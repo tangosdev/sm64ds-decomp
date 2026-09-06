@@ -72,17 +72,46 @@ those records by NAME. No byte gate at stage 2 or 3 catches it. And a class memb
 function **cannot sit inside an `extern "C" { }` region**, so the one file-scope
 region goes after the last surviving `func_*` member.
 
-## Coined-name classes are parked
+## Coined class names are allowed, and must be recorded as coined
 
-A class whose name was coined rather than read from the cartridge's RTTI **is not
-eligible for promotion**. Coined names block data verification against the ROM, and
-a promotion under one banks a claim the cartridge cannot corroborate.
+An earlier version of this file **parked** every class whose name was not read from
+the cartridge's RTTI. That rule is withdrawn: it was stricter than the project's own
+practice and it retroactively condemned merged work. Ten classes with coined names
+have already shipped -- `Player`, `Goomboss`, `Eyerok`, `ActorDerived`,
+`ActorBase_SceneNode`, and five `Mg*` minigame classes.
 
-This parks 143 of the 201 unpromoted queue rows (2,341 shards) until the naming
-question gets its own pass. Check the class's `identity_evidence` in its facts file
-before claiming: `dScMgCurling2_c` is in scope because the ov006 bytes at
-`0x0213c4c8` are literally `15dScMgCurling2_c`. **Do not run `class_rename.py`** to
-get around this.
+**The standard is disclosure, not abstention.** Promote the class; record the name as
+coined, with the evidence that justifies it, in the manifest and in
+`symbols/actor_renames.tsv`. That is already the discipline for coined *member*
+names -- `dScMgCurling2_c` shipped 17 of them, each with a `why` sentence separating
+what the ROM proves (member-ness, dispatch-table index) from what is invented (the
+word). Apply the same split to a class name: say what the cartridge attests and what
+you chose.
+
+State the identity either way. `dScMgCurling2_c` is ROM RTTI -- the ov006 bytes at
+`0x0213c4c8` are literally `15dScMgCurling2_c` -- and its facts file says so in
+`identity_evidence`. A coined name needs the same field, saying it is coined and on
+what basis. **Do not run `class_rename.py`** to manufacture agreement.
+
+Scale, measured 2026-09-06 against `build/rtti.json` (the parked figure quoted in the
+withdrawn rule was wrong, and wrong in a way that mattered):
+
+| | rows | shards |
+|---|---:|---:|
+| `UNATTRIBUTED` / `UNATTRIBUTED-CORE` -- **not classes**, buckets for unattributed functions | 2 | 4,560 |
+| real class rows, unpromoted | 235 | 3,708 |
+| -- name is ROM-proven | 42 | 872 |
+| -- name is coined | 193 | 2,836 |
+
+The two `UNATTRIBUTED*` rows are not promotable classes and must be excluded from any
+"how much is left" figure; counting them inflated the cost of this rule by 2.6x.
+
+The RTTI test itself is sound -- four independent searches for false negatives
+(`rtti.json` record names, raw ROM string search, the strict length-prefixed `_ZTS`
+form, and nested-scope) turned up exactly one, `dMgPsOpt_c`, attested only as the
+enclosing scope of `dMgPsOpt_c::TouchIcon_c`. **A raw substring search is not that
+test**: `Koopa`, `Door`, `Coin`, `Key` and `Fish` all "match" inside unrelated ROM
+strings.
 
 Stage 4 is the only stage that DECIDES whether the bytes are right, and it owns
 `linkcheck` and `rombuild`. That is not the same as "stages 1-3 never run a byte

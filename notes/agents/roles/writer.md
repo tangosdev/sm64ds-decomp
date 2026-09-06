@@ -39,13 +39,18 @@ the manifest's `functions[]` move in the same commit. No byte gate at stage 2 or
 catches this; the cheap link evidence is a `.symtab` undefined-symbol scan of the
 emitted object.
 
-## Coined-name classes are parked
+## Coined class names are allowed, and must be recorded as coined
 
-Do not claim a class whose name was coined rather than read from the cartridge's
-RTTI -- check `identity_evidence` in its facts file first. A coined name cannot be
-corroborated against the ROM, so a promotion under one banks a claim the cartridge
-cannot support. This parks 143 of the 201 unpromoted queue rows. **Do not run
-`class_rename.py`** to get around it.
+An earlier version of this file told you not to claim a class whose name was coined
+rather than read from the cartridge's RTTI. **That rule is withdrawn** -- see
+`PIPELINE.md`, "Coined class names are allowed". Ten coined-name classes have already
+shipped, so the rule condemned merged work.
+
+Claim it, and record the name as coined with its evidence in the manifest and in
+`symbols/actor_renames.tsv` -- the same discipline this file already requires for
+coined *member* names: say what the ROM proves and what you chose, separately. Check
+`identity_evidence` in the facts file and state the identity either way. **Do not run
+`class_rename.py`** to manufacture agreement.
 
 ## Inputs
 
