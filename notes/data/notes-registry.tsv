@@ -20,7 +20,7 @@ notes/archive/ARCHIVE_LOG.md	archive	process	live		Ledger of every note ever ret
 notes/archive/crack-loop-runbook.md	archive	matching	historical		Coddog fan-out matching-loop command sequence (prep/fan-out/verify); un-archived once, tooling still live.
 notes/archive/func_02059d8c-asm-origin.md	archive	matching	historical		Why func_02059d8c's 3-instruction busy-wait has no pure-C preimage; recommends ASM-PRIMITIVE reclass.
 notes/archive/func_ov079_02124008-floor.md	archive	matching	historical		Near-miss floor analysis for func_ov079_02124008 (div=1 materialization), banked in nearmiss/db.jsonl.
-notes/archive/n64-decomp-cross-reference.md	archive	matching	historical		Incomplete survey of the N64 SM64 decomp as a reuse/contamination oracle for this repo; parked.
+notes/archive/n64-decomp-cross-reference.md	archive	matching	live		N64 SM64 decomp cross-reference (naming oracle, physics/architecture comparison); still takes rename-cascade commits despite living under archive/.
 notes/archive/plan-gen-header.md	archive	cpp-conversion	historical		v2 plan for tools/gen_header.py's struct-layout header generator; scope vs. declaration headers.
 notes/archive/plan-scalar-markers.md	archive	cpp-conversion	historical		Status of retyping scalar-sized u8 marker fields; 71 mechanical cases done per gen_header.py --report.
 notes/archive/pret-idioms.md	archive	matching	historical		mwccarm idioms mined from pret's Pokemon Platinum/Diamond; superseded by notes/matching-style.md.
@@ -31,7 +31,6 @@ notes/asm-policy.md	doctrine	matching	live		Rule for when an asm{} block still c
 notes/assets.md	evidence	build	live		How to extract/catalog NitroFS assets (models, textures, sound) locally with unpack.py/rombuild.py.
 notes/bgobject-provenance.md	evidence	provenance	live		Per-class field-name evidence for dBgActor_c-derived interactive objects (StarSwitch, etc.), byte-neutral.
 notes/butterfly-tornado-provenance.md	evidence	provenance	live		Field-name provenance for Butterfly/Tornado/StarMarker/ToxBox, from tools/gen_header.py offsets.
-notes/class-init-pilot.md	evidence	provenance	live		Pilot: do *_classInit factories follow one pattern? 19/20 sampled do; the naming rule doesn't universalize.
 notes/codegen-rules.md	doctrine	matching	live		Condensed load-bearing rulebook: mwccarm-codegen.md's curated `## 1`-`## 6d` + `## 6az` sections, meant to be loaded whole.
 notes/collision-query-classes.md	evidence	provenance	superseded		RaycastLine/RaycastGround/SphereClsn gazetteer; several conclusions wrong — read collision-system.md first.
 notes/collision-system.md	evidence	provenance	live		Primary-evidence reference for the collision system: RTTI names, class graph, open questions (§6).
@@ -69,14 +68,12 @@ notes/dtor-variant-audit.md	evidence	cpp-conversion	live		41% of the D2 backlog 
 notes/ead-debug-name-crossref.md	evidence	naming	live		Cross-references ROM debug actor-name strings against overlay_actors.md; records accepted/rejected renames.
 notes/emu-trace-build.md	evidence	build	live		Engineering spec (phases, schemas, gates) for the melonDS/DeSmuME emulator-trace matching build.
 notes/emu-trace-plan.md	evidence	build	live		Premise check: what runtime emulator traces can and cannot buy for matching, ranked by divergence tier.
-notes/enemy-leaf-provenance.md	evidence	provenance	live		Field-name provenance for 10 dEnemyBase_c leaf classes, set B (JetStream, Goomboss, Whomp, etc.).
-notes/enemy-provenance.md	evidence	provenance	live		Field-name provenance for the dEnemyBase_c family, set A, from matched-body evidence only.
+notes/enemy-provenance.md	evidence	provenance	live		Field-name provenance for the dEnemyBase_c family, 17 classes across 2 module groups, from matched-body evidence only.
 notes/ghidra-dsd-landscape.md	evidence	build	live		Survey of current Ghidra/dsd usage and what adopting upstream ds-decomp PR #37 would buy.
 notes/global-data-migration.md	evidence	build	live		Design note: what it would take to source-build .data/.rodata/.bss instead of linking ROM gap objects.
 notes/handoff-class-skeleton.md	evidence	provenance	historical		2026-08-07 handoff: the class-skeleton interface is solved, fields are not; past shelf life, numbers stale.
 notes/handoff-marker-typing.md	evidence	cpp-conversion	historical		2026-08-06 handoff on object-marker typing; its "767 remaining" count is now ~20x stale (37 today).
 notes/handoff-sphereclsn-detectclsn.md	evidence	provenance	superseded		Search record for DetectClsn(SphereClsn&); function matched in #1655 — see collision-system.md instead.
-notes/handoff-validator-and-tests.md	evidence	process	superseded		2026-08 handoff on validator/test coverage gaps; both asks since landed (3 workflows, header-offsets gate).
 notes/itcm.md	evidence	matching	live		Why ITCM's 41 functions were invisible to every tool, and what the first matches found there.
 notes/levers.jsonl	data	matching	live		Distilled JSONL catalogue of mwccarm codegen levers (one per line); read by tools/levers.py, not by hand.
 notes/link-verification.md	evidence	matching	live		How tools/linkcheck.py catches wrong-callee/reloc-destination matches the wildcard byte-diff misses.
@@ -92,7 +89,6 @@ notes/mwccarm-codegen.md	evidence	matching	live		317KB dated log of mwccarm code
 notes/mwccarm-pragmas.txt	evidence	matching	live		246 #pragma names mwccarm actually recognizes (vs. silently-ignored typos), derived by exhaustive sweep.
 notes/mwccarm-version-archive-search.md	evidence	build	live		Playbook for locating historical mwccarm compiler builds (46/49/50/56) from the 2003-2004 period.
 notes/objisolate.md	evidence	cpp-conversion	live		Why a lone C++ destructor can't compile/link alone, and the bugs objisolate.py fixes to reach 106/106.
-notes/overlay-ambiguous-references.md	evidence	provenance	superseded		Original statement of the overlay-ambiguous-reference problem (169 refs); see overlay-residency.md.
 notes/overlay-residency.md	evidence	provenance	live		Which overlays can be resident together, derived from the game's own loader; resolves 127 of 137 refs.
 notes/plan-base-headers.md	evidence	cpp-conversion	superseded		Plan to fix 6 field declarations poisoning dEnemyBase_c/dCapEnemy_c; that base-class work has since landed.
 notes/plan-cpp-conversion-queue.md	evidence	cpp-conversion	live		Staged queue for migrating ROM-proven C++ .c files to real C++, by tier, with corrections to the census.
@@ -104,7 +100,6 @@ notes/port-selftest-bmp-gate.md	evidence	build	live		Rule for comparing the port
 notes/pr-monitor.md	evidence	process	live		How to run the read-only PR queue monitor and the repair loop for a flagged PR.
 notes/pr-validation.md	evidence	process	live		What the merge gate checks (match/coverage/fidelity/lineage/relocations/port refs) and which tools emit it.
 notes/profile-lifecycle-crosswalk.md	evidence	provenance	live		Crosswalk of SM64DS profile/lifecycle fields against an NSMBW hypothesis: confirmed vs. unresolved.
-notes/profile-macro-patterns.md	evidence	provenance	live		Binary-pattern pilot on actor/profile declarations; supports a repeated architecture, not an exact macro.
 notes/real-cpp-migration-runbook.md	evidence	cpp-conversion	live		Runbook for converting matched C to real C++ where the compiler, not hand-mangling, owns the ABI.
 notes/research-matching-levers.md	evidence	matching	live		Deep-research survey (dsd/objdiff/permuter/LLM pipelines) for matching speed/success at the 63% tail.
 notes/roadmap.md	evidence	build	historical		MATCH->LIFT->PORT->POLISH roadmap to a native PC EXE; percentages frozen, see cpp-tu-current-state.md.
@@ -115,16 +110,13 @@ notes/runbook-reference-repair.md	doctrine	matching	live		Runbook for making a m
 notes/runbook-type-reconstruction.md	doctrine	matching	live		Runbook for turning observed offsets into named/typed members and migrating a function to real C++.
 notes/scene-provenance.md	evidence	provenance	live		Derivation notes for the dScene_c branch's headers, moved out of source comments during a readability pass.
 notes/setup-mwccarm.md	evidence	build	live		How to get the pinned mwccarm 2004/b56 compiler + NITRO-SDK set up, vs. the separate version-sweep zip.
-notes/sinit-ownership-pilot-ov002.md	evidence	tu-promotion	live		Confirms __sinit_ov002_02100938 belongs to dEnemyBase_c's original TU; not yet promotion-ready.
+notes/sinit-ownership-cases.md	evidence	tu-promotion	live		Consolidated case log of 9 confirmed __sinit ownership rows (dEnemyBase_c, CutsceneObject+daDemo_c, Painting, Bird, daObjBkBillboard_c, daObjMarioCap_c, OneUpMushroom, daObjKurumajiku_c, MadPiano).
 notes/sinit-ownership-wave-edges-probe.cpp	evidence	tu-promotion	live		Compile-only probes proving two sinit blocks' ownership via ordinary PMF-array globals; not in any build.
-notes/sinit-ownership-wave-edges.md	evidence	tu-promotion	live		Ownership verdicts for two multi-class/large-table sinit blocks (CutsceneObject+daDemo_c, Painting).
-notes/sinit-ownership-wave-resource-handles.md	evidence	tu-promotion	live		Ownership audit of 3 resource-handle sinit rows (Bird, daObjBkBillboard_c, daObjMarioCap_c): confirmed.
 notes/sinit-ownership.md	evidence	tu-promotion	live		How to regenerate and read tools/sinit_owners.py's review-only sinit-to-TU ownership map.
 notes/sinit-probes/bird.cpp	evidence	tu-promotion	live		Compile-only organic-generation probe for Bird's model/anim-file sinit ownership, behind a research #define.
 notes/sinit-probes/mario_cap.cpp	evidence	tu-promotion	live		Compile-only probe for MarioCap anim-file/state sinit ownership, behind a research #define.
 notes/sinit-probes/pole_billboard.cpp	evidence	tu-promotion	live		Compile-only probe for the Pole billboard model-file sinit ownership, behind a research #define.
 notes/sinit-probes/wave_a.cpp	evidence	tu-promotion	live		Compile-only probes for 3 wave-A sinit ownership claims (OneUpMushroom and others), one #define at a time.
-notes/sinit-wave-a-ownership.md	evidence	tu-promotion	live		Wave-A sinit ownership verdicts: OneUpMushroom, daObjKurumajiku_c, MadPiano, all CONFIRMED via organic proof.
 notes/smartball-provenance.md	evidence	provenance	live		Field-name provenance for the smartball minigame family and its shared cMgSmartball_object_c base.
 notes/src-domain-buckets.md	doctrine	build	live		Policy for which top-level src/ directory a class's first promoted file goes into.
 notes/symbol-name-provenance.md	evidence	naming	live		Which parts of a mangled/symbols.txt name are ROM-proven vs. placeholder vs. assertion, and how to tell.
