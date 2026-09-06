@@ -325,6 +325,29 @@ its oracle sits one level shallower.
     rows = 2 x (ancestors + self)  +  1 vtable  +  1 per Vector3-like
                                                      member with an inline D1
 
+**A coined class name is harmless UNLESS your TU owns the key function — and
+then it is a hard blocker.** Three runs in one day reached opposite conclusions
+about renaming, and this is the reconciliation:
+
+- **Your range does not own the key function** → the TU emits no vtable and no
+  RTTI at all, so the tree's coined spelling never reaches a manifest. Keep it.
+  Renaming is a `class_rename` campaign, not a promotion. (`Goomboss` kept
+  `Goomboss` over the cartridge's `daKuriKing_c`; `Eyerok` kept `Eyerok` over
+  `daIwante_c`.)
+- **Your range does own the key function** → the TU emits `_ZTI`/`_ZTS`/`_ZTV`
+  for its own class, and those rows **must** carry the ROM's RTTI spelling.
+  `verify` refuses a coined RTTI row — it is "banked as a plain deadstrip, never
+  compared against the cartridge" — and the precedent is unanimous: **994 RTTI
+  and vtable rows across every promoted manifest, zero of them under a coined
+  name** (measured 2026-09-05 against `build/rtti.json`). There is no such thing
+  as a promoted coined class.
+
+Look the class up in `build/rtti.json` before you decide anything else, and
+expect the alias case: `symbols.txt` can carry **both** spellings at one address
+(`_ZTV10KingBobOmb` and `_ZTV12daBombking_c` at `0x02126e4c`). If you own the key
+function and hit that, say so in your report rather than renaming silently — the
+rename touches `symbols.txt` tree-wide and is a separate, reviewable decision.
+
 **The whole formula is conditional on the licensed range owning the key
 function, and this file used to state it unconditionally.** A TU that does not
 own the key function emits **no vtable and no RTTI at all** — zero rows from
