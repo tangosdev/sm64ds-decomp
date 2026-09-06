@@ -161,7 +161,14 @@ steps the dry-run does not print:
    path. **Write it at `indent=2`** — `tu_manifest.save` uses that, and a
    hand-written entry at `indent=1` fails
    `test_tu_manifest.py::test_rewriting_the_tracked_manifest_is_a_no_op` with
-   only "would be rewritten", which never names indentation as the cause. `verify` does not do this, and `promote --dry-run` refuses to run at
+   only "would be rewritten", which never names indentation as the cause.
+   **And write bytes, not text.** On Windows `pathlib.write_text` translates
+   `
+` to CRLF, so a python manifest edit silently converts a LF manifest to
+   CRLF — every sibling in `config/tu_manifest.d/` is LF. Normalise afterwards
+   if you used it. (Related environment trap: a `python - <<'PY'` heredoc aborts
+   on an apostrophe in prose and eats doubled backslashes; write the script to a
+   file and run it.) `verify` does not do this, and `promote --dry-run` refuses to run at
    all while `status` is still `text-verified`. **This is not cosmetic and the
    damage is permanent.** `tiers_ratchet.promoted_moves()` skips every manifest
    entry whose status is not exactly `promoted`, so leaving it means your
@@ -318,6 +325,14 @@ its oracle sits one level shallower.
     rows = 2 x (ancestors + self)  +  1 vtable  +  1 per Vector3-like
                                                      member with an inline D1
 
+**The whole formula is conditional on the licensed range owning the key
+function, and this file used to state it unconditionally.** A TU that does not
+own the key function emits **no vtable and no RTTI at all** — zero rows from
+this formula, not `2x(ancestors+self)+1`. Measured on `Goomboss` (ov074): a
+key-function-owning probe emitted exactly the predicted 11; the range actually
+licensed excludes the key function and needs **1** row, the `_ZN7Vector3D1Ev`
+duplicate. Both numbers are right. Decide which TU you are building first.
+
 **The last term is conditional, and "member" is the wrong test.** The trigger is
 any `Vector3` the TU *odr-uses* — **function locals count**. `dScMgD3DBase_c` is
 5 levels deep and needs **11** because it touches none. `daDsnBase_c` is also 5
@@ -432,6 +447,16 @@ mwccarm 2004/b56 behaviours, not style preferences.
   *below* D1 is **not** automatically a refusal any more: try the pragma before
   taking the partial promotion. It flips emission order for the whole file, so
   adopting it and laying the source out ROM-ascending are one edit, not two.
+
+  **A fifth lever, from the same day:** with the destructor **inline**, the two
+  variants come out in the *reverse order of their first odr-use*. On `Goomboss`
+  a `delete p; p->~Goomboss();` scaffold gave D1-then-D0 and swapping the two
+  statements gave D0-then-D1, read out of the compiled object's section order.
+  That is a real handle on the order — but the destructor group travels with the
+  scaffold that forces it, emitted immediately below that function wherever it
+  lands, so it is unusable when the pair belongs at the very start of a module's
+  `.text` (on `Goomboss`, D1 *is* the first byte of ov074's `.text`; there is no
+  address below it).
 
   Do not read that as "inline is the fallback". On `dScMgTeresa_c` inlining
   moved the key function to a member *above* the run's sourceless hole, so the
@@ -614,7 +639,11 @@ Ask the compiler rather than hand-mangling:
 
   **What actually works is corroboration from three independent tools**, which is
   what every correct extent in this campaign has rested on: the relocation gap,
-  `rtti_vtables.py --own <Class>` for the slot count, and
+  `rtti_vtables.py --own <Class>` for the slot count — **but it answers only to
+  the ROM's RTTI spelling, not the tree's**. `--own Goomboss` prints
+  `no vtable for Goomboss`; `--own daKuriKing_c` prints the 31 slots. For a
+  coined-name class that output reads as "no vtable exists", which is false;
+  look the class up in `build/rtti.json` and ask with the cartridge's name — and
   `romdata_check.check_object()` for `bytes`/`emitted` with `blindWords: 0`.
   Worked example, `dScMgRoulette_c`: relocated run `0x0213e398..0x0213e428`, then
   a real `0x18` gap before the next reloc at `0x0213e444`; storage
