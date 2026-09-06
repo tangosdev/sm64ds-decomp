@@ -610,6 +610,8 @@ def write_baseline(dead):
             "dead reference NOT listed here. Regenerate with --update, but read the "
             "diff: a new entry is usually a rename someone forgot to follow through "
             "into the docs."))
+
+
 def write_code_baseline(dead):
     code = {(f, r) for f, r in dead if f.endswith(CODE_SUFFIXES)}
     grouped = {}
@@ -668,9 +670,10 @@ def main(argv=None):
             print(f"  {f}:{ln}: {target} -> {resolved}")
 
     if args.update:
-        write_baseline(dead)
+        prose_dead = [(f, r) for f, r in dead if not f.endswith(CODE_SUFFIXES)]
+        write_baseline(prose_dead)
         print(f"  wrote {BASELINE.relative_to(REPO).as_posix()} "
-              f"({len(dead)} known reference(s))")
+              f"({len(prose_dead)} known prose reference(s))")
         if broken:
             print(f"  NOTE: {len(broken)} broken markdown link(s) remain -- relative "
                   f"links have no baseline and must be fixed, not banked")
@@ -687,20 +690,33 @@ def main(argv=None):
     new = [d for d in dead if d not in known]
     healed = sorted(known - set(dead))
 
-    if healed:
-        print(f"  {len(healed)} baselined reference(s) now resolve -- "
-              f"run --update to shrink the baseline (not a failure)")
+    healed_code = [d for d in healed if d[0].endswith(CODE_SUFFIXES)]
+    healed_prose = [d for d in healed if not d[0].endswith(CODE_SUFFIXES)]
+    if healed_prose:
+        print(f"  {len(healed_prose)} baselined prose reference(s) now resolve -- "
+              f"run --update to shrink the prose baseline (not a failure)")
+    if healed_code:
+        print(f"  {len(healed_code)} baselined C/C++ comment reference(s) now resolve "
+              f"-- refresh from a clean, pinned main with --update-code (not a failure)")
 
     if not new:
         print("  no new dead references")
     else:
-        print(f"\nFAIL: {len(new)} prose reference(s) name a path that does not exist:\n")
+        print(f"\nFAIL: {len(new)} prose/comment reference(s) name a path that does not "
+              f"exist:\n")
         for f, r in new:
             print(f"  {f}\n      names `{r}`, which is not in the tree")
-        print("\nThis is almost always a rename that did not carry into the prose. Fix the")
-        print("sentence to name the file's current path -- or, if the reference is")
-        print("deliberately historical or belongs to another repository, add it with")
-        print("`python tools/check_dead_references.py --update`.")
+        new_code = [d for d in new if d[0].endswith(CODE_SUFFIXES)]
+        new_prose = [d for d in new if not d[0].endswith(CODE_SUFFIXES)]
+        print("\nThis is almost always a rename that did not carry into the surrounding "
+              "text.")
+        print("Fix the reference to name the file's current path.")
+        if new_prose:
+            print("For deliberately historical prose or a path belonging to another "
+                  "repository, re-bank the prose baseline with --update after review.")
+        if new_code:
+            print("The code-comment baseline is initial-debt-only: --update does not "
+                  "bank it. Use --update-code only from a clean, pinned main checkout.")
 
     if not broken:
         print("  no broken markdown links")

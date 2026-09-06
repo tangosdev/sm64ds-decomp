@@ -58,7 +58,6 @@ additions remain failures.
 - Header-offset tests: 39 passed; related header-generation tests: 21 passed.
 - Representative live headers checked all documented fields, including
   `dScMgBase_c.h` (40 fields) and `dActor_c.h` (33 fields).
-- Dead-reference suites: 59 passed. The repository scan covers 10,728 C/C++
+- Dead-reference suites: 60 passed. The repository scan covers 10,728 C/C++
   files on the integration base and reports no new dead references or broken
   Markdown links.
-
