@@ -2,23 +2,24 @@
   "class": "dScMgCoin_c",
   "overlay": "ov006",
   "module_base": "0x020bfec0",
-    "sealed_base": "8bfc6d98b0c5b3ed16cd97e712aa780c77fdad37",
-    "produced_by": "scout stage: direct reads of extracted/dsd/arm9_overlays/ov006.bin, extracted/dsd/arm9_overlays/ov004.bin, extracted/arm9_dec.bin, and module-qualified config relocation/symbol records; reconstructed src was not used as an oracle for any ROM claim",
-    "reverified": {
-      "at": "2026-09-06",
-      "worktree": "C:/tmp/sm64ds-scout-coin-0905",
-      "ref": "cpp/dScMgCoin_c-tu",
-      "scope": "Independently re-derived, not merely re-read: the ZTS string, the three ZTI words, the vtable header pair, all 36 slot targets, the full 36-slot dScMgBase_c base table in ov004 (word-for-word diff -> exactly slots 0/6/9/16/17/18 differ), the factory literal pool (0x51e0 / 0x51c4 / 0x0213bf50), and every relocation in the tree whose target lands in 0x020dbe40..0x020de988 with overlay(6) in its module set. Every figure in this file survived. tools/rtti_vtables.py --own dScMgCoin_c agrees independently: 36 slots (base 36), the same six own slots at the same six addresses.",
-      "module_filter_warning": "An unfiltered scan of the same relocations reports 115 extra callers from ov002/ov030/ov072/ov079/ov085/ov092/ov096/ov098/ov102. Every one is a relocation whose target module is that overlay own overlapping address space, not ov006. Any reference count for this class that is not filtered on the destination module is wrong by roughly 2.5x.",
-      "tool_note": "tools/rtti_vtables.py reads build/rtti.json, which is per-worktree and absent in a fresh worktree. Run tools/rtti_extract.py first or it dies with FileNotFoundError."
-    },
-    "identity_provenance": {
-      "kind": "rom_named",
-      "statement": "dScMgCoin_c is a ROM name, not repository coinage. build/rtti.json carries a real record for it -- module ov006, addr 0x0213bf18, kind si, mangled 11dScMgCoin_c -- and the cartridge bytes at 0x0213bf24 spell 11dScMgCoin_c directly. Nothing about this class name is inferred, so tools/rtti_vtables.py --own dScMgCoin_c answers to the name as written.",
-      "why_this_is_recorded": "143 of the 201 unpromoted rows in notes/data/tu-promotion-queue.tsv carry coined names. --own answers only to the cartridge RTTI spelling and silently finds nothing for a coined one, so the first thing a reader of any facts file needs to know is which kind it is holding. This one is in the ROM-named minority.",
-      "method_names_are_a_separate_question": "The RTTI proves the CLASS name only. Of the six own slots, only OnYoshiTryEat carries a member name in config/arm9/overlays/ov006/symbols.txt that is not mechanically derived; InitResources/Behavior/Render are inherited slot names taken from the dScMgBase_c chain, and all 56 helpers are func_ov006_<addr> placeholders."
-    },
-    "rtti_name": "11dScMgCoin_c",
+  "sealed_base": "8bfc6d98b0c5b3ed16cd97e712aa780c77fdad37",
+  "produced_by": "scout stage: direct reads of extracted/dsd/arm9_overlays/ov006.bin, extracted/dsd/arm9_overlays/ov004.bin, extracted/arm9_dec.bin, and module-qualified config relocation/symbol records; reconstructed src was not used as an oracle for any ROM claim",
+  "reverified": {
+    "at": "2026-09-06",
+    "worktree": "C:/tmp/sm64ds-coin2",
+    "ref": "cpp/dScMgCoin_c-tu",
+    "scope": "Independently re-derived, not merely re-read: the ZTS string, the three ZTI words, the vtable header pair, all 36 slot targets, the full 36-slot dScMgBase_c base table in ov004 (word-for-word diff -> exactly slots 0/6/9/16/17/18 differ), the factory literal pool (0x51e0 / 0x51c4 / 0x0213bf50), and every relocation in the tree whose target lands in 0x020dbe40..0x020de988 with overlay(6) in its module set. Every figure in this file survived. tools/rtti_vtables.py --own dScMgCoin_c agrees independently: 36 slots (base 36), the same six own slots at the same six addresses.",
+    "module_filter_warning": "An unfiltered scan of the same relocations reports 115 extra callers from ov002/ov030/ov072/ov079/ov085/ov092/ov096/ov098/ov102. Every one is a relocation whose target module is that overlay own overlapping address space, not ov006. Any reference count for this class that is not filtered on the destination module is wrong by roughly 2.5x.",
+    "tool_note": "tools/rtti_vtables.py reads build/rtti.json, which is per-worktree and absent in a fresh worktree. Run tools/rtti_extract.py first or it dies with FileNotFoundError.",
+    "tree_derived_fields_rederived_on": "origin/main 8bfc6d98b. An earlier revision of this file derived its manifest-, delink- and queue-dependent fields against the branch's original base 395afdb23 (#2320), before six class promotions landed -- three of them in ov006. Everything read out of extracted/ is base-independent and was unaffected; the ov006 run itself re-derives identically on current main (63 functions, 61 delink sections, the same two gaps, 45 .c / 16 .cpp, 2 pragma sections, 3 in converted-baseline, no NONMATCHING). Only sibling_oracles was actually wrong, and it was wrong outright."
+  },
+  "identity_provenance": {
+    "kind": "rom_named",
+    "statement": "dScMgCoin_c is a ROM name, not repository coinage. build/rtti.json carries a real record for it -- module ov006, addr 0x0213bf18, kind si, mangled 11dScMgCoin_c -- and the cartridge bytes at 0x0213bf24 spell 11dScMgCoin_c directly. Nothing about this class name is inferred, so tools/rtti_vtables.py --own dScMgCoin_c answers to the name as written.",
+    "why_this_is_recorded": "143 of the 201 unpromoted rows in notes/data/tu-promotion-queue.tsv carry coined names. --own answers only to the cartridge RTTI spelling and silently finds nothing for a coined one, so the first thing a reader of any facts file needs to know is which kind it is holding. This one is in the ROM-named minority.",
+    "method_names_are_a_separate_question": "The RTTI proves the CLASS name only. Of the six own slots, only OnYoshiTryEat carries a member name in config/arm9/overlays/ov006/symbols.txt that is not mechanically derived; InitResources/Behavior/Render are inherited slot names taken from the dScMgBase_c chain, and all 56 helpers are func_ov006_<addr> placeholders."
+  },
+  "rtti_name": "11dScMgCoin_c",
   "rtti": {
     "symbol": "_ZTI11dScMgCoin_c",
     "address": "0x0213bf18",
@@ -76,52 +77,299 @@
     "direct_base_vtable_module": "ov004",
     "extent_evidence": "The direct ov006 read has a zero offset-to-top at 0x0213bf48, RTTI pointer at 0x0213bf4c, and exactly 36 plausible code words from 0x0213bf50 through 0x0213bfdc. config/arm9/overlays/ov006/relocs.txt has one relocation at every one of those 36 slot addresses. The next raw word at 0x0213bfe0 is 0x01fc00fc, packed non-code data, so it is not a slot; no rtti_vtables.py inferred extent is used here.",
     "entries": [
-      { "slot": 0, "slot_address": "0x0213bf50", "target": "0x020de704", "module": "ov006", "name": "_ZN11dScMgCoin_c13InitResourcesEv" },
-      { "slot": 1, "slot_address": "0x0213bf54", "target": "0x020b0930", "module": "ov004", "name": "_ZN11dScMgBase_c19BeforeInitResourcesEv" },
-      { "slot": 2, "slot_address": "0x0213bf58", "target": "0x020b08f0", "module": "ov004", "name": "_ZN11dScMgBase_c18AfterInitResourcesEj" },
-      { "slot": 3, "slot_address": "0x0213bf5c", "target": "0x02043bf0", "module": "main", "name": "_ZN7fBase_c16CleanupResourcesEv" },
-      { "slot": 4, "slot_address": "0x0213bf60", "target": "0x0202e5f0", "module": "main", "name": "_ZN8dScene_c22BeforeCleanupResourcesEv" },
-      { "slot": 5, "slot_address": "0x0213bf64", "target": "0x020b0840", "module": "ov004", "name": "_ZN11dScMgBase_c21AfterCleanupResourcesEj" },
-      { "slot": 6, "slot_address": "0x0213bf68", "target": "0x020de69c", "module": "ov006", "name": "_ZN11dScMgCoin_c8BehaviorEv" },
-      { "slot": 7, "slot_address": "0x0213bf6c", "target": "0x020b0620", "module": "ov004", "name": "_ZN11dScMgBase_c14BeforeBehaviorEv" },
-      { "slot": 8, "slot_address": "0x0213bf70", "target": "0x0202e3c8", "module": "main", "name": "_ZN8dScene_c13AfterBehaviorEj" },
-      { "slot": 9, "slot_address": "0x0213bf74", "target": "0x020de63c", "module": "ov006", "name": "_ZN11dScMgCoin_c6RenderEv" },
-      { "slot": 10, "slot_address": "0x0213bf78", "target": "0x020b04f4", "module": "ov004", "name": "_ZN11dScMgBase_c12BeforeRenderEv" },
-      { "slot": 11, "slot_address": "0x0213bf7c", "target": "0x0202e398", "module": "main", "name": "_ZN8dScene_c11AfterRenderEj" },
-      { "slot": 12, "slot_address": "0x0213bf80", "target": "0x020b04e8", "module": "ov004", "name": "_ZN11dScMgBase_c16OnPendingDestroyEv" },
-      { "slot": 13, "slot_address": "0x0213bf84", "target": "0x0204357c", "module": "main", "name": "_ZN7fBase_c9Virtual34Ejj" },
-      { "slot": 14, "slot_address": "0x0213bf88", "target": "0x0204349c", "module": "main", "name": "_ZN7fBase_c9Virtual38Ejj" },
-      { "slot": 15, "slot_address": "0x0213bf8c", "target": "0x02043494", "module": "main", "name": "_ZN7fBase_c13OnHeapCreatedEv" },
-      { "slot": 16, "slot_address": "0x0213bf90", "target": "0x020dbe40", "module": "ov006", "name": "_ZN11dScMgCoin_cD1Ev" },
-      { "slot": 17, "slot_address": "0x0213bf94", "target": "0x020dbe64", "module": "ov006", "name": "_ZN11dScMgCoin_cD0Ev" },
-      { "slot": 18, "slot_address": "0x0213bf98", "target": "0x020de5b0", "module": "ov006", "name": "_ZN11dScMgCoin_c13OnYoshiTryEatEi" },
-      { "slot": 19, "slot_address": "0x0213bf9c", "target": "0x020b2994", "module": "ov004", "name": "_ZN11dScMgBase_c13OnTurnIntoEggEi" },
-      { "slot": 20, "slot_address": "0x0213bfa0", "target": "0x020b2990", "module": "ov004", "name": "_ZN11dScMgBase_c9Virtual50Ev" },
-      { "slot": 21, "slot_address": "0x0213bfa4", "target": "0x020b298c", "module": "ov004", "name": "_ZN11dScMgBase_c15OnGroundPoundedEv" },
-      { "slot": 22, "slot_address": "0x0213bfa8", "target": "0x020ae198", "module": "ov004", "name": "_ZN11dScMgBase_c11OnAttacked1Ev" },
-      { "slot": 23, "slot_address": "0x0213bfac", "target": "0x020ae1a0", "module": "ov004", "name": "_ZN11dScMgBase_c11OnAttacked2Ev" },
-      { "slot": 24, "slot_address": "0x0213bfb0", "target": "0x020ae140", "module": "ov004", "name": "_ZN11dScMgBase_c8OnKickedEv" },
-      { "slot": 25, "slot_address": "0x0213bfb4", "target": "0x020ae128", "module": "ov004", "name": "_ZN11dScMgBase_c8OnPushedEv" },
-      { "slot": 26, "slot_address": "0x0213bfb8", "target": "0x020b04e0", "module": "ov004", "name": "_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv" },
-      { "slot": 27, "slot_address": "0x0213bfbc", "target": "0x020af27c", "module": "ov004", "name": "_ZN11dScMgBase_c15OnHitByMegaCharEv" },
-      { "slot": 28, "slot_address": "0x0213bfc0", "target": "0x020af04c", "module": "ov004", "name": "_ZN11dScMgBase_c19OnHitFromUnderneathEv" },
-      { "slot": 29, "slot_address": "0x0213bfc4", "target": "0x020af094", "module": "ov004", "name": "_ZN11dScMgBase_c16OnAimedAtWithEggEv" },
-      { "slot": 30, "slot_address": "0x0213bfc8", "target": "0x020aeed8", "module": "ov004", "name": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv" },
-      { "slot": 31, "slot_address": "0x0213bfcc", "target": "0x020b2880", "module": "ov004", "name": "_ZN11dScMgBase_c9Virtual7CEv" },
-      { "slot": 32, "slot_address": "0x0213bfd0", "target": "0x020b27f4", "module": "ov004", "name": "_ZN11dScMgBase_c9Virtual80Ev" },
-      { "slot": 33, "slot_address": "0x0213bfd4", "target": "0x020b265c", "module": "ov004", "name": "_ZN11dScMgBase_c9Virtual84Ev" },
-      { "slot": 34, "slot_address": "0x0213bfd8", "target": "0x020ae3b4", "module": "ov004", "name": "_ZN11dScMgBase_c9Virtual88Eiiii" },
-      { "slot": 35, "slot_address": "0x0213bfdc", "target": "0x020ad660", "module": "ov004", "name": "_ZN11dScMgBase_c9Virtual8CEv", "note": "The address collides with entries in ov000/ov002/ov003/ov007; the ov006 relocation explicitly permits the ov004 implementation, and the direct-base table has the same slot target." }
+      {
+        "slot": 0,
+        "slot_address": "0x0213bf50",
+        "target": "0x020de704",
+        "module": "ov006",
+        "name": "_ZN11dScMgCoin_c13InitResourcesEv"
+      },
+      {
+        "slot": 1,
+        "slot_address": "0x0213bf54",
+        "target": "0x020b0930",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c19BeforeInitResourcesEv"
+      },
+      {
+        "slot": 2,
+        "slot_address": "0x0213bf58",
+        "target": "0x020b08f0",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c18AfterInitResourcesEj"
+      },
+      {
+        "slot": 3,
+        "slot_address": "0x0213bf5c",
+        "target": "0x02043bf0",
+        "module": "main",
+        "name": "_ZN7fBase_c16CleanupResourcesEv"
+      },
+      {
+        "slot": 4,
+        "slot_address": "0x0213bf60",
+        "target": "0x0202e5f0",
+        "module": "main",
+        "name": "_ZN8dScene_c22BeforeCleanupResourcesEv"
+      },
+      {
+        "slot": 5,
+        "slot_address": "0x0213bf64",
+        "target": "0x020b0840",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c21AfterCleanupResourcesEj"
+      },
+      {
+        "slot": 6,
+        "slot_address": "0x0213bf68",
+        "target": "0x020de69c",
+        "module": "ov006",
+        "name": "_ZN11dScMgCoin_c8BehaviorEv"
+      },
+      {
+        "slot": 7,
+        "slot_address": "0x0213bf6c",
+        "target": "0x020b0620",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c14BeforeBehaviorEv"
+      },
+      {
+        "slot": 8,
+        "slot_address": "0x0213bf70",
+        "target": "0x0202e3c8",
+        "module": "main",
+        "name": "_ZN8dScene_c13AfterBehaviorEj"
+      },
+      {
+        "slot": 9,
+        "slot_address": "0x0213bf74",
+        "target": "0x020de63c",
+        "module": "ov006",
+        "name": "_ZN11dScMgCoin_c6RenderEv"
+      },
+      {
+        "slot": 10,
+        "slot_address": "0x0213bf78",
+        "target": "0x020b04f4",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c12BeforeRenderEv"
+      },
+      {
+        "slot": 11,
+        "slot_address": "0x0213bf7c",
+        "target": "0x0202e398",
+        "module": "main",
+        "name": "_ZN8dScene_c11AfterRenderEj"
+      },
+      {
+        "slot": 12,
+        "slot_address": "0x0213bf80",
+        "target": "0x020b04e8",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c16OnPendingDestroyEv"
+      },
+      {
+        "slot": 13,
+        "slot_address": "0x0213bf84",
+        "target": "0x0204357c",
+        "module": "main",
+        "name": "_ZN7fBase_c9Virtual34Ejj"
+      },
+      {
+        "slot": 14,
+        "slot_address": "0x0213bf88",
+        "target": "0x0204349c",
+        "module": "main",
+        "name": "_ZN7fBase_c9Virtual38Ejj"
+      },
+      {
+        "slot": 15,
+        "slot_address": "0x0213bf8c",
+        "target": "0x02043494",
+        "module": "main",
+        "name": "_ZN7fBase_c13OnHeapCreatedEv"
+      },
+      {
+        "slot": 16,
+        "slot_address": "0x0213bf90",
+        "target": "0x020dbe40",
+        "module": "ov006",
+        "name": "_ZN11dScMgCoin_cD1Ev"
+      },
+      {
+        "slot": 17,
+        "slot_address": "0x0213bf94",
+        "target": "0x020dbe64",
+        "module": "ov006",
+        "name": "_ZN11dScMgCoin_cD0Ev"
+      },
+      {
+        "slot": 18,
+        "slot_address": "0x0213bf98",
+        "target": "0x020de5b0",
+        "module": "ov006",
+        "name": "_ZN11dScMgCoin_c13OnYoshiTryEatEi"
+      },
+      {
+        "slot": 19,
+        "slot_address": "0x0213bf9c",
+        "target": "0x020b2994",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c13OnTurnIntoEggEi"
+      },
+      {
+        "slot": 20,
+        "slot_address": "0x0213bfa0",
+        "target": "0x020b2990",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual50Ev"
+      },
+      {
+        "slot": 21,
+        "slot_address": "0x0213bfa4",
+        "target": "0x020b298c",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c15OnGroundPoundedEv"
+      },
+      {
+        "slot": 22,
+        "slot_address": "0x0213bfa8",
+        "target": "0x020ae198",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c11OnAttacked1Ev"
+      },
+      {
+        "slot": 23,
+        "slot_address": "0x0213bfac",
+        "target": "0x020ae1a0",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c11OnAttacked2Ev"
+      },
+      {
+        "slot": 24,
+        "slot_address": "0x0213bfb0",
+        "target": "0x020ae140",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c8OnKickedEv"
+      },
+      {
+        "slot": 25,
+        "slot_address": "0x0213bfb4",
+        "target": "0x020ae128",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c8OnPushedEv"
+      },
+      {
+        "slot": 26,
+        "slot_address": "0x0213bfb8",
+        "target": "0x020b04e0",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv"
+      },
+      {
+        "slot": 27,
+        "slot_address": "0x0213bfbc",
+        "target": "0x020af27c",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c15OnHitByMegaCharEv"
+      },
+      {
+        "slot": 28,
+        "slot_address": "0x0213bfc0",
+        "target": "0x020af04c",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c19OnHitFromUnderneathEv"
+      },
+      {
+        "slot": 29,
+        "slot_address": "0x0213bfc4",
+        "target": "0x020af094",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c16OnAimedAtWithEggEv"
+      },
+      {
+        "slot": 30,
+        "slot_address": "0x0213bfc8",
+        "target": "0x020aeed8",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv"
+      },
+      {
+        "slot": 31,
+        "slot_address": "0x0213bfcc",
+        "target": "0x020b2880",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual7CEv"
+      },
+      {
+        "slot": 32,
+        "slot_address": "0x0213bfd0",
+        "target": "0x020b27f4",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual80Ev"
+      },
+      {
+        "slot": 33,
+        "slot_address": "0x0213bfd4",
+        "target": "0x020b265c",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual84Ev"
+      },
+      {
+        "slot": 34,
+        "slot_address": "0x0213bfd8",
+        "target": "0x020ae3b4",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual88Eiiii"
+      },
+      {
+        "slot": 35,
+        "slot_address": "0x0213bfdc",
+        "target": "0x020ad660",
+        "module": "ov004",
+        "name": "_ZN11dScMgBase_c9Virtual8CEv",
+        "note": "The address collides with entries in ov000/ov002/ov003/ov007; the ov006 relocation explicitly permits the ov004 implementation, and the direct-base table has the same slot target."
+      }
     ]
   },
   "own_override_count": 6,
   "own_overrides": [
-    { "slot": 0, "symbol": "_ZN11dScMgCoin_c13InitResourcesEv", "address": "0x020de704", "size": "0x23c" },
-    { "slot": 6, "symbol": "_ZN11dScMgCoin_c8BehaviorEv", "address": "0x020de69c", "size": "0x68" },
-    { "slot": 9, "symbol": "_ZN11dScMgCoin_c6RenderEv", "address": "0x020de63c", "size": "0x60" },
-    { "slot": 16, "symbol": "_ZN11dScMgCoin_cD1Ev", "address": "0x020dbe40", "size": "0x24" },
-    { "slot": 17, "symbol": "_ZN11dScMgCoin_cD0Ev", "address": "0x020dbe64", "size": "0x38" },
-    { "slot": 18, "symbol": "_ZN11dScMgCoin_c13OnYoshiTryEatEi", "address": "0x020de5b0", "size": "0x8c" }
+    {
+      "slot": 0,
+      "symbol": "_ZN11dScMgCoin_c13InitResourcesEv",
+      "address": "0x020de704",
+      "size": "0x23c"
+    },
+    {
+      "slot": 6,
+      "symbol": "_ZN11dScMgCoin_c8BehaviorEv",
+      "address": "0x020de69c",
+      "size": "0x68"
+    },
+    {
+      "slot": 9,
+      "symbol": "_ZN11dScMgCoin_c6RenderEv",
+      "address": "0x020de63c",
+      "size": "0x60"
+    },
+    {
+      "slot": 16,
+      "symbol": "_ZN11dScMgCoin_cD1Ev",
+      "address": "0x020dbe40",
+      "size": "0x24"
+    },
+    {
+      "slot": 17,
+      "symbol": "_ZN11dScMgCoin_cD0Ev",
+      "address": "0x020dbe64",
+      "size": "0x38"
+    },
+    {
+      "slot": 18,
+      "symbol": "_ZN11dScMgCoin_c13OnYoshiTryEatEi",
+      "address": "0x020de5b0",
+      "size": "0x8c"
+    }
   ],
   "override_evidence": "A word-for-word comparison against the raw 36-slot ov004 dScMgBase_c address point at 0x020bc0c0 differs at exactly slots 0, 6, 9, 16, 17 and 18. All other 30 targets are identical to the direct base table.",
   "destructors": {
@@ -159,62 +407,286 @@
       "basis": "The factory begins exactly at the end of the contiguous 62-function class run, constructs this class, stores this class's vtable, and is the g_profile_MG_COIN factory. Those facts make the combined 63-function range the promotion candidate, but adjacency does not by itself prove the original source-file boundary."
     },
     "non_vtable_functions": [
-      { "symbol": "func_ov006_020dbe9c", "address": "0x020dbe9c", "size": "0xe0" },
-      { "symbol": "func_ov006_020dbf7c", "address": "0x020dbf7c", "size": "0x1d8" },
-      { "symbol": "func_ov006_020dc154", "address": "0x020dc154", "size": "0x70" },
-      { "symbol": "func_ov006_020dc1c4", "address": "0x020dc1c4", "size": "0xa8" },
-      { "symbol": "func_ov006_020dc26c", "address": "0x020dc26c", "size": "0x28" },
-      { "symbol": "func_ov006_020dc294", "address": "0x020dc294", "size": "0x4" },
-      { "symbol": "func_ov006_020dc298", "address": "0x020dc298", "size": "0x60" },
-      { "symbol": "func_ov006_020dc2f8", "address": "0x020dc2f8", "size": "0x3c" },
-      { "symbol": "func_ov006_020dc334", "address": "0x020dc334", "size": "0x14" },
-      { "symbol": "func_ov006_020dc348", "address": "0x020dc348", "size": "0x28" },
-      { "symbol": "func_ov006_020dc370", "address": "0x020dc370", "size": "0x4c" },
-      { "symbol": "func_ov006_020dc3bc", "address": "0x020dc3bc", "size": "0x58" },
-      { "symbol": "func_ov006_020dc414", "address": "0x020dc414", "size": "0x9c" },
-      { "symbol": "func_ov006_020dc4b0", "address": "0x020dc4b0", "size": "0x18" },
-      { "symbol": "func_ov006_020dc4c8", "address": "0x020dc4c8", "size": "0xfc" },
-      { "symbol": "func_ov006_020dc5c4", "address": "0x020dc5c4", "size": "0x10c" },
-      { "symbol": "func_ov006_020dc6d0", "address": "0x020dc6d0", "size": "0x84" },
-      { "symbol": "func_ov006_020dc754", "address": "0x020dc754", "size": "0x60" },
-      { "symbol": "func_ov006_020dc7b4", "address": "0x020dc7b4", "size": "0x48" },
-      { "symbol": "func_ov006_020dc7fc", "address": "0x020dc7fc", "size": "0x18" },
-      { "symbol": "func_ov006_020dc814", "address": "0x020dc814", "size": "0x5c" },
-      { "symbol": "func_ov006_020dc870", "address": "0x020dc870", "size": "0x90" },
-      { "symbol": "func_ov006_020dc900", "address": "0x020dc900", "size": "0x60" },
-      { "symbol": "func_ov006_020dc960", "address": "0x020dc960", "size": "0x3c" },
-      { "symbol": "func_ov006_020dc99c", "address": "0x020dc99c", "size": "0x68" },
-      { "symbol": "func_ov006_020dca04", "address": "0x020dca04", "size": "0x118" },
-      { "symbol": "func_ov006_020dcb1c", "address": "0x020dcb1c", "size": "0x12c" },
-      { "symbol": "func_ov006_020dcc48", "address": "0x020dcc48", "size": "0x70" },
-      { "symbol": "func_ov006_020dccb8", "address": "0x020dccb8", "size": "0xbc" },
-      { "symbol": "func_ov006_020dcd74", "address": "0x020dcd74", "size": "0xc8" },
-      { "symbol": "func_ov006_020dce3c", "address": "0x020dce3c", "size": "0x6c" },
-      { "symbol": "func_ov006_020dcea8", "address": "0x020dcea8", "size": "0x154" },
-      { "symbol": "func_ov006_020dcffc", "address": "0x020dcffc", "size": "0x4" },
-      { "symbol": "func_ov006_020dd000", "address": "0x020dd000", "size": "0xe0" },
-      { "symbol": "func_ov006_020dd0e0", "address": "0x020dd0e0", "size": "0x1ec" },
-      { "symbol": "func_ov006_020dd2cc", "address": "0x020dd2cc", "size": "0x68" },
-      { "symbol": "func_ov006_020dd334", "address": "0x020dd334", "size": "0x17c" },
-      { "symbol": "func_ov006_020dd4b0", "address": "0x020dd4b0", "size": "0xe4" },
-      { "symbol": "func_ov006_020dd594", "address": "0x020dd594", "size": "0xc4" },
-      { "symbol": "func_ov006_020dd658", "address": "0x020dd658", "size": "0x164" },
-      { "symbol": "func_ov006_020dd7bc", "address": "0x020dd7bc", "size": "0x4" },
-      { "symbol": "func_ov006_020dd7c0", "address": "0x020dd7c0", "size": "0xc0" },
-      { "symbol": "func_ov006_020dd880", "address": "0x020dd880", "size": "0x214" },
-      { "symbol": "func_ov006_020dda94", "address": "0x020dda94", "size": "0x20c" },
-      { "symbol": "func_ov006_020ddca0", "address": "0x020ddca0", "size": "0x58" },
-      { "symbol": "func_ov006_020ddcf8", "address": "0x020ddcf8", "size": "0x74" },
-      { "symbol": "func_ov006_020ddd6c", "address": "0x020ddd6c", "size": "0xbc" },
-      { "symbol": "func_ov006_020dde28", "address": "0x020dde28", "size": "0x88" },
-      { "symbol": "func_ov006_020ddeb0", "address": "0x020ddeb0", "size": "0xec" },
-      { "symbol": "func_ov006_020ddf9c", "address": "0x020ddf9c", "size": "0x144" },
-      { "symbol": "func_ov006_020de0e0", "address": "0x020de0e0", "size": "0xf4" },
-      { "symbol": "func_ov006_020de1d4", "address": "0x020de1d4", "size": "0x98" },
-      { "symbol": "func_ov006_020de26c", "address": "0x020de26c", "size": "0x1d4" },
-      { "symbol": "func_ov006_020de440", "address": "0x020de440", "size": "0x144" },
-      { "symbol": "func_ov006_020de584", "address": "0x020de584", "size": "0x28" },
-      { "symbol": "func_ov006_020de5ac", "address": "0x020de5ac", "size": "0x4" }
+      {
+        "symbol": "func_ov006_020dbe9c",
+        "address": "0x020dbe9c",
+        "size": "0xe0"
+      },
+      {
+        "symbol": "func_ov006_020dbf7c",
+        "address": "0x020dbf7c",
+        "size": "0x1d8"
+      },
+      {
+        "symbol": "func_ov006_020dc154",
+        "address": "0x020dc154",
+        "size": "0x70"
+      },
+      {
+        "symbol": "func_ov006_020dc1c4",
+        "address": "0x020dc1c4",
+        "size": "0xa8"
+      },
+      {
+        "symbol": "func_ov006_020dc26c",
+        "address": "0x020dc26c",
+        "size": "0x28"
+      },
+      {
+        "symbol": "func_ov006_020dc294",
+        "address": "0x020dc294",
+        "size": "0x4"
+      },
+      {
+        "symbol": "func_ov006_020dc298",
+        "address": "0x020dc298",
+        "size": "0x60"
+      },
+      {
+        "symbol": "func_ov006_020dc2f8",
+        "address": "0x020dc2f8",
+        "size": "0x3c"
+      },
+      {
+        "symbol": "func_ov006_020dc334",
+        "address": "0x020dc334",
+        "size": "0x14"
+      },
+      {
+        "symbol": "func_ov006_020dc348",
+        "address": "0x020dc348",
+        "size": "0x28"
+      },
+      {
+        "symbol": "func_ov006_020dc370",
+        "address": "0x020dc370",
+        "size": "0x4c"
+      },
+      {
+        "symbol": "func_ov006_020dc3bc",
+        "address": "0x020dc3bc",
+        "size": "0x58"
+      },
+      {
+        "symbol": "func_ov006_020dc414",
+        "address": "0x020dc414",
+        "size": "0x9c"
+      },
+      {
+        "symbol": "func_ov006_020dc4b0",
+        "address": "0x020dc4b0",
+        "size": "0x18"
+      },
+      {
+        "symbol": "func_ov006_020dc4c8",
+        "address": "0x020dc4c8",
+        "size": "0xfc"
+      },
+      {
+        "symbol": "func_ov006_020dc5c4",
+        "address": "0x020dc5c4",
+        "size": "0x10c"
+      },
+      {
+        "symbol": "func_ov006_020dc6d0",
+        "address": "0x020dc6d0",
+        "size": "0x84"
+      },
+      {
+        "symbol": "func_ov006_020dc754",
+        "address": "0x020dc754",
+        "size": "0x60"
+      },
+      {
+        "symbol": "func_ov006_020dc7b4",
+        "address": "0x020dc7b4",
+        "size": "0x48"
+      },
+      {
+        "symbol": "func_ov006_020dc7fc",
+        "address": "0x020dc7fc",
+        "size": "0x18"
+      },
+      {
+        "symbol": "func_ov006_020dc814",
+        "address": "0x020dc814",
+        "size": "0x5c"
+      },
+      {
+        "symbol": "func_ov006_020dc870",
+        "address": "0x020dc870",
+        "size": "0x90"
+      },
+      {
+        "symbol": "func_ov006_020dc900",
+        "address": "0x020dc900",
+        "size": "0x60"
+      },
+      {
+        "symbol": "func_ov006_020dc960",
+        "address": "0x020dc960",
+        "size": "0x3c"
+      },
+      {
+        "symbol": "func_ov006_020dc99c",
+        "address": "0x020dc99c",
+        "size": "0x68"
+      },
+      {
+        "symbol": "func_ov006_020dca04",
+        "address": "0x020dca04",
+        "size": "0x118"
+      },
+      {
+        "symbol": "func_ov006_020dcb1c",
+        "address": "0x020dcb1c",
+        "size": "0x12c"
+      },
+      {
+        "symbol": "func_ov006_020dcc48",
+        "address": "0x020dcc48",
+        "size": "0x70"
+      },
+      {
+        "symbol": "func_ov006_020dccb8",
+        "address": "0x020dccb8",
+        "size": "0xbc"
+      },
+      {
+        "symbol": "func_ov006_020dcd74",
+        "address": "0x020dcd74",
+        "size": "0xc8"
+      },
+      {
+        "symbol": "func_ov006_020dce3c",
+        "address": "0x020dce3c",
+        "size": "0x6c"
+      },
+      {
+        "symbol": "func_ov006_020dcea8",
+        "address": "0x020dcea8",
+        "size": "0x154"
+      },
+      {
+        "symbol": "func_ov006_020dcffc",
+        "address": "0x020dcffc",
+        "size": "0x4"
+      },
+      {
+        "symbol": "func_ov006_020dd000",
+        "address": "0x020dd000",
+        "size": "0xe0"
+      },
+      {
+        "symbol": "func_ov006_020dd0e0",
+        "address": "0x020dd0e0",
+        "size": "0x1ec"
+      },
+      {
+        "symbol": "func_ov006_020dd2cc",
+        "address": "0x020dd2cc",
+        "size": "0x68"
+      },
+      {
+        "symbol": "func_ov006_020dd334",
+        "address": "0x020dd334",
+        "size": "0x17c"
+      },
+      {
+        "symbol": "func_ov006_020dd4b0",
+        "address": "0x020dd4b0",
+        "size": "0xe4"
+      },
+      {
+        "symbol": "func_ov006_020dd594",
+        "address": "0x020dd594",
+        "size": "0xc4"
+      },
+      {
+        "symbol": "func_ov006_020dd658",
+        "address": "0x020dd658",
+        "size": "0x164"
+      },
+      {
+        "symbol": "func_ov006_020dd7bc",
+        "address": "0x020dd7bc",
+        "size": "0x4"
+      },
+      {
+        "symbol": "func_ov006_020dd7c0",
+        "address": "0x020dd7c0",
+        "size": "0xc0"
+      },
+      {
+        "symbol": "func_ov006_020dd880",
+        "address": "0x020dd880",
+        "size": "0x214"
+      },
+      {
+        "symbol": "func_ov006_020dda94",
+        "address": "0x020dda94",
+        "size": "0x20c"
+      },
+      {
+        "symbol": "func_ov006_020ddca0",
+        "address": "0x020ddca0",
+        "size": "0x58"
+      },
+      {
+        "symbol": "func_ov006_020ddcf8",
+        "address": "0x020ddcf8",
+        "size": "0x74"
+      },
+      {
+        "symbol": "func_ov006_020ddd6c",
+        "address": "0x020ddd6c",
+        "size": "0xbc"
+      },
+      {
+        "symbol": "func_ov006_020dde28",
+        "address": "0x020dde28",
+        "size": "0x88"
+      },
+      {
+        "symbol": "func_ov006_020ddeb0",
+        "address": "0x020ddeb0",
+        "size": "0xec"
+      },
+      {
+        "symbol": "func_ov006_020ddf9c",
+        "address": "0x020ddf9c",
+        "size": "0x144"
+      },
+      {
+        "symbol": "func_ov006_020de0e0",
+        "address": "0x020de0e0",
+        "size": "0xf4"
+      },
+      {
+        "symbol": "func_ov006_020de1d4",
+        "address": "0x020de1d4",
+        "size": "0x98"
+      },
+      {
+        "symbol": "func_ov006_020de26c",
+        "address": "0x020de26c",
+        "size": "0x1d4"
+      },
+      {
+        "symbol": "func_ov006_020de440",
+        "address": "0x020de440",
+        "size": "0x144"
+      },
+      {
+        "symbol": "func_ov006_020de584",
+        "address": "0x020de584",
+        "size": "0x28"
+      },
+      {
+        "symbol": "func_ov006_020de5ac",
+        "address": "0x020de5ac",
+        "size": "0x4"
+      }
     ]
   },
   "reference_evidence": {
@@ -291,30 +763,126 @@
         }
       ],
       "references": [
-        { "record": "0x0213be44", "target": "0x020dc294", "symbol": "func_ov006_020dc294" },
-        { "record": "0x0213be4c", "target": "0x020dc1c4", "symbol": "func_ov006_020dc1c4" },
-        { "record": "0x0213be54", "target": "0x020de1d4", "symbol": "func_ov006_020de1d4" },
-        { "record": "0x0213be5c", "target": "0x020de0e0", "symbol": "func_ov006_020de0e0" },
-        { "record": "0x0213be64", "target": "0x020dd880", "symbol": "func_ov006_020dd880" },
-        { "record": "0x0213be6c", "target": "0x020de584", "symbol": "func_ov006_020de584" },
-        { "record": "0x0213be74", "target": "0x020dda94", "symbol": "func_ov006_020dda94" },
-        { "record": "0x0213be7c", "target": "0x020de440", "symbol": "func_ov006_020de440" },
-        { "record": "0x0213be84", "target": "0x020dd7c0", "symbol": "func_ov006_020dd7c0" },
-        { "record": "0x0213be8c", "target": "0x020dbf7c", "symbol": "func_ov006_020dbf7c" },
-        { "record": "0x0213be94", "target": "0x020dcffc", "symbol": "func_ov006_020dcffc" },
-        { "record": "0x0213be9c", "target": "0x020dd658", "symbol": "func_ov006_020dd658" },
-        { "record": "0x0213bea4", "target": "0x020de26c", "symbol": "func_ov006_020de26c" },
-        { "record": "0x0213beac", "target": "0x020dc4b0", "symbol": "func_ov006_020dc4b0" },
-        { "record": "0x0213beb4", "target": "0x020dd7bc", "symbol": "func_ov006_020dd7bc" },
-        { "record": "0x0213bebc", "target": "0x020dc414", "symbol": "func_ov006_020dc414" },
-        { "record": "0x0213bec4", "target": "0x020dc6d0", "symbol": "func_ov006_020dc6d0" },
-        { "record": "0x0213becc", "target": "0x020dc4c8", "symbol": "func_ov006_020dc4c8" },
-        { "record": "0x0213bed4", "target": "0x020dc5c4", "symbol": "func_ov006_020dc5c4" },
-        { "record": "0x0213bee4", "target": "0x020de5ac", "symbol": "func_ov006_020de5ac" },
-        { "record": "0x0213beec", "target": "0x020ddca0", "symbol": "func_ov006_020ddca0" },
-        { "record": "0x0213bef4", "target": "0x020dc154", "symbol": "func_ov006_020dc154" },
-        { "record": "0x0213befc", "target": "0x020dd0e0", "symbol": "func_ov006_020dd0e0" },
-        { "record": "0x0213bf04", "target": "0x020dd000", "symbol": "func_ov006_020dd000" }
+        {
+          "record": "0x0213be44",
+          "target": "0x020dc294",
+          "symbol": "func_ov006_020dc294"
+        },
+        {
+          "record": "0x0213be4c",
+          "target": "0x020dc1c4",
+          "symbol": "func_ov006_020dc1c4"
+        },
+        {
+          "record": "0x0213be54",
+          "target": "0x020de1d4",
+          "symbol": "func_ov006_020de1d4"
+        },
+        {
+          "record": "0x0213be5c",
+          "target": "0x020de0e0",
+          "symbol": "func_ov006_020de0e0"
+        },
+        {
+          "record": "0x0213be64",
+          "target": "0x020dd880",
+          "symbol": "func_ov006_020dd880"
+        },
+        {
+          "record": "0x0213be6c",
+          "target": "0x020de584",
+          "symbol": "func_ov006_020de584"
+        },
+        {
+          "record": "0x0213be74",
+          "target": "0x020dda94",
+          "symbol": "func_ov006_020dda94"
+        },
+        {
+          "record": "0x0213be7c",
+          "target": "0x020de440",
+          "symbol": "func_ov006_020de440"
+        },
+        {
+          "record": "0x0213be84",
+          "target": "0x020dd7c0",
+          "symbol": "func_ov006_020dd7c0"
+        },
+        {
+          "record": "0x0213be8c",
+          "target": "0x020dbf7c",
+          "symbol": "func_ov006_020dbf7c"
+        },
+        {
+          "record": "0x0213be94",
+          "target": "0x020dcffc",
+          "symbol": "func_ov006_020dcffc"
+        },
+        {
+          "record": "0x0213be9c",
+          "target": "0x020dd658",
+          "symbol": "func_ov006_020dd658"
+        },
+        {
+          "record": "0x0213bea4",
+          "target": "0x020de26c",
+          "symbol": "func_ov006_020de26c"
+        },
+        {
+          "record": "0x0213beac",
+          "target": "0x020dc4b0",
+          "symbol": "func_ov006_020dc4b0"
+        },
+        {
+          "record": "0x0213beb4",
+          "target": "0x020dd7bc",
+          "symbol": "func_ov006_020dd7bc"
+        },
+        {
+          "record": "0x0213bebc",
+          "target": "0x020dc414",
+          "symbol": "func_ov006_020dc414"
+        },
+        {
+          "record": "0x0213bec4",
+          "target": "0x020dc6d0",
+          "symbol": "func_ov006_020dc6d0"
+        },
+        {
+          "record": "0x0213becc",
+          "target": "0x020dc4c8",
+          "symbol": "func_ov006_020dc4c8"
+        },
+        {
+          "record": "0x0213bed4",
+          "target": "0x020dc5c4",
+          "symbol": "func_ov006_020dc5c4"
+        },
+        {
+          "record": "0x0213bee4",
+          "target": "0x020de5ac",
+          "symbol": "func_ov006_020de5ac"
+        },
+        {
+          "record": "0x0213beec",
+          "target": "0x020ddca0",
+          "symbol": "func_ov006_020ddca0"
+        },
+        {
+          "record": "0x0213bef4",
+          "target": "0x020dc154",
+          "symbol": "func_ov006_020dc154"
+        },
+        {
+          "record": "0x0213befc",
+          "target": "0x020dd0e0",
+          "symbol": "func_ov006_020dd0e0"
+        },
+        {
+          "record": "0x0213bf04",
+          "target": "0x020dd000",
+          "symbol": "func_ov006_020dd000"
+        }
       ]
     }
   },
@@ -328,607 +896,819 @@
   "observed_tail_storage_accesses": {
     "scope": "Direct effective this-relative accesses in the recovered high tail of the object, reported only as storage width. Entries without index_stride are fixed offsets. The three indexed entries explicitly retain their ROM arithmetic instead of presenting the base as an unconditional scalar member. Semantic grouping, names, signedness and types are not claimed.",
     "entries": [
-      { "offset": "0x5194", "width": 4, "representative_instruction": "0x020dc3c4 add r0,r0,#0x5000; 0x020dc3ec ldr r1,[r0,#0x194]" },
-      { "offset": "0x5198", "width": 4, "representative_instruction": "0x020dc7b4 add r1,r0,#0x5000; 0x020dc7f4 str r0,[r1,#0x198]" },
-      { "offset": "0x519c", "width": 2, "representative_instruction": "0x020dc398 add r0,r0,#0x5100; 0x020dc3a0 strh r2,[r0,#0x9c]" },
-      { "offset": "0x519e", "width": 2, "representative_instruction": "0x020dc35c add r0,r0,#0x5100; 0x020dc360 strh r2,[r0,#0x9e]" },
-      { "offset": "0x51a0", "width": 1, "representative_instruction": "0x020dc75c add r1,r0,#0x5000; 0x020dc760 ldrb r2,[r1,#0x1a0]" },
-      { "offset": "0x51a1", "width": 1, "representative_instruction": "0x020dc348 add r1,r0,#0x5000; 0x020dc350 strb r2,[r1,#0x1a1]" },
-      { "offset": "0x51a2", "width": 1, "representative_instruction": "0x020dc3c4 add r0,r0,#0x5000; 0x020dc3c8 ldrb r1,[r0,#0x1a2]" },
-      { "offset": "0x51a3", "width": 1, "representative_instruction": "0x020dc3c4 add r0,r0,#0x5000; 0x020dc3e4 ldrb lr,[r0,#0x1a3]" },
-      { "offset": "0x51a4", "width": 1, "representative_instruction": "0x020dc348 add r1,r0,#0x5000; 0x020dc358 strb r2,[r1,#0x1a4]" },
-      { "offset": "0x51a8", "width": 4, "representative_instruction": "0x020dbea4 add r3,r0,#0x5000; 0x020dbec4 ldr r1,[r3,#0x1a8]" },
-      { "offset": "0x51ac", "width": 4, "representative_instruction": "0x020dbea4 add r3,r0,#0x5000; 0x020dbec8 ldr r2,[r3,#0x1ac]" },
-      { "offset": "0x51b0", "width": 4, "representative_instruction": "0x020dc26c add r1,r0,#0x5000; 0x020dc284 str r2,[r1,#0x1b0]" },
-      { "offset": "0x51b4", "width": 4, "representative_instruction": "0x020dc26c add r1,r0,#0x5000; 0x020dc28c str r0,[r1,#0x1b4]" },
-      { "offset": "0x51b8", "width": 2, "representative_instruction": "0x020dbebc add r0,r0,#0x5100; 0x020dbec0 ldrh r0,[r0,#0xb8]" },
-      { "offset": "0x51ba", "index_stride": "0x1c", "effective_offset": "0x51ba + 0x1c*i", "width": 2, "representative_instruction": "0x020dc1c8 mov r2,#0x1c; 0x020dc1cc mul r2,r1,r2; 0x020dc230 add r2,r0,r2; 0x020dc248 add r1,r2,#0x5100; 0x020dc250 strh r2,[r1,#0xba]" },
-      { "offset": "0x51bc", "width": 1, "representative_instruction": "0x020dc334 add r0,r0,#0x5000; 0x020dc33c strb r1,[r0,#0x1bc]" },
-      { "offset": "0x51bd", "width": 1, "representative_instruction": "0x020dbea4 add r3,r0,#0x5000; 0x020dbea8 ldrb r1,[r3,#0x1bd]" },
-      { "offset": "0x51be", "width": 1, "representative_instruction": "0x020dc26c add r1,r0,#0x5000; 0x020dc27c strb r2,[r1,#0x1be]" },
-      { "offset": "0x51bf", "width": 1, "representative_instruction": "0x020dc26c add r1,r0,#0x5000; 0x020dc274 strb r2,[r1,#0x1bf]" },
-      { "offset": "0x51c0", "index_stride": "0x1c", "effective_offset": "0x51c0 + 0x1c*i", "width": 1, "representative_instruction": "0x020dc15c mov r2,#0x1c; 0x020dc160 mul r3,r1,r2; 0x020dc18c add r1,r0,r3; 0x020dc190 add r1,r1,#0x5000; 0x020dc1a8 strb r2,[r1,#0x1c0]" },
-      { "offset": "0x51c1", "index_stride": "0x1c", "effective_offset": "0x51c1 + 0x1c*i", "width": 1, "representative_instruction": "0x020dc15c mov r2,#0x1c; 0x020dc160 mul r3,r1,r2; 0x020dc18c add r1,r0,r3; 0x020dc190 add r1,r1,#0x5000; 0x020dc1ac strb r3,[r1,#0x1c1]" },
-      { "offset": "0x51c4", "width": 4, "representative_instruction": "factory 0x020de958/0x020de960 forms this+0x51c4; 0x020de96c calls main 0x0203b9b4, whose raw body is str r1,[r0]; bx lr" },
-      { "offset": "0x51c8", "width": 4, "representative_instruction": "0x020de620 add r1,r4,#0x5000; 0x020de62c str r0,[r1,#0x1c8]; 0x020de6a4 add r0,r4,#0x5000; 0x020de6a8 ldr r0,[r0,#0x1c8]" },
-      { "offset": "0x51cc", "width": 4, "representative_instruction": "0x020dc81c add r1,r0,#0x5000; 0x020dc834 ldr r1,[r1,#0x1cc]" },
-      { "offset": "0x51d0", "width": 4, "representative_instruction": "0x020de0a0 add r1,r4,#0x5000; 0x020de0b4 str r2,[r1,#0x1d0]" },
-      { "offset": "0x51d4", "width": 4, "representative_instruction": "0x020de620 add r1,r4,#0x5000; 0x020de624 str r0,[r1,#0x1d4]; 0x020dd280 add r0,r6,#0x5000; 0x020dd284 ldr r1,[r0,#0x1d4]" },
-      { "offset": "0x51da", "width": 1, "representative_instruction": "0x020de5b8 add r0,r4,#0x5000; 0x020de5c8 strbeq r1,[r0,#0x1da]; 0x020de8e8 add r0,r6,#0x5000; 0x020de8ec strb r1,[r0,#0x1da]" },
-      { "offset": "0x51db", "width": 1, "representative_instruction": "0x020de5b8 add r0,r4,#0x5000; 0x020de5bc ldrb r1,[r0,#0x1db]; 0x020dd280 add r0,r6,#0x5000; 0x020dd294 strbgt r1,[r0,#0x1db]" },
-      { "offset": "0x51dc", "width": 1, "representative_instruction": "0x020de8e8 add r0,r6,#0x5000; 0x020de8f4 strb r1,[r0,#0x1dc]" },
-      { "offset": "0x51dd", "width": 1, "representative_instruction": "0x020de0a0 add r1,r4,#0x5000; 0x020de0b0 strb r2,[r1,#0x1dd]" },
-      { "offset": "0x51de", "width": 1, "representative_instruction": "0x020dc348 add r1,r0,#0x5000; 0x020dc368 strb r0,[r1,#0x1de]; 0x020dc370 add r1,r0,#0x5000; 0x020dc374 ldrb r2,[r1,#0x1de]" },
-      { "offset": "0x51df", "width": 1, "representative_instruction": "0x020de0cc add r0,r4,#0x5000; 0x020de0d4 strb r1,[r0,#0x1df]" }
+      {
+        "offset": "0x5194",
+        "width": 4,
+        "representative_instruction": "0x020dc3c4 add r0,r0,#0x5000; 0x020dc3ec ldr r1,[r0,#0x194]"
+      },
+      {
+        "offset": "0x5198",
+        "width": 4,
+        "representative_instruction": "0x020dc7b4 add r1,r0,#0x5000; 0x020dc7f4 str r0,[r1,#0x198]"
+      },
+      {
+        "offset": "0x519c",
+        "width": 2,
+        "representative_instruction": "0x020dc398 add r0,r0,#0x5100; 0x020dc3a0 strh r2,[r0,#0x9c]"
+      },
+      {
+        "offset": "0x519e",
+        "width": 2,
+        "representative_instruction": "0x020dc35c add r0,r0,#0x5100; 0x020dc360 strh r2,[r0,#0x9e]"
+      },
+      {
+        "offset": "0x51a0",
+        "width": 1,
+        "representative_instruction": "0x020dc75c add r1,r0,#0x5000; 0x020dc760 ldrb r2,[r1,#0x1a0]"
+      },
+      {
+        "offset": "0x51a1",
+        "width": 1,
+        "representative_instruction": "0x020dc348 add r1,r0,#0x5000; 0x020dc350 strb r2,[r1,#0x1a1]"
+      },
+      {
+        "offset": "0x51a2",
+        "width": 1,
+        "representative_instruction": "0x020dc3c4 add r0,r0,#0x5000; 0x020dc3c8 ldrb r1,[r0,#0x1a2]"
+      },
+      {
+        "offset": "0x51a3",
+        "width": 1,
+        "representative_instruction": "0x020dc3c4 add r0,r0,#0x5000; 0x020dc3e4 ldrb lr,[r0,#0x1a3]"
+      },
+      {
+        "offset": "0x51a4",
+        "width": 1,
+        "representative_instruction": "0x020dc348 add r1,r0,#0x5000; 0x020dc358 strb r2,[r1,#0x1a4]"
+      },
+      {
+        "offset": "0x51a8",
+        "width": 4,
+        "representative_instruction": "0x020dbea4 add r3,r0,#0x5000; 0x020dbec4 ldr r1,[r3,#0x1a8]"
+      },
+      {
+        "offset": "0x51ac",
+        "width": 4,
+        "representative_instruction": "0x020dbea4 add r3,r0,#0x5000; 0x020dbec8 ldr r2,[r3,#0x1ac]"
+      },
+      {
+        "offset": "0x51b0",
+        "width": 4,
+        "representative_instruction": "0x020dc26c add r1,r0,#0x5000; 0x020dc284 str r2,[r1,#0x1b0]"
+      },
+      {
+        "offset": "0x51b4",
+        "width": 4,
+        "representative_instruction": "0x020dc26c add r1,r0,#0x5000; 0x020dc28c str r0,[r1,#0x1b4]"
+      },
+      {
+        "offset": "0x51b8",
+        "width": 2,
+        "representative_instruction": "0x020dbebc add r0,r0,#0x5100; 0x020dbec0 ldrh r0,[r0,#0xb8]"
+      },
+      {
+        "offset": "0x51ba",
+        "index_stride": "0x1c",
+        "effective_offset": "0x51ba + 0x1c*i",
+        "width": 2,
+        "representative_instruction": "0x020dc1c8 mov r2,#0x1c; 0x020dc1cc mul r2,r1,r2; 0x020dc230 add r2,r0,r2; 0x020dc248 add r1,r2,#0x5100; 0x020dc250 strh r2,[r1,#0xba]"
+      },
+      {
+        "offset": "0x51bc",
+        "width": 1,
+        "representative_instruction": "0x020dc334 add r0,r0,#0x5000; 0x020dc33c strb r1,[r0,#0x1bc]"
+      },
+      {
+        "offset": "0x51bd",
+        "width": 1,
+        "representative_instruction": "0x020dbea4 add r3,r0,#0x5000; 0x020dbea8 ldrb r1,[r3,#0x1bd]"
+      },
+      {
+        "offset": "0x51be",
+        "width": 1,
+        "representative_instruction": "0x020dc26c add r1,r0,#0x5000; 0x020dc27c strb r2,[r1,#0x1be]"
+      },
+      {
+        "offset": "0x51bf",
+        "width": 1,
+        "representative_instruction": "0x020dc26c add r1,r0,#0x5000; 0x020dc274 strb r2,[r1,#0x1bf]"
+      },
+      {
+        "offset": "0x51c0",
+        "index_stride": "0x1c",
+        "effective_offset": "0x51c0 + 0x1c*i",
+        "width": 1,
+        "representative_instruction": "0x020dc15c mov r2,#0x1c; 0x020dc160 mul r3,r1,r2; 0x020dc18c add r1,r0,r3; 0x020dc190 add r1,r1,#0x5000; 0x020dc1a8 strb r2,[r1,#0x1c0]"
+      },
+      {
+        "offset": "0x51c1",
+        "index_stride": "0x1c",
+        "effective_offset": "0x51c1 + 0x1c*i",
+        "width": 1,
+        "representative_instruction": "0x020dc15c mov r2,#0x1c; 0x020dc160 mul r3,r1,r2; 0x020dc18c add r1,r0,r3; 0x020dc190 add r1,r1,#0x5000; 0x020dc1ac strb r3,[r1,#0x1c1]"
+      },
+      {
+        "offset": "0x51c4",
+        "width": 4,
+        "representative_instruction": "factory 0x020de958/0x020de960 forms this+0x51c4; 0x020de96c calls main 0x0203b9b4, whose raw body is str r1,[r0]; bx lr"
+      },
+      {
+        "offset": "0x51c8",
+        "width": 4,
+        "representative_instruction": "0x020de620 add r1,r4,#0x5000; 0x020de62c str r0,[r1,#0x1c8]; 0x020de6a4 add r0,r4,#0x5000; 0x020de6a8 ldr r0,[r0,#0x1c8]"
+      },
+      {
+        "offset": "0x51cc",
+        "width": 4,
+        "representative_instruction": "0x020dc81c add r1,r0,#0x5000; 0x020dc834 ldr r1,[r1,#0x1cc]"
+      },
+      {
+        "offset": "0x51d0",
+        "width": 4,
+        "representative_instruction": "0x020de0a0 add r1,r4,#0x5000; 0x020de0b4 str r2,[r1,#0x1d0]"
+      },
+      {
+        "offset": "0x51d4",
+        "width": 4,
+        "representative_instruction": "0x020de620 add r1,r4,#0x5000; 0x020de624 str r0,[r1,#0x1d4]; 0x020dd280 add r0,r6,#0x5000; 0x020dd284 ldr r1,[r0,#0x1d4]"
+      },
+      {
+        "offset": "0x51da",
+        "width": 1,
+        "representative_instruction": "0x020de5b8 add r0,r4,#0x5000; 0x020de5c8 strbeq r1,[r0,#0x1da]; 0x020de8e8 add r0,r6,#0x5000; 0x020de8ec strb r1,[r0,#0x1da]"
+      },
+      {
+        "offset": "0x51db",
+        "width": 1,
+        "representative_instruction": "0x020de5b8 add r0,r4,#0x5000; 0x020de5bc ldrb r1,[r0,#0x1db]; 0x020dd280 add r0,r6,#0x5000; 0x020dd294 strbgt r1,[r0,#0x1db]"
+      },
+      {
+        "offset": "0x51dc",
+        "width": 1,
+        "representative_instruction": "0x020de8e8 add r0,r6,#0x5000; 0x020de8f4 strb r1,[r0,#0x1dc]"
+      },
+      {
+        "offset": "0x51dd",
+        "width": 1,
+        "representative_instruction": "0x020de0a0 add r1,r4,#0x5000; 0x020de0b0 strb r2,[r1,#0x1dd]"
+      },
+      {
+        "offset": "0x51de",
+        "width": 1,
+        "representative_instruction": "0x020dc348 add r1,r0,#0x5000; 0x020dc368 strb r0,[r1,#0x1de]; 0x020dc370 add r1,r0,#0x5000; 0x020dc374 ldrb r2,[r1,#0x1de]"
+      },
+      {
+        "offset": "0x51df",
+        "width": 1,
+        "representative_instruction": "0x020de0cc add r0,r4,#0x5000; 0x020de0d4 strb r1,[r0,#0x1df]"
+      }
     ]
   },
-    "promotion_inventory": {
-      "queue_row": "dScMgCoin_c | 61 | 1576 lines | ov006 | has_header yes | already_promoted no | blockers no-legacy-source:2;pragma:2;compiler-only:>=11 | sibling_oracle dScMgSingle3DBase_c | route text-only",
-      "what_the_61_counts": "The queue shard_count of 61 is the number of .text delink SECTIONS inside 0x020dbe40..0x020de988, not the number of functions. The run holds 63 functions; two of them are not delinked at all (see delink_gaps), leaving 61 sections. 60 of those 61 are one-function shard files in src/; the 61st is the factory, which already lives in src/d_s_mg_coin.cpp.",
-      "functions_in_run": 63,
-      "delink_sections_in_run": 61,
-      "one_function_shards": 60,
-      "language_mix": {
-        "c": 45,
-        "cpp": 16,
-        "note": "45 of the 61 sections are still .c. The C++ flip and the merge are one edit; every .cpp in the run already carries //cpp as its first bytes."
-      },
-      "matched_state": "No section in the run contains the token NONMATCHING, and the queue row carries no unmatched: blocker -- unlike its two larger ov006 neighbours (dScMgTeresa_c unmatched:1, dScMgBomroom_c unmatched:7). All 61 are matched source today.",
-      "delink_gaps": {
-        "count": 2,
-        "meaning": "These are the queue no-legacy-source:2. Both are class methods -- each takes this in r0 and reads fields at this+0x5000 -- but neither has a delink section nor a src file, so they stay inside ov006 undecompiled .text. A promoted TU cannot contain them, and the address range 0x020dbe40..0x020de988 therefore cannot be delinked contiguously. This is why promotion_route is text-only.",
-        "entries": [
-          {
-            "symbol": "func_ov006_020dbe9c",
-            "address": "0x020dbe9c",
-            "size": "0xe0",
-            "referenced_by": "called from inside the run; src/_ZN11dScMgCoin_c6RenderEv.cpp already names it as an extern",
-            "shape": "reads this+0x51bd as a gate, this+0x51b8 (halfword), this+0x51a8/0x51ac, this+0x51be; builds a 0x18-byte stack record of 20.12 fixed-point values and tail-calls ov004 0x020b023c"
-          },
-          {
-            "symbol": "func_ov006_020dd0e0",
-            "address": "0x020dd0e0",
-            "size": "0x1ec",
-            "referenced_by": "callback-table record 0x0213befc; no direct call from inside the run",
-            "shape": "early-outs unless this+0x51c8 == 2; indexes a 0x18-stride array off this, range-checks two 20.12 deltas against +/-0x10, writes this+0x51c8 = 3 and this+0x51cc = 0x40, calls main 0x020127a4 / 0x02012754, and sets this+0x51db from a compare against this+0x51d4"
-          }
-        ]
-      },
-      "pragma_sections": {
-        "count": 2,
-        "hazard": "Both carry #pragma opt_common_subs off and #pragma opt_strength_reduction off. Both switches are FILE-GLOBAL in mwccarm 2004/b56 by default -- a bracketed off/on pair does not bind positionally -- so folding these two into a 61-section TU turns them off for all 61 unless #pragma defer_codegen off is set first, which makes the brackets bind but forces an ascending-source rewrite of the whole TU. Measure both arrangements before accepting a partial.",
-        "entries": [
-          {
-            "symbol": "func_ov006_020dca04",
-            "address": "0x020dca04",
-            "file": "src/func_ov006_020dca04.c",
-            "pragmas": [
-              "#pragma opt_common_subs off",
-              "#pragma opt_strength_reduction off"
-            ]
-          },
-          {
-            "symbol": "func_ov006_020dcb1c",
-            "address": "0x020dcb1c",
-            "file": "src/func_ov006_020dcb1c.c",
-            "pragmas": [
-              "#pragma opt_common_subs off",
-              "#pragma opt_strength_reduction off"
-            ]
-          }
-        ]
-      },
-      "sections": [
+  "promotion_inventory": {
+    "queue_row": "dScMgCoin_c | 61 | 1576 lines | ov006 | has_header yes | already_promoted no | blockers no-legacy-source:2;pragma:2;compiler-only:>=11 | sibling_oracle dScMgSingle3DBase_c | route text-only (read as of origin/main 8bfc6d98b)",
+    "what_the_61_counts": "The queue's shard_count of 61 is a FLOOR, and it counts delink SECTIONS, not functions. The run holds 63 functions; two are undelinked (the no-legacy-source:2 blocker), leaving 61 sections, of which 60 are one-function shard files in src/ and the 61st is the factory, which already lives in src/d_s_mg_coin.cpp.",
+    "functions_in_run": 63,
+    "delink_sections_in_run": 61,
+    "one_function_shards": 60,
+    "language_mix": {
+      "c": 45,
+      "cpp": 16,
+      "note": "45 of the 61 sections are still .c. The C++ flip and the merge are one edit; every .cpp in the run already carries //cpp as its first bytes."
+    },
+    "matched_state": "No section in the run contains the token NONMATCHING, and the queue row carries no unmatched: blocker -- unlike its two larger ov006 neighbours (dScMgTeresa_c unmatched:1, dScMgBomroom_c unmatched:7). All 61 are matched source today.",
+    "delink_gaps": {
+      "count": 2,
+      "meaning": "These are the queue no-legacy-source:2. Both are class methods -- each takes this in r0 and reads fields at this+0x5000 -- but neither has a delink section nor a src file, so they stay inside ov006 undecompiled .text. A promoted TU cannot contain them, and the address range 0x020dbe40..0x020de988 therefore cannot be delinked contiguously. This is why promotion_route is text-only.",
+      "entries": [
         {
-          "address": "0x020dbe40",
-          "size": "0x24",
-          "symbol": "_ZN11dScMgCoin_cD1Ev",
-          "file": "src/_ZN11dScMgCoin_cD1Ev.cpp",
-          "lang": "cpp",
-          "in_converted_baseline": true
-        },
-        {
-          "address": "0x020dbe64",
-          "size": "0x38",
-          "symbol": "_ZN11dScMgCoin_cD0Ev",
-          "file": "src/_ZN11dScMgCoin_cD0Ev.cpp",
-          "lang": "cpp",
-          "in_converted_baseline": true
-        },
-        {
-          "address": "0x020dbf7c",
-          "size": "0x1d8",
-          "symbol": "func_ov006_020dbf7c",
-          "file": "src/func_ov006_020dbf7c.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc154",
-          "size": "0x70",
-          "symbol": "func_ov006_020dc154",
-          "file": "src/func_ov006_020dc154.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc1c4",
-          "size": "0xa8",
-          "symbol": "func_ov006_020dc1c4",
-          "file": "src/func_ov006_020dc1c4.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc26c",
-          "size": "0x28",
-          "symbol": "func_ov006_020dc26c",
-          "file": "src/func_ov006_020dc26c.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc294",
-          "size": "0x4",
-          "symbol": "func_ov006_020dc294",
-          "file": "src/func_ov006_020dc294.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc298",
-          "size": "0x60",
-          "symbol": "func_ov006_020dc298",
-          "file": "src/func_ov006_020dc298.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020dc2f8",
-          "size": "0x3c",
-          "symbol": "func_ov006_020dc2f8",
-          "file": "src/func_ov006_020dc2f8.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc334",
-          "size": "0x14",
-          "symbol": "func_ov006_020dc334",
-          "file": "src/func_ov006_020dc334.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc348",
-          "size": "0x28",
-          "symbol": "func_ov006_020dc348",
-          "file": "src/func_ov006_020dc348.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc370",
-          "size": "0x4c",
-          "symbol": "func_ov006_020dc370",
-          "file": "src/func_ov006_020dc370.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc3bc",
-          "size": "0x58",
-          "symbol": "func_ov006_020dc3bc",
-          "file": "src/func_ov006_020dc3bc.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc414",
-          "size": "0x9c",
-          "symbol": "func_ov006_020dc414",
-          "file": "src/func_ov006_020dc414.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc4b0",
-          "size": "0x18",
-          "symbol": "func_ov006_020dc4b0",
-          "file": "src/func_ov006_020dc4b0.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc4c8",
-          "size": "0xfc",
-          "symbol": "func_ov006_020dc4c8",
-          "file": "src/func_ov006_020dc4c8.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc5c4",
-          "size": "0x10c",
-          "symbol": "func_ov006_020dc5c4",
-          "file": "src/func_ov006_020dc5c4.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc6d0",
-          "size": "0x84",
-          "symbol": "func_ov006_020dc6d0",
-          "file": "src/func_ov006_020dc6d0.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc754",
-          "size": "0x60",
-          "symbol": "func_ov006_020dc754",
-          "file": "src/func_ov006_020dc754.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020dc7b4",
-          "size": "0x48",
-          "symbol": "func_ov006_020dc7b4",
-          "file": "src/func_ov006_020dc7b4.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc7fc",
-          "size": "0x18",
-          "symbol": "func_ov006_020dc7fc",
-          "file": "src/func_ov006_020dc7fc.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc814",
-          "size": "0x5c",
-          "symbol": "func_ov006_020dc814",
-          "file": "src/func_ov006_020dc814.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc870",
-          "size": "0x90",
-          "symbol": "func_ov006_020dc870",
-          "file": "src/func_ov006_020dc870.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc900",
-          "size": "0x60",
-          "symbol": "func_ov006_020dc900",
-          "file": "src/func_ov006_020dc900.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc960",
-          "size": "0x3c",
-          "symbol": "func_ov006_020dc960",
-          "file": "src/func_ov006_020dc960.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dc99c",
-          "size": "0x68",
-          "symbol": "func_ov006_020dc99c",
-          "file": "src/func_ov006_020dc99c.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dca04",
-          "size": "0x118",
-          "symbol": "func_ov006_020dca04",
-          "file": "src/func_ov006_020dca04.c",
-          "lang": "c",
-          "pragmas": [
-            "#pragma opt_common_subs off",
-            "#pragma opt_strength_reduction off"
-          ]
-        },
-        {
-          "address": "0x020dcb1c",
-          "size": "0x12c",
-          "symbol": "func_ov006_020dcb1c",
-          "file": "src/func_ov006_020dcb1c.c",
-          "lang": "c",
-          "pragmas": [
-            "#pragma opt_common_subs off",
-            "#pragma opt_strength_reduction off"
-          ]
-        },
-        {
-          "address": "0x020dcc48",
-          "size": "0x70",
-          "symbol": "func_ov006_020dcc48",
-          "file": "src/func_ov006_020dcc48.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dccb8",
-          "size": "0xbc",
-          "symbol": "func_ov006_020dccb8",
-          "file": "src/func_ov006_020dccb8.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dcd74",
-          "size": "0xc8",
-          "symbol": "func_ov006_020dcd74",
-          "file": "src/func_ov006_020dcd74.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dce3c",
-          "size": "0x6c",
-          "symbol": "func_ov006_020dce3c",
-          "file": "src/func_ov006_020dce3c.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dcea8",
-          "size": "0x154",
-          "symbol": "func_ov006_020dcea8",
-          "file": "src/func_ov006_020dcea8.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dcffc",
-          "size": "0x4",
-          "symbol": "func_ov006_020dcffc",
-          "file": "src/func_ov006_020dcffc.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dd000",
+          "symbol": "func_ov006_020dbe9c",
+          "address": "0x020dbe9c",
           "size": "0xe0",
-          "symbol": "func_ov006_020dd000",
-          "file": "src/func_ov006_020dd000.c",
-          "lang": "c"
+          "referenced_by": "called from inside the run; src/_ZN11dScMgCoin_c6RenderEv.cpp already names it as an extern",
+          "shape": "reads this+0x51bd as a gate, this+0x51b8 (halfword), this+0x51a8/0x51ac, this+0x51be; builds a 0x18-byte stack record of 20.12 fixed-point values and tail-calls ov004 0x020b023c"
         },
         {
-          "address": "0x020dd2cc",
-          "size": "0x68",
-          "symbol": "func_ov006_020dd2cc",
-          "file": "src/func_ov006_020dd2cc.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020dd334",
-          "size": "0x17c",
-          "symbol": "func_ov006_020dd334",
-          "file": "src/func_ov006_020dd334.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dd4b0",
-          "size": "0xe4",
-          "symbol": "func_ov006_020dd4b0",
-          "file": "src/func_ov006_020dd4b0.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dd594",
-          "size": "0xc4",
-          "symbol": "func_ov006_020dd594",
-          "file": "src/func_ov006_020dd594.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dd658",
-          "size": "0x164",
-          "symbol": "func_ov006_020dd658",
-          "file": "src/func_ov006_020dd658.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dd7bc",
-          "size": "0x4",
-          "symbol": "func_ov006_020dd7bc",
-          "file": "src/func_ov006_020dd7bc.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dd7c0",
-          "size": "0xc0",
-          "symbol": "func_ov006_020dd7c0",
-          "file": "src/func_ov006_020dd7c0.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020dd880",
-          "size": "0x214",
-          "symbol": "func_ov006_020dd880",
-          "file": "src/func_ov006_020dd880.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020dda94",
-          "size": "0x20c",
-          "symbol": "func_ov006_020dda94",
-          "file": "src/func_ov006_020dda94.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020ddca0",
-          "size": "0x58",
-          "symbol": "func_ov006_020ddca0",
-          "file": "src/func_ov006_020ddca0.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020ddcf8",
-          "size": "0x74",
-          "symbol": "func_ov006_020ddcf8",
-          "file": "src/func_ov006_020ddcf8.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020ddd6c",
-          "size": "0xbc",
-          "symbol": "func_ov006_020ddd6c",
-          "file": "src/func_ov006_020ddd6c.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020dde28",
-          "size": "0x88",
-          "symbol": "func_ov006_020dde28",
-          "file": "src/func_ov006_020dde28.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020ddeb0",
-          "size": "0xec",
-          "symbol": "func_ov006_020ddeb0",
-          "file": "src/func_ov006_020ddeb0.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020ddf9c",
-          "size": "0x144",
-          "symbol": "func_ov006_020ddf9c",
-          "file": "src/func_ov006_020ddf9c.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020de0e0",
-          "size": "0xf4",
-          "symbol": "func_ov006_020de0e0",
-          "file": "src/func_ov006_020de0e0.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020de1d4",
-          "size": "0x98",
-          "symbol": "func_ov006_020de1d4",
-          "file": "src/func_ov006_020de1d4.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020de26c",
-          "size": "0x1d4",
-          "symbol": "func_ov006_020de26c",
-          "file": "src/func_ov006_020de26c.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020de440",
-          "size": "0x144",
-          "symbol": "func_ov006_020de440",
-          "file": "src/func_ov006_020de440.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020de584",
-          "size": "0x28",
-          "symbol": "func_ov006_020de584",
-          "file": "src/func_ov006_020de584.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020de5ac",
-          "size": "0x4",
-          "symbol": "func_ov006_020de5ac",
-          "file": "src/func_ov006_020de5ac.c",
-          "lang": "c"
-        },
-        {
-          "address": "0x020de5b0",
-          "size": "0x8c",
-          "symbol": "_ZN11dScMgCoin_c13OnYoshiTryEatEi",
-          "file": "src/_ZN11dScMgCoin_c13OnYoshiTryEatEi.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020de63c",
-          "size": "0x60",
-          "symbol": "_ZN11dScMgCoin_c6RenderEv",
-          "file": "src/_ZN11dScMgCoin_c6RenderEv.cpp",
-          "lang": "cpp",
-          "in_converted_baseline": true
-        },
-        {
-          "address": "0x020de69c",
-          "size": "0x68",
-          "symbol": "_ZN11dScMgCoin_c8BehaviorEv",
-          "file": "src/_ZN11dScMgCoin_c8BehaviorEv.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020de704",
-          "size": "0x23c",
-          "symbol": "_ZN11dScMgCoin_c13InitResourcesEv",
-          "file": "src/_ZN11dScMgCoin_c13InitResourcesEv.cpp",
-          "lang": "cpp"
-        },
-        {
-          "address": "0x020de940",
-          "size": "0x48",
-          "symbol": "dScMgCoin_c_classInit",
-          "file": "src/d_s_mg_coin.cpp",
-          "lang": "cpp"
+          "symbol": "func_ov006_020dd0e0",
+          "address": "0x020dd0e0",
+          "size": "0x1ec",
+          "referenced_by": "callback-table record 0x0213befc; no direct call from inside the run",
+          "shape": "early-outs unless this+0x51c8 == 2; indexes a 0x18-stride array off this, range-checks two 20.12 deltas against +/-0x10, writes this+0x51c8 = 3 and this+0x51cc = 0x40, calls main 0x020127a4 / 0x02012754, and sets this+0x51db from a compare against this+0x51d4"
         }
       ]
     },
-    "existing_reconstruction": {
-      "warning": "This block is the only part of this file that reads src/ rather than the ROM. It is here so the writer does not re-create work that already exists; nothing in it is evidence about the cartridge.",
-      "header": {
-        "path": "include/dScMgCoin_c.h",
-        "state": "already exists and already declares struct dScMgCoin_c : dScMgBase_c with the four own virtuals, a pad from 0x4660, and typedef char dScMgCoin_c_size_must_be_0x51e0[sizeof(dScMgCoin_c) == 0x51e0 ? 1 : -1]. Most of this promotion touches no header.",
-        "fields_it_names": [
-          "unk_51c8",
-          "unk_51d4",
-          "unk_51da",
-          "unk_51db",
-          "unk_51dc"
-        ],
-        "gap": "It names 5 of the 32 tail offsets proved below. The other 27 -- 0x5194 through 0x51c4, plus 0x51cc/0x51d0/0x51dd/0x51de/0x51df -- sit inside pad_4660 or pad_51cc today and are reached through raw char* casts in the shards.",
-        "one_claim_in_it_is_wrong": "Its comment says the tree-wide OnYoshiTryEat mislabel landed on slot 17/D0 instead of slot 18. The cartridge does not support that framing: slot 18 (0x020de5b0) IS _ZN11dScMgCoin_c13OnYoshiTryEatEi in ov006 symbols.txt, and slot 17 (0x020dbe64) is the D0 body. src/_ZN11dScMgCoin_cD0Ev.cpp repeats the same sentence. It describes an old mislabel that has since been corrected on both files, but now reads as if the vtable itself were mislabelled, which it is not. Harmless to bytes; do not carry the sentence forward."
-      },
-      "factory_file": {
-        "path": "src/d_s_mg_coin.cpp",
-        "owns_delink_section": "0x020de940..0x020de988",
-        "note": "Already holds dScMgCoin_c_classInit in extern C form and already references the vtable as extern int data_ov006_0213bf50[]. It is the 61st section; a merge that forgets it leaves the factory behind."
-      },
-      "converted_baseline": {
-        "path": "config/converted-baseline.json",
-        "members_from_this_run": [
-          "src/_ZN11dScMgCoin_cD1Ev.cpp",
-          "src/_ZN11dScMgCoin_cD0Ev.cpp",
-          "src/_ZN11dScMgCoin_c6RenderEv.cpp"
-        ],
-        "note": "3 of the 61 sections are in the 2681-entry converted set. Deleting them during promotion is a CONVERTED-tier dilution; it goes through tiers_ratchet --update (which APPENDS, never replaces) plus converted-backslide-exceptions.jsonl, never a hand edit."
-      },
-      "profile_registry": {
-        "path": "symbols/profile_reconstruction_registry.json",
-        "profile": "MG_COIN",
-        "profile_index": 378,
-        "factory_module": "ov006",
-        "factory_address": "0x020de940",
-        "alloc_size": "0x000051e0",
-        "installed_vtable": "0x0213bf50",
-        "note": "Registry class_name is real RTTI and agrees with the cartridge on every field above."
-      }
-    },
-    "data_ownership": {
-      "finding": "ov006 entire .data segment, 0x02133600..0x021402e0, is ONE delink section owned by no file. The class _ZTV, _ZTI, _ZTS, its 25 eight-byte callback records and g_profile_MG_COIN all live in it.",
-      "consequence": "The promoted TU cannot own its own vtable and must not try to emit one -- naming a vtable also raises the file language mode. It references the table the way src/d_s_mg_coin.cpp already does, as extern int data_ov006_0213bf50[]. Same for the callback table: the 25 records stay in undelinked .data, so the TU emits none of them even though 25 of its functions are their targets.",
-      "callback_records_are_individually_symbolised": "config/arm9/overlays/ov006/symbols.txt names each record data_ov006_<addr> at an 8-byte stride from 0x0213be44, with g_profile_MG_COIN at 0x0213bedc sitting between the 19-record run and the 5-record run."
-    },
-    "sibling_oracles": {
-      "correction": "ov006 has 18 promoted TUs, and dScMgTeresa_c and dScMgBomroom_c are NOT among them -- both are unpromoted queue rows (81 and 80 sections, the two largest in the file). Anything citing them as promoted ov006 style oracles is wrong.",
-      "promoted_ov006_manifests": [
-        "MgBingoBallSlotsShot",
-        "MgMushroomRoulette",
-        "MgWhichWiggler",
-        "dScMgBSC_c",
-        "dScMgCard_c",
-        "dScMgCup_c",
-        "dScMgD3DBase_c",
-        "dScMgHanachan_c",
-        "dScMgJump2_c",
-        "dScMgMCarlo2_c+MgPairAGoneAndOn",
-        "dScMgMCarlo_c",
-        "dScMgMemory2_c",
-        "dScMgMemory_c",
-        "dScMgRoulette_c",
-        "dScMgSingle3DBase_c",
-        "dScMgSound_c",
-        "dScMgTrampoline2_c",
-        "dScMgTrampoline_c+MgTrampolineTime"
+    "pragma_sections": {
+      "count": 2,
+      "hazard": "Both carry #pragma opt_common_subs off and #pragma opt_strength_reduction off. Both switches are file-global in mwccarm 2004/b56 by default -- a bracketed off/on pair does not bind positionally -- so folding these two into the TU turns them off for every section in it unless #pragma defer_codegen off is set first, which makes the brackets bind but forces an ascending-source rewrite of the whole TU. That lever took dScMgHanachan_c from 22/61 to 49/61 in PR #2309. Run the delete-outright control first; measure defer_codegen off second.",
+      "entries": [
+        {
+          "symbol": "func_ov006_020dca04",
+          "address": "0x020dca04",
+          "file": "src/func_ov006_020dca04.c",
+          "pragmas": [
+            "#pragma opt_common_subs off",
+            "#pragma opt_strength_reduction off"
+          ]
+        },
+        {
+          "symbol": "func_ov006_020dcb1c",
+          "address": "0x020dcb1c",
+          "file": "src/func_ov006_020dcb1c.c",
+          "pragmas": [
+            "#pragma opt_common_subs off",
+            "#pragma opt_strength_reduction off"
+          ]
+        }
       ],
-      "manifest_dir": "config/tu_manifest.d/ov006/ -- there is no dScMgCoin_c.json there yet",
-      "closest_oracle": "config/tu_manifest.d/ov006/dScMgCard_c.json. dScMgCard_c is the immediately preceding class in ov006 .text (its factory sits at 0x020dbd54 and its run ends at 0x020dbe40, where this run begins), so it shares this class exact neighbourhood and section shape. The queue row names dScMgSingle3DBase_c, which is a base-class TU and a poorer shape match."
+      "count_is_not_a_blocker": "The queue file's header says outright that pragma:N is not a blocker -- it counts shards carrying a #pragma line and nothing more, and a count means something only after a delete-outright control shows the bytes actually move. dScMgRoulette_c's pragmas were inert and it scored 40/40 with them deleted. Treat the two here as a measurement to make, not an obstacle established."
     },
+    "sections": [
+      {
+        "address": "0x020dbe40",
+        "size": "0x24",
+        "symbol": "_ZN11dScMgCoin_cD1Ev",
+        "file": "src/_ZN11dScMgCoin_cD1Ev.cpp",
+        "lang": "cpp",
+        "in_converted_baseline": true
+      },
+      {
+        "address": "0x020dbe64",
+        "size": "0x38",
+        "symbol": "_ZN11dScMgCoin_cD0Ev",
+        "file": "src/_ZN11dScMgCoin_cD0Ev.cpp",
+        "lang": "cpp",
+        "in_converted_baseline": true
+      },
+      {
+        "address": "0x020dbf7c",
+        "size": "0x1d8",
+        "symbol": "func_ov006_020dbf7c",
+        "file": "src/func_ov006_020dbf7c.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc154",
+        "size": "0x70",
+        "symbol": "func_ov006_020dc154",
+        "file": "src/func_ov006_020dc154.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc1c4",
+        "size": "0xa8",
+        "symbol": "func_ov006_020dc1c4",
+        "file": "src/func_ov006_020dc1c4.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc26c",
+        "size": "0x28",
+        "symbol": "func_ov006_020dc26c",
+        "file": "src/func_ov006_020dc26c.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc294",
+        "size": "0x4",
+        "symbol": "func_ov006_020dc294",
+        "file": "src/func_ov006_020dc294.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc298",
+        "size": "0x60",
+        "symbol": "func_ov006_020dc298",
+        "file": "src/func_ov006_020dc298.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020dc2f8",
+        "size": "0x3c",
+        "symbol": "func_ov006_020dc2f8",
+        "file": "src/func_ov006_020dc2f8.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc334",
+        "size": "0x14",
+        "symbol": "func_ov006_020dc334",
+        "file": "src/func_ov006_020dc334.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc348",
+        "size": "0x28",
+        "symbol": "func_ov006_020dc348",
+        "file": "src/func_ov006_020dc348.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc370",
+        "size": "0x4c",
+        "symbol": "func_ov006_020dc370",
+        "file": "src/func_ov006_020dc370.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc3bc",
+        "size": "0x58",
+        "symbol": "func_ov006_020dc3bc",
+        "file": "src/func_ov006_020dc3bc.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc414",
+        "size": "0x9c",
+        "symbol": "func_ov006_020dc414",
+        "file": "src/func_ov006_020dc414.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc4b0",
+        "size": "0x18",
+        "symbol": "func_ov006_020dc4b0",
+        "file": "src/func_ov006_020dc4b0.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc4c8",
+        "size": "0xfc",
+        "symbol": "func_ov006_020dc4c8",
+        "file": "src/func_ov006_020dc4c8.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc5c4",
+        "size": "0x10c",
+        "symbol": "func_ov006_020dc5c4",
+        "file": "src/func_ov006_020dc5c4.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc6d0",
+        "size": "0x84",
+        "symbol": "func_ov006_020dc6d0",
+        "file": "src/func_ov006_020dc6d0.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc754",
+        "size": "0x60",
+        "symbol": "func_ov006_020dc754",
+        "file": "src/func_ov006_020dc754.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020dc7b4",
+        "size": "0x48",
+        "symbol": "func_ov006_020dc7b4",
+        "file": "src/func_ov006_020dc7b4.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc7fc",
+        "size": "0x18",
+        "symbol": "func_ov006_020dc7fc",
+        "file": "src/func_ov006_020dc7fc.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc814",
+        "size": "0x5c",
+        "symbol": "func_ov006_020dc814",
+        "file": "src/func_ov006_020dc814.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc870",
+        "size": "0x90",
+        "symbol": "func_ov006_020dc870",
+        "file": "src/func_ov006_020dc870.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc900",
+        "size": "0x60",
+        "symbol": "func_ov006_020dc900",
+        "file": "src/func_ov006_020dc900.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc960",
+        "size": "0x3c",
+        "symbol": "func_ov006_020dc960",
+        "file": "src/func_ov006_020dc960.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dc99c",
+        "size": "0x68",
+        "symbol": "func_ov006_020dc99c",
+        "file": "src/func_ov006_020dc99c.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dca04",
+        "size": "0x118",
+        "symbol": "func_ov006_020dca04",
+        "file": "src/func_ov006_020dca04.c",
+        "lang": "c",
+        "pragmas": [
+          "#pragma opt_common_subs off",
+          "#pragma opt_strength_reduction off"
+        ]
+      },
+      {
+        "address": "0x020dcb1c",
+        "size": "0x12c",
+        "symbol": "func_ov006_020dcb1c",
+        "file": "src/func_ov006_020dcb1c.c",
+        "lang": "c",
+        "pragmas": [
+          "#pragma opt_common_subs off",
+          "#pragma opt_strength_reduction off"
+        ]
+      },
+      {
+        "address": "0x020dcc48",
+        "size": "0x70",
+        "symbol": "func_ov006_020dcc48",
+        "file": "src/func_ov006_020dcc48.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dccb8",
+        "size": "0xbc",
+        "symbol": "func_ov006_020dccb8",
+        "file": "src/func_ov006_020dccb8.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dcd74",
+        "size": "0xc8",
+        "symbol": "func_ov006_020dcd74",
+        "file": "src/func_ov006_020dcd74.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dce3c",
+        "size": "0x6c",
+        "symbol": "func_ov006_020dce3c",
+        "file": "src/func_ov006_020dce3c.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dcea8",
+        "size": "0x154",
+        "symbol": "func_ov006_020dcea8",
+        "file": "src/func_ov006_020dcea8.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dcffc",
+        "size": "0x4",
+        "symbol": "func_ov006_020dcffc",
+        "file": "src/func_ov006_020dcffc.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dd000",
+        "size": "0xe0",
+        "symbol": "func_ov006_020dd000",
+        "file": "src/func_ov006_020dd000.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dd2cc",
+        "size": "0x68",
+        "symbol": "func_ov006_020dd2cc",
+        "file": "src/func_ov006_020dd2cc.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020dd334",
+        "size": "0x17c",
+        "symbol": "func_ov006_020dd334",
+        "file": "src/func_ov006_020dd334.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dd4b0",
+        "size": "0xe4",
+        "symbol": "func_ov006_020dd4b0",
+        "file": "src/func_ov006_020dd4b0.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dd594",
+        "size": "0xc4",
+        "symbol": "func_ov006_020dd594",
+        "file": "src/func_ov006_020dd594.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dd658",
+        "size": "0x164",
+        "symbol": "func_ov006_020dd658",
+        "file": "src/func_ov006_020dd658.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dd7bc",
+        "size": "0x4",
+        "symbol": "func_ov006_020dd7bc",
+        "file": "src/func_ov006_020dd7bc.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dd7c0",
+        "size": "0xc0",
+        "symbol": "func_ov006_020dd7c0",
+        "file": "src/func_ov006_020dd7c0.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020dd880",
+        "size": "0x214",
+        "symbol": "func_ov006_020dd880",
+        "file": "src/func_ov006_020dd880.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020dda94",
+        "size": "0x20c",
+        "symbol": "func_ov006_020dda94",
+        "file": "src/func_ov006_020dda94.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020ddca0",
+        "size": "0x58",
+        "symbol": "func_ov006_020ddca0",
+        "file": "src/func_ov006_020ddca0.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020ddcf8",
+        "size": "0x74",
+        "symbol": "func_ov006_020ddcf8",
+        "file": "src/func_ov006_020ddcf8.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020ddd6c",
+        "size": "0xbc",
+        "symbol": "func_ov006_020ddd6c",
+        "file": "src/func_ov006_020ddd6c.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020dde28",
+        "size": "0x88",
+        "symbol": "func_ov006_020dde28",
+        "file": "src/func_ov006_020dde28.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020ddeb0",
+        "size": "0xec",
+        "symbol": "func_ov006_020ddeb0",
+        "file": "src/func_ov006_020ddeb0.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020ddf9c",
+        "size": "0x144",
+        "symbol": "func_ov006_020ddf9c",
+        "file": "src/func_ov006_020ddf9c.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020de0e0",
+        "size": "0xf4",
+        "symbol": "func_ov006_020de0e0",
+        "file": "src/func_ov006_020de0e0.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020de1d4",
+        "size": "0x98",
+        "symbol": "func_ov006_020de1d4",
+        "file": "src/func_ov006_020de1d4.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020de26c",
+        "size": "0x1d4",
+        "symbol": "func_ov006_020de26c",
+        "file": "src/func_ov006_020de26c.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020de440",
+        "size": "0x144",
+        "symbol": "func_ov006_020de440",
+        "file": "src/func_ov006_020de440.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020de584",
+        "size": "0x28",
+        "symbol": "func_ov006_020de584",
+        "file": "src/func_ov006_020de584.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020de5ac",
+        "size": "0x4",
+        "symbol": "func_ov006_020de5ac",
+        "file": "src/func_ov006_020de5ac.c",
+        "lang": "c"
+      },
+      {
+        "address": "0x020de5b0",
+        "size": "0x8c",
+        "symbol": "_ZN11dScMgCoin_c13OnYoshiTryEatEi",
+        "file": "src/_ZN11dScMgCoin_c13OnYoshiTryEatEi.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020de63c",
+        "size": "0x60",
+        "symbol": "_ZN11dScMgCoin_c6RenderEv",
+        "file": "src/_ZN11dScMgCoin_c6RenderEv.cpp",
+        "lang": "cpp",
+        "in_converted_baseline": true
+      },
+      {
+        "address": "0x020de69c",
+        "size": "0x68",
+        "symbol": "_ZN11dScMgCoin_c8BehaviorEv",
+        "file": "src/_ZN11dScMgCoin_c8BehaviorEv.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020de704",
+        "size": "0x23c",
+        "symbol": "_ZN11dScMgCoin_c13InitResourcesEv",
+        "file": "src/_ZN11dScMgCoin_c13InitResourcesEv.cpp",
+        "lang": "cpp"
+      },
+      {
+        "address": "0x020de940",
+        "size": "0x48",
+        "symbol": "dScMgCoin_c_classInit",
+        "file": "src/d_s_mg_coin.cpp",
+        "lang": "cpp"
+      }
+    ],
+    "why_61_is_a_floor": "tools/tu_map.py cuts a run by symbol NAME -- it labels a function by srcpath.class_of on the mangled name -- so dScMgCoin_c_classInit, which is not mangled, cannot be labelled and falls outside the run it abuts with a zero-byte gap (the run ends at 0x020de940 and the factory starts at 0x020de940). The queue generator extends the count over exactly that zero-gap <Class>_classInit case, which is how 60 became 61. It does NOT extend over any other unlabelled neighbour, so a further unlabelled function abutting either end would still be uncounted. The file's own header says this in as many words and says to trust `tubuild.py inspect` over the column; this facts file inherits that caveat rather than retiring it.",
+    "holes_split_the_run_into_three": {
+      "why_it_matters": "The two undelinked functions are not merely missing bodies -- they are holes at 0x020dbe9c..0x020dbf7c and 0x020dd0e0..0x020dd2cc that cut the 61 sections into three contiguous pieces. The queue's own header states the rule for this: a licensed claim cannot have a hole, so such a run can only be taken as one of its contiguous sides. Whether a text-only promotion is bound by that rule the way a licensed one is, is a stage-4 question, but the writer should size the work knowing the run is 2 + 33 + 26 and not an unbroken 61.",
+      "segments": [
+        {
+          "segment": 1,
+          "start": "0x020dbe40",
+          "end": "0x020dbe9c",
+          "size": "0x5c",
+          "sections": 2,
+          "own_slots": [
+            "16 D1",
+            "17 D0"
+          ],
+          "holds_factory": false,
+          "note": "Both destructors, alone, ahead of the first hole."
+        },
+        {
+          "segment": 2,
+          "start": "0x020dbf7c",
+          "end": "0x020dd0e0",
+          "size": "0x1164",
+          "sections": 33,
+          "own_slots": [],
+          "holds_factory": false,
+          "note": "The largest piece and entirely helpers; no vtable slot points into it. Both pragma sections (0x020dca04, 0x020dcb1c) are here."
+        },
+        {
+          "segment": 3,
+          "start": "0x020dd2cc",
+          "end": "0x020de988",
+          "size": "0x16bc",
+          "sections": 26,
+          "own_slots": [
+            "18 OnYoshiTryEat",
+            "9 Render",
+            "6 Behavior",
+            "0 InitResources"
+          ],
+          "holds_factory": true,
+          "note": "The four non-destructor overrides and the factory. The most valuable single side to take if the run has to be split."
+        }
+      ]
+    }
+  },
+  "existing_reconstruction": {
+    "warning": "This block is the only part of this file that reads src/ rather than the ROM. It is here so the writer does not re-create work that already exists; nothing in it is evidence about the cartridge.",
+    "header": {
+      "path": "include/dScMgCoin_c.h",
+      "state": "already exists and already declares struct dScMgCoin_c : dScMgBase_c with the four own virtuals, a pad from 0x4660, and typedef char dScMgCoin_c_size_must_be_0x51e0[sizeof(dScMgCoin_c) == 0x51e0 ? 1 : -1]. Most of this promotion touches no header.",
+      "fields_it_names": [
+        "unk_51c8",
+        "unk_51d4",
+        "unk_51da",
+        "unk_51db",
+        "unk_51dc"
+      ],
+      "gap": "It names 5 of the 32 tail offsets proved below. The other 27 -- 0x5194 through 0x51c4, plus 0x51cc/0x51d0/0x51dd/0x51de/0x51df -- sit inside pad_4660 or pad_51cc today and are reached through raw char* casts in the shards.",
+      "one_claim_in_it_is_wrong": "Its comment says the tree-wide OnYoshiTryEat mislabel landed on slot 17/D0 instead of slot 18. The cartridge does not support that framing: slot 18 (0x020de5b0) IS _ZN11dScMgCoin_c13OnYoshiTryEatEi in ov006 symbols.txt, and slot 17 (0x020dbe64) is the D0 body. src/_ZN11dScMgCoin_cD0Ev.cpp repeats the same sentence. It describes an old mislabel that has since been corrected on both files, but now reads as if the vtable itself were mislabelled, which it is not. Harmless to bytes; do not carry the sentence forward."
+    },
+    "factory_file": {
+      "path": "src/d_s_mg_coin.cpp",
+      "owns_delink_section": "0x020de940..0x020de988",
+      "note": "Already holds dScMgCoin_c_classInit in extern C form and already references the vtable as extern int data_ov006_0213bf50[]. It is the 61st section; a merge that forgets it leaves the factory behind."
+    },
+    "converted_baseline": {
+      "path": "config/converted-baseline.json",
+      "members_from_this_run": [
+        "src/_ZN11dScMgCoin_cD1Ev.cpp",
+        "src/_ZN11dScMgCoin_cD0Ev.cpp",
+        "src/_ZN11dScMgCoin_c6RenderEv.cpp"
+      ],
+      "note": "3 of the 61 sections are in the 2681-entry converted set. Deleting them during promotion is a CONVERTED-tier dilution; it goes through tiers_ratchet --update (which APPENDS, never replaces) plus converted-backslide-exceptions.jsonl, never a hand edit."
+    },
+    "profile_registry": {
+      "path": "symbols/profile_reconstruction_registry.json",
+      "profile": "MG_COIN",
+      "profile_index": 378,
+      "factory_module": "ov006",
+      "factory_address": "0x020de940",
+      "alloc_size": "0x000051e0",
+      "installed_vtable": "0x0213bf50",
+      "note": "Registry class_name is real RTTI and agrees with the cartridge on every field above."
+    }
+  },
+  "data_ownership": {
+    "finding": "ov006 entire .data segment, 0x02133600..0x021402e0, is ONE delink section owned by no file. The class _ZTV, _ZTI, _ZTS, its 25 eight-byte callback records and g_profile_MG_COIN all live in it.",
+    "consequence": "The promoted TU cannot own its own vtable and must not try to emit one -- naming a vtable also raises the file's language mode. It references the table the way src/d_s_mg_coin.cpp already does, as extern int data_ov006_0213bf50[]. Same for the callback table: the 25 records stay in undelinked .data, so the TU emits none of them even though 25 of its functions are their targets.",
+    "callback_records_are_individually_symbolised": "config/arm9/overlays/ov006/symbols.txt names each record data_ov006_<addr> at an 8-byte stride from 0x0213be44, with g_profile_MG_COIN at 0x0213bedc sitting between the 19-record run and the 5-record run.",
+    "this_is_what_forces_text_only": "The intact-object route requires the TU to own its _ZTV/_ZTI/_ZTS at their natural address. Those three symbols are inside the one undelinked ov006 .data section, so that route is unavailable and text-only is the only one left. Worth stating because promotion_route is a hand-maintained estimate in the queue -- no tool derives it; tools/queue_audit.py only reads it back to pick the compiler-only floor."
+  },
+  "sibling_oracles": {
+    "read_on": "origin/main 8bfc6d98b, 2026-09-06",
+    "staleness_warning": "This block goes stale on every ov006 promotion and must be re-derived, never trusted from a file. An earlier revision of this same file, cut from a base six promotions old, asserted that dScMgTeresa_c and dScMgBomroom_c were NOT promoted. They are: both landed after that base and both read already_promoted yes in the queue on current main. The retraction is left here on purpose -- the failure was reading a manifest directory from a stale checkout, and the same trap is waiting for the next reader.",
+    "ov006_manifests": 20,
+    "ov006_promoted": 19,
+    "ov006_not_promoted": [
+      "dScMgCup_c (status: shadow, src_tu/minigames/d_s_mg_cup.cpp)"
+    ],
+    "promoted_to_src_actors": [
+      {
+        "class": "dScMgBomroom_c",
+        "output": "src/actors/dScMgBomroom_c.cpp"
+      },
+      {
+        "class": "dScMgD3DBase_c",
+        "output": "src/actors/dScMgD3DBase_c.cpp"
+      },
+      {
+        "class": "dScMgHanachan_c",
+        "output": "src/actors/dScMgHanachan_c.cpp"
+      },
+      {
+        "class": "dScMgMemory2_c",
+        "output": "src/actors/dScMgMemory2_c.cpp"
+      },
+      {
+        "class": "dScMgRoulette_c",
+        "output": "src/actors/dScMgRoulette_c.cpp"
+      },
+      {
+        "class": "dScMgSound_c",
+        "output": "src/actors/dScMgSound_c.cpp"
+      },
+      {
+        "class": "dScMgTeresa_c",
+        "output": "src/actors/dScMgTeresa_c.cpp"
+      }
+    ],
+    "promoted_to_src_minigames": [
+      "MgBingoBallSlotsShot -> src/minigames/d_s_mg_smartball.cpp",
+      "MgMushroomRoulette -> src/minigames/d_s_mg_roulette.cpp",
+      "MgWhichWiggler -> src/minigames/d_s_mg_hanachan.cpp",
+      "dScMgBSC_c -> src/minigames/d_s_mg_bsc.cpp",
+      "dScMgCard_c -> src/minigames/d_s_mg_card.cpp",
+      "dScMgJump2_c -> src/minigames/d_s_mg_jump2.cpp",
+      "dScMgMCarlo2_c+MgPairAGoneAndOn -> src/minigames/d_s_mg_m_carlo2.cpp",
+      "dScMgMCarlo_c -> src/minigames/d_s_mg_m_carlo.cpp",
+      "dScMgMemory_c -> src/minigames/d_s_mg_memory.cpp",
+      "dScMgSingle3DBase_c -> src/minigames/d_s_mg_single3_d_base.cpp",
+      "dScMgTrampoline2_c -> src/minigames/d_s_mg_trampoline2.cpp",
+      "dScMgTrampoline_c+MgTrampolineTime -> src/minigames/d_s_mg_trampoline.cpp"
+    ],
+    "two_output_conventions": "ov006's promoted TUs split by vintage: the older ones land in src/minigames/d_s_mg_*.cpp, the seven most recent in src/actors/<Class>.cpp. PIPELINE.md's stage-2 row says src/actors/<Class>.cpp, so the src/actors group is the live convention and the right shape to copy.",
+    "best_oracles": "dScMgTeresa_c and dScMgBomroom_c. They are the two freshest ov006 promotions, they use the current src/actors/<Class>.cpp output, and they are the closest structural match to this class: same overlay, same dScMgBase_c parent, and both carried the same shape of blockers this one has (Teresa no-legacy-source:1 + pragma:7, Bomroom pragma:17), so their manifests show how a run with holes and pragmas was actually taken. dScMgCard_c is the nearest NEIGHBOUR -- its run ends at 0x020dbe40, exactly where this one begins -- but it uses the older src/minigames output convention.",
+    "manifest_dir": "config/tu_manifest.d/ov006/ -- there is no dScMgCoin_c.json there yet",
+    "queue_sibling_oracle_column": "The queue names dScMgSingle3DBase_c. The file's own header says sibling_oracle is a SHAPE reference only and that copying its counts is what made the queue wrong before; dScMgSingle3DBase_c is a base-class TU and a poorer shape match than the two above."
+  },
   "unproven": [
     "That 0x020dbe40..0x020de988 was one original translation unit. The 62-function class run is mechanically contiguous and the factory is immediately adjacent and class-specific, but original file boundaries are not encoded in the ROM.",
     "Whether any of the 56 non-vtable functions had external linkage in the original source. There are 43 module-qualified direct call relocations to the run and every one originates inside it; the remaining named data references are the 24 callback records and six class-vtable slots, but absence of an outside relocation does not prove static linkage.",
@@ -938,7 +1718,8 @@
     "The source form that produces D1 followed by D0 without a Coin D2. The ROM order and symbol absence are facts; an inline in-class destructor is a compiler-reproduction hypothesis for the writer to measure.",
     "Source-style names for inherited placeholder slots Virtual34, Virtual38, Virtual50, Virtual7C, Virtual80, Virtual84, Virtual88 and Virtual8C. Slot numbers and linked targets are exact, but those names are repository coinage.",
     "Whether func_ov006_020dbe9c and func_ov006_020dd0e0 belonged to this original translation unit at all. Both sit inside the contiguous run, both take this in r0 and address this+0x5000 fields, but both are undelinked and unrecovered, so nothing about their source form is established.",
-    "Whether the file-global reach of opt_common_subs / opt_strength_reduction can be confined with defer_codegen off on a TU of this size. The two pragma sections are facts; the arrangement that reproduces all 61 is a measurement only stage 4 can make.",
-    "The 27 tail offsets proved here that include/dScMgCoin_c.h does not name. Their effective offsets and access widths are ROM-proven; where an aggregate boundary falls among them, and whether the 0x1c-stride and 0x18-stride indexed accesses walk the same array, is not."
+    "The 27 tail offsets proved here that include/dScMgCoin_c.h does not name. Their effective offsets and access widths are ROM-proven; where an aggregate boundary falls among them, and whether the 0x1c-stride and 0x18-stride indexed accesses walk the same array, is not.",
+    "Whether a text-only promotion can span the two holes at all, or whether it is bound by the licensed-claim rule and has to be taken as one of the three contiguous segments. The segment boundaries and counts are exact; which of them stage 4 can actually license is not established here.",
+    "Whether the file-global reach of opt_common_subs / opt_strength_reduction can be confined with defer_codegen off on a TU of this size, and whether either pragma is load-bearing at all. Both are measurements, and the delete-outright control comes first."
   ]
 }
