@@ -476,3 +476,15 @@ QuestionSwitch_SpawnInfo data_ov002_0210d774:0x20 data_ov002_0210d8b4:0x20
 # Stage::RenderVsModeCountdown banner/START sprite templates (READY? + START,
 # five languages each) -- hosted for the Luigi Infection pre-round countdown
 data_ov002_0210d008 data_ov002_0210d098 data_ov002_0210d130 data_ov002_0210d1c8 data_ov002_0210d210 data_ov002_0210d378 data_ov002_0210d3a0 data_ov002_0210d3c0 data_ov002_0210d3e0 data_ov002_0210d420
+
+# ---- link100 TAIL2 ----
+# The fifteen PURE-DATA tables CUTSCENE_OBJECT's state bodies index (gate 219,
+# port/slice_gate219.txt). config/arm9/overlays/ov002/relocs.txt carries NO
+# relocation anywhere in 0x021000c0..0x021002a0, so these carry no pointer and
+# nothing has to be seated afterwards -- the bytes are the whole truth. Every
+# one is exactly its next-symbol delta wide and every reader stays inside it:
+# the six 0x10-byte tables and the two 0x8-byte ones are indexed 0..3, the two
+# 0x20-byte ones as [i*2] and [i*2+1] with i 0..3, and the three 0x50-byte
+# blocks as five 4-int rows by func_ov002_020f2f9c. No size suffix is needed
+# on any of them.
+data_ov002_021000c8 data_ov002_021000d8 data_ov002_021000e0 data_ov002_021000f0 data_ov002_02100100 data_ov002_02100110 data_ov002_02100120 data_ov002_02100130 data_ov002_02100150 data_ov002_02100160 data_ov002_02100170 data_ov002_02100190 data_ov002_021001b0 data_ov002_02100200 data_ov002_02100250
