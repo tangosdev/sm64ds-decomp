@@ -534,7 +534,9 @@ mwccarm 2004/b56 behaviours, not style preferences.
   Out-of-line *without* that pragma emits `D2/D0/D1` in the wrong order plus a
   homeless `D2`, which is where the flat "always inline it" rule this file used
   to state came from. Landed both ways: ov006/`dScMgTeresa_c` and
-  ov006/`dScMgPanel_c` (71/71, link-verified) are both out-of-line +
+  ov006/`dScMgPanel_c` (71/71 bytes; its stage-2 "link-verified" was **not
+  reproducible** and stage 4 had to repair the linkage — see below) are both
+  out-of-line +
   `defer_codegen off`. **Try both before you take a partial** — and note the
   inline form has a cost of its own, since it moves the key function to the
   first out-of-line virtual declared, which on a coined-name class turns a
@@ -666,6 +668,30 @@ they cost minutes; discover them after and each is a cycle.
   declared-but-undefined members, and any type named in a member's own
   signature — uniquifying tags per member.
 
+  **Read "inside an `extern "C"` region" as the load-bearing half of that
+  sentence, because a C++-NAMED MEMBER CANNOT BE INSIDE ONE.** A `func_ov006_*`
+  member is wrapped in its own file-scope `extern "C" { }`, so its block-scope
+  `extern` names the ROM symbol. A class member function — `Class::Method` — may
+  not sit in a linkage-specification region at all, so the identical block-scope
+  declaration written in *its* body gets **C++ linkage** and the reference
+  mangles. Measured on ov006/`dScMgPanel_c`: 67 wrapped members were fine, the
+  four C++-named ones (ordinals 67-70) emitted **41 mangled undefined symbols**
+  — `_Z8LoadFilei`, `_Z10DeallocatePv`, `_Z19func_ov006_021063a0Pv` — and
+  mwldarm aborted with 22 `Undefined`. Nothing before the link noticed:
+  `tubuild verify` was 71/71 MATCH with objisolate and reloc-destinations clean,
+  and the `[4b]` object audit was `order_ok True, {'LICENSED': 71}, 0 refusals`.
+  **And you cannot fix it in the body**: mwccarm 2004/b56 rejects a block-scope
+  linkage specification outright — `extern "C" { extern void f(int); }` inside a
+  function is `Error: declarator expected`. So a TU with C++-named members needs
+  **one file-scope `extern "C"` region** for what those members call, the way
+  ov006/`dScMgTeresa_c` and ov006/`dScMgRoulette_c` already do. Place it *after*
+  the last wrapped member so none of them can see it and their independently
+  recovered spellings stand. Declarations naming members of the TU itself do not
+  belong in it at all — delete them and let the call bind to the definition
+  already above it, casting at the call site if the definition's pointer type
+  differs. Data is unaffected: mwccarm leaves a file-scope variable's name
+  unmangled in C++, so `data_*` declarations stay in their bodies.
+
 - **"Block-scope data redeclaration is rejected" is false**, and believing it
   costs bytes. Measured directly: `extern int dv;`, `extern char dv[];` and
   `extern struct V dv;` in three separate function bodies compile cleanly. Only
@@ -746,7 +772,10 @@ members and **7 of the 10 contradict the byte-matched shard**, two of them on
 the return type. Including it makes each an `illegal function overloading`
 error against code that already matches. That TU excluded the header (the ov002
 `Player` precedent) and gave the four class-method members their `decl_common`
-declarations at block scope instead. The more members a TU absorbs, the likelier
+declarations at block scope instead — **and that half did not link**; they had
+to move to a file-scope `extern "C"` region, for the reason measured above.
+Excluding the header does not free you from giving a C++-named member's
+declarations C linkage somewhere. The more members a TU absorbs, the likelier
 the header contradicts one — so count the collisions before you decide. Two
 promoted TUs include it and two of the largest exclude it, and both choices are
 right for their size.
