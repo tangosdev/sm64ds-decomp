@@ -434,10 +434,17 @@ Two things follow:
 - **Retarget the PR too**: `gh pr edit <n> --base <sibling-branch>`. Without it
   the PR's diff silently claims the sibling's work as its own.
 
-## Rebasing onto a moved `main` — the trap no gate catches
+## Catching up to a moved `main` — the trap no gate catches
 
-A class branch cut before `main` moved must be rebased, and **the two ratchet
-files behave differently and only one of them tells you**:
+**First, decide which operation you are allowed.** If the branch has already been
+pushed, you **merge** `origin/main` into it — a rebase makes the next push a
+non-fast-forward against the remote's copy of the same commits, and repairing
+that costs an add/add conflict on the promoted `.cpp`. Rebase (or the
+reset-and-cherry-pick above) is only for a branch that has never left this
+machine.
+
+Either way **the two ratchet files behave differently and only one of them tells
+you**:
 
 - `config/converted-baseline.json` **conflicts loudly — but only when the landed
   promotion actually changed the CONVERTED set.** It is regenerated whole per
@@ -448,7 +455,9 @@ files behave differently and only one of them tells you**:
   40-member promotion, changed **neither** ledger file and put zero rows in the
   exceptions file. Do not infer "no conflict, therefore no promotion landed".
 - `config/converted-backslide-exceptions.jsonl` **auto-merges silently and
-  reintroduces stale rows.** Measured here: a cherry-pick re-added five
+  reintroduces stale rows** — under a merge exactly as under a cherry-pick, since
+  it is the union driver doing it, not the replay. Measured here: a cherry-pick
+  re-added five
   `ShipWing` rows naming the former actor-directory location for
   `d_a_obj_rc_hane.cpp`; `main` had since moved it under `src/game/actors/`.
   Nothing flagged it. No gate reads those paths — which is also why this file
@@ -627,16 +636,25 @@ already stale. Getting this wrong costs a full validation cycle.
   mid-build produced `REGRESSION: 4,672 B stopped being built from source`
   naming five files in ov002/ov005/ov034 with nothing to do with the class, and
   a `CREDIT LOST` for a different class entirely. Both read exactly like real
-  regressions. Re-fetch and rebase before believing either; after the rebase
-  both were clean. The same applies to `git ls-tree origin/main` — worktrees
+  regressions. Re-fetch and **merge** `origin/main` before believing either;
+  after the merge both were clean. **Merge, do not rebase** — a rebase of a
+  branch that is already on the remote makes the next push a non-fast-forward
+  against the remote's copy of the same commits, and repairing that costs an
+  add/add conflict on the promoted `.cpp` itself. The same applies to `git ls-tree origin/main` — worktrees
   share one `.git`, so another agent's fetch moves `origin/main` under you, which
   is enough to make an existing file look deleted.
 
 - `linkcheck --baseline` is needed **only if you actually run a `linkcheck`** —
   which this role is told not to do. Running it anyway costs a full scratch
   delink and link for nothing, and `rombuild.py` runs its own baseline control
-  regardless. When you do need it: it builds the **working tree**, so a baseline
-  taken after header edits proves nothing, and a fresh worktree must take one
+  regardless. When you do need it: it builds the **working tree**, and it
+  fingerprints `trackedConfigArm9Sha256` — so **any `config/` edit invalidates
+  it, a `delinks.txt` splice included**, not just a header edit. That splice is
+  the most common edit in a promotion. The symptom does not point at you: a
+  stale baseline surfaces as `[4/8]` failures on *unrelated* TUs —
+  `daObjRcCarpet_c` and `daPropeller_Heyho_c` are the two that show up —
+  reported as baseline-fingerprint drift. Retake the baseline after the splice
+  before believing any unrelated-TU failure, and a fresh worktree must take one
   before any linkcheck or it dies on unrelated classes.
 - **The `tools.test_<gate>` invocation below does not work from the repo root
   for every gate, and the module you want may not exist at all.** `python -m
