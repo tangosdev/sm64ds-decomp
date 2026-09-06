@@ -41,9 +41,11 @@
  * strength-reduction members carry their own `#pragma push / opt_strength_
  * reduction off / #pragma pop` bracket, Render carries an `opt_common_subs off`
  * bracket, and every other member compiles under the file's default settings.
- * All 49 reproduce simultaneously.  Measured, not assumed -- with the pragma
- * line removed the same source still gives 49 byte-identical functions but the
- * emission order inverts.
+ * All 49 reproduce simultaneously.  Measured, not assumed: delete that one pragma
+ * line and this identical source drops to 44/49 -- the brackets stop binding and
+ * their trailing state goes file-wide, which is exactly the 44/49 the earlier pass
+ * measured for strength reduction off -- and the emission order inverts to `48
+ * ordinal pair(s) NOT in ROM order` on top of it.
  *
  * FUNCTION ORDER IS DELIBERATELY THE ROM'S OWN, LOWEST ADDRESS FIRST.  That is
  * the other half of `defer_codegen off`: with codegen deferred mwccarm emits one
@@ -123,8 +125,8 @@
         POSITIONALLY instead of file-global last-wins, which is what lets the four
         members that need strength reduction off and the three that need it on live
         in one TU.  push/O3/pop was always positional; these two were not.
-   Removing this one line still gives 49/49 byte-identical functions but flips the
-   emission order, which `linkcheck [4b/8]` refuses. */
+   Removing this one line costs both at once: 44/49 MATCH and `48 ordinal pair(s) NOT
+   in ROM order`, which `linkcheck [4b/8]` refuses. */
 
 #pragma defer_codegen off
 
