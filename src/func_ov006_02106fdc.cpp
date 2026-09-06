@@ -1,4 +1,5 @@
 //cpp
+// @symbol func_ov006_02106fdc
 #include "dScMgPanel_c.h"
 
 typedef void (dScMgPanel_c::*PMF)(int);
