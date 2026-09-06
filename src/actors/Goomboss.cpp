@@ -79,32 +79,6 @@ struct Obj {
     struct Anim anim;     /* 0x260 */
 };
 
-/* shadow typedef 'Inner' */
-typedef struct { int field0; int field4; } Inner;
-
-/* shadow typedef 'Entry' */
-typedef struct { Inner *ptr; int a; int b; } Entry;
-
-/* shadow struct 'Sub' */
-struct Sub {
-  virtual void v0(); virtual void v1(); virtual void v2();
-  virtual void v3(); virtual void v4(); virtual void m(void*);
-};
-
-/* shadow struct 'BMD_File' */
-struct BMD_File;
-
-/* shadow struct 'BCA_File' */
-struct BCA_File;
-
-/* shadow struct 'BTP_File' */
-struct BTP_File;
-
-/* shadow struct 'BMA_File' */
-struct BMA_File;
-
-/* shadow struct 'BTA_File' */
-struct BTA_File;
 
 /* shadow struct 'Vector3' */
 struct Vector3;
@@ -112,15 +86,6 @@ struct Vector3;
 /* shadow struct 'Vector3_16' */
 struct Vector3_16;
 
-/* shadow struct 'Obj210' */
-struct Obj210 {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void v5(int a);
-};
 
 
 
@@ -186,7 +151,6 @@ extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern void MulMat4x3Mat4x3(void* out, void* a, void* b);
 extern void Vec3_LslInPlace(void* v, int n);
 extern struct Matrix4x3 data_020a0e68;
-extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 extern struct Matrix4x3 IDENTITY_MATRIX4X3;
 extern void _ZN9Animation7AdvanceEv(void* p);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int a, int b, unsigned int u);
@@ -198,16 +162,6 @@ extern char data_ov002_0210da30;
 extern char data_ov084_02130cf8;
 extern char data_ov074_02123000;
 extern char data_ov074_02123040;
-extern void _ZN15TextureSequence6UpdateER15ModelComponents(void* a, void* b);
-extern void _ZN15MaterialChanger6UpdateER15ModelComponents(void* a, void* b);
-extern void _ZN18TextureTransformer6UpdateER15ModelComponents(void* a, void* b);
-extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *thiz, void *clsn, unsigned int a);
-extern void _ZN5dCc_c5ClearEv(void *c);
-extern void _ZN5dCc_c6UpdateEv(void *c);
-extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
-extern void _ZN8dActor_c13LandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
-extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *thiz, Vector3 *v, int f);
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);
 void LoadKeyModels(int idx);
 void *_ZN9Animation8LoadFileER13SharedFilePtr(void *shared);
@@ -227,11 +181,8 @@ extern void *data_ov074_02123030;
 extern void *func_021123f4;
 extern void *data_ov074_02122e5c[];
 extern void *func_021124ac;
-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
 extern void Vec3_Asr(Vector3* d, Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
-extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 }
 
 
@@ -277,8 +228,6 @@ void func_ov074_0211f244(dActor_c *self);
 void func_ov074_0211f154(char* c);
 extern int func_ov074_02121a20(void* c, int idx);
 extern int func_ov074_021216f4(void* c);
-extern int func_ov074_02122634(char* self);
-extern int func_ov074_0212229c(int* c);
 }
 
 /* -------------------------------------------------------------------------- */
