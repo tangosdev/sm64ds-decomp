@@ -191,7 +191,11 @@ src/func_0205a8f0.c
 src/func_0205afb4.c
 src/func_0205afe0.c
 src/func_0205b070.c
-src/IPCSend.c
+# src/IPCSend.c -- MOVED TO HOSTGEN (run link100, lane IPCSEND):
+#   CMakeLists.txt's GATE2IPC_SYMS, which the same three targets carry, so the
+#   link set is unchanged. Built plain its store to IPCFIFOSEND (0x04000188)
+#   latched in ntr's mapped I/O window instead of reaching ntr::ipc_reg_write,
+#   and this port therefore never made an ARM9->ARM7 send at all.
 src/Snd_SendCommand.c
 src/Vec3_RotateYAndTranslate.c
 src/_ZN12CylinderClsn4InitE5Fix12IiES1_jj.cpp

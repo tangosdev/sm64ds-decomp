@@ -1,0 +1,78 @@
+# slice_ipcsend -- run link100, lane IPCSEND: THE CHANNEL-8 FIRMWARE READ,
+# re-seated now that the ARM9 can actually SEND.
+#
+# WHAT CHANGED UNDERNEATH IT. src/IPCSend.c is hostgen'd now
+# (port/CMakeLists.txt's GATE2IPC_SYMS; its plain line is commented out of
+# port/slice_gate10.txt), so its `*(volatile unsigned int *)0x4000188 =
+# cmd.raw` reaches ntr::ipc_reg_write instead of latching in ntr's mapped I/O
+# window. Run link100 lane BOOT2 backed these four TUs out for exactly that
+# reason and wrote the measurement down in port/slice_gate222.txt and
+# port/hal/boot_os.cpp: with the call in, a level selftest HUNG, and cdb on the
+# live process put the main thread at func_0205ff08 + 0 with data_020a8114 == 1
+# -- waiting forever for a reply to a request that was never delivered.
+#
+# THE ROM EDGE. src/func_0201a054.c calls func_020196cc() between
+# Scene::PrepareToSpawnBoot() and its 3D fog/edge register block.
+# hal/boot_os.cpp's port_boot_rom_game_init_tail IS that span, and the call is
+# made at the ROM's own point in it.
+#
+# THE CHAIN, and every leaf of it was already linked:
+#
+#   func_020196cc   three statements:
+#                     func_0205f8e0(&a, &b)                 the backlight read
+#                     func_0203b9b4(data_0209d4b8, 0x4d2)   the arm9 RNG seed
+#                     SetSoundMode(data_0209d4b4[0])
+#   func_0205f8e0   PM_GetBackLight in ROM shape: func_0205fb1c(0, &flags),
+#                   then bit 3 -> a (top panel) and bit 2 -> b (bottom).
+#   func_0205fb1c   func_0205fb58(a, b, func_0205ff00, &local), and if that
+#                   returns 0, func_0205ff08() -- the spin -- then `return
+#                   local`.
+#   func_0205fb58   takes the busy flag through func_0205ff20 (data_020a8114 =
+#                   1), parks the completion callback at +4 and its argument at
+#                   +8, drops the request pointer in data_020a813c[a], and
+#                   posts (a & 0xff) | 0x3006500 through func_0205f8b0, i.e.
+#                   IPCSend(8, 0x3006500, 0). VERIFIED AT THE ADDRESS: the
+#                   literal pool at 0x0205fbc0..0x0205fbcc is 020a8138,
+#                   020a8114, 03006500, 020a813c, and 0x0205fba0 is
+#                   `orr r0, r2, r0` into the bl at 0x0205fbb0.
+#
+#   already linked, nothing new: func_0205f8b0, func_0205ff20, func_0205ff00,
+#   func_0205ff08, func_0203b9b4, SetSoundMode (slice_gate10); func_0205fcfc,
+#   func_0205feac (slice_gate2ipc).
+#
+# WHAT THE ARM7 ANSWERS, AND WHY THAT IS THE RIGHT ANSWER. Channel 8 is the
+# power-management channel, and hal/boot2_ipc.cpp HOLDS it with no PM driver
+# behind it, so its reply is the SDK's own no-handler answer: the word handed
+# back with bit 5 set. The ROM's receive handler finds func_0205fcfc in
+# data_020a7fc8[8] and calls it with that flag, and func_0205fcfc's very first
+# branch is `if (flag) { func_0205feac(2); return; }` -- which clears
+# data_020a8114, hands 2 to the parked callback (func_0205ff00 stores it into
+# &local) and releases func_0205ff08. So func_0205fb1c returns 2,
+# func_0205f8e0 returns 2, and func_020196cc's `func_0205f8e0(&a, &b) == 0` is
+# false: the backlight arm is skipped.
+#
+# THAT IS ALSO WHERE A HEALTHY DS ENDS UP. The arm is
+#
+#     if (r == 0 && a == 0) { if (b == 0) data_0208ee3c[0] = 0; }
+#
+# and it only fires when BOTH backlights read OFF. A DS running this game has
+# both ON, so a != 0 and the arm is skipped there too. The port's answer and
+# the hardware's answer reach the same state by different roads, and the
+# port's is the honest one: this host ARM7 really has no PM driver, and
+# saying so is a smaller claim than fabricating a PMIC register value.
+#
+# THE ONE STATE CHANGE THIS DOES MAKE is func_0203b9b4(data_0209d4b8, 0x4d2) --
+# the ROM's arm9 RNG boot constant, which the port has been leaving at the .bss
+# zero. hal/scene_mg.cpp's RNG note names THIS call as the ROM's boot seeder
+# ("func_020196cc  func_0203b9b4(data_0209d4b8, 0x4d2)  <- the boot value,
+# called once from src/func_0201a054.c after PrepareToSpawnBoot"), and that
+# lane's own minigame seeder re-seeds on top of it. So this makes the level
+# path faithful and leaves the minigame path exactly where lane RNGSEED put it.
+# SetSoundMode(data_0209d4b4[0]) is the second: data_0209d4b4 is zero bss, so
+# it is SetSoundMode(0) -> func_02011d5c(1), which returns immediately while
+# data_0209b480 (the master sound-effects flag) is still zero at this point in
+# the boot.
+src/func_020196cc.c
+src/func_0205f8e0.c
+src/func_0205fb1c.c
+src/func_0205fb58.c

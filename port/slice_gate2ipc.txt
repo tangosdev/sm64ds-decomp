@@ -44,10 +44,10 @@
 # calls away and /OPT:REF drops all nine, which is what the linkage delta on
 # this gate is measuring.
 #
-# ---- the two that are hostgen'd -------------------------------------------
+# ---- the three that are hostgen'd -----------------------------------------
 #
-# GATE2IPC_SYMS in port/CMakeLists.txt routes two of these through
-# tools/hostgen.py, and both have to be:
+# GATE2IPC_SYMS in port/CMakeLists.txt routes three TUs through
+# tools/hostgen.py. Two of them are on the slice below and have to be:
 #
 #   func_0205bad8       reads and writes IPCSYNC through a POINTER BOUND TO A
 #                       LITERAL (`volatile u16 *reg = (volatile u16 *)0x4000180`),
@@ -59,12 +59,21 @@
 #                       region ntr/io.cpp maps. Built plain it does not read a
 #                       stale value, it takes an access violation.
 #
-# The rest are plain on purpose. src/IPCSend.c is plain too and is NOT here --
+# THE THIRD IS src/IPCSend.c, AND IT IS THE GAP THIS FILE USED TO STATE.
+# This paragraph used to read: "src/IPCSend.c is plain too and is NOT here --
 # it is already linked out of port/slice_gate10.txt -- so its stores to
 # IPCFIFOSEND still latch in the window instead of reaching the model. That is
-# a stated gap, and it is why ntr/ipc.cpp publishes truthful IPCFIFOCNT status
-# back into the window: IPCSend tests the error and send-full bits before every
-# store, and src/func_0205ae30.c retries it in a `while (... < 0)` loop.
+# a stated gap." Run link100 lane IPCSEND closed it. IPCSend is in
+# GATE2IPC_SYMS now and its plain line is commented out of slice_gate10.txt; it
+# is not listed on the slice below because its src line lives in that file. Up
+# to that change the port had never made an ARM9->ARM7 SEND: the three PXI arms
+# hal/boot_os.cpp runs only register callbacks and poll the readiness word, and
+# the only word that ever reached ntr/ipc.cpp's send FIFO was the no-handler
+# bounce IRQ::IPCRxFifoNotEmptyHandler posts, because THAT one is hostgen'd.
+#
+# ntr/ipc.cpp still publishes truthful IPCFIFOCNT status back into the window,
+# for the plain TUs that read it and because ipc_publish is what keeps the two
+# views from ever disagreeing.
 #
 # ---- what is deliberately NOT here ----------------------------------------
 #

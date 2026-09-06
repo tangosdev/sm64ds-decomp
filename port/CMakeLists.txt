@@ -9792,6 +9792,25 @@ set_source_files_properties(
 #
 # On the two targets that compile tests/walk_window.cpp, because that file is
 # where the boot calls live. See port/slice_gate214.txt.
+# ---- lane IPCSEND: the channel-8 firmware read, re-seated -------------------
+# Four matched TUs run link100 lane BOOT2 backed out because the ARM9 could not
+# send. It can now (IPCSend is in GATE2IPC_SYMS below), so func_020196cc goes
+# back at its own point in hal/boot_os.cpp's port_boot_rom_game_init_tail. This
+# list rides with SLICE214_SOURCES rather than with the PXI slice, because
+# hal/boot_os.cpp is what calls it and that file is on the two walk_window
+# targets only -- putting the four on smoke_player as well would add object
+# files whose externs (data_0208ee3c, data_0209d4b8) that target does not host.
+# See port/slice_ipcsend.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ipcsend.txt" SLICE_IPCSEND_LINES)
+set(SLICE_IPCSEND_SOURCES "")
+foreach(line IN LISTS SLICE_IPCSEND_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_IPCSEND_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate214.txt" SLICE214_LINES)
 # hal/globals_link100.cpp: the card driver's control block, hosted as the one
 # ROM object dsd split into three names. It is on this list because that block
@@ -9820,12 +9839,29 @@ endforeach()
 # that reach them and the four channels deliberately left out are all in
 # port/slice_gate2ipc.txt.
 #
-# TWO OF THEM MUST BE HOSTGEN'D. func_0205bad8 reaches IPCSYNC through a
+# THREE OF THEM MUST BE HOSTGEN'D. func_0205bad8 reaches IPCSYNC through a
 # pointer bound to a literal, so built plain its reads come off the mapped
 # latch and the ARM7's nibble is always zero. IRQ::IPCRxFifoNotEmptyHandler
 # reads IPCFIFORECV at 0x04100000, which is outside every region ntr/io.cpp
 # maps -- built plain that is an access violation, not a stale read.
-set(GATE2IPC_SYMS func_0205bad8 _ZN3IRQ24IPCRxFifoNotEmptyHandlerEv)
+#
+# IPCSend IS THE THIRD, and until run link100 lane IPCSEND it was the one that
+# was missing. Its `*(volatile unsigned int *)0x4000188 = cmd.raw` is exactly
+# hostgen's MMIO_DEREF shape, and built plain it LATCHED IN THE MAPPED WINDOW:
+# this port had never made an ARM9->ARM7 send at all, which is why every
+# [ipc:rom-boot] line in the tree read send=0, and why lane BOOT2 had to back
+# func_020196cc out again (it hung at func_0205ff08 + 0 with data_020a8114 == 1,
+# waiting for a reply to a request that was never delivered).
+# ITS PLAIN LINE IS COMMENTED OUT OF port/slice_gate10.txt, and the two lists go
+# to the same three targets, so the LINK SET does not change -- only the route.
+# NOTHING ELSE ABOUT THE FUNCTION CHANGES. Its two IPCFIFOCNT reads used to come
+# off the window ntr::ipc_publish keeps truthful and now come from
+# ntr/ipc.cpp's fifocnt_value() directly, which is the same number by
+# construction; its error arm's `|= 0xc000` stops being a store into a latch and
+# becomes the acknowledge ipc_reg_write documents; and with SM64DS_IPC_MODEL=0
+# ipc_reg_read/ipc_reg_write both decline, so io.cpp falls through to the same
+# mapped window a plain build used and the negative control is untouched.
+set(GATE2IPC_SYMS func_0205bad8 _ZN3IRQ24IPCRxFifoNotEmptyHandlerEv IPCSend)
 set(GATE2IPC_GEN "")
 foreach(sym IN LISTS GATE2IPC_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -13214,7 +13250,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # run link100 lane BOOT: the ROM's own boot chain, called from the four
     # port_boot_rom_* seams in tests/walk_window.cpp's main. See the gate-214
     # block above and the header of hal/boot_os.cpp.
-    ${SLICE214_SOURCES}
+    ${SLICE214_SOURCES} ${SLICE_IPCSEND_SOURCES}
     # dialogue pipeline (2026-08-08): the box pump (Stage::UpdateMessage's
     # dialogue arm), the engine-A 2D-over-3D compositor, and the headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
@@ -13493,7 +13529,7 @@ add_custom_command(TARGET walk_window POST_BUILD
 add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
     # run link100 lane BOOT: same slice as walk_window, for the same reason --
     # this target compiles tests/walk_window.cpp, which carries the boot calls.
-    ${SLICE214_SOURCES}
+    ${SLICE214_SOURCES} ${SLICE_IPCSEND_SOURCES}
     # dialogue pipeline (2026-08-08): pump, engine-A compositor, headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
     # the launcher's settings.json, read by the game (camera turn direction,

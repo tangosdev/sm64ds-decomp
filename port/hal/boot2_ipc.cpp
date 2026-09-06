@@ -137,10 +137,9 @@ const Channel kChannels[] = {
     { 0xa, "wireless       (src/func_020616e8.c, WM_SendCommand)",   false },
     { 0xc, "channel 0xc    (src/func_02059e48.c -> func_02059e04)",  true  },
     { 0xd, "GBA slot       (src/func_0206a88c.c -> func_0206a694)",  false },
-    { 0xb, "cart backup    (src/func_02060f60.c; ntr/backup.cpp faces the ROM "
-           "body today and answers without the FIFO; when that body is "
-           "enrolled, arm7_recv routes tag 0xb to backup.cpp and replies "
-           "through ipc_arm7_send)",                                  false },
+    { 0xb, "cart backup    (src/func_02060f60.cpp; ntr/backup.cpp faces the "
+           "ROM body today and answers without the FIFO. See THE 0xB RECIPE "
+           "below for what enrolling it now needs)",                  false },
 };
 const unsigned kChannelCount = sizeof kChannels / sizeof kChannels[0];
 
@@ -238,6 +237,61 @@ void arm7_recv(uint32_t word) {
 }
 
 // ---------------------------------------------------------------------------
+// THE 0xB RECIPE: what enrolling src/func_02060f60.cpp actually needs
+//
+// Run link100 lane IPCSEND was asked whether the ROM's own card-backup body
+// could run over the FIFO now that the ARM9 can send. It CAN in principle and
+// it is NOT taken here, because the save path has to stay byte-identical and
+// this is more than a route. What it wants, measured rather than guessed:
+//
+//   1. CHANNEL 0xB IS THE ONE TAG WHOSE PROTOCOL USES BIT 5 AS PART OF THE
+//      REQUEST, and arm7_recv above would swallow every word of it. The ROM
+//      sends `IPCSend(0xb, v, 1)` -- the third argument is the flag, and it is
+//      SET -- and its own receive callback src/func_02060310.c only acts on
+//      `if (a == 0xb && c != 0)`, c being that same bit off the reply. So both
+//      directions carry it, and the general reading up there ("the flag means
+//      the far side had no handler") is wrong for this tag alone. A 0xb route
+//      has to sit BEFORE the `if (flag)` arm, not after it.
+//
+//   2. IT IS A TWO-WORD INIT FOLLOWED BY ONE-WORD COMMANDS. func_02060f60's
+//      first call is `func_02060f60(thiz, 0, 1)`, and for v == 0 it sends the
+//      command word AND THEN the command-block pointer (`q = thiz->f0`, which
+//      is data_020a8160 -- a main-RAM address, so it fits the 26-bit payload).
+//      Every later command (2 identify, 6 read, 8 program, 9 verify) is ONE
+//      word carrying just the number, because the ARM7 already has the block.
+//      So the host side is a two-state machine, not a switch: word 0 arms
+//      "the next 0xb word is the block pointer", and the reply is owed after
+//      the pointer rather than after the 0.
+//
+//   3. THE REPLY WAKES A THREAD, AND THE THREAD IS REAL IN THIS BUILD.
+//      func_02060310 clears data_020a8180 + 0x34 bit 0x20 and then calls
+//      func_02058048(*(void **)(data_020a8180 + 0xd0)). That word is not
+//      written by func_0206002c; it is parked by the CARD THREAD ITSELF --
+//      src/func_020602bc.cpp does `*(void **)(base + 0xd0) = base + 0x3c;`
+//      immediately before each OS_SleepThread(0). Gate 223 creates and enters
+//      that thread and port/tools/thread_create_proof.py measures it going
+//      back to sleep, so +0xd0 holds &data_020a81bc rather than a null. THE
+//      OFFSETS WERE READ AT THE ADDRESS: func_02060310 at 0x02060338 is
+//      `ldr r2,[pc,#0x20] / add r1,r2,#0x34 / ldr r0,[r1] / bic r0,r0,#0x20 /
+//      str r0,[r1] / ldr r0,[r2,#0xd0]`.
+//
+//   4. THE WAIT CLOSES EARLY, WHICH IS FINE AND WORTH KNOWING. ipc_arm7_send
+//      dispatches inline, so func_02060310 runs INSIDE IPCSend -- before
+//      func_02060f60 reaches `IRQ::Disable(); while (f34 & 0x20)
+//      OS_SleepThread(0);`. The bit is already clear when the loop is entered,
+//      so the loop is not executed at all. The func_02058048 in step 3 still
+//      reschedules into the card thread from inside that send, which finds no
+//      bit 8 in the state word, re-parks +0xd0 and sleeps again.
+//
+//   WHAT IS LEFT is the work this lane did not do: ntr/backup.cpp's
+//   func_02060f60 face becomes the FIFO-facing half (the same switch, driven
+//   by the stored block instead of by the caller's `self`), the face's C name
+//   is freed so src/func_02060f60.cpp can take it, a slice carries that TU,
+//   and port/tools/save_proof.py has to come back 27/27 with the 8192-byte
+//   image byte-identical -- which is the real cost, because it is a second
+//   full build and a save run, not a route.
+
+// ---------------------------------------------------------------------------
 // THE RECEIVE-PATH SELF-TEST  (SM64DS_IPC_SELFTEST=1)
 //
 // Two words, chosen so they change no game state at all, that walk the whole
@@ -276,6 +330,45 @@ void selftest() {
                  ? "PASS: the ROM handler read both words, dispatched the "
                    "registered one and returned the unclaimed one"
                  : "FAIL");
+    std::fflush(stderr);
+}
+
+// ---------------------------------------------------------------------------
+// THE EXIT REPORT AND THE PER-CHANNEL TALLY  (run link100, lane IPCSEND)
+//
+// port_ipc_rom_boot_done below takes ipc_report("rom-boot") at the end of the
+// ROM's pre-main PXI span, and at THAT point send= can only ever be zero:
+// nothing in the bring-up sends. Every ARM9-initiated command in this build
+// comes later -- channel 7 once a frame out of src/func_0205b070.c, channel 8
+// at game init out of func_020196cc -- so the rom-boot line is a report on a
+// FIFO nobody has used yet, and reading its send=0 as "the ARM9 never sends"
+// is half of what cost lane BOOT2 a seat. (Only half: src/IPCSend.c really was
+// compiled plain and really did latch every store in the mapped window. It is
+// hostgen'd now, port/CMakeLists.txt's GATE2IPC_SYMS.)
+//
+// So the same report is taken again at the OTHER end of the run, with the
+// per-tag tally arm7_recv has been keeping all along beside it. That tally is
+// the only place the ARM9->ARM7 direction is visible PER CHANNEL, and that is
+// what a sound-path regression would show up in: channel 7 is held
+// observed-only, so its count going UP is traffic arriving and being declined
+// -- which changes nothing -- while its count going to zero would mean
+// func_0205b070's per-frame poke had stopped happening.
+//
+// Log-gated on SM64DS_IPC_LOG, which port/tools/ipc_proof.py's R1 already
+// sets: this is evidence, not a line every launch needs.
+void exit_report()
+{
+    ntr::ipc_report("exit");
+    for (unsigned t = 0; t < 32; ++t) {
+        if (!g_seen[t]) continue;
+        const Channel *c = find_channel(t);
+        std::fprintf(stderr, "[arm7:census] tag %2u  %6lu word(s) from the "
+                     "ARM9  %s%s\n", t, g_seen[t],
+                     c ? c->what : "UNCLAIMED CHANNEL",
+                     (c && !c->answer) ? "   [observed only]" : "");
+    }
+    std::fprintf(stderr, "[arm7:census] answered %lu, observed %lu, "
+                 "refused %lu\n", g_answered, g_observed, g_refused);
     std::fflush(stderr);
 }
 
@@ -339,5 +432,8 @@ Attach g_attach;
 extern "C" void port_ipc_rom_boot_done(void)
 {
     ntr::ipc_report("rom-boot");
+    /* and the same report at the far end of the run, where the ARM9's own
+       sends have actually happened. See THE EXIT REPORT above. */
+    if (ntr::ipc_log_on()) std::atexit(exit_report);
     if (env_on("SM64DS_IPC_SELFTEST", false)) selftest();
 }
