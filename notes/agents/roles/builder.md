@@ -52,6 +52,14 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     python tools/port_refcheck.py
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
+    python tools/queue_audit.py --check
+    #    ^ RED after any promotion until you regenerate the queue with --write:
+    #      your class's row still says `promoted no` with the old shard_count.
+    #      It needs build/rtti.json AND a build/tu_map.json NEWER than config/,
+    #      and refuses with a bare regeneration hint otherwise -- so run
+    #      `python tools/rtti_extract.py` and
+    #      `python tools/tu_map.py --out build/tu_map.json` first. It is not
+    #      wired into any workflow, so nothing else will catch a stale queue.
     python tools/cpp_tu_state.py --check-note
     #    ^ --check-note is SAFE on a dirty tree: measured with an unrelated
     #      unstaged change, it printed `cpp-tu state note is current`, exit 0.
@@ -177,6 +185,13 @@ removed flipped `functions_matched: 9 -> 8` and
 `every_declared_function_bytes_match: PASS -> FAIL` in the committed manifest.
 Every other tool treats those as prose, so a poisoned manifest ships silently.
 **Run `git status` after every `verify`, especially one you expected to fail.**
+
+**And "prose fields" understates the blast radius.** On a measured negative
+control the failing run also rewrote the entire `droppedSections` list
+(`[9,10,80,81,...]` -> `[5,6,7,8,...]`) alongside `functions_matched: 48 -> 45`.
+That list is not prose — it is the compiler-only policy's section index list.
+A negative control you run for five seconds can leave a wrong licensing list in
+a manifest you then commit.
 
 **Byte match alone is never enough.** Every relocated word is a wildcard in
 `match.compare`. Require all three: byte compare, `objisolate` (relocation type
