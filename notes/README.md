@@ -12,7 +12,7 @@ runbooks, role prompts. **Evidence** is what you look up one fact in and never
 read whole -- provenance, censuses, pilot reports. `data` is machine-read/
 written; `archive` is frozen history. See `notes/CONVENTIONS.md` §1.
 
-Doctrine budget: **290,458 bytes (283.7KB)** across 18 files, against a stated 150KB cap.
+Doctrine budget: **290,621 bytes (283.8KB)** across 18 files, against a stated 150KB cap.
 Over cap today -- reported here, not enforced (see `tools/notes_index.py`'s
 docstring). Condensing doctrine is separate, not-yet-run work.
 
