@@ -56,7 +56,6 @@ notes/goal-*.md
 notes/*.local-draft.md
 notes/*_agent[0-9]*.tsv
 notes/*_agent[0-9]*.md
-notes/*-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md
 
 # third-party tools cloned for evaluation/integration (not part of this repo)
 vendor/
