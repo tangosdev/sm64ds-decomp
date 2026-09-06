@@ -12,10 +12,9 @@
  * order. The eight State* aliases are class-anchored inferences from the PMF table
  * built by __sinit_ov006_021303d0; their exact original spellings are not claimed.
  *
- * Current focused result: 31/32 byte+relocation matches. StateShuffle has the
- * correct 0x720-byte instruction shape and a measured nine-word scratch-register
- * coloring residual under eager emission. Compiler-only D2/RTTI/vtable passengers
- * are explicitly deadstripped in the manifest in favor of canonical ROM copies.
+ * Current focused result: 32/32 byte+relocation matches. Compiler-only
+ * D2/RTTI/vtable passengers are explicitly deadstripped in the manifest in favor
+ * of canonical ROM copies.
  */
 /* Shared declarations first; TU-private layouts follow. */
 #include "dScMgCup_c.h"
@@ -804,8 +803,19 @@ void dScMgCup_c::StateShuffle()
         } else if (*(u8*)(c + 0x546a) != 0) {
             s16 vv = *(s16*)(state + 0x5e);
             if ((vv >= 0 && uu >= 0x5555u) || (vv < 0 && uu <= 0xaaabu)) {
-                *(s16*)(state + 0x5e) = -vv;
-                *(u16*)(state + 0x5c) += 0x8000;
+                /* This spelling is load-bearing; all three parts were measured.
+                   The two loads above share one base register through `state`,
+                   but the ROM re-materialises `this + 0x5400` here, so these
+                   stores must respell the full offset rather than reuse it.
+                   `vv = -vv;` as its own statement orders the rsb before that
+                   base add; storing `-vv` directly reverses the pair. And the
+                   increment must be a plain read-modify-write -- writing it as
+                   `+= 0x8000` makes mwcc CSE the field address into a register
+                   and drop the displacement, which `opt_common_subs off` (in
+                   force over this function) does not undo. */
+                vv = -vv;
+                *(s16*)(c + 0x545e) = vv;
+                *(u16*)(c + 0x545c) = *(u16*)(c + 0x545c) + 0x8000;
                 {
                     int tb = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
                     int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);

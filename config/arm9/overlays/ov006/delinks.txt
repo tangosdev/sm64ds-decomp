@@ -1992,6 +1992,7 @@ src/func_ov006_020df540.c:
     .text start:0x020df540 end:0x020df5b8
 
 src/func_ov006_020df5b8.c:
+    complete
     .text start:0x020df5b8 end:0x020dfcd8
 
 src/func_ov006_020dfcd8.c:

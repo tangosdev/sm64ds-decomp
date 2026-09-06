@@ -82,7 +82,8 @@ void func_ov006_020df5b8(char *c)
     }
 
     {
-        u16 uu = *(u16*)(c + 0x545c);
+        char *state = c + 0x5400;
+        u16 uu = *(u16*)(state + 0x5c);
         if (uu == 0x8000) {
             int tb = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
             int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
@@ -98,10 +99,11 @@ void func_ov006_020df5b8(char *c)
                 *(int*)(c + 0x5418) = 1;
             }
         } else if (*(u8*)(c + 0x546a) != 0) {
-            s16 vv = *(s16*)(c + 0x545e);
+            s16 vv = *(s16*)(state + 0x5e);
             if ((vv >= 0 && uu >= 0x5555u) || (vv < 0 && uu <= 0xaaabu)) {
-                *(s16*)(c + 0x545e) = -vv;
-                *(u16*)(c + 0x545c) += 0x8000;
+                vv = -vv;
+                *(s16*)(c + 0x545e) = vv;
+                *(u16*)(c + 0x545c) = *(u16*)(c + 0x545c) + 0x8000;
                 {
                     int tb = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
                     int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
