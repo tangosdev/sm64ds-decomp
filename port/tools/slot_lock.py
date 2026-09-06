@@ -45,8 +45,9 @@ $SM64DS_TEST_LOCK_PATH is also set. The default in (2) remains for direct/hand
 CLI use, where a single human on the box is not racing another lane. acquire()
 also prints the resolved path once per process so a wrong path shows in the log.
 
-THE LOCKFILE CONTENTS are JSON: pid, host, an epoch acquire time, and a label.
-The pid and time are what the stale-break below reads.
+THE LOCKFILE CONTENTS are JSON: pid, host, an epoch acquire time, a label, and
+-- only when the holder declared one -- the max_hold it expects to need. The pid
+and time are what the stale-break below reads.
 
 TIMEOUT -- FAIL, NOT PROCEED. A caller that waits DEFAULT_ACQUIRE_TIMEOUT
 seconds (SM64DS_TEST_LOCK_TIMEOUT overrides) and still cannot get the slot
@@ -61,13 +62,25 @@ STALE-LOCK BREAK -- a crashed lane must not wedge the machine. A held lock is
 stale, and is broken and re-acquired, when EITHER:
   * the holder pid is dead (the primary, immediate check -- a crashed lane's
     pid is gone the moment it dies), OR
-  * the lockfile is older than MAX_HOLD_SECONDS (the backstop: a wedged-but-
-    alive holder, or a pid that the OS has since reused for something else).
+  * the lockfile is older than the bound THAT HOLD DECLARED, which is
+    MAX_HOLD_SECONDS unless the holder said otherwise (the backstop: a
+    wedged-but-alive holder, or a pid the OS has since reused).
 MAX_HOLD_SECONDS is well above any single windowed run, so the backstop never
 fires on a legitimately long-held slot; the pid check is what recovers a crash
-promptly. Breaking is itself raced-safe: the breaker unlinks and then re-creates
-with O_EXCL, and if two lanes race to break the same stale lock, only one wins
-the create and the other loops back to waiting.
+promptly. A caller that KNOWS it will hold for longer -- a phase hold across a
+battery's fifty level rows, or `run --max-hold N` around a long child -- says so
+and is not broken, while an UNDECLARED long hold still is, because that is the
+shape of a mistake; see _is_stale for the afternoon on this box that produced
+one of each within the hour. Breaking is itself raced-safe: the breaker unlinks
+and then re-creates with O_EXCL, and if two lanes race to break the same stale
+lock, only one wins the create and the other loops back to waiting.
+
+HOLDING IT ACROSS A PHASE. acquire() is deliberately NOT re-entrant -- a second
+acquire in one process blocks, which is what makes a lost release show up as a
+hang instead of as two runs quietly sharing the slot. A caller that wants to run
+several of its OWN windowed children at once takes slot_reentrant() around the
+whole phase and lets the inner per-launch locks nest for free; see the phase
+banner further down and port/tools/battery.py's SM64DS_BATTERY_WORKERS.
 
 ADOPTING IT.
 
@@ -99,6 +112,7 @@ import os
 import socket
 import sys
 import tempfile
+import threading
 import time
 
 # The longest a single windowed run should ever hold the slot is battery's
@@ -227,7 +241,25 @@ def _read_holder(path):
 
 
 def _is_stale(path):
-    """Is the lock currently on disk stale (dead holder OR older than MAX_HOLD)?"""
+    """Is the lock stale -- dead holder, or held past the bound it declared?
+
+    THE BOUND IS THE HOLDER'S TO DECLARE (run link100, lane SLOT). It used to be
+    one constant for every hold, and that constant has to be two things at once:
+    small enough to recover the box from a lane that wedged while holding, and
+    large enough never to fire on a hold that is legitimately long. Both cases
+    are real and were seen on this box on the same afternoon -- a lane wedged
+    for twenty-six minutes inside `slot_lock.py run -- python ipc_proof.py`,
+    holding the slot with no windowed process running at all and 3 seconds of
+    CPU to show for it, while a battery holding the slot across its whole level
+    phase (the reason that phase can now run several rows wide) is a legitimate
+    hold of a similar length.
+
+    So a caller that KNOWS it will be long says so -- acquire(max_hold=...)
+    writes the number into the lockfile and _is_stale reads it back. A caller
+    that declares nothing keeps MAX_HOLD_SECONDS exactly as before, which is
+    what recovers the wedged case promptly: an undeclared long hold is still
+    the shape of a mistake, and it is only the declared one that is not.
+    """
     pid, acquired, _ = _read_holder(path)
     if not _pid_alive(pid):
         return True
@@ -238,20 +270,41 @@ def _is_stale(path):
         return True
     if acquired:
         age = max(age, time.time() - float(acquired))
-    return age > MAX_HOLD_SECONDS
+    return age > _declared_max_hold(path)
 
 
-def _write_locked(fd, label):
-    payload = json.dumps({
+def _declared_max_hold(path):
+    """The bound this lockfile declared, or the default when it declared none."""
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            v = json.loads(f.read()).get("max_hold")
+        if v is not None:
+            v = float(v)
+            # A declaration can lengthen the leash, never shorten it below the
+            # default: a hold that claims it will be over in a second would
+            # otherwise be breakable a second later, and the whole point of the
+            # default is that it is comfortably above one windowed run.
+            return max(v, MAX_HOLD_SECONDS)
+    except (OSError, ValueError, AttributeError, TypeError):
+        pass
+    return MAX_HOLD_SECONDS
+
+
+def _write_locked(fd, label, max_hold=None):
+    payload = {
         "pid": os.getpid(),
         "host": socket.gethostname(),
         "acquired": time.time(),
         "label": label or "",
-    })
-    os.write(fd, payload.encode("utf-8"))
+    }
+    # Only written when the caller declared one, so an ordinary lockfile is
+    # byte-for-byte the shape it always was and reads the same to every tool.
+    if max_hold:
+        payload["max_hold"] = float(max_hold)
+    os.write(fd, json.dumps(payload).encode("utf-8"))
 
 
-def _try_create(path, label):
+def _try_create(path, label, max_hold=None):
     """One atomic attempt to create the lockfile. True if we now hold it."""
     os.makedirs(os.path.dirname(path), exist_ok=True)
     try:
@@ -259,13 +312,13 @@ def _try_create(path, label):
     except FileExistsError:
         return False
     try:
-        _write_locked(fd, label)
+        _write_locked(fd, label, max_hold)
     finally:
         os.close(fd)
     return True
 
 
-def acquire(label="", timeout=None, poll=POLL_SECONDS):
+def acquire(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
     """Block until this process holds the windowed slot, or time out.
 
     Returns the lockfile path on success. Raises SlotLockTimeout if the slot
@@ -292,7 +345,7 @@ def acquire(label="", timeout=None, poll=POLL_SECONDS):
         timeout = acquire_timeout()
     deadline = time.time() + timeout
     while True:
-        if _try_create(path, label):
+        if _try_create(path, label, max_hold):
             return path
         # Somebody holds it. Break it if it is stale, otherwise wait.
         if _is_stale(path):
@@ -305,7 +358,7 @@ def acquire(label="", timeout=None, poll=POLL_SECONDS):
                     os.remove(path)
             except OSError:
                 pass
-            if _try_create(path, label):
+            if _try_create(path, label, max_hold):
                 return path
         if time.time() >= deadline:
             pid, acquired, _ = _read_holder(path)
@@ -342,12 +395,86 @@ def release(path=None):
 
 
 @contextlib.contextmanager
-def slot(label="", timeout=None, poll=POLL_SECONDS):
+def slot(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
     """Context manager: hold the windowed slot for the block, release on exit."""
-    path = acquire(label=label, timeout=timeout, poll=poll)
+    path = acquire(label=label, timeout=timeout, poll=poll,
+                   max_hold=max_hold)
     try:
         yield path
     finally:
+        release(path)
+
+
+# ---- HOLDING THE SLOT ACROSS A WHOLE PHASE (run link100, lane SLOT) --------
+#
+# WHY THE PER-LAUNCH LOCK IS THE BOTTLENECK. battery.py takes and drops this
+# lock around EACH walk_window launch, and a battery makes about ninety of them
+# over roughly a quarter of an hour. That serialises two different things at
+# once: it keeps two LANES apart, which is the job, and it also keeps a lane
+# apart from ITSELF, which is not -- a battery physically cannot run two of its
+# own rows side by side while every row wants the same lock. With eight lanes on
+# the box the queue is the whole cost of the evening.
+#
+# So a caller that wants several of its own children in flight has to hold the
+# slot across the PHASE and launch inside it. acquire() cannot simply become
+# re-entrant to allow that: test_acquire_blocks_a_second_acquire pins the
+# opposite contract on purpose -- a second acquire in the same process BLOCKS,
+# which is what makes a lost release show up as a hang instead of as two runs
+# quietly sharing a slot. Re-entrancy is therefore its own function, opted into
+# by name at the call site, and acquire()/release() are byte-for-byte what they
+# were.
+#
+# held() is the predicate the nesting is built on and is worth having alone: it
+# answers "is the lockfile mine right now" from the file itself rather than from
+# memory, so a lock broken as stale underneath us reads as NOT held and the next
+# nested call goes and takes it properly.
+# The depth is mutated from WORKER THREADS -- the whole point is that a phase
+# hold on the main thread lets several launcher threads run at once -- so it is
+# guarded. `n += 1` on a module global is not atomic, and a drifted counter here
+# would release the slot while a lane still had children in it.
+_nest_depth = 0
+_nest_guard = threading.Lock()
+
+
+def held(path=None):
+    """Does THIS process hold the slot right now, per the lockfile itself?"""
+    if path is None:
+        path = lock_path()
+    pid, _, _ = _read_holder(path)
+    return pid == os.getpid()
+
+
+@contextlib.contextmanager
+def slot_reentrant(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
+    """slot(), except a nested use by a process that already holds it is free.
+
+    The outermost use acquires and releases exactly as slot() does; an inner use
+    inside it neither touches the lockfile nor waits, and its exit does not
+    release. Other lanes see one O_EXCL lockfile for the whole nested span and
+    are shut out for all of it, which is the property the lock exists for.
+    """
+    global _nest_depth
+    path = lock_path()
+    with _nest_guard:
+        nested = _nest_depth > 0 and held(path)
+        if nested:
+            _nest_depth += 1
+    if nested:
+        try:
+            yield path
+        finally:
+            with _nest_guard:
+                _nest_depth -= 1
+        return
+    path = acquire(label=label, timeout=timeout, poll=poll,
+                   max_hold=max_hold)
+    with _nest_guard:
+        _nest_depth += 1
+    try:
+        yield path
+    finally:
+        with _nest_guard:
+            _nest_depth -= 1
         release(path)
 
 
@@ -404,7 +531,8 @@ def main(argv=None):
     if cmd == "run":
         # Hold the slot for the whole lifetime of a child command.
         if "--" not in argv:
-            print("usage: slot_lock.py run [--label L] [--timeout N] -- <cmd...>",
+            print("usage: slot_lock.py run [--label L] [--timeout N] "
+                  "[--max-hold SECONDS] -- <cmd...>",
                   file=sys.stderr)
             return 2
         child = argv[argv.index("--") + 1:]
@@ -413,8 +541,15 @@ def main(argv=None):
             return 2
         import subprocess
         try:
+            # --max-hold DECLARES A LONG HOLD. `run` wraps a whole child
+            # command, and a child that is a proof script or a battery can
+            # legitimately run past the default stale bound -- at which point a
+            # waiter breaks the lock and starts a windowed run beside one that
+            # is still going. Say the number and it will not. Undeclared, the
+            # default still applies, which is what recovers a wedged holder.
             with slot(label=opt("--label", "cli run"),
-                      timeout=float(opt("--timeout", acquire_timeout()))):
+                      timeout=float(opt("--timeout", acquire_timeout())),
+                      max_hold=float(opt("--max-hold", 0)) or None):
                 return subprocess.run(child).returncode
         except SlotLockTimeout as e:
             print(f"slot: TIMEOUT -- {e}", file=sys.stderr)

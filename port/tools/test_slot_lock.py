@@ -10,6 +10,7 @@ import json
 import os
 import subprocess
 import sys
+import threading
 import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -242,6 +243,131 @@ def test_pid_alive_true_for_self_false_for_dead(lockfile):
     assert slot_lock._pid_alive(0x7FFFFFFF) is False
     assert slot_lock._pid_alive(None) is False
     assert slot_lock._pid_alive(-1) is False
+
+
+# --- held() and the re-entrant phase hold (run link100, lane SLOT) --------
+# The per-launch lock serialises a lane against ITSELF, which is why a battery
+# could not run two of its own rows at once. slot_reentrant is the way out, and
+# these pin both halves of its contract: nesting our own hold is free, and
+# acquire() is NOT re-entrant -- test_acquire_blocks_a_second_acquire above
+# stays true, which is what makes a lost release show up as a hang rather than
+# as two runs quietly sharing the slot.
+
+def test_held_is_true_only_while_we_hold_it(lockfile):
+    assert slot_lock.held(lockfile) is False
+    slot_lock.acquire(label="mine", timeout=2)
+    assert slot_lock.held(lockfile) is True
+    slot_lock.release(lockfile)
+    assert slot_lock.held(lockfile) is False
+
+
+def test_held_is_false_for_a_foreign_holder(lockfile):
+    with open(lockfile, "w", encoding="utf-8") as f:
+        json.dump({"pid": 0x7FFFFFFF, "host": "elsewhere",
+                   "acquired": time.time(), "label": "theirs"}, f)
+    assert slot_lock.held(lockfile) is False
+
+
+def test_slot_reentrant_nests_without_releasing_early(lockfile):
+    with slot_lock.slot_reentrant(label="phase", timeout=2) as outer:
+        assert os.path.exists(lockfile)
+        with slot_lock.slot_reentrant(label="row", timeout=2) as inner:
+            assert str(inner) == str(outer)
+            assert os.path.exists(lockfile)
+        # the INNER exit must not have freed the slot
+        assert os.path.exists(lockfile)
+        assert slot_lock.held(lockfile) is True
+    assert not os.path.exists(lockfile)
+
+
+def test_slot_reentrant_alone_behaves_like_slot(lockfile):
+    with slot_lock.slot_reentrant(label="solo", timeout=2) as p:
+        assert os.path.exists(p)
+        pid, _, _ = slot_lock._read_holder(p)
+        assert pid == os.getpid()
+    assert not os.path.exists(lockfile)
+
+
+def test_slot_reentrant_waits_for_a_foreign_holder(lockfile):
+    # Nesting is free only for OUR OWN hold. A live foreign holder still shuts
+    # this process out, which is the property the whole module exists for.
+    with open(lockfile, "w", encoding="utf-8") as f:
+        json.dump({"pid": os.getppid() or 1, "host": "x",
+                   "acquired": time.time(), "label": "theirs"}, f)
+    with pytest.raises(slot_lock.SlotLockTimeout):
+        with slot_lock.slot_reentrant(label="mine", timeout=0.4, poll=0.05):
+            pass
+
+
+def test_slot_reentrant_nesting_is_thread_safe(lockfile):
+    # The phase hold is taken on one thread and the rows run on others, so the
+    # depth is mutated from all of them; a drifted counter would release the
+    # slot with children still inside it.
+    seen = []
+
+    def row(i):
+        with slot_lock.slot_reentrant(label="row%d" % i, timeout=2):
+            seen.append(os.path.exists(lockfile))
+            time.sleep(0.05)
+
+    with slot_lock.slot_reentrant(label="phase", timeout=2):
+        ts = [threading.Thread(target=row, args=(i,)) for i in range(4)]
+        for t in ts:
+            t.start()
+        for t in ts:
+            t.join()
+        assert os.path.exists(lockfile)
+    assert seen == [True] * 4
+    assert not os.path.exists(lockfile)
+    assert slot_lock._nest_depth == 0
+
+
+# --- a hold may declare its own bound (run link100, lane SLOT) ------------
+# One constant had to be two things at once: small enough to recover the box
+# from a lane that wedged holding the slot, and large enough never to fire on a
+# hold that is legitimately long. Both happened on this box on the same
+# afternoon. So a long hold declares itself and an undeclared one still gets the
+# short leash.
+
+def test_a_declared_bound_keeps_a_long_hold_alive(lockfile):
+    long_hold = slot_lock.MAX_HOLD_SECONDS * 3
+    slot_lock.acquire(label="a long phase", timeout=2, max_hold=long_hold)
+    old = time.time() - (slot_lock.MAX_HOLD_SECONDS + 300)
+    os.utime(lockfile, (old, old))
+    d = json.loads(open(lockfile, encoding="utf-8").read())
+    assert d["max_hold"] == long_hold
+    # Past the DEFAULT bound, inside the declared one -> not stale.
+    assert slot_lock._is_stale(lockfile) is False
+    slot_lock.release(lockfile)
+
+
+def test_a_declared_bound_still_expires(lockfile):
+    slot_lock.acquire(label="a long phase", timeout=2,
+                      max_hold=slot_lock.MAX_HOLD_SECONDS * 2)
+    old = time.time() - (slot_lock.MAX_HOLD_SECONDS * 2 + 300)
+    os.utime(lockfile, (old, old))
+    assert slot_lock._is_stale(lockfile) is True
+    slot_lock.release(lockfile)
+
+
+def test_an_undeclared_hold_keeps_the_short_leash(lockfile):
+    # The wedged case: nothing declared, so the default still breaks it. This is
+    # the property that must not be lost to make long holds workable.
+    slot_lock.acquire(label="wedged", timeout=2)
+    old = time.time() - (slot_lock.MAX_HOLD_SECONDS + 120)
+    os.utime(lockfile, (old, old))
+    assert "max_hold" not in json.loads(open(lockfile, encoding="utf-8").read())
+    assert slot_lock._is_stale(lockfile) is True
+    slot_lock.release(lockfile)
+
+
+def test_a_declaration_cannot_shorten_the_leash(lockfile):
+    # A hold that claims it will be over in a second must not become breakable
+    # a second later; the default is a floor.
+    slot_lock.acquire(label="optimist", timeout=2, max_hold=1)
+    assert slot_lock._declared_max_hold(lockfile) == slot_lock.MAX_HOLD_SECONDS
+    assert slot_lock._is_stale(lockfile) is False
+    slot_lock.release(lockfile)
 
 
 # --- no-pytest standalone runner -----------------------------------------

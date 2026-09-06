@@ -7221,6 +7221,48 @@ int main(void)
         snprintf(logname, sizeof g_playlog,
                  "playlog/play_%04u%02u%02u_%02u%02u%02u.log", st_.wYear,
                  st_.wMonth, st_.wDay, st_.wHour, st_.wMinute, st_.wSecond);
+        /* THE NAME IS CLAIMED, NOT ASSUMED (run link100, lane SLOT).
+           This name has one-second resolution and nothing else in it, so two
+           copies of the game started in the same second in one folder pick the
+           SAME file and the second one's freopen "w" truncates the first one's
+           recorder. That is not a theory: twenty concurrent scene runs out of
+           one directory left TEN playlogs, so half of every pair's flight
+           recorder was destroyed -- and a recorder is exactly what somebody
+           wants when the run that went wrong was one of two.
+
+           CREATE_NEW is the claim, and it is atomic, so a loser cannot even
+           briefly believe it owns the name; the pid is what the loser falls
+           back to, and a second collision (one pid, two runs in a second --
+           impossible today, cheap to survive) walks a counter.
+
+           INERT FOR A SINGLE INSTANCE, which is every run today: the plain
+           timestamped name is free, the first CREATE_NEW wins it, and the file
+           is the same file with the same name it has always been. The handle is
+           closed immediately and freopen re-opens and truncates it; nobody else
+           can take the name in between, because by then it exists. */
+        for (int tries = 0; tries < 64; ++tries) {
+            HANDLE claim = CreateFileA(logname, GENERIC_WRITE,
+                                       FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+                                       CREATE_NEW, FILE_ATTRIBUTE_NORMAL, NULL);
+            if (claim != INVALID_HANDLE_VALUE) {
+                CloseHandle(claim);
+                break;
+            }
+            if (GetLastError() != ERROR_FILE_EXISTS)
+                break;      /* not a name clash; let freopen report it */
+            if (tries == 0)
+                snprintf(logname, sizeof g_playlog,
+                         "playlog/play_%04u%02u%02u_%02u%02u%02u_%lu.log",
+                         st_.wYear, st_.wMonth, st_.wDay, st_.wHour,
+                         st_.wMinute, st_.wSecond,
+                         (unsigned long)GetCurrentProcessId());
+            else
+                snprintf(logname, sizeof g_playlog,
+                         "playlog/play_%04u%02u%02u_%02u%02u%02u_%lu_%d.log",
+                         st_.wYear, st_.wMonth, st_.wDay, st_.wHour,
+                         st_.wMinute, st_.wSecond,
+                         (unsigned long)GetCurrentProcessId(), tries);
+        }
         if (freopen(logname, "w", stderr)) {
             setvbuf(stderr, NULL, _IONBF, 0);
             printf("flight recorder: %s\n", logname);

@@ -54,6 +54,13 @@ Everything the merge gate runs, in order, stopping at the first failure:
 Exit 0 all green, 1 first red, with a one-line verdict per step so a log tail
 reads as a checklist.
 
+SM64DS_BATTERY_WORKERS=N runs the LEVEL rows N at a time, each in its own
+directory, holding the windowed slot once for the phase instead of once per
+launch. Unset or 1 is exactly the run this file has always made, in level order
+out of build/port with the per-launch lock. See RUNNING THE LEVEL ROWS N-WIDE
+below for what the directories are for and why the slot has to be held across
+the phase for any of it to help.
+
 THE SELFTEST BMP TRACKS THE HOSTED-GLOBAL LAYOUT, NOT ONLY THE .dsstate BASE.
 
 Read this before treating a walk_window_selftest.bmp diff as a rendering
@@ -290,11 +297,15 @@ would buy a few minutes of latency and spend the only thing that makes its
 failures easy to read.
 """
 
+import contextlib
 import os
+import queue
 import re
+import shutil
 import subprocess
 import sys
 import time
+from concurrent.futures import ThreadPoolExecutor
 
 # The windowed test slot lock lives beside this file. Importing it is free and
 # never changes behaviour on its own -- run() below consults slot_lock.enabled()
@@ -828,14 +839,123 @@ def run(cmd, cwd, env=None, timeout=STEP_TIMEOUT):
     # cannot overlap and throw the random cross-level rc=1 that this lock exists
     # to end. Unset, or for a non-windowed command, this is a plain
     # subprocess.run and the battery behaves exactly as before.
+    # slot_reentrant rather than slot: identical when this is the only hold --
+    # it acquires and releases exactly as before -- and free when the caller is
+    # already holding the slot for a whole phase (see windowed_phase below), so
+    # a lane can run several of its own rows at once without the per-launch lock
+    # serialising the lane against itself. See slot_lock.py's phase banner.
     if slot_lock.enabled() and _is_windowed_cmd(cmd):
-        with slot_lock.slot(label=f"battery {os.path.basename(str(cmd[0]))}"):
+        with slot_lock.slot_reentrant(
+                label=f"battery {os.path.basename(str(cmd[0]))}"):
             return subprocess.run(cmd, cwd=cwd, env=env, timeout=timeout,
                                   capture_output=True, text=True,
                                   creationflags=NO_CONSOLE, startupinfo=SI_MIN)
     return subprocess.run(cmd, cwd=cwd, env=env, timeout=timeout,
                           capture_output=True, text=True,
                           creationflags=NO_CONSOLE, startupinfo=SI_MIN)
+
+
+# ---- RUNNING THE LEVEL ROWS N-WIDE (run link100, lane SLOT) ----------------
+#
+# WHY. The level phase is fifty windowed runs, one after another, and it is most
+# of the battery's quarter of an hour. Every one of them is an independent
+# question about an independent level, so the only reason they were sequential
+# is that the windowed slot lock made them so -- a per-launch lock serialises a
+# lane against ITSELF as much as against another lane. With the phase hold below
+# taking the slot once, the rows can go N at a time and the whole battery stops
+# being the thing eight lanes queue behind.
+#
+# DEFAULT 1, WHICH IS TODAY'S BEHAVIOUR BYTE FOR BYTE: one worker runs the rows
+# in level order out of build/port itself, with no copied exe and no phase hold,
+# which is the code path that shipped. N>1 is a lane's explicit choice.
+#
+# EACH WORKER GETS ITS OWN DIRECTORY, and that is not tidiness. Everything a run
+# writes is named relative to either the working directory or the exe, and
+# port/hal/instance_tag.h's survey is the list: walk_window_selftest.bmp,
+# sub_screen.bmp and the tex dumps are cwd-relative; crash.txt and exit.txt are
+# exe-relative and are DELIBERATELY NOT per-instance (that header's banner
+# explains at length why editing fault_probe.h is off the table), so two rows
+# sharing one folder would have the second faulting row overwrite the first's
+# report. A directory per worker separates every one of those names at once,
+# with no code change in the game and nothing to keep in sync -- which is
+# exactly the answer that header calls "already separable".
+#
+# SM64DS_INSTANCE rides along so the two names the port DOES suffix itself
+# (startup_error.txt, savestate.bin) and the window title are per worker too.
+MAX_LEVEL_WORKERS = 8
+
+
+def level_workers():
+    """How many level rows to run at once. 1 (the default) is the old path."""
+    v = os.environ.get("SM64DS_BATTERY_WORKERS", "")
+    try:
+        n = int(str(v).strip())
+    except ValueError:
+        n = 1
+    return max(1, min(n, MAX_LEVEL_WORKERS))
+
+
+def worker_dirs(root, build, n):
+    """One private directory per worker, each with its own walk_window.exe.
+
+    Returns a list of n directories; with n == 1 it is [build] and nothing is
+    copied, so the single-worker path touches no new files at all.
+    """
+    if n <= 1:
+        return [build]
+    base = os.path.join(root, "build", "battery-workers")
+    dirs = []
+    for i in range(n):
+        d = os.path.join(base, "w%d" % i)
+        os.makedirs(d, exist_ok=True)
+        src = os.path.join(build, "walk_window.exe")
+        dst = os.path.join(d, "walk_window.exe")
+        # Copy when the exe is newer or missing. A stale copy would test a
+        # binary nobody built, which is the failure this whole file is careful
+        # about elsewhere (shipcfg_stale_kit), so the mtime+size test is the
+        # cheap version of the same refusal.
+        if (not os.path.exists(dst)
+                or os.path.getmtime(dst) < os.path.getmtime(src)
+                or os.path.getsize(dst) != os.path.getsize(src)):
+            shutil.copy2(src, dst)
+        # The exe-adjacent post-mortems from an earlier battery must not be
+        # read as this one's: a stale crash.txt beside a worker is exactly the
+        # "stale artifact looks fresh" shape.
+        for name in ("crash.txt", "exit.txt", "startup_error.txt"):
+            p = os.path.join(d, name)
+            if os.path.exists(p):
+                try:
+                    os.remove(p)
+                except OSError:
+                    pass
+        dirs.append(d)
+    return dirs
+
+
+@contextlib.contextmanager
+def windowed_phase(workers, rows, label):
+    """Hold the windowed slot for a whole phase, or do nothing.
+
+    Taken ONLY when the rows are going to run more than one wide: with a single
+    worker every launch takes the per-launch lock exactly as it always did, so
+    the default path's locking is unchanged. With several, the phase hold is
+    what makes the per-launch locks free (slot_lock.slot_reentrant) instead of
+    serialising this lane against itself.
+    """
+    if workers > 1 and slot_lock.enabled():
+        # DECLARE THE LENGTH. A phase hold is legitimately longer than one
+        # windowed run, and slot_lock's stale backstop breaks an UNDECLARED
+        # overlong hold on purpose -- that is how a lane that wedged holding the
+        # slot is recovered -- so a phase that did not say how long it would be
+        # would eventually be broken into the very collision the lock exists to
+        # stop. The number is this phase's own worst case: every row taking the
+        # full per-step timeout, `workers` of them at a time. slot_lock floors
+        # it at its own default, so a small phase cannot shorten the leash.
+        worst = STEP_TIMEOUT * -(-rows // max(1, workers))
+        with slot_lock.slot_reentrant(label=label, max_hold=worst):
+            yield
+    else:
+        yield
 
 
 def selftest_env(lvl, skip=None):
@@ -880,6 +1000,14 @@ def selftest_env(lvl, skip=None):
     env.pop("SM64DS_COMMS_PORT", None)
     env.pop("SM64DS_COMMS_SLOT", None)
     env.pop("SM64DS_COMMS_INJECT", None)
+    # SM64DS_EDITOR_CHANNEL, the last member of that family and the only knob in
+    # the port that names a FIXED machine-wide number: hal/editor_channel.cpp
+    # binds loopback port 7355. See the longer note at the same entry in
+    # scene_env below -- run link100 lane SLOT scanned the linked exe and found
+    # no named kernel object of any kind, which makes 7355 the single name two
+    # concurrent runs on this box can contend for. Inherited, it also hands an
+    # outside process a live spawn/warp interface into a comparator run.
+    env.pop("SM64DS_EDITOR_CHANNEL", None)
     # SM64DS_RNG_MENU_FRAMES (run mg5, lane RNGSEED) pins the minigame RNG's
     # menu dwell and forces the seed, which moves data_0209d4b8 off the .bss
     # zero every draw in this tree is measured from. It is DETERMINISTIC -- the
@@ -989,6 +1117,20 @@ def scene_env(scene, extra=None):
               # whose whole job is to answer one question about one scene.
               "SM64DS_COMMS_ROLE", "SM64DS_COMMS_PORT",
               "SM64DS_COMMS_SLOT", "SM64DS_COMMS_INJECT",
+              # THE LAST MEMBER OF THAT FAMILY, and the only thing in the whole
+              # port that names a FIXED machine-wide number: hal/editor_channel
+              # .cpp binds loopback port 7355. Run link100 lane SLOT scanned the
+              # linked walk_window.exe for every named kernel object --
+              # CreateMutex, CreateFileMapping, CreateEvent, CreateSemaphore,
+              # CreateNamedPipe, and any "Global\\" or "Local\\" name string --
+              # and found NONE, so 7355 is the one name two concurrent runs on
+              # this box could contend for at all. It costs more than the
+              # contention: an inherited channel hands an outside process a live
+              # spawn / warp / objlist interface into a run whose whole job is
+              # to be deterministic. Same class as SM64DS_COMMS_ROLE directly
+              # above, and it was the one knob in that class neither env builder
+              # dropped.
+              "SM64DS_EDITOR_CHANNEL",
               "SM64DS_RNG_MENU_FRAMES"):
         env.pop(k, None)
     if extra:
@@ -1530,24 +1672,90 @@ def main():
         print(f"levels: FAIL, LEVEL_SKIPS names unmounted level(s) {orphans}")
         return 1
 
-    retired = []
-    for lvl in levels:
+    # ONE LEVEL'S WHOLE ROW, in one place, so the sequential and the N-wide
+    # paths cannot drift: the selftest, and for a skipped level the bare
+    # re-probe that decides whether the skip has retired. `wdir` is this
+    # worker's own directory and is build/port itself when there is one worker.
+    def level_row(lvl, wdir=None):
+        # THE DIRECTORY IS TAKEN, NOT INDEXED. Handing row i the directory
+        # i % workers looks equivalent and is not: the pool is free to start row
+        # 4 while rows 1-3 are still going, and rows 0 and 4 would then be two
+        # processes in one folder, which is the exact collision the per-worker
+        # directory exists to prevent. A row checks a directory out for its
+        # whole lifetime -- the selftest AND its retire probe -- and hands it
+        # back, so at most `workers` are ever in use and never two at once.
+        if wdir is None:
+            wdir = free_dirs.get()
+            try:
+                return level_row(lvl, wdir)
+            finally:
+                free_dirs.put(wdir)
         skip = LEVEL_SKIPS.get(lvl)
         env = selftest_env(lvl, skip[0] if skip else None)
-        r = run([os.path.join(build, "walk_window.exe")], build, env=env)
+        if wdir != build:
+            env["SM64DS_INSTANCE"] = os.path.basename(wdir)
+        r = run([os.path.join(wdir, "walk_window.exe")], wdir, env=env)
         if r.returncode:
-            print(f"selftest level {lvl}: FAIL rc={r.returncode}"
+            return lvl, r.returncode, r.stdout, skip, None, None
+        if not skip:
+            return lvl, 0, r.stdout, None, None, None
+        still, how = retire_probe(wdir, lvl)
+        return lvl, 0, r.stdout, skip, still, how
+
+    def report_row(lvl, rc, out, skip, still, how):
+        """Print one finished row and say whether the battery must stop."""
+        if rc:
+            print(f"selftest level {lvl}: FAIL rc={rc}"
                   + (f" (SM64DS_SKIP_CLASS={skip[0]})" if skip else ""))
-            print(r.stdout[-1500:])
-            return 1
+            print((out or "")[-1500:])
+            return False
         if not skip:
             print(f"selftest level {lvl}: ok")
-            continue
-        still, how = retire_probe(build, lvl)
+            return True
         print(f"selftest level {lvl}: ok with SM64DS_SKIP_CLASS={skip[0]}"
               f", owned by {skip[1]} ({how})")
         if not still:
             retired.append(lvl)
+        return True
+
+    retired = []
+    workers = level_workers()
+    wdirs = worker_dirs(root, build, workers)
+    if workers > 1:
+        print(f"levels: {workers} rows at a time, each in its own directory "
+              f"({os.path.join('build', 'battery-workers')}); the windowed slot "
+              f"is held once for the phase rather than per launch")
+    # THE PHASE HOLD, and it is taken for BOTH the sequential and the parallel
+    # arm of the branch below so the two differ only in width. With one worker
+    # it is a no-op and each launch takes the per-launch lock as before.
+    level_phase_t0 = time.time()
+    with windowed_phase(workers, len(levels), "battery level phase"):
+        if workers == 1:
+            for lvl in levels:
+                if not report_row(*level_row(lvl, build)):
+                    return 1
+        else:
+            # Submitted in level order and REPORTED in level order, because a
+            # battery log that reads as a checklist is the point of this file;
+            # only the running is out of order. The first failure in LEVEL order
+            # is the one that stops the run, which keeps the verdict independent
+            # of how the box happened to schedule the rows -- a battery that
+            # blamed whichever red finished first would not be reproducible.
+            free_dirs = queue.Queue()
+            for d in wdirs:
+                free_dirs.put(d)
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                futs = [pool.submit(level_row, lvl) for lvl in levels]
+                for f in futs:
+                    if not report_row(*f.result()):
+                        for g in futs:
+                            g.cancel()
+                        return 1
+
+    # The one number that says whether the width is worth anything, printed
+    # whatever the width is so the two are comparable from two logs.
+    print(f"levels: {len(levels)} rows in {time.time() - level_phase_t0:.0f}s "
+          f"at {workers} wide")
 
     for lvl in retired:
         skip = LEVEL_SKIPS[lvl]
@@ -1586,49 +1794,97 @@ def main():
               f"unable to run.")
         return 1
 
-    scene_retired = []
-    scene_unblocked = []
-    for sc in scenes:
+    # THE SCENE ROWS RUN N-WIDE TOO, on the same shape as the level rows above:
+    # one function does a whole row, the rows are reported in scene order
+    # whatever order they ran in, and each worker keeps its own directory for
+    # its whole row. The scene rows are the cheaper half -- measured on this box
+    # at 1.8s against a level row's 3.5s -- and they are also the half that
+    # opens NO WINDOW AT ALL: port_scene_want_window refuses a window to a scene
+    # run that names a frame budget, which every row here does, and run link100
+    # lane SLOT confirmed it from the logs (twenty concurrent scene runs, not
+    # one "[win]" line between them).
+    def scene_row(sc, wdir=None):
+        if wdir is None:
+            wdir = free_dirs.get()
+            try:
+                return scene_row(sc, wdir)
+            finally:
+                free_dirs.put(wdir)
+        exe = os.path.join(wdir, "walk_window.exe")
         block = SCENE_BLOCKED.get(sc)
         if block:
-            r = run([os.path.join(build, "walk_window.exe")], build,
-                    env=scene_env(sc))
+            env = scene_env(sc)
+            if wdir != build:
+                env["SM64DS_INSTANCE"] = os.path.basename(wdir)
+            r = run([exe], wdir, env=env)
             # BOTH streams: the unmatched-body trap that names the blocker
             # writes to stderr (unbuffered, so a fault cannot swallow it) and
             # the scene's own progress lines go to stdout.
-            out = (r.stdout or "") + (r.stderr or "")
-            if not r.returncode:
+            return sc, r.returncode, r.stdout, (r.stdout or "") + (r.stderr or ""), \
+                block, None, None, None
+        skip = SCENE_SKIPS.get(sc)
+        env = scene_env(sc, skip[0] if skip else None)
+        if wdir != build:
+            env["SM64DS_INSTANCE"] = os.path.basename(wdir)
+        r = run([exe], wdir, env=env)
+        if r.returncode or not skip:
+            return sc, r.returncode, r.stdout, "", None, skip, None, None
+        still, how = scene_retire_probe(wdir, sc)
+        return sc, 0, r.stdout, "", None, skip, still, how
+
+    def report_scene(sc, rc, out, both, block, skip, still, how):
+        if block:
+            if not rc:
                 print(f"selftest scene {sc}: BLOCK RETIRED -- the bare run "
                       f"now completes. Delete scene {sc} from SCENE_BLOCKED "
                       f"in port/tools/battery.py.")
                 scene_unblocked.append(sc)
-                continue
-            if block[1] not in out:
-                print(f"selftest scene {sc}: FAIL rc={r.returncode} -- it "
+                return True
+            if block[1] not in both:
+                print(f"selftest scene {sc}: FAIL rc={rc} -- it "
                       f"failed, but NOT with its recorded blocker. "
                       f"SCENE_BLOCKED expects {block[1]!r} in the output and "
                       f"it is not there, so this is a different failure.")
-                print(out[-1500:])
-                return 1
+                print(both[-1500:])
+                return False
             print(f"selftest scene {sc}: BLOCKED as recorded, owned by "
-                  f"{block[0]} (rc={r.returncode}, blocker reproduced)")
-            continue
-        skip = SCENE_SKIPS.get(sc)
-        r = run([os.path.join(build, "walk_window.exe")], build,
-                env=scene_env(sc, skip[0] if skip else None))
-        if r.returncode:
-            print(f"selftest scene {sc}: FAIL rc={r.returncode}"
+                  f"{block[0]} (rc={rc}, blocker reproduced)")
+            return True
+        if rc:
+            print(f"selftest scene {sc}: FAIL rc={rc}"
                   + (f" ({skip[0]})" if skip else ""))
-            print(r.stdout[-1500:])
-            return 1
+            print((out or "")[-1500:])
+            return False
         if not skip:
             print(f"selftest scene {sc}: ok")
-            continue
-        still, how = scene_retire_probe(build, sc)
+            return True
         print(f"selftest scene {sc}: ok with {skip[0]}, owned by {skip[1]}"
               f" ({how})")
         if not still:
             scene_retired.append(sc)
+        return True
+
+    scene_retired = []
+    scene_unblocked = []
+    scene_phase_t0 = time.time()
+    with windowed_phase(workers, len(scenes), "battery scene phase"):
+        if workers == 1:
+            for sc in scenes:
+                if not report_scene(*scene_row(sc, build)):
+                    return 1
+        else:
+            free_dirs = queue.Queue()
+            for d in wdirs:
+                free_dirs.put(d)
+            with ThreadPoolExecutor(max_workers=workers) as pool:
+                futs = [pool.submit(scene_row, sc) for sc in scenes]
+                for f in futs:
+                    if not report_scene(*f.result()):
+                        for g in futs:
+                            g.cancel()
+                        return 1
+    print(f"scenes: {len(scenes)} rows in {time.time() - scene_phase_t0:.0f}s "
+          f"at {workers} wide")
 
     for sc in scene_retired:
         skip = SCENE_SKIPS[sc]
