@@ -89,6 +89,19 @@ from every overlay that happens to overlap it: 115 phantom callers across nine
 overlays against 43 real ones on `dScMgCoin_c`, a 2.5x error. Accept a
 relocation only when its destination module is the overlay you are scouting.
 
+**And get the spelling right, because getting it wrong fails SILENTLY and in the
+plausible direction.** `relocs.txt` spells the module `overlay(6)`, not `ov006`.
+A filter written against `ov006` rejects every hit and then reports **zero
+callers for every function in the run** — which reads like a clean result for a
+self-contained class, not like a broken filter. One scout shipped that answer
+before catching it. Sanity-check any "no external callers" finding by counting
+the rows your filter *rejected*.
+
+**A relocation scan alone cannot find intra-overlay callers at all.** A `BL`
+inside one overlay carries no relocation, so `relocs.txt` makes every
+overlay-local helper look uncalled. Decode the overlay's `.text` to find those —
+14 file-local helpers on `dScMgCup_c` were invisible until that was done.
+
 ## Output
 
 Write `notes/data/class-facts/<class>.json`:

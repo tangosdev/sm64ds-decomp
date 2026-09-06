@@ -21,6 +21,11 @@ extern u8 data_0209f2d8;
 extern s8 data_0209f310[];
 extern u8 data_0209d684;
 
+/* The player pointer at +0x438 is loaded as a char* wherever its +0x6d8 byte
+   is read: with an int-typed load mwcc materializes 0x6d8 from the literal
+   pool (ldr r0,[pc] / ldrb r2,[r1,r0]) instead of folding it, and the
+   int-vs-char* loads in the second SpawnNumber call stop sharing one
+   ldr [r5,#0x438]. */
 void func_ov002_020e9d18(char *c)
 {
     u32 r2v;
@@ -67,23 +72,23 @@ modes:
             st = 0;
         mode = *(u16 *)(c + 0x490);
         if (mode == 1 && r2v == 0) {
-            int idx = *(u8 *)(*(int *)(c + 0x438) + 0x6d8);
+            int idx = *(u8 *)(*(char **)(c + 0x438) + 0x6d8);
             if (data_0209f310[idx] == 4) {
                 GiveVsStars(idx, 1);
                 func_ov002_020e8244(&t1, c);
-                _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, &t1, 5, st, 0, *(int *)(c + 0x438));
+                _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, &t1, 5, st, 0, (int)*(char **)(c + 0x438));
                 func_ov002_020e8618(c);
             }
         } else if (mode == 5) {
-            int idx2 = *(u8 *)(*(int *)(c + 0x438) + 0x6d8);
+            int idx2 = *(u8 *)(*(char **)(c + 0x438) + 0x6d8);
             if (data_0209f310[idx2] == 5 && r2v == false)
                 goto end;
             if (r2v == false)
                 GiveVsStars(idx2, 1);
             func_ov002_020e8244(&t2, c);
             _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, &t2,
-                data_0209f310[*(u8 *)(*(int *)(c + 0x438) + 0x6d8)], st, 0,
-                *(int *)(c + 0x438));
+                data_0209f310[*(u8 *)(*(char **)(c + 0x438) + 0x6d8)], st, 0,
+                (int)*(char **)(c + 0x438));
             func_ov002_020e8618(c);
         }
         goto end;
