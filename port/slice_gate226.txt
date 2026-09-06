@@ -1,0 +1,37 @@
+# gate 226 (run link100 wave 2, lane STUBADJ): the seven slots of
+# data_ov002_021096b0 that gate 224 had to trap.
+#
+# Gate 224 hosted the table in hal/actor_base_tables_ov002.cpp and left slots
+# 0, 3, 6, 9, 17, 25 and 27 calling ob2_guessN, because each of those ROM words
+# names a src/ body carrying the marker "recovered from vtable slot identity"
+# and port/tools/inferred_stub_guard.py refuses to seat a guess. That file said
+# so plainly and did not argue with the guard.
+#
+# This lane answered the question the marker only gestures at. All seven were
+# read at their ROM ADDRESS out of config/arm9/overlays/ov002/relocs.txt and
+# symbols.txt, confirmed to be real function entries (each has its own
+# kind:function(arm,size=...) record and its own ARM prologue -- none is an
+# interior address of a tail-shared body), and run through tools/match.py at
+# that address and size under the pinned mwccarm 2004/b56 with --strict-relocs.
+# All seven MATCH. The rulings are in port/tools/inferred_stub_adjudicated.txt
+# and the transcript is runs/link100/out/STUBADJ/verify.txt.
+#
+#   slot 0   0x020b8fe0  0x12c  InitResources
+#   slot 3   0x020b8d68  0x44   CleanupResources
+#   slot 6   0x020b8dd4  0x20c  Behavior
+#   slot 9   0x020b8dac  0x28   Render
+#   slot 17  0x020b8c3c  0x60   the DELETING DESTRUCTOR. src names it
+#                               daObjPushblock_c_OnYoshiTryEat and that name is
+#                               wrong; config calls the address
+#                               _ZN16daObjPushblock_cD0Ev. Third sighting of
+#                               the same slot-17 name defect (w16, link100
+#                               MATCH, here). The body is the D0.
+#   slot 25  0x020b8d3c  0x2c   OnPushed(Actor&)
+#   slot 27  0x020b8d14  0x28   OnHitByMegaChar(Player&)
+src/func_ov002_020b8fe0.cpp
+src/func_ov002_020b8d68.c
+src/func_ov002_020b8dd4.c
+src/func_ov002_020b8dac.cpp
+src/func_ov002_020b8c3c.c
+src/func_ov002_020b8d3c.c
+src/func_ov002_020b8d14.cpp

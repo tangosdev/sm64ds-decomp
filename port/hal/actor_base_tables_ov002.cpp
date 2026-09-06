@@ -85,11 +85,16 @@
  *   0x021096b0  (_ZTV16daObjPushblock_c, 32)
  *     0  0x020b8fe0   3  0x020b8d68   6  0x020b8dd4   9  0x020b8dac
  *    17  0x020b8c3c  25  0x020b8d3c  27  0x020b8d14
- *        SEVEN GUESSED BODIES -- every one of those src files carries the
- *        "recovered from vtable slot identity" marker, so every one of those
- *        seven slots TRAPS rather than seating a guess.
- *        port/tools/inferred_stub_guard.py exists to refuse exactly that and
- *        this file does not argue with it.
+ *        SEVEN MARKER-CARRYING BODIES. They trapped when this file was written,
+ *        because the marker "recovered from vtable slot identity" was the only
+ *        thing known about them and port/tools/inferred_stub_guard.py refuses
+ *        to seat a guess. Gate 226 (run link100 lane STUBADJ) ruled all seven
+ *        against the ROM by address and reproduced them byte for byte with
+ *        tools/match.py at 2004/b56 --strict-relocs, so they are SEATED now and
+ *        the traps are gone. The marker recorded how each NAME was recovered,
+ *        not where its BODY came from -- slot 17 is the clearest case: src
+ *        calls it OnYoshiTryEat and config calls the same address
+ *        _ZN16daObjPushblock_cD0Ev, and the body is the D0.
  *    16  0x020b8bf0  func_ov002_020b8bf0             SEATED, was unlinked
  *    31  0x020b8c9c  func_ov002_020b8c9c             SEATED, was unlinked
  *
@@ -158,6 +163,30 @@
 
 extern "C" void *__fastcall port_actor_s30_base(void *self, void *, void *out);
 
+/* GATE 226: two C++ SPELLINGS of ov002 mount symbols.
+ *
+ * src/func_ov002_020b8fe0.cpp is a C++ TU and declares the two SharedFilePtr
+ * its slot-0 body loads as
+ *
+ *     extern SharedFilePtr data_ov002_0210df9c;
+ *     extern SharedFilePtr data_ov002_0210df94;
+ *
+ * with C++ linkage, so MSVC emits references to ?data_ov002_0210df9c@@
+ * 3USharedFilePtr@@A. The ovdata mount from port/ov002_syms.txt publishes the
+ * C name. Both are the same DS address (0x0210df9c / 0x0210df94, the first two
+ * pool words of 0x020b8fe0 in config/arm9/overlays/ov002/relocs.txt) and the
+ * mount is the only definition, so an /alternatename routes the C++ spelling
+ * onto it -- the same shape hal/actor_classes_bob_enemy.cpp uses for ov102's
+ * SharedFilePtr cells and hal/actor_classes.cpp for data_ov002_0210d9a8.
+ *
+ * These two directives are LIVE, not decorative: their LHS is referenced by
+ * the object above and nothing else defines it, which is the condition
+ * tools/alternatename_guard.py checks (LHS and RHS must land at ONE address in
+ * the map). The C-named slot-3 body reaches the same two cells through gate
+ * 226's -D rows and does not need an alias. */
+#pragma comment(linker, "/alternatename:?data_ov002_0210df9c@@3USharedFilePtr@@A=_data_ov002_0210df9c")
+#pragma comment(linker, "/alternatename:?data_ov002_0210df94@@3USharedFilePtr@@A=_data_ov002_0210df94")
+
 extern "C" {
 /* the arm9 shared half; every address read off ov002's own reloc runs */
 int _ZN5Actor19BeforeInitResourcesEv(void *self);              /* slot 1  */
@@ -204,6 +233,17 @@ int *func_ov002_020b63e0(int *self);         /* 0210912c slot 16 */
 int *func_ov002_020b6388(int *self);         /* 0210912c slot 17 */
 int *func_ov002_020b8bf0(int *self);         /* 021096b0 slot 16 */
 void func_ov002_020b8c9c(char *self);        /* 021096b0 slot 31 */
+/* gate 226: the seven ruled bodies of 0x021096b0 */
+int func_ov002_020b8fe0(char *self);         /* 021096b0 slot 0  */
+int func_ov002_020b8d68(void *self);         /* 021096b0 slot 3  */
+int func_ov002_020b8dd4(char *self);         /* 021096b0 slot 6  */
+int func_ov002_020b8dac(void *self);         /* 021096b0 slot 9  */
+int *func_ov002_020b8c3c(int *self);         /* 021096b0 slot 17, the D0 */
+void func_ov002_020b8d3c(char *self, char *other);   /* slot 25 OnPushed  */
+void func_ov002_020b8d14(void *self, void *player);  /* slot 27 OnHitByMegaChar.
+     src spells the second parameter `int`; the ROM passes a Player* in r1
+     (mov r0,r1 then bl Player::IncMegaKillCount at 0x020b8d20), so the
+     declaration here carries the pointer. Same width, same ABI slot. */
 int func_ov002_020babf0(void *self);         /* 021099e4 slot 9  */
 int *func_ov002_020bab64(int *self);         /* 021099e4 slot 16 */
 int *func_ov002_020bab0c(int *self);         /* 021099e4 slot 17 */
@@ -265,21 +305,15 @@ static int __fastcall ob2_trap13(void *s, void *)
 { ob2_trap_report(s, 13, "ActorBase::Virtual34, not linked"); return 0; }
 static int __fastcall ob2_trap14(void *s, void *)
 { ob2_trap_report(s, 14, "ActorBase::Virtual38, not linked"); return 0; }
-/* the seven guessed bodies on 0x021096b0 */
-static int __fastcall ob2_guess0(void *s, void *)
-{ ob2_trap_report(s, 0, "func_ov002_020b8fe0 is a guessed body"); return 0; }
-static int __fastcall ob2_guess3(void *s, void *)
-{ ob2_trap_report(s, 3, "func_ov002_020b8d68 is a guessed body"); return 0; }
-static int __fastcall ob2_guess6(void *s, void *)
-{ ob2_trap_report(s, 6, "func_ov002_020b8dd4 is a guessed body"); return 0; }
-static int __fastcall ob2_guess9(void *s, void *)
-{ ob2_trap_report(s, 9, "func_ov002_020b8dac is a guessed body"); return 0; }
-static int __fastcall ob2_guess17(void *s, void *)
-{ ob2_trap_report(s, 17, "func_ov002_020b8c3c is a guessed body"); return 0; }
-static int __fastcall ob2_guess25(void *s, void *, void *)
-{ ob2_trap_report(s, 25, "func_ov002_020b8d3c is a guessed body"); return 0; }
-static int __fastcall ob2_guess27(void *s, void *, void *)
-{ ob2_trap_report(s, 27, "func_ov002_020b8d14 is a guessed body"); return 0; }
+/* The seven slots that used to trap here. Gate 226 (run link100 lane STUBADJ)
+   ruled every one of them against the ROM -- read at its ADDRESS out of
+   config/arm9/overlays/ov002/relocs.txt and symbols.txt, confirmed a real
+   function entry and not an interior address, then reproduced byte for byte by
+   tools/match.py at 2004/b56 with --strict-relocs. They are decompiled bodies
+   whose NAME was recovered from the vtable slot, not guessed bodies, so the
+   traps are gone and the faces below take their place. The rulings are in
+   port/tools/inferred_stub_adjudicated.txt and inferred_stub_guard.py accepts
+   them from there; nothing was added to the baseline or the debt queue. */
 
 // ---- the shared 1..30 half -------------------------------------------------
 //
@@ -412,6 +446,24 @@ static void *__fastcall ob2_6b0_d1(void *s, void *)
 { return (void *)func_ov002_020b8bf0((int *)s); }
 static int __fastcall ob2_6b0_s31(void *s, void *)
 { func_ov002_020b8c9c((char *)s); return 0; }
+/* gate 226. Arity is taken from the ROM slot, not from the C spelling: slots
+   0/3/6/9/17 are nullary methods and slots 25/27 take one reference, so the
+   faces carry exactly one trailing argument on the last two and none on the
+   rest. A face with the wrong arity would smash the stack on its first call. */
+static int __fastcall ob2_6b0_s0(void *s, void *)
+{ return func_ov002_020b8fe0((char *)s); }
+static int __fastcall ob2_6b0_s3(void *s, void *)
+{ return func_ov002_020b8d68(s); }
+static int __fastcall ob2_6b0_s6(void *s, void *)
+{ return func_ov002_020b8dd4((char *)s); }
+static int __fastcall ob2_6b0_s9(void *s, void *)
+{ return func_ov002_020b8dac(s); }
+static void *__fastcall ob2_6b0_d0(void *s, void *)
+{ return (void *)func_ov002_020b8c3c((int *)s); }
+static int __fastcall ob2_6b0_s25(void *s, void *, void *o)
+{ func_ov002_020b8d3c((char *)s, (char *)o); return 0; }
+static int __fastcall ob2_6b0_s27(void *s, void *, void *p)
+{ func_ov002_020b8d14(s, p); return 0; }
 
 static int __fastcall ob2_9e4_s9(void *s, void *)
 { return func_ov002_020babf0(s); }
@@ -478,18 +530,18 @@ extern "C" void hal_seat_ov002_base_tables(void)
         vt[31] = (void *)ob2_kill;
     }
 
-    /* 0x021096b0 -- seven guessed bodies, seven traps */
+    /* 0x021096b0 -- gate 226 seats the seven that used to trap */
     {
         void **vt = data_ov002_021096b0;
         ob2_fill_shared(vt);
-        vt[0]  = (void *)ob2_guess0;
-        vt[3]  = (void *)ob2_guess3;
-        vt[6]  = (void *)ob2_guess6;
-        vt[9]  = (void *)ob2_guess9;
+        vt[0]  = (void *)ob2_6b0_s0;
+        vt[3]  = (void *)ob2_6b0_s3;
+        vt[6]  = (void *)ob2_6b0_s6;
+        vt[9]  = (void *)ob2_6b0_s9;
         vt[16] = (void *)ob2_6b0_d1;
-        vt[17] = (void *)ob2_guess17;
-        vt[25] = (void *)ob2_guess25;
-        vt[27] = (void *)ob2_guess27;
+        vt[17] = (void *)ob2_6b0_d0;
+        vt[25] = (void *)ob2_6b0_s25;
+        vt[27] = (void *)ob2_6b0_s27;
         vt[31] = (void *)ob2_6b0_s31;
     }
 

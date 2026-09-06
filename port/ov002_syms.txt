@@ -501,3 +501,14 @@ VirtualDoor_SpawnInfo:0x1c
 # blocks as five 4-int rows by func_ov002_020f2f9c. No size suffix is needed
 # on any of them.
 data_ov002_021000c8 data_ov002_021000d8 data_ov002_021000e0 data_ov002_021000f0 data_ov002_02100100 data_ov002_02100110 data_ov002_02100120 data_ov002_02100130 data_ov002_02100150 data_ov002_02100160 data_ov002_02100170 data_ov002_02100190 data_ov002_021001b0 data_ov002_02100200 data_ov002_02100250
+
+# ---- link100 STUBADJ, gate 226 ----
+# daObjPushblock_c::InitResources (0x020b8fe0, slot 0 of data_ov002_021096b0)
+# hands MovingMeshCollider::SetFile a CLPS block by reference:
+#   0x020b9108 load -> 0x0210d7b4, the third pool word of that body.
+# 0x20 wide, the plain next-symbol delta to data_ov002_0210d7d4 -- which is
+# already mounted, and so is 0x0210d794 on the other side, so this was a single
+# missing block in the middle of a mounted run rather than a new region. The
+# two SharedFilePtr the same body loads (0x0210df9c and 0x0210df94, its first
+# two pool words) were already mounted above.
+data_ov002_0210d7b4:0x20

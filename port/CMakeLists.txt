@@ -14150,6 +14150,76 @@ set_source_files_properties(
     "_ZTV11dCapEnemy_c=data_ov002_02108284;G0=data_020a0eac")
 
 # ===========================================================================
+# GATE 226 -- the seven guessed slots of data_ov002_021096b0, ruled and seated
+# ===========================================================================
+#
+# Gate 224 above hosts six ov002 base tables and fills every slot it has a body
+# for. On 0x021096b0 (daObjPushblock_c) it had to leave SEVEN calling
+# ob2_guessN, because each of those ROM words names a src/ body carrying
+# "recovered from vtable slot identity" and inferred_stub_guard.py refuses to
+# seat a guess. That was the right call on the evidence gate 224 had.
+#
+# The evidence changed. Lane STUBADJ read all seven at their ROM ADDRESS (the
+# table word in config/arm9/overlays/ov002/relocs.txt, the target in that
+# overlay's symbols.txt -- never off a class name, because the tree's class
+# names are shifted and the addresses are not), confirmed each is a real
+# function entry rather than an interior address of a tail-shared body, and ran
+# tools/match.py at that address and size under the pinned mwccarm 2004/b56
+# with --strict-relocs. All seven reproduce the ROM: every non-relocated word
+# identical and every resolvable relocation landing on the destination config
+# records. The marker was recording how the NAME was recovered, not where the
+# BODY came from -- which is the same thing lanes w16, w13 and link100's MATCH
+# lane each found on their own batches. Rulings:
+# port/tools/inferred_stub_adjudicated.txt; transcript:
+# runs/link100/out/STUBADJ/verify.txt.
+#
+# ON ALL THREE BIG TARGETS, for gate 224's reason unchanged: these seven are
+# reached only through the table hal/actor_base_tables_ov002.cpp fills, and
+# that file is already on all three.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate226.txt" SLICE226_LINES)
+set(SLICE226_SOURCES "")
+foreach(line IN LISTS SLICE226_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE226_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t226 walk_window walk_window_hires smoke_player)
+    target_sources(${_t226} PRIVATE ${SLICE226_SOURCES})
+endforeach()
+#
+# TWO OF THE SEVEN NEED A BINDING, and both rows are read out of the body's OWN
+# literal pool in config/arm9/overlays/ov002/relocs.txt, never out of the
+# recovery's names -- the rule the gate 224 block above states and the ov029
+# block before it.
+#
+#   func_ov002_020b8d68  0x020b8da4 -> 0x0210df9c   0x020b8da8 -> 0x0210df94
+#         The two SharedFilePtr the CleanupResources releases, in that order:
+#         the ROM's first ldr (pc+0x14 at 0x020b8d88) reaches 0x020b8da4, the
+#         second (pc+0x10 at 0x020b8d90) reaches 0x020b8da8. src spells them G0
+#         and G1 in the same order. They are the same pair slot 0 loads by their
+#         REAL names at 0x020b9100/0x020b9104, so this is a naming difference
+#         between two recoveries of one class, not two different globals.
+#
+#   func_ov002_020b8c3c  0x020b8c90 -> 0x021096b0   0x020b8c94 -> 0x0210ae38
+#                        0x020b8c98 -> 0x020a0eac
+#         The D0's two vptr stores and its heap. Unlike the nine destructors in
+#         gate 224, BOTH stores here get their true target: the ROM writes the
+#         class's own table first (str r1,[r4] at 0x020b8c4c, r1 loaded from
+#         0x020b8c90) and _ZTV8Platform second (0x020b8c5c from 0x020b8c94), so
+#         there is no dead store to redirect. 0x020a0eac is the heap global,
+#         the same G0 gate 224 binds on _ZN8CapEnemyD0Ev.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020b8d68.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "G0=data_ov002_0210df9c;G1=data_ov002_0210df94")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020b8c3c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov002_021096b0;VT1=_ZTV8Platform;G0=data_020a0eac")
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
