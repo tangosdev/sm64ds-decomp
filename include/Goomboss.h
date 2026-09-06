@@ -25,7 +25,7 @@
  * 0x3d8 is the MaterialChanger's Animation cursor (+0x08) and 0x3f0 is the
  * TextureSequence's playback speed (+0x0c); see include/Animation.h.
  *
- * Field provenance: notes/enemy-leaf-provenance.md.
+ * Field provenance: notes/enemy-provenance.md.
  *
  * SM64DS RTTI names the implementation daKuriKing_c. The reconstructed
  * factory daKuriKing_c_classInit_KURIKING (historical alias

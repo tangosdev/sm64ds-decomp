@@ -210,44 +210,14 @@ sites, which is the same call the compiler emits from the declaration.
 
 ## cMgSmartball_ball_c (include/cMgSmartball_ball_c.h)
 
-Real ROM name confirmed by `tools/rtti_extract.py` (build/rtti.json). Own vtable
-ov006:0x0213ec98, RTTI ov006:0x0213ebec (`_ZTI19cMgSmartball_ball_c`),
-`_ZTS19cMgSmartball_ball_c` at ov006:0x0213edc0. One of eleven direct children
-of cMgSmartball_object_c -- see that header for the family's shape (a root,
-three slots, no virtual destructor).
-
-Size 0x12c, from `_Znwj(0x12c)` in func_ov006_02115b0c. The base ends at 0x34,
-so this class adds 0xf8 bytes -- the densest of the eleven children. Everything
+One of eleven direct children of cMgSmartball_object_c -- see that header for
+the family's shape (a root, three slots, no virtual destructor). Everything
 below 0x34 is reached through inherited members; this class's four functions
 never touch the base's 0x31-0x33 region, so no raw cast is needed anywhere.
-
-Most of the 0x34+ fields are declared and zeroed by this class's own
-RestoreInitial, which is exhaustive -- every array length and every scalar width
-below comes from that function's loop bounds and store widths. SaveSnapshot and
-Update corroborate roughly half of the same offsets.
-
-**Several names are borrowed, not invented.** func_ov006_02112ad8.c and
-func_ov006_021128fc.c -- two out-of-scope helpers SaveSnapshot calls with `this`
--- each reinterpret the pointer through their own local Obj-style struct cast
-and name a number of these exact offsets (hit/hitA/hitB/hitC, anyHit,
-specialHit, nearby, targetIndex, soundTimer, soundPlayed, state3a, state3b).
-Every one of those offsets is also independently touched by RestoreInitial, so
-the width and existence of each field is evidenced in-scope; only the spelling
-is borrowed. Anything without that corroboration keeps an `unk_` name.
-
-0x44-0x4b are hitX/hitZ in func_ov006_02112ad8.c's naming, but none of this
-class's own four functions touches them, so per the wing_c precedent they stay
-an explicit pad -- unmodelled, not unread. pad_0e7[0x11] (0xe7-0xf7) is a
-genuine gap: RestoreInitial's exhaustive zero pass skips straight over it
-(nearby[] ends at 0xe6, targetIndex starts at 0xf8) and func_ov006_02112ad8.c's
-Obj cast also treats it as padding. pad_101 / pad_111 / pad_122 / pad_12a are
-pure alignment gaps between adjacent int fields (house style: explicit pads over
-implicit compiler-inserted ones).
-
-Constructed by func_ov006_02114548, left a free function per the recipe. It
-calls the base constructor and writes only this vtable and the base's
-`unk_028 = 0x8000`; it touches nothing at or past 0x34, so it adds no evidence
-to the field list.
+Field-by-field provenance (RTTI/vtable addresses, size, every offset's name or
+pad determination, and the two out-of-scope helpers that lend several of the
+names) is tabulated in full in `notes/smartball-provenance.md` -- this file no
+longer keeps a separate copy.
 
 ## dScMgAmida_c (include/dScMgAmida_c.h)
 
