@@ -21,7 +21,7 @@ python tools/cpp_tu_state.py --check-note
 | MATCHED functions | 11276 / 11402 (98.89%) |
 | MATCHED code bytes | 2148316 / 2238108 (95.99%) |
 | Strict CONVERTED source functions | 2680 / 11332 (23.65%) |
-| Physical production source files | 10286 |
+| Physical production source files | 10259 |
 
 MATCHED is recomputed from committed config symbols and `src/` through
 `progress.synced_from_src()`; no ambient or gitignored chaos database is accepted.
@@ -32,9 +32,9 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked production source files | 10286 |
-| Tracked `.c` files | 5944 |
-| Tracked `.cpp` files | 4342 |
+| Tracked production source files | 10259 |
+| Tracked `.c` files | 5923 |
+| Tracked `.cpp` files | 4336 |
 | `.cpp` files missing first-line `//cpp` | 0 |
 | Mangled-symbol source files | 3860 |
 | Genuinely migrated C++ symbol files | 3734 |
@@ -42,12 +42,12 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 | `.cpp` files still hand-spelling their symbol | 57 |
 | Nonmatching C++-symbol drafts | 9 |
 | Delinks path-owned function-symbol records | 11239 |
-| Path-owned records still supplied from ROM bytes | 123 |
-| Source-built (`complete`) function-symbol records | 11116 |
-| Source-built (`complete`) source files | 10065 |
+| Path-owned records still supplied from ROM bytes | 122 |
+| Source-built (`complete`) function-symbol records | 11117 |
+| Source-built (`complete`) source files | 10039 |
 | Complete sources owning more than one function | 106 |
-| Source-built records inside multi-function sources | 1157 |
-| Largest function-symbol-records-per-source count | 47 |
+| Source-built records inside multi-function sources | 1184 |
+| Largest function-symbol-records-per-source count | 49 |
 | Complete source paths missing from git | 0 |
 
 Production path ownership is derived from `config/**/delinks.txt` ranges joined to
@@ -56,7 +56,7 @@ require the delinks entry's `complete` marker; entries without it are ROM-byte
 placeholders and are not reported as decompiled. The join remains correct when a
 source owns two functions; filenames are not treated as the authority.
 
-Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ActorDerived.cpp` (5 function-symbol records), `src/actors/dBgActor_c.cpp` (11 function-symbol records), `src/actors/dScGameOver_c.cpp` (9 function-symbol records), `src/actors/dScMgD3DBase_c.cpp` (27 function-symbol records), `src/actors/dScMgHanachan_c.cpp` (22 function-symbol records), `src/actors/daDsnBase_c.cpp` (9 function-symbol records), `src/actors/daObjCtMecha03_c.cpp` (8 function-symbol records), `src/actors/daObjCtMecha04_c.cpp` (9 function-symbol records), `src/actors/daObjFallBlock_c.cpp` (10 function-symbol records), and 96 more in `--json`.
+Current complete multi-function owners: `src/actors/ActorBase_SceneNode.cpp` (2 function-symbol records), `src/actors/ActorDerived.cpp` (5 function-symbol records), `src/actors/dBgActor_c.cpp` (11 function-symbol records), `src/actors/dScGameOver_c.cpp` (9 function-symbol records), `src/actors/dScMgD3DBase_c.cpp` (27 function-symbol records), `src/actors/dScMgHanachan_c.cpp` (49 function-symbol records), `src/actors/daDsnBase_c.cpp` (9 function-symbol records), `src/actors/daObjCtMecha03_c.cpp` (8 function-symbol records), `src/actors/daObjCtMecha04_c.cpp` (9 function-symbol records), `src/actors/daObjFallBlock_c.cpp` (10 function-symbol records), and 96 more in `--json`.
 
 A `.cpp` extension alone proves nothing about compiler language mode; this build
 selects C++ only when the first line is exactly `//cpp`. The marker-missing count
@@ -73,8 +73,8 @@ partition to add to the migrated and unmigrated rows.
 | --- | ---: |
 | Tracked `src_tu/` source files | 32 |
 | Manifest entries | 137 |
-| Functions named by manifest entries | 1867 |
-| Unique functions named by the manifest | 1856 |
+| Functions named by manifest entries | 1894 |
+| Unique functions named by the manifest | 1883 |
 | Modules represented | 40 |
 | Manifest shadow sources present in git | 137 |
 | Entries licensing non-text sections | 17 |

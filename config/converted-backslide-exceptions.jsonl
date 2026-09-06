@@ -333,3 +333,4 @@
 {"path": "src/_ZN13dScGameOver_c16OnPendingDestroyEv.cpp", "reason": "ov003/dScGameOver_c promoted: 9 one-function shards absorbed into src/actors/dScGameOver_c.cpp (scratch-link-verified, ROM identical)"}
 {"path": "src/_ZN13dScGameOver_cD0Ev.cpp", "reason": "ov003/dScGameOver_c promoted: 9 one-function shards absorbed into src/actors/dScGameOver_c.cpp (scratch-link-verified, ROM identical)"}
 {"path": "src/_ZN13dScGameOver_cD1Ev.cpp", "reason": "ov003/dScGameOver_c promoted: 9 one-function shards absorbed into src/actors/dScGameOver_c.cpp (scratch-link-verified, ROM identical)"}
+{"path": "src/_ZN15dScMgHanachan_c16CleanupResourcesEv.cpp", "reason": "ov006/dScMgHanachan_c 49-of-61 TU promotion absorbed src/_ZN15dScMgHanachan_c16CleanupResourcesEv.cpp; the receiving TU carries 45 auto-named func_ovNN_ADDR members that fail the readability criteria, so CONVERTED ownership cannot transfer to it."}

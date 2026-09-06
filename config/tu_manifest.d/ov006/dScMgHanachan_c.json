@@ -424,23 +424,23 @@
         "rom": true
       },
       "tuRange": {
-        "start": "0x020eb018",
-        "end": "0x020ec458",
+        "start": "0x020eac38",
+        "end": "0x020ede18",
         "differingBytes": 0,
         "firstDiff": null
       },
       "tuRanges": [
         {
           "section": ".text",
-          "start": "0x020eb018",
-          "end": "0x020ec458",
+          "start": "0x020eac38",
+          "end": "0x020ede18",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 22
+          "LICENSED": 49
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -481,7 +481,8 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "linkerOutput": null
+      "linkerOutput": null,
+      "note": "Pre-promotion substitution run: the 49-member TU was linked from src_tu/ while the 28 legacy delinks entries inside 0x020eac38..0x020ede18 were spliced out, which is the only shape tubuild will validate (once the src/ path is enrolled it routes to the intact-object path and refuses a text-only TU with `intact production requires one .text claim and at least one non-text claim`; that refusal reproduces on untouched main). [4b/8] licensing audit: 49 LICENSED, 0 non-licensed, 0 unlicensed sections, emitted .text order ROM-ascending. One prerequisite had to be settled first: src/_ZN15dScMgHanachan_c13OnYoshiTryEatEi.cpp carried no `complete` marker because as committed it did not compile (its own `extern char* data_ov004_020beb68` contradicts the void* spelling the headers reach), so dsd served ordinal 58 from ROM bytes. Absorbing it into this TU converts it to source-built; module fidelity stays 106/106 exact and the ROM sha256 is unchanged."
     }
   }
 }
