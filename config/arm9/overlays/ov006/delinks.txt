@@ -1674,9 +1674,17 @@ src/_ZN11dScMgCoin_cD0Ev.cpp:
     complete
     .text start:0x020dbe64 end:0x020dbe9c
 
+src/func_ov006_020dbe9c.c:
+    complete
+    .text start:0x020dbe9c end:0x020dbf7c
+
 src/actors/dScMgCoin_c.cpp:
     complete
     .text start:0x020dbf7c end:0x020dd0e0
+
+src/func_ov006_020dd0e0.c:
+    complete
+    .text start:0x020dd0e0 end:0x020dd2cc
 
 src/func_ov006_020dd2cc.cpp:
     complete
@@ -1877,6 +1885,10 @@ src/func_ov006_020e1680.c:
 src/func_ov006_020e17f8.cpp:
     complete
     .text start:0x020e17f8 end:0x020e1854
+
+src/func_ov006_020e1854.c:
+    complete
+    .text start:0x020e1854 end:0x020e1b54
 
 src/func_ov006_020e1b54.c:
     complete
