@@ -1,4 +1,5 @@
 //cpp
+// @symbol func_ov006_02115248
 /* func_ov006_02115248 -- dScMgSmartball_c, ov006 0x02115248, 0x238 bytes.
  *
  * Spawns up to four balls: for each of the four passes it takes the first free
