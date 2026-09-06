@@ -342,6 +342,35 @@ about renaming, and this is the reconciliation:
   name** (measured 2026-09-05 against `build/rtti.json`). There is no such thing
   as a promoted coined class.
 
+**And the inline-destructor lever can CREATE this blocker out of nothing.**
+Inlining moves the key function to the first out-of-line virtual declared. On
+ov071/`Scuttlebug` that pulled the key function *into* the claimed range — which
+is what the writer wanted for emission order, and it is also what turned a
+harmless coined name into a hard refusal. The TU then emitted
+`_ZTI10Scuttlebug` / `_ZTS10Scuttlebug`, which no `symbols.txt` anywhere names,
+and both dispositions refuse:
+
+    deadstrip-data -> "declared compiler-only data but has no configured ROM
+                       home; a homeless object is a plain deadstrip"
+    deadstrip      -> "an RTTI/vtable record banked as a plain deadstrip, which
+                       is never compared against the cartridge. If the class
+                       carries a coined name, rename it to the cartridge's RTTI
+                       spelling..."
+
+Result: `verify` 37/37 MATCH, TEXT-VERIFIED, **PROMOTION REFUSED** on two
+symbols. So before you reach for the inline destructor, check whether the class
+name is coined — the two levers interact, and `class_rename.py` reports **125
+classes** sitting in this state. Note the vtable often escapes because
+`symbols.txt` already aliases `_ZTV` under both spellings; nobody did the same
+for `_ZTI`/`_ZTS`.
+
+**Do not "fix" this by adding an alias, and understand why the temptation is
+dangerous: faking it passes every gate you can run locally.** `deadstrip-data`'s
+home check is a **name lookup**, and the byte comparison is deferred to
+`rombuild`. Giving `_ZTS10Scuttlebug` a home address would produce a green
+`verify` and a genuine 13-versus-12-byte mismatch downstream. The refusal is
+correct; the fix is the rename, as its own reviewable change.
+
 Look the class up in `build/rtti.json` before you decide anything else, and
 expect the alias case: `symbols.txt` can carry **both** spellings at one address
 (`_ZTV10KingBobOmb` and `_ZTV12daBombking_c` at `0x02126e4c`). If you own the key
@@ -452,6 +481,23 @@ mwccarm 2004/b56 behaviours, not style preferences.
   are not in ROM-ascending order: `licensed .text functions are not emitted in
   ROM address order`. Beware that `tubuild verify` reports the same condition as
   `PARTIAL ... not necessarily a bug`, which reads advisory and is not.
+
+  **And `verify`'s exit code carries no verdict about promotability.** It is
+  `return 0 if text_verified else 1` — so a run that prints `PROMOTION REFUSED`,
+  for unlicensed output or a compiler-only policy refusal, still **exits 0**.
+  Only a compile failure or a byte/reloc failure gives 1. Read the console text;
+  never gate on `$?` alone here. (Measured on ov071/`Scuttlebug`: two refused
+  runs, both exit 0.)
+
+  **Two more things that run does not say out loud.** The manifest's
+  `verification.criteria` records the **pre-policy** unlicensed count while the
+  console prints the post-policy one — `FAIL-BY-DESIGN -- 10 unlicensed
+  section/symbol(s)` in the file against `2 unlicensed section/symbol(s)` on
+  screen, after 8 were licensed. It is deterministic wording, not drift (a
+  re-run produced a byte-identical manifest), but a reader trusting the manifest
+  sees five times the real number. And it is **`linkcheck`**, not `verify`, that
+  was observed rewriting the manifest here — it adds a `verification.linkcheck`
+  block, and it can race your `git add`.
 
   The destructor pair is the usual way to hit it. Under **default** codegen the
   lever set is closed — measured, not guessed: **inline in class ⇒ D1 then D0,
