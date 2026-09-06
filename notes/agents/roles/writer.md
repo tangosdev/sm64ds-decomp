@@ -455,15 +455,36 @@ Ask the compiler rather than hand-mangling:
   `0x0211384c` reaches `0x021138d8` with **no gap anywhere** — 36 words, four
   more than the real 32 — because `_ZTI14daObjDpBrock_c` at `0x021138d0` is a
   `__si_class_type_info`, three fully-relocated words butted straight against the
-  table. Nothing in `relocs.txt` marks that boundary. **The tie-break is
-  `symbols.txt` naming a `_ZTI`/`_ZTS` inside the run**, not the run's own shape.
-  A class whose run happens to end in a real gap (`dScMgRoulette_c`: next
-  relocated word `0x0213e444`, with `0x0213e42c..0x0213e440` unrelocated) is
-  decisive by accident, not by method — do not generalise from one.
+  table. Nothing in `relocs.txt` marks that boundary.
+
+  **The `_ZTI`/`_ZTS` tie-break first proposed here does NOT generalise — a
+  later sweep refuted it.** All 51 `_ZTV` in ov006 were checked: the run-overshoot
+  is real in **15 of them**, but in every one of those the overshooting words are
+  ordinary `data_ov006_*` / `g_profile_*` objects, **never** a `_ZTI`. So "look
+  for a `_ZTI`/`_ZTS` named inside the run" would have caught **0 of 15**. And
+  the naive next-symbol read *under*-reports in the other direction
+  (`dScMgD3DBase_c`: `0x50` against a real `0x90`, because of an interior phantom
+  symbol). **Neither rule is sound alone.**
+
+  **What actually works is corroboration from three independent tools**, which is
+  what every correct extent in this campaign has rested on: the relocation gap,
+  `rtti_vtables.py --own <Class>` for the slot count, and
+  `romdata_check.check_object()` for `bytes`/`emitted` with `blindWords: 0`.
+  Worked example, `dScMgRoulette_c`: relocated run `0x0213e398..0x0213e428`, then
+  a real `0x18` gap before the next reloc at `0x0213e444`; storage
+  `0x0213e394..0x0213e42c` = `0x98`; symbol extent from the address point =
+  `0x90` = 36 slots; `rtti_vtables` says 36; `check_object` says
+  `bytes 144, emitted 144, blindWords 0, VERIFIED`. Three tools, one answer.
+  **Distinguish storage size from symbol extent** — they differ by the 8-byte
+  offset-to-top + typeinfo preamble, and quoting one where the other is meant is
+  its own source of confusion.
 - **Do NOT read the extent from `romdata_check`'s `romExtent` field.** It carries
   the *wrong short* value — `88` decimal, the false `0x58` — on the very class
   where the answer is `0x88`. Trusting it confirms the trap instead of catching
-  it. `emitted` and `bytes` are the truthful fields.
+  it. `emitted` and `bytes` are the truthful fields. **This is class-specific, not universal** — on
+  `dScMgRoulette_c` the field reads `144`, which is correct and equal to
+  `emitted`/`bytes`. So it is unreliable rather than always-wrong: never take it
+  alone, and corroborate as above.
 - **`verify` prints no `_ZTV` section size.** This file said twice to cross-check
   against one. It does not exist; `verify` prints the MATCH table, byte
   comparison, objisolate, emission order and the result.
