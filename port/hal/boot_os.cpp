@@ -77,31 +77,41 @@
 //       and a deliberate `b self`) that MSVC cannot assemble. Same reason the
 //       card bring-up below calls func_0206002c rather than func_02060890.
 //
-//       (3) THE WM THREAD'S STORAGE IS 16 KB THE PORT HOSTS NOWHERE, and this
-//       is the real work. src/func_02019f10.c is the entry func_02061128
-//       registers, and its own literal pool says exactly what it builds:
+//       (3) THE WM THREAD'S RECORD AND STACK LIVE INSIDE THE TRIG TABLE,
+//       AND THE PORT MUST NEVER HOST ANYTHING THERE. src/func_02019f10.c is
+//       the entry func_02061128 registers, and its own literal pool builds a
+//       thread out of thin air:
 //
 //           02019f28  ldr r0, [pc, #0x38]    pool 0x02019f58 = 0x02086214
 //           02019f30  sub r4, r0, #0x94      the record: 0x02086180
-//           02019f34  ldr r1, [pc, #0x34]    pool 0x02019f60 = func_02019f64
 //           02019f3c  mov r3, r4             stack TOP = the record's own base
 //           02019f40  str r2, [sp]           pool 0x02019f5c = 0x3f6c, the size
 //           02019f4c  bl  func_02058200
 //           02019f54  bl  func_02058048
 //
-//       So the record is 0x02086180..0x02086214 (0x94, one OSThread) and the
-//       stack is [0x02082214, 0x02086180) -- 16,236 bytes. config/arm9/
-//       symbols.txt has NO name anywhere in that range (the last one below is
-//       data_02082210, the first at or above is data_02086214), which is why
-//       the decompiled TU can only spell the record as `data_02086214 - 0x94`.
-//       hal/scene_boot.cpp hosts data_02086214 as `unsigned char
-//       data_02086214[256]` -- the arctan table src/func_020538b8.c indexes --
-//       and with that hosting alone func_02058200's MultiStore_Int would clear
-//       16 KB of whatever the linker happened to put BELOW that array. It wants
-//       the treatment hal/globals_link100.cpp gave the card driver: ONE grouped
-//       run covering 0x02082214..0x02086214 with data_02086214 at +0x4000, and
-//       scene_boot.cpp's array moved into it. That is the whole of the storage
-//       problem and it is a day's careful work, not a wall.
+//       An earlier version of this note called that span '16 KB the port hosts
+//       nowhere' and asked the decomp for names in it. THAT WAS WRONG, and the
+//       correction is worth keeping because acting on it would have done real
+//       damage. [0x02082214, 0x02086214) is the 4096-entry sine/cosine table:
+//       read the image and sample it as s16/4096 and the maximum deviation from
+//       sin(2*pi*idx/4096) is 0.0001. port/tools/romdata.py already hosts it as
+//       ONE object, (0x02082214, 0x4000, "short"). 0x02086180 is entry 4059.
+//       Naming a record there would have carved the table in two and given the
+//       port two overlapping objects where the ROM has one array.
+//
+//       So the cartridge DELIBERATELY ALIASES THE TRIG TABLE as scratch for a
+//       thread that only exists while the radio is up. The chain is dormant,
+//       not dead: src/Entry.c's bare `bl func_02019780` (reloc from:0x020048a4)
+//       runs on every boot, func_02019780 calls func_02019ebc
+//       (from:0x02019790), and func_02019ebc only LOADS func_02019f10's address
+//       (from:0x02019ecc kind:load -- the single reference to it in the whole
+//       image). Registration is unconditional; the handler executes only if
+//       something later dispatches the stored pointer, i.e. the radio coming
+//       up. Single-card play never dispatches it, so the table is never
+//       disturbed in normal play. In the port's world the radio thread does not
+//       exist, so the aliasing has no reason to be modelled at all: host
+//       nothing at 0x02086180, and if the WM is ever brought up, give its
+//       thread its own storage rather than reproducing the alias.
 //
 //       (4) AN ARM7 WIRELESS DRIVER, unchanged from the last pass.
 //       hal/boot2_ipc.cpp holds channel 0xa OBSERVED ONLY, on the stated
