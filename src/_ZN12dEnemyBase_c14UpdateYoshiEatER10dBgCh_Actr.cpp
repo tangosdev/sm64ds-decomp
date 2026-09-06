@@ -26,8 +26,8 @@ extern "C" {
 extern int _ZNK10dBgCh_Actr13GetLimMovFlagEv(char *c);
 extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(char *c);
 extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(char *c);
-extern void _ZN5Actor9UpdatePosEP5dCc_c(char *self, int p);
-extern void func_020383fc(char *c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char *self, int p);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(char *c);
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *c);
 extern char *_ZNK10dBgCh_Actr14GetFloorResultEv(char *c);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(char *p, char *v);
@@ -116,8 +116,8 @@ int dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr & clsn_)
         }
         lim = _ZNK10dBgCh_Actr13GetLimMovFlagEv(clsn);
         _ZN10dBgCh_Actr13SetLimMovFlagEv(clsn);
-        _ZN5Actor9UpdatePosEP5dCc_c(self, 0);
-        func_020383fc(clsn);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
+        dBgCh_Actr_UpdateContinuous_Veneer(clsn);
         if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn) != 0) {
             char *fr = _ZNK10dBgCh_Actr14GetFloorResultEv(clsn);
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr + 4, self + 0xd4);
