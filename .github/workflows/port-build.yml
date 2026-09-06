@@ -40,10 +40,10 @@
 # smoke_heap, smoke_roots, smoke_fs. The other nine generate romdata.c from gitignored
 # extracted/arm9_dec.bin and are out of a runner's reach.
 #
-# Only smoke_gx links on main today, so only smoke_gx is blocking. Measured on 11fcd24d5,
-# 32-bit MSVC 19.51: smoke_gx clean; smoke 1 unresolved, smoke_heap 3, smoke_roots 17,
-# smoke_fs 17. The rest run in a reporting step, and each moves up
-# to the blocking step as it is fixed -- the ratchet is the target list below, in review,
+# Two of the five link, so those two are blocking. Measured on 11fcd24d5, 32-bit MSVC
+# 19.51: smoke_gx and smoke clean; smoke_heap 3 unresolved, smoke_roots 17, smoke_fs 17.
+# The rest run in a reporting step, and each moves up to the blocking step as it is
+# fixed -- the ratchet is the target list below, in review,
 # rather than a file that can drift. Configure is blocking for everything: a broken
 # CMakeLists or an unresolvable srcpath symbol is a real regression regardless.
 #
@@ -52,7 +52,9 @@
 # call it from an inline `operator delete`, so every class in those hierarchies emits a
 # reference to the Itanium spelling. That satisfies the NDS link, where the mangled string
 # IS the symbol. A host definition does exist -- port/hal/ctor_bridge.cpp:88 -- but
-# ctor_bridge.cpp is only linked into the model-family targets, so smoke never gets it.
+# ctor_bridge.cpp is only linked into the model-family targets. hal/shims.cpp now carries
+# a gate-1 definition that forwards to the host global operator delete instead, which is
+# what the ROM function does; that is what moved smoke into the blocking step.
 # port_refcheck cannot see this class at all: its hal-links check covers bare
 # func_XXXXXXXX / data_XXXXXXXX names, not _ZN... ones.
 #
@@ -144,7 +146,7 @@ jobs:
         shell: cmd
         run: |
           call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
-          cmake --build build\portci --target smoke_gx
+          cmake --build build\portci --target smoke_gx smoke
 
       # Reporting only. -k 0 so ninja reports every target's link instead of stopping at
       # the first, which otherwise makes which failures you see depend on scheduling.
@@ -153,4 +155,4 @@ jobs:
         shell: cmd
         run: |
           call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
-          cmake --build build\portci --target smoke smoke_heap smoke_roots smoke_fs -- -k 0
+          cmake --build build\portci --target smoke_heap smoke_roots smoke_fs -- -k 0
