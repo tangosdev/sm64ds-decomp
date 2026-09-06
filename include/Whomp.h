@@ -22,7 +22,7 @@
  *   - unk_338 = TextureSequence.currFrame
  *   - unk_33c = TextureSequence.speed
  *
- * Field provenance: notes/enemy-leaf-provenance.md.
+ * Field provenance: notes/enemy-provenance.md.
  *
  * SIZE IS THE ROM'S OWN: `daBtn_c_classInit_BATAN` calls
  * `fBase_c::operator new(1552)` -- 0x610 -- and stores this class's

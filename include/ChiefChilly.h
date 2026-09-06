@@ -25,7 +25,7 @@
  * 0x3d8/3dc/3e0 (mSpawnPos*) are NOT a Vector3 despite looking like one: the
  * destructor does not touch 0x3d8, and a Vector3 member would be destroyed there.
  *
- * Field provenance: notes/enemy-leaf-provenance.md.
+ * Field provenance: notes/enemy-provenance.md.
  *
  * SM64DS RTTI names the implementation daKing_Donketu_c. The reconstructed
  * factory daKing_Donketu_c_classInit (historical alias

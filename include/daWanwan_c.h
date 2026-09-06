@@ -52,7 +52,7 @@ struct daWanwan_c : dEnemyBase_c {
     u8  mChainBroken;            /* 0x605 -- gates three Behavior helpers; nothing writes it */
     u8  pad_606[0x2];
     /* uniqueIDs (fBase_c +0x04) of two other actors. 0x1b and 0x29 are resolved
-       through ACTOR_SPAWN_TABLE at 0x02090864 -- see notes/enemy-leaf-provenance.md. */
+       through ACTOR_SPAWN_TABLE at 0x02090864 -- see notes/enemy-provenance.md. */
     s32 mStumpUniqueID;     /* 0x608 -- the actor 0x1b InitResources spawns */
     s32 mFenceUniqueID;     /* 0x60c -- actor 0x29, found lazily by Behavior */
     u8  pad_610[0xc];

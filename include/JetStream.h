@@ -40,7 +40,7 @@ struct JetStream : dEnemyBase_c {
        and never read back anywhere in the tree, so what they select is unknown:
        0x314 takes nibble 3 (param1 >> 12 & 0xf), 0x318 takes bit 0 but only when
        the low nibble is 0 or 1. Deliberately left unk_ -- see
-       notes/enemy-leaf-provenance.md. */
+       notes/enemy-provenance.md. */
     s32 unk_314;                      /* 0x314 */
     s32 unk_318;                      /* 0x318 */
 
