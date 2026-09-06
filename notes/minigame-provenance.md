@@ -171,7 +171,7 @@ either shadow header). This is a third local copy of the identical type;
 consolidating all three is a separate change with its own blast radius.
 
 **0x4700..0x4718** (seven fields) were split out of the former `pad_4660[0xbc]`:
-dScMgRoulette_c's Render (src/_ZN15dScMgRoulette_c6RenderEv.cpp) and dScMg3DEsp_c's Render
+dScMgRoulette_c's Render (_ZN15dScMgRoulette_c6RenderEv, in src/actors/dScMgRoulette_c.cpp) and dScMg3DEsp_c's Render
 (src/_ZN12dScMg3DEsp_c6RenderEv.cpp) both write those exact offsets, so they belong to
 this class, not either leaf. 0x4718..0x471b has no matched access and stays
 padding.
@@ -645,7 +645,7 @@ kind, but nothing in scope increments it), 0x0b8, 0x0c8, 0x0f0, 0x05c,
 | --- | --- | --- |
 | 0x53d6 | `mSelectedTile` | Render draws the cursor sprite at `data_ov006_02142ab4[n]` / `_02142ab8[n]` (the tile coordinate tables, stride 8); Behavior hands the same value to `func_ov006_02108b90` once per racer to score the board. |
 | 0x53e4 | `mCameraPreset` | Render copies row `n` of `data_ov006_0213e34c` and `_0213e370` (stride 0xc) into the base's `mCameraTarget` and `mCameraEye`, takes the angle from `data_ov006_0213e2e0 + n*2`, and then calls `Camera_UpdateMatrices`. 0 leaves the camera alone. Behavior sets it to 1 as the deal starts and clears it at the end. |
-| 0x53e6 | `mPhase` | Behavior's `switch`: 1 deals the racers out one at a time, 2 runs the countdown and reads the board, 3 pays out per landed tile, 4 announces win/lose/draw. src/_ZN15dScMgRoulette_c13OnYoshiTryEatEi.cpp starts it at 1. |
+| 0x53e6 | `mPhase` | Behavior's `switch`: 1 deals the racers out one at a time, 2 runs the countdown and reads the board, 3 pays out per landed tile, 4 announces win/lose/draw. _ZN15dScMgRoulette_c13OnYoshiTryEatEi (in src/actors/dScMgRoulette_c.cpp) starts it at 1. |
 | 0x53e8 | `mPhaseTimer` | Counted down in every phase and reloaded on each transition (8, 0x258, 1, 0x5a); Render also renders the countdown digits from it while `mPhase == 2`. |
 | 0x53f2 | `mScore` | Phase 3 sums each racer's payout into it and phase 4 compares it against `mTargetScore` to pick the win, lose or draw banner. Zeroed by the reset. |
 | 0x53f6 | `mTargetScore` | One per racer that did NOT land on the winning tile; the bar `mScore` has to beat. |
