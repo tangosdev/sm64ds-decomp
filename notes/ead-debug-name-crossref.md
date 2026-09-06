@@ -7,16 +7,12 @@ medium -> high in [config/rom-name-glossary.json](../config/rom-name-glossary.js
 (high confidence). Added to [overlay_actors.md](../symbols/overlay_actors.md): the RTTI-resolved
 new-ground entries below (BOOT, DSMT, TITLE, MINIGAME, ENTRY, RESULT,
 GAME_OVER, CT_MECHA03, BIG_SNOWMAN, METER, MULTIBOOT, MG_CUP, MG_SLOT1,
-MG_SLOT3, MG_AMIDA, MG_MCARLO, MG_FLOWER). **Not applied, on purpose:** the
-`Guragura` -> `Guruguru` suggestion below (§2, idx 132) — checked and
-rejected. `Guragura` is already a real, independently RTTI-verified class
-([daObjGuragura_c.h](../include/daObjGuragura_c.h), [ov002](../config/arm9/overlays/ov002/symbols.txt):1784 `_ZTI15daObjGuragura_c`) with its own header and
-matched methods; it is a *different actor* from index 132's `RC_GURUGURU`
-(ov036). The two just happen to romanize similarly. Left as-is rather than
-risk conflating two unrelated classes. The remaining §2 divergences (STARBASE,
-HANSWITCH, HS_MOON cluster, PILE/STUMP, SWITCHDOOR, WANWAN_SHUTTER) are
-unapplied — flagged for a closer look, not acted on.
+MG_SLOT3, MG_AMIDA, MG_MCARLO, MG_FLOWER).
 
+----
+**Not applied, on purpose:** the `Guragura` -> `Guruguru` suggestion below (§2, idx 132) — checked and rejected. `Guragura` is already a real, independently RTTI-verified class ([daObjGuragura_c.h](../include/daObjGuragura_c.h), [ov002](../config/arm9/overlays/ov002/symbols.txt):`0x0210905c` `_ZTI15daObjGuragura_c`) with its own header and matched methods; it is a *different actor* from index 132's `RC_GURUGURU` ([ov036](../config/arm9/overlays/ov036/symbols.txt)). The two just happen to romanize similarly. Left as-is rather than risk conflating two unrelated classes. The remaining §2 divergences (STARBASE, HANSWITCH, HS_MOON cluster, PILE/STUMP, SWITCHDOOR, WANWAN_SHUTTER) are unapplied — flagged for a closer look, not acted on.
+
+---
 [actor_debug_names.tsv](../symbols/actor_debug_names.tsv) is a literal ROM string table (Tier A, per
 [symbol-name-provenance.md](../notes/symbol-name-provenance.md)) keyed on the same index as
 `ACTOR_SPAWN_TABLE`. This note joins it, index by index, against the two
