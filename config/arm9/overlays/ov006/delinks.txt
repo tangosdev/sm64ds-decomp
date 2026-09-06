@@ -2956,18 +2956,23 @@ src/func_ov006_020f15ac.cpp:
     .text start:0x020f15ac end:0x020f17fc
 
 src/func_ov006_020f17fc.c:
+    complete
     .text start:0x020f17fc end:0x020f192c
 
 src/func_ov006_020f192c.c:
+    complete
     .text start:0x020f192c end:0x020f1a70
 
 src/func_ov006_020f1a70.c:
+    complete
     .text start:0x020f1a70 end:0x020f1b98
 
 src/func_ov006_020f1b98.c:
+    complete
     .text start:0x020f1b98 end:0x020f1cb4
 
 src/func_ov006_020f1cb4.c:
+    complete
     .text start:0x020f1cb4 end:0x020f1dbc
 
 src/func_ov006_020f1dbc.c:
