@@ -81,6 +81,12 @@ commit push the same SHA, git answers `Everything up-to-date` and exits 0, and
 normalized to the same ref — a class lives in one overlay, so the prefix adds
 nothing. Before that normalization the two spellings built two different refs
 and two agents could hold one class simultaneously; live claims existed in both
+**Use forward slashes in `--worktree`, as the example above does — it is
+required, not cosmetic.** A backslash path passed through a shell arrives with
+its separators eaten and the claim records
+`"worktree": "C:tmpsm64ds-memory2-build"`, which points at nothing and defeats
+the whole reason the field exists.
+
 forms. Create the worktree first and claim once with `--worktree`: re-claiming
 to attach the path afterwards is denied against yourself.
     python tools/classqueue.py release dActor_c --role writer

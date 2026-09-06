@@ -18,10 +18,11 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     #      that is degenerate post-promotion (contributionEquivalent "0/22",
     #      state "derived"). Revert it if it appears -- it does not always. The
     #      guess that it depends on status: promoted is refuted: daObjFallBlock_c
-    #      had that status and verify still wrote nothing. It more likely writes
-    #      only when no partial_isolation block exists yet -- a second promotion
-    #      (daDgr_c, daDkk_c: block already present, verify wrote nothing) is
-    #      consistent with that. Check, do not assume.
+    #      had that status and verify still wrote nothing. The follow-up guess --
+    #      that it writes only when no partial_isolation block exists yet -- is
+    #      ALSO refuted: dScMgMemory2_c has no such block and verify wrote
+    #      nothing across 5 runs. No correlate is known. Run `git status` after
+    #      every verify; do not predict it.
     python tools/rombuild.py -j 6
     Get-FileHash build/sm64ds.nds -Algorithm SHA256
     python tools/romdata_check.py --files src/actors/<Class>.cpp
@@ -52,7 +53,13 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
     python tools/cpp_tu_state.py --check-note
-    #    ^ --write-note EXITS 2 on a dirty tree, which is exactly the state the
+    #    ^ --check-note is SAFE on a dirty tree: measured with an unrelated
+    #      unstaged change, it printed `cpp-tu state note is current`, exit 0.
+    #      It reports stale only when the note file itself differs from a
+    #      regeneration. The dirty-tree refusal below belongs to --write-note
+    #      (and the one that hard-fails on an unstaged tree is
+    #      check_references.py, a different tool).
+    #      --write-note EXITS 2 on a dirty tree, which is exactly the state the
     #      rebase recipe leaves you in, and its message tells you to STASH --
     #      which this file forbids (shared across worktrees; unstages
     #      deletions). Use `git add -A`, then re-run.
@@ -93,7 +100,18 @@ PASS signals:
   fold lines collapse to one (`N address range(s) left the byte-verified set`).
   Measured on `ov006/dScMgRoulette_c`: `32 consolidated with credit intact,
   0 changed, 0 lost`. So aim for `0 changed`; if you cannot reach it, say which
-  rows resist and why, rather than writing it off as inherent. Run the check, commit what it asks for,
+  rows resist and why, rather than writing it off as inherent. **`0 changed` is
+  a target, not a merge bar** — the landed `dScMgHanachan_c` promotion (#2309)
+  measures `43 changed, 0 lost`, exit 1, at its own commit. Judge on `lost`.
+
+  **The mechanism this file never named, which cost a builder real time:** the
+  overrides live in `attribution.json` at the repo **root**, in the `overrides`
+  dict, keyed `src/<tu>.cpp#<symbol>`. `prepush_attribution --json` prints the
+  rows verbatim, so you can lift the keys straight out of it. Two traps: an
+  override has **no effect until it is committed**, and a key must match the
+  file's real extension — `main` carries a `..._c14RoundShowCardsEv.c` key for a
+  file that is `.cpp`, and that single mis-spelled key kept one member reporting
+  CREDIT CHANGED after the fold. Add the correctly-spelled key; never prune. Run the check, commit what it asks for,
   report the numbers, and move on — reconciling credit beyond that is a stated
   non-goal in this repo and has consumed whole sessions before.
 - everything else → exit 0 with no backlog count increased
@@ -436,6 +454,27 @@ already stale. Getting this wrong costs a full validation cycle.
   fails identically for `ov002/daBar_c` on untouched `main`. **Take the writer's
   pre-promotion linkcheck as the evidence.** Do not re-run it here and do not
   report its failure as a defect in the change.
+  **But do not leave the `[4b/8]` gate unverified just because `linkcheck`
+  refuses.** The object audit behind it is reachable in about a minute without a
+  linkcheck at all: `_compile_tu(entry)` -> `apply_compiler_only_policy` ->
+  `audit_tu_object` -> `object_audit_refusals`. That gives you
+  `emittedTextOrderIsRomAscending`, the LICENSED count and the refusal list
+  directly. Run it, and run it a second time with the suspect line removed as a
+  negative control — on `dScMgMemory2_c` that turned "the pragma is
+  load-bearing" from the writer's claim into the builder's measurement
+  (`order_ok True, {'LICENSED': 52}` with `#pragma defer_codegen off`;
+  `order_ok False -> object-audit-refused` with only that line deleted).
+
+- **`source_coverage --check` and `prepush_attribution` are BASE-RELATIVE, and a
+  stale base makes both scream about other people's work.** A `main` that moved
+  mid-build produced `REGRESSION: 4,672 B stopped being built from source`
+  naming five files in ov002/ov005/ov034 with nothing to do with the class, and
+  a `CREDIT LOST` for a different class entirely. Both read exactly like real
+  regressions. Re-fetch and rebase before believing either; after the rebase
+  both were clean. The same applies to `git ls-tree origin/main` — worktrees
+  share one `.git`, so another agent's fetch moves `origin/main` under you, which
+  is enough to make an existing file look deleted.
+
 - `linkcheck --baseline` is needed **only if you actually run a `linkcheck`** —
   which this role is told not to do. Running it anyway costs a full scratch
   delink and link for nothing, and `rombuild.py` runs its own baseline control

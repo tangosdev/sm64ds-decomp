@@ -1351,9 +1351,12 @@ def cmd_verify(args):
     if not idxs:
         pass
     elif not bad_pairs:
+        # Do not assert HOW the source is laid out here: a TU compiled with
+        # `#pragma defer_codegen off` emits in source order, so an ascending TU
+        # is ascending in the file too. Report the finding, not a guess at the
+        # cause.
         print(f"emission order    : all {len(idxs)} function(s) in the expected ROM-ascending "
-             f"section order (mwccarm reverses source order; this TU was written in reverse "
-             f"to compensate -- see the pilot report sec 3)")
+             f"section order")
     else:
         print(f"emission order    : {len(bad_pairs)} ordinal pair(s) NOT in ROM order: "
              f"{bad_pairs}  (a destructor's D0/D1/D2 group is ordered by the compiler, not "
