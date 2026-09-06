@@ -242,10 +242,14 @@ def render_readme(rows: list[dict[str, str]], repo: pathlib.Path) -> str:
             name = row["path"].removeprefix("notes/")
             summary = row["summary"]
             tags = []
+            # A real link, not just a backtick-quoted filename: this is what makes every
+            # notes/ file reachable in one hop from this page for a link-following reader
+            # (human or agent) -- see tools/notes_bench.py, which models exactly that walk
+            # and could not reach notes/agents/roles/writer.md before this changed.
             if row["tier"] in ("doctrine", "agent"):
-                label = f"**`{name}`**"
+                label = f"**[`{name}`]({name})**"
             else:
-                label = f"`{name}`"
+                label = f"[`{name}`]({name})"
             if row["status"] == "superseded":
                 tags.append("superseded")
             elif row["status"] == "historical":
