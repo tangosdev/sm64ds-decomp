@@ -50,10 +50,6 @@
    "ref": "src/_ZN8PlatformD0Ev.cpp"
   },
   {
-   "file": "notes/archive/crack-loop-runbook.md",
-   "ref": "notes/pret-idioms.md"
-  },
-  {
    "file": "notes/archive/func_02059d8c-asm-origin.md",
    "ref": "src/dst"
   },
@@ -100,10 +96,6 @@
   {
    "file": "notes/bgobject-provenance.md",
    "ref": "src/FortressWall_Spawn.c"
-  },
-  {
-   "file": "notes/bgobject-provenance.md",
-   "ref": "src/func_ov025_02111898.c"
   },
   {
    "file": "notes/collision-query-classes.md",

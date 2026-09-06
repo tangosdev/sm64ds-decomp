@@ -3,7 +3,7 @@
 // frame pointer, but the current build emits `mov fp, sp`, which (with an elided
 // early bl) cascades into whole-function register skew (1649 divergences).
 // Worklist row (correct target_hex + PR draft) is progress/wl_pr104.jsonl.
-// Launch: Workflow({ scriptPath: "tools/crack_pr104.js", args: { n: 3 } })
+// Launch: Workflow({ scriptPath: "tools/archive/crack_pr104.js", args: { n: 3 } })
 export const meta = {
   name: 'crack-pr104',
   description: 'Fable max-effort crack of func_ov006_02115b0c from PR #104 draft; self-verifying',
@@ -64,7 +64,7 @@ STRUCTURAL LEVERS (pick by what the diff shows once sizes match):
 - arithmetic idiom: signed x/32 and x%32 use the ROM's un-reduced shift idiom; x/K vs (x*magic)>>s; x%K vs x-(x/K)*K.
 - load width/signedness: u8/s8/u16/s16 local or cast flips ldrb/ldrsb/ldrh/ldrsh.
 - CSE-elided reload before an adjacent store: force a fresh ldr with *(volatile int*)... .
-Full catalogue: notes/mwccarm-codegen.md (sec 6e = newest levers) and notes/pret-idioms.md.
+Full catalogue: notes/mwccarm-codegen.md (sec 6e = newest levers) and notes/archive/pret-idioms.md.
 
 KNOWN TARGET-DATA CAVEAT (do NOT chase these until you are down to ~2 divergences at these exact offsets): the published disassembly is lossy for two ldrd/strd-decoded pool words. If your only remaining diffs are constants at +0x59c (a tilemap scan mask, most likely 0x3ff) and +0x5ac (a tile ID, written 0x2d2 but possibly 0x1d2/0x3d2), those are atlas ambiguities, not your bug - report them and stop; do not thrash other logic to satisfy them.
 

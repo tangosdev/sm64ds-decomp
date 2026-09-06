@@ -23,10 +23,9 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  *     "daBgSnwmn_c : dActor_c   31 slots (base 31)" -- daBgSnwmn_c's own
  *     table is exactly as long as dActor_c's own (31 slots, 0..30), which
  *     is only possible if dActor_c is the immediate base: dBgActor_c adds
- *     its own Kill override at slot 31 (see notes/handoff and the Platform
- *     family census), so a dBgActor_c child's table would be 32 slots, not
- *     31. daBgSnwmn_c overrides exactly seven of dActor_c's 31 -- 0, 3, 6,
- *     9, 12, 16, 17.
+ *     its own Kill override at slot 31, so a dBgActor_c child's table would
+ *     be 32 slots, not 31. daBgSnwmn_c overrides exactly seven of
+ *     dActor_c's 31 -- 0, 3, 6, 9, 12, 16, 17.
  *
  * CONSTRUCTION. daBgSnwmn_c_classInit is the reconstructed source-style
  * factory name. The function at 0x02120c00 opens with

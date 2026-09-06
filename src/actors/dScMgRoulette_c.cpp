@@ -1920,4 +1920,4 @@ void func_ov006_021079c8(void)
  * an out-of-line copy of the same body; merged they would also have been a
  * duplicate definition. The body now lives in include/dScMgRoulette_c.h,
  * where the compiler emits both variants itself, in the cartridge's order.
- * See notes/dtor-variant-order and the class header's own note. */
+ * See the class header's own note. */
