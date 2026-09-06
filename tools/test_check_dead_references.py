@@ -354,6 +354,23 @@ class BaselineTests(unittest.TestCase):
             "src/live.cpp": ["src/gone.cpp"],
         })
 
+    def test_prose_baseline_writer_cannot_bank_code_comment_debt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            old = CDR.BASELINE
+            CDR.BASELINE = pathlib.Path(tmp) / "prose.json"
+            try:
+                CDR.write_baseline({
+                    ("notes/live.md", "src/gone.cpp"),
+                    ("src/live.cpp", "src/also-gone.cpp"),
+                })
+                data = json.loads(CDR.BASELINE.read_text(encoding="utf-8"))
+            finally:
+                CDR.BASELINE = old
+        self.assertEqual(data["known"], [{
+            "file": "notes/live.md",
+            "ref": "src/gone.cpp",
+        }])
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
