@@ -88,6 +88,30 @@ class DetectionTests(unittest.TestCase):
             "tools/thing.py", "OPEN = 'include/Enemy.h'\n"))
         self.assertEqual(dead, set())
 
+    def test_a_dead_reference_in_a_cpp_line_comment_is_detected(self):
+        dead = self._dead(lambda t: t.write(
+            "src/thing.cpp", "int x; // promoted from src/vanished.cpp\n"))
+        self.assertIn(("src/thing.cpp", "src/vanished.cpp"), dead)
+
+    def test_a_dead_reference_in_a_multiline_header_comment_is_detected(self):
+        dead = self._dead(lambda t: t.write(
+            "include/thing.h", "/*\n * See src/vanished.c for the old body.\n */\n"))
+        self.assertIn(("include/thing.h", "src/vanished.c"), dead)
+
+    def test_cpp_strings_and_includes_are_not_comments(self):
+        dead = self._dead(lambda t: t.write(
+            "src/thing.cpp",
+            "#include \"include/vanished.h\"\n"
+            "const char* a = \"src/vanished.cpp\";\n"
+            "const char* b = R\"tag(src/also-vanished.cpp // not prose)tag\";\n"))
+        self.assertEqual(dead, set())
+
+    def test_a_live_path_in_a_cpp_comment_is_not_reported(self):
+        def build(t):
+            t.write("src/legacy.cpp", "int legacy;\n")
+            t.write("src/promoted.cpp", "// promoted from src/legacy.cpp\n")
+        self.assertEqual(self._dead(build), set())
+
 
 class NoiseTests(unittest.TestCase):
     """Negative controls: the shapes that must never be called a path."""
@@ -272,6 +296,8 @@ class FailLoudlyTests(unittest.TestCase):
     def test_the_floors_are_below_the_real_tree(self):
         files, refs, _dead = CDR.dead_references()
         self.assertGreaterEqual(len(files), CDR.MIN_FILES)
+        code_files = [f for f in files if f.endswith(CDR.CODE_SUFFIXES)]
+        self.assertGreaterEqual(len(code_files), CDR.MIN_CODE_FILES)
         self.assertGreaterEqual(len(refs), CDR.MIN_REFS)
 
 
@@ -300,6 +326,35 @@ class BaselineTests(unittest.TestCase):
         pairs = [(e["file"], e["ref"]) for e in data["known"]]
         self.assertEqual(pairs, sorted(pairs))
         self.assertEqual(len(pairs), len(set(pairs)))
+
+    def test_the_code_baseline_is_wellformed_sorted_and_current(self):
+        data = json.loads(CDR.CODE_BASELINE.read_text(encoding="utf-8"))
+        files = list(data["known"])
+        pairs = [(file, ref)
+                 for file, refs in data["known"].items() for ref in refs]
+        self.assertEqual(files, sorted(files))
+        self.assertEqual(pairs, sorted(pairs))
+        self.assertEqual(len(pairs), len(set(pairs)))
+        for file, _ref in pairs:
+            self.assertTrue(file.endswith(CDR.CODE_SUFFIXES))
+            self.assertTrue((REPO / file).exists(),
+                            f"code baseline names a citing file that is gone: {file}")
+
+    def test_code_baseline_writer_cannot_bank_markdown_debt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            old = CDR.CODE_BASELINE
+            CDR.CODE_BASELINE = pathlib.Path(tmp) / "code.json"
+            try:
+                CDR.write_code_baseline({
+                    ("src/live.cpp", "src/gone.cpp"),
+                    ("notes/live.md", "src/also-gone.cpp"),
+                })
+                data = json.loads(CDR.CODE_BASELINE.read_text(encoding="utf-8"))
+            finally:
+                CDR.CODE_BASELINE = old
+        self.assertEqual(data["known"], {
+            "src/live.cpp": ["src/gone.cpp"],
+        })
 
 
 if __name__ == "__main__":
