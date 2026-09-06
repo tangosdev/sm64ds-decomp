@@ -12,11 +12,11 @@ runbooks, role prompts. **Evidence** is what you look up one fact in and never
 read whole -- provenance, censuses, pilot reports. `data` is machine-read/
 written; `archive` is frozen history. See `notes/CONVENTIONS.md` §1.
 
-Doctrine budget: **291,903 bytes (285.1KB)** across 18 files, against a stated 150KB cap.
+Doctrine budget: **290,458 bytes (283.7KB)** across 18 files, against a stated 150KB cap.
 Over cap today -- reported here, not enforced (see `tools/notes_index.py`'s
 docstring). Condensing doctrine is separate, not-yet-run work.
 
-Tier counts: 18 doctrine, 93 evidence, 21 data, 8 archive (140 files total).
+Tier counts: 18 doctrine, 85 evidence, 21 data, 8 archive (132 files total).
 
 ## process
 
@@ -31,7 +31,6 @@ Tier counts: 18 doctrine, 93 evidence, 21 data, 8 archive (140 files total).
 - **[`agents/roles/scout.md`](agents/roles/scout.md)** — Scout role: which ROM facts to establish and write to class-facts/<Class>.json before writing starts.
 - **[`agents/roles/writer.md`](agents/roles/writer.md)** — Writer role: gather a class's scattered shard files into one real C++ TU; states the D0/D1/D2 order rule.
 - [`agent-cpp-class-migration.md`](agent-cpp-class-migration.md) _superseded_ — Older parallel-agent C++ migration guide; superseded by the 5-role pipeline in notes/agents/**.
-- [`handoff-validator-and-tests.md`](handoff-validator-and-tests.md) _superseded_ — 2026-08 handoff on validator/test coverage gaps; both asks since landed (3 workflows, header-offsets gate).
 - [`match-attempts.md`](match-attempts.md) — What match_attempts.jsonl records vs. nearmiss/db.jsonl and match_provenance.jsonl; the status vocabulary.
 - [`match-logging-console.md`](match-logging-console.md) — Which tools tangOS Console's match-logging stack requires (log_attempt/stamp_provenance/bank).
 - [`match-provenance.md`](match-provenance.md) — How and when to stamp a match's final provenance (kind/model/reasoning) with tools/stamp_provenance.py.
@@ -76,7 +75,7 @@ Tier counts: 18 doctrine, 93 evidence, 21 data, 8 archive (140 files total).
 - [`archive/crack-loop-runbook.md`](archive/crack-loop-runbook.md) _historical, archive_ — Coddog fan-out matching-loop command sequence (prep/fan-out/verify); un-archived once, tooling still live.
 - [`archive/func_02059d8c-asm-origin.md`](archive/func_02059d8c-asm-origin.md) _historical, archive_ — Why func_02059d8c's 3-instruction busy-wait has no pure-C preimage; recommends ASM-PRIMITIVE reclass.
 - [`archive/func_ov079_02124008-floor.md`](archive/func_ov079_02124008-floor.md) _historical, archive_ — Near-miss floor analysis for func_ov079_02124008 (div=1 materialization), banked in nearmiss/db.jsonl.
-- [`archive/n64-decomp-cross-reference.md`](archive/n64-decomp-cross-reference.md) _historical, archive_ — Incomplete survey of the N64 SM64 decomp as a reuse/contamination oracle for this repo; parked.
+- [`archive/n64-decomp-cross-reference.md`](archive/n64-decomp-cross-reference.md) _archive_ — N64 SM64 decomp cross-reference (naming oracle, physics/architecture comparison); still takes rename-cascade commits despite living under archive/.
 - [`archive/pret-idioms.md`](archive/pret-idioms.md) _historical, archive_ — mwccarm idioms mined from pret's Pokemon Platinum/Diamond; superseded by notes/matching-style.md.
 
 ## naming
@@ -97,21 +96,17 @@ Tier counts: 18 doctrine, 93 evidence, 21 data, 8 archive (140 files total).
 - [`actor-profile-pilot.md`](actor-profile-pilot.md) — Pilot: SpawnInfo is one instance of a broader process-profile system; 14 actor + 6 scene profiles sampled.
 - [`bgobject-provenance.md`](bgobject-provenance.md) — Per-class field-name evidence for dBgActor_c-derived interactive objects (StarSwitch, etc.), byte-neutral.
 - [`butterfly-tornado-provenance.md`](butterfly-tornado-provenance.md) — Field-name provenance for Butterfly/Tornado/StarMarker/ToxBox, from tools/gen_header.py offsets.
-- [`class-init-pilot.md`](class-init-pilot.md) — Pilot: do *_classInit factories follow one pattern? 19/20 sampled do; the naming rule doesn't universalize.
 - [`collision-query-classes.md`](collision-query-classes.md) _superseded_ — RaycastLine/RaycastGround/SphereClsn gazetteer; several conclusions wrong — read collision-system.md first.
 - [`collision-system.md`](collision-system.md) — Primary-evidence reference for the collision system: RTTI names, class graph, open questions (§6).
 - [`dscene-c-siblings-census.md`](dscene-c-siblings-census.md) — Vtable/class map for dScene_c's still-unnamed direct children, so nobody re-derives them.
-- [`enemy-leaf-provenance.md`](enemy-leaf-provenance.md) — Field-name provenance for 10 dEnemyBase_c leaf classes, set B (JetStream, Goomboss, Whomp, etc.).
-- [`enemy-provenance.md`](enemy-provenance.md) — Field-name provenance for the dEnemyBase_c family, set A, from matched-body evidence only.
+- [`enemy-provenance.md`](enemy-provenance.md) — Field-name provenance for the dEnemyBase_c family, 17 classes across 2 module groups, from matched-body evidence only.
 - [`handoff-class-skeleton.md`](handoff-class-skeleton.md) _historical_ — 2026-08-07 handoff: the class-skeleton interface is solved, fields are not; past shelf life, numbers stale.
 - [`handoff-sphereclsn-detectclsn.md`](handoff-sphereclsn-detectclsn.md) _superseded_ — Search record for DetectClsn(SphereClsn&); function matched in #1655 — see collision-system.md instead.
 - [`minigame-provenance.md`](minigame-provenance.md) — Where the minigame scene classes' recovered header layouts (base classes, fields) came from.
-- [`overlay-ambiguous-references.md`](overlay-ambiguous-references.md) _superseded_ — Original statement of the overlay-ambiguous-reference problem (169 refs); see overlay-residency.md.
 - [`overlay-residency.md`](overlay-residency.md) — Which overlays can be resident together, derived from the game's own loader; resolves 127 of 137 refs.
 - [`platform-provenance.md`](platform-provenance.md) — Where the dBgActor_c (level-object) family's header layouts and field names came from.
 - [`player-provenance.md`](player-provenance.md) — Field-name provenance for Player/Bowser/SpikeBomb; documents the mPrevPosX base-class shadowing trap.
 - [`profile-lifecycle-crosswalk.md`](profile-lifecycle-crosswalk.md) — Crosswalk of SM64DS profile/lifecycle fields against an NSMBW hypothesis: confirmed vs. unresolved.
-- [`profile-macro-patterns.md`](profile-macro-patterns.md) — Binary-pattern pilot on actor/profile declarations; supports a repeated architecture, not an exact macro.
 - [`scene-provenance.md`](scene-provenance.md) — Derivation notes for the dScene_c branch's headers, moved out of source comments during a readability pass.
 - [`smartball-provenance.md`](smartball-provenance.md) — Field-name provenance for the smartball minigame family and its shared cMgSmartball_object_c base.
 - [`system-provenance.md`](system-provenance.md) — Field provenance for non-actor system classes: particle tracker, minimap, level scene, BMD model file.
@@ -141,16 +136,13 @@ Tier counts: 18 doctrine, 93 evidence, 21 data, 8 archive (140 files total).
 - [`dScMgBase_c-slots-18-35.md`](dScMgBase_c-slots-18-35.md) — How vtable slots 18-35 got declared on dScMgBase_c, unlocking full-length emission for 32 descendants.
 - [`dScMgSingle3DBase_c-vtable-ownership.md`](dScMgSingle3DBase_c-vtable-ownership.md) — Two remaining blockers to dScMgSingle3DBase_c owning its own emitted _ZTV/_ZTI/_ZTS outright.
 - [`plan-tu-merge-queue.md`](plan-tu-merge-queue.md) — Planned TU-merge queue combining one-function files back into original translation units, with corrections.
-- [`sinit-ownership-pilot-ov002.md`](sinit-ownership-pilot-ov002.md) — Confirms __sinit_ov002_02100938 belongs to dEnemyBase_c's original TU; not yet promotion-ready.
+- [`sinit-ownership-cases.md`](sinit-ownership-cases.md) — Consolidated case log of 9 confirmed __sinit ownership rows (dEnemyBase_c, CutsceneObject+daDemo_c, Painting, Bird, daObjBkBillboard_c, daObjMarioCap_c, OneUpMushroom, daObjKurumajiku_c, MadPiano).
 - [`sinit-ownership-wave-edges-probe.cpp`](sinit-ownership-wave-edges-probe.cpp) — Compile-only probes proving two sinit blocks' ownership via ordinary PMF-array globals; not in any build.
-- [`sinit-ownership-wave-edges.md`](sinit-ownership-wave-edges.md) — Ownership verdicts for two multi-class/large-table sinit blocks (CutsceneObject+daDemo_c, Painting).
-- [`sinit-ownership-wave-resource-handles.md`](sinit-ownership-wave-resource-handles.md) — Ownership audit of 3 resource-handle sinit rows (Bird, daObjBkBillboard_c, daObjMarioCap_c): confirmed.
 - [`sinit-ownership.md`](sinit-ownership.md) — How to regenerate and read tools/sinit_owners.py's review-only sinit-to-TU ownership map.
 - [`sinit-probes/bird.cpp`](sinit-probes/bird.cpp) — Compile-only organic-generation probe for Bird's model/anim-file sinit ownership, behind a research #define.
 - [`sinit-probes/mario_cap.cpp`](sinit-probes/mario_cap.cpp) — Compile-only probe for MarioCap anim-file/state sinit ownership, behind a research #define.
 - [`sinit-probes/pole_billboard.cpp`](sinit-probes/pole_billboard.cpp) — Compile-only probe for the Pole billboard model-file sinit ownership, behind a research #define.
 - [`sinit-probes/wave_a.cpp`](sinit-probes/wave_a.cpp) — Compile-only probes for 3 wave-A sinit ownership claims (OneUpMushroom and others), one #define at a time.
-- [`sinit-wave-a-ownership.md`](sinit-wave-a-ownership.md) — Wave-A sinit ownership verdicts: OneUpMushroom, daObjKurumajiku_c, MadPiano, all CONFIRMED via organic proof.
 - [`translation-unit-reconstruction-plan.md`](translation-unit-reconstruction-plan.md) — Architecture/safety-model design for TU reconstruction; tools/tubuild.py and src_tu/ now implement it.
 - [`tu-boundaries.md`](tu-boundaries.md) — What tools/tu_map.py knows about original translation-unit boundaries, and where it stops knowing.
 - [`tu-cpp-census-2026-08.md`](tu-cpp-census-2026-08.md) — Reconciled ground-truth census (524 TUs, 1167 provably-C++ files) after fixing a stale tu_map regen bug.
