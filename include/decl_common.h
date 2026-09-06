@@ -1613,7 +1613,6 @@ extern int*data_ov084_02130e0c;
 extern int*func_02043f4c(int*, unsigned int, int);
 extern int*func_02111b6c;
 extern int*func_ov022_021123d0(int*, int);
-extern int*g_020beb68;
 extern long long Vec3_DistSq(const struct Vector3*, /*0x0203cf94*/ const struct Vector3*);
 extern long long func_0203d5bc(int*);
 extern s16 data_02082414;

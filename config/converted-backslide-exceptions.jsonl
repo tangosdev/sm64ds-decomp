@@ -341,3 +341,6 @@
 {"path": "src/_ZN7daDkk_c16OnAimedAtWithEggEv.cpp", "reason": "ov025/daDkk_c promoted: 8 one-function shards absorbed into src/actors/daDkk_c.cpp"}
 {"path": "src/_ZN7daDkk_cD0Ev.cpp", "reason": "ov025/daDkk_c promoted: 8 one-function shards absorbed into src/actors/daDkk_c.cpp"}
 {"path": "src/_ZN7daDkk_cD1Ev.cpp", "reason": "ov025/daDkk_c promoted: 8 one-function shards absorbed into src/actors/daDkk_c.cpp"}
+{"path": "src/_ZN12dScMgSound_c6RenderEv.cpp", "reason": "ov006: promote dScMgSound_c into one 82-function C++ TU (src/actors/dScMgSound_c.cpp); the 82 one-function shards are absorbed, not lost -- linkcheck scratch-link-verified, 106/106 modules exact, ROM sha256 identical to stock"}
+{"path": "src/_ZN12dScMgSound_cD0Ev.cpp", "reason": "ov006: promote dScMgSound_c into one 82-function C++ TU (src/actors/dScMgSound_c.cpp); the 82 one-function shards are absorbed, not lost -- linkcheck scratch-link-verified, 106/106 modules exact, ROM sha256 identical to stock"}
+{"path": "src/_ZN12dScMgSound_cD1Ev.cpp", "reason": "ov006: promote dScMgSound_c into one 82-function C++ TU (src/actors/dScMgSound_c.cpp); the 82 one-function shards are absorbed, not lost -- linkcheck scratch-link-verified, 106/106 modules exact, ROM sha256 identical to stock"}
