@@ -15,6 +15,10 @@ automates batch coordination, ROM verification, `src/` conventions, and PR
 formatting, and connects you to the repo's toolchain over MCP. Hand-driving
 the tools below works fine too.
 
+**Looking for a deeper reference** (matching craft, C++ conversion, TU
+promotion, provenance)? Start at [`notes/README.md`](notes/README.md) — it
+routes by task instead of making you scroll 130+ files.
+
 ## The one rule that matters
 
 **Every file you add to `src/` must byte-reproduce the ROM.**

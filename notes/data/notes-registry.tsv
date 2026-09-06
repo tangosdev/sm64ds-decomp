@@ -1,0 +1,139 @@
+path	tier	bucket	status	owner_tool	summary
+notes/CONVENTIONS.md	doctrine	process	live		Lifecycle policy for notes/: types, lifecycle, mechanical retire rule, MERGE eligibility, freshness.
+notes/README.md	doctrine	process	live	tools/notes_index.py	Generated router: buckets and a one-line summary per notes/ file, doctrine marked apart from evidence.
+notes/actor-core-provenance.md	evidence	provenance	live		fBase_c/ActorBase/ActorDerived/Actor ROM code ranges and ctor evidence moved out of the headers.
+notes/actor-leaf-provenance.md	evidence	provenance	live		Field-name evidence for dActor_c leaf classes (excl. Player/Bowser/dBgActor_c), byte-neutral.
+notes/actor-naming.md	evidence	naming	live		How to derive real actor names from the ROM's ACTOR_SPAWN_TABLE and DynamicAllocationDecomp's ActorList.h.
+notes/actor-profile-pilot.md	evidence	provenance	live		Pilot: SpawnInfo is one instance of a broader process-profile system; 14 actor + 6 scene profiles sampled.
+notes/actor-vtables.md	evidence	naming	live		Actor/ActorDerived/ActorBase/Player vtable slot-by-slot map recovered whole from the ROM.
+notes/agent-cpp-class-migration.md	evidence	process	superseded		Older parallel-agent C++ migration guide; superseded by the 5-role pipeline in notes/agents/**.
+notes/agent-partitioned-tu-workflow.md	evidence	tu-promotion	live		Operational companion to the TU-reconstruction plan; how tools/tubuild.py drives the partitioned workflow.
+notes/agents/LAUNCH.md	doctrine	process	live		Copy-paste launch prompts that bootstrap a fresh Claude Code/Codex instance into the class pipeline.
+notes/agents/PIPELINE.md	doctrine	process	live		The 5-stage class pipeline (scout/writer/builder/integrator/reviewer) and its claim protocol.
+notes/agents/roles/builder.md	doctrine	process	live		Builder role: required gate order and proof steps to verify a class reconstruction before opening a PR.
+notes/agents/roles/humanizer.md	doctrine	process	live		Humanizer role: checklist for whether reconstructed C++ reads like plausible 2004 EAD source.
+notes/agents/roles/integrator.md	doctrine	process	live		Integrator role: compose several proven class promotions onto one branch for a single validator run.
+notes/agents/roles/reviewer.md	doctrine	process	live		Reviewer role: independent re-verification checklist before merging a class-promotion PR.
+notes/agents/roles/scout.md	doctrine	process	live		Scout role: which ROM facts to establish and write to class-facts/<Class>.json before writing starts.
+notes/agents/roles/writer.md	doctrine	process	live		Writer role: gather a class's scattered shard files into one real C++ TU; states the D0/D1/D2 order rule.
+notes/archive/ARCHIVE_LOG.md	archive	process	live		Ledger of every note ever retired or archived: path, date, one-line reason, last commit sha.
+notes/archive/crack-loop-runbook.md	archive	matching	historical		Coddog fan-out matching-loop command sequence (prep/fan-out/verify); un-archived once, tooling still live.
+notes/archive/func_02059d8c-asm-origin.md	archive	matching	historical		Why func_02059d8c's 3-instruction busy-wait has no pure-C preimage; recommends ASM-PRIMITIVE reclass.
+notes/archive/func_ov079_02124008-floor.md	archive	matching	historical		Near-miss floor analysis for func_ov079_02124008 (div=1 materialization), banked in nearmiss/db.jsonl.
+notes/archive/n64-decomp-cross-reference.md	archive	matching	historical		Incomplete survey of the N64 SM64 decomp as a reuse/contamination oracle for this repo; parked.
+notes/archive/plan-gen-header.md	archive	cpp-conversion	historical		v2 plan for tools/gen_header.py's struct-layout header generator; scope vs. declaration headers.
+notes/archive/plan-scalar-markers.md	archive	cpp-conversion	historical		Status of retyping scalar-sized u8 marker fields; 71 mechanical cases done per gen_header.py --report.
+notes/archive/pret-idioms.md	archive	matching	historical		mwccarm idioms mined from pret's Pokemon Platinum/Diamond; superseded by notes/matching-style.md.
+notes/arm9-endgame.md	evidence	matching	live		Routing map for arm9's last ~20 unmatched functions (the large-residue tail); re-measured 2026-08-02.
+notes/arm9-msl-walls.md	evidence	matching	live		Why __pformatter/float2hex stay asm: built by a compiler family 1.2 can't reproduce; accepted by design.
+notes/ask-the-compiler.md	evidence	matching	live		Worked example: using mwccarm's stack-slot debug dump to match the ROM's largest unmatched function.
+notes/asm-policy.md	doctrine	matching	live		Rule for when an asm{} block still counts as "decompiled" vs. hiding an un-recovered function.
+notes/assets.md	evidence	build	live		How to extract/catalog NitroFS assets (models, textures, sound) locally with unpack.py/rombuild.py.
+notes/bgobject-provenance.md	evidence	provenance	live		Per-class field-name evidence for dBgActor_c-derived interactive objects (StarSwitch, etc.), byte-neutral.
+notes/butterfly-tornado-provenance.md	evidence	provenance	live		Field-name provenance for Butterfly/Tornado/StarMarker/ToxBox, from tools/gen_header.py offsets.
+notes/class-init-pilot.md	evidence	provenance	live		Pilot: do *_classInit factories follow one pattern? 19/20 sampled do; the naming rule doesn't universalize.
+notes/collision-query-classes.md	evidence	provenance	superseded		RaycastLine/RaycastGround/SphereClsn gazetteer; several conclusions wrong — read collision-system.md first.
+notes/collision-system.md	evidence	provenance	live		Primary-evidence reference for the collision system: RTTI names, class graph, open questions (§6).
+notes/converted-tier.md	evidence	cpp-conversion	live		Why tools/tiers.py's CONVERTED metric undercounted converted C++ methods; the real_name defect and fix.
+notes/cpp-conversion-enemies.md	evidence	cpp-conversion	live		Sweep of the 60-class dEnemyBase_c family's real-C++ conversion status and the remaining wall.
+notes/cpp-naming-guide.md	doctrine	naming	live		Itanium ABI mangling quick reference and C++ naming conventions used to match ROM symbols and vtables.
+notes/cpp-tu-current-state.md	evidence	cpp-conversion	live	tools/cpp_tu_state.py	Generated authority page: live matching/CONVERTED/TU-reconstruction counts from build inputs.
+notes/ctor-migration.md	evidence	cpp-conversion	live		Log of constructors migrated to real C++ through 2026-08-24; companion to dtor-migration.md.
+notes/dScMgBase_c-slots-18-35.md	evidence	tu-promotion	live		How vtable slots 18-35 got declared on dScMgBase_c, unlocking full-length emission for 32 descendants.
+notes/dScMgSingle3DBase_c-vtable-ownership.md	evidence	tu-promotion	live		Two remaining blockers to dScMgSingle3DBase_c owning its own emitted _ZTV/_ZTI/_ZTS outright.
+notes/data/c-cpp-classification.tsv	data	cpp-conversion	live		Per-src-file C++ evidence tier (PURE-C/etc.), RTTI class, and blockers; one row per src/*.c file.
+notes/data/class-build-worklist.tsv	data	process	live		Per-class build state (DONE/etc.), header path, base class; read by the agent pipeline's claim queue.
+notes/data/class-facts/README.md	data	process	live		One-line pointer: scout-stage output lands here as <Class>.json, consumed by the writer stage.
+notes/data/class-facts/dBgActor_c.json	data	process	live		Scout-stage ROM facts for dBgActor_c: RTTI/typeinfo/vtable addresses, overlay, module base.
+notes/data/class-facts/dScGameOver_c.json	data	process	live		Scout-stage ROM facts for dScGameOver_c: candidate text range 0x020b0580-0x020b1118, RTTI/vtable addresses.
+notes/data/class-facts/dScMgD3DBase_c.json	data	process	live		Scout-stage ROM facts for dScMgD3DBase_c: candidate text partition (17 class + 10 helper fns), RTTI address.
+notes/data/class-facts/dScMgHanachan_c.json	data	process	live		Writer-stage ROM facts for dScMgHanachan_c (ov006): RTTI/vtable addresses from rtti_extract.py, no scout ran.
+notes/data/class-facts/dScMgRoulette_c.json	data	process	live		Writer-stage ROM facts for dScMgRoulette_c (ov006): symbols.txt/relocs.txt-derived, no scout facts existed.
+notes/data/class-facts/daDgr_c.json	data	process	live		Scout-stage ROM facts for daDgr_c: RTTI/typeinfo addresses, base class dBgActor_c.
+notes/data/class-facts/daDkk_c.json	data	process	live		Scout-stage ROM facts for daDkk_c: RTTI/typeinfo addresses, base class daDsnBase_c.
+notes/data/class-facts/daDsnBase_c.json	data	process	live		Scout-stage ROM facts for daDsnBase_c (ov025): RTTI record lives outside its own overlay; base dBgActor_c.
+notes/data/class-facts/daObjCtMecha03_c.json	data	process	live		Scout-stage ROM facts for daObjCtMecha03_c: RTTI/typeinfo addresses, dBgActor_c-family base.
+notes/data/class-facts/daObjCtMecha04_c.json	data	process	live		Scout-stage ROM facts for daObjCtMecha04_c: RTTI/typeinfo addresses, dBgActor_c-family base.
+notes/data/class-facts/daObjFloatBoard_c.json	data	process	live		Scout-stage ROM facts for daObjFloatBoard_c: RTTI/typeinfo words and base class dBgActor_c.
+notes/data/class-facts/daOts_c.json	data	process	live		Scout-stage ROM facts for daOts_c (ov064): RTTI symbol/module and section layout (.text/.rodata/.init/.ctor).
+notes/data/class-facts/daPgDfdr_c.json	data	process	live		Scout-stage ROM facts for daPgDfdr_c (ov027): RTTI/typeinfo addresses and __si_class_type_info word layout.
+notes/data/notes-registry.tsv	data	process	live	tools/notes_index.py	The registry itself: one row per notes/ file with its tier, bucket, status, owner tool, and summary.
+notes/data/tu-merge-candidates.json	data	tu-promotion	live		524 candidate TUs from tu_map.py with per-module under/over-segmentation stats (74 modules, 11096 fns).
+notes/data/tu-promotion-queue.tsv	data	tu-promotion	live		Per-class TU-promotion queue: shard count, blockers, sibling oracle, route; the writer stage's target list.
+notes/declaration-centralization.md	evidence	build	live		Why every src/ file re-declares externs independently, and what centralizing them would take.
+notes/dscene-c-siblings-census.md	evidence	provenance	live		Vtable/class map for dScene_c's still-unnamed direct children, so nobody re-derives them.
+notes/dtor-migration.md	evidence	cpp-conversion	historical		Destructor-migration failure analysis; counts frozen, see d0_migrate.py/langmode_audit for live state.
+notes/dtor-variant-audit.md	evidence	cpp-conversion	live		41% of the D2 backlog is mislabelled D0/D1; tools/dtor_variant_audit.py reproduces the finding.
+notes/ead-debug-name-crossref.md	evidence	naming	live		Cross-references ROM debug actor-name strings against overlay_actors.md; records accepted/rejected renames.
+notes/emu-trace-build.md	evidence	build	live		Engineering spec (phases, schemas, gates) for the melonDS/DeSmuME emulator-trace matching build.
+notes/emu-trace-plan.md	evidence	build	live		Premise check: what runtime emulator traces can and cannot buy for matching, ranked by divergence tier.
+notes/enemy-leaf-provenance.md	evidence	provenance	live		Field-name provenance for 10 dEnemyBase_c leaf classes, set B (JetStream, Goomboss, Whomp, etc.).
+notes/enemy-provenance.md	evidence	provenance	live		Field-name provenance for the dEnemyBase_c family, set A, from matched-body evidence only.
+notes/ghidra-dsd-landscape.md	evidence	build	live		Survey of current Ghidra/dsd usage and what adopting upstream ds-decomp PR #37 would buy.
+notes/global-data-migration.md	evidence	build	live		Design note: what it would take to source-build .data/.rodata/.bss instead of linking ROM gap objects.
+notes/handoff-class-skeleton.md	evidence	provenance	historical		2026-08-07 handoff: the class-skeleton interface is solved, fields are not; past shelf life, numbers stale.
+notes/handoff-marker-typing.md	evidence	cpp-conversion	historical		2026-08-06 handoff on object-marker typing; its "767 remaining" count is now ~20x stale (37 today).
+notes/handoff-sphereclsn-detectclsn.md	evidence	provenance	superseded		Search record for DetectClsn(SphereClsn&); function matched in #1655 — see collision-system.md instead.
+notes/handoff-validator-and-tests.md	evidence	process	superseded		2026-08 handoff on validator/test coverage gaps; both asks since landed (3 workflows, header-offsets gate).
+notes/itcm.md	evidence	matching	live		Why ITCM's 41 functions were invisible to every tool, and what the first matches found there.
+notes/levers.jsonl	data	matching	live		Distilled JSONL catalogue of mwccarm codegen levers (one per line); read by tools/levers.py, not by hand.
+notes/link-verification.md	evidence	matching	live		How tools/linkcheck.py catches wrong-callee/reloc-destination matches the wildcard byte-diff misses.
+notes/llm-assisted-global-data-migration.md	evidence	build	live		Proposes static analysis + LLM inference + ROM tracing to reconstruct global-data ownership.
+notes/m2c-setup.md	evidence	matching	live		Wiring m2c as a free gcc-flavored semantic-draft tier for LARGE (0x400+ byte) unmatched functions.
+notes/match-attempts.md	evidence	process	live		What match_attempts.jsonl records vs. nearmiss/db.jsonl and match_provenance.jsonl; the status vocabulary.
+notes/match-logging-console.md	evidence	process	live		Which tools tangOS Console's match-logging stack requires (log_attempt/stamp_provenance/bank).
+notes/match-provenance.md	evidence	process	live		How and when to stamp a match's final provenance (kind/model/reasoning) with tools/stamp_provenance.py.
+notes/matching-style.md	doctrine	matching	live		Rules for writing C that mwccarm reproduces byte-for-byte, mined from 36 matched functions, ranked by impact.
+notes/minigame-provenance.md	evidence	provenance	live		Where the minigame scene classes' recovered header layouts (base classes, fields) came from.
+notes/model-rtti-names.md	evidence	naming	live		How to read a model/animation-family RTTI type_info record, and the original class names recovered.
+notes/mwccarm-codegen.md	evidence	matching	live		317KB dated log of mwccarm codegen levers (rules 1-6d, dated discoveries 6e-6bu); primary matching reference.
+notes/mwccarm-pragmas.txt	evidence	matching	live		246 #pragma names mwccarm actually recognizes (vs. silently-ignored typos), derived by exhaustive sweep.
+notes/mwccarm-version-archive-search.md	evidence	build	live		Playbook for locating historical mwccarm compiler builds (46/49/50/56) from the 2003-2004 period.
+notes/objisolate.md	evidence	cpp-conversion	live		Why a lone C++ destructor can't compile/link alone, and the bugs objisolate.py fixes to reach 106/106.
+notes/overlay-ambiguous-references.md	evidence	provenance	superseded		Original statement of the overlay-ambiguous-reference problem (169 refs); see overlay-residency.md.
+notes/overlay-residency.md	evidence	provenance	live		Which overlays can be resident together, derived from the game's own loader; resolves 127 of 137 refs.
+notes/plan-base-headers.md	evidence	cpp-conversion	superseded		Plan to fix 6 field declarations poisoning dEnemyBase_c/dCapEnemy_c; that base-class work has since landed.
+notes/plan-cpp-conversion-queue.md	evidence	cpp-conversion	live		Staged queue for migrating ROM-proven C++ .c files to real C++, by tier, with corrections to the census.
+notes/plan-cpp-language-mode.md	evidence	cpp-conversion	historical		Original #821 language-mode-gap campaign plan; superseded by langmode_audit.py + cpp-tu-current-state.md.
+notes/plan-tu-merge-queue.md	evidence	tu-promotion	live		Planned TU-merge queue combining one-function files back into original translation units, with corrections.
+notes/platform-provenance.md	evidence	provenance	live		Where the dBgActor_c (level-object) family's header layouts and field names came from.
+notes/player-provenance.md	evidence	provenance	live		Field-name provenance for Player/Bowser/SpikeBomb; documents the mPrevPosX base-class shadowing trap.
+notes/port-selftest-bmp-gate.md	evidence	build	live		Rule for comparing the port's selftest BMP gate: byte-exact only between matching .dsstate base+layout builds.
+notes/pr-monitor.md	evidence	process	live		How to run the read-only PR queue monitor and the repair loop for a flagged PR.
+notes/pr-validation.md	evidence	process	live		What the merge gate checks (match/coverage/fidelity/lineage/relocations/port refs) and which tools emit it.
+notes/profile-lifecycle-crosswalk.md	evidence	provenance	live		Crosswalk of SM64DS profile/lifecycle fields against an NSMBW hypothesis: confirmed vs. unresolved.
+notes/profile-macro-patterns.md	evidence	provenance	live		Binary-pattern pilot on actor/profile declarations; supports a repeated architecture, not an exact macro.
+notes/real-cpp-migration-runbook.md	evidence	cpp-conversion	live		Runbook for converting matched C to real C++ where the compiler, not hand-mangling, owns the ABI.
+notes/research-matching-levers.md	evidence	matching	live		Deep-research survey (dsd/objdiff/permuter/LLM pipelines) for matching speed/success at the 63% tail.
+notes/roadmap.md	evidence	build	historical		MATCH->LIFT->PORT->POLISH roadmap to a native PC EXE; percentages frozen, see cpp-tu-current-state.md.
+notes/rom-build.md	evidence	build	live		How to produce a bootable build/sm64ds.nds hybrid-linking matched src/ with delinked ROM gap objects.
+notes/rtti-name-audit.md	evidence	naming	live		259 of 541 _ZTV-bearing class names disagree with ROM RTTI; a coined name blocks TU promotion.
+notes/rtti-reconciliation.md	evidence	naming	live		The ROM's full 429-class RTTI graph vs. this tree's class graph, and where they disagree.
+notes/runbook-reference-repair.md	doctrine	matching	live		Runbook for making a match's references point at the symbol the ROM actually uses (reloc-destination repair).
+notes/runbook-type-reconstruction.md	doctrine	matching	live		Runbook for turning observed offsets into named/typed members and migrating a function to real C++.
+notes/scene-provenance.md	evidence	provenance	live		Derivation notes for the dScene_c branch's headers, moved out of source comments during a readability pass.
+notes/setup-mwccarm.md	evidence	build	live		How to get the pinned mwccarm 2004/b56 compiler + NITRO-SDK set up, vs. the separate version-sweep zip.
+notes/sinit-ownership-pilot-ov002.md	evidence	tu-promotion	live		Confirms __sinit_ov002_02100938 belongs to dEnemyBase_c's original TU; not yet promotion-ready.
+notes/sinit-ownership-wave-edges-probe.cpp	evidence	tu-promotion	live		Compile-only probes proving two sinit blocks' ownership via ordinary PMF-array globals; not in any build.
+notes/sinit-ownership-wave-edges.md	evidence	tu-promotion	live		Ownership verdicts for two multi-class/large-table sinit blocks (CutsceneObject+daDemo_c, Painting).
+notes/sinit-ownership-wave-resource-handles.md	evidence	tu-promotion	live		Ownership audit of 3 resource-handle sinit rows (Bird, daObjBkBillboard_c, daObjMarioCap_c): confirmed.
+notes/sinit-ownership.md	evidence	tu-promotion	live		How to regenerate and read tools/sinit_owners.py's review-only sinit-to-TU ownership map.
+notes/sinit-probes/bird.cpp	evidence	tu-promotion	live		Compile-only organic-generation probe for Bird's model/anim-file sinit ownership, behind a research #define.
+notes/sinit-probes/mario_cap.cpp	evidence	tu-promotion	live		Compile-only probe for MarioCap anim-file/state sinit ownership, behind a research #define.
+notes/sinit-probes/pole_billboard.cpp	evidence	tu-promotion	live		Compile-only probe for the Pole billboard model-file sinit ownership, behind a research #define.
+notes/sinit-probes/wave_a.cpp	evidence	tu-promotion	live		Compile-only probes for 3 wave-A sinit ownership claims (OneUpMushroom and others), one #define at a time.
+notes/sinit-wave-a-ownership.md	evidence	tu-promotion	live		Wave-A sinit ownership verdicts: OneUpMushroom, daObjKurumajiku_c, MadPiano, all CONFIRMED via organic proof.
+notes/smartball-provenance.md	evidence	provenance	live		Field-name provenance for the smartball minigame family and its shared cMgSmartball_object_c base.
+notes/src-domain-buckets.md	doctrine	build	live		Policy for which top-level src/ directory a class's first promoted file goes into.
+notes/symbol-name-provenance.md	evidence	naming	live		Which parts of a mangled/symbols.txt name are ROM-proven vs. placeholder vs. assertion, and how to tell.
+notes/system-provenance.md	evidence	provenance	live		Field provenance for non-actor system classes: particle tracker, minimap, level scene, BMD model file.
+notes/translation-unit-reconstruction-plan.md	evidence	tu-promotion	live		Architecture/safety-model design for TU reconstruction; tools/tubuild.py and src_tu/ now implement it.
+notes/tu-boundaries.md	evidence	tu-promotion	live		What tools/tu_map.py knows about original translation-unit boundaries, and where it stops knowing.
+notes/tu-cpp-census-2026-08.md	evidence	tu-promotion	live		Reconciled ground-truth census (524 TUs, 1167 provably-C++ files) after fixing a stale tu_map regen bug.
+notes/tu-filename-reconstruction-pilot.md	evidence	tu-promotion	live		Pilot: can Nintendo-style filenames be recovered from class/TU grouping? Useful, not a general rule.
+notes/tu-naming-and-swallowers.md	evidence	tu-promotion	live		Deriving a candidate name per TU from RTTI class-name prefixes; diagnoses why `main` collapsed into one unit.
+notes/tu-production-enrollment.md	evidence	tu-promotion	live		What exists toward making rombuild.py link modules from merged src_tu/ TUs, not per-function src/ files.
+notes/tu-promotion-conventions.md	doctrine	tu-promotion	live		PR conventions for genuine-TU promotion, grounded only in landed precedent; the reviewer's checklist.
+notes/tu-reconstruction-pilot-2-report.md	evidence	tu-promotion	live		Second read-only TU-reconstruction experiment: ov002/LevelObjects, a non-key-function TU (PINNED by config).
+notes/tu-reconstruction-pilot-report.md	evidence	tu-promotion	live		First read-only TU-reconstruction experiment: ov045/PoleLift, 7/7 functions byte-identical merged (PINNED).
+notes/worktree-inputs.md	evidence	build	live		Which gitignored inputs (extracted/, mwccarm/, dsd.exe) a fresh worktree needs junctioned in, and how.
