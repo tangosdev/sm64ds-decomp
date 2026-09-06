@@ -531,6 +531,7 @@ src/func_ov006_020c6348.c:
     .text start:0x020c6348 end:0x020c6378
 
 src/func_ov006_020c6378.c:
+    complete
     .text start:0x020c6378 end:0x020c63dc
 
 src/func_ov006_020c63dc.c:
@@ -1506,6 +1507,7 @@ src/func_ov006_020d5e3c.c:
     .text start:0x020d5e3c end:0x020d5e5c
 
 src/func_ov006_020d5e5c.c:
+    complete
     .text start:0x020d5e5c end:0x020d5eb8
 
 src/actors/dScMgBomroom_c.cpp:
@@ -1573,6 +1575,7 @@ src/func_ov006_020d816c.c:
     .text start:0x020d816c end:0x020d8324
 
 src/func_ov006_020d8324.c:
+    complete
     .text start:0x020d8324 end:0x020d836c
 
 src/func_ov006_020d836c.cpp:
@@ -2024,6 +2027,7 @@ src/func_ov006_020e285c.c:
     .text start:0x020e285c end:0x020e2868
 
 src/func_ov006_020e2868.c:
+    complete
     .text start:0x020e2868 end:0x020e2c08
 
 src/func_ov006_020e2c08.c:
@@ -2223,6 +2227,7 @@ src/func_ov006_020e5b70.c:
     .text start:0x020e5b70 end:0x020e5b7c
 
 src/func_ov006_020e5b7c.c:
+    complete
     .text start:0x020e5b7c end:0x020e5e3c
 
 src/func_ov006_020e5e3c.c:
@@ -2794,6 +2799,7 @@ src/func_ov006_020f0dd8.c:
     .text start:0x020f0dd8 end:0x020f0e28
 
 src/func_ov006_020f0e28.c:
+    complete
     .text start:0x020f0e28 end:0x020f0eac
 
 src/func_ov006_020f0eac.c:
@@ -2833,18 +2839,23 @@ src/func_ov006_020f15ac.cpp:
     .text start:0x020f15ac end:0x020f17fc
 
 src/func_ov006_020f17fc.c:
+    complete
     .text start:0x020f17fc end:0x020f192c
 
 src/func_ov006_020f192c.c:
+    complete
     .text start:0x020f192c end:0x020f1a70
 
 src/func_ov006_020f1a70.c:
+    complete
     .text start:0x020f1a70 end:0x020f1b98
 
 src/func_ov006_020f1b98.c:
+    complete
     .text start:0x020f1b98 end:0x020f1cb4
 
 src/func_ov006_020f1cb4.c:
+    complete
     .text start:0x020f1cb4 end:0x020f1dbc
 
 src/func_ov006_020f1dbc.c:
@@ -2896,6 +2907,7 @@ src/func_ov006_020f319c.c:
     .text start:0x020f319c end:0x020f31dc
 
 src/func_ov006_020f31dc.c:
+    complete
     .text start:0x020f31dc end:0x020f3260
 
 src/func_ov006_020f3260.c:
@@ -3095,6 +3107,7 @@ src/func_ov006_020fc1b4.c:
     .text start:0x020fc1b4 end:0x020fc1f8
 
 src/func_ov006_020fc1f8.c:
+    complete
     .text start:0x020fc1f8 end:0x020fc2ec
 
 src/func_ov006_020fc2ec.c:
@@ -3205,6 +3218,7 @@ src/func_ov006_020feba8.c:
     .text start:0x020feba8 end:0x020fed58
 
 src/_ZN15dScMgPachinko_c13OnYoshiTryEatEi.cpp:
+    complete
     .text start:0x020fed58 end:0x020fedc4
 
 src/_ZN15dScMgPachinko_c6RenderEv.cpp:
@@ -3404,6 +3418,7 @@ src/func_ov006_0210246c.cpp:
     .text start:0x0210246c end:0x021024e0
 
 src/func_ov006_021024e0.c:
+    complete
     .text start:0x021024e0 end:0x02102564
 
 src/func_ov006_02102564.c:
@@ -4686,6 +4701,7 @@ src/func_ov006_02125bbc.c:
     .text start:0x02125bbc end:0x02125cdc
 
 src/func_ov006_02125cdc.c:
+    complete
     .text start:0x02125cdc end:0x02125f68
 
 src/func_ov006_02126948.c:
