@@ -29,10 +29,34 @@ with, but **the conflict detector does not compare parameter types**: it will
 print `no cross-file conflicts detected` over a file carrying two contradictory
 declarations of the same helper (`extern "C" int f(char*)` from one shard and
 `int f(Class*)` from another), and even a nested `extern "C" { extern "C" ... }`.
-`create` can emit a TU that does not compile. Read what it wrote. **Trust it over the queue's `blockers` column**, which is
+`create` can emit a TU that does not compile. Read what it wrote. Two more
+collision classes it misses, both measured:
+
+- **The `/* TUBUILD CONFLICT ... */` blocks are not comment-safe.** An alternate
+  body containing its own `/* ... */` field comments terminates the outer block
+  early, and you get raw `declaration syntax error`s that name nothing.
+- **`this` used as a parameter name**, carried verbatim out of a `.c` shard into
+  a C++ TU, gives `')' expected`.
+
+**And `create`'s merging of a shared `struct` is a codegen hazard, not a naming
+one.** On `dScMgSound_c`, eleven dispatch members saw `struct C` **incomplete**
+and two saw it complete; merging them onto one complete `C` changes mwccarm's
+pointer-to-member representation for the eleven. This file's advice elsewhere
+— "a real header should usually win", "kept the first" — points the wrong way
+here. The fix was to **split the type** (`C` incomplete, `CFull` complete); no
+choice of a single body would have reproduced 82/82. **Trust it over the queue's `blockers` column**, which is
 inferred rather than measured: `promotion_route` and any `compiler-only:~N` were
 copied from the row's `sibling_oracle` manifest, and 91 of 226 rows have no
-oracle at all and simply default to text-only. The `~` means estimate. Confirm
+oracle at all and simply default to text-only. The `~` means estimate. **Measured across four classes, the blockers column has been wrong every
+time**, and in both directions: `dScMgRoulette_c`'s `pragma:1` was a phantom (the
+shards' pragmas were inert, provable by deleting them outright);
+`dScMgSound_c`'s `no-legacy-source:1` was simply false (`inspect` reports "no
+legacy source: none"), its `unmatched:3` was really 1, its `pragma:1` was inert,
+and its shard count was 80 against a real 82; `dScMgMemory2_c`'s count was 51
+against a real 52. **Treat every blocker as a hypothesis to disprove, and expect
+the shard count to be a floor** — `tu_map` cuts on symbol *name*, so a factory
+not spelled `_ZN<len><Class>...` is never labelled and never counted, even when
+it sits adjacent with no gap. Confirm
 the real count at build time -- `tubuild verify` will tell you exactly which
 symbols are unlicensed, and inheritance depth changes the number per class
 (`daBar_c` carries three levels of inherited base RTTI: `fBase_c`, `dBase_c`,
@@ -224,7 +248,15 @@ ever promote, which is plainly false.
 oracle's count unless the oracle sits at the same depth. **Count the chain
 yourself before trusting the queue's `compiler-only:~N`** — that column is copied
 from the `sibling_oracle` with no depth check, and has now been wrong in both
-directions. `dScMgMemory2_c` is six levels
+directions. (Note what an out-of-line destructor actually costs. "Out-of-line emits D2, D0,
+D1" reads as though the order is unusable; the tree says otherwise.
+`dScMgMemory2_c` declares its destructor out of line, is link-verified with D1
+below D0, and pays for it with a **homeless** `_ZN14dScMgMemory2_cD2Ev` — that
+is its 14th row, and it is where the formula's otherwise-unexplained "+1" comes
+from. The lever set is right; the consequence is a homeless D2 plus a licensing
+row, not necessarily a wrong order.)
+
+`dScMgMemory2_c` is six levels
 (`dScMgSingle3DBase_c` -> `dScMgBase_c` -> `dScene_c` -> `dBase_c` -> `fBase_c`)
 and needs `2x6 + 1 = 13`, +1 homeless `D2Ev` = **14**; the queue said ~11 because
 its oracle sits one level shallower.
@@ -263,6 +295,21 @@ by hand or tiers scoring misses them. The gap is narrower than it sounds — a
 shard carried in RAW, inside its own `extern "C"` block, *does* get a marker.
 Only the plain `.c`-derived ones lack them. Check which you have rather than
 blanket-adding.
+
+**Measured, that last sentence is too optimistic:** on `dScMgSound_c`, `create`
+emitted **10 markers and skipped 72 of 82**, the three RAW members among them.
+So the RAW-members-are-covered rule does not hold. Count what you actually got;
+blanket-adding was the right call there.
+
+**A missing `complete` marker refuses the whole run at `[1/8]`, before any of
+the documented failure modes.** If any shard in your TU has a `delinks.txt` entry
+without `complete`, `linkcheck` stops with *"substituting the TU would change
+enrollment and byte provenance in the same step"*. This fires first on any class
+carrying an `unmatched:` blocker, so expect it there. A shard usually lacks the
+marker for a reason — one measured case did not compile at all, because it
+referenced a **phantom** symbol that `decl_common.h` declares and no module
+defines. Find out why before setting the marker; setting it on a genuinely
+broken shard converts a clean refusal into a link failure.
 
 When the policy is refused, `verify` re-reports **all** extras as unlicensed from
 the unaudited object. One bad row makes it look like nothing is licensed. Fix the
@@ -438,8 +485,16 @@ Ask the compiler rather than hand-mangling:
   stock-identical ROM sha256 — out of `--partial`. Settling order at `verify` is
   still right; this is the extra evidence available once you have.
 - **`create` before `linkcheck --baseline` is safe.** `src_tu/` is untracked and
-  not in the build, so the tree is still pristine for baseline purposes. Only
-  *header edits* spoil a baseline.
+  not in the build, so the tree is still pristine for baseline purposes.
+  **But it is NOT only header edits that spoil a baseline** — this file used to
+  say so. The baseline's fingerprint is `trackedConfigArm9Sha256`, so **any**
+  edit under `config/arm9` invalidates it, including a one-line `complete` marker
+  in a `delinks.txt`. Worse, **the failure is indistinguishable from never having
+  run a baseline at all**: both die at `[4/8]` with the same
+  `ov036/daObjRcCarpet_c` + `ov070/daPropeller_Heyho_c` "vtable partition
+  baseline proof unavailable" pair. Recovery costs a second full baseline run
+  with the header **temporarily reverted** — the still-enrolled D1/D0 shards will
+  not compile against an inline destructor.
 - **Reading the `_ZTV` extent from the next `symbols.txt` row UNDER-reports it** —
   the opposite error to the one below, and easier to fall for because it looks
   authoritative. `_ZTV7daDkk_c` at `0x02113850` is followed by
