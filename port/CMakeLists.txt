@@ -3793,6 +3793,56 @@ list(APPEND SLICEINTRO_SOURCES
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020bd250.cpp")
 
+# ---- link100 TAIL2 ----
+# GATE 219: CUTSCENE_OBJECT's ten pointer-to-member STATE tables (49 body
+# TUs). port/slice_gate219.txt carries the list and the derivation of each;
+# hal/cutscene_states_link100.cpp is the ten address switches, generated from
+# the ROM by port/tools/tail2_gen_states.py and NOT hand-edited.
+#
+# The three trap-filled arm9 FADER tables this gate originally also seated
+# (data_0208eacc/eb2c/eafc, six matched TUs) came back OUT during finisher
+# review: seating them exposed a caller/callee calling-convention hazard
+# fdr_arm9_fader_seat.cpp already documents by name (the "GARBAGE-RECEIVER
+# HAZARD," ~line 220 there) for the three cdecl-shape sites that reach
+# data_0208ea6c. That hazard was proven benign there ONLY because MSVC happens
+# to leave the receiver in ECX at those three specific call sites -- "a
+# property of what MSVC happened to emit... not a guarantee" (same file). No
+# equivalent audit exists for the sites that reach an installed fader through
+# eacc/eb2c/eafc once func_02017278 or Scene::SetFaders install one (the
+# pointers are data_0209f5bc / data_0209d4ac): src/func_ov002_020f23f0.c's
+# `((int(**)(void*))*(void**)o)[5](o)` (CutsceneObject::Behavior's kind-0x2f
+# branch calls it directly) is one such site and is NOT one of the three
+# audited for data_0208ea6c; fdr_arm9_fader_seat.cpp's own comment names a
+# second, "Minimap::Behavior's vt->f[5]" -- Minimap is spawned in every level,
+# so that site alone would explain reaching the hazard with CUTSCENE_OBJECT's
+# class skipped, which is what SM64DS_SKIP_CLASS=CUTSCENE_OBJECT measured (the
+# crash persisted). Neither site's callee register allocation happens to
+# leave the receiver in ECX the way the three audited data_0208ea6c sites do.
+# Seating a real __fastcall body onto data_0208eacc/eb2c's slot 5 turns either
+# into a garbage-receiver call, and
+# FaderBrightness::IsAtStart()'s `currInterp == 0` read faults on the garbage
+# pointer -- reproduced with SM64DS_TEST_LOCK's opening-cutscene proof
+# (SKIP_MENU, new-file, 4000 frames): clean on this tree with the three tables
+# left trapped, c0000005 inside func_ov002_020f23f0 with them seated, every
+# time. Bisected by reverting exactly this fill (nothing else in the gate) and
+# rerunning the same proof. Re-seating these three tables needs the same kind
+# of dispatch-site audit port/fader_boot_map.txt section 9c did for
+# data_0208ea6c, extended to data_0209f5bc / data_0209d4ac's OTHER readers --
+# out of scope for this finisher pass. hal/scene_boot.cpp is back to its
+# pre-TAIL2 state (full trap on all three tables); config/arm9/relocs.txt's
+# six words were real and still are, they are just not seated.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate219.txt" SLICE219_LINES)
+set(SLICE219_SOURCES "")
+foreach(line IN LISTS SLICE219_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE219_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE219_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/cutscene_states_link100.cpp")
+
 # THE SCENE BOOT: the star select, the one non-level scene the port can enter.
 # ov003 carries three scene classes -- dScTitle_c (id 2), dScStarSel_c (id 4)
 # and dScGameOver_c (id 8) -- and ONLY id 4 is seated; the other two are
@@ -12977,7 +13027,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Ov070_PmfDispatch.cpp
     unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
-    ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES}
+    ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES} ${SLICE219_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
@@ -13210,7 +13260,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN}
-    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES}
+    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES} ${SLICE219_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
@@ -13495,7 +13545,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN}
-    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES}
+    ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE31_SOURCES} ${GATE6_GEN} ${SLICEINTRO_SOURCES} ${SLICE219_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
