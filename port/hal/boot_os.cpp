@@ -142,12 +142,20 @@
 //       only the ARM7's channel-6 completion clears. The full measurement is at
 //       its own point in the boot below and in port/slice_gate222.txt.
 //
-//   func_02053c40 / func_02019440 / func_020196cc
-//       NO LONGER SKIPPED. Run link100 lane BOOT2 seated all three at their own
+//   func_02053c40 / func_02019440
+//       NO LONGER SKIPPED. Run link100 lane BOOT2 seated both at their own
 //       points in func_0201a054; see port/slice_gate222.txt and the comments
-//       below. The graphics pair was BOOT's "left for the step that moves the
-//       graphics bring-up as a whole", and this is that step; func_020196cc
-//       needed lane IPC's ARM7 to answer channel 8 before it could return.
+//       below. This is BOOT's "left for the step that moves the graphics
+//       bring-up as a whole", and the two are one step: func_02053d9c turns the
+//       VRAM banks off and func_02054430(0x1ff) inside func_02019440 turns them
+//       back on, so seating one without the other would not have been correct.
+//
+//   func_020196cc
+//       TRIED, MEASURED, BACKED OUT. Its channel-8 firmware read spins forever
+//       because src/IPCSend.c is compiled plain and its store to IPCFIFOSEND
+//       latches in ntr's mapped window instead of reaching the model -- so this
+//       port has never made an ARM9->ARM7 send at all. The full measurement,
+//       including the cdb stack, is at its own point in the tail below.
 //
 //   func_0201fec8
 //       REFUSED, AND NOT FOR THE REASON THE LAST PASS OF THIS FILE GAVE. Run
@@ -288,7 +296,6 @@ extern char data_0209d574[];
 void func_02019440(void);                     // the VRAM/OAM/palette clear + 3D
 void func_0203b684(void);
 void func_020233f0(void);
-void func_020196cc(void);                     // the firmware read + sound mode
 void func_0201a5cc(void);                     // the fatal-vector pair
 
 
@@ -572,23 +579,36 @@ void port_boot_rom_game_init_tail(void)
     /* data_020a4bb8 = data_02090864 -- already seated by the host boot */
     func_020233f0();
     /* Scene::PrepareToSpawnBoot() -- picks the ROM boot scene */
-    /* THE FIRMWARE READ AND THE SOUND MODE, run link100 lane BOOT2. BOOT could
-       not have run this: func_0205f8e0 -> func_0205fb1c -> func_0205fb58 posts
-       a channel-8 command and then SPINS in func_0205ff08 until the ARM7's
-       answer clears data_020a8114, and there was no ARM7. There is one now, and
-       ntr/ipc.cpp dispatches the reply INLINE from ipc_arm7_send, so the word
-       is back through the ROM's own IRQ::IPCRxFifoNotEmptyHandler ->
-       func_0205fcfc -> func_0205feac before IPCSend returns.
-       WHAT THE ANSWER SAYS. hal/boot2_ipc.cpp holds channel 8 with no driver
-       behind it, so it replies with the SDK's own no-handler shape. That makes
-       func_0205fcfc take its flag arm and func_0205f8e0 return 2 -- a FAILED
-       READ, which is a truthful answer, and func_020196cc's own arm for a
-       failed read is to leave data_0208ee3c alone. Nothing here fabricates a
-       user-settings block to make the other arm run. The two lines that always
-       execute -- func_0203b9b4(data_0209d4b8, 0x4d2) and
-       SetSoundMode(data_0209d4b4[0]) -- are the ROM's, and hal/scene_mg.cpp
-       already carried a hand copy of the first of them for the minigames. */
-    func_020196cc();
+    /* func_020196cc() -- THE FIRMWARE READ AND THE SOUND MODE. TRIED, MEASURED,
+       AND BACKED OUT, because the measurement is worth more than the guess it
+       replaces. It reads the firmware user settings over PXI channel 8:
+       func_0205f8e0 -> func_0205fb1c -> func_0205fb58 posts
+       (a & 0xff) | 0x3006500 through func_0205f8b0, and func_0205fb1c then
+       spins in func_0205ff08 until the ARM7's answer clears data_020a8114.
+       Lane IPC's model answers channel 8 and dispatches the reply INLINE
+       (ntr/ipc.cpp's ipc_arm7_send calls raise_rx_irq), so the round trip
+       should close inside IPCSend. IT DOES NOT, AND THE REASON IS ONE FILE:
+       src/IPCSend.c is compiled PLAIN, and its `*(volatile unsigned int *)
+       0x4000188 = cmd.raw` therefore latches into ntr's mapped I/O window
+       instead of reaching ntr::ipc_reg_write. port/slice_gate2ipc.txt:62 says
+       so outright -- "src/IPCSend.c is plain too and is NOT here ... so its
+       stores to IPCFIFOSEND still latch in the window instead of reaching the
+       model. That is a stated gap." So this port has never made an ARM9->ARM7
+       SEND at all; the three PXI arms above only register and poll.
+       MEASURED, not inferred: with the call in, a level selftest hangs, and
+       cdb on the live process puts the main thread at func_0205ff08 + 0 with
+       data_020a8114 == 1.
+       WHAT IT WANTS is one hostgen row -- IPCSend joining func_0205bad8 and
+       IRQ::IPCRxFifoNotEmptyHandler in GATE2IPC_SYMS, its store being exactly
+       hostgen's MMIO_DEREF shape. It is NOT taken here because IPCSend is
+       already linked out of port/slice_gate10.txt and four of its other callers
+       are linked with it (func_0205ae30, func_0205b070, func_0205f040,
+       func_0205f8b0 -- the channel-7 sound command path, which runs every
+       frame). Making every one of those sends suddenly reach the model is lane
+       IPC's call, beside its own decision to hold channel 7 observed-only so
+       hal/sdat/consumer.cpp does not consume the batch twice. Four matched TUs
+       (func_020196cc, func_0205f8e0, func_0205fb1c, func_0205fb58) are behind
+       it, and so is every other ARM9-initiated command in the ROM. */
     func_0201a5cc();
     say("game init tail (func_0201a054)");
 }

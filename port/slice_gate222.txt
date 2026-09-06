@@ -2,11 +2,12 @@
 #
 # Read port/hal/boot_os.cpp's header block first. Lane BOOT transcribed the
 # runnable spans of src/func_02019780.c, src/main.c and src/func_0201a054.c and
-# left four arms of func_0201a054 marked "left for the next step" or "left for
-# the step that moves the graphics bring-up as a whole". This is that step for
-# the three of them that are graphics and the one that is the firmware read;
-# everything else func_0201a054 skips was re-derived on today's tree and is
-# still refused, with the measurement in boot_os.cpp beside each one.
+# left arms of func_0201a054 marked "left for the next step" or "left for the
+# step that moves the graphics bring-up as a whole". This is that step for the
+# two that are graphics. Everything else func_0201a054 skips was re-derived on
+# today's tree rather than inherited, and the measurement for each is in
+# boot_os.cpp at its own point in the boot; the ones that changed shape are
+# listed at the bottom of this file.
 #
 # THE ARMS, in func_0201a054's own order, and what each one pulls in.
 #
@@ -47,41 +48,44 @@
 #                   port_boot_rom_main_head(); this is the ROM's own writer of
 #                   the same words and it runs later, so the ROM's value stands.
 #   func_0200f46c   empty in the ROM. Enrolled because func_02019440 calls it.
-#   func_020196cc   the last call before the fatal-vector pair: reads the
-#                   firmware user settings over PXI channel 8 and sets the sound
-#                   mode from data_0209d4b4.
-#   func_0205f8e0 / func_0205fb1c / func_0205fb58
-#                   that read. func_0205fb58 posts (a & 0xff) | 0x3006500 on
-#                   channel 8 through func_0205f8b0, and func_0205fb1c then
-#                   SPINS in func_0205ff08 until the ARM7's answer clears
-#                   data_020a8114. That spin is why this could not be enrolled
-#                   before lane IPC: ntr/ipc.cpp's ipc_arm7_send dispatches the
-#                   reply INLINE (raise_rx_irq, ntr/ipc.cpp:302), so the word is
-#                   back through the ROM's own IRQ::IPCRxFifoNotEmptyHandler and
-#                   func_0205fcfc -> func_0205feac before IPCSend returns, and
-#                   the spin never turns.
-#                   WHAT THE ANSWER IS, said plainly: hal/boot2_ipc.cpp holds
-#                   channel 8 with no driver behind it, so its reply is the
-#                   SDK's own no-handler shape (the word back with 0x20 set).
-#                   func_0205fcfc takes its flag-set arm, hands 2 to
-#                   func_0205feac, and func_0205f8e0 returns 2 -- an ERROR, not
-#                   a fabricated firmware answer. func_020196cc's own
-#                   "read succeeded and the flag is clear" arm is therefore not
-#                   taken, which is the ROM's own handling of a failed read. The
-#                   port does not invent a user-settings block to make the other
-#                   arm run.
 src/func_02053c40.c
 src/func_02053d9c.c
 src/func_02019440.c
 src/func_0203bd24.c
 src/func_0200f4f4.c
 src/func_0200f46c.c
-src/func_020196cc.c
-src/func_0205f8e0.c
-src/func_0205fb1c.c
-src/func_0205fb58.c
 #
 # NOT HERE, each re-derived on today's tree rather than inherited:
+#
+#   src/func_020196cc.c and its channel-8 read (func_0205f8e0, func_0205fb1c,
+#       func_0205fb58). TRIED, MEASURED AND BACKED OUT, and the measurement is
+#       the point. func_0205fb58 posts (a & 0xff) | 0x3006500 on channel 8 and
+#       func_0205fb1c then spins in func_0205ff08 until the ARM7's answer clears
+#       data_020a8114. Lane IPC's model holds channel 8 and dispatches a reply
+#       INLINE from ipc_arm7_send (raise_rx_irq, ntr/ipc.cpp:302), so the round
+#       trip should close inside IPCSend and the read should come back as the
+#       honest ERROR a no-driver channel gives.
+#       IT DOES NOT, BECAUSE THE WORD NEVER LEAVES THE ARM9. src/IPCSend.c is
+#       compiled PLAIN, so its `*(volatile unsigned int *)0x4000188 = cmd.raw`
+#       latches into ntr's mapped I/O window instead of reaching
+#       ntr::ipc_reg_write. port/slice_gate2ipc.txt:62 states that gap outright.
+#       So this port has never made an ARM9->ARM7 SEND at all: the three PXI
+#       arms hal/boot_os.cpp already runs only register callbacks and poll the
+#       readiness word, and ipc_report's `send=0` at rom-boot is the receipt.
+#       MEASURED, not inferred: with func_020196cc in, a level-1 selftest hangs,
+#       and cdb on the live process puts the main thread at func_0205ff08 + 0
+#       with data_020a8114 == 1.
+#       WHAT IT WANTS is ONE HOSTGEN ROW -- IPCSend joining func_0205bad8 and
+#       IRQ::IPCRxFifoNotEmptyHandler in CMakeLists.txt's GATE2IPC_SYMS, its
+#       store being exactly hostgen.py's MMIO_DEREF shape. Not taken here
+#       because IPCSend is already linked out of port/slice_gate10.txt and four
+#       of its other callers are linked with it -- func_0205ae30, func_0205b070,
+#       func_0205f040 and func_0205f8b0, the channel-7 sound command path that
+#       runs every frame. Turning every one of those latched sends into a real
+#       one at once is lane IPC's call, beside its own decision to hold channel
+#       7 observed-only so hal/sdat/consumer.cpp does not consume the batch
+#       twice. Four matched TUs sit directly behind it and every other
+#       ARM9-initiated command in the ROM sits behind it too.
 #
 #   src/func_02013e64.c   memsets 0x32c bytes of data_0209caa0. BOOT refused it
 #       because the host has already staged the save block; the harder reason is
