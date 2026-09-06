@@ -38,7 +38,7 @@ class_name	shard_count	total_lines	overlay	has_header	already_promoted	blockers	
 #
 # sibling_oracle is a SHAPE reference only. Copying its counts is what made this file wrong.
 dMg3DEspAnimSet_c+dMg3DEspModel_c+dScMg3DEsp_c	68	1845	ov006	yes	no	pragma:8;multi-class-tu:3;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1; excludes 2 unresolved: dMg3DEspAnimSet_c,dMg3DEspModel_c)	dScMgSingle3DBase_c	text-only
-dMgJump3DMario_c	28	820	ov006	yes	no	classif:no-header:dMgJump3DMario_c;compiler-only:>=5(derived from own chain: 2 classes incl. self via build/rtti.json; floor 2x2+1)	dScMgSingle3DBase_c	text-only
+dMgJump3DMario_c	1	1016	ov006	yes	yes	classif:no-header:dMgJump3DMario_c;compiler-only:>=5(derived from own chain: 2 classes incl. self via build/rtti.json; floor 2x2+1)	dScMgSingle3DBase_c	text-only
 dScMgD3DBase_c	1	820	ov006	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 Ukiki	44	1983	ov030	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
 OneUpMushroom	36	971	ov002	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daBar_c	text-only

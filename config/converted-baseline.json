@@ -7,7 +7,7 @@
     "no_codegen_trick",
     "no_mangled_refs"
   ],
-  "count": 2685,
+  "count": 2686,
   "converted": [
     "src/ARMMathLoadState.c",
     "src/ARMMathSaveState.c",
@@ -845,8 +845,6 @@
     "src/_ZN16SpinningPlatform6RenderEv.cpp",
     "src/_ZN16SpinningPlatformD0Ev.cpp",
     "src/_ZN16SpinningPlatformD1Ev.cpp",
-    "src/_ZN16dMgJump3DMario_cC1Ev.cpp",
-    "src/_ZN16dMgJump3DMario_cD1Ev.cpp",
     "src/_ZN16dPathLiftActor_c12BaseBehaviorEv.cpp",
     "src/_ZN16dPathLiftActor_c9AfterClsnEi.cpp",
     "src/_ZN16dPathLiftActor_cD0Ev.cpp",
@@ -2118,6 +2116,9 @@
     "src/actors/dBgActor_c.cpp#_ZN10dBgActor_cC2Ev",
     "src/actors/dBgActor_c.cpp#_ZN10dBgActor_cD0Ev",
     "src/actors/dBgActor_c.cpp#_ZN10dBgActor_cD1Ev",
+    "src/actors/dMgJump3DMario_c.cpp#_ZN16dMgJump3DMario_c9StateIdleEv",
+    "src/actors/dMgJump3DMario_c.cpp#_ZN16dMgJump3DMario_cC1Ev",
+    "src/actors/dMgJump3DMario_c.cpp#_ZN16dMgJump3DMario_cD1Ev",
     "src/actors/dScGameOver_c.cpp#_ZN13dScGameOver_c16CleanupResourcesEv",
     "src/actors/dScGameOver_c.cpp#_ZN13dScGameOver_c16OnPendingDestroyEv",
     "src/actors/dScGameOver_c.cpp#_ZN13dScGameOver_cD0Ev",
