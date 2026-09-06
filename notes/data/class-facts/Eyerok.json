@@ -115,7 +115,7 @@
     "as_shipped": "include/Eyerok.h is left UNCHANGED (destructor still out of line) because the D1/D0 shards are outside this partial claim and still define it out of line; inlining it in the header would be a duplicate definition. A later writer who can take the whole run should inline it, and should expect the 13-row compiler_only_output above at the same time."
   },
   "size": "0x874",
-  "size_evidence": "src/daIwante_c_classInit.cpp calls fBase_c::operator new(0x874) and then stores 0x0211ad64 (_ZTV6Eyerok) at [this]. include/Eyerok.h closes the field span on the same number.",
+  "size_evidence": "The factory daIwante_c_classInit (ov066:0x0211a370, size 0xa8) calls fBase_c::operator new(0x874) and then stores 0x0211ad64 (_ZTV6Eyerok) at [this]. include/Eyerok.h closes the field span on the same number. Builder correction: this entry previously named the factory's source as a file that does not exist -- it lives in src/d_a_iwante.cpp, lines 21 and 24. tools/opnew_sizes.py agrees independently: 1 site, size 0x874, confidence inline_store, unambiguous, vtable 0x0211ad64.",
   "linker_run": {
     "range": "0x02115ee0..0x0211a2e4",
     "functions": 61,
