@@ -419,7 +419,7 @@
         "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
         "matchesStockRom": true
       },
-      "byteNeutralityOfPostLinkcheckEdit": "The only source edit after the recorded linkcheck was deleting 59 TUBUILD CONFLICT marker comments. The object sha256 before and after that edit is afcc5f436236bfa597c41ac93f36581b0856dfb0b7541ceea455969df3b8e727 (20520 bytes) in both cases."
+      "byteNeutralityOfPostLinkcheckEdit": "The only source edit after the recorded linkcheck was deleting 59 TUBUILD CONFLICT marker comments. The object sha256 before and after that edit is afcc5f436236bfa597c41ac93f36581b0856dfb0b7541ceea455969df3b8e727 (20520 bytes) in both cases. The builder stage then made two further source edits on the rebased tree -- removing 8 unreferenced shadow type declarations and 16 unreferenced extern declarations left over from the shards the cut dropped, and correcting func_ov074_021201f0's comment to name the Ang16 temp the body actually declares. The object sha256 is still afcc5f436236bfa597c41ac93f36581b0856dfb0b7541ceea455969df3b8e727 (20520 bytes) after both, so this linkcheck record still describes the object that ships."
     }
   },
   "compiler_only_output": [
