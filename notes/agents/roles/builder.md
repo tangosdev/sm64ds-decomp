@@ -133,9 +133,23 @@ coverage gaps** across the whole `tu_map` run. This is the highest-value check
 available on a partial and it settles the question in one pass: on
 `dScMgHanachan_c` it produced 39 `.text` blocks with exactly one gap — the
 sourceless hole — and the exact held-out shard count as a by-product. The
-supporting invariant is worth re-deriving rather than trusting: **0 of 13,201
-delink blocks and 0 of 136 TU manifests carry more than one `.text` run**, which
-is why a licensed claim cannot span a hole.
+supporting invariant is worth re-deriving rather than trusting, and it *has*
+moved: it now measures **0 of 9,998 delink blocks and 0 of 142 TU manifests**
+carrying more than one `.text` run (the 13,201 / 136 this file used to print is
+stale — promotions collapse blocks). The invariant itself holds, which is why a
+licensed claim cannot span a hole. Re-derive the counts; do not quote them.
+
+**Never read a gate's verdict through a pipe.** `python tools/X | tail -6;
+echo $?` reports **`tail`'s** exit status, not the tool's. Measured: a builder
+ran `source_coverage` that way, the tool printed its full failure banner into
+the truncated tail, `$?` came back 0, and they recorded it as green. Redirect to
+a file and echo `$?` *before* any pipe:
+`python tools/X > /tmp/x.log 2>&1; echo $?; tail -6 /tmp/x.log`. Two related
+parsing traps: `gh pr checks` output is **TAB**-separated, so `awk '{print $2}'`
+on `PR validation<TAB>pending` yields `validation` and a wait-loop exits
+immediately looking settled — use `awk -F'\t'`; and `classqueue.py claim
+--worktree` via a shell **eats backslashes**, recording
+`C:tmpsm64ds-bomroom-build`, so pass the path with forward slashes.
 
 **Diff the declared type and `extern` set against what the shipped members
 actually reference.** A twice-narrowed TU carries preamble residue for the
@@ -427,8 +441,10 @@ reports no difference.
 
 **Re-fetch `main` and re-verify more than once.** It moved twice during a single
 `daPgDfdr_c` build, and the second move landed *that class's own direct base*
-(`dBgActor_c`, #2269). Re-fetch immediately before opening the PR, not only at
-the start.
+(`dBgActor_c`, #2269). **Twice is the old rate: a later `dScMgBomroom_c` build
+saw `main` move six times**, one of them a same-overlay promotion that conflicted
+on both `attribution.json` and `notes/cpp-tu-current-state.md`. Re-fetch
+immediately before opening the PR, not only at the start.
 
 **Re-check the base immediately before you push.** The validator test-merges
 against the *exact current base* and rejects with `test merge conflicts with
