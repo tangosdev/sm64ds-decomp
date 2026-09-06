@@ -658,6 +658,67 @@ NAMED = [
     # ZERO rows anywhere in 0x02075804..0x02075a40, so none of this is a
     # pointer table and ptr_audit has nothing to say about it.
     "data_02075804", "data_02075998", "data_02092130",
+    # ---- run link100 lane SCENE: the two ARM9-RESIDENT SCENE CLASSES -------
+    #
+    # dScBoot_c (actor id 0) and dScMB_c (id 360) are the ROM's two boot
+    # scenes -- Scene::PrepareToSpawnBoot picks one or the other -- and unlike
+    # every scene the port had seated before them they live in arm9, not in an
+    # overlay, so their artwork is arm9 .data and there is no ovdata.py mount
+    # to carry it. These seven spans are every blob the two classes' own
+    # bodies name; hal/scene_link100_boot.cpp and hal/scene_link100_mb.cpp are
+    # the seats.
+    #
+    # EACH SPAN WAS AUDITED AGAINST config/arm9/relocs.txt individually, the
+    # rule this list's own header states, and all seven are file-backed (every
+    # address is below the 0x0209b000 BSS boundary pinned above).
+    #
+    #   data_020914e0  the boot scene's BG palette. GX::LoadBGPltt reads 0x40
+    #                  bytes of it (src/func_02005a58.c) and GXS::LoadBGPltt
+    #                  reads 2 and 0x40. PINNED at 0x40 rather than taking the
+    #                  delta-to-next-symbol default of 0x48: the last word of
+    #                  that delta is 0x02091524, the RELOCATED type_info
+    #                  pointer of the vtable at 0x02091528 (relocs.txt:
+    #                  from:0x02091524 to:0x020914c8), which belongs to the
+    #                  vtable object and not to the palette. This is the pin
+    #                  the "name:0xSIZE" form exists for.
+    #   data_02091570  0x168, the sub-screen BG2 screen map, LZ77 (its first
+    #                  word is 0x00080010: type 0x10, 0x800 decompressed).
+    #                  Reloc-free over the whole span.
+    #   data_020916d8  0x1ec, the main BG0 screen map, LZ77 0x10 -> 0x800.
+    #                  Reloc-free.
+    #   data_020918c4  0x84c, the shared BG character data, LZ77 0x10 ->
+    #                  0x2000. ONE `from:` row lands inside it
+    #                  (from:0x02091ae4 to:0x0212ffff module:overlay(85)) and
+    #                  it is a FALSE POSITIVE of the class this list already
+    #                  documents for LoadLevelNoReturn's six: the span is an
+    #                  LZ77 stream, the "destination" is one byte short of a
+    #                  64K boundary in an overlay this blob has nothing to do
+    #                  with, and nothing dereferences the word -- its only
+    #                  reader is DecompressLZ16 walking the stream.
+    #   data_0209444c  0x20, the multiboot scene's first OBJ palette (GX and
+    #                  GXS both load 0x20 at offset 0). Reloc-free.
+    #   data_0209446c  0x164, the multiboot scene's OBJ character data, LZ77
+    #                  0x10 -> 0x540. Reloc-free.
+    #   data_020945d0  0x20, its second OBJ palette (GX::LoadOBJPltt at 0xa0).
+    #                  Reloc-free.
+    #
+    # The five per-language multiboot images src/func_02034da4.c decompresses
+    # are NOT here: data_0208a0e4 and its five blobs are already hosted for
+    # the VS lobby (hal/scene_vs_menu.cpp and this list), and the multiboot
+    # scene reads that same table.
+    "data_020914e0:0x40", "data_02091570", "data_020916d8", "data_020918c4",
+    "data_0209444c", "data_0209446c", "data_020945d0",
+    # AND ONE FOUR-BYTE SENTINEL, here for the reason data_0208a174 is here.
+    # data_0208ee4c is "which scene overlay is resident", and its ROM value is
+    # -1 (0xffffffff, read at 0x0208ee4c - 0x02004000), the "none" case. It is
+    # read and written by src/func_0201a614.c and src/func_0201a694.c -- the
+    # scene loader's unload-before-load discipline -- and BOTH bodies branch on
+    # `!= -1` before calling the unload. A host that zeroed it would make the
+    # first pass unload overlay id 0 instead of skipping, which is not a
+    # cosmetic difference and nothing in the game would say so. Reloc-free
+    # (config/arm9/relocs.txt has no `from:0x0208ee4c` row), four bytes by the
+    # delta rule.
+    # "data_0208ee4c" is hosted by hal/boot_globals.cpp with its ROM bytes (lane BOOT); not emitted here.
 ]
 
 

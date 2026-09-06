@@ -1,0 +1,178 @@
+# Gate 218: THE TWO ARM9-RESIDENT SCENE CLASSES -- dScBoot_c (actor id 0) and
+# dScMB_c (actor id 360 / 0x168), the ROM's two boot scenes.
+#
+# Run link100, lane SCENE. hal/scene_link100_boot.cpp and
+# hal/scene_link100_mb.cpp are the seats and carry the per-class derivation
+# (identity by address, the eighteen-slot transcription, the adjudicated
+# bodies, the refused subtree). This file carries what the seats do not: what
+# the LINK actually wants, how that was measured, and how far it is from what
+# the ROM's own call graph predicted.
+#
+# ---- 1. THE TWO CLASSES ARE A FORK, NOT A SEQUENCE -------------------------
+#
+# src/_ZN5Scene18PrepareToSpawnBootEv.c is the whole decision:
+#
+#     if (func_0203d9b4()) data_02092664 = 0;      -> dScBoot_c, id 0
+#     else                 data_02092664 = 0x168;  -> dScMB_c,   id 360
+#
+# so a cartridge boot gets dScBoot_c and a DS Download Play boot gets dScMB_c,
+# and NEITHER is downstream of the title. dScBoot_c's Behavior is what asks
+# FOR the title: src/func_02005418.c ends in
+# Scene::StartSceneFade(func_0203da3c() != 0 ? 6 : 1, 0, 0). The lane brief
+# called 360 "the main-menu scene, on the default route"; the ROM does not,
+# and dScMB_c is the multiboot screen (its D2 is named
+# MultiBootScene::~MultiBootScene in src/func_02034a78.c's own header).
+#
+#   id 0    SpawnInfo 0x020914a8  vtable 0x02091528  factory 0x02023624
+#   id 360  SpawnInfo 0x0209435c  vtable 0x020943c4  factory 0x020352b4
+#
+# Both ids are the ARM9 spawn table's own index: relocs.txt
+# from:0x02090864 -> 0x020914a8 is index 0, and from:0x02090e04 -> 0x0209435c
+# is (0x02090e04 - 0x02090864)/4 = 360. src/GetSceneOverlayID.c answers -1 for
+# both, so neither has an overlay and neither needs a mount.
+#
+# ---- 2. THE SLICE IS THE LINK CLOSURE, AND IT IS 34 TUs -------------------
+#
+# Measured with port/tools/closure.py against the PRE-SEAT walk_window.map,
+# iterated to a fixpoint: compile the candidate set, read every object's
+# symbol table, add a src TU for each unresolved name the image does not
+# already carry, repeat until nothing new appears. Five rounds:
+#
+#     round 1   12 -> 21   (the twelve class TUs' own wants)
+#     round 2   21 -> 26
+#     round 3   26 -> 30
+#     round 4   30 -> 34
+#     round 5   34 -> 34   fixpoint
+#
+# Zero compile failures and zero duplicate-definition candidates at every
+# round: no TU here collides with a host body.
+#
+# ---- 3. THE ROM'S CALL GRAPH PREDICTED FIFTEEN TIMES THAT -----------------
+#
+# port/arm9_frontier.txt ranks func_0203506c and func_02005a58 the second and
+# third largest roots in arm9, at 531 and 528 transitively reachable unlinked
+# TUs. Recomputed here from config/arm9/relocs.txt over the two classes' own
+# bodies, the ROM-graph closure is 886 arm9 functions for dScMB_c and 873 for
+# dScBoot_c (928 in union, 831 shared), of which 481 and 484 are NOT in the
+# pre-seat image.
+#
+# THE LINK WANTS 34 OF THEM. The gap is not a measurement error and it is not
+# /OPT:REF: it is that the ROM's graph is walked through functions whose PORT
+# copy is a HOST BODY. LoadOverlay, UnloadOverlay, the DS thread create, the
+# card/backup leaves, OS_SleepThread -- each is a linked symbol with a host
+# definition that calls nothing, so every ROM edge under it is absent from the
+# port's reference graph. A census that walks the ROM's edges counts that
+# whole subtree; a linker never asks for it.
+#
+# The lane brief expected the census to over-predict by 2-3x. The measured
+# factor for these two roots is about FIFTEEN, and the honest reading is that
+# the arm9 frontier's top-six ranking measures the ROM's shape, not the port's
+# remaining work. Anyone scoping off that table should measure the link
+# closure first; port/tools/closure.py does it in minutes and needs no build.
+#
+# ---- 4. WHAT IS HOSTED RATHER THAN LINKED --------------------------------
+#
+# THE TWO VTABLES AND THE TWO SpawnInfo RECORDS. arm9 .data has no mount (no
+# arm9 equivalent of port/ovNNN_syms.txt), and all four objects carry
+# relocations to DS code, so they are host arrays under the ROM's own data
+# names in the two seat files -- the ov003 convention, one level down.
+#
+# EIGHT arm9 .data SPANS, in port/tools/romdata.py's NAMED list: the boot
+# scene's palette and its three LZ77 blobs (data_020914e0 pinned at 0x40,
+# data_02091570, data_020916d8, data_020918c4), the multiboot scene's two OBJ
+# palettes and its LZ77 blob (data_0209444c, data_0209446c, data_020945d0),
+# and data_0208ee4c, the scene loader's -1 "no overlay resident" sentinel.
+# Each span was audited against config/arm9/relocs.txt individually; the audit
+# is written out next to the rows.
+#
+# EIGHT BSS OBJECTS in hal/scene_link100_boot.cpp, and SEVEN overlay-id
+# symbols (overlay_2..7 and overlay_75) on the same mechanism, and with the
+# same stated limitation, hal/scene_boot.cpp section 2 uses for
+# overlay_64/66/100/102.
+#
+# ONE REFUSED SUBTREE, func_0201a2f8, the ROM's boot worker thread. Both
+# InitResources bodies take its address, so it must resolve; it is faced
+# loud-once in hal/scene_link100_boot.cpp rather than compiled, because it is
+# only ever entered from a DS thread the port never runs and its own first act
+# is loading ov000, which the port cannot mount. The full cost of that refusal
+# -- about twenty matched TUs and fourteen arm9 data spans, five of them
+# pointer-bearing -- is written out at the face.
+#
+# ---- 5. THE ADJUDICATED BODIES -------------------------------------------
+#
+# Seven TUs in this slice carry the "recovered from vtable slot identity"
+# marker: func_02005a58 and func_02005418 (dScBoot_c slots 0 and 6) and
+# func_0203506c, func_02034d70, func_02034da4, func_02034d9c, func_02034ac0
+# (dScMB_c slots 0/3/6/9/17). All seven are ruled REAL_DECOMP off the byte
+# gate in port/tools/inferred_stub_adjudicated.txt (run link100 lane MATCH,
+# evidence runs/link100/out/MATCH/treeB-verify.txt): compiled with the pinned
+# mwccarm 2004/b56 and compared to the ROM by tools/match.py --strict-relocs,
+# every one reproducing its ROM bytes exactly. No other marker file in this
+# slice is named by any port/hal fill, so the guard's live seated set grows by
+# exactly those seven and every one of them is adjudicated.
+#
+# ---- 6. THE TWELVE CLASS TUs ---------------------------------------------
+
+# dScMB_c: factory, then slots 0 / 3 / 6 / 9 / 16 / 17
+src/func_020352b4.c
+src/func_0203506c.c
+src/func_02034d70.c
+src/func_02034da4.c
+src/func_02034d9c.c
+src/func_02034a78.c
+src/func_02034ac0.c
+
+# dScBoot_c: factory, then slots 0 / 6 / 16 / 17. Slot 16 is _ZN5SceneD2Ev and
+# that is the ROM's own word, not a slip -- CodeWarrior folded the two
+# complete-object destructors and the body's first vptr store is data_02091528.
+src/func_02023624.c
+src/func_02005a58.c
+src/func_02005418.c
+src/_ZN5SceneD2Ev.c
+src/_ZN9BootSceneD0Ev.c
+
+# ---- 7. THE CLOSURE, IN THE ORDER THE ROUNDS FOUND IT --------------------
+
+# round 1: what the twelve want. The two message/save leaves are the boot
+# scene's "erase all save data" path (src/func_02005418.c state 5);
+# func_02034b1c/func_02034fbc are the multiboot scene's own sub-object init
+# and its heap swap; func_0203d7b8 and func_02053b98 are the card-busy poll
+# and the graphics-engine reset both InitResources bodies open with.
+src/_ZN7Message21DisplaySaveStatusTextEt.cpp
+src/_ZN8SaveData16EraseAllSaveDataEv.c
+src/func_02005348.c
+src/func_0201cd08.cpp
+src/engine/message/func_0201fe08.c
+src/func_02034b1c.c
+src/func_02034fbc.c
+# ALREADY LISTED ON port/slice_vs.txt, and kept here on purpose. CMake dedupes
+# the two listings, so this costs no second compile; what it records is that
+# this closure NEEDS the body. It was compiled and then DISCARDED by /OPT:REF
+# before this seat existed -- closure.py reports it unresolved against the
+# pre-seat map, which is what a dropped object looks like from the map -- so
+# the seat's own reference is what puts it in the binary.
+src/func_0203d7b8.c
+src/func_02053b98.c
+
+# round 2: the message renderer under DisplaySaveStatusText, and the root-heap
+# pair under func_02034fbc.
+src/Message_DrawCenteredLine.c
+src/func_0201a3e4.c
+src/func_0201a5f8.c
+src/engine/message/func_0201cb2c.c
+src/func_0201d418.c
+
+# round 3
+src/func_02011e94.c
+src/func_0201a614.c
+src/func_0201a694.c
+src/func_0201b100.c
+
+# round 4: the scene loader's own unload-before-load discipline, reached from
+# func_0201a614 / func_0201a694 above. Both bottom out in the port's faced
+# LoadOverlay and UnloadOverlay, which is why the seven overlay-id symbols
+# cost nothing.
+src/GetSceneOverlayID.c
+src/func_0201a754.c
+src/func_0201a798.c
+src/func_02051074.c

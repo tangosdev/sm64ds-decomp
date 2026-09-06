@@ -327,3 +327,8 @@ unsigned char data_020a9ec0[8];   /* 0x020a9ec0, .bss, ROM span 8 */
 
 }  // extern "C"
 DSSTATE_END
+
+/* The seven overlay-resident words the ROM's loader bookkeeping and
+   GetSceneOverlayID read (moved from hal/boot_hw.cpp at the SCENE fold). */
+extern "C" int overlay_2, overlay_3, overlay_4, overlay_5, overlay_6, overlay_7, overlay_75;
+int overlay_2, overlay_3, overlay_4, overlay_5, overlay_6, overlay_7, overlay_75;

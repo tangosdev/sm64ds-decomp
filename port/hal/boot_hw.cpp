@@ -187,7 +187,8 @@ void func_0206d9dc(int on) { (void)on; }
 // PORT_HOST_ABI: DS linker symbol whose ADDRESS is the overlay id; MSVC has no
 //                absolute-address global. Same ruling as hal/scene_boot.cpp's
 //                overlay_64/66/100/102 block.
-int overlay_2, overlay_3, overlay_4, overlay_5, overlay_6, overlay_7, overlay_75;
+/* overlay_2..overlay_7 and overlay_75 live in hal/boot_globals.cpp (pure data;
+   moved there at the SCENE fold so the headless smokes get them too). */
 // The end of the arm9 image. src/FS_LoadOverlay.c compares an overlay's
 // requested RAM base against `(unsigned)func_020aa420` -- config/arm9's .bss
 // ends at exactly 0x020aa420 -- and Crash()es below it. There is no host

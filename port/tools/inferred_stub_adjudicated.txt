@@ -2155,3 +2155,59 @@ func_ov002_020b36dc  REAL_DECOMP  brick-punch#slot-24  OnKicked 0xac: id +0xc ==
 func_ov100_021442d4  REAL_DECOMP  egg-slot30#slot-29  2/2 words (mov r0,#0; bx lr) under 2004/b56 --module ov100 strict-reloc, all three 1.2 configs; UnchainedChomp::OnAimedAtWithEgg returns a 0 egg lock-on radius
 # id 220, ov100, RollingIronBall (daIbl_c) slot 29 -- SEATED by this lane.
 func_ov100_02141fa8  REAL_DECOMP  egg-slot30#slot-29  2/2 words (mov r0,#0x82000; bx lr) under 2004/b56 --module ov100 strict-reloc, all three 1.2 configs; RollingIronBall::OnAimedAtWithEgg returns a 130.0 egg lock-on radius
+
+# ---------------------------------------------------------------------------
+# run link100 (lane MATCH), 2026-09-05.
+#
+# Eighteen marker-carrying bodies behind three scene classes the port has not
+# seated: dScBoot_c (id 0, vtable 0x02091528), dScMB_c (id 360, vtable
+# 0x020943c4), dScTitle_c (ov003 id 2, vtable 0x020b1650) and dScGameOver_c
+# (ov003 id 8, vtable 0x020b179c). Every table word was resolved first from
+# config/arm9/relocs.txt (and config/arm9/overlays/ov003/relocs.txt) as
+# table + 4*slot, so the address each ruling names is the address the ROM's
+# vtable actually parks in that slot, not a filename.
+#
+# The ruling here is stronger than the instruction-for-instruction reading the
+# earlier waves did. Each src/ body was COMPILED with the project's pinned
+# mwccarm 2004/b56 and its object compared against the ROM by
+# tools/match.py --strict-relocs (the default), which requires every
+# non-relocated word to be identical AND every relocation slot to land on the
+# destination config/**/relocs.txt records. All eighteen came back
+# "MATCHING VERSIONS: 2004/b56" with no reloc-destination failure and no
+# "reloc-destination check unavailable" degradation. That is the repo's own
+# definition of a match: these bodies are not guesses that read plausibly, they
+# are byte-exact decompilations, and the ROM would build from this source.
+#
+# Overlay targets were compared against extracted/overlays/overlay_0003.bin at
+# base 0x020ad660 -- the shipped image, not a dsd export.
+#
+# Three bodies of the fourth class in the same sweep, dScStarSel_c (vtable
+# 0x020b1704, slots 3/12/17), are already ruled above by the ov003 seat lane;
+# this sweep re-ran them through the same byte gate and all three MATCH, so
+# those rulings are now byte-gate confirmed rather than read-by-eye.
+#
+# Recurring NAME defect, same one lane w16 recorded: slot 17 of every one of
+# these scene tables is named *_OnYoshiTryEat in src/ and is actually the
+# deleting destructor D0. The body is right; the recovered name is not.
+#
+# Full per-body verify transcript (the exact commands and their output):
+# runs/link100/out/MATCH/treeB-verify.txt.
+
+func_02005a58  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScBoot_c (BootScene) vtable 0x02091528 slot 0, InitResources; byte gate: reproduces 0x02005a58 size 0x33c exactly under mwccarm 2004/b56 in module arm9, strict relocation-destination check clean
+func_02005418  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScBoot_c (BootScene) vtable 0x02091528 slot 6, Behavior -- 0x640, the largest body in this batch; byte gate: reproduces 0x02005418 size 0x640 exactly under mwccarm 2004/b56 in module arm9, strict relocation-destination check clean
+func_0203506c  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScMB_c vtable 0x020943c4 slot 0, InitResources; byte gate: reproduces 0x0203506c size 0x248 exactly under mwccarm 2004/b56 in module arm9, strict relocation-destination check clean
+func_02034d70  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScMB_c vtable 0x020943c4 slot 3, CleanupResources; byte gate: reproduces 0x02034d70 size 0x2c exactly under mwccarm 2004/b56 in module arm9, strict relocation-destination check clean
+func_02034da4  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScMB_c vtable 0x020943c4 slot 6, Behavior; byte gate: reproduces 0x02034da4 size 0x218 exactly under mwccarm 2004/b56 in module arm9, strict relocation-destination check clean
+func_02034d9c  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScMB_c vtable 0x020943c4 slot 9, Render -- the whole body is mov r0,#1 / bx lr; byte gate: reproduces 0x02034d9c size 0x8 exactly under mwccarm 2004/b56 in module arm9, strict relocation-destination check clean
+func_02034ac0  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScMB_c vtable 0x020943c4 slot 17. NAME says OnYoshiTryEat and is WRONG: the body is the deleting destructor D0 (main names this address _ZN7dScMB_cD0Ev); byte gate: reproduces 0x02034ac0 size 0x5c exactly under mwccarm 2004/b56 in module arm9, strict relocation-destination check clean
+func_ov003_020ada9c  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScTitle_c vtable 0x020b1650 slot 0, InitResources; byte gate: reproduces 0x020ada9c size 0x174 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020ada80  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScTitle_c vtable 0x020b1650 slot 3, CleanupResources; byte gate: reproduces 0x020ada80 size 0x1c exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020ad814  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScTitle_c vtable 0x020b1650 slot 6, Behavior; byte gate: reproduces 0x020ad814 size 0x26c exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020ad7a4  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScTitle_c vtable 0x020b1650 slot 9, Render; byte gate: reproduces 0x020ad7a4 size 0x70 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020ad7a0  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScTitle_c vtable 0x020b1650 slot 12, OnPendingDestroy -- 4 bytes, bx lr; byte gate: reproduces 0x020ad7a0 size 0x4 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020ad69c  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScTitle_c vtable 0x020b1650 slot 17. NAME says OnYoshiTryEat and is WRONG: the body is D0 (main names this address _ZN10dScTitle_cD0Ev); byte gate: reproduces 0x020ad69c size 0x50 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020b0b3c  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGameOver_c vtable 0x020b179c slot 0, InitResources; byte gate: reproduces 0x020b0b3c size 0x5dc exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020b0b34  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGameOver_c vtable 0x020b179c slot 3, CleanupResources; byte gate: reproduces 0x020b0b34 size 0x8 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020b0814  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGameOver_c vtable 0x020b179c slot 9, Render; byte gate: reproduces 0x020b0814 size 0x80 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020b0810  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGameOver_c vtable 0x020b179c slot 12, OnPendingDestroy -- 4 bytes, bx lr; byte gate: reproduces 0x020b0810 size 0x4 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+func_ov003_020b05bc  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGameOver_c vtable 0x020b179c slot 17. NAME says OnYoshiTryEat and is WRONG: the body is D0 (main names this address _ZN13dScGameOver_cD0Ev); byte gate: reproduces 0x020b05bc size 0x50 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean

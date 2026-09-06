@@ -9830,6 +9830,31 @@ foreach(line IN LISTS SLICE213_LINES)
     endif()
     list(APPEND SLICE213_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# ---- link100 SCENE ----
+# ---- gate 218: the two ARM9-RESIDENT SCENE CLASSES --------------------------
+# dScBoot_c (actor id 0, vtable 0x02091528, SpawnInfo 0x020914a8, factory
+# 0x02023624) and dScMB_c (id 360, vtable 0x020943c4, SpawnInfo 0x0209435c,
+# factory 0x020352b4) -- the ROM's two boot scenes, the fork
+# Scene::PrepareToSpawnBoot picks between. Both are arm9-resident, so unlike
+# every scene the port had seated before them there is no overlay to mount:
+# hal/scene_link100_boot.cpp and hal/scene_link100_mb.cpp host their vtables
+# and SpawnInfo records as arrays under the ROM's own data names, and the
+# seven .data blobs their InitResources bodies decompress come from
+# port/tools/romdata.py's NAMED list. The slice is the LINK closure, measured
+# with port/tools/closure.py against the pre-seat walk_window.map and iterated
+# to a fixpoint rather than taken from the ROM's own call graph -- the two
+# differ by a factor of several, because the port's host bodies already own
+# most of the ROM's edges. port/slice_gate218.txt carries the derivation.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate218.txt" SLICE218_LINES)
+set(SLICE218_SOURCES "")
+foreach(line IN LISTS SLICE218_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE218_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# ---- end link100 SCENE ----
 
 # ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
 #
@@ -13081,9 +13106,12 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # gate 215 (run link100, lane SAVE): the save system's own medium path,
     # plus the hosted backup medium the ARM7 would otherwise answer for.
     ntr/backup.cpp ${SLICE215_SOURCES} hal/os_lockid.cpp hal/globals_link100.cpp
+    hal/scene_link100_base_faces.cpp hal/scene_link100_boot.cpp
+    hal/scene_link100_mb.cpp ${SLICE218_SOURCES} hal/boot_globals.cpp hal/stage_globals.cpp
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/boot2_ipc.cpp ${SLICE2IPC_SOURCES} ${GATE2IPC_GEN}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE213_SOURCES}
+    # ---- link100 SCENE ---- the two arm9-resident scene classes, gate 218
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -13140,6 +13168,7 @@ endforeach()
 # player hit can be reproduced on demand against THIS binary rather than against
 # a special build of it. Inert unless SM64DS_IO_PRESSURE_AT is set in the
 # environment, and nothing in the tree sets it.
+
 add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
     # run link100 lane BOOT: the ROM's own boot chain, called from the four
     # port_boot_rom_* seams in tests/walk_window.cpp's main. See the gate-214
@@ -13317,6 +13346,9 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/boot2_ipc.cpp ${SLICE2IPC_SOURCES} ${GATE2IPC_GEN}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE213_SOURCES}
+    # ---- link100 SCENE ---- the two arm9-resident scene classes, gate 218
+    hal/scene_link100_base_faces.cpp hal/scene_link100_boot.cpp
+    hal/scene_link100_mb.cpp ${SLICE218_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -13602,6 +13634,9 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE216_SOURCES}
     hal/boot2_ipc.cpp ${SLICE2IPC_SOURCES} ${GATE2IPC_GEN}
     hal/actor_classes_enemy_spawner.cpp ${SLICE211_SOURCES} hal/actor_classes_question_switch.cpp ${SLICE212_SOURCES} ${SLICE213_SOURCES}
+    # ---- link100 SCENE ---- the two arm9-resident scene classes, gate 218
+    hal/scene_link100_base_faces.cpp hal/scene_link100_boot.cpp
+    hal/scene_link100_mb.cpp ${SLICE218_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
