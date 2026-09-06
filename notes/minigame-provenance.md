@@ -39,15 +39,15 @@ Field names and the matched body that settles each:
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x050 | `mSubBgScrollX` | InitResources sets it to 0xb0 or 0 from `data_0209b304` (the page index), then feeds it to `SetSubBg0Offset` / `SetSubBg2Offset` / `SetSubBg3Offset` and to `*(u32*)0x400101c = mSubBgScrollX & 0x1ff`. |
+| 0x050 | `mSubBgScrollX` | InitResources sets it to 0xb0 or 0 from [data_0209b304](../config/arm9/symbols.txt) (the page index), then feeds it to `SetSubBg0Offset` / `SetSubBg2Offset` / `SetSubBg3Offset` and to `*(u32*)0x400101c = mSubBgScrollX & 0x1ff`. |
 | 0x054 | `mPageFlipped` | u8. Zeroed by InitResources; Behavior sets it to 1 on each of the two page-timer expiries. Render draws the left/right page arrows only while it is 0. |
-| 0x058 | `mGroupBase` | InitResources seeds it from `data_0208a170`, the base index into the minigame table [data_ov005_020c24d8](../config/arm9/overlays/ov005/symbols.txt)`[]`. [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) copies it back into `data_0208a170` once `mScrollDelay` drains, i.e. it is the *target* group base and the global is the committed one. |
+| 0x058 | `mGroupBase` | InitResources seeds it from [data_0208a170](../config/arm9/symbols.txt), the base index into the minigame table [data_ov005_020c24d8](../config/arm9/overlays/ov005/symbols.txt)`[]`. [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) copies it back into `data_0208a170` once `mScrollDelay` drains, i.e. it is the *target* group base and the global is the committed one. |
 | 0x05c | `unk_05c` | Zeroed by InitResources; func_ov005_020c0378 copies it into `(&data_0209b308)[0x30]`. Role not settled -- left `unk_`. |
 | 0x060 | `unk_060` | Zeroed by InitResources, no other matched access. |
 | 0x064 | `unk_064` | Zeroed by InitResources, no other matched access. |
 | 0x08c | `mArrowBobPhase` | Behavior free-runs it 0..0x3f; Render uses it as the horizontal bob of the two page arrows (`0x50 - t/2` and `t/2 + 0xE0`). |
-| 0x090 | `mPrevPageTimer` | Behavior counts it down; expiry sets `data_0209b304 = 0` (page 0) and `mPageFlipped = 1`. Render drives the left arrow's scale pop from it. |
-| 0x094 | `mNextPageTimer` | Same shape; expiry sets `data_0209b304 = 1`. Drives the right arrow. |
+| 0x090 | `mPrevPageTimer` | Behavior counts it down; expiry sets [data_0209b304](../config/arm9/symbols.txt) `= 0` (page 0) and `mPageFlipped = 1`. Render drives the left arrow's scale pop from it. |
+| 0x094 | `mNextPageTimer` | Same shape; expiry sets [data_0209b304](../config/arm9/symbols.txt) `= 1`. Drives the right arrow. |
 | 0x098 | `mExitTimer` | Behavior counts it down to 1, then `dScene_c::SetAndStopColorFader()`, `ExitMinigameMenu()`, stops the music and sets `mExiting`. |
 | 0x09c | `mIconBlinkPhase` | Behavior free-runs it 0..0x3f; Render picks between two arrow frames on `>= 0x20`. |
 | 0x0a0 | `mScrollDelay` | [func_ov005_020c0878](../src/func_ov005_020c0878.cpp) decrements it, reloads it to 0x1e after committing a group change, and gates cursor input on `<= 0`. |
@@ -125,7 +125,7 @@ dScMgD3DBase_c needs a number to start its own fields at; 0x465c is the last
 field any matched function has observed, and 0x4660 is its 4-byte-aligned round
 up. If it were short, dScMgD3DBase_c's fields would land on the wrong bytes and
 build_pin would catch it -- the safety net check_header_offsets.py's own
-DATA_SIZE comment describes. Same reasoning for every other floor assert in the
+`DATA_SIZE` comment describes. Same reasoning for every other floor assert in the
 family.
 
 ## dScMgSingle3DBase_c (include/dScMgSingle3DBase_c.h)
@@ -163,7 +163,7 @@ this class, not either leaf. 0x4718..0x471b has no matched access and stays
 padding.
 
 **Their comments deliberately avoid the usual `/* 0xNN */` style.**
-tools/check_header_offsets.py's DATA_SIZE precompute walks a struct's commented
+tools/check_header_offsets.py's `DATA_SIZE` precompute walks a struct's commented
 fields by regex to find where a derived class's fields start, and that regex
 cannot parse the namespaced `Particle::SysTracker mSysTracker` a few lines down
 -- it silently stops at the last field it CAN parse. Before these seven fields
@@ -361,7 +361,7 @@ see above) indexes through both of them as byte buffers
 through a `*(void**)` cast.
 
 Fields below dScMgBase_c's own last-observed field (mSceneKind at 0x465e,
-DATA_SIZE 0x4660 per tools/check_header_offsets.py's own convention -- see
+`DATA_SIZE` 0x4660 per tools/check_header_offsets.py's own convention -- see
 dScMgBase_c.h) are genuinely THIS class's own, drawn only from what
 InitResources/AfterCleanupResources/Behavior/Render/D1/D0 directly touch.
 Fields touched only by the raw slot 18/31/34 helpers (0x46d8..0x4700's
@@ -449,7 +449,7 @@ the previous header held as four pads, and a run/HUD block at 0xb9d8.
 | 0xab60 | `mVelX` / `mVelY` (0xab64) | `Vec2_Len` of the pair is the speed, `atan2` of it is the heading, and it is added into `mPos` each tick. Capped at 0x8000. |
 | 0xab68 | `mScrollX` | Subtracted from every world X before drawing; [func_ov006_021279b0](../src/func_ov006_021279b0.cpp) zeroes it. |
 | 0xab6c | `mScrollY` | `mPosY - 0x190000`, clamped to `[0, mScrollLimit]`; drives all four `SetBg*Offset` calls and the four hardware scroll registers in [_ZN15dScMgSnowball_c8OnKickedEv](../src/_ZN15dScMgSnowball_c8OnKickedEv.cpp). |
-| 0xab70 | `mTouchX` / `mTouchY` (0xab74) | Behavior stores the raw touch sample (`data_020a0dea` / `data_020a0deb`) here and steers off the difference from the previous one. |
+| 0xab70 | `mTouchX` / `mTouchY` (0xab74) | Behavior stores the raw touch sample ([data_020a0dea](../config/arm9/symbols.txt) / [data_020a0deb](../config/arm9/symbols.txt)) here and steers off the difference from the previous one. |
 | 0xab78 | `mRollAngle` | u16. `+= speed * 0x2710 / mBallSize` -- an angle that advances faster the smaller the ball. |
 | 0xab7c | `mHeadingAngle` | u16. `atan2(mVelX, mVelY)`, approached linearly while rolling and set outright while crashing. |
 | 0xab7e | `mPrevRollAngle` / `mPrevHeadingAngle` (0xab82) | Behavior's prologue copies 0xab78..0xab7c into 0xab7e..0xab82 verbatim. |
@@ -485,15 +485,15 @@ any matched body reads).
 | --- | --- | --- |
 | 0x4fe4 | `mReelPos[3]` | InitResources seeds each entry with `(random % mStripLength) * 0x50000`; Render divides `n >> 12` by 0x50 to get the top stop and the pixel remainder, i.e. 0x50 screen pixels per symbol. |
 | 0x4ff4 | `mReelWinPos[3]` | Read exactly the way `mReelPos` is, but only in the `mState == 6` win-line pass. Split out of the former `pad_4ff4[0xc]`, which was three words wide. |
-| 0x5000 | `mState` | Behavior's whole body is `(self->*data_ov006_02142bdc[n])()` -- it is the index into that pointer-to-member table. Render tests it against 3, 4, 6 and 7 to pick which pass to draw. |
+| 0x5000 | `mState` | Behavior's whole body is `(self->*`[data_ov006_02142bdc](../config/arm9/overlays/ov006/symbols.txt)`[n])()` -- it is the index into that pointer-to-member table. Render tests it against 3, 4, 6 and 7 to pick which pass to draw. |
 | 0x500c | `mReelDrawY` | While positive the two marker rows are drawn at `n + 0x10` and `n + 0x60`; at 0 or below a single row is drawn at 0x60. |
 | 0x5010 | `mWinColumn` | Used as `n * 0x50 + 0x20/0x30/0x40` for the payout caption's x, against the same 0x50 column pitch the reels use; a negative value selects the "no win" caption instead. |
-| 0x5018 | `mLamp1Angle` / `mLamp2Angle` (0x501a) | u16 each. Behavior subtracts 0x200 and 0x400 a tick while `mState == 1`; Render hands each to `func_ov004_020afb20` in its rotation argument. InitResources zeroes both. |
+| 0x5018 | `mLamp1Angle` / `mLamp2Angle` (0x501a) | u16 each. Behavior subtracts 0x200 and 0x400 a tick while `mState == 1`; Render hands each to `[func_ov004_020afb20](../src/func_ov004_020afb20.cpp) in its rotation argument. InitResources zeroes both. |
 | 0x501c | `mReelStrip[3][5]` | Render walks it as `*(u8*)(p + row + 0x501c)` with `p` advancing 5 a reel and `row` taken modulo `mStripLength` -- three reels of five stops. |
 | 0x502e | `mLineActive[3]` | Three bytes gating both the payout-marker pass and the win chime. |
 | 0x5031 | `mResultSymbols[3][3]` | The same walk with `p` advancing 3 a reel, indexed 0..2 -- the 3x3 window the reels stopped on, compared against `mWinSymbol`. |
 | 0x503a | `mStripLength` | The modulus of that `row` walk, i.e. the number of stops per reel. |
-| 0x503b | `mWinSymbol` | Drawn as the marker row (`data_ov006_0213e9a4[n * 3 + i]`) and compared against `mResultSymbols` to decide a win. InitResources seeds it from 0x503c. |
+| 0x503b | `mWinSymbol` | Drawn as the marker row ([data_ov006_0213e9a4](../config/arm9/overlays/ov006/symbols.txt)`[n * 3 + i]`) and compared against `mResultSymbols` to decide a win. InitResources seeds it from 0x503c. |
 | 0x503f | `mFrameCounter` | u8. Behavior increments it unconditionally; Render gates the marker pass on `n & 0x20` and fires the win chime exactly once per cycle on `(n & 0x3f) == 0x20`. |
 
 Left `unk_`: 0x4ff0, 0x5004 (copied out of dScMgBase_c's own 0xbc, but nothing
@@ -508,7 +508,7 @@ into it by raw offset).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x5fb8 | `mCursorX` / `mCursorY` (0x5fbc) | Behavior loads the touch sample `data_020a0dea` / `data_020a0deb` and shifts it left 12; the nearest-petal test is `Vec2_Len` of the difference against this pair. |
+| 0x5fb8 | `mCursorX` / `mCursorY` (0x5fbc) | Behavior loads the touch sample [data_020a0dea](../config/arm9/symbols.txt) / [data_020a0deb](../config/arm9/symbols.txt) and shifts it left 12; the nearest-petal test is `Vec2_Len` of the difference against this pair. |
 | 0x5fc0 | `mPrevCursorX` / `mPrevCursorY` (0x5fc4) | Copied from the pair above at the top of state 0; the drag applied to the held petal is the difference between the two. |
 | 0x5fc8 | `mHeldPetal` | The `mArray` index the search loops store on a hit and read back to move that element; -1 means nothing is held, and the drop path restores it to -1. |
 | 0x5fcc | `mPetalToggle` | u8, flipped on every completed pull. One value plays sound 0x103 with banner 0x10, the other 0x104 with banner 0x13 -- the "loves me / loves me not" alternation. |
@@ -519,20 +519,20 @@ into it by raw offset).
 | 0x5fe0 | `mLoseStreak` | The mirror counter on the other outcome; at 3 it swaps in banner 0x11. It never touches the score. |
 | 0x5fe4 | `mHoldTimer` | src/_ZN13dScMgFlower_c13OnYoshiTryEatEi.cpp increments it while `<= 0x14` and otherwise resets it to 0; Behavior treats `> 0x14` as "held long enough". InitResources zeroes it. |
 | 0x5fe8 | `mState` | Behavior's `switch`: 0 plays, 1 is over (it stops the prompt and only ticks the 0x51f8 object). |
-| 0x5fec | `mFaceSprite` | Render's only use is `data_ov006_0213ab94[n]` drawn at the screen centre; Behavior sets it to 0..4 on each outcome. |
+| 0x5fec | `mFaceSprite` | Render's only use is [data_ov006_0213ab94](../config/arm9/overlays/ov006/symbols.txt)`[n]` drawn at the screen centre; Behavior sets it to 0..4 on each outcome. |
 | 0x5ff0 | `mScore` | Incremented by 1 or 3 per winning pull and clamped to 0x270f -- the same 9999 cap dScMgAmida_c and dScMgSnowball_c use. |
-| 0x5ff4 | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into `data_02082214` for both background layers -- the same idiom as dScMgAmida_c's own. |
+| 0x5ff4 | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into [data_02082214](../config/arm9/symbols.txt) for both background layers -- the same idiom as dScMgAmida_c's own. |
 
 Left `unk_`: 0x5fcd, a second gate on the between-rounds branch that nothing in
 scope ever writes.
 
 ## dScMgTrampoline_c field names
 
-Almost everything this class does with its own tail happens in the ov006
+Almost everything this class does with its own tail happens in the [ov006](../config/arm9/overlays/ov006/symbols.txt) trampoline minigame, so the
 helper functions its pointer-to-member state machine dispatches to, not in the
 four vtable methods; the citations below name those functions. All of them,
 helpers and vtable methods alike, now live in the class's own translation unit,
-src/minigames/d_s_mg_trampoline.cpp.
+[src/minigames/d_s_mg_trampoline.cpp](../src/minigames/d_s_mg_trampoline.cpp).
 
 The three state-entry helpers are now real `dScMgTrampoline_c` members too:
 `BeginIntro`, `BeginPlay`, and `BeginResults`. Each initializes the fields for
@@ -546,25 +546,25 @@ address-only, so the exact original source names remain unknown.
 | 0x5d98 | `mScrollTargetY` | The other argument of that `ApproachLinear`; recomputed as `(q << 3) + 0x20` once the scroll has caught up. InitResources seeds it from `mScrollY`. |
 | 0x5d9c | `mScrollHoldTimer` | Loaded with 0x78 and run down to 0 by `ApproachLinear(..., 0, 1)`; the target may not move again until it reaches 0. |
 | 0x5da0 | `mScrollOffsetY` | Added to `mScrollY` at every one of its uses, and zeroed once the scroll settles. |
-| 0x5da4 | `mArrow1X` / `mArrow2X` (0x5da8) | `dScMgTrampoline_c::StatePlay` drives the pair in opposition (`ApproachLinear` one toward 0 while the other goes toward 0x20); Render draws sprite `data_ov006_02134f08` at `n + 0xf0` for each. |
+| 0x5da4 | `mArrow1X` / `mArrow2X` (0x5da8) | `dScMgTrampoline_c::StatePlay` drives the pair in opposition (`ApproachLinear` one toward 0 while the other goes toward 0x20); Render draws sprite [data_ov006_02134f08](../config/arm9/overlays/ov006/symbols.txt) at `n + 0xf0` for each. |
 | 0x5dac | `mDragSoundHandle` | `UpdateTouchInput` passes the previous word to `func_02012468`, stores its returned handle, and zeroes it when a new drag begins; the intro interpolation uses the same positional-sound update path. |
-| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | `dScMgTrampoline_c::UpdateTouchInput` refreshes them from the touch sample `data_020a0dea` / `data_020a0deb` every tick a drag is live, and draws the drag segment from them. |
+| 0x5db0 | `mTouchX` / `mTouchY` (0x5db2) | `dScMgTrampoline_c::UpdateTouchInput` refreshes them from the touch sample [data_020a0dea](../config/arm9/symbols.txt) / [data_020a0deb](../config/arm9/symbols.txt) every tick a drag is live, and draws the drag segment from them. |
 | 0x5db4 | `mTouchStartX` / `mTouchStartY` (0x5db6) | Copied from the pair above on the press edge and then left alone; `OnAttacked2` measures the swipe as start-to-current and only accepts it if the two ends sit on opposite sides of the screen. |
 | 0x5db8 | `mInputEnabled` | s16. `UpdateTouchInput` clears `mTouching` and returns immediately while it is 0. |
 | 0x5dc4 | `mTouching` | u8, set on the press edge and cleared when input is disabled; the drag body runs only while it is 1. |
 | 0x5dc5 | `mTouchReleased` | u8, set on the release edge by the same file; `OnAttacked2` is the only reader and clears it after scoring the swipe. |
 
 Left `unk_`: 0x5dba (an s16 with its own getter/setter pair,
-`func_ov006_02121750` and `func_ov006_02121768`, but no reader that says what it
+[func_ov006_02121750](../config/arm9/overlays/ov006/symbols.txt) and [func_ov006_02121768](../config/arm9/overlays/ov006/symbols.txt), but no reader that says what it
 means), 0x5dbc..0x5dc2 (four s16 counters inside `dScMgTrampoline_c::StatePlay`'s
 banner-blink logic).
 
 ## The minigame camera, and the base fields it explains
 
-`src/Camera_UpdateMatrices.c` is the ov006 routine every 3D minigame scene
+`src/Camera_UpdateMatrices.c` is the [ov006](../config/arm9/overlays/ov006/symbols.txt) routine every 3D minigame scene
 calls once a frame, and the local struct it already carries is the whole story:
 
-```
+```cpp
 struct Camera {           /* 0xbc */
     Matrix4x3 viewMat;    /* 0x00 */
     char      pad30[0x30];
@@ -610,13 +610,13 @@ Only the fields several descendants corroborate are named here; this class has
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x0b4 | `mHudScore` | `dScMgBase_c::BeforeInitResources` zeroes it. `func_ov004_020adb1c` -- the routine that writes the HUD counter word at scene+0x464c -- is handed it directly by `func_ov006_02125364` (src/minigames/d_s_mg_bsc.cpp) and src/func_ov006_020ea3d0.c; dScMgMemory_c and dScMgSound_c seed it in their own InitResources; dScMgCard_c::Render keeps its own high-water mark of it; dScMgAmida_c::Behavior copies its round score into it. Deliberately NOT called `mScore`: five leaves already have a field of their own by that name, and naming the base's the same would silently shadow every one of them (see the round-2 `mPrevPosX` incident). |
-| 0x21c | `mSavedMainBgBits` | src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp (slot 29) stores `data_0209d45c` here; src/_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv.cpp (slot 30) restores it from here. |
-| 0x220 | `mSavedSubBgBits` | The same save/restore pair for `data_0209d454`. |
+| 0x0b4 | `mHudScore` | `dScMgBase_c::BeforeInitResources` zeroes it. [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) -- the routine that writes the HUD counter word at scene+0x464c -- is handed it directly by `func_ov006_02125364` (part of:[d_s_mg_bsc.cpp](../src/minigames/d_s_mg_bsc.cpp)) and [func_ov006_020ea3d0.c](../src/func_ov006_020ea3d0.c); dScMgMemory_c and dScMgSound_c seed it in their own InitResources; dScMgCard_c::Render keeps its own high-water mark of it; dScMgAmida_c::Behavior copies its round score into it. Deliberately NOT called `mScore`: five leaves already have a field of their own by that name, and naming the base's the same would silently shadow every one of them (see the round-2 `mPrevPosX` incident). |
+| 0x21c | `mSavedMainBgBits` | src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp (slot 29) stores [data_0209d45c](../config/arm9/symbols.txt) here; src/_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv.cpp (slot 30) restores it from here. |
+| 0x220 | `mSavedSubBgBits` | The same save/restore pair for [data_0209d454](../config/arm9/symbols.txt). |
 | 0x224 | `mSavedScreenSwap` | Saved as `(POWCNT1 & 0x8000) >> 15` and restored as `n << 15` by that same pair. |
 
 Deliberately left `unk_`: 0x0a8/0x0ac (a pair every leaf seeds together and
-`func_ov004_020ad79c` checks against `func_ov004_020ad8b8`, but nothing in the
+[func_ov004_020ad79c](../src/func_ov004_020ad79c.c) checks against [func_ov004_020ad8b8](../src/func_ov004_020ad8b8.c), but nothing in the
 tree says what it counts -- dScMgRoulette_c reads it through the singleton as a
 bonus added to its payout), 0x0bc (clamped to 0x270e, taken modulo 5, and used
 to scale difficulty in four different leaves -- a progression counter of some
@@ -627,8 +627,8 @@ kind, but nothing in scope increments it), 0x0b8, 0x0c8, 0x0f0, 0x05c,
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x53d6 | `mSelectedTile` | Render draws the cursor sprite at `data_ov006_02142ab4[n]` / `_02142ab8[n]` (the tile coordinate tables, stride 8); Behavior hands the same value to `func_ov006_02108b90` once per racer to score the board. |
-| 0x53e4 | `mCameraPreset` | Render copies row `n` of `data_ov006_0213e34c` and `_0213e370` (stride 0xc) into the base's `mCameraTarget` and `mCameraEye`, takes the angle from `data_ov006_0213e2e0 + n*2`, and then calls `Camera_UpdateMatrices`. 0 leaves the camera alone. Behavior sets it to 1 as the deal starts and clears it at the end. |
+| 0x53d6 | `mSelectedTile` | Render draws the cursor sprite at [data_ov006_02142ab4](../config/arm9/overlays/ov006/symbols.txt)`[n]` / [_02142ab8](../config/arm9/overlays/ov006/symbols.txt)`[n]` (the tile coordinate tables, stride 8); Behavior hands the same value to `func_ov006_02108b90` (part of:[d_s_mg_roulette.cpp](../src/minigames/d_s_mg_roulette.cpp)) once per racer to score the board. |
+| 0x53e4 | `mCameraPreset` | Render copies row `n` of [data_ov006_0213e34c](../config/arm9/overlays/ov006/symbols.txt) and [_0213e370](../config/arm9/overlays/ov006/symbols.txt) (stride 0xc) into the base's `mCameraTarget` and `mCameraEye`, takes the angle from [data_ov006_0213e2e0](../config/arm9/overlays/ov006/symbols.txt) + n*2, and then calls `Camera_UpdateMatrices`. 0 leaves the camera alone. Behavior sets it to 1 as the deal starts and clears it at the end. |
 | 0x53e6 | `mPhase` | Behavior's `switch`: 1 deals the racers out one at a time, 2 runs the countdown and reads the board, 3 pays out per landed tile, 4 announces win/lose/draw. _ZN15dScMgRoulette_c13OnYoshiTryEatEi (in src/actors/dScMgRoulette_c.cpp) starts it at 1. |
 | 0x53e8 | `mPhaseTimer` | Counted down in every phase and reloaded on each transition (8, 0x258, 1, 0x5a); Render also renders the countdown digits from it while `mPhase == 2`. |
 | 0x53f2 | `mScore` | Phase 3 sums each racer's payout into it and phase 4 compares it against `mTargetScore` to pick the win, lose or draw banner. Zeroed by the reset. |
@@ -644,10 +644,10 @@ bytes the reset zeroes and nothing reads).
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x5388 | `mState` | `func_ov006_020dac34` in src/minigames/d_s_mg_card.cpp is one long `switch` on it that mostly `++`s it; `func_ov006_020db720` in the same file switches on the same field; the reset in `func_ov006_020db9dc`, also there, starts it at 1. |
+| 0x5388 | `mState` | [func_ov006_020dac34](../src/minigames/d_s_mg_card.cpp) in [d_s_mg_card.cpp](../src/minigames/d_s_mg_card.cpp) is one long `switch` on it that mostly `++`s it; [func_ov006_020db720](../src/minigames/d_s_mg_card.cpp) in the same file switches on the same field; the reset in [func_ov006_020db9dc](../src/minigames/d_s_mg_card.cpp) also there, starts it at 1. |
 | 0x538a | `mStateTimer` | Reloaded with 0x10, 0x14, 0x1e, 0x3c or 0x5a on each step and run down to 0 (by `--` or `ApproachLinear2`) before `mState` advances. |
 | 0x5396 | `mFrameCounter` | `dScMgCard_c::Behavior`'s only own statement is `+= 1`; Render blinks the highlighted cards on bit 3. |
-| 0x5398 | `mScore` | Render keeps it as a high-water mark of the base's `mHudScore` and pushes it back out through `func_ov004_020adb1c` every frame. |
+| 0x5398 | `mScore` | Render keeps it as a high-water mark of the base's `mHudScore` and pushes it back out through [func_ov004_020adb1c](../src/func_ov004_020adb1c.c) every frame. |
 
 Left `unk_`: 0x538c, and the two highlight pairs 0x538e/0x5390 and
 0x5392/0x5394. Their mechanics are now in the header (Render blinks the card
