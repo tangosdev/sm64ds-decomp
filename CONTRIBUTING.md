@@ -5,7 +5,9 @@ written as a love letter to the original EAD team: every file in `src/`
 should read like idiomatic, period-accurate C++ from 2004 *and* compile
 byte-identical to the retail ROM under the pinned compiler. See
 [`AGENTS.md`](AGENTS.md) for what a change looks like and what the merge gate
-checks — this file is setup and ground rules.
+checks — this file is setup and ground rules. For deeper reference material
+(matching craft, C++ conversion, provenance), see
+[`notes/README.md`](notes/README.md).
 
 ## Get in touch
 

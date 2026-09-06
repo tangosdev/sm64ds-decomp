@@ -15,6 +15,10 @@ automates batch coordination, ROM verification, `src/` conventions, and PR
 formatting, and connects you to the repo's toolchain over MCP. Hand-driving
 the tools below works fine too.
 
+**Looking for a deeper reference** (matching craft, C++ conversion, TU
+promotion, provenance)? Start at [`notes/README.md`](notes/README.md) — it
+routes by task instead of making you scroll 130+ files.
+
 ## Coordinated agent work
 
 For multi-agent class/TU work, start at [notes/agents/README.md](notes/agents/README.md).
