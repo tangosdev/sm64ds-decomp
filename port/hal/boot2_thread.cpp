@@ -121,15 +121,76 @@
 // run; the proposed hunks are in the report. Step 3 does the handler's line 22
 // directly meanwhile, which is why it is tagged.
 //
-// ============================ WHAT IS NOT MODELLED =========================
+// ============================ THREAD CREATION ==============================
 //
-// * THE DS STACKS. func_02058200 gives a thread a DS stack and paints the two
-//   guard words 0x7bf9dd5b / 0xfddb597d at its ends; a fiber gets a real host
-//   stack instead and the guard words are never written. Nothing linked reads
-//   them (func_02057f38 is the checker and it is in no slice).
-// * THREAD CREATION. func_02058200 / func_02058538 / func_02058568 are not
-//   linked, so the only two threads are the two seated below. A restore of a
-//   context this file has never seen is REFUSED loudly rather than guessed at.
+// (run link100, lane THREAD. This section replaces the THREAD CREATION and THE
+// DS STACKS bullets of the WHAT IS NOT MODELLED block that stood here; both
+// said the same thing -- func_02058200 was not linked -- and it is now.)
+//
+// src/func_02058200.c IS THE ROM'S OS_CreateThread AND IT RUNS AS WRITTEN.
+// Nothing below hooks it, wraps it or reproduces it: it is on
+// port/slice_gate223.txt with func_02058538 (the slot allocator),
+// func_020584d0 (the priority insert, already on gate 215) and func_020581a8
+// (the exit thunk whose address it stores). Read off extracted/arm9_dec.bin at
+// 0x02058200 -- the transcription in src/ is exact, instruction for
+// instruction, and every store below is one of that body's:
+//
+//     0205845c  str sb, [r1, r0, lsl #2]   data_020a6148[id] = self, r1 = the
+//                                          pool word 0x020a6148
+//     0205846c  str r6, [sb, #0x88]        stack TOP   (the 4th argument)
+//     02058474  str r5, [sb, #0x84]        stack BASE  (top - size)
+//     0205848c  str r1, [r0, #-4]          0xfddb597d at top - 4
+//     02058498  str r2, [r1]               0x7bf9dd5b at base
+//     020584a8  bl  0x02058568             OS_InitContext(self, entry, top-4)
+//     020584b4  str r7, [sb, #4]           ctx r0 = the entry ARGUMENT
+//     020584b8  str r0, [sb, #0x3c]        ctx lr = &func_020581a8, from the
+//                                          pool word 0x020581a8
+//     020584d0  bl  0x0205e67c             MultiStore_Int(0, base+4, size-8)
+//
+// WHAT IS REPRODUCED BYTE FOR BYTE, and it is everything the ROM's body
+// writes. The record and the stack are BOTH hosted DS storage at the ROM's own
+// addresses -- for the card driver's thread that is hal/globals_link100.cpp's
+// grouped card span, where data_020a81bc's 1444 bytes are the OSThread record
+// AND, in their top kilobyte, the stack data_020a8760 is the top of. So the
+// two guard words land on the ROM's own bytes, the MultiStore_Int zero-fill
+// covers the ROM's own [base+4, top-8), the slot-table entry is written
+// through the ROM's own data_020a6148, and the context block at +0x00..+0x44
+// is filled by the ROM's own OS_InitContext arithmetic. The port does not skip
+// one store of it, and the ADOPTION below reads those exact words back as its
+// admission test rather than trusting a pointer it was handed.
+//
+// PORT_HOST_ABI: THE STACK IS WRITTEN, NOT EXECUTED ON. The DS thread's 1 KB
+//   region is filled exactly as above and is then bookkeeping: the fiber that
+//   runs the thread gets a Windows stack of its own, because an x86 frame is
+//   not an ARM frame and 1024 bytes of one would be gone before the entry
+//   function's prologue finished. This is the SAME exception ARMSaveContext
+//   already carries one screen down -- the fiber IS the context, so the ctx
+//   block at +0x00..+0x44 is written by the ROM and then not resumed FROM, and
+//   the stack at +0x84..+0x88 is written by the ROM and then not run ON. Both
+//   halves stay READABLE, which is the part that would have been lost by
+//   skipping the stores: src/func_02057f38.c's guard-word writer and
+//   src/func_02058158.c's state read both see what the ROM put there.
+//
+// HOW A CREATED THREAD BECOMES A FIBER -- LAZILY, OFF THE RECORD, AT THE FIRST
+// RESTORE. ARMRestoreContext used to refuse a context it had never seen. It
+// now tries to ADOPT it first, and the evidence it demands is the ROM's own
+// creation, read back out of the record it was handed:
+//
+//     +0x40  entry pc + 4     func_02058568's add r1,r1,#4 / str r1,[r0,#0x40]
+//     +0x04  entry argument   func_02058200's str r7, [sb, #4]
+//     +0x3c  &func_020581a8   func_02058200's exit thunk
+//     +0x6c  the slot id, and data_020a6148[id] MUST POINT BACK AT THIS RECORD
+//     +0x84 / +0x88          stack base and top, and the two GUARD WORDS must
+//                            be at base and top-4
+//
+// A record that fails any of those did not come through func_02058200 and is
+// refused exactly as before. A record that passes gets a fiber whose routine
+// enters the ROM's entry with the ROM's argument and, when that returns, calls
+// the ROM's OWN exit thunk out of +0x3c -- which is func_020581a8: it unhooks
+// the thread from data_020a6148, marks it exited, wakes its join queue and
+// reschedules. The trampoline's old park-forever tail is kept only as the
+// backstop for a record with no thunk in it.
+//
 // * THE IRQ-EXIT RESCHEDULE. On hardware a wake taken in IRQ mode sets the
 //   manager's pending flag and the exception return does the switch;
 //   ARMProcessorMode is hosted at 0x1f (system mode) in cxx_aliases.cpp
@@ -138,17 +199,23 @@
 //
 // ============================ KNOBS ========================================
 //
-//   SM64DS_THREAD_TRACE=1     one line per switch, halt and wake
+//   SM64DS_THREAD_TRACE=1     one line per switch, halt, wake and creation
 //   SM64DS_THREAD_PROOF=1     run the ROM's own sleep once at boot and print a
 //                             verdict -- port/tools/thread_proof.py reads it
-//   SM64DS_THREAD_NOFIBER=1   the negative control: ARMRestoreContext refuses
-//                             to switch, so the ROM's sleep cannot reach the
-//                             idle thread. Bounded by construction -- the ROM
-//                             body does not loop, so the refusal returns.
+//   SM64DS_THREAD_NOFIBER=1   the negative control for the SWITCH:
+//                             ARMRestoreContext refuses to switch, so the
+//                             ROM's sleep cannot reach the idle thread.
+//                             Bounded by construction -- the ROM body does not
+//                             loop, so the refusal returns.
+//   SM64DS_THREAD_NOCREATE=1  the negative control for CREATION: adoption is
+//                             refused, so a thread func_02058200 really made
+//                             is never entered. port/tools/
+//                             thread_create_proof.py reads both arms.
 
 #include <stdint.h>
 
 #include <cstdarg>
+#include <cstddef>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
@@ -171,7 +238,12 @@ extern "C" {
 extern int data_020a612c[4];
 extern int data_020a6134[5];
 extern int data_020a6128;
-extern int data_020a6148[8];
+// The ROM's sixteen-slot thread table, data_020a6134 + 0x14. It is 64 bytes of
+// hal/cxx_aliases.cpp's grouped OSThreadInfo run and src/func_02058538.c scans
+// all sixteen; the int[8] this used to declare covered half of it, which was
+// harmless while only slots 0 and 1 were ever written and is not now that
+// func_02058200 allocates out of the same table.
+extern int data_020a6148[16];
 
 // The per-VBlank wake queue, hosted by hal/comms_conductor.cpp as four bytes.
 // src/func_0201a4d0.c sleeps on it; src/_ZN3IRQ13VBlankHandlerEv.c:22 wakes it.
@@ -201,8 +273,20 @@ namespace {
 // ---------------------------------------------------------------------------
 #pragma pack(push, 1)
 struct RomThread {
-    unsigned char ctx[0x64];  // the ARM context block. Meaningless on a host:
-                              // the fiber below is what carries the context.
+    // The ARM context block. src/func_02058568.c (OS_InitContext, the hand-asm
+    // primitive whose host body is hal/scene_vs_menu.cpp) fills it and
+    // src/func_02058200.c writes two more words into it; the adoption below
+    // reads exactly those, because they are the only record of what thread the
+    // ROM meant to make. The REGISTER FILE half is meaningless on a host --
+    // the fiber is what carries the context.
+    uint32_t cpsr;            // +0x00  0x1f, or 0x3f for a Thumb entry
+    uint32_t r0;              // +0x04  the entry ARGUMENT (func_02058200)
+    unsigned char r1_r12[0x38 - 0x08];
+    uint32_t sp;              // +0x38  sp_svc - 0x40
+    uint32_t lr;              // +0x3c  &func_020581a8, the exit thunk
+    uint32_t pc4;             // +0x40  entry + 4
+    uint32_t sp_svc;          // +0x44  stack top - 4
+    unsigned char ctx_tail[0x64 - 0x48];
     uint32_t state;           // +0x64  1 runnable, 0 sleeping, 2 exited
     RomThread *next;          // +0x68  ready-list link
     uint32_t id;              // +0x6c  queue bit index, `1 << id`
@@ -217,6 +301,21 @@ struct RomThread {
 };
 #pragma pack(pop)
 
+// The offsets above are the ones src/func_02058200.c and src/func_02058568.c
+// write and the ones the adoption reads back, so they are checked rather than
+// commented. #pragma pack(1) is what makes them hold on a 32-bit host.
+static_assert(offsetof(RomThread, r0) == 0x04, "RomThread r0");
+static_assert(offsetof(RomThread, lr) == 0x3c, "RomThread lr");
+static_assert(offsetof(RomThread, pc4) == 0x40, "RomThread pc4");
+static_assert(offsetof(RomThread, sp_svc) == 0x44, "RomThread sp_svc");
+static_assert(offsetof(RomThread, state) == 0x64, "RomThread state");
+static_assert(offsetof(RomThread, next) == 0x68, "RomThread next");
+static_assert(offsetof(RomThread, id) == 0x6c, "RomThread id");
+static_assert(offsetof(RomThread, prio) == 0x70, "RomThread prio");
+static_assert(offsetof(RomThread, stack_lo) == 0x84, "RomThread stack_lo");
+static_assert(offsetof(RomThread, stack_hi) == 0x88, "RomThread stack_hi");
+static_assert(offsetof(RomThread, joinq) == 0x90, "RomThread joinq");
+
 inline unsigned char *mgr() { return reinterpret_cast<unsigned char *>(data_020a6134); }
 inline uint16_t &mgr_u16(unsigned off) { return *reinterpret_cast<uint16_t *>(mgr() + off); }
 inline RomThread *&mgr_current() { return *reinterpret_cast<RomThread **>(mgr() + 8); }
@@ -230,16 +329,22 @@ inline uint16_t &vblank_queue() { return *reinterpret_cast<uint16_t *>(data_0209
 RomThread g_main;   // the port's one game context: id 0, priority 0x10
 RomThread g_idle;   // src/func_02057e34.c:        id 1, priority 0x20
 
-// One fiber per thread. Four slots because thread creation is not linked and
-// two is what this lane seats; a fifth would be a thread nothing made.
+// One fiber per thread. SIXTEEN, which is the ROM's own cap and not a guess:
+// src/func_02058538.c scans data_020a6134 + 0x14 for a free slot out of
+// exactly sixteen and returns -1 when they are all taken, so a seventeenth
+// thread cannot exist. Slots 0 and 1 are the two seated below (the game
+// context and the idle thread); func_02058538 hands the first creation 2.
 struct FiberSlot {
     RomThread *thread;
     void *fiber;
     void (*entry)();
+    uint32_t arg;       // the ROM's entry argument, record +0x04
+    void (*exitfn)();   // the ROM's exit thunk, record +0x3c
     uint32_t cpsr;      // the CPSR I bit this thread was last suspended with
     bool bound;         // fiber is the host fiber this thread already runs on
+    bool created;       // came in through func_02058200, not the boot seat
 };
-FiberSlot g_slots[4];
+FiberSlot g_slots[16];
 
 RomThread *g_running;             // whose fiber is executing right now
 bool g_booted;
@@ -250,6 +355,7 @@ struct Stats {
     unsigned long long saves, restores, resumes, refused, unknown_ctx;
     unsigned long long halts, pump_turns, vblank_dispatches, vblank_wakes;
     unsigned long long starved, wrong_thread, idle_sleeps;
+    unsigned long long adopted, entered, exited, rejected, nocreate;
 } g_stat;
 
 constexpr size_t kFiberStack = 256 * 1024;
@@ -262,6 +368,11 @@ bool trace_on() {
 bool nofiber_on() {
     static int v = -1;
     if (v < 0) v = std::getenv("SM64DS_THREAD_NOFIBER") ? 1 : 0;
+    return v != 0;
+}
+bool nocreate_on() {
+    static int v = -1;
+    if (v < 0) v = std::getenv("SM64DS_THREAD_NOCREATE") ? 1 : 0;
     return v != 0;
 }
 
@@ -289,8 +400,11 @@ FiberSlot *slot_seat(RomThread *t, void (*entry)()) {
             s.thread = t;
             s.fiber = nullptr;
             s.entry = entry;
+            s.arg = 0;
+            s.exitfn = nullptr;
             s.cpsr = 0;
             s.bound = false;
+            s.created = false;
             return &s;
         }
     }
@@ -317,17 +431,110 @@ void *host_current_fiber() {
 #if defined(_WIN32)
 void CALLBACK thread_trampoline(void *p) {
     FiberSlot *s = static_cast<FiberSlot *>(p);
-    trace("enter thread id=%u entry=%p", s->thread->id, (void *)s->entry);
-    if (s->entry) s->entry();
-    // A DS thread body that returns lands in func_020581a8 (OS_ExitThread) on
-    // the ROM. Nothing this lane seats can get here -- func_02057e34 is a
-    // for(;;) -- and a fiber routine that RETURNS ends the OS thread, so park
-    // instead: mark exited and hand control back for good.
-    trace("thread id=%u returned; parking", s->thread->id);
+    ++g_stat.entered;
+    trace("enter thread id=%u entry=%p arg=%08x exit=%p", s->thread->id,
+          (void *)s->entry, s->arg, (void *)s->exitfn);
+    if (s->entry) {
+        // THE ROM'S ARGUMENT, THROUGH THE ROM'S REGISTER. func_02058200 puts
+        // the caller's third parameter in the context block's r0 word, which
+        // ARMRestoreContext's `ldmia r0, {r0-r12}^` would load; a __cdecl host
+        // callee finds the same value as its first stack argument, and a
+        // callee declared void ignores it with the caller cleaning up. Both of
+        // this build's thread bodies (src/func_020602bc.cpp, the card driver's
+        // service loop, and src/func_02057e34.c, the idle loop) take none and
+        // the ROM passes 0 to both.
+        reinterpret_cast<void (*)(uint32_t)>(s->entry)(s->arg);
+    }
+    // A DS thread body that returns lands in the thunk func_02058200 stored in
+    // the record's lr word, which is func_020581a8 (OS_ExitThread): it unhooks
+    // the thread from data_020a6148, marks it exited, wakes its join queue and
+    // reschedules. Run the ROM's, out of the record, rather than imitating it.
+    ++g_stat.exited;
+    trace("thread id=%u returned; exit thunk %p", s->thread->id,
+          (void *)s->exitfn);
+    if (s->exitfn) s->exitfn();
+    // A fiber routine that RETURNS ends the OS thread, and the ROM's own thunk
+    // never comes back (it reschedules off an exited thread). This is the
+    // backstop for a record with no thunk in it -- the two boot seats below,
+    // whose bodies are for(;;) and cannot reach here anyway.
+    trace("thread id=%u past its exit thunk; parking", s->thread->id);
     for (;;) {
         s->thread->state = 2;
         func_02057f54();
     }
+}
+
+// ---------------------------------------------------------------------------
+// ADOPTION: turn a record src/func_02058200.c really created into a fiber.
+//
+// The header block lists the six words this reads and where each is written.
+// Every one of them is checked rather than assumed, because the alternative to
+// checking is CreateFiber on a garbage entry point: this runs on whatever
+// pointer the ROM's scheduler picked out of its ready list, and the whole
+// reason ARMRestoreContext refused unknown contexts before this lane was that
+// it had no way to tell a created thread from a stray.
+// ---------------------------------------------------------------------------
+FiberSlot *adopt_created(RomThread *t) {
+    if (nocreate_on()) {
+        // THE NEGATIVE CONTROL FOR CREATION. Refuse the adoption and say so,
+        // which is exactly the behaviour this file had before the lane: the
+        // reschedule backs out and the caller carries on. Bounded for the same
+        // reason -- nothing in the refusal path loops.
+        ++g_stat.nocreate;
+        std::fprintf(stderr, "[thr] SM64DS_THREAD_NOCREATE=1: refusing to "
+                     "adopt created thread %p\n", (void *)t);
+        std::fflush(stderr);
+        return nullptr;
+    }
+
+    const uint32_t id = t->id;
+    const uint32_t entry4 = t->pc4;
+    const uint32_t lo = t->stack_lo;
+    const uint32_t hi = t->stack_hi;
+
+    const char *why = nullptr;
+    if (id >= 16)
+        why = "slot id out of the ROM's sixteen";
+    else if (data_020a6148[id] != static_cast<int>(reinterpret_cast<intptr_t>(t)))
+        why = "data_020a6148[id] does not point back at this record "
+              "(func_02058200 never allocated it)";
+    else if (entry4 < 8)
+        why = "context +0x40 holds no entry pc (func_02058568 never ran)";
+    else if (lo == 0 || hi == 0 || hi <= lo)
+        why = "stack bounds at +0x84/+0x88 are not a range";
+    else if (*reinterpret_cast<const uint32_t *>(
+                 static_cast<uintptr_t>(lo)) != 0x7bf9dd5bu)
+        why = "no 0x7bf9dd5b guard word at the stack base";
+    else if (*reinterpret_cast<const uint32_t *>(
+                 static_cast<uintptr_t>(hi - 4)) != 0xfddb597du)
+        why = "no 0xfddb597d guard word at the stack top";
+
+    if (why) {
+        ++g_stat.rejected;
+        std::fprintf(stderr, "[thr] ARMRestoreContext: refusing thread %p -- "
+                     "%s\n", (void *)t, why);
+        std::fflush(stderr);
+        return nullptr;
+    }
+
+    FiberSlot *s = slot_seat(t, reinterpret_cast<void (*)()>(
+                                    static_cast<uintptr_t>(entry4 - 4)));
+    if (!s) {
+        ++g_stat.rejected;
+        std::fprintf(stderr, "[thr] ARMRestoreContext: no free fiber slot for "
+                     "thread %p (all sixteen taken)\n", (void *)t);
+        std::fflush(stderr);
+        return nullptr;
+    }
+    s->arg = t->r0;
+    s->exitfn = reinterpret_cast<void (*)()>(static_cast<uintptr_t>(t->lr));
+    s->created = true;
+    s->cpsr = (t->cpsr & 0x80u);
+    ++g_stat.adopted;
+    trace("adopt created thread id=%u rec=%p entry=%08x arg=%08x exit=%08x "
+          "stack=[%08x,%08x) prio=%u",
+          id, (void *)t, entry4 - 4, t->r0, t->lr, lo, hi, t->prio);
+    return s;
 }
 #endif
 
@@ -478,11 +685,17 @@ void ARMRestoreContext(void *ctx) {
     RomThread *to = static_cast<RomThread *>(ctx);
     RomThread *from = g_running;
     FiberSlot *ts = slot_of(to);
+#if defined(_WIN32)
+    // A context this file has not seen is a thread src/func_02058200.c made
+    // while nobody was watching, which is the ordinary case now: the card
+    // driver's own bring-up creates one. Adopt it off its record, or refuse it
+    // for a named reason.
+    if (!ts) ts = adopt_created(to);
+#endif
     if (!ts) {
         ++g_stat.unknown_ctx;
-        std::fprintf(stderr, "[thr] ARMRestoreContext: unknown thread %p -- "
-                     "thread creation (func_02058200) is not linked; refusing\n",
-                     ctx);
+        std::fprintf(stderr, "[thr] ARMRestoreContext: thread %p has no fiber "
+                     "and could not be adopted; refusing\n", ctx);
         std::fflush(stderr);
         return;
     }
@@ -595,17 +808,56 @@ void _ZN4CP1516WaitForInterruptEv(void) {
 // THE PROOF, and the counters port/tools/thread_proof.py reads.
 // ===========================================================================
 
+// ---------------------------------------------------------------------------
+// WHAT hal/thread_create.cpp READS. Two C entry points, both narrow on
+// purpose: a counter snapshot and the one repair the negative control needs.
+// ---------------------------------------------------------------------------
+extern "C" void port_thread_sched_counts(unsigned long long *adopted,
+                                         unsigned long long *entered,
+                                         unsigned long long *restores,
+                                         unsigned long long *rejected,
+                                         unsigned long long *nocreate)
+{
+    if (adopted)  *adopted  = g_stat.adopted;
+    if (entered)  *entered  = g_stat.entered;
+    if (restores) *restores = g_stat.restores;
+    if (rejected) *rejected = g_stat.rejected;
+    if (nocreate) *nocreate = g_stat.nocreate;
+}
+
+// src/func_02057f54.c stores its PICK into the manager's current-thread word
+// BEFORE calling ARMRestoreContext:
+//
+//     data_020a6134.m8 = r5;
+//     ARMRestoreContext(r5);
+//
+// so a REFUSED restore -- SM64DS_THREAD_NOFIBER or SM64DS_THREAD_NOCREATE, the
+// two negative controls -- leaves that word naming a thread nobody switched
+// to, while the fiber that is really executing is the old one. This puts the
+// word back on the thread that is actually running. It is the same repair
+// thread_proof() below performs after its own control arm, and it exists ONLY
+// for that: on the armed path no caller ever needs it, because the switch
+// happened and the word is right.
+extern "C" void port_thread_repair_current(void)
+{
+    if (!g_running) return;
+    mgr_current() = g_running;
+    g_running->state = 1;
+}
+
 namespace port {
 
 void thread_sched_report(const char *tag) {
     std::fprintf(stderr,
                  "[thr] %s saves=%llu switches=%llu resumes=%llu refused=%llu "
                  "halts=%llu pump=%llu vbl_dispatch=%llu vbl_wakes=%llu "
-                 "starved=%llu unknown=%llu\n",
+                 "starved=%llu unknown=%llu adopted=%llu entered=%llu "
+                 "exited=%llu rejected=%llu nocreate=%llu\n",
                  tag, g_stat.saves, g_stat.restores, g_stat.resumes,
                  g_stat.refused, g_stat.halts, g_stat.pump_turns,
                  g_stat.vblank_dispatches, g_stat.vblank_wakes, g_stat.starved,
-                 g_stat.unknown_ctx);
+                 g_stat.unknown_ctx, g_stat.adopted, g_stat.entered,
+                 g_stat.exited, g_stat.rejected, g_stat.nocreate);
     std::fflush(stderr);
 }
 

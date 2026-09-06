@@ -14011,6 +14011,48 @@ endforeach()
 target_sources(walk_window PRIVATE ${SLICE222_SOURCES})
 target_sources(walk_window_hires PRIVATE ${SLICE222_SOURCES})
 
+# ---- gate 223 (run link100, lane THREAD): THREAD CREATION -----------------
+#
+# run link2's lane THR made the ROM's thread SWITCH real and wrote down, in
+# hal/boot2_thread.cpp's own header, that CREATION was not modelled: "the only
+# two threads are the two seated below. A restore of a context this file has
+# never seen is REFUSED loudly rather than guessed at." Three subsystems were
+# measured as blocked on exactly that sentence. This gate removes it:
+# src/func_02058200.c (the ROM's OS_CreateThread), its slot allocator, its exit
+# thunk, and the card driver's own bring-up func_0206002c, which is the ROM's
+# one caller of it that this build's boot reaches. The whole derivation --
+# which stores are reproduced byte for byte, which single thing is a host-ABI
+# exception, and what is deliberately NOT here -- is in
+# port/slice_gate223.txt's header and in hal/boot2_thread.cpp's.
+#
+# ON ALL THREE BIG TARGETS, and not by preference. hal/scene_vs_menu.cpp rides
+# SLICE_VS_SOURCES, which goes to exactly walk_window, walk_window_hires and
+# smoke_player, and this lane retires TWO of its VS_SEAM faces (func_02058200
+# and func_02058048) because the ROM bodies now cover them. A target that lost
+# a face without gaining its body would fail at link, so the three move
+# together. Appended as target_sources ABOVE the sharing block below, which
+# reads the three targets' SOURCES back off them: a source on all three joins
+# the single shared compile by itself.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate223.txt" SLICE223_LINES)
+set(SLICE223_SOURCES "")
+foreach(line IN LISTS SLICE223_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE223_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t223 walk_window walk_window_hires smoke_player)
+    target_sources(${_t223} PRIVATE ${SLICE223_SOURCES})
+endforeach()
+#
+# THE PROBE IS NOT ON ALL THREE. hal/thread_create.cpp is called from
+# hal/boot_os.cpp, which is SLICE214_SOURCES and goes to walk_window and
+# walk_window_hires only -- smoke_player does not run the boot spine. Same
+# split as the gate 222 block above.
+target_sources(walk_window PRIVATE hal/thread_create.cpp)
+target_sources(walk_window_hires PRIVATE hal/thread_create.cpp)
+
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================

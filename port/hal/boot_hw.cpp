@@ -315,5 +315,15 @@ unsigned int func_02057198(unsigned int val, void *addr, void (*cleanupFn)(void)
 #pragma comment(linker, "/alternatename:?FlushAndInvalidateDataCache@CP15@@YAXII@Z=__ZN4CP1527FlushAndInvalidateDataCacheEjj")
 #pragma comment(linker, "/alternatename:?data_020868a0@@3DA=_data_020868a0")
 #pragma comment(linker, "/alternatename:?data_020868d4@@3DA=_data_020868d4")
-#pragma comment(linker, "/alternatename:?data_020a6148@@3PAHA=_data_020a6148")
-#pragma comment(linker, "/alternatename:?data_020a612c@@3PAUObj581@@A=_data_020a612c")
+// THE TWO THREAD-RECORD BRIDGES MOVED (run link100, lane THREAD). They used to
+// be here:
+//     /alternatename:?data_020a6148@@3PAHA=_data_020a6148
+//     /alternatename:?data_020a612c@@3PAUObj581@@A=_data_020a612c
+// and their one consumer is src/func_020581a8.cpp, which spells both names at
+// namespace scope outside extern "C". That TU is on port/slice_gate223.txt,
+// which goes to ALL THREE big targets (hal/scene_vs_menu.cpp rides
+// SLICE_VS_SOURCES and this lane retires two of its faces), while THIS file is
+// SLICE214_SOURCES -- walk_window and walk_window_hires only. smoke_player
+// therefore linked the TU without the directives and failed with two LNK2019s
+// naming exactly these spellings. They now live in hal/cxx_aliases.cpp, beside
+// the definitions they point at, on the target set that needs them.

@@ -2349,6 +2349,23 @@ namespace {
 struct Link100OstiCheck { Link100OstiCheck() { port_link100_osti_check(); } };
 Link100OstiCheck g_link100_osti_check;
 }  /* anonymous namespace */
+
+// TWO NAME BRIDGES ONTO THE RECORD ABOVE, moved here from hal/boot_hw.cpp by
+// run link100's lane THREAD. Their one consumer is src/func_020581a8.cpp --
+// the exit thunk src/func_02058200.c stores in every context it builds -- and
+// that TU is a .cpp that declares both names at namespace scope OUTSIDE its
+// extern "C" block, so MSVC decorates the references while the definitions
+// eight lines up carry the ROM's flat C names. boot_hw.cpp is walk_window and
+// walk_window_hires only; port/slice_gate223.txt is on all three big targets,
+// and smoke_player failed at link with exactly these two LNK2019s.
+//
+// Both are DATA aliases, so there is no calling convention to disagree about,
+// and each right-hand side is a definition this file carries rather than
+// another alias -- not the chained shape alternatename_guard's header warns
+// about. Neither left-hand spelling is defined anywhere in the tree, so the
+// directives cannot be DEFEATED the way that guard checks for.
+#pragma comment(linker, "/alternatename:?data_020a6148@@3PAHA=_data_020a6148")
+#pragma comment(linker, "/alternatename:?data_020a612c@@3PAUObj581@@A=_data_020a612c")
 // ---- link100 STAGE ----------------------------------------------------------
 //
 // The OBJECT-OVERLAY WALK, five directives, all of them the C-linkage flip this

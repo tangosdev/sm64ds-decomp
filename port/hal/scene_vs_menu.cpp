@@ -935,12 +935,14 @@ DSSTATE_END
    assembles and MSVC cannot -- src/func_02058568.c is excluded from the
    slice and this is its host body, a faithful C transcription of the asm
    (the stores, the pc+4, the sp_svc-0x40, the Thumb-bit CPSR derivation).
-   PORT_HOST_ABI: ARM asm primitive. NOTE THE HONEST FLOOR BEHIND IT: the
-   port runs no DS threads (hal/os_thread.cpp is a pump, not a scheduler), so
-   a context initialised here is never context-switched INTO. The VS lobby's
-   carousel worker (func_0201a244 -> func_02058200) is created and never
-   runs; if the lobby scene stalls scrolling a selector, this is the floor,
-   and it is a LOBBY floor only -- the match path never creates a thread. */
+   PORT_HOST_ABI: ARM asm primitive. THE FLOOR THIS NOTE DESCRIBED IS GONE
+   (run link100, lane THREAD). "The port runs no DS threads" stopped being
+   true in run link2 (hal/boot2_thread.cpp is the ROM's scheduler on fibers)
+   and a context initialised here IS switched into now: the words this body
+   writes -- the entry pc at +0x40, the stack pointers at +0x38/+0x44 and the
+   CPSR at +0x00 -- are exactly what that file's adoption reads to build the
+   fiber. So this stays a faithful transcription of the asm and nothing more;
+   it is not a hook and it does not know about fibers. */
 extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
 {
     unsigned entry = pc + 4;
@@ -994,30 +996,39 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
    ARMSaveContext / ARMRestoreContext have honest host bodies. The floor moved
    without this file being told; it is restated here rather than left to read
    as a hardware fact it stopped being.
-     func_02058200  hal/boot2_thread.cpp's own WHAT IS NOT MODELLED section
-                    names thread CREATION outright -- the only threads are the
-                    two it seats, and a restore of a context it has never seen
-                    is refused loudly rather than guessed at. Its tail
-                    src/func_020581a8.cpp also unhooks the exiting thread from
-                    data_020a6148, storage that file owns.
-     func_02057f38  paints the DS stack guard words 0x7bf9dd5b / 0xfddb597d at
-                    the ends of a stack func_02058200 never allocated. Same
-                    file, same section: a fiber gets a real host stack and the
-                    guard words are never written.
-     func_02058048  its ROM body is only IRQ-disable, `state = 1`, reschedule,
-                    IRQ-restore, and every one of those IS in this build now,
-                    so this row is CLOSABLE ON LINKAGE and is held back on
-                    BEHAVIOUR instead. It writes offset 0x64 of whatever object
-                    its caller hands it, and two of its three linked callers
-                    (src/func_02060228.c, src/func_0206081c.c) hand it the CARD
-                    driver's thread at data_020a81bc -- a thread nothing in
-                    this build created, inside the gxband-guarded $card00 run.
-                    Seating it turns three sites that do nothing today into
-                    three real reschedules, and what those do at those sites is
-                    a measurement nobody has made. Named, not taken; the
-                    undersized-global half of exactly this hazard is what
-                    hal/auto_bss.cpp's data_0209d5b8 note fixed for the poll.
-   (run link100, lane DF40) */
+     func_02058200  RETIRED (run link100, lane THREAD). The section this row
+                    quoted is gone from hal/boot2_thread.cpp: thread CREATION
+                    is modelled, src/func_02058200.c runs as the ROM wrote it
+                    on port/slice_gate223.txt, and a context that file has not
+                    seen is ADOPTED off the record func_02058200 built rather
+                    than refused. Its tail src/func_020581a8.cpp is on the same
+                    gate, and the fiber trampoline calls it out of the record's
+                    own lr word. The VS carousel worker
+                    (func_0201a244 -> func_02058200) therefore creates a real
+                    thread now; whether the lobby's selector scrolls is a
+                    behaviour question this lane did not test, and it is no
+                    longer a link one.
+     func_02057f38  STILL FACED, and its reason is now the opposite of what it
+                    was. The guard words 0x7bf9dd5b / 0xfddb597d ARE written --
+                    by src/func_02058200.c, on the ROM's own bytes, and
+                    port/tools/thread_create_proof.py reads both of them back
+                    off data_020a81bc's stack. What holds this row is that no
+                    LINKED caller reaches func_02057f38, so seating it would be
+                    a row nothing exercises. Named for whoever wants it.
+     func_02058048  RETIRED (run link100, lane THREAD), on exactly the
+                    condition this note set. It said the row was "CLOSABLE ON
+                    LINKAGE and held back on BEHAVIOUR" because two of its
+                    three linked callers hand it "the CARD driver's thread at
+                    data_020a81bc -- a thread nothing in this build created".
+                    Something in this build creates it now: hal/boot_os.cpp
+                    calls src/func_0206002c.c at func_02042f68's own point in
+                    the boot, which is the ROM's own line
+                    func_02058200(&data_020a81bc, func_020602bc, 0,
+                    &data_020a8760, 0x400, 4) followed by
+                    func_02058048(&data_020a81bc). So the three sites reschedule
+                    onto a thread that exists, and the measurement the note
+                    asked for is port/tools/thread_create_proof.py.
+   (run link100, lane DF40; the three rows above rewritten by lane THREAD) */
 static unsigned g_vs_seam_hits;
 static void vs_seam(const char *name)
 {
@@ -1035,12 +1046,12 @@ VS_SEAM(func_0203d9f4)
 VS_SEAM(UnloadOverlay)
 // PORT_HOST_ABI: the port runs no DS threads; the carousel worker's reschedule answers idle 0.
 VS_SEAM(func_02057f38)
-// PORT_HOST_ABI: the port runs no DS threads; the carousel worker's queue-op answers idle 0.
-VS_SEAM(func_02058048)
 // func_02058158 WAS HERE and is now the ROM's own body: see the retirement
 // note in the block above. port/slice_gate221.txt carries the enrollment.
-// PORT_HOST_ABI: the port runs no DS threads; the carousel worker's thread-create answers idle 0 (its tail func_020581a8 reaches src/func_02057f54.c, the ROM scheduler, which needs the ARM context switch).
-VS_SEAM(func_02058200)
+// func_02058048 AND func_02058200 WERE HERE TOO and are now the ROM's own
+// bodies: port/slice_gate223.txt (run link100, lane THREAD). See the
+// retirement note in the block above -- this file named the exact condition
+// each was waiting on and lane THREAD met both.
 #undef VS_SEAM
 
 /* two more relocated arm9 tables, hosted with host pointers (the

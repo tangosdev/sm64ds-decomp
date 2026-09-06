@@ -1,0 +1,174 @@
+# gate 223 -- THREAD CREATION, AND THE CARD DRIVER'S THREAD.
+# run link100, lane THREAD.
+#
+# Read port/hal/boot2_thread.cpp's THREAD CREATION section first. Run link2's
+# lane THR made the ROM's thread SWITCH real (Windows fibers behind
+# ARMSaveContext / ARMRestoreContext) and wrote down, in that file's own
+# header, that CREATION was not modelled: "func_02058200 / func_02058538 /
+# func_02058568 are not linked, so the only two threads are the two seated
+# below. A restore of a context this file has never seen is REFUSED loudly
+# rather than guessed at."
+#
+# Three subsystems were measured as blocked on exactly that sentence -- the
+# sound bring-up (func_020134c8), the card driver (func_02042f68) and the
+# wireless manager (func_02019ebc). This gate removes the sentence.
+#
+# ===========================================================================
+# 1. THE CREATION ITSELF
+# ===========================================================================
+#
+# src/func_02058200.c is the ROM's OS_CreateThread and it runs AS WRITTEN --
+# nothing hooks it, wraps it or reproduces it. Verified instruction for
+# instruction against extracted/arm9_dec.bin at 0x02058200 (flat, load base
+# 0x02004000), including the four literal-pool words its stores come from:
+#
+#     0x02058400  0x020a6148   the sixteen-slot thread table
+#     0x02058404  0xfddb597d   the stack-TOP guard word
+#     0x02058408  0x7bf9dd5b   the stack-BASE guard word
+#     0x0205840c  0x020581a8   the exit thunk stored in the context's lr
+#
+# EVERY STORE IT MAKES LANDS ON HOSTED DS STORAGE AT THE ROM'S OWN ADDRESS.
+# That is the whole reason this is possible now and was not before:
+#
+#   the record and its stack   hal/globals_link100.cpp's grouped card span.
+#       data_020a81bc is 1444 bytes -- the OSThread record at the bottom and,
+#       in the top kilobyte, the stack whose TOP is data_020a8760. Both names
+#       are in ONE run, in ROM order, so `base = end - 0x400` lands inside the
+#       ROM's own bytes and the two guard words land on the two ends of them.
+#   the slot table            hal/cxx_aliases.cpp's link100 GLOBALS block,
+#       which hosts data_020a6134 / data_020a613c / data_020a6148 as one
+#       0x54-byte OSThreadInfo. func_02058538 scans it and func_02058200
+#       writes it, and before that grouping they were two different objects.
+#
+# So the DS stack is not skipped, faked or shortened: it is written exactly as
+# the ROM writes it and is then BOOKKEEPING, because the fiber that runs the
+# thread has a host stack of its own. That one exception is tagged
+# PORT_HOST_ABI in hal/boot2_thread.cpp with the reason (an x86 frame is not an
+# ARM frame; 1 KB of one is gone inside the entry function's prologue), beside
+# the existing exception for the context block itself.
+src/func_02058200.c
+#
+# THE SLOT ALLOCATOR. `for i in 0..15: if table[i] == 0 return i`, over the
+# same sixteen words func_02058200 then writes. Its correctness depends on the
+# grouped OSThreadInfo above and on nothing else.
+src/func_02058538.c
+#
+# THE EXIT THUNK, whose ADDRESS func_02058200 stores in every context it
+# builds (`str r0, [sb, #0x3c]`, pool word 0x020581a8) -- so the link needs it
+# whether or not a thread ever returns. Neither thread this build creates
+# does: src/func_020602bc.cpp is a for(;;) and src/func_02057e34.c is a
+# for(;;). It is here because the ROM's own creation names it, and because
+# hal/boot2_thread.cpp's fiber trampoline now calls the thunk OUT OF THE
+# RECORD rather than imitating what it does.
+#     hal/boot_hw.cpp already carries the two /alternatename bridges this TU
+#     needs (?data_020a612c@@3PAUObj581@@A and ?data_020a6148@@3PAHA): it is
+#     a .cpp that spells both names outside extern "C".
+src/func_020581a8.cpp
+#
+# ITS TWO CALLEES, both reached only from the thunk:
+#   func_02058488  unlink the exiting thread from the ready list -- the mirror
+#                  of func_020584d0, which is already linked (gate 215).
+#   func_02058a44  drain the exiting thread's message queue. Its first line is
+#                  `if (o->field_7c == 0) return;` and +0x7c is one of the
+#                  three words func_02058200 zeroes, so for a created thread
+#                  it returns at once. (It also has to: its own extern for
+#                  OS_WakeupThread is declared with no parameters, so the loop
+#                  body would call it with a garbage queue pointer. That is a
+#                  defect in the decompiled TU, not in this seat -- named here
+#                  so the next reader does not have to find it twice.)
+src/func_02058488.c
+src/func_02058a44.c
+src/func_02058960.c
+#
+# MAKE-RUNNABLE-AND-RESCHEDULE. Four lines: IRQ off, state = 1, func_02057f54,
+# IRQ back. hal/scene_vs_menu.cpp faced this and said so outright -- "its ROM
+# body is only IRQ-disable, state = 1, reschedule, IRQ-restore, and every one
+# of those IS in this build now, so this row is CLOSABLE ON LINKAGE and is
+# held back on BEHAVIOUR instead ... two of its three linked callers hand it
+# the CARD driver's thread at data_020a81bc -- a thread nothing in this build
+# created". This gate creates it, which is the exact condition that note put
+# on the row, so the face is retired and the ROM body takes its place.
+src/func_02058048.c
+#
+# ===========================================================================
+# 2. THE CARD DRIVER'S THREAD, WHICH IS WHAT THE CREATION IS FOR
+# ===========================================================================
+#
+# hal/boot_os.cpp's refusal of func_02042f68 named two blockers and lane
+# GLOBALS retired the first (the storage). The second was this one:
+#
+#     "func_0206002c's next two calls are func_02058048(&data_020a81bc), which
+#      resumes the new thread through func_02057f54 -- the ROM scheduler,
+#      ARMSaveContext and ARMRestoreContext, on a port that runs the game on
+#      ONE fiber -- and func_0205ba64(0xb, func_02060310), a PXI channel
+#      registration on the seam hal/os_arena.cpp ... is already waiting on."
+#
+# BOTH ARE ANSWERED NOW AND NEITHER BY THIS LANE ALONE. The scheduler is lane
+# THR's (the port has not run on one fiber since), the channel is lane IPC's
+# (hal/boot2_ipc.cpp claims 0xb at power-on and src/func_0205ba64.c is on
+# port/slice_gate2ipc.txt). What was left was the creation, and it is above.
+src/func_0206002c.c
+#
+# THE THREAD'S OWN BODY. It disables interrupts, and while the work object's
+# state word has no bit 8 set it parks its own record pointer at +0xd0 and
+# calls OS_SleepThread(0) -- a queue-less sleep: mark myself not runnable and
+# reschedule. So the first thing the card thread does after being entered is
+# go back to sleep, which is exactly what port/tools/thread_create_proof.py
+# measures, and it is ROM code doing it.
+src/func_020602bc.cpp
+#
+# AND THE PXI CALLBACK func_0206002c REGISTERS FOR CHANNEL 0xB. Its address is
+# taken by the line above, so the link needs it. It is never CALLED in this
+# build: ntr/backup.cpp faces the ROM's func_02060f60 and answers the card
+# commands without going near the FIFO, so no 0xb message is ever posted and
+# the ARM7 model never replies with one. If a later lane enrols the ROM's
+# func_02060f60, this is the body that wakes the card thread when the answer
+# comes back -- func_02058048 on the record parked at +0xd0.
+src/func_02060310.c
+#
+# ===========================================================================
+# 3. WHAT IS NOT HERE
+# ===========================================================================
+#
+#   src/func_02060890.c   the arm of func_02042f68 that CALLS func_0206002c.
+#       Two of its three other statements cannot link:
+#         func_02061138()  -> IRQ::SetIRQHandler(0x100000,
+#                             IRQ::GameCardIREQMCHandler) -> func_020610fc,
+#                             which is HAND-ASM (an IPCSend loop and an
+#                             intentional `b self`) that MSVC cannot assemble,
+#                             and whose handler also writes the absolute
+#                             address 0x020a89a0. ntr/runtime.cpp's
+#                             SetIRQHandler drops mask 0x100000 anyway, so the
+#                             handler is never dispatched.
+#         data_020a8780 = func_02060a64
+#                             the FLASH read path. ntr/backup.cpp: "the
+#                             driver's erase family (func_02060a64 and its
+#                             neighbours) is the FLASH path and no call site in
+#                             this game reaches it" -- and data_020a8780 is
+#                             hosted nowhere (ROM span 0x220, next symbol
+#                             data_020a89a0). Linking a body nothing
+#                             references to raise a count is not a seat.
+#       hal/boot_os.cpp therefore calls func_0206002c() directly at
+#       func_02042f68's own point in func_0201a054, with the skipped arms
+#       named there -- the same transcription discipline that file applies to
+#       func_0201a054 and func_02019780 themselves.
+#
+#   src/func_020603c8.cpp  func_02042f68's SECOND arm, the device identify.
+#       Blocked on ntr/backup.cpp's own ROMDATA PROPOSAL and not on threads:
+#       it reaches func_02060364 -> func_02060398, which looks a row up in the
+#       device table at arm9 .rodata 0x020867bc, and mounting that span through
+#       port/tools/romdata.py makes a ROM-CLEAN kit emit a ZEROED row -- a save
+#       chip of size 0, i.e. a shipped kit that silently cannot save. That
+#       file states the condition and it has not been settled.
+#
+#   src/func_02058568.c   OS_InitContext, the hand-asm primitive func_02058200
+#       calls. hal/scene_vs_menu.cpp already hosts a faithful C transcription
+#       of it (PORT_HOST_ABI) and this lane REFERENCES that body rather than
+#       adding a second. Nothing about it changes: the fiber adoption in
+#       hal/boot2_thread.cpp reads the words it writes, it does not hook it.
+#
+#   src/func_02057f38.c   the guard-word writer. Still faced in
+#       hal/scene_vs_menu.cpp. Its face is now understating the port -- the
+#       guard words ARE written, by func_02058200, on the ROM's own bytes --
+#       but no linked caller reaches it, so retiring the face would be a row
+#       nothing exercises. Named for whoever wants it.

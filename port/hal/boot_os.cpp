@@ -283,7 +283,12 @@ int  func_02053be0(int enable);               // DISPSTAT VBlank-IRQ enable
 void func_0203d740(void);
 void func_0201a4e4(void);                     // install IRQ::VBlankHandler
 void func_0203bb5c(void);
-/* func_02042f68 is NOT called -- see the refusal at its point in the boot */
+/* func_02042f68's FIRST ARM, two levels down: func_02060890 -> func_0206002c,
+   the card driver's bring-up and the ROM's own creation of the card thread.
+   The transcription note at its point in the boot below says which arms of
+   func_02042f68 and func_02060890 are skipped and why. */
+void func_0206002c(void);
+void port_thread_create_proof(void);          // hal/thread_create.cpp
 void func_02018aa4(void);                     // the file-system bring-up
 void func_0203ad84(void);
 /* func_0201a9fc(data_0209d574): the ROM calls this twice in func_0201a054,
@@ -507,29 +512,81 @@ void port_boot_rom_game_init_head(void)
     /* func_0201fec8() -- the user settings block. Still refused; the blocker
        is func_0203db64's eight-name wireless run and not data_0209d574, which
        is sized now. The count is in the header block. */
-    /* func_02042f68(0xd01, data_0208ee50) -- STILL REFUSED, and the storage
-       half of the old refusal is gone. It reaches func_02060890 ->
-       func_0206002c, which stands the game card's thread up with
-           func_02058200(&data_020a81bc, func_020602bc, 0, &data_020a8760,
-                         0x400, 4)
-       -- func_02058200 takes the FOURTH argument as the TOP of the new
-       thread's stack and fills 0x400 bytes DOWNWARD from it. hal/
-       globals_link100.cpp hosts that storage now, as one grouped run, and its
-       boundary is NOT the one written here before: func_0206002c's own base
-       register is data_020a8180 and it stores at +0xd4, which is
-       data_020a81bc + 0x98, so the group has to START at data_020a8180 and it
-       has to END past data_020a8760 (the stack top itself). 60 + 1444 + 4,
-       with the ROM evidence in that file.
-       WHAT ACTUALLY REFUSES IT is below the storage. func_0206002c's next two
-       calls are func_02058048(&data_020a81bc), which resumes the new thread
-       through func_02057f54 -- the ROM scheduler, ARMSaveContext and
-       ARMRestoreContext, on a port that runs the game on ONE fiber -- and
-       func_0205ba64(0xb, func_02060310), a PXI channel registration on the
-       seam hal/os_arena.cpp and the four func_02058c84 arms are already
-       waiting on. The thread this creates is func_020602bc, the card driver's
-       own service loop. That is the same ARM7 model the header block names,
-       not a global size, so the estimate of "about 37 more matched TUs" that
-       used to sit here belongs to the PXI lane and not to this one. */
+    /* func_02042f68(0xd01, data_0208ee50) -- ITS FIRST ARM RUNS NOW, and the
+       three things that refused it have each been retired by a named lane.
+       (run link100, lane THREAD; port/slice_gate223.txt.)
+
+       THE CHAIN, and where this line sits in it:
+           src/func_0201a054.c    func_02042f68(0xd01, data_0208ee50)
+             src/func_02042f68.c  arm 1: func_02060890()      <-- transcribed
+                                  arm 2: func_020603c8(0xd01) <-- skipped
+                                  arm 3: the eight-byte tag copy into
+                                         data_020a4b40        <-- skipped
+               src/func_02060890.c  func_0206002c()           <-- CALLED HERE
+                                    func_02061138()           <-- skipped
+                                    data_020a8780 = func_02060a64  <-- skipped
+
+       WHAT WAS REFUSING IT AND WHO FIXED EACH:
+         the storage    lane GLOBALS. hal/globals_link100.cpp hosts
+                        data_020a8180 / data_020a81bc / data_020a8760 as ONE
+                        grouped run, 60 + 1444 + 4, so func_02058200's
+                        `base = end - 0x400` and the two guard words it paints
+                        at the ends of that kilobyte land on the ROM's own
+                        bytes. The proof reads both guard words back.
+         the scheduler  run link2's lane THR. "A port that runs the game on ONE
+                        fiber" has not been true since hal/boot2_thread.cpp;
+                        func_02058048 -> func_02057f54 is a real switch.
+         the creation   THIS LANE. src/func_02058200.c, src/func_02058538.c and
+                        src/func_020581a8.cpp are linked, and
+                        hal/boot2_thread.cpp adopts the record they build.
+         PXI 0xb        run link100's lane IPC. hal/boot2_ipc.cpp claims the
+                        channel at power-on and src/func_0205ba64.c is on
+                        port/slice_gate2ipc.txt, so func_0206002c's
+                        registration is a real store into data_020a7fc8[0xb].
+                        Nothing posts on 0xb in this build -- ntr/backup.cpp
+                        faces func_02060f60 and answers the card commands
+                        without the FIFO -- so src/func_02060310.c is linked
+                        (its address is taken) and never called.
+
+       WHY func_0206002c AND NOT func_02060890, which is the arm the ROM
+       actually calls. Two of func_02060890's three statements cannot link:
+         func_02061138()   IRQ::SetIRQHandler(0x100000,
+                           IRQ::GameCardIREQMCHandler) reaches func_020610fc,
+                           which is HAND-ASM (an IPCSend loop and a deliberate
+                           `b self`) that MSVC cannot assemble, and whose
+                           handler also stores through the absolute address
+                           0x020a89a0. ntr/runtime.cpp's SetIRQHandler drops
+                           mask 0x100000 anyway, so the handler would never be
+                           dispatched.
+         data_020a8780 = func_02060a64
+                           the FLASH read path. ntr/backup.cpp: "no call site
+                           in this game reaches it", and data_020a8780 is
+                           hosted nowhere (ROM span 0x220, next symbol
+                           data_020a89a0).
+       Its seven field writes are not lost: ntr/backup.cpp's PortBackupFill
+       already sets the same object to the same values at start-up (state = 1,
+       f24 = -1, src/dst/len/cbfn/cbarg = 0), and func_0206002c itself writes
+       the two that matter to the lock -- owner = ~2 and depth = 0 -- along
+       with the command-block pointer, the wait queue and the priority. So the
+       skipped arm's effect is already there and this call adds the thread.
+
+       WHAT IS STILL SKIPPED ABOVE THIS, and it is not threads:
+         func_020603c8(0xd01)  the device identify, blocked on ntr/backup.cpp's
+                               own ROMDATA PROPOSAL -- it reaches
+                               func_02060398, a lookup in the device table at
+                               arm9 .rodata 0x020867bc, and mounting that span
+                               through port/tools/romdata.py makes a ROM-CLEAN
+                               kit emit a ZEROED row, i.e. a save chip of size
+                               0 and a kit that silently cannot save.
+         the tag copy          same file, same reason: it reads
+                               data_0208ee50 ("ds mario"), the other unmounted
+                               .rodata span, and ntr/backup.cpp defines
+                               data_020a4b40 with those eight bytes today. */
+    func_0206002c();
+    /* And the measurement, because a seat that links and never runs reads as
+       progress. No-ops unless SM64DS_THREAD_CREATE_PROOF is set; see
+       hal/thread_create.cpp and port/tools/thread_create_proof.py. */
+    port_thread_create_proof();
     func_02018aa4();          // FS_Init's once-guard (already tripped) +
                               // func_02017e60, which clears the twelve
                               // overlay-resident records at data_0209d3c4
