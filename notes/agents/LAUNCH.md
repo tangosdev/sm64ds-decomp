@@ -22,6 +22,15 @@ Repo: `C:\Users\andre\source\tangosdev\sm64ds-decomp`
 
 Substitute `<ROLE>`: `scout`, `writer`, `humanizer`, `builder`, `reviewer`.
 
+`integrator` uses a different launcher - it takes PR numbers, not a class:
+
+> Read `notes/agents/roles/integrator.md` in
+> `C:\Users\andre\source\tangosdev\sm64ds-decomp`. Compose PRs <numbers>
+> into one integration branch and prove the composition. Do not re-derive any
+> class and do not raise a partial's count. Work in your own worktree created
+> with `~\.claude\skills\decomp-worktree\wt-setup.ps1`. Report the ledger
+> verdict and the identical-record count explicitly.
+
 ## How many of each
 
 The validator is the bottleneck — one box, one job, about 20 minutes per PR — so
@@ -34,6 +43,7 @@ builders queue no matter how many you run. A sensible standing crew:
 | humanizer | 1 | fast, and one consistent voice keeps the style uniform |
 | builder | 2 | more than 2 just queue behind the validator |
 | reviewer | 1 | must be a different instance from the builder that opened the PR |
+| integrator | 0-1 | launch one only when 2+ proven class PRs are queued behind the validator |
 
 Give **Codex the scout and humanizer roles** — both are read-and-judge work with
 no compiler dependency. Give **Claude the writer and builder roles**, which need

@@ -243,7 +243,7 @@ struct Player : dActor_c {
     u8  pad_601[0x1b];
     s32 unk_61c;            /* 0x61c */
     s32 mLoopingSoundHandle;            /* 0x620 */
-    u8  pad_624[0x4];
+    s32 mSurfaceSoundHandle;            /* 0x624  Sound::PlayLong handle recycled by func_ov002_020bfa74 */
     s32 mParticle1;            /* 0x628 */
     s32 mParticle2;            /* 0x62c */
     s32 mParticle3;            /* 0x630 */

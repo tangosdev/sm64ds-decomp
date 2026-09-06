@@ -56,6 +56,10 @@ src/unnamed/ov063/func_ov063_0211640c.c:
     complete
     .text start:0x0211640c end:0x021166ac
 
+src/func_ov063_021166ac.cpp:
+    complete
+    .text start:0x021166ac end:0x021169c4
+
 src/unnamed/ov063/func_ov063_021169c4.cpp:
     complete
     .text start:0x021169c4 end:0x02116a1c

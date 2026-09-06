@@ -19,8 +19,11 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     #      state "derived"). Revert it if it appears -- it does not always. The
     #      guess that it depends on status: promoted is refuted: daObjFallBlock_c
     #      had that status and verify still wrote nothing. It more likely writes
-    #      only when no partial_isolation block exists yet. Check, do not assume.
-    python tools/rombuild.py -j 6 --no-rom
+    #      only when no partial_isolation block exists yet -- a second promotion
+    #      (daDgr_c, daDkk_c: block already present, verify wrote nothing) is
+    #      consistent with that. Check, do not assume.
+    python tools/rombuild.py -j 6
+    Get-FileHash build/sm64ds.nds -Algorithm SHA256
     python tools/romdata_check.py --files src/actors/<Class>.cpp
     python tools/tu_order_check.py <ov>/<Class>      # takes positional ids
 
@@ -48,14 +51,32 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     python tools/port_refcheck.py
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
+    python tools/cpp_tu_state.py --check-note
+    #    ^ notes/cpp-tu-current-state.md is generated and goes stale on every
+    #      promotion. Regenerate with --write-note and commit it in the same
+    #      PR; a stale note on
+    #      main is how the queue starts lying about what is already promoted.
     python tools/check_tubuild_conflicts.py --list
     python tools/layout_check.py
+    python tools/source_coverage.py --check --base origin/main
+    python tools/prepush_attribution.py --base origin/main --head HEAD
 
 PASS signals:
 
 - `tubuild verify` → `N/N MATCH, objisolate clean, reloc-destinations clean`
 - `rombuild` → `module fidelity: 106/106 exact, 100.000000% of compared bytes`
-  and `ROM-build analysis: PASS`
+  and `ROM-build analysis: PASS`; its stock profile must report 0 mod source
+  replacements and 0 ROM-gap fallbacks, and the built NDS must have the retail
+  SHA-256
+- `source_coverage` → `0 B` handed back to the cartridge
+- `prepush_attribution` → **no symbol *lost*.** Do **not** hold out for
+  `0 changed`: a promotion folds N shards into one file, and the counter credits
+  only the delinks range's *first* symbol and reclassifies the rest as
+  "claimed" — see the many-to-one fold artifact below, which lists the lines
+  that are expected and are not losses. `changed` is noise on a promotion by
+  construction; `lost` is the signal. Run the check, commit what it asks for,
+  report the numbers, and move on — reconciling credit beyond that is a stated
+  non-goal in this repo and has consumed whole sessions before.
 - everything else → exit 0 with no backlog count increased
 
 **Re-read the manifest prose against what actually shipped.** This is the single
@@ -70,12 +91,41 @@ file no longer occupies, and the shipped `.cpp` was still headed *"SHADOW
 translation unit — NOT ENROLLED, NOT CANONICAL. This file contributes nothing to
 the ROM build."* All byte gates were green throughout.
 
+**Verify a partial's structural claim by parsing `delinks.txt` for `.text`
+coverage gaps** across the whole `tu_map` run. This is the highest-value check
+available on a partial and it settles the question in one pass: on
+`dScMgHanachan_c` it produced 39 `.text` blocks with exactly one gap — the
+sourceless hole — and the exact held-out shard count as a by-product. The
+supporting invariant is worth re-deriving rather than trusting: **0 of 13,201
+delink blocks and 0 of 136 TU manifests carry more than one `.text` run**, which
+is why a licensed claim cannot span a hole.
+
+**Diff the declared type and `extern` set against what the shipped members
+actually reference.** A twice-narrowed TU carries preamble residue for the
+functions it dropped — `dScMgHanachan_c` shipped three unreferenced shadow
+structs and about thirty externs for functions outside its range, one of them
+carrying a comment asserting a stride requirement belonging to a function above
+the upper edge. Prose checking alone does not catch dead *declarations*.
+
+**All-zero `romdata_check` counts are the correct result** for a TU that does not
+own its key function, and are positive evidence for an empty
+`compiler_only_output`. The proof-block example shows nonzero counts; do not read
+zeros as a failed run.
+
 **Check every `compiler_only_output` canonical address against the owning
 module's own `symbols.txt`**, and scan the tree to confirm each is defined
 exactly once. Cross-module homes are normal, not a smell — but a wrong one is
 invisible to the byte gates. Corroborate from a second direction where you can:
 the vtable's typeinfo word relocates to the `_ZTI` address, and `check_object()`
 gives a per-symbol VERIFIED.
+
+**`verify` writes to the manifest when it FAILS, and no gate reads what it
+wrote.** This file warned only about a degenerate `partial_isolation` block. A
+*failing* run also rewrites the prose fields — an experimental run with a pragma
+removed flipped `functions_matched: 9 -> 8` and
+`every_declared_function_bytes_match: PASS -> FAIL` in the committed manifest.
+Every other tool treats those as prose, so a poisoned manifest ships silently.
+**Run `git status` after every `verify`, especially one you expected to fail.**
 
 **Byte match alone is never enough.** Every relocated word is a wildcard in
 `match.compare`. Require all three: byte compare, `objisolate` (relocation type
@@ -88,7 +138,32 @@ settled — import the module and call `check_object()` directly. **Pass
 `names=romdata_check.name_index()`**: without it `module` comes back `None`,
 which defeats the cross-module proof the call is for. The records carry `module`
 but **no address field**, so addresses still need checking against `symbols.txt`
-separately.
+separately. That file's format is `NAME kind:<k> addr:0x<hex> ...` — one
+space-separated field list per line, **not** `NAME = 0x...`. A grep written for
+the `=` spelling matches nothing and reads as "symbol absent", which is the
+wrong conclusion in the exact place it matters.
+
+## Two manifest defects no gate catches
+
+**Nothing checks a manifest's `legacy_source` paths against the tree.** Measured
+on `config/tu_manifest.d/ov006/dScMgMemory2_c.json`, landed on `main`: ordinal
+30 recorded the shard `_ZN14dScMgMemory2_c14RoundShowCardsEv` with a **`.c`**
+extension where both the file and its `delinks.txt` entry are **`.cpp`**. (Both
+spellings are written bare here rather than repo-rooted: quoting the dead one in
+full would fail `check_dead_references`, which is a gate this very paragraph
+would otherwise trip.) `linkcheck` refuses before doing any work
+— `manifest names legacy source ..., which is not a delinks entry inside the
+span` — so that class's recorded `status: link-verified` was **not
+reproducible**. One bad row out of 52. When you touch a manifest, audit every
+`legacy_source` against the tree; when you find one, say how many rows you
+checked, not just the one you fixed.
+
+**`linkcheck`'s report JSON and the committed manifests use different key names
+for the same audit.** The live report writes `objectAudit.orderOk` /
+`nonLicensed`; manifests on `main` record `emittedTextOrderIsRomAscending` /
+`nonLicensedSymbols`. A script that copies one into the other silently drops the
+fields — and a dropped emission-order field reads as "not audited", not as an
+error.
 
 ## What actually goes red on a promotion
 
@@ -130,10 +205,29 @@ auto-merging file is the dangerous one and the loudly conflicting one is safe.
 --write-tree <base> <head>` shows you the silent auto-merge before it lands, and
 an identical-whole-record count over the exceptions file shows you double-banking.
 
+**But do not use `merge-tree` to decide whether a PR will merge.** For
+`config/converted-backslide-exceptions.jsonl` it is exactly the tool that says
+**clean** where GitHub says **CONFLICTING**, because the file is declared
+`merge=union` in `.gitattributes` and GitHub ignores the driver. Use it to
+inspect content; use `gh pr view <n> --json mergeable` to decide mergeability.
+Every local compose prediction made with `merge-tree` in this pipeline has
+under-reported conflicts.
+
 **Dedupe by whole record, never by path.** Rows are `{path, reason}` and one
 path legitimately recurs under different reasons — `main` carries 66 such rows
 from past promotions. Only byte-identical repetition is the defect. A builder
 who deduped by path would delete real history.
+
+## Do not use `git stash` in this repo
+
+Two hazards compound. The stash is **shared across every worktree** here, so a
+stash pushed in one worktree is visible — and poppable — in another. And a stash
+round-trip **unstages staged deletions**: push then pop, and a 40-file deletion
+set comes back as unstaged, where the next `git commit` silently omits it. A
+writer caught this once mid-promotion; a promotion is exactly the change shaped
+to lose that way, since deleting the shards is most of the diff. If you must
+shelve work, copy files aside or commit to a scratch branch, and run
+`git status` before every commit rather than trusting what you staged earlier.
 
 ## Your branch
 
@@ -169,6 +263,32 @@ files behave differently and only one of them tells you**:
   Nothing flagged it. No gate reads those paths — which is also why this file
   writes that filename bare rather than repo-rooted: quoting the dead path in
   full would fail `check_dead_references`, the gate this paragraph is about.
+
+**Trust `gh pr view --json mergeable` over a local merge test for these two
+files.** `config/converted-backslide-exceptions.jsonl` is declared `merge=union`
+in `.gitattributes`, which that file itself warns GitHub ignores. So
+`git merge-tree` honours the driver and reports **clean** while GitHub reports
+**CONFLICTING** on the very same pair. A green PR can flip to CONFLICTING with
+nobody pushing anything, purely because the base moved — and a local compose test
+will not have predicted it.
+
+**These two rules look contradictory — here is the reconciliation.** Above, "if
+`--check` passes, skip `--update`". Here, "restore both files and re-run
+`--update`". Both are right; the rebase case needs the *damage detection*, not a
+second banking. Do it non-destructively: copy the post-cherry-pick files aside,
+`git checkout <newbase> --` both, run `--update` once, then
+`git diff --no-index` the regenerated files against your copies. Identical means
+the auto-merge was correct — `git checkout HEAD --` both and commit nothing.
+Different means the silent merge lost or duplicated rows, and the regenerated
+version is the one to keep.
+
+**Committing the regenerated exceptions file destroys the writers' reasons.**
+Rows carry whatever string you pass to `--reason`, so regenerating from a clean
+base and committing the result replaces N informative per-class reasons with N
+identical generic ones. Nothing reads those strings, so no gate goes red and no
+reviewer diff makes it obvious — it is silent data loss. This is the second half
+of the non-destructive recipe above: when the regenerated file differs from your
+copy *only in the `reason` strings*, your copy is the one to keep.
 
 **Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
 Never resolve either by hand and never let the merge resolve them for you — the
@@ -217,19 +337,48 @@ already stale. Getting this wrong costs a full validation cycle.
   regardless. When you do need it: it builds the **working tree**, so a baseline
   taken after header edits proves nothing, and a fresh worktree must take one
   before any linkcheck or it dies on unrelated classes.
+- **`pytest tools/` is not a CI signal.** The workflows invoke targeted
+  `python -m unittest tools.test_<gate>` modules only, so a green `tools` check
+  does not mean the suite passes. Two tests fail on untouched `origin/main`
+  (`test_dtor_members.py::test_the_frozen_census_reproduces` and
+  `test_opnew_sizes.py::test_only_two_live_classes_are_genuinely_headerless`).
+  Do not adopt those as your regression.
+- **PowerShell `| Select-Object -Last N` buffers everything**, so a backgrounded
+  `rombuild` writes a zero-byte output file until it exits. You cannot watch
+  progress that way.
 - Never run two consumers of `build/` at once — a backgrounded `rombuild` beside
   `eligible.py` invents link errors.
 
 ## Tools the write-up needs, and how they mislead
 
+- **`opnew_sizes.py` prints no per-class row** — read `build/opnew_sizes.json`.
+- **`check_references` and `check_dead_references` emit "run `--update` to bank
+  it" nudges that are NOT failures.** Do not bank them from a class PR; they are
+  someone else's baseline to shrink. The same goes for any *shrinkable baseline*
+  line: a clean promotion legitimately removes dead references, so the nudge
+  fires on healthy PRs. `config/unresolved-baseline.json` is maintained by the
+  automated `[skip ci]` refresh — a class PR that touches it is adding noise the
+  next refresh will overwrite.
 - **`opnew_sizes.py` and `rtti_vtables.py` both need `build/rtti.json`**, which
   only `tools/rtti_extract.py` writes. Without it they die on a bare
   `FileNotFoundError` naming no remedy. Run the extractor first.
-- **`rtti_vtables.py`'s slot count is not authoritative** — the known `_ZTV`
-  extent overrun. It reported 34 slots for `daObjCtMecha03_c` against a real 32;
-  the tail two words sat *below* the overlay's own load range. Corroborate
-  against `romdata_check`'s verified byte count (128 = 32 x 4) or the `_ZTV`
-  section size `verify` prints.
+- **Corroborate every slot count; do not take one tool's word.**
+  `rtti_vtables.py` used to over-report (34 against a real 32 on
+  `daObjCtMecha03_c`, tail words *below* the overlay's load range), but it now
+  trims following-table tails and has since agreed with a direct read. Keep
+  corroborating; drop the assumption that it is wrong.
+- **`verify` does not print a `_ZTV` section size.** I claimed it does, in this
+  file and in launch prompts — it prints the MATCH table, byte comparison,
+  objisolate, emission order and the result, and nothing else. Do not go looking.
+- **`romdata_check`'s `romExtent` field carries the WRONG short extent** — `88`
+  decimal, i.e. the false `0x58`, on the very class where the real answer is
+  `0x88`. The truthful fields are **`emitted`** and **`bytes`**, with
+  `blindWords: 0`. Following the extent field confirms the trap instead of
+  catching it.
+- **Print scalar fields only from a `check_object()` record.** Its `src` key is a
+  dict keyed by *tuples* covering every symbol in the module, so `json.dumps`
+  raises `TypeError: keys must be str...` and printing the record raw dumps about
+  20 MB.
 - **`check_object()` alone does nothing.** The per-symbol verdict recipe is:
   build `name_index()` and `rom_data_index()`, compile with `_compile(rel,
   tmpdir)`, *then* call `check_object()`. It is worth the trouble — it is how a
@@ -238,6 +387,14 @@ already stale. Getting this wrong costs a full validation cycle.
 - **Write scratch files under a class-unique name.** The session scratchpad is
   shared across concurrent pipeline agents; a sibling builder overwrote a
   `pr-body.md` mid-run. Use `pr-body-<Class>.md`.
+
+**The command blocks in this file are POSIX.** The primary shell here is
+PowerShell, where `git commit -F - <<MSG` is a parse error. Write the message to
+a class-unique scratch file and pass `-F <path>` — the same rule this file
+already gives for `pr-body-<Class>.md`.
+
+**`tu_order_check`'s `EXTRA [...] the extras above need a compiler-only policy`
+is a PASS**, not a warning, when the manifest carries the matching row.
 
 ## Flag spellings that differ from the obvious guess
 
@@ -277,11 +434,15 @@ descendants' factories each `mov r0, #0x34c` — corroborating the header's
 `0x34c` span from four independent overlays. That is stronger evidence than a
 single factory, so look for it before writing "no size available".
 
-**Check what you actually pushed.** The pre-push hook *can* create an attribution
-commit without pushing it, so `git push` may report success and leave that commit
-sitting locally. It does not always — one measured run had the hook fire with no
-commit created. Run the check regardless; drop the certainty, keep the habit. Run `git log origin/<branch>..HEAD` afterwards; if it is
-non-empty, push again. A PR missing its lineage commit looks complete.
+**Check what you actually pushed.** The feature-branch pre-push hook does not run
+the attribution gate and never creates commits. Run `prepush_attribution.py`
+yourself, commit every required `path#symbol` mapping, then run
+`git log origin/<branch>..HEAD`; if it is non-empty, push again. **Also re-read
+the remote head after pushing** with `gh pr view --json headRefOid`. Another
+pipeline agent can push to your branch, which a local extras check cannot see;
+it happened twice on one PR, including after a force-push removed a repair. A PR
+missing its lineage commit looks complete while silently losing contributor
+credit.
 
 Several validator lines are expected on a promotion and are not losses. All are
 the same many-to-one fold artifact: the counter credits only the delinks range's

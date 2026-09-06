@@ -67,8 +67,33 @@ now-inline destructor and the control run breaks. Working order:
     create -> linkcheck --baseline (pristine tree) -> header edit + reconcile
            -> verify -> linkcheck <ov>/<Class>
 
+**For a text-only TU, `linkcheck` cannot be re-run once the promotion is
+enrolled.** With the `src/` path in `delinks.txt`, `tubuild` routes the candidate
+to the intact-object path and refuses: *"intact production requires one .text
+claim and at least one non-text claim"*. That refusal is benign, not damage you
+caused — confirm it with a control on an already-promoted sibling
+(`dScMgSingle3DBase_c` produces the identical message on untouched `main`). The
+consequence is that your recorded link evidence is from a **pre-promotion tree**:
+if you then edit the source, you owe a proof that the edit is byte-neutral.
+Compile the object before and after and compare sha256 — one writer removing
+provably-inert pragmas did exactly this (identical object, 29744 bytes) and
+recorded it in the manifest. Do not let "I only removed a no-op" stand unproved.
+
 `create` emits in reverse source order and raises RAW review flags. Both are
 accurate and both matter — read them.
+
+**Reverse-source-order is not the only admissible layout.** mwccarm lays `.text`
+down in reverse source order *by default*, which is why the merged file is
+normally written descending-ROM. With `#pragma defer_codegen off` the TU emits
+**ROM-ascending** and can be written ROM-ascending — measured on
+`ov006/dScMgMemory2_c`, 52/52 with the pragma, and "51 ordinal pair(s) NOT in
+ROM order" the moment it was removed. Ascending is the more readable form. Either
+is fine; what is not fine is writing one and assuming the other.
+
+**`verify`'s emission-order success line is boilerplate, not a measurement.** It
+prints "mwccarm reverses source order; this TU was written in reverse to
+compensate" over a file written strictly ascending. Never infer your own source
+order from it.
 
 **That list is not a progression for every check.** `verify` passing does not
 mean you are closer to `linkcheck` passing. On emission order specifically the
@@ -161,7 +186,11 @@ carries an **empty** `externalized_output` and licenses all 13 of its RTTI
 records as `deadstrip-data`.
 
 `externalized_output` / `canonical-import` is what a TU that stops at
-text-verified uses. `daObjFallBlock_c` first wrote 10 rows there and could not
+text-verified uses. (The counts in the next sentence are historical and do not
+match the tree: `daObjFallBlock_c`'s manifest today carries **14** rows — 11
+`deadstrip-data` plus 3 `deadstrip-duplicate` — with `externalized_output`
+empty. Read it for the mechanism, not the arithmetic.)
+`daObjFallBlock_c` first wrote 10 rows there and could not
 promote; every one had a configured home, so all 10 converted to `deadstrip-data`
 and the class promoted. If you find yourself filling this block, check first
 whether those addresses are actually homed — most are.
@@ -192,7 +221,13 @@ that was promotable — if it were live, no class with cross-module RTTI could
 ever promote, which is plainly false.
 
 **The row count is predictable from inheritance depth**, so do not copy an
-oracle's count unless the oracle sits at the same depth:
+oracle's count unless the oracle sits at the same depth. **Count the chain
+yourself before trusting the queue's `compiler-only:~N`** — that column is copied
+from the `sibling_oracle` with no depth check, and has now been wrong in both
+directions. `dScMgMemory2_c` is six levels
+(`dScMgSingle3DBase_c` -> `dScMgBase_c` -> `dScene_c` -> `dBase_c` -> `fBase_c`)
+and needs `2x6 + 1 = 13`, +1 homeless `D2Ev` = **14**; the queue said ~11 because
+its oracle sits one level shallower.
 
     rows = 2 x (ancestors + self)  +  1 vtable  +  1 per Vector3-like
                                                      member with an inline D1
@@ -224,7 +259,10 @@ names the address. Two rows will be wrong if you guess.
 
 `tubuild create` writes `// @symbol` markers only for mangled or already-named
 members; **auto-named `func_ovNN_ADDR` shards are skipped silently.** Add theirs
-by hand or tiers scoring misses them.
+by hand or tiers scoring misses them. The gap is narrower than it sounds — a
+shard carried in RAW, inside its own `extern "C"` block, *does* get a marker.
+Only the plain `.c`-derived ones lack them. Check which you have rather than
+blanket-adding.
 
 When the policy is refused, `verify` re-reports **all** extras as unlicensed from
 the unaudited object. One bad row makes it look like nothing is licensed. Fix the
@@ -285,6 +323,10 @@ mwccarm 2004/b56 behaviours, not style preferences.
   Reordering the includes restored the match. `Vector3_16` behaves the same way.
   **When a function goes LONG after a merge and you did not touch it, check the
   include union before you look at CSE.** (Short, and you touched it: CSE.)
+  This heuristic has now found a regression it was written for: `daDgr_c`'s sole
+  DIFF was an untouched function whose `Matrix4x3` spelling flipped because the
+  merge made `math/Matrix.h` arrive first through `daDgr_c.h -> dBgW_KcMbg.h`.
+  A local flat `Mat12` restored 9/9.
 - **Struct copy:** C++ scalarizes word-by-word where C block-moves — about 12
   bytes short. Force it with `struct M { int w[12]; };`.
 - **bool widening:** `int f = (a==b); if (f)` is longer in C++ than `if (a==b)`.
@@ -294,7 +336,37 @@ mwccarm 2004/b56 behaviours, not style preferences.
   access does not. Only the byte gate settles it.
 - **`extern`, not `extern "C" { ... }`** for ROM symbols already spelled mangled
   in a `//cpp` file — the block form *defines* and collides.
+- **The mirror case, and it is the common one.** A symbol whose ROM name is
+  mangled but which the shards spell **unmangled** must be declared **outside**
+  the `extern "C"` block: inside it, C linkage strips the mangling and `[5/8]`
+  fails `Undefined : "<name>"`. Measured on `ApproachLinear`, ROM symbol
+  `_Z14ApproachLinearRiii`. The rule is *mangled spelling inside, unmangled C++
+  spelling outside* — and **`verify` stays green either way**, so nothing catches
+  this until `linkcheck`.
 - **`//cpp` must be the file's first bytes.** The extension is never consulted.
+
+## Mechanics of a large merge
+
+These are steps, not debugging responses. Do them before the first compile and
+they cost minutes; discover them after and each is a cycle.
+
+- **Emit forward declarations for every member.** mwcc lays `.text` down in
+  *reverse* source order, so the merged file is written descending-ROM and
+  nearly every intra-TU call is a forward reference. Skipping this produced
+  about twenty `undefined identifier func_ovNN_*` errors on one 49-function
+  attempt.
+- **Discard the generated preamble above roughly 30 members.** tubuild's emitted
+  one had `Self`/`Pmf` in dependency-wrong order, a `Vector3` redeclaration
+  against the real header, duplicate `P2`/`Pair`/`Obj` tags, and three
+  contradictory externs for a single data symbol. Hand-curate from the parsed
+  shards instead.
+- **A caller may pass more arguments than the definition takes.** Two sites did.
+  Declare the unused extra parameter — it preserves the caller's argument setup
+  and costs the callee nothing.
+- **Every 2-int shadow struct that is ever whole-struct-assigned must be spelled
+  with an array member.** C++ scalarizes what C block-moved. This one rule
+  accounted for seven byte-diffs in a single merge; treat it as a checklist
+  sweep, not a per-diff discovery.
 
 ## Reconciling the merged declarations
 
@@ -312,6 +384,31 @@ so **every** merged shard needs the check. When the merge makes both spellings
 visible mwccarm rejects it as `illegal function overloading`, and the error text
 points at your *definition* line while saying nothing about the header —
 measured on `func_ov091_02133098`, defined `void*` against the header's `char*`.
+**The fix pattern is to change the *definition* to the header's type and add a
+one-line cast alias inside the body** — not to fight the header. Three members of
+one TU hit this at once (`char*` vs `void*` twice, `int*` vs `char*` once).
+
+**The detector also misses *return-type* disagreement between two shards, and
+emits both spellings.** `func_0201267c` was declared `int f(int, void*)` by one
+shard and `void` by another; `create` reported `no cross-file conflicts` and
+wrote one into the shared block and one into a RAW per-member block — an
+unconditional redeclaration error. The shard-vs-real-header case is covered
+below; this is shard-vs-shard, and it needs the same grep.
+
+**Include `decl_common.h` and match it** — that is the actual instruction. The
+reason matters: **no header under `include/` includes `decl_common.h`**, so the
+`illegal function overloading` collision only fires if *your* TU pulls it in.
+Both promoted precedents (`daDsnBase_c`, `daObjCtMecha03_c`) do. Do the same and
+align your spellings to it, rather than assuming the header will collide with
+you on its own.
+
+**Grep shadow struct *tags* too, not only declarations.** A shadow type can
+collide with a **ROM symbol**, which is a different failure and a nastier one.
+`decl_common.h` declares `extern int VT[];`, and the legacy shards carry a
+shadow `struct VT` — invisible until the merge pulls `decl_common.h` in. In C++
+a variable name hides a struct tag, so this surfaces as `undefined identifier
+'VT'` reported against **the struct that uses it**: never the header, never the
+name that actually collided. Grepping declarations alone will not find it.
 The detector does not compare against real headers at all, and a real header
 always wins. Two measured disagreements were on *return type*: `decl_common.h`
 types `func_02012718` as returning void where the shard said int, and
@@ -343,10 +440,38 @@ Ask the compiler rather than hand-mangling:
 - **`create` before `linkcheck --baseline` is safe.** `src_tu/` is untracked and
   not in the build, so the tree is still pristine for baseline purposes. Only
   *header edits* spoil a baseline.
-- **`rtti_vtables.py` over-reports slot counts** — the known `_ZTV` extent
-  overrun; 34 against a real 32 on `daObjCtMecha03_c`. Cross-check against the
-  `_ZTV` section size `verify` prints (`0x88` = 2 preamble words + 32 slots).
-  The vtable row's `reason` invites you to state a slot count, so get it right.
+- **Reading the `_ZTV` extent from the next `symbols.txt` row UNDER-reports it** —
+  the opposite error to the one below, and easier to fall for because it looks
+  authoritative. `_ZTV7daDkk_c` at `0x02113850` is followed by
+  `data_ov025_021138a8`, implying `0x58` / 22 slots; it is really `0x88` / 32.
+  Three `ambiguous` `data_ov025_*` rows are **phantom interior symbols sitting
+  inside the table**. `relocs.txt` narrows it — every word through `0x021138cc`
+  is a relocated entry, and `0x021138d0` already belongs to the next class's
+  `_ZTI`. Corroborate with `romdata_check`'s **`emitted`/`bytes`** fields and
+  `blindWords: 0`.
+
+  **But "take the contiguous relocated run" OVERSHOOTS, and this worked example
+  is what proves it.** Measured on the same ov025 table: the relocated run from
+  `0x0211384c` reaches `0x021138d8` with **no gap anywhere** — 36 words, four
+  more than the real 32 — because `_ZTI14daObjDpBrock_c` at `0x021138d0` is a
+  `__si_class_type_info`, three fully-relocated words butted straight against the
+  table. Nothing in `relocs.txt` marks that boundary. **The tie-break is
+  `symbols.txt` naming a `_ZTI`/`_ZTS` inside the run**, not the run's own shape.
+  A class whose run happens to end in a real gap (`dScMgRoulette_c`: next
+  relocated word `0x0213e444`, with `0x0213e42c..0x0213e440` unrelocated) is
+  decisive by accident, not by method — do not generalise from one.
+- **Do NOT read the extent from `romdata_check`'s `romExtent` field.** It carries
+  the *wrong short* value — `88` decimal, the false `0x58` — on the very class
+  where the answer is `0x88`. Trusting it confirms the trap instead of catching
+  it. `emitted` and `bytes` are the truthful fields.
+- **`verify` prints no `_ZTV` section size.** This file said twice to cross-check
+  against one. It does not exist; `verify` prints the MATCH table, byte
+  comparison, objisolate, emission order and the result.
+- **Corroborate every slot count, but `rtti_vtables.py` is no longer the known-bad
+  one.** It used to over-report (34 against a real 32 on `daObjCtMecha03_c`); it
+  now trims following-table tails and has agreed with direct reads since. The
+  vtable row's `reason` invites you to state a slot count, so get it from two
+  sources regardless.
 - **`rtti_vtables.py` needs `build/rtti.json`**, which only `rtti_extract.py`
   writes. Without it you get a bare `FileNotFoundError` traceback that names no
   remedy.
@@ -365,6 +490,29 @@ Ask the compiler rather than hand-mangling:
 - **File:** `src/actors/<Class>.cpp`, the class name exactly, matching the
   class-named majority and the `layout_check` L2 stem rule. (`d_a_*.cpp` snake
   names also exist in the tree; do not add more.)
+
+  **A `promoted_source` already sitting in the manifest is a plan, not an
+  instruction.** `dScMgMemory2_c`'s manifest pre-declared
+  a `d_s_mg_memory2.cpp` snake name under `src/minigames/`
+  (written bare, not repo-rooted: the full dead path would fail
+  `check_dead_references`), and its own sibling and sibling-oracle did
+  land under `src/minigames/` with snake names — 13 such files against 12
+  class-named ones in `src/actors/`, both sets landed the same day. The
+  convention above wins; override the field and record in the manifest that you
+  did. Do not treat a pre-existing field as a decision someone else already made.
+
+- **Regenerate `notes/cpp-tu-current-state.md`** with
+  `python tools/cpp_tu_state.py --write-note` before you push. It is generated,
+  it goes stale on every promotion, and `--check-note` goes red in CI. That flag
+  **hard-fails on unstaged changes first** — "authority inputs have
+  unstaged/untracked changes; stage or stash" — which reads like a different
+  failure than staleness. Stage, then re-run.
+
+- **A text-only promotion does not touch `symbols.txt`.** That file maps
+  addresses to names and is unaffected by a source move; the reference promotion
+  `e193406f3` edits only `delinks.txt`, the exceptions file, the manifest and the
+  sources. If a launch prompt tells you to repoint `symbols.txt`, the prompt is
+  wrong.
 - **Branch:** `cpp/<Class>-tu`, class name verbatim including case —
   `cpp/dBgActor_c-tu`.
 - **Facts JSON** goes on the same branch, not a separate `facts/` one. Scout and
@@ -407,6 +555,25 @@ which is expected and is not a defect in your branch — you need the plan in
 order to *reach* the status flip. One run stopped after step 3, another printed
 all six steps and exited 0; either way read what it gives you.
 
+**`no current eligibility report` from the pre-push hook is expected in a fresh
+worktree** — it prints "skipping", not "passed", and it is not a failure. It
+appears at exactly the moment you are deciding whether your push landed cleanly,
+so read it and move on.
+
+**`eligible.py` takes no file argument** (`-j` and `--no-isolate` only). You
+cannot scope it to your class — grep `build/eligible-names.txt` afterwards.
+
+**`-j` is a `linkcheck` flag, not a `verify` flag.** `tubuild.py verify -j 6`
+dies with `unrecognized arguments: -j 6`. When this file or a launcher says "use
+`-j 6` while siblings are running", that applies to `linkcheck` and `rombuild`.
+
+**`wt-remove.ps1` prints `error: failed to delete ... Permission denied` and then
+succeeds**, falling back to a robocopy purge and reporting `removed: True`. Read
+the final line, not the error. This matters more than it looks: the rule never to
+use `git worktree remove` is load-bearing — it deletes through the junctions and
+empties the shared, non-redownloadable ROM dump — and an expected-looking failure
+here is exactly what would tempt someone into the unsafe fallback.
+
 **`wt-remove.ps1` takes `-Path`, not `-Name`** — unlike `wt-setup.ps1`. The rule
 never to use `git worktree remove` is load-bearing (it deletes through the
 junctions and empties the shared, non-redownloadable ROM dump), so a failed
@@ -417,6 +584,76 @@ teardown invocation must not tempt you into the unsafe fallback.
 Not every TU is promotable whole, and stopping short can be the correct result
 rather than a failure. When the ROM's emission order cannot be reproduced by any
 admissible source form:
+
+**The destructor direction is per-class and is not inherited.** `daDkk_c`
+derives from `daDsnBase_c`, and the two go opposite ways: ov025 orders `daDkk_c`
+D1-below-D0 so it promoted whole 8-of-8, while ov091 orders `daDsnBase_c`
+D0-below-D1 so it promoted 9-of-11. Measure your own class.
+
+**Never infer destructor placement from a sibling header.** `daDgr_c.h` declared
+its destructor out of line by analogy with `BigBrickBlock.h`'s leaf-class
+convention; the ROM's own addresses refuted it, and merged, the two out-of-line
+definitions were a duplicate definition *as well as* the wrong order. Read the
+cartridge, not the neighbour.
+
+**Destructor order is not the only reason to take a subset.** Two more, both
+measured on `ov006/dScMgHanachan_c` (22 of 61):
+
+- **A sourceless function splits the run.** `func_ov006_020ea914` has no `src/`
+  file anywhere and no `delinks.txt` entry — the cartridge's own bytes cover it.
+  **A licensed claim cannot have a hole**: no delink block and no TU manifest in
+  the tree carries two `.text` runs. So a run with a sourceless member in the
+  middle can only be taken as one of its two contiguous sides. Take the larger
+  and say so.
+- **Two file-global pragmas that contradict each other.** Four members reproduce
+  only with `opt_strength_reduction off` and three only with it **on**. Both that
+  pragma and `opt_common_subs` are file-global last-wins in mwccarm 2004/b56, so
+  there is no positional escape — bracketing `off ... on` around exactly the four
+  that want it gave byte-identical results to omitting it entirely. (`#pragma
+  push`/`O3`/`pop` *is* positional; these two are not.)
+
+  **That measurement is now suspect: try `#pragma defer_codegen off` first.**
+  Bracketed pragmas do not bind while codegen is deferred, which is the default,
+  and the measurement above was almost certainly taken that way. Measured on
+  `ov006/dScMgMemory2_c`: with `#pragma defer_codegen off` at the top of the TU,
+  **52/52 MATCH**; removing that one line dropped it to **50/52**, and the two
+  DIFFs were exactly the two functions carrying bracketed pragmas —
+  `opt_propagation off` (27 words) and `opt_loop_invariants off` (6 words). The
+  pair actually named above, `opt_strength_reduction` and `opt_common_subs`, has
+  **not** been re-tested under `defer_codegen off`. Do not take a pragma
+  collision as an automatic subset until you have tried it, and report what you
+  measure either way.
+
+  **A second writer confirmed the lever on a third pragma AND confirmed the
+  default.** Five controls on `ov006/dScMgRoulette_c`: `optimize_for_size on` at
+  file scope with no closing `off` gave 23/40 (so the pragma really does move
+  bytes there); bracketing `on`/`off` around one offender gave 40/40, i.e. the
+  bracket did **not** bind and the trailing `off` restored the default file-wide
+  — so the file-global last-wins rule above is **correct by default**; adding
+  `#pragma defer_codegen off` to that same bracket made it bind, surgically.
+
+  **`defer_codegen off` and source layout are ONE decision, not two.** The same
+  run flipped emission order to "38 ordinal pair(s) NOT in ROM order", because
+  that TU was written descending-ROM to compensate for deferred codegen's
+  reversal. `linkcheck [4b/8]` refuses the mixture and it is a hard refusal.
+  Adopting the pragma means **rewriting the TU ROM-ascending in the same change**.
+  Budget for that before reaching for it, and never report a recovered `verify`
+  count without saying whether emission order still passes — `linkcheck
+  --partial` skips that audit entirely.
+
+  **Beware proving nothing.** That writer's own first draft claimed the opposite
+  from a single control: bracketed pragmas present gave 40/40, so the brackets
+  "worked". Deleting the pragmas outright *also* gave 40/40 — both members match
+  at plain `-O4,p` anyway, so the first control had no signal in it. Always run
+  the delete-outright control before concluding a pragma did anything. Score every setting
+  across the whole side and take the longest **contiguous** all-matching run:
+  here SR-off scored 44/49 overall but SR-on gave the longest contiguous run, 22.
+
+**When the key function falls outside your licensed range, the row-count formula
+does not apply at all.** That TU emits no `_ZTV`/`_ZTI`/`_ZTS`, so there is no
+`compiler_only_output` block — zero rows, not the ~9 the formula predicts — and
+the header needs no edit. Check where the key function landed before deriving
+anything.
 
 The discriminator is which way the cartridge ordered the destructors. ROM **D1
 below D0** is the reproducible direction and promotes whole (`ov029/daObjWcObj01_c`);

@@ -77,14 +77,30 @@ struct daDgr_c : dBgActor_c {
     u32 mDustParticle2;
 
     /* --- vtable, in ROM order. Do not reorder. ---
-     * A leaf class (no RTTI children), so the destructor is declared OUT OF
-     * LINE here rather than inline, matching every other leaf under
-     * dBgActor_c (e.g. include/BigBrickBlock.h). Defined as a real method in
-     * src/_ZN7daDgr_cD1Ev.cpp / src/_ZN7daDgr_cD0Ev.cpp -- both empty bodies,
-     * because this class owns no member with its own destructor; the compiler
-     * emits the two inherited vtable stores and the two dBgActor_c member
-     * teardowns on its own. */
-    virtual ~daDgr_c();
+     * DECLARED INLINE, AND FIRST. This is measured against the cartridge, not
+     * a style choice: ov025 puts D1 at 0x021111a0 and D0 at 0x021111e4, i.e.
+     * D1 BELOW D0, and carries no D2 at all. mwccarm 2004/b56 emits exactly
+     * that pair, in exactly that order, only for a destructor defined in the
+     * class body; the out-of-line form emits D2, D0, D1 plus a homeless D2 and
+     * fails linkcheck's ROM-ascending .text audit. The body is empty because
+     * this class owns no member with a destructor of its own -- the compiler
+     * emits the two vtable stores and dBgActor_c's Model / dBgW_KcMbg
+     * teardowns from the base clause alone.
+     *
+     * (This header previously declared it out of line, reasoning by analogy
+     * with include/BigBrickBlock.h. The analogy is wrong for this class: the
+     * ROM's own D1/D0 addresses settle it, and the one-function shards could
+     * not see the ordering because each held only one variant.)
+     *
+     * SIDE EFFECT, AND IT IS BENIGN: an inline destructor is skipped when the
+     * key function is chosen, so the key function is now InitResources -- the
+     * first non-inline virtual DECLARED below -- and no longer the destructor.
+     * Both live in src/actors/daDgr_c.cpp, so the same eleven data symbols
+     * (_ZTV7daDgr_c plus ten RTTI records) are emitted from the same TU either
+     * way and the promotion's compiler_only_output stays at 12 rows; the
+     * correction did not move the eligibility bracket. Declaring a new virtual
+     * ABOVE InitResources would move the key function again. */
+    virtual ~daDgr_c() {}
 
     /* --- overrides of inherited fBase_c slots. Each takes its base's index
      *     (see include/fBase_c.h for the full 32-slot table). --- */
