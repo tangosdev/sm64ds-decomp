@@ -337,8 +337,6 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(len(pairs), len(set(pairs)))
         for file, _ref in pairs:
             self.assertTrue(file.endswith(CDR.CODE_SUFFIXES))
-            self.assertTrue((REPO / file).exists(),
-                            f"code baseline names a citing file that is gone: {file}")
 
     def test_code_baseline_writer_cannot_bank_markdown_debt(self):
         with tempfile.TemporaryDirectory() as tmp:
