@@ -75,6 +75,22 @@ extern "C" void func_ov006_02125800(void);
 extern "C" void NullDestructor_0203d47c(void);
 
 struct dScMgSnowball_c : dScMgSingle3DBase_c {
+    /* The 2-vector value type the collision ring carries the last hit in
+       (Fix12 x, y -- the same pair func_0203d388 rotates in place). THE
+       EMPTY DESTRUCTOR IS LOAD-BEARING, for the reason types.h gives
+       Vector3 one and dScMgFlower_c::Vec2 repeats: a local of this type
+       keeps an 8-byte stack home in the frame's aggregate region instead
+       of being scalarised into two spill words, and func_ov006_02125f68's
+       frame only lays out as the ROM's (sample at sp+0x38, this pair at
+       sp+0x40, acc at sp+0x48) with that home -- a plain POD pair, an
+       int[2] and two scalar temps all lose it, measured on 2004/b56.
+       Nested so the coined name cannot collide with anything global. */
+    struct Vec2 {
+        Fix12i x;
+        Fix12i y;
+        ~Vec2() {}
+    };
+
     virtual ~dScMgSnowball_c();
 
     /* --- this class's own vtable slots, named from the table ---
@@ -122,7 +138,9 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
                                 shrinks by 0x1000 a tick while melting */
     Model mModel;           /* 0xaba4 -- 0x50, see file banner */
     s32   unk_abf4;         /* 0xabf4 -- the constructor's own `= 0` write */
-    u8    pad_abf8[0x60];   /* 0xabf8 */
+    u8    mProbeHit[0x20];  /* 0xabf8 -- one flag per 32-step angle probe: set when that probe hit solid or breakable */
+    u8    mProbePush[0x20]; /* 0xac18 -- same probe hit solid; drives the push-out */
+    u8    mProbeWater[0x20];/* 0xac38 -- same probe is inside water */
     u8    mArray1Active[0x80]; /* 0xac58 -- 1 = this mArray1 slot is live */
     u8    mArray1[0x400];   /* 0xacd8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c;
                                each element is a Fix12 {x,y} the ROM's own
@@ -142,7 +160,12 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
                                 seconds.centiseconds, 0 ends the run */
     s32   mScore;           /* 0xb9e0 -- +1 a tick while rolling; handed to the
                                 HUD counter func_ov004_020adb1c on the crash */
-    u8    pad_b9e4[0x10];   /* 0xb9e4 */
+    u8    mHitBreakable;    /* 0xb9e4 -- a breakable was hit this tick */
+    u8    mAllWater;        /* 0xb9e5 -- every probe was in water */
+    u8    mSoundPending;    /* 0xb9e6 */
+    u8    pad_b9e7[0x1];    /* 0xb9e7 */
+    s32   unk_b9e8;         /* 0xb9e8 */
+    u8    pad_b9ec[0x8];    /* 0xb9ec */
     s32   mState;           /* 0xb9f4 -- 0 count-in, 1 rolling, 2/3 crash,
                                 4 melt, 5 over */
     u8    mScreensSwapped;  /* 0xb9f8 -- set once mPosY passes 0xe8000; swaps
