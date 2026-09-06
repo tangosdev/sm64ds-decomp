@@ -7,14 +7,17 @@
    nine games (ids base + 4*j) has one both unlocked and unseen, the page arrows and
    the exit button with their bounce scales.
 
-   Rewritten from the disassembly. The flat draft that sat here forced the inner
-   loop's two induction registers by hand; they fall out of the real source once the
-   tab table is declared what the ROM says it is: data_ov005_020c2250 is the first
-   word of ov005's .rodata, so it is `const`, and with a const table the compiler
-   keeps ONE load of data_ov005_020c2250[i] across the two calls (an anonymous
-   temp, r4) while strength reduction still gives the two textual `+ j * 4` uses
-   their own induction registers (r6 for the first, r5 + r4 for the second). A named
-   `base` local instead unifies both uses into one induction and colours r7. The
+   Rewritten from the disassembly. Credit for the NONMATCHING draft that sat here
+   before stays with it: it came in with the minigame class wave (#1741), and its
+   extern set and slot identification are what this rewrite started from.
+   The flat draft forced the inner loop's two induction registers by hand; they
+   fall out of the real source once the tab table is declared what the ROM says it
+   is: data_ov005_020c2250 is the first word of ov005's .rodata, so it is `const`,
+   and with a const table the compiler keeps ONE load of data_ov005_020c2250[i]
+   across the two calls (an anonymous temp, r4) while strength reduction still
+   gives the two textual `+ j * 4` uses their own induction registers (r6 for the
+   first, r5 + r4 for the second). A named `base` local instead unifies both uses
+   into one induction and colours r7. The
    second call spells `j * 4 + table[i]` because the cartridge adds the induction
    temp first. y1 is declared before y0 so y1 keeps fp and y0 spills. */
 #include "dScMiniGm_c.h"

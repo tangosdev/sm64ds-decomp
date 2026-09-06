@@ -6,12 +6,14 @@
    Wiggler::Behavior -- vtable slot 6, ov034 0x02112b5c, 0x6e0 bytes.
 
    Rewritten from the cartridge disassembly rather than from the flat-offset draft
-   that sat here before. Two things the flat draft had to force by hand fall out of
-   the real shape: strength reduction is left ON and the five induction pointers of
-   the segment loop (mTextureSequences[i], mModelAnims[i], unk_408[i].y as a store
-   base and as a call argument) colour r7/r6/r5/r4 with r8 as the counter by
-   themselves, and the second loop's counter gets its own block-scoped `j` so it
-   colours r6 above the two collider pointers.
+   that sat here before. Credit for that draft stays with it: it was banked as a
+   NONMATCHING draft by lunavyqo, and its structure, extern set and frame layout are
+   what made this address readable enough to attack. Two things the flat draft had
+   to force by hand fall out of the real shape: strength reduction is left ON and
+   the five induction pointers of the segment loop (mTextureSequences[i],
+   mModelAnims[i], unk_408[i].y as a store base and as a call argument) colour
+   r7/r6/r5/r4 with r8 as the counter by themselves, and the second loop's counter
+   gets its own block-scoped `j` so it colours r6 above the two collider pointers.
 
    The face-frame block is the one place the source shape is load-bearing: the ROM
    keeps TWO hoisted zero slots ([sp+0x10] for the clamp, [sp+0x14] for the flag)
