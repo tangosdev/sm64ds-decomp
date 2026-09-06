@@ -113,6 +113,23 @@
 //       nothing at 0x02086180, and if the WM is ever brought up, give its
 //       thread its own storage rather than reproducing the alias.
 //
+//       AND THE RULING IS STRONGER THAN 'HOST NOTHING THERE': NEVER EMULATE
+//       THAT PATH'S SIDE EFFECTS. func_02058200 does not merely record the
+//       stack bounds. Read src/func_02058200.c: it plants the SDK canaries
+//       (*(stackBottom-4) = 0xfddb597d at line 33, *(stackTop) = 0x7bf9dd5b at
+//       line 34) and then MultiStore_Int(0, base+4, size-8) ZERO-FILLS the
+//       stack. With end 0x02086180 and size 0x3f6c that fill covers
+//       [0x02082214, 0x02086180) -- the sine table itself. So a FAITHFUL port
+//       of this thread creation would wipe sixteen kilobytes of trig table and
+//       break every angle in the game, and it would present as a physics bug,
+//       not a memory bug. On hardware the table survives because the path is
+//       dormant: func_02019f10 is what IRQ::GameCardIREQMCHandler invokes
+//       through the global at 0x020a89a4 (src/_ZN3IRQ21GameCardIREQMCHandlerEv
+//       reads data_020a89a4), and a single-card boot never raises that
+//       interrupt. If the radio thread is ever modelled here, give it its own
+//       storage and do NOT reproduce the cartridge's alias. Measured and
+//       cross-checked with the decomp side 2026-09-06.
+//
 //       (4) AN ARM7 WIRELESS DRIVER, unchanged from the last pass.
 //       hal/boot2_ipc.cpp holds channel 0xa OBSERVED ONLY, on the stated
 //       grounds that "nothing in this build runs WM_Init, so a fabricated
