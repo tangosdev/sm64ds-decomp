@@ -38,6 +38,13 @@
  * measured one at a time and deleted as byte-neutral -- a cast tower here is
  * either load-bearing and commented, or gone.
  *
+ * ONE byte-neutral spelling is kept anyway and is labelled as such: the
+ * `speed = -speed;` statement split inside StateShuffle.  An earlier revision
+ * claimed it bought bytes; re-measurement says it does not.  If you find any
+ * other claim in this file that a spelling is load-bearing, it was produced by
+ * deleting that spelling and re-running tools/tubuild.py verify -- keep it that
+ * way.
+ *
  * Result: 32/32 byte+relocation matches.  Compiler-only D2/RTTI/vtable
  * passengers are externalized in the manifest to the canonical cartridge
  * copies; this TU claims no data and no bss.
@@ -436,11 +443,19 @@ extern "C" void func_ov006_020def80(char *c, int i)
 
     /* All three arms clear the same two per-cup counters, but only this last
        one assigns `cup` -- the two `goto epilogue` paths reach the label with
-       it still unset, and the epilogue reads `i` out of whatever register the
-       compiler left it in.  That is what the cartridge does, and it is the ONLY
-       spelling that reproduces it: hoisting the assignment to the declaration
+       it still unset.  Reading it there is UNDEFINED BEHAVIOUR in C++, and it
+       is deliberate: hoisting the assignment to the declaration
        (`int cup = i;`) and deleting this line was measured and takes this
-       function from MATCH to DIFF.  Do not tidy it. */
+       function from MATCH to DIFF.  Do not tidy it here.
+
+       THE HAZARD IS CLOSED, THOUGH, AND THE PORT'S REPAIR IS KNOWN.  The
+       cartridge's own epilogue at 0x020df00c is `add r0, r0, r1, lsl #2`, and
+       r1 -- the incoming `i` -- is never written on any path through this
+       function (r1 is first assigned at 0x020df014, after that use, as the zero
+       for the two stores).  So the ROM's behaviour is `cup == i`
+       unconditionally, and `int cup = i;` is not a guess at the undefined value
+       but a provably behaviour-preserving rewrite.  A host port should make
+       exactly that edit; only the byte-matching build needs the split. */
 epilogue:
     {
         char *out = c + (cup << 2);
@@ -740,16 +755,26 @@ void dScMgCup_c::StateShuffle()
         } else if (*(u8*)(c + 0x546a) != 0) {
             s16 speed = *(s16*)(state + 0x5e);
             if ((speed >= 0 && angle >= 0x5555u) || (speed < 0 && angle <= 0xaaabu)) {
-                /* This spelling is load-bearing; all three parts were measured.
-                   The two loads above share one base register through `state`,
-                   but the ROM re-materialises `this + 0x5400` here, so these
-                   stores must respell the full offset rather than reuse it.
-                   `speed = -speed;` as its own statement orders the rsb before that
-                   base add; storing `-speed` directly reverses the pair. And the
-                   increment must be a plain read-modify-write -- writing it as
-                   `+= 0x8000` makes mwcc CSE the field address into a register
-                   and drop the displacement, which `opt_common_subs off` (in
-                   force over this function) does not undo. */
+                /* TWO of the spellings below are load-bearing, each measured by
+                   removal on this tree:
+
+                   (1) These stores must respell the FULL offset from `c`.  The
+                   two loads above share one base register through `state`, but
+                   the ROM re-materialises `this + 0x5400` here.  Reusing the
+                   cached base gives DIFF *and* a wrong relocation destination
+                   (`data_ov006_0213c085` where the ROM has `0x0213c084`).
+
+                   (2) The increment must be a plain read-modify-write.  Writing
+                   it `*(u16*)(c + 0x545c) += 0x8000;` makes mwcc CSE the field
+                   address into a register and drop the displacement, which
+                   `opt_common_subs off` (in force over this function) does not
+                   undo.  DIFF.
+
+                   The split `speed = -speed;` statement is NOT load-bearing, and
+                   an earlier revision of this comment wrongly said it was.
+                   Fusing it into the store as `*(s16*)(c + 0x545e) = -speed;`
+                   still gives 32/32 MATCH -- measured, not reasoned.  It is kept
+                   split only because it reads better beside the guard above. */
                 speed = -speed;
                 *(s16*)(c + 0x545e) = speed;
                 *(u16*)(c + 0x545c) = *(u16*)(c + 0x545c) + 0x8000;
