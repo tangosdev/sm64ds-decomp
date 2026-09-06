@@ -37,8 +37,12 @@ The writer is **gathering, not authoring**: 387 of 429 classes already have a
 real header, and the shards being folded together are existing matched code. Most
 promotions touch no header at all.
 
-Stages 1-3 never run a byte gate; stage 4 is the only one that decides whether
-the bytes are right. Stage 3 never changes semantics. Stage 5 is a different
+Stage 4 is the only stage that DECIDES whether the bytes are right, and it owns
+`linkcheck` and `rombuild`. That is not the same as "stages 1-3 never run a byte
+gate", which this file used to say and which is actively harmful at stage 3: a
+humanizer's edits move bytes routinely, `tubuild.py verify` costs 2.6 seconds on
+a 71-member TU, and running it after every batch is the difference between
+knowing and bisecting. Stage 3 never changes semantics. Stage 5 is a different
 agent from stage 4 — a producer's own green output is evidence, not review.
 
 **Every merge to `main` invalidates the pinned base of every other open PR.** So
@@ -83,6 +87,13 @@ nothing. Before that normalization the two spellings built two different refs
 and two agents could hold one class simultaneously; live claims existed in both
 forms. Create the worktree first and claim once with `--worktree`: re-claiming
 to attach the path afterwards is denied against yourself.
+
+**Use forward slashes in `--worktree`, as the example above does — it is
+required, not cosmetic.** A backslash path passed through a shell arrives with
+its separators eaten and the claim records
+`"worktree": "C:tmpsm64ds-memory2-build"`, which points at nothing and defeats
+the whole reason the field exists.
+
     python tools/classqueue.py release dActor_c --role writer
     python tools/classqueue.py list
 
@@ -91,6 +102,16 @@ lock. Do not retry it, do not force-push over it — take the next row.
 
 Release your claim when your stage's output is committed and pushed, not when
 you personally are done thinking.
+
+**A released claim does not mean nobody has done the work.** The claim ref is
+the only thing `classqueue.py` consults, so a class whose scout pushed a branch,
+opened no PR and released its claim is offered again as unclaimed — and the next
+agent rediscovers the whole thing. That happened to `dScMgCoin_c`. Before you
+start, look:
+
+    git branch -r --list 'origin/cpp/<Class>*'
+
+If one exists, read it before you cut a new one.
 
 ## Launching an agent
 
@@ -118,3 +139,12 @@ the next one rather than stopping.
 4. **A near-miss never lands in `src/`.** Bank it in `nearmiss/db.jsonl` and
    restore the matched source.
 5. **Report the outcome, not the effort.** If a gate failed, paste the failure.
+6. **Force-pushes are blocked. Merge, do not rebuild — and do not rebase a
+   branch that is already on the remote at all.** Every stage after the first
+   inherits a pushed branch, so rebasing it makes your own push a
+   non-fast-forward against the remote's copy of *the same commit*; repairing
+   that costs an add/add conflict on the promoted `.cpp`, resolved correctly
+   only by first proving the remote side byte-identical to what you started
+   from. Merge `origin/main` in instead. And a branch rebuilt as a fast-forward
+   from an older commit ships stale tree-derived work past review — which does
+   not look stale, it looks confident.

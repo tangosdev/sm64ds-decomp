@@ -1,9 +1,15 @@
 #!/usr/bin/env python3
 """Compile a manifest TU once and report, per licensed function, bytes and order.
 
-The question this answers is the one blocking the promotion program: a TU that
-defines its destructor OUT OF LINE makes mwcc emit ``D2, D0, D1``, while the ROM has
-``D1`` then ``D0`` and no ``D2`` at all. Production isolation places an object's
+The question this answers is the one blocking the promotion program: the emitted
+order of a destructor group need not be the ROM's. Under DEFAULT (deferred) codegen
+a TU that defines its destructor OUT OF LINE makes mwcc emit ``D2, D0, D1`` while
+the ROM often has ``D1`` then ``D0`` and no ``D2`` at all. That is no longer the
+whole story: under ``#pragma defer_codegen off`` the same out-of-line form emits
+``D1, D0, D2`` (measured on ov006/dScMgTeresa_c), and an inline destructor emits its
+variants in the reverse order of their first odr-use. So the order is a question to
+MEASURE per TU, which is what this tool is for -- not a fixed property of the source
+form. Production isolation places an object's
 ``.text`` sections into the spanning delink in emission order, so the order is not
 cosmetic -- it decides whether the range links correctly.
 

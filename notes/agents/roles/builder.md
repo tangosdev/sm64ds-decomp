@@ -12,16 +12,24 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
 `eligible.py`, not after it. Run them the other way round and you get
 `report describes 7558d4ca8a9e, HEAD is 99567e1a082b` and have to redo both.
 
+**Stronger, and this is the part the ordering above understates: `eligible.py`
+must be the LAST command before `check_references`.** On a rebase the ledger, the
+regenerated note and the attribution commit each land *after* the rebase and each
+one restales the report. `check_references` hard-fails on a stale report — it
+does not soft-skip — so re-run `eligible.py` immediately before it, every time,
+not merely once after the rebase.
+
     # 1. bytes
     python tools/tubuild.py verify <ov>/<Class>
     #    ^ this CAN write to the manifest: it may add a partial_isolation block
     #      that is degenerate post-promotion (contributionEquivalent "0/22",
     #      state "derived"). Revert it if it appears -- it does not always. The
     #      guess that it depends on status: promoted is refuted: daObjFallBlock_c
-    #      had that status and verify still wrote nothing. It more likely writes
-    #      only when no partial_isolation block exists yet -- a second promotion
-    #      (daDgr_c, daDkk_c: block already present, verify wrote nothing) is
-    #      consistent with that. Check, do not assume.
+    #      had that status and verify still wrote nothing. The follow-up guess --
+    #      that it writes only when no partial_isolation block exists yet -- is
+    #      ALSO refuted: dScMgMemory2_c has no such block and verify wrote
+    #      nothing across 5 runs. No correlate is known. Run `git status` after
+    #      every verify; do not predict it.
     python tools/rombuild.py -j 6
     Get-FileHash build/sm64ds.nds -Algorithm SHA256
     python tools/romdata_check.py --files src/actors/<Class>.cpp
@@ -51,8 +59,27 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     python tools/port_refcheck.py
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
+    python tools/queue_audit.py --check
+    #    ^ RED after any promotion until you regenerate the queue with --write:
+    #      your class's row still says `promoted no` with the old shard_count.
+    #      It needs build/rtti.json AND a build/tu_map.json NEWER than config/,
+    #      and refuses with a bare regeneration hint otherwise -- so run
+    #      `python tools/rtti_extract.py` and
+    #      `python tools/tu_map.py --out build/tu_map.json` first. It is not
+    #      wired into any workflow, so nothing else will catch a stale queue.
     python tools/cpp_tu_state.py --check-note
-    #    ^ --write-note EXITS 2 on a dirty tree, which is exactly the state the
+    #    ^ --check-note is safe on a tree whose dirt is OUTSIDE the authority
+    #      inputs: measured with an unrelated unstaged change, it printed
+    #      `cpp-tu state note is current`, exit 0. It is NOT unconditionally
+    #      safe -- an unstaged edit to src, src_tu, include or config makes it
+    #      exit 2 with `authority inputs have unstaged/untracked changes`,
+    #      naming the file. Stage the edit and re-run; do NOT git stash, which
+    #      is shared across every worktree of this clone.
+    #      It reports stale only when the note file itself differs from a
+    #      regeneration. The dirty-tree refusal below belongs to --write-note
+    #      (and the one that hard-fails on an unstaged tree is
+    #      check_references.py, a different tool).
+    #      --write-note EXITS 2 on a dirty tree, which is exactly the state the
     #      rebase recipe leaves you in, and its message tells you to STASH --
     #      which this file forbids (shared across worktrees; unstages
     #      deletions). Use `git add -A`, then re-run.
@@ -93,7 +120,41 @@ PASS signals:
   fold lines collapse to one (`N address range(s) left the byte-verified set`).
   Measured on `ov006/dScMgRoulette_c`: `32 consolidated with credit intact,
   0 changed, 0 lost`. So aim for `0 changed`; if you cannot reach it, say which
-  rows resist and why, rather than writing it off as inherent. Run the check, commit what it asks for,
+  rows resist and why, rather than writing it off as inherent. **`0 changed` is
+  a target, not a merge bar** — the landed `dScMgHanachan_c` promotion (#2309)
+  measures `43 changed, 0 lost`, exit 1, at its own commit. Judge on `lost`.
+
+  **It is NOT the same computation as the validator's credit line on a
+  many-to-one fold, and this file used to imply that it was.** Measured on the
+  52-member ov006/`dScMgMemory2_c` promotion: locally `0 changed, 0 lost`, at the
+  validator **`11 changed`**. The two disagree about which side is *before* — for
+  `dScMgMemory2_c_classInit` the local `--json` gave `before=tangosdev,
+  after=bmanus2` while the validator reported `bmanus2 -> tangosdev`, exactly
+  inverted. So do not build overrides from the local tool's "was" column and
+  expect the validator to agree. It still answers the question that gates a
+  merge: without those overrides the local tool measured **38 lost**, and `lost`
+  fails a merge while `changed` is explicitly not a blocker.
+
+  **A second, independent mechanism for the same divergence, measured on the
+  301-member ov002/`Player` fold: a symbol with NO override row at all.** Local
+  reported `0 changed`; the validator reported **18 changed**, because for those
+  18 the resolver fell back to the *promotion commit's* author — moving them off
+  `tangosdev` (8), `ruspecial` (6) and `lunavyqo` (4). The repair is to restore
+  them from the validator's own "Before" column, after which the re-run is
+  `0 changed`. Two different causes, one rule: **a local green here does not
+  predict the gate on a many-to-one fold.**
+
+  **`prepush_attribution --json` takes a PATH argument**, not a bare flag. `--json`
+  alone errors `expected one argument`; this file used to imply it prints to stdout.
+
+  **The mechanism this file never named, which cost a builder real time:** the
+  overrides live in `attribution.json` at the repo **root**, in the `overrides`
+  dict, keyed `src/<tu>.cpp#<symbol>`. `prepush_attribution --json` prints the
+  rows verbatim, so you can lift the keys straight out of it. Two traps: an
+  override has **no effect until it is committed**, and a key must match the
+  file's real extension — `main` carries a `..._c14RoundShowCardsEv.c` key for a
+  file that is `.cpp`, and that single mis-spelled key kept one member reporting
+  CREDIT CHANGED after the fold. Add the correctly-spelled key; never prune. Run the check, commit what it asks for,
   report the numbers, and move on — reconciling credit beyond that is a stated
   non-goal in this repo and has consumed whole sessions before.
 - everything else → exit 0 with no backlog count increased
@@ -115,9 +176,28 @@ coverage gaps** across the whole `tu_map` run. This is the highest-value check
 available on a partial and it settles the question in one pass: on
 `dScMgHanachan_c` it produced 39 `.text` blocks with exactly one gap — the
 sourceless hole — and the exact held-out shard count as a by-product. The
-supporting invariant is worth re-deriving rather than trusting: **0 of 13,201
-delink blocks and 0 of 136 TU manifests carry more than one `.text` run**, which
-is why a licensed claim cannot span a hole.
+supporting invariant is worth re-deriving rather than trusting, and it *has*
+moved — **six times in a single day of promotions**: 13,201/136, then 9,998/142,
+10,181/138, 10,005/142, 9,663/145, 9,656/145, all measured by different builders
+within hours of each other. Any number printed here is stale before it is read,
+because promotions collapse blocks. The invariant itself holds — 0 blocks and 0
+manifests carry more than one `.text` run — which is why a licensed claim cannot
+span a hole. **Re-derive the counts at your own base; never quote them.**
+
+**Never read a gate's verdict through a pipe.** `python tools/source_coverage.py | tail -6;
+echo $?` reports **`tail`'s** exit status, not the tool's. Measured: a builder
+ran `source_coverage` that way, the tool printed its full failure banner into
+the truncated tail, `$?` came back 0, and they recorded it as green. Redirect to
+a file and echo `$?` *before* any pipe:
+`python tools/source_coverage.py > /tmp/x.log 2>&1; echo $?; tail -6 /tmp/x.log`. Two related
+parsing traps: `gh pr checks` output is **TAB**-separated, so `awk '{print $2}'`
+on `PR validation<TAB>pending` yields `validation` and a wait-loop exits
+immediately looking settled — use `awk -F'\t'`. **It also exits 8 while any check
+is still pending**, so a loop that treats non-zero as failure reads a merely
+queued validator as a hard failure: judge on the pending/pass/fail column, never
+on `$?`. And `classqueue.py claim
+--worktree` via a shell **eats backslashes**, recording
+`C:tmpsm64ds-bomroom-build`, so pass the path with forward slashes.
 
 **Diff the declared type and `extern` set against what the shipped members
 actually reference.** A twice-narrowed TU carries preamble residue for the
@@ -127,9 +207,13 @@ carrying a comment asserting a stride requirement belonging to a function above
 the upper edge. Prose checking alone does not catch dead *declarations*.
 
 **All-zero `romdata_check` counts are the correct result** for a TU that does not
-own its key function, and are positive evidence for an empty
-`compiler_only_output`. The proof-block example shows nonzero counts; do not read
+own its key function. The proof-block example shows nonzero counts; do not read
 zeros as a failed run.
+
+**They are NOT evidence for an empty `compiler_only_output`, and this file used
+to say they were.** `romdata_check` reports on *data* symbols. ov066/`Eyerok`
+measures 0/0/0/0 with a non-empty **two-row** `compiler_only_output`, because
+both rows are functions. Read all-zero as "no data rows", never as "no rows".
 
 **Check every `compiler_only_output` canonical address against the owning
 module's own `symbols.txt`**, and scan the tree to confirm each is defined
@@ -146,9 +230,29 @@ removed flipped `functions_matched: 9 -> 8` and
 Every other tool treats those as prose, so a poisoned manifest ships silently.
 **Run `git status` after every `verify`, especially one you expected to fail.**
 
+**And "prose fields" understates the blast radius.** On a measured negative
+control the failing run also rewrote the entire `droppedSections` list
+(`[9,10,80,81,...]` -> `[5,6,7,8,...]`) alongside `functions_matched: 48 -> 45`.
+That list is not prose — it is the compiler-only policy's section index list.
+A negative control you run for five seconds can leave a wrong licensing list in
+a manifest you then commit.
+
 **Byte match alone is never enough.** Every relocated word is a wildcard in
 `match.compare`. Require all three: byte compare, `objisolate` (relocation type
 and addend), and `reloc_audit` (destination identity).
+
+**And all four of those together still do not prove the TU LINKS.** Measured on
+`ov006/dScMgPanel_c`: 71/71 MATCH, objisolate clean, reloc-destinations clean,
+`[4b]` object audit `order_ok True, {'LICENSED': 71}, 0 refusals` — and the
+object carried **41 undefined symbols that do not exist anywhere in the image**,
+because a declaration got the wrong linkage. Every byte gate is happy with a
+relocation against a name nobody defines; only the linker is not. **Add one
+cheap check to the sweep**: read the compiled object's `.symtab` and list the
+`SHN_UNDEF` entries (a ~20-line ELF walk over
+`build/tu/<ov>-<Class>/<Class>.o`). Any `_Z…`-mangled name whose demangling is a
+plain C ROM symbol — `_Z8LoadFilei`, `_Z19func_ov006_021063a0Pv` — is a linkage
+bug, and it costs seconds where finding it through a failed `rombuild` costs an
+hour. Legitimate `_ZN…` / `_ZT…` names are not what you are looking for.
 
 **`match.py`'s API is not shaped the way that instruction implies.**
 `extract_func` returns a `(bytes, relocs)` **pair**, and the signature is
@@ -395,6 +499,46 @@ files merged silently. Same rule as the ledgers — regenerate, never resolve:
 `git checkout <newbase> --` it, finish the merge, then
 `python tools/cpp_tu_state.py --write-note`.
 
+**In a merge train the conflict set is bigger than one file, and every builder
+hit the same three.** Across six promotions rebased onto each other in one
+afternoon, the recurring `UU` set was `notes/cpp-tu-current-state.md`,
+**`attribution.json`** and, on the larger folds, **`config/converted-baseline.json`**.
+The last two are sorted, keyed **sets**, so resolve them as **unions**, line-wise,
+and never re-serialise: a reorder conflicts with every other open PR in the train.
+The audit to run afterwards is `resolved == exact union of both parents` with
+0 missing, 0 invented, 0 value conflicts and 0 duplicate keys — three builders ran
+it and all three came out exact (2,307 = 2,277 + 2,267 on one; 2,340 = 2,307 + 33
+on the next). For `converted-baseline.json`, check the count *and* the swap: one
+fold showed 2,681 held constant with 21 shard paths replaced by 21
+`<Class>.cpp#symbol` rows.
+
+**And `converted-baseline.json` is the dangerous one precisely because it often
+merges silently.** On the 52-member `dScMgMemory2_c` fold it auto-merged with no
+conflict at all — run the count-and-swap audit anyway. **The swap does not have
+to balance**: that fold went 4 shard paths out against 3 member rows in, net −1,
+because `D0` legitimately fails the readability criteria in merged form. An
+unbalanced swap is normal, and the rows in `converted-backslide-exceptions.jsonl`
+are exactly what banks the difference — `tiers_ratchet --check` then passes at the
+lower count. Assert the shape (every removal a plain shard path, every addition a
+TU member row, main's other rows untouched), not the arithmetic.
+
+**Expect `main` to move under you far more than this file used to claim.** It
+said twice is normal and six is the record; during a single afternoon's train it
+moved **seven** times, four of them inside one builder's run — once between a
+final gate sweep and its push, and once mid-command through the shared `.git`.
+Every base-relative gate (`source_coverage`, `prepush_attribution`,
+`cpp_tu_state --check-note`) goes red with *other people's* work when that
+happens; the symptom is a gate screaming about an overlay you never touched.
+
+**The mechanism, and the check that survives it: sibling worktrees share one ref
+store, so `origin/main` can advance between your `git fetch` and your
+`git rebase origin/main`.** The SHA you verified is not necessarily the SHA you
+rebased onto — one builder confirmed `5604d114a` and landed on `ce2cf87c1` minutes
+later, because another agent's fetch advanced the shared ref. A pre-flight
+`git log -1 origin/main` therefore proves nothing. Verify **after** the fact:
+`git merge-base HEAD origin/main` equal to `HEAD~N`, and
+`git log --oneline HEAD..origin/main` empty.
+
 **Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
 Never resolve either by hand and never let the merge resolve them for you — the
 tool regenerates them correctly from the current tree, and a merged result is
@@ -409,8 +553,10 @@ reports no difference.
 
 **Re-fetch `main` and re-verify more than once.** It moved twice during a single
 `daPgDfdr_c` build, and the second move landed *that class's own direct base*
-(`dBgActor_c`, #2269). Re-fetch immediately before opening the PR, not only at
-the start.
+(`dBgActor_c`, #2269). **Twice is the old rate: a later `dScMgBomroom_c` build
+saw `main` move six times**, one of them a same-overlay promotion that conflicted
+on both `attribution.json` and `notes/cpp-tu-current-state.md`. Re-fetch
+immediately before opening the PR, not only at the start.
 
 **Re-check the base immediately before you push.** The validator test-merges
 against the *exact current base* and rejects with `test merge conflicts with
@@ -433,15 +579,75 @@ already stale. Getting this wrong costs a full validation cycle.
   Once the source is enrolled in `delinks.txt`, `cmd_linkcheck` sets
   `enrolled_intact_candidate = True` unconditionally and routes down the intact
   path whatever `production_mode` says; it dies at `[4/8]`. Pre-existing — it
-  fails identically for `ov002/daBar_c` on untouched `main`. **Take the writer's
-  pre-promotion linkcheck as the evidence.** Do not re-run it here and do not
-  report its failure as a defect in the change.
+  fails identically for `ov002/daBar_c` on untouched `main`, and a second
+  control taken on the `dScMgPanel_c` run reproduces it on
+  `ov006/dScMgTeresa_c`, an already-promoted text-only TU that run never
+  touched: `FAIL src/actors/dScMgTeresa_c.cpp: isolate: intact TU preparation
+  refused: ov006/dScMgTeresa_c: intact production requires one .text claim and
+  at least one non-text claim`. The exact chain is
+  `tubuild.py:4613` (`enrolled_intact_candidate = True` for any entry already in
+  `delinks.txt` that is neither `partial` nor `partitioned`) ->
+  `tubuild.py:4777` (`intact_override[entry["source"]] = entry`) ->
+  `tu_production.py:41`, which refuses a manifest with no non-text claim. A
+  text-only promotion has `data: []`, `bss: []` and no `production_mode` key at
+  all, so it can never satisfy it. `rombuild.intact_tu_policies` skips entries
+  without `production_mode: "intact-object"`, which is why the normal build does
+  not take this path. **Never add a `production_mode` or a fake non-text claim
+  to make it go away** — `rombuild` would have to eat the lie later.
+  Do not report its failure as a defect in the change.
+
+  **But do NOT take the writer's recorded linkcheck as proof of the link.** This
+  file used to say to, and on `ov006/dScMgPanel_c` that was wrong: the manifest
+  recorded `result: scratch-link-verified` with `phases.link: true`, and the
+  source as shipped **did not link at all** — 41 mangled undefined symbols, and
+  mwldarm aborting with 22 `Undefined`. **The link proof you can still run is
+  `rombuild.py` itself.** Its BASELINE CONTROL is a full scratch delink, lcf,
+  whole-tree `mwccarm`, `mwldarm` link and ROM build of the **working tree**, and
+  a text-only promoted TU is compiled and linked inside it like any other
+  enrolled source (only `production_mode: intact-object` sources are demoted to
+  ROM gap bytes). So `rombuild` reaching `module fidelity: 106/106 exact` *is*
+  the link evidence for a text-only promotion, and a fresh worktree that has to
+  bootstrap that control will surface the failure whether you asked for it or
+  not. In `dScMgPanel_c`'s case the whole diagnosis came out of
+  `could not bootstrap strict stock control`, which reads like a stale-baseline
+  complaint and is not one — read the `LINK FAILED` block above it.
+  **But do not leave the `[4b/8]` gate unverified just because `linkcheck`
+  refuses.** The object audit behind it is reachable in about a minute without a
+  linkcheck at all: `_compile_tu(entry)` -> `apply_compiler_only_policy` ->
+  `audit_tu_object` -> `object_audit_refusals`. That gives you
+  `emittedTextOrderIsRomAscending`, the LICENSED count and the refusal list
+  directly. Run it, and run it a second time with the suspect line removed as a
+  negative control — on `dScMgMemory2_c` that turned "the pragma is
+  load-bearing" from the writer's claim into the builder's measurement
+  (`order_ok True, {'LICENSED': 52}` with `#pragma defer_codegen off`;
+  `order_ok False -> object-audit-refused` with only that line deleted).
+
+- **`source_coverage --check` and `prepush_attribution` are BASE-RELATIVE, and a
+  stale base makes both scream about other people's work.** A `main` that moved
+  mid-build produced `REGRESSION: 4,672 B stopped being built from source`
+  naming five files in ov002/ov005/ov034 with nothing to do with the class, and
+  a `CREDIT LOST` for a different class entirely. Both read exactly like real
+  regressions. Re-fetch and rebase before believing either; after the rebase
+  both were clean. The same applies to `git ls-tree origin/main` — worktrees
+  share one `.git`, so another agent's fetch moves `origin/main` under you, which
+  is enough to make an existing file look deleted.
+
 - `linkcheck --baseline` is needed **only if you actually run a `linkcheck`** —
   which this role is told not to do. Running it anyway costs a full scratch
   delink and link for nothing, and `rombuild.py` runs its own baseline control
   regardless. When you do need it: it builds the **working tree**, so a baseline
   taken after header edits proves nothing, and a fresh worktree must take one
   before any linkcheck or it dies on unrelated classes.
+- **The `tools.test_<gate>` invocation below does not work from the repo root
+  for every gate, and the module you want may not exist at all.** `python -m
+  unittest tools.test_classqueue` dies with `ModuleNotFoundError: No module
+  named 'classqueue'`, because the test does a bare `import classqueue`; run it
+  as `cd tools && python -m unittest test_classqueue` (3 tests, OK). And there
+  is no `test_langmode_audit` module under `tools/` whatsoever, nor a
+  `test_queue_audit` for the queue auditor -- a missing module is a gap in
+  coverage, not a regression you introduced. (Spelled without the directory
+  prefix on purpose: this gate reads a `tools/...` token in prose as a path
+  claim and goes red on it.)
 - **`pytest tools/` is not a CI signal.** The workflows invoke targeted
   `python -m unittest tools.test_<gate>` modules only, so a green `tools` check
   does not mean the suite passes. Two tests fail on untouched `origin/main`
@@ -475,14 +681,12 @@ already stale. Getting this wrong costs a full validation cycle.
 - **`verify` does not print a `_ZTV` section size.** I claimed it does, in this
   file and in launch prompts — it prints the MATCH table, byte comparison,
   objisolate, emission order and the result, and nothing else. Do not go looking.
-- **`romdata_check`'s `romExtent` field carries the WRONG short extent** — `88`
-  decimal, i.e. the false `0x58`, on the very class where the real answer is
-  `0x88`. The truthful fields are **`emitted`** and **`bytes`**, with
-  `blindWords: 0`. Following the extent field confirms the trap instead of
-  catching it. **This is class-specific, not universal** — on
-  `dScMgRoulette_c` the field reads `144`, which is correct and equal to
-  `emitted`/`bytes`. So it is unreliable rather than always-wrong: never take it
-  alone, and corroborate as above.
+- **Do not trust `romdata_check`'s `romExtent` field alone** — see
+  `notes/agents/roles/writer.md`'s romExtent trap passage (the
+  `88`/`0x58`-vs-`0x88` measurement is canonical there; this file only ever
+  restated it). Short version: `emitted`/`bytes` with `blindWords: 0` are the
+  truthful fields, and the field is class-specific-unreliable, not universally
+  wrong — corroborate as above.
 - **Print scalar fields only from a `check_object()` record.** Its `src` key is a
   dict keyed by *tuples* covering every symbol in the module, so `json.dumps`
   raises `TypeError: keys must be str...` and printing the record raw dumps about
@@ -526,7 +730,11 @@ Those figures are **one class's example, not a target.** Paste your own.
 plus a class-identity write-up: cite the `_ZTS` / `_ZTI` (with base) / `_ZTV` ROM
 addresses and the factory's `new`-size literal (`tools/opnew_sizes.py`); diff the
 vtable slot-by-slot against the base's to enumerate the overrides
-(`tools/rtti_vtables.py --own <Class>`); state the destructor placement and
+(`tools/rtti_vtables.py --own <Class>` — **pass the cartridge's RTTI spelling,
+not the coined name**: `--own Goomboss` prints `no vtable for Goomboss`, which
+reads as "no vtable exists", while `--own daKuriKing_c` prints the 31 slots.
+`writer.md` gained this caveat in #2321; this file did not contain the word
+"coined" at all); state the destructor placement and
 why; state the promotion route (text-only + `compiler_only_output`, or
 intact-object) and what the sibling oracle does.
 
@@ -560,6 +768,12 @@ the same many-to-one fold artifact: the counter credits only the delinks range's
     N address range(s) left the byte-verified set
     N more function(s) now claim a match that nothing compiles
     Byte-verified functions -N, code bytes -N,NNN
+
+**These four N's are not one number, and reading them as a family invites a
+wrong PR body.** On a many-to-one fold the ranges-left count is exactly **one
+higher** than the byte-verified function delta, because the TU's own new range
+re-enters the set as the shard ranges leave: the 52-member `dScMgMemory2_c`
+promotion reports 52 ranges left against -51 functions.
 
 The byte figure reconciles exactly — on `daObjCtMecha03_c`, -1,236 is the eight
 functions' 1,312 bytes minus D1's `0x4c`. The same run reports `Relocation

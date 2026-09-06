@@ -1,11 +1,15 @@
 extern short data_02082214[];
 extern int data_ov002_021101b4[];
-extern void _ZN6Player11ChangeStateERNS_5StateE(int self, int state);
+extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, int state);
 
-void func_ov002_020d0948(int self)
+void func_ov002_020d0948(char* self)
 {
-    int base = (short)(*(short*)(self + 0x8e) + 0x8000);
-    if (*(unsigned char*)(self + 0x703) != 0) {
+    /* The two header reads go through a byte pointer: with the int-typed
+       self, mwcc materializes the +0x703 offset from the literal pool
+       (ldr r1,[pc] / ldrb r2,[r0,r1]) instead of folding it into the ldrb. */
+    char* s = (char*)self;
+    int base = (short)(*(short*)(s + 0x8e) + 0x8000);
+    if (*(unsigned char*)(s + 0x703) != 0) {
         int idx = (unsigned short)base >> 4;
         int* p0 = (int*)(((long long)(int)(self + 0x5c)));
         int* p1 = (int*)(((long long)(int)(self + 0x60)));
