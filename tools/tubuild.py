@@ -1405,6 +1405,7 @@ def cmd_verify(args):
     else:
         print(f"Result: {n_match}/{len(rows)} MATCH -> NOT verified (see DIFF/MISSING/ERROR "
              f"lines above)")
+    promotion_refused = bool(n_unlicensed or policy_reasons)
     if n_unlicensed:
         print(f"        {n_unlicensed} unlicensed section/symbol(s) present -> PROMOTION "
              f"REFUSED regardless of the above (plan sec 4.5, 8)")
@@ -1466,7 +1467,13 @@ def cmd_verify(args):
     upsert_manifest_entry(data, entry)
     save_manifest(data)
 
-    return 0 if text_verified else 1
+    # A PROMOTION REFUSED is a failure of this command even when the bytes
+    # reproduced. `text_verified` is deliberately NOT folded into: it drives the
+    # manifest status above, and "the bytes match but the policy refuses the
+    # promotion" is a real and distinct state that must keep saying text-verified.
+    # Before this, a refused promotion exited 0 and any caller trusting the exit
+    # code shipped it.
+    return 0 if (text_verified and not promotion_refused) else 1
 
 
 # ========================================================== `linkcheck` -- scratch delinks
