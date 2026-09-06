@@ -521,8 +521,31 @@ they cost minutes; discover them after and each is a cycle.
 - **Discard the generated preamble above roughly 30 members.** tubuild's emitted
   one had `Self`/`Pmf` in dependency-wrong order, a `Vector3` redeclaration
   against the real header, duplicate `P2`/`Pair`/`Obj` tags, and three
-  contradictory externs for a single data symbol. Hand-curate from the parsed
-  shards instead.
+  contradictory externs for a single data symbol.
+
+  **But "hand-curate one declaration per symbol" is the wrong next step, and at
+  real size it is unworkable.** 301 independent recoveries of one symbol
+  disagree constantly, and forcing a single spelling rewrites call sites.
+  Measured on ov002/`Player` (301 members): in mwccarm 2004/b56 a declaration
+  written at **block scope inside an `extern "C"` region gets C linkage**, and
+  two function bodies may declare one C symbol with **different types**. So keep
+  every member's declarations **inside its own body** and merge nothing. Hoist
+  only what a body cannot hold — namespaces, classes with static or
+  declared-but-undefined members, and any type named in a member's own
+  signature — uniquifying tags per member.
+
+- **"Block-scope data redeclaration is rejected" is false**, and believing it
+  costs bytes. Measured directly: `extern int dv;`, `extern char dv[];` and
+  `extern struct V dv;` in three separate function bodies compile cleanly. Only
+  a **file-scope** redeclaration is rejected.
+
+- **Canonicalising a DATA declaration is a codegen hazard, exactly like merging
+  a shared `struct`.** Hoisting one canonical data declaration and casting each
+  member's view back with a macro **changed the codegen of six members** on
+  `Player` — and which spelling became canonical depended on which *other*
+  members happened to be in the file. Moving the data declarations back to block
+  scope recovered all six. The role file named the struct case as a hazard and
+  said nothing about data; they are the same hazard.
 - **A caller may pass more arguments than the definition takes.** Two sites did.
   Declare the unused extra parameter — it preserves the caller's argument setup
   and costs the callee nothing.
@@ -852,6 +875,22 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   **So the rule above is true by default and false under `defer_codegen off`,
   now confirmed on all three pragma families tried.** Any partial that was cut on
   a pragma contradiction is worth re-measuring.
+
+  **Why the bracket alone is not enough, stated precisely: with codegen
+  deferred, the state that binds is the state at END OF FILE.** So a `push` /
+  `opt_X off` / `pop` bracket restores the *other* members but cannot give the
+  bracketed member its own setting. The full chain, measured on ov002/`Player`
+  (301 members, one `#pragma opt_propagation off` at ordinal 35):
+
+  | configuration | result |
+  |---|---|
+  | pragma present, file-global by default | 250/301 |
+  | pragma deleted outright (the control) | 293/301 |
+  | pragma bracketed in `push`/`pop` | 294/301 — buys back the 43 casualties but **not ordinal 35 itself** |
+  | `#pragma defer_codegen off` + the bracket, source ROM-ascending | **301/301** |
+
+  That 294-vs-301 gap is the whole point: a bracket that looks like it worked can
+  still be leaving its own member on the floor.
 
   **The ROM-ascending rewrite is not optional when you adopt it.** Same class,
   same bytes, three configurations:
