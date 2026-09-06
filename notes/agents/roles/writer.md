@@ -266,7 +266,27 @@ long omitted:
 A cross-module home does *not* by itself send a symbol to `externalized_output`:
 what matters is whether the address has a **configured ROM home** in some
 module's `symbols.txt`. If it does — even in another overlay — it is
-`deadstrip-data` and it promotes. The promoted precedent `ov029/daObjWcObj01_c`
+`deadstrip-data` and it promotes.
+
+**But "the address has a home" is the wrong test, and this file stated it as the
+right one.** `apply_compiler_only_policy` (`tools/tubuild.py:2280`) resolves a
+row's home through `all_symbol_homes()`, which is **keyed on the `symbols.txt`
+spelling, not the address**. Measured on ov062/`Koopa`: `_ZTI5Koopa`'s record
+sits at a fully configured ov062 address — `0x0211da68` — and was refused
+anyway, because the cartridge configures it as `_ZTI8daNknk_c`. `tubuild.py`'s
+own comment at `:2264` says it outright: *"`homes` is keyed on the symbols.txt
+spelling while `_ZTI`/`_ZTS` are LENGTH-PREFIXED mangled strings — a coined name
+misses on both the prefix and the body, and the miss reads as 'the ROM has no
+such record'."*
+
+So read the rule as **spelled-the-cartridge's-way vs. not**, and expect it to
+bite exactly one class of symbol: a coined class's own `_ZTI`/`_ZTS`, in a TU
+that owns the key function. `_ZTV` frequently escapes because somebody added a
+coined alias row for it — honest for a vtable, and **not available for `_ZTS`**,
+whose *content* is the length-prefixed name (`"5Koopa"` where the cartridge
+holds `"8daNknk_c"`). Three separate classes hit this in one day (`Koopa`,
+`Scuttlebug`, `KingBobOmb`); `class_rename.py` counts **125** in this state. The
+unblock is the rename, as its own change. The promoted precedent `ov029/daObjWcObj01_c`
 carries an **empty** `externalized_output` and licenses all 13 of its RTTI
 records as `deadstrip-data`.
 
