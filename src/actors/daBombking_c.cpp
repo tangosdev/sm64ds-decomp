@@ -265,13 +265,15 @@ daBombking_c::~daBombking_c() {}
 // @symbol _ZN12daBombking_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
- * Two vtable stores and three destructor calls, every one a consequence of
- * `struct daBombking_c : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
- * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
- * member with a destructor of its own.
+ * A consequence of `struct daBombking_c : dEnemyBase_c`: its own vptr store,
+ * then the destructors of the five members that have one -- dBgCh_Actr at
+ * +0x110, BlendModelAnim at +0x2cc, dCcAcPos_c at +0x33c and +0x37c, and
+ * CommonModel at +0x3bc -- then the base chain. Each of those member calls is
+ * a relocation the ROM build checks, which is what named the members.
+ *
+ * DEFINED OUT OF LINE at the top of this file, and DECLARED FIRST in the
+ * header. Both halves are load-bearing; see the block above the definition.
  */
-/* destructor: inline in include/daBombking_c.h (D1 then D0) */
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 1 -- _ZN12daBombking_cD0Ev, 0x02123798, size 0x6c */
 /* -------------------------------------------------------------------------- */
@@ -280,14 +282,14 @@ daBombking_c::~daBombking_c() {}
  *
  * D0 is the DELETING destructor: destroy through this class and its bases --
  * which is why more than one vptr store appears -- then return the object to
- * its heap. Nobody writes that; declaring `~daBombking_c()` is enough, because mwcc
- * emits D2, D0 and D1 together and objisolate keeps the one this file is bound
- * to.
+ * its heap. Nobody writes that; declaring `~daBombking_c()` is enough, because
+ * mwcc emits D1, D0 and D2 together (measured on this TU, in that order) and
+ * objisolate keeps the ones this file is bound to. D2 is homeless -- the ROM
+ * has no D2 -- and is licensed as `deadstrip` in the manifest.
  *
  * The deallocation is an inline operator delete, which is why nothing below
  * mentions a heap.
  */
-/* destructor: inline in include/daBombking_c.h (D1 then D0) */
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov078_02123804, 0x02123804, size 0x60 */
