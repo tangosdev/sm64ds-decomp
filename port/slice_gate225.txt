@@ -1,0 +1,133 @@
+# gate 225 (run link100, lane ARM9T): the arm9 .data TABLES the port hosted
+# nowhere.
+#
+# Seated by hal/arm9_tables_link100.cpp (five tables read out of
+# config/arm9/relocs.txt and cross-read against extracted/arm9_dec.bin at base
+# 0x02004000) and, for the last line, by hal/scene_boot.cpp's
+# l2_fill_0208ea6c slot +0x04. Every body here is compiled by this file's
+# addition and would be dropped by /OPT:REF without the table word that
+# references it; the WORD is the work, the slice line only makes the body
+# available to be referenced.
+#
+# THE TABLES AND WHAT EACH LINE BUYS -- the full derivation, including every
+# ROM word and how each table was sized, is in the header of
+# hal/arm9_tables_link100.cpp.
+#
+#   data_02099fe4  the arm9 IRQ vector table, 22 slots, 9 distinct bodies.
+#                  The eight forwarders tail into 0x02056cc0, so
+#                  _ZN3IRQ13DmaTimHandlerEv rides in behind them (tenth line).
+#   data_02094390  dScMB_c's 4-slot graph descriptor, 3 bodies; func_02034b40
+#                  names func_02034d34, so that one rides in behind it.
+#   data_02092188  the Stage's graph callback table, 4 words (delta to
+#                  data_02092198 is 0x10). ONE body: slot 1. Slots 0 and 3 are
+#                  already linked, and slot 2, Stage::GraphCallback2, TRAPS on
+#                  port/slice_w8a.txt's standing ruling -- it takes the address
+#                  of reg_G2S_DB_BG3PA and MSVC cannot put a global at
+#                  0x04001030; closure.py named _reg_G2S_DB_BG3PA as its one
+#                  unresolved external before the line was written.
+#   data_0209a424  a callback pair, 2 words (delta to data_0209a42c is 0x8).
+#                  Two leaf predicates with no callees at all.
+#   data_0209a744  a two-slot vtable hosted 4 words wide (the symbol span; the
+#                  last two words are the NEXT table's Itanium header). ONE
+#                  body: slot 0. Slot 1 is func_020736c0, an .exceptix census
+#                  row and not this lane's, so it traps.
+#   data_0208eacc  slots +0x00 and +0x04 only (gate 225b), the FaderBrightness
+#   data_0208eafc  destructor pair on each of the three sibling tables
+#   data_0208eb2c  hal/scene_boot.cpp trap-fills. Five of the six bodies are
+#                  new to the link; _ZN10FaderColorD1Ev was already in it on
+#                  slice_intro.txt. WHY ONLY TWO SLOTS: every reader of
+#                  data_0209f5bc / data_0209d4ac in the image was enumerated
+#                  and no dispatch site anywhere reaches slot 0 or slot 1, so
+#                  the garbage-receiver hazard that made run link100 lane
+#                  TAIL2 back gate 219's full fill out is not reachable here.
+#                  The audit is at THE THREE SIBLING TABLES in scene_boot.cpp.
+#                  data_0208eacc slot 2 (AdvanceFade) is a row this lane leaves
+#                  on the table on purpose: its one dispatch site IS cdecl and
+#                  seating it is a live MASTER_BRIGHT write, i.e. a rendering
+#                  change rather than a linkage one.
+#   data_0208ea6c  slot +0x04 only, the deleting destructor. That slot's own
+#                  comment in hal/scene_boot.cpp already says why it was left:
+#                  "The reason is a slice line, not a missing body ... it is on
+#                  NO slice ... Putting it on one is a port/slice_*.txt edit,
+#                  which is outside this change's one-file scope." This is that
+#                  slice line.
+#
+# NOT HERE, each for a measured reason:
+#
+#   src/func_02030b58.c        data_020927ec's four slots. THE TABLE IS REAL
+#   src/func_02030c38.c        and its words were read; what stopped it is the
+#   src/func_02030ca0.c        closure. Resolved symbol by symbol against this
+#   src/func_02030dac.c        build's own walk_window.map, the four bodies
+#                              require 40 unlinked TUs and 17 arm9 data symbols
+#                              the port hosts nowhere -- the wireless/WM stack,
+#                              through func_0203d950 and func_02030790 -- and
+#                              one of the 40 is src/_ZN3IRQ13SetIRQHandlerEjPFvvE.c,
+#                              which is an LNK2005 against ntr/runtime.cpp's
+#                              host copy of that symbol on sight. That is a
+#                              lane, not a line, and it is a bigger one than
+#                              its four census rows suggest.
+#   src/func_020432e4.c        data_02099f50 and data_02099f68, one word each.
+#   src/func_0204322c.c        BOTH ALREADY HAVE A HOST COPY: closure.py named
+#                              them as FOREIGN-object LNK2005 candidates against
+#                              func_0204322c_hostcopy.cpp.obj before any link
+#                              ran. The tables stay unhosted; a seat would buy
+#                              nothing and break the build.
+#   src/_ZN5Stage14GraphCallback2EP12SceneRelated.c
+#                              data_02092188 slot 2, and the reason is above.
+#   src/__sinit_02074fb8.c     it WRITES data_020a0c68 before main. Slicing it
+#                              would buy one TU and change what the port does
+#                              at startup; data_02094390 is seated without it.
+#   src/func_02030e4c.c        data_020927ec's only reader, and a member of run
+#                              link100's Entry/boot-chain census, not this lane.
+#   src/func_ov000_020aa420.c  the ov000 root that names func_020189f0 /
+#                              func_02018a40 / func_02018a58. Its own two ROM
+#                              referrers are FS_LoadOverlay+0x8c and
+#                              func_0201a2f8+0x6c, and BOTH are unlinked --
+#                              func_0201a2f8's own referrers are func_02005a58
+#                              and func_0203506c, the two scene-boot roots
+#                              port/arm9_frontier.txt ranks first and second.
+#                              There is no cheap edge; the census marks it
+#                              `unreferenced` and that is correct.
+#   src/func_020171c8.cpp      data_0208ea6c slots +0x10, +0x0c and +0x08. All
+#   src/func_020171f0.cpp      three carry the "recovered from vtable slot
+#   src/func_0201721c.c        identity" marker, so they are GUESSES, and
+#                              hal/scene_boot.cpp already routes those three
+#                              slots past them (two transcriptions and a
+#                              forward). port/tools/inferred_stub_guard.py is
+#                              there to refuse exactly this and this gate does
+#                              not argue with it.
+src/_ZN3IRQ12EmptyHandlerEv.c
+src/_ZN3IRQ19Tim0OverflowHandlerEv.cpp
+src/_ZN3IRQ19Tim1OverflowHandlerEv.cpp
+src/_ZN3IRQ19Tim2OverflowHandlerEv.cpp
+src/_ZN3IRQ19Tim3OverflowHandlerEv.cpp
+src/_ZN3IRQ11Dma0HandlerEv.cpp
+src/_ZN3IRQ11Dma1HandlerEv.cpp
+src/_ZN3IRQ11Dma2HandlerEv.cpp
+src/_ZN3IRQ11Dma3HandlerEv.cpp
+src/_ZN3IRQ13DmaTimHandlerEv.c
+src/func_02034d2c.c
+src/func_02034d24.c
+src/func_02034b40.c
+src/func_02034d34.cpp
+src/func_02017228.c
+src/engine/fader/_ZN15FaderBrightnessD1Ev.c
+src/engine/fader/_ZN15FaderBrightnessD0Ev.c
+src/engine/fader/_ZN5FaderD1Ev.c
+src/engine/fader/_ZN5FaderD0Ev.c
+src/engine/fader/_ZN10FaderColorD0Ev.c
+src/_ZN5Stage14GraphCallback1Ev.c
+src/func_0206e254.c
+src/func_0206e240.c
+src/func_020736e4.c
+# A LINK FIX, NOT A ROW. src/func_02034b40.c (data_02094390 slot 3) calls
+# OAM::Flush as well as OAM::Reset. src/_ZN3OAM5FlushEv.c is already on
+# slice_gate6.txt and slice_gate214.txt, which reach walk_window and
+# walk_window_hires but NOT smoke_player -- so the first link of this gate gave
+# walk_window and walk_window_hires clean and smoke_player one LNK2019,
+# `unresolved external symbol __ZN3OAM5FlushEv referenced in function
+# _func_02034b40`. The line below puts the ROM's own body on the third target
+# too; CMake dedupes the identical absolute path on the two that already had
+# it, so nothing is compiled twice and the linked count does not move (this TU
+# was already counted through walk_window).
+src/_ZN3OAM5FlushEv.c
