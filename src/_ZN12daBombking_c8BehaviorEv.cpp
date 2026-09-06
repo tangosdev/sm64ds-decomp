@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN10KingBobOmb8BehaviorEv
+// @symbol _ZN12daBombking_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "KingBobOmb.h"
+#include "daBombking_c.h"
 struct C; typedef int (C::*PMF)();
 struct C { char pad[0x420]; PMF *pp; };
 
@@ -32,7 +32,7 @@ extern char data_ov078_0212703c[];
 extern char data_ov078_021270fc[];
 }
 
-int KingBobOmb::Behavior()
+int daBombking_c::Behavior()
 {
     char *self = (char *)((C *)this);
 

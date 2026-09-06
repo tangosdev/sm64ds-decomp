@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN10KingBobOmb16CleanupResourcesEv
+// @symbol _ZN12daBombking_c16CleanupResourcesEv
 
-#include "KingBobOmb.h"
+#include "daBombking_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
@@ -20,7 +20,7 @@ extern SharedFilePtr data_ov078_02126f28;
 extern SharedFilePtr data_ov078_02126ef8;
 }
 
-int KingBobOmb::CleanupResources()
+int daBombking_c::CleanupResources()
 {
     data_ov078_02126f38.Release();
     data_ov078_02126f00.Release();

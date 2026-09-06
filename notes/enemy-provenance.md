@@ -40,11 +40,11 @@ were dropped in favour of `mStarPos`.
 
 ---
 
-## `KingBobOmb` (`include/KingBobOmb.h`, [ov078](../config/arm9/overlays/ov078/symbols.txt))
+## `daBombking_c` (`include/daBombking_c.h`, [ov078](../config/arm9/overlays/ov078/symbols.txt))
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x420 | `void *mState` | `src/KingBobOmb_SetState.cpp` is exactly `c->pp = p; if (*c->pp) return (c->**c->pp)();` with `pp` at 0x420, and `src/_ZN10KingBobOmb8BehaviorEv.cpp` compares the same word against four [ov078](../config/arm9/overlays/ov078/symbols.txt) state tables ([data_ov078_0212703c](../config/arm9/overlays/ov078/symbols.txt), [_0212707c](../config/arm9/overlays/ov078/symbols.txt), [_021270bc](../config/arm9/overlays/ov078/symbols.txt), [_021270fc](../config/arm9/overlays/ov078/symbols.txt)) to pick its per-state path. Previously unnamed inside `pad_420`. |
+| 0x420 | `void *mState` | `src/KingBobOmb_SetState.cpp` is exactly `c->pp = p; if (*c->pp) return (c->**c->pp)();` with `pp` at 0x420, and `src/_ZN12daBombking_c8BehaviorEv.cpp` compares the same word against four [ov078](../config/arm9/overlays/ov078/symbols.txt) state tables ([data_ov078_0212703c](../config/arm9/overlays/ov078/symbols.txt), [_0212707c](../config/arm9/overlays/ov078/symbols.txt), [_021270bc](../config/arm9/overlays/ov078/symbols.txt), [_021270fc](../config/arm9/overlays/ov078/symbols.txt)) to pick its per-state path. Previously unnamed inside `pad_420`. |
 | 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the `Fix12` triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState`([data_ov078_021270bc](../config/arm9/overlays/ov078/symbols.txt)), the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. The [ov078](../config/arm9/overlays/ov078/symbols.txt) handlers read the whole triple: [func_ov078_02123d3c](../src/func_ov078_02123d3c.c) loads all three into a `Vector3`, and [func_ov078_021240a0](../src/func_ov078_021240a0.c)/[_021243c0](../src/func_ov078_021243c0.cpp) pass `&mArenaPosX` to `Vec3_Dist` and `Vec3_HorzAngle` against `mPos`. |
 | 0x4e0/0x4e4/0x4e8 | `mHomePosX/Y/Z` | `InitResources` writes them from `mPosX/mPosY/mPosZ` at spawn. |
 | 0x4f8 | `mInitAngleY` | `InitResources`' `*(short*)(this + 0x400 + 0xf8) = mAngleY;`, now spelled `mInitAngleY = mAngleY;`. Previously unnamed inside `pad_4ec`. |
@@ -222,10 +222,10 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 | 0x428 | `Vector3 mStuckCheckPos` | written from `mPosX/Y/Z` in `InitResources`; `Behavior` compares `Vec3_Dist(&mPosX, &mStuckCheckPos) < 0xa000` and, while the enemy stays inside that radius, ticks the already-named `mStuckTimer`; the moment it leaves, the timer is zeroed and this field is re-recorded from the current position. |
 | 0x44c | `mSavedParam` | last statement of `InitResources`: a copy of `param1`, taken *after* the earlier `param1 &= 0xf0ff` masking. Named for what it holds; no matched body reads it back. |
 | 0x458 | `mTimer458` | `InitResources` zeroes it; `Behavior` sets it to `0x5a` when `mStuckTimer` hits 0x1e on a capped goomba, and both the release path (`mStuckTimer >= 0x12c && mTimer458 == 0`) and the fall-through (`if (mTimer458 == 0) mStuckTimer = 0`) gate on it reaching 0. Nothing in a matched body decrements it, so "a timer" is the whole of the evidence and the offset stays in the name. |
-| 0x45a | `mInitAngleY` | `InitResources`: `= mPrevAngleY`. Same shape as `Unagi`, `MrBlizzard`, `KingBobOmb` and `PiranhaPlant`. |
+| 0x45a | `mInitAngleY` | `InitResources`: `= mPrevAngleY`. Same shape as `Unagi`, `MrBlizzard`, `daBombking_c` and `PiranhaPlant`. |
 | 0x464 | `mRewardType` | `InitResources`: `= (param1 >> 4) & 0xf`. Value 1 calls `dActor_c::TrackStar` and loads the silver-star assets; value 2 loads the silver-star assets only; anything else does neither. It selects what this goomba is worth. |
-| 0x465 | `mStarTracked` | `InitResources` presets it to -1 and, when `mRewardType == 1`, assigns `dActor_c::TrackStar(mStarID, 1)` into it. Same call and same role as `KingBobOmb`'s 0x507. |
-| 0x466 | `mStarID` | `InitResources`: `= (param1 >> 0xc) & 0xf`, and it is the star-id argument of `TrackStar`. Same as `KingBobOmb`'s 0x509. |
+| 0x465 | `mStarTracked` | `InitResources` presets it to -1 and, when `mRewardType == 1`, assigns `dActor_c::TrackStar(mStarID, 1)` into it. Same call and same role as `daBombking_c`'s 0x507. |
+| 0x466 | `mStarID` | `InitResources`: `= (param1 >> 0xc) & 0xf`, and it is the star-id argument of `TrackStar`. Same as `daBombking_c`'s 0x509. |
 
 Left `unk_`:
 

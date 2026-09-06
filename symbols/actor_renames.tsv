@@ -2337,18 +2337,18 @@ ov077	0x02127984	data_ov077_02127984	_ZTV5Spiny	vtable alloc=0x3ec
 ov077	0x02127a74	data_ov077_02127a74	HeaveHo_SpawnInfo	spawninfo
 ov077	0x02127a74	HeaveHo_SpawnInfo	g_profile_POPOI	reconstructed profile global; literal ROM ID POPOI+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov077	0x02127a98	data_ov077_02127a98	_ZTV7HeaveHo	vtable alloc=?
-ov078	0x02123740	func_ov078_02123740	_ZN10KingBobOmbD1Ev	vtable slot 16
-ov078	0x02123798	func_ov078_02123798	_ZN10KingBobOmbD0Ev	vtable slot 17
-ov078	0x02125ff4	func_ov078_02125ff4	_ZN10KingBobOmb16CleanupResourcesEv	vtable slot 3
-ov078	0x021260a8	func_ov078_021260a8	_ZN10KingBobOmb16OnPendingDestroyEv	vtable slot 12
-ov078	0x021260ac	func_ov078_021260ac	_ZN10KingBobOmb6RenderEv	vtable slot 9
-ov078	0x02126104	func_ov078_02126104	_ZN10KingBobOmb8BehaviorEv	vtable slot 6
-ov078	0x02126368	func_ov078_02126368	_ZN10KingBobOmb13InitResourcesEv	vtable slot 0
+ov078	0x02123740	func_ov078_02123740	_ZN12daBombking_cD1Ev	vtable slot 16
+ov078	0x02123798	func_ov078_02123798	_ZN12daBombking_cD0Ev	vtable slot 17
+ov078	0x02125ff4	func_ov078_02125ff4	_ZN12daBombking_c16CleanupResourcesEv	vtable slot 3
+ov078	0x021260a8	func_ov078_021260a8	_ZN12daBombking_c16OnPendingDestroyEv	vtable slot 12
+ov078	0x021260ac	func_ov078_021260ac	_ZN12daBombking_c6RenderEv	vtable slot 9
+ov078	0x02126104	func_ov078_02126104	_ZN12daBombking_c8BehaviorEv	vtable slot 6
+ov078	0x02126368	func_ov078_02126368	_ZN12daBombking_c13InitResourcesEv	vtable slot 0
 ov078	0x021265fc	func_ov078_021265fc	KingBobOmb_Spawn	spawnfunc
 ov078	0x021265fc	KingBobOmb_Spawn	daBombking_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov078	0x02126e28	data_ov078_02126e28	KingBobOmb_SpawnInfo	spawninfo
 ov078	0x02126e28	KingBobOmb_SpawnInfo	g_profile_BOMBKING	reconstructed profile global; literal ROM ID BOMBKING+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov078	0x02126e4c	data_ov078_02126e4c	_ZTV10KingBobOmb	vtable alloc=?
+ov078	0x02126e4c	data_ov078_02126e4c	_ZTV12daBombking_c	vtable alloc=?
 ov079	0x02123740	func_ov079_02123740	_ZN5WhompD1Ev	vtable slot 16
 ov079	0x02123798	func_ov079_02123798	_ZN5WhompD0Ev	vtable slot 17
 ov079	0x02125eb0	func_ov079_02125eb0	_ZN5Whomp16CleanupResourcesEv	vtable slot 3
