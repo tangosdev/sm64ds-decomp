@@ -1,0 +1,366 @@
+{
+  "class": "Koopa",
+  "coined_name_warning": "Koopa is a COINED name. The cartridge's RTTI spells this class daNknk_c, and config/arm9/overlays/ov062/symbols.txt carries BOTH _ZTV5Koopa and _ZTV8daNknk_c at 0x0211dab4 -- an honest alias, because a vtable's bytes do not encode a class name. There is NO _ZTI5Koopa or _ZTS5Koopa alias and there cannot be an honest one: the ROM's typeinfo string at 0x0211da5c is \"8daNknk_c\" (0xa bytes) and a TU spelled Koopa emits \"5Koopa\" (0x7). Ask tools/rtti_vtables.py and tools/rtti_extract.py with daNknk_c; --own Koopa prints nothing.",
+  "rtti_name": "8daNknk_c",
+  "rtti_name_symbol": "_ZTS8daNknk_c",
+  "rtti_name_address": "0x0211da5c",
+  "rtti_name_size": "0x0a",
+  "typeinfo": {
+    "symbol": "_ZTI8daNknk_c",
+    "address": "0x0211da68",
+    "kind": "__si_class_type_info",
+    "size": "0x0c",
+    "kind_vtable": "_ZTVN3abi20__si_class_type_infoE (arm9 0x0209a764)",
+    "name_pointer": "0x0211da5c",
+    "base_typeinfo": "_ZTI12dEnemyBase_c (ov002 0x021081c0)",
+    "raw_words": [
+      "0x0209a764",
+      "0x0211da5c",
+      "0x021081c0"
+    ],
+    "evidence": "config/arm9/overlays/ov062/relocs.txt relocates exactly these three words: 0x0211da68->0x0209a764, 0x0211da6c->0x0211da5c, 0x0211da70->0x021081c0. Three words behind the __si kind vtable is the single-inheritance form, so the base is dEnemyBase_c read off the cartridge, not inferred from the header."
+  },
+  "overlay": "ov062",
+  "base_class": "dEnemyBase_c",
+  "ancestor_chain": [
+    "dEnemyBase_c",
+    "dActor_c",
+    "dBase_c",
+    "fBase_c"
+  ],
+  "registry": {
+    "note": "The relocated words at 0x0211da74 -> 0x0211970c and 0x0211da90 -> 0x021196bc point at the TWO factories daNknk_c_classInit_NOKONOKO and daNknk_c_classInit_NOKONOKO_S. Two profile descriptors, one class -- this is why the class has two classInit functions, and why a name-keyed TU cut misses them.",
+    "profiles": [
+      "g_profile_NOKONOKO",
+      "g_profile_NOKONOKO_S"
+    ]
+  },
+  "vtable": {
+    "symbol": "_ZTV8daNknk_c (aliased _ZTV5Koopa)",
+    "address": "0x0211dab4",
+    "slots": 31,
+    "emitted_storage_start": "0x0211daac",
+    "emitted_storage_end": "0x0211db30",
+    "emitted_storage_size": "0x84",
+    "symbol_extent_size": "0x7c",
+    "preamble": {
+      "offset_to_top_address": "0x0211daac",
+      "offset_to_top": "0x00000000",
+      "typeinfo_pointer_address": "0x0211dab0",
+      "typeinfo_pointer": "0x0211da68"
+    },
+    "extent_evidence": "THREE INDEPENDENT TOOLS AGREE. (1) Relocations: config/arm9/overlays/ov062/relocs.txt relocates an unbroken run 0x0211dab0..0x0211db2c, one load per word. 0x0211dab0 is the typeinfo pointer (-> _ZTI8daNknk_c 0x0211da68); 0x0211daac is the zero offset-to-top and is therefore NOT relocated, which is why the run starts one word after the storage does. The next relocated word, 0x0211db30 -> 0x0211a740, belongs to a different object (data_ov062_0211db30). So the address point is 0x0211dab4, the last slot is slot 30 at 0x0211db2c, and slots = (0x0211db2c-0x0211dab4)/4+1 = 31. (2) tools/rtti_vtables.py --own daNknk_c reports 'daNknk_c : dEnemyBase_c 31 slots (base 31)'. (3) mwccarm's own emitted storage: tools/tubuild.py verify reports 'EXTRA .data _ZTV5Koopa size=0x84' for the reconstructed TU, and 0x84 = 0x0211daac..0x0211db30 exactly. STORAGE 0x84, SYMBOL EXTENT 0x7c; the 8-byte difference is the offset-to-top plus typeinfo preamble sitting BELOW the address point.",
+    "length_rule": "31 words = the dActor_c length. dBgActor_c descendants get 32. dEnemyBase_c adds no new slot.",
+    "slot_name_note": "Names are inherited interface labels from include/fBase_c.h and include/dActor_c.h. The ROM proves slot index and target address; it does not preserve the English spellings.",
+    "own_slots": [
+      {
+        "slot": 0,
+        "target": "0x02119420",
+        "symbol": "_ZN5Koopa13InitResourcesEv"
+      },
+      {
+        "slot": 3,
+        "target": "0x02118f04",
+        "symbol": "_ZN5Koopa16CleanupResourcesEv"
+      },
+      {
+        "slot": 6,
+        "target": "0x021190ec",
+        "symbol": "_ZN5Koopa8BehaviorEv"
+      },
+      {
+        "slot": 9,
+        "target": "0x02118f84",
+        "symbol": "_ZN5Koopa6RenderEv"
+      },
+      {
+        "slot": 12,
+        "target": "0x02118f80",
+        "symbol": "_ZN5Koopa16OnPendingDestroyEv"
+      },
+      {
+        "slot": 16,
+        "target": "0x021174cc",
+        "symbol": "_ZN5KoopaD1Ev"
+      },
+      {
+        "slot": 17,
+        "target": "0x02117514",
+        "symbol": "_ZN5KoopaD0Ev"
+      },
+      {
+        "slot": 18,
+        "target": "0x021196a8",
+        "symbol": "_ZN5Koopa13OnYoshiTryEatEv"
+      },
+      {
+        "slot": 19,
+        "target": "0x02119628",
+        "symbol": "_ZN5Koopa13OnTurnIntoEggER6Player"
+      },
+      {
+        "slot": 29,
+        "target": "0x02119608",
+        "symbol": "_ZN5Koopa16OnAimedAtWithEggEv"
+      }
+    ],
+    "inherited_slots_note": "Ten own slots; the other 21 resolve into arm9 (dActor_c/dBase_c/fBase_c bodies). Slots 0, 3, 6, 9 and 12 are declared in include/Koopa.h WITHOUT the 'virtual' keyword -- they still override, because include/fBase_c.h declares all five virtual and virtuality is inherited. The emitted table is correct; the header simply understates them.",
+    "destructor_order": "D1 at 0x021174cc precedes D0 at 0x02117514, and the cartridge emits NO D2 -- func_ov062_02117570 starts at 0x02117570, immediately after D0's 0x5c bytes, so there is no gap for a third variant. D1-below-D0 is the REPRODUCIBLE direction, but NOT by the route the tree assumed: include/Koopa.h declares the destructor OUT OF LINE, and out-of-line under default deferred codegen emits D2, D0, D1 -- which is what left the earlier ov062/Koopa+KoopaSmall attempt at 'PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]'. Adding '#pragma defer_codegen off' flips it to D1, D0, D2, and both cartridge variants then byte-MATCH in ROM positions 0 and 1. The homeless D2 (0x48) becomes one plain deadstrip row. No header edit was needed, so the pristine baseline stayed valid."
+  },
+  "text_span": {
+    "start": "0x021174cc",
+    "end": "0x0211975c",
+    "function_count": 39,
+    "boundary_confidence": "high",
+    "source": "config/arm9/overlays/ov062/symbols.txt, read directly. tools/tu_map.py reports 37 functions ending at 0x021196bc because it cuts on symbol NAME: the two trailing factories are spelled daNknk_c_classInit_* rather than _ZN5Koopa* or func_ov062_*, so the run is cut two functions short. They abut ordinal 36 with a ZERO-byte gap and the next function _ZN13KoopaTheQuickD1Ev at 0x0211975c belongs to a different class. The sibling oracle ov062/Chuckya absorbs its own daHolhei_c_classInit at the same relative position, and the abandoned ov062/Koopa+KoopaSmall manifest already carried this identical 39-function span."
+  },
+  "functions": [
+    {
+      "address": "0x021174cc",
+      "size": "0x48",
+      "symbol": "_ZN5KoopaD1Ev"
+    },
+    {
+      "address": "0x02117514",
+      "size": "0x5c",
+      "symbol": "_ZN5KoopaD0Ev"
+    },
+    {
+      "address": "0x02117570",
+      "size": "0x50",
+      "symbol": "func_ov062_02117570"
+    },
+    {
+      "address": "0x021175c0",
+      "size": "0x164",
+      "symbol": "func_ov062_021175c0"
+    },
+    {
+      "address": "0x02117724",
+      "size": "0x270",
+      "symbol": "func_ov062_02117724"
+    },
+    {
+      "address": "0x02117994",
+      "size": "0x50",
+      "symbol": "func_ov062_02117994"
+    },
+    {
+      "address": "0x021179e4",
+      "size": "0x58",
+      "symbol": "func_ov062_021179e4"
+    },
+    {
+      "address": "0x02117a3c",
+      "size": "0x90",
+      "symbol": "func_ov062_02117a3c"
+    },
+    {
+      "address": "0x02117acc",
+      "size": "0x7c",
+      "symbol": "func_ov062_02117acc"
+    },
+    {
+      "address": "0x02117b48",
+      "size": "0x18",
+      "symbol": "func_ov062_02117b48"
+    },
+    {
+      "address": "0x02117b60",
+      "size": "0x3c",
+      "symbol": "func_ov062_02117b60"
+    },
+    {
+      "address": "0x02117b9c",
+      "size": "0x58",
+      "symbol": "func_ov062_02117b9c"
+    },
+    {
+      "address": "0x02117bf4",
+      "size": "0xa4",
+      "symbol": "func_ov062_02117bf4"
+    },
+    {
+      "address": "0x02117c98",
+      "size": "0x36c",
+      "symbol": "func_ov062_02117c98"
+    },
+    {
+      "address": "0x02118004",
+      "size": "0x54",
+      "symbol": "func_ov062_02118004"
+    },
+    {
+      "address": "0x02118058",
+      "size": "0x7c",
+      "symbol": "func_ov062_02118058"
+    },
+    {
+      "address": "0x021180d4",
+      "size": "0x48",
+      "symbol": "func_ov062_021180d4"
+    },
+    {
+      "address": "0x0211811c",
+      "size": "0x84",
+      "symbol": "func_ov062_0211811c"
+    },
+    {
+      "address": "0x021181a0",
+      "size": "0xb8",
+      "symbol": "func_ov062_021181a0"
+    },
+    {
+      "address": "0x02118258",
+      "size": "0xdc",
+      "symbol": "func_ov062_02118258"
+    },
+    {
+      "address": "0x02118334",
+      "size": "0xac",
+      "symbol": "func_ov062_02118334"
+    },
+    {
+      "address": "0x021183e0",
+      "size": "0x1a8",
+      "symbol": "func_ov062_021183e0"
+    },
+    {
+      "address": "0x02118588",
+      "size": "0x190",
+      "symbol": "func_ov062_02118588"
+    },
+    {
+      "address": "0x02118718",
+      "size": "0x2e8",
+      "symbol": "func_ov062_02118718"
+    },
+    {
+      "address": "0x02118a00",
+      "size": "0x50",
+      "symbol": "func_ov062_02118a00"
+    },
+    {
+      "address": "0x02118a50",
+      "size": "0xfc",
+      "symbol": "func_ov062_02118a50"
+    },
+    {
+      "address": "0x02118b4c",
+      "size": "0x190",
+      "symbol": "func_ov062_02118b4c"
+    },
+    {
+      "address": "0x02118cdc",
+      "size": "0x10c",
+      "symbol": "func_ov062_02118cdc"
+    },
+    {
+      "address": "0x02118de8",
+      "size": "0x11c",
+      "symbol": "func_ov062_02118de8"
+    },
+    {
+      "address": "0x02118f04",
+      "size": "0x7c",
+      "symbol": "_ZN5Koopa16CleanupResourcesEv"
+    },
+    {
+      "address": "0x02118f80",
+      "size": "0x4",
+      "symbol": "_ZN5Koopa16OnPendingDestroyEv"
+    },
+    {
+      "address": "0x02118f84",
+      "size": "0x168",
+      "symbol": "_ZN5Koopa6RenderEv"
+    },
+    {
+      "address": "0x021190ec",
+      "size": "0x334",
+      "symbol": "_ZN5Koopa8BehaviorEv"
+    },
+    {
+      "address": "0x02119420",
+      "size": "0x1e8",
+      "symbol": "_ZN5Koopa13InitResourcesEv"
+    },
+    {
+      "address": "0x02119608",
+      "size": "0x20",
+      "symbol": "_ZN5Koopa16OnAimedAtWithEggEv"
+    },
+    {
+      "address": "0x02119628",
+      "size": "0x80",
+      "symbol": "_ZN5Koopa13OnTurnIntoEggER6Player"
+    },
+    {
+      "address": "0x021196a8",
+      "size": "0x14",
+      "symbol": "_ZN5Koopa13OnYoshiTryEatEv"
+    },
+    {
+      "address": "0x021196bc",
+      "size": "0x50",
+      "symbol": "daNknk_c_classInit_NOKONOKO_S"
+    },
+    {
+      "address": "0x0211970c",
+      "size": "0x50",
+      "symbol": "daNknk_c_classInit_NOKONOKO"
+    }
+  ],
+  "size": {
+    "value": "0x3d0",
+    "evidence": "BOTH factories call _ZN7fBase_cnwEj with the literal 976 == 0x3d0. A literal, not a field span. include/Koopa.h's size assert already matches, though its own comment calls the value a rounded field span -- the factories settle it independently."
+  },
+  "layout": {
+    "inherited_through": "dEnemyBase_c, which ends its own declared data at 0x110",
+    "own_fields_proven_by_both_factories": [
+      {
+        "offset": "0x110",
+        "type": "dCcAc_c",
+        "size": "0x34",
+        "name": "mdCc_c"
+      },
+      {
+        "offset": "0x144",
+        "type": "dBgCh_Actr",
+        "size": "0x1bc",
+        "name": "mWithMeshClsn"
+      },
+      {
+        "offset": "0x300",
+        "type": "ModelAnim",
+        "size": "0x64",
+        "name": "mModelAnim"
+      },
+      {
+        "offset": "0x364",
+        "type": "ShadowModel",
+        "size": "0x28",
+        "name": "mShadowModel"
+      }
+    ],
+    "evidence": "Both daNknk_c_classInit_* run fBase_c::operator new(976), dEnemyBase_c::dEnemyBase_c, the vptr store to &_ZTV5Koopa[2], then construct exactly these four subobjects at exactly these offsets, and _ZN5KoopaD1Ev destroys them in reverse declaration order before chaining to ~dEnemyBase_c. The members close exactly on one another and 0x110 closes exactly on dEnemyBase_c's end.",
+    "offsets_used_by_the_reconstructed_bodies": "0x38c, 0x390, 0x394, 0x39c, 0x3a0, 0x3a4, 0x3a8, 0x3ac, 0x3b0, 0x3bc, 0x3c4, 0x3ca, 0x3ce -- include/Koopa.h already names them. The reconstructed TU reaches them through raw casts off 'this' rather than through the named members, so no field-address CSE lever moves under a byte-verified body."
+  },
+  "compiler_only_rows": {
+    "count": 13,
+    "derivation": "2 x (ancestors + self) + 1 vtable = 2 x 5 + 1 = 11, plus one homeless _ZN5KoopaD2Ev (the out-of-line destructor form), plus one _ZN7Vector3D1Ev. Vector3 is odr-used as a FUNCTION LOCAL in four members (ordinals 3, 4, 6, 19) and there is no Vector3 data member; a vague-linkage copy is ONE row however many objects use it. No file-local anonymous-struct row: ordinal 13's 'struct { Vec3 sv; Vec3 hv; } L;' deliberately uses a POD local type, not Vector3. tools/tubuild.py verify emitted exactly 13.",
+    "licensed": 11,
+    "refused": [
+      "_ZTI5Koopa",
+      "_ZTS5Koopa"
+    ],
+    "refusal_cause": "apply_compiler_only_policy (tools/tubuild.py:2280) resolves a row's ROM home through all_symbol_homes(), which is keyed on the symbols.txt SPELLING, not on the address. The records ARE configured -- at ov062 0x0211da68 and 0x0211da5c -- but under the cartridge's RTTI spelling, so a coined-name class misses on both the length prefix and the body. The remedy is the rename to daNknk_c, not a manifest edit."
+  },
+  "unproven": [
+    "28 of the 39 functions have no ROM-preserved name (func_ov062_*). config/arm9/overlays/ov062/symbols.txt does not name them and include/decl_common.h spells ten of them by address, so this reconstruction keeps those spellings and leaves them extern \"C\" free functions rather than inventing member names. Their bodies, signatures as used, and call sites are proven; their original identifiers, member-versus-free form, and parameter types are not.",
+    "func_ov062_02117994 is called two mutually incompatible ways inside this same TU -- ordinal 15 tail-forwards its r0, and ordinal 16 passes a third argument the cartridge really does leave live in r2 (mov r2,#1 at 0x02118100, call at 0x02118110). Both spellings move bytes, so the TU declares two namespace-scoped views of the one linker symbol. Which of the two is the function's real signature is NOT settled; include/decl_common.h's void (void*, int) agrees with neither.",
+    "The English member names in include/Koopa.h from 0x38c up (mState, mKoopaVariant, mModelIndex, mAnimSpeed, mWalkState, mInvincibleTimer, mLandingDustTimer) are descriptive reconstructions. Offsets, widths and the arithmetic relating them are ROM-proven; the spellings are not.",
+    "Which of the two profiles (NOKONOKO vs NOKONOKO_S) is the plain Koopa and which the shelled variant is read from the factory bodies, not from any preserved string.",
+    "module sinit corroboration is module-wide (5 sinits / 5 .ctor entries, sinit_vs_tu=ok), NOT narrowed to this one TU."
+  ]
+}
