@@ -59,30 +59,39 @@ A note is a retire candidate at zero inbound citations, the union of three searc
    still can't reach. The historical "48 of 75" count predates that extension and
    should be re-measured before relying on it.
 
-**Zero on all three:** delete the file outright in one commit and add a row to
-`notes/archive/ARCHIVE_LOG.md` (path, date, one-line topic, last commit sha). Do not
-move it to `archive/` — history plus the ledger row is enough.
+**Exclusions — false negatives of the search above, not exceptions to the rule.**
+Treat both as cited; never auto-retire them regardless of what (1)-(3) report:
+- **Template/glob consumers.** A file loaded by pattern rather than by literal name
+  shows no citer: `notes/agents/roles/reviewer.md` and `roles/humanizer.md` (loaded as
+  `roles/<ROLE>.md`), and the 8 `notes/data/class-facts/*.json` (read by glob).
+- **Policy prose.** This file's own illustrative citations of a path count as an
+  inbound reference to that path, same as any other citer.
 
-**Nonzero on any:** never delete, never move. Add an in-place status banner
-(`STATUS: SUPERSEDED — see <link>`, `STATUS: STALE — verify before use`, or
-`STATUS: LIVE`) and leave the file exactly where it is. A banner is free — the path
-doesn't change, so nothing that cites it, and none of the 785 depth-sensitive relative
-links elsewhere in `notes/`, needs to change. A move never is: 11 files are `PINNED`
-(read at runtime from `config/tu_manifest.d/**`, not CI-checked), 14 more are `HIGH`.
-The last archive-by-move pass produced exactly this failure: `pret-idioms.md` moved
-from `notes/` to `notes/archive/pret-idioms.md`, and agent-prompt files (`tools/refine_run.js`,
-`tools/sched_run.js`, `tools/archive/crack_pr104.js`) kept sending agents to the dead
-path — invisible to (1) because nothing scanned `.js` string/template literals. Both
-gaps are now closed: `check_dead_references.py` scans `tools/**/*.js` (comments and
-string/template literals) among the other newly-added surfaces in (3) below, and every
-citer was repointed — the four live agent-prompt sites (`tangos.json`,
-`tools/chaosviewer.config.json`, `tools/refine_run.js`, `tools/sched_run.js`) to
-`notes/matching-style.md`, since pret-idioms.md's guidance is superseded there rather
-than merely relocated, and the remaining non-prompt citers to the real
-`notes/archive/pret-idioms.md` path. `notes/archive/` remains **frozen** regardless: no
-new entries, by this rule (retirement deletes, never relocates) or by hand — the 8
-files already there stay put, since moving them back costs the exact citation-rewrite
-this rule exists to avoid, for files that all still carry live citations.
+**Zero on all three (and not excluded above):** delete the file outright in one commit
+and add a row to `notes/archive/ARCHIVE_LOG.md` (path, date, one-line topic, last
+commit sha). Do not move it to `archive/` — history plus the ledger row is enough.
+
+**Nonzero on any:** never delete, never move — except **MERGE** (below). Add an
+in-place status banner (`STATUS: SUPERSEDED — see <link>`, `STATUS: STALE — verify
+before use`, or `STATUS: LIVE`) and leave the file exactly where it is. A banner is
+free — the path doesn't change, so nothing that cites it needs to change. 11 files are
+`PINNED` (read at runtime from `config/tu_manifest.d/**`, not CI-checked), 14 more are
+`HIGH`. The 2026-08-14 archive-by-move of `pret-idioms.md` produced exactly this
+failure — agent-prompt files kept citing the pre-move path, invisible to every gate of
+the time — fixed in commit `21e148507`; see git history, not this doc, for the story.
+`notes/archive/` stays **frozen** either way: no new entries, ever, by this rule or by
+hand — the 8 files there stay put, since moving them back costs the exact
+citation-rewrite this rule exists to avoid, for files that all still carry live
+citations.
+
+**MERGE** (the one case nonzero citations don't block): permitted **only when every
+citer is gate-visible AND every citation is rewritten in the same commit.** A file
+with even one citer in an unscanned surface (`src/`, `include/`, `config/**/*.json`,
+`*.js`, `*.jsonl`) is MERGE-ineligible — run searches (1)-(3) fresh per candidate, not
+from memory of an old surface list. "Gate-visible" is now much broader than it was:
+commit `21e148507` extended (1) to also scan `src/`, `src_tu/`, `include/` comments,
+`config/**/*.json`, root `*.json`, `tools/**/*.js`, and every `*.jsonl` — a merge that
+was ineligible before that commit may be eligible now.
 
 ## 4. Where new findings go
 
@@ -90,8 +99,10 @@ this rule exists to avoid, for files that all still carry live citations.
 live in the session's own scratchpad, or a gitignored path if they must survive a
 worktree boundary. `.gitignore` bans the naming habits that produce this, as a
 backstop, not the primary control: `*.local-draft.md`, `goal-*.md` (see the
-`goal-promote-agent-suite.md` example in §2), `*_agent[0-9]*.tsv`/`.md`, and a dated
-filename (`recon-2026-06-13.md` style).
+`goal-promote-agent-suite.md` example in §2), and `*_agent[0-9]*.tsv`/`.md`. A dated
+filename is deliberately NOT one of these patterns — `sinit-audit-2026-09-05.md` is a
+legitimate evidence note, and a glob on the date would silently drop it from the repo
+with nobody noticing; commit dated evidence normally.
 
 **A durable new fact that belongs to an existing note:** append to that note, in the
 commit that found it, and update its freshness stamp (§5) in the same edit — never a
