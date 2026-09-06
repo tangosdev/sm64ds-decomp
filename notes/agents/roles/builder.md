@@ -295,8 +295,14 @@ Two things follow:
 A class branch cut before `main` moved must be rebased, and **the two ratchet
 files behave differently and only one of them tells you**:
 
-- `config/converted-baseline.json` **conflicts loudly**. It is regenerated whole
-  per promotion, so any overlap collides. That is the safe one.
+- `config/converted-baseline.json` **conflicts loudly — but only when the landed
+  promotion actually changed the CONVERTED set.** It is regenerated whole per
+  promotion, so an overlapping change collides, and that is the safe one. The
+  guarantee is conditional and the condition is easy to miss: a promotion whose
+  absorbed shards were all *below* CONVERTED tier banks nothing, leaving the file
+  byte-identical and unable to collide. Measured — `dScMgRoulette_c` (#2312), a
+  40-member promotion, changed **neither** ledger file and put zero rows in the
+  exceptions file. Do not infer "no conflict, therefore no promotion landed".
 - `config/converted-backslide-exceptions.jsonl` **auto-merges silently and
   reintroduces stale rows.** Measured here: a cherry-pick re-added five
   `ShipWing` rows naming the former actor-directory location for
@@ -330,6 +336,13 @@ identical generic ones. Nothing reads those strings, so no gate goes red and no
 reviewer diff makes it obvious — it is silent data loss. This is the second half
 of the non-destructive recipe above: when the regenerated file differs from your
 copy *only in the `reason` strings*, your copy is the one to keep.
+
+**A third file conflicts on a rebase and this section used to omit it:
+`notes/cpp-tu-current-state.md`.** It is generated, every promotion rewrites it,
+and on one measured rebase it was the *only* `UU` conflict while both ledger
+files merged silently. Same rule as the ledgers — regenerate, never resolve:
+`git checkout <newbase> --` it, finish the merge, then
+`python tools/cpp_tu_state.py --write-note`.
 
 **Restore BOTH files to `main`'s version and re-run `tiers_ratchet --update`.**
 Never resolve either by hand and never let the merge resolve them for you — the

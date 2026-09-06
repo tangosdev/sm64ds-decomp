@@ -70,8 +70,18 @@ Read the diff, do not just look at the exit code:
   informative reason per class; a regeneration replaces all of them with N
   copies of your single `--reason`. Nothing reads those strings, so no gate goes
   red. It is real data loss with no alarm.
-- **Differs in the path set, order, or position** — the regenerated file wins,
-  and say so in the PR body with the count.
+- **Differs in the path MULTISET** — the regenerated file wins, and say so in
+  the PR body with the count.
+
+**Order and position are NOT discriminators — strike them from that test.**
+`append_exceptions` (`tools/tiers_ratchet.py:313`) opens the file `"a"` and only
+ever appends, so a regeneration **always** relocates your row to true EOF
+whenever anything was appended after it. Measured: a writer's row went in at line
+336 of 336; an `origin/main` merge then appended seven rows behind it, and the
+regeneration moved it to 343. That is guaranteed by construction, not merge
+damage. An earlier version of this file listed position as a "regenerated wins"
+signal — following it would have committed the regenerated file and destroyed
+the writer's per-class reason every single time.
 
 Then audit what you are shipping: **count byte-identical whole records** in the
 exceptions file. Zero is the target. Dedupe by *whole record*, never by path —
