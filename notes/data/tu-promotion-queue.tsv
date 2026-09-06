@@ -216,7 +216,7 @@ dScMgPachinko2_c+dScMgPachinko_c	74	2688	ov006	yes	no	unmatched:2;no-legacy-sour
 dScMgLuigi_c	57	1983	ov006	yes	no	unmatched:7;no-legacy-source:1;pragma:6;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 Goomboss	52	1999	ov074	yes	no	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1);not-in-delinks:1	-	text-only
 dEnemyBase_c	30	945	ov002	yes	no	no-legacy-source:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	daBar_c	text-only
-daObjMarioCap_c	31	1278	ov002	yes	no	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daBar_c	text-only
+daObjMarioCap_c	3	1295	ov002	yes	yes	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daBar_c	text-only
 dScMgMemory2_c	52	1476	ov006	yes	no	pragma:2;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
 PowerStar+StarMarker	77	3257	ov002	yes	no	unmatched:2;pragma:2;multi-class-tu:2;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	daBar_c	text-only
 dScMgCurling2_c	50	1439	ov006	yes	no	unmatched:1;no-legacy-source:3;pragma:3;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only

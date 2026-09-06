@@ -68,7 +68,7 @@
     "count": 12,
     "formula": "2 x (4 ancestors + self) = 10 vague-linkage RTTI records, + 1 vtable, + 1 for _ZN7Vector3D1Ev",
     "vector3_term": "func_ov002_020b781c holds three Vector3 locals and func_ov002_020b76ec one; types.h gives Vector3 an inline destructor, so the TU odr-uses _ZN7Vector3D1Ev and emits its own four-byte copy. No file-local anonymous struct destructor appears.",
-    "externalized_output": "EMPTY. All twelve addresses have a configured ROM home in some module's symbols.txt (eight in arm9, four in ov002), so all twelve license as deadstrip-data / deadstrip-duplicate and the TU promotes."
+    "externalized_output": "EMPTY. All twelve addresses have a configured ROM home in some module's symbols.txt (seven in arm9, five in ov002), so all twelve license as deadstrip-data / deadstrip-duplicate and the TU promotes."
   },
   "unproven": [
     "every `unk_` field name in include/daObjMarioCap_c.h -- offsets and widths are observed from the bodies, the spellings are not recovered",
