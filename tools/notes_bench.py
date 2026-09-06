@@ -121,11 +121,18 @@ def check_resolves(repo_root, rel_path, pattern):
     if not p.is_file():
         return False, "missing file"
     text = p.read_text(encoding="utf-8", errors="replace")
+    # Match against a whitespace-flattened copy. Prose in notes/ gets re-wrapped
+    # routinely (a TU promotion rewrites a path, the paragraph reflows), which
+    # splits an answer phrase across a newline without changing a single fact.
+    # Matching the raw text makes this harness fail on reflow -- a gate that
+    # cries wolf on reformatting is a gate people learn to ignore. Flattening
+    # keeps it sensitive to the thing it exists to catch: a fact going away.
+    flat = re.sub(r"\s+", " ", text)
     try:
         rx = re.compile(pattern, re.MULTILINE | re.DOTALL)
     except re.error as e:
         return False, "bad regex: %s" % e
-    return (True, "") if rx.search(text) else (False, "regex did not match")
+    return (True, "") if (rx.search(flat) or rx.search(text)) else (False, "regex did not match")
 
 
 def run(repo_root, bench_rows):

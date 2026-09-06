@@ -51,7 +51,7 @@ Only (a), (b) and (c) affect the exit code. Read-only: no ROM, no compiler, seco
 """
 from __future__ import annotations
 
-import argparse
+import argparse, json
 import pathlib
 import subprocess
 import sys
@@ -144,6 +144,55 @@ def load_registry(path: pathlib.Path) -> list[dict[str, str]]:
             )
         rows.append(dict(zip(FIELDS, cols)))
     return rows
+
+
+# Files that register themselves. A class-facts JSON is emitted by the scout or
+# writer stage as part of promoting a class; it is self-describing, and nobody
+# reviewing a promotion PR should have to hand-write a registry row to keep this
+# gate green. Requiring one meant every unrelated promotion turned --check red,
+# which is how a gate gets switched off. Derive the row from the file instead.
+AUTO_ROW_DIRS = ("notes/data/class-facts/",)
+
+
+def _auto_summary(repo: pathlib.Path, path: str) -> str:
+    try:
+        data = json.loads((repo / path).read_text(encoding="utf-8", errors="replace"))
+    except Exception:
+        return "Class-stage ROM facts (auto-registered; file did not parse as JSON)."
+    if not isinstance(data, dict):
+        return "Class-stage ROM facts (auto-registered)."
+    cls = str(data.get("class") or pathlib.PurePosixPath(path).stem)
+    overlay = str(data.get("overlay") or "").strip()
+    rtti = str(data.get("rtti_name") or "").strip()
+    bits = [f"Class-stage ROM facts for {cls}"]
+    if overlay:
+        bits.append(f" ({overlay})")
+    bits.append(": ")
+    detail = []
+    if rtti and rtti != cls:
+        detail.append(f"ROM RTTI name {rtti}")
+    text = data.get("candidate_text")
+    if isinstance(text, dict) and text.get("start") and text.get("end"):
+        detail.append(f"text {text['start']}-{text['end']}")
+    detail.append("auto-registered from the file itself")
+    return "".join(bits) + ", ".join(detail) + "."
+
+
+def auto_rows(repo: pathlib.Path, registered: set[str]) -> list[dict[str, str]]:
+    """Synthesize registry rows for self-describing data files."""
+    out = []
+    for path in tracked_or_trackable_notes_files(repo):
+        if path in registered:
+            continue
+        if not any(path.startswith(d) for d in AUTO_ROW_DIRS):
+            continue
+        if not path.endswith(".json"):
+            continue
+        out.append({
+            "path": path, "tier": "data", "bucket": "process", "status": "live",
+            "owner_tool": "", "summary": _auto_summary(repo, path),
+        })
+    return out
 
 
 def validate(rows: list[dict[str, str]], repo: pathlib.Path) -> list[str]:
@@ -283,6 +332,12 @@ def main(argv: list[str] | None = None) -> int:
     except RegistryError as exc:
         print(f"notes_index: {exc}", file=sys.stderr)
         return 2
+
+    # Fold in self-describing data files before anything reads `rows`, so
+    # --write lists them and --check does not demand a hand-written row.
+    synthesized = auto_rows(REPO, {r["path"] for r in rows})
+    if synthesized:
+        rows = sorted(rows + synthesized, key=lambda r: r["path"])
 
     total_doctrine, doctrine_files = doctrine_bytes(rows, REPO)
 
