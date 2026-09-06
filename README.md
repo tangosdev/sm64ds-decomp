@@ -17,7 +17,8 @@ Everything here runs against a cartridge dump you supply yourself, which stays o
 machine and is git-ignored.
 
 New here? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**, and if you review or
-merge PRs read **[MERGE.md](MERGE.md)**.
+merge PRs read **[MERGE.md](MERGE.md)**. Deeper reference material (matching craft,
+C++ conversion, provenance) is indexed at **[notes/README.md](notes/README.md)**.
 
 ## Progress
 
