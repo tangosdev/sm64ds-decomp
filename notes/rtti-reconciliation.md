@@ -236,7 +236,7 @@ something false. `0x0211396c` exists in **both** ov018 and ov032. The file
 `src/__sinit_ov018_02112c80.cpp` -- an ov018 file -- refers to it by ov032's spelling,
 `data_ov032_0211396c`. Renaming that to `_ZTS14daObjTdWater_c` would state that an ov018
 reference points at ov032's typeinfo string. It may; nothing here proves it. This is
-`notes/overlay-ambiguous-references.md` territory and wants
+`notes/overlay-residency.md` territory and wants
 `tools/overlay_residency.py`, one address at a time.
 
     data_ov032_0211396c  ov032  _ZTS14daObjTdWater_c    <- ambiguous with ov018
