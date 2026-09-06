@@ -2211,3 +2211,185 @@ func_ov003_020b0b34  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGa
 func_ov003_020b0814  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGameOver_c vtable 0x020b179c slot 9, Render; byte gate: reproduces 0x020b0814 size 0x80 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
 func_ov003_020b0810  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGameOver_c vtable 0x020b179c slot 12, OnPendingDestroy -- 4 bytes, bx lr; byte gate: reproduces 0x020b0810 size 0x4 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
 func_ov003_020b05bc  REAL_DECOMP  runs/link100/out/MATCH/treeB-verify.txt  dScGameOver_c vtable 0x020b179c slot 17. NAME says OnYoshiTryEat and is WRONG: the body is D0 (main names this address _ZN13dScGameOver_cD0Ev); byte gate: reproduces 0x020b05bc size 0x50 exactly under mwccarm 2004/b56 in module ov003, strict relocation-destination check clean
+#
+# ---------------------------------------------------------------------------
+# run link100 wave 2 (lane STUBADJ), 2026-09-06.
+#
+# THE WHOLE UNLINKED MARKER SET, GATED. Not a class or a table: every src/ TU
+# that carries the marker "recovered from vtable slot identity" AND is not in
+# the port build's active source set. That set is 112 files, enumerated with
+# inferred_stub_guard's own build_tu_set() so the guard and this ruling agree
+# on what "unlinked" means. All 112 were run through tools/match.py at the
+# symbol's exact config address and size under the pinned mwccarm 2004/b56
+# with --strict-relocs (the default; not passed, not disabled).
+#
+# RESULT: 112 of 112 reproduce the ROM. 108 as shipped; the other four only
+# after a one-line declaration conflict is resolved, and that conflict is in a
+# header, not in a body -- see BLOCKED below. Across the 107 bodies the census
+# could compile, 604 relocation slots: 530 destination-verified against
+# config/<module>/relocs.txt, 74 unresolved because the source spells them with
+# the shared header's placeholder names (VT/VT0/VT1/VT2/G0/G1/HEAP) that the
+# port binds per-TU from the body's own literal pool, 0 WRONG-DEST, 0 EXTRA,
+# 0 config relocs missing. ZERO genuine guesses.
+#
+# 41 of the 112 already carry a ruling from an earlier lane (w16, MUG, BNP,
+# BNT, SNW, mg_fanout, rel0215/w2-ov027, and link100's own MATCH lane). Those
+# are unlinked for reasons that are not this guard -- a host copy under a
+# PORT_HOST_ABI tag, an MSVC member-pointer width, an LNK2005 against an
+# unmatched/ stand-in -- and they are NOT re-listed here. This lane re-ran the
+# byte gate on them anyway and every one came back MATCH, so those earlier
+# rulings are now byte-gate confirmed rather than read-by-eye. The 71 rows
+# below are the ones that had no ruling at all.
+#
+# WHICH TREE. The gate ran in a git worktree off origin/port/link100 with
+# extracted/, tools/mwccarm and tools/bin junctioned, NOT off main. main has
+# already merged several of these bodies into per-class C++ TUs
+# (src/d_a_obj_pushblock.cpp, src/actors/dScMgD3DBase_c.cpp) and deleted the
+# per-address files the port actually seats, so a main-based tree would have
+# gated source the port does not compile. That is worth writing down: it is the
+# difference between measuring the port and measuring something adjacent to it.
+#
+# THE RECURRING NAME DEFECT, a third independent sighting. Lane w16 recorded it,
+# link100's MATCH lane recorded it, and it holds here: a slot-17 body is named
+# *_OnYoshiTryEat in src/ and the ROM's own symbols.txt calls the same address
+# the deleting destructor D0 (0x020b8c3c is _ZN16daObjPushblock_cD0Ev). Nine of
+# the rows below are that shape. The BODY is right in every one of them; the
+# recovered NAME is not. That is the whole point of the marker being a bad
+# proxy: it records how the name was recovered, not where the body came from.
+#
+# Every command and its output: runs/link100/out/STUBADJ/verify.txt.
+#
+# ---------------------------------------------------------------------------
+# BLOCKED, and NOT ruled REAL_DECOMP here, because they cannot be seated as
+# shipped. Four files fail to compile under the pinned compiler with "illegal
+# function overloading": include/decl_common.h forward-declares the file's own
+# symbol with C++ linkage and a void* parameter while the file defines it
+# extern "C" with a typed pointer.
+#
+#   func_ov004_020aeed8   decl_common.h:2352
+#   func_ov004_020af094   decl_common.h:2353
+#   func_ov004_020b0930   decl_common.h:1483
+#   func_ov006_020e6e78   decl_common.h:1522
+#
+# With ONLY that one declaration renamed away and the body untouched, all four
+# are strict-reloc MATCHES, so the bodies are real decomp and each already has
+# a ruling from an earlier lane. The fix is a decomp-side header edit (drop the
+# stale forward declaration, or give it extern "C" and the definition's
+# parameter type); src/ is read-only for a port lane, so this lane files it
+# rather than making it. Until it lands these four are not seatable, which is
+# why no admission ticket is written for them here.
+#
+# ---------------------------------------------------------------------------
+# arm9 -- 5 bodies
+func_02014a20  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name dCcAcPos_c_GetOwnerID; _ZTV25MovingCylinderClsnWithPos slot 3. addr 0x02014a20 size 0xc, module arm9. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 1 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_020171c8  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name dFdDummy_c_SetForwardTime; data_0208ea6c slot 4. addr 0x020171c8 size 0x28, module arm9. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_020171f0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name dFdDummy_c_SetBackwardTime; data_0208ea6c slot 3. addr 0x020171f0 size 0x2c, module arm9. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_0201721c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name dFdDummy_c_AdvanceFade; data_0208ea6c slot 2. addr 0x0201721c size 0xc, module arm9. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 1 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_0202ed08  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name dWipe_c_SetToEnd; data_020926f0 slot 8. addr 0x0202ed08 size 0xc, module arm9. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 1 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov002 -- 21 bodies
+func_ov002_020b32c8  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjAbuku_c_OnYoshiTryEat; data_ov002_02108964 slot 17. addr 0x020b32c8 size 0x44, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 5 reloc slot(s), 3 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (G0,VT0), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b36b4  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name BigBrickBlock_OnHitByMegaChar; _ZTV13BigBrickBlock slot 27. addr 0x020b36b4 size 0x28, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 1 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b3788  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name BigBrickBlock_OnAttacked2; _ZTV13BigBrickBlock slot 23. addr 0x020b3788 size 0x64, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b37ec  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name BigBrickBlock_OnAttacked1; _ZTV13BigBrickBlock slot 22. addr 0x020b37ec size 0x40, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b6d4c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjLava_c_OnYoshiTryEat; data_ov002_021093e0 slot 17. addr 0x020b6d4c size 0x38, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 4 reloc slot(s), 2 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (HEAP,VT), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b6d84  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjLava_c_Behavior; data_ov002_021093e0 slot 6. addr 0x020b6d84 size 0x4c, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 2 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b6dd0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjLava_c_InitResources; data_ov002_021093e0 slot 0. addr 0x020b6dd0 size 0x8, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b8c3c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjPushblock_c_OnYoshiTryEat; data_ov002_021096b0 slot 17. addr 0x020b8c3c size 0x60, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 8 reloc slot(s), 5 destination-verified against config and 3 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b8d14  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjPushblock_c_OnHitByMegaChar; data_ov002_021096b0 slot 27. addr 0x020b8d14 size 0x28, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 1 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b8d3c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjPushblock_c_OnPushed; data_ov002_021096b0 slot 25. addr 0x020b8d3c size 0x2c, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b8d68  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjPushblock_c_CleanupResources; data_ov002_021096b0 slot 3. addr 0x020b8d68 size 0x44, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 6 reloc slot(s), 4 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (G0,G1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b8dac  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjPushblock_c_Render; data_ov002_021096b0 slot 9. addr 0x020b8dac size 0x28, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b8dd4  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjPushblock_c_Behavior; data_ov002_021096b0 slot 6. addr 0x020b8dd4 size 0x20c, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 20 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020b8fe0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjPushblock_c_InitResources; data_ov002_021096b0 slot 0. addr 0x020b8fe0 size 0x12c, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 14 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020bb23c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name SignPost_OnAttacked1; _ZTV8SignPost slot 22. addr 0x020bb23c size 0x40, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020bb27c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name SignPost_OnGroundPounded; _ZTV8SignPost slot 21. addr 0x020bb27c size 0xf8, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 5 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020bb374  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name SignPost_OnHitByMegaChar; _ZTV8SignPost slot 27. addr 0x020bb374 size 0x44, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 3 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020bb3b8  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name SignPost_Kill; _ZTV8SignPost slot 31. addr 0x020bb3b8 size 0x74, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 4 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020ec3b8  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daWarpkun_c_OnYoshiTryEat; data_ov002_0210acbc slot 17. addr 0x020ec3b8 size 0x44, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 5 reloc slot(s), 3 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (G0,VT0), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov002_020f03f4  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daSCoin_c_OnYoshiTryEat; data_ov002_0210b030 slot 17. addr 0x020f03f4 size 0x44, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 5 reloc slot(s), 3 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (G0,VT0), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+_ZN11SoundObject8BehaviorEv  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daSoundObj_c_Behavior; _ZTV11SoundObject slot 6. addr 0x020f94fc size 0xe4, module ov002. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov006 -- 2 bodies
+func_ov006_021203ac  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name dScMgTeresa_c_Behavior; data_ov006_0213fa0c slot 6. addr 0x021203ac size 0x50, module ov006. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 2 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov006_021203fc  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name dScMgTeresa_c_InitResources; data_ov006_0213fa0c slot 0. addr 0x021203fc size 0x3ac, module ov006. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 48 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov010 -- 5 bodies
+func_ov010_021111ec  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjC1_Trap_c_OnYoshiTryEat; data_ov010_02112b08 slot 8. addr 0x021111ec size 0x60, module ov010. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 8 reloc slot(s), 5 destination-verified against config and 3 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov010_02111554  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjC1_Trap_c_CleanupResources; data_ov010_02112ae4 slot 3. addr 0x02111554 size 0x54, module ov010. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 6 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov010_021115a8  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjC1_Trap_c_Render; data_ov010_02112b08 slot 0. addr 0x021115a8 size 0x38, module ov010. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov010_021115e0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjC1_Trap_c_Behavior; data_ov010_02112ae4 slot 6. addr 0x021115e0 size 0x74, module ov010. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 4 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov010_02111654  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjC1_Trap_c_InitResources; data_ov010_02112ae4 slot 0. addr 0x02111654 size 0x1f8, module ov010. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 15 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov012 -- 2 bodies
+func_ov012_021111e4  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjC0_Switch_c_OnYoshiTryEat; data_ov012_02112368 slot 8. addr 0x021111e4 size 0x58, module ov012. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 7 reloc slot(s), 4 destination-verified against config and 3 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov012_02111324  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjC0_Switch_c_Render; data_ov012_02112368 slot 0. addr 0x02111324 size 0x28, module ov012. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov013 -- 1 bodies
+func_ov013_021111d0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjClockHuriko_c_OnYoshiTryEat; data_ov013_02112158 slot 5. addr 0x021111d0 size 0x44, module ov013. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 5 reloc slot(s), 3 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (G0,VT0), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov015 -- 2 bodies
+func_ov015_021113fc  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name PoleBillboard_OnKicked; data_ov015_02114458 slot 10. addr 0x021113fc size 0xc, module ov015. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 1 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov015_02111408  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name PoleBillboard_OnAttacked2; data_ov015_02114458 slot 9. addr 0x02111408 size 0xc, module ov015. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 1 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov016 -- 3 bodies
+func_ov016_02112a44  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjKi_Hasira_c_OnYoshiTryEat; data_ov016_02114b00 slot 17. addr 0x02112a44 size 0x58, module ov016. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 7 reloc slot(s), 4 destination-verified against config and 3 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov016_02112b28  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjKi_Hasira_c_Render; data_ov016_02114b00 slot 9. addr 0x02112b28 size 0x28, module ov016. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov016_02112f44  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjKi_Ita_c_OnYoshiTryEat; data_ov016_02114bcc slot 17. addr 0x02112f44 size 0x64, module ov016. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 8 reloc slot(s), 4 destination-verified against config and 4 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1,VT2), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov018 -- 1 bodies
+func_ov018_021111e4  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjSm_Lift_c_OnYoshiTryEat; data_ov018_021138fc slot 5. addr 0x021111e4 size 0x58, module ov018. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 7 reloc slot(s), 4 destination-verified against config and 3 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov029 -- 7 bodies
+func_ov029_021111f0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjWcObj01_c_OnYoshiTryEat; data_ov029_02113c48 slot 10. addr 0x021111f0 size 0x64, module ov029. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 8 reloc slot(s), 4 destination-verified against config and 4 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1,VT2), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov029_02111b08  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjWc_Obj05_c_OnYoshiTryEat; data_ov029_02113e88 slot 12. addr 0x02111b08 size 0x58, module ov029. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 7 reloc slot(s), 4 destination-verified against config and 3 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov029_02111b60  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjWc_Obj05_c_CleanupResources; data_ov029_02113e74 slot 3. addr 0x02111b60 size 0x44, module ov029. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 6 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov029_02111ba4  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjWc_Obj05_c_Render; data_ov029_02113e88 slot 4. addr 0x02111ba4 size 0x28, module ov029. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov029_02111bcc  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjWc_Obj05_c_Behavior; data_ov029_02113e88 slot 1. addr 0x02111bcc size 0x1a0, module ov029. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 7 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov029_02111d6c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjWc_Obj05_c_InitResources; data_ov029_02113e74 slot 0. addr 0x02111d6c size 0xd4, module ov029. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 13 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov029_02111ef4  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjWcObj06_c_OnYoshiTryEat; data_ov029_02113f78 slot 4. addr 0x02111ef4 size 0x64, module ov029. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 8 reloc slot(s), 4 destination-verified against config and 4 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1,VT2), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov043 -- 3 bodies
+func_ov043_0211144c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjKm1_Kurumajiku_c_OnYoshiTryEat; data_ov043_0211238c slot 17. addr 0x0211144c size 0x64, module ov043. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 8 reloc slot(s), 4 destination-verified against config and 4 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1,VT2), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov043_021114b0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjKm1_Kurumajiku_c_CleanupResources; data_ov043_0211238c slot 3. addr 0x021114b0 size 0x14, module ov043. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 2 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov043_021114c4  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjKm1_Kurumajiku_c_InitResources; data_ov043_0211238c slot 0. addr 0x021114c4 size 0x18, module ov043. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 2 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov060 -- 1 bodies
+func_ov060_02118254  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daKpa3Bg_c_Behavior; data_ov060_0211a9b0 slot 6. addr 0x02118254 size 0x5c, module ov060. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 3 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov062 -- 1 bodies
+func_ov062_0211ce78  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name Klepto_OnAimedAtWithEgg; _ZTV9daJango_c slot 29. addr 0x0211ce78 size 0x8, module ov062. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov064 -- 4 bodies
+func_ov064_02117220  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daDonketu_c_AfterClsn; _ZTV5Bully slot 32. addr 0x02117220 size 0xf0, module ov064. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 5 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov064_021179bc  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjFl_Amilift_c_OnYoshiTryEat; data_ov064_0211bc68 slot 17. addr 0x021179bc size 0x58, module ov064. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 7 reloc slot(s), 4 destination-verified against config and 3 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov064_02117cfc  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjFl_Amilift_c_Render; data_ov064_0211bc68 slot 9. addr 0x02117cfc size 0x28, module ov064. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov064_02118c10  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjFl_Coin_c_OnYoshiTryEat; data_ov064_0211c1d8 slot 17. addr 0x02118c10 size 0x38, module ov064. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 4 reloc slot(s), 2 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (HEAP,VT), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov072 -- 1 bodies
+func_ov072_02120a44  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daBgSnwmn_c_InitResources; data_ov072_02122978 slot 0. addr 0x02120a44 size 0x1bc, module ov072. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 21 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov079 -- 1 bodies
+func_ov079_02126f8c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjBkKillerdai_c_Behavior; data_ov079_02127fb8 slot 6. addr 0x02126f8c size 0x104, module ov079. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 8 reloc slot(s), 3 destination-verified against config and 5 unresolved because the source spells them with the shared header's placeholder names (_ZN7Actor_s10FindWithIDEj,_ZN7Actor_s13ClosestPlayerEv,_ZN7Actor_s5SpawnEjjRK7Vector3PK10Vector3_16ii,_ZN8Platform13IsClsnInRangeEii), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov080 -- 4 bodies
+func_ov080_02125428  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daPicGate_c_OnYoshiTryEat; data_ov080_021282b4 slot 17. addr 0x02125428 size 0x38, module ov080. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 4 reloc slot(s), 2 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (HEAP,VT), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov080_02126c20  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daPicGate_c_Render; data_ov080_021282b4 slot 9. addr 0x02126c20 size 0x40, module ov080. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov080_02126c60  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daPicGate_c_Behavior; data_ov080_021282b4 slot 6. addr 0x02126c60 size 0x40, module ov080. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov080_02126ca0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daPicGate_c_InitResources; data_ov080_021282b4 slot 0. addr 0x02126ca0 size 0x2ec, module ov080. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 8 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov091 -- 1 bodies
+func_ov091_02133440  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daObjPile_c_OnYoshiTryEat; data_ov091_021352bc slot 17. addr 0x02133440 size 0x58, module ov091. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 7 reloc slot(s), 4 destination-verified against config and 3 unresolved because the source spells them with the shared header's placeholder names (G0,VT0,VT1), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov098 -- 1 bodies
+func_ov098_02137d40  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name ArrowSignRight_OnAttacked1; _ZTV15daObjYajirusi_c slot 22. addr 0x02137d40 size 0x40, module ov098. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov100 -- 4 bodies
+func_ov100_02144424  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daDoor_c_OnYoshiTryEat; data_ov100_02148188 slot 17. addr 0x02144424 size 0x44, module ov100. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, 5 reloc slot(s), 3 destination-verified against config and 2 unresolved because the source spells them with the shared header's placeholder names (G0,VT0), 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov100_0214542c  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daDoor_c_CleanupResources; data_ov100_02148188 slot 3. addr 0x0214542c size 0x98, module ov100. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 7 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov100_021454c8  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daDoor_c_Render; data_ov100_02148188 slot 9. addr 0x021454c8 size 0x88, module ov100. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 2 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+func_ov100_02145550  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name daDoor_c_Behavior; data_ov100_02148188 slot 6. addr 0x02145550 size 0x50, module ov100. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, all 1 reloc slot(s) destination-verified against config, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
+# ov102 -- 1 bodies
+func_ov102_0214d6a0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name KoopaShell_OnYoshiTryEat; _ZTV7daShl_c slot 18. addr 0x0214d6a0 size 0x14, module ov102. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
+#
