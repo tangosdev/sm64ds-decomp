@@ -1,0 +1,519 @@
+{
+  "id": "ov062/Koopa",
+  "module": "ov062",
+  "source": "src_tu/actors/Koopa.cpp",
+  "promoted_source": "src/actors/Koopa.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21174cc..0x211975c, 39 function(s). tu_map.py reported 0x21174cc..0x21196bc / 37 because it cuts on symbol NAME: the two trailing factories are spelled daNknk_c_classInit_* rather than _ZN5Koopa* or func_ov062_*, so the run was cut two functions short.",
+    "the two factories abut ordinal 36 with a ZERO-byte gap (_ZN5Koopa13OnYoshiTryEatEv ends 0x21196bc, daNknk_c_classInit_NOKONOKO_S starts 0x21196bc) and the next function, _ZN13KoopaTheQuickD1Ev at 0x211975c, belongs to a different class.",
+    "both factories construct THIS class: fBase_c::operator new(976), dEnemyBase_c::dEnemyBase_c, then the vptr store, then dCcAc_c/dBgCh_Actr/ModelAnim/ShadowModel at 0x110/0x144/0x300/0x364 -- exactly Koopa.h's member offsets. ov062 relocs.txt confirms both vptr stores target 0x211dab4 = _ZTV5Koopa.",
+    "the sibling oracle ov062/Chuckya absorbs its own daHolhei_c_classInit (src/d_a_holhei.c, ordinal 35) at the same relative position, so this is the module's established TU shape.",
+    "class label(s): Koopa (ROM RTTI name daNknk_c; symbols.txt carries _ZTV5Koopa and _ZTV8daNknk_c at the same address 0x211dab4)",
+    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021174cc",
+      "end": "0x0211975c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN5KoopaD1Ev",
+      "address": "0x021174cc",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN5KoopaD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN5KoopaD0Ev",
+      "address": "0x02117514",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN5KoopaD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov062_02117570",
+      "address": "0x02117570",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov062_02117570.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov062_021175c0",
+      "address": "0x021175c0",
+      "size": "0x00000164",
+      "legacy_source": "src/func_ov062_021175c0.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov062_02117724",
+      "address": "0x02117724",
+      "size": "0x00000270",
+      "legacy_source": "src/func_ov062_02117724.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov062_02117994",
+      "address": "0x02117994",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov062_02117994.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov062_021179e4",
+      "address": "0x021179e4",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov062_021179e4.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov062_02117a3c",
+      "address": "0x02117a3c",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov062_02117a3c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov062_02117acc",
+      "address": "0x02117acc",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov062_02117acc.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov062_02117b48",
+      "address": "0x02117b48",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov062_02117b48.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov062_02117b60",
+      "address": "0x02117b60",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov062_02117b60.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov062_02117b9c",
+      "address": "0x02117b9c",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov062_02117b9c.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov062_02117bf4",
+      "address": "0x02117bf4",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov062_02117bf4.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov062_02117c98",
+      "address": "0x02117c98",
+      "size": "0x0000036c",
+      "legacy_source": "src/func_ov062_02117c98.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov062_02118004",
+      "address": "0x02118004",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov062_02118004.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov062_02118058",
+      "address": "0x02118058",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov062_02118058.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov062_021180d4",
+      "address": "0x021180d4",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov062_021180d4.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov062_0211811c",
+      "address": "0x0211811c",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov062_0211811c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov062_021181a0",
+      "address": "0x021181a0",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov062_021181a0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov062_02118258",
+      "address": "0x02118258",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov062_02118258.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov062_02118334",
+      "address": "0x02118334",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov062_02118334.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov062_021183e0",
+      "address": "0x021183e0",
+      "size": "0x000001a8",
+      "legacy_source": "src/func_ov062_021183e0.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov062_02118588",
+      "address": "0x02118588",
+      "size": "0x00000190",
+      "legacy_source": "src/func_ov062_02118588.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov062_02118718",
+      "address": "0x02118718",
+      "size": "0x000002e8",
+      "legacy_source": "src/func_ov062_02118718.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov062_02118a00",
+      "address": "0x02118a00",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov062_02118a00.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov062_02118a50",
+      "address": "0x02118a50",
+      "size": "0x000000fc",
+      "legacy_source": "src/func_ov062_02118a50.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov062_02118b4c",
+      "address": "0x02118b4c",
+      "size": "0x00000190",
+      "legacy_source": "src/func_ov062_02118b4c.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov062_02118cdc",
+      "address": "0x02118cdc",
+      "size": "0x0000010c",
+      "legacy_source": "src/func_ov062_02118cdc.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov062_02118de8",
+      "address": "0x02118de8",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov062_02118de8.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN5Koopa16CleanupResourcesEv",
+      "address": "0x02118f04",
+      "size": "0x0000007c",
+      "legacy_source": "src/_ZN5Koopa16CleanupResourcesEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN5Koopa16OnPendingDestroyEv",
+      "address": "0x02118f80",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN5Koopa16OnPendingDestroyEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN5Koopa6RenderEv",
+      "address": "0x02118f84",
+      "size": "0x00000168",
+      "legacy_source": "src/_ZN5Koopa6RenderEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN5Koopa8BehaviorEv",
+      "address": "0x021190ec",
+      "size": "0x00000334",
+      "legacy_source": "src/_ZN5Koopa8BehaviorEv.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN5Koopa13InitResourcesEv",
+      "address": "0x02119420",
+      "size": "0x000001e8",
+      "legacy_source": "src/_ZN5Koopa13InitResourcesEv.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN5Koopa16OnAimedAtWithEggEv",
+      "address": "0x02119608",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN5Koopa16OnAimedAtWithEggEv.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN5Koopa13OnTurnIntoEggER6Player",
+      "address": "0x02119628",
+      "size": "0x00000080",
+      "legacy_source": "src/_ZN5Koopa13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "_ZN5Koopa13OnYoshiTryEatEv",
+      "address": "0x021196a8",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN5Koopa13OnYoshiTryEatEv.cpp",
+      "ordinal": 36
+    },
+    {
+      "symbol": "daNknk_c_classInit_NOKONOKO_S",
+      "address": "0x021196bc",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_nknk_nokonoko_s.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "daNknk_c_classInit_NOKONOKO",
+      "address": "0x0211970c",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_nknk_nokonoko.c",
+      "ordinal": 38
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov062_02117570.cpp (func_ov062_02117570) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov062_021179e4.cpp (func_ov062_021179e4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: macro 'AT' differs between the legacy file that used to hold func_ov062_02117c98 and the one that held func_ov062_02118258; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE' differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02117724; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8Particle19SetSelfDestructFlagEj' differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02117724; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8Particle6System12FromUniqueIDEj' differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02117724; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02118a00' differs between the legacy file that used to hold func_ov062_02117a3c and the one that held func_ov062_02117acc; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02118de8' differs between the legacy file that used to hold func_ov062_02117a3c and the one that held func_ov062_02117acc; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_02117b9c; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov062_02117724 and the one that held func_ov062_02117bf4; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov062_02117724 and the one that held func_ov062_02117c98; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_02118058; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118058; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_021180d4; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_021180d4; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_0211811c; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_021181a0; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_021181a0; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_02118258; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov062_021180d4 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov062_02118258 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c14GetSubtractionEss' differs between the legacy file that used to hold func_ov062_02118058 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_021183e0; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov062_02117c98 and the one that held func_ov062_02118588; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118588; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK9Animation12WillHitFrameEi' differs between the legacy file that used to hold func_ov062_0211811c and the one that held func_ov062_02118588; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov062_021180d4 and the one that held func_ov062_02118588; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov062_02117b60 and the one that held func_ov062_02118718; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov062_02118258 and the one that held func_ov062_02118718; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c14GetSubtractionEss' differs between the legacy file that used to hold func_ov062_02118058 and the one that held func_ov062_02118718; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_02118718; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118718; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118a00; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_021175c0' differs between the legacy file that used to hold func_ov062_02118588 and the one that held func_ov062_02118a00; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov062_021180d4 and the one that held func_ov062_02118a50; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRiii' differs between the legacy file that used to hold func_ov062_02118004 and the one that held func_ov062_02118b4c; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov062_021183e0 and the one that held func_ov062_02118b4c; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118b4c; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov062_021180d4 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02117994' differs between the legacy file that used to hold func_ov062_02117bf4 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK9Animation13GetFrameCountEv' differs between the legacy file that used to hold func_ov062_0211811c and the one that held func_ov062_02118de8; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK9Animation12WillHitFrameEi' differs between the legacy file that used to hold func_ov062_0211811c and the one that held func_ov062_02118de8; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov062_02118058' differs between the legacy file that used to hold func_ov062_021183e0 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov062_021181a0 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209e650' differs between the legacy file that used to hold func_ov062_021181a0 and the one that held func_ov062_02118de8; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c8PoofDustEv' differs between the legacy file that used to hold func_ov062_02117c98 and the one that held _ZN5Koopa8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c24KillAndTrackInDeathTableEv' differs between the legacy file that used to hold func_ov062_02117c98 and the one that held _ZN5Koopa8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02117b9c; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov062_021175c0 and the one that held func_ov062_02118258; kept the first, the other is commented out for review -- RESOLVED: the whole generated preamble was discarded and rewritten by hand (37 members is past the size where it is repairable), so this name now has exactly one declaration in the file and the /* TUBUILD CONFLICT */ marker it was frozen against is gone. Checked by tools/check_tubuild_conflicts.py.",
+    "tubuild reconcile note: the generated preamble was NOT repaired, it was replaced. It nested extern \"C\" inside extern \"C\", declared Vec3 as both a typedef and a struct tag, declared data_ov062_0211cee8 three mutually exclusive ways, and shadowed Vector3/SharedFilePtr/dActor_c against the real headers a Koopa:: member definition has to include. The hand-written preamble includes decl_common.h and matches it.",
+    "reconciliation, measured: only ONE compile error survived the rewrite -- decl_Enemy.h already declares _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE with a real Vector3_16* second parameter, so re-declaring it void* is `illegal function overloading`; ordinal 13 now uses common.h's Vector3_16 instead of the shard's layout-identical local V16.",
+    "reconciliation, measured: two members disagree with decl_common.h about func_ov062_02117994 and BOTH disagreements move bytes. Ordinal 15 tail-forwards its r0 (`return func_ov062_02117994(c, 3);`) where decl_common.h correctly types it void; ordinal 16 passes a third argument, and the cartridge really does leave r2=1 live across the call at 0x2118110 (mov r2,#1 at 0x2118100, str r2,[r4,#0x38c] at 0x211810c). Both are spelled through namespace views of the same linker symbol (cv_ret, cv_arg3) rather than by overloading the global declaration -- the idiom the sibling oracle ov062/Chuckya uses for func_ov002_020db54c.",
+    "byte-diff resolutions, both from writer.md's own catalogue and both measured: (1) func_ov062_02118588 came out 0x19c against the ROM's 0x190 -- bool widening. As C, `int t = (x == 0x11d); if (t != 0)` gave the cartridge's moveq/movne/cmp/movne; as C++ the comparison is a bool and re-testing it costs an extra movne #1 / moveq #0 / cmp #0. Rewritten as a plain if/else. (2) func_ov062_021179e4 differed in 14 words at the same 0x58 -- argument evaluation order. The cartridge loads y, z, x in that order, which is the three-argument constructor the legacy shard used; types.h's Vector3 has no such constructor, and NEITHER three member stores NOR aggregate initialisation reproduces it (both were measured at 14 words differing). A layout-identical local V3ctor with that constructor, handed to Spawn through a reference cast, does.",
+    "PROMOTION BLOCKER, measured and single: 11 of the 13 compiler_only_output rows license cleanly; _ZTI5Koopa and _ZTS5Koopa do not. apply_compiler_only_policy (tools/tubuild.py:2280) resolves a row's ROM home through all_symbol_homes(), which is keyed on the symbols.txt SPELLING, not on the address -- and no symbols.txt names _ZTI5Koopa or _ZTS5Koopa. The records exist: ov062 carries _ZTI8daNknk_c at 0x211da68 and _ZTS8daNknk_c at 0x211da5c. Only the class's COINED name breaks the lookup. tubuild.py's own comment at :2264 says so and names the remedy: rename the class to the cartridge's RTTI spelling. Note the asymmetry with _ZTV5Koopa, which DOES resolve: someone added a coined alias row for the vtable, and that is honest because a vtable's bytes do not encode the class name. The same trick is NOT available for _ZTS: this TU emits the string \"5Koopa\" (0x7 bytes) where the cartridge has \"8daNknk_c\" (0xa), so an alias row would assert an identity the bytes contradict. The rows are left as deadstrip-data because that is what they factually are -- homed records in this TU's own module -- rather than moved to externalized_output/canonical-import, which would falsely claim the surviving copy lives in another module, or to a plain deadstrip, which tubuild rejects outright for RTTI records precisely because a coined name fakes that claim.",
+    "NEXT STEP, and it is NOT part of this promotion: rename Koopa -> daNknk_c. tools/class_rename.py refuses to do it unattended -- `REFUSING: _ZTV8daNknk_c is already defined in config/arm9/overlays/ov062/symbols.txt; a class that already carries the ROM name needs the COINED ALIAS DELETED, not this rename`. So the operation is: delete the _ZTV5Koopa alias row, then run the tool. It rewrites symbols.txt, delinks.txt, include/Koopa.h -> include/daNknk_c.h, BrickBlock.h, this TU and the ledgers, and it changes the class identity the queue, the claim and the remaining pipeline stages address this work by. That is a separate unit of work with its own hazards (mangled length prefixes, ledger row order), not something to fold into a source move -- the same reason linkcheck refuses a near-miss recovery and a promotion in one commit.",
+    "SUPERSEDES config/tu_manifest.d/ov062/Koopa+KoopaSmall.json and src_tu/actors/Koopa+KoopaSmall.cpp, both deleted in the same commit. That entry claimed the IDENTICAL .text range 0x21174cc..0x211975c with the same 39 functions -- independent confirmation that the queue's shard_count of 37 is a floor -- but it stopped with `functions_occur_in_expected_order: PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]` (the D1/D0 pair, i.e. no defer_codegen off) and compiler_only_output null. Two manifest entries claiming one .text run is a defect in its own right. Its promoted_source also carried a '+' in the filename, which an LCF cannot express."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov062-Koopa/Koopa.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 39,
+    "functions_declared": 39,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN5KoopaD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "unhandled": [],
+      "data": [
+        "_ZTV5Koopa",
+        "_ZTI5Koopa",
+        "_ZTS5Koopa",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s), 2 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "policy-refused",
+      "scratch": "build/tu/ov062-Koopa/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true
+      },
+      "tuRange": null,
+      "tuRanges": null,
+      "objectAudit": {
+        "counts": null,
+        "emittedTextOrderIsRomAscending": null,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": null
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": null,
+      "symbolCheckErrors": null,
+      "symbolCheckBaselineErrors": null,
+      "moduleSetSha256": null,
+      "rom": null,
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN5KoopaD2Ev",
+      "disposition": "deadstrip",
+      "reason": "GENUINELY HOMELESS -- no address in any module's symbols.txt carries this name, and the cartridge emits no D2 for this class at all: ov062 has _ZN5KoopaD1Ev at 0x21174cc and _ZN5KoopaD0Ev at 0x2117514 and then goes straight on to func_ov062_02117570 at 0x2117570, with no gap for a third variant. The D2 exists only because Koopa.h declares the destructor out of line, which is the form that reproduces the cartridge's D1-below-D0 order under `#pragma defer_codegen off` (out-of-line + deferred codegen emits D2, D0, D1 -- the wrong way round). Plain `deadstrip`, not `deadstrip-duplicate`: there is no ROM copy to be a duplicate of."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage copy of Vector3's empty destructor, which types.h declares so the ROM's __destroy_arr calls can exist. The canonical body is arm9's four bytes at 0x020072c0 (`bx lr`), named _ZN7Vector3D1Ev in config/arm9/symbols.txt. This TU odr-uses Vector3 as a FUNCTION LOCAL in four members (ordinals 3, 4, 6 and 19) and has no Vector3 data member; the emitted symbol is one vague-linkage copy however many objects there are."
+    },
+    {
+      "symbol": "_ZTV5Koopa",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov062",
+      "canonical_address": "0x0211dab4",
+      "reason": "This TU owns the key function (the out-of-line destructor at ordinal 0), so it emits the class vtable. The cartridge's copy is at ov062 0x211dab4, which config/arm9/overlays/ov062/symbols.txt names BOTH _ZTV5Koopa and _ZTV8daNknk_c -- the coined name is homed, which is what makes this row verifiable at all. 31 SLOTS, corroborated three ways: (1) relocations -- ov062 relocs.txt has an unbroken relocated word run 0x211dab0..0x211db2c (0x211dab0 is the typeinfo slot pointing at _ZTI8daNknk_c 0x211da68, and 0x211daac is the zero offset-to-top, which is why the run starts one word in), then the next relocation at 0x211db30 belongs to data_ov062_0211db30, a different object; (2) tools/rtti_vtables.py --own daNknk_c reports `daNknk_c : dEnemyBase_c 31 slots (base 31)` -- it must be asked with the CARTRIDGE's RTTI name, `--own Koopa` prints nothing; (3) mwccarm's own emitted storage size for this symbol, 0x84, reported by tubuild verify as `EXTRA .data _ZTV5Koopa size=0x84`. STORAGE 0x84 = 0x211daac..0x211db30; SYMBOL EXTENT from the address point 0x211dab4 = 0x7c = 31 words. The two differ by the 8-byte offset-to-top + typeinfo preamble."
+    },
+    {
+      "symbol": "_ZTI5Koopa",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov062",
+      "canonical_address": "0x0211da68",
+      "reason": "This class's own __si_class_type_info, emitted because this TU owns the key function. Homed in ov062 under the cartridge's RTTI spelling _ZTI8daNknk_c at 0x211da68; symbols.txt does not carry an _ZTI5Koopa alias the way it does for the vtable, but the disposition turns on whether the ADDRESS has a configured home, and it does."
+    },
+    {
+      "symbol": "_ZTS5Koopa",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov062",
+      "canonical_address": "0x0211da5c",
+      "reason": "This class's own typeinfo name string, homed in ov062 as _ZTS8daNknk_c at 0x211da5c. Note that the ROM's string is \"8daNknk_c\" while this TU emits \"5Koopa\" (0x7 bytes against the cartridge's 0xa): the record is deadstripped, so only the home matters, but it is the reason a coined-name class cannot be byte-compared here."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by ov002"
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by ov002"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "inherited vague-linkage RTTI copy; canonical definition is owned by arm9"
+    }
+  ],
+  "externalized_output": []
+}

@@ -63,7 +63,7 @@ reconciled text wants to know it was a judgement call, not a transcription.
 Pairing is exact, not by count. Both sides carry the conflict kind, the key, and the
 name of the legacy file's function the losing text came from, so the reconciliation key
 is `(kind, key, legacy function)` and there is no ambiguity even when one TU has fifty
-conflicts over the same handful of names -- ov062/Koopa+KoopaSmall does.
+conflicts over the same handful of names -- ov062/Koopa does (49 of them).
 
 Usage:
     python tools/check_tubuild_conflicts.py             # every manifest entry
