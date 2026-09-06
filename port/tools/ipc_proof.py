@@ -116,6 +116,14 @@ def check(rung, ok, why):
 
 SYNC_RE = re.compile(r"\[ipc:rom-boot\] sync=(\w+) steps=(\d+) reads=(\d+)")
 FRAMES_RE = re.compile(r"selftest: (\d+) frames")
+# THE SEND COUNTER, AT THE END OF THE RUN AND NOT AT ROM-BOOT. The rom-boot
+# report is taken before any ROM body has had a reason to send, so its send= is
+# structurally zero and can test nothing; hal/boot2_ipc.cpp takes the same
+# report again at exit (log-gated, and R1 sets the log). THAT one is where "did
+# the ARM9 ever actually reach the model" lives, and it read zero for the whole
+# life of this port until src/IPCSend.c was hostgen'd -- its store to
+# IPCFIFOSEND latched in ntr's mapped I/O window. See GATE2IPC_SYMS.
+EXIT_RE = re.compile(r"\[ipc:exit\] sync=\w+ steps=\d+ reads=\d+ send=(\d+)")
 
 
 def rung1(out_dir, frames):
@@ -139,6 +147,16 @@ def rung1(out_dir, frames):
     check("R1", "[ipc:selftest] PASS" in txt,
           "the ROM's IRQ::IPCRxFifoNotEmptyHandler read both pushed words, "
           "dispatched the registered one and returned the unclaimed one")
+    xm = EXIT_RE.search(txt)
+    check("R1", xm is not None and int(xm.group(1)) > 0,
+          "the ARM9 made %s real send(s) into the model over the run "
+          "(src/IPCSend.c is hostgen'd, so its store to IPCFIFOSEND reaches "
+          "ntr::ipc_reg_write instead of the mapped window)"
+          % (xm.group(1) if xm else "0"))
+    check("R1", "[arm7:census] tag  7" in txt,
+          "the channel-7 sound-command path is among them: the host ARM7 saw "
+          "src/func_0205b070.c's per-frame poke and declined it, so "
+          "hal/sdat/consumer.cpp still owns the batch")
     fm = FRAMES_RE.search(txt)
     check("R1", fm is not None and int(fm.group(1)) >= frames,
           "the boot proceeded %s frames" % (fm.group(1) if fm else "0"))

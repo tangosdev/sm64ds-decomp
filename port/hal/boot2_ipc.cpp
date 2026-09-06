@@ -280,6 +280,45 @@ void selftest() {
 }
 
 // ---------------------------------------------------------------------------
+// THE EXIT REPORT AND THE PER-CHANNEL TALLY  (run link100, lane IPCSEND)
+//
+// port_ipc_rom_boot_done below takes ipc_report("rom-boot") at the end of the
+// ROM's pre-main PXI span, and at THAT point send= can only ever be zero:
+// nothing in the bring-up sends. Every ARM9-initiated command in this build
+// comes later -- channel 7 once a frame out of src/func_0205b070.c, channel 8
+// at game init out of func_020196cc -- so the rom-boot line is a report on a
+// FIFO nobody has used yet, and reading its send=0 as "the ARM9 never sends"
+// is half of what cost lane BOOT2 a seat. (Only half: src/IPCSend.c really was
+// compiled plain and really did latch every store in the mapped window. It is
+// hostgen'd now, port/CMakeLists.txt's GATE2IPC_SYMS.)
+//
+// So the same report is taken again at the OTHER end of the run, with the
+// per-tag tally arm7_recv has been keeping all along beside it. That tally is
+// the only place the ARM9->ARM7 direction is visible PER CHANNEL, and that is
+// what a sound-path regression would show up in: channel 7 is held
+// observed-only, so its count going UP is traffic arriving and being declined
+// -- which changes nothing -- while its count going to zero would mean
+// func_0205b070's per-frame poke had stopped happening.
+//
+// Log-gated on SM64DS_IPC_LOG, which port/tools/ipc_proof.py's R1 already
+// sets: this is evidence, not a line every launch needs.
+void exit_report()
+{
+    ntr::ipc_report("exit");
+    for (unsigned t = 0; t < 32; ++t) {
+        if (!g_seen[t]) continue;
+        const Channel *c = find_channel(t);
+        std::fprintf(stderr, "[arm7:census] tag %2u  %6lu word(s) from the "
+                     "ARM9  %s%s\n", t, g_seen[t],
+                     c ? c->what : "UNCLAIMED CHANNEL",
+                     (c && !c->answer) ? "   [observed only]" : "");
+    }
+    std::fprintf(stderr, "[arm7:census] answered %lu, observed %lu, "
+                 "refused %lu\n", g_answered, g_observed, g_refused);
+    std::fflush(stderr);
+}
+
+// ---------------------------------------------------------------------------
 // THE SEAM: the ROM's own PXI bring-up
 // ---------------------------------------------------------------------------
 //
@@ -339,5 +378,8 @@ Attach g_attach;
 extern "C" void port_ipc_rom_boot_done(void)
 {
     ntr::ipc_report("rom-boot");
+    /* and the same report at the far end of the run, where the ARM9's own
+       sends have actually happened. See THE EXIT REPORT above. */
+    if (ntr::ipc_log_on()) std::atexit(exit_report);
     if (env_on("SM64DS_IPC_SELFTEST", false)) selftest();
 }

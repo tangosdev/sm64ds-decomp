@@ -73,11 +73,22 @@ void spin_guard_trip() {
 //
 // Reads and writes that reach io_read/io_write only come from TUs hostgen
 // routed. Everything else latches in the window io.cpp maps, so the model
-// publishes its own status there after every change. src/IPCSend.c is the case
-// that matters: it is built plain out of port/slice_gate10.txt and it reads
-// IPCFIFOCNT's error and send-full bits before every store. If those read
-// stale-set, its callers (src/func_0205ae30.c's `while (IPCSend(7,0,0) < 0)`,
-// src/func_0205f040.c) spin forever -- so publish() is not cosmetic.
+// publishes its own status there after every change.
+//
+// src/IPCSend.c USED TO BE THE CASE THAT MATTERS, and it is the reason this
+// block exists: it was built plain out of port/slice_gate10.txt, so it read
+// IPCFIFOCNT's error and send-full bits off the window -- and, worse, its
+// store to IPCFIFOSEND went into the window too, which meant the ARM9 never
+// sent anything at all. Run link100 lane IPCSEND moved it into GATE2IPC_SYMS,
+// so all three of its accesses arrive here now.
+//
+// THE PUBLISH STAYS, for two reasons that are not that one. Every linked TU
+// that touches an IPC register is routed today (IPCSend, func_0205bad8,
+// IRQ::IPCRxFifoNotEmptyHandler -- src/func_01ffdd98.c is the only other one
+// in src/ and it is a host stub), but the moment a plain TU joins the link
+// this is what keeps it reading the truth rather than a stale latch; and the
+// window and the model must never be allowed to disagree, because a debugger
+// or a save state reading 0x04000184 is reading the window.
 // ---------------------------------------------------------------------------
 
 volatile uint16_t *win16(uint32_t addr) {

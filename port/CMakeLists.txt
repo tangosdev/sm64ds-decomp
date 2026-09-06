@@ -9820,12 +9820,29 @@ endforeach()
 # that reach them and the four channels deliberately left out are all in
 # port/slice_gate2ipc.txt.
 #
-# TWO OF THEM MUST BE HOSTGEN'D. func_0205bad8 reaches IPCSYNC through a
+# THREE OF THEM MUST BE HOSTGEN'D. func_0205bad8 reaches IPCSYNC through a
 # pointer bound to a literal, so built plain its reads come off the mapped
 # latch and the ARM7's nibble is always zero. IRQ::IPCRxFifoNotEmptyHandler
 # reads IPCFIFORECV at 0x04100000, which is outside every region ntr/io.cpp
 # maps -- built plain that is an access violation, not a stale read.
-set(GATE2IPC_SYMS func_0205bad8 _ZN3IRQ24IPCRxFifoNotEmptyHandlerEv)
+#
+# IPCSend IS THE THIRD, and until run link100 lane IPCSEND it was the one that
+# was missing. Its `*(volatile unsigned int *)0x4000188 = cmd.raw` is exactly
+# hostgen's MMIO_DEREF shape, and built plain it LATCHED IN THE MAPPED WINDOW:
+# this port had never made an ARM9->ARM7 send at all, which is why every
+# [ipc:rom-boot] line in the tree read send=0, and why lane BOOT2 had to back
+# func_020196cc out again (it hung at func_0205ff08 + 0 with data_020a8114 == 1,
+# waiting for a reply to a request that was never delivered).
+# ITS PLAIN LINE IS COMMENTED OUT OF port/slice_gate10.txt, and the two lists go
+# to the same three targets, so the LINK SET does not change -- only the route.
+# NOTHING ELSE ABOUT THE FUNCTION CHANGES. Its two IPCFIFOCNT reads used to come
+# off the window ntr::ipc_publish keeps truthful and now come from
+# ntr/ipc.cpp's fifocnt_value() directly, which is the same number by
+# construction; its error arm's `|= 0xc000` stops being a store into a latch and
+# becomes the acknowledge ipc_reg_write documents; and with SM64DS_IPC_MODEL=0
+# ipc_reg_read/ipc_reg_write both decline, so io.cpp falls through to the same
+# mapped window a plain build used and the negative control is untouched.
+set(GATE2IPC_SYMS func_0205bad8 _ZN3IRQ24IPCRxFifoNotEmptyHandlerEv IPCSend)
 set(GATE2IPC_GEN "")
 foreach(sym IN LISTS GATE2IPC_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")

@@ -139,7 +139,10 @@ void ipc_set_rx_handler(void (*h)());
 // Put the model's authoritative IPCSYNC / IPCFIFOCNT values back into the
 // mapped I/O window, so a TU built PLAIN reads the truth. Same reason
 // io_gxstat_publish() exists: a trigger in io.cpp only reaches TUs that are
-// routed, and src/IPCSend.c is built plain out of port/slice_gate10.txt.
+// routed. src/IPCSend.c used to be the plain TU this sentence named; it is
+// hostgen'd now (run link100 lane IPCSEND, port/CMakeLists.txt's
+// GATE2IPC_SYMS), which is what made the ARM9 able to send at all. See the
+// THE MAPPED WINDOW block in ipc.cpp for what the publish is still for.
 void ipc_publish();
 
 struct IpcCounters {
