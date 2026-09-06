@@ -1260,12 +1260,65 @@ extern "C" int port_level_change_apply(void)
 /* The per-frame poll. Sits where Scene::SpawnIfNecessary sits in the ROM's
    own frame (func_020197b8 phase 3): after input, before the actor phases,
    so a level that comes up mid-frame gets its first tick from the same frame
-   loop as any other. */
+   loop as any other.
+
+   ---- AND IT IS SpawnIfNecessary'S OTHER HALF TOO (run link100, lane FRAME2)
+   ---------------------------------------------------------------------------
+   The release below is the SECOND half of the ROM's Scene::SpawnIfNecessary --
+   `data_02092664 = 0x187` -- run at the ROM's own seam. The block above
+   port_scene_request_release explains why the port owes that statement at all
+   (it runs SetSceneToSpawn and has no spawner for the ov003 scenes); this call
+   is about WHEN, and it is here rather than only inside the apply because of a
+   writer that did not exist until _ZTV5Stage slot 6 held the ROM's own body.
+
+   MEASURED, level 20 (Snowman's Land igloo), SM64DS_WINDOW_SELFTEST=300
+   SM64DS_LEVEL=20 SM64DS_FAULTS_FATAL=1, on the tip that seats slot 6 (cdb
+   breakpoints, f = the slot-6 thunk's own Behavior counter):
+
+     LoadLevel f=79 lvl=19 ret=func_ov002_020b0a0c+0x3c   the igloo exit
+     RELEASE   f=79 pend=187      (from port_level_change_apply's head call:
+                                   nothing pending yet, so it did nothing)
+     SETSCENE  f=80 id=3   from ?Behavior@Stage@@QAEHXZ+0x2a9
+     A_BOOT    f=80 p110=-1                               level 19 up
+     MFD_STAGE f=111 pend=3   from _ZN5Scene14BeforeBehaviorEv+0xe1
+     FATAL: Stage vtable slot 3 (CleanupResources) is not hosted   (0xc0000409)
+
+   Read the two middle lines together. port_level_teardown's convergence loop
+   calls port_actor_tick(), which walks phase 3, and the Stage HEADS the
+   behaviour list -- so the ROM's Stage::Behavior runs from INSIDE the teardown,
+   twenty lines before port_level_latch() clears data_02092110. It therefore
+   sees the change still pending, takes its own level-change arm and calls
+   Scene::SetSceneToSpawn(3, 0) -- the ROM's correct answer to a pending level
+   change, and the exact statement the cartridge's SpawnIfNecessary consumes a
+   moment later. The head release had already run, one statement earlier, so
+   nothing ever took the id back off 3; from then on Scene::BeforeBehavior (slot
+   7, the ROM's own body) took its `data_02092664 != 0x187` branch every frame
+   and, once the post-change fade read at-end, marked the STAGE for destruction.
+   The abort thirty frames later is the block above this one, verbatim.
+
+   The head release inside the apply STAYS -- its own comment says why (a
+   HitDeathPlane request latched before the change would otherwise let that very
+   teardown dispatch the trapped slot 3). This one covers the other side: any
+   request raised WHILE the change was being applied, by the ROM's own Stage or
+   by anything else. Running it here rather than at the apply's tail also covers
+   the apply's three declines, and it is where the ROM's consumer sits.
+
+   IT DOES NOT RELEASE ON A FRAME WITH NO PENDING CHANGE. The early return above
+   is unchanged, so a session that never changes level reaches nothing here, and
+   the title-select path is untouched: its own fade gate reads g_scene_fade_scene
+   (a host word), port_scene_fade_clear() still runs after the boot, and the id
+   it would have released has already gone back to the sentinel by then.
+
+   SM64DS_SCENE_LATCH=1 still declines every release, this one included, which
+   is how the abort above is reproduced from a fixed binary. */
 extern "C" int port_level_change_poll(void)
 {
     if (data_02092110 < 0)
         return 0;
-    return port_level_change_apply();
+    const int changed = port_level_change_apply();
+    port_scene_request_release("the level change has been serviced (or "
+                               "declined) and the port spawns no scene for it");
+    return changed;
 }
 
 /* ---- the front door -------------------------------------------------------

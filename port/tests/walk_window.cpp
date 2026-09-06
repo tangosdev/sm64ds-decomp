@@ -598,6 +598,10 @@ extern int data_0209f4a2[];    /* split: stick nx */
 extern int data_0209f4a4[];    /* split: stick ny */
 extern unsigned char data_0209f4ac[]; /* split: touching */
 extern int data_020a0e58[];    /* PadData[4]: u16 held, u16 pressed */
+/* THE PRESSED HALFWORD'S SPLIT SYMBOL. On the DS this IS data_020a0e58 + 2 --
+   PadData strides 4, {u16 held, u16 pressed} -- and hal/auto_bss.cpp gives it
+   its own storage on the host. See the publish beside the pad store below. */
+extern int data_020a0e5a[];
 /* MY COMMS SLOT: 0 solo or parent, 1..3 a child seat. hal/comms_conductor.cpp
    seats it from func_02040704 when a session joins; the flight recorder below
    reads it.
@@ -9337,8 +9341,46 @@ int main(void)
                    direct store is the one that reaches the game. */
                 const int lo = (int)data_0209f250 * 4;
                 *(unsigned short *)((char *)data_020a0e58 + lo + 0) = raw;
-                *(unsigned short *)((char *)data_020a0e58 + lo + 2) =
+                const unsigned short edge =
                     (unsigned short)(raw & (unsigned short)~raw_prev);
+                *(unsigned short *)((char *)data_020a0e58 + lo + 2) = edge;
+                /* ---- AND THE SPLIT SYMBOL, EVERY FRAME (run link100, lane
+                   FRAME2) -------------------------------------------------
+                   data_020a0e5a is PadData[i].pressed -- the SAME halfword the
+                   store above just wrote, at data_020a0e58 + i*4 + 2 -- and
+                   hal/auto_bss.cpp gives it separate host storage. Two ROM
+                   readers use the split spelling rather than the record:
+                   IsButtonInputValid (src/IsButtonInputValid.c) and
+                   Stage::Behavior's own pause trigger
+                   (src/_ZN5Stage8BehaviorEv.cpp:205, `data_020a0e5a + pi * 4`).
+
+                   NOTHING WROTE IT PER FRAME. hal/message_pump.cpp assigns it
+                   while a message box is up and says why -- the box could not
+                   be dismissed otherwise -- and hal/input_probe.cpp ORs a
+                   scripted edge into it. Outside those two it stayed at
+                   whatever was last OR-ed in, forever. Two things follow, and
+                   _ZTV5Stage slot 6 is what made both visible:
+
+                     * a real key press never reaches it at all, so the ROM's
+                       own pause trigger could not fire from the keyboard; and
+                     * one SM64DS_PROBE_INPUT press LATCHES. Measured on the tip
+                       before this line, port/tools/stage_pause_proof.py rung 5:
+                       a scripted START+L at f150..155 is refused for all six
+                       frames by the ROM's own L+START term, and then the pause
+                       opens at f156 -- the frame the hold ends -- off the START
+                       bit still standing in this word from f150. The same latch
+                       is why the paused run reopened the menu at f190 after
+                       closing it at f180.
+
+                   The store is an ASSIGNMENT of the same edge, at the same
+                   instant, which is exactly what the aliasing does on hardware.
+                   It is above port_input_probe_apply on purpose: the probe ORs
+                   its scripted bits into BOTH words after this, so a scripted
+                   press still arrives and still lasts exactly one frame.
+                   hal/message_pump.cpp's own publish is unchanged and still
+                   runs later in the frame; it now folds A/B onto a word that
+                   was cleared this frame instead of one that never was. */
+                *(unsigned short *)((char *)data_020a0e5a + lo) = edge;
             }
             raw_prev = raw;
             /* the angle FROM Mario TO the camera (what the name
@@ -11275,11 +11317,23 @@ int main(void)
              seen   data_0209caa0[2] & 0x80, the opening-seen bit. In adventure
                     mode the trigger's inner gate is
                         (VS && data_0209fc68 == 0) || (data_0209caa0[2] & 0x80)
-                    and exactly one write in the image sets that bit --
+                    and on the CARTRIDGE exactly one write sets that bit --
                     src/func_ov085_0212d5dc.cpp:51, LakituBro's last opening
-                    state. A single-player run that has not been through the
-                    opening CANNOT pause, on the cartridge or here, and a proof
-                    that did not print this term would read that as a bug.
+                    state.
+                    ON THIS PORT IT IS ALREADY SET ON EVERY LEVEL ENTRY, and a
+                    reader who takes the sentence above as the whole story will
+                    misread every line this block prints. hal/level_boot.cpp
+                    (the `intro_seen` block, `data_0209caa0[8] |= 0x80`) sets it
+                    across every boot that is not a title-bridge crossing into a
+                    fresh file and not the second half of an opening, and its
+                    own banner gives the three reasons -- StartIntroCutscene's
+                    gate, HUD::Behavior and HUD::Render (the whole bottom screen
+                    returns early without it), and Player::InitResources' voice
+                    bank. So a level selftest boots with seen=1 from frame 0 and
+                    the pause is STATE-legal here; what refuses a scripted START
+                    is one of the terms below it or the button combination
+                    itself. port/tools/stage_pause_proof.py rung 5 is the
+                    measurement of that, and it used to assert the opposite.
              msg    data_0209d660, a message box is up
              fade   data_0209d4b0, a fader is in motion
              trio   data_0209f294 | data_0209f2c4 | data_0209f20c
@@ -11295,28 +11349,40 @@ int main(void)
                 pw = v ? atoi(v) : 0;
                 if (v && pw == 0) pw = 1;      /* "=1", "=on", anything */
             }
-            /* SM64DS_PAUSE_WATCH=2 IS A TEST FIXTURE AND IS NAMED ONE.
-               The ROM's pause gate needs data_0209caa0[2] & 0x80, the
-               opening-seen bit, and the only writer of that bit in the whole
-               image is src/func_ov085_0212d5dc.cpp:51 -- LakituBro's last
-               opening state. A level selftest boots straight into the level
-               with a fresh save block, so the bit is clear and the ROM refuses
-               to pause, exactly as the cartridge would. That refusal is worth
-               proving on its own (mode 1 is the negative control), but proving
-               that the pause OPENS needs the bit set, and running the whole
-               opening inside a level selftest is not something this harness
-               can do. Mode 2 sets it once, at the frame the watch starts, with
-               the same `|= 0x80` the ROM's own state uses. Scaffolding of the
-               same class as SM64DS_FORCE_ANALOG and SM64DS_SYNC_FORCE_V1: it
-               is never on in a shipped run and never on in the battery. */
+            /* SM64DS_PAUSE_WATCH=2 IS A TEST FIXTURE AND IS NAMED ONE -- AND
+               ON A LEVEL SELFTEST IT IS A NO-OP, WHICH IT NOW SAYS.
+               (run link100, lane FRAME2: the correction.) What stood here was
+
+                 "A level selftest boots straight into the level with a fresh
+                  save block, so the bit is clear and the ROM refuses to pause
+                  ... Mode 2 sets it once."
+
+               and the first half is false on this port. hal/level_boot.cpp's
+               intro_seen block sets data_0209caa0[8] |= 0x80 -- the same word,
+               the same bit -- on every level entry that is not a title-bridge
+               crossing into a fresh file, for the three reasons its own banner
+               gives. Measured: every [pause] line of a level-1 selftest, from
+               f0, reads seen=1 with this mode OFF.
+
+               The mode stays, because the ONE entry the port leaves the bit
+               clear on is real (the opening's own boot), and a proof that wants
+               the pause open on that entry needs it. It now reports whether it
+               actually did anything, so a log can never again be read as
+               evidence that the bit was clear beforehand. Scaffolding of the
+               same class as SM64DS_FORCE_ANALOG and SM64DS_SYNC_FORCE_V1: it is
+               never on in a shipped run and never on in the battery. */
             if (pw >= 2) {
                 static int seeded;
                 if (!seeded) {
                     seeded = 1;
+                    const int was = (data_0209caa0[2] & 0x80) ? 1 : 0;
                     data_0209caa0[2] |= 0x80;
                     fprintf(stderr, "[pause] fixture: data_0209caa0[2] |= 0x80 "
-                            "(the opening-seen bit, normally written by "
-                            "src/func_ov085_0212d5dc.cpp:51)\n");
+                            "(the opening-seen bit) -- it was %s\n",
+                            was ? "ALREADY SET by the level boot "
+                                  "(hal/level_boot.cpp intro_seen); this "
+                                  "fixture changed nothing"
+                                : "CLEAR; the fixture is what set it");
                 }
             }
             if (pw) {
@@ -12048,18 +12114,35 @@ int main(void)
                hal/camera_bridges.cpp. */
             if (ntr::widescreen)
                 hal_camera_widen_frustum();
-            /* THE ACTOR RENDER BUCKET GOES HERE, and the reason is the shim
-               immediately below. Processing list 5 is the game's own render
-               pass -- func_0204322c over slots 9/10/11, in render-priority
-               order -- and everything on it is ROM code working in SCENE
-               units: Tree::Render clips its cylinders through the Clipper
-               with data_0209b3ec as it stands and writes scene-unit
-               translations into its Models. The shim converts that same view
+            /* THE ACTOR RENDER BUCKET GOES HERE. Processing list 5 is the
+               game's own render pass -- func_0204322c over slots 9/10/11, in
+               render-priority order -- and everything on it is ROM code working
+               in SCENE units: Tree::Render clips its cylinders through the
+               Clipper with data_0209b3ec as it stands and writes scene-unit
+               translations into its Models. The raster is z-buffered, so
+               drawing the actors ahead of the level model costs nothing.
+
+               THE REASON THIS BANNER USED TO GIVE IS STALE, and saying so is
+               the point (run link100, lane FRAME2). It read: "the reason is the
+               shim immediately below ... the shim converts that same view
                matrix for the port's own world-unit models. So the bucket runs
                BEFORE the conversion and the harness's two draws after it, and
-               each side gets the matrix it was written against. The raster is
-               z-buffered, so drawing the actors ahead of the level model
-               costs nothing.
+               each side gets the matrix it was written against." There is no
+               conversion below any more. The block that follows this one says
+               so in its own first line -- "THE VIEW MATRIX IS USED AS THE ROM
+               PRODUCED IT ... The R6 shim that scaled this row by 8 for the
+               harness's world-unit models is gone" -- and every model matrix in
+               the frame is scene units now. What this position still buys is
+               DRAW ORDER and nothing else: opaque geometry is free either way,
+               and the order that is not free is the translucent one (see the
+               particle note below, which loses every particle if it is
+               submitted ahead of the level).
+
+               IT MATTERS TO _ZTV5Stage SLOT 9, which is why it is corrected
+               here rather than left. Stage::Render dispatches from INSIDE this
+               bucket, and the stale paragraph made that look like a matrix
+               problem. It is not; it is the same problem slot 6 had. See
+               port/stage_lifecycle_map.txt section 12c.
                SM64DS_NO_ACTORS=1 takes the bucket out for the A/B. */
             static int no_actors = -1;
             if (no_actors < 0) no_actors = getenv("SM64DS_NO_ACTORS") ? 1 : 0;

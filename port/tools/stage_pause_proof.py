@@ -66,22 +66,53 @@ than merely green.
           A double call would step it two.
 
   RUNG 5  THE PAUSE REFUSES, AND FOR THE ROM'S REASON.  This is the negative
-          control, and it is a real measurement rather than a placeholder.
-          Stage::Behavior's pause trigger is gated in adventure mode on
-          data_0209caa0[2] & 0x80 -- the opening-seen bit, whose only writer in
-          the whole image is src/func_ov085_0212d5dc.cpp:51.  A level selftest
-          boots with that bit clear, so a scripted START must NOT open the pause
-          screen, and the watch line must say seen=0 while it refuses.  A run
-          that paused here would mean the port had invented a pause the
-          cartridge does not offer.
+          control.
 
-  RUNG 6  THE PAUSE OPENS.  Same binary, same scripted START, with
-          SM64DS_PAUSE_WATCH=2 setting the opening-seen bit the way the
-          opening's own last state sets it.  data_0209f2c4 must go 0 -> 1 on the
-          press, which is Stage::Behavior running PS_Init and PS_Update -- fifty
-          matched TUs that had never been in a link.  And the run must exit 0
-          with SM64DS_FAULTS_FATAL=1: the pause screen allocates, draws and
-          reads input, and none of that may fault.
+          IT USED TO TEST A PREMISE THAT IS FALSE ON THIS PORT, and the
+          correction is the interesting part (run link100, lane FRAME2).  What
+          stood here was: the trigger's inner gate is
+              (VS && data_0209fc68 == 0) || (data_0209caa0[2] & 0x80)
+          the opening-seen bit's only writer is src/func_ov085_0212d5dc.cpp:51,
+          "a level selftest boots with that bit clear", so a scripted START must
+          be refused and the watch must say seen=0.
+
+          It does not say seen=0.  hal/level_boot.cpp's intro_seen block sets
+          data_0209caa0[8] |= 0x80 -- the same word, the same bit -- on every
+          level entry that is not a title-bridge crossing into a fresh file,
+          with three reasons in its own banner (StartIntroCutscene's gate,
+          HUD::Behavior and HUD::Render, Player::InitResources' voice bank).
+          Measured: every [pause] line of a level-1 selftest reads seen=1 from
+          frame 0, with no fixture at all.  So the old rung could not pass, its
+          verdict line asserted "opening-seen bit clear on every frame" as a
+          fixed string whatever the run said, and the state gate it named was
+          not what refused anything.  It ALSO made rung 6's SM64DS_PAUSE_WATCH=2
+          fixture a no-op that read like the thing making the pause possible.
+
+          WHAT THE ROM ACTUALLY REFUSES ON, and what this rung tests now, is the
+          first term of the trigger, src/_ZN5Stage8BehaviorEv.cpp:205:
+
+              (((held & 0x200) == 0 && (held & 0x100) == 0) || (pressed & 8) == 0)
+
+          -- 0x100 is L, 0x200 is R, 8 is START.  START pressed while L or R is
+          held is not a pause on the cartridge, and on the hold frames after the
+          edge there is no START press left to open one either.  So the rung
+          scripts START+L, in the same run shape and at the same frames as rung
+          6's plain START, and requires data_0209f2c4 to stay 0.  The state gate
+          is OPEN in this run (seen=1 is asserted, not assumed), which is what
+          makes the refusal attributable to the button term rather than vacuous
+          -- and rung 6, one press different on the same binary and the same
+          state, opens the menu.  A run that paused here would mean the port had
+          invented a pause the cartridge does not offer.
+
+  RUNG 6  THE PAUSE OPENS -- AND WITH NO FIXTURE.  Same binary, same watch mode
+          as rung 5 (SM64DS_PAUSE_WATCH=1), same frames, plain START.
+          data_0209f2c4 must go 0 -> 1 on the press, which is Stage::Behavior
+          running PS_Init and PS_Update -- fifty matched TUs that had never been
+          in a link.  And the run must exit 0 with SM64DS_FAULTS_FATAL=1: the
+          pause screen allocates, draws and reads input, and none of that may
+          fault.  SM64DS_PAUSE_WATCH=2 is no longer used by any rung; it stays in
+          the binary for the one entry that does leave the bit clear (the
+          opening's own boot) and now reports whether it changed anything.
 
   RUNG 7  AND IT CLOSES.  A second START while paused must bring data_0209f2c4
           back to 0.  A pause that opens and cannot be left is the failure mode
@@ -249,6 +280,11 @@ def rung4(exe, root, rundir):
 PAUSE_RE = re.compile(r"\[pause\] f(\d+) f2c4=(\d+) seen=(\d+) msg=(\d+) "
                       r"fade=(\d+) trio=(\d+) held=([0-9a-f]+)")
 PRESS = "150-155:START,220-225:START"
+# rung 5's control: the SAME frames, with L held. Stage::Behavior:205 refuses a
+# START pressed while L (0x100) or R (0x200) is held, and the hold frames after
+# the edge carry no START press to open one with.
+REFUSE = "150-155:START+L,220-225:START+L"
+KEY_START, KEY_L = 0x008, 0x100
 
 
 def pause_rows(t):
@@ -258,23 +294,29 @@ def pause_rows(t):
 
 def rung5(exe, root, rundir):
     rc, t = run(exe, root, rundir, "r5_refuse", 260,
-                {"SM64DS_PAUSE_WATCH": "1", "SM64DS_PROBE_INPUT": PRESS})
+                {"SM64DS_PAUSE_WATCH": "1", "SM64DS_PROBE_INPUT": REFUSE})
     rows = pause_rows(t)
     if rc != 0 or not rows:
         return verdict(False, "rung5  run rc=%d, %d watch lines" % (rc, len(rows)))
-    seen_any = any(r[2] for r in rows)
-    paused = [r for r in rows if r[1] != 0]
-    start_seen = any(r[6] & 0x8 for r in rows)
-    ok = (not seen_any) and (not paused) and start_seen
-    return verdict(ok, "rung5  NEGATIVE CONTROL: opening-seen bit clear on "
-                       "every one of %d frames, START arrived (%s), pause "
-                       "refused on all of them (%d paused frames)"
-                   % (len(rows), "yes" if start_seen else "NO", len(paused)))
+    seen = sum(1 for r in rows if r[2])
+    paused = sum(1 for r in rows if r[1] != 0)
+    combo = sum(1 for r in rows
+                if (r[6] & (KEY_START | KEY_L)) == (KEY_START | KEY_L))
+    # The control is only meaningful with the state gate OPEN: seen must be set
+    # on every frame (it is, from the level boot), the scripted L+START must
+    # actually have arrived, and nothing may pause.
+    ok = seen == len(rows) and combo > 0 and paused == 0
+    return verdict(ok, "rung5  NEGATIVE CONTROL: over %d frames the "
+                       "opening-seen bit was set on %d (the state gate is "
+                       "OPEN), START arrived with L held on %d, and "
+                       "data_0209f2c4 stayed 0 on %d -- Stage::Behavior:205's "
+                       "L+START term refused every one"
+                   % (len(rows), seen, combo, len(rows) - paused))
 
 
 def rung67(exe, root, rundir):
     rc, t = run(exe, root, rundir, "r67_open", 300,
-                {"SM64DS_PAUSE_WATCH": "2", "SM64DS_PROBE_INPUT": PRESS})
+                {"SM64DS_PAUSE_WATCH": "1", "SM64DS_PROBE_INPUT": PRESS})
     rows = pause_rows(t)
     if not rows:
         verdict(False, "rung6  no watch lines")
@@ -283,7 +325,9 @@ def rung67(exe, root, rundir):
                            "SM64DS_FAULTS_FATAL=1" % rc)
     opened = [r[0] for r in rows if r[1] != 0]
     ok6 = verdict(bool(opened), "rung6  data_0209f2c4 went nonzero at frame "
-                                "%s (the pause screen opened)"
+                                "%s (the pause screen opened, on plain START "
+                                "and with no fixture -- one press different "
+                                "from rung 5, same binary, same state)"
                   % (opened[0] if opened else "NEVER")) and ok6
     # rung 7: it comes back to 0 after the second press
     closed = False

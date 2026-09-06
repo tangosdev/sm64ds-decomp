@@ -366,15 +366,27 @@ static int __fastcall st_behavior(void *, void *) { return 1; }
 #endif
 
 /* Slot 9. STILL A HOST OCCUPANT, and the reason is the frame loop rather than
-   the link -- port/stage_lifecycle_map.txt section 12c, and section 13 for what
-   this lane measured against it. tests/walk_window.cpp transcribes
-   Stage::Render statement by statement and runs the ROM's actor render bucket
+   the link -- port/stage_lifecycle_map.txt section 12c, and 13b for the two
+   things lane FRAME shipped wrong.
+
+   AND ONE CORRECTION, because this comment carried it first (lane FRAME2). What
+   stood here was that tests/walk_window.cpp "runs the ROM's actor render bucket
    BEFORE the world/scene matrix handling that follows it, so a slot-9 dispatch
    (which happens from inside that bucket) draws the level model, the skybox and
-   the transparent pass on the other side of it. Behaviour-neutral by
-   construction, exactly as the retired comment above says: walk_window still
-   draws all three from its own render phase, so this occupant removes and adds
-   no pixel. It retires the day the render half of that file moves. */
+   the transparent pass on the other side of it". There is no matrix handling
+   after the bucket any more: the block below port_actor_render in that file
+   opens "THE VIEW MATRIX IS USED AS THE ROM PRODUCED IT ... The R6 shim that
+   scaled this row by 8 for the harness's world-unit models is gone", and every
+   model matrix in the frame is scene units. What blocks slot 9 is section 6's
+   twelve pieces and the fact that tests/walk_window.cpp IS Stage::Render,
+   transcribed statement by statement -- the same shape of job slot 6 was, with
+   a selftest-BMP A/B in place of a script cursor where the proof is concerned.
+   12c is the whole reading.
+
+   Behaviour-neutral by construction, exactly as the retired comment above says:
+   walk_window still draws all three from its own render phase, so this occupant
+   removes and adds no pixel. It retires the day the render half of that file
+   moves. */
 static int __fastcall st_render(void *, void *)   { return 1; }
 
 static int  __fastcall st_binit(void *s, void *)
