@@ -1,15 +1,19 @@
-// NONMATCHING: 16/161 at exact size 0x284. The previous draft here was 0x22c -- 88 bytes
+// NONMATCHING: 9/161 at exact size 0x284. The draft that stood here was 0x22c -- 88 bytes
 // SHORT and semantically wrong (array24/array28 were read off the wrong shadow struct),
-// so it was an incomplete reconstruction rather than a near-miss. This is a fresh
-// size-exact reconstruction and the whole residue is two callee-saved pair swaps in the
-// path-node block at +0x104..+0x15c: the ROM colours the node pointer r7 and the node
-// count r8 (and the two distance accumulators sb/sl) where every build here takes the
-// mirror assignment. MEASURED INERT: all 120 declaration permutations of the block's five
-// locals with split declarations, and all 360 initialised-declaration forms (five
-// initialised declarations x the six positions of the `r5 = 0` statement) -- consistent
-// with notes 6bs, where rank stops biting once the declaration is split from the
-// assignment. Both sides take fresh registers here, so this is a colouring-priority
-// difference and not the recycle rule.
+// so it was an incomplete reconstruction rather than a near-miss.
+//
+// 16 -> 9 came from the permuter and the lever is note 6bu #5 seen from the other side:
+// the x half of the reference distance must NOT have a name. Written `int rx = *(s16 *)
+// (r4 + 0x3c); int dd = rx * rx + rz * rz;` the named copy takes r7 away from the node
+// pointer and the whole r7/r8 pair rotates; written as two inline reads of the same
+// halfword it lands on the ROM's registers. `rz` must stay named -- inlining it too costs
+// the same seven words back.
+//
+// Residue is the last nine words: the sb <-> sl pair over the two squared distances
+// (+0x138..+0x15c). MEASURED INERT: all 120 declaration permutations of the block's five
+// outer locals, all 360 initialised-declaration forms (five initialised declarations x the
+// six positions of `r5 = 0`), splitting `dz`/`dx` into a load then an in-place subtract,
+// swapping the dz/dx declaration order, and inlining rz as well.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -67,8 +71,7 @@ int func_ov007_020ba05c(void)
                     int dz = (((int *)*(char **)(o + 0x28))[idx] >> 12) - x;
                     int rz = *(s16 *)(r4 + 0x3e);
                     int dx = (((int *)*(char **)(o + 0x24))[idx] >> 12) - y;
-                    int rx = *(s16 *)(r4 + 0x3c);
-                    int dd = rx * rx + rz * rz;
+                    int dd = *(s16 *)(r4 + 0x3c) * *(s16 *)(r4 + 0x3c) + rz * rz;
                     int dd2 = dx * dx + dz * dz;
                     if (dd >= 0x100 && dd2 <= 4)
                         flag = 1;
