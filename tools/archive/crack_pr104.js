@@ -64,7 +64,7 @@ STRUCTURAL LEVERS (pick by what the diff shows once sizes match):
 - arithmetic idiom: signed x/32 and x%32 use the ROM's un-reduced shift idiom; x/K vs (x*magic)>>s; x%K vs x-(x/K)*K.
 - load width/signedness: u8/s8/u16/s16 local or cast flips ldrb/ldrsb/ldrh/ldrsh.
 - CSE-elided reload before an adjacent store: force a fresh ldr with *(volatile int*)... .
-Full catalogue: notes/mwccarm-codegen.md (sec 6e = newest levers) and notes/archive/pret-idioms.md.
+Condensed rules: notes/codegen-rules.md. Full dated catalogue (sec 6e = newest levers): notes/mwccarm-codegen.md. Also notes/archive/pret-idioms.md.
 
 KNOWN TARGET-DATA CAVEAT (do NOT chase these until you are down to ~2 divergences at these exact offsets): the published disassembly is lossy for two ldrd/strd-decoded pool words. If your only remaining diffs are constants at +0x59c (a tilemap scan mask, most likely 0x3ff) and +0x5ac (a tile ID, written 0x2d2 but possibly 0x1d2/0x3d2), those are atlas ambiguities, not your bug - report them and stop; do not thrash other logic to satisfy them.
 

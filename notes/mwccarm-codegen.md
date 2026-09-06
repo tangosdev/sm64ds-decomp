@@ -5041,3 +5041,10 @@ against the baseline on main, so `nearmiss_db.py ingest` correctly refused it. T
 second time in this run that a lane's headline claim was scored against a stale baseline. The
 rule that prevents it is one line: before claiming an improvement, re-score the DB's own
 stored `c_source` for that key in the same worktree, in the same run, and quote both numbers.
+---
+
+**Note (added at end-of-file on purpose, to avoid shifting any line number cited
+elsewhere in `notes/`): `notes/codegen-rules.md` condenses sections `## 1`-`## 6d` and
+`## 6az` above into a ~20KB doctrine file meant to be loaded whole. Read it for the rules;
+come back here (by section label) for the fuller derivation, evidence, and the dated
+discovery log (`## 6e` onward) that it does not condense.**
