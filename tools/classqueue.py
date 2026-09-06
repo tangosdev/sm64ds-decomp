@@ -95,9 +95,21 @@ def queue_path():
 
 
 def rows():
+    """Queue rows, minus the '#' note block.
+
+    tu-promotion-queue.tsv carries its own reading instructions -- what each
+    blocker means, and which columns are floors rather than figures -- because
+    every one of them has been read as a measurement and been wrong. csv wants
+    the column header on line 1, so the notes cannot precede it; they sit
+    directly below it as rows whose first field starts with '#'. Without this
+    filter `next` would hand a writer a comment line as a target.
+    """
     path = queue_path()
     with path.open(newline="", encoding="utf-8") as fh:
-        return path, list(csv.DictReader(fh, delimiter="\t"))
+        rd = csv.DictReader(fh, delimiter="\t")
+        first = rd.fieldnames[0] if rd.fieldnames else "class_name"
+        return path, [r for r in rd
+                      if not (r.get(first) or "").lstrip().startswith("#")]
 
 
 def workable(row):
