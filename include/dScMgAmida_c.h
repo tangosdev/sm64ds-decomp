@@ -94,8 +94,15 @@ struct dScMgAmida_c : dScMgBase_c {
     virtual int  Virtual8C();                          /* slot 35 */
     virtual int  Unk36();                                /* slot 36 */
 
-    u8  unk_4660[4][8];      /* 0x4660 -- only ever passed around whole */
-    u8  pad_4680[0x50];
+    s32 unk_4660[4][2];      /* 0x4660 */
+    s8  unk_4680[4];          /* 0x4680 */
+    s32 unk_4684[4];          /* 0x4684 */
+    s32 unk_4694[4];          /* 0x4694 */
+    s32 unk_46a4[4];          /* 0x46a4 */
+    s8  unk_46b4[4];          /* 0x46b4 */
+    s32 unk_46b8[4];          /* 0x46b8 */
+    s32 unk_46c8;             /* 0x46c8 */
+    s32 unk_46cc;             /* 0x46cc */
     s32 mState;               /* 0x46d0 -- Behavior's state switch: 0 setup,
                                  1 playing, 2 result wait, 3 finale */
     u8  mFinished;            /* 0x46d4 -- set when mRoundCount reaches 5;
