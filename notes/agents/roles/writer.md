@@ -271,6 +271,24 @@ long omitted:
 |---|---|
 | `externalized_output` | a symbol whose one kept copy lives in **another module** — disposition `canonical-import` |
 
+**An unowned `.data` section in `delinks.txt` does NOT mean your TU cannot own
+data.** Prompts and notes have repeatedly stated the ov006 constraint as "the
+whole `.data` segment is one section owned by no file, so a TU there cannot own
+data objects". Measured false: `dScMgTrampoline_c+MgTrampolineTime` and
+`dScMgTrampoline2_c` each own named objects at that section's tail
+(`0x0213faa0`, `0x0213fbc4`). The section being unowned in `delinks.txt` and a
+manifest claiming individual symbols inside it are different questions. The
+constraint that does survive is narrower and is about position: ov006's vtables
+sit **mid-section**, so they cannot be carved out, and a TU there still must not
+emit its own vtable.
+
+**Do not assume a sibling convention about the `*_classInit` factory — count
+it.** It is tempting to read one promoted neighbour and generalise. On ov006,
+**14 of the 20 manifests name a `classInit`**, and three of the exclusions are
+only because a separate manifest already claims it. Whether the factory belongs
+in your claim is decided by whether it is contiguous with the run you are
+taking, not by a house style.
+
 **Prefer `deadstrip-data`. `externalized_output` is the non-promotable route.**
 A cross-module home does *not* by itself send a symbol to `externalized_output`:
 what matters is whether the address has a **configured ROM home** in some
