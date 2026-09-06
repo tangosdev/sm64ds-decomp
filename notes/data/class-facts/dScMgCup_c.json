@@ -1,0 +1,386 @@
+{
+  "class": "dScMgCup_c",
+  "produced_by": "scout (stage 1). This class was picked because it is the ONLY one of ov006's twenty TU manifests that is not `status: promoted`, and the question 'why did this shadow never promote' is worth more than the class facts. Tools: tools/rtti_extract.py, tools/rtti_vtables.py --own dScMgCup_c, tools/tubuild.py inspect + verify ov006/dScMgCup_c, tools/match.py extract_func, plus direct word reads and capstone disassembly of extracted/overlays/overlay_0006.bin. No byte gate was run beyond `tubuild verify`, which is read-and-compare, not a gate.",
+
+  "headline": {
+    "question": "Why has src_tu/minigames/d_s_mg_cup.cpp never promoted?",
+    "answer": "ONE function out of thirty-two does not byte-match: _ZN10dScMgCup_c12StateShuffleEv at 0x020df5b8, size 0x720, differing in exactly 9 of 456 words. Nothing else is wrong with this TU. It is not blocked by RTTI, not by the vtable, not by an unlicensed section, not by the compiler-only policy, not by relocation destinations, not by emission order, and not by a missing manifest field.",
+    "mechanism": "tools/tubuild.py:1398 computes `text_verified = all_bytes_ok and all_reloc_ok and not overlaps and not (declared-not-defined) and no MISSING`. Line 1460 then reads `if text_verified and entry.get('status') == 'shadow': entry['status'] = 'text-verified'`. `all_bytes_ok` is the ONLY one of those five conjuncts that is False. So `shadow` here does not mean 'half-reconstructed', 'unregistered', or 'structurally ineligible' - it means 'a previous verify round ran and did not reach 100% byte match'. The status is a measurement, not a stage marker.",
+    "generalisation": "For any manifest reading `status: shadow`, read `verification.criteria` before assuming anything structural. If `every_declared_function_bytes_match` is FAIL and the other four criteria are PASS, the manifest is one near-miss away from promotion and the whole remaining cost is a matching problem in a named function - not a reconstruction problem. That is the shape here."
+  },
+
+  "name_provenance": {
+    "kind": "ROM-named",
+    "statement": "dScMgCup_c is a REAL RTTI name carried by the cartridge. The coined-name wall does not apply to this class, so no _ZTI/_ZTS/_ZTV row is refused for want of a provable name.",
+    "evidence": "build/rtti.json (regenerated on this worktree by tools/rtti_extract.py) carries {\"module\": \"ov006\", \"addr\": \"0x0213c048\", \"kind\": \"si\", \"mangled\": \"10dScMgCup_c\", \"name\": \"dScMgCup_c\", \"name_addr\": \"0x0213c054\", \"vtable\": \"0x0213c154\", \"vtable_module\": \"ov006\"}. Read directly from extracted/overlays/overlay_0006.bin, the NUL-terminated bytes at 0x0213c054 are b'10dScMgCup_c\\x00' - the mangled length-prefixed spelling, matching the record's own name pointer.",
+    "coined_parts": "The factory name dScMgCup_c_classInit, all eight State* method names, Virtual50, every func_ov006_* helper name and every field name are reconstructions. The manifest itself says so: 'The eight State* names are explicit class-anchored inferences from PMF order and behavior; the ROM proves their class identity and order, not their exact original source spelling.' Only the CLASS name is cartridge-proved."
+  },
+
+  "overlay": "ov006",
+  "module_base": "0x020bfec0",
+  "module_sections": {
+    ".text": "0x020bfec0..0x0212b890",
+    ".rodata": "0x0212b890..0x0212f4c4",
+    ".init": "0x0212f4c4..0x0213356c",
+    ".ctor": "0x0213356c..0x021335e8",
+    ".data": "0x02133600..0x021402e0",
+    ".bss": "0x021402e0..0x021430a0",
+    "source": "config/arm9/overlays/ov006/delinks.txt (tree-derived, base 8f3d1eb1a)",
+    "image_extent": "extracted/overlays/overlay_0006.bin is 0x80420 bytes, so 0x020bfec0..0x021402e0 - the image stops exactly at .bss, as expected."
+  },
+
+  "typeinfo": {
+    "ZTI": "0x0213c048",
+    "ZTI_module": "ov006",
+    "ZTI_kind": "abi::__si_class_type_info",
+    "ZTI_size": "0x0c",
+    "ZTS": "0x0213c054",
+    "ZTS_module": "ov006",
+    "ZTV": "0x0213c154",
+    "ZTV_module": "ov006",
+    "raw_words_at_ZTI": ["0x0209a764", "0x0213c054", "0x0213bc64"],
+    "word_meanings": [
+      "+0x00 -> arm9 0x0209a764, the ABI __si_class_type_info vtable (confirms exactly one direct base, no virtual bases)",
+      "+0x04 -> ov006 0x0213c054, _ZTS10dScMgCup_c, bytes '10dScMgCup_c'",
+      "+0x08 -> ov006 0x0213bc64, _ZTI19dScMgSingle3DBase_c (that record's own +0x04 points at 0x0213bd00, bytes '19dScMgSingle3DBase_c')"
+    ],
+    "all_three_local": "Unlike daOts_c, whose _ZTV sits in ov064 while its _ZTI/_ZTS live in ov027, all three of this class's records are in ov006 and are adjacent: _ZTI 0x0213c048, _ZTS 0x0213c054, _ZTV 0x0213c154. Each was read from the ov006 image at its own address, not inferred from the others."
+  },
+
+  "base_class": "dScMgSingle3DBase_c",
+  "base_evidence": "DIRECT, from the __si_class_type_info record, read as raw words out of extracted/overlays/overlay_0006.bin. _ZTI10dScMgCup_c at ov006 0x0213c048 has +0x00 = 0x0209a764 (the __si_class_type_info vtable, so the record IS the single-inheritance form) and +0x08 = 0x0213bc64. Following that pointer, the record at 0x0213bc64 has +0x04 = 0x0213bd00, whose NUL-terminated bytes are '19dScMgSingle3DBase_c'. build/rtti.json independently emits the same edge: {\"derived\": \"dScMgCup_c\", \"base\": \"dScMgSingle3DBase_c\", \"offset\": 0, \"resolved_by\": \"own_module\"}. Vtable LENGTH is corroboration only and is NOT the reason: dScMgCup_c has 36 slots and dScMgSingle3DBase_c also leaves 36, which is consistent with a direct subclass that adds no new virtuals, but would be equally consistent with several ov006 siblings.",
+
+  "inheritance_chain": ["dScMgCup_c", "dScMgSingle3DBase_c", "dScMgBase_c", "dScene_c", "dBase_c", "fBase_c"],
+  "inheritance_chain_evidence": "Each link is a separate __si_class_type_info +0x08 hop in build/rtti.json's edge list: dScMgCup_c->dScMgSingle3DBase_c (resolved_by own_module), dScMgSingle3DBase_c->dScMgBase_c (resolved_by unique), dScMgBase_c->dScene_c (resolved_by arm9), dScene_c->dBase_c (own_module), dBase_c->fBase_c (own_module). fBase_c is kind 'class' - a root with no base - which terminates the chain.",
+
+  "ancestor_typeinfo_canonical": [
+    {"symbol": "_ZTI19dScMgSingle3DBase_c", "module": "ov006", "address": "0x0213bc64"},
+    {"symbol": "_ZTS19dScMgSingle3DBase_c", "module": "ov006", "address": "0x0213bd00"},
+    {"symbol": "_ZTI11dScMgBase_c", "module": "ov004", "address": "0x020bbf6c"},
+    {"symbol": "_ZTS11dScMgBase_c", "module": "ov004", "address": "0x020bbf84"},
+    {"symbol": "_ZTI8dScene_c", "module": "arm9", "address": "0x020914d4"},
+    {"symbol": "_ZTS8dScene_c", "module": "arm9", "address": "0x020914b0"},
+    {"symbol": "_ZTI7dBase_c", "module": "arm9", "address": "0x02086e78"},
+    {"symbol": "_ZTS7dBase_c", "module": "arm9", "address": "0x02086e54"},
+    {"symbol": "_ZTI7fBase_c", "module": "arm9", "address": "0x02086d70"},
+    {"symbol": "_ZTS7fBase_c", "module": "arm9", "address": "0x02086e60"}
+  ],
+  "ancestor_typeinfo_evidence": "These are the canonical_module/canonical_address rows the existing manifest's compiler_only_output block already asserts, and each was cross-checked against build/rtti.json's own records map (keys 'ov006:0x0213bc64', 'ov004:0x020bbf6c', 'arm9:0x020914d4', 'arm9:0x02086e78', 'arm9:0x02086d70'). They agree.",
+
+  "vtable": {
+    "symbol": "_ZTV10dScMgCup_c",
+    "address": "0x0213c154",
+    "module": "ov006",
+    "slots": 36,
+    "address_point": "The symbol IS the address point. Read from the image: the word at 0x0213c154-8 is 0x00000000 (offset-to-top) and at 0x0213c154-4 is 0x0213c048, which is exactly _ZTI10dScMgCup_c. Slot 0 sits at the symbol.",
+    "extent_note": "The word at 0x0213c1e4 (one past the 36th slot) is 0x020e0a24, a plausible ov006 text address, so a naive 'read until it stops looking like code' scan would over-read. tools/rtti_vtables.py reports 36 and notes it 'trimmed a following-table tail from 62 class(es)'; the base dScMgSingle3DBase_c is also 36, and the tool's own invariant check ('no class has fewer slots than its base') passed. 36 is the right length and the class adds no new virtual slots.",
+    "slot_dump": [
+      {"slot": 0, "target": "0x020e0308", "own": true, "name": "InitResources"},
+      {"slot": 1, "target": "0x020b0930", "own": false},
+      {"slot": 2, "target": "0x0210a6e4", "own": false},
+      {"slot": 3, "target": "0x02043bf0", "own": false},
+      {"slot": 4, "target": "0x0202e5f0", "own": false},
+      {"slot": 5, "target": "0x0210a608", "own": false},
+      {"slot": 6, "target": "0x020e0204", "own": true, "name": "Behavior"},
+      {"slot": 7, "target": "0x0210a698", "own": false},
+      {"slot": 8, "target": "0x0202e3c8", "own": false},
+      {"slot": 9, "target": "0x020e0068", "own": true, "name": "Render"},
+      {"slot": 10, "target": "0x0210a664", "own": false},
+      {"slot": 11, "target": "0x0202e398", "own": false},
+      {"slot": 12, "target": "0x020b04e8", "own": false},
+      {"slot": 13, "target": "0x0204357c", "own": false},
+      {"slot": 14, "target": "0x0204349c", "own": false},
+      {"slot": 15, "target": "0x02043494", "own": false},
+      {"slot": 16, "target": "0x020de988", "own": true, "name": "~dScMgCup_c [D1]"},
+      {"slot": 17, "target": "0x020dea1c", "own": true, "name": "~dScMgCup_c [D0]"},
+      {"slot": 18, "target": "0x020dfeec", "own": true, "name": "OnYoshiTryEat"},
+      {"slot": 19, "target": "0x020b2994", "own": false},
+      {"slot": 20, "target": "0x020dfed4", "own": true, "name": "Virtual50"},
+      {"slot": 21, "target": "0x020b298c", "own": false},
+      {"slot": 22, "target": "0x020ae198", "own": false},
+      {"slot": 23, "target": "0x020ae1a0", "own": false},
+      {"slot": 24, "target": "0x020ae140", "own": false},
+      {"slot": 25, "target": "0x020ae128", "own": false},
+      {"slot": 26, "target": "0x0210a600", "own": false},
+      {"slot": 27, "target": "0x020af27c", "own": false},
+      {"slot": 28, "target": "0x020af04c", "own": false},
+      {"slot": 29, "target": "0x020af094", "own": false},
+      {"slot": 30, "target": "0x020aeed8", "own": false},
+      {"slot": 31, "target": "0x020b2880", "own": false},
+      {"slot": 32, "target": "0x020b27f4", "own": false},
+      {"slot": 33, "target": "0x0210a708", "own": false},
+      {"slot": 34, "target": "0x020ae3b4", "own": false},
+      {"slot": 35, "target": "0x020ad660", "own": false}
+    ],
+    "inherited_slot_note": "The non-own slots at 0x0210a6e4 / 0x0210a608 / 0x0210a698 / 0x0210a664 / 0x0210a600 / 0x0210a708 are inside ov006 but belong to dScMgSingle3DBase_c's own text run, not to this TU. Slot 35's 0x020ad660 is below ov006's base (0x020bfec0) and so lives in another module entirely. Neither set is this TU's to define."
+  },
+
+  "overrides": [
+    {"slot": 0,  "address": "0x020e0308", "size": "0x26c", "name": "InitResources", "symbol": "_ZN10dScMgCup_c13InitResourcesEv"},
+    {"slot": 6,  "address": "0x020e0204", "size": "0x104", "name": "Behavior", "symbol": "_ZN10dScMgCup_c8BehaviorEv"},
+    {"slot": 9,  "address": "0x020e0068", "size": "0x19c", "name": "Render", "symbol": "_ZN10dScMgCup_c6RenderEv"},
+    {"slot": 16, "address": "0x020de988", "size": "0x094", "name": "~dScMgCup_c [D1, complete-object]", "symbol": "_ZN10dScMgCup_cD1Ev"},
+    {"slot": 17, "address": "0x020dea1c", "size": "0x0a8", "name": "~dScMgCup_c [D0, deleting]", "symbol": "_ZN10dScMgCup_cD0Ev"},
+    {"slot": 18, "address": "0x020dfeec", "size": "0x17c", "name": "OnYoshiTryEat", "symbol": "_ZN10dScMgCup_c13OnYoshiTryEatEi"},
+    {"slot": 20, "address": "0x020dfed4", "size": "0x018", "name": "Virtual50", "symbol": "_ZN10dScMgCup_c9Virtual50Ev"}
+  ],
+  "override_count": 7,
+  "override_evidence": "tools/rtti_extract.py then tools/rtti_vtables.py --own dScMgCup_c, corroborated independently: a scan of every word in the ov006 image for values landing inside this TU's text run 0x020de988..0x020e0638 found exactly one data-word reference for each of the seven, and each of those seven addresses is the slot the tool named (D1 at 0x0213c194 = _ZTV+0x40 = slot 16; D0 0x0213c198 = slot 17; OnYoshiTryEat 0x0213c19c = slot 18; Virtual50 0x0213c1a4 = slot 20; Render 0x0213c178 = slot 9; Behavior 0x0213c16c = slot 6; InitResources 0x0213c154 = slot 0). Slot index is the identity, not the address.",
+
+  "shadow_diagnosis": {
+    "manifest": "config/tu_manifest.d/ov006/dScMgCup_c.json",
+    "status": "shadow",
+    "reconstruction": "src_tu/minigames/d_s_mg_cup.cpp, 1263 lines",
+    "what_the_manifest_CLAIMS": [
+      "a single .text section 0x020de988..0x020e0638 with boundary_confidence 'high' and four independent boundary_evidence statements",
+      "all 32 functions, in ROM address order, each with an address, a size, a legacy_source shard and an ordinal",
+      "a full verification block naming the toolchain (tools/mwccarm/2004/b56), the exact flags, the object path and the three comparison passes (match.py bytes/relocs, objisolate.py type/addend, reloc_audit.py destination identity)",
+      "functions_matched: 31, functions_declared: 32",
+      "a complete compiler_only_output disposition list: one text symbol (_ZN10dScMgCup_cD2Ev, deadstrip) and thirteen data symbols with named canonical modules and addresses"
+    ],
+    "what_the_manifest_does_NOT_claim": [
+      "it does not claim a byte match - `verification.criteria.every_declared_function_bytes_match` reads 'FAIL' in the committed file, and has done since it was written",
+      "it does not claim a link - there is NO `verification.linkcheck` block at all, whereas both fresh promoted siblings have one",
+      "it does not claim data or bss ownership - `data: []` and `bss: []`",
+      "it makes no claim about whether the 5 pragma-bearing shards' pragmas are load-bearing"
+    ],
+    "missing_relative_to_a_fresh_promoted_sibling": {
+      "compared_against": ["config/tu_manifest.d/ov006/dScMgTeresa_c.json", "config/tu_manifest.d/ov006/dScMgBomroom_c.json"],
+      "differences": [
+        {"field": "status", "cup": "shadow", "siblings": "promoted"},
+        {"field": "source", "cup": "src_tu/minigames/d_s_mg_cup.cpp", "siblings": "src/actors/dScMgTeresa_c.cpp and src/actors/dScMgBomroom_c.cpp", "note": "OUTPUT CONVENTION. Both fresh siblings have source == promoted_source == src/actors/<Class>.cpp. dScMgCup_c still carries the OLD convention in BOTH fields: source in src_tu/, promoted_source pointing at src/minigames/d_s_mg_cup.cpp. Twelve older ov006 promotions use src/minigames/d_s_mg_*.cpp, so the old spelling is not wrong-and-unprecedented, it is simply stale. The writer must retarget promoted_source to src/actors/dScMgCup_c.cpp to match the live convention."},
+        {"field": "verification.criteria.every_declared_function_bytes_match", "cup": "FAIL", "siblings": "PASS", "note": "THIS is the promotion blocker. Every other criterion is PASS on all three."},
+        {"field": "verification.linkcheck", "cup": "absent", "siblings": "present", "note": "Teresa reads result 'scratch-link-verified', Bomroom reads 'link-verified'. linkcheck is stage 4's output and cannot exist before the bytes match, so its absence is a CONSEQUENCE of the byte failure, not a second independent blocker."},
+        {"field": "externalized_output", "cup": "key absent", "siblings": "dScMgTeresa_c has `externalized_output: []`; dScMgBomroom_c does not have the key either", "note": "An EMPTY externalized_output is the promotable state. Cup has no key rather than an empty list, which is equivalent-by-absence, and its 13 RTTI/vtable rows sit in `compiler_only_output` with disposition 'deadstrip-data' - the licensed route - not in an externalized_output list. So this class is NOT on the non-promotable externalized route."},
+        {"field": "boundary_confidence", "cup": "high", "siblings": "medium", "note": "Cup is the STRONGER of the three here. Its boundary is better evidenced than either promoted sibling's."}
+      ],
+      "summary": "Exactly one substantive field differs in a way that blocks: the byte-match criterion. The output-convention drift is real but cosmetic and one edit wide. Everything else the promoted siblings have that Cup lacks is downstream of the byte failure."
+    },
+    "verify_console_output_verbatim_tail": "byte comparison   : 31/32 MATCH  (tools/match.py extract_func + compare, relocation-aware)\nobjisolate check  : clean  (tools/objisolate.py plan() -- relocation type/addend; this is the check pilot #1 needed to catch a bug match.compare alone reported as MATCH)\nemission order    : all 32 function(s) in the expected ROM-ascending section order\n\nResult: 31/32 MATCH -> NOT verified (see DIFF/MISSING/ERROR lines above)",
+    "verify_exit_code": 1,
+    "verify_printed_no_refusal": "The run printed NEITHER an 'unlicensed section/symbol(s) present -> PROMOTION REFUSED' line NOR a 'compiler-only policy refused -> PROMOTION REFUSED' line. It printed `compiler-only : exact deadstrip ['_ZN10dScMgCup_cD2Ev']`, which is the success spelling. So the compiler-only policy is SATISFIED and is not a blocker.",
+    "the_one_diff": "DIFF     _ZN10dScMgCup_c12StateShuffleEv            0x020df5b8  size 0x720  -- 9 word(s) differ"
+  },
+
+  "unmatched_one": {
+    "queue_blocker": "unmatched:1",
+    "verdict": "GENUINELY UNMATCHED. Not a stale ledger row.",
+    "function": "_ZN10dScMgCup_c12StateShuffleEv",
+    "address": "0x020df5b8",
+    "size": "0x720 (1824 bytes, 456 words)",
+    "legacy_shard": "src/func_ov006_020df5b8.c",
+    "primary_evidence": "config/arm9/overlays/ov006/delinks.txt line 1994 declares `src/func_ov006_020df5b8.c:` with a `.text start:0x020df5b8 end:0x020dfcd8` line and NO `complete` marker. Its immediate neighbours (func_ov006_020df540.c above, func_ov006_020dfcd8.c below) both carry `complete`. Of 1270 file entries in that delinks file, exactly 23 lack the marker and this is one of them. The missing `complete` marker is the draft signal - it is what the queue's `unmatched:1` counts.",
+    "corroborating_evidence": "tools/tubuild.py inspect reports `[22] 0x020df5b8 size 0x0720 func_ov006_020df5b8  legacy source: src/func_ov006_020df5b8.c   complete=False` and separately lists it under `functions without \\`complete\\`: ['func_ov006_020df5b8']`. tools/tubuild.py verify then independently measures a 9-word DIFF at that exact address.",
+    "classification_tsv_row": {
+      "path": "src/func_ov006_020df5b8.c",
+      "live_row": "src/func_ov006_020df5b8.c\\tPURE-C\\tov006\\t\\t\\t\\t1\\t\\tNone\\t\\t-",
+      "row_count": 1,
+      "line": 4460,
+      "note": "notes/data/c-cpp-classification.tsv is an APPEND LOG and the LAST row for a path is the live one. Here there is only ONE row, at line 4460, so there is no stale-row ambiguity to resolve.",
+      "FLAG_DO_NOT_FIX": "That single row is nevertheless WRONG in two ways and I have not touched it, per standing rule 3. (a) It classifies the shard `PURE-C`, but the manifest and the reconstruction both treat this address as the C++ member _ZN10dScMgCup_c12StateShuffleEv, and the ROM agrees (the address has an 8-byte pointer-to-member record in ov006 .data at 0x0213c028). (b) Its `blockers` column reads `-`, i.e. no blocker recorded, even though the delinks entry has no `complete` marker and tubuild measures a real 9-word diff. Anyone reading the classification TSV alone would conclude this shard is clean. Whoever owns that ledger should regenerate rather than hand-edit it."
+    }
+  },
+
+  "the_nine_words": {
+    "why_this_matters": "The manifest's own note characterises the diff as 'nine scratch-register encoding differences caused by eager CodeWarrior allocation' and reports that 'scoped pragma, lifetime, type, comparison, coalescing-copy, volatile-load, and natural-optimizer controls were measured without improvement'. I re-measured the diff and that characterisation UNDERSTATES it. Six of the nine words are not register naming; they are a different addressing-mode shape. Naming the real mechanism is the point of this section, because the previous author was searching the wrong lever family.",
+    "measurement": "tools/match.py extract_func on build/tu/ov006-dScMgCup_c/d_s_mg_cup.o vs the raw bytes of extracted/overlays/overlay_0006.bin at 0x020df5b8. 14 relocation slots were excluded from the comparison. Sizes are identical: 1824 bytes both sides.",
+    "differing_words": [
+      {"offset": "+0x0344", "va": "0x020df8fc", "rom": "e2841b15", "ours": "e2843b15", "rom_asm": "add r1, r4, #0x5400", "ours_asm": "add r3, r4, #0x5400"},
+      {"offset": "+0x0348", "va": "0x020df900", "rom": "e1d125bc", "ours": "e1d325bc", "rom_asm": "ldrh r2, [r1, #0x5c]", "ours_asm": "ldrh r2, [r3, #0x5c]"},
+      {"offset": "+0x0408", "va": "0x020df9c0", "rom": "e1d115fe", "ours": "e1d315fe", "rom_asm": "ldrsh r1, [r1, #0x5e]", "ours_asm": "ldrsh r1, [r3, #0x5e]"},
+      {"offset": "+0x0434", "va": "0x020df9ec", "rom": "e2611000", "ours": "e2610000", "rom_asm": "rsb r1, r1, #0", "ours_asm": "rsb r0, r1, #0"},
+      {"offset": "+0x0438", "va": "0x020df9f0", "rom": "e2840b15", "ours": "e1c305be", "rom_asm": "add r0, r4, #0x5400", "ours_asm": "strh r0, [r3, #0x5e]"},
+      {"offset": "+0x043c", "va": "0x020df9f4", "rom": "e1c015be", "ours": "e283105c", "rom_asm": "strh r1, [r0, #0x5e]", "ours_asm": "add r1, r3, #0x5c"},
+      {"offset": "+0x0440", "va": "0x020df9f8", "rom": "e1d015bc", "ours": "e1d100b0", "rom_asm": "ldrh r1, [r0, #0x5c]", "ours_asm": "ldrh r0, [r1]"},
+      {"offset": "+0x044c", "va": "0x020dfa04", "rom": "e2811902", "ours": "e2800902", "rom_asm": "add r1, r1, #0x8000", "ours_asm": "add r0, r0, #0x8000"},
+      {"offset": "+0x0450", "va": "0x020dfa08", "rom": "e1c015bc", "ours": "e1c100b0", "rom_asm": "strh r1, [r0, #0x5c]", "ours_asm": "strh r0, [r1]"}
+    ],
+    "real_mechanism": "The ROM RE-MATERIALISES the sub-object base. At +0x33c it computes `add r1, r4, #0x5400`, uses it for two loads, and then at +0x438 computes it AGAIN into a different register (`add r0, r4, #0x5400`) for the read-modify-write burst, addressing the fields as [r0,#0x5e] and [r0,#0x5c]. Our build instead keeps ONE base register (r3) live across the whole region and then CSEs the FIELD ADDRESS: `add r1, r3, #0x5c` followed by `ldrh r0,[r1]` / `strh r0,[r1]` with a zero displacement. Same instruction count, different shape. The register-numbering divergence at +0x344/+0x348/+0x408 (r1 vs r3) and the r0/r1 swap at +0x434/+0x44c are DOWNSTREAM of that one decision, not independent facts - because our version never needs a second base register, the allocator numbers everything differently.",
+    "source_cause": "src_tu/minigames/d_s_mg_cup.cpp line 788 reads `char *state = c + 0x5400;` and the following lines use `*(u16*)(state + 0x5c)` and `*(s16*)(state + 0x5e)`. That cached local pointer is exactly what makes mwccarm hold the sub-object base live and then CSE `&state[0x5c]`. The ROM's shape is what you get when the source re-spells the full offset at each use site.",
+    "lever_the_previous_author_did_not_try": "The SAME FILE already contains the counter-measure, applied at a DIFFERENT site and evidently never carried to this one. Line 730 reads `*(u16*)(((long long)(int)(c + 0x545c))) += *(s16*)(c + 0x545e);` - a `(long long)(int)` launder cast through the full `c + 0x545c` offset, with no cached base pointer. The obvious next experiment is to delete the `char *state = c + 0x5400;` local at line 788 and respell its three uses as `c + 0x545c` / `c + 0x545e`, with the same launder cast on the RMW, matching the idiom already proven at line 730. I did NOT run that experiment - trying levers is the writer's job, not the scout's.",
+    "pragma_note_for_the_writer": "`#pragma opt_common_subs off` is ALREADY in force over StateShuffle (src_tu line 713-714) and does NOT suppress this. That is a fact worth carrying: the field-address CSE here is not the optimizer's common-subexpression pass, it is the front end honouring a cached pointer the source actually wrote. Turning opt_common_subs off cannot fix a CSE the source performed by hand."
+  },
+
+  "compiler_only_picture": {
+    "queue_estimate": "compiler-only:>=13 (derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)",
+    "measured": "14 symbols: 1 text (_ZN10dScMgCup_cD2Ev) + 13 data. The estimate's floor of 13 is met and slightly exceeded; the estimate was sound.",
+    "coined_name_wall": "DOES NOT APPLY. Confirmed, not assumed: build/rtti.json carries a real record for dScMgCup_c, and the cartridge bytes at ov006 0x0213c054 read b'10dScMgCup_c\\x00'. Every one of the six classes in the chain (dScMgCup_c, dScMgSingle3DBase_c, dScMgBase_c, dScene_c, dBase_c, fBase_c) is likewise a real RTTI name with a real record, so every _ZTI/_ZTS row has a provable canonical address.",
+    "would_any_row_be_refused": "NO. `tubuild verify` printed `compiler-only     : exact deadstrip ['_ZN10dScMgCup_cD2Ev']` and printed neither the unlicensed-symbol refusal nor the compiler-only-policy refusal. All 13 data rows carry disposition 'deadstrip-data' with a named canonical_module and canonical_address, which is the licensed route, and none is on an `externalized_output` list.",
+    "text": [{"symbol": "_ZN10dScMgCup_cD2Ev", "disposition": "deadstrip", "reason": "mwccarm emits the base-object destructor beside the licensed D1/D0 pair; the ROM has no configured D2 home and no surviving relocation references it"}],
+    "data": [
+      {"symbol": "_ZTI10dScMgCup_c", "canonical_module": "ov006", "canonical_address": "0x0213c048", "class": "self", "homed": false},
+      {"symbol": "_ZTS10dScMgCup_c", "canonical_module": "ov006", "canonical_address": "0x0213c054", "class": "self", "homed": false},
+      {"symbol": "_ZTV10dScMgCup_c", "canonical_module": "ov006", "canonical_address": "0x0213c154", "class": "self", "homed": false},
+      {"symbol": "_ZTI19dScMgSingle3DBase_c", "canonical_module": "ov006", "canonical_address": "0x0213bc64", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTS19dScMgSingle3DBase_c", "canonical_module": "ov006", "canonical_address": "0x0213bd00", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTI11dScMgBase_c", "canonical_module": "ov004", "canonical_address": "0x020bbf6c", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTS11dScMgBase_c", "canonical_module": "ov004", "canonical_address": "0x020bbf84", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTI8dScene_c", "canonical_module": "arm9", "canonical_address": "0x020914d4", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTS8dScene_c", "canonical_module": "arm9", "canonical_address": "0x020914b0", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTI7dBase_c", "canonical_module": "arm9", "canonical_address": "0x02086e78", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTS7dBase_c", "canonical_module": "arm9", "canonical_address": "0x02086e54", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTI7fBase_c", "canonical_module": "arm9", "canonical_address": "0x02086d70", "class": "ancestor", "homed": true},
+      {"symbol": "_ZTS7fBase_c", "canonical_module": "arm9", "canonical_address": "0x02086e60", "class": "ancestor", "homed": true}
+    ],
+    "homed_vs_homeless": "The ten ANCESTOR rows are homed - each canonical copy is independently enrolled in another file or module. The three SELF rows (_ZTI/_ZTS/_ZTV for dScMgCup_c) are homeless: their canonical addresses 0x0213c048/0x0213c054/0x0213c154 all fall inside ov006's unowned .data span. The manifest's own reason text calls this 'ROM-gap owned'. They deadstrip cleanly today, so this is not a blocker, but it is why this TU can never own its vtable - see constraint below."
+  },
+
+  "ov006_data_constraint": {
+    "standing_claim": "ov006's entire .data segment is ONE section owned by no file, so a promoted ov006 TU cannot own its vtable.",
+    "my_measurement": "PARTIALLY REFUTED, and the writer should know the exact shape. config/arm9/overlays/ov006/delinks.txt does declare one module-level `.data start:0x02133600 end:0x021402e0 kind:data align:32`. But TWO files already claim sub-ranges of it: `src/minigames/d_s_mg_trampoline.cpp` claims `.data start:0x0213faa0 end:0x0213fbc4` and `src/minigames/d_s_mg_trampoline2.cpp` claims `.data start:0x0213fbc4 end:0x0213fd0c`. So it is NOT true that no ov006 file owns .data.",
+    "what_is_still_true": "Both existing claims sit at the TAIL of .data (0x0213faa0..0x0213fd0c, against a section end of 0x021402e0). dScMgCup_c's _ZTI/_ZTS/_ZTV at 0x0213c048..0x0213c1e4 sit in the middle of the still-unowned span, as does the PMF/profile cluster at 0x0213bfe8..0x0213c048 that this TU's eight State methods are referenced from. Carving those out would be a new mid-section claim, which is a materially larger change than appending at the tail.",
+    "instruction_to_the_writer": "Record this as a CONSTRAINT, do not try to solve it. Keep `data: []` and `bss: []` in the manifest and let the three self RTTI symbols continue to deadstrip. The precedent that two trampoline files own tail .data is NOT a licence to claim the vtable's range."
+  },
+
+  "pragmas": {
+    "queue_blocker": "pragma:5",
+    "reconciliation": "The queue counts FILES; tools/tubuild.py inspect counts DIRECTIVES. 5 distinct legacy shards carry 7 pragma directives between them. Both numbers are right about different things.",
+    "families": {"opt_strength_reduction off": 4, "opt_common_subs off": 3},
+    "by_file": [
+      {"file": "src/func_ov006_020df28c.c", "maps_to": "_ZN10dScMgCup_c11StateResultEv @0x020df28c", "pragmas": ["opt_strength_reduction off"]},
+      {"file": "src/func_ov006_020df3bc.c", "maps_to": "_ZN10dScMgCup_c11StateSelectEv @0x020df3bc", "pragmas": ["opt_common_subs off", "opt_strength_reduction off"]},
+      {"file": "src/func_ov006_020df5b8.c", "maps_to": "_ZN10dScMgCup_c12StateShuffleEv @0x020df5b8 (the unmatched one)", "pragmas": ["opt_common_subs off"]},
+      {"file": "src/_ZN10dScMgCup_c13OnYoshiTryEatEi.cpp", "maps_to": "_ZN10dScMgCup_c13OnYoshiTryEatEi @0x020dfeec", "pragmas": ["opt_strength_reduction off", "opt_common_subs off"]},
+      {"file": "src/_ZN10dScMgCup_c8BehaviorEv.cpp", "maps_to": "_ZN10dScMgCup_c8BehaviorEv @0x020e0204", "pragmas": ["opt_strength_reduction off"]}
+    ],
+    "load_bearing": "NOT ASSESSED. Whether any of these seven is load-bearing is a control the writer runs, not a fact a scout can read. Note only that both families are file-global in mwccarm, which is why the existing reconstruction brackets each with #pragma push / #pragma pop; the existing src_tu file already does this at lines 599-636, 642-694, 713-880, 982-1039 and 1127-1151."
+  },
+
+  "non_virtual": {
+    "verdict": "Fifteen file-local static helpers, one factory, and two array-element callbacks. None of the fifteen is a public method.",
+    "method": "Two independent scans. (1) A destination-module-filtered relocation scan across every config/arm9/**/relocs.txt. (2) A direct decode of every BL instruction in ov006's .text 0x020bfec0..0x0212b890 plus a scan of every non-text word in the ov006 image, both looking for targets inside 0x020de988..0x020e0638.",
+    "file_local_helpers": [
+      {"address": "0x020deac8", "size": "0x028", "callers_in_tu": 1},
+      {"address": "0x020deaf0", "size": "0x058", "callers_in_tu": 2},
+      {"address": "0x020deb48", "size": "0x06c", "callers_in_tu": 6},
+      {"address": "0x020debb4", "size": "0x048", "callers_in_tu": 1},
+      {"address": "0x020debfc", "size": "0x040", "callers_in_tu": 1},
+      {"address": "0x020dec3c", "size": "0x020", "callers_in_tu": 1},
+      {"address": "0x020dec5c", "size": "0x02c", "callers_in_tu": 1},
+      {"address": "0x020dec88", "size": "0x078", "callers_in_tu": 1},
+      {"address": "0x020ded00", "size": "0x084", "callers_in_tu": 1},
+      {"address": "0x020ded84", "size": "0x078", "callers_in_tu": 1},
+      {"address": "0x020dedfc", "size": "0x0dc", "callers_in_tu": 1},
+      {"address": "0x020deed8", "size": "0x0a8", "callers_in_tu": 1},
+      {"address": "0x020def80", "size": "0x0a4", "callers_in_tu": 3},
+      {"address": "0x020df024", "size": "0x198", "callers_in_tu": 1}
+    ],
+    "file_local_evidence": "Every one of the fourteen above has ZERO callers outside 0x020de988..0x020e0638 and ZERO data-word references anywhere in the ov006 image. Nothing outside this TU can reach them. That is the signature of `static` functions in the original source, and it independently corroborates the manifest's boundary_confidence of 'high'.",
+    "factory": {"address": "0x020e0574", "size": "0x0c0", "symbol": "dScMgCup_c_classInit", "reached_by": "one data word, the MG_CUP profile record at ov006 0x0213c020, which reads {0x020e0574, 0x01690169} - the classInit pointer and profile id 0x169. No code calls it directly."},
+    "array_element_callbacks": [
+      {"address": "0x020deac4", "size": "0x004", "role": "element constructor passed BY POINTER to the array-construct helper at 0x020733a8; its address is a literal in classInit's own pool at 0x020e0620"},
+      {"address": "0x020e0634", "size": "0x004", "role": "element destructor/second callback, literal at 0x020e0624. Both bodies are a bare `bx lr` (0xe12fff1e read at 0x020e0634), i.e. empty."}
+    ],
+    "state_methods_note": "All eight State* methods and all seven vtable overrides have ZERO direct callers. Each is reached solely through a data word: the seven overrides through _ZTV10dScMgCup_c, the eight States through an 8-byte pointer-to-member record each. Nothing in the ROM calls any of them by BL."
+  },
+
+  "state_pmf_table": {
+    "location": "ov006 .data, 0x0213bfe8..0x0213c048, immediately preceding _ZTI10dScMgCup_c at 0x0213c048",
+    "record_shape": "8 bytes: {code pointer, 0x00000000}. The zero second word is the pointer-to-member `this`-adjustment, so these are non-virtual PMFs into a single-inheritance class at offset 0.",
+    "records": [
+      {"address": "0x0213bfe8", "target": "0x020df1bc", "method": "StateIdle"},
+      {"address": "0x0213bff8", "target": "0x020df540", "method": "StateWaitForInput"},
+      {"address": "0x0213c000", "target": "0x020dfcd8", "method": "StatePrepareShuffle"},
+      {"address": "0x0213c008", "target": "0x020df1c0", "method": "StateFinish"},
+      {"address": "0x0213c010", "target": "0x020df3bc", "method": "StateSelect"},
+      {"address": "0x0213c028", "target": "0x020df5b8", "method": "StateShuffle"},
+      {"address": "0x0213c030", "target": "0x020dfd48", "method": "StateSetup"},
+      {"address": "0x0213c040", "target": "0x020df28c", "method": "StateResult"}
+    ],
+    "interleaving_warning": "These eight records are NOT contiguous. Interleaved between them are records of a different shape - 0x0213bfe0 {0x01fc00fc, 0xffff15f7}, 0x0213bff0 {0x41f800f8, 0xffff15d2}, 0x0213c018 {0x01fc00fc, 0xffff15f6}, 0x0213c038 {0x41f800f8, 0xffff15d4} - and dScMgCup_c's own profile at 0x0213c020 {0x020e0574, 0x01690169}. Do NOT read this span as one 12-entry array of PMFs. The ORDER of the eight is ROM fact; the array they were written as is not.",
+    "relation_to_manifest_claim": "The manifest's boundary_evidence says '__sinit_ov006_021303d0 exclusively builds the eight-entry Cup PMF table at 0x02141870'. 0x02141870 is in .bss (0x021402e0..0x021430a0), so that is the RUNTIME table; the .data records above are the source constants it is built from. The two claims are consistent, and the count of eight matches on both sides. I did not disassemble the sinit to re-verify the 'exclusively' part."
+  },
+
+  "object_size": {
+    "value": "0x5470",
+    "decimal": 21616,
+    "evidence": "dScMgCup_c_classInit at 0x020e0574 begins `ldr r0, [pc, #0x84]` (resolving to the literal at 0x020e0608, which holds 0x00005470) followed immediately by `bl #0x2043444`, the allocator, then `movs r4, r0` / `beq` on the null path. 0x5470 is the size argument. Read from extracted/overlays/overlay_0006.bin, not from any header."
+  },
+
+  "fields": [
+    {"offset": "0x0000", "name": "__vptr", "type": "void**", "proven": true, "evidence": "classInit does `str r1,[r4]` twice: first with 0x0213e448 (_ZTV19dScMgSingle3DBase_c, the base ctor's store) then with 0x0213c154 (_ZTV10dScMgCup_c). Classic base-then-derived vptr assignment at offset 0."},
+    {"offset": "0x471c", "name": null, "proven": true, "evidence": "classInit: literal 0x0000471c at 0x020e060c, `add r0, r4, r0`, then `bl #0x2023204` - a sub-object constructor call. Type unknown."},
+    {"offset": "0x4f38", "name": null, "proven": true, "evidence": "classInit: literal 0x00004f38 at 0x020e0614, `add r0, r4, r0`, then `bl #0x20c33dc` - a sub-object constructor call. Type unknown. The manifest's boundary_evidence names this member too."},
+    {"offset": "0x50e8", "name": null, "type": "array[32] of 0x18 bytes (0x300 bytes total)", "proven": true, "evidence": "classInit: literal 0x000050e8 at 0x020e061c, `add r0, r4, r0`, `mov r1, #0x20` (count 32), `mov r2, #0x18` (element size), `ldr r3,[pc]` -> 0x020e0634, `str r1,[sp]` with r1 = 0x020deac4, then `bl #0x20733a8` - the array-construct helper. Element ctor 0x020deac4, element dtor 0x020e0634, both empty (`bx lr`)."},
+    {"offset": "0x53e8", "name": null, "type": "array[3] of 8 bytes (0x18 bytes total)", "proven": true, "evidence": "classInit: literal 0x000053e8 at 0x020e062c, `add r0, r4, r0`, `mov r1, #3` (count), `mov r2, #8` (element size), `ldr r3,[pc]` -> 0x0203d738, `str r1,[sp]` with r1 = 0x0203d47c, then `bl #0x20733a8`. Element ctor 0x0203d47c and dtor 0x0203d738 both live outside ov006. The manifest's boundary_evidence names this member too."},
+    {"offset": "0x5400", "name": null, "proven": true, "type": "sub-object, at least 0x60 bytes (fields observed to +0x5e)", "evidence": "StateShuffle repeatedly computes `add rN, r4, #0x5400` and addresses fields off it. src_tu line 788 already models this as `char *state = c + 0x5400;`."},
+    {"offset": "0x5408", "name": null, "type": "int", "proven": true, "evidence": "src_tu line 534 writes `*(int*)(a + 0x5408)`; the shard it came from is a byte-matched function."},
+    {"offset": "0x5430", "name": null, "type": "int", "proven": true, "evidence": "src_tu line 530 indexes data_ov006_0213c0a8 by `*(int*)(a + 0x5430)`; that shard byte-matches."},
+    {"offset": "0x5458", "name": null, "type": "int", "proven": true, "evidence": "StateShuffle reads and writes `*(int*)(c + 0x5458)` as the first and last argument of func_02012468."},
+    {"offset": "0x545c", "name": null, "type": "u16", "proven": true, "evidence": "ROM `ldrh rN, [rBase, #0x5c]` / `strh rN, [rBase, #0x5c]` off a base of this+0x5400, at 0x020df900, 0x020df9f8 and 0x020dfa08. Half-word, read and written, incremented by 0x8000 - an angle accumulator by shape, though the name is unproven."},
+    {"offset": "0x545e", "name": null, "type": "s16", "proven": true, "evidence": "ROM `ldrsh r1, [rBase, #0x5e]` at 0x020df9c0 (SIGNED load, so the field is signed) and `strh r1, [rBase, #0x5e]` at 0x020df9f4 storing a negated value. Signed half-word, read and written."}
+  ],
+  "fields_note": "Every offset above is proven from a load/store displacement or a constructor call site. NOT ONE has a proven NAME. The writer must not invent names for them; the existing reconstruction correctly keeps them as raw `*(T*)(c + 0x....)` casts.",
+
+  "modules_touched": ["ov006", "main", "ov004", "overlays(0,4)"],
+  "modules_touched_evidence": "Outbound relocations FROM 0x020de988..0x020e0638 in config/arm9/overlays/ov006/relocs.txt, counted by destination module: overlay(6) 61, main 59, overlay(4) 17, overlays(0,4) 6. The `overlays(0,4)` spelling is the ambiguous form for addresses present in both ov000 and ov004.",
+
+  "phantom_warning": {
+    "statement": "The destination-module filter was worth more here than on any class I can find a record of, and it very nearly caught me out in a second way.",
+    "numbers": "89 relocations in the whole tree land at an address inside 0x020de988..0x020e0638. Only 42 of them actually have destination module ov006. The other 47 are phantoms: 46 claim `overlay(2)` (35 emitted from ov002 itself, plus 4 from ov094, 3 from ov098, 2 from ov102, 1 from ov027, 1 from ov062) and 1 claims `overlay(7)`. An unfiltered scan would have reported 89 inbound references against a true 42 - a 2.1x overcount, with MORE phantoms than real hits.",
+    "spelling_trap": "config/arm9/**/relocs.txt spells the destination module `overlay(6)`, NOT `ov006`. My first filter tested `dstmod != 'ov006'` and rejected all 89, reporting zero callers for every function in the class - a clean, plausible, completely wrong answer that would have read as 'this TU is dead code'. Any future scout writing this filter must accept BOTH spellings, and should sanity-check that the accepted count is non-zero before believing it.",
+    "second_gap": "Even a correct relocation filter is incomplete for intra-module calls: ov006-internal BLs are resolved at link and carry no relocation record at all. The fourteen file-local helpers show 0 relocation callers and 1-6 real BL callers each. Finding them required decoding ov006's .text directly. A scout who trusts relocs.txt alone will conclude every helper in an overlay is uncalled."
+  },
+
+  "queue_row_corrections": [
+    {"field": "shard_count", "queue": 31, "measured": 32, "note": "The manifest declares 32 functions. tools/tubuild.py inspect lists only 30, because it reads the tu_map cut rather than the manifest; the manifest deliberately extends the run past the tu_map boundary to 0x020e0638 to absorb dScMgCup_c_classInit (0x020e0574) and the trailing empty element callback (0x020e0634), and documents that extension in boundary_evidence. Same class of tu_map undercut already recorded on dScMgSound_c (queue said 80, real 82, because tu_map cut on symbol name and missed dScMgSound_c_classInit). The queue's 31 is between the two and matches neither; treat 32 as the number."},
+    {"field": "blockers/unmatched:1", "queue": "unmatched:1", "verdict": "CONFIRMED REAL", "note": "StateShuffle @0x020df5b8. Missing `complete` in delinks.txt AND a measured 9-word diff. Not stale."},
+    {"field": "blockers/pragma:5", "queue": "pragma:5", "verdict": "CONFIRMED, units clarified", "note": "5 files, 7 directives."},
+    {"field": "blockers/compiler-only:>=13", "queue": ">=13", "measured": 14, "verdict": "ESTIMATE SOUND"},
+    {"field": "already_promoted", "queue": "no", "verdict": "CORRECT but easy to misread", "note": "The class is not promoted, but a full 32-function reconstruction ALREADY EXISTS at src_tu/minigames/d_s_mg_cup.cpp and 31 of 32 functions byte-match. The row's `no` should not be read as `no work has been done`."},
+    {"field": "sibling_oracle", "queue": "dScMgSingle3DBase_c", "verdict": "UNUSUALLY GOOD", "note": "For most ov006 rows the oracle is a same-overlay convenience. Here it happens to be this class's actual DIRECT BASE, proven by the __si_class_type_info record. Its header is the right source for slot names."}
+  ],
+
+  "output_convention": {
+    "live": "src/actors/<Class>.cpp",
+    "evidence": "The two freshest ov006 promotions, dScMgTeresa_c and dScMgBomroom_c, both have source == promoted_source == src/actors/<Class>.cpp. Twelve older ov006 promotions use src/minigames/d_s_mg_*.cpp.",
+    "instruction": "The writer should target src/actors/dScMgCup_c.cpp and update BOTH `source` and `promoted_source` in the manifest. The current manifest's `promoted_source: src/minigames/d_s_mg_cup.cpp` is the stale convention.",
+    "derived_on": "8f3d1eb1a"
+  },
+
+  "what_the_writer_should_do": [
+    "This is NOT a gathering job. The gathering is done - 32 functions are already merged into src_tu/minigames/d_s_mg_cup.cpp and 31 byte-match. This is a one-function matching job.",
+    "Work the StateShuffle diff at the source level, starting from the `char *state = c + 0x5400;` local at line 788 and the already-proven `(long long)(int)` launder idiom at line 730. Do not spend another round on opt_common_subs - it is already on and already ineffective here.",
+    "Retarget the output to src/actors/dScMgCup_c.cpp in both manifest fields.",
+    "Keep `data: []` / `bss: []`. Do not try to own the vtable.",
+    "Do not touch notes/data/c-cpp-classification.tsv line 4460 by hand, even though it is wrong."
+  ],
+
+  "unproven": [
+    "Every field NAME. Eleven offsets are proven; zero names are.",
+    "The types of the sub-objects at +0x471c and +0x4f38 - only their constructor addresses (0x2023204 and 0x20c33dc) are known.",
+    "The original source spelling of all eight State* method names, of Virtual50, and of dScMgCup_c_classInit. Their class identity and their PMF order are ROM-proved; their spellings are inference.",
+    "Whether any of the 7 pragma directives is load-bearing - not a scout-readable fact.",
+    "Whether the `char *state` respell actually closes the 9-word diff. I identified the lever from the codegen shape and from a working precedent in the same file; I did not compile it.",
+    "The name and semantics of the array element types at +0x50e8 (32 x 0x18) and +0x53e8 (3 x 8).",
+    "Whether __sinit_ov006_021303d0 builds the .bss PMF table EXCLUSIVELY from this TU's records - the manifest asserts it, I did not re-disassemble the sinit to confirm.",
+    "The identity of the interleaved 8-byte records at 0x0213bfe0/0x0213bff0/0x0213c018/0x0213c038 in the PMF span. They are not this class's PMFs and not this class's profile."
+  ],
+
+  "provenance": {
+    "rom_derived": [
+      "the RTTI record and its __si_class_type_info kind, the base edge, the whole inheritance chain",
+      "the vtable address, its 36 slots and the 7 own overrides",
+      "the object size 0x5470 and every field offset",
+      "the 8 State PMF records and their order",
+      "the 9 differing words in StateShuffle and their disassembly",
+      "the caller topology (14 file-local helpers, 0 direct callers of any method)",
+      "source: extracted/overlays/overlay_0006.bin, base 0x020bfec0, plus build/rtti.json regenerated from it"
+    ],
+    "tree_derived": [
+      "the queue row and its blockers",
+      "the manifest contents, its status, and the promoted/shadow census of ov006 (19 promoted, 1 shadow)",
+      "the delinks.txt `complete` markers and the 23-of-1270 count",
+      "the classification TSV row at line 4460",
+      "the live output convention (src/actors/<Class>.cpp)",
+      "the src_tu reconstruction and its line numbers",
+      "the two trampoline .data claims"
+    ],
+    "tree_base_commit": "8f3d1eb1a",
+    "tree_base_description": "notes: fold the dScMgPanel_c and dScMgCoin_c runs' findings into the role files (#2342)",
+    "worktree": "C:/tmp/sm64ds-cupscout",
+    "ref": "cpp/dScMgCup_c-tu",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe, verified by wt-setup canary build",
+    "byte_gate_run": "None. `tubuild verify` was run, which compiles and compares but is not a gate; it exited 1 and printed 31/32 MATCH -> NOT verified. Stage 4 owns the gates."
+  }
+}

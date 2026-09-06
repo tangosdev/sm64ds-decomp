@@ -56,6 +56,39 @@ far and may be wrong; the cartridge is not.
    you could not prove as `unproven` — do not invent a name for it.
 8. **Which overlay(s)** the methods live in, and the module base address.
 
+## Stay current with `origin/main`, and know which of your facts can rot
+
+Your file mixes two kinds of claim, and only one of them is stable:
+
+- **ROM-derived** — the RTTI record, the vtable, the base class, the overrides,
+  the destructor addresses, the object size. Cut from `extracted/`. Merging
+  cannot change these.
+- **Tree-derived** — the queue row, the manifest directory, delink membership,
+  which siblings are promoted, which output convention is live. These change on
+  **every** promotion, and several land per day.
+
+Re-derive every tree-derived field against the base you actually ship, and name
+that base in the file. A scout that skipped this shipped `dScMgCoin_c.json`
+asserting two siblings were unpromoted; both had landed six promotions earlier,
+so the claim read as a confident *correction of the truth* rather than as
+obviously stale — which is the dangerous failure, not the loud one.
+
+Verify your base **after** the fact, not before: sibling worktrees share one ref
+store, so `origin/main` can advance between your fetch and your rebase. Check
+`git merge-base HEAD origin/main` == `HEAD~N` and `git log --oneline
+HEAD..origin/main` empty.
+
+**Force-pushes are blocked on this repo.** If you rebase and then cannot push,
+**merge `origin/main` into your branch.** Do not rebuild the branch as a
+fast-forward from an older commit — that is exactly how the stale derivations
+above got shipped.
+
+**Filter every relocation scan on the destination MODULE.** Overlays share
+address space, so an unfiltered scan for the callers of a run reports phantoms
+from every overlay that happens to overlap it: 115 phantom callers across nine
+overlays against 43 real ones on `dScMgCoin_c`, a 2.5x error. Accept a
+relocation only when its destination module is the overlay you are scouting.
+
 ## Output
 
 Write `notes/data/class-facts/<class>.json`:

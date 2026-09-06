@@ -81,14 +81,15 @@ commit push the same SHA, git answers `Everything up-to-date` and exits 0, and
 normalized to the same ref — a class lives in one overlay, so the prefix adds
 nothing. Before that normalization the two spellings built two different refs
 and two agents could hold one class simultaneously; live claims existed in both
+forms. Create the worktree first and claim once with `--worktree`: re-claiming
+to attach the path afterwards is denied against yourself.
+
 **Use forward slashes in `--worktree`, as the example above does — it is
 required, not cosmetic.** A backslash path passed through a shell arrives with
 its separators eaten and the claim records
 `"worktree": "C:tmpsm64ds-memory2-build"`, which points at nothing and defeats
 the whole reason the field exists.
 
-forms. Create the worktree first and claim once with `--worktree`: re-claiming
-to attach the path afterwards is denied against yourself.
     python tools/classqueue.py release dActor_c --role writer
     python tools/classqueue.py list
 
@@ -97,6 +98,16 @@ lock. Do not retry it, do not force-push over it — take the next row.
 
 Release your claim when your stage's output is committed and pushed, not when
 you personally are done thinking.
+
+**A released claim does not mean nobody has done the work.** The claim ref is
+the only thing `classqueue.py` consults, so a class whose scout pushed a branch,
+opened no PR and released its claim is offered again as unclaimed — and the next
+agent rediscovers the whole thing. That happened to `dScMgCoin_c`. Before you
+start, look:
+
+    git branch -r --list 'origin/cpp/<Class>*'
+
+If one exists, read it before you cut a new one.
 
 ## Launching an agent
 
@@ -124,3 +135,7 @@ the next one rather than stopping.
 4. **A near-miss never lands in `src/`.** Bank it in `nearmiss/db.jsonl` and
    restore the matched source.
 5. **Report the outcome, not the effort.** If a gate failed, paste the failure.
+6. **Force-pushes are blocked. Merge, do not rebuild.** If you rebase and the
+   push is refused, merge `origin/main` into your branch. Rebuilding the branch
+   as a fast-forward from an older commit is how stale, tree-derived work gets
+   shipped past review — and it does not look stale, it looks confident.

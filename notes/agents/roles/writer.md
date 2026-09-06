@@ -52,7 +52,16 @@ uniquification stops being advice.** Measured at 41 members: duplicate
 - a naive `C` tag rename corrupts `extern "C"` into `extern "C_5fec"` —
   placeholder-protect the string first;
 - member-local `extern` declarations that mention a renamed tag must **not** be
-  hoisted into the shared block.
+  hoisted into the shared block;
+- `re.sub(r'^(\s+)extern "C" ', ..., re.M)` matches **across a preceding blank
+  line**, because `\s` includes `
+`. It rewrites file-scope `extern "C" {`
+  into `extern {` and reports `declaration syntax error` eighty lines away. Use
+  `[ 	]+`;
+- any scan for a member's definition line must **skip comments**. A doc comment
+  naming `Class::Method` is taken as the definition, which silently leaves that
+  shard's declaration block at file scope — three `illegal function
+  overloading` errors, none of them near the real cause.
 
 **And `create`'s merging of a shared `struct` is a codegen hazard, not a naming
 one.** On `dScMgSound_c`, eleven dispatch members saw `struct C` **incomplete**
@@ -513,9 +522,23 @@ both destructor variants in.
 
 mwccarm 2004/b56 behaviours, not style preferences.
 
-- **`virtual ~X() {}` inline, declared FIRST member.** Out-of-line emits
-  D2/D0/D1 in the wrong order plus a homeless D2; the ROM carries D1-then-D0
-  and no D2.
+- **The destructor form is a MEASUREMENT, not a default.** Two forms reproduce
+  the ROM's usual `D1`-then-`D0`-and-no-`D2`, and which one a TU needs is a
+  question to measure per TU:
+
+  - `virtual ~X() {}` **inline, declared FIRST member** — the variants emit in
+    reverse order of their first odr-use;
+  - the destructor **out of line** under `#pragma defer_codegen off` — emits
+    `D1, D0, D2`.
+
+  Out-of-line *without* that pragma emits `D2/D0/D1` in the wrong order plus a
+  homeless `D2`, which is where the flat "always inline it" rule this file used
+  to state came from. Landed both ways: ov006/`dScMgTeresa_c` and
+  ov006/`dScMgPanel_c` (71/71, link-verified) are both out-of-line +
+  `defer_codegen off`. **Try both before you take a partial** — and note the
+  inline form has a cost of its own, since it moves the key function to the
+  first out-of-line virtual declared, which on a coined-name class turns a
+  harmless name into a hard promotion refusal.
 - **Emission order is a hard gate, and it is the constraint most likely to stop
   you.** `linkcheck [4b/8]` fatally refuses a TU whose licensed `.text` sections
   are not in ROM-ascending order: `licensed .text functions are not emitted in
@@ -648,6 +671,17 @@ they cost minutes; discover them after and each is a cycle.
   `extern struct V dv;` in three separate function bodies compile cleanly. Only
   a **file-scope** redeclaration is rejected.
 
+  **But the licence is for FUNCTIONS with C linkage, and a project header
+  revokes it for data.** Measured on ov006/`dScMgPanel_c`:
+  `include/dScMgBase_c.h:12` already declares
+  `extern "C" void *data_ov004_020beb68;`, ordinal 60 recovered the object as
+  `char *`, and the block-scope form is rejected outright —
+  `identifier 'data_ov004_020beb68' redeclared; was declared as: 'void *'`.
+  The wording above sends you hunting for a file-scope duplicate *inside your
+  own TU* that is not there; the conflicting declaration is in a header you
+  include. The fix that kept 71/71 was a reinterpreting macro, not a
+  redeclaration.
+
 - **Canonicalising a DATA declaration is a codegen hazard, exactly like merging
   a shared `struct`.** Hoisting one canonical data declaration and casting each
   member's view back with a macro **changed the codegen of six members** on
@@ -705,6 +739,17 @@ excludes the header and declares every symbol the header would have supplied.
 So: include it and align *by default*, but when a spelling it dictates breaks a
 byte match, measure both ways and say which you took and why. The bytes outrank
 the header.
+
+**And "include it" inverts above some member count — this is a size-dependent
+rule, not a default.** `decl_common.h` declares 10 of ov006/`dScMgPanel_c`'s 71
+members and **7 of the 10 contradict the byte-matched shard**, two of them on
+the return type. Including it makes each an `illegal function overloading`
+error against code that already matches. That TU excluded the header (the ov002
+`Player` precedent) and gave the four class-method members their `decl_common`
+declarations at block scope instead. The more members a TU absorbs, the likelier
+the header contradicts one — so count the collisions before you decide. Two
+promoted TUs include it and two of the largest exclude it, and both choices are
+right for their size.
 
 **Grep shadow struct *tags* too, not only declarations.** A shadow type can
 collide with a **ROM symbol**, which is a different failure and a nastier one.
