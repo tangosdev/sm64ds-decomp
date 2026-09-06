@@ -48,6 +48,16 @@ notes/recon-2026-06-13.md
 notes/overnight-plan.md
 notes/ac-decomp-comparison.md
 
+# Session scratch that must never reach notes/ -- see notes/CONVENTIONS.md.
+# Tracking docs, per-agent work queues, and personal drafts belong in an agent's
+# scratchpad, not committed notes/. These patterns are a backstop for habit slips,
+# not the primary control.
+notes/goal-*.md
+notes/*.local-draft.md
+notes/*_agent[0-9]*.tsv
+notes/*_agent[0-9]*.md
+notes/*-[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9].md
+
 # third-party tools cloned for evaluation/integration (not part of this repo)
 vendor/
 
