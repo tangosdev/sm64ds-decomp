@@ -2,10 +2,8 @@
 // proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
 // to a draft until someone reproduces the bytes from real C.
 // HAND-ASM: IPC send loop (cmd 0xd, arg 2) followed by an intentional hang
-// (b self). The symbol's span also contains an unreachable epilogue-less tail
-// that stores r0 into data_020a89a4 - not producible from a single C function,
-// so this is kept as asm.
-extern int data_020a89a4;
+// (b self). The routine never returns, so mwccarm will not emit a function
+// that ends on a backward branch to itself with no epilogue at all.
 extern int IPCSend(unsigned int a, unsigned int c, unsigned int b);
 
 asm void func_020610fc(void) {
@@ -22,7 +20,4 @@ L10:
     bne L10
 L24:
     b L24
-    ldr r1, =data_020a89a4
-    str r0, [r1]
-    bx lr
 }
