@@ -7,7 +7,7 @@
    nine games (ids base + 4*j) has one both unlocked and unseen, the page arrows and
    the exit button with their bounce scales.
 
-   Rewritten from the disassembly. Credit for the NONMATCHING draft that sat here
+   Rewritten from the disassembly. Credit for the earlier unmatched draft that sat here
    before stays with it: it came in with the minigame class wave (#1741), and its
    extern set and slot identification are what this rewrite started from.
    The flat draft forced the inner loop's two induction registers by hand; they

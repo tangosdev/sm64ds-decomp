@@ -7,7 +7,7 @@
 
    Rewritten from the cartridge disassembly rather than from the flat-offset draft
    that sat here before. Credit for that draft stays with it: it was banked as a
-   NONMATCHING draft by lunavyqo, and its structure, extern set and frame layout are
+   earlier unmatched draft by lunavyqo, and its structure, extern set and frame layout are
    what made this address readable enough to attack. Two things the flat draft had
    to force by hand fall out of the real shape: strength reduction is left ON and
    the five induction pointers of the segment loop (mTextureSequences[i],
