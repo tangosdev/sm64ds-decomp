@@ -1489,7 +1489,7 @@
       "opt_propagation off": 1
     },
     "not_a_blocker": "This is a SOLVED pattern in this overlay, with four landed precedents. Wrap each pragma-carrying function in `#pragma push` / `#pragma pop` and put `#pragma defer_codegen off` near the top of the TU. src/actors/dScMgBomroom_c.cpp does it eleven times and covers all three families including opt_propagation; src/actors/dScMgHanachan_c.cpp six times; src/actors/dScMgMemory2_c.cpp twice; src/actors/dScMgTeresa_c.cpp three times. Without `defer_codegen off` the brackets do NOT bind positionally, and opt_strength_reduction in particular behaves file-globally - which is what makes an 8-pragma TU look scary on paper.",
-    "caution": "`defer_codegen off` also fixes the emission order to ascending, so the merged source must be written in REVERSE ROM order (highest address first) exactly as src/actors/dScMgRoulette_c.cpp is. Emission order is a hard gate (linkcheck [4b/8]), not advice."
+    "caution": "CORRECTED once the promotion landed 71/71: `defer_codegen off` fixes the emission order to ascending, so the merged source must be written in ROM-ASCENDING order (LOWEST address first). This field originally said REVERSE order and cited src/actors/dScMgRoulette_c.cpp; both halves are wrong -- dScMgRoulette_c does not use `defer_codegen off` at all, it is descending source under default deferred codegen. The oracle for the ascending + `defer_codegen off` form is src/actors/dScMgTeresa_c.cpp. Measured control on the shipped TU: deleting only `defer_codegen off` costs both the bytes (71/71 -> 67/71) and the order (70 section pairs out of ROM order). Emission order is a hard gate (linkcheck [4b/8]), not advice."
   },
   "compiler_only_output_prediction": {
     "expected_rows": 12,
