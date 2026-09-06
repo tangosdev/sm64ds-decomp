@@ -139,12 +139,12 @@ carrying more than one `.text` run (the 13,201 / 136 this file used to print is
 stale — promotions collapse blocks). The invariant itself holds, which is why a
 licensed claim cannot span a hole. Re-derive the counts; do not quote them.
 
-**Never read a gate's verdict through a pipe.** `python tools/X | tail -6;
+**Never read a gate's verdict through a pipe.** `python tools/source_coverage.py | tail -6;
 echo $?` reports **`tail`'s** exit status, not the tool's. Measured: a builder
 ran `source_coverage` that way, the tool printed its full failure banner into
 the truncated tail, `$?` came back 0, and they recorded it as green. Redirect to
 a file and echo `$?` *before* any pipe:
-`python tools/X > /tmp/x.log 2>&1; echo $?; tail -6 /tmp/x.log`. Two related
+`python tools/source_coverage.py > /tmp/x.log 2>&1; echo $?; tail -6 /tmp/x.log`. Two related
 parsing traps: `gh pr checks` output is **TAB**-separated, so `awk '{print $2}'`
 on `PR validation<TAB>pending` yields `validation` and a wait-loop exits
 immediately looking settled — use `awk -F'\t'`; and `classqueue.py claim
