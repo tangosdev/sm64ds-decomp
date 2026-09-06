@@ -1,110 +1,69 @@
 //cpp
 /* dScMgCoin_c -- the coin minigame scene, ov006.
  *
- * Reconstructed translation unit: ROM ordinals 3..35 of the contiguous linker
- * run 0x020dbe40..0x020de940, i.e. 0x020dbf7c..0x020dd0e0, 33 functions.
- * Assembled from the 33 one-function legacy sources, then reconciled by hand
- * (declarations, struct spellings, one decl_common.h signature).
+ * Reconstructed translation unit, PARTIAL: ROM ordinals 3..35 of the contiguous
+ * linker run 0x020dbe40..0x020de940, i.e. 0x020dbf7c..0x020dd0e0, 33 functions.
  *
- * ------------------------------------------------------------------------
- * WHY THIS IS A SUB-RANGE: TWO SOURCELESS HOLES, NOT ONE
- * ------------------------------------------------------------------------
- * tu_map calls 0x020dbe40..0x020de940 one 62-function linker run.  Two of
- * those 62 have no source anywhere in the tree and no entry in
- * config/arm9/overlays/ov006/delinks.txt at all -- the cartridge's own bytes
- * cover them:
+ * WHY A SUB-RANGE.  Two of the run's 62 functions have no source in the tree and
+ * no entry in config/arm9/overlays/ov006/delinks.txt: func_ov006_020dbe9c
+ * (ordinal 2) and func_ov006_020dd0e0 (ordinal 36).  Both are long-standing
+ * banked near-misses, and a near-miss never lands in src/.  Nothing in this tree
+ * can express a .text claim with a hole in it, so the run has to be licensed as
+ * one of its three contiguous pieces:
  *
- *   ROM ordinal 2   func_ov006_020dbe9c  0x020dbe9c  size 0x0e0
- *   ROM ordinal 36  func_ov006_020dd0e0  0x020dd0e0  size 0x1ec
+ *     segment 1  0x020dbe40..0x020dbe9c   2 sections  D1 and D0, alone
+ *     segment 2  0x020dbf7c..0x020dd0e0  33 sections  THIS FILE
+ *     segment 3  0x020dd2cc..0x020de988  26 sections  25 shards + the factory
  *
- * Both are long-standing banked near-misses, not unattempted work.
- * func_ov006_020dbe9c has fourteen logged attempts in
- * config/match_attempts.jsonl across four models and three harnesses; the best
- * standing result is 7 divergent words (nearmiss/db.jsonl carries that draft),
- * and the last three sessions all recorded no_progress against a residual its
- * own notes call a welded shift ordering plus a register-colouring cascade.
- * func_ov006_020dd0e0 is banked in nearmiss/db.jsonl at 34 divergences.  A
- * near-miss never lands in src/, so neither can be brought in here.
+ * Segment 2 is the largest.  The cost is that segment 3 keeps four of the six own
+ * vtable overrides (slots 0, 6, 9, 18) and the factory.  A class-named TU holding
+ * only helpers is precedented and landed: ov006/dScMgBomroom_c, ov074/Goomboss.
  *
- * Nothing in this tree can express a .text claim with a hole in it: checked
- * tree-wide on this base, zero of 148 TU manifests and zero delink blocks in
- * any overlay delinks.txt carry two .text runs.  So the run has to be licensed
- * as one of its THREE contiguous pieces, and the arithmetic that picks this
- * one is:
+ * So this TU does not own the class's key function -- the first declared virtual
+ * is the out-of-line destructor at 0x020dbe40, over in segment 1 -- and emits no
+ * vtable and no RTTI, needs no compiler_only_output block, and left
+ * include/dScMgCoin_c.h untouched.  That is the only outcome available anyway:
+ * ov006's whole .data segment is one delink section owned by no file, so no ov006
+ * TU can own its own vtable.
  *
- *   segment 1  0x020dbe40..0x020dbe9c   2 sections  -- D1 and D0, alone
- *   segment 2  0x020dbf7c..0x020dd0e0  33 sections  -- THIS FILE
- *   segment 3  0x020dd2cc..0x020de988  26 sections  -- 25 shards + the factory
+ * DO NOT REORDER.  Function order is the ROM's own, lowest address first, which
+ * is what `#pragma defer_codegen off` buys: with codegen deferred, mwccarm
+ * 2004/b56 emits one .text section per function in the REVERSE of source order.
+ * Dropping that one line costs no bytes but inverts emission order to 32
+ * out-of-order pairs, and linkcheck [4b/8] refuses that.
  *
- * Segment 2 is the largest side by shard count, which is the queue's own
- * ranking metric, and 33 beats segment 3's ceiling of 26 even after segment 3
- * absorbs dScMgCoin_c_classInit from src/d_s_mg_coin.cpp.  The cost of the
- * choice, stated plainly: segment 3 holds four of the class's six own vtable
- * overrides (slots 0, 6, 9, 18) and the factory, so those stay in their own
- * shards.  A TU of only helpers under a class-named file is precedented and
- * landed -- ov006/dScMgBomroom_c (41 functions) and ov074/Goomboss (36) both
- * promoted with no mangled class member at all.
+ * The two shards that carried `#pragma opt_common_subs off` and
+ * `#pragma opt_strength_reduction off` were measured against a delete-outright
+ * control: byte-identical, 33/33 either way, so both pragmas are gone.  Do not
+ * generalise from that -- dScMgHanachan_c, same overlay, needs them.
  *
- * NOT A DESTRUCTOR-ORDER REFUSAL.  The cartridge orders this class D1
- * (0x020dbe40) BELOW D0 (0x020dbe64) with no D2 anywhere in the image, which is
- * a reproducible direction; the pair is out only because it lies on the far
- * side of the first hole.  Consequently this TU does not own the class's key
- * function -- the first declared virtual is the out-of-line destructor at
- * 0x020dbe40, in segment 1 -- so it emits no vtable and no RTTI, needs no
- * compiler_only_output block (verify reports zero unlicensed symbols), and
- * needed no edit to include/dScMgCoin_c.h.  That is also the only outcome
- * available: ov006's entire .data segment is one delink section owned by no
- * file, so no ov006 TU can own its own vtable.
- *
- * ------------------------------------------------------------------------
- * THE TWO PRAGMA SECTIONS ARE INERT -- MEASURED, NOT ASSUMED
- * ------------------------------------------------------------------------
- * The legacy shards of func_ov006_020dca04 and func_ov006_020dcb1c each carried
- * `#pragma opt_common_subs off` and `#pragma opt_strength_reduction off`, which
- * is the queue's `pragma:2` blocker.  Three configurations were compiled on this
- * identical member set:
- *
- *   defer_codegen off + both pragmas bracketed push/pop   33/33, ROM-ascending
- *   defer_codegen off + both pragmas deleted outright     33/33, ROM-ascending
- *   pragmas deleted, defer_codegen off deleted too        33/33, 32 pairs NOT
- *                                                          in ROM order
- *
- * The delete-outright control is the decisive one: it is byte-identical to the
- * bracketed build, so both pragmas buy zero members here and are gone from this
- * file.  This is the same verdict dScMgRoulette_c reached on its own `pragma:1`,
- * and the opposite of dScMgHanachan_c, where the same two switches were
- * load-bearing on the same overlay.  The count in the queue column is a count of
- * shards carrying a #pragma line and never was evidence.
- *
- * FUNCTION ORDER IS DELIBERATELY THE ROM'S OWN, LOWEST ADDRESS FIRST.  That is
- * what `#pragma defer_codegen off` buys: with codegen deferred mwccarm 2004/b56
- * emits one .text section per function in the REVERSE of source order, and a
- * merged TU has to be written backwards to compensate.  Generating at parse time
- * emits them in source order instead.  The third control above is the proof --
- * dropping that one line from this ascending file costs nothing in bytes and
- * inverts emission order to 32 out-of-order pairs, which linkcheck [4b/8]
- * refuses.  Do not reorder.
- *
- * ------------------------------------------------------------------------
- * WHAT WAS RECONCILED
- * ------------------------------------------------------------------------
  * Every member keeps its own declarations rather than sharing one canonical
- * spelling, because the shards genuinely disagree and forcing one rewrites call
- * sites.  Three names disagree between members and are therefore declared at
- * block scope inside the bodies that use them, where the enclosing extern "C"
- * still gives them C linkage: func_ov006_020ddeb0 (char* vs void*),
- * func_ov004_020b0380 (void*,int,int,int vs int,int,int,int) and
- * RenderOamMainScreen (int(...) vs void(...) -- a shard-vs-shard RETURN-type
- * disagreement, which tubuild's conflict detector did not report at all).
+ * spelling: the shards genuinely disagree, and forcing one spelling rewrites call
+ * sites.  Three names disagree between members and so are declared at block scope
+ * in the bodies that use them, where the enclosing extern "C" still gives them C
+ * linkage -- func_ov006_020ddeb0 (char* vs void*), func_ov004_020b0380
+ * (void*,int,int,int vs int,int,int,int) and RenderOamMainScreen (a shard-vs-shard
+ * RETURN-type disagreement).  Member-local type tags carry a per-member suffix for
+ * the same reason: merging a shared struct across members is a codegen hazard, not
+ * a naming one.
  *
- * Member-local type tags that collided across members are uniquified per member
- * rather than merged: merging a shared struct is a codegen hazard, not a naming
- * one.  Sub/Obj, C/PMF/Entry, Elem and E all carry a per-member tag suffix here.
+ * THE SCENE OBJECT.  No layout for dScMgCoin_c is recovered, so every member here
+ * reaches its fields through raw offsets off the scene pointer.  These shapes are
+ * read off the arithmetic in this file and nothing more -- they are descriptions,
+ * not recovered names.  Nothing else in the tree names any of these offsets, and
+ * the same addresses mean unrelated things in dScMgSound_c and dScMgMemory2_c.
  *
- * One real header disagreement: include/decl_common.h:1995 types func_02012718
- * as void(int, int) where the func_ov006_020dbf7c shard declared it
- * void(void*, int).  The header wins -- the shard's local declaration is gone
- * and the call site passes 0xef unqualified.  Byte-neutral: 33/33 either way.
+ *     +0x4ac0  0x18-stride records: position, fall speed, a state byte at +0x10
+ *     +0x4d14  0x18-stride records, 0x20 of them: position, velocity, +0x180 of
+ *              gravity a frame, an 0x18-frame life, drawn from data_ov006_02136e24
+ *     +0x5014  0x10-stride records, 24 of them: seeded from a +0x4ac0 record,
+ *              0x18-frame life, drawn as a number at (x >> 12, y >> 12)
+ *     +0x519c  0x14-stride records: a delay, a frame counter, a state byte and
+ *              the sprite index those two drive
+ *     +0x51a8  0x1c-stride records: position, velocity, a countdown and two
+ *              little counters
+ *     +0x51c8  a scene phase word, tested against 5 all over this file, and
+ *              incremented in exactly one place (func_ov006_020dc5c4)
  */
 
 #include "types.h"
@@ -117,6 +76,15 @@
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dbf7c
 extern "C" {
+/* Steps one +0x51a8 record: integrate, spin it a little faster in whichever
+ * direction it is travelling, and once it has fallen past the height for its
+ * stage, bounce it back up with a random horizontal speed.  field_18 is how many
+ * bounces are left in the stage, field_19 the stage; after stage 6 the record
+ * just stops being drawn once it is off the bottom.
+ *
+ * The call to func_02012718 passes 0xef unqualified because decl_common.h types
+ * it void(int, int), not the void(void*, int) this member's shard declared.  The
+ * header wins; it is byte-neutral either way. */
 extern int RandomIntInternal(int *seed);
 
 extern int data_0209d4b8;
@@ -195,23 +163,28 @@ void func_ov006_020dbf7c(struct Obj_bf7c *sb, int i)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc154
 extern "C" {
+/* Runs the countdown at +0x51ba on one +0x51a8 record; when it expires the
+ * record goes to state 3 and the scene is told to re-scan. */
 void func_ov006_020dc154(char *base, int idx)
 {
     extern void func_ov006_020ddeb0(char *o);
-  unsigned short *p = (unsigned short *) ((base + 0x51ba) + (idx * 0x1c));
-  if ((*p) != 0)
-  {
-    *p = (*p) - 1;
-    return;
-  }
-  {
-    char *o = (base + (idx * 0x1c)) + 0x5000;
-    *((unsigned char *) (o + 0x1bf)) = 3;
-    *((int *) (((base + (idx * 0x1c)) + 0x5000) + 0x1b4)) = 0;
-    *((unsigned char *) (((base + (idx * 0x1c)) + 0x5000) + 0x1c0)) = 1;
-    *((unsigned char *) (((base + (idx * 0x1c)) + 0x5000) + 0x1c1)) = 0;
-  }
-  func_ov006_020ddeb0(base);
+
+    unsigned short *p = (unsigned short *) ((base + 0x51ba) + (idx * 0x1c));
+    if ((*p) != 0) {
+        *p = (*p) - 1;
+        return;
+    }
+    {
+        /* Only the first store goes through o; spelling the other three out from
+         * base again is what the original does, and folding them into o costs
+         * eight words.  Measured, this file, 2026-09-06. */
+        char *o = (base + (idx * 0x1c)) + 0x5000;
+        *((unsigned char *) (o + 0x1bf)) = 3;
+        *((int *) (((base + (idx * 0x1c)) + 0x5000) + 0x1b4)) = 0;
+        *((unsigned char *) (((base + (idx * 0x1c)) + 0x5000) + 0x1c0)) = 1;
+        *((unsigned char *) (((base + (idx * 0x1c)) + 0x5000) + 0x1c1)) = 0;
+    }
+    func_ov006_020ddeb0(base);
 }
 }
 
@@ -220,9 +193,13 @@ void func_ov006_020dc154(char *base, int idx)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc1c4
 extern "C" {
+/* The falling half of the same record: apply gravity and spin until it reaches
+ * the floor at -0xf0, then park it there, put it in state 2 and start the 0x30
+ * frame countdown func_ov006_020dc154 runs down. */
 void func_ov006_020dc1c4(void *thiz, int idx)
 {
     extern void func_ov006_020ddeb0(void *thiz);
+
     unsigned char *c = (unsigned char *)thiz;
     int off = idx * 0x1c;
 
@@ -230,7 +207,8 @@ void func_ov006_020dc1c4(void *thiz, int idx)
     *(int *)(c + 0x51b4 + off) = *(int *)(c + 0x51b4 + off) - 0x100;
     *(unsigned short *)(c + 0x51b8 + off) = *(unsigned short *)(c + 0x51b8 + off) + 0x400;
 
-    if ((*(int *)(c + 0x51ac + off) >> 0xc) > -0xf0) return;
+    if ((*(int *)(c + 0x51ac + off) >> 0xc) > -0xf0)
+        return;
 
     *(int *)(c + 0x51ac + off) = -0xf0000;
     *(unsigned char *)(c + 0x51bf + off) = 2;
@@ -244,11 +222,13 @@ void func_ov006_020dc1c4(void *thiz, int idx)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc26c
 extern "C" {
-void func_ov006_020dc26c(char *c){
-  *(char*)(c+0x51bf)=1;
-  *(char*)(c+0x51be)=1;
-  *(int*)(c+0x51b0)=0;
-  *(int*)(c+0x51b4)=-0x4000;
+/* Kicks record 0 into state 1 and gives it a little upward hop. */
+void func_ov006_020dc26c(char *c)
+{
+    *(char *)(c + 0x51bf) = 1;
+    *(char *)(c + 0x51be) = 1;
+    *(int *)(c + 0x51b0) = 0;
+    *(int *)(c + 0x51b4) = -0x4000;
 }
 }
 
@@ -257,6 +237,8 @@ void func_ov006_020dc26c(char *c){
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc294
 extern "C" {
+/* Deliberately empty: the first entry of the scene's callback table at
+ * 0x0213be44 points here, so state 0 does nothing. */
 void func_ov006_020dc294(void)
 {
 }
@@ -278,9 +260,14 @@ struct C_c298 {
     unsigned char idx;
 };
 
+/* Per-frame step for the +0x51a8 records: dispatch on the state byte at +0x51bf
+ * through the pointer-to-member table at 0x021417c8, but only while the enable
+ * flag at +0x51bc is set. */
 void func_ov006_020dc298(C_c298 *c)
 {
-    if (c->guard == 0) return;
+    if (c->guard == 0)
+        return;
+
     int j = c->idx;
     (c->*data_ov006_021417c8[j].pmf[0])(0);
 }
@@ -291,14 +278,16 @@ void func_ov006_020dc298(C_c298 *c)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc2f8
 extern "C" {
-void func_ov006_020dc2f8(char *c){
-  *(char*)(c+0x51bc)=1;
-  *(char*)(c+0x51bd)=1;
-  *(char*)(c+0x51be)=0;
-  *(char*)(c+0x51bf)=0x43000;
-  *(short*)(c+0x51b8)=0;
-  *(int*)(c+0x51a8)=0x8e000;
-  *(int*)(c+0x51ac)=-0x43000;
+/* Resets the +0x51a8 records to their start-of-round position and enables them. */
+void func_ov006_020dc2f8(char *c)
+{
+    *(char *)(c + 0x51bc) = 1;
+    *(char *)(c + 0x51bd) = 1;
+    *(char *)(c + 0x51be) = 0;
+    *(char *)(c + 0x51bf) = 0;
+    *(short *)(c + 0x51b8) = 0;
+    *(int *)(c + 0x51a8) = 0x8e000;
+    *(int *)(c + 0x51ac) = -0x43000;
 }
 }
 
@@ -307,6 +296,7 @@ void func_ov006_020dc2f8(char *c){
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc334
 extern "C" {
+/* The other half of func_ov006_020dc2f8: clears both enable flags. */
 void func_ov006_020dc334(char *p)
 {
     *(char *)(p + 0x51bc) = 0;
@@ -319,11 +309,14 @@ void func_ov006_020dc334(char *p)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc348
 extern "C" {
-void func_ov006_020dc348(char *c){
-  *(char*)(c+0x51a1)=4;
-  *(char*)(c+0x51a4)=0;
-  *(short*)(c+0x519e)=0;
-  *(char*)(c+0x51de)=1;
+/* Puts the +0x519c animation into state 4 from frame 0 and latches the flag at
+ * +0x51de, which func_ov006_020dc370 then reads as "leave me alone". */
+void func_ov006_020dc348(char *c)
+{
+    *(char *)(c + 0x51a1) = 4;
+    *(char *)(c + 0x51a4) = 0;
+    *(short *)(c + 0x519e) = 0;
+    *(char *)(c + 0x51de) = 1;
 }
 }
 
@@ -332,16 +325,22 @@ void func_ov006_020dc348(char *c){
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc370
 extern "C" {
-void func_ov006_020dc370(char *c){
-  if(*(unsigned char*)(c+0x51de)!=0) return;
-  if(*(unsigned char*)(c+0x51a1)==2){
-    *(short*)(c+0x519c)=0x3c;
-    return;
-  }
-  *(short*)(c+0x519c)=0x3c;
-  *(char*)(c+0x51a1)=2;
-  *(char*)(c+0x51a4)=0;
-  *(short*)(c+0x519e)=0;
+/* Starts, or retriggers, the 0x3c frame state-2 animation.  Retriggering only
+ * refreshes the delay; the frame counter is left alone. */
+void func_ov006_020dc370(char *c)
+{
+    if (*(unsigned char *)(c + 0x51de) != 0)
+        return;
+
+    if (*(unsigned char *)(c + 0x51a1) == 2) {
+        *(short *)(c + 0x519c) = 0x3c;
+        return;
+    }
+
+    *(short *)(c + 0x519c) = 0x3c;
+    *(char *)(c + 0x51a1) = 2;
+    *(char *)(c + 0x51a4) = 0;
+    *(short *)(c + 0x519e) = 0;
 }
 }
 
@@ -352,13 +351,19 @@ void func_ov006_020dc370(char *c){
 extern "C" {
 extern int data_ov006_0213a9fc[];
 
-void func_ov006_020dc3bc(char*c){
-    extern int RenderOamMainScreen(int a,int b,int c,int d,int e);
-  if(*(unsigned char*)(c+0x5000+0x1a2)==0) return;
-  int x=*(int*)(c+0x5000+0x194);
-  int y=*(int*)(c+0x5000+0x198);
-  RenderOamMainScreen(data_ov006_0213a9fc[*(unsigned char*)(c+0x5000+0x1a3)],
-    x>>0xc, y>>0xc, -1, -1);
+/* Draws the +0x5194 sprite, if it is visible, at its own fixed-point position.
+ * The sprite index at +0x51a3 selects a cell out of data_ov006_0213a9fc. */
+void func_ov006_020dc3bc(char *c)
+{
+    extern int RenderOamMainScreen(int a, int b, int c, int d, int e);
+
+    if (*(unsigned char *)(c + 0x5000 + 0x1a2) == 0)
+        return;
+
+    int x = *(int *)(c + 0x5000 + 0x194);
+    int y = *(int *)(c + 0x5000 + 0x198);
+    RenderOamMainScreen(data_ov006_0213a9fc[*(unsigned char *)(c + 0x5000 + 0x1a3)],
+                        x >> 0xc, y >> 0xc, -1, -1);
 }
 }
 
@@ -370,18 +375,25 @@ extern "C" {
 extern unsigned char data_ov006_0212e324[];
 extern unsigned char data_ov006_0212e31c[];
 
-void func_ov006_020dc414(char* base, int idx){
-  unsigned short* cnt = (unsigned short*)(base + 0x519e + idx*0x14);
-  unsigned char* st = (unsigned char*)(base + 0x51a4 + idx*0x14);
-  *cnt = *cnt + 1;
-  if (*cnt < data_ov006_0212e324[*st]) return;
-  *cnt = 0;
-  *st = *st + 1;
-  if (*st >= 8) {
-    *st = 1;
-  } else {
-    *(unsigned char*)(base + idx*0x14 + 0x5000 + 0x1a3) = data_ov006_0212e31c[*st];
-  }
+/* Eight-frame looping animation: hold each frame for its own duration out of
+ * data_ov006_0212e324, then step the sprite index out of data_ov006_0212e31c.
+ * Frame 0 is the intro, so the loop comes back round to 1 rather than 0. */
+void func_ov006_020dc414(char *base, int idx)
+{
+    unsigned short *cnt = (unsigned short *)(base + 0x519e + idx * 0x14);
+    unsigned char *st = (unsigned char *)(base + 0x51a4 + idx * 0x14);
+
+    *cnt = *cnt + 1;
+    if (*cnt < data_ov006_0212e324[*st])
+        return;
+
+    *cnt = 0;
+    *st = *st + 1;
+    if (*st >= 8) {
+        *st = 1;
+    } else {
+        *(unsigned char *)(base + idx * 0x14 + 0x5000 + 0x1a3) = data_ov006_0212e31c[*st];
+    }
 }
 }
 
@@ -390,8 +402,10 @@ void func_ov006_020dc414(char* base, int idx){
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc4b0
 extern "C" {
-void func_ov006_020dc4b0(char* c, int i){
-  *(char*)(c + i*0x14 + 0x5000 + 0x1a3) = 0;
+/* Back to sprite cell 0. */
+void func_ov006_020dc4b0(char *c, int i)
+{
+    *(char *)(c + i * 0x14 + 0x5000 + 0x1a3) = 0;
 }
 }
 
@@ -405,28 +419,24 @@ extern unsigned char data_ov006_0212e30c[];
 
 void func_ov006_020dc4c8(char *c, int i)
 {
-  int n = i * 0x14;
-  unsigned short cnt = *((unsigned short *) ((c + 0x519e) + n));
-  int new_var;
+    int n = i * 0x14;
+    unsigned short cnt = *((unsigned short *) ((c + 0x519e) + n));
   *((unsigned short *) ((c + 0x519e) + n)) = cnt + 1;
-  unsigned char idx = *((unsigned char *) ((c + 0x51a4) + n));
-  if ((*((unsigned short *) ((c + 0x519e) + n))) >= data_ov006_0212e308[idx])
-  {
+    unsigned char idx = *((unsigned char *) ((c + 0x51a4) + n));
+    if ((*((unsigned short *) ((c + 0x519e) + n))) >= data_ov006_0212e308[idx]) {
     *((unsigned short *) ((c + 0x519e) + n)) = 0;
     *((unsigned char *) ((c + 0x51a4) + n)) = (*((unsigned char *) ((c + 0x51a4) + n))) + 1;
     *((unsigned char *) ((c + 0x51a4) + n)) = (*((unsigned char *) ((c + 0x51a4) + n))) & 1;
-  }
+    }
   *((unsigned char *) ((c + n) + 0x51a3)) = data_ov006_0212e30c[*((unsigned char *) ((c + 0x51a4) + n))];
-  if ((*((int *) (c + 0x51c8))) == 5)
-  {
-    return;
-  }
-  unsigned short w = *((unsigned short *) ((c + 0x519c) + n));
-  if (w != 0)
-  {
-    *((unsigned short *) ((c + 0x519c) + n)) = (new_var = w - 1);
-    return;
-  }
+    if ((*((int *) (c + 0x51c8))) == 5) {
+        return;
+    }
+    unsigned short w = *((unsigned short *) ((c + 0x519c) + n));
+    if (w != 0) {
+    *((unsigned short *) ((c + 0x519c) + n)) = w - 1;
+        return;
+    }
   *((c + n) + 0x51a1) = 3;
   *((unsigned char *) ((c + 0x51a4) + n)) = 0;
   *((unsigned short *) ((c + 0x519e) + n)) = 0;
@@ -444,6 +454,10 @@ extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
 extern u16 data_ov006_0212e33c[];
 extern u8 data_ov006_0212e310[];
 
+/* The count-in animation.  Steps through data_ov006_0212e33c's per-frame
+ * durations; frame 2 hops record 0 and plays the "ready" sound, and after frame 3
+ * the slot drops into state 2 with a 0xb4 frame delay and the scene phase at
+ * +0x51c8 advances.  This is the only place that phase word is incremented. */
 void func_ov006_020dc5c4(char *c, int i)
 {
     int off = i * 0x14;
@@ -462,7 +476,7 @@ void func_ov006_020dc5c4(char *c, int i)
         *(u16 *)(c + 0x519c + off) = 0xb4;
         *(u8 *)(c + 0x51a1 + off) = 2;
         {
-            int *p = (int *)(((int)c + 0x51c8));
+            int *p = (int *)(c + 0x51c8);
             *st = 0;
             *counter = 0;
             *p = *p + 1;
@@ -480,20 +494,23 @@ void func_ov006_020dc5c4(char *c, int i)
 extern "C" {
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned);
 
+/* Runs the state-2 delay down, chiming 0x18 frames before it expires, and then
+ * hands the slot back to state 1 at frame 0.
+ *
+ * The (unsigned long long) on the last line is load-bearing, not litter: taking
+ * it out costs five words.  Measured, this file, 2026-09-06. */
 void func_ov006_020dc6d0(int o, int idx)
 {
-  unsigned short *timer = (unsigned short *) ((((char *) o) + 0x519c) + (idx * 0x14));
-  if ((*timer) != 0)
-  {
-    *timer = (*timer) - 1;
-    if ((*timer) == 0x18)
-    {
-      _ZN5Sound12PlayBank2_2DEj(0xf1);
+    unsigned short *timer = (unsigned short *) ((((char *) o) + 0x519c) + (idx * 0x14));
+    if ((*timer) != 0) {
+        *timer = (*timer) - 1;
+        if ((*timer) == 0x18) {
+            _ZN5Sound12PlayBank2_2DEj(0xf1);
+        }
+        return;
     }
-    return;
-  }
-  *((unsigned char *) (((((char *) o) + (idx * 0x14)) + 0x5000) + 0x1a1)) = 1;
-  *((unsigned short *) (((((char *) ((unsigned long long) o)) + (idx * 0x14)) + 0x5100) + 0x9e)) = 0;
+    *((unsigned char *) (((((char *) o) + (idx * 0x14)) + 0x5000) + 0x1a1)) = 1;
+    *((unsigned short *) (((((char *) ((unsigned long long) o)) + (idx * 0x14)) + 0x5000) + 0x19e)) = 0;
 }
 }
 
@@ -512,9 +529,13 @@ struct C_c754 {
     unsigned char idx;
 };
 
+/* Same shape as func_ov006_020dc298, one record set over: dispatch the +0x519c
+ * slot's state byte through the table at 0x021417e8 while its flag is set. */
 void func_ov006_020dc754(C_c754 *c)
 {
-    if (c->guard == 0) return;
+    if (c->guard == 0)
+        return;
+
     int j = c->idx;
     (c->*data_ov006_021417e8[j].pmf[0])(0);
 }
@@ -525,16 +546,19 @@ void func_ov006_020dc754(C_c754 *c)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc7b4
 extern "C" {
-void func_ov006_020dc7b4(char* c){
-  *(char*)(c+0x5000+0x1a0)=1;
-  *(char*)(c+0x5000+0x1a1)=0;
-  *(char*)(c+0x5000+0x1a2)=1;
-  *(short*)(c+0x5000+0x19c)=0x28;
-  *(short*)(c+0x5000+0x19e)=0;
-  *(char*)(c+0x5000+0x1a3)=3;
-  *(char*)(c+0x5000+0x1a4)=0;
-  *(int*)(c+0x5000+0x194)=0x70000;
-  *(int*)(c+0x5000+0x198)=0x98000;
+/* Start of round: park the +0x519c slot at the middle of the screen, visible, in
+ * state 0 on sprite cell 3, with 0x28 frames on the clock. */
+void func_ov006_020dc7b4(char *c)
+{
+    *(char *)(c + 0x5000 + 0x1a0) = 1;
+    *(char *)(c + 0x5000 + 0x1a1) = 0;
+    *(char *)(c + 0x5000 + 0x1a2) = 1;
+    *(short *)(c + 0x5000 + 0x19c) = 0x28;
+    *(short *)(c + 0x5000 + 0x19e) = 0;
+    *(char *)(c + 0x5000 + 0x1a3) = 3;
+    *(char *)(c + 0x5000 + 0x1a4) = 0;
+    *(int *)(c + 0x5000 + 0x194) = 0x70000;
+    *(int *)(c + 0x5000 + 0x198) = 0x98000;
 }
 }
 
@@ -543,6 +567,7 @@ void func_ov006_020dc7b4(char* c){
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc7fc
 extern "C" {
+/* End of round: stop stepping the slot but leave it on screen. */
 void func_ov006_020dc7fc(char *p)
 {
     *(char *)(p + 0x51a0) = 0;
@@ -557,12 +582,20 @@ void func_ov006_020dc7fc(char *p)
 extern "C" {
 extern void func_ov004_020b0d8c(void *c, int arg1, int arg2);
 
-void func_ov006_020dc814(char *c){
-  if(*(int*)(c+0x5000+0x1c8) != 5) return;
-  int v = *(int*)(c+0x5000+0x1cc);
-  if(v > 0x80) return;
-  if(v == 0) return;
-  func_ov004_020b0d8c(c, 0xe0, 0xa0);
+/* In the last phase only, and only over the final 0x80 frames, draw the
+ * countdown overlay.  Nothing at all once it reaches zero. */
+void func_ov006_020dc814(char *c)
+{
+    if (*(int *)(c + 0x5000 + 0x1c8) != 5)
+        return;
+
+    int v = *(int *)(c + 0x5000 + 0x1cc);
+    if (v > 0x80)
+        return;
+    if (v == 0)
+        return;
+
+    func_ov004_020b0d8c(c, 0xe0, 0xa0);
 }
 }
 
@@ -588,6 +621,8 @@ typedef struct {
     Elem_c870 arr[24];
 } Obj_c870;
 
+/* Draws all 24 live +0x5014 popups.  Once the scene is in its last phase they
+ * are suppressed as soon as the countdown at +0x51cc hits zero. */
 void func_ov006_020dc870(Obj_c870 *o)
 {
     int i;
@@ -608,6 +643,12 @@ void func_ov006_020dc870(Obj_c870 *o)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc900
 extern "C" {
+/* Ages the 24 +0x5014 popups a frame each and marks the expired ones done.
+ *
+ * Both cast towers here are load-bearing.  The (long long) on the index and the
+ * (int) round-trip on the two +0x501c accesses each cost a word if removed --
+ * the (int) is what stops mwccarm reusing the address it just computed for the
+ * read-modify-write.  Measured, this file, 2026-09-06. */
 void func_ov006_020dc900(char *c)
 {
     int i;
@@ -627,15 +668,17 @@ void func_ov006_020dc900(char *c)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dc960
 extern "C" {
+/* Spawns popup i over coin i: same position, the coin's value, 0x18 frames.
+ * The two strides differ -- 0x18 for the coin, 0x10 for the popup. */
 void func_ov006_020dc960(char *c, int i)
 {
-    unsigned char (*s)[0x18] = (unsigned char (*)[0x18])c;
-    unsigned char (*d)[0x10] = (unsigned char (*)[0x10])c;
-    *(int *)(&d[i][0x5014]) = *(int *)(&s[i][0x4ac0]);
-    *(int *)(&d[i][0x5018]) = *(int *)(&s[i][0x4ac4]);
-    *(short *)(&d[i][0x501e]) = *(unsigned char *)(&s[i][0x4ad3]);
-    *(unsigned char *)(&d[i][0x5020]) = 1;
-    *(short *)(&d[i][0x501c]) = 0x18;
+    char *s = c + i * 0x18;
+    char *d = c + i * 0x10;
+    *(int *)(d + 0x5014) = *(int *)(s + 0x4ac0);
+    *(int *)(d + 0x5018) = *(int *)(s + 0x4ac4);
+    *(short *)(d + 0x501e) = *(unsigned char *)(s + 0x4ad3);
+    *(unsigned char *)(d + 0x5020) = 1;
+    *(short *)(d + 0x501c) = 0x18;
 }
 }
 
@@ -647,8 +690,12 @@ extern "C" {
 extern void *data_ov006_02136e24[];
 struct E_c99c { char pad[0x18]; };
 
-void func_ov006_020dc99c(char *c) {
+/* Draws whichever of the 0x20 +0x4d14 sparkles are visible, each with its own
+ * sprite out of data_ov006_02136e24. */
+void func_ov006_020dc99c(char *c)
+{
     extern void func_ov004_020b0380(void *fn, int a, int b, int d);
+
     int i;
     struct E_c99c *arr = (struct E_c99c *)c;
     for (i = 0; i < 0x20; i++) {
@@ -668,6 +715,9 @@ void func_ov006_020dc99c(char *c) {
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dca04
 extern "C" {
+/* Steps the 0x20 +0x4d14 sparkles: gravity, and horizontal drag that pulls any
+ * speed above 0x300 back towards it.  The early return when one expires is the
+ * original's, not a transcription slip -- only one sparkle is retired a frame. */
 void func_ov006_020dca04(char *o)
 {
     int i;
@@ -675,19 +725,19 @@ void func_ov006_020dca04(char *o)
     for (i = 0; i < 0x20; i++, q += 0x18) {
         if (*(u8 *)(q + 0x4d28) != 0) {
             if (*(u16 *)(q + 0x4d24) != 0) {
-                *(u16 *)(((int)q + 0x4d24)) -= 1;
+                *(u16 *)(q + 0x4d24) -= 1;
             } else {
                 *(u8 *)(o + i * 0x18 + 0x4d28) = 0;
                 *(u8 *)(o + i * 0x18 + 0x4d29) = 0;
                 return;
             }
-            *(int *)(((int)q + 0x4d14)) += *(int *)(q + 0x4d1c);
-            *(int *)(((int)q + 0x4d18)) += *(int *)(q + 0x4d20);
-            *(int *)(((int)q + 0x4d20)) += 0x180;
+            *(int *)(q + 0x4d14) += *(int *)(q + 0x4d1c);
+            *(int *)(q + 0x4d18) += *(int *)(q + 0x4d20);
+            *(int *)(q + 0x4d20) += 0x180;
             if (*(int *)(q + 0x4d1c) > 0x300)
-                *(int *)(((int)q + 0x4d1c)) -= 0x180;
+                *(int *)(q + 0x4d1c) -= 0x180;
             else if (*(int *)(q + 0x4d1c) < -0x300)
-                *(int *)(((int)q + 0x4d1c)) += 0x180;
+                *(int *)(q + 0x4d1c) += 0x180;
         }
     }
 }
@@ -702,12 +752,15 @@ extern int data_ov006_0212e430[];
 extern u16 data_ov006_0212e334[];
 extern s16 data_02082214[];
 
+/* Bursts four sparkles out of coin a1, one per fixed direction in
+ * data_ov006_0212e334.  The offsets come in x/z pairs out of
+ * data_ov006_0212e430, the speeds off the shared sine table at 0x02082214. */
 void func_ov006_020dcb1c(char *o, int a1)
 {
     int i, j, k;
     char *b = o + a1 * 0x18;
-    int *px = (int *)(((int)b + 0x4ac0));
-    int *pz = (int *)(((int)b + 0x4ac4));
+    int *px = (int *)(b + 0x4ac0);
+    int *pz = (int *)(b + 0x4ac4);
     for (i = 0, j = 0, k = 1; i < 4; i++, o += 0x18, j += 2, k += 2) {
         if (*(u8 *)(o + 0x4d28) == 0) {
             *(u8 *)(o + 0x4d28) = 1;
@@ -731,15 +784,14 @@ void func_ov006_020dcb1c(char *o, int a1)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dcc48
 extern "C" {
-/* func_ov006_020dcc48 at 0x020dcc48
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov006).
- */
 extern int data_ov006_021341ec;
 extern int data_ov006_0212e364[];
 
-void func_ov006_020dcc48(void) {
+/* Tiles the backdrop: three rows of sixteen, 0x20 apart, all the same sprite. */
+void func_ov006_020dcc48(void)
+{
     extern void func_ov004_020b0380(int a, int b, int c, int d);
+
     int i;
     int s, v, j;
     for (i = 0; i < 3; i++) {
@@ -764,18 +816,24 @@ void func_ov004_020b1de8(int r0, int r1, int r2, int r3);
 void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3);
 void func_ov004_020b2444(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 
+/* The top line of the HUD, once the scene is past its opening phase: a caption
+ * from the current language's table, a label, and the count at +0x51d4.
+ * GetGameLanguage is asked twice on purpose: hoisting the second call out costs
+ * eighteen words here.  Measured, this file, 2026-09-06. */
 void func_ov006_020dccb8(char *thiz)
 {
     void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+
     int idx;
-    if (*(int*)(thiz + 0x5000 + 0x1c8) < 2)
+    if (*(int *)(thiz + 0x5000 + 0x1c8) < 2)
         return;
+
     idx = GetGameLanguage();
-    RenderOamMainScreen(data_ov006_0213bf34[idx][0x20/4], 0x80, 0x18, -1, -1);
+    RenderOamMainScreen(data_ov006_0213bf34[idx][8], 0x80, 0x18, -1, -1);
     func_ov004_020b1de8(0x68, 0x28, 1, -1);
     idx = GetGameLanguage();
-    DrawOamSprite((void*)data_ov006_0213bf34[idx][4/4], (void*)0x7a, 0x28, (void*)0);
-    func_ov004_020b2444(0x8c, 0x28, *(int*)(thiz + 0x5000 + 0x1d4), 1, -1, 2, 0);
+    DrawOamSprite((void *)data_ov006_0213bf34[idx][1], (void *)0x7a, 0x28, (void *)0);
+    func_ov004_020b2444(0x8c, 0x28, *(int *)(thiz + 0x5000 + 0x1d4), 1, -1, 2, 0);
 }
 }
 
@@ -791,20 +849,25 @@ void func_ov004_020b1de8(int r0, int r1, int r2, int r3);
 void DrawOamSprite(void *arg0, void *arg1, int arg2, void *arg3);
 void func_ov004_020b2444(int a0, int a1, int a2, int a3, int a4, int a5, int a6);
 
+/* The second line of the HUD, laid out exactly like the first, except that the
+ * number is the other player's and is read out of ov004's record -- which may
+ * not exist yet, in which case it shows zero. */
 void func_ov006_020dcd74(char *thiz)
 {
     void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+
     int idx;
     int r2;
-    if (*(int*)(thiz + 0x5000 + 0x1c8) < 2)
+    if (*(int *)(thiz + 0x5000 + 0x1c8) < 2)
         return;
+
     idx = GetGameLanguage();
-    RenderOamMainScreen(data_ov006_0213bf34[idx][0x10/4], 0x80, 0x50, -1, -1);
+    RenderOamMainScreen(data_ov006_0213bf34[idx][4], 0x80, 0x50, -1, -1);
     func_ov004_020b1de8(0x6c, 0x60, 1, -1);
     idx = GetGameLanguage();
-    DrawOamSprite((void*)data_ov006_0213bf34[idx][4/4], (void*)0x7e, 0x60, (void*)0);
+    DrawOamSprite((void *)data_ov006_0213bf34[idx][1], (void *)0x7e, 0x60, (void *)0);
     if (data_ov004_020beb68 != 0)
-        r2 = *(int*)((char*)data_ov004_020beb68 + 0xac);
+        r2 = *(int *)((char *)data_ov004_020beb68 + 0xac);
     else
         r2 = 0;
     func_ov004_020b2444(0x90, 0x60, r2, 1, -1, 2, 0);
@@ -816,21 +879,23 @@ void func_ov006_020dcd74(char *thiz)
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dce3c
 extern "C" {
-void func_ov006_020dce3c(char* c)
+/* Walks the displayed total at +0x4d0a up towards the real one at +0x4d08, one
+ * step every eight frames, so the score counts up rather than jumping. */
+void func_ov006_020dce3c(char *c)
 {
-    if (*(unsigned char*)(c + 0x4000 + 0xd13) == 0)
+    if (*(unsigned char *)(c + 0x4000 + 0xd13) == 0)
         return;
-    if (*(unsigned short*)(c + 0x4d08) == *(unsigned short*)(c + 0x4d0a))
+    if (*(unsigned short *)(c + 0x4d08) == *(unsigned short *)(c + 0x4d0a))
         return;
     {
-        unsigned short* e = (unsigned short*)(c + 0x4d0c);
+        unsigned short *e = (unsigned short *)(c + 0x4d0c);
         *e = *e + 1;
     }
-    if (*(unsigned short*)(c + 0x4d0c) < 8)
+    if (*(unsigned short *)(c + 0x4d0c) < 8)
         return;
-    *(unsigned short*)(c + 0x4d0c) = 0;
+    *(unsigned short *)(c + 0x4d0c) = 0;
     {
-        unsigned short* p = (unsigned short*)(c + 0x4d0a);
+        unsigned short *p = (unsigned short *)(c + 0x4d0a);
         *p = *p + 1;
     }
 }
@@ -867,10 +932,16 @@ extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b2444(int a1, int a2, int num, int a4, int a5, int sel, int idx);
 extern void* data_ov006_02133f10[];
 
-void func_ov006_020dcea8(struct Obj_cea8* o) {
+/* Draws the 24 coins.  Before the last phase a coin is drawn whenever b12 is
+ * set; in the last phase only the ones that were collected are, with their value
+ * printed over them.  b10 == 2 picks the second sprite and the highlight. */
+void func_ov006_020dcea8(struct Obj_cea8 *o)
+{
     int i;
     int v1, v2;
-    if (o->a == 5 && o->b == 0) return;
+    if (o->a == 5 && o->b == 0)
+        return;
+
     v1 = 0;
     v2 = 0;
     for (i = 0; i < 24; i++) {
@@ -901,6 +972,7 @@ void func_ov006_020dcea8(struct Obj_cea8* o) {
 /* ---------------------------------------------------------------- */
 // @symbol func_ov006_020dcffc
 extern "C" {
+/* Another table no-op, like func_ov006_020dc294. */
 void func_ov006_020dcffc(void)
 {
 }
@@ -915,6 +987,9 @@ extern void func_ov006_020dc370(char *c);
 extern void func_ov006_020dc960(char *c, int i);
 extern void func_ov006_020dd4b0(char *c, int i);
 
+/* One hop of a bouncing coin: fall, land on the floor recorded at +0x4ac8, count
+ * the bounce and start the caption animation.  After the last bounce the coin
+ * settles into state 2 and leaves a popup behind; otherwise it goes back up. */
 void func_ov006_020dd000(char *c, int i)
 {
     int off = i * 0x18;
