@@ -371,8 +371,8 @@ greppable feature of the *residual* and scan every matched function for it:
 | function | address-nearest siblings | what signature search found |
 |---|---|---|
 | `func_ov063_02119074` | nothing on frame padding | scan for prologue `push {r4,lr}; sub sp,#0x10` + near-zero sp traffic (dead frame space) -> the `volatile int dummy[N]` idiom |
-| `func_ov006_02109aac` | no useful idiom | scan matched ov006 ROM bytes for `add rD, rN, rD, lsl #3` -> `src/func_ov006_02108f2c.c`, same table/compares/callee; 7 words closed in one edit |
-| `func_ov006_021082fc` | adjacent twin 0x38 away, useless | `grep -l Matrix4x3_ApplyInPlaceToTranslation src/*.c` filtered to callers passing a stack Vec3 -> `src/func_ov006_02107ea8.c`; 11 -> 0 |
+| `func_ov006_02109aac` | no useful idiom | scan matched ov006 ROM bytes for `add rD, rN, rD, lsl #3` -> `func_ov006_02108f2c` (now folded into `src/actors/dScMgRoulette_c.cpp`), same table/compares/callee; 7 words closed in one edit |
+| `func_ov006_021082fc` | adjacent twin 0x38 away, useless | `grep -l Matrix4x3_ApplyInPlaceToTranslation src/*.c` filtered to callers passing a stack Vec3 -> `func_ov006_02107ea8` (now folded into `src/actors/dScMgRoulette_c.cpp`); 11 -> 0 |
 
 Practical recipes: grep `src/` for a **callee name** your function also calls (then filter by
 argument shape); scan matched ROM bytes for a distinctive **instruction pattern** from your residual;
@@ -404,7 +404,8 @@ your target before starting.**
 > `volatile` is the one to reach for last: it preserves the stores but pins their order and
 > introduces extra *named webs*, which cost an 11-word rotation on `func_ov006_021082fc`
 > that no declaration-order permutation could fix. Swapping it for form #1 (taken verbatim
-> from the twin `src/func_ov006_02107ea8.c`) closed that function 11 -> 0 in one edit.
+> from the twin `func_ov006_02107ea8`, now part of
+> `src/actors/dScMgRoulette_c.cpp`) closed that function 11 -> 0 in one edit.
 > Form #2 beat `volatile` on `func_ov060_02117db8` for the same reason: dropping `volatile`
 > alone deleted the stores as dead, but merging two stack Vec3s into one `int v[6]` whose
 > address escapes into a call kept them *and* let the scheduler hoist the call-arg setup the
