@@ -44,8 +44,8 @@ were dropped in favour of `mStarPos`.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x420 | `void *mState` | `src/KingBobOmb_SetState.cpp` is exactly `c->pp = p; if (*c->pp) return (c->**c->pp)();` with `pp` at 0x420, and `src/_ZN12daBombking_c8BehaviorEv.cpp` compares the same word against four [ov078](../config/arm9/overlays/ov078/symbols.txt) state tables ([data_ov078_0212703c](../config/arm9/overlays/ov078/symbols.txt), [_0212707c](../config/arm9/overlays/ov078/symbols.txt), [_021270bc](../config/arm9/overlays/ov078/symbols.txt), [_021270fc](../config/arm9/overlays/ov078/symbols.txt)) to pick its per-state path. Previously unnamed inside `pad_420`. |
-| 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the `Fix12` triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState`([data_ov078_021270bc](../config/arm9/overlays/ov078/symbols.txt)), the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. The [ov078](../config/arm9/overlays/ov078/symbols.txt) handlers read the whole triple: [func_ov078_02123d3c](../src/func_ov078_02123d3c.c) loads all three into a `Vector3`, and [func_ov078_021240a0](../src/func_ov078_021240a0.c)/[_021243c0](../src/func_ov078_021243c0.cpp) pass `&mArenaPosX` to `Vec3_Dist` and `Vec3_HorzAngle` against `mPos`. |
+| 0x420 | `void *mState` | `KingBobOmb_SetState` (in [`src/actors/daBombking_c.cpp`](../src/actors/daBombking_c.cpp)) is exactly `c->pp = p; if (*c->pp) return (c->**c->pp)();` with `pp` at 0x420, and `daBombking_c::Behavior` (in [`src/actors/daBombking_c.cpp`](../src/actors/daBombking_c.cpp)) compares the same word against four [ov078](../config/arm9/overlays/ov078/symbols.txt) state tables ([data_ov078_0212703c](../config/arm9/overlays/ov078/symbols.txt), [_0212707c](../config/arm9/overlays/ov078/symbols.txt), [_021270bc](../config/arm9/overlays/ov078/symbols.txt), [_021270fc](../config/arm9/overlays/ov078/symbols.txt)) to pick its per-state path. Previously unnamed inside `pad_420`. |
+| 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the `Fix12` triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState`([data_ov078_021270bc](../config/arm9/overlays/ov078/symbols.txt)), the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. The [ov078](../config/arm9/overlays/ov078/symbols.txt) handlers read the whole triple: [func_ov078_02123d3c](../src/actors/daBombking_c.cpp) loads all three into a `Vector3`, and [func_ov078_021240a0](../src/actors/daBombking_c.cpp)/[_021243c0](../src/actors/daBombking_c.cpp) pass `&mArenaPosX` to `Vec3_Dist` and `Vec3_HorzAngle` against `mPos`. |
 | 0x4e0/0x4e4/0x4e8 | `mHomePosX/Y/Z` | `InitResources` writes them from `mPosX/mPosY/mPosZ` at spawn. |
 | 0x4f8 | `mInitAngleY` | `InitResources`' `*(short*)(this + 0x400 + 0xf8) = mAngleY;`, now spelled `mInitAngleY = mAngleY;`. Previously unnamed inside `pad_4ec`. |
 | 0x4fc | `mAnimSpeed` | `Behavior`'s only read is `mBlendModelAnim.speed = mAnimSpeed << 0xc`, i.e. it is the animation speed in whole units, converted to Fix12 on the way in. `BlendModelAnim`'s `speed` is at +0x5c (`include/BlendModelAnim.h`), and 0x2cc + 0x5c = 0x328, the address the raw poke used. `InitResources` sets it to 1. |
@@ -61,9 +61,9 @@ Left `unk_`:
 - **0x499** — `Behavior` compares it against 1; nothing writes it in matched code.
 - **0x4a0** — `InitResources` sets it to `((rand >> 0x1e) & 1) + 1`, so 1 or 2, and no
   matched body reads it.
-- **0x500** — `mHealth`. Set to 3 in `InitResources`; [func_ov078_021243c0](../src/func_ov078_021243c0.cpp) decrements it
+- **0x500** — `mHealth`. Set to 3 in `InitResources`; [func_ov078_021243c0](../src/actors/daBombking_c.cpp) decrements it
   by one in the same body that plays the stagger anim and applies the knockback speeds,
-  and then latches `+0xb0` when it reaches 0; [func_ov078_021240a0](../src/func_ov078_021240a0.c) gates the whole
+  and then latches `+0xb0` when it reaches 0; [func_ov078_021240a0](../src/actors/daBombking_c.cpp) gates the whole
   chase-the-player branch on `<= 0`. Three throws, exactly as the fight plays.
 - **0x424/0x428/0x42c/0x42d** — zeroed by a two-iteration loop in `InitResources` and
   otherwise untouched.
