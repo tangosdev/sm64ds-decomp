@@ -1007,7 +1007,11 @@ int Eyerok::Render()
  * default) a bracketed opt_* pragma does not bind and these two go
  * file-global, which costs func_ov066_021184e0 (4 words) and
  * func_ov066_021194fc (a size change).  Deleting them outright instead
- * costs _ZN6Eyerok8BehaviorEv, 0x4b0 -> 0x4ac. */
+ * costs _ZN6Eyerok8BehaviorEv: 33/34, a 999-word content divergence plus one
+ * wrong relocation destination, with the size UNCHANGED at 0x4b0.  (An earlier
+ * revision of this comment said 0x4b0 -> 0x4ac; that size change belongs to a
+ * ROM-descending arrangement, not this one.  Re-measured by negative control on
+ * the shipped source.) */
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
 /* -------------------------------------------------------------------------- */

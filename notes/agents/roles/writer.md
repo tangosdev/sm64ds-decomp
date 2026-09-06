@@ -391,6 +391,26 @@ home check is a **name lookup**, and the byte comparison is deferred to
 `verify` and a genuine 13-versus-12-byte mismatch downstream. The refusal is
 correct; the fix is the rename, as its own reviewable change.
 
+**Every path you cite must resolve from the repo root on a fresh clone.**
+This is a real defect, not a hypothetical: four private Claude-memory slugs are
+committed in this tree as though they were repo notes. Naming the slugs alone,
+because spelling them the way the source does would trip the dead-reference gate
+in this very file: `actor-class-names-off-by-one` in `include/daObjHmBskt_c.h`,
+`key-function-tu-vptr-store-blocker` in
+`src/game/actors/d_a_obj_km3_dorifu.cpp` and twice in
+`src_tu/actors/TTC_MovingBar.cpp`, `phantom-references` in
+`include/nitro/hw/registers.h`, and `stale-tu-map-overcut-ov006` in two
+`config/tu_manifest.d/ov006/*.json` `boundary_evidence` strings — each written
+there with a `notes/` prefix and a `.md` suffix. Those files live
+in one machine's private memory directory; nobody else can follow the reference,
+and the dead-reference gate never saw them because it walked only `.md`.
+
+State the test as the fresh-clone property, not as "don't cite memory". An agent
+that can see its own memory directory finds the file sitting right there, so
+"is this a memory slug" is not a question it can answer — "does this path resolve
+in a fresh clone" is. The same test catches the neighbouring mistake of citing an
+untracked local scratch file. Cite a tracked repo path, or state the fact inline.
+
 Look the class up in `build/rtti.json` before you decide anything else, and
 expect the alias case: `symbols.txt` can carry **both** spellings at one address
 (`_ZTV10KingBobOmb` and `_ZTV12daBombking_c` at `0x02126e4c`). If you own the key
@@ -973,13 +993,16 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
 
   | configuration | result |
   |---|---|
-  | pragma present, file-global by default | 250/301 |
-  | pragma deleted outright (the control) | 293/301 |
-  | pragma bracketed in `push`/`pop` | 294/301 — buys back the 43 casualties but **not ordinal 35 itself** |
+  | pragma present, file-global by default | 255/301 |
+  | pragma deleted outright (the control) | 300/301 |
+  | pragma bracketed in `push`/`pop` | 300/301 — **identical to deleting it** |
   | `#pragma defer_codegen off` + the bracket, source ROM-ascending | **301/301** |
 
-  That 294-vs-301 gap is the whole point: a bracket that looks like it worked can
-  still be leaving its own member on the floor.
+  **The bracketed and deleted rows are the same number, and that is the point.**
+  While codegen is deferred the bracket binds to nothing, so it is worth **zero**
+  members — not "buys back the casualties but not its own". An earlier revision of
+  this file printed 250 / 293 / 294 here and glossed a "294-vs-301 gap"; those
+  figures do not reproduce. Re-measured on the shipped ov002/`Player` TU.
 
   **The ROM-ascending rewrite is not optional when you adopt it.** Same class,
   same bytes, three configurations:
