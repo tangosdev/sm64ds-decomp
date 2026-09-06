@@ -1,19 +1,8 @@
-// NONMATCHING: 9/161 at exact size 0x284. The draft that stood here was 0x22c -- 88 bytes
-// SHORT and semantically wrong (array24/array28 were read off the wrong shadow struct),
-// so it was an incomplete reconstruction rather than a near-miss.
-//
-// 16 -> 9 came from the permuter and the lever is note 6bu #5 seen from the other side:
-// the x half of the reference distance must NOT have a name. Written `int rx = *(s16 *)
-// (r4 + 0x3c); int dd = rx * rx + rz * rz;` the named copy takes r7 away from the node
-// pointer and the whole r7/r8 pair rotates; written as two inline reads of the same
-// halfword it lands on the ROM's registers. `rz` must stay named -- inlining it too costs
-// the same seven words back.
-//
-// Residue is the last nine words: the sb <-> sl pair over the two squared distances
-// (+0x138..+0x15c). MEASURED INERT: all 120 declaration permutations of the block's five
-// outer locals, all 360 initialised-declaration forms (five initialised declarations x the
-// six positions of `r5 = 0`), splitting `dz`/`dx` into a load then an in-place subtract,
-// swapping the dz/dx declaration order, and inlining rz as well.
+/* ov007 manager: proximity/heading gate against the last path node. */
+// @symbol func_ov007_020ba05c
+/* `dz` is loaded and then subtracted in place; that split is what keeps the two
+ * squared distances on the cartridge's sb/sl pair (the whole 9-word residue the
+ * earlier drafts carried). */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -68,11 +57,13 @@ int func_ov007_020ba05c(void)
                 x = *(u16 *)(r4 + 0xa);
                 if (cnt >= 2) {
                     int idx = cnt - 2;
-                    int dz = (((int *)*(char **)(o + 0x28))[idx] >> 12) - x;
+                    int dz = ((int *)*(char **)(o + 0x28))[idx] >> 12;
                     int rz = *(s16 *)(r4 + 0x3e);
                     int dx = (((int *)*(char **)(o + 0x24))[idx] >> 12) - y;
                     int dd = *(s16 *)(r4 + 0x3c) * *(s16 *)(r4 + 0x3c) + rz * rz;
-                    int dd2 = dx * dx + dz * dz;
+                    int dd2;
+                    dz -= x;
+                    dd2 = dx * dx + dz * dz;
                     if (dd >= 0x100 && dd2 <= 4)
                         flag = 1;
                 }
