@@ -1,3 +1,4 @@
+// @symbol func_ov006_020dbe9c
 /* func_ov006_020dbe9c -- dScMgCoin_c, ov006 0x020dbe9c, 0xe0 bytes.
  *
  * Draws the hand cursor while the stylus is down: the sine table entry for the

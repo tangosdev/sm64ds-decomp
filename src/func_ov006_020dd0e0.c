@@ -1,3 +1,4 @@
+// @symbol func_ov006_020dd0e0
 /* func_ov006_020dd0e0 -- dScMgCoin_c, ov006 0x020dd0e0, 0x1ec bytes.
  *
  * The touch test for one of the four cups. While the scene is in state 2 and the

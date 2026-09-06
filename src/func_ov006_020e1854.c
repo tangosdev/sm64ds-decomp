@@ -1,3 +1,4 @@
+// @symbol func_ov006_020e1854
 /* func_ov006_020e1854 -- the pen handler for the ov006 slot-machine style scene,
  * 0x020e1854, 0x300 bytes.
  *
