@@ -39,7 +39,11 @@ struct MovingCylinderClsn : CylinderClsn {
     Actor *owner;           /* 0x30 - nulled by C2 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~MovingCylinderClsn();      /* slots 0 (D1), 1 (D0) */
+    /* The destructor pair as two plain virtuals -- the base's spelling, and it
+       has to be the SAME two names here or MSVC appends a slot instead of
+       overriding. include/CylinderClsn.h carries the measurement. */
+    virtual void Destructor1();         /* slot 0 (D1) */
+    virtual void Destructor0();         /* slot 1 (D0) */
     virtual Vector3 &GetPos();          /* slot 2 - the owner's pos, not ours */
     virtual u32 GetOwnerID();           /* slot 3 - owner->uniqueID */
 };

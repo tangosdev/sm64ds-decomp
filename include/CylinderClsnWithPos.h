@@ -35,7 +35,11 @@ struct CylinderClsnWithPos : CylinderClsn {
     Vector3 pos;            /* 0x30 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~CylinderClsnWithPos();     /* slots 0 (D1), 1 (D0) */
+    /* The destructor pair as two plain virtuals -- the base's spelling, and it
+       has to be the SAME two names here or MSVC appends a slot instead of
+       overriding. include/CylinderClsn.h carries the measurement. */
+    virtual void Destructor1();         /* slot 0 (D1) */
+    virtual void Destructor0();         /* slot 1 (D0) */
     virtual Vector3 &GetPos();          /* slot 2 */
     virtual u32 GetOwnerID();           /* slot 3 - always 0 */
 

@@ -63,7 +63,27 @@ struct CylinderClsn {
     CylinderClsn *next;     /* 0x2c - intrusive list, zeroed by C2 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~CylinderClsn();            /* slots 0 (D1), 1 (D0) */
+    /* THE DESTRUCTOR PAIR, SPELLED AS TWO PLAIN VIRTUALS ON PURPOSE. mwccarm
+       gives `virtual ~CylinderClsn()` TWO vtable entries -- D1 complete and D0
+       deleting, the Itanium pair this header's own map reads out of the ROM at
+       slots 0 and 1 -- and MSVC folds them into ONE. Spelt as a destructor the
+       declaration indexed correctly on the ARM and ONE SLOT EARLY on the host:
+       CylinderClsn::Process, which is header-compiled and dispatches both
+       remaining slots on every node of the active list, came out as
+       `call [eax+4]` for GetPos (ROM slot 1, the DELETING DESTRUCTOR) and
+       `call [eax+8]` for GetOwnerID (ROM slot 2, GetPos). The port's tables are
+       ROM-ordered -- hal/actor_classes.cpp fills [0] D1, [1] D0, [2] GetPos,
+       [3] GetOwnerID -- so the two numberings collided and the matched symbol
+       had to be left switched off behind a ROM-shaped host transcription
+       (port/unmatched/CylinderClsn_Process.cpp; hal/actor_registry.cpp records
+       the whole ruling). Two ordinary virtuals occupy the SAME two entries
+       under mwccarm, so the ROM bytes do not move, and they occupy two under
+       MSVC as well, so the host lands where the ARM does. Neither is ever
+       called by name; they hold the two slots the ROM's table holds. Same
+       shape as the FaderBrightness fix in src/ProcessKuppaScript.cpp --
+       port/stage_lifecycle_map.txt sections 16 and 17 are the measurement. */
+    virtual void Destructor1();         /* slot 0 (D1) */
+    virtual void Destructor0();         /* slot 1 (D0) */
     virtual Vector3 &GetPos() = 0;      /* slot 2 - null in the ROM table */
     virtual u32 GetOwnerID() = 0;       /* slot 3 - null in the ROM table */
 
