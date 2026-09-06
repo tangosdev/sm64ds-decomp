@@ -24,6 +24,10 @@ class_name	shard_count	total_lines	overlay	has_header	already_promoted	blockers	
 # move: dScMgRoulette_c's pragmas were inert and it scored 40/40 with them deleted.
 #
 # unmatched:N        delink entries in the run with no 'complete' marker.
+#                    The NAME MISLEADS: this is a LINK condition, not a matching one.
+#                    Measured on ov066/Eyerok all six byte-MATCHed; they lack the marker
+#                    because they reference cross-overlay addresses under names no
+#                    symbols.txt gives, so dsd drops them from the link.
 # no-legacy-source:N functions with no delinks entry AND no src/<symbol>.c[pp] at all. The
 #                    cartridge's own bytes cover them, and a licensed claim cannot have a
 #                    hole, so such a run can only be taken as one of its two contiguous

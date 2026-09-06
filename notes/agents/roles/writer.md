@@ -565,6 +565,15 @@ Both promoted precedents (`daDsnBase_c`, `daObjCtMecha03_c`) do. Do the same and
 align your spellings to it, rather than assuming the header will collide with
 you on its own.
 
+**But a `decl_common.h` return type can cost you the match, and then the header
+is what gives way.** Measured on ov066/`Eyerok`: `decl_common.h:2730` types
+`func_ov066_02119454` as `void(void*, void*)` and the ROM function returns a
+value — declaring it `int` MATCHes, declaring it `void` does not. That TU
+excludes the header and declares every symbol the header would have supplied.
+So: include it and align *by default*, but when a spelling it dictates breaks a
+byte match, measure both ways and say which you took and why. The bytes outrank
+the header.
+
 **Grep shadow struct *tags* too, not only declarations.** A shadow type can
 collide with a **ROM symbol**, which is a different failure and a nastier one.
 `decl_common.h` declares `extern int VT[];`, and the legacy shards carry a
@@ -638,7 +647,11 @@ Ask the compiler rather than hand-mangling:
   symbol). **Neither rule is sound alone.**
 
   **What actually works is corroboration from three independent tools**, which is
-  what every correct extent in this campaign has rested on: the relocation gap,
+  what every correct extent in this campaign has rested on — though the third is
+  **unavailable to a TU that does not own the key function**: `check_object` only
+  sees the vtable if the TU emits it, so on a partial promotion get that number
+  from whichever shard still owns the key function, or from a throwaway probe TU
+  that does. The three are the relocation gap,
   `rtti_vtables.py --own <Class>` for the slot count — **but it answers only to
   the ROM's RTTI spelling, not the tree's**. `--own Goomboss` prints
   `no vtable for Goomboss`; `--own daKuriKing_c` prints the 31 slots. For a
