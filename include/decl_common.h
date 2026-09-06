@@ -426,7 +426,7 @@ extern int _ZTV10BrickBlock[];
 extern int _ZTV10BulletBill[];
 extern int _ZTV10CheepCheep[];
 extern int _ZTV10HootTheOwl[];
-extern int _ZTV10KingBobOmb[];
+extern int _ZTV12daBombking_c[];
 extern int _ZTV10KoopaShell[];
 extern int _ZTV10LavaBubble[];
 extern int _ZTV10MrBlizzard[];

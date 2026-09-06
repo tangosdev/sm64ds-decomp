@@ -191,7 +191,7 @@ dScMgTrampoline2_c	39	1331	ov006	yes	yes	unmatched:1;no-legacy-source:1;pragma:1
 Moneybag	36	948	ov081	yes	no	unmatched:1;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 SignPost	27	911	ov002	yes	no	unmatched:1;no-legacy-source:1;compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 Door	31	956	ov100	yes	no	unmatched:1;compiler-only:~14(estimate from sibling daObjPathLift_c: 1 deadstrip-duplicate,13 deadstrip-data)	daObjPathLift_c	text-only
-KingBobOmb	51	1940	ov078	yes	no	unmatched:1;pragma:4;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
+daBombking_c	51	1940	ov078	yes	no	unmatched:1;pragma:4;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 daSCoin_c	8	240	ov002	yes	no	unmatched:1;compiler-only:~10(estimate from sibling daBar_c: 10 deadstrip-data)	daBar_c	text-only
 daTrsTrap_c	15	382	ov063	yes	no	unmatched:1;no-legacy-source:1;compiler-only:unknown(no sibling oracle available; measure directly - text-only default per 20/21 verified oracles)	-	text-only
 dScMgCup_c	30	1113	ov006	yes	no	unmatched:1;pragma:5;compiler-only:~11(estimate from sibling dScMgSingle3DBase_c: 11 deadstrip-data)	dScMgSingle3DBase_c	text-only

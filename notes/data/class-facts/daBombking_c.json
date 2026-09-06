@@ -1,0 +1,68 @@
+{
+  "class": "daBombking_c",
+  "rtti_name": "12daBombking_c",
+  "rtti_name_address": "0x02126e18",
+  "coined_alias": "KingBobOmb",
+  "identity_evidence": "The cartridge's own RTTI string at ov078:0x02126e18 reads `12daBombking_c`. `KingBobOmb` was a coined name; config/arm9/overlays/ov078/symbols.txt carried BOTH _ZTV10KingBobOmb and _ZTV12daBombking_c at the single address 0x02126e4c (the 125-class alias case). The coined alias row was deleted and the class renamed to the cartridge spelling, so the TU now emits the cartridge's own _ZTS bytes rather than a same-shaped record with a different type-name string.",
+  "typeinfo": {
+    "symbol": "_ZTI12daBombking_c",
+    "address": "0x02126e0c",
+    "kind": "__si_class_type_info",
+    "size": "0xc",
+    "base_typeinfo": "_ZTI12dEnemyBase_c (ov002 0x021081c0)"
+  },
+  "overlay": "ov078",
+  "vtable": {
+    "symbol": "_ZTV12daBombking_c",
+    "address": "0x02126e4c",
+    "slots": 31,
+    "emitted_storage_size": "0x7c",
+    "extent_evidence": "Three tools agree on 31 slots / 124 bytes. (1) tools/rtti_vtables.py --own daBombking_c reports 31 slots, base dEnemyBase_c 31 -- this class ADDS NO SLOT, it only overrides. (2) Relocation gap: the symbol IS the address point at 0x02126e4c, storage begins 8 bytes lower at 0x02126e44, the 31st slot word ends at 0x02126ec8, and the next real symbol is data_ov078_02126ee0 (bss) -- 24 bytes of trailing zero padding in between. (3) tools/romdata_check.py check_object on the RAW object: bytes=124, emitted=124, blindWords=0, 0 differing. romExtent reports 148, over-reporting by exactly those 24 trailing zero bytes (the documented dsd _ZTV extent overrun); the verdict is PARTIAL for that reason alone, not because any emitted word disagrees with the cartridge.",
+    "note": "the symbol IS the address point; the two ABI preamble words (offset-to-top, RTTI pointer) sit at -8 and -4"
+  },
+  "base_class": "dEnemyBase_c",
+  "base_evidence": "_ZTI12daBombking_c is a __si_class_type_info whose +8 word points at _ZTI12dEnemyBase_c (ov002 0x021081c0), so the direct base is dEnemyBase_c and nothing else. Full measured chain, derived from build/rtti.json edges: daBombking_c -> dEnemyBase_c (ov002 0x021081c0) -> dActor_c (arm9 0x0208e390) -> dBase_c (arm9 0x02086e78) -> fBase_c (arm9 0x02086d70). Corroborated by length: _ZTV12dEnemyBase_c and _ZTV12daBombking_c are both 31 slots.",
+  "key_function": {
+    "symbol": "_ZN12daBombking_cD1Ev",
+    "address": "0x02123740",
+    "note": "the destructor is the first virtual DECLARED and is defined out of line, so it is the key function: this TU emits _ZTV/_ZTI/_ZTS for the whole inherited chain as vague linkage."
+  },
+  "overrides": [
+    {"slot": 0,  "address": "0x02126368", "name": "InitResources",     "size": "0x28c"},
+    {"slot": 3,  "address": "0x02125ff4", "name": "CleanupResources",  "size": "0xb4"},
+    {"slot": 6,  "address": "0x02126104", "name": "Behavior",          "size": "0x264"},
+    {"slot": 9,  "address": "0x021260ac", "name": "Render",            "size": "0x58"},
+    {"slot": 12, "address": "0x021260a8", "name": "OnPendingDestroy",  "size": "0x4"},
+    {"slot": 16, "address": "0x02123740", "name": "~daBombking_c (D1)", "size": "0x58",
+     "note": "defined OUT OF LINE and declared FIRST. Measured on this TU under `#pragma defer_codegen off`: an out-of-line definition emits D1, D0, D2 in that order, putting D1 and D0 at the two lowest addresses in the run exactly as the cartridge has them. An INLINE body also emits D1 then D0, but at the END of the TU -- an ordinal inversion (50, 0) and a hard linkcheck [4b/8] refusal."},
+    {"slot": 17, "address": "0x02123798", "name": "~daBombking_c (D0, deleting)", "size": "0x6c"},
+    {"slot": 29, "address": "0x021265f4", "name": "OnAimedAtWithEgg",  "size": "0x8"}
+  ],
+  "text_span": "0x02123740..0x02126660",
+  "size": "0x50c",
+  "size_evidence": "observed field span, rounded up; guards the declaration, not independent ROM evidence",
+  "factory": {
+    "symbol": "daBombking_c_classInit",
+    "address": "0x021265fc",
+    "size": "0x64",
+    "note": "the 52nd shard. NOT in build/tu_map.json's function list: tu_map cuts on symbol NAME, and this factory is not spelled _ZN<len><Class>..., so it was never labelled or counted. The queue's shard count of 51 was a floor, as the role file warns."
+  },
+  "unproven": [
+    "KingBobOmb_SetState (0x02125c48) keeps its coined spelling: it is a derived C symbol, coined at both ends, and the ROM says nothing about its name. --with-derived was deliberately NOT used.",
+    "the English names of pad_* runs and unk_498",
+    "whether the four ov078 state tables (data_ov078_0212703c / _0212707c / _021270bc / _021270fc) have cartridge names"
+  ],
+  "provenance": {
+    "worktree": "C:/tmp/sm64ds-kingbobomb",
+    "ref": "cpp/KingBobOmb-tu (from agents/class-pipeline 8a8003d77)",
+    "verification": "52/52 MATCH, objisolate clean, emission order ROM-ascending -> TEXT-VERIFIED; then SCRATCH-LINK-VERIFIED with the built ROM sha256 byte-identical to the stock control (d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8)",
+    "tools": [
+      "tools/tubuild.py inspect/create/compile/verify/linkcheck ov078/daBombking_c",
+      "tools/rtti_extract.py -> build/rtti.json",
+      "tools/rtti_vtables.py --own daBombking_c",
+      "tools/romdata_check.py check_object (on the RAW object)",
+      "tools/class_rename.py --class KingBobOmb --to daBombking_c",
+      "config/arm9/overlays/ov078/symbols.txt"
+    ]
+  }
+}

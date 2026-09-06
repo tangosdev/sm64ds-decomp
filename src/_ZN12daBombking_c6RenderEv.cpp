@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN10KingBobOmb6RenderEv
+// @symbol _ZN12daBombking_c6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "KingBobOmb.h"
+#include "daBombking_c.h"
 extern "C" {
 extern int _ZN5Model6RenderEPK7Vector3(void *m, void *v);
 }
 
-int KingBobOmb::Render()
+int daBombking_c::Render()
 {
     void *r1 = (void*)*(int*)((char*)&mHeldActor);
     if (r1 != 0) {

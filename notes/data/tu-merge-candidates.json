@@ -28411,13 +28411,13 @@
    "start": "0x2123740",
    "end": "0x2126660",
    "classes": [
-    "KingBobOmb"
+    "daBombking_c"
    ],
    "n_functions_map": 52,
    "n_files": 52,
    "files": [
-    "src/_ZN10KingBobOmbD1Ev.cpp",
-    "src/_ZN10KingBobOmbD0Ev.cpp",
+    "src/_ZN12daBombking_cD1Ev.cpp",
+    "src/_ZN12daBombking_cD0Ev.cpp",
     "src/func_ov078_02123804.c",
     "src/func_ov078_02123864.c",
     "src/func_ov078_021238ac.c",
@@ -28461,12 +28461,12 @@
     "src/func_ov078_02125c98.cpp",
     "src/func_ov078_02125de0.c",
     "src/func_ov078_02125f8c.cpp",
-    "src/_ZN10KingBobOmb16CleanupResourcesEv.cpp",
-    "src/_ZN10KingBobOmb16OnPendingDestroyEv.cpp",
-    "src/_ZN10KingBobOmb6RenderEv.cpp",
-    "src/_ZN10KingBobOmb8BehaviorEv.cpp",
-    "src/_ZN10KingBobOmb13InitResourcesEv.cpp",
-    "src/_ZN10KingBobOmb16OnAimedAtWithEggEv.cpp",
+    "src/_ZN12daBombking_c16CleanupResourcesEv.cpp",
+    "src/_ZN12daBombking_c16OnPendingDestroyEv.cpp",
+    "src/_ZN12daBombking_c6RenderEv.cpp",
+    "src/_ZN12daBombking_c8BehaviorEv.cpp",
+    "src/_ZN12daBombking_c13InitResourcesEv.cpp",
+    "src/_ZN12daBombking_c16OnAimedAtWithEggEv.cpp",
     "src/daBombking_c_classInit.c"
    ],
    "ext_mix": {

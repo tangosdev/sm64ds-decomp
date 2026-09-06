@@ -3,11 +3,11 @@
     .ctor       start:0x02126cd4 end:0x02126cd8 kind:rodata align:4
     .data       start:0x02126ce0 end:0x02126ee0 kind:data align:32
     .bss        start:0x02126ee0 end:0x02127140 kind:bss align:32
-src/_ZN10KingBobOmbD1Ev.cpp:
+src/_ZN12daBombking_cD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123798
 
-src/_ZN10KingBobOmbD0Ev.cpp:
+src/_ZN12daBombking_cD0Ev.cpp:
     complete
     .text start:0x02123798 end:0x02123804
 
@@ -68,6 +68,7 @@ src/func_ov078_02124060.cpp:
     .text start:0x02124060 end:0x021240a0
 
 src/func_ov078_021240a0.c:
+    complete
     .text start:0x021240a0 end:0x021243c0
 
 src/func_ov078_021243c0.cpp:
@@ -182,27 +183,27 @@ src/func_ov078_02125f8c.cpp:
     complete
     .text start:0x02125f8c end:0x02125ff4
 
-src/_ZN10KingBobOmb16CleanupResourcesEv.cpp:
+src/_ZN12daBombking_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02125ff4 end:0x021260a8
 
-src/_ZN10KingBobOmb16OnPendingDestroyEv.cpp:
+src/_ZN12daBombking_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021260a8 end:0x021260ac
 
-src/_ZN10KingBobOmb6RenderEv.cpp:
+src/_ZN12daBombking_c6RenderEv.cpp:
     complete
     .text start:0x021260ac end:0x02126104
 
-src/_ZN10KingBobOmb8BehaviorEv.cpp:
+src/_ZN12daBombking_c8BehaviorEv.cpp:
     complete
     .text start:0x02126104 end:0x02126368
 
-src/_ZN10KingBobOmb13InitResourcesEv.cpp:
+src/_ZN12daBombking_c13InitResourcesEv.cpp:
     complete
     .text start:0x02126368 end:0x021265f4
 
-src/_ZN10KingBobOmb16OnAimedAtWithEggEv.cpp:
+src/_ZN12daBombking_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021265f4 end:0x021265fc
 

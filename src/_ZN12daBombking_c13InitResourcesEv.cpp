@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN10KingBobOmb13InitResourcesEv
+// @symbol _ZN12daBombking_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "KingBobOmb.h"
+#include "daBombking_c.h"
 /* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 typedef struct BMD_File BMD_File;
@@ -38,7 +38,7 @@ extern int RandomIntInternal(int* seed);
 extern void KingBobOmb_SetState(void* c, PMF* p);
 }
 
-int KingBobOmb::InitResources()
+int daBombking_c::InitResources()
 {
     BMD_File* f;
     Vector3 v0;

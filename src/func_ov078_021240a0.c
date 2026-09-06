@@ -37,7 +37,7 @@ int func_ov078_021240a0(char* c)
                 *(int*)(c + 0x98) = 0;
                 func_ov078_02125c24(c, 0x7d0000);
             }
-            if ((unsigned short)(*(unsigned short*)(*(int*)(c + 0x430) + 0x6ce) & 0x800) != 0)
+            if ((unsigned short)(*(unsigned short*)((char*)*(int*)(c + 0x430) + 0x6ce) & 0x800) != 0)
                 return 1;
 
             ApproachAngle((short*)(c + 0x94), _ZN8dActor_c18HorzAngleToCPlayerEv(c), 5, 0x1000, 0x200);
