@@ -32,7 +32,19 @@
  * construct: a two-int struct copy that C compiles as load/load/store/store and
  * C++ scalarizes into load/store/load/store.  The array-wrapper view
  * (`struct P2w { int w[2]; }`) restores the ROM's shape in func_ov002_020c14b8
- * and func_ov002_020c25a8.  Nothing else in the 301 bodies was rewritten.
+ * and func_ov002_020c25a8.
+ *
+ * Two further bodies carry a SECOND, smaller change the flip forces, which an
+ * earlier draft of this header wrongly folded into "nothing else was rewritten".
+ * func_ov002_020c6fe4 and func_ov002_020c897c each do arithmetic on the result of
+ * a `void **` load -- `*(void**)(c + id*4 + 0xdc) + 0x50` -- which is a GNU
+ * extension C accepts under -gccext and C++ does not, so both casts became
+ * `char **`.  The address arithmetic is identical and the bytes are unaffected,
+ * but it IS an edit; the builder found it by diffing all 301 shipped bodies
+ * against their shards.  Apart from those four members, and the local struct TAG
+ * renames that hoisting forces (Vector3 -> Vec3i, V3 -> V3a/V3b, Obj -> ObjHS
+ * and Obj2fec, State -> State3i, Camera -> CameraRaw), nothing in the 301 bodies
+ * was rewritten.
  *
  * See config/tu_manifest.d/ov002/Player.json for the boundary evidence, and
  * notes/data/class-facts/Player.json for what the cartridge proves about the
