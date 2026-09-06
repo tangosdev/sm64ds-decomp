@@ -1,7 +1,7 @@
 {
   "class": "dScMgLuigi_c",
-  "base_commit": "6d4c9b33e82fe76f0b0d0c723a4da16641e7c088",
-  "base_commit_note": "origin/main at 2026-09-06, merged into cpp/dScMgLuigi_c-tu. Every tree-derived field below (shard inventory, delink coverage, manifest set, promoted siblings, queue row, header contents) was re-derived against THIS commit. ROM-derived fields were cut from extracted/ and are independent of it.",
+  "base_commit": "28a974f17d0def757e7cb0ec1e66a2cfa657792b",
+  "base_commit_note": "origin/main at 2026-09-06 (advanced twice during this run; merged into cpp/dScMgLuigi_c-tu both times). Every tree-derived field below - shard inventory, delink coverage, manifest set, promoted siblings, queue row, header contents - was re-derived against THIS commit. The dMgJump3DMario_c promotion that landed mid-run edits ov006 delinks and symbols but touches ZERO lines in this class's address range, and leaves the dScMgLuigi_c queue row byte-identical. ROM-derived fields were cut from extracted/ and are independent of any commit.",
   "rtti_name": "12dScMgLuigi_c",
   "rtti_name_symbol": "_ZTS12dScMgLuigi_c",
   "rtti_name_address": "0x0213ce60",
@@ -1501,6 +1501,7 @@
     ]
   },
   "promoted_ov006_siblings": [
+    "dMgJump3DMario_c",
     "dScMgD3DBase_c",
     "dScMgSound_c",
     "dScMgTeresa_c",
@@ -1515,7 +1516,7 @@
     "dScMgTrampoline2_c",
     "dScMgCup_c"
   ],
-  "promoted_ov006_siblings_note": "re-derived from notes/data/tu-promotion-queue.tsv at base 6d4c9b33 (already_promoted column): 13 of the ov006 rows. config/tu_manifest.d/ov006/ holds 18 manifests.",
+  "promoted_ov006_siblings_note": "re-derived from notes/data/tu-promotion-queue.tsv at the base_commit above (already_promoted column): 14 of the 32 ov006 rows. config/tu_manifest.d/ov006/ holds 24 manifests. dMgJump3DMario_c is the newest and landed while this file was being written.",
   "unproven": [
     "The original identifiers and the member-versus-file-local linkage of all 50 non-vtable functions. The ROM proves dispatch shape and TU membership; stripped names are not recoverable.",
     "Whether func_ov006_020efc08 (4 bytes, 'bx lr', at 0x020efc08) belongs to this TU or to dScMgJump2_c. It sits between them, is its own delink unit, has no caller and no relocation, and nothing attributes it. It is excluded here.",
