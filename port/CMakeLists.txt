@@ -13955,6 +13955,32 @@ endif()
 target_compile_definitions(mp_sleepwake PRIVATE PORT_OS_THREAD_HOST_PAIR)
 target_compile_definitions(mp_comms_seam PRIVATE PORT_OS_THREAD_HOST_PAIR)
 
+# ---- gate 222 (run link100, lane BOOT2): THE REST OF func_0201a054 ---------
+#
+# Lane BOOT (gate 214) transcribed func_0201a054 and left four of its arms
+# marked "left for the next step": func_02053c40 and func_02019440, the two
+# halves of the ROM's own graphics bring-up, and func_020196cc, the firmware
+# read that needed lane IPC's PXI model to come back at all. This gate is those
+# arms, called from hal/boot_os.cpp at the point func_0201a054 calls them and
+# nowhere else. Ten matched TUs; the derivation of each, and the re-derived
+# refusal for every arm still left out, is in port/slice_gate222.txt's header.
+#
+# On the two targets that compile tests/walk_window.cpp -- the same two as gate
+# 214 -- because that file is where the boot seams are called from. Appended
+# above the sharing block below: two targets of the three, which that block
+# handles by leaving these rows per-target.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate222.txt" SLICE222_LINES)
+set(SLICE222_SOURCES "")
+foreach(line IN LISTS SLICE222_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE222_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+target_sources(walk_window PRIVATE ${SLICE222_SOURCES})
+target_sources(walk_window_hires PRIVATE ${SLICE222_SOURCES})
+
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================

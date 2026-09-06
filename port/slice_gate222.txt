@@ -1,0 +1,147 @@
+# gate 222 -- run link100, lane BOOT2: THE REST OF func_0201a054 THAT RUNS.
+#
+# Read port/hal/boot_os.cpp's header block first. Lane BOOT transcribed the
+# runnable spans of src/func_02019780.c, src/main.c and src/func_0201a054.c and
+# left four arms of func_0201a054 marked "left for the next step" or "left for
+# the step that moves the graphics bring-up as a whole". This is that step for
+# the three of them that are graphics and the one that is the firmware read;
+# everything else func_0201a054 skips was re-derived on today's tree and is
+# still refused, with the measurement in boot_os.cpp beside each one.
+#
+# THE ARMS, in func_0201a054's own order, and what each one pulls in.
+#
+#   func_02053c40   the display reset. POWCNT1 (bit 15 up, then the 0x20e
+#                   pattern, then bit 0), func_02053d9c, DISPSTAT = 0,
+#                   DISPCNT = 0, the two 2D register banks cleared, and the
+#                   EIGHT BG affine words seeded to 0x100.
+#                   THE PORT WAS ALREADY DOING FOUR OF THOSE EIGHT BY HAND.
+#                   port/hal/sub_screen.cpp:947 writes 0x04001020/26/30/36
+#                   itself and says why: the ROM seeds those to 0x100 in
+#                   func_02053c40, "the hardware reset that runs once from
+#                   func_0201a054, the full boot the port does not have". The
+#                   same comment records the four it would NOT write: "main BG2
+#                   and BG3 are still unseeded, which is a real gap and
+#                   deliberately not closed from this line -- writing
+#                   main-engine display registers during bring-up can move the
+#                   level frame, and that is a measurement somebody has to make
+#                   rather than a word somebody changes." This lane made that
+#                   measurement: the ROM body runs at the ROM's own point in
+#                   func_0201a054 and the battery's frames do not move. The host
+#                   lines in sub_screen.cpp are left alone -- they run at
+#                   hal_sub_screen_init time, which walk_window.cpp calls long
+#                   AFTER this seam, and they write the same values.
+#   func_02053d9c   func_02053c40's own first call: zeroes data_020a6088[0..12]
+#                   (the VRAM bank shadow, 26 bytes -- hal/cxx_aliases.cpp sized
+#                   that object by ROM span in run link100 and its header is the
+#                   record of the two-byte version it replaced) and clears
+#                   VRAMCNT A..I.
+#   func_02019440   the tail's own clear: func_0203bd24, POWCNT again,
+#                   func_02053be0(1), func_02054430(0x1ff), 0xa4000 bytes of
+#                   VRAM from 0x06800000, the OAM and palette fills, the three
+#                   stage words, then the 3D bring-up.
+#   func_0203bd24   empty in the ROM. Enrolled because func_02019440 calls it.
+#   func_0200f4f4   Initialise3dGraphics(0), GX::SetBankForTex(3),
+#                   GX::SetBankForTexPltt(0x30), func_02045d9c, and the
+#                   data_02082128 -> data_0209b3ec matrix copy with its inverse.
+#                   walk_window.cpp seeds data_0209b3ec by hand five lines after
+#                   port_boot_rom_main_head(); this is the ROM's own writer of
+#                   the same words and it runs later, so the ROM's value stands.
+#   func_0200f46c   empty in the ROM. Enrolled because func_02019440 calls it.
+#   func_020196cc   the last call before the fatal-vector pair: reads the
+#                   firmware user settings over PXI channel 8 and sets the sound
+#                   mode from data_0209d4b4.
+#   func_0205f8e0 / func_0205fb1c / func_0205fb58
+#                   that read. func_0205fb58 posts (a & 0xff) | 0x3006500 on
+#                   channel 8 through func_0205f8b0, and func_0205fb1c then
+#                   SPINS in func_0205ff08 until the ARM7's answer clears
+#                   data_020a8114. That spin is why this could not be enrolled
+#                   before lane IPC: ntr/ipc.cpp's ipc_arm7_send dispatches the
+#                   reply INLINE (raise_rx_irq, ntr/ipc.cpp:302), so the word is
+#                   back through the ROM's own IRQ::IPCRxFifoNotEmptyHandler and
+#                   func_0205fcfc -> func_0205feac before IPCSend returns, and
+#                   the spin never turns.
+#                   WHAT THE ANSWER IS, said plainly: hal/boot2_ipc.cpp holds
+#                   channel 8 with no driver behind it, so its reply is the
+#                   SDK's own no-handler shape (the word back with 0x20 set).
+#                   func_0205fcfc takes its flag-set arm, hands 2 to
+#                   func_0205feac, and func_0205f8e0 returns 2 -- an ERROR, not
+#                   a fabricated firmware answer. func_020196cc's own
+#                   "read succeeded and the flag is clear" arm is therefore not
+#                   taken, which is the ROM's own handling of a failed read. The
+#                   port does not invent a user-settings block to make the other
+#                   arm run.
+src/func_02053c40.c
+src/func_02053d9c.c
+src/func_02019440.c
+src/func_0203bd24.c
+src/func_0200f4f4.c
+src/func_0200f46c.c
+src/func_020196cc.c
+src/func_0205f8e0.c
+src/func_0205fb1c.c
+src/func_0205fb58.c
+#
+# NOT HERE, each re-derived on today's tree rather than inherited:
+#
+#   src/func_02013e64.c   memsets 0x32c bytes of data_0209caa0. BOOT refused it
+#       because the host has already staged the save block; the harder reason is
+#       that hal/level_boot.cpp hosts data_0209caa0 as a 0x14 object, which is
+#       the dsd symbol's own span (the next name is data_0209cab4). The ROM
+#       object is the FULL 0x32c: 0x0209caa0 + 0x32c = 0x0209cdcc, which is
+#       exactly the next symbol after the four dsd names inside it
+#       (data_0209cab4, data_0209cad2, data_0209cae4, data_0209caf4). Seating
+#       the body today would memset 796 bytes into a 20-byte host object. The
+#       fix is one grouped run in hal/level_boot.cpp, which is not this lane's
+#       file.
+#
+#   src/func_0203bbc0.c and its channel-6 chain (func_0205f270, func_0205f300,
+#       func_0205f1e4, func_0205f0e0, func_0205edd8, func_0205eeac,
+#       func_0205e9fc, func_0205eb58). BLOCKED ON A SUBSYSTEM, measured:
+#       func_0205edd8 posts two words on channel 6 and sets data_020a80cc+0x36
+#       bit 3, then func_0203bbc0 calls func_0205ea10(8), whose whole body is a
+#       spin on that bit. Only func_0205f300 -- the channel-6 receive callback
+#       -- clears it, and only for a completion whose (msg & 0x7f00) >> 8 is the
+#       same bit with (msg & 0xff) == 0. hal/boot2_ipc.cpp holds channel 6
+#       OBSERVED ONLY, and even its no-driver reply carries the no-handler flag,
+#       which func_0205f300 turns into a SET of f34 and not a clear of f36. So
+#       the spin never turns and the boot never comes back. WHAT IT WANTS is a
+#       host ARM7 touch/SPI driver: completions for the sampling setup (bit 3)
+#       and the auto-sample start (bit 1), plus live samples at 0x027fffaa and
+#       0x027fffac for func_0205f300's ring. That is a subsystem, not a boot
+#       step, and func_0203bbc0's two Crash() arms are downstream of it.
+#       THE SECOND BLOCKER IS STILL REAL AND STILL NOT THIS LANE'S FILE:
+#       hal/scene_boot.cpp hosts data_020a80cc as int[6], 24 bytes, while
+#       func_0205f270 stores at +0x36 and func_0205f300 reads f36 there too.
+#       CONFIRMED SPAN: 0x020a80cc to 0x020a8104 (the next hosted name, in
+#       hal/boot2_ipc.cpp) is 0x38 bytes, and it absorbs the dsd name
+#       data_020a80e4 at +0x18. hal/boot2_ipc.cpp already recorded the undersize;
+#       this lane confirms what the run has to be.
+#
+#   src/func_0201fec8.c   unchanged from BOOT's measurement: func_0203db64's
+#       eight-name run, three of which are hosted nowhere at all.
+#
+#   src/func_02042f68.c and the card chain -- unchanged, and lane THR does not
+#       change it: func_0206002c stands a thread up with func_02058200, and
+#       hal/boot2_thread.cpp says outright that thread CREATION is not modelled
+#       ("func_02058200 / func_02058538 / func_02058568 are not linked, so the
+#       only two threads are the two seated below. A restore of a context this
+#       file has never seen is REFUSED loudly rather than guessed at."). THR
+#       made the SWITCH real; it did not make a third fiber.
+#
+#   src/func_020134c8.c / src/func_020133bc.c -- unchanged: the ROM's own SDAT
+#       player stood up over 1MB of Memory::Allocate, beside hal/sdat. Its
+#       closure also reaches func_02058200, so it now wants the same third
+#       fiber as the card chain.
+#
+#   THE WHOLE REST OF func_02058c84 -- func_02058ec8 (call 4), func_02059594
+#       (call 6) and func_0206a88c (call 11) -- is blocked on `G`, and that is a
+#       NEW finding rather than BOOT's. See port/hal/boot_os.cpp's header block:
+#       the ROM's own literal pools make `G` an I/O REGISTER per TU
+#       (0x04000204, EXMEMCNT, for func_02057128 and func_02057140, which are
+#       the OS lock pair's cleanup callbacks), while `G` links to
+#       hal/heap_vtable.cpp's default-heap word in this binary. All three arms
+#       reach func_02057158 or func_02057178 before they reach anything else, so
+#       running any of them writes the default-heap pointer. The Slot-2 window
+#       at 0x08000000 that BOOT named is a real SECOND blocker and no ntr region
+#       covers it, but it is not the one that fires first: func_02058690 takes
+#       the lock before it reads the magic.
