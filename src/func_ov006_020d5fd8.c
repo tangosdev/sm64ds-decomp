@@ -1,4 +1,5 @@
+typedef struct { char pad[0xa8]; short f; } BrEnt5fd8;
 void func_ov006_020d5fd8(int c, int i){
-  int p = c + (i<<4) + 0x6200;
-  *(short*)(p+0xa8)=0;
+  BrEnt5fd8 *p = (BrEnt5fd8*)(c + (i<<4) + 0x6200);
+  p->f = 0;
 }

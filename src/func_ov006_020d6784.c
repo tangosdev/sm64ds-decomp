@@ -17,7 +17,7 @@ void func_ov006_020d6784(char *c)
         *(int *)(c + 0x62d4) = 0;
         *(unsigned char *)(c + 0x62f8) = 0;
         *(unsigned char *)(c + 0x62f5) = 0;
-        *(unsigned int *)(c + 0xbc) += 1;
+        *(volatile unsigned int *)(c + 0xbc) = *(unsigned int *)(c + 0xbc) + 1;
         if (*(unsigned int *)(c + 0xbc) > 0x270e) *(unsigned int *)(c + 0xbc) = 0x270e;
         *(unsigned char *)(c + 0x62fb) = 1;
         _ZN5Sound12PlayBank2_2DEj(0x1e6);
@@ -26,7 +26,7 @@ void func_ov006_020d6784(char *c)
         *(int *)(c + 0x62d4) = 0;
         *(unsigned char *)(c + 0x62f8) = 0;
         *(unsigned char *)(c + 0x62f5) = 1;
-        *(unsigned int *)(c + 0xbc) += 1;
+        *(volatile unsigned int *)(c + 0xbc) = *(unsigned int *)(c + 0xbc) + 1;
         if (*(unsigned int *)(c + 0xbc) > 0x270e) *(unsigned int *)(c + 0xbc) = 0x270e;
         *(unsigned char *)(c + 0x62fb) = 1;
         _ZN5Sound12PlayBank2_2DEj(0x1e6);
