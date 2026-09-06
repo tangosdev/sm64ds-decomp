@@ -59,9 +59,10 @@
  * time.  One pragma buys the bytes and the order.
  *
  * A THIRD SHARD'S PRAGMA WAS MEASURED INERT AND IS NOT CARRIED.
- * src/func_ov006_020e4794.c opens with `#pragma opt_propagation off`;
- * bracketing it here and deleting it outright both give 31/31, so it buys
- * nothing and would only mislead the next reader.
+ * The shard this file absorbed for ordinal 0x020e4794 -- now PickStepMode --
+ * opened with `#pragma opt_propagation off`; bracketing it here and deleting
+ * it outright both give 31/31, so it buys nothing and would only mislead the
+ * next reader.
  *
  * TWO OBJECT-EMBEDDED ARRAYS DRIVE MOST OF THIS FILE, AND THE ROM NAMES
  * NEITHER.  Twenty-one of the 31 members touch one of them, so the comments
