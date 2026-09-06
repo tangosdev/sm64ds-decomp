@@ -56,11 +56,20 @@
  * objects, not one descriptor table -- they only cluster because mwld lays
  * .data out by ascending object size -- so no array is reconstructed here.
  *
- * EACH MEMBER KEEPS ITS OWN DECLARATIONS, INSIDE ITS OWN BODY.  mwccarm
- * 2004/b56 gives a block-scope declaration in an `extern "C"` region C
- * linkage (measured on ov002/Player, 301 members), so 71 independently
+ * EACH `extern "C"` MEMBER KEEPS ITS OWN DECLARATIONS, INSIDE ITS OWN BODY.
+ * mwccarm 2004/b56 gives a block-scope declaration in an `extern "C"` region C
+ * linkage (measured on ov002/Player, 301 members), so 67 independently
  * recovered views of one ROM symbol coexist without one having to be chosen
- * over the others and without a single call site being rewritten.  Nothing
+ * over the others and without a single call site being rewritten.  THE FOUR
+ * C++-NAMED MEMBERS (ordinals 67-70) ARE THE EXCEPTION, and they have to be: a
+ * class member function cannot sit inside an `extern "C"` region, so the same
+ * block-scope declaration there gets C++ LINKAGE and the reference mangles.
+ * That is not a style question -- it made this TU compile, byte-match 71/71 and
+ * then fail to link with 41 `_Z...` undefined symbols.  mwccarm rejects a
+ * block-scope `extern "C"` (`declarator expected`), so those four members'
+ * external declarations live in one file-scope `extern "C"` region placed after
+ * ordinal 66, where none of the 67 members above can see it; see the comment
+ * there.  Nothing else
  * was canonicalised: `func_ov004_020afdd0` is `(int,int,int,int,int)` in
  * ordinal 2 and `(void *,int,int,int,int)` in ordinal 23, `func_ov006_021050bc`
  * has four different parameter types across ordinals 60-65, and
@@ -2321,6 +2330,53 @@ void func_ov006_021071d4(char *c)
 }
 }
 
+/* ---------------------------------------------------------------------------
+ * The four members below are the C++-NAMED ones, and they are the one place in
+ * this file where a member's declarations cannot live inside its own body.
+ * Every `func_ov006_*` member above sits inside its own `extern "C" { }`
+ * region, so a block-scope `extern` inside it gets C linkage and names the ROM
+ * symbol.  A class member function cannot be inside such a region, so the same
+ * block-scope declaration there gets C++ linkage and mwld goes looking for
+ * `_Z8LoadFilei`, which does not exist.  mwccarm 2004/b56 rejects a block-scope
+ * `extern "C"` outright (`declarator expected`), so the ROM symbols these four
+ * call are declared here, at file scope, in one region -- the same shape
+ * dScMgTeresa_c and dScMgRoulette_c use.  It sits after ordinal 66 so that none
+ * of the 67 members above can see it, and their independently recovered
+ * spellings stand exactly as they were.
+ *
+ * Data symbols are NOT affected: mwccarm leaves a file-scope variable's name
+ * unmangled in C++, so the `data_*` declarations those four members carry stay
+ * in their own bodies.
+ * ------------------------------------------------------------------------- */
+extern "C" {
+
+extern void  Deallocate(void *);
+extern int   GetOwnerLanguage(void);
+extern int   LoadFile(int handle);
+extern void  DecompressLZ16(int src, void *dst);
+extern void  MultiStore16(u16 val, char *dst, int nbytes);
+extern void  FreeGfxSlotsById(int arg);
+extern void  SetSubBg0Offset(int, int);
+extern int   func_02054d88(void);
+extern void  func_020562b4(const void *, u32, u32);
+extern void  func_02056314(void *, u32, u32);
+extern void  func_02056374(const void *, u32, u32);
+extern void  func_020563d4(const void *, u32, u32);
+extern void  func_020564f4(const void *, int, int);
+extern void  func_ov004_020adb1c(int);
+extern void  func_ov004_020b04d0(int);
+extern void  func_ov004_020b0cac(int, int, int, int, int, s16);
+extern void  func_ov004_020b1e34(void *a, int b, int c, int d);
+extern char *_ZN2G212GetBG2ScrPtrEv(void);
+extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
+extern char *_ZN3G2S13GetBG3CharPtrEv(void);
+extern void  _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+extern void  _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+extern void  _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+extern void  _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+
+}  /* extern "C" */
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 67 -- _ZN12dScMgPanel_c13OnYoshiTryEatEi, 0x021071fc, size 0x0110 */
 /* -------------------------------------------------------------------------- */
@@ -2331,15 +2387,6 @@ void func_ov006_021071d4(char *c)
 
 void dScMgPanel_c::OnYoshiTryEat(int flag)
 {
-    /* from include/decl_common.h, which this TU cannot include */
-    extern void SetSubBg0Offset(int, int);
-    extern void func_ov004_020adb1c(int);
-    extern void func_ov004_020b0cac(int, int, int, int, int, s16);
-    extern void func_ov006_02104b24(char *);
-    extern void FreeGfxSlotsById(int arg);
-    extern void func_ov006_021067a4(char *p);
-    extern void func_ov006_021063a0(char *p);
-    extern void func_ov006_02106168(char *p);
     extern u8 data_0209d454;
     char *self = (char *)this;
 
@@ -2366,7 +2413,7 @@ void dScMgPanel_c::OnYoshiTryEat(int flag)
     FreeGfxSlotsById(0x1d);
     func_ov006_021067a4(self);
     func_ov006_021063a0(self);
-    func_ov006_02106168(self);
+    func_ov006_02106168(this);
     func_ov006_02104b24(self);
 
     *(u8 *)(self + 0x4fe2) = 3;
@@ -2384,19 +2431,13 @@ void dScMgPanel_c::OnYoshiTryEat(int flag)
 /* Vtable slot 9. */
 s32 dScMgPanel_c::Render()
 {
-    /* from include/decl_common.h, which this TU cannot include */
-    extern void func_ov006_021042e8(void *);
-    extern void func_ov006_02104b5c(void *);
-    extern void func_ov006_02104d44(void *);
-    extern void func_ov006_02104d94(void *);
-    extern void func_ov006_02105ab4(void *);
-    extern void func_ov004_020b1e34(void *a, int b, int c, int d);
+    char *c = (char *)this;
     func_ov004_020b1e34(this, 0xe0, 0x14, 1);
-    func_ov006_02104d44(this);
-    func_ov006_02104d94(this);
-    func_ov006_021042e8(this);
-    func_ov006_02104b5c(this);
-    func_ov006_02105ab4(this);
+    func_ov006_02104d44(c);
+    func_ov006_02104d94(c);
+    func_ov006_021042e8(c);
+    func_ov006_02104b5c(c);
+    func_ov006_02105ab4((PanelObj_ab4 *)c);
     return 1;
 }
 
@@ -2411,10 +2452,6 @@ s32 dScMgPanel_c::Render()
 struct Ent_358 { int a; int b; };
 s32 dScMgPanel_c::Behavior()
 {
-    /* from include/decl_common.h, which this TU cannot include */
-    extern int func_ov006_02104354(void *);
-    extern int func_ov006_02104ac4(void *);
-    extern void func_02073244(void *, int, int, void (*)(void *));
     extern Ent_358 data_ov006_02142888[];
     char *c = (char *)this;
     int idx = *(int *)(c + 0x4000 + 0xca8);
@@ -2428,7 +2465,7 @@ s32 dScMgPanel_c::Behavior()
         fn = e->a;
     }
     ((void (*)(void *))fn)(obj);
-    func_ov006_02104ac4(c);
+    func_ov006_02104ac4((PanelC_ac4 *)c);
     func_ov006_02104354(c);
     return 1;
 }
@@ -2442,34 +2479,6 @@ s32 dScMgPanel_c::Behavior()
 
 s32 dScMgPanel_c::InitResources()
 {
-    /* from include/decl_common.h, which this TU cannot include */
-    extern void Deallocate(void *);
-    extern int GetOwnerLanguage(void);
-    extern char *_ZN3G2S13GetBG3CharPtrEv(void);
-    extern int func_02054d88(void);
-    extern void func_020562b4(const void *, u32, u32);
-    extern void func_02056314(void *, u32, u32);
-    extern void func_02056374(const void *, u32, u32);
-    extern void func_020563d4(const void *, u32, u32);
-    extern void func_020564f4(const void *, int, int);
-    extern void func_ov004_020b04d0(int);
-    extern void func_ov004_020b0cac(int, int, int, int, int, s16);
-    extern void func_ov006_02104b24(char *);
-    extern void func_ov006_02105118(char *);
-    extern void func_ov006_02106758(char *);
-    extern int LoadFile(int handle);
-    extern void DecompressLZ16(int src, void *dst);
-    extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-    extern char *_ZN2G212GetBG2ScrPtrEv(void);
-    extern void MultiStore16(u16 val, char *dst, int nbytes);
-    extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-    extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-    extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
-    extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-    extern void FreeGfxSlotsById(int arg);
-    extern void func_ov006_021067a4(void *p);
-    extern void func_ov006_021063a0(void *p);
-    extern void func_ov006_02106168(void *p);
     extern u8 data_0209d45c;
     extern u8 data_0209d454;
     char *c = (char *)this;
@@ -2583,7 +2592,7 @@ s32 dScMgPanel_c::InitResources()
     *(int *)(c + 0x4cb4) = 0xff;
 
     func_ov006_021063a0(c);
-    func_ov006_02106168(c);
+    func_ov006_02106168(this);
     func_ov006_02105118(c);
     func_ov006_02104b24(c);
 
