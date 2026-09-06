@@ -612,15 +612,43 @@ measured on `ov006/dScMgHanachan_c` (22 of 61):
   that want it gave byte-identical results to omitting it entirely. (`#pragma
   push`/`O3`/`pop` *is* positional; these two are not.)
 
-  **That measurement is now suspect: try `#pragma defer_codegen off` first.**
+  **SETTLED: `#pragma defer_codegen off` makes the bracket bind, and it recovered
+  this exact class from 22 of 61 to 49 of 61.** The pragma-driven exclusions were
+  all 27 of them; the only functions still held back are the sourceless hole and
+  the 11 on its smaller side, which is a different and unfixable refusal. Measured
+  on `ov006/dScMgHanachan_c` (PR #2309): `verify` 49/49 MATCH, `linkcheck [4b/8]`
+  49 LICENSED with `emittedTextOrderIsRomAscending = true`, 106/106 modules exact,
+  ROM sha256 identical to stock. The decisive probe was adding one
+  `opt_strength_reduction off` member under a `push`/`pop` bracket: 23/23, with
+  the two `opt_strength_reduction`-**on** members still matching. Deleting that
+  one pragma line from the finished file drops it to 44/49 **and** 48 ordinal
+  pairs out of ROM order — it buys the bytes and the order together.
+
+  **So the rule above is true by default and false under `defer_codegen off`,
+  now confirmed on all three pragma families tried.** Any partial that was cut on
+  a pragma contradiction is worth re-measuring.
+
+  **The ROM-ascending rewrite is not optional when you adopt it.** Same class,
+  same bytes, three configurations:
+
+  | source order | `defer_codegen` | bytes | emission order |
+  |---|---|---|---|
+  | ROM-descending | deferred (default) | 22/22 | ROM-ascending |
+  | ROM-descending | **off** | 22/22 | **21 pairs NOT in ROM order** |
+  | ROM-ascending | **off** | 22/22 | ROM-ascending |
+
+  The rewrite is mechanical and belongs in the same edit.
+
+  **The older, superseded framing follows.**
   Bracketed pragmas do not bind while codegen is deferred, which is the default,
   and the measurement above was almost certainly taken that way. Measured on
   `ov006/dScMgMemory2_c`: with `#pragma defer_codegen off` at the top of the TU,
   **52/52 MATCH**; removing that one line dropped it to **50/52**, and the two
   DIFFs were exactly the two functions carrying bracketed pragmas —
   `opt_propagation off` (27 words) and `opt_loop_invariants off` (6 words). The
-  pair actually named above, `opt_strength_reduction` and `opt_common_subs`, has
-  **not** been re-tested under `defer_codegen off`. Do not take a pragma
+  pair actually named above, `opt_strength_reduction` and `opt_common_subs`, was
+  the last untested family; it has since been measured and behaves the same way
+  (see the settled result at the top of this bullet). Do not take a pragma
   collision as an automatic subset until you have tried it, and report what you
   measure either way.
 
