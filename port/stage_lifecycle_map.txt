@@ -2522,3 +2522,24 @@ was 0 through every one of section 15's nine runs, and the cell census was
 green, because port_dispatch_guarded froze the Stage and let the frame finish.
 The gate was run against lane OPENFAULT's own pre-fix log as a negative control
 and reports both signatures.
+
+AND THE SEAT IS LIVE, which is a separate measurement from the fault being
+gone. hal/scene_boot.cpp's env-gated trace over the same recipe (3000 frames,
+fresh save; tail2_states_proof.py strips SM64DS_* out of its child env, so the
+run was driven by hand) prints exactly Kuppa command 0x10's three slots:
+
+    [eb2c] slot +0x20 entered   SetToEnd,        was landing on +0x1c
+    [eb2c] slot +0x10 entered   SetForwardTime,  was landing on +0x0c
+    [eb2c] slot +0x18 entered   IsAtEnd
+
+The third line is the one worth reading twice. It is not a call ProcessKuppa-
+Script makes; it is the matched setter's own trailing predicate, arriving at
+the receiver's ROM +0x18 through the MSVC-ordered view. Without the view that
+call goes to MSVC byte 0x14, which on a ROM-ordered table is IsAtStart.
+
+WHAT WAS RUN, all on this branch's own binary: the repro three times (3 of 3
+green, 363 distinct player positions each), `battery.py --skip-build
+--linked-floor 9820` ALL GREEN (51 of 51 levels, 36 of 36 scenes, linkage 9820
+at 86.7%, ptr_audit 0, shipcfg build and selftest ok), and the four subsystem
+proofs directly: ipc_proof 15 checks 0 failed, thread_proof PASS,
+thread_create_proof PASS, save_proof ALL GREEN.
