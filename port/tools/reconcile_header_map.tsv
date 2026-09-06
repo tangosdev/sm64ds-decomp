@@ -1,0 +1,88 @@
+port_header	anchor	anchor_kind	module	address	rom_rtti	main_at_address	main_class	new_header	verdict
+Actor.h	_ZTV5Actor	vtable	arm9	0x0208e3a4	8dActor_c	_ZTV8dActor_c;data_0208e3a4	dActor_c	include/dActor_c.h	RESOLVED
+ActorBase.h	_ZTV9ActorBase	vtable	arm9	0x02099edc	7fBase_c	_ZTV7fBase_c;data_02099edc	fBase_c	include/fBase_c.h	RESOLVED
+ActorDerived.h	_ZTV12ActorDerived	vtable	arm9	0x0208e4b8	7dBase_c	_ZTV7dBase_c;data_0208e4b8	dBase_c	include/dBase_c.h	RESOLVED
+AmbientSoundEffects.h	_ZTV19AmbientSoundEffects	vtable	ov002	0x0210b4c8	9daSetSE_c	_ZTV9daSetSE_c	daSetSE_c	include/daSetSE_c.h	RESOLVED
+Amp.h	_ZTV3Amp	vtable	ov070	0x02123278	7daBrq_c	_ZTV7daBrq_c	daBrq_c	include/daBrq_c.h	RESOLVED
+ArmedRotatingPlatform.h	_ZTV21ArmedRotatingPlatform	vtable	ov036	0x02113ecc	16daObjRc_Dorifu_c	_ZTV16daObjRc_Dorifu_c	daObjRc_Dorifu_c	include/daObjRc_Dorifu_c.h	RESOLVED
+ArrowLift.h	_ZTV9ArrowLift	vtable	ov029	0x02113db4	15daObjWc_Obj03_c	_ZTV15daObjWc_Obj03_c	daObjWc_Obj03_c	include/daObjWc_Obj03_c.h	RESOLVED
+BgCh.h	_ZN4BgCh18StopDetectingWaterEv	method	arm9	0x02035488	-	_ZN5dBgCh18StopDetectingWaterEv	dBgCh	include/dBgCh.h	RESOLVED
+Boo.h	_ZTV3Boo	vtable	ov063	0x0211e828	7daTrs_c	_ZTV7daTrs_c	daTrs_c	include/daTrs_c.h	RESOLVED
+BooCage.h	_ZTV7BooCage	vtable	ov063	0x0211e930	11daTBasket_c	_ZTV11daTBasket_c	daTBasket_c	include/daTBasket_c.h	RESOLVED
+BowserFireSeaArena.h	_ZTV18BowserFireSeaArena	vtable	ov060	0x0211a8b0	10daKpa2Bg_c	_ZTV10daKpa2Bg_c	daKpa2Bg_c	include/daKpa2Bg_c.h	RESOLVED
+CameraTag.h	_ZTV9CameraTag	vtable	ov002	0x021085f8	10daChRoom_c	_ZTV10daChRoom_c	daChRoom_c	include/daChRoom_c.h	RESOLVED
+CannonHatch.h	_ZTV11CannonHatch	vtable	ov002	0x02109d38	20daObjCannonShutter_c	_ZTV20daObjCannonShutter_c	daObjCannonShutter_c	include/daObjCannonShutter_c.h	RESOLVED
+CapEnemy.h	_ZN8CapEnemy10ReleaseCapERK7Vector3	method	arm9	0x020061b0	-	_ZN11dCapEnemy_c10ReleaseCapERK7Vector3	dCapEnemy_c	include/dCapEnemy_c.h	RESOLVED
+ChainChomp.h	_ZTV10ChainChomp	vtable	ov014	0x021147ec	10daWanwan_c	_ZTV10daWanwan_c	daWanwan_c	include/daWanwan_c.h	RESOLVED
+ChainChompFence.h	_ZTV15ChainChompFence	vtable	ov014	0x021148b0	20daObjWanwanShutter_c	_ZTV20daObjWanwanShutter_c	daObjWanwanShutter_c	include/daObjWanwanShutter_c.h	RESOLVED
+Cloud.h	_ZTV5Cloud	vtable	ov039	0x02111858	11daObjKumo_c	_ZTV11daObjKumo_c	daObjKumo_c	include/daObjKumo_c.h	RESOLVED
+ClsnResult.h	_ZN10ClsnResultC1Ev	method	arm9	0x0203816c	-	_ZN5dBgPiC1Ev	dBgPi	include/dBgPi.h	RESOLVED
+CylinderClsn.h	_ZTV12CylinderClsn	vtable	arm9	0x0208e6ec	5dCc_c	_ZTV5dCc_c;data_0208e6ec	dCc_c	include/dCc_c.h	RESOLVED
+CylinderClsnWithPos.h	_ZTV19CylinderClsnWithPos	vtable	arm9	0x0208e6bc	8dCcPos_c	_ZTV8dCcPos_c	dCcPos_c	include/dCcPos_c.h	RESOLVED
+DorrieCap.h	_ZTV9DorrieCap	vtable	ov065	0x0211cdc4	12daDossyCap_c	_ZTV12daDossyCap_c	daDossyCap_c	include/daDossyCap_c.h	RESOLVED
+Enemy.h	_ZN5Enemy11UpdateDeathER12WithMeshClsn	method	ov002	0x020ae6a8	-	_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr	dEnemyBase_c	include/dEnemyBase_c.h	RESOLVED
+ExtendingMeshCollider.h	_ZTV21ExtendingMeshCollider	vtable	arm9	0x02099490	14dBgW_KcMbgSclY	_ZTV14dBgW_KcMbgSclY	dBgW_KcMbgSclY	include/dBgW_KcMbgSclY.h	RESOLVED
+FallBlockLll.h	_ZTV12FallBlockLll	vtable	ov022	0x021143a4	15daObjFlMaruta_c	_ZTV13RollingLogLll	RollingLogLll	include/RollingLogLll.h	RESOLVED
+Flag.h	_ZTV4Flag	vtable	ov009	0x02113ba0	10daMcFlag_c	_ZTV10daMcFlag_c	daMcFlag_c	include/daMcFlag_c.h	RESOLVED
+FlameChomp.h	_ZTV10FlameChomp	vtable	ov070	0x02123370	8daKrpa_c	_ZTV8daKrpa_c	daKrpa_c	include/daKrpa_c.h	RESOLVED
+FlameChompFire.h	_ZTV14FlameChompFire	vtable	ov070	0x02123448	8daKpFr_c	_ZTV8daKpFr_c	daKpFr_c	include/daKpFr_c.h	RESOLVED
+FloatOnWaterPlatformJrb.h	_ZTV23FloatOnWaterPlatformJrb	vtable	ov016	0x02114c8c	13daSlide_Box_c	_ZTV10SlidingBox;_ZTV13daSlide_Box_c	SlidingBox	include/SlidingBox.h	RESOLVED
+FloatOnWaterPlatformWdwSquare.h	_ZTV29FloatOnWaterPlatformWdwSquare	vtable	ov029	0x02113cf0	15daObjWc_Obj02_c	_ZTV15daObjWc_Obj02_c	daObjWc_Obj02_c	include/daObjWc_Obj02_c.h	RESOLVED
+FloatingFloorLllBig.h	_ZTV19FloatingFloorLllBig	vtable	ov022	0x021141f0	15daObjFl_UkiKi_c	_ZTV9LavaPlank	LavaPlank	include/LavaPlank.h	RESOLVED
+FlyGuy.h	_ZTV6FlyGuy	vtable	ov070	0x02123168	19daPropeller_Heyho_c	_ZTV19daPropeller_Heyho_c	daPropeller_Heyho_c	include/daPropeller_Heyho_c.h	RESOLVED
+Goomba.h	_ZTV6Goomba	vtable	ov084	0x02130948	7daKrb_c	_ZTV7daKrb_c	daKrb_c	include/daKrb_c.h	RESOLVED
+HugeCover.h	_ZTV9HugeCover	vtable	ov032	0x021139a4	14daObjTdWater_c	_ZTV14daObjTdWater_c	daObjTdWater_c	include/daObjTdWater_c.h	RESOLVED
+IceSheet.h	_ZTV8IceSheet	vtable	ov018	0x02113b34	15daObjIceBoard_c	_ZTV15daObjIceBoard_c	daObjIceBoard_c	include/daObjIceBoard_c.h	RESOLVED
+IceSlideManager.h	_ZTV15IceSlideManager	vtable	ov019	0x021133cc	10daSldMng_c	_ZTV10daSldMng_c	daSldMng_c	include/daSldMng_c.h	RESOLVED
+InvisibleSecret.h	_ZTV15InvisibleSecret	vtable	ov002	0x0210b0ec	13daObjNumber_c	_ZTV6Number;_ZTV13daObjNumber_c	Number	include/Number.h	RESOLVED
+MansionSteps.h	_ZTV12MansionSteps	vtable	ov063	0x0211ea88	11daTrsTrap_c	_ZTV11daTrsTrap_c	daTrsTrap_c	include/daTrsTrap_c.h	RESOLVED
+MegaMushroomCreateTag.h	_ZTV21MegaMushroomCreateTag	vtable	ov002	0x02108cf4	16daObjKinokoTag_c	_ZTV16daObjKinokoTag_c	daObjKinokoTag_c	include/daObjKinokoTag_c.h	RESOLVED
+MeshCollider.h	_ZTV12MeshCollider	vtable	arm9	0x020993dc	7dBgW_Kc	_ZTV7dBgW_Kc	dBgW_Kc	include/dBgW_Kc.h	RESOLVED
+MeshColliderBase.h	_ZTV16MeshColliderBase	vtable	arm9	0x02099388	4dBgW	_ZTV4dBgW	dBgW	include/dBgW.h	RESOLVED
+MetalNet.h	_ZTV8MetalNet	vtable	ov009	0x02113ae0	18daObjMc_Metalnet_c	_ZTV18daObjMc_Metalnet_c	daObjMc_Metalnet_c	include/daObjMc_Metalnet_c.h	RESOLVED
+MgBounceAndPounce.h	_ZTV17MgBounceAndPounce	vtable	ov006	0x0213c62c	14dScMgD3DBase_c	_ZTV14dScMgD3DBase_c	dScMgD3DBase_c	include/dScMgD3DBase_c.h	RESOLVED
+MovingBarSmall.h	_ZTV14MovingBarSmall	vtable	ov015	0x02114650	14daObjBk_Lift_c	_ZTV9TowerStep;_ZTV14daObjBk_Lift_c	TowerStep	include/TowerStep.h	RESOLVED
+MovingCylinderClsn.h	_ZTV18MovingCylinderClsn	vtable	arm9	0x0208e6d4	7dCcAc_c	_ZTV7dCcAc_c	dCcAc_c	include/dCcAc_c.h	RESOLVED
+MovingCylinderClsnWithPos.h	_ZTV25MovingCylinderClsnWithPos	vtable	arm9	0x0208e704	10dCcAcPos_c	_ZTV10dCcAcPos_c	dCcAcPos_c	include/dCcAcPos_c.h	RESOLVED
+MovingMeshCollider.h	_ZTV18MovingMeshCollider	vtable	arm9	0x02099434	10dBgW_KcMbg	_ZTV10dBgW_KcMbg	dBgW_KcMbg	include/dBgW_KcMbg.h	RESOLVED
+MrI_Projectile.h	_ZTV14MrI_Projectile	vtable	ov071	0x02122de8	8daEyBm_c	_ZTV8daEyBm_c	daEyBm_c	include/daEyBm_c.h	RESOLVED
+OrangeBallBillboard.h	_ZTV19OrangeBallBillboard	vtable	ov044	0x02111604	19daObjKb1Billboard_c	_ZTV19daObjKb1Billboard_c	daObjKb1Billboard_c	include/daObjKb1Billboard_c.h	RESOLVED
+Particle__Acceleration.h	-	none	-	-	-	-	-	-	NOT A RENAME (no address anchor and no counterpart on main)
+Particle__ClipCallback.h	-	none	-	-	-	-	-	-	NOT A RENAME (no address anchor and no counterpart on main)
+Particle__Converge.h	-	none	-	-	-	-	-	-	NOT A RENAME (no address anchor and no counterpart on main)
+Particle__EndingStarGlitterCallback.h	-	none	-	-	-	-	-	-	NOT A RENAME (no address anchor and no counterpart on main)
+Particle__Jitter.h	-	none	-	-	-	-	-	-	NOT A RENAME (no address anchor and no counterpart on main)
+Particle__RadiusConverge.h	-	none	-	-	-	-	-	-	NOT A RENAME (no address anchor and no counterpart on main)
+Particle__SimpleCallback.h	-	none	-	-	-	-	-	-	NOT A RENAME (no address anchor and no counterpart on main)
+Platform.h	_ZTV8Platform	vtable	ov002	0x0210ae38	10dBgActor_c	_ZTV10dBgActor_c	dBgActor_c	include/dBgActor_c.h	RESOLVED
+PoleBillboard.h	_ZTV13PoleBillboard	vtable	ov015	0x02114420	17daObjBk_Botaosi_c	_ZTV14KnockDownPlank;_ZTV17daObjBk_Botaosi_c	KnockDownPlank	include/KnockDownPlank.h	RESOLVED
+PushBlock.h	_ZTV9PushBlock	vtable	ov002	0x02109800	18daObjPowerUpItem_c	_ZTV11PowerFlower;_ZTV18daObjPowerUpItem_c	PowerFlower	include/PowerFlower.h	RESOLVED
+QuestionSwitch.h	_ZTV14QuestionSwitch	vtable	ov002	0x02108e5c	19daObjHatenaSwitch_c	_ZTV19daObjHatenaSwitch_c	daObjHatenaSwitch_c	include/daObjHatenaSwitch_c.h	RESOLVED
+RaycastGround.h	_ZN13RaycastGround10DetectClsnEv	method	arm9	0x02038f44	-	_ZN9dBgCh_Gnd10DetectClsnEv	dBgCh_Gnd	include/dBgCh_Gnd.h	RESOLVED
+RaycastLine.h	_ZN11RaycastLine10DetectClsnEv	method	arm9	0x02038638	-	_ZN9dBgCh_Lin10DetectClsnEv	dBgCh_Lin	include/dBgCh_Lin.h	RESOLVED
+RaycastLine__Line.h	-	none	-	-	-	-	-	-	NOT A RENAME (no address anchor and no counterpart on main)
+RickshawPlatformBdw.h	_ZTV19RickshawPlatformBdw	vtable	ov043	0x0211255c	17daObjKm1_Dorifu_c	_ZTV17daObjKm1_Dorifu_c	daObjKm1_Dorifu_c	include/daObjKm1_Dorifu_c.h	RESOLVED
+RickshawPlatformBs.h	_ZTV18RickshawPlatformBs	vtable	ov047	0x0211254c	17daObjKm3_Dorifu_c	_ZTV17daObjKm3_Dorifu_c	daObjKm3_Dorifu_c	include/daObjKm3_Dorifu_c.h	RESOLVED
+RotatingClockHand.h	_ZTV17RotatingClockHand	vtable	ov035	0x02112bcc	16daObjCtMecha11_c	_ZTV16SpinningPlatform;_ZTV16daObjCtMecha11_c	SpinningPlatform	include/SpinningPlatform.h	RESOLVED
+RotatingPlatformRr.h	_ZTV18RotatingPlatformRr	vtable	ov036	0x02113c38	14daObjRc_Hane_c	_ZTV14daObjRc_Hane_c	daObjRc_Hane_c	include/daObjRc_Hane_c.h	RESOLVED
+RotatingPlatformWdw.h	_ZTV19RotatingPlatformWdw	vtable	ov029	0x021140dc	14daObjWc_Mizu_c	_ZTV14daObjWc_Mizu_c	daObjWc_Mizu_c	include/daObjWc_Mizu_c.h	RESOLVED
+Scene.h	_ZTV5Scene	vtable	arm9	0x02092680	8dScene_c	_ZTV8dScene_c	dScene_c	include/dScene_c.h	RESOLVED
+Seaweed.h	_ZTV7Seaweed	vtable	ov002	0x02109c74	12daObjHeart_c	_ZTV12HealingHeart;_ZTV12daObjHeart_c	HealingHeart	include/HealingHeart.h	RESOLVED
+ShipWater.h	_ZTV9ShipWater	vtable	ov017	0x02111bf8	14daObjKsWater_c	_ZTV14daObjKsWater_c	daObjKsWater_c	include/daObjKsWater_c.h	RESOLVED
+ShipWing.h	_ZTV8ShipWing	vtable	ov036	0x02113cf8	16daObjRc_Tikuwa_c	_ZTV10DonutBlock;_ZTV16daObjRc_Tikuwa_c	DonutBlock	include/DonutBlock.h	RESOLVED
+ShutterBob.h	_ZTV10ShutterBob	vtable	ov014	0x02114608	14daObjBSwdoor_c	_ZTV14daObjBSwdoor_c	daObjBSwdoor_c	include/daObjBSwdoor_c.h	RESOLVED
+ShutterHmc.h	_ZTV10ShutterHmc	vtable	ov021	0x02114914	16daObjCvShutter_c	_ZTV16daObjCvShutter_c	daObjCvShutter_c	include/daObjCvShutter_c.h	RESOLVED
+SlideDecorationSilverStar.h	_ZTV25SlideDecorationSilverStar	vtable	ov031	0x02111984	18daObjHsBillboard_c	_ZTV18daObjHsBillboard_c	daObjHsBillboard_c	include/daObjHsBillboard_c.h	RESOLVED
+SphereClsn.h	_ZN10SphereClsn10DetectClsnEv	method	arm9	0x02038b78	-	_ZN12dBgCh_SphCrr10DetectClsnEv	dBgCh_SphCrr	include/dBgCh_SphCrr.h	RESOLVED
+Squasher.h	_ZTV8Squasher	vtable	ov023	0x02111fe4	16daObjFm_Battan_c	_ZTV16daObjFm_Battan_c	daObjFm_Battan_c	include/daObjFm_Battan_c.h	RESOLVED
+SwitchActivatedPlank.h	_ZTV20SwitchActivatedPlank	vtable	ov029	0x021141a0	15daObjWc_Obj04_c	_ZTV15daObjWc_Obj04_c	daObjWc_Obj04_c	include/daObjWc_Obj04_c.h	RESOLVED
+SwitchPillar.h	_ZTV12SwitchPillar	vtable	ov012	0x02112408	14daObjC0Water_c	_ZTV13BasementWater;_ZTV14daObjC0Water_c	BasementWater	include/BasementWater.h	RESOLVED
+Trap.h	_ZTV4Trap	vtable	ov010	0x02112ba8	15daObjC1Hikari_c	_ZTV9LightBeam;_ZTV15daObjC1Hikari_c	LightBeam	include/LightBeam.h	RESOLVED
+Tree.h	_ZTV4Tree	vtable	ov002	0x0210ac00	8daTree_c	_ZTV8daTree_c	daTree_c	include/daTree_c.h	RESOLVED
+TtcConveyorBeltLarge.h	_ZTV20TtcConveyorBeltLarge	vtable	ov065	0x0211d1ec	16daObjCtMecha04_c	_ZTV16daObjCtMecha04_c	daObjCtMecha04_c	include/daObjCtMecha04_c.h	RESOLVED
+TtcMovingCubeA.h	_ZTV14TtcMovingCubeA	vtable	ov065	0x0211d568	16daObjCtMecha09_c	_ZTV14TTC_MovingBeam;_ZTV16daObjCtMecha09_c	TTC_MovingBeam	include/TTC_MovingBeam.h	RESOLVED
+VirtualDoor.h	_ZTV11VirtualDoor	vtable	ov002	0x021086b4	11daChScene_c	_ZTV11daChScene_c	daChScene_c	include/daChScene_c.h	RESOLVED
+WaterfallMist.h	_ZTV13WaterfallMist	vtable	ov002	0x021095f0	15daObjMarioCap_c	_ZTV15daObjMarioCap_c	daObjMarioCap_c	include/daObjMarioCap_c.h	RESOLVED
+WithMeshClsn.h	_ZN12WithMeshClsn12Unk_0203589cEv	method	arm9	0x0203589c	-	_ZN10dBgCh_Actr12Unk_0203589cEv	dBgCh_Actr	include/dBgCh_Actr.h	RESOLVED
+daBDonketu_c.h	(ROM RTTI daBDonketu_c)	rom-rtti	ov064	0x0211b978	-	_ZTV8BigBully	BigBully	include/BigBully.h	RESOLVED
+daDoor_c.h	(ROM RTTI daDoor_c)	rom-rtti	ov100	0x02148188	-	_ZTV4Door	Door	include/Door.h	RESOLVED
