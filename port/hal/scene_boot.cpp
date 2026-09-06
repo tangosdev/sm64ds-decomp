@@ -1050,11 +1050,14 @@ static void port_save_probe(int frame)
 // and SetBackwardTime whenever the answer is yes (see the slot map at the foot
 // of this section). The ten function slots run the ROM's own bodies now.
 //
-// ITS THREE SIBLINGS ARE UNCHANGED AND STILL TRAP. data_0208eafc,
+// ITS THREE SIBLINGS NOW CARRY THEIR DESTRUCTOR PAIR AND NOTHING ELSE, and
+// the reason the rest of each one still traps is a MEASURED dispatch-site
+// audit rather than caution -- run link100 lane ARM9T, gate 225b, at the foot
+// of this section under THE THREE SIBLING TABLES. data_0208eafc,
 // data_0208eacc and data_0208eb2c -- the other three vptrs func_02017278
-// writes -- keep their raw ROM bytes or the shared trap, on
-// hal/sub_actors.cpp's precedent: a dispatch through them lands on a named
-// trap instead of on 0x02017254 interpreted as a host address.
+// writes -- keep their raw ROM bytes or the shared trap on every slot from
+// +0x08 up, on hal/sub_actors.cpp's precedent: a dispatch through them lands
+// on a named trap instead of on 0x02017254 interpreted as a host address.
 //
 // AND THE CLASS HAS A NAME. The ROM's own RTTI says so, with
 // config/arm9/relocs.txt applied to extracted/arm9_dec.bin (flat, base
@@ -1096,7 +1099,7 @@ void *data_0208ea6c[12];
    0x020176d8, 0x02017698, ...). Trap-filled for the same reason. The other
    two the ctor writes, data_0208eafc and data_0208eacc, are already in the
    build carrying raw ROM bytes and this lane did not touch them. */
-void *data_0208eb2c[10];
+void *data_0208eb2c[10];   /* slots 0 and 1 seated by gate 225b, 2..9 trap */
 /* data_0208eacc, the SECOND of the member's four vptrs, joins them: 48 bytes,
    twelve words, relocated code addresses. Three of the four are now filled
    here and only data_0208eafc is still shipping raw ROM bytes, because
@@ -1212,8 +1215,11 @@ DSSTATE_END
    compiled into every target that compiles this file (walk_window,
    smoke_player, walk_window_hires): src/func_02017254.c rides slice_ov007.txt,
    the five FaderBrightness methods ride slice_w1l3.txt and slice_fdr.txt, and
-   Fader::AdvanceInterp rides slice_w1l3.txt. Nothing here adds a source file.
-   The exceptions are named at their slots. */
+   Fader::AdvanceInterp rides slice_w1l3.txt. The tenth, src/func_02017228.c,
+   rides port/slice_gate225.txt as of gate 225 and is seated at +0x04. The
+   remaining exceptions are named at their slots: +0x08, +0x0c and +0x10, whose
+   src TUs are the three guess-marked bodies port/tools/inferred_stub_guard.py
+   refuses, and which this file already routes past. */
 
 #include "FaderBrightness.h"
 
@@ -1224,8 +1230,12 @@ extern "C" {
      _ZN5Fader13AdvanceInterpEv                 hal/fdr_arm9_fader_seat.cpp
      _ZN15FaderBrightness9IsAtStartEv           hal/fdr_arm9_fader_seat.cpp
      _ZN15FaderBrightness20IsBetweenStartAndEndEv  hal/fdr_arm9_fader_seat.cpp
-     _ZN15FaderBrightness7IsAtEndEv             hal/method_faces.cpp        */
+     _ZN15FaderBrightness7IsAtEndEv             hal/method_faces.cpp
+   and one that is added to the link BY this gate:
+     func_02017228                              src/func_02017228.c, on
+                                                port/slice_gate225.txt        */
 void *func_02017254(void *self);
+void *func_02017228(void *self);
 void  _ZN5Fader13AdvanceInterpEv(void *self);
 int   _ZN15FaderBrightness9IsAtStartEv(void *self);
 int   _ZN15FaderBrightness7IsAtEndEv(void *self);
@@ -1262,16 +1272,30 @@ static void l2_ea6c_note(int slot)
 static void *__fastcall l2_ea6c_s00(void *s, void *)
 { l2_ea6c_note(0); return func_02017254(s); }
 
-/* +0x04. D0, AND THE ONE SLOT THIS BLOCK DOES NOT SEAT. The reason is a slice
-   line, not a missing body: src/func_02017228.c is matched and is the same
-   three writes as D1 plus Memory::operator_delete2, and it is on NO slice, so
-   it is not in this link. Putting it on one is a port/slice_*.txt edit, which
-   is outside this change's one-file scope. TRANSCRIBING A DELETING DESTRUCTOR
-   HERE INSTEAD WOULD FREE THE RECEIVER ON THIS FILE'S AUTHORITY -- the trap
-   leaks the object and announces itself, which is the direction every unseated
-   slot in hal/fdr_arm9_fader_seat.cpp takes. */
-static void *__fastcall l2_ea6c_s04(void *, void *)
-{ l2_trap("data_0208ea6c vtable slot"); return 0; }
+/* +0x04. D0, AND IT IS SEATED NOW -- run link100 lane ARM9T, gate 225.
+   The paragraph that stood here said "the reason is a slice line, not a
+   missing body: src/func_02017228.c is matched and is the same three writes as
+   D1 plus Memory::operator_delete2, and it is on NO slice ... Putting it on
+   one is a port/slice_*.txt edit, which is outside this change's one-file
+   scope." port/slice_gate225.txt is that slice line, and this is the slot it
+   was added for; the body's whole closure is ITSELF (its three callees
+   _ZN5ColorD1Ev, Memory::operator_delete2 and data_0208ea6c are all already in
+   this link, measured against walk_window.map before the line was written).
+
+   IT IS THE ROM'S OWN WORD, NOT A TRANSCRIPTION, which is the distinction the
+   retired paragraph turned on: it refused to hand-write a deleting destructor
+   here "on this file's authority", and this does not -- config/arm9/relocs.txt
+   from:0x0208ea70 to:0x02017228 is the word, and src/func_02017228.c is the
+   matched body at that address, carrying no "recovered from vtable slot
+   identity" marker. So the object is freed by the ROM's own code on the ROM's
+   own slot instead of being leaked by a trap.
+
+   NO CALL SITE, STILL. port/fader_boot_map.txt section 9c lists none for
+   either destructor slot, which is what slot +0x00 above already rests on, so
+   this takes the same no-argument __fastcall shape D1 does and no audit of a
+   new dispatch site is claimed. */
+static void *__fastcall l2_ea6c_s04(void *s, void *)
+{ l2_ea6c_note(1); return func_02017228(s); }
 
 /* +0x08. AdvanceFade, and the one slot here that is not __fastcall, for
    hal/fdr_arm9_fader_seat.cpp's fdr_s08 reason exactly (shape C above).
@@ -1454,6 +1478,124 @@ static void l2_ea6c_selftest(void)
     std::fflush(stdout);
 }
 
+/* ---- THE THREE SIBLING TABLES: D1 AND D0, AND NOTHING ELSE ----------------
+
+   WHAT WAS TRIED BEFORE AND WHY IT CAME OUT. run link100 lane TAIL2's gate 219
+   seated ALL TEN slots of data_0208eacc and data_0208eb2c and both function
+   words of data_0208eafc, and the finisher backed the whole fill out after a
+   crash bisect. The account is in port/CMakeLists.txt at the gate-219 block:
+   with the three tables seated, the opening-cutscene proof (SKIP_MENU,
+   new-file, 4000 frames) faulted c0000005 inside func_ov002_020f23f0 every
+   time, and clean every time with them trapped. The diagnosis recorded there
+   is the GARBAGE-RECEIVER HAZARD hal/fdr_arm9_fader_seat.cpp names around line
+   220: three call sites in this image reach an installed fader through a CDECL
+   shape, which puts the receiver on the STACK, and a __fastcall veneer reads
+   ECX. Seat a real body behind one of those and it runs on whatever was in ECX.
+
+   THE QUESTION THAT WAS LEFT OPEN was whether that is a property of THE SEAT
+   or of THE SLOT, and gate 219 could not answer it because it seated every
+   slot at once. This block answers it by ENUMERATING THE DISPATCH SITES, which
+   is the audit that block says was out of its scope: "Re-seating these three
+   tables needs the same kind of dispatch-site audit port/fader_boot_map.txt
+   section 9c did for data_0208ea6c, extended to data_0209f5bc /
+   data_0209d4ac's OTHER readers".
+
+   THE AUDIT, and it is mechanical rather than a reading. An object of one of
+   these three classes is only ever reached as THE INSTALLED FADER, through
+   data_0209f5bc or data_0209d4ac -- Scene::SetFaders is what writes both. So
+   every reader of those two pointers in the whole image was resolved out of
+   config/arm9/relocs.txt and all 101 overlay reloc files, mapped to its owning
+   function through each module's own symbols.txt, and each owner's src TU was
+   read for the SLOT INDEX it dispatches. Forty functions read the pointers.
+   The slots they dispatch, whole image, arm9 and every overlay:
+
+     +0x08  slot 2  func_02018efc                              (cdecl shape)
+     +0x0c  slot 3  Scene::BeforeBehavior, func_ov004_020b841c
+     +0x10  slot 4  Scene::BeforeBehavior, func_ov004_020b841c
+     +0x14  slot 5  Scene::BeforeBehavior, Scene::SetFaders (vt->f14),
+                    Stage::Behavior, func_02005418, HUD::Behavior,
+                    Minimap::Behavior, func_ov002_020f23f0,
+                    func_ov003_020ad814, func_ov003_020af038,
+                    func_ov004_020b0620 (spelled f05), four ov005 bodies,
+                    func_ov006_0212101c, func_ov075_0211a2b8
+     +0x18  slot 6  Scene::BeforeBehavior, Scene::SetFaders (vt->f18),
+                    func_ov004_020b841c, func_ov006_020c2848,
+                    func_ov006_020c2924
+     +0x1c  slot 7  FUN_02029934, FUN_02029980, FUN_020299f4,
+                    func_ov004_020b7c04, func_ov004_020b841c,
+                    func_ov006_0212101c
+     +0x20  slot 8  Minimap::Behavior, func_ov004_020b7c04
+
+   SLOTS 0, 1 AND 9 HAVE NO DISPATCH SITE ANYWHERE IN THE IMAGE. That is the
+   whole ruling. gate 219's crash was a receiver-convention mismatch AT A CALL
+   SITE, and the two destructor slots have none to mismatch at -- so seating
+   them cannot reproduce it, and this block does not have to argue that the
+   hazard is benign, only that it is not reachable here. The two spot checks
+   that could have made the enumeration wrong were both taken: the `v0()` in
+   func_ov075_0211a2b8 is on a different object (`Poly0 *o`, not
+   data_0209f5bc), and Scene::SetFaders' `v20()`/`v24()` are on the Scene it is
+   handed, not on the fader.
+
+   WHAT IS DELIBERATELY LEFT TRAPPED, and it is a ROW THIS LANE COULD HAVE HAD.
+   data_0208eacc slot 2 is _ZN15FaderBrightness11AdvanceFadeEv and its src TU
+   is matched, unlinked and unmarked -- one more linkage row for one more word.
+   It stays trapped because slot 2's ONE dispatch site, func_02018efc's
+   `((void(*)(void*))vt[2])(o)`, is one of the three CDECL-shape sites the
+   hazard section names, so the seat would have to be a __cdecl veneer (the
+   shape l2_ea6c_s08 above already uses for that same site) AND it would turn a
+   silent trap into a live MASTER_BRIGHT write on both engines. That is a
+   rendering change, not a linkage one, and it needs an eye on a screen rather
+   than a headless proof. Named here rather than left as an unexplained gap.
+
+   THE SHAPE IS SLOT +0x00's ABOVE, unchanged: __fastcall with a dummy second
+   parameter, receiver in ECX, no stack arguments to clean. The bodies are the
+   ROM's own, on port/slice_gate225.txt, and two of them need a
+   COMPILE_DEFINITIONS row because src/engine/fader/_ZN5FaderD0Ev.c spells its
+   two ROM addresses with PLACEHOLDER names -- `vtbl_Fader` (declared in
+   include/decl_common.h and defined nowhere) and `base_dtor_Fader`. Read off
+   that body's own literal pool rather than off the names:
+     from:0x02017858 kind:arm_call to:0x0203cbcc  = Memory::operator_delete2
+     from:0x02017868 kind:load     to:0x0208eafc  = the table below
+   which is the gate-224 binding technique and is in port/CMakeLists.txt.
+
+   SM64DS_EA6C_TRACE=1 REPORTS WHETHER EITHER SLOT IS EVER ENTERED, because a
+   seat nothing dispatches and a seat that runs every frame are opposite
+   findings and both are silent. Six lines a run at most. */
+extern "C" {
+int   _ZN15FaderBrightnessD1Ev(int *self);   /* 0x02017814  eacc +0x00 */
+void *_ZN15FaderBrightnessD0Ev(void *self);  /* 0x020177e8  eacc +0x04 */
+void  _ZN5FaderD1Ev(int *self);              /* 0x0201786c  eafc +0x00 */
+void *_ZN5FaderD0Ev(void *self);             /* 0x02017848  eafc +0x04 */
+int   _ZN10FaderColorD1Ev(int *self);        /* 0x020175c4  eb2c +0x00 */
+void *_ZN10FaderColorD0Ev(void *self);       /* 0x02017598  eb2c +0x04 */
+}
+
+static void l2_sib_note(int tab, int slot)
+{
+    static const char *const names[3] = { "acc", "afc", "b2c" };
+    static int on = -1;
+    static unsigned char said[3][2];
+    if (on < 0) on = std::getenv("SM64DS_EA6C_TRACE") != 0;
+    if (!on || said[tab][slot]) return;
+    said[tab][slot] = 1;
+    std::printf("  [fdr-sib] data_0208e%s slot +0x%02x entered for the first "
+                "time\n", names[tab], slot * 4);
+    std::fflush(stdout);
+}
+
+static void *__fastcall l2_eacc_s00(void *s, void *)
+{ l2_sib_note(0, 0); return (void *)_ZN15FaderBrightnessD1Ev((int *)s); }
+static void *__fastcall l2_eacc_s04(void *s, void *)
+{ l2_sib_note(0, 1); return _ZN15FaderBrightnessD0Ev(s); }
+static void *__fastcall l2_eafc_s00(void *s, void *)
+{ l2_sib_note(1, 0); _ZN5FaderD1Ev((int *)s); return s; }
+static void *__fastcall l2_eafc_s04(void *s, void *)
+{ l2_sib_note(1, 1); return _ZN5FaderD0Ev(s); }
+static void *__fastcall l2_eb2c_s00(void *s, void *)
+{ l2_sib_note(2, 0); return (void *)_ZN10FaderColorD1Ev((int *)s); }
+static void *__fastcall l2_eb2c_s04(void *s, void *)
+{ l2_sib_note(2, 1); return _ZN10FaderColorD0Ev(s); }
+
 static void l2_fill_0208ea6c(void)
 {
     data_0208ea6c[0]  = (void *)l2_ea6c_s00;
@@ -1468,10 +1610,20 @@ static void l2_fill_0208ea6c(void)
     data_0208ea6c[9]  = (void *)l2_ea6c_s24;
     data_0208ea6c[10] = (void *)l2_ea6c_over;
     data_0208ea6c[11] = (void *)l2_ea6c_over;
+    /* THE TRAP GOES DOWN FIRST AND THE SEAT OVERWRITES TWO WORDS OF IT, so a
+       slot this block does not name keeps exactly the trap it had. Only slots
+       0 and 1 are seated, and the enumeration above is why: no dispatch site
+       in the image reaches either. */
     for (int i = 0; i < 10; ++i) data_0208eb2c[i] = (void *)l2_vt_trap;
     for (int i = 0; i < 12; ++i) data_0208eacc[i] = (void *)l2_vt_trap;
     ((void **)data_0208eafc)[0] = (void *)l2_vt_trap;
     ((void **)data_0208eafc)[1] = (void *)l2_vt_trap;
+    data_0208eacc[0] = (void *)l2_eacc_s00;
+    data_0208eacc[1] = (void *)l2_eacc_s04;
+    ((void **)data_0208eafc)[0] = (void *)l2_eafc_s00;
+    ((void **)data_0208eafc)[1] = (void *)l2_eafc_s04;
+    data_0208eb2c[0] = (void *)l2_eb2c_s00;
+    data_0208eb2c[1] = (void *)l2_eb2c_s04;
     l2_ea6c_selftest();
 }
 

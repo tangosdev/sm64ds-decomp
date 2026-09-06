@@ -14149,6 +14149,119 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV11dCapEnemy_c=data_ov002_02108284;G0=data_020a0eac")
 
+
+# ---- gate 225 (run link100, lane ARM9T): FIVE arm9 .data TABLES -----------
+#
+# The gate-224 block above hosts six ov002 base tables the port hosted nowhere.
+# This gate is the same shape on the MAIN MODULE: two arm9 .data tables whose
+# ROM words name matched TUs the port never links, hosted and filled in
+# hal/arm9_tables_link100.cpp, plus one already-hosted vtable slot that was
+# left trapped for want of a slice line.
+#
+#   data_02099fe4  the arm9 IRQ vector table, 22 words (next-symbol delta to
+#                  data_0209a03c is 0x58, and both ROM readers walk i < 0x16).
+#                  Nine distinct bodies; the eight forwarders tail into
+#                  0x02056cc0 so _ZN3IRQ13DmaTimHandlerEv rides in with them.
+#                  Its bit-number companion data_02099fd4 (16 bytes, no
+#                  relocation inside it) is hosted alongside with the ROM's own
+#                  eight halfwords, because that handler indexes it.
+#   data_02094390  dScMB_c's graph descriptor, 4 words (delta to data_020943a0
+#                  is 0x10). Three bodies plus func_02034d34 behind
+#                  func_02034b40.
+#   data_02092188  the Stage's graph callback table, 4 words. One body, slot 1;
+#                  slot 2 traps on port/slice_w8a.txt's standing ruling that
+#                  Stage::GraphCallback2 is not hostable at all.
+#   data_0209a424  a two-word callback pair, both bodies new to the link.
+#   data_0209a744  a two-slot vtable hosted at its 4-word symbol span. One body,
+#                  slot 0; slot 1 is an .exceptix census row and traps.
+#   data_0208ea6c  slot +0x04 only. hal/scene_boot.cpp seated nine of that
+#                  table's ten slots in an earlier gate and left the deleting
+#                  destructor trapped, saying in the slot's own comment that
+#                  "the reason is a slice line, not a missing body ... which is
+#                  outside this change's one-file scope". slice_gate225.txt is
+#                  that line and the slot calls src/func_02017228.c now.
+#
+# BOTH TABLES ARE DEAD STORAGE IN THIS PORT and the seat claims no behaviour
+# change from them: every ROM reader of either is itself outside the link --
+# the IRQ table's two are _ZN3IRQ13GetIRQHandlerEj / SetIRQHandler, which
+# ntr/runtime.cpp DEFINES itself under a PORT_HOST_ABI tag naming this very
+# table, and data_02094390's are __sinit_02074fb8 and func_0203506c, both
+# unlinked. The 0208ea6c slot is the one live-path change in the gate and it
+# takes the destructor shape slot +0x00 already rests on.
+#
+# THE THIRD TABLE THIS LANE WAS HANDED, data_020927ec, IS RULED OUT AND STAYS
+# UNHOSTED. It is real and its seven words were read, but resolved symbol by
+# symbol against this build's own walk_window.map its four bodies require 40
+# unlinked TUs and 17 unhosted arm9 data symbols -- the wireless/WM stack
+# through func_0203d950 and func_02030790 -- and one of the 40 is
+# src/_ZN3IRQ13SetIRQHandlerEjPFvvE.c, an LNK2005 against ntr/runtime.cpp on
+# sight. The closure is written down in hal/arm9_tables_link100.cpp so the next
+# lane does not measure it twice.
+#
+# ON ALL THREE BIG TARGETS, and not optionally: hal/scene_boot.cpp's +0x04 slot
+# calls func_02017228 by name and all three of walk_window, walk_window_hires
+# and smoke_player compile scene_boot.cpp, so a target that got the file
+# without the slice would fail at link. Appended as target_sources ABOVE the
+# sharing block below.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate225.txt" SLICE225_LINES)
+set(SLICE225_SOURCES "")
+foreach(line IN LISTS SLICE225_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE225_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t225 walk_window walk_window_hires smoke_player)
+    target_sources(${_t225} PRIVATE ${SLICE225_SOURCES}
+                   hal/arm9_tables_link100.cpp)
+endforeach()
+#
+# THE EIGHT FORWARDERS' CALLEE NAME. src/_ZN3IRQ11Dma0HandlerEv.cpp and its
+# seven siblings each declare `extern "C" void func_02056cc0(int irq);` and
+# call it; config/arm9/symbols.txt names 0x02056cc0 _ZN3IRQ13DmaTimHandlerEv,
+# which is what src/_ZN3IRQ13DmaTimHandlerEv.c defines. ONE ADDRESS, TWO
+# NAMES -- the gate-216 rename block's case, and it takes gate 224's answer: a
+# COMPILE_DEFINITIONS row, not an /alternatename. Same arity (one word in r0 /
+# on the stack) and same C linkage on both sides, so nothing is bridged but the
+# spelling.
+#
+# GATE 225b: THE THREE SIBLING FADER TABLES' DESTRUCTOR PAIR. gate 219 above
+# seated all ten slots of data_0208eacc / data_0208eb2c and both function words
+# of data_0208eafc and was backed out after a crash bisect, with the note that
+# re-seating needs "the same kind of dispatch-site audit port/fader_boot_map.txt
+# section 9c did for data_0208ea6c, extended to data_0209f5bc / data_0209d4ac's
+# OTHER readers". That audit was done: every reader of those two pointers in
+# arm9 and all 101 overlay reloc files was resolved to its owning function and
+# each owner's src TU read for the slot index it dispatches. Forty functions
+# read the pointers and they dispatch slots 2, 3, 4, 5, 6, 7 and 8. SLOTS 0, 1
+# AND 9 HAVE NO DISPATCH SITE ANYWHERE IN THE IMAGE, so the two destructor
+# slots are seated here and everything from +0x08 up keeps gate 219's trap --
+# including slot 5, which is where the c0000005 was. The enumeration is written
+# out at THE THREE SIBLING TABLES in hal/scene_boot.cpp.
+#
+# TWO PLACEHOLDER NAMES. src/engine/fader/_ZN5FaderD0Ev.c spells its vtable
+# `vtbl_Fader` (declared in include/decl_common.h, defined nowhere in this
+# build) and Memory::operator_delete2 `base_dtor_Fader`. Both bindings are read
+# off that body's OWN literal pool in config/arm9/relocs.txt and not off the
+# recovery's names:
+#   from:0x02017858 kind:arm_call to:0x0203cbcc  _ZN6Memory16operator_delete2EPv
+#   from:0x02017868 kind:load     to:0x0208eafc  the table it writes
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN5FaderD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "vtbl_Fader=data_0208eafc;base_dtor_Fader=_ZN6Memory16operator_delete2EPv")
+
+foreach(_g225 _ZN3IRQ11Dma0HandlerEv _ZN3IRQ11Dma1HandlerEv
+              _ZN3IRQ11Dma2HandlerEv _ZN3IRQ11Dma3HandlerEv
+              _ZN3IRQ19Tim0OverflowHandlerEv _ZN3IRQ19Tim1OverflowHandlerEv
+              _ZN3IRQ19Tim2OverflowHandlerEv _ZN3IRQ19Tim3OverflowHandlerEv)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/${_g225}.cpp"
+        PROPERTIES COMPILE_DEFINITIONS
+        "func_02056cc0=_ZN3IRQ13DmaTimHandlerEv")
+endforeach()
+
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
