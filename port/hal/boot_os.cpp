@@ -463,9 +463,19 @@ void port_boot_rom_game_init_head(void)
            ROM's own func_02019440 -> func_02054430(0x1ff) and func_0200f4f4 in
            the tail below, and after that by each scene's InitResources. */
     func_02053c40();
-    /* func_0205b858() -- PXI */
+    /* func_0205b858() -- the ROM calls the PXI init a SECOND time here. Not
+       repeated: port_boot_rom_pre_main() above already made func_02058c84's
+       call 2, and src/func_0205bad8.c is guarded on `data_020a7fc4 == 0`, so
+       the ROM's own second call takes and releases the IRQ mask and returns.
+       Left out to keep the surface this lane verified minimal; putting it back
+       would be equally faithful and would change nothing. */
     func_0203d740();
-    /* func_02013e64() -- memsets the save block; see the header block */
+    /* func_02013e64() -- memsets 0x32c bytes of the save block. REFUSED, and
+       the reason is no longer only "the host already staged it":
+       hal/level_boot.cpp hosts data_0209caa0 as a 0x14 object -- the dsd
+       symbol's own span -- while the ROM object is the full 0x32c, which is
+       exactly 0x0209caa0 to 0x0209cdcc and absorbs four more dsd names. See the
+       header block. */
     func_0201a4e4();          // IRQ::SetIRQHandler(1, IRQ::VBlankHandler)
     /* the IRQ trio: ntr::rt_irq_boot_state() */
     /* DISPSTAT bit 3, the VBlank-IRQ enable. Already-linked ROM body, so it
