@@ -214,6 +214,39 @@ class AliasCollisions(unittest.TestCase):
         self.assertEqual(CDB.alias_collision_addresses(), set())
 
 
+class ZeroSizeAliasPredicate(unittest.TestCase):
+    """is_zero_size_alias, on its own.
+
+    It decides a DENOMINATOR now, not just a numerator, so getting it wrong in the
+    permissive direction hides real unmatched work instead of merely undercounting a
+    match. Both directions are pinned here, close to the one line that decides them."""
+
+    ALIASED = {("itcm", 0x01ff8708)}
+
+    def test_the_zero_size_side_of_a_collision_is_an_alias(self):
+        self.assertTrue(
+            BG.is_zero_size_alias("itcm", 0x01ff8708, 0, self.ALIASED))
+
+    def test_the_sized_side_of_the_same_address_is_not(self):
+        """The bug this guards: the set is keyed by address and both records sit on it,
+        so a caller that dropped the address rather than the zero-size record would
+        delete func_01ff8708's 1,776 bytes from the game."""
+        self.assertFalse(
+            BG.is_zero_size_alias("itcm", 0x01ff8708, 0x6f0, self.ALIASED))
+
+    def test_a_zero_size_symbol_at_an_uncollided_address_is_not(self):
+        """A lone zero-size symbol is real outstanding work and must stay counted.
+        Without this the predicate could quietly swallow anything sized 0."""
+        self.assertFalse(
+            BG.is_zero_size_alias("itcm", 0x01ff9000, 0, self.ALIASED))
+
+    def test_the_same_address_in_another_module_is_not(self):
+        """Overlay addresses overlap; the set is keyed by (module, addr) for that
+        reason and the predicate must respect the module half of the key."""
+        self.assertFalse(
+            BG.is_zero_size_alias("ov065", 0x01ff8708, 0, self.ALIASED))
+
+
 class MatchedConjunct(unittest.TestCase):
     """End to end through chaos_db_ci.main(): a record that fails the byte gate reads
     matched false, and reads true again once it is fixed.
@@ -229,13 +262,18 @@ class MatchedConjunct(unittest.TestCase):
         (self.root / "src").mkdir()
         (self.root / "config").mkdir()
         self.sym = self.root / "config" / "symbols.txt"
+        # `lonely` is the control: a zero-size record at an address NO sized record
+        # shares. It is not an alias, it is a real function the config happens to
+        # declare with no length, and it must survive every rule below. Without it a
+        # predicate that dropped everything sized 0 would pass this whole class.
         self.sym.write_text(
             "good kind:function(arm,size=0x10) addr:0x02000000\n"
             "broken kind:function(arm,size=0x20) addr:0x02000010\n"
             "sized kind:function(arm,size=0x100) addr:0x02000030\n"
-            "alias kind:function(arm,size=0x0) addr:0x02000030\n", encoding="utf-8")
+            "alias kind:function(arm,size=0x0) addr:0x02000030\n"
+            "lonely kind:function(arm,size=0x0) addr:0x02000200\n", encoding="utf-8")
         self.sha = {}
-        for name in ("good", "broken", "sized", "alias"):
+        for name in ("good", "broken", "sized", "alias", "lonely"):
             self.sha[name] = put(self.root / "src" / f"{name}.c", FIXED)
         self.man = self.root / "config" / "bytegate-known-failures.txt"
 
@@ -303,17 +341,38 @@ class MatchedConjunct(unittest.TestCase):
         after_coins = {c["login"]: c["coins"] for c in contrib["contributors"]}
         self.assertEqual(after_coins["matcher"], before_coins["matcher"] + 1)
 
-    def test_the_zero_size_alias_drops_and_its_sized_twin_is_untouched(self):
-        """The address-keying bug: both records sit on 0x02000030 and only the
-        zero-size one may be excluded."""
+    def test_the_zero_size_alias_leaves_the_count_entirely(self):
+        """Numerator AND denominator. The alias is a second name for `sized`, which is
+        already in the list at 0x02000030, so publishing it as an unmatched record put a
+        row in the total that nothing could ever clear -- it has no length to compare.
+
+        The address-keying half still has to hold: both records sit on 0x02000030 and
+        only the zero-size one may go."""
         self.man.write_text("", encoding="utf-8")
         recs, stats, _ = self.generate()
-        self.assertFalse(recs["alias"]["matched"])
-        self.assertEqual(recs["alias"]["byteGate"], "zero-size-alias")
+        self.assertNotIn("alias", recs, "a second name is not a second function")
         self.assertTrue(recs["sized"]["matched"],
                         "the sized primary is the body that SHOULD count")
         self.assertNotIn("byteGate", recs["sized"])
+        # good, broken, sized, lonely -- four records for five symbol lines.
+        self.assertEqual(stats["totalFunctions"], 4)
+        self.assertEqual(len(recs), 4)
         self.assertEqual(stats["matchedBytes"], 0x10 + 0x20 + 0x100)
+        # The alias carried no bytes, so removing it moves no byte total.
+        self.assertEqual(stats["totalBytes"], 0x10 + 0x20 + 0x100)
+
+    def test_a_zero_size_symbol_with_no_sized_twin_is_still_counted(self):
+        """The control. `lonely` is size 0 at an address nothing else claims, so it is
+        outstanding work, not a duplicate name, and it has to stay in both halves of the
+        fraction. A predicate that dropped every zero-size record would hide it, and the
+        published rate would rise on work nobody did."""
+        self.man.write_text("", encoding="utf-8")
+        recs, stats, _ = self.generate()
+        self.assertIn("lonely", recs)
+        self.assertEqual(recs["lonely"]["size"], 0)
+        self.assertTrue(recs["lonely"]["matched"],
+                        "src/lonely.c is a real source and nothing here may refuse it")
+        self.assertNotIn("byteGate", recs["lonely"])
 
     def test_a_lapsed_row_falls_back_to_counting_rather_than_guessing(self):
         """Permissive on staleness, by design: the count returns to the old behaviour

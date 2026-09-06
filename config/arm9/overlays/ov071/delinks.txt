@@ -205,6 +205,7 @@ src/func_ov071_021214f4.c:
     .text start:0x021214f4 end:0x0212152c
 
 src/func_ov071_0212152c.c:
+    complete
     .text start:0x0212152c end:0x02121570
 
 src/func_ov071_02121570.c:

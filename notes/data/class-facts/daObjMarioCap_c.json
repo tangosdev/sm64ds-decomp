@@ -1,0 +1,91 @@
+{
+  "class": "daObjMarioCap_c",
+  "rtti_name": "15daObjMarioCap_c",
+  "rtti_name_address": "0x021095b8",
+  "typeinfo": {
+    "symbol": "_ZTI15daObjMarioCap_c",
+    "address": "0x021095ac",
+    "kind": "__si_class_type_info",
+    "size": "0xc",
+    "words": ["0x0209a764", "0x021095b8", "0x021081c0"],
+    "base_typeinfo": "_ZTI12dEnemyBase_c (ov002 0x021081c0)"
+  },
+  "overlay": "ov002",
+  "module_base": "0x020ad660",
+  "vtable": {
+    "symbol": "_ZTV15daObjMarioCap_c",
+    "address": "0x021095f0",
+    "slots": 31,
+    "storage_start": "0x021095e8",
+    "storage_end": "0x0210966c",
+    "emitted_storage_size": "0x84",
+    "preamble": {"offset_to_top": "0x0", "rtti": "0x021095ac"},
+    "note": "the symbol IS the address point; the two ABI preamble words sit at -8 and -4. Corroborated from two directions: mwccarm's own emitted _ZTV section for this TU is 0x84 bytes, and 0x021095e8 + 0x84 = 0x0210966c is exactly _ZTI16daObjPushblock_c, the next class's record. 31 slots is dActor_c's table length -- this class adds no virtual, it only overrides."
+  },
+  "base_class": "dEnemyBase_c",
+  "base_evidence": "_ZTI15daObjMarioCap_c (ov002 0x021095ac) is a __si_class_type_info whose +8 word is 0x021081c0 = _ZTI12dEnemyBase_c, so the direct base is dEnemyBase_c and nothing else. Read directly out of extracted/overlays/overlay_0002.bin at module base 0x020ad660. Full chain: daObjMarioCap_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c, five levels, which is what the TU's twelve compiler-only records count out.",
+  "overrides": [
+    {"slot": 0, "address": "0x020b86d0", "name": "InitResources", "size": "0x4c8",
+     "note": "NOT reproduced. src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp compiles to 0x4d0 under the pinned 2004/b56 -- two instructions over the cartridge's 0x4c8 -- and its delinks.txt block carries no `complete` marker. It is the top function of the run and is held out of the promoted TU."},
+    {"slot": 3, "address": "0x020b8284", "name": "CleanupResources", "size": "0x110"},
+    {"slot": 6, "address": "0x020b84a8", "name": "Behavior", "size": "0x228"},
+    {"slot": 9, "address": "0x020b83c4", "name": "Render", "size": "0xe4"},
+    {"slot": 12, "address": "0x020b8394", "name": "OnPendingDestroy", "size": "0x30"},
+    {"slot": 16, "address": "0x020b6f18", "name": "~daObjMarioCap_c (D1)", "size": "0x50",
+     "note": "D1 SITS BELOW D0 (0x020b6f18 < 0x020b6f68) and no D2 exists anywhere in the image -- the reproducible direction. Declaring the destructor inline and first in daObjMarioCap_c.h emits exactly this pair in exactly this order."},
+    {"slot": 17, "address": "0x020b6f68", "name": "~daObjMarioCap_c (D0, deleting)", "size": "0x64"},
+    {"slot": 18, "address": "0x020b8270", "name": "OnYoshiTryEat", "size": "0x14",
+     "note": "THIS CLASS'S KEY FUNCTION once the destructor is inline: the first out-of-line virtual declared in the class body. The TU that defines it emits _ZTV/_ZTI/_ZTS and both destructor variants."},
+    {"slot": 19, "address": "0x020b81e0", "name": "OnTurnIntoEgg", "size": "0x90",
+     "note": "The ROM body produces no return value; dActor_c declares slot 19 as `int` and the cartridge leaves r0 alone on the way out."}
+  ],
+  "inherited_unchanged_slots": "slots 1,2,4,5,7,8,10,11,13,14,15,20-30 hold dEnemyBase_c's own words verbatim (arm9 0x0201xxxx / 0x02043xxx). Diffed word for word against _ZTV12dEnemyBase_c (ov002 0x021081e4); the nine slots above are the only differences, and they are exactly the nine methods include/daObjMarioCap_c.h declares.",
+  "factory": {
+    "symbol": "daObjMarioCap_c_classInit",
+    "address": "0x020b8b98",
+    "source": "src/d_a_obj_mario_cap.c",
+    "note": "OUTSIDE the promoted range. tu_map.py ends this TU's span at 0x020b8b98, and the factory is its own delinks entry above it. It calls _ZN7fBase_cnwEj(1040), constructs dEnemyBase_c, stores _ZTV15daObjMarioCap_c, then dCcAc_c at 0x110, dBgCh_Actr at 0x144, ModelAnim at 0x300, ShadowModel at 0x364 and dCapIcon_c at 0x3d0."
+  },
+  "profile": {
+    "symbol": "g_profile_OBJ_MARIO_CAP",
+    "address": "0x021095cc",
+    "size": "0x1c",
+    "words": ["0x020b8b98", "0x0061010d", "0x00800002", "0x00032000", "0x00032000", "0x01000000", "0x01000000"],
+    "note": "first word relocates to the factory; profile id 0x010d. The symbol is marked `ambiguous` in ov002/symbols.txt."
+  },
+  "size": "0x410",
+  "size_evidence": "the literal in the factory's fBase_c::operator new (1040 = 0x410), matched by the compile-time assert in include/daObjMarioCap_c.h. The destructor tears down the same five members in reverse order, closing the layout independently.",
+  "text_span": {
+    "start": "0x020b6f18",
+    "end": "0x020b8b98",
+    "functions": 30,
+    "licensed_start": "0x020b6f18",
+    "licensed_end": "0x020b86d0",
+    "licensed_functions": 29,
+    "boundary_confidence": "medium/medium (tools/tu_map.py). Left neighbour src/game/actors/d_a_obj_waterfall.cpp ends exactly at 0x020b6f18; the factory's own delinks entry begins exactly at 0x020b8b98."
+  },
+  "compiler_only_records": {
+    "count": 12,
+    "formula": "2 x (4 ancestors + self) = 10 vague-linkage RTTI records, + 1 vtable, + 1 for _ZN7Vector3D1Ev",
+    "vector3_term": "func_ov002_020b781c holds three Vector3 locals and func_ov002_020b76ec one; types.h gives Vector3 an inline destructor, so the TU odr-uses _ZN7Vector3D1Ev and emits its own four-byte copy. No file-local anonymous struct destructor appears.",
+    "externalized_output": "EMPTY. All twelve addresses have a configured ROM home in some module's symbols.txt (seven in arm9, five in ov002), so all twelve license as deadstrip-data / deadstrip-duplicate and the TU promotes."
+  },
+  "unproven": [
+    "every `unk_` field name in include/daObjMarioCap_c.h -- offsets and widths are observed from the bodies, the spellings are not recovered",
+    "the original names of the twenty-one func_ov002_020b* members; they occupy no vtable slot of any class in the image and the ROM names none of them",
+    "which of those twenty-one were file-local statics and which had external linkage",
+    "the reason src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp comes out 8 bytes long -- only that it does, reproducibly, under the pinned compiler",
+    "g_profile_OBJ_MARIO_CAP and daObjMarioCap_c_classInit are reconstructed source-style spellings, not recovered SM64DS symbols"
+  ],
+  "provenance": {
+    "worktree": "C:/tmp/sm64ds-mariocap",
+    "ref": "cpp/daObjMarioCap_c-tu (from origin/main 66779c216)",
+    "tools": [
+      "tools/tubuild.py inspect ov002/daObjMarioCap_c",
+      "tools/tubuild.py verify ov002/daObjMarioCap_c",
+      "tools/tubuild.py linkcheck ov002/daObjMarioCap_c",
+      "direct word reads of extracted/overlays/overlay_0002.bin at module base 0x020ad660",
+      "config/arm9/symbols.txt, config/arm9/overlays/ov002/{symbols,delinks}.txt"
+    ]
+  }
+}

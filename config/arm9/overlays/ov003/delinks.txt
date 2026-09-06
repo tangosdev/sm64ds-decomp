@@ -79,9 +79,17 @@ src/func_ov003_020ae238.c:
     complete
     .text start:0x020ae238 end:0x020ae358
 
+src/func_ov003_020ae358.c:
+    complete
+    .text start:0x020ae358 end:0x020ae6f0
+
 src/_ZN12dScStarSel_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020ae6f0 end:0x020ae6f4
+
+src/_ZN12dScStarSel_c6RenderEv.cpp:
+    complete
+    .text start:0x020ae6f4 end:0x020af038
 
 src/_ZN12dScStarSel_c16CleanupResourcesEv.cpp:
     complete

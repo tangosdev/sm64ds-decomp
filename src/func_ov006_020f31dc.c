@@ -1,6 +1,6 @@
-extern void func_ov006_020f2790(int this);
-extern int func_ov006_020f0d58(int this);
-void func_ov006_020f31dc(int this) {
+extern void func_ov006_020f2790(char *this);
+extern int func_ov006_020f0d58(char *this);
+void func_ov006_020f31dc(char *this) {
     int i;
     for (i = 0; i < 8; i++)
         func_ov006_020f2790(this);

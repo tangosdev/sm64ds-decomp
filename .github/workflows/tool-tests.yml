@@ -230,8 +230,10 @@ jobs:
 #                                      never as a NitroFS file ID.
 #   test_attribution            (17)   chaos_db_ci.py -- rebuilds chaos-db.json from
 #                                      COMMITTED history; the credit data the site reads.
-#   test_bytegate               (18)   bytegate.py -- the byte-gate-failure half of the
-#                                      matched test, over layout_check/relocs/srcpath.
+#   test_bytegate               (23)   bytegate.py -- the byte-gate-failure half of the
+#                                      matched test, over layout_check/relocs/srcpath,
+#                                      plus is_zero_size_alias, which decides whether a
+#                                      symbol is in the published DENOMINATOR at all.
 #   test_check_data_definitions  (3)   check_data_definitions.py -- WHICH objects the
 #                                      gate scans. It globbed only build/src/, which
 #                                      eligible.py never writes, so it skipped silently.
@@ -264,8 +266,9 @@ jobs:
 #                                      profile/class namespace split, actor/base layout
 #                                      distinction, overlay-address rejection, and the
 #                                      dry-run-only policy for ambiguous factory names.
-#   test_progress                (4)   progress.py -- matched functions/bytes vs the
-#                                      whole game; the number the README reports.
+#   test_progress                (5)   progress.py -- matched functions/bytes vs the
+#                                      whole game; the number the README reports, both
+#                                      halves of the fraction.
 #   test_rombuild               (37)   rombuild.py -- the source-to-ROM build itself:
 #                                      intact-TU policy resolution, per-file verdicts and
 #                                      the `.init` retargeting that decides which `.text`
