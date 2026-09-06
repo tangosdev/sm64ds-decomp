@@ -191,6 +191,47 @@ if(PORT_ROM_CLEAN)
     set(PORT_REPO_ROOT_EMBED "")
 endif()
 
+# PORT_REPO_ROOT IS SCOPED TO ITS TEN READERS, NOT PUT ON EVERY COMMAND LINE.
+#
+# It used to be a target-level define, which put the BUILD MACHINE'S ABSOLUTE
+# PATH on all 32,716 compile command lines while exactly ten source files in
+# the tree read it. Two costs came out of that. The command line is part of
+# every compiler cache's key, so two worktrees of the same commit -- ten lanes
+# build on one box tonight -- produced different keys for identical objects and
+# could never share a cached compile. And the path went into targets that never
+# needed it, which is noise in every log and every /showIncludes trace.
+#
+# The ten readers are listed here and get it as a SOURCE property, so the
+# define reaches exactly them and no other command line carries the path.
+# PORT_REPO_ROOT_DEF below is the empty variable that the target-level uses
+# were replaced with; leaving it defined (rather than deleting the arguments)
+# keeps every target_compile_definitions call's shape intact, so an appended
+# block that still spells the PORT_REPO_ROOT define out itself keeps
+# working -- it just puts the path back on that one target's command lines.
+#
+# ADDING AN ELEVENTH READER MEANS ADDING IT HERE. Seven of the ten carry
+# `#ifndef PORT_REPO_ROOT / #define PORT_REPO_ROOT "."`, so a missing entry
+# does not fail the compile -- it makes that file look for the asset tree in
+# the current directory at run time. The three tests (smoke_gx, smoke_soak,
+# smoke_soak_anim) have no fallback and fail the build loudly.
+set(PORT_REPO_ROOT_DEF "")
+set(PORT_REPO_ROOT_READERS
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs_mods.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs_names.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/stage_geom.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/romdata_loader.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/asset_root_refuse.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/sdat/sdat.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/smoke_gx.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/smoke_soak.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/smoke_soak_anim.cpp")
+foreach(_rr IN LISTS PORT_REPO_ROOT_READERS)
+    set_property(SOURCE "${_rr}" APPEND PROPERTY COMPILE_DEFINITIONS
+                 "PORT_REPO_ROOT=\"${PORT_REPO_ROOT_EMBED}\"")
+endforeach()
+
+
 # Build-time git tip embed (fault_probe.h's rich dump reports which build
 # crashed). Resolved at configure time via `git rev-parse`; a re-configure on a
 # new commit refreshes it. Emitted as a tiny .c so any target that wants the tip
@@ -241,7 +282,7 @@ target_include_directories(smoke_gx PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_gx PRIVATE ntr)
 target_compile_definitions(smoke_gx PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_gx PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -314,7 +355,7 @@ target_include_directories(smoke_model PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_model PRIVATE ntr)
 target_compile_definitions(smoke_model PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_model PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -330,7 +371,7 @@ target_include_directories(smoke_frames PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_frames PRIVATE ntr)
 target_compile_definitions(smoke_frames PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_frames PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -346,7 +387,7 @@ target_include_directories(smoke_soak PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_soak PRIVATE ntr)
 target_compile_definitions(smoke_soak PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_soak PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -403,7 +444,7 @@ target_include_directories(smoke_clsn PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_clsn PRIVATE ntr)
 target_compile_definitions(smoke_clsn PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_clsn PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -469,7 +510,7 @@ target_include_directories(smoke_modelanim PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_modelanim PRIVATE ntr)
 target_compile_definitions(smoke_modelanim PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_modelanim PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -516,7 +557,7 @@ target_include_directories(smoke_oam PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_oam PRIVATE ntr)
 target_compile_definitions(smoke_oam PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_oam PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -540,7 +581,7 @@ target_include_directories(smoke_soak_anim PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_soak_anim PRIVATE ntr)
 target_compile_definitions(smoke_soak_anim PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_soak_anim PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -557,7 +598,7 @@ target_include_directories(smoke_anim PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_anim PRIVATE ntr)
 target_compile_definitions(smoke_anim PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_anim PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -569,7 +610,7 @@ target_include_directories(smoke_fs PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_compile_definitions(smoke_fs PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_fs PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -679,7 +720,7 @@ target_include_directories(smoke_actor PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_actor PRIVATE ntr)
 target_compile_definitions(smoke_actor PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_actor PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -701,7 +742,7 @@ target_include_directories(smoke_savestate PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_savestate PRIVATE ntr)
 target_compile_definitions(smoke_savestate PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_savestate PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -734,7 +775,7 @@ target_include_directories(smoke_persist PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_persist PRIVATE ntr)
 target_compile_definitions(smoke_persist PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_persist PRIVATE /wd4311 /wd4312 /wd4068)
     # A disk state stores absolute pointers into the exe image (every actor's
@@ -13132,7 +13173,7 @@ target_include_directories(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(smoke_player PRIVATE ntr)
 target_compile_definitions(smoke_player PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
+    ${PORT_REPO_ROOT_DEF}
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
@@ -13398,7 +13439,7 @@ target_include_directories(walk_window PRIVATE
 # active size is byte-for-byte that build when the key is off.
 target_link_libraries(walk_window PRIVATE ntr_wide_rt)
 target_compile_definitions(walk_window PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
+    ${PORT_REPO_ROOT_DEF}
     # GATE 220 (run link100, lane FRAME): this target carries
     # port/slice_gate220.txt and hal/stage_frame.cpp, so _ZTV5Stage
     # slot 6 dispatches the ROM's own Stage::Behavior instead of the
@@ -13658,7 +13699,7 @@ target_include_directories(walk_window_hires PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(walk_window_hires PRIVATE ntr_hires)
 target_compile_definitions(walk_window_hires PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
+    ${PORT_REPO_ROOT_DEF}
     # GATE 220 (run link100, lane FRAME): this target carries
     # port/slice_gate220.txt and hal/stage_frame.cpp, so _ZTV5Stage
     # slot 6 dispatches the ROM's own Stage::Behavior instead of the
@@ -13708,7 +13749,7 @@ target_include_directories(smoke_sdat PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_compile_definitions(smoke_sdat PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(smoke_sdat PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -13845,7 +13886,7 @@ target_include_directories(mp_sleepwake PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(mp_sleepwake PRIVATE ntr)
 target_compile_definitions(mp_sleepwake PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(mp_sleepwake PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -13863,7 +13904,7 @@ target_include_directories(mp_sleepwake_rom PRIVATE
 target_link_libraries(mp_sleepwake_rom PRIVATE ntr)
 target_compile_definitions(mp_sleepwake_rom PRIVATE SM64DS_PLATFORM_PC
     MP_PROBE_ROM_THREADS
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(mp_sleepwake_rom PRIVATE /wd4311 /wd4312 /wd4068 /EHa)
 endif()
@@ -13886,7 +13927,7 @@ target_include_directories(mp_comms_seam PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 target_link_libraries(mp_comms_seam PRIVATE ntr)
 target_compile_definitions(mp_comms_seam PRIVATE SM64DS_PLATFORM_PC
-    PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}")
+    ${PORT_REPO_ROOT_DEF})
 if(MSVC)
     target_compile_options(mp_comms_seam PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
@@ -13913,3 +13954,227 @@ endif()
 # lane behind. port/tests/mp_sleepwake.cpp is not this lane's file.
 target_compile_definitions(mp_sleepwake PRIVATE PORT_OS_THREAD_HOST_PAIR)
 target_compile_definitions(mp_comms_seam PRIVATE PORT_OS_THREAD_HOST_PAIR)
+
+# ===========================================================================
+# ONE COMPILE OF THE TIER-INDEPENDENT SLICE
+# ===========================================================================
+#
+# THE PROBLEM. Three targets compile the whole matched slice: walk_window,
+# walk_window_hires and smoke_player. Their command lines are byte-identical
+# except for ONE define apiece -- NTR_WIDE_RT on the first (from ntr_wide_rt),
+# NTR_HIRES on the second (from ntr_hires), neither on the third. So the build
+# carried 32,716 compile edges over 10,276 distinct sources: a 3.2x duplicate
+# compile, and most of the port's build was cl.exe producing three identical
+# objects from one file.
+#
+# THE RULE. A translation unit can only differ between those three targets if a
+# DIVERGENT MACRO -- one defined for some of them and not the others -- is
+# visible in its include closure. Everything else compiles to the same bytes
+# under all three and needs to be compiled once. In this tree the divergent set
+# is NTR_WIDE_RT and NTR_HIRES, and only four files in the whole port mention
+# either: ntr/include/ntr/ppu.h, ntr/ppu.cpp, ntr/ppu_sub.cpp and
+# tests/walk_window.cpp. Nothing under src/ or include/ reaches them at all.
+#
+# HOW IT IS DECIDED. Not by a hand-kept list. The divergent set is computed
+# below as the SYMMETRIC DIFFERENCE of the three targets own compile
+# definitions, and tools/tierscan.py walks each candidate's transitive include
+# closure over this build's own -I set and asks whether any file in it MENTIONS
+# a divergent name. Mentioning is coarser than using on purpose: a comment
+# about NTR_HIRES is enough to keep a TU per-target. Add a define to one of
+# these targets and not the others and the split re-derives itself; the shared
+# library shrinks and the build stays correct with no edit here.
+#
+# WHY IT IS AT THE BOTTOM OF THE FILE. Every lane appends slice_gate rows to
+# these targets. This block reads the SOURCES property back off the targets
+# after all of that has happened, so an appended row is picked up with no
+# knowledge of this block at all. A row appended to ALL THREE targets joins the
+# shared compile; a row appended to ONE stays per-target, which is what it has
+# to do. A block appended BELOW this one still builds -- its sources just
+# compile per target, the way every source did before this block existed.
+#
+# WHAT DOES NOT CHANGE. The three target names, their link lines, their
+# defines, their /MAP output, and every source-file property (the per-TU
+# COMPILE_DEFINITIONS the vtable and global slices set, the /vmg /vmm rows, the
+# forced includes). Source properties are directory-scoped and the object
+# library is in this same directory, so it inherits all of them.
+
+set(PORT_SHARE_TARGETS walk_window walk_window_hires smoke_player)
+
+set(_share_targets "")
+foreach(_t IN LISTS PORT_SHARE_TARGETS)
+    if(TARGET ${_t})
+        list(APPEND _share_targets ${_t})
+    endif()
+endforeach()
+list(LENGTH _share_targets _share_n)
+
+if(_share_n GREATER 1)
+    # -- the divergent macro set: names defined for some of these, not all.
+    set(_defs_all "")
+    set(_defs_common "")
+    set(_first TRUE)
+    foreach(_t IN LISTS _share_targets)
+        get_target_property(_d ${_t} COMPILE_DEFINITIONS)
+        if(NOT _d)
+            set(_d "")
+        endif()
+        # A PUBLIC definition inherited through a linked library (NTR_WIDE_RT
+        # from ntr_wide_rt, NTR_HIRES from ntr_hires) is not in
+        # COMPILE_DEFINITIONS, so read it off the linked targets as well --
+        # those two ARE the divergence this block exists for.
+        get_target_property(_libs ${_t} LINK_LIBRARIES)
+        if(_libs)
+            foreach(_l IN LISTS _libs)
+                if(TARGET ${_l})
+                    get_target_property(_ld ${_l} INTERFACE_COMPILE_DEFINITIONS)
+                    if(_ld)
+                        list(APPEND _d ${_ld})
+                    endif()
+                endif()
+            endforeach()
+        endif()
+        # Divergence is decided on the NAME (PORT_REPO_ROOT="..." is one name
+        # with a value), but what the shared library must be COMPILED with is
+        # the full definition, value and all -- so both are collected.
+        set(_names "")
+        foreach(_one IN LISTS _d)
+            string(REGEX REPLACE "=.*$" "" _n "${_one}")
+            list(APPEND _names "${_n}")
+        endforeach()
+        list(APPEND _defs_all ${_names})
+        if(_first)
+            set(_defs_common ${_d})
+            set(_first FALSE)
+        else()
+            set(_keep "")
+            foreach(_one IN LISTS _defs_common)
+                if("${_one}" IN_LIST _d)
+                    list(APPEND _keep "${_one}")
+                endif()
+            endforeach()
+            set(_defs_common ${_keep})
+        endif()
+    endforeach()
+    # _defs_common carries values; the divergence test needs names.
+    set(_common_names "")
+    foreach(_one IN LISTS _defs_common)
+        string(REGEX REPLACE "=.*$" "" _one "${_one}")
+        list(APPEND _common_names "${_one}")
+    endforeach()
+    list(REMOVE_DUPLICATES _defs_all)
+    set(PORT_DIVERGENT_DEFINES ${_defs_all})
+    if(_common_names)
+        list(REMOVE_ITEM PORT_DIVERGENT_DEFINES ${_common_names})
+    endif()
+    message(STATUS "SLICE SHARE: divergent defines = ${PORT_DIVERGENT_DEFINES}")
+
+    # -- the candidate set: sources every sharing target compiles.
+    set(_common_srcs "")
+    set(_first TRUE)
+    foreach(_t IN LISTS _share_targets)
+        get_target_property(_s ${_t} SOURCES)
+        set(_abs "")
+        set(_genex_${_t} "")
+        foreach(_one IN LISTS _s)
+            if(_one MATCHES "\\$<")
+                # A generator expression is not a file and can never
+                # be part of the shared compile, but it must survive
+                # back onto the target it was already on.
+                list(APPEND _genex_${_t} "${_one}")
+                continue()
+            endif()
+            if(NOT IS_ABSOLUTE "${_one}")
+                set(_one "${CMAKE_CURRENT_SOURCE_DIR}/${_one}")
+            endif()
+            get_filename_component(_one "${_one}" ABSOLUTE)
+            list(APPEND _abs "${_one}")
+        endforeach()
+        set(_srcs_${_t} ${_abs})
+        if(_first)
+            set(_common_srcs ${_abs})
+            set(_first FALSE)
+        else()
+            set(_keep "")
+            foreach(_one IN LISTS _common_srcs)
+                if("${_one}" IN_LIST _abs)
+                    list(APPEND _keep "${_one}")
+                endif()
+            endforeach()
+            set(_common_srcs ${_keep})
+        endif()
+    endforeach()
+    list(REMOVE_DUPLICATES _common_srcs)
+
+    # -- split it. A GENERATED source does not exist on a fresh configure, so
+    # tierscan cannot read it. Those are emitted by tools/romdata.py and
+    # tools/ovdata.py, whose only emitted includes are <string.h> and
+    # <stdio.h>, so they can carry no divergent macro by construction and are
+    # classified shared without a scan. Nothing else is trusted unread.
+    set(_scan_srcs "")
+    set(_gen_srcs "")
+    foreach(_one IN LISTS _common_srcs)
+        string(FIND "${_one}" "${CMAKE_BINARY_DIR}" _in_build)
+        if(_in_build EQUAL 0)
+            list(APPEND _gen_srcs "${_one}")
+        else()
+            list(APPEND _scan_srcs "${_one}")
+        endif()
+    endforeach()
+
+    string(REPLACE ";" "\n" _scan_txt "${_scan_srcs}")
+    file(WRITE "${CMAKE_BINARY_DIR}/tierscan_candidates.txt" "${_scan_txt}\n")
+    set(_tierscan_args
+        "${CMAKE_CURRENT_SOURCE_DIR}/tools/tierscan.py"
+        --sources "${CMAKE_BINARY_DIR}/tierscan_candidates.txt"
+        --out "${CMAKE_BINARY_DIR}/tierscan_split.cmake"
+        --cache "${CMAKE_BINARY_DIR}/tierscan_cache.json"
+        --incdir "${CMAKE_CURRENT_SOURCE_DIR}"
+        --incdir "${PORT_REPO_ROOT_ABS}/include"
+        --incdir "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
+    foreach(_m IN LISTS PORT_DIVERGENT_DEFINES)
+        list(APPEND _tierscan_args --macro "${_m}")
+    endforeach()
+    execute_process(COMMAND python ${_tierscan_args}
+                    RESULT_VARIABLE _tierscan_rc)
+    if(NOT _tierscan_rc EQUAL 0)
+        message(FATAL_ERROR "tierscan.py failed (${_tierscan_rc}); refusing to "
+                            "guess which TUs are tier-independent")
+    endif()
+    include("${CMAKE_BINARY_DIR}/tierscan_split.cmake")
+    list(APPEND PORT_TIER_SHARED ${_gen_srcs})
+    list(LENGTH PORT_TIER_SHARED _n_shared)
+    list(LENGTH PORT_TIER_PERTGT _n_pertgt)
+    message(STATUS "SLICE SHARE: ${_n_shared} sources compiled ONCE, "
+                   "${_n_pertgt} still per target, across ${_share_n} targets")
+
+    if(_n_shared GREATER 0)
+        add_library(port_slice_shared OBJECT ${PORT_TIER_SHARED})
+        target_include_directories(port_slice_shared PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}"
+            "${CMAKE_CURRENT_SOURCE_DIR}/../include"
+            "${CMAKE_CURRENT_SOURCE_DIR}/ntr/include")
+        # Exactly the definitions all sharing targets agree on. A name in the
+        # divergent set is what kept a TU out of here in the first place, so by
+        # construction nothing in this library can see one.
+        foreach(_one IN LISTS _defs_common)
+            target_compile_definitions(port_slice_shared PRIVATE "${_one}")
+        endforeach()
+        if(MSVC)
+            target_compile_options(port_slice_shared PRIVATE
+                                   /wd4311 /wd4312 /wd4068 /wd4576)
+        endif()
+
+        # Swap each target's copy of the shared sources for the one build of
+        # them. Nothing else about the target is touched.
+        foreach(_t IN LISTS _share_targets)
+            set(_keep ${_genex_${_t}})
+            foreach(_one IN LISTS _srcs_${_t})
+                if(NOT "${_one}" IN_LIST PORT_TIER_SHARED)
+                    list(APPEND _keep "${_one}")
+                endif()
+            endforeach()
+            set_property(TARGET ${_t} PROPERTY SOURCES ${_keep})
+            target_sources(${_t} PRIVATE $<TARGET_OBJECTS:port_slice_shared>)
+        endforeach()
+    endif()
+endif()

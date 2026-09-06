@@ -51,6 +51,7 @@ variable whose value is computed) would not be seen. Those are rare and are
 not how a hand written host copy or a raw reader enters the build today.
 """
 
+import concurrent.futures
 import os
 import re
 import sys
@@ -299,6 +300,20 @@ def blank_comments(src):
     return "".join(out)
 
 
+def _read_workers():
+    """How many files to have open at once.
+
+    This scan is not compute: profiling it on this tree put 113 of its 122
+    seconds inside _io.open, across roughly ten thousand source files, at about
+    eleven milliseconds an open -- the on-access virus scanner and ten other
+    lanes hammering the same disk. Opens release the GIL, so threads are the
+    right lever and the count wants to be well past the core count. Nothing
+    about WHAT is checked changes: the pool preserves input order, so the
+    reported offenders come out in exactly the order the serial loop produced.
+    """
+    return min(16, (os.cpu_count() or 4) * 2)
+
+
 def scan_file(rel, abs_path):
     """Return a list of (rel, lineno, symbol, remedy) offenders in one TU.
 
@@ -321,8 +336,10 @@ def main():
     files = build_tu_set(port_dir, repo_dir)
 
     offenders = []
-    for rel, abs_path in files:
-        offenders.extend(scan_file(rel, abs_path))
+    with concurrent.futures.ThreadPoolExecutor(
+            max_workers=_read_workers()) as pool:
+        for found in pool.map(lambda item: scan_file(item[0], item[1]), files):
+            offenders.extend(found)
 
     if not offenders:
         print(

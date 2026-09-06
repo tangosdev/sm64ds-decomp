@@ -446,6 +446,16 @@ CONFIG_ROW = re.compile(r"^(\S+)\s+kind:\S+\s+addr:0x([0-9a-fA-F]+)")
 BUILD_RULE = re.compile(
     r"^build CMakeFiles\\(\w+)\.dir\\([^:]+?\.obj): \S+ (\S+)", re.MULTILINE)
 
+# `build <name>.exe: CXX_EXECUTABLE_LINKER__<target>_<cfg> <obj> <obj> ...`
+# The link line is read because an executable's objects no longer all live in
+# its own CMakeFiles directory: the tier-independent slice is compiled once
+# into an OBJECT library and linked into three executables, so walk_window.exe
+# carries objects out of CMakeFiles\port_slice_shared.dir. Only the link edge
+# says which objects are actually in which binary.
+LINK_RULE = re.compile(
+    r"^build ([^:\n]+?\.exe): CXX_EXECUTABLE_LINKER__\S+ ([^\n|]*)",
+    re.MULTILINE)
+
 CALL, JMP = 0xE8, 0xE9
 
 REMEDY_JUMP = (
@@ -673,6 +683,19 @@ def object_sources(build_dir):
     walk_window's alone. Keeping the target in the key is what makes that safe:
     the tree builds twenty-odd harnesses out of overlapping source sets and a
     basename read across all of them collides constantly.
+
+    WHAT "TARGET" MEANS HERE IS THE BINARY, NOT THE CMAKE DIRECTORY. It used to
+    be both, because every source was compiled once per executable and so every
+    object in walk_window.map came out of CMakeFiles/walk_window.dir. That is
+    no longer true: the tier-independent slice is compiled ONCE into an OBJECT
+    library and linked into three executables, so walk_window.map names objects
+    from CMakeFiles/port_slice_shared.dir. Looking those up under the map's own
+    target name found nothing and skipped the row, which this guard correctly
+    refuses to read as a pass. So the mapping is now built from the LINK EDGE:
+    every compile rule indexed by its FULL object path, then each executable's
+    own input list resolved through it. The per-binary basename key is
+    unchanged, and identifying the object by path rather than by the directory
+    it was assumed to live in is strictly more precise than the old read.
     """
     ninja = os.path.join(build_dir, 'build.ninja')
     if not os.path.isfile(ninja):
@@ -683,13 +706,37 @@ def object_sources(build_dir):
             "an MSVC map names an object by its basename alone." % ninja)
     with open(ninja, errors='replace') as f:
         text = f.read()
-    out = {}
-    for target, obj, src in BUILD_RULE.findall(text):
-        base = obj.split('\\')[-1]
+
+    # every compile rule, keyed by the object's full path
+    by_path = {}
+    for cmake_dir, obj, src in BUILD_RULE.findall(text):
+        full = ('CMakeFiles\\%s.dir\\%s' % (cmake_dir, obj)).lower()
         src = src.replace('$:', ':').replace('\\', '/')
-        out.setdefault((target, base), set()).add(src)
-    if not out:
+        by_path.setdefault(full, set()).add(src)
+    if not by_path:
         raise Refused("%s parsed to zero compile rules" % ninja)
+
+    # every executable, resolved through its own link inputs
+    out = {}
+    linked = 0
+    for exe, inputs in LINK_RULE.findall(text):
+        target = os.path.splitext(os.path.basename(exe))[0]
+        for tok in inputs.split():
+            if not tok.lower().endswith('.obj'):
+                continue
+            srcs = by_path.get(tok.replace('$:', ':').lower())
+            if not srcs:
+                continue
+            out.setdefault((target, tok.split('\\')[-1]), set()).update(srcs)
+            linked += 1
+    if not linked:
+        # No link edge parsed: fall back to the directory read rather than
+        # refuse, so a generator whose link lines this cannot parse degrades to
+        # the old behaviour instead of blocking a build.
+        for cmake_dir, obj, src in BUILD_RULE.findall(text):
+            base = obj.split('\\')[-1]
+            src = src.replace('$:', ':').replace('\\', '/')
+            out.setdefault((cmake_dir, base), set()).add(src)
     return out
 
 
