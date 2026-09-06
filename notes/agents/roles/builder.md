@@ -52,7 +52,11 @@ that does not match `HEAD` — so the ratchet and its commit must come **before*
     python tools/check_duplicate_sources.py
     python tools/check_dead_references.py
     python tools/cpp_tu_state.py --check-note
-    #    ^ notes/cpp-tu-current-state.md is generated and goes stale on every
+    #    ^ --write-note EXITS 2 on a dirty tree, which is exactly the state the
+    #      rebase recipe leaves you in, and its message tells you to STASH --
+    #      which this file forbids (shared across worktrees; unstages
+    #      deletions). Use `git add -A`, then re-run.
+    #      notes/cpp-tu-current-state.md is generated and goes stale on every
     #      promotion. Regenerate with --write-note and commit it in the same
     #      PR; a stale note on
     #      main is how the queue starts lying about what is already promoted.
@@ -144,7 +148,10 @@ and addend), and `reloc_audit` (destination identity).
 **`romdata_check`'s per-symbol verdicts are not reachable from the CLI.**
 `--show` only slices `report["differing"]` and `--json` carries counts. To prove
 a specific symbol's identity — which is how the cross-module RTTI claim was
-settled — import the module and call `check_object()` directly. The signature is
+settled — import the module and call `check_object()` directly. **The records DO carry an address** — this file used to say they carry `module`
+but no address field. The keys are exactly `symbol, module, addr, bytes,
+emitted, romExtent, blindWords, verdict`. The verdict key is `verdict`; printing
+`status`/`result`/`state` gives `None`. The signature is
 `check_object(obj_path, rel, names=None)` — passing a rom index positionally
 raises `TypeError: got multiple values for argument 'names'`. **Pass
 `names=romdata_check.name_index()`**: without it `module` comes back `None`,
@@ -254,10 +261,31 @@ owners the validator printed, with **0 disagreements**.
 the source — the workflows that read history correctly set `fetch-depth: 0`.
 Local agent runs are.
 
+**An attribution override has no effect until it is committed.** With all rows
+present in the working tree the gate still reported `0 consolidated, 71 lost` —
+unchanged. After `git commit`, the identical rows gave `71 consolidated, 0
+changed, 0 lost`. A builder who edits, re-runs, and sees no movement will
+reasonably conclude overrides are the wrong mechanism. Commit, then re-run.
+
 **So: never bank an attribution override from a shallow clone.** If
 `--is-shallow-repository` prints true, run `git fetch --unshallow` and recompute
 before writing anything. Worktrees share the parent clone's `.git`, so one
 shallow clone makes every worktree cut from it shallow too.
+
+## Two PowerShell traps that read as other people's bugs
+
+- **`git commit -F @'...'@` does not fail at parse time.** PowerShell passes the
+  here-string *body* as a filename, and git dies with `...: No such file or
+  directory` — which reads like a git problem, not a shell one. Write the
+  message to a class-unique scratch file and pass `-F <path>`.
+- **No PowerShell pipeline form gives live progress from a backgrounded build.**
+  `Select-Object -Last N`, `Tee-Object -FilePath` and `Out-File` all buffer
+  identically; the log file stays at 0 bytes until the process exits. A
+  backgrounded `linkcheck` cannot be watched at all — poll `build/tu/<id>/`
+  directory mtimes instead.
+- `jq` is **not** on PATH in the Bash tool here; only `gh`'s built-in `--jq`.
+  A monitor built on `jq` fails silently with `command not found` and produces
+  no events at all, which looks like the thing you are watching never finished.
 
 ## Do not use `git stash` in this repo
 

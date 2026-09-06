@@ -29,7 +29,13 @@ with, but **the conflict detector does not compare parameter types**: it will
 print `no cross-file conflicts detected` over a file carrying two contradictory
 declarations of the same helper (`extern "C" int f(char*)` from one shard and
 `int f(Class*)` from another), and even a nested `extern "C" { extern "C" ... }`.
-`create` can emit a TU that does not compile. Read what it wrote. Two more
+`create` can emit a TU that does not compile. **At any real size, discard the
+generated preamble and hand-curate one declaration per symbol — do not try to
+repair it.** The measured failure mode is not a typo you can patch: comment
+hoisting **split a multi-line declaration in half**, leaving a bare
+`int flags, int speed, unsigned int startFrame);` at file scope with no return
+type and no name, alongside two contradictory `PMF` typedefs and one data symbol
+declared three mutually exclusive ways in the same file. Two more
 collision classes it misses, both measured:
 
 - **The `/* TUBUILD CONFLICT ... */` blocks are not comment-safe.** An alternate
@@ -193,7 +199,12 @@ steps the dry-run does not print:
    edit itself invalidates any earlier baseline, since the fingerprint is
    `trackedConfigArm9Sha256`.
 
-5. **Rewrite each manifest conflict note** from `tubuild create warning:
+5. **Rewrite each manifest CONFLICT note — and only those.**
+   `check_tubuild_conflicts.py`'s `NOTE_RE` matches only
+   `CONFLICT: (macro|extern declaration|local declaration)`. `create` also emits
+   `RAW:` warnings, which the gate never reads; rewriting them is wasted work and
+   editing them can only break things. Measured: 40 CONFLICT notes marked, 3
+   `RAW:` notes left alone, gate green. Rewrite from `tubuild create warning:
    CONFLICT:` to `tubuild create warning (RESOLVED): CONFLICT:`, or
    `check_tubuild_conflicts.py` fails once per note. **Keep the trailing
    `; kept the first` verbatim** and append your resolution after it — the
@@ -316,6 +327,16 @@ anonymous struct holding those locals emits its own destructor,
 the one disposition you will rarely otherwise use. So: **count the `Vector3`s the
 TU touches, members and locals alike, and add one more for any local anonymous
 struct containing them.**
+
+**Correction, measured: the Vector3 term is `+1` if the TU odr-uses `Vector3`
+AT ALL — not one per object.** The emitted symbol is the single vague-linkage
+`_ZN7Vector3D1Ev`, so the count is one however many objects there are.
+`daObjMarioCap_c` odr-uses **four** (three locals in one function, one in
+another), has **no** `Vector3` member, and got exactly **one** extra row: 12 =
+2x5 + 1 + 1. Read literally, "1 per Vector3" predicts 4 or 5. The worked examples
+above are consistent with the corrected rule; only the prose was wrong. The
+local-anonymous-struct term is separate and genuinely additive — that one emits
+its own distinct `_ZN<N>@class$<n><file>_cppD1Ev`.
 
 `daPgDfdr_c` (`dBgActor_c` -> `dActor_c` -> `dBase_c` -> `fBase_c`, 5 levels)
 needs 2x5+2 = **12**. Its oracle `daIDonketu_c` sits one level deeper and needs
@@ -592,7 +613,14 @@ Ask the compiler rather than hand-mangling:
   `dScMgRoulette_c` the field reads `144`, which is correct and equal to
   `emitted`/`bytes`. So it is unreliable rather than always-wrong: never take it
   alone, and corroborate as above.
-- **`verify` prints no `_ZTV` section size.** This file said twice to cross-check
+- **`verify` DOES print a `_ZTV` size while the licensing policy is still
+  missing**, and that is worth exploiting. Each unlicensed symbol gets an
+  `EXTRA <section> <symbol> size=0x..` line, e.g.
+  `EXTRA .data _ZTV15daObjMarioCap_c size=0x84`. That is **mwcc's own emitted
+  storage size**, free, before you read a single ROM word — the cheapest of the
+  three corroborations for the extent. Run `verify` once before writing the
+  licensing policy just to harvest it.
+- **On a green run, `verify` prints no `_ZTV` section size.** This file said twice to cross-check
   against one. It does not exist; `verify` prints the MATCH table, byte
   comparison, objisolate, emission order and the result.
 - **Corroborate every slot count, but `rtti_vtables.py` is no longer the known-bad
@@ -681,7 +709,16 @@ three.
 leads with `<<< promotion would be REFUSED` while `status` is `text-verified`,
 which is expected and is not a defect in your branch — you need the plan in
 order to *reach* the status flip. One run stopped after step 3, another printed
-all six steps and exited 0; either way read what it gives you.
+all six steps and exited 0; a third printed the **complete** plan (1, 2, 3, 4,
+4b, 5, 6) and exited **1**. **So the exit code carries no information about plan
+completeness** — read the output, never the status, and do not re-run just
+because it exited non-zero.
+
+**Two of its steps are missing from the hand-promotion list above, and nothing
+gates them:** the dry-run also prints RETARGET of `srcPath` in
+`config/match_provenance.jsonl` and `config/match_attempts.jsonl`. A writer
+following the list alone leaves both dangling, and `check_dead_references` walks
+only `.md`, so no gate notices.
 
 **`no current eligibility report` from the pre-push hook is expected in a fresh
 worktree** — it prints "skipping", not "passed", and it is not a failure. It
