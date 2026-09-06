@@ -907,8 +907,30 @@ extern "C" void port_actor_tick(void)
        same statement, in the same position in the frame, reaching the same
        word. Stage::VE_Init, Stage::LC_Update and Stage::PS_Update re-latch it
        at their own points on the ROM; those paths are not hosted here and are
-       named in runs/mg16/status/FIXC4.md as an honest gap. */
-    data_0209b464 = (unsigned)data_0209b454[0];
+       named in runs/mg16/status/FIXC4.md as an honest gap.
+
+       RETIRED (run link100, lane FRAME), and the paragraph above is its own
+       retirement argument. It says this line is "the same statement, in the
+       same position in the frame" as Stage::Behavior's first one, standing in
+       because every Stage slot trapped. Slot 6 holds the ROM's own
+       Stage::Behavior now, and it runs where that paragraph says it runs: at
+       the head of the behaviour list this function is about to walk, before any
+       other body. The stand-in and the statement would be the same write to the
+       same word twice, one line apart -- harmless (it is a copy of one word,
+       which is why section 12b of port/stage_lifecycle_map.txt classed it
+       IDEMPOTENT and survivable) and untrue, because it would leave the file
+       claiming the Stage does not latch its own mask.
+
+       AND THE GAP IN THE LAST SENTENCE CLOSES WITH IT: Stage::VE_Init,
+       Stage::LC_Update and Stage::PS_Update re-latch data_0209b464 at their own
+       points, and all three are in the link now behind slot 6
+       (port/slice_gate220.txt). runs/mg16/status/FIXC4.md's honest gap is a
+       gap no longer.
+
+       IF THE STAGE IS NOT THE FIRST NODE this retirement is wrong, so it is
+       measured rather than argued: port/tools/stage_pause_proof.py rung 2 reads
+       the behaviour list in walk order out of the SM64DS_TRACE_LISTS line
+       printed immediately below and fails unless the Stage heads it. */
 
     data_02099f24[0] = 3;
     port_list_trace("behaviour", data_020a4b78);

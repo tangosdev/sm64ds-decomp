@@ -2398,3 +2398,85 @@ Link100OstiCheck g_link100_osti_check;
 #pragma comment(linker, "/alternatename:?data_020758c8@@3PAHA=_data_020758c8")
 #pragma comment(linker, "/alternatename:?data_02092130@@3HA=_data_02092130")
 #pragma comment(linker, "/alternatename:?data_0209f278@@3EA=_data_0209f278")
+// ---- link100 FRAME ----
+//
+// _ZTV5Stage slot 6 seats the ROM's own Stage::Behavior (port/slice_gate220.txt,
+// hal/stage_frame.cpp, port/stage_lifecycle_map.txt section 13). The gate brings
+// fifty-six matched TUs into the link at once -- the pause screen, its five menu
+// arms, the Message::Display* family and the VS-exit pair -- and that set spans
+// BOTH recovery styles: some of those TUs were recovered as flat C and publish
+// _ZN5Stage20PS_UpdateOptionsMenuEv, some as real C++ against a shared header and
+// publish ?PS_UpdateOptionsMenu@Stage@@SAXXZ. One function, two spellings, and
+// which one a caller writes depends only on which style ITS OWN file was
+// recovered in. Every row below binds one such pair.
+//
+// NOTHING HERE CHANGES A BODY. Each left-hand side is a name no object in this
+// tree defines -- that is why it needed an alias -- and each right-hand side is
+// the same function or the same word under its other spelling. The pairs were
+// not typed: they were read out of the gate's own compiled objects with
+// dumpbin, matched by (class, member), and every one was then checked for its
+// CALLING CONVENTION before it was written here. Two pairs failed that check
+// and are NOT below: ?Display@Message@@QAEXI@Z and ?CanPause@Player@@QAEHXZ are
+// __thiscall instance methods whose callers are __cdecl, so an alias would have
+// left the receiver in a register nobody wrote and double-cleaned the stack.
+// Both are faces in hal/stage_frame.cpp instead, with the derivation beside
+// them.
+//
+// THE DATA ROWS, twenty-six of them. A .cpp-recovered TU that declares
+// `extern u8 data_0209f22c;` outside an extern "C" block decorates the
+// reference as ?data_0209f22c@@3EA; the port's host storage is the C name
+// _data_0209f22c. Same word, same address, and the alias runs in the ordinary
+// direction (an UNDEFINED name pointed at a DEFINED one), so none of them can
+// be defeated the way port/tools/alternatename_guard.py checks for.
+#pragma comment(linker, "/alternatename:?data_020755c0@@3PAGA=_data_020755c0")
+#pragma comment(linker, "/alternatename:?data_020755c4@@3PAGA=_data_020755c4")
+#pragma comment(linker, "/alternatename:?data_020755cc@@3PAGA=_data_020755cc")
+#pragma comment(linker, "/alternatename:?data_02075610@@3RCHC=_data_02075610")
+#pragma comment(linker, "/alternatename:?data_0209d4c8@@3VTimer@@A=_data_0209d4c8")
+#pragma comment(linker, "/alternatename:?data_0209f1ec@@3EA=_data_0209f1ec")
+#pragma comment(linker, "/alternatename:?data_0209f210@@3EA=_data_0209f210")
+#pragma comment(linker, "/alternatename:?data_0209f218@@3EA=_data_0209f218")
+#pragma comment(linker, "/alternatename:?data_0209f22c@@3EA=_data_0209f22c")
+#pragma comment(linker, "/alternatename:?data_0209f230@@3EA=_data_0209f230")
+#pragma comment(linker, "/alternatename:?data_0209f238@@3EA=_data_0209f238")
+#pragma comment(linker, "/alternatename:?data_0209f23c@@3EA=_data_0209f23c")
+#pragma comment(linker, "/alternatename:?data_0209f240@@3EA=_data_0209f240")
+#pragma comment(linker, "/alternatename:?data_0209f244@@3EA=_data_0209f244")
+#pragma comment(linker, "/alternatename:?data_0209f248@@3EA=_data_0209f248")
+#pragma comment(linker, "/alternatename:?data_0209f280@@3EA=_data_0209f280")
+#pragma comment(linker, "/alternatename:?data_0209f29c@@3EA=_data_0209f29c")
+#pragma comment(linker, "/alternatename:?data_0209f2b4@@3EA=_data_0209f2b4")
+#pragma comment(linker, "/alternatename:?data_0209f2c8@@3EA=_data_0209f2c8")
+#pragma comment(linker, "/alternatename:?data_0209f2cc@@3EA=_data_0209f2cc")
+#pragma comment(linker, "/alternatename:?data_0209f2e0@@3EA=_data_0209f2e0")
+#pragma comment(linker, "/alternatename:?data_0209f2e4@@3EA=_data_0209f2e4")
+#pragma comment(linker, "/alternatename:?data_0209f2ec@@3EA=_data_0209f2ec")
+#pragma comment(linker, "/alternatename:?data_0209f2f0@@3EA=_data_0209f2f0")
+#pragma comment(linker, "/alternatename:?data_0209f300@@3GA=_data_0209f300")
+#pragma comment(linker, "/alternatename:?data_0209f5bc@@3PAUUnkVis@@A=_data_0209f5bc")
+//
+// THE FIVE FUNCTION ROWS, each with where its right-hand side comes from:
+//
+//   ?GetBG1ScrPtr@G2S@@YAPAGXZ            src/_ZN3G2S12GetBG1ScrPtrEv.c, on the
+//     gate. The callers spell it as a namespace-scope free function
+//     (`namespace G2S { u16 *GetBG1ScrPtr(); }`) because that is how the
+//     .cpp-recovered menu arms declare it; the flat-C TU publishes the ROM's
+//     own name. hal/scene_mg_slot3.cpp:700 already carries the identical row
+//     for the MAIN-engine twin, ?GetBG1ScrPtr@G2@@SAPAXXZ.
+//   ?PauseMusic@Sound@@SAXXZ              src/_ZN5Sound10PauseMusicEv.c, on the
+//     gate. Stage::PS_Init's only unhosted callee.
+//   ?SetBlendBrightness@G2x@@SAXPCGHF@Z   already in walk_window.map as
+//     __ZN3G2x18SetBlendBrightnessEPVtts. PS_Init's other one.
+//   __ZN5Stage20PS_UpdateOptionsMenuEv    the reverse direction, and the pair
+//   __ZN5Stage25PS_UpdateOkAndBackButtonsEb  that shows the split is not about
+//     C++ always losing: here the CALLER (src/_ZN5Stage9PS_UpdateEv.cpp, itself
+//     .cpp-recovered) spells the flat-C name in an extern "C" block while the
+//     two menu arms were recovered as real C++ statics. Both are __cdecl on
+//     both sides -- a static member and a flat C function have the same frame
+//     -- and the second's bool/int parameter is one four-byte stack slot in
+//     either spelling.
+#pragma comment(linker, "/alternatename:?GetBG1ScrPtr@G2S@@YAPAGXZ=__ZN3G2S12GetBG1ScrPtrEv")
+#pragma comment(linker, "/alternatename:?PauseMusic@Sound@@SAXXZ=__ZN5Sound10PauseMusicEv")
+#pragma comment(linker, "/alternatename:?SetBlendBrightness@G2x@@SAXPCGHF@Z=__ZN3G2x18SetBlendBrightnessEPVtts")
+#pragma comment(linker, "/alternatename:__ZN5Stage20PS_UpdateOptionsMenuEv=?PS_UpdateOptionsMenu@Stage@@SAXXZ")
+#pragma comment(linker, "/alternatename:__ZN5Stage25PS_UpdateOkAndBackButtonsEb=?PS_UpdateOkAndBackButtons@Stage@@SAX_N@Z")

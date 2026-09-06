@@ -131,6 +131,41 @@ NAMED = [
     # spelled as a C literal for the reason every other row here exists: the
     # port does not write Nintendo's bytes down, it reads them.
     "data_0209a048",
+    # Run link100 lane FRAME: the EIGHT arm9 .data rows _ZTV5Stage slot 6's
+    # closure reads. Seating the ROM's own Stage::Behavior brings the pause
+    # screen, its five menu arms and the Message::Display* family into the link
+    # (port/slice_gate220.txt), and those bodies index six ROM tables and read
+    # two ROM scalars that no host file had. Every one is checked the way lane
+    # STAGE checked its three: relocation-free over its WHOLE span
+    # (config/arm9/relocs.txt has no `from:` row inside any of the eight) and
+    # sized by delta-to-next-symbol in config/arm9/symbols.txt, which is exact
+    # on all eight.
+    #
+    # THE FOUR 0x020755xx ROWS ARE TILE-OFFSET TABLES, NOT POINTERS, and that
+    # is the thing to check before reading the `PAG` in ?data_020755c0@@3PAGA
+    # as an address the port would have to map. The callers are
+    #   src/_ZN5Stage20PS_UpdateOptionsMenuEv.cpp:36
+    #       `scr = G2S::GetBG1ScrPtr() + data_020755c0[j];`
+    #   ..:47 the same shape on data_020755c4
+    #   src/_ZN5Stage25PS_UpdateOkAndBackButtonsEb.cpp:67 on data_020755cc
+    #   src/_ZN5Stage17PS_UpdateSaveMenuEb.c:28 on data_020755c8
+    # -- the POINTER is the accessor's return value and the table holds u16
+    # tile INDICES added to it. So there is nothing to relocate and nothing to
+    # map, which is also why the relocation check comes back clean.
+    #
+    #   data_02075258   12 bytes  the eleven sound ids func_02011c54 walks,
+    #                             one per iteration into func_0204f9c4
+    #   data_020755c0    4        options-menu row offsets
+    #   data_020755c4    4        options-menu row offsets, second table
+    #   data_020755c8    4        save-menu row offsets
+    #   data_020755cc    8        OK/Back button offsets
+    #   data_02075610   16        the per-button run lengths
+    #                             PS_UpdateOkAndBackButtons:68 counts to
+    #   data_020756d0   32        the pause-menu message ids
+    #                             PS_Update:204 hands Message::Display
+    #   data_0208ee40    4        the scalar the level-clear arm reads
+    "data_02075258", "data_020755c0", "data_020755c4", "data_020755c8",
+    "data_020755cc", "data_02075610", "data_020756d0", "data_0208ee40",
     # Run mg11 lane TTI: the one s16 dScMgTrampoline_c's InitResources divides
     # by. src/func_ov006_02122198.cpp reads it as `(s32)data_02082414` and the
     # ROM does `ldrsh r1,[r1]` at 0x02122210 with the pool word 0x02082414,

@@ -1962,3 +1962,336 @@ NOT TOUCHED: tests/walk_window.cpp, hal/star_flow.cpp, hal/scene_vs_menu.cpp
 (the seam it defines is correct; only the files describing it were wrong),
 hal/actor_registry.cpp, hal/level_boot.cpp, hal/level_change.cpp,
 hal/cxx_aliases.cpp, port/CMakeLists.txt, src/.
+
+(Integration note, run link100: lane FRAME wrote its accounting as sections 12
+and 13 on a tree that did not carry lane STAGE's section 12 above; they are
+renumbered 13 and 14 here. Lane FRAME's source comments cite them by their
+original numbers. Sections 13 and 14 supersede 12b-12d: slot 6 is seated on
+the ROM's Stage::Behavior, and slot 9's blocker is restated in 13c.)
+
+13. LANE FRAME (run link100): THE FRAME LOOP WAS THE STAGE
+-----------------------------------------------------------
+
+Written by lane FRAME2, which is lane FRAME's second half. Nine places in the
+tree already cite "section 13b", "section 13c" and "section 14" -- the slot-6
+seat's own comments in hal/stage_bridges.cpp and hal/stage_frame.cpp,
+hal/actor_registry.cpp's retirement note, tests/walk_window.cpp, the head of
+port/slice_gate220.txt and port/tools/stage_pause_proof.py. FRAME ran out of
+session before it wrote them. These are those sections, written from the code
+that shipped and the runs below rather than from memory.
+
+
+13a. THE CORRECTION SECTION 6 OWES
+
+Section 6 declined both slots with "Both genuinely blocked, both measured,
+neither is close", counted slot 6 at 19 + 3 pieces, and reasoned that "the
+port's Stage does no behaviour at all today, so a slot-6 occupant that returns 1
+and does nothing is behaviour-neutral".
+
+The count is right. The last sentence is the thing that was wrong, and it was
+wrong in a way no count could show: THE PORT'S STAGE DID DO BEHAVIOUR. It did it
+from tests/walk_window.cpp, statement by statement, and the host occupant was
+behaviour-neutral only because that copy stood beside it. So the wall in front
+of slot 6 was never the twenty-two pieces on their own -- it was that seating
+the ROM's body WITHOUT retiring the copy runs ProcessKuppaScript twice a frame
+and plays every cutscene in the game at double speed, which is a regression an
+exit code cannot see and a screenshot cannot either.
+
+Naming that is what let the slot close: the twenty-two pieces are enrolled
+(port/slice_gate220.txt, fifty-nine translation units), the copy is retired in
+the same commit, and the hazard is measured rather than argued
+(port/tools/stage_pause_proof.py rungs 3 and 4).
+
+
+13b. THE SITES THE PORT WAS RUNNING Stage::Behavior FROM
+
+Six, and each is a statement of src/_ZN5Stage8BehaviorEv.cpp standing where the
+ROM runs it:
+
+  hal/actor_registry.cpp   data_0209b464 = data_0209b454, at the head of
+                           phase 3                              Behavior:105
+  tests/walk_window.cpp    _ZN5Stage10CheckInputEv(), in the input phase
+                                                                Behavior:107
+  tests/walk_window.cpp    ProcessKuppaScript(), above port_actor_tick
+                                                                Behavior:111
+  tests/walk_window.cpp    ShadowModel::CleanAll(), above port_actor_tick
+                                                    Behavior's first and last
+  tests/walk_window.cpp    port_message_pump()      Behavior's UpdateMessage arm
+  tests/walk_window.cpp    port_vs_countdown_tick() the head of the VS arm
+
+All six are retired and the ROM's own body runs all six statements from
+_ZTV5Stage slot 6. TWO OF THEM WERE NOT EQUALLY DANGEROUS, and the asymmetry is
+the reason the proof has the shape it has. The freeze-mask latch is one word
+copied to another; running it twice a frame is IDEMPOTENT and survivable, which
+is why it could stand for five Stage lanes without anyone noticing. Running
+ProcessKuppaScript twice is not: its cursor steps twice, and every scripted
+camera in the game moves at double speed. Rung 3 counts the thunk's own
+dispatches across two run lengths and takes the SLOPE (one run can only say the
+count is plausible); rung 4 counts the effect, on the cursor itself.
+
+RETIRING THE TWO HOISTED STATEMENTS -- the latch and CleanAll -- is correct if
+and only if the Stage is the FIRST body the behaviour walk reaches, because that
+is the only thing that makes "at the head of phase 3" and "inside
+Stage::Behavior" the same instant. On the cartridge that is free: the Stage's
+spawn record at arm9 0x0209213c carries behaviour priority 3 against the
+hundreds every other class uses. On the port it is a claim about a host list, so
+rung 2 reads the list in walk order and fails unless the Stage heads it.
+
+port_vs_countdown_tick (hal/star_flow.cpp) is now UNREFERENCED. Its body is the
+head of Stage::Behavior's VS arm, which the ROM's own body runs; the function is
+left in place rather than deleted because star_flow.cpp's own callers and
+comments are that file's, not this lane's, and an unreferenced body costs the
+link nothing under /OPT:REF. Whoever next opens that file should delete it and
+its banner together.
+
+AND ONE HOST BRIDGE MOVED WITH THE SEAT. The port hosts five interior fields of
+the ROM's Ctrl block (data_0209f4a0/a2/a4/a6/ac) as SEPARATE arrays, so it needs
+a copy the cartridge does not: on hardware every actor reads data_0209f498 +
+N*0x18 directly. The copy belongs at the instant the ROM's write finishes --
+after Stage::Behavior returns, before any other actor's Behavior runs -- so
+hal/stage_frame.cpp's slot-6 thunk calls port_frame_ctrl_publish there. The same
+copy placed BELOW port_actor_tick hands src/_ZN6Player8BehaviorEv.cpp:170 last
+frame's stick, which is a one-frame input lag on every walk in the game.
+
+
+13c. SLOT 9 STAYS, AND IT IS THE SAME JOB AS SLOT 6 -- NOT A MATRIX PROBLEM
+
+FRAME left slot 9 with a reason that does not survive reading the file it names,
+and correcting it is worth more to the next lane than the decline is.
+
+WHAT WAS SAID. hal/stage_bridges.cpp's slot-9 comment and hal/stage_frame.cpp's
+header both say that tests/walk_window.cpp "runs the ROM's actor render bucket
+BEFORE the world/scene matrix handling that follows it", so a slot-9 dispatch
+(which happens from inside that bucket) would draw the level model, the skybox
+and the transparent pass on the far side of a matrix conversion. That is the
+banner over port_actor_render, and it was true when it was written.
+
+WHAT IS TRUE NOW. The conversion is gone. The block immediately after the bucket
+in the same file opens with "THE VIEW MATRIX IS USED AS THE ROM PRODUCED IT ...
+The R6 shim that scaled this row by 8 for the harness's world-unit models is
+gone", and every model matrix in the frame is scene units. So there is no side
+of a matrix change to be on, and the bucket's position buys draw order only.
+The banner is corrected in place; this is the record of why.
+
+WHAT ACTUALLY BLOCKS SLOT 9, then, is two things and neither is a matrix:
+
+  1. SECTION 6'S TWELVE PIECES, unchanged: Particle::SysTracker::Update,
+     OAM::Render's seven-argument overload, Stage::RenderFog,
+     RenderVsModeCountdown, RenderVsModeNewStar, PS_Render, LC_Render,
+     RenderNumber, func_020391f0, func_0203083c, func_ov001_020aaf40, and
+     Stage::RenderBouncingArrows (which resolves through a w8a face today and so
+     never shows as unresolved). Four of them want the ov002 pause/VS sprite
+     templates at 0x0210caf4..0x0210d420, which is a row in port/ov002_syms.txt
+     -- the mount lane's file, not this one's.
+
+  2. THE FRAME LOOP IS Stage::Render, EXACTLY AS IT WAS Stage::Behavior.
+     tests/walk_window.cpp carries Stage::Render's sequence statement by
+     statement, in the ROM's own order, with each statement's provenance beside
+     it: port_stage_advance_anims (Render's first block, the shown areas' BTA
+     texture animations), port_stage_render_skybox, port_stage_render_model,
+     ShadowModel::RenderAll between the two model passes, and
+     port_stage_render_model_transparent -- plus port_particle_render, which
+     the file's own comment places where Stage::GraphCallback1 runs it rather
+     than where the simulation runs. Seating slot 9 without retiring those is
+     the double-dispatch of 12a with pixels instead of script steps.
+
+SO THE SHAPE OF THE SLOT-9 LANE IS THE SHAPE OF THIS ONE: enrol the twelve (or
+seam the four that wait on port/ov002_syms.txt), retire the transcription in the
+same commit, and prove the retirement rather than assert it. The proof it needs
+is different in one way and the difference is the hard part: rungs 3 and 4 could
+count a script cursor, and a render pass has no cursor. What it has is the
+selftest BMP, and the honest form of the rung is an A/B of that image across the
+seat, per level, with every difference explained -- the ROM's order is the
+authority, and a BMP that moves is a finding to explain, not to hide.
+
+ONE ORDERING FACT THE NEXT LANE SHOULD START FROM, because it is the one the
+z-buffer does not make free: the level's OPAQUE pass can move anywhere in the
+bucket, but the transparent pass, the shadow volumes and the particles cannot.
+walk_window.cpp already measured that in the other direction -- particles
+submitted ahead of the opaque level are all lost to the ground drawn over them.
+The Stage's own render priority is what decides where slot 9 lands among the
+actors, and that number, not the matrix, is what the A/B is really testing.
+
+
+14. THE ACCOUNTING FOR LANE FRAME, AND THE TWO THINGS IT SHIPPED WRONG
+-----------------------------------------------------------------------
+
+14a. WHAT LANDED
+
+  port/slice_gate220.txt      the enrolment: 59 translation units -- the pause
+                              screen and its five menu arms, the
+                              Message::Display* family, Sound::PauseMusic /
+                              UnpauseMusic, Stage::CanPause,
+                              Stage::IsPauseDisabled, Stage::CheckInput,
+                              Player::CanPause and Behavior's own six
+                              func_020xxxxx callees.
+  hal/stage_frame.cpp         the faces the ROM body's callees need (a pure
+                              spelling difference on eleven of them, a real
+                              convention change on two), the ONE seam
+                              (func_020199a4, the VS arm past data_0209fcc8 >=
+                              7, whose closure is the DS heap allocator and the
+                              IRQ primitives), and the slot-6 entry point.
+  hal/stage_globals.cpp       eighteen bss globals the closure reads, plus
+                              __aeabi_uidiv (the unsigned twin of the
+                              __aeabi_idiv hal/actor_vtables.cpp already had).
+  hal/cxx_aliases.cpp         31 aliases, the FRAME block.
+  port/tools/romdata.py       8 NAMED arm9 .data rows, each relocation-free
+                              over its whole span and sized by delta-to-next.
+  hal/stage_bridges.cpp       slot 6's thunk, behind SM64DS_STAGE_SLOT6_ROM.
+  port/CMakeLists.txt         the gate on three targets; the seat itself on the
+                              two walk_window targets only (smoke_player does
+                              not carry hal/message_pump.cpp and does not run a
+                              level frame loop).
+  port/tools/stage_pause_proof.py   seven rungs.
+
+  LINKAGE 9582 -> 9640 (+58) of 11328.
+
+14b. THE TWO FAILURES, AND WHAT THEY WERE
+
+FAILURE 1 -- LEVEL 20 ABORTED, and the seat exposed a pre-existing hole rather
+than opening a new one.
+
+`python port/tools/battery.py --skip-build` reached `selftest level 20: FAIL
+rc=3221226505` (0xc0000409, FAST_FAIL_FATAL_APP_EXIT) with levels 0..19 green.
+Level 20 is the Snowman's Land igloo, and it is the only selftest of the fifty
+that CHANGES LEVEL mid-run: the idle probe walks Mario out of the igloo, the
+ROM's own ov002 exit handler calls LoadLevel(19, entrance 4), and the run
+finishes in Snowman's Land. The base tip does the same warp and exits 0.
+
+Traced under cdb (breakpoints, f = the slot-6 thunk's own counter):
+
+    LoadLevel f=79 lvl=19  ret=func_ov002_020b0a0c+0x3c
+    RELEASE   f=79 pend=187        port_level_change_apply's head release:
+                                   nothing pending, so it did nothing
+    SETSCENE  f=80 id=3            from ?Behavior@Stage@@QAEHXZ+0x2a9
+    A_BOOT    f=80 p110=-1         level 19 up
+    MFD_STAGE f=111 pend=3         from _ZN5Scene14BeforeBehaviorEv+0xe1
+    FATAL: Stage vtable slot 3 (CleanupResources) is not hosted
+
+The two middle rows are the mechanism. hal/level_change.cpp's
+port_level_teardown converges by calling port_actor_tick(), which walks phase 3
+-- and the Stage heads that list (12b). So the ROM's Stage::Behavior runs from
+INSIDE the teardown, twenty lines before port_level_latch() clears
+data_02092110, sees the change still pending, takes its own level-change arm and
+calls Scene::SetSceneToSpawn(3, 0). That is the ROM's correct answer; on the
+cartridge Scene::SpawnIfNecessary consumes it a moment later. The port has no
+spawner for the ov003 scenes and completes SpawnIfNecessary's other half by hand
+-- but its one call site ran ONE STATEMENT EARLIER, so the id stayed at 3 for
+the rest of the session. From there it is hal/level_change.cpp's own
+pending-scene block, verbatim: Scene::BeforeBehavior (slot 7, the ROM's body)
+takes its `data_02092664 != 0x187` branch every frame, the post-change fade
+reads at-end, and it calls ActorBase::MarkForDestruction on the STAGE. Slot 3 is
+trapped and measured blocked (section 5), so the trap fires -- correctly.
+
+FIXED in hal/level_change.cpp by running the release in port_level_change_poll,
+after the apply, which is where Scene::SpawnIfNecessary sits in the ROM's own
+frame (func_020197b8 phase 3) and which also covers the apply's three declines.
+The head release inside the apply stays; its own comment says why. Level 20 now
+exits 0 over 300 frames and prints the release at the change.
+
+NOT FIXED, AND NAMED: port_level_teardown dispatching phase 3 at all. On the
+cartridge nothing runs an actor's Behavior while the scene is being destroyed --
+the Stage is destroyed with it. The port keeps the Stage alive and pumps the
+tick to drive the ROM's cleanup Process, and phase 3 comes along for the ride,
+so with slot 6 seated a level change now steps ProcessKuppaScript, the message
+pump and Stage::CheckInput once per teardown round (up to sixteen). Nothing
+measured is wrong today. Whoever next owns hal/level_change.cpp should give the
+teardown a pump that runs phases 4 and 2 only, and prove convergence with the
+battery; that is a change to the destruction protocol on every target and it
+wanted its own lane rather than a ride on this one.
+
+FAILURE 2 -- RUNG 5 TESTED A PREMISE THAT IS FALSE ON THIS PORT.
+
+The negative control asserted that a level selftest boots with
+data_0209caa0[2] & 0x80 -- the opening-seen bit -- CLEAR, so a scripted START
+must be refused. It is not clear. hal/level_boot.cpp's intro_seen block sets
+data_0209caa0[8] |= 0x80, the same word and the same bit, on every level entry
+that is not a title-bridge crossing into a fresh file, and its own banner gives
+the three reasons (StartIntroCutscene's gate, HUD::Behavior and HUD::Render, and
+Player::InitResources' voice bank). Measured: every [pause] line of a level-1
+selftest reads seen=1 from frame 0 with no fixture. Two consequences the rung's
+own output hid:
+
+  * the verdict string asserted "opening-seen bit clear on every one of N
+    frames" as a FIXED STRING, printed whatever the run measured; and
+  * SM64DS_PAUSE_WATCH=2, rung 6's "fixture", was setting a bit that was
+    already set -- a no-op that read like the thing making the pause possible.
+
+There is no second, host-side pause path: nothing in port/ writes data_0209f2c4
+except the three host resets (walk_window.cpp, hal/level_boot.cpp,
+hal/level_change.cpp), all of which clear it. The pause the run opens is the
+ROM's.
+
+FIXED by testing what the ROM actually refuses on. src/_ZN5Stage8BehaviorEv.cpp
+:205 gates the trigger on
+
+    (((held & 0x200) == 0 && (held & 0x100) == 0) || (pressed & 8) == 0)
+
+-- 0x100 is L, 0x200 is R, 8 is START -- so START pressed while L is held is not
+a pause, and the hold frames after the edge carry no START press to open one
+with. Rung 5 now scripts START+L at the same frames rung 6 scripts plain START,
+on the same binary and the same state, ASSERTS seen=1 (the state gate is open,
+which is what makes the refusal attributable to the button term rather than
+vacuous) and requires data_0209f2c4 to stay 0. Rungs 6 and 7 dropped the fixture
+and run at SM64DS_PAUSE_WATCH=1. The knob stays in the binary for the one entry
+that does leave the bit clear, and now reports whether it changed anything.
+
+AND THE CONTROL FOUND A THIRD DEFECT ON ITS FIRST RUN, which is the best thing
+that can be said for a negative control.
+
+With rung 5 rewritten onto the L+START term, the run came back: refused on all
+six frames of the hold (f150..155, held=0148, f2c4=0) and then PAUSED AT f156 --
+the frame the hold ends and held drops back to 0040. Nothing pressed START at
+f156. What opened the menu was the START bit still standing in data_020a0e5a
+from f150.
+
+data_020a0e5a is PadData[i].pressed. On the DS it IS data_020a0e58 + i*4 + 2 --
+the same halfword the pad read rewrites every frame -- and hal/auto_bss.cpp
+gives it its own host storage. Two ROM readers use the split spelling rather
+than the record: IsButtonInputValid, and Stage::Behavior:205 itself. NOTHING ON
+THE PORT WROTE IT PER FRAME. hal/message_pump.cpp assigns it while a message box
+is up (its banner says why: the box could not be dismissed otherwise) and
+hal/input_probe.cpp ORs a scripted edge into it. Outside those two it held
+whatever was last OR-ed in, for the rest of the session.
+
+So on the tip lane FRAME shipped, with slot 6 seated: a real key press never
+reached the word at all -- the ROM's own pause trigger could not fire from the
+keyboard -- and one scripted press latched it forever, which is also why the
+paused run of rung 6 reopened the menu at f190 after closing it at f180.
+
+FIXED in tests/walk_window.cpp by assigning the split symbol the same edge, at
+the same instant, as the pad record's own pressed halfword -- the aliasing the
+hardware has, restored at the one place the record is written, above
+port_input_probe_apply so a scripted press still arrives and now lasts exactly
+one frame. hal/message_pump.cpp is untouched and still folds A/B on top later in
+the frame; it now folds onto a word that was cleared this frame.
+
+IT IS A PRE-EXISTING GAP, NOT A GATE-220 REGRESSION, and it was unobservable
+before this lane for the ordinary reason: nothing in the image read
+data_020a0e5a for anything but a message box until Stage::Behavior's pause
+trigger came into the link.
+
+
+14c. OWNERSHIP AND DEVIATIONS
+
+Lane FRAME: port/slice_gate220.txt, hal/stage_frame.cpp, hal/stage_globals.cpp,
+port/tools/stage_pause_proof.py (all new), the hal/cxx_aliases.cpp FRAME block,
+the port/tools/romdata.py rows, hal/stage_bridges.cpp slots 6 and 9,
+hal/actor_registry.cpp's latch, tests/walk_window.cpp's frame loop, and the
+port/CMakeLists.txt wiring.
+
+Lane FRAME2 deviations, declared:
+
+  hal/level_change.cpp         port_level_change_poll: one call and its banner.
+                               A lane told to fix an abort cannot avoid the file
+                               that owns the pending-scene sentinel, and that
+                               file had already written the whole derivation of
+                               the failure -- this adds the second call site it
+                               was missing, not a new mechanism.
+  port/stage_lifecycle_map.txt sections 13 and 13. Nine files were already
+                               citing them.
+
+NOT TOUCHED by FRAME2: hal/stage_frame.cpp, hal/stage_globals.cpp,
+port/slice_gate220.txt, hal/stage_bridges.cpp, hal/actor_registry.cpp,
+hal/star_flow.cpp, hal/message_pump.cpp, port/CMakeLists.txt,
+port/tools/romdata.py, hal/cxx_aliases.cpp.

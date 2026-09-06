@@ -10178,6 +10178,24 @@ foreach(line IN LISTS SLICE217_LINES)
     endif()
     list(APPEND SLICE217_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# GATE 220 (run link100, lane FRAME): _ZTV5Stage slot 6 takes the ROM's own
+# Stage::Behavior, and port/tests/walk_window.cpp stops being the port's copy of
+# it. Fifty-six matched TUs -- the pause screen and its five menu arms, the nine
+# Message::Display* bodies they draw through, the VS-exit pair, LC_Update,
+# VE_Init/VE_Update and Behavior itself. The whole derivation, including why the
+# pause tree could not be seamed and which single body could not be enrolled,
+# is in port/slice_gate220.txt's own header; section 13 of
+# port/stage_lifecycle_map.txt is the accounting.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate220.txt" SLICE220_LINES)
+set(SLICE220_SOURCES "")
+foreach(line IN LISTS SLICE220_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE220_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
 # The id-348 deleting destructor spells the VT placeholder; its ROM store
 # relocates to its own table (ov002 from:0x020b084c -> 0x021085f8), the
 # host array the fill writes and VirtualDoor_Spawn installs. HEAP is left
@@ -13147,6 +13165,17 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # PORT_HOST_ABI bodies, the four C-name faces, two 4-byte arm9 BSS words
     # and the data_02075720 alias; the slice holds the ROM's own TUs.
     hal/stage_slot0.cpp ${SLICE_S4_SLOT0_SOURCES}
+    # GATE 220, lane FRAME: the ROM's own Stage::Behavior in _ZTV5Stage
+    # slot 6, its faces, and the eighteen arm9 .bss words its closure
+    # reads.  On the TWO walk_window targets and NOT on smoke_player,
+    # which is the one place this differs from the slot-0 row above.
+    # Stage::Behavior calls Stage::UpdateMessage, whose body on this
+    # port is port_message_pump (hal/message_pump.cpp), and that file is
+    # on these two targets only -- it pulls the message compositor and
+    # the generated text with it.  smoke_player therefore keeps the host
+    # occupant in slot 6, selected by the SM64DS_STAGE_SLOT6_ROM compile
+    # definition below rather than by a second copy of the thunk.
+    hal/stage_frame.cpp hal/stage_globals.cpp ${SLICE220_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
     ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
@@ -13288,6 +13317,12 @@ target_include_directories(walk_window PRIVATE
 target_link_libraries(walk_window PRIVATE ntr_wide_rt)
 target_compile_definitions(walk_window PRIVATE SM64DS_PLATFORM_PC
     PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
+    # GATE 220 (run link100, lane FRAME): this target carries
+    # port/slice_gate220.txt and hal/stage_frame.cpp, so _ZTV5Stage
+    # slot 6 dispatches the ROM's own Stage::Behavior instead of the
+    # host occupant.  smoke_player does not define this and keeps the
+    # occupant; see the gate row above it for why.
+    SM64DS_STAGE_SLOT6_ROM=1
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
@@ -13405,6 +13440,27 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # PORT_HOST_ABI bodies, the four C-name faces, two 4-byte arm9 BSS words
     # and the data_02075720 alias; the slice holds the ROM's own TUs.
     hal/stage_slot0.cpp ${SLICE_S4_SLOT0_SOURCES}
+    # GATE 220, lane FRAME: the ROM's own Stage::Behavior in _ZTV5Stage
+    # slot 6, its faces, and the eighteen arm9 .bss words its closure
+    # reads.  On the TWO walk_window targets and NOT on smoke_player,
+    # which is the one place this differs from the slot-0 row above.
+    # Stage::Behavior calls Stage::UpdateMessage, whose body on this
+    # port is port_message_pump (hal/message_pump.cpp), and that file is
+    # on these two targets only -- it pulls the message compositor and
+    # the generated text with it.  smoke_player therefore keeps the host
+    # occupant in slot 6, selected by the SM64DS_STAGE_SLOT6_ROM compile
+    # definition below rather than by a second copy of the thunk.
+    # AND hal/w8a_stage_faces.cpp WITH IT, on this target only.
+    # walk_window has carried that file since lane w8-a and this target
+    # has not; it is alias-only (five /alternatename rows and one marker
+    # byte) and three of those rows are the plumbing gate 220 needs --
+    # ?CanPause@Stage@@SAHXZ, ?IsPauseDisabled@Stage@@SAHXZ and
+    # ?CheckInput@Stage@@QAEXXZ, every one referenced only by
+    # Stage::Behavior, which is exactly what this gate adds.  Without it
+    # walk_window_hires fails with three LNK2019s that walk_window does
+    # not, which is how the omission was found.
+    hal/stage_frame.cpp hal/stage_globals.cpp hal/w8a_stage_faces.cpp
+    ${SLICE220_SOURCES}
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
     ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
@@ -13518,6 +13574,12 @@ target_include_directories(walk_window_hires PRIVATE
 target_link_libraries(walk_window_hires PRIVATE ntr_hires)
 target_compile_definitions(walk_window_hires PRIVATE SM64DS_PLATFORM_PC
     PORT_REPO_ROOT="${PORT_REPO_ROOT_EMBED}"
+    # GATE 220 (run link100, lane FRAME): this target carries
+    # port/slice_gate220.txt and hal/stage_frame.cpp, so _ZTV5Stage
+    # slot 6 dispatches the ROM's own Stage::Behavior instead of the
+    # host occupant.  smoke_player does not define this and keeps the
+    # occupant; see the gate row above it for why.
+    SM64DS_STAGE_SLOT6_ROM=1
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)

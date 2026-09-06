@@ -362,16 +362,77 @@ static int __fastcall st_init(void *self, void *)
     return 1;
 }
 
-/* Slots 6 and 9. NEW HOST OCCUPANTS, and this file is not going to pretend
-   otherwise: the seat needs something in them because an actor that survives
-   the init pass is on the behaviour and render lists on the next frame, and
-   both ROM bodies are measured blocked. Each is behaviour-neutral by
-   construction -- the port's Stage did no behaviour at all before this and
-   walk_window still draws the stage model, the skybox and the transparent
-   pass from its own render phase, so neither occupant removes or adds a
-   single drawn pixel. They exist to keep the dispatch from landing on the
-   trap, and they retire when their ROM bodies close. */
+/* Slot 6. THE HOST OCCUPANT IS RETIRED AND THE ROM'S OWN Stage::Behavior IS
+   HERE (run link100, lane FRAME).
+   ---------------------------------------------------------------------------
+   What used to stand in this comment is worth keeping in front of a reader,
+   because it was true when it was written and it is exactly what changed:
+
+     "NEW HOST OCCUPANTS, and this file is not going to pretend otherwise: the
+      seat needs something in them because an actor that survives the init pass
+      is on the behaviour and render lists on the next frame, and both ROM
+      bodies are measured blocked. ... They exist to keep the dispatch from
+      landing on the trap, and they retire when their ROM bodies close."
+
+   Slot 6's body closes here. port/stage_lifecycle_map.txt section 12b measured
+   what was actually holding it, and it was never a symbol: tests/walk_window
+   .cpp WAS the port's copy of Stage::Behavior, transcribed statement by
+   statement into the frame loop, with the freeze-mask latch in
+   hal/actor_registry.cpp, UpdateMessage's body in hal/message_pump.cpp and the
+   VS countdown statement in hal/star_flow.cpp. All five sites are retired in
+   the same commit as this line; section 13 is the accounting.
+
+   THE THUNK IS AN ADAPTER AND NOTHING ELSE. src/_ZN5Stage8BehaviorEv.cpp
+   compiles a real C++ method and publishes ?Behavior@Stage@@QAEHXZ, which no C
+   name in this file can spell and which include/Stage.h does not declare, so
+   the call goes through hal/stage_frame.cpp -- one file, one declaration of
+   class Stage, the seven faces the ROM body's own callees need, and the entry
+   point below. The ROM's Behavior returns 1 on every path, which is the code
+   the behaviour Process reads as "this pass succeeded".
+
+   TWO OF THE THREE TARGETS, and this is the one place this seat differs from
+   slot 0's row in port/CMakeLists.txt. Stage::Behavior calls
+   Stage::UpdateMessage, whose body on this port is port_message_pump, and
+   hal/message_pump.cpp is on walk_window and walk_window_hires only -- it
+   brings the message compositor and the generated text with it, which
+   smoke_player has no use for and does not carry. So the gate is on those two
+   and smoke_player keeps the host occupant, selected here by the compile
+   definition rather than by a second copy of the thunk living somewhere else.
+   smoke_player does not run a level frame loop, so the occupant it keeps is
+   the program it already had. */
+#if defined(SM64DS_STAGE_SLOT6_ROM)
+extern "C" int port_stage_rom_behavior(void *self);   /* hal/stage_frame.cpp */
+
+static int __fastcall st_behavior(void *s, void *)
+{ return port_stage_rom_behavior(s); }
+#else
+/* smoke_player: the host occupant, unchanged. Behaviour-neutral by
+   construction -- it is what every target had before gate 220. */
 static int __fastcall st_behavior(void *, void *) { return 1; }
+#endif
+
+/* Slot 9. STILL A HOST OCCUPANT, and the reason is the frame loop rather than
+   the link -- port/stage_lifecycle_map.txt section 12c, and 13b for the two
+   things lane FRAME shipped wrong.
+
+   AND ONE CORRECTION, because this comment carried it first (lane FRAME2). What
+   stood here was that tests/walk_window.cpp "runs the ROM's actor render bucket
+   BEFORE the world/scene matrix handling that follows it, so a slot-9 dispatch
+   (which happens from inside that bucket) draws the level model, the skybox and
+   the transparent pass on the other side of it". There is no matrix handling
+   after the bucket any more: the block below port_actor_render in that file
+   opens "THE VIEW MATRIX IS USED AS THE ROM PRODUCED IT ... The R6 shim that
+   scaled this row by 8 for the harness's world-unit models is gone", and every
+   model matrix in the frame is scene units. What blocks slot 9 is section 6's
+   twelve pieces and the fact that tests/walk_window.cpp IS Stage::Render,
+   transcribed statement by statement -- the same shape of job slot 6 was, with
+   a selftest-BMP A/B in place of a script cursor where the proof is concerned.
+   12c is the whole reading.
+
+   Behaviour-neutral by construction, exactly as the retired comment above says:
+   walk_window still draws all three from its own render phase, so this occupant
+   removes and adds no pixel. It retires the day the render half of that file
+   moves. */
 static int __fastcall st_render(void *, void *)   { return 1; }
 
 static int  __fastcall st_binit(void *s, void *)

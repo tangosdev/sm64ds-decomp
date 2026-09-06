@@ -568,11 +568,22 @@ extern "C" int port_party_member(int slot);
 extern char data_0209f4a0[];
 extern int data_0209f4a6[];   /* pad stick WORLD angle -- auto_bss split
                                  symbol, NOT data_0209f4a0+6 on host */
-/* the real input processor (Stage::CheckInput) and its environment */
+
+/* the real input processor (Stage::CheckInput) and its environment.
+   Stage::Behavior calls it now (_ZTV5Stage slot 6, run link100 lane FRAME);
+   this file calls it only on the frames that never dispatch the Stage at all
+   -- see the fallback beside the Ctrl fan-out, past the tick chain. */
 void _ZN5Stage10CheckInputEv(void);
+/* how many times the slot-6 thunk has run the ROM's Stage::Behavior, counted
+   by the thunk itself (hal/stage_frame.cpp). The fallback above reads it to
+   tell "the Stage ticked this frame" from "it did not", which is the only
+   question a harness frame can ask that a DS frame cannot. */
+unsigned port_stage_behavior_calls(void);
 /* Stage::Behavior's per-frame cutscene-script advance (Stage::Behavior:112).
    Matched src (src/ProcessKuppaScript.cpp), self-guarded: returns at once when
-   data_0209fc48 == 0. Transcribed into the game tick below (STAR1). */
+   data_0209fc48 == 0. The ROM's own Stage::Behavior makes this call now; the
+   declaration stays for the SM64DS_COURSE_PROBE=kuppa repro below, which
+   launches and ends a script by hand. */
 void ProcessKuppaScript(void);
 void EndKuppaScript(void);     /* STAR1 proof: clears data_0209fc48 at cutscene end */
 void port_intro_bit_edge(void); /* hal/level_boot.cpp: flags2 bit 7, edge-triggered */
@@ -587,6 +598,10 @@ extern int data_0209f4a2[];    /* split: stick nx */
 extern int data_0209f4a4[];    /* split: stick ny */
 extern unsigned char data_0209f4ac[]; /* split: touching */
 extern int data_020a0e58[];    /* PadData[4]: u16 held, u16 pressed */
+/* THE PRESSED HALFWORD'S SPLIT SYMBOL. On the DS this IS data_020a0e58 + 2 --
+   PadData strides 4, {u16 held, u16 pressed} -- and hal/auto_bss.cpp gives it
+   its own storage on the host. See the publish beside the pad store below. */
+extern int data_020a0e5a[];
 /* MY COMMS SLOT: 0 solo or parent, 1..3 a child seat. hal/comms_conductor.cpp
    seats it from func_02040704 when a session joins; the flight recorder below
    reads it.
@@ -777,6 +792,11 @@ extern unsigned char data_0209f1f8;  /* view-object count */
 extern signed char data_0209f2f8;    /* level/sublevel id (weather select) */
 extern int data_0209f32c[];          /* water level */
 extern int data_0209f20c[], data_0209f294[], data_0209f2c4[];
+/* the fader CURRENTLY IN MOTION (run link100, lane FRAME: read by the
+   SM64DS_PAUSE_WATCH line). hal/cxx_aliases.cpp defines it as an int[8];
+   its first word is the installed fader or 0, which is the term
+   Stage::Behavior's own pause gate tests. */
+extern int data_0209d4b0[];
 extern int data_0209b454[];
 extern int data_0209ee90[];
 extern int data_020a4b60[];
@@ -6895,6 +6915,212 @@ static int scene_window_run(void)
    host process needs its own main() to open the window and pump frames; the
    ROM's void main(void) links as a decomp TU that the host boot path calls,
    not as the process entry point. */
+/* ---- THE Ctrl BRIDGE, PUBLISHED AT THE ROM'S OWN BOUNDARY ----------------
+   (run link100, lane FRAME.)
+
+   _ZTV5Stage slot 6 runs the ROM's Stage::Behavior, and Stage::Behavior:107 is
+   Stage::CheckInput -- so the Ctrl block at data_0209f498 is filled from inside
+   port_actor_tick, at the head of the behaviour walk. Everything below used to
+   sit in the input phase immediately after a hand-placed CheckInput call.
+
+   The port hosts five of Ctrl's interior fields as SEPARATE arrays
+   (data_0209f4a0/a2/a4/a6/ac), so a copy is needed that the cartridge does not
+   need, and the only correct place for it is the instant the ROM's own write
+   finishes: after Stage::Behavior returns, before any other actor's Behavior
+   reads it. hal/stage_frame.cpp's slot-6 thunk calls this there.
+
+   The four statics are this frame's pad, stashed by the input phase above so
+   the publish can run from inside the tick without the frame loop's locals.
+   They are written every frame before port_actor_tick and read once after
+   Stage::Behavior, which is the whole of their lifetime. */
+static XPad g_fc_pad;
+static int  g_fc_pad_live;
+static int  g_fc_menu_on;
+static int  g_fc_selftest;
+
+extern "C" void port_frame_ctrl_publish(void)
+{
+    const XPad &pad = g_fc_pad;
+    const int pad_live = g_fc_pad_live;
+    const int menu_on = g_fc_menu_on;
+    const int selftest = g_fc_selftest;
+    (void)pad_live; (void)menu_on; (void)selftest;
+    /* main()'s own run_mode lambda, repeated here rather than shared, because
+       it is two terms and sharing it would mean giving a file-scope function a
+       reference to a frame-loop local. Same definition, same pin: a selftest is
+       always button mode, whatever settings.json says. */
+    const auto run_mode = [&]() -> int {
+        return selftest ? RUN_BUTTON : g_run_mode;
+    };
+
+            /* the matched TU writes its own data_0209f498 block; older
+               TUs read per-field split symbols -- copy the record out
+               ----------------------------------------------------------------
+               run mg16 lane MP3: FOR EVERY PLAYER, AT THE DS's OWN STRIDE.
+               This copied slot 0 and only slot 0, which was right while the
+               port asserted one player and is the exact reason a second
+               player could receive input and still not move.
+
+               ON THE DS THESE FIVE NAMES ARE INTERIOR ADDRESSES OF THE Ctrl
+               BLOCK ITSELF: data_0209f498 + 8, +0xa, +0xc, +0xe and +0x14,
+               with Ctrl striding 0x18 per player. That is why
+               port/unmatched/Player_Behavior.cpp reads its stick angle as
+               `*(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * 0x18)` --
+               on hardware that walks straight into player N's own Ctrl record.
+               The port hosts the five as SEPARATE arrays, so the same walk
+               lands inside data_0209f4a6's own storage instead, reading a byte
+               nobody wrote. Slot 0 worked because its offset is zero.
+
+               So the copy writes each player's fields at that same 0x18 stride,
+               which puts player N's values exactly where the ROM's walk looks
+               for them.
+
+               THE CEILING IS GONE, and it was never a layout fact. An
+               earlier revision of this comment said the split symbols could
+               not be enlarged because they sit interior to .dsstate and
+               growing them retires every BMP baseline. The first half was
+               wrong: they are SEPARATE host symbols, not interior addresses,
+               and this tree already sizes two of the family
+               (data_0209f4ac/data_0209f4ae) at 0x18 * 4 for exactly this
+               reason -- hal/actor_vtables.cpp carries the note about the stray
+               that taught it. The rest now match. Baselines do move, which is
+               what rung 1's position check is for. */
+            {
+                const char *q = (const char *)data_0209f498;
+                int np = (int)data_0209f21c;
+                if (np < 1) np = 1;
+                /* 0.3.2: sixteen. The five split arrays this fans into
+                   (hal/actor_vtables.cpp f49c/f49e/f4a0/f4ac/f4ae, and
+                   auto_bss.cpp's f4a2/f4a4/f4a6) are all 0x18 * kPortMaxPlayers
+                   now; the old cap at four was what kept slots 4..15 motionless
+                   in a wide match -- their records arrived and were never
+                   fanned out, so every peer agreed they stood still. */
+                if (np > kPortMaxPlayers) np = kPortMaxPlayers;
+                for (int pi = 0; pi < np; ++pi) {
+                    const char *r = q + pi * 0x18;
+                    const int o = pi * 0x18;
+                    /* THE BUTTONS, and leaving them out was the second input
+                       seam. Ctrl+0x04 is the HELD word and +0x06 is
+                       pressed-this-frame, and they are what every button
+                       reader in the game uses -- crouch among them. Fanning
+                       the stick fields and not these meant movement routed to
+                       the right player and one button family did not: crouch
+                       in the child's window crouched MARIO in the child's
+                       world. Same one-line character as the PadData[0]
+                       clobber, one layer further in. */
+                    *(short *)((char *)data_0209f49c + o) = *(const short *)(r + 0x04);
+                    *(short *)((char *)data_0209f49e + o) = *(const short *)(r + 0x06);
+                    *(short *)((char *)data_0209f4a0 + o) = *(const short *)(r + 0x08);
+                    *(short *)((char *)data_0209f4a2 + o) = *(const short *)(r + 0x0a);
+                    *(short *)((char *)data_0209f4a4 + o) = *(const short *)(r + 0x0c);
+                    *(short *)((char *)data_0209f4a6 + o) = *(const short *)(r + 0x0e);
+                    *((unsigned char *)data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
+                }
+            }
+            /* ---- RUN MODE ANALOG: the record, refilled from the pad's left
+               stick. See the RUN_ mode block up by the menu enum for why this
+               is the game's own analog path and not a new one.
+
+               CheckInput has just written the D-PAD answer: magnitude pinned
+               at 0x1000, touching zero, direction quantized to the eight
+               table entries. That is right for a keyboard and wrong for a
+               stick, so when there IS a stick and it is off its rest, the
+               same five fields are written again the way CheckInput's TOUCH
+               branch writes them -- and every reader downstream, the walk
+               core included, cannot tell which branch filled them in.
+
+               The mapping, end to end. XInput reports each axis as +-32767,
+               so the deflection is the radius sqrt(lx^2+ly^2) clamped to the
+               stop, and the usable travel starts at XInput's own left-stick
+               floor (7849) rather than at zero, so a stick that rests a
+               little off centre is still at rest:
+
+                   mag = 0x1000 * (len - 7849) / (32767 - 7849)
+
+               clamped into 0..0x1000. Direction goes in as the touch screen's
+               axes -- x right, y DOWN, which is why the stick's up becomes a
+               negative dy -- and the angle through the ROM's own atan2 rather
+               than a host one, so it lands on the same table entry the
+               hardware would have picked.
+
+               What the game then does with it is entirely the game's:
+               func_ov002_020bf224 scales the speed target by mag/0x1000, so
+               the speed is linear in that deflection, and the walk/run flag
+               flips when mag crosses 0xdc7 with 0x80 of hysteresis -- 0xe47
+               of 0x1000 to break into a run and back under 0xdc7 to drop out
+               of it, which is 89.2 and 86.1 percent of the usable travel, or
+               91.8 and 89.4 percent of the whole stick once the dead zone is
+               counted back in. Those are the ROM's numbers and nothing here
+               touches them -- so running in this mode does mean pushing the
+               stick most of the way, which is what pushing the touch stick
+               most of the way did.
+
+               A stick inside the dead zone falls through with CheckInput's
+               answer untouched, which is button mode -- so analog mode on a
+               keyboard, or with the pad put down, is exactly the program that
+               shipped before. */
+            /* ---- THE FOURTH SLOT-0 WRITER, AND THE ONE NO RUNG COULD SEE
+             *
+             * Run mg16 lane MP4. Same shape as the three already gated -- it
+             * writes THIS console's stick straight into Ctrl slot 0, on the
+             * level path, AFTER the per-player fan -- and it is the stick
+             * family rather than the buttons, so on a child it would drive the
+             * HOST's character and destroy the host's own stick values in one
+             * store.
+             *
+             * IT WAS INVISIBLE TO EVERY RUNG BY CONSTRUCTION. The guard
+             * includes pad_live, which is XInputGetState succeeding, and no
+             * harness has a physical gamepad -- so every green ladder in this
+             * campaign ran with this block switched off. It would have bitten
+             * the owner the first time he played multiplayer with a controller
+             * in analog mode, which is a configuration no proof had ever
+             * entered. The reviewer found it by reading, which is the only way
+             * it could have been found.
+             *
+             * SM64DS_FORCE_ANALOG makes it reachable from a proof: it forces
+             * the run-mode half of the condition, and SM64DS_PAD_TEST already
+             * forces the pad_live half in play mode (it fakes a pad and sets
+             * pad_live=1 at walk_window.cpp:3442, and is deliberately disabled
+             * under selftest). Together they cover the block with no hardware.
+             * Test scaffolding of the same class as SM64DS_SYNC_FORCE_V1 and
+             * SM64DS_SYNC_DROP, and named here so it is not mistaken for a
+             * player-facing setting. */
+            static int force_analog = -1;
+            if (force_analog < 0)
+                force_analog = getenv("SM64DS_FORCE_ANALOG") ? 1 : 0;
+            const int analog_mode = force_analog || run_mode() == RUN_ANALOG;
+            if (!selftest && analog_mode && pad_live && !menu_on &&
+                !(port::comms_transport() && comms_fanout_on())) {
+                const int DEAD = 7849;      /* XInput's left-stick floor */
+                const int FULL = 32767;
+                const int dxs = pad.lx;
+                const int dys = -pad.ly;    /* stick up is touch-screen up */
+                double len = sqrt((double)dxs * dxs + (double)dys * dys);
+                if (len > FULL) len = FULL;
+                if (len > DEAD) {
+                    int mag = (int)(4096.0 * (len - DEAD) / (FULL - DEAD));
+                    if (mag > 0x1000) mag = 0x1000;
+                    if (mag < 0) mag = 0;
+                    /* THE LOCAL SLOT, at the 0x18 Ctrl stride. Each split array
+                       (f4a0/f4a2/f4a4/f4a6/f4ac) is 0x18 * kPortMaxPlayers, and
+                       the ROM reads player N's fields at symbol + N*0x18 (see the
+                       fan block above). On the child data_0209f250 is 1, so the
+                       stick must land in slot 1. */
+                    const int lo = (int)data_0209f250 * 0x18;
+                    *(short *)((char *)data_0209f4a0 + lo) = (short)mag;
+                    *(short *)((char *)data_0209f4a2 + lo) =
+                        (short)((double)dxs * mag / len);
+                    *(short *)((char *)data_0209f4a4 + lo) =
+                        (short)((double)dys * mag / len);
+                    *(short *)((char *)data_0209f4a6 + lo) =
+                        _ZN4cstd5atan2E5Fix12IiES1_(dxs, dys);
+                    /* the field the walk/run branch keys off: "the player is
+                       on the analog stick, read the deflection" */
+                    *((unsigned char *)data_0209f4ac + lo) = 1;
+                }
+            }
+}
+
 int main(void)
 {
     /* THE ASPECT IS CHOSEN HERE, ONCE, BEFORE ANYTHING TOUCHES THE FRAMEBUFFER.
@@ -9115,8 +9341,46 @@ int main(void)
                    direct store is the one that reaches the game. */
                 const int lo = (int)data_0209f250 * 4;
                 *(unsigned short *)((char *)data_020a0e58 + lo + 0) = raw;
-                *(unsigned short *)((char *)data_020a0e58 + lo + 2) =
+                const unsigned short edge =
                     (unsigned short)(raw & (unsigned short)~raw_prev);
+                *(unsigned short *)((char *)data_020a0e58 + lo + 2) = edge;
+                /* ---- AND THE SPLIT SYMBOL, EVERY FRAME (run link100, lane
+                   FRAME2) -------------------------------------------------
+                   data_020a0e5a is PadData[i].pressed -- the SAME halfword the
+                   store above just wrote, at data_020a0e58 + i*4 + 2 -- and
+                   hal/auto_bss.cpp gives it separate host storage. Two ROM
+                   readers use the split spelling rather than the record:
+                   IsButtonInputValid (src/IsButtonInputValid.c) and
+                   Stage::Behavior's own pause trigger
+                   (src/_ZN5Stage8BehaviorEv.cpp:205, `data_020a0e5a + pi * 4`).
+
+                   NOTHING WROTE IT PER FRAME. hal/message_pump.cpp assigns it
+                   while a message box is up and says why -- the box could not
+                   be dismissed otherwise -- and hal/input_probe.cpp ORs a
+                   scripted edge into it. Outside those two it stayed at
+                   whatever was last OR-ed in, forever. Two things follow, and
+                   _ZTV5Stage slot 6 is what made both visible:
+
+                     * a real key press never reaches it at all, so the ROM's
+                       own pause trigger could not fire from the keyboard; and
+                     * one SM64DS_PROBE_INPUT press LATCHES. Measured on the tip
+                       before this line, port/tools/stage_pause_proof.py rung 5:
+                       a scripted START+L at f150..155 is refused for all six
+                       frames by the ROM's own L+START term, and then the pause
+                       opens at f156 -- the frame the hold ends -- off the START
+                       bit still standing in this word from f150. The same latch
+                       is why the paused run reopened the menu at f190 after
+                       closing it at f180.
+
+                   The store is an ASSIGNMENT of the same edge, at the same
+                   instant, which is exactly what the aliasing does on hardware.
+                   It is above port_input_probe_apply on purpose: the probe ORs
+                   its scripted bits into BOTH words after this, so a scripted
+                   press still arrives and still lasts exactly one frame.
+                   hal/message_pump.cpp's own publish is unchanged and still
+                   runs later in the frame; it now folds A/B onto a word that
+                   was cleared this frame instead of one that never was. */
+                *(unsigned short *)((char *)data_020a0e5a + lo) = edge;
             }
             raw_prev = raw;
             /* the angle FROM Mario TO the camera (what the name
@@ -9134,173 +9398,31 @@ int main(void)
                the direct readers (IsButtonInputValid, Message::Update) both see
                it. Does nothing without the env var. */
             port_input_probe_apply(frame);
-            _ZN5Stage10CheckInputEv();
-            /* the matched TU writes its own data_0209f498 block; older
-               TUs read per-field split symbols -- copy the record out
-               ----------------------------------------------------------------
-               run mg16 lane MP3: FOR EVERY PLAYER, AT THE DS's OWN STRIDE.
-               This copied slot 0 and only slot 0, which was right while the
-               port asserted one player and is the exact reason a second
-               player could receive input and still not move.
+            /* THIS FRAME'S PAD, STASHED FOR THE Ctrl BRIDGE (run link100, lane
+               FRAME). port_frame_ctrl_publish runs from inside port_actor_tick
+               -- hal/stage_frame.cpp's slot-6 thunk calls it the instant the
+               ROM's Stage::Behavior has filled the Ctrl block -- so it cannot
+               reach these four frame-loop locals. Written here, above the tick,
+               and read once below it; see the function's own banner. */
+            g_fc_pad = pad;
+            g_fc_pad_live = pad_live;
+            g_fc_menu_on = menu_on;
+            g_fc_selftest = selftest;
+            /* STAGE::CheckInput IS THE STAGE'S AGAIN (run link100, lane FRAME).
+               This is where the port used to call it -- Stage::Behavior:107,
+               transcribed here so the two blocks that followed could read this
+               frame's Ctrl record. Slot 6 of _ZTV5Stage now holds the ROM's own
+               Stage::Behavior, which calls CheckInput itself, so a call here
+               would run the input processor TWICE a frame: `held` and `pressed`
+               are |= accumulations and DecIfAbove0_Byte would run p->cnt and
+               p->delay down at double rate.
 
-               ON THE DS THESE FIVE NAMES ARE INTERIOR ADDRESSES OF THE Ctrl
-               BLOCK ITSELF: data_0209f498 + 8, +0xa, +0xc, +0xe and +0x14,
-               with Ctrl striding 0x18 per player. That is why
-               port/unmatched/Player_Behavior.cpp reads its stick angle as
-               `*(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * 0x18)` --
-               on hardware that walks straight into player N's own Ctrl record.
-               The port hosts the five as SEPARATE arrays, so the same walk
-               lands inside data_0209f4a6's own storage instead, reading a byte
-               nobody wrote. Slot 0 worked because its offset is zero.
-
-               So the copy writes each player's fields at that same 0x18 stride,
-               which puts player N's values exactly where the ROM's walk looks
-               for them.
-
-               THE CEILING IS GONE, and it was never a layout fact. An
-               earlier revision of this comment said the split symbols could
-               not be enlarged because they sit interior to .dsstate and
-               growing them retires every BMP baseline. The first half was
-               wrong: they are SEPARATE host symbols, not interior addresses,
-               and this tree already sizes two of the family
-               (data_0209f4ac/data_0209f4ae) at 0x18 * 4 for exactly this
-               reason -- hal/actor_vtables.cpp carries the note about the stray
-               that taught it. The rest now match. Baselines do move, which is
-               what rung 1's position check is for. */
-            {
-                const char *q = (const char *)data_0209f498;
-                int np = (int)data_0209f21c;
-                if (np < 1) np = 1;
-                /* 0.3.2: sixteen. The five split arrays this fans into
-                   (hal/actor_vtables.cpp f49c/f49e/f4a0/f4ac/f4ae, and
-                   auto_bss.cpp's f4a2/f4a4/f4a6) are all 0x18 * kPortMaxPlayers
-                   now; the old cap at four was what kept slots 4..15 motionless
-                   in a wide match -- their records arrived and were never
-                   fanned out, so every peer agreed they stood still. */
-                if (np > kPortMaxPlayers) np = kPortMaxPlayers;
-                for (int pi = 0; pi < np; ++pi) {
-                    const char *r = q + pi * 0x18;
-                    const int o = pi * 0x18;
-                    /* THE BUTTONS, and leaving them out was the second input
-                       seam. Ctrl+0x04 is the HELD word and +0x06 is
-                       pressed-this-frame, and they are what every button
-                       reader in the game uses -- crouch among them. Fanning
-                       the stick fields and not these meant movement routed to
-                       the right player and one button family did not: crouch
-                       in the child's window crouched MARIO in the child's
-                       world. Same one-line character as the PadData[0]
-                       clobber, one layer further in. */
-                    *(short *)((char *)data_0209f49c + o) = *(const short *)(r + 0x04);
-                    *(short *)((char *)data_0209f49e + o) = *(const short *)(r + 0x06);
-                    *(short *)((char *)data_0209f4a0 + o) = *(const short *)(r + 0x08);
-                    *(short *)((char *)data_0209f4a2 + o) = *(const short *)(r + 0x0a);
-                    *(short *)((char *)data_0209f4a4 + o) = *(const short *)(r + 0x0c);
-                    *(short *)((char *)data_0209f4a6 + o) = *(const short *)(r + 0x0e);
-                    *((unsigned char *)data_0209f4ac + o) = *(const unsigned char *)(r + 0x14);
-                }
-            }
-            /* ---- RUN MODE ANALOG: the record, refilled from the pad's left
-               stick. See the RUN_ mode block up by the menu enum for why this
-               is the game's own analog path and not a new one.
-
-               CheckInput has just written the D-PAD answer: magnitude pinned
-               at 0x1000, touching zero, direction quantized to the eight
-               table entries. That is right for a keyboard and wrong for a
-               stick, so when there IS a stick and it is off its rest, the
-               same five fields are written again the way CheckInput's TOUCH
-               branch writes them -- and every reader downstream, the walk
-               core included, cannot tell which branch filled them in.
-
-               The mapping, end to end. XInput reports each axis as +-32767,
-               so the deflection is the radius sqrt(lx^2+ly^2) clamped to the
-               stop, and the usable travel starts at XInput's own left-stick
-               floor (7849) rather than at zero, so a stick that rests a
-               little off centre is still at rest:
-
-                   mag = 0x1000 * (len - 7849) / (32767 - 7849)
-
-               clamped into 0..0x1000. Direction goes in as the touch screen's
-               axes -- x right, y DOWN, which is why the stick's up becomes a
-               negative dy -- and the angle through the ROM's own atan2 rather
-               than a host one, so it lands on the same table entry the
-               hardware would have picked.
-
-               What the game then does with it is entirely the game's:
-               func_ov002_020bf224 scales the speed target by mag/0x1000, so
-               the speed is linear in that deflection, and the walk/run flag
-               flips when mag crosses 0xdc7 with 0x80 of hysteresis -- 0xe47
-               of 0x1000 to break into a run and back under 0xdc7 to drop out
-               of it, which is 89.2 and 86.1 percent of the usable travel, or
-               91.8 and 89.4 percent of the whole stick once the dead zone is
-               counted back in. Those are the ROM's numbers and nothing here
-               touches them -- so running in this mode does mean pushing the
-               stick most of the way, which is what pushing the touch stick
-               most of the way did.
-
-               A stick inside the dead zone falls through with CheckInput's
-               answer untouched, which is button mode -- so analog mode on a
-               keyboard, or with the pad put down, is exactly the program that
-               shipped before. */
-            /* ---- THE FOURTH SLOT-0 WRITER, AND THE ONE NO RUNG COULD SEE
-             *
-             * Run mg16 lane MP4. Same shape as the three already gated -- it
-             * writes THIS console's stick straight into Ctrl slot 0, on the
-             * level path, AFTER the per-player fan -- and it is the stick
-             * family rather than the buttons, so on a child it would drive the
-             * HOST's character and destroy the host's own stick values in one
-             * store.
-             *
-             * IT WAS INVISIBLE TO EVERY RUNG BY CONSTRUCTION. The guard
-             * includes pad_live, which is XInputGetState succeeding, and no
-             * harness has a physical gamepad -- so every green ladder in this
-             * campaign ran with this block switched off. It would have bitten
-             * the owner the first time he played multiplayer with a controller
-             * in analog mode, which is a configuration no proof had ever
-             * entered. The reviewer found it by reading, which is the only way
-             * it could have been found.
-             *
-             * SM64DS_FORCE_ANALOG makes it reachable from a proof: it forces
-             * the run-mode half of the condition, and SM64DS_PAD_TEST already
-             * forces the pad_live half in play mode (it fakes a pad and sets
-             * pad_live=1 at walk_window.cpp:3442, and is deliberately disabled
-             * under selftest). Together they cover the block with no hardware.
-             * Test scaffolding of the same class as SM64DS_SYNC_FORCE_V1 and
-             * SM64DS_SYNC_DROP, and named here so it is not mistaken for a
-             * player-facing setting. */
-            static int force_analog = -1;
-            if (force_analog < 0)
-                force_analog = getenv("SM64DS_FORCE_ANALOG") ? 1 : 0;
-            const int analog_mode = force_analog || run_mode() == RUN_ANALOG;
-            if (!selftest && analog_mode && pad_live && !menu_on &&
-                !(port::comms_transport() && comms_fanout_on())) {
-                const int DEAD = 7849;      /* XInput's left-stick floor */
-                const int FULL = 32767;
-                const int dxs = pad.lx;
-                const int dys = -pad.ly;    /* stick up is touch-screen up */
-                double len = sqrt((double)dxs * dxs + (double)dys * dys);
-                if (len > FULL) len = FULL;
-                if (len > DEAD) {
-                    int mag = (int)(4096.0 * (len - DEAD) / (FULL - DEAD));
-                    if (mag > 0x1000) mag = 0x1000;
-                    if (mag < 0) mag = 0;
-                    /* THE LOCAL SLOT, at the 0x18 Ctrl stride. Each split array
-                       (f4a0/f4a2/f4a4/f4a6/f4ac) is 0x18 * kPortMaxPlayers, and
-                       the ROM reads player N's fields at symbol + N*0x18 (see the
-                       fan block above). On the child data_0209f250 is 1, so the
-                       stick must land in slot 1. */
-                    const int lo = (int)data_0209f250 * 0x18;
-                    *(short *)((char *)data_0209f4a0 + lo) = (short)mag;
-                    *(short *)((char *)data_0209f4a2 + lo) =
-                        (short)((double)dxs * mag / len);
-                    *(short *)((char *)data_0209f4a4 + lo) =
-                        (short)((double)dys * mag / len);
-                    *(short *)((char *)data_0209f4a6 + lo) =
-                        _ZN4cstd5atan2E5Fix12IiES1_(dxs, dys);
-                    /* the field the walk/run branch keys off: "the player is
-                       on the analog stick, read the deflection" */
-                    *((unsigned char *)data_0209f4ac + lo) = 1;
-                }
-            }
+               THE TWO BLOCKS MOVED WITH IT, to the far side of port_actor_tick
+               -- the split-array Ctrl fan-out and the RUN-mode analog override.
+               Both have to see THIS frame's record, and the Stage fills it from
+               inside the tick now. See the block below the tick chain. The pad
+               mirror is still written HERE, above the tick, because that is
+               where CheckInput reads it from. */
             /* camera lazy-follow, from the same intended direction */
             if ((dx || dz) && !orbiting) {
                 float head = cam_yaw + atan2f((float)-dx, (float)dz);
@@ -10793,8 +10915,37 @@ int main(void)
            stays here, above the tick, and why the seat is held to pixels
            and triangles rather than exit codes: SM64DS_SHADOW_TRIS=1 prints
            what the seat submits per frame (see the call site). */
-        if (real_boot && !menu_on)
-            ShadowModel::CleanAll();
+        /* RETIRED BY THE SLOT-6 SEAT (run link100, lane FRAME), and everything
+           the block above argues is why it CAN be retired rather than why it
+           cannot. ShadowModel's freeze protocol is unchanged -- InitModel
+           refuses while data_0209ceec is set, RenderAll SETS it, CleanAll
+           CLEARS it, so a frame's registrations can only happen after that
+           frame's CleanAll and before its RenderAll -- and the ROM satisfies it
+           the way it always did: this call is Stage::Behavior's LAST statement,
+           and the Stage's own spawn record (arm9 0x0209213c) carries behaviour
+           priority 3 against the hundreds every other class uses, so
+           Stage::Behavior is the FIRST body phase 3 runs. "Above
+           port_actor_tick" was this file's rendering of "before every other
+           actor's Behavior"; "the head of the behaviour list" is the ROM's own,
+           and on this tree they are the same position in the frame.
+
+           THE ROM'S GUARD COMES BACK WITH IT, which is the half the
+           transcription had to drop. The ROM's call sits inside
+
+               if ((u8)(data_0209f294 | (data_0209f2c4 | data_0209f20c)) == 0)
+                   if ((data_0209b454 & ~0x20000000) == 0)
+                       ShadowModel::CleanAll();
+
+           and the note above is explicit that the port held all four of those
+           words at 0 for the boot it shipped, so writing the guard out "would
+           only be repeating a constant". They are not held at 0 any more:
+           data_0209f2c4 is the pause state and slot 6 is what starts writing
+           it. A paused frame now keeps its shadow list instead of emptying it,
+           which is the ROM's answer.
+
+           NOT AN ARGUMENT -- A RUNG. port/tools/stage_pause_proof.py rung 2
+           reads the behaviour list in walk order out of SM64DS_TRACE_LISTS and
+           fails unless the Stage is the first node on it. */
         /* STAR1: Stage::Behavior:112 -- advance the running cutscene/kuppa
            script one frame. The port transcribes Stage::Behavior statement by
            statement and this one was missing. Without it a script launched by
@@ -10810,12 +10961,25 @@ int main(void)
            when data_0209fc48 == 0, so it is free off a cutscene and leaves every
            script-free selftest byte-identical. Gated to the game tick like the
            ROM, which does not run Stage::Behavior on a paused frame.
-           SM64DS_NO_KUPPA_TICK=1 restores the old behaviour on this binary. */
-        static int no_kuppa_tick = -1;
-        if (no_kuppa_tick < 0)
-            no_kuppa_tick = getenv("SM64DS_NO_KUPPA_TICK") ? 1 : 0;
-        if (real_boot && !menu_on && !no_kuppa_tick)
-            ProcessKuppaScript();
+           SM64DS_NO_KUPPA_TICK=1 restores the old behaviour on this binary.
+
+           AND THIS IS THE ONE THE SEAT COULD NOT SURVIVE (run link100, lane
+           FRAME). port/stage_lifecycle_map.txt section 12b sized all four
+           transcribed Stage::Behavior statements against a slot-6 seat and
+           three of them are idempotent or benign; this one is not. The script
+           VM advances one step per call, so leaving this line beside the ROM's
+           own Stage::Behavior:112 would run every cutscene in the game at
+           double speed -- and nothing about that shows up in an exit code or a
+           final position. It is retired here, the ROM's body makes the call,
+           and port/tools/stage_pause_proof.py rung 4 counts the calls per frame
+           on the opening cutscene rather than trusting this comment.
+
+           SM64DS_NO_KUPPA_TICK IS RETIRED WITH IT and deliberately not
+           re-implemented as a gate on the ROM's call. It existed to put the
+           pre-fix program back on the same binary while the fix was a host
+           line; the fix is now the ROM's own statement, and a switch that skips
+           one statement inside a matched body is not something this file can
+           honestly offer. */
         /* The intro-seen bit's EDGE, reported once when it moves. The opening's
            completion bar asks that flags2 bit 7 ends SET and that the PORT
            never sets it -- the write is the ROM's own, src/func_ov085_0212d5dc
@@ -10925,6 +11089,51 @@ int main(void)
         } else {
             hal_player_st_wait_main(player);
         }
+        /* THE BRIDGE RUNS INSIDE THE TICK NOW, and this comment is the
+           correction to where it first landed. Retiring the transcription put
+           the fan-out and the analog override HERE, past port_actor_tick, on
+           the reasoning that they have to see the record Stage::CheckInput
+           writes and CheckInput is inside the tick now. Both halves of that are
+           true and the placement was still wrong, because it asks the wrong
+           question: not "when is the record written" but "when is it READ".
+
+           src/_ZN6Player8BehaviorEv.cpp:170 reads its stick angle as
+               *(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * stride)
+           and Player::Behavior runs INSIDE port_actor_tick, after the Stage.
+           A fan-out below the tick therefore hands every actor LAST frame's
+           stick -- a one-frame input lag on every walk in the game, which no
+           exit code and no final position at 120 frames would have shown.
+
+           SO IT RUNS WHERE THE ROM'S OWN WRITE LANDS. On the cartridge there
+           are no split arrays at all: Stage::Behavior fills the Ctrl block at
+           data_0209f498 and every actor after it in the behaviour walk reads
+           that block directly at its 0x18 stride. The split arrays are the
+           port's own bridge around undersized host globals, so the faithful
+           place for them is exactly the instant the ROM's write finishes --
+           after Stage::Behavior returns and before any other actor's Behavior.
+           hal/stage_frame.cpp's slot-6 thunk calls port_frame_ctrl_publish()
+           there. It is a host bridge at a ROM boundary, which is what a bridge
+           is for; it is not a call the ROM makes and it moves nothing of the
+           ROM's.
+
+           WHAT IS LEFT HERE IS THE HARNESS'S OWN FRAME. Three of this file's
+           frames never dispatch slot 6 -- the debug menu holds the tick, and
+           the two no-spawn dev-rig arms above call a Player body directly with
+           no Stage on any list. The DS has no such frame, so on the ROM
+           "Stage::Behavior did not run" and "the input record is stale" never
+           come apart. They can here. The counter in hal/stage_frame.cpp is the
+           exact test -- the slot-6 thunk increments it, so it cannot disagree
+           with what ran -- and these two calls happen on precisely the frames
+           the ROM's own body did not make them. */
+        {
+            static unsigned frame_beh_seen;
+            const unsigned frame_beh_now = port_stage_behavior_calls();
+            if (frame_beh_now == frame_beh_seen) {
+                _ZN5Stage10CheckInputEv();
+                port_frame_ctrl_publish();
+            }
+            frame_beh_seen = frame_beh_now;
+        }
         /* ADVENTURE GHOSTS: hold every remote body in the disable-interaction
            state, HERE because it must land AFTER the actor phases above --
            Player::ChangeState re-arms all three fields on every transition, so
@@ -11008,16 +11217,64 @@ int main(void)
            Stage::Behavior runs it on the ROM. Advances Message::UpdateWindow +
            Message::Update, which writes engine A's box registers that the
            compositor below reads. Stepped here, after the player tick that can
-           open the box (St_Talk_Main -> func_0201f32c) and beside the fader. */
-        port_message_pump();
-        /* AND ITS OTHER ARM. On the ROM these two are the same statement:
-           Stage::Behavior branches on data_0209f2d8 == 1 and calls
-           UpdateMessage on the adventure side, the VS block on the other. The
-           countdown is the head of that block, and its last act -- after the
-           three beeps and the GO -- is Sound::LoadAndSetMusic_Layer1(0x4d),
-           which is the only music a VS arena has. Self-guarded on the mode, so
-           an adventure frame reaches one load and a compare. */
-        port_vs_countdown_tick();
+           open the box (St_Talk_Main -> func_0201f32c) and beside the fader.
+
+           BOTH ARMS ARE RETIRED FROM THIS FILE (run link100, lane FRAME), and
+           the comment above already said where they belong: "run every frame
+           the way Stage::Behavior runs it on the ROM". _ZTV5Stage slot 6 holds
+           that function now, so the two calls that used to stand here are made
+           from inside it -- one statement, one branch on data_0209f2d8, exactly
+           as the ROM writes it.
+
+             THE PUMP. Stage::Behavior spells ?UpdateMessage@Stage@@SAXXZ; the
+             matched TU src/_ZN5Stage13UpdateMessageEv.cpp spells the method
+             non-static AND defines its own four empty Message/SaveData leaves,
+             so linking it would tick nothing. hal/stage_frame.cpp's face points
+             that name at port_message_pump, which IS UpdateMessage's body
+             calling the REAL matched Message methods. Nothing about the pump
+             changed; only who calls it.
+
+             IT MOVES ONE PHASE EARLIER IN THE FRAME AND THAT IS THE ROM'S
+             ANSWER, not an accident of where the face landed. This file stepped
+             the pump AFTER the player tick so a box opened by St_Talk_Main
+             advanced the same frame. The Stage ticks at the HEAD of the
+             behaviour list on the DS, so on hardware a box opened by the player
+             is first advanced on the NEXT frame. One frame of box-open
+             animation, in the direction of the cartridge.
+
+             THE VS COUNTDOWN. Same statement, other branch. hal/star_flow.cpp
+             keeps port_vs_countdown_tick's body and its derivation of seq 0x4d;
+             it is no longer called from the frame, because the ROM's own block
+             does the same decrements and leaving both in would run the
+             countdown at double rate.
+
+           TWO THINGS THE ROM'S BLOCK DOES NOT DO, and they are this lane's
+           declared cost rather than a silence. Both are inside the VS mode
+           (data_0209f2d8 == 1) and neither is reachable on any adventure frame:
+
+             THE READINESS CENSUS IS FOUR-WIDE. The ROM counts ready players
+             over `for (i = 0; i < 4; i++)` and starts the countdown at
+             `cnt >= data_0209fc50`. port_vs_countdown_tick widened that census
+             to data_0209fc50 for the 16-player mod, so a match seated above
+             four now waits on a census that can never reach its own required
+             count. A VS lane owns this; it is a mod's own seeded value
+             (seat_vs_countdown's data_0209fc50) against the cartridge's
+             four-slot loop, and neither this file nor a Stage seat is the place
+             to reconcile them.
+
+             LUIGI INFECTION'S STEP-ASIDE IS GONE. port_vs_countdown_tick opened
+             with `if (port_luigi_enabled()) return;` so the mod could own the
+             whole countdown. The ROM's block has no such line, so with that
+             mode armed the native ~2s countdown now runs underneath the mod's
+             stretched 5s one. THE MODE STILL WORKS: port_luigi_countdown_drive
+             just below writes data_0209f2bc and data_0209f304 from the host
+             frame counter every frame, unguarded and deliberately so ("they are
+             the world, they are pure functions of the frame"), which lands
+             after the tick and overwrites whatever the ROM's block decremented.
+             What leaks through is EFFECTS the stomp cannot take back: the ROM's
+             own beeps and its Sound::LoadAndSetMusic_Layer1(0x4d) fire on the
+             cartridge's schedule as well as the mod's. Audible, not structural,
+             and named here so the next VS lane does not have to find it. */
         /* LUIGI INFECTION START COUNTDOWN, update half (host-frame deterministic).
            When the mode is armed it owns the whole VS countdown -- the state, the
            stretched ~5s cadence, the beeps/music and the tagger pick at the end.
@@ -11042,6 +11299,119 @@ int main(void)
            one the level cannot produce (hal/level_boot.cpp) */
         if (real_boot)
             port_stage_path_guard(player);
+        /* ---- SM64DS_PAUSE_WATCH: the pause state and the terms of the gate
+           that opens it (run link100, lane FRAME).
+           ---------------------------------------------------------------------
+           _ZTV5Stage slot 6 is what made this observable at all. Stage::Behavior
+           carries the pause TRIGGER in its last block, and until the ROM's body
+           ran there was nothing to watch: data_0209f2c4 sat at 0 for the whole
+           process and START did nothing.
+
+           WHAT IS PRINTED, and why each field is here rather than only the
+           answer. The line reports data_0209f2c4 -- the pause state itself, 0
+           for running, 1 the frame PS_Init seats it -- and beside it the five
+           terms of the ROM's own gate, so a run where START does NOT open the
+           menu says WHICH term refused rather than only that it refused:
+
+             f2c4   the pause state (the answer)
+             seen   data_0209caa0[2] & 0x80, the opening-seen bit. In adventure
+                    mode the trigger's inner gate is
+                        (VS && data_0209fc68 == 0) || (data_0209caa0[2] & 0x80)
+                    and on the CARTRIDGE exactly one write sets that bit --
+                    src/func_ov085_0212d5dc.cpp:51, LakituBro's last opening
+                    state.
+                    ON THIS PORT IT IS ALREADY SET ON EVERY LEVEL ENTRY, and a
+                    reader who takes the sentence above as the whole story will
+                    misread every line this block prints. hal/level_boot.cpp
+                    (the `intro_seen` block, `data_0209caa0[8] |= 0x80`) sets it
+                    across every boot that is not a title-bridge crossing into a
+                    fresh file and not the second half of an opening, and its
+                    own banner gives the three reasons -- StartIntroCutscene's
+                    gate, HUD::Behavior and HUD::Render (the whole bottom screen
+                    returns early without it), and Player::InitResources' voice
+                    bank. So a level selftest boots with seen=1 from frame 0 and
+                    the pause is STATE-legal here; what refuses a scripted START
+                    is one of the terms below it or the button combination
+                    itself. port/tools/stage_pause_proof.py rung 5 is the
+                    measurement of that, and it used to assert the opposite.
+             msg    data_0209d660, a message box is up
+             fade   data_0209d4b0, a fader is in motion
+             trio   data_0209f294 | data_0209f2c4 | data_0209f20c
+             held   the local player's PadData held word, so a scripted START
+                    can be seen arriving
+
+           port/tools/stage_pause_proof.py reads these lines; it is inert with
+           the variable unset. */
+        {
+            static int pw = -1;
+            if (pw < 0) {
+                const char *v = getenv("SM64DS_PAUSE_WATCH");
+                pw = v ? atoi(v) : 0;
+                if (v && pw == 0) pw = 1;      /* "=1", "=on", anything */
+            }
+            /* SM64DS_PAUSE_WATCH=2 IS A TEST FIXTURE AND IS NAMED ONE -- AND
+               ON A LEVEL SELFTEST IT IS A NO-OP, WHICH IT NOW SAYS.
+               (run link100, lane FRAME2: the correction.) What stood here was
+
+                 "A level selftest boots straight into the level with a fresh
+                  save block, so the bit is clear and the ROM refuses to pause
+                  ... Mode 2 sets it once."
+
+               and the first half is false on this port. hal/level_boot.cpp's
+               intro_seen block sets data_0209caa0[8] |= 0x80 -- the same word,
+               the same bit -- on every level entry that is not a title-bridge
+               crossing into a fresh file, for the three reasons its own banner
+               gives. Measured: every [pause] line of a level-1 selftest, from
+               f0, reads seen=1 with this mode OFF.
+
+               The mode stays, because the ONE entry the port leaves the bit
+               clear on is real (the opening's own boot), and a proof that wants
+               the pause open on that entry needs it. It now reports whether it
+               actually did anything, so a log can never again be read as
+               evidence that the bit was clear beforehand. Scaffolding of the
+               same class as SM64DS_FORCE_ANALOG and SM64DS_SYNC_FORCE_V1: it is
+               never on in a shipped run and never on in the battery. */
+            if (pw >= 2) {
+                static int seeded;
+                if (!seeded) {
+                    seeded = 1;
+                    const int was = (data_0209caa0[2] & 0x80) ? 1 : 0;
+                    data_0209caa0[2] |= 0x80;
+                    fprintf(stderr, "[pause] fixture: data_0209caa0[2] |= 0x80 "
+                            "(the opening-seen bit) -- it was %s\n",
+                            was ? "ALREADY SET by the level boot "
+                                  "(hal/level_boot.cpp intro_seen); this "
+                                  "fixture changed nothing"
+                                : "CLEAR; the fixture is what set it");
+                }
+            }
+            if (pw) {
+                /* the LOCAL player index. data_020a0e40 is declared as an
+                   array here (line 648), so the value is [0]; taking the
+                   symbol itself gives the address, which is what the first
+                   version of this line did and it read PadData at a megabyte
+                   past the end. */
+                const unsigned pi = (unsigned)data_020a0e40[0];
+                static int said_stage;
+                if (!said_stage) {
+                    said_stage = 1;
+                    /* the Stage's own object, so a proof can match it against
+                       the first node SM64DS_TRACE_LISTS prints on the
+                       behaviour list -- which is what licenses retiring the
+                       freeze-mask latch and the CleanAll hoist */
+                    fprintf(stderr, "[pause] stage actor=%p\n", (void *)stage);
+                }
+                fprintf(stderr,
+                        "[pause] f%d f2c4=%d seen=%d msg=%d fade=%d trio=%d "
+                        "held=%04x\n", frame, (int)data_0209f2c4[0],
+                        (data_0209caa0[2] & 0x80) ? 1 : 0,
+                        (int)data_0209d660, data_0209d4b0[0] ? 1 : 0,
+                        (int)(data_0209f294[0] | data_0209f2c4[0] |
+                              data_0209f20c[0]),
+                        (unsigned)*(unsigned short *)((char *)data_020a0e58 +
+                                                      pi * 4));
+            }
+        }
         ph_end(PH_INPUT, t_phase);
         /* THE DECEL CURVE. One line per frame after the tick, so the speed
            printed is the one this frame's physics produced. dv is the change
@@ -11744,18 +12114,35 @@ int main(void)
                hal/camera_bridges.cpp. */
             if (ntr::widescreen)
                 hal_camera_widen_frustum();
-            /* THE ACTOR RENDER BUCKET GOES HERE, and the reason is the shim
-               immediately below. Processing list 5 is the game's own render
-               pass -- func_0204322c over slots 9/10/11, in render-priority
-               order -- and everything on it is ROM code working in SCENE
-               units: Tree::Render clips its cylinders through the Clipper
-               with data_0209b3ec as it stands and writes scene-unit
-               translations into its Models. The shim converts that same view
+            /* THE ACTOR RENDER BUCKET GOES HERE. Processing list 5 is the
+               game's own render pass -- func_0204322c over slots 9/10/11, in
+               render-priority order -- and everything on it is ROM code working
+               in SCENE units: Tree::Render clips its cylinders through the
+               Clipper with data_0209b3ec as it stands and writes scene-unit
+               translations into its Models. The raster is z-buffered, so
+               drawing the actors ahead of the level model costs nothing.
+
+               THE REASON THIS BANNER USED TO GIVE IS STALE, and saying so is
+               the point (run link100, lane FRAME2). It read: "the reason is the
+               shim immediately below ... the shim converts that same view
                matrix for the port's own world-unit models. So the bucket runs
                BEFORE the conversion and the harness's two draws after it, and
-               each side gets the matrix it was written against. The raster is
-               z-buffered, so drawing the actors ahead of the level model
-               costs nothing.
+               each side gets the matrix it was written against." There is no
+               conversion below any more. The block that follows this one says
+               so in its own first line -- "THE VIEW MATRIX IS USED AS THE ROM
+               PRODUCED IT ... The R6 shim that scaled this row by 8 for the
+               harness's world-unit models is gone" -- and every model matrix in
+               the frame is scene units now. What this position still buys is
+               DRAW ORDER and nothing else: opaque geometry is free either way,
+               and the order that is not free is the translucent one (see the
+               particle note below, which loses every particle if it is
+               submitted ahead of the level).
+
+               IT MATTERS TO _ZTV5Stage SLOT 9, which is why it is corrected
+               here rather than left. Stage::Render dispatches from INSIDE this
+               bucket, and the stale paragraph made that look like a matrix
+               problem. It is not; it is the same problem slot 6 had. See
+               port/stage_lifecycle_map.txt section 12c.
                SM64DS_NO_ACTORS=1 takes the bucket out for the A/B. */
             static int no_actors = -1;
             if (no_actors < 0) no_actors = getenv("SM64DS_NO_ACTORS") ? 1 : 0;
