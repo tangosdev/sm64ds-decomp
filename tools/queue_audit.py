@@ -396,9 +396,15 @@ def run(write, check):
             if int(row["shard_count"]) != m["src_files"]:
                 row["shard_count"] = str(m["src_files"])
                 changed["shard_count"] += 1
-                if int(row["total_lines"]) != m["total_lines"]:
-                    row["total_lines"] = str(m["total_lines"])
-                    changed["total_lines"] += 1
+            # total_lines is measured independently of shard_count. It used to be
+            # nested inside the test above, so a row whose line count moved while
+            # its shard count held was never corrected and never counted -- which
+            # is why the two counters always reported the same figure. At the time
+            # of the fix that hid 29 stale rows behind the 4 the gate reported,
+            # with deltas from -51 to +95.
+            if int(row["total_lines"]) != m["total_lines"]:
+                row["total_lines"] = str(m["total_lines"])
+                changed["total_lines"] += 1
             # Omitting the token was never a claim of zero: of 108 promoted
             # manifests only two carry no compiler_only_output, both because
             # the key function fell outside the licensed range.
