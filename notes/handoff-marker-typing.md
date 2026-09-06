@@ -1,5 +1,15 @@
 # Handoff: object-marker typing
 
+> **STATUS: STALE — verify before use.** The **767 bare markers remaining** headline
+> is now ~20x stale: `python tools/marker_census.py` reports 19 bannered headers and
+> **37** bare markers remaining (measured 2026-09-05), not 767. The typing programme
+> this handoff tracks is effectively finished; do not carry forward the 298/767/235
+> counts anywhere in this file. The D1-vs-D2 soundness argument (§2 — why
+> D1-and-never-D2 proves a member's declared type) and the five traps in §7
+> (Capstone condition-code mnemonic collisions, "wrong-place scan reports like a
+> clean scan", verify a merge by content after a squash) are general lessons and
+> remain valid. Verified 2026-09-06.
+
 **Written 2026-08-06.** Everything below is checkable; nothing here is a plan you have
 to take on trust. Where a number appears, the command that produces it appears with it.
 
