@@ -10,14 +10,14 @@ void func_ov002_020c70ac(char* c) {
     *(int*)(c+0x9c) = -0x4000;
     switch (*(u8*)(c+0x6e3)) {
     case 12:
-        *(s16*)(c+0x8e) += 0x8000;
+        *(s16*)(c+0x8e) = *(s16*)(c+0x8e) + 0x8000;
     case 11:
     case 18:
         *(int*)(c+0x98) = 0x20000;
         *(u16*)(c+0x6a6) = 6;
         break;
     case 9:
-        *(s16*)(c+0x8e) += 0x8000;
+        *(s16*)(c+0x8e) = *(s16*)(c+0x8e) + 0x8000;
     case 8:
     case 16:
         *(int*)(c+0xa8) = 0x40000;

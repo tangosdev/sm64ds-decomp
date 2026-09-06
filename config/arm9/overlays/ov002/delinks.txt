@@ -2004,6 +2004,7 @@ src/func_ov002_020c6fe4.c:
     .text start:0x020c6fe4 end:0x020c70ac
 
 src/func_ov002_020c70ac.c:
+    complete
     .text start:0x020c70ac end:0x020c7194
 
 src/func_ov002_020c7194.cpp:
@@ -2619,6 +2620,7 @@ src/_ZN6Player20St_LedgeHang_CleanupEv.cpp:
     .text start:0x020d092c end:0x020d0948
 
 src/func_ov002_020d0948.c:
+    complete
     .text start:0x020d0948 end:0x020d0a44
 
 src/_ZN6Player17St_LedgeHang_MainEv.cpp:
@@ -3633,6 +3635,7 @@ src/func_ov002_020e25f0.c:
     .text start:0x020e25f0 end:0x020e2664
 
 src/func_ov002_020e2664.c:
+    complete
     .text start:0x020e2664 end:0x020e28d4
 
 src/func_ov002_020e28d4.c:
