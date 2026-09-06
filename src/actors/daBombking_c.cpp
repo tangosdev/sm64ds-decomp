@@ -243,120 +243,6 @@ extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, Vector3* v, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
 extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, Fix12i r, Fix12i h, Vector3_16* p, Vector3_16* q);
 extern unsigned char _ZN8dActor_c9TrackStarEjj(void* self, unsigned int a, unsigned int b);
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov078_02123864, NOT applied: extern void* _ZN8dActor_c10FindWithIDEj(unsigned int); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02123aa0, NOT applied: extern int KingBobOmb_SetState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_02123aa0, NOT applied: extern void func_02012694(int a, void* b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov078_02123bc4, NOT applied: extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *, BCA_File&, int, int, Fix12, unsigned short); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov078_02123864, from the legacy file for func_ov078_02123d3c, NOT applied: extern void func_ov078_02123864(char* c); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov078_02123d3c, NOT applied: extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1); */
-/* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov078_02123d3c, NOT applied: extern int ApproachAngle(void* dst, int target, int a, int b, int c); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Dist, from the legacy file for func_ov078_02123d3c, NOT applied: extern int Vec3_Dist(const Vector3* a, const Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_02123d3c, NOT applied: extern void func_02012694(int id, void* v); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02123d3c, NOT applied: extern void KingBobOmb_SetState(char* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov078_02123804, from the legacy file for func_ov078_02123f1c, NOT applied: extern "C" int func_ov078_02123804(C* c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov078_02123864, from the legacy file for func_ov078_02123f1c, NOT applied: extern "C" void func_ov078_02123864(C* c); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov002_020db54c, from the legacy file for func_ov078_02123f1c, NOT applied: extern "C" void func_ov002_020db54c(int self, int a, int b, int d); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02123f1c, NOT applied: extern "C" void KingBobOmb_SetState(C* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov078_02124000, NOT applied: extern void ApproachAngle(void*,int,int,int,int); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN9Animation8FinishedEv, from the legacy file for func_ov078_02124000, NOT applied: extern int _ZN9Animation8FinishedEv(void*); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02124000, NOT applied: extern int KingBobOmb_SetState(void*,void*); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c18HorzAngleToCPlayerEv, from the legacy file for func_ov078_021240a0, NOT applied: extern int _ZN8dActor_c18HorzAngleToCPlayerEv(char* c); */
-/* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov078_021240a0, NOT applied: extern void ApproachAngle(short* p, int target, int a, int b, int c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE, from the legacy file for func_ov078_021240a0, NOT applied: extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int f); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_021240a0, NOT applied: extern void func_02012694(int a, void* b); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_021240a0, NOT applied: extern void KingBobOmb_SetState(char* c, void* pmf); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov078_021240a0, NOT applied: extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f220, from the legacy file for func_ov078_021240a0, NOT applied: extern unsigned char data_0209f220; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c18HorzAngleToCPlayerEv, from the legacy file for func_ov078_02124470, NOT applied: extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self); */
-/* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov078_02124470, NOT applied: extern void ApproachAngle(void* dst, int target, int a, int b, int e); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02124470, NOT applied: extern int KingBobOmb_SetState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov078_021244d0, NOT applied: extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_02124520, NOT applied: extern void func_02012694(int a, void *v); */
-/* TUBUILD CONFLICT -- alternate declaration of MulMat4x3Mat4x3, from the legacy file for func_ov078_02124520, NOT applied: extern void MulMat4x3Mat4x3(void *a, void *b, void *dst); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Lsl, from the legacy file for func_ov078_02124520, NOT applied: extern void Vec3_Lsl(void *d, void *s, int sh); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player12GetTalkStateEv, from the legacy file for func_ov078_02124520, NOT applied: extern int _ZN6Player12GetTalkStateEv(void *player); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov078_02124520, NOT applied: extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN9Animation8FinishedEv, from the legacy file for func_ov078_02124520, NOT applied: extern int _ZN9Animation8FinishedEv(void *anim); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02124520, NOT applied: extern void KingBobOmb_SetState(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov078_02124520, NOT applied: extern Matrix4x3 data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov078_021247bc, NOT applied: extern short Vec3_HorzAngle(const void *a, const void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Dist, from the legacy file for func_ov078_021247bc, NOT applied: extern int Vec3_Dist(const void *a, const void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov078_021247bc, NOT applied: extern void ApproachAngle(void *p, int target, int a, int b, int cc); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN9Animation8FinishedEv, from the legacy file for func_ov078_021247bc, NOT applied: extern int _ZN9Animation8FinishedEv(void *thiz); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov078_021247bc, NOT applied: extern void MulVec3Mat4x3(void *src, void *m, void *dst); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr10IsOnGroundEv, from the legacy file for func_ov078_021247bc, NOT applied: extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *thiz); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c13ClosestPlayerEv, from the legacy file for func_ov078_021247bc, NOT applied: extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_021247bc, NOT applied: extern void KingBobOmb_SetState(void *c, void *p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov078_021247bc, NOT applied: extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *thiz, void *f, int a, int b, int fx, unsigned short t); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh, from the legacy file for func_ov078_021247bc, NOT applied: extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *thiz, void *actor, unsigned int a, const void *pos, unsigned int b, unsigned int cc); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Camera9SetFlag_3Ev, from the legacy file for func_ov078_021247bc, NOT applied: extern void _ZN6Camera9SetFlag_3Ev(void *thiz); */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov078_021247bc, NOT applied: extern char data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov078_021247bc, NOT applied: extern char data_0209f318; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov078_02124b40, NOT applied: extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(char *anim, void *file, int a, int b, int c, unsigned short u); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_02124b40, NOT applied: extern int func_02012694(int a, void *b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov078_02125c24, from the legacy file for func_ov078_02124c94, NOT applied: extern int func_ov078_02125c24(void* c, int a); */
-/* TUBUILD CONFLICT -- alternate declaration of func_0200fa8c, from the legacy file for func_ov078_02124c94, NOT applied: extern void func_0200fa8c(int *t, int a); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr10IsOnGroundEv, from the legacy file for func_ov078_02124cf4, NOT applied: int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02124cf4, NOT applied: void KingBobOmb_SetState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_02124cf4, NOT applied: void func_02012694(int a, int* t); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov078_02125c24, from the legacy file for func_ov078_02124cf4, NOT applied: void func_ov078_02125c24(void* c, int a); */
-/* TUBUILD CONFLICT -- alternate declaration of func_0200fa8c, from the legacy file for func_ov078_02124cf4, NOT applied: void func_0200fa8c(int* t, int a); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player9StartTalkER7fBase_cb, from the legacy file for func_ov078_02124cf4, NOT applied: int _ZN6Player9StartTalkER7fBase_cb(void* self, fBase_c& a, bool b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE, from the legacy file for func_ov078_02124cf4, NOT applied: void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int fix); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh, from the legacy file for func_ov078_02124cf4, NOT applied: int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, fBase_c& a, unsigned int b, const Vector3* v, unsigned int d, unsigned int e); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_0212705c, from the legacy file for func_ov078_02124cf4, NOT applied: extern int data_ov078_0212705c; */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f220, from the legacy file for func_ov078_02124cf4, NOT applied: extern unsigned char data_0209f220; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov078_02124e9c, NOT applied: extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(char *anim, void *file, int a, int b, int c, unsigned short u); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov078_021250f8, NOT applied: extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c13ClosestPlayerEv, from the legacy file for func_ov078_021250f8, NOT applied: extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_FromRotationY, from the legacy file for func_ov078_021250f8, NOT applied: extern void Matrix4x3_FromRotationY(void* m, int ang); */
-/* TUBUILD CONFLICT -- alternate declaration of Matrix4x3_ApplyInPlaceToRotationX, from the legacy file for func_ov078_021250f8, NOT applied: extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short ang); */
-/* TUBUILD CONFLICT -- alternate declaration of MulVec3Mat4x3, from the legacy file for func_ov078_021250f8, NOT applied: extern void MulVec3Mat4x3(void* a, void* m, void* b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN9Animation8FinishedEv, from the legacy file for func_ov078_021250f8, NOT applied: extern int _ZN9Animation8FinishedEv(void* self); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_021250f8, NOT applied: extern void KingBobOmb_SetState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_0212703c, from the legacy file for func_ov078_021250f8, NOT applied: extern int data_ov078_0212703c; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov078_02125350, NOT applied: extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt( void* self, int bca, int a, int b, int fix, unsigned short t); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_02125448, NOT applied: extern void func_02012694(int a, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02125448, NOT applied: extern int KingBobOmb_SetState(void* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c18HorzAngleToCPlayerEv, from the legacy file for func_ov078_02125448, NOT applied: extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov078_02125448, NOT applied: extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov078_02125734, NOT applied: extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void*, void*, int, int, int, unsigned short); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c18HorzAngleToCPlayerEv, from the legacy file for func_ov078_02125790, NOT applied: extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* a); */
-/* TUBUILD CONFLICT -- alternate declaration of ApproachAngle, from the legacy file for func_ov078_02125790, NOT applied: extern void ApproachAngle(short* p, int target, int step, int band, int max); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_02125790, NOT applied: extern void func_02012694(int a, void* b); */
-/* TUBUILD CONFLICT -- alternate declaration of MulMat4x3Mat4x3, from the legacy file for func_ov078_02125790, NOT applied: extern void MulMat4x3Mat4x3(void* d, Matrix4x3* a, Matrix4x3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Lsl, from the legacy file for func_ov078_02125790, NOT applied: extern void Vec3_Lsl(void *d, void *s, int sh); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c17HugeLandingDustAtER7Vector3b, from the legacy file for func_ov078_02125790, NOT applied: extern int _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void* a, Vector3* v, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN9Animation8FinishedEv, from the legacy file for func_ov078_02125790, NOT applied: extern int _ZN9Animation8FinishedEv(void* a); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_02125790, NOT applied: extern void KingBobOmb_SetState(char* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov078_02125790, NOT applied: extern Matrix4x3 data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_0212703c, from the legacy file for func_ov078_02125790, NOT applied: extern int data_ov078_0212703c; */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_HorzAngle, from the legacy file for func_ov078_02125950, NOT applied: extern "C" short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b); */
-/* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRsss, from the legacy file for func_ov078_021259ec, NOT applied: extern void _Z14ApproachLinearRsss(short* a, short b, short c); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c13ClosestPlayerEv, from the legacy file for func_ov078_021259ec, NOT applied: extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Dist, from the legacy file for func_ov078_021259ec, NOT applied: extern int Vec3_Dist(struct Vector3* a, struct Vector3* b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player9StartTalkER7fBase_cb, from the legacy file for func_ov078_021259ec, NOT applied: extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh, from the legacy file for func_ov078_021259ec, NOT applied: extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actor, unsigned int msgid, struct Vector3* v, unsigned int arg4, unsigned int arg5); */
-/* TUBUILD CONFLICT -- alternate declaration of func_02012694, from the legacy file for func_ov078_021259ec, NOT applied: extern void func_02012694(int a, void* b); */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for func_ov078_021259ec, NOT applied: extern int KingBobOmb_SetState(char* c, void* p); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f220, from the legacy file for func_ov078_021259ec, NOT applied: extern unsigned char data_0209f220; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt, from the legacy file for func_ov078_02125bc8, NOT applied: extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void*, void*, int, int, int, unsigned short); */
-/* TUBUILD CONFLICT -- alternate declaration of data_0209f318, from the legacy file for func_ov078_02125c24, NOT applied: extern void* data_0209f318; */
-/* TUBUILD CONFLICT -- alternate declaration of _ZNK10dBgCh_Actr10IsOnGroundEv, from the legacy file for func_ov078_02125c98, NOT applied: int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self); */
-/* TUBUILD CONFLICT -- alternate declaration of Vec3_Lsl, from the legacy file for func_ov078_02125de0, NOT applied: extern void Vec3_Lsl(void *d, void *s, int sh); */
-/* TUBUILD CONFLICT -- alternate declaration of _ZN8dActor_c10FindWithIDEj, from the legacy file for func_ov078_02125de0, NOT applied: extern unsigned int _ZN8dActor_c10FindWithIDEj(unsigned int id); */
-/* TUBUILD CONFLICT -- alternate declaration of data_020a0e68, from the legacy file for func_ov078_02125de0, NOT applied: extern struct Matrix4x3 data_020a0e68; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126f20, from the legacy file for _ZN12daBombking_c16CleanupResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126f20; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126f10, from the legacy file for _ZN12daBombking_c16CleanupResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126f10; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126f08, from the legacy file for _ZN12daBombking_c16CleanupResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126f08; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126f28, from the legacy file for _ZN12daBombking_c16CleanupResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126f28; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126ef8, from the legacy file for _ZN12daBombking_c16CleanupResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126ef8; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126f20, from the legacy file for _ZN12daBombking_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126f20; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126f10, from the legacy file for _ZN12daBombking_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126f10; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126f08, from the legacy file for _ZN12daBombking_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126f08; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126f28, from the legacy file for _ZN12daBombking_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126f28; */
-/* TUBUILD CONFLICT -- alternate declaration of data_ov078_02126ef8, from the legacy file for _ZN12daBombking_c13InitResourcesEv, NOT applied: extern SharedFilePtr data_ov078_02126ef8; */
-/* TUBUILD CONFLICT -- alternate declaration of KingBobOmb_SetState, from the legacy file for _ZN12daBombking_c13InitResourcesEv, NOT applied: extern void KingBobOmb_SetState(void* c, PMF* p); */
 }
 
 
@@ -406,6 +292,7 @@ daBombking_c::~daBombking_c() {}
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 2 -- func_ov078_02123804, 0x02123804, size 0x60 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123804
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02123804(char *c){
     unsigned int v=*(unsigned int*)(c+0x3a0);
@@ -420,6 +307,7 @@ int func_ov078_02123804(char *c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- func_ov078_02123864, 0x02123864, size 0x48 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123864
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov078_02123864(char* r7) {
   int i = 0;
@@ -437,6 +325,7 @@ void func_ov078_02123864(char* r7) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_ov078_021238ac, 0x021238ac, size 0x190 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_021238ac
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021238ac(char *c)
 {
@@ -491,6 +380,7 @@ int func_ov078_021238ac(char *c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- func_ov078_02123a3c, 0x02123a3c, size 0x64 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123a3c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02123a3c(char* c){
     *(int*)(c+0x4fc)=2;
@@ -538,6 +428,7 @@ int func_ov078_02123aa0(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov078_02123bc4, 0x02123bc4, size 0x5c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123bc4
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -553,6 +444,7 @@ extern "C" int func_ov078_02123bc4(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 8 -- func_ov078_02123c20, 0x02123c20, size 0xd0 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123c20
 extern "C" {
 extern int _ZNK9Animation12WillHitFrameEi(void* self, int f);
 extern int _ZN9Animation8FinishedEv(void* self);
@@ -587,6 +479,7 @@ int func_ov078_02123c20(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 9 -- func_ov078_02123cf0, 0x02123cf0, size 0x4c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123cf0
 struct BCA_File;
 extern "C" {
 int func_ov078_02123cf0(char* c){
@@ -597,6 +490,7 @@ int func_ov078_02123cf0(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- func_ov078_02123d3c, 0x02123d3c, size 0x17c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123d3c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02123d3c(char* c)
 {
@@ -649,6 +543,7 @@ int func_ov078_02123d3c(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 11 -- func_ov078_02123eb8, 0x02123eb8, size 0x64 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123eb8
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02123eb8(int *t)
 {
@@ -663,6 +558,7 @@ int func_ov078_02123eb8(int *t)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 12 -- func_ov078_02123f1c, 0x02123f1c, size 0x98 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123f1c
 extern "C" int func_ov078_02123f1c(CView* c)
 {
     if (func_ov078_02123804((char*)c) != 1) {
@@ -686,6 +582,7 @@ L6c:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 13 -- func_ov078_02123fb4, 0x02123fb4, size 0x4c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02123fb4
 extern "C" {
 int func_ov078_02123fb4(char *c){
   *(int*)(c+0x9c) = -0x2000;
@@ -697,6 +594,7 @@ int func_ov078_02123fb4(char *c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 14 -- func_ov078_02124000, 0x02124000, size 0x60 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124000
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02124000(char* c){
   int ang = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
@@ -712,6 +610,7 @@ int func_ov078_02124000(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 15 -- func_ov078_02124060, 0x02124060, size 0x40 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124060
 extern "C" {
 int func_ov078_02124060(char *c){
   _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c+0x2cc), (void*)(data_ov078_02126f00[1]), 0, 0x40000000, 0x1000, 0);
@@ -825,6 +724,7 @@ int func_ov078_021240a0(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 17 -- func_ov078_021243c0, 0x021243c0, size 0xb0 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_021243c0
 extern "C" {
 int func_ov078_021243c0(char* c){
   _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c+0x2cc), (void*)((void*)data_ov078_02126f20[1]), 0, 0, 0x1000, 0);
@@ -844,6 +744,7 @@ int func_ov078_021243c0(char* c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 18 -- func_ov078_02124470, 0x02124470, size 0x60 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124470
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02124470(char* c)
 {
@@ -859,6 +760,7 @@ int func_ov078_02124470(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 19 -- func_ov078_021244d0, 0x021244d0, size 0x50 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_021244d0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021244d0(char *c) {
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c+0x2cc), (void*)((void*)data_ov078_02126f20[1]), 0, 0, 0x1000, 0);
@@ -870,6 +772,7 @@ int func_ov078_021244d0(char *c) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 20 -- func_ov078_02124520, 0x02124520, size 0x258 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124520
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02124520(char *c)
 {
@@ -951,6 +854,7 @@ int func_ov078_02124520(char *c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov078_02124778, 0x02124778, size 0x44 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124778
 extern "C" {
 int func_ov078_02124778(char *c){
   _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt((void*)(c+0x2cc), (void*)(data_ov078_02126ef8[1]), 8, 0x40000000, 0x1000, 0);
@@ -961,6 +865,7 @@ int func_ov078_02124778(char *c){
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 22 -- func_ov078_021247bc, 0x021247bc, size 0x384 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_021247bc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021247bc(void *thiz)
 {
@@ -1066,6 +971,7 @@ int func_ov078_021247bc(void *thiz)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 23 -- func_ov078_02124b40, 0x02124b40, size 0x84 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124b40
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02124b40(char *c)
 {
@@ -1086,6 +992,7 @@ int func_ov078_02124b40(char *c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- func_ov078_02124bc4, 0x02124bc4, size 0xd0 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124bc4
 extern "C" {
 extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* thiz);
 extern void func_0200fa8c(void* t, int a);
@@ -1119,6 +1026,7 @@ int func_ov078_02124bc4(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov078_02124c94, 0x02124c94, size 0x60 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124c94
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02124c94(char *p) {
     *(int*)(p+0x9c) = -0x2000;
@@ -1184,6 +1092,7 @@ done:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 27 -- func_ov078_02124e9c, 0x02124e9c, size 0x8c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02124e9c
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02124e9c(char *c)
 {
@@ -1288,6 +1197,7 @@ done:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 29 -- func_ov078_021250d0, 0x021250d0, size 0x28 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_021250d0
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021250d0(char *c)
 {
@@ -1383,6 +1293,7 @@ int func_ov078_021250f8(char* c) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 31 -- func_ov078_02125350, 0x02125350, size 0xf8 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02125350
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02125350(int sl)
 {
@@ -1532,6 +1443,7 @@ int func_ov078_02125448(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 33 -- func_ov078_02125734, 0x02125734, size 0x5c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02125734
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02125734(char *c) {
     *(int*)(c + 0x4fc) = 1;
@@ -1585,6 +1497,7 @@ extern "C" int func_ov078_02125790(char* self)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 35 -- func_ov078_021258e4, 0x021258e4, size 0x6c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_021258e4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021258e4(int *t)
 {
@@ -1632,6 +1545,7 @@ extern "C" int func_ov078_02125950(char *c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 37 -- func_ov078_021259e4, 0x021259e4, size 0x8 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_021259e4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_021259e4(void)
 {
@@ -1715,6 +1629,7 @@ int func_ov078_021259ec(char* c)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 39 -- func_ov078_02125bc8, 0x02125bc8, size 0x5c */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02125bc8
 extern "C" int func_ov078_02125bc8(char* c) {
     *(int*)(c+0x98) = 0;
     *(int*)(c+0x4fc) = 1;
@@ -1727,6 +1642,7 @@ extern "C" int func_ov078_02125bc8(char* c) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 40 -- func_ov078_02125c24, 0x02125c24, size 0x24 */
 /* -------------------------------------------------------------------------- */
+// @symbol func_ov078_02125c24
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov078_02125c24(char* c, int strength) {
     func_0200d8c8(data_0209f318, c + 0x5c, strength);
@@ -1736,6 +1652,7 @@ void func_ov078_02125c24(char* c, int strength) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 41 -- KingBobOmb_SetState, 0x02125c48, size 0x50 */
 /* -------------------------------------------------------------------------- */
+// @symbol KingBobOmb_SetState
 extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
     C *c = (C *)cv;
     PMF *p = (PMF *)pv;
