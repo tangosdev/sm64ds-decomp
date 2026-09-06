@@ -1,0 +1,156 @@
+# Does the PC port at port/ still build against the decomp it compiles?
+#
+# port/ compiles decomp sources by literal path: the nine slice manifests, of which
+# port/slice_gate1.txt is the first, name files under src/; port/CMakeLists.txt names
+# symbols that srcpath.py resolves; and port/hal/*.cpp bridges MSVC linkage onto the
+# decomp's address-based naming. None of that is built by the matching
+# toolchain, and until this file nothing in .github/workflows built it either -- the only
+# mentions of `port` in a workflow are comments (src-tu-refs.yml:11,
+# update-chaos-data.yml:155). The port's smoke battery ran by hand, on a desktop.
+#
+# WHAT THAT COST. The port tree is not main. Its merge base is 7b2f913fe and main has run
+# ~2,500 commits past it (2,503 measured 2026-09-06). Four port work-lanes in one week
+# were reported spent on premises main had already invalidated -- a placeholder since
+# replaced with real register names, a one-word fix already landed, a span that already
+# has symbols, a file that no longer exists. A configure-and-build on every change would
+# have reported all four the day they landed. The port side also reports that of a
+# 400-file sample of the rows it enrolls, 361 are deleted on main: the port enrolls per
+# file and TU promotion deletes files, so the collision is structural. (Those two counts
+# are the port side's measurements of a tree this repo does not contain; the commit-count
+# is ours.)
+#
+# NOT THE SAME THING AS ci/port-build-proto. That branch (2026-09-05, 420 lines) answered
+# a different question -- can a free runner absorb the port BRANCH's ~33k-object compile
+# -- by replacing the two cartridge-reading generators with an empty emitter, which means
+# it deliberately cannot link and measures throughput only. It also builds another
+# branch's port/ tree, because main's port/ is just the 14 smoke gates (228 sources).
+# This file is the complement: main's own port/, small enough to link, gated on every PR.
+#
+# NO NINTENDO BYTES REACH GITHUB, the same hard rule that branch set. Nothing here
+# fetches, generates or uploads ROM-derived data.
+#
+# TWO JOBS, DELIBERATELY UNEQUAL.
+#
+# `refs` is blocking and cheap. tools/port_refcheck.py already did the right check --
+# manifests, cmake symbols, hal alternatename/extern-C links -- in about a second with no
+# compiler and no ROM, and was simply never wired to anything. On 11fcd24d5 it reports
+# 402 references (229 + 21 + 152), 0 stale.
+#
+# `build` compiles and links the ROM-free targets. There are five: smoke, smoke_gx,
+# smoke_heap, smoke_roots, smoke_fs. The other nine generate romdata.c from gitignored
+# extracted/arm9_dec.bin and are out of a runner's reach.
+#
+# Only smoke_gx links on main today, so only smoke_gx is blocking. Measured on 11fcd24d5,
+# 32-bit MSVC 19.51: smoke_gx clean; smoke 1 unresolved, smoke_heap 3, smoke_roots 17,
+# smoke_fs 17. The rest run in a reporting step, and each moves up
+# to the blocking step as it is fixed -- the ratchet is the target list below, in review,
+# rather than a file that can drift. Configure is blocking for everything: a broken
+# CMakeLists or an unresolvable srcpath symbol is a real regression regardless.
+#
+# THE SHARED CAUSE, since it will come up on each: 17 headers (include/Fader.h:69 is the
+# one smoke reaches) declare `extern "C" void _ZN6Memory16operator_delete2EPv(void *)` and
+# call it from an inline `operator delete`, so every class in those hierarchies emits a
+# reference to the Itanium spelling. That satisfies the NDS link, where the mangled string
+# IS the symbol. A host definition does exist -- port/hal/ctor_bridge.cpp:88 -- but
+# ctor_bridge.cpp is only linked into the model-family targets, so smoke never gets it.
+# port_refcheck cannot see this class at all: its hal-links check covers bare
+# func_XXXXXXXX / data_XXXXXXXX names, not _ZN... ones.
+#
+# SCOPE. Compile and link only. BUILD_TESTING is off and no ctest runs -- the smoke
+# binaries want the asset catalog. Runtime behaviour is not claimed. "Does it still
+# compile and link" is, which is what a rename, a header consolidation or a TU merge
+# actually breaks.
+#
+# NO paths: FILTER, deliberately. A required check that never reports leaves an off-path
+# PR unmergeable, and `refs` is the job most worth making required. Keeping the trigger
+# unconditional keeps that option open.
+
+name: port-build
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: port-build-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the check reads the working tree, config/ and port/.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # build/ is gitignored, so a fresh checkout does not have it, and the tool's
+      # --json writes without creating parents. Without this the gate fails on its
+      # own report file rather than on anything about the port.
+      - name: Every port/ path and symbol reference resolves
+        run: |
+          mkdir -p build
+          python tools/port_refcheck.py --json build/port_refcheck.json
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: port-refcheck
+          path: build/port_refcheck.json
+          if-no-files-found: ignore
+
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # port/CMakeLists.txt shells out to tools/srcpath.py at configure time, so Python
+      # has to be on PATH before cmake runs. ninja from pip rather than from the VS
+      # install so the recipe does not depend on which workload the image ships.
+      - name: Ninja
+        run: python -m pip install --disable-pip-version-check ninja
+
+      # 32-bit MSVC is not a preference: port/host_abi.h:23 rejects a 64-bit host at
+      # compile time. Discovering VS through vswhere is what port/build-port.cmd already
+      # does, so this does not pin a VS version the way -G "Visual Studio 17 2022" would.
+      # (build-port.cmd itself cannot run here: it requires extracted/ and the asset
+      # catalog up front, before it configures anything.)
+      - name: Configure
+        shell: cmd
+        run: |
+          set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+          if not exist "%VSWHERE%" (echo ERROR: vswhere.exe not found 1>&2 & exit /b 1)
+          set "VSINSTALL="
+          for /f "usebackq delims=" %%I in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSINSTALL=%%I"
+          if not defined VSINSTALL (echo ERROR: no VS install with the x86 C++ tools 1>&2 & exit /b 1)
+          rem Redirection first: `echo VAR=%X%>>file` can bind a trailing char to the >.
+          >>"%GITHUB_ENV%" echo VSINSTALL=%VSINSTALL%
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          cmake -S port -B build\portci -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+
+      # Each `shell: cmd` step is its own process, so vcvars32 has to be re-applied;
+      # only the discovery is carried over, through GITHUB_ENV.
+      - name: Link the targets that link today
+        shell: cmd
+        run: |
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          cmake --build build\portci --target smoke_gx
+
+      # Reporting only. -k 0 so ninja reports every target's link instead of stopping at
+      # the first, which otherwise makes which failures you see depend on scheduling.
+      - name: The targets that do not link yet (reporting)
+        continue-on-error: true
+        shell: cmd
+        run: |
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          cmake --build build\portci --target smoke smoke_heap smoke_roots smoke_fs -- -k 0
