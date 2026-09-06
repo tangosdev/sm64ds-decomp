@@ -1,0 +1,417 @@
+{
+  "id": "ov006/dScMgBomroom_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgBomroom_c.cpp",
+  "promoted_source": "src/actors/dScMgBomroom_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020d5a54..0x020d9574, 80 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): dScMgBomroom_c",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "PARTIAL: this TU licenses 41 of the run's 80 functions, ROM ordinals 14..54, .text 0x020d5eb8..0x020d7c4c. The run is broken by FOUR functions that no admissible source reproduces, and a licensed .text claim cannot span a hole (0 of 13,201 delink blocks and 0 of 136 TU manifests carry more than one .text run). The holes, in ROM order: ordinal 13 func_ov006_020d5e5c (a 10-word pure register permutation -- the ROM keeps the scene pointer in r0 throughout, every admissible spelling tried puts it in r2); ordinal 40 was a hole and is not any more, see below; ordinal 55 func_ov006_020d7c4c (NO legacy source anywhere under src/ and no delinks.txt entry -- the cartridge's own bytes cover it; config/match_attempts.jsonl records a floor of 40 divergences over ~700 permuter iterations); ordinal 60 func_ov006_020d8324. The five contiguous all-matching runs are 0..12 (13), 14..54 (41), 56..59 (4) and 61..79 (19); this is the largest.",
+    "FIVE of the seven never-matched shards were recovered while merging, and they are inside the licensed run: func_ov006_020d5fd8, _020d6264 and _020d65b4 each fold `+0x6200` and their field offset into one literal-pool constant, where the cartridge keeps `add rN,rN,#0x6200` and a separate `strh [rN,#off]`; a struct with the field at that offset restores the split. func_ov006_020d672c is the same defect twice over (0x6000 and 0x6200 bases). func_ov006_020d6784's only defect was field-address CSE across a read-modify-write of the score at +0xbc: the cartridge re-issues `ldr r0,#0xbc` / `str`, mwcc hoists `add r3,r0,#0xbc`; writing the store through `volatile unsigned int *` defeats the hoist. All five carried delink blocks WITHOUT the `complete` marker, i.e. dsd was serving the cartridge's bytes for them; folded here they are source-built and byte-verified for the first time.",
+    "The destructor pair (ROM ordinals 0 and 1, _ZN14dScMgBomroom_cD1Ev at 0x020d5a54 BELOW D0Ev at 0x020d5a78) is on the far side of the ordinal-13 hole and is NOT in this range. dScMgBomroom_c declares its destructor first and out of line, so the destructor is the class's key function; with the key function outside the licensed range this TU emits no _ZTV/_ZTI/_ZTS and compiler_only_output is empty -- the 2*(ancestors+self)+1 row-count formula does not apply. include/dScMgBomroom_c.h is NOT edited by this promotion.",
+    "PRAGMA LEVER, measured: all 11 pragma brackets inside the licensed range move bytes, and none is inert. Baseline (source ROM-ascending, `#pragma defer_codegen off`, 11 positional push/opt_X off/pop brackets) is 41/41. Deleting the pragmas outright is 30/41; keeping the brackets but deleting `#pragma defer_codegen off` is 30/41 with the IDENTICAL 11-member DIFF set; keeping defer_codegen off but deleting the brackets is also 30/41 with the same set. So the delete-outright control has real signal here, and the brackets bind ONLY under defer_codegen off. Removing any single bracket costs exactly its own member and nothing else (11 separate runs, each 40/41). The families exercised are opt_strength_reduction (7 members), opt_common_subs (7), opt_propagation (1); opt_loop_invariants appears only on func_ov006_020d8408, above this range."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020d5eb8",
+      "end": "0x020d7c4c"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_ov006_020d5eb8",
+      "address": "0x020d5eb8",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020d5eb8.c",
+      "ordinal": 0
+    },
+    {
+      "symbol": "func_ov006_020d5f28",
+      "address": "0x020d5f28",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020d5f28.c",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_020d5f2c",
+      "address": "0x020d5f2c",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov006_020d5f2c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020d5fd8",
+      "address": "0x020d5fd8",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_020d5fd8.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020d5fec",
+      "address": "0x020d5fec",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_020d5fec.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020d604c",
+      "address": "0x020d604c",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_020d604c.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_020d6084",
+      "address": "0x020d6084",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_020d6084.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_020d6098",
+      "address": "0x020d6098",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_020d6098.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_020d6100",
+      "address": "0x020d6100",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020d6100.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_020d6170",
+      "address": "0x020d6170",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020d6170.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_020d61dc",
+      "address": "0x020d61dc",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov006_020d61dc.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_020d6264",
+      "address": "0x020d6264",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_020d6264.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_020d6278",
+      "address": "0x020d6278",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_020d6278.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_020d62e0",
+      "address": "0x020d62e0",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020d62e0.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_020d634c",
+      "address": "0x020d634c",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_020d634c.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_020d63ac",
+      "address": "0x020d63ac",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020d63ac.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_020d63d4",
+      "address": "0x020d63d4",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_020d63d4.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_020d6454",
+      "address": "0x020d6454",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020d6454.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov006_020d64c4",
+      "address": "0x020d64c4",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020d64c4.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_020d64c8",
+      "address": "0x020d64c8",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov006_020d64c8.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_020d65b4",
+      "address": "0x020d65b4",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_020d65b4.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_020d65c8",
+      "address": "0x020d65c8",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_020d65c8.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_020d6630",
+      "address": "0x020d6630",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_020d6630.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_020d669c",
+      "address": "0x020d669c",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020d669c.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_020d66c4",
+      "address": "0x020d66c4",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_020d66c4.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_020d672c",
+      "address": "0x020d672c",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_020d672c.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_020d6784",
+      "address": "0x020d6784",
+      "size": "0x00000124",
+      "legacy_source": "src/func_ov006_020d6784.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_020d68a8",
+      "address": "0x020d68a8",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov006_020d68a8.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_020d69b8",
+      "address": "0x020d69b8",
+      "size": "0x000001d0",
+      "legacy_source": "src/func_ov006_020d69b8.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_020d6b88",
+      "address": "0x020d6b88",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov006_020d6b88.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_020d6c90",
+      "address": "0x020d6c90",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov006_020d6c90.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_020d6d7c",
+      "address": "0x020d6d7c",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov006_020d6d7c.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_020d6e8c",
+      "address": "0x020d6e8c",
+      "size": "0x00000698",
+      "legacy_source": "src/func_ov006_020d6e8c.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov006_020d7524",
+      "address": "0x020d7524",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov006_020d7524.c",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_ov006_020d7604",
+      "address": "0x020d7604",
+      "size": "0x00000174",
+      "legacy_source": "src/func_ov006_020d7604.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_ov006_020d7778",
+      "address": "0x020d7778",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020d7778.c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "func_ov006_020d777c",
+      "address": "0x020d777c",
+      "size": "0x000001dc",
+      "legacy_source": "src/func_ov006_020d777c.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_ov006_020d7958",
+      "address": "0x020d7958",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_020d7958.c",
+      "ordinal": 37
+    },
+    {
+      "symbol": "func_ov006_020d795c",
+      "address": "0x020d795c",
+      "size": "0x00000128",
+      "legacy_source": "src/func_ov006_020d795c.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "func_ov006_020d7a84",
+      "address": "0x020d7a84",
+      "size": "0x0000017c",
+      "legacy_source": "src/func_ov006_020d7a84.c",
+      "ordinal": 39
+    },
+    {
+      "symbol": "func_ov006_020d7c00",
+      "address": "0x020d7c00",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov006_020d7c00.cpp",
+      "ordinal": 40
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [],
+  "notes": [
+    "Assembled by hand from tools/tubuild.py's parsed shard data: `tubuild.py create ov006/dScMgBomroom_c` ABORTS on this TU with AttributeError: 'NoneType' object has no attribute 'relative_to' (tubuild.py:959). build_manifest_entry calls SP.path_for(name).relative_to(REPO) unconditionally, which contradicts cmd_create's own comment at tubuild.py:987-995 that a sourceless member 'becomes a banner'. assemble_shadow_source handles it; the manifest builder does not. The .cpp is written before the crash, so the shadow source exists with no manifest entry.",
+    "Written ROM-ASCENDING because `#pragma defer_codegen off` makes CodeWarrior emit each definition as it is encountered rather than in reverse source order.",
+    "include/decl_common.h declares seven of this TU's members. Six are `void f(void*)`; their definitions here take that spelling and cast to the recovered type on the first line, which is byte-neutral (41/41 with the casts in place). The seventh, func_ov006_020d672c, was declared `int f()` -- decl_headers.py had read the legacy shard's K&R forward declaration rather than its definition. The cartridge takes the scene pointer in r0 and leaves r0 untouched on the early-out path, so the header is corrected to `void f(void*)` in the same change; the only other caller, src/_ZN14dScMgBomroom_c6RenderEv.cpp, declares it locally and does not include decl_common.h.",
+    "Each member keeps its own legacy shadow types, suffixed with the member's address (S_604c, Obj_6098, PMF_6278, ...) so that fourteen shards' independently-invented `S`/`C`/`Rec`/`Obj`/`Work`/`Ent`/`Entry` tags coexist. Members derived from .c shards had their `this` parameter renamed to `self_` -- a C++ keyword in the merged TU."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgBomroom_c/dScMgBomroom_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 41,
+    "functions_declared": 41,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "link-verified",
+      "scratch": "build/tu/ov006-dScMgBomroom_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020d5eb8",
+        "end": "0x020d7c4c",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020d5eb8",
+          "end": "0x020d7c4c",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 41
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

@@ -1508,169 +1508,49 @@ src/func_ov006_020d5e3c.c:
 src/func_ov006_020d5e5c.c:
     .text start:0x020d5e5c end:0x020d5eb8
 
-src/func_ov006_020d5eb8.c:
+src/actors/dScMgBomroom_c.cpp:
     complete
-    .text start:0x020d5eb8 end:0x020d5f28
+    .text start:0x020d5eb8 end:0x020d7c4c
 
-src/func_ov006_020d5f28.c:
-    complete
-    .text start:0x020d5f28 end:0x020d5f2c
 
-src/func_ov006_020d5f2c.c:
-    complete
-    .text start:0x020d5f2c end:0x020d5fd8
 
-src/func_ov006_020d5fd8.c:
-    complete
-    .text start:0x020d5fd8 end:0x020d5fec
 
-src/func_ov006_020d5fec.cpp:
-    complete
-    .text start:0x020d5fec end:0x020d604c
 
-src/func_ov006_020d604c.c:
-    complete
-    .text start:0x020d604c end:0x020d6084
 
-src/func_ov006_020d6084.cpp:
-    complete
-    .text start:0x020d6084 end:0x020d6098
 
-src/func_ov006_020d6098.c:
-    complete
-    .text start:0x020d6098 end:0x020d6100
 
-src/func_ov006_020d6100.c:
-    complete
-    .text start:0x020d6100 end:0x020d6170
 
-src/func_ov006_020d6170.c:
-    complete
-    .text start:0x020d6170 end:0x020d61dc
 
-src/func_ov006_020d61dc.c:
-    complete
-    .text start:0x020d61dc end:0x020d6264
 
-src/func_ov006_020d6264.c:
-    complete
-    .text start:0x020d6264 end:0x020d6278
 
-src/func_ov006_020d6278.cpp:
-    complete
-    .text start:0x020d6278 end:0x020d62e0
 
-src/func_ov006_020d62e0.c:
-    complete
-    .text start:0x020d62e0 end:0x020d634c
 
-src/func_ov006_020d634c.c:
-    complete
-    .text start:0x020d634c end:0x020d63ac
 
-src/func_ov006_020d63ac.c:
-    complete
-    .text start:0x020d63ac end:0x020d63d4
 
-src/func_ov006_020d63d4.c:
-    complete
-    .text start:0x020d63d4 end:0x020d6454
 
-src/func_ov006_020d6454.c:
-    complete
-    .text start:0x020d6454 end:0x020d64c4
 
-src/func_ov006_020d64c4.c:
-    complete
-    .text start:0x020d64c4 end:0x020d64c8
 
-src/func_ov006_020d64c8.c:
-    complete
-    .text start:0x020d64c8 end:0x020d65b4
 
-src/func_ov006_020d65b4.c:
-    complete
-    .text start:0x020d65b4 end:0x020d65c8
 
-src/func_ov006_020d65c8.cpp:
-    complete
-    .text start:0x020d65c8 end:0x020d6630
 
-src/func_ov006_020d6630.c:
-    complete
-    .text start:0x020d6630 end:0x020d669c
 
-src/func_ov006_020d669c.c:
-    complete
-    .text start:0x020d669c end:0x020d66c4
 
-src/func_ov006_020d66c4.cpp:
-    complete
-    .text start:0x020d66c4 end:0x020d672c
 
-src/func_ov006_020d672c.c:
-    complete
-    .text start:0x020d672c end:0x020d6784
 
-src/func_ov006_020d6784.c:
-    complete
-    .text start:0x020d6784 end:0x020d68a8
 
-src/func_ov006_020d68a8.c:
-    complete
-    .text start:0x020d68a8 end:0x020d69b8
 
-src/func_ov006_020d69b8.c:
-    complete
-    .text start:0x020d69b8 end:0x020d6b88
 
-src/func_ov006_020d6b88.c:
-    complete
-    .text start:0x020d6b88 end:0x020d6c90
 
-src/func_ov006_020d6c90.c:
-    complete
-    .text start:0x020d6c90 end:0x020d6d7c
 
-src/func_ov006_020d6d7c.c:
-    complete
-    .text start:0x020d6d7c end:0x020d6e8c
 
-src/func_ov006_020d6e8c.c:
-    complete
-    .text start:0x020d6e8c end:0x020d7524
 
-src/func_ov006_020d7524.c:
-    complete
-    .text start:0x020d7524 end:0x020d7604
 
-src/func_ov006_020d7604.c:
-    complete
-    .text start:0x020d7604 end:0x020d7778
 
-src/func_ov006_020d7778.c:
-    complete
-    .text start:0x020d7778 end:0x020d777c
 
-src/func_ov006_020d777c.c:
-    complete
-    .text start:0x020d777c end:0x020d7958
 
-src/func_ov006_020d7958.c:
-    complete
-    .text start:0x020d7958 end:0x020d795c
 
-src/func_ov006_020d795c.c:
-    complete
-    .text start:0x020d795c end:0x020d7a84
 
-src/func_ov006_020d7a84.c:
-    complete
-    .text start:0x020d7a84 end:0x020d7c00
 
-src/func_ov006_020d7c00.cpp:
-    complete
-    .text start:0x020d7c00 end:0x020d7c4c
 
 src/func_ov006_020d7e7c.c:
     complete
