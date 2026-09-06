@@ -38,10 +38,25 @@
  * (src files 021095cc.c, 02109834.c, 0210a194.cpp -- dScMgRoulette_c's
  * own vtable methods).
  *
- * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN15dScMgRoulette_cD1Ev.cpp; D0Ev.cpp
- * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, two levels up, already provides one.
+ * THE DESTRUCTOR IS DEFINED INLINE, AND THE CARTRIDGE'S OWN ADDRESSES ARE
+ * WHY. ov006 puts D1 at 0x0210788c BELOW D0 at 0x02107920 and carries no D2
+ * anywhere. In mwccarm 2004/b56 that order is reachable from exactly one
+ * source form: an inline, in-class destructor declared as the first member,
+ * which emits D1 then D0. An out-of-line definition emits D2, D0, D1 -- the
+ * wrong order, plus a D2 the ROM does not have -- and no scaffold
+ * (`p->~X()`, `delete p`, moving the declaration below the overrides)
+ * changes that. It was previously declared out of line, with the body
+ * duplicated across src/_ZN15dScMgRoulette_cD1Ev.cpp and D0Ev.cpp; both are
+ * absorbed into src/actors/dScMgRoulette_c.cpp and the body moved here,
+ * where the compiler emits both variants itself in the cartridge's order.
+ *
+ * Declaring it inline also moves the key function to InitResources, the
+ * first DECLARED non-inline virtual, so the TU that defines InitResources is
+ * the one that emits _ZTV/_ZTI/_ZTS. That is src/actors/dScMgRoulette_c.cpp,
+ * which licenses them in its manifest's compiler_only_output block.
+ *
+ * No separate operator delete is needed -- dScMgBase_c, two levels up,
+ * already provides one.
  *
  * SM64DS RTTI names the implementation dScMgRoulette_c. The reconstructed factory
  * dScMgRoulette_c_classInit (historical alias MgMushroomRoulette_Spawn) installs this class's
@@ -57,7 +72,15 @@ extern "C" void func_ov006_021079c8(void);
 extern "C" void _ZN5ModelD1Ev(void *);
 
 struct dScMgRoulette_c : dScMgSingle3DBase_c {
-    virtual ~dScMgRoulette_c();
+    /* Inline and declared first: see the file banner. The four explicit calls
+       are the ROM's own order -- mModel2, mModel1, mArray, mTable -- which
+       typed members could not reproduce. */
+    virtual ~dScMgRoulette_c() {
+        _ZN5ModelD1Ev(mModel2);
+        _ZN5ModelD1Ev(mModel1);
+        __destroy_arr(mArray, 5, 0x34, (void *)func_ov006_021079c8);
+        func_ov006_020c1c64((char *)mTable);
+    }
 
     /* --- this class's own vtable slots, named from the table ---
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
