@@ -158,7 +158,10 @@ steps the dry-run does not print:
 1. Move the source out of `src_tu/` and `git rm` the shards.
 2. Splice their N `delinks.txt` entries into one.
 3. **Edit the manifest yourself:** `status` → `promoted`, `source` → the new
-   path. `verify` does not do this, and `promote --dry-run` refuses to run at
+   path. **Write it at `indent=2`** — `tu_manifest.save` uses that, and a
+   hand-written entry at `indent=1` fails
+   `test_tu_manifest.py::test_rewriting_the_tracked_manifest_is_a_no_op` with
+   only "would be rewritten", which never names indentation as the cause. `verify` does not do this, and `promote --dry-run` refuses to run at
    all while `status` is still `text-verified`. **This is not cosmetic and the
    damage is permanent.** `tiers_ratchet.promoted_moves()` skips every manifest
    entry whose status is not exactly `promoted`, so leaving it means your
@@ -412,14 +415,29 @@ mwccarm 2004/b56 behaviours, not style preferences.
   ROM address order`. Beware that `tubuild verify` reports the same condition as
   `PARTIAL ... not necessarily a bug`, which reads advisory and is not.
 
-  The destructor pair is the usual way to hit it, and the lever set is closed —
-  measured, not guessed: **inline in class ⇒ D1 then D0, always**; out-of-line
-  ⇒ D2, D0, D1. A `delete p` scaffold, a `p->~X()` scaffold, and moving the
-  declaration below the overrides all change **nothing**. So if the cartridge
-  puts D0 *below* D1, no admissible source form reproduces the order, and the
-  pair cannot live in this TU's licensed run. See the comment block in
+  The destructor pair is the usual way to hit it. Under **default** codegen the
+  lever set is closed — measured, not guessed: **inline in class ⇒ D1 then D0,
+  always**; out-of-line ⇒ D2, D0, D1. A `delete p` scaffold, a `p->~X()`
+  scaffold, and moving the declaration below the overrides all change
+  **nothing**. See the comment block in
   `src/game/actors/d_a_obj_wc_obj01.cpp` and `notes/tu-reconstruction-pilot-report.md`
   section 3.
+
+  **But that closure holds only under deferred codegen, and `#pragma
+  defer_codegen off` is a fourth lever the old measurement never tried.**
+  Measured 2026-09-05 on `dScMgTeresa_c` (pinned 2004/b56, real header, both
+  ways): out-of-line + default codegen emits **D2, D0, D1**; out-of-line +
+  `#pragma defer_codegen off` emits **D1, D0, D2** — the cartridge's order.
+  Sizes 0x24 / 0x38 / 0x24, byte-MATCH either way. So a cartridge that puts D0
+  *below* D1 is **not** automatically a refusal any more: try the pragma before
+  taking the partial promotion. It flips emission order for the whole file, so
+  adopting it and laying the source out ROM-ascending are one edit, not two.
+
+  Do not read that as "inline is the fallback". On `dScMgTeresa_c` inlining
+  moved the key function to a member *above* the run's sourceless hole, so the
+  destructor pair could not share a licensed TU with it; the probe TU emitted
+  one `.text` section and **neither** D1 nor D0. Check where inlining puts the
+  key function before assuming it is available.
 - **The TU must odr-use the class** or nothing is emitted at all.
 - **vptr store is `(int)&_ZTV...[2]`**, never the raw symbol — the addend loses
   8 on rebind, and only `objisolate`'s addend check sees a miss.
