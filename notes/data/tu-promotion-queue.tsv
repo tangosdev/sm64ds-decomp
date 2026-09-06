@@ -210,7 +210,7 @@ daTBasket_c+daTrsIcon_c+daTrs_c	96	3891	ov063	yes	no	unmatched:1;no-legacy-sourc
 dScMgPachinko_c	72	2364	ov006	yes	no	unmatched:3;no-legacy-source:4;pragma:5;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 dScMgPanel_c	72	2124	ov006	yes	no	pragma:7;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 OamAnimation+dScEntry_c	81	3204	ov075	yes	no	unmatched:1;pragma:3;multi-class-tu:2;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1; excludes 1 unresolved: OamAnimation);not-in-delinks:2	-	text-only
-dScMgCoin_c	61	1576	ov006	yes	no	no-legacy-source:2;pragma:2;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
+dScMgCoin_c	29	1984	ov006	yes	yes	no-legacy-source:2;pragma:2;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 dScMgHanachan_c	13	2655	ov006	yes	yes	no-legacy-source:1;pragma:7;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 dScMgPachinko2_c+dScMgPachinko_c	75	2819	ov006	yes	no	unmatched:1;pragma:35;multi-class-tu:2;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+2)	dScMgSingle3DBase_c	text-only
 dScMgLuigi_c	57	1983	ov006	yes	no	unmatched:7;no-legacy-source:1;pragma:6;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
