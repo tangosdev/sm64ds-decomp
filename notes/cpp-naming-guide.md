@@ -78,24 +78,9 @@ Thunks are small compiler-generated functions that adjust the `this` pointer bef
 To achieve byte-matching virtual dispatches, you must replicate the exact vtable layout. For most objects inheriting from `ActorBase`, the standard virtual order has 18 slots.
 
 ### The ActorBase Virtual Order
-0. `InitResources`
-1. `BeforeInitResources`
-2. `AfterInitResources(u32)`
-3. `CleanupResources`
-4. `Before~`
-5. `After~(u32)`
-6. `Behavior`
-7. `BeforeBehavior`
-8. `AfterBehavior(u32)`
-9. `Render`
-10. `BeforeRender`
-11. `AfterRender(u32)`
-12. `OnPendingDestroy`
-13. `Virtual34(u32, u32)`
-14. `Virtual38(u32, u32)`
-15. `OnHeapCreated`
-16. `~Actor()` (D1 complete destructor)
-17. `~Actor()` (D0 deleting destructor)
+The full 18-slot table (ROM hex addresses included) is canonical in
+[actor-vtables.md](actor-vtables.md#actorbase--0x02099edc-18-slots) — this guide
+does not keep its own copy. `Behavior` is slot 6, used in the worked example below.
 
 ### Declaring Dummy Virtuals
 If you are matching a virtual function call on an object, say calling `Behavior()` (slot 6), you must ensure your C++ structure defines the preceding virtuals so `Behavior()` lands at offset `6 * 4 = 24` in the vtable.

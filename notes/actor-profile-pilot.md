@@ -18,6 +18,15 @@ system, but it is not the only descriptor layout.  The pilot contains:
 - 6 scene/process profiles with an 0x08 `{factory, execute priority, draw priority}`
   layout.
 
+Reading an 0x08 entry as the longer 0x1c layout consumes adjacent unrelated data, so
+the extractor chooses the descriptor family from RTTI ancestry and emits blank
+actor-only fields for 0x08 entries instead. That family choice can still pick wrong
+where RTTI ancestry alone underdetermines it -- `profile-lifecycle-crosswalk.md`
+found exactly this failure for `CAMERA`, `MAP` and `ENTRY_OBJECT`: three 0x08 base
+profiles that `symbols/profile_reconstruction_registry.tsv` still records as the
+longer `actor_profile_0x1c` family, evidenced as mis-parsed by their "actor-only"
+fields resolving to adjacent code/data pointers rather than values.
+
 The field follow-up found that the first priority halfword has a dual role: for all
 391 registry indices, at least one valid descriptor interpretation stores the index
 itself at `+0x04`, and `fBase_c::fBase_c` copies that same halfword into the
@@ -254,6 +263,34 @@ This is not the same as the stale ov098 `MgShellSmash_SpawnInfo` alias at
 `0x0213c434`.  That word points at an ordinary `dActor_c` virtual method, not an
 operator-new factory, so the stricter pilot rejects it.  The ov006 interpretation is
 the sole class-initializing candidate for `MG_CURLING_J`.
+
+## Repeated data placement and factory placement
+
+A companion binary-pattern pass over the same 20-row sample (`profile-macro-patterns.md`,
+folded in here) checked whether the registry's construction-wrapper shape matches a
+source-level declaration convention rather than just this pilot's own sample.
+
+Observed relative address orders across the 20 sampled entries:
+
+| Relative address order | Count | Interpretation |
+|---|---:|---|
+| RTTI, RTTI name, profile, vtable | 8 | most common compact actor cluster |
+| profile, RTTI, RTTI name, vtable | 5 | common scene/process arrangement |
+| RTTI name, RTTI, profile, vtable | 5 | alternate RTTI emission order |
+| profile, RTTI name, RTTI, vtable | 1 | arm9 `BOOT` variant |
+| base vtable, profile; no most-derived RTTI | 1 | unresolved `STAR_CAMERA` exception |
+
+The profile can precede or follow RTTI; the observed ordering does not justify
+reconstructing a single declaration order, so no source-order rule is proposed.
+
+Thirteen of the 20 sampled factories are the final function in their recovered text
+TU; seven are not -- the non-final set includes arm9 under-segmentation,
+shared-profile TUs, and class families with other code following the factory.
+"Factory last" is therefore useful supporting evidence in compact TUs, not an
+acceptance rule. The full operator-new inventory independently attributes all 391
+registry sites: **388 directly store the class vptr and 3 route through a
+constructor** -- population-scale support for the same construction-wrapper
+architecture this pilot's 20-row sample shows.
 
 ## Answers
 
