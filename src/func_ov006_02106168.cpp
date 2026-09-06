@@ -1,4 +1,5 @@
 //cpp
+// @symbol func_ov006_02106168
 /* dScMgPanel_c layout pass: reads the panel layout (x/y from the layout tables,
    face from the face table picked by Virtual8C), draws unk_4cc0 random picks
    through func_ov006_02106080, and retries the whole thing until
