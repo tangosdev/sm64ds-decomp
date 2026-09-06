@@ -1050,6 +1050,11 @@ static void port_save_probe(int frame)
 // and SetBackwardTime whenever the answer is yes (see the slot map at the foot
 // of this section). The ten function slots run the ROM's own bodies now.
 //
+// [AMENDED, run link100 lane STAGEBUG: data_0208eb2c now carries ALL TEN of
+// its slots. The paragraph below is still the account for data_0208eacc and
+// data_0208eafc; the block above l2_eb2c_s08 is the account for eb2c and for
+// why the audit it rests on did not cover that table.]
+//
 // ITS THREE SIBLINGS NOW CARRY THEIR DESTRUCTOR PAIR AND NOTHING ELSE, and
 // the reason the rest of each one still traps is a MEASURED dispatch-site
 // audit rather than caution -- run link100 lane ARM9T, gate 225b, at the foot
@@ -1099,7 +1104,10 @@ void *data_0208ea6c[12];
    0x020176d8, 0x02017698, ...). Trap-filled for the same reason. The other
    two the ctor writes, data_0208eafc and data_0208eacc, are already in the
    build carrying raw ROM bytes and this lane did not touch them. */
-void *data_0208eb2c[10];   /* slots 0 and 1 seated by gate 225b, 2..9 trap */
+/* ALL TEN SEATED as of run link100 lane STAGEBUG: 0 and 1 by gate 225b, and
+   2..9 by the block above l2_eb2c_s08, which is also where the fault that
+   forced it is written down. */
+void *data_0208eb2c[10];
 /* data_0208eacc, the SECOND of the member's four vptrs, joins them: 48 bytes,
    twelve words, relocated code addresses. Three of the four are now filled
    here and only data_0208eafc is still shipping raw ROM bytes, because
@@ -1240,6 +1248,10 @@ void  _ZN5Fader13AdvanceInterpEv(void *self);
 int   _ZN15FaderBrightness9IsAtStartEv(void *self);
 int   _ZN15FaderBrightness7IsAtEndEv(void *self);
 int   _ZN15FaderBrightness20IsBetweenStartAndEndEv(void *self);
+/* and one more for data_0208eb2c +0x08, the flat face
+   hal/fdr_arm9_fader_seat.cpp already owns over
+   src/engine/fader/_ZN10FaderColor11AdvanceFadeEv.cpp. */
+void  _ZN10FaderColor11AdvanceFadeEv(void *self);
 }
 
 /* SM64DS_EA6C_TRACE=1: one line the first time each seated slot is entered,
@@ -1257,6 +1269,19 @@ static void l2_ea6c_note(int slot)
     if (!on || l2_ea6c_quiet || slot < 0 || slot > 11 || said[slot]) return;
     said[slot] = 1;
     std::printf("  [ea6c] slot +0x%02x entered for the first time\n", slot * 4);
+    std::fflush(stdout);
+}
+
+/* The same line for data_0208eb2c's eight seated slots, on the same variable.
+   Ten lines a run at most between the two tables, and nothing at all unset. */
+static void l2_eb2c_note(int slot)
+{
+    static int on = -1;
+    static unsigned char said[10];
+    if (on < 0) on = std::getenv("SM64DS_EA6C_TRACE") != 0;
+    if (!on || slot < 0 || slot > 9 || said[slot]) return;
+    said[slot] = 1;
+    std::printf("  [eb2c] slot +0x%02x entered for the first time\n", slot * 4);
     std::fflush(stdout);
 }
 
@@ -1422,6 +1447,203 @@ static void __fastcall l2_ea6c_s24(void *s, void *)
 static int __fastcall l2_ea6c_over(void *, void *)
 { l2_trap("data_0208ea6c vtable slot"); return 0; }
 
+/* ---- data_0208eb2c, _ZTV10FaderColor: THE EIGHT SLOTS THE AUDIT MISSED ----
+   run link100 lane STAGEBUG.
+
+   THE AUDIT UNDER "THE THREE SIBLING TABLES" BELOW IS RIGHT ABOUT WHAT IT
+   ENUMERATED AND WRONG ABOUT WHAT IT CONCLUDED. It resolved every reader of
+   data_0209f5bc and data_0209d4ac -- "an object of one of these three classes
+   is only ever reached as THE INSTALLED FADER" -- and that premise is false
+   for this table. data_0209b294 is a FaderColor whose vptr __sinit_02073e6c
+   leaves pointing HERE, and src/ProcessKuppaScript.cpp reaches it BY ADDRESS,
+   not through either pointer: config/arm9/relocs.txt from:0x0200ee2c
+   to:0x0209b294 is that read, and ProcessKuppaScript is what drives the
+   opening cutscene. So slots +0x0c, +0x10, +0x20 and +0x24 were dispatched on
+   the very first new-file boot, into l2_vt_trap.
+
+   AND ONE OF THOSE DISPATCHES CORRUPTED THE CALLER. l2_vt_trap is
+   `void l2_vt_trap(void)` and ends in a bare `ret`, so it cleans NOTHING.
+   The two setters are reached by a __thiscall site that pushes two arguments
+   and cleans neither (shape B in port/fader_boot_map.txt section 9c), read out
+   of the binary this lane built at _ProcessKuppaScript+0x2d4:
+
+       004E5238  push eax                 the second argument, 0
+       004E5244  push 1Eh                 the frame count
+       004E5246  call dword ptr [eax+0Ch] the trap -- and it pops neither
+
+   Eight bytes stay on ProcessKuppaScript's frame, and its epilogue reads them
+   back as callee-saved registers:
+
+       004E52C8  pop edi                  <- 0x1E
+       004E52D4  pop ebx                  <- 0
+       004E52DB  pop esi
+       004E52DC  mov esp,ebp              <- and ESP IS PUT BACK, so the damage
+       004E52DE  pop ebp                     is invisible from the stack
+       004E52DF  ret
+
+   Neither Stage::Behavior nor port_stage_rom_behavior allocates ebx or edi, so
+   the two dead registers ride out to func_02043288, the BEHAVIOUR Process,
+   which caches the actor's vptr in ebx once and dispatches slots 7/6/8 through
+   it. Slot 8 then reads [0+0x20] and takes an access violation. That is the
+   opening-cutscene fault port/stage_lifecycle_map.txt section 15 measured --
+   `access 00000000 at 00000020`, ebx 0, edi 0x1e, esp exactly right -- and
+   section 16 is this lane's account of it. port_dispatch_guarded caught it and
+   FROZE THE STAGE, which is the cutscene stopping.
+
+   THE SLOTS, from config/arm9/relocs.txt 0x0208eb2c..0x0208eb50 resolved
+   against config/arm9/symbols.txt. Every body is matched and already in this
+   link; nothing is transcribed and nothing is invented:
+
+     +0x08  0x020174e0  _ZN10FaderColor11AdvanceFadeEv
+     +0x0c  0x020176d8  _ZN15FaderBrightness15SetBackwardTimeEj
+     +0x10  0x02017698  _ZN15FaderBrightness14SetForwardTimeEj
+     +0x14  0x02017684  _ZN15FaderBrightness9IsAtStartEv
+     +0x18  0x02017670  _ZN15FaderBrightness7IsAtEndEv
+     +0x1c  0x02017628  _ZN15FaderBrightness20IsBetweenStartAndEndEv
+     +0x20  0x0201761c  _ZN15FaderBrightness8SetToEndEv
+     +0x24  0x02017610  _ZN15FaderBrightness10SetToStartEv
+
+   THE SHAPES ARE THE CALL SITES', slot for slot the same rule the ea6c fill
+   above follows and for the same reason: +0x08 is __cdecl because its one site
+   passes the receiver as a stack argument, the two setters clean eight because
+   their sites push two words and clean neither, and the rest are
+   no-stack-parameter __fastcall. THE SETTERS' `ret 8` IS THE WHOLE FIX; the
+   other six are seated because a trap standing where an INSTALLED fader's
+   predicate belongs answers with whatever was in eax, and Stage::Behavior
+   gates its entire body on one of them (`data_0209f5bc->v5()`, ROM +0x14).
+
+   WHY GATE 219'S CRASH DOES NOT COME BACK. That gate seated all ten of this
+   table at once, before section 9c existed, and died c0000005 inside
+   func_ov002_020f23f0. The mechanism is legible now and it is the SETTERS, not
+   the predicates: the matched FaderBrightness setters each end in an
+   UNQUALIFIED predicate call, which MSVC compiles one slot early against a
+   ROM-ordered table -- SetBackwardTime's `IsAtStart()` becomes byte 0x10,
+   which is SetForwardTime, which cleans EIGHT. A no-argument caller losing
+   eight bytes returns into its own saved registers, and where that lands is
+   arbitrary. The view below is what stops it, and it is the mechanism
+   hal/fdr_arm9_fader_seat.cpp already ships for IsBetweenStartAndEnd. */
+
+/* The MSVC-ordered stand-in the two setters run against. Four words: the ROM
+   object's three, laid out so the matched body reads and writes the fields it
+   expects, plus the real receiver past them for the two thunks. The body is
+   not reentrant into it and does not store it, so a stack instance is enough.
+   `speed` is copied back because it is the one field the setters WRITE;
+   currInterp they only read, and only through the virtual predicate. */
+struct L2Eb2cView {
+    void **vt;        /* +0x00  the MSVC-ordered table below */
+    int currInterp;   /* +0x04 */
+    int speed;        /* +0x08 */
+    void *real;       /* +0x0c  past the ROM object, invisible to the body */
+};
+
+/* MSVC byte 0x10 is FaderBrightness::IsAtStart; the ROM keeps it at 0x14.
+   MSVC byte 0x14 is FaderBrightness::IsAtEnd;   the ROM keeps it at 0x18.
+   Both dispatch the REAL receiver's own table, which is what the ARM does. */
+static int __fastcall l2_eb2c_view_is_at_start(L2Eb2cView *v, void *)
+{ return l2_ea6c_dispatch(v->real, 0x14); }
+static int __fastcall l2_eb2c_view_is_at_end(L2Eb2cView *v, void *)
+{ return l2_ea6c_dispatch(v->real, 0x18); }
+
+/* Nothing reaches 0x00 through 0x0c: each setter dispatches exactly one
+   predicate and returns. Filled with a named refusal rather than left null so
+   a codegen change announces itself instead of jumping to zero. */
+static int __fastcall l2_eb2c_view_unreached(void *, void *)
+{
+    std::fprintf(stderr, "  [eb2c] the MSVC-ordered view built for the "
+                 "FaderBrightness setters was dispatched below byte 0x10. "
+                 "Those bodies are supposed to reach 0x10 or 0x14 and nothing "
+                 "else, so their codegen has changed and the view no longer "
+                 "describes them.\n");
+    std::fflush(stderr);
+    return 0;
+}
+
+static void *l2_eb2c_msvc_vt[6] = {
+    (void *)l2_eb2c_view_unreached,     /* 0x00  dtor, folded */
+    (void *)l2_eb2c_view_unreached,     /* 0x04  AdvanceFade */
+    (void *)l2_eb2c_view_unreached,     /* 0x08  SetBackwardTime */
+    (void *)l2_eb2c_view_unreached,     /* 0x0c  SetForwardTime */
+    (void *)l2_eb2c_view_is_at_start,   /* 0x10  IsAtStart */
+    (void *)l2_eb2c_view_is_at_end,     /* 0x14  IsAtEnd */
+};
+
+static int l2_eb2c_run_setter(void *s, unsigned frames, int backward)
+{
+    L2Eb2cView v;
+    v.vt = l2_eb2c_msvc_vt;
+    v.currInterp = ((int *)s)[1];
+    v.speed = ((int *)s)[2];
+    v.real = s;
+    FaderBrightness *fb = (FaderBrightness *)(void *)&v;
+    const int r = backward ? fb->FaderBrightness::SetBackwardTime(frames)
+                           : fb->FaderBrightness::SetForwardTime(frames);
+    ((int *)s)[2] = v.speed;
+    return r;
+}
+
+/* +0x08. FaderColor::AdvanceFade, and the one slot here that is not
+   __fastcall, for l2_ea6c_s08's reason exactly: its single dispatch site,
+   src/func_02018efc.c's `((void(*)(void*))vt[2])(o)`, passes the receiver as a
+   CDECL ARGUMENT. Read out of this lane's binary at _func_ov002_020f23f0+0x29
+   for the neighbouring slot, ecx there holds the VPTR and not the object, so a
+   __fastcall veneer would run on the vtable. The matched body makes no virtual
+   call of its own -- it reaches Fader::AdvanceInterp and G2x by flat name --
+   so no view is needed. The receiver check is fdr_s08's and earns its place
+   the same way: a shape A caller would hand this stub a word off its own frame
+   and it says so instead of running on it. */
+static void __cdecl l2_eb2c_s08(void *s)
+{
+    if (s == 0 || *(void **)s != (void *)data_0208eb2c) {
+        l2_trap("data_0208ea6c vtable slot");
+        return;
+    }
+    l2_eb2c_note(2);
+    _ZN10FaderColor11AdvanceFadeEv(s);
+}
+
+/* +0x0c and +0x10. THE TWO THAT CLEAN EIGHT. __fastcall(self, edx, a, b) is
+   the host spelling of __thiscall(self, a, b): the receiver arrives in ecx,
+   edx is unread, the two pushed words come off the stack and MSVC emits
+   `ret 8`. THE ARITY IS THE CALL SITE'S AND NOT THE ROM BODY'S -- the ARM
+   bodies take one argument each because the second rides r1/r2 and costs
+   nothing there, and the host caller still pushed two words that somebody has
+   to clean. */
+static int __fastcall l2_eb2c_s0c(void *s, void *, int frames, int)
+{ l2_eb2c_note(3); return l2_eb2c_run_setter(s, (unsigned)frames, 1); }
+static int __fastcall l2_eb2c_s10(void *s, void *, int frames, int)
+{ l2_eb2c_note(4); return l2_eb2c_run_setter(s, (unsigned)frames, 0); }
+
+/* +0x14, +0x18 and +0x1c. The three predicates, through the flat faces two
+   other hal files already own. +0x1c is the one that must NOT be a qualified
+   call for l2_ea6c_s1c's reason: the matched IsBetweenStartAndEnd re-dispatches
+   two slots, and the face in hal/fdr_arm9_fader_seat.cpp is the one that lands
+   them on this object's ROM +0x14 and +0x18. */
+static int __fastcall l2_eb2c_s14(void *s, void *)
+{ l2_eb2c_note(5); return _ZN15FaderBrightness9IsAtStartEv(s); }
+static int __fastcall l2_eb2c_s18(void *s, void *)
+{ l2_eb2c_note(6); return _ZN15FaderBrightness7IsAtEndEv(s); }
+static int __fastcall l2_eb2c_s1c(void *s, void *)
+{ l2_eb2c_note(7); return _ZN15FaderBrightness20IsBetweenStartAndEndEv(s); }
+
+/* +0x20 and +0x24. Both matched, both non-virtual in the header, so a
+   qualified call is a direct call and no host vtable is read. */
+static void __fastcall l2_eb2c_s20(void *s, void *)
+{ l2_eb2c_note(8); ((FaderBrightness *)s)->FaderBrightness::SetToEnd(); }
+static void __fastcall l2_eb2c_s24(void *s, void *)
+{ l2_eb2c_note(9); ((FaderBrightness *)s)->FaderBrightness::SetToStart(); }
+
+/* THE SAME DEFECT, ONE TABLE OVER, HARDENED RATHER THAN SEATED.
+   data_0208eacc is _ZTV15FaderBrightness and its +0x0c / +0x10 are the same
+   two setters reached by the same shape B sites, so a bare `ret` there is the
+   same eight-byte leak waiting for an object of that class to be installed.
+   NOTHING IN THIS IMAGE INSTALLS ONE -- the audit under THE THREE SIBLING
+   TABLES holds for eacc, whose only readers are through data_0209f5bc /
+   data_0209d4ac -- so this is not a seat and claims no behaviour: it is the
+   SAME trap with the SAME string and the SAME return, spelled so that if it
+   ever does fire it does not corrupt the caller on the way out. */
+static int __fastcall l2_vt_trap8(void *, void *, int, int)
+{ l2_trap("data_0208ea6c vtable slot"); return 0; }
+
 /* SM64DS_EA6C_SELFTEST=1: DOES +0x1c REACH THE REAL PREDICATES? Env-gated and
    inert unset, and it is a measurement rather than an assertion that the fill
    is right.
@@ -1499,6 +1721,18 @@ static void l2_ea6c_selftest(void)
    tables needs the same kind of dispatch-site audit port/fader_boot_map.txt
    section 9c did for data_0208ea6c, extended to data_0209f5bc /
    data_0209d4ac's OTHER readers".
+
+   [THE AUDIT'S PREMISE IS FALSE FOR ONE OF THE THREE, run link100 lane
+    STAGEBUG. "Only ever reached as THE INSTALLED FADER" does not hold for
+    data_0208eb2c: data_0209b294 is a FaderColor that __sinit_02073e6c leaves
+    pointing at that table, and src/ProcessKuppaScript.cpp takes its address
+    directly (config/arm9/relocs.txt from:0x0200ee2c to:0x0209b294) and
+    dispatches four of the slots this block left trapped. One of them was
+    corrupting its caller's callee-saved registers on every new-file boot; the
+    block above l2_eb2c_s08 is the mechanism and the fix. The enumeration below
+    is still exactly right about the INSTALLED-FADER readers, and it is still
+    the reason data_0208eacc and data_0208eafc stay as they are. Kept whole
+    because the shape of the miss is the useful part.]
 
    THE AUDIT, and it is mechanical rather than a reading. An object of one of
    these three classes is only ever reached as THE INSTALLED FADER, through
@@ -1610,20 +1844,41 @@ static void l2_fill_0208ea6c(void)
     data_0208ea6c[9]  = (void *)l2_ea6c_s24;
     data_0208ea6c[10] = (void *)l2_ea6c_over;
     data_0208ea6c[11] = (void *)l2_ea6c_over;
-    /* THE TRAP GOES DOWN FIRST AND THE SEAT OVERWRITES TWO WORDS OF IT, so a
-       slot this block does not name keeps exactly the trap it had. Only slots
-       0 and 1 are seated, and the enumeration above is why: no dispatch site
-       in the image reaches either. */
+    /* THE TRAP GOES DOWN FIRST AND THE SEAT OVERWRITES THE WORDS OF IT THIS
+       BLOCK NAMES, so a slot it does not name keeps exactly the trap it had.
+       [AMENDED, run link100 lane STAGEBUG. The sentence here used to read
+        "Only slots 0 and 1 are seated, and the enumeration above is why: no
+        dispatch site in the image reaches either." That was true of
+        data_0208eacc and FALSE of data_0208eb2c, whose eight remaining slots
+        are dispatched by src/ProcessKuppaScript.cpp off data_0209b294 -- a
+        reader of neither installed-fader pointer, so the enumeration never
+        looked at it. All ten of eb2c are seated now.] */
     for (int i = 0; i < 10; ++i) data_0208eb2c[i] = (void *)l2_vt_trap;
     for (int i = 0; i < 12; ++i) data_0208eacc[i] = (void *)l2_vt_trap;
     ((void **)data_0208eafc)[0] = (void *)l2_vt_trap;
     ((void **)data_0208eafc)[1] = (void *)l2_vt_trap;
     data_0208eacc[0] = (void *)l2_eacc_s00;
     data_0208eacc[1] = (void *)l2_eacc_s04;
+    /* eacc's two shape B slots keep the trap and lose the eight-byte leak with
+       it -- same string, same return, correct frame. See l2_vt_trap8. */
+    data_0208eacc[3] = (void *)l2_vt_trap8;
+    data_0208eacc[4] = (void *)l2_vt_trap8;
     ((void **)data_0208eafc)[0] = (void *)l2_eafc_s00;
     ((void **)data_0208eafc)[1] = (void *)l2_eafc_s04;
     data_0208eb2c[0] = (void *)l2_eb2c_s00;
     data_0208eb2c[1] = (void *)l2_eb2c_s04;
+    /* +0x08 up: run link100 lane STAGEBUG. ProcessKuppaScript dispatches this
+       table BY ADDRESS off data_0209b294, which is what the installed-fader
+       audit below did not cover, and one of those dispatches was corrupting
+       its caller. The block above l2_eb2c_s08 is the account. */
+    data_0208eb2c[2] = (void *)l2_eb2c_s08;
+    data_0208eb2c[3] = (void *)l2_eb2c_s0c;
+    data_0208eb2c[4] = (void *)l2_eb2c_s10;
+    data_0208eb2c[5] = (void *)l2_eb2c_s14;
+    data_0208eb2c[6] = (void *)l2_eb2c_s18;
+    data_0208eb2c[7] = (void *)l2_eb2c_s1c;
+    data_0208eb2c[8] = (void *)l2_eb2c_s20;
+    data_0208eb2c[9] = (void *)l2_eb2c_s24;
     l2_ea6c_selftest();
 }
 

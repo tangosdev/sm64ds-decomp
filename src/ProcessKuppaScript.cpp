@@ -27,7 +27,21 @@ extern "C" {
 struct FaderBrightness {
     Fix12i currInterp;
     Fix12i speed;
-    virtual ~FaderBrightness();
+    /* THE DESTRUCTOR PAIR, SPELLED AS TWO PLAIN VIRTUALS ON PURPOSE. mwccarm
+       gives `virtual ~FaderBrightness()` TWO vtable entries -- D1 complete and
+       D0 deleting, the Itanium pair -- and MSVC folds them into ONE. Spelt as a
+       destructor this declaration indexed correctly on the ARM and ONE SLOT
+       EARLY on the host, so every dispatch below reached its ROM neighbour:
+       SetForwardTime ran the ROM's SetBackwardTime at +0x0c, SetToStart ran
+       SetToEnd at +0x20, SetBackwardTime ran AdvanceFade at +0x08. Two ordinary
+       virtuals occupy the SAME two entries under mwccarm, so the ROM bytes are
+       untouched (2004/b56, 1.2/base, 1.2/sp2 and 1.2/sp2p3 all still match),
+       and they occupy two under MSVC as well, so the host lands where the ARM
+       does. Neither is ever called from here; they hold the two slots the ROM's
+       table holds, and the UnkVis struct below already takes this shape for the
+       same reason. port/stage_lifecycle_map.txt section 16 is the measurement. */
+    virtual void Destructor1();
+    virtual void Destructor0();
     virtual int Advance();
     virtual int SetBackwardTime(unsigned frames, unsigned arg2);
     virtual int SetForwardTime(unsigned frames, unsigned arg2);

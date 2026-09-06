@@ -2390,3 +2390,135 @@ subtree with `ebx == 0` as the predicate -- and a warning: cdb cannot script
 STEPPING here (`.while(...){p}` fails with "Debuggee already running", from a
 -c list and from stdin alike), so the bisect is conditional breakpoints
 bracketing a call, one bit per run.
+
+
+16. LANE STAGEBUG (run link100): THE WRITER IS A TWELVE-BYTE TRAP STUB, AND IT
+    IS THE OPENING'S OWN FADER
+
+Section 15 handed on a register file and a subtree. This section names the
+instruction, and no debugger was needed for the naming: the whole chain is
+legible in the linked binary, and cdb was only used afterwards to confirm the
+seat runs.
+
+THE WRITER. data_0208eb2c is _ZTV10FaderColor, ten relocated words in arm9
+.data. hal/scene_boot.cpp seated slots 0 and 1 (the destructor pair, gate 225b)
+and left 2..9 pointing at l2_vt_trap, which is
+
+    static void l2_vt_trap(void) { l2_trap("data_0208ea6c vtable slot"); }
+
+a no-argument __cdecl stub ending in a bare `ret`. IT CLEANS NOTHING.
+
+THE OBJECT. data_0209b294 is a FaderColor; src/__sinit_02073e6c.c leaves its
+vptr pointing at data_0208eb2c. src/ProcessKuppaScript.cpp -- which IS the
+opening cutscene's interpreter, and which Stage::Behavior calls directly --
+reads that object BY ADDRESS (config/arm9/relocs.txt from:0x0200ee2c
+to:0x0209b294) and dispatches four of its slots.
+
+THE INSTRUCTION, read out of this lane's own walk_window.exe. The Kuppa script
+command that runs on the level-change frame ends in a two-argument setter:
+
+    004E5238  push eax                    the second argument, zero
+    004E5244  push 1Eh                    the frame count
+    004E5246  call dword ptr [eax+0Ch]    -> l2_vt_trap, which pops neither
+    004E5249  push 1773918h               Scene::SetFaders, cdecl
+    004E524E  call 004080C0
+    004E5253  add  esp,4                  ITS OWN argument, and only that one
+
+__thiscall is callee-cleans and the site cleans neither push, so eight bytes
+stay on ProcessKuppaScript's frame from there to its epilogue. The function
+saves three registers, in this order:
+
+    004E4F70  push ebp / mov ebp,esp / sub esp,0Ch
+    004E4F76  push esi
+    004E4F8E  push ebx
+    004E4FA0  push edi
+
+so the epilogue reads back one word per push, from an ESP that is eight low:
+
+    004E52C8  pop  edi        <- 0x1E, the frame count
+    004E52D4  pop  ebx        <- 0,    the second argument
+    004E52DB  pop  esi        <- what edi should have been
+    004E52DC  mov  esp,ebp    <- AND THE STACK POINTER IS PUT BACK
+    004E52DE  pop  ebp
+    004E52DF  ret
+
+edi = 0x1e. ebx = 0. esp exactly right. That is section 15's register file,
+produced by construction rather than inferred, and the `mov esp,ebp` is why the
+damage is invisible to every stack check between there and the fault.
+
+WHY IT REACHES func_02043288. Nothing between ProcessKuppaScript and the
+faulting instruction restores either register: MSVC allocated ebx and edi in
+neither Stage::Behavior nor port_stage_rom_behavior, and section 15 already
+measured both frames as transparent. esi IS restored -- port_stage_rom_behavior
+pushes it -- which is why the outer dump shows a plausible esi and says nothing
+about the corruption. func_02043288 then dispatches slot 8 through the ebx it
+cached at +0x0d, reads [0 + 0x20], and takes the access violation.
+
+WHY THE TRAP WAS THERE AT ALL, and it is an honest miss rather than an
+oversight. hal/scene_boot.cpp's gate-225b block audited "every reader of
+data_0209f5bc and data_0209d4ac in arm9 and all 101 overlay reloc files" and
+concluded SLOTS 0, 1 AND 9 HAVE NO DISPATCH SITE ANYWHERE IN THE IMAGE. The
+enumeration is correct and its premise is not: it rests on "an object of one of
+these three classes is only ever reached as THE INSTALLED FADER", and
+data_0209b294 is reached by ADDRESS, through neither pointer. The audit was
+about the pointers; this table has a second door.
+
+A SECOND DEFECT, FOUND ON THE WAY AND FIXED WITH IT. ProcessKuppaScript's local
+struct spelled the class's destructor pair as `virtual ~FaderBrightness()`.
+mwccarm gives a virtual destructor TWO vtable entries and MSVC folds them into
+ONE, so on the host every dispatch below it landed ONE ROM SLOT EARLY:
+
+    source call            ARM slot            host slot before the fix
+    SetBackwardTime        +0x0c               +0x08  AdvanceFade
+    SetForwardTime         +0x10               +0x0c  SetBackwardTime
+    SetToEnd               +0x20               +0x1c  IsBetweenStartAndEnd
+    SetToStart             +0x24               +0x20  SetToEnd
+
+Every one of those is trapped today, so the skew was invisible and would have
+become a wrong-behaviour bug the moment the slots were seated. The fix is the
+shape the same file's UnkVis struct already uses: two ordinary virtuals in
+place of the destructor. mwccarm gives those the same two entries, so the ROM
+bytes do not move -- ProcessKuppaScript matches on 2004/b56, 1.2/base, 1.2/sp2
+and 1.2/sp2p3 before and after -- and MSVC gives them two as well, so the host
+lands where the ARM does.
+
+THE SEAT. All eight remaining slots of data_0208eb2c now carry the ROM's own
+matched bodies, each in the shape ITS OWN CALL SITES use:
+
+  +0x08  _ZN10FaderColor11AdvanceFadeEv            __cdecl, receiver checked
+  +0x0c  _ZN15FaderBrightness15SetBackwardTimeEj   __fastcall, cleans 8
+  +0x10  _ZN15FaderBrightness14SetForwardTimeEj    __fastcall, cleans 8
+  +0x14  _ZN15FaderBrightness9IsAtStartEv          __fastcall, cleans 0
+  +0x18  _ZN15FaderBrightness7IsAtEndEv            __fastcall, cleans 0
+  +0x1c  _ZN15FaderBrightness20IsBetweenStartAndEndEv  through the existing face
+  +0x20  _ZN15FaderBrightness8SetToEndEv           __fastcall, cleans 0
+  +0x24  _ZN15FaderBrightness10SetToStartEv        __fastcall, cleans 0
+
+and none is transcribed: every body was already compiled into this link.
+
+GATE 219 SEATED THIS TABLE ONCE AND WAS BACKED OUT AFTER A c0000005, so the
+reason that does not come back is owed. The two setters each end in an
+UNQUALIFIED predicate call, and MSVC compiles those one slot early against a
+ROM-ordered table for exactly the reason above: SetBackwardTime's `IsAtStart()`
+becomes byte 0x10, which is SetForwardTime, which cleans EIGHT. A no-argument
+caller losing eight bytes returns into its own saved registers and lands
+anywhere -- which is what a crash "inside func_ov002_020f23f0" looks like. Both
+setters therefore run against an MSVC-ORDERED VIEW whose 0x10 and 0x14
+dispatch the real receiver's ROM 0x14 and 0x18, which is the mechanism
+hal/fdr_arm9_fader_seat.cpp already ships for IsBetweenStartAndEnd.
+
+AND THE SAME SHAPE ONE TABLE OVER. data_0208eacc is _ZTV15FaderBrightness and
+its +0x0c / +0x10 are the same two setters behind the same shape B sites, so a
+bare `ret` there is the same leak waiting for an object of that class to be
+installed. Nothing in this image installs one -- for eacc the gate-225b audit's
+premise does hold -- so those two slots are not seated: they keep the trap, with
+the same string and the same return, spelled to clean eight. No behaviour is
+claimed for them, only a frame.
+
+THE PROOF IS A RUNG NOW. port/tools/tail2_states_proof.py grew an OPENING GATE
+that fails the run on any quarantined fault and on a player position that is
+CONSTANT across the frames after the level change. Both halves are needed: rc
+was 0 through every one of section 15's nine runs, and the cell census was
+green, because port_dispatch_guarded froze the Stage and let the frame finish.
+The gate was run against lane OPENFAULT's own pre-fix log as a negative control
+and reports both signatures.

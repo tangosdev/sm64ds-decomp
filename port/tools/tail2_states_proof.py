@@ -43,6 +43,8 @@ def main():
     ap.add_argument("--tag", default="states")
     ap.add_argument("--outroot",
                     default=os.environ.get("TEMP", "/tmp") + "/tail2_states")
+    ap.add_argument("--no-opening-gate", action="store_true",
+                    help="report the opening gate below but do not fail on it")
     a = ap.parse_args()
 
     root = pathlib.Path(a.root).resolve()
@@ -106,7 +108,73 @@ def main():
         for line in text.splitlines():
             if bad in line:
                 print("  REFUSAL: " + line.strip())
-    return 0 if rc == 0 else 1
+
+    gate = opening_gate(text)
+    if a.no_opening_gate:
+        gate = 0
+    return 1 if (rc != 0 or gate) else 0
+
+
+def opening_gate(text):
+    """THE OPENING MUST STILL BE MOVING AT THE END OF THE RUN -- run link100
+    lane STAGEBUG.
+
+    rc AND THE CELL CENSUS ARE BOTH BLIND TO THE FAILURE THIS CATCHES, which is
+    why it is a rung and not a paragraph. port_dispatch_guarded catches an
+    access violation inside an actor's phase callback, writes a dump, FREEZES
+    that actor and resumes the walk, so the process runs its full frame budget
+    and exits 0 with the cutscene dead. That is exactly what
+    port/stage_lifecycle_map.txt sections 15 and 16 measured: one quarantined
+    fault on the level-change frame, the Stage frozen from then on, and every
+    later frame printing the player parked at the same coordinates with a fixed
+    camera.
+
+    Three assertions, in the order they fail informatively:
+      QUARANTINE  no actor was frozen. One line here is a real defect even
+                  though rc is 0.
+      REACH       the run got past the opening's level change at all, so a
+                  harness that never left the title cannot pass this vacuously.
+      MOTION      the player's position is not CONSTANT across the frames after
+                  that level change. A frozen Stage pins it; a running cutscene
+                  does not.
+    """
+    bad = 0
+
+    quarantined = [l.strip() for l in text.splitlines() if "[quarantine]" in l]
+    if quarantined:
+        bad = 1
+        print(f"  OPENING GATE: FAIL -- {len(quarantined)} quarantined "
+              f"fault(s); an actor was frozen and the run still exited 0")
+        for l in quarantined[:4]:
+            print("    " + l)
+
+    change = [m.start() for m in re.finditer(r"\[lvl\] change: level ", text)]
+    if not change:
+        print("  OPENING GATE: FAIL -- the run never reached the opening's "
+              "level change, so it proves nothing about the cutscene. Check "
+              "SM64DS_TOUCH_PROBE, the fresh save, and --frames.")
+        return 1
+
+    after = text[change[-1]:]
+    tail = [(int(m.group(1)), m.group(2))
+            for m in re.finditer(r"\[f(\d+)\] pos=\(([^)]*)\)", after)]
+    if len(tail) < 8:
+        print(f"  OPENING GATE: FAIL -- only {len(tail)} frame(s) logged after "
+              f"the level change; raise --frames so the tail is measurable")
+        return 1
+
+    distinct = len({p for _, p in tail})
+    if distinct < 2:
+        bad = 1
+        print(f"  OPENING GATE: FAIL -- the player is PARKED at ({tail[0][1]}) "
+              f"for all {len(tail)} frames after the level change (frames "
+              f"{tail[0][0]}..{tail[-1][0]}). That is the frozen-Stage "
+              f"signature of stage_lifecycle_map.txt section 15.")
+    elif not bad:
+        print(f"  OPENING GATE: PASS -- 0 quarantined faults, and the player "
+              f"takes {distinct} distinct positions over frames "
+              f"{tail[0][0]}..{tail[-1][0]}, after the level change")
+    return bad
 
 
 if __name__ == "__main__":
