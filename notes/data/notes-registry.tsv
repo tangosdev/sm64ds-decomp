@@ -32,6 +32,7 @@ notes/assets.md	evidence	build	live		How to extract/catalog NitroFS assets (mode
 notes/bgobject-provenance.md	evidence	provenance	live		Per-class field-name evidence for dBgActor_c-derived interactive objects (StarSwitch, etc.), byte-neutral.
 notes/butterfly-tornado-provenance.md	evidence	provenance	live		Field-name provenance for Butterfly/Tornado/StarMarker/ToxBox, from tools/gen_header.py offsets.
 notes/class-init-pilot.md	evidence	provenance	live		Pilot: do *_classInit factories follow one pattern? 19/20 sampled do; the naming rule doesn't universalize.
+notes/codegen-rules.md	doctrine	matching	live		Condensed load-bearing rulebook: mwccarm-codegen.md's curated `## 1`-`## 6d` + `## 6az` sections, meant to be loaded whole.
 notes/collision-query-classes.md	evidence	provenance	superseded		RaycastLine/RaycastGround/SphereClsn gazetteer; several conclusions wrong — read collision-system.md first.
 notes/collision-system.md	evidence	provenance	live		Primary-evidence reference for the collision system: RTTI names, class graph, open questions (§6).
 notes/converted-tier.md	evidence	cpp-conversion	live		Why tools/tiers.py's CONVERTED metric undercounted converted C++ methods; the real_name defect and fix.
@@ -57,6 +58,7 @@ notes/data/class-facts/daObjCtMecha04_c.json	data	process	live		Scout-stage ROM 
 notes/data/class-facts/daObjFloatBoard_c.json	data	process	live		Scout-stage ROM facts for daObjFloatBoard_c: RTTI/typeinfo words and base class dBgActor_c.
 notes/data/class-facts/daOts_c.json	data	process	live		Scout-stage ROM facts for daOts_c (ov064): RTTI symbol/module and section layout (.text/.rodata/.init/.ctor).
 notes/data/class-facts/daPgDfdr_c.json	data	process	live		Scout-stage ROM facts for daPgDfdr_c (ov027): RTTI/typeinfo addresses and __si_class_type_info word layout.
+notes/data/notes-bench.tsv	data	process	live	tools/notes_bench.py	10 canonical questions measuring notes/ retrieval cost (hops, path_bytes, grep fanout) from the front doors.
 notes/data/notes-registry.tsv	data	process	live	tools/notes_index.py	The registry itself: one row per notes/ file with its tier, bucket, status, owner tool, and summary.
 notes/data/tu-merge-candidates.json	data	tu-promotion	live		524 candidate TUs from tu_map.py with per-module under/over-segmentation stats (74 modules, 11096 fns).
 notes/data/tu-promotion-queue.tsv	data	tu-promotion	live		Per-class TU-promotion queue: shard count, blockers, sibling oracle, route; the writer stage's target list.
