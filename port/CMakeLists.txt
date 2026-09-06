@@ -13987,6 +13987,29 @@ endforeach()
 foreach(_t221 walk_window walk_window_hires smoke_player)
     target_sources(${_t221} PRIVATE ${SLICE221_SOURCES})
 endforeach()
+# ---- gate 222 (run link100, lane BOOT2): THE REST OF func_0201a054 ---------
+#
+# Lane BOOT (gate 214) transcribed func_0201a054 and left four of its arms
+# marked "left for the next step": func_02053c40 and func_02019440, the two
+# halves of the graphics bring-up (the first turns the VRAM banks off, the
+# second turns them back on with func_02054430(0x1ff)), plus their tails.
+# They run from hal/boot_os.cpp at the ROM's own points now. Seating them also
+# closes the gap hal/sub_screen.cpp:947 records: the ROM body seeds all eight
+# BG affine words, where the port seeded four by hand.
+#
+# walk_window and walk_window_hires only: smoke_player does not run the boot
+# spine. Appended ABOVE the sharing block below.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate222.txt" SLICE222_LINES)
+set(SLICE222_SOURCES "")
+foreach(line IN LISTS SLICE222_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE222_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+target_sources(walk_window PRIVATE ${SLICE222_SOURCES})
+target_sources(walk_window_hires PRIVATE ${SLICE222_SOURCES})
 
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
