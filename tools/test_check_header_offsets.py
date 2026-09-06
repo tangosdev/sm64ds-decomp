@@ -671,3 +671,92 @@ class QualifiedSizeAssertTests(unittest.TestCase):
         self.assertNotIn("include/dMgPsOpt_c.h", C._known_issues(),
                          "the waiver is back; this test guards its retirement")
         self.assertEqual(C.main(["include/dMgPsOpt_c.h"], REPO), 0)
+
+
+# ---------------------------------- defect 5: Allman inline member-function bodies
+
+ALLMAN_EMPTY = """\
+struct Widget {
+    virtual ~Widget()
+    {
+    }
+    u32 first;   /* 0x004 */
+    u32 second;  /* 0x008 */
+};
+"""
+
+ALLMAN_NONEMPTY = """\
+struct Widget {
+    virtual ~Widget()
+    {
+        if (first) { first = 0; } // unmatched-looking }
+        /* Braces in comments are not body braces: { } { */
+        const char *brace = "}";
+    }
+    u32 first;   /* 0x004 */
+    u32 second;  /* 0x008 */
+    u16 third;   /* 0x00c */
+};
+"""
+
+SAME_LINE_BODY = """\
+struct Widget {
+    virtual ~Widget() { /* } */ }
+    u32 first;   /* 0x004 */
+    u32 second;  /* 0x008 */
+};
+"""
+
+DECLARED_DTOR = """\
+struct Widget {
+    virtual ~Widget();
+    u32 first;   /* 0x004 */
+    u32 second;  /* 0x008 */
+};
+"""
+
+
+class InlineMethodBodyTests(unittest.TestCase):
+    def _run(self, body):
+        with Repo() as r:
+            r.write("include/Widget.h", body)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                rc = r.run("include/Widget.h")
+            return rc, out.getvalue()
+
+    def _assert_checked(self, body, count, span):
+        rc, out = self._run(body)
+        self.assertEqual(rc, 0, out)
+        self.assertIn(
+            f"{count} commented fields, 0 mismatched, 0 unparsed, struct spans {span}",
+            out,
+        )
+
+    def test_an_empty_allman_destructor_does_not_end_the_struct(self):
+        # Pre-fix: depth was computed from this declaration line alone.  It is
+        # necessarily zero even though the body opens on the following line.
+        signature = "    virtual ~Widget()"
+        self.assertEqual(signature.count("{") - signature.count("}"), 0)
+        self._assert_checked(ALLMAN_EMPTY, 2, "0xc")
+
+    def test_a_nonempty_allman_body_ignores_comment_and_string_braces(self):
+        self._assert_checked(ALLMAN_NONEMPTY, 3, "0xe")
+
+    def test_a_one_line_body_keeps_working(self):
+        self._assert_checked(SAME_LINE_BODY, 2, "0xc")
+
+    def test_an_ordinary_destructor_declaration_does_not_consume_fields(self):
+        self._assert_checked(DECLARED_DTOR, 2, "0xc")
+
+    def test_a_missing_body_does_not_hide_the_following_field(self):
+        malformed = ALLMAN_EMPTY.replace("    {\n    }\n", "")
+        rc, out = self._run(malformed)
+        self.assertEqual(rc, 1, out)
+        self.assertIn("2 commented fields, 0 mismatched, 1 unparsed", out)
+
+    def test_a_bad_field_after_an_allman_body_is_still_a_failure(self):
+        broken = ALLMAN_EMPTY.replace("/* 0x008 */", "/* 0x00c */")
+        rc, out = self._run(broken)
+        self.assertEqual(rc, 1, out)
+        self.assertIn("2 commented fields, 1 mismatched, 0 unparsed", out)
