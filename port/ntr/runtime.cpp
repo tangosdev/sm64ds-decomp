@@ -310,6 +310,18 @@ extern "C" void _ZN4CP1514FlushDataCacheEv(void) {}
 // PORT_HOST_ABI: hand-asm primitive (src/ carries the banner): mcr p15
 //   cache maintenance. See the CP15 block above -- host memory is coherent.
 extern "C" void _ZN4CP1514FlushDataCacheEjj(unsigned int, unsigned int) {}
+// PORT_HOST_ABI: hand-asm primitive (src/ carries the banner): the whole ROM
+//   body is `mov r0, #0; mcr p15, 0, r0, c7, c10, 4; bx lr` -- drain the write
+//   buffer. See the CP15 block above -- host memory is coherent, and a 32-bit
+//   x86 MSVC cannot assemble an ARM coprocessor move in any case.
+//   The tag was simply missing: both its neighbours in this block carry one and
+//   this line did not, so linkage.py counted it an UNDOCUMENTED SHADOW -- work
+//   owed -- when it is the same permanent exception they are. Found by the
+//   func_0203df40 / func_0203ea5c census (run link100, lane DF40); it is the
+//   one row of that census whose disposition was a missing ruling rather than a
+//   missing body. The sibling on line 30, _ZN3IRQ6EnableEv, is the same shape
+//   and the same omission, but it is in neither closure, so this lane names it
+//   rather than taking it.
 extern "C" void _ZN4CP1516DrainWriteBufferEv(void) {}
 // PORT_HOST_ABI: hand-asm primitive (src/ carries the banner): mcr p15
 //   cache maintenance. See the CP15 block above -- host memory is coherent.
