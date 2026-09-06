@@ -40,111 +40,688 @@
     },
     "extent_evidence": "Exactly 36 relocated code pointers occupy 0x0213c510..0x0213c59c. The following raw word at 0x0213c5a0 is 0x2f474d2f (`/MG/` in little endian), not a code pointer or relocation, and config labels it as a separate data object. Therefore the exclusive end is 0x0213c5a0 and storage is 8 + 36*4 = 0x98.",
     "all_slots": [
-      {"slot": 0, "target": "0x020e6894"},
-      {"slot": 1, "target": "0x020b0930"},
-      {"slot": 2, "target": "0x020b08f0"},
-      {"slot": 3, "target": "0x02043bf0"},
-      {"slot": 4, "target": "0x0202e5f0"},
-      {"slot": 5, "target": "0x020b0840"},
-      {"slot": 6, "target": "0x020e683c"},
-      {"slot": 7, "target": "0x020b0620"},
-      {"slot": 8, "target": "0x0202e3c8"},
-      {"slot": 9, "target": "0x020e67f0"},
-      {"slot": 10, "target": "0x020b04f4"},
-      {"slot": 11, "target": "0x0202e398"},
-      {"slot": 12, "target": "0x020b04e8"},
-      {"slot": 13, "target": "0x0204357c"},
-      {"slot": 14, "target": "0x0204349c"},
-      {"slot": 15, "target": "0x02043494"},
-      {"slot": 16, "target": "0x020e3854"},
-      {"slot": 17, "target": "0x020e3878"},
-      {"slot": 18, "target": "0x020e6774"},
-      {"slot": 19, "target": "0x020b2994"},
-      {"slot": 20, "target": "0x020b2990"},
-      {"slot": 21, "target": "0x020b298c"},
-      {"slot": 22, "target": "0x020ae198"},
-      {"slot": 23, "target": "0x020ae1a0"},
-      {"slot": 24, "target": "0x020ae140"},
-      {"slot": 25, "target": "0x020ae128"},
-      {"slot": 26, "target": "0x020b04e0"},
-      {"slot": 27, "target": "0x020af27c"},
-      {"slot": 28, "target": "0x020af04c"},
-      {"slot": 29, "target": "0x020af094"},
-      {"slot": 30, "target": "0x020aeed8"},
-      {"slot": 31, "target": "0x020b2880"},
-      {"slot": 32, "target": "0x020b27f4"},
-      {"slot": 33, "target": "0x020b265c"},
-      {"slot": 34, "target": "0x020ae3b4"},
-      {"slot": 35, "target": "0x020ad660"}
+      {
+        "slot": 0,
+        "target": "0x020e6894",
+        "symbol": "_ZN15dScMgCurling2_c13InitResourcesEv",
+        "own_override": true,
+        "base_target": "0x02043c80"
+      },
+      {
+        "slot": 1,
+        "target": "0x020b0930",
+        "symbol": "_ZN11dScMgBase_c19BeforeInitResourcesEv",
+        "own_override": false,
+        "base_target": "0x020b0930"
+      },
+      {
+        "slot": 2,
+        "target": "0x020b08f0",
+        "symbol": "_ZN11dScMgBase_c18AfterInitResourcesEj",
+        "own_override": false,
+        "base_target": "0x020b08f0"
+      },
+      {
+        "slot": 3,
+        "target": "0x02043bf0",
+        "symbol": "_ZN7fBase_c16CleanupResourcesEv",
+        "own_override": false,
+        "base_target": "0x02043bf0"
+      },
+      {
+        "slot": 4,
+        "target": "0x0202e5f0",
+        "symbol": "_ZN8dScene_c22BeforeCleanupResourcesEv",
+        "own_override": false,
+        "base_target": "0x0202e5f0"
+      },
+      {
+        "slot": 5,
+        "target": "0x020b0840",
+        "symbol": "_ZN11dScMgBase_c21AfterCleanupResourcesEj",
+        "own_override": false,
+        "base_target": "0x020b0840"
+      },
+      {
+        "slot": 6,
+        "target": "0x020e683c",
+        "symbol": "_ZN15dScMgCurling2_c8BehaviorEv",
+        "own_override": true,
+        "base_target": "0x020b0618"
+      },
+      {
+        "slot": 7,
+        "target": "0x020b0620",
+        "symbol": "_ZN11dScMgBase_c14BeforeBehaviorEv",
+        "own_override": false,
+        "base_target": "0x020b0620"
+      },
+      {
+        "slot": 8,
+        "target": "0x0202e3c8",
+        "symbol": "_ZN8dScene_c13AfterBehaviorEj",
+        "own_override": false,
+        "base_target": "0x0202e3c8"
+      },
+      {
+        "slot": 9,
+        "target": "0x020e67f0",
+        "symbol": "_ZN15dScMgCurling2_c6RenderEv",
+        "own_override": true,
+        "base_target": "0x020b04ec"
+      },
+      {
+        "slot": 10,
+        "target": "0x020b04f4",
+        "symbol": "_ZN11dScMgBase_c12BeforeRenderEv",
+        "own_override": false,
+        "base_target": "0x020b04f4"
+      },
+      {
+        "slot": 11,
+        "target": "0x0202e398",
+        "symbol": "_ZN8dScene_c11AfterRenderEj",
+        "own_override": false,
+        "base_target": "0x0202e398"
+      },
+      {
+        "slot": 12,
+        "target": "0x020b04e8",
+        "symbol": "_ZN11dScMgBase_c16OnPendingDestroyEv",
+        "own_override": false,
+        "base_target": "0x020b04e8"
+      },
+      {
+        "slot": 13,
+        "target": "0x0204357c",
+        "symbol": "_ZN7fBase_c9Virtual34Ejj",
+        "own_override": false,
+        "base_target": "0x0204357c"
+      },
+      {
+        "slot": 14,
+        "target": "0x0204349c",
+        "symbol": "_ZN7fBase_c9Virtual38Ejj",
+        "own_override": false,
+        "base_target": "0x0204349c"
+      },
+      {
+        "slot": 15,
+        "target": "0x02043494",
+        "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+        "own_override": false,
+        "base_target": "0x02043494"
+      },
+      {
+        "slot": 16,
+        "target": "0x020e3854",
+        "symbol": "_ZN15dScMgCurling2_cD1Ev",
+        "own_override": true,
+        "base_target": "0x020b2a84"
+      },
+      {
+        "slot": 17,
+        "target": "0x020e3878",
+        "symbol": "_ZN15dScMgCurling2_cD0Ev",
+        "own_override": true,
+        "base_target": "0x020b2a18"
+      },
+      {
+        "slot": 18,
+        "target": "0x020e6774",
+        "symbol": "_ZN15dScMgCurling2_c13OnYoshiTryEatEi",
+        "own_override": true,
+        "base_target": "0x020b299c"
+      },
+      {
+        "slot": 19,
+        "target": "0x020b2994",
+        "symbol": "_ZN11dScMgBase_c13OnTurnIntoEggEi",
+        "own_override": false,
+        "base_target": "0x020b2994"
+      },
+      {
+        "slot": 20,
+        "target": "0x020b2990",
+        "symbol": "_ZN11dScMgBase_c9Virtual50Ev",
+        "own_override": false,
+        "base_target": "0x020b2990"
+      },
+      {
+        "slot": 21,
+        "target": "0x020b298c",
+        "symbol": "_ZN11dScMgBase_c15OnGroundPoundedEv",
+        "own_override": false,
+        "base_target": "0x020b298c"
+      },
+      {
+        "slot": 22,
+        "target": "0x020ae198",
+        "symbol": "_ZN11dScMgBase_c11OnAttacked1Ev",
+        "own_override": false,
+        "base_target": "0x020ae198"
+      },
+      {
+        "slot": 23,
+        "target": "0x020ae1a0",
+        "symbol": "_ZN11dScMgBase_c11OnAttacked2Ev",
+        "own_override": false,
+        "base_target": "0x020ae1a0"
+      },
+      {
+        "slot": 24,
+        "target": "0x020ae140",
+        "symbol": "_ZN11dScMgBase_c8OnKickedEv",
+        "own_override": false,
+        "base_target": "0x020ae140"
+      },
+      {
+        "slot": 25,
+        "target": "0x020ae128",
+        "symbol": "_ZN11dScMgBase_c8OnPushedEv",
+        "own_override": false,
+        "base_target": "0x020ae128"
+      },
+      {
+        "slot": 26,
+        "target": "0x020b04e0",
+        "symbol": "_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv",
+        "own_override": false,
+        "base_target": "0x020b04e0"
+      },
+      {
+        "slot": 27,
+        "target": "0x020af27c",
+        "symbol": "_ZN11dScMgBase_c15OnHitByMegaCharEv",
+        "own_override": false,
+        "base_target": "0x020af27c"
+      },
+      {
+        "slot": 28,
+        "target": "0x020af04c",
+        "symbol": "_ZN11dScMgBase_c19OnHitFromUnderneathEv",
+        "own_override": false,
+        "base_target": "0x020af04c"
+      },
+      {
+        "slot": 29,
+        "target": "0x020af094",
+        "symbol": "_ZN11dScMgBase_c16OnAimedAtWithEggEv",
+        "own_override": false,
+        "base_target": "0x020af094"
+      },
+      {
+        "slot": 30,
+        "target": "0x020aeed8",
+        "symbol": "_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv",
+        "own_override": false,
+        "base_target": "0x020aeed8"
+      },
+      {
+        "slot": 31,
+        "target": "0x020b2880",
+        "symbol": "_ZN11dScMgBase_c9Virtual7CEv",
+        "own_override": false,
+        "base_target": "0x020b2880"
+      },
+      {
+        "slot": 32,
+        "target": "0x020b27f4",
+        "symbol": "_ZN11dScMgBase_c9Virtual80Ev",
+        "own_override": false,
+        "base_target": "0x020b27f4"
+      },
+      {
+        "slot": 33,
+        "target": "0x020b265c",
+        "symbol": "_ZN11dScMgBase_c9Virtual84Ev",
+        "own_override": false,
+        "base_target": "0x020b265c"
+      },
+      {
+        "slot": 34,
+        "target": "0x020ae3b4",
+        "symbol": "_ZN11dScMgBase_c9Virtual88Eiiii",
+        "own_override": false,
+        "base_target": "0x020ae3b4"
+      },
+      {
+        "slot": 35,
+        "target": "0x020ad660",
+        "symbol": "_ZN11dScMgBase_c9Virtual8CEv",
+        "own_override": false,
+        "base_target": "0x020ad660"
+      }
     ],
     "own_overrides": [
-      {"slot": 0, "address": "0x020e6894", "size": "0x360", "symbol": "_ZN15dScMgCurling2_c13InitResourcesEv"},
-      {"slot": 6, "address": "0x020e683c", "size": "0x58", "symbol": "_ZN15dScMgCurling2_c8BehaviorEv"},
-      {"slot": 9, "address": "0x020e67f0", "size": "0x4c", "symbol": "_ZN15dScMgCurling2_c6RenderEv"},
-      {"slot": 16, "address": "0x020e3854", "size": "0x24", "symbol": "_ZN15dScMgCurling2_cD1Ev"},
-      {"slot": 17, "address": "0x020e3878", "size": "0x38", "symbol": "_ZN15dScMgCurling2_cD0Ev"},
-      {"slot": 18, "address": "0x020e6774", "size": "0x7c", "symbol": "_ZN15dScMgCurling2_c13OnYoshiTryEatEi"}
+      {
+        "slot": 0,
+        "address": "0x020e6894",
+        "size": "0x360",
+        "symbol": "_ZN15dScMgCurling2_c13InitResourcesEv"
+      },
+      {
+        "slot": 6,
+        "address": "0x020e683c",
+        "size": "0x58",
+        "symbol": "_ZN15dScMgCurling2_c8BehaviorEv"
+      },
+      {
+        "slot": 9,
+        "address": "0x020e67f0",
+        "size": "0x4c",
+        "symbol": "_ZN15dScMgCurling2_c6RenderEv"
+      },
+      {
+        "slot": 16,
+        "address": "0x020e3854",
+        "size": "0x24",
+        "symbol": "_ZN15dScMgCurling2_cD1Ev"
+      },
+      {
+        "slot": 17,
+        "address": "0x020e3878",
+        "size": "0x38",
+        "symbol": "_ZN15dScMgCurling2_cD0Ev"
+      },
+      {
+        "slot": 18,
+        "address": "0x020e6774",
+        "size": "0x7c",
+        "symbol": "_ZN15dScMgCurling2_c13OnYoshiTryEatEi"
+      }
     ],
-    "override_evidence": "Direct comparison with the 36-slot dScMgBase_c table changes exactly slots 0, 6, 9, 16, 17 and 18. Every target agrees with the ov006 relocation table and exact config symbol at its address."
+    "override_evidence": "Word-for-word diff of the 36-slot cartridge tables at ov006 0x0213c510 and ov004 0x020bc0c0 differs in exactly slots 0, 6, 9, 16, 17, 18, and all six targets lie inside the run. The other 30 slots are byte-identical to dScMgBase_c's and are named here from ov004/arm9 symbols.txt.",
+    "base_vtable": {
+      "symbol": "_ZTV11dScMgBase_c",
+      "address": "0x020bc0c0",
+      "module": "ov004",
+      "slots": 36
+    }
   },
   "destructor_evidence": "D1 at 0x020e3854 and D0 at 0x020e3878 each install the 0x0213c510 address point and call dScMgBase_cD2 at ov004 0x020b29c0. D0 then calls operator delete. No own subobject destructor is called, proving only plain/opaque own storage at this lifecycle boundary.",
   "text_span": {
     "start": "0x020e3854",
-    "end": "0x020e6bf4",
-    "size": "0x33a0",
-    "function_count": 52,
+    "end": "0x020e6c28",
+    "size": "0x33d4",
+    "function_count": 53,
+    "src_file_count": 52,
     "own_virtual_count": 6,
-    "nonvirtual_count": 46,
+    "factory_count": 1,
     "boundary_confidence": "medium",
-    "evidence": "tools/tu_map.py --module ov006 --verbose groups 52 gap-free config functions from D1 through InitResources. The left edge follows the separate dScMgCurling_c factory interval; the right edge is the adjacent dScMgCurling2_c_classInit factory interval. Adjacency, class-named endpoints, relocation closure and the companion sinit support the candidate, but do not preserve an original filename or make the inferred boundary high-confidence."
+    "evidence": "tu_map.py's ov006 unit EXTENDED by queue_audit.py over the zero-gap neighbour dScMgCurling2_c_classInit (tu_map cuts on symbol NAME, so the factory falls outside a run it physically abuts). The previous scout stopped at 0x020e6bf4 and reported 52 functions; the current generator absorbs the factory and reports 53 functions in 52 distinct src/ files (52 because one function has no src/ file at all)."
   },
   "non_virtual": [
-    {"symbol": "func_ov006_020e38b0", "address": "0x020e38b0", "size": "0x98", "direct_callers": ["0x020e681c"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e3948", "address": "0x020e3948", "size": "0x98", "direct_callers": ["0x020e6880"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e39e0", "address": "0x020e39e0", "size": "0x1bc", "direct_callers": ["0x020e53fc", "0x020e5970"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e3b9c", "address": "0x020e3b9c", "size": "0x28", "direct_callers": ["0x020e6768"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e3bc4", "address": "0x020e3bc4", "size": "0x88", "direct_callers": ["0x020e6824"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e3c4c", "address": "0x020e3c4c", "size": "0x94", "table_pointer": "0x0213c46c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e3ce0", "address": "0x020e3ce0", "size": "0xd4", "table_pointer": "0x0213c484", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e3db4", "address": "0x020e3db4", "size": "0x98", "table_pointer": "0x0213c41c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e3e4c", "address": "0x020e3e4c", "size": "0x108", "table_pointer": "0x0213c4a4", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e3f54", "address": "0x020e3f54", "size": "0x140", "table_pointer": "0x0213c43c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4094", "address": "0x020e4094", "size": "0x13c", "table_pointer": "0x0213c444", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e41d0", "address": "0x020e41d0", "size": "0xe4", "table_pointer": "0x0213c49c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e42b4", "address": "0x020e42b4", "size": "0x94", "table_pointer": "0x0213c48c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4348", "address": "0x020e4348", "size": "0xc4", "table_pointer": "0x0213c45c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e440c", "address": "0x020e440c", "size": "0x114", "table_pointer": "0x0213c464", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4520", "address": "0x020e4520", "size": "0x110", "table_pointer": "0x0213c40c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4630", "address": "0x020e4630", "size": "0x114", "table_pointer": "0x0213c474", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4744", "address": "0x020e4744", "size": "0x50", "table_pointer": "0x0213c494", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4794", "address": "0x020e4794", "size": "0x6c", "table_pointer": "0x0213c42c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4800", "address": "0x020e4800", "size": "0xd4", "direct_callers": ["0x020e6878"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e48d4", "address": "0x020e48d4", "size": "0x1b0", "direct_callers": ["0x020e6b40"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e4a84", "address": "0x020e4a84", "size": "0x7c", "direct_callers": ["0x020e6804"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e4b00", "address": "0x020e4b00", "size": "0x78", "direct_callers": ["0x020e6294"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e4b78", "address": "0x020e4b78", "size": "0x5c", "direct_callers": ["0x020e682c"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e4bd4", "address": "0x020e4bd4", "size": "0x300", "table_pointer": "0x0213c4ac", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4ed4", "address": "0x020e4ed4", "size": "0x114", "table_pointer": "0x0213c4b4", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e4fe8", "address": "0x020e4fe8", "size": "0x94", "direct_callers": ["0x020e680c"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e507c", "address": "0x020e507c", "size": "0xc0", "direct_callers": ["0x020e6814"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e513c", "address": "0x020e513c", "size": "0x314", "direct_callers": ["0x020e5fac"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e5450", "address": "0x020e5450", "size": "0x560", "direct_callers": ["0x020e5d8c"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e59b0", "address": "0x020e59b0", "size": "0x5c", "direct_callers": ["0x020e5d98"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e5a0c", "address": "0x020e5a0c", "size": "0x164", "table_pointer": "0x0213c3ec", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e5b70", "address": "0x020e5b70", "size": "0x0c", "table_pointer": "0x0213c3d4", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e5b7c", "address": "0x020e5b7c", "size": "0x2c0", "table_pointer": "0x0213c3dc", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e5e3c", "address": "0x020e5e3c", "size": "0x1c0", "table_pointer": "0x0213c3e4", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e5ffc", "address": "0x020e5ffc", "size": "0x11c", "direct_callers": ["0x020e6344", "0x020e6510", "0x020e6b38"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e6118", "address": "0x020e6118", "size": "0x84", "direct_callers": ["0x020e60b4"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e619c", "address": "0x020e619c", "size": "0x24", "direct_callers": ["0x020e6100"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e61c0", "address": "0x020e61c0", "size": "0x04", "table_pointer": "0x0213c3f4", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e61c4", "address": "0x020e61c4", "size": "0xc8", "table_pointer": "0x0213c424", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e628c", "address": "0x020e628c", "size": "0xc8", "table_pointer": "0x0213c404", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e6354", "address": "0x020e6354", "size": "0x190", "table_pointer": "0x0213c414", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e64e4", "address": "0x020e64e4", "size": "0x44", "table_pointer": "0x0213c47c", "kind": "nonvirtual member callback"},
-    {"symbol": "func_ov006_020e6528", "address": "0x020e6528", "size": "0x154", "direct_callers": ["0x020e6794", "0x020e6b14"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e667c", "address": "0x020e667c", "size": "0x10", "direct_callers": ["0x020e6b0c"], "kind": "direct-call helper; member-vs-free unproven"},
-    {"symbol": "func_ov006_020e668c", "address": "0x020e668c", "size": "0xe8", "direct_callers": ["0x020e64ec", "0x020e678c", "0x020e6b04"], "kind": "direct-call helper; member-vs-free unproven"}
+    {
+      "symbol": "func_ov006_020e38b0",
+      "address": "0x020e38b0",
+      "size": "0x98",
+      "direct_callers": [
+        "0x020e681c"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e3948",
+      "address": "0x020e3948",
+      "size": "0x98",
+      "direct_callers": [
+        "0x020e6880"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e39e0",
+      "address": "0x020e39e0",
+      "size": "0x1bc",
+      "direct_callers": [
+        "0x020e53fc",
+        "0x020e5970"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e3b9c",
+      "address": "0x020e3b9c",
+      "size": "0x28",
+      "direct_callers": [
+        "0x020e6768"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e3bc4",
+      "address": "0x020e3bc4",
+      "size": "0x88",
+      "direct_callers": [
+        "0x020e6824"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e3c4c",
+      "address": "0x020e3c4c",
+      "size": "0x94",
+      "table_pointer": "0x0213c46c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e3ce0",
+      "address": "0x020e3ce0",
+      "size": "0xd4",
+      "table_pointer": "0x0213c484",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e3db4",
+      "address": "0x020e3db4",
+      "size": "0x98",
+      "table_pointer": "0x0213c41c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e3e4c",
+      "address": "0x020e3e4c",
+      "size": "0x108",
+      "table_pointer": "0x0213c4a4",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e3f54",
+      "address": "0x020e3f54",
+      "size": "0x140",
+      "table_pointer": "0x0213c43c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4094",
+      "address": "0x020e4094",
+      "size": "0x13c",
+      "table_pointer": "0x0213c444",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e41d0",
+      "address": "0x020e41d0",
+      "size": "0xe4",
+      "table_pointer": "0x0213c49c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e42b4",
+      "address": "0x020e42b4",
+      "size": "0x94",
+      "table_pointer": "0x0213c48c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4348",
+      "address": "0x020e4348",
+      "size": "0xc4",
+      "table_pointer": "0x0213c45c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e440c",
+      "address": "0x020e440c",
+      "size": "0x114",
+      "table_pointer": "0x0213c464",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4520",
+      "address": "0x020e4520",
+      "size": "0x110",
+      "table_pointer": "0x0213c40c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4630",
+      "address": "0x020e4630",
+      "size": "0x114",
+      "table_pointer": "0x0213c474",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4744",
+      "address": "0x020e4744",
+      "size": "0x50",
+      "table_pointer": "0x0213c494",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4794",
+      "address": "0x020e4794",
+      "size": "0x6c",
+      "table_pointer": "0x0213c42c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4800",
+      "address": "0x020e4800",
+      "size": "0xd4",
+      "direct_callers": [
+        "0x020e6878"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e48d4",
+      "address": "0x020e48d4",
+      "size": "0x1b0",
+      "direct_callers": [
+        "0x020e6b40"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e4a84",
+      "address": "0x020e4a84",
+      "size": "0x7c",
+      "direct_callers": [
+        "0x020e6804"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e4b00",
+      "address": "0x020e4b00",
+      "size": "0x78",
+      "direct_callers": [
+        "0x020e6294"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e4b78",
+      "address": "0x020e4b78",
+      "size": "0x5c",
+      "direct_callers": [
+        "0x020e682c"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e4bd4",
+      "address": "0x020e4bd4",
+      "size": "0x300",
+      "table_pointer": "0x0213c4ac",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4ed4",
+      "address": "0x020e4ed4",
+      "size": "0x114",
+      "table_pointer": "0x0213c4b4",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e4fe8",
+      "address": "0x020e4fe8",
+      "size": "0x94",
+      "direct_callers": [
+        "0x020e680c"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e507c",
+      "address": "0x020e507c",
+      "size": "0xc0",
+      "direct_callers": [
+        "0x020e6814"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e513c",
+      "address": "0x020e513c",
+      "size": "0x314",
+      "direct_callers": [
+        "0x020e5fac"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e5450",
+      "address": "0x020e5450",
+      "size": "0x560",
+      "direct_callers": [
+        "0x020e5d8c"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e59b0",
+      "address": "0x020e59b0",
+      "size": "0x5c",
+      "direct_callers": [
+        "0x020e5d98"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e5a0c",
+      "address": "0x020e5a0c",
+      "size": "0x164",
+      "table_pointer": "0x0213c3ec",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e5b70",
+      "address": "0x020e5b70",
+      "size": "0x0c",
+      "table_pointer": "0x0213c3d4",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e5b7c",
+      "address": "0x020e5b7c",
+      "size": "0x2c0",
+      "table_pointer": "0x0213c3dc",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e5e3c",
+      "address": "0x020e5e3c",
+      "size": "0x1c0",
+      "table_pointer": "0x0213c3e4",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e5ffc",
+      "address": "0x020e5ffc",
+      "size": "0x11c",
+      "direct_callers": [
+        "0x020e6344",
+        "0x020e6510",
+        "0x020e6b38"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e6118",
+      "address": "0x020e6118",
+      "size": "0x84",
+      "direct_callers": [
+        "0x020e60b4"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e619c",
+      "address": "0x020e619c",
+      "size": "0x24",
+      "direct_callers": [
+        "0x020e6100"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e61c0",
+      "address": "0x020e61c0",
+      "size": "0x04",
+      "table_pointer": "0x0213c3f4",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e61c4",
+      "address": "0x020e61c4",
+      "size": "0xc8",
+      "table_pointer": "0x0213c424",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e628c",
+      "address": "0x020e628c",
+      "size": "0xc8",
+      "table_pointer": "0x0213c404",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e6354",
+      "address": "0x020e6354",
+      "size": "0x190",
+      "table_pointer": "0x0213c414",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e64e4",
+      "address": "0x020e64e4",
+      "size": "0x44",
+      "table_pointer": "0x0213c47c",
+      "kind": "nonvirtual member callback"
+    },
+    {
+      "symbol": "func_ov006_020e6528",
+      "address": "0x020e6528",
+      "size": "0x154",
+      "direct_callers": [
+        "0x020e6794",
+        "0x020e6b14"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e667c",
+      "address": "0x020e667c",
+      "size": "0x10",
+      "direct_callers": [
+        "0x020e6b0c"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    },
+    {
+      "symbol": "func_ov006_020e668c",
+      "address": "0x020e668c",
+      "size": "0xe8",
+      "direct_callers": [
+        "0x020e64ec",
+        "0x020e678c",
+        "0x020e6b04"
+      ],
+      "kind": "direct-call helper; member-vs-free unproven"
+    }
   ],
   "relocation_closure": {
     "direct_calls_to_exact_function_entries": 27,
@@ -182,43 +759,632 @@
   },
   "size": "0x55c4",
   "fields": [
-    {"offset": "0x5580", "size": "0x4", "type": "32-bit state-like scalar", "name": null, "evidence": "InitResources stores word value 1 at 0x020e6b4c; OnYoshiTryEat stores zero at 0x020e6788; func_ov006_020e6354 stores 2. Width and small-state use are proven; exact signedness/enum/type/name are not."},
-    {"offset": "0x5584", "size": "0x4", "type": "32-bit fixed-point-like scalar", "name": null, "evidence": "func_ov006_020e668c clears it with a word store; func_ov006_020e5e3c loads it as a word and subtracts an indexed position value. Exact declared type/name are unproven."},
-    {"offset": "0x5588", "size": "0x4", "type": "32-bit fixed-point-like scalar", "name": null, "evidence": "func_ov006_020e668c clears it with a word store; func_ov006_020e5e3c loads it as a word and subtracts an indexed position value. Exact declared type/name are unproven."},
-    {"offset": "0x55ac", "size": "0x4", "type": "32-bit handle/value", "name": null, "evidence": "InitResources stores the word returned by ov004 func_ov004_020adc1c at 0x020e6bac; OnYoshiTryEat repeats the word store at 0x020e67d8. The return type and original member name are unproven."},
-    {"offset": "0x55b4", "size": "0x2", "type": "16-bit countdown", "name": null, "evidence": "InitResources stores halfword zero at 0x020e6b2c. func_ov006_020e5ffc, func_ov006_020e64e4 and func_ov006_020e668c load, store, decrement or test it with mixed ldrh/ldrsh/strh operations; declared signedness is unproven."},
-    {"offset": "0x55b6", "size": "0x2", "type": "16-bit countdown", "name": null, "evidence": "InitResources stores halfword 0x40 at 0x020e6b60. func_ov006_020e61c4 and func_ov006_020e628c decrement and clamp it, while func_ov006_020e6354 reads and resets it to 0x40. The code uses mixed ldrh/ldrsh and strh operations, so declared signedness is unproven."},
-    {"offset": "0x55bb", "size": "0x1", "type": "u8 flag", "name": null, "evidence": "InitResources stores byte one at 0x020e6b20; func_ov006_020e5ffc and func_ov006_020e5e3c use byte loads/stores to test, set and clear it."},
-    {"offset": "0x55c3", "size": "0x1", "type": "u8 flag", "name": null, "evidence": "InitResources stores byte one at 0x020e6b30. Its byte width and inclusion as the final allocated byte are proven; precise semantics/name are not."}
+    {
+      "offset": "0x5580",
+      "size": "0x4",
+      "type": "32-bit state-like scalar",
+      "name": null,
+      "evidence": "InitResources stores word value 1 at 0x020e6b4c; OnYoshiTryEat stores zero at 0x020e6788; func_ov006_020e6354 stores 2. Width and small-state use are proven; exact signedness/enum/type/name are not."
+    },
+    {
+      "offset": "0x5584",
+      "size": "0x4",
+      "type": "32-bit fixed-point-like scalar",
+      "name": null,
+      "evidence": "func_ov006_020e668c clears it with a word store; func_ov006_020e5e3c loads it as a word and subtracts an indexed position value. Exact declared type/name are unproven."
+    },
+    {
+      "offset": "0x5588",
+      "size": "0x4",
+      "type": "32-bit fixed-point-like scalar",
+      "name": null,
+      "evidence": "func_ov006_020e668c clears it with a word store; func_ov006_020e5e3c loads it as a word and subtracts an indexed position value. Exact declared type/name are unproven."
+    },
+    {
+      "offset": "0x55ac",
+      "size": "0x4",
+      "type": "32-bit handle/value",
+      "name": null,
+      "evidence": "InitResources stores the word returned by ov004 func_ov004_020adc1c at 0x020e6bac; OnYoshiTryEat repeats the word store at 0x020e67d8. The return type and original member name are unproven."
+    },
+    {
+      "offset": "0x55b4",
+      "size": "0x2",
+      "type": "16-bit countdown",
+      "name": null,
+      "evidence": "InitResources stores halfword zero at 0x020e6b2c. func_ov006_020e5ffc, func_ov006_020e64e4 and func_ov006_020e668c load, store, decrement or test it with mixed ldrh/ldrsh/strh operations; declared signedness is unproven."
+    },
+    {
+      "offset": "0x55b6",
+      "size": "0x2",
+      "type": "16-bit countdown",
+      "name": null,
+      "evidence": "InitResources stores halfword 0x40 at 0x020e6b60. func_ov006_020e61c4 and func_ov006_020e628c decrement and clamp it, while func_ov006_020e6354 reads and resets it to 0x40. The code uses mixed ldrh/ldrsh and strh operations, so declared signedness is unproven."
+    },
+    {
+      "offset": "0x55bb",
+      "size": "0x1",
+      "type": "u8 flag",
+      "name": null,
+      "evidence": "InitResources stores byte one at 0x020e6b20; func_ov006_020e5ffc and func_ov006_020e5e3c use byte loads/stores to test, set and clear it."
+    },
+    {
+      "offset": "0x55c3",
+      "size": "0x1",
+      "type": "u8 flag",
+      "name": null,
+      "evidence": "InitResources stores byte one at 0x020e6b30. Its byte width and inclusion as the final allocated byte are proven; precise semantics/name are not."
+    }
   ],
   "unproven": [
-    "The original identifiers and member-versus-file-local form of the 21 direct-call-only helpers. Direct calls preserve targets and arguments, not source-level linkage or original names.",
-    "The original names of all 25 nonvirtual member callbacks. Their function addresses, zero-adjustment member-pointer constants and initializer copies are proven; the seven destination arrays' gameplay/state semantics are not recovered here.",
-    "The original English names and exact declared types of the selected fields beyond the measured widths and operations. Existing unk_ labels are reconstruction placeholders and are not elevated to ROM facts.",
-    "The layout and ownership of most own storage from the dScMgBase_c tail near 0x4660 through 0x557f, plus unlisted high control bytes/halfwords. No field is invented merely to fill those gaps.",
-    "That the 52-function tu_map interval plus the adjacent factory and medium-confidence sinit were one original translation unit. The evidence is promotion-grade input, not a recovered original filename or linker-object boundary."
+    "Whether func_ov006_020e5450 can be matched. The best recorded attempt sits at 29 divergences with a byte-clean prologue, but no matched source exists and the banked draft is at 324.",
+    "Whether any of the five pragma directives is load-bearing. That is a delete-outright control the writer runs; nothing here measures it.",
+    "The original identifiers and member-versus-file-local form of the 21 direct-call-only helpers. Direct calls preserve targets and arguments, not source-level linkage.",
+    "The original names of the 25 nonvirtual member callbacks reached through the pointer-to-member records, and the gameplay semantics of the seven BSS destination arrays.",
+    "That the 53-function run was one original translation unit. tu_map boundary confidence is medium: adjacency, class-named endpoints, relocation closure and the companion sinit support it, but no original filename or linker-object boundary survives.",
+    "Whether segment A can carry its own _ZTV/_ZTI/_ZTS emissions as deadstrip-data in ov006. dScMgMemory_c did exactly that and is promoted, which is precedent but not proof for this class.",
+    "Field layout from the dScMgBase_c tail near 0x4660 through 0x557f beyond what include/dScMgCurling2_c.h already asserts."
   ],
   "modules_touched": [
-    {"module": "ov006", "module_base": "0x020bfec0", "role": "own text, factory, profile, callback constants, RTTI, name and vtable"},
-    {"module": "ov004", "module_base": "0x020ad660", "role": "direct-base RTTI, base constructor/destructor and inherited virtual targets"},
-    {"module": "arm9", "module_base": "0x02004000", "role": "ABI typeinfo implementation, operator new/delete and inherited virtual targets"}
+    {
+      "module": "ov006",
+      "module_base": "0x020bfec0",
+      "role": "own text, factory, profile, callback constants, RTTI, name and vtable"
+    },
+    {
+      "module": "ov004",
+      "module_base": "0x020ad660",
+      "role": "direct-base RTTI, base constructor/destructor and inherited virtual targets"
+    },
+    {
+      "module": "arm9",
+      "module_base": "0x02004000",
+      "role": "ABI typeinfo implementation, operator new/delete and inherited virtual targets"
+    }
   ],
   "provenance": {
-    "worktree": "C:/tmp/sm64ds-scout-curling2-0905",
+    "worktree": "C:/tmp/sm64ds-curl2",
     "ref": "cpp/dScMgCurling2_c-tu",
-    "base": "395afdb2399f7d5e304183d074c5ff670ab766d3",
+    "base": "9d45c00829e507f9626f5fb17591998972f5151c",
+    "base_description": "origin/main tip at 2026-09-06, AFTER the ov006 promotions of dScMgTeresa_c (#2329), dScMgCoin_c (#2344), dScMgPanel_c (#2347) and dScMgMemory2_c (#2324). Verified with `git log --oneline HEAD..origin/main` empty and `git merge-base HEAD origin/main` == that SHA.",
+    "supersedes": "f36793912 'Scout dScMgCurling2_c ROM facts', whose base 395afdb23 was 42 commits behind. Its ROM-derived facts re-verified clean; its TREE-derived facts (run extent, blocker counts, pragma count) had gone stale and are corrected here.",
     "inputs": [
       "extracted/overlays/overlay_0006.bin",
       "extracted/overlays/overlay_0004.bin",
       "config/arm9/overlays/ov006/symbols.txt",
       "config/arm9/overlays/ov006/relocs.txt",
-      "config/arm9/overlays/ov004/symbols.txt"
+      "config/arm9/overlays/ov006/delinks.txt",
+      "config/arm9/overlays/ov004/symbols.txt",
+      "build/rtti.json",
+      "build/rtti_vtables.json",
+      "build/tu_map.json",
+      "config/match_attempts.jsonl",
+      "nearmiss/db.jsonl"
     ],
     "tools": [
-      "python tools/tu_map.py --module ov006 --verbose",
-      "python tools/sinit_owners.py --module ov006 --no-write --show all",
-      "python tools/disasm.py extracted/overlays/overlay_0006.bin",
-      "python tools/check_header_offsets.py include/dScMgCurling2_c.h"
+      "python tools/rtti_extract.py",
+      "python tools/rtti_vtables.py --out build/rtti_vtables.json",
+      "python tools/tu_map.py --out build/tu_map.json",
+      "python tools/queue_audit.py  (blocker re-derivation)"
     ]
+  },
+  "name_provenance": {
+    "verdict": "ROM",
+    "coined": false,
+    "blocks_promotion_on_naming": false,
+    "evidence": "The cartridge bytes at ov006 0x0213c4c8 are literally '15dScMgCurling2_c\\x00' (read straight out of extracted/overlays/overlay_0006.bin at file offset 0x0213c4c8-0x020bfec0). build/rtti.json carries the matching record {module ov006, addr 0x0213c4bc, kind si, mangled '15dScMgCurling2_c'}. The name is the compiler's own _ZTS string, not a coined guess, so the open _ZTI/_ZTS compiler-only policy question about COINED names does not apply to this class and it is not parked on those grounds."
+  },
+  "run_segments": {
+    "contiguous": false,
+    "hole_count": 1,
+    "shape": "31 / [hole 1] / 21",
+    "note": "The single hole is the one no-legacy-source function. Because it has neither a delinks entry nor a src/ file, a text-only promotion cannot span it: the run is two licensable segments. This is the same situation dScMgCoin_c faced at 2/33/26, where the writer took the 33.",
+    "segments": [
+      {
+        "id": "A",
+        "start": "0x020e3854",
+        "end": "0x020e5450",
+        "size": "0x1bfc",
+        "function_count": 31,
+        "holds_destructors": true,
+        "holds_own_overrides": [
+          "slot 16 D1",
+          "slot 17 D0"
+        ],
+        "holds_key_function": true,
+        "key_function_note": "The class's key function is its out-of-line destructor, which is also the FIRST declared virtual in include/dScMgCurling2_c.h. A TU licensed over segment A therefore contains the key function and mwcc will emit _ZTV/_ZTI/_ZTS as vague linkage. ov006's .data is one unowned section with the vtables mid-section, so those emissions must be declared compiler-only/deadstrip-data exactly as dScMgMemory_c.json and dScMgSingle3DBase_c.json do.",
+        "member_pointer_records_into_segment": 16,
+        "pragma_files": 3,
+        "first": "_ZN15dScMgCurling2_cD1Ev @ 0x020e3854",
+        "last": "func_ov006_020e513c @ 0x020e513c"
+      },
+      {
+        "id": "B",
+        "start": "0x020e59b0",
+        "end": "0x020e6c28",
+        "size": "0x1278",
+        "function_count": 21,
+        "holds_destructors": false,
+        "holds_own_overrides": [
+          "slot 0 InitResources",
+          "slot 6 Behavior",
+          "slot 9 Render",
+          "slot 18 OnYoshiTryEat"
+        ],
+        "holds_key_function": false,
+        "key_function_note": "Segment B holds four of the six own overrides and the classInit factory but NOT the destructor. A TU whose key function falls outside its licensed range emits no vtable/RTTI at all -- the dScMgCoin_c outcome, whose manifest carries compiler_only_output: 0. That makes B the cheaper segment on the compiler-only axis and A the one that must argue its emissions.",
+        "member_pointer_records_into_segment": 10,
+        "pragma_files": 1,
+        "first": "func_ov006_020e59b0 @ 0x020e59b0",
+        "last": "dScMgCurling2_c_classInit @ 0x020e6bf4"
+      }
+    ],
+    "hole": {
+      "start": "0x020e5450",
+      "end": "0x020e59b0",
+      "size": "0x560",
+      "symbol": "func_ov006_020e5450",
+      "reason": "no-legacy-source: no delinks.txt entry and no src/func_ov006_020e5450.c[pp]. The cartridge's own bytes cover it."
+    }
+  },
+  "blockers_measured": {
+    "measured_on_base": "9d45c00829e507f9626f5fb17591998972f5151c",
+    "queue_row_as_shipped": "unmatched:1;no-legacy-source:1;pragma:3;compiler-only:>=11",
+    "unmatched": {
+      "count": 0,
+      "queue_says": 1,
+      "verdict": "STALE QUEUE ROW -- flag, do not fix here",
+      "evidence": "All 52 delinks.txt entries overlapping 0x020e3854..0x020e6c28 carry a `complete` marker, so queue_audit.py measures unmatched:0. Note also that `unmatched` is a LINK condition (missing `complete` marker), not a matching one -- queue_audit.py's own docstring says so. Separately, notes/data/c-cpp-classification.tsv (7068 rows, an APPEND log) has NO row at all for any path in this run, so it is not the source of the stale 1 either. Nothing was hand-edited.",
+      "action": "Re-derive with `python tools/queue_audit.py --write`. Never hand-edit the queue or the classification ledger."
+    },
+    "no_legacy_source": {
+      "count": 1,
+      "queue_says": 1,
+      "verdict": "REAL and unchanged",
+      "function": "func_ov006_020e5450",
+      "address": "0x020e5450",
+      "size": "0x560",
+      "evidence": "Absent from config/arm9/overlays/ov006/delinks.txt (a 0x560 gap sits between src/func_ov006_020e513c.cpp ending at 0x020e5450 and src/func_ov006_020e59b0.c starting at 0x020e59b0) and there is no src/func_ov006_020e5450.c or .cpp."
+    },
+    "pragma": {
+      "count_files": 4,
+      "count_directives": 5,
+      "queue_says": 3,
+      "verdict": "STALE QUEUE ROW (undercount by one file)",
+      "note": "queue_audit.py's docstring states outright that pragma:N is measured but is NOT a blocker. Whether any of these is load-bearing is a delete-outright control the writer runs; this scout makes no claim either way.",
+      "directives": [
+        {
+          "file": "src/func_ov006_020e4794.c",
+          "line": 1,
+          "pragma": "opt_propagation off",
+          "family": "opt_propagation",
+          "segment": "A"
+        },
+        {
+          "file": "src/func_ov006_020e4b00.c",
+          "line": 3,
+          "pragma": "opt_strength_reduction off",
+          "family": "opt_strength_reduction",
+          "segment": "A"
+        },
+        {
+          "file": "src/func_ov006_020e4bd4.cpp",
+          "line": 27,
+          "pragma": "opt_common_subs off",
+          "family": "opt_common_subs",
+          "segment": "A"
+        },
+        {
+          "file": "src/func_ov006_020e4bd4.cpp",
+          "line": 28,
+          "pragma": "opt_propagation off",
+          "family": "opt_propagation",
+          "segment": "A"
+        },
+        {
+          "file": "src/func_ov006_020e628c.c",
+          "line": 25,
+          "pragma": "opt_strength_reduction off",
+          "family": "opt_strength_reduction",
+          "segment": "B"
+        }
+      ],
+      "families": {
+        "opt_propagation": 2,
+        "opt_strength_reduction": 2,
+        "opt_common_subs": 1
+      }
+    },
+    "compiler_only": {
+      "floor": 11,
+      "queue_says": ">=11",
+      "verdict": "CONFIRMED on this base",
+      "own_chain": [
+        "dScMgCurling2_c",
+        "dScMgBase_c",
+        "dScene_c",
+        "dBase_c",
+        "fBase_c"
+      ],
+      "arithmetic": "2 x 5 chain classes + 1 vtable = 11, text-only route (no -3 intact discount). Chain walked through build/rtti.json edges.",
+      "expected_set": [
+        "_ZTI/_ZTS for fBase_c (arm9 0x02086d70 / 0x02086e60)",
+        "_ZTI/_ZTS for dBase_c (arm9 0x02086e78 / 0x02086e54)",
+        "_ZTI/_ZTS for dScene_c (arm9 0x020914d4 / 0x020914b0)",
+        "_ZTI/_ZTS for dScMgBase_c (ov004 0x020bbf6c / 0x020bbf84)",
+        "_ZTI/_ZTS for dScMgCurling2_c (ov006 0x0213c4bc / 0x0213c4c8)",
+        "_ZTV15dScMgCurling2_c (ov006 0x0213c510)",
+        "_ZN15dScMgCurling2_cD2Ev -- disposition deadstrip, NOT deadstrip-data; the ROM has no D2 (see destructors)"
+      ],
+      "note": "Applies only to a segment that CONTAINS the key function (segment A). dScMgCoin_c, whose promoted segment excluded its key function, has compiler_only_output: 0."
+    }
+  },
+  "near_miss_bank": {
+    "hole_function": {
+      "name": "func_ov006_020e5450",
+      "address": "0x020e5450",
+      "size": "0x560",
+      "attempts": 1,
+      "models_tried": [
+        "grok-4.6 (reasoning high, harness grok-build, author lunavyqo)"
+      ],
+      "best_status": "near_miss",
+      "best_residual_divergences": 29,
+      "banked_draft": {
+        "file": "nearmiss/db.jsonl line 126",
+        "source": "fanout-sonnet",
+        "lang": "c",
+        "divergences": 324,
+        "cand_size": 1404,
+        "rom_size": 1376,
+        "note": "The BANKED draft is much worse (324) than the best ATTEMPT (29). The 29-divergence grok-4.6 attempt is recorded in config/match_attempts.jsonl only -- its source is not in the bank, so a writer wanting it must regenerate from the attempt note."
+      },
+      "attempt_note": "common_subs off; for-loop with found body inside; slot=self+m forms px/pz; loop guards via p+0x4689 split. Prologue and loop tests byte-ok except branch offsets. Residual: z/x pair load order, frame 0x64 vs 0x7c, size 0x52c vs 0x560, found-body s64/pointer schedule.",
+      "writer_guidance": "29 divergences with the prologue and loop tests already byte-clean is a live match candidate, not a wall. But it is the ONLY thing splitting this run in two: matching it merges segments A and B into one 53-function TU. Cutting around it means shipping a 31- or 21-function partial."
+    },
+    "other_run_entries": [
+      {
+        "name": "func_ov006_020e61c4",
+        "status": "near_miss",
+        "model": "glm-5.2",
+        "divergences": 8,
+        "segment": "B",
+        "note": "already has a complete delinks entry and src/ file; not a blocker"
+      },
+      {
+        "name": "func_ov006_020e513c",
+        "status": "no_progress",
+        "model": "grok-4.6",
+        "divergences": 291,
+        "banked": "nearmiss/db.jsonl line 117 (fable-subagent, 175)",
+        "segment": "A",
+        "note": "already complete in delinks; not a blocker"
+      },
+      {
+        "name": "func_ov006_020e5ffc",
+        "status": "matched",
+        "model": "claude (max)",
+        "banked": "nearmiss/db.jsonl line 52 (fanout-glm-5.2, 12)",
+        "segment": "B"
+      },
+      {
+        "name": "func_ov006_020e5a0c",
+        "status": "matched",
+        "model": "claude-opus-5",
+        "divergences": 0,
+        "segment": "B"
+      },
+      {
+        "name": "func_ov006_020e39e0",
+        "status": "matched",
+        "model": "claude-opus-5",
+        "segment": "A"
+      }
+    ]
+  },
+  "data_relocations_into_range": {
+    "applies": true,
+    "severity": "HIGH -- this is the dScMgCup_c failure, at 25 records instead of 8",
+    "record_count": 26,
+    "records_needing_rename": 25,
+    "record_span": "0x0213c3d4..0x0213c4b4",
+    "shape": "8-byte pointer-to-member-function records: a code pointer from this run followed by a zero adjustment word. __sinit_ov006_02130758 copies them into seven BSS arrays.",
+    "data_ownership": "These addresses lie in ov006 .data (0x02133600..0x021402e0), which delinks.txt leaves UNOWNED. ov006 has exactly two owned .data objects, both at the section tail: src/minigames/d_s_mg_trampoline.cpp (0x0213faa0..0x0213fbc4) and src/minigames/d_s_mg_trampoline2.cpp (0x0213fbc4..0x0213fd0c). So a TU here can own named data objects, but not at this address, and must not emit its own vtable.",
+    "trap": "dsd resolves these records by symbol NAME. 25 of the 26 targets are still spelled func_ov006_* in config/arm9/overlays/ov006/symbols.txt. If the promoted TU defines the mangled member names while symbols.txt still says func_ov006_*, every one of those code words links as 0x00000000 -- silently, with a green compile. On dScMgCup_c this cost a full debugging cycle at 8 records; here it is 25.",
+    "action": "The symbols.txt rename is PART OF THE PROMOTION EDIT, not a follow-up. The 26th record (0x0213c434 -> 0x020e6bf4) already names dScMgCurling2_c_classInit and needs nothing.",
+    "records": [
+      {
+        "record_address": "0x0213c3d4",
+        "target": "0x020e5b70",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e5b70",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c3dc",
+        "target": "0x020e5b7c",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e5b7c",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c3e4",
+        "target": "0x020e5e3c",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e5e3c",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c3ec",
+        "target": "0x020e5a0c",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e5a0c",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c3f4",
+        "target": "0x020e61c0",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e61c0",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c404",
+        "target": "0x020e628c",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e628c",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c40c",
+        "target": "0x020e4520",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e4520",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c414",
+        "target": "0x020e6354",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e6354",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c41c",
+        "target": "0x020e3db4",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e3db4",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c424",
+        "target": "0x020e61c4",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e61c4",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c42c",
+        "target": "0x020e4794",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e4794",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c434",
+        "target": "0x020e6bf4",
+        "adjustment_word": "0x01770177",
+        "symbols_txt_spelling": "dScMgCurling2_c_classInit",
+        "needs_rename": false,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c43c",
+        "target": "0x020e3f54",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e3f54",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c444",
+        "target": "0x020e4094",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e4094",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c45c",
+        "target": "0x020e4348",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e4348",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c464",
+        "target": "0x020e440c",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e440c",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c46c",
+        "target": "0x020e3c4c",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e3c4c",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c474",
+        "target": "0x020e4630",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e4630",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c47c",
+        "target": "0x020e64e4",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e64e4",
+        "needs_rename": true,
+        "segment": "B"
+      },
+      {
+        "record_address": "0x0213c484",
+        "target": "0x020e3ce0",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e3ce0",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c48c",
+        "target": "0x020e42b4",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e42b4",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c494",
+        "target": "0x020e4744",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e4744",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c49c",
+        "target": "0x020e41d0",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e41d0",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c4a4",
+        "target": "0x020e3e4c",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e3e4c",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c4ac",
+        "target": "0x020e4bd4",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e4bd4",
+        "needs_rename": true,
+        "segment": "A"
+      },
+      {
+        "record_address": "0x0213c4b4",
+        "target": "0x020e4ed4",
+        "adjustment_word": "0x00000000",
+        "symbols_txt_spelling": "func_ov006_020e4ed4",
+        "needs_rename": true,
+        "segment": "A"
+      }
+    ]
+  },
+  "destructors": {
+    "rom_variants_present": [
+      "D1",
+      "D0"
+    ],
+    "D2_in_rom": false,
+    "D1": {
+      "symbol": "_ZN15dScMgCurling2_cD1Ev",
+      "address": "0x020e3854",
+      "size": "0x24",
+      "vtable_slot": 16,
+      "rom_ordinal": 0
+    },
+    "D0": {
+      "symbol": "_ZN15dScMgCurling2_cD0Ev",
+      "address": "0x020e3878",
+      "size": "0x38",
+      "vtable_slot": 17,
+      "rom_ordinal": 1
+    },
+    "rom_order": "D1 (0x020e3854) then D0 (0x020e3878), adjacent, at the very start of the run. There is NO D2 anywhere: the only D2 in the family is the base's _ZN11dScMgBase_cD2Ev at ov004 0x020b29c0, which D1 and D0 both call.",
+    "why_no_D2": "dScMgCurling2_c is a confirmed leaf -- no edge in build/rtti.json names it as a base -- so its own D2 is never odr-used and never emitted.",
+    "emission_recipe": "The one landed ov006 precedent for an out-of-line destructor is src/minigames/d_s_mg_memory.cpp, which puts a single destructor definition under `#pragma defer_codegen off` and gets D1 then D0 as ROM ordinals 0 and 1 -- exactly this class's shape. mwccarm ALSO emits a D2 that the ROM does not have; dScMgMemory_c.json and dScMgCup_c.json both carry it as compiler_only_output with disposition `deadstrip` (not deadstrip-data).",
+    "correction": "The pipeline brief's phrasing 'emits D1, D0, D2' describes what mwcc emits, not what the ROM contains. Here the ROM contains D1 and D0 only, and the D2 must be declared and deadstripped.",
+    "header_state": "include/dScMgCurling2_c.h ALREADY declares `virtual ~dScMgCurling2_c();` out-of-line, and declares it FIRST, ahead of InitResources/Behavior/Render/OnYoshiTryEat.",
+    "evidence": "D1 and D0 each install the 0x0213c510 address point and call ov004 0x020b29c0; D0 then calls operator delete. Neither calls any own subobject destructor."
+  },
+  "base_chain": {
+    "chain": [
+      "dScMgCurling2_c",
+      "dScMgBase_c",
+      "dScene_c",
+      "dBase_c",
+      "fBase_c"
+    ],
+    "edges": [
+      {
+        "derived": "dScMgCurling2_c",
+        "base": "dScMgBase_c",
+        "derived_key": "ov006:0x0213c4bc",
+        "base_key": "ov004:0x020bbf6c",
+        "offset": 0,
+        "resolved_by": "unique"
+      },
+      {
+        "derived": "dScMgBase_c",
+        "base": "dScene_c",
+        "derived_key": "ov004:0x020bbf6c",
+        "base_key": "arm9:0x020914d4",
+        "offset": 0,
+        "resolved_by": "arm9"
+      },
+      {
+        "derived": "dScene_c",
+        "base": "dBase_c",
+        "derived_key": "arm9:0x020914d4",
+        "base_key": "arm9:0x02086e78",
+        "offset": 0,
+        "resolved_by": "own_module"
+      },
+      {
+        "derived": "dBase_c",
+        "base": "fBase_c",
+        "derived_key": "arm9:0x02086e78",
+        "base_key": "arm9:0x02086d70",
+        "offset": 0,
+        "resolved_by": "own_module"
+      }
+    ],
+    "leaf": true,
+    "leaf_evidence": "No edge in build/rtti.json has dScMgCurling2_c as its base."
+  },
+  "header_state": {
+    "path": "include/dScMgCurling2_c.h",
+    "exists": true,
+    "size_assert": "sizeof(dScMgCurling2_c) == 0x55c4",
+    "note": "The header is already written and carries the 0x30-byte dScMgCurling2_stone record, an 11-element mStone[] at 0x4660, the four named own virtuals and the out-of-line destructor declared FIRST. Per PIPELINE.md most promotions touch no header at all; this one should not need to either."
+  },
+  "sibling_oracles": {
+    "queue_row": "dScMgSingle3DBase_c",
+    "better_for_the_destructor": "src/minigames/d_s_mg_memory.cpp + config/tu_manifest.d/ov006/dScMgMemory_c.json -- the only landed ov006 TU with an out-of-line destructor under `#pragma defer_codegen off`.",
+    "better_for_a_partial": "config/tu_manifest.d/ov006/dScMgCoin_c.json -- promoted a 33-of-61 segment that EXCLUDED its key function and therefore carries compiler_only_output: 0.",
+    "ov006_manifest_status_note": "dScMgCup_c is at status `shadow`, NOT promoted. Of the four classes the pipeline brief listed as promoted in the last day, dScMgTeresa_c (#2329), dScMgCoin_c (#2344) and dScMgPanel_c (#2347) are promoted; dScMgCup_c is not. dScMgMemory2_c (#2324) also landed in that window."
   }
 }
