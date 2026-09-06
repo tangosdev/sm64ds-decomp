@@ -69,8 +69,12 @@ unsigned int _ZN4CP1517MPUGetDataRegion7Ev(void) { return g_mpu_region7; }
 // thread here would deadlock the frame loop, so this returns; if the idle
 // thread is ever really entered the `for(;;)` above it spins and that is a
 // louder failure than a hang inside a primitive.
-// PORT_HOST_ABI: CP15 wait-for-interrupt (mcr p15,0,v,c7,c0,4), no host halt.
-void _ZN4CP1516WaitForInterruptEv(void) {}
+// Since the run link100 THR fold, hal/boot2_thread.cpp defines this primitive
+// as the modelled halt (interrupt arrives, dispatcher runs the handler, the
+// wake reschedules), because the ROM's idle thread IS entered now that the
+// scheduler runs as the ROM wrote it. The empty body that lived here stood in
+// only while nothing could reach the idle thread; two definitions collided at
+// integration and the modelled one stays.
 
 // --- the trap instruction ---------------------------------------------------
 // src/_ZN4cstd14__builtin_trapEv.c is literally `dcd 0xe7ffffff`, the ARM

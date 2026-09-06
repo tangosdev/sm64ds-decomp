@@ -1,0 +1,50 @@
+# gate 2thr -- THE DS THREAD SCHEDULER, run link2 lane THR.
+#
+# The four matched TUs that make the ROM's sleep/wake pair run as written. Read
+# port/hal/boot2_thread.cpp's header first: it is the fiber seam these four sit
+# on, and it says which fields of the thread manager are a host boot seat and
+# why src/func_02058308.c (the ROM's own init) is not one of them.
+#
+# THE THREE THAT USED TO BE FILTERED OUT. port/CMakeLists.txt drops these three
+# out of SLICE10_CAM_SOURCES (the `if(src MATCHES "/OS_SleepThread\\.c$" ...)`
+# block) because hal/os_thread.cpp hosted the pair and hal/cxx_aliases.cpp
+# stubbed the ARM context switch. Both stand-ins are gone now -- the host pair
+# is behind PORT_OS_THREAD_HOST_PAIR, which only the two console probes define,
+# and ARMSaveContext/ARMRestoreContext are fiber-backed in hal/boot2_thread.cpp
+# -- so the ROM bodies link. The filter is left in place: it is the only reason
+# these rows do not arrive twice.
+src/OS_SleepThread.c
+src/OS_WakeupThread.c
+src/func_02057f54.c
+#
+# AND THE IDLE THREAD. A sleep needs somewhere to go, and the ROM already says
+# where: three lines that enable interrupts and halt forever on CP15's
+# wait-for-interrupt. The halt is the one primitive with a host body
+# (hal/boot2_thread.cpp), and the sleeper is woken from inside it by
+# OS_WakeupThread -- ROM code at both ends of the wait.
+src/func_02057e34.c
+#
+# ALREADY LINKED, listed here only so the set reads as one thing:
+#   src/func_0205801c.c  the ready-list pick        port/slice_gate10.txt:368
+#   src/func_0201a4d0.c  OS_SleepThread(data_0209d4fc)  port/slice_mp3.txt:91
+#
+# NOT HERE, and each for a reason:
+#   src/ARMSaveContext.c / src/ARMRestoreContext.c  hand-asm register-file
+#       primitives; MSVC cannot assemble them and a host has no ARM register
+#       file. PORT_HOST_ABI in hal/boot2_thread.cpp.
+#   src/ARMProcessorMode.c   hand-asm mrs cpsr. Already PORT_HOST_ABI in
+#       hal/cxx_aliases.cpp:321, answering 0x1f (system mode), which is the
+#       right answer for a host that runs every handler as a plain call.
+#   src/_ZN4CP1516WaitForInterruptEv.c   the CP15 halt instruction itself.
+#       PORT_HOST_ABI in hal/boot2_thread.cpp.
+#   src/func_02058308.c   the ROM thread-system init. It reads the ITCM entry
+#       symbols and DTCM for the main thread's stack bounds and writes
+#       data_020a6134 through +0x54; run/link100's BOOT lane refused it for
+#       that. hal/boot2_thread.cpp seats the fields the linked TUs read.
+#   src/func_0201a4bc.c   OS_SleepThread(data_0209d500). data_0209d500 is
+#       hosted nowhere on this branch, so the row would be an unresolved
+#       external, not a link.
+#   the OS lock family (func_02058894, func_020587e4, func_0205816c,
+#       func_020581a8, func_0205c864, func_0205cd5c, func_0205ffd0,
+#       func_020600e0) -- measured and reported separately by the lane; each
+#       needs its own globals seated before its row can be honest.

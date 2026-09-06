@@ -320,14 +320,17 @@ int func_01ff9e2c(unsigned a, unsigned b, unsigned c, unsigned d)
    ARMProcessorMode reads CPSR & 0x1f; host always reports system mode */
 int ARMProcessorMode(void) { return 0x1f; }
 
-/* DS thread scheduler context ops. The port runs the game on ONE fiber (the
-   ntr rt loop owns real scheduling), so a save reports "already resumed"
-   (setjmp-nonzero) and the reschedule path backs out without switching.
-   A restore reaching the host would mean a second DS thread went live.
-   PORT_HOST_ABI: ARM register context save/restore, no host equivalent. */
-int ARMSaveContext(void *ctx) { (void)ctx; return 1; }
-/* PORT_HOST_ABI: ARM register context restore (second DS thread), no host equivalent. */
-void ARMRestoreContext(void *ctx) { (void)ctx; __debugbreak(); }
+/* DS thread scheduler context ops -- MOVED, run link2 lane THR.
+   ARMSaveContext and ARMRestoreContext used to be stubbed here: a save that
+   reported "already resumed" (setjmp-nonzero) so func_02057f54 backed out
+   without switching, and a restore that trapped because "a second DS thread
+   went live" was assumed impossible. A second DS thread IS live now -- the
+   ROM's own idle thread, src/func_02057e34.c -- so both bodies are in
+   hal/boot2_thread.cpp, backed by the fiber seam ntr/include/ntr/rt.h:11-14
+   describes. They are still PORT_HOST_ABI and for the same reason (hand-asm
+   ARM register-file primitives); the tag and its evidence moved with them.
+   Nothing else changed here: ARMProcessorMode above still answers 0x1f, which
+   is what makes func_02057f54 take the switching arm of its own branch. */
 
 /* PORT_HOST_ABI: ARM asm primitive (hand-asm digit-carry), MSVC cannot assemble.
    func_02071644 (hand-asm): backward digit-carry increment over the decimal
@@ -551,6 +554,9 @@ int data_0209a61c[4], data_020a6128;
    foot of this file. It is not a 16-byte object of its own: it is the first of
    three dsd names over ONE 0x54-byte ROM record, and hosting it as int[4] on
    this line is what refused func_02058308 in hal/boot_os.cpp. */
+/* (run link2 lane THR sized this int[5]; the grouped 0x54-byte record in the
+   GLOBALS block below supersedes that at integration, and the slot table it
+   feared duplicating is hosted once, inside the record.) */
 DSSTATE_END
 
 /* ---- THE GX BANK-STATE BLOCK, 0x020a6088..0x020a60a4, IN ROM ORDER ---------

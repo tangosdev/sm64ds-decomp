@@ -1,10 +1,34 @@
-// THE DS's SLEEP/WAKE PAIR, HOSTED. Run mg15, lane MP1.
-// Everything about why this file exists is in os_thread.h. This is the body.
+// THE DS's SLEEP/WAKE PAIR. Run mg15, lane MP1. RETIRED by run link2, lane THR.
+// Everything about why this file existed is in os_thread.h. This is the body.
 //
-// PORT_HOST_ABI: src/OS_SleepThread.c derefs data_020a612c->node (a null host
-// global) and reschedules through ARMSaveContext/ARMRestoreContext, neither of
-// which has a host body. The queue-word half of the contract is reproduced
-// here exactly; the ARM context switch is replaced by a bounded host pump.
+// ============================ WHAT IS LEFT HERE ============================
+//
+// THE HOSTED PAIR IS GONE FROM EVERY SHIPPED TARGET. The reason it existed --
+// "the ROM's sleep reschedules through ARMSaveContext/ARMRestoreContext, which
+// have no host body" -- stopped being true when hal/boot2_thread.cpp gave those
+// two hand-asm primitives a fiber-backed body, which is what
+// port/ntr/include/ntr/rt.h:11-14 said the fiber mechanism was for. So
+// src/OS_SleepThread.c, src/OS_WakeupThread.c and src/func_02057f54.c link and
+// run as written, on port/slice_gate2thr.txt, and the two host bodies below
+// compile ONLY under PORT_OS_THREAD_HOST_PAIR -- which port/CMakeLists.txt
+// defines for mp_sleepwake and mp_comms_seam and for nothing else. They are
+// kept there because mp_sleepwake exists to MEASURE the difference between the
+// ROM bodies and this stand-in; deleting the stand-in deletes the measurement.
+//
+// WHAT DOES STILL LIVE HERE UNCONDITIONALLY: the pump. hal/comms_conductor.cpp
+// installs one through thread_set_pump, and the pump's job -- advance the host
+// by one turn while a DS thread is blocked -- is the same job under the new
+// scheduler. It is now called once per turn of the ROM's own IDLE THREAD, from
+// hal/boot2_thread.cpp's CP15 wait-for-interrupt body, with the same bound
+// (thread_pump_limit). Nothing about a pump's contract changed; the thing that
+// calls it did.
+//
+// pump_vblank and pump_fiber are kept for the same reason: both are still
+// callers' choices of what a blocked turn should do, and port/tests/
+// mp_sleepwake.cpp measures both. pump_fiber's caveat is unchanged and now
+// doubly true -- the idle thread runs on ITS OWN fiber, so yielding to rt_run's
+// host fiber from inside a DS thread would resume rt_run's game fiber and not
+// the DS thread that yielded. Do not install pump_fiber under the scheduler.
 
 #include "os_thread.h"
 
@@ -58,6 +82,15 @@ bool pump_fiber(unsigned) {
 }
 
 }  // namespace port
+
+// ===========================================================================
+// THE RETIRED HOST PAIR. Run link2 lane THR: compiled ONLY for the two console
+// probes that measure it (port/CMakeLists.txt defines PORT_OS_THREAD_HOST_PAIR
+// for mp_sleepwake and mp_comms_seam). In every shipped target the bodies below
+// are src/OS_SleepThread.c and src/OS_WakeupThread.c instead, running on
+// hal/boot2_thread.cpp's fiber-backed context primitives.
+// ===========================================================================
+#if defined(PORT_OS_THREAD_HOST_PAIR)
 
 extern "C" {
 
@@ -122,3 +155,5 @@ void OS_WakeupThread(uint16_t *q) {
 }
 
 }  // extern "C"
+
+#endif  // PORT_OS_THREAD_HOST_PAIR
