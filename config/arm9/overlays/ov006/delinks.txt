@@ -4187,6 +4187,10 @@ src/func_ov006_02106f44.cpp:
     complete
     .text start:0x02106f44 end:0x02106fdc
 
+src/func_ov006_02106fdc.cpp:
+    complete
+    .text start:0x02106fdc end:0x0210709c
+
 src/func_ov006_0210709c.cpp:
     complete
     .text start:0x0210709c end:0x0210713c
