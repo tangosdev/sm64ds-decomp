@@ -786,7 +786,7 @@ void func_ov074_021203e0(void)
  * simply retries next frame; on success the music layer flips once (guarded
  * by the f_60c latch) and the state advances to 1.
  *
- * Shape notes: the angle temp is a Vector3_16 STRUCT COPY, not three field
+ * Shape notes: the angle temp is an Ang16 STRUCT COPY, not three field
  * assignments -- mwccarm scalarizes the field form away and drops the
  * memory home the ROM keeps at sp+8. msgpos[0] is filled through a base
  * pointer (the ov073 idiom) while msgpos[1] uses direct offsets; that
