@@ -33,28 +33,37 @@
 #
 # `refs` is blocking and cheap. tools/port_refcheck.py already did the right check --
 # manifests, cmake symbols, hal alternatename/extern-C links -- in about a second with no
-# compiler and no ROM, and was simply never wired to anything. On 11fcd24d5 it reports
-# 402 references (229 + 21 + 152), 0 stale.
+# compiler and no ROM, and was simply never wired to anything. It reports 423 references
+# (249 + 21 + 153), 0 stale.
 #
 # `build` compiles and links the ROM-free targets. There are five: smoke, smoke_gx,
-# smoke_heap, smoke_roots, smoke_fs. The other nine generate romdata.c from gitignored
-# extracted/arm9_dec.bin and are out of a runner's reach.
+# smoke_heap, smoke_roots, smoke_fs. ALL FIVE ARE BLOCKING. The other nine generate
+# romdata.c from gitignored extracted/arm9_dec.bin and are out of a runner's reach, so
+# this file cannot gate them and does not pretend to. Configure is blocking as well: a
+# broken CMakeLists or an unresolvable srcpath symbol is a regression regardless.
 #
-# Only smoke_gx links on main today, so only smoke_gx is blocking. Measured on 11fcd24d5,
-# 32-bit MSVC 19.51: smoke_gx clean; smoke 1 unresolved, smoke_heap 3, smoke_roots 17,
-# smoke_fs 17. The rest run in a reporting step, and each moves up
-# to the blocking step as it is fixed -- the ratchet is the target list below, in review,
-# rather than a file that can drift. Configure is blocking for everything: a broken
-# CMakeLists or an unresolvable srcpath symbol is a real regression regardless.
+# THREE OF THE FIVE DID NOT LINK when this workflow was first written -- smoke_heap 3
+# unresolved symbols, smoke_roots 17, smoke_fs 17 -- and ran in a reporting step instead.
+# They are fixed and that step is gone: a workflow with a permanently-red half teaches
+# people to skip the whole thing. If a target regresses, the answer is to fix it or to
+# take it off the list below, in review -- not to demote it in place.
 #
-# THE SHARED CAUSE, since it will come up on each: 17 headers (include/Fader.h:69 is the
-# one smoke reaches) declare `extern "C" void _ZN6Memory16operator_delete2EPv(void *)` and
-# call it from an inline `operator delete`, so every class in those hierarchies emits a
-# reference to the Itanium spelling. That satisfies the NDS link, where the mangled string
-# IS the symbol. A host definition does exist -- port/hal/ctor_bridge.cpp:88 -- but
-# ctor_bridge.cpp is only linked into the model-family targets, so smoke never gets it.
-# port_refcheck cannot see this class at all: its hal-links check covers bare
-# func_XXXXXXXX / data_XXXXXXXX names, not _ZN... ones.
+# WHAT THOSE 17 WERE, because the shape recurs on every migration wave and it is most of
+# the reason a build gate is worth having. The decomp names symbols the way the NDS link
+# does, by their Itanium string, so a header line like
+#
+#     extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+#
+# is a complete reference to a real function on the cartridge and nothing at all to MSVC.
+# All 17 were spelling seams of that kind, and each is answered in port/hal by a real
+# forwarder rather than an /alternatename alias, because the two spellings sit on
+# opposite sides of a calling convention -- __thiscall against cdecl -- and an alias
+# across that boundary links quietly and then reads garbage as `this`. Constructors are
+# the sharpest case: C1 is an Itanium ABI variant tag with no C++ syntax at all, so a
+# hand-written function of that name is the only thing that can ever answer one.
+#
+# port_refcheck sees none of this. Its hal-links check covers bare func_XXXXXXXX /
+# data_XXXXXXXX names, not _ZN... ones; only a link finds them.
 #
 # SCOPE. Compile and link only. BUILD_TESTING is off and no ctest runs -- the smoke
 # binaries want the asset catalog. Runtime behaviour is not claimed. "Does it still
@@ -140,17 +149,12 @@ jobs:
 
       # Each `shell: cmd` step is its own process, so vcvars32 has to be re-applied;
       # only the discovery is carried over, through GITHUB_ENV.
-      - name: Link the targets that link today
+      #
+      # -k 0 so ninja reports EVERY target's link rather than stopping at the first
+      # failure. Without it, which breakage you see depends on scheduling order, and a
+      # change that breaks three targets reads as a change that breaks one.
+      - name: Link the ROM-free targets
         shell: cmd
         run: |
           call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
-          cmake --build build\portci --target smoke_gx
-
-      # Reporting only. -k 0 so ninja reports every target's link instead of stopping at
-      # the first, which otherwise makes which failures you see depend on scheduling.
-      - name: The targets that do not link yet (reporting)
-        continue-on-error: true
-        shell: cmd
-        run: |
-          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
-          cmake --build build\portci --target smoke smoke_heap smoke_roots smoke_fs -- -k 0
+          cmake --build build\portci --target smoke smoke_gx smoke_heap smoke_roots smoke_fs -- -k 0
