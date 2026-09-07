@@ -33,7 +33,7 @@ Files\Microsoft\jdk-11.0.16.101-hotspot`); Ghidra 11.x needs JDK 21. Whatever pr
 the historical `ghidra_out` drafts ran elsewhere or has been removed.
 
 **G1.5 — The historical verdict on raw Ghidra drafts is mixed, and recorded.** [high]
-`CLAIMS.md` cites them by name both ways: a win ([ov102](../config/arm9/overlays/ov102/symbols.txt) [func_ov102_0214b53c](../src/func_ov102_0214b53c.c) — "Ghidra
+`CLAIMS.md` cites them by name both ways: a win ([ov102](../config/arm9/overlays/ov102/symbols.txt) [func_ov102_0214b53c](../src/actors/daBmb_c.cpp) — "Ghidra
 dest + ROM-order angle" → byte-identical) and repeated losses ([ov006](../config/arm9/overlays/ov006/symbols.txt) [func_ov006_020dbe9c](../src/func_ov006_020dbe9c.c) — "Ghidra missed s64 matrix"; [arm9](../config/arm9/symbols.txt) `OAM::Render` — "Ghidra dump div=999 (frame 0x44)";
 [ov006](../config/arm9/overlays/ov006/symbols.txt) [func_ov006_0211e72c](../src/actors/dScMgTeresa_c.cpp) — "Ghidra-shaped 30w attractor" that*stalls* at 26 words).
 `README.md:102` states the house position: useful for reading a function, "its output
@@ -540,7 +540,7 @@ extension links `cpp_demangle`):
 
 | function | callees in the draft |
 |---|---|
-| [func_ov102_0214b53c](../src/func_ov102_0214b53c.c) | `Matrix4x3_FromRotationY`, `MulMat4x3Mat4x3`, `Vec3_Lsl`, `Vec3_LslInPlace`, `IsFrontSliding`, `LostGrabbedObject`, `UpdateCarry`, [func_ov002_020e496c](../src/func_ov002_020e496c.c) |
+| [func_ov102_0214b53c](../src/actors/daBmb_c.cpp) | `Matrix4x3_FromRotationY`, `MulMat4x3Mat4x3`, `Vec3_Lsl`, `Vec3_LslInPlace`, `IsFrontSliding`, `LostGrabbedObject`, `UpdateCarry`, [func_ov002_020e496c](../src/func_ov002_020e496c.c) |
 | `OAM::Render` | `GetObjWidth`, `GetObjHeight`, `LoadAffineParams`, `fdiv` — and the function itself comes back as `OAM::Render(...)` with 10 parameters, not `FUN_02020994` |
 | [func_ov006_020dbe9c](../src/func_ov006_020dbe9c.c) | [func_ov004_020b023c](../src/func_ov004_020b023c.cpp) — **correctly attributed to [ov004](../config/arm9/overlays/ov004/symbols.txt)** |
 
@@ -549,7 +549,7 @@ says `MulMat4x3Mat4x3(...)` tells the LLM tier what the function *is*, where
 `FUN_020b1234(...)` tells it nothing.
 
 **G9.3 — Types: unchanged. SyncDsd carries no layout information.** [high]
-[func_ov102_0214b53c](../src/func_ov102_0214b53c.c) still decompiles to 64 `undefined*` types and 67 raw
+[func_ov102_0214b53c](../src/actors/daBmb_c.cpp) still decompiles to 64 `undefined*` types and 67 raw
 `*(int *)(param_1 + 0xNN)` field accesses, with the signature `void f(int param_1)`.
 That is expected — dsd's config has symbols and relocations, not struct definitions, so
 there is nothing for SyncDsd to import. Class layouts would have to come from our own
