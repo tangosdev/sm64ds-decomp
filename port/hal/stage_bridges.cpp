@@ -211,15 +211,17 @@ extern "C" void hal_fill_stage_vtable(void)
 //                        body without retiring those runs the cutscene script
 //                        twice per frame. See port/stage_lifecycle_map.txt
 //                        section 12.
-//   9  Render            HOSTED, and blocked the same way and harder:
-//                        walk_window's render frame is Stage::Render
-//                        transcribed statement by statement (:11984-:12060),
-//                        and it deliberately runs the ROM's render BUCKET
-//                        before the world/scene matrix shim so ROM actors and
-//                        host models each get the matrix they were written
-//                        against. Slot 9 dispatches inside that bucket, so the
-//                        ROM body would draw the level on the wrong side of
-//                        the shim.
+//   9  Render            SEATED on the ROM's own body (run link100, lane
+//                        RENDER9), on walk_window and walk_window_hires. It
+//                        was blocked the same way slot 6 was and for one more
+//                        reason that turned out to be stale: the world/scene
+//                        matrix shim the old note here named is gone (lane
+//                        FRAME2). What was left was the frame loop -- eight
+//                        transcribed sites, all retired with this seat -- and
+//                        section 6's twelve pieces, of which three are seamed
+//                        on unmounted ov001/ov002 sprite templates. See the
+//                        slot-9 block below, port/slice_slot9.txt and
+//                        port/stage_lifecycle_map.txt section 18.
 //  16  ~Stage (D2)       SEATED (run link100, lane STAGE). Nothing destroys
 //  17  ~Stage (D0)       the Stage, so neither executes; the ROM's own words
 //                        in the ROM's own table are the reference edge.
@@ -411,29 +413,87 @@ static int __fastcall st_behavior(void *s, void *)
 static int __fastcall st_behavior(void *, void *) { return 1; }
 #endif
 
-/* Slot 9. STILL A HOST OCCUPANT, and the reason is the frame loop rather than
-   the link -- port/stage_lifecycle_map.txt section 12c, and 13b for the two
-   things lane FRAME shipped wrong.
+/* Slot 9. THE HOST OCCUPANT IS RETIRED AND THE ROM'S OWN Stage::Render IS HERE
+   (run link100, lane RENDER9).
+   ---------------------------------------------------------------------------
+   What used to stand in this comment is worth keeping in front of a reader,
+   because two lanes wrote it and the second one is what made this seat
+   possible:
 
-   AND ONE CORRECTION, because this comment carried it first (lane FRAME2). What
-   stood here was that tests/walk_window.cpp "runs the ROM's actor render bucket
-   BEFORE the world/scene matrix handling that follows it, so a slot-9 dispatch
-   (which happens from inside that bucket) draws the level model, the skybox and
-   the transparent pass on the other side of it". There is no matrix handling
-   after the bucket any more: the block below port_actor_render in that file
-   opens "THE VIEW MATRIX IS USED AS THE ROM PRODUCED IT ... The R6 shim that
-   scaled this row by 8 for the harness's world-unit models is gone", and every
-   model matrix in the frame is scene units. What blocks slot 9 is section 6's
-   twelve pieces and the fact that tests/walk_window.cpp IS Stage::Render,
-   transcribed statement by statement -- the same shape of job slot 6 was, with
-   a selftest-BMP A/B in place of a script cursor where the proof is concerned.
-   12c is the whole reading.
+     "STILL A HOST OCCUPANT, and the reason is the frame loop rather than the
+      link. ... AND ONE CORRECTION (lane FRAME2). What stood here was that
+      tests/walk_window.cpp 'runs the ROM's actor render bucket BEFORE the
+      world/scene matrix handling that follows it, so a slot-9 dispatch draws
+      the level model, the skybox and the transparent pass on the other side of
+      it'. There is no matrix handling after the bucket any more ... What blocks
+      slot 9 is section 6's twelve pieces and the fact that tests/walk_window
+      .cpp IS Stage::Render, transcribed statement by statement -- the same
+      shape of job slot 6 was, with a selftest-BMP A/B in place of a script
+      cursor where the proof is concerned."
 
-   Behaviour-neutral by construction, exactly as the retired comment above says:
-   walk_window still draws all three from its own render phase, so this occupant
-   removes and adds no pixel. It retires the day the render half of that file
-   moves. */
+   That is the job this lane did. EIGHT sites in tests/walk_window.cpp carried
+   Stage::Render's statements -- port_stage_render_skybox, the advance half of
+   port_stage_advance_anims, port_stage_render_model, ShadowModel::RenderAll,
+   port_stage_render_model_transparent, port_cylinder_clsn_process,
+   func_ov001_020aaf40, and port_particle_frame's SysTracker::Update -- and all
+   eight are retired in the same commit as this line. Section 18 of
+   port/stage_lifecycle_map.txt is the accounting; port/slice_slot9.txt is the
+   enrolment and the three seams.
+
+   WHERE THE DRAW MOVES TO, because that is the visible half and it is the one
+   thing this seat cannot leave unsaid. Slot 9 dispatches from inside
+   port_actor_render (hal/actor_registry.cpp, phase 5 over data_020a4b98), in
+   RENDER-PRIORITY order, and the Stage's own render priority is 6. So the
+   level model, the skybox and the transparent pass are now submitted where the
+   ROM submits them -- among the actors, at the Stage's priority -- instead of
+   after the whole bucket. That is a draw-order change and it is the ROM's own
+   order; the BMP A/B in section 18 is what measures it.
+
+   THE THUNK IS AN ADAPTER AND NOTHING ELSE, the same as slot 6's above.
+   src/_ZN5Stage6RenderEv.cpp compiles a real C++ method and publishes
+   ?Render@Stage@@QAEHXZ, which no C name here can spell and which
+   include/Stage.h does not declare, so the call goes through hal/stage_frame
+   .cpp. The ROM's Render returns 1 on its only path, which is the code the
+   render Process reads as "this pass succeeded".
+
+   GATED ON THE SAME TARGETS AS SLOT 6 AND FOR A NARROWER REASON. Stage::Render
+   reaches Stage::RenderNumber and the seams in hal/stage_frame.cpp, and that
+   file is on walk_window and walk_window_hires only. smoke_player keeps the
+   host occupant, which is the program it already had -- it runs no level frame
+   loop, so nothing there ever dispatched this slot for anything but the
+   trap. */
+#if defined(SM64DS_STAGE_SLOT9_ROM)
+extern "C" int port_stage_rom_render(void *self);     /* hal/stage_frame.cpp */
+
+/* THE ONE ESCAPE, AND IT IS HERE RATHER THAN IN THE FRAME LOOP ON PURPOSE.
+   A render seat's proof is a picture, and a picture compared across two
+   BINARIES is not a comparison of the change: port/tools/battery.py's own
+   header measures the selftest BMP moving by 1354 pixels for sixty-four bytes
+   of unrelated hosted-global layout. So the A/B has to be two runs of ONE
+   binary, which is the shape hal/level_boot.cpp's SM64DS_NO_CAP_MANAGER and
+   this file's own probes already use.
+
+   SM64DS_STAGE_SLOT9_HOST=1 makes this thunk decline -- it returns the same 1
+   the host occupant returned, having drawn nothing -- and tests/walk_window
+   .cpp's fallback then runs its transcription for the frame, because that
+   fallback keys off hal/stage_frame.cpp's render counter and the counter does
+   not move when this branch is taken. ONE env, ONE mechanism, and a double
+   draw is impossible by construction rather than by care: the two paths are
+   the two arms of this `if`. */
+static int st_slot9_host(void)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_STAGE_SLOT9_HOST") != 0;
+    return on;
+}
+
+static int __fastcall st_render(void *s, void *)
+{ return st_slot9_host() ? 1 : port_stage_rom_render(s); }
+#else
+/* smoke_player: the host occupant, unchanged. */
 static int __fastcall st_render(void *, void *)   { return 1; }
+#endif
 
 static int  __fastcall st_binit(void *s, void *)
 { return _ZN5Scene19ResetFadersAndSoundEv(s); }
@@ -1139,7 +1199,23 @@ extern "C" void port_stage_anims_rearm(void)
     port_stage_anims_loaded_level = -2;
 }
 
-extern "C" void port_stage_advance_anims(void *self)
+/* THE LOAD HALF ON ITS OWN (run link100, lane RENDER9).
+ *
+ * The two halves above are Stage::InitResources' and Stage::Render's, and the
+ * only reason they were one function is that the port ran neither method. Slot
+ * 9 now runs Stage::Render's half -- the ROM's own advance loop, in the ROM's
+ * own body, gated on the ROM's own pause trio -- so the load half has to be
+ * callable without it. hal/stage_frame.cpp's port_stage_rom_render calls this
+ * immediately before dispatching the ROM's Render, which is the same instant in
+ * the frame it used to run at.
+ *
+ * NOTHING ABOUT THE SLOT-0 DEBT CHANGES. The paragraph above still holds word
+ * for word: whoever gives Stage::InitResources its real LoadTextureTransformers
+ * call has to drop THIS function and port_stage_anims_rearm together, and the
+ * call in port_stage_rom_render with them. Splitting the function makes that
+ * retirement smaller, not different -- there is now exactly one place to
+ * delete instead of a block inside a function that has to survive. */
+extern "C" void port_stage_anims_load(void *self)
 {
     unsigned char *info = data_0209f340;
     if (!info)
@@ -1160,6 +1236,22 @@ extern "C" void port_stage_advance_anims(void *self)
         std::printf("[stage] texture transformers: %d of %u areas animate "
                     "(level %d)\n", live, n, loaded_level);
     }
+}
+
+/* THE ADVANCE HALF, which is Stage::Render's own first block transcribed. With
+   _ZTV5Stage slot 9 on the ROM's body this is UNREACHED on every shipped run:
+   tests/walk_window.cpp keeps its call only under SM64DS_STAGE_SLOT9_HOST=1,
+   the same-binary escape the seat's BMP A/B is captured with. It retires with
+   that escape. */
+extern "C" void port_stage_advance_anims(void *self)
+{
+    unsigned char *info = data_0209f340;
+    if (!info)
+        return;
+    const unsigned n = info[0x14];
+    char *slots = (char *)self + 0x8bc;
+
+    port_stage_anims_load(self);
 
     if ((data_0209f294[0] | data_0209f2c4[0] | data_0209f20c[0]) & 0xff)
         return;

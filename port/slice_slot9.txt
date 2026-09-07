@@ -1,0 +1,98 @@
+# GATE SLOT9 -- _ZTV5Stage SLOT 9: THE ROM'S OWN Stage::Render, AND THE FRAME
+# LOOP THAT WAS HOSTING IT.  (run link100, lane RENDER9)
+# ============================================================================
+#
+# WHAT THIS GATE IS.  Slot 9 of the Stage's own vtable held a host occupant --
+# `static int __fastcall st_render(void *, void *) { return 1; }` -- through
+# six Stage lanes.  Every one of them declined the ROM body.  Section 12c of
+# port/stage_lifecycle_map.txt measured why and section 13c corrected the
+# measurement: it was never the world/scene matrix shim (that shim is gone) and
+# it was never only the link.  port/tests/walk_window.cpp WAS the port's copy of
+# Stage::Render, transcribed statement by statement into the frame loop --
+# port_stage_render_skybox, port_stage_advance_anims, port_stage_render_model,
+# ShadowModel::RenderAll, port_stage_render_model_transparent,
+# port_cylinder_clsn_process and func_ov001_020aaf40, plus
+# port_particle_frame's SysTracker::Update.  Seating the ROM body without
+# retiring those draws the level twice a frame, which is section 12a's
+# double-dispatch with pixels instead of script steps.
+#
+# All eight sites are retired in the same commit as this file, behind one
+# escape (SM64DS_STAGE_SLOT9_HOST=1) that exists for the A/B and nothing else.
+# Section 18 of port/stage_lifecycle_map.txt is the accounting;
+# hal/stage_frame.cpp carries the faces, the three seams and the entry point.
+#
+# WHAT IS IN THE SLICE, and every line is a body Stage::Render calls directly
+# or one of those bodies' own leaves:
+#
+#   Stage::Render          the body itself, arm9 0x0202b8a4 size 0x318
+#   func_020391f0          Render's second statement.  An empty ROM body; it is
+#                          here because the ROM calls it and the port should
+#                          not decide which of the ROM's calls are worth making
+#   Stage::RenderFog       Render's third statement
+#   G3X::SetFogTable       RenderFog's tail
+#   func_ov002_020f1c20    RenderFog's level-5 (Jolly Roger Bay) fog override
+#   Stage::RenderNumber    the timer digits in Render's own OAM block
+#
+# THE RAW MMIO IN RenderFog AND SetFogTable IS DELIBERATELY NOT hostgen'd.
+# RenderFog writes `*(volatile unsigned int *)0x4000358` and SetFogTable hands
+# `(void *)0x4000360` to Copy32Bytes.  Both are FOG LATCHES, not triggers:
+# ntr/include/ntr/mmio.h's mechanism 1 maps real memory across
+# 0x04000000..0x04002000, so both land in mapped storage and latch, which is
+# what the hardware does.  hostgen's rewrite exists for the registers whose
+# WRITE runs hardware (the geometry FIFO, MTX_SCALE, the divider); neither of
+# these is one, and SetFogTable's is a cast-as-argument that hostgen's
+# MMIO_DEREF would not have matched anyway.  The host renderer reads no fog
+# register, so the visible consequence of this pair is nothing -- which the
+# BMP A/B in section 18 measures rather than assumes.
+#
+# WHAT IS NOT IN THE SLICE, AND WHY -- THREE SEAMS, NAMED.  Stage::PS_Render,
+# Stage::LC_Render and Stage::RenderVsModeNewStar are the three of section 6's
+# twelve this lane does not enrol.  Their bodies are matched and ready; what
+# they want is SPRITE TEMPLATE DATA that is not mounted:
+#
+#   PS_Render              OAM::PAUSE, OAM::VS_PAUSE, OAM::MM_SMALL_STAR,
+#                          OAM::TINY_STAR, OAM::ARROW_POINTING_LEFT/RIGHT and
+#                          OAM::SMALL_ARROW_POINTING_LEFT/RIGHT -- eight ov002
+#                          rows at 0x0210c548..0x0210cb4c -- plus five ov001
+#                          records past the mounted 0x020ab800..0x020abb00 span
+#                          (func_020abd98, func_020ac218, func_020ac64c,
+#                          func_020acb68, func_020ad04c)
+#   LC_Render              ten ov002 rows at 0x0210caf4..0x0210cfa0
+#   RenderVsModeNewStar    OAM::VS_NEW_STAR_APPEARED and four ov002 rows at
+#                          0x0210cfd0..0x0210d188
+#
+# port/ov002_syms.txt and port/ov001_syms.txt are the mount lane's files, and
+# section 6 predicted exactly this ("a row in port/ov002_syms.txt -- the mount
+# lane's file, not this one's").  Adding fourteen ov002 records and extending
+# the ov001 span is a mount change with its own ovsweep/gapaudit evidence, and
+# it is not a Stage seat's to make on the same commit that moves the frame
+# loop.  The seams are LOUD, in hal/stage_frame.cpp, and they are
+# BEHAVIOUR-NEUTRAL against the program they replace: nothing in the port drew
+# the pause screen, the level-clear banner or the VS new-star popup before this
+# commit either, because Stage::Render never ran.
+#
+# WHAT LINKS WITHOUT BEING LISTED HERE, because it is already in the image and
+# only /OPT:REF was keeping it out of the frame -- Particle::SysTracker::Update
+# (hostgen, gate 29), OAM::Render's seven-argument overload (gate 27),
+# Stage::RenderVsModeCountdown (gate 27), Stage::RenderBouncingArrows (the w8a
+# /alternatename, inert until today), func_0203083c (slice_vs),
+# func_ov001_020aaf40 (slice_cap), func_0203db3c (gate 10),
+# CylinderClsn::Process (gate 33), ShadowModel::RenderAll, Stage::RenderModel
+# and Stage::RenderModelTransparent.
+#
+# ONE OF THOSE IS A LIVE SWITCH-OVER AND IT IS DECLARED HERE.  Stage::Render
+# calls CylinderClsn::Process(), which resolves to ?Process@CylinderClsn@@SAXXZ
+# -- the MATCHED body from src, in the link since gate 33.  The frame loop was
+# calling port_cylinder_clsn_process (port/unmatched/CylinderClsn_Process.cpp),
+# the ROM-shaped host copy.  Section 17 of port/stage_lifecycle_map.txt fixed
+# the destructor skew that made the matched body wrong and said "turning the
+# switch over is a separate lane's measurement".  This is that measurement: the
+# host copy's call site is retired and the ROM's own call site is what runs the
+# pass.  Section 18 carries what the battery and the two-player rungs said.
+
+src/_ZN5Stage6RenderEv.cpp
+src/func_020391f0.c
+src/_ZN5Stage9RenderFogEv.cpp
+src/_ZN3G3X11SetFogTableEPv.cpp
+src/func_ov002_020f1c20.c
+src/_ZN5Stage12RenderNumberEhiibi.cpp

@@ -10478,6 +10478,25 @@ foreach(line IN LISTS SLICE220_LINES)
     endif()
     list(APPEND SLICE220_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# GATE SLOT9 (run link100, lane RENDER9): _ZTV5Stage slot 9 takes the ROM's own
+# Stage::Render, and port/tests/walk_window.cpp stops being the port's copy of
+# it. Six matched TUs -- Render itself, func_020391f0, RenderFog and its two
+# leaves, and RenderNumber -- plus three bodies deliberately NOT enrolled and
+# seamed in hal/stage_frame.cpp, on unmounted ov001/ov002 sprite templates that
+# belong to the mount lane's files. The whole derivation, including what each
+# seam wants and which already-linked TUs the seat brings back off /OPT:REF,
+# is in port/slice_slot9.txt's own header; section 18 of
+# port/stage_lifecycle_map.txt is the accounting.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_slot9.txt" SLICE_SLOT9_LINES)
+set(SLICE_SLOT9_SOURCES "")
+foreach(line IN LISTS SLICE_SLOT9_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SLOT9_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
 # The id-348 deleting destructor spells the VT placeholder; its ROM store
 # relocates to its own table (ov002 from:0x020b084c -> 0x021085f8), the
 # host array the fill writes and VirtualDoor_Spawn installs. HEAP is left
@@ -13470,6 +13489,14 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # occupant in slot 6, selected by the SM64DS_STAGE_SLOT6_ROM compile
     # definition below rather than by a second copy of the thunk.
     hal/stage_frame.cpp hal/stage_globals.cpp ${SLICE220_SOURCES}
+    # GATE SLOT9 (run link100, lane RENDER9): slot 9's own six TUs.
+    # Same two targets and the same reason -- hal/stage_frame.cpp
+    # carries slot 9's faces and its three seams too.
+    ${SLICE_SLOT9_SOURCES}
+    # and the one face that cannot share a translation unit with the rest:
+    # the seven-argument OAM::Render has two decorated names in this link,
+    # differing only in return type, and one file can declare one of them.
+    hal/slot9_oam_face.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
     ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
@@ -13619,6 +13646,12 @@ target_compile_definitions(walk_window PRIVATE SM64DS_PLATFORM_PC
     # host occupant.  smoke_player does not define this and keeps the
     # occupant; see the gate row above it for why.
     SM64DS_STAGE_SLOT6_ROM=1
+    # GATE SLOT9 (run link100, lane RENDER9): the same for slot 9 and
+    # Stage::Render.  SM64DS_STAGE_SLOT9_HOST=1 in the ENVIRONMENT makes the
+    # seated thunk decline at run time, which is how the BMP A/B is captured
+    # on ONE binary; the compile definition is what puts the ROM body in the
+    # slot at all.
+    SM64DS_STAGE_SLOT9_ROM=1
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
@@ -13757,6 +13790,14 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # not, which is how the omission was found.
     hal/stage_frame.cpp hal/stage_globals.cpp hal/w8a_stage_faces.cpp
     ${SLICE220_SOURCES}
+    # GATE SLOT9 (run link100, lane RENDER9): slot 9's own six TUs.
+    # Same two targets and the same reason -- hal/stage_frame.cpp
+    # carries slot 9's faces and its three seams too.
+    ${SLICE_SLOT9_SOURCES}
+    # and the one face that cannot share a translation unit with the rest:
+    # the seven-argument OAM::Render has two decorated names in this link,
+    # differing only in return type, and one file can declare one of them.
+    hal/slot9_oam_face.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
     ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_CAM_SOURCES}
     ${SLICE10_CAM_SOURCES} ${SLICE_COMMS_SOURCES} ${SLICE13_SOURCES} ${SLICE14_SOURCES}
@@ -13878,6 +13919,12 @@ target_compile_definitions(walk_window_hires PRIVATE SM64DS_PLATFORM_PC
     # host occupant.  smoke_player does not define this and keeps the
     # occupant; see the gate row above it for why.
     SM64DS_STAGE_SLOT6_ROM=1
+    # GATE SLOT9 (run link100, lane RENDER9): the same for slot 9 and
+    # Stage::Render.  SM64DS_STAGE_SLOT9_HOST=1 in the ENVIRONMENT makes the
+    # seated thunk decline at run time, which is how the BMP A/B is captured
+    # on ONE binary; the compile definition is what puts the ROM body in the
+    # slot at all.
+    SM64DS_STAGE_SLOT9_ROM=1
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
