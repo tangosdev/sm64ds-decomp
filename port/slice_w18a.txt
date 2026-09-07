@@ -106,3 +106,46 @@ src/func_ov072_02121cdc.cpp
 src/func_ov071_02120278.cpp
 src/func_ov071_021215c0.cpp
 src/func_ov080_021250c8.cpp
+
+# ---- run link100 lane PMF: THE TWO pp+0 HALVES OF THE SAME TWO TABLES ------
+#
+# Wave 18 above reclaimed the `pp + 1` halves of the Scuttlebug and BabyPenguin
+# tables and left their `pp + 0` halves as host copies, for a reason it states
+# plainly: "at index 0 the wrong stride cannot bite, because MSVC's 4-byte PMF
+# at offset 0 IS the fn word". True, and it means nothing FORCED those two off
+# the slice -- they were host-copied for the general width reason their files'
+# headers give, not for a measured fault. With /vmg /vmm now global
+# (port/CMakeLists.txt, above R8), the general reason is spent and they come
+# back on the same evidence their siblings did.
+#
+#   src/func_ov072_02121d18.cpp   BabyPenguin ENTER, ov072 +0x35c
+#       sibling src/func_ov072_02121cdc.cpp (TICK, same +0x35c, same table,
+#       same seat) is four lines above this comment and has been linked and
+#       green since wave 18.
+#   src/func_ov071_021202b4.cpp   Scuttlebug ENTER, ov071 +0x380
+#       sibling src/func_ov071_02120278.cpp (MAIN, same +0x380, same table,
+#       same seat) likewise.
+#
+# EVERY CHECK WAVE 18 MADE FOR THE SIBLING COVERS THE ENTER HALF UNCHANGED,
+# because it is the same table read one record earlier:
+#   deltas       ov071's eighteen source deltas are ROM zero (checked by wave
+#                18); ov072's are checked at runtime on every boot, because
+#                hal/actor_classes_ov072.cpp's seat ABORTS on a nonzero one.
+#   convention   both callers are plain .c cdecl TUs that are already linked --
+#                src/func_ov072_02121d50.c and src/Scuttlebug_SetState.c -- each
+#                storing the record pointer and then calling the dispatcher with
+#                the object pushed. So the tail jump wave 18 measured
+#                ("pop ebp / jmp eax leaves the original argument at [esp+4]")
+#                carries `this` onto the seat's cdecl body exactly as it does
+#                for the sibling.
+#   shape        both are the pure forwarder, one statement, no branch:
+#                  extern "C" void f(C *c) { PMF *p = c->pp; (c->**p)(); }
+#                which is the sibling's line with the `+ 1` removed.
+#
+# THE HOST BODIES THEY REPLACE COME OUT IN THE SAME COMMIT: the whole of
+# port/unmatched/BabyPenguin_StateEnter.cpp (that file was only this one body)
+# and one function out of port/unmatched/Scuttlebug_StateDispatch.cpp, whose
+# eighteen-source table seat is untouched and still needed -- the same surgery
+# wave 18 did to that file for the MAIN half.
+src/func_ov072_02121d18.cpp
+src/func_ov071_021202b4.cpp
