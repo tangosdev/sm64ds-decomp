@@ -173,11 +173,11 @@ extern void *_ZN7fBase_cnwEj(unsigned size);
 extern void _ZN10dBgActor_cC2Ev(void *self);
 }
 
-/* The vptr seam, at namespace scope: a namespace-scope variable is not mangled
-   under the Itanium ABI, so no linkage block is needed to emit this name
-   verbatim. symbols.txt's 0x0211458c IS the public address point, which is why
-   the store below takes the symbol's own value. */
-extern int _ZTV19daObjBk_Dossunbar_c[];
+/* The vptr seam comes from `decl_common.h`, which is where the pre-fold shards
+   already read `_ZTV19daObjBk_Dossunbar_c` from -- restating it here would be
+   this class's first local `extern _ZTV` declaration and the langmode ratchet
+   counts declaration sites, not uses. symbols.txt's 0x0211458c IS the public
+   address point, which is why the store below takes the symbol's own value. */
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S, 0x02112260, size 0x30 */

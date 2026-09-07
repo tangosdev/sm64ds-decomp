@@ -536,7 +536,6 @@ extern int _ZTV13daSlide_Box_c[];
 extern int _ZTV14ArrowSignRight[];
 extern int _ZTV14EnemySwitchTag[];
 extern int _ZTV9daSetSE_c[];
-extern int _ZTV19daObjBk_Dossunbar_c[];
 extern int _ZTV9TowerStep[];
 extern int _ZTV14QuestionSwitch[];
 extern int _ZTV14SquarePathLift[];

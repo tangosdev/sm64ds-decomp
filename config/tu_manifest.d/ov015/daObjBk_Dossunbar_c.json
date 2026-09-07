@@ -1,9 +1,9 @@
 {
   "id": "ov015/daObjBk_Dossunbar_c",
   "module": "ov015",
-  "source": "src_tu/actors/daObjBk_Dossunbar_c.cpp",
+  "source": "src/game/actors/d_a_obj_bk_dossunbar.cpp",
   "promoted_source": "src/game/actors/d_a_obj_bk_dossunbar.cpp",
-  "status": "shadow",
+  "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2111ba0..0x2112290, 25 function(s). tools/tu_map.py splits this into 0x2111ba0..0x2112230 (23) plus a separate 0x2112230..0x2112290 two-function unit holding the factories; the split is the known unhandled-_classInit segmentation defect and the two are folded back together here.",
@@ -209,7 +209,7 @@
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
     "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
-    "object": "build/tu/ov015-daObjBk_Dossunbar_c/daObjBk_Dossunbar_c.o (gitignored)",
+    "object": "build/tu/ov015-daObjBk_Dossunbar_c/d_a_obj_bk_dossunbar.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
     "functions_matched": 23,
     "functions_declared": 25,
