@@ -267,9 +267,9 @@ only part that describes the composition.
 - **Composition method:** `origin/main` merged in, never rebased. No conflict arose
   in any integration-lane file. `config/converted-baseline.json` was audited by
   shape rather than arithmetic, as it merges silently: `main` did not touch it
-  across this range, so the merged content is the candidate's — 5 whole-file
-  `src/_ZN5Ukiki*.cpp` rows out, 6 `src/actors/daMky_c.cpp#…` member rows in,
-  `count` 2696 → 2697.
+  across this range, so the merged content is the candidate's — 5 whole-file rows
+  under the retired per-shard names out, 6 `src/actors/daMky_c.cpp#…` member rows
+  in, `count` 2696 → 2697.
 - **The composed head carries the post-#2425 `tools/`.** `tools/romdata_check.py`
   and `tools/validate_merge.py` are byte-identical to `main`'s, so the head's ROM
   report emits the `{module, symbol, addr, bytes}` anchor rather than the anchorless
