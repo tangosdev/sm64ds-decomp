@@ -211,6 +211,11 @@ start, look:
 
 If one exists, read it before you cut a new one.
 
+This has already happened at scale: as of 2026-09-07 there were **57 unmerged
+`cpp/*` branches with zero open PRs between them**. `notes/agents/IN-FLIGHT.md`
+records that backlog, the four places pipeline state is kept, and the three
+commands that re-derive all of it -- read it before assuming a class is untouched.
+
 ## Launching an agent
 
 Point any instance — Claude Code or Codex — at one role file and one class:
