@@ -254,3 +254,43 @@ commit so it can be reverted or replayed alone. Please ratify it with
 `classqueue.py v2 amend` on the task, or tell the producer to drop that commit.
 
 A log generated after this commit belongs in separately recorded evidence.
+
+## Integration addendum (session `integ-2410-0907`, PR #2430)
+
+Written after the producer's commit, on the composed merge of this candidate with
+`origin/main`. Everything above describes the candidate alone; this section is the
+only part that describes the composition.
+
+- **The ledger commit `c1490845` is ratified and kept.** `symbols/actor_renames.tsv`
+  on the composed head hashes to sha256 `a0fd0bf7…`, 447,030 bytes LF-normalised —
+  byte for byte the `check_rename_ledger.py --fix` output the verifier replayed.
+- **Composition method:** `origin/main` merged in, never rebased. No conflict arose
+  in any integration-lane file. `config/converted-baseline.json` was audited by
+  shape rather than arithmetic, as it merges silently: `main` did not touch it
+  across this range, so the merged content is the candidate's — 5 whole-file
+  `src/_ZN5Ukiki*.cpp` rows out, 6 `src/actors/daMky_c.cpp#…` member rows in,
+  `count` 2696 → 2697.
+- **The composed head carries the post-#2425 `tools/`.** `tools/romdata_check.py`
+  and `tools/validate_merge.py` are byte-identical to `main`'s, so the head's ROM
+  report emits the `{module, symbol, addr, bytes}` anchor rather than the anchorless
+  `{module, symbol}` rows the candidate's own pre-#2425 copy would have produced.
+  This matters because the branch **removes** the retired `_ZTV5Ukiki` row at ov030
+  0x02115bfc, where `main` carries both spellings; a name-anchored diff reads that
+  de-aliasing as a lost symbol.
+- **Gates re-run on the composed result, not on the branch alone:** `rombuild.py
+  -j16 --no-rom` 11,191/11,191 reproducing, 0 mismatching, module fidelity 106/106
+  exact; `tubuild.py verify ov030/daMky_c` 44/44 MATCH; `romdata_check` 4 VERIFIED /
+  5 PARTIAL / 0 DIFFERS; `premerge_check.py --base origin/main` all 8 static gates
+  pass on base and merge tree; `check_rename_ledger`, `port_refcheck` (423 refs),
+  `check_dead_references`, `cpp_tu_state` and `prepush_attribution` clean.
+  `queue_audit` still reports only the unrelated pre-existing `dScMgAmida_c` row.
+- **Contributor credit.** The first validation run on the composed merge reported
+  `0 added, 5 changed, 0 lost` — five ov030 addresses (0x0211172c, 0x02111b20,
+  0x021132d4, 0x02113324, 0x02113a80) whose author would have moved to the squashing
+  maintainer, two of them lunavyqo's. The fold's 54 `path#symbol` overrides had
+  missed them. Eight rows were added to `attribution.json`, all inside this class's
+  own block; no existing row was changed or removed.
+- **`prepush_attribution` did not catch those five and the validator did.** The two
+  gates key differently — `member_overrides_at` on the OLD basename, the validator
+  on the CURRENT symbol name — so a green `prepush_attribution` is not evidence that
+  credit survives a rename. Do not read one as covering the other.
