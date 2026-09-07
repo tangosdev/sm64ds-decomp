@@ -30,9 +30,9 @@ This document describes this commit. The queue records its immutable output SHA.
   `include/`, and the three promoted manifests under
   `config/tu_manifest.d/ov002/`.
 - Next action, responsible role and blockers: independent verification of this
-  commit (verifier), then integration. Known blocker for nothing: the
-  `tubuild.py linkcheck` refusal for an already-promoted TU is reproduced below
-  and is the tool's documented intact-production rule, not a source defect.
+  commit (verifier), then integration. No known blocker: the `tubuild.py
+  linkcheck` [4/8] refusal the brief anticipated for an already-promoted TU did
+  not occur on this tree (see Proof).
 - Status: verified candidate (local proof below; the private validator has not
   run on this commit).
 - Remaining uncommitted/local-only material and where it is preserved: the other
@@ -71,12 +71,13 @@ This document describes this commit. The queue records its immutable output SHA.
   `check_rename_ledger.py --fix`), `notes/actor-leaf-provenance.md` (one source
   citation repointed), `config/tu_manifest.d/ov002/daObjHatenaSwitch_c.json`
   (prose neighbour name only). Legacy one-function shards and the two coined
-  headers are removed; the C shard of `func_ov002_020f051c` became
-  `src/func_ov002_020f051c.cpp` (cherry-pick).
+  headers are removed. The cherry-picked commit turned the C shard of
+  `func_ov002_020f051c` into a C++ one (its first source build); the scoin
+  promotion then folded that shard into the TU, so no shard file remains.
 - ROM observations: `_ZTS11daObjLava_c` at ov002:0x021093ac and
   `_ZTS11daObjFire_c` at ov002:0x02108ee8 are the ROM's own class names, so the
-  coined names are retired per the ROM-RTTI ruling. Both vtables are 31 words
-  (dActor_c-shaped). Factories allocate 0xd8 (lava), 0x118 (fire), 0x114 (scoin)
+  coined names are retired per the ROM-RTTI ruling. All three vtables are 31 slots
+  (dActor_c-shaped, 0x84 bytes of storage each). Factories allocate 0xd8 (lava), 0x118 (fire), 0x114 (scoin)
   and plant `&_ZTV<C>[2]`. D1 precedes D0 in the cartridge; no D2 exists.
 - Lineage evidence or structural inference: unchanged from main's headers; the
   only header edit per class is the destructor moved inline
@@ -111,7 +112,9 @@ This document describes this commit. The queue records its immutable output SHA.
   claim in the manifest and reproduces byte-exactly.
 - Attribution preserved through each move/rename: 22 overrides in
   `attribution.json` carry the original per-function authors
-  (tangosdev/andrewboudreau/ruspecial) across the fold.
+  (tangosdev/andrewboudreau/ruspecial) across the fold; validate_merge reports
+  `0 changed, 0 lost` after two overrides were set back to their pre-fold
+  values.
 - Remaining agreed issue scope: the other 14 classes of PR #2231.
 
 ## Proof
