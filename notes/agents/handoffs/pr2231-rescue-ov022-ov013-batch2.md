@@ -275,18 +275,19 @@ inherited from PR #2231's own manifests or logs.
   (main) = 3178, `config/converted-baseline.json` 2706 +12 -12 (batch) +13
   -11 (main) = 2708, `config/converted-backslide-exceptions.jsonl` 415 +0
   (batch) +5 (main) = 420; zero missing, zero extra in each.
-- RED on the restacked head, not this batch's: `queue_audit.py --check`
-  (needs `rtti_extract.py`, `rtti_vtables.py --out build/rtti_vtables.json`
-  and `tu_map.py --out build/tu_map.json` regenerated AFTER the last config
-  edit or it refuses on staleness) exits 1 on exactly ONE row,
+- `queue_audit.py --check` (needs `rtti_extract.py`, `rtti_vtables.py --out
+  build/rtti_vtables.json` and `tu_map.py --out build/tu_map.json`
+  regenerated AFTER the last config edit or it refuses on staleness): clean
+  at `450a93a65`; after the restack it exited 1 on exactly ONE row,
   `daObjBk_Dossunbar_c` (ov015), which #2442 landed on `main` without
   refreshing the queue -- the same failure mode as #2435's three ov002 rows
-  that this batch does refresh. `origin/main` `115cb5d74` is red on the same
-  gate by itself (4 rows: that one plus the three this batch fixes). The
-  agreed scope of this batch's `queue_audit --write` was the three ov002
-  rows plus batch-2's classes, so the Dossunbar row is NOT refreshed here;
-  `--write` would change only that row (`23 350 ... no` -> `1 603 ... yes`).
-  Before the restack (`450a93a65`) the gate was clean.
+  this batch refreshes. `origin/main` `115cb5d74` is red on the gate by
+  itself (4 rows: that one plus the three). By the coordinator's decision
+  that row is repaired here too, in its own commit: `queue_audit --write`
+  changed only that line (`23 350 ... no` -> `1 603 ... yes`), and
+  `--check` is green again ("queue agrees with the tree"). `check_dead_references`
+  re-run green after the edit; nothing else in this section can move on a
+  queue-row line.
 - RED, known tool defect: `python tools/prepush_attribution.py` exits 1 with
   14 `CREDIT LOST` rows on this tree, all this batch's folded or renamed
   shards (5 London, 7 clock, 2 volcano) -- issue #2433's basename-keyed
