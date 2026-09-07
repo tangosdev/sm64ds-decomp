@@ -4,7 +4,7 @@
 #include "BowserPuzzleManager.h"
 // recovered name: daObjFl_Coin_c_Behavior
 /* recovered: renamed to Class_Method */
-/* daObjFl_Coin_c::Behavior - recovered from vtable slot identity */
+/* daObjFl_Coin_c::Behavior - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov064 symbols.txt); the vtable-slot-guess marker it carried was stale */
 extern "C" {
 extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 }

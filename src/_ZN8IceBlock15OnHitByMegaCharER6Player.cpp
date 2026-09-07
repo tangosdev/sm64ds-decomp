@@ -3,7 +3,7 @@
 #include "IceBlock.h"
 // recovered name: IceBlock_OnHitByMegaChar
 /* recovered: renamed to Class_Method */
-/* daObjIceBlock_c::OnHitByMegaChar - recovered from vtable slot identity.
+/* daObjIceBlock_c::OnHitByMegaChar - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov081 symbols.txt); the vtable-slot-guess marker it carried was stale.
    The draft called into a 32-entry vtable-shim struct's slot 31 (index
    past v0..v30); that slot is Kill(), already a named virtual on this
    class, so this calls it directly instead. */

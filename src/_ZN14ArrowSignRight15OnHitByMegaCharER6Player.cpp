@@ -3,7 +3,7 @@
 #include "ArrowSignRight.h"
 // recovered name: ArrowSignRight_OnHitByMegaChar
 /* recovered: renamed to Class_Method */
-/* daObjYajirusi_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* daObjYajirusi_c::OnHitByMegaChar - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov098 symbols.txt); the vtable-slot-guess marker it carried was stale */
 extern "C" {
 int func_02012694(int, void*);
 void _ZN6Player16IncMegaKillCountEv(void*);

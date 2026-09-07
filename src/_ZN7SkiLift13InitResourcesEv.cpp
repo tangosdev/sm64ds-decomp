@@ -5,7 +5,7 @@
 #include "daObjSm_Lift_c.h"
 // recovered name: daObjSm_Lift_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daObjSm_Lift_c::InitResources - recovered from vtable slot identity */
+/* daObjSm_Lift_c::InitResources - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov018 symbols.txt); the vtable-slot-guess marker it carried was stale */
 struct PathPtr { char b[8]; };
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
