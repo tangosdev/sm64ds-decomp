@@ -1,7 +1,5 @@
 // Host-side definitions for symbols the slice references but whose NDS
 // definitions cannot serve an MSVC build.
-#include <new>
-
 #include "Fader.h"
 #include "FaderBrightness.h"
 
@@ -40,22 +38,8 @@ extern "C" void _Z14ApproachLinearRiii(Fix12i *value, Fix12i target, Fix12i step
     (void)ApproachLinear(*value, target, step);
 }
 
-// include/Fader.h:69 -- and sixteen other headers -- spell Memory::operator_delete2
-// as an extern "C" Itanium symbol and call it from an inline operator delete, so
-// every class in those hierarchies emits a reference to that spelling. On the NDS
-// link the mangled string IS the symbol; MSVC decorates it as a cdecl name that
-// needs a real definition.
-//
-// port/hal/ctor_bridge.cpp defines it for the model-family targets by forwarding to
-// Memory::Deallocate. Gate 1 links no Memory layer, so forwarding there would only
-// trade one unresolved symbol for another. It forwards to the host global instead,
-// which is what the ROM function does in any case: a three-word tail call to _ZdlPv,
-// the global operator delete (see src/_ZN6Memory16operator_delete2EPv.cpp, which is
-// excluded from the slice with the other *D0Ev TUs).
-//
-// No target links both this file and ctor_bridge.cpp. If one ever does, the duplicate
-// is a link error, which is loud -- not a silent divergence between the two routes.
-extern "C" void _ZN6Memory16operator_delete2EPv(void *ptr)
-{
-    ::operator delete(ptr);
-}
+// Memory::operator_delete2 -- referenced from include/Fader.h's inline operator
+// delete, and so from every Fader class here -- is defined in hal/mem_delete2.cpp.
+// It lived here first; smoke_roots and smoke_fs then needed the same definition,
+// and a per-target copy of a definition that is not target-specific is the thing
+// the move avoids.
