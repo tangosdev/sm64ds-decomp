@@ -633,37 +633,10 @@ src/game/actors/d_a_obj_hatena_switch.cpp:
     .text start:0x020b4ed8 end:0x020b5734
     .data start:0x02108e14 end:0x02108edc
 
-src/_ZN9BlueFlameD1Ev.cpp:
+src/actors/daObjFire_c.cpp:
     complete
-    .text start:0x020b5734 end:0x020b5764
-
-src/_ZN9BlueFlameD0Ev.cpp:
-    complete
-    .text start:0x020b5764 end:0x020b57a8
-
-src/_ZN9BlueFlame8BehaviorEv.cpp:
-    complete
-    .text start:0x020b57a8 end:0x020b5940
-
-src/_ZN9BlueFlame13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b5940 end:0x020b599c
-
-src/_ZN9BlueFlame13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x020b599c end:0x020b59a0
-
-src/_ZN9BlueFlame13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x020b59a0 end:0x020b59a8
-
-src/d_a_obj_fire_obj_blue_fire.c:
-    complete
-    .text start:0x020b59a8 end:0x020b59e0
-
-src/d_a_obj_fire_obj_red_fire.c:
-    complete
-    .text start:0x020b59e0 end:0x020b5a18
+    .text start:0x020b5734 end:0x020b5a18
+    .data start:0x02108edc end:0x02108fb4
 
 src/_ZN17daObjFloatBoard_cD0Ev.cpp:
     complete
@@ -825,25 +798,10 @@ src/func_ov002_020b6c54.c:
     complete
     .text start:0x020b6c54 end:0x020b6d28
 
-src/_ZN18PoppingLavaBubblesD1Ev.cpp:
+src/actors/daObjLava_c.cpp:
     complete
-    .text start:0x020b6d28 end:0x020b6d4c
-
-src/_ZN18PoppingLavaBubblesD0Ev.cpp:
-    complete
-    .text start:0x020b6d4c end:0x020b6d84
-
-src/func_ov002_020b6d84.c:
-    complete
-    .text start:0x020b6d84 end:0x020b6dd0
-
-src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp:
-    complete
-    .text start:0x020b6dd0 end:0x020b6dd8
-
-src/d_a_obj_lava.c:
-    complete
-    .text start:0x020b6dd8 end:0x020b6e08
+    .text start:0x020b6d28 end:0x020b6e08
+    .data start:0x021093a0 end:0x0210945c
 
 src/game/actors/d_a_obj_waterfall.cpp:
     complete
@@ -3103,41 +3061,10 @@ src/func_ov002_020f035c.c:
     complete
     .text start:0x020f035c end:0x020f03c4
 
-src/_ZN9daSCoin_cD1Ev.cpp:
+src/actors/daSCoin_c.cpp:
     complete
-    .text start:0x020f03c4 end:0x020f03f4
-
-src/_ZN9daSCoin_cD0Ev.cpp:
-    complete
-    .text start:0x020f03f4 end:0x020f0438
-
-src/func_ov002_020f0438.cpp:
-    complete
-    .text start:0x020f0438 end:0x020f051c
-
-src/func_ov002_020f051c.cpp:
-    complete
-    .text start:0x020f051c end:0x020f05f4
-
-src/func_ov002_020f05f4.c:
-    complete
-    .text start:0x020f05f4 end:0x020f069c
-
-src/_ZN9daSCoin_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x020f069c end:0x020f06c0
-
-src/_ZN9daSCoin_c8BehaviorEv.cpp:
-    complete
-    .text start:0x020f06c0 end:0x020f07dc
-
-src/_ZN9daSCoin_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x020f07dc end:0x020f085c
-
-src/d_a_s_coin.c:
-    complete
-    .text start:0x020f085c end:0x020f0894
+    .text start:0x020f03c4 end:0x020f0894
+    .data start:0x0210aff4 end:0x0210b0ac
 
 src/_ZN6NumberD1Ev.cpp:
     complete
