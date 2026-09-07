@@ -307,7 +307,7 @@ daSlide_Box_c	DONE	include\SlidingBox.h  [alias: header uses pre-rename name]	dB
 daUdlift_c	DONE	include\UpDownLiftBbh.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov095	6
 daOts_c	DONE	include\daOts_c.h	dEnemyBase_c	3	ov064	11
 dCapEnemy_c	DONE	include\dCapEnemy_c.h	dEnemyBase_c	2	arm9;ov002	14
-da1up_c	DONE	include\OneUpMushroom.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov002	9
+da1up_c	DONE	include\da1up_c.h	dEnemyBase_c	0	ov002	9
 daBakubaku_c	DONE	include\daBakubaku_c.h	dEnemyBase_c	0	ov032	8
 daBasabasa_c	DONE	include\Swoop.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov065	10
 daBbl_c	DONE	include\LavaBubble.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov064	8
