@@ -59,16 +59,15 @@ typedef int (*PortOv077StateFnI)(void *);
 /* ---- (1) Render -------------------------------------------------------- */
 extern int data_0209f32c;
 
-/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
-int _ZN7HeaveHo6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    if (*(int *)(c + 0x60) < data_0209f32c)
-        return 1;
-    /* ((Cls *)&mModelAnim)->method5(0) -- the ROM slot-5 Render, qualified */
-    ((ModelAnim *)(c + 0x340))->ModelAnim::Render(0);
-    return 1;
-}
+/* _ZN7HeaveHo6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+   ROM-order model slot-5 dispatch -- died with lane SLOT5F's
+   respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
+   put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the
+   matched source's local six-virtual shadow reaches the body it means.
+   The C name is defined in hal/except_faces.cpp onto the matched
+   __thiscall method; the ROM vtable word and the kind:function record
+   are in port/slice_except2.txt. */
+
 
 /* ---- (2) the state setter + enter dispatch ----------------------------- */
 

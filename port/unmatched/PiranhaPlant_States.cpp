@@ -185,40 +185,22 @@ extern "C" int _ZN12PiranhaPlant8BehaviorEv(void *selfv)
     return 1;
 }
 
-/* ---- PIRANHA_PLANT's Render (ov084 0x0212fcdc) ----------------------------
-   mModelAnim at +0x110, mModel at +0x174; the second draw is gated on
-   unk_170 == data_ov084_02130df4's second word (the anim table's frame count).
-   ModelAnim slot 5 is the host case; Model slot 5 is dual-filled. */
-extern "C" { extern int data_ov084_02130df4[]; }   /* {file, frames} pair */
-/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish
- * case. */
-extern "C" int _ZN12PiranhaPlant6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    if (*(int *)(c + 0x80) == 0)                    /* mScaleX == 0 */
-        return 1;
-    /* ((Obj *)&mModelAnim)->m5(&mScaleX) */
-    ((ModelAnim *)(c + 0x110))->ModelAnim::Render((const Vector3 *)(c + 0x80));
-    if (*(int *)(c + 0x170) == data_ov084_02130df4[1])
-        /* ((Obj *)&mModel)->m5(&unk_428) -- Model slot 5, dual-filled */
-        ((Model *)(c + 0x174))->Model::Render((const Vector3 *)(c + 0x428));
-    return 1;
-}
+/* _ZN12PiranhaPlant6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+   ROM-order model slot-5 dispatch -- died with lane SLOT5F's
+   respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
+   put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the
+   matched source's local six-virtual shadow reaches the body it means.
+   The C name is defined in hal/except_faces.cpp onto the matched
+   __thiscall method; the ROM vtable word and the kind:function record
+   are in port/slice_except2.txt. */
 
-/* ---- FIRE_PIRANHA_PLANT's Render (ov084 0x0212e5a8) -----------------------
-   Runs the FirePiranhaPlantBig class. mModelAnim at +0x110, mScale at +0x204,
-   the engine hide at flag 0x40000 of unk_0b0. Draws at a uniform scale built
-   from mScale. */
-/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish
- * case. */
-extern "C" int _ZN19FirePiranhaPlantBig6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    int v = *(int *)(c + 0x204);                    /* mScale */
-    if (v == 0 || (*(int *)(c + 0xb0) & 0x40000) != 0)
-        return 1;
-    int s[3] = {v, v, v};
-    /* ((Obj *)&mModelAnim)->m5(&s) */
-    ((ModelAnim *)(c + 0x110))->ModelAnim::Render((const Vector3 *)s);
-    return 1;
-}
+
+/* _ZN19FirePiranhaPlantBig6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+   ROM-order model slot-5 dispatch -- died with lane SLOT5F's
+   respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
+   put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the
+   matched source's local six-virtual shadow reaches the body it means.
+   The C name is defined in hal/except_faces.cpp onto the matched
+   __thiscall method; the ROM vtable word and the kind:function record
+   are in port/slice_except2.txt. */
+

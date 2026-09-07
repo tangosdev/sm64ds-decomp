@@ -1,0 +1,98 @@
+# LANE EXCEPT (run link100, wave 5), batch 1: two rows off the documented
+# host-ABI exception queue, each one another lane's named leftover.
+#
+# The census this batch was cut from is out/EXCEPT/census.md in the run
+# directory: 414 documented exceptions on the tree at a4504f88d, grouped by the
+# mechanism each host copy's own header states, 410 of which would each gain +1
+# if retired. Half the queue (209 rows: ARM assembly, unmodelled DS hardware,
+# register ride-throughs, MSVC front-end refusals on the matched TU's own text,
+# name collisions, decomp defects) is not port work at all and is named closed
+# there. These two rows are the cheapest that ARE port work.
+#
+# Every row below is verified by ROM ADDRESS: the referrer is the ROM's own
+# vtable word read out of the raw overlay image (never a dsd copy), and the
+# body has a kind:function record at the destination.
+#
+# ---------------------------------------------------------------------------
+# ROW 1 (plain slice row): src/func_ov002_020f6778.cpp
+# ---------------------------------------------------------------------------
+# The cutscene ModelAnim's DELETING DESTRUCTOR. Retires
+# port/unmatched/Ov002_ModelAnimD0_020f6778.cpp.
+#
+#   record    func_ov002_020f6778 kind:function(arm,size=0xf8) addr:0x020f6778
+#             (config/arm9/overlays/ov002/symbols.txt:1393)
+#   prologue  020f6778 e92d4030 / 020f677c e24dd004 / 020f6780 e59f10dc
+#   referrer  data_ov002_0210bcc4[1], the CUTSCENE_OBJECT ModelAnim vtable's
+#             ROM slot 1. Read out of extracted/overlays/overlay_0002.bin at
+#             that overlay's own base 0x020ad660
+#             (config/arm9/overlays/ov002/delinks.txt line 1):
+#                 0210bcc4 = 020f6870   slot 0, the D1
+#                 0210bcc8 = 020f6778   slot 1, the D0  <- this row
+#             which is word for word what hal/actor_classes_intro.cpp's
+#             g_co_vt2[] already checks the mount against on every boot. The
+#             fill installs co_modelanim_d0, a one-line face that calls
+#             &func_ov002_020f6778; that address IS the reference edge, and
+#             with the host copy gone it resolves to this matched TU.
+#
+# WHAT UNBLOCKED IT. Its only divergence from src was a call through
+# _ZTV15TextureSequence[1], which was a plain null on the host, so the matched
+# body called address 0 (measured as `code c0000005 +ffc00000` on the opening
+# cutscene). hal/model_dtor_seat.cpp now seats that slot with the ROM's own
+# body for it, _ZN15TextureSequenceD0Ev, behind a CDECL thunk -- the
+# convention the ROM's readers of that word use (`typedef void (*VFN)(void*)`).
+# The ROM words that settle which body belongs there are quoted in that file's
+# seat block: 0208e7d4 = 02015a2c (D1, slot 0) and 0208e7d8 = 02015a00 (D0,
+# slot 1), read at arm9_dec.bin's real base 0x02004000.
+#
+src/func_ov002_020f6778.cpp
+#
+# ---------------------------------------------------------------------------
+# ROW 2 (NOT a plain row -- it builds through tools/hostgen.py):
+#        src/func_ov006_02127d10.c
+# ---------------------------------------------------------------------------
+# dScMgSnowball_c's Render, ROM vtable slot 9. Retires
+# port/unmatched/MgSnowball_ModelRender.cpp -- the one row of lane FOLD2's
+# thirty that it left standing, because the repair is a VIRTUAL_CALL row in
+# port/tools/hostgen.py and FOLD2 did not own that file.
+#
+#   record    func_ov006_02127d10 kind:function(arm,size=0x694) addr:0x02127d10
+#             (config/arm9/overlays/ov006/symbols.txt:1828)
+#   prologue  02127d10 e92d4ff0 / 02127d14 e24dd024 / 02127d18 e59f1630
+#   referrer  data_ov006_0214000c[9], the class's own vtable, read out of
+#             extracted/overlays/overlay_0006.bin at base 0x020bfec0:
+#                 02140030 = 02127d10
+#             (slot 8 = 0202e3c8 and slot 10 = 0210a664 either side of it, so
+#             the stride and the index are both checked, not assumed.)
+#   marker    src/func_ov006_02127d10.c carries "recovered from vtable slot
+#             identity", and it is ADJUDICATED REAL_DECOMP at
+#             port/tools/inferred_stub_adjudicated.txt:1283 -- ten distinct
+#             callees at ten matching counts, and a 0x694 body that is 400
+#             instructions plus a 21-word pool. Not a guess seat.
+#
+# WHY hostgen AND NOT A PLAIN ROW. Two rewrites, and neither is the fold:
+#   (a) the dispatch. The ROM reads BYTE +0x14 of the model's vptr -- word 5,
+#       which is Render on the host too since lane SLOT5F's respelling made
+#       every model table ROM-numbered (hal/cxxname_bridge.cpp:522). The index
+#       is already right; the CONVENTION is not. The matched source reads the
+#       word into a `void (*)(void*, int*)` and calls it cdecl, and what is
+#       seated is `void __fastcall mv_render(void *self, void *unused,
+#       const void *s)`. The VIRTUAL_CALL row keeps the ROM's word index and
+#       the ROM's arguments and only spells the entry the way the slot has to
+#       be entered.
+#   (b) the two geometry-register stores, 0x040004c8 LIGHT_VECTOR and
+#       0x040004cc LIGHT_COLOR. hostgen's MMIO_DEREF rewrites both with no
+#       table row (the pattern takes the volatile and the non-volatile
+#       spelling). Unrewritten they latch into the mapped I/O window and the
+#       geometry engine never gets the light, which is the same defect FOLD2
+#       repaired on this file's three siblings.
+#
+# hostgen's whole output was diffed line by line against src/ before this row
+# was written: THREE hunks, the two NTR_MMIO substitutions and the one
+# dispatch line pair. Nothing else in the file changes.
+#
+# The generated source is added to the three targets by the LANE EXCEPT
+# hostgen block at the very bottom of port/CMakeLists.txt, for the reason
+# lane FOLD2's identical block gives: it does not exist at configure time, so
+# it has to sit below the tier-independent section.
+#
+#   (no plain row here -- see EXCEPT_HOSTGEN_SYMS in port/CMakeLists.txt)

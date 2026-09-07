@@ -107,23 +107,15 @@ int *_ZN6LakituD1Ev(int *t)
     return t;
 }
 
-/* ---- (2) Render -------------------------------------------------------- */
-/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
-int _ZN6Lakitu6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    if ((*(unsigned int *)(c + 0xb0) & 0x40000) != 0)
-        return 1;
-    _ZN15TextureSequence6UpdateER15ModelComponents(c + 0x1b0, c + 0xdc);
-    /* ((VObj *)&mModelAnim)->m(0) -- the ROM slot-5 Render, spelled qualified */
-    ((ModelAnim *)(c + 0xd4))->ModelAnim::Render(0);
-    if (*(int *)(c + 0x3f4) == 1) {
-        unsigned int v = ((unsigned int)(*(int *)(c + 0x12c) << 4)) >> 0x10;
-        if (v >= 0x19 && v <= 0x3a)
-            ((Model *)(c + 0x138))->Model::Render(0);
-    }
-    return 1;
-}
+/* _ZN6Lakitu6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+   ROM-order model slot-5 dispatch -- died with lane SLOT5F's
+   respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
+   put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the
+   matched source's local six-virtual shadow reaches the body it means.
+   The C name is defined in hal/except_faces.cpp onto the matched
+   __thiscall method; the ROM vtable word and the kind:function record
+   are in port/slice_except2.txt. */
+
 
 /* ---- (4) InitResources: THE IMPLICIT r1 RIDE-THROUGH -------------------- */
 /* MEASURED, not reasoned. The first boot of this seat faulted c0000005 on

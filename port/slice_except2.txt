@@ -1,0 +1,196 @@
+# LANE EXCEPT (run link100, wave 5), batch 2: THE SLOT-5 FAMILY.
+#
+# Seventeen matched Render TUs across sixteen actor classes, every one of them
+# a documented host-ABI exception whose stated reason is a vtable numbering
+# THAT NO LONGER EXISTS.
+#
+# THE READING. Each of these headers says, in these words or a paraphrase of
+# them:
+#
+#     hal/cxxname_bridge.cpp fills _ZTV9ModelAnim in MSVC order (dtor 0,
+#     DoSetFile 1, UpdateVerts 2, Virtual10 3, Render 4, Virtual18 5), because
+#     MSVC spends ONE slot on the destructor where Itanium spends two, so ROM
+#     slot 5 (Render) lands on the host array's Virtual18.
+#
+# Lane SLOT5F respelled the ROM's D1/D0 pair as two plain virtuals under
+# _MSC_VER in include/ModelBase.h and its five siblings, and the fills in the
+# tree today are ROM-numbered:
+#
+#     port/hal/cxxname_bridge.cpp:519-522   _ZTV5Model[2..5]
+#                                           = mv_dosetfile / mv_updateverts /
+#                                             mv_virtual10 / mv_render
+#                              :575-579     _ZTV9ModelAnim[2..6]
+#                                           = mv_dosetfile / ma2_updateverts /
+#                                             ma2_virtual10 / ma2_render /
+#                                             ma2_virtual18
+#
+# port/hal/model_dtor_seat.cpp says the same thing in its own words ("ROM
+# NUMBERING NOW"), and port/hal/actor_classes_intro.cpp says "every TU counts
+# in ROM numbering now. THE TWO DUPLICATE FILLS ARE GONE."
+#
+# THESE ROWS WERE NOT IN LANE UNMATCH'S FOLD SWEEP, and I cannot say why from
+# the evidence. That enumeration (out/UNMATCH/fold_candidates.txt) states its
+# own rule -- "every port/unmatched TU whose first 4 KB names a matched src TU
+# as HOST COPY OF and whose stated divergence is the MSVC destructor fold (the
+# words 'slot 5', 'MSVC folds', 'one slot', 'dual fill')" -- and six of the
+# files below satisfy BOTH halves of it by the letter. Counted over the first
+# 4 KB of each header:
+#
+#     Lakitu_HostSites      "slot 5" x2   "HOST COPY OF" yes
+#     PiranhaPlant_States   "slot 5" x2   "HOST COPY OF" yes
+#     Spiny_HostSites       "slot 5" x1   "HOST COPY OF" yes
+#     Tornado_HostSites     "slot 5" x1   "HOST COPY OF" yes
+#     HeaveHo_HostSites     "slot-5" x2   "HOST COPY OF" yes
+#     MrI_Render            "slot 5" x3   "HOST COPY OF" yes
+#
+# So the list of thirty was not the whole set its own criteria describe. The
+# conclusion is not about the wording: AN ENUMERATION IS NOT A CENSUS. A row is
+# closed when someone reads its reason and checks it against the tree as it is
+# now, which is what out/EXCEPT/census.md does for all 414 of them.
+#
+# WHAT IS LEFT AFTER THE INDEX: THE CONVENTION, and it agrees. Each matched
+# source dispatches through a LOCAL SIX-VIRTUAL shadow class over the embedded
+# model, which MSVC compiles as a __thiscall virtual call: `this` in ecx, the
+# one argument pushed, callee cleans. The host slot holds
+#
+#     void __fastcall mv_render(void *self, void *unused, const void *scale)
+#
+# -- ecx = self, edx ignored, scale pushed, callee cleans 4. Argument for
+# argument and cleanup for cleanup, those two agree; the ignored edx is the
+# only difference and it is read by nothing. Four of the shadows declare their
+# slot-5 method returning int where Render returns void, which leaves garbage
+# in eax, and all four discard the result.
+#
+# EVERY ROW IS VERIFIED BY ROM ADDRESS, not by name: the referrer is the
+# class's own vtable slot 9 word read out of the RAW overlay image at that
+# overlay's own .text base (config/arm9/overlays/ovNNN/delinks.txt line 1),
+# and the destination carries a kind:function(arm,size=..) record. Seventeen
+# of seventeen agreed; the generator refuses a mismatch.
+#
+# THE FACES. Sixteen of the seventeen matched sources are `real C++ method`
+# recoveries -- they define `int Class::Render()`, whose MSVC mangling is
+# ?Render@Class@@QAEHXZ -- while every fill site declares and calls the
+# Itanium C NAME at C linkage, because what it used to reach was an extern "C"
+# host copy. port/hal/except_faces.cpp defines that C name onto the method,
+# one cdecl line each, and NOT ONE FILL SITE CHANGES. The seventeenth,
+# src/_ZN7Tornado6RenderEv.cpp, defines the C name itself and needs no face.
+#
+# NOT IN THIS BATCH, and each for a reason:
+#   Goomboss_HostSites.cpp   its second body, func_ov074_021222e0, is one half
+#       of a NAME RACE with ov070's two-pointer file table at the same shared
+#       -window address; retiring it needs that alias re-cut, which is a
+#       different mechanism and a different lane.
+#   Jrb_Renders.cpp (4 rows)  carries a SECOND stated reason -- "the shadow's
+#       methods return int where Model::Render returns void, MSVC decorates
+#       that differently". That reading is weak on its face (a virtual call
+#       through a local shadow is an indirect call through the vptr and
+#       decorates nothing) but it has not been measured, so it stays.
+#   MgD3DBase_ModelAnimRender.cpp (4 rows)  ov006, four bodies in one file,
+#       one of which is a different shape again. A minigame lane's row.
+#   Ov085_Renders.cpp's _ZN9RabbitKey6RenderEv  its header records a MEASURED
+#       convention twist on top of the slot, so it is not this reading.
+#   port/hal/method_faces.cpp's Bird::Render and Flag::Render  the same
+#       reading, one line each, but that file is outside this lane's list.
+#
+# MrI (ov071) OK
+#   referrer  _ZTV3MrI[9] @ 02122d54 = 021216b8   (overlay_0071.bin, base 0211f000)
+#   record    _ZN3MrI6RenderEv kind:function(arm,size=0x34) addr:0x021216b8   (overlays/ov071/symbols.txt:58)
+#   retires   port/unmatched/MrI_Render.cpp (whole file)
+src/_ZN3MrI6RenderEv.cpp
+#
+# ChiefChilly (ov073) OK
+#   referrer  _ZTV11ChiefChilly[9] @ 021230b4 = 02121870   (overlay_0073.bin, base 0211f000)
+#   record    _ZN11ChiefChilly6RenderEv kind:function(arm,size=0x30) addr:0x02121870   (overlays/ov073/symbols.txt:43)
+#   retires   port/unmatched/Ov073_Render.cpp (whole file)
+src/_ZN11ChiefChilly6RenderEv.cpp
+#
+# Clam (ov064) OK
+#   referrer  _ZTV4Clam[9] @ 0211c5ec = 0211aa30   (overlay_0064.bin, base 02115ee0)
+#   record    _ZN4Clam6RenderEv kind:function(arm,size=0x28) addr:0x0211aa30   (overlays/ov064/symbols.txt:156)
+#   retires   port/unmatched/Ov064_Clam.cpp (whole file)
+src/_ZN4Clam6RenderEv.cpp
+#
+# TreasureChest (ov064) OK
+#   referrer  _ZTV13TreasureChest[9] @ 0211c530 = 0211a7c4   (overlay_0064.bin, base 02115ee0)
+#   record    _ZN13TreasureChest6RenderEv kind:function(arm,size=0x28) addr:0x0211a7c4   (overlays/ov064/symbols.txt:148)
+#   retires   port/unmatched/Ov064_Clam.cpp (whole file)
+src/_ZN13TreasureChest6RenderEv.cpp
+#
+# Spiny (ov077) OK
+#   referrer  _ZTV5Spiny[9] @ 021279a8 = 02125ef0   (overlay_0077.bin, base 02123740)
+#   record    _ZN5Spiny6RenderEv kind:function(arm,size=0x78) addr:0x02125ef0   (overlays/ov077/symbols.txt:62)
+#   retires   port/unmatched/Spiny_HostSites.cpp (body cut)
+src/_ZN5Spiny6RenderEv.cpp
+#
+# Shark (ov090) OK
+#   referrer  _ZTV5Shark[9] @ 02134410 = 021339ac   (overlay_0090.bin, base 02130f00)
+#   record    _ZN5Shark6RenderEv kind:function(arm,size=0x2c) addr:0x021339ac   (overlays/ov090/symbols.txt:63)
+#   retires   port/unmatched/Shark_HostSites.cpp (body cut)
+src/_ZN5Shark6RenderEv.cpp
+#
+# Skeeter (ov090) OK
+#   referrer  _ZTV7Skeeter[9] @ 0213418c = 02131f34   (overlay_0090.bin, base 02130f00)
+#   record    _ZN7Skeeter6RenderEv kind:function(arm,size=0x54) addr:0x02131f34   (overlays/ov090/symbols.txt:19)
+#   retires   port/unmatched/Skeeter_HostSites.cpp (body cut)
+src/_ZN7Skeeter6RenderEv.cpp
+#
+# MantaRay (ov090) OK
+#   referrer  _ZTV8MantaRay[9] @ 02134260 = 02132c68   (overlay_0090.bin, base 02130f00)
+#   record    _ZN8MantaRay6RenderEv kind:function(arm,size=0x2c) addr:0x02132c68   (overlays/ov090/symbols.txt:35)
+#   retires   port/unmatched/MantaRay_HostSites.cpp (body cut)
+src/_ZN8MantaRay6RenderEv.cpp
+#
+# Lakitu (ov077) OK
+#   referrer  _ZTV6Lakitu[9] @ 02127890 = 02124828   (overlay_0077.bin, base 02123740)
+#   record    _ZN6Lakitu6RenderEv kind:function(arm,size=0x90) addr:0x02124828   (overlays/ov077/symbols.txt:28)
+#   retires   port/unmatched/Lakitu_HostSites.cpp (body cut)
+src/_ZN6Lakitu6RenderEv.cpp
+#
+# HeaveHo (ov077) OK
+#   referrer  _ZTV7HeaveHo[9] @ 02127abc = 02126e38   (overlay_0077.bin, base 02123740)
+#   record    _ZN7HeaveHo6RenderEv kind:function(arm,size=0x50) addr:0x02126e38   (overlays/ov077/symbols.txt:85)
+#   retires   port/unmatched/HeaveHo_HostSites.cpp (body cut)
+src/_ZN7HeaveHo6RenderEv.cpp
+#
+# CheepCheep (ov090) OK
+#   referrer  _ZTV10CheepCheep[9] @ 02134348 = 021333e0   (overlay_0090.bin, base 02130f00)
+#   record    _ZN10CheepCheep6RenderEv kind:function(arm,size=0x50) addr:0x021333e0   (overlays/ov090/symbols.txt:50)
+#   retires   port/unmatched/CheepCheep_HostSites.cpp (body cut)
+src/_ZN10CheepCheep6RenderEv.cpp
+#
+# Stump (ov091) OK
+#   referrer  _ZTV5Stump[9] @ 021353d0 = 02134184   (overlay_0091.bin, base 02130f00)
+#   record    _ZN5Stump6RenderEv kind:function(arm,size=0x68) addr:0x02134184   (overlays/ov091/symbols.txt:85)
+#   retires   port/unmatched/Ov091_HostSites.cpp (body cut)
+src/_ZN5Stump6RenderEv.cpp
+#
+# PiranhaPlant (ov084) OK
+#   referrer  _ZTV12PiranhaPlant[9] @ 02130c4c = 0212fcdc   (overlay_0084.bin, base 02129020)
+#   record    _ZN12PiranhaPlant6RenderEv kind:function(arm,size=0x70) addr:0x0212fcdc   (overlays/ov084/symbols.txt:100)
+#   retires   port/unmatched/PiranhaPlant_States.cpp (body cut)
+src/_ZN12PiranhaPlant6RenderEv.cpp
+#
+# FirePiranhaPlantBig (ov084) OK
+#   referrer  _ZTV19FirePiranhaPlantBig[9] @ 02130b4c = 0212e5a8   (overlay_0084.bin, base 02129020)
+#   record    _ZN19FirePiranhaPlantBig6RenderEv kind:function(arm,size=0x6c) addr:0x0212e5a8   (overlays/ov084/symbols.txt:71)
+#   retires   port/unmatched/PiranhaPlant_States.cpp (body cut)
+src/_ZN19FirePiranhaPlantBig6RenderEv.cpp
+#
+# Rabbit (ov085) OK
+#   referrer  _ZTV6Rabbit[9] @ 0213011c = 0212c074   (overlay_0085.bin, base 02129020)
+#   record    _ZN6Rabbit6RenderEv kind:function(arm,size=0xdc) addr:0x0212c074   (overlays/ov085/symbols.txt:67)
+#   retires   port/unmatched/Ov085_Renders.cpp (body cut)
+src/_ZN6Rabbit6RenderEv.cpp
+#
+# LakituBro (ov085) OK
+#   referrer  _ZTV9LakituBro[9] @ 02130368 = 0212ead0   (overlay_0085.bin, base 02129020)
+#   record    _ZN9LakituBro6RenderEv kind:function(arm,size=0x48) addr:0x0212ead0   (overlays/ov085/symbols.txt:117)
+#   retires   port/unmatched/Ov085_Renders.cpp (body cut)
+src/_ZN9LakituBro6RenderEv.cpp
+#
+# Tornado (ov096) OK
+#   referrer  _ZTV7Tornado[9] @ 02137ab4 = 02137414   (overlay_0096.bin, base 02135700)
+#   record    _ZN7Tornado6RenderEv kind:function(arm,size=0x34) addr:0x02137414   (overlays/ov096/symbols.txt:44)
+#   retires   port/unmatched/Tornado_HostSites.cpp (body cut)
+src/_ZN7Tornado6RenderEv.cpp
+#
