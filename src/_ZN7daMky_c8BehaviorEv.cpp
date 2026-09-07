@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-// @symbol _ZN5Ukiki8BehaviorEv
+// @symbol _ZN7daMky_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_SaveData.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Ukiki.h"
+#include "daMky_c.h"
 struct Vector3;
 struct Vector3_16;
 struct dActor_c;
@@ -26,7 +26,7 @@ struct VObj {
     virtual void v3();
 };
 
-int Ukiki::Behavior()
+int daMky_c::Behavior()
 {
     char *c = (char *)((dActor_c *)this);
     if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((dActor_c *)this), 0x5dc000) != 0 &&

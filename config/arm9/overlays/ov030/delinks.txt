@@ -60,15 +60,15 @@ src/d_a_obj_hm_maruta.c:
     complete
     .text start:0x0211164c end:0x02111688
 
-src/_ZN5UkikiD1Ev.cpp:
+src/_ZN7daMky_cD1Ev.cpp:
     complete
     .text start:0x02111688 end:0x021116d0
 
-src/_ZN5UkikiD0Ev.cpp:
+src/_ZN7daMky_cD0Ev.cpp:
     complete
     .text start:0x021116d0 end:0x0211172c
 
-src/_ZN5Ukiki13OnYoshiTryEatEv.cpp:
+src/_ZN7daMky_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211172c end:0x02111734
 
@@ -212,27 +212,27 @@ src/func_ov030_021141a8.c:
     complete
     .text start:0x021141a8 end:0x021141c4
 
-src/_ZN5Ukiki16CleanupResourcesEv.cpp:
+src/_ZN7daMky_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021141c4 end:0x0211422c
 
-src/_ZN5Ukiki16OnPendingDestroyEv.cpp:
+src/_ZN7daMky_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211422c end:0x02114230
 
-src/_ZN5Ukiki6RenderEv.cpp:
+src/_ZN7daMky_c6RenderEv.cpp:
     complete
     .text start:0x02114230 end:0x02114278
 
-src/_ZN5Ukiki8BehaviorEv.cpp:
+src/_ZN7daMky_c8BehaviorEv.cpp:
     complete
     .text start:0x02114278 end:0x02114378
 
-src/_ZN5Ukiki13InitResourcesEv.cpp:
+src/_ZN7daMky_c13InitResourcesEv.cpp:
     complete
     .text start:0x02114378 end:0x021145d4
 
-src/_ZN5Ukiki13OnTurnIntoEggER6Player.cpp:
+src/_ZN7daMky_c13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x021145d4 end:0x021145e0
 
