@@ -2040,8 +2040,8 @@ int func_ov030_02113ff0(char* c){
 // @symbol _ZN7daMky_c11EnterState0Ev
 int daMky_c::EnterState0()
 {
-    int *p = (int *)this;
-    p[237] = 0; return 1;
+    mState = 0;
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
