@@ -67,6 +67,22 @@ source, its `tu_manifest.d` entry, its header:
 and are byte-identical to `main` under the strict one. **Diff the class files, not
 the aggregates.** The aggregates are the integration lane's problem.
 
+**Correction, later the same day: the UNBANKED-NEW column above is still wrong, and
+the strict test was not strict enough.** It asked whether a class file exists at its
+branch path on `main`. PR #2270 had moved actor sources to `src/game/actors/` and
+renamed their stems to `d_a_<snake>`, so a *move* reads as an *absence* — and one
+case renamed the stem as well, from a class-named `daEyBm_c` source to a
+`d_a_ey_bm` one, which no directory-swap heuristic finds. Eight tasks were registered off
+those rows and all eight were already banked; every one was cancelled. A parallel
+inventory of the `tu/*` lane hit the third variant of the same mistake, where class
+and manifest RENAMES made 54 of 79 already-promoted classes read as unlanded.
+
+The rule that covers all three: **key the comparison on something `main` cannot
+move** — blob hashes across every plausible path, or `(module, ROM address)` for a
+symbol, with the module included because overlays reuse addresses. And note that the
+files a promotion DELETES being absent from `main` is proof it landed, not evidence
+of missing work; reading that backwards is what inflated the count.
+
 ## Do not delete
 
 - **`cpp/promote-da-obj-lava`** — 55 class files absent from `main`, PR #2231 closed
@@ -104,25 +120,44 @@ uncommitted in a working tree. Recovered in #2408.
 **Only six uncommitted things in the whole fleet were unique.** The rest of the
 dirty state is regenerable tool output or stale copies of what already landed.
 
-## Not adopted yet
+## The three unadopted lanes, now inventoried
 
-Registered nothing for these; they need their own inventory before anyone claims
-them.
+All three were scouted after the cutover. Two of them are finished work, not backlog.
 
-- **The port lane.** 30 unmerged branches, exactly one PR (#2360) between them. The
-  `l1` → `l2` → `l3` names are a genuine ancestor chain, not siblings:
-  `intro-cutscene` → `l1-*` → `l2-openfault` → `link100` → `l3-*` → `l3-recon-c`.
-  Eleven older top-level `port-*` branches from 2026-08-04 conflict heavily with
-  current `main` (100 to 226 markers) and are effectively a rewrite.
-- **The `tu/*` promotion lane.** Eight branches, none with a PR, and they overlap
-  hard: `tu/promote-batch-2` holds 76 manifests and shares 39 with
-  `tu/restack-inline-dtors` and 41 with `tu/legacy-source-extensions`. These are
-  three different treatments of one actor wave. Pick one lineage per class before
-  promoting anything; they cannot all apply.
-- **The profile-reconstruction campaign.** ~24 branches. One commit on
-  `cpp/profile-reconstruction-wave24` says it re-applies renames that a `main`
-  promotion reverted — check that before discarding the cluster.
-- **Older `cpp/*` work**, per the do-not-delete list above.
+**The profile-reconstruction campaign is complete and merging any of it is a
+regression.** All 53 branches are landed; 46 have a merged PR and none has an open
+one. Across 51,631 symbol deltas there is not one case where a branch holds a real
+name and `main` holds a placeholder. Merging 50 of the 53 would revert between 261
+and 781 ROM RTTI names, including 56 coined-name reversions such as `Exit` for
+`daChScene_c` and `StarDoor` for `daStarGate_c`. **The `wave24` lead recorded above is
+refuted and was inverted:** its commit is accurate only about that branch's own merge,
+which discarded 99 campaign renames inside the branch and then re-applied them there.
+`main` never had them to lose, and carries all 99 today. Its substantive content
+landed via #2235.
+
+**The `tu/*` promotion lane is mostly finished too.** 54 of the 79 classes are already
+promoted on `main` under renamed ids and moved paths. Only 25 are genuinely open and
+only 6 contested, each with a recommended lineage. No manifest falsely claims
+`promoted` — 146 checked, zero failures. `tu/promote-batch-2` remains the sole carrier
+of an inline-destructor census, now 17 classes rather than the 43 first recorded, and
+stays on the do-not-delete list. Two earlier entries are settled and no longer needed:
+`main` has `~dPathLiftActor_c(){}`, and `WDW_Water` promoted without the inline form.
+
+**The port lane is the one with real unbanked work, and one branch in it is
+irreplaceable.** `port-linux-fwd-sweep` is contained in no other ref and is the only
+Linux/GCC/SDL2 host lane: 20 files exist nowhere else, among them a Linux
+host-platform HAL source, an MSVC-compatibility header, a 155-entry `--defsym`
+alias list and twelve WSL harness scripts. The modern `l3` chain
+is Windows-only. 25 other port branches are strict git ancestors of a surviving tip
+and are safe to retire. Two premises this file inherited were also wrong: the `l1`,
+`l2`, `l3` names are a DAG rather than a line, and the older `port-*` branches conflict
+at 19-37 markers, not the 100-226 first reported — that larger figure belongs to
+`port-0.2.7-hotfix` and the deep chain. The `l3-recon-c` port branch merges today's `main`
+with zero conflicts and is the natural lane trunk.
+
+**#2360 cannot land until #2392 does.** Confirmed from the validator's own message and
+`tools/validate_merge.py:665-667`: #2360 splits a symbol, which changes the coverage
+denominator, and #2392 is the relaxation that admits a split.
 
 ## What the upgrade actually fixed
 
