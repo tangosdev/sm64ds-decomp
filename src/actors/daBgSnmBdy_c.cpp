@@ -67,9 +67,9 @@ void      _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(dActor_c *player,
                                              const Vector3 *pos, u32 a,
                                              int fix, u32 b, u32 c, u32 d);
-int  _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(int player, void *actor,
-                                                    int msg, void *pos, int a,
-                                                    int b);
+int  _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(Player *player,
+                                                    void *actor, int msg,
+                                                    void *pos, int a, int b);
 int  _ZN6Player12GetTalkStateEv(void *player);
 
 int  _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *out, u32 node);
@@ -149,10 +149,10 @@ int daBgSnmBdy_c::InitResources()
     mModel.SetFile((BMD_File *)file, 1, 1);
     if (mShadowModel.InitCylinder() == 0)
         return 0;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x14c,
-        ((char *)this), 0x82000, 0x104000, 0x800004, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mCylinder,
+        this, 0x82000, 0x104000, 0x800004, 0);
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        ((char *)this) + 0x180, ((char *)this), 0x82000, 0x82000, 0, 0);
+        &mWithMeshClsn, this, 0x82000, 0x82000, 0, 0);
     {
         int p60;
         pos.x = mPosX;
@@ -178,7 +178,7 @@ int daBgSnmBdy_c::InitResources()
     mTalkPlayer = 0;
     *(MatrixWords *)((char *)&mShadowMat) = *(MatrixWords *)&IDENTITY_MATRIX4X3;
     UpdateModel();
-    _ZN7PathPtr6FromIDEj(((char *)this) + 0x380, param1 & 0xff);
+    _ZN7PathPtr6FromIDEj(&mPath, param1 & 0xff);
     return 1;
 }
 
@@ -242,36 +242,30 @@ void daBgSnmBdy_c::CallStateBehavior()
 // @symbol _ZN12daBgSnmBdy_c10InitState0Ev
 int daBgSnmBdy_c::InitState0()
 {
-    char *c = (char *)this;
-    int *p;
-    *(int *)(c + 0x9c) = 0;
-    *(int *)(c + 0xa0) = 0;
-    *(int *)(c + 0x80) = 0x800;
-    *(int *)(c + 0x84) = 0x800;
-    *(int *)(c + 0x88) = 0x800;
-    *(int *)(c + 0x398) = (int)(((long long)(*(int *)(c + 0x80)) *
-                                        0x82000 + 0x800) >> 12);
-    *(int *)(c + 0x150) = *(int *)(c + 0x398);
-    *(int *)(c + 0x154) = *(int *)(c + 0x398) << 1;
-    func_0203568c((int *)(c + 0x180), *(int *)(c + 0x398));
-    func_02035684((int *)(c + 0x180), *(int *)(c + 0x398));
+    mVertAccel = 0;
+    mTerminalVelocity = 0;
+    mScaleX = 0x800;
+    mScaleY = 0x800;
+    mScaleZ = 0x800;
+    mRadius = (int)(((long long)mScaleX * 0x82000 + 0x800) >> 12);
+    mCylinder.radius = mRadius;
+    mCylinder.height = mRadius << 1;
+    func_0203568c((int *)&mWithMeshClsn, mRadius);
+    func_02035684((int *)&mWithMeshClsn, mRadius);
     _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
-        c, *(int *)(c + 0x398), *(int *)(c + 0x398), 0x1000000, 0x1000000);
-    p = (int *)(((int)c + 0xb0));
-    *p = *p | 1;
-    *(int *)(c + 0x394) = 0;
+        this, mRadius, mRadius, 0x1000000, 0x1000000);
+    mFlags |= 1;
+    mStateValue = 0;
     return 1;
 }
 
 // @symbol _ZN12daBgSnmBdy_c6State0Ev
 int daBgSnmBdy_c::State0()
 {
-    char *c = (char *)this;
     Player *player = ClosestPlayer();
-    char *p = (char *)player;
-    if (Vec3_HorzDist(c + 0x5c, p + 0x5c) < 0x10e000) {
-        if (((Player *)player)->StartTalk(*(fBase_c *)this, 1)) {
-            *(Player **)(c + 0x390) = player;
+    if (Vec3_HorzDist(&mPosX, &player->mPosX) < 0x10e000) {
+        if (player->StartTalk(*this, 1)) {
+            mTalkPlayer = player;
             SetState(1);
         }
     }
@@ -281,40 +275,35 @@ int daBgSnmBdy_c::State0()
 // @symbol _ZN12daBgSnmBdy_c10InitState1Ev
 int daBgSnmBdy_c::InitState1()
 {
-    char *c = (char *)this;
-    c[0x3a2] = 0;
-    *(unsigned short *)(c + 0x3a0) = 0x15;
-    *(int *)(c + 0x394) = 1;
+    mSubstate = 0;
+    mStateTimer = 0x15;
+    mStateValue = 1;
     return 1;
 }
 
 // @symbol _ZN12daBgSnmBdy_c6State1Ev
 int daBgSnmBdy_c::State1()
 {
-    char *c = (char *)this;
     int v[3];
-    unsigned char *state;
-    v[0] = *(int *)(c + 0x5c);
-    int y = *(int *)(c + 0x60);
+    v[0] = mPosX;
+    int y = mPosY;
     v[1] = y;
-    v[2] = *(int *)(c + 0x64);
+    v[2] = mPosZ;
     v[1] = y + 0x96000;
-    switch (*(unsigned char *)(c + 0x3a2)) {
+    switch (mSubstate) {
     case 0:
         if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
-                *(int *)(c + 0x390), c, 0xb0, v, 0, 0) == 0)
+                mTalkPlayer, this, 0xb0, v, 0, 0) == 0)
             break;
-        state = (unsigned char *)(((int)c + 0x3a2));
-        *state = *state + 1;
+        mSubstate++;
         break;
     case 1:
-        if (_ZN6Player12GetTalkStateEv((void *)*(int *)(c + 0x390)) != -1)
+        if (_ZN6Player12GetTalkStateEv(mTalkPlayer) != -1)
             break;
-        state = (unsigned char *)(((int)c + 0x3a2));
-        *state = *state + 1;
+        mSubstate++;
         break;
     case 2:
-        if (DecIfAbove0_Short((unsigned short *)(c + 0x3a0)) == 0)
+        if (DecIfAbove0_Short(&mStateTimer) == 0)
             SetState(2);
         break;
     }
@@ -324,16 +313,12 @@ int daBgSnmBdy_c::State1()
 // @symbol _ZN12daBgSnmBdy_c10InitState2Ev
 int daBgSnmBdy_c::InitState2()
 {
-    char *c = (char *)this;
-    *(int *)(c + 0x9c) = -0x2000;
-    *(int *)(c + 0xa0) = -0x3c000;
-    {
-        int *p = (int *)(((int)c + 0xb0));
-        *p &= ~1;
-    }
-    *(int *)(c + 0x388) = 0;
-    *(int *)(c + 0x98) = 0;
-    *(int *)(c + 0x394) = 2;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
+    mFlags &= ~1;
+    mPathNode = 0;
+    mHorzSpeed = 0;
+    mStateValue = 2;
     return 1;
 }
 
@@ -381,9 +366,8 @@ int daBgSnmBdy_c::State2()
 // @symbol _ZN12daBgSnmBdy_c10InitState3Ev
 int daBgSnmBdy_c::InitState3()
 {
-    char *c = (char *)this;
-    *(char *)(c + 0x3a2) = 0;
-    *(int *)(c + 0x394) = 3;
+    mSubstate = 0;
+    mStateValue = 3;
     return 1;
 }
 
@@ -446,27 +430,23 @@ int daBgSnmBdy_c::State3()
 // @symbol _ZN12daBgSnmBdy_c10InitState4Ev
 int daBgSnmBdy_c::InitState4()
 {
-    char *c = (char *)this;
-    *(int *)(((int)c + 0xb0)) &= ~1;
-    *(int *)(c + 0x394) = 4;
+    mFlags &= ~1;
+    mStateValue = 4;
     return 1;
 }
 
 // @symbol _ZN12daBgSnmBdy_c6State4Ev
 int daBgSnmBdy_c::State4()
 {
-    char *c = (char *)this;
-    _Z14ApproachLinearRiii((int *)(c + 0x98), 0x28000, 0x400);
-    _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(
-        *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-    *(int *)(c + 0x39c) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-        *(unsigned int *)(c + 0x39c), 3, 0x8a,
-        (const Vector3 *)(c + 0x74), 0);
+    _Z14ApproachLinearRiii(&mHorzSpeed, 0x28000, 0x400);
+    _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(mPosX, mPosY, mPosZ);
+    mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+        mSoundID, 3, 0x8a, (const Vector3 *)&mCamSpacePosX, 0);
     UpdateRollAngle();
-    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x14c);
-    UpdateGroundCollision((dBgCh_Actr *)(c + 0x180));
+    _ZN8dActor_c9UpdatePosEP5dCc_c(this, &mCylinder);
+    UpdateGroundCollision(&mWithMeshClsn);
     HurtPlayer();
-    if (*(int *)(c + 0x60) < (int)0xfe363c80)
+    if (mPosY < (int)0xfe363c80)
         SetState(5);
     return 1;
 }
@@ -474,9 +454,8 @@ int daBgSnmBdy_c::State4()
 // @symbol _ZN12daBgSnmBdy_c10InitState5Ev
 int daBgSnmBdy_c::InitState5()
 {
-    char *c = (char *)this;
-    *(int *)(((int)c + 0xb0)) &= ~1;
-    *(int *)(c + 0x394) = 5;
+    mFlags &= ~1;
+    mStateValue = 5;
     return 1;
 }
 
@@ -508,24 +487,20 @@ int daBgSnmBdy_c::State5()
 // @symbol _ZN12daBgSnmBdy_c11UpdateModelEv
 void daBgSnmBdy_c::UpdateModel()
 {
-    char *c = (char *)this;
-    Matrix4x3_FromRotationXYZExt(c + 0xf0, *(s16 *)(c + 0x8c),
-                                *(s16 *)(c + 0x8e), *(s16 *)(c + 0x90));
-    *(int *)(c + 0x114) = *(int *)(c + 0x5c) >> 3;
-    *(int *)(c + 0x118) = (*(int *)(c + 0x60) + *(int *)(c + 0x398)) >> 3;
-    *(int *)(c + 0x11c) = *(int *)(c + 0x64) >> 3;
-    *(int *)(c + 0x374) = *(int *)(c + 0x5c) >> 3;
-    *(int *)(c + 0x378) = (*(int *)(c + 0x60) + *(int *)(c + 0x398)) >> 3;
-    *(int *)(c + 0x37c) = *(int *)(c + 0x64) >> 3;
+    Matrix4x3_FromRotationXYZExt(&mModel.mat4x3, mAngleX, mAngleY, mAngleZ);
+    mModel.mat4x3.t.x = mPosX >> 3;
+    mModel.mat4x3.t.y = (mPosY + mRadius) >> 3;
+    mModel.mat4x3.t.z = mPosZ >> 3;
+    mShadowMat.t.x = mPosX >> 3;
+    mShadowMat.t.y = (mPosY + mRadius) >> 3;
+    mShadowMat.t.z = mPosZ >> 3;
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        c, c + 0x124, c + 0x350, *(int *)(c + 0x398) << 1,
-        *(int *)(c + 0x398) << 1, 0xf);
+        this, &mShadowModel, &mShadowMat, mRadius << 1, mRadius << 1, 0xf);
 }
 
 // @symbol _ZN12daBgSnmBdy_c21UpdateGroundCollisionEP10dBgCh_Actr
 void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
 {
-    char *c = (char *)this;
     Vector3 n;
     char *fr;
     dBgCh_Actr_UpdateContinuous_Veneer(mc);
@@ -534,34 +509,33 @@ void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr + 4, &n);
     if (n.y == 0) return;
     {
-        int a = (int)(((long long)n.x * *(int *)(c + 0xa4) + 0x800) >> 12);
-        int b = (int)(((long long)n.z * *(int *)(c + 0xac) + 0x800) >> 12);
-        *(int *)(c + 0xa8) = -(_ZN4cstd4fdivEii(a + b, n.y) + 0x8000);
+        int a = (int)(((long long)n.x * unk_0a4 + 0x800) >> 12);
+        int b = (int)(((long long)n.z * unk_0ac + 0x800) >> 12);
+        mVertSpeed = -(_ZN4cstd4fdivEii(a + b, n.y) + 0x8000);
     }
 }
 
 // @symbol _ZN12daBgSnmBdy_c10HurtPlayerEv
 int daBgSnmBdy_c::HurtPlayer()
 {
-    char *self = (char *)this;
     dActor_c *actor;
     u32 id;
     int t;
     Vector3 pos;
 
-    id = *(u32 *)(self + 0x170);
+    id = mCylinder.otherOwner;
     if (id == 0) return 0;
     actor = _ZN8dActor_c10FindWithIDEj(id);
     if (actor == 0) goto fail;
-    t = (int)(*(u16 *)((char *)actor + 0xc) == 0xbf);
+    t = (int)(actor->actorID == 0xbf);
     if (t != 0) goto body;
 fail:
     return 0;
 body:
-    if (*(u32 *)(self + 0x98) != 0) {
-        pos.x = *(int *)(self + 0x5c);
-        pos.y = *(int *)(self + 0x60);
-        pos.z = *(int *)(self + 0x64);
+    if (mHorzSpeed != 0) {
+        pos.x = mPosX;
+        pos.y = mPosY;
+        pos.z = mPosZ;
         _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
             actor, &pos, 2, 0xc000, 1, 0, 1);
     }
@@ -571,20 +545,16 @@ body:
 // @symbol _ZN12daBgSnmBdy_c11AdvancePathEv
 int daBgSnmBdy_c::AdvancePath()
 {
-    char *c = (char *)this;
     int v[3];
-    int *idx;
     int n;
-    _ZNK7PathPtr7GetNodeER7Vector3j(c + 0x380, v, *(int *)(c + 0x388));
-    int d = Vec3_HorzDist(c + 0x5c, v);
-    _Z11UpdateAngleRssis((short *)(c + 0x8e),
-                        Vec3_HorzAngle(c + 0x5c, v), 2, 0x600);
-    *(short *)(c + 0x94) = *(short *)(c + 0x8e);
-    if (d < *(int *)(c + 0x398)) {
-        n = _ZNK7PathPtr8NumNodesEv(c + 0x380);
-        idx = (int *)(((int)c + 0x388));
-        *idx = *idx + 1;
-        if (*(int *)(c + 0x388) >= n - 1) return 1;
+    _ZNK7PathPtr7GetNodeER7Vector3j(&mPath, v, mPathNode);
+    int d = Vec3_HorzDist(&mPosX, v);
+    _Z11UpdateAngleRssis(&mAngleY, Vec3_HorzAngle(&mPosX, v), 2, 0x600);
+    mPrevAngleY = mAngleY;
+    if (d < mRadius) {
+        n = _ZNK7PathPtr8NumNodesEv(&mPath);
+        mPathNode++;
+        if ((int)mPathNode >= n - 1) return 1;
     }
     return 0;
 }
@@ -592,32 +562,27 @@ int daBgSnmBdy_c::AdvancePath()
 // @symbol _ZN12daBgSnmBdy_c15UpdateRollAngleEv
 void daBgSnmBdy_c::UpdateRollAngle()
 {
-    char *c = (char *)this;
-    int d = (int)(((long long)(*(int *)(c + 0x398) << 1) *
+    int d = (int)(((long long)(mRadius << 1) *
                        0x3243F6A89LL + 0x80000000LL) >> 32);
-    Fix12i q = _ZN4cstd4fdivEii(*(int *)(c + 0x98), d);
-    *(short *)(c + 0x8c) = (short)(*(short *)(c + 0x8c) +
+    Fix12i q = _ZN4cstd4fdivEii(mHorzSpeed, d);
+    mAngleX = (short)(mAngleX +
         (int)(((long long)q * 0xffff + 0x800) >> 12));
 }
 
 // @symbol _ZN12daBgSnmBdy_c18IsPlayerNearCenterEv
 int daBgSnmBdy_c::IsPlayerNearCenter()
 {
-    char *c = (char *)this;
-    int d0 = Vec3_Dist(&data_ov072_02122b58, c + 0x5c);
-    int d1 = Vec3_Dist(&data_ov072_02122b58,
-                      (char *)(*(int *)(c + 0x390)) + 0x5c);
-    int a0 = Vec3_HorzAngle(&data_ov072_02122b58, c + 0x5c);
-    int a1 = Vec3_HorzAngle(&data_ov072_02122b58,
-                           (char *)(*(int *)(c + 0x390)) + 0x5c);
+    int d0 = Vec3_Dist(&data_ov072_02122b58, &mPosX);
+    int d1 = Vec3_Dist(&data_ov072_02122b58, &mTalkPlayer->mPosX);
+    int a0 = Vec3_HorzAngle(&data_ov072_02122b58, &mPosX);
+    int a1 = Vec3_HorzAngle(&data_ov072_02122b58, &mTalkPlayer->mPosX);
     int sub = a0 - a1;
     if (d1 < d0) {
         short diff = (short)sub;
         if (diff < 0) diff = -diff;
         if (diff < 0x700) goto ret1;
     }
-    if (Vec3_Dist(&data_ov072_02122b58,
-                  (char *)(*(int *)(c + 0x390)) + 0x5c) >= 0x300000)
+    if (Vec3_Dist(&data_ov072_02122b58, &mTalkPlayer->mPosX) >= 0x300000)
         goto ret0;
 ret1:
     return 1;
