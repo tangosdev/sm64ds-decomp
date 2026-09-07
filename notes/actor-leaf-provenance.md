@@ -118,15 +118,24 @@ frame the penguin is near the player, never read).
 
 Deliberately left `unk_`: 0x410 (zeroed, never read).
 
-## Moneybag -- include/Moneybag.h
+## daGmch_c -- include/daGmch_c.h
+
+Scouted and named as `Moneybag`; renamed to the cartridge's own RTTI spelling
+when the TU was promoted. All 37 functions now live in `src/actors/daGmch_c.cpp`,
+so the per-shard citations below are given as member names.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x3a0 | `mMatrix` | `*(Matrix4x3*)&unk_3a0 = IDENTITY_MATRIX4X3`; 0x3a0..0x3cf is exactly 0x30 bytes. |
-| 0x3d0 | `mSpawnPosX` | `src/_ZN8Moneybag13InitResourcesEv.cpp` copies `mPosX` in. |
+| 0x3a0 | `mMatrix` | `*(Matrix4x3*)&unk_3a0 = IDENTITY_MATRIX4X3` in `InitResources`; 0x3a0..0x3cf is exactly 0x30 bytes. |
+| 0x3d0 | `mSpawnPosX` | `InitResources` copies `mPosX` in. |
 | 0x3d4 | `mSpawnPosY` | same, `mPosY`. |
 | 0x3d8 | `mSpawnPosZ` | same, `mPosZ`. |
-| 0x3f0 | `mState` | set to 1 by `InitResources`; `src/_ZN8Moneybag6RenderEv.cpp` draws the `ModelAnim` only above 1 and the `Model` only at or below 0x1f. |
+| 0x3dc | `mStatePmfPair` | `SetState` stores `&mirror + (n<<4)` here; `CallStateEnter` invokes pair slot 0 and `CallStateUpdate` pair slot 1. |
+| 0x3e0 | `mStateIndex` | each of the nine `EnterStateN` members writes its own literal `N` here as its last act. |
+| 0x3e4 | `mNextState` | every path of `ChooseNextState` writes a state number here, then reaches `SetState`. |
+| 0x3f0 | `mState` | set to 1 by `InitResources`; `Render` draws the `ModelAnim` only above 1 and the `Model` only at or below 0x1f. `UpdateState0` also reaches 0x3f0 as an `int *` through `ApproachLinear2`, so 0x3f0..0x3f3 is one word there. |
+| 0x3f1 | `mPhase` | `UpdateState0` and `UpdateState3` switch on it; `EnterState0` and `EnterState3` reset it to 0. |
+| 0x3f2 | `mTimer` | `EnterState1` and `EnterState8` set it; `UpdateState1` and `UpdateState8` end the state when `DecIfAbove0_Byte` drives it to 0. |
 
 ## Coin -- include/Coin.h
 
