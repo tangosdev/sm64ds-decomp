@@ -2863,13 +2863,13 @@ ov095	0x02137628	data_ov095_02137628	_ZTV13UpDownLiftBbh	vtable alloc=0x34c
 ov095	0x021376cc	data_ov095_021376cc	Flamethrower_SpawnInfo	spawninfo
 ov095	0x021376cc	Flamethrower_SpawnInfo	g_profile_OBJ_FLAMETHROWER	reconstructed profile global; literal ROM ID OBJ_FLAMETHROWER+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov095	0x021376f0	data_ov095_021376f0	_ZTV12Flamethrower	vtable alloc=?
-ov096	0x02135700	func_ov096_02135700	_ZN5PokeyD1Ev	vtable slot 16
-ov096	0x02135748	func_ov096_02135748	_ZN5PokeyD0Ev	vtable slot 17
-ov096	0x02136944	func_ov096_02136944	_ZN5Pokey16CleanupResourcesEv	vtable slot 3
-ov096	0x021369b0	func_ov096_021369b0	_ZN5Pokey16OnPendingDestroyEv	vtable slot 12
-ov096	0x021369fc	func_ov096_021369fc	_ZN5Pokey6RenderEv	vtable slot 9
-ov096	0x02136a50	func_ov096_02136a50	_ZN5Pokey8BehaviorEv	vtable slot 6
-ov096	0x02136ab0	func_ov096_02136ab0	_ZN5Pokey13InitResourcesEv	vtable slot 0
+ov096	0x02135700	func_ov096_02135700	_ZN9daSanbo_cD1Ev	vtable slot 16
+ov096	0x02135748	func_ov096_02135748	_ZN9daSanbo_cD0Ev	vtable slot 17
+ov096	0x02136944	func_ov096_02136944	_ZN9daSanbo_c16CleanupResourcesEv	vtable slot 3
+ov096	0x021369b0	func_ov096_021369b0	_ZN9daSanbo_c16OnPendingDestroyEv	vtable slot 12
+ov096	0x021369fc	func_ov096_021369fc	_ZN9daSanbo_c6RenderEv	vtable slot 9
+ov096	0x02136a50	func_ov096_02136a50	_ZN9daSanbo_c8BehaviorEv	vtable slot 6
+ov096	0x02136ab0	func_ov096_02136ab0	_ZN9daSanbo_c13InitResourcesEv	vtable slot 0
 ov096	0x02136d10	func_ov096_02136d10	PokeySegment_Spawn	spawnfunc
 ov096	0x02136d10	PokeySegment_Spawn	daSanbo_c_classInit_SANBO_BODY	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov096	0x02136d60	func_ov096_02136d60	Pokey_Spawn	spawnfunc
@@ -2886,7 +2886,7 @@ ov096	0x02137998	data_ov096_02137998	Pokey_SpawnInfo	spawninfo
 ov096	0x02137998	Pokey_SpawnInfo	g_profile_SANBO	reconstructed profile global; literal ROM ID SANBO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov096	0x021379b4	data_ov096_021379b4	PokeySegment_SpawnInfo	spawninfo
 ov096	0x021379b4	PokeySegment_SpawnInfo	g_profile_SANBO_BODY	reconstructed profile global; literal ROM ID SANBO_BODY+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov096	0x021379d8	data_ov096_021379d8	_ZTV5Pokey	vtable alloc=0x3b0
+ov096	0x021379d8	data_ov096_021379d8	_ZTV9daSanbo_c	vtable alloc=0x3b0
 ov096	0x02137a6c	data_ov096_02137a6c	Tornado_SpawnInfo	spawninfo
 ov096	0x02137a6c	Tornado_SpawnInfo	g_profile_TORNADO	reconstructed profile global; literal ROM ID TORNADO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov096	0x02137a90	data_ov096_02137a90	_ZTV7Tornado	vtable alloc=0x370

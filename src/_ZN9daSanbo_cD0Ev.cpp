@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN5PokeyD0Ev
+// @symbol _ZN9daSanbo_cD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body.
  * D0 is the deleting destructor (vtable slot); mwcc emits D0/D1/D2 from one
- * ~Pokey() and objisolate keeps the variant this TU is bound to. Body is
+ * ~daSanbo_c() and objisolate keeps the variant this TU is bound to. Body is
  * identical to the D1 file; delinks.txt binds each file to one symbol. */
-#include "Pokey.h"
+#include "daSanbo_c.h"
 
-Pokey::~Pokey()
+daSanbo_c::~daSanbo_c()
 {
 }

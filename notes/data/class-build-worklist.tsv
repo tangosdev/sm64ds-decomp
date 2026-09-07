@@ -175,7 +175,7 @@ daRedBombhei_c	DONE	include\BobOmbBuddy.h  [alias: header uses pre-rename name]	
 daSBird_c	DONE	include\Bird.h  [alias: header uses pre-rename name]	dActor_c	0	ov009	7
 daSCoin_c	DONE	include\daSCoin_c.h	dActor_c	0	ov002	5
 daSCre_c	DONE	include\daSCre_c.h	dActor_c	0	ov018	3
-daSanbo_c	DONE	include\Pokey.h  [alias: header uses pre-rename name]	dActor_c	0	ov096	10
+daSanbo_c	DONE	include\daSanbo_c.h	dActor_c	0	ov096	10
 daSetSE_c	DONE	include\daSetSE_c.h	dActor_c	0	ov002	7
 daSldMng_c	DONE	include\daSldMng_c.h	dActor_c	0	ov019	4
 daSnmBth_c	DONE	include\SnowmanBreath.h  [alias: header uses pre-rename name]	dActor_c	0	ov027	8

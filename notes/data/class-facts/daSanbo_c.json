@@ -1,5 +1,6 @@
 {
   "class": "Pokey",
+  "post_scout_rename": "This blob was written at scout stage, before the class was renamed to its ROM RTTI name. Every 'Pokey' spelling below -- the class name, the mangled _ZN5Pokey symbols, the per-function shard filenames and the header filename -- is the PRE-RENAME spelling, preserved verbatim as the scout recorded it. The live spellings are daSanbo_c, _ZN9daSanbo_c..., and include/daSanbo_c.h. Nothing in the evidence below was rewritten; read the 'Pokey' occurrences as history.",
   "queue_row": "Pokey",
   "scouted_at_base": "2ab05bae3, then merged origin/main (b266ff471) in -- final base b4954ddc0",
   "base_verification": "Cut at 2ab05bae3. origin/main advanced 7 commits during the run, so origin/main was MERGED in (not rebased -- the branch was already pushed). Re-checked afterwards: this branch differs from origin/main by exactly one file, notes/data/class-facts/Pokey.json. None of the 7 commits touched ov096, the promotion queue, delinks.txt, symbols.txt, config/tu_manifest.d/ or include/Pokey.h, so every tree-derived field below still holds; they were tools/ and notes/ gate work. Worktree C:/tmp/sm64ds-pokey-scout, branch cpp/Pokey-tu.",

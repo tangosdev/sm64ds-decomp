@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN5Pokey16OnPendingDestroyEv
+// @symbol _ZN9daSanbo_c16OnPendingDestroyEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Pokey.h"
+#include "daSanbo_c.h"
 
-void Pokey::OnPendingDestroy()
+void daSanbo_c::OnPendingDestroy()
 {
     int r1 = *(unsigned short *)((char *)&actorID);
     r1 = (r1 == 0xf1);

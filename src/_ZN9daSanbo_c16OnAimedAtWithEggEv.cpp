@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN5Pokey16OnAimedAtWithEggEv
+// @symbol _ZN9daSanbo_c16OnAimedAtWithEggEv
 /* daSanbo_c::OnAimedAtWithEgg -- vtable slot 29, recovered from vtable slot identity.
  * The ROM body ignores `this` and returns a constant. */
-#include "Pokey.h"
+#include "daSanbo_c.h"
 
-int Pokey::OnAimedAtWithEgg()
+int daSanbo_c::OnAimedAtWithEgg()
 {
     return 245760;
 }
