@@ -331,6 +331,15 @@ NAMED = [
     # gate 32: the coin tables Actor::GivePlayerCoins indexes (id and amount),
     # and the per-character cap-model constant data_0208a0e0 sits beside them.
     "data_02075230", "data_02075238",
+    # run link100, lane RENDER9 (_ZTV5Stage slot 9): the four bytes
+    # Stage::RenderNumber indexes to turn a digit into an OAM tile row. Checked
+    # the way lane STAGE and lane FRAME checked theirs -- config/arm9/symbols
+    # .txt puts data_020755bc at the next address, so the delta is exactly 4,
+    # and config/arm9/relocs.txt has no `from:` inside the span, so it is data
+    # rather than a pointer table. It sits four rows below the two OBJ
+    # width/height tables in TABLES above, which are the same kind of thing
+    # read by the same subsystem.
+    "data_020755b8",
     "data_0208ee44",
     # The three MSG_GEN_TEXT_FUNCS embedded-text data tables (func_0201aca4 /
     # func_0201adac read them on a 0xfe message escape): data_0208ee64 is the

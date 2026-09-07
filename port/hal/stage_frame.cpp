@@ -116,6 +116,14 @@ void _ZN5Stage9VE_UpdateEv(void);
 void _ZN5Scene15SetSceneToSpawnEjj(unsigned int a, unsigned int b);
 /* Stage::UpdateMessage's body, on the port: hal/message_pump.cpp */
 void port_message_pump(void);
+/* run link100, lane RENDER9: the flat-C matched bodies slot 9's faces forward
+   to. Each is a real ROM body already compiled into this link; what is missing
+   is only the MSVC spelling src/_ZN5Stage6RenderEv.cpp calls them by. */
+void _ZN5Stage21RenderVsModeCountdownEv(void);
+void _ZN8Particle10SysTracker6UpdateEv(void *self);
+void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int draw, void *obj, int px,
+                                              int py, int pal, int prio,
+                                              void *mtx);
 }
 
 /* The class, declared exactly the way the ROM TU declares it -- public
@@ -124,13 +132,20 @@ void port_message_pump(void);
    nothing here has storage. */
 class Stage {
 public:
-    /* the ROM body this lane seats. Defined in src/, not here. */
+    /* the ROM bodies this file's two lanes seat. Defined in src/, not here. */
     int  Behavior();
+    int  Render();
     /* the faces */
     static void PS_Cleanup();
     static void UpdateMessage();
     static void VE_Init();
     static void VE_Update();
+    /* run link100, lane RENDER9 -- slot 9's own four. One is a spelling face
+       and three are seams; the blocks below say which and why. */
+    static void RenderVsModeCountdown();
+    static void RenderVsModeNewStar();
+    static void PS_Render();
+    static void LC_Render();
 };
 
 /* Scene::SetSceneToSpawn is the same shape one class over. Stage::Behavior's
@@ -152,6 +167,167 @@ void Stage::VE_Update()             { _ZN5Stage9VE_UpdateEv(); }
 void Stage::UpdateMessage()         { port_message_pump(); }
 void Scene::SetSceneToSpawn(unsigned int a, unsigned int b)
 { _ZN5Scene15SetSceneToSpawnEjj(a, b); }
+
+/* ---- SLOT 9's SPELLING FACES (run link100, lane RENDER9) ------------------
+ *
+ * Same reading as the block above: src/_ZN5Stage6RenderEv.cpp declares its own
+ * local classes and so SPELLS the MSVC decorated names, while the matched
+ * bodies these forward to are flat C. All three are __cdecl on both sides -- a
+ * `static` member is __cdecl in MSVC, a member of a nested class taking no
+ * argument but the receiver is __thiscall on both -- so each is a call and
+ * nothing else.
+ *
+ *   ?RenderVsModeCountdown@Stage@@SAXXZ     _ZN5Stage21RenderVsModeCountdownEv
+ *       Already in the image on port/slice_gate27.txt and /OPT:REF-dropped
+ *       until today, because Stage::Render was its only caller.
+ *   ?Update@SysTracker@Particle@@QAEXXZ     _ZN8Particle10SysTracker6UpdateEv
+ *       Reached through hostgen (port/slice_gate29.txt). __thiscall on the
+ *       face and __cdecl on the target, which is the CheckInput shape one
+ *       block up in reverse: the receiver is a real argument here, so the face
+ *       PASSES it rather than dropping it, and neither side has a stack
+ *       argument to disagree about. hal/particle_bridges.cpp calls the same
+ *       body with the same `(char *)stage + 0x50` receiver; its
+ *       port_particle_frame call site is retired in this commit.
+ *   ?Render@OAM@@SAH_NPAUOamAttr@@HHHHPAUMatrix2x2@@@Z
+ *       The seven-argument OAM::Render, port/slice_gate27.txt. The recovered
+ *       source declares it returning int and the matched body is void; the ROM
+ *       leaves r0 holding whatever the body left there and Stage::Render
+ *       discards the value at both of its two call sites, so the face returns
+ *       0 rather than inventing a meaning for a register nobody reads. */
+
+/* ---- TWO MORE THINGS SLOT 9's CLOSURE NEEDS, AND NEITHER IS A FACE --------
+ *
+ * ONE: Copy32Bytes. G3X::SetFogTable's whole body is `Copy32Bytes(table,
+ * (void *)0x4000360)` and src/Copy32Bytes.c is ARM ASSEMBLY -- a six-line
+ * ldmia/stmia block MSVC cannot assemble. port/slice_w8a.txt named this as one
+ * of the walls in front of Stage::RenderFog and it is the only one left.
+ *
+ * hal/model_host.cpp already hosts its SIBLING for the same reason and with the
+ * same marker -- MultiCopy32Bytes, "PORT_HOST_ABI: ARM asm primitive (32-byte
+ * block copy), MSVC cannot assemble" -- so this is the established shape rather
+ * than a new liberty, and it belongs beside that one the day anybody owns that
+ * file. THE ARITY IS NOT GUESSED: the ARM body takes r0 and r1 and every caller
+ * in the corpus is src/_ZN3G3X11SetFogTableEPv.cpp, which declares it
+ * `void Copy32Bytes(void *, void *)` and passes (src, dst) in that order. There
+ * is no second caller to disagree with, checked across all of src/.
+ * PORT_HOST_ABI: ARM asm primitive (32-byte block copy), MSVC cannot assemble.
+ *
+ * TWO: data_020755b8's SPELLING. src/_ZN5Stage12RenderNumberEhiibi.cpp declares
+ * `extern unsigned char data_020755b8[];` OUTSIDE its one-line extern "C", so
+ * the reference is C++-mangled, exactly as the same file's func_020aba70 is --
+ * hal/w8a_stage_faces.cpp landed an alias for that one and wrote down why. The
+ * ROM bytes are emitted flat by port/tools/romdata.py (a named row this lane
+ * added: four bytes, relocation-free, delta-to-next-symbol exact), so the two
+ * names are the same address and the alias is exact. It is an ALIAS rather than
+ * a face because a face would have to DEFINE the array, which means either a
+ * second copy of the ROM's bytes or hand-typed constants -- and romdata.py's
+ * own header says a hand-typed constant is "a value nobody can re-derive from
+ * the image". */
+
+extern "C" void Copy32Bytes(void *src, void *dst)
+{
+    const unsigned char *s = (const unsigned char *)src;
+    unsigned char *d = (unsigned char *)dst;
+    for (int i = 0; i < 32; ++i)
+        d[i] = s[i];
+}
+
+#pragma comment(linker, "/alternatename:?data_020755b8@@3PAEA=_data_020755b8")
+
+struct OamAttr;
+struct Matrix2x2;
+
+struct OAM {
+    static int Render(bool, OamAttr *, int, int, int, int, Matrix2x2 *);
+};
+
+struct Particle {
+    struct SysTracker {
+        void Update();
+    };
+};
+
+void Stage::RenderVsModeCountdown() { _ZN5Stage21RenderVsModeCountdownEv(); }
+
+void Particle::SysTracker::Update()
+{ _ZN8Particle10SysTracker6UpdateEv(this); }
+
+int OAM::Render(bool draw, OamAttr *obj, int px, int py, int pal, int prio,
+                Matrix2x2 *mtx)
+{
+    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(draw ? 1 : 0, (void *)obj, px, py,
+                                             pal, prio, (void *)mtx);
+    return 0;
+}
+
+/* ---- SLOT 9's THREE SEAMS (run link100, lane RENDER9) ---------------------
+ *
+ * Stage::PS_Render, Stage::LC_Render and Stage::RenderVsModeNewStar are three
+ * of section 6's twelve pieces, and they are the three this lane does not
+ * enrol. Every one of them is a MATCHED body sitting in src/ ready to link;
+ * what none of them has is its SPRITE TEMPLATE DATA. The templates are ov002
+ * records at 0x0210c548..0x0210d188 and five ov001 records past the
+ * 0x020ab800..0x020abb00 span port/ov001_syms.txt mounts -- fourteen rows in
+ * port/ov002_syms.txt and a span extension in port/ov001_syms.txt, which are
+ * the mount lane's files. port/stage_lifecycle_map.txt section 6 called this
+ * exactly ("a row in port/ov002_syms.txt -- the mount lane's file, not this
+ * one's") and section 13c kept it on the blocked list for the same reason.
+ * port/slice_slot9.txt lists every symbol each one wants.
+ *
+ * THEY ARE BEHAVIOUR-NEUTRAL AGAINST WHAT THEY REPLACE, which is the half that
+ * makes seaming them honest rather than convenient. Nothing in the port drew
+ * the pause screen, the level-clear banner or the VS new-star popup before
+ * this commit either: Stage::Render never ran, so none of the three had a
+ * caller. The seat does not take a drawn thing away; it declines to add one.
+ *
+ * LOUD ONCE EACH, and named, for the reason func_020199a4's seam above gives:
+ * a silent empty body lets a run walk past the thing the port cannot do. None
+ * aborts -- Stage::Render's next statement is correct either way, and LC_Render
+ * in particular is the LAST statement of every frame's Render, so an abort
+ * there would take out every level in the battery for a banner the port has
+ * never drawn. */
+
+static void slot9_seam(const char *what, const char *why)
+{
+    std::fprintf(stderr,
+                 "[stageframe] SEAM: %s (_ZTV5Stage slot 9, Stage::Render) is "
+                 "not hosted -- %s. See port/slice_slot9.txt and "
+                 "port/stage_lifecycle_map.txt section 18.\n", what, why);
+}
+
+void Stage::PS_Render()
+{
+    static int said;
+    if (!said) {
+        said = 1;
+        slot9_seam("Stage::PS_Render, the pause screen's draw",
+                   "its eight OAM sprite templates are unmounted ov002 rows "
+                   "at 0x0210c548..0x0210cb4c and five unmounted ov001 records "
+                   "past 0x020abb00");
+    }
+}
+
+void Stage::LC_Render()
+{
+    static int said;
+    if (!said) {
+        said = 1;
+        slot9_seam("Stage::LC_Render, the level-clear banner's draw",
+                   "its ten sprite templates are unmounted ov002 rows at "
+                   "0x0210caf4..0x0210cfa0");
+    }
+}
+
+void Stage::RenderVsModeNewStar()
+{
+    static int said;
+    if (!said) {
+        said = 1;
+        slot9_seam("Stage::RenderVsModeNewStar, the VS new-star popup's draw",
+                   "OAM::VS_NEW_STAR_APPEARED and four more are unmounted "
+                   "ov002 rows at 0x0210cfd0..0x0210d188");
+    }
+}
 
 /* ---- TWO MORE FACES, AND THEY ARE NOT SPELLING FIXES --------------------
  *
@@ -271,10 +447,12 @@ extern "C" void func_020199a4(void)
 
 static unsigned g_beh_calls;
 
+static unsigned g_ren_calls;
+
 static void stage_frame_report(void)
 {
-    std::fprintf(stderr, "[stageframe] Stage::Behavior ran %u time(s)\n",
-                 g_beh_calls);
+    std::fprintf(stderr, "[stageframe] Stage::Behavior ran %u time(s), "
+                 "Stage::Render ran %u time(s)\n", g_beh_calls, g_ren_calls);
 }
 
 static void stage_frame_arm(void)
@@ -316,4 +494,39 @@ extern "C" int port_stage_rom_behavior(void *self)
     const int r = ((Stage *)self)->Stage::Behavior();
     port_frame_ctrl_publish();
     return r;
+}
+
+/* ---- SLOT 9's ENTRY POINT (run link100, lane RENDER9) ---------------------
+ *
+ * Same shape as slot 6's above, and the counter is there for the same reason:
+ * port/stage_lifecycle_map.txt section 12a's double-dispatch hazard is the
+ * whole risk of this seat, and with pixels rather than script steps an exit
+ * code cannot see it. tests/walk_window.cpp reads this live to tell "the Stage
+ * rendered" from "it did not", which is the question its Stage-less frames
+ * raise. SM64DS_STAGE_FRAME_COUNT=1 prints both totals at process exit.
+ *
+ * ONE HOST BRIDGE RUNS AHEAD OF THE BODY, and it is the same kind of thing
+ * port_frame_ctrl_publish is for slot 6: a copy the cartridge does not need.
+ * The level's TextureTransformers are LOADED by Stage::InitResources on the
+ * ROM (its LoadTextureTransformers call), and _ZTV5Stage slot 0 is still the
+ * boot body rather than the ROM's InitResources -- so on this port nothing
+ * loads them except hal/stage_bridges.cpp's lazy block, which used to sit in
+ * front of the advance loop inside port_stage_advance_anims. Stage::Render's
+ * own first block is that advance loop and it loads nothing, so the load half
+ * is called here, at the same instant it used to run, and the advance half is
+ * the ROM's. port_stage_anims_load is that half alone; its banner in
+ * hal/stage_bridges.cpp carries the whole derivation, including what the
+ * slot-0 lane has to retire it with.
+ *
+ * NOT A CALL THE ROM MAKES, and this file will not blur that either. */
+extern "C" void port_stage_anims_load(void *self);   /* hal/stage_bridges.cpp */
+
+extern "C" unsigned port_stage_render_calls(void) { return g_ren_calls; }
+
+extern "C" int port_stage_rom_render(void *self)
+{
+    stage_frame_arm();
+    ++g_ren_calls;
+    port_stage_anims_load(self);
+    return ((Stage *)self)->Stage::Render();
 }

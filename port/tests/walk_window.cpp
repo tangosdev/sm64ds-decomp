@@ -579,6 +579,18 @@ void _ZN5Stage10CheckInputEv(void);
    tell "the Stage ticked this frame" from "it did not", which is the only
    question a harness frame can ask that a DS frame cannot. */
 unsigned port_stage_behavior_calls(void);
+/* the same counter for _ZTV5Stage slot 9 (run link100, lane RENDER9), and it
+   answers the same question one phase later. THE RENDER TRANSCRIPTION BELOW IS
+   A FALLBACK NOW, not a statement of the frame: on every ordinary frame the
+   ROM's own Stage::Render draws the skybox, the level and the transparent pass
+   from inside the actor render bucket, and this file draws none of them. The
+   frames where it still has to are the ones the DS does not have -- a no-spawn
+   dev-rig arm and the debug menu, where there is no Stage on the render list
+   at all -- plus the deliberate SM64DS_STAGE_SLOT9_HOST=1 run the seat's BMP
+   A/B is captured with. The counter is the exact test for all three, for the
+   reason the slot-6 one is: the thunk increments it, so it cannot disagree
+   with what ran. */
+unsigned port_stage_render_calls(void);
 /* Stage::Behavior's per-frame cutscene-script advance (Stage::Behavior:112).
    Matched src (src/ProcessKuppaScript.cpp), self-guarded: returns at once when
    data_0209fc48 == 0. The ROM's own Stage::Behavior makes this call now; the
@@ -1295,7 +1307,11 @@ void port_scene_fade_clear(void);
 void port_actor_render(void);        /* phase 5: the render bucket */
 /* gate 29: the pair Stage::Render and Stage::GraphCallback1 make on the ROM,
    and they are called from the two places those two run -- the simulation in
-   the actor bucket, the submission after the level pass */
+   the actor bucket, the submission after the level pass.
+   port_particle_frame is Stage::Render's SysTracker::Update statement, so the
+   slot-9 seat retires it: the ROM's own body makes that call now, and this one
+   survives under SM64DS_STAGE_SLOT9_HOST=1 only. port_particle_render is
+   GraphCallback1's, which no seated slot runs, so it stays unconditional. */
 void port_particle_frame(void);      /* Stage::Render: SysTracker::Update */
 void port_particle_render(void);     /* GraphCallback1: Particle::RenderAll */
 void port_particle_counts(int *systems, int *particles);
@@ -1405,6 +1421,27 @@ void hal_sub_camera_input(void);
 extern "C" void port_cylinder_clsn_process(void);
 /* ov001, slice_cap.txt: Stage::Render's cap-visibility manager. */
 extern "C" void func_ov001_020aaf40(void);
+
+/* ---- DID THE ROM'S Stage::Render RUN THIS FRAME? (run link100, lane RENDER9)
+   The mark is taken immediately before the actor render bucket and every
+   retired site below tests it. Two functions rather than one variable because
+   the bucket and the level pass are in different blocks of the frame body, and
+   a file-scope pair is honest about that where a smuggled local would not be.
+
+   The answer is NO on exactly three kinds of frame and they are all frames the
+   DS does not have: the debug menu (no tick at all), the two no-spawn dev-rig
+   arms (no Stage on any list), and a run started with
+   SM64DS_STAGE_SLOT9_HOST=1, which makes hal/stage_bridges.cpp's slot-9 thunk
+   decline so this file's transcription is what draws the frame. That last one
+   is the seat's own A/B control and it exists for one reason: a render change
+   proved across two BINARIES proves nothing, because the selftest BMP tracks
+   the hosted-global layout (port/tools/battery.py's header measures 1354
+   pixels of it for 64 unrelated bytes). Two runs of one binary hold the layout
+   exactly. */
+static unsigned g_stage9_ren_mark;
+static void stage9_mark(void) { g_stage9_ren_mark = port_stage_render_calls(); }
+static int  stage9_rendered(void)
+{ return port_stage_render_calls() != g_stage9_ren_mark; }
 extern "C" void *_ZTV18MovingCylinderClsn[];
 extern "C" void *data_0209ee74;   /* the particle SysTracker (hal/auto_bss) */
 extern "C" void *data_0209f5bc;   /* the installed fader (hal/fader_wipes) */
@@ -12117,6 +12154,15 @@ int main(void)
             ntr::gx_enable_lights(0x1);
         }
         float dbg_eye[3] = {0, 0, 0}, dbg_at[3] = {0, 0, 0};
+        /* THE SLOT-9 MARK, taken HERE and not inside the camera arm below.
+           _ZTV5Stage slot 9 dispatches from inside the actor render bucket,
+           which is in the `real_camera` arm only -- so on a debug-camera frame
+           the Stage does not render and the transcription has to. Marking
+           inside that arm would leave the mark stale on exactly those frames,
+           stage9_rendered() would read TRUE from some earlier frame's dispatch,
+           and the level would not be drawn at all. One line above both arms is
+           the whole fix. */
+        stage9_mark();
         if (real_camera) {
             /* THE CAMERA'S OWN FRAME. Render builds the projection from
                the mode preset (PerspectiveW_ -> MTX_LOAD_4x4) and the view
@@ -12188,6 +12234,13 @@ int main(void)
                SM64DS_NO_ACTORS=1 takes the bucket out for the A/B. */
             static int no_actors = -1;
             if (no_actors < 0) no_actors = getenv("SM64DS_NO_ACTORS") ? 1 : 0;
+            /* ONE CONSEQUENCE OF THE SLOT-9 SEAT WORTH SAYING OUT LOUD HERE:
+               SM64DS_NO_ACTORS=1 now takes the LEVEL out with the bucket,
+               because the Stage renders from the bucket the same as every
+               other actor does. That is what the cartridge does; the banner
+               above calls this position "draw order and nothing else" and this
+               is the order. The mark itself is taken further up, outside the
+               camera arms -- see stage9_mark's own call site. */
             if (boot_spawns && !no_actors) {
                 size_t before = 0, after = 0;
                 if (selftest) ntr::gx_polygons(before);
@@ -12236,7 +12289,14 @@ int main(void)
                    engine-A OAM batch. Inert with no SM64DS_VS_LUIGI_INFECTION. */
                 port_luigi_countdown_render();
                 port_luigi_hittest(frame);
-                port_particle_frame();
+                /* Stage::Render's Particle::SysTracker::Update statement
+                   (arm9 reloc 0x0202b930). RETIRED by the slot-9 seat -- the
+                   ROM's own body makes that call, at its own place in its own
+                   order, which is BEFORE func_020391f0 rather than after the
+                   whole bucket. Kept as the fallback for the three Stage-less
+                   frames and the A/B control. */
+                if (!stage9_rendered())
+                    port_particle_frame();
                 if (selftest) {
                     const ntr::GxTriangle *at = ntr::gx_polygons(after);
                     if (frame == 0 || getenv("SM64DS_TRACE_ACTOR_TRIS")) {
@@ -12430,8 +12490,18 @@ int main(void)
 
         static int no_level = -1;
         if (no_level < 0) no_level = getenv("SM64DS_NO_LEVEL") ? 1 : 0;
+        /* THE WHOLE BLOCK BELOW IS RETIRED (run link100, lane RENDER9). Five of
+           Stage::Render's statements were transcribed here -- the skybox, the
+           BTA advance, RenderModel, ShadowModel::RenderAll and
+           RenderModelTransparent -- and _ZTV5Stage slot 9 now runs the ROM's
+           own body, which makes all five calls itself, in the ROM's own order,
+           from inside the actor render bucket above. The `real_boot` arm
+           therefore runs only when the Stage did NOT render this frame; the
+           `else` arm is the harness's own non-ROM level draw and is untouched,
+           because there is no Stage on those frames to render anything.
+           port/stage_lifecycle_map.txt section 18 is the accounting. */
         if (!no_level) {
-            if (real_boot) {
+            if (real_boot && !stage9_rendered()) {
                 /* Stage::Render's own order: the skybox, then the opaque
                    pass, then the translucent one. The skybox is the +0x9bc
                    Model glued to the camera eye (hal/stage_bridges.cpp); the
@@ -12495,7 +12565,12 @@ int main(void)
                 }
                 if (!rb_skip_render())
                     port_stage_render_model_transparent(stage);
-            } else {
+            } else if (!real_boot) {
+                /* `else if (!real_boot)` and not a bare `else`: the arm above
+                   now declines on a real-boot frame whose Stage already
+                   rendered, and that frame must NOT fall through to the
+                   harness's own model draw -- it would draw the level a second
+                   time, in world units, over the ROM's. */
                 if (!rb_skip_render())
                     hal_render_model(level_model, level_shift);
             }
@@ -12504,8 +12579,20 @@ int main(void)
            after the transparent pass, CylinderClsn::Process consumes the list
            the behaviour phase threaded onto data_0209cee8 -- the overlap
            pushbacks, and the notify chain that hands a grabbable cylinder to
-           the Player (slice_gate10, the tree-grab block). */
-        if (boot_spawns) {
+           the Player (slice_gate10, the tree-grab block).
+
+           RETIRED BY THE SLOT-9 SEAT, AND THIS ONE CHANGES WHICH BODY RUNS.
+           Stage::Render calls CylinderClsn::Process(), which resolves to
+           ?Process@CylinderClsn@@SAXXZ -- the MATCHED body, in the link on
+           port/slice_gate33.txt. The call below is the ROM-SHAPED HOST COPY
+           (port/unmatched/CylinderClsn_Process.cpp), which existed because the
+           matched body dispatched GetPos through MSVC's folded destructor slot
+           and freed a cylinder on the first pass. Section 17 of
+           port/stage_lifecycle_map.txt fixed that skew four headers wide and
+           said turning the switch over was a separate lane's measurement; this
+           is that measurement, and section 18 carries what it said. The host
+           copy stays for the Stage-less frames and the A/B control. */
+        if (boot_spawns && !stage9_rendered()) {
             const double rb_t = rb_probe_mode() ? rb_now_ms() : 0.0;
             port_cylinder_clsn_process();
             if (rb_probe_mode()) rb_note(RB_CYL, rb_now_ms() - rb_t);
@@ -12533,11 +12620,18 @@ int main(void)
            none -- the same reason the line above it carries the guard.
            SM64DS_NO_CAP_MANAGER=1 restores the pre-seat behaviour on this
            binary, which is what the before/after probe pair is captured
-           with. */
+           with.
+
+           RETIRED BY THE SLOT-9 SEAT (run link100, lane RENDER9): the ROM's own
+           Stage::Render makes this call, unconditionally, as its own statement
+           125. Kept here for the Stage-less frames and the A/B control, which
+           is also the only state SM64DS_NO_CAP_MANAGER can still act in -- with
+           the seat live the ROM's call is not gated on a host env, exactly as
+           the paragraph above says a guard on VS would not have been. */
         static int no_cap_mgr = -1;
         if (no_cap_mgr < 0)
             no_cap_mgr = getenv("SM64DS_NO_CAP_MANAGER") ? 1 : 0;
-        if (boot_spawns && !no_cap_mgr)
+        if (boot_spawns && !no_cap_mgr && !stage9_rendered())
             func_ov001_020aaf40();
         /* phase 1, which is where func_02044120 ends: the scene tree's own
            housekeeping -- priority re-sorts, parent flag propagation, and the
