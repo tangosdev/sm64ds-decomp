@@ -35,7 +35,7 @@ struct daSanbo_c : dActor_c {
        IDENTITY_MATRIX4X3 straight into it, so this slot plus its pad is one
        Matrix4x3. Still spelt u8 + pad because giving it the real type would
        drag math/Matrix.h into every includer of this header.
-       [_ZN9daSanbo_c13InitResourcesEv.cpp] */
+       [InitResources, in src/actors/daSanbo_c.cpp] */
     u8  mMatrix;            /* 0x33c */
     u8  pad_33d[0x2f];
     /* A daSanbo_c is two actors: the head (actorID 0xf0) and its body segments
@@ -43,25 +43,25 @@ struct daSanbo_c : dActor_c {
        finds the head with dActor_c::FindWithID(param1), keeps it in mHead, and
        copies the head's mRootPos triple word for word out of the head object at
        this same 0x36c offset. So every actor in one daSanbo_c carries the same root
-       position. [_ZN9daSanbo_c13InitResourcesEv.cpp] */
+       position. [InitResources, in src/actors/daSanbo_c.cpp] */
     s32 mRootPosX;            /* 0x36c */
     s32 mRootPosY;            /* 0x370 */
     s32 mRootPosZ;            /* 0x374 */
     u8  pad_378[0x14];
     /* Behavior early-outs on distance from the player UNLESS mState is 2 or 5,
        which keep running however far away the player is.
-       [_ZN9daSanbo_c8BehaviorEv.cpp] */
+       [Behavior, in src/actors/daSanbo_c.cpp] */
     s32 mState;            /* 0x38c */
     /* mHead is a dActor_c* to the 0xf0 head, spelt s32 and cast at every use;
        0 on the head itself. mNextSegment chains the segments: OnPendingDestroy
        (head only) walks p = mNextSegment, then p->mNextSegment at the same
        0x394 offset, tearing each one down.
-       [_ZN9daSanbo_c13InitResourcesEv.cpp, _ZN9daSanbo_c16OnPendingDestroyEv.cpp] */
+       [InitResources and OnPendingDestroy, in src/actors/daSanbo_c.cpp] */
     s32 mHead;            /* 0x390 */
     s32 mNextSegment;            /* 0x394 */
     u8  pad_398[0x10];
     /* Set to 1 by the head only, after it loads the blue-coin model; no
-       enrolled body reads it back. [_ZN9daSanbo_c13InitResourcesEv.cpp] */
+       enrolled body reads it back. [InitResources, in src/actors/daSanbo_c.cpp] */
     u8  unk_3a8;            /* 0x3a8 */
     u8  pad_3a9[0x7];
 
@@ -82,6 +82,6 @@ struct daSanbo_c : dActor_c {
     void OnPendingDestroy();
 };
 
-typedef char Pokey_size_must_be_0x3b0[sizeof(daSanbo_c) == 0x3b0 ? 1 : -1];
+typedef char daSanbo_c_size_must_be_0x3b0[sizeof(daSanbo_c) == 0x3b0 ? 1 : -1];
 
 #endif /* DASANBO_C_H */
