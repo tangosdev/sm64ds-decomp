@@ -12,16 +12,17 @@ runbooks, role prompts. **Evidence** is what you look up one fact in and never
 read whole -- provenance, censuses, pilot reports. `data` is machine-read/
 written; `archive` is frozen history. See `notes/CONVENTIONS.md` §1.
 
-Doctrine budget: **356,149 bytes (347.8KB)** across 18 files, against a stated 150KB cap.
+Doctrine budget: **370,228 bytes (361.6KB)** across 19 files, against a stated 150KB cap.
 Over cap today -- reported here, not enforced (see `tools/notes_index.py`'s
 docstring). Condensing doctrine is separate, not-yet-run work.
 
-Tier counts: 18 doctrine, 85 evidence, 33 data, 8 archive (144 files total).
+Tier counts: 19 doctrine, 86 evidence, 42 data, 8 archive (155 files total).
 
 ## process
 
 - **[`CONVENTIONS.md`](CONVENTIONS.md)** — Lifecycle policy for notes/: types, lifecycle, mechanical retire rule, MERGE eligibility, freshness.
 - **[`README.md`](README.md)** — Generated router: buckets and a one-line summary per notes/ file, doctrine marked apart from evidence.
+- **[`agents/IN-FLIGHT.md`](agents/IN-FLIGHT.md)** — What is in flight and where it is recorded, written 2026-09-07 while winding the class pipeline down for a workflow upgrade.
 - **[`agents/LAUNCH.md`](agents/LAUNCH.md)** — Copy-paste launch prompts that bootstrap a fresh Claude Code/Codex instance into the class pipeline.
 - **[`agents/PIPELINE.md`](agents/PIPELINE.md)** — The 5-stage class pipeline (scout/writer/builder/integrator/reviewer) and its claim protocol.
 - **[`agents/roles/builder.md`](agents/roles/builder.md)** — Builder role: required gate order and proof steps to verify a class reconstruction before opening a PR.
@@ -36,12 +37,21 @@ Tier counts: 18 doctrine, 85 evidence, 33 data, 8 archive (144 files total).
 - [`match-provenance.md`](match-provenance.md) — How and when to stamp a match's final provenance (kind/model/reasoning) with tools/stamp_provenance.py.
 - [`pr-monitor.md`](pr-monitor.md) — How to run the read-only PR queue monitor and the repair loop for a flagged PR.
 - [`pr-validation.md`](pr-validation.md) — What the merge gate checks (match/coverage/fidelity/lineage/relocations/port refs) and which tools emit it.
+- [`tool-gate-findings-2026-09-05.md`](tool-gate-findings-2026-09-05.md) — Findings from a 2026-09-05 gate audit scoped to tooling alone; deliberately touched no agent docs, promotion queues, or source.
 - [`data/class-build-worklist.tsv`](data/class-build-worklist.tsv) _data_ — Per-class build state (DONE/etc.), header path, base class; read by the agent pipeline's claim queue.
+- [`data/class-facts/ChiefChilly.json`](data/class-facts/ChiefChilly.json) _data_ — Class-stage ROM facts for ChiefChilly (ov073): ROM RTTI name 16daKing_Donketu_c, auto-registered from the file itself.
 - [`data/class-facts/Eyerok.json`](data/class-facts/Eyerok.json) _data_ — Writer-stage ROM facts for the class symbols.txt calls Eyerok: the cartridge's own RTTI spells it 10daIwante_c, so vtable/typeinfo queries must use the ROM name and a key-function TU licenses _ZTI6Eyerok/_ZTS6Eyerok as plain deadstrip.
 - [`data/class-facts/Goomboss.json`](data/class-facts/Goomboss.json) _data_ — Class-stage ROM facts for Goomboss (ov074): ROM RTTI name 12daKuriKing_c, auto-registered from the file itself.
+- [`data/class-facts/Klepto.json`](data/class-facts/Klepto.json) _data_ — Class-stage ROM facts for Klepto (ov062): ROM RTTI name 9daJango_c, auto-registered from the file itself.
+- [`data/class-facts/MovingBar.json`](data/class-facts/MovingBar.json) _data_ — Class-stage ROM facts for MovingBar (ov015): ROM RTTI name 19daObjBk_Dossunbar_c, auto-registered from the file itself.
+- [`data/class-facts/PiranhaPlant.json`](data/class-facts/PiranhaPlant.json) _data_ — Class-stage ROM facts for PiranhaPlant (ov084): ROM RTTI name 7daPkn_c, auto-registered from the file itself.
 - [`data/class-facts/Player.json`](data/class-facts/Player.json) _data_ — Class-stage ROM facts for Player (ov002): ROM RTTI name 7daPly_c, auto-registered from the file itself.
+- [`data/class-facts/Pokey.json`](data/class-facts/Pokey.json) _data_ — Class-stage ROM facts for Pokey (ov096): ROM RTTI name 9daSanbo_c, auto-registered from the file itself.
 - [`data/class-facts/README.md`](data/class-facts/README.md) _data_ — One-line pointer: scout-stage output lands here as <Class>.json, consumed by the writer stage.
+- [`data/class-facts/Scuttlebug.json`](data/class-facts/Scuttlebug.json) _data_ — Class-stage ROM facts for Scuttlebug (ov071): ROM RTTI name 7daSpd_c, auto-registered from the file itself.
+- [`data/class-facts/Snufit.json`](data/class-facts/Snufit.json) _data_ — Class-stage ROM facts for Snufit (ov065): ROM RTTI name 15daYurei_Mucho_c, auto-registered from the file itself.
 - [`data/class-facts/dBgActor_c.json`](data/class-facts/dBgActor_c.json) _data_ — Scout-stage ROM facts for dBgActor_c: RTTI/typeinfo/vtable addresses, overlay, module base.
+- [`data/class-facts/dMgJump3DMario_c.json`](data/class-facts/dMgJump3DMario_c.json) _data_ — Class-stage ROM facts for dMgJump3DMario_c (ov006): ROM RTTI name 16dMgJump3DMario_c, auto-registered from the file itself.
 - [`data/class-facts/dScGameOver_c.json`](data/class-facts/dScGameOver_c.json) _data_ — Scout-stage ROM facts for dScGameOver_c: candidate text range 0x020b0580-0x020b1118, RTTI/vtable addresses.
 - [`data/class-facts/dScMgBomroom_c.json`](data/class-facts/dScMgBomroom_c.json) _data_ — Writer-stage ROM facts for dScMgBomroom_c (ov006): text 0x020d5a54-0x020d9574, 80 functions, of which func_ov006_020d7c4c has no legacy src/ file and no delinks entry.
 - [`data/class-facts/dScMgCoin_c.json`](data/class-facts/dScMgCoin_c.json) _data_ — Class-stage ROM facts for dScMgCoin_c (ov006): ROM RTTI name 11dScMgCoin_c, auto-registered from the file itself.
@@ -49,6 +59,7 @@ Tier counts: 18 doctrine, 85 evidence, 33 data, 8 archive (144 files total).
 - [`data/class-facts/dScMgCurling2_c.json`](data/class-facts/dScMgCurling2_c.json) _data_ — Class-stage ROM facts for dScMgCurling2_c (ov006): ROM RTTI name 15dScMgCurling2_c, auto-registered from the file itself.
 - [`data/class-facts/dScMgD3DBase_c.json`](data/class-facts/dScMgD3DBase_c.json) _data_ — Scout-stage ROM facts for dScMgD3DBase_c: candidate text partition (17 class + 10 helper fns), RTTI address.
 - [`data/class-facts/dScMgHanachan_c.json`](data/class-facts/dScMgHanachan_c.json) _data_ — Writer-stage ROM facts for dScMgHanachan_c (ov006): RTTI/vtable addresses from rtti_extract.py, no scout ran.
+- [`data/class-facts/dScMgLuigi_c.json`](data/class-facts/dScMgLuigi_c.json) _data_ — Class-stage ROM facts for dScMgLuigi_c (ov006): ROM RTTI name 12dScMgLuigi_c, auto-registered from the file itself.
 - [`data/class-facts/dScMgMemory2_c.json`](data/class-facts/dScMgMemory2_c.json) _data_ — Class-stage ROM facts for dScMgMemory2_c (ov006): ROM RTTI name 14dScMgMemory2_c, text 0x020f5564-0x020f7634, auto-registered from the file itself.
 - [`data/class-facts/dScMgPanel_c.json`](data/class-facts/dScMgPanel_c.json) _data_ — Class-stage ROM facts for dScMgPanel_c (ov006): auto-registered from the file itself.
 - [`data/class-facts/dScMgRoulette_c.json`](data/class-facts/dScMgRoulette_c.json) _data_ — Writer-stage ROM facts for dScMgRoulette_c (ov006): symbols.txt/relocs.txt-derived, no scout facts existed.
