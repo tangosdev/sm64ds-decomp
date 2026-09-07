@@ -120,9 +120,16 @@ Recorded separately, not combined into one score.
   0x02114134, 0x02114170, 0x021141a8). Not all of them need to become methods;
   some are plausibly original file-static helpers.
 - Recovered layout/fields; remaining shadow structs/raw offsets:
-  `include/daMky_c.h` is 126 lines and still carries 8 `unk_` fields.
-  `src/actors/daMky_c.cpp` still has 52 lines matching a raw-offset or cast-shaped
-  access pattern. Layout recovery is partial.
+  `include/daMky_c.h` is 126 lines and still carries 5 `unk_` fields
+  (`unk_380`, `unk_384`, `unk_388`, `unk_3a8`, `unk_3cb`) plus 5 `pad_` runs.
+  `src/actors/daMky_c.cpp` matches `tiers.py`'s own `RAW_OFFSET` regex on
+  **381 of its 2,320 lines, 447 occurrences** — 90 lines inside the 20 converted
+  methods, 291 inside the 24 bridges — and the file contains **zero** named-field
+  accesses. Layout recovery is partial, and the remaining scope should be planned
+  from 381.
+  (Corrected during verification and re-measured at integration. The first draft
+  of this document said 8 `unk_` fields, a `grep -c unk_` artifact that counted 3
+  comment lines, and 52 raw-offset lines, which understated the gap by ~7x.)
 - Lifecycle, vtable/RTTI, initializer and data ownership:
   the TU owns the key function and therefore emits the vtable, but claims no
   non-text section, so `_ZTV7daMky_c`, `_ZTI7daMky_c`, `_ZTS7daMky_c` and the four
@@ -136,10 +143,11 @@ Recorded separately, not combined into one score.
   references checked and none stale, so no `port/` reference was stranded by the
   file move or the rename.
 - Remaining agreed issue scope:
-  24 free functions to convert to methods where evidenced, 8 `unk_` fields to name,
-  52 raw-offset accesses to retire, and the PARTIAL `romdata_check` coverage of the
-  emitted vtable/RTTI to close. "Promoted" is packaging state; this class is not a
-  finished reconstruction.
+  24 free functions to convert to methods where evidenced, 5 `unk_` fields to name,
+  381 raw-offset lines (447 occurrences) to retire, and the `romdata_check` extent
+  shortfall to close — which for `_ZTV7daMky_c` means correcting the `symbols.txt`
+  extent, not the class model; see the PARTIAL breakdown under Proof.
+  "Promoted" is packaging state; this class is not a finished reconstruction.
 
 ## Proof
 
@@ -153,9 +161,12 @@ pinned compiler `tools/mwccarm/2004/b56/mwccarm.exe`.
   "dsd modules PASS, zero new symbol errors, storage aliases exact"; ROM data from
   source 686 verified / 215 partial / 5 differ / 407 unnamed. Report at
   `build/rombuild-report.json` (gitignored). The baseline control in the same run
-  reports two pre-existing ITCM symbol errors (`_deq`, `func_01ff9e2c`) with NO TU
-  substitution; by that control's own definition they belong to the tree, not to
-  this TU. The 5 differing data symbols are in arm9, ov002 and ov084 — none in
+  reports **9** `dsd check symbols` error lines with NO TU substitution —
+  `overlay_100`, `overlay_102`, `data_020ad524`, `data_020ad560`, `func_01ff98f4`,
+  `func_01ff99a4`, `func_01ff9d40`, `_deq`, `func_01ff9e2c` — not the two this
+  document first named. By that control's own definition all nine belong to the
+  tree, not to this TU, and the operative comparison (zero *new* symbol errors)
+  passed. The 5 differing data symbols are in arm9, ov002 and ov084 — none in
   ov030, and `romdata_check` on this TU alone reports DIFFERS 0.
 
 - Explicit function/consumer relocation checks:
@@ -171,15 +182,34 @@ pinned compiler `tools/mwccarm/2004/b56/mwccarm.exe`.
   `python tools/romdata_check.py --files src/actors/daMky_c.cpp` — exit 0.
   9 emitted data symbols: VERIFIED 4 (44 bytes: `_ZTI7daMky_c`, `_ZTI8dActor_c`,
   `_ZTI7dBase_c`, `_ZTI7fBase_c`), PARTIAL 5 (156 bytes equal, coverage short of
-  the ROM's extent), DIFFERS 0, UNNAMED 0. Do not read PARTIAL as verified: the
-  emitted vtable and typeinfo-name coverage is short of the cartridge extent, and
-  that shortfall is unclosed.
+  the ROM's extent), DIFFERS 0, UNNAMED 0.
+  The 5 PARTIALs were run down during verification rather than assumed, because
+  `romdata_check` hides per-symbol verdicts in both stdout and `--json`. Four are
+  `_ZTS` type-name strings short by trailing alignment — `_ZTS7dBase_c`,
+  `_ZTS7daMky_c`, `_ZTS7fBase_c`, `_ZTS8dActor_c`, each `emitted=9..10`,
+  `romExtent=12`, `compared=8`, `differing=0` — the benign sibling pattern.
+  The fifth is the **vtable**: `_ZTV7daMky_c`, `emitted=124 romExtent=132
+  compared=124 differing=0 blindWords=0`. The cartridge at ov030 0x02115bfc holds
+  31 real slots and then two zero words, and the ov030 initialised image ends at
+  0x02115c80 where `data_ov030_02115c80 kind:bss` begins, so the 8-byte shortfall
+  is unnamed module tail padding. **All 31 real vtable slots are byte-exact with
+  zero blind words.** This is an extent overrun in `symbols.txt`, not a short
+  vtable; closing it means correcting the extent, and that belongs to a separate
+  change. Still do not read PARTIAL as VERIFIED — but the shortfall is now
+  characterised rather than unknown.
   NOT AVAILABLE: `python tools/tubuild.py linkcheck ov030/daMky_c -j16 --no-rom`
   exits 1 at step 4/8 with "intact production requires one .text claim and at least
   one non-text claim". That is the harness path, not this TU: the identical command
   on `ov002/daObjAbuku_c`, already landed on main, fails with the identical message,
-  and 107 of the tree's 124 promoted TUs are text-only. The intact-object link gate
-  that does apply is the one inside `rombuild.py` step 4/6, which passed.
+  and 107 of the tree's 124 promoted TUs are text-only. (That 107/124 was
+  re-measured at integration and reproduces exactly: of the 124 manifests whose
+  `status` is `promoted`, 107 declare no non-`.text` section and no `data`/`bss`
+  claim.) The intact-object link gate that does apply is the one inside
+  `rombuild.py` step 4/6, which passed.
+  A second coverage limit worth stating plainly: `daMky_c` is itself one of
+  `prepush_linkcheck`'s 298 `NO-SYM` warnings, so that gate proves nothing about
+  the TU under test. Its relocation proof rests on `tubuild verify` and the
+  full-ROM link, not on linkcheck.
 
 - Shared-header consumer expansion:
   not applicable to this stage — it edited no header. `include/daMky_c.h` is
