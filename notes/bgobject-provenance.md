@@ -351,26 +351,39 @@ same nine functions are now compiled and linked into the ROM from one file.
 
 ---
 
-## MovingBar (`include/MovingBar.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x338)
+## daObjBk_Dossunbar_c (`include/daObjBk_Dossunbar_c.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x338)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |
 | 0x320/0x324/0x328 | `mHomePosX/Y/Z` | `InitResources` copies `mPosX/mPosY/mPosZ` into them as its last act before installing state 5. |
+| 0x334 | `mStateTimer` | the six state-entry bodies seed it with a frame count (20, 10, 5, 0x18, 10, 10) and the state bodies decrement it and test it against 0 before advancing. Offset, width and countdown role are proven by those bodies; the word "Timer" is coined. It is the last word of the 0x338 both factories allocate, and it was `pad_334` before. |
 
-`mVariant` (0x32c) and `mState` (0x330) were already named. `mState` was missing from
-the `#else` C twin entirely and is added, because `Behavior`'s state dispatch indexes
-`data_ov015_021149ec` by exactly that word — the local `struct C { char pad[0x330];
-int idx; }` shadow existed only to reach it, and the index now reads `mState`. The
-pointer-to-member call itself still goes through that shadow: a PMF's representation
-is not the same for a polymorphic class.
+`mVariant` (0x32c) and `mState` (0x330) were already named. `mState` is read by
+`Behavior`'s state dispatch, which indexes `data_ov015_021149ec` by exactly that word
+— the local `struct C { char pad[0x330]; int idx; }` shadow existed only to reach it,
+and the index now reads `mState`. The pointer-to-member call itself still goes through
+that shadow: a PMF's representation is not the same for a polymorphic class.
 
-In the C twin, six `dActor_c` offsets were repointed to the names
-`include/dActor_c.h` gives them: `mPosX/Y/Z` (0x05c) and `mPrevPosX/Y/Z` (0x068).
+The `#else` C twin is gone. Every file that included this header was already a `.cpp`
+— the class's fifteen `.c` shards reach the object through local shadow structs and
+never included it — so the twin compiled in no translation unit, and deleting it
+removed a second declaration of the same layout rather than any built code. Its six
+repointed `dActor_c` offsets (`mPosX/Y/Z` at 0x05c, `mPrevPosX/Y/Z` at 0x068) survive
+in `include/dActor_c.h`, which the C++ declaration inherits.
 
 Raw-offset collapses in `InitResources` (the `*(int *)((char *)&member)` double
 indirection on `mVariant`, `actorID` and the three home-position stores) and in
 `Render`, whose `struct Derived { char pad[0xd4]; Base base; }` shadow of the whole
 object is gone — the call goes through `&mModel`.
+
+The class then folded into the single translation unit
+`src/game/actors/d_a_obj_bk_dossunbar.cpp`: 25 functions over
+0x02111ba0..0x02112290, including both registry factories
+(`daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L` and `..._S`), enrolled as one
+`complete` span in `config/arm9/overlays/ov015/delinks.txt`. The destructor is written
+inline in the header on purpose: the cartridge has D1 then D0 and no D2, and that is
+the only form which reproduces that order. ov015 delinks no `.data`, so the TU emits
+no `_ZTV`/`_ZTI`/`_ZTS` of its own and takes the vtable as an `extern` declaration.
 
 ---
 
