@@ -13076,10 +13076,15 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_021111a0.c"
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV14daObjWcObj01_c=data_ov029_02113c2c;_ZTV10dBgActor_c=data_ov029_02113c2c;VT2=_ZTV8Platform")
+# GATE 229 CORRECTION (lane SEAT3). This row predates any seat of the TU, so it
+# was never compiled and never checked. VT1 read the class's OWN table where the
+# body's literal pool at 0x02111248 holds the ov002 base 0x02108fdc, and G0 was
+# missing entirely, which would have left `extern void *G0;` unresolved. Both
+# fixed from config/arm9/overlays/ov029/relocs.txt inside the body's own span.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_021111f0.c"
     PROPERTIES COMPILE_DEFINITIONS
-    "VT0=data_ov029_02113c2c;VT1=data_ov029_02113c2c;VT2=_ZTV8Platform")
+    "VT0=data_ov029_02113c2c;VT1=data_ov002_02108fdc;VT2=_ZTV8Platform;G0=data_020a0eac")
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111ac4.c"
     PROPERTIES COMPILE_DEFINITIONS
@@ -13092,10 +13097,13 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111ea4.c"
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV14daObjWcObj06_c=data_ov029_02113f44;_ZTV10dBgActor_c=data_ov029_02113f44;VT2=_ZTV8Platform")
+# GATE 229 CORRECTION (lane SEAT3), the same two defects as the 021111f0 row
+# above: VT1 belongs to the ov002 base 0x02108fdc (pool word 0x02111f4c), not to
+# the class's own table, and G0 was missing.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111ef4.c"
     PROPERTIES COMPILE_DEFINITIONS
-    "VT0=data_ov029_02113f44;VT1=data_ov029_02113f44;VT2=_ZTV8Platform")
+    "VT0=data_ov029_02113f44;VT1=data_ov002_02108fdc;VT2=_ZTV8Platform;G0=data_020a0eac")
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.c"
     PROPERTIES COMPILE_DEFINITIONS
@@ -14612,6 +14620,52 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov091_02133440.c"
     PROPERTIES COMPILE_DEFINITIONS
     "VT0=_ZTV11daObjPile_c;VT1=_ZTV8Platform;G0=data_020a0eac")
+
+# ===========================================================================
+# GATE 229 -- three more ruled bodies, all deleting destructors
+# ===========================================================================
+#
+# The same ruling set as gates 227 and 228 (lane STUBADJ's REAL_DECOMP rows in
+# port/tools/inferred_stub_adjudicated.txt). What is left in that set after
+# those two gates is mostly NOT seatable, and port/slice_gate229.txt says which
+# and why so the next lane does not re-derive it: eighteen rows sit on tables
+# the port hosts nowhere (their class is unregistered), seven are already
+# DEFINED as host copies in port/unmatched, five are the ldr-ip/bx-ip
+# interworking veneers that are register ride-throughs by construction, and
+# five are the PMF exceptions gate 227 already recorded.
+#
+# These three are the remainder: each is the ROM's own deleting destructor in
+# slot 17 of a table the port ALREADY fills, and each is dispatched today by a
+# trap (the two ov029 float platforms) or by a hand-written thunk with the
+# second vptr store elided (the ov064 Amilift). Every one of the three hal
+# sites says in prose that the inferred-stub marker is the only reason the real
+# body was not used, which is exactly what gate 228 was about.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate229.txt" SLICE229_LINES)
+set(SLICE229_SOURCES "")
+foreach(line IN LISTS SLICE229_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE229_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t229 walk_window walk_window_hires smoke_player)
+    target_sources(${_t229} PRIVATE ${SLICE229_SOURCES})
+endforeach()
+#
+# ONE BINDING. The two ov029 rows are NOT here: they already existed further up
+# this file, written for a seat that never happened, and this lane corrected
+# them in place rather than shadowing them with a second row (a second
+# set_source_files_properties on the same file wins silently, which is a worse
+# thing to leave behind than a corrected row). The Amilift's row is new, read at
+# 0x02117a08 and 0x02117a0c inside the body's own span in
+# config/arm9/overlays/ov064/relocs.txt: 0x0211bc68 is the class's own table,
+# which hal/actor_classes_ov064_gate178.cpp hosts as _ZTV17daObjFl_Amilift_c and
+# the ov064 mount deliberately leaves out, and 0x0210ae38 is _ZTV8Platform.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov064_021179bc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV17daObjFl_Amilift_c;VT1=_ZTV8Platform;G0=data_020a0eac")
 
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE

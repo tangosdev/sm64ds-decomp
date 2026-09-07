@@ -1,0 +1,70 @@
+# gate 229 (run link100, lane SEAT3): three more ruled bodies, every one a
+# deleting destructor that the port dispatches today through a hand-written
+# thunk or a trap, held out by nothing but the inferred-stub marker.
+#
+# THE RULINGS are lane STUBADJ's rows in port/tools/inferred_stub_adjudicated.txt
+# (REAL_DECOMP, evidence runs/link100/out/STUBADJ/verify.txt). Read gate 227's
+# header for the four checks this lane repeats per body; what follows is what
+# each check returned here.
+#
+# ONE CORRECTION TO HOW THE RULINGS NAME THEIR TABLE, and it is why two of
+# these three looked unseatable at first. A ruling quotes the table symbol dsd
+# landed on, and dsd sometimes lands INSIDE a vtable rather than at its base:
+#
+#   ruling says          real base (the array the port hosts)   real slot
+#   data_ov029_02113c48  data_ov029_02113c2c                    17, not 10
+#   data_ov029_02113f78  data_ov029_02113f44                    17, not 4
+#
+# Both words are the same ROM address either way (0x02113c70, 0x02113f88); only
+# the arithmetic that names the slot changes. Keyed on the ADDRESS, both bodies
+# are deleting destructors sitting in slot 17 of a table the port already fills,
+# which is what their own source says they are and what the two hal files say
+# they trap for.
+#
+# ---------------------------------------------------------------------------
+# ov029, the two WDW float platforms -- slot 17 was ov29_trap17
+#
+#   data_ov029_02113c2c s17  0x021111f0  0x64  id 95 FloatOnWaterPlatformWdwSquare.
+#       Table word 0x02113c70 -> 0x021111f0 (config/arm9/overlays/ov029/relocs.txt),
+#       and symbols.txt carries func_ov029_021111f0 kind:function(arm,size=0x64) at
+#       exactly that address. hal/actor_classes_ov029.cpp:252 says in prose that the
+#       body is trapped because it "carries the inferred-stub marker", which the
+#       ruling removes. THREE vptr stores, read out of its own literal pool at
+#       0x02111244/48/4c -> 0x02113c2c, 0x02108fdc, 0x0210ae38, and G0 at
+#       0x02111250 -> 0x020a0eac.
+#
+#   data_ov029_02113f44 s17  0x02111ef4  0x64  id 100 FloatOnWaterPlatformWdwRectangle.
+#       Table word 0x02113f88 -> 0x02111ef4; symbols.txt has
+#       func_ov029_02111ef4 kind:function(arm,size=0x64) there. Pool at
+#       0x02111f48/4c/50 -> 0x02113f44, 0x02108fdc, 0x0210ae38, G0 0x02111f54 ->
+#       0x020a0eac.
+#
+# THE -D ROWS FOR THESE TWO WERE ALREADY IN port/CMakeLists.txt AND WERE WRONG.
+# They were written for a seat that never happened, so nothing ever compiled
+# them: both bound VT1 to the class's OWN table instead of the ov002 base
+# 0x02108fdc the pool actually holds, and neither bound G0 at all, which would
+# have left `extern void *G0;` unresolved at link. Corrected in place rather
+# than shadowed by a second row.
+src/func_ov029_021111f0.c
+src/func_ov029_02111ef4.c
+#
+# ---------------------------------------------------------------------------
+# ov064, the Amilift -- slot 17 was a HAND-WRITTEN THUNK
+#
+#   data_ov064_0211bc68 s17  0x021179bc  0x58  id 69 METAL_NET_LIFT
+#       (daObjFl_Amilift_c). Table word 0x0211bcac -> 0x021179bc; symbols.txt has
+#       func_ov064_021179bc kind:function(arm,size=0x58) there. The port hosts the
+#       table as `int _ZTV17daObjFl_Amilift_c[32]`, and 0x0211bc68 is NOT in the
+#       ov064 mount, so the host array is the only object of that address.
+#       hal/actor_classes_ov064_gate178.cpp:58 states the refusal exactly: both
+#       destructors "spell the SHARED single-global placeholder tables ... So both
+#       are NOT in the slice; the thunks below run the matched chain with the
+#       derived table stored once." The -D row names the second table per TU out
+#       of this body's own pool (0x02117a08/0c -> 0x0211bc68, 0x0210ae38; G0 at
+#       0x02117a10 -> 0x020a0eac), so the seated body does the store the thunk
+#       left out. The recovered NAME on this row says OnYoshiTryEat and is wrong;
+#       the hal file already says so. The ADDRESS is what was checked.
+#
+#   ONLY THE D0 IS SEATED. Its sibling D1 (func_ov064_02117978) is not in the
+#   ruling set at all, so its thunk stays.
+src/func_ov064_021179bc.c
