@@ -41,6 +41,15 @@ WDW_Water_SpawnInfo:0x1c
 data_ov029_0211302c
 # SwitchActivatedPlank::InitResources reads data_ov029_0211304c the same way.
 data_ov029_0211304c
+# link100 SPAWN2: CageLift (99) reads data_ov029_0211306c the same way -- it is
+# the CLPS_Block src/func_ov029_02111d6c.cpp hands to
+# MovingMeshCollider::SetFile as its last argument, read out of the body's own
+# literal pool (from:0x02111e34 kind:load to:0x0211306c module:overlay(29)).
+# Sized 0x20 by next-symbol delta (0x0211306c -> 0x0211308c), the same 0x20 the
+# two sibling CLPS blocks above take. Until this gate it fell inside the mount's
+# 2940-byte gap pk029_gap_0211306c and would have been read as thirty-two zero
+# bytes.
+data_ov029_0211306c
 # RotatingPlatformWdw::InitResources indexes data_ov029_02112b2c[idx] for
 # idx 0..2 (idx clamped to 2), a three-Fix12i height table -- pinned to the
 # full 0xc so index [2] reads its own word and not the next symbol's (the

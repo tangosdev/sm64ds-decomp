@@ -1,3 +1,16 @@
+# ---- link100 SPAWN2, gate 232: TWO ROWS TAKEN OUT ------------------------
+# data_ov010_02112ae4:0x24 and data_ov010_02112b08:0x5c used to be in the list
+# below, and together they were the 128 bytes of actor 36's own 32-slot vtable
+# emitted as raw DS words (the generator wrote `u8 data_ov010_02112ae4[36] =
+# { 84,22,17,2, ... }`, which is 0x02111654, a DS code address). Nothing
+# dispatched them, because the port had actor 36 installing _ZTV4Trap through an
+# /alternatename instead -- and that binding is the defect gate 232 corrects.
+# The table is a live host array now (hal/actor_classes_ov010.cpp), so the mount
+# gives the span up and the generator leaves a zero-filled pk010_gap_* in its
+# place, exactly the treatment every other hosted table in this tree gets.
+# 0x02112b08 is dsd's symbol INSIDE the table at +0x24, which is why two rows
+# come out and not one.
+#
 # The ov010 data the castle interior's TRAP, LIGHT_BEAM and PEACH_PAINTING name.
 #
 # ov010 is level 2's own overlay, already mounted WHOLE for the loaders (it is
@@ -41,7 +54,7 @@ data_ov010_02112790:0xd4 data_ov010_02112864:0xe4 data_ov010_02112948:0x20 data_
 data_ov010_021129b4:0xb8 data_ov010_02112a6c:0xc data_ov010_02112a78:0x8 data_ov010_02112a80:0x8
 data_ov010_02112a88:0x8 data_ov010_02112a90:0x8 data_ov010_02112a98:0x8 data_ov010_02112aa0:0x4
 data_ov010_02112aa4:0x4 data_ov010_02112aa8:0x4 data_ov010_02112aac:0x14 Trap_SpawnInfo:0x1c
-data_ov010_02112adc:0x8 data_ov010_02112ae4:0x24 data_ov010_02112b08:0x5c data_ov010_02112b64:0xc
+data_ov010_02112adc:0x8 data_ov010_02112b64:0xc
 data_ov010_02112b70:0x14 LightBeam_SpawnInfo:0x1c data_ov010_02112bdc:0x10 data_ov010_02112bec:0x1c
 data_ov010_02112c08:0x10 data_ov010_02112c18:0xc data_ov010_02112c24:0xc data_ov010_02112c30:0x14
 PeachPainting_SpawnInfo:0x1c data_ov010_02112c88:0x20

@@ -77,11 +77,15 @@ void port_ov043_syms_patch(void);
 void __sinit_ov043_021117fc(void);   /* id 135's own two SharedFilePtrs */
 /* lane SEAT-BDW: the file constructors of the two SEATED classes (136, 134),
    run in the same bring-up (declared here so port_ov43_bringup can call them).
-   id 137's sinit __sinit_ov043_02111868 stays OFF -- 137 is not seated (its
-   InitResources is an inferred wall that hard-crashes level 35 at spawn; the
-   ov081 rule, a sinit for an unhosted class stays off). */
+   link100 SPAWN2 adds the THIRD: 137's own __sinit_ov043_02111868 comes ON with
+   this gate, because 137 is seated now. It builds exactly the pair 137's
+   InitResources consumes -- Model file 1621 into data_ov043_02112610 and
+   collision file 1622 into data_ov043_02112608, the first two words of the
+   3-word Arg record data_ov043_02112344 the mount rebases -- so the ov081 rule
+   ("a sinit for an unhosted class stays off") no longer applies to it. */
 void __sinit_ov043_021118d4(void);   /* id 136 */
 void __sinit_ov043_02111940(void);   /* id 134 */
+void __sinit_ov043_02111868(void);   /* id 137, ON since link100 SPAWN2 */
 
 /* id 135's own bodies, all matched src on slice_gate206.txt */
 int func_ov043_02111320(void *self);     /* slot 0,  InitResources */
@@ -242,11 +246,11 @@ extern "C" void port_ov43_bringup(void)
     /* lane SEAT-BDW: the file constructors of the two SEATED classes. 136's
        (021118d4) and 134's (02111940, the five-stair array) feed the
        InitResources those classes run. DIAMOND_LIFT's "one sinit, not four"
-       note partly discharged: 136 and 134 are hosted so their sinits come on;
-       137's (02111868) stays off because 137 is not seatable (its InitResources
-       is an inferred wall). */
+       note is now fully discharged: 135, 136, 134 and -- as of link100 SPAWN2 --
+       137 are all hosted, so all four of ov043's file constructors run. */
     __sinit_ov043_021118d4();
     __sinit_ov043_02111940();
+    __sinit_ov043_02111868();
 }
 
 // ---- DIAMOND_LIFT (id 135) -- table 0x021122b8 -----------------------------
@@ -313,13 +317,21 @@ extern "C" void hal_fill_diamond_lift_vtable(void)
 // _ZTV11RickshawBdw / _ZN11RickshawBdw* are id 136's; _ZTV19RickshawPlatformBdw
 // / _ZN19RickshawPlatformBdw* are id 134's; and RickshawBdw_Spawn is id 137's.
 //
-// ONLY 136 AND 134 ARE SEATED. id 137 (RICKSHAW_BDW) is NOT: its four own
-// bodies are GUESS func_ov043 TUs (inferred stubs), so its InitResources has no
-// matched body. 137 is placed on level 35 and spawns at boot, and a half-built
-// 137 (InitResources declined) NULL-derefs during its own spawn continuation --
-// not a survivable quarantine, a hard c0000005. Registering it faults BitDW, so
-// it stays skipped. SHIP-GATE: 137 needs its InitResources matched before it can
-// be seated. See lane SEAT-BDW's report and port/slice_bdw.txt.
+// 136, 134 AND -- SINCE link100 SPAWN2 -- 137 ARE SEATED. The note that stood
+// here said 137 could not be: its four own bodies carried the "recovered from
+// vtable slot identity" marker, so InitResources had no body the guard would
+// let through, and a half-built 137 (InitResources DECLINED) NULL-derefs during
+// its own spawn continuation -- a hard c0000005 on level 35, not a survivable
+// quarantine. That reading is retired by a ruling, not by a rewrite: three of
+// the four (0x021114c4 slot 0, 0x021114b0 slot 3, 0x0211144c slot 17) are ruled
+// REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt, each a match.py
+// 2004/b56 strict-reloc MATCH against the ROM with 0 WRONG-DEST, and the fourth
+// (0x021113fc slot 16, the D1) never carried the marker. So the crash the note
+// describes was the DECLINE path, and seating the real bodies is what removes
+// it: InitResources is two instructions of delegation into the shared ov002
+// generic-object loader func_ov002_020b6c54 with this class's own 3-word Arg
+// record data_ov043_02112344, which the mount already rebases onto the pair
+// 137's sinit builds.
 //
 // SLOTS 6/9 are inherited ov002 bodies already in the link (ov036 + ov047
 // slices); declared and faced here, never re-enrolled. SLOTS 0/3/16/17 are each
@@ -335,6 +347,18 @@ int _ZN11RickshawBdw16CleanupResourcesEv(void *self);   /* slot 3  */
 int *_ZN11RickshawBdwD1Ev(int *self);                   /* slot 16 */
 int *_ZN11RickshawBdwD0Ev(int *self);                   /* slot 17 */
 
+/* id 137's four matched own bodies (slots 0/3/16/17), link100 SPAWN2. Every one
+   taken from the reloc at data_ov043_0211238c + 4*slot and confirmed by a
+   kind:function(arm,size=..) record at exactly that address:
+     slot 0  0x0211238c -> 0x021114c4  func_ov043_021114c4 size 0x18
+     slot 3  0x02112398 -> 0x021114b0  func_ov043_021114b0 size 0x14
+     slot 16 0x021123cc -> 0x021113fc  func_ov043_021113fc size 0x50
+     slot 17 0x021123d0 -> 0x0211144c  func_ov043_0211144c size 0x64 */
+void func_ov043_021114c4(unsigned char *self);  /* slot 0,  InitResources */
+int  func_ov043_021114b0(unsigned char *self);  /* slot 3,  CleanupResources */
+int *func_ov043_021113fc(int *self);            /* slot 16, D1 */
+int *func_ov043_0211144c(int *self);            /* slot 17, D0 */
+
 /* id 134's four matched own bodies (slots 0/3/16/17) */
 int _ZN19RickshawPlatformBdw13InitResourcesEv(void *self);    /* slot 0  */
 int _ZN19RickshawPlatformBdw16CleanupResourcesEv(void *self); /* slot 3  */
@@ -348,20 +372,25 @@ int func_ov002_020b6920(void *self);   /* 136 Behavior, ov047 slice */
 int func_ov002_020b68f8(void *self);   /* 136 Render,   ov047 slice */
 int func_ov002_020b4bfc(void *self);   /* 134 Behavior, ov036 slice */
 int func_ov002_020b4bc4(void *self);   /* 134 Render,   ov036 slice */
+int func_ov002_020b6b38(void *self);   /* 137 Behavior, slot 6 of 0x0211238c */
+int func_ov002_020b6b10(void *self);   /* 137 Render,   slot 9 of 0x0211238c */
 
-/* the two seated classes' file-constructor sinits (135's runs already; 137's
-   __sinit_ov043_02111868 stays off, 137 is not seated). */
+/* the seated classes' file-constructor sinits, re-declared here beside the
+   bodies they feed (all four run; see port_ov43_bringup). */
 void __sinit_ov043_021118d4(void);   /* id 136's Model 1619 + clsn 1620 */
 void __sinit_ov043_02111940(void);   /* id 134's five-stair array (files 1609-1618) */
 
-/* the two host vtables for the seated classes, both excluded from the mount
-   (the four-spans rule in port/CMakeLists.txt). The names are what each class's
-   OWN bodies spell after the per-source -D binds resolve -- dsd's for the
-   ADDRESS, not the class. 137's table 0x0211238c is deliberately NOT hosted:
-   nothing links to it because 137 is not registered. */
+/* the host vtables for the seated classes, all excluded from the mount (the
+   four-spans rule in port/CMakeLists.txt; the generator leaves each span as a
+   zero-filled pk043_gap_* so the pack layout still matches the ROM's). The
+   names are what each class's OWN bodies spell after the per-source -D binds
+   resolve -- dsd's for the ADDRESS, not the class. 137's table 0x0211238c joins
+   them with link100 SPAWN2; `int` and C linkage because include/decl_common.h
+   declares the placeholder the -D renames as `extern int _ZTV...[]`. */
 DSSTATE_BEGIN
 int _ZTV11RickshawBdw[32];          /* 0x0211245c, id 136 RICKSHAW_PLATFORM_BDW */
 int _ZTV19RickshawPlatformBdw[32];  /* 0x0211255c, id 134 STAIRS_BDW */
+int data_ov043_0211238c[32];        /* 0x0211238c, id 137 RICKSHAW_BDW */
 DSSTATE_END
 }
 
@@ -414,8 +443,54 @@ static void o43_fill_shared(void **vt)
     vt[30] = (void *)port_actor_s30_base;
 }
 
-// id 137 RICKSHAW_BDW is intentionally NOT filled or registered -- see the file
-// header. Its four own bodies are inferred and a live level-35 spawn crashes.
+// ---- RICKSHAW_BDW (id 137) -- table 0x0211238c, matched --------------------
+//
+// SLOTS 6 AND 9 ARE INHERITED and already in the link: the reloc run puts
+// 0x020b6b38 (Behavior) at slot 6 and 0x020b6b10 (Render) at slot 9, both
+// module overlays(0,2) -- the shared ov002 generic-object pair, not this
+// class's. So 137 owns four slots, not six, which is why its dossier counts
+// five files and not nine.
+//
+// THE ONE FACE IN THIS GATE THAT IS NOT A STRAIGHT FORWARD, and it is exact
+// rather than a guess. The ROM's slot 0 is a TAIL JUMP, six words long:
+//   021114c4  ldr ip,[pc,#8]   -> 0x020b6c54
+//   021114c8  ldr r1,[pc,#8]   -> 0x02112344
+//   021114cc  mov r2,#0x88
+//   021114d0  bx  ip
+// so its return value IS func_ov002_020b6c54's, and src/func_ov002_020b6c54.c
+// ends `return 1;` unconditionally -- no load path, no "not ready yet" arm. The
+// src for 0x021114c4 is spelled `void`, which drops that, so the face restores
+// the ROM's own constant instead of riding a register MSVC does not promise.
+// (r2 = 0x88 = 136: the loader spawns FOUR RICKSHAW_PLATFORM_BDW children per
+// axle, which is the "runtime child" relation actor_classes.inc already
+// records, and 136 is seated.)
+static int __fastcall rbdw_init(void *s, void *)
+{ func_ov043_021114c4((unsigned char *)s); return 1; }
+static int __fastcall rbdw_clean(void *s, void *)
+{ return func_ov043_021114b0((unsigned char *)s); }
+static int __fastcall rbdw_behavior(void *s, void *)
+{ return func_ov002_020b6b38(s); }
+static int __fastcall rbdw_render(void *s, void *)
+{ port_actor_render_probe("RICKSHAW_BDW", (char *)s + 0xd4);
+  return func_ov002_020b6b10(s); }
+static int __fastcall rbdw_d1(void *s, void *)
+{ return (int)(size_t)func_ov043_021113fc((int *)s); }
+static int __fastcall rbdw_d0(void *s, void *)
+{ return (int)(size_t)func_ov043_0211144c((int *)s); }
+
+extern "C" void hal_fill_rickshaw_bdw_vtable(void)
+{
+    port_ov43_bringup();
+    void **vt = (void **)data_ov043_0211238c;
+    o43_fill_shared(vt);
+    vt[0]  = (void *)rbdw_init;
+    vt[3]  = (void *)rbdw_clean;
+    vt[6]  = (void *)rbdw_behavior;
+    vt[9]  = (void *)rbdw_render;
+    vt[16] = (void *)rbdw_d1;
+    vt[17] = (void *)rbdw_d0;
+    vt[31] = (void *)o43_kill;
+}
 
 // ---- RICKSHAW_PLATFORM_BDW (id 136) -- table 0x0211245c, matched -----------
 static int __fastcall rpbdw_init(void *s, void *)

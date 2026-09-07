@@ -67,6 +67,7 @@ void _ZN8Platform4KillEv(void *self);
 
 const char *port_actor_class_name(unsigned id);
 void port_actor_slot_decline(const char *what);
+void port_actor_render_probe(const char *cls, void *model); /* hal/actor_classes */
 
 /* the mount's own two passes and the eight SharedFilePtr sinits, in .ctor order */
 void port_ov029_pack_check(void);
@@ -105,7 +106,27 @@ int _ZN9ArrowLift16CleanupResourcesEv(void *self);
 int _ZN9ArrowLift8BehaviorEv(void *self);
 int _ZN9ArrowLift6RenderEv(void *self);
 int *_ZN9ArrowLiftD0Ev(int *self);   /* D1 trapped: see WaterDiamond fill */
-/* id 99 CageLift is not mounted (guessed bodies) -- no externs. */
+/* id 99 CageLift (link100 SPAWN2). Its six own bodies, every one taken from the
+   reloc at data_ov029_02113e74 + 4*slot and confirmed by a
+   kind:function(arm,size=..) record at exactly that address in
+   config/arm9/overlays/ov029/symbols.txt:
+     slot 0  0x02113e74 -> 0x02111d6c  func_ov029_02111d6c size 0xd4   (.cpp)
+     slot 3  0x02113e80 -> 0x02111b60  func_ov029_02111b60 size 0x44
+     slot 6  0x02113e8c -> 0x02111bcc  func_ov029_02111bcc size 0x1a0
+     slot 9  0x02113e98 -> 0x02111ba4  func_ov029_02111ba4 size 0x28   (.cpp)
+     slot 16 0x02113eb4 -> 0x02111ac4  func_ov029_02111ac4 size 0x44
+     slot 17 0x02113eb8 -> 0x02111b08  func_ov029_02111b08 size 0x58
+   Five of the six carry the "recovered from vtable slot identity" marker and
+   lane STUBADJ ruled ALL FIVE REAL_DECOMP against the ROM (match.py 2004/b56
+   strict-reloc MATCH, 0 WRONG-DEST), which is the fact that retires the note
+   that used to stand where this block is. The sixth (the D1) never carried a
+   marker. */
+int  func_ov029_02111d6c(char *self);   /* s0  InitResources */
+int  func_ov029_02111b60(void *self);   /* s3  CleanupResources */
+int  func_ov029_02111bcc(void *self);   /* s6  Behavior */
+int  func_ov029_02111ba4(void *self);   /* s9  Render */
+int *func_ov029_02111ac4(int *self);    /* s16 D1 */
+int *func_ov029_02111b08(int *self);    /* s17 D0 */
 /* id 100 FloatOnWaterPlatformWdwRectangle own bodies (unnamed; s17 D0 guessed,
    trapped not seated) */
 int  func_ov029_02111f58(char *self);   /* s0 */
@@ -139,7 +160,7 @@ DSSTATE_BEGIN
 void *data_ov029_02113c2c[32];                    /* id 95  Square       */
 void *_ZTV29FloatOnWaterPlatformWdwSquare[32];    /* id 96  ArrowLift     */
 void *_ZTV9ArrowLift[31];                          /* id 97  WaterDiamond  */
-/* id 99 CageLift: not mounted (guessed bodies), no host table */
+void *data_ov029_02113e74[32];                    /* id 99  CageLift      */
 void *data_ov029_02113f44[32];                    /* id 100 Rectangle     */
 void *_ZTV32FloatOnWaterPlatformWdwRectangle[32]; /* id 94  RotatingWdw   */
 void *_ZTV20SwitchActivatedPlank[32];             /* id 98  SwitchPlank   */
@@ -304,15 +325,42 @@ extern "C" void hal_fill_water_diamond_vtable(void)
     /* no slot 31: a plain Actor, 31 slots, ends at 30 */
 }
 
-/* id 99 CageLift is NOT mounted. Five of its six lifecycle bodies
-   (func_ov029_02111d6c InitResources, _02111b60 CleanupResources, _02111bcc
-   Behavior, _02111ba4 Render, _02111b08 D0) carry the "recovered from vtable
-   slot identity" marker -- they are guessed, not ROM decompilations, so seating
-   them would fail inferred_stub_guard and put fabricated code behind a live
-   vtable. Only its D1 (func_ov029_02111ac4) is real. With InitResources unable
-   to be seated the class cannot load its model or collision, so it is left
-   unregistered (id 99 stays skipped, as on baseline) rather than trap-mounted
-   into a likely fault. It waits on a faithful decomp of those five bodies. */
+/* id 99 CageLift (data_ov029_02113e74, Platform 32) -- link100 SPAWN2.
+   THE NOTE THAT USED TO STAND HERE IS RETIRED, and by a ruling rather than by a
+   rewrite: the five "recovered from vtable slot identity" bodies this class was
+   held back for are each ruled REAL_DECOMP in port/tools/
+   inferred_stub_adjudicated.txt, every one a match.py 2004/b56 strict-reloc
+   MATCH against the ROM with 0 WRONG-DEST. So they are decompilations, not
+   guesses, and InitResources can be seated -- which is the single thing the old
+   note said the class was waiting on.
+   THIS CLASS OWNS ALL SIX lifecycle slots (0/3/6/9/16/17); unlike the Square and
+   the Rectangle two classes up it inherits nothing from the ov002 base. Slot 31
+   is the shared Platform::Kill 0x020ee55c that every 32-slot table in this file
+   carries, and slot 30 the SRET base seat.
+   SLOT 9 IS THE SHADOW-DISPATCH SHAPE and it is safe here, adjudicated the way
+   hal/actor_classes_ov043.cpp adjudicates DIAMOND_LIFT's byte-identical body:
+   InitResources feeds Model::LoadFile into ModelBase::SetFile at +0xd4 and both
+   destructors call _ZN5ModelD1Ev on +0xd4, so the object it dispatches slot 5 of
+   is a plain Model and hal/cxxname_bridge.cpp's dual-filled _ZTV5Model[5] is
+   Model::Render. func_ov043_02111280.cpp is the same eight lines and has been
+   linked and shipping on level 35 since gate 206. */
+static int __fastcall cl_init(void *s, void *)  { return func_ov029_02111d6c((char *)s); }
+static int __fastcall cl_clean(void *s, void *) { return func_ov029_02111b60(s); }
+static int __fastcall cl_beh(void *s, void *)   { return func_ov029_02111bcc(s); }
+static int __fastcall cl_ren(void *s, void *)
+{ port_actor_render_probe("CAGE_LIFT", (char *)s + 0xd4);
+  return func_ov029_02111ba4(s); }
+static int __fastcall cl_d1(void *s, void *)    { return (int)(size_t)func_ov029_02111ac4((int *)s); }
+static int __fastcall cl_d0(void *s, void *)    { return (int)(size_t)func_ov029_02111b08((int *)s); }
+extern "C" void hal_fill_cage_lift_vtable(void)
+{
+    port_ov29_bringup();
+    void *volatile *vt = (void *volatile *)data_ov029_02113e74;
+    ov29_fill_shared(vt);
+    vt[0]=(void *)cl_init; vt[3]=(void *)cl_clean; vt[6]=(void *)cl_beh;
+    vt[9]=(void *)cl_ren;  vt[16]=(void *)cl_d1;   vt[17]=(void *)cl_d0;
+    vt[31]=(void *)ov29_kill;
+}
 
 /* id 100 FloatOnWaterPlatformWdwRectangle (data_ov029_02113f44, Platform 32;
    inherited s3/6/9 = ov002 base, same as Square) */
