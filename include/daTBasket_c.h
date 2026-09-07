@@ -24,9 +24,11 @@
  * It closes: 0x350 + sizeof(ShadowModel) 0x28 = 0x378, and 8 bytes of tail padding
  * reach the 0x380 the ROM allocates.
  *
- * The ROM's RTTI names this class daTBasket_c. The member shape is OneUpMushroom's
+ * The ROM's RTTI names this class daTBasket_c. The member shape is da1up_c's
  * exactly -- same four types at the same four offsets -- which is what a shared
  * spawn-and-hold idiom looks like; the classes differ only in total size.
+ * (da1up_c is the class this tree called OneUpMushroom until the ROM's own
+ * `7da1up_c` type-name string at ov002:0x02108370 replaced the coined name.)
  *
  * SM64DS RTTI names the implementation daTBasket_c. The reconstructed
  * factory daTBasket_c_classInit (historical alias

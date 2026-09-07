@@ -67,7 +67,8 @@ initializer is ordinal 1; `.p__sinit_ov002_02100938` at `0x021080d4` relocates t
 it. The immediately preceding initializer is the ambiguous shared-resource
 initializer `__sinit_ov002_02100560`. The immediately following initializer,
 `__sinit_ov002_02100adc`, independently resolves high-confidence to
-`ov002/OneUpMushroom`, the next substantial class TU after the small
+`ov002/da1up_c` (the manifest id this note called `ov002/OneUpMushroom` before
+the class moved to its cartridge RTTI name), the next substantial class TU after the small
 `0x020aedbc..0x020aee40` tail/destructor records. No adjacent initializer proposes
 the `dEnemyBase_c` tables and this row has no conflict blocker.
 
