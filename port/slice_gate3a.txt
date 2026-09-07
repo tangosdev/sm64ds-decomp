@@ -20,3 +20,31 @@ src/_ZN6Memory10DeallocateEPvP4Heap.cpp
 src/_ZN4Heap8AllocateEji.cpp
 src/_ZN4Heap10DeallocateEPv.cpp
 src/_ZN22ExpandingHeapAllocator10MemoryLeftEv.cpp
+
+# The ten remaining ExpandingHeap overrides, and one destructor definition per
+# class. Not new host coverage that was chosen -- MSVC EMITS THE VTABLE in the
+# translation unit that defines the constructor, and a vtable needs the ADDRESS
+# of every slot, so the four overrides above were never a linkable subset. On the
+# NDS each of these files is its own object and the ROM's table is already built,
+# so nothing forced the question there. This is the whole class: Heap declares
+# fourteen pure virtuals and ExpandingHeap overrides all fourteen.
+src/_ZN13ExpandingHeap8VDestroyEv.cpp
+src/_ZN13ExpandingHeap14VDeallocateAllEv.cpp
+src/_ZN13ExpandingHeap7VIntactEv.cpp
+src/_ZN13ExpandingHeap7VRescueEv.cpp
+src/_ZN13ExpandingHeap11VReallocateEPvj.cpp
+src/_ZN13ExpandingHeap22VMaxAllocationUnitSizeEv.cpp
+src/_ZN13ExpandingHeap19VMaxAllocatableSizeEv.cpp
+src/_ZN13ExpandingHeap10VSetNodeIDEj.cpp
+src/_ZN13ExpandingHeap10VGetNodeIDEv.cpp
+src/_ZN13ExpandingHeap12VResizeToFitEv.cpp
+
+# ONE destructor file per class, not the pair. src/_ZN4HeapD0Ev.cpp,
+# _ZN4HeapD1Ev.cpp and _ZN4HeapD2Ev.cpp each carry the SAME `Heap::~Heap() {}'
+# body -- that is the point of the D0/D1/D2 split, one definition delinked into
+# three ROM addresses -- and MSVC folds the variants into a single
+# ??1Heap@@UAE@XZ, so linking two of them is a duplicate-symbol error. D1 is
+# picked because it is the complete-object variant the host's own deleting
+# destructor calls. Same for ExpandingHeap.
+src/_ZN4HeapD1Ev.cpp
+src/_ZN13ExpandingHeapD1Ev.cpp
