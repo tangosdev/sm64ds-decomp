@@ -290,7 +290,34 @@ only part that describes the composition.
   maintainer, two of them lunavyqo's. The fold's 54 `path#symbol` overrides had
   missed them. Eight rows were added to `attribution.json`, all inside this class's
   own block; no existing row was changed or removed.
+  With those eight rows the validator reports `0 added, **0 changed**, 0 lost` and
+  "Committed merge introduces no reconstruction or attribution regression".
 - **`prepush_attribution` did not catch those five and the validator did.** The two
   gates key differently — `member_overrides_at` on the OLD basename, the validator
   on the CURRENT symbol name — so a green `prepush_attribution` is not evidence that
   credit survives a rename. Do not read one as covering the other.
+- **The gate passing is not the same claim as the chart being preserved, and this
+  promotion does move the chart.** The published contributor chart is built by
+  `chaos_db_ci`, which resolves overrides by **whole path** and therefore never reads
+  a `path#symbol` row at all. Measured on this composition, base versus head, with
+  that same whole-path resolution: **34 ov030 shard paths lose their attribution and
+  one path gains it** (`src/actors/daMky_c.cpp`), for a net move of
+
+  | contributor | delta |
+  |---|---|
+  | tangosdev | −24 |
+  | andrewboudreau | −4 |
+  | lunavyqo | −3 |
+  | ruspecial | −2 |
+
+  Nothing outside this class is affected — 0 paths lost elsewhere, 0 reauthored. This
+  is not specific to `daMky_c`; every consolidating promotion does it, and it cannot be
+  answered with a whole-path override row, because one path can only carry one author
+  while this TU carries four. It is a known, separately filed defect and is deliberately
+  **not** fixed here. State it as "the gate passed and the address-level credit model is
+  intact", never as "credit was preserved".
+- **Row placement.** These 60 override rows sit beside this class's own retired-shard
+  rows rather than at the tail of the object, which is where `daBmb_c` and the existing
+  `daDgr_c` / `dScGameOver_c` rows sit. Appending at the tail made this branch collide
+  with every other class doing the same; the diff against `main` is now a single
+  60-line insertion with zero deletions.
