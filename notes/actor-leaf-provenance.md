@@ -16,7 +16,7 @@ name below was checked against `include/dActor_c.h`, `include/dBase_c.h` and
 `include/fBase_c.h` first. A derived field that reuses a base spelling compiles
 cleanly and silently rebinds every unqualified use across the tree.
 
-## Ukiki -- include/Ukiki.h
+## daMky_c -- include/daMky_c.h
 
 | offset | new name | evidence |
 | --- | --- | --- |
@@ -27,9 +27,10 @@ cleanly and silently rebinds every unqualified use across the tree.
 | 0x3b0 | `mCapPlayerNo` | read out of `ClosestPlayer()->param1` (`+0x8`), guarded `< 3`, then shifted into the spawn parameter as `(mCapPlayerNo << 8) | 2`. |
 | 0x3c8 | `mHasSpawnedCap` | tested `== 0` before the spawn block and latched to 1 inside it, so the cap is spawned at most once. |
 
-Both `src/_ZN5Ukiki13InitResourcesEv.cpp` and `src/_ZN5Ukiki8BehaviorEv.cpp`
-run the same block; only the first names its fields, the second still reaches
-them as raw `c + 0xNN` offsets.
+Both `daMky_c::InitResources` and `daMky_c::Behavior` run the same block;
+only the first names its fields, the second still reaches them as raw
+`c + 0xNN` offsets. Both now live in `src/actors/daMky_c.cpp`, which
+absorbed the class's 44 one-function shards.
 
 Deliberately left `unk_`: 0x380/0x384/0x388 (a second position triple, seeded
 from `mPos` with `0x64000` added to Y right after -- no enrolled body reads it
