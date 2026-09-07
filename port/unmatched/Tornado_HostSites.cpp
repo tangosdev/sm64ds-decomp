@@ -83,15 +83,15 @@ int *_ZN7TornadoD1Ev(int *t)
 /* ---- (2) Render -------------------------------------------------------- */
 int _ZN18TextureTransformer6UpdateER15ModelComponents(void *, void *);
 
-/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
-int _ZN7Tornado6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    _ZN18TextureTransformer6UpdateER15ModelComponents(c + 0x328, c + 0x2cc);
-    /* ((Sub *)(c + 0x2c4))->g5(c + 0x80) -- the ROM slot-5 Render, qualified */
-    ((ModelAnim *)(c + 0x2c4))->ModelAnim::Render((const Vector3 *)(c + 0x80));
-    return 1;
-}
+/* _ZN7Tornado6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+   ROM-order model slot-5 dispatch -- died with lane SLOT5F's
+   respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
+   put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the
+   matched source's local six-virtual shadow reaches the body it means.
+   The C name is defined in hal/except_faces.cpp onto the matched
+   __thiscall method; the ROM vtable word and the kind:function record
+   are in port/slice_except2.txt. */
+
 
 /* ---- (3) THE IMPLICIT r0 RIDE-THROUGH, and it is the dangerous one ------
  * src/_ZN7Tornado8BehaviorEv.cpp dispatches its three-way state switch as

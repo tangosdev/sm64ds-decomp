@@ -72,20 +72,15 @@ int *_ZN5SpinyD1Ev(int *t)
     return t;
 }
 
-/* ---- (2) Render -------------------------------------------------------- */
-/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
-int _ZN5Spiny6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    if ((*(unsigned int *)(c + 0xb0) & 0x40000) != 0)
-        return 1;
-    int s = *(int *)(c + 0x3d8);
-    if (s == 0 || s == 4)
-        ((Model *)(c + 0xd4))->Model::Render(0);
-    else
-        ((ModelAnim *)(c + 0x124))->ModelAnim::Render(0);
-    return 1;
-}
+/* _ZN5Spiny6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+   ROM-order model slot-5 dispatch -- died with lane SLOT5F's
+   respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
+   put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the
+   matched source's local six-virtual shadow reaches the body it means.
+   The C name is defined in hal/except_faces.cpp onto the matched
+   __thiscall method; the ROM vtable word and the kind:function record
+   are in port/slice_except2.txt. */
+
 
 /* ---- (3) the two state dispatch sites ---------------------------------- */
 struct PortOv077Pmf { unsigned int fn; int delta; };

@@ -13350,10 +13350,16 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE_W10B_SOURCES}
     ${SLICE_W11_SOURCES}
     hal/actor_classes_ov073.cpp unmatched/Ov073_State.cpp
-    unmatched/Ov073_Render.cpp
+    # unmatched/Ov073_Render.cpp RETIRED (run link100, lane EXCEPT): the
+    # ROM-order BlendModelAnim slot-5 reason died with SLOT5F's respelling.
+    # src/_ZN11ChiefChilly6RenderEv.cpp is on port/slice_except2.txt and its
+    # C name comes from hal/except_faces.cpp.
     ${SLICE_W12_SOURCES}
     hal/actor_classes_ov052.cpp ${SLICE_W12B_SOURCES}
-    hal/actor_classes_ov064_w12.cpp unmatched/Ov064_Clam.cpp
+    hal/actor_classes_ov064_w12.cpp
+    # unmatched/Ov064_Clam.cpp RETIRED (run link100, lane EXCEPT): both its
+    # bodies were the slot-5 reading. src/_ZN4Clam6RenderEv.cpp and
+    # src/_ZN13TreasureChest6RenderEv.cpp are on port/slice_except2.txt.
     ${SLICE_W12C_SOURCES}
     hal/actor_classes_ov056.cpp ${SLICE_W15_SOURCES}
     hal/actor_classes_ov002_w15.cpp ${SLICE_W15B_SOURCES}
@@ -13394,7 +13400,11 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_flamethrower.cpp ${SLICE_W6F_SOURCES} unmatched/Flamethrower_Behavior.c
     ${SLICE_W8FACES_SOURCES}
     hal/actor_classes_scuttlebug.cpp ${SLICE176_SOURCES} unmatched/Scuttlebug_StateDispatch.cpp
-    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
+    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp
+    # unmatched/MrI_Render.cpp RETIRED (run link100, lane EXCEPT): its own
+    # header said "If _ZTV9ModelAnim ever gains a ROM-order view, this
+    # retires", and SLOT5F gave it one. src/_ZN3MrI6RenderEv.cpp is on
+    # port/slice_except2.txt.
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
@@ -13592,10 +13602,16 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE_W10B_SOURCES}
     ${SLICE_W11_SOURCES}
     hal/actor_classes_ov073.cpp unmatched/Ov073_State.cpp
-    unmatched/Ov073_Render.cpp
+    # unmatched/Ov073_Render.cpp RETIRED (run link100, lane EXCEPT): the
+    # ROM-order BlendModelAnim slot-5 reason died with SLOT5F's respelling.
+    # src/_ZN11ChiefChilly6RenderEv.cpp is on port/slice_except2.txt and its
+    # C name comes from hal/except_faces.cpp.
     ${SLICE_W12_SOURCES}
     hal/actor_classes_ov052.cpp ${SLICE_W12B_SOURCES}
-    hal/actor_classes_ov064_w12.cpp unmatched/Ov064_Clam.cpp
+    hal/actor_classes_ov064_w12.cpp
+    # unmatched/Ov064_Clam.cpp RETIRED (run link100, lane EXCEPT): both its
+    # bodies were the slot-5 reading. src/_ZN4Clam6RenderEv.cpp and
+    # src/_ZN13TreasureChest6RenderEv.cpp are on port/slice_except2.txt.
     ${SLICE_W12C_SOURCES}
     hal/actor_classes_ov056.cpp ${SLICE_W15_SOURCES}
     hal/actor_classes_ov002_w15.cpp ${SLICE_W15B_SOURCES}
@@ -13638,7 +13654,11 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_flamethrower.cpp ${SLICE_W6F_SOURCES} unmatched/Flamethrower_Behavior.c
     ${SLICE_W8FACES_SOURCES}
     hal/actor_classes_scuttlebug.cpp ${SLICE176_SOURCES} unmatched/Scuttlebug_StateDispatch.cpp
-    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
+    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp
+    # unmatched/MrI_Render.cpp RETIRED (run link100, lane EXCEPT): its own
+    # header said "If _ZTV9ModelAnim ever gains a ROM-order view, this
+    # retires", and SLOT5F gave it one. src/_ZN3MrI6RenderEv.cpp is on
+    # port/slice_except2.txt.
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
@@ -13893,10 +13913,16 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE_W10B_SOURCES}
     ${SLICE_W11_SOURCES}
     hal/actor_classes_ov073.cpp unmatched/Ov073_State.cpp
-    unmatched/Ov073_Render.cpp
+    # unmatched/Ov073_Render.cpp RETIRED (run link100, lane EXCEPT): the
+    # ROM-order BlendModelAnim slot-5 reason died with SLOT5F's respelling.
+    # src/_ZN11ChiefChilly6RenderEv.cpp is on port/slice_except2.txt and its
+    # C name comes from hal/except_faces.cpp.
     ${SLICE_W12_SOURCES}
     hal/actor_classes_ov052.cpp ${SLICE_W12B_SOURCES}
-    hal/actor_classes_ov064_w12.cpp unmatched/Ov064_Clam.cpp
+    hal/actor_classes_ov064_w12.cpp
+    # unmatched/Ov064_Clam.cpp RETIRED (run link100, lane EXCEPT): both its
+    # bodies were the slot-5 reading. src/_ZN4Clam6RenderEv.cpp and
+    # src/_ZN13TreasureChest6RenderEv.cpp are on port/slice_except2.txt.
     ${SLICE_W12C_SOURCES}
     hal/actor_classes_ov056.cpp ${SLICE_W15_SOURCES}
     hal/actor_classes_ov002_w15.cpp ${SLICE_W15B_SOURCES}
@@ -13939,7 +13965,11 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_flamethrower.cpp ${SLICE_W6F_SOURCES} unmatched/Flamethrower_Behavior.c
     ${SLICE_W8FACES_SOURCES}
     hal/actor_classes_scuttlebug.cpp ${SLICE176_SOURCES} unmatched/Scuttlebug_StateDispatch.cpp
-    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
+    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp
+    # unmatched/MrI_Render.cpp RETIRED (run link100, lane EXCEPT): its own
+    # header said "If _ZTV9ModelAnim ever gains a ROM-order view, this
+    # retires", and SLOT5F gave it one. src/_ZN3MrI6RenderEv.cpp is on
+    # port/slice_except2.txt.
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
@@ -15206,6 +15236,49 @@ foreach(line IN LISTS SLICE_EXCEPT_LINES)
 endforeach()
 foreach(_texcept walk_window walk_window_hires smoke_player)
     target_sources(${_texcept} PRIVATE ${SLICE_EXCEPT_SOURCES})
+endforeach()
+
+# ===========================================================================
+# LANE EXCEPT, batch 2: the slot-5 family, seventeen Renders
+# ===========================================================================
+#
+# Seventeen matched Render TUs across sixteen actor classes whose documented
+# host-ABI reason is a vtable numbering THAT NO LONGER EXISTS. Lane SLOT5F
+# respelled the ROM's destructor pair under _MSC_VER in include/ModelBase.h,
+# so hal/cxxname_bridge.cpp fills index 5 of _ZTV5Model, _ZTV9ModelAnim and
+# _ZTV10ModelAnim2 with Render again, and every one of these matched sources
+# -- each dispatching through a local six-virtual shadow counted in ROM
+# numbering -- reaches the body it means.
+#
+# LANE UNMATCH'S FOLD SWEEP DID NOT LIST THEM, and the reason is not in the
+# evidence: six of these files satisfy that enumeration's own stated rule by
+# the letter (they carry both `HOST COPY OF` and the unhyphenated `slot 5` in
+# their first 4 KB) and were still not on its list of thirty. An enumeration is
+# not a census; port/slice_except2.txt and out/EXCEPT/census.md carry the
+# counts.
+#
+# Sixteen of the seventeen matched sources are `real C++ method` recoveries,
+# so hal/except_faces.cpp defines the Itanium C name each fill site calls onto
+# the __thiscall method, one cdecl line each, and NOT ONE FILL SITE CHANGES.
+# src/_ZN7Tornado6RenderEv.cpp defines the C name itself and needs no face.
+#
+# Every row's referrer is the class's own vtable slot 9 word read out of the
+# RAW overlay image at that overlay's .text base, and every destination has a
+# kind:function(arm,size=..) record: seventeen of seventeen agreed, and the
+# generator refuses a mismatch. The table is port/slice_except2.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_except2.txt" SLICE_EXCEPT2_LINES)
+set(SLICE_EXCEPT2_SOURCES "")
+foreach(line IN LISTS SLICE_EXCEPT2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_EXCEPT2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_EXCEPT2_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/except_faces.cpp")
+foreach(_texcept2 walk_window walk_window_hires smoke_player)
+    target_sources(${_texcept2} PRIVATE ${SLICE_EXCEPT2_SOURCES})
 endforeach()
 
 # ===========================================================================

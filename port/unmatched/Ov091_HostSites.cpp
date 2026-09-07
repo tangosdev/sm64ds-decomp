@@ -272,35 +272,15 @@ extern "C" int _ZN5Stump8BehaviorEv(void *self)
     return 1;
 }
 
-/* ==========================================================================
- * (2) Stump::Render -- the ModelAnim slot-5 collision, host-copied after the
- * first level-22 run faulted through it. src/_ZN5Stump6RenderEv.cpp draws with
- *     struct V { virtual void m0(); ... virtual int m5(int); };
- *     ((V *)((char *)&mModelAnim))->m5(0);
- * and index 5 of the host _ZTV9ModelAnim is Virtual18. This names
- * ModelAnim::Render, the body the ROM's slot 5 holds (arm9 0x020167f8).
- *
- * RE-DERIVED FROM THE ROM AFTER IT WAS WRITTEN, because this is the one body in
- * this file transcribed by hand rather than propagated. 0x02134184, size 0x68:
- *     ldr r1,[r0,#0x374] / cmp #1        -> return 1                 mVariant
- *     ldr r1,[r0,#0xb0]  / ands #0x40000 -> return 1                 unk_0b0
- *     add r0,r0,#0x300                   -> the ModelAnim
- *     ldr r2,[r0,#0] / mov r1,#0 / ldr r2,[r2,#0x14] / blx r2
- *     mov r0,#1
- * 0x14 is 5 * 4, so the ROM dispatches SLOT 5 with a null second argument --
- * which is what this body does by name.
- * ==========================================================================*/
-/* PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch. */
-extern "C" int _ZN5Stump6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    if (*(int *)(c + 0x374) == 1)
-        return 1;
-    if ((*(unsigned int *)(c + 0xb0) & 0x40000) != 0)
-        return 1;
-    ((ModelAnim *)(c + 0x300))->ModelAnim::Render((const Vector3 *)0);
-    return 1;
-}
+/* _ZN5Stump6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
+   ROM-order model slot-5 dispatch -- died with lane SLOT5F's
+   respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578
+   put Render back on index 5 of _ZTV5Model and _ZTV9ModelAnim, so the
+   matched source's local six-virtual shadow reaches the body it means.
+   The C name is defined in hal/except_faces.cpp onto the matched
+   __thiscall method; the ROM vtable word and the kind:function record
+   are in port/slice_except2.txt. */
+
 
 /* ==========================================================================
  * (3) func_ov091_021339fc -- FWOOSH's per-frame player interaction.
