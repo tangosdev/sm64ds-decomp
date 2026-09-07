@@ -1,6 +1,19 @@
 # Plan: fix the two base headers that poison their descendants
 
-**Status:** in progress. First change in the gen_header programme that touches `include/`.
+> **STATUS: SUPERSEDED.** The "much larger change" this plan explicitly deferred
+> (real inheritance instead of flat, duplicated field declarations) has since
+> landed: `include/dEnemyBase_c.h` now declares `struct dEnemyBase_c : dActor_c`
+> and `include/dCapEnemy_c.h` derives from `dEnemyBase_c`. None of the six
+> flat-marker offsets this plan discusses (0x094/0x0a8/0x0ac/0x10c on Enemy,
+> 0x05c/0x08c on CapEnemy) exist anymore as duplicated fields — the plan fully
+> executed and was then overtaken by the bigger refactor. Kept in place, not
+> deleted: `notes/rtti-reconciliation.md` cites this plan's specific findings (the
+> 330-row width-adjudication method it used, and confirmation that the six field
+> declarations landed) as historical evidentiary support for its own width-bug
+> analysis. Verified 2026-09-06.
+
+**Original status when written:** in progress. First change in the gen_header programme
+that touches `include/`.
 **Depends on:** #1118 (the evidence passes and the differential that found this).
 **Scope:** `include/dEnemyBase_c.h` and `include/dCapEnemy_c.h`, six field declarations.
 

@@ -18,15 +18,10 @@ US-region address and reads as zeros here). `SpawnInfo` layout (credit:
 - *spawn func*: allocates the instance (`mov r0,#size before the first bl`) and
   stores the *class vtable* (last pool literal stored to [r4])
 - **vtable slot order** = `ActorBase` virtual order, validated empirically on [ov056](../config/arm9/overlays/ov056/symbols.txt)   *BigMovingIceBlock* (slot `6 Behavior` == the byte-matched path follower at
-  **0x021112ac**; slots `16/17` are the` D1/D0` **destructor** pair):
-```c
-    0 InitResources  1 BeforeInitResources  2 AfterInitResources(u32)
-    3 CleanupResources  4 Before~  5 After~(u32)
-    6 Behavior  7 BeforeBehavior  8 AfterBehavior(u32)
-    9 Render  10 BeforeRender  11 AfterRender(u32)
-    12 OnPendingDestroy  13 Virtual34(u32,u32)  14 Virtual38(u32,u32)
-    15 OnHeapCreated  16 dtor D1  17 dtor D0
-```
+  **0x021112ac**; slots `16/17` are the` D1/D0` **destructor** pair). The full
+  18-slot table (ROM hex addresses included) is canonical in
+  [actor-vtables.md](actor-vtables.md#actorbase--0x02099edc-18-slots) — this note
+  does not keep its own copy.
 Slots pointing into arm9 are inherited defaults and stay unnamed. Functions
 shared between sibling classes (identical-code folding) are claimed by the
 lowest **actor id**; see [symbols/actor_renames_report.txt](../symbols/actor_renames_report.txt) for the audit trail.

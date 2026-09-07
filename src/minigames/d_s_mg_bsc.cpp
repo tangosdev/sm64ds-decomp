@@ -303,7 +303,7 @@ s32 dScMgBSC_c::Render()
    override of an int base outright, so the s32 form was both wrong and
    forced. The rebase first took s32 here on Coin's `return 0;` evidence,
    the byte gate disproved it, and the base slot was amended to void the
-   same day -- see dScMgBase_c.h and notes/minigame-family-decisions.md.
+   same day -- see dScMgBase_c.h.
    void is this function's own measured form: byte-verified as void before
    the base ever declared the slot, re-verified against the amended base
    (match.py, 2004/b56). */

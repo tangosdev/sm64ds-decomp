@@ -173,7 +173,7 @@ Every one of those is a code or data pointer.  `CAMERA`'s descriptor at
 `0x02086d78` reads `{factory 0x0200e444, 0x0000014c, 0x020084b0, 0, 0x020078c4, 0,
 0x02009e70, 0}` -- an 0x08 base profile with execute order `0x14c` and draw order
 zero, followed by three more 0x08 profiles packed behind it.  This is exactly the
-failure `profile-macro-patterns.md` predicts when a short descriptor is read as a
+failure `actor-profile-pilot.md` predicts when a short descriptor is read as a
 long one; the family choice from RTTI ancestry picked wrong for these three.
 
 The three rows are the sole source of the apparent profile-authored `0x08`, `0x10`,

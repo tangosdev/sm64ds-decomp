@@ -17,7 +17,8 @@ Everything here runs against a cartridge dump you supply yourself, which stays o
 machine and is git-ignored.
 
 New here? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**, and if you review or
-merge PRs read **[MERGE.md](MERGE.md)**.
+merge PRs read **[MERGE.md](MERGE.md)**. Deeper reference material (matching craft,
+C++ conversion, provenance) is indexed at **[notes/README.md](notes/README.md)**.
 
 ## Progress
 
@@ -121,10 +122,10 @@ as much as possible before any manual effort:
 
 An attempt that compiles to almost the right bytes is evidence. Every one is recorded
 in the near-miss database with how far off it landed and what was tried, so the next
-person does not rediscover the same dead end. The compiler behaviour recovered along
-the way is written up in [notes/mwccarm-codegen.md](notes/mwccarm-codegen.md), which is
-where the register allocation, instruction scheduling, and materialization findings
-live.
+person does not rediscover the same dead end. The recovered compiler behaviour is
+condensed into rules at [notes/codegen-rules.md](notes/codegen-rules.md) — register
+allocation, instruction scheduling, and materialization findings. The full dated
+discovery log is [notes/mwccarm-codegen.md](notes/mwccarm-codegen.md).
 
 ### Two checks beyond the byte diff
 
