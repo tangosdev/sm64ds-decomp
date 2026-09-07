@@ -390,50 +390,45 @@ int daBgSnmBdy_c::InitState3()
 // @symbol _ZN12daBgSnmBdy_c6State3Ev
 int daBgSnmBdy_c::State3()
 {
-    unsigned char *thiz = (unsigned char *)this;
-    unsigned char *state;
-    switch (thiz[0x3a2]) {
+    switch (mSubstate) {
     case 0:
         {
-            int d = Vec3_HorzDist(&data_ov072_02122b58, thiz + 0x5c);
-            _Z11UpdateAngleRssis((short *)(thiz + 0x8e),
-                Vec3_HorzAngle(thiz + 0x5c, &data_ov072_02122b58),
+            int d = Vec3_HorzDist(&data_ov072_02122b58, &mPosX);
+            _Z11UpdateAngleRssis(&mAngleY,
+                Vec3_HorzAngle(&mPosX, &data_ov072_02122b58),
                 2, 0x600);
-            *(short *)(thiz + 0x94) = *(short *)(thiz + 0x8e);
+            mPrevAngleY = mAngleY;
             _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(
-                *(int *)(thiz + 0x5c), *(int *)(thiz + 0x60),
-                *(int *)(thiz + 0x64));
-            *(unsigned int *)(thiz + 0x39c) =
-                _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                    *(unsigned int *)(thiz + 0x39c), 3, 0x8a,
-                    (const Vector3 *)(thiz + 0x74), 0);
+                mPosX, mPosY, mPosZ);
+            mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+                mSoundID, 3, 0x8a, (const Vector3 *)&mCamSpacePosX, 0);
             if (d < 0x17c000) {
                 void *actor = _ZN8dActor_c15FindWithActorIDEjPS_(0x111, 0);
+                /* +0x336 belongs to actor 0x111, a class this TU has no header
+                   for; the offset stays until that class is reconstructed. */
                 *(unsigned char *)((unsigned char *)actor + 0x336) = 1;
-                func_0201267c(0x114, thiz + 0x74);
-                *(int *)(thiz + 0xa8) = 0x1d000;
-                *(int *)(thiz + 0x98) = 0xe000;
-                state = (unsigned char *)(((int)thiz + 0x3a2));
-                *state = *state + 1;
+                func_0201267c(0x114, &mCamSpacePosX);
+                mVertSpeed = 0x1d000;
+                mHorzSpeed = 0xe000;
+                mSubstate++;
             }
         }
         break;
     case 1:
-        if (_ZNK10dBgCh_Actr13JustHitGroundEv(thiz + 0x180) != 0) {
+        if (_ZNK10dBgCh_Actr13JustHitGroundEv(&mWithMeshClsn) != 0) {
             Vector3 v;
-            v.x = *(int *)(thiz + 0x5c);
-            v.y = *(int *)(thiz + 0x60);
-            v.z = *(int *)(thiz + 0x64);
+            v.x = mPosX;
+            v.y = mPosY;
+            v.z = mPosZ;
             _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
-                thiz, &v, 0x5dc000);
-            *(int *)(thiz + 0x5c) = data_ov072_02122b58.x;
-            *(int *)(thiz + 0x60) = data_ov072_02122b58.y;
-            *(int *)(thiz + 0x64) = data_ov072_02122b58.z;
-            *(short *)(thiz + 0x8c) = 0;
-            *(short *)(thiz + 0x8e) = (short)-0x4000;
-            *(int *)(thiz + 0x98) = 0;
-            state = (unsigned char *)(((int)thiz + 0x3a2));
-            *state = *state + 1;
+                this, &v, 0x5dc000);
+            mPosX = data_ov072_02122b58.x;
+            mPosY = data_ov072_02122b58.y;
+            mPosZ = data_ov072_02122b58.z;
+            mAngleX = 0;
+            mAngleY = (short)-0x4000;
+            mHorzSpeed = 0;
+            mSubstate++;
         }
         break;
     case 2:
@@ -442,8 +437,8 @@ int daBgSnmBdy_c::State3()
     }
 
     UpdateRollAngle();
-    _ZN8dActor_c9UpdatePosEP5dCc_c(thiz, thiz + 0x14c);
-    UpdateGroundCollision((dBgCh_Actr *)(thiz + 0x180));
+    _ZN8dActor_c9UpdatePosEP5dCc_c(this, &mCylinder);
+    UpdateGroundCollision(&mWithMeshClsn);
     HurtPlayer();
     return 1;
 }
