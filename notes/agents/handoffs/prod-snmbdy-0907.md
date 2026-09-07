@@ -72,8 +72,16 @@ This document describes this commit. The queue records its immutable output SHA.
 - Lineage evidence or structural inference:
   the fold is 29, not the queue's 28. `build/tu_map.json` cuts the class run at
   0x0211f000..0x0211fedc and leaves the immediately following factory run
-  0x0211fedc..0x0211ff34 unattributed, because it cuts on symbol NAME and the tree
-  spelled that factory under the retired coined class name. The join is not a
+  0x0211fedc..0x0211ff34 unattributed. An earlier draft of this note explained
+  that by saying the tree spelled the factory under the retired coined class
+  name. That explanation is false and is withdrawn: at the pinned base
+  `config/arm9/overlays/ov072/symbols.txt` already read
+  `daBgSnmBdy_c_classInit` at 0x0211fedc, and regenerating `tu_map` at this tree,
+  with all 29 names ROM-spelled, still leaves the run unattributed. The
+  observation reproduces; the causal claim does not. The mechanism is in
+  `tools/tu_map.py`: `factory_vtable_labels` only ever considers a name ending
+  `_Spawn`, so a `_classInit` factory never enters the attribution path no matter
+  how its class is spelled. The join is not a
   tu_map inference: the main registry maps BIG_SNOWMAN_BODY to the 0x0212279c
   descriptor whose first word relocates to `daBgSnmBdy_c_classInit` at 0x0211fedc,
   that function allocates the factory-proven 0x3a8, installs
@@ -96,9 +104,14 @@ This document describes this commit. The queue records its immutable output SHA.
   `CallStateBehavior` and `SetState` are inferred private spellings: their class
   ownership, callers, bodies, relocations and codegen are proven, the original
   English words are not. `UpdateGroundCollision`'s mangled name asserts a POINTER
-  parameter (`P10dBgCh_Actr`); that is a disclosed guess, recorded in the manifest
-  notes, in the rename ledger row and in the declaration comment, per rule 1 of
-  `notes/tu-promotion-conventions.md`.
+  parameter (`P10dBgCh_Actr`); that is a disclosed guess. Rule 1 of
+  `notes/tu-promotion-conventions.md` requires the disclosure in all three places
+  that can carry it. As produced, only two carried it -- the manifest entry's
+  `notes` and the `why` column of the rename ledger row. Point 3, the comment on
+  the declaration, is the gap rule 1 names by name as the one #2055 left open,
+  and this branch left it open too. The integration added it at both
+  `include/daBgSnmBdy_c.h`'s declaration and the definition site in
+  `src/actors/daBgSnmBdy_c.cpp`; all three places carry it now.
 - Compiler experiments and measured barriers:
   three, all recorded because each changed the shape of the result.
   1. The first compile emitted a static initializer object and a

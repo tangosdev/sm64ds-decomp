@@ -536,6 +536,9 @@ void daBgSnmBdy_c::UpdateModel()
 }
 
 // @symbol _ZN12daBgSnmBdy_c21UpdateGroundCollisionEP10dBgCh_Actr
+// The P10dBgCh_Actr in that spelling asserts a POINTER parameter. The bytes
+// cannot distinguish a pointer from a reference here -- R10dBgCh_Actr would have
+// matched equally well -- so the parameter type is a disclosed guess.
 void daBgSnmBdy_c::UpdateGroundCollision(dBgCh_Actr *mc)
 {
     char *c = (char *)this;
