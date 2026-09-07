@@ -1,12 +1,12 @@
-#ifndef RABBIT_H
-#define RABBIT_H
+#ifndef DAMIP_C_H
+#define DAMIP_C_H
 
 #include "types.h"
 
 /* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
- * the class's own destructor `_ZN6RabbitD1Ev` destroys each member, and
- * `Rabbit_Spawn` constructs the same types at the same offsets before
- * storing `_ZTV6Rabbit`. Everything this header used to restate below
+ * the class's own destructor `_ZN7daMip_cD1Ev` destroys each member, and
+ * `daMip_c_classInit` constructs the same types at the same offsets before
+ * storing `_ZTV7daMip_c`. Everything this header used to restate below
  * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
@@ -23,7 +23,7 @@
  *   - unk_30c = ModelAnim.data.materials
  *   - unk_35c = ModelAnim.speed
  *
- * SIZE IS THE ROM'S OWN: `Rabbit_Spawn` calls
+ * SIZE IS THE ROM'S OWN: `daMip_c_classInit` calls
  * `fBase_c::operator new(1140)` -- 0x474 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  *
@@ -32,7 +32,7 @@
  * source-style names -- evidence-bounded proposals, not recovered SM64DS
  * symbols.
  *
- * daMip_c_classInit at 0x0212cc2c (historical alias Rabbit_Spawn) allocates
+ * daMip_c_classInit at 0x0212cc2c allocates
  * 0x474 and installs this class's cartridge vtable. It backs the MIP
  * registry profile, whose descriptor at 0x021300d4 is reconstructed as
  * g_profile_MIP.
@@ -44,7 +44,7 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
-struct Rabbit : dEnemyBase_c {
+struct daMip_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
@@ -97,7 +97,7 @@ struct Rabbit : dEnemyBase_c {
     s32                          mGlowParticle;         /* 0x470 */
 
     /* --- vtable --- */
-    virtual ~Rabbit();
+    virtual ~daMip_c();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
 
@@ -106,8 +106,46 @@ struct Rabbit : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+
+    /* --- helpers ---
+       Member-ness is ROM-proven for SetState and for every State* below: each
+       is the target of an 8-byte {fnptr, 0} pointer-to-member-function constant
+       in ov085 .data at 0x0213003c..0x021300bc, and such a record can point at
+       nothing but a member of this class. The other six take the object in r0
+       and address it this-relatively throughout; whether the original source
+       spelled them members or file-local functions taking a daMip_c* is NOT
+       recovered, and the two forms are indistinguishable in the cartridge's
+       bytes. Every NAME here is coined -- see symbols/actor_renames.tsv for the
+       per-name evidence. */
+    int  TestWaterBelow();
+    void UpdateGrab();
+    int  SetState(void *record);
+    void UpdateMatrixAndShadow();
+    void UpdateCarriedMatrix();
+    void UpdateMirrorShadow();
+    void RenderMirrorImage();
+
+    /* --- the eight animation states ---
+       Each pair is one 16-byte .bss record = {Init, Main}; the pairing and the
+       order are proven by __sinit_ov085_0212f5ec, which builds all eight. */
+    int  StateStartleInit();               /* record 0x0213066c */
+    int  StateStartleMain();
+    int  StateFleeInit();                  /* record 0x0213067c */
+    int  StateFleeMain();
+    int  StateSaveTalkInit();              /* record 0x0213068c */
+    int  StateSaveTalkMain();
+    int  StateRestInit();                  /* record 0x0213069c */
+    int  StateRestMain();
+    int  StateCaughtInit();                /* record 0x021306ac */
+    int  StateCaughtMain();
+    int  StateReleasedInit();              /* record 0x021306bc */
+    int  StateReleasedMain();
+    int  StateIdleInit();                  /* record 0x021306cc */
+    int  StateIdleMain();
+    int  StateTalkInit();                  /* record 0x021306dc */
+    int  StateTalkMain();
 };
 
-typedef char Rabbit_size_must_be_0x474[sizeof(Rabbit) == 0x474 ? 1 : -1];
+typedef char daMip_c_size_must_be_0x474[sizeof(daMip_c) == 0x474 ? 1 : -1];
 
-#endif /* RABBIT_H */
+#endif /* DAMIP_C_H */
