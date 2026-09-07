@@ -82,10 +82,32 @@ struct daMky_c : dActor_c {
        [_ZN7daMky_c13InitResourcesEv.cpp, _ZN7daMky_c8BehaviorEv.cpp] */
     s32 mCapUniqueID;            /* 0x3ac */
     u32 mCapPlayerNo;            /* 0x3b0 */
-    u8  pad_3b4[0x14];
+    s32 mState;            /* 0x3b4 -- the state-machine id.  Proven: the
+                             eleven EnterState* members below each write
+                             one immediate here, 0..10 with none repeated
+                             and none missing, and 0x02115e0c holds exactly
+                             eleven 0x10-byte descriptors. */
+    u8  pad_3b8[0x10];
     u8  mHasSpawnedCap;            /* 0x3c8 */
     u8  pad_3c9[0x2];
     u8  unk_3cb;            /* 0x3cb */
+
+    /* The state machine.  Entered through func_ov030_021141a8(this, N),
+       which installs descriptor N at +0x3a4 and calls its first
+       pointer-to-member; each of these writes its own N to mState.  The
+       class name and the numbers are the cartridge's; the word
+       "EnterState" is coined.  See src/actors/daMky_c.cpp. */
+    s32  EnterState0();        /* 0x02114124 -- PMF record 20 of 22 */
+    s32  EnterState1();        /* 0x02113fd8 -- PMF record 5 of 22 */
+    s32  EnterState2();        /* 0x02113be8 -- PMF record 7 of 22 */
+    s32  EnterState3();        /* 0x02113a80 -- PMF record 16 of 22 */
+    s32  EnterState4();        /* 0x0211360c -- PMF record 9 of 22 */
+    s32  EnterState5();        /* 0x021132d4 -- PMF record 18 of 22 */
+    s32  EnterState6();        /* 0x02112ff8 -- PMF record 3 of 22 */
+    s32  EnterState7();        /* 0x02112c14 -- PMF record 4 of 22 */
+    s32  EnterState8();        /* 0x02112a14 -- PMF record 0 of 22 */
+    s32  EnterState9();        /* 0x02112560 -- PMF record 8 of 22 */
+    s32  EnterState10();       /* 0x021123a4 -- PMF record 6 of 22 */
 
     virtual ~daMky_c();            /* slots 16 (D1), 17 (D0) */
 
