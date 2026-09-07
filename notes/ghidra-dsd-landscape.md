@@ -472,15 +472,15 @@ evidence is already in the tree.
 
 | target | candidates | unambiguous calls from the callers | verdict |
 |---|---|---|---|
-| `0x020aed98` | 2, 7 | [ov002](../config/arm9/overlays/ov002/symbols.txt) **1289** / [ov007](../config/arm9/overlays/ov007/symbols.txt) 6 | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
-| `0x020aea30` | 2, 4 | [ov002](../config/arm9/overlays/ov002/symbols.txt) **387** / [ov004](../config/arm9/overlays/ov004/symbols.txt) 0 | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
-| `0x020adc74` | 3, 4 | [ov003](../config/arm9/overlays/ov003/symbols.txt) 0 / [ov004](../config/arm9/overlays/ov004/symbols.txt) **993** | **[ov004](../config/arm9/overlays/ov004/symbols.txt)** |
-| `0x020ada40` | 2, 4 | [ov002](../config/arm9/overlays/ov002/symbols.txt) **545** / [ov004](../config/arm9/overlays/ov004/symbols.txt) 0 | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
-| `0x020ad660` | 2,3,4,7 | [ov002](../config/arm9/overlays/ov002/symbols.txt) **139** / others 0 | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
-| `0x020efaf0` | 2, 6 | [ov002](../config/arm9/overlays/ov002/symbols.txt) **104** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 0 | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
-| `0x020effb8` | 2, 6 | [ov002](../config/arm9/overlays/ov002/symbols.txt) **148** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 5 | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
-| `0x020aa420` | 0, 1 | [ov000](../config/arm9/overlays/ov000/symbols.txt) 1 / [ov001](../config/arm9/overlays/ov001/symbols.txt) **7** | **[ov001](../config/arm9/overlays/ov001/symbols.txt)** (weak) |
-| `0x020ca78c` | 2, 6 | [ov002](../config/arm9/overlays/ov002/symbols.txt) **53** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 0 | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020aed98` | 2, 7 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **1289** / [ov007](../config/arm9/overlays/ov007/symbols.txt) 6** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020aea30` | 2, 4 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **387** / [ov004](../config/arm9/overlays/ov004/symbols.txt) 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020adc74` | 3, 4 | **[ov003](../config/arm9/overlays/ov003/symbols.txt) 0** / [ov004](../config/arm9/overlays/ov004/symbols.txt) **993** | **[ov004](../config/arm9/overlays/ov004/symbols.txt)** |
+| `0x020ada40` | 2, 4 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **545** / [ov004](../config/arm9/overlays/ov004/symbols.txt) 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020ad660` | 2,3,4,7 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) 139 / others 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020efaf0` | 2, 6 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **104** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020effb8` | 2, 6 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **148** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 5** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020aa420` | 0, 1 | **[ov000](../config/arm9/overlays/ov000/symbols.txt) 1** / [ov001](../config/arm9/overlays/ov001/symbols.txt) **7** | **[ov001](../config/arm9/overlays/ov001/symbols.txt) (weak)** |
+| `0x020ca78c` | 2, 6 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **53** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
 | `0x02123804` | 77,78,79,80 | all zero | **inconclusive** |
 
 **G8.1 — `0x020aed98` is confirmed twice over.** [high] Co-residency gives [ov002](../config/arm9/overlays/ov002/symbols.txt) 1289-to-6,
