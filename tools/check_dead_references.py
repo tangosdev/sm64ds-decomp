@@ -1,8 +1,9 @@
-"""Does the tree's PROSE name files that no longer exist?
+"""Does the tree's prose name files that no longer exist?
 
     python tools/check_dead_references.py            # gate: fail on NEW dead references
     python tools/check_dead_references.py --list      # print every dead reference found
-    python tools/check_dead_references.py --update    # re-bank the baseline
+    python tools/check_dead_references.py --update    # re-bank the prose baseline
+    python tools/check_dead_references.py --update-code  # re-bank C/C++ comment debt
 
 WHY THIS EXISTS
 ---------------
@@ -15,8 +16,9 @@ usage line, `check_src_tu.py`'s "does not compile" list, and a whole family of
 `plan-gen-header.md` citations that had outlived that note's move into the notes
 archive), and each one had already been repeated as fact by a reader who trusted it.
 
-This is a REFERENCE-INTEGRITY gate for documentation, not for code. `check_references.py`
-covers dangling code symbols; this covers the sentences around them.
+This is a REFERENCE-INTEGRITY gate for prose, including prose embedded in C/C++
+comments. `check_references.py` covers dangling code symbols; this covers the sentences
+around them.
 
 WHAT IT CHECKS
 --------------
@@ -26,6 +28,7 @@ Prose surfaces only:
   - `notes/**/*.md`, top-level `*.md`, `docs/**/*.md`, `port/docs/*.md`
   - `.github/workflows/*.yml`  comments and `name:` / `run:` lines
   - `.claude/skills/**/*.md`
+  - comments in repository `.c`, `.cc`, `.cpp`, `.h`, and `.hpp` files
 
 In those it finds repo-rooted path references -- a token whose first segment is a real
 top-level directory of this repo (`tools/`, `notes/`, `include/`, `src/`, ...) -- and
@@ -60,14 +63,13 @@ Two mechanisms, because a noisy gate gets switched off and then protects nothing
    outright -- a reference to `build/tu_map.json` is correct even on a fresh clone
    where the file is absent.
 
-2. Everything else is measured against `config/dead-reference-baseline.json`, the same
-   ratchet shape this repo already uses for byte, layout and langmode known-issues.
-   Only a reference that is dead AND not in the baseline fails the run. That admits
-   the whole existing false-positive population -- synthetic example paths in test
-   fixtures (`src/f.c`), paths belonging to other repositories (`include/nitro/...`,
-   the n64 `src/game/mario.c` cross-reference), paths that live only on an unlanded
-   branch, and prose that deliberately names something historical -- without anyone
-   having to enumerate those categories by pattern.
+2. Documentation debt is measured against `config/dead-reference-baseline.json`, while
+   the larger pre-existing C/C++ comment debt has its own grouped ratchet at
+   `tools/dead-code-reference-baseline.json`. Only a reference that is dead AND absent
+   from both baselines fails. Keeping the comment ratchet separate matters: the familiar
+   prose `--update` command cannot accidentally bank hundreds of source-comment entries.
+   Exact `(citing file, referenced path)` pairs allow removals but prevent one cleanup
+   from hiding one addition.
 
 FAILING LOUDLY RATHER THAN SKIPPING GREEN
 -----------------------------------------
@@ -92,10 +94,15 @@ import tokenize
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 BASELINE = REPO / "config" / "dead-reference-baseline.json"
+CODE_BASELINE = REPO / "tools" / "dead-code-reference-baseline.json"
 
 # The scan must be at least this big or the tool is broken, not the tree.
 MIN_FILES = 150
 MIN_REFS = 1000
+# A broken C/C++ target selector must not quietly reduce the new coverage to zero. This
+# is deliberately far below the current tree, so normal shard consolidation cannot trip
+# it while removing files.
+MIN_CODE_FILES = 1000
 # 183 relative markdown links at e6ede02d7, 106 of them in one note. The floor sits
 # below what survives that note being deleted outright, so it trips on a broken
 # extractor and not on prose churn.
@@ -113,6 +120,7 @@ GENERATED = {"build", "extracted", "progress"}
 
 SKIP_DIRS = {".git", "build", "extracted", "__pycache__", ".mypy_cache",
              ".pytest_cache", "node_modules", ".venv", "venv"}
+CODE_SUFFIXES = (".c", ".cc", ".cpp", ".h", ".hpp")
 
 PATH_RE = re.compile(r"(?<![\w./\\-])((?:[A-Za-z0-9_.\-]+/)+[A-Za-z0-9_.\-]+)(?![\w-])")
 # Templates, globs and format placeholders are not paths anyone can resolve.
@@ -127,11 +135,12 @@ NUL = bytes([0])
 
 # --------------------------------------------------------------------------- scan
 
-def _prose_targets():
+def _prose_targets(root=None):
+    root = REPO if root is None else pathlib.Path(root)
     out = []
-    for base, dirs, files in os.walk(REPO):
+    for base, dirs, files in os.walk(root):
         dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
-        rel_base = pathlib.Path(base).relative_to(REPO).as_posix()
+        rel_base = pathlib.Path(base).relative_to(root).as_posix()
         for f in files:
             rel = f if rel_base == "." else f"{rel_base}/{f}"
             if rel.startswith("tools/") and rel.endswith(".py"):
@@ -145,6 +154,8 @@ def _prose_targets():
             elif rel.startswith(".github/workflows/") and rel.endswith((".yml", ".yaml")):
                 out.append(rel)
             elif "/" not in rel and rel.endswith(".md"):
+                out.append(rel)
+            elif rel.endswith(CODE_SUFFIXES):
                 out.append(rel)
     return sorted(out)
 
@@ -187,21 +198,103 @@ def _text_prose(text):
         yield i, line
 
 
+def _c_prose(text):
+    """Yield comments from C/C++ without mistaking strings or includes for prose.
+
+    This is a small lexer rather than a comment regex: URLs and path-shaped strings are
+    common in host code, and `//` or `/*` inside them must not start a comment. Raw C++
+    strings are skipped as one token for the same reason.
+    """
+    i = 0
+    line = 1
+    size = len(text)
+    while i < size:
+        ch = text[i]
+        if ch == "\n":
+            line += 1
+            i += 1
+            continue
+
+        if text.startswith("//", i):
+            end = text.find("\n", i + 2)
+            if end < 0:
+                end = size
+            yield line, text[i + 2:end]
+            i = end
+            continue
+
+        if text.startswith("/*", i):
+            i += 2
+            while i < size:
+                end = text.find("*/", i)
+                stop = size if end < 0 else end
+                segment = text[i:stop]
+                parts = segment.split("\n")
+                for offset, part in enumerate(parts):
+                    yield line + offset, part
+                line += len(parts) - 1
+                if end < 0:
+                    i = size
+                    break
+                i = end + 2
+                break
+            continue
+
+        # C++ raw string: R"delimiter(contents)delimiter". Prefixes such as u8R are
+        # harmless because the scanner reaches the R before the quote.
+        if text.startswith('R"', i):
+            open_paren = text.find("(", i + 2, min(size, i + 20))
+            if open_paren >= 0:
+                delimiter = text[i + 2:open_paren]
+                if not re.search(r"[\s\\()]", delimiter):
+                    close = ")" + delimiter + '"'
+                    end = text.find(close, open_paren + 1)
+                    if end >= 0:
+                        token_end = end + len(close)
+                        line += text.count("\n", i, token_end)
+                        i = token_end
+                        continue
+
+        if ch in ('"', "'"):
+            quote = ch
+            i += 1
+            while i < size:
+                if text[i] == "\\":
+                    if i + 1 < size and text[i + 1] == "\n":
+                        line += 1
+                    i += 2
+                    continue
+                if text[i] == quote:
+                    i += 1
+                    break
+                if text[i] == "\n":
+                    # Invalid/uncontinued literals should not hide the rest of a file.
+                    line += 1
+                    i += 1
+                    break
+                i += 1
+            continue
+
+        i += 1
+
+
 def _normalise(ref):
     ref = ref.strip().rstrip(TRAILING).lstrip("(\"'`[").replace("\\", "/")
     return ref.lstrip("./").rstrip("/")
 
 
 def collect(root=REPO):
-    """[(file, line, ref)] for every repo-rooted path reference in prose."""
+    """[(file, line, ref)] for every repo-rooted path reference in prose/comments."""
     refs = []
-    files = _prose_targets()
+    files = _prose_targets(root)
     for rel in files:
         text = (root / rel).read_text(encoding="utf-8", errors="replace")
         if rel.endswith(".py"):
             regions = _py_prose(text)
         elif rel.endswith((".yml", ".yaml")):
             regions = _yaml_prose(text)
+        elif rel.endswith(CODE_SUFFIXES):
+            regions = _c_prose(text)
         else:
             regions = _text_prose(text)
         for lineno, snippet in regions:
@@ -325,11 +418,19 @@ def dead_references(root=REPO):
     """
     files, refs = collect(root)
     paths = _tree_paths(root) | _git_tracked(root)
+    # Most references are repo-rooted and hit `paths` directly. The historical
+    # basename-relative allowance used a full paths scan for every miss; grouping by
+    # final component preserves that behavior without turning C/C++ coverage into an
+    # O(references * repository-files) gate.
+    suffix_candidates = {}
+    for path in paths:
+        suffix_candidates.setdefault(path.rsplit("/", 1)[-1], []).append(path)
     unresolved = set()
     for rel, _lineno, ref in refs:
         if ref in paths:
             continue
-        if any(p.endswith("/" + ref) for p in paths):
+        if any(p.endswith("/" + ref)
+               for p in suffix_candidates.get(ref.rsplit("/", 1)[-1], ())):
             continue
         unresolved.add((rel, ref))
     ignored = _git_ignored({ref for _rel, ref in unresolved}, root)
@@ -399,7 +500,7 @@ def collect_links(root=REPO):
     outside fences.
     """
     links = []
-    for rel in _prose_targets():
+    for rel in _prose_targets(root):
         if not rel.endswith(".md"):
             continue
         text = (root / rel).read_text(encoding="utf-8", errors="replace")
@@ -472,27 +573,61 @@ def broken_links(root=REPO, dead=()):
 # ------------------------------------------------------------------------ baseline
 
 def load_baseline():
-    if not BASELINE.exists():
-        return set()
-    data = json.loads(BASELINE.read_text(encoding="utf-8"))
-    return {(e["file"], e["ref"]) for e in data["known"]}
+    known = set()
+    for path in (BASELINE, CODE_BASELINE):
+        if not path.exists():
+            continue
+        data = json.loads(path.read_text(encoding="utf-8"))
+        entries = data["known"]
+        if isinstance(entries, dict):
+            known.update((file, ref)
+                         for file, refs in entries.items() for ref in refs)
+        else:
+            known.update((e["file"], e["ref"]) for e in entries)
+    return known
+
+
+def _write_baseline(path, dead, comment):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    payload = {
+        "_comment": comment,
+        "known": [{"file": f, "ref": r} for f, r in sorted(dead)],
+    }
+    path.write_text(json.dumps(payload, indent=1) + "\n",
+                    encoding="utf-8", newline="\n")
 
 
 def write_baseline(dead):
-    BASELINE.parent.mkdir(parents=True, exist_ok=True)
-    payload = {
-        "_comment": (
+    prose = {(f, r) for f, r in dead if not f.endswith(CODE_SUFFIXES)}
+    _write_baseline(
+        BASELINE,
+        prose,
+        (
             "Dead path references in prose that are known and accepted: synthetic "
             "example paths in tests, paths belonging to other repositories, paths "
             "that exist only on an unlanded branch, and prose that deliberately "
             "names something historical. tools/check_dead_references.py fails on any "
             "dead reference NOT listed here. Regenerate with --update, but read the "
             "diff: a new entry is usually a rename someone forgot to follow through "
-            "into the docs."),
-        "known": [{"file": f, "ref": r} for f, r in sorted(dead)],
+            "into the docs."))
+
+
+def write_code_baseline(dead):
+    code = {(f, r) for f, r in dead if f.endswith(CODE_SUFFIXES)}
+    grouped = {}
+    for file, ref in sorted(code):
+        grouped.setdefault(file, []).append(ref)
+    payload = {
+        "_comment": (
+            "Dead repo-rooted paths already present in C/C++ comments when comment "
+            "coverage was introduced. tools/check_dead_references.py allows these "
+            "exact pairs, reports healed entries, and fails on additions. Regenerate "
+            "only from a clean, pinned main checkout with --update-code; never use it "
+            "to make a feature branch green."),
+        "known": grouped,
     }
-    BASELINE.write_text(json.dumps(payload, indent=1) + "\n",
-                        encoding="utf-8", newline="\n")
+    CODE_BASELINE.write_text(json.dumps(payload, indent=1) + "\n",
+                             encoding="utf-8", newline="\n")
 
 
 # ---------------------------------------------------------------------------- cli
@@ -501,23 +636,30 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("--list", action="store_true",
                     help="print every dead reference and broken link, baselined or not")
-    ap.add_argument("--update", action="store_true",
-                    help="re-bank config/dead-reference-baseline.json")
+    updates = ap.add_mutually_exclusive_group()
+    updates.add_argument("--update", action="store_true",
+                         help="re-bank config/dead-reference-baseline.json only")
+    updates.add_argument("--update-code", action="store_true",
+                         help="re-bank tools/dead-code-reference-baseline.json only")
     args = ap.parse_args(argv)
 
     files, refs, dead = dead_references()
     links, broken = broken_links(REPO, dead)
+    code_files = [f for f in files if f.endswith(CODE_SUFFIXES)]
 
     # A scan that inspected nothing must not report a clean tree.
-    if len(files) < MIN_FILES or len(refs) < MIN_REFS or len(links) < MIN_LINKS:
-        print(f"check_dead_references: SCAN TOO SMALL -- {len(files)} prose file(s), "
-              f"{len(refs)} path reference(s), {len(links)} markdown link(s); expected "
-              f"at least {MIN_FILES}, {MIN_REFS} and {MIN_LINKS}.")
+    if (len(files) < MIN_FILES or len(code_files) < MIN_CODE_FILES
+            or len(refs) < MIN_REFS or len(links) < MIN_LINKS):
+        print(f"check_dead_references: SCAN TOO SMALL -- {len(files)} scan target(s), "
+              f"{len(code_files)} C/C++ file(s), {len(refs)} path reference(s), "
+              f"{len(links)} markdown link(s); expected at least {MIN_FILES}, "
+              f"{MIN_CODE_FILES}, {MIN_REFS} and {MIN_LINKS}.")
         print("  The extractor is broken, or the tool is being run outside the repo.")
         print("  Refusing to report a pass on a scan this size.")
         return 2
 
-    print(f"check_dead_references: {len(files)} prose file(s), {len(refs)} repo-rooted "
+    print(f"check_dead_references: {len(files)} scan target(s), {len(code_files)} C/C++ "
+          f"file(s), {len(refs)} repo-rooted "
           f"path reference(s), {len(dead)} that do not resolve; {len(links)} markdown "
           f"link(s), {len(broken)} that do not resolve relative to their own file")
 
@@ -528,32 +670,53 @@ def main(argv=None):
             print(f"  {f}:{ln}: {target} -> {resolved}")
 
     if args.update:
-        write_baseline(dead)
+        prose_dead = [(f, r) for f, r in dead if not f.endswith(CODE_SUFFIXES)]
+        write_baseline(prose_dead)
         print(f"  wrote {BASELINE.relative_to(REPO).as_posix()} "
-              f"({len(dead)} known reference(s))")
+              f"({len(prose_dead)} known prose reference(s))")
         if broken:
             print(f"  NOTE: {len(broken)} broken markdown link(s) remain -- relative "
                   f"links have no baseline and must be fixed, not banked")
+        return 1 if broken else 0
+
+    if args.update_code:
+        write_code_baseline(dead)
+        code_dead = sum(1 for f, _r in dead if f.endswith(CODE_SUFFIXES))
+        print(f"  wrote {CODE_BASELINE.relative_to(REPO).as_posix()} "
+              f"({code_dead} known C/C++ comment reference(s))")
         return 1 if broken else 0
 
     known = load_baseline()
     new = [d for d in dead if d not in known]
     healed = sorted(known - set(dead))
 
-    if healed:
-        print(f"  {len(healed)} baselined reference(s) now resolve -- "
-              f"run --update to shrink the baseline (not a failure)")
+    healed_code = [d for d in healed if d[0].endswith(CODE_SUFFIXES)]
+    healed_prose = [d for d in healed if not d[0].endswith(CODE_SUFFIXES)]
+    if healed_prose:
+        print(f"  {len(healed_prose)} baselined prose reference(s) now resolve -- "
+              f"run --update to shrink the prose baseline (not a failure)")
+    if healed_code:
+        print(f"  {len(healed_code)} baselined C/C++ comment reference(s) now resolve "
+              f"-- refresh from a clean, pinned main with --update-code (not a failure)")
 
     if not new:
         print("  no new dead references")
     else:
-        print(f"\nFAIL: {len(new)} prose reference(s) name a path that does not exist:\n")
+        print(f"\nFAIL: {len(new)} prose/comment reference(s) name a path that does not "
+              f"exist:\n")
         for f, r in new:
             print(f"  {f}\n      names `{r}`, which is not in the tree")
-        print("\nThis is almost always a rename that did not carry into the prose. Fix the")
-        print("sentence to name the file's current path -- or, if the reference is")
-        print("deliberately historical or belongs to another repository, add it with")
-        print("`python tools/check_dead_references.py --update`.")
+        new_code = [d for d in new if d[0].endswith(CODE_SUFFIXES)]
+        new_prose = [d for d in new if not d[0].endswith(CODE_SUFFIXES)]
+        print("\nThis is almost always a rename that did not carry into the surrounding "
+              "text.")
+        print("Fix the reference to name the file's current path.")
+        if new_prose:
+            print("For deliberately historical prose or a path belonging to another "
+                  "repository, re-bank the prose baseline with --update after review.")
+        if new_code:
+            print("The code-comment baseline is initial-debt-only: --update does not "
+                  "bank it. Use --update-code only from a clean, pinned main checkout.")
 
     if not broken:
         print("  no broken markdown links")
