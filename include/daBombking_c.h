@@ -44,8 +44,9 @@ struct daBombking_c : dEnemyBase_c {
     ShadowModel mShadowModel;         /* 0x3f8 */
     /* The state pointer. KingBobOmb_SetState writes it and immediately calls
        through it, and Behavior compares it against the ov078 state tables
-       (data_ov078_0212703c / _0212707c / _021270bc / _021270fc) -- see
-       src/KingBobOmb_SetState.cpp and src/_ZN12daBombking_c8BehaviorEv.cpp. */
+       (data_ov078_0212703c / _0212707c / _021270bc / _021270fc). Both members
+       now live in the promoted TU; they were their own one-function sources
+       before the fold. */
     void *mState;                     /* 0x420 */
     u8  pad_424[0x70];
     s32 mHeldActor;                      /* 0x494 */
