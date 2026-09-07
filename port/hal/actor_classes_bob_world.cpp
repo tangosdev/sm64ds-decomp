@@ -1919,3 +1919,152 @@ extern "C" void port_bob_debug_watch(void)
     }
     std::printf("\n");
 }
+
+/* ===========================================================================
+   GATE SLOT5 -- the thirty faces that let the matched Render bodies link
+   ===========================================================================
+
+   THE BUG THAT KEPT THEM OUT. mwccarm spends TWO vtable entries on
+   `virtual ~X()` (the Itanium D1 complete-object and D0 deleting pair) and
+   MSVC folds them into ONE, so every virtual declared after the destructor sat
+   one slot early on the host, the whole way down ModelBase -> Model ->
+   ModelAnim. The ROM's _ZTV9ModelAnim spends slot 5 on Render(Vector3 const *)
+   and slot 6 on Virtual18(u32, Vector3 const *); the folded host table put
+   Virtual18 on slot 5, which reads one argument more than a slot-5 caller
+   passes. Thirty matched Render bodies dispatch that slot through a local
+   six-virtual shadow over a Model or ModelAnim member, so all thirty were
+   dropped from their own gates' slices and typed out by hand into
+   unmatched/ModelAnim_Renders.cpp and unmatched/BobEnemy_Renders.cpp.
+
+   include/ModelBase.h and its six siblings now spell the destructor pair as
+   two plain virtuals under _MSC_VER. The host numbers the table the ROM's way,
+   the hand copies have nothing left to work around, and slice_slot5.txt puts
+   the thirty matched sources back in the link.
+
+   WHY THE FACES. Each of the thirty fill sites declares the Itanium name at C
+   linkage and calls it, because the definition it used to reach was an
+   extern "C" host copy. The matched sources define __thiscall METHODS, and an
+   /alternatename cannot bridge ecx against the stack -- the rule this file's
+   own header states. So each row below is a cdecl definition of the C name
+   onto the method, and not one fill site changes.
+
+   WHY THIS FILE and not hal/cxxname_bridge.cpp, which is the general home for
+   this shape: cxxname_bridge.cpp is compiled into FIVE targets (it says so
+   itself, at the Memory::operator_delete2 note) and only three of them --
+   walk_window, walk_window_hires and smoke_player -- link the slice, so a face
+   there would be an unresolved external in smoke_actor, smoke_savestate and
+   smoke_persist. This file is named by those three targets and no others, the
+   same three that carried unmatched/BobEnemy_Renders.cpp and
+   unmatched/ModelAnim_Renders.cpp until this gate. hal/bob_enemy_bridges.cpp
+   has the right target list too but declares its own shadow struct ModelBase,
+   which collides with the real one these headers pull in.
+
+   VERIFIED BY ROM ADDRESS, every row. Slot 9 is ActorBase::Render, the slot
+   each class's own table spends on this method; the word is read out of
+   config/arm9/overlays/<ov>/relocs.txt and the destination out of the same
+   overlay's symbols.txt. Every one of the thirty destinations is a
+   kind:function(arm,size=..) record whose first word is a real ARM push
+   (0xe92d4xxx), and none carries the "recovered from vtable slot identity"
+   guess marker, so inferred_stub_guard.py has nothing to refuse.
+
+     BobOmb           ov102  vt 0x0214e558 + 4*9 = 0x0214e57c -> 0x0214c168  function(arm,size=0x54)
+     Goomba           ov084  vt 0x02130948 + 4*9 = 0x0213096c -> 0x0212b5bc  function(arm,size=0x130)
+     BobOmbBuddy      ov084  vt 0x02130a38 + 4*9 = 0x02130a5c -> 0x0212cf40  function(arm,size=0x2c)
+     ChainChomp       ov014  vt 0x021147ec + 4*9 = 0x02114810 -> 0x02112994  function(arm,size=0x58)
+     ChainChompFence  ov014  vt 0x021148b0 + 4*9 = 0x021148d4 -> 0x02112f80  function(arm,size=0x40)
+     KoopaTheQuick    ov062  vt 0x0211db9c + 4*9 = 0x0211dbc0 -> 0x0211ab50  function(arm,size=0x38)
+     KoopaFlag        ov062  vt 0x0211dc54 + 4*9 = 0x0211dc78 -> 0x0211b030  function(arm,size=0x2c)
+     Whomp            ov079  vt 0x02127c80 + 4*9 = 0x02127ca4 -> 0x02125f78  function(arm,size=0x54)
+     Butterfly        ov100  vt 0x02147e9c + 4*9 = 0x02147ec0 -> 0x021419d4  function(arm,size=0x6c)
+     Fish             ov100  vt 0x021484bc + 4*9 = 0x021484e0 -> 0x02146b04  function(arm,size=0x34)
+     QuestionBlock    ov102  vt 0x0214e47c + 4*9 = 0x0214e4a0 -> 0x0214a2ac  function(arm,size=0x80)
+     Scuttlebug       ov071  vt 0x02122c2c + 4*9 = 0x02122c50 -> 0x0212033c  function(arm,size=0x5c)
+     PowerStar        ov002  vt 0x0210ab3c + 4*9 = 0x0210ab60 -> 0x020eacf4  function(arm,size=0x9c)
+     Bully            ov064  vt 0x0211b870 + 4*9 = 0x0211b894 -> 0x02116cf0  function(arm,size=0x2c)
+     BigBully         ov064  vt 0x0211b978 + 4*9 = 0x0211b99c -> 0x0211764c  function(arm,size=0x38)
+     RotatingFirebar  ov064  vt 0x0211be10 + 4*9 = 0x0211be34 -> 0x0211824c  function(arm,size=0x28)
+     UpDownLiftBbh    ov095  vt 0x02137628 + 4*9 = 0x0213764c -> 0x021364b0  function(arm,size=0x28)
+     Seaweed          ov002  vt 0x02109c74 + 4*9 = 0x02109c98 -> 0x020bc6d4  function(arm,size=0x28)
+     SeesawBob        ov095  vt 0x021374fc + 4*9 = 0x02137520 -> 0x02135a28  function(arm,size=0x28)
+     UnchainedChomp   ov100  vt 0x02148054 + 4*9 = 0x02148078 -> 0x02143d0c  function(arm,size=0x58)
+     BabyPenguin      ov072  vt 0x02122a90 + 4*9 = 0x02122ab4 -> 0x02121db4  function(arm,size=0x54)
+     HootTheOwl       ov094  vt 0x02136a58 + 4*9 = 0x02136a7c -> 0x0213642c  function(arm,size=0x4c)
+     SwitchPillar     ov012  vt 0x02112408 + 4*9 = 0x0211242c -> 0x02111540  function(arm,size=0x34)
+     Spindrift        ov081  vt 0x0212887c + 4*9 = 0x021288a0 -> 0x02123c1c  function(arm,size=0x50)
+     Moneybag         ov081  vt 0x02128c04 + 4*9 = 0x02128c28 -> 0x021277e0  function(arm,size=0x74)
+     PushBlock        ov002  vt 0x02109800 + 4*9 = 0x02109824 -> 0x020b9aac  function(arm,size=0xc4)
+     Boo              ov063  vt 0x0211e828 + 4*9 = 0x0211e84c -> 0x0211af70  function(arm,size=0x108)
+     FlyGuy           ov070  vt 0x02123168 + 4*9 = 0x0212318c -> 0x021201c0  function(arm,size=0x50)
+     YoshiEgg         ov002  vt 0x0210adb4 + 4*9 = 0x0210add8 -> 0x020edf98  function(arm,size=0x78)
+     QuestionSwitch   ov002  vt 0x02108e5c + 4*9 = 0x02108e80 -> 0x020b51ac  function(arm,size=0x30)
+
+   NOT SEATED, for the record. SwitchPillar's own Render (ov012 0x02111324,
+   src/func_ov012_02111324.cpp) is the same collision but its source carries
+   the guess marker, so its host copy stays in unmatched/ModelAnim_Renders.cpp.
+   The four wave-19 bodies in unmatched/W19_Slot5_Renders.cpp (Snufit, Swoop,
+   Dorrie, MontyMole) are the same collision and worth four more, but their
+   fills route to port_w19_* names in hal/actor_classes_ov065.cpp and
+   hal/actor_classes_montymole.cpp, which this lane does not own. */
+#include "BobOmb.h"
+#include "Goomba.h"
+#include "BobOmbBuddy.h"
+#include "ChainChomp.h"
+#include "ChainChompFence.h"
+#include "KoopaTheQuick.h"
+#include "KoopaFlag.h"
+#include "Whomp.h"
+#include "Butterfly.h"
+#include "Fish.h"
+#include "QuestionBlock.h"
+#include "Scuttlebug.h"
+#include "PowerStar.h"
+#include "Bully.h"
+#include "BigBully.h"
+#include "RotatingFirebar.h"
+#include "UpDownLiftBbh.h"
+#include "Seaweed.h"
+#include "SeesawBob.h"
+#include "UnchainedChomp.h"
+#include "BabyPenguin.h"
+#include "HootTheOwl.h"
+#include "SwitchPillar.h"
+#include "Spindrift.h"
+#include "Moneybag.h"
+#include "PushBlock.h"
+#include "Boo.h"
+#include "FlyGuy.h"
+#include "YoshiEgg.h"
+#include "QuestionSwitch.h"
+
+extern "C" {
+int _ZN6BobOmb6RenderEv(void *s)           { return ((BobOmb *)s)->BobOmb::Render(); }
+int _ZN6Goomba6RenderEv(void *s)           { return ((Goomba *)s)->Goomba::Render(); }
+int _ZN11BobOmbBuddy6RenderEv(void *s)     { return ((BobOmbBuddy *)s)->BobOmbBuddy::Render(); }
+int _ZN10ChainChomp6RenderEv(void *s)      { return ((ChainChomp *)s)->ChainChomp::Render(); }
+int _ZN15ChainChompFence6RenderEv(void *s) { return ((ChainChompFence *)s)->ChainChompFence::Render(); }
+int _ZN13KoopaTheQuick6RenderEv(void *s)   { return ((KoopaTheQuick *)s)->KoopaTheQuick::Render(); }
+int _ZN9KoopaFlag6RenderEv(void *s)        { return ((KoopaFlag *)s)->KoopaFlag::Render(); }
+int _ZN5Whomp6RenderEv(void *s)            { return ((Whomp *)s)->Whomp::Render(); }
+int _ZN9Butterfly6RenderEv(void *s)        { return ((Butterfly *)s)->Butterfly::Render(); }
+int _ZN4Fish6RenderEv(void *s)             { return ((Fish *)s)->Fish::Render(); }
+int _ZN13QuestionBlock6RenderEv(void *s)   { return ((QuestionBlock *)s)->QuestionBlock::Render(); }
+int _ZN10Scuttlebug6RenderEv(void *s)      { return ((Scuttlebug *)s)->Scuttlebug::Render(); }
+int _ZN9PowerStar6RenderEv(void *s)        { return ((PowerStar *)s)->PowerStar::Render(); }
+int _ZN5Bully6RenderEv(void *s)            { return ((Bully *)s)->Bully::Render(); }
+int _ZN8BigBully6RenderEv(void *s)         { return ((BigBully *)s)->BigBully::Render(); }
+int _ZN15RotatingFirebar6RenderEv(void *s) { return ((RotatingFirebar *)s)->RotatingFirebar::Render(); }
+int _ZN13UpDownLiftBbh6RenderEv(void *s)   { return ((UpDownLiftBbh *)s)->UpDownLiftBbh::Render(); }
+int _ZN7Seaweed6RenderEv(void *s)          { return ((Seaweed *)s)->Seaweed::Render(); }
+int _ZN9SeesawBob6RenderEv(void *s)        { return ((SeesawBob *)s)->SeesawBob::Render(); }
+int _ZN14UnchainedChomp6RenderEv(void *s)  { return ((UnchainedChomp *)s)->UnchainedChomp::Render(); }
+int _ZN11BabyPenguin6RenderEv(void *s)     { return ((BabyPenguin *)s)->BabyPenguin::Render(); }
+int _ZN10HootTheOwl6RenderEv(void *s)      { return ((HootTheOwl *)s)->HootTheOwl::Render(); }
+int _ZN12SwitchPillar6RenderEv(void *s)    { return ((SwitchPillar *)s)->SwitchPillar::Render(); }
+int _ZN9Spindrift6RenderEv(void *s)        { return ((Spindrift *)s)->Spindrift::Render(); }
+int _ZN8Moneybag6RenderEv(void *s)         { return ((Moneybag *)s)->Moneybag::Render(); }
+int _ZN9PushBlock6RenderEv(void *s)        { return ((PushBlock *)s)->PushBlock::Render(); }
+int _ZN3Boo6RenderEv(void *s)              { return ((Boo *)s)->Boo::Render(); }
+int _ZN6FlyGuy6RenderEv(void *s)           { return ((FlyGuy *)s)->FlyGuy::Render(); }
+int _ZN8YoshiEgg6RenderEv(void *s)         { return ((YoshiEgg *)s)->YoshiEgg::Render(); }
+int _ZN14QuestionSwitch6RenderEv(void *s)  { return ((QuestionSwitch *)s)->QuestionSwitch::Render(); }
+}

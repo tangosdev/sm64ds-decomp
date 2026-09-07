@@ -14614,6 +14614,43 @@ set_source_files_properties(
     "VT0=_ZTV11daObjPile_c;VT1=_ZTV8Platform;G0=data_020a0eac")
 
 # ===========================================================================
+# GATE SLOT5 -- the thirty Render bodies the destructor fold kept unlinked
+# ===========================================================================
+#
+# mwccarm spends TWO vtable entries on `virtual ~X()` (the Itanium D1/D0 pair)
+# and MSVC folds them into one, so every virtual declared after the destructor
+# sat one slot early on the host through the whole model hierarchy. The ROM's
+# _ZTV9ModelAnim spends slot 5 on Render; the folded host table spent it on
+# Virtual18, which takes an argument more. Thirty matched Render bodies that
+# dispatch that slot through a local six-virtual shadow were therefore dropped
+# from their own gates' slices and hand-transcribed into
+# unmatched/ModelAnim_Renders.cpp and unmatched/BobEnemy_Renders.cpp.
+#
+# include/ModelBase.h and its six siblings now spell the destructor pair as two
+# plain virtuals under _MSC_VER, so the host numbers the table the ROM's way
+# and the hand copies have nothing left to work around. slice_slot5.txt carries
+# the thirty sources, each verified against the word at its class vtable's
+# slot 9 in config/arm9/overlays/<ov>/relocs.txt before it was enrolled.
+#
+# THE FACES ARE THE OTHER HALF. Every one of the thirty fill sites declares the
+# Itanium name at C linkage and calls it, because the host copy it reached was
+# an extern "C" definition; the matched sources define __thiscall methods, and
+# no linker alias bridges ecx against the stack. hal/cxxname_bridge.cpp carries
+# the thirty one-line faces, so no fill site changes.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_slot5.txt" SLICE_SLOT5_LINES)
+set(SLICE_SLOT5_SOURCES "")
+foreach(line IN LISTS SLICE_SLOT5_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SLOT5_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tslot5 walk_window walk_window_hires smoke_player)
+    target_sources(${_tslot5} PRIVATE ${SLICE_SLOT5_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
