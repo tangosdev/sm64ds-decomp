@@ -303,7 +303,16 @@ void func_ov004_020b1b08(int c);
 void func_ov004_020b1b40(int c);
 void func_ov004_020b1bc8(char *, int, int, int);
 void func_ov004_020b2220(int, int, int, int, int, int, int);
-void func_ov004_020b56c8(void);
+/* ONE ARGUMENT, THE ROUND'S COIN TOTAL, AND IT USED TO BE DROPPED.
+   ov004 0x020b56c8 opens `push {r4,r5,r6,lr}` then `mov r4, r0` -- it stashes
+   r0 before touching anything, so r0 is a parameter and not scratch. The one
+   in-tree call site proves what is in it: ov006 0x0210979c
+   `ldrsh r0,[r1,#0xf2]` loads the round's total from +0x53f2, 0x021097a0
+   `cmp r0,#0` / `beq` skips on zero, and 0x021097a8 `bl 0x20b56c8` falls into
+   the call with r0 untouched. Declared `(void)` and called with nothing this
+   byte-matched anyway, because on ARM r0 was already live; on a host build the
+   callee reads an unwritten slot and the coin shower is handed garbage. */
+void func_ov004_020b56c8(int coinTotal);
 void func_ov004_020b65e4(void);
 void func_ov004_020b66d4(void);
 void func_ov006_020c0aa8(char *c);
@@ -865,7 +874,7 @@ int dScMgRoulette_c::OnTurnIntoEgg(int /* mode */)
         (*(s16 *)(self + 0x53e8))--;
         if (*(s16 *)(self + 0x53e8) == 0) {
             if (*(s16 *)(self + 0x53f2) != 0)
-                func_ov004_020b56c8();
+                func_ov004_020b56c8(*(s16 *)(self + 0x53f2));
             (*(s16 *)(self + 0x53e6))++;
         }
         break;
