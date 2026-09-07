@@ -135,11 +135,11 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 
 ---
 
-## `PiranhaPlant` (`include/PiranhaPlant.h`, [ov084](../config/arm9/overlays/ov084/symbols.txt))
+## `daPkn_c` (`include/daPkn_c.h`, [ov084](../config/arm9/overlays/ov084/symbols.txt))
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x428 | `Vector3 mPipeScale` | `src/_ZN12PiranhaPlant6RenderEv.cpp` passes `&mPipeScale` as the `Vector3 *` argument of `mModel.Render` — the same slot `mModelAnim.Render` gets `&mScaleX` in. Twelve bytes of what used to be `u8 unk_428` plus `pad_429[0xb]`. |
+| 0x428 | `Vector3 mPipeScale` | `daPkn_c::Render` (now in `src/actors/daPkn_c.cpp`) passes `&mPipeScale` as the `Vector3 *` argument of `mModel.Render` — the same slot `mModelAnim.Render` gets `&mScaleX` in. Twelve bytes of what used to be `u8 unk_428` plus `pad_429[0xb]`. |
 | 0x434 | `Vector3 mFirePos` | `InitResources`' tail computes it: `0xe0` along the facing angle out of the shared sin/cos table `data_02082214`, plus `0x37800` above the spawn Y. The file's own header comment already called it "where the plant's fire comes from". |
 | 0x440 | `Vector3 mSpawnPos` | `InitResources` writes `mPosX/Y/Z` into it; `Behavior` passes `&mSpawnPos` to `dCcAcPos_c::SetPosRelativeToActor`. |
 | 0x44c | `Vector3 mHomePos` | copied wholesale from `mSpawnPos` in `InitResources`; `Behavior` restores `mPosX/Y/Z` from it when `UpdateKillByInvincibleChar` returns 2 (the plant zeroes its scale and goes home). Two separate copies of the spawn point, distinguished by which one is read back into the position. |

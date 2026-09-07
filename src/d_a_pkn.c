@@ -9,7 +9,7 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV12PiranhaPlant */
+/* resolved: VT0 = _ZTV7daPkn_c */
 /* Reconstructed source-style name: SM64DS proves daPkn_c through RTTI,
  * allocation size, vtable identity, and the PAKUN registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -19,7 +19,7 @@ int *daPkn_c_classInit(void)
     int *p = (int *)_ZN7fBase_cnwEj(1148);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)_ZTV12PiranhaPlant;
+        p[0] = (int)_ZTV7daPkn_c;
         _ZN9ModelAnimC1Ev((char *)p + 0x110);
         _ZN5ModelC1Ev((char *)p + 0x174);
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x1c4);
