@@ -9,13 +9,13 @@ arm9	0x020914a8	data_020914a8	g_profile_BOOT	reconstructed profile global; liter
 arm9	0x0202e088	Stage_Spawn	dScStage_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 arm9	0x0209213c	_ZN5Stage9spawnDataE	g_profile_STAGE	reconstructed profile global; literal ROM ID STAGE+registry role+later EAD lineage; exact SM64DS spelling not preserved
 arm9	0x0209435c	data_0209435c	g_profile_MULTIBOOT	reconstructed profile global; literal ROM ID MULTIBOOT+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x020aee40	func_ov002_020aee40	_ZN13OneUpMushroomD1Ev	vtable slot 16
-ov002	0x020aee88	func_ov002_020aee88	_ZN13OneUpMushroomD0Ev	vtable slot 17
-ov002	0x020affe8	func_ov002_020affe8	_ZN13OneUpMushroom16CleanupResourcesEv	vtable slot 3
-ov002	0x020b006c	func_ov002_020b006c	_ZN13OneUpMushroom16OnPendingDestroyEv	vtable slot 12
-ov002	0x020b0070	func_ov002_020b0070	_ZN13OneUpMushroom6RenderEv	vtable slot 9
-ov002	0x020b00e8	func_ov002_020b00e8	_ZN13OneUpMushroom8BehaviorEv	vtable slot 6
-ov002	0x020b01c0	func_ov002_020b01c0	_ZN13OneUpMushroom13InitResourcesEv	vtable slot 0
+ov002	0x020aee40	func_ov002_020aee40	_ZN7da1up_cD1Ev	vtable slot 16 (was _ZN13OneUpMushroomD1Ev)
+ov002	0x020aee88	func_ov002_020aee88	_ZN7da1up_cD0Ev	vtable slot 17 (was _ZN13OneUpMushroomD0Ev)
+ov002	0x020affe8	func_ov002_020affe8	_ZN7da1up_c16CleanupResourcesEv	vtable slot 3 (was _ZN13OneUpMushroom16CleanupResourcesEv)
+ov002	0x020b006c	func_ov002_020b006c	_ZN7da1up_c16OnPendingDestroyEv	vtable slot 12 (was _ZN13OneUpMushroom16OnPendingDestroyEv)
+ov002	0x020b0070	func_ov002_020b0070	_ZN7da1up_c6RenderEv	vtable slot 9 (was _ZN13OneUpMushroom6RenderEv)
+ov002	0x020b00e8	func_ov002_020b00e8	_ZN7da1up_c8BehaviorEv	vtable slot 6 (was _ZN13OneUpMushroom8BehaviorEv)
+ov002	0x020b01c0	func_ov002_020b01c0	_ZN7da1up_c13InitResourcesEv	vtable slot 0 (was _ZN13OneUpMushroom13InitResourcesEv)
 ov002	0x020b0530	func_ov002_020b0530	MegaMushroom_Spawn	spawnfunc
 ov002	0x020b0530	MegaMushroom_Spawn	da1up_c_classInit_SCALEUP_KINOKO	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x020b0580	func_ov002_020b0580	OneUpMushroom_Spawn	spawnfunc
@@ -326,7 +326,7 @@ ov002	0x02108388	data_ov002_02108388	OneUpMushroom_SpawnInfo	spawninfo
 ov002	0x02108388	OneUpMushroom_SpawnInfo	g_profile_ONEUPKINOKO	reconstructed profile global; literal ROM ID ONEUPKINOKO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x021083a4	data_ov002_021083a4	MegaMushroom_SpawnInfo	spawninfo
 ov002	0x021083a4	MegaMushroom_SpawnInfo	g_profile_SCALEUP_KINOKO	reconstructed profile global; literal ROM ID SCALEUP_KINOKO+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov002	0x021083c8	data_ov002_021083c8	_ZTV13OneUpMushroom	vtable alloc=0x398
+ov002	0x021083c8	data_ov002_021083c8	_ZTV7da1up_c	vtable alloc=0x398 (was _ZTV13OneUpMushroom; alias collapse at one address, so the 0x398 figure is this same class's and is retained: both factories mov r0,#0x398)
 ov002	0x0210845c	data_ov002_0210845c	InvisiblePole_SpawnInfo	spawninfo
 ov002	0x0210845c	InvisiblePole_SpawnInfo	g_profile_BAR	reconstructed profile global; literal ROM ID BAR+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov002	0x02108480	data_ov002_02108480	_ZTV7daBar_c	vtable alloc=0x108
