@@ -255,14 +255,22 @@ these exact trees; neither is a cached report from an earlier base.
   checked, 620 verified, 294 warnings, 0 blocking. Coverage limit: this class is
   itself one of those warnings. `prepush_linkcheck` returns `NO-SYM` for a
   promoted multi-symbol TU by construction, so it proves nothing about this
-  change; the relocation proof rests on `pr_linkcheck`, `tubuild.py verify` and
-  the full-ROM link.
-  NOT AVAILABLE: `tools/linkcheck.py --name` cannot be driven by symbol in any
-  checkout of this repository. It reads the per-function ledger
-  `progress/matched.jsonl`, which is gitignored and absent from the main checkout
-  and both worktrees, so all 29 invocations die with `FileNotFoundError`.
-  `pr_linkcheck` is the by-symbol driver that works, and it is the one recorded
-  above.
+  change; the relocation proof rests on `linkcheck.py` driven by symbol,
+  `pr_linkcheck`, `tubuild.py verify` and the full-ROM link.
+  `python tools/linkcheck.py --module ov072 --name <symbol> --addr <addr>
+  --size <size> --c src/actors/daBgSnmBdy_c.cpp`, run for each of the 29 members
+  — **29/29 VERIFIED, 0 otherwise.**
+  A correction, because the first version of this document got it wrong and a
+  wrong version would be read as a fact about the repository. `--name` used ALONE
+  does need the per-function ledger `progress/matched.jsonl`, which is gitignored
+  and was absent from this worktree, and the read of it is unguarded, so a bare
+  `--name` dies with `FileNotFoundError` rather than the tool's own message. That
+  is a property of THIS worktree's missing gitignored inputs, not of the tool:
+  the ledger lookup is skipped entirely when `--addr` and `--size` are supplied,
+  and the tool says so itself — "not in progress/matched.jsonl; pass
+  --addr/--size/--module". Both values come straight out of this class's manifest.
+  Do not read the earlier claim that the tool is unavailable; it is available,
+  and this is its result.
 
 - Complete emitted TU and data/metadata checks:
   `python tools/tubuild.py linkcheck ov072/daBgSnmBdy_c -j16` — exit 0,
