@@ -14,8 +14,9 @@ sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import romdata_check as RDC  # noqa: E402
 
 
-def rec(symbol, verdict, src="src/a.cpp", size=4):
-    return {"symbol": symbol, "verdict": verdict, "src": src, "bytes": size}
+def rec(symbol, verdict, src="src/a.cpp", size=4, addr=None):
+    return {"symbol": symbol, "verdict": verdict, "src": src, "bytes": size,
+            "addr": addr}
 
 
 class SummarizeCountsSymbols(unittest.TestCase):
@@ -28,7 +29,7 @@ class SummarizeCountsSymbols(unittest.TestCase):
         self.assertEqual(s["totalRecords"], 3)
         self.assertEqual(s["verifiedRecords"], 3)
         self.assertEqual(s["verifiedSymbols"], [
-            {"module": None, "symbol": "_ZTI7fBase_c"}])
+            {"module": None, "symbol": "_ZTI7fBase_c", "addr": None, "bytes": 4}])
 
     def test_consolidating_sources_does_not_move_the_ratchet(self):
         """The measured shape of the first TU promotion, in miniature."""
@@ -49,7 +50,7 @@ class SummarizeCountsSymbols(unittest.TestCase):
         self.assertEqual(s["verified"], 0)
         self.assertEqual(len(s["differing"]), 1)
         self.assertEqual(s["differingSymbols"], [
-            {"module": None, "symbol": "_ZTV4Foo"}])
+            {"module": None, "symbol": "_ZTV4Foo", "addr": None, "bytes": 4}])
 
     def test_distinct_symbols_still_add_up(self):
         s = RDC.summarize([rec("_ZTI4Foo", RDC.VERIFIED), rec("_ZTS4Foo", RDC.PARTIAL),
@@ -63,7 +64,26 @@ class SummarizeCountsSymbols(unittest.TestCase):
                            dict(rec("_ZTV4Foo", RDC.DIFFERS), module="ov084")])
         self.assertEqual((s["symbols"], s["verified"], s["differs"]), (2, 1, 1))
         self.assertEqual(s["verifiedSymbols"], [
-            {"module": "ov006", "symbol": "_ZTV4Foo"}])
+            {"module": "ov006", "symbol": "_ZTV4Foo", "addr": None, "bytes": 4}])
+
+    def test_the_identity_rows_carry_the_rom_address_and_proven_bytes(self):
+        """Without the address `validate_merge` cannot tell a rename from a deletion.
+
+        `verify_data_symbol` has both on every record; dropping them here is what made
+        the ROM-data ratchet name-only, and a name is the one part of a data symbol a
+        source change is allowed to move.
+        """
+        s = RDC.summarize([
+            dict(rec("_ZTV8daGmch_c", RDC.VERIFIED, size=0x84, addr=0x02128c04),
+                 module="ov081"),
+            dict(rec("_ZTV7daMky_c", RDC.DIFFERS, size=0x84, addr=0x02115bfc),
+                 module="ov030")])
+        self.assertEqual(s["verifiedSymbols"], [
+            {"module": "ov081", "symbol": "_ZTV8daGmch_c",
+             "addr": 0x02128c04, "bytes": 0x84}])
+        self.assertEqual(s["differingSymbols"], [
+            {"module": "ov030", "symbol": "_ZTV7daMky_c",
+             "addr": 0x02115bfc, "bytes": 0x84}])
 
     def test_unparsable_objects_never_dedupe_against_each_other(self):
         """check_object's `?` catch-all carries no symbol identity, only a source."""

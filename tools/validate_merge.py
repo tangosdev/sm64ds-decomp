@@ -177,6 +177,7 @@ def function_snapshot(rev):
     in_tree = set(paths)
     records = {}
     total_bytes = matched_bytes = 0
+    spans = {}
     for path in paths:
         module = _module_from_symbols(path)
         if module is None:
@@ -190,14 +191,37 @@ def function_snapshot(rev):
             owner = enrolled.get((module, addr))
             src = owner if owner in in_tree else sources.get(name)
             matched = bool(src and src not in nonmatching and src not in transcribed)
-            records[key] = {"id": key, "module": module, "addr": addr, "name": name,
-                            "size": size, "matched": matched, "srcPath": src}
+            # A ZERO-SIZE ALIAS MUST NOT DISPLACE THE FUNCTION IT ALIASES. `records` is
+            # keyed by module:addr, so without this the last line at an address wins,
+            # and in every one of the ten colliding addresses in this tree the last
+            # line is the alias: `__cxa_vec_cleanup`(0x0) over `__destroy_arr`(0x5c),
+            # `_dadd`(0x0) over `func_01ff8000`(0x59c), and eight more. The surviving
+            # record then carries the alias's name, size, srcPath AND matched flag, so
+            # the real function is invisible to every check below.
+            #
+            # Latent rather than live today: none of the ten has an unbannered source,
+            # so no current count moves. It fires the moment one of them is matched --
+            # which is precisely what a pending `__destroy_arr` match does.
+            prior = records.get(key)
+            if prior is None or size > prior["size"]:
+                records[key] = {"id": key, "module": module, "addr": addr, "name": name,
+                                "size": size, "matched": matched, "srcPath": src}
+            # RAW spans, collected here rather than derived from `records` later.
+            # `records` is keyed by module:addr, so two symbols at one address collapse
+            # to whichever line comes last -- and config/arm9/symbols.txt:3052-3053 is
+            # exactly that, `__destroy_arr` (0x5c) followed by the zero-size alias
+            # `__cxa_vec_cleanup` at the SAME address. Derived from `records`, the real
+            # function's extent would simply vanish. Only classify_repartition reads
+            # this; no existing statistic changes.
+            if size > 0:
+                spans.setdefault(module, []).append((addr, addr + size))
             total_bytes += size
             if matched:
                 matched_bytes += size
     matched = {k: r for k, r in records.items() if r["matched"]}
     return {
         "functions": records,
+        "spans": spans,
         "matched": matched,
         "stats": {
             "totalFunctions": len(records),
@@ -208,6 +232,110 @@ def function_snapshot(rev):
             "matchedBytePercent": 100.0 * matched_bytes / total_bytes if total_bytes else 0.0,
         },
     }
+
+
+def _covered_spans(snapshot):
+    """Byte ranges each module's symbol table covers, merged, per module.
+
+    Reads `snapshot["spans"]`, the RAW per-line ranges, never `snapshot["functions"]`:
+    that dict is keyed by module:addr and so loses one of any two symbols sharing an
+    address. `__destroy_arr` is shadowed by the zero-size alias `__cxa_vec_cleanup` at
+    its own address (config/arm9/symbols.txt:3052-3053), and deriving the covered set
+    from `functions` would drop its 0x5c entirely -- which made the very re-partition
+    this rule exists to allow look like a change to the covered bytes.
+
+    Zero-size rows are already excluded upstream: they cover nothing, so an alias can
+    never move the covered set.
+    """
+    spans = snapshot["spans"]
+    out = {}
+    for module, raw in spans.items():
+        merged = []
+        for lo, hi in sorted(raw):
+            if merged and lo <= merged[-1][1]:
+                merged[-1] = (merged[-1][0], max(merged[-1][1], hi))
+            else:
+                merged.append([lo, hi])
+        out[module] = tuple(tuple(s) for s in merged)
+    return out
+
+
+def classify_repartition(bf, hf):
+    """Is a denominator change a SPLIT of the same bytes, with the numerator frozen?
+
+    The denominator check below refuses any move in `totalFunctions` or `totalBytes`, in
+    either direction, and it is right to: the headline is a fraction, and a gate that
+    watched only the numerator would let anyone lift it by shrinking what they divide by.
+
+    But the symbol table is not ground truth. It is a HYPOTHESIS about where the
+    cartridge's functions start and end, and it is sometimes wrong -- one symbol claiming
+    a span the ROM runs as two routines. Correcting such a row moves the denominator, so
+    the gate as written makes the correction the one edit that cannot land, and holds the
+    tree in a state where its own count is a fiction. PR #2360 is the live case:
+    `func_020610fc` is declared 0x3c, the routine is 0x2c and ends in `b self`, and the
+    remaining 0x10 is a separate routine that `src/func_02019ebc.c` CALLS -- a call
+    `config/unresolved-baseline.json` records as missing because nothing defines it.
+
+    That is the trap the WITHDRAWN carve-out below was written for: "treating both as
+    loss made the gate reward the lie."
+
+    SPLITS ONLY, AND THE DIRECTION IS THE WHOLE SAFETY ARGUMENT. A split raises
+    `totalFunctions`. With the numerator frozen (below), that strictly LOWERS both
+    headline percentages, so it is not a lever anyone pulls to game a number -- the rule
+    can only ever make the tree look worse. That argument is explicit rather than
+    emergent, which is the standard the WITHDRAWN restriction sets for itself two
+    screens down.
+
+    MERGES STAY BLOCKED, AND THAT IS DELIBERATE. A merge lowers `totalFunctions` and so
+    RAISES the percentage, which makes it the direction an attack uses, and no arithmetic
+    over this snapshot can tell a true merge from a false one. In particular a rule of
+    the form "allow it when `matchedBytes` rises" does NOT work, however tightly it is
+    tied to the merged range: `matchedBytes` is `size` summed over records that merely
+    have an unbannered `src/` file (see `function_snapshot` and `verification_split`,
+    which says it outright -- "Nothing in that classification compiles the file, links
+    it, or compares a byte"). Growing an already-matched, text-only symbol to swallow an
+    unmatched neighbour raises `matchedBytes` by the absorbed size with nothing compiled
+    and nothing verified, in a symbols.txt-only diff. Nor is "every changed range is
+    unmatched" enough on its own: merging a hundred unmatched symbols into one still
+    drops the denominator by ninety-nine and lifts the headline for no work at all.
+
+    A merge carve-out therefore needs EVIDENCE rather than arithmetic -- the survivor
+    carrying a VERIFIED link row at its head size, or the merged range going `complete`
+    in `delinks.txt` with `sourceBytes` rising by exactly its size -- and that is a
+    separate change with its own proof. Until then a merge lands as two pull requests:
+    the re-partition, then the match.
+
+    THE NUMERATOR IS FROZEN BY IDENTITY, NOT BY COUNT. `matchedFunctions` staying equal
+    is not enough -- one match can leave while another arrives -- and neither is the byte
+    total, since a matched symbol may grow while another shrinks. So the matched SET must
+    be identical and every matched record must keep its size. Without the size clause a
+    split may grow a matched neighbour by a few bytes and raise `matchedBytePercent`
+    while `matchedFunctionPercent` falls, which is the leak that killed the first draft
+    of this rule. A split that genuinely produces a newly matched function lands the
+    split first and the match second.
+
+    Returns a dict describing the split, or None if the change is not one.
+    """
+    if hf["stats"]["totalFunctions"] <= bf["stats"]["totalFunctions"]:
+        return None
+    if hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]:
+        return None
+    # Per module: overlay addresses overlap, so a global address set would let a
+    # cross-module shuffle read as a clean re-partition.
+    if _covered_spans(bf) != _covered_spans(hf):
+        return None
+
+    base_matched, head_matched = bf["matched"], hf["matched"]
+    if set(base_matched) != set(head_matched):
+        return None
+    if any(base_matched[k]["size"] != head_matched[k]["size"] for k in base_matched):
+        return None
+
+    added = sorted(set(hf["functions"]) - set(bf["functions"]))
+    removed = sorted(set(bf["functions"]) - set(hf["functions"]))
+    return {"kind": "split",
+            "functionDelta": hf["stats"]["totalFunctions"] - bf["stats"]["totalFunctions"],
+            "added": added, "removed": removed}
 
 
 def enrollment_snapshot(rev):
@@ -400,17 +528,71 @@ def _rom_state(report):
             "failure": failure}
 
 
-def _data_symbol_set(data, field):
-    """Return stable ``(module, symbol)`` identities, or None for an old report."""
+def _data_symbol_rows(data, field):
+    """Return the report's per-symbol rows, or None for an old/unparsable report."""
     rows = data.get(field)
     if not isinstance(rows, list):
         return None
-    out = set()
+    out = []
     for row in rows:
         if not isinstance(row, dict) or not isinstance(row.get("symbol"), str):
             return None
-        out.add((row.get("module"), row["symbol"]))
+        out.append(row)
     return out
+
+
+def _data_identity(row):
+    return (row.get("module"), row["symbol"])
+
+
+def _data_anchor(row):
+    """The cartridge anchor a rename cannot move: module, ROM address, proven bytes.
+
+    A symbol NAME is a source-side choice; the address and the number of bytes that
+    byte-verified there are ROM facts. Retiring a coined ``_ZTV<Coined>`` in favour
+    of the ROM's own ``_ZTV<RomName>`` at the same address proves exactly the same
+    cartridge data, so it is a rename and not a loss. Returns None for a report that
+    predates the addresses -- `romdata_check.summarize` used to drop them -- which is
+    what puts the diff back on its old name-only footing.
+    """
+    addr, size = row.get("addr"), row.get("bytes")
+    if isinstance(addr, bool) or not isinstance(addr, int):
+        return None
+    if isinstance(size, bool) or not isinstance(size, int):
+        return None
+    return (row.get("module"), addr, size)
+
+
+def _data_departures(base_rows, head_rows):
+    """Base identities absent from head, after cancelling address-anchored renames.
+
+    Identity by ``(module, symbol)`` alone reads every symbol RENAME as a deletion,
+    which is what blocked adopting the ROM's own RTTI name over a coined one. The
+    address anchor cannot be forged from source: a head symbol has to byte-verify at
+    that address to appear in the report at all, and neither an alias row in
+    `symbols.txt` nor the PR's own rename ledger takes part in the decision.
+
+    Matching is strictly one-to-one per anchor, so two departures answered by a
+    single arrival still lose one symbol, and a departure whose only arrival sits at
+    a different address -- or proves a different number of bytes -- is still a loss.
+    A row carrying no anchor, on either side, never matches; that is exactly the
+    pre-existing name-only behaviour.
+    """
+    head_ids = {_data_identity(r) for r in head_rows}
+    base_ids = {_data_identity(r) for r in base_rows}
+    gone = [r for r in base_rows if _data_identity(r) not in head_ids]
+    arrivals = collections.Counter(
+        anchor for anchor in (_data_anchor(r) for r in head_rows
+                              if _data_identity(r) not in base_ids)
+        if anchor is not None)
+    lost = []
+    for row in sorted(gone, key=lambda r: (r.get("module") or "", r["symbol"])):
+        anchor = _data_anchor(row)
+        if anchor is not None and arrivals[anchor] > 0:
+            arrivals[anchor] -= 1
+            continue
+        lost.append(_data_identity(row))
+    return lost
 
 
 def _data_name(identity):
@@ -426,10 +608,10 @@ def rom_data_regressions(base_data, head_data):
         return ["head full-ROM report omitted the ROM-data measurement"]
 
     out = []
-    base_verified = _data_symbol_set(base_data, "verifiedSymbols")
-    head_verified = _data_symbol_set(head_data, "verifiedSymbols")
+    base_verified = _data_symbol_rows(base_data, "verifiedSymbols")
+    head_verified = _data_symbol_rows(head_data, "verifiedSymbols")
     if base_verified is not None and head_verified is not None:
-        lost = sorted(base_verified - head_verified, key=lambda x: (x[0] or "", x[1]))
+        lost = _data_departures(base_verified, head_verified)
         if lost:
             names = ", ".join(_data_name(x) for x in lost[:3])
             more = f", +{len(lost) - 3} more" if len(lost) > 3 else ""
@@ -447,10 +629,16 @@ def rom_data_regressions(base_data, head_data):
             f"ROM data verified bytes fell from {base_data['verifiedBytes']} to "
             f"{head_data['verifiedBytes']}")
 
-    base_differing = _data_symbol_set(base_data, "differingSymbols")
-    head_differing = _data_symbol_set(head_data, "differingSymbols")
+    base_differing = _data_symbol_rows(base_data, "differingSymbols")
+    head_differing = _data_symbol_rows(head_data, "differingSymbols")
     if base_differing is not None and head_differing is not None:
-        new = sorted(head_differing - base_differing, key=lambda x: (x[0] or "", x[1]))
+        # Symmetric, and for the same reason: a symbol that was already wrong on base
+        # and is still wrong at the same address under a new name is not a NEWLY wrong
+        # symbol. Reversing the arguments makes an ARRIVAL the thing to cancel. A
+        # genuinely new differing symbol has no departure to answer it, and a symbol
+        # that went VERIFIED -> DIFFERS across a rename is still caught, by the
+        # verified-loss diff above.
+        new = _data_departures(head_differing, base_differing)
         if new:
             names = ", ".join(_data_name(x) for x in new[:3])
             more = f", +{len(new) - 3} more" if len(new) > 3 else ""
@@ -662,9 +850,13 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
             removed.append(k)
     if removed:
         reasons.append(f"lost {len(removed)} matched function(s)")
+    # A denominator move is a blocker UNLESS it is a re-partition of the same bytes --
+    # see classify_repartition, which carries the full argument and the two tests.
+    repartition = classify_repartition(bf, hf)
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
-        reasons.append("function/byte coverage denominator changed")
+        if repartition is None:
+            reasons.append("function/byte coverage denominator changed")
     if he["stats"]["sourceBytes"] < be["stats"]["sourceBytes"]:
         reasons.append("source-built byte coverage decreased")
     # Bytes alone cannot see a SWAP. Dropping `complete` from one delinks entry and
@@ -718,6 +910,14 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("full-ROM validation failed")
 
     warnings = []
+    if repartition:
+        # A carve-out that passes quietly is a carve-out nobody audits. Say what moved.
+        warnings.append(
+            f"symbol-table split: totalFunctions {repartition['functionDelta']:+d} over "
+            "identical covered bytes, matched set and matched sizes unchanged. Allowed "
+            "as a re-partition -- see classify_repartition. Added: "
+            + ", ".join(repartition["added"][:3] or ["none"])
+            + "; removed: " + ", ".join(repartition["removed"][:3] or ["none"]))
     if withdrawn:
         warnings.append(
             f"{len(withdrawn)} claimed match(es) withdrawn by a NONMATCHING banner "
@@ -834,6 +1034,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered,
                       "strandedMarkers": stranded_markers},
         "matchedWithdrawn": withdrawn,
+        "repartition": repartition,
         "linkcheck": link,
         "portRefcheck": port,
         "rom": {"base": base_rom_state, "head": head_rom_state,
@@ -877,6 +1078,11 @@ def render_markdown(r):
         lines.append(
             f"| Claims withdrawn (banner added) | {len(r['matchedWithdrawn'])} "
             f"function(s), none byte-verified |")
+    if r.get("repartition"):
+        rp = r["repartition"]
+        lines.append(
+            f"| Symbol-table {rp['kind']} | totalFunctions "
+            f"{rp['functionDelta']:+d} over identical covered bytes |")
     # The delinks view of the same quantity. Identical to byte-verified above whenever
     # every enrolled range is a matched symbols.txt function, which is the healthy
     # state -- so it earns a row only when the two disagree, where the disagreement is
