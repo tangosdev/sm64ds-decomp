@@ -112,6 +112,53 @@ ARR_DIMS = re.compile(r"\[\s*(0x[0-9a-fA-F]+|\d+)\s*\]")
 # lines inside a struct body that are legitimately not declarations
 IGNORABLE = re.compile(r"^\s*($|/\*|\*|//|\}|#)")
 
+
+def _code_without_comments_or_strings(line, in_block_comment=False):
+    """Return C/C++ code tokens and whether a block comment remains open.
+
+    Brace depth is used only to skip inline method bodies.  Counting raw braces
+    makes a `// }` or `/* { */` inside one of those bodies end or extend the skip,
+    and the next real body brace is then mistaken for the outer struct's close.
+    This deliberately small lexer removes comments and quoted literals while
+    preserving every punctuation token the body-depth state needs.
+    """
+    code = []
+    quote = None
+    escaped = False
+    i = 0
+    while i < len(line):
+        ch = line[i]
+        nxt = line[i + 1] if i + 1 < len(line) else ""
+        if in_block_comment:
+            if ch == "*" and nxt == "/":
+                in_block_comment = False
+                i += 2
+            else:
+                i += 1
+            continue
+        if quote:
+            if escaped:
+                escaped = False
+            elif ch == "\\":
+                escaped = True
+            elif ch == quote:
+                quote = None
+            i += 1
+            continue
+        if ch == "/" and nxt == "/":
+            break
+        if ch == "/" and nxt == "*":
+            in_block_comment = True
+            i += 2
+            continue
+        if ch in "\"'":
+            quote = ch
+            i += 1
+            continue
+        code.append(ch)
+        i += 1
+    return "".join(code), in_block_comment
+
 # Class sizes come from the tree's own compile-time assertions:
 #   typedef char ModelAnim_size_must_be_0x64[...]
 # Without these an embedded member is an unknown type, which this checker skips --
@@ -551,6 +598,8 @@ def main(argv, repo=None):
         trusted = True
         started = in_comment = unmodelled = nested = skip_other = False
         skip_body = 0
+        await_body = body_comment = False
+        await_body_line = None
         unknown_base = derived_from = None
         expected = fp.stem
         all_lines = txt.splitlines()
@@ -631,9 +680,35 @@ def main(argv, repo=None):
             # rather than assuming a method is always one line -- an unbalanced
             # line here would otherwise fall through to DECL parsing and get
             # reported UNPARSED against the tool's own skipped-method text.
-            if skip_body:
-                skip_body += line.count("{") - line.count("}")
-                continue
+            if await_body or skip_body:
+                body_code, body_comment = _code_without_comments_or_strings(
+                    line, body_comment)
+                saw_open = "{" in body_code
+                depth = body_code.count("{") - body_code.count("}")
+                if await_body:
+                    if saw_open:
+                        await_body = False
+                        await_body_line = None
+                        skip_body = max(depth, 0)
+                        continue
+                    if ";" in body_code:
+                        # A split declaration, not an inline definition.  A real
+                        # field on this line must still reach DECL; otherwise the
+                        # pending-method state would create another zero-field pass.
+                        await_body = body_comment = False
+                        layout_line = DECL.match(line) or re.match(r"^\s*\};", line)
+                        if layout_line:
+                            skipped.append(await_body_line)
+                        await_body_line = None
+                        if not layout_line:
+                            continue
+                    else:
+                        # Blank/comment and signature-continuation lines are both
+                        # harmless while waiting for the Allman opening brace.
+                        continue
+                else:
+                    skip_body = max(skip_body + depth, 0)
+                    continue
             # A NESTED type definition -- `struct State { ... };` inside Player -- is a
             # type, not a field: it occupies no space and advances no offset. Consume it
             # whole, before the checks below can misread it.
@@ -696,9 +771,18 @@ def main(argv, repo=None):
                 # list as before -- that's the generated-header convention
                 # (Stage.h: fields, then methods).
                 if n == 0:
-                    depth = line.count("{") - line.count("}")
-                    if depth > 0:
-                        skip_body = depth
+                    body_code, body_comment = _code_without_comments_or_strings(line)
+                    saw_open = "{" in body_code
+                    depth = body_code.count("{") - body_code.count("}")
+                    if saw_open:
+                        skip_body = max(depth, 0)
+                    elif ";" not in body_code:
+                        # `virtual ~X()` followed by an Allman `{` is an inline
+                        # body too.  Raw depth on the signature is zero, so the old
+                        # walk treated that `{` as a field and its `}` as the end of
+                        # the outer struct, checking none of the fields below it.
+                        await_body = True
+                        await_body_line = f"{lineno}: {line.strip()}"
                     continue
                 break
             # A declaration can carry a trailing comment that runs onto later lines:
@@ -766,6 +850,10 @@ def main(argv, repo=None):
             for d in ARR_DIMS.findall(arr):
                 arr_n *= int(d, 0)
             off += w * arr_n
+        if await_body and await_body_line:
+            # EOF before either `{` or a terminating `;` is malformed input.  It
+            # must not collapse back to the same zero-field pass this state fixes.
+            skipped.append(await_body_line)
         if unknown_base:
             # Not a pass and not a failure: a statement of what is missing. Adding
             # `typedef char X_size_must_be_0xN[sizeof(X) == 0xN ? 1 : -1];` to the
