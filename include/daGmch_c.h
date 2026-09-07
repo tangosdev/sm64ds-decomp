@@ -32,18 +32,24 @@
  * reconstructed as g_profile_GAMAGUCHI.
  */
 struct daGmch_c : dActor_c {
-    u8  pad_0d0[0x4];
+    /* The actor whose position this one copies while mFlags bit 0x40000 (one
+       of dActor_c's yoshi-mouth states) is set.  EnterState7 reads its
+       mHorzSpeed, mAngleY and position, then clears the pointer.  A dActor_c
+       because those are the only fields ever read through it; that it is in
+       fact the player is not asserted here.
+       [UpdateState6, EnterState7] */
+    dActor_c *mHolder;                       /* 0x0d0 */
     ModelAnim mModelAnim;                    /* 0x0d4 */
     Model mModel;                            /* 0x138 */
     ShadowModel mShadowModel;                /* 0x188 */
     dCcAc_c mdCcAc_c;  /* 0x1b0 */
     dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
-    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, and
-       0x3a0..0x3cf is exactly the 0x30 bytes a Matrix4x3 occupies. Still spelt
-       u8 + pad so the header need not pull in math/Matrix.h.
-       [_ZN8daGmch_c13InitResourcesEv.cpp] */
-    u8  mMatrix;            /* 0x3a0 */
-    u8  pad_3a1[0x2f];
+    /* InitResources assigns IDENTITY_MATRIX4X3 into it whole, and
+       UpdateDrawMatrices writes the position, scaled by 8, into its
+       translation row before handing it to DropShadowRadHeight.  The
+       Matrix4x3 type reaches this header through Model.h.
+       [InitResources, UpdateDrawMatrices] */
+    Matrix4x3 mMatrix;      /* 0x3a0 */
     /* Copy of mPosX/Y/Z taken once in InitResources.
        [_ZN8daGmch_c13InitResourcesEv.cpp] */
     s32 mSpawnPosX;            /* 0x3d0 */
@@ -61,7 +67,16 @@ struct daGmch_c : dActor_c {
        to SetState when their animation finishes.
        [ChooseNextState, UpdateState2, UpdateState4] */
     s32 mNextState;            /* 0x3e4 */
-    u8  pad_3e8[0x8];
+    u8  pad_3e8[0x4];
+    /* The Y rotation UpdateDrawMatrices applies to mModel's matrix (the
+       drawn-below-0x20 model, not the animated one); UpdateState0 advances it
+       by 0xc00 every frame.
+       [UpdateDrawMatrices, UpdateState0] */
+    s16 mSpinAngleY;           /* 0x3ec */
+    /* The heading UpdateState1 turns mAngleY toward, 0x2bc a frame; EnterState1
+       draws it at random.
+       [EnterState1, UpdateState1] */
+    s16 mTargetAngleY;         /* 0x3ee */
     /* Set to 1 by InitResources. Render draws the ModelAnim only above 1 and
        the Model only at or below 0x1f, so the two overlap for 2..0x1f and the
        high values are a state in which neither is drawn.
