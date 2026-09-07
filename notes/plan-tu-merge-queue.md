@@ -618,7 +618,7 @@ reorder: run B1–B9 (no normalizer needed) and hold B10–B11.
 
 Sizes: 31 TUs at 10–14 members, 11 at 15–19, 18 at 20–24, **13 at 25+** (largest:
 [ov081](../config/arm9/overlays/ov081/symbols.txt)/`MrBlizzard` 35, [ov102](../config/arm9/overlays/ov102/symbols.txt)/`BobOmb` 35, [ov077](../config/arm9/overlays/ov077/symbols.txt)/`Spiny` 34, [ov077](../config/arm9/overlays/ov077/symbols.txt)/`Lakitu` 32,
-[ov085](../config/arm9/overlays/ov085/symbols.txt)/`Rabbit` 32). 18 are multi-class. 48 of 73 need the normalizer.
+[ov085](../config/arm9/overlays/ov085/symbols.txt)/`daMip_c` 32). 18 are multi-class. 48 of 73 need the normalizer.
 
 ### 5.1 Greedy admission
 
