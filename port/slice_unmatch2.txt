@@ -1,0 +1,105 @@
+# SLICE UNMATCH 2 -- run link100, lane UNMATCH, batch 2.
+#
+# The three pointer-to-member families lane PMF3 named and left, all three for
+# a reason that is a SECOND FIX rather than a width or a form: two tables that
+# nothing re-seats, and one dispatcher shape that no seat in the tree served.
+#
+# THE FORM, RE-MEASURED HERE RATHER THAN CARRIED. All seven TUs compiled on
+# 2026-09-07 with the port's own flags read out of build/port/build.ninja
+# (/DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MT /Oy- /vmg /vmm
+# plus the port's three include roots), /FAsc listings kept in
+# runs/link100/out/UNMATCH/.
+#
+# ---- 1. DA_PG_DFDR (ov027), +2 --------------------------------------------
+# src/func_ov027_02111d38.cpp and src/func_ov027_02111cfc.cpp both TAIL JUMP
+# through the ROM's own record:
+#
+#     mov  eax, DWORD PTR _c$[ebp]
+#     mov  edx, DWORD PTR [eax+972]     ; c->pp, the ROM's +0x3cc
+#     mov  ecx, DWORD PTR [edx+4]       ; the adjustment word  (cfc: [edx+12])
+#     add  ecx, eax
+#     mov  eax, DWORD PTR [edx]         ; the code word        (cfc: [edx+8])
+#     pop  ebp
+#     jmp  eax
+#
+# so with /vmg /vmm MSVC's member pointer IS the ROM's 8-byte pair and `c->pp+1`
+# IS the element's second pair. What was missing is the SEAT: nothing rewrote
+# data_ov027_02113ce4, so the table held DS code addresses and a matched
+# dispatcher would have jumped to 0x02111ca8 -- reserved zeroed main RAM on this
+# host. port/unmatched/DaPgDfdr_StateDispatch.cpp is now that seat: it rewrites
+# the four .data SOURCE pairs with host bodies before
+# __sinit_ov027_02112df8 copies them, the gate-178 ordering, called from
+# hal/actor_overlays.cpp. All four pairs re-read out of
+# extracted/overlays/overlay_0027.bin at (addr - 0x021111a0), every adjustment
+# word ROM ZERO:
+#   data_ov027_021139d4 {02111ca8,0}  data_ov027_021139cc {02111c48,0}
+#   data_ov027_021139dc {02111b2c,0}  data_ov027_021139c4 {02111a28,0}
+# REFERRER: the ROM's own setter func_ov027_02111d70 tail-jumps into
+# func_ov027_02111d38 after storing the element pointer at +0x3cc, and
+# daPgDfdr_c's Behavior reaches func_ov027_02111cfc; both are called by C name
+# from the rest of the ov027 cast, which is why the two symbols never left the
+# link -- only their bodies did.
+src/func_ov027_02111d38.cpp
+src/func_ov027_02111cfc.cpp
+
+# ---- 2. YOSHI_EGG (ov002), +2 ---------------------------------------------
+# src/func_ov002_020ed63c.cpp (the state setter) and src/func_ov002_020ed684.cpp
+# (the per-frame main half) are the indexed-table family PMF3 landed fourteen
+# of. Same measurement, same tail jump, the ROM's 16-byte element (`shl edx,4`)
+# and the ROM's two pairs at [edx]/[edx+4] and [edx+8]/[edx+12]. Their name
+# bridge already existed (hal/cxx_aliases.cpp:1180 spells
+# ?data_ov002_02110a5c@@3PAUEntry@@A=_data_ov002_02110a5c), so the name was
+# never what held them back -- the SEAT was.
+# port/unmatched/YoshiEgg_StateDispatch.cpp is now that seat. It rewrites the
+# DESTINATION table rather than the source pairs, because
+# __sinit_ov002_02107118 runs from the harness at startup, long before any
+# actor-overlay pass, and data_ov002_0210ad38 is mounted one pair wide. Called
+# from port_actor_overlays_sinits() at level boot, which is safe by
+# construction: a YoshiEgg only exists inside a level. All eight source pairs
+# re-read out of extracted/overlays/overlay_0002.bin at (addr - 0x020ad660),
+# every adjustment word ROM ZERO:
+#   state 0 enter 020ed5b0  main 020ed0d4    state 1 enter 020ecfc8  main 020ecf94
+#   state 2 enter 020ecad4  main 020ec9c4    state 3 enter 020ec978  main 020ec938
+# REFERRER: _ZTV8YoshiEgg's Behavior calls func_ov002_020ed684 every frame and
+# the egg's own transitions call func_ov002_020ed63c; both by C name from
+# slice_gate210's bodies.
+# THE TRACE MOVED, IT DID NOT GO. port/tools/yoshi_egg_throw_proof.py reads one
+# [eggstate] line per egg tick and three of its six assertions rest on it. The
+# retired host copy printed it; the four MAIN-half records are now seated
+# through a one-line face that prints it and calls the body, so the line, the
+# fields and the SM64DS_EGG_TRACE knob are unchanged. The four ENTER-half
+# records take the body directly.
+src/func_ov002_020ed63c.cpp
+src/func_ov002_020ed684.cpp
+
+# ---- 3. THE PAINTING (ov080), +3 ------------------------------------------
+# daPicGate_c's three per-mode dispatchers. The old host copy's header said
+# MSVC "widens the PMF to the 16-byte general form" and therefore strides 0x20
+# where the ROM strides 0x18. That is no longer true under /vmg /vmm and the
+# listing says so: src/func_ov080_02126ca0.cpp emits
+#
+#     lea eax, DWORD PTR [eax+eax*2]                      ; * 3
+#     lea eax, ?data_ov080_02128628@@3PAUDisp@@A[eax*8]   ; * 8  == 0x18
+#
+# -- the ROM's own stride -- and _02126c60 / _02126c20 read the element's
+# second and third pairs at [edx+8]/[edx+12] and [edx+16]/[edx+20], which is
+# the ROM's {setup, update, render} record exactly.
+#
+# WHAT WAS ACTUALLY WRONG IS THE CALL, and it is the one place in the port
+# where the member-pointer family does not tail-jump. All three TUs end
+# `return 1;` after the dispatch, so MSVC cannot reuse the frame and emits
+# `call eax` with the receiver in ecx and NOTHING pushed. Every other seated
+# table in this tree relies on the tail jump leaving the dispatcher's own
+# receiver argument at [esp+4] for a cdecl body to read. So the twelve seated
+# Painting records now hold a one-line __fastcall FACE each
+# (hal/actor_overlays.cpp, beside g_painting_states); __fastcall reads the
+# receiver from ecx and returns `ret 0`, which balances a `call` and equally
+# survives a tail jump. No body changes and no ROM word moves.
+# The two mangled names InitResources asks for are bridged in the new
+# port/hal/unmatch_aliases.cpp.
+# REFERRER: _ZTV11Painting slots 0/6/9 (InitResources, Behavior, Render) --
+# the three rows SEAT3's census records as PMF EXCEPTION for ov080
+# (data_ov080_021282b4 slots 0, 6 and 9).
+src/func_ov080_02126ca0.cpp
+src/func_ov080_02126c60.cpp
+src/func_ov080_02126c20.cpp

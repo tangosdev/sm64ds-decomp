@@ -8534,10 +8534,15 @@ set(LEVELBOOT_HOST_SOURCES
     unmatched/Door_Render.cpp
     # gate 23: the seventh, and the last on this level
     unmatched/QuestionBlock_States.cpp
-    unmatched/QuestionBlock_BounceDispatch.cpp
-    # gate 50: the eighth -- the PAINTING's three per-mode dispatchers, the
-    # deferred fix from the registry note (mode-table stride + widened PMF)
-    unmatched/Painting_Dispatch.cpp)
+    unmatched/QuestionBlock_BounceDispatch.cpp)
+# unmatched/Painting_Dispatch.cpp RETIRED (run link100, lane UNMATCH). The
+# widened-PMF half of its reason is dead under /vmg /vmm -- MSVC strides the
+# ROM's own 0x18 and reads the ROM's own {code, adjust} pairs -- and the half
+# that was real is now served by the seat: the twelve Painting state records
+# hold a __fastcall face each, because these three dispatchers are the one
+# member-pointer family in the port that MSVC compiles as `call eax` rather
+# than a tail jump. src/func_ov080_02126ca0.cpp, _02126c60.cpp and
+# _02126c20.cpp carry them, in port/slice_unmatch2.txt.
 # unmatched/ModelAnim_Renders.cpp RETIRED (run link100, lane UNMATCH). Lane
 # SLOT5F's stage B took twenty-three of its bodies; the twenty-fourth,
 # SWITCH_PILLAR's own Render, stayed only because its source carries the
@@ -14855,6 +14860,50 @@ foreach(line IN LISTS SLICE_UNMATCH_LINES)
 endforeach()
 foreach(_tunmatch walk_window walk_window_hires smoke_player)
     target_sources(${_tunmatch} PRIVATE ${SLICE_UNMATCH_SOURCES})
+endforeach()
+
+# ===========================================================================
+# LANE UNMATCH, batch 2: the two tables nothing re-seated, and the one
+# dispatcher shape no seat in this tree served
+# ===========================================================================
+#
+# Lane PMF3 landed twenty member-pointer host copies and named three families
+# it would not force. None of the three was a width or a form problem -- all
+# three measure as the ROM's own record under /vmg /vmm -- and all three needed
+# a SECOND fix, which is what this block is.
+#
+#   DA_PG_DFDR (ov027)  nothing rewrote data_ov027_02113ce4, so the table held
+#                       DS code addresses for the life of the process. The seat
+#                       moved into port/unmatched/DaPgDfdr_StateDispatch.cpp,
+#                       called from hal/actor_overlays.cpp BEFORE
+#                       __sinit_ov027_02112df8 copies the four pairs.
+#   YOSHI_EGG (ov002)   the same, one overlay over. Its sinit runs from the
+#                       harness at startup so the source pairs are out of
+#                       reach; the seat rewrites the destination table from
+#                       port_actor_overlays_sinits() at level boot instead.
+#   THE PAINTING (ov080) its three dispatchers end `return 1;` after the
+#                       dispatch, so MSVC emits `call eax` and not the tail
+#                       jump every other seated table in this tree relies on to
+#                       leave the receiver at [esp+4]. The twelve seated
+#                       records now hold a one-line __fastcall face each.
+#
+# Every pair behind all three was re-read out of the raw overlay images for
+# this lane and every adjustment word is ROM zero; the seats abort by name on
+# anything else and are idempotent, so a .dsstate rollback is repaired rather
+# than fatal. The per-row evidence, the listings and the referrers are in
+# port/slice_unmatch2.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_unmatch2.txt" SLICE_UNMATCH2_LINES)
+set(SLICE_UNMATCH2_SOURCES "")
+foreach(line IN LISTS SLICE_UNMATCH2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_UNMATCH2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tunmatch2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tunmatch2} PRIVATE ${SLICE_UNMATCH2_SOURCES}
+                   "${CMAKE_CURRENT_SOURCE_DIR}/hal/unmatch_aliases.cpp")
 endforeach()
 
 # ===========================================================================
