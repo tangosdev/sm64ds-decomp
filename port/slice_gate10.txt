@@ -582,7 +582,8 @@ src/func_ov002_020d9298.cpp
 # REG_RIDE_ARG spells the one argument. This is the body that seats the head
 # model's world matrix. Was port/unmatched/func_ov002_020e444c_hostcopy.c,
 # which transcribed the whole hundred-line body to change that one call.
-port/unmatched/func_ov002_020e4768_hostcopy.cpp
+# port/unmatched/func_ov002_020e4768_hostcopy.cpp  RETIRED (run link100, lane FOLD2);
+#   the matched TU(s) it stood in for are on port/slice_fold2.txt.
 src/func_ov002_020e4990.c
 src/func_ov002_020eea84.c
 src/AddVec3.c

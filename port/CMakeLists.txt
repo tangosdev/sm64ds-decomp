@@ -8521,8 +8521,9 @@ set(LEVELBOOT_HOST_SOURCES
     unmatched/LakituBro_Behavior.cpp
     # ...and gate 17's ModelAnim slot-5 case with a body attached
     unmatched/Ov085_Renders.cpp
-    # gate 19: the same slot problem one slot lower, on Model
-    unmatched/Cannon_Render.cpp
+    # gate 19: unmatched/Cannon_Render.cpp RETIRED (run link100, lane FOLD2)
+    # -- "the same slot problem one slot lower, on Model" was the destructor
+    # fold, and _ZTV5Model[5] is Model::Render again. Its Behavior stays.
     unmatched/Cannon_Behavior.cpp
     # gate 21: the pointer-to-member dispatch for the fifth time
     unmatched/Fish_Behavior.cpp
@@ -11082,13 +11083,20 @@ endforeach()
 list(APPEND SLICE_OV066_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov066.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Eyerok_Behavior.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Eyerok_Render.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Eyerok_ClosestPlayerRead.cpp")
+# unmatched/Eyerok_Render.cpp RETIRED (run link100, lane FOLD2): its only
+# divergence was the BlendModelAnim slot-5 shadow the destructor fold created,
+# and src/_ZN6Eyerok6RenderEv.cpp is on port/slice_fold2.txt now. No face: the
+# matched TU defines ?Render@Eyerok@@QAEHXZ, which is the symbol
+# hal/actor_classes_ov066.cpp's ov66_render already calls as a C++ method.
 # run link100 lane PMF2: src/func_ov066_02119454.cpp LEFT this list. Its host
 # copy (unmatched/Eyerok_StateEnter.cpp) is deleted and the matched TU is on
 # port/slice_pmf2.txt, so listing it here would refuse a slice line that is
 # now correct. The other three are still host-copied and still guarded.
-foreach(dup IN ITEMS src/_ZN6Eyerok8BehaviorEv.cpp src/_ZN6Eyerok6RenderEv.cpp
+# src/_ZN6Eyerok6RenderEv.cpp LEFT this guard with lane FOLD2's retirement --
+# it is a slice row again, on port/slice_fold2.txt, so refusing it here would
+# refuse a line that is now correct. The other two are still host-copied.
+foreach(dup IN ITEMS src/_ZN6Eyerok8BehaviorEv.cpp
                      src/func_ov066_02119398.cpp)
     if(dup IN_LIST SLICE_OV066_LINES)
         message(FATAL_ERROR
@@ -11867,8 +11875,11 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "func_ov047_02111254=func_ov032_02111254")
 list(APPEND SWEEP2_SOURCES hal/actor_classes_ov032.cpp ${SLICE_SWEEP2_OV032_SOURCES}
-    unmatched/Bubba_Behavior.cpp
-    unmatched/Bubba_Render.cpp unmatched/Bubba_ChaseGate.cpp)
+    unmatched/Bubba_Behavior.cpp unmatched/Bubba_ChaseGate.cpp)
+# unmatched/Bubba_Render.cpp RETIRED (run link100, lane FOLD2): the ModelAnim
+# slot-5 shadow, dead with the destructor unfold. src/func_ov032_02112164.cpp
+# carries it on port/slice_fold2.txt and needs no face -- it is an
+# address-named C symbol its matched source already defines at C linkage.
 
 # ---- 2/4: ov034, level 26 (Tiny-Huge Island's cave) ------------------------
 # WIGGLER (248) x1 -- level 26's WHOLE skip list, so this takes the level to
@@ -11934,8 +11945,11 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "data_ov034_02114538=port_ov015_kdp_clsn_files")
 list(APPEND SWEEP2_SOURCES hal/actor_classes_ov034.cpp ${SLICE_SWEEP2_OV034_SOURCES}
-    unmatched/Wiggler_StateEnter.cpp unmatched/Wiggler_StateTick.cpp
-    unmatched/Wiggler_Render.cpp)
+    unmatched/Wiggler_StateEnter.cpp unmatched/Wiggler_StateTick.cpp)
+# unmatched/Wiggler_Render.cpp RETIRED (run link100, lane FOLD2): five
+# ModelAnims drawn through a six-virtual shadow's index 5, which
+# _ZTV9ModelAnim holds Render at again. src/_ZN7Wiggler6RenderEv.cpp carries it
+# and hal/fold2_faces.cpp holds the cdecl face the slot-9 fill calls.
 
 # ---- 3/4: ov047, level 39 (Bowser in the Sky) ------------------------------
 # RICKSHAW_BS (152) x3, STAIRS_BS (153) x1 and ROTATING_PLATFORM_BS (156) x3 --
@@ -12321,8 +12335,11 @@ foreach(sym IN LISTS OV19GEN_SYMS)
 endforeach()
 list(APPEND W3E_SOURCES hal/actor_classes_ov019_w3e.cpp
     ${SLICE_W3E_OV019_SOURCES} ${OV19GEN}
-    unmatched/RacingPenguin_Render.cpp
     unmatched/RacingPenguin_ShadowFaces.cpp)
+# unmatched/RacingPenguin_Render.cpp RETIRED (run link100, lane FOLD2): the
+# same slot-5 shadow one overlay over. src/_ZN13RacingPenguin6RenderEv.cpp
+# carries it; the face is in hal/fold2_faces.cpp and is spelled with a char*
+# receiver to match this file's own declaration of the C name.
 
 # W10, THE ONE DATA CROSS-NAME IN ov019, and it is the worst spelling in this
 # lane: src/_ZN13RacingPenguin16CleanupResourcesEv.cpp declares its seven
@@ -13343,8 +13360,8 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
-    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
-    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
+    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES}
     # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 3 (lane w3-f2): ov091's ARROW_PATH_LIFT (157) +
@@ -13353,7 +13370,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     ${SLICE_W3C_SOURCES}
-    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/Player_BlowAway.cpp
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
@@ -13369,16 +13386,17 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
-    hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
-    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp unmatched/Klepto_Render.cpp
+    hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp
+    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
     # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
-    # and last class. Two host copies ride beside the slice: slot 6 (the
-    # ModelAnim slot-3 numbering) and the two PMF dispatchers.
+    # and last class. ONE host copy rides beside the slice now, the two PMF
+    # dispatchers; unmatched/Ov085_PrincessPeach_Behavior.cpp RETIRED (run
+    # link100, lane FOLD2) because the slot-6 body's whole reason was the
+    # ModelAnim slot-3 numbering, and _ZTV9ModelAnim[3] is UpdateVerts again.
     ${SLICEW3F_SOURCES}
-    unmatched/Ov085_PrincessPeach_Behavior.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
@@ -13586,8 +13604,8 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
-    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
-    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
+    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES}
     # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 3 (lane w3-f2): ov091's ARROW_PATH_LIFT (157) +
@@ -13596,7 +13614,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     ${SLICE_W3C_SOURCES}
-    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/Player_BlowAway.cpp
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
@@ -13612,16 +13630,17 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
-    hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
-    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp unmatched/Klepto_Render.cpp
+    hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp
+    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
     # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
-    # and last class. Two host copies ride beside the slice: slot 6 (the
-    # ModelAnim slot-3 numbering) and the two PMF dispatchers.
+    # and last class. ONE host copy rides beside the slice now, the two PMF
+    # dispatchers; unmatched/Ov085_PrincessPeach_Behavior.cpp RETIRED (run
+    # link100, lane FOLD2) because the slot-6 body's whole reason was the
+    # ModelAnim slot-3 numbering, and _ZTV9ModelAnim[3] is UpdateVerts again.
     ${SLICEW3F_SOURCES}
-    unmatched/Ov085_PrincessPeach_Behavior.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
@@ -13886,8 +13905,8 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
     hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
-    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
-    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
+    hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
+    hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES}
     # run rel0215 wave 2 (lane cast-ov090): ov090's whole four-class water cast.
     ${SLICE_OV090_SOURCES}
     # run rel0215 wave 3 (lane w3-f2): ov091's ARROW_PATH_LIFT (157) +
@@ -13896,7 +13915,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     ${SLICE_W3C_SOURCES}
-    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/DaPgDfdr_Render.cpp unmatched/Player_BlowAway.cpp
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/Player_BlowAway.cpp
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
@@ -13912,16 +13931,17 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
-    hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
-    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp unmatched/Klepto_Render.cpp
+    hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp
+    hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
     unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
     # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
-    # and last class. Two host copies ride beside the slice: slot 6 (the
-    # ModelAnim slot-3 numbering) and the two PMF dispatchers.
+    # and last class. ONE host copy rides beside the slice now, the two PMF
+    # dispatchers; unmatched/Ov085_PrincessPeach_Behavior.cpp RETIRED (run
+    # link100, lane FOLD2) because the slot-6 body's whole reason was the
+    # ModelAnim slot-3 numbering, and _ZTV9ModelAnim[3] is UpdateVerts again.
     ${SLICEW3F_SOURCES}
-    unmatched/Ov085_PrincessPeach_Behavior.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
@@ -15118,6 +15138,18 @@ foreach(line IN LISTS SLICE_FOLD2_LINES)
     endif()
     list(APPEND SLICE_FOLD2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# BATCH 2 (the same gate, one wave on): fifteen more host copies in
+# port/unmatched whose only stated reason was the fold, carrying SIXTEEN matched
+# TUs -- unmatched/Ov060_Renders.cpp held two bodies. Ten of the sixteen fill
+# sites call the ROM's Itanium name at C linkage while the matched source
+# defines a __thiscall METHOD, so hal/fold2_faces.cpp defines that C name onto
+# the method, one cdecl line each, and NOT ONE FILL SITE CHANGES. The other six
+# need nothing: five matched sources already define the C name themselves and
+# Eyerok's fill calls the C++ method directly. The per-row vtable word, the
+# kind:function(arm,size=..) record and the ARM prologue are in
+# hal/fold2_faces.cpp's header and in port/slice_fold2.txt.
+list(APPEND SLICE_FOLD2_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/fold2_faces.cpp")
 foreach(_tfold2 walk_window walk_window_hires smoke_player)
     target_sources(${_tfold2} PRIVATE ${SLICE_FOLD2_SOURCES})
 endforeach()

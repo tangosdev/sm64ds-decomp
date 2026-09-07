@@ -48,8 +48,10 @@ port/hal/actor_classes_ov089.cpp
 # ---- the state seat + the five pointer-to-member host copies --------------
 port/unmatched/Ov060_StateDispatch.cpp
 # ---- the two ModelAnim slot-5 Renders --------------------------------------
-port/unmatched/Ov060_Renders.cpp
-port/unmatched/Ov089_Renders.cpp
+# port/unmatched/Ov060_Renders.cpp  RETIRED (run link100, lane FOLD2);
+#   the matched TU(s) it stood in for are on port/slice_fold2.txt.
+# port/unmatched/Ov089_Renders.cpp  RETIRED (run link100, lane FOLD2);
+#   the matched TU(s) it stood in for are on port/slice_fold2.txt.
 
 # ---- SPIKE BOMB (284) -- the shifted spellings ----------------------------
 # D1 is HELD OUT: src/_ZN17BowserSkyPlatformD1Ev.cpp is a real MSVC destructor
