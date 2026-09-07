@@ -8,14 +8,16 @@
  * is absent from every executable image in every encoding tested, so it was a
  * coined name and is gone.
  *
- * WHAT IS STILL RECONSTRUCTED, and it is only the spellings around the class:
+ * RECONSTRUCTED IDENTIFIERS include the member names and signatures, plus
  * the two factories da1up_c_classInit_ONEUPKINOKO / _SCALEUP_KINOKO and the two
  * registry descriptors g_profile_ONEUPKINOKO / _SCALEUP_KINOKO. ONEUPKINOKO and
  * SCALEUP_KINOKO themselves are NOT coined -- they are ROM-attested ASCII in
  * arm9's actor debug-name table at 0x020901e8 and 0x02090658, profile ids 276
  * and 277 -- but the `classInit` and `g_profile_` affixes are later EAD lineage,
- * not SM64DS symbols. Every FIELD NAME below is a project invention too: the
- * ROM proves each offset, width and member TYPE and none of the words.
+ * not SM64DS symbols. Every FIELD NAME below is a project invention too.
+ * Constructor/destructor calls support the owned-subobject types and offsets;
+ * the tail fields and exact base extent remain inferences as the fact file
+ * records. The RTTI class string does not recover method or parameter names.
  */
 
 #include "types.h"
@@ -55,7 +57,7 @@ struct da1up_c : dEnemyBase_c {
     s32                          unk_380;               /* 0x380 */
     s32                          mMushroomType;         /* 0x384 */
     s32                          unk_388;               /* 0x388 */
-    u8  pad_38c[0x2];
+    u16                          mStateTimer;            /* 0x38c; coined name */
     u8                           unk_38e;               /* 0x38e */
     u8                           unk_38f;               /* 0x38f */
     s32                          unk_390;               /* 0x390 */
@@ -65,11 +67,11 @@ struct da1up_c : dEnemyBase_c {
        Nine own overrides, and _ZTV7da1up_c at 0x021083c8 is what says which:
        its 31 slots relocate to this run at slot 0 (0x020b01c0), 3 (0x020affe8),
        6 (0x020b00e8), 9 (0x020b0070), 12 (0x020b006c), 16/17 (the destructor
-       pair) and 18/19. Five of these were declared NON-virtual here until this
-       change -- Behavior, CleanupResources, InitResources, OnPendingDestroy and
-       Render -- which the cartridge's own table contradicts, and which silently
-       let dActor_c's inherited addresses stand in five slots of the vtable this
-       class's key-function TU now emits.
+       pair) and 18/19. Behavior, CleanupResources, InitResources,
+       OnPendingDestroy and Render already overrode inherited virtuals in the
+       previous header, despite its misleading non-virtual comment. Repeating
+       the virtual keyword makes their role explicit; it does not turn a
+       non-virtual function into an override or repair five vtable slots.
 
        The destructor stays OUT OF LINE and declared FIRST, so it is this
        class's key function: the ROM puts D1 at 0x020aee40 below D0 at
