@@ -1,8 +1,8 @@
 {
   "class": "Pokey",
   "queue_row": "Pokey",
-  "scouted_at_base": "2ab05bae3",
-  "base_verification": "git merge-base HEAD origin/main == HEAD == origin/main == 2ab05bae3; `git log --oneline HEAD..origin/main` empty. Verified AFTER the facts were cut, in worktree C:/tmp/sm64ds-pokey-scout on branch cpp/Pokey-tu.",
+  "scouted_at_base": "2ab05bae3, then merged origin/main (b266ff471) in -- final base b4954ddc0",
+  "base_verification": "Cut at 2ab05bae3. origin/main advanced 7 commits during the run, so origin/main was MERGED in (not rebased -- the branch was already pushed). Re-checked afterwards: this branch differs from origin/main by exactly one file, notes/data/class-facts/Pokey.json. None of the 7 commits touched ov096, the promotion queue, delinks.txt, symbols.txt, config/tu_manifest.d/ or include/Pokey.h, so every tree-derived field below still holds; they were tools/ and notes/ gate work. Worktree C:/tmp/sm64ds-pokey-scout, branch cpp/Pokey-tu.",
   "rtti_name": "9daSanbo_c",
   "rtti_name_symbol": "_ZTS9daSanbo_c",
   "rtti_name_address": "0x02137980",
@@ -790,14 +790,17 @@
     ],
     "tu_manifest": "config/tu_manifest.d/ov096/ does NOT exist at 2ab05bae3. The writer creates it.",
     "sibling_oracle": "NONE, correctly. ov096 contains exactly two classes (daSanbo_c and daTor_c) and neither is promoted at this base. Nearest structural analogue is ov002/daObjFloatBoard_c, whose manifest shows the inline-destructor + compiler_only_output route -- but its destructor pair is ordered D0-before-D1 in the cartridge and this one is D1-before-D0, so its exclusion workaround does not transfer.",
-    "queue_row_at_this_base": "row 48: Pokey\\t34\\t957\\tov096\\tyes\\tno\\tcompiler-only:>=9(...)\\t-\\ttext-only. Re-read at 2ab05bae3."
+    "queue_row_at_this_base": "row 48: Pokey\\t34\\t957\\tov096\\tyes\\tno\\tcompiler-only:>=9(...)\\t-\\ttext-only. Re-read at 2ab05bae3.",
+    "corroborating_prose": "notes/actor-leaf-provenance.md independently documents this class's head/segment design and the same field offsets I re-derived from the cartridge (0xf0/0xf1 actor ids, mState 0x38c tested against 2 and 5, mNextSegment 0x394 walked by OnPendingDestroy). It agrees with the ROM on every point I checked."
   },
   "blockers_for_the_writer": [
     "THE VTABLE MUST NOT BE EMITTED BY THE PROMOTED TU. .data is unowned (see data_ownership), so _ZTV, _ZTI and _ZTS are carried from the cartridge. If the TU emits its own, the RTTI name string alone breaks the band: this class must be spelled `Pokey` in source (all 36 shards, all symbols.txt rows and the existing header already use _ZN5Pokey...), so mwccarm would emit _ZTS5Pokey = '5Pokey\\0' (7 bytes) where the ROM has '9daSanbo_c\\0' (11 bytes) -- a 4-byte shift that moves _ZTI, both profiles and both vtables. Because the TU emits no RTTI, the coined spelling costs nothing; but only while it emits none.",
     "DO NOT DEFINE THE STATE TABLE IN THE TU. The 12 PMF records live in unowned .data and are written at runtime by __sinit_ov096_0213770c, which is its own delinked shard (src/__sinit_ov096_0213770c.c). A file-scope PMF array with a dynamic initializer in the promoted .cpp would make mwccarm generate a second __sinit and duplicate that shard.",
     "RENAMING ANY OF THE 12 PMF TARGETS IS A TWO-FILE EDIT. dsd resolves those .data records by symbol NAME; a renamed member whose new mangled name is not in ov096/symbols.txt in the same commit links as 0x00000000, and no stage-2 or stage-3 byte gate sees it.",
     "STAGE 3B CEILING IS NAME RECOVERY, NOT CODEGEN. 10 of the 36 members already carry mangled _ZN5Pokey names and convert as a pure codegen question. The other 26 (12 PMF handlers, 12 helpers, 2 factories) carry auto-generated names -- func_ov096_* and daSanbo_c_classInit_* -- so converting them means renaming, with the symbols.txt edit above. State that wall in the result rather than reporting a bare fraction.",
-    "extern \"C\" REGION PLACEMENT. Any member kept as a free function must stay inside the one file-scope extern \"C\" region, and that region must sit after the last surviving func_* member, because a class member function cannot live inside it."
+    "extern \"C\" REGION PLACEMENT. Any member kept as a free function must stay inside the one file-scope extern \"C\" region, and that region must sit after the last surviving func_* member, because a class member function cannot live inside it.",
+    "THREE PROSE CITATIONS MUST MOVE IN THE PROMOTION COMMIT. notes/actor-leaf-provenance.md names src/_ZN5Pokey13InitResourcesEv.cpp (line 76), src/_ZN5Pokey8BehaviorEv.cpp (line 85) and src/_ZN5Pokey16OnPendingDestroyEv.cpp (line 87). All three shards are deleted by this promotion, so each becomes a dead reference the moment the fold lands. Repoint them to the promoted source in the same commit. (A fourth hit, src/func_ov096_02137088.cpp in audit/enrollment_report.md, belongs to daTor_c/Tornado, not to this class.) Scope of that search: grep for 'src/func_ov096_', 'src/_ZN5Pokey' and 'src/d_a_sanbo' across *.c, *.cpp, *.h and *.md in the whole repo -- 4 hits total, listed above.",
+    "check_dead_references.py IS ALREADY RED ON origin/main, and it now scans C/C++ comments as well as prose (7d83b57a2, landed mid-scout). On the merged tree it exits 1 for a reference this class did not create: src/actors/dScMgSound_c.cpp:420 names src/_ZN12dScMgLuigi_c13InitResourcesEv.cpp, a shard an earlier promotion deleted. That file is byte-identical to origin/main here, so the failure is inherited, not ours. Do not bank it with --update-code (the tool says that is for a clean pinned main checkout) and do not read the red as your own regression -- but expect stage 4 to hit it."
   ],
   "unproven": [
     "The class name `Pokey` is COINED. It does not appear in this cartridge in any case (see coined_name_search); the ROM RTTI name is daSanbo_c. Keeping `Pokey` as the C++ spelling is a disclosure, not a finding.",
