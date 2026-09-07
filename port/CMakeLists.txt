@@ -6146,15 +6146,15 @@ set(SCENE_MG_FLOWER_SOURCES
     # in a form section 4's two silent shapes do not cover: a dispatcher that
     # open-codes the Itanium sequence in plain ints. Replaces
     # src/func_ov006_020c3d18.cpp, which is out of the slice.
-    unmatched/MgFlower_SubDispatch.cpp
-    # Run mg5 lane Y3D: the class's MODEL DRAW, and the reason the minigame
-    # showed its 2D background with no flower and no Yoshi. Same local-shadow-
-    # class defect unmatched/Door_Render.cpp records on the same two classes:
-    # the ROM's vtable BYTE +0x14 is Render, MSVC's sixth word is Virtual18,
-    # so the matched TU handed Virtual18 a null matrix, Model::Virtual10 read
-    # address 0 and the quarantine froze the whole scene actor on frame 0.
-    # Replaces src/func_ov006_020c3bf4.cpp, which is out of the slice.
-    unmatched/MgFlower_ModelRender_020c3bf4.cpp)
+    unmatched/MgFlower_SubDispatch.cpp)
+# unmatched/MgFlower_ModelRender_020c3bf4.cpp RETIRED (run link100, lane
+# FOLD2). It existed because the ROM's vtable BYTE +0x14 is Render while the
+# FOLDED host table put ModelAnim::Virtual18 there, so the matched TU handed
+# Virtual18 a null matrix and Model::Virtual10 read address 0. Lane SLOT5F's
+# destructor unfold ROM-numbers _ZTV9ModelAnim, so index 5 is Render again.
+# src/func_ov006_020c3bf4.cpp carries it now -- through tools/hostgen.py, for
+# its one LIGHT_VECTOR store; see the FOLD2 hostgen block near the end of this
+# file and port/slice_fold2.txt.
 
 # Run mg6 lane MEM: dScMgMemory2_c (Memory Master), actor id 0x16b = scene 363,
 # and the SECOND three-deep hierarchy the port seats.
@@ -6194,17 +6194,16 @@ set(SLICE_MEM_SOURCES hal/scene_mg_memory2.cpp
                       # three globals that exist in no config, and the ROM
                       # loads 0x205/0x206/0x207 out of its own literal pool.
                       unmatched/MgMemory2_SubObjCtor.cpp
-                      # REPLACES src/func_ov006_020c1804.cpp, which is out of
-                      # the slice: the local-shadow-class model draw (two call
-                      # sites) plus two LIGHT_VECTOR stores that a plain src
-                      # build lands in the I/O window. Same pair
-                      # unmatched/MgFlower_ModelRender_020c3bf4.cpp carries.
-                      unmatched/MgMemory2_ModelRender_020c1804.cpp
-                      # REPLACES src/func_ov006_020c06dc.cpp, out of the slice:
-                      # the same shadow-class defect one call deeper, at the
-                      # slot where the wrong body ALSO `ret 4`s and unbalances
-                      # the stack.
-                      unmatched/MgMemory2_ShadowSlot_020c06dc.cpp)
+                      )
+# unmatched/MgMemory2_ModelRender_020c1804.cpp and
+# unmatched/MgMemory2_ShadowSlot_020c06dc.cpp RETIRED (run link100, lane
+# FOLD2). Both were the destructor fold and nothing else: the first dispatches
+# ROM index 5 (Render) on a BlendModelAnim and a Model, the second ROM index 3
+# (UpdateVerts), and lane SLOT5F's unfold puts both words back where the ROM
+# holds them. src/func_ov006_020c06dc.cpp is a plain row in
+# port/slice_fold2.txt; src/func_ov006_020c1804.cpp goes through
+# tools/hostgen.py for its two LIGHT_VECTOR stores (the FOLD2 hostgen block
+# near the end of this file).
 foreach(line IN LISTS SLICE_MEM_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -6288,12 +6287,13 @@ set(SLICE_CUP_SOURCES hal/scene_mg_cup.cpp
                       #             on BlendModelAnim and nothing on Model),
                       #             plus four LIGHT_COLOR / LIGHT_VECTOR stores
                       #             that a host copy must route through
-                      #             NTR_MMIO because tools/hostgen.py never sees
-                      #             this file. Both lanes wrote behaviourally
-                      #             identical copies and both crash traces are
-                      #             in the header. REPLACES
-                      #             src/func_ov006_020c29dc.cpp.
-                      unmatched/MgShared4f38_ModelRender_020c29dc.cpp
+                      #             NTR_MMIO. RETIRED (run link100, lane
+                      #             FOLD2): the fold is dead and hostgen.py
+                      #             DOES see the file now -- it is wired
+                      #             through the FOLD2 hostgen block near the
+                      #             end of this file, which is what routes the
+                      #             four stores. src/func_ov006_020c29dc.cpp
+                      #             carries the body.
                       #   020c2924  a RECEIVER DROP at a host C++ virtual: a
                       #             __cdecl-typed raw vtable read against a
                       #             __thiscall body, where the stack balances so
@@ -6501,11 +6501,11 @@ set(SLICE_BOX_SOURCES hal/scene_mg_boombox.cpp
                       #             +0x14 at two sites, and four I/O-window
                       #             stores that need the geometry proxy. Found
                       #             by the BATTERY, which renders; this lane's
-                      #             own NO_RENDER boots were clean over it. The
-                      #             canonical file keeps this lane's NTR_MMIO
-                      #             spelling. REPLACES
-                      #             src/func_ov006_020c29dc.cpp.
-                      unmatched/MgShared4f38_ModelRender_020c29dc.cpp
+                      #             own NO_RENDER boots were clean over it.
+                      #             RETIRED (run link100, lane FOLD2) -- the
+                      #             same row the cup slice above carries, and
+                      #             the file was listed by both. The four
+                      #             stores are hostgen.py's now.
                       #   020c2924  a RECEIVER DROP at a host C++ virtual -- a
                       #             __cdecl-typed raw vtable read against a
                       #             __thiscall body, where the stack balances so
@@ -6897,18 +6897,15 @@ set(SLICE_PSY_SOURCES hal/scene_mg_psycheout.cpp
                       # The alias rows the link asked for and the five
                       # shadow-class destructors src's two destructors spell.
                       unmatched/Mg3DEsp_Faces.cpp
-                      # REPLACES src/func_ov006_020e7b44.cpp, out of the slice:
-                      # a shadow-class Render dispatch on a plain ModelAnim,
-                      # whose _ZTV9ModelAnim slot 5 is a real Virtual18 and is
-                      # deliberately NOT dual-filled. The TU
-                      # hal/cxxname_bridge.cpp says trap-by-Virtual18 will name
-                      # if it ever appears.
-                      unmatched/Mg3DEsp_ModelAnimRender_020e7b44.cpp
-                      # REPLACES src/func_ov006_020e777c.cpp, out of the slice:
-                      # the same defect one frame down, on the array of THREE
-                      # ModelAnims at the sub-object's +0x84. This one crashed
-                      # a rendered run; its sibling above was found by reading.
-                      unmatched/Mg3DEsp_ModelAnimRender_020e777c.cpp)
+                      )
+# unmatched/Mg3DEsp_ModelAnimRender_020e7b44.cpp and
+# unmatched/Mg3DEsp_ModelAnimRender_020e777c.cpp RETIRED (run link100, lane
+# FOLD2). They were the two TUs hal/cxxname_bridge.cpp's ModelAnim2 block
+# predicted by name when it wrote that trap-by-Virtual18 would name such a TU
+# if one ever appeared -- the folded host table put Virtual18 on ROM slot 5.
+# That prediction is retracted in the same file now: _ZTV9ModelAnim[5] is
+# ModelAnim::Render again, and src/func_ov006_020e7b44.cpp and
+# src/func_ov006_020e777c.cpp carry both bodies (port/slice_fold2.txt).
 foreach(line IN LISTS SLICE_PSY_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -7635,10 +7632,11 @@ set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # port that mounts both. This was the only thing stopping
                       # scene 384 from booting.
                       unmatched/MgTrmpln3DMario_ModuleFix.cpp
-                      # the element's per-frame model draw: the local-shadow
-                      # slot-numbering defect Door_Render.cpp and the flower's
-                      # ModelRender file already carry, one class over
-                      unmatched/MgTrmpln3DMario_ModelRender.cpp
+                      # unmatched/MgTrmpln3DMario_ModelRender.cpp RETIRED
+                      # (run link100, lane FOLD2): the local-shadow
+                      # slot-numbering defect died with the destructor unfold,
+                      # and src/func_ov006_020cafb4.cpp carries the draw
+                      # (port/slice_fold2.txt).
                       # This slice's own light body plus the one it shares with
                       # slice_tte. The shared path is listed by BOTH slices on
                       # purpose -- CMake dedupes the identical absolute path,
@@ -12802,8 +12800,11 @@ set(SCENE_MG_SLOT1_SOURCES hal/scene_mg_slot1.cpp)
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mug.txt" SLICE_MUG_LINES)
 set(SLICE_MUG_SOURCES hal/scene_mg_slot3.cpp
                       unmatched/MgSlot3_StateDispatch.cpp
-                      unmatched/MgSlot3_SubObjCtor.cpp
-                      unmatched/MgSlot3_SubObjUpdate_020c1f4c.cpp)
+                      unmatched/MgSlot3_SubObjCtor.cpp)
+# unmatched/MgSlot3_SubObjUpdate_020c1f4c.cpp RETIRED (run link100, lane
+# FOLD2): its shadow's v3() is ROM index 3, BlendModelAnim::UpdateVerts, which
+# is what _ZTV14BlendModelAnim[3] holds again. src/func_ov006_020c1f4c.cpp
+# carries it (port/slice_fold2.txt).
 foreach(line IN LISTS SLICE_MUG_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -12900,8 +12901,11 @@ set_source_files_properties(
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_rlt.txt" SLICE_RLT_LINES)
 set(SLICE_RLT_SOURCES hal/scene_mg_roulette.cpp
                       unmatched/MgRoulette_Factory.cpp
-                      unmatched/MgRoulette_WheelDispatch.cpp
-                      unmatched/MgRoulette_ModelRender_02107d80.cpp)
+                      unmatched/MgRoulette_WheelDispatch.cpp)
+# unmatched/MgRoulette_ModelRender_02107d80.cpp RETIRED (run link100, lane
+# FOLD2): two plain Models drawn through a six-virtual shadow's index 5, and
+# _ZTV5Model[5] is Model::Render again. src/func_ov006_02107d80.cpp carries it
+# (port/slice_fold2.txt).
 foreach(line IN LISTS SLICE_RLT_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -15072,6 +15076,53 @@ foreach(_tunmatch2 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# LANE FOLD2, batch 1: the ov006 minigame host copies the unfold retired
+# ===========================================================================
+#
+# Nine host copies whose ONLY stated reason was the MSVC destructor fold. Lane
+# SLOT5F respelled the ROM's D1/D0 pair as two plain virtuals under _MSC_VER in
+# include/ModelBase.h and its five siblings, so the host's model-family tables
+# are ROM-numbered again: index 3 is UpdateVerts and index 5 is Render on
+# _ZTV5Model, _ZTV9ModelAnim, _ZTV10ModelAnim2 and _ZTV14BlendModelAnim, which
+# is what config/arm9/relocs.txt says the ROM's own four tables hold at
+# 0x0208e90c, 0x0208e980, 0x0208e9b4 and 0x0208e94c. Every one of these matched
+# sources dispatches a model member through a LOCAL shadow class counted in ROM
+# numbering, so all nine now reach the body their source means.
+#
+# NO FILL SITE CHANGES AND NO FACE IS ADDED. All nine ROM bodies are
+# address-named ov006 functions whose matched sources define them at C linkage
+# under the exact name their callers use, so there is nothing to bridge.
+#
+# THREE of the nine are NOT in this list. They carry a second, still-live
+# difference from src -- a raw store into the DS I/O window at 0x040004c8 /
+# 0x040004cc, the geometry engine's LIGHT_VECTOR and LIGHT_COLOR -- and the
+# port already owns the answer to that: tools/hostgen.py's MMIO_DEREF rewrite,
+# the mechanism gate 4a, gate 4b, gate 6 and Animation::Advance all use. They
+# build from ${CMAKE_BINARY_DIR}/host-src through the FOLD2 hostgen block at
+# the very bottom of this file. hostgen's rewrite on all three is the MMIO
+# substitution and nothing else, diffed line by line against src/ first.
+#
+# The per-row referrer (an arm_call address in ov006, or the ROM vtable word),
+# the kind:function(arm,size=..) record and the first three ARM words of each
+# body are in port/slice_fold2.txt, together with the ONE ov006 row of the ten
+# that stays: MgSnowball_ModelRender.cpp, whose source reads the vtable word by
+# hand and calls it CDECL against a __fastcall face. That is a receiver
+# convention, not the fold, and its repair is a VIRTUAL_CALL row in
+# port/tools/hostgen.py, which this lane does not own.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_fold2.txt" SLICE_FOLD2_LINES)
+set(SLICE_FOLD2_SOURCES "")
+foreach(line IN LISTS SLICE_FOLD2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_FOLD2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tfold2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tfold2} PRIVATE ${SLICE_FOLD2_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
@@ -15294,3 +15345,58 @@ if(_share_n GREATER 1)
         endforeach()
     endif()
 endif()
+
+
+# ===========================================================================
+# LANE FOLD2 hostgen: the three ov006 draws that also poke the light registers
+# ===========================================================================
+#
+# WHY THIS BLOCK IS BELOW THE TIER-INDEPENDENT SECTION AND NOT ABOVE IT. That
+# section reads each target's SOURCES property back and rewrites it, and it
+# decides the shared set by walking every candidate's include closure with
+# tools/tierscan.py. These three sources do not exist at configure time -- they
+# are produced by an add_custom_command into ${CMAKE_BINARY_DIR}/host-src. The
+# section's own header states the rule for exactly this case: "A block appended
+# BELOW this one still builds -- its sources just compile per target." Three
+# files compiled three times is the whole price, and it buys a generated source
+# no scanner has to guess about.
+#
+# WHAT THE REWRITE IS. Each of the three matched sources stores to the geometry
+# engine's LIGHT_VECTOR (0x040004c8) or LIGHT_COLOR (0x040004cc) through a
+# plain literal-address cast. Those are NOT harmless on the host: port/io.cpp
+# maps real memory across the DS I/O window, so an unrewritten store latches
+# into dead memory and the geometry engine never sees the light -- the finding
+# tools/hostgen.py's own header records for MTX_SCALE, and the reason the two
+# MgShared4f38 host copies spelled their four stores NTR_MMIO by hand.
+# hostgen.py's MMIO_DEREF turns each one into NTR_MMIO(T, addr) and touches
+# nothing else in these three files (1, 2 and 4 rewrites respectively; the
+# generated text was diffed against src/ line by line before this block was
+# written).
+#
+#   src/func_ov006_020c3bf4.cpp   was unmatched/MgFlower_ModelRender_020c3bf4.cpp
+#   src/func_ov006_020c1804.cpp   was unmatched/MgMemory2_ModelRender_020c1804.cpp
+#   src/func_ov006_020c29dc.cpp   was unmatched/MgShared4f38_ModelRender_020c29dc.cpp
+#
+# The fold half of each is the same as the plain rows in slice_fold2.txt: a
+# local shadow class dispatching ROM index 5, which _ZTV5Model,
+# _ZTV9ModelAnim and _ZTV14BlendModelAnim all hold Render at again.
+set(FOLD2_HOSTGEN_SYMS func_ov006_020c3bf4 func_ov006_020c1804
+                       func_ov006_020c29dc)
+set(FOLD2_HOSTGEN_GEN "")
+foreach(sym IN LISTS FOLD2_HOSTGEN_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND FOLD2_HOSTGEN_GEN "${sym_out}")
+endforeach()
+foreach(_tfold2g walk_window walk_window_hires smoke_player)
+    target_sources(${_tfold2g} PRIVATE ${FOLD2_HOSTGEN_GEN})
+endforeach()

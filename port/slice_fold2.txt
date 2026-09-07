@@ -1,0 +1,173 @@
+# SLICE FOLD2 -- run link100, lane FOLD2, batch 1: the ov006 minigame rows.
+#
+# Nine host copies in port/unmatched whose stated reason was the MSVC
+# DESTRUCTOR FOLD and nothing else. Lane SLOT5F respelled the ROM's D1/D0 pair
+# as two plain virtuals under _MSC_VER in include/ModelBase.h and its five
+# siblings, so every host model-family table is ROM-numbered again:
+#
+#   _ZTV5Model           0x0208e90c  [3] 0x02016c98 Model::UpdateVerts
+#                                    [4] 0x02016bb8 Model::Virtual10
+#                                    [5] 0x02016b78 Model::Render
+#   _ZTV9ModelAnim       0x0208e980  [3] 0x0201686c ModelAnim::UpdateVerts
+#                                    [4] 0x0201682c ModelAnim::Virtual10
+#                                    [5] 0x020167f8 ModelAnim::Render
+#   _ZTV10ModelAnim2     0x0208e9b4  [3][4][5] the same three words
+#   _ZTV14BlendModelAnim 0x0208e94c  [3] 0x02016578 BlendModelAnim::UpdateVerts
+#                                    [4] 0x02016518 BlendModelAnim::Virtual10
+#                                    [5] 0x020164e4 BlendModelAnim::Render
+#
+# read out of config/arm9/relocs.txt at each table's own address, and every
+# destination resolved in config/arm9/symbols.txt. That is the ROM word behind
+# every row below: each matched source models a model-family member with a
+# LOCAL shadow class counted in ROM/Itanium numbering and dispatches index 5
+# (Render) or index 3 (UpdateVerts). The folded host table put Virtual18 on
+# index 5 and Virtual10 on index 3; it does not now, so the shadow reaches the
+# body its source means and the host copies have nothing left to work around.
+#
+# hal/cxxname_bridge.cpp fills those tables at the ROM index (its own comment
+# says so at hal_fill_model_vtable and hal_fill_modelanim2_vtable, and the dual
+# fill of _ZTV5Model[5] is gone), and hal/model_dtor_seat.cpp seats the ROM's
+# deleting half at slot 1 of all three model-family tables.
+#
+# NO FACE IS ADDED FOR ANY ROW IN THIS BATCH. All nine ROM bodies are
+# address-named ov006 functions that their matched sources define at C linkage
+# under exactly the name their callers use, so nothing bridges anything.
+#
+# Every row: the ROM referrer, then the matched TU's own function record and
+# the first three words of its ARM body read out of
+# extracted/overlays/overlay_0006.bin at base 0x020bfec0. None of the nine
+# carries the "recovered from vtable slot identity" guess marker, so
+# inferred_stub_guard.py has nothing to refuse.
+
+# 1. src/func_ov006_020e777c.cpp -- dScMg3DEsp_c, the THREE-ModelAnim draw at
+#    the sub-object's +0x84 (an array of three at stride 0x64, established from
+#    the constructor at src/func_ov006_020e7aac.c, which runs ModelAnim's C1/D1
+#    through func_020733a8). RETIRES port/unmatched/
+#    Mg3DEsp_ModelAnimRender_020e777c.cpp (whole file). Its only delta was the
+#    shadow's `m(zero)` spelled as ((ModelAnim *)r5)->Render(0).
+#    REFERRER: an arm_call from its own sibling --
+#    from:0x020e7bd8 kind:arm_call to:0x020e777c (func_ov006_020e7b44 + 0x94).
+#    RECORD: func_ov006_020e777c kind:function(arm,size=0x9c) addr:0x020e777c,
+#    body e92d41f0 e1a07000 e59f0088.
+src/func_ov006_020e777c.cpp
+
+# 2. src/func_ov006_020e7b44.cpp -- the same class's render half, on the plain
+#    ModelAnim at the sub-object's +0xc (constructor src/func_ov006_020e814c.c
+#    runs _ZN9ModelAnimC1Ev there). RETIRES port/unmatched/
+#    Mg3DEsp_ModelAnimRender_020e7b44.cpp (whole file). The host copy is the
+#    one hal/cxxname_bridge.cpp predicted in writing; that prediction is now
+#    retracted in the same file.
+#    REFERRER: from:0x020e9dbc kind:arm_call to:0x020e7b44
+#    (func_ov006_020e9d1c + 0xa0, the class's slot-9 Render).
+#    RECORD: func_ov006_020e7b44 kind:function(arm,size=0xa4) addr:0x020e7b44,
+#    body e92d4010 e1a04000 e59f2090.
+src/func_ov006_020e7b44.cpp
+
+# 3. src/func_ov006_020c06dc.cpp -- dScMgMemory2_c, the shadow at +0x18 whose
+#    four-virtual `m()` is ROM index 3, UpdateVerts. RETIRES port/unmatched/
+#    MgMemory2_ShadowSlot_020c06dc.cpp (whole file). This is the slot where the
+#    wrong body ALSO returned `ret 4` and unbalanced the stack, so it is the
+#    one row of the batch whose old symptom was two frames from its cause.
+#    REFERRER: from:0x020c07ac kind:arm_call to:0x020c06dc
+#    (func_ov006_020c07a0 + 0xc).
+#    RECORD: func_ov006_020c06dc kind:function(arm,size=0xc4) addr:0x020c06dc,
+#    body e92d4030 e24dd004 e1a04000.
+src/func_ov006_020c06dc.cpp
+
+# 4. src/func_ov006_02107d80.cpp -- dScMgRoulette_c's two plain Models at +0x10
+#    and +0x60, both drawn through a six-virtual shadow's `m(0)`. RETIRES
+#    port/unmatched/MgRoulette_ModelRender_02107d80.cpp (whole file).
+#    REFERRER: from:0x02109a38 kind:arm_call to:0x02107d80
+#    (func_ov006_02109834 + 0x204).
+#    RECORD: func_ov006_02107d80 kind:function(arm,size=0x38) addr:0x02107d80,
+#    body e92d4010 e1a04000 e2840010.
+src/func_ov006_02107d80.cpp
+
+# 5. src/func_ov006_020c1f4c.cpp -- dScMgSlot3_c's sub-object update, whose
+#    four-virtual shadow calls `v3()` on the BlendModelAnim at +0x10: ROM index
+#    3, UpdateVerts. RETIRES port/unmatched/MgSlot3_SubObjUpdate_020c1f4c.cpp
+#    (whole file).
+#    REFERRER: from:0x020c2128 kind:arm_call to:0x020c1f4c
+#    (func_ov006_020c201c + 0x10c).
+#    RECORD: func_ov006_020c1f4c kind:function(arm,size=0xd0) addr:0x020c1f4c,
+#    body e92d4030 e24dd004 e1a04000.
+src/func_ov006_020c1f4c.cpp
+
+# 6. src/func_ov006_020cafb4.cpp -- dScMgTrampoline_c's 3D Mario element, one
+#    six-virtual shadow call at +0x6c with data_ov006_0212e038 as the scale.
+#    RETIRES port/unmatched/MgTrmpln3DMario_ModelRender.cpp (whole file).
+#    REFERRER: from:0x020cd360 kind:arm_call to:0x020cafb4
+#    (func_ov006_020cd270 + 0xf0).
+#    RECORD: func_ov006_020cafb4 kind:function(arm,size=0x28) addr:0x020cafb4,
+#    body e92d4000 e24dd004 e5b0206c.
+src/func_ov006_020cafb4.cpp
+
+# ---------------------------------------------------------------------------
+# THREE MORE ROWS ARE IN THIS BATCH AND ARE NOT LISTED HERE, because they do
+# not build from src/ directly. Each carries the fold AND a raw store into the
+# DS I/O window -- the geometry engine's LIGHT_VECTOR at 0x040004c8 and
+# LIGHT_COLOR at 0x040004cc -- which tools/hostgen.py's MMIO_DEREF rewrite
+# turns into NTR_MMIO. On the host those stores are NOT harmless: the ntr layer
+# maps real memory at the DS I/O addresses, so an unrewritten store latches
+# into dead memory and the geometry engine never sees the light (the finding
+# hostgen.py's own header records for MTX_SCALE). They build from
+# ${CMAKE_BINARY_DIR}/host-src, wired in port/CMakeLists.txt's FOLD2 hostgen
+# block, and hostgen's rewrite is the MMIO substitution and NOTHING ELSE --
+# diffed line by line against src/ before this batch was applied.
+#
+#   src/func_ov006_020c3bf4.cpp  1 MMIO rewrite. dScMgFlower_c's ModelAnim at
+#       +0xd18 through a six-virtual shadow's f5(0); the file's own header
+#       quotes the ROM at 020c3cb4 ldr r2,[r2,#0x14] / blx r2. RETIRES
+#       unmatched/MgFlower_ModelRender_020c3bf4.cpp.
+#       REFERRER: from:0x0212ac44 kind:arm_call to:0x020c3bf4
+#       (func_ov006_0212aacc + 0x178).
+#       RECORD: kind:function(arm,size=0x124) addr:0x020c3bf4,
+#       body e92d4070 e24dd010 e59f20f4.
+#   src/func_ov006_020c1804.cpp  2 MMIO rewrites. A BlendModelAnim at +0x1c
+#       and a plain Model at +0x8c, both through a six-virtual shadow's f5(0).
+#       RETIRES unmatched/MgMemory2_ModelRender_020c1804.cpp.
+#       REFERRER: eight arm_calls, the nearest
+#       from:0x020dabc0 kind:arm_call to:0x020c1804
+#       (func_ov006_020da9c4 + 0x1fc); the others are at 0x020f5370,
+#       0x020f7440, 0x020f8680, 0x020fa110, 0x02109a48, 0x021254a0 and
+#       ov007's 0x020b77b4. A shared draw, not one scene's.
+#       RECORD: kind:function(arm,size=0x1cc) addr:0x020c1804,
+#       body e92d4010 e24dd020 e59f21a4.
+#   src/func_ov006_020c29dc.cpp  4 MMIO rewrites. The dScMgSingle3DBase_c body
+#       shared by the cup and boombox slices: a BlendModelAnim at +0x8 and a
+#       plain Model at +0x78. RETIRES unmatched/
+#       MgShared4f38_ModelRender_020c29dc.cpp, which was listed by BOTH
+#       SLICE_CUP_SOURCES and SLICE_BOX_SOURCES.
+#       REFERRER: from:0x020e01e0 kind:arm_call to:0x020c29dc
+#       (func_ov006_020e0068 + 0x178), and from:0x0211c70c
+#       (func_ov006_0211c6c4 + 0x48).
+#       RECORD: kind:function(arm,size=0x1b0) addr:0x020c29dc,
+#       body e92d4070 e24dd018 e59f2180.
+#
+# ---------------------------------------------------------------------------
+# THE ONE ov006 ROW OF THE TEN THAT STAYS, and why.
+#
+#   unmatched/MgSnowball_ModelRender.cpp  (src/func_ov006_02127d10.c)
+#       The fold is dead here too, but it is not this file's only reason. Its
+#       matched source does not dispatch through a shadow class at all: it
+#       reads the vtable word by hand and calls it CDECL --
+#
+#           void (*fn)(void*, int*) =
+#               *(void(**)(void*, int*))((char*)(*(void**)self) + 0x14);
+#           fn(self, vecArr);
+#
+#       Byte +0x14 is ROM index 5 and _ZTV5Model[5] is Model::Render, so the
+#       SLOT is right; the CONVENTION is not. hal/cxxname_bridge.cpp's mv_render
+#       is `static void __fastcall mv_render(void *self, void *, const void *s)`
+#       -- `this` in ecx, the way a host C++ virtual call passes it -- and a
+#       cdecl call through the same word puts `self` on the stack and reads the
+#       scale out of the slot that held it. That is the receiver drop the two
+#       MgShared4f38 headers describe at 0x020c2924, and the repair is a
+#       VIRTUAL_CALL row in port/tools/hostgen.py, which lane FOLD2 does not
+#       own. Named and left. Two more MMIO stores in the same body would be
+#       handled by the same hostgen pass, so the file is one table row away
+#       from retiring.
+#       REFERRER, for whoever takes it: from:0x02140030 kind:load to:0x02127d10
+#       (data_ov006_0214000c + 4*9, the class's own slot 9).
+#       RECORD: kind:function(arm,size=0x694) addr:0x02127d10,
+#       body e92d4ff0 e24dd024 e59f1630.
