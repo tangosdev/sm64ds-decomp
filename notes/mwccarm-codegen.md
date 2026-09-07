@@ -4973,3 +4973,71 @@ optimiser and changes nothing: measured completely inert on `func_ov006_020d01e0
 banked draft had carried it as though it were load-bearing. A frame home has to be bought
 with something the compiler cannot delete, which means a referenced local, or the non-POD
 of item 6.
+
+## 6bw. The entry write order decides the entry register pair, and one scoring rule 6bv did not state (2026-09-06)
+
+A follow-up lane on the five least-explored remaining targets closed nothing, which is the
+expected outcome on a list whose members have all survived several passes. It turned up one
+new lever, two counter-examples that bound levers 2 and 4 of 6bv, and one scoring mistake
+worth stating separately because it cost the lane its headline claim.
+
+**1. When two same-typed locals are both zeroed at entry, the one written FIRST gets the
+lower register, and that is source-controlled.**
+
+On `func_ov002_020d3b9c` (ov002, 0x5a0) the cartridge opens `mov r5,#0 / mov r4,r5`. Getting
+that pair byte-exact is worth two words, and the only thing that decides it is which of the
+two zeroing statements comes first:
+
+| entry spelling | first written | divergences |
+|---|---|---|
+| `acc = 0; ... spd = acc;` | acc | 51 |
+| `acc = 0; ... spd = 0;` | acc | 51 |
+| `acc = 0; spd = acc;` adjacent | acc | 51 |
+| `spd = 0; ... acc = spd;` | spd | 53 |
+| `spd = 0; ... acc = 0;` | spd | 53 |
+
+The copy relationship is irrelevant, and so is the distance between the two statements. Only
+the order of first write moves it. Stated the other way, because it is the part that is easy
+to get backwards: this is NOT the declaration order. All thirty positions of the `spd` and
+`acc` declarations among the function's six locals score 51 with the writes in the winning
+order, and 53 with them in the losing order. mwccarm ranks the two webs by first definition,
+not by declaration, and this is the one place in the function where the source controls the
+ranking.
+
+This is cheap enough to be worth an unconditional probe: any function whose entry zeroes two
+locals of the same type has exactly two spellings, and one of them is free. The lever was
+inert on two of the four other functions it was tried on, so it is a probe, not a rule.
+
+**2. Counter-example to 6bv's "delete the named intermediate".** On `func_ov002_020cfea4`
+(ov002, 0x2d4) the named intermediate is load-bearing in the other direction: removing
+`int t = idx << 1` from the second block re-orders the shift group and costs seven words
+(36 to 43). The name is what pins the offset-computation order. Deleting the intermediate is
+a probe with two outcomes, the same as item 1.
+
+**3. Counter-example to any pragma sweep that treats pragmas as removable.** On
+`func_ov006_02126b4c` (ov006, 0x398) `#pragma opt_strength_reduction off` carries eighteen
+words: dropping it takes the function from 41 to 59. Confirming 6bv item 9's screening rule
+from the other side, a pragma that IS doing work is not always the one a lane would guess,
+and a lane that inherits a draft should measure each pragma's contribution before removing
+any of them for tidiness.
+
+**4. mwccarm evaluates call arguments right to left, and that decides which parameter is
+homed first.** On `func_ov004_020b2220` (ov004, 0x224) the cartridge homes param0 into `sl`
+before the entry clamp, which frees r0 in time for the next local to be born there; our
+build homes param1 into `sb` first and every register in the block that follows shifts by
+one. The cause is that in `f(tbl[th], sl - 0x30, sb, ...)` the right-to-left evaluation makes
+the first use of `sb` precede the first use of `sl`. Hoisting an `sl`-using statement above
+the branch does flip the home order at no size cost, but the scheduler then stops filling the
+pool-load delay slot with a home at all, which costs the word back. The function needs `sl`
+first-used earlier AND the delay slot still filled.
+
+**5. Score a candidate against the row that is on main, not against the number a lane
+remembers.** The same lane reported a shape win on `func_ov004_020b2220`, comparing 135 equal
+and 2 replaced against a remembered 131 and 6. Re-scored against the row actually committed
+in `nearmiss/db.jsonl`, the committed row is 100 equal and 34 replaced and the new candidate
+is 99 and 35, both size-exact at 548 bytes, and both already byte-exact from 0x104 to the end
+of the function. The improvement was real against the baseline the lane held and absent
+against the baseline on main, so `nearmiss_db.py ingest` correctly refused it. This is the
+second time in this run that a lane's headline claim was scored against a stale baseline. The
+rule that prevents it is one line: before claiming an improvement, re-score the DB's own
+stored `c_source` for that key in the same worktree, in the same run, and quote both numbers.
