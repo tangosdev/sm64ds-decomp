@@ -63,6 +63,43 @@
 //        ShadowModel::InitCylinder to `return 1` rather than let it dispatch.
 //   _ZTV15TextureSequence[0]   <- _ZN15TextureSequenceD0Ev
 //        ROM from:0x0208e7d8 -> 0x02015a00 (_ZTV15TextureSequence+4, slot 1)
+//
+//   TEXTURESEQUENCE SLOT 1 (run link100, lane EXCEPT). Index 1 was left null
+//   by the seat above, and that null was a live fault, not an empty seat: the
+//   ROM's own bodies destroy a TextureSequence through a HAND-INDEXED word,
+//
+//       p = *(void **)(c + 0x7c);
+//       if (p != 0) (*(VFN)((*(int **)p)[1]))(p);      // typedef void (*VFN)(void*)
+//
+//   and calling index 1 called address 0. Measured as
+//   `code c0000005 +ffc00000` on the opening cutscene (0 expressed as an RVA
+//   against this image's 0x00400000 base), which is what
+//   port/unmatched/Ov002_ModelAnimD0_020f6778.cpp was written to work around.
+//
+//   THE ROM'S OWN WORDS, read out of extracted/arm9_dec.bin at the image's
+//   real base 0x02004000 (port/tools/romdata.py:17 states that base; reading
+//   at 0x02000000 lands in .data and gives a wrong answer):
+//
+//       0208e7d4 = 02015a2c   _ZTV15TextureSequence[0]
+//       0208e7d8 = 02015a00   _ZTV15TextureSequence[1]
+//
+//   and config/arm9/symbols.txt:528-529 names both:
+//
+//       _ZN15TextureSequenceD0Ev kind:function(arm,size=0x2c) addr:0x02015a00
+//       _ZN15TextureSequenceD1Ev kind:function(arm,size=0x24) addr:0x02015a2c
+//
+//   So the ROM holds D1 at slot 0 and D0 at slot 1, exactly as
+//   include/TextureSequence.h:46 says -- that comment was checked against
+//   these words and is CORRECT, so it is not edited.
+//
+//   Index 1 therefore takes the ROM's own body for that slot, D0, behind a
+//   CDECL thunk rather than the __fastcall one index 0 has. The convention is
+//   not a choice: the only readers of index 1 are ROM bodies with the VFN
+//   typedef above, and MSVC's own vtable for this class has ONE slot (one
+//   virtual destructor), so nothing MSVC generates ever indexes 1. Index 0
+//   keeps its __fastcall thunk untouched, because that is the slot MSVC's
+//   `delete p` reaches and it must still free.
+//   Retires port/unmatched/Ov002_ModelAnimD0_020f6778.cpp.
 //   _ZTV15MaterialChanger[0]   <- _ZN15MaterialChangerD0Ev
 //        ROM from:0x0208e7f8 -> 0x02015800 (_ZTV15MaterialChanger+4, slot 1)
 //   _ZTV18TextureTransformer[0]<- _ZN18TextureTransformerD0Ev
@@ -146,6 +183,9 @@ static void __fastcall modelanim2_d1(void *s, void *){ _ZN10ModelAnim2D1Ev(s); }
 static void __fastcall blend_d1(void *s, void *)     { _ZN14BlendModelAnimD1Ev(s); }
 static void __fastcall modelbase_d1(void *s, void *) { _ZN9ModelBaseD1Ev(s); }
 static void __fastcall texseq_d0(void *s, void *)    { _ZN15TextureSequenceD0Ev(s); }
+/* Run link100, lane EXCEPT. THE SAME BODY, ENTERED THE OTHER WAY, for ROM
+   slot 1 -- see the TEXTURESEQUENCE SLOT 1 note in the seat block above. */
+static void texseq_d0_cdecl(void *s)                 { _ZN15TextureSequenceD0Ev(s); }
 static void __fastcall matchg_d0(void *s, void *)    { _ZN15MaterialChangerD0Ev(s); }
 static void __fastcall texxfm_d0(void *s, void *)    { _ZN18TextureTransformerD0Ev(s); }
 static void __fastcall modelbase_d0(void *s, void *) { _ZN9ModelBaseD0Ev(s); }
@@ -183,6 +223,9 @@ extern "C" void hal_seat_model_family_dtors(void)
        is the ROM's slot 2, and with the fold gone that is where it goes. */
     _ZTV11ShadowModel[2]        = (void *)shadow_dosetfile;
     _ZTV15TextureSequence[0]    = (void *)texseq_d0;
+    /* Run link100, lane EXCEPT: ROM slot 1, filled at last. See the
+       TEXTURESEQUENCE SLOT 1 note in the seat block at the top of this file. */
+    _ZTV15TextureSequence[1]    = (void *)texseq_d0_cdecl;
     _ZTV15MaterialChanger[0]    = (void *)matchg_d0;
     _ZTV18TextureTransformer[0] = (void *)texxfm_d0;
     /* ROM numbering: 0x0208e87c holds ModelBase's D1 and 0x0208e880 its D0.

@@ -854,6 +854,45 @@ VIRTUAL_CALL = {
          "    ((void (__fastcall *)(void *, void *, unsigned))vt[8])(self, 0, code);\n"
          "    return r;"),
     ],
+    # Run link100, lane EXCEPT. dScMgSnowball_c's Render, ROM vtable slot 9,
+    # and the last of lane FOLD2's thirty ov006 rows. Its divergence is NOT
+    # the destructor fold: the vtable read is already right. The ROM is
+    #
+    #     02127e50  add  r0,sb,r0        ; the Model at this+0xaba4
+    #     02127e54  ldr  r2,[r0]         ; its vptr
+    #     02127e58  ldr  r2,[r2,#0x14]   ; BYTE +0x14 = word 5
+    #     02127e5c  blx  r2
+    #
+    # and word 5 of _ZTV5Model is Render on the host too, since lane SLOT5F's
+    # respelling of include/ModelBase.h made every model table ROM-numbered
+    # (hal/cxxname_bridge.cpp:522 writes mv_render there). The problem is the
+    # CONVENTION, measured by a run: the matched source reads the word into a
+    # `void (*)(void*, int*)` and calls it cdecl, while what is seated is
+    #
+    #     void __fastcall mv_render(void *self, void *unused, const void *s)
+    #
+    # so the receiver arrived on the stack instead of ecx, `s` read the model
+    # pointer, and the callee cleaned four bytes the caller had also counted.
+    # The retired host copy recorded the fault that finding came from: scene
+    # 377, code c0000005, eip == the actor's own address, because the
+    # double-cleaned frame returned into the object.
+    #
+    # This patch keeps the ROM's word index and the ROM's arguments and only
+    # spells the call the way the host slot has to be entered. The two
+    # geometry-register stores in the same body need no row here: transform()
+    # runs after this and MMIO_DEREF already matches both
+    # `*(volatile int*)0x040004c8` and `*(int*)0x040004cc`.
+    # Retires port/unmatched/MgSnowball_ModelRender.cpp.
+    "func_ov006_02127d10": [
+        ("            void (*fn)(void*, int*) = "
+         "*(void(**)(void*, int*))((char*)(*(void**)self) + 0x14);\n"
+         "            fn(self, vecArr);",
+         "            /* hostgen VIRTUAL_CALL: byte +0x14 is word 5 of the\n"
+         "               Model vptr -- Render -- and the host seats a\n"
+         "               __fastcall thunk there. See the table. */\n"
+         "            ((void (__fastcall *)(void *, void *, int *))\n"
+         "             (*(void ***)self)[5])(self, 0, vecArr);"),
+    ],
 }
 
 
