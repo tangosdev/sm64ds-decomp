@@ -544,6 +544,16 @@ struct Player : dActor_c {
     int St_Climb_Main();
     int St_Crawl_Init();
     int St_Crawl_Main();
+    /* The third member of the state's trio. It is a real symbol --
+       _ZN6Player22St_CrazedCrate_CleanupEv, ov002 0x020e0d28 size 0x20,
+       carried in config/arm9/overlays/ov002/symbols.txt and defined by
+       src/_ZN6Player22St_CrazedCrate_CleanupEv.cpp -- and that TU declares it
+       locally instead of here, so nothing outside the file can name it.
+       Declared with its siblings because the host state dispatcher calls it
+       by qualified name (port/hal/player_states.inc, case 0x020e0d28) and a
+       method's decorated name is fixed by the class declaration, not by the
+       defining TU. Declaration only: no definition moves, no byte moves. */
+    int St_CrazedCrate_Cleanup();
     int St_CrazedCrate_Init();
     int St_CrazedCrate_Main();
     int St_Crouch_Init();
