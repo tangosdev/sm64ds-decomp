@@ -2,6 +2,10 @@
 
 Written 2026-09-07 while winding the class pipeline down for a workflow upgrade.
 
+This is a v1 cutover snapshot, not the active v2 queue authority. Follow
+[PIPELINE.md](PIPELINE.md) and [CUTOVER.md](CUTOVER.md) for the replacement protocol.
+Preserve the observations below, but remeasure the inventory before adoption.
+
 This file exists because of a question with an uncomfortable answer: *is everyone's
 state being managed somewhere?* The artifacts are safe. The coordination is not.
 Read [The four stores](#the-four-stores) before you trust any single one of them.

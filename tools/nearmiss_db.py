@@ -874,6 +874,73 @@ def reeval(args):
           f"alone); pinned evaluator {_fingerprint(M.CANONICAL, METRIC_REV)} in {PIN.name}")
 
 
+CONFIG_SYM = re.compile(r"^(\S+)\s+kind:(\w+)(?:\([^)]*\))?\s+addr:0x([0-9a-fA-F]+)")
+SRC_IDENT = re.compile(r"\b(_Z[A-Za-z0-9_]{3,}|func_[A-Za-z0-9_]+|data_[A-Za-z0-9_]+)\b")
+NAME_ADDR = re.compile(r"_(0[0-9a-f]{7})$")
+# tests point this at a fixture tree; production always reads the repo's config/
+CONFIG_GLOB_ROOT = REPO
+
+
+def _config_symbols():
+    """(names, {addr: first name}) from every committed symbol table.
+
+    kind: comes in two shapes -- `kind:function(arm,size=0x10)` and a bare `kind:bss`
+    with no parentheses. A pattern that requires the parentheses silently drops all 787
+    bss symbols and reports live data references as dead, which is how the first pass of
+    this audit produced 137 false positives against 27 real ones.
+    """
+    names, by_addr = set(), {}
+    for f in sorted(CONFIG_GLOB_ROOT.glob("config/**/symbols.txt")):
+        for line in f.read_text(encoding="utf-8", errors="replace").splitlines():
+            m = CONFIG_SYM.match(line)
+            if not m:
+                continue
+            names.add(m.group(1))
+            by_addr.setdefault(int(m.group(3), 16), m.group(1))
+    return names, by_addr
+
+
+def check_refs(args):
+    """Report near-miss sources naming a symbol that no longer exists in config.
+
+    A dead callee is invisible to the byte gate: relocation slots are wildcarded, so a
+    draft that calls a renamed or invented function scores exactly as well as one that
+    calls the real thing, and only fails when someone tries to LINK it. 13 of 59 rows
+    carried one on 2026-09-07, every one of them a rename that landed on main after the
+    row was banked (Actor became dActor_c, Scene became dScene_c, and a handful of
+    func_ADDR placeholders got real names).
+
+    Renames are recoverable because the ADDRESS is still in the name: func_020124c4 is
+    Sound_PlayIfNotActive now, and resolving by address rather than by name is the same
+    rule the port uses when main renames something under it.
+    """
+    names, by_addr = _config_symbols()
+    db = load_db()
+    dead = 0
+    for key in sorted(db):
+        r = db[key]
+        src = r.get("c_source") or ""
+        bad = sorted({n for n in SRC_IDENT.findall(src)} - {r["name"]} - names)
+        if not bad:
+            continue
+        print(f"{r.get('module')} {r['name']} (div={r.get('divergences')})")
+        for n in bad:
+            dead += 1
+            m = NAME_ADDR.search(n)
+            hit = by_addr.get(int(m.group(1), 16)) if m else None
+            if hit:
+                print(f"    {n}  ->  {hit}   (resolved by address)")
+            else:
+                print(f"    {n}  ->  UNRESOLVED, no address in the name")
+    if dead:
+        print()
+        print(f"check-refs: {dead} dead reference(s) across the database")
+        if args.check:
+            sys.exit(1)
+    else:
+        print(f"check-refs: every reference in {len(db)} row(s) resolves in config")
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -918,6 +985,11 @@ def main():
     p.add_argument("--dry-run", action="store_true",
                    help="list stale names without rewriting them")
     p.set_defaults(fn=resync_names)
+    p = sub.add_parser("check-refs")
+    p.add_argument("--check", action="store_true",
+                   help="regression gate: exit 1 if any row names a symbol config "
+                        "does not have")
+    p.set_defaults(fn=check_refs)
     p = sub.add_parser("dedupe")
     p.add_argument("--dry-run", action="store_true",
                    help="report duplicate rows without collapsing them")
