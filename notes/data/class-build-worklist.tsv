@@ -122,7 +122,7 @@ daEykn_c	DONE	include\MrI.h  [alias: header uses pre-rename name]	dActor_c	0	ov0
 daFRing_c	DONE	include\BowserShockwaves.h  [alias: header uses pre-rename name]	dActor_c	0	ov060	6
 daFeather_c	DONE	include\WingFeather.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	6
 daFish_c	DONE	include\Fish.h  [alias: header uses pre-rename name]	dActor_c	0	ov100	7
-daGmch_c	DONE	include\Moneybag.h  [alias: header uses pre-rename name]	dActor_c	0	ov081	10
+daGmch_c	DONE	include\daGmch_c.h	dActor_c	0	ov081	10
 daJgm_c	DONE	include\Lakitu.h  [alias: header uses pre-rename name]	dActor_c	0	ov077	10
 daKinopio_c	DONE	include\Toad.h  [alias: header uses pre-rename name]	dActor_c	0	ov085	14
 daKirai_c	DONE	include\SpikeBomb.h  [alias: header uses pre-rename name]	dActor_c	0	ov060	6

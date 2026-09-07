@@ -40,6 +40,7 @@ add_executable(smoke
     hal/cstd_div.c
     hal/os_time.cpp
     hal/shims.cpp
+    hal/mem_delete2.cpp
     ${SLICE_SOURCES})
 
 target_include_directories(smoke PRIVATE
@@ -88,7 +89,7 @@ endforeach()
 sm64ds_honor_cpp_markers(SLICE3A_SOURCES)
 
 add_executable(smoke_roots tests/smoke_roots.cpp
-    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/mem_delete2.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES})
 target_include_directories(smoke_roots PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -385,6 +386,7 @@ endif()
 
 add_executable(smoke_fs tests/smoke_fs.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
+    hal/mem_delete2.cpp
     ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES})
 target_include_directories(smoke_fs PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}"

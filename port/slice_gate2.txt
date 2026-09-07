@@ -34,3 +34,24 @@ src/_ZN18NestedHeapIterator4NextEP13HeapAllocator.cpp
 src/_ZN18NestedHeapIterator8AddFirstEP13HeapAllocator.cpp
 src/_ZN18NestedHeapIterator8PreviousEP13HeapAllocator.cpp
 src/_ZN18NestedHeapIterator6RemoveEP13HeapAllocator.cpp
+
+# The seven allocator entry points the ExpandingHeap overrides forward to. They
+# arrive with those overrides (slice_gate3a.txt) rather than because gate 2 grew:
+# each V* method is a one-line call into this layer, so a host link that has the
+# override and not its target has half of a pair. They stay HERE because this is
+# the allocator layer's manifest and smoke_heap links it, which is the gate that
+# would catch a break in them first.
+src/_ZN13HeapAllocator7DestroyEv.cpp
+src/_ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j.cpp
+src/_ZN22ExpandingHeapAllocator13DeallocateAllEPFvPvPS_jEj.cpp
+src/_ZN22ExpandingHeapAllocator10ReallocateEPvj.cpp
+src/_ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi.cpp
+src/_ZN22ExpandingHeapAllocator9SetNodeIDEj.cpp
+src/_ZN22ExpandingHeapAllocator9GetNodeIDEv.cpp
+src/_ZN13HeapAllocator6RemoveEv.cpp
+
+# cstd::abs, which ExpandingHeapAllocator::MaxAllocatableSize calls. It was in
+# slice_gate4b.txt and moved here rather than being listed twice: the nine targets
+# that link gate 4b all link gate 2 as well, so two entries would be a duplicate
+# definition, and the layer that needs it first is this one.
+src/_ZN4cstd3absEi.cpp

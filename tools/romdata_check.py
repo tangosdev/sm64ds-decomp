@@ -358,13 +358,24 @@ def summarize(records):
                          if r["verdict"] == VERIFIED)
     partial_bytes = sum(r.get("bytes", 0) for r in best.values()
                         if r["verdict"] == PARTIAL)
+    # `addr` and `bytes` travel with the identity because a symbol NAME is a source-side
+    # choice and the cartridge address is not. Adopting the ROM's own RTTI name for a
+    # class that carried a coined one retires `_ZTV<Coined>` and introduces
+    # `_ZTV<RomName>` proving the same bytes at the same address; without the address
+    # validate_merge's set difference could only read that as a lost symbol, and the
+    # only ways to answer it from the name alone -- an alias row in `symbols.txt`, or
+    # consulting the rename ledger the PR writes itself -- would let a PR certify its
+    # own rename. The address cannot be forged: nothing reaches this list without
+    # byte-verifying there.
+    def _identity(r):
+        return {"module": r.get("module"), "symbol": r["symbol"],
+                "addr": r.get("addr"), "bytes": r.get("bytes")}
+
     verified_symbols = sorted(
-        ({"module": r.get("module"), "symbol": r["symbol"]}
-         for r in best.values() if r["verdict"] == VERIFIED),
+        (_identity(r) for r in best.values() if r["verdict"] == VERIFIED),
         key=lambda r: (r["module"] or "", r["symbol"]))
     differing_symbols = sorted(
-        ({"module": r.get("module"), "symbol": r["symbol"]}
-         for r in best.values() if r["verdict"] == DIFFERS),
+        (_identity(r) for r in best.values() if r["verdict"] == DIFFERS),
         key=lambda r: (r["module"] or "", r["symbol"]))
     return {
         "symbols": len(best),
