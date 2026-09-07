@@ -11721,10 +11721,12 @@ foreach(line IN LISTS SLICE_OV074_LINES)
     endif()
     list(APPEND SLICE_OV074_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# run link100 lane PMF3 (R9c): unmatched/Goomboss_StateDispatch.cpp was the
+# two pointer-to-member dispatchers and nothing else, and both are back on the
+# slice as matched TUs, so the file is deleted and its row comes out here.
 list(APPEND SLICE_OV074_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov074.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_HostSites.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_StateDispatch.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_InitResources.cpp")
 
 # lane w2-ov074: THE TWO .c FILES IN THIS SLICE THAT ARE REALLY C++.
@@ -13304,7 +13306,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov025.cpp ${SLICE_W15C_SOURCES}
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
-    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/ttc_level_data_seat.cpp
+    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES} ${SLICE219_SOURCES}
@@ -13545,7 +13547,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov025.cpp ${SLICE_W15C_SOURCES}
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
-    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/ttc_level_data_seat.cpp
+    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -13845,7 +13847,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov025.cpp ${SLICE_W15C_SOURCES}
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
-    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/ttc_level_data_seat.cpp
+    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}

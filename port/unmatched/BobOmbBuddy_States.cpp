@@ -98,32 +98,26 @@ extern "C" void port_bob_omb_buddy_states_seat(void)
     }
 }
 
-static void port_buddy_call(const PortBuddyPmf *m, void *self, const char *half)
-{
-    if (m->fn & 1) {
-        std::fprintf(stderr, "FATAL: BobOmbBuddy %s half is a VIRTUAL member "
-                     "pointer (%08x/%d); the ROM stores none there\n", half,
-                     m->fn, m->delta);
-        std::abort();
-    }
-    ((PortBuddyFn)(size_t)m->fn)((char *)self + m->delta);
-}
+/* BOTH DISPATCHERS ARE BACK ON THE SLICE. src/func_ov084_0212c960.cpp and
+   src/func_ov084_0212c9a8.cpp are on port/slice_pmf3.txt (run link100 lane
+   PMF3). Under /vmg /vmm an Entry is the ROM's sixteen bytes rather than
+   MSVC's thirty-two, the emitted bodies stride `shl edx, 4` and TAIL JUMP, and
+   port/hal/pmf3_aliases.cpp bridges the mangled table name onto the mount's C
+   symbol. The seat above is unchanged and is the gate: it aborts on a nonzero
+   adjustment word and rewrites the function word with a host body on BOTH
+   sides of the sinit, the six statics and the six destination halves, so what
+   the matched dispatchers read is a host address with a zero delta. The six
+   source pairs at ov084 0x021309c4..0x021309ec were re-read out of
+   overlay_0084.bin with their relocations, every adjustment word ROM zero.
 
-/* +0x1e4 is the state index the matched pair reads and writes. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov084_0212c960(void *self, int i)
-{
-    *(int *)((char *)self + 0x1e4) = i;
-    port_buddy_call(&data_ov084_02130dc4[*(int *)((char *)self + 0x1e4)].init,
-                    self, "init");
-}
-
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov084_0212c9a8(void *self)
-{
-    port_buddy_call(&data_ov084_02130dc4[*(int *)((char *)self + 0x1e4)].main,
-                    self, "main");
-}
+   port_buddy_call went with them -- it was the hand-rolled {function, delta}
+   call and nothing else used it. It carried a virtual-member-pointer refusal
+   that tested bit 0 of the FUNCTION word, which is not where the ROM keeps
+   that flag: the ROM tests bit 0 of the ADJUSTMENT word (`ands r1,r1,#1` on
+   the word it has just loaded from record+4). The seat's own abort covers
+   that case properly and earlier, because it refuses any nonzero adjustment
+   at all. port_buddy_seat_one, which the goomba half below still calls,
+   stays. */
 
 /* ---- and the GOOMBA's five, which need SEATING and nothing else ------------
    Goomba::Behavior dispatches data_ov084_02130d74[state * 2] the way the
