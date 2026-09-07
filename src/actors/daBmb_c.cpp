@@ -247,16 +247,18 @@ extern unsigned char data_0209f2d8;
  * lower.  `+ 2` is int-indexed, so eight bytes, and it makes this store agree
  * with the addend-8 vptr stores the compiler itself emits in the destructor.
  * A relocated word is a wildcard to every byte gate, so `verify` prints the
- * same 35/35 either way; objisolate's addend check is what refuses the bare
- * form.  See notes: key-function-tu-vptr-store-blocker.
+ * same 35/35 either way; tools/objisolate.py's addend check is what refuses the
+ * bare form.
+ *
+ * The declaration itself lives in include/daBmb_c.h, next to the class and the
+ * allocation size this factory proves -- the vtable is a property of daBmb_c,
+ * not of this file, and the legacy shard read it from a shared header too.
  *
  * Reconstructed source-style name: SM64DS proves daBmb_c through RTTI,
  * allocation size, vtable identity, and the BOMBHEI registry profile; later EAD
  * lineage supplies classInit.  Exact original spelling is not preserved.
  * Historical alias: BobOmb_Spawn.
  * ======================================================================== */
-
-extern int _ZTV7daBmb_c[];
 
 extern "C" {
 

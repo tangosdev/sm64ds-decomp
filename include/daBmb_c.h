@@ -139,4 +139,19 @@ struct daBmb_c : dEnemyBase_c {
 
 typedef char daBmb_c_size_must_be_0x400[sizeof(daBmb_c) == 0x400 ? 1 : -1];
 
+/* The vtable this class's translation unit emits, declared here so the registry
+   factory can name it.  daBmb_c_classInit is an `extern "C"` factory and not a
+   constructor -- the cartridge's symbol is the bare name -- so the vptr store at
+   the head of a fresh object is written by hand and has to spell the vtable.
+   That declaration is a property of daBmb_c, so it belongs with the class and
+   with the allocation size the same factory proves, not in the body of whichever
+   source file does the store; the legacy one-function shard likewise read it
+   from a shared declaration header.
+
+   The factory addresses it as `_ZTV7daBmb_c + 2`, because that TU DEFINES the
+   vtable -- OnYoshiTryEat is the key function -- so the bare symbol names the
+   two-word Itanium preamble, eight bytes below the slot array the cartridge's
+   own store points at. */
+extern int _ZTV7daBmb_c[];
+
 #endif /* DABMB_C_H */
