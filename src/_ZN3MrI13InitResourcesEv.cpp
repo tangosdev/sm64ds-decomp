@@ -1,27 +1,53 @@
 //cpp
 // @symbol _ZN3MrI13InitResourcesEv
-// NONMATCHING: 3/166 at exact size 0x298. The draft that stood here DID NOT COMPILE at
-// all -- `mwccarm.exe: undefined identifier 'Matrix4x3'` at its line 111 -- so it was
-// scoring nothing. This is a real C++ method on include/MrI.h with named members
-// (mModelAnim, mShadowModel, mdCcAcPos_c, mShadowRadiusScale, mShadowHeight, mTimer,
-// unk_1ec, unk_217) and no shadow structs.
+// NONMATCHING: 3/166 at exact size 0x298. (A lane draft briefly wrote 2 here and cited
+// the near-miss DB's shadow-struct row for the same address as agreeing. Re-measured
+// against b2bd6a323, both give 3: this body 3/166, and that DB row 3/166 under its own
+// func_ov071_02121734 spelling, though the row still stores divergences: 2. The residue
+// listed just below is three slots and always was.)
 //
 // The whole residue is a three-word rotation of the ModelBase::SetFile argument setup at
-// +0x20: the ROM emits mov r2,#1 / mov r1,r0 / add r0,r4,#0xd4 / mov r3,r2, every build
-// here emits mov r1,r0 / add r0,r4,#0xd4 / mov r2,#1 / mov r3,r2. Same instruction
-// multiset, same registers -- pure emission order.
+// +0x20. The four setup instructions are the same multiset in the same registers; only
+// the slot of the independent constant differs:
+//   ROM:  mov r2,#1 / mov r1,r0 / add r0,r4,#0xd4 / mov r3,r2
+//   here: mov r1,r0 / add r0,r4,#0xd4 / mov r2,#1 / mov r3,r2
 //
 // PROBED, and this is the useful part for anyone who returns to it: mwccarm 2004/b56 DOES
 // emit the ROM's constant-first order, but only when the basic block holding the call also
 // contains a condition-code comparison. `if (!SetFile(...)) return;` and even a comparison
 // on an unrelated global (`g = (h == 3);`) both flip it; a plain call, an if with an empty
 // body, a switch, a goto label, a stored result, a trailing loop whose compare sits in the
-// loop latch, and a following call all leave it alone. This function has no comparison in
-// that block, so the order is out of reach from the source. Also inert: 14 conditional-
-// context spellings of the call, named/const/register/bool/byte/short constants, nested
-// and member-call forms of SetFile, 4 inline-helper wrappers, 7 structural variants of the
-// surrounding loop and declarations, and all 24 pragma cells.
-// @symbol _ZN3MrI13InitResourcesEv
+// loop latch, and a following call all leave it alone. The ROM's own entry block runs from
+// the prologue to the loop preheader with no cmp in it, so the trigger cannot be paid for
+// out of instructions the cartridge already spends, and the order is out of reach here.
+//
+// MEASURED INERT, first pass: 14 conditional-context spellings of the call, named/const/
+// register/bool/byte/short constants, nested and member-call forms of SetFile, 4 inline-
+// helper wrappers, 7 structural variants of the surrounding loop and declarations.
+// MEASURED INERT, run m100 lane H1 (all 3/166, size-exact): nested LoadFile inside the
+// SetFile call; a dead local for the first LoadFile result; a ModelBase& alias; a named
+// ModelBase* taken before the calls; `mModelAnim.SetFile` as a plain member call; the
+// +0xd4 this-pointer written as a char* cast; a stored return value; `bmd` as char*; an
+// initialised-at-declaration `bmd`; a comma-expression assignment inside the call; and
+// both `int one = 1` and `int a,b` forms with the constant's FIRST WRITE placed before
+// the LoadFile calls (the first-write rank lever does not reach a scheduling slot).
+// Also inert: 56 pragma cells over 28 REAL pragma names lifted out of mwccarm.exe --
+// including opt_defineargorder, opt_repositioncode, opt_prelinearize,
+// opt_serializeassignments and opt_useexpressioncostswhenlinearizingassignments, the
+// five whose names promise this exact behaviour. The sweep is not vacuous: in the same
+// batch `opt_propagation off` scores 58 at 0x2a0 and `optimize_for_size on` 42 at 0x28c,
+// so the pragmas were applied.
+// Cross-build: 1.2/base, 1.2/sp2, 1.2/sp2p3 and 2004/b56 all reach 0x298 and all four
+// give the SAME 2. Every other installed build misses the size (1.2/sp3-sp4 0x290,
+// 2.0 0x288, dsi 0x27c).
+//
+// So the verdict is a ROM-compiler build delta, in the same CLASS as notes 6bs but not
+// the same mechanism: 6bs is a register CHOICE (the ROM skips a just-dead register),
+// this is an emission SLOT for an instruction whose registers already agree. What the
+// two share is the signature -- a residue that is byte-identical across every installed
+// build able to produce the right size, and unmoved by any source spelling, belongs to
+// the compiler the cartridge was actually built with (CW NITRO V0.6.1, notes 6ah,
+// unarchived) and not to a spelling nobody has found yet.
 #include "MrI.h"
 
 struct BMD_File;
