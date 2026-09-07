@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN10Scuttlebug13OnTurnIntoEggER6Player
-/* daSpd_c::OnTurnIntoEgg -- vtable slot 19, recovered from vtable slot identity.
+/* daSpd_c::OnTurnIntoEgg -- vtable slot 19, byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov071 symbols.txt); the vtable-slot-guess marker it carried was stale.
  * Pays the player mCoinCount coins (a cap-collection coin if Yoshi is wearing
  * the cap, an egg coin otherwise). A spawned-child Scuttlebug (param1 != 0)
  * resets to its egg state instead of dying; the original (param1 == 0) marks
