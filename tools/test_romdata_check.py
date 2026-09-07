@@ -27,6 +27,8 @@ class SummarizeCountsSymbols(unittest.TestCase):
         self.assertEqual(s["verifiedBytes"], 4)
         self.assertEqual(s["totalRecords"], 3)
         self.assertEqual(s["verifiedRecords"], 3)
+        self.assertEqual(s["verifiedSymbols"], [
+            {"module": None, "symbol": "_ZTI7fBase_c"}])
 
     def test_consolidating_sources_does_not_move_the_ratchet(self):
         """The measured shape of the first TU promotion, in miniature."""
@@ -46,6 +48,8 @@ class SummarizeCountsSymbols(unittest.TestCase):
         self.assertEqual(s["differs"], 1)
         self.assertEqual(s["verified"], 0)
         self.assertEqual(len(s["differing"]), 1)
+        self.assertEqual(s["differingSymbols"], [
+            {"module": None, "symbol": "_ZTV4Foo"}])
 
     def test_distinct_symbols_still_add_up(self):
         s = RDC.summarize([rec("_ZTI4Foo", RDC.VERIFIED), rec("_ZTS4Foo", RDC.PARTIAL),
@@ -58,6 +62,8 @@ class SummarizeCountsSymbols(unittest.TestCase):
         s = RDC.summarize([dict(rec("_ZTV4Foo", RDC.VERIFIED), module="ov006"),
                            dict(rec("_ZTV4Foo", RDC.DIFFERS), module="ov084")])
         self.assertEqual((s["symbols"], s["verified"], s["differs"]), (2, 1, 1))
+        self.assertEqual(s["verifiedSymbols"], [
+            {"module": "ov006", "symbol": "_ZTV4Foo"}])
 
     def test_unparsable_objects_never_dedupe_against_each_other(self):
         """check_object's `?` catch-all carries no symbol identity, only a source."""

@@ -26,7 +26,7 @@ Relation to what already existed
 BODIES for `_ZN9ModelAnimD1Ev(t + 0xd4)`.  That is the same evidence, but it can only
 see the destructors this tree has already recovered as C.  This pass reads the
 cartridge, so it also sees every destructor that is still `func_ov084_0212b344` or has
-no source file at all.  `marker_census` reports 34 decidable; the cartridge proves 814
+no source file at all.  `marker_census` reports 34 decidable; the cartridge proves 832
 member pairs, of which 91 were decidable and untyped when this landed.
 
 `opnew_sizes.py` recovers a class's EXTENT from the `operator new` literal and is blind
@@ -42,7 +42,7 @@ function is itself a named destructor, a small `this`-relative abstract interpre
 run over it to a fixed point and r0 at the call site is read out.  `this` is r0 on
 entry; the lattice is (this + k), (sp + k), (imm k) or unknown, with stack slots tracked
 so a spilled `this` survives and the literal pool read so an offset with no ARM
-immediate encoding is still recovered.  Every one of the 2,358 sites yields an offset.
+immediate encoding is still recovered.  Every one of the 2,426 sites yields an offset.
 
 What the header side has to get right
 -------------------------------------
@@ -166,19 +166,21 @@ SKIPPABLE = re.compile(r"^\s*($|/\*|\*|//)")
 # `this`, not a member.  `Stage` (0xa2b8) is the largest class in the cartridge.
 MAX_OFFSET = 0x10000
 
-# Frozen census.  Raise these deliberately; a fall means evidence was lost.
+# Frozen census.  Change these deliberately and inspect every delta: named evidence can
+# legitimately increase as symbols land, while the unnamed bucket should decrease by
+# the corresponding amount.  Exact equality catches losses and unexpected growth alike.
 GATE = {
-    "dtor_symbols": 765,
-    "arm_call_relocs_to_a_destructor": 2666,
-    "sites_inside_a_named_destructor": 2358,
-    "sites_inside_an_unnamed_function": 308,
-    "sites_cross_class": 2358,
-    "sites_offset_recovered": 2358,
-    "pairs_distinct": 1178,
-    "pairs_member_evidence": 814,
-    "pairs_base_at_0": 359,
-    "pairs_secondary_base": 5,
-    "owners_distinct": 365,
+    "dtor_symbols": 805,
+    "arm_call_relocs_to_a_destructor": 2715,
+    "sites_inside_a_named_destructor": 2426,
+    "sites_inside_an_unnamed_function": 289,
+    "sites_cross_class": 2426,
+    "sites_offset_recovered": 2426,
+    "pairs_distinct": 1208,
+    "pairs_member_evidence": 832,
+    "pairs_base_at_0": 369,
+    "pairs_secondary_base": 7,
+    "owners_distinct": 374,
 }
 
 
