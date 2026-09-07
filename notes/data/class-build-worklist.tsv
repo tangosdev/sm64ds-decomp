@@ -359,7 +359,7 @@ daWater_Suikomi_c	DONE	include\WaterSuction.h  [alias: header uses pre-rename na
 daWater_Tatumaki_c	DONE	include\Whirlpool.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov026	7
 daWbm_c	DONE	include\WaterBomb.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov098	6
 daYegg_c	DONE	include\YoshiEgg.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov002	6
-daYurei_Mucho_c	DONE	include\Snufit.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov065	10
+daYurei_Mucho_c	DONE	include\daYurei_Mucho_c.h	dEnemyBase_c	0	ov065	10
 dScMgSingle3DBase_c	DONE	include\dScMgSingle3DBase_c.h	dScMgBase_c	13	ov006	8
 dScMgD3DBase_c	DONE	include\dScMgD3DBase_c.h	dScMgBase_c	4	ov006	17
 dScMgAmida_c	DONE	include\dScMgAmida_c.h	dScMgBase_c	0	ov006	11
