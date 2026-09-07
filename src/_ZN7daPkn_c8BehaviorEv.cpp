@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN12PiranhaPlant8BehaviorEv
+// @symbol _ZN7daPkn_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "PiranhaPlant.h"
+#include "daPkn_c.h"
 struct Cls { virtual void dummy(); };
 typedef void (Cls::*PMF)();
 extern PMF data_ov084_02130e80[];
@@ -15,7 +15,7 @@ extern void _ZN5dCc_c6UpdateEv(void*);
 extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void*, void*);
 }
 
-int PiranhaPlant::Behavior()
+int daPkn_c::Behavior()
 {
     int r;
     int old;

@@ -1,9 +1,9 @@
-#ifndef PIRANHAPLANT_H
-#define PIRANHAPLANT_H
+#ifndef DAPKN_C_H
+#define DAPKN_C_H
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN12PiranhaPlantD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN7daPkn_cD1Ev`
  * stores this vtable, destroys six members, then calls `dEnemyBase_c::~dEnemyBase_c`.
  * Everything this header used to restate below 0x110 belongs to that chain and
  * is inherited now.
@@ -43,7 +43,7 @@
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
-struct PiranhaPlant : dEnemyBase_c {
+struct daPkn_c : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
     Model                        mModel;                /* 0x174 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x1c4 */
@@ -68,7 +68,7 @@ struct PiranhaPlant : dEnemyBase_c {
     s32                          unk_478;               /* 0x478 */
 
     /* --- vtable --- */
-    virtual ~PiranhaPlant();
+    virtual ~daPkn_c();
 
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
@@ -79,6 +79,6 @@ struct PiranhaPlant : dEnemyBase_c {
     int Render();
 };
 
-typedef char PiranhaPlant_size_must_be_0x47c[sizeof(PiranhaPlant) == 0x47c ? 1 : -1];
+typedef char daPkn_c_size_must_be_0x47c[sizeof(daPkn_c) == 0x47c ? 1 : -1];
 
-#endif /* PIRANHAPLANT_H */
+#endif /* DAPKN_C_H */

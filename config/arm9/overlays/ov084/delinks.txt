@@ -320,11 +320,11 @@ src/d_a_f_pkn_firepakun.c:
     complete
     .text start:0x0212eaa8 end:0x0212eaf0
 
-src/_ZN12PiranhaPlantD1Ev.cpp:
+src/_ZN7daPkn_cD1Ev.cpp:
     complete
     .text start:0x0212eaf0 end:0x0212eb48
 
-src/_ZN12PiranhaPlantD0Ev.cpp:
+src/_ZN7daPkn_cD0Ev.cpp:
     complete
     .text start:0x0212eb48 end:0x0212ebb4
 
@@ -336,7 +336,7 @@ src/func_ov084_0212ec04.c:
     complete
     .text start:0x0212ec04 end:0x0212ec58
 
-src/_ZN12PiranhaPlant16OnAimedAtWithEggEv.cpp:
+src/_ZN7daPkn_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0212ec58 end:0x0212ec60
 
@@ -392,23 +392,23 @@ src/func_ov084_0212fc10.c:
     complete
     .text start:0x0212fc10 end:0x0212fc84
 
-src/_ZN12PiranhaPlant16CleanupResourcesEv.cpp:
+src/_ZN7daPkn_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212fc84 end:0x0212fcd8
 
-src/_ZN12PiranhaPlant16OnPendingDestroyEv.cpp:
+src/_ZN7daPkn_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212fcd8 end:0x0212fcdc
 
-src/_ZN12PiranhaPlant6RenderEv.cpp:
+src/_ZN7daPkn_c6RenderEv.cpp:
     complete
     .text start:0x0212fcdc end:0x0212fd4c
 
-src/_ZN12PiranhaPlant8BehaviorEv.cpp:
+src/_ZN7daPkn_c8BehaviorEv.cpp:
     complete
     .text start:0x0212fd4c end:0x0212feb4
 
-src/_ZN12PiranhaPlant13InitResourcesEv.cpp:
+src/_ZN7daPkn_c13InitResourcesEv.cpp:
     complete
     .text start:0x0212feb4 end:0x02130110
 

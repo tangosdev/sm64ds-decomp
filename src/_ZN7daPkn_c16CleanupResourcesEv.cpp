@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN12PiranhaPlant16CleanupResourcesEv
+// @symbol _ZN7daPkn_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "PiranhaPlant.h"
+#include "daPkn_c.h"
 #include "SharedFilePtr.h"
 extern "C" {
 extern void UnloadBlueCoinModel(void*);
@@ -10,7 +10,7 @@ extern int* data_ov084_021302f4;
 extern int data_ov002_0210da38;
 }
 
-int PiranhaPlant::CleanupResources()
+int daPkn_c::CleanupResources()
 {
   int i;
   ((SharedFilePtr *)(&data_ov084_02130dfc))->Release();

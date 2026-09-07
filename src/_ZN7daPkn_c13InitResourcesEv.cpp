@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN12PiranhaPlant13InitResourcesEv
+// @symbol _ZN7daPkn_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
- * This was still `extern "C" int _ZN12PiranhaPlant13InitResourcesEv(char* c)`
+ * This was still `extern "C" int _ZN7daPkn_c13InitResourcesEv(char* c)`
  * working raw offsets -- a file renamed .cpp without ever being migrated. It is
  * a real method now and every offset is a field.
  *
@@ -18,7 +18,7 @@
  * the call site, so spelling the true types breaks the byte match -- see
  * notes/mwccarm-codegen.md 6az.
  */
-#include "PiranhaPlant.h"
+#include "daPkn_c.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
@@ -35,7 +35,7 @@ extern struct { int id; void* file; } data_ov084_02130df4;
 extern s16 data_02082214[];
 }
 
-int PiranhaPlant::InitResources()
+int daPkn_c::InitResources()
 {
     int i;
     Vector3 v;
