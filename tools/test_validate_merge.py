@@ -803,10 +803,6 @@ class RomFailureDetailTest(unittest.TestCase):
         self.assertIn("trimmed", out)
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 def _enr(ranges):
     """An enrollment_snapshot-shaped dict from (addr, end) tuples, all `complete` src."""
     src = {}
@@ -820,8 +816,22 @@ def _enr(ranges):
                       "modFunctions": 0, "modBytes": 0}}
 
 
+def _compiled(enrollment):
+    """`build_report`'s `compiled_src` for an enrollment whose sources are all real C.
+
+    The production set is the merge's own added/modified sources that carry no asm body
+    and no banner excusing one; here it is simply every path `_enr` invented.
+    """
+    return {e["path"] for e in enrollment["source"].values()}
+
+
 class MergeEvidence(unittest.TestCase):
     """A merge raises the headline, so it lands only on evidence the ROM build supplies.
+
+    The evidence has two halves and both are tested here: a newly `complete` delinks
+    range that covers every removed address, AND a source behind that range which is real
+    compiled code. The second half is not redundant -- a `dcd` transcription reproduces
+    vacuously, so the range alone proves nothing.
 
     The live case: `__destroy_arr` is declared 0x5c in symbols.txt while the ROM's own
     `.exceptix` record gives 0x74. The trailing 0x18 is carried as a separate symbol and
@@ -830,12 +840,18 @@ class MergeEvidence(unittest.TestCase):
 
     DESTROY, CATCH = 0x0207328c, 0x020732e8
 
+    def _junk(self):
+        """A hundred four-byte symbols folded into one 400-byte one. No work at all."""
+        return (_snap([(f"func_{0x02100000 + i * 4:08x}", 0x02100000 + i * 4, 4, False)
+                       for i in range(100)]),
+                _snap([("func_02100000", 0x02100000, 400, False)]))
+
     def test_the_live_case_lands(self):
         base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
                       ("func_020732e8", self.CATCH, 0x18, False)])
         head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
-        got = VM.classify_merge(base, head, _enr([]),
-                                _enr([(self.DESTROY, self.DESTROY + 0x74)]))
+        he = _enr([(self.DESTROY, self.DESTROY + 0x74)])
+        got = VM.classify_merge(base, head, _enr([]), he, _compiled(he))
         self.assertIsNotNone(got)
         self.assertEqual(got["kind"], "merge")
         self.assertEqual(got["functionDelta"], -1)
@@ -847,29 +863,54 @@ class MergeEvidence(unittest.TestCase):
         base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
                       ("func_020732e8", self.CATCH, 0x18, False)])
         head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
-        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([])))
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([]), set()))
 
     def test_a_hundred_junk_symbols_merged_into_one_is_refused(self):
-        base = _snap([(f"func_{0x02100000 + i * 4:08x}", 0x02100000 + i * 4, 4, False)
-                      for i in range(100)])
-        head = _snap([("func_02100000", 0x02100000, 400, False)])
-        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([])))
+        base, head = self._junk()
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([]), set()))
 
     def test_a_hundred_junk_symbols_cannot_borrow_an_unrelated_new_range(self):
         # The evidence has to cover the merged addresses, not merely exist.
-        base = _snap([(f"func_{0x02100000 + i * 4:08x}", 0x02100000 + i * 4, 4, False)
-                      for i in range(100)])
-        head = _snap([("func_02100000", 0x02100000, 400, False)])
-        self.assertIsNone(VM.classify_merge(base, head, _enr([]),
-                                            _enr([(0x02300000, 0x02300190)])))
+        base, head = self._junk()
+        he = _enr([(0x02300000, 0x02300190)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he)))
+
+    def test_a_transcribed_source_is_not_evidence_even_covering_the_merge(self):
+        # THE COVERING-RANGE ATTACK, and the reason the source classification is an
+        # argument at all. Same hundred junk symbols, but now the new `complete` range
+        # covers exactly the addresses the fold removes and sourceBytes rises by exactly
+        # its extent -- every arithmetic condition the rule checks is satisfied. What
+        # backs it is a `dcd` transcription under a HAND-ASM PRIMITIVE banner, so it
+        # byte-compares against retail by construction (the words ARE the ROM's words),
+        # module fidelity passes, and `asm_policy.classify` returns None because the
+        # banner excuses it. Measured before the `compiled` clause: this classified as
+        # `merge`, functionDelta -99, sourceByteDelta 400.
+        base, head = self._junk()
+        he = _enr([(0x02100000, 0x02100000 + 400)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, set()))
+
+    def test_a_covering_range_from_compiled_source_still_lands(self):
+        # The mirror, and the thing the rule must not break: the identical fold, backed
+        # by a range whose source is real compiled C. #2429 exists to let this through.
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("func_020732e8", self.CATCH, 0x18, False)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
+        he = _enr([(self.DESTROY, self.DESTROY + 0x74)])
+        # Named explicitly rather than through _compiled, so the test still reads as a
+        # statement about one file if the helper ever changes.
+        got = VM.classify_merge(base, head, _enr([]), he,
+                                {f"src/r{self.DESTROY:08x}.c"})
+        self.assertIsNotNone(got)
+        self.assertEqual(got["kind"], "merge")
+        self.assertEqual(got["sourceByteDelta"], 0x74)
 
     def test_absorbing_a_matched_function_is_refused(self):
         # A merge may swallow an ASM stub or a severed epilogue. Never a match.
         base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
                       ("real_function", self.CATCH, 0x18, True)])
         head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
-        self.assertIsNone(VM.classify_merge(base, head, _enr([]),
-                                            _enr([(self.DESTROY, self.DESTROY + 0x74)])))
+        he = _enr([(self.DESTROY, self.DESTROY + 0x74)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he)))
 
     def test_source_bytes_must_rise_by_exactly_the_new_extent(self):
         # An unrelated range leaving under cover of the merge holds the delta short.
@@ -878,7 +919,7 @@ class MergeEvidence(unittest.TestCase):
         base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
                       ("func_020732e8", self.CATCH, 0x18, False)])
         head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
-        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he))
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he)))
 
     def test_a_range_already_complete_in_base_is_not_evidence(self):
         # Absorbing into a range the build was already compiling proves nothing new.
@@ -886,23 +927,27 @@ class MergeEvidence(unittest.TestCase):
         base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
                       ("func_020732e8", self.CATCH, 0x18, False)])
         head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
-        self.assertIsNone(VM.classify_merge(base, head, enr, enr))
+        self.assertIsNone(VM.classify_merge(base, head, enr, enr, _compiled(enr)))
 
     def test_total_bytes_must_not_move(self):
         base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
                       ("func_020732e8", self.CATCH, 0x18, False)])
         head = _snap([("__destroy_arr", self.DESTROY, 0x80, True)])
-        self.assertIsNone(VM.classify_merge(base, head, _enr([]),
-                                            _enr([(self.DESTROY, self.DESTROY + 0x80)])))
+        he = _enr([(self.DESTROY, self.DESTROY + 0x80)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he)))
 
     def test_a_split_is_not_a_merge(self):
         base = _snap([("func_020610fc", 0x020610fc, 0x3c, False)])
         head = _snap([("func_020610fc", 0x020610fc, 0x2c, False),
                       ("func_02061128", 0x02061128, 0x10, False)])
-        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([])))
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([]), set()))
 
     def test_missing_enrollment_snapshots_refuse_rather_than_crash(self):
         base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
                       ("func_020732e8", self.CATCH, 0x18, False)])
         head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
-        self.assertIsNone(VM.classify_merge(base, head, None, None))
+        self.assertIsNone(VM.classify_merge(base, head, None, None, set()))
+
+
+if __name__ == "__main__":
+    unittest.main()
