@@ -214,6 +214,43 @@ class NearMissDbTests(unittest.TestCase):
             NDB.dedupe(argparse.Namespace(check=True, dry_run=False))
         self.assertIn("check ok", out.getvalue())
 
+    # ------------------------------------------------------------- dead callees
+    # A renamed callee is INVISIBLE to the byte gate: relocation slots are wildcarded,
+    # so a draft calling a symbol that no longer exists scores exactly as well as one
+    # calling the real thing and only fails when someone tries to link it. 13 of 59 rows
+    # carried one on 2026-09-07, all of them renames that landed on main after the row
+    # was banked.
+    def _fixture_config(self, *names):
+        root = pathlib.Path(tempfile.mkdtemp())
+        d = root / "config"
+        d.mkdir(parents=True)
+        (d / "symbols.txt").write_text(
+            "".join("%s kind:function(arm,size=0x10) addr:0x%08x\n" % (n, 0x02000000 + i * 4)
+                    for i, n in enumerate(names)), encoding="utf-8")
+        return root
+
+    def test_check_refs_passes_when_every_callee_resolves(self):
+        self.write_rows(row(10, c_source="void f(void){ Sound_PlayIfNotActive(); }"))
+        NDB.CONFIG_GLOB_ROOT = self._fixture_config("Sound_PlayIfNotActive")
+        try:
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                NDB.check_refs(argparse.Namespace(check=True))
+            self.assertIn("every reference", out.getvalue())
+        finally:
+            NDB.CONFIG_GLOB_ROOT = NDB.REPO
+
+    def test_check_refs_fails_on_a_callee_config_does_not_have(self):
+        self.write_rows(row(10, c_source="void f(void){ func_020124c4(); }"))
+        NDB.CONFIG_GLOB_ROOT = self._fixture_config("Sound_PlayIfNotActive")
+        try:
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                with self.assertRaises(SystemExit) as ctx:
+                    NDB.check_refs(argparse.Namespace(check=True))
+            self.assertEqual(ctx.exception.code, 1)
+            self.assertIn("func_020124c4", out.getvalue())
+        finally:
+            NDB.CONFIG_GLOB_ROOT = NDB.REPO
+
     # ------------------------------------------------------------------ imports
     def test_module_imports_without_the_compile_stack(self):
         # stats/list/dedupe and this suite must run where capstone/pyelftools are

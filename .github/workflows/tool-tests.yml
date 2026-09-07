@@ -192,6 +192,8 @@ jobs:
             tools.test_attribution \
             tools.test_bytegate \
             tools.test_check_data_definitions \
+            tools.test_classqueue \
+            tools.test_classqueue_v2 \
             tools.test_cpp_rename_verify \
             tools.test_delaunder \
             tools.test_enroll \

@@ -7,6 +7,14 @@ looks like and what the merge gate checks.
 
 ## 1. Claims (before you touch a function or class)
 
+For the coordinated v2 class/TU fleet, follow
+[notes/agents/PIPELINE.md](notes/agents/PIPELINE.md): a successful queue claim is
+mandatory before editing, and the designated integrator controls landing order.
+An unavailable service is not permission to bypass v2 ownership. The separate
+range service below is not unified with v2; reconcile it during cutover and keep
+its work disjoint. The following best-effort fallback applies only outside the
+coordinated v2 fleet.
+
 - `claims_check` the span first. `claims_lock` (module / start / end) to reserve it,
   `claims_release` when it is banked.
 - Claims are **best-effort**. If they return `401` / "missing key", the claims service

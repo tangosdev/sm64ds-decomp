@@ -124,6 +124,7 @@ def workable(row):
 
 
 def cmd_next(args):
+    require_legacy_queue()
     path, all_rows = rows()
     live = held()
     for row in all_rows:
@@ -170,6 +171,7 @@ def prior_work(cls):
 
 
 def cmd_claim(args):
+    require_legacy_queue()
     ref = ref_for(args.cls, args.role)
 
     # A parentless commit over the empty tree, carrying a nonce so that two
@@ -267,7 +269,23 @@ def cmd_list(args):
     return 0
 
 
+def require_legacy_queue():
+    """Updated clients cannot accidentally restart v1 after the v2 cutover.
+
+    Older binaries lack this check; stopping them remains a cutover prerequisite.
+    Keep list/status/release available so actual owners can drain legacy claims.
+    """
+    from classqueue_v2 import REF
+    if git("ls-remote", "origin", REF).stdout.strip():
+        raise SystemExit("v2 coordination is active; use classqueue.py v2 (do not acquire v1 work)")
+
+
 def main():
+    # The opt-in protocol has a separate transport and explicit cutover contract.
+    # Leave v1 commands usable by in-flight sessions until that cutover.
+    if len(sys.argv) > 1 and sys.argv[1] == "v2":
+        from classqueue_v2 import main as v2_main
+        return v2_main(sys.argv[2:], repo=REPO)
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)
