@@ -14,7 +14,10 @@ This document describes this commit. The queue records its immutable output SHA.
   the whole v1 history is preserved; `origin/main` was merged, not rebased onto.
 - Original source base SHA and installed workflow/tool SHA: base
   `b2bd6a323832d244a12e750713b1405b26a94c66`; workflow/tools
-  `f327f7b6460e157153eb7fc0749dbbe60dd854f1`.
+  `f327f7b6460e157153eb7fc0749dbbe60dd854f1`. The earlier original-base record
+  the coordinator asked to preserve is
+  `2ab05bae36a6821679a7e647e811c0a3243a3c49`; `b2bd6a323` is the *current*
+  merge-base with main, not a replacement for it. Both travel.
 - Separate evidence commits and required artifacts in this commit: none pinned
   separately. `notes/data/class-facts/daBmb_c.json`,
   `config/tu_manifest.d/ov102/daBmb_c.json`, `include/daBmb_c.h` and
@@ -109,7 +112,26 @@ This document describes this commit. The queue records its immutable output SHA.
   an abstract dispatch shim `Render` uses to reach slot 5 of the model object at
   `+0x300`. Those three are the measured spellings the members byte-match in.
   Byte-offset casts (`(char *)this + N`) remain throughout the free-function
-  half.
+  half. **Counted, because "some remain" understates it:** 303 expressions of
+  the form `<identifier> + 0x<literal>` survive in
+  `src/actors/daBmb_c.cpp`, of which 295 displace an object handle
+  (`c` ×194, `self` ×50, `s` ×13, `p` ×10, `r4` ×7, `p2` ×6, `this` ×3,
+  `into` ×3, and nine further handles once or twice each); the other 8 are
+  scalar arithmetic. Eight more accesses use a hex word subscript. Every one of
+  those is a field this reconstruction has not recovered a name for.
+- Surviving mangled-name ABI bridges — a dimension the rest of this document did
+  not count. The TU reaches other modules by spelling their mangled symbols
+  directly instead of calling declared C++ methods: **17 distinct mangled names
+  declared at file scope** (in the leading `extern "C"` prologue) and **29
+  distinct declared at block scope** across 34 declaration sites inside function
+  bodies, six of them inside `daBmb_c_classInit` alone (`_ZN7fBase_cnwEj`,
+  `_ZN12dEnemyBase_cC2Ev`, `_ZN7dCcAc_cC1Ev`, `_ZN10dBgCh_ActrC1Ev`,
+  `_ZN9ModelAnimC1Ev`, `_ZN11ShadowModelC1Ev`). Some are byte-forced and
+  documented as such in the source — `_ZN9ModelBase7SetFileEP8BMD_Fileii`
+  returns a value the header declares `void`, and the two `Init` calls carry
+  `Fix12<int>` by value — but most are simply not yet expressed as calls on a
+  real type. They are remaining reconstruction work, not a byte defect: the
+  cartridge is reproduced either way.
 - Lifecycle, vtable/RTTI, initializer and data ownership: the destructor is
   inline in the header and declared first, which is what makes mwccarm emit D1
   below D0 and no D2 — the cartridge's own order. That makes `OnYoshiTryEat` the
@@ -122,9 +144,17 @@ This document describes this commit. The queue records its immutable output SHA.
 - Attribution preserved through each move/rename: NOT yet preserved, and this is
   the one substantive piece of work this stage is leaving behind. See
   "Attribution" below.
-- Remaining agreed issue scope: the 19 NAMING-blocked free functions and the two
-  SCOPE-blocked state arms; the three shadow types; and the `attribution.json`
-  overrides.
+- Remaining agreed issue scope, corrected in the integration lane because the
+  list above was short: the 19 NAMING-blocked free functions and the two
+  SCOPE-blocked state arms; the three shadow types; the 17 file-scope and 29
+  block-scope mangled-name ABI bridges; and the 295 raw byte-offset accesses on
+  an object handle. The `attribution.json` overrides were the fourth item and
+  are now applied (see the integration addendum). Confirmed content of the TU as
+  it stands: 21 free functions, 13 methods (11 out-of-line plus D1/D0 from the
+  inline destructor), 3 shadow types. **"Promoted" is a packaging state.** This
+  class is one C++ translation unit that reproduces the cartridge exactly; it is
+  not a finished reconstruction, and nothing in this document should be read as
+  claiming it is.
 
 ## Blocker: a known-defective gate, not a defect in this source
 
@@ -155,9 +185,10 @@ rather than a blocker, and the totals stay at 11,279 attributed / 0 unattributed
 but the per-symbol credit currently moves to the promoter.
 
 `attribution.json` is integration-lane state and is not reserved to this task, so
-the rows are recorded here rather than applied. They belong in the `overrides`
-map, in the same `path#symbol` form the tree already uses for
-`src/game/actors/d_a_obj_abuku.cpp`:
+the producer recorded the rows here rather than applying them. **They are applied
+now, in the integration lane** — see the addendum at the end of this document.
+They belong in the `overrides` map, in the same `path#symbol` form the tree
+already uses for `src/game/actors/d_a_obj_abuku.cpp`:
 
 | symbol | original credit |
 |---|---|
@@ -280,3 +311,87 @@ commit's tree unless a base tree is named. Base is `origin/main` at
   open yet.
 
 A log generated after this commit belongs in separately recorded evidence.
+
+## Integration addendum (stage `integrate`, session `integ-2413-0907`)
+
+Written in the integration lane, on top of the accepted candidate. It records
+what the integrator changed, what it measured, and the corrections it made to
+the text above. The producer's and verifier's records stand as written.
+
+### Composition
+
+- Accepted candidate: `123ea08645d12a52f43a5cdc70b6c019ac1301dd`, branch
+  `cpp/daBmb_c-v2`, which is left untouched at that tip.
+- Composed by MERGING `origin/main` into a fresh branch off the candidate — never
+  rebased. Main moved during the run; the last base composed against is
+  `9e630dab3f7b65210a18ce76fe718f38dd20af2b`. Both merges were clean, no
+  conflicts, no file resolved by taking one side whole.
+- Wired integration worktrees: `C:/tmp/sm64ds-integ2413` (head) and
+  `C:/tmp/sm64ds-integ2413-base` (base at `9e630dab3`). Reports and logs live in
+  their gitignored `build/`.
+
+### Integration-lane rows touched, and only these
+
+The three concurrent class integrations share these files, so this branch keeps
+its edits to this class's own rows and reformats nothing:
+
+| file | this branch's change |
+|---|---|
+| `attribution.json` | +32 lines, 0 removed, one hunk, inserted beside this class's existing retired-shard rows — the same placement the tree already uses for `src/actors/daDgr_c.cpp#…` and `src/actors/dScGameOver_c.cpp#…` |
+| `config/converted-baseline.json` | 6 whole-file identities out, 6 `path#symbol` identities in; `count` stays 2696 and the list stays sorted and duplicate-free |
+| `config/converted-backslide-exceptions.jsonl` | +6 rows appended, one per retired one-function shard of this class |
+| `symbols/actor_renames.tsv` | 7 ov102 rows re-spelled in place, +14 appended |
+| `include/decl_common.h` | 1 vtable declaration re-spelled, 1 now-member declaration removed |
+
+`config/match_attempts.jsonl` and `config/match_provenance.jsonl` are untouched.
+
+### Attribution: the 32 rows are applied
+
+Derived independently rather than copied: `tools/validate_merge.py` on the
+composed tree against `origin/main` reports **32 changed, 0 lost**, and each
+changed address maps through `config/arm9/overlays/ov102/symbols.txt` to a head
+symbol. That derivation reproduces the producer's table exactly — same 32
+symbols, same 32 authors, **zero mismatches** — so the table was applied verbatim
+to `attribution.json` under the `src/actors/daBmb_c.cpp#<symbol>` key form.
+
+Credit preserved: **lunavyqo ×3** (`_ZN7daBmb_c8BehaviorEv`,
+`func_ov102_0214b248`, `func_ov102_0214b53c`), **ruspecial ×1**
+(`func_ov102_0214b384`), **aitddlabs ×1** (`func_ov102_0214baa0`),
+tangosdev ×27. `func_ov102_0214ab1c`, `func_ov102_0214bc20` and
+`_ZN7daBmb_c13OnYoshiTryEatEv` already credit andrewboudreau at the base and get
+no row. After the rows are applied the same tool reports **0 changed, 0 lost**.
+
+### What the integrator measured
+
+| check | tree | exit | result |
+|---|---|---|---|
+| `rombuild.py -j16 --no-rom` | head | 0 | 106/106 modules exact; 11,191 source-built functions reproducing, 0 mismatching; ROM data 686 verified / 44,276 bytes / 5 differ |
+| `rombuild.py -j16 --no-rom` | base `9e630dab3` | 0 | 106/106 exact; 11,191 reproducing, 0 mismatching; 685 verified / 44,264 bytes / 5 differ |
+| `build/src/actors/daBmb_c.o` | head | — | sha256 `7f2d71307a287beb07992fb5a409d82402e6ce730c509f24808a7bd77b4820eb`, the value the producer and verifier both measured |
+| `pr_linkcheck.py --base origin/main -j16` | head | 0 | 2 changed headers fan out to 926 further sources, 927 files checked; `src/actors/daBmb_c.cpp` ok on all 35 slots; 5 non-`ok` rows, the same 1 DRAFT + 4 BLIND files the verifier measured at the base |
+| `port_refcheck.py` | head | 0 | 423 references checked, 0 stale |
+
+Both ROM reports were produced by `tools/romdata_check.py` blob `346b04c2`, which
+is `origin/main`'s copy — the post-`1c93d2663` one. Their `VERIFIED`, `PARTIAL`
+and `DIFFERS` rows all carry `module`/`addr`/`bytes`, so
+`validate_merge._data_anchor` resolves an address for every one of them and the
+ROM-data comparison is anchored on the cartridge address, not on the symbol name.
+A report generated by a pre-`1c93d2663` `romdata_check.py` emits `{module,
+symbol}` only, `_data_anchor` returns `None`, the comparison silently falls back
+to names, and this class's `_ZTV6BobOmb` -> `_ZTV7daBmb_c` rename is read as a
+lost data symbol. That is why the base report is regenerated here rather than
+reused.
+
+### Corrections to the record above
+
+1. The original-base record `2ab05bae36a6821679a7e647e811c0a3243a3c49` is now
+   carried alongside the current merge-base.
+2. The remaining-work list was short. It omitted the surviving mangled-name ABI
+   bridges (17 distinct at file scope, 29 distinct at block scope across 34
+   declaration sites, 6 of them in `daBmb_c_classInit`) and the raw byte-offset
+   accesses (295 on an object handle, of 303 `<name> + 0x<literal>` expressions,
+   plus 8 hex word subscripts). Both are counted in place above.
+3. Confirmed content, unchanged: 21 free functions, 13 methods, 3 shadow types.
+4. "Promoted" is a packaging state. This class ships as one byte-exact C++
+   translation unit; the reconstruction is not finished, and the issue stays open
+   for the work item 2 names.
