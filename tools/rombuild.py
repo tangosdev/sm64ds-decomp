@@ -1177,7 +1177,7 @@ def main():
 
         # Gap objects first: delinks.txt drives which ranges dsd carves out for us.
         print(f"profile: {args.profile} ({len(profile['modReplacements'])} mod source replacement(s), "
-              f"{len(profile['modGapFallbacks'])} ROM-gap fallback(s))")
+              f"{len(profile['modGapFallbacks'])} mod-entry gap fallback(s))")
         print("[1/6] dsd delink")
         run([str(DSD), "delink", "-c", str(config_yaml)], "dsd delink",
             quiet_patterns=("No module for relocation",))
