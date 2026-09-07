@@ -33,10 +33,11 @@
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. daMky_c overrides
  * slot 0 (InitResources), slot 3 (CleanupResources), slot 6 (Behavior),
- * slot 9 (Render), plus a leaf-only slot (OnPendingDestroy, an extern "C"
- * empty-body free function -- src/_ZN7daMky_c16OnPendingDestroyEv.c), 18
+ * slot 9 (Render), slot 12 (OnPendingDestroy, a leaf-only slot whose ROM body
+ * is one `bx lr` -- the override exists only to occupy the slot), 18
  * (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot holds the base's
  * own word and is inherited, so it is deliberately not redeclared here.
+ * All seven are defined in src/actors/daMky_c.cpp.
  */
 struct daMky_c : dActor_c {
     u8  pad_0d0[0x4];
