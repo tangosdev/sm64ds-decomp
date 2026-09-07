@@ -13389,27 +13389,27 @@ matched: yes</title></rect><rect x="495.87" y="110.64" width="10.22" height="5.9
 module: ov002
 addr: 0x020b56d8
 size: 92 bytes
-matched: yes</title></rect><rect x="506.10" y="110.64" width="5.33" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9BlueFlameD1Ev
+matched: yes</title></rect><rect x="506.10" y="110.64" width="5.33" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjFire_cD1Ev
 module: ov002
 addr: 0x020b5734
 size: 48 bytes
-matched: yes</title></rect><rect x="511.43" y="110.64" width="7.56" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9BlueFlameD0Ev
+matched: yes</title></rect><rect x="511.43" y="110.64" width="7.56" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjFire_cD0Ev
 module: ov002
 addr: 0x020b5764
 size: 68 bytes
-matched: yes</title></rect><rect x="518.99" y="110.64" width="45.33" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9BlueFlame8BehaviorEv
+matched: yes</title></rect><rect x="518.99" y="110.64" width="45.33" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjFire_c8BehaviorEv
 module: ov002
 addr: 0x020b57a8
 size: 408 bytes
-matched: yes</title></rect><rect x="564.32" y="110.64" width="10.22" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9BlueFlame13InitResourcesEv
+matched: yes</title></rect><rect x="564.32" y="110.64" width="10.22" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjFire_c13InitResourcesEv
 module: ov002
 addr: 0x020b5940
 size: 92 bytes
-matched: yes</title></rect><rect x="574.54" y="110.64" width="0.44" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9BlueFlame13OnTurnIntoEggER6Player
+matched: yes</title></rect><rect x="574.54" y="110.64" width="0.44" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjFire_c13OnTurnIntoEggER6Player
 module: ov002
 addr: 0x020b599c
 size: 4 bytes
-matched: yes</title></rect><rect x="574.98" y="110.64" width="0.89" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9BlueFlame13OnYoshiTryEatEv
+matched: yes</title></rect><rect x="574.98" y="110.64" width="0.89" height="5.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjFire_c13OnYoshiTryEatEv
 module: ov002
 addr: 0x020b59a0
 size: 8 bytes
@@ -13597,19 +13597,19 @@ matched: yes</title></rect><rect x="383.19" y="127.82" width="21.71" height="6.5
 module: ov002
 addr: 0x020b6c54
 size: 212 bytes
-matched: yes</title></rect><rect x="404.90" y="127.82" width="3.69" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18PoppingLavaBubblesD1Ev
+matched: yes</title></rect><rect x="404.90" y="127.82" width="3.69" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjLava_cD1Ev
 module: ov002
 addr: 0x020b6d28
 size: 36 bytes
-matched: yes</title></rect><rect x="408.59" y="127.82" width="5.74" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18PoppingLavaBubblesD0Ev
+matched: yes</title></rect><rect x="408.59" y="127.82" width="5.74" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjLava_cD0Ev
 module: ov002
 addr: 0x020b6d4c
 size: 56 bytes
-matched: yes</title></rect><rect x="414.32" y="127.82" width="7.78" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov002_020b6d84
+matched: yes</title></rect><rect x="414.32" y="127.82" width="7.78" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjLava_c8BehaviorEv
 module: ov002
 addr: 0x020b6d84
 size: 76 bytes
-matched: yes</title></rect><rect x="422.11" y="127.82" width="0.82" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN18PoppingLavaBubbles13InitResourcesEv
+matched: yes</title></rect><rect x="422.11" y="127.82" width="0.82" height="6.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11daObjLava_c13InitResourcesEv
 module: ov002
 addr: 0x020b6dd0
 size: 8 bytes

@@ -708,7 +708,6 @@ extern int _ZTV6Coffin[];
 extern int _ZTV6Eyerok[];
 extern int _ZTV6Klepto[];
 extern int _ZTV6Lakitu[];
-extern int _ZTV6Rabbit[];
 extern int _ZTV6ShipUp[];
 extern int _ZTV6Snufit[];
 extern int _ZTV6dMap_c[];

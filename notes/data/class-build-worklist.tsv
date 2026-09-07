@@ -332,7 +332,7 @@ daKpaFire_c	DONE	include\BowserFire.h  [alias: header uses pre-rename name]	dEne
 daKuriKing_c	DONE	include\Goomboss.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov074	6
 daManta_c	DONE	include\MantaRay.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	7
 daMenbo_c	DONE	include\Skeeter.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov090	10
-daMip_c	DONE	include\Rabbit.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov085	8
+daMip_c	DONE	include\daMip_c.h	dEnemyBase_c	0	ov085	8
 daMoray_c	DONE	include\Unagi.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov016	7
 daNknk_c	DONE	include\Koopa.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov062	10
 daObjKey_c	DONE	include\Key.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov089	8
