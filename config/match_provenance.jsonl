@@ -718,3 +718,4 @@
 {"id":"ov007:0x020b8188","module":"ov007","addr":34308488,"name":"func_ov007_020b8188","matchProvenance":{"kind":"human"},"author":"tangosdev","srcPath":"src/func_ov007_020b8188.c"}
 {"id":"ov021:0x021116c8","module":"ov021","addr":34674376,"name":"_ZN12WorkElevator8BehaviorEv","matchProvenance":{"kind":"human"},"author":"github-actions[bot]","srcPath":"src/_ZN12WorkElevator8BehaviorEv.cpp"}
 {"id":"ov004:0x020ae5c4","module":"ov004","addr":34268612,"name":"func_ov004_020ae5c4","matchProvenance":{"kind":"human"},"author":"tangosdev","srcPath":"src/func_ov004_020ae5c4.cpp"}
+{"id":"ov006:0x0212a764","module":"ov006","addr":34776932,"name":"func_ov006_0212a764","matchProvenance":{"kind":"human","note":"m100 OV63 exact-match landing"},"author":"tangosdev","srcPath":"src/func_ov006_0212a764.cpp"}
