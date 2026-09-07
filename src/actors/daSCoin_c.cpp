@@ -45,7 +45,6 @@ extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int radius, int height, unsigned int flags, unsigned int vulnFlags);
 void _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern int data_ov002_0210d9a8;
-extern int _ZTV9daSCoin_c[];
 }
 
 /* -------------------------------------------------------------------------- */

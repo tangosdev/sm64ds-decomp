@@ -7,7 +7,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - Issue URL, task ID, stage, session and harness: no GitHub issue and no v2 queue
   task exist for these three classes; this is batch 1 of the rescue of
   https://github.com/tangosdev/sm64ds-decomp/pull/2231 (closed unmerged, branch
-  `cpp/promote-da-obj-lava` @ `9622b484a`, 17 promotions / 135 functions), stage
+  `cpp/promote-da-obj-lava` @ `8015f733e`, 17 promotions / 135 functions), stage
   `reconstruct` + `integrate-candidate`, session `rescue-lava-0907`, harness
   Claude Code (`claude-fable-5-1`). Enqueuing is a coordinator act and was not
   done; nothing was claimed in `classqueue.py v2`.
@@ -16,8 +16,13 @@ This document describes this commit. The queue records its immutable output SHA.
   `origin/main` into it produced 40 conflicts and was abandoned). Its content for
   these three classes was re-derived file by file on top of main, and one of its
   commits, `b98628358` "Enroll func_ov002_020f051c by compiling it as C++", was
-  cherry-picked with `-x`. `cpp/promote-da-obj-lava` is untouched and must not be
-  deleted: it still holds the other 14 classes.
+  cherry-picked with `-x`. `cpp/promote-da-obj-lava` is untouched on the remote
+  and must not be deleted: it still holds the other 14 classes. Its head is
+  `8015f733e` (re-confirmed with `gh pr view 2231` and
+  `git rev-parse origin/cpp/promote-da-obj-lava`). The `9622b484a` this session
+  first cited is a LOCAL-ONLY merge of `8015f733e` with an older main
+  (`0335d0fce`), reachable from no remote ref; later batches must start from
+  `8015f733e`, not from it.
 - Original source base SHA and installed workflow/tool SHA: the batch was built on
   `ac9106002` (main at the start of the session) and `origin/main` `9e630dab3`
   was then MERGED in (never rebased); the two conflicts were the append-only
@@ -92,7 +97,10 @@ This document describes this commit. The queue records its immutable output SHA.
 - Compiler experiments and measured barriers: `extern int _ZTV11daObjFire_c[]`
   inside the TU tripped the langmode `extern_vtable` ratchet (+1); the
   declaration now comes from `include/decl_common.h`, which is where main's own
-  fire factories took it. Byte-identical either way (8/8 MATCH after the change).
+  fire factories took it, and removing the declaration entirely does not
+  compile, so this was the available option. `daSCoin_c.cpp` carried the same
+  redundant extern next to its `decl_common.h` include; dropped as well.
+  Byte-identical in both cases (8/8 and 9/9 MATCH after the change).
 
 ## Reconstruction dimensions
 
@@ -110,11 +118,14 @@ This document describes this commit. The queue records its immutable output SHA.
 - Lifecycle, vtable/RTTI, initializer and data ownership: each TU emits its own
   `_ZTV`, `_ZTI`, `_ZTS` and spawn-info record(s); the .data run is a licensed
   claim in the manifest and reproduces byte-exactly.
-- Attribution preserved through each move/rename: 22 overrides in
-  `attribution.json` carry the original per-function authors
-  (tangosdev/andrewboudreau/ruspecial) across the fold; validate_merge reports
-  `0 changed, 0 lost` after two overrides were set back to their pre-fold
-  values.
+- Attribution preserved through each move/rename: NOT preserved in the
+  contributor chart. The 22 `attribution.json` overrides `tu_promote.py` wrote
+  are `path#symbol` rows, and `chaos_db_ci.py` resolves overrides with a
+  whole-path lookup (`overrides.get(<TU path>)` is `None` for all three TUs),
+  so they are inert: tangosdev's and ruspecial's credit on the folded shards is
+  lost in the chart even though `validate_merge` says `0 changed, 0 lost`.
+  That is issue #2433's territory (2,230 such rows repo-wide today) and is not
+  fixed here.
 - Remaining agreed issue scope: the other 14 classes of PR #2231.
 
 ## Proof
@@ -187,9 +198,18 @@ quoted verdict; nothing here is inherited from PR #2231's own manifests or logs.
   `check_references.py`, `cpp_tu_compat.py`, `check_profile_campaign.py`,
   `port_refcheck.py` (423 references resolve), `check_tubuild_conflicts.py`,
   `tiers_ratchet.py --check` (CONVERTED 2698 -> 2701, not banked, no
-  `--update` run), `langmode_audit.py --check langmode-baseline.json` (PASS
-  after moving fire's vtable extern to `decl_common.h`; before that it read
-  `extern_vtable 165 -> 166`).
+  `--update` run), `langmode_audit.py --check langmode-baseline.json` (PASS;
+  `extern_vtable` 164 against the banked 165 after the two redundant externs
+  were dropped -- before the fire fix it read 165 -> 166).
+- RED, known tool defect: `python tools/prepush_attribution.py` exits 1 with
+  13 `CREDIT LOST` rows on this tree (it is in the pre-push hook). 12 are this
+  batch's folded shards -- exactly the ones whose CLASS was renamed
+  (`PoppingLavaBubbles*`, `BlueFlame*`, `d_a_obj_lava`, `d_a_obj_fire_*`,
+  `d_a_s_coin`, `func_ov002_020b6d84`); the 5 daSCoin_c shards whose basename
+  still equals the surviving symbol are reported "consolidated, credit intact".
+  The 13th (`daBmb_c`) comes from main. This is issue #2433's basename-keyed
+  false positive, adjudicated as such by the verifier; the underlying credit
+  loss in the chart is real and is stated above.
 - Private validation, if run, and the exact PR head/base it tested: not run.
 
 Not run: a real `.nds` link (`--no-rom` everywhere) and the v2 queue
