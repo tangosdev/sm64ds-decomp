@@ -444,22 +444,37 @@ class ValidateMerge(unittest.TestCase):
 
 
 class RomDataRatchet(unittest.TestCase):
+    """Rows are `(module, symbol)` for an address-free report, `(module, symbol, addr,
+    bytes)` for one `romdata_check.summarize` produced with the cartridge anchor."""
+
+    def rows(self, entries):
+        out = []
+        for entry in entries:
+            if len(entry) == 2:
+                out.append({"module": entry[0], "symbol": entry[1]})
+            else:
+                module, symbol, addr, size = entry
+                out.append({"module": module, "symbol": symbol,
+                            "addr": addr, "bytes": size})
+        return out
+
     def data(self, verified=(), differing=(), verified_bytes=None):
+        verified_rows = self.rows(verified)
         body = {
-            "verified": len(verified),
+            "verified": len(verified_rows),
             "differs": len(differing),
-            "verifiedSymbols": [
-                {"module": module, "symbol": symbol}
-                for module, symbol in verified],
-            "differingSymbols": [
-                {"module": module, "symbol": symbol}
-                for module, symbol in differing],
+            "verifiedSymbols": verified_rows,
+            "differingSymbols": self.rows(differing),
         }
-        body["verifiedBytes"] = (4 * len(verified)
-                                  if verified_bytes is None else verified_bytes)
+        body["verifiedBytes"] = (
+            sum(row.get("bytes", 4) for row in verified_rows)
+            if verified_bytes is None else verified_bytes)
         return body
 
     def test_equal_count_cannot_hide_a_lost_exact_symbol(self):
+        """An address-free report -- a base built before `summarize` carried the
+        address -- keeps the original name-only diff, and so keeps calling this a
+        loss. The fallback is what makes the anchored path safe to add at all."""
         base = self.data(verified=(("ov006", "_ZTV3Old"),))
         head = self.data(verified=(("ov006", "_ZTV3New"),))
         out = VM.rom_data_regressions(base, head)
@@ -483,6 +498,84 @@ class RomDataRatchet(unittest.TestCase):
         base = self.data(verified=(("arm9", "Data"),))
         self.assertEqual(VM.rom_data_regressions(base, {}),
                          ["head full-ROM report omitted the ROM-data measurement"])
+
+    # -- the cartridge anchor: a rename is not a deletion ---------------------------
+    #
+    # `ov081/symbols.txt` carries `_ZTV8Moneybag` and `_ZTV8daGmch_c` at one address,
+    # 0x02128c04. Adopting the ROM's own RTTI name retires the coined row, so the head
+    # report proves 0x84 bytes at that address under the other name. Nothing was lost,
+    # and `verifiedBytes` -- unchanged across the rename -- already said so.
+
+    def test_a_rename_at_the_same_address_and_size_is_not_a_loss(self):
+        base = self.data(verified=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),))
+        head = self.data(verified=(("ov081", "_ZTV8daGmch_c", 0x02128c04, 0x84),))
+        self.assertEqual(VM.rom_data_regressions(base, head), [])
+
+    def test_a_replacement_at_another_address_is_still_a_loss(self):
+        base = self.data(verified=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),))
+        head = self.data(verified=(("ov081", "_ZTV8daGmch_c", 0x02128d00, 0x84),))
+        out = VM.rom_data_regressions(base, head)
+        self.assertTrue(any("lost 1 exact symbol" in reason for reason in out))
+        self.assertIn("ov081:_ZTV8Moneybag", "; ".join(out))
+
+    def test_two_departures_answered_by_one_arrival_still_lose_one(self):
+        """Matching is one-to-one. Two symbols proven at an address cannot both be
+        excused by a single replacement standing there."""
+        base = self.data(verified=(("ov081", "_ZTV8MoneybgA", 0x02128c04, 0x84),
+                                   ("ov081", "_ZTV8MoneybgB", 0x02128c04, 0x84)),
+                         verified_bytes=0x84)
+        head = self.data(verified=(("ov081", "_ZTV8daGmch_c", 0x02128c04, 0x84),),
+                         verified_bytes=0x84)
+        out = VM.rom_data_regressions(base, head)
+        self.assertTrue(any("lost 1 exact symbol" in reason for reason in out))
+
+    def test_a_replacement_proving_fewer_bytes_is_still_a_loss(self):
+        """Same address, less of it proven: the anchor is address AND extent, so a
+        shorter arrival cannot stand in for what the base actually verified."""
+        base = self.data(verified=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),))
+        head = self.data(verified=(("ov081", "_ZTV8daGmch_c", 0x02128c04, 0x7c),))
+        self.assertTrue(any("lost 1 exact symbol" in reason
+                            for reason in VM.rom_data_regressions(base, head)))
+
+    def test_the_same_address_in_another_module_is_still_a_loss(self):
+        """Overlays share address space; only `(module, addr)` names one datum."""
+        base = self.data(verified=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),))
+        head = self.data(verified=(("ov030", "_ZTV8daGmch_c", 0x02128c04, 0x84),))
+        self.assertTrue(any("lost 1 exact symbol" in reason
+                            for reason in VM.rom_data_regressions(base, head)))
+
+    def test_an_address_free_head_cannot_excuse_an_anchored_departure(self):
+        """A half-upgraded pair of reports falls back rather than guessing."""
+        base = self.data(verified=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),),
+                         verified_bytes=0x84)
+        head = self.data(verified=(("ov081", "_ZTV8daGmch_c"),), verified_bytes=0x84)
+        self.assertTrue(any("lost 1 exact symbol" in reason
+                            for reason in VM.rom_data_regressions(base, head)))
+
+    def test_a_renamed_differing_symbol_is_not_a_newly_differing_symbol(self):
+        """The same cartridge data still wrong at the same address under a new name is
+        not new breakage -- the gate must not go red for work that changed nothing."""
+        base = self.data(differing=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),))
+        head = self.data(differing=(("ov081", "_ZTV8daGmch_c", 0x02128c04, 0x84),))
+        self.assertEqual(VM.rom_data_regressions(base, head), [])
+
+    def test_a_genuinely_new_differing_symbol_is_still_reported(self):
+        base = self.data(differing=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),))
+        head = self.data(differing=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),
+                                    ("ov081", "_ZTV5Other", 0x02128e00, 0x40)))
+        out = VM.rom_data_regressions(base, head)
+        self.assertTrue(any("gained 1 differing symbol" in reason for reason in out))
+        self.assertIn("ov081:_ZTV5Other", "; ".join(out))
+
+    def test_a_rename_that_also_breaks_the_data_is_caught_both_ways(self):
+        """VERIFIED -> DIFFERS across a rename: the address anchor must not launder
+        it. The verified side loses the symbol; the differing side gains one."""
+        base = self.data(verified=(("ov081", "_ZTV8Moneybag", 0x02128c04, 0x84),))
+        head = self.data(differing=(("ov081", "_ZTV8daGmch_c", 0x02128c04, 0x84),),
+                         verified_bytes=0x84)
+        out = "; ".join(VM.rom_data_regressions(base, head))
+        self.assertIn("lost 1 exact symbol", out)
+        self.assertIn("gained 1 differing symbol", out)
 
 
 class ModuleFidelityDetail(unittest.TestCase):
