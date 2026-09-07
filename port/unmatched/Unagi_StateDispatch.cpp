@@ -101,15 +101,12 @@ static void unagi_state_arrive(void *c)
  * Jrb_Aliases.cpp's own (void*,void*) signature, so this tag documents
  * that bridged name too). */
 extern "C" int func_ov018_02111bf0(void *c, void *cell);
-extern "C" int func_ov016_02111bf0(void *c, PortPmf *cell)
-{
-    *(PortPmf **)((char *)c + 0x34c) = cell;
-    if (cell[0].fn == 0)
-        return 1;
-    ((void (*)(void *))(size_t)cell[0].fn)(c);
-    return 1;
-}
-
+/* func_ov016_02111bf0 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov016_02111bf0.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
+   global MSVC's pointer-to-member IS the ROM's 8-byte {function, delta}
+   pair, the matched TU compiles to the same tail jump this body was, and
+   the seat in this file aborts the binary on a nonzero delta so the two
+   agree word for word. The reading above is kept as the derivation. */
 /* PORT_HOST_ABI: Unagi::Behavior, host copy. Only the PMF dispatch (the MAIN
  * half at cell+8) differs from the matched src; the rest is transcribed line
  * for line off _ZN5Unagi8BehaviorEv.cpp with raw offsets. */

@@ -59,22 +59,12 @@ int func_ov002_020fec94(void *c);   /* main : per-frame fly/collide/expire     *
 
 }  /* extern "C" */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct C. The
-   matched func_ov002_020fed2c stores the descriptor pointer at this+0x350, reads
-   the ENTER record (descriptor+0) and, if non-null, calls it with `this`. Read
-   as a plain { fn, 0 }. */
-extern "C" int func_ov002_020fed2c(void *cv, void *rec)
-{
-    char *c = (char *)cv;
-    *(void **)(c + 0x350) = rec;                /* c->pp = rec */
-    {
-        PortPmf *q = *(PortPmf **)(c + 0x350);  /* q = c->pp */
-        if (q[0].fn == 0)
-            return 1;
-        return ((int (*)(void *))(size_t)q[0].fn)(c);
-    }
-}
-
+/* func_ov002_020fed2c IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov002_020fed2c.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
+   global MSVC's pointer-to-member IS the ROM's 8-byte {function, delta}
+   pair, the matched TU compiles to the same tail jump this body was, and
+   the seat in this file aborts the binary on a nonzero delta so the two
+   agree word for word. The reading above is kept as the derivation. */
 /* PORT_HOST_ABI: mwcc pointer-to-member (the MAIN half, descriptor+8). The
    matched Bullet::Behavior's control flow line for line. */
 extern "C" int _ZN6Bullet8BehaviorEv(void *self)

@@ -243,3 +243,59 @@ src/func_ov090_021332e8.cpp
 src/func_ov090_021338b4.cpp
 src/func_ov091_02134044.cpp
 src/func_ov100_02143b18.cpp
+
+# ---- BATCH 2, THE SAME GATE, EIGHT MORE ------------------------------------
+#
+# The first pass of this lane looked for the delta-zero abort with too narrow a
+# pattern and missed eight seats that spell the same check as `p->delta != 0`
+# rather than `cell.enter_delta != 0`. Re-read one file at a time, they are the
+# same net: each aborts the binary before any actor can dispatch if the record
+# it is about to seat carries a nonzero delta. All eight also TAIL JUMP under
+# the port's own flags, measured the same way and in the same listing set.
+#
+#   src/func_ov071_021215fc.cpp   MrI ENTER, +0x1e4
+#       seat unmatched/MrI_StateDispatch.cpp:140, six sources
+#       referrer src/func_ov071_02121634.c
+#   src/Chuckya_ChangeState.cpp   Chuckya, +0x364
+#       seat unmatched/KoopaChuckya_StateDispatch.cpp:277
+#       referrer src/_ZN7Chuckya13InitResourcesEv.c and ten more ov062 bodies
+#   src/func_ov002_020fed2c.cpp   Bullet, +0x350
+#       seat unmatched/Bullet_StateDispatch.cpp:135
+#       referrer src/_ZN6Bullet13InitResourcesEv.cpp
+#   src/func_ov016_02111bf0.cpp   Unagi, +0x34c
+#       seat unmatched/Unagi_StateDispatch.cpp:193
+#       referrer src/_ZN5Unagi13InitResourcesEv.cpp
+#   src/func_ov062_0211c658.cpp   Klepto, +0x42c
+#       seat unmatched/Klepto_StateDispatch.cpp:208
+#       referrer src/_ZN6Klepto13InitResourcesEv.cpp; the host file also calls it
+#       at :149 and :156, so its own forward declaration stays
+#   src/func_ov064_021187ec.cpp   LavaBubble seeder, +0x300
+#       seat unmatched/Ov064Gate178_States.cpp:240
+#       referrer src/_ZN10LavaBubble13InitResourcesEv.cpp
+#   src/func_ov064_0211982c.cpp   BowserPuzzle, +0x300
+#       seat unmatched/BowserPuzzle_StateDispatch.cpp:164 and :192
+#       referrer src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp
+#   src/func_ov064_02119ecc.cpp   WaterRing, +0x370
+#       seat unmatched/Ov064_WaterRing.cpp:207
+#       referrer src/_ZN9WaterRing13InitResourcesEv.cpp; the host file also calls
+#       it at :181
+#
+# STILL NOT HERE after this pass, and now for one shared reason rather than a
+# scan artefact: DaPgDfdr (func_ov027_02111cfc, func_ov027_02111d38), Bbh
+# (func_ov080_02125104), PrincessPeach (func_ov085_0212a430, func_ov085_0212a46c),
+# RabbitKey (func_ov085_0212d268), HootTheOwl (func_ov094_02136188) and
+# KingBobOmb_SetState all tail jump, and every one of their host files states in
+# prose that the adjustment words are ROM zero, read out of the overlay image.
+# But none of their seats CHECKS the delta word at run time -- they verify the
+# function word and rewrite it. Prose is a weaker net than the one every row
+# above passes, so they wait for either a static re-read of the overlay bytes or
+# a delta assertion added to their seat. That is the next lane's batch and it is
+# a small one.
+src/func_ov071_021215fc.cpp
+src/Chuckya_ChangeState.cpp
+src/func_ov002_020fed2c.cpp
+src/func_ov016_02111bf0.cpp
+src/func_ov062_0211c658.cpp
+src/func_ov064_021187ec.cpp
+src/func_ov064_0211982c.cpp
+src/func_ov064_02119ecc.cpp

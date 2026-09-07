@@ -115,19 +115,12 @@ int func_ov064_02117d24(void *cv)
 /* ---- LAVA_BUBBLE (214) seeder-dispatcher func_ov064_021187ec ----------------
    src: `c->pp = p; if (*p == 0) return 1; return (c->**p)()` -- store the table
    base at +0x300, call record[0] (the ENTER state). The record is 8 bytes. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch over an 8-byte {fn,delta}
-   record (the Scuttlebug stride trap); MSVC would make the stride 4. */
-int func_ov064_021187ec(void *cv, void *tablev)
-{
-    char *c = (char *)cv;
-    PortPmf *table = (PortPmf *)tablev;
-    *(void **)(c + 0x300) = tablev;           /* c->pp = p */
-    if (table[0].fn == 0)
-        return 1;
-    /* PORT_HOST_ABI: mwcc `(c->**p)()` -- record[0].fn called with this. */
-    return ((int (*)(void *))(size_t)table[0].fn)(c);
-}
-
+/* func_ov064_021187ec IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov064_021187ec.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
+   global MSVC's pointer-to-member IS the ROM's 8-byte {function, delta}
+   pair, the matched TU compiles to the same tail jump this body was, and
+   the seat in this file aborts the binary on a nonzero delta so the two
+   agree word for word. The reading above is kept as the derivation. */
 /* ---- LAVA_BUBBLE (214) Behavior _ZN10LavaBubble8BehaviorEv ------------------
    The matched .cpp line for line, with the two `(this->*(m->pmf))()` dispatches
    (m = the table base stored at +0x300, m->pmf = record[1].fn, the MAIN state)

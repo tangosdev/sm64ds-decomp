@@ -107,15 +107,12 @@ void port_mri_states_seat(void);
    The ENTER half below stays a host copy -- it reads record 0, where the
    wrong stride never bit. */
 
-/* PORT_HOST_ABI: the matched TU forms `(c->**c->pp)()` over the ENTER PMF at
-   the record's +0; here the record is read as a plain { fn, 0 } and the fn
-   called with `this`. ROM 0x021215fc, 0x38 bytes. */
-extern "C" void func_ov071_021215fc(void *c)
-{
-    PortPmf *rec = *(PortPmf **)((char *)c + 0x1e4);
-    ((void (*)(void *))(size_t)rec[0].fn)(c);
-}
-
+/* func_ov071_021215fc IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov071_021215fc.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
+   global MSVC's pointer-to-member IS the ROM's 8-byte {function, delta}
+   pair, the matched TU compiles to the same tail jump this body was, and
+   the seat in this file aborts the binary on a nonzero delta so the two
+   agree word for word. The reading above is kept as the derivation. */
 /* Each SOURCE PMF, in the mount's address order, with the ROM fn it holds and
    the host body that replaces it. */
 static const struct { PortPmf *slot; unsigned rom; int (*host)(void *); }

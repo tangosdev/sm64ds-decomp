@@ -118,22 +118,12 @@ extern PortPmf data_ov062_0211d900, data_ov062_0211d908, data_ov062_0211d910,
 
 }  /* extern "C" */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct C. The
-   matched Chuckya_ChangeState stores the State pointer at this+0x364, reads
-   the ENTER record (State+0) and, if non-null, calls it with `this`. Read as a
-   plain { fn, 0 }. */
-extern "C" int Chuckya_ChangeState(void *cv, void *rec)
-{
-    char *c = (char *)cv;
-    *(void **)(c + 0x364) = rec;               /* c->pp = p */
-    {
-        PortPmf *q = *(PortPmf **)(c + 0x364); /* q = c->pp */
-        if (q[0].fn == 0)
-            return 1;
-        return ((int (*)(void *))(size_t)q[0].fn)(c);
-    }
-}
-
+/* Chuckya_ChangeState IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/Chuckya_ChangeState.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
+   global MSVC's pointer-to-member IS the ROM's 8-byte {function, delta}
+   pair, the matched TU compiles to the same tail jump this body was, and
+   the seat in this file aborts the binary on a nonzero delta so the two
+   agree word for word. The reading above is kept as the derivation. */
 /* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct Klass
    (the MAIN half, State+8), plus one raw vptr+0xc model dispatch. The matched
    Behavior's control flow line for line. */

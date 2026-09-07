@@ -125,19 +125,18 @@ extern "C" int _ZN9WaterRing8BehaviorEv(void *self)
     return 1;
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member on a forward-declared struct. The
-   matched func_ov064_02119ecc stores the record at this+0x370, then reads its
-   FIRST half (the enter, byte +0) and, if non-null, calls it with `this`.
-   Read as a plain { fn, 0 }. */
-extern "C" int func_ov064_02119ecc(void *self, void *p)
-{
-    char *c = (char *)self;
-    *(void **)(c + 0x370) = p;
-    PortPmf *rec = (PortPmf *)p;
-    if (rec[0].fn == 0)
-        return 1;
-    return ((int (*)(void *))(size_t)rec[0].fn)(c);
-}
+/* func_ov064_02119ecc IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov064_02119ecc.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
+   global MSVC's pointer-to-member IS the ROM's 8-byte {function, delta}
+   pair, the matched TU compiles to the same tail jump this body was, and
+   the seat in this file aborts the binary on a nonzero delta so the two
+   agree word for word. The reading above is kept as the derivation. */
+/* func_ov064_02119afc below still CALLS it and the deleted body was also its
+   only declaration in this TU, so it is declared here. INT, not the void that
+   include/decl_common.h:2762 spells: the matched TU that now defines it returns
+   the dispatched state's own value, and note 1b above is exactly the reason
+   this file includes no decl_common.h, so the two never meet. */
+extern "C" int func_ov064_02119ecc(void *cv, void *pv);
 
 /* PORT_HOST_ABI: displaced by a decl_common.h redeclaration (see 1b in this
    file's header), not by an ABI fault of its own. src/func_ov064_02119afc.cpp

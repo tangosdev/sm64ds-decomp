@@ -73,22 +73,12 @@ int func_ov062_0211c218(void *c); int func_ov062_0211b930(void *c);
 
 }  /* extern "C" */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct C. The
-   matched func_ov062_0211c658 stores the descriptor pointer at this+0x42c, reads
-   the ENTER record (descriptor+0) and, if non-null, calls it with `this`. Read
-   as a plain { fn, 0 }. */
-extern "C" int func_ov062_0211c658(void *cv, void *rec)
-{
-    char *c = (char *)cv;
-    *(void **)(c + 0x42c) = rec;                /* c->pp = rec */
-    {
-        PortPmf *q = *(PortPmf **)(c + 0x42c);  /* q = c->pp */
-        if (q[0].fn == 0)
-            return 1;
-        return ((int (*)(void *))(size_t)q[0].fn)(c);
-    }
-}
-
+/* func_ov062_0211c658 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov062_0211c658.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
+   global MSVC's pointer-to-member IS the ROM's 8-byte {function, delta}
+   pair, the matched TU compiles to the same tail jump this body was, and
+   the seat in this file aborts the binary on a nonzero delta so the two
+   agree word for word. The reading above is kept as the derivation. */
 /* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct Klass
    (the MAIN half, descriptor+8). The matched Behavior's control flow line for
    line. */

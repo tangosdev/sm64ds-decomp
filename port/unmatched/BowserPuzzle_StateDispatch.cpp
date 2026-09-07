@@ -105,20 +105,12 @@ extern "C" int _ZN19BowserPuzzleManager8BehaviorEv(void *self)
     return 1;
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct C. The
-   matched func_ov064_0211982c stores &Obj at this+0x300, then reads the FIRST
-   record (Obj.a) and, if non-null, calls it with `this`. Read as a plain
-   { fn, 0 }. */
-extern "C" int func_ov064_0211982c(void *self, void *p)
-{
-    char *c = (char *)self;
-    *(void **)(c + 0x300) = p;           /* c->pp = p */
-    PortPmf *rec = (PortPmf *)p;          /* q = c->pp; *q is rec[0] (Obj.a) */
-    if (rec[0].fn == 0)
-        return 1;
-    return ((int (*)(void *))(size_t)rec[0].fn)(c);
-}
-
+/* func_ov064_0211982c IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov064_0211982c.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
+   global MSVC's pointer-to-member IS the ROM's 8-byte {function, delta}
+   pair, the matched TU compiles to the same tail jump this body was, and
+   the seat in this file aborts the binary on a nonzero delta so the two
+   agree word for word. The reading above is kept as the derivation. */
 /* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct C. The
    matched Piece::Behavior reads Obj.pmf (Obj at this+0x300, .pmf at +8 = record
    [1], the .b half) and, if non-null, calls it with `this`. Read as a plain
