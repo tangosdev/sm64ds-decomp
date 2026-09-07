@@ -16,9 +16,16 @@ differently on purpose:
 
   zero-size alias   DERIVED, live, by alias_collision_addresses() below. It reads
                     config/**/symbols.txt and nothing else, so the progress and Chaos
-                    generators share one definition and it self-heals in both
-                    directions: fix the config and the record returns to the count;
-                    match a previously unmatched alias and it is excluded the same day.
+                    generators share one definition, and it self-heals: fix the config
+                    so the record carries its own size and it returns to the count.
+
+                    These records leave the count ENTIRELY -- numerator and denominator
+                    both. They are not functions. Each one is a second name for a
+                    function already in the list at the same address, so counting the
+                    pair asks the project to match the same bytes twice, and the
+                    zero-size half can never be matched. Subtracting it from the
+                    numerator alone (what this did until 2026-09-06) parked ten records
+                    in the denominator that nothing could ever clear.
 
   will not build    a MANIFEST, config/bytegate-known-failures.txt, because deciding it
                     means running mwccarm. The two workflows that regenerate the
@@ -66,9 +73,9 @@ FUNC_RE = re.compile(
 def alias_collision_addresses(module_universe=None) -> set[tuple[str, int]]:
     """``{(module, addr)}`` where a zero-size function aliases a sized record.
 
-    Only the zero-size side is excluded from MATCHED. Address-keying lets callers make
-    that decision while visiting the full symbol record, and deriving it from committed
-    config keeps the progress and Chaos generators in lockstep.
+    Only the zero-size side is dropped. Address-keying lets callers make that decision
+    while visiting the full symbol record, and deriving it from committed config keeps
+    the progress and Chaos generators in lockstep.
     """
     if module_universe is None:
         sys.path.insert(0, str(REPO / "tools"))
@@ -89,6 +96,24 @@ def alias_collision_addresses(module_universe=None) -> set[tuple[str, int]]:
                 zero.append(addr)
         out.update((label, addr) for addr in zero if addr in sized)
     return out
+
+
+def is_zero_size_alias(module: str, addr: int, size: int, alias_addrs) -> bool:
+    """Is this symbol record the second-name half of an aliased address?
+
+    ONE definition, called by the numerator and by the denominator in both counting
+    tools. The set above is keyed by ADDRESS and both records sit on it, so ``size == 0``
+    is the whole of what separates the alias from the body it names; a caller that
+    forgot it would refuse to count func_01ff8708 (1,776 bytes) the day someone matches
+    it. Sharing one function is what keeps the two sides of the fraction from drifting
+    apart the way they did before -- the zero-size side was subtracted from the
+    numerator and left in the denominator, so it could never be cleared.
+
+    ``alias_addrs`` is passed in rather than derived here because the callers walk
+    thousands of symbol lines and deriving it per line would re-read every symbols.txt
+    in the repository each time.
+    """
+    return size == 0 and (module, addr) in alias_addrs
 
 
 def source_hash(path: pathlib.Path) -> str | None:

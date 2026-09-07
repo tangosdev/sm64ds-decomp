@@ -37,3 +37,9 @@ extern "C" void _Z14ApproachLinearRiii(Fix12i *value, Fix12i target, Fix12i step
 {
     (void)ApproachLinear(*value, target, step);
 }
+
+// Memory::operator_delete2 -- referenced from include/Fader.h's inline operator
+// delete, and so from every Fader class here -- is defined in hal/mem_delete2.cpp.
+// It lived here first; smoke_roots and smoke_fs then needed the same definition,
+// and a per-target copy of a definition that is not target-specific is the thing
+// the move avoids.

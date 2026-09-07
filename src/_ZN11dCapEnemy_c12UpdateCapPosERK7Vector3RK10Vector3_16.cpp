@@ -24,8 +24,11 @@ public:
 void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
 {
     char* self = (char*)this;
-    CapFlags* fl = (CapFlags*)(self + 0x17f);
-    if (fl->b2 != 0 || fl->b1 == 0) {
+    /* The flags byte is read through an inline cast on each access. A local
+       CapFlags* at +0x17f makes mwcc materialize the (non-immediate) offset
+       through the literal pool (ldr r3,[pc] / ldrb r0,[r5,r3]) and the
+       function grows a word; the cartridge folds it (ldrb r0,[r5,#0x17f]). */
+    if (((CapFlags*)(self + 0x17f))->b2 != 0 || ((CapFlags*)(self + 0x17f))->b1 == 0) {
         if ((*(unsigned char*)(self + 0x113) & 0xf) < 6) {
             unsigned char* p = (unsigned char*)(((long long)(int)(self + 0x113)));
             *p = *p | 0x80;

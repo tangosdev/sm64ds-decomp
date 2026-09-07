@@ -11,7 +11,7 @@
  * header.
  *
  * SIZE 0x5470, from the factory's own `_ZN7fBase_cnwEj(0x5470)`
- * (src/d_s_mg_cup.cpp).
+ * (dScMgCup_c_classInit, now in src/actors/dScMgCup_c.cpp).
  *
  * THE FACTORY AND THE DESTRUCTOR AGREE MEMBER FOR MEMBER, which is the
  * bar this tree sets (see include/dScMgCard_c.h's own note). The factory
@@ -26,7 +26,7 @@
  * TABLE at 0x4f38 is opaque, but it does NOT run all the way to mArray1 as
  * the first draft of this header claimed. Three s32 sit at 0x50d4, spelled
  * as the SPLIT LITERAL `*(int*)(c + 0x5000 + 0xd4 / 0xd8 / 0xdc)` in
- * func_ov006_020df3bc.c and 020dfeec.c -- a form no single-literal grep
+ * StateSelect and OnYoshiTryEat -- a form no single-literal grep
  * finds, which is exactly how the wrong bound got written. So the table is
  * bounded at 0x19c, and 8 bytes stay unclaimed between those three fields
  * and mArray1.
@@ -36,17 +36,25 @@
  * first statement of Cup's own Behavior (vtable slot 6) is now a typed
  * pointer-to-member dispatch through data_ov006_02141870[mState];
  * InitResources
- * (func_ov006_020e0308.cpp, slot 0) already carries a local struct naming
+ * (src/actors/dScMgCup_c.cpp, slot 0) already carries a local struct naming
  * `ones[3]` at 0x540c, `ids[3]` at 0x5420 and `flags[3]` at 0x5465; and
  * slot 9's Render reads 0x5462 and 0x5468. Matched access runs to 0x5469.
  *
  * The size is unaffected -- 0x5470 is the factory's literal either way --
  * but the span and the literal AGREE here, which the first draft denied.
  *
- * THE SHADOW TU HAS ONE SOURCE-LEVEL DESTRUCTOR DEFINITION and lets
- * CodeWarrior emit D1/D0/D2. Until production promotion, the enrolled D1/D0
- * bodies remain in their legacy one-function files. No separate operator delete
- * is needed; dScMgBase_c, two levels up, already provides one. */
+ * THE PROMOTED TU HAS ONE SOURCE-LEVEL DESTRUCTOR DEFINITION and lets
+ * CodeWarrior emit D1/D0/D2 from it; D1 and D0 are enrolled from
+ * src/actors/dScMgCup_c.cpp and D2 is a deadstripped compiler-only passenger.
+ * No separate operator delete is needed; dScMgBase_c, two levels up, already
+ * provides one.
+ *
+ * THE FIELD NAMES BELOW THAT ARE NOT `unk_`/`pad_` ARE INFERENCES, NOT ROM
+ * FACTS. notes/data/class-facts/dScMgCup_c.json proves eleven offsets in
+ * 0x5400..0x5470 and names none of them: mOnes, mIds and mFlags come from a
+ * local struct in InitResources, and mState, mShuffleSound, mShuffleAngle and
+ * mShuffleSpeed from behaviour. src/actors/dScMgCup_c.cpp deliberately
+ * addresses this tail by raw offset rather than through these members. */
 #ifndef DSCMGCUP_C_H
 #define DSCMGCUP_C_H
 #include "dScMgSingle3DBase_c.h"
@@ -79,11 +87,11 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     void StateResult();
     void StateFinish();
     void StateIdle();
-    s32 InitResources();  /* slot  0 -- src/_ZN10dScMgCup_c13InitResourcesEv.cpp */
+    s32 InitResources();  /* slot  0 -- src/actors/dScMgCup_c.cpp */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  Virtual50();                          /* slot 20 */
-    s32 Behavior();       /* slot  6 -- src/_ZN10dScMgCup_c8BehaviorEv.cpp */
-    s32 Render();         /* slot  9 -- src/_ZN10dScMgCup_c6RenderEv.cpp */
+    s32 Behavior();       /* slot  6 -- src/actors/dScMgCup_c.cpp */
+    s32 Render();         /* slot  9 -- src/actors/dScMgCup_c.cpp */
 
     u8  pad_4f38[0x19c];  /* 0x4f38 -- opaque table, see file banner */
     s32 unk_50d4;         /* 0x50d4 -- split-literal access, see file banner */
@@ -92,7 +100,7 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     u8  pad_50e0[0x8];    /* 0x50e0 -- no matched access */
     u8  mArray1[0x300];   /* 0x50e8 -- 0x20 * 0x18, elem dtor func_ov006_020deac4 */
     u8  mArray2[0x18];    /* 0x53e8 -- 3 * 8, elem dtor NullDestructor_0203d47c.
-                             func_ov006_020e0308.cpp already recovers the element
+                             InitResources already recovers the element
                              as a pair of s32; left raw here, own change. */
     u8  pad_5400[0xc];    /* 0x5400 -- no matched access */
     s32 mOnes[3];         /* 0x540c -- named `ones[3]` by InitResources' own struct */

@@ -1,7 +1,10 @@
-extern int data_ov004_020beb68;
+/* The state block pointer is a char*: with an int-typed base mwcc materializes
+   the +0x46xx offset from the literal pool instead of splitting it as
+   add r0,r0,#0x4000 / ldr r0,[r0,#0x6xx] the way the cartridge does. */
+extern char *data_ov004_020beb68;
 
 void func_ov004_020adc00(int v) {
-    int val = data_ov004_020beb68;
+    char *val = data_ov004_020beb68;
     if (val != 0) {
         *(int*)(val + 0x4650) = v;
     }

@@ -32,10 +32,10 @@ generated header declares zero virtuals, so mwcc emits a 2-slot vtable stub wher
 ROM has 31 slots; the emitted prefix is not even the same slots. Failing a merge on
 that would fail nearly every C++ file in the tree for pre-existing modelling debt.
 
-So the verdicts are counted, the count is reported, and `validate_merge` ratchets it:
-the number of verified data symbols may rise freely and may not fall. That is the same
-shape as langmode-ratchet and converted-ratchet, and it is the only shape that can
-land green.
+So the verdicts are reported, and `validate_merge` ratchets the exact verified-symbol
+identities and byte count while refusing newly differing symbols. Pre-existing model
+debt can remain, but an unrelated gain cannot conceal losing a known-good vtable or
+typeinfo record.
 
 THE VTABLE PREAMBLE, AND WHY THE COMPARE IS OFFSET
 --------------------------------------------------
@@ -358,6 +358,25 @@ def summarize(records):
                          if r["verdict"] == VERIFIED)
     partial_bytes = sum(r.get("bytes", 0) for r in best.values()
                         if r["verdict"] == PARTIAL)
+    # `addr` and `bytes` travel with the identity because a symbol NAME is a source-side
+    # choice and the cartridge address is not. Adopting the ROM's own RTTI name for a
+    # class that carried a coined one retires `_ZTV<Coined>` and introduces
+    # `_ZTV<RomName>` proving the same bytes at the same address; without the address
+    # validate_merge's set difference could only read that as a lost symbol, and the
+    # only ways to answer it from the name alone -- an alias row in `symbols.txt`, or
+    # consulting the rename ledger the PR writes itself -- would let a PR certify its
+    # own rename. The address cannot be forged: nothing reaches this list without
+    # byte-verifying there.
+    def _identity(r):
+        return {"module": r.get("module"), "symbol": r["symbol"],
+                "addr": r.get("addr"), "bytes": r.get("bytes")}
+
+    verified_symbols = sorted(
+        (_identity(r) for r in best.values() if r["verdict"] == VERIFIED),
+        key=lambda r: (r["module"] or "", r["symbol"]))
+    differing_symbols = sorted(
+        (_identity(r) for r in best.values() if r["verdict"] == DIFFERS),
+        key=lambda r: (r["module"] or "", r["symbol"]))
     return {
         "symbols": len(best),
         "verified": symbol_counts[VERIFIED],
@@ -366,6 +385,10 @@ def summarize(records):
         "unnamed": symbol_counts[UNNAMED],
         "verifiedBytes": verified_bytes,
         "partialBytes": partial_bytes,
+        # Identities, not only a count. A count-only ratchet can lose one known-good
+        # vtable while gaining an unrelated one and report no regression at all.
+        "verifiedSymbols": verified_symbols,
+        "differingSymbols": differing_symbols,
         # Per-object-record totals, kept for visibility -- these move with file topology
         # (a TU merge or a duplicate-file cleanup changes them without a symbol's verdict
         # changing) and are not what validate_merge ratchets.

@@ -158,9 +158,12 @@ void func_0204a17c(EData* t, char* d)
         SEntry* s = &t->seconds[i];
         char* rec = d + off;
         s->src = rec;
-        Flags2* f2 = (Flags2*)(rec + 4);
-        s->s10 = 1 << (f2->val1 + 3);
-        s->s12 = 1 << (f2->val2 + 3);
+        /* The two bitfield reads cast inline on each use. Holding a Flags2*
+           local for rec+4 makes mwcc CSE that address into r6 and read the
+           raw word through it (add r6,r1,#4 / ldr r5,[r6]); the cartridge
+           re-issues ldr r5,[r1,#4] each time. */
+        s->s10 = 1 << (((Flags2*)(rec + 4))->val1 + 3);
+        s->s12 = 1 << (((Flags2*)(rec + 4))->val2 + 3);
         s->raw = *(int*)(rec + 4);
         off += *(int*)(rec + 0x1c);
     }

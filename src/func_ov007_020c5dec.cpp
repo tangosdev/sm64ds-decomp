@@ -48,15 +48,10 @@ extern "C" void func_ov007_020c5dec(C *c){
   }
   c->f70 = c->f7c;
   {
-    int *p5c = (int*)((char*)c + 0x5c);
-    int *p58 = (int*)((char*)c + 0x58);
-    int *p68 = (int*)((char*)c + 0x68);
-    int *p64 = (int*)((char*)c + 0x64);
-    int *p60 = (int*)((char*)c + 0x60);
-    *p5c = -1;
-    *p58 = *p5c;
-    *p68 = 0;
-    *p64 = *p68;
-    *p60 = *p64;
+    *(int*)((char*)c + 0x5c) = -1;
+    *(int*)((char*)c + 0x58) = *(int*)((char*)c + 0x5c);
+    *(int*)((char*)c + 0x68) = 0;
+    *(int*)((char*)c + 0x64) = *(int*)((char*)c + 0x68);
+    *(int*)((char*)c + 0x60) = *(int*)((char*)c + 0x64);
   }
 }

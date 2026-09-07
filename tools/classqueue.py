@@ -95,9 +95,21 @@ def queue_path():
 
 
 def rows():
+    """Queue rows, minus the '#' note block.
+
+    tu-promotion-queue.tsv carries its own reading instructions -- what each
+    blocker means, and which columns are floors rather than figures -- because
+    every one of them has been read as a measurement and been wrong. csv wants
+    the column header on line 1, so the notes cannot precede it; they sit
+    directly below it as rows whose first field starts with '#'. Without this
+    filter `next` would hand a writer a comment line as a target.
+    """
     path = queue_path()
     with path.open(newline="", encoding="utf-8") as fh:
-        return path, list(csv.DictReader(fh, delimiter="\t"))
+        rd = csv.DictReader(fh, delimiter="\t")
+        first = rd.fieldnames[0] if rd.fieldnames else "class_name"
+        return path, [r for r in rd
+                      if not (r.get(first) or "").lstrip().startswith("#")]
 
 
 def workable(row):
@@ -112,6 +124,7 @@ def workable(row):
 
 
 def cmd_next(args):
+    require_legacy_queue()
     path, all_rows = rows()
     live = held()
     for row in all_rows:
@@ -158,6 +171,7 @@ def prior_work(cls):
 
 
 def cmd_claim(args):
+    require_legacy_queue()
     ref = ref_for(args.cls, args.role)
 
     # A parentless commit over the empty tree, carrying a nonce so that two
@@ -255,7 +269,23 @@ def cmd_list(args):
     return 0
 
 
+def require_legacy_queue():
+    """Updated clients cannot accidentally restart v1 after the v2 cutover.
+
+    Older binaries lack this check; stopping them remains a cutover prerequisite.
+    Keep list/status/release available so actual owners can drain legacy claims.
+    """
+    from classqueue_v2 import REF
+    if git("ls-remote", "origin", REF).stdout.strip():
+        raise SystemExit("v2 coordination is active; use classqueue.py v2 (do not acquire v1 work)")
+
+
 def main():
+    # The opt-in protocol has a separate transport and explicit cutover contract.
+    # Leave v1 commands usable by in-flight sessions until that cutover.
+    if len(sys.argv) > 1 and sys.argv[1] == "v2":
+        from classqueue_v2 import main as v2_main
+        return v2_main(sys.argv[2:], repo=REPO)
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = p.add_subparsers(dest="cmd", required=True)

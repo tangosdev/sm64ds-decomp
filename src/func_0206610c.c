@@ -1,9 +1,22 @@
+/* Wireless-download parent send step, arm9 0x0206610c (0x1b4 bytes). Steps
+ * the current file index mod 16 up to sixteen times looking for a registered
+ * file with children waiting on it, fetches the block to send through
+ * func_02067530, writes a type-4 record header, copies the block after it,
+ * and hands the packet to func_02067f2c.
+ *
+ * Typed access through private/arm9_a9db8_mb_parent.h is the match under
+ * 2004/b56. The raw char* form this replaces pooled the whole 0x1525 address
+ * once the byte was read from more than one statement (+12 bytes), and with
+ * that fixed by hand a named `g + 0x1000` base still rotated five registers
+ * in the three reads before CpuCopy8; a struct field at 0x1525 makes that
+ * base a compiler temp and the colouring falls into place. */
 #include "types.h"
-extern char *data_020a9db8;
+#include "private/arm9_a9db8_mb_parent.h"
+extern MbParentWork *data_020a9db8;
 
 extern void func_02065f08(int idx);
 struct Out { int f0; u32 f4; int f8; u8 fc; };
-extern int func_02067530(struct Out *o, char *in, u32 val, char *tbl);
+extern int func_02067530(struct Out *o, u8 *in, u32 val, u8 *tbl);
 
 typedef struct Rec {
     u8 type;
@@ -19,22 +32,20 @@ int func_0206610c(void)
 {
     unsigned int loopCount;
     u8 idxByte;
-    char *rec;
     Rec r;
     struct Out out;
 
-    if (*(u8 *)(data_020a9db8 + 0x1000 + 0x524) == 0) return 0x15;
+    if (data_020a9db8->unk_1524 == 0) return 0x15;
 
     loopCount = 0;
     do {
         {
-            u8 *p = (u8 *)(*(char *volatile *)&data_020a9db8 + 0x1000 + 0x525);
-            *p = (*p + 1) % 16;
+            MbParentWork *g = *(MbParentWork *volatile *)&data_020a9db8;
+            g->mCurrentFile = (g->mCurrentFile + 1) % 16;
         }
-        idxByte = *(u8 *)(data_020a9db8 + 0x1000 + 0x525);
+        idxByte = data_020a9db8->mCurrentFile;
 
-        rec = data_020a9db8 + idxByte * 0x5c4;
-        if (*(u8 *)(rec + 0x1000 + 0xd4a) != 0 && *(u16 *)(rec + 0x1d00 + 0x44) != 0) break;
+        if (data_020a9db8->mFiles[idxByte].mActive != 0 && data_020a9db8->mFiles[idxByte].mChildBitmap != 0) break;
 
         loopCount = (loopCount + 1) & 0xff;
     } while (loopCount < 0x10);
@@ -42,23 +53,21 @@ int func_0206610c(void)
 
     func_02065f08(idxByte);
 
-    idxByte = *(u8 *)(data_020a9db8 + 0x1000 + 0x525);
-    rec = data_020a9db8 + idxByte * 0x5c4;
-    if (func_02067530(&out, data_020a9db8 + 0x1d24 + idxByte * 0x5c4,
-                       *(u16 *)(rec + 0x1d00 + 0x40),
-                       data_020a9db8 + 0x1788 + idxByte * 0x5c4) == 0) {
+    idxByte = data_020a9db8->mCurrentFile;
+    if (func_02067530(&out, data_020a9db8->mFiles[idxByte].mBlockTable, data_020a9db8->mFiles[idxByte].mCurrentBlock, data_020a9db8->mFiles[idxByte].mHeader) == 0) {
         return 0x15;
     }
 
-    out.f8 = out.f8 + *(int *)(data_020a9db8 + *(u8 *)(data_020a9db8 + 0x1000 + 0x525) * 0x5c4 + 0x1000 + 0xd3c);
-
-    r.type = 4;
-    r.a = *(u8 *)(data_020a9db8 + 0x1000 + 0x525);
-    r.b = *(u16 *)(data_020a9db8 + *(u8 *)(data_020a9db8 + 0x1000 + 0x525) * 0x5c4 + 0x1d00 + 0x40);
+    {
+        MbParentWork *g = data_020a9db8;
+        out.f8 = out.f8 + g->mFiles[g->mCurrentFile].mSrcAddr;
+        r.type = 4;
+        r.a = g->mCurrentFile;
+        r.b = g->mFiles[g->mCurrentFile].mCurrentBlock;
+    }
 
     CpuCopy8((void *)out.f8, func_02065d5c(&r, (u8 *)data_020a9db8), out.f4);
 
-    idxByte = *(u8 *)(data_020a9db8 + 0x1000 + 0x525);
-    rec = data_020a9db8 + idxByte * 0x5c4;
-    func_02067f2c(out.f4 + 6, *(u16 *)(rec + 0x1d00 + 0x44), (u32)data_020a9db8);
+    idxByte = data_020a9db8->mCurrentFile;
+    func_02067f2c(out.f4 + 6, data_020a9db8->mFiles[idxByte].mChildBitmap, (u32)data_020a9db8);
 }

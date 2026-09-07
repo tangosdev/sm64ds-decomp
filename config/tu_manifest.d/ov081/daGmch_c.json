@@ -1,0 +1,541 @@
+{
+  "id": "ov081/daGmch_c",
+  "module": "ov081",
+  "source": "src/actors/daGmch_c.cpp",
+  "promoted_source": "src/actors/daGmch_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x02126504..0x02127b34, 37 function(s); the 36-function 0x02126504..0x02127adc run reported by build/tu_map.json (tools/tu_map.py) plus the immediately adjacent unique GAMAGUCHI factory daGmch_c_classInit (0x02127adc..0x02127b34, delinks.txt src/d_a_gmch.c, marked complete), which allocates 0x3f4, calls _ZN8dActor_cC2Ev and stores the address point of _ZTV8daGmch_c as the vptr.",
+    "class label(s): daGmch_c -- the cartridge's own RTTI. extracted/overlays/overlay_0081.bin file offset 0x5488 (= address 0x02128bc8, base 0x02123740 + offset with no adjustment) holds 38 64 61 47 6d 63 68 5f 63 00 = the length-prefixed \"8daGmch_c\", and _ZTI8daGmch_c at 0x02128bd4 points at it. The tree previously spelt the class Moneybag; this promotion retires that coined name.",
+    "LEFT bound: daSnowball_c_classInit at 0x021264b4 size 0x50 ends exactly at 0x02126504, so the run starts on a function boundary and takes nothing from daSnowball_c.",
+    "RIGHT bound: _ZN8IceBlockD1Ev begins at 0x02127b34, so the run ends on a function boundary and takes nothing from daObjIceBlock_c.",
+    "self-contained: filtering all 106 modules' relocs.txt on module:overlay(81) accepts 64 of the 436 rows whose destination lies in this address range (ov077..ov082 share base 0x02123740, so 372 are phantoms). Those 64 are 35 from .text inside the run, the 18 pointer-to-member records at 0x02128b38..0x02128bc8, the 10 own vtable slots and the profile's factory word. Zero come from .text outside the run.",
+    "module sinit corroboration: 5 sinit(s) / 5 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU). Narrowed by hand instead: __sinit_ov081_021284f0 has 45 relocations -- 18 into this class's pointer-to-member band, 13 into its .bss objects, 14 into arm9 -- and references no text outside this run, so it is this class's static initializer and nobody else's. It stays enrolled: it lives in .init, outside the claimed .text range."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02126504",
+      "end": "0x02127b34"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daGmch_cD1Ev",
+      "address": "0x02126504",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN8MoneybagD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daGmch_cD0Ev",
+      "address": "0x02126554",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN8MoneybagD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN8daGmch_c13OnYoshiTryEatEv",
+      "address": "0x021265b8",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8Moneybag13OnYoshiTryEatEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN8daGmch_c16OnAimedAtWithEggEv",
+      "address": "0x021265c0",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8Moneybag16OnAimedAtWithEggEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN8daGmch_c15ChooseNextStateEv",
+      "address": "0x021265c8",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov081_021265c8.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN8daGmch_c16SpawnCoinsAndDieEv",
+      "address": "0x02126700",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov081_02126700.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN8daGmch_c18CheckPlayerContactEv",
+      "address": "0x02126758",
+      "size": "0x000001f8",
+      "legacy_source": "src/func_ov081_02126758.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN8daGmch_c21ApplySlopeToVertSpeedEPv",
+      "address": "0x02126950",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov081_02126950.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN8daGmch_c18UpdateDrawMatricesEv",
+      "address": "0x02126a20",
+      "size": "0x00000200",
+      "legacy_source": "src/func_ov081_02126a20.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState8Ev",
+      "address": "0x02126c20",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov081_02126c20.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState8Ev",
+      "address": "0x02126c8c",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov081_02126c8c.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState7Ev",
+      "address": "0x02126d64",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov081_02126d64.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState7Ev",
+      "address": "0x02126e28",
+      "size": "0x0000017c",
+      "legacy_source": "src/func_ov081_02126e28.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState6Ev",
+      "address": "0x02126fa4",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov081_02126fa4.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState6Ev",
+      "address": "0x02127044",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov081_02127044.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState5Ev",
+      "address": "0x02127070",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov081_02127070.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState5Ev",
+      "address": "0x02127134",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov081_02127134.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState4Ev",
+      "address": "0x02127188",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov081_02127188.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState4Ev",
+      "address": "0x021271e8",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov081_021271e8.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState3Ev",
+      "address": "0x02127240",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov081_02127240.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState3Ev",
+      "address": "0x02127314",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov081_02127314.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState2Ev",
+      "address": "0x02127398",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov081_02127398.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState2Ev",
+      "address": "0x021273e8",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov081_021273e8.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState1Ev",
+      "address": "0x02127440",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov081_02127440.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState1Ev",
+      "address": "0x021274c8",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov081_021274c8.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN8daGmch_c12UpdateState0Ev",
+      "address": "0x02127558",
+      "size": "0x00000158",
+      "legacy_source": "src/func_ov081_02127558.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN8daGmch_c11EnterState0Ev",
+      "address": "0x021276b0",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov081_021276b0.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN8daGmch_c15CallStateUpdateEv",
+      "address": "0x02127708",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov081_02127708.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN8daGmch_c14CallStateEnterEv",
+      "address": "0x02127744",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov081_02127744.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN8daGmch_c8SetStateEi",
+      "address": "0x0212777c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov081_0212777c.c",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN8daGmch_c16CleanupResourcesEv",
+      "address": "0x02127798",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN8Moneybag16CleanupResourcesEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN8daGmch_c16OnPendingDestroyEv",
+      "address": "0x021277dc",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8Moneybag16OnPendingDestroyEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN8daGmch_c6RenderEv",
+      "address": "0x021277e0",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN8Moneybag6RenderEv.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN8daGmch_c8BehaviorEv",
+      "address": "0x02127854",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN8Moneybag8BehaviorEv.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN8daGmch_c13InitResourcesEv",
+      "address": "0x021278a8",
+      "size": "0x000001d4",
+      "legacy_source": "src/_ZN8Moneybag13InitResourcesEv.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN8daGmch_c13OnTurnIntoEggER6Player",
+      "address": "0x02127a7c",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN8Moneybag13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 35
+    },
+    {
+      "symbol": "daGmch_c_classInit",
+      "address": "0x02127adc",
+      "size": "0x00000058",
+      "legacy_source": "src/d_a_gmch.c",
+      "ordinal": 36
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov081_02126700.cpp (func_ov081_02126700) did not split (the definition is inside the extern \"C\" block opened on line 6, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov081_02126950.cpp (func_ov081_02126950) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov081_02126c20.cpp (func_ov081_02126c20) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov081_02126fa4.cpp (func_ov081_02126fa4) did not split (the definition is inside the extern \"C\" block opened on line 3, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov081_02127240.cpp (func_ov081_02127240) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov081_02127314.cpp (func_ov081_02127314) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov081_02127440.cpp (func_ov081_02127440) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov081_021276b0.cpp (func_ov081_021276b0) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov081_0212777c' differs between the legacy file that used to hold func_ov081_021265c8 and the one that held func_ov081_02126758; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank0EjRK7Vector3' differs between the legacy file that used to hold func_ov081_02126758 and the one that held func_ov081_02126c8c; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127044; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov081_021265c8 and the one that held func_ov081_02127070; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov081_02126758 and the one that held func_ov081_02127070; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov081_02126c8c and the one that held func_ov081_02127134; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov081_0212777c' differs between the legacy file that used to hold func_ov081_021265c8 and the one that held func_ov081_02127188; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov081_02126758' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127188; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127188; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c6UpdateEv' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127188; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov081_02126c8c and the one that held func_ov081_021271e8; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov081_0212777c' differs between the legacy file that used to hold func_ov081_021265c8 and the one that held func_ov081_02127398; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov081_02126758' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127398; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127398; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c6UpdateEv' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127398; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov081_02126c8c and the one that held func_ov081_021273e8; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov081_02126c8c and the one that held func_ov081_021274c8; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov081_021265c8 and the one that held func_ov081_021274c8; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13DistToCPlayerEv' differs between the legacy file that used to hold func_ov081_021265c8 and the one that held func_ov081_02127558; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov081_0212777c' differs between the legacy file that used to hold func_ov081_021265c8 and the one that held func_ov081_02127558; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov081_02126758' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127558; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127558; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c6UpdateEv' differs between the legacy file that used to hold func_ov081_02126d64 and the one that held func_ov081_02127558; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj' differs between the legacy file that used to hold func_ov081_02127558 and the one that held _ZN8daGmch_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded outright and every member's own declarations were moved to BLOCK scope inside its own body, so both spellings stand and neither is at file scope. No TUBUILD CONFLICT marker survives in the merged source.",
+    "The 8 RAW notes above describe what `tubuild create` produced. That output was NOT used: at 36 members the generated preamble is unusable, so the merged source was hand-assembled from the 36 shards plus src/d_a_gmch.c in ROM-ascending order. Read the file's own header comment for what was and was not reconciled.",
+    "MEASURED, and it is the one thing in this TU that is not a shard's own spelling: `#include \"common.h\"` sits BEFORE daGmch_c.h. common.h and math/Matrix.h both define Matrix4x3 under the single MATRIX4X3_DEFINED guard and whichever is seen first stands. daGmch_c.h reaches math/Matrix.h through Model.h, so without that line ordinal 34 (_ZN8daGmch_c13InitResourcesEv) sees the structured Matrix3x3+Vector3 spelling, splits `mMatrix = IDENTITY_MATRIX4X3` into a 9-word ldm/stm plus a CSE tail and comes out 0x1f0 against the cartridge's 0x1d4 -- 35/36. The shards reached the flat s32[12] spelling through decl_common.h -> common.h; this include replaces that route and restores 36/36.",
+    "decl_common.h is deliberately NOT included. It declares 7 of this TU's 26 auto-named members and 3 of those 7 contradict the byte-matched definitions: func_ov081_02126950 as (void*, void*) against (int*, void*), func_ov081_02127708 as int(char*) against void(C*), and func_ov081_0212777c as (void*, int) against (char*, int). Including it would be three `illegal function overloading` errors pointed at the definitions rather than at the header, which is the ov002/Player and ov006/dScMgLuigi_c precedent."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov081-daGmch_c/daGmch_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 37,
+    "functions_declared": 37,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN8daGmch_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN8daGmch_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        17,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89
+      ],
+      "data": [
+        "_ZTV8daGmch_c",
+        "_ZTI8daGmch_c",
+        "_ZTS8daGmch_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daGmch_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daGmch_c",
+        "_ZTV8daGmch_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov081-daGmch_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02126504",
+        "end": "0x02127b34",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02126504",
+          "end": "0x02127b34",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 37
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN8daGmch_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the base-object destructor beside the licensed D1/D0 pair when the destructor is out of line under `#pragma defer_codegen off`. The cartridge has no daGmch_c D2 at all -- a grep of the whole config/ tree for MoneybagD2, daGmch_cD2 and 8daGmch_cD2 returns no rows, no third destructor address appears in _ZTV8daGmch_c, and all_symbol_homes() returns nothing for it -- so it is homeless and a plain deadstrip is the right disposition."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "reason": "types.h gives Vector3 a declared destructor, so any TU that odr-uses one re-emits its vague-linkage D1. Ordinal 5 (func_ov081_02126700) holds a Vector3 local and ordinal 34 another. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0"
+    },
+    {
+      "symbol": "_ZTV8daGmch_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x02128c04",
+      "reason": "this class vtable; the canonical cartridge copy remains ROM-gap owned -- all 113 delink blocks in config/arm9/overlays/ov081/delinks.txt are .text or .init only, so no file owns any of ov081's .data. Extent corroborated three ways: the cartridge words put mwcc's two-word preamble {0x00000000, 0x02128bd4} at 0x02128bfc and the last slot at 0x02128c7c, with _ZTI15daObjIceBlock_c next at 0x02128c80, so the OBJECT is 0x02128bfc..0x02128c80 = 0x84 bytes; tools/rtti_vtables.py --own daGmch_c reports 31 slots (0x7c) plus the 0x8 preamble = 0x84; the emitted _ZTV8daGmch_c is 0x84. symbols.txt names the address point 0x02128c04, which is the convention romdata_check re-derives the object start from."
+    },
+    {
+      "symbol": "_ZTI8daGmch_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x02128bd4",
+      "reason": "this class RTTI record (__si_class_type_info: {0x0209a764, 0x02128bc8, 0x0208e390}); the canonical cartridge copy remains ROM-gap owned."
+    },
+    {
+      "symbol": "_ZTS8daGmch_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov081",
+      "canonical_address": "0x02128bc8",
+      "reason": "this class RTTI name. The cartridge itself spells it \"8daGmch_c\" at 0x02128bc8, so this is a recovered name and not a coined one and the row really is compared against the ROM. That comparison is why the class had to be renamed out of the tree's coined `Moneybag` before promotion: BOTH names are 8 characters, so a Moneybag-named TU would have emitted a 10-byte _ZTS of exactly the right SIZE and the wrong CONTENT, which no size or extent check catches. The canonical cartridge copy remains ROM-gap owned."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "root ancestor RTTI passenger (__class_type_info, 8 bytes -- fBase_c has no base); the canonical cartridge copy is independently enrolled."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "root ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled."
+    }
+  ]
+}

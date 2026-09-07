@@ -105,6 +105,7 @@ struct dEnemyBase_c : dActor_c {
     /* --- non-virtual --- */
     int AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_);
     int UpdateDeath(dBgCh_Actr & clsn_);
+    int UpdateYoshiEat(dBgCh_Actr & clsn_);
     void UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel);
     /* Already a real method -- its own file builds _ZN12dEnemyBase_c9SpawnCoinEv from a
        local `struct dEnemyBase_c : dActor_c` shadow. Declared here so callers need not

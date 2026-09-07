@@ -321,7 +321,7 @@ Three things on that branch are harvestable into `main` with no byte risk:
    collapses the Itanium D1/D0 pair into one slot and every virtual past it lands one slot
    low — `GetPos` indexes what is `D0` in a ROM-shaped table. The ROM shape is
    `[0] D1, [1] D0, [2] GetPos, [3] GetOwnerID`, and the matched grab test
-   [func_ov002_020caf98](../src/func_ov002_020caf98.cpp) calls slot 2 for `GetPos`, confirming it. Any host or portable
+   `func_ov002_020caf98` (ROM ordinal 239 of the ov002/Player TU, now in [src/actors/Player.cpp](../src/actors/Player.cpp)) calls slot 2 for `GetPos`, confirming it. Any host or portable
    build must keep the ROM shape and dispatch by explicit slot.
 
 The 1,143-commit gap is mostly the class-rename campaign, which the port branch predates —

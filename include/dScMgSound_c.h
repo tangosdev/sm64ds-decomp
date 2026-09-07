@@ -21,11 +21,15 @@
  * reason as the shared table (see include/dScMgMemory_c.h's own note) --
  * nothing to preserve, nothing to invent.
  *
- * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
- * its own. Defined for real in src/_ZN12dScMgSound_cD1Ev.cpp; D0Ev.cpp
- * carries an identical copy for its own key-function TU. No separate
- * operator delete is needed -- dScMgBase_c, two levels up, already
- * provides one.
+ * THE DESTRUCTOR IS DEFINED INLINE, AND IS DECLARED FIRST. It is still this
+ * class's key function, so the translation unit that owns it emits
+ * _ZTV/_ZTI/_ZTS. The inline form is what reproduces the cartridge's
+ * destructor ORDER: mwccarm 2004/b56 emits D1 then D0 for an in-class body
+ * and D2/D0/D1 for an out-of-line one, and ov006 puts D1 at 0x02119904
+ * BELOW D0 at 0x02119958. The body is the one the two pre-migration
+ * one-function destructor shards each carried, unchanged; both are now
+ * absorbed into src/actors/dScMgSound_c.cpp. No separate operator delete is
+ * needed -- dScMgBase_c, two levels up, already provides one.
  *
  * SM64DS RTTI names the implementation dScMgSound_c. The reconstructed factory
  * dScMgSound_c_classInit (historical alias MgBoomBox_Spawn) installs this class's
@@ -38,7 +42,7 @@
 extern "C" int func_ov006_020c3288(char *t); /* decl_common.h's own signature */
 
 struct dScMgSound_c : dScMgSingle3DBase_c {
-    virtual ~dScMgSound_c();
+    virtual ~dScMgSound_c() { func_ov006_020c3288((char *)mTable); }
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  Virtual50();                          /* slot 20 */
 

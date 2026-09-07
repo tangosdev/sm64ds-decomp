@@ -1,65 +1,104 @@
-# Launch commands
+# Launch and restart prompts
 
-Paste one of these into a fresh Claude Code or Codex instance. Each is
-self-contained: the instance reads its role file from the repo, claims work, and
-keeps going. Nothing here depends on a Claude skill or memory, so a Codex
-instance and a Claude instance follow the identical protocol.
+Use the same prompts in Codex, Kimi K3, Claude, or another shell-capable harness.
+The protocol lives in the repository; prior conversation memory is supporting
+context. Install this revision first and complete [CUTOVER.md](CUTOVER.md)
+before v2 workers start.
 
-Repo: `C:\Users\andre\source\tangosdev\sm64ds-decomp`
+Repository: `C:/Users/andre/source/tangosdev/sm64ds-decomp`.
 
-## The generic launcher
+## Continue from the previous version
 
-> Read `notes/agents/PIPELINE.md` and `notes/agents/roles/<ROLE>.md` in
-> `C:\Users\andre\source\tangosdev\sm64ds-decomp`. Execute that role for the
-> next unclaimed class. Claim it first with `python tools/classqueue.py claim
-> <class> --role <ROLE> --worktree <your worktree>`; if the claim is denied,
-> take the next row instead. Work in your own worktree created with
-> `~\.claude\skills\decomp-worktree\wt-setup.ps1` (Codex: read that script and
-> follow it — it junctions `extracted/`, `tools/mwccarm/`, `tools/bin/`, which
-> the byte gates need and which `git worktree add` does not copy). When your
-> stage is committed and pushed, release the claim and take the next class. Do
-> not stop after one.
+Paste into the existing session, replacing the final line with its known class,
+issue, or branch when available:
 
-Substitute `<ROLE>`: `scout`, `writer`, `humanizer`, `builder`, `reviewer`.
+> Continue your previous SM64DS work under the updated agent protocol.
+> Read notes/agents/README.md, notes/agents/PIPELINE.md,
+> notes/agents/CUTOVER.md, and your current role entry from the updated
+> repository checkout. Do not follow the old automatic claim/release loop.
+> First identify your existing worktree, branch, HEAD, uncommitted changes,
+> facts, prior proof, open PR, and legacy claim. Preserve all of that work.
+> Produce the handoff described in notes/agents/templates/handoff.md and
+> report the exact next action. Before further source edits, confirm the fleet
+> cutover is complete and obtain or resume the v2 task assigned to this work.
+> Resume its accepted input or explicitly adopted checkpoint; do not start the
+> class over. Follow the continuous producer role unless the task assigns you
+> independent verification or integration. Do not initialize the shared queue
+> or remove another session's claim. If the old workflow has not stopped yet,
+> finish the checkpoint and wait for the coordinator's recorded adoption.
+> Existing work: [class, issue, branch, or "identify from this session"].
 
-`integrator` uses a different launcher - it takes PR numbers, not a class:
+The prompt works even if the source branch predates these docs: read this
+installed protocol revision in the updated checkout, then return to the existing
+source worktree. Keep the protocol/tool checkout separate from the source input.
+The coordinator records both commits. Do not merge workflow files into every
+in-flight source branch just to get a launcher.
 
-> Read `notes/agents/roles/integrator.md` in
-> `C:\Users\andre\source\tangosdev\sm64ds-decomp`. Compose PRs <numbers>
-> into one integration branch and prove the composition. Do not re-derive any
-> class and do not raise a partial's count. Work in your own worktree created
-> with `~\.claude\skills\decomp-worktree\wt-setup.ps1`. Report the ledger
-> verdict and the identical-record count explicitly.
+## Fleet coordinator: stop, inventory, and adopt
 
-## How many of each
+> Read notes/agents/README.md, PIPELINE.md, CUTOVER.md, queue-v2.md, and
+> roles/coordinator.md in the updated repository checkout.
+> Coordinate the v1-to-v2 cutover. Inventory the existing workers, worktrees,
+> claims, branches, PRs and facts; distinguish unknown liveness from abandonment.
+> Use a GitHub issue for each active class/evidenced TU and record its current
+> output and remaining scope. The human is stopping old workers: verify their
+> checkpoint/release acknowledgments before initializing v2.
+> Reuse existing research and branches. Keep shared-header overlaps serialized.
+> Register explicit continuation tasks with exact input SHAs, resources,
+> producer identity when known, and remaining stages. Start with a small pilot.
+> Never infer that an agent stopped merely because its claim is old.
 
-The validator is the bottleneck — one box, one job, about 20 minutes per PR — so
-builders queue no matter how many you run. A sensible standing crew:
+## Producer: one class/TU through reconstruction
 
-| role | count | why |
-|---|---|---|
-| scout | 2 | read-only, cheap, keeps the facts queue ahead of the writers |
-| writer | 3 | the slow creative step; independent classes never collide |
-| humanizer | 1 | fast, and one consistent voice keeps the style uniform |
-| builder | 2 | more than 2 just queue behind the validator |
-| reviewer | 1 | must be a different instance from the builder that opened the PR |
-| integrator | 0-1 | launch one only when 2+ proven class PRs are queued behind the validator |
+> Read notes/agents/PIPELINE.md, roles/producer.md, and queue-v2.md.
+> Work the assigned GitHub issue/task using its recorded protocol revision.
+> Read the issue, queue input, facts, and handoff; inspect existing work before
+> creating anything. Obtain the v2 producer claim, use your own wired worktree,
+> and own the class through method/layout reconstruction and local proof.
+> Ask the coordinator to reserve newly discovered shared dependencies before
+> editing them. Commit a concise handoff with the final candidate, publish its
+> exact SHA to the next stage, and report the remaining reconstruction work.
+> Task: [issue URL and task ID].
 
-Give **Codex the scout and humanizer roles** — both are read-and-judge work with
-no compiler dependency. Give **Claude the writer and builder roles**, which need
-the mwccarm behaviours and the gate traps.
+## Independent verifier
 
-## Safety rails to state in every launch
+> Read notes/agents/PIPELINE.md, roles/verifier.md, and queue-v2.md.
+> Accept the assigned task's exact offered input into your own verification
+> worktree. Confirm you did not produce it. Re-run the required proof and review
+> its source/provenance claims. Record commands, exit codes, tested source/base
+> SHAs, logs, and coverage limits. Return failures through the rework transition;
+> do not fix the candidate yourself or publish failed evidence as a pass.
+> Task: [issue URL and task ID].
 
-- Never `git worktree remove` — it deletes through the junctions and empties the
-  real `extracted/` ROM dump, which cannot be re-downloaded. Use
-  `~\.claude\skills\decomp-worktree\wt-remove.ps1`.
-- Never hand-edit `symbols/actor_renames.tsv` or
-  `notes/data/c-cpp-classification.tsv`. Row order is load-bearing.
-- Never force-push over a claim ref.
-- A near-miss never lands in `src/`.
+## Integrator
 
-## Watching it
+> Read notes/agents/PIPELINE.md, roles/integrator.md, and queue-v2.md.
+> Own the shared integration queue for the assigned accepted candidates.
+> Recheck candidate and main SHAs, compose compatible work in your own wired
+> worktree, reconcile shared bookkeeping once, and run the required composition
+> gates. Publish only the coherent reviewed result, monitor terminal validation,
+> and record the PR and merged-main SHA. Account for superseded work and
+> attribution before completing the task. Do not convert a pending check to a pass.
+> Assigned tasks: [task IDs and issue URLs].
 
-    python tools/classqueue.py list          # who holds what
-    gh pr list --state open --limit 40       # what is waiting on the validator
+## Specialists
+
+Scouts read [roles/scout.md](roles/scout.md); source reviewers read
+[roles/humanizer.md](roles/humanizer.md). They assist the producer or take an
+explicitly scheduled stage. They do not independently edit the producer's worktree.
+
+## Checking status
+
+Run these from the installed protocol/tool checkout:
+
+```powershell
+python tools/classqueue.py v2 list
+python tools/classqueue.py v2 next --role producer
+python tools/classqueue.py v2 next --role verifier
+gh pr list --repo tangosdev/sm64ds-decomp --state open --limit 100
+```
+
+Before initialization, `v2 list` is expected to refuse; use the read-only legacy
+inventory commands in CUTOVER. Private receipts remain in ignored local storage.
+A missing receipt or unreachable queue is a recovery task, not an invitation to
+claim a second copy of the work.

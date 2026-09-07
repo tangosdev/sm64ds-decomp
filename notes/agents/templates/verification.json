@@ -1,0 +1,29 @@
+{
+  "verdict": "unmeasured",
+  "tested_commit": "REPLACE_WITH_EXACT_ACCEPTED_INPUT_SHA",
+  "tested_base": "REPLACE_WITH_ACTUAL_TESTED_BASE_SHA",
+  "workflow_commit": "REPLACE_WITH_WORKFLOW_SHA",
+  "reviewer_session": "REPLACE_WITH_INDEPENDENT_SESSION",
+  "checks": [
+    {
+      "name": "REPLACE_WITH_REQUIRED_CHECK",
+      "command": "REPLACE_WITH_COMMAND",
+      "exit_code": null,
+      "result": "not_run",
+      "log": "REPLACE_WITH_DURABLE_LOG_REFERENCE",
+      "coverage_limits": []
+    }
+  ],
+  "source_review": {
+    "result": "not_run",
+    "remaining_work": [],
+    "attribution": "not_reviewed"
+  },
+  "pr_url": null,
+  "composition_commit": null,
+  "composition_base": null,
+  "composition_checks": [],
+  "composition_independent_verification": null,
+  "merged_main_sha": null,
+  "next_action": "Replace placeholders and run required proof; this template is not pass evidence."
+}
