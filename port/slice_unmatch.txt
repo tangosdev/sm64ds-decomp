@@ -1,0 +1,108 @@
+# SLICE UNMATCH -- run link100, lane UNMATCH, batch 1.
+#
+# Four host copies in port/unmatched whose stated reason is GONE. Three of them
+# are the same reason: lane SLOT5F's destructor unfold (include/ModelBase.h and
+# its six siblings now spell the ROM's D1/D0 pair as two plain virtuals under
+# _MSC_VER, so every host model-family table is ROM-numbered again). The fourth
+# is the trace-only copy that unfold left behind. Every row is verified BY ROM
+# ADDRESS against the word at its class vtable's own slot, and every one of the
+# three ruled bodies is REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt,
+# so inferred_stub_guard.py admits the seat.
+#
+# 1. src/_ZN14CutsceneObject6RenderEv.cpp
+#    RETIRES port/unmatched/CutsceneObject_Render.cpp (whole file).
+#    That file was the matched source plus a per-object render trace, and its
+#    one divergence -- a five-virtual shadow where the matched source has six --
+#    was SLOT5F's own stage-A regression, which it fixed by giving the shadow
+#    its sixth virtual. With that done the two files are the same body, so the
+#    matched one carries it and the trace goes: hal/actor_classes_intro.cpp's
+#    co_render already calls port_actor_render_probe on the same object.
+#    REFERRER: _ZTV14CutsceneObject[9] <- co_render (actor_classes_intro.cpp:638),
+#    which calls the cdecl face _ZN14CutsceneObject6RenderEv (same file, :655)
+#    onto the __thiscall method. ROM: from:0x0210bd84 (vtable 0x0210bd60 + 4*9)
+#    -> 0x020f80ac, symbols.txt _ZN14CutsceneObject6RenderEv
+#    kind:function(arm,size=0x118).
+src/_ZN14CutsceneObject6RenderEv.cpp
+
+# 2. src/func_ov012_02111324.cpp  (daObjC0_Switch_c::Render, SWITCH_PILLAR id 34)
+#    RETIRES port/unmatched/ModelAnim_Renders.cpp (whole file -- this was the
+#    last body left in it after SLOT5F's stage B took the other twenty-three).
+#    The source dispatches a plain Model at +0xd4 through a local six-virtual
+#    ROM-order shadow; with _ZTV5Model ROM-numbered, index 5 is Model::Render
+#    again. SLOT5F left it only because the source carries the "recovered from
+#    vtable slot identity" marker -- and it is ADJUDICATED:
+#    inferred_stub_adjudicated.txt:2326 REAL_DECOMP, match.py 2004/b56
+#    strict-reloc MATCH, 0 WRONG-DEST, 0 EXTRA.
+#    REFERRER: SwitchPillar's own host vtable data_ov012_02112344[9] <- sp_render
+#    (hal/actor_classes_ov012.cpp:214), which calls the C symbol directly, so no
+#    face is needed. ROM: from:0x02112368 (0x02112344 + 4*9) -> 0x02111324,
+#    kind:function(arm,size=0x28).
+src/func_ov012_02111324.cpp
+
+# 3. src/func_ov064_02117cfc.cpp  (daObjFl_Amilift_c::Render, METAL_NET_LIFT id 69)
+#    RETIRES the func_ov064_02117cfc body from port/unmatched/
+#    Ov064Gate178_States.cpp. THE FILE STAYS: its other bodies are the ov064
+#    pointer-to-member dispatchers and the gate-178 table seat, which are a
+#    different and still-live reason.
+#    Same shadow, same dead reason. ADJUDICATED at
+#    inferred_stub_adjudicated.txt:2366 REAL_DECOMP, strict-reloc MATCH.
+#    REFERRER: hal/actor_classes_ov064_gate178.cpp:306, a __fastcall slot-9
+#    thunk calling the C symbol directly -- no face needed. ROM:
+#    from:0x0211bc8c (data_ov064_0211bc68 + 4*9) -> 0x02117cfc,
+#    kind:function(arm,size=0x28).
+src/func_ov064_02117cfc.cpp
+
+# 4. src/func_ov100_0214542c.cpp  (daDoor_c::CleanupResources)
+#    RETIRES port/unmatched/Door_CleanupResources.cpp (whole file).
+#    The matched source deletes the door's second Model through a two-virtual
+#    shadow's v1() -- ROM slot 1, the DELETING destructor. That is exactly what
+#    hal/model_dtor_seat.cpp now seats: _ZTV5Model[1] = model_d0,
+#    _ZTV9ModelAnim[1] = modelanim_d0, _ZTV10ModelAnim2[1] = modelanim2_d0, the
+#    three classes port_model_family_delete was written to pick between. The
+#    host copy's port_model_family_delete(obj) call and the source's obj->v1()
+#    now reach the same body for all three, so the workaround has nothing left
+#    to work around; the Itanium D0 is D1 plus operator delete, which is what
+#    the helper did by hand.
+#    ADJUDICATED at inferred_stub_adjudicated.txt:2389 REAL_DECOMP, all 7 reloc
+#    slots destination-verified.
+#    REFERRER: hal/actor_classes.cpp:2143, a slot-3 thunk calling the C symbol
+#    directly -- no face needed. ROM: from:0x02148194 (data_ov100_02148188 +
+#    4*3) -> 0x0214542c, kind:function(arm,size=0x98).
+src/func_ov100_0214542c.cpp
+
+# THE FOUR THAT STAY, and why (SEAT3's census listed seven "already DEFINED as
+# host copies in port/unmatched"; three of them are above):
+#   func_ov060_02118254  unmatched/Ov060_StateDispatch.cpp -- REAL. The ov060
+#       record is the ROM's 8 bytes and MSVC's pointer-to-member for this TU's
+#       forward-declared-C class measures 16, re-measured at the wave-6 close
+#       with this build's compiler. A 16-byte stride over-steps by two records.
+#   func_ov064_02117220  unmatched/Bully_AfterClsn.cpp -- REAL. The matched TU
+#       re-declares Actor::Spawn and Actor::FindWithID at namespace scope after
+#       declaring them in its local shadow; MSVC rejects that with C2761.
+#   func_ov072_02120a44  unmatched/Snowman_InitResources.cpp -- REAL. The
+#       TextureSequence::Prepare register ride-through (the SHORT-1 argsweep
+#       row): the matched source calls a three-register method with two declared
+#       arguments and relies on r0-r2 riding through, which cdecl cannot do.
+#   func_ov098_02137d40  unmatched/ArrowSign_OnAttacked1.cpp -- REAL. The
+#       matched source's inner slot-31 dispatch leaves the VTABLE in ecx and
+#       pushes `this`, while the seated slot-31 veneer as_kill is __fastcall and
+#       reads `this` from ecx. Wrong receiver, listings quoted in the file.
+
+# 5. src/_ZN14CutsceneObject16CleanupResourcesEv.cpp
+#    RETIRES port/unmatched/CutsceneObject_CleanupResources.cpp (whole file).
+#    Found by asking the same question of the rest of the intro block: this is
+#    the third file whose one divergence is the fold. The matched source
+#    destroys both cutscene models through a two-virtual shadow's `m04` --
+#    index 1, the ROM's DELETING destructor -- and the host copy dropped the
+#    shadow's first virtual to reach the folded index 0. Both destructor slots
+#    of both cutscene model tables now hold the deleting half
+#    (hal/actor_classes_intro.cpp:591-597 writes co_model_d0 / co_modelanim_d0
+#    at [0] AND [1]), and those are __fastcall faces, which is what a shadow's
+#    virtual call emits. So index 1 reaches the right body with the right
+#    receiver and the copy has nothing left to change: it is otherwise the
+#    matched source line for line, the doubled `if (a)` included.
+#    REFERRER: _ZTV14CutsceneObject[3] <- co_cleanup (actor_classes_intro.cpp),
+#    which calls the cdecl face _ZN14CutsceneObject16CleanupResourcesEv onto the
+#    __thiscall method. ROM: from:0x0210bd6c (vtable 0x0210bd60 + 4*3) ->
+#    0x020f8028, kind:function(arm,size=0x80).
+src/_ZN14CutsceneObject16CleanupResourcesEv.cpp

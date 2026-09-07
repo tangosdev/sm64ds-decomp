@@ -42,7 +42,10 @@
 #   src/func_ov012_02111324.cpp -- SwitchPillar's own Render, the same
 #     collision, but its source carries the "recovered from vtable slot
 #     identity" GUESS marker. inferred_stub_guard.py refuses new seats of
-#     those, so its host copy stays in unmatched/ModelAnim_Renders.cpp.
+#     those. RETIRED anyway by run link100 lane UNMATCH: the body IS
+#     adjudicated (inferred_stub_adjudicated.txt:2326 REAL_DECOMP), so the
+#     guard admits the seat. port/slice_unmatch.txt carries it and
+#     unmatched/ModelAnim_Renders.cpp is gone.
 #   src/_ZN6Snufit6RenderEv.cpp, src/_ZN5Swoop6RenderEv.cpp,
 #     src/_ZN6Dorrie6RenderEv.cpp, src/_ZN9MontyMole6RenderEv.cpp -- the same
 #     collision and worth four more, but their fills route to

@@ -1,20 +1,20 @@
 /* HOST COPIES for gate 178's two ov064 riders, METAL_NET_LIFT (69,
  * daObjFl_Amilift_c) and LAVA_BUBBLE (214, daBbl_c):
- *   - the Amilift Render func_ov064_02117cfc (the ModelAnim/Model slot-5 shadow
- *     collision, the Whomp/Scuttlebug case),
+ *   - the Amilift Render func_ov064_02117cfc -- RETIRED, run link100 lane
+ *     UNMATCH; the slot-5 shadow collision died with SLOT5F's unfold,
  *   - the two PMF-dispatching bodies of each class, and
  *   - the seat of the two source PMF tables their sinits copy into bss.
  *
  * WHY THESE ARE HOST COPIES, NOT SLICED
  * -------------------------------------
- * 1. func_ov064_02117cfc dispatches its model's slot 5 through a LOCAL six-
- *    virtual shadow struct whose sixth method takes an int (`Base *b = &d->base;
- *    b->m(0)`, Model at +0xd4). The host _ZTV5Model / _ZTV9ModelAnim are MSVC-
- *    ordered (one dtor slot where Itanium spends two), so ROM slot 5 lands on
- *    Virtual18 and reads a null matrix -> c0000005. The fix is to dispatch the
- *    qualified Model::Render, exactly as unmatched/ModelAnim_Renders.cpp does for
- *    Whomp/Bully/RotatingFirebar. (Kept in this file rather than appended to
- *    ModelAnim_Renders.cpp because gate 178 must add no lines to existing files.)
+ * 1. func_ov064_02117cfc RETIRED, run link100 lane UNMATCH. It dispatched its
+ *    model's slot 5 through a LOCAL six-virtual shadow struct whose sixth
+ *    method takes an int (`Base *b = &d->base; b->m(0)`, Model at +0xd4), and
+ *    the host _ZTV5Model / _ZTV9ModelAnim were MSVC-ordered (one dtor slot
+ *    where Itanium spends two), so ROM slot 5 landed on Virtual18 and read a
+ *    null matrix -> c0000005. Lane SLOT5F respelled the destructor pair under
+ *    _MSC_VER; the tables are ROM-numbered and the matched source needs no
+ *    help. See the block below where the copy used to be.
  *
  * 2. func_ov064_02117d24, func_ov064_021187ec and _ZN10LavaBubble8BehaviorEv all
  *    invoke an mwcc pointer-to-member: `(obj->*pmf)()`. On MSVC that is a
@@ -52,17 +52,17 @@
 
 extern "C" {
 
-/* ---- METAL_NET_LIFT (69) Render: the slot-5 collision -----------------------
-   src/func_ov064_02117cfc.cpp: `Derived{ char pad[0xd4]; Base base; }` shadow,
-   Model at +0xd4, dispatched as slot 5. Spelled qualified. */
-/* PORT_HOST_ABI: ModelAnim/Model slot-5 shadow-vtable dispatch (MSVC folds
-   the dtor slot, ROM slot 5 lands on Virtual18); the Whomp/Fish case. */
-int func_ov064_02117cfc(void *selfv)
-{
-    /* PORT_HOST_ABI: ROM-order Model slot-5 dispatch, the Whomp/Fish case. */
-    ((Model *)((char *)selfv + 0xd4))->Model::Render(0);
-    return 1;
-}
+/* ---- METAL_NET_LIFT (69) Render: RETIRED (run link100, lane UNMATCH) --------
+   The copy that stood here dispatched Model::Render qualified because the
+   folded host table put Virtual18 on the slot the matched source means. Lane
+   SLOT5F's destructor unfold ROM-numbers _ZTV5Model, so the source's own
+   six-virtual shadow reaches Render at index 5 again and there is nothing left
+   to spell differently. src/func_ov064_02117cfc.cpp carries it now, in
+   port/slice_unmatch.txt; the reloc is from:0x0211bc8c (data_ov064_0211bc68 +
+   4*9) -> 0x02117cfc and the body is ADJUDICATED REAL_DECOMP at
+   port/tools/inferred_stub_adjudicated.txt:2366. The fill at
+   hal/actor_classes_ov064_gate178.cpp:306 calls the C symbol by name, so it is
+   unchanged. Model.h stays included: the seat below reads it too. */
 
 /* record layout of every ov064 gate-178 PMF table: the ROM's 8-byte { fn, delta }
    with delta 0. */
