@@ -74,22 +74,20 @@ main on merge; that exact failure happened to the converted ratchet on 2026-08-3
 
 SECTIONS, AND THE HONEST STORY ABOUT ROM DATA
 ----------------------------------------------
-This counts EVERY section a `complete` entry names, not just `.text`. Today that is
-`.text` (10,893 entries) and `.init` (305) -- `.init` is `kind:code`, is compiled from
-`src/` exactly like `.text`, and a `.text`-only tool would let 305 entries' worth of
-ARM9 init code be handed back in silence. Sections are counted and reported separately
-so a future data delink is picked up with no change here.
+This counts EVERY section a `complete` entry names, not just `.text`. That includes
+`.init`, and now also the `.data`, `.ctor` and `.bss` ranges owned by promoted intact
+translation units. Sections are counted and reported separately, so a non-text claim
+cannot disappear behind growth in code coverage.
 
-ROM DATA IS NOT COVERED, AND CANNOT BE COVERED HERE. As of this writing NO delinks entry
-in this tree names a `.rodata`, `.data` or `.bss` range -- the census above is the whole
-of it. Vtables, typeinfo and every other data symbol reach the ROM through `dsd`'s gap
-objects, i.e. from the cartridge, and `tools/objisolate.py` zeroes them out of the
-compiled object on purpose. So there is no "source-built data byte" for this tool to
-count, and a reader must not read a green result here as data coverage. Data
-verification is a genuinely different measurement with a genuinely different tool:
-`tools/romdata_check.py` compares emitted data symbols against the cartridge, and
-`validate_merge` ratchets its verified-symbol count. Nothing in this file substitutes
-for that, and nothing in that file substitutes for this.
+MOST ROM DATA IS STILL NOT SOURCE-BUILT. Ordinary per-function objects have their
+compiler-emitted vtables, typeinfo and other content measured and then isolated away;
+DSD gap objects supply those addresses from the cartridge. Promoted intact TUs are the
+exception: their explicitly licensed non-text ranges carry `complete` and therefore do
+count here. `tools/romdata_check.py` separately compares compiler-emitted data symbols
+even when they are not linked from source. A green result here means no previously
+source-owned range was handed back; it does not mean the build contains no retail-gap
+bytes. Nothing in this file substitutes for emitted-data verification, and nothing in
+that measurement substitutes for source ownership.
 
 HOW TO OVERRIDE WHEN A DECREASE IS LEGITIMATE
 ----------------------------------------------
