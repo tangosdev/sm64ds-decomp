@@ -31,16 +31,12 @@ int _ZN10CheepCheep6RenderEv(void *selfv)
 struct PortOv090Pmf { unsigned int fn; int delta; };
 typedef int (*PortOv090StateFn)(void *);
 
-/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class. */
-int func_ov090_021332e8(void *cv, void *pv)   /* record 0, the ENTER half */
-{
-    *(void **)((char *)cv + 0x370) = pv;
-    PortOv090Pmf *q = (PortOv090Pmf *)pv;
-    if (q[0].fn == 0)
-        return 1;
-    return ((PortOv090StateFn)(size_t)q[0].fn)(cv);
-}
-
+/* func_ov090_021332e8 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov090_021332e8.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 int  _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *wm);
 void _ZN12CylinderClsn5ClearEv(void *c);
 void _ZN12CylinderClsn6UpdateEv(void *c);

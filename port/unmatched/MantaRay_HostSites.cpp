@@ -55,15 +55,17 @@ int _ZN8MantaRay6RenderEv(void *selfv)
 struct PortOv090Pmf { unsigned int fn; int delta; };
 typedef int (*PortOv090StateFn)(void *);
 
-/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class. */
-int func_ov090_02132ac4(void *cv, void *pv)   /* record 0, the ENTER half */
-{
-    *(void **)((char *)cv + 0x370) = pv;
-    PortOv090Pmf *q = (PortOv090Pmf *)pv;
-    if (q[0].fn == 0)
-        return 1;
-    return ((PortOv090StateFn)(size_t)q[0].fn)(cv);
-}
+/* func_ov090_02132ac4 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov090_02132ac4.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
+/* MantaRay::InitResources further down still CALLS it, and the deleted body was
+   also its only declaration in this TU, so it is declared here instead. Same
+   shape the removed body had; the matched TU spells the parameters (C *, PMF *)
+   and both are one pointer, cdecl, extern "C". */
+int func_ov090_02132ac4(void *cv, void *pv);
 
 struct MrVec3 { int x, y, z; };
 

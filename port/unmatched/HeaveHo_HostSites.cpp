@@ -71,17 +71,13 @@ int _ZN7HeaveHo6RenderEv(void *selfv)
 }
 
 /* ---- (2) the state setter + enter dispatch ----------------------------- */
-/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class. */
-int func_ov077_02126d5c(void *cv, void *pv)
-{
-    char *c = (char *)cv;
-    *(void **)(c + 0x3fc) = pv;
-    PortOv077Pmf *q = *(PortOv077Pmf **)(c + 0x3fc);
-    if (q[0].fn == 0)
-        return 1;
-    return ((PortOv077StateFnI)(size_t)q[0].fn)(cv);
-}
 
+/* func_ov077_02126d5c IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov077_02126d5c.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 /* ---- (3) Behavior ------------------------------------------------------ */
 unsigned short DecIfAbove0_Short(unsigned short *p);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);

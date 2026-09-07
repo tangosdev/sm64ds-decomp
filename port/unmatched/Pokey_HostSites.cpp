@@ -118,24 +118,21 @@ int *_ZN5PokeyD1Ev(int *t)
 }
 
 /* ---- (2) the ENTER dispatch -------------------------------------------- */
-/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class. */
-void func_ov096_021368f0(void *cv)
-{
-    char *c = (char *)cv;
-    PortOv096Pmf *p = *(PortOv096Pmf **)(c + 0x384);
-    ((PortOv096StateFn)(size_t)p[0].fn)(cv);
-}
 
+/* func_ov096_021368f0 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov096_021368f0.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 /* ---- (3) the TICK dispatch --------------------------------------------- */
-/* PORT_HOST_ABI: the same, plus the ROM 8-byte record stride MSVC widens to
-   16. `c->pp + 1` in the matched source is record[1], the tick half. */
-void func_ov096_021368b4(void *cv)
-{
-    char *c = (char *)cv;
-    PortOv096Pmf *p = *(PortOv096Pmf **)(c + 0x384);
-    ((PortOv096StateFn)(size_t)p[1].fn)(cv);
-}
 
+/* func_ov096_021368b4 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov096_021368b4.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 /* ---- (4) THE FALL-OFF-THE-END BODY -------------------------------------
  * src/func_ov096_02135e2c.cpp is declared `int` and has NO return statement.
  * mwccarm accepts that and lets r0 carry whatever the last call left;

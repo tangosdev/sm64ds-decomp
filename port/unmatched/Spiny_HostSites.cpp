@@ -91,18 +91,17 @@ int _ZN5Spiny6RenderEv(void *selfv)
 struct PortOv077Pmf { unsigned int fn; int delta; };
 typedef void (*PortOv077StateFn)(void *);
 
-/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class. */
-void func_ov077_02125e5c(void *cv)   /* cell[0], the ENTER half */
-{
-    PortOv077Pmf *p = *(PortOv077Pmf **)((char *)cv + 0x3d0);
-    ((PortOv077StateFn)(size_t)p[0].fn)(cv);
-}
+/* func_ov077_02125e5c IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov077_02125e5c.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class. */
-void func_ov077_02125e20(void *cv)   /* cell[1], the TICK half */
-{
-    PortOv077Pmf *p = *(PortOv077Pmf **)((char *)cv + 0x3d0);
-    ((PortOv077StateFn)(size_t)p[1].fn)(cv);
-}
-
+/* func_ov077_02125e20 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov077_02125e20.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 }  /* extern "C" */

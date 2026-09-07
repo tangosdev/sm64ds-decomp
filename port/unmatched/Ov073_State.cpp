@@ -99,29 +99,20 @@ static int ov73_pmf_call(char *self, int *rec)
 }
 
 /* ---- the two dispatchers -------------------------------------------------- */
-/* PORT_HOST_ABI: ROM {function, adj} record decode; MSVC's pointer-to-member
-   for this shape is 16 bytes and __thiscall. */
-int func_ov073_021223a4(void *cv, void *pv)          /* CccArena, member 0x320 */
-{
-    char *c = (char *)cv;
-    *(void **)(c + 0x320) = pv;
-    int *rec = *(int **)(c + 0x320);
-    if (rec[0] == 0)
-        return 1;
-    return ov73_pmf_call(c, rec);
-}
-/* PORT_HOST_ABI: ROM {function, adj} record decode; MSVC's pointer-to-member
-   for this shape is 16 bytes and __thiscall. */
-int ChiefChilly_ChangeState(void *cv, void *pv)      /* ChiefChilly, 0x37c */
-{
-    char *c = (char *)cv;
-    *(void **)(c + 0x37c) = pv;
-    int *rec = *(int **)(c + 0x37c);
-    if (rec[0] == 0)
-        return 1;
-    return ov73_pmf_call(c, rec);
-}
 
+/* func_ov073_021223a4 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov073_021223a4.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
+
+/* ChiefChilly_ChangeState IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/ChiefChilly_ChangeState.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 }  /* extern "C" */
 
 /* ---- ChiefChilly::Behavior, the matched TU with the dispatch corrected ----

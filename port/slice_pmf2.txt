@@ -1,0 +1,245 @@
+# run link100 lane PMF2: THE FREE POINTER-TO-MEMBER SET, MEASURED ROW BY ROW.
+#
+# Twenty-eight matched TUs that were host-copied for exactly one reason -- MSVC's
+# pointer-to-member representation did not match mwcc's -- come back onto the
+# slice. The twenty-eight host bodies they replace are removed in the same
+# commit, eight of them as whole files. Same one-owner contract as every other
+# slice here: a symbol is defined by the matched TU or by a host copy, never
+# both.
+#
+# ---- WHAT CHANGED, AND WHY THAT IS NOT AN ARGUMENT BUT A MEASUREMENT --------
+#
+# port/CMakeLists.txt block R8 now carries
+#
+#     add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/vmg> $<...:/vmm>)
+#
+# target-wide (run link100 lane PMF, commit 59b1bc243). /vmg /vmm tells MSVC to
+# use the MULTIPLE-INHERITANCE representation for a pointer-to-member declared
+# before its class, which is {void *function; int delta;} -- eight bytes, the
+# ROM's own record, with a call that adds delta to `this` and calls function.
+# Before that flag the same declaration was four bytes (single inheritance) or
+# sixteen (unknown inheritance), which is why every TU below was host-copied.
+#
+# THE FORM IS NOT ASSUMED. Every one of the twenty-eight was compiled on
+# 2026-09-07 with the port's own flags, read out of build.ninja rather than
+# retyped:
+#
+#     cl /c /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MT /Oy-
+#        /vmg /vmm /wd4311 /wd4312 /wd4068 -DSM64DS_PLATFORM_PC /FAs
+#
+# and the emitted body classified from its own /FAs listing. All twenty-eight
+# are a TAIL JUMP -- `pop ebp` and then `jmp` through a register, no `call`.
+# The listings are archived at runs/link100/out/PMF2/listings/.
+#
+#   the pure forwarder, src/func_ov096_021368f0.cpp:
+#       push ebp / mov ebp,esp
+#       mov  eax, [ebp+8]          ; c
+#       mov  edx, [eax+900]        ; c->pp
+#       mov  ecx, [edx+4]          ; delta
+#       add  ecx, eax              ; ecx = this + delta
+#       mov  eax, [edx]            ; function
+#       pop  ebp
+#       jmp  eax
+#
+#   the setter plus null guard, src/func_ov073_021223a4.cpp:
+#       push ebp / mov ebp,esp
+#       mov  ecx, [ebp+12]         ; p
+#       mov  eax, [ebp+8]          ; c
+#       mov  [eax+800], ecx        ; c->pp = p
+#       mov  edx, [ecx]            ; function
+#       test edx, edx
+#       jne  SHORT $LN2
+#       mov  eax, 1 / pop ebp / ret 0        ; the ROM's own early out
+#     $LN2:
+#       mov  ecx, [ecx+4]          ; delta
+#       add  ecx, eax
+#       pop  ebp
+#       jmp  edx
+#
+# `pop ebp` BEFORE the jump in both, so the caller's own cdecl frame survives
+# and the object the caller pushed is still at [esp+4] for the seated cdecl
+# body, while ecx carries this+delta for anything that wants a thiscall
+# receiver. The extra `p` parameter of the guard form sits at [esp+8] and the
+# callee never reads it. This is the property wave 18 measured and
+# port/tools/tailjump_guard.py exists for; see THE GUARD GAP at the bottom.
+#
+# ---- THE DELTA IS ZERO, PROVEN PER TABLE, NOT ASSUMED ----------------------
+#
+# The one place MSVC and the ROM can disagree is the adjustment. The ROM adds
+# `adj >> 1` to `this` and uses bit 0 to mean "the function word is a vtable
+# BYTE OFFSET"; MSVC adds delta WHOLE and has no virtual arm at all in this
+# form. At delta 0 the two are the same instruction sequence. At any nonzero
+# delta they are not, and the difference is silent.
+#
+# So no row is on this slice unless the seat that FILLS its {function, delta}
+# records aborts the binary on a nonzero delta, on every boot, before any actor
+# can dispatch. That is not a new check written for this lane -- it is the
+# check the port already had, because every one of these tables holds DS .text
+# addresses that a mount cannot rebase, so a host seat has to rewrite the
+# function word anyway and each one verifies the record it is about to touch.
+# The seats, and what each covers:
+#
+#   hal/actor_classes_ov030.cpp   port_ukiki_states_seat        11 cells x 2
+#   hal/actor_classes_ov072.cpp   BabyPenguin + Snowman seats   6 + 6 cells x 2
+#   hal/actor_classes_ov077.cpp   port_ov077_states_seat        32 records
+#                                 (Lakitu 10, Spiny 12, HeaveHo 10)
+#   hal/actor_classes_ov096.cpp   port_ov096_states_seat        Pokey, 12 records
+#   unmatched/Ov073_State.cpp     port_ov073_states_seat        40 records
+#   hal/actor_classes_ov026.cpp   port_ov026_pmf_seat            6 source pairs
+#   hal/actor_classes_ov032.cpp   BUBBA state seat               5 cells x 2
+#   unmatched/Ov065_StateDispatch.cpp  port_ov065_states_seat    Snufit + Swoop
+#   hal/actor_classes_ov066.cpp   port_eyerok_states_seat       19 cells x 2
+#   hal/actor_classes_ov081.cpp   port_mr_blizzard_states_seat  10 cells x 2
+#   hal/actor_classes_ov090.cpp   port_ov090_states_seat        Skeeter 8, MantaRay 2,
+#                                 CheepCheep 4, Shark 2
+#   hal/actor_classes_ov091.cpp   port_ov091_states_seat        9 records (3 lift,
+#                                 6 Fwoosh -- 02134044 is Fwoosh's enter setter)
+#   unmatched/UnchainedChomp_Behavior.cpp  chomp state seat
+#
+# Each of those reads, in its own words, "the ROM's own records say %08x/0" and
+# calls std::abort() if the delta word is not zero. THE VIRTUAL ARM GOES WITH
+# IT: bit 0 of the delta is part of the same word, so a record that would take
+# the ROM's virtual path (`ands r1,r1,#1`) has a nonzero delta and the seat
+# stops the binary before the dispatcher can be reached. Two of the host bodies
+# removed here (Ov073_State.cpp's ov73_pmf_call, Bubba_StateEnter.cpp)
+# transcribed that virtual arm faithfully; it is provably dead on these tables,
+# and this slice records that rather than leaving it implied. A future table
+# with a live virtual member pointer CANNOT come onto this slice -- see the
+# residue note at the bottom.
+#
+# ---- THE ROM'S OWN REFERENCE GRAPH REACHES EVERY ROW -----------------------
+#
+# Each row's host copy existed because something calls it; the caller does not
+# change. Referrers, all already linked, one per row (the full audit with every
+# referrer per symbol is runs/link100/out/PMF2/audit.txt):
+#
+#   func_ov030_02114134  <- unmatched/Ukiki_Behavior.cpp (RollingLogTtm::Behavior)
+#   func_ov030_02114170  <- src/func_ov030_021141a8.c
+#   func_ov072_0211fc78  <- src/func_ov072_0211fcb0.c
+#   func_ov072_0211fc3c  <- src/_ZN11SnowmanBody8BehaviorEv.cpp
+#   func_ov072_0212059c  <- src/func_ov072_021205d4.c
+#   func_ov072_02120560  <- src/_ZN11SnowmanHead8BehaviorEv.cpp
+#   func_ov077_02124754  <- src/func_ov077_0212478c.c
+#   func_ov077_02124718  <- src/_ZN6Lakitu8BehaviorEv.cpp
+#   func_ov077_02125e5c  <- src/func_ov077_02125e94.c
+#   func_ov077_02125e20  <- src/_ZN5Spiny8BehaviorEv.cpp
+#   func_ov096_021368f0  <- src/func_ov096_02136928.c
+#   func_ov096_021368b4  <- src/_ZN5Pokey8BehaviorEv.cpp
+#   ChiefChilly_ChangeState <- src/_ZN11ChiefChilly13InitResourcesEv.cpp and
+#                              fifteen more ov073 state bodies
+#   func_ov073_021223a4  <- src/_ZN8CccArena13InitResourcesEv.cpp
+#   func_ov026_02111ee0  <- src/_ZN9Submarine13InitResourcesEv.cpp
+#   func_ov026_021122d4  <- src/_ZN12WaterSuction13InitResourcesEv.cpp
+#   func_ov032_02111ff4  <- src/func_ov032_02111620.cpp and five more
+#   func_ov065_0211691c  <- src/_ZN6Snufit13InitResourcesEv.cpp
+#   func_ov065_02117944  <- src/_ZN5Swoop13InitResourcesEv.cpp
+#   func_ov066_02119454  <- src/_ZN6Eyerok13InitResourcesEv.cpp and eighteen more
+#   func_ov077_02126d5c  <- src/_ZN7HeaveHo13InitResourcesEv.cpp
+#   func_ov081_02125488  <- src/_ZN10MrBlizzard13InitResourcesEv.cpp
+#   func_ov090_02131e00  <- src/_ZN7Skeeter13InitResourcesEv.cpp
+#   func_ov090_02132ac4  <- unmatched/MantaRay_HostSites.cpp (InitResources)
+#   func_ov090_021332e8  <- src/_ZN10CheepCheep13InitResourcesEv.cpp
+#   func_ov090_021338b4  <- src/_ZN5Shark13InitResourcesEv.cpp
+#   func_ov091_02134044  <- src/_ZN5Stump13InitResourcesEv.cpp
+#   func_ov100_02143b18  <- unmatched/UnchainedChomp_Behavior.cpp (InitResources)
+#
+# ---- WHAT IS NOT HERE, AND THE MECHANISM THAT KEEPS IT OUT -----------------
+#
+# (1) THE EXTRA-ARGUMENT SETTERS. src/func_ov055_021112c4.cpp (MirrorLuigi) and
+#     src/func_ov100_021453d8.cpp (Door) are the same guard shape with one more
+#     parameter: `return (c->**q)(a2);`. Measured under the same flags they do
+#     NOT tail jump -- MSVC pushes a2 and emits `call edx`, so at the callee
+#     [esp+4] is a2 and the cdecl seat would read the state argument as `this`.
+#     A real fault, not a width one. Both stay host copies.
+#
+# (2) THE INDEXED-TABLE FAMILY, sixteen TUs of the shape
+#         struct Entry { PMF pmf[2]; };  extern Entry data_ovNNN_xxxxxxxx[];
+#         f(C *c, int i) { c->idx = i; (c->*data[c->idx].pmf[0])(); }
+#     They tail jump too, all sixteen, measured. They are held back for a
+#     DIFFERENT reason: `data_ovNNN_xxxxxxxx` is declared outside extern "C" in
+#     those TUs, so MSVC mangles it (?data_ov084_02130dc4@@3PAUEntry@@A) and it
+#     will not resolve against the mounted C-linkage symbol. That is alias work
+#     with its own risk (port/tools/alternatename_guard.py's subject), not
+#     width work, and it belongs to whoever takes it with a measured before and
+#     after.
+#
+# (3) src/func_ov018_0211235c.cpp is a pure forwarder with NO host copy and NO
+#     caller anywhere in the binary -- nothing defines or references the symbol
+#     except one prose mention in unmatched/Ov070_PmfDispatch.cpp. Adding it
+#     would raise the count without the ROM's reference graph reaching it, so
+#     it is deliberately left off.
+#
+# (4) THE VIRTUAL MEMBER POINTERS. data_02099e74/e9c/ecc are {0x24,1} {0x28,1}
+#     {0x2c,1}: a vtable BYTE OFFSET with bit 0 set. MSVC's virtual
+#     pointer-to-member puts a VCALL THUNK ADDRESS in the code word instead, so
+#     no /vm setting maps one onto the other. port/unmatched/func_0204322c_hostcopy.cpp
+#     resolves them by hand and stays. Lane PMF measured this; this lane did not
+#     re-measure it and does not need to, because no row here reads that table.
+#
+# (5) hal/cutscene_states_link100.cpp's ten readers declare no pointer-to-member
+#     at all -- they read raw {fn, delta} words -- so the flag cannot reach them
+#     and they are not part of this family however they look.
+#
+# ---- THE GUARD GAP, STATED PLAINLY ----------------------------------------
+#
+# port/tools/tailjump_guard.py asserts these forms over the maps and its
+# fixture battery is unchanged by this commit. It could NOT be extended with
+# these twenty-eight rows: its mechanism is "an E8 or E9 rel32 in the frame's
+# own map span, resolved against the callee's address", and every row here
+# jumps through a REGISTER (FF E0 / FF E2) to a seated table word, which has no
+# rel32 and no statically known callee. The property still matters -- /Od,
+# /Ob0, or one more statement in any of these TUs turns the jump into a call
+# and every affected seat starts reading the wrong `this` in the same build --
+# so the gap is written here rather than papered over. Closing it needs a
+# different check (the frame's last instruction is an indirect jump and the
+# frame contains no call), which is a tool change with its own fixtures, not an
+# assertion row.
+#
+# ---- STALE PROSE THIS COMMIT CREATES, FOR WHOEVER OWNS THOSE FILES ---------
+#
+# Eight host files are deleted and several other lanes' comment blocks still
+# name them as the standing exemplar. They are comments, they do not affect the
+# build, and they belong to other lanes' gates, so this lane records them
+# instead of editing them:
+#   port/CMakeLists.txt:1945          names unmatched/Snowman_StateDispatch.cpp
+#   port/slice_gate193.txt:206        the same file, "ALL FOUR PMF DISPATCHERS"
+#   port/slice_gate192.txt            names unmatched/MrBlizzard_StateDispatch.cpp
+#   port/slice_ov030cast.txt:71       names unmatched/Ukiki_StateTick.cpp
+#   port/slice_ov066.txt:43           the Ukiki_StateTick shape, and the
+#                                     Eyerok_StateEnter row above it
+#   port/slice_sweep2_ov032.txt       names unmatched/Bubba_StateEnter.cpp
+#   port/slice_sweep2_ov055.txt       names unmatched/Ukiki_StateEnter.cpp
+#   port/slice_ov026cast.txt          names both ov026 dispatch host copies
+#
+# ---- THE TWENTY-EIGHT ------------------------------------------------------
+#
+# pure forwarder, pp + 0 and pp + 1
+src/func_ov030_02114134.cpp
+src/func_ov030_02114170.cpp
+src/func_ov072_0211fc3c.cpp
+src/func_ov072_0211fc78.cpp
+src/func_ov072_02120560.cpp
+src/func_ov072_0212059c.cpp
+src/func_ov077_02124718.cpp
+src/func_ov077_02124754.cpp
+src/func_ov077_02125e20.cpp
+src/func_ov077_02125e5c.cpp
+src/func_ov096_021368b4.cpp
+src/func_ov096_021368f0.cpp
+# setter plus null guard
+src/ChiefChilly_ChangeState.cpp
+src/func_ov073_021223a4.cpp
+src/func_ov026_02111ee0.cpp
+src/func_ov026_021122d4.cpp
+src/func_ov032_02111ff4.cpp
+src/func_ov065_0211691c.cpp
+src/func_ov065_02117944.cpp
+src/func_ov066_02119454.cpp
+src/func_ov077_02126d5c.cpp
+src/func_ov081_02125488.cpp
+src/func_ov090_02131e00.cpp
+src/func_ov090_02132ac4.cpp
+src/func_ov090_021332e8.cpp
+src/func_ov090_021338b4.cpp
+src/func_ov091_02134044.cpp
+src/func_ov100_02143b18.cpp

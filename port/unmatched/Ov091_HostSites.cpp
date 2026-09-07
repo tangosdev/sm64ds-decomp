@@ -206,16 +206,13 @@ extern "C" int _ZN22RotatingUpDownPlatform8BehaviorEv(void *self)
  * words. Here it stores the record-array pointer at +0x364 the way the ROM
  * does and dispatches record[0]'s fn word with an explicit self.
  * ========================================================================== */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch; PMF over the incomplete C is MSVC's 16-byte unknown-inheritance form, so the record's fn word is dispatched with explicit self
-extern "C" int func_ov091_02134044(void *c, void *p)
-{
-    *(void **)((char *)c + 0x364) = p;
-    Ov091PmfRec *q = (Ov091PmfRec *)*(void **)((char *)c + 0x364);
-    if (q->fn == 0)
-        return 1;
-    return ((int (*)(void *))(size_t)q->fn)(c);
-}
 
+/* func_ov091_02134044 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov091_02134044.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 /* ==========================================================================
  * (1c) Stump::Behavior -- FWOOSH's tick half.
  *

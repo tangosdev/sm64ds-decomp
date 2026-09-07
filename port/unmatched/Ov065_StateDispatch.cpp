@@ -136,22 +136,17 @@ extern "C" void port_ov065_states_seat(void)
  * Snufit's Behavior reads the SECOND record of the same table (+8) -- the
  * pair is {enter/act, per-frame} -- so the two dispatchers together cover
  * both words the seat rewrote. */
-/* PORT_HOST_ABI: mwcc pointer-to-member over a forward-declared class --
-   MSVC's 16-byte general form reads garbage adjustment fields. */
-extern "C" int func_ov065_0211691c(char *c, unsigned *table)
-{
-    *(unsigned **)(c + 0x3bc) = table;
-    if (table[0] == 0)
-        return 1;
-    return ((int (*)(char *))table[0])(c);
-}
 
-/* ---- func_ov065_02117944, HOST COPY: Swoop's twin at +0x420 ---------------- */
-/* PORT_HOST_ABI: same mwcc pointer-to-member form as func_ov065_0211691c. */
-extern "C" int func_ov065_02117944(char *c, unsigned *table)
-{
-    *(unsigned **)(c + 0x420) = table;
-    if (table[0] == 0)
-        return 1;
-    return ((int (*)(char *))table[0])(c);
-}
+/* func_ov065_0211691c IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov065_0211691c.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
+
+/* func_ov065_02117944 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov065_02117944.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */

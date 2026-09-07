@@ -314,19 +314,13 @@ static int port_chomp_call(const PortPmf *p, void *self)
 
 /* HOST COPY of src/func_ov100_02143b18.cpp: seat the Holder at +0x668 and run
    its word-0 (lo) pointer-to-member immediately, the InitResources-time call. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" int func_ov100_02143b18(void *selfv, void *holder)
-{
-    char *c = (char *)selfv;
-    *(void **)(c + 0x668) = holder;
-    {
-        const PortPmf *p = (const PortPmf *)*(void **)(c + 0x668);   /* -> lo */
-        if (p->fn == 0)
-            return 1;
-        return port_chomp_call(p, c);
-    }
-}
 
+/* func_ov100_02143b18 IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
+   src/func_ov100_02143b18.cpp back on port/slice_pmf2.txt: with /vmg /vmm global (the
+   R8 block in port/CMakeLists.txt) MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the matched TU compiles to the same
+   tail jump this body was -- measured, listing in that slice's header.
+   The reading above is kept because it is the derivation. */
 /* HOST COPY of src/_ZN14UnchainedChomp8BehaviorEv.cpp. The one PMF dispatch
    (Holder+8, the hi pair) is spelled as a resolved plain call; everything else
    is the matched source line for line. */
