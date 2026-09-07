@@ -191,6 +191,17 @@ src/__sinit_ov072_02122414.c
 # is in the host chains too, and it is a no-op re-store of the host array.
 # Both stay byte-locked in src/ as the matched proof.
 #
+# CORRECTION, run link100 lane PMF: THE EXEMPLAR THIS BLOCK POINTS AT IS GONE.
+# port/unmatched/BabyPenguin_StateEnter.cpp is DELETED and
+# src/func_ov072_02121d18.cpp is on port/slice_w18a.txt, because /vmg /vmm is
+# now global (port/CMakeLists.txt, above R8) and MSVC's member pointer IS the
+# ROM's 8-byte {function, delta} pair. So the sentence below about "the unknown
+# inheritance form" is no longer true of this build, and the appeal to
+# BabyPenguin as measured precedent now argues the OTHER way. Snowman's four
+# are still host copies -- this lane took only the two dispatchers that had a
+# same-table sibling already linked and green -- but they are host copies
+# awaiting a measurement now, not host copies for a live reason.
+#
 # ALL FOUR PMF DISPATCHERS ARE HOST COPIES, the BabyPenguin_StateEnter
 # treatment, in port/unmatched/Snowman_StateDispatch.cpp:
 #   func_ov072_0211fc78  SnowmanBody enter (pp+0)   pad 0x38c

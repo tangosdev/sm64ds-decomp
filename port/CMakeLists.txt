@@ -14,6 +14,113 @@ set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MAP")
 add_compile_options(/Oy-)
 
+# THE mwcc POINTER-TO-MEMBER WIDTH, run link100 lane PMF.
+#
+# mwccarm's pointer-to-member-function is always the EIGHT-byte {code,
+# this-adjust} pair the ROM's five-instruction dispatch reads (the sequence is
+# disassembled verbatim in unmatched/MgBase_StateDispatch.cpp section 1). MSVC's
+# default "best case" representation is not, and it is wrong in TWO OPPOSITE
+# DIRECTIONS at once, which is why no single narrowing ever fixed it: FOUR bytes
+# for a complete single-inheritance class, SIXTEEN for a class that is only ever
+# forward-declared.
+#
+# MEASURED on this box's compiler (cl 19.44.35228 for x86), not inherited:
+#
+#   representation             none  /vms  /vmm  /vmv  /vmg  /vmg+/vmm   ROM
+#   PMF complete single-inh       4     4     4     4    16          8     8
+#   PMF complete multiple-inh     8     8     8     8    16          8     8
+#   PMF complete + vtable         4     4     4     4    16          8     8
+#   PMF forward-declared only    16    16    16    16    16          8     8
+#   PMD complete single-inh       4     4     4     4    12          4     4
+#   PMD forward-declared only    12    12    12    12    12          4     4
+#
+# READ THE /vmm COLUMN. ON ITS OWN THE FLAG IS INERT -- every entry under it is
+# the default entry. /vms, /vmm and /vmv only choose the worst case that /vmg's
+# general representation has to cover, so the PAIR is what lands, and it lands
+# every pointer-to-member on the ROM's own width, data members included. /vmg
+# alone is worse than nothing: it takes everything to sixteen.
+#
+# The FIELD ORDER agrees too, checked by dumping a formed pointer: word 0 is the
+# code address and word 1 the this-adjust, which is `struct { unsigned fn; int
+# delta; }` -- the shape every seat in port/ already hand-declares.
+#
+# THIS SUPERSEDES R8, R9 AND W6, AND IT REVERSES THE RULING THEY CARRY. Those
+# three blocks below set the same pair per source file, twenty-eight files
+# between them, each with its own measured before/after, and R9 states the rule
+# as "PER-SOURCE, NEVER GLOBAL" on the grounds that "a TU that already agrees
+# with MSVC's default would silently change layout under a blanket flag".
+#
+# The measurement is right and the conclusion inverts once the ROM is the
+# reference rather than the host. A TU THAT AGREES WITH MSVC'S DEFAULT DISAGREES
+# WITH THE ROM: four bytes where the ROM lays down eight, every field after the
+# pointer shifted. R8's own text says as much -- "THE SAME OPTION IS THE FIX FOR
+# THE OTHER TWENTY-ONE TUs with this shape" -- and each wave since has spent a
+# lane paying for a few more of them one before/after at a time. R9's twelve
+# INERT rows are that cost made visible: options set on TUs nothing references
+# yet, as traps disarmed ahead of a lane.
+#
+# AND THE HAZARD R9 NAMES IS THE PER-SOURCE FORM'S OWN, NOT THE GLOBAL FORM'S.
+# What breaks is a struct with a member-pointer field crossing a header boundary
+# between a TU that has the option and a TU that does not -- which is possible
+# only while the setting is per-source. R9 has to argue the set is safe ("none
+# of these TUs takes a pointer-to-member across a header boundary"); a global
+# setting has nothing to argue, because there is no boundary left to cross.
+#
+# So it goes on add_compile_options above every target and must never become a
+# per-target property either: half a build with it is worse than none. The three
+# per-source blocks are left where they are, redundant and harmless, so their
+# derivations stay readable and a revert of this line restores their behaviour.
+#
+# WHAT IT REPAIRS ON A PATH THAT ALREADY LINKS, which is why it is not merely an
+# enabler for the host-copy retirements. Twenty-seven in-slice TUs form a member
+# pointer without carrying one of the per-source rows below; ov075's pair is the
+# one that is provably wrong today, and it is provable WITHOUT the ROM because
+# both halves are in the tree and disagree with each other:
+#
+#   src/__sinit_ov075_0211b5e0.c FILLS the two tables and spells the cell
+#     struct P2 { int a, b; };  extern struct P2 data_ov075_0211d56c[10];
+#                               extern struct P2 data_ov075_0211d53c[6];
+#   -- eight bytes, ten and six cells, which is exactly the 0x50 and 0x30 those
+#   two bss symbols span in config/arm9/overlays/ov075/symbols.txt.
+#
+#   src/func_ov075_02114cd8.cpp READS them and spells the same cell
+#     struct C0 {};  typedef void (C0::*PMF)();  struct PmfRow { PMF pmf; };
+#     (((C0*)self)->*data_ov075_0211d56c[*(int*)(s + 0x110)].pmf)();
+#   -- FOUR bytes on MSVC's default, so the reader indexes a table at half the
+#   stride the writer laid down. Both TUs are in the slice and in the map today.
+#
+# Under this flag PmfRow is eight bytes, the reader and the writer agree, and
+# both agree with the span the config publishes.
+#
+# HOW MUCH THAT IS WORTH, SAID EXACTLY. Nothing seats those two ov075 tables
+# with host addresses -- swept, there is no seat -- so the words the reader
+# fetches are still the mount's DS addresses and the dispatch would fault if it
+# ran. It does not run today: the battery is green. So this is a LATENT repair,
+# a wrong stride made right ahead of the lane that seats ov075, not a fault
+# fixed in a shipping path. It is here because it is the one case in the
+# twenty-seven that is provably wrong rather than merely representationally
+# different, and because a stride bug found later, after a seat exists, reads
+# as a seat bug.
+#
+# TWO CLAIMS THAT LOOK LIKE THIS ONE AND ARE NOT, checked and struck rather than
+# left standing. src/func_ov070_02120d34.cpp does stride `c->pp + 1` by four on
+# MSVC's default -- but R8 below already sets the option on that exact file, so
+# it has been eight bytes since wave 17. And src/_ZN9ActorBase7Process...cpp
+# does read three four-byte member pointers from callers that push eight-byte
+# pairs -- but tools/hostgen.py rewrites all four of those callers into vtable
+# index dispatches (build/port/host-src/src/func_0204335c.cpp), so nothing in
+# the binary makes that call and the mismatch is unreachable.
+#
+# C2287 IS THE FAILURE MODE TO WATCH FOR -- a class that genuinely needs the
+# VIRTUAL inheritance representation cannot be covered by /vmm. There is none in
+# src/ or include/, and the system headers this tree includes (the STL subset in
+# hal/, windows.h, mmsystem.h, process.h) were compiled both ways and are
+# byte-identical. If one ever appears, the error names the class.
+#
+# CXX ONLY: /vm* is a C++ switch and cl warns on it once per .c file otherwise.
+add_compile_options($<$<COMPILE_LANGUAGE:CXX>:/vmg>
+                    $<$<COMPILE_LANGUAGE:CXX>:/vmm>)
+
 # Test-only fault injection: SM64DS_TEST_QUARANTINE, the hook in
 # port/unmatched/func_02043fdc_hostcopy.cpp that force-freezes an actor by
 # raising the access violation a real per-actor decline raises. A proof run
@@ -1835,8 +1942,12 @@ list(APPEND PORT_ACTOR_OVERLAYS ov081)
 # its class sinits run. The two new classes are plain 31-slot Actors whose
 # shared slots are byte-identical to the two above, so ov72_fill_shared serves
 # all four. Their four pointer-to-member dispatchers are host copies
-# (unmatched/Snowman_StateDispatch.cpp) for the BabyPenguin_StateEnter reason,
-# and their state cells are seated with host addresses. One method face
+# (unmatched/Snowman_StateDispatch.cpp) for the pointer-to-member width reason
+# port/slice_w18a.txt states -- BabyPenguin's own enter dispatcher, which this
+# line used to name as the exemplar, is back on that slice now that /vmg /vmm
+# is global and its host copy is deleted; Snowman's four are a different shape
+# and have not been re-measured.
+# Their state cells are seated with host addresses. One method face
 # (unmatched/Ov072_MethodFaces.cpp) closes Player::StartTalk, which two of
 # the new state handlers call as a C++ method and no linked TU spells that
 # way -- the Coffin closure addendum's shape.
@@ -13138,7 +13249,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
@@ -13375,7 +13486,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp
@@ -13663,7 +13774,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Snowman_StateDispatch.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Render.cpp unmatched/Whirlpool_Behavior.cpp unmatched/Whirlpool_StateDispatch.cpp unmatched/WaterSuction_Behavior.cpp unmatched/WaterSuction_StateDispatch.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES} unmatched/FlyingCarpet_Render.cpp

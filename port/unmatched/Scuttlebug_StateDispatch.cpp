@@ -18,7 +18,15 @@
  * from the odd-copied ones. The mapping was read out of the sinit's own
  * store offsets (below), not guessed.
  *
- * Both dispatcher TUs are the OneUpMushroom / MontyMole case and must be host
+ * NEITHER DISPATCHER IS A HOST COPY ANY MORE, and the two paragraphs below are
+ * kept because they are the derivation, not because they still rule. Wave 18
+ * put the MAIN half back on the slice and run link100 lane PMF put the ENTER
+ * half back; both notes sit at the bodies' old positions further down. What
+ * changed under them is reason 1: /vmg /vmm is global now, so MSVC's member
+ * pointer IS the ROM's 8-byte {fn, delta}. Reason 2 and the seat below are
+ * untouched and still needed.
+ *
+ * Both dispatcher TUs were the OneUpMushroom / MontyMole case and were host
  * copies for the same two reasons:
  *
  *   1. MSVC forms a pointer-to-member of the `struct C` the matched TUs
@@ -95,14 +103,17 @@ extern PortPmf data_ov071_02122b60[], data_ov071_02122b68[],
     data_ov071_02122be8[];
 }  /* extern "C" */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member read on the record. The matched TU
-   forms `(c->**c->pp)()` over the ENTER PMF at c->pp[0]; here the record is
-   read as a plain { fn, 0 } and the fn called with `this`. */
-extern "C" void func_ov071_021202b4(void *c)
-{
-    PortPmf *rec = *(PortPmf **)((char *)c + 0x380);
-    ((void (*)(void *))(size_t)rec[0].fn)(c);
-}
+/* func_ov071_021202b4 -- the ENTER half, `c->pp[0]` -- WAS host-copied here,
+   and is now back on the slice: run link100 lane PMF makes /vmg /vmm GLOBAL
+   (port/CMakeLists.txt, above R8), so the matched src/func_ov071_021202b4.cpp
+   forms the ROM's own 8-byte {fn, delta} record instead of MSVC's four-byte
+   default. Everything wave 18 checked for the MAIN half below covers this half
+   unchanged -- same table, same seat, same eighteen ROM-zero deltas, and the
+   same tail jump, which is what carries `this` on the caller's own frame onto
+   the plain cdecl bodies g_scuttlebug_sources installs. Its caller
+   src/Scuttlebug_SetState.c is a plain .c cdecl TU that was already linked, so
+   there is no new convention at the call site either. See port/slice_w18a.txt's
+   own link100 section. */
 
 /* func_ov071_02120278 -- the MAIN half, `c->pp + 1` -- WAS host-copied here
    for the width reason this file's header states, and is now back on the
