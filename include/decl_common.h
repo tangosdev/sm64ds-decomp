@@ -405,7 +405,6 @@ extern int RotatingPlatformRr_SpawnInfo[];
 extern int SetPolygonID(void*, int);
 extern int ShadowModel_InitCylinder(void*);
 extern int SignPost_Kill(char*);
-extern int Snufit_Kill(int*);
 extern int SublevelToLevel(int);
 extern int VT0[];
 extern int VT1[];
