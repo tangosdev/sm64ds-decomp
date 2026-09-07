@@ -2258,7 +2258,9 @@ void _ZN4BgCh19StartDetectingWaterEv(void *self)
    THE SEAT CHECK IS NOT DEFENSIVE PROGRAMMING, IT IS A MEASURED HARNESS GAP,
    and it is the wave-3 abort-vs-no-op lesson (hal/cxxname_bridge.cpp) landing
    in a new place. The matched body's SetFile dispatches DoSetFile through
-   _ZTV11ShadowModel[1], which hal/model_dtor_seat.cpp seats inside
+   _ZTV11ShadowModel[2] -- ROM numbering, as of the destructor respelling in
+   include/ModelBase.h; it was [1] while MSVC folded the pair -- which
+   hal/model_dtor_seat.cpp seats inside
    hal_seat_model_family_dtors -- and that runs from port_stage_a2_seat, so
    walk_window and walk_window_hires have it from process start. smoke_player
    does NOT: it hand-fills the host vtables and calls hal_fill_shadow_vtable,
@@ -2284,11 +2286,11 @@ void _ZN4BgCh19StartDetectingWaterEv(void *self)
 int _ZN11ShadowModel12InitCylinderEv(void *self)
 {
     void **vt = *(void ***)self;
-    if (!vt || !vt[1]) {
+    if (!vt || !vt[2]) {
         static int told;
         if (!told) {
             told = 1;
-            std::fprintf(stderr, "InitCylinder: _ZTV11ShadowModel[1] "
+            std::fprintf(stderr, "InitCylinder: _ZTV11ShadowModel[2] "
                          "(DoSetFile) is null in this target -- no shadow "
                          "installed\n");
         }

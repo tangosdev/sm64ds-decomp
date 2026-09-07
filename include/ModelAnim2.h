@@ -26,7 +26,17 @@ struct ModelAnim2 : ModelAnim {
     Animation otherAnim;       /* 0x68 - a member, built with Animation::C1 */
 
     /* --- vtable order. Do not reorder. --- */
+    /* The destructor pair spelled as two plain virtuals on the host; the whole
+       ruling is in include/ModelBase.h. Nothing is declared after it here, so
+       this class has no skew of its own -- but an override must still carry
+       the SAME TWO NAMES ModelAnim declares, or slots 0 and 1 of the primary
+       table would be a fresh pair appended past Virtual18 instead. */
+#ifdef _MSC_VER
+    virtual void Destructor1();                /* slot 0 (D1) */
+    virtual void Destructor0();                /* slot 1 (D0) */
+#else
     virtual ~ModelAnim2();                     /* slots 0 (D1), 1 (D0) */
+#endif
 
     /* --- non-virtual --- */
     void Copy(const ModelAnim2 &src, char *newFile, u32 newOtherFile);

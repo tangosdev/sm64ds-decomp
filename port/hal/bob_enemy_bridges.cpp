@@ -121,11 +121,13 @@ extern "C" void _ZN6Player16IncMegaKillCountEv(void *self)
 // name, so the decorated symbols match exactly.
 
 /* SetFile is `DoSetFile(file, a, b)` and nothing else -- the ROM branches
-   straight into it. DoSetFile is slot 1 of the host tables
-   (hal/cxxname_bridge.cpp fills _ZTV5Model and _ZTV9ModelAnim in MSVC order:
-   dtor 0, DoSetFile 1, UpdateVerts 2, Virtual10 3, Render 4), and every slot
-   there is a __fastcall thunk. Dispatching it here is what returns the real
-   value. */
+   straight into it. DoSetFile is slot 2 of the host tables, which is the slot
+   the ROM's own tables hold it at: hal/cxxname_bridge.cpp fills _ZTV5Model and
+   _ZTV9ModelAnim in ROM order (D1 0, D0 1, DoSetFile 2, UpdateVerts 3,
+   Virtual10 4, Render 5, Virtual18 6) since the destructor respelling in
+   include/ModelBase.h stopped MSVC folding the pair. It was slot 1 while the
+   fold pulled everything below the destructor up by one. Every slot there is a
+   __fastcall thunk; dispatching it here is what returns the real value. */
 struct BMD_File;
 struct ModelBase { int SetFile(BMD_File *file, int a, int b); };
 
@@ -134,12 +136,12 @@ typedef int(__fastcall *PortDoSetFile)(void *, void *, char *, int, int);
 int ModelBase::SetFile(BMD_File *file, int a, int b)
 {
     void **vt = *(void ***)this;
-    if (!vt || !vt[1]) {
+    if (!vt || !vt[2]) {
         std::fprintf(stderr, "FATAL: ModelBase::SetFile on %p: vtable %p has "
                      "no DoSetFile\n", (void *)this, (void *)vt);
         std::abort();
     }
-    return ((PortDoSetFile)vt[1])(this, 0, (char *)file, a, b);
+    return ((PortDoSetFile)vt[2])(this, 0, (char *)file, a, b);
 }
 
 /* ?InitCylinder@ShadowModel@@QAEHXZ IS GONE FROM THIS FILE (run linkw wave 4,

@@ -52,7 +52,15 @@ struct ShadowModel : ModelBase {
     ShadowModel *next;         /* 0x24 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
+    /* The destructor pair spelled as two plain virtuals on the host; the whole
+       ruling is in include/ModelBase.h. Overrides take their base's slots, so
+       these carry the SAME TWO NAMES ModelBase declares. */
+#ifdef _MSC_VER
+    virtual void Destructor1();                       /* slot 0 (D1) */
+    virtual void Destructor0();                       /* slot 1 (D0) */
+#else
     virtual ~ShadowModel();                           /* slots 0 (D1), 1 (D0) */
+#endif
     virtual int DoSetFile(char *file, int a, int b);  /* slot 2 */
 
     /* --- non-virtual --- */

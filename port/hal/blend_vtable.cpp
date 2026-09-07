@@ -80,12 +80,18 @@ void *VTable_Animation_BlendModelAnimThunk[8];
 
 void hal_fill_blendmodelanim_vtable(void)
 {
+    /* ROM NUMBERING, as of the destructor respelling in include/ModelBase.h:
+       slots 0 and 1 are the ROM's D1/D0 pair (seeded no-op here,
+       hal/model_dtor_seat.cpp seats the matched bodies), and everything below
+       sits where the ROM's own table holds it. Was MSVC-numbered, one slot
+       early from DoSetFile on, because MSVC folded the destructor pair. */
     _ZTV14BlendModelAnim[0] = (void *)blend_dtor;
-    _ZTV14BlendModelAnim[1] = (void *)blend_dosetfile;
-    _ZTV14BlendModelAnim[2] = (void *)blend_updateverts;
-    _ZTV14BlendModelAnim[3] = (void *)blend_virtual10;
-    _ZTV14BlendModelAnim[4] = (void *)blend_render;
-    _ZTV14BlendModelAnim[5] = (void *)blend_virtual18;
+    _ZTV14BlendModelAnim[1] = (void *)blend_dtor;
+    _ZTV14BlendModelAnim[2] = (void *)blend_dosetfile;
+    _ZTV14BlendModelAnim[3] = (void *)blend_updateverts;
+    _ZTV14BlendModelAnim[4] = (void *)blend_virtual10;
+    _ZTV14BlendModelAnim[5] = (void *)blend_render;
+    _ZTV14BlendModelAnim[6] = (void *)blend_virtual18;
     /* the Animation-base secondary table only ever destructs */
     VTable_Animation_BlendModelAnimThunk[0] = (void *)blend_dtor;
     VTable_Animation_BlendModelAnimThunk[1] = (void *)blend_dtor;

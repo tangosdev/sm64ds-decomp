@@ -505,24 +505,38 @@ extern "C" {
 extern void *_ZTV5Model[8];
 void hal_fill_model_vtable(void)
 {
-    _ZTV5Model[1] = (void *)mv_dosetfile;
-    _ZTV5Model[2] = (void *)mv_updateverts;
-    _ZTV5Model[3] = (void *)mv_virtual10;
-    _ZTV5Model[4] = (void *)mv_render;
-    /* Slot 5 too: TUs that dispatch through LOCAL shadow classes count in
-       ROM/Itanium numbering (two dtor slots), which lands Render at 5.
-       Model.h-compiled TUs land it at 4. The object serves both. */
+    /* ROM NUMBERING, as of the destructor respelling in include/ModelBase.h.
+       Slots 0 and 1 are the ROM's D1/D0 pair (hal/model_dtor_seat.cpp seats
+       them); everything below is at the index the ROM's own _ZTV5Model at
+       0x0208e90c holds it at.
+
+       THE DUAL FILL IS GONE, and that is the point of the change. Slot 5 used
+       to carry a second copy of mv_render because TUs dispatching through a
+       LOCAL shadow class count in ROM/Itanium numbering (two dtor slots) and
+       landed Render at 5, while Model.h-compiled TUs landed it at 4. Both
+       count in ROM numbering now, so one fill serves both and slot 4 is
+       Virtual10 again rather than a duplicate of Render. */
+    _ZTV5Model[2] = (void *)mv_dosetfile;
+    _ZTV5Model[3] = (void *)mv_updateverts;
+    _ZTV5Model[4] = (void *)mv_virtual10;
     _ZTV5Model[5] = (void *)mv_render;
 }
 }
 
 // gate 10: ModelAnim2's primary table (the Player's two body ModelAnims
-// dispatch DoSetFile through it via ModelBase::SetFile). MSVC order: dtor 0,
-// DoSetFile 1, UpdateVerts 2, Virtual10 3, Render 4, Virtual18 5. ROM slots
-// carry the ModelAnim overrides for everything past DoSetFile. No dual-fill
+// dispatch DoSetFile through it via ModelBase::SetFile). ROM NUMBERING, as of
+// the destructor respelling in include/ModelBase.h: D1 0, D0 1, DoSetFile 2,
+// UpdateVerts 3, Virtual10 4, Render 5, Virtual18 6, which is word for word
+// the ROM's own _ZTV9ModelAnim at 0x0208e980. ROM slots carry the ModelAnim
+// overrides for everything past DoSetFile.
+//
+// THE COLLISION THIS COMMENT USED TO DESCRIBE IS GONE. It read: "No dual-fill
 // here: Render's ROM slot (5) is Virtual18's MSVC slot, so shadow-TU Render
-// dispatch cannot be served by the same array -- trap-by-Virtual18 will name
-// it if such a TU ever appears.
+// dispatch cannot be served by the same array." That was true only while MSVC
+// folded the destructor pair into one slot and pulled everything below it up
+// by one. It does not fold now, Render is at 5 in both numberings, and the ~55
+// Render bodies that were hand-transcribed into port/unmatched/*_Renders.cpp
+// to dodge it can link from src/ instead.
 #include "ModelAnim.h"
 static void __fastcall ma2_dtor(void *, void *) {}
 static void __fastcall ma2_updateverts(void *self, void *)
@@ -540,22 +554,28 @@ extern void *_ZTV9ModelAnim[10];
 extern void *VTable_Animation_ModelAnimThunk[8];
 void hal_fill_modelanim2_vtable(void)
 {
+    /* Slots 0 and 1 are the ROM's D1/D0 pair. They are seeded with the no-op
+       here and hal/model_dtor_seat.cpp overwrites both with the matched
+       bodies at stage-A2 seat time; before this change the fold gave the pair
+       one slot between them and the D1 had nowhere to live. */
     _ZTV10ModelAnim2[0] = (void *)ma2_dtor;
-    _ZTV10ModelAnim2[1] = (void *)mv_dosetfile;
-    _ZTV10ModelAnim2[2] = (void *)ma2_updateverts;
-    _ZTV10ModelAnim2[3] = (void *)ma2_virtual10;
-    _ZTV10ModelAnim2[4] = (void *)ma2_render;
-    _ZTV10ModelAnim2[5] = (void *)ma2_virtual18;
+    _ZTV10ModelAnim2[1] = (void *)ma2_dtor;
+    _ZTV10ModelAnim2[2] = (void *)mv_dosetfile;
+    _ZTV10ModelAnim2[3] = (void *)ma2_updateverts;
+    _ZTV10ModelAnim2[4] = (void *)ma2_virtual10;
+    _ZTV10ModelAnim2[5] = (void *)ma2_render;
+    _ZTV10ModelAnim2[6] = (void *)ma2_virtual18;
     /* the Animation-base secondary table only ever destructs */
     VTable_Animation_ModelAnim2Thunk[0] = (void *)ma2_dtor;
     VTable_Animation_ModelAnim2Thunk[1] = (void *)ma2_dtor;
     /* plain ModelAnim (the Player's head models) shares every slot */
     _ZTV9ModelAnim[0] = (void *)ma2_dtor;
-    _ZTV9ModelAnim[1] = (void *)mv_dosetfile;
-    _ZTV9ModelAnim[2] = (void *)ma2_updateverts;
-    _ZTV9ModelAnim[3] = (void *)ma2_virtual10;
-    _ZTV9ModelAnim[4] = (void *)ma2_render;
-    _ZTV9ModelAnim[5] = (void *)ma2_virtual18;
+    _ZTV9ModelAnim[1] = (void *)ma2_dtor;
+    _ZTV9ModelAnim[2] = (void *)mv_dosetfile;
+    _ZTV9ModelAnim[3] = (void *)ma2_updateverts;
+    _ZTV9ModelAnim[4] = (void *)ma2_virtual10;
+    _ZTV9ModelAnim[5] = (void *)ma2_render;
+    _ZTV9ModelAnim[6] = (void *)ma2_virtual18;
     VTable_Animation_ModelAnimThunk[0] = (void *)ma2_dtor;
     VTable_Animation_ModelAnimThunk[1] = (void *)ma2_dtor;
 }
@@ -598,13 +618,14 @@ void hal_fill_shadow_vtable(void)
        self-guarding in the matched source (ShadowModelD1Ev.c:33-51 checks
        prev/head and zeroes both). */
     _ZTV11ShadowModel[0] = (void *)shadow_dtor;
-    /* vt[1] is DoSetFile under this tree's MSVC numbering (ROM slots 0+1 fold
-       into MSVC 0, so ROM slot 2 = MSVC 1, the same fold _ZTV5Model[1] gets
-       elsewhere in this file). hal/model_dtor_seat.cpp seats the matched
-       ShadowModel::DoSetFile there. An earlier version of this comment called
-       vt[1] "the D0 slot, null deliberately", which was ROM numbering leaking
-       into an MSVC-numbered fill; the folded table gives the D0 no slot of
-       its own. */
+    /* vt[1] IS the D0 slot, and it is a real slot again: the respelling in
+       include/ModelBase.h stopped MSVC folding the pair, so this table is ROM
+       numbering throughout and DoSetFile is vt[2], where
+       hal/model_dtor_seat.cpp now seats the matched ShadowModel::DoSetFile.
+       The two comments this replaces were both right in their own moment --
+       "the D0 slot, null deliberately" under ROM numbering, then "vt[1] is
+       DoSetFile" under the folded MSVC numbering. Only one numbering is left
+       and it is the ROM's. */
 }
 }
 

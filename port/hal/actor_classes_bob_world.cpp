@@ -258,10 +258,10 @@ static void bw_fill_shared(void **vt)
 //
 // _ZTV11CommonModel is arm9 0x0208e8a4 and it is THREE SLOTS: D1, D0, and
 // DoSetFile. The class's Render is non-virtual, which is the whole difference
-// from Model. Under MSVC the two destructor slots fold into one, so DoSetFile
-// is slot 1 there and slot 2 in ROM/Itanium numbering -- and both get filled,
-// the same dual-fill _ZTV5Model already carries in hal/cxxname_bridge.cpp,
-// because a TU dispatching through a LOCAL shadow class counts the ROM's way.
+// from Model. MSVC used to fold the two destructor slots into one, which put
+// DoSetFile at 1 on the host and 2 in ROM/Itanium numbering and forced a
+// dual-fill; include/CommonModel.h spells the pair as two plain virtuals now,
+// so host and ROM agree and one fill serves every caller.
 //
 // The live dispatcher is ModelBase::SetFile, which Coin::InitResources calls
 // four times by its Itanium name.
@@ -272,35 +272,36 @@ void *_ZTV11CommonModel[8];
 
 static int __fastcall cm_dosetfile(void *self, void *, char *file, int a, int b)
 { return ((CommonModel *)self)->CommonModel::DoSetFile(file, a, b); }
-/* MERGE DECISION, 2026-08-05, and the one in this consolidation that wants a
-   real test rather than a reading.
+/* THE MERGE COLLISION OF 2026-08-05, RESOLVED RATHER THAN TRADED.
 
-   Gate 32 (King Bob-omb, the first actor to own a CommonModel) filled this
-   table in ROM numbering with the real destructors: D1, D0, DoSetFile. This
-   file filled it MSVC-first: a trap, then DoSetFile at both 1 and 2. Slot 1 is
-   the collision, because ROM wants D0 there and MSVC wants DoSetFile.
+   It read: gate 32 (King Bob-omb, the first actor to own a CommonModel) filled
+   this table in ROM numbering with the real destructors -- D1, D0, DoSetFile.
+   This file filled it MSVC-first: a trap, then DoSetFile at both 1 and 2. Slot
+   1 was the collision, because ROM wants D0 there and MSVC wanted DoSetFile.
+   One table could not serve both, the measured path won, and the note ended
+   "What now has no slot is D0. If a CommonModel is ever destroyed through ROM
+   slot 1 it reaches DoSetFile with destructor arguments, so that is the thing
+   to suspect if King Bob-omb misbehaves on despawn."
 
-   One table cannot serve both, so the verified path wins. The coins here are
-   measured working and their dispatcher is ModelBase::SetFile, which is
-   header-compiled and therefore counts MSVC slots: DoSetFile MUST be at 1.
-   Gate 32's teardown was never exercised in its 600-frame runs, so its D0 at
-   slot 1 is a reading rather than a measurement.
-
-   Slot 0 takes gate 32's REAL D1 rather than this file's abort, which is
-   strictly better: a teardown that does dispatch slot 0 destroys the object
-   instead of killing the process. What now has no slot is D0. If a CommonModel
-   is ever destroyed through ROM slot 1 it reaches DoSetFile with destructor
-   arguments, so that is the thing to suspect if King Bob-omb misbehaves on
-   despawn. */
+   There is no collision left to trade. MSVC only wanted DoSetFile at 1 because
+   it folded the destructor pair into one slot; the respelling in
+   include/ModelBase.h stopped it folding, ModelBase::SetFile now dispatches
+   slot 2 (hal/bob_enemy_bridges.cpp), and the ROM's own three slots are the
+   three slots the host fills. D0 has its slot back, so the despawn hazard that
+   note left standing is closed rather than documented. */
 extern "C" void *_ZN11CommonModelD1Ev(void *self);
+extern "C" void *_ZN11CommonModelD0Ev(void *self);
 static int __fastcall cm_d1(void *s, void *)
 { return (int)(size_t)_ZN11CommonModelD1Ev(s); }
+static int __fastcall cm_d0(void *s, void *)
+{ return (int)(size_t)_ZN11CommonModelD0Ev(s); }
 
 extern "C" void port_fill_common_model_vtable(void)
 {
+    /* ROM numbering, the only numbering left. */
     _ZTV11CommonModel[0] = (void *)cm_d1;
-    _ZTV11CommonModel[1] = (void *)cm_dosetfile;   /* MSVC numbering */
-    _ZTV11CommonModel[2] = (void *)cm_dosetfile;   /* ROM numbering */
+    _ZTV11CommonModel[1] = (void *)cm_d0;
+    _ZTV11CommonModel[2] = (void *)cm_dosetfile;
 }
 
 static void hal_fill_common_model_vtable(void)

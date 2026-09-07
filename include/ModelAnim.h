@@ -68,7 +68,18 @@ struct ModelAnim : Model, Animation {
     BCA_File *file;            /* 0x60 */
 
     /* --- primary vtable order. Do not reorder. --- */
+    /* The destructor pair spelled as two plain virtuals on the host; the whole
+       ruling, and the ROM-vs-MSVC layout measurement behind it, is in
+       include/ModelBase.h. THIS is the class the skew cost the most: its ROM
+       slot 5 is Render and the folded host table put Virtual18 there, which
+       takes two arguments where a slot-5 caller passes one. Overrides take
+       their base's slots, so these carry the SAME TWO NAMES Model declares. */
+#ifdef _MSC_VER
+    virtual void Destructor1();                           /* slot 0 (D1) */
+    virtual void Destructor0();                           /* slot 1 (D0) */
+#else
     virtual ~ModelAnim();                                 /* slots 0 (D1), 1 (D0) */
+#endif
     virtual void UpdateVerts();                           /* slot 3 */
     virtual void Virtual10(Matrix4x3 &mat);               /* slot 4 */
     virtual void Render(const Vector3 *scale);            /* slot 5 */
