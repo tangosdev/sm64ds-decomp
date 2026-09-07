@@ -72,7 +72,6 @@
 #include "decl_SaveData.h"
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Actr.h"
-#include "daObjHmMaruta_c.h"
 #include "private/mtx43.h"
 
 /* ==========================================================================
@@ -970,23 +969,28 @@ int func_ov030_02112578(void *arg0)
 /* -------------------------------------------------------------------------- */
 /* state 8 entry handler.  Member-ness is read from the ROM: 02112a14 is pointer-to-member record 0 of the 22 at 0x02115ac8. */
 /* The number 8 is read from the ROM too: this body writes the immediate 8 to the state word at +0x3b4, and it is the only one of the 44 that writes 8.  "EnterState" is coined; see the block above. */
+/* This shard used to be labelled daObjHmMaruta_c::AfterClsn and read through a
+   daObjHmMaruta_c shadow struct.  The cartridge refutes that on four counts:
+   0x02112a14 falls inside this TU's own .text run (0x02111688..0x021145e0)
+   while d_a_obj_hm_maruta.c's run is 0x0211164c..0x02111688; it is record 0 of
+   daMky_c's 22-entry pointer-to-member array; it writes 8 to daMky_c's state
+   word; and daObjHmMaruta_c's factory allocates 836 (0x344) bytes, so the
+   0x3c7 this body stores to is 131 bytes past the end of that object, where
+   daMky_c is 972 (0x3cc).  The two classes share dActor_c's low offsets, which
+   is why the wrong header still compiled.  Offsets now go through `c` like the
+   ten sibling EnterState members. */
 // @symbol _ZN7daMky_c11EnterState8Ev
 int daMky_c::EnterState8() {
     char *c = (char *)this;
-    /* recovered: renamed to Class_Method, RTTI class fields named */
-    // recovered name: daObjHmMaruta_c_AfterClsn
-    /* recovered: renamed to Class_Method */
-    /* daObjHmMaruta_c::AfterClsn - recovered from vtable slot identity */
     struct G { void *a; void *b; };
     extern struct G data_ov030_02115d18;
-    struct daObjHmMaruta_c *self = (struct daObjHmMaruta_c *)(void *)c;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, data_ov030_02115d18.b, 0, 0x1000, 0);
-    self->unk_130 = 0x1000;
+    *(int *)(c + 0x130) = 0x1000;
     _ZN7PathPtr6FromIDEj(c+0x398, *(int*)(c+8) & 0xff);
-    self->unk_3a0 = 1;
-    self->unk_3c7 = 0;
-    self->unk_098 = 0x6000;
-    self->unk_3b4 = 8;
+    *(int *)(c + 0x3a0) = 1;
+    *(char *)(c + 0x3c7) = 0;
+    *(int *)(c + 0x98) = 0x6000;
+    *(int *)(c + 0x3b4) = 8;
     return 1;
 }
 
