@@ -225,7 +225,7 @@ daLinelift2_c	DONE	include\RotatingUpDownPlatform.h  [alias: header uses pre-ren
 daObjBC_Switch_c	DONE	include\daObjBC_Switch_c.h	dBgActor_c	0	ov002	6
 daObjBkKillerdai_c	PARTIAL	include\daObjBkKillerdai_c.h	dBgActor_c	0	ov079	8
 daObjBk_Botaosi_c	DONE	include\KnockDownPlank.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov015	9
-daObjBk_Dossunbar_c	DONE	include\MovingBar.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov015	8
+daObjBk_Dossunbar_c	DONE	include\daObjBk_Dossunbar_c.h	dBgActor_c	0	ov015	8
 daObjBk_Kabe_c	DONE	include\FortressWall.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov079	8
 daObjBk_Lift_c	DONE	include\TowerStep.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov015	8
 daObjBk_Rotebar_c	DONE	include\daObjBk_Rotebar_c.h	dBgActor_c	0	ov015	6
