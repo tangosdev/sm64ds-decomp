@@ -13,6 +13,17 @@
 #define DSCMGCURLING_C_H
 #include "dScMgBase_c.h"
 
+/* One curling stone, 0x2c bytes, five of them at 0x4660. */
+struct dScMgCurling_stone {
+    s32 x;              /* 0x00 */
+    s32 y;              /* 0x04 */
+    u8  unk08[0x21];    /* 0x08 */
+    u8  active;         /* 0x29 */
+    u8  unk2a[0x2];     /* 0x2a */
+};
+
+typedef char dScMgCurling_stone_size_must_be_0x2c[sizeof(struct dScMgCurling_stone) == 0x2c ? 1 : -1];
+
 struct dScMgCurling_c : dScMgBase_c {
     /* Declared, not defined inline -- a leaf, so nothing needs to inline
        it; real body in src/_ZN11dScMgCurling_cD1Ev.cpp / _D0Ev.cpp. */
@@ -30,7 +41,8 @@ struct dScMgCurling_c : dScMgBase_c {
        documented in notes/dscene-c-siblings-census.md section 3): its
        body sets fields and calls helpers, nothing like a destructor. */
 
-    u8  pad_4660[0x84c];
+    dScMgCurling_stone mStone[5];   /* 0x4660, stride 0x2c */
+    u8  pad_473c[0x770];
     s32 unk_4eac;            /* 0x4eac */
     u8  pad_4eb0[0x28];
     s32 unk_4ed8;            /* 0x4ed8 */

@@ -13,12 +13,12 @@ extern int data_ov085_02130800[];
 
 int func_ov085_0212e4a4(unsigned int self)
 {
-    int p = _ZN8dActor_c13ClosestPlayerEv();
+    char *p = (char *)_ZN8dActor_c13ClosestPlayerEv();
     if (p != 0) {
         V3 v = *(V3 *)(p + 0x5c);
         if ((data_0209caa0[2] & 0x10000) != 0 &&
             v.z > -0x28000 &&
-            _ZN6Player17SetNoControlStateEhih(p, 0x12, -1, 0) != 0) {
+            _ZN6Player17SetNoControlStateEhih((int)p, 0x12, -1, 0) != 0) {
             *(int *)(p + 0x744) = *(int *)(self + 0x5c);
             *(int *)(p + 0x748) = *(int *)(self + 0x60);
             *(int *)(p + 0x74c) = *(int *)(self + 0x64);

@@ -88,7 +88,9 @@ Usage:
 """
 import argparse
 import collections
+import glob
 import json
+import os
 import pathlib
 import re
 import sys
@@ -100,6 +102,38 @@ import srcpath as SP
 REPO = pathlib.Path(__file__).resolve().parent.parent
 OUT = REPO / "build" / "tu_map.json"
 VTABLES = REPO / "build" / "rtti_vtables.json"
+NL = chr(10)
+
+
+def _require_vtables():
+    """Refuse to run with the RTTI signal silently switched off.
+
+    `vtable_labels` and `vtable_factory_classes` used to return {} when
+    build/rtti_vtables.json was absent. tu_map then completed, printed a
+    plausible summary and wrote an authoritative-looking map -- with the
+    cartridge's own type evidence contributing nothing.
+
+    Measured 2026-09-06 on one tree: with the file the map is 691 TUs / 333
+    classed; without it, 692 / 332. The difference is small enough to look like
+    noise and is not, and queue_audit consumes the result: a queue regenerated
+    from the map built without it left `Player` at 26794 lines when the tree
+    said 26798, while --check and --write both reported success.
+
+    queue_audit already refuses its own missing and stale inputs for exactly
+    this reason (see its `stale_input` docstring). tu_map did not refuse its
+    own. A missing input here is a silently wrong answer, not a missing one.
+    """
+    how = "python tools/rtti_vtables.py --out build/rtti_vtables.json"
+    if not VTABLES.is_file():
+        raise SystemExit(
+            f"{VTABLES.relative_to(REPO)} is absent; make it with:" + NL + f"    {how}")
+    config = (glob.glob(str(REPO / "config" / "arm9" / "overlays" / "*" / "symbols.txt"))
+              + [str(REPO / "config" / "arm9" / "symbols.txt")])
+    newest = max((os.path.getmtime(f) for f in config if os.path.exists(f)), default=0)
+    if newest > os.path.getmtime(VTABLES):
+        raise SystemExit(
+            f"{VTABLES.relative_to(REPO)} is older than config/; "
+            f"regenerate it with: {how}")
 
 # Nesting threshold for _drop_swallowers, set by --split-swallowers. None = off,
 # which keeps the committed map byte-identical until the change is reviewed.
@@ -192,8 +226,7 @@ def vtable_labels():
     The point of this table is the anonymous overlays. ov006 has 1866 functions
     and 38 named ones; RTTI still knows what its polymorphic classes are called,
     so a vtable slot lands a real name on code that no symbol ever named."""
-    if not VTABLES.is_file():
-        return {}
+    _require_vtables()
     data = json.loads(VTABLES.read_text(errors="ignore"))
     out = collections.defaultdict(dict)
     for cls, rec in data.items():
@@ -215,8 +248,7 @@ def vtable_factory_classes():
     already-mangled method names.  `own` slots are the non-inherited entries and
     therefore pair the vtable with the exact class component those methods use.
     """
-    if not VTABLES.is_file():
-        return {}
+    _require_vtables()
     data = json.loads(VTABLES.read_text(errors="ignore"))
     candidates = collections.defaultdict(lambda: collections.defaultdict(set))
     for _cls, rec in data.items():

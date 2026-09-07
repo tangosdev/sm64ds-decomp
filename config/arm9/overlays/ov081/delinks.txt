@@ -293,6 +293,7 @@ src/func_ov081_02126c8c.cpp:
     .text start:0x02126c8c end:0x02126d64
 
 src/func_ov081_02126d64.c:
+    complete
     .text start:0x02126d64 end:0x02126e28
 
 src/func_ov081_02126e28.c:

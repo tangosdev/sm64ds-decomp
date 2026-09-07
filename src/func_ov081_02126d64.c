@@ -12,7 +12,7 @@ extern void _ZN5dCc_c6UpdateEv(void *cl);
 int func_ov081_02126d64(char *s)
 {
     func_02038414(s + 0x1e4);
-    *(short *)(s + 0x8c) += 0x1000;
+    *(short *)(s + 0x8c) = *(short *)(s + 0x8c) + 0x1000;
     if (_ZNK10dBgCh_Actr13JustHitGroundEv(s + 0x1e4) != 0) {
         *(int *)(s + 0xa8) = *(int *)(s + 0xa8) * -0x3c / 100;
     } else if (_ZNK10dBgCh_Actr10IsOnGroundEv(s + 0x1e4) != 0) {

@@ -1,0 +1,86 @@
+{
+  "class": "dScMgTeresa_c",
+  "overlay": "ov006",
+  "module_base": "0x020bfec0",
+  "produced_by": "writer (no scout ran for this class); tools/rtti_extract.py and tools/rtti_vtables.py plus a direct read of extracted/dsd/arm9_overlays/ov006.bin and ov004.bin",
+  "rtti_name": "13dScMgTeresa_c",
+  "rtti": {
+    "symbol": "_ZTI13dScMgTeresa_c",
+    "address": "0x0213f9b4",
+    "kind_vptr": "0x0209a764",
+    "kind": "abi::__si_class_type_info",
+    "name_pointer": "0x0213f9c0",
+    "direct_base_pointer": "0x020bbf6c",
+    "evidence": "Linked ov006 words at 0x0213f9b4 are {0x0209a764, 0x0213f9c0, 0x020bbf6c}; the NUL-terminated bytes at 0x0213f9c0 are '13dScMgTeresa_c'."
+  },
+  "base_class": "dScMgBase_c",
+  "base_evidence": "The __si_class_type_info record at 0x0213f9b4 has +0x08 = 0x020bbf6c. Linked ov004 words at 0x020bbf6c are {0x0209a764, 0x020bbf84, 0x020914d4} and the NUL-terminated string at 0x020bbf84 is '11dScMgBase_c'. Same base record that ov006/dScMgHanachan_c's and ov006/dScMgD3DBase_c's facts files record, and the chain continues 0x020914d4 = _ZTI8dScene_c (arm9).",
+  "inheritance_chain": [
+    "dScMgTeresa_c",
+    "dScMgBase_c",
+    "dScene_c",
+    "dBase_c",
+    "fBase_c"
+  ],
+  "inheritance_chain_evidence": "Five levels, counted from the __si_class_type_info chain, not from a sibling. It predicts the compiler_only_output row count exactly: 2 x 5 + 1 vtable = 11 data rows, and the TU adds one homeless _ZN13dScMgTeresa_cD2Ev for 12 in total. The promotion queue's estimate of ~11 was copied from sibling_oracle dScMgSingle3DBase_c, which sits at the same depth but whose TU emits no D2.",
+  "leaf": true,
+  "leaf_evidence": "No RTTI record in build/rtti.json names 0x0213f9b4 as a direct base.",
+  "vtable": {
+    "symbol": "_ZTV13dScMgTeresa_c",
+    "address": "0x0213fa0c",
+    "header_start": "0x0213fa04",
+    "offset_to_top_address": "0x0213fa04",
+    "offset_to_top": "0x00000000",
+    "rtti_pointer_address": "0x0213fa08",
+    "rtti_pointer": "0x0213f9b4",
+    "slots": 36,
+    "last_slot_address": "0x0213fa98",
+    "end": "0x0213fa9c",
+    "storage_size": "0x98",
+    "symbol_extent": "0x90",
+    "extent_evidence": "Four independent reads agree on 36 slots. (a) DIRECT: the 36 consecutive words from the address point 0x0213fa0c through 0x0213fa98 are all plausible code addresses in main/ov004/ov006; the next word, at 0x0213fa9c, is 0x00000001, which is not a code pointer, so the table ends there. (b) RELOCATIONS: config/arm9/overlays/ov006/relocs.txt has an unbroken relocated run from 0x0213fa08 (the typeinfo word of the header) through 0x0213fa98, first gap at 0x0213fa9c, and the next relocation at 0x0213faa0 is the start of the 8-stride pointer-to-member table that follows -- so the 'contiguous relocated run' rule does NOT overshoot on this table. (c) tools/rtti_vtables.py --own dScMgTeresa_c reports 36 slots. (d) the next symbols.txt row after the address point is data_ov006_0213fa9c at 0x0213fa9c. Symbol extent 0x0213fa0c..0x0213fa9c = 0x90; STORAGE 0x0213fa04..0x0213fa9c = 0x98, which is exactly the .data section size the reconstructed TU emits for it. NOTE for the next reader: the naive next-symbol read is RIGHT here only by luck -- this table does carry a phantom interior symbol, data_ov006_0213fa0c, but it sits ON the address point rather than inside the table.",
+    "own_overrides": [
+      { "slot": 0,  "target": "0x021203fc", "symbol": "_ZN13dScMgTeresa_c13InitResourcesEv" },
+      { "slot": 6,  "target": "0x021203ac", "symbol": "_ZN13dScMgTeresa_c8BehaviorEv" },
+      { "slot": 9,  "target": "0x02120348", "symbol": "_ZN13dScMgTeresa_c6RenderEv" },
+      { "slot": 16, "target": "0x0211cbd0", "symbol": "_ZN13dScMgTeresa_cD1Ev" },
+      { "slot": 17, "target": "0x0211cbf4", "symbol": "_ZN13dScMgTeresa_cD0Ev" },
+      { "slot": 18, "target": "0x02120248", "symbol": "_ZN13dScMgTeresa_c13OnYoshiTryEatEi" },
+      { "slot": 20, "target": "0x02120238", "symbol": "_ZN13dScMgTeresa_c9Virtual50Ev" },
+      { "slot": 34, "target": "0x021200dc", "symbol": "_ZN13dScMgTeresa_c9Virtual88Eiiii" }
+    ]
+  },
+  "destructors": {
+    "D1": "0x0211cbd0",
+    "D0": "0x0211cbf4",
+    "D2": null,
+    "rom_order": "D1 below D0",
+    "significance": "D1-below-D0 is the reproducible direction, so this class is NOT one of the destructor-order refusals. It is reproduced here by an OUT-OF-LINE destructor under `#pragma defer_codegen off`, not by the inline form the received rule prescribes. Measured on the pinned 2004/b56 with the real header, both ways: out-of-line + deferred codegen emits sections D2, D0, D1; out-of-line + defer_codegen off emits D1, D0, D2. The inline form is unusable for this class for a separate reason -- see key_function below."
+  },
+  "key_function": {
+    "symbol": "_ZN13dScMgTeresa_cD1Ev",
+    "why": "include/dScMgTeresa_c.h declares the destructor out of line and declares it first, so the destructor is the class's key function and the TU that defines it emits _ZTV/_ZTI/_ZTS for the whole chain.",
+    "consequence_if_made_inline": "The key function would move to InitResources at 0x021203fc, which lies ABOVE the sourceless hole and so cannot be in the same licensed TU as the destructor pair. That TU would then emit no vtable, nothing would odr-use the inline destructor, and neither D1 nor D0 would be emitted at all -- measured on a probe TU that includes an inline-destructor header plus one trivial function: one .text section, no destructor, no vtable. The header therefore needs no edit."
+  },
+  "candidate_text": {
+    "tu_map_run": { "start": "0x0211cbd0", "end": "0x021207a8", "functions": 81 },
+    "licensed": { "start": "0x0211cbd0", "end": "0x0211e72c", "functions": 48, "ordinals": "0..47" },
+    "why_partial": [
+      "A sourceless hole splits the run, and it is the only edge. ROM ordinal 48, func_ov006_0211e72c (0x0211e72c, size 0xac), has a symbols.txt row but no source anywhere in the tree and no entry in config/arm9/overlays/ov006/delinks.txt at all, so the cartridge's own bytes cover it. It is a banked near-miss whose floor is 26 divergences, reconfirmed independently by glm-5.2, claude-fable-5, grok-4.5 and grok-4.6 in config/match_attempts.jsonl. It sits in the MIDDLE of the run, and no delink block and no TU manifest in this tree expresses a .text claim with a hole in it, so the run can only be licensed as one of its two contiguous sides. The lower side is the larger by member count, 48 against 32, and it is the side that carries the destructor pair.",
+      "The upper side is larger in BYTES (0x1fd0 against 0x1b5c) but it also holds the run's one unmatched member that does have a source, _ZN13dScMgTeresa_c13OnYoshiTryEatEi at 0x02120248 (`complete=False`, banked near-miss), which would split it again into 28 + 3."
+    ],
+    "pragmas_are_not_an_edge": "Three of the run's seven pragma-carrying legacy sources fall on the licensed side: func_ov006_0211d924 and func_ov006_0211db7c want opt_common_subs off, func_ov006_0211e220 wants opt_strength_reduction off. Under `#pragma defer_codegen off` each binds inside its own push/pop bracket and all three reproduce simultaneously with the other 45. Both controls were run: deleting the three pragmas outright gives 45/48 with the DIFFs falling on exactly those three members, and keeping the brackets while deleting only defer_codegen off gives 45/48 AND inverts the emission order to 47 ordinal pairs out of ROM order."
+  },
+  "unproven": [
+    "That the 81-function tu_map run was ever a single original translation unit. tu_map's own boundary confidence for it is medium on both sides, and ov006 is one of the modules tu_map.py reports as under-segmented, so the run is a lower bound on TU count rather than a proven file.",
+    "That ordinals 0..47 are a whole original TU. They are the largest contiguous run this tree can license, which is a build fact, not a boundary fact. boundary_confidence stays medium.",
+    "The real types behind the three mutually contradictory `struct C` views the legacy sources carry (+0x4be0/+0x4be1 with the PMF table at data_ov006_02142f18, +0x4bba/+0x4bbc with data_ov006_02142e88, and a bare 0x24-stride row walk), and behind `struct Elem`. Every offset used is byte-proved by the matching members, but the field names and the element types are not recovered; the names in the promoted source (TeresaPmfA, TeresaPmfB, RowArray, SlotElem, HudElem, BooArray, View, Work) are coined for this file and carry no ROM evidence.",
+    "That func_ov006_0211e72c belongs to this class. It is reached only by an arm_call from 0x02120384, inside _ZN13dScMgTeresa_c13OnYoshiTryEatEi, so adjacency plus one call site is all that places it.",
+    "The name 'Virtual50' for slot 20 and 'Virtual88' for slot 34 -- both are placeholders carried from include/dScMgBase_c.h, not recovered names."
+  ],
+  "related_modules": [
+    { "module": "main",  "module_base": "0x02004000", "role": "inherited slots, ABI type-info implementation, and the dScene_c/dBase_c/fBase_c typeinfo records" },
+    { "module": "ov004", "module_base": "0x020ad660", "role": "direct-base RTTI (dScMgBase_c) and its method bodies" },
+    { "module": "ov006", "module_base": "0x020bfec0", "role": "class RTTI, vtable, own overrides, and candidate text" }
+  ]
+}

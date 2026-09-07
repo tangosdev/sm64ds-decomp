@@ -11143,6 +11143,7 @@ src/func_02065f78.c:
     .text start:0x02065f78 end:0x0206610c
 
 src/func_0206610c.c:
+    complete
     .text start:0x0206610c end:0x020662c0
 
 src/func_020662c0.c:

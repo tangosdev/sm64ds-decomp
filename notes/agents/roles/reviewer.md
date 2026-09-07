@@ -39,6 +39,15 @@ that the evidence means what it claims.
 9. **The merge tree, not the branch.** `premerge_check` gates each PR alone. Two
    individually-green PRs can produce a red main. Compose the merge yourself and
    verify before landing.
+10. **Re-measure every count a shipped artifact asserts.** This is the defect you
+    will find most often, and no gate looks for it: prose written at stage 2 is
+    invalidated by stage 3b's rename pass, and comments, manifest notes and PR
+    bodies all ship the stale figure. Count the things yourself -- symbols,
+    definitions, `extern "C"` regions, unlicensed sections, ledger rows -- and
+    compare against the file, not against the body. Treat a stated number that
+    contradicts its own artifact as a defect to name even though it is
+    byte-neutral. Check negative claims hardest: a search result is unproven until
+    its case, scope and encoding are stated.
 
 ## Merging
 

@@ -4768,3 +4768,276 @@ inert list -- decl-order permutations at function scope, named-versus-inline dif
 u64 launder on the pool arrays (which regressed `func_ov006_020dd0e0` by nine words), tail
 source order and idx reuse -- and none of it moved a byte on the matched four; the useful
 half of that list is already the near-miss database's, not this file's.
+
+## 6bv. Nine levers from run m100: the sense of the test, the stride in the type, and what to score them with (2026-09-06)
+
+A long overnight run across arm9, ov002, ov003, ov006, ov007, ov060, ov065 and ov075.
+The three sections above hold the compiler-build facts the run turned up (6br, 6bs, 6bt)
+and the ov006 colouring family (6bu); this one holds the levers that moved bodies, and the
+scoring rules without which two of them read as regressions. Each is stated with what it
+cost or bought, and each carries the counter-example that bounds it, because four of the
+nine are actively wrong somewhere.
+
+**1. Write the branch test in its POSITIVE sense, so the heavy arm is the then-block.**
+Same semantics, same branch instruction, different linearisation: the compiler visits the
+heavy arm first, and the call's argument setup with it.
+
+```c
+if (v < 10) c = 0x7c; else { Render(tens); c += 9; }      /* residue */
+if (v >= 10) { Render(tens); c += 9; } else c = 0x7c;     /* cartridge order */
+```
+
+On `_ZN12dScStarSel_c6RenderEv` (0x944) all thirteen words of that block fall into place at
+once: the divide-by-ten magic-multiply chain starts one instruction earlier and
+`mov r5,#0x77` lands as late as possible. The same inversion closed
+`_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr` (0x3cc), where the residue was a load-use
+slot. Both had been declared floors after long work INSIDE the residue block: an earlier
+lane spent about twenty-five spellings on the first and about six thousand four hundred
+permuter iterations on the second, all of it inside a block whose problem was the sense of
+the test outside it.
+
+Two positive controls, measured rather than assumed. On `func_ov007_020c9688` the full
+2x2x2 matrix of test senses makes the banked all-positive shape the unique 10: inverting
+the second test costs 27, the first 29, the outer one 45 to 49. On `func_ov002_020bb614`
+the banked shape already satisfies the lever, and writing the `else` out explicitly costs
+51.
+
+**1a. The refinement, on a predicated two-value select: write the value the cartridge
+materialises UNCONDITIONALLY first, which is not the same as putting the heavy arm first.**
+Six spellings of a +-1 select on `func_ov006_0211e72c`:
+
+```
+(sl == 0) ? -1 : 1          26      if (sl == 0) ... else ...     26
+(sl != 0) ? 1 : -1          27      if (sl != 0) ... else ...     27
+ip = -1; if (sl) ip = 1;    27      ip = 1; if (!sl) ip = -1;     28
+```
+
+The word the winning pair buys is `mov sb,#1`, and `sb` is the register the cartridge then
+passes as the bool first argument, so the gain is a colouring gain and not a scheduling
+one. 27 to 26, size-exact and launder-free. Where a select has an unconditional half,
+prefer this rule; lever 1 proper governs a genuine two-arm branch.
+
+**2. Keep an array's stride in the TYPE and name the INDEX, never the row pointer.**
+The stride-in-the-type form on its own moved none of four targets. The refinement did:
+
+```c
+extern u8 data_020a0de8[][4];               /* not u8 data_020a0de8[]; */
+rec = data_020a0de8[idx];                   /* name the index, not the row */
+... data_020a0de8[idx][0] ... data_020a0de9[idx][0] ...
+```
+
+A named row pointer welds every read onto one address temp (6bp: a named local holding an
+address outranks the compiler's own address temp, and everything below it rotates); a named
+index lets each read fold its own `lsl #2` into its addressing mode, which is what the
+cartridge does. `func_ov003_020ae358` went 6 to 0 on that, after thirty-eight source
+variants and about eleven thousand permuter iterations across two earlier attempts had
+failed. `_ZN12dScStarSel_c8BehaviorEv` went 20 to 19 on the same shape, and there an
+invented four-byte struct type scores identically and retyping either of the two arrays
+alone is enough.
+
+None of this is reachable through arithmetic. `idx<<2`, `4*idx`, `idx*2*2`, `idx+idx*3`,
+casts, a fresh global read and an explicit deref all score EXACTLY the same, because index
+arithmetic is canonicalised before allocation. A type is not canonicalised. The lever shows
+up from the other side on `func_ov006_02126ee4`, where an eight-byte stride left out of the
+type makes the compiler strength-reduce `slot*8` into a second induction variable, costing
+the third pass a register and spilling a constant, worth nine words.
+
+**Three bounds on lever 2, each with a reason rather than a shrug.**
+
+*A stride known only at runtime cannot be carried by a type.* `func_ov075_0211621c` is
+structurally inapplicable: its one shared scaled temp uses a runtime stride, and its three
+constant-stride arrays are each indexed once, so there is no shared temp to break.
+
+*Where the cartridge really does hold a cursor, dropping the row pointer is catastrophic.*
+On `func_ov007_020c9688` the inner loop is a genuine post-incremented row cursor
+(`ldrh r3,[sb],#0x18`); the index-not-pointer form costs 10 to 138, and a `u16 (*)[0xc]`
+index form breaks the size outright.
+
+*The shared sine table at `data_02082214` must stay FLAT everywhere, proved four times.*
+Retyping it `s16[][2]` breaks the size on `func_ov006_020fc8c0`, scores 208 on
+`func_ov002_020bb614`, 56 on `func_ov015_021114f0`, and breaks the size again on
+`func_ov060_021140c0`. The cartridge settles it directly: in ov002 the `[i*2]` read at +0x7c
+is `asr #4` then `lsl #2`, and the `[i*2+1]` read at +0xac to +0xb8 is `asr #4`, `lsl #1`,
+`add #1`, `lsl #1`. A `[][2]` type would emit `lsl #2` plus `add #2`. The cartridge's source
+builds the element index once and scales each read separately, so the table is flat and
+stays flat in every file that touches it.
+
+**3. Delete the named intermediate local and store the expression straight into its
+destination.** The highest-yield lever of the night by count: three of one lane's four
+matches came from it alone. Two sharper forms:
+
+*A named 64-bit product costs the whole register colouring.* On `func_ov065_02118838` the
+Q12 product has to be written into its destination field, never through an `s64` name.
+
+*A named loop constant is a liability.* Same function: `0xfff` spelled out at each of three
+compare sites matches, and the name does not. The cartridge holding that constant in a
+register across the loop is the compiler's own hoist, not something the source asked for,
+so writing the hoist into the source competes with it. Read a constant living in a register
+across a loop as evidence of BARE LITERALS in the body (6bh), never as evidence of a name.
+
+This is the tension 6bu levers 5 and 6 record inside a single function, where one value
+needs a name to hold its position and another needs to stay anonymous to give up a
+register. The default that survived this run is: no name unless a measurement asks for one.
+
+**4. Split a computation into a load plus an IN-PLACE operation, and demote its consumer to
+an uninitialised declaration assigned afterwards.** `func_ov007_020ba05c`, 9 to 0. Neither
+half does anything alone, which is exactly why an earlier lane had recorded the in-place
+split as inert and moved on. A two-factor lever cannot appear in a one-factor-at-a-time
+sweep, and this is the run's clearest instance of one.
+
+**5. Re-read a field after a call by moving its declaration BELOW the call.**
+`func_ov006_020fdd40`, 83 to 58, and the frame from 0x1c to the cartridge's 0x14. The
+cartridge re-reads `self->unk_5c28` after the `RandomIntInternal` call inside the gate
+(`add r1,r5,#0x5c00` / `ldrh r2,[r1,#0x28]` / `asr r1,r2,#1`). A draft that declares
+`int lvl = self->unk_5c28 >> 1;` before the call reuses the earlier load and loses one
+`ldrh` and one `mov`, which is why every frame-correct store ordering came out eight bytes
+short. Declaring the call's result first and `lvl` second restores both instructions.
+
+The general form is broader than the re-read: an extra live value read EARLIER renumbers
+the whole downstream register web. `func_ov006_020d27dc` went 20 to 17 by reading `want`
+before assigning `dirSlot` and `dirVal` rather than after, which pushes the allocation up
+one register and reproduces the cartridge's `ldr r1,[pc]` / `mov r2,r7` / `add r7,r2,r1`
+exactly. And statement position decides GLOBAL register allocation, not merely local
+scheduling: on `func_ov065_02118838` one statement move, found by the permuter in two
+minutes against a flattened C copy of a C++ target, went 183 to 30. One line, a hundred and
+fifty-three divergences.
+
+**6. A non-POD local with an empty destructor takes a stack home in the frame's AGGREGATE
+region, not a spill word.** That makes it a frame-layout lever in both directions: it adds
+a frame home without adding a live value, and it explains a frame home nobody meant to ask
+for. It is not a padding hack and must not be read as licence for one; see the trap under
+item 9, where an uninitialised POD array touched through `(void)a[0]` is deleted outright
+and buys nothing.
+
+**7. The compiler has exactly two aggregate-copy lowerings, and the cartridge's grouped
+copy is a third form with a specific trigger.** 6bt establishes that the equal-width block
+move is the only path to `ldm`/`stm` at all. The two lowerings are that block load and
+store for a whole aggregate, and one-register interleaved loads and stores member-wise. On
+`func_ov006_020d01e0` every launder-free way of breaking the equal-width copy compiles
+BYTE-IDENTICALLY to twelve instructions funnelled through a single register: member-by-
+member on two `Vec3`, member-by-member on one 24-byte struct, `s32[6]` element-wise, a
+wrapper struct element-wise, and six named temps. All of them cost fourteen words elsewhere,
+because scalarising the object moves it out of the aggregate region and re-lays the whole
+scalar frame. Pointer indirection folds straight back to add plus `ldm`/`stm`.
+
+The cartridge's six loads then six stores is neither lowering, and it is reachable:
+**it appears when the destination cannot be scalarised while the source's address has
+escaped.** Putting both objects inside one enclosing aggregate, so that taking the address
+of one blocks scalarisation of the other, reproduces the copy region exactly at a cost of
+six words elsewhere. An earlier lane's verdict of "answered, no" was right about its own
+probes and wrong about the mechanism: every probe had broken the copy without changing what
+could be scalarised.
+
+**8. The if-conversion threshold is seven instructions, and the cartridge's is lower.**
+Measured on `func_ov006_020d27dc`: 2004/b56 predicates a conditional early-return block of
+seven instructions or fewer and emits a real branch at eight or more. The cartridge's block
+at that site is six instructions and it branches anyway. So that block cannot be reached
+from any source shape under this build, and the residue is a build delta in the same class
+as 6bs (mwccarm 2.0 emits a real `blt` there).
+
+The block-size attack proves the floor from the other side rather than asserting it.
+Growing the early-return block to eight instructions DOES make b56 emit the branch, and the
+function is then 913 of 914 instructions equal at shape ratio .9978, the only divergence in
+3656 bytes being the two instructions that did the growing. The tax cannot be paid: dead
+assignments are eliminated before the decision is made, and a duplicated store folds, which
+re-derives the same threshold independently. Measured inert at the same site: the goto-pin
+in both polarities, braces, label placement, `break`, and `do { } while (0)`, all
+byte-identical because the compiler normalises them to one CFG; and the full 78-name pragma
+table pulled out of `mwccarm.exe`.
+
+**9. Scoring rules, without which items 5 and 7 read as regressions.**
+
+*Score by FRAME SIZE and by the `--align-shape` ratio, never by the raw mismatch count.*
+Two functions this run had their real fix hidden behind a WORSE mismatch count, and both
+were found only once the lane changed objective. Same discipline as the 6bo addendum's
+"score the roles, not the count", arrived at independently on frame data.
+
+*Correct the shape score for the frame.* `--align-shape` charges about twenty-one words for
+a stack-frame size shift, because every `add rN,sp,#imm` immediate moves with it. On
+`func_ov006_020d01e0` that made a change which GAINS nine words read as losing nine: the
+same source scored frame-blind is .9785 with 500 of 512 equal. Two conclusions in one night
+were wrong for exactly this reason, a declaration-order verdict and the first
+aggregate-copy verdict of item 7. Any lane working a function whose frame is off must score
+frame-blind alongside the official metric.
+
+*A pragma that did nothing is not a pragma that was applied.* The real names are recoverable
+with `strings mwccarm.exe | grep opt_` (about seventy-eight of them; `opt_peephole` and
+`opt_blockmerge` do not exist, the real name is `peephole`); a mid-function `opt_*` pragma
+does NOT scope to its block but runs to the end of the function, so "off then on" is just
+"on"; and under b56 an unrecognised pragma NAME is accepted in silence. Screen every pragma
+name against a 1.2 build before banking a pragma result, per 6br section 3.
+
+*The frame-padding trap, stated once so item 6 is not misread.* An uninitialised POD array
+declared purely to widen a frame, kept alive through `(void)a[0]`, is deleted by the
+optimiser and changes nothing: measured completely inert on `func_ov006_020d01e0`, where a
+banked draft had carried it as though it were load-bearing. A frame home has to be bought
+with something the compiler cannot delete, which means a referenced local, or the non-POD
+of item 6.
+
+## 6bw. The entry write order decides the entry register pair, and one scoring rule 6bv did not state (2026-09-06)
+
+A follow-up lane on the five least-explored remaining targets closed nothing, which is the
+expected outcome on a list whose members have all survived several passes. It turned up one
+new lever, two counter-examples that bound levers 2 and 4 of 6bv, and one scoring mistake
+worth stating separately because it cost the lane its headline claim.
+
+**1. When two same-typed locals are both zeroed at entry, the one written FIRST gets the
+lower register, and that is source-controlled.**
+
+On `func_ov002_020d3b9c` (ov002, 0x5a0) the cartridge opens `mov r5,#0 / mov r4,r5`. Getting
+that pair byte-exact is worth two words, and the only thing that decides it is which of the
+two zeroing statements comes first:
+
+| entry spelling | first written | divergences |
+|---|---|---|
+| `acc = 0; ... spd = acc;` | acc | 51 |
+| `acc = 0; ... spd = 0;` | acc | 51 |
+| `acc = 0; spd = acc;` adjacent | acc | 51 |
+| `spd = 0; ... acc = spd;` | spd | 53 |
+| `spd = 0; ... acc = 0;` | spd | 53 |
+
+The copy relationship is irrelevant, and so is the distance between the two statements. Only
+the order of first write moves it. Stated the other way, because it is the part that is easy
+to get backwards: this is NOT the declaration order. All thirty positions of the `spd` and
+`acc` declarations among the function's six locals score 51 with the writes in the winning
+order, and 53 with them in the losing order. mwccarm ranks the two webs by first definition,
+not by declaration, and this is the one place in the function where the source controls the
+ranking.
+
+This is cheap enough to be worth an unconditional probe: any function whose entry zeroes two
+locals of the same type has exactly two spellings, and one of them is free. The lever was
+inert on two of the four other functions it was tried on, so it is a probe, not a rule.
+
+**2. Counter-example to 6bv's "delete the named intermediate".** On `func_ov002_020cfea4`
+(ov002, 0x2d4) the named intermediate is load-bearing in the other direction: removing
+`int t = idx << 1` from the second block re-orders the shift group and costs seven words
+(36 to 43). The name is what pins the offset-computation order. Deleting the intermediate is
+a probe with two outcomes, the same as item 1.
+
+**3. Counter-example to any pragma sweep that treats pragmas as removable.** On
+`func_ov006_02126b4c` (ov006, 0x398) `#pragma opt_strength_reduction off` carries eighteen
+words: dropping it takes the function from 41 to 59. Confirming 6bv item 9's screening rule
+from the other side, a pragma that IS doing work is not always the one a lane would guess,
+and a lane that inherits a draft should measure each pragma's contribution before removing
+any of them for tidiness.
+
+**4. mwccarm evaluates call arguments right to left, and that decides which parameter is
+homed first.** On `func_ov004_020b2220` (ov004, 0x224) the cartridge homes param0 into `sl`
+before the entry clamp, which frees r0 in time for the next local to be born there; our
+build homes param1 into `sb` first and every register in the block that follows shifts by
+one. The cause is that in `f(tbl[th], sl - 0x30, sb, ...)` the right-to-left evaluation makes
+the first use of `sb` precede the first use of `sl`. Hoisting an `sl`-using statement above
+the branch does flip the home order at no size cost, but the scheduler then stops filling the
+pool-load delay slot with a home at all, which costs the word back. The function needs `sl`
+first-used earlier AND the delay slot still filled.
+
+**5. Score a candidate against the row that is on main, not against the number a lane
+remembers.** The same lane reported a shape win on `func_ov004_020b2220`, comparing 135 equal
+and 2 replaced against a remembered 131 and 6. Re-scored against the row actually committed
+in `nearmiss/db.jsonl`, the committed row is 100 equal and 34 replaced and the new candidate
+is 99 and 35, both size-exact at 548 bytes, and both already byte-exact from 0x104 to the end
+of the function. The improvement was real against the baseline the lane held and absent
+against the baseline on main, so `nearmiss_db.py ingest` correctly refused it. This is the
+second time in this run that a lane's headline claim was scored against a stale baseline. The
+rule that prevents it is one line: before claiming an improvement, re-score the DB's own
+stored `c_source` for that key in the same worktree, in the same run, and quote both numbers.

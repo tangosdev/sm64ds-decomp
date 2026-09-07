@@ -1,0 +1,445 @@
+{
+  "id": "ov071/Scuttlebug",
+  "module": "ov071",
+  "source": "src/actors/Scuttlebug.cpp",
+  "promoted_source": "src/actors/Scuttlebug.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x0211f0a4..0x02120668, 35 function(s), with no gap anywhere",
+    "LEFT EDGE IS A CHOICE, not a gap. The cartridge's run starts two functions lower, at _ZN10ScuttlebugD1Ev 0x0211f000 and _ZN10ScuttlebugD0Ev 0x0211f048. They are held out because ~Scuttlebug is this class's key function: whichever TU defines it emits _ZTV10Scuttlebug, _ZTI10Scuttlebug and _ZTS10Scuttlebug, and the last two have no address anywhere in the cartridge -- it spells the class daSpd_c (_ZTS7daSpd_c 0x02122bf0, _ZTI7daSpd_c 0x02122bfc) and ov071/symbols.txt aliases only the vtable. Leaving D1/D0 enrolled leaves the emission with src/_ZN10ScuttlebugD1Ev.cpp, where objisolate keeps the enrolled .text and discards the data, exactly as ov074/Goomboss (36 functions from 0x0211f154, its D1/D0 at 0x0211f000/0x0211f0a0 left enrolled) and ov066/Eyerok (34 functions from 0x021184c0) already do. Both are promoted and both carry _ZN7Vector3D1Ev as their only compiler-only row.",
+    "tools/tu_map.py reported 36 and stopped at 0x02120618 because it cuts on symbol NAME: daSpd_c_classInit is not spelt _ZN10Scuttlebug..., so it was never labelled. Its delinks.txt entry src/d_a_spd.c claims .text 0x02120618..0x02120668, abutting _ZN10Scuttlebug13OnTurnIntoEggER6Player (0x02120580 + 0x98 = 0x02120618) with a ZERO-byte gap. The cartridge's whole run is 37 functions; this TU claims 35 of them.",
+    "ov071 puts each class's <class>_classInit last in its own run: daEyBm_c (promoted, 13 of 13), daObjCasket_c and daEykn_c all do the same",
+    "0x02120668 is _ZN3MrID1Ev, the first function of the next class TU",
+    "class label(s): Scuttlebug; ROM RTTI identity daSpd_c (_ZTS7daSpd_c 0x02122bf0, _ZTI7daSpd_c 0x02122bfc), vtable _ZTV10Scuttlebug == _ZTV7daSpd_c at 0x02122c2c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211f0a4",
+      "end": "0x02120668"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN10Scuttlebug13OnYoshiTryEatEv",
+      "address": "0x0211f0a4",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN10Scuttlebug13OnYoshiTryEatEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN10Scuttlebug16OnAimedAtWithEggEv",
+      "address": "0x0211f0ac",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN10Scuttlebug16OnAimedAtWithEggEv.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov071_0211f0b4",
+      "address": "0x0211f0b4",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov071_0211f0b4.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov071_0211f148",
+      "address": "0x0211f148",
+      "size": "0x00000154",
+      "legacy_source": "src/func_ov071_0211f148.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov071_0211f29c",
+      "address": "0x0211f29c",
+      "size": "0x000001fc",
+      "legacy_source": "src/func_ov071_0211f29c.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov071_0211f498",
+      "address": "0x0211f498",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov071_0211f498.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov071_0211f524",
+      "address": "0x0211f524",
+      "size": "0x00000170",
+      "legacy_source": "src/func_ov071_0211f524.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov071_0211f694",
+      "address": "0x0211f694",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov071_0211f694.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov071_0211f6f8",
+      "address": "0x0211f6f8",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov071_0211f6f8.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov071_0211f7d4",
+      "address": "0x0211f7d4",
+      "size": "0x000000fc",
+      "legacy_source": "src/func_ov071_0211f7d4.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov071_0211f8d0",
+      "address": "0x0211f8d0",
+      "size": "0x00000184",
+      "legacy_source": "src/func_ov071_0211f8d0.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov071_0211fa54",
+      "address": "0x0211fa54",
+      "size": "0x000000b8",
+      "legacy_source": "src/func_ov071_0211fa54.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov071_0211fb0c",
+      "address": "0x0211fb0c",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov071_0211fb0c.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov071_0211fb24",
+      "address": "0x0211fb24",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov071_0211fb24.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov071_0211fbf4",
+      "address": "0x0211fbf4",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov071_0211fbf4.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov071_0211fc60",
+      "address": "0x0211fc60",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov071_0211fc60.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov071_0211fcd4",
+      "address": "0x0211fcd4",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov071_0211fcd4.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov071_0211fd58",
+      "address": "0x0211fd58",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov071_0211fd58.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov071_0211fe38",
+      "address": "0x0211fe38",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov071_0211fe38.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov071_0211fee4",
+      "address": "0x0211fee4",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov071_0211fee4.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov071_0211ff84",
+      "address": "0x0211ff84",
+      "size": "0x000000a4",
+      "legacy_source": "src/func_ov071_0211ff84.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov071_02120028",
+      "address": "0x02120028",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov071_02120028.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov071_02120130",
+      "address": "0x02120130",
+      "size": "0x00000084",
+      "legacy_source": "src/func_ov071_02120130.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov071_021201b4",
+      "address": "0x021201b4",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov071_021201b4.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov071_02120200",
+      "address": "0x02120200",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov071_02120200.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov071_02120278",
+      "address": "0x02120278",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov071_02120278.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov071_021202b4",
+      "address": "0x021202b4",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov071_021202b4.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "Scuttlebug_SetState",
+      "address": "0x021202ec",
+      "size": "0x0000001c",
+      "legacy_source": "src/Scuttlebug_SetState.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN10Scuttlebug16CleanupResourcesEv",
+      "address": "0x02120308",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN10Scuttlebug16CleanupResourcesEv.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN10Scuttlebug16OnPendingDestroyEv",
+      "address": "0x02120338",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN10Scuttlebug16OnPendingDestroyEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN10Scuttlebug6RenderEv",
+      "address": "0x0212033c",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN10Scuttlebug6RenderEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN10Scuttlebug8BehaviorEv",
+      "address": "0x02120398",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN10Scuttlebug8BehaviorEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN10Scuttlebug13InitResourcesEv",
+      "address": "0x021203f8",
+      "size": "0x00000188",
+      "legacy_source": "src/_ZN10Scuttlebug13InitResourcesEv.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN10Scuttlebug13OnTurnIntoEggER6Player",
+      "address": "0x02120580",
+      "size": "0x00000098",
+      "legacy_source": "src/_ZN10Scuttlebug13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "daSpd_c_classInit",
+      "address": "0x02120618",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_spd.c",
+      "ordinal": 34
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov071_0211fb24.cpp (func_ov071_0211fb24) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov071_0211fd58.cpp (func_ov071_0211fd58) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov071_021201b4.cpp (func_ov071_021201b4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_0211f29c; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_0211f29c; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_0211f498; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'dBgCh_Actr_UpdateDiscreteNoLava_veneer' differs between the legacy file that used to hold func_ov071_0211f148 and the one that held func_ov071_0211f694; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov071_0211f498' differs between the legacy file that used to hold func_ov071_0211f29c and the one that held func_ov071_0211f694; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank0EjRK7Vector3' differs between the legacy file that used to hold func_ov071_0211f29c and the one that held func_ov071_0211f6f8; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'dBgCh_Actr_UpdateDiscreteNoLava_veneer' differs between the legacy file that used to hold func_ov071_0211f148 and the one that held func_ov071_0211f7d4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr14GetFloorResultEv' differs between the legacy file that used to hold func_ov071_0211f148 and the one that held func_ov071_0211f7d4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov071_0211f498' differs between the legacy file that used to hold func_ov071_0211f29c and the one that held func_ov071_0211f7d4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_0211f7d4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_0211fa54; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_0211fa54; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov071_0211f6f8 and the one that held func_ov071_0211fbf4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation7AdvanceEv' differs between the legacy file that used to hold func_ov071_0211f694 and the one that held func_ov071_0211fc60; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov071_0211f148 and the one that held func_ov071_0211fc60; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_0211fc60; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c9UpdatePosEP5dCc_c' differs between the legacy file that used to hold func_ov071_0211f694 and the one that held func_ov071_0211fc60; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov071_0211f29c' differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_0211fc60; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_0211fc60; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c6UpdateEv' differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_0211fc60; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov071_0211f6f8 and the one that held func_ov071_0211fcd4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov071_0211f6f8 and the one that held func_ov071_0211fe38; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov071_0211fcd4 and the one that held func_ov071_0211fee4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov071_0211f148' differs between the legacy file that used to hold func_ov071_0211fc60 and the one that held func_ov071_0211fee4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_0211ff84; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_0211ff84; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov071_0211f6f8 and the one that held func_ov071_0211ff84; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation7AdvanceEv' differs between the legacy file that used to hold func_ov071_0211f694 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c9UpdatePosEP5dCc_c' differs between the legacy file that used to hold func_ov071_0211f694 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'dBgCh_Actr_UpdateDiscreteNoLava_veneer' differs between the legacy file that used to hold func_ov071_0211f148 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr13JustHitGroundEv' differs between the legacy file that used to hold func_ov071_0211f694 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov071_0211f148 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_' differs between the legacy file that used to hold func_ov071_0211f6f8 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov071_0211f29c' differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c6UpdateEv' differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_02120028; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov071_0211f6f8 and the one that held func_ov071_02120130; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgCh_Actr13SetLimMovFlagEv' differs between the legacy file that used to hold func_ov071_0211f8d0 and the one that held func_ov071_02120130; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_0201267c' differs between the legacy file that used to hold func_ov071_0211fcd4 and the one that held func_ov071_02120130; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5dCc_c5ClearEv' differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_02120200; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov071_02122f88' differs between the legacy file that used to hold func_ov071_0211fcd4 and the one that held _ZN10Scuttlebug13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held _ZN10Scuttlebug13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov071_0211f524' differs between the legacy file that used to hold _ZN10Scuttlebug8BehaviorEv and the one that held _ZN10Scuttlebug13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Scuttlebug_SetState' differs between the legacy file that used to hold func_ov071_0211f0b4 and the one that held _ZN10Scuttlebug13OnTurnIntoEggER6Player; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold func_ov071_0211f498 and the one that held _ZN10Scuttlebug13OnTurnIntoEggER6Player; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'dActor_c') differs between the legacy file that used to hold func_ov071_0211f7d4 and the one that held func_ov071_0211fee4; kept the first, the other is commented out for review -- RESOLVED: the generated preamble was discarded wholesale and this TU declares exactly one hand-curated spelling per symbol; no /* TUBUILD CONFLICT */ marker survives in the merged source.",
+    "daSpd_c_classInit and the SPIDER profile relationship are reconstructed source-style names (historical alias Scuttlebug_Spawn). The 0x3ac allocation size, the member construction order and the vtable identity are proven; the exact original SM64DS spelling is not. g_profile_SPIDER (0x02122c08) is data this TU does not claim and does not define.",
+    "STAGE 3B, MEASURED: 10 of the 37 members are real Scuttlebug:: methods; the other 27 are extern \"C\" free functions. The ceiling is NAME RECOVERY, not codegen and not emission order. All 27 carry an auto-generated symbol (25 func_ov071_*, plus Scuttlebug_SetState and daSpd_c_classInit), so converting any of them is a rename, and two independent tools agree on what that rename costs. config/arm9/overlays/ov071/relocs.txt has exactly 29 relocation sources outside 0x0211f000..0x02120668 that land inside it: 10 vtable slots (already mangled), the 18 pointer-to-member records at 0x02122b60..0x02122be8, and g_profile_SPIDER+0 at 0x02122c08. The delinked unowned-data object from the linkcheck baseline scratch tree, _dsd_gap@ov071_4.o, lists those same 29 as UNDEFINED by name -- the 10 _ZN10Scuttlebug* symbols, the 18 func_ov071_* state handlers and daSpd_c_classInit. So 19 of the 27 cannot be renamed unless this module's symbols.txt moves in the same commit, or every one of those records links as 0x00000000; the remaining 8 (func_ov071_0211f0b4, _0211f148, _0211f29c, _0211f498, _0211f524, _02120278, _021202b4 and Scuttlebug_SetState) have no external namer at all and are blocked only by the missing names. include/decl_common.h declares five of those eight and is generated, so a rename regenerates it, and about twenty sibling shards carry call-site extern declarations that move with it.",
+    "THE 51-OF-52 CONVERSION ORACLE IS NOT INHERITED NAMING, which is worth stating because it looks as though it might be. At 12f85d7fc^ only 8 of ov006/dScMgMemory2_c's 52 symbols were spelt _ZN14dScMgMemory2_c* in config/arm9/overlays/ov006/symbols.txt; the promotion commit 12f85d7fc renamed 44 more in that file and in 44 shards in the same commit, one line per shard with the shard file names untouched. That is the recipe this class would need, and it is a naming pass rather than a codegen one. It is deliberately not folded in here: every one of the 27 free-function names is on the scout facts file's binding unproven list -- the 25 func_ov071_* members as a group, and daSpd_c_classInit and Scuttlebug_SetState by name.",
+    "HEADER CORRECTIONS, both from the scout facts file and both byte-neutral (all 10 enrolled shards re-measured MATCH and the merged TU stayed 37/37 across the edit): 0x0d0 was declared u8 pad_0d0[0x4] and is a live 4-byte field -- InitResources writes it whole at 0x02120528 and two more functions of the run read and write it; and 0x3a8 was declared u8 mTimer followed by u8 pad_3a9[0x3], while Behavior passes its address to DecIfAbove0_Short, a short* helper, so the slot is a halfword and 0x3aa is a separate live byte with its own ldrb/strb sites. The header also gained the same RTTI-name disclosure include/MrI.h carries for the identical case in this overlay (ROM name daEykn_c, tree name MrI, vtable aliased under both).",
+    "THE COINED NAME IS NOT A PROMOTION BLOCKER, and an earlier revision of this entry said it was. Measured on this class, everything else held constant, one line changed in include/Scuttlebug.h: with `virtual ~Scuttlebug() {}` the TU emits _ZTV10Scuttlebug, _ZTI10Scuttlebug and _ZTS10Scuttlebug and verify reports 12 unlicensed section/symbol(s) -- 9 in .data (those three, plus _ZTI and _ZTS for each of fBase_c, dBase_c and dActor_c) and 3 in .text (D1, D0 and _ZN7Vector3D1Ev) -- alongside 2 compiler-only policy errors, and PROMOTION REFUSED; with `virtual ~Scuttlebug();` declared and not defined, the same TU emits ZERO data symbols and the only EXTRA left is _ZN7Vector3D1Ev, size 0x4, in .text. An inline destructor body gives the vtable and RTTI vague linkage, so they come out of every odr-using TU whatever the declaration position; declared-and-undefined makes the destructor the key function and confines all three to the one TU that defines it. That TU is src/_ZN10ScuttlebugD1Ev.cpp, which stays enrolled, and objisolate keeps its .text and discards its data.",
+    "TWO PROMOTED PRECEDENTS HAVE EXACTLY THIS SHAPE, and they were the model for the range above. ov074/Goomboss and ov066/Eyerok are coined classes whose symbols.txt aliases only _ZTV (no _ZTS/_ZTI alias); both declare the destructor out of line and first, both hold D1/D0 out of the licensed run (Goomboss 36 functions from 0x0211f154 with D1/D0 at 0x0211f000/0x0211f0a0; Eyerok 34 from 0x021184c0), and both are status:promoted and both carry _ZN7Vector3D1Ev as a compiler_only_output row -- Goomboss's only one, while Eyerok carries a second, _ZN4Vec4D1Ev, the implicit destructor of the file-local shadow struct its ordinal 50 declares. The cost is two functions, not the class.",
+    "THE ROMDATA COST OF THE LEVER IS ZERO, measured rather than assumed, because the switch does not change what any ENROLLED source emits. tools/romdata_check.py reads src/, and src_tu/actors/Scuttlebug.cpp is a shadow TU that is never in the build under either shape. With the inline body the vtable comes out of src/_ZN10ScuttlebugD1Ev.cpp by vague linkage; with the body removed it comes out of the same file as the key function's owner. Run over src/_ZN10ScuttlebugD1Ev.cpp, src/_ZN10ScuttlebugD0Ev.cpp and src/_ZN10Scuttlebug13OnYoshiTryEatEv.cpp, both shapes report an identical 9 data symbols: VERIFIED 4 (156 bytes), PARTIAL 3 (24 bytes), DIFFERS 0, UNNAMED 2. The two UNNAMED are _ZTI10Scuttlebug and _ZTS10Scuttlebug, which have no symbols.txt address to compare against and can never verify under any shape, since those names are not in the cartridge.",
+    "DESTRUCTOR SHARDS: the inline-body shape had left src/_ZN10ScuttlebugD1Ev.cpp and src/_ZN10ScuttlebugD0Ev.cpp redefining a destructor the header already defined, so both failed to compile -- \"object 'Scuttlebug::~Scuttlebug()' redefined\" -- and the whole-tree build was red on this branch. No gate on the branch reported it, because linkcheck stopped at the object audit before mwldarm ran. Reverting the header to the declared-and-undefined form restores both shards to their original out-of-line definitions with no forcing scaffold at all, and both re-measure MATCH."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov071-Scuttlebug/Scuttlebug.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 35,
+    "functions_declared": 35,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        11
+      ],
+      "data": [],
+      "dataExternalized": []
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov071-Scuttlebug/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0211f0a4",
+        "end": "0x02120668",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0211f0a4",
+          "end": "0x02120668",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 35
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vague-linkage Vector3 destructor. Vector3 carries a user-declared ~Vector3() (include/types.h), and this TU odr-uses four of them as function locals -- pos/normal/wallnormal in func_ov071_0211f148 and v in func_ov071_0211f8d0. One row however many objects: the emitted symbol is the single vague copy. arm9 owns the kept copy at 0x020072c0, four bytes of bx lr."
+    }
+  ]
+}

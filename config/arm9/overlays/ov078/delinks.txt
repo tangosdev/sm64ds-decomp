@@ -68,6 +68,7 @@ src/func_ov078_02124060.cpp:
     .text start:0x02124060 end:0x021240a0
 
 src/func_ov078_021240a0.c:
+    complete
     .text start:0x021240a0 end:0x021243c0
 
 src/func_ov078_021243c0.cpp:

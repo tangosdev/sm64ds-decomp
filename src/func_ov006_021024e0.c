@@ -1,11 +1,11 @@
 #pragma opt_strength_reduction off
 extern unsigned char data_ov006_0212ebb8[];
-void func_ov006_021024e0(int this) {
+void func_ov006_021024e0(char *this) {
     int n = data_ov006_0212ebb8[*(int*)(this + 0x5000 + 0x668)];
     int i = 0;
     if (n <= 0) return;
     do {
-        char *b = (char*)(this + i * 0x40);
+        char *b = this + i * 0x40;
         *(unsigned char*)(b + 0x5294) = 1;
         *(unsigned char*)(b + 0x5296) = 0;
         *(unsigned char*)(b + 0x529b) = 0;

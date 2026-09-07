@@ -25,8 +25,11 @@ void dScMgTeresa_c::OnYoshiTryEat(int reset)
 
     volatile unsigned short val;
     if (reset == 0) {
-        unsigned int v = *(unsigned int*)(self + 0xbc) + 1;
-        *(unsigned int*)(self + 0xbc) = v;
+        /* `const` on the read is load-bearing: without it mwcc CSEs the +0xbc
+           field address into its own register (add r2,r4,#0xbc / ldr [r2] /
+           str [r2]) and the function grows a word; the cartridge re-issues
+           ldr r1,[r4,#0xbc]. Same lever as dScMgHanachan_c::OnYoshiTryEat. */
+        *(unsigned int*)(self + 0xbc) = *(const unsigned int*)(self + 0xbc) + 1;
         if (*(unsigned int*)(self + 0xbc) > 0x270e)
             *(unsigned int*)(self + 0xbc) = 0x270e;
     } else {

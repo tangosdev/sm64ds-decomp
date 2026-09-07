@@ -1,0 +1,506 @@
+{
+  "id": "ov002/daObjMarioCap_c",
+  "module": "ov002",
+  "source": "src/actors/daObjMarioCap_c.cpp",
+  "promoted_source": "src/actors/daObjMarioCap_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x020b6f18..0x020b8b98, 30 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "PARTIAL: the licensed range is 0x020b6f18..0x020b86d0, 29 of those 30. _ZN15daObjMarioCap_c13InitResourcesEv (0x020b86d0, size 0x4c8) is held out -- its src/ shard does not reproduce under the pinned 2004/b56 compiler (build_pin.verify: 999 word(s) differ) and its delinks.txt block carries no complete marker. It is the TOP function of the run, so holding it out leaves one contiguous .text claim with no hole.",
+    "ROM class identity: _ZTS15daObjMarioCap_c / _ZTI15daObjMarioCap_c / _ZTV15daObjMarioCap_c live in ov002 outside this .text range, so the route is text-only plus a compiler_only_output policy.",
+    "destructor direction: the cartridge orders D1 (0x020b6f18) BELOW D0 (0x020b6f68) and carries no D2 -- the reproducible direction for an inline in-class destructor.",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b6f18",
+      "end": "0x020b86d0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15daObjMarioCap_cD1Ev",
+      "address": "0x020b6f18",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN15daObjMarioCap_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15daObjMarioCap_cD0Ev",
+      "address": "0x020b6f68",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN15daObjMarioCap_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020b6fcc",
+      "address": "0x020b6fcc",
+      "size": "0x0000021c",
+      "legacy_source": "src/func_ov002_020b6fcc.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020b71e8",
+      "address": "0x020b71e8",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov002_020b71e8.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov002_020b71f0",
+      "address": "0x020b71f0",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov002_020b71f0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov002_020b7200",
+      "address": "0x020b7200",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov002_020b7200.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov002_020b7330",
+      "address": "0x020b7330",
+      "size": "0x000001a0",
+      "legacy_source": "src/func_ov002_020b7330.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov002_020b74d0",
+      "address": "0x020b74d0",
+      "size": "0x0000021c",
+      "legacy_source": "src/func_ov002_020b74d0.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov002_020b76ec",
+      "address": "0x020b76ec",
+      "size": "0x00000130",
+      "legacy_source": "src/func_ov002_020b76ec.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov002_020b781c",
+      "address": "0x020b781c",
+      "size": "0x00000354",
+      "legacy_source": "src/func_ov002_020b781c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov002_020b7b70",
+      "address": "0x020b7b70",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov002_020b7b70.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov002_020b7c30",
+      "address": "0x020b7c30",
+      "size": "0x000000ac",
+      "legacy_source": "src/func_ov002_020b7c30.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov002_020b7cdc",
+      "address": "0x020b7cdc",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov002_020b7cdc.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov002_020b7cec",
+      "address": "0x020b7cec",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov002_020b7cec.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov002_020b7d58",
+      "address": "0x020b7d58",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020b7d58.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov002_020b7d6c",
+      "address": "0x020b7d6c",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov002_020b7d6c.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov002_020b7d94",
+      "address": "0x020b7d94",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov002_020b7d94.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov002_020b7d9c",
+      "address": "0x020b7d9c",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov002_020b7d9c.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov002_020b7e08",
+      "address": "0x020b7e08",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020b7e08.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov002_020b7e1c",
+      "address": "0x020b7e1c",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov002_020b7e1c.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov002_020b7f24",
+      "address": "0x020b7f24",
+      "size": "0x00000008",
+      "legacy_source": "src/func_ov002_020b7f24.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov002_020b7f2c",
+      "address": "0x020b7f2c",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov002_020b7f2c.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov002_020b7f7c",
+      "address": "0x020b7f7c",
+      "size": "0x00000264",
+      "legacy_source": "src/func_ov002_020b7f7c.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN15daObjMarioCap_c13OnTurnIntoEggER6Player",
+      "address": "0x020b81e0",
+      "size": "0x00000090",
+      "legacy_source": "src/_ZN15daObjMarioCap_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN15daObjMarioCap_c13OnYoshiTryEatEv",
+      "address": "0x020b8270",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN15daObjMarioCap_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN15daObjMarioCap_c16CleanupResourcesEv",
+      "address": "0x020b8284",
+      "size": "0x00000110",
+      "legacy_source": "src/_ZN15daObjMarioCap_c16CleanupResourcesEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN15daObjMarioCap_c16OnPendingDestroyEv",
+      "address": "0x020b8394",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN15daObjMarioCap_c16OnPendingDestroyEv.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN15daObjMarioCap_c6RenderEv",
+      "address": "0x020b83c4",
+      "size": "0x000000e4",
+      "legacy_source": "src/_ZN15daObjMarioCap_c6RenderEv.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN15daObjMarioCap_c8BehaviorEv",
+      "address": "0x020b84a8",
+      "size": "0x00000228",
+      "legacy_source": "src/_ZN15daObjMarioCap_c8BehaviorEv.cpp",
+      "ordinal": 28
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov002_020b6fcc.cpp (func_ov002_020b6fcc) did not split (the definition is inside the extern \"C\" block opened on line 3, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020b7cec.cpp (func_ov002_020b7cec) did not split (the definition is inside the extern \"C\" block opened on line 4, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020b7d9c.cpp (func_ov002_020b7d9c) did not split (the definition is inside the extern \"C\" block opened on line 4, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov002_020b7200 and the one that held func_ov002_020b7330; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold func_ov002_020b7200 and the one that held func_ov002_020b74d0; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov002_020b7330 and the one that held func_ov002_020b74d0; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov002_020b7200 and the one that held func_ov002_020b74d0; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov002_020b7200 and the one that held func_ov002_020b74d0; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov002_020b74d0 and the one that held func_ov002_020b76ec; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold func_ov002_020b7200 and the one that held func_ov002_020b781c; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov002_020b781c and the one that held func_ov002_020b7c30; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020b6fcc' differs between the legacy file that used to hold func_ov002_020b781c and the one that held func_ov002_020b7c30; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold func_ov002_020b7200 and the one that held func_ov002_020b7c30; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020b6fcc' differs between the legacy file that used to hold func_ov002_020b781c and the one that held func_ov002_020b7d6c; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_' differs between the legacy file that used to hold func_ov002_020b7c30 and the one that held func_ov002_020b7e1c; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'DecIfAbove0_Short' differs between the legacy file that used to hold func_ov002_020b74d0 and the one that held func_ov002_020b7e1c; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020b6fcc' differs between the legacy file that used to hold func_ov002_020b781c and the one that held func_ov002_020b7e1c; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov002_020b781c and the one that held func_ov002_020b7f7c; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov002_020b7200 and the one that held _ZN15daObjMarioCap_c13OnTurnIntoEggER6Player; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210df54' differs between the legacy file that used to hold func_ov002_020b7f7c and the one that held _ZN15daObjMarioCap_c13OnTurnIntoEggER6Player; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de58' differs between the legacy file that used to hold func_ov002_020b7330 and the one that held _ZN15daObjMarioCap_c16CleanupResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de18' differs between the legacy file that used to hold func_ov002_020b7330 and the one that held _ZN15daObjMarioCap_c16CleanupResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de30' differs between the legacy file that used to hold func_ov002_020b7330 and the one that held _ZN15daObjMarioCap_c16CleanupResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210df54' differs between the legacy file that used to hold func_ov002_020b7f7c and the one that held _ZN15daObjMarioCap_c6RenderEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c9UpdatePosEP5dCc_c' differs between the legacy file that used to hold func_ov002_020b7c30 and the one that held _ZN15daObjMarioCap_c8BehaviorEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj' differs between the legacy file that used to hold func_ov002_020b7c30 and the one that held _ZN15daObjMarioCap_c8BehaviorEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov002_020b781c and the one that held _ZN15daObjMarioCap_c8BehaviorEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov002_020b7330 and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020b7f2c' differs between the legacy file that used to hold _ZN15daObjMarioCap_c13OnTurnIntoEggER6Player and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020b7f7c' differs between the legacy file that used to hold _ZN15daObjMarioCap_c8BehaviorEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de50' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de60' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de48' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de28' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de08' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de20' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de40' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de10' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de00' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de58' differs between the legacy file that used to hold func_ov002_020b7330 and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de18' differs between the legacy file that used to hold func_ov002_020b7330 and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de30' differs between the legacy file that used to hold func_ov002_020b7330 and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210de38' differs between the legacy file that used to hold _ZN15daObjMarioCap_c16CleanupResourcesEv and the one that held _ZN15daObjMarioCap_c13InitResourcesEv; kept the first, the other is commented out for review; resolved by hand-curating ONE declaration per symbol in the merged preamble (widest compatible spelling, casts added at the call sites that needed them) and deleting every TUBUILD CONFLICT marker from the source. 29/29 byte-match."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjMarioCap_c/daObjMarioCap_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 29,
+    "functions_declared": 29,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        38
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI15daObjMarioCap_c",
+        "_ZTS15daObjMarioCap_c",
+        "_ZTV15daObjMarioCap_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI15daObjMarioCap_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS15daObjMarioCap_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV15daObjMarioCap_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov002-daObjMarioCap_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020b6f18",
+        "end": "0x020b86d0",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020b6f18",
+          "end": "0x020b86d0",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 29
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "func_ov002_020b781c and func_ov002_020b76ec hold Vector3 locals, and types.h gives Vector3 an inline destructor, so the compiler emits its own copy of the four-byte bx lr body. The ROM homes it in arm9; this copy is a duplicate and is discarded by text-only isolation."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical ov002 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy at its canonical ov002 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI15daObjMarioCap_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021095ac",
+      "reason": "OnYoshiTryEat is the key function, so it naturally emits the ROM-proven daObjMarioCap_c single-inheritance RTTI. romdata_check proves its complete record and its base relocation to _ZTI12dEnemyBase_c before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTS15daObjMarioCap_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021095b8",
+      "reason": "OnYoshiTryEat naturally emits the ROM-proven daObjMarioCap_c type-name string. romdata_check proves its exact payload before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTV15daObjMarioCap_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021095f0",
+      "reason": "OnYoshiTryEat is the key function and emits the complete 0x84-byte class vtable storage (two header words plus 31 slots, the dActor_c-derived table length). romdata_check applies the measured eight-byte public-address-point bias and proves every slot before text-only isolation discards the copy."
+    }
+  ],
+  "externalized_output": [],
+  "production_mode": "text-only"
+}

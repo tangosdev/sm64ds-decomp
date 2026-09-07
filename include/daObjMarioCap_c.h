@@ -74,9 +74,20 @@ struct daObjMarioCap_c : dEnemyBase_c {
     u8  unk_401;                                /* 0x401 */
     u8  pad_402[0xe];
 
-    virtual ~daObjMarioCap_c();
+    /* INLINE, AND DECLARED FIRST. The cartridge puts D1 at 0x020b6f18 below
+       D0 at 0x020b6f68 and carries no D2, which is exactly what mwccarm 2004
+       emits for an inline destructor; an out-of-line one emits D2/D0/D1 in the
+       wrong order plus a homeless D2. The typed member list below makes the
+       empty body own the dCapIcon_c, ShadowModel, ModelAnim, dBgCh_Actr and
+       dCcAc_c teardowns and the chain into _ZN12dEnemyBase_cD2Ev.
 
-    virtual s32   OnYoshiTryEat();         /* slot 18 */
+       With the destructor inline, OnYoshiTryEat becomes the first out-of-line
+       virtual this class declares -- the key function -- so the vtable and the
+       RTTI group land in the translation unit that defines it,
+       src/actors/daObjMarioCap_c.cpp. */
+    virtual ~daObjMarioCap_c() {}
+
+    virtual s32   OnYoshiTryEat();         /* slot 18 -- key function */
 
     /* methods */
     int Behavior();
