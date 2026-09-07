@@ -1,0 +1,85 @@
+# SLICE SLOT5 (run link100, lane SLOT5F): the thirty Render bodies the
+# virtual-destructor fold kept out of the link.
+#
+# WHAT WAS WRONG. mwccarm gives `virtual ~X()` TWO vtable entries -- the
+# Itanium complete-object D1 and deleting D0 pair -- and MSVC folds them into
+# ONE. Every virtual declared after the destructor therefore sat one slot early
+# on the host, all the way down ModelBase -> Model -> ModelAnim and its
+# siblings. The ROM's _ZTV9ModelAnim reads [0] D1, [1] D0, [2] DoSetFile,
+# [3] UpdateVerts, [4] Virtual10, [5] Render, [6] Virtual18; the folded host
+# table put Virtual18 on slot 5, which is a two-argument method where a slot-5
+# caller passes one.
+#
+# Each body below declares a LOCAL six-virtual shadow over a Model or ModelAnim
+# member and dispatches the sixth virtual, which is the ROM's slot 5 and is
+# Render. Under the fold that dispatch landed on Virtual18 and faulted, so each
+# body was dropped from its own gate's slice and typed out by hand into
+# port/unmatched/ModelAnim_Renders.cpp or port/unmatched/BobEnemy_Renders.cpp.
+#
+# WHAT CHANGED. include/ModelBase.h and its six siblings now spell the
+# destructor pair as two plain virtuals under _MSC_VER, so the host's numbering
+# IS the ROM's numbering and slot 5 is Render on both sides. Nothing in this
+# tree defines _MSC_VER for mwccarm, so no ROM byte moves. The hand copies have
+# nothing left to work around and the matched sources link in their place.
+#
+# VERIFIED BY ROM ADDRESS, every row, before it was enrolled. For each class
+# the word at _ZTV<class> + 4*9 in config/arm9/overlays/<ov>/relocs.txt
+# relocates to the body enrolled here -- slot 9 is ActorBase::Render, the slot
+# the ROM's own table spends on this method -- and that destination carries a
+# kind:function(arm,size=..) record in the same overlay's symbols.txt whose
+# first word is a real ARM push. Not one of the thirty carries the "recovered
+# from vtable slot identity" marker, so inferred_stub_guard.py has nothing to
+# refuse. The addresses are in the lane report.
+#
+# WHAT STILL NEEDS A FACE. Every one of the thirty hal fill sites declares the
+# Itanium name at C linkage and calls it, because the host copy it used to
+# reach was an extern "C" definition. The matched sources define __thiscall
+# METHODS instead, and no linker alias bridges ecx-against-the-stack, so
+# hal/cxxname_bridge.cpp carries thirty one-line faces. The fill sites
+# themselves are untouched.
+#
+# NOT HERE, and why:
+#   src/func_ov012_02111324.cpp -- SwitchPillar's own Render, the same
+#     collision, but its source carries the "recovered from vtable slot
+#     identity" GUESS marker. inferred_stub_guard.py refuses new seats of
+#     those, so its host copy stays in unmatched/ModelAnim_Renders.cpp.
+#   src/_ZN6Snufit6RenderEv.cpp, src/_ZN5Swoop6RenderEv.cpp,
+#     src/_ZN6Dorrie6RenderEv.cpp, src/_ZN9MontyMole6RenderEv.cpp -- the same
+#     collision and worth four more, but their fills route to
+#     port_w19_* host names in hal/actor_classes_ov065.cpp and
+#     hal/actor_classes_montymole.cpp, which this lane does not own.
+#
+# ---------------------------------------------------------------------------
+# BOB-OMB BATTLEFIELD's cast (host copies were unmatched/BobEnemy_Renders.cpp)
+src/_ZN6BobOmb6RenderEv.cpp
+src/_ZN6Goomba6RenderEv.cpp
+src/_ZN11BobOmbBuddy6RenderEv.cpp
+src/_ZN10ChainChomp6RenderEv.cpp
+src/_ZN15ChainChompFence6RenderEv.cpp
+src/_ZN13KoopaTheQuick6RenderEv.cpp
+src/_ZN9KoopaFlag6RenderEv.cpp
+# ---------------------------------------------------------------------------
+# THE REST (host copies were unmatched/ModelAnim_Renders.cpp)
+src/_ZN5Whomp6RenderEv.cpp
+src/_ZN9Butterfly6RenderEv.cpp
+src/_ZN4Fish6RenderEv.cpp
+src/_ZN13QuestionBlock6RenderEv.cpp
+src/_ZN10Scuttlebug6RenderEv.cpp
+src/_ZN9PowerStar6RenderEv.cpp
+src/_ZN5Bully6RenderEv.cpp
+src/_ZN8BigBully6RenderEv.cpp
+src/_ZN15RotatingFirebar6RenderEv.cpp
+src/_ZN13UpDownLiftBbh6RenderEv.cpp
+src/_ZN7Seaweed6RenderEv.cpp
+src/_ZN9SeesawBob6RenderEv.cpp
+src/_ZN14UnchainedChomp6RenderEv.cpp
+src/_ZN11BabyPenguin6RenderEv.cpp
+src/_ZN10HootTheOwl6RenderEv.cpp
+src/_ZN12SwitchPillar6RenderEv.cpp
+src/_ZN9Spindrift6RenderEv.cpp
+src/_ZN8Moneybag6RenderEv.cpp
+src/_ZN9PushBlock6RenderEv.cpp
+src/actors/Boo/_ZN3Boo6RenderEv.cpp
+src/_ZN6FlyGuy6RenderEv.cpp
+src/_ZN8YoshiEgg6RenderEv.cpp
+src/_ZN14QuestionSwitch6RenderEv.cpp
