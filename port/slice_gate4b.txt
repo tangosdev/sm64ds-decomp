@@ -51,7 +51,9 @@ src/func_020453c0.c
 src/func_0204547c.c
 src/func_020457f0.c
 src/func_020456a0.c
-src/_ZN4cstd3absEi.cpp
+# src/_ZN4cstd3absEi.cpp moved to slice_gate2.txt: the allocator layer needs it
+# too, and every target that links this slice links gate 2 as well, so listing it
+# in both would be a duplicate definition.
 src/_ZN9Animation8LoadFileER13SharedFilePtr.cpp
 src/_ZN9Animation17UpdateFileOffsetsER8BCA_File.cpp
 
