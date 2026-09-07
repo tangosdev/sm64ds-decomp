@@ -260,6 +260,100 @@ def _covered_spans(snapshot):
     return out
 
 
+def classify_merge(bf, hf, be, he):
+    """Is a denominator DROP a merge the ROM build has already paid for?
+
+    A merge lowers `totalFunctions` and so RAISES the headline, which is the direction an
+    attack uses. No arithmetic over the symbol snapshot can separate a true merge from a
+    false one -- see `classify_repartition` for why `matchedBytes` in particular cannot,
+    and why "every changed range is unmatched" cannot either.
+
+    The separating fact lives in `delinks.txt`. A range carrying `complete` is compiled,
+    linked and byte-compared against the cartridge; everything else is filled by a gap
+    object holding the ROM's own bytes (`verification_split` states this). So requiring
+    that EVERY address the merge removes is newly covered by a `complete` range, and that
+    `sourceBytes` rises by exactly the size of those new ranges, ties the carve-out to a
+    build. Merging a hundred junk symbols yields no new `complete` range; forging one for
+    a range that does not reproduce fails module fidelity in the same validator run.
+
+    NOTHING MATCHED MAY LEAVE. The removed records must all be unmatched in base -- a
+    merge is licensed to absorb ASM stubs and severed epilogues, never to swallow a
+    function someone had already matched. Matched records that survive keep their sizes,
+    with one exception: a survivor of the merge may grow, and only into the new
+    `complete` range, at exactly its head size.
+
+    The live case is a hand-asm pair reunited as one C++ body: `__destroy_arr` declared
+    0x5c in `symbols.txt` while the ROM's own `.exceptix` record gives 0x74, the trailing
+    0x18 carried as a separate symbol that is not a function at all but the catch handler.
+
+    Returns a dict describing the merge, or None.
+    """
+    if be is None or he is None:
+        return None
+    if hf["stats"]["totalFunctions"] >= bf["stats"]["totalFunctions"]:
+        return None
+    if hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]:
+        return None
+    if _covered_spans(bf) != _covered_spans(hf):
+        return None
+
+    base_matched, head_matched = bf["matched"], hf["matched"]
+    # Nothing matched leaves. (`lost N matched function(s)` above would also fire, but
+    # this rule must not be the thing that decides a loss is acceptable.)
+    if set(base_matched) - set(head_matched):
+        return None
+
+    removed = sorted(set(bf["functions"]) - set(hf["functions"]))
+    if not removed:
+        return None
+    # Every removed record was unmatched in base.
+    if any(k in base_matched for k in removed):
+        return None
+
+    # The evidence: ranges that are `complete` in head and were not in base.
+    new_ranges = collections.defaultdict(list)
+    for key, entry in he["source"].items():
+        if key not in be["source"]:
+            new_ranges[entry["module"]].append((entry["addr"], entry["end"]))
+    if not new_ranges:
+        return None
+
+    def _inside_new(module, addr, end):
+        return any(start <= addr and end <= stop
+                   for start, stop in new_ranges.get(module, []))
+
+    # Every removed address is absorbed into one of them.
+    for key in removed:
+        record = bf["functions"][key]
+        if not _inside_new(record["module"], record["addr"],
+                           record["addr"] + record["size"]):
+            return None
+
+    # sourceBytes rises by exactly the newly-complete extent -- no other range may
+    # quietly join or leave under cover of the merge.
+    new_bytes = sum(stop - start
+                    for spans in new_ranges.values() for start, stop in spans)
+    if he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"] != new_bytes:
+        return None
+
+    # Surviving matched records keep their size unless they grew into a new range.
+    for key, head_record in head_matched.items():
+        base_record = base_matched.get(key)
+        if base_record is None:
+            continue
+        if base_record["size"] == head_record["size"]:
+            continue
+        if not _inside_new(head_record["module"], head_record["addr"],
+                           head_record["addr"] + head_record["size"]):
+            return None
+
+    return {"kind": "merge",
+            "functionDelta": hf["stats"]["totalFunctions"] - bf["stats"]["totalFunctions"],
+            "added": sorted(set(hf["functions"]) - set(bf["functions"])),
+            "removed": removed,
+            "sourceByteDelta": new_bytes}
+
+
 def classify_repartition(bf, hf):
     """Is a denominator change a SPLIT of the same bytes, with the numerator frozen?
 
@@ -299,11 +393,14 @@ def classify_repartition(bf, hf):
     unmatched" enough on its own: merging a hundred unmatched symbols into one still
     drops the denominator by ninety-nine and lifts the headline for no work at all.
 
-    A merge carve-out therefore needs EVIDENCE rather than arithmetic -- the survivor
-    carrying a VERIFIED link row at its head size, or the merged range going `complete`
-    in `delinks.txt` with `sourceBytes` rising by exactly its size -- and that is a
-    separate change with its own proof. Until then a merge lands as two pull requests:
-    the re-partition, then the match.
+    A MERGE THEREFORE NEEDS EVIDENCE RATHER THAN ARITHMETIC, and `classify_merge` below
+    is that evidence. The distinguishing fact is not in the symbol table at all: it is
+    that the merged range newly carries `complete` in a `delinks.txt`, which means the
+    ROM build compiles it, links it into its module and byte-compares it against retail
+    rather than filling it from a gap object. A hundred junk symbols merged into one
+    cannot produce that, because nothing would compile. Neither can growing a text-only
+    symbol: `complete` on a range that does not reproduce fails module fidelity, in the
+    same validator run.
 
     THE NUMERATOR IS FROZEN BY IDENTITY, NOT BY COUNT. `matchedFunctions` staying equal
     is not enough -- one match can leave while another arrives -- and neither is the byte
@@ -852,7 +949,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append(f"lost {len(removed)} matched function(s)")
     # A denominator move is a blocker UNLESS it is a re-partition of the same bytes --
     # see classify_repartition, which carries the full argument and the two tests.
-    repartition = classify_repartition(bf, hf)
+    repartition = classify_repartition(bf, hf) or classify_merge(bf, hf, be, he)
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
         if repartition is None:
@@ -911,11 +1008,20 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
 
     warnings = []
     if repartition:
-        # A carve-out that passes quietly is a carve-out nobody audits. Say what moved.
+        # A carve-out that passes quietly is a carve-out nobody audits. Say what moved,
+        # and say which of the two rules let it through -- they rest on different
+        # evidence and a reader auditing one should not have to guess.
+        if repartition["kind"] == "merge":
+            basis = (f"newly `complete` delinks coverage of every removed range, "
+                     f"sourceBytes {repartition['sourceByteDelta']:+d} -- see "
+                     f"classify_merge")
+        else:
+            basis = ("identical matched set and matched sizes -- see "
+                     "classify_repartition")
         warnings.append(
-            f"symbol-table split: totalFunctions {repartition['functionDelta']:+d} over "
-            "identical covered bytes, matched set and matched sizes unchanged. Allowed "
-            "as a re-partition -- see classify_repartition. Added: "
+            f"symbol-table {repartition['kind']}: totalFunctions "
+            f"{repartition['functionDelta']:+d} over identical covered bytes, allowed on "
+            f"{basis}. Added: "
             + ", ".join(repartition["added"][:3] or ["none"])
             + "; removed: " + ", ".join(repartition["removed"][:3] or ["none"]))
     if withdrawn:
