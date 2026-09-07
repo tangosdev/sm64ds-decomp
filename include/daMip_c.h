@@ -148,4 +148,14 @@ struct daMip_c : dEnemyBase_c {
 
 typedef char daMip_c_size_must_be_0x474[sizeof(daMip_c) == 0x474 ? 1 : -1];
 
+/* ~daMip_c, the key function, owns the compiler-emitted definition of this
+ * vtable, so the table itself is real and `tools/romdata_check.py` compares it
+ * against 0x021300f8. daMip_c_classInit must still store its public address
+ * point by hand because the measured factory calls fBase_c::operator new rather
+ * than a natural new, and fBase_c cannot declare that operator in-class (see
+ * include/fBase_c.h). This declaration only exposes the address to that factory
+ * seam; it is spelled exactly as include/decl_common.h spells it, and as
+ * include/Scuttlebug.h does for the same seam. */
+extern int _ZTV7daMip_c[];
+
 #endif /* DAMIP_C_H */

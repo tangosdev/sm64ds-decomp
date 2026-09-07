@@ -178,8 +178,6 @@ void  func_02022a4c(s32, s32, s32);
 u32   func_02022cbc(int, int, s32, s32, s32, const void *);
 void  func_0203c178(void *, int, int, int);
 
-extern void *_ZTV7daMip_c[];
-
 }
 
 /* The state records at 0x0213003c..0x021300bc are 8-byte Itanium
@@ -1869,7 +1867,10 @@ s32 daMip_c::OnYoshiTryEat() {
  * `_ZTV7daMip_c + 2` is the address point. Now that this TU owns the key
  * function it emits the table itself, and the emitted symbol names the START of
  * storage -- eight bytes below the offset-to-top/typeinfo pair that the
- * cartridge's 0x021300f8 sits above.
+ * cartridge's 0x021300f8 sits above. The declaration lives in daMip_c.h beside
+ * the class, not in this file: the table is a real compiler-emitted one, and
+ * a file-local `extern _ZTV` here reads as the hand-stamped-vptr idiom that
+ * tools/langmode_audit.py counts for classes that have no vtable at all.
  *
  * Reconstructed source-style name: SM64DS proves daMip_c through RTTI,
  * allocation size, vtable identity and the MIP registry profile; later EAD
