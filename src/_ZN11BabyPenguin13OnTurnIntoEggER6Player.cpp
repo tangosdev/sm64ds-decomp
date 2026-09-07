@@ -5,7 +5,7 @@
  * member call. */
 #include "BabyPenguin.h"
 
-int BabyPenguin::OnTurnIntoEgg(Player &player)
+void BabyPenguin::OnTurnIntoEgg(Player &player)
 {
     MarkForDestruction();
 }

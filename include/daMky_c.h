@@ -124,7 +124,7 @@ struct daMky_c : dActor_c {
     virtual s32  Render();           /* slot  9 */
     virtual void OnPendingDestroy();      /* slot 12 */
     virtual s32  OnYoshiTryEat();         /* slot 18 */
-    virtual int  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
 };
 
 typedef char daMky_c_size_must_be_0x3cc[sizeof(daMky_c) == 0x3cc ? 1 : -1];

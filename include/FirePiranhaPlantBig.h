@@ -73,7 +73,7 @@ struct FirePiranhaPlantBig : dEnemyBase_c {
     virtual ~FirePiranhaPlantBig();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

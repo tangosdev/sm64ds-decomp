@@ -217,7 +217,7 @@ extern "C" int *daSpd_c_classInit(void)
  * resets to its egg state; the original marks itself for destruction. */
 
 // @symbol _ZN10Scuttlebug13OnTurnIntoEggER6Player
-int Scuttlebug::OnTurnIntoEgg(Player &player)
+void Scuttlebug::OnTurnIntoEgg(Player &player)
 {
     volatile int force_stack;
     char *a = (char *)this;

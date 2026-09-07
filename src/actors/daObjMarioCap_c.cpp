@@ -364,7 +364,7 @@ s32 daObjMarioCap_c::OnYoshiTryEat() {
 /* player that just ate the cap is stashed for the follow-up state.            */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daObjMarioCap_c13OnTurnIntoEggER6Player
-int daObjMarioCap_c::OnTurnIntoEgg(Player &player)
+void daObjMarioCap_c::OnTurnIntoEgg(Player &player)
 {
     if (player.SetNoControlState(8, -1, 0) == 1) {
         player.SetNewHatCharacter(mModelIndex & 0xff, 1, 0);

@@ -1073,7 +1073,7 @@ int daGmch_c::InitResources()
 /* Vtable slot 19.  Gives the player 5 coins -- as cap-collection coins if Yoshi
    is wearing the cap, otherwise as egg coins -- then kills this actor and
    tracks it in the death table. */
-int daGmch_c::OnTurnIntoEgg(Player &player)
+void daGmch_c::OnTurnIntoEgg(Player &player)
 {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 5, 0);
