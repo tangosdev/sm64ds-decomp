@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN6Snufit16OnPendingDestroyEv
+// @symbol _ZN15daYurei_Mucho_c16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
-#include "Snufit.h"
+#include "daYurei_Mucho_c.h"
 
-void Snufit::OnPendingDestroy()
+void daYurei_Mucho_c::OnPendingDestroy()
 {
 }

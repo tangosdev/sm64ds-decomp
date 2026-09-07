@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN6Snufit8BehaviorEv
+// @symbol _ZN15daYurei_Mucho_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Snufit.h"
+#include "daYurei_Mucho_c.h"
 
 /* This file used to open with `struct dEnemyBase_c { char pad[0x800]; };` and work a
- * `char *c` through raw offsets. Snufit.h now supplies the real chain, so the
+ * `char *c` through raw offsets. daYurei_Mucho_c.h now supplies the real chain, so the
  * stand-in is gone and every offset below is a named field.
  *
  * dEnemyBase_c::UpdateYoshiEat is still reached by its mangled name -- unlike
@@ -24,7 +24,7 @@ extern short data_02082214[];
 extern int data_ov065_0211d670[];
 }
 
-int Snufit::Behavior()
+int daYurei_Mucho_c::Behavior()
 {
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();

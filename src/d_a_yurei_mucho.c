@@ -8,7 +8,7 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV6Snufit */
+/* resolved: VT0 = _ZTV15daYurei_Mucho_c */
 /* Reconstructed source-style name: SM64DS proves daYurei_Mucho_c through RTTI,
  * allocation size, vtable identity, and the YUREI_MUCHO registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -18,7 +18,7 @@ int *daYurei_Mucho_c_classInit(void)
     int *p = (int *)_ZN7fBase_cnwEj(996);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)_ZTV6Snufit;
+        p[0] = (int)_ZTV15daYurei_Mucho_c;
         _ZN7dCcAc_cC1Ev((char *)p + 0x110);
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
         _ZN9ModelAnimC1Ev((char *)p + 0x300);

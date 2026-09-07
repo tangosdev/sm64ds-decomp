@@ -1,9 +1,9 @@
-#ifndef SNUFIT_H
-#define SNUFIT_H
+#ifndef DAYUREI_MUCHO_C_H
+#define DAYUREI_MUCHO_C_H
 
 #include "types.h"
 
-/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN6SnufitD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN15daYurei_Mucho_cD1Ev`
  * stores this vtable, destroys four members, then calls `dEnemyBase_c::~dEnemyBase_c`.
  * Everything this header used to restate below 0x110 belongs to that chain and
  * is inherited now.
@@ -26,7 +26,7 @@
  * HootTheOwl's.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daYurei_Mucho_c_classInit` calls
- * `fBase_c::operator new(996)` -- 0x3e4 -- and stores `_ZTV6Snufit`,
+ * `fBase_c::operator new(996)` -- 0x3e4 -- and stores `_ZTV15daYurei_Mucho_c`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3dc; the difference is trailing space no source reads.
  *
@@ -42,13 +42,13 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
-struct Snufit : dEnemyBase_c {
+struct daYurei_Mucho_c : dEnemyBase_c {
     /* What mCurrentState points at. Behavior compares it against three objects
        in ov065's data and calls the handler at +0x08 through it. Only that
        handler is evidenced. */
     struct State {
         u8  pad_00[0x8];
-        void (Snufit::*mMain)();      /* 0x08 */
+        void (daYurei_Mucho_c::*mMain)();      /* 0x08 */
     };
 
     dCcAc_c mdCcAc_c; /* 0x110 */
@@ -68,7 +68,7 @@ struct Snufit : dEnemyBase_c {
     u8  pad_3dc[0x8];
 
     /* --- vtable --- */
-    virtual ~Snufit();
+    virtual ~daYurei_Mucho_c();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
@@ -81,6 +81,6 @@ struct Snufit : dEnemyBase_c {
     int Render();
 };
 
-typedef char Snufit_size_must_be_0x3e4[sizeof(Snufit) == 0x3e4 ? 1 : -1];
+typedef char daYurei_Mucho_c_size_must_be_0x3e4[sizeof(daYurei_Mucho_c) == 0x3e4 ? 1 : -1];
 
-#endif /* SNUFIT_H */
+#endif /* DAYUREI_MUCHO_C_H */

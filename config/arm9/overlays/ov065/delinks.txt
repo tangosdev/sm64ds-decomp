@@ -4,11 +4,11 @@
     .ctor       start:0x0211cae0 end:0x0211cb08 kind:rodata align:4
     .data       start:0x0211cb20 end:0x0211d600 kind:data align:32
     .bss        start:0x0211d600 end:0x0211da00 kind:bss align:32
-src/_ZN6SnufitD1Ev.cpp:
+src/_ZN15daYurei_Mucho_cD1Ev.cpp:
     complete
     .text start:0x02115ee0 end:0x02115f28
 
-src/_ZN6SnufitD0Ev.cpp:
+src/_ZN15daYurei_Mucho_cD0Ev.cpp:
     complete
     .text start:0x02115f28 end:0x02115f84
 
@@ -60,35 +60,35 @@ src/func_ov065_0211696c.c:
     complete
     .text start:0x0211696c end:0x02116ae8
 
-src/_ZN6Snufit16CleanupResourcesEv.cpp:
+src/_ZN15daYurei_Mucho_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02116ae8 end:0x02116b30
 
-src/_ZN6Snufit16OnPendingDestroyEv.cpp:
+src/_ZN15daYurei_Mucho_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02116b30 end:0x02116b34
 
-src/_ZN6Snufit6RenderEv.cpp:
+src/_ZN15daYurei_Mucho_c6RenderEv.cpp:
     complete
     .text start:0x02116b34 end:0x02116b84
 
-src/_ZN6Snufit8BehaviorEv.cpp:
+src/_ZN15daYurei_Mucho_c8BehaviorEv.cpp:
     complete
     .text start:0x02116b84 end:0x02116e10
 
-src/_ZN6Snufit13InitResourcesEv.cpp:
+src/_ZN15daYurei_Mucho_c13InitResourcesEv.cpp:
     complete
     .text start:0x02116e10 end:0x02116f0c
 
-src/_ZN6Snufit16OnAimedAtWithEggEv.cpp:
+src/_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02116f0c end:0x02116f14
 
-src/_ZN6Snufit13OnTurnIntoEggER6Player.cpp:
+src/_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02116f14 end:0x02116f40
 
-src/_ZN6Snufit13OnYoshiTryEatEv.cpp:
+src/_ZN15daYurei_Mucho_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02116f40 end:0x02116f48
 
