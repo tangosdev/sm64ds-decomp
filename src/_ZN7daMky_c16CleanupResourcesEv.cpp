@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN5Ukiki16CleanupResourcesEv
-/* Ukiki::CleanupResources -- vtable slot 3. Releases the four shared files the
+// @symbol _ZN7daMky_c16CleanupResourcesEv
+/* daMky_c::CleanupResources -- vtable slot 3. Releases the four shared files the
  * class holds plus its ten-entry table; it never touches `this`, which is why
  * the legacy C form could declare itself nullary and still reproduce. */
-#include "Ukiki.h"
+#include "daMky_c.h"
 
 struct SharedFilePtr { u32 data[4]; };
 
@@ -16,7 +16,7 @@ extern struct SharedFilePtr data_ov030_02115d00;
 extern struct SharedFilePtr *data_ov030_02114824[10];
 }
 
-s32 Ukiki::CleanupResources()
+s32 daMky_c::CleanupResources()
 {
     int i;
     _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da40);
