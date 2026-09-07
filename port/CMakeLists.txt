@@ -3881,8 +3881,12 @@ endforeach()
 list(APPEND SLICE31_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_CleanupResources.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/func_02073244_hostcopy.c"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/SetNumPlayers_hostcopy.c"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Door_CleanupResources.cpp")
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/SetNumPlayers_hostcopy.c")
+# unmatched/Door_CleanupResources.cpp RETIRED (run link100, lane UNMATCH):
+# its `obj->v1()` workaround was the MSVC destructor fold, and
+# hal/model_dtor_seat.cpp seats the ROM's deleting half at slot 1 of all
+# three model-family tables now. src/func_ov100_0214542c.cpp carries it,
+# in port/slice_unmatch.txt.
 
 # ---- the NEW-FILE OPENING (run lvled, lane intro-cutscene) ------------------
 # Everything the ROM's own intro gate reaches once it is allowed to fire. All of
@@ -3941,23 +3945,19 @@ list(APPEND SLICEINTRO_SOURCES
 # of each file and through which class. Src line commented out in slice_intro.txt.
 list(APPEND SLICEINTRO_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov002_CutsceneLoad_020f6618.cpp")
-# CutsceneObject::Render dispatches its model through a LOCAL SHADOW class
-# counted in ROM/Itanium numbering, so its `m` reaches ROM slot 5 =
-# ModelAnim::Render(Vector3 const *). MSVC folds the D1/D0 pair, so index 5 on
-# the host table is _ZTV9ModelAnim[5] = ModelAnim::Virtual18(u32, Vector3 const*)
-# -- a different function with a different arity, and the renderer then walked an
-# Entry chosen by a garbage index. cxxname_bridge.cpp predicted this TU by name.
-# One dropped declaration; body otherwise the matched source. Src line commented
-# out in slice_intro.txt.
-list(APPEND SLICEINTRO_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CutsceneObject_Render.cpp")
-# The same one-slot shift, one file over. CutsceneObject::CleanupResources
-# destroys its model through a shadow whose `m04` is index 1 -- the ROM's
-# DELETING destructor, and MSVC's Model::DoSetFile. Cleaning up the cast would
-# have called DoSetFile on a model being freed. Src line commented out in
-# slice_intro.txt.
-list(APPEND SLICEINTRO_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/CutsceneObject_CleanupResources.cpp")
+# unmatched/CutsceneObject_Render.cpp RETIRED (run link100, lane UNMATCH).
+# It existed because CutsceneObject::Render dispatches its model through a
+# LOCAL SHADOW counted in ROM numbering, and the folded host table put
+# ModelAnim::Virtual18 on the slot the source means for Render. Lane SLOT5F's
+# unfold ROM-numbers the table and gave this file's shadow its sixth virtual,
+# which left it a line-for-line copy of the matched source plus a render trace.
+# src/_ZN14CutsceneObject6RenderEv.cpp carries it now, in port/slice_unmatch.txt;
+# co_render's port_actor_render_probe call is the trace that stays.
+# unmatched/CutsceneObject_CleanupResources.cpp RETIRED (run link100, lane
+# UNMATCH), the same one-slot shift one file over. Its `m04` is ROM index 1,
+# the DELETING destructor, and with the fold gone that is what index 1 on both
+# cutscene model tables holds. src/_ZN14CutsceneObject16CleanupResourcesEv.cpp
+# carries it now, in port/slice_unmatch.txt.
 # And the third instance, one layer down: the cutscene ModelAnim's own deleting
 # destructor destroys its TextureSequence through a hand-indexed vtable word at
 # ROM slot 1. MSVC folds D1/D0, so hal/model_dtor_seat.cpp seats that body at
@@ -8534,12 +8534,22 @@ set(LEVELBOOT_HOST_SOURCES
     unmatched/Door_Render.cpp
     # gate 23: the seventh, and the last on this level
     unmatched/QuestionBlock_States.cpp
-    unmatched/QuestionBlock_BounceDispatch.cpp
-    # gate 50: the eighth -- the PAINTING's three per-mode dispatchers, the
-    # deferred fix from the registry note (mode-table stride + widened PMF)
-    unmatched/Painting_Dispatch.cpp
-    # gates 21 and 23: the ModelAnim slot-5 collision, three more times
-    unmatched/ModelAnim_Renders.cpp)
+    unmatched/QuestionBlock_BounceDispatch.cpp)
+# unmatched/Painting_Dispatch.cpp RETIRED (run link100, lane UNMATCH). The
+# widened-PMF half of its reason is dead under /vmg /vmm -- MSVC strides the
+# ROM's own 0x18 and reads the ROM's own {code, adjust} pairs -- and the half
+# that was real is now served by the seat: the twelve Painting state records
+# hold a __fastcall face each, because these three dispatchers are the one
+# member-pointer family in the port that MSVC compiles as `call eax` rather
+# than a tail jump. src/func_ov080_02126ca0.cpp, _02126c60.cpp and
+# _02126c20.cpp carry them, in port/slice_unmatch2.txt.
+# unmatched/ModelAnim_Renders.cpp RETIRED (run link100, lane UNMATCH). Lane
+# SLOT5F's stage B took twenty-three of its bodies; the twenty-fourth,
+# SWITCH_PILLAR's own Render, stayed only because its source carries the
+# "recovered from vtable slot identity" marker. It is ADJUDICATED REAL_DECOMP
+# (inferred_stub_adjudicated.txt:2326, match.py 2004/b56 strict-reloc MATCH),
+# so src/func_ov012_02111324.cpp carries it in port/slice_unmatch.txt and the
+# file is gone.
 
 set(CAMERA_HOST_SOURCES
     unmatched/ChangeArea_hostcopy.c
@@ -14983,6 +14993,83 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov010_021115e0.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "data_ov010_02112d28=port_trap36_states")
+# LANE UNMATCH, batch 1: four host copies whose reason died with the unfold
+# ===========================================================================
+#
+# Lane SLOT5F respelled the ROM's D1/D0 destructor pair as two plain virtuals
+# under _MSC_VER, so every host model-family table is ROM-numbered again and
+# three separate workarounds in port/unmatched have nothing left to work
+# around: two ROM-order slot-5 Render shadows (SWITCH_PILLAR's own Render and
+# METAL_NET_LIFT's) and one ROM-slot-1 deleting-destructor shadow (the door's
+# CleanupResources, which hal/model_dtor_seat.cpp now seats at
+# _ZTV5Model[1] / _ZTV9ModelAnim[1] / _ZTV10ModelAnim2[1]). The fourth is
+# CutsceneObject::Render, whose host copy SLOT5F itself corrected into a
+# line-for-line copy of the matched source plus a trace.
+#
+# Every row is verified by ROM address against the word at its class vtable's
+# own slot, and the three ruled bodies are REAL_DECOMP rows in
+# port/tools/inferred_stub_adjudicated.txt. No fill site changes and no face is
+# added: all three ruled bodies are extern "C" symbols their thunks already
+# call by name, and CutsceneObject::Render's cdecl face already exists at
+# hal/actor_classes_intro.cpp:655. The per-row referrer and the reloc line are
+# in port/slice_unmatch.txt, together with the four rows of SEAT3's census that
+# STAY host copies and the measured reason for each.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_unmatch.txt" SLICE_UNMATCH_LINES)
+set(SLICE_UNMATCH_SOURCES "")
+foreach(line IN LISTS SLICE_UNMATCH_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_UNMATCH_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tunmatch walk_window walk_window_hires smoke_player)
+    target_sources(${_tunmatch} PRIVATE ${SLICE_UNMATCH_SOURCES})
+endforeach()
+
+# ===========================================================================
+# LANE UNMATCH, batch 2: the two tables nothing re-seated, and the one
+# dispatcher shape no seat in this tree served
+# ===========================================================================
+#
+# Lane PMF3 landed twenty member-pointer host copies and named three families
+# it would not force. None of the three was a width or a form problem -- all
+# three measure as the ROM's own record under /vmg /vmm -- and all three needed
+# a SECOND fix, which is what this block is.
+#
+#   DA_PG_DFDR (ov027)  nothing rewrote data_ov027_02113ce4, so the table held
+#                       DS code addresses for the life of the process. The seat
+#                       moved into port/unmatched/DaPgDfdr_StateDispatch.cpp,
+#                       called from hal/actor_overlays.cpp BEFORE
+#                       __sinit_ov027_02112df8 copies the four pairs.
+#   YOSHI_EGG (ov002)   the same, one overlay over. Its sinit runs from the
+#                       harness at startup so the source pairs are out of
+#                       reach; the seat rewrites the destination table from
+#                       port_actor_overlays_sinits() at level boot instead.
+#   THE PAINTING (ov080) its three dispatchers end `return 1;` after the
+#                       dispatch, so MSVC emits `call eax` and not the tail
+#                       jump every other seated table in this tree relies on to
+#                       leave the receiver at [esp+4]. The twelve seated
+#                       records now hold a one-line __fastcall face each.
+#
+# Every pair behind all three was re-read out of the raw overlay images for
+# this lane and every adjustment word is ROM zero; the seats abort by name on
+# anything else and are idempotent, so a .dsstate rollback is repaired rather
+# than fatal. The per-row evidence, the listings and the referrers are in
+# port/slice_unmatch2.txt.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_unmatch2.txt" SLICE_UNMATCH2_LINES)
+set(SLICE_UNMATCH2_SOURCES "")
+foreach(line IN LISTS SLICE_UNMATCH2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_UNMATCH2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tunmatch2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tunmatch2} PRIVATE ${SLICE_UNMATCH2_SOURCES}
+                   "${CMAKE_CURRENT_SOURCE_DIR}/hal/unmatch_aliases.cpp")
+endforeach()
 
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE

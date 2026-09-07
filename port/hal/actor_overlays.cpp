@@ -884,27 +884,60 @@ static void port_princess_peach_states_seat(void)
    level 2's paintings run 300 frames fault-free without touching it, so the
    class is registered and this seat names the function instead of jumping into
    the overlay image -- what a hole should do. */
-static void port_painting_state_021261f4(void *)
+static void __fastcall port_painting_state_021261f4(void *, void *)
 {
     std::fprintf(stderr, "FATAL: Painting state 5's Render (ov080 "
                  "0x021261f4) is UNMATCHED -- no host body exists\n");
     std::abort();
 }
 
-static const struct { PortPmfPt *slot; unsigned rom; void (*host)(void *); }
-g_painting_states[] = {
-    {data_ov080_02128214, 0x02126124, func_ov080_02126124},
+/* THE FACES, run link100 lane UNMATCH, and the Painting is the one member-
+   pointer family in the port that needs them.
+
+   Every other seated table in this file is dispatched by a matched TU that
+   MSVC compiles as a TAIL JUMP: it pops its own frame and jumps, so the
+   callee's [esp+4] is still the dispatcher's own receiver argument, which is
+   exactly where a cdecl ov-body reads it. The Painting's three dispatchers
+   (src/func_ov080_02126ca0.cpp, _02126c60.cpp, _02126c20.cpp) end in
+   `return 1;` after the dispatch, so MSVC cannot tail-jump and emits
+
+       mov  ecx, DWORD PTR [edx+N+4]     ; the ROM's adjustment word
+       add  ecx, eax
+       mov  eax, DWORD PTR [edx+N]       ; the ROM's code word
+       call eax
+
+   -- measured on 2026-09-07 under the port's own flags. `call` pushes a return
+   address and sets up NO stack argument, so a cdecl body reads the caller's
+   saved ebp as its receiver. The receiver is in ecx, where a __fastcall
+   function reads it, and __fastcall with two register parameters and no stack
+   parameters returns with `ret 0`, which balances a `call` and equally
+   survives the tail-jump form. So the table holds a face and the face holds
+   the body; nothing about either body changes. */
+static void __fastcall pt_f_02126124(void *s, void *) { func_ov080_02126124(s); }
+static void __fastcall pt_f_02126a54(void *s, void *) { func_ov080_02126a54(s); }
+static void __fastcall pt_f_021269b8(void *s, void *) { func_ov080_021269b8(s); }
+static void __fastcall pt_f_02126120(void *s, void *) { func_ov080_02126120(s); }
+static void __fastcall pt_f_02125fd0(void *s, void *) { func_ov080_02125fd0(s); }
+static void __fastcall pt_f_0212677c(void *s, void *) { func_ov080_0212677c(s); }
+static void __fastcall pt_f_021265ec(void *s, void *) { func_ov080_021265ec(s); }
+static void __fastcall pt_f_02125f00(void *s, void *) { func_ov080_02125f00(s); }
+static void __fastcall pt_f_021264ec(void *s, void *) { func_ov080_021264ec(s); }
+
+static const struct {
+    PortPmfPt *slot; unsigned rom; void (__fastcall *host)(void *, void *);
+} g_painting_states[] = {
+    {data_ov080_02128214, 0x02126124, pt_f_02126124},
     {data_ov080_0212821c, 0x021261f4, port_painting_state_021261f4},
-    {data_ov080_02128224, 0x02126a54, func_ov080_02126a54},
-    {data_ov080_0212822c, 0x021269b8, func_ov080_021269b8},
-    {data_ov080_02128234, 0x02126120, func_ov080_02126120},
-    {data_ov080_0212823c, 0x02125fd0, func_ov080_02125fd0},
-    {data_ov080_02128244, 0x02125fd0, func_ov080_02125fd0},
-    {data_ov080_0212824c, 0x0212677c, func_ov080_0212677c},
-    {data_ov080_02128254, 0x02126120, func_ov080_02126120},
-    {data_ov080_0212825c, 0x021265ec, func_ov080_021265ec},
-    {data_ov080_02128264, 0x02125f00, func_ov080_02125f00},
-    {data_ov080_0212826c, 0x021264ec, func_ov080_021264ec},
+    {data_ov080_02128224, 0x02126a54, pt_f_02126a54},
+    {data_ov080_0212822c, 0x021269b8, pt_f_021269b8},
+    {data_ov080_02128234, 0x02126120, pt_f_02126120},
+    {data_ov080_0212823c, 0x02125fd0, pt_f_02125fd0},
+    {data_ov080_02128244, 0x02125fd0, pt_f_02125fd0},
+    {data_ov080_0212824c, 0x0212677c, pt_f_0212677c},
+    {data_ov080_02128254, 0x02126120, pt_f_02126120},
+    {data_ov080_0212825c, 0x021265ec, pt_f_021265ec},
+    {data_ov080_02128264, 0x02125f00, pt_f_02125f00},
+    {data_ov080_0212826c, 0x021264ec, pt_f_021264ec},
 };
 
 static void port_painting_states_seat(void)
@@ -1184,6 +1217,22 @@ void __sinit_ov027_02112cb0(void);
 void __sinit_ov027_02112d1c(void);
 void __sinit_ov027_02112df8(void);
 void __sinit_ov027_02112f70(void);
+/* run link100 lane UNMATCH: DA_PG_DFDR's four state SOURCE pairs, seated over
+   their host bodies BEFORE __sinit_ov027_02112df8 copies them into
+   data_ov027_02113ce4. Until this lane the two dispatchers were host copies and
+   the table kept the ROM's DS addresses for the life of the process; the
+   matched TUs carry them now (port/slice_unmatch2.txt) and they tail-jump
+   through whatever the word holds, so the word has to be a host body.
+   port/unmatched/DaPgDfdr_StateDispatch.cpp. */
+void port_dapgdfdr_states_seat(void);
+/* run link100 lane UNMATCH: YOSHI_EGG's eight state records, seated in the
+   DESTINATION table data_ov002_02110a5c. Its source pairs cannot be seated the
+   gate-178 way -- __sinit_ov002_02107118 runs from the harness at startup, long
+   before this pass, and data_ov002_0210ad38 is mounted one pair wide -- so this
+   one rewrites the copy instead. Safe by construction: a YoshiEgg only exists
+   inside a level, and a level boot is what calls this pass.
+   port/unmatched/YoshiEgg_StateDispatch.cpp. */
+void port_yoshi_egg_states_seat(void);
 
 /* run rel0215 wave 2 (lane w2-ov074): ov074 per-symbol -- the GOOMBOSS pack's
    fourteen SharedFilePtrs, its fourteen destructor-chain nodes and the
@@ -1228,6 +1277,11 @@ extern "C" void port_actor_overlays_sinits(void)
     if (g_actor_overlays_sinits_done)
         return;
     g_actor_overlays_sinits_done = 1;
+
+    /* run link100 lane UNMATCH: YOSHI_EGG's eight records. Nothing in this
+       pass fills or reads them, so the position is free; it is first so the
+       table is host-shaped before anything can spawn an egg. */
+    port_yoshi_egg_states_seat();
 
     port_ov085_pack_check();
     port_ov085_syms_patch();
@@ -1634,6 +1688,8 @@ extern "C" void port_actor_overlays_sinits(void)
     port_ov027_syms_patch();
     __sinit_ov027_02112cb0();   /* SLIDING_ICE's model + collision files */
     __sinit_ov027_02112d1c();   /* CHILL_BULLY's five */
+    /* run link100 lane UNMATCH: BEFORE the sinit copies the four pairs. */
+    port_dapgdfdr_states_seat();
     __sinit_ov027_02112df8();   /* DA_PG_DFDR's six, then its four PMF copies */
     __sinit_ov027_02112f70();   /* SNOWMAN_BREATH's Vector3 constant */
     /* run rel0215 wave 2 (lane w2-ov074): ov074's ONE sinit -- the overlay's
