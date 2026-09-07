@@ -1,0 +1,57 @@
+# link100 lane SPAWN2, gate 231a: actor id 99, CAGE_LIFT / daObjWc_Obj05_c,
+# ov029 (Dire Dire Docks' water city, level 21, two placements).
+#
+# WHAT WAS MISSING. Not the code. The SpawnInfo record has been mounted since
+# the ov029 gate (CageLift_SpawnInfo:0x1c in port/ov029_syms.txt), the two
+# SharedFilePtrs its InitResources consumes are built by __sinit_ov029_02112c4c
+# which the ov029 bring-up has always run, and every one of its six own bodies
+# has a matched TU in src/. What it had was a RULING problem: five of the six
+# carried the "recovered from vtable slot identity" marker, so
+# hal/actor_classes_ov029.cpp trapped the class rather than seat fabricated code
+# behind a live vtable, and hal/actor_classes.inc left the row out. Lane STUBADJ
+# ruled all five REAL_DECOMP on this run -- each a match.py 2004/b56
+# strict-reloc comparison against the ROM, "every non-relocated word identical
+# ... 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing". That retires the trap.
+#
+# THE TABLE, read from the ROM and not from a name. Its vtable is the unnamed
+# data_ov029_02113e74, and the reloc run in config/arm9/overlays/ov029/relocs.txt
+# is exactly 32 words: slot 31 is 0x020ee55c (Platform::Kill, the shared body
+# every 32-slot table in this file carries) and the word at +0x80 is 0x0209a764,
+# which is the NEXT class's RTTI record and not a slot. Every own slot below is
+# the destination of the reloc at vtable + 4*N, with a kind:function(arm,size=..)
+# record at exactly that address:
+#
+#   slot 0   0x02113e74 -> 0x02111d6c  func_ov029_02111d6c  0xd4   InitResources
+#   slot 3   0x02113e80 -> 0x02111b60  func_ov029_02111b60  0x44   CleanupResources
+#   slot 6   0x02113e8c -> 0x02111bcc  func_ov029_02111bcc  0x1a0  Behavior
+#   slot 9   0x02113e98 -> 0x02111ba4  func_ov029_02111ba4  0x28   Render
+#   slot 16  0x02113eb4 -> 0x02111ac4  func_ov029_02111ac4  0x44   D1
+#   slot 17  0x02113eb8 -> 0x02111b08  func_ov029_02111b08  0x58   D0
+#
+# THE NAME TRAP THE DOSSIER WARNED ABOUT, met twice here. src/func_ov029_02111b08.c
+# is headed "daObjWc_Obj05_c::OnYoshiTryEat - recovered from vtable slot
+# identity" and it is NOT OnYoshiTryEat: it is the deleting destructor, slot 17,
+# and its last act is Memory::Deallocate(this, heap). The slot came from the
+# reloc, never from the comment. Same for src/func_ov029_02111ba4.cpp, which the
+# STUBADJ census keys as "data_ov029_02113e88 slot 4" -- 0x02113e88 is a symbol
+# dsd landed INSIDE the vtable at +0x14, so its slot 4 is the array's slot 9.
+#
+# THE FACTORY. ov029/symbols.txt has CageLift_Spawn kind:function(arm,size=0x30)
+# addr:0x02111e74, and CageLift_SpawnInfo (0x02113e50) word[0] relocates to
+# exactly that address. The body allocates 816 bytes on ActorBase::operator new,
+# runs Platform's C2 and stores its own table -- ONE store, so unlike its ov043
+# and ov029 siblings there is no dead first store to bind. The source spells the
+# table by its dsd name directly (extern int data_ov029_02113e74[]), which is the
+# host array hal/actor_classes_ov029.cpp now defines, so this TU needs no -D at
+# all: its own literal pool at 0x02111ea0 loads 0x02113e74 and nothing else.
+#
+# CLOSURE. func_ov029_02111e40.cpp and func_ov029_02111e60.c (the collision
+# callback InitResources installs through func_020393c4) are already on
+# port/slice_ov029.txt and already linked, so they are not repeated here.
+src/CageLift_Spawn.c
+src/func_ov029_02111d6c.cpp
+src/func_ov029_02111b60.c
+src/func_ov029_02111bcc.c
+src/func_ov029_02111ba4.cpp
+src/func_ov029_02111ac4.c
+src/func_ov029_02111b08.c

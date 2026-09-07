@@ -759,17 +759,23 @@ extern unsigned char DiamondLift_SpawnInfo[];       /* ov043 0x02112294, +4 read
 void *DiamondLift_Spawn(void);                      /* ov043 0x021113cc (matched src) */
 void hal_fill_diamond_lift_vtable(void);
 /* ---- lane SEAT-BDW: two of ov043's remaining three classes, ids pinned by
-   Spawn-store, not by name (the naming shift, port/ov043_syms.txt). 136 and 134
-   are fully matched and seated. id 137 (RICKSHAW_BDW) is NOT seated: its own
-   bodies are inferred stubs, it is live on level 35, and a half-built 137
-   NULL-derefs during spawn -- registering it faults BitDW. See
-   hal/actor_classes_ov043.cpp and port/slice_bdw.txt. */
+   Spawn-store, not by name (the naming shift, port/ov043_syms.txt). 136 and
+   134 are fully matched and seated. link100 SPAWN2 adds the THIRD, id 137
+   RICKSHAW_BDW: the "inferred stub with no match" reading that kept it out is
+   retired by lane STUBADJ's rulings (0x021114c4 slot 0, 0x021114b0 slot 3 and
+   0x0211144c slot 17 are each REAL_DECOMP), and slot 16's 0x021113fc never
+   carried the marker at all. The NULL-deref the old note describes was the
+   DECLINE path a trapped InitResources took, not the ROM body. See
+   hal/actor_classes_ov043.cpp. */
 extern unsigned char RickshawPlatformBdw_SpawnInfo[]; /* ov043 0x02112438, +4 reads 136 */
 extern unsigned char StairsBdw_SpawnInfo[];           /* ov043 0x021124fc, +4 reads 134 */
+extern unsigned char RickshawBdw_SpawnInfo[];         /* ov043 0x02112368, +4 reads 137 */
 void *RickshawPlatformBdw_Spawn(void);                /* ov043 0x021115f4 (matched src, returns int*) */
 void *StairsBdw_Spawn(void);                          /* ov043 0x0211176c (matched src) */
+void *RickshawBdw_Spawn(void);                        /* ov043 0x021114dc (matched src) */
 void hal_fill_rickshaw_platform_bdw_vtable(void);
 void hal_fill_stairs_bdw_vtable(void);
+void hal_fill_rickshaw_bdw_vtable(void);              /* data_ov043_0211238c, 32 */
 /* ---- gate 175: BLUE_FLAME (317) + RED_FLAME (316), the cave's flames ----
    One class (daObjFire_c, ov002), two matched factories installing
    _ZTV9BlueFlame; RED_FLAME's row is fill=0 (the GreenShellBlockTag shape).
@@ -2018,8 +2024,16 @@ void hal_fill_water_diamond_vtable(void);                        /* _ZTV9ArrowLi
 extern unsigned char SwitchActivatedPlank_SpawnInfo[];             /* ov029 0x0211417c, +4 = 98  */
 void *SwitchActivatedPlank_Spawn(void);                          /* ov029 0x02112964 */
 void hal_fill_switch_activated_plank_vtable(void);               /* _ZTV20SwitchActivatedPlank 0x021141a0, 32 */
-/* id 99 CageLift is NOT registered: five of its six lifecycle bodies are
-   guess-marked (inferred stubs), so it cannot be seated faithfully. */
+/* ---- link100 SPAWN2: CAGE_LIFT (99), ov029, level 21 x2. The note that
+   stood here -- five of six lifecycle bodies guess-marked, so no faithful
+   seat -- is retired by lane STUBADJ's rulings: all five are REAL_DECOMP in
+   port/tools/inferred_stub_adjudicated.txt, each a match.py 2004/b56
+   strict-reloc MATCH against the ROM with 0 WRONG-DEST. The SpawnInfo record
+   was already mounted (CageLift_SpawnInfo:0x1c, port/ov029_syms.txt); what
+   was missing was the factory TU, the host table and this row. */
+extern unsigned char CageLift_SpawnInfo[];                         /* ov029 0x02113e50, +4 = 99  */
+void *CageLift_Spawn(void);                                      /* ov029 0x02111e74 */
+void hal_fill_cage_lift_vtable(void);                            /* data_ov029_02113e74, 32 */
 extern unsigned char FloatOnWaterPlatformWdwRectangle_SpawnInfo[]; /* ov029 0x02113f20, +4 = 100 */
 void *FloatOnWaterPlatformWdwRectangle_Spawn(void);              /* ov029 0x02112044 */
 void hal_fill_float_on_water_platform_wdw_rectangle_vtable(void);/* data_ov029_02113f44, 32 */
@@ -2411,13 +2425,16 @@ void hal_fill_cloud_vtable(void);               /* _ZTV5Cloud 0x02111858, 31 */
     /* ---- lane SEAT-BDW: two of ov043's remaining Bowser-in-the-Dark-World \
        classes. RICKSHAW_PLATFORM_BDW (136) is RICKSHAW_BDW's runtime child \
        (not level-placed; census via SM64DS_SPAWN_ACTOR=136), STAIRS_BDW (134, \
-       L35 x1) the self-assembling staircase; both fully matched. RICKSHAW_BDW \
-       (137) is deliberately NOT registered: its InitResources is an inferred \
-       stub with no match and a live level-35 spawn NULL-derefs. ---- */ \
+       L35 x1) the self-assembling staircase; both fully matched. link100 \
+       SPAWN2 adds RICKSHAW_BDW (137, L35 x1), the axle those four children \
+       hang off: its three marker-carrying bodies are ruled REAL_DECOMP and \
+       its fourth never carried a marker. ---- */ \
     {136, "RICKSHAW_PLATFORM_BDW", RickshawPlatformBdw_SpawnInfo, \
      RickshawPlatformBdw_Spawn, hal_fill_rickshaw_platform_bdw_vtable}, \
     {134, "STAIRS_BDW", StairsBdw_SpawnInfo, StairsBdw_Spawn, \
      hal_fill_stairs_bdw_vtable}, \
+    {137, "RICKSHAW_BDW", RickshawBdw_SpawnInfo, RickshawBdw_Spawn, \
+     hal_fill_rickshaw_bdw_vtable}, \
     /* ---- gate 175: the flames (ov002) -- BLUE_FLAME carries the fill, \
        RED_FLAME reuses it, the GreenShellBlockTag shape ---- */ \
     {317, "BLUE_FLAME", BlueFlame_SpawnInfo, BlueFlame_Spawn, \
@@ -3105,7 +3122,10 @@ void hal_fill_cloud_vtable(void);               /* _ZTV5Cloud 0x02111858, 31 */
      hal_fill_water_diamond_vtable}, \
     {98,  "SWITCH_ACTIVATED_PLANK", SwitchActivatedPlank_SpawnInfo, \
      SwitchActivatedPlank_Spawn, hal_fill_switch_activated_plank_vtable}, \
-    /* id 99 CAGE_LIFT omitted: guessed lifecycle bodies (inferred stubs). */ \
+    /* ---- link100 SPAWN2: CAGE_LIFT (99), the WDW cage the note above kept \
+       out until its five bodies were ruled REAL_DECOMP. Level 21 x2. ---- */ \
+    {99,  "CAGE_LIFT", CageLift_SpawnInfo, CageLift_Spawn, \
+     hal_fill_cage_lift_vtable}, \
     {100, "FLOAT_ON_WATER_PLATFORM_WDW_RECTANGLE", FloatOnWaterPlatformWdwRectangle_SpawnInfo, \
      FloatOnWaterPlatformWdwRectangle_Spawn, hal_fill_float_on_water_platform_wdw_rectangle_vtable}, \
     {101, "WDW_WATER", WDW_Water_SpawnInfo, WDW_Water_Spawn, \

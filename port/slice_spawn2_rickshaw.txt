@@ -1,0 +1,55 @@
+# link100 lane SPAWN2, gate 231b: actor id 137, RICKSHAW_BDW /
+# daObjKm1_Kurumajiku_c, ov043 (Bowser in the Dark World, level 35, one
+# placement -- the axle the four rickshaw platforms hang off).
+#
+# WHAT WAS MISSING, and why the old note said it could never be seated. Lane
+# SEAT-BDW wrote in hal/actor_classes_ov043.cpp that 137's four own bodies were
+# "GUESS func_ov043 TUs (inferred stubs), so its InitResources has no matched
+# body", and that a half-built 137 (InitResources DECLINED) NULL-derefs during
+# its own spawn continuation -- a hard c0000005 on level 35. Both halves of that
+# are true of the DECLINE path and neither is true any more:
+#   * three of the four carry the marker and lane STUBADJ ruled all three
+#     REAL_DECOMP against the ROM (match.py 2004/b56 strict-reloc MATCH, 0
+#     WRONG-DEST): 0x021114c4 (slot 0), 0x021114b0 (slot 3), 0x0211144c (slot 17);
+#   * the fourth, 0x021113fc (slot 16, the D1), never carried a marker at all.
+# So the crash the note describes was the trap firing, not the ROM's code, and
+# seating the real bodies is exactly what removes it.
+#
+# THE TABLE, read from the ROM. data_ov043_0211238c, and the reloc run is 32
+# words: slot 31 is 0x020ee55c (Platform::Kill) and the word at +0x80 is
+# 0x0209a764, the next class's RTTI record. dsd's "next data symbol" for this
+# table is 0x021123e4, which would read 22 slots; the reloc run wins, because
+# every word up to 31 relocates to a code address and a following data object
+# would not. Own slots, each the destination of the reloc at vtable + 4*N with a
+# kind:function(arm,size=..) record at exactly that address:
+#
+#   slot 0   0x0211238c -> 0x021114c4  func_ov043_021114c4  0x18   InitResources
+#   slot 3   0x02112398 -> 0x021114b0  func_ov043_021114b0  0x14   CleanupResources
+#   slot 16  0x021123cc -> 0x021113fc  func_ov043_021113fc  0x50   D1
+#   slot 17  0x021123d0 -> 0x0211144c  func_ov043_0211144c  0x64   D0
+#
+# SLOTS 6 AND 9 ARE INHERITED and already linked: 0x021123a4 -> 0x020b6b38 and
+# 0x021123b0 -> 0x020b6b10, both module overlays(0,2), the shared ov002
+# generic-object Behavior/Render pair. They are faced in the fill and never
+# re-enrolled. That is why this class costs five files and not nine.
+#
+# THE NAME TRAP AGAIN: src/func_ov043_0211144c.c is headed
+# "daObjKm1_Kurumajiku_c::OnYoshiTryEat" and is the slot-17 deleting destructor.
+# Taken from the reloc, not the comment.
+#
+# THE FACTORY. RickshawBdw_Spawn kind:function(arm,size=0x3c) addr:0x021114dc,
+# and RickshawBdw_SpawnInfo (0x02112368) word[0] relocates to it; the record's
+# +4 halfword reads 137.
+#
+# THE FILE CONSTRUCTOR COMES ON WITH THIS GATE. __sinit_ov043_02111868 builds
+# exactly the pair InitResources consumes -- Model file 1621 into
+# data_ov043_02112610 and collision file 1622 into data_ov043_02112608, which
+# are words 0 and 1 of the 3-word Arg record data_ov043_02112344 the mount
+# rebases (build/port/host-src/ov043_syms.c). It was left out of slice_bdw.txt
+# on the "a sinit for an unhosted class stays off" rule; 137 is hosted now.
+src/RickshawBdw_Spawn.c
+src/func_ov043_021114c4.c
+src/func_ov043_021114b0.c
+src/func_ov043_021113fc.c
+src/func_ov043_0211144c.c
+src/__sinit_ov043_02111868.c

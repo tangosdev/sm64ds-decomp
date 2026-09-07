@@ -13128,10 +13128,19 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111ac4.c"
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV15daObjWc_Obj05_c=data_ov029_02113e74;_ZTV10dBgActor_c=_ZTV8Platform")
+# link100 SPAWN2 CORRECTION, the third instance of the defect lane SEAT3 fixed
+# twice at gate 229 and for the same reason: this row was written for a seat
+# that never happened, so nothing had ever compiled it. G0 was missing
+# entirely and `extern void *G0;` in the body would have gone unresolved
+# (or, worse, bound to the global cxx_aliases G0). Read from the body's own
+# literal pool in config/arm9/overlays/ov029/relocs.txt: 0x02111b54 ->
+# 0x02113e74 (VT0, the class's own table), 0x02111b58 -> 0x0210ae38
+# (VT1 = _ZTV8Platform), 0x02111b5c -> 0x020a0eac (G0, the game heap
+# pointer Memory::Deallocate takes). VT0/VT1 were already right.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111b08.c"
     PROPERTIES COMPILE_DEFINITIONS
-    "VT0=data_ov029_02113e74;VT1=_ZTV8Platform")
+    "VT0=data_ov029_02113e74;VT1=_ZTV8Platform;G0=data_020a0eac")
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov029_02111ea4.c"
     PROPERTIES COMPILE_DEFINITIONS
@@ -14761,6 +14770,78 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/PushBlock_Spawn.c"
     PROPERTIES COMPILE_DEFINITIONS
     "_ZTV16daObjPushblock_c=data_ov002_021096b0")
+
+# ===========================================================================
+# GATE 231 (run link100, lane SPAWN2) -- two actor classes the port had never
+# been able to register, and their ruled bodies
+# ===========================================================================
+#
+# Both classes were held out by the same reading and both are released by the
+# same ruling. Their lifecycle bodies carry the "recovered from vtable slot
+# identity" marker, so hal/actor_classes_ov029.cpp and hal/actor_classes_ov043.cpp
+# each wrote in print that the class stays unregistered rather than put a guessed
+# body behind a live vtable. Lane STUBADJ then compared every one of them against
+# the ROM with match.py 2004/b56 and ruled them REAL_DECOMP -- "every
+# non-relocated word identical ... 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing"
+# -- which is recorded in port/tools/inferred_stub_adjudicated.txt. They are
+# decompilations. The two slice files carry the per-slot ROM derivation.
+#
+#   id 99  CAGE_LIFT      ov029  data_ov029_02113e74  6 own slots  level 21 x2
+#   id 137 RICKSHAW_BDW   ov043  data_ov043_0211238c  4 own slots  level 35 x1
+#
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_cagelift.txt" SLICE231A_LINES)
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_rickshaw.txt" SLICE231B_LINES)
+set(SLICE231_SOURCES "")
+foreach(line IN LISTS SLICE231A_LINES SLICE231B_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE231_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t231 walk_window walk_window_hires smoke_player)
+    target_sources(${_t231} PRIVATE ${SLICE231_SOURCES})
+endforeach()
+#
+# THE BINDINGS, every one read out of the referring body's OWN literal pool in
+# config/arm9/overlays/ov043/relocs.txt and cross-checked against the ARM store
+# order, because the recovered placeholder names are not in ROM order here.
+#
+# RickshawBdw_Spawn (0x021114dc) makes TWO stores and the source spells the
+# named one FIRST:
+#     021114f4  ldr r1,[pc,#20]  -> [02111510] = 02109320
+#     021114f8  ldr r0,[pc,#20]  -> [02111514] = 0211238c
+#     021114fc  str r1,[r4]                       <- dead first store
+#     02111500  str r0,[r4]                       <- LIVE store, own table
+# so _ZTV21daObjKm1_Kurumajiku_c is the ov002 intermediate base 0x02109320 (a
+# host array in hal/actor_classes_ov047.cpp) and VT1 is the class's own table.
+# Binding the named one to the own table would land the right vptr by accident
+# and still be a wrong reloc destination, which is what linkcheck catches.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RickshawBdw_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV21daObjKm1_Kurumajiku_c=data_ov002_02109320;VT1=data_ov043_0211238c")
+#
+# The D1 (0x021113fc) and the D0 (0x0211144c) both make THREE stores in the same
+# order -- own table, ov002 base, _ZTV8Platform -- and there the source order and
+# the pool order agree:
+#     02111400  ldr r1 -> [02111440] = 0211238c ; 0211140c str r1,[r4]
+#     02111408  ldr r0 -> [02111444] = 02109320 ; 02111414 str r0,[r4]
+#     02111410  ldr r1 -> [02111448] = 0210ae38 ; 0211141c str r1,[r4]
+# and the D0 adds 0x021114ac -> 0x020a0eac, the game heap pointer it hands to
+# Memory::Deallocate as G0. 0x0210ae38 is _ZTV8Platform in ov002/symbols.txt.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov043_021113fc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV21daObjKm1_Kurumajiku_c=data_ov043_0211238c;_ZTV10dBgActor_c=data_ov002_02109320;VT2=_ZTV8Platform")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov043_0211144c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov043_0211238c;VT1=data_ov002_02109320;VT2=_ZTV8Platform;G0=data_020a0eac")
+#
+# CAGE_LIFT needs no new row. Its factory spells data_ov029_02113e74 by name and
+# that is the host array; its D1 and D0 rows already exist above (the D0's is
+# corrected in place for the missing G0).
 
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
