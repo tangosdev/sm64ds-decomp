@@ -1,0 +1,28 @@
+# gate 230 (run link100, lane SEAT3): the factory TU for actor id 192,
+# daObjPushblock_c -- the cheapest seat on lane SPAWNPREP's board.
+#
+# WHAT WAS MISSING, and it was never the class's code. Its vtable
+# data_ov002_021096b0 is already a live host array in
+# hal/actor_base_tables_ov002.cpp with all nine of its own slots seated by
+# gate 226 and no traps left, and every one of those nine bodies already
+# links. What the class had no way to reach was the spawn spine: its
+# SpawnInfo record was absent from the ov002 mount, its factory TU was in no
+# slice, and it had no registry row. All three are added by this gate.
+#
+# THE FACTORY, verified by address rather than by its name. ov002/symbols.txt:
+#   PushBlock_Spawn kind:function(arm,size=0x3c) addr:0x020b910c
+# and PushBlock_SpawnInfo (0x0210968c) word[0] relocates to exactly that
+# address (from:0x0210968c kind:load to:0x020b910c). The body allocates 1268
+# bytes on ActorBase's operator new, runs Platform's C2, stores its vtable and
+# constructs the WithMeshClsn at +0x320.
+#
+# ONE BINDING, read out of the factory's own literal pool: 0x020b9144 loads
+# 0x021096b0, so the placeholder name _ZTV16daObjPushblock_c that the source
+# spells is this class's table and nothing else. That is the same name and the
+# same target the gate-226 row for src/func_ov002_020b8bf0.c already binds.
+#
+# NAME TRAP: the registry's PUSH_BLOCK is id 306 (PowerFlower_Spawn,
+# _ZTV9PushBlock 0x02109800), a different class that merely got dsd's
+# "PushBlock" name. The row this gate adds is PUSHABLE_BLOCK so the two do not
+# collide; the name is a diagnostic label, and the id is the fact.
+src/PushBlock_Spawn.c

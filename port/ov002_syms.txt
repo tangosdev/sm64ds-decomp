@@ -512,3 +512,24 @@ data_ov002_021000c8 data_ov002_021000d8 data_ov002_021000e0 data_ov002_021000f0 
 # two SharedFilePtr the same body loads (0x0210df9c and 0x0210df94, its first
 # two pool words) were already mounted above.
 data_ov002_0210d7b4:0x20
+
+# ---- link100 SEAT3, gate 230: actor id 192, daObjPushblock_c ----
+# The one record the class was missing. ov002/symbols.txt has
+#   PushBlock_SpawnInfo kind:data(any) addr:0x0210968c
+# and its +4 halfword reads 192, which is what hal/actor_registry.cpp
+# cross-checks before it seats the row. Word[0] is a relocation
+# (from:0x0210968c load to:0x020b910c, PushBlock_Spawn) and the registry
+# OVERWRITES it with the host factory's address the way it does for every
+# other SpawnInfo, so the mounted DS word is never called.
+#
+# PINNED TO 0x1c, the SpawnInfo record's real width, and not left to the
+# next-symbol delta: the next symbol is 0x021096b0, which is the class's
+# VTABLE and a live host array in hal/actor_base_tables_ov002.cpp, so the
+# unpinned span would be 0x24 and would emit eight bytes of a different
+# object. The registry reads +0, +4 and +6 and ActorBase's constructor reads
+# +4/+6; nothing reads past 0x1c.
+#
+# NAME TRAP, settled by address: the registry's existing PUSH_BLOCK row is id
+# 306, whose SpawnInfo is PowerFlower_SpawnInfo (0x021097a0) and whose vtable
+# is _ZTV9PushBlock (0x02109800). Different class, different record.
+PushBlock_SpawnInfo:0x1c

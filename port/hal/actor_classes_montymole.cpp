@@ -190,15 +190,15 @@ static int __fastcall mm_under(void *s, void *, void *o)
    __thiscall so the ecx that never held `this` is not handed to the body. */
 static int __fastcall mm_init(void *s, void *)
 { return ((MontyMole *)s)->MontyMole::InitResources(); }
-/* RUN LINKW WAVE 19: was `((MontyMole *)s)->MontyMole::Render()`. That body
-   dispatches slot 5 of a local six-virtual shadow over the ModelAnim at 0xd4,
-   which the host _ZTV9ModelAnim numbers as Virtual18 -- a live c0000005 the
-   moment a MONTY_MOLE is drawn (SM64DS_SPAWN_ACTOR=310 on level 13). See
-   port/unmatched/W19_Slot5_Renders.cpp for the fault and the cost. */
-extern "C" int port_w19_montymole_render(void *self);
+/* GATE 230: the matched Render is back, the same reading as the three ov065
+   classes -- the ModelAnim virtual-destructor unfold in this branch's base put
+   slot 5 back on Render, so the six-virtual shadow this body dispatches lands
+   where the ROM means. _ZTV9MontyMole is ov080 0x021280b0 and its slot-9 word
+   0x021280d4 relocates to 0x021244d8, recorded as
+   _ZN9MontyMole6RenderEv kind:function(arm,size=0x28). */
 static int __fastcall mm_render(void *s, void *)
 { port_actor_render_probe("MONTY_MOLE", (char *)s + 0xd4);
-  return port_w19_montymole_render(s); }
+  return ((MontyMole *)s)->MontyMole::Render(); }
 /* Behavior is the HOST copy (C linkage), Cleanup and D0 are plain C. */
 static int __fastcall mm_behavior(void *s, void *)
 { return _ZN9MontyMole8BehaviorEv(s); }

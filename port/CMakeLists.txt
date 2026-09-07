@@ -13246,7 +13246,6 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
-    unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES} ${SLICE219_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
@@ -13481,7 +13480,6 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
-    unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN}
@@ -13769,7 +13767,6 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
-    unmatched/W19_Slot5_Renders.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN}
@@ -14666,6 +14663,37 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov064_021179bc.c"
     PROPERTIES COMPILE_DEFINITIONS
     "VT0=_ZTV17daObjFl_Amilift_c;VT1=_ZTV8Platform;G0=data_020a0eac")
+
+# ===========================================================================
+# GATE 230 -- actor id 192, daObjPushblock_c, joins the registry
+# ===========================================================================
+#
+# Not a decomp gate: the class's nine own bodies are all linked already and
+# its vtable is filled with no traps (gate 226). This links the FACTORY and
+# lets the spawn spine reach it, which is the last of the three things lane
+# SPAWNPREP's dossier said id 192 was missing -- the other two are the
+# SpawnInfo row in port/ov002_syms.txt and the registry row in
+# hal/actor_classes.inc. Seven placed instances across levels 0, 21 and 39.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate230.txt" SLICE230_LINES)
+set(SLICE230_SOURCES "")
+foreach(line IN LISTS SLICE230_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE230_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t230 walk_window walk_window_hires smoke_player)
+    target_sources(${_t230} PRIVATE ${SLICE230_SOURCES})
+endforeach()
+#
+# ONE BINDING, read at 0x020b9144 inside PushBlock_Spawn's own span in
+# config/arm9/overlays/ov002/relocs.txt: the placeholder the source spells is
+# this class's own table, hosted in hal/actor_base_tables_ov002.cpp.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/PushBlock_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV16daObjPushblock_c=data_ov002_021096b0")
 
 # ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE

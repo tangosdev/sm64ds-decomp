@@ -288,9 +288,36 @@ int _ZN10MrBlizzardD0Ev(void *self);                  /* slot 17, .c, spells own
                                                            under RTTI alias daSnowman_c */
 int func_ov081_02125eb8(void);                        /* slot 29, OnAimedAtWithEgg --
                                                            no args, returns int */
-int func_ov081_021261b8(void *self);                  /* slot 31, Kill -- returns int */
+/* func_ov081_021261b8 is NOT a virtual -- see the [31] note below. It is the
+   ENTER half of the Snowball state cell at 0x02128eb4 and is reached through
+   port_snowball_states_seat further down this file. */
+int func_ov081_021261b8(void *self);
 void *MrBlizzard_Spawn(void);                         /* installs _ZTV10MrBlizzard */
-int _ZTV10MrBlizzard[32];
+/* THIRTY-ONE SLOTS, NOT THIRTY-TWO, and the four sibling Enemy classes in this
+   tree were right where this one was wrong. Settled from the ROM three ways,
+   re-read for this gate rather than taken on trust:
+     1. SPAN. ov081/symbols.txt puts _ZTV10MrBlizzard and its RTTI alias
+        _ZTV11daSnowman_c at 0x021289f0 and the next symbol data_ov081_02128a6c
+        at 0x02128a6c: 0x7c bytes = 31 words, indices 0..30.
+     2. ADDRESS-TAKEN, WHICH A VTABLE SLOT NEVER IS. relocs.txt has
+        from:0x021284e4 load to:0x02128a6c -- a literal-pool word holding the
+        ADDRESS of the object. A slot is read as vtable + 4*N by a dispatch and
+        is never address-taken.
+     3. THE TAKER IS A STATIC INITIALIZER. 0x021284e4 lies inside
+        __sinit_ov081_021284b4 (function(arm,size=0x3c)), which is the PMF-copy
+        pattern this file already documents: 0x02128a6c is {0x021261b8, 0} and
+        0x02128a74 is {0x021260fc, 0}, two member-pointer SOURCE constants
+        sitting right after the table, which is why the bytes looked like a
+        slot followed by a zero.
+   The same three reads on Bowser (ov060 0x0211a6b8), Snufit (ov065
+   0x0211cba4), ChiefChilly (ov073 0x02123090) and MantaRay (ov090 0x0213423c)
+   return the same shape: span 0x7c, exactly one address-taking load, and every
+   taker inside that overlay's own __sinit_. Declaring [32] and filling vt[31]
+   made func_ov081_021261b8 LOOK seated while the path the ROM really
+   dispatches it through carried it; it was memory-safe only by luck of the
+   [32] declaration, which is why nothing ever crashed. Costs zero linkage: the
+   body stays referenced through the state cell. */
+int _ZTV10MrBlizzard[31];
 
 /* the ten state cells: each is TWO 8-byte {fn,delta} PMF pairs back to
    back (the .x=enter half, .y=tick half __sinit_ov081_02128154's own
@@ -409,8 +436,7 @@ static int __fastcall mb_d0(void *s, void *)
 { return _ZN10MrBlizzardD0Ev(s); }
 static int __fastcall mb_aimed(void *s, void *)
 { (void)s; return func_ov081_02125eb8(); }
-static int __fastcall mb_kill(void *s, void *)
-{ return func_ov081_021261b8(s); }
+/* No mb_kill: there is no slot 31 on a 31-slot table. See the [31] note. */
 
 extern "C" void hal_fill_mr_blizzard_vtable(void)
 {
@@ -427,7 +453,7 @@ extern "C" void hal_fill_mr_blizzard_vtable(void)
     vt[16] = (void *)mb_d1;
     vt[17] = (void *)mb_d0;
     vt[29] = (void *)mb_aimed;       /* own OnAimedAtWithEgg */
-    vt[31] = (void *)mb_kill;        /* own Kill */
+    /* no vt[31]: 31 slots, ends at 30 */
 }
 
 // ============================================================================
