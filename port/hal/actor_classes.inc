@@ -181,6 +181,17 @@ void hal_fill_pushblock_vtable(void);
 extern unsigned char MugenBgm_SpawnInfo[];              /* ov002 0x0210b560, +4 reads 351 */
 void *MugenBgm_Spawn(void);                             /* ov002 0x020f1f40 */
 void hal_fill_mugen_bgm_vtable(void);
+/* ---- link100 SEAT3, gate 230: PUSHABLE_BLOCK (192), ov002 (already mounted;
+   the SpawnInfo record joined ov002_syms.txt for this gate). A DIFFERENT class
+   from the PUSH_BLOCK row above, which is id 306: this one's factory really is
+   called PushBlock_Spawn and its table is the unnamed data_ov002_021096b0,
+   RTTI daObjPushblock_c. Keyed on the id and the addresses, not the names. Its
+   vtable is filled by hal/actor_base_tables_ov002.cpp (gate 226, nine own
+   slots, no traps), and hal_fill_pushblock192_vtable there is the re-fill hook
+   the savestate path needs. */
+extern unsigned char PushBlock_SpawnInfo[];             /* ov002 0x0210968c, +4 reads 192 */
+void *PushBlock_Spawn(void);                            /* ov002 0x020b910c */
+void hal_fill_pushblock192_vtable(void);
 /* ---- gate 202: CLOCK_HAND_SHORT (292) + CLOCK_HAND_LONG (293) +
    CLOCK_PENDULUM (294), ov013 (level 5), a fresh per-symbol mount
    (ov013_syms.txt) joining the existing whole level mount. Both hands share
@@ -3114,4 +3125,7 @@ void hal_fill_cloud_vtable(void);               /* _ZTV5Cloud 0x02111858, 31 */
     /* ---- link100 OV ---- */ \
     {348, "CHANGE_ROOM", VirtualDoor_SpawnInfo, VirtualDoor_Spawn, \
      hal_fill_change_room_vtable}, \
-    {314, "CLOUD", Cloud_SpawnInfo, Cloud_Spawn, hal_fill_cloud_vtable},
+    {314, "CLOUD", Cloud_SpawnInfo, Cloud_Spawn, hal_fill_cloud_vtable}, \
+    /* ---- link100 SEAT3, gate 230 ---- */ \
+    {192, "PUSHABLE_BLOCK", PushBlock_SpawnInfo, PushBlock_Spawn, \
+     hal_fill_pushblock192_vtable},

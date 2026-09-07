@@ -91,6 +91,7 @@ int func_ov002_020b66f0(void *self);
    body, trapped not seated -- no extern) */
 int  func_ov029_02111254(char *self);   /* s0 InitResources */
 int *func_ov029_021111a0(int *self);    /* s16 D1 */
+int *func_ov029_021111f0(int *self);    /* s17 D0 -- GATE 229, ruled and seated */
 /* id 96 ArrowLift, live table _ZTV29FloatOnWaterPlatformWdwSquare (mangled bodies) */
 int _ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv(void *self);
 int _ZN29FloatOnWaterPlatformWdwSquare16CleanupResourcesEv(void *self);
@@ -109,6 +110,7 @@ int *_ZN9ArrowLiftD0Ev(int *self);   /* D1 trapped: see WaterDiamond fill */
    trapped not seated) */
 int  func_ov029_02111f58(char *self);   /* s0 */
 int *func_ov029_02111ea4(int *self);    /* s16 */
+int *func_ov029_02111ef4(int *self);    /* s17 D0 -- GATE 229, ruled and seated */
 /* id 94 RotatingPlatformWdw, live table _ZTV32FloatOnWaterPlatformWdwRectangle */
 int _ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv(void *self);
 int _ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv(void *self);
@@ -242,18 +244,26 @@ static int __fastcall sq_clean(void *s, void *) { return func_ov002_020b5be0(s);
 static int __fastcall sq_beh(void *s, void *)   { return func_ov002_020b5c4c(s); }
 static int __fastcall sq_ren(void *s, void *)   { return func_ov002_020b5c24(s); }
 static int __fastcall sq_d1(void *s, void *)    { return (int)(size_t)func_ov029_021111a0((int *)s); }
-/* slot 17 (D0, the deleting destructor) is func_ov029_021111f0, which carries
-   the "recovered from vtable slot identity" marker -- a guessed body, not a ROM
-   decompilation, so it is TRAPPED rather than seated. D0 is not called across a
-   level selftest (actors are freed at teardown), and the real D1 at slot 16 is
-   seated. */
+/* GATE 229: SLOT 17 IS THE ROM BODY NOW. func_ov029_021111f0 carries the
+   "recovered from vtable slot identity" marker, which is why the note that used
+   to stand here trapped it -- and lane STUBADJ ruled that marker set against the
+   ROM (REAL_DECOMP, port/tools/inferred_stub_adjudicated.txt), so it is a
+   decompilation after all. Checked by address before seating, not by the
+   ruling's own text: the table word 0x02113c70 is data_ov029_02113c2c + 4*17 and
+   relocates to 0x021111f0, and symbols.txt carries
+   func_ov029_021111f0 kind:function(arm,size=0x64) at exactly that address.
+   Its THREE vptr stores are bound per TU in port/CMakeLists.txt out of its own
+   literal pool (own table, the ov002 base 0x02108fdc, then _ZTV8Platform), which
+   is the store the recovered placeholder names could not spell. Two-parameter
+   face: slot 17 is a lifecycle slot and the caller pushes nothing. */
+static int __fastcall sq_d0(void *s, void *)   { return (int)(size_t)func_ov029_021111f0((int *)s); }
 extern "C" void hal_fill_float_on_water_platform_wdw_square_vtable(void)
 {
     port_ov29_bringup();
     void *volatile *vt = (void *volatile *)data_ov029_02113c2c;
     ov29_fill_shared(vt);
     vt[0]=(void *)sq_init; vt[3]=(void *)sq_clean; vt[6]=(void *)sq_beh;
-    vt[9]=(void *)sq_ren;  vt[16]=(void *)sq_d1;   vt[17]=(void *)ov29_trap17;
+    vt[9]=(void *)sq_ren;  vt[16]=(void *)sq_d1;   vt[17]=(void *)sq_d0;
     vt[31]=(void *)ov29_kill;
 }
 
@@ -311,15 +321,19 @@ static int __fastcall rc_clean(void *s, void *) { return func_ov002_020b5be0(s);
 static int __fastcall rc_beh(void *s, void *)   { return func_ov002_020b5c4c(s); }
 static int __fastcall rc_ren(void *s, void *)   { return func_ov002_020b5c24(s); }
 static int __fastcall rc_d1(void *s, void *)    { return (int)(size_t)func_ov029_02111ea4((int *)s); }
-/* slot 17 (D0) is func_ov029_02111ef4, a guess-marked body -- TRAPPED, like the
-   Square D0. Real D1 at slot 16 is seated. */
+/* GATE 229: slot 17 is the ROM body, the same reading as the Square one class
+   up. Table word 0x02113f88 = data_ov029_02113f44 + 4*17 relocates to
+   0x02111ef4, and symbols.txt has func_ov029_02111ef4
+   kind:function(arm,size=0x64) there. Same three-store binding out of its own
+   pool, same two-parameter face. */
+static int __fastcall rc_d0(void *s, void *)   { return (int)(size_t)func_ov029_02111ef4((int *)s); }
 extern "C" void hal_fill_float_on_water_platform_wdw_rectangle_vtable(void)
 {
     port_ov29_bringup();
     void *volatile *vt = (void *volatile *)data_ov029_02113f44;
     ov29_fill_shared(vt);
     vt[0]=(void *)rc_init; vt[3]=(void *)rc_clean; vt[6]=(void *)rc_beh;
-    vt[9]=(void *)rc_ren;  vt[16]=(void *)rc_d1;   vt[17]=(void *)ov29_trap17;
+    vt[9]=(void *)rc_ren;  vt[16]=(void *)rc_d1;   vt[17]=(void *)rc_d0;
     vt[31]=(void *)ov29_kill;
 }
 

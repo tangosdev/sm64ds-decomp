@@ -380,17 +380,21 @@ static int __fastcall sn_clean(void *s, void *)
 { (void)s; return _ZN6Snufit16CleanupResourcesEv(); }
 static int __fastcall sn_behavior(void *s, void *)
 { return _ZN6Snufit8BehaviorEv(s); }
-/* RUN LINKW WAVE 19: was `((Snufit *)s)->Snufit::Render()`, the matched TU.
-   That body dispatches slot 5 of a local six-virtual shadow over the ModelAnim
-   at 0x300, and the host _ZTV9ModelAnim numbers slot 5 as Virtual18 -- a live
-   c0000005 the moment a SNUFIT is drawn (measured with SM64DS_SPAWN_ACTOR=236
-   on level 13; the banner in port/unmatched/W19_Slot5_Renders.cpp carries the
-   fault). The host copy costs the matched TU and is the same trade
-   Butterfly/Whomp/Amp already made. */
-extern "C" int port_w19_snufit_render(void *self);
+/* GATE 230: THE MATCHED Render IS BACK, because the collision it was routed
+   around is gone. Lane SLOT5F's stage A (this branch's base) respelt the
+   Model family's virtual destructor as two plain virtuals under _MSC_VER, so
+   MSVC's _ZTV9ModelAnim is the ROM's numbering word for word and slot 5 is
+   Render again -- which is exactly what the host copy's own banner named as
+   the real fix. The trade that banner recorded (a linked body that faults is
+   worth less than an unlinked one that does not) is settled the other way
+   now, so the host copy is deleted rather than kept.
+   Verified by address before re-seating: _ZTV6Snufit is ov065 0x0211cba4 and
+   the word at 0x0211cbc8 is base + 4*9, ActorBase::Render, relocating to
+   0x02116b34 -- which ov065/symbols.txt records as
+   _ZN6Snufit6RenderEv kind:function(arm,size=0x50). */
 static int __fastcall sn_render(void *s, void *)
 { port_actor_render_probe("SNUFIT", (char *)s + 0x300);
-  return port_w19_snufit_render(s); }
+  return ((Snufit *)s)->Snufit::Render(); }
 static int __fastcall sn_pdes(void *s, void *)
 { (void)s; _ZN6Snufit16OnPendingDestroyEv(); return 0; }
 static int __fastcall sn_d1(void *s, void *)
@@ -451,13 +455,14 @@ static int __fastcall sw_clean(void *s, void *)
 { (void)s; return _ZN5Swoop16CleanupResourcesEv(); }
 static int __fastcall sw_behavior(void *s, void *)
 { return _ZN5Swoop8BehaviorEv(s); }
-/* RUN LINKW WAVE 19: the same ModelAnim slot-5 collision, over BOTH of
-   SWOOP's ModelAnims (0x300 and 0x364). Measured with SM64DS_SPAWN_ACTOR=237
-   on level 13. See port/unmatched/W19_Slot5_Renders.cpp. */
-extern "C" int port_w19_swoop_render(void *self);
+/* GATE 230: the matched Render is back, the same reading as SNUFIT above --
+   and SWOOP dispatches slot 5 over BOTH of its ModelAnims (0x300 and 0x364),
+   so both branches were the collision and both are fixed by the same unfold.
+   _ZTV5Swoop is ov065 0x0211cca0 and its slot-9 word 0x0211ccc4 relocates to
+   0x02117af0, recorded as _ZN5Swoop6RenderEv kind:function(arm,size=0x74). */
 static int __fastcall sw_render(void *s, void *)
 { port_actor_render_probe("SWOOP", (char *)s + 0x300);
-  return port_w19_swoop_render(s); }
+  return ((Swoop *)s)->Swoop::Render(); }
 static int __fastcall sw_pdes(void *s, void *)
 { (void)s; _ZN5Swoop16OnPendingDestroyEv(); return 0; }
 static int __fastcall sw_d1(void *s, void *)
@@ -512,13 +517,13 @@ static int __fastcall do_clean(void *s, void *)
 { return ((Dorrie *)s)->Dorrie::CleanupResources(); }
 static int __fastcall do_behavior(void *s, void *)
 { return _ZN6Dorrie8BehaviorEv(s); }
-/* RUN LINKW WAVE 19: the same ModelAnim slot-5 collision, over the ModelAnim
-   at 0xec. Measured with SM64DS_SPAWN_ACTOR=168 on level 13. See
-   port/unmatched/W19_Slot5_Renders.cpp. */
-extern "C" int port_w19_dorrie_render(void *self);
+/* GATE 230: the matched Render is back, the same reading as SNUFIT above,
+   over the ModelAnim at 0xec. _ZTV6Dorrie is ov065 0x0211ce48 and its slot-9
+   word 0x0211ce6c relocates to 0x02118d80, recorded as
+   _ZN6Dorrie6RenderEv kind:function(arm,size=0x28). */
 static int __fastcall do_render(void *s, void *)
 { port_actor_render_probe("DORRIE", (char *)s + 0xec);
-  return port_w19_dorrie_render(s); }
+  return ((Dorrie *)s)->Dorrie::Render(); }
 static int __fastcall do_d1(void *s, void *)
 { return (int)(size_t)_ZN6DorrieD1Ev(s); }
 static int __fastcall do_d0(void *s, void *)

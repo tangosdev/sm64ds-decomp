@@ -141,8 +141,10 @@ void *MetalNetLift_Spawn(void);        /* the factory, installs the host table *
 /* Behavior func_ov064_02117d24 is a HOST COPY (PMF dispatch) -- declared in the
    states file; the fill binds the host copy at slot 6. */
 int func_ov064_02117d24(void *self);
-/* D1/D0 (func_ov064_02117978/021179bc) are NOT declared -- host thunks below.
+/* D1 (func_ov064_02117978) is NOT declared -- host thunk below. D0 IS declared:
+   GATE 229 seats it, see the note above aml_d0.
    The Amilift dtor chain's sub-object destructors and base D2, all C-linkage. */
+int *func_ov064_021179bc(int *self);        /* slot 17, the ROM's own D0 */
 void _ZN18MovingMeshColliderD1Ev(void *);   /* MovingMeshCollider at +0x124 */
 void _ZN5ModelD1Ev(void *);                 /* Model at +0xd4 */
 void _ZN5ActorD2Ev(void *);                 /* the Actor base D2 */
@@ -317,16 +319,28 @@ static int __fastcall aml_d1(void *s, void *)
     _ZN5ActorD2Ev(t);
     return (int)(size_t)s;
 }
+/* GATE 229: THE D0 IS THE ROM BODY NOW, and the thunk that used to stand here is
+   gone. The refusal above is answered rather than argued with: the "shared
+   single-global placeholder" the note names is spelled VT0/VT1 in
+   src/func_ov064_021179bc.c, and port/CMakeLists.txt binds those two names FOR
+   THIS SOURCE ONLY, out of this body's own literal pool
+   (0x02117a08 -> 0x0211bc68, this class's table; 0x02117a0c -> 0x0210ae38,
+   _ZTV8Platform; G0 at 0x02117a10 -> 0x020a0eac), so no other speller is
+   affected. What comes back is the SECOND vptr store the thunk elided, and it
+   happens inside a destructor whose next act is Memory::Deallocate, so nothing
+   dispatches through it.
+
+   Verified by address before seating: the table word 0x0211bcac is
+   data_ov064_0211bc68 + 4*17 and relocates to 0x021179bc, and ov064/symbols.txt
+   carries func_ov064_021179bc kind:function(arm,size=0x58) at exactly that
+   address -- a function entry, not an interior. The row's recovered name says
+   OnYoshiTryEat and is wrong; the note above already said so. Ruled REAL_DECOMP
+   by lane STUBADJ (port/tools/inferred_stub_adjudicated.txt).
+
+   The D1 thunk one function up is UNTOUCHED: func_ov064_02117978 is not in the
+   ruling set, so nothing has changed about why it is a thunk. */
 static int __fastcall aml_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)_ZTV17daObjFl_Amilift_c;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov064_021179bc((int *)s); }
 
 extern "C" void hal_fill_metal_net_lift_vtable(void)
 {

@@ -565,3 +565,16 @@ struct Ov002BaseTableSeat {
 };
 Ov002BaseTableSeat g_ov002_base_table_seat;
 }
+
+/* ---- GATE 230: the registry's fill hook for actor id 192 -----------------
+   data_ov002_021096b0 is filled above, by hal_seat_ov002_base_tables through
+   the static constructor, and gate 226 seated all nine of its own slots with
+   no traps left. So id 192 needs no new fill -- it needs the EXISTING one
+   reachable from the registry, because the tables live in .dsstate and a
+   savestate restore wipes them; every other registered class re-fills from
+   its hal_fill_* hook and this one now does too. hal_seat_ov002_base_tables
+   writes constants only, so calling it twice is the same as calling it once. */
+extern "C" void hal_fill_pushblock192_vtable(void)
+{
+    hal_seat_ov002_base_tables();
+}
