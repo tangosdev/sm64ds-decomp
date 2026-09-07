@@ -1,0 +1,379 @@
+{
+  "_file": "Scout-stage facts for the promotion-queue row `OneUpMushroom` (ov002).",
+  "_read_this_first": [
+    "The queue row is spelled `OneUpMushroom`. That is a COINED project name and it is NOT in the cartridge.",
+    "The cartridge's own RTTI name for this class is `da1up_c`. Write the class as `da1up_c`.",
+    "This file is named after the queue row so the writer can find it from `tu-promotion-queue.tsv`; `class` below is the real identity."
+  ],
+
+  "class": "da1up_c",
+  "queue_row": "OneUpMushroom",
+  "rtti_name": "7da1up_c",
+  "name_is_rom_rtti": true,
+  "identity_evidence": "ov002 file offset 0x5ad10 == address 0x02108370 holds the bytes 37 64 61 31 75 70 5f 63 00, i.e. the length-prefixed Itanium type-name string `7da1up_c\\0`. Read directly out of extracted/dsd/arm9_overlays/ov002.bin, not from build/rtti.json (rtti.json agrees). The strict length-prefixed search for `13OneUpMushroom\\0` returns ABSENT from every image.",
+
+  "coined_names_in_the_current_tree": {
+    "OneUpMushroom": "COINED. Absent from the cartridge -- see `negative_search` below. Carried by 9 shard filenames, 9 symbols.txt rows, include/OneUpMushroom.h, and the `_ZTV13OneUpMushroom` alias. All of these must move to `da1up_c` in ONE commit together with symbols.txt (see `blockers`).",
+    "ONEUPKINOKO": "NOT coined -- ROM-attested. The literal ASCII string `ONEUPKINOKO` is in arm9 at 0x020901e8, in the game's own actor debug-name table, as profile id 276 (0x0114).",
+    "SCALEUP_KINOKO": "NOT coined -- ROM-attested. Literal ASCII `SCALEUP_KINOKO` in arm9 at 0x02090658, profile id 277 (0x0115).",
+    "g_profile_ / _classInit_ affixes": "COINED. The substrings `g_profile`, `classInit`, `SpawnInfo` are ABSENT from every image in every encoding tested. Only the KINOKO ids inside them are ROM-attested."
+  },
+
+  "overlay": "ov002",
+  "module_base": "0x020ad660",
+  "module_code_size": "0x60340",
+  "module_text_data_end": "0x0210d9a0",
+  "module_bss": "0x0210d9a0..0x021111a0",
+  "modules_touched": ["ov002", "arm9"],
+
+  "text_run": {
+    "start": "0x020aee40",
+    "end": "0x020b05d0",
+    "bytes": "0x1790",
+    "functions": 38,
+    "note": "38 = the 36 shards the queue counts + the 2 `da1up_c_classInit_*` factories. tu_map.py splits the factories into their own classless unit at 0x020b0530..0x020b05d0 because `_classInit` is an unhandled factory spelling; that is a known tool defect, not a real TU boundary. The sibling oracle daBar_c puts its own classInit at the END of its run, and both factories here reference this class's vtable and profiles. Treat 0x020aee40..0x020b05d0 as one TU.",
+    "contiguity_evidence": "config/arm9/overlays/ov002/delinks.txt lists all 38 sources contiguously in exact address order; the function below the run start is _ZN12dEnemyBase_cC2Ev (0x020aed98, the base class's own TU) and the function above the run end is _ZN7daBar_cD1Ev (0x020b05d0, the already-promoted daBar_c TU)."
+  },
+
+  "vtable": {
+    "symbol": "_ZTV7da1up_c",
+    "address": "0x021083c8",
+    "address_is_the_address_point": true,
+    "offset_to_top_at_minus_8": "0x00000000",
+    "rtti_ptr_at_minus_4": "0x0210837c",
+    "slots": 31,
+    "payload_extent": "0x021083c8..0x02108444",
+    "payload_bytes": "0x7c",
+    "storage_extent": "0x021083c0..0x02108444",
+    "storage_bytes": "0x84",
+    "ends_exactly_where": "_ZTS7daBar_c begins, at 0x02108444. The table ends precisely on the next datum; there is no slack and no trailing-null truncation ambiguity.",
+    "module": "ov002",
+    "alias_hazard": "symbols.txt carries TWO symbols at 0x021083c8: `_ZTV13OneUpMushroom` and `_ZTV7da1up_c`. This coined/RTTI vtable alias pair is the house pattern in ov002 -- 18 of the module's 20 duplicate addresses are exactly this shape -- and the promoted daBar_c has only the RTTI spelling, so the alias is expected to be resolved by the promotion."
+  },
+
+  "base_class": "dEnemyBase_c",
+  "base_evidence": "_ZTI7da1up_c at ov002:0x0210837c is a __si_class_type_info (word[0] = 0x0209a764, the __si_class_type_info vtable in arm9). Its +8 word is 0x021081c0, which is _ZTI12dEnemyBase_c -- read from the ROM, whose own +4 name pointer is 0x021081cc holding `12dEnemyBase_c\\0`. This is the authoritative single-inheritance base record, not a vtable-length inference.",
+  "ancestor_chain": [
+    {"class": "da1up_c",      "ZTI": "0x0210837c", "module": "ov002"},
+    {"class": "dEnemyBase_c", "ZTI": "0x021081c0", "module": "ov002"},
+    {"class": "dActor_c",     "ZTI": "0x0208e390", "module": "arm9"},
+    {"class": "dBase_c",      "ZTI": "0x02086e78", "module": "arm9"},
+    {"class": "fBase_c",      "ZTI": "0x02086d70", "module": "arm9"}
+  ],
+  "chain_evidence": "da1up_c -> dEnemyBase_c and dEnemyBase_c -> dActor_c were read from the ROM in this session. dActor_c -> dBase_c -> fBase_c is taken from build/rtti.json and from the already-promoted config/tu_manifest.d/ov002/daBar_c.json compiler_only_output block; it was NOT re-read from the cartridge here.",
+
+  "typeinfo": {
+    "ZTI": "0x0210837c", "ZTI_module": "ov002",
+    "ZTS": "0x02108370", "ZTS_module": "ov002",
+    "ZTV_module": "ov002",
+    "note": "All three live in ov002. There is no cross-overlay vague-linkage split here (contrast daOts_c, whose _ZTV is in ov064 while _ZTI/_ZTS are in ov027). ov002's symbols.txt names all three addresses, which resolves the module unambiguously."
+  },
+
+  "vtable_slots": {
+    "_note": "31 slots. Names come from the whole base chain: slots 0-17 from include/fBase_c.h, slots 18-30 from include/dActor_c.h. dEnemyBase_c adds NO new slots and overrides only 16/17, so this class's table is 31 words like its base's.",
+    "own_override_count": 9,
+    "own": [
+      {"slot": 0,  "address": "0x020b01c0", "name": "InitResources",    "current_symbol": "_ZN13OneUpMushroom13InitResourcesEv",    "size": "0x370", "note": "largest member in the TU; also the key-function position used by the daBar_c oracle"},
+      {"slot": 3,  "address": "0x020affe8", "name": "CleanupResources", "current_symbol": "_ZN13OneUpMushroom16CleanupResourcesEv", "size": "0x84"},
+      {"slot": 6,  "address": "0x020b00e8", "name": "Behavior",         "current_symbol": "_ZN13OneUpMushroom8BehaviorEv",         "size": "0xd8", "note": "the ONLY consumer of the pointer-to-member dispatch table; loads 0x0210dc00 from its literal pool at 0x020b01bc"},
+      {"slot": 9,  "address": "0x020b0070", "name": "Render",           "current_symbol": "_ZN13OneUpMushroom6RenderEv",           "size": "0x78"},
+      {"slot": 12, "address": "0x020b006c", "name": "OnPendingDestroy", "current_symbol": "_ZN13OneUpMushroom16OnPendingDestroyEv","size": "0x4",  "body": "bx lr", "note": "empty body"},
+      {"slot": 16, "address": "0x020aee40", "name": "~da1up_c (D1)",    "current_symbol": "_ZN13OneUpMushroomD1Ev",                "size": "0x48"},
+      {"slot": 17, "address": "0x020aee88", "name": "~da1up_c (D0)",    "current_symbol": "_ZN13OneUpMushroomD0Ev",                "size": "0x5c"},
+      {"slot": 18, "address": "0x020af3a0", "name": "OnYoshiTryEat",    "current_symbol": "_ZN13OneUpMushroom13OnYoshiTryEatEv",   "size": "0x8",  "body": "mov r0,#4; bx lr", "note": "returns 4"},
+      {"slot": 19, "address": "0x020af2b0", "name": "OnTurnIntoEgg",    "current_symbol": "_ZN13OneUpMushroom13OnTurnIntoEggER6Player", "size": "0xf0"}
+    ],
+    "inherited": [
+      {"slot": 1,  "address": "0x02011268", "module": "arm9", "target": "_ZN8dActor_c19BeforeInitResourcesEv"},
+      {"slot": 2,  "address": "0x02011244", "module": "arm9", "target": "_ZN8dActor_c18AfterInitResourcesEj"},
+      {"slot": 4,  "address": "0x02011220", "module": "arm9", "target": "_ZN8dActor_c22BeforeCleanupResourcesEv"},
+      {"slot": 5,  "address": "0x02011214", "module": "arm9", "target": "_ZN8dActor_c21AfterCleanupResourcesEj"},
+      {"slot": 7,  "address": "0x02010fd4", "module": "arm9", "target": "_ZN8dActor_c14BeforeBehaviorEv"},
+      {"slot": 8,  "address": "0x02010fc8", "module": "arm9", "target": "_ZN8dActor_c13AfterBehaviorEj"},
+      {"slot": 10, "address": "0x02010f78", "module": "arm9", "target": "_ZN8dActor_c12BeforeRenderEv"},
+      {"slot": 11, "address": "0x02010f6c", "module": "arm9", "target": "_ZN8dActor_c11AfterRenderEj"},
+      {"slot": 13, "address": "0x0204357c", "module": "arm9", "target": "_ZN7fBase_c9Virtual34Ejj"},
+      {"slot": 14, "address": "0x0204349c", "module": "arm9", "target": "_ZN7fBase_c9Virtual38Ejj"},
+      {"slot": 15, "address": "0x02043494", "module": "arm9", "target": "_ZN7fBase_c13OnHeapCreatedEv"},
+      {"slot": 20, "address": "0x0201014c", "module": "arm9", "target": "_ZN8dActor_c9Virtual50Ev"},
+      {"slot": 21, "address": "0x02010148", "module": "arm9", "target": "_ZN8dActor_c15OnGroundPoundedERS_"},
+      {"slot": 22, "address": "0x02010144", "module": "arm9", "target": "_ZN8dActor_c11OnAttacked1ERS_"},
+      {"slot": 23, "address": "0x02010140", "module": "arm9", "target": "_ZN8dActor_c11OnAttacked2ERS_"},
+      {"slot": 24, "address": "0x0201013c", "module": "arm9", "target": "_ZN8dActor_c8OnKickedERS_"},
+      {"slot": 25, "address": "0x02010138", "module": "arm9", "target": "_ZN8dActor_c8OnPushedERS_"},
+      {"slot": 26, "address": "0x02010134", "module": "arm9", "target": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_"},
+      {"slot": 27, "address": "0x02010130", "module": "arm9", "target": "_ZN8dActor_c15OnHitByMegaCharER6Player"},
+      {"slot": 28, "address": "0x0201012c", "module": "arm9", "target": "_ZN8dActor_c19OnHitFromUnderneathERS_"},
+      {"slot": 29, "address": "0x02010124", "module": "arm9", "target": "_ZN8dActor_c16OnAimedAtWithEggEv"},
+      {"slot": 30, "address": "0x020100dc", "module": "arm9", "target": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv"}
+    ]
+  },
+
+  "destructors": {
+    "variants_present": ["D1", "D0"],
+    "D2_present": false,
+    "D1": {"address": "0x020aee40", "size": "0x48", "slot": 16},
+    "D0": {"address": "0x020aee88", "size": "0x5c", "slot": 17},
+    "address_order": "D1 then D0, D1 at the lower address -- identical to the promoted sibling daBar_c (D1 0x020b05d0, D0 0x020b0600).",
+    "shape": "D0 does NOT call D1; it inlines D1's whole teardown and then calls Memory::Deallocate(this, *heap) at arm9:0x0203c1e8 with the heap pointer loaded from 0x020a0eac. This is the inline-destructor shape the daBar_c oracle produces from `virtual ~daBar_c() {}` declared FIRST in the class body with InitResources as the first out-of-line virtual.",
+    "teardown_order": "vptr store, then ShadowModel@0x350, Model@0x300, dBgCh_Actr@0x144, dCcAc_c@0x110, then base _ZN12dEnemyBase_cD2Ev -- exact reverse of the constructor."
+  },
+
+  "size": "0x398",
+  "size_evidence": "Both factories execute `mov r0,#0x398` then `bl 0x02043444` (_ZN7fBase_cnwEj, fBase_c::operator new) and store this class's vtable at [this+0]. 920 == 0x398 is therefore the ROM's own sizeof. Corroborated independently: the last proven field is a word at +0x394, which closes the object exactly at 0x398.",
+
+  "construction_sequence": [
+    {"step": "fBase_c::operator new(0x398)", "target": "arm9:0x02043444"},
+    {"step": "dEnemyBase_c::dEnemyBase_c() [C2]", "target": "ov002:0x020aed98"},
+    {"step": "store vptr &_ZTV7da1up_c at this+0", "target": "0x021083c8"},
+    {"step": "dCcAc_c::dCcAc_c() at this+0x110", "target": "arm9:0x020149c8"},
+    {"step": "dBgCh_Actr::dBgCh_Actr() at this+0x144", "target": "arm9:0x02037430"},
+    {"step": "Model::Model() at this+0x300", "target": "arm9:0x02016d58"},
+    {"step": "ShadowModel::ShadowModel() at this+0x350", "target": "arm9:0x02016068"}
+  ],
+
+  "fields": [
+    {"offset": "0x000", "type": "dEnemyBase_c", "size": "0x110", "proven": "base subobject; first own member sits at 0x110 so sizeof(dEnemyBase_c) <= 0x110. The exact value 0x110 is inferred from that bound, not directly measured."},
+    {"offset": "0x110", "type": "dCcAc_c",    "size": "0x34",  "proven": "constructed by both factories, destroyed first-in-reverse by D1/D0"},
+    {"offset": "0x144", "type": "dBgCh_Actr", "size": "0x1bc", "proven": "constructed by both factories, destroyed by D1/D0"},
+    {"offset": "0x300", "type": "Model",      "size": "0x50",  "proven": "constructed by both factories, destroyed by D1/D0"},
+    {"offset": "0x350", "type": "ShadowModel","size": "0x28",  "proven": "constructed by both factories, destroyed by D1/D0"},
+    {"offset": "0x378", "width": 4, "accesses": 4,  "name": null},
+    {"offset": "0x37c", "width": 4, "accesses": 6,  "name": null},
+    {"offset": "0x380", "width": 4, "accesses": 2,  "name": null},
+    {"offset": "0x384", "width": 4, "accesses": 17, "name": null},
+    {"offset": "0x388", "width": 4, "accesses": 24, "name": null},
+    {"offset": "0x38c", "width": 2, "accesses": 0,  "name": null, "note": "no access seen -- padding, as include/OneUpMushroom.h already assumes"},
+    {"offset": "0x38e", "width": 1, "accesses": 11, "name": null, "note": "ldrb/strb only"},
+    {"offset": "0x38f", "width": 1, "accesses": 3,  "name": null, "note": "ldrb/strb only"},
+    {"offset": "0x390", "width": 4, "accesses": 3,  "name": null},
+    {"offset": "0x394", "width": 4, "accesses": 3,  "name": null}
+  ],
+  "fields_evidence": "The 0x110/0x144/0x300/0x350 members are proven twice over: the two factories construct them at those offsets and D1/D0 destroy them at the same offsets in exact reverse order. The 0x378..0x394 tail comes from decoding every immediate-displacement load/store in the run (0x020aee40..0x020b05d0) and tallying displacements >= 0x100 with a non-PC base register; the widths follow from ldr/str vs ldrb/strb. Caveat: that scan does not prove the base register was `this`, so the tail offsets are strong but not airtight. The layout does close exactly on 0x398, and it agrees field-for-field with the existing include/OneUpMushroom.h. No FIELD NAME is proven -- see `unproven`.",
+
+  "members": {
+    "total_in_run": 38,
+    "named_mangled": 9,
+    "auto_named_func": 27,
+    "factories": 2,
+    "pointer_to_member_table_members": 14,
+    "plain_helpers": 13
+  },
+
+  "pointer_to_member_table": {
+    "_why_this_matters": "This is the structural heart of the class and the single biggest thing the writer must not discover by accident: da1up_c is a 14-state machine dispatched through an array of pointers-to-member, and 14 of the 27 unnamed members are its states.",
+    "bss_array": {"address": "0x0210dc00", "symbol": "data_ov002_0210dc00", "kind": "bss", "bytes": "0x70", "elements": 14, "element_size": 8},
+    "bss_extent_evidence": "The next bss symbol in ov002 is at 0x0210dc70, so the array is exactly 0x70 = 14 * 8 bytes. The sinit's last store is `str r3, [r5, #0x6c]`, which writes the 14th record's second word.",
+    "descriptor_band": {"start": "0x02108300", "end": "0x02108370", "bytes": "0x70", "records": 14, "stride": 8},
+    "alignment_proof": "14 relocations, kind:load, at an exact 8-byte stride beginning at 0x02108300, each pointing at a function inside this run; the second word of every record is 0x00000000 (zero `this` adjustment). Reading the band 4 bytes off would place zero relocations on the record-start words, so the alignment is settled by the relocation stride itself, not by eyeballing.",
+    "static_initializer": {"symbol": "__sinit_ov002_02100adc", "address": "0x02100adc", "size": "0x174", "section": ".init", "shard": "src/__sinit_ov002_02100adc.c", "ctor_entry": "0x021080d8"},
+    "consumer": "_ZN13OneUpMushroom8BehaviorEv (0x020b00e8..0x020b01c0) is the ONLY reader of 0x0210dc00 anywhere in the ROM besides the sinit itself. That one-consumer-inside-the-TU shape is exactly how notes/sinit-ownership-pilot-ov002.md established dEnemyBase_c's two PMF tables.",
+    "ownership": "This TU owns the array, the 14 descriptors and the sinit. notes/sinit-ownership-pilot-ov002.md independently resolves __sinit_ov002_02100adc to `ov002/OneUpMushroom` high-confidence, and records the organic compiler proof: under pinned mwccarm 2004/b56 a non-const file-scope PMF array emits exactly one .init function, one 4-byte .ctor entry, and N separate 8-byte .data descriptors each with one R_ARM_ABS32 at offset 0 and a zero adjustment. That is byte-for-byte the shape measured here.",
+    "index_map": [
+      {"index": 0,  "descriptor": "0x02108350", "member": "func_ov002_020aff10", "size": "0xd8"},
+      {"index": 1,  "descriptor": "0x02108330", "member": "func_ov002_020afe4c", "size": "0xc4"},
+      {"index": 2,  "descriptor": "0x02108348", "member": "func_ov002_020afd10", "size": "0xd4"},
+      {"index": 3,  "descriptor": "0x02108358", "member": "func_ov002_020afc44", "size": "0x24"},
+      {"index": 4,  "descriptor": "0x02108338", "member": "func_ov002_020afbb4", "size": "0x90"},
+      {"index": 5,  "descriptor": "0x02108310", "member": "func_ov002_020afa98", "size": "0x11c"},
+      {"index": 6,  "descriptor": "0x02108328", "member": "func_ov002_020afa6c", "size": "0x2c"},
+      {"index": 7,  "descriptor": "0x02108320", "member": "func_ov002_020af950", "size": "0x100"},
+      {"index": 8,  "descriptor": "0x02108308", "member": "func_ov002_020af924", "size": "0x2c"},
+      {"index": 9,  "descriptor": "0x02108340", "member": "func_ov002_020af838", "size": "0xd0"},
+      {"index": 10, "descriptor": "0x02108318", "member": "func_ov002_020af7cc", "size": "0x6c"},
+      {"index": 11, "descriptor": "0x02108300", "member": "func_ov002_020afa50", "size": "0x1c"},
+      {"index": 12, "descriptor": "0x02108368", "member": "func_ov002_020af908", "size": "0x1c"},
+      {"index": 13, "descriptor": "0x02108360", "member": "func_ov002_020af724", "size": "0xa8"}
+    ],
+    "index_map_evidence": "Derived twice, independently, and the two agree exactly. (1) By hand, tracing register dataflow through the sinit's disassembly: each `ldr rX,[pc,#N]` literal resolves to a descriptor address, `ldr [rX]` / `ldr [rX,#4]` fetch the pair, and the `str [r5,#8*i]` / `str [r5,#8*i+4]` pair names the index. (2) The existing shard src/__sinit_ov002_02100adc.c already expresses the same 14 assignments. All 14 descriptors are used exactly once and all 14 targets are distinct.",
+    "member_ness_is_proven": "A pointer-to-member-function descriptor can only designate a non-static member function, and every adjustment word here is 0, so all 14 are members of da1up_c with `this` at offset 0. Their INDEX in the table is also ROM-proven. Only the NAME of each is unknown."
+  },
+
+  "non_virtual": {
+    "_note": "27 auto-named members. 14 are the PMF states above (member-ness ROM-proven). The 13 below have no vtable slot and no PMF descriptor; they are reached only by BL from inside the run.",
+    "plain_helpers": [
+      {"address": "0x020aeee4", "symbol": "func_ov002_020aeee4", "size": "0xc0",  "intra_run_callers": 8},
+      {"address": "0x020aefa4", "symbol": "func_ov002_020aefa4", "size": "0x14",  "intra_run_callers": 3},
+      {"address": "0x020aefb8", "symbol": "func_ov002_020aefb8", "size": "0x108", "intra_run_callers": 11},
+      {"address": "0x020af0c0", "symbol": "func_ov002_020af0c0", "size": "0x11c", "intra_run_callers": 1},
+      {"address": "0x020af1dc", "symbol": "func_ov002_020af1dc", "size": "0x3c",  "intra_run_callers": 3},
+      {"address": "0x020af218", "symbol": "func_ov002_020af218", "size": "0x30",  "intra_run_callers": 6},
+      {"address": "0x020af248", "symbol": "func_ov002_020af248", "size": "0x68",  "intra_run_callers": 5},
+      {"address": "0x020af3a8", "symbol": "func_ov002_020af3a8", "size": "0xcc",  "intra_run_callers": 10},
+      {"address": "0x020af474", "symbol": "func_ov002_020af474", "size": "0x78",  "intra_run_callers": 4},
+      {"address": "0x020af4ec", "symbol": "func_ov002_020af4ec", "size": "0x198", "intra_run_callers": 2},
+      {"address": "0x020af684", "symbol": "func_ov002_020af684", "size": "0xa0",  "intra_run_callers": 4},
+      {"address": "0x020afc68", "symbol": "func_ov002_020afc68", "size": "0xa8",  "intra_run_callers": 1},
+      {"address": "0x020afde4", "symbol": "func_ov002_020afde4", "size": "0x68",  "intra_run_callers": 3}
+    ],
+    "pmf_members_with_extra_direct_callers": [
+      {"symbol": "func_ov002_020af924", "intra_run_callers": 1},
+      {"symbol": "func_ov002_020afa6c", "intra_run_callers": 1}
+    ]
+  },
+
+  "factories": [
+    {"symbol": "da1up_c_classInit_ONEUPKINOKO",    "address": "0x020b0580", "size": "0x50", "shard": "src/d_a_1up_oneupkinoko.c",     "profile": "g_profile_ONEUPKINOKO",    "profile_address": "0x02108388", "profile_id": 276, "profile_id_hex": "0x0114", "rom_name_string": "arm9:0x020901e8"},
+    {"symbol": "da1up_c_classInit_SCALEUP_KINOKO", "address": "0x020b0530", "size": "0x50", "shard": "src/d_a_1up_scaleup_kinoko.c", "profile": "g_profile_SCALEUP_KINOKO", "profile_address": "0x021083a4", "profile_id": 277, "profile_id_hex": "0x0115", "rom_name_string": "arm9:0x02090658"},
+    {"_note": "The two factories are BYTE-IDENTICAL apart from PC-relative branch encodings -- same 0x398 allocation, same base ctor, same vptr, same four member ctors. ONE class, TWO registry profiles. Any source form must emit both."}
+  ],
+
+  "profile_objects": {
+    "shape": "0x1c bytes, identical to the DaBarSpawnInfo shape already documented in include/daBar_c.h",
+    "g_profile_ONEUPKINOKO": {
+      "address": "0x02108388",
+      "words": ["0x020b0580 (factory)", "0x008c0114 (profileID 0x0114, drawOrder 0x008c)", "0x00000003", "0x00032000", "0x0012c000", "0x01000000", "0x01000000"]
+    },
+    "g_profile_SCALEUP_KINOKO": {
+      "address": "0x021083a4",
+      "words": ["0x020b0530 (factory)", "0x008d0115 (profileID 0x0115, drawOrder 0x008d)", "0x00000003", "0x00032000", "0x0012c000", "0x01000000", "0x01000000"]
+    },
+    "consumers": "Referenced ONLY from the arm9 global profile registry, at 0x02090cb4 and 0x02090cb8 -- two consecutive words, exactly as for the promoted daBar_c. Nothing in ov002 reads them.",
+    "id_cross_check": "The profile ids read out of the ROM structs (0x0114 = 276, 0x0115 = 277) match symbols/actor_debug_names.tsv rows 276 ONEUPKINOKO / 277 SCALEUP_KINOKO independently."
+  },
+
+  "callers": {
+    "external_callers": 0,
+    "finding": "ZERO callers outside ov002, and zero callers outside this TU other than data references. Every reference to every one of the 38 functions is one of: a slot of _ZTV7da1up_c, one of the 14 PMF descriptors, one of the two g_profile factory words, or an intra-run BL.",
+    "method": "All 104 relocation tables scanned (config/arm9/relocs.txt plus config/arm9/overlays/*/relocs.txt), matching on destination address and then FILTERING ON DESTINATION MODULE spelled `overlay(2)` -- relocs.txt uses `overlay(2)`/`main`, never `ov002`.",
+    "filter_liveness_check": "88 rows accepted with module `overlay(2)`; 6 rows REJECTED as phantoms from overlapping overlays (overlay(0) x4, overlay(3) x1, overlay(7) x1). A non-zero reject count proves the filter is live rather than silently matching nothing.",
+    "intra_overlay_note": "This project's config relocs.txt DOES carry intra-overlay rows (module:overlay(2) with an ov002 `from`), so intra-run BLs were visible here without decoding .text; 63 intra-run relocations were found.",
+    "semantic_caller": "_ZN10BrickBlock18SpawnOneUpMushroomEv (ov002:0x020b429c) spawns this actor, but by profile ID through the registry -- it does NOT reference any symbol of this TU, so it is not a link-level caller and does not constrain the promotion."
+  },
+
+  "external_dependencies": {
+    "count_distinct": 70,
+    "distinct_arm9": 56,
+    "distinct_ov002_outside_run": 14,
+    "reloc_rows": {"main": 105, "overlay(2)_outside_run": 22},
+    "ov002_outside_run_destinations": [
+      "0x020ade78 _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr",
+      "0x020aebf8 _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj",
+      "0x020aed18 _ZN12dEnemyBase_cD2Ev",
+      "0x020aed98 _ZN12dEnemyBase_cC2Ev",
+      "0x020bdf8c func_ov002_020bdf8c",
+      "0x020bf4e4 _ZN6Player4HealEi",
+      "0x020d0d2c func_ov002_020d0d2c",
+      "0x020ff040 data_ov002_020ff040 (InitResources literal)",
+      "0x020ff050 data_ov002_020ff050 (InitResources literal)",
+      "0x021083c8 _ZTV7da1up_c (own vptr)",
+      "0x0210d9b8 shared bss",
+      "0x0210d9d8 shared bss",
+      "0x0210da30 shared bss",
+      "0x0210dc00 own bss PMF array"
+    ],
+    "note": "105 relocations from the run into arm9 across 56 distinct arm9 symbols, plus the 14 ov002 destinations listed above. Notables: dActor_c::Spawn, dActor_c::KillAndTrackInDeathTable, dActor_c::IsPlayerInRange, Sound::PlayBank3, dCcAc_c::Init, dBgCh_Actr::Init, dBgCh_Gnd::DetectClsn, Particle::System::New, GiveLives, GiveCoins, IsStarCollectedInCurLevel, ModelBase::SetFile, Model::LoadFile, cstd::atan2, cstd::fdiv."
+  },
+
+  "bss_ownership": {
+    "owned": ["0x0210dc00 (the 14-element PMF array, 0x70 bytes)"],
+    "not_owned": ["0x0210d9b8", "0x0210d9d8", "0x0210da30"],
+    "evidence": "0x0210dc00 is referenced only from this run (Behavior's literal pool at 0x020b01bc) and from this TU's own sinit at 0x02100c18. The other three are each referenced from several unrelated ov002 addresses outside the run (0x020ff06c, 0x0210085c, 0x020b4400, 0x020b45d4, 0x020b484c, 0x020b49fc, 0x02100c18 region), so they are shared globals this TU merely reads."
+  },
+
+  "compiler_only_output_expected": {
+    "measured_floor": 28,
+    "note": "The queue row estimates '>=11' from the 5-class chain (2 per class + 1 vtable). That floor is real but under-counts what this TU actually emits.",
+    "items": [
+      "_ZTS7fBase_c / _ZTI7fBase_c (canonical arm9 0x02086e60 / 0x02086d70)",
+      "_ZTS7dBase_c / _ZTI7dBase_c (canonical arm9 0x02086e54 / 0x02086e78)",
+      "_ZTS8dActor_c / _ZTI8dActor_c (canonical arm9 0x0208e384 / 0x0208e390)",
+      "_ZTS12dEnemyBase_c / _ZTI12dEnemyBase_c (canonical ov002 0x021081cc / 0x021081c0)",
+      "_ZTS7da1up_c / _ZTI7da1up_c (canonical ov002 0x02108370 / 0x0210837c)",
+      "_ZTV7da1up_c (canonical ov002 0x021083c8, 0x84 bytes storage)",
+      "g_profile_ONEUPKINOKO (ov002 0x02108388)",
+      "g_profile_SCALEUP_KINOKO (ov002 0x021083a4)",
+      "14 PMF descriptors (ov002 0x02108300..0x02108370)",
+      "the .bss PMF array (ov002 0x0210dc00, 0x70 bytes)",
+      "__sinit_ov002_02100adc (.init, 0x174 bytes) and its 4-byte .ctor entry at 0x021080d8"
+    ],
+    "difference_from_the_oracle": "daBar_c's promoted manifest declares 10 compiler_only_output items, all `deadstrip-data`, with data:[] and bss:[]. This class adds 2 more RTTI symbols (the dEnemyBase_c pair), a second profile object, and -- the real difference -- a static initializer with 14 .data descriptors and a .bss array. The sinit is CODE in a .init section, not data, so it is not a `deadstrip-data` row. See `blockers`."
+  },
+
+  "tree_derived_state": {
+    "_warning": "Everything in this block changes on every promotion. Re-derive it against the base you actually ship.",
+    "base_commit": "2ab05bae36a6821679a7e647e811c0a3243a3c49",
+    "base_verified": "git merge-base HEAD origin/main == HEAD == 2ab05bae3, and `git log HEAD..origin/main` is empty. Verified AFTER the work, not before.",
+    "branch": "cpp/OneUpMushroom-tu",
+    "worktree": "C:/tmp/sm64ds-oneup-scout",
+    "queue_row": "OneUpMushroom\t36\t972\tov002\tyes\tno\tcompiler-only:>=11\tdaBar_c\ttext-only",
+    "shard_count_measured": 36,
+    "shard_line_count_measured": 971,
+    "shard_line_count_note": "The queue says 972; I measured 971 across the 36 class shards (1027 across all 38 including the two factories). One-line difference, most likely a trailing-newline convention.",
+    "language_split": "22 .c and 16 .cpp among the 38 files. The TU language mode is transitive, so the merged TU is C++.",
+    "no_nonmatching_banners": true,
+    "no_asm_bodies": true,
+    "manifest_dir": "config/tu_manifest.d/ov002/ (no da1up_c.json or OneUpMushroom.json yet)",
+    "sibling_oracle": "config/tu_manifest.d/ov002/daBar_c.json -- status promoted, text-only, 8 functions, run 0x020b05d0..0x020b0748, immediately ABOVE this run in address order. Its include/daBar_c.h is the model for the inline-dtor + InitResources-key-function source form.",
+    "converted_baseline_entries_that_will_change": [
+      "src/_ZN13OneUpMushroom13OnTurnIntoEggER6Player.cpp",
+      "src/_ZN13OneUpMushroom13OnYoshiTryEatEv.cpp",
+      "src/_ZN13OneUpMushroom16OnPendingDestroyEv.cpp",
+      "src/_ZN13OneUpMushroomD0Ev.cpp",
+      "src/_ZN13OneUpMushroomD1Ev.cpp"
+    ],
+    "converted_baseline_note": "5 of the 36 shards are in config/converted-baseline.json (2696 entries). Deleting them requires `tiers_ratchet --update`; never hand-edit. A 6th match, src/_ZN10BrickBlock18SpawnOneUpMushroomEv.cpp, belongs to BrickBlock and must NOT be touched.",
+    "actor_renames_live_rows": "Last live row for 0x021083c8 is `data_ov002_021083c8 -> _ZTV13OneUpMushroom`. The factories (0x020b0530, 0x020b0580) and profiles (0x02108388, 0x021083a4) have already been renamed to their da1up_c spellings; the CLASS itself has not.",
+    "existing_header": "include/OneUpMushroom.h exists and already states `The ROM's RTTI names this class da1up_c`. Its member layout agrees field-for-field with what I measured. Its struct is still spelled `OneUpMushroom` and it declares Behavior/CleanupResources/InitResources/OnPendingDestroy/Render as NON-virtual, which the ROM contradicts -- they are vtable slots 6/3/0/12/9."
+  },
+
+  "negative_search": {
+    "_why": "A negative claim is worthless without its case, scope and encoding.",
+    "scope": "109 executable images, 4,225,056 bytes total: extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin, extracted/dsd/arm9/{arm9,itcm,dtcm}.bin, and all 103 extracted/dsd/arm9_overlays/ov*.bin.",
+    "encodings_tested": ["raw ASCII, case-SENSITIVE substring", "ASCII with the whole image lowercased (case-FOLDED)", "UTF-16LE, case-sensitive", "strict length-prefixed Itanium _ZTS form `<len><name>\\0`, case-sensitive"],
+    "harness_liveness": "Control needles `7da1up_c`, `12dEnemyBase_c` and `7daBar_c` were each found exactly once in ov002.bin, proving the search actually reads the images. A 100%-absent sweep with no surviving control is a harness bug, not a finding.",
+    "ABSENT_in_every_image_and_every_encoding": ["OneUpMushroom", "OneUp", "Mushroom", "MegaMushroom", "ScaleUp", "SpawnInfo", "classInit", "g_profile", "InvisiblePole"],
+    "PRESENT_and_therefore_NOT_coined": {
+      "ONEUPKINOKO": "arm9 x1, at 0x020901e8, in the actor debug-name table",
+      "SCALEUP_KINOKO": "arm9 x1, at 0x02090658",
+      "da1up_c": "ov002 x1, at 0x02108370, as the length-prefixed `7da1up_c\\0`"
+    },
+    "caution": "`Kinoko`/`kinoko` also appears in ov000 x2 and ov006 x1 and `KINOKO` in arm9 x6; those are OTHER actors' names in the same table and are not evidence about this class. A raw substring hit is not an identity."
+  },
+
+  "blockers": [
+    {
+      "severity": "HIGH",
+      "title": "Renaming any of the 14 PMF members without moving its symbols.txt row in the SAME commit links that descriptor as 0x00000000.",
+      "detail": "The 14 descriptors at 0x02108300..0x02108370 sit in UNOWNED .data as `data_ov002_*` rows, and dsd resolves those records by SYMBOL NAME. Every one currently spells its target `func_ov002_*`. No byte gate at stage 2 or 3 catches a silently-zeroed descriptor. This is the exact hazard the pipeline warns about, and this class has 14 instances of it."
+    },
+    {
+      "severity": "HIGH",
+      "title": "`promotion_route: text-only` is not the whole story -- this TU owns a static initializer.",
+      "detail": "Unlike the daBar_c oracle, this TU emits a .init function (__sinit_ov002_02100adc, 0x174 bytes), a 4-byte .ctor entry at 0x021080d8, 14 .data PMF descriptors, and a 0x70-byte .bss array. If the writer declares the PMF array in the TU, mwccarm will generate all of that (notes/sinit-ownership-pilot-ov002.md proves the shape reproduces organically under the pinned compiler); it then has to be handled as compiler-only output, and the sinit is CODE, so it is not a plain `deadstrip-data` row like daBar_c's ten. If the writer instead leaves the array extern, Behavior() keeps loading someone else's symbol and the 14 states never become members. Decide this deliberately, and note that `src/__sinit_ov002_02100adc.c` is a 39th shard outside the 36 the queue counts."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "Two symbols at 0x021083c8.",
+      "detail": "`_ZTV13OneUpMushroom` and `_ZTV7da1up_c` both name the vtable. The promotion must collapse them to the RTTI spelling; the two factory shards currently reference the coined one by name."
+    },
+    {
+      "severity": "MEDIUM",
+      "title": "The class rename is a 9-symbol coordinated pass, not a file rename.",
+      "detail": "9 mangled members currently spell the class `13OneUpMushroom`. Each new `_ZN7da1up_c...` name must reach config/arm9/overlays/ov002/symbols.txt in the same commit, and include/OneUpMushroom.h must be renamed with them. Do NOT run class_rename.py; append to symbols/actor_renames.tsv at the END only."
+    },
+    {
+      "severity": "LOW",
+      "title": "include/OneUpMushroom.h contradicts the ROM on virtuality.",
+      "detail": "It declares Behavior, CleanupResources, InitResources, OnPendingDestroy and Render as non-virtual. The ROM puts them at vtable slots 6, 3, 0, 12 and 9 of _ZTV7da1up_c. The header's field layout is right; its virtual/non-virtual split is wrong."
+    },
+    {
+      "severity": "LOW",
+      "title": "tu_map.py splits the two factories off the run.",
+      "detail": "Unit 0x020aee40..0x020b0530 (36 fns) and unit 0x020b0530..0x020b05d0 (2 fns). That is the known `_classInit` unhandled-factory-spelling defect, not a TU boundary. The oracle daBar_c includes its classInit in its own TU."
+    }
+  ],
+
+  "unproven": [
+    "Every member NAME behind the 27 `func_ov002_*` symbols. 14 of them are ROM-proven to be non-static members of da1up_c at index 0..13 of the dispatch table (member-ness and index are proven; the words are not). The other 13 have no name evidence at all.",
+    "Whether the 13 non-PMF helpers are private member functions or file-local static functions. Neither linkage nor call sites distinguish them here; I did not check whether each receives `this` in r0.",
+    "Every FIELD NAME. include/OneUpMushroom.h's `mMushroomType` at 0x384, `mModel`, `mShadowModel`, `mWithMeshClsn`, `mdCcAc_c` and the `unk_*` spellings are project inventions. The ROM proves the offsets, widths and member TYPES (from the ctor/dtor calls), never the names.",
+    "sizeof(dEnemyBase_c) == 0x110 exactly. Proven only as an upper bound by the first own member sitting at 0x110.",
+    "That the 0x378..0x394 displacements are fields of `this`. The scan matched immediate load/stores with a non-PC base register but did not prove the base register held `this`. Two out-of-range displacements (+0x6d8, +0x706) show at least one other base register is in play in the run.",
+    "The C++ declaration form of the PMF array -- its type spelling, its name, and whether it is one array of 14 or the source declared it some other way that happens to emit 14 contiguous descriptors.",
+    "The signatures (parameter and return types) of all 27 auto-named members, and of the 9 mangled ones beyond what their existing mangled names assert. The mangled names in symbols.txt are themselves reconstructions whose parameter types are guesses.",
+    "The dActor_c -> dBase_c -> fBase_c segment of the ancestor chain, which I took from build/rtti.json and the daBar_c manifest rather than re-reading from the cartridge in this session. da1up_c -> dEnemyBase_c -> dActor_c WAS read from the cartridge.",
+    "Which of the two profiles (ONEUPKINOKO vs SCALEUP_KINOKO) the class treats as its default, and what distinguishes their behaviour. The factories are byte-identical, so the difference must be read at runtime from the profile id -- I did not trace it.",
+    "The object's behaviour semantics: what each of the 14 states does. Only their indices are established."
+  ]
+}
