@@ -1,7 +1,13 @@
-/* HOST COPIES of src/KingBobOmb_SetState.cpp and
- * src/_ZN10KingBobOmb8BehaviorEv.cpp -- the mwcc pointer-to-member dispatch
- * for the eleventh time in this port, and the widest one yet: EIGHTEEN states
- * of two halves each.
+/* HOST COPY of src/_ZN10KingBobOmb8BehaviorEv.cpp -- the mwcc
+ * pointer-to-member dispatch for the eleventh time in this port, and the
+ * widest one yet: EIGHTEEN states of two halves each.
+ *
+ * The OTHER half of this pair, src/KingBobOmb_SetState.cpp, is no longer host
+ * copied: run link100 lane PMF3 put it back on the slice once /vmg /vmm made
+ * MSVC's pointer-to-member the ROM's own 8-byte record. Behavior stays because
+ * it does more than dispatch -- it COMPARES the state pointer against four
+ * records by address, and that comparison is what decides whether the king is
+ * carried, thrown or walking. See the note where the setter used to be.
  *
  * KING_BOB_OMB'S STATE IS A POINTER, not an index. Every other class in this
  * gate keeps a number at a fixed offset and indexes a table; the king keeps
@@ -91,17 +97,24 @@ static void port_king_call(const PortKingPmf *m, void *self, const char *half)
 /* +0x420 is the state pointer both the setter and Behavior read. */
 #define PORT_KING_STATE(s) (*(PortKingState **)((char *)(s) + 0x420))
 
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" int KingBobOmb_SetState(void *self, void *state)
-{
-    PortKingState *p = (PortKingState *)state;
-    PORT_KING_STATE(self) = p;
-    p = PORT_KING_STATE(self);
-    if (p->init.fn == 0)
-        return 1;
-    port_king_call(&p->init, self, "init");
-    return 1;
-}
+/* KingBobOmb_SetState IS NO LONGER HOST-COPIED. src/KingBobOmb_SetState.cpp is
+   on port/slice_pmf3.txt (run link100 lane PMF3). With /vmg /vmm target-wide
+   MSVC's pointer-to-member IS the ROM's 8-byte {function, delta} record, so
+   `pp + 1` steps eight and the null test reads the record's own function word,
+   and the emitted body is a TAIL JUMP: the caller's cdecl frame survives, the
+   seated body reads its receiver from [esp+4], and the state pointer the
+   caller pushed second sits unread at [esp+8]. The adjustment is proven twice.
+   port_king_bob_omb_states_seat (hal/actor_overlays.cpp) aborts the binary on
+   any nonzero delta in any of the thirty-six halves before the king can
+   dispatch, and those same thirty-six source pairs at ov078
+   0x02126ce0..0x02126df8 were re-read out of overlay_0078.bin with their
+   relocations: every adjustment word is ROM zero.
+
+   The declaration at the top of this file now names the matched TU, and
+   Behavior below still calls it. One difference worth naming: the host body
+   returned 1 unconditionally, the matched TU returns whatever the dispatched
+   init half returns, which is what the ROM does. Behavior ignores the value.
+   port_king_call and PORT_KING_STATE stay because Behavior uses both. */
 
 /* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
  * incomplete class is the wider general representation. See the header. */

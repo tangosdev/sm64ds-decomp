@@ -1,0 +1,162 @@
+# run link100 lane PMF3: THE POINTER-TO-MEMBER LEFTOVERS PMF2 NAMED, ONE
+# FAMILY AT A TIME, WITH THE DELTA PROVEN OUT OF THE ROM IMAGE RATHER THAN
+# OUT OF PROSE.
+#
+# PMF2 retired thirty-six host copies on a two-part gate: the object form
+# measured under the port's own flags (a TAIL JUMP, so the caller's cdecl
+# frame survives and the seated body still finds its receiver at [esp+4]),
+# and the adjustment word proven zero by the seat that fills the table.
+# It left three families behind and named each of them. This slice answers
+# two of the three and measures the third into a refusal.
+#
+# ---- WHAT WAS ACTUALLY MISSING, AND IT WAS NOT THE EVIDENCE ---------------
+#
+# PMF2's deltacheck scan reported seven forwarders as "no assertion found".
+# Read one file at a time rather than by pattern, five of those seven already
+# carry the strongest form of the check this port has:
+#
+#   port_princess_peach_states_seat   hal/actor_overlays.cpp  10 records
+#   port_rabbit_key_states_seat       hal/actor_overlays.cpp   4 records
+#   port_king_bob_omb_states_seat     hal/actor_overlays.cpp  36 halves
+#   port_hoot_the_owl_states_seat     unmatched/HootTheOwl_StateDispatch.cpp
+#                                                              5 cells x 2
+#   hal_fill_crazed_crate_vtable      hal/actor_classes_ov063.cpp  6 records
+#
+# Each of the first four aborts the binary, on every boot and before any actor
+# can dispatch, when the record it is about to seat does not read {the ROM's
+# own address, 0}. The fifth is stronger still: it WRITES the adjustment word
+# to zero as it seats, so the matched dispatcher's `this + delta` cannot be
+# anything but `this + 0`. The scan missed them because it looked only in
+# files whose names it derived from the symbol, and these seats live in
+# hal/actor_overlays.cpp.
+#
+# ---- AND THE STATIC RE-READ, WHICH IS NEW HERE ----------------------------
+#
+# A run-time abort proves what the mount holds. It does not by itself prove
+# what the ROM holds, because the seat's own expectation is written by hand.
+# So every source pair that can reach a dispatcher on this slice was re-read
+# out of the raw overlay image, on 2026-09-07, by
+# runs/link100/out/PMF3/deltas_static.py:
+#
+#   image     extracted/overlays/overlay_NNNN.bin at (addr - base)
+#   base      port/tools/ovdata.overlay_base(), which cross-checks
+#             delinks.txt against the ROM's own overlay table (the yaml is a
+#             dsd export and is wrong on 22 of 103 bases -- never used here)
+#   relocs    config/arm9/overlays/ovNNN/relocs.txt
+#
+# A pair passes only when all four hold: the image word at +0 is the target of
+# a `kind:load` relocation in that overlay, the image word at +4 is exactly
+# zero, NO relocation is recorded from +4 (so nothing rewrites the adjustment
+# at load time), and both words lie inside the overlay's own image rather than
+# its bss. The run reads EIGHTY-TWO source pairs across ov027, ov078, ov080,
+# ov085 and ov094 and all eighty-two pass. The listing is
+# runs/link100/out/PMF3/deltas_static.txt and it covers the blocked rows too,
+# so the record is complete rather than selective.
+#
+# ---- THE FORM, MEASURED THE SAME WAY PMF2 MEASURED IT ---------------------
+#
+# All six rows below are in PMF2's own formcheck.txt as TAIL JUMP under
+#
+#     cl /c /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG -std:c++17 -MT
+#        /Oy- /vmg /vmm /wd4311 /wd4312 /wd4068 -DSM64DS_PLATFORM_PC /FAs
+#
+# read out of build.ninja rather than retyped. Nothing on this slice is a
+# CALL form; see THE REFUSAL at the bottom for the two that are.
+#
+# ---- THE ROM'S OWN REFERENCE GRAPH REACHES EVERY ROW ----------------------
+#
+#   func_ov080_02125104  <- src/func_ov080_0212513c.c (the state seat itself)
+#   func_ov085_0212a430  <- src/_ZN13PrincessPeach8BehaviorEv.cpp
+#   func_ov085_0212a46c  <- src/func_ov085_0212a4a4.c
+#   func_ov085_0212d268  <- src/_ZN9RabbitKey13InitResourcesEv.cpp,
+#                           src/func_ov085_0212d108.c
+#   func_ov094_02136188  <- src/_ZN10HootTheOwl13InitResourcesEv.cpp and
+#                           seven more ov094 state bodies
+#   KingBobOmb_SetState  <- src/_ZN10KingBobOmb13InitResourcesEv.cpp and
+#                           eight more ov078 state bodies, plus
+#                           unmatched/KingBobOmb_States.cpp's own Behavior
+#
+# ---- ONE BEHAVIOURAL DIFFERENCE, STATED RATHER THAN LEFT TO BE FOUND ------
+#
+# Three of the host bodies replaced here ended in `return 1;` after the
+# dispatch. The matched TUs RETURN THE DISPATCHED BODY'S OWN RESULT, which is
+# what the ROM does (`blx r1` and the callee's r0 is the return). No caller of
+# any of the three reads the value, so nothing changes today; the slice
+# records it because the matched form is the faithful one and the host form
+# was the approximation, not the other way round.
+#
+# ---- THE HOST BODIES REMOVED ---------------------------------------------
+#
+#   unmatched/Ov085_PrincessPeach_States.cpp  WHOLE FILE (both bodies and the
+#       hand-rolled peach_pmf_call were all it held); its three target rows
+#       come out of port/CMakeLists.txt with it
+#   unmatched/RabbitKey_StateSeat.cpp         WHOLE FILE (one body); the
+#       list(APPEND SLICE18_SOURCES ...) line that carried it comes out with
+#       it. The commented-out src line in slice_gate18.txt is left as it is:
+#       that file belongs to gate 18 and this slice owns the row instead.
+#   unmatched/Bbh_PmfDispatch.c               func_ov080_02125104 only. Its
+#       four other bodies and bbh_pmf_call stay; 021250c8, the tick half of
+#       the same pair, went back on the slice at wave 18 and this is the
+#       enter half finally joining it.
+#   unmatched/HootTheOwl_StateDispatch.cpp    func_ov094_02136188 only. The
+#       seat and the Behavior host copy stay, and the seat is the delta
+#       assertion this row is gated on.
+#   unmatched/KingBobOmb_States.cpp           KingBobOmb_SetState only. The
+#       Behavior host copy stays and still CALLS the symbol, through the
+#       declaration at the top of that file, which is now a declaration of
+#       the matched TU rather than of the body below it.
+#
+# ---- THE REFUSAL: THE PAINTING, AND WHY THE FLAG DOES NOT REACH IT --------
+#
+# The record asked whether the Painting exceptions (daPicGate_c, ov080)
+# become free once /vmg /vmm is target-wide. MEASURED on 2026-09-07 with the
+# flags above, they do not:
+#
+#   func_ov080_02126c60   push ebp / mov ebp,esp
+#                         mov eax,[ebp+8] / mov edx,[eax+420]
+#                         mov ecx,[edx+12] / add ecx,eax
+#                         mov eax,[edx+8]
+#                         call eax                <-- a CALL, not a jump
+#                         mov eax,1 / pop ebp / ret 0
+#   func_ov080_02126c20   the same, at [edx+16]/[edx+20]
+#
+# The stride and the record offsets are now RIGHT (Entry is 0x18, the update
+# pair at +8 and the render pair at +0x10, exactly the ROM's layout). What
+# defeats them is the `return 1;` that follows the dispatch: MSVC cannot tail
+# jump out of a function that still has to set a return value, so it emits a
+# thiscall CALL with the receiver only in ecx and NOTHING pushed. Every
+# seated body in this port is extern-C cdecl and reads its receiver from
+# [esp+4], which at that point is the caller's return address neighbourhood.
+# This is the SAME mechanism that blocks PMF2's two extra-argument setters
+# (func_ov055_021112c4, func_ov100_021453d8), reached from the other
+# direction: there the extra argument forces the call, here the return value
+# does. Both need a receiver convention, not a width flag, and neither is on
+# this slice. func_ov080_02126ca0 (the Painting's InitResources) dispatches
+# in the middle of a long body and cannot tail jump for the same reason.
+# Listings: runs/link100/out/PMF3/func_ov080_02126c60.asm and _02126c20.asm.
+#
+# unmatched/Door_Render.cpp is not this family at all -- its own banner says
+# mwcc VIRTUAL-SHADOW dispatch (MSVC thiscall against the slice's cdecl), a
+# different ruling that no pointer-to-member flag touches. Left alone.
+#
+# ---- THE REFUSAL: DA_PG_DFDR, AND IT IS NOT ABOUT THE DELTA ---------------
+#
+# func_ov027_02111cfc and func_ov027_02111d38 tail jump, and their four
+# source pairs read {code, 0} in the image (deltas_static.txt has them). They
+# still cannot come onto a slice, and the reason is one the delta evidence
+# was never going to show: NOTHING RE-SEATS data_ov027_02113ce4. Every other
+# row here has a seat that rewrites the table's function word with a HOST
+# body's address before anything dispatches. ov027 has no such seat -- the
+# host copy IS the translation, an address switch that reads the ROM's DS
+# word and calls the matching host body by name. Retire it and the matched
+# dispatcher jumps to 0x02111ca8, which on this host is reserved zeroed DS
+# main RAM. That is a second fix (a re-seat, which is a change to a fill and
+# a different lane's decision), so the row is named and left.
+#
+# ---- THE SIX --------------------------------------------------------------
+src/func_ov080_02125104.cpp
+src/func_ov085_0212a430.cpp
+src/func_ov085_0212a46c.cpp
+src/func_ov085_0212d268.cpp
+src/func_ov094_02136188.cpp
+src/KingBobOmb_SetState.cpp
