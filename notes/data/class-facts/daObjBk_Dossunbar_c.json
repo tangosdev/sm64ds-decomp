@@ -1,14 +1,14 @@
 {
-  "class": "MovingBar",
+  "class": "daObjBk_Dossunbar_c",
   "rom_rtti_name": "daObjBk_Dossunbar_c",
   "rtti_name": "19daObjBk_Dossunbar_c",
   "name_status": "tree name is COINED; the cartridge names this class daObjBk_Dossunbar_c",
   "identity_evidence": [
     "CARTRIDGE. extracted/overlays/overlay_0015.bin, ov015 base 0x021111a0, file offset 0x337c = address 0x0211451c: the bytes are the length-prefixed byte string '19daObjBk_Dossunbar_c'. That is _ZTS, and it is the only thing that proves a class name.",
     "CARTRIDGE. The _ZTI record at ov015:0x02114510 has its +4 name word = 0x0211451c, pointing at exactly that string, and the _ZTV at 0x0211458c has its -4 RTTI word = 0x02114510. So the vtable, the typeinfo and the name string are one chain and the class they name is daObjBk_Dossunbar_c.",
-    "NEGATIVE CLAIM, stated with its scope. The literal 'MovingBar' does not occur anywhere in the extracted cartridge. Search: every *.bin under extracted/ (977 files, 9,439,611 bytes = 9.0 MiB, which covers extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin, extracted/overlays/overlay_*.bin and the extracted/dsd/ copies of the same). Byte-substring search over raw bytes, run twice: once case-sensitive on b'MovingBar' and once case-folded (haystack.lower() vs b'movingbar'). Result: 0 hits case-sensitive AND 0 hits case-folded. The length-prefixed _ZTS form b'9MovingBar' likewise returns 0 and 0.",
-    "POSITIVE CONTROL for that same search. b'Dossunbar' returns 2 case-sensitive hits and 22 case-folded hits over the identical corpus, and every one of the 22 is accounted for: '19daObjBk_Dossunbar_c' x2 (ov015, via both extracted/overlays/ and extracted/dsd/arm9_overlays/ -- the same overlay image reached by two paths), 'BK_DOSSUNBAR_L' x2 and 'BK_DOSSUNBAR_S' x2 (arm9, offset 0x8c6ab / 0x8c6bb), and the four asset paths 'data/special_obj/bk_dossunbar_{l,s}/bk_dossunbar_{l,s}.{bmd,kcl}' x4 each (ov000). A search that finds the lowercase and uppercase variants of the real name and still finds zero 'movingbar' is a search that would have found 'MovingBar' had it been there.",
-    "So: daObjBk_Dossunbar_c is ROM-attested. MovingBar is coined and must be disclosed as coined. The registry profile ids BK_DOSSUNBAR_L and BK_DOSSUNBAR_S are ROM-attested string literals in arm9."
+    "NEGATIVE CLAIM, stated with its scope. The literal 'daObjBk_Dossunbar_c' does not occur anywhere in the extracted cartridge. Search: every *.bin under extracted/ (977 files, 9,439,611 bytes = 9.0 MiB, which covers extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin, extracted/overlays/overlay_*.bin and the extracted/dsd/ copies of the same). Byte-substring search over raw bytes, run twice: once case-sensitive on b'daObjBk_Dossunbar_c' and once case-folded (haystack.lower() vs b'movingbar'). Result: 0 hits case-sensitive AND 0 hits case-folded. The length-prefixed _ZTS form b'9MovingBar' likewise returns 0 and 0.",
+    "POSITIVE CONTROL for that same search. b'Dossunbar' returns 2 case-sensitive hits and 22 case-folded hits over the identical corpus, and every one of the 22 is accounted for: '19daObjBk_Dossunbar_c' x2 (ov015, via both extracted/overlays/ and extracted/dsd/arm9_overlays/ -- the same overlay image reached by two paths), 'BK_DOSSUNBAR_L' x2 and 'BK_DOSSUNBAR_S' x2 (arm9, offset 0x8c6ab / 0x8c6bb), and the four asset paths 'data/special_obj/bk_dossunbar_{l,s}/bk_dossunbar_{l,s}.{bmd,kcl}' x4 each (ov000). A search that finds the lowercase and uppercase variants of the real name and still finds zero 'movingbar' is a search that would have found 'daObjBk_Dossunbar_c' had it been there.",
+    "So: daObjBk_Dossunbar_c is ROM-attested. daObjBk_Dossunbar_c is coined and must be disclosed as coined. The registry profile ids BK_DOSSUNBAR_L and BK_DOSSUNBAR_S are ROM-attested string literals in arm9."
   ],
   "overlay": "ov015",
   "module_base": "0x021111a0",
@@ -38,7 +38,7 @@
     ]
   },
   "vtable": {
-    "symbol": "_ZTV9MovingBar",
+    "symbol": "_ZTV19daObjBk_Dossunbar_c",
     "rom_symbol_would_be": "_ZTV19daObjBk_Dossunbar_c",
     "address": "0x0211458c",
     "module": "ov015",
@@ -66,24 +66,24 @@
   },
   "modules_touched": ["ov015", "ov002", "arm9", "itcm"],
   "size": "0x338",
-  "size_evidence": "CARTRIDGE, and stated by both factories independently. daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L at 0x02112230: 'mov r0, #0x338' at 0x02112234 then 'bl 0x02043444' = arm9:_ZN7fBase_cnwEj (fBase_c::operator new(unsigned)). daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S at 0x02112260: 'mov r0, #0x338' at 0x02112264, same call. Both then 'bl 0x20eea50' = ov002:_ZN10dBgActor_cC2Ev and store the literal 0x0211458c into [this]. Two factories agreeing on 0x338 is why 0x338 is the allocation size and 0x334 is merely where the last proven field ends. include/MovingBar.h's existing size assert of 0x338 agrees.",
+  "size_evidence": "CARTRIDGE, and stated by both factories independently. daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L at 0x02112230: 'mov r0, #0x338' at 0x02112234 then 'bl 0x02043444' = arm9:_ZN7fBase_cnwEj (fBase_c::operator new(unsigned)). daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S at 0x02112260: 'mov r0, #0x338' at 0x02112264, same call. Both then 'bl 0x20eea50' = ov002:_ZN10dBgActor_cC2Ev and store the literal 0x0211458c into [this]. Two factories agreeing on 0x338 is why 0x338 is the allocation size and 0x334 is merely where the last proven field ends. include/daObjBk_Dossunbar_c.h's existing size assert of 0x338 agrees.",
   "destructors": {
     "variants_present": ["D1", "D0"],
     "D2_present": false,
-    "D1": {"symbol": "_ZN9MovingBarD1Ev", "address": "0x02111ba0", "size": "0x44", "vtable_slot": 16},
-    "D0": {"symbol": "_ZN9MovingBarD0Ev", "address": "0x02111be4", "size": "0x58", "vtable_slot": 17},
+    "D1": {"symbol": "_ZN19daObjBk_Dossunbar_cD1Ev", "address": "0x02111ba0", "size": "0x44", "vtable_slot": 16},
+    "D0": {"symbol": "_ZN19daObjBk_Dossunbar_cD0Ev", "address": "0x02111be4", "size": "0x58", "vtable_slot": 17},
     "order": "D1 first, then D0, ascending address -- the order an INLINE destructor body produces. This is the same shape the sibling oracle daObjBkBillboard_c relies on; its manifest warns that writing the body out of line flips them to D0-before-D1 and the isolation step rejects the object.",
-    "evidence": "CARTRIDGE. No _ZN9MovingBarD2Ev symbol exists in config/arm9/overlays/ov015/symbols.txt, and no third destructor body sits in the run -- the 25 delink entries tile the range with none left over. Both D1 and D0 bodies were disassembled: each stores 0x0211458c into [this], then stores 0x0210ae38 (= _ZTV10dBgActor_c address point) into [this] -- that second store IS the inlined ~dBgActor_c, which is why no call to a dBgActor_c destructor appears -- then calls arm9:_ZN10dBgW_KcMbgD1Ev on this+0x124, arm9:_ZN5ModelD1Ev on this+0xd4, and arm9:_ZN8dActor_cD2Ev on this. D0 then additionally calls arm9:_ZN6Memory10DeallocateEPvP4Heap with a heap pointer loaded from the literal 0x020a0eac."
+    "evidence": "CARTRIDGE. No _ZN19daObjBk_Dossunbar_cD2Ev symbol exists in config/arm9/overlays/ov015/symbols.txt, and no third destructor body sits in the run -- the 25 delink entries tile the range with none left over. Both D1 and D0 bodies were disassembled: each stores 0x0211458c into [this], then stores 0x0210ae38 (= _ZTV10dBgActor_c address point) into [this] -- that second store IS the inlined ~dBgActor_c, which is why no call to a dBgActor_c destructor appears -- then calls arm9:_ZN10dBgW_KcMbgD1Ev on this+0x124, arm9:_ZN5ModelD1Ev on this+0xd4, and arm9:_ZN8dActor_cD2Ev on this. D0 then additionally calls arm9:_ZN6Memory10DeallocateEPvP4Heap with a heap pointer loaded from the literal 0x020a0eac."
   },
   "overrides": [
-    {"slot": 0,  "address": "0x021120fc", "size": "0x134", "symbol": "_ZN9MovingBar13InitResourcesEv", "inherited_name": "fBase_c::InitResources", "base_default": "0x02043c80"},
-    {"slot": 3,  "address": "0x02112004", "size": "0x64",  "symbol": "_ZN9MovingBar16CleanupResourcesEv", "inherited_name": "fBase_c::CleanupResources", "base_default": "0x02043bf0"},
-    {"slot": 6,  "address": "0x02112090", "size": "0x6c",  "symbol": "_ZN9MovingBar8BehaviorEv", "inherited_name": "fBase_c::Behavior", "base_default": "0x02043b24"},
-    {"slot": 9,  "address": "0x02112068", "size": "0x28",  "symbol": "_ZN9MovingBar6RenderEv", "inherited_name": "fBase_c::Render", "base_default": "0x02043af0"},
-    {"slot": 16, "address": "0x02111ba0", "size": "0x44",  "symbol": "_ZN9MovingBarD1Ev", "inherited_name": "dBgActor_c::~dBgActor_c (D1)", "base_default": "0x020ee42c"},
-    {"slot": 17, "address": "0x02111be4", "size": "0x58",  "symbol": "_ZN9MovingBarD0Ev", "inherited_name": "dBgActor_c::~dBgActor_c (D0)", "base_default": "0x020ee464"},
-    {"slot": 27, "address": "0x02111cb8", "size": "0x28",  "symbol": "_ZN9MovingBar15OnHitByMegaCharER6Player", "inherited_name": "dActor_c::OnHitByMegaChar(Player&)", "base_default": "0x02010130"},
-    {"slot": 31, "address": "0x02111c3c", "size": "0x7c",  "symbol": "_ZN9MovingBar4KillEv", "inherited_name": "dBgActor_c::Kill", "base_default": "0x020ee55c"}
+    {"slot": 0,  "address": "0x021120fc", "size": "0x134", "symbol": "_ZN19daObjBk_Dossunbar_c13InitResourcesEv", "inherited_name": "fBase_c::InitResources", "base_default": "0x02043c80"},
+    {"slot": 3,  "address": "0x02112004", "size": "0x64",  "symbol": "_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv", "inherited_name": "fBase_c::CleanupResources", "base_default": "0x02043bf0"},
+    {"slot": 6,  "address": "0x02112090", "size": "0x6c",  "symbol": "_ZN19daObjBk_Dossunbar_c8BehaviorEv", "inherited_name": "fBase_c::Behavior", "base_default": "0x02043b24"},
+    {"slot": 9,  "address": "0x02112068", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c6RenderEv", "inherited_name": "fBase_c::Render", "base_default": "0x02043af0"},
+    {"slot": 16, "address": "0x02111ba0", "size": "0x44",  "symbol": "_ZN19daObjBk_Dossunbar_cD1Ev", "inherited_name": "dBgActor_c::~dBgActor_c (D1)", "base_default": "0x020ee42c"},
+    {"slot": 17, "address": "0x02111be4", "size": "0x58",  "symbol": "_ZN19daObjBk_Dossunbar_cD0Ev", "inherited_name": "dBgActor_c::~dBgActor_c (D0)", "base_default": "0x020ee464"},
+    {"slot": 27, "address": "0x02111cb8", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player", "inherited_name": "dActor_c::OnHitByMegaChar(Player&)", "base_default": "0x02010130"},
+    {"slot": 31, "address": "0x02111c3c", "size": "0x7c",  "symbol": "_ZN19daObjBk_Dossunbar_c4KillEv", "inherited_name": "dBgActor_c::Kill", "base_default": "0x020ee55c"}
   ],
   "override_count": 8,
   "overrides_evidence": "CARTRIDGE, slot by slot. The 32 words of this vtable were compared against the 32 words of _ZTV10dBgActor_c (ov002:0x0210ae38, read from overlay_0002.bin at base 0x020ad660). Exactly 8 slots differ from the base and all 8 point inside ov015 .text (0x021111a0..0x02112e0c); the other 24 are byte-identical to dBgActor_c's. The inherited_name column is each slot's target in dBgActor_c's own table resolved through symbols.txt, so the names come from the whole base chain (fBase_c for 0/3/6/9, dActor_c for 27, dBgActor_c for 16/17/31) and not from one header. Independently reproduced by `python tools/rtti_vtables.py --own daObjBk_Dossunbar_c`, which lists the identical 8 slots after `tools/rtti_extract.py` was run first.",
@@ -92,7 +92,7 @@
       "address": "0x02111fb8", "size": "0x4c", "symbol": "func_ov015_02111fb8",
       "role": "SetState(int) -- a real member function, currently unnamed",
       "evidence": "CARTRIDGE. Takes this in r0 and a state index in r1; loads the table base 0x02114a24, forms r3 = base + index*8, runs the standard mwcc/Itanium pointer-to-member call sequence (adj = r3[1]; this += adj>>1; if (adj & 1) virtual-dispatch through *this else call r3[0]; blx), and then stores the index into [this + 0x330]. Writing this->0x330 through a this-pointer is what makes it a member and not a free helper.",
-      "callers": "9 call sites, ALL inside this run and none outside it: the seven state-execute functions 0x02111ce0, 0x02111d4c, 0x02111d98, 0x02111df4, 0x02111e80 (twice), 0x02111eec, 0x02111f6c, plus _ZN9MovingBar13InitResourcesEv at 0x02112208. It is file-local.",
+      "callers": "9 call sites, ALL inside this run and none outside it: the seven state-execute functions 0x02111ce0, 0x02111d4c, 0x02111d98, 0x02111df4, 0x02111e80 (twice), 0x02111eec, 0x02111f6c, plus _ZN19daObjBk_Dossunbar_c13InitResourcesEv at 0x02112208. It is file-local.",
       "caller_method": "These are intra-overlay BLs, which carry NO relocation, so relocs.txt alone would have reported this function as uncalled. Found by decoding every B/BL word in ov015 .text (0x021111a0..0x02112e0c) and resolving the sign-extended 24-bit displacement."
     }
   ],
@@ -108,7 +108,7 @@
     },
     "runtime_tables": [
       {"name_coined": "state ENTER table", "address": "0x02114a24", "section": ".bss", "extent": "0x02114a24..0x02114a5c (0x38 = 7 records)", "indexed_by": "the NEW state, in func_ov015_02111fb8 (SetState)"},
-      {"name_coined": "state EXECUTE table", "address": "0x021149ec", "section": ".bss", "extent": "0x021149ec..0x02114a24 (0x38 = 7 records)", "indexed_by": "this->mState (0x330), every frame, in _ZN9MovingBar8BehaviorEv"}
+      {"name_coined": "state EXECUTE table", "address": "0x021149ec", "section": ".bss", "extent": "0x021149ec..0x02114a24 (0x38 = 7 records)", "indexed_by": "this->mState (0x330), every frame, in _ZN19daObjBk_Dossunbar_c8BehaviorEv"}
     ],
     "table_extent_evidence": "CARTRIDGE. Each table is 0x38 bytes and each ends exactly where the next symbol begins: 0x021149ec + 0x38 = 0x02114a24 (the second table) and 0x02114a24 + 0x38 = 0x02114a5c (the next .bss symbol). dsd emitted spurious interior symbols data_ov015_021149f0 / _021149fc / _02114a18 inside the first table, and symbols.txt marks all three 'ambiguous' -- they are interior noise, not separate objects.",
     "states": [
@@ -121,8 +121,8 @@
       {"state": 6, "enter": "0x02111d28", "enter_size": "0x24", "execute": "0x02111ce0", "execute_size": "0x48"}
     ],
     "pairing_evidence": "CARTRIDGE. The pairing is not guessed from address order -- it was recovered by emulating the copy loop in __sinit_ov015_02113048, resolving every ldr rX,[pc,#imm] against the literal pool and following each str rS,[rD,#K] to work out which source record lands at which offset of which destination array. Done twice, once by hand off the disassembly and once by an independent register-tracking script; the two agree on all 14 assignments.",
-    "initial_state": "5 -- CARTRIDGE: _ZN9MovingBar13InitResourcesEv does 'mov r1, #5' at 0x021121f8 immediately before 'bl 0x02111fb8' (SetState).",
-    "dispatch_shape": "CARTRIDGE. _ZN9MovingBar8BehaviorEv loads this->0x330, indexes the 0x021149ec table by *8, runs the same PMF call sequence as SetState, then calls ov002:_ZN10dBgActor_c21UpdateModelPosAndRotYEv, then ov002:_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_ with both args 0, and only if that returns nonzero calls ov002:_ZN10dBgActor_c19UpdateClsnPosAndRotEv; returns 1.",
+    "initial_state": "5 -- CARTRIDGE: _ZN19daObjBk_Dossunbar_c13InitResourcesEv does 'mov r1, #5' at 0x021121f8 immediately before 'bl 0x02111fb8' (SetState).",
+    "dispatch_shape": "CARTRIDGE. _ZN19daObjBk_Dossunbar_c8BehaviorEv loads this->0x330, indexes the 0x021149ec table by *8, runs the same PMF call sequence as SetState, then calls ov002:_ZN10dBgActor_c21UpdateModelPosAndRotYEv, then ov002:_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_ with both args 0, and only if that returns nonzero calls ov002:_ZN10dBgActor_c19UpdateClsnPosAndRotEv; returns 1.",
     "naming_caveat": "'ENTER' and 'EXECUTE' are COINED. What the cartridge proves is the mechanism: table 0x02114a24 is called by SetState before the new state index is stored, and table 0x021149ec is called by Behavior with the current state index every frame. The words 'enter' and 'execute' are my description of that mechanism, not ROM-attested, and no state has a ROM-attested name."
   },
   "static_initializer": {
@@ -155,7 +155,7 @@
     "count": 14,
     "location": "0x021144a0..0x02114510",
     "all_adj_zero": true,
-    "dsd_name_hazard": "Every one of these 14 records lives in UNOWNED .data and dsd resolves such records BY SYMBOL NAME. All 14 currently spell their target func_ov015_*. If the writer renames any of the 14 state functions to a mangled _ZN9MovingBar...Ev form, the new name MUST reach config/arm9/overlays/ov015/symbols.txt in the SAME commit, or that record links as 0x00000000. No byte gate at stage 2 or 3 catches it. The same applies to func_ov015_02111fb8 -- but note it is reached only by BL, not by a .data record, so it is the safer of the two kinds."
+    "dsd_name_hazard": "Every one of these 14 records lives in UNOWNED .data and dsd resolves such records BY SYMBOL NAME. All 14 currently spell their target func_ov015_*. If the writer renames any of the 14 state functions to a mangled _ZN19daObjBk_Dossunbar_c...Ev form, the new name MUST reach config/arm9/overlays/ov015/symbols.txt in the SAME commit, or that record links as 0x00000000. No byte gate at stage 2 or 3 catches it. The same applies to func_ov015_02111fb8 -- but note it is reached only by BL, not by a .data record, so it is the safer of the two kinds."
   },
   "fields": [
     {"offset": "0xc",   "type": "u16", "name": "mActorID", "inherited_from": "fBase_c", "proven": true,
@@ -192,10 +192,10 @@
     "note": "ROM address order. mwccarm 2004/b56 emits one .text section per function in the REVERSE of source order, so the writer's file must be written HIGHEST address FIRST -- the sibling oracle's header comment states this and warns that tools/rombuild.py refuses the object outright when the emitted order and the ROM's disagree.",
     "language_mix": "10 of the 25 legacy shards are .cpp and 15 are .c. The 15 .c ones are the 13 unnamed state/helper functions plus the 2 factories, and they must keep C linkage. Per PIPELINE.md a class member function cannot sit inside an extern \"C\" region, so the one file-scope extern \"C\" block goes after the last surviving mangled member.",
     "list": [
-      {"ordinal": 0,  "address": "0x02111ba0", "size": "0x44",  "symbol": "_ZN9MovingBarD1Ev", "legacy_source": "src/_ZN9MovingBarD1Ev.cpp"},
-      {"ordinal": 1,  "address": "0x02111be4", "size": "0x58",  "symbol": "_ZN9MovingBarD0Ev", "legacy_source": "src/_ZN9MovingBarD0Ev.cpp"},
-      {"ordinal": 2,  "address": "0x02111c3c", "size": "0x7c",  "symbol": "_ZN9MovingBar4KillEv", "legacy_source": "src/_ZN9MovingBar4KillEv.cpp"},
-      {"ordinal": 3,  "address": "0x02111cb8", "size": "0x28",  "symbol": "_ZN9MovingBar15OnHitByMegaCharER6Player", "legacy_source": "src/_ZN9MovingBar15OnHitByMegaCharER6Player.cpp"},
+      {"ordinal": 0,  "address": "0x02111ba0", "size": "0x44",  "symbol": "_ZN19daObjBk_Dossunbar_cD1Ev", "legacy_source": "src/_ZN19daObjBk_Dossunbar_cD1Ev.cpp"},
+      {"ordinal": 1,  "address": "0x02111be4", "size": "0x58",  "symbol": "_ZN19daObjBk_Dossunbar_cD0Ev", "legacy_source": "src/_ZN19daObjBk_Dossunbar_cD0Ev.cpp"},
+      {"ordinal": 2,  "address": "0x02111c3c", "size": "0x7c",  "symbol": "_ZN19daObjBk_Dossunbar_c4KillEv", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c4KillEv.cpp"},
+      {"ordinal": 3,  "address": "0x02111cb8", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player.cpp"},
       {"ordinal": 4,  "address": "0x02111ce0", "size": "0x48",  "symbol": "func_ov015_02111ce0", "legacy_source": "src/func_ov015_02111ce0.cpp", "role": "state 6 EXECUTE"},
       {"ordinal": 5,  "address": "0x02111d28", "size": "0x24",  "symbol": "func_ov015_02111d28", "legacy_source": "src/func_ov015_02111d28.c", "role": "state 6 ENTER"},
       {"ordinal": 6,  "address": "0x02111d4c", "size": "0x40",  "symbol": "func_ov015_02111d4c", "legacy_source": "src/func_ov015_02111d4c.c", "role": "state 5 EXECUTE"},
@@ -211,10 +211,10 @@
       {"ordinal": 16, "address": "0x02111f6c", "size": "0x40",  "symbol": "func_ov015_02111f6c", "legacy_source": "src/func_ov015_02111f6c.c", "role": "state 0 EXECUTE"},
       {"ordinal": 17, "address": "0x02111fac", "size": "0xc",   "symbol": "func_ov015_02111fac", "legacy_source": "src/func_ov015_02111fac.c", "role": "state 0 ENTER"},
       {"ordinal": 18, "address": "0x02111fb8", "size": "0x4c",  "symbol": "func_ov015_02111fb8", "legacy_source": "src/func_ov015_02111fb8.c", "role": "SetState(int), file-local, 9 in-run callers"},
-      {"ordinal": 19, "address": "0x02112004", "size": "0x64",  "symbol": "_ZN9MovingBar16CleanupResourcesEv", "legacy_source": "src/_ZN9MovingBar16CleanupResourcesEv.cpp"},
-      {"ordinal": 20, "address": "0x02112068", "size": "0x28",  "symbol": "_ZN9MovingBar6RenderEv", "legacy_source": "src/_ZN9MovingBar6RenderEv.cpp"},
-      {"ordinal": 21, "address": "0x02112090", "size": "0x6c",  "symbol": "_ZN9MovingBar8BehaviorEv", "legacy_source": "src/_ZN9MovingBar8BehaviorEv.cpp"},
-      {"ordinal": 22, "address": "0x021120fc", "size": "0x134", "symbol": "_ZN9MovingBar13InitResourcesEv", "legacy_source": "src/_ZN9MovingBar13InitResourcesEv.cpp"},
+      {"ordinal": 19, "address": "0x02112004", "size": "0x64",  "symbol": "_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv.cpp"},
+      {"ordinal": 20, "address": "0x02112068", "size": "0x28",  "symbol": "_ZN19daObjBk_Dossunbar_c6RenderEv", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c6RenderEv.cpp"},
+      {"ordinal": 21, "address": "0x02112090", "size": "0x6c",  "symbol": "_ZN19daObjBk_Dossunbar_c8BehaviorEv", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c8BehaviorEv.cpp"},
+      {"ordinal": 22, "address": "0x021120fc", "size": "0x134", "symbol": "_ZN19daObjBk_Dossunbar_c13InitResourcesEv", "legacy_source": "src/_ZN19daObjBk_Dossunbar_c13InitResourcesEv.cpp"},
       {"ordinal": 23, "address": "0x02112230", "size": "0x30",  "symbol": "daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L", "legacy_source": "src/d_a_obj_bk_dossunbar_bk_dossunbar_l.c", "role": "factory, profile BK_DOSSUNBAR_L, actor id 0x35, variant 1"},
       {"ordinal": 24, "address": "0x02112260", "size": "0x30",  "symbol": "daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S", "legacy_source": "src/d_a_obj_bk_dossunbar_bk_dossunbar_s.c", "role": "factory, profile BK_DOSSUNBAR_S, actor id 0x36, variant 0"}
     ]
@@ -227,9 +227,9 @@
   },
   "naming_defect_found": {
     "symbols": ["MovingBarSmall_ClsnFile (ov015:0x02114a5c)", "MovingBarSmall_ModelFile (ov015:0x02114a64)"],
-    "finding": "These two .bss symbols carry a MovingBar-flavoured coined name but do NOT belong to this class. Do not use them.",
+    "finding": "These two .bss symbols carry a daObjBk_Dossunbar_c-flavoured coined name but do NOT belong to this class. Do not use them.",
     "evidence": "CARTRIDGE. Every overlay(15)-destined relocation targeting 0x02114a5c and 0x02114a64 was enumerated: 3 references each, and all six come from TowerStep's code and its sinit -- 0x021124a0/0x021124a4 (literal pool of _ZN9TowerStep16CleanupResourcesEv), 0x021128c0/0x021128c4 (literal pool of _ZN9TowerStep13InitResourcesEv) and 0x021132b0/0x021132c0 (__sinit_ov015_02113264, which is one of the six sinits with ZERO references into this class's band). This class's own four SharedFilePtrs are 0x0211499c / 0x021149a4 / 0x021149ac / 0x021149b4, reached through the resource table at 0x02114534.",
-    "corroboration": "symbols/actor_renames.tsv rows 762-767 record that the functions once called _ZN14MovingBarSmall* were renamed to _ZN9TowerStep*, and rows 752-757 that the ones once called _ZN14KnockDownPlank* became _ZN9MovingBar*. The two .bss names are leftovers from that earlier, wrong attribution and were never moved."
+    "corroboration": "symbols/actor_renames.tsv rows 762-767 record that the functions once called _ZN14MovingBarSmall* were renamed to _ZN9TowerStep*, and rows 752-757 that the ones once called _ZN14KnockDownPlank* became _ZN19daObjBk_Dossunbar_c*. The two .bss names are leftovers from that earlier, wrong attribution and were never moved."
   },
   "expected_compiler_only_output": {
     "count": 11,
@@ -245,7 +245,7 @@
       "_ZTS10dBgActor_c": "ov002:0x02108a04",
       "_ZTI19daObjBk_Dossunbar_c": "ov015:0x02114510",
       "_ZTS19daObjBk_Dossunbar_c": "ov015:0x0211451c",
-      "_ZTV9MovingBar": "ov015:0x0211458c"
+      "_ZTV19daObjBk_Dossunbar_c": "ov015:0x0211458c"
     },
     "evidence": "CARTRIDGE for the four ov002/ov015 addresses and for arm9:0x0208e390 / 0x0208e384 (read as the chain walk's +4 and +8 words from the module images). The fBase_c and dBase_c pairs were read the same way at the tail of that walk, and independently agree with the addresses the sibling oracle's manifest already records."
   },
@@ -257,19 +257,19 @@
     "The compile flags (-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off) are copied from the oracle's manifest verification block; they have not been re-derived here."
   ],
   "unproven": [
-    "The class name MovingBar. It is COINED -- 0 occurrences in 9.0 MiB of cartridge, case-sensitive and case-folded. The cartridge's name is daObjBk_Dossunbar_c. Whatever the writer ships, the manifest and symbols/actor_renames.tsv must record the name as coined with this evidence.",
+    "The class name daObjBk_Dossunbar_c. It is COINED -- 0 occurrences in 9.0 MiB of cartridge, case-sensitive and case-folded. The cartridge's name is daObjBk_Dossunbar_c. Whatever the writer ships, the manifest and symbols/actor_renames.tsv must record the name as coined with this evidence.",
     "The member name SetState for func_ov015_02111fb8. Proven: it takes this and an index, calls through the 0x02114a24 table, and stores the index into this->0x330. The WORD 'SetState' is invented.",
     "All 14 state-function names. Nothing in the cartridge names them. Their state index and their ENTER/EXECUTE role are proven; nothing else is.",
     "The words ENTER and EXECUTE for the two tables. The mechanism is proven, the labels are mine.",
     "What the 7 states MEAN behaviourally. Not established -- the state EXECUTE bodies were not decompiled, only located and paired.",
-    "mHomePosX / mHomePosY / mHomePosZ as NAMES. Proven: 0x320/0x324/0x328 receive mPosX/mPosY/mPosZ during InitResources. The word 'Home' is a reading of that, not a ROM fact. These names are already in include/MovingBar.h at this revision.",
+    "mHomePosX / mHomePosY / mHomePosZ as NAMES. Proven: 0x320/0x324/0x328 receive mPosX/mPosY/mPosZ during InitResources. The word 'Home' is a reading of that, not a ROM fact. These names are already in include/daObjBk_Dossunbar_c.h at this revision.",
     "mVariant and mState as NAMES. Their offsets, widths and roles are proven; the words are coined and already in the header.",
-    "The 2 bytes at 0x31e..0x320 (include/MovingBar.h's pad_31e). Nothing in this run reads or writes them.",
+    "The 2 bytes at 0x31e..0x320 (include/daObjBk_Dossunbar_c.h's pad_31e). Nothing in this run reads or writes them.",
     "The 4 bytes at 0x334..0x338 (pad_334). They exist only because the factories allocate 0x338 while the last proven field ends at 0x334. No access to them was found.",
-    "The SIZE of the CLPS_Block at 0x2ec, and its name. Only its offset and its type -- the latter from the callee's mangled signature -- are proven. include/MovingBar.h currently spells 0x2ec..0x320 as pad_2ec[0x34], which is a span, not evidence.",
+    "The SIZE of the CLPS_Block at 0x2ec, and its name. Only its offset and its type -- the latter from the callee's mangled signature -- are proven. include/daObjBk_Dossunbar_c.h currently spells 0x2ec..0x320 as pad_2ec[0x34], which is a span, not evidence.",
     "The field layout of the 0x1c-byte profile records beyond the classInit pointer at +0 and the 0x0035/0x0036 actor ids at +4. The remaining words (2, 0, 0x00500000, 0x01000000, 0) were not interpreted.",
     "The third field (+8) of each resource-table record is a CLPS_Block* by the callee's signature; the objects it points at, 0x021135b4 and 0x02113634, were not examined.",
-    "Which of the 25 members will actually convert to real MovingBar:: methods. That is stage 3b's measurement, not a scout fact. The 8 vtable overrides plus func_ov015_02111fb8 already carry or clearly warrant member form; the 14 state functions are members by mechanism but are auto-named, which per PIPELINE.md makes converting them a NAME-RECOVERY act, not a codegen one -- and see pointer_to_member_records.dsd_name_hazard before renaming any of them."
+    "Which of the 25 members will actually convert to real daObjBk_Dossunbar_c:: methods. That is stage 3b's measurement, not a scout fact. The 8 vtable overrides plus func_ov015_02111fb8 already carry or clearly warrant member form; the 14 state functions are members by mechanism but are auto-named, which per PIPELINE.md makes converting them a NAME-RECOVERY act, not a codegen one -- and see pointer_to_member_records.dsd_name_hazard before renaming any of them."
   ],
   "blockers_for_the_writer": [
     "TEXT-ONLY IS A HARD CONSTRAINT, not a preference. No delink entry in ov015 owns .data or .bss. The vtable, both RTTI records, the 14 PMF constants, the 2 state tables and the 4 SharedFilePtrs must all be declared extern and never defined, or mwcc emits .data/.init that this TU is not allowed to own.",
@@ -279,7 +279,7 @@
     "Emit in reverse ROM order -- highest address first -- or rombuild refuses the object outright."
   ],
   "base_revision": {
-    "branch": "cpp/MovingBar-tu",
+    "branch": "cpp/daObjBk_Dossunbar_c-tu",
     "worktree": "C:/tmp/sm64ds-movingbar-scout",
     "base": "2ab05bae3",
     "verified": "Verified AFTER the work, per roles/scout.md: `git fetch origin` then HEAD == origin/main == 2ab05bae3 and `git log --oneline HEAD..origin/main` is empty. Every tree-derived claim in this file (the 25 delink entries, the shard filenames, the symbols.txt rows, the actor_renames.tsv row numbers, the tu_map segmentation, the oracle manifest) was read at this revision. Every ROM-derived claim was cut from extracted/ and cannot rot.",
