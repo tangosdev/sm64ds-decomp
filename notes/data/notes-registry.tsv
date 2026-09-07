@@ -8,6 +8,7 @@ notes/actor-profile-pilot.md	evidence	provenance	live		Pilot: SpawnInfo is one i
 notes/actor-vtables.md	evidence	naming	live		Actor/ActorDerived/ActorBase/Player vtable slot-by-slot map recovered whole from the ROM.
 notes/agent-cpp-class-migration.md	evidence	process	superseded		Older parallel-agent C++ migration guide; superseded by the 5-role pipeline in notes/agents/**.
 notes/agent-partitioned-tu-workflow.md	evidence	tu-promotion	live		Operational companion to the TU-reconstruction plan; how tools/tubuild.py drives the partitioned workflow.
+notes/agents/IN-FLIGHT.md	doctrine	process	live		What is in flight and where it is recorded, written 2026-09-07 while winding the class pipeline down for a workflow upgrade.
 notes/agents/LAUNCH.md	doctrine	process	live		Copy-paste launch prompts that bootstrap a fresh Claude Code/Codex instance into the class pipeline.
 notes/agents/PIPELINE.md	doctrine	process	live		The 5-stage class pipeline (scout/writer/builder/integrator/reviewer) and its claim protocol.
 notes/agents/roles/builder.md	doctrine	process	live		Builder role: required gate order and proof steps to verify a class reconstruction before opening a PR.
@@ -125,6 +126,7 @@ notes/smartball-provenance.md	evidence	provenance	live		Field-name provenance fo
 notes/src-domain-buckets.md	doctrine	build	live		Policy for which top-level src/ directory a class's first promoted file goes into.
 notes/symbol-name-provenance.md	evidence	naming	live		Which parts of a mangled/symbols.txt name are ROM-proven vs. placeholder vs. assertion, and how to tell.
 notes/system-provenance.md	evidence	provenance	live		Field provenance for non-actor system classes: particle tracker, minimap, level scene, BMD model file.
+notes/tool-gate-findings-2026-09-05.md	evidence	process	live		Findings from a 2026-09-05 gate audit scoped to tooling alone; deliberately touched no agent docs, promotion queues, or source.
 notes/translation-unit-reconstruction-plan.md	evidence	tu-promotion	live		Architecture/safety-model design for TU reconstruction; tools/tubuild.py and src_tu/ now implement it.
 notes/tu-boundaries.md	evidence	tu-promotion	live		What tools/tu_map.py knows about original translation-unit boundaries, and where it stops knowing.
 notes/tu-cpp-census-2026-08.md	evidence	tu-promotion	live		Reconciled ground-truth census (524 TUs, 1167 provably-C++ files) after fixing a stale tu_map regen bug.
