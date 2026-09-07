@@ -1190,7 +1190,7 @@ int *daGmch_c_classInit(void)
     extern void _ZN11ShadowModelC1Ev(void *p);
     extern void _ZN7dCcAc_cC1Ev(void *p);
     extern void _ZN10dBgCh_ActrC1Ev(void *p);
-    extern int _ZTV8daGmch_c[];
+    /* _ZTV8daGmch_c is declared in daGmch_c.h -- see the note there. */
 
     int *p = (int *)_ZN7fBase_cnwEj(1012);
     if (p) {

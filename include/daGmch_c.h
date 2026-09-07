@@ -148,4 +148,12 @@ struct daGmch_c : dActor_c {
 
 typedef char daGmch_c_size_must_be_0x3f4[sizeof(daGmch_c) == 0x3f4 ? 1 : -1];
 
+/* This class's vtable, for the factory's vptr store.  The declaration belongs
+   here rather than in daGmch_c_classInit's body: before this promotion the
+   shard d_a_gmch.c (written bare: this promotion deletes it) reached the same
+   symbol through decl_common.h and carried no `extern` of its own, so a header
+   is the declaration site this class already had.  A file-local `extern` would also be the one thing in
+   this TU that langmode_audit counts as an unmodelled class. */
+extern int _ZTV8daGmch_c[];
+
 #endif /* DAGMCH_C_H */
