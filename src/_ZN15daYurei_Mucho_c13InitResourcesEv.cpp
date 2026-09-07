@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN6Snufit13InitResourcesEv
+// @symbol _ZN15daYurei_Mucho_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method
  *
  * The stand-in typedefs this file used to carry (`typedef int Fix12;`, a
  * two-word SharedFilePtr, a three-short Vector3_16, opaque dActor_c/BMD_File)
- * all name real types now that Snufit.h pulls in the dEnemyBase_c chain, so they are
+ * all name real types now that daYurei_Mucho_c.h pulls in the dEnemyBase_c chain, so they are
  * gone. dCcAc_c::Init and dBgCh_Actr::Init are still reached
  * through their mangled names because neither is declared as a method yet.
  */
-#include "Snufit.h"
+#include "daYurei_Mucho_c.h"
 #include "SharedFilePtr.h"
 
 struct PMF;
@@ -25,7 +25,7 @@ extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* se
 extern int func_ov065_0211691c(void* c, PMF* p);
 }
 
-int Snufit::InitResources()
+int daYurei_Mucho_c::InitResources()
 {
     mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov065_0211d618), 1, -1);
     Model::LoadFile(data_ov065_0211d610);
