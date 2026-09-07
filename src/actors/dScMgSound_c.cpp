@@ -417,10 +417,12 @@ extern "C" void *dScMgSound_c_classInit(void)
  * pre-migration file wrote it as `*(int *)(r7 + 0xb4)`.
  *
  * The GX/G2S/GXS entry points keep their mangled spellings INSIDE extern "C",
- * which is the tree's idiom for them (src/_ZN12dScMgLuigi_c13InitResourcesEv.cpp
- * does the same). Inside extern "C" the identifier is emitted verbatim; only a
- * bare namespace-scope `extern` of a mangled name would mangle a SECOND time,
- * which is the defect include/SharedFilePtr.h's banner records. */
+ * which is the tree's idiom for them (src/actors/dScMgLuigi_c.cpp, which
+ * absorbed that shard when ov006/dScMgLuigi_c was promoted, does the same --
+ * 17 mangled spellings inside its file-scope extern "C" regions).  Inside
+ * extern "C" the identifier is emitted verbatim; only a bare namespace-scope
+ * `extern` of a mangled name would mangle a SECOND time, which is the defect
+ * include/SharedFilePtr.h's banner records. */
 s32 dScMgSound_c::InitResources()
 {
     u8 *r7 = (u8 *)this;

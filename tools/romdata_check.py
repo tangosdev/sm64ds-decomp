@@ -32,10 +32,10 @@ generated header declares zero virtuals, so mwcc emits a 2-slot vtable stub wher
 ROM has 31 slots; the emitted prefix is not even the same slots. Failing a merge on
 that would fail nearly every C++ file in the tree for pre-existing modelling debt.
 
-So the verdicts are counted, the count is reported, and `validate_merge` ratchets it:
-the number of verified data symbols may rise freely and may not fall. That is the same
-shape as langmode-ratchet and converted-ratchet, and it is the only shape that can
-land green.
+So the verdicts are reported, and `validate_merge` ratchets the exact verified-symbol
+identities and byte count while refusing newly differing symbols. Pre-existing model
+debt can remain, but an unrelated gain cannot conceal losing a known-good vtable or
+typeinfo record.
 
 THE VTABLE PREAMBLE, AND WHY THE COMPARE IS OFFSET
 --------------------------------------------------
@@ -358,6 +358,14 @@ def summarize(records):
                          if r["verdict"] == VERIFIED)
     partial_bytes = sum(r.get("bytes", 0) for r in best.values()
                         if r["verdict"] == PARTIAL)
+    verified_symbols = sorted(
+        ({"module": r.get("module"), "symbol": r["symbol"]}
+         for r in best.values() if r["verdict"] == VERIFIED),
+        key=lambda r: (r["module"] or "", r["symbol"]))
+    differing_symbols = sorted(
+        ({"module": r.get("module"), "symbol": r["symbol"]}
+         for r in best.values() if r["verdict"] == DIFFERS),
+        key=lambda r: (r["module"] or "", r["symbol"]))
     return {
         "symbols": len(best),
         "verified": symbol_counts[VERIFIED],
@@ -366,6 +374,10 @@ def summarize(records):
         "unnamed": symbol_counts[UNNAMED],
         "verifiedBytes": verified_bytes,
         "partialBytes": partial_bytes,
+        # Identities, not only a count. A count-only ratchet can lose one known-good
+        # vtable while gaining an unrelated one and report no regression at all.
+        "verifiedSymbols": verified_symbols,
+        "differingSymbols": differing_symbols,
         # Per-object-record totals, kept for visibility -- these move with file topology
         # (a TU merge or a duplicate-file cleanup changes them without a symbol's verdict
         # changing) and are not what validate_merge ratchets.
