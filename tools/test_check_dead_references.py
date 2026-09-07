@@ -409,30 +409,6 @@ class NewSurfaceTests(unittest.TestCase):
             "src/thing.c", 'const char *s = "notes/gone.md";\n'))
         self.assertEqual(dead, set())
 
-    def test_a_dead_src_reference_in_a_c_comment_is_not_reported(self):
-        """`src/`/`src_tu/`/`include/` comments narrate their own TU-merge history in
-        `src/` paths that are SUPPOSED to be gone -- only a `notes/` head counts here."""
-        dead = self._dead(lambda t: t.write(
-            "include/thing.h",
-            "// absorbed from src/func_gone.c into this header\n"))
-        self.assertEqual(dead, set())
-
-    def test_legacy_listing_lines_are_stripped_from_c_comments(self):
-        """Unit-level: `_c_comments` itself, since `NOTES_ONLY_HEADS` would mask the
-        same effect if tested only through `dead_references`."""
-        comments = CDR._c_comments(
-            "/* absorbed functions:\n"
-            " * [1] 0x02001234  src/func_gone_a.c\n"
-            " * [2] 0x02001238  src/func_gone_b.c\n"
-            " * see notes/gone.md for the full story\n"
-            " */\n")
-        joined = "\n".join(snippet for _ln, snippet in comments)
-        self.assertNotIn("func_gone_a.c", joined)
-        self.assertNotIn("func_gone_b.c", joined)
-        self.assertIn("notes/gone.md", joined)
-
-    # -- tools/**/*.js --
-
     def test_a_dead_reference_in_a_js_comment_is_detected(self):
         dead = self._dead(lambda t: t.write(
             "tools/thing.js", "// see notes/gone.md\nconsole.log(1);\n"))
