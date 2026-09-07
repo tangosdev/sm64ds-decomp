@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN5Pokey16CleanupResourcesEv
+// @symbol _ZN9daSanbo_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "Pokey.h"
+#include "daSanbo_c.h"
 #include "SharedFilePtr.h"
 extern "C" {
 void UnloadBlueCoinModel(void *);
@@ -9,7 +9,7 @@ extern int data_ov096_02137b20[];
 extern int data_ov096_02137b28[];
 }
 
-int Pokey::CleanupResources()
+int daSanbo_c::CleanupResources()
 {
   int id = actorID;
   int a = (id == 0xf0);

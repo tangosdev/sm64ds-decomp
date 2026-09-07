@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN5Pokey13InitResourcesEv
+// @symbol _ZN9daSanbo_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "common.h"
-#include "Pokey.h"
+#include "daSanbo_c.h"
 extern "C" {
 void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
@@ -21,7 +21,7 @@ extern void* data_ov096_02137b28;
 struct Block3 { int w[3]; };
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-int Pokey::InitResources()
+int daSanbo_c::InitResources()
 {
     int t;
 

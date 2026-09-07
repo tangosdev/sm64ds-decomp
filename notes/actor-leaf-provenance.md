@@ -71,11 +71,11 @@ Deliberately left `unk_`: 0x10d (`param1 & 0xf`, written and never read);
 0x112 (already documented as touched only by the class's unenrolled
 [func_ov002_020f051c](../config/arm9/overlays/ov002/symbols.txt)).
 
-## Pokey -- include/Pokey.h
+## daSanbo_c -- include/daSanbo_c.h
 
-A Pokey is two actors: the head (`actorID` 0xf0) and its body segments
-(`actorID` 0xf1). `src/_ZN5Pokey13InitResourcesEv.cpp` branches on that all the
-way through.
+A daSanbo_c (coined English name: Pokey) is two actors: the head (`actorID`
+0xf0) and its body segments (`actorID` 0xf1).
+`src/_ZN9daSanbo_c13InitResourcesEv.cpp` branches on that all the way through.
 
 | offset | new name | evidence |
 | --- | --- | --- |
@@ -83,9 +83,9 @@ way through.
 | 0x36c | `mRootPosX` | head seeds it from its own `mPosX`; a segment copies it word for word out of the head object at the same 0x36c offset. |
 | 0x370 | `mRootPosY` | same. |
 | 0x374 | `mRootPosZ` | same. |
-| 0x38c | `mState` | `src/_ZN5Pokey8BehaviorEv.cpp` skips its distance-to-player early-out when this is 2 or 5. |
+| 0x38c | `mState` | `src/_ZN9daSanbo_c8BehaviorEv.cpp` skips its distance-to-player early-out when this is 2 or 5. |
 | 0x390 | `mHead` | a segment stores `dActor_c::FindWithID(param1)` here; the head stores 0. A `dActor_c*` spelt `s32` and cast at every use. |
-| 0x394 | `mNextSegment` | `src/_ZN5Pokey16OnPendingDestroyEv.cpp` (head only) walks `p = mNextSegment` and then `p->mNextSegment` at the same 0x394 offset, tearing down each segment in turn. |
+| 0x394 | `mNextSegment` | `src/_ZN9daSanbo_c16OnPendingDestroyEv.cpp` (head only) walks `p = mNextSegment` and then `p->mNextSegment` at the same 0x394 offset, tearing down each segment in turn. |
 
 Deliberately left `unk_`: 0x3a8 (set to 1 by the head after it loads the
 blue-coin model, never read by an enrolled body).

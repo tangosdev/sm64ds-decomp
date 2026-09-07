@@ -694,7 +694,7 @@ extern int _ZTV4Fish[];
 extern int _ZTV4Toad[];
 extern int _ZTV9LightBeam[];
 extern int _ZTV5Koopa[];
-extern int _ZTV5Pokey[];
+extern int _ZTV9daSanbo_c[];
 extern int _ZTV5Shark[];
 extern int _ZTV5Spiny[];
 extern int _ZTV6Fwoosh[];
