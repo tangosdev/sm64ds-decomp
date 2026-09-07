@@ -254,28 +254,18 @@ extern "C" void port_sign_post_states_seat(void)
     }
 }
 
-/* func_ov002_020bbd5c: enter state `i` -- store it, then run its Init. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov002_020bbd5c(void *selfv, int i)
-{
-    char *c = (char *)selfv;
-    *(int *)(c + 0x354) = i;
-    if ((unsigned)i >= PORT_SIGNPOST_STATES) {
-        std::fprintf(stderr, "FATAL: SignPost state %d out of range\n", i);
-        std::abort();
-    }
-    ((void (*)(void *))(size_t)data_ov002_0210e084[i].init.fn)(c);
-}
+/* BOTH DISPATCHERS ARE BACK ON THE SLICE. src/func_ov002_020bbd5c.cpp and
+   src/func_ov002_020bbda4.cpp are on port/slice_pmf3.txt (run link100 lane
+   PMF3): /vmg /vmm makes MSVC's pointer-to-member the ROM's 8-byte record, so
+   the stride is the ROM's 0x10 and both bodies TAIL JUMP; the mangled table
+   reference is bridged in port/hal/pmf3_aliases.cpp. The seat above is
+   unchanged and is what the rows are gated on -- it verifies each of the ten
+   records against the ROM's own address, zeroes the adjustment word as it
+   seats, and installs the host bodies -- and the ten source statics at ov002
+   0x02109a64..0x02109ab4 were re-read out of overlay_0002.bin with their
+   relocations, every adjustment word ROM zero.
 
-/* func_ov002_020bbda4: run the current state's Main. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov002_020bbda4(void *selfv)
-{
-    char *c = (char *)selfv;
-    int i = *(int *)(c + 0x354);
-    if ((unsigned)i >= PORT_SIGNPOST_STATES) {
-        std::fprintf(stderr, "FATAL: SignPost state %d out of range\n", i);
-        std::abort();
-    }
-    ((void (*)(void *))(size_t)data_ov002_0210e084[i].main_.fn)(c);
-}
+   ONE GUARD GOES WITH THE HOST BODIES and it is worth naming: they tested
+   `(unsigned)i >= PORT_SIGNPOST_STATES` and ABORTED. The ROM makes no such
+   test, and because the host test was an abort rather than a silent skip,
+   every green battery this port has run is proof it never fired. */

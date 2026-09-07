@@ -94,18 +94,20 @@ void func_ov063_0211ddf4(char *c)
  * DESTINATION is the same final state).
  */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch through the state-record
-   pointer at +0x36c; the matched func_ov080_02125104.cpp mis-strides under
-   MSVC. First pair = state enter. */
-void func_ov080_02125104(char *c)
-{
-    unsigned char *pp = *(unsigned char **)(c + 0x36c);
-    bbh_pmf_call(pp, c);
-}
+/* BOTH crate dispatchers are back on the slice now and NEITHER is host-copied
+   here any more. func_ov080_021250c8, the tick half at record +8, went back at
+   wave 18. func_ov080_02125104, the enter half at record +0, goes back in run
+   link100 lane PMF3 (port/slice_pmf3.txt) on the same evidence carried one
+   step further: its object form is a TAIL JUMP under the port's own flags, and
+   the six source pairs at ov080 0x0212812c..0x02128154 were re-read out of
+   overlay_0080.bin with their relocations and every adjustment word is ROM
+   zero. hal_fill_crazed_crate_vtable also WRITES each destination adjustment
+   word to zero as it installs the host body, so the matched dispatcher's
+   `this + delta` cannot be anything but `this + 0`.
 
-/* func_ov080_021250c8 -- the SECOND pair (state tick) at record +8 -- WAS
-   host-copied here, and is now back on the slice: run linkw wave 18 compiles
-   src/func_ov080_021250c8.cpp with /vmg /vmm, which gives MSVC the 8-byte
+   The wave 18 reading, kept because it is what both rows rest on: run linkw
+   wave 18 compiles src/func_ov080_021250c8.cpp with /vmg /vmm, which gives
+   MSVC the 8-byte
    {fn, delta} representation the ROM's record already is, so `c->pp + 1`
    strides eight onto the tick pair's own function word. All twelve of ov080's
    source statics at 0x02128214 carry a ROM-zero delta, so the matched dispatch

@@ -160,29 +160,23 @@ void Actor::UntrackAndSpawnStar(signed char &trackStarID, unsigned starID,
         (unsigned char)howToSpawnStar);
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member on a forward-declared struct, indexed.
-   The matched func_ov064_0211a6ec writes the new index to this+0x16c, reads it
-   back and calls Entry[idx].pmf[0] -- the state's ENTER half. */
-extern "C" void func_ov064_0211a6ec(void *self, int i)
-{
-    char *c = (char *)self;
-    *(int *)(c + 0x16c) = i;
-    int j = *(int *)(c + 0x16c);
-    unsigned fn = data_ov064_0211c98c[j].pmf[0].fn;
-    if (fn)
-        ((int (*)(void *))(size_t)fn)(c);
-}
+/* BOTH DISPATCHERS ARE BACK ON THE SLICE -- src/func_ov064_0211a6ec.cpp and
+   src/func_ov064_0211a734.cpp, port/slice_pmf3.txt (run link100 lane PMF3).
+   /vmg /vmm gives MSVC the ROM's 8-byte {function, delta} record, so Entry is
+   the ROM's 0x10 and both bodies TAIL JUMP through the record's own function
+   word; the mangled table reference is bridged in port/hal/pmf3_aliases.cpp.
+   The declaration below is what the transcribed body further down calls.
 
-/* PORT_HOST_ABI: the same, reading Entry[idx].pmf[1] -- the state's TICK half.
-   TreasureChest::Behavior calls this every frame. */
-extern "C" void func_ov064_0211a734(void *self)
-{
-    char *c = (char *)self;
-    int j = *(int *)(c + 0x16c);
-    unsigned fn = data_ov064_0211c98c[j].pmf[1].fn;
-    if (fn)
-        ((int (*)(void *))(size_t)fn)(c);
-}
+   THE ONE GUARD THAT LEAVES WITH THEM: the host copies tested `if (fn)` and
+   SILENTLY SKIPPED the dispatch. The ROM does not test. A silent skip is not
+   something a green battery can vouch for, so this row rests on the seat
+   instead: port_treasure_chest_states_seat verifies all six records against
+   the ROM's own addresses, aborts on a nonzero adjustment word, and rewrites
+   every function word with a host body -- including func_ov064_0211a4c4, the
+   body transcribed in this file -- before a chest can exist. The six source
+   pairs at ov064 0x0211c49c..0x0211c4c4 were re-read out of overlay_0064.bin
+   with their relocations, every adjustment word ROM zero. */
+extern "C" void func_ov064_0211a6ec(void *self, int i);
 
 /* PORT_HOST_ABI: the ROM body at ov064 0x0211a4c4 (0x21c bytes), state 0's
    tick. No matched TU exists anywhere in the tree; this is transcribed from the

@@ -64,19 +64,16 @@ extern PortPmf data_ov098_0213c4a8[], data_ov098_0213c488[],
     data_ov098_0213c460[], data_ov098_0213c4c0[], data_ov098_0213c4b8[];
 }  /* extern "C" */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member stride on the incomplete class. */
-extern "C" void Crate_SetState(char *c, int i)
-{
-    *(int *)(c + 0x560) = i;
-    ((void (*)(char *))(size_t)data_ov098_0213c878[2 * i].fn)(c);
-}
-
-/* PORT_HOST_ABI: same mwcc pointer-to-member stride limit as Crate_SetState. */
-extern "C" void func_ov098_02138b70(char *c)
-{
-    int j = *(int *)(c + 0x560);
-    ((void (*)(char *))(size_t)data_ov098_0213c878[2 * j + 1].fn)(c);
-}
+/* BOTH DISPATCHERS ARE BACK ON THE SLICE. src/Crate_SetState.cpp and
+   src/func_ov098_02138b70.cpp are on port/slice_pmf3.txt (run link100 lane
+   PMF3): /vmg /vmm makes the pointer-to-member the ROM's 8-byte record, the
+   fourteen-record table strides 0x10, and both bodies TAIL JUMP. The mangled
+   reference to the table is bridged in port/hal/pmf3_aliases.cpp. The seat
+   below is unchanged and is the gate -- it aborts on a nonzero adjustment
+   word and rewrites all fourteen function words with host bodies before a
+   crate can spawn -- and the fourteen source statics at ov098
+   0x0213c458..0x0213c4c0 were re-read out of overlay_0098.bin with their
+   relocations, every adjustment word ROM zero. */
 
 static const struct { PortPmf *slot; unsigned rom; void (*host)(char *); }
 g_crate_states[] = {

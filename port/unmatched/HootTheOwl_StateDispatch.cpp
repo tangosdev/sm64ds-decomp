@@ -109,19 +109,18 @@ extern "C" void port_hoot_the_owl_states_seat(void)
     }
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately
-   incomplete class (the SoundObject/Cap/MrBlizzard/BabyPenguin/Unagi-state
-   treatment); MSVC's PMF representation there does not reproduce the ROM's
-   {function,delta} pair. Installs the cell pointer at self+0x3c8
-   (mCurrentState) and dispatches its own first word once, on entry. */
-int func_ov094_02136188(char *c, PortHootPmf *p)
-{
-    *(PortHootPmf **)(c + 0x3c8) = p;
-    PortHootPmf *q = *(PortHootPmf **)(c + 0x3c8);
-    if (q->fn == 0)
-        return 1;
-    return ((int (*)(void *))(size_t)q->fn)(c);
-}
+/* func_ov094_02136188, the state-cell installer, IS NO LONGER HOST-COPIED.
+   src/func_ov094_02136188.cpp is on port/slice_pmf3.txt (run link100 lane
+   PMF3): with /vmg /vmm target-wide, MSVC's pointer-to-member IS the ROM's
+   8-byte {function, delta} pair, and the emitted body is a TAIL JUMP -- the
+   caller's own cdecl frame survives, so the seated body still reads its
+   receiver from [esp+4] and the extra `p` argument sits unread at [esp+8].
+   The one thing the flag cannot decide is the adjustment, and it is decided
+   twice here: port_hoot_the_owl_states_seat above aborts the binary on any
+   nonzero delta before an owl can dispatch, and the ten source pairs at ov094
+   0x021369c0..0x02136a08 were re-read out of overlay_0094.bin with their
+   relocations and every adjustment word is ROM zero. The seat and the
+   Behavior host copy below both stay: Behavior is a separate ruling. */
 
 /* PORT_HOST_ABI: HootTheOwl::Behavior, host copy -- ONLY the inline PMF
    dispatch (the state cell's own "tick" word, read back from self+0x3c8)

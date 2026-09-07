@@ -73,36 +73,16 @@ extern "C" void port_question_block_states_seat(void)
     }
 }
 
-/* index the state, bounds-checked -- the ROM does not, but a stray +0x3e8
-   would otherwise walk off a three-entry table into ov102's own bss. */
-static const PortPmf *port_qblock_pmf(char *c, int half)
-{
-    unsigned idx = (unsigned)*(int *)(c + 0x3e8);
-    if (idx >= 3) {
-        std::fprintf(stderr, "FATAL: QuestionBlock state %u out of range\n",
-                     idx);
-        std::abort();
-    }
-    return &data_ov102_0214e890[idx * 2 + half];
-}
+/* BOTH DISPATCHERS ARE BACK ON THE SLICE. src/func_ov102_02149da8.cpp and
+   src/func_ov102_02149df0.cpp are on port/slice_pmf3.txt (run link100 lane
+   PMF3): /vmg /vmm makes MSVC's pointer-to-member the ROM's 8-byte record, so
+   the three-entry table strides 0x10 and both bodies TAIL JUMP;
+   port/hal/pmf3_aliases.cpp bridges the mangled table name. The seat above is
+   unchanged and is the gate -- it aborts on a nonzero adjustment word and
+   rewrites all six function words with host bodies -- and the six source
+   statics at ov102 0x0214e258..0x0214e3a0 were re-read out of overlay_0102.bin
+   with their relocations, every adjustment word ROM zero.
 
-/* src/func_ov102_02149da8.cpp: change state, then run its enter half. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov102_02149da8(void *selfv, int i)
-{
-    char *c = (char *)selfv;
-    *(int *)(c + 0x3e8) = i;
-    {
-        const PortPmf *p = port_qblock_pmf(c, 0);
-        ((void (*)(void *))(size_t)p->fn)(c);
-    }
-}
-
-/* src/func_ov102_02149df0.cpp: the per-frame half, Behavior's first line. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov102_02149df0(void *selfv)
-{
-    char *c = (char *)selfv;
-    const PortPmf *p = port_qblock_pmf(c, 1);
-    ((void (*)(void *))(size_t)p->fn)(c);
-}
+   port_qblock_pmf goes with them. It bounds-checked the state index and
+   ABORTED, which its own comment says the ROM does not do; because it aborted
+   rather than skipped, every green battery is proof it never fired. */

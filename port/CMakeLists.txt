@@ -2817,12 +2817,12 @@ endforeach()
 # commented out in slice_gate18.txt.
 list(APPEND SLICE18_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/TexSeq_Caller_LakituBro.cpp")
-# rabbit-key: func_ov085_0212d268 (the RABBIT_KEY seat-and-enter) is a real MSVC
-# pointer-to-member call over an incomplete class -- the gate-16 case. Host copy
-# with the mwcc {value, adj} dispatch hand-rolled; src line commented out in
-# slice_gate18.txt.
-list(APPEND SLICE18_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/RabbitKey_StateSeat.cpp")
+# rabbit-key: func_ov085_0212d268 (the RABBIT_KEY seat-and-enter) WAS a host
+# copy here for the gate-16 reason -- MSVC's pointer-to-member over an
+# incomplete class. R9c below (run link100 lane PMF3) puts the matched TU back
+# instead, so unmatched/RabbitKey_StateSeat.cpp is deleted and this append goes
+# with it. The src line stays commented out in slice_gate18.txt, which is gate
+# 18's file; port/slice_pmf3.txt owns the row now.
 # r0-passthrough: func_ov085_0212b8dc (the RABBIT's state Main, daMip_c) calls
 # Actor::ClosestPlayer() with no argument, relying on `this` riding ARM r0. Host
 # copy passes `c`; src line commented out in slice_gate18.txt. (the actor-187
@@ -3626,6 +3626,27 @@ foreach(line IN LISTS SLICE_PMF2_LINES)
         continue()
     endif()
     list(APPEND SLICE_PMF2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# R9c, run link100 lane PMF3: THE LEFTOVERS R9b NAMED.
+# PMF2 left three families behind. This slice takes the rows whose adjustment
+# word is now proven TWICE -- by the seat that fills the table aborting on any
+# nonzero delta (or, for the crate, writing the word to zero as it seats), and
+# by a fresh static re-read of the ROM's own {code, adjust} pairs out of the
+# raw overlay images with their relocations, eighty-two pairs and every adjust
+# word zero. The reading, the refusals and the per-row evidence are in
+# port/slice_pmf3.txt; the listing is runs/link100/out/PMF3/deltas_static.txt.
+# The host bodies these replace come out in the same commit, two as whole
+# files (unmatched/Ov085_PrincessPeach_States.cpp and
+# unmatched/RabbitKey_StateSeat.cpp).
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_pmf3.txt" SLICE_PMF3_LINES)
+set(SLICE_PMF3_SOURCES "")
+foreach(line IN LISTS SLICE_PMF3_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMF3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w15c.txt" SLICE_W15C_LINES)
@@ -11700,10 +11721,12 @@ foreach(line IN LISTS SLICE_OV074_LINES)
     endif()
     list(APPEND SLICE_OV074_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# run link100 lane PMF3 (R9c): unmatched/Goomboss_StateDispatch.cpp was the
+# two pointer-to-member dispatchers and nothing else, and both are back on the
+# slice as matched TUs, so the file is deleted and its row comes out here.
 list(APPEND SLICE_OV074_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov074.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_HostSites.cpp"
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_StateDispatch.cpp"
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Goomboss_InitResources.cpp")
 
 # lane w2-ov074: THE TWO .c FILES IN THIS SLICE THAT ARE REALLY C++.
@@ -13283,7 +13306,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov025.cpp ${SLICE_W15C_SOURCES}
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
-    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} hal/ttc_level_data_seat.cpp
+    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES} ${SLICE219_SOURCES}
@@ -13333,7 +13356,6 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # ModelAnim slot-3 numbering) and the two PMF dispatchers.
     ${SLICEW3F_SOURCES}
     unmatched/Ov085_PrincessPeach_Behavior.cpp
-    unmatched/Ov085_PrincessPeach_States.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
@@ -13525,7 +13547,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov025.cpp ${SLICE_W15C_SOURCES}
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
-    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} hal/ttc_level_data_seat.cpp
+    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -13577,7 +13599,6 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # ModelAnim slot-3 numbering) and the two PMF dispatchers.
     ${SLICEW3F_SOURCES}
     unmatched/Ov085_PrincessPeach_Behavior.cpp
-    unmatched/Ov085_PrincessPeach_States.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
@@ -13826,7 +13847,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov025.cpp ${SLICE_W15C_SOURCES}
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
-    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} hal/ttc_level_data_seat.cpp
+    ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -13878,7 +13899,6 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # ModelAnim slot-3 numbering) and the two PMF dispatchers.
     ${SLICEW3F_SOURCES}
     unmatched/Ov085_PrincessPeach_Behavior.cpp
-    unmatched/Ov085_PrincessPeach_States.cpp
     unmatched/Ov085_PrincessPeach_Declshapes.cpp
     hal/actor_classes_montymolerock.cpp ${SLICE208_SOURCES}
     hal/actor_classes_ov043.cpp ${SLICE206_SOURCES} ${SLICE207_SOURCES} ${SLICEBDW_SOURCES}
