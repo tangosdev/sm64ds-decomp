@@ -1,11 +1,13 @@
 {
-  "class": "PiranhaPlant",
+  "class": "daPkn_c",
+  "queue_key": "PiranhaPlant",
+  "tree_name": "PiranhaPlant",
   "rom_rtti_name": "daPkn_c",
   "rtti_name": "7daPkn_c",
   "rtti_name_address": "0x02130bec",
   "rtti_name_module": "ov084",
 
-  "name_status": "The tree's class name `PiranhaPlant` is COINED. The cartridge's RTTI name for this class is `daPkn_c`. Both spellings alias one vtable: config/arm9/overlays/ov084/symbols.txt carries `_ZTV12PiranhaPlant` and `_ZTV7daPkn_c` at the same address 0x02130c28, and every member symbol in symbols.txt is mangled `_ZN12PiranhaPlant...`, i.e. against the coined name, not the ROM one.",
+  "name_status": "SETTLED 2026-09-07: the class is `daPkn_c` tree-wide and the coined spelling `PiranhaPlant` is gone from src/, include/ and symbols.txt. What follows is the scout record that settled it. The tree's class name `PiranhaPlant` was COINED. The cartridge's RTTI name for this class is `daPkn_c`. Both spellings alias one vtable: config/arm9/overlays/ov084/symbols.txt carries `_ZTV12PiranhaPlant` and `_ZTV7daPkn_c` at the same address 0x02130c28, and every member symbol in symbols.txt is mangled `_ZN12PiranhaPlant...`, i.e. against the coined name, not the ROM one.",
   "identity_evidence": {
     "rom_bytes": "extracted/overlays/overlay_0084.bin file offset 0x7bcc (= 0x02129020 + 0x7bcc = 0x02130bec) reads `37 64 61 50 6b 6e 5f 63 00` = the NUL-terminated string \"7daPkn_c\", the length-prefixed Itanium form of `daPkn_c`. Read directly from the image, not from rtti.json.",
     "typeinfo_backlink": "_ZTI7daPkn_c at ov084:0x02130bf8 has +4 = 0x02130bec, pointing at that string, and the vtable header word at 0x02130c24 (= _ZTV - 4) is 0x02130bf8, pointing back at the typeinfo. The three records close on each other.",
