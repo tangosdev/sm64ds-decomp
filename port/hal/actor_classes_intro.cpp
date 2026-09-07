@@ -449,6 +449,8 @@ extern void *_ZTV9ModelAnim[10];
 void hal_fill_model_vtable(void);
 void hal_fill_modelanim2_vtable(void);  /* fills _ZTV9ModelAnim too */
 void func_ov002_020f6778(void);           /* the ModelAnim class's own D0 */
+/* Its D1, ov002 0x020f6870, is deliberately NOT declared or seated here; the
+   note beside co_model_d0 below has the measurement that rules it out. */
 extern unsigned data_ov002_0210bcc4[];
 void port_intro_seat_ov002_ptrs(void);    /* hal/intro_ov002_seat.cpp */
 }
@@ -486,6 +488,37 @@ static void *__fastcall co_model_d0(void *s, void *)
 { return ((CoRomD0)(void *)&func_ov002_020f69a8)((char *)s); }
 static void *__fastcall co_modelanim_d0(void *s, void *)
 { return ((CoRomD0)(void *)&func_ov002_020f6778)((char *)s); }
+/* THE COMPLETE-OBJECT HALVES ARE NOT SEATED, and this is the one place in the
+   Model-family unfold where the ROM's own arrangement cannot be taken.
+
+   With the destructor respelling the ROM's slots 0 (D1) and 1 (D0) both exist
+   on the host, so seating src/func_ov002_020f6a00.cpp and
+   src/func_ov002_020f6870.cpp at slot 0 looks free. It is not. Both D1 bodies
+   destroy the TextureSequence they own through a HAND-INDEXED vtable word --
+
+       p = *(void **)(c + 0x7c);
+       if (p != 0) (*(VFN)((*(int **)p)[1]))(p);        // ROM slot 1
+
+   -- and on the host _ZTV15TextureSequence[1] is a plain null, because
+   TextureSequence is NOT one of the seven classes this lane respelled: MSVC
+   still folds its destructor pair into slot 0, which is where
+   hal/model_dtor_seat.cpp seats texseq_d0. Seating the D1 therefore calls a
+   null pointer, MEASURED: the opening cutscene faulted c0000005 at address 0
+   (RVA 0xffc00000 against the 0x400000 base) through
+   CutsceneObject::CleanupResources+0x42 -> co_modelanim_d1 ->
+   func_ov002_020f6870+0x8a. That is the same fault
+   port/unmatched/Ov002_ModelAnimD0_020f6778.cpp was written to close for the
+   DELETING half, and its header spells out why the index alone is not enough:
+   the seated slot is `static void __fastcall texseq_d0(void *, void *)` while
+   the matched source's `typedef void (*VFN)(void *)` is the ARM shape, so even
+   at the right index the call would enter a thiscall thunk cdecl.
+
+   So both ROM destructor slots take the DELETING half here, the way they did
+   before this lane. Nothing needs the complete half: the only caller is
+   CutsceneObject::CleanupResources, which is throwing the model away.
+   Making this ROM-faithful needs a host copy of each D1 with the same two
+   corrections Ov002_ModelAnimD0_020f6778.cpp already carries, which belongs
+   to whoever owns port/unmatched. */
 
 static void co_seat_model_vtable(void)
 {
@@ -520,30 +553,50 @@ static void co_seat_model_vtable(void)
        are idempotent -- plain sequences of stores. */
     hal_fill_model_vtable();
     hal_fill_modelanim2_vtable();
-    if (!_ZTV5Model[1] || !_ZTV5Model[4] ||
-        !_ZTV9ModelAnim[1] || !_ZTV9ModelAnim[4]) {
+    /* Slots 2 and 5 are the first and last thing hal_fill_model_vtable writes
+       under ROM numbering. It does NOT write slots 0 and 1 -- those are the
+       destructor pair, and hal/model_dtor_seat.cpp seats them later at
+       stage-A2 -- so checking [1] here would abort on a table that is
+       perfectly well filled. It used to check [1] and [4] because the folded
+       MSVC numbering made those DoSetFile and Render. */
+    if (!_ZTV5Model[2] || !_ZTV5Model[5] ||
+        !_ZTV9ModelAnim[2] || !_ZTV9ModelAnim[5]) {
         std::fprintf(stderr, "FATAL: _ZTV5Model / _ZTV9ModelAnim are not filled "
                      "-- CUTSCENE_OBJECT's tables are filled FROM them and would "
                      "inherit nulls\n");
         std::abort();
     }
 
-    /* MSVC numbering, the shape both host fills use. Slot 0 is the single
-       folded deleting destructor and is each class's OWN D0; everything past it
-       is inherited from the host base table, which also inherits the port's
-       tracing and actor-box wrappers instead of forking them.
-       For the Model table, [5] repeats Render -- the same dual-fill
-       _ZTV5Model carries, so a shadow TU counting in ROM numbering still lands
-       on Render. For the ModelAnim table, [6] repeats Virtual18 for the same
-       reason: no DS address is left in any code slot of either table. */
+    /* ROM NUMBERING FROM SLOT 2 DOWN, which is what both host fills use now:
+       DoSetFile at 2, UpdateVerts 3, Virtual10 4, Render 5, and on the ModelAnim
+       table Virtual18 at 6 -- word for word what g_co_vt and g_co_vt2 above read
+       out of the ROM's own relocations. That is the half of this table the fold
+       was actually costing: every TU that dispatches these two models counts in
+       ROM numbering, and until the respelling in include/ModelBase.h the host
+       array numbered them one slot low.
+
+       THE TWO DUPLICATE FILLS ARE GONE. [5] used to repeat Render on the Model
+       table and [6] repeat Virtual18 on the ModelAnim table, both to serve
+       shadow TUs counting in ROM numbering; every TU counts in ROM numbering
+       now. No DS address is left in any code slot of either table.
+
+       THE DESTRUCTOR PAIR IS THE EXCEPTION, and the long note beside
+       co_model_d0 above says why: the ROM's complete-object halves cannot be
+       entered on this host, because both of them destroy their TextureSequence
+       through _ZTV15TextureSequence[1], which is null here (TextureSequence is
+       not one of the seven classes this lane respelled) and would want a
+       __fastcall entry even if it were not. So both destructor slots take the
+       DELETING half, exactly as they did before this lane. The only caller is
+       CutsceneObject::CleanupResources, which is throwing the model away. */
     data_ov002_0210bae4[0] = (unsigned)(size_t)&co_model_d0;
-    for (unsigned i = 1; i <= 5; ++i)
+    data_ov002_0210bae4[1] = (unsigned)(size_t)&co_model_d0;
+    for (unsigned i = 2; i <= 5; ++i)
         data_ov002_0210bae4[i] = (unsigned)(size_t)_ZTV5Model[i];
 
     data_ov002_0210bcc4[0] = (unsigned)(size_t)&co_modelanim_d0;
-    for (unsigned i = 1; i <= 5; ++i)
+    data_ov002_0210bcc4[1] = (unsigned)(size_t)&co_modelanim_d0;
+    for (unsigned i = 2; i <= 6; ++i)
         data_ov002_0210bcc4[i] = (unsigned)(size_t)_ZTV9ModelAnim[i];
-    data_ov002_0210bcc4[6] = (unsigned)(size_t)_ZTV9ModelAnim[5];
 }
 
 extern "C" void hal_fill_cutscene_object_vtable(void)

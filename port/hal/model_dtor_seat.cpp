@@ -120,6 +120,13 @@ void *_ZN9AnimationD0Ev(void *self);
 void *_ZN9ModelAnimD0Ev(void *self);
 void *_ZN10ModelAnim2D0Ev(void *self);
 void *_ZN14BlendModelAnimD0Ev(void *self);
+/* the COMPLETE-object halves, which the fold used to leave without a slot */
+void *_ZN5ModelD1Ev(void *self);
+void *_ZN9AnimationD1Ev(void *self);
+void *_ZN9ModelAnimD1Ev(void *self);
+void *_ZN10ModelAnim2D1Ev(void *self);
+void *_ZN14BlendModelAnimD1Ev(void *self);
+void *_ZN9ModelBaseD1Ev(void *self);
 void *_ZN15TextureSequenceD0Ev(void *self);
 void *_ZN15MaterialChangerD0Ev(void *self);
 void *_ZN18TextureTransformerD0Ev(void *self);
@@ -132,6 +139,12 @@ static void __fastcall anim_d0(void *s, void *)      { _ZN9AnimationD0Ev(s); }
 static void __fastcall modelanim_d0(void *s, void *) { _ZN9ModelAnimD0Ev(s); }
 static void __fastcall modelanim2_d0(void *s, void *){ _ZN10ModelAnim2D0Ev(s); }
 static void __fastcall blend_d0(void *s, void *)     { _ZN14BlendModelAnimD0Ev(s); }
+static void __fastcall model_d1(void *s, void *)     { _ZN5ModelD1Ev(s); }
+static void __fastcall anim_d1(void *s, void *)      { _ZN9AnimationD1Ev(s); }
+static void __fastcall modelanim_d1(void *s, void *) { _ZN9ModelAnimD1Ev(s); }
+static void __fastcall modelanim2_d1(void *s, void *){ _ZN10ModelAnim2D1Ev(s); }
+static void __fastcall blend_d1(void *s, void *)     { _ZN14BlendModelAnimD1Ev(s); }
+static void __fastcall modelbase_d1(void *s, void *) { _ZN9ModelBaseD1Ev(s); }
 static void __fastcall texseq_d0(void *s, void *)    { _ZN15TextureSequenceD0Ev(s); }
 static void __fastcall matchg_d0(void *s, void *)    { _ZN15MaterialChangerD0Ev(s); }
 static void __fastcall texxfm_d0(void *s, void *)    { _ZN18TextureTransformerD0Ev(s); }
@@ -147,18 +160,37 @@ static int __fastcall shadow_dosetfile(void *self, void *, char *f, int a, int b
 
 extern "C" void hal_seat_model_family_dtors(void)
 {
-    _ZTV5Model[0]           = (void *)model_d0;
-    _ZTV9Animation[0]       = (void *)anim_d0;
-    _ZTV9ModelAnim[0]       = (void *)modelanim_d0;
-    _ZTV10ModelAnim2[0]     = (void *)modelanim2_d0;
-    _ZTV14BlendModelAnim[0] = (void *)blend_d0;
+    /* ROM NUMBERING NOW. The respelling in include/ModelBase.h stopped MSVC
+       folding the destructor pair, so slot 0 is the ROM's COMPLETE-object D1
+       and slot 1 its DELETING D0 -- two slots for two bodies, which is what
+       the ROM's tables have always had. Before this, both fought over a single
+       folded slot 0 and the deleting half won it (MSVC's `delete p` calls slot
+       0 and expects it to free); the complete half had nowhere to live at all.
+       Seating both is the ROM-faithful arrangement AND a reference edge each,
+       so the five D1 TUs join the five D0 TUs in the link. */
+    _ZTV5Model[0]           = (void *)model_d1;
+    _ZTV5Model[1]           = (void *)model_d0;
+    _ZTV9Animation[0]       = (void *)anim_d1;
+    _ZTV9Animation[1]       = (void *)anim_d0;
+    _ZTV9ModelAnim[0]       = (void *)modelanim_d1;
+    _ZTV9ModelAnim[1]       = (void *)modelanim_d0;
+    _ZTV10ModelAnim2[0]     = (void *)modelanim2_d1;
+    _ZTV10ModelAnim2[1]     = (void *)modelanim2_d0;
+    _ZTV14BlendModelAnim[0] = (void *)blend_d1;
+    _ZTV14BlendModelAnim[1] = (void *)blend_d0;
 
-    /* lane l3, wave 1: see the SEAT block at the top of this file. */
-    _ZTV11ShadowModel[1]        = (void *)shadow_dosetfile;
+    /* lane l3, wave 1: see the SEAT block at the top of this file. DoSetFile
+       is the ROM's slot 2, and with the fold gone that is where it goes. */
+    _ZTV11ShadowModel[2]        = (void *)shadow_dosetfile;
     _ZTV15TextureSequence[0]    = (void *)texseq_d0;
     _ZTV15MaterialChanger[0]    = (void *)matchg_d0;
     _ZTV18TextureTransformer[0] = (void *)texxfm_d0;
-    data_0208e87c[0]            = (int)(size_t)modelbase_d0;
+    /* ROM numbering: 0x0208e87c holds ModelBase's D1 and 0x0208e880 its D0.
+       The fold gave the pair one slot and the D0 took it, which is why
+       _ZN9ModelBaseD1Ev was on this file's LEFT UNSEATED list. It has a slot
+       of its own again. */
+    data_0208e87c[0]            = (int)(size_t)modelbase_d1;
+    data_0208e87c[1]            = (int)(size_t)modelbase_d0;
 
     /* run link100, lane STAGEFIX: _ZTV18TextureTransformer's ROM slot 1 (the
        Itanium D0, folded away by MSVC the same way slot 0 above already

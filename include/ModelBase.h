@@ -67,7 +67,41 @@ struct ModelBase {
     BMD_File *modelFile;    /* 0x04 - owned; the destructors Deallocate it */
 
     /* --- vtable, in ROM order at 0x0208e87c. Do not reorder. --- */
+    /* THE DESTRUCTOR PAIR, SPELLED AS TWO PLAIN VIRTUALS ON THE HOST. mwccarm
+       gives `virtual ~ModelBase()` TWO vtable entries -- the Itanium D1
+       complete / D0 deleting pair this header's own map reads out of the ROM
+       at slots 0 and 1 -- and MSVC folds them into ONE. Spelt as a destructor
+       the declaration indexes correctly on the ARM and ONE SLOT EARLY on the
+       host, for every virtual declared after it and all the way down the
+       hierarchy: ModelBase -> Model -> ModelAnim -> {ModelAnim2,
+       BlendModelAnim}, plus the CommonModel and ShadowModel siblings.
+
+       That skew is what put ModelAnim::Render's ROM slot 5 on the host's
+       Virtual18, the collision port/unmatched/ModelAnim_Renders.cpp,
+       BobEnemy_Renders.cpp and W19_Slot5_Renders.cpp were written around --
+       ROM-faithful Render bodies kept out of the link and hand-transcribed
+       instead. MEASURED, not reasoned: the ROM's _ZTV9ModelAnim at 0x0208e980
+       reads [0] D1, [1] D0, [2] Model::DoSetFile, [3] UpdateVerts,
+       [4] Virtual10, [5] Render, [6] Virtual18, while MSVC's own
+       /d1reportSingleClassLayoutModelAnim dropped D0 and read [1] DoSetFile
+       ... [4] Render, [5] Virtual18 -- one slot early from index 1 on, and the
+       missing word is exactly D0.
+
+       Two ordinary virtuals occupy the same two entries under MSVC that the
+       destructor pair occupies under mwccarm, so spelling them out on the host
+       makes MSVC's numbering the ROM's numbering, and the port's tables are
+       filled in ROM order throughout. The guard keeps the ARM side untouched:
+       nothing in this tree defines _MSC_VER, so mwccarm still sees the
+       destructor and no ROM byte moves. Neither name is ever called; they hold
+       the two slots the ROM's table holds. Same shape as the CylinderClsn fix
+       in include/CylinderClsn.h and the FaderBrightness fix in
+       src/ProcessKuppaScript.cpp. */
+#ifdef _MSC_VER
+    virtual void Destructor1();                      /* slot 0 (D1) */
+    virtual void Destructor0();                      /* slot 1 (D0) */
+#else
     virtual ~ModelBase();                            /* slots 0 (D1), 1 (D0) */
+#endif
     virtual int DoSetFile(char *file, int a, int b) = 0;  /* slot 2, null here */
 
     /* --- non-virtual --- */

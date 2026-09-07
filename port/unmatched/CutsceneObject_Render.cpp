@@ -67,11 +67,29 @@ void func_ov002_020f65b8(void* o);
 struct M48 { int w[12]; };
 extern M48 data_0209b41c;
 
-/* MSVC numbering: the folded destructor is slot 0, so ROM slot 5 (Render) is
-   index 4 here. See the header -- this single dropped declaration IS the fix. */
+/* ROM NUMBERING, and the dropped declaration is back. This file was written
+   around the fold: MSVC gave `virtual ~X()` one vtable entry where mwccarm
+   gives two, so every host table in the port sat one slot low and ROM slot 5
+   (Render) was index 4 here. include/ModelBase.h and its six siblings now
+   spell the destructor pair as two plain virtuals under _MSC_VER, so the
+   tables are ROM-numbered throughout and index 5 is Render again -- the same
+   six-virtual shape the matched source has always had.
+
+   MEASURED, not reasoned. With the five-virtual shadow left in place against
+   the ROM-numbered tables, index 4 is Model::Virtual10(Matrix4x3 &), which
+   read its matrix reference off the `0` this file passes as a scale: the
+   opening cutscene quarantined two CUTSCENE_OBJECTs on frame 2 with a
+   c0000005 at Model::Virtual10+0xc, reached from CutsceneObject::Render+0x74.
+   That is this file's own header trap, pointing the other way.
+
+   THIS FILE IS NOW REDUNDANT. It is the matched source plus co_render_watch,
+   and this shadow was its one divergence. Retiring it in favour of
+   src/_ZN14CutsceneObject6RenderEv.cpp is a free +1 for whoever owns
+   port/CMakeLists.txt's intro block; the trace is the only thing that would
+   need a new home. */
 struct ModelBase {
   virtual void v0(); virtual void v1(); virtual void v2();
-  virtual void v3(); virtual void m(int arg);
+  virtual void v3(); virtual void v4(); virtual void m(int arg);
 };
 
 /* Per-object render trace. Inert unless SM64DS_INTRO_WATCH. Prints which member
@@ -92,9 +110,9 @@ static void co_render_watch(const CutsceneObject* self, const void* obj,
     void* entries = info ? *(void* const*)((const char*)info + 0x10) : 0;
     std::fprintf(stderr,
                  "  [render] obj %p unk8 0x%02x via %s | model %p | vt %p"
-                 " | slot4 %p | info %p | entries %p\n",
+                 " | slot5 %p | info %p | entries %p\n",
                  (const void*)self, (unsigned)self->unk_008, which, obj,
-                 (const void*)vt, vt ? vt[4] : 0, info, entries);
+                 (const void*)vt, vt ? vt[5] : 0, info, entries);
 }
 
 int CutsceneObject::Render()
