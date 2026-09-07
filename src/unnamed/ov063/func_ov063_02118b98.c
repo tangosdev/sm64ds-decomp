@@ -11,7 +11,7 @@ void func_ov063_02118b98(char *c)
 {
     u16 v;
 
-    *(u16 *)(((long long)(int)(c + 0x5d4))) &= ~0x40;
+    *(u16 *)(c + 0x5d4) &= ~0x40;
     func_ov063_0211adfc(c);
 
     v = *(u16 *)(c + 0x100);
@@ -45,7 +45,7 @@ bigblock:
             if (r1 == 0) goto after_strb;
             if (((unsigned int)*(int *)(r1 + 8) >> 8 & 3) == 0) break;
         }
-        *(char *)(r1 + 0x155) = 1;
+        *((char *)r1 + 0x155) = 1;
     }
 after_strb:
     _ZN7fBase_c18MarkForDestructionEv(c);

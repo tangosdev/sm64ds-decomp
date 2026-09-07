@@ -1,6 +1,8 @@
 """Report decomp completion: matched functions / bytes vs the whole game.
 
-Totals come from the dsd config (every kind:function across all modules).
+Totals come from the dsd config (every kind:function across all modules, less
+the zero-size alias records, which are second names for functions already
+counted at the same address -- see bytegate.is_zero_size_alias).
 Matched functions are recorded in progress/matched.jsonl (one JSON object per
 line: {"addr","name","size","module","versions"}). De-duped by addr.
 
@@ -36,7 +38,6 @@ README = REPO / "README.md"
 README_START = "<!-- progress:start -->"
 README_END = "<!-- progress:end -->"
 
-FUNC_RE = re.compile(r"kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\)")
 FUNC_NAME_RE = re.compile(
     r"^(\S+)\s+kind:function\((?:arm|thumb),size=0x([0-9a-fA-F]+)\)"
     r".*?addr:0x([0-9a-fA-F]+)"
@@ -49,7 +50,7 @@ def source_counts_as_matched(path, src_path, module, addr, size,
     text = path.read_text(errors="ignore")
     countable = (not asm_policy.has_draft_banner(text)
                  and asm_policy.classify(text) != "transcribed")
-    zero_alias = size == 0 and (module, addr) in alias_addrs
+    zero_alias = BG.is_zero_size_alias(module, addr, size, alias_addrs)
     return countable and not zero_alias and src_path not in excluded_paths
 
 
@@ -57,14 +58,20 @@ def totals():
     n = 0
     total_bytes = 0
     per_module = {}
-    for sym in CONFIG.rglob("symbols.txt"):
+    alias_addrs = BG.alias_collision_addresses()
+    # relocs.module_universe rather than a local rglob, so the module label this asks
+    # alias_addrs about is the same label alias_addrs was built with. The display key
+    # below stays the config-relative path it always was.
+    for sym, label in RL.module_universe():
         # module label: e.g. arm9, arm9/itcm, arm9/overlays/ov006
         mod = sym.parent.relative_to(CONFIG).as_posix()
         m_n = m_b = 0
         for line in sym.read_text(errors="ignore").splitlines():
-            mm = FUNC_RE.search(line)
+            mm = FUNC_NAME_RE.match(line)
             if mm:
-                sz = int(mm.group(1), 16)
+                sz, addr = int(mm.group(2), 16), int(mm.group(3), 16)
+                if BG.is_zero_size_alias(label, addr, sz, alias_addrs):
+                    continue  # a second name, not a second function -- see synced_from_src
                 m_n += 1
                 m_b += sz
         if m_n:
@@ -87,12 +94,28 @@ def synced_from_src():
     # too, so all the surfaces agreed on a number that left out 43 real functions
     # and 24344 bytes of real game code. They agree again, on the honest figure:
     # counting itcm moves the published rate from 92.480% to 91.580%.
+    #
+    # The denominator then had a second honesty problem, fixed the same way on
+    # 2026-09-06. Ten symbols in config are zero-size aliases: each one shares its
+    # address with a sized function that is already in this loop, so `_dmul` and
+    # func_01ff8708 are one body under two names. The numerator has always refused
+    # them (source_counts_as_matched, above) because a zero-length range cannot be
+    # byte-compared against anything -- but `n += 1` counted them anyway, so ten
+    # records sat in the denominator that no amount of decompilation could ever
+    # clear. They are dropped from both sides now, using the numerator's own
+    # predicate rather than a name list, so a config fix that gives one a real size
+    # brings it straight back. Measured at this commit's base: the count was
+    # 11,304 / 11,402 = 99.141%; it is 11,304 / 11,392 = 99.228%, and the work left
+    # is 88 functions, not 98. No function's matched status changes and no byte total
+    # moves, because all ten records are size 0.
     for sym, _label in RL.module_universe():
         for line in sym.read_text(errors="ignore").splitlines():
             m = FUNC_NAME_RE.match(line)
             if not m:
                 continue
             name, sz, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
+            if BG.is_zero_size_alias(_label, addr, sz, alias_addrs):
+                continue
             n += 1
             total_bytes += sz
             f = SP.path_for(name)

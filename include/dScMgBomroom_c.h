@@ -18,6 +18,26 @@
  * dScMgBomroom_c_classInit (historical alias MgSortOrSplode_Spawn) installs this class's
  * cartridge vtable for the MG_BOMROOM registry profile.
  */
+/* One bomb (0x70 of them at 0x4660, stride 0x40, see func_ov006_020d6784's
+   i < 0x70 walk). func_ov006_020d7c4c steps it along its angle at unk_10 per
+   frame and bounces it off the room walls. */
+struct dScMgBomroom_Bomb {
+    s32 x;            /* +0x00 -- Fix12 */
+    s32 y;            /* +0x04 -- Fix12 */
+    u8  unk_08[0x8];
+    s32 unk_10;       /* +0x10 -- speed, Fix12 per frame */
+    u8  unk_14[0x18];
+    u16 angle;        /* +0x2c -- 0..0xffff, sine-table index >> 4 */
+    u16 unk_2e;       /* +0x2e -- counter, see func_ov006_020d69b8 */
+    u16 unk_30;       /* +0x30 */
+    u8  unk_32[0x4];
+    u8  unk_36;       /* +0x36 -- inner-room flag: selects the wall box */
+    u8  unk_37;       /* +0x37 -- state, 5 = settled */
+    u8  unk_38;       /* +0x38 -- active */
+    u8  unk_39[0x7];
+};
+typedef char dScMgBomroom_Bomb_size_must_be_0x40[sizeof(struct dScMgBomroom_Bomb) == 0x40 ? 1 : -1];
+
 struct dScMgBomroom_c : dScMgBase_c {
     virtual ~dScMgBomroom_c();
     virtual s32 InitResources();  /* slot 0 */
@@ -25,7 +45,8 @@ struct dScMgBomroom_c : dScMgBase_c {
     virtual s32 Render();         /* slot 9 */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
-    u8  pad_4660[0x1c70];
+    dScMgBomroom_Bomb mBombs[0x70]; /* 0x4660 -- 0x70 x 0x40 */
+    u8  pad_6260[0x70];
     s32 unk_62d0;            /* 0x62d0 */
     u8  pad_62d4[0x1a];
     u16 unk_62ee;            /* 0x62ee */

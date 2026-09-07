@@ -1,0 +1,443 @@
+{
+  "class": "dScMgMemory2_c",
+  "candidate_text": {
+    "start": "0x020f5564",
+    "end": "0x020f7634",
+    "size": "0x20d0",
+    "partition": "51 dScMgMemory2_c member bodies (0x2070 bytes) plus the unique MG_MEMORY_J factory dScMgMemory2_c_classInit (0x60 bytes), which closes the scene object"
+  },
+  "rtti_name": "14dScMgMemory2_c",
+  "rtti": {
+    "symbol": "_ZTI14dScMgMemory2_c",
+    "address": "0x0213d350",
+    "kind_vptr": "0x0209a764",
+    "kind": "abi::__si_class_type_info",
+    "name_pointer": "0x0213d35c",
+    "direct_base_pointer": "0x0213bc64",
+    "evidence": "config/arm9/overlays/ov006/relocs.txt carries exactly three relocations whose source is the record itself: 0x0213d350 -> 0x0209a764 (main), 0x0213d354 -> 0x0213d35c, 0x0213d358 -> 0x0213bc64. The bytes at 0x0213d35c are the NUL-terminated string 14dScMgMemory2_c, named _ZTS14dScMgMemory2_c in ov006's own symbols.txt."
+  },
+  "overlay": "ov006",
+  "module_base": "0x020bfec0",
+  "related_modules": [
+    {
+      "module": "arm9",
+      "module_base": "0x02004000",
+      "role": "fBase_c / dBase_c / dScene_c RTTI and seven inherited slot bodies; the ABI __si_class_type_info implementation vtable at 0x0209a764"
+    },
+    {
+      "module": "ov004",
+      "module_base": "0x020ad660",
+      "role": "dScMgBase_c RTTI at 0x020bbf6c and fifteen inherited slot bodies"
+    },
+    {
+      "module": "ov006",
+      "module_base": "0x020bfec0",
+      "role": "class RTTI and vtable, direct-base dScMgSingle3DBase_c RTTI and its six slot bodies, and the whole candidate text"
+    }
+  ],
+  "base_class": "dScMgSingle3DBase_c",
+  "base_evidence": "The __si_class_type_info record at 0x0213d350 has +0x08 = 0x0213bc64. ov006's symbols.txt names 0x0213bc64 _ZTI19dScMgSingle3DBase_c, whose name pointer 0x0213bd00 holds the NUL-terminated string 19dScMgSingle3DBase_c. build/rtti.json continues the chain: dScMgSingle3DBase_c -> dScMgBase_c (ov004 0x020bbf6c) -> dScene_c (arm9 0x020914d4) -> dBase_c (arm9 0x02086e78) -> fBase_c (arm9 0x02086d70). SIX classes counting self, which is what fixes the compiler-only row count at 2 x 6 + 1 = 13.",
+  "vtable": {
+    "symbol": "_ZTV14dScMgMemory2_c",
+    "address": "0x0213d4d4",
+    "header_start": "0x0213d4cc",
+    "offset_to_top_address": "0x0213d4cc",
+    "offset_to_top": "0x00000000",
+    "rtti_pointer_address": "0x0213d4d0",
+    "rtti_pointer": "0x0213d350",
+    "last_slot_address": "0x0213d560",
+    "end": "0x0213d564",
+    "slots": 36,
+    "extent_evidence": "Two independent sources agree on 36. (1) relocs.txt has a relocation whose source is the word itself for every address from 0x0213d4d4 through 0x0213d560 inclusive, and none at 0x0213d564: (0x0213d560 - 0x0213d4d4) / 4 + 1 = 36. (2) tools/rtti_vtables.py --own dScMgMemory2_c reports 36 slots, base 36. The word at 0x0213d564 is named data_ov006_0213d564 in symbols.txt and is only ever LOADED FROM, by code at 0x020f820c, 0x020f8a14 and 0x020f8cf8 -- a following table, not a trailing slot, and there are no trailing nulls to qualify. Reading the extent from the next symbols.txt row happens to agree here (0x0213d564 - 0x0213d4d4 = 0x90 = 36 slots), but the relocation walk is what proves it.",
+    "entries": [
+      {
+        "slot": 0,
+        "slot_address": "0x0213d4d4",
+        "target": "0x020f74b4",
+        "module": "ov006",
+        "name": "dScMgMemory2_c::InitResources"
+      },
+      {
+        "slot": 1,
+        "slot_address": "0x0213d4d8",
+        "target": "0x020b0930",
+        "module": "ov004",
+        "name": "dScMgBase_c::BeforeInitResources"
+      },
+      {
+        "slot": 2,
+        "slot_address": "0x0213d4dc",
+        "target": "0x0210a6e4",
+        "module": "ov006",
+        "name": "dScMgSingle3DBase_c::AfterInitResources"
+      },
+      {
+        "slot": 3,
+        "slot_address": "0x0213d4e0",
+        "target": "0x02043bf0",
+        "module": "arm9",
+        "name": "fBase_c::CleanupResources"
+      },
+      {
+        "slot": 4,
+        "slot_address": "0x0213d4e4",
+        "target": "0x0202e5f0",
+        "module": "arm9",
+        "name": "dScene_c::BeforeCleanupResources"
+      },
+      {
+        "slot": 5,
+        "slot_address": "0x0213d4e8",
+        "target": "0x0210a608",
+        "module": "ov006",
+        "name": "dScMgSingle3DBase_c::AfterCleanupResources"
+      },
+      {
+        "slot": 6,
+        "slot_address": "0x0213d4ec",
+        "target": "0x020f7458",
+        "module": "ov006",
+        "name": "dScMgMemory2_c::Behavior"
+      },
+      {
+        "slot": 7,
+        "slot_address": "0x0213d4f0",
+        "target": "0x0210a698",
+        "module": "ov006",
+        "name": "dScMgSingle3DBase_c::BeforeBehavior"
+      },
+      {
+        "slot": 8,
+        "slot_address": "0x0213d4f4",
+        "target": "0x0202e3c8",
+        "module": "arm9",
+        "name": "dScene_c::AfterBehavior"
+      },
+      {
+        "slot": 9,
+        "slot_address": "0x0213d4f8",
+        "target": "0x020f73f4",
+        "module": "ov006",
+        "name": "dScMgMemory2_c::Render"
+      },
+      {
+        "slot": 10,
+        "slot_address": "0x0213d4fc",
+        "target": "0x0210a664",
+        "module": "ov006",
+        "name": "dScMgSingle3DBase_c::BeforeRender"
+      },
+      {
+        "slot": 11,
+        "slot_address": "0x0213d500",
+        "target": "0x0202e398",
+        "module": "arm9",
+        "name": "dScene_c::AfterRender"
+      },
+      {
+        "slot": 12,
+        "slot_address": "0x0213d504",
+        "target": "0x020b04e8",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnPendingDestroy"
+      },
+      {
+        "slot": 13,
+        "slot_address": "0x0213d508",
+        "target": "0x0204357c",
+        "module": "arm9",
+        "name": "fBase_c::Virtual34"
+      },
+      {
+        "slot": 14,
+        "slot_address": "0x0213d50c",
+        "target": "0x0204349c",
+        "module": "arm9",
+        "name": "fBase_c::Virtual38"
+      },
+      {
+        "slot": 15,
+        "slot_address": "0x0213d510",
+        "target": "0x02043494",
+        "module": "arm9",
+        "name": "fBase_c::OnHeapCreated"
+      },
+      {
+        "slot": 16,
+        "slot_address": "0x0213d514",
+        "target": "0x020f5564",
+        "module": "ov006",
+        "name": "dScMgMemory2_c::~dScMgMemory2_c D1"
+      },
+      {
+        "slot": 17,
+        "slot_address": "0x0213d518",
+        "target": "0x020f55b8",
+        "module": "ov006",
+        "name": "dScMgMemory2_c::~dScMgMemory2_c D0"
+      },
+      {
+        "slot": 18,
+        "slot_address": "0x0213d51c",
+        "target": "0x020f7394",
+        "module": "ov006",
+        "name": "dScMgMemory2_c::OnYoshiTryEat"
+      },
+      {
+        "slot": 19,
+        "slot_address": "0x0213d520",
+        "target": "0x020f7320",
+        "module": "ov006",
+        "name": "dScMgMemory2_c::OnTurnIntoEgg"
+      },
+      {
+        "slot": 20,
+        "slot_address": "0x0213d524",
+        "target": "0x020b2990",
+        "module": "ov004",
+        "name": "dScMgBase_c::Virtual50"
+      },
+      {
+        "slot": 21,
+        "slot_address": "0x0213d528",
+        "target": "0x020f730c",
+        "module": "ov006",
+        "name": "dScMgMemory2_c::OnGroundPounded"
+      },
+      {
+        "slot": 22,
+        "slot_address": "0x0213d52c",
+        "target": "0x020ae198",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnAttacked1"
+      },
+      {
+        "slot": 23,
+        "slot_address": "0x0213d530",
+        "target": "0x020ae1a0",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnAttacked2"
+      },
+      {
+        "slot": 24,
+        "slot_address": "0x0213d534",
+        "target": "0x020ae140",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnKicked"
+      },
+      {
+        "slot": 25,
+        "slot_address": "0x0213d538",
+        "target": "0x020ae128",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnPushed"
+      },
+      {
+        "slot": 26,
+        "slot_address": "0x0213d53c",
+        "target": "0x0210a600",
+        "module": "ov006",
+        "name": "dScMgSingle3DBase_c::OnHitByCannonBlastedChar"
+      },
+      {
+        "slot": 27,
+        "slot_address": "0x0213d540",
+        "target": "0x020af27c",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnHitByMegaChar"
+      },
+      {
+        "slot": 28,
+        "slot_address": "0x0213d544",
+        "target": "0x020af04c",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnHitFromUnderneath"
+      },
+      {
+        "slot": 29,
+        "slot_address": "0x0213d548",
+        "target": "0x020af094",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnAimedAtWithEgg"
+      },
+      {
+        "slot": 30,
+        "slot_address": "0x0213d54c",
+        "target": "0x020aeed8",
+        "module": "ov004",
+        "name": "dScMgBase_c::OnAimedAtWithEggReturnVec"
+      },
+      {
+        "slot": 31,
+        "slot_address": "0x0213d550",
+        "target": "0x020b2880",
+        "module": "ov004",
+        "name": "dScMgBase_c::Virtual7C"
+      },
+      {
+        "slot": 32,
+        "slot_address": "0x0213d554",
+        "target": "0x020b27f4",
+        "module": "ov004",
+        "name": "dScMgBase_c::Virtual80"
+      },
+      {
+        "slot": 33,
+        "slot_address": "0x0213d558",
+        "target": "0x0210a708",
+        "module": "ov006",
+        "name": "dScMgSingle3DBase_c::Virtual84"
+      },
+      {
+        "slot": 34,
+        "slot_address": "0x0213d55c",
+        "target": "0x020ae3b4",
+        "module": "ov004",
+        "name": "dScMgBase_c::Virtual88"
+      },
+      {
+        "slot": 35,
+        "slot_address": "0x0213d560",
+        "target": "0x020ad660",
+        "module": "ov004",
+        "name": "dScMgBase_c::Virtual8C"
+      }
+    ]
+  },
+  "own_override_count": 8,
+  "overrides": [
+    {
+      "slot": 0,
+      "address": "0x020f74b4",
+      "end": "0x020f75d4",
+      "name": "InitResources",
+      "body": "Loads the minigame's resources and builds the scene; 0x120 bytes, ending where the factory begins."
+    },
+    {
+      "slot": 6,
+      "address": "0x020f7458",
+      "end": "0x020f74b4",
+      "name": "Behavior",
+      "body": "Per-frame tick. Dispatches through the class's own main-state PMF table, the one __sinit_ov006_021314e4 fills with StateSetup / StatePlay / StateJudge / StateResult / StateExit."
+    },
+    {
+      "slot": 9,
+      "address": "0x020f73f4",
+      "end": "0x020f7458",
+      "name": "Render",
+      "body": "Draws the card, cursor and message layers, then chains to the inherited render path."
+    },
+    {
+      "slot": 16,
+      "address": "0x020f5564",
+      "end": "0x020f55b8",
+      "name": "D1 destructor",
+      "body": "Destroys the 0x270-byte shared table at this+0x4f38 through func_ov006_020c1c64, stores vptr (int)&_ZTV14dScMgMemory2_c[2], destroys the inherited Particle::SysTracker, then calls _ZN11dScMgBase_cD2Ev at 0x020b29c0."
+    },
+    {
+      "slot": 17,
+      "address": "0x020f55b8",
+      "end": "0x020f5620",
+      "name": "D0 deleting destructor",
+      "body": "Runs the same chain as D1 and then deallocates through Memory::Deallocate at 0x0203c1e8. The cartridge places D0 ABOVE D1, i.e. D1 is the lower address -- the reproducible direction, so the pair stays inside the licensed run."
+    },
+    {
+      "slot": 18,
+      "address": "0x020f7394",
+      "end": "0x020f73f4",
+      "name": "OnYoshiTryEat",
+      "body": "Minigame-specific reaction to Yoshi's tongue; 0x60 bytes."
+    },
+    {
+      "slot": 19,
+      "address": "0x020f7320",
+      "end": "0x020f7394",
+      "name": "OnTurnIntoEgg",
+      "body": "Minigame-specific egg-conversion handler; 0x74 bytes."
+    },
+    {
+      "slot": 21,
+      "address": "0x020f730c",
+      "end": "0x020f7320",
+      "name": "OnGroundPounded",
+      "body": "0x14 bytes, the shortest of the eight overrides."
+    }
+  ],
+  "non_virtual": [
+    {
+      "count": 43,
+      "evidence": "Forty-three of the 51 member bodies are not vtable targets: no word in 0x0213d4cc..0x0213d564 relocates to any of their addresses. What makes them dScMgMemory2_c members rather than free helpers is their receiver use plus their membership in the four member-function-pointer tables __sinit_ov006_021314e4 builds -- main, result, card and player -- and in the separate ten-entry round table, which independently fixes RoundStart through RoundReveal order.",
+      "names_are_coined": true
+    }
+  ],
+  "factory": {
+    "symbol": "dScMgMemory2_c_classInit",
+    "address": "0x020f75d4",
+    "size": "0x60",
+    "profile": "MG_MEMORY_J, registry id 363, descriptor ov006:0x0213d288",
+    "new_size": "0x5410",
+    "new_size_site": "0x020f75dc",
+    "historical_alias": "MgMemoryMaster_Spawn",
+    "evidence": "tools/opnew_sizes.py resolves ov006:0x020f75dc to an inline_store of 21520 = 0x5410 into _ZN7fBase_cnwEj, with vtable 0x0213d4d4 and size_confidence exact. include/dScMgMemory2_c.h carries the matching compile-time assert sizeof(dScMgMemory2_c) == 0x5410, so the header and the cartridge agree."
+  },
+  "size": "0x00005410",
+  "size_evidence": {
+    "kind": "direct allocation immediate",
+    "direct_allocation_site": "0x020f75dc",
+    "direct_allocation_size": "0x00005410",
+    "member_extent": "The header's field list runs from mShared at 0x4f38 (0x270 bytes, size-asserted) through mCards[20] at 0x51a8 (0x18 stride), mPlayers[3] at 0x5388 (0x14 stride), mCursor at 0x53c4 (0x10) and the state scalars, ending with pad_540d[3] at 0x540d -- exactly 0x5410."
+  },
+  "fields": [
+    {
+      "offset": "0x4f38",
+      "width": "0x0270",
+      "name": "mShared",
+      "evidence": "Both destructors call func_ov006_020c1c64 with this+0x4f38, and four sibling dScMgSingle3DBase_c scenes carry the same 0x270 table. NEITHER dScMgMemory_c NOR dScMgMemory2_c reads inside it, so no field of it is named."
+    },
+    {
+      "offset": "0x51a8",
+      "width": "0x01e0",
+      "name": "mCards[20]",
+      "evidence": "CardMove, CardSelect, CardFlipUp, CardFlipDown, CardWait, CardIdle and CardFlyAway index this+0x51a8 with a 0x18 stride; ShuffleCards walks all twenty."
+    },
+    {
+      "offset": "0x5388",
+      "width": "0x003c",
+      "name": "mPlayers[3]",
+      "evidence": "PlayerMove, PlayerDrop, PlayerWait and InitPlayers index this+0x5388 with a 0x14 stride over three elements."
+    },
+    {
+      "offset": "0x53c4",
+      "width": "0x0010",
+      "name": "mCursor",
+      "evidence": "DrawCursor, UpdateCursor, ShowCursor and HideCursor address this+0x53c4; DrawCursor gates on the byte at this+0x53d2."
+    },
+    {
+      "offset": "0x53d4",
+      "width": "0x0004",
+      "name": "mState",
+      "evidence": "StateSetup, StatePlay, StateJudge, StateResult and StateExit write it; Behavior dispatches on it."
+    },
+    {
+      "offset": "0x53d8",
+      "width": "0x0004",
+      "name": "mSubstate",
+      "evidence": "The round, result and card sub-state machines write it."
+    },
+    {
+      "offset": "0x540b",
+      "width": "0x0001",
+      "name": "mMessageVisible",
+      "evidence": "DrawMessage returns early unless the byte at this+0x540b is non-zero."
+    }
+  ],
+  "unproven": [
+    "Original source spellings for the 43 address-only member bodies and for every field name above. The ROM proves ownership, stride and width; the names are descriptive coinage, disclosed here, in config/tu_manifest.d/ov006/dScMgMemory2_c.json and in symbols/actor_renames.tsv.",
+    "Any field inside the 0x270-byte mShared table. Neither dScMgMemory_c nor dScMgMemory2_c reads inside it, so borrowing a sibling's field names would assert bytes this class never touches.",
+    "The original translation-unit cut at the LEFT edge. build/tu_map.json rates both boundaries medium and reports ov006 under-segmented; the run is contiguous and the factory is unique to the class, but adjacency alone does not prove the original one-to-one file cut.",
+    "Ownership of the non-.text sections. The four PMF tables, the resource and static data, _ZTV / _ZTI / _ZTS, __sinit_ov006_021314e4 and the 0x021423a8..0x02142490 BSS stay ROM-gap owned; the promotion claims .text only.",
+    "Original source-style names and full signatures for the placeholder ABI slots Virtual34, Virtual38, Virtual50, Virtual7C, Virtual80, Virtual84, Virtual88 and Virtual8C. Their indices and targets are proven by the linked vtable; their names are not.",
+    "Any vtable slot after slot 35. The relocation walk proves the table ends at 0x0213d564, and no trailing null slot is present to preserve an otherwise unobservable declaration."
+  ],
+  "produced_by": "writer, not scout -- no scout ran for this class. notes/agents/roles/writer.md instructs the writer to produce the facts file itself from tools/rtti_extract.py plus a direct overlay read when none exists."
+}

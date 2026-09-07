@@ -1,10 +1,15 @@
 //cpp
 // @symbol _ZN12dScStarSel_c6RenderEv
-// NONMATCHING: 13/593 at exact size (was 58). Real dScStarSel_c method over
-// include/dScStarSel_c.h, vtable slot 9. Residue is the two-digit level number
-// block: the ROM materialises the tens-digit x (0x77) right before the OAM::Render
-// argument copy (mov r5,#0x77 / mov r2,r5 after the table load) while every
-// spelling tried here emits it at the top of the block.
+// Real dScStarSel_c method over include/dScStarSel_c.h, vtable slot 9.
+//
+// The two-digit level-number block was the last residue (13 words): the cartridge
+// materialises the tens-digit x (mov r5,#0x77) right before the OAM::Render argument
+// copy, and starts the /10 magic-multiply chain one instruction earlier. Writing the
+// test in its POSITIVE sense -- `if (v >= 10) { render tens; c += 9; } else c = 0x7c;`
+// instead of `if (v < 10) c = 0x7c; else { ... }` -- puts the tens branch first in the
+// linearisation and the whole 13-word argument-setup block falls into the cartridge's
+// order. The two branches are otherwise identical, so this is a source-shape fact and
+// not a code change.
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
 #include "common.h"
@@ -67,11 +72,11 @@ s32 dScStarSel_c::Render()
         func_ov003_020adfc8((char *)this);
         v = SublevelToLevel(data_02092110) + 1;
         if (v <= 0xf) {
-            if (v < 10) {
-                c = 0x7c;
-            } else {
+            if (v >= 10) {
                 _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[v / 10], c = 0x77, 0x7a, 8, -1, 0);
                 c += 9;
+            } else {
+                c = 0x7c;
             }
             _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[v % 10], c, 0x7a, 8, -1, 0);
         }

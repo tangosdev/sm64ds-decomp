@@ -339,7 +339,7 @@ file at this ref.
 | ov085 | 0x02129dbc | 256 | `src/func_ov085_02129dbc.cpp` | ruspecial | line 17: illegal function overloading |
 | ov096 | 0x02137088 | 568 | `src/func_ov096_02137088.cpp` | lunavyqo | line 22: illegal function overloading |
 | ov098 | 0x0213a794 | 332 | `src/func_ov098_0213a794.cpp` | tangosdev | line 22: illegal function overloading |
-| ov102 | 0x0214b248 | 316 | `src/func_ov102_0214b248.cpp` | lunavyqo | line 18: illegal function overloading |
+| ov102 | 0x0214b248 | 316 | `src/actors/daBmb_c.cpp` | lunavyqo | line 18: illegal function overloading (shard absorbed into the promoted ov102/daBmb_c TU) |
 
 `src/_ZN6Goomba13InitResourcesEv.cpp` carries its `//cpp` sentinel on line 2, behind an
 `#include`. `eligible.classify` and `reloc_audit.winning_object` both test

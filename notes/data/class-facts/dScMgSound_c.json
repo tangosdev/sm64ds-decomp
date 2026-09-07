@@ -1,0 +1,75 @@
+{
+ "class": "dScMgSound_c",
+ "overlay": "ov006",
+ "module_base": "0x020bfec0",
+ "produced_by": "writer stage (notes/agents/roles/writer.md), not a scout run -- no scout facts file existed for this class. Everything below is read from config/arm9/**/symbols.txt, config/arm9/overlays/ov006/relocs.txt, config/arm9/overlays/ov006/delinks.txt and the extracted overlay bytes; nothing is inferred from a sibling.",
+ "candidate_text": {
+  "start": "0x02119904",
+  "end": "0x0211cbd0",
+  "size": "0x32cc",
+  "partition": "82 functions, every one with a legacy src/ file and a delinks.txt entry -- the queue's `no-legacy-source:1` is wrong, `tubuild.py inspect` reports `functions with no legacy source: none`. 7 are vtable-targeted dScMgSound_c methods (slots 0, 6, 9, 16, 17, 18, 20), 1 is the MG_SOUND registry factory dScMgSound_c_classInit, and the other 74 are file-local helpers reached only from inside the run."
+ },
+ "rtti_name": "12dScMgSound_c",
+ "rtti": {
+  "symbol": "_ZTI12dScMgSound_c",
+  "address": "0x0213f6e4",
+  "kind_vptr": "0x0209a764",
+  "kind": "abi::__si_class_type_info",
+  "name_pointer": "0x0213f708",
+  "direct_base_pointer": "0x0213bc64",
+  "evidence": "The three linked ov006 words at 0x0213f6e4 are {0x0209a764, 0x0213f708, 0x0213bc64}. The bytes at 0x0213f708 are the NUL-terminated string \"12dScMgSound_c\". 0x0213bc64 is _ZTI19dScMgSingle3DBase_c in ov006's own symbols.txt, and its own +0x08 word is 0x020bbf6c = ov004's _ZTI11dScMgBase_c."
+ },
+ "base_class": "dScMgSingle3DBase_c",
+ "base_evidence": "_ZTI12dScMgSound_c is a __si_class_type_info (single public base, offset 0) whose +0x08 word is 0x0213bc64 = _ZTI19dScMgSingle3DBase_c. Full chain, each link the same shape: dScMgSound_c -> dScMgSingle3DBase_c (ov006 0x0213bc64) -> dScMgBase_c (ov004 0x020bbf6c) -> dScene_c (arm9 0x020914d4) -> dBase_c (arm9 0x02086e78) -> fBase_c (arm9 0x02086d70). SIX levels including self, counted here and not copied from the queue: the TU's compiler_only_output therefore carries 2*6 + 1 = 13 rows, not the 11 the queue estimated from sibling dScMgSingle3DBase_c (which sits one level shallower). No Vector3 is odr-used anywhere in the TU, so the formula's conditional last term is zero, and the inline destructor emits no homeless D2Ev -- the sibling dScMgMemory2_c has 14 rows only because its destructor is out of line.",
+ "related_modules": [
+  {
+   "module": "arm9",
+   "module_base": "0x02004000",
+   "role": "fBase_c / dBase_c / dScene_c RTTI and inherited slot bodies"
+  },
+  {
+   "module": "ov004",
+   "module_base": "0x020ad660",
+   "role": "dScMgBase_c RTTI and inherited vtable slot bodies"
+  },
+  {
+   "module": "ov006",
+   "module_base": "0x020bfec0",
+   "role": "this class's RTTI, vtable, factory, own overrides and all 82 TU functions"
+  }
+ ],
+ "vtable": {
+  "symbol": "_ZTV12dScMgSound_c",
+  "address": "0x0213f844",
+  "header_start": "0x0213f83c",
+  "offset_to_top_address": "0x0213f83c",
+  "offset_to_top": "0x00000000",
+  "rtti_pointer_address": "0x0213f840",
+  "rtti_pointer": "0x0213f6e4",
+  "last_slot_address": "0x0213f8d0",
+  "storage_end": "0x0213f8d4",
+  "storage_size": "0x98",
+  "symbol_extent": "0x90",
+  "slots": 36,
+  "extent_evidence": "THREE INDEPENDENT TOOLS, because neither single-tool rule is sound in ov006. (1) Relocations: config/arm9/overlays/ov006/relocs.txt carries a relocated word at every 4-byte address from 0x0213f840 (the typeinfo pointer; 0x0213f83c is the zero offset-to-top and is NOT relocated) through 0x0213f8d4 with no gap -- but that run OVERSHOOTS by one word. 0x0213f8d4 is named data_ov006_0213f8d4 in ov006's own symbols.txt and begins a table of EIGHT-byte pairs (every following reloc is +0x8 apart, not +0x4), and its word 0x0211f040 is not a dScMgSound_c slot. This is the documented ov006 overshoot, 15 of 51 tables. (2) tools/rtti_vtables.py --own dScMgSound_c reports 36 slots, base dScMgSingle3DBase_c also 36. (3) tools/romdata_check.py check_object() on the compiled TU reports _ZTV12dScMgSound_c bytes 144, emitted 144, romExtent 144, blindWords 0, VERIFIED. All three agree: symbol extent 0x90 from the address point = 36 slots, storage 0x98 from 0x0213f83c. Corroborated by content: slot 0 at 0x0213f844 is 0x0211c984 = _ZN12dScMgSound_c13InitResourcesEv, and the last slot at 0x0213f8d0 is 0x0210a708 = _ZN19dScMgSingle3DBase_c9Virtual84Ev, which is slot 35 of the base's own 36-slot table."
+ },
+ "own_vtable_slots": {
+  "0": "0x0211c984 _ZN12dScMgSound_c13InitResourcesEv",
+  "6": "0x0211c720 _ZN12dScMgSound_c8BehaviorEv",
+  "9": "0x0211c6c4 _ZN12dScMgSound_c6RenderEv",
+  "16": "0x02119904 _ZN12dScMgSound_cD1Ev",
+  "17": "0x02119958 _ZN12dScMgSound_cD0Ev",
+  "18": "0x0211c5d0 _ZN12dScMgSound_c13OnYoshiTryEatEi",
+  "20": "0x0211c5b8 _ZN12dScMgSound_c9Virtual50Ev"
+ },
+ "destructor_direction": "ROM D1 BELOW D0 -- D1 at 0x02119904, D0 at 0x02119958. That is the reproducible direction: mwccarm 2004/b56 emits D1 then D0 for an in-class destructor body, so the pair stays inside the licensed run and the TU promotes whole. No subset was needed on destructor grounds.",
+ "object_size": {
+  "value": "0x562c",
+  "evidence": "dScMgSound_c_classInit (0x0211cb70) calls _ZN7fBase_cnwEj(0x562c). Consistent with include/dScMgSound_c.h's existing size assert."
+ },
+ "unproven": [
+  "The single 0x6f4-byte member at 0x4f38 (`mTable`) is still opaque. func_ov006_020c33dc constructs it and func_ov006_020c3288 destroys it; no source in this tree has recovered its shape, so every access into it (0x50e0, 0x5608, 0x5616, 0x5618, 0x5626, and the 0x14- and 0x24-stride arrays at 0x50e8 and 0x51b4/0x51b8) stays a raw cast off the scene rather than a named field. This TU does not change that.",
+  "The local implementation views in the TU (Elem/CFull, BallSlot/BallObj, BigSlot/BigObj, NoteSlot/NoteObj, Slot/Mgr, SndEntry/SndCtx, E, Ent, SceneVt) are the legacy shards' own coinage, kept because they reproduce the bytes. They are NOT recovered types and their field names are descriptive only.",
+  "Module sinit corroboration is module-wide (31 sinits / 31 .ctor entries, sinit_vs_tu=ok), not narrowed to this TU by hand."
+ ]
+}

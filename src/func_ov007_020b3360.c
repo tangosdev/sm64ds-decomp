@@ -35,7 +35,10 @@ void func_ov007_020b3360(void)
                 break;
             case 8:
                 if (*(u32*)(s2 + 0xc) <= 1) {
-                    *(int*)(*(char**)(data_ov007_0210342c + 0x54) + 0x64) |= 1;
+                    {
+                        char *o = *(char**)(data_ov007_0210342c + 0x54);
+                        *(int*)(o + 0x64) = *(const int*)(o + 0x64) | 1;
+                    }
                     func_ov007_020c2090(*(char**)(data_ov007_0210342c + 0x54));
                 }
                 if (*(s16*)(*(char**)(data_ov007_0210342c + 8) + 2) == -1)

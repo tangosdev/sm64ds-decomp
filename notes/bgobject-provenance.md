@@ -245,9 +245,10 @@ members turned **every remaining `pad_` run in the class** into an evidenced fie
 and the class now closes on 0x874 by field span instead of only by the factory's
 `operator new` literal.
 
-Bodies read: `src/_ZN6Eyerok13InitResourcesEv.cpp`, `src/_ZN6Eyerok8BehaviorEv.cpp`,
-`src/_ZN6Eyerok6RenderEv.cpp`, `src/_ZN6Eyerok16CleanupResourcesEv.cpp`,
-`src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`.
+Bodies read: `src/_ZN6Eyerok13InitResourcesEv.cpp`,
+`src/_ZN6Eyerok16OnAimedAtWithEggEv.cpp`, `src/Eyerok_Spawn.cpp`, and `Behavior`,
+`Render` and `CleanupResources`, which used to be one file each and are now
+members of the promoted `src/actors/Eyerok.cpp`.
 
 | Offset | Name | Evidence |
 | --- | --- | --- |

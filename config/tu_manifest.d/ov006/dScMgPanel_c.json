@@ -1,0 +1,827 @@
+{
+  "id": "ov006/dScMgPanel_c",
+  "module": "ov006",
+  "source": "src/actors/dScMgPanel_c.cpp",
+  "promoted_source": "src/actors/dScMgPanel_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "WHOLE RUN, 71 of 71. tools/tu_map.py calls 0x0210428c..0x02107858 one contiguous linker run of 71 function(s) (build/tu_map.json), and this TU licenses all of it, ROM ordinals 0..70. There is no sourceless hole: every one of the 71 addresses has a legacy src/ file AND an entry in config/arm9/overlays/ov006/delinks.txt, and `tools/tubuild.py inspect ov006/dScMgPanel_c` reports `functions without complete : none` and `functions with no legacy source : none`. That is the difference from the sibling dScMgTeresa_c, which could license only 48 of 81.",
+    "class label(s): dScMgPanel_c",
+    "LEFT EDGE (high). 0x0210428c is _ZN12dScMgPanel_cD1Ev, the class's key function and the lowest address of the run. Vtable slot 16 relocates to it. The function below it, 0x02104278, belongs to the preceding unattributed span.",
+    "RIGHT EDGE (medium). The run ends at 0x02107858, where dScMgPanel_c_classInit begins (size 0x34, src/d_s_mg_panel.c). tu_map splits that factory out as its own 1-function unattributed span 0x02107858..0x0210788c, and every promoted ov006 sibling follows the same convention -- dScMgRoulette_c's landed manifest licenses 0x0210788c..0x0210a400 while its own classInit at 0x0210a400 stays a separate shard. The factory is NOT folded in here. tu_map's own right-edge confidence for this run is medium and ov006 is a module it reports as under-segmented, so 71 is a lower bound on what one original file held rather than a proven file boundary.",
+    "THE VTABLE CORROBORATES BOTH ENDS. Of the 36 slots, six relocate into this run -- slot 0 to 0x021073b0, slot 6 to 0x02107358, slot 9 to 0x0210730c, slot 16 to 0x0210428c, slot 17 to 0x021042b0, slot 18 to 0x021071fc -- and every one of the other 30 relocates OUTSIDE 0x0210428c..0x02107858, into ov004 or arm9. Both ends of the claimed range are this class's own code.",
+    "NOT CLAIMED, and deliberately so: __sinit_ov006_02131fa4 (0x02131fa4, size 0x318, src/__sinit_ov006_02131fa4.c) is this class's static initializer and lives in ov006's .init section with its own delinks.txt block and .ctor slot. The original translation unit was therefore NOT text-only -- it owned .data, .bss and .init output as well -- but ov006's entire .data segment is one section owned by no file, so only .text is claimable. The 27 eight-byte {function pointer, 0} objects at 0x0213dc4c..0x0213dd34 that hold this class's callback addresses stay extern; they are 27 SEPARATE objects rather than one descriptor table (g_profile_MG_PANEL sits inside the cluster at 0x0213dc64 with a different shape and a different owner, and the sinit loads each address individually in scrambled order), and what clusters them is mwld laying .data out by ascending object size."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0210428c",
+      "end": "0x02107858"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12dScMgPanel_cD1Ev",
+      "address": "0x0210428c",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN12dScMgPanel_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12dScMgPanel_cD0Ev",
+      "address": "0x021042b0",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN12dScMgPanel_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov006_021042e8",
+      "address": "0x021042e8",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_021042e8.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_02104354",
+      "address": "0x02104354",
+      "size": "0x00000118",
+      "legacy_source": "src/func_ov006_02104354.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_0210446c",
+      "address": "0x0210446c",
+      "size": "0x000000ec",
+      "legacy_source": "src/func_ov006_0210446c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_02104558",
+      "address": "0x02104558",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_02104558.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov006_02104580",
+      "address": "0x02104580",
+      "size": "0x000002f0",
+      "legacy_source": "src/func_ov006_02104580.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov006_02104870",
+      "address": "0x02104870",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov006_02104870.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov006_021048b0",
+      "address": "0x021048b0",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov006_021048b0.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov006_021048e4",
+      "address": "0x021048e4",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_021048e4.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov006_02104920",
+      "address": "0x02104920",
+      "size": "0x000000f0",
+      "legacy_source": "src/func_ov006_02104920.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov006_02104a10",
+      "address": "0x02104a10",
+      "size": "0x000000b0",
+      "legacy_source": "src/func_ov006_02104a10.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov006_02104ac0",
+      "address": "0x02104ac0",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_02104ac0.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_02104ac4",
+      "address": "0x02104ac4",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov006_02104ac4.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov006_02104b24",
+      "address": "0x02104b24",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_02104b24.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_02104b4c",
+      "address": "0x02104b4c",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_02104b4c.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov006_02104b5c",
+      "address": "0x02104b5c",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov006_02104b5c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov006_02104bac",
+      "address": "0x02104bac",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_02104bac.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov006_02104bb0",
+      "address": "0x02104bb0",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_02104bb0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov006_02104c08",
+      "address": "0x02104c08",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_02104c08.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_02104c60",
+      "address": "0x02104c60",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov006_02104c60.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov006_02104cfc",
+      "address": "0x02104cfc",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov006_02104cfc.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_02104d44",
+      "address": "0x02104d44",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov006_02104d44.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov006_02104d94",
+      "address": "0x02104d94",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov006_02104d94.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov006_02104e70",
+      "address": "0x02104e70",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_02104e70.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_02104e80",
+      "address": "0x02104e80",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_02104e80.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov006_02104ea8",
+      "address": "0x02104ea8",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_02104ea8.c",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov006_02104eb8",
+      "address": "0x02104eb8",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov006_02104eb8.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov006_02104ec8",
+      "address": "0x02104ec8",
+      "size": "0x00000004",
+      "legacy_source": "src/func_ov006_02104ec8.c",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov006_02104ecc",
+      "address": "0x02104ecc",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov006_02104ecc.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov006_02104fb4",
+      "address": "0x02104fb4",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov006_02104fb4.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "func_ov006_0210500c",
+      "address": "0x0210500c",
+      "size": "0x00000080",
+      "legacy_source": "src/func_ov006_0210500c.c",
+      "ordinal": 31
+    },
+    {
+      "symbol": "func_ov006_0210508c",
+      "address": "0x0210508c",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov006_0210508c.c",
+      "ordinal": 32
+    },
+    {
+      "symbol": "func_ov006_021050bc",
+      "address": "0x021050bc",
+      "size": "0x0000005c",
+      "legacy_source": "src/func_ov006_021050bc.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "func_ov006_02105118",
+      "address": "0x02105118",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_02105118.c",
+      "ordinal": 34
+    },
+    {
+      "symbol": "func_ov006_02105134",
+      "address": "0x02105134",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov006_02105134.c",
+      "ordinal": 35
+    },
+    {
+      "symbol": "func_ov006_021051dc",
+      "address": "0x021051dc",
+      "size": "0x000001cc",
+      "legacy_source": "src/func_ov006_021051dc.c",
+      "ordinal": 36
+    },
+    {
+      "symbol": "func_ov006_021053a8",
+      "address": "0x021053a8",
+      "size": "0x000002c8",
+      "legacy_source": "src/func_ov006_021053a8.cpp",
+      "ordinal": 37
+    },
+    {
+      "symbol": "func_ov006_02105670",
+      "address": "0x02105670",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov006_02105670.c",
+      "ordinal": 38
+    },
+    {
+      "symbol": "func_ov006_02105730",
+      "address": "0x02105730",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov006_02105730.c",
+      "ordinal": 39
+    },
+    {
+      "symbol": "func_ov006_021057f0",
+      "address": "0x021057f0",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov006_021057f0.cpp",
+      "ordinal": 40
+    },
+    {
+      "symbol": "func_ov006_02105854",
+      "address": "0x02105854",
+      "size": "0x00000260",
+      "legacy_source": "src/func_ov006_02105854.c",
+      "ordinal": 41
+    },
+    {
+      "symbol": "func_ov006_02105ab4",
+      "address": "0x02105ab4",
+      "size": "0x00000168",
+      "legacy_source": "src/func_ov006_02105ab4.c",
+      "ordinal": 42
+    },
+    {
+      "symbol": "func_ov006_02105c1c",
+      "address": "0x02105c1c",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov006_02105c1c.c",
+      "ordinal": 43
+    },
+    {
+      "symbol": "func_ov006_02105c88",
+      "address": "0x02105c88",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_02105c88.c",
+      "ordinal": 44
+    },
+    {
+      "symbol": "func_ov006_02105d20",
+      "address": "0x02105d20",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov006_02105d20.c",
+      "ordinal": 45
+    },
+    {
+      "symbol": "func_ov006_02105de4",
+      "address": "0x02105de4",
+      "size": "0x00000264",
+      "legacy_source": "src/func_ov006_02105de4.c",
+      "ordinal": 46
+    },
+    {
+      "symbol": "func_ov006_02106048",
+      "address": "0x02106048",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_02106048.c",
+      "ordinal": 47
+    },
+    {
+      "symbol": "func_ov006_02106080",
+      "address": "0x02106080",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov006_02106080.c",
+      "ordinal": 48
+    },
+    {
+      "symbol": "func_ov006_02106168",
+      "address": "0x02106168",
+      "size": "0x00000238",
+      "legacy_source": "src/func_ov006_02106168.cpp",
+      "ordinal": 49
+    },
+    {
+      "symbol": "func_ov006_021063a0",
+      "address": "0x021063a0",
+      "size": "0x000002c4",
+      "legacy_source": "src/func_ov006_021063a0.cpp",
+      "ordinal": 50
+    },
+    {
+      "symbol": "func_ov006_02106664",
+      "address": "0x02106664",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov006_02106664.c",
+      "ordinal": 51
+    },
+    {
+      "symbol": "func_ov006_02106758",
+      "address": "0x02106758",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov006_02106758.c",
+      "ordinal": 52
+    },
+    {
+      "symbol": "func_ov006_021067a4",
+      "address": "0x021067a4",
+      "size": "0x00000134",
+      "legacy_source": "src/func_ov006_021067a4.c",
+      "ordinal": 53
+    },
+    {
+      "symbol": "func_ov006_021068d8",
+      "address": "0x021068d8",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov006_021068d8.c",
+      "ordinal": 54
+    },
+    {
+      "symbol": "func_ov006_02106910",
+      "address": "0x02106910",
+      "size": "0x000000f8",
+      "legacy_source": "src/func_ov006_02106910.c",
+      "ordinal": 55
+    },
+    {
+      "symbol": "func_ov006_02106a08",
+      "address": "0x02106a08",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov006_02106a08.c",
+      "ordinal": 56
+    },
+    {
+      "symbol": "func_ov006_02106aa8",
+      "address": "0x02106aa8",
+      "size": "0x00000104",
+      "legacy_source": "src/func_ov006_02106aa8.c",
+      "ordinal": 57
+    },
+    {
+      "symbol": "func_ov006_02106bac",
+      "address": "0x02106bac",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov006_02106bac.c",
+      "ordinal": 58
+    },
+    {
+      "symbol": "func_ov006_02106bc0",
+      "address": "0x02106bc0",
+      "size": "0x000000e4",
+      "legacy_source": "src/func_ov006_02106bc0.c",
+      "ordinal": 59
+    },
+    {
+      "symbol": "func_ov006_02106ca4",
+      "address": "0x02106ca4",
+      "size": "0x00000214",
+      "legacy_source": "src/func_ov006_02106ca4.cpp",
+      "ordinal": 60
+    },
+    {
+      "symbol": "func_ov006_02106eb8",
+      "address": "0x02106eb8",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov006_02106eb8.cpp",
+      "ordinal": 61
+    },
+    {
+      "symbol": "func_ov006_02106f44",
+      "address": "0x02106f44",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_02106f44.cpp",
+      "ordinal": 62
+    },
+    {
+      "symbol": "func_ov006_02106fdc",
+      "address": "0x02106fdc",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov006_02106fdc.cpp",
+      "ordinal": 63
+    },
+    {
+      "symbol": "func_ov006_0210709c",
+      "address": "0x0210709c",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov006_0210709c.cpp",
+      "ordinal": 64
+    },
+    {
+      "symbol": "func_ov006_0210713c",
+      "address": "0x0210713c",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov006_0210713c.cpp",
+      "ordinal": 65
+    },
+    {
+      "symbol": "func_ov006_021071d4",
+      "address": "0x021071d4",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_021071d4.c",
+      "ordinal": 66
+    },
+    {
+      "symbol": "_ZN12dScMgPanel_c13OnYoshiTryEatEi",
+      "address": "0x021071fc",
+      "size": "0x00000110",
+      "legacy_source": "src/_ZN12dScMgPanel_c13OnYoshiTryEatEi.cpp",
+      "ordinal": 67
+    },
+    {
+      "symbol": "_ZN12dScMgPanel_c6RenderEv",
+      "address": "0x0210730c",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN12dScMgPanel_c6RenderEv.cpp",
+      "ordinal": 68
+    },
+    {
+      "symbol": "_ZN12dScMgPanel_c8BehaviorEv",
+      "address": "0x02107358",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN12dScMgPanel_c8BehaviorEv.cpp",
+      "ordinal": 69
+    },
+    {
+      "symbol": "_ZN12dScMgPanel_c13InitResourcesEv",
+      "address": "0x021073b0",
+      "size": "0x000004a8",
+      "legacy_source": "src/_ZN12dScMgPanel_c13InitResourcesEv.cpp",
+      "ordinal": 70
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "LINK DEFECT FOUND AND FIXED AT STAGE 4, and it is the reason ordinals 67-70 do not follow the block-scope rule the other 67 members do. As written by stages 2 and 3 this TU compiled, byte-matched 71/71, passed objisolate, passed reloc-destinations and passed the [4b] object audit -- and did not link. Every `func_ov006_*` member sits inside its own file-scope `extern \"C\" { }` region, so its block-scope `extern` declarations have C linkage and name the ROM symbol. A class member function cannot sit inside such a region, so the identical block-scope declarations in the four C++-named members had C++ LINKAGE: the object carried 41 mangled undefined symbols that do not exist in the image (`_Z8LoadFilei`, `_Z10DeallocatePv`, `_Z19func_ov006_021063a0Pv`, ...) and mwldarm aborted with 22 `Undefined`, all `Referenced from \"dScMgPanel_c::InitResources()\"`. mwccarm 2004/b56 rejects a block-scope `extern \"C\"` (measured: `Error: declarator expected`), so the repair is the shape dScMgTeresa_c and dScMgRoulette_c already use -- ONE file-scope `extern \"C\"` region carrying the 24 genuinely external ROM symbols those four members call, placed after ordinal 66 so the 67 members above it keep their own recovered spellings unchanged. The 13 declarations that named members OF THIS TU were deleted outright rather than moved: those symbols are now defined earlier in the same file, so the call binds to the definition, and three call sites took the definition's own pointer type (`func_ov006_02106168(this)` in ordinals 67 and 70, `(PanelObj_ab4 *)` in 68, `(PanelC_ac4 *)` in 69). One declaration, `func_02073244` in ordinal 69, was dead -- nothing in the body referenced it -- and was dropped. Data symbols were NOT touched and did not need to be: mwccarm leaves a file-scope variable's name unmangled in C++, which is why `data_0209d454`, `data_0209d45c` and `data_ov006_02142888` still sit at block scope. AFTER the repair: 71/71 MATCH unchanged, object audit order_ok true with {'LICENSED': 71} and zero refusals, 0 mangled undefined symbols left in the object, and `tools/rombuild.py -j 6` reaches `module fidelity: 106/106 exact, 100.000000%` with `ROM-build analysis: PASS`. NOTE FOR THE READER OF THE `linkcheck` BLOCK BELOW: its recorded `scratch-link-verified` was NOT reproducible on the source as shipped by stage 2 -- the same scratch pipeline, reached through rombuild's own BASELINE CONTROL, failed to link it. It is reproducible now.",
+    "Hand-assembled from the 71 legacy shards; tools/tubuild.py create ran, and its generated preamble was DISCARDED WHOLE rather than repaired. At 71 members it carried the failure modes writer.md documents: two contradictory PMF typedefs, three incompatible `struct C` bodies (0x4692 pad / 0x4674 pad / derived from a 36-virtual base), two incompatible `Obj` typedefs, and data_0209d454 declared both as a scalar and as an array. The shipped file follows ov002/Player for the 67 `extern \"C\"` members: each keeps its own declarations inside its own body and nothing is canonicalised. The four C++-NAMED members (ordinals 67-70) cannot, because a class member function cannot sit inside an `extern \"C\"` region -- see the link note below.",
+    "decl_common.h is deliberately NOT included, and this is a departure from the daDsnBase_c / daObjCtMecha03_c / dScMgTeresa_c precedent. It declares ten of this TU's own members and seven of the ten contradict the shard that defines them: func_ov006_02104354 and func_ov006_02104ac4 on the RETURN TYPE (`int` against the shards' `void`), and func_ov006_021042e8, 02104b5c, 02104d44, 02104d94 and 02105ab4 on the parameter type (`void*` against `char*` or a shadow struct). Including it makes each of those an `illegal function overloading` error against a body that already matches byte-for-byte. ov002/Player, the largest promoted TU in the tree, excludes it for the same reason. The four class-method members that used to lean on it -- ordinals 67-70 -- carry the declarations they actually used, copied from decl_common.h, in one FILE-SCOPE `extern \"C\"` region placed after ordinal 66 so that none of the 67 members above can see it; their block-scope spelling did not link (see the link note below).",
+    "One member needed a source change the merge forced. include/dScMgBase_c.h:12 declares `extern \"C\" void *data_ov004_020beb68;` at file scope, and ordinal 60 (func_ov006_02106ca4) recovered the same ROM object as `char *`. The block-scope licence covers FUNCTIONS with C linkage, not a second declaration of one variable with a different type, so the shard's view is spelled as a reinterpreting read of the header's object -- `#define PANEL_BEB68 (*(char **)&data_ov004_020beb68)` -- rather than a redeclaration. Same address, same load width, no extra local, and the member matches.",
+    "Ordinals 0 and 1 are two shards of ONE C++ definition. src/_ZN12dScMgPanel_cD1Ev.cpp and src/_ZN12dScMgPanel_cD0Ev.cpp each spell `dScMgPanel_c::~dScMgPanel_c() {}`; merged, writing both would be a duplicate definition. The file carries the body once, under ordinal 0, and mwcc emits D1, D0 and a homeless D2 from it.",
+    "Eight bracketed optimisation pragmas across three families, not the seven notes/data/tu-promotion-queue.tsv claims: opt_common_subs off on ordinals 3, 4, 6, 50 and 57; opt_strength_reduction off on 51 and 53; opt_propagation off on 60. `tools/tubuild.py inspect` prints 8 and a direct grep of the 71 shards finds the same eight files. Each keeps its own #pragma push / #pragma pop bracket, which binds positionally only because `#pragma defer_codegen off` is at the top of the file; with codegen deferred the state that binds is the state at end of file and the bracket is worth zero members. That pragma also emits .text in SOURCE order rather than reversed, which is why this file is written ROM-ascending -- one decision, not two.",
+    "CONTROLS, measured at this revision on the shipped file, both required by notes/agents/roles/writer.md before claiming a pragma does anything. (A) Delete all eight pragma brackets outright, change nothing else: 67/71, and the four DIFFs are func_ov006_0210446c, 02106664, 021067a4 and 02106aa8. So four of the eight are load-bearing and the other four -- 02104354, 02104580, 021063a0, 02106ca4 -- are inert at plain -O4,p in this TU; they are kept because they are what the shards recovered and deleting them buys nothing. (B) Delete ONLY `#pragma defer_codegen off`, keep every bracket: 67/71 -- byte-identical to deleting the pragmas outright, because the bracket binds to nothing while codegen is deferred -- AND emission order inverts to \"70 ordinal pair(s) NOT in ROM order\", which linkcheck [4b/8] refuses. One pragma buys the bytes and the order together, exactly as writer.md predicts.",
+    "The queue row's shard_count of 72 counts src/d_s_mg_panel.c (dScMgPanel_c_classInit); this promotion absorbs 71 shards, not 72.",
+    "tubuild create warning: RAW: src/func_ov006_02104a10.cpp (func_ov006_02104a10) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_021053a8.cpp (func_ov006_021053a8) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_021063a0.cpp (func_ov006_021063a0) did not split (the definition is inside the extern \"C\" block opened on line 20, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_0210713c.cpp (func_ov006_0210713c) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'SetBg2Offset' differs between the legacy file that used to hold func_ov006_02104580 and the one that held func_ov006_021048b0; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'SetSubBg2Offset' differs between the legacy file that used to hold func_ov006_02104580 and the one that held func_ov006_021048b0; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02104870 and the one that held func_ov006_02104920; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020afdd0' differs between the legacy file that used to hold func_ov006_021042e8 and the one that held func_ov006_02104d94; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02104870 and the one that held func_ov006_02104ecc; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02104c60' differs between the legacy file that used to hold func_ov006_02104c60 and the one that held func_ov006_021057f0; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02104870 and the one that held func_ov006_02105854; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02104870 and the one that held func_ov006_02105d20; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_02104870 and the one that held func_ov006_02105de4; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov006_0210446c and the one that held func_ov006_02106168; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02104ea8' differs between the legacy file that used to hold func_ov006_02106bc0 and the one that held func_ov006_02106ca4; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov004_020b0a54' differs between the legacy file that used to hold func_ov006_02106bc0 and the one that held func_ov006_02106ca4; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_021050bc' differs between the legacy file that used to hold func_ov006_02106ca4 and the one that held func_ov006_02106fdc; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_021050bc' differs between the legacy file that used to hold func_ov006_02106ca4 and the one that held func_ov006_0210709c; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'FreeGfxSlotsById' differs between the legacy file that used to hold func_ov006_02104ecc and the one that held _ZN12dScMgPanel_c13OnYoshiTryEatEi; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'FreeGfxSlotsById' differs between the legacy file that used to hold func_ov006_02104ecc and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_021067a4' differs between the legacy file that used to hold _ZN12dScMgPanel_c13OnYoshiTryEatEi and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_021063a0' differs between the legacy file that used to hold _ZN12dScMgPanel_c13OnYoshiTryEatEi and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_02106168' differs between the legacy file that used to hold _ZN12dScMgPanel_c13OnYoshiTryEatEi and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d454' differs between the legacy file that used to hold func_ov006_02104920 and the one that held _ZN12dScMgPanel_c13InitResourcesEv; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_02104ac4 and the one that held func_ov006_02104c60; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_02104ac4 and the one that held func_ov006_021057f0; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov006_02104ac4 and the one that held func_ov006_021057f0; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Obj') differs between the legacy file that used to hold func_ov006_02105ab4 and the one that held func_ov006_02105de4; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_02104ac4 and the one that held func_ov006_02106bc0; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'void') differs between the legacy file that used to hold func_ov006_02104ac4 and the one that held func_ov006_02106fdc; kept the first, the other is commented out for review. RESOLVED: the generated preamble was discarded whole and neither spelling was hoisted; each member keeps its own declaration inside its own body, where a block-scope declaration in an extern \"C\" region has C linkage, so both recovered views stand as recovered and no call site was rewritten. Local type declarations are kept at file scope with per-member tag names instead of being merged."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dScMgPanel_c/dScMgPanel_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 71,
+    "functions_declared": 71,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN12dScMgPanel_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN12dScMgPanel_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        120,
+        121,
+        122,
+        123,
+        124,
+        125,
+        126,
+        127,
+        128,
+        129,
+        130,
+        131,
+        132,
+        133,
+        134,
+        135,
+        136
+      ],
+      "data": [
+        "_ZTI12dScMgPanel_c",
+        "_ZTS12dScMgPanel_c",
+        "_ZTI11dScMgBase_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS8dScene_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTV12dScMgPanel_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11dScMgBase_c",
+        "_ZTI12dScMgPanel_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dScene_c",
+        "_ZTS11dScMgBase_c",
+        "_ZTS12dScMgPanel_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dScene_c",
+        "_ZTV12dScMgPanel_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "superseded-by-production-link",
+      "resultNote": "THIS BLOCK IS A STAGE-2 SNAPSHOT AND IT DID NOT REPRODUCE. Re-run at stage 4, the source as shipped did not link at all: the four C++-named members' declarations had C++ linkage and the object carried 41 mangled undefined symbols, with mwldarm aborting on 22 of them. See the LINK DEFECT note. The recorded phases and byte figures below are left as the record of the run that produced them; they are NOT the evidence for this promotion. The live evidence is verification.production. Re-running `tubuild.py linkcheck ov006/dScMgPanel_c` cannot regenerate this block either: post-promotion the command refuses at [4/8] with `intact production requires one .text claim and at least one non-text claim` for every already-enrolled text-only TU (controlled on ov006/dScMgTeresa_c, which this branch never touched, and traced to tubuild.py:4613 -> 4777 -> tu_production.py:41).",
+      "scratch": "build/tu/ov006-dScMgPanel_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x0210428c",
+        "end": "0x02107858",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x0210428c",
+          "end": "0x02107858",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 71
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    },
+    "production": {
+      "round": "stage 4 -- tools/rombuild.py -j 6, whose BASELINE CONTROL is a full scratch dsd delink, lcf, whole-tree mwccarm, mwldarm link and ROM build of the WORKING TREE; a text-only promoted TU is compiled and linked inside it like any other enrolled source",
+      "result": "production-link-verified",
+      "moduleFidelity": "106/106 exact, 100.000000% of compared bytes",
+      "sourceBuiltFunctions": {
+        "reproducing": 11174,
+        "mismatching": 0
+      },
+      "sourceOwnedDataClaims": {
+        "reproducing": 20,
+        "mismatching": 0
+      },
+      "romBuildAnalysis": "PASS",
+      "profile": "stock -- 0 mod source replacements, 0 ROM-gap fallbacks",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "equalsBaselineControlRom": true
+      },
+      "symbolCheckNewVsBaseline": 0,
+      "symbolCheckBaselineErrorCount": 9,
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 71
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "objectUndefinedMangledSymbols": 0,
+      "negativeControl": "deleting only `#pragma defer_codegen off` gives order_ok False -- `licensed .text functions are not emitted in ROM address order`; the pragma is load-bearing for the emission order as well as the bytes"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI12dScMgPanel_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213dd40, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213dd40"
+    },
+    {
+      "symbol": "_ZTS12dScMgPanel_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at ov006:0x0213dd84, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213dd84"
+    },
+    {
+      "symbol": "_ZTI11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf6c, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf6c"
+    },
+    {
+      "symbol": "_ZTS11dScMgBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at ov004:0x020bbf84, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov004",
+      "canonical_address": "0x020bbf84"
+    },
+    {
+      "symbol": "_ZTI8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914d4, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914d4"
+    },
+    {
+      "symbol": "_ZTS8dScene_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at arm9:0x020914b0, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020914b0"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e78, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e54, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo records as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086d70, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "Ancestor passenger. This TU defines dScMgPanel_c's key function -- the destructor, which include/dScMgPanel_c.h declares out of line and declares FIRST -- so mwcc emits the whole inheritance chain's typeinfo names as vague linkage. The cartridge keeps its canonical copy at arm9:0x02086e60, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTV12dScMgPanel_c",
+      "disposition": "deadstrip-data",
+      "reason": "The class's own vtable, emitted because this TU owns the key function. Extent corroborated three ways, per notes/agents/roles/writer.md, plus a fourth independent upper bound. (a) RELOCATIONS: the relocated run in config/arm9/overlays/ov006/relocs.txt is unbroken from 0x0213e248 -- the typeinfo word of the 8-byte offset-to-top/typeinfo preamble -- through 0x0213e2d8, with the first gap at 0x0213e2dc and the next relocation at 0x0213e2e8. (b) tools/rtti_vtables.py --own dScMgPanel_c reports 36 slots (base 36); the class is ROM-named, so that tool answers to the tree's spelling with no alias needed. (c) tools/tubuild.py verify's own EXTRA line reports .data _ZTV12dScMgPanel_c size=0x98 -- mwcc's emitted storage size. (d) UPPER BOUND: 0x0213e2dc is itself the TARGET of three load relocations, from 0x02107a64, 0x02107b0c and 0x02107b68 -- all inside dScMgRoulette_c's promoted TU -- so the cartridge's own relocation table says a DIFFERENT object begins exactly there. All four agree: symbol extent 0x0213e24c..0x0213e2dc = 0x90 = 36 slots, STORAGE 0x0213e244..0x0213e2dc = 0x98, equal to the .data section this TU emits. (The naive next-symbol read happens to be right here: the phantom interior symbol data_ov006_0213e24c sits ON the address point rather than inside the table. That is luck, not a licence -- an interior phantom cuts other ov006 tables short.) The cartridge keeps its canonical copy at ov006:0x0213e24c, outside this TU's only licensed range (.text 0x0210428c-0x02107858), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213e24c"
+    },
+    {
+      "symbol": "_ZN12dScMgPanel_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. mwcc emits three destructor variants from the one out-of-line definition -- D1, D0, D2 in that order under `#pragma defer_codegen off` -- but the cartridge carries only D1 (0x0210428c, 0x24) and D0 (0x021042b0, 0x38). No address anywhere in config/ names a D2 for this class: config/arm9/overlays/ov006/symbols.txt has no such row and `tools/tubuild.py inspect` reports the variant set as ['_ZN12dScMgPanel_cD1Ev', '_ZN12dScMgPanel_cD0Ev']. It has no ROM home, so plain `deadstrip` rather than `deadstrip-duplicate`, and production isolation discards it. It is emitted AFTER D0 and before ordinal 2, so it does not disturb the licensed run's ROM-ascending emission order -- `verify` reports all 71 licensed functions in the expected ROM-ascending section order with it present."
+    }
+  ],
+  "externalized_output": [],
+  "language": "c++"
+}

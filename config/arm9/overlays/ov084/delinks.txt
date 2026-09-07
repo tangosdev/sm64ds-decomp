@@ -41,6 +41,7 @@ src/func_ov084_021296b0.c:
     .text start:0x021296b0 end:0x021296cc
 
 src/func_ov084_021296cc.c:
+    complete
     .text start:0x021296cc end:0x02129864
 
 src/func_ov084_02129864.c:
