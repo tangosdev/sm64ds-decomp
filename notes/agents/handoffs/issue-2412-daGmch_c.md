@@ -102,15 +102,22 @@ This document describes this commit. The queue records its immutable output SHA.
   (the cartridge's own symbol is free, and it constructs rather than operates
   on an object). Calls into other classes: `Animation::Advance`/`Finished`,
   `ModelAnim::Render`/`Model::Render` (slot 5, virtual) and
-  `Player::IsOnShell`/`IncMegaKillCount` are now real method calls; 50
-  `extern "C"` bridge declarations remain (was 54), every one a callee whose own
+  `Player::IsOnShell`/`IncMegaKillCount` are now real method calls; **57**
+  `extern "C"` bridge declarations remain (was 61), every one a callee whose own
   header does not yet declare it as a method (`dActor_c::UpdatePos`,
-  `dCc_c::Clear`, `Player::Bounce`, `Player::Hurt`, ...). Each bridge is one
-  row in the file-scope block; none was introduced by this task.
+  `dCc_c::Clear`, `Player::Bounce`, `Player::Hurt`, ...). 50 of the 57 are rows
+  in the file-scope block; the remaining **7 sit at block scope inside the
+  factory body** (`_ZN7fBase_cnwEj`, `_ZN8dActor_cC2Ev`, `_ZN9ModelAnimC1Ev`,
+  `_ZN5ModelC1Ev`, `_ZN11ShadowModelC1Ev`, `_ZN7dCcAc_cC1Ev`,
+  `_ZN10dBgCh_ActrC1Ev`) and an earlier count of this handoff omitted them.
+  **47 of the 57 are mangled C++ callees** and 10 are plain C helpers, so 47
+  outbound calls to other classes' members still cross an ABI bridge: this is a
+  promoted TU, not a fully reconstructed class. None was introduced by this task.
 - Recovered layout/fields; remaining shadow structs/raw offsets: raw
   `(char *)this + 0xNNN` accesses went from about 240 to 6, and the 6 are all
   in the factory (member-object placement and the vptr store on a freshly
-  allocated block, which is what a factory does). Shadow types went from 8 to 4:
+  allocated block, which is what a factory does). Shadow types went from **9** to 4
+  (an earlier count of this handoff said 8; the input commit defines nine):
   `Vec3_26e28` (the flat aggregate DetectRaycastClsn takes; `Vector3` has a
   declared destructor and is not one), the two pointer-to-member windows
   `C_27708`/`C_27744` that CallStateUpdate/CallStateEnter dispatch through, and
@@ -186,9 +193,14 @@ Logs are private `build/` files named below; they are not committed.
   `scratch-link-verified` block dates from before enrollment and is carried,
   not re-established, by this commit.
   `python tools/romdata_check.py --files src/actors/daGmch_c.cpp` -- exit 0; 9
-  data symbols emitted, 5 VERIFIED (168 bytes equal), 4 PARTIAL (the ancestor
-  `_ZTI/_ZTS` records, coverage short of the ROM extent), 0 DIFFERS, 0 UNNAMED
-  (`gate-romdata.log`, `romdata-batch2.json`).
+  data symbols emitted, 5 VERIFIED (168 bytes equal), 4 PARTIAL, 0 DIFFERS,
+  0 UNNAMED (`gate-romdata.log`, `romdata-batch2.json`). The wording "the
+  ancestor `_ZTI/_ZTS` records" was inexact: every `_ZTI` record is VERIFIED
+  (`_ZTV8daGmch_c`, `_ZTI8daGmch_c`, `_ZTI8dActor_c`, `_ZTI7dBase_c`,
+  `_ZTI7fBase_c`), and the four PARTIALs are the four `_ZTS` type-name strings
+  -- own plus three ancestors -- emitted shorter than the `symbols.txt`-derived
+  extent because of alignment padding. That is benign, not a vtable or typeinfo
+  defect.
 - Shared-header consumer expansion: `include/daGmch_c.h` has one includer (the
   TU), compiled by every check above.
   `python tools/check_header_offsets.py --changed b2bd6a32...` -- exit 0;
@@ -227,3 +239,35 @@ Logs are private `build/` files named below; they are not committed.
 
 A log generated after this commit belongs in separately recorded evidence. Do not
 amend a proved candidate just to paste its own SHA or a later result into it.
+
+## Integration lane (added by the integrator, not by the producer)
+
+Everything above describes the producer's candidate. This section records what the
+integration stage added on top of it; it changes no source, header or manifest.
+
+- **Corrections to the prose above**, each re-measured on the candidate's own tree
+  and agreeing with independent verification: `extern "C"` bridges are **57**
+  (50 file-scope plus 7 at block scope inside the factory), not 50, of which 47
+  are mangled C++ callees; shadow type definitions went **9 -> 4**, not 8 -> 4;
+  the four `romdata_check` PARTIALs are the `_ZTS` name strings, while every
+  `_ZTI` record is VERIFIED. The candidate's own commit message still carries the
+  superseded "54 to 50" figure -- a proved commit is not amended to correct prose.
+- **`attribution.json`**: the producer correctly left this file alone as
+  integration-lane state. The fold moves 37 symbols out of 37 one-function shards
+  into one TU, which hands their credit to whoever pushed the fold. 37
+  `src/actors/daGmch_c.cpp#<symbol>` override rows are added here, each carrying
+  the author `chaos_db_ci` resolves for that symbol's own legacy shard on the
+  merge base -- the same key form and the same lineage computation
+  `tools/tu_promote.py` would have written. Of the 37, six are owed to named
+  contributors other than the maintainer account: four to `lunavyqo`
+  (`EnterState7`, `UpdateState0`, `UpdateState4`, `UpdateState7`), one to
+  `ruspecial` (`UpdateState6`) and one to `andrewboudreau` (`UpdateState3`).
+  A local `prepush_attribution` run reports only 27 of these as at risk because
+  it keys on the vanished shard basename; the ten it omits are still credit the
+  merge gate would reassign, so all 37 rows are written.
+- **Generated and ledger state** was audited for shape rather than arithmetic:
+  `config/converted-baseline.json` stays sorted and duplicate-free with its
+  `count` field equal to its list length (2696 -> 2698: seven shard paths leave,
+  nine `daGmch_c.cpp#symbol` rows enter), and
+  `config/converted-backslide-exceptions.jsonl` holds 404 rows with no
+  byte-identical duplicate record.
