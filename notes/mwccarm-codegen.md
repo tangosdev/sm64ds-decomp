@@ -5041,3 +5041,185 @@ against the baseline on main, so `nearmiss_db.py ingest` correctly refused it. T
 second time in this run that a lane's headline claim was scored against a stale baseline. The
 rule that prevents it is one line: before claiming an improvement, re-score the DB's own
 stored `c_source` for that key in the same worktree, in the same run, and quote both numbers.
+
+## 6bx. Two scores that rank the same candidate oppositely, three pragma names that do not exist, and four levers from the 2026-09-07 near-miss lanes (2026-09-07)
+
+Two crack lanes worked nine near-miss targets overnight and matched none, which is the
+expected outcome on a list where every member has survived several passes. The banking pass
+that followed found something worth more than the seeds: the two numbers this repo calls
+"divergences" are two different measurements, and on both of the night's candidates they
+point in opposite directions. That comes first, because it decides whether any of the rest
+is an improvement.
+
+**1. `tools/fdiff.py` and `tools/nearmiss_db.py` do not measure the same thing, and 6bw item
+5's re-scoring rule only works if you re-score with the tool that owns the number.**
+
+`fdiff.py` counts POSITIONAL mismatches: candidate word N against target word N, reloc slots
+wildcarded, reported as `mismatches=N/total`. `nearmiss_db.evaluate_full` computes a difflib
+edit distance over disassembled instruction strings, so one instruction that MOVES costs two
+(a delete and an insert) where fdiff charges one, and the DB's stored `divergences` is that
+second number. Measured on the night's two seeds, both size-exact against their targets, each
+scored in one worktree at origin/main 199b7ad3e:
+
+| function | fdiff seed / stored | DB metric seed / stored |
+|---|---|---|
+| `func_ov006_0211e72c` (ov006, 0x0211e72c, 172 bytes) | 26 / 27 | 27 / 26 |
+| `func_ov004_020b2220` (ov004, 0x020b2220, 548 bytes) | 33 / 34 | 36 / 34 |
+
+Both lanes measured with `fdiff.py`, saw a one-instruction gain, and wrote the seed up as an
+improvement. By the number the DB actually holds, both are regressions, and
+`nearmiss_db.py ingest --seeds` correctly refused both: `ingested: +0 new, 0 improved`, with
+`nearmiss/db.jsonl` byte-identical afterwards. The refusal is not a tool defect and it is not
+the size-gap tie-break inside `closeness`; the candidate sizes are exact and equal on both
+rows. It is the metric.
+
+The same split explains a row that read as wrong and is not.
+`_ZN3MrI13InitResourcesEv` (ov071, 0x02121734, 0x298) stores `divergences: 2`, and both its
+committed file banner and `fdiff.py` say 3/166. Both are right.
+`nearmiss_db.py reeval --dry-run` over all 59 rows reports `50 unchanged, 0 drifted, 9
+unscorable`, so the stored 2 reproduces exactly under the live evaluator; the 3 is the
+positional count of the same object. Nothing to correct, and the tool has no path to
+"correct" it anyway: `ingest` is strictly improving in `closeness`, so it can lower a stored
+divergence and never raise one, and `reeval` is the only writer that can move a number
+upward.
+
+The rule that follows is one line: **re-score with the metric that owns the number you are
+trying to beat.** A DB row is beaten only by `nearmiss_db.evaluate_full`; a file banner and a
+hand-iteration loop are `fdiff.py`. Quoting an fdiff number against a DB row is the 6bw item
+5 mistake in a new costume.
+
+*The gap is not small on a size-wrong candidate.* The `_disasm` helper the DB metric runs on
+disassembles at address 0, so every branch operand is an absolute `#0x...` string. Delete one
+instruction and every branch below it prints differently, and the edit distance eats the whole
+tail. The night's best `func_ov006_020d27dc` (ov006, 0x020d27dc, 0xe48) candidate is 913
+instructions against the ROM's 914, `--align` ratio 0.9918 with 906 equal, 7 replaced and 6
+deleted; under the DB metric that same object scores 353 against the row's stored 18. One
+object, two numbers, a factor of twenty apart. Score a size-wrong candidate frame-blind with
+`--align` (6bv item 9) and never with the DB metric.
+
+**2. `#pragma ARM_conditionalize` does not exist, and `-w illpragmas` will not tell you.**
+
+mwccarm 2004/b56 accepts an unknown pragma NAME in silence. It warns only about a bad
+ARGUMENT to a name it knows. Measured, one file each, canonical flags including
+`-w illpragmas`:
+
+```
+#pragma ARM_conditionalize on     compiles, no diagnostic
+#pragma opt_blockmerge off        compiles, no diagnostic
+#pragma zzz_not_a_pragma on       compiles, no diagnostic
+#pragma opt_propagation blah      warning: illegal #pragma
+#pragma options blah              warning: illegal #pragma
+```
+
+`tools/match.py:compile_c` already surfaces `illegal #pragma` lines, so a lane can reasonably
+believe it is protected. It is not: that guard fires on the argument, never on the name. So
+every "this pragma is inert" result taken against an ad-hoc pragma list proves nothing about
+the pragma and only re-measures the baseline. Last night's lane H4 hit this with
+`opt_blockmerge`, `opt_scheduling`, `ARM_scheduling` and `no_register_coloring`, and the
+2026-09-07 lanes hit it again with `ARM_conditionalize`. None of those five strings occurs
+anywhere in `mwccarm.exe`.
+
+The real list comes out of the executable. This is the exact command:
+
+```
+python -c "import re,pathlib; b=pathlib.Path('tools/mwccarm/2004/b56/mwccarm.exe').read_bytes(); print(chr(10).join(sorted(set(m.decode() for m in re.findall(rb'opt_[a-z_]+', b)))))"
+```
+
+68 distinct `opt_*` strings. 67 of them sit in the compiler's contiguous pragma-name table at
+file offset 0x196800 to 0x197300: a run of 63 on/off names from `opt_common_subs` to
+`opt_obeyfunceffects`, plus four that take a value (`opt_pointer_analysis_mode`,
+`opt_full_unroll_limit`, `opt_unroll_count`, `opt_unroll_instr_count`). The 68th,
+`opt_classresults`, is not in that table and is not a pragma. The same table holds the
+optimisation knobs spelled without the prefix, which is where `opt_peephole` goes wrong:
+`peephole`, `optimize_for_size`, `optimization_level`, `global_optimizer`. This corrects 6bv
+item 9's "about seventy-eight of them" to a counted 68, from a named offset, with the command
+that reproduces it.
+
+The two names in that table that sound like if-conversion control,
+`opt_generateconditionalassignments` and `opt_rebuildconditionals`, are inert on
+`func_ov006_020d27dc`. Predication is chosen in the ARM backend and no pragma in the table
+reaches it, which is the conclusion 6bv item 8 reached from the block-size side.
+
+**3. Cast a wider pointer to `u8 *`, never to `int`, when you add a byte offset to it.**
+
+`*(s32 *)((int)p + 0x5374)` makes the compiler pool-load the whole offset and address the
+memory with a register offset. `*(s32 *)((u8 *)p + 0x5374)` gives the ROM's split constant and
+an immediate offset, and the base survives as a common subexpression for the next access in
+the same region. On a two-line probe over a `struct S *p`, canonical flags, whole function:
+
+```
+(int)p    ldr r1,[pc] / ldr r2,[pc] / add ip,r0,r1 / ldr r3,[ip] / mov r1,#0x3c
+          add r3,r3,#1 / str r3,[ip] / str r1,[r0,r2] / bx lr          44 bytes
+(u8 *)p   ldr r1,[pc] / add r2,r0,#0x5000 / add r3,r0,r1 / ldr r1,[r3] / mov r0,#0x3c
+          add r1,r1,#1 / str r1,[r3] / str r0,[r2,#0x3c0] / bx lr      40 bytes
+```
+
+The second store is the whole difference: `add #0x5000` once, then `[r2,#0x3c0]`, which is the
+ROM's shape at that site. The bound, and it is why this reads as inert if you probe it in the
+wrong place: **the cast only matters when the base is not already byte-strided.** In the
+banked `func_ov006_020d27dc` candidate the base is a `char *`, and there both spellings
+compile to the same 3652 bytes, md5 `8462f11dba034fd64356bc06233a65cf`, at both surviving
+sites. `(int)p + k` and `p + k` on a `char *` are the same expression after canonicalisation,
+the same way index arithmetic is canonicalised in 6bv item 2.
+
+That lever carried `func_ov006_020d27dc` from 17 divergences to a single instruction, and the
+one that remains is the notes 6d / 6bv item 8 if-conversion floor: mwccarm predicates a
+six-instruction else arm and duplicates the epilogue where the ROM emits `blt` and an
+unpredicated block. It is now evidenced over 119 pragma settings, 5 optimisation levels, 20
+source spellings and all 20 installed builds. The endpoint source is size-wrong by four bytes,
+so it does not belong in `src/`, and by item 1 it does not belong in the DB either.
+
+**4. The reversed-sense ternary, and a launder that is not needed.**
+
+On `func_ov006_0211e72c` (ov006, 0x0211e72c, 172 bytes), `(flip == 0) ? neg1 : one` scores 26
+and `(flip != 0) ? one : neg1` scores 27, re-measured tonight from a different draft, which
+reproduces 6bv item 1a on the same function. What is new is the second half: a typed `void **`
+table local reaches the same 26 as the int-cast launder that draft was carrying, so the
+launder buys nothing there and the seed is launder-free and volatile-free. 26 is a floor
+across a 960-cell sweep of 120 load orders by 4 select forms by 2 `mla` placements.
+
+The residue is one live range. The ROM keeps eight callee-saved registers because the 0x676
+flag byte lives in `sl` from its load to its compare, across the four stack-argument stores;
+every C spelling computes the select before those stores, so the flag is short-lived and seven
+callee-saved registers suffice. The stored row's source is also the more admissible problem:
+it fabricates an eighth parameter for `OAM::Render` and passes `(OamAttr *)0x1000`, where the
+seed calls `_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii` with the parameter shape a matched
+sibling on main already uses (`src/func_ov006_020fa7b8.cpp`). Admissibility is not what
+`closeness` ranks on, so the DB keeps the worse-shaped source. That is a known cost of the
+metric, not an argument for forcing the ingest.
+
+**5. `func_ov004_020b2220` refines 6bw item 4: the homing order is the whole residue and no
+source lever reaches it.**
+
+The ROM keeps the thousands counter in r0 and live across the whole matrix block, which forces
+`angle` into r1 and rotates every register from 0x7c to 0xe0 plus the compare at 0xe4 and the
+table index at 0x100. The counter lands in r0 only if parameter 0 is homed to `sl` before the
+`mov #0` is materialised, and every candidate homes parameter 1 first. 334 compiles across
+four sweeps (216 plus 48 plus 54 plus 16 cells) never moved the parameter-homing order. The
+entry-write-order lever of 6bw item 1 does apply here, spelled `th = 0; te = th; hu = th;` with
+the three counter zeros moved above the value clamp, and it is worth exactly one positional
+word. `#pragma opt_propagation off` is load-bearing on this function: without it the same
+source scores 91 to 93 instead of 33.
+
+**6. `volatile` can be ROM structure rather than a codegen pin, and on `func_ov006_02126b4c`
+it is.**
+
+The draft for `func_ov006_02126b4c` (ov006, 0x02126b4c, 920 bytes) carries sixteen
+`volatile u16` locals, which reads as a pin a lane should try to delete. It is not one. The
+ROM has sixteen `strh`/`ldrh` pairs at distinct stack slots around each `MultiStore16` call,
+and stripping the volatiles loses exactly those 16 instructions and 0x358 of frame. What
+carries the 41-divergence floor there is `#pragma opt_strength_reduction off`, the same
+eighteen-word pragma 6bw item 3 records on this function. The floor itself is a five-cycle
+register permutation, unchanged across all 720 declaration orders of the six loop locals.
+
+**7. `_ZN12dScMgSlot1_c8BehaviorEv` (ov006, 0x0210c9e0, 2076 bytes): all of the residue is one
+0x60-byte window, and the two ways into it trade size against position.**
+
+Every one of the 19 mismatches sits between +0x264 and +0x2c4, where the ROM RECOMPUTES
+`idx * 4` and mwccarm propagates it from the guard's live copy in r1. Named-pointer spellings
+get the ROM's shape but hoist the computation above the guard and come out two instructions
+short; index spellings stay size-exact and score 21 to 29. 16 spellings, neither shape gets
+both.
+
+Items 3 to 7 were measured by lanes DC1 and DC2 on 2026-09-07. Items 1 and 2, and the
+byte-level probes in item 3, were re-measured in the banking pass at origin/main 199b7ad3e.
