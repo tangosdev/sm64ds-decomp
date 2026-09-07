@@ -1,0 +1,257 @@
+{
+  "class": "Moneybag",
+  "class_name_is_coined": true,
+  "rtti_name": "8daGmch_c",
+  "rtti_name_address": "0x02128bc8",
+
+  "scouted_at_base": {
+    "branch": "cpp/Moneybag-tu",
+    "worktree": "C:/tmp/sm64ds-moneybag-scout",
+    "base_commit": "2ab05bae3",
+    "base_subject": "Merge pull request #2385 from tangosdev/docs/stage3b-prose-guard",
+    "verified_after": "git merge-base HEAD origin/main == 2ab05bae36a6821679a7e647e811c0a3243a3c49 == HEAD, and `git log --oneline HEAD..origin/main` returned 0 lines. Checked AFTER the derivations below, not before, because sibling worktrees share one ref store.",
+    "which_facts_can_rot": "Everything under rom_derived_facts is cut from extracted/ and merging cannot change it. The tree_derived section is re-derived at this base and WILL rot: re-check it before writing."
+  },
+
+  "identity_evidence": {
+    "verdict": "Moneybag is COINED. The cartridge's class name is daGmch_c. The name is allowed under the current rule but must never be presented as ROM-proven; this field is that record.",
+    "rom_string": "extracted/overlays/overlay_0081.bin, file offset 0x5488 -> address 0x02128bc8, bytes 38 64 61 47 6d 63 68 5f 63 00 = \"8daGmch_c\\0\". That is the Itanium length-prefixed _ZTS form: length 8, then the 8 characters d a G m c h _ c. Address = 0x02123740 + file offset, with no adjustment (see module_base).",
+    "negative_search": "SEARCH CASE, SCOPE AND ENCODING, stated explicitly because a negative claim is worthless without them. Encoding: raw ASCII byte substring. Case: CASE-FOLDED -- both the haystack and the needle were lowercased before matching, so this search cannot be defeated by capitalisation the way a previous scout's was. Scope: 106 code images (extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin and all 103 extracted/overlays/overlay_*.bin) PLUS 2,073 files of the unpacked ROM filesystem under extracted/dsd/files/. Results: b'moneybag' -> 0 hits in the 106 code images and 0 hits in the 2,073 filesystem files. b'8moneybag' (the length-prefixed _ZTS form a Moneybag TU would emit) -> 0 hits in both scopes. So nothing in this cartridge spells Moneybag in any case, in code or in data.",
+    "what_the_cartridge_does_call_it": "b'gamaguchi' case-folded -> 11 hits in the code images and 10 in the filesystem. The profile name string \"GAMAGUCHI\" sits at arm9_dec.bin file offset 0x8bee8 = address 0x0208fee8, and extracted/overlays/overlay_0000.bin carries the asset paths data/enemy/gamaguchi/gamaguchi.bmd and .../gamaguchi_jump.bca. Gamaguchi is a clasp-purse, so the English sense of the coined name is right; what is absent is any C++ identity spelling it.",
+    "false_positive_warning": "b'gmch' case-folded also hits extracted/dsd/files/data/stage/fire_mt/fire_mt_icg.bin at 0x4024 inside the byte run 'HCGMCHBF'. That is unrelated binary data, exactly the class of substring false positive PIPELINE.md warns about (Koopa/Door/Coin/Key/Fish). The only meaningful hit for b'8dagmch_c' is the single ov081 one above.",
+    "whole_overlay_string_census": "The entire 0x5620-byte ov081 image contains exactly FIVE printable runs of >=5 characters, and all five are _ZTS records: 8daHuwa_c (0x02128840), 11daSnowman_c (0x021289bc), 12daSnowball_c (0x02128a88), 8daGmch_c (0x02128bc8), 15daObjIceBlock_c (0x02128c8c). There is no room in this overlay for a hidden English class name.",
+    "tooling_corroboration": "tools/rtti_extract.py at this base wrote build/rtti.json with 429 records, 413 edges, 0 unresolved. Its record for this class is {module: ov081, addr: 0x02128bd4, kind: si, mangled: 8daGmch_c, name: daGmch_c, name_addr: 0x02128bc8, vtable: 0x02128c04, vtable_module: ov081}. `tools/rtti_vtables.py --own daGmch_c` prints the 10-slot override set below; `tools/rtti_vtables.py --own Moneybag` prints 'no vtable for Moneybag' -- the ROM-derived database has never heard the name.",
+    "registry_corroboration": "symbols/profile_reconstruction_registry.json, entry actor_id 261, states class_name daGmch_c with class_name_source 'SM64DS RTTI ov081:0x02128bd4'. Per the project's own finding that registry class_name IS real RTTI, this is an independent second attestation of the same string, and it agrees.",
+    "symbols_txt_asymmetry": "config/arm9/overlays/ov081/symbols.txt aliases the VTABLE under BOTH spellings at one address (_ZTV8Moneybag and _ZTV8daGmch_c, both addr:0x02128c04) but names _ZTS and _ZTI under the daGmch_c spelling ONLY (_ZTS8daGmch_c 0x02128bc8, _ZTI8daGmch_c 0x02128bd4). A TU compiled as `class Moneybag` therefore emits _ZTS8Moneybag and _ZTI8Moneybag, neither of which has any home in the cartridge.",
+    "length_coincidence_hazard": "READ THIS BEFORE CONSIDERING INTACT-OBJECT. 'Moneybag' and 'daGmch_c' are BOTH 8 characters, so both mangle to a length-8 prefix and both _ZTS payloads are exactly 10 bytes ('8Moneybag\\0' vs '8daGmch_c\\0'). The wrong name would therefore produce RTTI of the CORRECT SIZE and the WRONG CONTENT -- a silent byte mismatch that no size or extent check catches. This is survivable on the queue's declared text-only route, where the RTTI data is externalized and never emitted, and it is FATAL and hard to diagnose on an intact-object route. Do not attempt intact-object under the coined spelling.",
+    "sibling_naming_pattern": "All FIVE classes in ov081 carry coined English tree names aliased onto the ROM name, in the same shape: daHuwa_c=Spindrift (0x0212887c), daSnowman_c=MrBlizzard (0x021289f0), daSnowball_c=Snowball (0x02128abc), daGmch_c=Moneybag (0x02128c04), daObjIceBlock_c=IceBlock (0x02128cc4). Not one of ov081's classes is spelt with its ROM name in the tree."
+  },
+
+  "overlay": "ov081",
+  "module_base": "0x02123740",
+  "module_base_derivation": "extracted/dsd/arm9_overlays/overlays.yaml, entry id:81 -> base_address 34748224 = 0x02123740, code_size 22048 = 0x5620, bss_size 672 = 0x2a0. Three independent checks: (a) extracted/overlays/overlay_0081.bin is exactly 22048 bytes, equal to code_size, so file offset 0 IS address 0x02123740 and address = 0x02123740 + file_offset with no adjustment; (b) config/arm9/overlays/ov081/delinks.txt gives .text start:0x02123740, the same value, and .bss end:0x02129000 = 0x02128d60 + 0x2a0, matching bss_size; (c) extracted/dsd/arm9_overlays/ov081.bin and extracted/overlays/overlay_0081.bin are byte-identical (cmp exit 0), so either file may be read. Every ROM read below was taken at address minus 0x02123740.",
+  "module_extent": {"file_backed": "0x02123740..0x02128d60", "bss": "0x02128d60..0x02129000"},
+  "sections": {
+    ".text":   "0x02123740..0x021280d8",
+    ".rodata": "0x021280d8..0x021280e8",
+    ".init":   "0x021280e8..0x02128824",
+    ".ctor":   "0x02128824..0x02128838",
+    ".data":   "0x02128840..0x02128d60",
+    ".bss":    "0x02128d60..0x02129000",
+    "source": "config/arm9/overlays/ov081/delinks.txt, section header block (lines 1-6)"
+  },
+  "overlay_address_sharing": "ov077, ov078, ov079, ov080, ov081 and ov082 ALL load at base_address 0x02123740. They are mutually exclusive overlays sharing one address window. Every relocation scan below is therefore filtered on the destination MODULE and never on the address; see callers.phantom_filter for the measured size of that error.",
+
+  "text_run": {
+    "start": "0x02126504",
+    "end": "0x02127b34",
+    "bytes": "0x1630 (5680)",
+    "function_count": 37,
+    "contiguity": "No gaps and no overlaps. Walking config/arm9/overlays/ov081/symbols.txt addr+size across the run, each function ends exactly where the next begins, and the last (daGmch_c_classInit, 0x02127adc + 0x58) ends exactly at 0x02127b34.",
+    "boundary_proof_low": "The preceding symbol is daSnowball_c_classInit at 0x021264b4 size 0x50, ending at exactly 0x02126504. So the run starts on a function boundary and does not begin inside Snowball.",
+    "boundary_proof_high": "The following symbol is _ZN8IceBlockD1Ev at 0x02127b34. So the run ends on a function boundary and does NOT spill into IceBlock.",
+    "neighbour_check": "ov081 holds five classes in .text address order: Spindrift/daHuwa_c (0x02123740..), MrBlizzard/daSnowman_c (0x02124090..), Snowball/daSnowball_c (0x02125ba0..), Moneybag/daGmch_c (0x02126504..0x02127b34), IceBlock/daObjIceBlock_c (0x02127b34..0x021280d8). The claimed run touches neither MrBlizzard nor IceBlock, which the task asked to be confirmed explicitly.",
+    "composition": "10 mangled _ZN8Moneybag*/_ZN8MoneybagD* + 26 auto-named func_ov081_* + 1 daGmch_c_classInit."
+  },
+
+  "vtable": {
+    "symbol": "_ZTV8daGmch_c (aliased in symbols.txt as _ZTV8Moneybag)",
+    "address": "0x02128c04",
+    "module": "ov081",
+    "slots": 31,
+    "symbol_extent": "0x02128c04..0x02128c80 = 0x7c = 31 words",
+    "storage_extent": "0x02128bfc..0x02128c80 = 0x84, including the two ABI preamble words",
+    "address_point_note": "The symbol IS the address point. offset-to-top at 0x02128bfc = 0x00000000 (and carries NO relocation, as an absolute zero should not) and the typeinfo pointer at 0x02128c00 = 0x02128bd4 = _ZTI8daGmch_c. Confirmed a third time from code: daGmch_c_classInit (literal pool word at 0x02127b30), _ZN8MoneybagD1Ev (0x02126550) and _ZN8MoneybagD0Ev (0x021265b0) all store the BARE value 0x02128c04 into this+0, not &_ZTV[2].",
+    "extent_evidence": [
+      "Next symbol: _ZTI15daObjIceBlock_c is at 0x02128c80 in config/arm9/overlays/ov081/symbols.txt, so the table cannot run past 0x02128c80. It ends precisely where the next datum begins.",
+      "Content at the boundary: the word at 0x02128c80 is 0x0209a764 = _ZTVN3abi20__si_class_type_infoE, i.e. the first word of IceBlock's own __si_class_type_info record -- a type_info vtable pointer, not a method.",
+      "Relocations: config/arm9/overlays/ov081/relocs.txt carries an unbroken run of kind:load records from 0x02128c00 through 0x02128c7c with no gap; the next record after it is from:0x02128c80 -> 0x0209a764.",
+      "Base length: _ZTV8dActor_c in arm9 runs 0x0208e3a4..0x0208e420 (next arm9 symbol at 0x0208e420) = 0x7c = 31 words, the same length. This class adds no slot; it only overrides."
+    ],
+    "truncation_caveat": "31 is NOT a truncated count. Slot 30 holds the non-null arm9 word 0x020100dc (_ZN8dActor_c25OnAimedAtWithEggReturnVecEv), so no trailing null slots were dropped, and dActor_c's own table is 31 words too."
+  },
+
+  "base_class": "dActor_c",
+  "base_evidence": "_ZTI8daGmch_c sits at 0x02128bd4 (ov081) and is a __si_class_type_info: +0 = 0x0209a764 = _ZTVN3abi20__si_class_type_infoE (config/arm9/symbols.txt line 4500), +4 = 0x02128bc8 = _ZTS8daGmch_c, +8 = 0x0208e390 = _ZTI8dActor_c (config/arm9/symbols.txt line 3539). The +8 word names the direct base outright, so the direct base is dActor_c and nothing else. Bytes read from extracted/overlays/overlay_0081.bin at file offsets 0x5494/0x5498/0x549c; the same three words appear in config/arm9/overlays/ov081/relocs.txt as from:0x02128bd4->main, from:0x02128bd8->overlay(81), from:0x02128bdc->main.",
+  "base_corroboration": "Vtable length agrees (31 words for both) and every non-overridden slot holds the base's own word verbatim. Corroboration, not the proof -- the __si_class_type_info +8 word above is the proof.",
+  "ancestor_chain": ["daGmch_c (tree spelling Moneybag)", "dActor_c", "dBase_c", "fBase_c"],
+  "ancestor_chain_evidence": "Walked through build/rtti.json edges at this base: daGmch_c -> dActor_c (base_key arm9:0x0208e390, resolved_by arm9), dActor_c -> dBase_c (arm9:0x02086e78, own_module), dBase_c -> fBase_c (arm9:0x02086d70, own_module). fBase_c has no base edge, so the chain is 4 classes including self -- which is exactly what the queue row's compiler-only blocker asserts.",
+
+  "typeinfo": {
+    "ZTV": "0x02128c04", "ZTV_module": "ov081",
+    "ZTI": "0x02128bd4", "ZTI_module": "ov081",
+    "ZTS": "0x02128bc8", "ZTS_module": "ov081",
+    "vague_linkage_note": "All three live in ov081. The daOts_c hazard -- _ZTI/_ZTS landing in a different overlay from the _ZTV -- does NOT apply to this class. Confirmed three ways: build/rtti.json gives module ov081 for the record and vtable_module ov081; ov081's own symbols.txt names all three addresses; and the case-folded byte search for b'8dagmch_c' over all 106 code images returned exactly ONE hit, in overlay_0081.bin, so no duplicate copy of the type-name string exists in any other module."
+  },
+  "modules_touched": ["ov081", "arm9"],
+
+  "overrides": [
+    {"slot": 0,  "address": "0x021278a8", "symbol": "_ZN8Moneybag13InitResourcesEv",        "size": "0x1d4", "base_slot_held": "_ZN7fBase_c13InitResourcesEv (0x02043c80)"},
+    {"slot": 3,  "address": "0x02127798", "symbol": "_ZN8Moneybag16CleanupResourcesEv",     "size": "0x44",  "base_slot_held": "_ZN7fBase_c16CleanupResourcesEv (0x02043bf0)"},
+    {"slot": 6,  "address": "0x02127854", "symbol": "_ZN8Moneybag8BehaviorEv",              "size": "0x54",  "base_slot_held": "_ZN7fBase_c8BehaviorEv (0x02043b24)"},
+    {"slot": 9,  "address": "0x021277e0", "symbol": "_ZN8Moneybag6RenderEv",                "size": "0x74",  "base_slot_held": "_ZN7fBase_c6RenderEv (0x02043af0)"},
+    {"slot": 12, "address": "0x021277dc", "symbol": "_ZN8Moneybag16OnPendingDestroyEv",     "size": "0x4",   "base_slot_held": "_ZN7fBase_c16OnPendingDestroyEv (0x02043ac0)", "body": "bx lr", "note": "empty body, one instruction"},
+    {"slot": 16, "address": "0x02126504", "symbol": "_ZN8MoneybagD1Ev",                     "size": "0x50",  "base_slot_held": "_ZN8dActor_cD1Ev (0x02011374)"},
+    {"slot": 17, "address": "0x02126554", "symbol": "_ZN8MoneybagD0Ev",                     "size": "0x64",  "base_slot_held": "_ZN8dActor_cD0Ev (0x02011314)"},
+    {"slot": 18, "address": "0x021265b8", "symbol": "_ZN8Moneybag13OnYoshiTryEatEv",        "size": "0x8",   "base_slot_held": "_ZN8dActor_c13OnYoshiTryEatEv (0x02010160)", "body": "mov r0,#6; bx lr", "note": "returns 6"},
+    {"slot": 19, "address": "0x02127a7c", "symbol": "_ZN8Moneybag13OnTurnIntoEggER6Player", "size": "0x60",  "base_slot_held": "_ZN8dActor_c13OnTurnIntoEggER6Player (0x02010154)"},
+    {"slot": 29, "address": "0x021265c0", "symbol": "_ZN8Moneybag16OnAimedAtWithEggEv",     "size": "0x8",   "base_slot_held": "_ZN8dActor_c16OnAimedAtWithEggEv (0x02010124)", "body": "mov r0,#0x39800; bx lr", "note": "returns the immediate 0x39800"}
+  ],
+  "override_count": 10,
+  "override_evidence": "Established THREE independent ways, all agreeing on the same slot set [0,3,6,9,12,16,17,18,19,29]: (1) reading the 31 words at 0x02128c04 out of extracted/overlays/overlay_0081.bin and classifying each target by whether it lands in ov081's 0x02123740..0x02129000 window; (2) `python tools/rtti_extract.py` then `python tools/rtti_vtables.py --own daGmch_c`, which prints 'daGmch_c : dActor_c  31 slots (base 31)' and the same ten rows; (3) a word-for-word diff of _ZTV8daGmch_c against _ZTV8dActor_c at arm9 0x0208e3a4 (arm9_dec.bin base 0x02004000), which shows exactly ten differing slots and 21 identical inherited words.",
+  "inherited_slot_names_note": "The 21 non-overridden slots take their names from the whole base chain, not one header: slots 1,2,4,5,7,8,10,11 and 13,14,15 hold fBase_c/dActor_c pre/post hooks, and slots 20-28 and 30 hold dActor_c interaction handlers. include/dActor_c.h is the right template here because this IS a direct dActor_c subclass.",
+  "new_virtuals": "NONE. The table is 31 slots and dActor_c's is 31 slots, so this class introduces no new virtual method and only overrides.",
+  "arm9_dec_base_derivation": "0x02004000, derived and then checked: the registry's debug_string_address for actor 261 is 0x0208fee8 and the string 'GAMAGUCHI\\0' sits at extracted/arm9_dec.bin file offset 0x8bee8, giving base 0x0208fee8 - 0x8bee8 = 0x02004000. Re-checked by reading _ZTS8dActor_c at 0x0208e384 (= b'8dActor_c\\0') and _ZTI8dActor_c at 0x0208e390 (= 0x0209a764 / 0x0208e384 / 0x02086e78), both of which land correctly.",
+
+  "destructors": {
+    "variants_present": ["D1", "D0"],
+    "D2_present": false,
+    "D2_evidence": "A grep of the whole config/ tree for MoneybagD2, daGmch_cD2 and 8MoneybagD2 returns no rows, and no third destructor address appears in the vtable or the text run. Only the two variants exist.",
+    "D1": {"address": "0x02126504", "size": "0x50", "slot": 16},
+    "D0": {"address": "0x02126554", "size": "0x64", "slot": 17},
+    "emission_order": "D1 first at 0x02126504, then D0 at 0x02126554, and they are the FIRST two functions of the text run.",
+    "shape": "D0 does NOT call D1 -- it inlines D1's whole body and then deletes. Both store the vtable address point 0x02128c04 into this+0, then destroy the five members in reverse construction order, then call _ZN8dActor_cD2Ev (0x020112c8). D0 additionally loads a Heap* from [0x020a0eac] and tail-calls _ZN6Memory10DeallocateEPvP4Heap (0x0203c1e8).",
+    "member_destruction_order": "0x1e4 _ZN10dBgCh_ActrD1Ev, 0x1b0 _ZN7dCcAc_cD1Ev, 0x188 _ZN11ShadowModelD1Ev, 0x138 _ZN5ModelD1Ev, 0xd4 _ZN9ModelAnimD1Ev -- exactly the reverse of the factory's construction order, which is the second independent witness for the field layout."
+  },
+
+  "size": "0x3f4",
+  "size_evidence": "1012 = 0x3f4 read straight out of the cartridge: daGmch_c_classInit at 0x02127adc disassembles to `mov r0, #0x3f4` at 0x02127ae0 immediately followed by `bl 0x02043444` = _ZN7fBase_cnwEj (fBase_c::operator new). The literal is the factory's own, not inferred. Corroborated twice: symbols/profile_reconstruction_registry.json records alloc_size 0x000003f4 for actor_id 261, and the highest object displacement anywhere in the text run is +0x3f2 (a byte), which closes on 0x3f4 after alignment.",
+
+  "factory": {
+    "symbol": "daGmch_c_classInit",
+    "address": "0x02127adc",
+    "size": "0x58",
+    "source_file_today": "src/d_a_gmch.c",
+    "note": "This is the 37th function of the text run and is NOT one of the 36 queue shards -- it already lives in a named file rather than a func_ov081_* shard. config/arm9/overlays/ov081/delinks.txt assigns src/d_a_gmch.c the range .text 0x02127adc..0x02127b34.",
+    "body": "operator new(0x3f4) -> dActor_c::dActor_c() -> store vtable 0x02128c04 -> ModelAnim(+0xd4), Model(+0x138), ShadowModel(+0x188), dCcAc_c(+0x1b0), dBgCh_Actr(+0x1e4)."
+  },
+
+  "profile": {
+    "symbol": "g_profile_GAMAGUCHI",
+    "address": "0x02128be0",
+    "size": "0x1c (28 bytes, 7 words)",
+    "actor_id": 261,
+    "actor_id_evidence": "The single external reference into this class is arm9 relocation `from:0x02090c78 kind:load to:0x02128be0 module:overlay(81)`, and 0x02090c78 lies in ACTOR_SPAWN_TABLE (arm9 symbol at 0x02090864) at +0x414, i.e. index 0x414/4 = 261 = 0x105. The profile's own second word is 0x00770105, whose low half is 0x0105 = 261. The stride-4 index arithmetic was verified against four sibling profiles in the same overlay: ICE_BLOCK_LL id 0x12 at slot +0x48, SNOWMAN id 0xdf at +0x37c, SNOWBALL id 0xe0 at +0x380, GAMAGUCHI id 0x105 at +0x414 -- all four agree.",
+    "words": ["0x02127adc (-> daGmch_c_classInit)", "0x00770105", "0x10000007", "0x0003f000", "0x00050000", "0x01000000", "0x00a28000"]
+  },
+
+  "non_virtual": {
+    "summary": "26 auto-named func_ov081_* members, none of which carries a mangled name today. They split cleanly into 18 reached ONLY through a pointer-to-member table and 8 reached by direct intra-overlay calls.",
+    "state_machine_members_18": [
+      {"address": "0x02126c20", "state": 8, "half": "update"},
+      {"address": "0x02126c8c", "state": 8, "half": "enter"},
+      {"address": "0x02126d64", "state": 7, "half": "update"},
+      {"address": "0x02126e28", "state": 7, "half": "enter"},
+      {"address": "0x02126fa4", "state": 6, "half": "update"},
+      {"address": "0x02127044", "state": 6, "half": "enter"},
+      {"address": "0x02127070", "state": 5, "half": "update"},
+      {"address": "0x02127134", "state": 5, "half": "enter"},
+      {"address": "0x02127188", "state": 4, "half": "update"},
+      {"address": "0x021271e8", "state": 4, "half": "enter"},
+      {"address": "0x02127240", "state": 3, "half": "update"},
+      {"address": "0x02127314", "state": 3, "half": "enter"},
+      {"address": "0x02127398", "state": 2, "half": "update"},
+      {"address": "0x021273e8", "state": 2, "half": "enter"},
+      {"address": "0x02127440", "state": 1, "half": "update"},
+      {"address": "0x021274c8", "state": 1, "half": "enter"},
+      {"address": "0x02127558", "state": 0, "half": "update"},
+      {"address": "0x021276b0", "state": 0, "half": "enter"}
+    ],
+    "helpers_8": [
+      {"address": "0x021265c8", "size": "0x138", "intra_overlay_callers": 6,  "role": "unproven"},
+      {"address": "0x02126700", "size": "0x58",  "intra_overlay_callers": 5,  "role": "unproven"},
+      {"address": "0x02126758", "size": "0x1f8", "intra_overlay_callers": 7,  "role": "unproven"},
+      {"address": "0x02126950", "size": "0xd0",  "intra_overlay_callers": 3,  "role": "unproven"},
+      {"address": "0x02126a20", "size": "0x200", "intra_overlay_callers": 2,  "role": "unproven; called by InitResources and Behavior"},
+      {"address": "0x02127708", "size": "0x3c",  "intra_overlay_callers": 1,  "role": "PROVEN: invokes PMF[1] ('update') of the current state. Does `ldr r1,[r0,#0x3dc]; add r3,r1,#8` then the standard PMF call sequence. Called from Moneybag::Behavior."},
+      {"address": "0x02127744", "size": "0x38",  "intra_overlay_callers": 0,  "role": "PROVEN: invokes PMF[0] ('enter') of the current state. Never BL'd -- its address is TAKEN by a literal-pool load at 0x02127794 inside 0x0212777c, which tail-calls it via `bx ip`. A pure BL scan reports this function as dead; it is not."},
+      {"address": "0x0212777c", "size": "0x1c",  "intra_overlay_callers": 10, "role": "PROVEN: the state setter. `r2 = 0x02128f40; r1 = r2 + (state << 4); [r0+0x3dc] = r1; bx 0x02127744` -- stores a pointer to the state's 16-byte PMF pair and tail-calls the enter handler."}
+    ],
+    "reachability_completeness": "10 (vtable) + 18 (PMF table) + 8 (helpers) = 36 shards, + daGmch_c_classInit (reached from g_profile_GAMAGUCHI) = 37 functions. Every function in the run is accounted for."
+  },
+
+  "pointer_to_member_records": {
+    "count": 18,
+    "data_band": "0x02128b38..0x02128bc8 (0x90 = 144 bytes)",
+    "record_size": 8,
+    "record_shape": "{word0 = function pointer or vtable offset, word1 = (this-adjustment << 1) | is_virtual}. ALL 18 records have word1 = 0, so all 18 are non-virtual with zero this-adjustment.",
+    "alignment_proof": "The alignment phase is proven, not assumed -- the 4-byte-off trap would have yielded zero valid records here. Two independent confirmations: (a) reading at 8-byte stride from 0x02128b38 gives 18 records whose even word is always a code address inside this class's text run and whose odd word is always 0; (b) config/arm9/overlays/ov081/relocs.txt carries kind:load records at exactly 0x02128b38, b40, b48, ... bc0 -- 18 rows at 8-byte stride, module overlay(81) -- and NO relocation at any of the intervening +4 addresses, which is only consistent with this phase. The preceding words 0x02128b30/0x02128b34 are relocated to arm9 and are the last two slots of _ZTV8Snowball, so 0x02128b38 is genuinely the first record.",
+    "bss_mirror": "data_ov081_02128f40, 0x02128f40..0x02128fd0 = 0x90 = 144 bytes, i.e. the same 18 records.",
+    "initializer": "__sinit_ov081_021284f0 (.init, 0x021284f0..0x021287b8; delink file src/__sinit_ov081_021284f0.c) copies all 18 records word-for-word from the .data band into the .bss mirror at 8-byte stride, writing offsets 0x00 through 0x8c. Recovered by simulating the function's register file: 36 word-stores, 18 distinct source records, paired-word consistency OK, source/destination word parity OK.",
+    "state_table_layout": "The 18 records are NINE states of TWO handlers each (16 bytes per state). Proven by the setter's `add r1, r2, r1, lsl #4` (stride 16) together with the two invokers: 0x02127744 reads [r3] and 0x02127708 reads [r3+8]. State N occupies 0x02128f40 + N*16.",
+    "state_field": "this+0x3dc holds a pointer to the current state's 16-byte pair. Only three instructions in the whole run touch it: a store in 0x0212777c and loads in 0x02127744 and 0x02127708.",
+    "WRITER_HAZARD": "These 18 records live in UNOWNED .data (see delinks_ownership) and dsd resolves them BY SYMBOL NAME. If any of these 18 members is renamed to a mangled _ZN8Moneybag... name, that new name MUST reach config/arm9/overlays/ov081/symbols.txt in the SAME commit, or every one of these records links as 0x00000000 and the state machine dispatches to null. No byte gate at stage 2 or 3 catches this."
+  },
+
+  "data_and_bss_band": {
+    "rtti_and_vtable": "0x02128bc8 _ZTS8daGmch_c (12 bytes incl. padding), 0x02128bd4 _ZTI8daGmch_c (12 bytes), 0x02128be0 g_profile_GAMAGUCHI (0x1c), 0x02128bfc..0x02128c80 the vtable with its two preamble words.",
+    "pmf_table": "0x02128b38..0x02128bc8 (18 records).",
+    "bss_objects": ["0x02128ec4", "0x02128ecc", "0x02128ed4", "0x02128edc", "0x02128ee4", "0x02128eec", "0x02128ef8", "0x02128f04", "0x02128f10", "0x02128f1c", "0x02128f28", "0x02128f34", "0x02128f40"],
+    "bss_exclusivity": "All 13 are referenced ONLY by this class's text run, by __sinit_ov081_021284f0, and by the four-entry .rodata pointer table at 0x021280d8..0x021280e8 (which holds 0x02128edc, 0x02128ee4, 0x02128ecc, 0x02128ec4). No other ov081 class's text touches any of them -- checked by classifying the `from:` address of every ov081 relocation targeting these 13 addresses against the symbol table's function ranges.",
+    "sinit_exclusivity": "__sinit_ov081_021284f0 has 45 relocations: 18 into this class's PMF band, 13 into the .bss objects above, 14 into arm9. It references NO text outside the Moneybag run, so it is this class's static initializer and nothing else's. It is a 38th file logically belonging to this TU, but it lives in .init and is not one of the 36 shards.",
+    "rodata": "0x021280d8..0x021280e8 is a four-word pointer table into this class's .bss (0x02128edc, 0x02128ee4, 0x02128ecc, 0x02128ec4). It is the whole of ov081's .rodata."
+  },
+
+  "fields": [
+    {"offset": "0xd4",  "type": "ModelAnim",   "proof": "constructed by _ZN9ModelAnimC1Ev at 0x02127b00 and destroyed by _ZN9ModelAnimD1Ev in D1/D0 -- two witnesses"},
+    {"offset": "0x138", "type": "Model",       "proof": "constructed by _ZN5ModelC1Ev at 0x02127b08, destroyed by _ZN5ModelD1Ev"},
+    {"offset": "0x188", "type": "ShadowModel", "proof": "constructed by _ZN11ShadowModelC1Ev at 0x02127b10, destroyed by _ZN11ShadowModelD1Ev"},
+    {"offset": "0x1b0", "type": "dCcAc_c",     "proof": "constructed by _ZN7dCcAc_cC1Ev at 0x02127b18, destroyed by _ZN7dCcAc_cD1Ev"},
+    {"offset": "0x1e4", "type": "dBgCh_Actr",  "proof": "constructed by _ZN10dBgCh_ActrC1Ev at 0x02127b20, destroyed by _ZN10dBgCh_ActrD1Ev"},
+    {"offset": "0x3dc", "type": "pointer to a 16-byte PMF pair", "proof": "PROVEN by use: stored in 0x0212777c (`str r1,[r0,#0x3dc]`), loaded in 0x02127744 and 0x02127708 as the base of the two-PMF state record. include/Moneybag.h currently spells this offset as part of `u8 pad_3dc[0x14]`; that is a refinement the writer should make."},
+    {"offset": "0x3e0", "type": "word (unproven type)", "proof": "5 ldr and 9 str in the run; currently inside pad_3dc"},
+    {"offset": "0x3e4", "type": "word, signed (unproven type)", "proof": "6 ldr plus conditional stores strgt/strlt/strlo/strhs, so it is compared as a signed quantity; currently inside pad_3dc"},
+    {"offset": "0x3f0", "type": "u8", "proof": "4 ldrb + 1 strb; header calls it mState"},
+    {"offset": "0x3f1", "type": "u8", "proof": "2 ldrb + 2 strb -- a LIVE byte field, currently spelt as padding in pad_3f1[0x3]"},
+    {"offset": "0x3f2", "type": "u8", "proof": "2 strb -- also live, also currently spelt as padding"}
+  ],
+  "field_span_check": "The highest object displacement anywhere in the run is +0x3f2 (a byte store), which closes on the factory's 0x3f4 after alignment. Displacements 0x3c4/0x3c8/0x3cc are three word stores landing in the last row of the 0x30-byte matrix the existing header places at 0x3a0..0x3d0, and 0x3d0/0x3d4/0x3d8 are three consecutive word stores matching the header's mSpawnPosX/Y/Z.",
+  "existing_header": "include/Moneybag.h already exists at this base and already asserts sizeof == 0x3f4 with the five member objects at the offsets proven above. The writer most likely touches no header at all; the only refinements the ROM justifies are naming 0x3dc/0x3e0/0x3e4 inside pad_3dc[0x14] and 0x3f1/0x3f2 inside pad_3f1[0x3].",
+
+  "callers": {
+    "external_entry_point": "ONE, and it is not a call: arm9 relocation `from:0x02090c78 kind:load to:0x02128be0 module:overlay(81)` -- ACTOR_SPAWN_TABLE[261] pointing at g_profile_GAMAGUCHI, whose first word is daGmch_c_classInit. The class is reached by spawn-table dispatch and by its vtable, never by a direct cross-module BL.",
+    "cross_module_calls_into_the_text_run": 0,
+    "phantom_filter": "MEASURED, because 'no external callers' is the finding a broken filter produces. Scanning all 106 module relocation files (91,808 rows) for a destination inside 0x02126504..0x02127b34: 436 rows land in that ADDRESS range, but only 64 carry module:overlay(81). The other 372 are phantoms from the overlays sharing this address window -- ov078 (170), ov077 (95), ov079 (52), ov080 (30), ov006 (11) and 14 more across ov022/ov030/main. An unfiltered scan would have overstated the caller set by 6.8x. The filter is spelt `overlay(81)`, NOT `ov081`; the rejected count above is the sanity check that it is not simply rejecting everything.",
+    "ambiguous_row_resolved": "One row read `from:0x02090b58 kind:load to:0x02126e28 module:overlays(78,81)`. Resolved to ov078, NOT ov081: ov078's symbols.txt names 0x02126e28 as g_profile_BOMBKING and ov078's .data band is 0x02126ce0..0x02126ee0, which contains that address, whereas in ov081 0x02126e28 is a .text function. The referrer is ACTOR_SPAWN_TABLE+0x2f4, and spawn-table entries point at profiles, not at function bodies. So this is ov078's BOMB KING and not a caller of this class.",
+    "accepted_64_breakdown": "35 from .text inside the run (34 arm_call + 1 load) and 29 from .data (18 PMF records + the 10 own vtable slots + the profile's factory word). Zero from .text outside the run, zero from .init.",
+    "intra_overlay_scan": "Done separately by DECODING ov081's .text and .init, because a relocation scan alone cannot be trusted to find intra-overlay calls. Decoding every B/BL/BLX word in 0x02123740..0x021280d8 and 0x021280e8..0x02128824 finds 34 BL sites landing in the run, against 7 distinct targets, plus intra-function B branches. The two methods AGREE exactly: 34 decoded BL == 34 arm_call relocations, and the one extra reloc is the `load` at 0x02127794 that takes the address of 0x02127744.",
+    "callers_from_other_ov081_classes": "NONE. No BL from Spindrift, MrBlizzard, Snowball or IceBlock lands anywhere in 0x02126504..0x02127b34, so the run is self-contained and can be lifted without dragging a sibling class in."
+  },
+
+  "tree_derived": {
+    "re_derived_at": "2ab05bae3",
+    "queue_row": "notes/data/tu-promotion-queue.tsv line 229: Moneybag / 36 shards / 948 lines / ov081 / has_header yes / already_promoted no / blockers compiler-only:>=9 (own chain 4 classes incl. self) / sibling_oracle '-' / promotion_route text-only.",
+    "shard_count_verified": "36. Every one of the 36 resolves to an existing file: 22 .cpp and 14 .c under src/. The 37th function of the run, daGmch_c_classInit, already lives in src/d_a_gmch.c (30 lines) and is NOT a shard.",
+    "total_lines_verified": "948, counted at this base across exactly those 36 files -- matches the queue row exactly.",
+    "chain_length_verified": "4 classes including self, matching the blocker text.",
+    "sibling_oracle": "NONE, and this is now positively confirmed rather than copied from the queue: config/tu_manifest.d/ has directories for 43 modules and ov081 is NOT among them. No class in this overlay has ever been promoted, so there is no in-overlay TU to copy. The writer must take the output convention from another overlay's recent promotion.",
+    "promoted_siblings_in_ov081": "None of Spindrift, MrBlizzard, Snowball or IceBlock is promoted at this base.",
+    "delinks_ownership": "config/arm9/overlays/ov081/delinks.txt has 113 file blocks and EVERY ONE of them is .text or .init only. No delink file owns any .data, .rodata, .ctor or .bss. So the vtable, the RTTI records, the profile, the 18 PMF records and all 13 .bss objects stay in the unowned/unlicensed block after promotion -- the promoted TU will not own its own vtable, which is the expected shape for the text-only route."
+  },
+
+  "blockers_for_the_writer": [
+    "PMF NAME COUPLING (the real one). 18 of the 26 auto-named members are reachable ONLY through pointer-to-member records in unowned .data, which dsd resolves by symbol NAME. Renaming any of those 18 is one edit, not two: the mangled name must land in config/arm9/overlays/ov081/symbols.txt in the same commit or the record links as 0. No stage-2 or stage-3 byte gate detects it.",
+    "THE CEILING IS NAME RECOVERY, NOT CODEGEN. All 26 unconverted members carry auto-generated func_ov081_* names; only the 10 vtable overrides already carry mangled names. This is the ov071/Scuttlebug wall, not the dScMgCurling2_c one. A realistic conversion target is 10/36 for free, and anything beyond that is a coordinated naming pass. The 9-state x 2-handler table recovered above is the evidence base for naming the 18.",
+    "COINED NAME + LENGTH COINCIDENCE. 'Moneybag' and 'daGmch_c' are both 8 characters, so a wrongly-named TU emits _ZTS/_ZTI of exactly the right SIZE and the wrong CONTENT. Fine on the declared text-only route; silently fatal on intact-object.",
+    "A member function cannot sit inside an extern \"C\" { } region, so the one file-scope region must go after the last surviving func_* member."
+  ],
+  "not_blockers": [
+    "No cross-module caller has to move: there are zero cross-module calls into the text run.",
+    "No sibling class calls into the run, so the 0x02126504..0x02127b34 slice is clean.",
+    "The header already exists and already asserts the right size; most likely no header edit is needed.",
+    "No vague-linkage split: _ZTV, _ZTI and _ZTS are all in ov081."
+  ],
+
+  "unproven": [
+    "The class name 'Moneybag' itself. It is COINED. The cartridge says daGmch_c and nothing in any of the 106 code images or 2,073 filesystem files spells 'moneybag' in any case. Recorded as coined per PIPELINE.md; do NOT run class_rename.py to manufacture agreement.",
+    "'g_profile_GAMAGUCHI' as a SYMBOL NAME is reconstructed. The ROM proves the string GAMAGUCHI at 0x0208fee8 and proves a 0x1c descriptor at 0x02128be0 whose first word is the factory, but the C identifier spelling is the project's, not the cartridge's.",
+    "'daGmch_c_classInit' as a FUNCTION NAME is reconstructed. The address, the shape and the class are proven; the word classInit comes from later EAD lineage, not from this cartridge. Its historical alias in the tree is Moneybag_Spawn.",
+    "The role of 6 of the 8 file-local helpers (0x021265c8, 0x02126700, 0x02126758, 0x02126950, 0x02126a20). Their call counts and callers are proven; what they DO is not, and no name should be invented for them without reading the bodies.",
+    "Semantic names for all 18 state-machine members. The state INDEX and the enter/update half of each is proven from the initializer; the meaning of each state is not.",
+    "What state index 0..8 each MEAN. Only the table order is proven.",
+    "Field TYPES at 0x3e0 and 0x3e4. Both are word-sized and 0x3e4 is compared signed; neither type nor meaning is proven.",
+    "Field meanings at 0x3f1 and 0x3f2. Proven to be LIVE byte fields (ldrb/strb), not padding; nothing more.",
+    "The existing header's names mMatrix, mSpawnPosX/Y/Z and mState. The offsets and sizes are corroborated by the displacements measured here, but the names are the tree's prior reconstruction, not ROM-proven.",
+    "Whether the 4-word .rodata pointer table at 0x021280d8 should be owned by the promoted TU. It points only into this class's .bss, but no delink file owns .rodata today."
+  ]
+}
