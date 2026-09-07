@@ -117,22 +117,22 @@ struct daBombking_c {
     u8  pad_0d0[0x40];
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x110 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12daBombking_cD1Ev.c] */
+       checks. Was a u8 marker. [src/actors/daBombking_c.cpp] */
     dBgCh_Actr mWithMeshClsn;            /* 0x110 */
     /* BlendModelAnim member, named by _ZN14BlendModelAnimD1Ev at +0x2cc -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     BlendModelAnim mBlendModelAnim;            /* 0x2cc */
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x33c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12daBombking_cD1Ev.c] */
+       checks. Was a u8 marker. [src/actors/daBombking_c.cpp] */
     dCcAcPos_c mdCcAcPos_c1;            /* 0x33c */
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x37c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12daBombking_cD1Ev.c] */
+       checks. Was a u8 marker. [src/actors/daBombking_c.cpp] */
     dCcAcPos_c mdCcAcPos_c2;            /* 0x37c */
     /* CommonModel member, named by the class's own destructor calling
        CommonModel's D1 at +0x3bc -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN12daBombking_cD1Ev.c] */
+       checks. Was a u8 marker. [src/actors/daBombking_c.cpp] */
     CommonModel mCommonModel;            /* 0x3bc */
     u8  mShadowModel;            /* 0x3f8 */
     u8  pad_3f9[0x27];
