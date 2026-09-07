@@ -6,31 +6,41 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - Issue URL, task ID, stage, session and harness:
   https://github.com/tangosdev/sm64ds-decomp/issues/2411, task `issue-2411`,
-  stage `reconstruct` (role producer, second attempt after a rework), session
-  `prod-2411b-0907`, Claude Code. The first attempt's session was
-  `prod-2411-0907` and the independent verification that rejected it was
-  `vfy-2411-0907`.
-- Source branch and previous accepted input SHA: branch `cpp/da1up_c-v2b`;
-  accepted input `39229e56110d805c876d7c51958cdf4f21bb4403` (the rejected
-  candidate, tip of `cpp/da1up_c-v2`). That input in turn descends from
-  `f38a8f74f584658e02e0ab4ae435a0fa2e949c5f` (the tip of the v1 branch
-  `cpp/OneUpMushroom-tu`, PR https://github.com/tangosdev/sm64ds-decomp/pull/2398)
-  by two merges of `origin/main`
-  (`aec3fbf4305aef087adcffccd65af6bf368ba9a3` at `5af2bcc9e`, then
-  `95a79f7ea068f9652b71cf09b7e2400dfa6b1f97` at `69d973f1259889d1ac588283e6cab54bd0f28190`);
-  both merges were conflict-free and the second brought notes only.
+  stage `reconstruct` (role producer, third attempt), session
+  `prod-2411c-0907`, Claude Code. The earlier producer sessions were
+  `prod-2411-0907` (first attempt) and `prod-2411b-0907` (second); the
+  independent verifications were `vfy-2411-0907` (rejected the first attempt)
+  and the session whose report is
+  https://github.com/tangosdev/sm64ds-decomp/issues/2411#issuecomment-5572536511
+  (returned the second attempt for these four text corrections).
+- Source branch and previous accepted input SHA: branch `cpp/da1up_c-v2c`;
+  accepted input `9c361560ff07147d1944597fbf0e5a22de8638cf` (tip of
+  `cpp/da1up_c-v2b`). That input is a single-parent child of
+  `39229e56110d805c876d7c51958cdf4f21bb4403` (tip of `cpp/da1up_c-v2`), which
+  in turn descends from `f38a8f74f584658e02e0ab4ae435a0fa2e949c5f` (the tip of
+  the v1 branch `cpp/OneUpMushroom-tu`, PR
+  https://github.com/tangosdev/sm64ds-decomp/pull/2398) by two merges of
+  `origin/main` (`aec3fbf4305aef087adcffccd65af6bf368ba9a3` at `5af2bcc9e`,
+  then `95a79f7ea068f9652b71cf09b7e2400dfa6b1f97` at
+  `69d973f1259889d1ac588283e6cab54bd0f28190`); both merges were conflict-free
+  and the second brought notes only.
 - Scope of this revision: **this commit changes this handoff document and
   nothing else.** Source, headers, the TU manifest, `symbols.txt`, `delinks.txt`
-  and `attribution.json` are byte-identical to the rejected input
+  and `attribution.json` are byte-identical to the accepted input
+  `9c361560ff07147d1944597fbf0e5a22de8638cf` and, through it, to
   `39229e56110d805c876d7c51958cdf4f21bb4403`, so every byte, relocation and
   ROM-data measurement recorded under Proof was taken on a tree whose source
   and config are byte-identical to this one -- this document is the only
   difference -- and none of it is restated from an older or differently shaped
-  tree. The revision corrects three statements the
-  independent verification found unsupported (the `tubuild linkcheck` figure,
-  the attribution coverage claim and the shadow-struct count) and records the
-  attribution rows the integration lane owes. It deliberately does not move the
-  source file; see the placement note under blockers.
+  tree. The independent verification checked that claim rather than accepting
+  it: a blob-level `git ls-tree -r` comparison of this document's input against
+  `39229e56`, with the handoff path removed, is byte-identical at 10,935
+  entries, every mode and hash equal. This revision corrects four statements
+  that verification found wrong -- the owed-attribution table's re-key recipe
+  (which, applied literally, FAILED `prepush_attribution`), the stated
+  mechanism behind that gate's blindness, the contributor count, and the
+  block-scope extern count -- and changes nothing else. It deliberately does
+  not move the source file; see the placement note under blockers.
 - Original source base SHA and installed workflow/tool SHA: source base
   `b2bd6a323832d244a12e750713b1405b26a94c66` (the earlier duplicate issue
   https://github.com/tangosdev/sm64ds-decomp/issues/2405 recorded
@@ -61,6 +71,19 @@ This document describes this commit. The queue records its immutable output SHA.
   forbidden -- do NOT re-add an alias row to
   `config/arm9/overlays/ov002/symbols.txt` and do NOT make the gate consult
   `symbols/actor_renames.tsv`; both would let this change certify its own rename.
+- Why this candidate has NOT merged `origin/main`, and why that is deliberate:
+  the base stays at `69d973f1259889d1ac588283e6cab54bd0f28190`. Merging main
+  now would rewrite this tree and invalidate the byte, relocation and ROM-data
+  proof recorded below, which was taken on it; holding the base is what lets
+  that proof carry unchanged through the two text-only revisions since
+  `39229e56`. The second
+  independent verification checked the deferral rather than granting it: since
+  `69d973f125`, main has moved 21 files, of which only 2 sit under `src/`,
+  `config/` or `include/` and both are append-only ledgers; there is zero
+  overlap with this task's blast radius, and `git merge-tree` is clean. The
+  integrator still composes onto a current base containing `1c93d2663` -- that
+  is an integration-lane merge with its own gate run, not a rebase this task
+  should perform.
 - Source placement (raised as blocking by the first verification, overturned):
   the TU stays at `src/actors/da1up_c.cpp`. The measurement behind that ruling,
   made by the domain coordinator and posted on
@@ -69,30 +92,43 @@ This document describes this commit. The queue records its immutable output SHA.
   none landing under `src/game/actors/` as `d_a_<snake>.cpp` since
   https://github.com/tangosdev/sm64ds-decomp/pull/2270; that
   `tools/srcpath.py`, the resolver this workflow designates, returns the flat
-  path for this class (re-checked in this worktree:
+  path for this class (re-checked **[rev b]**:
   `python tools/srcpath.py _ZN7da1up_c6RenderEv` -> `src/actors/da1up_c.cpp`);
   and that no gate rejects `src/actors/`. The forward convention for new class
   TUs -- flat versus a nested `src/game/actors/` stem such as `d_a_1up` -- is
   being decided on issue #2426 and is not this task's to settle. A later
   reviewed convention change would move this file with every other one.
-- Status: candidate for a fresh independent verification. Its predecessor
-  `39229e56` was REJECTED, and it is worth being precise about what failed:
-  every byte, relocation, emitted-object and ROM-data check passed on that
-  commit and none of it was disputed. The rejection rested on the source
-  placement (overturned above, on measurement, by the domain coordinator) and
-  on three unsupported statements in this document (all three corrected here,
-  each marked at the place it was corrected). Every check the producer and the
-  independent verification could run locally is listed under Proof, including
+- Status: candidate for a fresh independent verification. It is worth being
+  precise about what has and has not failed across three attempts. **No byte,
+  relocation, emitted-object or ROM-data check has ever failed on this source**,
+  and none has been disputed by either verification; the second verification
+  additionally proved the scope claim above at blob level, so that evidence
+  carries onto this commit without being re-cut. What failed was text. The
+  first attempt (`39229e56`) was rejected on source placement (overturned
+  above, on measurement, by the domain coordinator) and on three unsupported
+  statements. The second (`9c361560`) had those three confirmed accurate but
+  was returned for four further defects, all corrected here and each marked at
+  the place it was corrected. One of the four was not a wording problem: the
+  owed-attribution table's re-key recipe, applied literally to a scratch commit,
+  made `prepush_attribution` exit 1 with `CREDIT LOST _ZN13OneUpMushroomD0Ev`.
+  That recipe is rewritten below and re-tested the same way; the number this
+  session measured is recorded under Proof. Every check the producer and the
+  independent verifications could run locally is listed under Proof, including
   the one that is refused and the one gate whose row disagrees on unrelated
   pre-existing drift. The terminal private validation has not been run on this
-  commit or its input; on the predecessor `f38a8f74` it failed only on the
-  `rom_data_regressions` line now fixed by `1c93d2663`, and noted 8 contributor
-  credit reassignments, which are tabulated below as owed integration work.
+  commit or any of its inputs; on the predecessor `f38a8f74` it failed only on
+  the `rom_data_regressions` line now fixed by `1c93d2663`, and noted 8
+  contributor credit reassignments, which are tabulated below as owed
+  integration work.
 - Remaining uncommitted/local-only material and where it is preserved: none.
   Build state and the queue receipts are in the ignored `build/` of the
   worktrees `C:/tmp/sm64ds-a1up2411` (first producer attempt),
-  `C:/tmp/sm64ds-vfy2411` (independent verification) and
-  `C:/tmp/sm64ds-sm64ds-1up2411b` (this revision).
+  `C:/tmp/sm64ds-vfy2411` (first independent verification),
+  `C:/tmp/sm64ds-sm64ds-1up2411b` (second producer attempt) and
+  `C:/tmp/sm64ds-sm64ds-1up2411c` (this revision). The three scratch commits
+  this session used to test the owed-attribution table were made on a throwaway
+  branch, measured, and deleted with the branch; `attribution.json` in this
+  commit is byte-identical to the input's.
 
 ## What changed and why
 
@@ -118,8 +154,9 @@ This document describes this commit. The queue records its immutable output SHA.
   `config/converted-baseline.json`, `config/converted-backslide-exceptions.jsonl`,
   `config/match_attempts.jsonl`, `config/match_provenance.jsonl`,
   `include/decl_common.h` (one stale `extern int _ZTV13OneUpMushroom[];` removed).
-  Session `prod-2411-0907` added only this handoff document; session
-  `prod-2411b-0907` (this revision) edited only this handoff document.
+  Session `prod-2411-0907` added only this handoff document; sessions
+  `prod-2411b-0907` and `prod-2411c-0907` (this revision) each edited only this
+  handoff document.
   `attribution.json` in particular is still NOT reconciled: the eight rows the
   integration lane owes are tabulated under Reconstruction dimensions, and this
   revision deliberately did not add them, because that file is global
@@ -193,7 +230,13 @@ This document describes this commit. The queue records its immutable output SHA.
   raw `(base + 0xNN)` accesses -- 139 over 39 distinct offsets by this
   session's regex, 172 over 42 by the independent verification's; the count is
   regex-dependent and only its order of magnitude should be relied on -- plus
-  32 block-scope mangled `extern` declarations and **three** local shadow
+  **33** block-scope mangled `extern` declarations (an earlier revision said 32;
+  counting indented `extern` lines naming a `_Z` symbol in
+  `src/actors/da1up_c.cpp` gives 33 declarations of only **16 distinct**
+  symbols -- `_ZN5Sound9PlayBank3EjRK7Vector3` is redeclared 7 times and
+  `_ZN8dActor_c15IsPlayerInRangeEi` 5, each local block spelling its own
+  parameter types, which is itself part of the remaining cleanup)
+  and **three** local shadow
   structs, not two: `C` (line 1042, the opaque pointer-to-member holder),
   `Obj` (line 1050, a six-slot vtable-shape stand-in so ordinal 33 can reach
   the model's slot 5 by index) and `ModelCache` (line 1061, ordinal 35's view
@@ -211,16 +254,20 @@ This document describes this commit. The queue records its immutable output SHA.
   gap is measured below.** `attribution.json` carries
   `src/actors/da1up_c.cpp#<symbol>` overrides for **26 of the 36** folded
   shards (commit `f38a8f74` on the input branch) -- 33 rows on that path in
-  all, because the 7 renamed members each carry a row under both the old
-  `OneUpMushroom` and the new `da1up_c` mangled spelling, and the 19
-  `func_ov002_*` bodies carry one each. An earlier revision of this document
+  all, because the 7 renamed members that have rows each carry one under both
+  the old `OneUpMushroom` and the new `da1up_c` mangled spelling (7x2 = 14),
+  and the 19 `func_ov002_*` bodies carry one each: 14 + 19 = 33. That doubling
+  is load-bearing, not redundancy, and the reason is spelled out under the
+  table below. An earlier revision of this document
   said "every folded shard"; that was wrong. `python tools/prepush_attribution.py --base
   69d973f1259889d1ac588283e6cab54bd0f28190 --head HEAD` reports `9720 tracked,
   26 consolidated with credit intact, 0 changed, 0 lost` -- the 26 with rows.
-  The remaining **10** symbols have no override row and fall back through
-  `chaos_db_ci.match_finishers` / `first_matchers` on a source path the fold
-  deleted, so the private validator resolves them to the TU's adder
-  (`andrewboudreau`). They are `_ZN7da1up_cD0Ev`, `_ZN7da1up_c8BehaviorEv`,
+  The remaining **10** symbols have no `#symbol` override row. For the private
+  validator, which resolves on the HEAD path, they miss
+  `overrides[src/actors/da1up_c.cpp#<sym>]`, miss the bare TU path, and land on
+  `first_matchers[src/actors/da1up_c.cpp]` -- a path created by this fold --
+  so it credits them to the TU's adder (`andrewboudreau`). They are
+  `_ZN7da1up_cD0Ev`, `_ZN7da1up_c8BehaviorEv`,
   `func_ov002_020aeee4`, `func_ov002_020aefa4`, `func_ov002_020aefb8`,
   `func_ov002_020af724`, `func_ov002_020af950`, `func_ov002_020afc68`,
   `func_ov002_020afd10` and `func_ov002_020aff10`. For two of them
@@ -230,34 +277,81 @@ This document describes this commit. The queue records its immutable output SHA.
   validation reported. This is owed work, not a resolved item.
   `attribution.json` is global bookkeeping, is NOT among this task's reserved
   resources, and was deliberately left untouched by this commit; the integration
-  lane applies the rows below. Each base author was recomputed in this worktree
-  with the validator's own formula (`overrides[path#symbol]` else
+  lane applies the rows below. Each base author was recomputed independently
+  **[rev b]** and again **[this revision]** with the validator's own formula
+  (`overrides[path#symbol]` else
   `overrides[path]` else `match_finishers[path]` else `first_matchers[path]`,
-  evaluated at base `69d973f125...`), which reproduces the count of 8 exactly.
+  evaluated at base `69d973f125...`), which reproduces the same 8 rows and the
+  same 8 handles both times.
   Each old shard path is recorded per function as `legacy_source` in
   `config/tu_manifest.d/ov002/da1up_c.json`.
 
-  | # | Ordinal | Address | Override key to add | Credit owed to | Where the base credit comes from |
-  |---|---|---|---|---|---|
-  | 1 | 1 | 0x020aee88 | `src/actors/da1up_c.cpp#_ZN7da1up_cD0Ev` | `tangosdev` | an existing `attribution.json` path override, now keyed on a shard path the fold deleted |
-  | 2 | 3 | 0x020aefa4 | `src/actors/da1up_c.cpp#func_ov002_020aefa4` | `ruspecial` | an existing `attribution.json` path override, now keyed on a shard path the fold deleted |
-  | 3 | 4 | 0x020aefb8 | `src/actors/da1up_c.cpp#func_ov002_020aefb8` | `lunavyqo` | `match_finishers` on the deleted shard |
-  | 4 | 15 | 0x020af724 | `src/actors/da1up_c.cpp#func_ov002_020af724` | `tangosdev` | `match_finishers` on the deleted shard |
-  | 5 | 20 | 0x020af950 | `src/actors/da1up_c.cpp#func_ov002_020af950` | `tangosdev` | `match_finishers` on the deleted shard |
-  | 6 | 26 | 0x020afc68 | `src/actors/da1up_c.cpp#func_ov002_020afc68` | `tangosdev` | `match_finishers` on the deleted shard |
-  | 7 | 30 | 0x020aff10 | `src/actors/da1up_c.cpp#func_ov002_020aff10` | `tangosdev` | `match_finishers` on the deleted shard |
-  | 8 | 34 | 0x020b00e8 | `src/actors/da1up_c.cpp#_ZN7da1up_c8BehaviorEv` | `alexsobolew7` | `match_finishers` on the deleted shard |
+  **Two of these eight need a row under BOTH mangled spellings, and an earlier
+  revision of this table asked for only the new one.** That is not a cosmetic
+  point: applied literally, the earlier table made the pre-push gate FAIL. The
+  two tools that read these rows key them differently, and both have to hit:
 
-  Rows 1 and 2 are the two whose credit currently survives only through an
-  `attribution.json` row keyed on a path this promotion deleted; re-key those
-  onto the TU rather than adding a second row, so no stale key is left behind.
-  Three named contributors other than the project account are owed credit here
-  -- `ruspecial` (1), `lunavyqo` (1) and `alexsobolew7` (1) -- and `tangosdev`
-  is owed the other 5. For completeness the integrator may also add rows for
-  `func_ov002_020aeee4` (ordinal 2, 0x020aeee4) and `func_ov002_020afd10`
-  (ordinal 27, 0x020afd10), both `andrewboudreau`: no credit moves today, but a
-  row makes them durable against a later move of this file. That would bring
-  the TU to 36/36 explicit rows.
+  - `validate_merge.attribution_snapshot` builds `f"{path}#{rec['name']}"` from
+    the built report, so at HEAD it looks up the **new** spelling
+    (`...#_ZN7da1up_cD0Ev`) on the TU path.
+  - `prepush_attribution.member_overrides_at` splits on the `#` and keys the
+    result by the bare symbol, then consults it for each **deleted shard's
+    basename** (`prepush_attribution.py:256-265`). A promoted shard's basename
+    is the **old** spelling (`_ZN13OneUpMushroomD0Ev`), because that is what
+    the file was called. Without a row under the old spelling the rescue misses
+    and the gate reports the credit lost.
+
+  This is exactly what the 26 rows already on that path do -- it is why 26
+  shards carry 33 rows -- and the earlier table failed to apply its own
+  arithmetic to the two shards it was adding. Measured on a scratch commit by
+  this session; see the `prepush_attribution` entry under Proof for the exit
+  codes.
+
+  | # | Ordinal | Address | Override key(s) to add on `src/actors/da1up_c.cpp` | Value | Where the base credit comes from |
+  |---|---|---|---|---|---|
+  | 1 | 1 | 0x020aee88 | `#_ZN7da1up_cD0Ev` **and** `#_ZN13OneUpMushroomD0Ev` | `tangosdev` | an `attribution.json` **bare-path** override keyed on the deleted shard `_ZN13OneUpMushroomD0Ev.cpp`; drop that row |
+  | 2 | 3 | 0x020aefa4 | `#func_ov002_020aefa4` | `ruspecial` | an `attribution.json` **bare-path** override keyed on the deleted shard `func_ov002_020aefa4.c`; drop that row |
+  | 3 | 4 | 0x020aefb8 | `#func_ov002_020aefb8` | `lunavyqo` | `match_finishers` on the deleted shard |
+  | 4 | 15 | 0x020af724 | `#func_ov002_020af724` | `tangosdev` | `match_finishers` on the deleted shard |
+  | 5 | 20 | 0x020af950 | `#func_ov002_020af950` | `tangosdev` | `match_finishers` on the deleted shard |
+  | 6 | 26 | 0x020afc68 | `#func_ov002_020afc68` | `tangosdev` | `match_finishers` on the deleted shard |
+  | 7 | 30 | 0x020aff10 | `#func_ov002_020aff10` | `tangosdev` | `match_finishers` on the deleted shard |
+  | 8 | 34 | 0x020b00e8 | `#_ZN7da1up_c8BehaviorEv` **and** `#_ZN13OneUpMushroom8BehaviorEv` | `alexsobolew7` | `match_finishers` on the deleted shard |
+
+  Ten rows for eight shards. Rows 3-7 need only one spelling because a
+  `func_ov002_*` body was never renamed -- its shard basename and its symbol
+  are the same string. Rows 1 and 8 are the two renamed members and need both.
+
+  Two of the eight, rows 1 and 2, additionally require a **deletion**: their
+  credit today survives only through a bare-path `attribution.json` override on
+  a path this promotion deleted, and they appear in neither `first_matchers`
+  nor `match_finishers`. Re-key them onto the TU -- add the `#symbol` row(s),
+  drop the bare-path row -- rather than leaving a second, stale key behind. The
+  other six are `match_finishers`-only and need no deletion.
+
+  On the **value** column: write the base handle verbatim, as
+  `match_finishers` / the bare-path override returns it at base
+  `69d973f125...`. Notably that means `alexsobolew7` for row 8, not
+  `ruspecial`. `prepush_attribution` string-compares the row's value against
+  the base handle with no alias resolution, so a canonicalised value can read
+  as CREDIT CHANGED; `validate_merge` applies `attribution.json`'s own
+  `aliases` map afterwards (`validate_merge.py:319-333`) and gets the right
+  person either way.
+
+  Which person: `attribution.json`'s own `aliases` map collapses
+  `alexsobolew7` onto `ruspecial`, so **two** distinct contributors outside the
+  project account are owed here, not three -- `ruspecial` **x2** (rows 2 and 8)
+  and `lunavyqo` **x1** (row 3) -- with `tangosdev` owed the other 5. An
+  earlier revision of this document counted `alexsobolew7` as a third person;
+  it is the same person as `ruspecial`, and `lunavyqo` is not aliased to
+  anyone.
+
+  For completeness the integrator may also add rows for `func_ov002_020aeee4`
+  (ordinal 2, 0x020aeee4) and `func_ov002_020afd10` (ordinal 27, 0x020afd10),
+  both `andrewboudreau`: no credit moves today, but a row makes them durable
+  against a later move of this file. That would bring the TU to 36/36 shards
+  covered, on 45 rows -- the 9 renamed members at two spellings each plus the
+  27 `func_ov002_*` bodies at one.
 - Remaining agreed issue scope: name the 14 dispatch members and the 13 helpers
   only if evidence appears (none in the ROM); replace raw offsets in the 27 free
   bodies with member access without moving bytes; give the dispatch array and
@@ -268,12 +362,13 @@ This document describes this commit. The queue records its immutable output SHA.
 Unless an entry says otherwise, the commands ran in `C:/tmp/sm64ds-a1up2411`
 (producer session `prod-2411-0907`) on this commit's tree -- source and config
 identical to `95a79f7ea068f9652b71cf09b7e2400dfa6b1f97`, and identical again to
-the rejected input `39229e56`, since this revision changes only this document --
-with pinned compiler mwccarm 2004/b56 and base
-`69d973f1259889d1ac588283e6cab54bd0f28190`. Entries marked **[verifier]** were
-measured independently by session `vfy-2411-0907` in `C:/tmp/sm64ds-vfy2411` on
-the same tree; entries marked **[this revision]** were measured by session
-`prod-2411b-0907` in `C:/tmp/sm64ds-sm64ds-1up2411b`. Logs are in each
+the inputs `39229e56` and `9c361560`, since the two revisions after `39229e56`
+changed only this document -- with pinned compiler mwccarm 2004/b56 and base
+`69d973f1259889d1ac588283e6cab54bd0f28190`. Session markers:
+**[verifier]** was measured independently by `vfy-2411-0907` in
+`C:/tmp/sm64ds-vfy2411`; **[rev b]** by `prod-2411b-0907` in
+`C:/tmp/sm64ds-sm64ds-1up2411b`; **[this revision]** by `prod-2411c-0907` in
+`C:/tmp/sm64ds-sm64ds-1up2411c`. All on the same tree. Logs are in each
 worktree's ignored `build/`; they are not committed.
 
 - Full-ROM build: `python tools/rombuild.py -j16 --no-rom` -> exit 0.
@@ -328,7 +423,7 @@ worktree's ignored `build/`; they are not committed.
   step `[4/8]` before any byte comparison: `FAIL src/actors/da1up_c.cpp:
   isolate: intact TU preparation refused: ov002/da1up_c: intact production
   requires one .text claim and at least one non-text claim`. Re-run and
-  reproduced verbatim **[this revision]** at this commit. This is a tool-shape
+  reproduced verbatim **[rev b]** at this tree. This is a tool-shape
   limit, not a byte result: the scratch link forces the candidate through
   `tu_production.prepare_intact_object`, which needs a non-text claim, while
   this TU deliberately claims `.text` only (vtable, RTTI, descriptors and bss
@@ -375,34 +470,106 @@ worktree's ignored `build/`; they are not committed.
   69d973f1259889d1ac588283e6cab54bd0f28190 --head HEAD --json
   build/attrib.json` -> exit 0, `9720 tracked, 0 moved with credit intact,
   0 renamed with credit intact, 26 consolidated with credit intact, 0 changed,
-  0 lost`. Re-run **[this revision]**; the verifier ran the same command with
-  the same result. Coverage limit, and this is the point: this gate only sees
-  the 26 shards that HAVE an `attribution.json` override row. The other 10 do
-  not appear in its ledger at all, so `0 changed` here does not contradict the
-  private validator's 8 reassignments -- the two tools disagree because they
-  measure different sets. The 8 were recomputed **[this revision]** with the
-  validator's own resolution order against base `69d973f125...` and are
-  tabulated under Reconstruction dimensions. `attribution.json` is unreserved
-  global bookkeeping and was not edited by this commit. Log
-  `build/attrib.json`.
+  0 lost`. Re-run **[rev b]** and again **[this revision]**; both verifications
+  ran the same command with the same result. Coverage limit, and an earlier revision of this
+  document had its mechanism **exactly backwards**. It said the gate sees only
+  the 26 rowed shards and that the other 10 are absent from its ledger. It is
+  the other way round, and it was measured this time rather than reasoned
+  about, by comparing each shard's `legacy_source` basename against
+  `prepush_attribution.lineage(HEAD)`:
+  - **0 of the 26** rowed shards appear in the HEAD ledger. Their deleted paths
+    drop out of `first_matchers`/`match_finishers`/bare overrides entirely, so
+    each falls into the "present at base, gone at head" branch and is rescued
+    by its `#symbol` row. That rescue is precisely what `26 consolidated`
+    counts -- the number is the rowed shards, but it counts them because they
+    VANISHED, not because the gate can see them.
+  - **10 of the 10** unrowed shards DO appear in the HEAD ledger: 8 because
+    `match_finishers` never expires a deleted source path, and 2
+    (`_ZN13OneUpMushroomD0Ev`, `func_ov002_020aefa4`) through the stale
+    bare-path overrides that rows 1 and 2 of the owed table remove. Being
+    present at head with the same handle as at base, they compare equal and are
+    reported as nothing at all.
+
+  The conclusion the earlier revision drew survives intact: `0 changed` here
+  does not contradict the private validator's 8 reassignments, because the two
+  tools measure different sets. Only the stated reason was wrong. The 8 were
+  recomputed **[this revision]** with the validator's own resolution order
+  against base `69d973f125...`, reproducing the same 8 rows and the same base
+  handles, and are tabulated under Reconstruction dimensions.
+  `attribution.json` is unreserved global bookkeeping and was not edited by
+  this commit. Log `build/attrib.json`.
+- Scratch test of the owed-attribution table **[this revision]**: the table
+  above is a recipe an integrator will apply literally, so it was applied
+  literally -- to `attribution.json` on a throwaway branch off this commit, one
+  commit per variant, then measured with the same
+  `prepush_attribution.py --base 69d973f125... --head HEAD` invocation and the
+  branch deleted. Three variants:
+  - The table **as the previous revision wrote it** (new mangled spelling only,
+    both bare-path overrides dropped) -> **exit 1**, `27 consolidated with
+    credit intact, 0 changed, 1 lost`, and the line
+    `CREDIT LOST     _ZN13OneUpMushroomD0Ev`, whose tail names the deleted
+    shard stem and `tangosdev`. `func_ov002_020aefa4` is rescued (its shard
+    basename and its symbol are the same string); the renamed destructor is not.
+  - The table **as corrected above** (both spellings for rows 1 and 8) ->
+    **exit 0**, `9718 tracked, 0 moved with credit intact, 0 renamed with
+    credit intact, 28 consolidated with credit intact, 0 changed, 0 lost`. The
+    two extra consolidations over the 26 baseline are exactly
+    `_ZN13OneUpMushroomD0Ev` and `func_ov002_020aefa4`; `tracked` falls by 2
+    because dropping the two stale bare-path overrides removes two names from
+    the head ledger. Rows 3-8 change this gate's tally by nothing, for the
+    reason in the coverage limit above -- their names never leave the ledger.
+  - The corrected table with row 8 valued `ruspecial` instead of
+    `alexsobolew7` -> also **exit 0**, `28 consolidated, 0 changed, 0 lost`,
+    because that shard's name stays in the head ledger and its `#symbol` row is
+    never consulted by this gate. Recorded so nobody reads that as licence:
+    write the base handle verbatim, since the moment `match_finishers` stops
+    carrying the deleted path the row IS consulted and a canonicalised value
+    reads as CREDIT CHANGED.
+
+  The scratch commits were discarded and their branch deleted;
+  `git diff 9c361560ff07147d1944597fbf0e5a22de8638cf -- attribution.json`
+  on this commit is empty. Applying the table remains the integration lane's
+  work, not this task's.
 - Gates re-run for THIS revision, and only these **[this revision]**: this
   commit changes one Markdown file under `notes/` and no source, header,
   manifest, `symbols.txt` or `delinks.txt`, so the byte, relocation and
   ROM-data evidence above was NOT re-measured -- it was taken on the identical
-  tree and stands unchanged. What was re-run is what a prose edit can plausibly
-  break, plus the two claims being corrected:
+  tree and stands unchanged, and the identity of that tree was itself checked
+  at blob level by the second verification. What was re-run is what a prose
+  edit can plausibly break, plus every claim this revision corrects:
   `python tools/check_dead_references.py` -> exit 0, `10329 scan target(s) ...
   896 markdown link(s), 0 that do not resolve relative to their own file`,
-  `no new dead references`, `no broken markdown links` (it also notes that 3
-  already-baselined prose references now resolve, which is not a failure and is
-  left for a separate baseline-shrinking change);
+  `no new dead references`, `no broken markdown links` (it still notes the same
+  3 already-baselined prose references that now resolve, which is not a failure
+  and is left for a separate baseline-shrinking change). Worth recording for
+  whoever edits this document next: its first draft named the two deleted shard
+  paths in full and this gate went red on all three tokens, since it reads any
+  `dir/file`-shaped string in prose as a live path claim. The prose now names
+  those shards by basename only, which is why row 1 and row 2 of the table
+  above read the way they do;
   `python tools/check_python_names.py` -> exit 0, `278 tracked file(s) checked,
   0 unresolvable names`;
-  `python tools/tubuild.py linkcheck ov002/da1up_c` -> exit 1, the documented
-  refusal, reproduced verbatim; `python tools/prepush_attribution.py` as above;
-  `python tools/srcpath.py _ZN7da1up_c6RenderEv` -> `src/actors/da1up_c.cpp`.
-  No full ROM rebuild, no `tubuild verify`, no `romdata_check` and no
-  `prepush_linkcheck` run belongs to this revision, and none is claimed for it.
+  `python tools/prepush_attribution.py --base 69d973f125... --head HEAD` on
+  this commit -> exit 0, `26 consolidated, 0 changed, 0 lost`, and on the three
+  scratch variants of the owed table -> exit 1 / exit 0 / exit 0 as recorded
+  above; the ledger-membership measurement behind the corrected coverage limit
+  (0 of the 26 rowed shards and 10 of the 10 unrowed ones present in
+  `prepush_attribution.lineage(HEAD)`); the base-handle recomputation
+  for all 36 shards through the validator's resolution order; the
+  `attribution.json` `aliases` read that settles `alexsobolew7` -> `ruspecial`;
+  the block-scope mangled `extern` count (33 lines, 16 distinct symbols); and
+  `git merge-base --is-ancestor 1c93d2663 origin/main` -> exit 0.
+  Gates NOT run for this revision, and why: `rombuild.py`, `tubuild verify`,
+  `tubuild linkcheck`, `romdata_check.py`, `prepush_linkcheck.py`,
+  `linkcheck.py`, `check_header_offsets.py`, `affected_src.py`,
+  `port_refcheck.py`, `check_rename_ledger.py`, `check_src_tu.py`,
+  `check_tubuild_conflicts.py`, `check_profile_campaign.py`,
+  `tiers_ratchet.py`, `langmode_audit.py`, `layout_check.py`,
+  `cpp_tu_state.py`, `queue_audit.py`, `tu_map.py` and `srcpath.py` -- every
+  one of them reads source, headers, config, manifests or the ROM, none of
+  which this commit touches; their recorded results were taken on this exact
+  tree and are not restated as this revision's own work. No claim in this
+  document rests on a measurement this revision made but did not name.
 - Private validation, if run, and the exact PR head/base it tested: not run on
   this commit. On the predecessor (PR head `f38a8f74f584658e02e0ab4ae435a0fa2e949c5f`,
   https://github.com/tangosdev/sm64ds-decomp/pull/2398#issuecomment-5565596161)
