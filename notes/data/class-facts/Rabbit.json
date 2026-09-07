@@ -3,7 +3,7 @@
   "class_name_is_coined": true,
   "rtti_name": "7daMip_c",
   "rtti_name_address": "0x021300bc",
-  "scouted_at_base": "2ab05bae3 (origin/main, 2026-09-07; HEAD == origin/main, `git log --oneline HEAD..origin/main` empty, merge-base == HEAD)",
+  "scouted_at_base": "Cut at origin/main 2ab05bae3, then origin/main advanced 7 commits to b266ff471 (a tooling and gate PR) while this run was in flight and b266ff471 was MERGED into cpp/Rabbit-tu -- not rebased onto, since the branch was already pushed. Re-derived after the merge: `git diff --stat 2ab05bae3..b266ff471 -- notes/data/tu-promotion-queue.tsv config/tu_manifest.d config/arm9/overlays/ov085 include/Rabbit.h src/ notes/data/class-facts/` is EMPTY, so every tree-derived field below still holds at b266ff471. The seven commits touched only tools/ and one note.",
   "scout_worktree": "C:/tmp/sm64ds-rabbit-scout on branch cpp/Rabbit-tu",
 
   "identity_evidence": {
