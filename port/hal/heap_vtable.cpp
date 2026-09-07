@@ -116,3 +116,29 @@ extern "C" void *_ZTV13ExpandingHeap[15] = {
     (void *)slot_trap13,       /* 13: VGetNodeID */
     (void *)slot_trap14,       /* 14: VResizeToFit */
 };
+
+// ---- ExpandingHeap's constructor, under its Itanium spelling ---------------
+//
+// src/_ZN4Heap14CreateRootHeapEPvj.cpp and src/_ZN4Heap19CreateExpandingHeapEjPS_i.cpp
+// call `_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator' as an extern "C"
+// function, for the reason hal/heap_globals.cpp's constructor-bridge block gives:
+// C1 is an Itanium ABI variant tag and MSVC has no syntax that emits or references
+// one, so the only way to satisfy that string is to write a function with it.
+//
+// IT IS HERE AND NOT NEXT TO THE OTHER TWO because heap_globals.cpp is also linked
+// by smoke_heap, whose slice is the allocator layer alone. The body has to name
+// ExpandingHeap's constructor, and smoke_heap does not compile it -- putting this
+// there would trade two of smoke_heap's unresolved symbols for a new one.
+//
+// The placement new also installs the MSVC vptr, which is what
+// src/_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator.cpp already does when
+// MSVC compiles it; this bridge does not change which table an object carries. The
+// synthetic _ZTV13ExpandingHeap above serves the C-spelled callers, and the note at
+// the head of this file covers the slot numbering the two orders disagree on.
+#include <new>
+
+extern "C" ExpandingHeap *_ZN13ExpandingHeapC1EPvjP4HeapP22ExpandingHeapAllocator(
+    void *self, void *start, u32 size, Heap *root, ExpandingHeapAllocator *allocator)
+{
+    return ::new (self) ExpandingHeap(start, size, root, allocator);
+}
