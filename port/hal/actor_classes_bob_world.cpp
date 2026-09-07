@@ -783,6 +783,15 @@ int *_ZN11CannonHatchD1Ev(int *self);
 int *_ZN11CannonHatchD0Ev(int *self);          /* slot 17, DTOR-PAIRS seat (ov002 0x020bc938) */
 void *_ZTV11CannonHatch[32];
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov002 0x02109d38 carries its own RTTI
+   record: the word at 0x02109d34 relocates to the typeinfo at 0x02109cf0,
+   whose word[1] points at the Itanium name string at 0x02109cfc =
+   "20daObjCannonShutter_c", so 20daObjCannonShutter_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   CannonHatch_Spawn, _ZN11CannonHatchD0Ev, _ZN11CannonHatchD1Ev. Read out
+   of extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV20daObjCannonShutter_c=__ZTV11CannonHatch")
 static int __fastcall ch_init(void *s, void *)
 { return ((CannonHatch *)s)->CannonHatch::InitResources(); }
@@ -1200,6 +1209,15 @@ int *_ZN10StarSwitchD1Ev(int *self);
 int *_ZN10StarSwitchD0Ev(int *self);           /* slot 17, DTOR-PAIRS seat (ov002 0x020b9ea8) */
 void *_ZTV10StarSwitch[32];
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov002 0x02109940 carries its own RTTI
+   record: the word at 0x0210993c relocates to the typeinfo at 0x021098cc,
+   whose word[1] points at the Itanium name string at 0x021098d8 =
+   "13daObjSwitch_c", so 13daObjSwitch_c is the ROM's own RTTI spelling of
+   that class. The ROM bodies whose literal pools load it are
+   ExclamationSwitch_Spawn, StarSwitch_Spawn, _ZN10StarSwitchD0Ev. Read out
+   of extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV13daObjSwitch_c=__ZTV10StarSwitch")
 static int __fastcall xs_init(void *s, void *)
 { return _ZN10StarSwitch13InitResourcesEv((char *)s); }
@@ -1297,6 +1315,15 @@ DSSTATE_BEGIN
 void *data_ov002_0210b030[31];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov002 0x0210b030 carries its own RTTI
+   record: the word at 0x0210b02c relocates to the typeinfo at 0x0210b000,
+   whose word[1] points at the Itanium name string at 0x0210aff4 =
+   "9daSCoin_c", so 9daSCoin_c is the ROM's own RTTI spelling of that class.
+   The ROM bodies whose literal pools load it are InvisibleSecret_Spawn,
+   func_ov002_020f03c4, func_ov002_020f03f4. Read out of
+   extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV9daSCoin_c=_data_ov002_0210b030")
 static int __fastcall is_init(void *s, void *)
 { return func_ov002_020f07dc((char *)s); }
@@ -1356,6 +1383,15 @@ DSSTATE_BEGIN
 void *data_ov002_02108480[31];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov002 0x02108480 carries its own RTTI
+   record: the word at 0x0210847c relocates to the typeinfo at 0x02108450,
+   whose word[1] points at the Itanium name string at 0x02108444 =
+   "7daBar_c", so 7daBar_c is the ROM's own RTTI spelling of that class. The
+   ROM bodies whose literal pools load it are InvisiblePole_Spawn,
+   func_ov002_020b05d0, func_ov002_020b0600. Read out of
+   extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV7daBar_c=_data_ov002_02108480")
 static int __fastcall ip_init(void *s, void *)
 { return func_ov002_020b067c((char *)s); }
@@ -1746,6 +1782,15 @@ int *_ZN13FortressTowerD1Ev(int *self);
 int *_ZN13FortressTowerD0Ev(int *self);        /* slot 17, DTOR-PAIRS seat (ov102 0x02148ac4) */
 void *_ZTV13FortressTower[32];
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov102 0x0214e1d8 carries its own RTTI
+   record: the word at 0x0214e1d4 relocates to the typeinfo at 0x0214e0c0,
+   whose word[1] points at the Itanium name string at 0x0214e0cc =
+   "15daObjSimpleBg_c", so 15daObjSimpleBg_c is the ROM's own RTTI spelling
+   of that class. The ROM bodies whose literal pools load it are
+   CgStairs_Spawn, FortressTower_Spawn, RockTriangle_Spawn. Read out of
+   extracted/overlays/overlay_0102.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV15daObjSimpleBg_c=__ZTV13FortressTower")
 static int __fastcall wp_init(void *s, void *)
 { return ((FortressTower *)s)->FortressTower::InitResources(); }
@@ -1814,6 +1859,15 @@ DSSTATE_BEGIN
 void *data_ov002_0210acbc[31];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov002 0x0210acbc carries its own RTTI
+   record: the word at 0x0210acb8 relocates to the typeinfo at 0x0210ac7c,
+   whose word[1] points at the Itanium name string at 0x0210ac88 =
+   "11daWarpkun_c", so 11daWarpkun_c is the ROM's own RTTI spelling of that
+   class. The ROM bodies whose literal pools load it are Warp_Spawn,
+   func_ov002_020ec388, func_ov002_020ec3b8. Read out of
+   extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV11daWarpkun_c=_data_ov002_0210acbc")
 static int __fastcall warp_init(void *s, void *)
 { return func_ov002_020ec4c4((char *)s); }

@@ -548,6 +548,15 @@ DSSTATE_BEGIN
 void *_ZTV12FallBlockBbh[32];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov063 0x0211eb58 carries its own RTTI
+   record: the word at 0x0211eb54 relocates to the typeinfo at 0x0211eb04,
+   whose word[1] points at the Itanium name string at 0x0211eb1c =
+   "20daObjTh_Fall_Block_c", so 20daObjTh_Fall_Block_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   FallBlockBbh_Spawn, _ZN12FallBlockBbhD0Ev, _ZN12FallBlockBbhD1Ev. Read
+   out of extracted/overlays/overlay_0063.bin; the LHS is not a config
+   symbol anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV20daObjTh_Fall_Block_c=__ZTV12FallBlockBbh")
 extern "C" void *port_factory_fall_block_bbh(void)
 {
@@ -790,6 +799,15 @@ void *_ZTV8BookShot[31];
 void *_ZTV15BookShotSpawner[31];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov020 0x0211495c carries its own RTTI
+   record: the word at 0x02114958 relocates to the typeinfo at 0x02114844,
+   whose word[1] points at the Itanium name string at 0x0211482c =
+   "8daBook_c", so 8daBook_c is the ROM's own RTTI spelling of that class.
+   The ROM bodies whose literal pools load it are BookShot_Spawn,
+   Bookend_Spawn, _ZN8BookShotD0Ev. Read out of
+   extracted/overlays/overlay_0020.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV8daBook_c=__ZTV8BookShot")
 struct BookShot { int InitResources(); int CleanupResources(); int Behavior(); };
 struct BookShotSpawner { int InitResources(); int CleanupResources(); };
@@ -917,6 +935,15 @@ DSSTATE_BEGIN
 void *_ZTV11CrazedCrate[31];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov080 0x02128198 carries its own RTTI
+   record: the word at 0x02128194 relocates to the typeinfo at 0x02128168,
+   whose word[1] points at the Itanium name string at 0x0212815c =
+   "9daBttBk_c", so 9daBttBk_c is the ROM's own RTTI spelling of that class.
+   The ROM bodies whose literal pools load it are CrazedCrate_Spawn,
+   _ZN11CrazedCrateD0Ev, _ZN11CrazedCrateD1Ev. Read out of
+   extracted/overlays/overlay_0080.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV9daBttBk_c=__ZTV11CrazedCrate")
 struct CrazedCrate { int InitResources(); int Behavior(); int Render(); };
 static int __fastcall cc_init(void *s, void *)

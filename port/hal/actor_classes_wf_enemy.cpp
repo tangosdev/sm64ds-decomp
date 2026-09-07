@@ -287,6 +287,15 @@ int *_ZN10BulletBillD0Ev(int *self);
 int func_ov079_021266fc(void);                       /* slot 29 */
 void *_ZTV10BulletBill[31];
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov079 0x02127ee8 carries its own RTTI
+   record: the word at 0x02127ee4 relocates to the typeinfo at 0x02127eb8,
+   whose word[1] points at the Itanium name string at 0x02127eac =
+   "7daKlr_c", so 7daKlr_c is the ROM's own RTTI spelling of that class. The
+   ROM bodies whose literal pools load it are BulletBill_Spawn,
+   _ZN10BulletBillD0Ev, _ZN10BulletBillD1Ev. Read out of
+   extracted/overlays/overlay_0079.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV7daKlr_c=__ZTV10BulletBill")
 
 static int __fastcall klr_init(void *s, void *)

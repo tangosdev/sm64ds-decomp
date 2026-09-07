@@ -348,6 +348,15 @@ int *_ZN9TowerStepD1Ev(int *self);                /* .c, C linkage */
 int *_ZN9TowerStepD0Ev(int *self);                /* .c, slot 17, DTOR-PAIRS seat (0x02112988) */
 void *_ZTV9TowerStep[32];
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov015 0x02114714 carries its own RTTI
+   record: the word at 0x02114710 relocates to the typeinfo at 0x021146d0,
+   whose word[1] points at the Itanium name string at 0x021146dc =
+   "17daObjBk_Rotebar_c", so 17daObjBk_Rotebar_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   RotatingBridge_Spawn, _ZN9TowerStepD0Ev, _ZN9TowerStepD1Ev. Read out of
+   extracted/overlays/overlay_0015.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV17daObjBk_Rotebar_c=__ZTV9TowerStep")
 static int __fastcall rb_init(void *s, void *)
 { return ((TowerStep *)s)->TowerStep::InitResources(); }
@@ -406,6 +415,15 @@ DSSTATE_BEGIN
 void *data_ov015_02114360[31];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov015 0x02114360 carries its own RTTI
+   record: the word at 0x0211435c relocates to the typeinfo at 0x02114318,
+   whose word[1] points at the Itanium name string at 0x02114324 =
+   "18daObjBkBillboard_c", so 18daObjBkBillboard_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   PoleBillboard_Spawn, __sinit_ov034_021138ec, func_ov015_021111a0. Read
+   out of extracted/overlays/overlay_0015.bin; the LHS is not a config
+   symbol anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV18daObjBkBillboard_c=_data_ov015_02114360")
 static int __fastcall pb_init(void *s, void *)
 { return func_ov015_021112a0((char *)s); }
@@ -453,6 +471,15 @@ int *_ZN13PoleBillboardD1Ev(int *self);                /* .c, C linkage */
 int *_ZN13PoleBillboardD0Ev(int *self);                /* .c, slot 17, DTOR-PAIRS seat (0x02111360) */
 void *_ZTV13PoleBillboard[32];
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov015 0x02114420 carries its own RTTI
+   record: the word at 0x0211441c relocates to the typeinfo at 0x021143dc,
+   whose word[1] points at the Itanium name string at 0x021143e8 =
+   "17daObjBk_Botaosi_c", so 17daObjBk_Botaosi_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   KnockDownPlank_Spawn, _ZN13PoleBillboardD0Ev, _ZN13PoleBillboardD1Ev.
+   Read out of extracted/overlays/overlay_0015.bin; the LHS is not a config
+   symbol anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV17daObjBk_Botaosi_c=__ZTV13PoleBillboard")
 static int __fastcall kp_init(void *s, void *)
 { return _ZN13PoleBillboard13InitResourcesEv((char *)s); }
@@ -518,6 +545,15 @@ void *data_ov015_021147e8[32];
 DSSTATE_END
 void *RotatingPlatformWf_Spawn(void);
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov015 0x021147e8 carries its own RTTI
+   record: the word at 0x021147e4 relocates to the typeinfo at 0x02114798,
+   whose word[1] points at the Itanium name string at 0x021147b0 =
+   "17daObjBk_Ukisima_c", so 17daObjBk_Ukisima_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   RotatingPlatformWf_Spawn, func_ov015_02112bd0, func_ov015_02112c20. Read
+   out of extracted/overlays/overlay_0015.bin; the LHS is not a config
+   symbol anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV17daObjBk_Ukisima_c=_data_ov015_021147e8")
 /* RotatingPlatformWf_Spawn is the one ov015 factory whose vtable store is the
    shared-header VT1 placeholder (`p[0] = (int)VT1`), not a named _ZTV -- the
@@ -603,6 +639,15 @@ int *_ZN14KnockDownPlankD0Ev(int *self);                 /* .c, slot 17, DTOR-PA
 void port_knock_down_plank_states_seat(void);            /* the two-table seat */
 void *_ZTV14KnockDownPlank[32];
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov015 0x0211458c carries its own RTTI
+   record: the word at 0x02114588 relocates to the typeinfo at 0x02114510,
+   whose word[1] points at the Itanium name string at 0x0211451c =
+   "19daObjBk_Dossunbar_c", so 19daObjBk_Dossunbar_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   MovingBarBig_Spawn, MovingBarSmall_Spawn, _ZN14KnockDownPlankD0Ev. Read
+   out of extracted/overlays/overlay_0015.bin; the LHS is not a config
+   symbol anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV19daObjBk_Dossunbar_c=__ZTV14KnockDownPlank")
 /* Four spelling bridges the recovered ov015 source needs, none of them a src
    edit and all byte-faithful (same address, same bytes):

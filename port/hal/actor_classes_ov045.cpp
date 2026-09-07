@@ -753,6 +753,15 @@ DSSTATE_BEGIN
 void *_ZTV12FallBlockBfs[32];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov045 0x021130f4 carries its own RTTI
+   record: the word at 0x021130f0 relocates to the typeinfo at 0x021130a0,
+   whose word[1] points at the Itanium name string at 0x021130b8 =
+   "21daObjKm2_Fall_Block_c", so 21daObjKm2_Fall_Block_c is the ROM's own
+   RTTI spelling of that class. The ROM bodies whose literal pools load it
+   are FallBlockBfs_Spawn, _ZN12FallBlockBfsD0Ev, _ZN12FallBlockBfsD1Ev.
+   Read out of extracted/overlays/overlay_0045.bin; the LHS is not a config
+   symbol anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV21daObjKm2_Fall_Block_c=__ZTV12FallBlockBfs")
 /* The unprefixed ov098 spellings this class's Init/Cleanup veneers use are
    already aliased by hal/actor_classes_wf.cpp for FALL_BLOCK_WF's identical

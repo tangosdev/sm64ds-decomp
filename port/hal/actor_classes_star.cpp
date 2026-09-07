@@ -182,6 +182,15 @@ void port_power_star_states_seat(void);   /* port/unmatched/PowerStar_States */
    at the star as Mario, same as every Enemy class in the port. */
 int _ZN5Actor16OnAimedAtWithEggEv(void *self);     /* slot 29 */
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov002 0x0210ab3c carries its own RTTI
+   record: the word at 0x0210ab38 relocates to the typeinfo at 0x0210aa24,
+   whose word[1] points at the Itanium name string at 0x0210aa00 =
+   "8daStar_c", so 8daStar_c is the ROM's own RTTI spelling of that class.
+   The ROM bodies whose literal pools load it are PowerStar_Spawn,
+   SilverStar_Spawn, _ZN9PowerStarD0Ev. Read out of
+   extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV8daStar_c=__ZTV9PowerStar")
 
 /* PowerStar's Cleanup/InitResources and the state helper func_ov002_020e8ef0

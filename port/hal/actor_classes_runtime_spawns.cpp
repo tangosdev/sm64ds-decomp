@@ -309,6 +309,15 @@ int *_ZN16BowserShockwavesD1Ev(int *self);
 int *_ZN16BowserShockwavesD0Ev(int *self);
 void *_ZTV16BowserShockwaves[31];
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov060 0x0211ab54 carries its own RTTI
+   record: the word at 0x0211ab50 relocates to the typeinfo at 0x0211ab14,
+   whose word[1] points at the Itanium name string at 0x0211ab08 =
+   "9daFRing_c", so 9daFRing_c is the ROM's own RTTI spelling of that class.
+   The ROM bodies whose literal pools load it are BowserShockwaves_Spawn,
+   _ZN16BowserShockwavesD0Ev, _ZN16BowserShockwavesD1Ev. Read out of
+   extracted/overlays/overlay_0060.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV9daFRing_c=__ZTV16BowserShockwaves")
 #pragma comment(linker, "/alternatename:_func_021115e4=_data_ov046_021115e4")
 #pragma comment(linker, "/alternatename:_func_021115f4=_data_ov046_021115f4")
@@ -440,6 +449,15 @@ int *_ZN8YoshiEggD1Ev(int *self);
 int *_ZN8YoshiEggD0Ev(int *self);
 extern int _ZTV8YoshiEgg[];                        /* ov002 mount, 31 slots */
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov002 0x0210adb4 carries its own RTTI
+   record: the word at 0x0210adb0 relocates to the typeinfo at 0x0210ad84,
+   whose word[1] points at the Itanium name string at 0x0210ad78 =
+   "8daYegg_c", so 8daYegg_c is the ROM's own RTTI spelling of that class.
+   The ROM bodies whose literal pools load it are YoshiEgg_Spawn,
+   _ZN8YoshiEggD0Ev, _ZN8YoshiEggD1Ev. Read out of
+   extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV8daYegg_c=__ZTV8YoshiEgg")
 #pragma comment(linker, "/alternatename:_func_02123804=_func_ov079_02123804")
 /* CleanupResources.cpp releases the two animation SharedFilePtrs as C++

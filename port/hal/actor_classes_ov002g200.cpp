@@ -101,6 +101,15 @@ void *_ZN5ActorD2Ev(void *self);
 void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern void *data_020a0eac;   /* the game heap */
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov002 0x02109800 carries its own RTTI
+   record: the word at 0x021097fc relocates to the typeinfo at 0x0210977c,
+   whose word[1] points at the Itanium name string at 0x02109788 =
+   "18daObjPowerUpItem_c", so 18daObjPowerUpItem_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   PowerFlower_Spawn, _ZN9PushBlockD0Ev, _ZN9PushBlockD1Ev. Read out of
+   extracted/overlays/overlay_0002.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV18daObjPowerUpItem_c=__ZTV9PushBlock")
 
 // ---- the shared 1..30 half, both 31-slot Actor tables share it -----------

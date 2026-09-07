@@ -405,6 +405,15 @@ DSSTATE_BEGIN
 void *data_ov022_02113f70[32];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov022 0x02113f70 carries its own RTTI
+   record: the word at 0x02113f6c relocates to the typeinfo at 0x02113f2c,
+   whose word[1] points at the Itanium name string at 0x02113f38 =
+   "16daObjFl_London_c", so 16daObjFl_London_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   LavaBridge_Spawn, func_ov022_02111980, func_ov022_021119c4. Read out of
+   extracted/overlays/overlay_0022.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV16daObjFl_London_c=_data_ov022_02113f70")
 /* 73's InitResources (a .cpp) declares its two file pointers and its CLPS
    block as TYPED C++ globals, so MSVC decorates them and the plain C names the
@@ -463,6 +472,15 @@ DSSTATE_BEGIN
 void *data_ov022_02114034[32];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov022 0x02114034 carries its own RTTI
+   record: the word at 0x02114030 relocates to the typeinfo at 0x02113ff0,
+   whose word[1] points at the Itanium name string at 0x02113ffc =
+   "16daObjFl_Seesaw_c", so 16daObjFl_Seesaw_c is the ROM's own RTTI
+   spelling of that class. The ROM bodies whose literal pools load it are
+   LavaSeesaw_Spawn, func_ov022_02111cac, func_ov022_02111cf0. Read out of
+   extracted/overlays/overlay_0022.bin; the LHS is not a config symbol
+   anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV16daObjFl_Seesaw_c=_data_ov022_02114034")
 /* 77's InitResources, same C++-decoration bridge as 73's above. */
 #pragma comment(linker, "/alternatename:?data_ov022_021145a8@@3USharedFilePtr@@A=_data_ov022_021145a8")
@@ -577,6 +595,15 @@ DSSTATE_BEGIN
 void *_ZTV13RollingLogLll[31];
 DSSTATE_END
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov022 0x0211447c carries its own RTTI
+   record: the word at 0x02114478 relocates to the typeinfo at 0x02114434,
+   whose word[1] points at the Itanium name string at 0x02114440 =
+   "21daObj_volcanoCannon_c", so 21daObj_volcanoCannon_c is the ROM's own
+   RTTI spelling of that class. The ROM bodies whose literal pools load it
+   are VolcanoFire_Spawn, _ZN13RollingLogLllD0Ev, _ZN13RollingLogLllD1Ev.
+   Read out of extracted/overlays/overlay_0022.bin; the LHS is not a config
+   symbol anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV21daObj_volcanoCannon_c=__ZTV13RollingLogLll")
 static int __fastcall vf_init(void *s, void *)
 { return ((RollingLogLll *)s)->RollingLogLll::InitResources(); }

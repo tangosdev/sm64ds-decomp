@@ -95,6 +95,15 @@ void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern void *data_020a0eac;   /* the game heap, already hosted (== G0 the
                                   matched src's own D0 bodies extern) */
 }
+/* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
+   off a comment (lane ALIASCHK). ov012 0x02112408 carries its own RTTI
+   record: the word at 0x02112404 relocates to the typeinfo at 0x021123c4,
+   whose word[1] points at the Itanium name string at 0x021123d0 =
+   "14daObjC0Water_c", so 14daObjC0Water_c is the ROM's own RTTI spelling of
+   that class. The ROM bodies whose literal pools load it are
+   BasementWater_Spawn, _ZN12SwitchPillarD0Ev, _ZN12SwitchPillarD1Ev. Read
+   out of extracted/overlays/overlay_0012.bin; the LHS is not a config
+   symbol anywhere, so the alias cannot be defeated by a later slice. */
 #pragma comment(linker, "/alternatename:__ZTV14daObjC0Water_c=__ZTV12SwitchPillar")
 
 // ---- the shared 1..30 half, both 32-slot Platform tables share it --------
