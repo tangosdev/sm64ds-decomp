@@ -533,6 +533,11 @@ def cmd_inspect(args):
 _CPP_MARKER = "//cpp"
 _PRAGMA_LINE_RE = re.compile(r'^\s*#\s*pragma\b.*$')
 _LONG_CALLS_ON_RE = re.compile(r'^\s*#\s*pragma\s+long_calls\s+on\b')
+_AT_SYMBOL_RE = re.compile(r'^\s*//\s*@symbol\s+(\S+)', re.M)
+# The compiler-generated destructor group is the one documented exception: it is
+# scored by tiers._lifecycle_member_fragment from the class header, not from a
+# marker, so marking it here would cut a fragment nothing reads.
+_DTOR_VARIANT_RE = re.compile(r'D[012]Ev$')
 _INCLUDE_RE = re.compile(r'^\s*#\s*include\s*.+$')
 _DEFINE_RE = re.compile(r'^\s*#\s*define\b.*$')
 _DECL_KEYWORDS = ("struct", "class", "enum", "typedef", "namespace")
@@ -896,6 +901,16 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
             out.append(" * ROM's own bytes cover this range. Recover it before promotion. */")
             out.append("")
             continue
+        # `tiers._marked_member_fragment` slices a promoted TU's member source from
+        # each `// @symbol` marker to the NEXT marker, so an unmarked body is
+        # charged to whichever member is marked above it, and the ratchet reports
+        # a BACKSLID against a member that does not contain the offending code.
+        # Emitting the marker here is byte-neutral (measured on ov066/Eyerok: 29
+        # markers added, object sha256 and its 18136 bytes unchanged) and removes
+        # a manual step every promotion previously had to remember.
+        if not _AT_SYMBOL_RE.search("\n".join(p["notes"])) \
+                and not _DTOR_VARIANT_RE.search(name):
+            out.append(f"// @symbol {name}")
         for note in p["notes"]:
             out.append(note)
         # `#pragma long_calls` is POSITIONAL (measured on 2004/b56, notes in the
@@ -1336,9 +1351,12 @@ def cmd_verify(args):
     if not idxs:
         pass
     elif not bad_pairs:
+        # Do not assert HOW the source is laid out here: a TU compiled with
+        # `#pragma defer_codegen off` emits in source order, so an ascending TU
+        # is ascending in the file too. Report the finding, not a guess at the
+        # cause.
         print(f"emission order    : all {len(idxs)} function(s) in the expected ROM-ascending "
-             f"section order (mwccarm reverses source order; this TU was written in reverse "
-             f"to compensate -- see the pilot report sec 3)")
+             f"section order")
     else:
         print(f"emission order    : {len(bad_pairs)} ordinal pair(s) NOT in ROM order: "
              f"{bad_pairs}  (a destructor's D0/D1/D2 group is ordered by the compiler, not "
@@ -1387,6 +1405,7 @@ def cmd_verify(args):
     else:
         print(f"Result: {n_match}/{len(rows)} MATCH -> NOT verified (see DIFF/MISSING/ERROR "
              f"lines above)")
+    promotion_refused = bool(n_unlicensed or policy_reasons)
     if n_unlicensed:
         print(f"        {n_unlicensed} unlicensed section/symbol(s) present -> PROMOTION "
              f"REFUSED regardless of the above (plan sec 4.5, 8)")
@@ -1448,7 +1467,13 @@ def cmd_verify(args):
     upsert_manifest_entry(data, entry)
     save_manifest(data)
 
-    return 0 if text_verified else 1
+    # A PROMOTION REFUSED is a failure of this command even when the bytes
+    # reproduced. `text_verified` is deliberately NOT folded into: it drives the
+    # manifest status above, and "the bytes match but the policy refuses the
+    # promotion" is a real and distinct state that must keep saying text-verified.
+    # Before this, a refused promotion exited 0 and any caller trusting the exit
+    # code shipped it.
+    return 0 if (text_verified and not promotion_refused) else 1
 
 
 # ========================================================== `linkcheck` -- scratch delinks

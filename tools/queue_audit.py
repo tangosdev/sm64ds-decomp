@@ -25,6 +25,13 @@ shard_count        distinct src/ files covering the TU's ROM run, where the run
                    abut; absorbing them adds a member to about 50 rows. It is
                    still a FLOOR -- any other unlabelled neighbour is uncounted.
 unmatched:N        delink entries in the run with no `complete` marker.
+                   The NAME MISLEADS: it is a link condition, not a matching
+                   one. Measured on ov066/Eyerok, all six `unmatched` shards
+                   byte-MATCH under `match.py --strict-relocs`; they carry no
+                   `complete` marker because they reference cross-overlay
+                   addresses under names no module's symbols.txt gives, so dsd
+                   drops them from the link. Check the bytes before assuming
+                   there is decompilation work to do.
 no-legacy-source:N functions in the run with NO delinks entry and NO
                    src/<symbol>.c[pp] -- the cartridge's own bytes cover them.
 not-in-delinks:N   functions with a src/ file but no delinks entry. A milder
@@ -352,6 +359,10 @@ NOTES = [
     "# move: dScMgRoulette_c's pragmas were inert and it scored 40/40 with them deleted.",
     "#",
     "# unmatched:N        delink entries in the run with no 'complete' marker.",
+    "#                    The NAME MISLEADS: this is a LINK condition, not a matching one.",
+    "#                    Measured on ov066/Eyerok all six byte-MATCHed; they lack the marker",
+    "#                    because they reference cross-overlay addresses under names no",
+    "#                    symbols.txt gives, so dsd drops them from the link.",
     "# no-legacy-source:N functions with no delinks entry AND no src/<symbol>.c[pp] at all. The",
     "#                    cartridge's own bytes cover them, and a licensed claim cannot have a",
     "#                    hole, so such a run can only be taken as one of its two contiguous",
@@ -385,9 +396,15 @@ def run(write, check):
             if int(row["shard_count"]) != m["src_files"]:
                 row["shard_count"] = str(m["src_files"])
                 changed["shard_count"] += 1
-                if int(row["total_lines"]) != m["total_lines"]:
-                    row["total_lines"] = str(m["total_lines"])
-                    changed["total_lines"] += 1
+            # total_lines is measured independently of shard_count. It used to be
+            # nested inside the test above, so a row whose line count moved while
+            # its shard count held was never corrected and never counted -- which
+            # is why the two counters always reported the same figure. At the time
+            # of the fix that hid 29 stale rows behind the 4 the gate reported,
+            # with deltas from -51 to +95.
+            if int(row["total_lines"]) != m["total_lines"]:
+                row["total_lines"] = str(m["total_lines"])
+                changed["total_lines"] += 1
             # Omitting the token was never a claim of zero: of 108 promoted
             # manifests only two carry no compiler_only_output, both because
             # the key function fell outside the licensed range.

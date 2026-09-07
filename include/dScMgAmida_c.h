@@ -51,6 +51,30 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    question of itself.  This class narrows the base's `(param1 & 0xff) != 0`
    to `== 1`. */
 struct dScMgAmida_c : dScMgBase_c {
+    /* A touch-screen cell, x then y.  ALL THREE SPECIAL MEMBERS ARE
+       LOAD-BEARING, measured on the pen handler func_ov006_020d1ba0 under
+       2004/b56:
+         - the empty destructor keeps a local of this type on the stack (the
+           dScMgFlower_c::Vec2 rule) and, because the by-value temporaries
+           below then need destroying after the call, makes mwcc materialise
+           `func(...) == n` into a bool before the branch -- the ROM's
+           moveq/movne/cmp triple at every func_ov006_020d2580 call;
+         - the user copy constructor makes a by-value Point argument travel
+           by reference to a caller-side temporary that is filled field by
+           field, x before y and the first argument before the second (the
+           implicit copy does the second argument first), and the fields
+           are re-read through the reference rather than reused from the
+           guard that just compared them;
+         - the default constructor exists only because declaring the copy
+           constructor removes the implicit one. */
+    struct Point {
+        s32 x;
+        s32 y;
+        Point() {}
+        Point(const Point &o) : x(o.x), y(o.y) {}
+        ~Point() {}
+    };
+
     virtual ~dScMgAmida_c();
     virtual s32  InitResources();                       /* slot  0 */
     virtual void AfterCleanupResources(u32 vfSuccess);   /* slot  5 */
@@ -70,18 +94,40 @@ struct dScMgAmida_c : dScMgBase_c {
     virtual int  Virtual8C();                          /* slot 35 */
     virtual int  Unk36();                                /* slot 36 */
 
-    u8  unk_4660[4][8];      /* 0x4660 -- only ever passed around whole */
-    u8  pad_4680[0x50];
+    s32 unk_4660[4][2];      /* 0x4660 */
+    s8  unk_4680[4];          /* 0x4680 */
+    s32 unk_4684[4];          /* 0x4684 */
+    s32 unk_4694[4];          /* 0x4694 */
+    s32 unk_46a4[4];          /* 0x46a4 */
+    s8  unk_46b4[4];          /* 0x46b4 */
+    s32 unk_46b8[4];          /* 0x46b8 */
+    s32 unk_46c8;             /* 0x46c8 */
+    s32 unk_46cc;             /* 0x46cc */
     s32 mState;               /* 0x46d0 -- Behavior's state switch: 0 setup,
                                  1 playing, 2 result wait, 3 finale */
     u8  mFinished;            /* 0x46d4 -- set when mRoundCount reaches 5;
                                  never cleared except by a full reset */
     u8  unk_46d5;             /* 0x46d5 */
     u8  pad_46d6[0x2];
-    u8  pad_46d8[0x28];       /* 0x46d8 -- slot 34's digit-drawing state */
+    /* The rung the player is drawing, as func_ov006_020d1ba0 (the pen
+       handler) keeps it: mLineStart is the end snapped to the lane the pen
+       started on, mLineEnd the end on the lane it crossed to.  x is the lane axis (0x20 + 0x40 * lane) and doubles as the row
+       index of the two 0x158-stride grids below; -1 while idle. */
+    Point mLineStart;         /* 0x46d8 */
+    Point mLineEnd;           /* 0x46e0 */
+    Point mPenStart;          /* 0x46e8 -- cell the pen came down on; -1 while up */
+    Point mPen;               /* 0x46f0 -- cell the pen was on last tick; -1 while up */
+    Point mPrev;              /* 0x46f8 -- slot 34's previous brush cell */
     s32 mLineEndY;            /* 0x4700 -- 0x78 or 0x98; the y2 argument of
                                  the four vertical ghost-leg line draws */
-    u8  pad_4704[0x8];        /* 0x4704 -- slot 34's flag bytes */
+    u8  mLineStartSet;        /* 0x4704 -- mLineX1/Y1 accepted by the probe */
+    u8  mLineEndSet;          /* 0x4705 -- mLineX2/Y2 accepted by the probe */
+    u8  mLineCommit;          /* 0x4706 -- set while the accepted rung is painted */
+    u8  unk_4707;             /* 0x4707 */
+    u8  mProbeMode;           /* 0x4708 -- slot 34 tests the grid instead of painting */
+    u8  mProbeHit;            /* 0x4709 -- slot 34 found an occupied cell */
+    u8  mLineCount;           /* 0x470a -- rungs drawn; 0xff stops the pen */
+    u8  pad_470b;             /* 0x470b */
     u8 *unk_470c;             /* 0x470c -- 0x100 rows x 0x158 bytes, cleared
                                  row-wise; slot 34 indexes it as y*0x158 */
     u8 *unk_4710;             /* 0x4710 -- second buffer of the same shape */
@@ -110,7 +156,9 @@ struct dScMgAmida_c : dScMgBase_c {
     s32 mResultWaitTimer;       /* 0x53c0 -- 0x3c frames of state 2 */
     s32 mStartBannerTimer;      /* 0x53c4 -- 0x3c; on expiry gfx slot 0xd (the
                                  start banner) is freed and the prompt blinks */
-    u8  pad_53c8[0x8];
+    u8  mPenTapped;             /* 0x53c8 -- the pen has not moved since it came down */
+    u8  pad_53c9[0x3];
+    s32 mPenSoundHandle;        /* 0x53cc -- the pen-drag sound, re-armed per tick */
     s32 mEndDelayTimer;         /* 0x53d0 -- 0xb4; Render holds the play field
                                  until it drains, then draws the finale */
     s32 mPatternIndex;          /* 0x53d4 -- selects the ghost-leg pattern;
@@ -118,7 +166,8 @@ struct dScMgAmida_c : dScMgBase_c {
     u8  pad_53d8[0x4];
     u8  unk_53dc;                /* 0x53dc */
     u8  unk_53dd;                /* 0x53dd */
-    u8  pad_53de[0x2];
+    u8  unk_53de;                /* 0x53de -- input lock: the pen handler bails while set */
+    u8  pad_53df;
     s32 mRoundTimer;             /* 0x53e0 -- counts down; expiry ends the
                                  round and picks replay or finish */
     s32 unk_53e4;                /* 0x53e4 */
@@ -127,6 +176,7 @@ struct dScMgAmida_c : dScMgBase_c {
     u8  pad_53ec[0x10];          /* tail padding to the 0x53fc allocation */
 };
 
+typedef char dScMgAmida_c_Point_size_must_be_0x8[sizeof(dScMgAmida_c::Point) == 0x8 ? 1 : -1];
 typedef char dScMgAmida_c_size_must_be_0x53fc[sizeof(dScMgAmida_c) == 0x53fc ? 1 : -1];
 
 #endif

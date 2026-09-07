@@ -544,6 +544,7 @@ src/func_ov075_0211af84.c:
     .text start:0x0211af84 end:0x0211afb0
 
 src/func_ov075_0211b1cc.c:
+    complete
     .text start:0x0211b1cc end:0x0211b260
 
 src/func_ov075_0211b260.c:

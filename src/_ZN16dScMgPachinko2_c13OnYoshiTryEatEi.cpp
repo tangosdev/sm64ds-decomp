@@ -9,19 +9,26 @@
    declaration exactly, or mwcc appends a slot instead of overriding. */
 extern "C" {
 extern void FreeGfxSlotsById(int n);
+extern void func_ov006_02103bfc(char *c);
 }
+
 void dScMgPachinko2_c::OnYoshiTryEat(int n)
 {
-    char *c = (char *)this;
+    /* The score increment reads unk_0bc through a const view of `this`.
+       Without it mwcc CSEs the +0xbc field address into its own register
+       (add r2,r4,#0xbc / ldr [r2] / str [r2]) and the function grows a
+       word; the cartridge re-issues ldr r1,[r4,#0xbc] / str r1,[r4,#0xbc].
+       Same lever as dScMgHanachan_c::OnYoshiTryEat. */
+    const dScMgPachinko2_c *ro = this;
 
-    *(int*)(c+0x5000+0x660) = 0;
-    if(n == 0x10){
-        *(int*)(c+0xbc) = *(int*)(c+0xbc) + 1;
-        if(*(unsigned int*)(c+0xbc) > 0x270e) *(int*)(c+0xbc) = 0x270e;
+    unk_5660 = 0;
+    if (n == 0x10) {
+        unk_0bc = ro->unk_0bc + 1;
+        if (unk_0bc > 0x270e) unk_0bc = 0x270e;
     } else {
-        *(int*)(c+0xbc) = 0;
-        if(*(unsigned int*)(c+0xbc) > 0x270e) *(int*)(c+0xbc) = 0x270e;
+        unk_0bc = 0;
+        if (unk_0bc > 0x270e) unk_0bc = 0x270e;
     }
     FreeGfxSlotsById(0x1d);
-    func_ov006_02103bfc(c);
+    func_ov006_02103bfc((char *)this);
 }

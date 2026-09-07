@@ -26,7 +26,7 @@ void func_ov084_021296cc(char *c)
             LinkSilverStarAndStarMarker(a, b);
             _ZN8dActor_c13SpawnSoundObjEj(c, 1);
         }
-        *(int *)(c + 8) &= 0xff0f;
+        *(int *)(c + 8) = *(const int *)((const char *)c + 8) & 0xff0f;
         return;
     }
     if (*(u8 *)(c + 0x464) != 2)
@@ -41,6 +41,6 @@ void func_ov084_021296cc(char *c)
         0xb3, *(u8 *)(c + 0x466) | 0x30, (struct Vector3 *)(c + 0x5c), 0,
         *(signed char *)(c + 0xcc), -1);
     *(u8 *)(c + 0x464) = 3;
-    *(int *)(c + 8) &= 0xff0f;
+    *(int *)(c + 8) = *(const int *)((const char *)c + 8) & 0xff0f;
     _ZN8dActor_c13SpawnSoundObjEj(c, 1);
 }

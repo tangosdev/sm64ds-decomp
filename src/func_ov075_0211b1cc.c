@@ -27,5 +27,5 @@ void func_ov075_0211b1cc(char* c) {
   }
   func_ov075_0211abb0(c);
   func_ov075_0211ad60(c);
-  self->unk_0a0 += 0x1111;
+  self->unk_0a0 = ((const struct Self *)self)->unk_0a0 + 0x1111;
 }

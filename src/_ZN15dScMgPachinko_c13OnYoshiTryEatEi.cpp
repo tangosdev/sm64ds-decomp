@@ -9,16 +9,21 @@
    declaration exactly, or mwcc appends a slot instead of overriding. */
 void dScMgPachinko_c::OnYoshiTryEat(int n)
 {
-    char *c = (char *)this;
+    /* The score increment reads unk_0bc through a const view of `this`.
+       Without it mwcc CSEs the +0xbc field address into its own register
+       (add r2,r4,#0xbc / ldr [r2] / str [r2]) and the function grows a
+       word; the cartridge re-issues ldr r1,[r4,#0xbc] / str r1,[r4,#0xbc].
+       Same lever as dScMgPachinko2_c::OnYoshiTryEat. */
+    const dScMgPachinko_c *ro = this;
 
-    *(int*)(c+0x5000+0xc10) = 0;
-    if(n == 9){
-        *(int*)(c+0xbc) = *(int*)(c+0xbc) + 1;
-        if(*(unsigned int*)(c+0xbc) > 0x270e) *(int*)(c+0xbc) = 0x270e;
+    unk_5c10 = 0;
+    if (n == 9) {
+        unk_0bc = ro->unk_0bc + 1;
+        if (unk_0bc > 0x270e) unk_0bc = 0x270e;
     } else {
-        *(int*)(c+0xbc) = 0;
-        if(*(unsigned int*)(c+0xbc) > 0x270e) *(int*)(c+0xbc) = 0x270e;
+        unk_0bc = 0;
+        if (unk_0bc > 0x270e) unk_0bc = 0x270e;
     }
-    func_ov006_020fadfc(c);
-    func_ov006_020fad90(c);
+    func_ov006_020fadfc((char *)this);
+    func_ov006_020fad90((char *)this);
 }

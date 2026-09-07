@@ -37,7 +37,7 @@ void func_ov007_020c1db0(T *a, Vec4 *b)
 
     if (*(volatile unsigned int *)&a->f2c & 1) {
         if (a->v8.c == 0)
-            a->f2c &= ~1;
+            a->f2c = ((const T *)a)->f2c & ~1;
         else
             a->v8.c = 0;
     }

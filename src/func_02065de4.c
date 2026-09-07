@@ -36,7 +36,12 @@ int func_02065de4(u8 *a0, int idx)
     int n = *((int *) (b + 0x320));
     if (n > 0)
     {
-      u32 bits = *((u32 *) (((i * 4) + new_var) + 0x1718));
+      /* The bitmask word is reached as +0x1000 then +0x718: spelled as one
+         +0x1718 mwcc shares the constant with the |= above (kept live in ip
+         from the literal pool) and emits ldr r6,[r4,ip]; the cartridge does
+         add r4,r4,#0x1000 / ldr r6,[r4,#0x718]. */
+      char *q = (char *) ((i * 4) + new_var) + 0x1000;
+      u32 bits = *((u32 *) (q + 0x718));
       do
       {
         if ((1u << j) & bits)

@@ -307,9 +307,11 @@ Source: `src/_ZN12daDossyCap_c8BehaviorEv.cpp`.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x3a8 | `mTimer` | counted down once per frame at the top of `Behavior` with `DecIfAbove0_Short` -- as a HALFWORD, though the generated header typed the slot `u8`. The result is discarded there, so the name says "a timer" and no more. |
+| 0x3a8 | `mTimer` | counted down once per frame at the top of `Behavior` with `DecIfAbove0_Short` -- as a HALFWORD, though the generated header typed the slot `u8`. The result is discarded there, so the name says "a timer" and no more. The header now declares it `s16`, and `0x3aa` alongside it is a separate live `u8`, not padding. |
 
-Source: `src/_ZN10Scuttlebug8BehaviorEv.cpp`.
+Source: `src/actors/Scuttlebug.cpp`, which absorbed the one-function
+`Behavior` file when ov071/Scuttlebug was promoted into a single
+translation unit.
 
 ## BowserTail -- include/BowserTail.h
 

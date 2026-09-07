@@ -1455,7 +1455,12 @@ extern int func_ov006_020d5dfc();
 extern int func_ov006_020d5e5c();
 extern void func_ov006_020d6098(void*);
 extern void func_ov006_020d63d4(void*);
-extern int func_ov006_020d672c();
+/* func_ov006_020d672c: the recorded declaration was `int f()` -- decl_headers.py
+   read the legacy shard's K&R `extern int f();` forward declaration rather than
+   its definition. The cartridge's own bytes at 0x020d672c take the scene pointer
+   in r0 and leave r0 untouched on the early-out path, so it is void(void*);
+   src/actors/dScMgBomroom_c.cpp now defines it with that signature. */
+extern void func_ov006_020d672c(void*);
 extern void func_ov006_020d7524(void*);
 extern int func_ov006_020da4ac(char*, s16*);
 extern int func_ov006_020da5e8(char*, char*);

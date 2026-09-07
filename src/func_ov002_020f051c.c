@@ -12,7 +12,10 @@ void func_ov002_020f051c(char* c)
 {
     struct dActor_c* a;
     u32 t;
-    int b;
+    /* u32, not int: the type-kind flag is materialized in the cartridge
+       (moveq r1,r8 / movne r1,r7 / cmp r1,#0 with the 0/1 hoisted out of the
+       loop); an int flag folds each test into a single conditional branch. */
+    u32 b;
     if (*(u8*)(c+0x112) != 0) return;
     a = _ZN8dActor_c4NextEPKS_(0);
     if (a == 0) goto done;
