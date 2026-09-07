@@ -50,16 +50,16 @@
  * ---------------------------------------------------------------------------
  * ALL 36 MEMBERS ARE CLASS METHODS
  * ---------------------------------------------------------------------------
- * The cartridge names only ten of them.  The other 26 carry auto-generated
- * `func_ov081_<address>` names in the delinked tree, and this TU replaces those
+ * Ten already had reconstructed mangled names in the tree.  The other 26 had
+ * auto-generated `func_ov081_<address>` names, and this TU replaces those
  * with `daGmch_c::` methods; the header says what each name is and is not
  * allowed to claim.  Every one of the 26 still byte-matches, so nothing here is
  * a near-miss and nothing stayed a free function for want of a match.
  *
  * The one function that is deliberately NOT a member is daGmch_c_classInit, the
- * profile factory at the end: the cartridge's own symbol for it is a free
- * symbol, not a member of this class, and it constructs the object rather than
- * running on one.
+ * profile factory at the end.  Its name follows the project's free-factory
+ * convention and later EAD lineage; the original spelling is not preserved.
+ * Its observed role is to construct the object rather than run on one.
  *
  * A class member function may NOT sit in a linkage-specification region, so
  * once every member became a method, every external function declaration had to
@@ -134,15 +134,16 @@ struct C_27744 { char pad[0x3dc]; PMF_27744 *pp; };
 struct Bca2 { int w[2]; };
 
 /* ---------------------------------------------------------------------------
- * EVERY external function this TU calls, declared once, with C linkage.
+ * External function bridges used by class methods, with C linkage.
  * ---------------------------------------------------------------------------
  * A class member function may not sit in a linkage-specification region, so
  * once a member becomes `daGmch_c::Something` a declaration written in its body
- * gets C++ linkage and the reference mangles.  All 36 members below are class
- * methods, so all 54 external function declarations have to live here.
+ * gets C++ linkage and the reference mangles.  The 50 bridges used by these
+ * methods are declared once here; the free factory keeps its seven declarations
+ * at block scope.
  *
- * Of the 54, exactly NINE were declared with more than one type spelling across
- * the 36 shards: Vec3_Dist, dActor_c::DistToCPlayer, func_02038414,
+ * Of the original 54 declarations, exactly NINE had more than one type spelling
+ * across the 36 shards: Vec3_Dist, dActor_c::DistToCPlayer, func_02038414,
  * ModelAnim::SetAnim, Vec3_HorzAngle, DecIfAbove0_Byte, Sound::PlayBank0,
  * ApproachLinear and RandomIntInternal.  Collapsing each onto ONE spelling was
  * measured, not assumed, and eight of the nine cost nothing:
