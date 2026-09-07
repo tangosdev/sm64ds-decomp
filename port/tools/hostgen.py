@@ -767,15 +767,24 @@ VIRTUAL_CALL = {
     # Lane shadow-A: Model::LoadAndSetFile's middle. The matched source
     # dispatches DoSetFile through a LOCAL shadow class with three virtuals,
     # `self->v2(file, c, d)`: slot 2 in ROM/Itanium numbering, where a
-    # destructor takes TWO slots (D1, D0). MSVC gives a destructor one slot,
-    # so the host's _ZTV5Model has DoSetFile at 1 and UpdateVerts at 2, and
-    # the shadow's "slot 2" walked a fresh Model's null vertex list inside the
-    # first Tree's InitResources. hal/cxxname_bridge.cpp's double-fill trick
-    # (Render, slots 4 and 5) cannot serve a slot that means two live things,
-    # so the call is resolved at the caller: DoSetFile is slot 1 in every
-    # host model table (_ZTV5Model, _ZTV9ModelAnim, _ZTV10ModelAnim2), and the
-    # slots are __fastcall thunks (ecx = this, the dummy edx absorbs
-    # fastcall's second register), the convention hal/actor_vtables.cpp set.
+    # destructor takes TWO slots (D1, D0).
+    #
+    # THE SLOT MOVED BACK, and this is the history. The comment used to read:
+    # "MSVC gives a destructor one slot, so the host's _ZTV5Model has DoSetFile
+    # at 1 and UpdateVerts at 2, and the shadow's slot 2 walked a fresh Model's
+    # null vertex list inside the first Tree's InitResources. The double-fill
+    # trick (Render, slots 4 and 5) cannot serve a slot that means two live
+    # things, so the call is resolved at the caller: DoSetFile is slot 1 in
+    # every host model table." The respelling in include/ModelBase.h stopped
+    # MSVC folding the pair, so every host model table is ROM-numbered now and
+    # the shadow's slot 2 IS DoSetFile -- the word the ROM's own _ZTV5Model
+    # holds at 0x0208e90c+8.
+    #
+    # The rewrite itself stays, because the shadow's `v2` still has to be
+    # entered __fastcall (ecx = this, the dummy edx absorbs fastcall's second
+    # register), the convention hal/actor_vtables.cpp set. Only the index
+    # changes, 1 -> 2. LEFT AT 1 THIS WOULD DISPATCH Model's DELETING
+    # DESTRUCTOR on every model load.
     # The third patch is a HOST SEAM and not part of the slot fold: the tail
     # is the ROM's shrink-to-fit (func_02017060 -> Heap::Reallocate), which the
     # port declines by default on every model path (hal/level_boot.cpp's
@@ -788,7 +797,7 @@ VIRTUAL_CALL = {
          'extern "C" int port_model_shrink_enabled(void);'),
         ("ret = self->v2(file, c, d);",
          "ret = ((int (__fastcall *)(void *, void *, BMD_File *, int, int))"
-         "(*(void ***)self)[1])(self, 0, file, c, d);"),
+         "(*(void ***)self)[2])(self, 0, file, c, d);"),
         ("if (ret) func_02017060(file);",
          "if (ret && port_model_shrink_enabled()) func_02017060(file);"),
     ],
