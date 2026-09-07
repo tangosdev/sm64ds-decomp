@@ -21,4 +21,4 @@
 # Waivers are consumed ONCE. After the decrease lands, main's own total is the new floor
 # and the row does nothing; stale rows are harmless and can be pruned in a later sweep.
 #
-# Empty on purpose: the tree currently hands back zero bytes.
+# Empty on purpose: no source-coverage regression has been waived.

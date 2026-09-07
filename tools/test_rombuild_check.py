@@ -49,9 +49,35 @@ class RomBuildCheck(unittest.TestCase):
         self.assertEqual(report["sourceBuild"]["sourceFunctions"], 1)
         self.assertEqual(report["sourceBuild"]["sourceBytes"], 4)
         self.assertEqual(report["sourceBuild"]["sourceBytesPercent"], 50.0)
+        self.assertEqual(report["moduleComposition"]["retailGapCodeBytes"], 4)
+        self.assertEqual(report["moduleComposition"]["retailGapBytes"], 4)
         self.write_delinks("src/actors/Pair.cpp", end=0x00001008)
         consolidated = RBC.analyze(self.config, "stock")
         self.assertEqual(consolidated["moduleFidelity"]["moduleSetSha256"], digest)
+
+    def test_source_percentage_uses_the_same_module_universe_on_both_sides(self):
+        """ITCM/DTCM source bytes must not enter a main+overlay-only fraction."""
+        itcm = self.config / "itcm"
+        itcm.mkdir()
+        (itcm / "symbols.txt").write_text(
+            "Itcm kind:function(arm,size=0x4) addr:0x00002000\n",
+            encoding="utf-8")
+        (itcm / "delinks.txt").write_text(
+            "    .text start:0x00002000 end:0x00002004 kind:code\n\n"
+            "src/Itcm.c:\n"
+            "    complete\n"
+            "    .text start:0x00002000 end:0x00002004\n",
+            encoding="utf-8")
+        (self.retail / "arm9" / "itcm.bin").write_bytes(b"ITCM")
+        (self.built / "itcm.bin").write_bytes(b"ITCM")
+
+        report = RBC.analyze(self.config, "stock")
+        source = report["sourceBuild"]
+        self.assertEqual(source["sourceFunctions"], 2)
+        self.assertEqual(source["totalCodeFunctions"], 3)
+        self.assertEqual(source["sourceBytes"], 8)
+        self.assertEqual(source["totalCodeBytes"], 12)
+        self.assertAlmostEqual(source["sourceBytesPercent"], 100.0 * 8 / 12)
 
     def test_shared_source_counts_every_owned_function(self):
         self.write_delinks("src/actors/Pair.cpp", end=0x00001008)
@@ -88,6 +114,7 @@ class RomBuildCheck(unittest.TestCase):
         self.assertEqual(report["sourceBuild"]["sourceBytes"], 8)
         self.assertEqual(report["moduleComposition"]["sourceDataBytes"], 4)
         self.assertEqual(report["moduleComposition"]["unownedDataBytes"], 0)
+        self.assertEqual(report["moduleComposition"]["retailGapBytes"], 0)
 
     def test_intact_bss_is_nobits_not_an_out_of_range_data_failure(self):
         (self.config / "delinks.txt").write_text(
