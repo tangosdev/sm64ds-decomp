@@ -96,37 +96,10 @@ src/d_a_obj_fl_block.c:
     complete
     .text start:0x02111950 end:0x02111980
 
-src/_ZN10LavaBridgeD1Ev.cpp:
+src/actors/daObjFl_London_c.cpp:
     complete
-    .text start:0x02111980 end:0x021119c4
-
-src/_ZN10LavaBridgeD0Ev.cpp:
-    complete
-    .text start:0x021119c4 end:0x02111a1c
-
-src/func_ov022_02111a1c.c:
-    complete
-    .text start:0x02111a1c end:0x02111a64
-
-src/_ZN10LavaBridge16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111a64 end:0x02111aa8
-
-src/_ZN10LavaBridge6RenderEv.cpp:
-    complete
-    .text start:0x02111aa8 end:0x02111ad0
-
-src/_ZN10LavaBridge8BehaviorEv.cpp:
-    complete
-    .text start:0x02111ad0 end:0x02111bdc
-
-src/_ZN10LavaBridge13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111bdc end:0x02111c7c
-
-src/d_a_obj_fl_london.c:
-    complete
-    .text start:0x02111c7c end:0x02111cac
+    .text start:0x02111980 end:0x02111cac
+    .data start:0x02113f2c end:0x02113ff0
 
 src/_ZN10LavaSeesawD1Ev.cpp:
     complete
@@ -244,11 +217,11 @@ src/d_a_obj_fl_maruta.c:
     complete
     .text start:0x021125a4 end:0x021125e0
 
-src/_ZN11VolcanoFireD1Ev.cpp:
+src/_ZN21daObj_volcanoCannon_cD1Ev.cpp:
     complete
     .text start:0x021125e0 end:0x02112610
 
-src/_ZN11VolcanoFireD0Ev.cpp:
+src/_ZN21daObj_volcanoCannon_cD0Ev.cpp:
     complete
     .text start:0x02112610 end:0x02112654
 
@@ -264,19 +237,19 @@ src/func_ov022_02112710.c:
     complete
     .text start:0x02112710 end:0x02112790
 
-src/_ZN11VolcanoFire11ChangeStateEPNS_5StateE.cpp:
+src/_ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE.cpp:
     complete
     .text start:0x02112790 end:0x021127e0
 
-src/_ZN11VolcanoFire16CleanupResourcesEv.cpp:
+src/_ZN21daObj_volcanoCannon_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021127e0 end:0x02112800
 
-src/_ZN11VolcanoFire8BehaviorEv.cpp:
+src/_ZN21daObj_volcanoCannon_c8BehaviorEv.cpp:
     complete
     .text start:0x02112800 end:0x021128b8
 
-src/_ZN11VolcanoFire13InitResourcesEv.cpp:
+src/_ZN21daObj_volcanoCannon_c13InitResourcesEv.cpp:
     complete
     .text start:0x021128b8 end:0x02112918
 
