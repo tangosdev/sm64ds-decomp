@@ -1,0 +1,706 @@
+{
+  "class": "daBmb_c",
+  "queue_key": "BobOmb",
+  "tree_name": "BobOmb",
+  "name_status": "tree name BobOmb is COINED; daBmb_c is ROM RTTI",
+  "rtti_name": "7daBmb_c",
+  "rtti_name_address": "0x0214e4fc",
+  "identity_evidence": "_ZTS7daBmb_c read from extracted/dsd/arm9_overlays/ov102.bin at file offset 0x5a7c (= 0x0214e4fc, module base 0x02148a80): bytes 37 64 61 42 6d 62 5f 63 00 = \"7daBmb_c\\0\", the length-prefixed mangled form (7 + 'daBmb_c'). _ZTI7daBmb_c at 0x0214e508 points its +4 word at 0x0214e4fc, and the vtable's -4 header word points back at 0x0214e508, closing the triangle. THE TREE NAME 'BobOmb' IS COINED AND HAS NO CARTRIDGE ATTESTATION: a search of 106 images (extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin and all 103 extracted/dsd/arm9_overlays/*.bin; 3,582,144 bytes total) found 0 occurrences of the ASCII bytes 'BobOmb', 0 of lowercase 'bobomb' searched against a whole-image case-folded (.lower()) copy, 0 of the strict length-prefixed ZTS form '6BobOmb\\0', and 0 of UTF-16LE 'BobOmb'. 'daBmb_c' occurs exactly once in the whole cartridge, at ov102 0x0214e4fc. ov102/symbols.txt carries _ZTS7daBmb_c and _ZTI7daBmb_c but NO _ZTI6BobOmb and NO _ZTS6BobOmb; only the vtable address carries both spellings (see vtable.symbol_aliases).",
+  "overlay": "ov102",
+  "module_base": "0x02148a80",
+  "module_sections": {
+    ".text": "0x02148a80-0x0214d70c",
+    ".rodata": "0x0214d70c-0x0214d714",
+    ".init": "0x0214d714-0x0214e0a0",
+    ".ctor": "0x0214e0a0-0x0214e0b0",
+    ".data": "0x0214e0c0-0x0214e6e0",
+    ".bss": "0x0214e6e0-0x0214eaa0"
+  },
+  "text_run": {
+    "start": "0x0214a96c",
+    "end": "0x0214c748",
+    "bytes": 7644,
+    "shards": 35,
+    "gaps": 0,
+    "evidence": "35 consecutive config/arm9/overlays/ov102/delinks.txt entries, indices 53..87, every entry marked 'complete'; end-of-one == start-of-next with zero gaps; 7,644 bytes total. The neighbour below is QuestionBlock/daObjHatenaBlock_c, which ends at 0x0214a96c. The neighbour above is KoopaShell/daShl_c, which BEGINS at 0x0214c748 with src/_ZN10KoopaShellD1Ev.cpp. The claimed run does not spill into KoopaShell. Full ov102 run map, measured from delinks.txt at this revision (each run starts at that class's D1 shard): FortressTower/daObjSimpleBg_c 0x02148a80..0x02148fbc (12 files), QuestionBlock/daObjHatenaBlock_c 0x02148fbc..0x0214a96c (41 files), BobOmb/daBmb_c 0x0214a96c..0x0214c748 (35 files), KoopaShell/daShl_c 0x0214c748..0x0214d70c (25 files).",
+    "queue_row_reconciliation": "The queue row says 34 shards / 1336 lines; measured here 35 / 1364. The difference is exactly src/d_a_bmb.c, the adjacent factory shard, at 28 lines. tools/queue_audit.py documents shard_count as a FLOOR that 'under-counts by however many adjacent factories'. Not a defect."
+  },
+  "typeinfo": {
+    "ZTS": "0x0214e4fc",
+    "ZTS_module": "ov102",
+    "ZTS_size": 12,
+    "ZTI": "0x0214e508",
+    "ZTI_module": "ov102",
+    "ZTI_size": 12,
+    "ZTI_kind": "__si_class_type_info (vptr 0x0209a764, in arm9)",
+    "note": "All three RTTI symbols live in ov102. No cross-overlay vague-linkage split for this class."
+  },
+  "vtable": {
+    "symbol": "_ZTV7daBmb_c",
+    "address_point": "0x0214e558",
+    "slots": 31,
+    "storage_start": "0x0214e550",
+    "storage_end": "0x0214e5d4",
+    "storage_bytes": 132,
+    "header_words": {
+      "offset_to_top": "0x00000000",
+      "rtti": "0x0214e508"
+    },
+    "symbol_aliases": [
+      "_ZTV6BobOmb",
+      "_ZTV7daBmb_c"
+    ],
+    "extent_evidence": "The symbol IS the address point. Slot 30 (0x0214e5d0) holds 0x020100dc, non-null. The next configured datum is data_ov102_0214e5d4 at 0x0214e5d4, so the table is 0x0214e5d4 - 0x0214e558 = 0x7c = 31 slots exactly, and it CANNOT be longer: the words from 0x0214e5d4 on are eight 8-byte {fn,0} pointer-to-member records whose targets (0x0214cfe4, 0x0214d044, 0x0214d1b8, 0x0214d020, 0x0214d1b0, 0x0214d0bc, 0x0214d148, 0x0214d114) all lie in the KoopaShell/daShl_c text run and therefore belong to daShl_c. Preamble: g_profile_BOMBHEI is 0x1c bytes (0x0214e534..0x0214e550) on the spacing of the four g_profile_* rows above it in the same band, leaving 0x0214e550..0x0214e558 as the 8-byte vtable preamble, which carries NO configured symbol. Cross-check against the base: _ZTV12dEnemyBase_c at ov002 0x021081e4 runs to the next symbol _ZTI11dCapEnemy_c at 0x02108260 = 0x7c = 31 slots also, so daBmb_c declares NO NEW VIRTUALS and only overrides."
+  },
+  "base_class": "dEnemyBase_c",
+  "base_evidence": "_ZTI7daBmb_c at ov102 0x0214e508 is a __si_class_type_info (vptr 0x0209a764) whose +8 word reads 0x021081c0 = _ZTI12dEnemyBase_c in ov002, whose own _ZTS at ov002 0x021081cc reads the bytes '12dEnemyBase_c'. Read from the cartridge images, not from a header. NOTE: vtable LENGTH is NOT usable as corroboration for this class -- dEnemyBase_c's own table is 31 slots, the same as dActor_c's, so the '31 words = dActor_c' heuristic would give the WRONG base here.",
+  "ancestor_chain": [
+    "daBmb_c",
+    "dEnemyBase_c",
+    "dActor_c",
+    "dBase_c",
+    "fBase_c"
+  ],
+  "ancestor_chain_evidence": "Each link walked by reading the +8 word of the __si_class_type_info record out of the images: daBmb_c 0x0214e508 (ov102) -> dEnemyBase_c 0x021081c0 (ov002, _ZTS '12dEnemyBase_c' @0x021081cc) -> dActor_c 0x0208e390 (arm9, _ZTS '8dActor_c' @0x0208e384) -> dBase_c 0x02086e78 (arm9, _ZTS '7dBase_c' @0x02086e54) -> fBase_c 0x02086d70 (arm9, _ZTS '7fBase_c' @0x02086e60). fBase_c's vptr is 0x0209a774 (__class_type_info, not __si_class_type_info), so the chain terminates there. 5 classes including self.",
+  "modules_touched": [
+    "ov102",
+    "ov002",
+    "arm9"
+  ],
+  "overrides": [
+    {
+      "slot": 0,
+      "address": "0x0214c510",
+      "inherited_slot_name": "InitResources",
+      "declared_by": "fBase_c",
+      "symbol": "_ZN6BobOmb13InitResourcesEv",
+      "shard": "src/_ZN6BobOmb13InitResourcesEv.cpp"
+    },
+    {
+      "slot": 3,
+      "address": "0x0214c12c",
+      "inherited_slot_name": "CleanupResources",
+      "declared_by": "fBase_c",
+      "symbol": "_ZN6BobOmb16CleanupResourcesEv",
+      "shard": "src/_ZN6BobOmb16CleanupResourcesEv.cpp"
+    },
+    {
+      "slot": 6,
+      "address": "0x0214c1bc",
+      "inherited_slot_name": "Behavior",
+      "declared_by": "fBase_c",
+      "symbol": "_ZN6BobOmb8BehaviorEv",
+      "shard": "src/_ZN6BobOmb8BehaviorEv.cpp"
+    },
+    {
+      "slot": 9,
+      "address": "0x0214c168",
+      "inherited_slot_name": "Render",
+      "declared_by": "fBase_c",
+      "symbol": "_ZN6BobOmb6RenderEv",
+      "shard": "src/_ZN6BobOmb6RenderEv.cpp"
+    },
+    {
+      "slot": 16,
+      "address": "0x0214a96c",
+      "inherited_slot_name": "~ (D1, complete)",
+      "declared_by": "fBase_c",
+      "symbol": "_ZN6BobOmbD1Ev",
+      "shard": "src/_ZN6BobOmbD1Ev.cpp"
+    },
+    {
+      "slot": 17,
+      "address": "0x0214a9b4",
+      "inherited_slot_name": "~ (D0, deleting)",
+      "declared_by": "fBase_c",
+      "symbol": "_ZN6BobOmbD0Ev",
+      "shard": "src/_ZN6BobOmbD0Ev.cpp"
+    },
+    {
+      "slot": 18,
+      "address": "0x0214c6e4",
+      "inherited_slot_name": "OnYoshiTryEat",
+      "declared_by": "dActor_c",
+      "symbol": "_ZN6BobOmb13OnYoshiTryEatEv",
+      "shard": "src/_ZN6BobOmb13OnYoshiTryEatEv.cpp"
+    },
+    {
+      "slot": 19,
+      "address": "0x0214adc8",
+      "inherited_slot_name": "OnTurnIntoEgg(Player&)",
+      "declared_by": "dActor_c",
+      "symbol": "_ZN6BobOmb13OnTurnIntoEggER6Player",
+      "shard": "src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp"
+    },
+    {
+      "slot": 29,
+      "address": "0x0214aa10",
+      "inherited_slot_name": "OnAimedAtWithEgg",
+      "declared_by": "dActor_c",
+      "symbol": "_ZN6BobOmb16OnAimedAtWithEggEv",
+      "shard": "src/_ZN6BobOmb16OnAimedAtWithEggEv.cpp"
+    }
+  ],
+  "override_count": 9,
+  "override_evidence": "Two independent derivations agree on the same 9 slots. (1) tools/rtti_extract.py (429 records) then tools/rtti_vtables.py --own daBmb_c reports '31 slots (base 31)' and lists exactly these 9. (2) A word-by-word diff of the 31 slots of _ZTV7daBmb_c (ov102 0x0214e558) against the 31 slots of _ZTV12dEnemyBase_c (ov002 0x021081e4), both read straight from the images, differs in exactly these 9 positions and is byte-identical in the other 22. Slot NAMES are taken from the whole base chain: slots 0/3/6/9/16/17 are declared by fBase_c (include/fBase_c.h), slots 18/19/29 by dActor_c (include/dActor_c.h). No slot name was taken from include/BobOmb.h.",
+  "not_overridden": [
+    1,
+    2,
+    4,
+    5,
+    7,
+    8,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28,
+    30
+  ],
+  "destructors": {
+    "D1": {
+      "address": "0x0214a96c",
+      "size": 72,
+      "slot": 16,
+      "symbol": "_ZN6BobOmbD1Ev"
+    },
+    "D0": {
+      "address": "0x0214a9b4",
+      "size": 92,
+      "slot": 17,
+      "symbol": "_ZN6BobOmbD0Ev"
+    },
+    "D2": null,
+    "evidence": "Disassembled from the image. D1 @0x0214a96c: stores 0x0214e558 (the address point, taken from the literal at 0x0214a9b0) into [this], then destroys +0x364, +0x300, +0x144, +0x110 in reverse declaration order, then bl 0x020aed18 (dEnemyBase_c::~dEnemyBase_c), returns this. D0 @0x0214a9b4 does NOT call D1 -- it INLINES the identical body, then loads the operator-delete function pointer from the global at 0x020a0eac and bl 0x0203c1e8. No D2 variant is emitted anywhere and none appears in ov102/symbols.txt."
+  },
+  "size": "0x400",
+  "size_evidence": "daBmb_c_classInit at 0x0214c6f8, disassembled from the image: 'mov r0, #0x400' then 'bl 0x02043444' (fBase_c::operator new), 'movs r4, r0'; on non-null 'bl 0x020aed98' = ov002 _ZN12dEnemyBase_cC2Ev, then 'str r1,[r4]' with r1 = the literal at 0x0214c744 = 0x0214e558, the vtable address point. 1024 bytes is the ROM's own literal, not a rounded-up field span. Corroborated by symbols/actor_renames.tsv row 3098, 'vtable alloc=0x400'.",
+  "fields": [
+    {
+      "offset": "0x000",
+      "name": "__vptr",
+      "evidence": "str of 0x0214e558 into [this] in classInit, in D1 and in D0"
+    },
+    {
+      "offset": "0x110",
+      "type": "dCcAc_c",
+      "evidence": "classInit 'add r0,r4,#0x110' -> bl 0x020149c8 (dCcAc_c ctor); D1 destroys it 4th"
+    },
+    {
+      "offset": "0x144",
+      "type": "dBgCh_Actr",
+      "evidence": "classInit 'add r0,r4,#0x144' -> bl 0x02037430 (dBgCh_Actr ctor); D1 destroys it 3rd"
+    },
+    {
+      "offset": "0x300",
+      "type": "ModelAnim",
+      "evidence": "classInit 'add r0,r4,#0x300' -> bl 0x02016958 (ModelAnim ctor); D1 destroys it 2nd"
+    },
+    {
+      "offset": "0x364",
+      "type": "ShadowModel",
+      "evidence": "classInit 'add r0,r4,#0x364' -> bl 0x02016068 (ShadowModel ctor); D1 destroys it 1st"
+    }
+  ],
+  "fields_note": "Only these five are proven from the cartridge in this pass. include/BobOmb.h already carries a much fuller layout (0x390, 0x394 mMatrix, 0x3c4/0x3c8/0x3cc home position, 0x3dc mState, 0x3e0, 0x3e8..0x3f6, pad to 0x400) derived from load/store displacements in the shards. I did NOT re-derive those from the ROM. Treat them as tree-derived; see 'unproven'.",
+  "non_virtual": [
+    {
+      "address": "0x0214aa18",
+      "end": "0x0214ab1c",
+      "size": 260,
+      "symbol": "func_ov102_0214aa18",
+      "shard": "src/func_ov102_0214aa18.cpp",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214ab1c",
+      "end": "0x0214ad14",
+      "size": 504,
+      "symbol": "func_ov102_0214ab1c",
+      "shard": "src/func_ov102_0214ab1c.c",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214ad14",
+      "end": "0x0214ad40",
+      "size": 44,
+      "symbol": "func_ov102_0214ad14",
+      "shard": "src/func_ov102_0214ad14.c",
+      "call_sites": 3,
+      "calling_modules_other_than_ov102": [
+        "ov002",
+        "ov078"
+      ],
+      "calling_runs_in_ov102": [
+        "QuestionBlock/daObjHatenaBlock_c"
+      ]
+    },
+    {
+      "address": "0x0214ad40",
+      "end": "0x0214adc8",
+      "size": 136,
+      "symbol": "func_ov102_0214ad40",
+      "shard": "src/func_ov102_0214ad40.c",
+      "call_sites": 2,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214ae1c",
+      "end": "0x0214b03c",
+      "size": 544,
+      "symbol": "func_ov102_0214ae1c",
+      "shard": "src/func_ov102_0214ae1c.c",
+      "call_sites": 6,
+      "calling_modules_other_than_ov102": [
+        "ov014",
+        "ov098"
+      ],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214b03c",
+      "end": "0x0214b128",
+      "size": 236,
+      "symbol": "func_ov102_0214b03c",
+      "shard": "src/func_ov102_0214b03c.cpp",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214b128",
+      "end": "0x0214b248",
+      "size": 288,
+      "symbol": "func_ov102_0214b128",
+      "shard": "src/func_ov102_0214b128.cpp",
+      "call_sites": 2,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214b248",
+      "end": "0x0214b384",
+      "size": 316,
+      "symbol": "func_ov102_0214b248",
+      "shard": "src/func_ov102_0214b248.cpp",
+      "call_sites": 2,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214b384",
+      "end": "0x0214b3b8",
+      "size": 52,
+      "symbol": "func_ov102_0214b384",
+      "shard": "src/func_ov102_0214b384.c",
+      "call_sites": 13,
+      "calling_modules_other_than_ov102": [
+        "ov078"
+      ],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c",
+        "QuestionBlock/daObjHatenaBlock_c"
+      ]
+    },
+    {
+      "address": "0x0214b3b8",
+      "end": "0x0214b3f0",
+      "size": 56,
+      "symbol": "func_ov102_0214b3b8",
+      "shard": "src/func_ov102_0214b3b8.c",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214b3f0",
+      "end": "0x0214b444",
+      "size": 84,
+      "symbol": "func_ov102_0214b3f0",
+      "shard": "src/func_ov102_0214b3f0.c",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214b444",
+      "end": "0x0214b53c",
+      "size": 248,
+      "symbol": "func_ov102_0214b444",
+      "shard": "src/func_ov102_0214b444.cpp",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214b53c",
+      "end": "0x0214b988",
+      "size": 1100,
+      "symbol": "func_ov102_0214b53c",
+      "shard": "src/func_ov102_0214b53c.c",
+      "call_sites": 5,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214b988",
+      "end": "0x0214ba30",
+      "size": 168,
+      "symbol": "func_ov102_0214b988",
+      "shard": "src/func_ov102_0214b988.cpp",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214ba30",
+      "end": "0x0214baa0",
+      "size": 112,
+      "symbol": "func_ov102_0214ba30",
+      "shard": "src/func_ov102_0214ba30.cpp",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214baa0",
+      "end": "0x0214bbd8",
+      "size": 312,
+      "symbol": "func_ov102_0214baa0",
+      "shard": "src/func_ov102_0214baa0.c",
+      "call_sites": 2,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214bbd8",
+      "end": "0x0214bc20",
+      "size": 72,
+      "symbol": "func_ov102_0214bbd8",
+      "shard": "src/func_ov102_0214bbd8.c",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214bc20",
+      "end": "0x0214bcc8",
+      "size": 168,
+      "symbol": "func_ov102_0214bc20",
+      "shard": "src/func_ov102_0214bc20.c",
+      "call_sites": 2,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214bcc8",
+      "end": "0x0214bd20",
+      "size": 88,
+      "symbol": "func_ov102_0214bcc8",
+      "shard": "src/func_ov102_0214bcc8.c",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214bd20",
+      "end": "0x0214bd90",
+      "size": 112,
+      "symbol": "func_ov102_0214bd20",
+      "shard": "src/func_ov102_0214bd20.cpp",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214bd90",
+      "end": "0x0214be1c",
+      "size": 140,
+      "symbol": "func_ov102_0214bd90",
+      "shard": "src/func_ov102_0214bd90.c",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214be1c",
+      "end": "0x0214beb4",
+      "size": 152,
+      "symbol": "func_ov102_0214be1c",
+      "shard": "src/func_ov102_0214be1c.cpp",
+      "call_sites": 2,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214beb4",
+      "end": "0x0214bf64",
+      "size": 176,
+      "symbol": "func_ov102_0214beb4",
+      "shard": "src/func_ov102_0214beb4.c",
+      "call_sites": 3,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214bf64",
+      "end": "0x0214c0b8",
+      "size": 340,
+      "symbol": "func_ov102_0214bf64",
+      "shard": "src/func_ov102_0214bf64.cpp",
+      "call_sites": 1,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    },
+    {
+      "address": "0x0214c0b8",
+      "end": "0x0214c12c",
+      "size": 116,
+      "symbol": "func_ov102_0214c0b8",
+      "shard": "src/func_ov102_0214c0b8.c",
+      "call_sites": 7,
+      "calling_modules_other_than_ov102": [],
+      "calling_runs_in_ov102": [
+        "BobOmb/daBmb_c"
+      ]
+    }
+  ],
+  "non_virtual_count": 25,
+  "factory": {
+    "symbol": "daBmb_c_classInit",
+    "address": "0x0214c6f8",
+    "size": 80,
+    "shard": "src/d_a_bmb.c",
+    "reached_by": "g_profile_BOMBHEI +0 (relocs row from:0x0214e534 kind:load to:0x0214c6f8); no BL anywhere targets it",
+    "renamed_from": "BobOmb_Spawn (symbols/actor_renames.tsv rows 3059-3060)"
+  },
+  "callers_outside_the_span": {
+    "method": "Two independent passes, both filtered on the DESTINATION module spelled exactly as relocs.txt spells it -- 'overlay(102)', read out of the file rather than guessed. (a) Every relocs.txt in the tree (104 files, 91,656 rows parsed) scanned for to: inside 0x0214a96c..0x0214c748: 72 rows accepted, 0 rejected. The 0 rejections are genuine and not a broken filter: of ALL reloc rows anywhere whose destination lands in ov102's whole address span 0x02148a80..0x0214eaa0, 432 of 432 carry module:overlay(102) and none carries another tag, so the module filter has nothing to reject. (b) Every ARM BL in ov102 .text decoded straight from the image (536 BL instructions): 57 call-site/target pairs land inside the run, and all 57 also appear in the reloc set -- dsd DOES record intra-overlay calls for this module. The 5 reloc rows the decode cannot see are exactly the cross-module callers listed below.",
+    "cross_module": [
+      {
+        "caller_module": "ov002",
+        "caller_address": "0x020f1740",
+        "target": "0x0214ad14"
+      },
+      {
+        "caller_module": "ov014",
+        "caller_address": "0x021122c0",
+        "target": "0x0214ae1c"
+      },
+      {
+        "caller_module": "ov078",
+        "caller_address": "0x0212519c",
+        "target": "0x0214b384"
+      },
+      {
+        "caller_module": "ov078",
+        "caller_address": "0x02125284",
+        "target": "0x0214ad14"
+      },
+      {
+        "caller_module": "ov098",
+        "caller_address": "0x0213ad80",
+        "target": "0x0214ae1c"
+      }
+    ],
+    "same_overlay_other_TU": [
+      {
+        "caller_run": "QuestionBlock/daObjHatenaBlock_c",
+        "caller_address": "0x0214926c",
+        "caller_shard": "src/func_ov102_02149220.cpp",
+        "target": "0x0214ad14"
+      },
+      {
+        "caller_run": "QuestionBlock/daObjHatenaBlock_c",
+        "caller_address": "0x02149278",
+        "caller_shard": "src/func_ov102_02149220.cpp",
+        "target": "0x0214b384"
+      }
+    ],
+    "consequence": "Three helpers -- 0x0214ad14, 0x0214ae1c and 0x0214b384 -- are referenced from OUTSIDE this TU and must keep external linkage. All three take a daBmb_c* (they touch +0x3ea, +0x390, +0x144, +0x128, +0x134, +0x3e0), so all three are real methods rather than free helpers. Converting any of them into a daBmb_c:: method is a CROSS-MODULE rename: the new mangled name must land in ov102/symbols.txt AND every caller must move with it in the same commit -- ov002, ov014, ov078, ov098, plus src/func_ov102_02149220.cpp inside ov102's own QuestionBlock TU. The other 22 helpers are called only from inside this run and rename within the TU."
+  },
+  "ambiguous_module_resolutions": [
+    {
+      "from": "0x0214c328",
+      "to": "0x020ada40",
+      "relocs_says": "overlays(2,4)",
+      "resolved": "ov002 _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE (size 0x100)",
+      "why": "ov002/symbols.txt names that exact address as a dEnemyBase_c method and daBmb_c derives from dEnemyBase_c; ov004's row for the same address is a bare func_ov004_020ada40 of a different size (0xbc). ov002 and ov004 are alternates in one overlay slot."
+    },
+    {
+      "from": "0x0214c70c",
+      "to": "0x020aed98",
+      "relocs_says": "overlays(2,7)",
+      "resolved": "ov002 _ZN12dEnemyBase_cC2Ev (size 0x24)",
+      "why": "ov002/symbols.txt names it as the dEnemyBase_c C2 constructor, which is exactly what classInit must call at that point; ov007's row is a bare func_ov007_020aed98 of size 0x1e0."
+    }
+  ],
+  "data_referenced": {
+    "owned_band": {
+      "start": "0x0214e4fc",
+      "end": "0x0214e5d4",
+      "members": [
+        {
+          "address": "0x0214e4fc",
+          "symbol": "_ZTS7daBmb_c",
+          "size": 12
+        },
+        {
+          "address": "0x0214e508",
+          "symbol": "_ZTI7daBmb_c",
+          "size": 12
+        },
+        {
+          "address": "0x0214e514",
+          "symbol": "data_ov102_0214e514",
+          "size": 16,
+          "content": "fx32 [0x00028000, 0x00028000, 0x00050000, 0x00028000] = [40.0, 40.0, 80.0, 40.0]",
+          "read_from": "0x0214bcbc"
+        },
+        {
+          "address": "0x0214e524",
+          "symbol": "data_ov102_0214e524",
+          "size": 16,
+          "content": "fx32 [0x0000a000, 0x0000a000, 0x0001a000, 0x0000a000] = [10.0, 10.0, 26.0, 10.0]",
+          "read_from": "0x0214bcc0"
+        },
+        {
+          "address": "0x0214e534",
+          "symbol": "g_profile_BOMBHEI",
+          "size": 28,
+          "content": "words 0x0214c6f8 (classInit), 0x002d00ce, 0x10008083, 0x00032000, 0x00046000, 0x01000000, 0x01000000"
+        },
+        {
+          "address": "0x0214e550",
+          "symbol": "(none -- vtable preamble)",
+          "size": 8
+        },
+        {
+          "address": "0x0214e558",
+          "symbol": "_ZTV7daBmb_c / _ZTV6BobOmb",
+          "size": 124
+        }
+      ]
+    },
+    "pointer_to_member_records": {
+      "count": 0,
+      "evidence": "Every 4-byte-aligned word of ov102 .rodata, .init, .ctor and .data (0x0214d70c..0x0214e6e0) was read and tested against the BobOmb run -- a full-band sweep at 4-byte stride, so a PMF band read one word off the true alignment could not have been missed. Exactly 10 words point into the run: g_profile_BOMBHEI+0 (the classInit pointer) and the 9 vtable override slots. Nothing else. The 8 PMF records that DO exist in this .data band (0x0214e5d4..0x0214e614, 8 bytes each, shape {fn, 0}) all target the KoopaShell/daShl_c run and belong to that class."
+    },
+    "bss_touched": [
+      {
+        "address": "0x0214e9c0",
+        "symbol": "data_ov102_0214e9c0",
+        "what": "SharedFilePtr, file id 0x2b8",
+        "constructed_by": "__sinit_ov102_0214de70 (.ctor[2], src/__sinit_ov102_0214de70.c)",
+        "read_from": [
+          "0x0214ad10",
+          "0x0214b120",
+          "0x0214bcc4",
+          "0x0214c128",
+          "0x0214c160",
+          "0x0214c6cc"
+        ]
+      },
+      {
+        "address": "0x0214e9c8",
+        "symbol": "data_ov102_0214e9c8",
+        "what": "SharedFilePtr, file id 0x2b7",
+        "constructed_by": "__sinit_ov102_0214de70",
+        "read_from": [
+          "0x0214bd8c",
+          "0x0214c164",
+          "0x0214c6d0"
+        ]
+      },
+      {
+        "address": "0x0214ea18",
+        "symbol": "data_ov102_0214ea18 (+ interior 0x0214ea1c, 0x0214ea20)",
+        "what": "a Vector3 initialised to (0x1c000, -0x14000, 0x28000); its x/y/z are read as three separate loads at 0x0214b970 / 0x0214b974 / 0x0214b978",
+        "constructed_by": "__sinit_ov102_0214de70"
+      }
+    ],
+    "bss_note": "These are this TU's file-scope statics. Three further Vector3 statics constructed by the same sinit -- 0x0214ea24, 0x0214ea30, 0x0214ea3c, contiguous on a 12-byte stride -- are referenced only from .init and never from any .text run, so the ROM does not say whether the four are one Vector3[4] or four separately named constants. Every one of these addresses is referenced ONLY by the BobOmb run and by that one sinit; no other ov102 run touches them."
+  },
+  "promotion_notes": {
+    "base_this_was_derived_against": "Derived against origin/main 2ab05bae3; origin/main advanced to b266ff471 ('Merge pull request #2367 from tangosdev/tools/fix-gate-regressions-0905' -- 7 commits, all under tools/ plus one notes/ file) during the run, so b266ff471 was MERGED into cpp/BobOmb-tu (not rebased) and every TREE-DERIVED claim in this file was re-measured against it and came back identical: the queue row (34 / 1336 / ov102 / text-only / sibling_oracle '-'), the 35 shards at 0x0214a96c..0x0214c748 totalling 1364 lines and all marked 'complete', 19 .cpp + 16 .c, 0 pragmas, the FortressTower and QuestionBlock run starts (0x02148a80 and 0x02148fbc), 31 promoted TUs with none in ov102, both oracle manifests still at 12 compiler_only_output rows with data [] and bss [], the four ov102 RTTI symbol rows with 0 hits for _ZTI6BobOmb or _ZTS6BobOmb, and symbols/actor_renames.tsv row 3098. This file ships against b266ff471. ROM-derived claims are unaffected by either base.",
+    "shard_language_mix": "19 .cpp + 16 .c of the 35; all 35 marked 'complete' in delinks.txt",
+    "pragma_count": 0,
+    "pragma_evidence": "grep for 'pragma' across all 35 shard files at this revision matched no file. Consistent with the queue row, whose blockers field carries no pragma term for this class.",
+    "siblings_in_ov102": "NONE promoted at this base. All four ov102 classes -- FortressTower/daObjSimpleBg_c (6 shards), QuestionBlock/daObjHatenaBlock_c (35), BobOmb/daBmb_c (34), KoopaShell/daShl_c (23) -- sit unpromoted in notes/data/tu-promotion-queue.tsv, and no src/actors/*.cpp covers ov102 (31 promoted TUs exist, none in this overlay). The queue's 'sibling_oracle: -' is correct.",
+    "chain_shape_oracles": "The queue lists no oracle because it looks only inside the overlay, but two promoted TUs have the IDENTICAL chain shape (X -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c): config/tu_manifest.d/ov064/daOts_c.json (src/actors/daOts_c.cpp, 22 functions) and config/tu_manifest.d/ov002/daObjMarioCap_c.json (src/actors/daObjMarioCap_c.cpp, 29 functions, production_mode 'text-only', sections = one .text range, data [] and bss [], externalized_output []). BOTH carry exactly 12 compiler_only_output rows: _ZN7Vector3D1Ev as 'deadstrip-duplicate', plus _ZTI/_ZTS for each of fBase_c, dBase_c, dActor_c and dEnemyBase_c and _ZTI/_ZTS/_ZTV for the class itself, all as 'deadstrip-data'. That is the queue's estimated floor of 11 plus the Vector3 row. Copy that manifest shape. include/daOts_c.h declares 'struct daOts_c : dEnemyBase_c'.",
+    "naming_decision_the_writer_must_make": "deadstrip-data is licensed on the symbol having a known ROM home. daOts_c and daObjMarioCap_c both spell the class by its ROM RTTI name, which is why all three of their own RTTI symbols are homed. If this TU declares 'struct BobOmb', mwcc emits _ZTV6BobOmb / _ZTI6BobOmb / _ZTS6BobOmb -- and of those, ONLY _ZTV6BobOmb exists in ov102/symbols.txt (as a second name on 0x0214e558). _ZTI6BobOmb and _ZTS6BobOmb have no home anywhere in the tree, so they cannot take deadstrip-data and fall back to plain 'deadstrip', forfeiting those records. If it declares 'struct daBmb_c', all three emitted names are _ZTV7daBmb_c / _ZTI7daBmb_c / _ZTS7daBmb_c, every one of which is already a configured symbol at its true ROM address. This is a real cost difference, not a style preference. Renaming is the larger act: it moves 9 mangled member names (_ZN6BobOmb* -> _ZN7daBmb_c*), include/BobOmb.h, and the ov102/symbols.txt rows, and symbols/actor_renames.tsv row 3098 currently records _ZTV6BobOmb as the live name for 0x0214e558. THE SCOUT DOES NOT DECIDE THIS -- this records the evidence and the cost of each branch.",
+    "vtable_ownership": "_ZTV7daBmb_c sits in unowned .data. No BobOmb shard claims any non-.text section (in this overlay only the four __sinit_* shards own .init), so the text-only route needs no delinks .data claim. If someone later wants production_mode 'intact-object' on this band, note that the vtable preamble at 0x0214e550 carries NO configured symbol, so there is nothing to drop there.",
+    "not_a_blocker": "The two names on 0x0214e558 (_ZTV6BobOmb and _ZTV7daBmb_c) are aliases at the SAME address, not interior aliases at different offsets, so this is NOT the multi-name-data-object blocker; the same double-naming exists on _ZTV13QuestionBlock/_ZTV18daObjHatenaBlock_c and _ZTV10KoopaShell/_ZTV7daShl_c in this overlay. The real interior-alias hazard here is in .bss: data_ov102_0214ea18, ..1c and ..20 are three configured symbols inside one 12-byte Vector3 and all three are relocs.txt destinations. Harmless for a text-only promotion, which never claims .bss, but it would block an intact-object claim on this .bss band."
+  },
+  "unproven": [
+    "The word 'BobOmb' itself -- it is COINED. The cartridge attests only 'daBmb_c' (RTTI) and 'BOMBHEI' (the profile id). See identity_evidence for the search's scope, case handling and encodings.",
+    "The member NAMES on the 9 override rows (InitResources, CleanupResources, Behavior, Render, OnYoshiTryEat, OnTurnIntoEgg, OnAimedAtWithEgg) are inherited slot names taken from include/fBase_c.h and include/dActor_c.h, not read from the ROM. The ROM proves the SLOT INDEX and the target address only.",
+    "Every field except +0x000 (vptr), +0x110, +0x144, +0x300 and +0x364. The rest of include/BobOmb.h's layout -- 0x390, 0x394 mMatrix, 0x3c4/0x3c8/0x3cc, the 0x3d0 pad, 0x3dc mState, 0x3e0, 0x3e8..0x3f6, the 0x3f7 pad -- was NOT re-derived from the cartridge in this pass and is tree-derived. Do not treat those names as ROM-proven.",
+    "All 25 non-virtual helper NAMES. Every one is still an auto-generated func_ov102_* symbol and nothing in the cartridge names them. Per PIPELINE.md this makes the stage-3b ceiling for those 25 a NAME-RECOVERY wall, not a codegen wall and not a scope wall.",
+    "g_profile_BOMBHEI's field semantics beyond word 0 (the classInit pointer). The words 0x002d00ce, 0x10008083, 0x00032000, 0x00046000, 0x01000000, 0x01000000 are recorded raw; no Profile struct definition exists in include/ at this revision to decode them against.",
+    "The profile's numeric id. 'BOMBHEI' appears as ASCII twice in extracted/arm9_dec.bin (file offsets 0x8b8c0 and 0x8c21c) and case-folded 'bombhei' 24 times across arm9_dec and several overlays, but I did not resolve which index of the profile-name table it occupies.",
+    "Whether the four Vector3 statics at 0x0214ea18/24/30/3c are one Vector3[4] or four separate named objects. The 12-byte stride is consistent with both, and mwcc's per-object registration calls in __sinit_ov102_0214de70 do not settle it.",
+    "The three Vector3 statics at 0x0214ea24, 0x0214ea30 and 0x0214ea3c: constructed by this TU's sinit but read by no .text anywhere in the module. Whether they are dead constants or reached by a path I did not find is not established.",
+    "The parameter TYPES inside every mangled name quoted here (e.g. OnTurnIntoEgg(Player&)) come from include/dActor_c.h, not from the ROM. Mangled parameter types in this tree are guesses.",
+    "Whether mwcc will actually emit _ZN7Vector3D1Ev for this TU -- the 12th compiler_only_output row both oracles needed. That is a stage-4 compile-and-inventory question, not a ROM fact."
+  ]
+}

@@ -77,13 +77,22 @@ This document describes this commit. The queue records its immutable output SHA.
   proof recorded below, which was taken on it; holding the base is what lets
   that proof carry unchanged through the two text-only revisions since
   `39229e56`. The second
-  independent verification checked the deferral rather than granting it: since
-  `69d973f125`, main has moved 21 files, of which only 2 sit under `src/`,
-  `config/` or `include/` and both are append-only ledgers; there is zero
-  overlap with this task's blast radius, and `git merge-tree` is clean. The
-  integrator still composes onto a current base containing `1c93d2663` -- that
-  is an integration-lane merge with its own gate run, not a rebase this task
-  should perform.
+  independent verification checked the deferral rather than granting it, and
+  the third flagged its figures as stale by construction -- a drift count ages
+  every time main moves, and this one aged twice while the task sat in the
+  integration lane. **Re-measured by the integrator at compose time**, against
+  `e4fb1300e`: since `69d973f125` main has moved **123 files, 88 of them under
+  `src/`, `config/` or `include/`**, not the 21/2 recorded here earlier and not
+  the 79/48 that held an hour before. The conclusion survives every
+  re-measurement, because the 88 are two unrelated class promotions -- the
+  ov081 `daGmch_c` fold and the ov102 `daBmb_c` fold -- plus the append-only
+  ledgers. There is still zero overlap with this task's blast radius: main
+  touches **0** ov002 files, and its `include/decl_common.h` hunks land at
+  lines 704, 752, 1565, 2817 and 2909, while this change's single hunk removes
+  the `_ZTV13OneUpMushroom` declaration at line 510. `git merge-tree` is clean.
+  The integrator composes onto a current base containing `1c93d2663` -- an
+  integration-lane merge with its own gate run, not a rebase this task should
+  perform.
 - Source placement (raised as blocking by the first verification, overturned):
   the TU stays at `src/actors/da1up_c.cpp`. The measurement behind that ruling,
   made by the domain coordinator and posted on
