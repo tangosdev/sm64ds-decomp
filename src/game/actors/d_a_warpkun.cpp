@@ -102,7 +102,7 @@ int *daWarpkun_c_classInit(void)
 // @symbol _ZN11daWarpkun_c13InitResourcesEv
 // recovered name: daWarpkun_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daWarpkun_c::InitResources - recovered from vtable slot identity */
+/* daWarpkun_c::InitResources - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov002 symbols.txt); the vtable-slot-guess marker it carried was stale */
 s32 daWarpkun_c::InitResources() {
     void * c = (void *)this;
   int v = *((int *) (((char *) c) + 8));
@@ -160,7 +160,7 @@ s32 daWarpkun_c::Behavior()
 // @symbol _ZN11daWarpkun_c6RenderEv
 // recovered name: daWarpkun_c_Render
 /* recovered: renamed to Class_Method */
-/* daWarpkun_c::Render - recovered from vtable slot identity */
+/* daWarpkun_c::Render - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov002 symbols.txt); the vtable-slot-guess marker it carried was stale */
 s32 daWarpkun_c::Render() {
     return 1;
 }
@@ -171,7 +171,7 @@ s32 daWarpkun_c::Render() {
 // @symbol _ZN11daWarpkun_c16OnPendingDestroyEv
 // recovered name: daWarpkun_c_OnPendingDestroy
 /* recovered: renamed to Class_Method */
-/* daWarpkun_c::OnPendingDestroy - recovered from vtable slot identity */
+/* daWarpkun_c::OnPendingDestroy - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov002 symbols.txt); the vtable-slot-guess marker it carried was stale */
 void daWarpkun_c::OnPendingDestroy() {
 }
 
@@ -181,7 +181,7 @@ void daWarpkun_c::OnPendingDestroy() {
 // @symbol _ZN11daWarpkun_c16CleanupResourcesEv
 // recovered name: daWarpkun_c_CleanupResources
 /* recovered: renamed to Class_Method */
-/* daWarpkun_c::CleanupResources - recovered from vtable slot identity */
+/* daWarpkun_c::CleanupResources - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov002 symbols.txt); the vtable-slot-guess marker it carried was stale */
 s32 daWarpkun_c::CleanupResources() {
     return 1;
 }

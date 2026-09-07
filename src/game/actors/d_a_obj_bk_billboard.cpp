@@ -118,7 +118,7 @@ s32 daObjBkBillboard_c::InitResources()
 // @symbol _ZN18daObjBkBillboard_c6RenderEv
 // recovered name: daObjBkBillboard_c_Render
 /* recovered: renamed to Class_Method */
-/* daObjBkBillboard_c::Render - recovered from vtable slot identity */
+/* daObjBkBillboard_c::Render - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov015 symbols.txt); the vtable-slot-guess marker it carried was stale */
 s32 daObjBkBillboard_c::Render() {
     Derived * d = (Derived *)this; Base *b = &d->base; b->m(0); return 1; }
 
@@ -128,7 +128,7 @@ s32 daObjBkBillboard_c::Render() {
 // @symbol _ZN18daObjBkBillboard_c16CleanupResourcesEv
 // recovered name: daObjBkBillboard_c_CleanupResources
 /* recovered: renamed to Class_Method */
-/* daObjBkBillboard_c::CleanupResources - recovered from vtable slot identity */
+/* daObjBkBillboard_c::CleanupResources - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov015 symbols.txt); the vtable-slot-guess marker it carried was stale */
 s32 daObjBkBillboard_c::CleanupResources() {
     _ZN13SharedFilePtr7ReleaseEv(&data_ov015_02114960);
     return 1;

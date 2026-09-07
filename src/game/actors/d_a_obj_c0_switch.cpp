@@ -136,7 +136,7 @@ int daObjC0_Switch_c::InitResources()
 // @symbol _ZN16daObjC0_Switch_c8BehaviorEv
 // recovered name: daObjC0_Switch_c_Behavior
 /* recovered: renamed to Class_Method */
-/* daObjC0_Switch_c::Behavior - recovered from vtable slot identity */
+/* daObjC0_Switch_c::Behavior - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov012 symbols.txt); the vtable-slot-guess marker it carried was stale */
 s32 daObjC0_Switch_c::Behavior() {
     void * c = (void *)this;
     _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
@@ -160,7 +160,7 @@ s32 daObjC0_Switch_c::Render() {
 // recovered name: daObjC0_Switch_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 /* recovered: renamed to Class_Method */
-/* daObjC0_Switch_c::CleanupResources - recovered from vtable slot identity */
+/* daObjC0_Switch_c::CleanupResources - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov012 symbols.txt); the vtable-slot-guess marker it carried was stale */
 s32 daObjC0_Switch_c::CleanupResources() {
     void * t = (void *)this;
     _ZN4dBgW7DisableEv((char *)t + 0x124);

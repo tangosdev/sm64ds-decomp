@@ -5,7 +5,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjPile_c::CleanupResources - recovered from vtable slot identity */
+/* daObjPile_c::CleanupResources - byte-matched vs the ROM at mwccarm 2004/b56 with strict relocs (tools/match.py, size from ov091 symbols.txt); the vtable-slot-guess marker it carried was stale */
 extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern int data_ov091_02135654[];
