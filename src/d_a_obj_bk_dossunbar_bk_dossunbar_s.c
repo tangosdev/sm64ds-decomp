@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV9MovingBar */
+/* resolved: VT = _ZTV19daObjBk_Dossunbar_c */
 /* Reconstructed source-style name: SM64DS proves daObjBk_Dossunbar_c through RTTI,
  * allocation size, vtable identity, and the BK_DOSSUNBAR_S registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
@@ -12,6 +12,6 @@
 int *daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(824);
-    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV9MovingBar; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV19daObjBk_Dossunbar_c; }
     return p;
 }

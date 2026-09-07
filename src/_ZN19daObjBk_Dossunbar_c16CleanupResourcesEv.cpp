@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN9MovingBar16CleanupResourcesEv
+// @symbol _ZN19daObjBk_Dossunbar_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MovingBar.h"
+#include "daObjBk_Dossunbar_c.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 extern char data_ov015_02114534[];
 
-int MovingBar::CleanupResources()
+int daObjBk_Dossunbar_c::CleanupResources()
 {
     if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
         ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();

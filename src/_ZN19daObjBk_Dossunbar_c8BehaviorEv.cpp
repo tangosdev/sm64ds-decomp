@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN9MovingBar8BehaviorEv
+// @symbol _ZN19daObjBk_Dossunbar_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "MovingBar.h"
+#include "daObjBk_Dossunbar_c.h"
 struct C;
 typedef void (C::*PMF)();
 struct TabEnt { PMF pmf; };
@@ -16,7 +16,7 @@ struct C {
     int idx;
 };
 
-int MovingBar::Behavior()
+int daObjBk_Dossunbar_c::Behavior()
 {
     (((C *)this)->*(data_ov015_021149ec[mState].pmf))();
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((C *)this));

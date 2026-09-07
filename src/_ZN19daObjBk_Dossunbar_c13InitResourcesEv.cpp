@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9MovingBar13InitResourcesEv
+// @symbol _ZN19daObjBk_Dossunbar_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MovingBar.h"
+#include "daObjBk_Dossunbar_c.h"
 extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
@@ -17,7 +17,7 @@ extern int data_ov015_02114534[];
 extern int _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 }
 
-int MovingBar::InitResources()
+int daObjBk_Dossunbar_c::InitResources()
 {
   int b = (actorID == 0x35) ? 1 : 0;
   if(b) mVariant = 1; else mVariant = 0;

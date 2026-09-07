@@ -1,0 +1,437 @@
+{
+  "id": "ov015/daObjBk_Dossunbar_c",
+  "module": "ov015",
+  "source": "src_tu/actors/daObjBk_Dossunbar_c.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_bk_dossunbar.cpp",
+  "status": "shadow",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2111ba0..0x2112290, 25 function(s). tools/tu_map.py splits this into 0x2111ba0..0x2112230 (23) plus a separate 0x2112230..0x2112290 two-function unit holding the factories; the split is the known unhandled-_classInit segmentation defect and the two are folded back together here.",
+    "class label(s): daObjBk_Dossunbar_c",
+    "module sinit corroboration: 7 sinit(s) / 7 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+    "FOLD. The 25 delink entries of config/arm9/overlays/ov015/delinks.txt tile 0x02111ba0..0x02112290 with no gap and no overlap, bounded below by daObjBk_Botaosi_c_classInit (0x02111b68) and above by _ZN9TowerStepD1Ev (0x02112290). Both factories store the same vptr 0x0211458c and allocate the same 0x338, so they are two registry profiles of this one class. Same precedent as the sibling oracle daObjBkBillboard_c, whose factory was folded in on 2026-09-04."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02111ba0",
+      "end": "0x02112290"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN19daObjBk_Dossunbar_cD1Ev",
+      "address": "0x02111ba0",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN19daObjBk_Dossunbar_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN19daObjBk_Dossunbar_cD0Ev",
+      "address": "0x02111be4",
+      "size": "0x00000058",
+      "legacy_source": "src/_ZN19daObjBk_Dossunbar_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN19daObjBk_Dossunbar_c4KillEv",
+      "address": "0x02111c3c",
+      "size": "0x0000007c",
+      "legacy_source": "src/_ZN19daObjBk_Dossunbar_c4KillEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player",
+      "address": "0x02111cb8",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov015_02111ce0",
+      "address": "0x02111ce0",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov015_02111ce0.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov015_02111d28",
+      "address": "0x02111d28",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov015_02111d28.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov015_02111d4c",
+      "address": "0x02111d4c",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov015_02111d4c.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov015_02111d8c",
+      "address": "0x02111d8c",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov015_02111d8c.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov015_02111d98",
+      "address": "0x02111d98",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov015_02111d98.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov015_02111dd4",
+      "address": "0x02111dd4",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov015_02111dd4.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov015_02111df4",
+      "address": "0x02111df4",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov015_02111df4.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov015_02111e60",
+      "address": "0x02111e60",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov015_02111e60.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov015_02111e80",
+      "address": "0x02111e80",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov015_02111e80.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov015_02111ee0",
+      "address": "0x02111ee0",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov015_02111ee0.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov015_02111eec",
+      "address": "0x02111eec",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov015_02111eec.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov015_02111f4c",
+      "address": "0x02111f4c",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov015_02111f4c.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov015_02111f6c",
+      "address": "0x02111f6c",
+      "size": "0x00000040",
+      "legacy_source": "src/func_ov015_02111f6c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov015_02111fac",
+      "address": "0x02111fac",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov015_02111fac.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov015_02111fb8",
+      "address": "0x02111fb8",
+      "size": "0x0000004c",
+      "legacy_source": "src/func_ov015_02111fb8.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv",
+      "address": "0x02112004",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN19daObjBk_Dossunbar_c6RenderEv",
+      "address": "0x02112068",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN19daObjBk_Dossunbar_c6RenderEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN19daObjBk_Dossunbar_c8BehaviorEv",
+      "address": "0x02112090",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN19daObjBk_Dossunbar_c8BehaviorEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN19daObjBk_Dossunbar_c13InitResourcesEv",
+      "address": "0x021120fc",
+      "size": "0x00000134",
+      "legacy_source": "src/_ZN19daObjBk_Dossunbar_c13InitResourcesEv.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L",
+      "address": "0x02112230",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_bk_dossunbar_bk_dossunbar_l.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S",
+      "address": "0x02112260",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_obj_bk_dossunbar_bk_dossunbar_s.c",
+      "ordinal": 24
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-curated from a tools/tubuild.py create starting point. The generator's five review items were all resolved here: func_ov015_02111ce0's own extern \"C\" block is kept as written; the func_ov015_02111fb8, dBgActor_c::UpdateModelPosAndRotY and dBgActor_c::UpdateClsnPosAndRot declarations were reconciled to one spelling each (the void return, which is what include/dBgActor_c.h declares); and the pointer-to-member typedef was restored to the Behavior file's spelling, which is the one the state dispatch needs.",
+    "NAME. The cartridge's own _ZTS at ov015:0x0211451c spells 19daObjBk_Dossunbar_c, and the _ZTI/_ZTV chain at 0x02114510/0x0211458c binds it to this vtable. The tree's previous name MovingBar was COINED -- it occurs nowhere in the 9.0 MiB extracted cartridge, case-sensitive or case-folded, while Dossunbar occurs in both the RTTI string and the arm9 profile ids BK_DOSSUNBAR_L / BK_DOSSUNBAR_S. The rename was applied with tools/class_rename.py and the _ZTV row in config/arm9/overlays/ov015/symbols.txt was renamed in place at its unchanged address 0x0211458c; no alias row was added anywhere.",
+    "TEXT ONLY. No delink entry in ov015 owns a .data or .bss section, so this entry claims .text and nothing else. The fourteen pointer-to-member constants at 0x021144a0, the two .bss dispatch tables at 0x021149ec and 0x02114a24 and the four SharedFilePtr objects are declared extern in the TU and defined nowhere; they are built by __sinit_ov015_02113048, which is a separate .init shard and not part of this TU.",
+    "THE FOURTEEN STATE FUNCTIONS KEEP THEIR ADDRESS-DERIVED NAMES ON PURPOSE. Nothing in the cartridge names them, so renaming them would be a name-recovery act rather than a codegen one, and each of the thirteen state bodies is the target of a pointer-to-member record in UNOWNED .data that dsd resolves by symbol NAME: a rename that does not reach config/arm9/overlays/ov015/symbols.txt in the same commit links that record as zero and no byte gate at any stage reports it. Converting them to real members is the next concrete improvement for this class, not part of this promotion.",
+    "DESTRUCTOR. include/daObjBk_Dossunbar_c.h gives the destructor an INLINE empty body and declares it ahead of the out-of-line virtuals, which is what makes mwcc emit D1 at 0x02111ba0 then D0 at 0x02111be4 and no D2 -- exactly what the cartridge carries. That inline body is also why this TU emits the eleven vague-linkage RTTI records licensed in compiler_only_output. Writing the destructor out of line instead flips the pair to D0-before-D1 and adds a homeless D2. The two legacy destructor shards had to leave the build in this same change, because an inline body in the header redefines what an enrolled out-of-line shard defines and that is a COMPILE error, not a link one.",
+    "tools/tubuild.py verify reports 23/25 and criterion relocation_destinations_verified FAIL. Both DIFF lines are the single message `_ZTV19daObjBk_Dossunbar_c: unexpected reloc type=2 addend=0` on the two factories, and criterion every_declared_function_bytes_match is PASS -- no byte differs. That message comes from tools/objisolate.py's one-function isolation route, whose externalise branch accepts only addend >= 8 while its consolidated route accepts addend 0 as the ROM-symbol convention. Measured at this revision, the already-promoted ov015 siblings daObjBkBillboard_c (6/7) and daObjBk_Rotebar_c (6/7) report the identical message on their own factories, so it is a property of that route and not of this class. What settles it is the production route: tools/tubuild.py linkcheck links all 25 functions into the real ov015 range with 0 differing bytes, 106/106 modules exact, 0 new dsd check symbols errors against the baseline control, and a linked ROM byte-identical to the stock control."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov015-daObjBk_Dossunbar_c/daObjBk_Dossunbar_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 23,
+    "functions_declared": 25,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        28
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI19daObjBk_Dossunbar_c",
+        "_ZTS19daObjBk_Dossunbar_c",
+        "_ZTV19daObjBk_Dossunbar_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI19daObjBk_Dossunbar_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS19daObjBk_Dossunbar_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV19daObjBk_Dossunbar_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov015-daObjBk_Dossunbar_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x02111ba0",
+        "end": "0x02112290",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x02111ba0",
+          "end": "0x02112290",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 25
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x021089ec, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI19daObjBk_Dossunbar_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov015",
+      "canonical_address": "0x02114510",
+      "reason": "This class's own typeinfo record, vague-linkage and emitted here because the inline destructor in include/daObjBk_Dossunbar_c.h makes this TU the vtable's home. The cartridge's own copy lives at ov015:0x02114510 -- inside this module's .data but OUTSIDE the 0x02111ba0..0x02112290 .text run this entry claims -- so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS19daObjBk_Dossunbar_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov015",
+      "canonical_address": "0x0211451c",
+      "reason": "This class's own type-name string, vague-linkage and emitted here because the inline destructor in include/daObjBk_Dossunbar_c.h makes this TU the vtable's home. The cartridge's own copy lives at ov015:0x0211451c -- inside this module's .data but OUTSIDE the 0x02111ba0..0x02112290 .text run this entry claims -- so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTV19daObjBk_Dossunbar_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov015",
+      "canonical_address": "0x0211458c",
+      "reason": "This class's own vtable, vague-linkage and emitted here because the inline destructor in include/daObjBk_Dossunbar_c.h makes this TU the vtable's home. The cartridge's own copy lives at ov015:0x0211458c -- inside this module's .data but OUTSIDE the 0x02111ba0..0x02112290 .text run this entry claims -- so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Kill declares two Vector3 locals, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    }
+  ]
+}

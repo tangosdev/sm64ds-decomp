@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN9MovingBar4KillEv
-/* MovingBar::Kill() at ov015 0x02111c3c, 0x7c bytes -- vtable slot 31.
+// @symbol _ZN19daObjBk_Dossunbar_c4KillEv
+/* daObjBk_Dossunbar_c::Kill() at ov015 0x02111c3c, 0x7c bytes -- vtable slot 31.
  *
- * ATTRIBUTED BY THE VTABLE. _ZTV9MovingBar (ov015 0x0211458c) carries 0x02111c3c
+ * ATTRIBUTED BY THE VTABLE. _ZTV19daObjBk_Dossunbar_c (ov015 0x0211458c) carries 0x02111c3c
  * at slot 31 -- config/arm9/overlays/ov015/relocs.txt has
  * `from:0x02114608 kind:load to:0x02111c3c` -- while _ZTV10dBgActor_c's word at the
  * same slot (from:0x0210aeb4) relocates to 0x020ee55c, _ZN10dBgActor_c4KillEv.
@@ -22,13 +22,13 @@
  * stays spelled as its mangled name -- its parameters are Fix12<int> BY VALUE
  * and declaring the true types changes how the caller passes them. Both points
  * are argued in full in src/_ZN10dBgActor_c4KillEv.cpp. */
-#include "MovingBar.h"
+#include "daObjBk_Dossunbar_c.h"
 #include "Sound.h"
 
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
     u32 id, Fix12i x, Fix12i y, Fix12i z);
 
-void MovingBar::Kill()
+void daObjBk_Dossunbar_c::Kill()
 {
     Vector3 pos;
     Vector3 dustPos;
