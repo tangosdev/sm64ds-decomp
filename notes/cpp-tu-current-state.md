@@ -20,8 +20,8 @@ python tools/cpp_tu_state.py --check-note
 | --- | ---: |
 | MATCHED functions | 11311 / 11392 (99.29%) |
 | MATCHED code bytes | 2185368 / 2238108 (97.64%) |
-| Strict CONVERTED source functions | 2700 / 11358 (23.77%) |
-| Physical production source files | 9214 |
+| Strict CONVERTED source functions | 2701 / 11358 (23.78%) |
+| Physical production source files | 9222 |
 
 MATCHED is recomputed from committed config symbols and `src/` through
 `progress.synced_from_src()`; no ambient or gitignored chaos database is accepted.
@@ -32,21 +32,21 @@ weighted by enrolled function ownership so TU consolidation does not move it.
 
 | Measure | Live value |
 | --- | ---: |
-| Tracked production source files | 9214 |
-| Tracked `.c` files | 5278 |
-| Tracked `.cpp` files | 3936 |
+| Tracked production source files | 9222 |
+| Tracked `.c` files | 5285 |
+| Tracked `.cpp` files | 3937 |
 | `.cpp` files missing first-line `//cpp` | 0 |
-| Mangled-symbol source files | 3979 |
-| Genuinely migrated C++ symbol files | 3899 |
+| Mangled-symbol source files | 3990 |
+| Genuinely migrated C++ symbol files | 3910 |
 | Not semantically migrated | 76 |
 | `.cpp` files still hand-spelling their symbol | 50 |
 | Nonmatching C++-symbol drafts | 5 |
 | Delinks path-owned function-symbol records | 11274 |
 | Path-owned records still supplied from ROM bytes | 78 |
 | Source-built (`complete`) function-symbol records | 11196 |
-| Source-built (`complete`) source files | 9047 |
+| Source-built (`complete`) source files | 9055 |
 | Complete sources owning more than one function | 127 |
-| Source-built records inside multi-function sources | 2276 |
+| Source-built records inside multi-function sources | 2268 |
 | Largest function-symbol-records-per-source count | 301 |
 | Complete source paths missing from git | 0 |
 
@@ -73,8 +73,8 @@ partition to add to the migrated and unmigrated rows.
 | --- | ---: |
 | Tracked `src_tu/` source files | 30 |
 | Manifest entries | 156 |
-| Functions named by manifest entries | 2902 |
-| Unique functions named by the manifest | 2891 |
+| Functions named by manifest entries | 2894 |
+| Unique functions named by the manifest | 2883 |
 | Modules represented | 46 |
 | Manifest shadow sources present in git | 156 |
 | Entries licensing non-text sections | 17 |
