@@ -21,9 +21,19 @@ src/_ZN11ShadowModel9DoSetFileEPcii.cpp
 src/_ZN15TextureSequenceD0Ev.c
 src/_ZN15MaterialChangerD0Ev.c
 src/_ZN18TextureTransformerD0Ev.c
-# ModelBase's deleting destructor, into data_0208e87c[0] -- data_0208e87c is
-# _ZTV9ModelBase's function-slot start (ROM 0x0208e880 -> 0x020170e8).
+# ModelBase's destructor PAIR. data_0208e87c is _ZTV9ModelBase's function-slot
+# start: ROM 0x0208e87c -> 0x02017120 is the complete-object D1 and
+# 0x0208e880 -> 0x020170e8 the deleting D0.
+#
+# The D1 was parked in this file's exclusion list for one reason -- "MSVC folds
+# the ROM's two dtor slots into one, and for these two classes the folded slot
+# is already spoken for" -- and that reason is gone. include/ModelBase.h spells
+# the pair as two plain virtuals on the host now, so the table has both slots
+# and hal/model_dtor_seat.cpp seats D1 at 0 and D0 at 1, the way the ROM holds
+# them. The D1's whole closure is the D0's closure (data_0208e87c and
+# Deallocate, nothing else), and the D0 has been linking here since wave 1.
 src/_ZN9ModelBaseD0Ev.c
+src/_ZN9ModelBaseD1Ev.c
 
 # ---- wave 2: the game heap --------------------------------------------------
 # The port aliased the game-heap word straight onto the root heap and skipped
@@ -246,6 +256,15 @@ src/_ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c
 #     both spellings are host-stubbed (hal/bob_enemy_bridges.cpp returns 1,
 #     hal/player_bridges.cpp is a no-op) because the shadow template BMDs live
 #     in ov001 and the port does not mount it. Neither file is this lane's.
-# _ZN11ShadowModelD0Ev.c, _ZN9ModelBaseD1Ev.c
-#     MSVC folds the ROM's two dtor slots into one, and for these two classes
-#     the folded slot is already spoken for. See hal/model_dtor_seat.cpp.
+# _ZN11ShadowModelD0Ev.c
+#     This used to read "_ZN11ShadowModelD0Ev.c, _ZN9ModelBaseD1Ev.c -- MSVC
+#     folds the ROM's two dtor slots into one, and for these two classes the
+#     folded slot is already spoken for." The fold is gone (include/ModelBase.h
+#     spells the pair as two plain virtuals on the host), so the blocker is
+#     gone for both and _ZN9ModelBaseD1Ev.c is TAKEN above.
+#
+#     ShadowModel's D0 is left parked only because it is not this pass's
+#     measurement: its closure is wider than ModelBase's (_ZTV11ShadowModel,
+#     data_0209cef4, _ZN9ModelBaseD2Ev, Memory::operator_delete2) and the
+#     ROM's slot 1 for this class is now empty and free for it. It is a free
+#     +1 for whoever checks that closure links.
