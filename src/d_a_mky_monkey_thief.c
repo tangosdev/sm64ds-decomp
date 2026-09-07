@@ -8,7 +8,7 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV5Ukiki */
+/* resolved: VT0 = _ZTV7daMky_c */
 extern void _ZN7PathPtrC1Ev(void *);
 /* Reconstructed source-style name: SM64DS proves daMky_c through RTTI,
  * allocation size, vtable identity, and the MONKEY_THIEF registry profile;
@@ -19,7 +19,7 @@ int *daMky_c_classInit_MONKEY_THIEF(void)
     int *p = (int *)_ZN7fBase_cnwEj(972);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV5Ukiki;
+        p[0] = (int)_ZTV7daMky_c;
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN11ShadowModelC1Ev((char *)p + 0x138);
         _ZN7dCcAc_cC1Ev((char *)p + 0x160);

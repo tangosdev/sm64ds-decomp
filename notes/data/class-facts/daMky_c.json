@@ -1,0 +1,1154 @@
+{
+  "class": "daMky_c",
+  "queue_row_name": "Ukiki",
+  "scouted_at_base": "2ab05bae36a6821679a7e647e811c0a3243a3c49",
+  "scouted_on": "2026-09-06",
+  "branch": "cpp/Ukiki-tu",
+  "worktree": "C:/tmp/sm64ds-scout-ukiki-0905",
+  "identity": {
+    "rtti_name": "7daMky_c",
+    "class_name_from_rtti": "daMky_c",
+    "coined": false,
+    "ZTS_symbol": "_ZTS7daMky_c",
+    "ZTS_address": "0x02115b78",
+    "ZTS_module": "ov030",
+    "identity_evidence": "Read from the cartridge, not from a symbol map: extracted/overlays/overlay_0030.bin at file offset 0x0049d8 (= 0x02115b78) holds the bytes 37 64 61 4d 6b 79 5f 63 00 -- ASCII '7daMky_c' NUL-terminated, the Itanium length-prefixed _ZTS payload for a 7-character class name. _ZTI7daMky_c +4 points at exactly this address, so the string is the RTTI name of the record whose vtable the class uses.",
+    "queue_name_is_not_the_rom_name": "The queue row, all 9 own member symbols in config/arm9/overlays/ov030/symbols.txt, and include/Ukiki.h all spell the class 'Ukiki'. The cartridge does not. Per roles/scout.md rule 1, RTTI wins: the class is daMky_c. 'Ukiki' is a reconstruction label, not a coined-and-disclosed ROM identity.",
+    "negative_claim_scope": {
+      "claim": "No spelling of 'Ukiki' occurs anywhere in this cartridge as a class name.",
+      "images_scanned": 2286,
+      "bytes_scanned": 21081988,
+      "scope": "extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin, extracted/dsd/arm9/{arm9,itcm,dtcm}.bin, every extracted/overlays/*.bin, every extracted/dsd/arm9_overlays/*.bin, every extracted/dsd/arm7/*.bin, and every file under extracted/dsd/files/ (the whole ROM filesystem)",
+      "results": [
+        "byte pattern '5Ukiki' (the strict length-prefixed _ZTS payload a class named Ukiki would produce), CASE-SENSITIVE: 0 hits",
+        "byte pattern '5ukiki', CASE-FOLDED: 0 hits",
+        "bare token 'Ukiki', CASE-SENSITIVE: 0 hits",
+        "bare token 'ukiki', CASE-FOLDED: 2 hits -- both are the SAME overlay in its two extracted copies (extracted/overlays/overlay_0022.bin and extracted/dsd/arm9_overlays/ov022.bin, both at +0x003022), and both are the string '15daObjFl_UkiKi_c', a DIFFERENT class living in ov022. It is not this class and must not be confused with it.",
+        "byte pattern '7daMky_c', CASE-SENSITIVE: 2 hits -- again the same overlay in its two copies (overlay_0030.bin and ov030.bin, both at +0x0049d8). One real occurrence.",
+        "bare token 'daMky', CASE-FOLDED: 2 hits -- the same two copies of the same string."
+      ],
+      "corroboration_not_proof": "The token 'monkey' occurs in ROM filesystem asset paths (data/enemy/monkey/monkey_{run,jump,wait,hold}*.bca, 12 files) and in arc0.narc. That supports the semantic reading of 'Mky' as Monkey but proves nothing about the class identifier; only the _ZTS string does that.",
+      "method_note": "An earlier version of this scan used a raw 0x05/0x07 byte as the length prefix and reported 0 hits for BOTH needles, including the one that demonstrably exists. Itanium length prefixes are ASCII DIGITS. The numbers above are from the corrected scan."
+    }
+  },
+  "overlay": "ov030",
+  "module_base": "0x021111a0",
+  "module_image": "extracted/overlays/overlay_0030.bin (19168 bytes = 0x4ae0; base + 0x4ae0 = 0x02115c80 = .bss start, so the file covers .text .. .data)",
+  "module_sections": {
+    ".text": {
+      "start": "0x021111a0",
+      "end": "0x02114690",
+      "align": 32
+    },
+    ".rodata": {
+      "start": "0x02114690",
+      "end": "0x0211484c",
+      "align": 4
+    },
+    ".init": {
+      "start": "0x0211484c",
+      "end": "0x02114dd0",
+      "align": 4
+    },
+    ".ctor": {
+      "start": "0x02114dd0",
+      "end": "0x02114ddc",
+      "align": 4
+    },
+    ".data": {
+      "start": "0x02114de0",
+      "end": "0x02115c80",
+      "align": 32
+    },
+    ".bss": {
+      "start": "0x02115c80",
+      "end": "0x02115ec0",
+      "align": 32
+    }
+  },
+  "typeinfo": {
+    "ZTI_symbol": "_ZTI7daMky_c",
+    "ZTI": "0x02115b84",
+    "ZTI_module": "ov030",
+    "ZTS": "0x02115b78",
+    "ZTS_module": "ov030",
+    "kind": "__si_class_type_info",
+    "size": "0x0c",
+    "raw_words": [
+      "0x0209a764",
+      "0x02115b78",
+      "0x0208e390"
+    ],
+    "word_meanings": {
+      "+0x00": "0x0209a764 = _ZTVN3abi20__si_class_type_infoE (arm9) -- identifies the record as single-inheritance",
+      "+0x04": "0x02115b78 = _ZTS7daMky_c (ov030)",
+      "+0x08": "0x0208e390 = _ZTI8dActor_c (arm9) -- the direct base"
+    },
+    "note": "Unlike daOts_c, this class's _ZTI and _ZTS both live in the SAME overlay as its _ZTV (ov030). No cross-overlay vague-linkage split here."
+  },
+  "base_class": "dActor_c",
+  "base_evidence": "_ZTI7daMky_c at ov030 0x02115b84 is a __si_class_type_info (vptr word = 0x0209a764 = _ZTVN3abi20__si_class_type_infoE). Its +0x08 word is 0x0208e390, which config/arm9/symbols.txt names _ZTI8dActor_c. A __si_class_type_info's +8 names the direct public base at offset zero outright. This is the proof; the equal 31-slot vtable length is corroboration only and is NOT the reason.",
+  "ancestor_chain": [
+    "dActor_c",
+    "dBase_c",
+    "fBase_c"
+  ],
+  "ancestor_chain_evidence": [
+    "_ZTI7daMky_c   (ov030 0x02115b84) +8 -> 0x0208e390 = _ZTI8dActor_c  [__si_class_type_info]",
+    "_ZTI8dActor_c  (arm9  0x0208e390) +8 -> 0x02086e78 = _ZTI7dBase_c   [__si_class_type_info], +4 -> _ZTS8dActor_c = '8dActor_c'",
+    "_ZTI7dBase_c   (arm9  0x02086e78) +8 -> 0x02086d70 = _ZTI7fBase_c   [__si_class_type_info], +4 -> _ZTS7dBase_c = '7dBase_c'",
+    "_ZTI7fBase_c   (arm9  0x02086d70) vptr = 0x0209a774 = _ZTVN3abi17__class_type_infoE -- a PLAIN __class_type_info, i.e. the root: it has no base pointer. +4 -> _ZTS7fBase_c = '7fBase_c'.",
+    "Every name string above was read out of extracted/dsd/arm9/arm9.bin, not taken from symbols.txt."
+  ],
+  "vtable": {
+    "symbol": "_ZTV7daMky_c",
+    "duplicate_symbol_at_same_address": "_ZTV5Ukiki",
+    "duplicate_note": "config/arm9/overlays/ov030/symbols.txt lines 143-144 declare BOTH _ZTV5Ukiki and _ZTV7daMky_c at 0x02115bfc. Two vtable symbol names for one address. Whichever name the promoted TU emits must be the one the ROM data records resolve through; see blockers.",
+    "module": "ov030",
+    "address_point": "0x02115bfc",
+    "slots": [
+      {
+        "slot": 0,
+        "address": "0x02114378",
+        "module": "ov030",
+        "own": true,
+        "interface": "InitResources",
+        "symbol": "_ZN5Ukiki13InitResourcesEv"
+      },
+      {
+        "slot": 1,
+        "address": "0x02011268",
+        "module": "arm9",
+        "own": false,
+        "interface": "BeforeInitResources",
+        "symbol": "_ZN8dActor_c19BeforeInitResourcesEv"
+      },
+      {
+        "slot": 2,
+        "address": "0x02011244",
+        "module": "arm9",
+        "own": false,
+        "interface": "AfterInitResources",
+        "symbol": "_ZN8dActor_c18AfterInitResourcesEj"
+      },
+      {
+        "slot": 3,
+        "address": "0x021141c4",
+        "module": "ov030",
+        "own": true,
+        "interface": "CleanupResources",
+        "symbol": "_ZN5Ukiki16CleanupResourcesEv"
+      },
+      {
+        "slot": 4,
+        "address": "0x02011220",
+        "module": "arm9",
+        "own": false,
+        "interface": "BeforeCleanupResources",
+        "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv"
+      },
+      {
+        "slot": 5,
+        "address": "0x02011214",
+        "module": "arm9",
+        "own": false,
+        "interface": "AfterCleanupResources",
+        "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj"
+      },
+      {
+        "slot": 6,
+        "address": "0x02114278",
+        "module": "ov030",
+        "own": true,
+        "interface": "Behavior",
+        "symbol": "_ZN5Ukiki8BehaviorEv"
+      },
+      {
+        "slot": 7,
+        "address": "0x02010fd4",
+        "module": "arm9",
+        "own": false,
+        "interface": "BeforeBehavior",
+        "symbol": "_ZN8dActor_c14BeforeBehaviorEv"
+      },
+      {
+        "slot": 8,
+        "address": "0x02010fc8",
+        "module": "arm9",
+        "own": false,
+        "interface": "AfterBehavior",
+        "symbol": "_ZN8dActor_c13AfterBehaviorEj"
+      },
+      {
+        "slot": 9,
+        "address": "0x02114230",
+        "module": "ov030",
+        "own": true,
+        "interface": "Render",
+        "symbol": "_ZN5Ukiki6RenderEv"
+      },
+      {
+        "slot": 10,
+        "address": "0x02010f78",
+        "module": "arm9",
+        "own": false,
+        "interface": "BeforeRender",
+        "symbol": "_ZN8dActor_c12BeforeRenderEv"
+      },
+      {
+        "slot": 11,
+        "address": "0x02010f6c",
+        "module": "arm9",
+        "own": false,
+        "interface": "AfterRender",
+        "symbol": "_ZN8dActor_c11AfterRenderEj"
+      },
+      {
+        "slot": 12,
+        "address": "0x0211422c",
+        "module": "ov030",
+        "own": true,
+        "interface": "OnPendingDestroy",
+        "symbol": "_ZN5Ukiki16OnPendingDestroyEv"
+      },
+      {
+        "slot": 13,
+        "address": "0x0204357c",
+        "module": "arm9",
+        "own": false,
+        "interface": "Virtual34",
+        "symbol": "_ZN7fBase_c9Virtual34Ejj"
+      },
+      {
+        "slot": 14,
+        "address": "0x0204349c",
+        "module": "arm9",
+        "own": false,
+        "interface": "Virtual38",
+        "symbol": "_ZN7fBase_c9Virtual38Ejj"
+      },
+      {
+        "slot": 15,
+        "address": "0x02043494",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnHeapCreated",
+        "symbol": "_ZN7fBase_c13OnHeapCreatedEv"
+      },
+      {
+        "slot": 16,
+        "address": "0x02111688",
+        "module": "ov030",
+        "own": true,
+        "interface": "~daMky_c (D1)",
+        "symbol": "_ZN5UkikiD1Ev"
+      },
+      {
+        "slot": 17,
+        "address": "0x021116d0",
+        "module": "ov030",
+        "own": true,
+        "interface": "~daMky_c (D0)",
+        "symbol": "_ZN5UkikiD0Ev"
+      },
+      {
+        "slot": 18,
+        "address": "0x0211172c",
+        "module": "ov030",
+        "own": true,
+        "interface": "OnYoshiTryEat",
+        "symbol": "_ZN5Ukiki13OnYoshiTryEatEv"
+      },
+      {
+        "slot": 19,
+        "address": "0x021145d4",
+        "module": "ov030",
+        "own": true,
+        "interface": "OnTurnIntoEgg",
+        "symbol": "_ZN5Ukiki13OnTurnIntoEggER6Player",
+        "is_veneer": true
+      },
+      {
+        "slot": 20,
+        "address": "0x0201014c",
+        "module": "arm9",
+        "own": false,
+        "interface": "Virtual50",
+        "symbol": "_ZN8dActor_c9Virtual50Ev"
+      },
+      {
+        "slot": 21,
+        "address": "0x02010148",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnGroundPounded",
+        "symbol": "_ZN8dActor_c15OnGroundPoundedERS_"
+      },
+      {
+        "slot": 22,
+        "address": "0x02010144",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnAttacked1",
+        "symbol": "_ZN8dActor_c11OnAttacked1ERS_"
+      },
+      {
+        "slot": 23,
+        "address": "0x02010140",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnAttacked2",
+        "symbol": "_ZN8dActor_c11OnAttacked2ERS_"
+      },
+      {
+        "slot": 24,
+        "address": "0x0201013c",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnKicked",
+        "symbol": "_ZN8dActor_c8OnKickedERS_"
+      },
+      {
+        "slot": 25,
+        "address": "0x02010138",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnPushed",
+        "symbol": "_ZN8dActor_c8OnPushedERS_"
+      },
+      {
+        "slot": 26,
+        "address": "0x02010134",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnHitByCannonBlastedChar",
+        "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_"
+      },
+      {
+        "slot": 27,
+        "address": "0x02010130",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnHitByMegaChar",
+        "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player"
+      },
+      {
+        "slot": 28,
+        "address": "0x0201012c",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnHitFromUnderneath",
+        "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_"
+      },
+      {
+        "slot": 29,
+        "address": "0x02010124",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnAimedAtWithEgg",
+        "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv"
+      },
+      {
+        "slot": 30,
+        "address": "0x020100dc",
+        "module": "arm9",
+        "own": false,
+        "interface": "OnAimedAtWithEggReturnVec",
+        "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv"
+      }
+    ],
+    "storage_start": "0x02115bf4",
+    "storage_end_exclusive": "0x02115c78",
+    "storage_size": "0x84",
+    "address_point_extent": "0x7c",
+    "preamble": {
+      "offset_to_top": {
+        "address": "0x02115bf4",
+        "value": "0x00000000"
+      },
+      "typeinfo_pointer": {
+        "address": "0x02115bf8",
+        "value": "0x02115b84",
+        "relocated": true
+      }
+    },
+    "extent_evidence": "MEASURED at this revision, two independent ways that agree. (1) Bytes: the two-word ABI preamble sits at 0x02115bf4..0x02115bfb; slot 0 is at the symbol address 0x02115bfc; the last function word is slot 30 at 0x02115c74; exclusive end 0x02115c78. (2) Relocations: config/arm9/overlays/ov030/relocs.txt carries exactly 31 'kind:load' relocations at 0x02115bfc, 0x02115c00, ... 0x02115c74 (stride 4, inclusive) plus one at 0x02115bf8 for the typeinfo pointer. The two words at 0x02115c78 and 0x02115c7c are BOTH zero AND carry NO relocation, so they are not slots.",
+    "why_it_does_not_end_where_the_next_datum_begins": "The next datum is .bss at 0x02115c80, 8 bytes past the vtable's end at 0x02115c78. Those 8 zero, unrelocated bytes are section-end alignment padding: .data is declared align:32 in config/arm9/overlays/ov030/delinks.txt and 0x02115c80 is the next 32-byte boundary, while 0x02115c78 is not. mwld truncates trailing null vtable slots, so an emitted vtable never ends in nulls; combined with the absent relocations this rules out a 32- or 33-slot reading. The vtable is the last object in ov030 .data.",
+    "own_override_count": 9,
+    "own_override_slots": [
+      0,
+      3,
+      6,
+      9,
+      12,
+      16,
+      17,
+      18,
+      19
+    ],
+    "own_slot_test": "A slot is this class's own iff its relocation names module:overlay(30); all 22 inherited slots relocate to module:main (arm9). Verified per-slot in relocs.txt.",
+    "tooling_agreement": "tools/rtti_extract.py (429 records, 413 edges, 0 unresolved) then tools/rtti_vtables.py --own daMky_c independently reports 'daMky_c : dActor_c  31 slots (base 31)' and the same 9 own slots at the same addresses. NOTE: 'rtti_vtables.py --own Ukiki' answers 'no vtable for Ukiki' -- the tooling's canonical key is daMky_c.",
+    "slot_name_source": "Slots 1-2,4-5,7-8,10-11,18-30 are declared in include/dActor_c.h with explicit slot comments; slots 13-15 come from fBase_c. Slot index is the identity; the interface names are inherited declarations, not names read from the ROM."
+  },
+  "destructors": {
+    "variants_present": [
+      "D1",
+      "D0"
+    ],
+    "D2_present": false,
+    "D2_evidence": "A grep for 'UkikiD2' / 'daMky_cD2' across config/arm9/symbols.txt and every config/arm9/overlays/*/symbols.txt returns nothing; only _ZN5UkikiD1Ev and _ZN5UkikiD0Ev exist. There is no separate D2 body -- consistent with a class whose base subobject destructor is reached directly.",
+    "D1": {
+      "address": "0x02111688",
+      "size": "0x48",
+      "vtable_slot": 16,
+      "body": "Stores the vtable address point 0x02115bfc into this+0 (literal at 0x021116cc), then destroys members in exactly REVERSE construction order: dBgCh_Actr::~dBgCh_Actr(this+0x194) @arm9 0x020373f8, dCcAc_c::~dCcAc_c(this+0x160) @0x020149a4, ShadowModel::~ShadowModel(this+0x138) @0x02015ff8, ModelAnim::~ModelAnim(this+0xd4) @0x0201691c, then the base _ZN8dActor_cD2Ev @0x020112c8. PathPtr at +0x398 is NOT destroyed (trivial destructor). Returns this."
+    },
+    "D0": {
+      "address": "0x021116d0",
+      "size": "0x5c",
+      "vtable_slot": 17,
+      "body": "Does NOT call D1. It INLINES the whole D1 body (same five destructor calls in the same order, same vptr store), then loads a Heap* indirectly -- ldr r1,[pc,#0x18] -> literal 0x020a0eac (arm9 .bss symbol data_020a0eac), ldr r1,[r1] -- and tail-calls _ZN6Memory10DeallocateEPvP4Heap @arm9 0x0203c1e8 with r0 = this. Returns this.",
+      "writer_note": "The deallocation is a direct Memory::Deallocate(this, *g_heap) call, not a call to a separate operator delete symbol. No _ZN7fBase_cdlEPv exists in config/arm9/symbols.txt."
+    },
+    "emission_order_in_rom": "D1 (0x02111688) precedes D0 (0x021116d0) in address order, and both are the two LOWEST addresses in the class's text run."
+  },
+  "overrides": [
+    {
+      "slot": 0,
+      "address": "0x02114378",
+      "size": "0x25c",
+      "name": "InitResources",
+      "symbol": "_ZN5Ukiki13InitResourcesEv"
+    },
+    {
+      "slot": 3,
+      "address": "0x021141c4",
+      "size": "0x68",
+      "name": "CleanupResources",
+      "symbol": "_ZN5Ukiki16CleanupResourcesEv"
+    },
+    {
+      "slot": 6,
+      "address": "0x02114278",
+      "size": "0x100",
+      "name": "Behavior",
+      "symbol": "_ZN5Ukiki8BehaviorEv"
+    },
+    {
+      "slot": 9,
+      "address": "0x02114230",
+      "size": "0x48",
+      "name": "Render",
+      "symbol": "_ZN5Ukiki6RenderEv"
+    },
+    {
+      "slot": 12,
+      "address": "0x0211422c",
+      "size": "0x4",
+      "name": "OnPendingDestroy",
+      "symbol": "_ZN5Ukiki16OnPendingDestroyEv",
+      "body": "bx lr",
+      "note": "empty body, returns whatever is in r0"
+    },
+    {
+      "slot": 16,
+      "address": "0x02111688",
+      "size": "0x48",
+      "name": "~daMky_c (D1)",
+      "symbol": "_ZN5UkikiD1Ev"
+    },
+    {
+      "slot": 17,
+      "address": "0x021116d0",
+      "size": "0x5c",
+      "name": "~daMky_c (D0)",
+      "symbol": "_ZN5UkikiD0Ev"
+    },
+    {
+      "slot": 18,
+      "address": "0x0211172c",
+      "size": "0x8",
+      "name": "OnYoshiTryEat",
+      "symbol": "_ZN5Ukiki13OnYoshiTryEatEv",
+      "body": "mov r0,#7; bx lr",
+      "note": "returns 7"
+    },
+    {
+      "slot": 19,
+      "address": "0x021145d4",
+      "size": "0xc",
+      "name": "OnTurnIntoEgg",
+      "symbol": "_ZN5Ukiki13OnTurnIntoEggER6Player",
+      "is_veneer": true,
+      "body": "ldr ip,[pc]; bx ip; .word 0x02043824",
+      "note": "CORRECTION vs the previous scout file, which listed this as an ordinary override body. These 12 bytes are a linker long-branch VENEER, not a function body. The literal 0x02043824 is _ZN7fBase_c18MarkForDestructionEv in arm9. r0 still holds `this` at the jump, so the effective behaviour is fBase_c::MarkForDestruction(this) and the Player& argument is dropped. The existing shard src/_ZN5Ukiki13OnTurnIntoEggER6Player.cpp already models this as `{ MarkForDestruction(); }` (note: it has no return statement despite an `int` return type). Whether the original source wrote a one-line forwarding member or something else is an INFERENCE -- the veneer shape is the only ROM-proven part."
+    }
+  ],
+  "text_run": {
+    "start": "0x02111688",
+    "end_exclusive": "0x021145e0",
+    "size": "0x2f58",
+    "function_count": 44,
+    "contiguous": true,
+    "contiguity_evidence": "Every one of the 44 delinks.txt .text ranges in [0x02111688,0x021145e0) ends exactly where the next begins; there are no gaps and no foreign shards inside the run.",
+    "shards_present_in_src": 44,
+    "shard_language_mix": {
+      ".cpp": 24,
+      ".c": 20
+    },
+    "langmode_note": "20 of the 44 shards are still .c. Folding them into one .cpp is a language-mode flip as well as a merge -- one edit, not two.",
+    "vtable_target_count": 9,
+    "non_virtual_count": 35,
+    "boundary_confidence": "medium",
+    "boundary_evidence": "tools/tu_map.py --module ov030 segments the module as: 0x2111524-0x211155c 1 fn (unattributed) | 0x211155c-0x211164c 5 fn RollingLogTtm | 0x211164c-0x2111688 1 fn (unattributed) | 0x2111688-0x21145e0 44 fn Ukiki | 0x21145e0-0x2114690 2 fn (unattributed). It reports boundary confidence 'medium' for all 5 boundaries in this module.",
+    "left_edge": "0x02111688 (D1). The function immediately before, 0x0211164c..0x02111688, is unattributed by tu_map.",
+    "right_edge": "0x021145e0, where the two classInit factories begin."
+  },
+  "factories": {
+    "note": "Both factories sit OUTSIDE the 44-shard run (0x021145e0..0x02114690) and are NOT part of the queue's 44-shard count. They live in their own shards.",
+    "entries": [
+      {
+        "symbol": "daMky_c_classInit_MONKEY_STAR",
+        "address": "0x021145e0",
+        "size": "0x58",
+        "shard": "src/d_a_mky_monkey_star.c"
+      },
+      {
+        "symbol": "daMky_c_classInit_MONKEY_THIEF",
+        "address": "0x02114638",
+        "size": "0x58",
+        "shard": "src/d_a_mky_monkey_thief.c"
+      }
+    ],
+    "bodies_are_identical": "Instruction-for-instruction identical apart from the profile they are registered under; both were disassembled at this revision."
+  },
+  "size": "0x3cc",
+  "size_evidence": "ROM-proven twice, independently. Disassembling extracted/overlays/overlay_0030.bin: at 0x021145e4 `mov r0, #0x3cc` immediately precedes `bl 0x02043444` = _ZN7fBase_cnwEj (fBase_c::operator new), and at 0x0211463c the identical pair appears in the second factory. 0x3cc = 972. include/dActor_c.h asserts sizeof(dActor_c) == 0xd0, so this class's own fields occupy [0xd0, 0x3cc).",
+  "construction": {
+    "order_from_the_factories": [
+      "_ZN7fBase_cnwEj(0x3cc)                     @arm9 0x02043444",
+      "_ZN8dActor_cC2Ev(this)                     @arm9 0x0201150c",
+      "store vptr: this[0] = 0x02115bfc            (the vtable ADDRESS POINT itself, loaded from the factory literal pool at 0x02114634 / 0x0211468c)",
+      "_ZN9ModelAnimC1Ev(this+0x0d4)              @arm9 0x02016958",
+      "_ZN11ShadowModelC1Ev(this+0x138)           @arm9 0x02016068",
+      "_ZN7dCcAc_cC1Ev(this+0x160)                @arm9 0x020149c8",
+      "_ZN10dBgCh_ActrC1Ev(this+0x194)            @arm9 0x02037430",
+      "_ZN7PathPtrC1Ev(this+0x398)                @arm9 0x0203ad74"
+    ],
+    "vptr_store_note": "The stored word is 0x02115bfc, the address point, i.e. &_ZTV7daMky_c[0] as dsd numbers it (= &_ZTV[2] counting the two ABI header words)."
+  },
+  "fields": {
+    "own_field_window": "[0x0d0, 0x3cc)  -- sizeof(dActor_c) == 0xd0 is asserted in include/dActor_c.h:356",
+    "proven_subobjects": [
+      {
+        "offset": "0x0d4",
+        "type": "ModelAnim",
+        "evidence": "both factories call _ZN9ModelAnimC1Ev on this+0x0d4; D1 and D0 both call _ZN9ModelAnimD1Ev (arm9 0x0201691c) on the same address"
+      },
+      {
+        "offset": "0x138",
+        "type": "ShadowModel",
+        "evidence": "both factories call _ZN11ShadowModelC1Ev on this+0x138; D1/D0 call _ZN11ShadowModelD1Ev (arm9 0x02015ff8) there"
+      },
+      {
+        "offset": "0x160",
+        "type": "dCcAc_c",
+        "evidence": "both factories call _ZN7dCcAc_cC1Ev on this+0x160; D1/D0 call _ZN7dCcAc_cD1Ev (arm9 0x020149a4) there"
+      },
+      {
+        "offset": "0x194",
+        "type": "dBgCh_Actr",
+        "evidence": "both factories call _ZN10dBgCh_ActrC1Ev on this+0x194; D1/D0 call _ZN10dBgCh_ActrD1Ev (arm9 0x020373f8) there"
+      },
+      {
+        "offset": "0x350",
+        "size": "0x30",
+        "type": "Matrix4x3",
+        "evidence": "at 0x02112260 the code does `add lr, r5, #0x350` then three ldm/stm quads (0x02112268..0x0211227c) copying exactly 12 words into this+0x350. The source matrix is built two instructions earlier by Matrix4x3_ApplyInPlaceToRotationXYZExt (arm9 0x0203c0b4) and Matrix4x3_ApplyInPlaceToTranslation (arm9 0x0203c184). 12 words = a 4x3 matrix, and the region ends exactly at 0x380."
+      },
+      {
+        "offset": "0x398",
+        "size": "0x8",
+        "type": "PathPtr",
+        "evidence": "both factories call _ZN7PathPtrC1Ev on this+0x398; the arm9 constructor at 0x0203ad74 is 0x10 bytes. Not destroyed by D1/D0, so its destructor is trivial."
+      }
+    ],
+    "proven_scalar_slots": [
+      {
+        "offset": "0x3a4",
+        "size": "0x4",
+        "type": "pointer to a 16-byte state descriptor",
+        "evidence": "func_ov030_021141a8 computes `descriptor_base + state*0x10` and stores it to [r0,#0x3a4]; func_ov030_02114170 and func_ov030_02114134 both load [r0,#0x3a4] and dispatch through it. Disassembled at this revision."
+      },
+      {
+        "offset": "0x3b4",
+        "size": "0x4",
+        "type": "s32 state/mode",
+        "evidence": "func_ov030_02114124 is `mov r1,#0; str r1,[r0,#0x3b4]; mov r0,#1; bx lr`. 20 immediate accesses across the run (9 ldr / 11 str), the second-most-written own word."
+      }
+    ],
+    "displacement_census": {
+      "what_it_is": "An objective measurement, made at this revision, of every immediate-offset load/store in the 44-function run whose displacement falls in [0xd0,0x3cc). It says which offsets are LIVE. It does NOT prove the base register is `this`, and it does NOT name or type anything.",
+      "instructions_decoded": 860,
+      "distinct_live_displacements": 30,
+      "total_accesses": 223,
+      "method": "ARM immediate-offset LDR/STR/LDRB/STRB/LDRH/STRH with U=1, base register != r15.",
+      "known_blind_spots": [
+        "Excluding r15 was necessary: including it added 48 spurious displacements from literal-pool reads. In particular `ldr r0,[r15,#0x3c4]` at 0x02112624 is a literal load, NOT a field access -- offsets 0x3c0..0x3c5 really are untouched.",
+        "It MISSES block transfers. The Matrix4x3 at 0x350 is written with ldm/stm and therefore does not appear in the table below at all. Absence from this table is not evidence of a dead offset.",
+        "It misses register-offset and scaled addressing."
+      ],
+      "live_offsets": {
+        "0x0d0": {
+          "uses": 5,
+          "kinds": {
+            "ldr": 1,
+            "str": 4
+          }
+        },
+        "0x0e8": {
+          "uses": 1,
+          "kinds": {
+            "ldr": 1
+          }
+        },
+        "0x114": {
+          "uses": 1,
+          "kinds": {
+            "str": 1
+          }
+        },
+        "0x118": {
+          "uses": 1,
+          "kinds": {
+            "str": 1
+          }
+        },
+        "0x11c": {
+          "uses": 1,
+          "kinds": {
+            "str": 1
+          }
+        },
+        "0x12c": {
+          "uses": 2,
+          "kinds": {
+            "ldr": 2
+          }
+        },
+        "0x130": {
+          "uses": 10,
+          "kinds": {
+            "str": 10
+          }
+        },
+        "0x134": {
+          "uses": 3,
+          "kinds": {
+            "ldr": 3
+          }
+        },
+        "0x180": {
+          "uses": 2,
+          "kinds": {
+            "ldr": 2
+          }
+        },
+        "0x184": {
+          "uses": 1,
+          "kinds": {
+            "ldr": 1
+          }
+        },
+        "0x380": {
+          "uses": 4,
+          "kinds": {
+            "ldr": 3,
+            "str": 1
+          }
+        },
+        "0x384": {
+          "uses": 14,
+          "kinds": {
+            "ldr": 13,
+            "str": 1
+          }
+        },
+        "0x388": {
+          "uses": 4,
+          "kinds": {
+            "ldr": 3,
+            "str": 1
+          }
+        },
+        "0x38c": {
+          "uses": 5,
+          "kinds": {
+            "str": 4,
+            "ldr": 1
+          }
+        },
+        "0x390": {
+          "uses": 5,
+          "kinds": {
+            "str": 4,
+            "ldr": 1
+          }
+        },
+        "0x394": {
+          "uses": 5,
+          "kinds": {
+            "str": 4,
+            "ldr": 1
+          }
+        },
+        "0x3a0": {
+          "uses": 3,
+          "kinds": {
+            "ldr": 2,
+            "str": 1
+          }
+        },
+        "0x3a4": {
+          "uses": 3,
+          "kinds": {
+            "ldr": 2,
+            "str": 1
+          }
+        },
+        "0x3a8": {
+          "uses": 50,
+          "kinds": {
+            "str": 8,
+            "ldr": 42
+          }
+        },
+        "0x3ac": {
+          "uses": 10,
+          "kinds": {
+            "ldr": 4,
+            "str": 6
+          }
+        },
+        "0x3b0": {
+          "uses": 7,
+          "kinds": {
+            "ldr": 4,
+            "str": 3
+          }
+        },
+        "0x3b4": {
+          "uses": 20,
+          "kinds": {
+            "ldr": 9,
+            "str": 11
+          }
+        },
+        "0x3b8": {
+          "uses": 13,
+          "kinds": {
+            "str": 8,
+            "ldr": 5
+          }
+        },
+        "0x3bc": {
+          "uses": 1,
+          "kinds": {
+            "ldr": 1
+          }
+        },
+        "0x3c6": {
+          "uses": 6,
+          "kinds": {
+            "strb": 6
+          }
+        },
+        "0x3c7": {
+          "uses": 25,
+          "kinds": {
+            "ldrb": 6,
+            "strb": 19
+          }
+        },
+        "0x3c8": {
+          "uses": 12,
+          "kinds": {
+            "ldrb": 9,
+            "strb": 3
+          }
+        },
+        "0x3c9": {
+          "uses": 4,
+          "kinds": {
+            "strb": 1,
+            "ldrb": 3
+          }
+        },
+        "0x3ca": {
+          "uses": 3,
+          "kinds": {
+            "ldrb": 2,
+            "strb": 1
+          }
+        },
+        "0x3cb": {
+          "uses": 2,
+          "kinds": {
+            "strb": 2
+          }
+        }
+      },
+      "notes": [
+        "Offsets 0x0d0 through 0x184 are inside or just past the dActor_c base and the ModelAnim/ShadowModel subobjects; the base register there is frequently NOT `this`. Do not read them as own fields.",
+        "0x3bc is read exactly ONCE (at 0x021128dc, `ldr r1,[r5,#0x3bc]`) and never written with an immediate-offset store. The previous scout file's claim that it is 'incremented by 0x400 and compared with a fixed threshold' is not supported by any immediate-offset access measured here; treat its semantics as unproven.",
+        "0x3c0..0x3c5 have ZERO accesses of any measured kind."
+      ]
+    },
+    "existing_header": "include/Ukiki.h already exists at this base (5082 bytes). It declares the class as `Ukiki`, asserts sizeof == 0x3cc, and already carries the ModelAnim/ShadowModel/dCcAc_c/dBgCh_Actr/PathPtr members at the offsets proven above plus several unk_/pad_ fields. The writer should treat its field NAMES (mSpawnPosX/Y/Z, mCapUniqueID, mCapPlayerNo, mHasSpawnedCap, unk_*) as prior reconstruction, not as ROM facts -- none of those names are in the cartridge."
+  },
+  "data_and_bss": {
+    "class_owns_no_data": "MEASURED: not one of the 44 shards (nor either factory shard) declares a .data, .bss, .rodata or .init section in config/arm9/overlays/ov030/delinks.txt. Count of non-.text sections on class shards: 0. This is consistent with the queue's promotion_route: text-only -- and it is what makes the pointer-to-member hazard below real.",
+    "pointer_to_member_array": {
+      "address": "0x02115ac8",
+      "end_exclusive": "0x02115b78",
+      "size": "0xb0",
+      "record_count": 22,
+      "record_size": 8,
+      "record_layout": "{ void *ptr; s32 adj; } -- the ARM Itanium pointer-to-member-function representation. In all 22 records the second word is 0 (non-virtual, zero this-adjustment) and the first word is a relocated ov030 .text address.",
+      "alignment_proof": "The 22 relocations in relocs.txt sit at 0x02115ac8, 0x02115ad0, ... 0x02115b70 -- stride 8, starting exactly at 0x02115ac8. Reading this band 4 bytes off would pair each pointer with the wrong word and yield zero valid records; the relocation stride rules that out. The array ends exactly where _ZTS7daMky_c begins at 0x02115b78, and begins exactly where _ZTV13RollingLogTtm ends at 0x02115ac8.",
+      "abi_proof": "func_ov030_02114170 (0x02114170) executes the textbook ARM PMF call sequence on these records: ldr r3,[r0,#0x3a4]; ldr r1,[r3,#4]; add r0,r0,r1,asr #1; ands r1,r1,#1; ldrne r2,[r0]; ldrne r1,[r3]; ldrne r1,[r2,r1]; ldreq r1,[r3]; blx r1. The `adj&1` virtual bit and the `adj>>1` this-adjustment are unmistakable. func_ov030_02114134 does the same on the record at descriptor +8.",
+      "targets_in_array_order": [
+        "0x02112a14",
+        "0x02112578",
+        "0x02113324",
+        "0x02112ff8",
+        "0x02112c14",
+        "0x02113fd8",
+        "0x021123a4",
+        "0x02113be8",
+        "0x02112560",
+        "0x0211360c",
+        "0x021136b0",
+        "0x02113094",
+        "0x02112da0",
+        "0x02112a84",
+        "0x021122b0",
+        "0x02113b38",
+        "0x02113a80",
+        "0x02113d20",
+        "0x021132d4",
+        "0x02113ff0",
+        "0x02114124",
+        "0x02112400"
+      ],
+      "all_targets_inside_the_run": true
+    },
+    "state_descriptor_array": {
+      "address": "0x02115e0c",
+      "section": ".bss (ov030, 0x02115c80..0x02115ec0)",
+      "stride": "0x10",
+      "descriptor_count": 11,
+      "descriptor_layout": "two consecutive 8-byte PMF records: { PMF entry; PMF tick; }",
+      "evidence": "func_ov030_021141a8 is `ldr r2,[pc,#0xc] (-> 0x02115e0c); ldr ip,[pc,#0xc] (-> 0x02114170); add r1,r2,r1,lsl #4; str r1,[r0,#0x3a4]; bx ip` -- base 0x02115e0c, index scaled by 16. 11 descriptors x 0x10 = 0xb0 = exactly the size of the 22-record .data array, and 0x02115e0c + 0xb0 = 0x02115ebc, just inside the .bss end at 0x02115ec0. The count 11 is corroborated by an 11-entry .bss pointer table at 0x02115bc8..0x02115bf4 (11 relocations, verified).",
+      "initialised_by": "__sinit_ov030_02114924 (ov030 .init, 0x02114924..0x02114dd0, size 0x4ac). Its literal pool holds 0x02115e0c at 0x02114d50 followed by all 22 PMF-record addresses at 0x02114d54..0x02114da8. Those are the only three references to 0x02115e0c / 0x02115ac8 in the whole module (relocs.txt: 0x021141bc, 0x02114d50, 0x02114d94).",
+      "caveat": "This sinit is 0x4ac bytes and also performs SharedFilePtr::Construct calls for the module's other classes, so it is a MODULE-wide initializer, not daMky_c's alone. The pairing of individual PMF records to individual descriptor indices was read from literal-pool ORDER, not from a simulated execution, and is marked unproven below."
+    }
+  },
+  "callers": {
+    "method": "Two independent passes, both run at this revision.",
+    "relocation_pass": {
+      "files_scanned": 104,
+      "relocation_rows_total": 91656,
+      "rows_landing_in_the_address_range": 4059,
+      "rows_accepted_after_module_filter": 104,
+      "rows_rejected_by_module_filter": 3955,
+      "filter": "Accept a relocation only when its destination module names overlay 30. dsd spells this `module:overlay(30)` (and `module:overlays(30,75)` for ambiguous ones), NEVER `ov030`; the filter parses the digits out of both spellings.",
+      "phantom_ratio": "39x. 3955 of the 4059 rows that land in this address range come from 50+ OTHER overlays that share the address space (largest: overlay(22) 236, overlay(29) 200, overlay(36) 187, overlay(9) 172). Reporting them as callers would have been a 39-fold overcount.",
+      "filter_sanity_check": "The rejected count is 3955, i.e. non-zero, so the filter is not silently rejecting everything. Independently: config/arm9/relocs.txt DOES contain references into ov030 (5 of them -- 4 spelled `overlay(30)` and one spelled `overlays(30,75)`), so an arm9 caller would have been found had one existed.",
+      "result": "All 104 accepted references originate from ov030 itself. ZERO references into the class's text run come from arm9 or from any other overlay."
+    },
+    "text_decode_pass": {
+      "why": "roles/scout.md warns a relocation scan can miss intra-overlay BL. In this tree every function is its own delink shard, so inter-function calls DO carry relocations -- but the decode was run anyway as an independent check.",
+      "branches_decoded": 622,
+      "branches_targeting_the_run": 315,
+      "branches_into_the_run_from_outside_it": 2,
+      "the_two": "0x021145f0 -> 0x02114628 and 0x02114648 -> 0x02114680. Both are a factory's own internal forward `beq` (the null-check skip), i.e. intra-function branches, not calls in.",
+      "result": "Agrees with the relocation pass: no ov030 code outside the 44-function run branches into it."
+    },
+    "entry_points": [
+      "The two classInit factories, reached only through the profile records (below).",
+      "The 31-slot vtable at 0x02115bfc, for the 9 own virtual slots.",
+      "The 22 pointer-to-member records at 0x02115ac8, for 22 of the 35 non-virtual functions."
+    ],
+    "most_called_internal_helpers": [
+      {
+        "address": "0x021141a8",
+        "size": "0x1c",
+        "inbound_calls": 31,
+        "role": "state-transition setter; writes this+0x3a4 and tail-calls the dispatcher at 0x02114170"
+      },
+      {
+        "address": "0x02111bc4",
+        "size": "0x20c",
+        "inbound_calls": 9
+      },
+      {
+        "address": "0x02111f6c",
+        "size": "0x128",
+        "inbound_calls": 9
+      },
+      {
+        "address": "0x02111890",
+        "size": "0x78",
+        "inbound_calls": 4
+      },
+      {
+        "address": "0x02111a00",
+        "size": "0x120",
+        "inbound_calls": 3
+      },
+      {
+        "address": "0x02111dd0",
+        "size": "0xd4",
+        "inbound_calls": 3
+      },
+      {
+        "address": "0x02111ea4",
+        "size": "0xc8",
+        "inbound_calls": 3
+      },
+      {
+        "address": "0x02112094",
+        "size": "0x21c",
+        "inbound_calls": 3,
+        "note": "called by func_ov030_02111734, Behavior (0x02114358) and InitResources (0x0211459c)"
+      }
+    ]
+  },
+  "profiles": {
+    "record_size_observed": "0x1c (7 words) for both records, back to back at 0x02115b90 and 0x02115bac",
+    "layout_observed": "+0x00 classInit pointer | +0x04 packed ids (low16 = ACTOR_SPAWN_TABLE index, high16 = a sequential ordering number) | +0x08 flags | +0x0c,+0x10 two equal fixed-point words | +0x14,+0x18 0x01000000 twice",
+    "layout_caveat": "The neighbouring g_profile_HM_BASKET record in the same overlay spans 0x24 bytes and ends with a _ZTI pointer, so the struct may be longer than the 0x1c these two occupy. The exact struct definition is NOT proven here.",
+    "entries": [
+      {
+        "symbol": "g_profile_MONKEY_THIEF",
+        "address": "0x02115b90",
+        "factory": "0x02114638",
+        "packed_ids": "0x007e010b",
+        "actor_id": "0x10b (267)",
+        "order_word": "0x7e (126)",
+        "spawn_table_slot": "ACTOR_SPAWN_TABLE + 0x42c (arm9 0x02090c90)",
+        "evidence": "config/arm9/relocs.txt has `from:0x02090c90 kind:load to:0x02115b90 module:overlay(30)`. ACTOR_SPAWN_TABLE is at arm9 0x02090864, so the slot index is 0x42c/4 = 267 = 0x10b -- which equals the low half of the record's own +0x04 word. The index/word identity was cross-checked on g_profile_HM_BASKET (slot 103, +0x04 low half 0x0067) and holds."
+      },
+      {
+        "symbol": "g_profile_MONKEY_STAR",
+        "address": "0x02115bac",
+        "factory": "0x021145e0",
+        "packed_ids": "0x007f010c",
+        "actor_id": "0x10c (268)",
+        "order_word": "0x7f (127)",
+        "spawn_table_slot": "ACTOR_SPAWN_TABLE + 0x430 (arm9 0x02090c94)",
+        "ambiguous": true,
+        "evidence": "config/arm9/relocs.txt has `from:0x02090c94 kind:load to:0x02115bac module:overlays(30,75)` -- the destination is ambiguous between ov030 and ov075 because both overlays cover 0x02115bac. That ambiguity is exactly why config/arm9/overlays/ov030/symbols.txt marks this symbol `ambiguous`. The slot index 0x430/4 = 268 = 0x10c still matches the record's own +0x04 low half, so the ov030 reading is self-consistent."
+      }
+    ]
+  },
+  "source_order_signal": {
+    "observation": "The 44 functions occupy strictly ascending, gapless addresses. mwccarm emits .text in REVERSE source order, so DESCENDING address is source order.",
+    "implied_source_order_of_the_9_virtuals": [
+      "0x021145d4 OnTurnIntoEgg (veneer)",
+      "0x02114378 InitResources",
+      "0x02114278 Behavior",
+      "0x02114230 Render",
+      "0x0211422c OnPendingDestroy",
+      "0x021141c4 CleanupResources",
+      "... 35 non-virtual helpers ...",
+      "0x0211172c OnYoshiTryEat",
+      "0x021116d0 D0",
+      "0x02111688 D1"
+    ],
+    "status": "INFERENCE, not measurement. The address order is measured; the reverse-source-order rule is a compiler behaviour recorded elsewhere in this project and must be confirmed by the writer against the real build, not against generated src/ files. It matters because destructor DECLARATION position decides whether the TU emits the vtable."
+  },
+  "modules_touched": [
+    {
+      "module": "ov030",
+      "base": "0x021111a0",
+      "role": "all 44 run functions, both factories, _ZTS, _ZTI, _ZTV, the 22 PMF records, the 11 .bss state descriptors and the module sinit"
+    },
+    {
+      "module": "arm9",
+      "base": "0x02004000",
+      "role": "the direct-base RTTI record, all 22 inherited vtable targets, operator new, every member/base constructor and destructor, Memory::Deallocate, the Matrix4x3 helpers, fBase_c::MarkForDestruction (the slot-19 veneer target) and ACTOR_SPAWN_TABLE"
+    }
+  ],
+  "tree_state_at_this_base": {
+    "base_commit": "2ab05bae36a6821679a7e647e811c0a3243a3c49",
+    "queue_row": "Ukiki\t44\t1983\tov030\tyes\tno\tcompiler-only:>=9(...)\t-\ttext-only",
+    "queue_rank": "42 of 266 rows",
+    "already_promoted": false,
+    "existing_manifest": "none -- config/tu_manifest.d/ holds 44 manifests at this base and none of them is this class",
+    "existing_header": "include/Ukiki.h exists",
+    "shards_present": "44 of 44",
+    "sibling_oracle": "none. The queue's `-` is correct and was re-derived here: ov030 has three queue rows (Ukiki 44 shards, daObjHmBskt_c 8, RollingLogTtm 5) and ALL THREE are unpromoted. src/actors/ holds 31 promoted classes at this base and not one of them is from ov030. The writer has no same-overlay example to copy."
+  },
+  "blockers": [
+    {
+      "severity": "high",
+      "title": "22 pointer-to-member records in UNOWNED .data resolve their targets BY NAME",
+      "detail": "The class owns no .data (measured: 0 non-.text sections across all 44 shards), so the 22-record PMF array at 0x02115ac8 stays in unowned .data while its 22 targets move into the promoted TU. dsd resolves those records by SYMBOL NAME. If any of those 22 functions is renamed from func_ov030_* to a daMky_c:: member without the matching row landing in config/arm9/overlays/ov030/symbols.txt IN THE SAME COMMIT, that record links as 0x00000000. No stage-2 or stage-3 byte gate catches it. The 22 affected addresses are listed under data_and_bss.pointer_to_member_array.targets_in_array_order.",
+      "also": "A class member function cannot sit inside an `extern \"C\" { }` region, so the file-scope region must go after the last surviving func_* member."
+    },
+    {
+      "severity": "high",
+      "title": "The class name in the tree is not the class name in the ROM",
+      "detail": "Every one of the 9 own member symbols is spelled _ZN5Ukiki*, and include/Ukiki.h declares `Ukiki`. The cartridge says daMky_c, proven by the _ZTS string at 0x02115b78 and confirmed by tools/rtti_vtables.py, whose canonical key is daMky_c and which does not recognise 'Ukiki' at all. Writing the class as daMky_c re-mangles all 9 member symbols (5 -> 7 characters) and changes _ZTV5Ukiki to _ZTV7daMky_c -- a coordinated rename touching symbols.txt, the header, and every shard, in one commit. Writing it as Ukiki keeps the tree consistent but ships a class name the ROM contradicts. This is a SCOPE DECISION for the writer/reviewer, not something the scout should settle; the ROM fact is recorded here either way."
+    },
+    {
+      "severity": "medium",
+      "title": "Two _ZTV symbols at one address",
+      "detail": "config/arm9/overlays/ov030/symbols.txt declares both _ZTV5Ukiki (line 143) and _ZTV7daMky_c (line 144) at 0x02115bfc. Whichever name the promoted TU emits must be the one the data records resolve through, and romdata_check is the only vtable gate. Resolve the duplicate as part of the naming decision above."
+    },
+    {
+      "severity": "medium",
+      "title": "The TU owns all 9 virtuals, so it will want to emit the vtable",
+      "detail": "All 9 own vtable targets including both out-of-line destructors are inside the 44-shard run, and an out-of-line destructor is the key function. A TU that owns every virtual emits _ZTV -- but the route is text-only and the class owns no .data. Whether the vtable ends up emitted, and in which order the destructor variants come out, is the thing most likely to cost this promotion; the destructor-position and defer_codegen levers apply. Note there is no D2 to order."
+    },
+    {
+      "severity": "low",
+      "title": "20 of 44 shards are still .c",
+      "detail": "Folding them into one .cpp is a language-mode flip as well as a merge, and language mode is transitive through includes."
+    }
+  ],
+  "unproven": [
+    "The class name as written in the original 2004 source. The cartridge proves the RTTI identity is daMky_c and proves 'Ukiki' occurs nowhere in the ROM in any case; it does not prove what the .cpp file or the C++ identifier was called. 'Ukiki' is a prior reconstruction label carried by the tree, NOT a coined-and-disclosed name with ROM evidence behind it.",
+    "The original identifiers of all 35 non-virtual functions, and whether each was a member function or a file-local free function. What IS proven: their addresses, sizes, contiguous TU membership, inbound call counts, and which 22 of them are reached through pointer-to-member records. 22 being PMF targets is strong evidence those 22 are non-static MEMBER functions -- a PMF record can only point at one -- but it does not supply their names.",
+    "The names of every own field. The five constructor/destructor-proven subobjects, the Matrix4x3 block at 0x350, and the two dispatcher-proven words at 0x3a4 and 0x3b4 are proven as STORAGE; no field NAME in include/Ukiki.h (mSpawnPosX/Y/Z, mCapUniqueID, mCapPlayerNo, mHasSpawnedCap, unk_*) was read from the ROM.",
+    "The types and meanings of the own scalar tail at 0x380, 0x384, 0x388, 0x38c, 0x390, 0x394, 0x3a0, 0x3a8, 0x3ac, 0x3b0, 0x3b8, 0x3bc and the bytes 0x3c6..0x3cb. The displacement census proves each is live and gives its access width and read/write mix; it proves nothing about semantics. The previous scout file assigned each of these a type and a purpose -- those readings are NOT reproduced here as facts.",
+    "Whether the base register at the low displacements (0x0d0..0x184) is `this` at all. Those are very likely accesses into the base subobject or through another object pointer.",
+    "0x3bc's semantics specifically: it is READ exactly once (0x021128dc) and never written by an immediate-offset store. The previous file's 'incremented by 0x400 and compared with a threshold' claim is unsupported by anything measured here.",
+    "Bytes 0x3c0..0x3c5 (6 bytes). ZERO accesses of any measured kind in the whole run. Padding is the likely reading, but it is not proven, and the census is blind to block transfers.",
+    "The pairing of individual PMF records to individual state-descriptor indices. The 22 record addresses appear in __sinit_ov030_02114924's literal pool at 0x02114d54..0x02114da8 in a definite order, and the descriptor stride is a measured 0x10, so a pairing can be read off; but that pairing was NOT confirmed by simulating the sinit, and the sinit is module-wide rather than class-specific. Do not treat any state index -> handler mapping as proven.",
+    "The exact profile struct definition. Both records occupy 0x1c bytes back to back, but the sibling g_profile_HM_BASKET in the same overlay spans 0x24 and ends with a _ZTI pointer, so the struct may be longer than what these two occupy.",
+    "Whether slot 19's original source was a one-line forwarding member. The 12 bytes at 0x021145d4 are proven to be a long-branch veneer to fBase_c::MarkForDestruction; the source construct that produced it is an inference.",
+    "The reverse-source-order reading of the address layout. The addresses are measured; the compiler rule mapping them to source order is not verified in this run.",
+    "The left TU boundary at 0x02111688. tu_map.py reports 'medium' confidence for every boundary in ov030, and the function immediately below (0x0211164c..0x02111688) is unattributed rather than assigned to a neighbouring class."
+  ],
+  "writer_stage3b": {
+    "run_on": "2026-09-06",
+    "branch": "cpp/Ukiki-tu",
+    "result": "44/44 MATCH, TEXT-VERIFIED; 20 of 44 members are daMky_c:: methods",
+    "methods_before_this_pass": 9,
+    "methods_after_this_pass": 20,
+    "state_machine": {
+      "state_word": "+0x3b4, named mState in include/daMky_c.h",
+      "descriptor_array": "data_ov030_02115e0c, 11 entries of 0x10 bytes",
+      "installer": "func_ov030_021141a8(this, N) stores &data_ov030_02115e0c[N] at +0x3a4 and calls func_ov030_02114170, which invokes pp[0]. func_ov030_02114134 is the same shape on pp[1]. 021141a8 never writes +0x3b4 itself.",
+      "proof": "Bijection. Each of the eleven bodies below writes exactly one immediate to +0x3b4; across all 44 functions in the run the values are 0,1,2,...,10 with none repeated and none missing; there are exactly 11 descriptors. Entering state N calls descriptor N's pp[0] and leaves N in +0x3b4, and only one body writes N, so that body is descriptor N's pp[0].",
+      "entry_handlers": [
+        {
+          "state": 0,
+          "address": "0x02114124",
+          "pmf_record_index": 20,
+          "former_symbol": "func_ov030_02114124",
+          "method": "daMky_c::EnterState0",
+          "mangled": "_ZN7daMky_c11EnterState0Ev"
+        },
+        {
+          "state": 1,
+          "address": "0x02113fd8",
+          "pmf_record_index": 5,
+          "former_symbol": "func_ov030_02113fd8",
+          "method": "daMky_c::EnterState1",
+          "mangled": "_ZN7daMky_c11EnterState1Ev"
+        },
+        {
+          "state": 2,
+          "address": "0x02113be8",
+          "pmf_record_index": 7,
+          "former_symbol": "func_ov030_02113be8",
+          "method": "daMky_c::EnterState2",
+          "mangled": "_ZN7daMky_c11EnterState2Ev"
+        },
+        {
+          "state": 3,
+          "address": "0x02113a80",
+          "pmf_record_index": 16,
+          "former_symbol": "func_ov030_02113a80",
+          "method": "daMky_c::EnterState3",
+          "mangled": "_ZN7daMky_c11EnterState3Ev"
+        },
+        {
+          "state": 4,
+          "address": "0x0211360c",
+          "pmf_record_index": 9,
+          "former_symbol": "func_ov030_0211360c",
+          "method": "daMky_c::EnterState4",
+          "mangled": "_ZN7daMky_c11EnterState4Ev"
+        },
+        {
+          "state": 5,
+          "address": "0x021132d4",
+          "pmf_record_index": 18,
+          "former_symbol": "func_ov030_021132d4",
+          "method": "daMky_c::EnterState5",
+          "mangled": "_ZN7daMky_c11EnterState5Ev"
+        },
+        {
+          "state": 6,
+          "address": "0x02112ff8",
+          "pmf_record_index": 3,
+          "former_symbol": "func_ov030_02112ff8",
+          "method": "daMky_c::EnterState6",
+          "mangled": "_ZN7daMky_c11EnterState6Ev"
+        },
+        {
+          "state": 7,
+          "address": "0x02112c14",
+          "pmf_record_index": 4,
+          "former_symbol": "func_ov030_02112c14",
+          "method": "daMky_c::EnterState7",
+          "mangled": "_ZN7daMky_c11EnterState7Ev"
+        },
+        {
+          "state": 8,
+          "address": "0x02112a14",
+          "pmf_record_index": 0,
+          "former_symbol": "func_ov030_02112a14",
+          "method": "daMky_c::EnterState8",
+          "mangled": "_ZN7daMky_c11EnterState8Ev"
+        },
+        {
+          "state": 9,
+          "address": "0x02112560",
+          "pmf_record_index": 8,
+          "former_symbol": "func_ov030_02112560",
+          "method": "daMky_c::EnterState9",
+          "mangled": "_ZN7daMky_c11EnterState9Ev"
+        },
+        {
+          "state": 10,
+          "address": "0x021123a4",
+          "pmf_record_index": 6,
+          "former_symbol": "func_ov030_021123a4",
+          "method": "daMky_c::EnterState10",
+          "mangled": "_ZN7daMky_c12EnterState10Ev"
+        }
+      ],
+      "coined": "The word \"EnterState\" is coined. The class name (daMky_c) and the eleven numbers are read from the cartridge; nothing else in these names is."
+    },
+    "walls": {
+      "codegen": "ABSENT, measured. Probe 1 converted three declaration-free pointer-to-member targets (0x02112560, 0x02113fd8, 0x02114124) to daMky_c:: methods -- all MATCH. The eleven real conversions then landed 44/44.",
+      "scope": "ABSENT, measured. Probe 2 converted a declaration-carrying member (0x021132d4), forcing two declarations to file scope above three members that redeclare _ZN5dCc_c5ClearEv with a different return type -- still MATCH. In the real pass, 12 canonical function declarations sit above all 24 remaining free functions and the TU still matches 44/44. DATA declarations are the exception and are not hoisted; see the manifest note.",
+      "naming": "THE WALL. 24 members stay func_ov030_*. Eleven of them are among the 22 pointer-to-member records at 0x02115ac8, so their member-ness is as proven as the eleven that converted, but the ROM neither names nor numbers them. The other thirteen are not proven members at all."
+    },
+    "settled_from_the_scout_unproven_list": {
+      "item_1": "PARTIALLY SETTLED. Eleven of the 35 non-virtual functions are now proven member functions with a proven state number. Their original identifiers are still unknown -- EnterStateN is coined.",
+      "item_7": "STILL UNPROVEN, and now bounded. Exactly 11 of the 22 records write a state id and exactly 11 do not, which is the 11 x (entry, tick) split the 0x10 descriptor predicts. The array order does NOT pair them (2i, 2i+1): records 4 and 5 are both entry handlers. Which tick belongs to which entry remains unproven.",
+      "item_2": "PARTIALLY SETTLED for +0x3b4. Its ROLE is proven (it holds the state-machine id, values 0..10) and it is now declared as s32 mState. The NAME mState is still coined."
+    },
+    "contradiction_found": {
+      "address": "0x02112a14",
+      "detail": "The shard src/func_ov030_02112a14.c carried the provenance comments `recovered name: daObjHmMaruta_c_AfterClsn` and `daObjHmMaruta_c::AfterClsn - recovered from vtable slot identity`, and its body read through a `struct daObjHmMaruta_c *`. That attribution is contradicted by the ROM: 0x02112a14 is pointer-to-member record 0 of daMky_c's 22-record array at 0x02115ac8, it lies inside daMky_c's contiguous text run, and it writes the immediate 8 to daMky_c's state word. It is daMky_c's state-8 entry handler. The two classes evidently share the dActor_c field offsets the body touches, which is how the wrong header still compiled. Converted here as daMky_c::EnterState8."
+    }
+  }
+}
