@@ -65,7 +65,11 @@ struct daSanbo_c : dActor_c {
     u8  unk_3a8;            /* 0x3a8 */
     u8  pad_3a9[0x7];
 
-    virtual ~daSanbo_c();            /* slots 16 (D1), 17 (D0) */
+    /* Inline, and declared first: mwccarm emits the vague-linkage D1/D0 pair
+       from this body, in the cartridge's D1-then-D0 order, and no D2. */
+    virtual ~daSanbo_c() {
+    }
+
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
