@@ -43,12 +43,24 @@
 #include "dBgCh_Actr.h"
 
 struct daYurei_Mucho_c : dEnemyBase_c {
-    /* What mCurrentState points at. Behavior compares it against three objects
-       in ov065's data and calls the handler at +0x08 through it. Only that
-       handler is evidenced. */
+    /* What mCurrentState points at. Four of these live in ov065's .bss at
+       0x0211d650/660/670/680, 0x10 apart, the last ending exactly where the
+       next class's band begins -- which is what makes 0x10 the size.
+
+       BOTH words are pointers-to-member, and both are evidenced. The module's
+       static initializer copies each object in as two 8-byte halves from the
+       .data pointer-to-member records at 0x0211cb20..0x0211cb60, and the two
+       hooks are invoked from different places: func_ov065_0211691c calls the
+       one at +0x00 the moment a state is installed, and Behavior calls the one
+       at +0x08 every frame.
+
+       COINED: the words "Enter" and "Main". The ROM proves the offsets, the
+       encoding and which caller reaches which; it preserves no name. The `int`
+       return type is measured -- func_ov065_0211691c returns the +0x00 hook's
+       result -- not chosen. */
     struct State {
-        u8  pad_00[0x8];
-        void (daYurei_Mucho_c::*mMain)();      /* 0x08 */
+        int (daYurei_Mucho_c::*mEnter)();      /* 0x00 */
+        int (daYurei_Mucho_c::*mMain)();       /* 0x08 */
     };
 
     dCcAc_c mdCcAc_c; /* 0x110 */
@@ -68,7 +80,12 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     u8  pad_3dc[0x8];
 
     /* --- vtable --- */
-    virtual ~daYurei_Mucho_c();
+    /* MEASURED -- INLINE ON PURPOSE. This directly included declaration makes
+       mwccarm emit the cartridge's D1-then-D0 pair (0x02115ee0, 0x02115f28)
+       without the otherwise homeless D2 an out-of-line definition produces.
+       It is also what makes the promoted TU this class's key-function TU, so
+       the _ZTV/_ZTI/_ZTS group is emitted here and externalized. */
+    virtual ~daYurei_Mucho_c() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
     virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */

@@ -4,97 +4,9 @@
     .ctor       start:0x0211cae0 end:0x0211cb08 kind:rodata align:4
     .data       start:0x0211cb20 end:0x0211d600 kind:data align:32
     .bss        start:0x0211d600 end:0x0211da00 kind:bss align:32
-src/_ZN15daYurei_Mucho_cD1Ev.cpp:
+src/actors/daYurei_Mucho_c.cpp:
     complete
-    .text start:0x02115ee0 end:0x02115f28
-
-src/_ZN15daYurei_Mucho_cD0Ev.cpp:
-    complete
-    .text start:0x02115f28 end:0x02115f84
-
-src/func_ov065_02115f84.c:
-    complete
-    .text start:0x02115f84 end:0x02115ff0
-
-src/func_ov065_02115ff0.c:
-    complete
-    .text start:0x02115ff0 end:0x021162c0
-
-src/func_ov065_021162c0.c:
-    complete
-    .text start:0x021162c0 end:0x02116328
-
-src/func_ov065_02116328.c:
-    complete
-    .text start:0x02116328 end:0x02116364
-
-src/func_ov065_02116364.cpp:
-    complete
-    .text start:0x02116364 end:0x02116588
-
-src/func_ov065_02116588.cpp:
-    complete
-    .text start:0x02116588 end:0x021165d8
-
-src/func_ov065_021165d8.cpp:
-    complete
-    .text start:0x021165d8 end:0x0211672c
-
-src/func_ov065_0211672c.c:
-    complete
-    .text start:0x0211672c end:0x02116744
-
-src/func_ov065_02116744.c:
-    complete
-    .text start:0x02116744 end:0x021168a8
-
-src/func_ov065_021168a8.cpp:
-    complete
-    .text start:0x021168a8 end:0x0211691c
-
-src/func_ov065_0211691c.cpp:
-    complete
-    .text start:0x0211691c end:0x0211696c
-
-src/func_ov065_0211696c.c:
-    complete
-    .text start:0x0211696c end:0x02116ae8
-
-src/_ZN15daYurei_Mucho_c16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02116ae8 end:0x02116b30
-
-src/_ZN15daYurei_Mucho_c16OnPendingDestroyEv.cpp:
-    complete
-    .text start:0x02116b30 end:0x02116b34
-
-src/_ZN15daYurei_Mucho_c6RenderEv.cpp:
-    complete
-    .text start:0x02116b34 end:0x02116b84
-
-src/_ZN15daYurei_Mucho_c8BehaviorEv.cpp:
-    complete
-    .text start:0x02116b84 end:0x02116e10
-
-src/_ZN15daYurei_Mucho_c13InitResourcesEv.cpp:
-    complete
-    .text start:0x02116e10 end:0x02116f0c
-
-src/_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv.cpp:
-    complete
-    .text start:0x02116f0c end:0x02116f14
-
-src/_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player.cpp:
-    complete
-    .text start:0x02116f14 end:0x02116f40
-
-src/_ZN15daYurei_Mucho_c13OnYoshiTryEatEv.cpp:
-    complete
-    .text start:0x02116f40 end:0x02116f48
-
-src/d_a_yurei_mucho.c:
-    complete
-    .text start:0x02116f48 end:0x02116f98
+    .text start:0x02115ee0 end:0x02116f98
 
 src/_ZN5SwoopD1Ev.cpp:
     complete
