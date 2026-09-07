@@ -85,7 +85,7 @@ struct da1up_c : dEnemyBase_c {
     virtual s32   Render();                      /* slot  9 */
     virtual void  OnPendingDestroy();            /* slot 12 */
     virtual s32   OnYoshiTryEat();               /* slot 18 */
-    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
 };
 
 typedef char da1up_c_size_must_be_0x398[sizeof(da1up_c) == 0x398 ? 1 : -1];

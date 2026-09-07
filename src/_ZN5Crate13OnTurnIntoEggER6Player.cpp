@@ -14,15 +14,11 @@ void _ZN6Player20RegisterEggCoinCountEjbb(char *player, unsigned int n, char b1,
 void Crate_SetState(char *c, int i);
 }
 
-/* NO VALUE IS RETURNED, AND THAT IS FAITHFUL. The header declares `int`; this
- * body sets no return value and the ROM does not either. Adding an explicit
- * `return <v>;` emits a real instruction and breaks the match (measured on
- * daObjPushblock_c::OnPushed, 2026-08-22). The legacy .c declared this `void` and never
- * included the header, so nothing checked the disagreement until it became a
- * real method. Harmless for the ROM build; a host-port caller that reads this
- * result gets garbage. Fix upstream in the header's return type if it is wrong --
- * never with a `return` here. */
-int Crate::OnTurnIntoEgg(Player &player)
+/* The legacy free function returned void. The shared actor hook now agrees,
+ * so this method can finish after changing state without an invented result.
+ * The earlier int declaration made that fallthrough an invalid C++ contract;
+ * matching residual register contents did not make it a defined return value. */
+void Crate::OnTurnIntoEgg(Player &player)
 {
     char *r4 = (char *)&player;
     if (_ZN6Player15IsCollectingCapEv(r4)) {

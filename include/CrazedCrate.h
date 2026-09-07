@@ -68,7 +68,7 @@ struct CrazedCrate : dActor_c {
     virtual s32  Render();           /* slot  9 */
     virtual void OnPendingDestroy();      /* slot 12 */
     virtual s32  OnYoshiTryEat();         /* slot 18 */
-    virtual int  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
 };
 
 typedef char CrazedCrate_size_must_be_0x378[sizeof(CrazedCrate) == 0x378 ? 1 : -1];

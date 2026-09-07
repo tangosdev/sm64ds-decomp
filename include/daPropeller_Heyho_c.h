@@ -61,7 +61,7 @@ struct daPropeller_Heyho_c : dEnemyBase_c {
     virtual ~daPropeller_Heyho_c() {}
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

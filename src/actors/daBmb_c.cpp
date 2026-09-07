@@ -1470,7 +1470,7 @@ void func_ov102_0214ae1c(void *cv) {
  * ======================================================================== */
 
 // @symbol _ZN7daBmb_c13OnTurnIntoEggER6Player
-int daBmb_c::OnTurnIntoEgg(Player &player)
+void daBmb_c::OnTurnIntoEgg(Player &player)
 {
     if (unk_108 == 1) {
         Sound::PlayBank3(0x11, *(Vector3 *)&mCamSpacePosX);

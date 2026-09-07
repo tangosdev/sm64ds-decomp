@@ -86,7 +86,7 @@ struct Scuttlebug : dActor_c {
     virtual ~Scuttlebug();            /* slots 16 (D1), 17 (D0) */
 
     virtual int   OnYoshiTryEat();               /* slot 18 */
-    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual int   OnAimedAtWithEgg();            /* slot 29 */
 
     int Behavior();

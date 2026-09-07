@@ -55,13 +55,13 @@
  * `SharedFilePtr` in ordinal 35.
  *
  * `decl_common.h` IS DELIBERATELY NOT INCLUDED. It declares 11 of these 36
- * symbols and 4 of the 11 disagree with the shard that defines them --
- * `func_ov002_020af4ec` (`char *` vs the definition's `void *`) and
- * `func_ov002_020afc68` (`char *` vs `unsigned char *`) on the pointer type,
- * `func_ov002_020afa6c` on the return type (`void` vs `int`), and
- * `func_ov002_020af684` on BOTH -- `void (void *, int, int)` against the
- * definition's `int (char *, int, char *)`, so the return type and two of the
- * three parameters. Pulling it in makes each an `illegal function overloading`
+ * symbols and 3 of the 11 have different parameter views from their definitions:
+ * `func_ov002_020af4ec` (`char *` vs the definition's `void *`),
+ * `func_ov002_020afc68` (`char *` vs `unsigned char *`), and
+ * `func_ov002_020af684` (`void *, int, int` vs `char *, int, char *`).
+ * The shared void egg-turn contract reconciles the former return disagreements
+ * for `func_ov002_020af684` and `func_ov002_020afa6c`. Pulling it in makes each an
+ * `illegal function overloading`
  * error against a byte-matched body. ov002/Player and ov006/dScMgPanel_c, the
  * two largest promoted TUs, exclude it for the same reason.
  *
@@ -105,8 +105,8 @@
    (0x020af908) calls ordinal 19 (0x020af924). Both spellings are the
    definitions' own, so nothing below has to be adapted to them. */
 extern "C" {
-int func_ov002_020afa6c(char *c);
-int func_ov002_020af924(char *c);
+void func_ov002_020afa6c(char *c);
+void func_ov002_020af924(char *c);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -317,15 +317,14 @@ int func_ov002_020af248(char* c, int n){
 
 /* The first of the two file-scope `extern "C"` regions. Ordinal 9 is a class
    member function, so it cannot sit in one and a declaration written in its body
-   would mangle; these three have to be here. `func_ov002_020af684` is the one
-   place promotion changed a void definition to int to agree with ordinal 9.
-   Ordinal 14 still has no return statement; the matched residual-r0 behavior
-   does not establish a valid C++ return contract. That contract remains to be
-   reconstructed across these callers, including ordinals 19 and 22 and their
-   differing `(void*, int, int)` declarations. */
+   would mangle; these three have to be here. The shared actor egg-turn hook
+   and its forwarding helpers return void. Promotion had changed ordinal 14
+   from void to int to agree with the old hook declaration despite its void
+   terminal call. Ordinals 9, 19 and 22 now use this one void declaration;
+   ordinals 19 and 22 retain the player lookup result and its null test. */
 extern "C" {
 void GiveLives(int count);
-int func_ov002_020af684(char* self, int target, char* player);
+void func_ov002_020af684(char* self, int target, char* player);
 void func_ov002_020bdf8c(Player* player);
 }
 
@@ -335,7 +334,7 @@ void func_ov002_020bdf8c(Player* player);
 // @symbol _ZN7da1up_c13OnTurnIntoEggER6Player
 /* Vtable slot 19, verified against config/arm9/overlays/ov002/relocs.txt:
    _ZTV7da1up_c (0x021083c8) + 0x4c relocates to 0x020af2b0, this address. */
-int da1up_c::OnTurnIntoEgg(Player &player)
+void da1up_c::OnTurnIntoEgg(Player &player)
 {
     if (mMushroomType == 0xb) {
         return func_ov002_020af684((char*)this, 5, (char*)&player);
@@ -503,12 +502,13 @@ void func_ov002_020af4ec(void* self)
 /* ROM ordinal 14 -- func_ov002_020af684, 0x020af684, size 0xa0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af684
-/* Unresolved return contract: promotion changed this helper from void to int
-   for ordinal 9, but it still falls through after a void call. The matched
-   register behavior is not a defined C++ return value. A coherent signature
-   correction needs caller-use evidence and fresh byte/relocation proof. */
+/* Shared with the egg-turn hook and dispatch indices 8 and 6. This helper
+   finishes by killing the actor and returns no value. Its callers use the same
+   void contract; the lookup result in ordinals 19 and 22 is still needed as
+   the player argument. This reconstructs a consistent interface, not an
+   original return type recovered from an unused register. */
 extern "C" {
-int func_ov002_020af684(char* self, int target, char* player){
+void func_ov002_020af684(char* self, int target, char* player){
     struct dActor_c;
     extern dActor_c* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int actorID, dActor_c* prev);
     extern void GiveCoins(int idx, int amount);
@@ -646,13 +646,11 @@ void func_ov002_020af908(char *self) {
 // @symbol func_ov002_020af924
 /* Dispatch-table index 8. */
 extern "C" {
-int func_ov002_020af924(char* c){
+void func_ov002_020af924(char* c){
   extern int func_ov002_020af1dc(void*);
-  extern int func_ov002_020af684(void*, int, int);
   int r=func_ov002_020af1dc(c);
-  if(!r) return r;
-  r=func_ov002_020af684(c, 7, r);
-  return r;
+  if(!r) return;
+  func_ov002_020af684(c, 7, (char*)r);
 }
 }
 
@@ -726,13 +724,11 @@ void func_ov002_020afa50(char *self) {
 // @symbol func_ov002_020afa6c
 /* Dispatch-table index 6. */
 extern "C" {
-int func_ov002_020afa6c(char* c){
+void func_ov002_020afa6c(char* c){
   extern int func_ov002_020af1dc(void*);
-  extern int func_ov002_020af684(void*, int, int);
   int r=func_ov002_020af1dc(c);
-  if(!r) return r;
-  r=func_ov002_020af684(c, 5, r);
-  return r;
+  if(!r) return;
+  func_ov002_020af684(c, 5, (char*)r);
 }
 }
 

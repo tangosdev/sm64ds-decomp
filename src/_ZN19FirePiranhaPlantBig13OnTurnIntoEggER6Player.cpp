@@ -9,7 +9,7 @@
 #include "FirePiranhaPlantBig.h"
 #include "Player.h"
 
-int FirePiranhaPlantBig::OnTurnIntoEgg(Player &player)
+void FirePiranhaPlantBig::OnTurnIntoEgg(Player &player)
 {
     GivePlayerCoins(player, 1, 0);
     KillAndTrackInDeathTable();

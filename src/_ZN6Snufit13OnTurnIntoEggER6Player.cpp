@@ -9,7 +9,7 @@
 #include "Snufit.h"
 #include "Player.h"
 
-int Snufit::OnTurnIntoEgg(Player &player)
+void Snufit::OnTurnIntoEgg(Player &player)
 {
     GivePlayerCoins(player, (unsigned char)(unk_10a + 1), 0);
     KillAndTrackInDeathTable();

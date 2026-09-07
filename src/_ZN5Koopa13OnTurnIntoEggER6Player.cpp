@@ -10,7 +10,7 @@
 #include "Player.h"
 
 #pragma optimize_for_size on
-int Koopa::OnTurnIntoEgg(Player &player)
+void Koopa::OnTurnIntoEgg(Player &player)
 {
     if (unk_108 == 3) {
         if (OnYoshiTryEat() == 6 && !player.IsCollectingCap()) {

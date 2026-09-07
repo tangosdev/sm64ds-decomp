@@ -6,7 +6,7 @@
 #include "Pokey.h"
 #include "Player.h"
 
-int Pokey::OnTurnIntoEgg(Player &player)
+void Pokey::OnTurnIntoEgg(Player &player)
 {
     int flag = (actorID == 0xf0);
     if (flag)
