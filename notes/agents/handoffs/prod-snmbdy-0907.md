@@ -81,7 +81,13 @@ This document describes this commit. The queue records its immutable output SHA.
   observation reproduces; the causal claim does not. The mechanism is in
   `tools/tu_map.py`: `factory_vtable_labels` only ever considers a name ending
   `_Spawn`, so a `_classInit` factory never enters the attribution path no matter
-  how its class is spelled. The join is not a
+  how its class is spelled. Regenerated on this tree, ov072 has four one-function
+  units each holding nothing but a `_classInit` and each carrying no class:
+  `daBgSnmBdy_c_classInit` at 0x0211fedc, `daBgSnmHed_c_classInit` at 0x021207d4,
+  `daBgSnwmn_c_classInit` at 0x02120c00 and `daPgBby_c_classInit` at 0x02121fac.
+  Three of those four belong to classes that landed under their ROM names long
+  ago, which is the refutation: the spelling is not what decides it. The join is
+  not a
   tu_map inference: the main registry maps BIG_SNOWMAN_BODY to the 0x0212279c
   descriptor whose first word relocates to `daBgSnmBdy_c_classInit` at 0x0211fedc,
   that function allocates the factory-proven 0x3a8, installs
