@@ -87,18 +87,31 @@ Not inherited from the dossier. In the cartridge, `ldr r1,[pc,#0x2c]` at
 0x0211cba4..0x0211cc1c. Both destructor literals (0x02115f24 and 0x02115f7c)
 hold 0x0211cba4 as well.
 
-That measurement is load-bearing in the source. The retired factory shard wrote
-the bare `(int)_ZTV6Snufit`, which was right while the symbol was UNDEF and
-symbols.txt bound it to the address point. In the promoted TU the same spelling
-binds to this TU's own definition, two words lower, so the store is written
-`(int)(_ZTV15daYurei_Mucho_c + 2)`.
+That measurement is what decides the spelling in the source. The retired factory
+shard wrote the bare `(int)_ZTV6Snufit`, which was right while the symbol was
+UNDEF and symbols.txt bound it to the address point. In the promoted TU the same
+spelling would bind to this TU's own definition, two words lower, so the store is
+written `(int)(_ZTV15daYurei_Mucho_c + 2)`.
 
-**A relocated word is a wildcard to every byte gate, so `match.py` reported
-23/23 MATCH with the bare form too.** `tools/objisolate.py`'s addend check is
-what refused it, with `_ZTV15daYurei_Mucho_c: unexpected reloc type=2 addend=0`.
+**It is not, however, load-bearing in the shipped object, and an earlier draft of
+this note and of the source comment both said it was.** Compiled both ways, the
+two spellings isolate to byte-identical objects, sha256
+`54f1b54d7368e7617103fffe891e05995649797122ae06e374ff701c69044f7d`, which is also
+the sha256 of the shipped `build/src/actors/daYurei_Mucho_c.o`. A relocated word
+is a wildcard to every byte gate, so `match.py` reports 23/23 MATCH with the bare
+form too; and `rombuild.py` sends a multi-function source through
+`objisolate.isolate_many`, whose whole-TU path explicitly accepts addend 0 for a
+`_ZTV` target and rebases only a nonzero one, so addend 8 and addend 0 both leave
+the pipeline as UNDEF `_ZTV` addend 0.
 
-That message was expected to be a known false positive. It was not. The control
-is recorded under Proof.
+What refuses the bare form is the singular per-symbol path, `objisolate.plan`,
+which requires `addend >= VTABLE_PREAMBLE` for a `_ZTV` target and reports
+`_ZTV15daYurei_Mucho_c: unexpected reloc type=2 addend=0`. That is the path
+`tubuild verify` and `tubuild partial` take per member, and it is where the
+message was first seen. It was expected to be a known false positive; it was not,
+and the control is recorded under Proof. So `+ 2` buys per-member isolation
+rather than bytes -- and it stays, because it is the spelling the ROM literal and
+mwcc's own D1/D0 vptr stores both write.
 
 ### A wrong callee the byte gate could not see
 
@@ -297,14 +310,34 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
 - **The five `_ZTS` PARTIALs** are an extent question in symbols.txt, not a class
   model question, and match the landed siblings exactly. Closing them belongs to a
   separate change.
-- **The scout's dossier was deliberately left untouched**: it is a dated record of
-  what was known before the rename, and rewriting it would falsify a dated
-  artifact. The same reasoning left `notes/data/tu-merge-candidates.json` and
-  `notes/data/c-cpp-classification.tsv` alone; `check_dead_references` is green
-  over both.
-- **`include/decl_common.h` still declares `extern int Snufit_Kill(int*);`** at
-  line 408. That is a phantom declaration for `func_ov065_021177e4`, which lies
-  inside the RESERVED neighbour's run, so it was left for that owner.
+- **The scout's dossier is renamed, not rewritten.** `notes/data/class-facts/`
+  now spells it `daYurei_Mucho_c.json`, following the landed `daBmb_c.json`
+  precedent (renamed from `BobOmb.json`), and its `class` field carries the ROM
+  RTTI name. Its `queue_key`/`tree_name`/`former_tree_name`/`name_status` block
+  now says in the file what changed. Every tree-derived field below that -- the
+  22 shard paths, the `_ZN6Snufit...` symbols, `symbols_txt_rows`, `queue_row` --
+  is left exactly as measured: it is a dated observation at
+  `tree_derived.base_commit`, and rewriting it would falsify a dated artifact.
+  `name_status` says so explicitly so a reader cannot mistake it for a live
+  claim. The same reasoning still leaves `notes/data/tu-merge-candidates.json`
+  and `notes/data/c-cpp-classification.tsv` alone; `check_dead_references` is
+  green over both.
+- **The coined free function `Snufit_Kill` is retired too**, so the overlay does
+  not carry a retired class name in one spelling and its ROM name in another.
+  `extern int Snufit_Kill(int*);` was a dead declaration in
+  `include/decl_common.h` -- no definition, no caller, and no such symbol in
+  `config/arm9/overlays/ov065/symbols.txt`, which spells the function
+  `func_ov065_021177e4`. It is deleted. It was NOT renamed to
+  `daYurei_Mucho_c_Kill`, because the shard's own attribution turned out to be
+  wrong on both halves, refuted by three ROM reads recorded in the shard's
+  header comment: 0x021177e4 is in no vtable in ov065 (neither
+  `_ZTV15daYurei_Mucho_c` at 0x0211cb9c nor `_ZTV5Swoop`/`_ZTV12daBasabasa_c` at
+  0x0211cc98 contains it); it sits inside the neighbour's run between
+  `_ZN5SwoopD0Ev` (0x02116fe8) and `_ZN5Swoop16CleanupResourcesEv` (0x02117aa4),
+  past this class's end at 0x02116f98; and its body calls `ModelAnim::SetAnim`
+  on `t + 0x364`, where `daYurei_Mucho_c` holds a `ShadowModel`, while reading
+  `data_ov065_0211d6a0` from outside this class's bss band
+  0x0211d600..0x0211d690. Naming it belongs to the `daBasabasa_c`/`Swoop` owner.
 
 ## Next action
 

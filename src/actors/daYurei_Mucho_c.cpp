@@ -213,20 +213,31 @@ extern void func_ov065_0211696c(char *c);
  * which the tree already carried for this class; restating it locally would
  * raise the langmode extern_vtable metric for no byte benefit.
  *
- * THE `+ 2` IS LOAD-BEARING, and the fold is what changed it. The legacy shard
- * wrote the bare `(int)_ZTV15daYurei_Mucho_c`, and that was correct there: the
- * symbol was UNDEF and config/arm9/overlays/ov065/symbols.txt binds it to the
- * ADDRESS POINT at 0x0211cba4. Here the same spelling binds to this TU's own
- * definition instead -- the inline destructor is the key function, so mwcc
- * emits the vtable and addresses the storage OBJECT, two words of Itanium
+ * WHY `+ 2` AND NOT THE BARE SYMBOL, and what the fold changed. The legacy
+ * shard wrote the bare `(int)_ZTV15daYurei_Mucho_c`, and that was correct there:
+ * the symbol was UNDEF and config/arm9/overlays/ov065/symbols.txt binds it to
+ * the ADDRESS POINT at 0x0211cba4. Here the same spelling would bind to this
+ * TU's own definition instead -- the inline destructor is the key function, so
+ * mwcc emits the vtable and addresses the storage OBJECT, two words of Itanium
  * preamble lower at 0x0211cb9c. `+ 2` is int-indexed, so eight bytes, which is
  * exactly the bias measured from the ROM: the literal at 0x02116f94 that
  * `ldr r1,[pc,#0x2c]` (0x02116f60) loads and `str r1,[r4]` (0x02116f68) writes
- * to this+0 is 0x0211cba4, and 0x0211cba4 - 0x0211cb9c = 8. It also makes this
- * store agree with the addend-8 vptr stores mwcc emits in D1/D0 by itself.
- * A relocated word is a wildcard to every byte gate, so tools/match.py reports
- * MATCH either way; tools/objisolate.py's addend check is what refuses the bare
- * form, and it did (`_ZTV15daYurei_Mucho_c: unexpected reloc type=2 addend=0`).
+ * to this+0 is 0x0211cba4, and 0x0211cba4 - 0x0211cb9c = 8. It also agrees with
+ * the addend-8 vptr stores mwcc emits in D1/D0 by itself, so all three
+ * `_ZTV15daYurei_Mucho_c` relocations in the compiled TU carry one addend.
+ *
+ * IT IS NOT, HOWEVER, LOAD-BEARING IN THE SHIPPED OBJECT. An earlier draft of
+ * this comment claimed it was and a measurement refuted that: compiled both
+ * ways, the two spellings isolate to byte-identical objects. A relocated word is
+ * a wildcard to every byte gate, so tools/match.py reports MATCH either way; and
+ * a multi-function source takes objisolate's whole-TU path, which externalises
+ * the vtable and rebases only a NONZERO `_ZTV` addend, so addend 8 and addend 0
+ * both leave as UNDEF `_ZTV` addend 0. What refuses the bare form is the
+ * SINGULAR per-symbol path, `objisolate.plan`, which requires addend >=
+ * VTABLE_PREAMBLE for a `_ZTV` target (`unexpected reloc type=2 addend=0`) --
+ * the path `tubuild verify` and `tubuild partial` take per member. So `+ 2` buys
+ * per-member isolation rather than bytes, and it is still the spelling to keep,
+ * because it is the one the ROM literal and mwcc's own vptr stores both write.
  *
  * Reconstructed source-style name: SM64DS proves daYurei_Mucho_c through RTTI,
  * allocation size, vtable identity and the YUREI_MUCHO registry profile; later
