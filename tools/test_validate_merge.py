@@ -88,6 +88,24 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(split["stats"]["claimedFunctions"], 0)
         self.assertEqual(split["claimed"], {})
 
+    def test_zero_size_alias_does_not_displace_the_function_it_aliases(self):
+        # config/arm9/symbols.txt has ten addresses carrying two function records, and
+        # in every one the LAST line is a zero-size alias over a real function. Keyed by
+        # module:addr, last-wins would hand the alias's name, size and matched flag to
+        # the address and make the function invisible.
+        config = self.repo / "config" / "arm9" / "symbols.txt"
+        config.write_text(
+            "Example kind:function(arm,size=0x4) addr:0x02000000\n"
+            "ExampleAlias kind:function(arm,size=0x0) addr:0x02000000\n",
+            encoding="utf-8")
+        head = commit(self.repo, "add alias", "bob")
+        snap = VM.function_snapshot(head)
+        record = snap["functions"]["arm9:0x02000000"]
+        self.assertEqual(record["name"], "Example")
+        self.assertEqual(record["size"], 0x4)
+        self.assertTrue(record["matched"])
+        self.assertEqual(snap["stats"]["matchedFunctions"], 1)
+
     def test_nonmatching_is_read_from_requested_revision(self):
         (self.repo / "src" / "Example.c").write_text(
             "// NONMATCHING\nint Example(void) { return 0; }\n")
@@ -483,6 +501,118 @@ class RomDataRatchet(unittest.TestCase):
         base = self.data(verified=(("arm9", "Data"),))
         self.assertEqual(VM.rom_data_regressions(base, {}),
                          ["head full-ROM report omitted the ROM-data measurement"])
+
+
+def _snap(records):
+    """A function_snapshot-shaped dict from (name, addr, size, matched) tuples."""
+    functions, spans, total, matched_bytes = {}, {}, 0, 0
+    for name, addr, size, is_matched in records:
+        key = f"arm9:0x{addr:08x}"
+        prior = functions.get(key)
+        if prior is None or size > prior["size"]:
+            functions[key] = {"id": key, "module": "arm9", "addr": addr, "name": name,
+                              "size": size, "matched": is_matched,
+                              "srcPath": f"src/{name}.c" if is_matched else None}
+        if size > 0:
+            spans.setdefault("arm9", []).append((addr, addr + size))
+        total += size
+        if is_matched:
+            matched_bytes += size
+    matched = {k: r for k, r in functions.items() if r["matched"]}
+    return {"functions": functions, "spans": spans, "matched": matched,
+            "stats": {"totalFunctions": len(functions), "totalBytes": total,
+                      "matchedFunctions": len(matched), "matchedBytes": matched_bytes}}
+
+
+class Repartition(unittest.TestCase):
+    """The denominator carve-out, and the attacks an adversarial review threw at it."""
+
+    def test_split_of_an_unmatched_symbol_is_a_repartition(self):
+        # PR #2360's shape: one 0x3c symbol is really a 0x2c routine and a 0x10 one.
+        base = _snap([("func_020610fc", 0x020610fc, 0x3c, False)])
+        head = _snap([("func_020610fc", 0x020610fc, 0x2c, False),
+                      ("func_02061128", 0x02061128, 0x10, False)])
+        got = VM.classify_repartition(base, head)
+        self.assertIsNotNone(got)
+        self.assertEqual(got["kind"], "split")
+        self.assertEqual(got["functionDelta"], 1)
+
+    def test_split_that_also_gains_a_match_is_refused(self):
+        # The free numerator: a new symbol whose name collides with an existing src
+        # stem is resolved as matched by the filename convention. Land the split first.
+        base = _snap([("func_020610fc", 0x020610fc, 0x3c, False)])
+        head = _snap([("func_020610fc", 0x020610fc, 0x2c, False),
+                      ("func_02061128", 0x02061128, 0x10, True)])
+        self.assertIsNone(VM.classify_repartition(base, head))
+
+    def test_split_that_grows_a_matched_neighbour_is_refused(self):
+        # Attack S. Every count holds -- one matched function before and after, and the
+        # covered bytes are identical -- but the matched symbol grew by 4, which raises
+        # matchedBytePercent while matchedFunctionPercent falls. Counts cannot see it;
+        # pinning each matched record's SIZE can.
+        base = _snap([("hit", 0x02000000, 0x10, True), ("miss", 0x02000010, 0x20, False)])
+        head = _snap([("hit", 0x02000000, 0x14, True), ("miss", 0x02000014, 0x10, False),
+                      ("miss2", 0x02000024, 0xc, False)])
+        self.assertIsNone(VM.classify_repartition(base, head))
+
+    def test_split_that_swaps_which_function_is_matched_is_refused(self):
+        # Counts again equal, one match out and one in. The matched SET is the test.
+        base = _snap([("a", 0x02000000, 0x10, True), ("b", 0x02000010, 0x10, False),
+                      ("c", 0x02000020, 0x10, False)])
+        head = _snap([("a", 0x02000000, 0x10, False), ("b", 0x02000010, 0x10, True),
+                      ("c", 0x02000020, 0x8, False), ("d", 0x02000028, 0x8, False)])
+        self.assertIsNone(VM.classify_repartition(base, head))
+
+    def test_new_bytes_are_not_a_repartition(self):
+        base = _snap([("a", 0x02000000, 0x10, False)])
+        head = _snap([("a", 0x02000000, 0x10, False), ("b", 0x02000010, 0x10, False)])
+        self.assertIsNone(VM.classify_repartition(base, head))
+
+    def test_merges_stay_blocked_even_when_the_absorber_is_matched(self):
+        # Attack M1, the one that killed the first draft's merge rule. A matched,
+        # TEXT-ONLY symbol grows to swallow an unmatched neighbour: matchedBytes rises
+        # by exactly the absorbed size, in a symbols.txt-only diff, with nothing
+        # compiled and nothing byte-compared. Merges get no arithmetic carve-out.
+        base = _snap([("hit", 0x02052550, 0x1c, True),
+                      ("miss", 0x0205256c, 0x1c, False)])
+        head = _snap([("hit", 0x02052550, 0x38, True)])
+        self.assertIsNone(VM.classify_repartition(base, head))
+
+    def test_merging_unmatched_symbols_to_shrink_the_denominator_is_refused(self):
+        # And the crude version: a hundred unmatched symbols become one. Covered bytes
+        # identical, matched set identical -- and the headline still rises for no work,
+        # which is why "every changed range is unmatched" is not a sufficient rule.
+        base = _snap([(f"f{i}", 0x02000000 + i * 4, 4, False) for i in range(100)])
+        head = _snap([("f0", 0x02000000, 400, False)])
+        self.assertIsNone(VM.classify_repartition(base, head))
+
+    def test_case_two_shaped_merge_is_refused_pending_its_own_rule(self):
+        # The __destroy_arr shape. Correct on the merits and still not this rule's to
+        # allow: it lands as a re-partition PR and then a match PR.
+        base = _snap([("__destroy_arr", 0x0207328c, 0x5c, False),
+                      ("func_020732e8", 0x020732e8, 0x18, False)])
+        head = _snap([("__destroy_arr", 0x0207328c, 0x74, True)])
+        self.assertIsNone(VM.classify_repartition(base, head))
+
+    def test_a_stable_denominator_is_not_a_repartition(self):
+        base = _snap([("a", 0x02000000, 0x10, False)])
+        head = _snap([("a", 0x02000000, 0x10, True)])
+        self.assertIsNone(VM.classify_repartition(base, head))
+
+    def test_cross_module_shuffle_is_not_a_repartition(self):
+        # totalBytes alone would call this clean. The covered set is compared per
+        # module precisely because overlay addresses overlap.
+        base = {"functions": {}, "spans": {"arm9": [(0x02000000, 0x02000010)],
+                                           "ov000": [(0x02200000, 0x02200010)]},
+                "matched": {},
+                "stats": {"totalFunctions": 2, "totalBytes": 0x20,
+                          "matchedFunctions": 0, "matchedBytes": 0}}
+        head = {"functions": {}, "spans": {"arm9": [(0x02000000, 0x02000020)],
+                                           "ov000": []},
+                "matched": {},
+                "stats": {"totalFunctions": 3, "totalBytes": 0x20,
+                          "matchedFunctions": 0, "matchedBytes": 0}}
+        self.assertIsNone(VM.classify_repartition(base, head))
 
 
 class ModuleFidelityDetail(unittest.TestCase):
