@@ -2778,3 +2778,192 @@ OPENING GATE at PASS -- 0 quarantined faults and 363 distinct player positions
 over frames 2474..3999, the same count section 16 measured; and the four
 subsystem proofs directly: ipc_proof 15 checks 0 failed ALL GREEN, thread_proof
 PASS, thread_create_proof PASS, save_proof ALL GREEN.
+18. LANE RENDER9 (run link100): SLOT 9 IS SEATED, THE FRAME LOOP STOPS BEING
+    Stage::Render, AND THREE OF THE TWELVE STAY WITH THE MOUNT LANE
+------------------------------------------------------------------------------
+
+Section 13c said the shape of the slot-9 lane is the shape of the slot-6 lane:
+"enrol the twelve (or seam the four that wait on port/ov002_syms.txt), retire
+the transcription in the same commit, and prove the retirement rather than
+assert it". This section is that lane. It also carries the recount section 6
+asked for, because most of the twelve were not in the state that section left
+them in.
+
+18a. THE TWELVE, RE-CHECKED AGAINST THIS RUN'S BASE (6072d08a6)
+
+Read by ROM ADDRESS out of config/arm9/symbols.txt rather than by filename, and
+every one of the twelve has a matched TU with no NONMATCHING banner:
+
+  piece                          addr        state at 6072d08a6
+  ------------------------------ ----------  ----------------------------------
+  Particle::SysTracker::Update   0x02022f20  IN THE IMAGE (gate 29, hostgen).
+                                             Nothing was missing; the frame
+                                             loop was calling it directly.
+  OAM::Render (7-arg)            0x020214a4  IN THE IMAGE (gate 27) under its
+                                             FLAT C name only. Both MSVC
+                                             spellings were undefined -- 18b.
+  Stage::RenderFog               0x0202b67c  NOT ENROLLED. Wants G3X::SetFog-
+                                             Table and func_ov002_020f1c20,
+                                             both matched, both unenrolled.
+  Stage::RenderVsModeCountdown   0x0202a168  IN THE IMAGE (gate 27) and
+                                             /OPT:REF-dropped: Stage::Render
+                                             was its only caller.
+  Stage::RenderVsModeNewStar     0x02029ef8  NOT ENROLLED. Four unmounted ov002
+                                             rows.
+  Stage::PS_Render               0x020251d0  NOT ENROLLED. Eight unmounted
+                                             ov002 rows and five ov001.
+  Stage::LC_Render               0x02023db8  NOT ENROLLED. Ten unmounted ov002
+                                             rows.
+  Stage::RenderNumber            0x020250d0  NOT ENROLLED. One arm9 romdata
+                                             row, data_020755b8.
+  func_020391f0                  0x020391f0  NOT ENROLLED. An empty ROM body.
+  func_0203083c                  0x0203083c  IN THE IMAGE (slice_vs).
+  func_ov001_020aaf40            0x020aaf40  IN THE IMAGE (slice_cap), and the
+                                             frame loop was calling it.
+  Stage::RenderBouncingArrows    0x02023be0  IN THE IMAGE (slice_w1l5), reached
+                                             through the w8a alias, which was
+                                             INERT for want of a reference.
+
+SO "ELEVEN UNRESOLVED PLUS ONE" WAS NEVER ELEVEN LINK ERRORS. Six of the twelve
+were already compiled into walk_window; what none of them had was a CALLER.
+That is section 6's own instruction ("READ THE COUNTS AS PIECES, NOT AS
+UNRESOLVED EXTERNALS") arriving at a different answer than that section drew
+from it, and the difference matters in one direction that is easy to get
+backwards: /OPT:REF discards a body nothing names, so enrolling any of these
+WITHOUT seating slot 9 would have moved the linkage number by exactly zero. The
+seat is the whole of the gain, not the enrolment.
+
+MEASURED, NOT ARGUED: the first link of this gate came back with TWO unresolved
+externals across the whole closure -- _Copy32Bytes and the C++ spelling of
+data_020755b8, both named in 18b -- and nothing else. Every other name in
+Stage::Render's tree, including all three seams' left-hand sides and both MSVC
+spellings of OAM::Render, resolved.
+
+AND ONE PIECE SECTION 6 COULD NOT HAVE LISTED, because it is not a callee: the
+SPELLING of OAM::Render. src/_ZN5Stage6RenderEv.cpp declares the seven-argument
+overload returning int; src/_ZN5Stage12RenderNumberEhiibi.cpp declares the same
+overload returning void. MSVC encodes the return type, so those are two distinct
+decorated names, and the matched body is flat C and defines neither. One
+translation unit cannot declare both -- C++ has no overload on return type -- so
+the seat needs TWO faces in TWO files. hal/stage_frame.cpp carries the int one
+and hal/slot9_oam_face.cpp exists for the void one; that file is the derivation.
+
+18b. WHAT LANDED
+
+  port/slice_slot9.txt        SIX matched TUs: Stage::Render, func_020391f0,
+                              Stage::RenderFog with G3X::SetFogTable and
+                              func_ov002_020f1c20 behind it, and
+                              Stage::RenderNumber.
+  hal/stage_bridges.cpp       slot 9's thunk behind SM64DS_STAGE_SLOT9_ROM
+                              (walk_window and walk_window_hires; smoke_player
+                              keeps the occupant, slot 6's reason), and the
+                              split of port_stage_advance_anims.
+  hal/stage_frame.cpp         Stage::Render's entry point and counter, three
+                              spelling faces, three seams, and the two things
+                              below that are neither.
+  hal/slot9_oam_face.cpp      NEW. The one face that cannot share a TU.
+  port/tools/romdata.py       ONE named row, data_020755b8, checked the way
+                              lanes STAGE and FRAME checked theirs:
+                              relocation-free across the span
+                              (config/arm9/relocs.txt has no from: row in it)
+                              and delta-to-next-symbol exact (data_020755bc is
+                              the next name, so the size is 4).
+  tests/walk_window.cpp       the eight retired sites, 18c.
+
+TWO THINGS IN hal/stage_frame.cpp ARE NOT FACES, and the first link named both.
+
+  Copy32Bytes. G3X::SetFogTable's entire body is a 32-byte block copy into the
+  fog-table register file, and src/Copy32Bytes.c is ARM ASSEMBLY -- MSVC cannot
+  assemble it. port/slice_w8a.txt listed this as one of the walls in front of
+  Stage::RenderFog and it was the only one still standing. The host body is the
+  shape hal/model_host.cpp already uses for the SIBLING primitive with the same
+  marker (MultiCopy32Bytes, "PORT_HOST_ABI: ARM asm primitive (32-byte block
+  copy), MSVC cannot assemble"), and it belongs beside that one the day anybody
+  owns that file. The arity is read rather than guessed: the ARM body takes r0
+  and r1, and the only caller anywhere in src/ is SetFogTable, which declares it
+  void (void *, void *) and passes (src, dst).
+
+  data_020755b8's SPELLING. src/_ZN5Stage12RenderNumberEhiibi.cpp declares it
+  OUTSIDE its one-line extern "C", so the reference is C++-mangled, exactly as
+  the same file's func_020aba70 is -- hal/w8a_stage_faces.cpp landed an alias
+  for that one and wrote down why. romdata.py emits the ROM bytes under the flat
+  name, so the two names are one address and the alias is exact. An ALIAS rather
+  than a face because a face has to DEFINE the array, which means either a
+  second copy of the ROM's bytes or hand-typed constants, and romdata.py's own
+  header calls a hand-typed constant "a value nobody can re-derive from the
+  image". The linker's own hint line named the pair.
+
+THE THREE SEAMS, and section 6 predicted all three. PS_Render, LC_Render and
+RenderVsModeNewStar are matched bodies waiting on SPRITE TEMPLATE DATA that is
+not mounted: fourteen ov002 records at 0x0210c548..0x0210d188 and five ov001
+records past the 0x020ab800..0x020abb00 span port/ov001_syms.txt carries.
+port/ov002_syms.txt and port/ov001_syms.txt are the mount lane's files and
+section 6 said so outright ("a row in port/ov002_syms.txt -- the mount lane's
+file, not this one's"). The seams are loud-once and named, and they are
+BEHAVIOUR-NEUTRAL against the program they replace: nothing in the port drew the
+pause screen, the level-clear banner or the VS new-star popup before this commit
+either, because Stage::Render never ran. The seat does not take a drawn thing
+away; it declines to add one. Whoever adds those rows deletes three functions
+from hal/stage_frame.cpp and this paragraph with them.
+
+18c. THE EIGHT SITES THE PORT WAS RUNNING Stage::Render FROM
+
+Eight, and each is a statement of src/_ZN5Stage6RenderEv.cpp standing where the
+ROM runs it. All eight are in tests/walk_window.cpp:
+
+  port_particle_frame()                  Render's SysTracker::Update
+  port_stage_render_skybox()             Render's +0x9bc Draw block
+  port_stage_advance_anims()             Render's first block (half of it)
+  port_stage_render_model()              RenderModel
+  ShadowModel::RenderAll()               between the two model passes
+  port_stage_render_model_transparent()  RenderModelTransparent
+  port_cylinder_clsn_process()           CylinderClsn::Process
+  func_ov001_020aaf40()                  Render:125
+
+ALL EIGHT ARE RETIRED AND NONE IS DELETED, which is where this lane starts from
+lane FRAME's answer rather than rediscovering it. Section 13b records that
+deleting slot 6's five left three frames the DS does not have -- the debug menu
+and the two no-spawn dev-rig arms -- with no body to run, and that the shape
+that settled it was a COUNTER comparison. Same shape here:
+hal/stage_frame.cpp's slot-9 thunk increments a counter, tests/walk_window.cpp
+marks it once per frame, and each of the eight sites tests whether it moved. On
+an ordinary frame it moved and none of the eight runs; on a Stage-less frame it
+did not and all eight do.
+
+THE MARK IS TAKEN ABOVE BOTH CAMERA ARMS AND THAT IS NOT COSMETIC. Slot 9
+dispatches from inside the actor render bucket, which is in the real-camera arm
+only. Marking inside that arm leaves the mark stale on a debug-camera frame, so
+stage9_rendered() reads TRUE from some EARLIER frame's dispatch and the level is
+not drawn at all. One line above both arms is the whole fix, and it is written
+down because the first draft of this seat had it wrong.
+
+TWO OF THE EIGHT ARE NOT LIKE THE OTHERS.
+
+  port_stage_advance_anims IS TWO HALVES AND ONLY ONE IS RENDER'S. Its own
+  banner in hal/stage_bridges.cpp already said so: the lazy
+  LoadTextureTransformers block is Stage::InitResources' work standing in that
+  function because slot 0 is not seated, and the advance loop under it is
+  Stage::Render's. The ROM's Render advances and loads nothing, so this lane
+  SPLIT the function. port_stage_anims_load is the load half alone, called from
+  hal/stage_frame.cpp's entry point immediately before the ROM's body -- the
+  same instant in the frame it used to run at. The slot-0 debt is unchanged and
+  is now smaller to pay: one function to delete instead of a block inside a
+  function that has to survive.
+
+  port_cylinder_clsn_process CHANGES WHICH BODY RUNS, and this is the one
+  substantive behaviour change the seat makes on purpose. Stage::Render calls
+  CylinderClsn::Process(), which resolves to the MATCHED body -- in the link on
+  port/slice_gate33.txt since long before this lane -- while the frame loop was
+  calling the ROM-SHAPED HOST COPY in port/unmatched/CylinderClsn_Process.cpp.
+  Section 17 fixed the destructor skew that made the matched body wrong and
+  said "turning the switch over is a separate lane's measurement". This is that
+  measurement.
+
+ONE SMALL ASYMMETRY IS LEFT AND IS NOT A DEFECT. hal/rollback.cpp has two
+separate skips: rb_skip_actor_render() takes the whole bucket down to a six-id
+whitelist on a replayed frame, and the Stage (id 3) is not on it, so slot 9 does
+not dispatch and the fallback runs under rb_skip_render() exactly as before. The
+one combination that differs is SM64DS_ROLLBACK_ACTOR_RENDER=1 (the conservative
+re-sim), where the bucket runs but rb_skip_render() is still true: the ROM's
+Render now draws a level the old path would have skipped. Nothing is presented
+on those frames, so the cost is rasterising work in a debug mode.
