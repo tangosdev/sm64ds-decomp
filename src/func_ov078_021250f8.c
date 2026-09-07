@@ -4,9 +4,9 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov102_0214b384(void* a, int b);
-extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern void Matrix4x3_FromRotationY(void* m, int ang);
 extern int Vec3_HorzLen(void* v);
@@ -29,7 +29,7 @@ int func_ov078_021250f8(char* c) {
     }
 
     if (*(unsigned char*)(c + *(int*)(c + 0x49c) + 0x42c) == 0) {
-        target = _ZN5Actor10FindWithIDEj(*(int*)(c + (*(int*)(c + 0x49c) << 2) + 0x424));
+        target = _ZN8dActor_c10FindWithIDEj(*(int*)(c + (*(int*)(c + 0x49c) << 2) + 0x424));
         if (target != 0) {
             *(int*)((char*)target + 0x5c) = *(int*)(c + 0x4ec);
             *(int*)((char*)target + 0x60) = *(int*)(c + 0x4f0);
@@ -46,7 +46,7 @@ int func_ov078_021250f8(char* c) {
                 in.x = 0; in.y = 0; in.z = 0x28000;
                 out.x = 0; out.y = 0; out.z = 0;
                 v[0].x = 0; v[0].y = 0; v[0].z = 0;
-                player = _ZN5Actor13ClosestPlayerEv(c);
+                player = _ZN8dActor_c13ClosestPlayerEv(c);
                 if (player != 0) {
                     int* q = (int*)(((int)player + 0x5c));
                     v[1].x = q[0];
@@ -79,7 +79,7 @@ int func_ov078_021250f8(char* c) {
     }
 
     if (_ZN9Animation8FinishedEv(c + 0x31c) != 0) {
-        player = _ZN5Actor13ClosestPlayerEv(c);
+        player = _ZN8dActor_c13ClosestPlayerEv(c);
         if (player != 0) {
             if (*(int*)((char*)player + 8) != 3) {
                 *(unsigned char*)(c + 0x504) = 0x64;

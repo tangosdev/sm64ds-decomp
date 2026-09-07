@@ -1,17 +1,14 @@
 //cpp
 // @symbol _ZN13RollingLogLllD1Ev
-
-struct Actor {
-    char pad[0xd0];
-    virtual ~Actor();
-};
-
-struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
-
-struct RollingLogLll : Actor {
-    MovingCylinderClsn m0;   /* 0xd4 */
-    virtual ~RollingLogLll();
-};
+/* recovered: real C++ destructor -- the compiler emits the whole body
+ *
+ * THREE vtable stores, and the middle one is the finding. `struct RollingLogLll :
+ * daObjMaruta_c : dBgActor_c` emits its own vptr, then daObjMaruta_c's --
+ * inlined, because that destructor is defined in its class body -- then dBgActor_c's,
+ * then dBgActor_c's dBgW_KcMbg and Model, then dActor_c. Nothing in the chain
+ * adds a member with a destructor, so the body is empty.
+ */
+#include "RollingLogLll.h"
 
 RollingLogLll::~RollingLogLll()
 {

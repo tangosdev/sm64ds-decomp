@@ -14,7 +14,7 @@ public:
 
 int CrazedCrate::Render()
 {
-    int r1 = unk_0b0;
+    int r1 = mFlags;
     r1 = r1 & 0x40000;
     r1 = r1 ? 1 : 0;
     if (r1) return 1;

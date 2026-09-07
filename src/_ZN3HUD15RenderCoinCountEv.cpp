@@ -11,9 +11,9 @@ extern unsigned char data_0209f2d8;
 extern unsigned char data_0209f250;
 extern unsigned short data_0209f358[];
 extern signed char data_0209f2f8;
-extern OamAttr* func_020aba70[];
-extern OamAttr func_020ab9c8;
-extern OamAttr func_020abad8;
+extern OamAttr* _ZN3OAM7NUMBERSE[];
+extern OamAttr _ZN3OAM5TIMESE;
+extern OamAttr _ZN3OAM4COINE;
 extern int SublevelToLevel(int i);
 }
 
@@ -37,12 +37,12 @@ void HUD::RenderCoinCount()
         for (int i = 2; i >= 0; i--) {
             signed char d = digits[i];
             if (d >= 0) {
-                OAM::Render(true, func_020aba70[d], sb, 2, -1, 1, 0);
+                OAM::Render(true, _ZN3OAM7NUMBERSE[d], sb, 2, -1, 1, 0);
                 sb -= 9;
             }
         }
-        OAM::Render(true, &func_020ab9c8, sb, 0xa, -1, 1, 0);
-        OAM::Render(true, &func_020abad8, sb - 0x10, 2, -1, 1, 0);
+        OAM::Render(true, &_ZN3OAM5TIMESE, sb, 0xa, -1, 1, 0);
+        OAM::Render(true, &_ZN3OAM4COINE, sb - 0x10, 2, -1, 1, 0);
     } else {
         if (SublevelToLevel(data_0209f2f8) == 0x1d)
             return;
@@ -52,11 +52,11 @@ void HUD::RenderCoinCount()
         for (i = 2; i >= 0; i--) {
             signed char d = digits[i];
             if (d >= 0) {
-                OAM::Render(false, func_020aba70[d], sb, 2, -1, 1, 0);
+                OAM::Render(false, _ZN3OAM7NUMBERSE[d], sb, 2, -1, 1, 0);
                 sb -= 9;
             }
         }
-        OAM::Render(false, &func_020ab9c8, sb, 0xa, -1, 1, 0);
-        OAM::Render(false, &func_020abad8, sb - 0x10, 2, -1, 1, 0);
+        OAM::Render(false, &_ZN3OAM5TIMESE, sb, 0xa, -1, 1, 0);
+        OAM::Render(false, &_ZN3OAM4COINE, sb - 0x10, 2, -1, 1, 0);
     }
 }

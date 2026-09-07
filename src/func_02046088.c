@@ -18,7 +18,7 @@ void func_02046088(Obj *self, int a, int b)
 
     for (i = 0; i < n; i++)
     {
-        volatile u32 *p = (volatile u32 *)(((long long)(int)((int)self->data + i * 0x30 + 0x24)));
+        volatile u32 *p = (volatile u32 *)((int)self->data + i * 0x30 + 0x24);
         *p &= 0xc0ffff0f;
         *p |= b << 24;
         *p |= 0x80;

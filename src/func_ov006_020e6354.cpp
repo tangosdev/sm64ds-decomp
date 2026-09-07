@@ -12,7 +12,7 @@ extern PMF1 data_ov006_021419d8[];
 extern "C" void func_ov006_020e6354(char* c)
 {
     if (*(u16*)(c + 0x55b6) != 0) {
-        u16* q = (u16*)((long long)(int)(c + 0x55b6));
+        u16* q = (u16*)(c + 0x55b6);
         *q = *q - 1;
         return;
     }
@@ -22,7 +22,7 @@ extern "C" void func_ov006_020e6354(char* c)
         *(u16*)(c + 0xc0) = 0;
     }
     if (*(u8*)(c + 0x55bd) != 0) {
-        u8* q = (u8*)((long long)(int)(c + 0x55bd));
+        u8* q = (u8*)(c + 0x55bd);
         *q = *q - 1;
     }
     (((C*)c)->*data_ov006_02141978[*(u8*)(c + 0x55b8)])();
@@ -36,7 +36,7 @@ extern "C" void func_ov006_020e6354(char* c)
                 *(int*)(p + 0x466c) = *(int*)(p + 0x4660);
                 *(int*)(p + 0x4670) = *(int*)(p + 0x4664);
                 if (*(u16*)(p + 0x4680) != 0) {
-                    u16* q = (u16*)((long long)(int)(p + 0x4680));
+                    u16* q = (u16*)(p + 0x4680);
                     *q = *q - 1;
                 }
                 (((C*)c)->*data_ov006_021419d8[*(u8*)(p + 0x4688)])(i);

@@ -1,10 +1,20 @@
 //cpp
+// @symbol _ZN10KoopaShell16CleanupResourcesEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * Releases the shared model file this shell claimed in InitResources, picked
+ * by the same mModelIndex, so the claim and the release stay paired.
+ */
+#include "KoopaShell.h"
 #include "SharedFilePtr.h"
+
 extern "C" {
 extern int data_ov102_0214d70c[];
-int _ZN10KoopaShell16CleanupResourcesEv(char* c){
-  unsigned char i=*(unsigned char*)(c+0x3c4);
+}
+
+int KoopaShell::CleanupResources()
+{
+  unsigned char i = mModelIndex;
   ((SharedFilePtr *)((void*)data_ov102_0214d70c[i]))->Release();
   return 1;
-}
 }

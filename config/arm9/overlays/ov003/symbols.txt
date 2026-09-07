@@ -1,16 +1,16 @@
-func_ov003_020ad660 kind:function(arm,size=0x3c) addr:0x020ad660
-func_ov003_020ad69c kind:function(arm,size=0x50) addr:0x020ad69c
+_ZN10dScTitle_cD1Ev kind:function(arm,size=0x3c) addr:0x020ad660
+_ZN10dScTitle_cD0Ev kind:function(arm,size=0x50) addr:0x020ad69c
 func_ov003_020ad6ec kind:function(arm,size=0xb4) addr:0x020ad6ec
-func_ov003_020ad7a0 kind:function(arm,size=0x4) addr:0x020ad7a0
-func_ov003_020ad7a4 kind:function(arm,size=0x70) addr:0x020ad7a4
-func_ov003_020ad814 kind:function(arm,size=0x26c) addr:0x020ad814
-func_ov003_020ada80 kind:function(arm,size=0x1c) addr:0x020ada80
-func_ov003_020ada9c kind:function(arm,size=0x174) addr:0x020ada9c
-func_ov003_020adc10 kind:function(arm,size=0x64) addr:0x020adc10
+_ZN10dScTitle_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020ad7a0
+_ZN10dScTitle_c6RenderEv kind:function(arm,size=0x70) addr:0x020ad7a4
+_ZN10dScTitle_c8BehaviorEv kind:function(arm,size=0x26c) addr:0x020ad814
+_ZN10dScTitle_c16CleanupResourcesEv kind:function(arm,size=0x1c) addr:0x020ada80
+_ZN10dScTitle_c13InitResourcesEv kind:function(arm,size=0x174) addr:0x020ada9c
+dScTitle_c_classInit kind:function(arm,size=0x64) addr:0x020adc10
 func_ov003_020adc74 kind:function(arm,size=0x48) addr:0x020adc74
 func_ov003_020adcbc kind:function(arm,size=0x140) addr:0x020adcbc
-func_ov003_020addfc kind:function(arm,size=0x58) addr:0x020addfc
-func_ov003_020ade54 kind:function(arm,size=0x6c) addr:0x020ade54
+_ZN12dScStarSel_cD1Ev kind:function(arm,size=0x58) addr:0x020addfc
+_ZN12dScStarSel_cD0Ev kind:function(arm,size=0x6c) addr:0x020ade54
 func_ov003_020adec0 kind:function(arm,size=0x90) addr:0x020adec0
 func_ov003_020adf50 kind:function(arm,size=0x78) addr:0x020adf50
 func_ov003_020adfc8 kind:function(arm,size=0xe8) addr:0x020adfc8
@@ -18,22 +18,22 @@ func_ov003_020ae0b0 kind:function(arm,size=0xf4) addr:0x020ae0b0
 func_ov003_020ae1a4 kind:function(arm,size=0x94) addr:0x020ae1a4
 func_ov003_020ae238 kind:function(arm,size=0x120) addr:0x020ae238
 func_ov003_020ae358 kind:function(arm,size=0x398) addr:0x020ae358
-func_ov003_020ae6f0 kind:function(arm,size=0x4) addr:0x020ae6f0
-func_ov003_020ae6f4 kind:function(arm,size=0x944) addr:0x020ae6f4
-func_ov003_020af038 kind:function(arm,size=0x834) addr:0x020af038
-func_ov003_020af86c kind:function(arm,size=0x34) addr:0x020af86c
-func_ov003_020af8a0 kind:function(arm,size=0xc50) addr:0x020af8a0
-StarSelect_Spawn kind:function(arm,size=0x90) addr:0x020b04f0
-func_ov003_020b0580 kind:function(arm,size=0x3c) addr:0x020b0580
-func_ov003_020b05bc kind:function(arm,size=0x50) addr:0x020b05bc
+_ZN12dScStarSel_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020ae6f0
+_ZN12dScStarSel_c6RenderEv kind:function(arm,size=0x944) addr:0x020ae6f4
+_ZN12dScStarSel_c8BehaviorEv kind:function(arm,size=0x834) addr:0x020af038
+_ZN12dScStarSel_c16CleanupResourcesEv kind:function(arm,size=0x34) addr:0x020af86c
+_ZN12dScStarSel_c13InitResourcesEv kind:function(arm,size=0xc50) addr:0x020af8a0
+dScStarSel_c_classInit kind:function(arm,size=0x90) addr:0x020b04f0
+_ZN13dScGameOver_cD1Ev kind:function(arm,size=0x3c) addr:0x020b0580
+_ZN13dScGameOver_cD0Ev kind:function(arm,size=0x50) addr:0x020b05bc
 func_ov003_020b060c kind:function(arm,size=0x124) addr:0x020b060c
 func_ov003_020b0730 kind:function(arm,size=0xe0) addr:0x020b0730
-func_ov003_020b0810 kind:function(arm,size=0x4) addr:0x020b0810
-func_ov003_020b0814 kind:function(arm,size=0x80) addr:0x020b0814
-func_ov003_020b0894 kind:function(arm,size=0x2a0) addr:0x020b0894
-func_ov003_020b0b34 kind:function(arm,size=0x8) addr:0x020b0b34
-func_ov003_020b0b3c kind:function(arm,size=0x5dc) addr:0x020b0b3c
-func_ov003_020b1118 kind:function(arm,size=0x64) addr:0x020b1118
+_ZN13dScGameOver_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x020b0810
+_ZN13dScGameOver_c6RenderEv kind:function(arm,size=0x80) addr:0x020b0814
+_ZN13dScGameOver_c8BehaviorEv kind:function(arm,size=0x2a0) addr:0x020b0894
+_ZN13dScGameOver_c16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x020b0b34
+_ZN13dScGameOver_c13InitResourcesEv kind:function(arm,size=0x5dc) addr:0x020b0b3c
+dScGameOver_c_classInit kind:function(arm,size=0x64) addr:0x020b1118
 data_ov003_020b117c kind:data(any) addr:0x020b117c
 data_ov003_020b1180 kind:data(any) addr:0x020b1180
 data_ov003_020b1181 kind:data(any) addr:0x020b1181
@@ -44,7 +44,7 @@ data_ov003_020b1360 kind:data(any) addr:0x020b1360
 data_ov003_020b1368 kind:data(any) addr:0x020b1368
 data_ov003_020b1370 kind:data(any) addr:0x020b1370
 data_ov003_020b1378 kind:data(any) addr:0x020b1378
-data_ov003_020b1380 kind:data(any) addr:0x020b1380 ambiguous
+g_profile_TITLE kind:data(any) addr:0x020b1380 ambiguous
 data_ov003_020b1388 kind:data(any) addr:0x020b1388
 data_ov003_020b1390 kind:data(any) addr:0x020b1390
 data_ov003_020b139c kind:data(any) addr:0x020b139c
@@ -68,7 +68,7 @@ data_ov003_020b1468 kind:data(any) addr:0x020b1468
 data_ov003_020b1474 kind:data(any) addr:0x020b1474
 data_ov003_020b1480 kind:data(any) addr:0x020b1480
 data_ov003_020b148c kind:data(any) addr:0x020b148c
-data_ov003_020b1498 kind:data(any) addr:0x020b1498
+_ZTI10dScTitle_c kind:data(any) addr:0x020b1498
 data_ov003_020b14a4 kind:data(any) addr:0x020b14a4
 data_ov003_020b14b0 kind:data(any) addr:0x020b14b0
 data_ov003_020b14bc kind:data(any) addr:0x020b14bc
@@ -86,7 +86,7 @@ data_ov003_020b1550 kind:data(any) addr:0x020b1550
 data_ov003_020b1560 kind:data(any) addr:0x020b1560
 data_ov003_020b1570 kind:data(any) addr:0x020b1570
 data_ov003_020b1580 kind:data(any) addr:0x020b1580
-data_ov003_020b1590 kind:data(any) addr:0x020b1590
+_ZTS10dScTitle_c kind:data(any) addr:0x020b1590
 data_ov003_020b15a0 kind:data(any) addr:0x020b15a0
 data_ov003_020b15b0 kind:data(any) addr:0x020b15b0
 data_ov003_020b15c0 kind:data(any) addr:0x020b15c0
@@ -98,25 +98,28 @@ data_ov003_020b1610 kind:data(any) addr:0x020b1610
 data_ov003_020b1620 kind:data(any) addr:0x020b1620
 data_ov003_020b1634 kind:data(any) addr:0x020b1634
 data_ov003_020b1650 kind:data(any) addr:0x020b1650
+_ZTV10dScTitle_c kind:data(any) addr:0x020b1650
 data_ov003_020b1698 kind:data(any) addr:0x020b1698
 data_ov003_020b169c kind:data(any) addr:0x020b169c
 data_ov003_020b16a0 kind:data(any) addr:0x020b16a0
 data_ov003_020b16a4 kind:data(any) addr:0x020b16a4
 data_ov003_020b16a8 kind:data(any) addr:0x020b16a8
 data_ov003_020b16ac kind:data(any) addr:0x020b16ac
-StarSelect_SpawnInfo kind:data(any) addr:0x020b16b4 ambiguous
-data_ov003_020b16bc kind:data(any) addr:0x020b16bc
+g_profile_STAR_SELECT kind:data(any) addr:0x020b16b4 ambiguous
+_ZTI12dScStarSel_c kind:data(any) addr:0x020b16bc
 data_ov003_020b16c8 kind:data(any) addr:0x020b16c8
-data_ov003_020b16d4 kind:data(any) addr:0x020b16d4
+_ZTS12dScStarSel_c kind:data(any) addr:0x020b16d4
 data_ov003_020b16e4 kind:data(any) addr:0x020b16e4
 data_ov003_020b1704 kind:data(any) addr:0x020b1704
+_ZTV12dScStarSel_c kind:data(any) addr:0x020b1704
 data_ov003_020b174c kind:data(any) addr:0x020b174c
-data_ov003_020b1750 kind:data(any) addr:0x020b1750 ambiguous
-data_ov003_020b1758 kind:data(any) addr:0x020b1758
+g_profile_GAME_OVER kind:data(any) addr:0x020b1750 ambiguous
+_ZTI13dScGameOver_c kind:data(any) addr:0x020b1758
 data_ov003_020b1764 kind:data(any) addr:0x020b1764
 data_ov003_020b1774 kind:data(any) addr:0x020b1774
-data_ov003_020b1784 kind:data(any) addr:0x020b1784
+_ZTS13dScGameOver_c kind:data(any) addr:0x020b1784
 data_ov003_020b179c kind:data(any) addr:0x020b179c
+_ZTV13dScGameOver_c kind:data(any) addr:0x020b179c
 data_ov003_020b17e4 kind:data(any) addr:0x020b17e4
 data_ov003_020b17ec kind:data(any) addr:0x020b17ec
 data_ov003_020b17f4 kind:data(any) addr:0x020b17f4

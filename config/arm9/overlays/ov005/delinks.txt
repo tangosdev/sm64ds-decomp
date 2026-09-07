@@ -3,10 +3,11 @@
     .ctor       start:0x020c2430 end:0x020c2430 kind:rodata align:4
     .data       start:0x020c2440 end:0x020c3020 kind:data align:32
     .bss        start:0x020c3020 end:0x020c3020 kind:bss align:32
-src/func_ov005_020bfec0.c:
+src/_ZN11dScMiniGm_cD1Ev.cpp:
+    complete
     .text start:0x020bfec0 end:0x020bfefc
 
-src/func_ov005_020bfefc.c:
+src/_ZN11dScMiniGm_cD0Ev.cpp:
     complete
     .text start:0x020bfefc end:0x020bff4c
 
@@ -42,7 +43,7 @@ src/func_ov005_020c00e4.c:
     complete
     .text start:0x020c00e4 end:0x020c0140
 
-src/func_ov005_020c0140.c:
+src/func_ov005_020c0140.cpp:
     complete
     .text start:0x020c0140 end:0x020c0250
 
@@ -50,17 +51,25 @@ src/func_ov005_020c0250.cpp:
     complete
     .text start:0x020c0250 end:0x020c0378
 
+src/func_ov005_020c0378.cpp:
+    complete
+    .text start:0x020c0378 end:0x020c06cc
+
 src/func_ov005_020c06cc.c:
     complete
     .text start:0x020c06cc end:0x020c0878
 
-src/func_ov005_020c0878.c:
+src/func_ov005_020c0878.cpp:
     complete
     .text start:0x020c0878 end:0x020c0b00
 
-src/func_ov005_020c0b00.c:
+src/_ZN11dScMiniGm_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020c0b00 end:0x020c0b04
+
+src/_ZN11dScMiniGm_c6RenderEv.cpp:
+    complete
+    .text start:0x020c0b04 end:0x020c0f38
 
 src/func_ov005_020c0f38.c:
     complete
@@ -74,11 +83,11 @@ src/func_ov005_020c1130.c:
     complete
     .text start:0x020c1130 end:0x020c14a0
 
-src/func_ov005_020c14a0.c:
+src/_ZN11dScMiniGm_c8BehaviorEv.cpp:
     complete
     .text start:0x020c14a0 end:0x020c1654
 
-src/func_ov005_020c1654.c:
+src/_ZN11dScMiniGm_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020c1654 end:0x020c1688
 
@@ -86,10 +95,14 @@ src/func_ov005_020c1688.c:
     complete
     .text start:0x020c1688 end:0x020c16e4
 
-src/func_ov005_020c1a20.c:
+src/func_ov005_020c16e4.c:
+    complete
+    .text start:0x020c16e4 end:0x020c1a20
+
+src/_ZN11dScMiniGm_c13InitResourcesEv.cpp:
     complete
     .text start:0x020c1a20 end:0x020c21ec
 
-src/func_ov005_020c21ec.c:
+src/d_s_mini_gm.c:
     complete
     .text start:0x020c21ec end:0x020c2250

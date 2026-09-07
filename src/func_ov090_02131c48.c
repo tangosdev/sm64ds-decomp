@@ -4,7 +4,7 @@ typedef short s16;
 typedef struct { int x, y, z; } Vector3;
 
 extern void func_02012694(unsigned int id, const Vector3* v);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
 extern int AngleDiff(int a, int b);
 extern int ApproachAngle(s16* cur, int target, int divisor, int band, int maxStep);
 extern int _ZN9Animation8FinishedEv(void* c);
@@ -24,7 +24,7 @@ int func_ov090_02131c48(char* c)
         func_02012694(0xfd, (const Vector3*)(c + 0x74));
 
     if (*(u16*)(c + 0x394) == 0
-        && _ZNK12WithMeshClsn8IsOnWallEv(c + 0x150)
+        && _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x150)
         && AngleDiff(*(s16*)(c + 0x94), *(s16*)(c + 0x39a)) < 0x200) {
         s16* p = (s16*)(((int)c + 0x39a));
         *p = *p + 0x4000;

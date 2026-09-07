@@ -7,7 +7,7 @@
 
 struct daPicGate_c {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
+    s32 mPosX;            /* 0x05c */
     u8  pad_060[0x148];
     s32 unk_1a8;            /* 0x1a8 */
     u8  pad_1ac[0x4];

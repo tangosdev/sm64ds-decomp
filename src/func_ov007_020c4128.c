@@ -4,7 +4,7 @@ extern void func_ov007_020c4388(char* r0, int r1);
 extern void SubVec3(Vec3 *a, Vec3 *b, Vec3 *c);
 extern void func_ov007_020c421c(char *r4);
 
-#define ADDR(p) ((int *)(((long long)(int)(p))))
+#define ADDR(p) ((int *)(p))
 
 void func_ov007_020c4128(char *self, char *dest, int arg2)
 {

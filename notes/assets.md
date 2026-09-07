@@ -26,8 +26,7 @@ The first command writes two deliberately separate ID layers:
 
 That distinction matters. Calls such as `LoadFile(0x40a)` and the arguments used to
 construct `SharedFilePtr` are runtime handles, not FAT/FNT indices. The game maps
-handles below `0x8000` through the table at `data_ov000_020bd4b8`; confusing the two
-number spaces gives convincing but incorrect asset names. The source-reference
+handles below `0x8000` through the table at [data_ov000_020bd4b8](../config/arm9/overlays/ov000/symbols.txt); confusing the two number spaces gives convincing but incorrect asset names. The source-reference
 report therefore resolves against `AssetHandle.h`, while `NitroFileId.h` is for
 low-level filesystem work.
 
@@ -40,6 +39,22 @@ The second command writes three review surfaces:
   format, and records confidence, consumers, and blockers;
 - `build/assets/layout-candidates.tsv` correlates static initializers with named
   actor directories that consume their resource globals.
+
+## Look up a single ID
+
+```powershell
+python tools/asset_catalog.py resolve 1570
+python tools/asset_catalog.py resolve kb1_ball data_ov044_02111680
+```
+
+`resolve` answers one query at a time against the generated catalogs, so reading a
+literal in matched source does not mean grepping a TSV. It accepts a handle literal
+(`1570`, `0x622`), a path fragment (`kb1_ball`), or an owner symbol
+(`data_ov044_02111680`), and prints the asset path, kind, size, the separate NitroFS
+file ID, the `ASSET_HANDLE_*` constant, and every loader call site found by the
+`references` command. An integer is always read as a runtime handle; values at or
+above `0x8000` report that they bypass the overlay 0 table rather than resolving to
+a wrong name. It exits non-zero when a query does not resolve.
 
 These are evidence for review, not automatic renames. A candidate is marked
 `high` only when one anonymous owner maps to one asset and the proposed name does
@@ -76,6 +91,17 @@ the control grammar: `FD` is a line break, `FE` begins a command whose second by
 is its total length, and `FF` ends the message. The character and icon map agrees
 with the long-standing
 [SM64DSe character table](https://github.com/Gota7/SM64DSe-Ultimate/blob/master/assets/basic_eur_us_chars.txt).
+
+For quick decompilation research, inspect one message or search decoded text
+without exporting the whole bank:
+
+```powershell
+python tools/bmg.py show 0x123 --language eng
+python tools/bmg.py search "save" --language eng
+```
+
+`--file` overrides the extracted language bank. `show` accepts decimal or hex
+IDs; `search` is case-insensitive by default and supports `--regex`.
 
 ```powershell
 python tools/message_bank.py extract `

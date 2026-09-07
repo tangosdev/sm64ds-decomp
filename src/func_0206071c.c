@@ -21,9 +21,9 @@ void func_0206071c(char *thiz)
     *((unsigned int *)((*((int *)thiz)) + 0x14)) = n;
     if (func_02060f60(thiz, 6, 1) == 0) break;
     CpuCopy8(e0, *((int *)(thiz + 0x1c)), n);
-    *((int *)(((int)thiz + 0x18) & 0xFFFFFFFFFFFFFFFFull)) += n;
-    *((int *)(((int)thiz + 0x1c) & 0xFFFFFFFFFFFFFFFFull)) += n;
-    *((int *)(((int)thiz + 0x20) & 0xFFFFFFFFFFFFFFFFull)) -= n;
+    *((int *)((int)thiz + 0x18)) += n;
+    *((int *)((int)thiz + 0x1c)) += n;
+    *((int *)((int)thiz + 0x20)) -= n;
   }
   while (*((int *)(thiz + 0x20)) != 0);
 

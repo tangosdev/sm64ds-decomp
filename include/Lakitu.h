@@ -1,63 +1,76 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Lakitu: 5 matched functions, 24 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef LAKITU_H
 #define LAKITU_H
-#include "types.h"
 
-struct Lakitu {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    u8  unk_05c;            /* 0x05c */
-    u8  pad_05d[0x3];
-    u8  unk_060;            /* 0x060 */
-    u8  pad_061[0x3];
-    u8  unk_064;            /* 0x064 */
-    u8  pad_065[0x1b];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x10];
-    u8  unk_09c;            /* 0x09c */
-    u8  pad_09d[0x3];
-    u8  unk_0a0;            /* 0x0a0 */
-    u8  pad_0a1[0xf];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x20];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x7];
-    u8  unk_0dc;            /* 0x0dc */
-    u8  pad_0dd[0x4f];
-    s32 unk_12c;            /* 0x12c */
-    u8  pad_130[0x8];
-    u8  mModel;            /* 0x138 */
-    u8  pad_139[0x4f];
-    u8  mShadowModel;            /* 0x188 */
-    u8  pad_189[0x27];
-    u8  mTextureSequence;            /* 0x1b0 */
-    u8  pad_1b1[0x13];
-    u8  mMovingCylinderClsnWithPos;            /* 0x1c4 */
-    u8  pad_1c5[0x3f];
-    u8  mWithMeshClsn;            /* 0x204 */
-    u8  pad_205[0x1bb];
-    u8  unk_3c0;            /* 0x3c0 */
+#include "types.h"
+#include "dActor_c.h"
+#include "ModelAnim.h"
+#include "Model.h"
+#include "ShadowModel.h"
+#include "TextureSequence.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
+
+/* TWO WITNESSES, and they close on each other:
+ *
+ *   daJgm_c_classInit  fBase_c::operator new(1056 = 0x420), dActor_c::dActor_c(), stores _ZTV6Lakitu,
+ *                 then the six members below in this order.
+ *   ~Lakitu       the same members destroyed in reverse, then ~dActor_c.
+ *
+ * SIZE 0x420 is the factory's own literal, and the trailing byte fields close exactly on it.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov077). Only the
+ * slots declared below differ; every other slot holds the base's own word and is inherited,
+ * so it is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daJgm_c. The reconstructed
+ * factory daJgm_c_classInit (historical alias
+ * Lakitu_Spawn) constructs it for the JUGEM
+ * registry profile.
+ */
+struct Lakitu : dActor_c {
+    u8  pad_0d0[0x4];
+    ModelAnim mModelAnim;                                /* 0x0d4 */
+    Model mModel;                                        /* 0x138 */
+    ShadowModel mShadowModel;                            /* 0x188 */
+    TextureSequence mTextureSequence;                    /* 0x1b0 */
+    dCcAcPos_c mdCcAcPos_c; /* 0x1c4 */
+    dBgCh_Actr mWithMeshClsn;                          /* 0x204 */
+    /* InitResources assigns IDENTITY_MATRIX4X3 straight into this slot, so
+       0x3c0 begins a Matrix4x3 (0x30 bytes, through 0x3ef); the pad below runs
+       four bytes further, to 0x3f3. Still spelt u8 + pad so the header need not
+       pull in math/Matrix.h. [_ZN6Lakitu13InitResourcesEv.cpp] */
+    u8  mMatrix;            /* 0x3c0 */
     u8  pad_3c1[0x33];
-    s32 unk_3f4;            /* 0x3f4 */
-    u8  unk_3f8;            /* 0x3f8 */
-    u8  pad_3f9[0x3];
-    u8  unk_3fc;            /* 0x3fc */
-    u8  pad_3fd[0x3];
-    s32 unk_400;            /* 0x400 */
+    /* Render draws the second Model only when this is 1 (and then only for a
+       window of the animation frame at 0x12c). [_ZN6Lakitu6RenderEv.cpp] */
+    s32 mState;            /* 0x3f4 */
+    /* Was declared as a u8 marker; InitResources writes/reads it as a full
+       word (a copy of mPosX), and it directly abuts mSpawnPosY with no gap. */
+    /* Copy of mPosX/Y/Z taken once at the end of InitResources; the first two
+       are written through raw `this + 0x3f8` / `+ 0x3fc` stores there, which is
+       why only the third reads as a member. [_ZN6Lakitu13InitResourcesEv.cpp] */
+    s32 mSpawnPosX;            /* 0x3f8 */
+    /* Was declared as a u8 marker; InitResources writes/reads it as a full
+       word (a copy of mPosY), and it directly abuts mSpawnPosZ with no gap. */
+    s32 mSpawnPosY;            /* 0x3fc */
+    s32 mSpawnPosZ;            /* 0x400 */
     u8  pad_404[0xc];
     s32 unk_410;            /* 0x410 */
-#ifdef __cplusplus
-    /* methods */
+    u8  pad_414[0xc];
+
+    virtual ~Lakitu();            /* slots 16 (D1), 17 (D0) */
+
+    virtual int   OnYoshiTryEat();               /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual int   OnAimedAtWithEgg();            /* slot 29 */
+
     int Behavior();
     int InitResources();
     int Render();
-#endif
+    int CleanupResources();
+    void OnPendingDestroy();
 };
 
-#endif
+typedef char Lakitu_size_must_be_0x420[sizeof(Lakitu) == 0x420 ? 1 : -1];
+
+#endif /* LAKITU_H */

@@ -1,23 +1,24 @@
 //cpp
-struct CylinderClsn { void Clear(); void Update(); };
-struct WithMeshClsn { int JustHitGround() const; int IsOnGround() const; };
-struct Actor { void UpdatePos(CylinderClsn *cc); };
+#include "dBgCh_Actr.h"
 
-extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(WithMeshClsn *w);
+struct dCc_c { void Clear(); void Update(); };
+struct dActor_c { void UpdatePos(dCc_c *cc); };
+
+extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *w);
 extern "C" void func_ov080_02124acc(char *c);
 
 extern "C" int func_ov080_0212500c(char *c)
 {
-    WithMeshClsn_UpdateDiscreteNoLava_veneer((WithMeshClsn *)(c + 0x180));
-    if (((WithMeshClsn *)(c + 0x180))->JustHitGround()) {
+    dBgCh_Actr_UpdateDiscreteNoLava_veneer((dBgCh_Actr *)(c + 0x180));
+    if (((dBgCh_Actr *)(c + 0x180))->JustHitGround()) {
         int v = *(int *)(c + 0xa8) * -0x3c;
         *(int *)(c + 0xa8) = v / 100;
-    } else if (((WithMeshClsn *)(c + 0x180))->IsOnGround()) {
+    } else if (((dBgCh_Actr *)(c + 0x180))->IsOnGround()) {
         *(int *)(c + 0xa8) = 0xc000;
     }
-    ((Actor *)c)->UpdatePos((CylinderClsn *)(c + 0x14c));
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x14c));
     func_ov080_02124acc(c);
-    ((CylinderClsn *)(c + 0x14c))->Clear();
-    ((CylinderClsn *)(c + 0x14c))->Update();
+    ((dCc_c *)(c + 0x14c))->Clear();
+    ((dCc_c *)(c + 0x14c))->Update();
     return 1;
 }

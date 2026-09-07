@@ -1,0 +1,82 @@
+# Does every deferred tubuild conflict still have a record, and every record a conflict?
+#
+# When tubuild merges N legacy source files into one translation unit and two of them
+# disagree -- two spellings of one #define, two declarations of one extern, two local
+# typedefs of one name -- it cannot merge them. It keeps the first and writes the loser
+# down TWICE: a `/* TUBUILD CONFLICT ... NOT applied: ... */` comment in the generated
+# source, and a `tubuild create warning: CONFLICT:` note on the entry in
+# config/tu_manifest.d/. Together those two halves are the entire record of an arbitrary
+# choice that nobody has reviewed yet. Separately, each half is nearly meaningless.
+#
+# NOTHING ELSE IN THE BUILD CAN SEE THEM DRIFT APART. The dropped alternate is never
+# compiled, so it yields no object, no mismatch and no coverage change; rombuild.py goes
+# on reporting 106/106 exact whether the record is intact, stale, or gone entirely. It
+# is the unbuildable-files-invisible shape again: what is absent produces no failure.
+# A note still claiming a conflict that was quietly reconciled reads as unfinished work
+# that does not exist, and a marker with no note is a decision that never reached review
+# at all. Measured on 5c24b731940c, immediately before the reconciliation that lands
+# with this gate: 63 wrong records across 97 entries -- 59 stale notes, 3 desynchronized
+# by a symbol rename, 1 never recorded.
+#
+# WHOLE-TREE, and with no `paths:` filter, for exactly the reason src-tu-refs.yml has
+# none. The change that breaks this correspondence is a symbol RENAME, and a rename
+# touches config/arm9/**/symbols.txt and the generated sources -- it never opens
+# config/tu_manifest.d/ at all. The marker names the legacy function in comment text, so
+# a tree-wide substitution rewrites it; the note names it in prose, so the same
+# substitution does not. PR #2087 renamed func_ov006_020db720 to
+# _ZN11dScMgCard_c13OnTurnIntoEggEi and split three records that way without touching
+# the manifest. A `paths:` filter listing config/tu_manifest.d/** would have let precisely
+# that through, which is the only failure this gate has ever actually observed.
+#
+# AN EMPTY CHECK IS NOT A PASS, and this one has two ways to be empty: a manifest that
+# resolves to no entries, and entries whose sources are all absent. A relocated manifest
+# directory or a partial checkout looks like either. Both exit 2 rather than printing a
+# reassuring "checked 0" and exiting 0.
+#
+# Zero CONFLICT RECORDS is deliberately NOT one of those arms. A tree with every
+# conflict reconciled is the goal state, not a malfunction, and a gate that turns red on
+# the day the campaign succeeds is a gate somebody switches off.
+#
+# Costs nothing: stdlib Python over git-tracked text, no compiler and no ROM, well under
+# a second across 97 entries. That is why it lives here rather than on the private build
+# box that pr-validate.yml relays to.
+name: tubuild conflicts
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Its own group. Sharing one with another workflow is what made the range gates cancel
+# each other's runs in #2042.
+concurrency:
+  group: tubuild-conflicts-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  conflicts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the check reads the working tree and config/.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Every deferred conflict is recorded, and every record is real
+        # --list so the log carries the per-entry table as evidence. A pass that does
+        # not say what it inspected cannot be told apart from one that stopped seeing
+        # its inputs.
+        run: python tools/check_tubuild_conflicts.py --list
+
+      # unittest, not pytest: pytest is not installed on this runner, and the point of
+      # this step is that the gate's FAILURE branches still work, so it must not be the
+      # step that needs a dependency. `if: always()` so a red gate above still reports
+      # whether the gate itself is sound -- those are different questions.
+      - name: The gate's own tests
+        if: always()
+        run: python -m unittest tools.test_check_tubuild_conflicts

@@ -14,7 +14,7 @@ void func_ov100_0214629c(char* c, int a1)
     *(unsigned char*)(c + 0x159) = 0;
     *(int*)(c + 0x13c) = a1;
     if (*(unsigned char*)(c + 0x15c) != 0) {
-        short* p = (short*)(((long long)(int)(c + 0x94)));
+        short* p = (short*)(c + 0x94);
         *p = *p & 0x8000;
         unsigned char v = *(unsigned char*)(c + 0x15c);
         if (v == 3) {

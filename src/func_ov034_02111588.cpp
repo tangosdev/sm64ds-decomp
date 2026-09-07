@@ -1,7 +1,7 @@
 //cpp
 extern "C" int DecIfAbove0_Byte(void*);
-extern "C" void data_ov052_021125b8(void*, int);
+extern "C" void func_ov034_021125b8(void*, int);
 extern "C" void func_ov034_02111588(char *c){
   if(DecIfAbove0_Byte(c+0x8da)) return;
-  data_ov052_021125b8(c, 0xa);
+  func_ov034_021125b8(c, 0xa);
 }

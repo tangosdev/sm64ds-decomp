@@ -42,7 +42,7 @@ void func_ov007_020c56bc(char* sl, int sb, int r2, int r3, int p4, int fp)
                         {
                             int* q;
                             r6[0] = r6[0] + r5;
-                            q = (int*)(int)(((long long)(int)((char*)r6 + 4)));
+                            q = (int*)(int)((char*)r6 + 4);
                             *q = *q + r0v;
                         }
                         break;

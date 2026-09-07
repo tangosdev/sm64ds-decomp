@@ -1,4 +1,5 @@
 //cpp
+#include "Stage.h"
 #include "types.h"
 extern "C" {
 extern u16 data_0209f308;
@@ -15,7 +16,7 @@ extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void* attr, int a
 extern unsigned int func_02012790(unsigned int a);
 }
 
-extern "C" void _ZN5Stage19RenderVsModeNewStarEv(void)
+void Stage::RenderVsModeNewStar()
 {
     u16 timer = data_0209f308;
     if (timer == 0)

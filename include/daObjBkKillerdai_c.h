@@ -7,15 +7,15 @@
 
 struct daObjBkKillerdai_c {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
-    s32 unk_060;            /* 0x060 */
-    s32 unk_064;            /* 0x064 */
+    s32 mPosX;            /* 0x05c */
+    s32 mPosY;            /* 0x060 */
+    s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x26];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x4];
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x36];
-    s8  unk_0cc;            /* 0x0cc */
+    s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x253];
     s32 unk_320;            /* 0x320 */
 };

@@ -14,7 +14,7 @@ void func_020453c0(int *a, short *node, int *p2, int p3)
     int mla = idx * 0x24 + r6[5];
     unsigned short *dst;
     func_0204547c(r6, mla, r5, elem);
-    dst = (unsigned short*)(int)(((long long)(int)(elem + 0x18)));
+    dst = (unsigned short*)(int)(elem + 0x18);
     *dst = (unsigned short)(*dst | *(unsigned short*)(elem + node[4] * 0x34 + 0x18));
     if (node[5] != 0)
         func_020453c0(a, (short*)((char*)node + (node[5] << 6)), r6, r5);

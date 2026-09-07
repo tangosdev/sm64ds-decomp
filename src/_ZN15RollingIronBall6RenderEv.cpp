@@ -13,10 +13,10 @@ struct EmbeddedClass {
 
 int RollingIronBall::Render()
 {
-  unsigned char b = unk_3d0;
+  unsigned char b = mVariant;
   if(b){
     EmbeddedClass* e = (EmbeddedClass*)((char*)&mModel);
-    e->virtualMethod((char*)&unk_3ac);
+    e->virtualMethod((char*)&mDrawScaleX);
   }
   return 1;
 }

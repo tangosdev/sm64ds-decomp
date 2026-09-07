@@ -17,8 +17,8 @@ struct Base {
 
 extern "C" {
 void Crate_SetState(void *c, int i);
-void *_ZN5Actor10FindWithIDEj(u32 id);
-int _ZN6Player7TryGrabER5Actor(void *f, void *a);
+void *_ZN8dActor_c10FindWithIDEj(u32 id);
+int _ZN6Player7TryGrabER8dActor_c(void *f, void *a);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, struct Vector3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
 }
 
@@ -55,7 +55,7 @@ extern "C" void func_ov098_02138e6c(char *c)
         o->m();
     }
 
-    a = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x588));
+    a = _ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x588));
     if (a == 0) return;
     {
         int bf = (int)(*(u16*)((char*)a + 0xc) == 0xbf);
@@ -74,7 +74,7 @@ extern "C" void func_ov098_02138e6c(char *c)
         return;
     }
     if ((fl & 0x1000) != 0) {
-        if (_ZN6Player7TryGrabER5Actor(a, c) == 0) return;
+        if (_ZN6Player7TryGrabER8dActor_c(a, c) == 0) return;
         *(void**)(c + 0x5e4) = a;
         Crate_SetState(c, 1);
         return;

@@ -2,27 +2,27 @@
 # spawns through its factory, initializes, behaves and renders through
 # vtable dispatch. Sits on the full prior stack.
 
-src/ArrowSignRight_Spawn.c
+src/d_a_obj_yajirusi_yajirusi_r.c
 src/_ZN14ArrowSignRight13InitResourcesEv.cpp
 src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp
 src/_ZN14ArrowSignRight8BehaviorEv.cpp
 src/_ZN14ArrowSignRight6RenderEv.cpp
-src/_ZN8PlatformC2Ev.c
-src/_ZN5ActorC2Ev.cpp
-# ActorBase C1 is hand-asm; the HAL carries the transcription
-src/_ZN9ActorBase9SceneNodeC1Ev.c
+# dBgActor_c is one production translation unit; the constructor,
+# UpdateClsnPosAndRot, UpdateModelPosAndRotY and IsClsnInRangeOnScreen
+# this slice used to name separately all live in it.
+src/actors/dBgActor_c.cpp
+src/_ZN8dActor_cC2Ev.cpp
+# SceneNode's constructor and Reset now share their production translation unit.
+src/actors/ActorBase_SceneNode.cpp
 src/func_0203b438.c
 src/func_02043810.c
-src/_ZN9ActorBasenwEj.cpp
-src/_ZN11ShadowModelC1Ev.c
-src/_ZN18MovingMeshColliderC1Ev.c
-src/_ZN16MeshColliderBase7DisableEv.cpp
-src/_ZN16MeshColliderBase9IsEnabledEv.cpp
-src/_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c
-src/_ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_.cpp
-src/_ZN8Platform19UpdateClsnPosAndRotEv.cpp
-src/_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp
-src/_ZN8Platform21UpdateModelPosAndRotYEv.cpp
+src/_ZN7fBase_cnwEj.cpp
+src/_ZN11ShadowModelC1Ev.cpp
+src/_ZN10dBgW_KcMbgC1Ev.cpp
+src/_ZN4dBgW7DisableEv.cpp
+src/_ZN4dBgW9IsEnabledEv.cpp
+src/_ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c
+src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp
 src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp
 src/func_02039394.c
 src/func_020393a4.c
@@ -32,14 +32,12 @@ src/func_02039404.c
 src/InvMat4x3.c
 src/func_02039e18.c
 src/func_02053200.c
-src/func_020398c8.c
-src/_ZN18MovingMeshCollider9TransformERK9Matrix4x3s.cpp
+src/_ZN7dBgW_KcC2Ev.cpp
+src/_ZN10dBgW_KcMbg9TransformERK9Matrix4x3s.cpp
 src/func_0203b244.c
 src/LenVec3.c
 src/func_020396d0.c
-src/_ZN16MeshColliderBase6EnableEP5Actor.cpp
-src/_ZN5Actor13ClosestPlayerEv.c
-src/_ZN9ActorBase9SceneNode5ResetEv.c
+src/_ZN8dActor_c13ClosestPlayerEv.cpp
 src/Matrix4x3_FromRotationY.c
 src/func_01ffb07c.cpp
 src/func_01ffb098.cpp
@@ -49,15 +47,15 @@ src/func_01ffb0bc.cpp
 src/func_01ffb0c8.cpp
 src/func_020393fc.c
 src/func_020395fc.c
-src/_ZN9ActorBase19BeforeInitResourcesEv.cpp
-src/_ZN9ActorBase18AfterInitResourcesEj.cpp
-src/_ZN9ActorBase22BeforeCleanupResourcesEv.cpp
-src/_ZN9ActorBase14BeforeBehaviorEv.cpp
-src/_ZN9ActorBase13AfterBehaviorEj.cpp
-src/_ZN9ActorBase12BeforeRenderEv.cpp
-src/_ZN9ActorBase11AfterRenderEj.cpp
-src/_ZN9ActorBase16OnPendingDestroyEv.cpp
-src/_ZN9ActorBase13OnHeapCreatedEv.cpp
+src/_ZN7fBase_c19BeforeInitResourcesEv.cpp
+src/_ZN7fBase_c18AfterInitResourcesEj.cpp
+src/_ZN7fBase_c22BeforeCleanupResourcesEv.cpp
+src/_ZN7fBase_c14BeforeBehaviorEv.cpp
+src/_ZN7fBase_c13AfterBehaviorEj.cpp
+src/_ZN7fBase_c12BeforeRenderEv.cpp
+src/_ZN7fBase_c11AfterRenderEj.cpp
+src/_ZN7fBase_c16OnPendingDestroyEv.cpp
+src/_ZN7fBase_c13OnHeapCreatedEv.cpp
 src/func_0203b27c.c
 src/func_0204405c.c
 src/func_0203b3c0.c
@@ -67,4 +65,15 @@ src/MulVec3Mat4x3.c
 src/func_0203b2ec.c
 src/func_02044284.cpp
 src/func_0203b20c.c
-src/_ZN5Model11UpdateVertsEv.cpp
+
+# Virtuals the host now needs as real methods: migrating a constructor to
+# real C++ makes its TU the vtable's key function on MSVC too, and MSVC
+# emits the vtable there -- which requires every virtual to be defined, not
+# just the ones a gate happens to exercise. These already existed in src/;
+# they were simply never sliced.
+
+# dBgW's non-virtual accessors: these were always sliced here. They are not
+# part of the vtable and have nothing to do with the constructor migration.
+src/_ZN4dBgW7DisableEv.cpp
+src/_ZN4dBgW9IsEnabledEv.cpp
+src/_ZN4dBgW6EnableEP8dActor_c.cpp

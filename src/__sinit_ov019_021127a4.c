@@ -5,7 +5,7 @@ extern int SharedFilePtr_Construct_TexSeq(void*, int);
 extern void func_02017ab4(void);
 extern void SharedFilePtr_Destruct_Anim(void);
 extern void SharedFilePtr_Destruct_TexSeq(void);
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 
 extern void* data_ov019_02113498;
 extern void* data_ov019_021134dc;
@@ -93,10 +93,10 @@ void __sinit_ov019_021127a4(void)
     data_ov019_021134e8.x = -25962657;
     data_ov019_021134e8.y = -23381572;
     data_ov019_021134e8.z = -26155537;
-    func_020731dc(&data_ov019_021134e8, (void*)&func_020072c0, (void**)&data_ov019_021134d0);
+    func_020731dc(&data_ov019_021134e8, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov019_021134d0);
 
     data_ov019_0211353c.x = -19464192;
     data_ov019_0211353c.y = 0x600000;
     data_ov019_0211353c.z = 0;
-    func_020731dc(&data_ov019_0211353c, (void*)&func_020072c0, (void**)&data_ov019_02113518);
+    func_020731dc(&data_ov019_0211353c, (void*)&_ZN7Vector3D1Ev, (void**)&data_ov019_02113518);
 }

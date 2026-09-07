@@ -1,7 +1,7 @@
 #include "types.h"
 extern void func_ov004_020adb1c(int self);
 extern void _ZN5Sound12PlayBank2_2DEj(unsigned int);
-extern char *func_020beb68;
+extern char *data_ov004_020beb68;
 
 void func_ov006_020f0274(char *s)
 {
@@ -36,7 +36,7 @@ void func_ov006_020f0274(char *s)
         *(u8 *)(s + 0x47e3) = 0;
         *(u8 *)(((int)s + 0x47e1)) += 1;
         {
-            char *g = func_020beb68;
+            char *g = data_ov004_020beb68;
             if (g != 0) {
                 if (*(int *)(g + 0xb4) < 0x270f)
                     *(int *)(((int)g + 0xb4)) += 1;
@@ -44,7 +44,7 @@ void func_ov006_020f0274(char *s)
                     *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
             }
         }
-        func_ov004_020adb1c(func_020beb68 != 0 ? *(int *)(func_020beb68 + 0xb4) : 0);
+        func_ov004_020adb1c(data_ov004_020beb68 != 0 ? *(int *)(data_ov004_020beb68 + 0xb4) : 0);
         return;
     }
 

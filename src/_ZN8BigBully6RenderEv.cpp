@@ -6,7 +6,7 @@ struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g
 
 int BigBully::Render()
 {
-  if(unk_3fe >= 3)
+  if(mNumBulliesKilled >= 3)
     ((Sub*)((char*)&mModelAnim))->g5(0);
   return 1;
 }

@@ -11,7 +11,7 @@ typedef struct Camera {
     char _pad0[0xb0];
     Vector3 savedLookAt;   /* 0xb0 */
     char _pad1[0x110 - 0xbc];
-    void   *owner;         /* 0x110 (Actor*, pos @ +0x5c) */
+    void   *owner;         /* 0x110 (dActor_c*, pos @ +0x5c) */
 } Camera;
 
 extern void func_02007c9c(const Vector3 *v0, const Vector3 *v1,

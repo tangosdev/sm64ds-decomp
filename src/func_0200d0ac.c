@@ -10,7 +10,7 @@ int func_0200d0ac(int a, unsigned int b)
     {
       return 0;
     }
-    *((unsigned int *) ((a + 0x154) & 0xFFFFFFFFFFFFFFFFu)) |= 2u;
+    *((unsigned int *) (a + 0x154)) |= 2u;
     func_02012790(7);
   }
   return 1;

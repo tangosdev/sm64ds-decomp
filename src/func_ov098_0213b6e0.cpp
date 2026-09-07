@@ -3,7 +3,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-extern void *_ZN5Actor10FindWithIDEj(unsigned);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *thiz, const void *v, unsigned, int, unsigned, unsigned, unsigned);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned, int, int, int);
 extern int func_ov098_0213b63c(char *c);
@@ -14,7 +14,7 @@ int func_ov098_0213b6e0(char *c) {
     Vector3 vec;
     unsigned id = *(unsigned *)(c + 0x134);
     if (id != 0) {
-        void *found = _ZN5Actor10FindWithIDEj(id);
+        void *found = _ZN8dActor_c10FindWithIDEj(id);
         if (found != 0) {
             unsigned short k = *(unsigned short *)((char *)found + 0xc);
             int t = k == 0xbf;

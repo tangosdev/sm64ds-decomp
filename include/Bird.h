@@ -1,48 +1,41 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Bird: 5 matched functions, 19 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BIRD_H
 #define BIRD_H
-#include "types.h"
 
-struct Bird {
-    u8  pad_000[0x4];
-    s32 unk_004;            /* 0x004 */
-    u8  pad_008[0x54];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    u8  pad_092[0x2];
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x6];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x30];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x1b];
-    u8  unk_0f0;            /* 0x0f0 */
-    u8  pad_0f1[0x33];
-    u8  mAnimation;            /* 0x124 */
-    u8  pad_125[0x13];
-    u8  mShadowModel;            /* 0x138 */
-    u8  pad_139[0x27];
-    s32 unk_160;            /* 0x160 */
-    s32 unk_164;            /* 0x164 */
-    s32 unk_168;            /* 0x168 */
-    u8  pad_16c[0xc];
-    s32 unk_178;            /* 0x178 */
-    s32 unk_17c;            /* 0x17c */
-    u8  unk_180;            /* 0x180 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+#include "ModelAnim.h"
+#include "ShadowModel.h"
+#include "dActor_c.h"
+
+/* daSBird_c_classInit allocates 0x184 bytes, constructs dActor_c, then constructs a
+ * ModelAnim at 0xd4 and a ShadowModel at 0x138. D1 destroys those members in
+ * reverse order before chaining to dActor_c. InitResources snapshots the
+ * inherited actor position into 0x160 and Behavior dispatches through the
+ * state index at 0x17c.
+ *
+ * SM64DS RTTI names the implementation daSBird_c. The reconstructed factory
+ * daSBird_c_classInit (historical alias Bird_Spawn) installs this class's
+ * cartridge vtable for the SBIRD registry profile.
+ */
+struct Bird : dActor_c {
+    u8          pad_0d0[0x4];
+    ModelAnim   mModelAnim;      /* 0x0d4 */
+    ShadowModel mShadowModel;    /* 0x138 */
+    Vector3     mHomePos;        /* 0x160 */
+    u8          pad_16c[0xc];
+    u32         mOwnerID;        /* 0x178 */
+    s32         mState;          /* 0x17c */
+    u8          mIsLeader;         /* 0x180 */
+    u8          pad_181[0x3];
+
+    virtual ~Bird();
+
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
+    virtual void OnPendingDestroy();
 };
 
-#endif
+typedef char Bird_size_must_be_0x184[
+    sizeof(Bird) == 0x184 ? 1 : -1];
+
+#endif /* BIRD_H */

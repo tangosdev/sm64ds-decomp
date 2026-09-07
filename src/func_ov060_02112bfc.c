@@ -1,4 +1,4 @@
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov060_02112d48(char* c, int arg);
 void func_ov060_02117a3c(char* self);
 extern short data_ov060_02119294[];
@@ -9,7 +9,7 @@ extern short data_ov060_02119298[];
 void func_ov060_02112bfc(char* c){
     char* found; int i; int r6; short* p;
     *(int*)(c + 0xa8) = *(int*)(c + 0xa0);
-    found = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x3ac));
+    found = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x3ac));
     if (found == 0) { *(int*)(c + 0x40c) = 0; return; }
     p = data_ov060_02119294;
     i = 0;

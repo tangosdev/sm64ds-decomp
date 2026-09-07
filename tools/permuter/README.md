@@ -67,8 +67,15 @@ End-to-end pipeline runs on our mwccarm toolchain, native Windows, no external o
 
 1. `git clone https://github.com/simonlindholm/decomp-permuter vendor/decomp-permuter`
 2. `python -m pip install toml pcpp pycparser capstone pyelftools`
-3. Windows-compat patches to the cloned permuter (all small, marked
-   `# Windows-compat (sm64ds-decomp)`):
+3. `git -C vendor/decomp-permuter apply ../../tools/permuter/windows-compat.patch`
+
+   **The patch is checked in** (`tools/permuter/windows-compat.patch`, exported
+   2026-08-20 against upstream `2795247`) precisely because `vendor/` is gitignored:
+   the clone went missing between sessions and all four patches had to be
+   reconstructed from the prose below. If `git apply` rejects a hunk after an
+   upstream move, re-apply by hand from that prose and re-export the patch.
+
+   What the four patches do (all marked `# Windows-compat (sm64ds-decomp)`):
    - `src/compiler.py`: route `compile.sh` through `bash` on Windows; AND, when a `cc.txt`
      sidecar exists next to it, call `mwccarm.exe` DIRECTLY (no bash) -- git-bash startup is
      ~400ms/candidate, direct ~140ms (~3x throughput). `import_func.setup_dir` writes `cc.txt`.

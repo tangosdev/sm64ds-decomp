@@ -1,11 +1,11 @@
 // BMD model loading.
 //
 // Header offsets are from include/BMD_File.h in the decomp, which pins them from
-// matched code. The display-list table is the unk_0c/unk_10 chain that
-// Model::UpdateFileOffsets walks:
+// matched code. The display-list table is the numDisplayListGroups /
+// displayListGroups chain that Model::UpdateFileOffsets walks:
 //
-//     unk_10 -> unk_0c records of {count, ptr}
-//               ptr    -> count records of 0x10 bytes
+//     displayListGroups -> numDisplayListGroups BMD_DisplayListGroup records
+//               lists    -> numLists BMD_DisplayList records of 0x10 bytes
 //                         +0x08 display list size
 //                         +0x0c display list data
 //

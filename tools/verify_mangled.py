@@ -4,6 +4,22 @@ Reads progress/matched.jsonl, selects every entry whose first version is a
 "template:..." tag and whose symbol is Itanium-mangled (_Z...), then re-runs the
 canonical single-version match for each and prints a pass/fail summary.
 
+NOT EVERY LEDGER ROW CARRIES VERSION PROVENANCE, and this tool used to crash on the
+ones that do not. progress/matched.jsonl has two writers with different row shapes:
+the banking paths append {"versions": [...]}, while tools/rebuild_ledger.py reconstructs
+the whole file from committed src/ and writes {"tag": "src-rebuild"} instead -- it works
+from what is on disk and genuinely cannot know which compiler version each function was
+matched at. Indexing d["versions"] therefore raised KeyError on every row of a rebuilt
+ledger, which is the normal state after a fresh worktree or a large merge.
+
+Selecting nothing is now reported, not silently treated as success: a ledger with no
+version provenance cannot answer the question this tool asks, and printing "0 pass,
+0 fail" would read as an all-clear. Rebuild provenance by re-banking, or verify the
+functions you care about directly with tools/match.py.
+
+Exit codes: 0 all selected functions matched, 1 at least one failed, 2 nothing could
+be selected (see above).
+
 Usage:
     python tools/verify_mangled.py            # verify all mangled template funcs
     python tools/verify_mangled.py _ZN5Actor  # verify only names matching a substring
@@ -42,12 +58,33 @@ def overlay_bin_and_base(module: str):
 filt = sys.argv[1] if len(sys.argv) > 1 else ""
 
 rows = []
+total = no_provenance = 0
 for line in MATCHED.read_text().splitlines():
     if not line.strip():
         continue
     d = json.loads(line)
-    if "template:" in d["versions"][0] and d["name"].startswith("_Z") and filt in d["name"]:
+    total += 1
+    # rebuild_ledger.py rows carry "tag" instead of "versions" -- see the module docstring.
+    versions = d.get("versions") or []
+    if not versions:
+        no_provenance += 1
+        continue
+    if "template:" in versions[0] and d["name"].startswith("_Z") and filt in d["name"]:
         rows.append(d)
+
+if no_provenance:
+    print(f"note: {no_provenance} of {total} ledger row(s) carry no version provenance "
+          f"(written by rebuild_ledger.py, which cannot know it); skipped.")
+
+if not rows:
+    where = f" matching {filt!r}" if filt else ""
+    if no_provenance == total and total:
+        print(f"\nnothing to verify: the whole ledger was rebuilt from committed src/, so no "
+              f"row records the version it was matched at.\nRe-bank the functions you want "
+              f"tracked, or check one directly with tools/match.py.")
+        sys.exit(2)
+    print(f"\nnothing to verify: no mangled template row{where} in the ledger.")
+    sys.exit(2)
 
 rows.sort(key=lambda d: d["addr"])
 npass = nfail = 0

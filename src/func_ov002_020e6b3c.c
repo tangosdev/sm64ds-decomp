@@ -10,7 +10,7 @@ struct B {
 };
 
 void func_ov002_020e6b3c(char *o) {
-    void **p = (void **)(((long long)(int)(o + 8)));
+    void **p = (void **)(o + 8);
     struct A *a = (struct A *)p[0];
     unsigned int n = a->count;
     struct B *b = (struct B *)p[1];

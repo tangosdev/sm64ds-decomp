@@ -10,7 +10,7 @@ extern "C" void _ZN9ModelBase12ApplyOpacityEj(void* self, u32 op, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, s16 angX);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void* m, s16 angY);
-extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* c, void* shadow, void* mtx, int rad, int height, u32 flags);
 
 extern Mtx43 data_020a0e68;
@@ -64,6 +64,6 @@ extern "C" void func_ov081_02126a20(char* c)
     *(int*)(c + 0x3cc) = *(int*)(c + 0x64) >> 3;
 
     int dh = (*(int*)(c + 0x3e0) == 8) ? 0x258000 : 0x12c000;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x188, c + 0x3a0, 0x78000, dh, 0xf);
 }

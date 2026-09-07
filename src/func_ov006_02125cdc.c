@@ -2,6 +2,7 @@
 
 int func_ov006_02125cdc(int c, int *p)
 {
+    char *b = (char *)c;
     int z = p[1];
     int x;
     unsigned short t;
@@ -9,9 +10,9 @@ int func_ov006_02125cdc(int c, int *p)
 
     if (z < -0x20000)
         return 1;
-    if (z >= *(int *)(c + 0xba08) << 16)
+    if (z >= *(int *)(b + 0xba08) << 16)
         return 1;
-    if (z >= *(int *)(c + 0xab6c) + 0x1d0000)
+    if (z >= *(int *)(b + 0xab6c) + 0x1d0000)
         return 1;
     x = p[0];
     if (x < 0)
@@ -19,12 +20,12 @@ int func_ov006_02125cdc(int c, int *p)
     if (x >= 0x100000)
         return 1;
     if (z < 0)
-        t = *(unsigned short *)(c + ((x >> 12) / 16) * 0x5c0 + 0x4f38);
+        t = *(unsigned short *)(b + ((x >> 12) / 16) * 0x5c0 + 0x4f38);
     else
     {
         int xq = (x >> 12) / 16;
         xq = xq ? xq : xq;
-        t = *(unsigned short *)(c + xq * 0x5c0 + ((z >> 12) / 16) * 2 + 0x4f38);
+        t = *(unsigned short *)((char *)(c + xq * 0x5c0 + ((z >> 12) / 16) * 2) + 0x4f38);
     }
     zf = (z >> 12) & 0xf;
     xf = (x >> 12) & 0xf;

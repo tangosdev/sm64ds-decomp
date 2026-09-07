@@ -55,7 +55,14 @@ import tempfile
 import threading
 
 # Bump when the meaning of a key input changes; every stored entry then misses.
-SCHEMA = 1
+# Bumped to 2 when objisolate landed. Entries written before it were stored
+# post-isolation by a version whose symbol sweep missed STB_LOPROC, and because
+# isolate() is idempotent it declines to re-fix an object that already looks
+# reduced -- so a stale entry would be served broken forever. The cache now stores
+# the compile UN-isolated and applies isolation after fetch, so a later change to
+# objisolate needs no bump. Note it stores the RETARGETED compile -- retarget runs
+# before put -- so a change to retarget_text_section still does.
+SCHEMA = 2
 
 _DRIVE_RE = re.compile(r"^[A-Za-z]:/")
 

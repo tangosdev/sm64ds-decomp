@@ -4,11 +4,11 @@ typedef struct { int x, y, z; } Vector3;
 extern unsigned int _ZN5Event6GetBitEj(unsigned int bit);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int bankId, const Vector3 *pos);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *thiz);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *thiz);
 
-#define LM(p) ((u8*)(int)(((long long)(int)(p))))
-#define LMS(p) ((short*)(int)(((long long)(int)(p))))
-#define LMI(p) ((int*)(int)(((long long)(int)(p))))
+#define LM(p) ((u8*)(int)(p))
+#define LMS(p) ((short*)(int)(p))
+#define LMI(p) ((int*)(int)(p))
 
 int func_ov002_020bac18(char *c)
 {
@@ -41,6 +41,6 @@ int func_ov002_020bac18(char *c)
         break;
     }
 
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     return 1;
 }

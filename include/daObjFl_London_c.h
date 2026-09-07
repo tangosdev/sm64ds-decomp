@@ -7,13 +7,13 @@
 
 struct daObjFl_London_c {
     u8  pad_000[0x8e];
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
+    s16 mAngleY;            /* 0x08e */
+    s16 mAngleZ;            /* 0x090 */
     u8  pad_092[0x4];
-    s16 unk_096;            /* 0x096 */
+    s16 mPrevAngleZ;            /* 0x096 */
     u8  pad_098[0x286];
-    u8  unk_31e;            /* 0x31e */
-    u8  unk_31f;            /* 0x31f */
+    u8  mCooldown;            /* 0x31e */
+    u8  mFlag;            /* 0x31f */
 };
 
 #endif

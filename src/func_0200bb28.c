@@ -16,10 +16,10 @@ extern void Vec3_RotateYAndTranslate(s32* out, s32* in, s16 ang, s32* src);
 extern s32 Math_Function_0203b14c(s32* p, s32 tgt, s32 rate, s32 lim, s32 step);
 extern s32 _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(s32* v, s32* t, s32 rate);
 
-#define L0(p) ((s32)(((long long)(s32)(p))))
-#define L1(p) ((s32)(((unsigned long long)(unsigned int)(p))))
-#define L2(p) ((s32)((((long long)(s32)(p)) | 0LL)))
-#define L3(p) ((s32)(((unsigned long long)(s32)(p))))
+#define L0(p) ((s32)(p))
+#define L1(p) ((s32)(p))
+#define L2(p) ((s32)((p) | 0LL))
+#define L3(p) ((s32)(p))
 
 
 

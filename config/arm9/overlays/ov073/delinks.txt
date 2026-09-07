@@ -3,11 +3,11 @@
     .ctor       start:0x02122f34 end:0x02122f3c kind:rodata align:4
     .data       start:0x02122f40 end:0x02123280 kind:data align:32
     .bss        start:0x02123280 end:0x021234e0 kind:bss align:32
-src/_ZN11ChiefChillyD1Ev.c:
+src/_ZN11ChiefChillyD1Ev.cpp:
     complete
     .text start:0x0211f000 end:0x0211f098
 
-src/_ZN11ChiefChillyD0Ev.c:
+src/_ZN11ChiefChillyD0Ev.cpp:
     complete
     .text start:0x0211f098 end:0x0211f144
 
@@ -23,7 +23,7 @@ src/func_ov073_0211f494.c:
     complete
     .text start:0x0211f494 end:0x0211f61c
 
-src/func_ov073_0211f61c.c:
+src/func_ov073_0211f61c.cpp:
     complete
     .text start:0x0211f61c end:0x0211fa74
 
@@ -167,7 +167,7 @@ src/_ZN11ChiefChilly16CleanupResourcesEv.cpp:
     complete
     .text start:0x021217e0 end:0x0212186c
 
-src/_ZN11ChiefChilly16OnPendingDestroyEv.c:
+src/_ZN11ChiefChilly16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212186c end:0x02121870
 
@@ -183,17 +183,20 @@ src/_ZN11ChiefChilly13InitResourcesEv.cpp:
     complete
     .text start:0x02121ccc end:0x02121ec0
 
-src/func_ov073_02121ec0.c:
+src/_ZN11ChiefChilly16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02121ec0 end:0x02121ec8
 
-src/ChiefChilly_Spawn.cpp:
+src/d_a_king_donketu.cpp:
+    complete
     .text start:0x02121ec8 end:0x02121f90
 
-src/_ZN8CccArenaD1Ev.c:
+src/_ZN8CccArenaD1Ev.cpp:
+    complete
     .text start:0x02121f90 end:0x02121fd4
 
-src/_ZN8CccArenaD0Ev.c:
+src/_ZN8CccArenaD0Ev.cpp:
+    complete
     .text start:0x02121fd4 end:0x0212202c
 
 src/func_ov073_0212202c.c:
@@ -232,7 +235,7 @@ src/func_ov073_021223a4.cpp:
     complete
     .text start:0x021223a4 end:0x021223f4
 
-src/func_ov073_021223f4.cpp:
+src/_ZN8CccArena4KillEv.cpp:
     complete
     .text start:0x021223f4 end:0x02122464
 
@@ -260,20 +263,22 @@ src/func_ov073_021227d0.c:
     complete
     .text start:0x021227d0 end:0x021227e4
 
-src/CccSmallIce_Spawn.c:
+src/d_a_obj_ewb_ice_ewb_ice_c.c:
     complete
     .text start:0x021227e4 end:0x02122814
 
-src/CccBigIce_Spawn.c:
+src/d_a_obj_ewb_ice_ewb_ice_b.c:
     complete
     .text start:0x02122814 end:0x02122844
 
-src/CccArena_Spawn.c:
+src/d_a_obj_ewb_ice_ewb_ice_a.c:
     complete
     .text start:0x02122844 end:0x02122874
 
 src/__sinit_ov073_02122874.c:
+    complete
     .init start:0x02122874 end:0x02122d48
 
 src/__sinit_ov073_02122d48.c:
+    complete
     .init start:0x02122d48 end:0x02122f34

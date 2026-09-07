@@ -1,4 +1,4 @@
 void func_020355e8(char *self)
 {
-    *(unsigned int *)(((long long)(int)(self + 0x10))) &= ~0x400;
+    *(unsigned int *)(self + 0x10) &= ~0x400;
 }

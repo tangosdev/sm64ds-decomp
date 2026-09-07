@@ -1,5 +1,5 @@
 #include "types.h"
-#define LP(p) ((long long)(int)(p))
+#define LP(p) (p)
 
 extern void Vec3_RotateYAndTranslate(int *out, int *in, short angle, int *src);
 extern int func_020091f8(void *a, int b, int c, int d);

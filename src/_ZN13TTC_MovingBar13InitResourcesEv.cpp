@@ -4,73 +4,68 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "TTC_MovingBar.h"
+#include "dBgCh_Gnd.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
 }
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern "C" {
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int fix, short s, void *clps);
+}
 extern "C" {
 extern void func_020393d4(int *p, int v);
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
-extern void _ZN13RaycastGroundD1Ev(void *self);
 }
-extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
-
-struct Vec3 { int x, y, z; };
 
 int TTC_MovingBar::InitResources()
 {
-    struct Vec3 pos;
-    char raycast[0x50];
+    Vector3 pos;
     int i;
 
-    if (mActorID != 0x72) {
-        if (mActorID == 0x73)
-            unk_31e = 1;
+    if (actorID != 0x72) {
+        if (actorID == 0x73)
+            mVariant = 1;
     } else {
-        unk_31e = 0;
+        mVariant = 0;
     }
 
-    i = unk_31e;
+    i = mVariant;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(
-        ((char *)this) + 0xd4,
+        &mModel,
         _ZN5Model8LoadFileER13SharedFilePtr(*(void **)(data_ov065_0211d35c + i * 0xc)),
         1, -1);
 
     _ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel);
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
-    i = unk_31e;
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char *)this) + 0x124,
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)(data_ov065_0211d360 + i * 0xc)),
-        ((char *)this) + 0x2ec,
+    i = mVariant;
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        &mMeshCollider,
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void **)(data_ov065_0211d360 + i * 0xc)),
+        &mClsnMat,
         0x199,
         mAngleY,
         *(void **)(data_ov065_0211d364 + i * 0xc));
 
-    func_020393d4((int *)((char *)&mMeshCollider), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
     pos.y = pos.y - 0xa000;
 
-    _ZN13RaycastGroundC1Ev(raycast);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(raycast, &pos, (void *)0);
-    unk_320 = pos.y;
-    if (_ZN13RaycastGround10DetectClsnEv(raycast))
-        unk_320 = *(int *)(raycast + 0x44);
-    _ZN13RaycastGroundD1Ev(raycast);
+    dBgCh_Gnd ground;
+    ground.SetObjAndPos(pos, 0);
+    mGroundY = pos.y;
+    if (ground.DetectClsn())
+        mGroundY = ground.clsnY;
 
     return 1;
 }

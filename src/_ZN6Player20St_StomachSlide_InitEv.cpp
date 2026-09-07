@@ -17,7 +17,7 @@ int Player::St_StomachSlide_Init()
     func_0200d544(data_0209f318, mPlayerNo);
   }
   mStateWork=0;
-  unk_6e6=0;
+  mStatePhase=0;
   mSlideStoppedTimer=0;
   mStateArg=mSlideType;
   mIsSlidingOnGround=0;

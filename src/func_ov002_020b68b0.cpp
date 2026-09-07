@@ -1,10 +1,10 @@
 //cpp
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 int func_ov002_020b68b0(void* c, void* r4) {
-    if (((MeshColliderBase *)((char*)c+0x124))->IsEnabled())
-        ((MeshColliderBase *)((char*)c+0x124))->Disable();
+    if (((dBgW *)((char*)c+0x124))->IsEnabled())
+        ((dBgW *)((char*)c+0x124))->Disable();
     ((SharedFilePtr *)(*(void**)r4))->Release();
     ((SharedFilePtr *)(*(void**)((char*)r4+4)))->Release();
     return 1;

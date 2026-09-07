@@ -39,7 +39,7 @@ int func_ov081_021249f4(char *c)
         func_ov081_02125488(c, data_ov081_02128e84);
     }
     {
-        short *ang = (short *)(((long long)(int)(c + 0x94)));
+        short *ang = (short *)(c + 0x94);
         *ang = (short)(*ang + 0x2000);
         *(short *)(c + 0x8e) = *(short *)(c + 0x94);
     }

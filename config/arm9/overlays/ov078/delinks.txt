@@ -3,11 +3,11 @@
     .ctor       start:0x02126cd4 end:0x02126cd8 kind:rodata align:4
     .data       start:0x02126ce0 end:0x02126ee0 kind:data align:32
     .bss        start:0x02126ee0 end:0x02127140 kind:bss align:32
-src/_ZN10KingBobOmbD1Ev.c:
+src/_ZN10KingBobOmbD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123798
 
-src/_ZN10KingBobOmbD0Ev.c:
+src/_ZN10KingBobOmbD0Ev.cpp:
     complete
     .text start:0x02123798 end:0x02123804
 
@@ -32,6 +32,7 @@ src/func_ov078_02123aa0.c:
     .text start:0x02123aa0 end:0x02123bc4
 
 src/func_ov078_02123bc4.cpp:
+    complete
     .text start:0x02123bc4 end:0x02123c20
 
 src/func_ov078_02123c20.cpp:
@@ -67,6 +68,7 @@ src/func_ov078_02124060.cpp:
     .text start:0x02124060 end:0x021240a0
 
 src/func_ov078_021240a0.c:
+    complete
     .text start:0x021240a0 end:0x021243c0
 
 src/func_ov078_021243c0.cpp:
@@ -106,6 +108,7 @@ src/func_ov078_02124c94.c:
     .text start:0x02124c94 end:0x02124cf4
 
 src/func_ov078_02124cf4.cpp:
+    complete
     .text start:0x02124cf4 end:0x02124e9c
 
 src/func_ov078_02124e9c.c:
@@ -180,11 +183,11 @@ src/func_ov078_02125f8c.cpp:
     complete
     .text start:0x02125f8c end:0x02125ff4
 
-src/_ZN10KingBobOmb16CleanupResourcesEv.c:
+src/_ZN10KingBobOmb16CleanupResourcesEv.cpp:
     complete
     .text start:0x02125ff4 end:0x021260a8
 
-src/_ZN10KingBobOmb16OnPendingDestroyEv.c:
+src/_ZN10KingBobOmb16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021260a8 end:0x021260ac
 
@@ -200,13 +203,14 @@ src/_ZN10KingBobOmb13InitResourcesEv.cpp:
     complete
     .text start:0x02126368 end:0x021265f4
 
-src/func_ov078_021265f4.c:
+src/_ZN10KingBobOmb16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021265f4 end:0x021265fc
 
-src/KingBobOmb_Spawn.c:
+src/d_a_bombking.c:
     complete
     .text start:0x021265fc end:0x02126660
 
 src/__sinit_ov078_02126660.c:
+    complete
     .init start:0x02126660 end:0x02126cd4

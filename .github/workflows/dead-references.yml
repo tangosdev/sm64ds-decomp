@@ -1,0 +1,79 @@
+# Does the tree's PROSE still name files that exist?
+#
+# Renames here are heavy and mechanical -- Actor -> dActor_c, MeshCollider -> dBgW_Kc,
+# ClsnResult -> dBgPi, Scene -> dScene_c -- and every one of them moves a FILE while
+# leaving untouched every docstring, comment and note that cites it. Nothing in the
+# build reads a docstring, so `Enemy.h` stayed in `check_header_offsets.py`'s usage
+# line for months after that header stopped existing, and a whole family of
+# `plan-gen-header.md` citations outlived that note's move into the archive. Three such
+# were found by hand in two days, and each had already been repeated as fact by someone
+# who trusted the docstring. This job is the reason that stops being a hand search.
+#
+# RATCHET, NOT A SWEEP. `config/dead-reference-baseline.json` banks the references that
+# are dead today and accepted -- synthetic example paths in test fixtures, paths owned
+# by other repositories, paths that live only on an unlanded branch, and prose that
+# deliberately names something historical. The job fails only on a reference that is
+# dead AND not banked, which is exactly the shape a fresh rename makes.
+#
+# IT CANNOT PASS BY DOING NOTHING. The tool counts the prose files and path references
+# it actually inspected and exits non-zero with SCAN TOO SMALL below a floor, rather
+# than announcing a clean tree. That guard exists because this repo has already shipped
+# a gate that reported a pass after a reformat took its match count to zero.
+#
+# THE FILTER COVERS EVERY WORKFLOW FILE, not just this one. The tool reads workflow
+# comments and `run:` lines as prose, but the trigger below used to name only
+# `dead-references.yml`, so a PR touching a SIBLING workflow never ran this gate. #2027
+# merged as `e9de9103a` naming a `test_X.py` under tools/ in a `tool-tests.yml` comment
+# -- a path that has never existed -- and the main-push run list for that commit reads
+# `src_tu references`, `tool tests`, `pages`, with no `dead references` among them. The
+# dead reference then sat on main until it turned #2030's `references` check red for a
+# defect #2030 did not introduce; `b309f5d3f` (#2031) removed the string. A gate that
+# reads a file must be triggered by that file.
+#
+# AND A GATE THAT RESOLVES A PATH MUST BE TRIGGERED BY THAT PATH. There is no `paths:`
+# filter here any more, and that is the same lesson one step further out. The filter
+# used to list `**.py`, `**.md`, `include/**`, `src/**`, `src_tu/**`, the baseline JSON
+# and `.github/workflows/**` -- the files the tool READS. But the tool also RESOLVES
+# what that prose names, against the whole tree, so a PR that only deletes or renames a
+# resolution TARGET breaks references without touching anything in the filter. Measured
+# when #2037's relative-link check went in: 99 of the tree's 183 markdown links point
+# outside the old filter -- 89 at a per-overlay `symbols.txt`, the rest under `symbols/`
+# and `nearmiss/` or at top-level `attribution.json` and `LICENSE`. Renaming an overlay
+# symbols file is routine here and would have broken 89 links silently. Enumerating every
+# top-level directory would reproduce the whole tree in a list that goes stale on the
+# next new directory, so the filter is gone instead: this job is static analysis over
+# the working tree with no compiler and no ROM, and running it on every change costs
+# less than one missed rename.
+name: dead references
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dead-references-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  references:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # The tool resolves against the working tree, so no history is needed -- but a
+        # shallow checkout must still contain every file, which actions/checkout does.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prose references that name a path which is not in the tree
+        run: python tools/check_dead_references.py
+      - name: The gate's own tests
+        # Positive controls first: a docstring naming a missing header MUST be reported,
+        # and an empty scan MUST exit non-zero. A reference-integrity gate that quietly
+        # finds nothing is worse than no gate, so those two are what these tests defend.
+        # stdlib unittest -- this runner installs nothing.
+        run: python -m unittest tools.test_check_dead_references -v

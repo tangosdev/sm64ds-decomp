@@ -5,7 +5,7 @@
 
 extern "C" {
 int _Z14ApproachLinearRsss(short&, short, short);
-char* _ZN5Actor10FindWithIDEj(unsigned int id);
+char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void Vec3_Sub(Vector3* out, Vector3* a, Vector3* b);
 int Vec3_HorzLen(Vector3* v);
 int RandomIntInternal(int* seed);
@@ -18,7 +18,7 @@ void func_ov100_021463b0(char* c)
     if (!_Z14ApproachLinearRsss(*(short*)(c + 0x94), *(short*)(o + 0x56), *(short*)(o + 0x54)))
         return;
     {
-        char* a = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x13c));
+        char* a = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x13c));
         Vec3_Sub(&v, (Vector3*)(c + 0x5c), (Vector3*)(a + 0x5c));
     }
     if (Vec3_HorzLen(&v) >= 0xfa000) return;

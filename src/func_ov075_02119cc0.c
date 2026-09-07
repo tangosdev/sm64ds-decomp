@@ -2,9 +2,9 @@ extern void func_020551f0(void *s, int v);
 extern int func_ov075_0211a194(char *self, void *src);
 
 void func_ov075_02119cc0(char *self) {
-    *(unsigned char *)(((long long)(int)(self + 0x284))) += 1;
+    *(unsigned char *)(self + 0x284) += 1;
     if (*(unsigned char *)(self + 0x284) & 1) return;
-    *(unsigned char *)(((long long)(int)(self + 0x283))) += 1;
+    *(unsigned char *)(self + 0x283) += 1;
     func_020551f0((void *)0x4001050, *(unsigned char *)(self + 0x283));
     if (*(unsigned char *)(self + 0x283) < 0x10) return;
     *(unsigned char *)(self + 0x285) = 1;

@@ -3,8 +3,8 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void* m, void* actor);
-extern void* _ZN5Actor13ClosestPlayerEv(void* c);
+extern void _ZN4dBgW6EnableEP8dActor_c(void* m, void* actor);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern int Vec3_Dist(void* a, void* b);
 
 
@@ -17,14 +17,14 @@ int func_ov079_021243e0(char* c, int r4)
     int y;
 
     if (*(unsigned char*)(c + 0x404) == 0) {
-        if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x418))
-            _ZN16MeshColliderBase7DisableEv(c + 0x418);
+        if (_ZN4dBgW9IsEnabledEv(c + 0x418))
+            _ZN4dBgW7DisableEv(c + 0x418);
         return 1;
     }
 
     if (*(unsigned char*)(c + 0x414) != 0 && *(int*)(c + 0x3b0) != 0) {
-        if (!_ZN16MeshColliderBase9IsEnabledEv(c + 0x418))
-            _ZN16MeshColliderBase6EnableEP5Actor(c + 0x418, c);
+        if (!_ZN4dBgW9IsEnabledEv(c + 0x418))
+            _ZN4dBgW6EnableEP8dActor_c(c + 0x418, c);
         return 0;
     }
 
@@ -38,15 +38,15 @@ int func_ov079_021243e0(char* c, int r4)
         r4 = z2 << 3;
     }
 
-    player = (char*)_ZN5Actor13ClosestPlayerEv(c);
+    player = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     dist = Vec3_Dist(&v, player + 0x5c);
     if (dist > r4) {
-        if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x418))
-            _ZN16MeshColliderBase7DisableEv(c + 0x418);
+        if (_ZN4dBgW9IsEnabledEv(c + 0x418))
+            _ZN4dBgW7DisableEv(c + 0x418);
         return 1;
     }
 
-    if (!_ZN16MeshColliderBase9IsEnabledEv(c + 0x418))
-        _ZN16MeshColliderBase6EnableEP5Actor(c + 0x418, c);
+    if (!_ZN4dBgW9IsEnabledEv(c + 0x418))
+        _ZN4dBgW6EnableEP8dActor_c(c + 0x418, c);
     return 0;
 }

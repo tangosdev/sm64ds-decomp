@@ -1,192 +1,196 @@
-// NONMATCHING: register naming only, in two blocks (7 of 235 words differ). No
-// instruction is added, removed or reordered anywhere in the body -- the ROM's
-// instruction stream and this one are the same 235 instructions in the same order,
-// and seven of them name a different register. Size is exact (0x3ac), control flow
-// is exact, the 0x54 frame and every local's stack slot are exact, and ALL FIFTEEN
-// external call sites land at the ROM's own byte offset with the ROM's own
-// destination: func_0203b958 at +0x01c, +0x1f0, +0x200, +0x210, +0x25c, +0x27c and
-// +0x29c; func_0203d434 at +0x0ac; Vec2_Len (0x0203d614) at +0x0ec and +0x13c;
-// _ZN4cstd4fdivEii (0x02053258) at +0x148; func_0203d630 at +0x154; func_0203d704
-// at +0x164; Vec2_Sub (0x0203d6d0) at +0x174; func_ov006_020d01e0 at +0x344. Plus
-// the four pool words data_ov006_02140990 / _02140cb4 / _02140cb6 / _02140cae, whose
-// extern declarations are ordered here to match the ROM's own pool order -- the byte
-// gate wildcards pool words and cannot see that, so it is taken on the linkcheck
-// argument, not on a gate figure. Logic verified instruction by instruction against
-// the ROM at 0x020d0c38. Run mg12 lane TRM seated it; run mg14 lane GAPS took it
-// from 17 divergences to 7.
-//
-// THE TWO REMAINING DIVERGENCES, both register naming, both measured:
-//
-//   1. MIDPOINT BLOCK, 5 words at +0x8c, +0x98, +0x9c, +0xa4 and +0xa8. The ROM
-//      keeps my in r2 and shifts it in place (asr r2,r2,#1 then lsl r2,r2,#0xc),
-//      and puts mid[0] in r1; this build puts my in r3 and mid[0] in r2, so the two
-//      stores at sp+0x14 and sp+0x18 name the opposite registers. Same two values,
-//      same two stack slots, same order.
-//   2. FIRST RECORD STORE, 2 words at +0x348 and +0x350. The ROM loads
-//      data_ov006_02140cb4 into r1; this build loads it into r3. The other two
-//      record stores name the ROM's own registers (r0, then r1 again).
-//
-// The previous banner attributed the +0x8c block to the tail-store block. That was
-// wrong and is corrected here: the two sets are independent. Closing the tail (below)
-// left the +0x8c block exactly where it was.
-//
-// WHAT CLOSED THE OTHER TEN -- two levers, measured against clean compiles, not
-// asserted. MEASURED ALONE each lever closes FOUR (17 -> 13 either way); TOGETHER
-// they close TEN (17 -> 7). The extra two are an interaction: neither spelling
-// reaches the ROM's schedule until both hold. (An earlier revision credited them
-// six-and-four; the lane's own per-lever diffs read 13 both, and the re-ratify
-// measured the same.)
-//
-//   * Spelling the success return as the array expression rather than `return rec;`.
-//     It gives the ROM's r4/r5 colouring at +0x310, +0x32c and +0x33c -- the
-//     compiler CSEs the address straight back onto the rec the call already used,
-//     so the emitted code still returns the saved pointer.
-//   * Routing the three record-field stores through ONE named `short *p` address
-//     temporary with a `*(volatile short *)p =` store. It is what
-//     makes mwccarm interleave pool load / constant / store the way the ROM does
-//     instead of batching the three pool loads ahead of the three stores. The
-//     volatile is a codegen spelling and changes nothing about the stores: same three
-//     destinations, same index register (i * 0x32c), same values 1, 0 and i.
-//
-// SWEPT AND REJECTED for the remaining seven, every one re-run from a clean compile:
-// volatile on the extern declarations (16); the volatile cast without the named
-// temporary (11); three distinct pointer temporaries (11); two alternating temporaries
-// (11); all eight direct/through-pointer mixes of the three stores (11, except
-// all-three-through-one at 7); an explicit index temporary (17); pointer arithmetic
-// instead of &arr[] (17); dropping the (short) cast (13); the stores moved before the
-// call (26); all store-order permutations (13 and 14); nine spellings of the midpoint
-// block including both compound-assignment forms and inlining the temporaries away
-// (7 at best, 19 at worst); five declaration positions for the address temporary (7
-// flat). The permuter was run for five minutes at -j4 from this source and never beat
-// the base score. Statement order and store spelling do not move either block: this
-// reads as a rank-pinned colouring floor, not an untried lever.
-//
-// Counts as decompiled, not matched. No delinks block, by the NONMATCHING seat
-// convention (src/MgTrampolineTerror_Spawn.c precedent).
-//
-// WHAT IT DOES: this is the stylus STROKE-CONNECTED TEST that dScMgTrampoline_c
-// and dScMgTrampoline2_c ask on every stylus release (vtable slot 23, via
-// src/func_ov006_0212101c.c and src/func_ov006_02122f24.c). Given the stroke's
-// two endpoints it rejects strokes narrower than 8 in x, normalises the half
-// delta and rejects it if |x| < 0x579 (too steep), stretches a short stroke out
-// to a fixed 0x18000 length about its midpoint, then walks the three trampoline
-// records looking for a free one: a candidate is rejected if the stroke crosses
-// any of the four LIVE records' segments (the two straddle tests are the standard
-// signed-area segment intersection). On success it installs the stroke into the
-// free record via func_ov006_020d01e0, marks it live, and RETURNS THE RECORD
-// POINTER -- which is why slot 23's true arm (the hit sound) fires. Returning 0
-// is the miss arm, which is all the port could do while this body was trapped.
-extern void func_0203b958(short *o, short *a, short *b);
-extern int func_0203d434(int *v);
-extern int Vec2_Len(int *v);
-extern int _ZN4cstd4fdivEii(int a, int b);
-extern void func_0203d630(int *p, int m);
-extern void func_0203d704(int *o, int *a, int *b);
-extern void func_ov006_020d01e0(short *g, short *a, short *b);
-extern void Vec2_Sub(int *o, int *a, int *b);
+/*
+ * ov006 minigame: try to place a new line segment between two 16-bit
+ * points (sl, sb).  Rejects segments shorter than 8 in x, with no
+ * direction, or under the minimum half-length; when the full vector is
+ * short of 0x30000 it re-scales the half vector (y stretched by 0xc00)
+ * to a fixed length and rewrites both endpoints around the midpoint.
+ * Then finds the first free slot (state byte +0x328 == 0) among the
+ * three, rejecting it if the segment crosses any active (state 1) slot's
+ * own segment (+0x50/+0x54), and initialises the slot through
+ * func_ov006_020d01e0, returning its address (0 when none is free).
+ *
+ * Shape notes: the midpoint pair needs named x<<12 / y<<12 temps so the
+ * y shift lands in place; the re-scale block reads half[1] inline at
+ * both the multiply and the two-word copy into tmp (a named copy of it
+ * takes r4 ahead of the umull low word).
+ */
+typedef short s16;
 
-extern unsigned char data_ov006_02140990[];
-extern unsigned char data_ov006_02140cb4[];
-extern unsigned char data_ov006_02140cb6[];
-extern unsigned char data_ov006_02140cae[];
+extern void func_0203b958(s16* o, s16* a, s16* b);
+extern int func_0203d434(int* in);
+extern int Vec2_Len(int* v);
+extern int _ZN4cstd4fdivEii(int, int);
+extern void func_0203d630(int* p, int m);
+extern void func_0203d704(int* o, int* a, int* b);
+extern void Vec2_Sub(int* o, int* a, int* b);
+extern void func_ov006_020d01e0(s16* slot, s16* a, s16* b);
 
-short *func_ov006_020d0c38(short *a, short *b)
-{
-    short d[2];
-    int v1[2];
-    int v2[2];
+extern char data_ov006_02140990[];
+extern s16 data_ov006_02140cb4[];
+extern s16 data_ov006_02140cb6[];
+extern s16 data_ov006_02140cae[];
+
+int func_ov006_020d0c38(s16* sl, s16* sb) {
+    s16 d[2];
+    int fx[2];
+    int half[2];
     int mid[2];
     int tmp[2];
-    int o1[2];
-    int o2[2];
-    short s0[2];
-    short s1[2];
-    short s2[2];
-    short t0[2];
-    short t1[2];
-    short t2[2];
-    short pa[2];
-    short pb[2];
-    int i, j;
-    int mx, my;
-    short *rec;
-    unsigned char *pi;
-    unsigned char *pj;
-    short *p;
+    int p1[2];
+    int p2[2];
+    s16 v0[2];
+    s16 v1[2];
+    s16 v2[2];
+    s16 v3[2];
+    s16 v4[2];
+    s16 v5[2];
+    s16 a[2];
+    s16 b[2];
+    s16 s0;
+    s16 s1;
+    int abs0;
+    int i;
+    int j;
+    char* base;
+    char* p;
+    int cross1;
+    int cross2;
+    long long m;
+    int scaled;
+    int len;
+    int off;
+    s16* slot;
 
-    func_0203b958(d, a, b);
-    if ((d[0] < 0 ? (short)-d[0] : d[0]) < 8)
+    func_0203b958(d, sl, sb);
+
+    s0 = d[0];
+    if (s0 < 0)
+        abs0 = (s16)(-s0);
+    else
+        abs0 = s0;
+    if (abs0 < 8)
         return 0;
 
-    v1[0] = d[0] << 12;
-    v1[1] = d[1] << 12;
-    v2[0] = (d[0] >> 1) << 12;
-    v2[1] = (d[1] >> 1) << 12;
-    mx = (a[0] + b[0]) >> 1;
-    my = (a[1] + b[1]) >> 1;
-    mid[0] = mx << 12;
-    mid[1] = my << 12;
+    s1 = d[1];
+    fx[0] = (int)s0 << 12;
+    fx[1] = (int)s1 << 12;
+    half[0] = ((int)s0 >> 1) << 12;
+    half[1] = ((int)s1 >> 1) << 12;
 
-    if (func_0203d434(v2) == 0)
-        return 0;
-    if ((v2[0] < 0 ? -v2[0] : v2[0]) < 0x579)
-        return 0;
-
-    if (Vec2_Len(v1) < 0x30000) {
-        tmp[0] = v2[0];
-        tmp[1] = v2[1];
-        tmp[1] = (int)(((long long)v2[1] * 0xc00 + 0x800) >> 12);
-        func_0203d630(v2, _ZN4cstd4fdivEii(0x18000, Vec2_Len(tmp)));
-        func_0203d704(o1, mid, v2);
-        Vec2_Sub(o2, mid, v2);
-        a[0] = (short)(o1[0] >> 12);
-        a[1] = (short)(o1[1] >> 12);
-        b[0] = (short)(o2[0] >> 12);
-        b[1] = (short)(o2[1] >> 12);
+    {
+        int ay = (s16)sl[1];
+        int by = (s16)sb[1];
+        int ax = (s16)sl[0];
+        int bx = (s16)sb[0];
+        int y = (ay + by) >> 1;
+        int x = (ax + bx) >> 1;
+        int x12 = x << 12;
+        int y12 = y << 12;
+        mid[0] = x12;
+        mid[1] = y12;
     }
 
-    pi = data_ov006_02140990;
-    for (i = 0; i < 3; i++, pi += 0x32c) {
-        if (pi[0x328] != 0)
-            continue;
-        pj = data_ov006_02140990;
-        for (j = 0; j < 4; j++, pj += 0x32c) {
-            if (i == j)
-                continue;
-            if (pj[0x328] != 1)
-                continue;
-            func_0203b958(s0, b, a);
-            func_0203b958(s1, (short *)(pj + 0x50), a);
-            func_0203b958(s2, (short *)(pj + 0x54), a);
-            if ((s0[0] * s1[1] - s0[1] * s1[0])
-                * (s0[0] * s2[1] - s0[1] * s2[0]) > 0)
-                continue;
-            func_0203b958(t0, (short *)(pj + 0x54), (short *)(pj + 0x50));
-            s0[0] = t0[0];
-            s0[1] = t0[1];
-            func_0203b958(t1, a, (short *)(pj + 0x50));
-            s1[0] = t1[0];
-            s1[1] = t1[1];
-            func_0203b958(t2, b, (short *)(pj + 0x50));
-            s2[0] = t2[0];
-            s2[1] = t2[1];
-            if ((s0[0] * s1[1] - s0[1] * s1[0])
-                * (s0[0] * s2[1] - s0[1] * s2[0]) <= 0)
-                return 0;
+    if (func_0203d434(half) == 0)
+        return 0;
+
+    {
+        int ah = half[0];
+        if (ah < 0)
+            ah = -ah;
+        if (ah < 1401)
+            return 0;
+    }
+
+    if (Vec2_Len(fx) < 0x30000) {
+        m = (long long)half[1] * 0xc00 + 0x800;
+        scaled = (int)(m >> 12);
+        tmp[0] = half[0];
+        tmp[1] = half[1];
+        tmp[1] = scaled;
+        len = Vec2_Len(tmp);
+        func_0203d630(half, _ZN4cstd4fdivEii(0x18000, len));
+
+        func_0203d704(p1, mid, half);
+        Vec2_Sub(p2, mid, half);
+
+        sl[0] = (s16)(p1[0] >> 12);
+        sl[1] = (s16)(p1[1] >> 12);
+        sb[0] = (s16)(p2[0] >> 12);
+        sb[1] = (s16)(p2[1] >> 12);
+    }
+
+    base = data_ov006_02140990;
+    i = 0;
+    do {
+        if ((unsigned char)base[0x328] == 0) {
+            p = data_ov006_02140990;
+            j = 0;
+            do {
+                if (i != j) {
+                    if ((unsigned char)p[0x328] == 1) {
+                        func_0203b958(v0, sb, sl);
+                        func_0203b958(v1, (s16*)(p + 0x50), sl);
+                        func_0203b958(v2, (s16*)(p + 0x54), sl);
+
+                        {
+                            s16 ax = v0[0];
+                            s16 ay = v0[1];
+                            s16 bx = v1[0];
+                            s16 by = v1[1];
+                            s16 cy = v2[1];
+                            cross1 = (int)ax * (int)by - (int)ay * (int)bx;
+                            {
+                                s16 cx = v2[0];
+                                cross2 = (int)ax * (int)cy - (int)ay * (int)cx;
+                            }
+                        }
+                        if (cross1 * cross2 <= 0) {
+                            func_0203b958(v3, (s16*)(p + 0x54), (s16*)(p + 0x50));
+                            v0[0] = v3[0];
+                            v0[1] = v3[1];
+                            func_0203b958(v4, sl, (s16*)(p + 0x50));
+                            v1[0] = v4[0];
+                            v1[1] = v4[1];
+                            func_0203b958(v5, sb, (s16*)(p + 0x50));
+                            v2[0] = v5[0];
+                            v2[1] = v5[1];
+
+                            {
+                                s16 ax = v0[0];
+                                s16 ay = v0[1];
+                                s16 bx = v1[0];
+                                s16 by = v1[1];
+                                s16 cy = v2[1];
+                                cross1 = (int)ax * (int)by - (int)ay * (int)bx;
+                                {
+                                    s16 cx = v2[0];
+                                    cross2 = (int)ax * (int)cy - (int)ay * (int)cx;
+                                }
+                            }
+                            if (cross1 * cross2 <= 0)
+                                return 0;
+                        }
+                    }
+                }
+                j++;
+                p += 0x32c;
+            } while (j < 4);
+
+            a[0] = sl[0];
+            a[1] = sl[1];
+            b[0] = sb[0];
+            b[1] = sb[1];
+            off = i * 0x32c;
+            slot = (s16*)((int)data_ov006_02140990 + off);
+            func_ov006_020d01e0(slot, a, b);
+            *(s16*)((int)data_ov006_02140cb4 + off) = 1;
+            *(s16*)((int)data_ov006_02140cb6 + off) = 0;
+            *(s16*)((int)data_ov006_02140cae + off) = (s16)i;
+            return (int)slot;
         }
-        pa[0] = a[0];
-        pa[1] = a[1];
-        pb[0] = b[0];
-        pb[1] = b[1];
-        rec = (short *)&data_ov006_02140990[i * 0x32c];
-        func_ov006_020d01e0(rec, pa, pb);
-        p = (short *)&data_ov006_02140cb4[i * 0x32c];
-        *(volatile short *)p = 1;
-        p = (short *)&data_ov006_02140cb6[i * 0x32c];
-        *(volatile short *)p = 0;
-        p = (short *)&data_ov006_02140cae[i * 0x32c];
-        *(volatile short *)p = (short)i;
-        return (short *)&data_ov006_02140990[i * 0x32c];
-    }
+        i++;
+        base += 0x32c;
+    } while (i < 3);
+
     return 0;
 }

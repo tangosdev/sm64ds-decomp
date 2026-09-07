@@ -1,5 +1,5 @@
 extern void func_ov007_020c8440(void* p);
-extern void _ZN6Player17St_EndingFly_MainEv(void* p);
+extern void func_ov007_020c3d1c(void* p);
 extern void func_ov007_020c8098(void* p);
 
 struct S {
@@ -16,7 +16,7 @@ void func_ov007_020c78dc(struct S* c)
         for (i = 0; i < c->n; i++)
             func_ov007_020c8440(c->a0[i]);
     }
-    _ZN6Player17St_EndingFly_MainEv(c->a0);
+    func_ov007_020c3d1c(c->a0);
     if (c->n > 1) {
         int m;
         if (c->n <= 1)
@@ -25,7 +25,7 @@ void func_ov007_020c78dc(struct S* c)
             m = c->n - ((c->flags & 2) ? 0 : 1);
         for (i = 0; i < m; i++)
             func_ov007_020c8098(c->a8[i]);
-        _ZN6Player17St_EndingFly_MainEv(c->a8);
+        func_ov007_020c3d1c(c->a8);
     }
-    _ZN6Player17St_EndingFly_MainEv(c);
+    func_ov007_020c3d1c(c);
 }

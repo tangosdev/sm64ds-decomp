@@ -14,25 +14,15 @@
  * index, and the digit or character index is ADDED to it rather than stored - that is
  * the `(val & ~0x3ff) | ((n + (val << 22 >> 22)) & 0x3ff)` in each block.
  */
-// NONMATCHING: register allocation and frame layout (div=40 at the canonical mwccarm
-// 2004/b56). Counts as decompiled, not matched.
-//
-// Every one of the 40 divergent words is routing, verified word by word rather than by
-// eye: 30 differ only in register fields and 10 only in an sp displacement, and none
-// changes an opcode, an immediate, an addressing mode or a condition. The implied
-// correspondence is a single pair swap in each file - registers sb <-> r7, and stack
-// slots 0x20 <-> 0x24 - plus a local r0/r1 exchange inside the divide-by-100 block. So
-// the same operations run on the same values; only where they are held differs.
-//
-// That pair swap is the floor. The hundreds digit is memory-homed BELOW the loop counter
-// in the ROM's frame, and mwccarm sorts a memory-homed aggregate above every spilled
-// scalar, so the two slots cannot be exchanged from C. Mechanism and the levers that are
-// measured-closed: notes/mwccarm-codegen.md 6bl.
-//
-// The shape carries matching crutches, which are deliberate and not natural source: the
-// one-element array `hv` memory-homes the hundreds digit, the block of `zA`..`zF`,
-// `minus1`, `off14`, `scale`, `yIcon` and `yNum` reproduces the ROM's hoisted constant
-// block (6bh), and `inline_fn` forces the index call to inline.
+// NONMATCHING: 27/229 at exact size 0x394 (was 40). Every divergence is routing --
+// register fields and sp displacements only; no opcode, immediate, addressing mode or
+// condition differs, so the same operations run on the same values and only where they
+// are held changes. Three levers took it from 40 to 27:
+//   (1) the row x is not a variable -- spell every x as xbase + K + i * pitch so the
+//       induction variable stays the ROM's;
+//   (2) the leading-zero pen advance is an if/else over a named pen, not a ternary;
+//   (3) the digit blocks keep the OAM attribute word anonymous.
+// Residue is a callee-saved pair swap (sb <-> r7) plus the stack slots that follow it.
 #include "types.h"
 extern u8 data_0209fc50;
 extern u8 data_ov075_0211c6e8[];
@@ -55,7 +45,8 @@ void func_ov075_0211621c(char *c)
 {
   int count = data_0209fc50;
   int stride;
-  int hv[1];
+  int tens;
+  int hundreds;
   int i = 0;
   int d = 4 - count;
   int xbase;
@@ -65,7 +56,6 @@ void func_ov075_0211621c(char *c)
   {
     if (count > 0)
     {
-      int xoff = i;
       int minus1 = -1;
       int zA;
       int yIcon;
@@ -77,46 +67,43 @@ void func_ov075_0211621c(char *c)
       int zF;
       int scale;
       int yNum;
-      zE = xoff;
-      zD = xoff;
-      zB = xoff;
+      zE = i;
+      zD = i;
+      zB = i;
       off14 = 0x14;
-      zF = xoff;
-      zA = xoff;
+      zF = i;
+      zA = i;
       yIcon = 0x98;
-      zC = xoff;
+      zC = i;
       scale = 0x1000;
       yNum = 0xb0;
       do
       {
         int *p;
         int pid = inline_fn(i);
-        int x = xbase + xoff;
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(zA, data_ov075_0211c7c0, x, yIcon, minus1, minus1, scale, scale, zA, minus1);
-        p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zC, data_ov075_0211c8b0, (xbase + 0x1c) + xoff, yIcon, minus1, minus1, scale, zC);
+        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(zA, data_ov075_0211c7c0, xbase + i * stride, yIcon, minus1, minus1, scale, scale, zA, minus1);
+        p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zC, data_ov075_0211c8b0, xbase + 0x1c + i * stride, yIcon, minus1, minus1, scale, zC);
         if (p != 0)
         {
           int *q = (int *) ((int) (p + 1));
           int val = *q;
           *q = (val & (~0x3ff)) | ((data_0209f310[pid] + (((u32) (val << 22)) >> 22)) & 0x3ff);
         }
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(zB, data_ov075_0211c870, x, yNum, minus1, minus1, scale, scale, zB, minus1);
+        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(zB, data_ov075_0211c870, xbase + i * stride, yNum, minus1, minus1, scale, scale, zB, minus1);
         {
           int n;
-          int tens;
           int dx = off14;
           n = (*((int *) (data_0209ee90 + 0x1d4))) + data_0209f358[pid];
-          hv[0] = n / 100;
-          n = n % 100;
-          tens = n / 10;
-          if (hv[0] != 0)
+          hundreds = n / 100;
+          tens = (n % 100) / 10;
+          if (hundreds != 0)
           {
-            p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zD, data_ov075_0211c8b0, (xbase + 0x14) + xoff, yNum, minus1, minus1, scale, zD);
+            p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zD, data_ov075_0211c8b0, xbase + 0x14 + i * stride, yNum, minus1, minus1, scale, zD);
             if (p != 0)
             {
               int *q = (int *) ((int) (p + 1));
               int val = *q;
-              *q = (val & (~0x3ff)) | ((hv[0] + (((u32) (val << 22)) >> 22)) & 0x3ff);
+              *q = (val & (~0x3ff)) | ((hundreds + (((u32) (val << 22)) >> 22)) & 0x3ff);
             }
             dx = dx + 8;
           }
@@ -124,9 +111,9 @@ void func_ov075_0211621c(char *c)
           {
             dx = dx + 4;
           }
-          if ((tens != 0) || (hv[0] != 0))
+          if ((tens != 0) || (hundreds != 0))
           {
-            p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zE, data_ov075_0211c8b0, (xbase + dx) + xoff, yNum, minus1, minus1, scale, zE);
+            p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zE, data_ov075_0211c8b0, xbase + dx + i * stride, yNum, minus1, minus1, scale, zE);
             if (p != 0)
             {
               int *q = (int *) ((int) (p + 1));
@@ -139,15 +126,14 @@ void func_ov075_0211621c(char *c)
           {
             dx = dx + 4;
           }
-          p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zF, data_ov075_0211c8b0, (xbase + dx) + xoff, yNum, minus1, minus1, scale, zF);
+          p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zF, data_ov075_0211c8b0, xbase + dx + i * stride, yNum, minus1, minus1, scale, zF);
           if (p != 0)
           {
             int *q = (int *) ((int) (p + 1));
             int val = *q;
-            *q = (val & (~0x3ff)) | (((n % 10) + (((u32) (val << 22)) >> 22)) & 0x3ff);
+            *q = (val & (~0x3ff)) | ((((n % 100) % 10) + (((u32) (val << 22)) >> 22)) & 0x3ff);
           }
         }
-        xoff += stride;
         i++;
       }
       while (i < count);

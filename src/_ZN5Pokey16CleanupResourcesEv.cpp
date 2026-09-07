@@ -11,7 +11,7 @@ extern int data_ov096_02137b28[];
 
 int Pokey::CleanupResources()
 {
-  int id = mActorID;
+  int id = actorID;
   int a = (id == 0xf0);
   if (a) {
     UnloadBlueCoinModel(((char *)this));

@@ -299,9 +299,9 @@ int func_02057410(char *dst, int n, const char *fmt, int *args)
                         cnt = zero;
                         if (v != 0) {
                             do {
-                                int digit = (int)(v % pf[1]);
+                                int digit = (int)((u64)v % (u64)pf[1]);
                                 int dch;
-                                v = v / pf[1];
+                                v = (u64)v / (u64)pf[1];
                                 if (digit < 0xa) dch = digit + 0x30;
                                 else dch = digit + pf[2];
                                 numbuf[cnt] = dch;

@@ -25,7 +25,7 @@ int Player::St_Jump_Main()
 
   if (*(u8*)((char*)&mIsAirborne) == 0) {
     if (*(u16*)((char*)&mStateTimer) != 0) {
-      u16* q = (u16*)(((long long)(int)((char*)&mStateFlags)));
+      u16* q = (u16*)((char*)&mStateFlags);
       *q |= 0x100;
     }
     _ZN6Player11ChangeStateERNS_5StateE(((void*)this), data_ov002_02110424);
@@ -53,7 +53,7 @@ int Player::St_Jump_Main()
       {
         u32 id = _ZNK6Player14GetBodyModelIDEjb(((void*)this), *(u32*)((char*)&param1) & 0xff, 0);
         void* anim = *(void**)((char*)((void*)this) + (id << 2) + 0xdc);
-        u32 w = *(u32*)((char*)(((long long)(int)((char*)anim + 0x50))) + 8);
+        u32 w = *(u32*)((char*)((long long)(int)((char*)anim + 0x50)) + 8);
         u16 t = (u16)(w >> 12);
         if (t == 4 || t == 0x18 || t == 0x2c) {
           _ZN5Sound9PlayBank0EjRK7Vector3(0xf, (char*)((void*)this) + 0x74);

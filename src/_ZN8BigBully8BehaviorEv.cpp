@@ -6,18 +6,18 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BigBully.h"
 extern "C" {
-extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, u16* p);
+extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, u16* p);
 extern int func_ov064_02116d1c(void* c);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* c, void* clsn, unsigned f);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* c, void* clsn, unsigned f);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 }
 
 int BigBully::Behavior()
 {
-    u8 s = unk_3fe;
+    u8 s = mNumBulliesKilled;
     if (s >= 4) {
         if (mSecretSoundCounter != 0) {
-            if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
+            if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
                 mSecretSoundCounter = 0;
         }
         return func_ov064_02116d1c(((char*)this));
@@ -26,16 +26,16 @@ int BigBully::Behavior()
         int t;
         int m;
         int* p;
-        if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
+        if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
             mSecretSoundCounter = 0;
-        t = unk_0a8 + unk_09c;
-        m = unk_0a0;
+        t = mVertSpeed + mVertAccel;
+        m = mTerminalVelocity;
         if (t >= m) m = t;
-        unk_0a8 = m;
+        mVertSpeed = m;
         p = (int*)(((int)((char*)this) + 0x60));
-        *p = *p + unk_0a8;
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x174, 0);
-        if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
+        *p = *p + mVertSpeed;
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), ((char*)this) + 0x174, 0);
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
             u8* q;
             func_0200fa8c(((char*)this), 0);
             q = (u8*)(((int)((char*)this) + 0x3fe));

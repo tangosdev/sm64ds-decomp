@@ -1,12 +1,13 @@
 //cpp
-#include "types.h"
 // @symbol _ZN8Particle10SysTracker10InitialiseEv
-/* recovered: named members + shared header, declarations from a shared header */
+/* declarations from a shared header */
+#include "types.h"
 #include "decl_Heap.h"
-#include "decl_Particle.h"
 #include "decl_common.h"
-/* recovered: named members + shared header */
+/* recovered: real class form -- the compiler spells the mangled name */
 #include "Particle__SysTracker.h"
+#include "Particle__Texture.h"
+
 extern "C" void DecompressLZ16(const void* src, void* dst);
 
 
@@ -17,7 +18,10 @@ extern void* data_020a0ea0;
 
 #define M(p) ((long long)(int)(p))
 
-extern "C" void _ZN8Particle10SysTracker10InitialiseEv(struct Particle__SysTracker *self) {
+namespace Particle {
+
+void SysTracker::Initialise()
+{
     signed char v = data_0209f2f8;
     unsigned int allocSize = 0x8c00;
     int countA = 0x28;
@@ -41,28 +45,33 @@ extern "C" void _ZN8Particle10SysTracker10InitialiseEv(struct Particle__SysTrack
     data_0209ee84 = func_02045cf0();
     data_0209ee8c = func_02045ce0();
 
-    *(char**)((char*)&self->unk_004) = func_0204a4c8(func_02023178, countA, countB, 0x1a, 0x3e);
-    *(int*)(*(char**)((char*)&self->unk_004) + 0x30) = 0x8000;
+    mManager = (Manager*)func_0204a4c8(
+        func_02023178, countA, countB, 0x1a, 0x3e);
+    *(int*)((char*)mManager + 0x30) = 0x8000;
 
     if (func_0206e28c((u8*)data_02075f14, data_0208f668, 4) != 0) {
-        *(char**)((char*)self) = data_02075f14;
+        mResourceFile = data_02075f14;
     } else {
         char* hdr = (char*)(int)M(data_02075f14);
         unsigned int size = (unsigned int)M(*(unsigned int*)(hdr + 4) >> 8);
         void* dst = _ZN6Memory8AllocateEj(size);
         DecompressLZ16(hdr + 4, dst);
         _ZN4CP1514FlushDataCacheEjj((unsigned int)dst, size);
-        *(void**)((char*)self) = dst;
+        mResourceFile = dst;
     }
 
-    func_0204a17c(*(char**)((char*)&self->unk_004), *(char**)((char*)self));
-    func_0204a0dc(*(void**)((char*)&self->unk_004), _ZN8Particle7Texture12AllocTexVramEjb);
-    func_0204a028(*(void**)((char*)&self->unk_004), _ZN8Particle7Texture12AllocPalVramEjb);
+    func_0204a17c(mManager, mResourceFile);
+    func_0204a0dc(mManager,
+        (u32 (*)(const void *, u32))Texture::AllocTexVram);
+    func_0204a028(mManager,
+        (u32 (*)(u32, u32))Texture::AllocPalVram);
 
-    if (*(char**)((char*)self) != data_02075f14) {
+    if (mResourceFile != data_02075f14) {
         void* heap = (void*)(int)M(data_020a0ea0);
-        unsigned int oldSize = (unsigned int)M(*(unsigned int*)(*(char**)((char*)self) + 0x18));
-        _ZN4Heap7_SizeofEPv(heap, *(void**)((char*)self));
-        _ZN4Heap10ReallocateEPvj(heap, *(void**)((char*)self), oldSize);
+        unsigned int oldSize = (unsigned int)M(*(unsigned int*)((char*)mResourceFile + 0x18));
+        _ZN4Heap7_SizeofEPv(heap, mResourceFile);
+        _ZN4Heap10ReallocateEPvj(heap, mResourceFile, oldSize);
     }
+}
+
 }

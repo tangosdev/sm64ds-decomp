@@ -1,5 +1,5 @@
 #include "types.h"
-#define LA(p) (((long long)(int)(p)))
+#define LA(p) (p)
 extern s16 data_02082214[];
 extern s8 data_ov092_0213208c[];
 extern void func_ov092_021314d0(void *c);

@@ -12,7 +12,7 @@ struct Vector3
 extern short data_02082214[];
 extern void *data_ov030_02115d08[];
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
-extern int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int flag);
+extern int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int flag);
 int func_ov030_02112c14(void *arg0)
 {
   u8 *new_var;
@@ -64,7 +64,7 @@ int func_ov030_02112c14(void *arg0)
     v.y = mul;
     v.z = oz;
   }
-  _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(c, &v, (struct Vector3 *) pos, 1);
+  _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(c, &v, (struct Vector3 *) pos, 1);
   *((int *) (c + 0xd0)) = 0;
   *((int *) (c + 0x3a8)) = 0;
   *((int *) (c + 0x3b4)) = 7;

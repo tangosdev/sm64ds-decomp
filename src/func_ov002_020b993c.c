@@ -4,7 +4,7 @@
 #include "common.h"
 struct ShadowModel; struct Matrix4x3;
 
-extern int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(char* self, struct ShadowModel* sm, struct Matrix4x3* m, int fix, int t, u32 f);
+extern int _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(char* self, struct ShadowModel* sm, struct Matrix4x3* m, int fix, int t, u32 f);
 int func_ov002_020b993c(char* c)
 {
     int r3;
@@ -19,5 +19,5 @@ int func_ov002_020b993c(char* c)
         r3 = 0x64000 - (int)(((s64)d * 0x180 + 0x800) >> 12);
         if (r3 < 0x3c000) r3 = 0x3c000;
     }
-    return _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, (struct ShadowModel*)(c+0x174), (struct Matrix4x3*)(c+0x19c), r3, 0x3c000, 0xf);
+    return _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, (struct ShadowModel*)(c+0x174), (struct Matrix4x3*)(c+0x19c), r3, 0x3c000, 0xf);
 }

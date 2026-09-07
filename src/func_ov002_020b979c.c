@@ -1,9 +1,9 @@
 #include "types.h"
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern int _ZN6Player15IsCollectingCapEv(void* p);
 extern void _ZN6Player16InitWingFeathersEb(void* p, int b);
 extern void _ZN6Player16InitBalloonMarioEv(void* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void _ZN6Player14InitMetalWarioEv(void* p);
 extern void _ZN6Player15InitVanishLuigiEv(void* p);
 extern void _ZN6Player13InitFireYoshiEv(void* p);
@@ -13,7 +13,7 @@ void func_ov002_020b979c(char* self) {
     u32 id = *(u32*)(self + 0x1f0);
     if (id == 0) return;
 
-    other = (char*)_ZN5Actor10FindWithIDEj(id);
+    other = (char*)_ZN8dActor_c10FindWithIDEj(id);
     if (other == 0) return;
 
     {
@@ -48,15 +48,15 @@ void func_ov002_020b979c(char* self) {
         } else {
             _ZN6Player16InitBalloonMarioEv(other);
         }
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     case 2:
         _ZN6Player14InitMetalWarioEv(other);
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     case 1:
         _ZN6Player15InitVanishLuigiEv(other);
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     case 3:
         if (*(char**)(other + 0x360) != 0) {
@@ -64,7 +64,7 @@ void func_ov002_020b979c(char* self) {
             if (*(u16*)(p + 0xc) == 0x10c) return;
         }
         _ZN6Player13InitFireYoshiEv(other);
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     }
 }

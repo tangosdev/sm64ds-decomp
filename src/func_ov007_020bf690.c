@@ -29,7 +29,10 @@ void func_ov007_020bf690(void)
     data_ov007_02104bd8->sub->f40 = data_ov007_02104bd8->sub->f48;
     if (obj6->f8 != 3) return;
     data_ov007_02104bd8->sub->f94 = 0;
-    data_ov007_02104bd8->flags &= ~1;
+    {
+        const struct G *gr = data_ov007_02104bd8;
+        data_ov007_02104bd8->flags = gr->flags & ~1;
+    }
     if (obj6->f1c == 0) return;
     _ZN3G2x18SetBlendBrightnessEPVtts((void*)0x4000050, 0x3f, -0x10);
 }

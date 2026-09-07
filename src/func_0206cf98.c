@@ -33,7 +33,7 @@ extern void func_0206d868(const SavedIntState *state);
 extern u32 func_0206dab4(u32 val, void *addr);
 extern void func_0206d940(struct Arr *s, u32 index);
 extern void func_0206d8c4(struct Arr *s, u32 index);
-extern void _ZN4cstd8__assertEPKcPKcPKci(const char *, const char *, const char *, int);
+extern void _ZN4cstd8__assertEPKcS1_S1_i(const char *, const char *, const char *, int);
 
 int func_0206cf98(int type, u32 addr, u32 size) {
     int result;
@@ -76,10 +76,10 @@ int func_0206cf98(int type, u32 addr, u32 size) {
         if (!found) continue;
 
         if (!(ea <= addr)) {
-            _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x1a9, &data_0208690c, 1);
+            _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x1a9, &data_0208690c, 1);
         }
         if (!((unsigned long long)(u32)table->elems[i].a + (u32)table->elems[i].c > addr)) {
-            _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x1aa, &data_0208692c, 1);
+            _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x1aa, &data_0208692c, 1);
         }
 
         if (addr != table->elems[i].a) {
@@ -99,7 +99,7 @@ int func_0206cf98(int type, u32 addr, u32 size) {
         }
 
         if (!(addr == table->elems[i].a)) {
-            _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x1b7, &data_0208696c, 1);
+            _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x1b7, &data_0208696c, 1);
         }
 
         if (table->elems[i].c <= size) {
@@ -115,7 +115,7 @@ int func_0206cf98(int type, u32 addr, u32 size) {
                     long long ov = (long long)end - (long long)(u32)wa;
                     if (ov <= 0) break;
                     if (!(wc > (u32)ov)) {
-                        _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x1ca, &data_0208698c, 1);
+                        _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x1ca, &data_0208698c, 1);
                     }
                     *LM(&((struct Arr *)((char *)table + (i << 4)))->elems[0].a) += (u32)ov;
                     *LM(&((struct Arr *)((char *)table + (i << 4)))->elems[0].b) += (u32)ov;

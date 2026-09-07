@@ -13,9 +13,9 @@ extern u8 data_0209fc5c;
 
 int UnknownVsEntry::Behavior()
 {
-    if (unk_f44 == 0) {
+    if (mSuspended == 0) {
         int i;
-        char* base;
+        UnknownVsPlayer* player;
         char* p;
         u8* g;
         int fp;
@@ -23,26 +23,26 @@ int UnknownVsEntry::Behavior()
         char* ee;
         g = &data_0209fc5c;
         p = ((char*)this);
-        base = ((char*)this) + 0x920;
+        player = mPlayers;
         fp = 1;
         i = 0;
         z = 0;
         ee = ((char*)this); ee += 0xe80;
-        for (; i < 4; i++, base += 0x158, p += 0x158, g += 1) {
-            func_ov075_02114cd8(base);
+        for (; i < 4; i++, player++, p += 0x158, g += 1) {
+            func_ov075_02114cd8((char*)player);
             if (*(u8*)(p + 0xa75)) {
-                int* q = (int*)(int)(((long long)(int)(base + 0x118)));
+                int* q = (int*)(int)&player->mPosition;
                 int v[3];
                 v[0] = q[0]; v[1] = q[1]; v[2] = q[2];
                 func_ov075_0211ab38(ee, v);
             }
             if (*g) {
-                if (func_ov075_021148f0(base) == 0)
+                if (func_ov075_021148f0((char*)player) == 0)
                     fp = z;
             }
         }
 
-        if (unk_f41 == 1 && fp != 0) {
+        if (mState == 1 && fp != 0) {
             int j = 0;
             u8* g2 = &data_0209fc5c;
             char* b2 = ((char*)this) + 0x920;
@@ -50,16 +50,20 @@ int UnknownVsEntry::Behavior()
                 if (*g2) func_ov075_02114894(b2);
                 g2 += 1; b2 += 0x158;
             }
-            unk_f41 = 2;
+            mState = 2;
         }
-        if (unk_f41 != 0) {
-            if (func_ov075_02114ac4(((char*)this) + 0x920 + unk_f42 * 0x158, ((char*)this) + 0xf34, ((char*)this) + 0xf28) != 0)
+        if (mState != 0) {
+            if (func_ov075_02114ac4(((char*)this) + 0x920 + mFocusedPlayer * 0x158, ((char*)this) + 0xf34, ((char*)this) + 0xf28) != 0)
                 func_ov075_021152d4(((char*)this));
         }
-        if (unk_f40) {
+        if (mAnimActive) {
             int r = func_0203da9c();
             func_ov075_021151b4(((char*)this), r);
-            _ZN9Animation7AdvanceEv((char*)&mAnimation);
+            /* 0x90c is +0x50 inside the ModelAnim at 0x8bc -- its Animation base,
+               which the cartridge's own ~UnknownVsEntry proves is there
+               (tools/dtor_members.py). Advance is non-virtual, so this is the same
+               direct bl to _ZN9Animation7AdvanceEv with this adjusted by +0x50. */
+            mModelAnim.Advance();
         }
         func_ov075_0211b418((char*)&unk_e80);
     }

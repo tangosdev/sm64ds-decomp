@@ -8,7 +8,7 @@ int Player::St_HoldLight_Cleanup()
 {
   char* p = *(char**)((char*)&mHeldObj);
   if (p) {
-    *(unsigned int*)(((long long)(int)(p + 0xb0))) |= 0x4000;
+    *(unsigned int*)(p + 0xb0) |= 0x4000;
   }
   return 1;
 }

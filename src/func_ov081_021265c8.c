@@ -1,5 +1,5 @@
 typedef int Fix12i;
-extern Fix12i _ZN5Actor13DistToCPlayerEv(void *c);
+extern Fix12i _ZN8dActor_c13DistToCPlayerEv(void *c);
 extern Fix12i Vec3_Dist(const void *a, const void *b);
 extern unsigned int RandomIntInternal(int *seed);
 extern void func_ov081_021265c8(void *c);
@@ -11,7 +11,7 @@ void func_ov081_021265c8(void *c) {
     Fix12i dist;
     int v;
 
-    distC = _ZN5Actor13DistToCPlayerEv(c);
+    distC = _ZN8dActor_c13DistToCPlayerEv(c);
     dist = Vec3_Dist((char *)c + 0x5c, (char *)c + 0x3d0);
     if (dist > 0x5dc000) {
         *(int *)((char *)c + 0x3e4) = 5;

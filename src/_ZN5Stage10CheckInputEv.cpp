@@ -1,4 +1,5 @@
 //cpp
+#include "Stage.h"
 #include "types.h"
 struct TouchData { u8 touched; u8 tapped; u8 x; u8 y; };
 struct PadData { u16 held; u16 pressed; };
@@ -40,10 +41,9 @@ extern s16 data_020756b0[];
 extern s16 data_02082214[];
 extern u16* data_0209214c[];
 
-void _ZN5Stage10CheckInputEv();
 }
 
-void _ZN5Stage10CheckInputEv()
+void Stage::CheckInput()
 {
     u8 m = data_0209f2d8;
     int b1 = (m == 1);
@@ -183,9 +183,9 @@ main_part:
                         j++;
                     } while (j < 0x10);
                     if (p->mode != 2 && (p->held & 0x300) == 0x300) {
-                        *(u16*)(((int)p + 4) & 0xFFFFFFFFFFFFFFFFull) |= 0x4000;
+                        *(u16*)((int)p + 4) |= 0x4000;
                         if (p->pressed & 0x300) {
-                            *(u16*)(((int)p + 6) & 0xFFFFFFFFFFFFFFFFull) |= 0x4000;
+                            *(u16*)((int)p + 6) |= 0x4000;
                         }
                     }
                 }

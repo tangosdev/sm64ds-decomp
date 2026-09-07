@@ -20,7 +20,7 @@ extern void func_02012694(int a, void* p);
 
 
 
-#define LA(p) ((void*)(unsigned long)(((long long)(int)(unsigned long)(p))))
+#define LA(p) ((void*)(unsigned long)((unsigned long)(p)))
 
 int func_ov016_021115c0(char* c)
 {

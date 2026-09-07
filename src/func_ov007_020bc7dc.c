@@ -22,7 +22,7 @@ void func_ov007_020bc7dc(char* c)
     if (*(int*)(c + 0x98) == 0)
         return;
 
-    *(short*)(((long long)(int)(c + 0x8c))) -= 1;
+    *(short*)(c + 0x8c) -= 1;
     if (*(short*)(c + 0x8c) <= 0)
         *(short*)(c + 0x8c) = 0;
 }

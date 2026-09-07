@@ -15,7 +15,7 @@ int func_ov006_020cd158(void)
         b = data_ov006_0213b164;
         first = b[0];
         do {
-            int *p = (int *)(((unsigned int)e + 0x64) & 0xFFFFFFFFFFFFFFFFull);
+            int *p = (int *)((unsigned int)e + 0x64);
             if (p[0] == first) {
                 if (p[1] == *(volatile int *)(b + 1)) goto next;
                 if (*(volatile int *)(e + 0x64) == 0) goto next;

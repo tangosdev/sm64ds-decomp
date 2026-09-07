@@ -9,6 +9,13 @@ struct Player {
     int IsState(State &);
     int ChangeState(State &);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" int _ZN6Player7IsStateERNS_5StateE(void *, State &);
+extern "C" int _ZN6Player11ChangeStateERNS_5StateE(void *, State &);
+
 
 extern "C" int Player_ScaleByCharFactor(Player *c, int a);
 extern "C" int func_ov002_020d0178(Player *c, int a, int b);
@@ -17,7 +24,7 @@ extern "C" int func_ov002_020d06c0(Player *p)
 {
     int thresh, b354, b358;
 
-    if (!p->IsState(data_ov002_021101b4))
+    if (!_ZN6Player7IsStateERNS_5StateE(p, data_ov002_021101b4))
         return 0;
 
     if (p->GetHealth() != 0 &&
@@ -32,7 +39,7 @@ extern "C" int func_ov002_020d06c0(Player *p)
             if (b358 == 0 &&
                 *(unsigned char *)((char *)p + 0x708) == 0 &&
                 *(unsigned char *)((char *)p + 0x6fd) == 0 &&
-                p->IsState(data_ov002_0211001c) == 0 &&
+                _ZN6Player7IsStateERNS_5StateE(p, data_ov002_0211001c) == 0 &&
                 *(unsigned char *)((char *)p + 0x6de) != 0)
             {
                 goto cont;
@@ -57,6 +64,6 @@ cont:
         return 0;
 
     *(unsigned char *)((char *)p + 0x6e3) = 0;
-    p->ChangeState(data_ov002_0210ffec);
+    _ZN6Player11ChangeStateERNS_5StateE(p, data_ov002_0210ffec);
     return 1;
 }

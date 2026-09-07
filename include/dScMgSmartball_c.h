@@ -9,11 +9,12 @@
  * straight away -- no second vptr store, which is what an inlined
  * intermediate base's destructor would have left behind.
  *
- * SIZE 0x629c, from MgBingoBallSlotsShot_Spawn's own
+ * SIZE 0x629c, from dScMgSmartball_c_classInit's own
  * `_ZN7fBase_cnwEj(0x629c)`, and the last array closes EXACTLY on it:
- * 0x599c + 0x40 * 0x24 = 0x629c. The English _Spawn name is already
- * attributed and is kept, the same convention as MgPicturePoker_Spawn for
- * dScMgCard_c.
+ * 0x599c + 0x40 * 0x24 = 0x629c. The coined English _Spawn name
+ * MgBingoBallSlotsShot_Spawn is already attributed and is retained as a
+ * historical alias, the same convention as dScMgCard_c_classInit
+ * (historical alias MgPicturePoker_Spawn) for dScMgCard_c.
  *
  * FACTORY AND DESTRUCTOR AGREE MEMBER FOR MEMBER, in exact reverse order:
  * built 0x47c8, 0x4854, 0x48d4, 0x599c; destroyed 0x599c, 0x48d4, 0x4854,
@@ -39,7 +40,12 @@
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN16dScMgSmartball_cD1Ev.cpp; D0Ev.cpp
  * carries an identical copy. No separate operator delete is needed --
- * dScMgBase_c, the immediate base, already provides one. */
+ * dScMgBase_c, the immediate base, already provides one.
+ *
+ * SM64DS RTTI names the implementation dScMgSmartball_c. The reconstructed factory
+ * dScMgSmartball_c_classInit (historical alias MgBingoBallSlotsShot_Spawn) installs this class's
+ * cartridge vtable for the MG_SMARTBALL registry profile.
+ */
 #ifndef DSCMGSMARTBALL_C_H
 #define DSCMGSMARTBALL_C_H
 #include "dScMgBase_c.h"
@@ -64,12 +70,22 @@ struct dScMgSmartball_c : dScMgBase_c {
        The pre-migration file spelled the parameter `int mode` and still matched,
        because the ROM only ever compares it against 2 -- but the declaration it is
        overriding is `void AfterCleanupResources(u32)`, so that is what it is. */
+    /* InitResources was declared here before its body existed, because the
+       EMITTED vtable needs the declaration: without it mwcc wrote fBase_c's
+       default, _ZN7fBase_c13InitResourcesEv (0x02043c80), into slot 0 while the
+       cartridge holds 0x02118b70 -- romdata_check scored _ZTV16dScMgSmartball_c
+       DIFFERS on that one word. Its 0x8dc bytes are now decompiled and enrolled
+       (src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp); the slot is unchanged. */
+    virtual void OnYoshiTryEat(int arg);               /* slot 18 */
+    virtual int  OnPushed();                           /* slot 25 */
+    virtual int  Virtual7C();                          /* slot 31 */
+    s32  InitResources();  /* slot  0 -- src/_ZN16dScMgSmartball_c13InitResourcesEv.cpp */
     void AfterCleanupResources(u32 vfSuccess);
                            /* slot  5 -- src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp */
     s32  Behavior();       /* slot  6 -- src/_ZN16dScMgSmartball_c8BehaviorEv.cpp */
     s32  Render();         /* slot  9 -- src/_ZN16dScMgSmartball_c6RenderEv.cpp */
 
-    u8 pad_465d[0x16b];   /* 0x465d -- dScMgBase_c's data ends here; real matched
+    u8 pad_4660[0x168];   /* 0x4660 -- dScMgBase_c's data ends here; real matched
                               access inside, see file banner */
     u8 mArray1[0x28];     /* 0x47c8 -- 5 * 8,      elem dtor NullDestructor_0203d47c */
     u8 pad_47f0[0x64];    /* 0x47f0 -- real matched access, see file banner */

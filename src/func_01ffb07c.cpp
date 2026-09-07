@@ -1,6 +1,6 @@
 //cpp
 // @symbol func_01ffb07c
-/* MeshCollider, 0x01ffb07c (ITCM). Copies a Vector3 into 0x38..0x40 -- three
+/* dBgW_Kc, 0x01ffb07c (ITCM). Copies a Vector3 into 0x38..0x40 -- three
  * separate word loads and stores, no base register materialised for either side.
  *
  * Those three fields are declared as scalars (unk_38/unk_3c/unk_40) but behave as
@@ -10,9 +10,9 @@
  *
  * extern "C": the symbol is unmangled in config/arm9/symbols.txt.
  */
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 
-extern "C" void func_01ffb07c(MeshCollider *self, const Vector3 *v)
+extern "C" void func_01ffb07c(dBgW_Kc *self, const Vector3 *v)
 {
     self->unk_38 = v->x;
     self->unk_3c = v->y;

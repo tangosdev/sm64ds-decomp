@@ -24,7 +24,8 @@ def funcs_in(obj: bytes) -> dict:
     st = elf.get_section_by_name(".symtab")
     out = {}
     for s in st.iter_symbols():
-        if s["st_info"]["type"] == "STT_FUNC" and s["st_size"] > 0:
+        if (s["st_info"]["type"] == "STT_FUNC" and s["st_size"] > 0
+                and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")):
             sec = elf.get_section(s["st_shndx"])
             out[s.name] = sec.data()[s["st_value"]:s["st_value"] + s["st_size"]]
     return out

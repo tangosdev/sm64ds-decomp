@@ -1,4 +1,5 @@
 //cpp
+#include "Stage.h"
 // _ZN5Stage21RenderVsModeCountdownEv at 0x0202a168
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
 struct Base {
@@ -26,7 +27,7 @@ int GetOwnerLanguage(void);
 int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void*, int, int, int, int, int, int, int, int);
 }
 
-extern "C" void _ZN5Stage21RenderVsModeCountdownEv(void) {
+void Stage::RenderVsModeCountdown() {
     int count = 0;
     int i;
     for (i = 0; i < 4; i++) {

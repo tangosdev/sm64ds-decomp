@@ -1,5 +1,14 @@
 //cpp
-extern "C" void* _ZN2G212GetBG3ScrPtrEv(void){
+// @symbol _ZN2G212GetBG3ScrPtrEv
+//
+// Language-mode flip only: the compiler mangles the name, it is no longer
+// spelled by hand. Signature preserved exactly as it was; no codegen intent.
+// See notes/plan-cpp-language-mode.md phase 1 (layout-free SDK namespaces).
+
+namespace G2 {
+
+void* GetBG3ScrPtr()
+{
   unsigned int mode = *(volatile unsigned int*)0x4000000 & 7;
   unsigned short bg3cnt = *(volatile unsigned short*)0x400000e;
   unsigned int sbase = ((*(volatile unsigned int*)0x4000000 & 0x38000000) >> 0x1b) << 0x10;
@@ -15,4 +24,6 @@ extern "C" void* _ZN2G212GetBG3ScrPtrEv(void){
   default:
     return (void*)0;
   }
+}
+
 }

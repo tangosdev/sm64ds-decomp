@@ -20,8 +20,8 @@
 extern "C" {
 #endif
 
-extern int _ZN9ActorBase14BeforeBehaviorEv(void*);
-extern void*_ZN9ActorBasenwEj(unsigned);
+extern int _ZN7fBase_c14BeforeBehaviorEv(void*);
+extern void*_ZN7fBase_cnwEj(unsigned);
 
 
 #ifdef __cplusplus

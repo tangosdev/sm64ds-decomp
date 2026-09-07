@@ -5,7 +5,7 @@ extern void Vec3_Asr(void* d, void* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern void MulMat4x3Mat4x3(void* dst, void* a, void* b);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* c, void* shadow, void* mtx, int rad, int height, u32 flags);
 
 extern int data_020a0e68[];
@@ -42,6 +42,6 @@ void func_ov065_0211696c(char* c)
 
     *(Mtx43*)(c + 0x38c) = *(Mtx43*)data_020a0e68;
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x364, c + 0x38c, 0x64000, 0x258000, 0xf);
 }

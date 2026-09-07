@@ -3,7 +3,7 @@
 #include "ShadowModel.h"
 extern "C" extern BMD_File data_020ad560;
 
-void ShadowModel::InitCylinder()
+int ShadowModel::InitCylinder()
 {
-    SetFile(&data_020ad560, 1, -1);
+    return SetFile(&data_020ad560, 1, -1);
 }

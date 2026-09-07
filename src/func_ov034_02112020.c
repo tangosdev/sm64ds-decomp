@@ -12,7 +12,7 @@ void func_ov034_02112020(char *c)
 {
     int i;
     for (i = 0; i < 5; i++) {
-        int *p = (int *)(void *)(unsigned long long)(unsigned)(c + (i << 6) + 0x490);
+        int *p = (int *)(void *)(c + (i << 6) + 0x490);
         *p &= ~4;
     }
     *(unsigned char *)(c + 0x8da) = 0;

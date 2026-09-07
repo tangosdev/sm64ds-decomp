@@ -1,45 +1,47 @@
 //cpp
 // @symbol _ZN6Snufit13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: named members + shared header, real C++ method
+ *
+ * The stand-in typedefs this file used to carry (`typedef int Fix12;`, a
+ * two-word SharedFilePtr, a three-short Vector3_16, opaque dActor_c/BMD_File)
+ * all name real types now that Snufit.h pulls in the dEnemyBase_c chain, so they are
+ * gone. dCcAc_c::Init and dBgCh_Actr::Init are still reached
+ * through their mangled names because neither is declared as a method yet.
+ */
 #include "Snufit.h"
-typedef int Fix12;
-typedef struct { int w[2]; } SharedFilePtr;
-typedef struct { short x,y,z; } Vector3_16;
-typedef struct BMD_File BMD_File;
-typedef struct Actor Actor;
-typedef struct PMF PMF;
+#include "SharedFilePtr.h"
+
+struct PMF;
+
 extern SharedFilePtr data_ov065_0211d618;
-extern SharedFilePtr data_ov075_0211d610;
+extern SharedFilePtr data_ov065_0211d610;
 extern SharedFilePtr data_ov065_0211d600;
-extern SharedFilePtr data_ov075_0211d608;
+extern SharedFilePtr data_ov065_0211d608;
 extern PMF data_ov065_0211d670;
+
 extern "C" {
-extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
-extern void _ZN11ShadowModel12InitCylinderEv(void* self);
-extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, Fix12 r, Fix12 h, Vector3_16* p, Vector3_16* q);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, Vector3_16* q);
 extern int func_ov065_0211691c(void* c, PMF* p);
 }
 
 int Snufit::InitResources()
 {
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x300, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov065_0211d618), 1, -1);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov075_0211d610);
-    _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov065_0211d600);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov075_0211d608);
-    unk_0a0 = -0x1e000;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this)+0x110, (Actor*)((char*)this), 0x38000, 0x7e000, 0x200000, 0x7eff0);
+    mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov065_0211d618), 1, -1);
+    Model::LoadFile(data_ov065_0211d610);
+    mShadowModel.InitCylinder();
+    Animation::LoadFile(data_ov065_0211d600);
+    Animation::LoadFile(data_ov065_0211d608);
+    mTerminalVelocity = -0x1e000;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x38000, 0x7e000, 0x200000, 0x7eff0);
     mAngleY = mPrevAngleY;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x144, (Actor*)((char*)this), 0x46000, 0, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x46000, 0, 0, 0);
     unk_108 = 1;
     unk_10a = 1;
-    unk_3cc = mPosX;
-    unk_3d0 = mPosY;
-    unk_3d4 = mPosZ;
-    unk_35c = 0x1000;
-    func_ov065_0211691c(((char*)this), &data_ov065_0211d670);
+    mHomePosX = mPosX;
+    mHomePosY = mPosY;
+    mHomePosZ = mPosZ;
+    mModelAnim.speed = 0x1000;
+    func_ov065_0211691c(this, &data_ov065_0211d670);
     return 1;
 }

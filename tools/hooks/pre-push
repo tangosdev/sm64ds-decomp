@@ -10,6 +10,13 @@
 # once a PR is open -- and the mistake is invisible in review, because every file still
 # byte-matches. See tools/prepush_attribution.py.
 #
+# It also checks port/'s references into src/ (manifests, hostgen symbol lists, HAL linkage
+# bridges). port/ has its own MSVC build that nothing in the decomp toolchain compiles or
+# links, so a src/ rename can strand a port/ reference with no other gate to catch it. See
+# tools/port_refcheck.py. That check, and the unresolved-reference ratchet, run on EVERY
+# push rather than only main-targeted ones: neither needs the ROM, and both catch mistakes
+# that are invisible in review because every byte still matches.
+#
 # Install:
 #   cp tools/hooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
 # Bypass once (you had better be sure):
@@ -50,6 +57,71 @@ remote_ref_check() {
   done
   return 0
 }
+
+# --- checks that run on EVERY push, not only main ---------------------------
+#
+# The gate above only fires for refs/heads/main, because link verification needs
+# the ROM and toolchain and costs minutes. These two need neither, and the
+# mistakes they catch land on feature branches -- which is exactly where they
+# were missed: a src/ rename stranded a port/ bridge, every byte still matched,
+# and only the PR validator noticed.
+
+echo "pre-push: checking port/ references into src/"
+if ! python tools/port_refcheck.py; then
+  echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+  exit 1
+fi
+
+# Two source files for one symbol. delinks.txt names one path per address range,
+# and every gate in this tree is driven from delinks.txt -- so the other half is
+# compiled by nothing and checked by nothing. Pure filesystem scan, milliseconds.
+if ! python tools/check_duplicate_sources.py; then
+  echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+  exit 1
+fi
+
+# Does every merged translation unit still COMPILE? tools/check_src_tu.py (run in CI)
+# proves every include and mangled symbol resolves; it cannot see a type. #1583 retyped
+# three dActor_c virtuals int -> void, swept only src/, and stranded a src_tu TU --
+# and #1643's collision rename left ov029/SwitchActivatedPlank with a placeholder
+# `struct dBgW_Kc` that the real class then collided with. Neither showed up anywhere:
+# an unbuildable source file is an ABSENT one, so rombuild kept reporting 106/106 with
+# the file simply gone from coverage.
+#
+# It needs mwccarm but NOT the ROM, and it is about three seconds for all 41 TUs, so it
+# runs on every push rather than only main-targeted ones.
+#
+# The gate itself never returns 0 without a compiler -- that is deliberate, see its
+# docstring. Deciding what an unwired worktree should do is the HOOK's call, not the
+# gate's, so the compiler is tested here and its absence is printed as NOT CHECKED
+# rather than either refusing the push or being passed over in silence.
+if [ -f tools/mwccarm/2004/b56/mwccarm.exe ]; then
+  if ! python tools/check_src_tu_compiles.py --quiet; then
+    echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+    exit 1
+  fi
+else
+  echo "pre-push: src_tu COMPILE GATE NOT CHECKED -- no tools/mwccarm/2004/b56/mwccarm.exe"
+  echo "          in this worktree. This is not a pass: type drift in src_tu/ is invisible"
+  echo "          to every other gate. Wire the worktree up and re-run"
+  echo "          'python tools/check_src_tu_compiles.py' before trusting this push."
+fi
+
+# Reference resolvability needs tools/eligible.py, which compiles ~11,100 files and
+# takes minutes -- far too slow for a hook. So this checks only when a report for
+# THIS commit already exists, and otherwise says nothing was checked rather than
+# implying it passed.
+if python tools/check_references.py >/dev/null 2>&1; then
+  echo "pre-push: unresolved references OK"
+elif python tools/check_references.py 2>&1 | grep -q "report describes\|no commit stamp\|missing "; then
+  echo "pre-push: (skipping reference check -- no current eligibility report;"
+  echo "          run 'python tools/eligible.py' to include it)"
+else
+  echo "pre-push: reference check FAILED"
+  python tools/check_references.py
+  echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+  exit 1
+fi
 
 remote_ref_check || exit 1
 exit 0

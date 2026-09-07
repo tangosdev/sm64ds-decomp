@@ -19,12 +19,12 @@ void func_ov060_021188e8(char* c)
 {
     Work* w = (Work*)c;
     int scale;
-    (*(u32*)((long long)(int)(c + 0x13c))) |= 1;
+    (*(u32*)(c + 0x13c)) |= 1;
     scale = (w->timer * 9 << 12) / 14 + 0x1000;
     w->scaleX = scale;
     w->scaleY = scale;
     w->scaleZ = scale;
     if (w->timer == 0x1c)
         func_ov060_021184bc(c);
-    (*(u16*)((long long)(int)(c + 0x1ac)))++;
+    (*(u16*)(c + 0x1ac))++;
 }

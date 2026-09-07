@@ -19,18 +19,15 @@ typedef struct Matrix3x3 {
     Fix12i m[9];
 } Matrix3x3;
 
-/* Guarded so common.h's own plain {s32 m[12]} Matrix4x3 (a TU that pulled
- * common.h first, e.g. via a shared decl_*.h header) does not collide with
- * this richer {Matrix3x3 r; Vector3 t;} shape -- the same MATRIX4X3_DEFINED
- * convention common.h spells. Both are layout-compatible (12 Fix12i words,
- * 0x30 bytes); whichever header loads first wins and this one stands down,
- * losing only the named-member convenience, not any byte. */
+/* See include/common.h: this type has a second, flat spelling there. Same 0x30
+ * bytes; whichever a translation unit sees first stands. */
 #ifndef MATRIX4X3_DEFINED
 #define MATRIX4X3_DEFINED
 typedef struct Matrix4x3 {
     Matrix3x3 r;   /* 0x00 */
     Vector3   t;   /* 0x24 */
 } Matrix4x3;
+#endif
 
 typedef char Matrix3x3_size_must_be_0x24[
     sizeof(Matrix3x3) == 0x24 ? 1 : -1
@@ -39,6 +36,5 @@ typedef char Matrix3x3_size_must_be_0x24[
 typedef char Matrix4x3_size_must_be_0x30[
     sizeof(Matrix4x3) == 0x30 ? 1 : -1
 ];
-#endif /* MATRIX4X3_DEFINED */
 
 #endif /* SM64DS_MATH_MATRIX_H */

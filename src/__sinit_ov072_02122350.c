@@ -7,7 +7,7 @@ extern int data_ov072_02122c48[];
 extern int data_ov072_02122c50[];
 extern int func_02017ab4[];
 extern int SharedFilePtr_Destruct_TexSeq[];
-extern int func_020072c0[];
+extern int _ZN7Vector3D1Ev[];
 extern int data_ov072_02122c88[];
 extern int data_ov072_02122c7c[];
 extern int data_ov072_02122c58[];
@@ -25,5 +25,5 @@ void __sinit_ov072_02122350(void)
   data_ov072_02122c70[new_var] = (new_var = 0);
   data_ov072_02122c70[1] = -0x50000;
   data_ov072_02122c70[2] = new_var;
-  func_020731dc(data_ov072_02122c70, func_020072c0, data_ov072_02122c64);
+  func_020731dc(data_ov072_02122c70, _ZN7Vector3D1Ev, data_ov072_02122c64);
 }

@@ -6,10 +6,10 @@ enum Bool { FALSE, TRUE };
 
 struct Vector3 { int x, y, z; };
 
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void func_02012694(int a, void* b);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void* self, struct Vector3* v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* self, struct Vector3* v, int f);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, struct Vector3* v, unsigned int b, int c, unsigned int d, unsigned int e, unsigned int f);
 extern void func_ov060_021184bc(char* c);
 
@@ -21,7 +21,7 @@ void func_ov060_02118970(char* c)
     unsigned int id;
     id = *(unsigned int*)(c + 0x148);
     if (id == 0) return;
-    a = _ZN5Actor10FindWithIDEj(id);
+    a = _ZN8dActor_c10FindWithIDEj(id);
     if (a == 0) return;
     isType = (enum Bool)(*(unsigned short*)(a + 0xc) == 0xbf);
     if (!isType) return;
@@ -34,7 +34,7 @@ void func_ov060_02118970(char* c)
     v1.x = *(int*)(c + 0x5c);
     v1.y = *(int*)(c + 0x60);
     v1.z = *(int*)(c + 0x64);
-    _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &v1, 0x7d0000);
+    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &v1, 0x7d0000);
     v2.x = *(int*)(c + 0x5c);
     v2.y = *(int*)(c + 0x60);
     v2.z = *(int*)(c + 0x64);

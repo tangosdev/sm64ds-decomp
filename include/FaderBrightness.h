@@ -7,20 +7,56 @@
  * interpolator. It adds no members of its own -- FaderBrightness::~FaderBrightness
  * writes the vptr and immediately tail-calls the Fader subobject destructor, so
  * the object is exactly a Fader with a different vtable.
+ *
+ * It is the only concrete implementation in the family: its vtable at
+ * data_0208eacc fills all eight of the slots Fader leaves null, and both
+ * data_0208eb2c (FaderColor's) and _ZTV9FaderWipe still point at these functions
+ * for everything except AdvanceFade. `data_0208eacc` is the ROM-proven address
+ * point; `_ZTV15FaderBrightness` is its compiler-facing compatibility alias.
+ * The ROM RTTI name is dFdBrightness_c; see include/Fader.h.
+ *
+ * THREE OF THESE USED TO BE DECLARED NON-VIRTUAL -- IsBetweenStartAndEnd,
+ * SetToEnd and SetToStart. They occupy slots 7, 8 and 9 of every concrete table
+ * in the family, and the ROM calls them through the vtable: dScene_c::SetFaders
+ * dispatches slot 9 at [vt+0x24] and slot 8 at [vt+0x20] on a fader it has only
+ * as a base pointer, which a non-virtual member makes impossible to express.
  */
 #ifdef __cplusplus
 struct FaderBrightness : Fader {
-    virtual ~FaderBrightness();
-    virtual void AdvanceFade();
-    virtual int SetBackwardTime(u32 frames);
-    virtual int SetForwardTime(u32 frames);
-    virtual int IsAtStart();
-    virtual int IsAtEnd();
+    /* Inline, and this is where the interpolator's initial state is set. The
+       ROM's evidence is the order inside _ZN9FaderWipeC1Ev (0x02017480), the
+       chain's only surviving constructor: Fader's vtable, then THIS class's
+       vtable, and only THEN `currInterp = 0x1000; speed = 0`. A field write
+       that follows a sub-object's own vptr store belongs to that sub-object's
+       constructor, so those two are FaderBrightness's, not Fader's. A fade
+       therefore starts fully opaque and stationary. Inline because the ROM has
+       no out-of-line constructor for this class: it is emitted into
+       FaderWipe's. */
+    FaderBrightness();
 
-    void SetToStart();
-    void SetToEnd();
-    int IsBetweenStartAndEnd();
+    /* Declared first among the virtuals -- key function. The D0/D1/D2 sources
+       now define the real destructor and isolate the requested variant from
+       mwcc's emitted group. */
+    virtual ~FaderBrightness();
+
+    virtual void AdvanceFade();                 /* slot 2 */
+    virtual int  SetBackwardTime(u32 frames);   /* slot 3 */
+    virtual int  SetForwardTime(u32 frames);    /* slot 4 */
+    virtual int  IsAtStart();                   /* slot 5 */
+    virtual int  IsAtEnd();                     /* slot 6 */
+    virtual int  IsBetweenStartAndEnd();        /* slot 7 */
+    virtual void SetToEnd();                    /* slot 8 */
+    virtual void SetToStart();                  /* slot 9 */
 };
+
+/* Defined out of line so the declaration inside the struct is a plain
+   declaration -- tools/check_header_offsets.py cannot parse a member with an
+   inline body and reports the whole header UNPARSED. `inline` keeps the
+   emission identical: the body still goes wherever it is used, and the ROM
+   has no out-of-line constructor for this class. */
+inline FaderBrightness::FaderBrightness() { currInterp = 0x1000; speed = 0; }
+
+typedef char FaderBrightness_size_must_be_0xc[sizeof(FaderBrightness) == 0xc ? 1 : -1];
 #else
 struct FaderBrightness {
     void*  vtable;      /* 0x00 */

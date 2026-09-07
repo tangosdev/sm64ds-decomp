@@ -15,7 +15,7 @@ void func_0200cbe0(void *self)
 
     if (r2 != 0) {
         if (r1 != 0) {
-            *(int *)(((long long)(int)((char *)self + 0x154))) &= ~0x8000;
+            *(int *)((char *)self + 0x154) &= ~0x8000;
         }
     }
 

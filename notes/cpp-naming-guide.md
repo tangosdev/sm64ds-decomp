@@ -157,6 +157,10 @@ The project provides Python tools to help you work with C++ names and symbols:
 
 *   **Demangle a Symbol:** Use `demangle.py` for a quick breakdown.
     `python tools/demangle.py _ZN13OneUpMushroom8BehaviorEv`
+*   **Mangle a Definition:** Compile a C++ source with the pinned compiler and
+    read the exact emitted names from its ELF symbol table. Add `--expect` to
+    make a guessed signature a checked condition.
+    `python tools/mangle.py scratch.cpp --expect _ZN13OneUpMushroom8BehaviorEv`
 *   **Browse Classes:** Use the C++ indexer to find all known methods for a class.
     `python tools/cpp_index.py --class Player`
 *   **Rename Files:** If you deduce a function's real name and update the ledger, safely rename the source file and update its references (run dry-run first).

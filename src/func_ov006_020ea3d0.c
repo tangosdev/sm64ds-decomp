@@ -1,7 +1,7 @@
 #include "types.h"
 extern void _Z14ApproachLinearRiii(int *p, int target, int step);
 extern void func_ov004_020adb1c(int self);
-extern char *func_020beb68;
+extern char *data_ov004_020beb68;
 extern char data_ov006_02141fe4[];
 
 typedef struct {
@@ -46,7 +46,7 @@ void func_ov006_020ea3d0(int *arg)
             *(u8 *)(f + 0x10) = 0;
             *(u8 *)(((int)f + 0xe)) += 1;
             {
-                char *g = func_020beb68;
+                char *g = data_ov004_020beb68;
                 if (g != 0) {
                     if (*(int *)(g + 0xb4) < 0x270f)
                         *(int *)(((int)g + 0xb4)) += 1;
@@ -54,7 +54,7 @@ void func_ov006_020ea3d0(int *arg)
                         *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
                 }
             }
-            func_ov004_020adb1c(func_020beb68 != 0 ? *(int *)(func_020beb68 + 0xb4) : 0);
+            func_ov004_020adb1c(data_ov004_020beb68 != 0 ? *(int *)(data_ov004_020beb68 + 0xb4) : 0);
         } else {
             if (*(u8 *)(f + 0xf) != 0) {
                 *(u8 *)(((int)f + 0xc)) += 1;

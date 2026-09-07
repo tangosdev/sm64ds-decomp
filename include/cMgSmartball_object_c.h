@@ -48,7 +48,16 @@ struct cMgSmartball_object_c {
     /* The C spelling of this class gets no explicit vtable member because
        no .c file declares it; every reader reaches these fields by raw
        offset today. */
-    s32 unk_004;      /* 0x004 -- the constructor's first argument */
+    s32 mpManager;    /* 0x004 -- the constructor's first argument: the
+                          dScMgSmartball_c that owns this object. Every child
+                          dereferences it as that manager (mgr+0x4664 the
+                          index of the ball in play, mgr+0x4668/0x4688 the
+                          tracked-ball count and table, mgr+0x4670/0x46bc the
+                          kinoko count and table, mgr+0x595c/0x595d two pause
+                          flags). DECLARED s32, NOT A POINTER TYPE, because
+                          the manager has no header here and every reader
+                          spells its own cast -- the name states what the word
+                          is, the type states nothing it cannot back up. */
     s32 mCurrent0;    /* 0x008 -- restored from mInitial by RestoreInitial */
     s32 mCurrent1;    /* 0x00c */
     s32 mSnapshot0;   /* 0x010 -- written from mCurrent by SaveSnapshot */
@@ -56,13 +65,34 @@ struct cMgSmartball_object_c {
     s32 mInitial0;    /* 0x018 -- constructor writes the same pair here and
                           at mCurrent */
     s32 mInitial1;    /* 0x01c */
-    s32 unk_020;      /* 0x020 -- constructor zeroes it */
-    s32 unk_024;      /* 0x024 -- constructor zeroes it */
-    s32 unk_028;      /* 0x028 -- constructor zeroes it; ten other files in
-                          this family read or write it, the most-touched
-                          field of the class */
-    s32 unk_02c;      /* 0x02c -- the constructor's second argument */
-    u8  unk_030;      /* 0x030 -- constructor sets it to 1 */
+    s32 mVel0;        /* 0x020 -- constructor zeroes it. Velocity, x half:
+                          cMgSmartball_ball_c::SaveSnapshot does
+                          `mCurrent0 += mVel0; mCurrent1 += mVel1;` and passes
+                          &mVel0 to Vec2_Len as a 2-vector. */
+    s32 mVel1;        /* 0x024 -- constructor zeroes it; the z half of that
+                          pair, and the value cMgSmartball_spring_c eases
+                          mCurrent1 back to rest with. */
+    s32 mRadius;      /* 0x028 -- constructor zeroes it and each child's own
+                          constructor then writes its own constant (0x8000
+                          ball, 0x14000 pakkun, 0x18000 board, 0x20000 dokan/
+                          propeller/spring, 0x7000 kinoko). Both readers use it
+                          as a distance: cMgSmartball_ball_c::SaveSnapshot
+                          compares a signed plane distance against -mRadius,
+                          and cMgSmartball_kinoko_c eases it to 0 and back to
+                          0x7000 as the mushroom squashes, with that class's
+                          Update turning it into a render scale. Ten other
+                          files in this family read or write it, the
+                          most-touched field of the class. */
+    s32 mIndex;       /* 0x02c -- the constructor's second argument: this
+                          object's slot in the manager's tables.
+                          func_ov006_021128fc compares it against mgr+0x4664
+                          and indexes mgr+0x4688 with it minus one. */
+    u8  mIsActive;    /* 0x030 -- constructor sets it to 1. While it is 0
+                          cMgSmartball_ball_c's SaveSnapshot and Update return
+                          immediately, func_ov006_02111dcc refuses to arm an
+                          expiry, and both cMgSmartball_board_c::SaveSnapshot
+                          and cMgSmartball_kinoko_c::SaveSnapshot skip a
+                          tracked ball whose byte at 0x30 is 0. */
     /* 0x031-0x033 IS A THREE-BYTE REGION WITH NO SINGLE TYPE, and that is the
        answer, not a gap in the evidence. Three children read the same three
        bytes three incompatible ways, all of them byte-matching:

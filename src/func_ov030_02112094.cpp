@@ -13,11 +13,11 @@ struct Bundle { Vector3_16 rot; short _p; Vector3 trans; int _tail[2]; };
 extern "C" {
 extern int _ZN6Player14IsFrontSlidingEv(void*);
 extern int _ZN6Player17LostGrabbedObjectEv(void*);
-extern void* _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(void*, void*, void*);
+extern void* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void*, void*, void*);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* self, void* shadow, void* mtx, int rad, int height, unsigned int flags);
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void MulMat4x3Mat4x3(void* a, void* b, void* out);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
@@ -45,7 +45,7 @@ void func_ov030_02112094(void* self)
         if (*(int*)(*(char**)(c + 0x3a8) + 8) == 2) {
             idx = (idx + 2) & 0xff;
         }
-        res = _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(c, *(void**)(c + 0x3a8),
+        res = _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(c, *(void**)(c + 0x3a8),
             data_ov030_02115ddc + idx * 0xc);
         *(M4x3*)(c + 0xf0) = *(M4x3*)res;
     } else {
@@ -57,7 +57,7 @@ void func_ov030_02112094(void* self)
 
     int b = (int)((*(int*)(c + 0xb0) & 0x40000) != 0);
     if (!b) {
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, c + 0x138, c + 0xf0, 0x5a000, 0x190000, 0xf);
     }
 
@@ -65,7 +65,7 @@ void func_ov030_02112094(void* self)
     if (id == 0)
         return;
 
-    obj = _ZN5Actor10FindWithIDEj(id);
+    obj = _ZN8dActor_c10FindWithIDEj(id);
 
     bnd.trans.x = 0xa00;
     bnd.trans.y = 0;

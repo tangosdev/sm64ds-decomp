@@ -4,10 +4,12 @@
     .ctor       start:0x0214e0a0 end:0x0214e0b0 kind:rodata align:4
     .data       start:0x0214e0c0 end:0x0214e6e0 kind:data align:32
     .bss        start:0x0214e6e0 end:0x0214eaa0 kind:bss align:32
-src/_ZN13FortressTowerD1Ev.c:
+src/_ZN13FortressTowerD1Ev.cpp:
+    complete
     .text start:0x02148a80 end:0x02148ac4
 
-src/_ZN13FortressTowerD0Ev.c:
+src/_ZN13FortressTowerD0Ev.cpp:
+    complete
     .text start:0x02148ac4 end:0x02148b1c
 
 src/_ZN13FortressTower16CleanupResourcesEv.cpp:
@@ -23,36 +25,39 @@ src/_ZN13FortressTower8BehaviorEv.cpp:
     .text start:0x02148ba8 end:0x02148c94
 
 src/_ZN13FortressTower13InitResourcesEv.cpp:
+    complete
     .text start:0x02148c94 end:0x02148e9c
 
-src/RopeBarrier_Spawn.c:
+src/d_a_obj_simple_bg_mc_hazad.c:
     complete
     .text start:0x02148e9c end:0x02148ecc
 
-src/CgStairs_Spawn.c:
+src/d_a_obj_simple_bg_mc_dodai.c:
     complete
     .text start:0x02148ecc end:0x02148efc
 
-src/WarpPipe_Spawn.c:
+src/d_a_obj_simple_bg_dokan.c:
     complete
     .text start:0x02148efc end:0x02148f2c
 
-src/FortressTower_Spawn.c:
+src/d_a_obj_simple_bg_bk_tower.c:
     complete
     .text start:0x02148f2c end:0x02148f5c
 
-src/RockTriangle_Spawn.c:
+src/d_a_obj_simple_bg_ki_hasira_dai.c:
     complete
     .text start:0x02148f5c end:0x02148f8c
 
-src/StaticRock_Spawn.c:
+src/d_a_obj_simple_bg_ki_iwa.c:
     complete
     .text start:0x02148f8c end:0x02148fbc
 
-src/_ZN13QuestionBlockD1Ev.c:
+src/_ZN13QuestionBlockD1Ev.cpp:
+    complete
     .text start:0x02148fbc end:0x02149010
 
-src/_ZN13QuestionBlockD0Ev.c:
+src/_ZN13QuestionBlockD0Ev.cpp:
+    complete
     .text start:0x02149010 end:0x02149078
 
 src/func_ov102_02149078.c:
@@ -100,29 +105,30 @@ src/func_ov102_0214953c.c:
     .text start:0x0214953c end:0x02149610
 
 src/func_ov102_02149610.cpp:
+    complete
     .text start:0x02149610 end:0x02149684
 
 src/func_ov102_02149684.c:
     complete
     .text start:0x02149684 end:0x021496a4
 
-src/func_ov102_021496a4.c:
+src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp:
     complete
     .text start:0x021496a4 end:0x02149710
 
-src/func_ov102_02149710.c:
+src/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02149710 end:0x02149770
 
-src/func_ov102_02149770.c:
+src/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp:
     complete
     .text start:0x02149770 end:0x021497c8
 
-src/func_ov102_021497c8.c:
+src/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp:
     complete
     .text start:0x021497c8 end:0x02149820
 
-src/func_ov102_02149820.c:
+src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02149820 end:0x02149878
 
@@ -133,6 +139,10 @@ src/func_ov102_02149878.c:
 src/func_ov102_021498c4.c:
     complete
     .text start:0x021498c4 end:0x021498e0
+
+src/func_ov102_021498e0.cpp:
+    complete
+    .text start:0x021498e0 end:0x02149c78
 
 src/func_ov102_02149c78.c:
     complete
@@ -178,47 +188,48 @@ src/_ZN13QuestionBlock8BehaviorEv.cpp:
     complete
     .text start:0x0214a32c end:0x0214a4a4
 
-src/_ZN13QuestionBlock13InitResourcesEv.c:
+src/_ZN13QuestionBlock13InitResourcesEv.cpp:
     complete
     .text start:0x0214a4a4 end:0x0214a7ec
 
-src/CapBlockWario_Spawn.c:
+src/d_a_obj_hatena_block_cap_block_w.c:
     complete
     .text start:0x0214a7ec end:0x0214a82c
 
-src/CapBlockLuigi_Spawn.c:
+src/d_a_obj_hatena_block_cap_block_l.c:
     complete
     .text start:0x0214a82c end:0x0214a86c
 
-src/CapBlockMario_Spawn.c:
+src/d_a_obj_hatena_block_cap_block_m.c:
     complete
     .text start:0x0214a86c end:0x0214a8ac
 
-src/ExclamationBlock_Spawn.c:
+src/d_a_obj_hatena_block_item_block.c:
     complete
     .text start:0x0214a8ac end:0x0214a8ec
 
-src/QuestionBlock_Spawn.c:
+src/d_a_obj_hatena_block_hatena_block.c:
     complete
     .text start:0x0214a8ec end:0x0214a92c
 
-src/ExclamationBlockVs_Spawn.c:
+src/d_a_obj_hatena_block_vs_item_block.c:
     complete
     .text start:0x0214a92c end:0x0214a96c
 
-src/_ZN6BobOmbD1Ev.c:
+src/_ZN6BobOmbD1Ev.cpp:
     complete
     .text start:0x0214a96c end:0x0214a9b4
 
-src/_ZN6BobOmbD0Ev.c:
+src/_ZN6BobOmbD0Ev.cpp:
     complete
     .text start:0x0214a9b4 end:0x0214aa10
 
-src/func_ov102_0214aa10.c:
+src/_ZN6BobOmb16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0214aa10 end:0x0214aa18
 
 src/func_ov102_0214aa18.cpp:
+    complete
     .text start:0x0214aa18 end:0x0214ab1c
 
 src/func_ov102_0214ab1c.c:
@@ -233,7 +244,7 @@ src/func_ov102_0214ad40.c:
     complete
     .text start:0x0214ad40 end:0x0214adc8
 
-src/func_ov102_0214adc8.c:
+src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x0214adc8 end:0x0214ae1c
 
@@ -250,6 +261,7 @@ src/func_ov102_0214b128.cpp:
     .text start:0x0214b128 end:0x0214b248
 
 src/func_ov102_0214b248.cpp:
+    complete
     .text start:0x0214b248 end:0x0214b384
 
 src/func_ov102_0214b384.c:
@@ -267,6 +279,10 @@ src/func_ov102_0214b3f0.c:
 src/func_ov102_0214b444.cpp:
     complete
     .text start:0x0214b444 end:0x0214b53c
+
+src/func_ov102_0214b53c.c:
+    complete
+    .text start:0x0214b53c end:0x0214b988
 
 src/func_ov102_0214b988.cpp:
     complete
@@ -316,7 +332,7 @@ src/func_ov102_0214c0b8.c:
     complete
     .text start:0x0214c0b8 end:0x0214c12c
 
-src/_ZN6BobOmb16CleanupResourcesEv.c:
+src/_ZN6BobOmb16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214c12c end:0x0214c168
 
@@ -324,25 +340,27 @@ src/_ZN6BobOmb6RenderEv.cpp:
     complete
     .text start:0x0214c168 end:0x0214c1bc
 
-src/_ZN6BobOmb8BehaviorEv.c:
+src/_ZN6BobOmb8BehaviorEv.cpp:
+    complete
     .text start:0x0214c1bc end:0x0214c510
 
 src/_ZN6BobOmb13InitResourcesEv.cpp:
+    complete
     .text start:0x0214c510 end:0x0214c6e4
 
-src/func_ov102_0214c6e4.c:
+src/_ZN6BobOmb13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0214c6e4 end:0x0214c6f8
 
-src/BobOmb_Spawn.c:
+src/d_a_bmb.c:
     complete
     .text start:0x0214c6f8 end:0x0214c748
 
-src/_ZN10KoopaShellD1Ev.c:
+src/_ZN10KoopaShellD1Ev.cpp:
     complete
     .text start:0x0214c748 end:0x0214c798
 
-src/_ZN10KoopaShellD0Ev.c:
+src/_ZN10KoopaShellD0Ev.cpp:
     complete
     .text start:0x0214c798 end:0x0214c7fc
 
@@ -355,9 +373,11 @@ src/func_ov102_0214c84c.c:
     .text start:0x0214c84c end:0x0214cbec
 
 src/func_ov102_0214cbec.cpp:
+    complete
     .text start:0x0214cbec end:0x0214ce60
 
 src/func_ov102_0214ce60.cpp:
+    complete
     .text start:0x0214ce60 end:0x0214cf4c
 
 src/func_ov102_0214cf4c.cpp:
@@ -408,7 +428,7 @@ src/_ZN10KoopaShell16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214d248 end:0x0214d274
 
-src/_ZN10KoopaShell16OnPendingDestroyEv.c:
+src/_ZN10KoopaShell16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0214d274 end:0x0214d278
 
@@ -421,24 +441,29 @@ src/_ZN10KoopaShell8BehaviorEv.cpp:
     .text start:0x0214d2e8 end:0x0214d54c
 
 src/_ZN10KoopaShell13InitResourcesEv.cpp:
+    complete
     .text start:0x0214d54c end:0x0214d6a0
 
-src/func_ov102_0214d6a0.c:
+src/_ZN10KoopaShell13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0214d6a0 end:0x0214d6b4
 
-src/KoopaShell_Spawn.c:
+src/d_a_shl.c:
     complete
     .text start:0x0214d6b4 end:0x0214d70c
 
 src/__sinit_ov102_0214d714.c:
+    complete
     .init start:0x0214d714 end:0x0214d908
 
 src/__sinit_ov102_0214d908.c:
+    complete
     .init start:0x0214d908 end:0x0214de70
 
 src/__sinit_ov102_0214de70.c:
+    complete
     .init start:0x0214de70 end:0x0214dfac
 
 src/__sinit_ov102_0214dfac.c:
+    complete
     .init start:0x0214dfac end:0x0214e0a0

@@ -6,7 +6,7 @@ extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, s16 angX);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(void* m, s16 angY);
-extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* c, void* shadow, void* mtx, int rad, int height, u32 flags);
 extern "C" void MulMat4x3Mat4x3(void* a, void* b, void* out);
 extern "C" void Vec3_LslInPlace(void* v, int sh);
@@ -51,7 +51,7 @@ extern "C" void func_ov077_02123d40(char* c)
     *(int*)(c + 0x3e8) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x3ec) = *(int*)(c + 0x64) >> 3;
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x188, c + 0x3c0, 0x5a000, 0x320000, 0xf);
 
     if (*(int*)(c + 0x3f4) != 1)

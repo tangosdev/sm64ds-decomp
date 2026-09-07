@@ -29,14 +29,11 @@ int Fader::IsAtEnd() { return 0; }
 // hardware upload.
 void FaderBrightness::AdvanceFade() { AdvanceInterp(); }
 
-// Fader::AdvanceInterp calls the 20.12 approach helper by its historical
-// name func_0203ae58 (extern "C", by-pointer). The function has since been
-// identified and renamed to ApproachLinear(int&, int, int) -- the NDS build
-// resolves the old name by address, the host cannot. Bridge, do not edit
-// src/: the fader TU keeps matching bytes, and when its extern is one day
-// modernised this shim dies loudly as a duplicate.
+// Fader::AdvanceInterp deliberately retains the ROM's Itanium spelling as a C
+// symbol. MSVC emits its own decoration for the migrated C++ definition, so the
+// host needs a calling-convention-preserving forwarder between those spellings.
 int ApproachLinear(int &ref, int target, int step);
-extern "C" void func_0203ae58(int *value, int target, int step)
+extern "C" void _Z14ApproachLinearRiii(Fix12i *value, Fix12i target, Fix12i step)
 {
-    ApproachLinear(*value, target, step);
+    (void)ApproachLinear(*value, target, step);
 }

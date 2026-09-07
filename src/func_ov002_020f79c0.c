@@ -28,7 +28,7 @@ int func_ov002_020f79c0(char *self, void *unused, int mode)
         int t;
 
         {
-            short *p94 = (short *)(((long long)(int)(c + 0x94)));
+            short *p94 = (short *)(c + 0x94);
             *p94 = *p94 + 0x200;
         }
         Math_Function_0203b0fc((int *)(c + 0xf4), 0x64000, 0x7a, 0x7fffffff);
@@ -49,18 +49,18 @@ int func_ov002_020f79c0(char *self, void *unused, int mode)
         h = *(unsigned short *)(c + 0xfc);
         t = data_02082214[(h >> 4) * 2 + 1];
         {
-            int *p60 = (int *)(((long long)(int)(c + 0x60)));
+            int *p60 = (int *)(c + 0x60);
             *p60 = *p60 + (int)((((long long)t * 0x96000LL) + 0x800) >> 12);
         }
 
         {
-            short *pfc = (short *)(((long long)(int)(c + 0xfc)));
+            short *pfc = (short *)(c + 0xfc);
             *pfc = *pfc + *(short *)(c + 0xfe);
         }
         ApproachAngle((short *)(c + 0xfe), 0x200, 0x14, 0x4000, 0);
 
         {
-            int *p5c = (int *)(((long long)(int)(c + 0x5c)));
+            int *p5c = (int *)(c + 0x5c);
             *p5c = *p5c + *(int *)(c + 0xf8);
         }
         Math_Function_0203b0fc((int *)(c + 0xf8), 0, 0xcc, 0x7fffffff);

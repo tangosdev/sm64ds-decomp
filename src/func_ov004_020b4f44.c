@@ -6,7 +6,7 @@ extern int data_ov004_020b9488[];
 extern int data_ov004_020bfa18[];
 
 void func_ov004_020b4f44(char* c){
-  int* p = (int*)(((int)c + 0xc) & 0xFFFFFFFFFFFFFFFFull);
+  int* p = (int*)((int)c + 0xc);
   int g = data_ov004_020b9488[0];
   int n = -(((short)*(short*)(c+0x20) - (g >> 1)) << 12);
   int q;

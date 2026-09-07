@@ -7,7 +7,7 @@ int func_ov007_020b9fc0(void) {
     char *p1 = *(char **)(base + 4);
     char *p2 = *(char **)(base + 8);
     int *addr4 = (int *)(p2 + 0x50);
-    int *addr1 = (int *)(((long long)(int)(p1 + 0x50)));
+    int *addr1 = (int *)(p1 + 0x50);
 
     if (*addr1 < 0x1f000) {
         char *c = (char *)data_ov007_02104ba0;

@@ -27,6 +27,6 @@ int KoopaTheQuick::CleanupResources()
     _ZN13SharedFilePtr7ReleaseEv(&data_ov062_0211e03c);
     _ZN13SharedFilePtr7ReleaseEv(&data_ov062_0211e02c);
     _ZN13SharedFilePtr7ReleaseEv(&data_ov062_0211e004);
-    if (unk_3b5) _ZN5Sound22StopLoadedMusic_Layer2Ev();
+    if (mIsRacing) _ZN5Sound22StopLoadedMusic_Layer2Ev();
     return 1;
 }

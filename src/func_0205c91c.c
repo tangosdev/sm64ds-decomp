@@ -24,7 +24,7 @@ int func_0205c91c(S *s)
     if (((s->f10 & 2) ? 1 : 0) != 0) {
         ret = func_0205c864(s);
         if (((s->f10 & 4) ? 1 : 0) != 0) {
-            *(unsigned int *)(((int)&s->f10) & 0xFFFFFFFFFFFFFFFFu) &= ~4u;
+            *(unsigned int *)((int)&s->f10) &= ~4u;
             r = s->f38;
             s->f38 = 0;
             s->f20 = s->f30;

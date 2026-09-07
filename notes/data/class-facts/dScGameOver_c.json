@@ -1,0 +1,114 @@
+{
+  "class": "dScGameOver_c",
+  "candidate_text": {
+    "start": "0x020b0580",
+    "end": "0x020b1118",
+    "size": "0x0b98",
+    "partition": "7 vtable-targeted class functions (0x0994 bytes) plus 2 non-member helper functions (0x0204 bytes)"
+  },
+  "rtti_name": "13dScGameOver_c",
+  "rtti": {
+    "symbol": "_ZTI13dScGameOver_c",
+    "address": "0x020b1758",
+    "kind_vptr": "0x0209a764",
+    "kind": "abi::__si_class_type_info",
+    "name_pointer": "0x020b1784",
+    "direct_base_pointer": "0x020914d4",
+    "evidence": "Linked ov003 words at 0x020b1758 are {0x0209a764, 0x020b1784, 0x020914d4}; the bytes at 0x020b1784 are the NUL-terminated RTTI name \"13dScGameOver_c\" (0x10 bytes through 0x020b1794). The single-base __si kind vptr 0x0209a764 is the same one dScMgD3DBase_c's record carries (notes/data/class-facts/dScMgD3DBase_c.json)."
+  },
+  "overlay": "ov003",
+  "module_base": "0x020ad660",
+  "related_modules": [
+    {
+      "module": "main",
+      "module_base": "0x02004000",
+      "role": "inherited slots (fBase_c/dBase_c/dScene_c bodies), ancestor RTTI, and every arm9 helper this TU calls"
+    },
+    {
+      "module": "ov003",
+      "module_base": "0x020ad660",
+      "role": "class RTTI, vtable, own overrides, candidate text, and the four data tables it reads"
+    }
+  ],
+  "base_class": "dScene_c",
+  "base_evidence": "_ZTI13dScGameOver_c at 0x020b1758 has +0x08 = 0x020914d4, which config/arm9/symbols.txt names _ZTI8dScene_c. Corroborated by vtable length: _ZTV13dScGameOver_c is 18 slots, exactly dScene_c's own 18, and no new virtual is added.",
+  "vtable": {
+    "symbol": "_ZTV13dScGameOver_c",
+    "address": "0x020b179c",
+    "header_start": "0x020b1794",
+    "offset_to_top_address": "0x020b1794",
+    "offset_to_top": "0x00000000",
+    "rtti_pointer_address": "0x020b1798",
+    "rtti_pointer": "0x020b1758",
+    "last_slot_address": "0x020b17e0",
+    "end": "0x020b17e4",
+    "slots": 18,
+    "section_size": "0x50",
+    "extent_evidence": "The 18 consecutive words from the address point 0x020b179c through 0x020b17e0 are all code pointers into ov003 or arm9. The next word at 0x020b17e4 is 0x81f000f0, which is not a code address in any loaded module, and ov003's symbols.txt independently starts a new data symbol data_ov003_020b17e4 there. There are no trailing null slots to qualify. 0x020b17e4 - 0x020b1794 = 0x50, the whole emitted section including the two header words. Note the ROM's _ZTV symbol IS the address point, so the section starts 8 bytes below the manifest address.",
+    "entries": [
+      {"slot": 0, "slot_address": "0x020b179c", "target": "0x020b0b3c", "module": "ov003", "name": "dScGameOver_c::InitResources"},
+      {"slot": 1, "slot_address": "0x020b17a0", "target": "0x0202e638", "module": "main", "name": "dScene_c::BeforeInitResources"},
+      {"slot": 2, "slot_address": "0x020b17a4", "target": "0x0202e62c", "module": "main", "name": "dScene_c::AfterInitResources"},
+      {"slot": 3, "slot_address": "0x020b17a8", "target": "0x020b0b34", "module": "ov003", "name": "dScGameOver_c::CleanupResources"},
+      {"slot": 4, "slot_address": "0x020b17ac", "target": "0x0202e5f0", "module": "main", "name": "dScene_c::BeforeCleanupResources"},
+      {"slot": 5, "slot_address": "0x020b17b0", "target": "0x0202e5d0", "module": "main", "name": "dScene_c::AfterCleanupResources"},
+      {"slot": 6, "slot_address": "0x020b17b4", "target": "0x020b0894", "module": "ov003", "name": "dScGameOver_c::Behavior"},
+      {"slot": 7, "slot_address": "0x020b17b8", "target": "0x0202e3d4", "module": "main", "name": "dScene_c::BeforeBehavior"},
+      {"slot": 8, "slot_address": "0x020b17bc", "target": "0x0202e3c8", "module": "main", "name": "dScene_c::AfterBehavior"},
+      {"slot": 9, "slot_address": "0x020b17c0", "target": "0x020b0814", "module": "ov003", "name": "dScGameOver_c::Render"},
+      {"slot": 10, "slot_address": "0x020b17c4", "target": "0x0202e3a4", "module": "main", "name": "dScene_c::BeforeRender"},
+      {"slot": 11, "slot_address": "0x020b17c8", "target": "0x0202e398", "module": "main", "name": "dScene_c::AfterRender"},
+      {"slot": 12, "slot_address": "0x020b17cc", "target": "0x020b0810", "module": "ov003", "name": "dScGameOver_c::OnPendingDestroy"},
+      {"slot": 13, "slot_address": "0x020b17d0", "target": "0x0204357c", "module": "main", "name": "fBase_c::Virtual34"},
+      {"slot": 14, "slot_address": "0x020b17d4", "target": "0x0204349c", "module": "main", "name": "fBase_c::Virtual38"},
+      {"slot": 15, "slot_address": "0x020b17d8", "target": "0x02043494", "module": "main", "name": "fBase_c::OnHeapCreated"},
+      {"slot": 16, "slot_address": "0x020b17dc", "target": "0x020b0580", "module": "ov003", "name": "dScGameOver_c::~dScGameOver_c D1"},
+      {"slot": 17, "slot_address": "0x020b17e0", "target": "0x020b05bc", "module": "ov003", "name": "dScGameOver_c::~dScGameOver_c D0"}
+    ]
+  },
+  "own_override_count": 7,
+  "overrides": [
+    {"slot": 0, "address": "0x020b0b3c", "end": "0x020b1118", "name": "InitResources", "body": "Brings both engines up: DisableAllBanks, four SetBankFor* calls, graphics modes, then BG control-register setup for main BG0/BG1/BG2 and sub BG0/BG1/BG2. Loads the language-specific \"GAME OVER\" art on both screens (five variants keyed off GetOwnerLanguage()), the debug font, the OAM glyph tiles and palettes. Calls func_ov003_020b0730(this, 1) to prime the yes/no highlight, zeroes the five state bytes at 0x090..0x094, lays the eight glyphs out from data_ov003_020b1764 into unk_050 with y=0x60, scale=0x30, rotation=0, then starts the game-over music. Returns 1."},
+    {"slot": 3, "address": "0x020b0b34", "end": "0x020b0b3c", "name": "CleanupResources", "body": "`return 1;` -- eight bytes. The scene owns no allocation of its own."},
+    {"slot": 6, "address": "0x020b0894", "end": "0x020b0b34", "name": "Behavior", "body": "Gated on a virtual call through the global object at data_0209f5bc (vtable slot 0x14). Runs the glyph drop animation via func_ov003_020b060c(this), then, once unk_094 >= 2, a two-state cursor FSM: state 0 reads the stylus box and the button and picks yes/no; state 1 runs the two countdowns down and commits -- func_0202ae74() on \"yes\", dScene_c::StartSceneFade(1, 0, 0) on \"no\" -- then stops the music. Returns 1."},
+    {"slot": 9, "address": "0x020b0814", "end": "0x020b0894", "name": "Render", "body": "Draws the eight \"GAME OVER\" glyph sprites through OAM::Render from data_ov003_020b1824[i] at unk_050[i]/unk_060[i] with scale 0x1000 and no rotation, then calls Stage::RenderBouncingArrows() once unk_094 >= 2. Returns 1."},
+    {"slot": 12, "address": "0x020b0810", "end": "0x020b0814", "name": "OnPendingDestroy", "body": "`bx lr` -- four bytes, an empty body."},
+    {"slot": 16, "address": "0x020b0580", "end": "0x020b05bc", "name": "D1 destructor", "body": "Stores vptr &_ZTV13dScGameOver_c[2], then dScene_c's and dBase_c's vptrs inline, then calls fBase_c::~fBase_c at 0x02043d48. No member destruction: every own field is a scalar."},
+    {"slot": 17, "address": "0x020b05bc", "end": "0x020b060c", "name": "D0 deleting destructor", "body": "The same chain as D1, then Memory::Deallocate(this, GAME_HEAP_PTR) through the operator delete dScGameOver_c inherits from its immediate base dScene_c."}
+  ],
+  "non_virtual": [],
+  "tu_nearby_free_helpers": [
+    {"address": "0x020b060c", "end": "0x020b0730", "reason": "Called only from Behavior at 0x020b08b8 with r0 = this. It reads and writes this object's fields at +0x50, +0x70 and +0x94, so it takes the receiver, but it carries no mangled name and the ROM gives it none; it is the glyph drop-in animation step. Its one caller is inside the class region."},
+    {"address": "0x020b0730", "end": "0x020b0810", "reason": "Called from InitResources at 0x020b1080 and from Behavior at three sites, always with r0 = this and a second argument in r1. Reads this+0x91 and this+0x93 and repaints the sub-screen BG1 highlight over the yes/no boxes. Same shape as the previous helper: takes the receiver, has no mangled name, and every caller is inside the class region."}
+  ],
+  "size": "0x98",
+  "size_evidence": {
+    "kind": "direct allocation immediate",
+    "direct_allocation_site": "0x020b1118",
+    "direct_allocation_size": "0x98",
+    "lower_bound": "InitResources zeroes five bytes at this+0x090..0x094 and Behavior/Render read them back, proving occupancy through 0x95.",
+    "upper_bound": "dScGameOver_c_classInit at 0x020b1118 opens with _ZN7fBase_cnwEj(0x98) -- fBase_c::operator new with the literal 0x98. 0x98 - 0x95 = 3 bytes of trailing padding to the class's own 4-byte alignment.",
+    "member_extent": "Everything below 0x50 is inherited from fBase_c/dBase_c/dScene_c, which add no members of their own (include/dScene_c.h). InitResources fills four back-to-back 8-entry s16 arrays at 0x050/0x060/0x070/0x080 and Render reads the first two back; the five state bytes follow at 0x090.",
+    "derived_allocation_witness": null
+  },
+  "fields": [
+    {"offset": "0x050", "width": "0x10", "name": "unk_050", "evidence": "InitResources writes eight s16 entries from data_ov003_020b1764; func_ov003_020b060c walks the same eight with a 2-byte stride; Render passes unk_050[i] as the OAM x coordinate."},
+    {"offset": "0x060", "width": "0x10", "name": "unk_060", "evidence": "InitResources writes 0x60 into eight s16 entries; Render passes unk_060[i] as the OAM y coordinate."},
+    {"offset": "0x070", "width": "0x10", "name": "unk_070", "evidence": "InitResources writes 0x30 into eight s16 entries; func_ov003_020b060c uses the same eight as per-glyph delay counters."},
+    {"offset": "0x080", "width": "0x10", "name": "unk_080", "evidence": "InitResources zeroes eight s16 entries. No other reader in this TU."},
+    {"offset": "0x090", "width": "0x01", "name": "unk_090", "evidence": "Behavior switches on it as a two-state cursor FSM and writes 1 on commit; InitResources zeroes it."},
+    {"offset": "0x091", "width": "0x01", "name": "unk_091", "evidence": "Behavior uses it as the left/right selection and func_ov003_020b0730 compares it against the box index."},
+    {"offset": "0x092", "width": "0x01", "name": "unk_092", "evidence": "Behavior loads 0x10*data_0208ee44 into it and counts it down to commit."},
+    {"offset": "0x093", "width": "0x01", "name": "unk_093", "evidence": "Behavior loads 0x08*data_0208ee44 into it and counts it down; func_ov003_020b0730 reads it to decide the highlight colour."},
+    {"offset": "0x094", "width": "0x01", "name": "unk_094", "evidence": "func_ov003_020b060c drives it 0 -> 1 -> 2 as the glyph animation finishes; Behavior and Render both gate on >= 2."},
+    {"offset": "0x095", "width": "0x03", "name": "pad_095", "evidence": "Nothing reads or writes it; it is the span between the last proven byte and the 0x98 allocator literal."}
+  ],
+  "unproven": [
+    "Semantic names for any own field: the offsets, widths and roles above are proven by ROM accesses, but no ROM string or symbol names them.",
+    "Original source linkage of the two helper bodies at 0x020b060c and 0x020b0730: both take this object's address as their first argument and are called only from within the class region, which is consistent with static file-scope helpers, but adjacency and call shape do not prove static versus external linkage or the original translation-unit cut. The ROM gives them no mangled name, so they were not class members with external linkage.",
+    "The identity of the global object at data_0209f5bc whose vtable slot 0x14 gates Behavior; only its call shape (a virtual call taking itself as receiver, returning a truth value) is proven.",
+    "The element type of data_ov003_020b1824: Render passes each entry straight to OAM::Render's OamAttr* parameter, which proves the pointer type at that call and nothing about the pointed-to layout.",
+    "Any vtable slot after slot 17: the linked bytes prove the table ends at 0x020b17e4, and no trailing null slot is present to preserve an otherwise unobservable declaration.",
+    "Whether dScGameOver_c declares an operator delete of its own: D0 deallocates through Memory::Deallocate(this, GAME_HEAP_PTR) inline, which is equally consistent with inheriting dScene_c's inline copy (the reading include/dScGameOver_c.h takes) and with a private copy of the same body."
+  ]
+}

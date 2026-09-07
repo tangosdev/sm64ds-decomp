@@ -2,7 +2,7 @@ extern int data_0209b2f4[];
 extern int data_0209b2f8[];
 extern int data_020a0d90[];
 extern void func_ov003_020adcbc(int a, int b, int c);
-extern void func_ov004_020adc74(void* p, int b, int c);
+extern void func_ov003_020adc74(void* p, int b, int c);
 
 void func_ov003_020ad6ec(void)
 {
@@ -24,5 +24,5 @@ void func_ov003_020ad6ec(void)
         func_ov003_020adcbc(j, i, 3);
         j++;
     }
-    func_ov004_020adc74(data_020a0d90, 0, 0);
+    func_ov003_020adc74(data_020a0d90, 0, 0);
 }

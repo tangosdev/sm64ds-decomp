@@ -84,7 +84,7 @@ void func_02046bbc(struct Ctx *ctx, struct Desc *desc, unsigned int sb)
     idx0 = *((u16 *) (((char *) desc->field4) + (v0 * 8)));
     item = ctx->node->m18 + (idx0 * 0x14);
     *((int *) (dst + 0x1c)) = *((int *) ((((char *) ctx->node->m28) + (e->id * 0x30)) + 0x20));
-    *((int *) (((unsigned int) (dst + 0x1c)) & 0xFFFFFFFFFFFFFFFFULL)) |= *((int *) (item + 0x10));
+    *((int *) ((unsigned int) (dst + 0x1c))) |= *((int *) (item + 0x10));
     flags = ((*((unsigned int *) (item + 0x10))) >> 26) & 7;
     if (desc->field8 != 0)
     {

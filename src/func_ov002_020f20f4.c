@@ -22,7 +22,7 @@ void func_ov002_020f20f4(char *thiz)
       if ((data_020a0db0 & 1) == 0)
       {
         s16 *o = (s16 *) (d + ((i & 0xFFFFFFFFFFFFFFFF) * 2));
-        s16 *q = (s16 *) (((int) (((char *) ((s16 *) (d + (i * 2)))) + 0xc)) & 0xFFFFFFFFFFFFFFFFLL);
+        s16 *q = (s16 *) ((int) (((char *) ((s16 *) (d + (i * 2)))) + 0xc));
         s16 vel = *((s16 *) (((char *) o) + 0x1c));
         s16 pos = *q;
         int *seed = &data_0209e650;

@@ -1,46 +1,61 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class LavaBubble: 4 matched functions, 18 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef LAVABUBBLE_H
 #define LAVABUBBLE_H
+
 #include "types.h"
 
-struct LavaBubble {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x34];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x4c];
-    s16 unk_100;            /* 0x100 */
-    u8  pad_102[0xe];
-    u8  mMovingCylinderClsn;            /* 0x110 */
-    u8  pad_111[0x17];
-    u8  unk_128;            /* 0x128 */
-    u8  pad_129[0x7];
-    s32 unk_130;            /* 0x130 */
-    u32 unk_134;            /* 0x134 */
-    u8  pad_138[0xc];
-    u8  mWithMeshClsn;            /* 0x144 */
-    u8  pad_145[0x1bb];
-    u8  unk_300;            /* 0x300 */
-    u8  pad_301[0x3];
-    s32 unk_304;            /* 0x304 */
-    s32 unk_308;            /* 0x308 */
-    s32 unk_30c;            /* 0x30c */
-    u8  unk_310;            /* 0x310 */
-#ifdef __cplusplus
-    /* methods */
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
+ * the class's own destructor `_ZN10LavaBubbleD1Ev` destroys each member, and
+ * `daBbl_c_classInit` constructs the same types at the same offsets before
+ * storing `_ZTV10LavaBubble`. Everything this header used to restate below
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
+ *
+ * The members close on each other, which is what makes the layout a
+ * reading rather than a guess:
+ *
+ *     0x110 dCcAc_c         0x34    -> 0x144
+ *     0x144 dBgCh_Actr               0x1bc   -> 0x300
+ *
+ * Typing them absorbed markers that were their insides:
+ *   - unk_128 = dCcAc_c.flags
+ *   - unk_130 = dCcAc_c.hitFlags
+ *   - unk_134 = dCcAc_c.otherOwner
+ *
+ * SIZE IS THE ROM'S OWN: `daBbl_c_classInit` calls
+ * `fBase_c::operator new(796)` -- 0x31c -- and stores this class's
+ * vtable, so that literal IS this class's sizeof.
+ *
+ * SM64DS RTTI names the implementation daBbl_c. The reconstructed
+ * factory daBbl_c_classInit (historical alias
+ * LavaBubble_Spawn) constructs it for the BUBBLE
+ * registry profile.
+ */
+
+#include "dEnemyBase_c.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
+
+struct LavaBubble : dEnemyBase_c {
+    dCcAc_c           mdCcAc_c;   /* 0x110 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
+    s32                          unk_300;               /* 0x300 */
+    s32                          unk_304;               /* 0x304 */
+    s32                          unk_308;               /* 0x308 */
+    s32                          unk_30c;               /* 0x30c */
+    u8                           unk_310;               /* 0x310 */
+    u8  pad_311[0xb];
+
+    /* --- vtable --- */
+    virtual ~LavaBubble();
+
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+
     int Behavior();
+    int CleanupResources();
     int InitResources();
-#endif
+    void OnPendingDestroy();
+    int Render();
 };
 
-#endif
+typedef char LavaBubble_size_must_be_0x31c[sizeof(LavaBubble) == 0x31c ? 1 : -1];
+
+#endif /* LAVABUBBLE_H */

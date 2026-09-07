@@ -53,7 +53,11 @@ int func_ov004_020b0b1c(int arg) {
                     if (data_ov004_020bc150 != 0) {
                         func_ov004_020b422c(o);
                         if ((unsigned int)(arg - 1) <= 1) {
-                            *(int *)(*(int *)&data_ov004_020beb68 + 0x4000 + 0x630) = 1;
+                            /* The state block pointer is read as a char*: an int-typed base
+                               makes mwcc materialize 0x4630 from the literal pool and store
+                               with a register index (strls r4,[r1,r0]); the cartridge splits
+                               it as addls r0,r0,#0x4000 / strls r4,[r0,#0x630]. */
+                            *(int *)(*(char **)&data_ov004_020beb68 + 0x4000 + 0x630) = 1;
                         }
                     }
                 }

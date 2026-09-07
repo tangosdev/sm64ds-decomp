@@ -74,7 +74,7 @@ void func_ov002_020f4710(char *c, int i)
         return;
 
     {
-        int o2 = (int)((unsigned long long)i & 0xFFFFFFFFFFFFFFFFULL) * 0x4c;
+        int o2 = (int)((unsigned long long)i) * 0x4c;
         (*(u8*)(c + 0x47 + o2))++;
         *(u16*)(c + 0x3c + o2) = 0;
         *(u8*)(c + 0x48 + off) = 0;

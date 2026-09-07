@@ -13,9 +13,9 @@ extern char data_ov102_0214ea58;
 extern char data_ov102_0214ea78;
 
 extern "C" {
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
-extern void func_020ada40(void* c, void* v, void* r4, s32 flag);
-extern int _ZN6Player7TryGrabER5Actor(void* p, void* actor);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* c, void* v, void* r4, s32 flag);
+extern int _ZN6Player7TryGrabER8dActor_c(void* p, void* actor);
 extern void func_ov102_0214d1f8(void* c, void* p);
 extern void func_020105cc(void* c, u32 flags);
 extern int func_ov102_0214cf4c(char* c, char* p);
@@ -34,7 +34,7 @@ extern "C" void func_ov102_0214cbec(char* c)
     id = *(u32*)(c + 0x134);
     if (id == 0)
         return;
-    r4 = _ZN5Actor10FindWithIDEj(id);
+    r4 = _ZN8dActor_c10FindWithIDEj(id);
     if (!r4)
         return;
 
@@ -52,7 +52,7 @@ extern "C" void func_ov102_0214cbec(char* c)
         v[0] = 0x2000;
         v[1] = 0;
         v[2] = 0;
-        func_020ada40(c, v, r4, *(s32*)(c + 0x118) >> 1);
+        _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, v, r4, *(s32*)(c + 0x118) >> 1);
         return;
     }
 
@@ -61,7 +61,7 @@ extern "C" void func_ov102_0214cbec(char* c)
             return;
         if (!(r2 & 0x1000))
             return;
-        if (_ZN6Player7TryGrabER5Actor(r4, c) == 0)
+        if (_ZN6Player7TryGrabER8dActor_c(r4, c) == 0)
             return;
         *(void**)(c + 0x3c0) = r4;
         func_ov102_0214d1f8(c, &data_ov102_0214ea58);

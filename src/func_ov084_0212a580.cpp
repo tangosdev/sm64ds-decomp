@@ -7,14 +7,20 @@ struct Vector3_16_local { unsigned short x, y, z; };
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* o);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* o);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 extern short data_02082214[];
 }
 
-struct CapEnemy {
+struct dCapEnemy_c {
     void UpdateCapPos(const Vector3&, const Vector3_16_local&);
 };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16(void *, const Vector3&, const Vector3_16_local&);
+
 
 extern "C" void func_ov084_0212a580(char* c){
     Vector3_16_local s16;
@@ -30,10 +36,10 @@ extern "C" void func_ov084_0212a580(char* c){
     s16.y = *(short*)(c + 0x8e);
     s16.z = *(short*)(c + 0x90);
     if ((*(int*)(c + 0xb0) & 0x40000 ? 1 : 0) == 0) {
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1b4)) {
-            _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x1e000, 0xf);
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4)) {
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x1e000, 0xf);
         } else {
-            _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x96000, 0xf);
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x96000, 0xf);
         }
     }
     pos.x = 0;
@@ -48,5 +54,5 @@ extern "C" void func_ov084_0212a580(char* c){
     arg16.y = ((unsigned short*)&s16)[1];
     arg16.z = ((unsigned short*)&s16)[2];
     /* equal-arm ternary forces arg16 setup (r2) before arg (r1) — matches ROM call-arg order */
-    ((CapEnemy*)c)->UpdateCapPos(arg, c ? arg16 : arg16);
+    _ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16((dCapEnemy_c*)c, arg, c ? arg16 : arg16);
 }

@@ -1,0 +1,69 @@
+# Keeps symbols/actor_renames.tsv honest about what lives at each address.
+#
+# The ledger's fourth column is a present-tense claim, and `tools/cpp_index.py`
+# and `tools/cpp_rename.py` read it back as a live address -> symbol map. When
+# 360 of its 1,635 mangled/vtable rows named the NEXT class along -- the residue
+# of the `parse_spawnfunc` over-scan fixed in #1418-#1423, on a file that was
+# never regenerated afterwards and can no longer be regenerated at all -- every
+# one of those rows was a false lookup result sitting in a tracked file with
+# nothing watching it.
+#
+# Nothing was watching it because the ledger is not compiled into the ROM. A
+# byte-perfect 106/106 build says nothing about this file, which is exactly the
+# shape of gate this repo keeps having to add after the fact: the failure branch
+# a green run never reaches. `tools/class_rename.py` rewrites rows by NAME, so
+# the drift is reintroducible by an ordinary rename on any future PR.
+#
+# Costs nothing: two text files and no compiler, so it runs here rather than on
+# the private build box pr-validate.yml relays to. About a second over 2,574
+# ledger rows and 25 symbols.txt files.
+#
+# NARROW ON PURPOSE. Only `_ZN...` and `_ZTV...` rows are checked, because only
+# those have a symbols.txt counterpart to check against; the coined rows
+# (Foo_Spawn, g_profile_BAR) carry the same shift in at least a few places and
+# this gate will not catch them. The check prints its own unchecked count on
+# every run so the green cannot be read as covering the whole file.
+name: rename ledger
+
+on:
+  pull_request:
+    paths:
+      - "symbols/actor_renames.tsv"
+      - "config/**/symbols.txt"
+      - "tools/check_rename_ledger.py"
+      - "tools/test_check_rename_ledger.py"
+      - ".github/workflows/rename-ledger.yml"
+  push:
+    branches: [main]
+    paths:
+      - "symbols/actor_renames.tsv"
+      - "config/**/symbols.txt"
+      - "tools/check_rename_ledger.py"
+      - "tools/test_check_rename_ledger.py"
+      - ".github/workflows/rename-ledger.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rename-ledger-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ledger:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the check reads two tracked text files.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Ledger rows agree with symbols.txt
+        run: python tools/check_rename_ledger.py --repo .
+      - name: The gate's own tests
+        # Every case is a defect found reviewing the first draft of the checker
+        # -- the digit in da1up_c, the mixed line endings, --fix exiting 0 over
+        # rows it refused, a silently missing symbols.txt, and the retired name
+        # that had nowhere else to live. stdlib unittest, no dependencies.
+        run: python -m unittest tools.test_check_rename_ledger -v

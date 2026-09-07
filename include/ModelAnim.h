@@ -39,7 +39,7 @@
  * -- and are called from 103 and 131 source files respectively. A compiler
  * emits C1/D1 only for a type something actually creates; a class that can
  * only ever be a base gets C2/D2 alone. Those calls land at member offsets
- * inside other classes (Amp+0xd4, Flag+0xd4, QuestionSwitch+0x6b4, ...),
+ * inside other classes (Amp+0xd4, daMcFlag_c+0xd4, QuestionSwitch+0x6b4, ...),
  * which is what an embedded member looks like, and they are relocations the
  * ROM build checks -- not prose.
  *
@@ -64,6 +64,8 @@
 
 #ifdef __cplusplus
 
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct ModelAnim : Model, Animation {
     BCA_File *file;            /* 0x60 */
 
@@ -74,10 +76,28 @@ struct ModelAnim : Model, Animation {
     virtual void Render(const Vector3 *scale);            /* slot 5 */
     virtual void Virtual18(u32 mat, const Vector3 *scale);/* slot 6 */
 
+    /* DECLARED, defined out of line in src/_ZN9ModelAnimC1Ev.cpp as real C++
+     * -- complete-object context for every ROM caller (103 of them), hence C1.
+     * Body is the single store file = 0; both base steps and both vptr stores
+     * are synthesised (notes/ctor-migration.md section 6). The C2 sibling each
+     * TU emits is stripped by objisolate; its enrolled home stays the
+     * hand-written _ZN9ModelAnimC2Ev.c (section 1). */
+
     /* --- non-virtual --- */
+    ModelAnim();
     void SetAnim(BCA_File *animFile, int flags, Fix12<int> speed,
                  u32 startFrame);         /* defined as a free function, wall 6az */
     void Copy(const ModelAnim &src, char *newFile);
+
+    /* ITS OWN, TO RESOLVE AN AMBIGUITY MULTIPLE INHERITANCE CREATES. ModelAnim
+       derives from Model (so ModelBase) and from Animation, and both bases
+       declare operator delete, so an inherited one is "ambiguous access to
+       name found: ModelBase::operator delete and Animation::operator delete".
+       Declaring it here picks the same deallocator both bases name, and also
+       satisfies the rule in include/dActor_c.h that mwcc only inlines the member
+       when it is in the class or its immediate base. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+
 };
 
 typedef char ModelAnim_size_must_be_0x64[sizeof(ModelAnim) == 0x64 ? 1 : -1];

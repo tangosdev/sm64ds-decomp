@@ -14,9 +14,9 @@ struct BF3ae {
 };
 
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *c, void *sm, void *mtx, int a, int b, unsigned int u);
-extern int data_02082128[];
+extern int IDENTITY_MATRIX4X3[];
 
 void func_ov002_020b14d8(char *c)
 {
@@ -28,7 +28,7 @@ void func_ov002_020b14d8(char *c)
     *(int*)(c + 0x10c) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x110) = *(int*)(c + 0x64) >> 3;
     *(struct Matrix4x3*)(c + 0x120) = *(struct Matrix4x3*)(c + 0xe4);
-    *(struct Matrix4x3*)(c + 0x368) = *(struct Matrix4x3*)data_02082128;
+    *(struct Matrix4x3*)(c + 0x368) = *(struct Matrix4x3*)IDENTITY_MATRIX4X3;
     *(int*)(c + 0x38c) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x390) = *(int*)(c + 0x60) >> 3;
     *(int*)(c + 0x394) = *(int*)(c + 0x64) >> 3;
@@ -45,7 +45,7 @@ void func_ov002_020b14d8(char *c)
 
     sel = ((struct BF3ae*)(c + 0x3ae))->sel;
     if (sel == 0) {
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, c + 0x150, c + 0x368, 0x50000, 0x1f4000, 0xf);
         *(int*)(c + 0xb8) = 0x3e800;
         return;
@@ -55,7 +55,7 @@ void func_ov002_020b14d8(char *c)
     {
         int t = *(int*)(c + 0x60) - *(int*)(c + 0x398);
         *(int*)(c + 0xb8) = (t + 0x50000) >> 3;
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, c + 0x150, c + 0x368, 0x50000, t + 0x28000, 0xf);
     }
 }

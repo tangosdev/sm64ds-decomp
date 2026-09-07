@@ -1,0 +1,311 @@
+{
+  "id": "ov070/daKpFr_c",
+  "module": "ov070",
+  "source": "src/game/actors/d_a_kp_fr.cpp",
+  "promoted_source": "src/game/actors/d_a_kp_fr.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2121b48..0x2122244, 21 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daKpFr_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02121b48",
+      "end": "0x02122244"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daKpFr_cD1Ev",
+      "address": "0x02121b48",
+      "size": "0x00000040",
+      "legacy_source": "src/_ZN8daKpFr_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daKpFr_cD0Ev",
+      "address": "0x02121b88",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN8daKpFr_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN8daKpFr_c13OnYoshiTryEatEv",
+      "address": "0x02121bdc",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8daKpFr_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov070_02121be4",
+      "address": "0x02121be4",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov070_02121be4.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov070_02121c8c",
+      "address": "0x02121c8c",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov070_02121c8c.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov070_02121cbc",
+      "address": "0x02121cbc",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov070_02121cbc.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov070_02121d50",
+      "address": "0x02121d50",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov070_02121d50.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov070_02121e14",
+      "address": "0x02121e14",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov070_02121e14.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov070_02121eb0",
+      "address": "0x02121eb0",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov070_02121eb0.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov070_02121ef8",
+      "address": "0x02121ef8",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov070_02121ef8.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov070_02121f18",
+      "address": "0x02121f18",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov070_02121f18.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov070_02121fb0",
+      "address": "0x02121fb0",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov070_02121fb0.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov070_02121fd0",
+      "address": "0x02121fd0",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov070_02121fd0.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov070_0212200c",
+      "address": "0x0212200c",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov070_0212200c.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov070_02122044",
+      "address": "0x02122044",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov070_02122044.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN8daKpFr_c16CleanupResourcesEv",
+      "address": "0x02122060",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8daKpFr_c16CleanupResourcesEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN8daKpFr_c16OnPendingDestroyEv",
+      "address": "0x02122068",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8daKpFr_c16OnPendingDestroyEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN8daKpFr_c6RenderEv",
+      "address": "0x0212206c",
+      "size": "0x00000098",
+      "legacy_source": "src/_ZN8daKpFr_c6RenderEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN8daKpFr_c8BehaviorEv",
+      "address": "0x02122104",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN8daKpFr_c8BehaviorEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN8daKpFr_c13InitResourcesEv",
+      "address": "0x02122124",
+      "size": "0x000000d8",
+      "legacy_source": "src/_ZN8daKpFr_c13InitResourcesEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "daKpFr_c_classInit",
+      "address": "0x021221fc",
+      "size": "0x00000048",
+      "legacy_source": "src/daKpFr_c_Spawn.c",
+      "ordinal": 20
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits the inherited fBase_c typeinfo as vague linkage; romdata_check proves this exact copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits the inherited fBase_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits the inherited dBase_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits the inherited dActor_c type-name string as vague linkage; romdata_check proves its exact emitted bytes at the canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8daKpFr_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov070",
+      "canonical_address": "0x0212340c",
+      "reason": "The key-function TU emits daKpFr_c's ROM-named type string; its canonical bytes remain gap-owned in this text-only production model and are proved before isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTI8daKpFr_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov070",
+      "canonical_address": "0x02123418",
+      "reason": "The key-function TU emits daKpFr_c's single-inheritance typeinfo; romdata_check proves its ABI kind, name relocation, and dActor_c base link at the canonical ov070 home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits the inherited dActor_c typeinfo as vague linkage; romdata_check proves this copy at its canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits the inherited dBase_c typeinfo as vague linkage; romdata_check proves this copy at its canonical arm9 home before isolation discards it."
+    },
+    {
+      "symbol": "g_profile_KERONPA_FIRE",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov070",
+      "canonical_address": "0x02123424",
+      "reason": "The source reconstructs the 0x1c actor/process profile descriptor with its sole relocation to daKpFr_c_classInit and exact profile/order, flag, and culling words; romdata_check proves all emitted bytes at its ov070 home."
+    },
+    {
+      "symbol": "_ZTV8daKpFr_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov070",
+      "canonical_address": "0x02123448",
+      "reason": "The key-function TU emits the full daKpFr_c vtable storage; romdata_check applies the 8-byte ABI address-point bias and proves all 31 retail slots before text-only isolation discards it."
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: this TU began as a hand-assembled reverse-ROM-order concatenation because tubuild create refused the extern-C-wrapped legacy bodies; it has since been reconstructed around the genuine daKpFr_c class and typed owned subobjects.",
+    "21/21 MATCH, objisolate clean, reloc-destinations clean. Natural `new daKpFr_c` was rejected because it relocates to unresolved `_Znwm`; the typed actor-table factory explicitly retains retail `_ZN7fBase_cnwEj` plus the proven base/member constructors and vptr store. The inline virtual destructor still makes mwcc emit retail D1 then D0 with no D2; automatic real dBgCh_Gnd objects eliminate the shadow lifecycle, while typed Matrix4x3/state storage and POD local vector buffers avoid any standalone Vector3 destructor. The source also emits the exact actor descriptor, RTTI, and complete vtable, all fail-closed through deadstrip-data rows in this text-only manifest.",
+    "daKpFr_c_classInit and g_profile_KERONPA_FIRE are reconstructed source-style names: SM64DS proves the daKpFr_c RTTI identity, KERONPA_FIRE registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were FlameChompFire_Spawn, daKpFr_c_Spawn, and daKpFr_c_SpawnInfo."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov070-daKpFr_c/daKpFr_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 21,
+    "functions_declared": 21,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daKpFr_c",
+        "_ZTI8daKpFr_c",
+        "_ZTI8dActor_c",
+        "_ZTI7dBase_c",
+        "g_profile_KERONPA_FIRE",
+        "_ZTV8daKpFr_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daKpFr_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daKpFr_c",
+        "_ZTV8daKpFr_c",
+        "g_profile_KERONPA_FIRE"
+      ]
+    }
+  }
+}

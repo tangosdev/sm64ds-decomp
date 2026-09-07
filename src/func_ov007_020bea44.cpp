@@ -13,6 +13,6 @@ extern "C" void func_ov007_020bea44(unsigned char* r4){
     func_ov007_020bc53c(p);
     *(int*)(r4+4)=0;
   }
-  extern void _ZN6Player17St_EndingFly_MainEv(void*);
-  _ZN6Player17St_EndingFly_MainEv(r4);
+  extern void func_ov007_020c3d1c(void*);
+  func_ov007_020c3d1c(r4);
 }

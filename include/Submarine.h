@@ -1,51 +1,31 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Submarine: 5 matched functions, 21 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SUBMARINE_H
 #define SUBMARINE_H
-#include "types.h"
 
-struct Submarine {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    s16 mPrevAngleX;            /* 0x092 */
-    s16 mPrevAngleY;            /* 0x094 */
-    s16 mPrevAngleZ;            /* 0x096 */
-    u8  pad_098[0x68];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    u8  unk_110;            /* 0x110 */
-    u8  pad_111[0x3];
-    u8  mModelAnim;            /* 0x114 */
-    u8  pad_115[0x7];
-    u8  unk_11c;            /* 0x11c */
-    u8  pad_11d[0x47];
-    u8  mAnimation;            /* 0x164 */
-    u8  pad_165[0xb];
-    s32 unk_170;            /* 0x170 */
-    u8  pad_174[0x4];
-    u8  mTextureTransformer;            /* 0x178 */
-    u8  pad_179[0xb];
-    s32 unk_184;            /* 0x184 */
-    u8  pad_188[0x20];
-    s32 unk_1a8;            /* 0x1a8 */
-    s32 unk_1ac;            /* 0x1ac */
-    s32 unk_1b0;            /* 0x1b0 */
-    u8  pad_1b4[0x4];
-    u8  unk_1b8;            /* 0x1b8 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+#include "types.h"
+#include "dBgActor_c.h"
+
+/* TWO WITNESSES, and they close on each other:
+ *
+ *   daObjWlSubmarine_c_classInit (historically Submarine_Spawn)
+ *                 fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV9Submarine,
+ *                 then the members below in this order.
+ *   ~Submarine   the same members destroyed in reverse, then ~dBgActor_c.
+ *
+ * SIZE 0x320 is the factory's own literal, and the last member closes exactly on it.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots declared
+ * below differ; every other slot holds the base's own word and is inherited, so it
+ * is deliberately not redeclared here.
+ */
+struct Submarine : dBgActor_c {
+
+    virtual ~Submarine();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Render();                /* slot  9 */
 };
 
-#endif
+typedef char Submarine_size_must_be_0x320[sizeof(Submarine) == 0x320 ? 1 : -1];
+
+#endif /* SUBMARINE_H */

@@ -1,4 +1,4 @@
-/* Platform selection for the dual NDS/PC build.
+/* dBgActor_c selection for the dual NDS/PC build.
  *
  * Exactly one of SM64DS_PLATFORM_NDS / SM64DS_PLATFORM_PC is defined by the
  * build system. src/ files do not include this header today; it exists so the

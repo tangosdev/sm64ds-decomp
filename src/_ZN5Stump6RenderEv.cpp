@@ -1,16 +1,10 @@
 //cpp
 // @symbol _ZN5Stump6RenderEv
-/* recovered: named members + shared header, real C++ method */
 #include "Stump.h"
-extern "C" {
-struct V { virtual void m0(); virtual void m1(); virtual void m2(); virtual void m3(); virtual void m4(); virtual int m5(int); };
-}
-
-int Stump::Render()
-{
-    if (mVariant == 1) return 1;
-    int b = (unk_0b0 & 0x40000) != 0;
-    if (b) return 1;
-    ((V*)((char *)&mModelAnim))->m5(0);
-    return 1;
-}
+// recovered name: daObjPile_c_Render
+/* recovered: renamed to Class_Method */
+/* daObjPile_c::Render - recovered from vtable slot identity */
+struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
+struct Derived { char pad[0xd4]; Base base; };
+s32 Stump::Render() {
+    Derived * d = (Derived *)this; Base *b = &d->base; b->m(0); return 1; }

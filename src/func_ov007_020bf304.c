@@ -6,7 +6,7 @@ extern u8 data_ov007_0210342c[];
 
 extern void func_ov007_020cbb04(void *c);
 extern int func_ov007_020ca26c(void *c);
-extern void _ZN6Player17St_EndingFly_MainEv(void *thiz);
+extern void func_ov007_020c3d1c(void *thiz);
 extern void func_ov007_020c9fa0(void *c);
 extern int func_ov007_020c44c4(void *r4);
 
@@ -35,7 +35,7 @@ void func_ov007_020bf304(void)
 
     for (i = 0; i < 2; i++) {
         if (*(void **)((char *)(*(void **)data_ov007_02104bd4) + 4 + i * 4) != 0) {
-            _ZN6Player17St_EndingFly_MainEv(*(void **)((char *)(*(void **)data_ov007_02104bd4) + 4 + i * 4));
+            func_ov007_020c3d1c(*(void **)((char *)(*(void **)data_ov007_02104bd4) + 4 + i * 4));
             *(int *)((char *)(*(void **)data_ov007_02104bd4) + 4 + i * 4) = 0;
         }
     }
@@ -51,6 +51,6 @@ void func_ov007_020bf304(void)
         }
     }
 
-    _ZN6Player17St_EndingFly_MainEv(*(void **)data_ov007_02104bd4);
+    func_ov007_020c3d1c(*(void **)data_ov007_02104bd4);
     *(void **)data_ov007_02104bd4 = 0;
 }

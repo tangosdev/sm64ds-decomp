@@ -3,7 +3,7 @@ typedef struct { int x, y, z, w; } Vec4;
 
 extern void func_020731dc(int a, int b, void **node);
 extern void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
-extern int func_020072c0(void);
+extern int _ZN7Vector3D1Ev(void);
 
 extern int data_ov006_0214032c;
 extern Vec3 data_ov006_02140364;
@@ -20,14 +20,14 @@ void func_ov006_020c6ca4(char* dst, char* src)
         data_ov006_02140364.x = -0x100000;
         data_ov006_02140364.y = 0;
         data_ov006_02140364.z = 0;
-        func_020731dc((int)&data_ov006_02140364, (int)&func_020072c0, (void**)&data_ov006_02140358);
+        func_020731dc((int)&data_ov006_02140364, (int)&_ZN7Vector3D1Ev, (void**)&data_ov006_02140358);
         data_ov006_0214032c |= 1;
     }
     if (!(data_ov006_02140318 & 1)) {
         data_ov006_0214037c.x = 0x100000;
         data_ov006_0214037c.y = 0;
         data_ov006_0214037c.z = 0;
-        func_020731dc((int)&data_ov006_0214037c, (int)&func_020072c0, (void**)&data_ov006_02140370);
+        func_020731dc((int)&data_ov006_0214037c, (int)&_ZN7Vector3D1Ev, (void**)&data_ov006_02140370);
         data_ov006_02140318 |= 1;
     }
 

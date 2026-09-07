@@ -5,22 +5,22 @@ struct Spawn { struct Vec3_16f rot; struct Vec3 pos; };
 
 extern s16 data_02082214[];
 
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020ec728(void *self);
 extern void func_ov002_020ed63c(void *self, s32 a);
 extern s32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, s32 x, s32 y, s32 z, struct Vec3_16f *rot, void *cb);
-extern s32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 c, void *v, u32 d);
+extern s32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *v, u32 d);
 extern void func_ov002_020ed738(void *self);
 extern s32 func_ov002_020eddc4(void *self);
-extern s32 _ZNK12WithMeshClsn8IsOnWallEv(void *self);
+extern s32 _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 extern s32 func_02035638(void *self);
 extern void func_ov002_020edca4(void *self);
 extern s32 func_ov002_020ed6cc(void *self);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void *self);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *self);
 
 void func_ov002_020ecb0c(void *arg0)
 {
@@ -42,7 +42,7 @@ void func_ov002_020ecb0c(void *arg0)
     id = *(u32 *)(c + 0x410);
     o = 0;
     if (id != 0)
-        o = _ZN5Actor10FindWithIDEj(id);
+        o = _ZN8dActor_c10FindWithIDEj(id);
     if (o != 0) {
         b = (s32)((*(u32 *)(o + 0xb0) & 0x10000000) != 0);
         if (b == 0) {
@@ -78,13 +78,13 @@ void func_ov002_020ecb0c(void *arg0)
                 sp.rot.z = rz;
                 *(s32 *)(c + 0x414) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
                     *(u32 *)(c + 0x414), 0x2c, sp.pos.x, sp.pos.y, pz, pr, 0);
-                *(s32 *)(c + 0x418) = _ZN5Sound8PlayLongEjjjRK7Vector3j(
+                *(s32 *)(c + 0x418) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                     *(u32 *)(c + 0x418), 3, 0x93, c + 0x74, 0);
                 flag = 1;
                 func_ov002_020ed738(c);
                 if (func_ov002_020eddc4(c) != 0)
                     return;
-                onwall = _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144);
+                onwall = _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144);
                 if ((onwall | func_02035638(c + 0x144)) != 0) {
                     func_ov002_020edca4(c);
                     return;
@@ -96,9 +96,9 @@ void func_ov002_020ecb0c(void *arg0)
         func_ov002_020edca4(c);
         return;
     }
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
     if (flag == 1)
-        _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
+        _ZN5dCc_c6UpdateEv(c + 0x110);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x144);
 }

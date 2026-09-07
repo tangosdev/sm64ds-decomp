@@ -14,7 +14,7 @@ extern void func_02062aa4(void);
 
 #define H(o) (*(u16 *)(self + (o)))
 #define H414_LAUNDERED \
-    (*(u16 *)(((int)self + 0x414) & 0xFFFFFFFFFFFFFFFFULL))
+    (*(u16 *)((int)self + 0x414))
 
 int func_020631dc(u8 *self, int unitIdx, int mask, int elemSize, int flag)
 {

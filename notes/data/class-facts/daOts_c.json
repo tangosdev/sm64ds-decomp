@@ -1,0 +1,115 @@
+{
+  "class": "daOts_c",
+  "rtti_name": "7daOts_c",
+  "rtti_name_symbol": "_ZTS7daOts_c",
+  "rtti_name_module": "ov027",
+  "rtti_name_address": "0x021138a4",
+  "overlay": "ov064",
+  "module_base": "0x02115ee0",
+  "module_sections": {
+    ".text": "0x02115ee0..0x0211adb0",
+    ".rodata": "0x0211adb0..0x0211ae00",
+    ".init": "0x0211ae00..0x0211b72c",
+    ".ctor": "0x0211b72c..0x0211b758",
+    ".data": "0x0211b760..0x0211c660",
+    ".bss": "0x0211c660..0x0211ca00"
+  },
+  "vtable": {
+    "symbol": "_ZTV7daOts_c",
+    "module": "ov064",
+    "address": "0x0211b768",
+    "slots": 37,
+    "offset_to_top": "0x0211b760 = 0x00000000",
+    "rtti_pointer_word": "0x0211b764 -> 0x021138bc (_ZTI7daOts_c, ov027)",
+    "ends_at": "0x0211b7fc, where _ZTI11daDonketu_c begins"
+  },
+  "typeinfo": {
+    "symbol": "_ZTI7daOts_c",
+    "module": "ov027",
+    "address": "0x021138bc",
+    "words": [
+      "+0 0x0209a764  arm9, __si_class_type_info's vtable",
+      "+4 0x021138a4  _ZTS7daOts_c (ov027)",
+      "+8 0x021081c0  _ZTI12dEnemyBase_c (ov002)"
+    ],
+    "note": "The RTTI pair does NOT live in ov064 with the vtable. The linker kept the single vague-linkage copy in ov027, immediately before _ZTS12daIDonketu_c, and ov064's vtable header word at 0x0211b764 relocates across to it. dsd records that relocation's module as overlays(9,14,15,16,18,20,21,22,24,25,26,27,29,32,34,36) because those overlays all cover 0x021138bc; ov027 is the only one of them whose symbol table names it."
+  },
+  "base_class": "dEnemyBase_c",
+  "base_evidence": "_ZTI7daOts_c is a __si_class_type_info record and its +8 word is 0x021081c0, which config/arm9/overlays/ov002/symbols.txt names _ZTI12dEnemyBase_c. That names the direct base outright. (Corroboration only, not the reason: _ZTI12dEnemyBase_c's own +8 is 0x0208e390 = _ZTI8dActor_c in arm9, so the chain is daOts_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c, and the 37-slot table is 6 longer than dEnemyBase_c's.)",
+  "pure_virtual_slots": [
+    {"slot": 0, "name": "InitResources", "word": "0x00000000",
+     "evidence": "a bare zero word with no relocation. mwccarm emits exactly that for a pure virtual -- there is no __cxa_pure_virtual in this image -- and all three children (daDonketu_c, daBDonketu_c, daIDonketu_c) override it, which is what an abstract base forces."},
+    {"slot": 6, "name": "Behavior", "word": "0x00000000",
+     "evidence": "same: bare zero word, all three children override."}
+  ],
+  "overrides": [
+    {"slot": 3, "address": "0x02116ca0", "name": "CleanupResources",
+     "note": "THE KEY FUNCTION -- first virtual daOts_c declares out of line, so the TU that defines it emits _ZTV7daOts_c and the D1/D0 pair. Same word in all three children's tables, so they inherit it."},
+    {"slot": 9, "address": "0x02116cf0", "name": "Render",
+     "note": "same word in daDonketu_c and daIDonketu_c; daBDonketu_c is the only child that replaces it (0x0211764c)."},
+    {"slot": 16, "address": "0x02115ee0", "name": "~daOts_c (D1)"},
+    {"slot": 17, "address": "0x02115f28", "name": "~daOts_c (D0)"},
+    {"slot": 29, "address": "0x02115f84", "name": "OnAimedAtWithEgg",
+     "note": "same word in all four tables."},
+    {"slot": 31, "address": "0x021165d4", "name": "UpdateRunState",
+     "note": "new slot; spelling describes the call site, the stripped image carries no original method name."},
+    {"slot": 32, "address": "0x021163bc", "name": "UpdateDeathState", "note": "new slot; coined spelling."},
+    {"slot": 33, "address": "0x02116374", "name": "PlayStepSound", "note": "new slot; coined spelling."},
+    {"slot": 34, "address": "0x02116360", "name": "PlayHitSound", "note": "new slot; coined spelling."},
+    {"slot": 35, "address": "0x0211635c", "name": "PlayShellHitSound", "note": "new slot; coined spelling."},
+    {"slot": 36, "address": "0x02116348", "name": "PlayDeathSound", "note": "new slot; coined spelling."}
+  ],
+  "inherited_slots_unchanged": "Every other slot of the 37 holds dEnemyBase_c's or dActor_c's own word (arm9 0x0201xxxx / 0x0204xxxx), so nothing else is overridden.",
+  "non_virtual": [
+    {"symbol": "func_ov064_02115f98", "address": "0x02115f98", "size": "0x178",
+     "callers": "6 inbound relocations, all from inside func_ov064_02116754 (this TU)", "name_evidence": "none"},
+    {"symbol": "func_ov064_02116110", "address": "0x02116110", "size": "0x5c",
+     "callers": "2 inbound, 0x021171d4 and 0x02117580 -- both in the children's code above 0x02116d1c", "name_evidence": "none"},
+    {"symbol": "func_ov064_0211616c", "address": "0x0211616c", "size": "0xb4",
+     "callers": "2 inbound, 0x0211722c and 0x021175d8 -- children", "name_evidence": "none"},
+    {"symbol": "func_ov064_02116220", "address": "0x02116220", "size": "0x128",
+     "callers": "1 inbound, 0x021166d8, inside func_ov064_021165d8 (this TU)", "name_evidence": "none"},
+    {"symbol": "func_ov064_021163c0", "address": "0x021163c0", "size": "0xa0",
+     "callers": "1 inbound, 0x02116e40 -- a child", "name_evidence": "none"},
+    {"symbol": "func_ov064_02116460", "address": "0x02116460", "size": "0x100",
+     "callers": "1 inbound, 0x02116e2c -- a child", "name_evidence": "none"},
+    {"symbol": "func_ov064_02116560", "address": "0x02116560", "size": "0x74",
+     "callers": "1 inbound, 0x02116e08 -- a child", "name_evidence": "none"},
+    {"symbol": "func_ov064_021165d8", "address": "0x021165d8", "size": "0x118",
+     "callers": "4 inbound from the children", "name_evidence": "none"},
+    {"symbol": "func_ov064_021166f0", "address": "0x021166f0", "size": "0x64",
+     "callers": "1 inbound, 0x02116dbc -- a child", "name_evidence": "none"},
+    {"symbol": "func_ov064_02116754", "address": "0x02116754", "size": "0x458",
+     "callers": "1 inbound, 0x02116d84 -- a child", "name_evidence": "none"},
+    {"symbol": "func_ov064_02116bac", "address": "0x02116bac", "size": "0xf4",
+     "callers": "2 inbound, 0x02116e98 and 0x0211776c -- children", "name_evidence": "none"}
+  ],
+  "size": "0x398",
+  "size_evidence": "include/daOts_c.h's static assert, and every member closes exactly on the next: ModelAnim 0x64 at 0x110 ends at 0x174, dBgCh_Actr 0x1bc at 0x174 ends at 0x330, mFileTable plus padding ends at 0x33c, dCcAc_c 0x34 at 0x33c ends at 0x370, ShadowModel 0x28 at 0x370 ends at 0x398. Confirmed by this TU's D1 (0x02115ee0), which destroys exactly those four members at exactly those offsets and then chains to _ZN12dEnemyBase_cD2Ev.",
+  "fields": [
+    {"offset": "0x110", "type": "ModelAnim", "name": "mModelAnim",
+     "evidence": "D1 destroys a ModelAnim here; PlayStepSound and Render call members on it."},
+    {"offset": "0x174", "type": "dBgCh_Actr", "name": "mWithMeshClsn",
+     "evidence": "D1 destroys a dBgCh_Actr here; func_ov064_021165d8 hands c+0x174 to dEnemyBase_c::UpdateWMClsn and IsGoingOffCliff, both of which take dBgCh_Actr&."},
+    {"offset": "0x330", "type": "s32", "name": "mFileTable",
+     "evidence": "CleanupResources releases five SharedFilePtrs through it; OnAimedAtWithEgg reads +0x24 of what it points at. All three children declare a field here, which is what makes it the base's."},
+    {"offset": "0x334", "size": "0x8", "name": "pad_334", "status": "unproven",
+     "evidence": "func_ov064_0211616c stores two Particle::System handles at 0x334 and 0x338, so the eight bytes are used, but nothing proves a type or a name."},
+    {"offset": "0x33c", "type": "dCcAc_c", "name": "mdCcAc_c",
+     "evidence": "D1 destroys a dCcAc_c here; func_ov064_02116754 hands c+0x33c to dActor_c::JumpedOnByPlayer, which takes dCc_c&."},
+    {"offset": "0x370", "type": "ShadowModel", "name": "mShadowModel",
+     "evidence": "D1 destroys a ShadowModel here; func_ov064_02116bac hands c+0x370 to dActor_c::DropShadowRadHeight, which takes ShadowModel&."}
+  ],
+  "unproven": [
+    "the original spelling of all eleven func_ov064_* members -- the image is stripped and no relocation, string or profile names any of them",
+    "the original spelling of slots 31..36 (UpdateRunState, UpdateDeathState, PlayStepSound, PlayHitSound, PlayShellHitSound, PlayDeathSound). The slot INDEX and the override ownership are ROM-proven by the four vtables; the names describe the call sites",
+    "the exact object size of a plain daOts_c. Nothing allocates one -- it is abstract, slots 0 and 6 are zero -- so 0x398 is the span the members close on, and 0x398..0x3f9 stays the children's padding rather than being annexed into the base",
+    "the fields between 0x334 and 0x33c: used, but untyped and unnamed",
+    "which TU originally owned _ZTI7daOts_c / _ZTS7daOts_c. They are vague linkage; the linker kept ov027's copy, which says nothing about the source file they came from"
+  ],
+  "modules_touched": {
+    "text": "ov064 only, 0x02115ee0..0x02116d1c",
+    "vtable": "ov064 0x0211b768",
+    "rtti": "ov027 0x021138a4 (_ZTS) and 0x021138bc (_ZTI)"
+  }
+}

@@ -1,35 +1,21 @@
 //cpp
-typedef short s16;
-typedef unsigned short u16;
-typedef unsigned char u8;
-typedef int s32;
-typedef unsigned int u32;
-
-struct Vector3 { int x, y, z; };
+#include "dBgCh_Lin.h"
 
 struct C; typedef int (C::*PMF)();
 struct C { char pad[0x420]; PMF *pp; };
-
-struct RaycastLine {
-    char pad[0x78];
-};
 
 extern "C" {
 int RandomIntInternal(int *seed);
 int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 void func_02012694(int a, void *p);
-void _ZN11RaycastLineC1Ev(RaycastLine *self);
 void Matrix4x3_FromRotationY(void *m, s16 angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 void MulVec3Mat4x3(const Vector3 *v, const void *m, Vector3 *out);
-void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(RaycastLine *self, const Vector3 *a, const Vector3 *b, void *actor);
-int _ZN11RaycastLine10DetectClsnEv(RaycastLine *self);
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 void _Z14ApproachLinearRsss(s16 *cur, s16 target, s16 step);
 int func_ov090_021314a0(void *c);
 int func_ov090_02131e00(C *c, PMF *p);
-void _ZN11RaycastLineD1Ev(RaycastLine *self);
 }
 
 extern int data_0209e650;
@@ -44,7 +30,6 @@ extern "C" int func_ov090_02131648(C *c)
     u32 rnd;
     int selfY;
     Vector3 a, b, in, out;
-    RaycastLine rc;
     int angleSet;
     s16 *p39a;
     int sh;
@@ -59,7 +44,7 @@ extern "C" int func_ov090_02131648(C *c)
     }
 
     angleSet = 0;
-    _ZN11RaycastLineC1Ev(&rc);
+    dBgCh_Lin line;
 
     a.x = 0; a.y = 0; a.z = 0;
     b.x = 0; b.y = 0; b.z = 0;
@@ -85,14 +70,14 @@ extern "C" int func_ov090_02131648(C *c)
     b.y = a.y + out.y;
     b.z = a.z + out.z;
 
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&rc, &a, &b, c);
+    line.SetObjAndLine(a, b, (dActor_c*)c);
 
-    if (_ZN11RaycastLine10DetectClsnEv(&rc) == 0) {
+    if (!line.DetectClsn()) {
         if (*(u8 *)(self + 0x3a0) == 0) {
             ha = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
             sh = (rnd & 3) << 0xc;
             *(s16 *)((self + 0x300) + 0x9a) = ha;
-            p39a = (s16 *)(((int)self + 0x39a) & 0xFFFFFFFFFFFFFFFF);
+            p39a = (s16 *)((int)self + 0x39a);
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
             *(int *)(self + 0x5c) = *(int *)(self + 0x68);
@@ -118,12 +103,12 @@ extern "C" int func_ov090_02131648(C *c)
         *(u8 *)(self + 0x39e) = 0;
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(self + 0x150) != 0) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x150) != 0) {
         if (*(u8 *)(self + 0x39f) == 0 && *(u8 *)(self + 0x39e) == 0 && *(u8 *)(self + 0x3a0) == 0) {
             ha = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x374));
             sh = (rnd & 3) << 0xc;
             *(s16 *)((self + 0x300) + 0x9a) = ha;
-            p39a = (s16 *)(((unsigned int)self + 0x39a) & 0xFFFFFFFFFFFFFFFF);
+            p39a = (s16 *)((unsigned int)self + 0x39a);
             angleSet = 1;
             *p39a = *p39a + (0x1800 - sh);
             *(int *)(self + 0x5c) = *(int *)(self + 0x68);
@@ -137,7 +122,7 @@ extern "C" int func_ov090_02131648(C *c)
 
     if (*(u16 *)((self + 0x300) + 0x98) == 0 && *(u8 *)(self + 0x39f) == 0 && *(u8 *)(self + 0x39e) == 0 && *(u8 *)(self + 0x3a0) == 0) {
         *(u16 *)((self + 0x300) + 0x98) = (u16)((rnd + 0x32) & 0x3f);
-        p39a = (s16 *)(((long long)(int)(self + 0x39a)) & 0xFFFFFFFFFFFFFFFFll);
+        p39a = (s16 *)(self + 0x39a);
         *p39a = *p39a + (0x1800 - ((rnd & 3) << 0xc));
     }
 
@@ -163,7 +148,7 @@ extern "C" int func_ov090_02131648(C *c)
     }
 
     if (((u32)((*(u32 *)(self + 0x364)) << 4) >> 0x10) >= 0x10) {
-        p390 = (int *)(((int)self + 0x390) & 0xFFFFFFFFFFFFFFFF);
+        p390 = (int *)((int)self + 0x390);
         *p390 = *p390 + 1;
     }
 
@@ -175,6 +160,5 @@ extern "C" int func_ov090_02131648(C *c)
         func_ov090_02131e00(c, (PMF *)&data_ov090_02134504);
     }
 
-    _ZN11RaycastLineD1Ev(&rc);
     return 1;
 }

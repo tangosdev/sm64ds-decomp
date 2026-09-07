@@ -1,7 +1,7 @@
 // @symbol func_ov063_02117650
 /* recovered: shared common types */
 #include "common.h"
-extern void *_ZN5Actor13ClosestPlayerEv(void);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void);
 extern int RandomIntInternal(int *seed);
 extern int Vec3_HorzDist(struct Vector3 *a, struct Vector3 *b);
 extern short Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);
@@ -14,13 +14,13 @@ void func_ov063_02117650(char *self)
     char *p;
     int neg1 = (int)(-1LL);
 
-    p = (char *)_ZN5Actor13ClosestPlayerEv();
+    p = (char *)_ZN8dActor_c13ClosestPlayerEv();
     if (p == 0) {
         return;
     }
 
     {
-        int *pp = (int *)(((long long)(int)(p + 0x5c)));
+        int *pp = (int *)(p + 0x5c);
         ppos.x = pp[0];
         ppos.y = pp[1];
         ppos.z = pp[2];

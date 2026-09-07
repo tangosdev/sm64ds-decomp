@@ -7,5 +7,8 @@ struct Derived { char pad[0xd4]; Base base; };
 
 int DonutBlock::Render()
 {
- Base *b = &((Derived *)this)->base; b->m(0); return 1;
+  if(*(unsigned char*)((char*)&mState)!=2){
+    Base *b = &((Derived *)this)->base; b->m(0);
+  }
+  return 1;
 }

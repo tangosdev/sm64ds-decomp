@@ -1,9 +1,9 @@
 extern short data_02082214[];
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 
 void func_ov060_02112d48(char *c, int arg)
 {
-    char *o = (char *)_ZN5Actor10FindWithIDEj(*(unsigned int *)(c + 0x3ac));
+    char *o = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x3ac));
     if (o == 0)
         return;
     short angle = *(short *)(c + 0x408);

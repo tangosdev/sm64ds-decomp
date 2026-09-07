@@ -34,7 +34,7 @@ void HUD::UpdateVsTimer()
     if (data_ov002_02111188 == 0)
     {
         data_ov002_02111188 = 0xb4;
-        q = (unsigned short *)(((int)this + 0x60) & 0xFFFFFFFFFFFFFFFFULL);
+        q = (unsigned short *)((int)this + 0x60);
         *q = *q - 1;
         v = *(unsigned short *)((char *)this + 0x60);
         if (v <= 3 && v != 0)
@@ -52,7 +52,7 @@ void HUD::UpdateVsTimer()
         return;
     if (*(unsigned short *)((char *)this + 0x66) < 0x30)
     {
-        q = (unsigned short *)(((int)this + 0x66) & 0xFFFFFFFFFFFFFFFFULL);
+        q = (unsigned short *)((int)this + 0x66);
         *q = *q + 4;
     }
     else

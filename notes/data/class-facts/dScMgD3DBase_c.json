@@ -1,0 +1,151 @@
+{
+  "class": "dScMgD3DBase_c",
+  "candidate_text": {
+    "start": "0x020e6c28",
+    "end": "0x020e7660",
+    "size": "0x0a38",
+    "partition": "17 vtable-targeted class functions (0x06e0 bytes) plus 10 non-member helper functions (0x0358 bytes)"
+  },
+  "rtti_name": "14dScMgD3DBase_c",
+  "rtti": {
+    "symbol": "_ZTI14dScMgD3DBase_c",
+    "address": "0x0213c5c8",
+    "kind_vptr": "0x0209a764",
+    "kind": "abi::__si_class_type_info",
+    "name_pointer": "0x0213c5d4",
+    "direct_base_pointer": "0x020bbf6c",
+    "evidence": "Linked ov006 words are {0x0209a764, 0x0213c5d4, 0x020bbf6c}; the pointed-to bytes at 0x0213c5d4 are the NUL-terminated RTTI name."
+  },
+  "overlay": "ov006",
+  "module_base": "0x020bfec0",
+  "related_modules": [
+    {
+      "module": "main",
+      "module_base": "0x02004000",
+      "role": "inherited slots and ABI type-info implementation"
+    },
+    {
+      "module": "ov004",
+      "module_base": "0x020ad660",
+      "role": "direct-base RTTI and dScMgBase_c method bodies"
+    },
+    {
+      "module": "ov006",
+      "module_base": "0x020bfec0",
+      "role": "class RTTI, vtable, own overrides, and candidate text"
+    }
+  ],
+  "base_class": "dScMgBase_c",
+  "base_evidence": "The _ZTI14dScMgD3DBase_c __si_class_type_info record at 0x0213c5c8 has +0x08 = 0x020bbf6c. Linked ov004 bytes at 0x020bbf6c have name pointer 0x020bbf84, whose NUL-terminated string is 11dScMgBase_c.",
+  "vtable": {
+    "symbol": "_ZTV14dScMgD3DBase_c",
+    "address": "0x0213c62c",
+    "header_start": "0x0213c624",
+    "offset_to_top_address": "0x0213c624",
+    "offset_to_top": "0x00000000",
+    "rtti_pointer_address": "0x0213c628",
+    "rtti_pointer": "0x0213c5c8",
+    "last_slot_address": "0x0213c6b8",
+    "end": "0x0213c6bc",
+    "slots": 36,
+    "extent_evidence": "The 36 consecutive words at the address point are code pointers through 0x0213c6b8. The next word at 0x0213c6bc is 0x6f6d6168, the start of the non-RTTI string hamon, so it is not another slot; there are no trailing null slots to qualify.",
+    "entries": [
+      {"slot": 0, "slot_address": "0x0213c62c", "target": "0x02043c80", "module": "main", "name": "fBase_c::InitResources"},
+      {"slot": 1, "slot_address": "0x0213c630", "target": "0x020e70e4", "module": "ov006", "name": "dScMgD3DBase_c::BeforeInitResources"},
+      {"slot": 2, "slot_address": "0x0213c634", "target": "0x020e70c0", "module": "ov006", "name": "dScMgD3DBase_c::AfterInitResources"},
+      {"slot": 3, "slot_address": "0x0213c638", "target": "0x02043bf0", "module": "main", "name": "fBase_c::CleanupResources"},
+      {"slot": 4, "slot_address": "0x0213c63c", "target": "0x0202e5f0", "module": "main", "name": "dScene_c::BeforeCleanupResources"},
+      {"slot": 5, "slot_address": "0x0213c640", "target": "0x020e6f60", "module": "ov006", "name": "dScMgD3DBase_c::AfterCleanupResources"},
+      {"slot": 6, "slot_address": "0x0213c644", "target": "0x020b0618", "module": "ov004", "name": "dScMgBase_c::Behavior"},
+      {"slot": 7, "slot_address": "0x0213c648", "target": "0x020e7074", "module": "ov006", "name": "dScMgD3DBase_c::BeforeBehavior"},
+      {"slot": 8, "slot_address": "0x0213c64c", "target": "0x0202e3c8", "module": "main", "name": "dScene_c::AfterBehavior"},
+      {"slot": 9, "slot_address": "0x0213c650", "target": "0x020b04ec", "module": "ov004", "name": "dScMgBase_c::Render"},
+      {"slot": 10, "slot_address": "0x0213c654", "target": "0x020e7040", "module": "ov006", "name": "dScMgD3DBase_c::BeforeRender"},
+      {"slot": 11, "slot_address": "0x0213c658", "target": "0x020e700c", "module": "ov006", "name": "dScMgD3DBase_c::AfterRender"},
+      {"slot": 12, "slot_address": "0x0213c65c", "target": "0x020b04e8", "module": "ov004", "name": "dScMgBase_c::OnPendingDestroy"},
+      {"slot": 13, "slot_address": "0x0213c660", "target": "0x0204357c", "module": "main", "name": "fBase_c::Virtual34"},
+      {"slot": 14, "slot_address": "0x0213c664", "target": "0x0204349c", "module": "main", "name": "fBase_c::Virtual38"},
+      {"slot": 15, "slot_address": "0x0213c668", "target": "0x02043494", "module": "main", "name": "fBase_c::OnHeapCreated"},
+      {"slot": 16, "slot_address": "0x0213c66c", "target": "0x020e6c28", "module": "ov006", "name": "dScMgD3DBase_c::~dScMgD3DBase_c D1"},
+      {"slot": 17, "slot_address": "0x0213c670", "target": "0x020e6c60", "module": "ov006", "name": "dScMgD3DBase_c::~dScMgD3DBase_c D0"},
+      {"slot": 18, "slot_address": "0x0213c674", "target": "0x020b299c", "module": "ov004", "name": "dScMgBase_c::OnYoshiTryEat"},
+      {"slot": 19, "slot_address": "0x0213c678", "target": "0x020b2994", "module": "ov004", "name": "dScMgBase_c::OnTurnIntoEgg"},
+      {"slot": 20, "slot_address": "0x0213c67c", "target": "0x020b2990", "module": "ov004", "name": "dScMgBase_c::Virtual50"},
+      {"slot": 21, "slot_address": "0x0213c680", "target": "0x020b298c", "module": "ov004", "name": "dScMgBase_c::OnGroundPounded"},
+      {"slot": 22, "slot_address": "0x0213c684", "target": "0x020ae198", "module": "ov004", "name": "dScMgBase_c::OnAttacked1"},
+      {"slot": 23, "slot_address": "0x0213c688", "target": "0x020ae1a0", "module": "ov004", "name": "dScMgBase_c::OnAttacked2"},
+      {"slot": 24, "slot_address": "0x0213c68c", "target": "0x020e6e78", "module": "ov006", "name": "dScMgD3DBase_c::OnKicked"},
+      {"slot": 25, "slot_address": "0x0213c690", "target": "0x020e6e54", "module": "ov006", "name": "dScMgD3DBase_c::OnPushed"},
+      {"slot": 26, "slot_address": "0x0213c694", "target": "0x020e6e4c", "module": "ov006", "name": "dScMgD3DBase_c::OnHitByCannonBlastedChar"},
+      {"slot": 27, "slot_address": "0x0213c698", "target": "0x020e6d98", "module": "ov006", "name": "dScMgD3DBase_c::OnHitByMegaChar"},
+      {"slot": 28, "slot_address": "0x0213c69c", "target": "0x020e6d8c", "module": "ov006", "name": "dScMgD3DBase_c::OnHitFromUnderneath"},
+      {"slot": 29, "slot_address": "0x0213c6a0", "target": "0x020e6d24", "module": "ov006", "name": "dScMgD3DBase_c::OnAimedAtWithEgg"},
+      {"slot": 30, "slot_address": "0x0213c6a4", "target": "0x020e6cac", "module": "ov006", "name": "dScMgD3DBase_c::OnAimedAtWithEggReturnVec"},
+      {"slot": 31, "slot_address": "0x0213c6a8", "target": "0x020e72c0", "module": "ov006", "name": "dScMgD3DBase_c::Virtual7C"},
+      {"slot": 32, "slot_address": "0x0213c6ac", "target": "0x020b27f4", "module": "ov004", "name": "dScMgBase_c::Virtual80"},
+      {"slot": 33, "slot_address": "0x0213c6b0", "target": "0x020e7124", "module": "ov006", "name": "dScMgD3DBase_c::Virtual84"},
+      {"slot": 34, "slot_address": "0x0213c6b4", "target": "0x020ae3b4", "module": "ov004", "name": "dScMgBase_c::Virtual88"},
+      {"slot": 35, "slot_address": "0x0213c6b8", "target": "0x020ad660", "module": "ov004", "name": "dScMgBase_c::Virtual8C"}
+    ]
+  },
+  "own_override_count": 17,
+  "overrides": [
+    {"slot": 1, "address": "0x020e70e4", "end": "0x020e7110", "name": "BeforeInitResources", "body": "Calls the inherited body at 0x020b0930; on success stores a 32-bit zero at this+0x5000 and returns true."},
+    {"slot": 2, "address": "0x020e70c0", "end": "0x020e70e4", "name": "AfterInitResources", "body": "Calls the inherited body at 0x020b08f0, then calls 0x02022f40 with this+0x47e4."},
+    {"slot": 5, "address": "0x020e6f60", "end": "0x020e700c", "name": "AfterCleanupResources", "body": "For argument 0x00000002 performs display/resource cleanup, calls helper 0x020e7110, then calls the inherited body at 0x020b0840."},
+    {"slot": 7, "address": "0x020e7074", "end": "0x020e70c0", "name": "BeforeBehavior", "body": "Calls the inherited body at 0x020b0620; when it succeeds and a global flag is set, calls 0x02022f20 with this+0x47e4."},
+    {"slot": 10, "address": "0x020e7040", "end": "0x020e7074", "name": "BeforeRender", "body": "Calls the inherited body at 0x020b04f4, conditionally calls 0x02022ee0, and returns a normalized boolean."},
+    {"slot": 11, "address": "0x020e700c", "end": "0x020e7040", "name": "AfterRender", "body": "Polls the display scanline register, then tail-branches to the inherited body at 0x0202e398."},
+    {"slot": 16, "address": "0x020e6c28", "end": "0x020e6c60", "name": "D1 destructor", "body": "Stores vptr 0x0213c62c, calls Particle::SysTracker::~SysTracker at 0x02023194 on this+0x47e4, then calls dScMgBase_c D2 at 0x020b29c0."},
+    {"slot": 17, "address": "0x020e6c60", "end": "0x020e6cac", "name": "D0 deleting destructor", "body": "Runs the same destruction chain as D1, then deallocates through 0x0203c1e8."},
+    {"slot": 24, "address": "0x020e6e78", "end": "0x020e6f60", "name": "OnKicked", "body": "Calls inherited 0x020ae140; on success tests this+0x4628, toggles the halfword at this+0x4664, switches display helpers 0x020e7508 or 0x020e759c, and returns true."},
+    {"slot": 25, "address": "0x020e6e54", "end": "0x020e6e78", "name": "OnPushed", "body": "Calls inherited 0x020ae128 and returns its result normalized to 0x00000000 or 0x00000001."},
+    {"slot": 26, "address": "0x020e6e4c", "end": "0x020e6e54", "name": "OnHitByCannonBlastedChar", "body": "Returns 0x00000002."},
+    {"slot": 27, "address": "0x020e6d98", "end": "0x020e6da4", "name": "OnHitByMegaChar", "body": "Long-branch veneer to inherited target 0x020af27c."},
+    {"slot": 28, "address": "0x020e6d8c", "end": "0x020e6d98", "name": "OnHitFromUnderneath", "body": "Long-branch veneer to inherited target 0x020af04c."},
+    {"slot": 29, "address": "0x020e6d24", "end": "0x020e6d8c", "name": "OnAimedAtWithEgg", "body": "Calls no-argument helper 0x020e73c4, resets resources at this+0x00a0 and this+0x4660, then calls inherited 0x020af094."},
+    {"slot": 30, "address": "0x020e6cac", "end": "0x020e6d24", "name": "OnAimedAtWithEggReturnVec", "body": "Releases resources at this+0x00a0 and this+0x4660, calls display helpers, branches on the halfword at this+0x4664, then calls inherited 0x020aeed8."},
+    {"slot": 31, "address": "0x020e72c0", "end": "0x020e73c4", "name": "Virtual7C", "body": "Initializes display resources, stores a returned handle at this+0x4660, and uses this+0x00a0 for a second resource handle."},
+    {"slot": 33, "address": "0x020e7124", "end": "0x020e72c0", "name": "Virtual84", "body": "Initializes 3D/display state and publishes this+0x466c and this+0x4728 as two object addresses to globals."}
+  ],
+  "non_virtual": [],
+  "tu_nearby_free_helpers": [
+    {"address": "0x020e6da4", "end": "0x020e6db4", "reason": "Address-adjusting veneer called only by 0x020e6df0; it adds 0x00080000 to its argument and does not use a class receiver."},
+    {"address": "0x020e6db4", "end": "0x020e6df0", "reason": "Called from four distant sites at 0x020cffec, 0x020d0024, 0x020d08ec, and 0x020d0928; its three arguments are forwarded as sound parameters, not a class receiver."},
+    {"address": "0x020e6df0", "end": "0x020e6e3c", "reason": "Shared sound helper with many distant ov006 callers; r0 indexes a byte table and r1/r2 supply sound parameters."},
+    {"address": "0x020e6e3c", "end": "0x020e6e4c", "reason": "Shared address-adjusting veneer with many distant ov006 callers; it adds 0x00080000 to r1 and never treats r0 as this."},
+    {"address": "0x020e7110", "end": "0x020e7124", "reason": "Called by slot 5 at 0x020e6fa8; ignores the incoming receiver and only clears the global byte at 0x0209e660."},
+    {"address": "0x020e73c4", "end": "0x020e740c", "reason": "Called by slot 29 at 0x020e6d2c; ignores the incoming receiver and only manipulates global display state."},
+    {"address": "0x020e740c", "end": "0x020e7428", "reason": "Called by slot 30 at 0x020e6cd4; overwrites r0 with global address 0x02141a54 before tail-branching to a 0x00000400-byte fill routine."},
+    {"address": "0x020e7428", "end": "0x020e7508", "reason": "Called by slot 33 at 0x020e7208; ignores the incoming receiver and initializes only global graphics tables and registers."},
+    {"address": "0x020e7508", "end": "0x020e759c", "reason": "Called by slots 24 and 30; ignores the incoming receiver and configures global main/sub display state."},
+    {"address": "0x020e759c", "end": "0x020e7660", "reason": "Called by slots 24 and 30; ignores the incoming receiver and configures the opposite global display state."}
+  ],
+  "size": "0x00005004",
+  "size_evidence": {
+    "kind": "tight ROM layout boundary; no direct allocation call",
+    "lower_bound": "Slot 1 at 0x020e70e4 conditionally stores a full word at this+0x5000, proving occupancy through 0x5004.",
+    "upper_bound": "The direct child dScMgJump_c RTTI record at 0x0213cb98 has +0x08 = 0x0213c5c8. Its vtable-targeted Behavior at 0x020ee27c dispatches through a member-function pair beginning at this+0x5004; table word 0x0213cb6c supplies target 0x020ee2c4, whose body writes this+0x5004 and this+0x5008.",
+    "member_extent": "The D1 body proves a Particle::SysTracker subobject begins at 0x47e4. Particle::SysTracker::SysTracker at 0x02023204 writes through suboffset 0x0818, proving its occupied extent through 0x5000 when based at 0x47e4; the separate word at 0x5000 reaches the 0x5004 boundary.",
+    "direct_allocation_site": null,
+    "direct_allocation_size": null,
+    "derived_allocation_witness": {"class": "dScMgJump_c", "site": "0x020eeb08", "literal_address": "0x020eebb8", "size": "0x00005834"}
+  },
+  "fields": [
+    {"offset": "0x4660", "width": "0x0004", "name": null, "evidence": "Slots 29, 30, and 31 load/store a word at this+0x4660 and pass its value to resource routines."},
+    {"offset": "0x4664", "width": "0x0002", "name": null, "evidence": "Slots 24 and 30 use ldrh/strh at this+0x4664."},
+    {"offset": "0x466c", "width": null, "name": null, "evidence": "Slot 33 forms this+0x466c and publishes the address; direct-child factories iterate from 0x466c to 0x47e4 in 0x00bc-byte steps, proving two adjacent 0x00bc-byte elements."},
+    {"offset": "0x4728", "width": null, "name": null, "evidence": "Slot 33 independently forms this+0x4728, the second address in the 0x00bc-stride range ending at 0x47e4."},
+    {"offset": "0x47e4", "width": "0x081c", "name": "Particle::SysTracker subobject", "evidence": "D1 calls Particle::SysTracker::~SysTracker at 0x02023194 with this+0x47e4; slots 2 and 7 call tracker routines with the same address. The constructor at 0x02023204 writes through suboffset 0x0818."},
+    {"offset": "0x5000", "width": "0x0004", "name": null, "evidence": "Slot 1 forms this+0x5000 and conditionally stores a 32-bit zero there."}
+  ],
+  "unproven": [
+    "A direct dScMgD3DBase_c allocation call and operator-new size literal: no factory allocates this abstract intermediate directly; 0x5004 is a tight layout boundary proved from ROM accesses and a direct child, not a direct allocation immediate.",
+    "Any non-virtual dScMgD3DBase_c method in 0x020e6c28..0x020e7660: all 17 receiver-using bodies are vtable targets, while the other 10 bodies ignore a receiver or have sound-helper callers outside the class region.",
+    "Original source linkage and exact TU membership of the 10 helper bodies: call behavior proves they are not class methods, but adjacency alone does not prove static versus external linkage or the original translation-unit cut.",
+    "Semantic names for fields at 0x4660, 0x4664, 0x466c, 0x4728, and 0x5000; only widths, address formation, stride, and call roles are proven here.",
+    "A concrete element type for the two 0x00bc-byte objects at 0x466c and 0x4728; this span proves their addresses and stride but not a ROM RTTI identity.",
+    "Original source-style names and full signatures for placeholder ABI slots Virtual7C, Virtual80, Virtual84, Virtual88, and Virtual8C; their indices and targets are proven by the linked vtables.",
+    "Any vtable slot after slot 35: linked bytes prove the table ends at 0x0213c6bc, and no trailing null slot is present to preserve an otherwise unobservable declaration."
+  ]
+}

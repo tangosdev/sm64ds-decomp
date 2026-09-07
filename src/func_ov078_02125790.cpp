@@ -8,12 +8,12 @@
 
 
 extern "C" {
-extern int _ZN5Actor18HorzAngleToCPlayerEv(void* a);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* a);
 extern void ApproachAngle(short* p, int target, int step, int band, int max);
 extern void func_02012694(int a, void* b);
 extern void MulMat4x3Mat4x3(void* d, Matrix4x3* a, Matrix4x3* b);
 extern void Vec3_Lsl(Vector3* d, Vector3* s, int sh);
-extern int _ZN5Actor17HugeLandingDustAtER7Vector3b(void* a, Vector3* v, int b);
+extern int _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void* a, Vector3* v, int b);
 extern int _ZN9Animation8FinishedEv(void* a);
 extern void KingBobOmb_SetState(char* c, void* p);
 }
@@ -26,7 +26,7 @@ extern "C" int func_ov078_02125790(char* self)
   Vector3 d;
   Vector3 v;
   if (func_ov078_02123804(self) == 1) return 1;
-  ApproachAngle((short*)(self + 0x94), _ZN5Actor18HorzAngleToCPlayerEv(self), 1, 0x500, 0x500);
+  ApproachAngle((short*)(self + 0x94), _ZN8dActor_c18HorzAngleToCPlayerEv(self), 1, 0x500, 0x500);
   *(short*)(self + 0x8e) = *(short*)(self + 0x94);
   if (_ZNK9Animation12WillHitFrameEi(self + 0x31c, 0x46)) {
     func_ov078_02125c24(self, 0x7d0000);
@@ -46,7 +46,7 @@ extern "C" int func_ov078_02125790(char* self)
     v.y = d.y;
     s.z = d.z;
     v.z = d.z;
-    _ZN5Actor17HugeLandingDustAtER7Vector3b(self, &v, 1);
+    _ZN8dActor_c17HugeLandingDustAtER7Vector3b(self, &v, 1);
   }
   if (_ZN9Animation8FinishedEv(self + 0x31c)) {
     KingBobOmb_SetState(self, &data_ov078_0212703c);

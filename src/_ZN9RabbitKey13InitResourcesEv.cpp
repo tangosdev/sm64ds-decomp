@@ -17,8 +17,8 @@ int RabbitKey::InitResources()
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x110, f, 1, -1) == 0)
         return 0;
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
-    unk_19c = unk_008 & 0xff;
-    unk_0a0 = -0x3c000;
+    unk_19c = param1 & 0xff;
+    mTerminalVelocity = -0x3c000;
     unk_190 = 0;
     func_ov085_0212d268(((char*)this), &data_ov085_0213071c);
     return 1;

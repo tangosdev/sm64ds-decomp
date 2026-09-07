@@ -1,6 +1,6 @@
 typedef struct Vec3 { int x, y, z; } Vec3;
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void func_02012694(int a, void *p);
 extern void func_ov066_021166c8(void *thiz);
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *r, void *t, int step);
@@ -17,13 +17,13 @@ extern void func_ov066_02116390(void *c);
 extern void func_ov066_021165cc(void *c);
 extern int _ZN9Animation8FinishedEv(void *thiz);
 extern void func_ov066_021162e8(void *c);
-extern int _ZN16MeshColliderBase9IsEnabledEv(void *thiz);
-extern void _ZN16MeshColliderBase7DisableEv(void *thiz);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *thiz, void *f, void *m, int fx, int s, void *clps);
+extern int _ZN4dBgW9IsEnabledEv(void *thiz);
+extern void _ZN4dBgW7DisableEv(void *thiz);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *thiz, void *f, void *m, int fx, int s, void *clps);
 extern void func_020393d4(void *p, void *v);
 extern void func_020393c4(void *p, void *v);
 extern void func_020398fc(void *p);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void *thiz, void *a);
+extern void _ZN4dBgW6EnableEP8dActor_c(void *thiz, void *a);
 extern void func_ov066_02119454(void *c, void *p);
 
 extern unsigned char data_ov066_0211ae0c;
@@ -33,7 +33,7 @@ extern unsigned char data_ov066_0211ae04;
 extern char data_ov066_0211ae14[];
 extern char data_ov066_0211aeac[];
 extern char data_ov066_0211b06c;
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 extern int func_02112c08;
 extern int func_02112d48;
 extern int func_ov066_0211a35c;
@@ -46,7 +46,7 @@ int func_ov066_021175e8(void *thiz)
     switch (*(int *)(c + 0x4a0)) {
     case 0:
         if (data_ov066_0211ae0c == *(int *)(c + 0x49c)) {
-            char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
+            char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
             if (p != 0) {
                 Vec3 *pp = (Vec3 *)(((int)p + 0x5c));
                 *(int *)(c + 0x4bc) = pp->x;
@@ -93,7 +93,7 @@ int func_ov066_021175e8(void *thiz)
             *(unsigned short *)(c + 0x4d0) = 0xa;
             *(int *)(c + 0x4a0) = 7;
             if (func_ov066_02116a68(c) == 0) {
-                char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
+                char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
                 if (p != 0) {
                     Vec3 *pp = (Vec3 *)(((int)p + 0x5c));
                     v.x = pp->x;
@@ -154,20 +154,20 @@ int func_ov066_021175e8(void *thiz)
     case 6:
         if (_ZN9Animation8FinishedEv(c + 0x3b0) != 0) {
             func_ov066_021162e8(c);
-            if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x674) != 0)
-                _ZN16MeshColliderBase7DisableEv(c + 0x674);
+            if (_ZN4dBgW9IsEnabledEv(c + 0x674) != 0)
+                _ZN4dBgW7DisableEv(c + 0x674);
             if (*(int *)(c + 0x49c) == 1)
-                _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+                _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                     c + 0x674, *(void **)(data_ov066_0211ae14 + 4), c + 0x83c, 0x199,
                     *(short *)(c + 0x8e), &func_02112c08);
             else
-                _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+                _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                     c + 0x674, *(void **)(data_ov066_0211aeac + 4), c + 0x83c, 0x199,
                     *(short *)(c + 0x8e), &func_02112d48);
-            func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+            func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
             func_020393c4(c + 0x674, &func_ov066_0211a35c);
             func_020398fc(c + 0x674);
-            _ZN16MeshColliderBase6EnableEP5Actor(c + 0x674, c);
+            _ZN4dBgW6EnableEP8dActor_c(c + 0x674, c);
             data_ov066_0211ae08 += 1;
             *(int *)(c + 0x4a0) = 8;
         }

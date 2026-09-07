@@ -2,7 +2,10 @@
 struct P2 { int a, b; };
 struct P6 { struct P2 lo, hi, tail; };
 
-extern void func_ov075_021160b4(void *);
+/* This generated C initializer must use the compiler-owned linker spelling
+ * until its globals can be reconstructed as their original typed C++
+ * definitions. */
+extern void _ZN10dScEntry_c15graphCallback_cC1Ev(void *);
 extern void func_020731dc(void *, void *, void **);
 extern void NoOpDestructor(void);
 
@@ -144,7 +147,7 @@ void __sinit_ov075_0211bb00(void)
     struct P2 tmp;
     int ta, tb;
 
-    func_ov075_021160b4(data_ov075_0211d71c);
+    _ZN10dScEntry_c15graphCallback_cC1Ev(data_ov075_0211d71c);
 
     p = (short *)(&data_ov075_0211d948);
     ((short *)(&data_ov075_0211d948))[0] = 0x80;

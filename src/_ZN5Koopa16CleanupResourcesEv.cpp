@@ -16,7 +16,7 @@ extern struct SharedFilePtr *data_ov062_0211cee8[];
 
 int Koopa::CleanupResources()
 {
-  int b = (int) ((*((unsigned short *) ((char *)&mActorID))) == 0xcc);
+  int b = (int) ((*((unsigned short *) ((char *)&actorID))) == 0xcc);
   if (b == 0)
   {
     _ZN13SharedFilePtr7ReleaseEv(data_ov062_0211cee0[*((int *) ((char *)&mModelIndex))]);

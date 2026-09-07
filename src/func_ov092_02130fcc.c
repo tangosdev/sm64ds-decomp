@@ -1,4 +1,4 @@
-extern void _ZN9ActorBase18MarkForDestructionEv(void *);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *);
 
 void func_ov092_02130fcc(char *c)
 {
@@ -12,5 +12,5 @@ void func_ov092_02130fcc(char *c)
     cur = *(int *)(c + 0x60);
     if (cur >= limit)
         return;
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
 }

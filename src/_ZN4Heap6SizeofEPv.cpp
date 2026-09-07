@@ -1,14 +1,28 @@
 //cpp
 // @symbol _ZN4Heap6SizeofEPv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* Heap::Sizeof(void*) at 0x0203c454 -- asks slot 9 how large an allocated block
+ * is, and treats -1 as the failure report.
+ *
+ * The result is held in an `int' because that is what this function returns;
+ * slot 9 is declared u32, which is what the overrides return. The choice is
+ * BYTE-UNOBSERVABLE, and that was measured, not assumed: compiling this with
+ * `u32 size' and `size == (u32)-1' is byte-identical under 2004/b56. An earlier
+ * revision of this comment claimed the u32 spelling "would turn that into an
+ * unsigned compare and change the instruction", which is simply false -- the
+ * guard is an equality, so it lowers to cmp/bne on the Z flag and there is no
+ * signed or unsigned variant of that to pick between. Runbook section 2 asks
+ * for "byte-unobservable", not "verified"; the earlier wording was the exact
+ * overclaim it warns about.
+ *
+ * Was a cast of `this' to a local `struct Base' with nine anonymous virtuals
+ * padding `m' out to index 9. */
 #include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "Heap.h"
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7(); virtual void v8(); virtual int m(void*); };
 
-int Heap::Sizeof(void * a)
+int Heap::Sizeof(void* ptr)
 {
-  int r = ((Base *)this)->m(a);
-  if (r == -1 && (*(int*)((char*)&unk_010) & 0x4000)) Crash();
-  return r;
+    int size = VSizeof(ptr);
+    if (size == -1 && (flags & 0x4000))
+        Crash();
+    return size;
 }

@@ -4,7 +4,7 @@
     .ctor       start:0x020b9de4 end:0x020b9df4 kind:rodata align:4
     .data       start:0x020b9e00 end:0x020beb60 kind:data align:32
     .bss        start:0x020beb60 end:0x020bfec0 kind:bss align:32
-src/func_ov004_020ad660.c:
+src/_ZN11dScMgBase_c9Virtual8CEv.cpp:
     complete
     .text start:0x020ad660 end:0x020ad674
 
@@ -44,7 +44,7 @@ src/func_ov004_020ada20.c:
     complete
     .text start:0x020ada20 end:0x020ada40
 
-src/_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player.c:
+src/func_ov004_020ada40.c:
     complete
     .text start:0x020ada40 end:0x020adafc
 
@@ -76,9 +76,11 @@ src/func_ov004_020adc4c.c:
     .text start:0x020adc4c end:0x020adc5c
 
 src/Ov004_Deallocate.c:
+    complete
     .text start:0x020adc5c end:0x020adc68
 
 src/func_ov004_020adc68.c:
+    complete
     .text start:0x020adc68 end:0x020adc74
 
 src/func_ov004_020adc74.c:
@@ -117,19 +119,19 @@ src/func_ov004_020adfc4.c:
     complete
     .text start:0x020adfc4 end:0x020ae03c
 
-src/func_ov004_020ae03c.c:
+src/_ZN11dScMgBase_c15graphCallback_c14GraphCallback3Ev.cpp:
     complete
     .text start:0x020ae03c end:0x020ae06c
 
-src/func_ov004_020ae06c.c:
+src/_ZN11dScMgBase_c15graphCallback_c14GraphCallback2Ev.cpp:
     complete
     .text start:0x020ae06c end:0x020ae0a4
 
-src/func_ov004_020ae0a4.c:
+src/_ZN11dScMgBase_c15graphCallback_c14GraphCallback1Ev.cpp:
     complete
     .text start:0x020ae0a4 end:0x020ae0d4
 
-src/func_ov004_020ae0d4.c:
+src/_ZN11dScMgBase_c15graphCallback_c14GraphCallback0Ev.cpp:
     complete
     .text start:0x020ae0d4 end:0x020ae104
 
@@ -137,19 +139,19 @@ src/func_ov004_020ae104.c:
     complete
     .text start:0x020ae104 end:0x020ae128
 
-src/func_ov004_020ae128.c:
+src/_ZN11dScMgBase_c8OnPushedEv.cpp:
     complete
     .text start:0x020ae128 end:0x020ae140
 
-src/func_ov004_020ae140.cpp:
+src/_ZN11dScMgBase_c8OnKickedEv.cpp:
     complete
     .text start:0x020ae140 end:0x020ae198
 
-src/func_ov004_020ae198.c:
+src/_ZN11dScMgBase_c11OnAttacked1Ev.cpp:
     complete
     .text start:0x020ae198 end:0x020ae1a0
 
-src/func_ov004_020ae1a0.c:
+src/_ZN11dScMgBase_c11OnAttacked2Ev.cpp:
     complete
     .text start:0x020ae1a0 end:0x020ae1a8
 
@@ -181,11 +183,19 @@ src/func_ov004_020ae330.c:
     complete
     .text start:0x020ae330 end:0x020ae3b4
 
-src/func_ov004_020ae3b4.c:
+src/_ZN11dScMgBase_c9Virtual88Eiiii.cpp:
     complete
     .text start:0x020ae3b4 end:0x020ae5c4
 
-src/_ZN5Enemy12KillByAttackER5Actor.cpp:
+src/func_ov004_020ae5c4.cpp:
+    complete
+    .text start:0x020ae5c4 end:0x020ae858
+
+src/func_ov004_020ae858.cpp:
+    complete
+    .text start:0x020ae858 end:0x020aea30
+
+src/func_ov004_020aea30.cpp:
     complete
     .text start:0x020aea30 end:0x020aea78
 
@@ -197,17 +207,19 @@ src/func_ov004_020aeb24.cpp:
     complete
     .text start:0x020aeb24 end:0x020aeed8
 
-src/func_ov004_020aeed8.cpp:
+src/_ZN11dScMgBase_c25OnAimedAtWithEggReturnVecEv.cpp:
+    complete
     .text start:0x020aeed8 end:0x020af04c
 
-src/func_ov004_020af04c.cpp:
+src/_ZN11dScMgBase_c19OnHitFromUnderneathEv.cpp:
     complete
     .text start:0x020af04c end:0x020af094
 
-src/func_ov004_020af094.cpp:
+src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp:
+    complete
     .text start:0x020af094 end:0x020af27c
 
-src/func_ov004_020af27c.c:
+src/_ZN11dScMgBase_c15OnHitByMegaCharEv.cpp:
     complete
     .text start:0x020af27c end:0x020af2f8
 
@@ -279,45 +291,19 @@ src/func_ov004_020b04d0.c:
     complete
     .text start:0x020b04d0 end:0x020b04e0
 
-src/func_ov004_020b04e0.c:
+src/_ZN11dScMgBase_c24OnHitByCannonBlastedCharEv.cpp:
     complete
     .text start:0x020b04e0 end:0x020b04e8
 
-src/func_ov004_020b04e8.c:
+src/minigames/d_s_mg_base.cpp:
     complete
-    .text start:0x020b04e8 end:0x020b04ec
-
-src/func_ov004_020b04ec.c:
-    complete
-    .text start:0x020b04ec end:0x020b04f4
-
-src/func_ov004_020b04f4.cpp:
-    complete
-    .text start:0x020b04f4 end:0x020b0618
-
-src/func_ov004_020b0618.c:
-    complete
-    .text start:0x020b0618 end:0x020b0620
-
-src/func_ov004_020b0620.cpp:
-    .text start:0x020b0620 end:0x020b0840
-
-src/func_ov004_020b0840.c:
-    complete
-    .text start:0x020b0840 end:0x020b08f0
-
-src/func_ov004_020b08f0.cpp:
-    complete
-    .text start:0x020b08f0 end:0x020b0930
-
-src/func_ov004_020b0930.cpp:
-    .text start:0x020b0930 end:0x020b0a38
+    .text start:0x020b04e8 end:0x020b0a38
 
 src/func_ov004_020b0a38.c:
     complete
     .text start:0x020b0a38 end:0x020b0a54
 
-src/func_ov004_020b0a54.c:
+src/func_ov004_020b0a54.cpp:
     complete
     .text start:0x020b0a54 end:0x020b0aa0
 
@@ -424,15 +410,15 @@ src/func_ov004_020b2574.c:
     complete
     .text start:0x020b2574 end:0x020b265c
 
-src/func_ov004_020b265c.c:
+src/_ZN11dScMgBase_c9Virtual84Ev.cpp:
     complete
     .text start:0x020b265c end:0x020b27f4
 
-src/func_ov004_020b27f4.c:
+src/_ZN11dScMgBase_c9Virtual80Ev.cpp:
     complete
     .text start:0x020b27f4 end:0x020b2880
 
-src/func_ov004_020b2880.c:
+src/_ZN11dScMgBase_c9Virtual7CEv.cpp:
     complete
     .text start:0x020b2880 end:0x020b290c
 
@@ -441,21 +427,22 @@ src/func_ov004_020b290c.c:
     .text start:0x020b290c end:0x020b2980
 
 src/func_ov004_020b2980.c:
+    complete
     .text start:0x020b2980 end:0x020b298c
 
-src/func_ov004_020b298c.c:
+src/_ZN11dScMgBase_c15OnGroundPoundedEv.cpp:
     complete
     .text start:0x020b298c end:0x020b2990
 
-src/func_ov004_020b2990.c:
+src/_ZN11dScMgBase_c9Virtual50Ev.cpp:
     complete
     .text start:0x020b2990 end:0x020b2994
 
-src/func_ov004_020b2994.c:
+src/_ZN11dScMgBase_c13OnTurnIntoEggEi.cpp:
     complete
     .text start:0x020b2994 end:0x020b299c
 
-src/func_ov004_020b299c.c:
+src/_ZN11dScMgBase_c13OnYoshiTryEatEi.cpp:
     complete
     .text start:0x020b299c end:0x020b29a0
 
@@ -463,19 +450,19 @@ src/func_ov004_020b29a0.cpp:
     complete
     .text start:0x020b29a0 end:0x020b29c0
 
-src/func_ov004_020b29c0.cpp:
+src/_ZN11dScMgBase_cD2Ev.cpp:
     complete
     .text start:0x020b29c0 end:0x020b2a18
 
-src/func_ov004_020b2a18.cpp:
+src/_ZN11dScMgBase_cD0Ev.cpp:
     complete
     .text start:0x020b2a18 end:0x020b2a84
 
-src/func_ov004_020b2a84.cpp:
+src/_ZN11dScMgBase_cD1Ev.cpp:
     complete
     .text start:0x020b2a84 end:0x020b2adc
 
-src/func_ov004_020b2adc.c:
+src/_ZN11dScMgBase_cC2Ev.cpp:
     complete
     .text start:0x020b2adc end:0x020b2c58
 
@@ -1026,18 +1013,19 @@ src/func_ov004_020b8688.c:
     complete
     .text start:0x020b8688 end:0x020b8714
 
-src/func_ov004_020b8714.cpp:
+src/_ZN10dMgState_c6RenderEv.cpp:
     complete
     .text start:0x020b8714 end:0x020b8778
 
-src/func_ov004_020b8778.cpp:
+src/_ZN10dMgState_c8BehaviorEv.cpp:
     complete
     .text start:0x020b8778 end:0x020b87e0
 
-src/func_ov004_020b87e0.cpp:
+src/_ZN10dMgState_c8SetStateEi.cpp:
+    complete
     .text start:0x020b87e0 end:0x020b8a70
 
-src/func_ov004_020b8a70.c:
+src/_ZN10dMgState_cC1Ev.cpp:
     complete
     .text start:0x020b8a70 end:0x020b8a8c
 
@@ -1045,7 +1033,7 @@ src/func_ov004_020b8a8c.c:
     complete
     .text start:0x020b8a8c end:0x020b8c18
 
-src/func_ov004_020b8c18.c:
+src/_ZN10dMgPsOpt_c11TouchIcon_c6RenderEv.cpp:
     complete
     .text start:0x020b8c18 end:0x020b8dc0
 
@@ -1073,23 +1061,24 @@ src/func_ov004_020b9220.c:
     complete
     .text start:0x020b9220 end:0x020b9280
 
-src/func_ov004_020b9280.c:
+src/_ZN10dMgPsOpt_c11TouchIcon_cD1Ev.cpp:
     complete
     .text start:0x020b9280 end:0x020b929c
 
-src/func_ov004_020b929c.c:
+src/_ZN10dMgPsOpt_cD1Ev.cpp:
     complete
     .text start:0x020b929c end:0x020b92c4
 
-src/func_ov004_020b92c4.c:
+src/_ZN10dMgPsOpt_cC1Ev.cpp:
     complete
     .text start:0x020b92c4 end:0x020b9430
 
-src/func_ov004_020b9430.c:
+src/_ZN10dMgPsOpt_c11TouchIcon_cC1Ev.cpp:
     complete
     .text start:0x020b9430 end:0x020b944c
 
 src/__sinit_ov004_020b948c.c:
+    complete
     .init start:0x020b948c end:0x020b955c
 
 src/__sinit_ov004_020b955c.c:
@@ -1097,7 +1086,9 @@ src/__sinit_ov004_020b955c.c:
     .init start:0x020b955c end:0x020b9ad0
 
 src/__sinit_ov004_020b9ad0.c:
+    complete
     .init start:0x020b9ad0 end:0x020b9b24
 
 src/__sinit_ov004_020b9b24.c:
+    complete
     .init start:0x020b9b24 end:0x020b9de4

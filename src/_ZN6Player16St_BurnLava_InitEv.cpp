@@ -8,6 +8,7 @@ extern "C" {
 extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned int,int,int,unsigned int);
 extern int func_ov002_020d91e0(void*,int,int);
 extern int _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int,unsigned int,struct Vector3*);
+extern int func_ov002_020e3078(void*,int*);
 }
 
 int Player::St_BurnLava_Init()
@@ -22,7 +23,7 @@ int Player::St_BurnLava_Init()
   mVertSpeed=0x64000;
   mStateWork=0;
   mStateStep=0;
-  if(func_ov006_020e3078(((char*)this),data_ov002_021100f4)==0){
+  if(func_ov002_020e3078(((char*)this),data_ov002_021100f4)==0){
     mStateArg=0;
   }
   func_ov002_020d91e0(((char*)this),0x300,1);

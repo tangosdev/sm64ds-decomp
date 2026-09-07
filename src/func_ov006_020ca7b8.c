@@ -15,7 +15,7 @@ extern int data_ov006_0213b10c[2];
 int func_ov006_020ca7b8(void) {
     int i;
     for (i = 0; i < data_ov006_021405bc; i++) {
-        int* v = (int*)(((long long)(int)&data_ov006_02140554[i].x));
+        int* v = (int*)(&data_ov006_02140554[i].x);
         volatile int* q = (volatile int*)data_ov006_0213b10c;
         if (v[0] != data_ov006_0213b10c[0]
             || (v[1] != q[1] && data_ov006_02140554[i].x != 0))

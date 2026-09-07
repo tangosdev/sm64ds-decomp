@@ -2,7 +2,7 @@
 typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct Mtx43 { int w[12]; } Mtx43;
 
-#define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
+#define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 extern void Vec3_Asr(Vec3* d, Vec3* s, int sh);
 extern void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);

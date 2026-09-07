@@ -25,6 +25,7 @@ Usage:
 """
 import argparse, difflib, json, pathlib, sys, time
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import asm_policy  # noqa: E402
 import swarm as S
 import relocs as R
 import modules as MOD
@@ -96,7 +97,7 @@ def build_corpus():
             # A committed src file is only an example-eligible byte-match if it is NOT a
             # "// NONMATCHING" hatch (a decompiled-but-unmatchable draft). The banner is in the
             # committed src, so this is portable and does not need nonmatching.jsonl.
-            hatch = src is not None and "// NONMATCHING" in src[:200]
+            hatch = src is not None and asm_policy.has_draft_banner(src)
             if src is not None and not hatch:
                 rec["src"] = src
                 matched.append(rec)
@@ -182,16 +183,16 @@ def main():
     pool = [u for u in unmatched
             if args.min <= u["size"] <= args.max and (not args.module or u["module"] == args.module)]
 
-    # Drop anything another contributor holds in CLAIMS.md. Filtering at pool construction
-    # (rather than at write time) also keeps claimed targets out of the similarity scoring,
-    # so they cannot displace schedulable work from the top of the batch.
+    # Drop anything another contributor holds (API lock or CLAIMS.md row). Filtering at
+    # pool construction (rather than at write time) also keeps claimed targets out of the
+    # similarity scoring, so they cannot displace schedulable work from the top of the batch.
     if not args.ignore_claims:
         held = CLM.held_targets()
         before = len(pool)
-        pool = [u for u in pool if not CLM.is_held(held, u["name"], u["addr"])]
+        pool = [u for u in pool if not CLM.is_held(held, u["name"], u["addr"], module=u.get("module"))]
         if before != len(pool):
-            sys.stderr.write(f"claims: skipped {before - len(pool)} target(s) held in CLAIMS.md "
-                             f"({held['rows']} active rows)\n")
+            sys.stderr.write(f"claims: skipped {before - len(pool)} held target(s) "
+                             f"({held['rows']} active holds)\n")
         try:
             import claims as _CL
             _msg = _CL.key_reminder()

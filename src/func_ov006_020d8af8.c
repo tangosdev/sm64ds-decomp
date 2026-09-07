@@ -12,7 +12,7 @@ void func_ov006_020d8af8(char* self)
     func_ov006_020d836c(self);
 
     if (*(u16*)(self + 0x62e8) != 0) {
-        (*(u16*)(((long long)(int)(self + 0x62e8))))--;
+        (*(u16*)(self + 0x62e8))--;
         if (*(s16*)(self + 0x62e8) > 0)
             return;
         *(u16*)(self + 0x62e8) = 0;
@@ -25,7 +25,7 @@ void func_ov006_020d8af8(char* self)
     }
 
     if (*(u16*)(self + 0x62e0) != 0) {
-        (*(u16*)(((long long)(int)(self + 0x62e0))))--;
+        (*(u16*)(self + 0x62e0))--;
         return;
     }
 
@@ -37,14 +37,14 @@ void func_ov006_020d8af8(char* self)
         j++;
     } while (j < 0x70);
 
-    (*(u16*)(((long long)(int)(self + 0x62ea))))++;
+    (*(u16*)(self + 0x62ea))++;
     if (*(u16*)(self + 0x62ea) < 4)
         return;
 
     if (found != 0) {
         arr[found - 1][0x4698] = 2;
         *(u16*)(self + 0x62ea) = 0;
-        (*(u16*)(((long long)(int)(self + 0x62ee))))++;
+        (*(u16*)(self + 0x62ee))++;
         _ZN5Sound12PlayBank2_2DEj(0x1bc);
     } else {
         *(u16*)(self + 0x62ea) = 0;

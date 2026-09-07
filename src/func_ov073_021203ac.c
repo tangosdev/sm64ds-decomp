@@ -5,7 +5,7 @@ extern short Vec3_VertAngle(void *a, void *b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern void func_ov073_0211f2c0(void *self, int v);
 extern int func_02012694(int a, void *pos);
 extern void ChiefChilly_ChangeState(void *c, void *p);
@@ -30,7 +30,7 @@ int func_ov073_021203ac(void *thiz)
         *(int *)(c + 0xa8) = 0x5a000;
         *(int *)(c + 0x9c) = -neg;
         {
-            unsigned char *p = (unsigned char *)(((long long)(int)(c + 0x4c4)));
+            unsigned char *p = (unsigned char *)(c + 0x4c4);
             *p = *p + 1;
             *p = *p & 7;
         }
@@ -67,7 +67,7 @@ mainblock:
         *(int *)(c + 0xa4) = out[0];
         *(int *)(c + 0xac) = out[2];
     }
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x150) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x150) != 0) {
         *(unsigned char *)(c + 0x4c5) = *(unsigned char *)(c + 0x4c4);
         *(int *)(c + 0x98) = 0;
         *(int *)(c + 0xa4) = 0;
@@ -76,7 +76,7 @@ mainblock:
         func_ov073_0211f2c0(c, 0x7d0000);
         func_02012694(0x16d, c + 0x74);
         {
-            int *cnt = (int *)(((long long)(int)(c + 0x4b8)));
+            int *cnt = (int *)(c + 0x4b8);
             *cnt = *cnt + 1;
         }
         if (*(int *)(c + 0x4b8) > 7) {

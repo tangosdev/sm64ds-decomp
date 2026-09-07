@@ -5,7 +5,7 @@
 #include "common.h"
 typedef int Fix12;
 typedef short s16;
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, Fix12 a, Fix12 b, unsigned int g);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, Fix12 a, Fix12 b, unsigned int g);
 
 
 
@@ -15,5 +15,5 @@ void func_ov079_02126704(char* c) {
   *(int*)(c+0x350) = *(int*)(c+0x60) >> 3;
   *(int*)(c+0x354) = *(int*)(c+0x64) >> 3;
   *(struct Matrix4x3*)(c+0x378) = *(struct Matrix4x3*)(c+0x328);
-  _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c+0x3ac, c+0x328, 0x50000, 0x50000, 0xf);
+  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c+0x3ac, c+0x328, 0x50000, 0x50000, 0xf);
 }

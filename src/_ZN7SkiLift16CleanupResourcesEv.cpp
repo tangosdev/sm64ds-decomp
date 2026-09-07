@@ -1,16 +1,22 @@
 //cpp
-#include "types.h"
+// @symbol _ZN7SkiLift16CleanupResourcesEv
+#include "SkiLift.h"
+// recovered name: daObjSm_Lift_c_CleanupResources
+/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method */
+/* daObjSm_Lift_c::CleanupResources - recovered from vtable slot identity */
 extern "C" {
-struct SharedFilePtr { u32 data[4]; };
-void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
-extern struct SharedFilePtr data_ov018_02113c00;
-extern struct SharedFilePtr* data_ov018_02112c0c[2];
-extern struct SharedFilePtr* data_ov018_02112c04[2];
-int _ZN7SkiLift16CleanupResourcesEv(void){
-  int i;
-  _ZN13SharedFilePtr7ReleaseEv(&data_ov018_02113c00);
-  for(i=0;i<2;i++) _ZN13SharedFilePtr7ReleaseEv(data_ov018_02112c0c[i]);
-  for(i=0;i<2;i++) _ZN13SharedFilePtr7ReleaseEv(data_ov018_02112c04[i]);
-  return 1;
+extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+extern int data_ov018_02113bc8[];
 }
+
+s32 SkiLift::CleanupResources() {
+    void * t = (void *)this;
+    if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
+        _ZN4dBgW7DisableEv((char *)t + 0x124);
+    }
+    _ZN13SharedFilePtr7ReleaseEv(data_ov018_02113bc8);
+    _ZN13SharedFilePtr7ReleaseEv(data_ov018_02113bc0);
+    return 1;
 }

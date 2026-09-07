@@ -1,0 +1,125 @@
+{
+  "class": "daDsnBase_c",
+  "rtti_name": "11daDsnBase_c",
+  "rtti_name_address": "0x02113804",
+  "typeinfo": {
+    "symbol": "_ZTI11daDsnBase_c",
+    "address": "0x021137f8",
+    "module": "ov025",
+    "kind": "__si_class_type_info",
+    "size": "0xc",
+    "base_typeinfo": "_ZTI10dBgActor_c (ov002 0x021089ec)",
+    "note": "THE RECORD IS NOT IN THIS CLASS'S OWN OVERLAY. _ZTI/_ZTS have vague linkage and mwld kept the single copy in ov025, while the vtable stayed in ov091. Proved from the cartridge, not inferred: the two ABI preamble words below _ZTV11daDsnBase_c read 0x00000000 (offset-to-top) and 0x021137f8 (RTTI pointer), and config/arm9/overlays/ov025/symbols.txt:121 is what names that address."
+  },
+  "overlay": "ov091",
+  "module_base": "0x02130f00",
+  "vtable": {
+    "symbol": "_ZTV11daDsnBase_c",
+    "address": "0x021351fc",
+    "module": "ov091",
+    "slots": 32,
+    "emitted_storage_size": "0x88",
+    "note": "the symbol IS the address point; the two ABI preamble words (offset-to-top 0x0, RTTI pointer 0x021137f8) sit at -8 and -4. 0x88 = 8 preamble bytes + 32 slots x 4, and tubuild verify reports the emitted section at exactly 0x88, so rtti_vtables.py's known extent over-report does NOT apply to this class.",
+    "slot_count_evidence": "read word-by-word out of extracted/dsd/arm9_overlays/ov091.bin at file offset 0x42fc (module base 0x02130f00). Same count as the base dBgActor_c -- daDsnBase_c adds no slot, it only overrides."
+  },
+  "base_class": "dBgActor_c",
+  "base_evidence": "_ZTI11daDsnBase_c is a __si_class_type_info with ONE base at subobject offset 0, whose +8 word points at _ZTI10dBgActor_c (ov002 0x021089ec). Corroborated by length: _ZTV10dBgActor_c and _ZTV11daDsnBase_c are both 32 slots, and slot 31 of this table still holds dBgActor_c::Kill (0x020ee55c). Full ancestor chain, 5 levels: daDsnBase_c -> dBgActor_c -> dActor_c -> dBase_c -> fBase_c.",
+  "abstract": true,
+  "abstract_evidence": "slots 0 and 6 hold a bare 0x00000000 in the cartridge and no relocation in config/arm9/overlays/ov091/relocs.txt reaches either word -- which is how a pure virtual reads once the linker is done. Each leaf (daDsn_c, daDkk_c) supplies both for real.",
+  "overrides": [
+    {
+      "slot": 0,
+      "address": null,
+      "name": "InitResources",
+      "note": "PURE. Null word in the ROM, supplied by each leaf."
+    },
+    {
+      "slot": 3,
+      "address": "0x021331b8",
+      "name": "CleanupResources",
+      "size": "0x58",
+      "note": "THE KEY FUNCTION -- the first declared virtual that is neither inline nor pure, so the TU that defines it emits _ZTV11daDsnBase_c and both destructor variants. The ROM spelled this symbol _ZN6Thwomp16CleanupResourcesEv, but slot 3 of THIS class's vtable holds it and Thwomp's table merely inherits the word, so it belongs to daDsnBase_c."
+    },
+    {
+      "slot": 6,
+      "address": null,
+      "name": "Behavior",
+      "note": "PURE. Null word in the ROM, supplied by each leaf."
+    },
+    {
+      "slot": 9,
+      "address": "0x02133210",
+      "name": "Render",
+      "size": "0x44",
+      "note": "Same crossed-name story as slot 3: the ROM spelled it _ZN6Thwomp6RenderEv, but it is this class's slot word and Thwomp inherits it."
+    },
+    {
+      "slot": 16,
+      "address": "0x02132d6c",
+      "name": "~daDsnBase_c (D1)",
+      "size": "0x54",
+      "note": "body defined INLINE in include/daDsnBase_c.h so that both descendants inline it; this out-of-line copy exists only because the vtable is emitted here. Empty but not inert -- it tears down mShadowModel (+0x338) then mTextureSequence (+0x324) in reverse declaration order, then the dBgActor_c base step."
+    },
+    {
+      "slot": 17,
+      "address": "0x02132d04",
+      "name": "~daDsnBase_c (D0, deleting)",
+      "size": "0x68",
+      "note": "SITS BELOW D1 IN THE CARTRIDGE. That order is not reproducible by any admissible source form -- see unproven/blockers below and the manifest's boundary_evidence."
+    }
+  ],
+  "inherited_unchanged_slots": "slots 1, 2, 4, 5, 7, 8, 10-15 and 18-30 still hold dActor_c's own words (all point into arm9); slot 31 holds dBgActor_c::Kill at ov002 0x020ee55c. This class adds no slot and overrides exactly four (3, 9, 16, 17) beyond the two it leaves pure (0, 6).",
+  "non_virtual": [
+    { "symbol": "func_ov091_02132dc0", "address": "0x02132dc0", "size": "0xa4",
+      "note": "Finds the closest actor with ID 9 and, if it is within this actor's clip radius, enables the mesh collider. Calls dActor_c::OnAimedAtWithEgg (slot 29) through the vtable." },
+    { "symbol": "func_ov091_02132e64", "address": "0x02132e64", "size": "0x34",
+      "note": "State step: counts down the 0x39e delay byte, then sets state 0x398 = 0 and reloads the delay to 0x28." },
+    { "symbol": "func_ov091_02132e98", "address": "0x02132e98", "size": "0x6c",
+      "note": "State step: on delay expiry sets state 4 and reloads a random delay of 0x14..0x1d." },
+    { "symbol": "func_ov091_02132f04", "address": "0x02132f04", "size": "0xf0",
+      "note": "The fall step. Accelerates 0xa8 downward, clamps Y to 0x394, then on landing either HugeLandingDust (actor type 0xa1) or particle 0x2e, plus an Earthquake and sound 0xc7." },
+    { "symbol": "func_ov091_02132ff4", "address": "0x02132ff4", "size": "0x2c",
+      "note": "State step: on delay expiry sets state 2." },
+    { "symbol": "func_ov091_02133020", "address": "0x02133020", "size": "0x78",
+      "note": "The rise step. Adds 0xa000 to Y, clamps to the rest height 0x390, then sets state 1 and a random delay of 0xa..0x27." },
+    { "symbol": "func_ov091_02133098", "address": "0x02133098", "size": "0x120",
+      "note": "Drop-shadow sizing. Scales the shadow by the fall distance (Y minus 0x394), copies the model matrix 0xf0 -> 0x360, and calls dActor_c::DropShadowScaleXYZ with mShadowModel (+0x338)." }
+  ],
+  "text_span": "0x02132d04..0x02133254",
+  "text_span_note": "11 functions, one contiguous linker run, from build/tu_map.json. Boundary confidence medium on both sides.",
+  "size": "0x360",
+  "size_evidence": "MINIMAL READING, and said as such. mShadowModel closes at 0x338 + 0x28 = 0x360 and nothing this class owns reaches higher. The two leaves allocate MORE and disagree with each other -- daDkk_c_classInit passes 928 = 0x3a0 and Thwomp_Spawn 932 = 0x3a4 -- so no allocation literal fixes this class's end. 0x360..0x3a0 exists in both leaves and is declared on them.",
+  "fields": [
+    { "offset": "0x320", "name": "mFileTable", "type": "s32", "note": "a void** in practice. CleanupResources releases entries [0], [1] and, when non-null, [3]; Render reads entry [3] to decide whether to run the texture animation. NAME IS COINED." },
+    { "offset": "0x324", "name": "mTextureSequence", "type": "TextureSequence", "size": "0x14",
+      "note": "Two-sided evidence: Thwomp_Spawn and daDkk_c_classInit both call _ZN15TextureSequenceC1Ev at +0x324 while the vptr is this class's, and this class's own D1 calls its D1 there." },
+    { "offset": "0x338", "name": "mShadowModel", "type": "ShadowModel", "size": "0x28",
+      "note": "Same two-sided evidence, _ZN11ShadowModelC1Ev at +0x338. Corroborated a third way: func_ov091_02133098 passes this+0x338 as dActor_c::DropShadowScaleXYZ's ShadowModel& parameter." }
+  ],
+  "pad": "0x360..0x3a0 is NOT declared here -- it exists in both leaves and is declared on them, because the two leaves' allocation sizes disagree and neither pins this class's end.",
+  "unproven": [
+    "the field NAMES: nothing in the ROM names them, all three are coined from what the code does",
+    "the original English names of the seven func_ov091_* members -- they are unnamed in the ROM config and no mangled spelling survives",
+    "the exact meaning of the state machine's 0x398 state ids (0..4) and the 0x39e delay byte's name",
+    "whether 0x360..0x3a0 belongs to this class: the two leaves allocate 0x3a0 and 0x3a4 and disagree, so it stays declared on the leaves",
+    "the return types of CleanupResources and Render are taken as s32 from the header; both bodies only ever return the literal 1, so a bool spelling is not excluded by the bytes"
+  ],
+  "blockers": [
+    "THE DESTRUCTOR PAIR IS NOT PROMOTABLE INTO THE LICENSED RUN. The cartridge puts D0 (0x02132d04) BELOW D1 (0x02132d6c). mwccarm 2004/b56's lever set for destructor variant order is closed: inline in the class body emits D1 then D0, always; out of line emits D2, D0, D1 and adds a homeless D2 the ROM does not carry. Both variants BYTE-MATCH from the inline form, so the source form is right and only the ORDER is unreproducible. Handled as a 9-of-11 partial promotion; the two shards stay enrolled and the TU's own copies are licensed deadstrip-duplicate.",
+    "Nothing outside the vtable depends on those two addresses: the only references to either in all of config/ are relocs.txt 0x0213523c -> 0x02132d6c and 0x02135240 -> 0x02132d04, which are vtable slots 16 and 17. No instruction in the image calls either address."
+  ],
+  "provenance": {
+    "worktree": "C:/tmp/sm64ds-dsnbase",
+    "ref": "cpp/daDsnBase_c-tu (from origin/main 379bd67f9)",
+    "written_by": "writer (no scout ran for this class; no sibling oracle exists in ov091)",
+    "tools": [
+      "tools/tubuild.py inspect ov091/daDsnBase_c",
+      "tools/rtti_extract.py",
+      "tools/rtti_vtables.py --own daDsnBase_c",
+      "direct word-by-word read of extracted/dsd/arm9_overlays/ov091.bin at the vtable",
+      "config/arm9/symbols.txt, config/arm9/overlays/{ov002,ov025,ov091}/symbols.txt",
+      "config/arm9/overlays/ov091/relocs.txt",
+      "include/daDsnBase_c.h (pre-existing, and its claims were re-proved here rather than imported)"
+    ]
+  }
+}

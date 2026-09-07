@@ -5,7 +5,7 @@
 #include "common.h"
 extern "C" {
 u8 DecIfAbove0_Byte(u8* p);
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3* v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
 void func_0201267c(int a, void* p);
 void Vec3_Sub(Vector3* out, Vector3* a, Vector3* b);
@@ -14,9 +14,9 @@ s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
 int _Z14ApproachLinearRsss(s16* v, s16 target, s16 step);
 void func_ov063_0211ddac(void* c, int i);
 void _ZN9Animation7AdvanceEv(void* a);
-void _ZN12CylinderClsn5ClearEv(void* c);
-void* _ZN5Actor13ClosestPlayerEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* c);
+void _ZN5dCc_c5ClearEv(void* c);
+void* _ZN8dActor_c13ClosestPlayerEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* c);
 }
 
 extern s16 data_02082214[];
@@ -54,7 +54,7 @@ extern "C" void func_ov063_0211d8cc(char* c)
     for (; i < 2; i = i + 1) {
         int id = *(int*)(c + i * 0x40 + 0x4b0);
         if (id != 0) {
-            a = _ZN5Actor10FindWithIDEj((unsigned int)id);
+            a = _ZN8dActor_c10FindWithIDEj((unsigned int)id);
             if (a != 0) {
                 int isBf = (*(u16*)((char*)a + 0xc) == 0xbf);
                 if (isBf != false) {
@@ -117,9 +117,9 @@ extern "C" void func_ov063_0211d8cc(char* c)
     p = c + 0x48c;
     for (k = 0; k < 2; k = k + 1) {
         *(int*)(c + k * 0x40 + 0x490) = 0x9b000;
-        _ZN12CylinderClsn5ClearEv(p);
-        if (*(u8*)((char*)_ZN5Actor13ClosestPlayerEv(c) + 0x6fb) == 0)
-            _ZN12CylinderClsn6UpdateEv(p);
+        _ZN5dCc_c5ClearEv(p);
+        if (*(u8*)((char*)_ZN8dActor_c13ClosestPlayerEv(c) + 0x6fb) == 0)
+            _ZN5dCc_c6UpdateEv(p);
         p += 0x40;
     }
 }

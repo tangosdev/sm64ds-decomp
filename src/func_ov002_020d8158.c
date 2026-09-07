@@ -9,7 +9,7 @@ extern struct State data_ov002_0211004c;
 void func_ov002_020d8158(char* c)
 {
     if (*(int*)(c + 8) != 3) {
-        *(u16*)(int)(((long long)(int)(c + 0x6ce))) &= ~0x1000;
+        *(u16*)(int)(c + 0x6ce) &= ~0x1000;
         return;
     }
     if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_02110034)) return;
@@ -19,6 +19,6 @@ void func_ov002_020d8158(char* c)
     func_ov002_020d8118(c);
     *(u8*)(c + 0x6f4) = 1;
     func_ov002_020bdc18(c);
-    *(u16*)(int)(((long long)(int)(c + 0x6ce))) &= ~0x1000;
+    *(u16*)(int)(c + 0x6ce) &= ~0x1000;
     *(u8*)(c + 0x714) = 1;
 }

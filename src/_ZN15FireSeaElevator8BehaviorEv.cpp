@@ -1,37 +1,65 @@
 //cpp
 // @symbol _ZN15FireSeaElevator8BehaviorEv
-/* recovered: named members + shared header, real C++ method */
 #include "FireSeaElevator.h"
-typedef int Fix12;
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "daObjKm2_Agaru_c.h"
+// recovered name: daObjKm2_Agaru_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daObjKm2_Agaru_c::Behavior - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern "C" {
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, Fix12 a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
+extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
 }
-extern short data_02082214[];
 
-int FireSeaElevator::Behavior()
-{
-    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
-    if (unk_008 != 0xffff) {
-        int idx = unk_354 >> 4;
-        int s = *(short*)((char*)data_02082214 + (idx << 2));
-        *(int*)(((int)((char *)this) + 0x60)) =
-            *(int*)(((int)((char *)this) + 0x60)) + (int)(((long long)s * 0x7000 + 0x800) >> 12);
-    } else {
-        int idx = unk_354 >> 4;
-        int s = *(short*)((char*)data_02082214 + (idx << 2));
-        *(int*)(((int)((char *)this) + 0x60)) =
-            *(int*)(((int)((char *)this) + 0x60)) - (int)(((long long)s * 0x3000 + 0x800) >> 12);
+s32 FireSeaElevator::Behavior() {
+    char * c = (char *)this;
+    struct daObjKm2_Agaru_c *self = (struct daObjKm2_Agaru_c *)(void *)c;
+    switch (self->unk_327) {
+    case 0:
+        if (self->unk_326 != 0)
+            *(unsigned char*)(((int)c + 0x327)) =
+                *(unsigned char*)(((int)c + 0x327)) + 1;
+        break;
+    case 1:
+        if (self->unk_324 >= 0x14) {
+            int lim;
+            *(int*)(((int)c + 0x60)) =
+                *(int*)(((int)c + 0x60)) + 0xa000;
+            lim = self->unk_320 + 0x5dc000;
+            if (self->mPosY >= lim) {
+                self->mPosY = lim;
+                *(unsigned char*)(((int)c + 0x327)) =
+                    *(unsigned char*)(((int)c + 0x327)) + 1;
+                self->unk_324 = 0;
+            }
+        } else {
+            *(unsigned short*)(((int)c + 0x324)) =
+                *(unsigned short*)(((int)c + 0x324)) + 1;
+        }
+        break;
+    case 2:
+        if (self->unk_324 >= 0x14) {
+            int lim;
+            *(int*)(((int)c + 0x60)) =
+                *(int*)(((int)c + 0x60)) - 0xa000;
+            lim = self->unk_320;
+            if (self->mPosY <= lim) {
+                self->mPosY = lim;
+                self->unk_327 = 0;
+                self->unk_324 = 0;
+            }
+        } else {
+            *(unsigned short*)(((int)c + 0x324)) =
+                *(unsigned short*)(((int)c + 0x324)) + 1;
+        }
+        break;
     }
-    *(short*)(((int)((char *)this) + 0x354)) =
-        *(short*)(((int)((char *)this) + 0x354)) + 0x100;
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
-    if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x400000, 0)) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
-    }
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0x1f4000, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+    self->unk_326 = 0;
     return 1;
 }

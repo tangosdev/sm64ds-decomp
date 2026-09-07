@@ -33,7 +33,11 @@ def callers(sym):
     """Files that reference sym, excluding its own definition file."""
     out = subprocess.run(["git", "grep", "-l", "-F", sym, "--", "src/"],
                          cwd=REPO, capture_output=True, text=True).stdout
-    return [l for l in out.splitlines() if l.strip() and not l.startswith(f"src/{sym}.")]
+    # Ask srcpath where the definition actually is rather than assuming src/<sym>.<ext>:
+    # once a symbol lives in a subdirectory the flat guess stops matching and the symbol
+    # is reported as a caller of itself.
+    own = {p.relative_to(REPO).as_posix() for p in SP.paths_for(sym)}
+    return [l for l in out.splitlines() if l.strip() and l not in own]
 
 
 def named_callees(text):

@@ -3,7 +3,7 @@
 #include "ShadowModel.h"
 extern "C" extern BMD_File data_020ad524;
 
-void ShadowModel::InitCuboid()
+int ShadowModel::InitCuboid()
 {
-    SetFile(&data_020ad524, 1, -1);
+    return SetFile(&data_020ad524, 1, -1);
 }

@@ -32,7 +32,7 @@ extern "C" int func_02060558(int a, int b, int c, int d, int e, int f)
             OS_SleepThread(g->sub);
         } while (g->flags & 4);
     }
-    u32* fp = (u32*)(((unsigned long long)((int)g + 0x34)) & 0xFFFFFFFFFFFFFFFFULL);
+    u32* fp = (u32*)((unsigned long long)((int)g + 0x34));
     *fp |= 4;
     IRQ::Restore(irq);
     g->a = a;

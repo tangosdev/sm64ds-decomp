@@ -1,38 +1,38 @@
 #include "types.h"
 typedef struct Vec3 { int x, y, z; } Vec3;
-typedef struct RaycastGround {
+typedef struct dBgCh_Gnd {
     char pre[0x10];
     char result[0x34];
     int clsnY;
     char post[0x8];
-} RaycastGround;
+} dBgCh_Gnd;
 
-extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, Vec3 *pos, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
-extern int _ZNK10ClsnResult9GetClsnIDEv(void *self);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *self, Vec3 *pos, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
+extern int _ZNK5dBgPi9GetClsnIDEv(void *self);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
 extern void func_ov060_02113a94(void *c);
 extern void func_ov060_02111cc0(void *c, int a, int b);
 extern void func_02012694(int a, void *p);
 extern void _Z14ApproachLinearRiii(int *v, int target, int step);
 extern int func_ov060_021145d4(void *c);
 extern void func_ov060_02115b0c(void *c);
-extern void *_ZN5Actor15FindWithActorIDEjPS_(u32 id, void *p);
+extern void *_ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void *p);
 extern void func_ov060_02115018(void *c);
 extern int Bowser_IsAnimAtLastFrame(void *c);
 
 void func_ov060_02113740(char *c)
 {
     Vec3 pos;
-    RaycastGround rc;
+    dBgCh_Gnd rc;
     int hit;
     int ground;
 
     ground = *(int*)(c + 0x3b4) - 0x7d0000;
     hit = 0;
     if (*(int*)(c + 0x60) >= *(int*)(c + 0x3b4)) {
-        _ZN13RaycastGroundC1Ev(&rc);
+        _ZN9dBgCh_GndC1Ev(&rc);
         {
             int pz = *(int*)(c + 0x64);
             int py = *(int*)(c + 0x3b4) + 0x96000;
@@ -41,16 +41,16 @@ void func_ov060_02113740(char *c)
             pos.y = py;
             pos.z = pz;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, &pos, c);
-        if (_ZN13RaycastGround10DetectClsnEv(&rc)) {
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, c);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc)) {
             ground = rc.clsnY;
-            if (_ZNK10ClsnResult9GetClsnIDEv(&rc.result) != -1)
+            if (_ZNK5dBgPi9GetClsnIDEv(&rc.result) != -1)
                 hit = 1;
         }
-        _ZN13RaycastGroundD1Ev(&rc);
+        _ZN9dBgCh_GndD1Ev(&rc);
     }
 
-    *(int*)(((long long)(int)(c + 0x418))) |= 0x10000;
+    *(int*)(c + 0x418) |= 0x10000;
 
     switch (*(u8*)(c + 0x423)) {
     case 0:
@@ -64,7 +64,7 @@ void func_ov060_02113740(char *c)
         *p8c += 0x800;
         *p90 += 0x800;
         if ((*(s16*)(c + 0x8c) & 0xffff) == 0)
-            (*(u8*)(((int)c + 0x423)))++;
+            (*(u8*)((int)c + 0x423))++;
         func_ov060_02113a94(c);
         return;
     }
@@ -78,7 +78,7 @@ void func_ov060_02113740(char *c)
             *(int*)(c + 0x9c) = 0;
             *(u8*)(c + 0x41d) = 0xff;
             *(s16*)(c + 0x3fe) = 0;
-            (*(u8*)(((int)c + 0x423)))++;
+            (*(u8*)((int)c + 0x423))++;
             return;
         }
         func_ov060_02113a94(c);
@@ -101,7 +101,7 @@ void func_ov060_02113740(char *c)
             }
         }
         if (func_ov060_021145d4(c)) {
-            (*(u8*)(((int)c + 0x423)))++;
+            (*(u8*)((int)c + 0x423))++;
             if (hit == 0) {
                 func_ov060_02115b0c(c);
             } else {
@@ -114,7 +114,7 @@ void func_ov060_02113740(char *c)
             if (*(u8*)(c + 0x414) == 1) {
                 char *r;
                 *(int*)(c + 0x40c) = 0x13;
-                r = (char*)_ZN5Actor15FindWithActorIDEjPS_(0xa6, 0);
+                r = (char*)_ZN8dActor_c15FindWithActorIDEjPS_(0xa6, 0);
                 if (r) *(int*)(c + 0x3ac) = *(int*)(r + 4);
                 *(int*)(c + 0x9c) = -0x2000;
             }
@@ -125,7 +125,7 @@ void func_ov060_02113740(char *c)
     case 3:
         if (Bowser_IsAnimAtLastFrame(c) != 0) {
             *(int*)(c + 0x40c) = 0;
-            *(int*)(((int)c + 0x418)) &= ~0x10000;
+            *(int*)((int)c + 0x418) &= ~0x10000;
             *(int*)(c + 0x9c) = -0x2000;
         }
         return;

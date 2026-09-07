@@ -31,6 +31,7 @@ import time
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import srcpath as SP  # noqa: E402
+import asm_policy  # noqa: E402
 
 SRC = REPO / "src"
 MATCHED = REPO / "progress" / "matched.jsonl"
@@ -267,8 +268,8 @@ def bank(record, src_text):
             # also sanctioned: the banner proves it is a hatch even though the
             # local gitignored nonmatching.jsonl never saw it.
             all_hatches = all(
-                "NONMATCHING" in p.read_text(encoding="utf-8",
-                                             errors="replace")[:200]
+                asm_policy.has_draft_banner(
+                    p.read_text(encoding="utf-8", errors="replace"))
                 for p in existing)
             if parked_owner != k and not all_hatches:
                 print(f"ledger: REFUSED to bank {name} at {k}: "

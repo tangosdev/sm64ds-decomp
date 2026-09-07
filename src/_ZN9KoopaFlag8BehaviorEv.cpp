@@ -6,29 +6,25 @@
 /* recovered: named members + shared header, real C++ method */
 #include "KoopaFlag.h"
 extern "C" {
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-extern void _ZN9Animation7AdvanceEv(void *a);
-extern void _ZN12CylinderClsn5ClearEv(void *c);
-extern void _ZN12CylinderClsn6UpdateEv(void *c);
 }
 extern char data_0209d4c8[];
 
 int KoopaFlag::Behavior()
 {
     unsigned int id;
-    char *a;
+    dActor_c *a;
     int b;
 
-    if (unk_16e == 0) {
-        id = unk_0f8;
+    if (mHasTouchedFlag == 0) {
+        id = mdCcAc_c.otherOwner;
         if (id != 0) {
-            a = _ZN5Actor10FindWithIDEj(id);
+            a = dActor_c::FindWithID(id);
             if (a != 0) {
-                b = *(unsigned short *)(a + 0xC);
+                b = a->actorID;
                 b = b == 0xBF;
                 if (b) {
-                    unk_16e = 1;
+                    mHasTouchedFlag = 1;
                     _ZN5Timer9StopTimerEv(data_0209d4c8);
                     mVictoryTimer = 1;
                     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1F, 0x14, 0x7F, 0x6B000, 0);
@@ -46,9 +42,9 @@ int KoopaFlag::Behavior()
         }
     }
 
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    mModelAnim.Advance();
     func_ov062_0211afbc(((char *)this));
-    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

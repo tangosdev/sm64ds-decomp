@@ -11,13 +11,13 @@
 extern "C" {
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char*, unsigned int, int, int, unsigned int);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int, unsigned int, void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
 extern void func_ov002_020ed63c(void*, int);
 }
 
 int Player::St_YoshiPower_Init()
 {
-    *(unsigned short*)(((int)((char*)this) + 0x6ce)) |= 0x200;
+    mStateFlags |= 0x200;
     unk_6ee = 0;
     mEggParams = 0;
     if (unk_6be != 0) {
@@ -31,7 +31,7 @@ int Player::St_YoshiPower_Init()
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x6d, 0x40000000, 0x1000, 0);
             mStateStep = 5;
             mStateTimer = 0x1e;
-            *(unsigned char*)(((int)((char*)this) + 0x6f4)) -= 1;
+            unk_6f4 -= 1;
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0x101, ((char*)this)+0x74);
         } else if (*(void**)((char*)&mObjInMouth) == 0) {
             _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x6c, 0x40000000, 0x1000, 0);
@@ -40,7 +40,7 @@ int Player::St_YoshiPower_Init()
             }
             mStateStep = 0;
             mStateArg = 0;
-            _ZN12CylinderClsn5ClearEv((char*)&mAttackClsn);
+            _ZN5dCc_c5ClearEv((char*)&mAttackClsn);
             func_ov002_020d708c(((char*)this));
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0xfc, ((char*)this)+0x74);
         } else {

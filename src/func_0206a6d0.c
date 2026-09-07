@@ -46,7 +46,13 @@ void func_0206a6d0(void)
     func_0206a37c(*(unsigned short *)((char *)&data_020a9de0 + 2), sp);
     *(volatile u16 *)0x27ffc30 = *(u16 *)((char *)&data_020a9e00 + 0xbe);
     for (i = 0; i < 3; i++)
-        *(volatile u8 *)(0x27ffc32 + i) = *(u8 *)((char *)&data_020a9e00 + i + 0xb5);
+        /* Indexed off a typed pointer, not `*(volatile u8 *)(0x27ffc32 + i)`. Under
+           2004/b56 the integer form parks the whole address in the literal pool and
+           stores through a register offset, while the ROM builds 0x27ff000 from two
+           immediates and puts 0xc32 in the store's 12-bit displacement -- one more
+           instruction and one FEWER literal. That single pool entry shifts every
+           pc-relative load in the function by 4, which is the whole 52-word diff. */
+        ((volatile u8 *)0x27ffc32)[i] = *(u8 *)((char *)&data_020a9e00 + i + 0xb5);
     {
         volatile u16 *p6 = (volatile u16 *)0x27ffc30;
         p6[3] = *(u16 *)((char *)&data_020a9e00 + 0xb0);

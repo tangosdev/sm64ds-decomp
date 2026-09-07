@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 extern void func_0200fa04(void *c, void *v, int flag);
 extern void func_02012694(int a, void *b);
 extern int _ZN6Player7IsInAirEv(void *p);
@@ -13,7 +13,7 @@ extern int _ZN6Player7IsInAirEv(void *p);
 int func_ov060_021145d4(char *c){
   struct Vector3 v;
   int b;
-  if(_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c)){
+  if(_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x14c)){
     *(int*)(c + 0x98) = 0;
     *(int*)(c + 0xa8) = 0;
     v.x = *(int*)(c + 0x5c);

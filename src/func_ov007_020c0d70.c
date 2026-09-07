@@ -16,7 +16,7 @@ struct AnimData {
     u32 count;      /* 0xc */
 };
 
-#define AT16(p, off) (*(short *)(int)(((long long)(int)((char *)(p) + (off)))))
+#define AT16(p, off) (*(short *)(int)((char *)(p) + (off)))
 
 void func_ov007_020c0d70(struct Anim *a, struct AnimData *d)
 {

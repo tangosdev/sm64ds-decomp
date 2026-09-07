@@ -5,7 +5,7 @@ typedef struct Mtx43 { int w[12]; } Mtx43;
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, s16 angX);
-extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* c, void* shadow, void* mtx, int rad, int height, u32 flags);
 
 extern Mtx43 data_020a0e68;
@@ -49,6 +49,6 @@ extern "C" void func_ov071_0211f524(char* c)
     *(int*)(c + 0x37c) = *(int*)(c + 0x64) >> 3;
 
     int dh = (*(int*)(c + 0x39c) == 8) ? 0x190000 : 0xc8000;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x138, c + 0x350, 0xa0000, dh, 0xf);
 }

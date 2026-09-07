@@ -193,13 +193,22 @@ def land(a):
                     # first via a matched sibling, so the driver kept wasting attempts faking a MATCH.
                     # A human can unpark (drop the nonmatching row) and fix the reloc by hand.
                     names = {r["name"] for r, _m, _a, _s in wrong}
-                    src_dir = pathlib.Path(__file__).resolve().parent.parent / "src"
+                    # Resolve through srcpath rather than composing src/<name>.<ext>: a file
+                    # banked into a subdirectory would survive a hand-built flat unlink while
+                    # its matched.jsonl row was dropped below, leaving a known-bogus match in
+                    # src/ with nothing left pointing at it. Invalidate first -- these files
+                    # were written moments ago, so a cached scan predates them.
+                    import srcpath as SP
+                    SP.invalidate()
+                    removed = 0
                     for nm in names:
-                        for ext in ("c", "cpp"):
-                            try:
-                                (src_dir / f"{nm}.{ext}").unlink()
-                            except FileNotFoundError:
-                                pass
+                        for p in SP.paths_for(nm):
+                            p.unlink(missing_ok=True)
+                            removed += 1
+                    SP.invalidate()
+                    if removed != len(names):
+                        print(f"    (unbanked {removed} file(s) for {len(names)} wrong-dest "
+                              f"symbol(s) -- check for strays before committing)")
                     try:
                         kept = [ln for ln in L.MATCHED.read_text(encoding="utf-8").splitlines()
                                 if ln.strip() and json.loads(ln).get("name") not in names]

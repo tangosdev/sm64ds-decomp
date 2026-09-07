@@ -1,0 +1,136 @@
+diff --git a/src/compiler.py b/src/compiler.py
+index 7bb5080..bccd07d 100644
+--- a/src/compiler.py
++++ b/src/compiler.py
+@@ -1,4 +1,7 @@
+-from typing import Optional
++from typing import List, Optional
++import json
++import os
++import os.path
+ import tempfile
+ import subprocess
+ import shutil
+@@ -6,6 +9,25 @@ import shutil
+ from .helpers import try_remove
+ 
+ 
++def _win_argv(compile_cmd: str, c_name: str, o_name: str):
++    """Windows-compat (sm64ds-decomp): return (argv, env) for one candidate compile.
++
++    compile.sh is a bash script, and git-bash startup costs ~400ms per candidate.
++    When import_func.setup_dir has written a `cc.txt` sidecar next to it we call
++    mwccarm.exe DIRECTLY instead (~140ms, roughly 3x the throughput). Falls back to
++    routing the script through bash when there is no sidecar."""
++    env = None
++    cc = os.path.join(os.path.dirname(compile_cmd), "cc.txt")
++    if os.path.isfile(cc):
++        with open(cc, encoding="utf-8") as f:
++            spec = json.load(f)
++        env = dict(os.environ)
++        if spec.get("license"):
++            env["LM_LICENSE_FILE"] = spec["license"]
++        return [*spec["cmd"], "-o", o_name, c_name], env
++    return ["bash", compile_cmd, c_name, "-o", o_name], env
++
++
+ class Compiler:
+     def __init__(
+         self, compile_cmd: str, *, show_errors: bool, debug_mode: bool
+@@ -40,10 +62,15 @@ class Compiler:
+ 
+         try:
+             stderr = 2 if show_errors else subprocess.DEVNULL
++            if os.name == "nt":
++                argv, env = _win_argv(self.compile_cmd, c_name, o_name)
++            else:
++                argv, env = [self.compile_cmd, c_name, "-o", o_name], None
+             subprocess.check_call(
+-                [self.compile_cmd, c_name, "-o", o_name],
++                argv,
+                 stdout=stderr,
+                 stderr=stderr,
++                env=env,
+             )
+         except subprocess.CalledProcessError:
+             if not show_errors:
+diff --git a/src/main.py b/src/main.py
+index d2317a8..fb8f1c3 100644
+--- a/src/main.py
++++ b/src/main.py
+@@ -325,7 +325,8 @@ def run_inner(options: Options, heartbeat: Callable[[], None]) -> List[int]:
+             if not os.path.isfile(fname):
+                 print(f"Missing file {fname}", file=sys.stderr)
+                 sys.exit(1)
+-        if not os.stat(compile_cmd).st_mode & 0o100:
++        # Windows-compat (sm64ds-decomp): NTFS has no executable bit.
++        if os.name != "nt" and not os.stat(compile_cmd).st_mode & 0o100:
+             print(f"{compile_cmd} must be marked executable.", file=sys.stderr)
+             sys.exit(1)
+ 
+diff --git a/src/objdump.py b/src/objdump.py
+index 95c0f31..53ae161 100644
+--- a/src/objdump.py
++++ b/src/objdump.py
+@@ -286,6 +286,10 @@ def get_arch(o_file: str) -> ArchSettings:
+     # https://refspecs.linuxfoundation.org/elf/gabi4+/ch4.eheader.html
+     with open(o_file, "rb") as f:
+         data = f.read(20)
++    # Windows-compat (sm64ds-decomp): our target.o is a RAW slice of ROM bytes, not
++    # an ELF. There is only one architecture in this project, so assume ARM32.
++    if len(data) < 20 or data[:4] != b"ELF":
++        return ARM32_SETTINGS
+     if data[5] == 2:
+         arch = (data[18] << 8) + data[19]
+     else:
+@@ -298,7 +302,8 @@ def get_arch(o_file: str) -> ArchSettings:
+         return PPC_SETTINGS
+     if arch == 40:
+         return ARM32_SETTINGS
+-    raise Exception("Bad ELF")
++    # Windows-compat (sm64ds-decomp): ARM32 is the only arch here.
++    return ARM32_SETTINGS
+ 
+ 
+ def parse_relocated_line(line: str) -> Tuple[str, str, str]:
+diff --git a/src/preprocess.py b/src/preprocess.py
+index 8447a80..712540b 100644
+--- a/src/preprocess.py
++++ b/src/preprocess.py
+@@ -1,8 +1,36 @@
+ from typing import List
++import io
++import os
+ import subprocess
+ 
+ 
+ def preprocess(filename: str, cpp_args: List[str] = []) -> str:
++    # Windows-compat (sm64ds-decomp): there is no `cpp` binary on Windows, so run the
++    # pure-python pcpp preprocessor in-process. Same contract: -P (no linemarkers),
++    # -nostdinc, -DPERMUTER.
++    if os.name == "nt":
++        from pcpp.preprocessor import Preprocessor, OutputDirective, Action
++
++        class _P(Preprocessor):
++            def on_include_not_found(self, *args):
++                # A base.c handed to the permuter is already self-contained; any
++                # leftover #include is dropped rather than fatal.
++                raise OutputDirective(Action.IgnoreAndPassThrough)
++
++        pp = _P()
++        pp.line_directive = None          # equivalent of -P
++        pp.define("PERMUTER 1")
++        for a in cpp_args:
++            if a.startswith("-D"):
++                pp.define(a[2:].replace("=", " ", 1))
++            elif a.startswith("-I"):
++                pp.add_path(a[2:])
++        with open(filename, encoding="utf-8") as f:
++            pp.parse(f.read(), filename)
++        out = io.StringIO()
++        pp.write(out)
++        return out.getvalue()
++
+     return subprocess.check_output(
+         ["cpp"] + cpp_args + ["-P", "-nostdinc", "-DPERMUTER", filename],
+         universal_newlines=True,

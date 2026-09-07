@@ -6,7 +6,7 @@ void func_02016acc(char *a0, unsigned int mask)
 
     for (unsigned int i = 0; i < n; i++) {
         unsigned int nmask = ~mask;
-        *(unsigned int *)(((long long)(int)(q + 0x24))) &= nmask;
+        *(unsigned int *)(q + 0x24) &= nmask;
         q += 0x30;
     }
 }

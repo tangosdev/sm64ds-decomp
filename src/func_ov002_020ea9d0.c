@@ -10,10 +10,10 @@ extern s32 data_0209b454;
 extern s8 data_0209f2f8;
 
 extern void func_ov002_020e9590(void *self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_02012694(u32 id, void *v);
 extern void func_ov002_020e9448(void *p);
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern s32 Vec3_HorzDist(void *a, void *b);
 extern void func_ov002_020e947c(void *c, struct Vector3 *p, s32 n);
 extern s32 func_ov002_020e8dd8(void *self);
@@ -32,24 +32,24 @@ void func_ov002_020ea9d0(void *arg0)
     if (*(u8 *)(c + 0x49d) != 0) {
         func_ov002_020e9590(c);
         if (*(s32 *)(c + 0x434) == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return;
         }
     }
-    *(u32 *)((int)(((long long)(int)(c + 0xb0)))) |= 0x4000000;
+    *(u32 *)((int)(c + 0xb0)) |= 0x4000000;
     data_0209b454 |= 0x4000000;
     *(u16 *)(c + 0x496) = 0;
     func_02012694(0x57, c + 0x74);
     *(s32 *)(c + 0xa8) = 0x20000;
     func_ov002_020e9448(c);
-    other = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x434));
+    other = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x434));
     if (*(s32 *)(c + 0x43c) == 4) {
         if (other == 0 || Vec3_HorzDist(c + 0x5c, other + 0x5c) == 0) {
             *(s32 *)(c + 0xa8) = 0x18000;
             *(s32 *)(c + 0x440) = 3;
         } else {
             *(s32 *)(c + 0x440) = 2;
-            op = (struct Vector3 *)((int)(((long long)(int)(other + 0x5c))));
+            op = (struct Vector3 *)((int)(other + 0x5c));
             *(struct Vec1 *)&v0.x = *(struct Vec1 *)&op->x;
             *(struct Vec1 *)&v0.y = *(struct Vec1 *)&op->y;
             *(struct Vec1 *)&v0.z = *(struct Vec1 *)&op->z;

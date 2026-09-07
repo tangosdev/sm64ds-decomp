@@ -1,5 +1,5 @@
 #include "types.h"
-extern int _ZN5Actor14GetSubtractionEss(void* actor, s16 a, s16 b);
+extern int _ZN8dActor_c14GetSubtractionEss(void* actor, s16 a, s16 b);
 extern int _Z14ApproachLinearRsss(s16* dst, s16 target, int step);
 extern int func_ov060_02115744(void* c);
 extern int func_ov060_02115718(void* c);
@@ -10,7 +10,7 @@ void func_ov060_02114d08(char* self)
     int r4;
     int step;
 
-    r4 = _ZN5Actor14GetSubtractionEss(self, *(s16*)(self + 0x8e), *(s16*)(self + 0x406));
+    r4 = _ZN8dActor_c14GetSubtractionEss(self, *(s16*)(self + 0x8e), *(s16*)(self + 0x406));
 
     if (*(unsigned char*)(self + 0x414) == 1) {
         step = 0x400;

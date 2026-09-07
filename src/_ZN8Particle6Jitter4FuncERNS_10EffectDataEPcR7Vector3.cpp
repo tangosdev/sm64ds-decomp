@@ -1,29 +1,32 @@
 //cpp
-#include "types.h"
-// @symbol _ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3
-/* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: named members + shared header */
-#include "Particle__Jitter.h"
-extern "C" void _ZN8Particle6Jitter4FuncERNS_10EffectDataEPcR7Vector3(struct Particle__Jitter *self, char* p, int* v) {
+#include "Particle__Behavior.h"
+
+void Particle::Jitter::Func(EffectData& effect, char* particle, Vector3& velocity)
+{
+    Element& state = *(Element*)particle;
     u32 s;
     int r;
     int amp;
-    if ((int)*(u16*)(p + 0x2e) % (int)self->unk_006 != 0)
+
+    if ((int)state.age % (int)effect.jitter.period != 0)
         return;
+
     s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
     data_020a4d30 = s;
-    amp = self->unk_000;
+    amp = effect.jitter.xAmplitude;
     r = s >> 23;
-    v[0] += (amp * r - (amp << 8)) >> 8;
+    velocity.x += (amp * r - (amp << 8)) >> 8;
+
     s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
     data_020a4d30 = s;
-    amp = self->unk_002;
+    amp = effect.jitter.yAmplitude;
     r = s >> 23;
-    *(int*)(((long long)(int)(v + 1))) += (amp * r - (amp << 8)) >> 8;
+    velocity.y += (amp * r - (amp << 8)) >> 8;
+
     s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
     data_020a4d30 = s;
-    amp = self->unk_004;
+    amp = effect.jitter.zAmplitude;
     r = s >> 23;
-    *(int*)(((long long)(int)(v + 2))) += (amp * r - (amp << 8)) >> 8;
+    velocity.z += (amp * r - (amp << 8)) >> 8;
 }

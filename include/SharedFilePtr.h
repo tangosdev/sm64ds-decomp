@@ -21,10 +21,15 @@
  */
 struct SharedFilePtr
 {
-    void Construct(unsigned int fileID);
+    /* RETURN TYPES ARE MEASURED, not chosen: both of these set r0 on the way out
+       and the C forms that defined them returned a value, so declaring them void
+       made the declaration and the definition disagree -- harmless while nothing
+       was defined as a real method, and blocking as soon as one is. A return type
+       is not part of an Itanium mangled name, so no symbol changes here. */
+    SharedFilePtr &Construct(unsigned int fileID);
     void ReallocateModelFile();
     void Release();
-    void LoadFile();
+    void *LoadFile();
     void Load();
 };
 

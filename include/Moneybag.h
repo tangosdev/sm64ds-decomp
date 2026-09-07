@@ -1,49 +1,75 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Moneybag: 5 matched functions, 19 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef MONEYBAG_H
 #define MONEYBAG_H
-#include "types.h"
 
-struct Moneybag {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x10];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x20];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x63];
-    u8  mModel;            /* 0x138 */
-    u8  pad_139[0x4f];
-    u8  mShadowModel;            /* 0x188 */
-    u8  pad_189[0x27];
-    u8  mMovingCylinderClsn;            /* 0x1b0 */
-    u8  pad_1b1[0x33];
-    u8  mWithMeshClsn;            /* 0x1e4 */
-    u8  pad_1e5[0x1bb];
-    u8  unk_3a0;            /* 0x3a0 */
+#include "types.h"
+#include "dActor_c.h"
+#include "ModelAnim.h"
+#include "Model.h"
+#include "ShadowModel.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
+
+/* TWO WITNESSES, and they close on each other:
+ *
+ *   Moneybag_Spawn  fBase_c::operator new(1012 = 0x3f4), dActor_c::dActor_c(), stores _ZTV8Moneybag,
+ *                   then the five members below in this order.
+ *   ~Moneybag       the same members destroyed in reverse, then ~dActor_c.
+ *
+ * SIZE 0x3f4 is the factory's own literal, and the trailing byte fields close exactly on it.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov081). Only the
+ * slots declared below differ; every other slot holds the base's own word and is inherited,
+ * so it is deliberately not redeclared here.
+ *
+ * SM64DS proves this class as daGmch_c through RTTI, allocation size and
+ * vtable identity. The factory and profile spellings below are reconstructed
+ * source-style names -- evidence-bounded proposals, not recovered SM64DS
+ * symbols.
+ *
+ * daGmch_c_classInit at 0x02127adc (historical alias Moneybag_Spawn)
+ * allocates 0x3f4 and installs this class's cartridge vtable. It backs the
+ * GAMAGUCHI registry profile, whose descriptor at 0x02128be0 is
+ * reconstructed as g_profile_GAMAGUCHI.
+ */
+struct Moneybag : dActor_c {
+    u8  pad_0d0[0x4];
+    ModelAnim mModelAnim;                    /* 0x0d4 */
+    Model mModel;                            /* 0x138 */
+    ShadowModel mShadowModel;                /* 0x188 */
+    dCcAc_c mdCcAc_c;  /* 0x1b0 */
+    dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
+    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, and
+       0x3a0..0x3cf is exactly the 0x30 bytes a Matrix4x3 occupies. Still spelt
+       u8 + pad so the header need not pull in math/Matrix.h.
+       [_ZN8Moneybag13InitResourcesEv.cpp] */
+    u8  mMatrix;            /* 0x3a0 */
     u8  pad_3a1[0x2f];
-    s32 unk_3d0;            /* 0x3d0 */
-    s32 unk_3d4;            /* 0x3d4 */
-    s32 unk_3d8;            /* 0x3d8 */
+    /* Copy of mPosX/Y/Z taken once in InitResources.
+       [_ZN8Moneybag13InitResourcesEv.cpp] */
+    s32 mSpawnPosX;            /* 0x3d0 */
+    s32 mSpawnPosY;            /* 0x3d4 */
+    s32 mSpawnPosZ;            /* 0x3d8 */
     u8  pad_3dc[0x14];
-    u8  unk_3f0;            /* 0x3f0 */
-#ifdef __cplusplus
-    /* methods */
+    /* Set to 1 by InitResources. Render draws the ModelAnim only above 1 and
+       the Model only at or below 0x1f, so the two overlap for 2..0x1f and the
+       high values are a state in which neither is drawn.
+       [_ZN8Moneybag13InitResourcesEv.cpp, _ZN8Moneybag6RenderEv.cpp] */
+    u8  mState;            /* 0x3f0 */
+    u8  pad_3f1[0x3];
+
+    virtual ~Moneybag();            /* slots 16 (D1), 17 (D0) */
+
+    virtual int   OnYoshiTryEat();               /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual int   OnAimedAtWithEgg();            /* slot 29 */
+
     int Behavior();
+    int CleanupResources();                  /* slot  3 */
     int InitResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
-#endif
 };
 
-#endif
+typedef char Moneybag_size_must_be_0x3f4[sizeof(Moneybag) == 0x3f4 ? 1 : -1];
+
+#endif /* MONEYBAG_H */

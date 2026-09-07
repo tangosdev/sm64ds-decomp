@@ -4,7 +4,7 @@ typedef unsigned int u32;
 typedef int Fix12i;
 
 typedef struct Vector3 { int x, y, z; } Vector3;
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 
 struct BF3ae {
     u8 b0 : 1;
@@ -14,23 +14,23 @@ struct BF3ae {
 
 extern signed char data_0209f2f8;
 
-extern Actor* _ZN5Actor4NextEPKS_(const Actor* prev);
+extern dActor_c* _ZN8dActor_c4NextEPKS_(const dActor_c* prev);
 extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
-extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLineD1Ev(void* self);
-extern void _ZN10ClsnResultC1Ev(void* self);
-extern void _ZN10ClsnResultD1Ev(void* self);
-extern int _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, const Vector3* a, const Vector3* b, Actor* obj);
-extern int _ZN11RaycastLine10DetectClsnEv(void* self);
-extern void _ZNK10ClsnResult6CopyToERS_(const void* self, void* dst);
-extern u32 _ZNK10ClsnResult9GetClsnIDEv(const void* self);
-extern Actor* _ZN5Actor10FindWithIDEj(u32 id);
-extern void _ZN11RaycastLine10GetClsnPosEv(Vector3* res, void* self);
+extern void _ZN9dBgCh_LinC1Ev(void* self);
+extern void _ZN9dBgCh_LinD1Ev(void* self);
+extern void _ZN5dBgPiC1Ev(void* self);
+extern void _ZN5dBgPiD1Ev(void* self);
+extern int _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, const Vector3* a, const Vector3* b, dActor_c* obj);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
+extern void _ZNK5dBgPi6CopyToERS_(const void* self, void* dst);
+extern u32 _ZNK5dBgPi9GetClsnIDEv(const void* self);
+extern dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3* res, void* self);
 
 void func_ov002_020b10e4(char* c)
 {
     int b;
-    Actor* a;
+    dActor_c* a;
 
     b = (int)((*(int*)(c + 0xb0) & 8) != 0);
     if (b) return;
@@ -38,7 +38,7 @@ void func_ov002_020b10e4(char* c)
     if (((struct BF3ae*)(c + 0x3ae))->sel != 7) return;
 
     if (data_0209f2f8 == 0x1c || data_0209f2f8 == 0x27) {
-        a = _ZN5Actor4NextEPKS_(0);
+        a = _ZN8dActor_c4NextEPKS_(0);
         if (a) {
             do {
                 char* ac = (char*)a;
@@ -53,7 +53,7 @@ void func_ov002_020b10e4(char* c)
                         return;
                     }
                 }
-                a = _ZN5Actor4NextEPKS_(a);
+                a = _ZN8dActor_c4NextEPKS_(a);
             } while (a);
         }
     }
@@ -62,8 +62,8 @@ void func_ov002_020b10e4(char* c)
         char rl[0x78];
         char cr[0x28];
         Vector3 va, vb;
-        _ZN11RaycastLineC1Ev(rl);
-        _ZN10ClsnResultC1Ev(cr);
+        _ZN9dBgCh_LinC1Ev(rl);
+        _ZN5dBgPiC1Ev(cr);
         vb.x = *(int*)(c + 0x5c);
         vb.y = *(int*)(c + 0x60);
         vb.z = *(int*)(c + 0x64);
@@ -72,20 +72,20 @@ void func_ov002_020b10e4(char* c)
         va.z = vb.z;
         va.y += 0x14000;
         vb.y -= 0x1f4000;
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &va, &vb, (Actor*)c);
-        if (_ZN11RaycastLine10DetectClsnEv(rl)) {
-            _ZNK10ClsnResult6CopyToERS_(rl + 0x10, cr);
-            if (_ZNK10ClsnResult9GetClsnIDEv(cr) != (u32)-1 &&
-                _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(cr)) != 0) {
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &va, &vb, (dActor_c*)c);
+        if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
+            _ZNK5dBgPi6CopyToERS_(rl + 0x10, cr);
+            if (_ZNK5dBgPi9GetClsnIDEv(cr) != (u32)-1 &&
+                _ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(cr)) != 0) {
                 ((struct BF3ae*)((long long)(c + 0x3ae)))->sel = 0;
             } else {
                 Vector3 pos;
-                _ZN11RaycastLine10GetClsnPosEv(&pos, rl);
+                _ZN9dBgCh_Lin10GetClsnPosEv(&pos, rl);
                 *(int*)(c + 0x398) = pos.y;
                 ((struct BF3ae*)((long long)(c + 0x3ae)))->sel = 1;
             }
         }
-        _ZN10ClsnResultD1Ev(cr);
-        _ZN11RaycastLineD1Ev(rl);
+        _ZN5dBgPiD1Ev(cr);
+        _ZN9dBgCh_LinD1Ev(rl);
     }
 }

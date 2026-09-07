@@ -1,5 +1,0 @@
-void func_ov006_020d99ec(char *c, int n){
-  *(int*)(c+0x1c) = (n*0x28+0x2c)<<0xc;
-  *(int*)(c+0x20) = 0x80000;
-  *(char*)(c+0x2b) = 7;
-}

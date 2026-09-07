@@ -10,9 +10,10 @@ a class definition -- are never checked. That gap let PR #86's
 _ZThn80_N9AnimationD1Ev pass local verify and fail review with WRONG-DEST (its
 tail branch relocated to Animation::~Animation when the ROM slot needs
 ModelAnim2::~ModelAnim2). This tool closes the gap by scope: it takes the exact
-files a PR touched, maps each filename to the symbol it defines (in this repo the
-src filename IS the mangled symbol), resolves that symbol's (addr, size, module)
-from the checked-in config/**/symbols.txt, and runs linkcheck on every slot.
+files a PR touched, asks `srcpath.symbols_for` which symbols each one defines --
+the filename for a one-function file, the enrolment table for a merged translation
+unit that owns several -- resolves each symbol's (addr, size, module) from the
+checked-in config/**/symbols.txt, and runs linkcheck on every slot.
 linkcheck's explicit --addr/--size/--module mode needs no ledger row and returns
 WRONG for a wrong-dest thunk (verified: is_benign forgives a branch diff only when
 the ROM's veneer/twin resolves to the exact address the source names).
@@ -46,7 +47,9 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import affected_src as A  # noqa: E402
+import asm_policy as AP  # noqa: E402
 import linkcheck as LC  # noqa: E402
+import srcpath as SP  # noqa: E402
 
 SRC_SUFFIXES = (".c", ".cpp")
 HDR_SUFFIXES = (".h", ".hpp")
@@ -167,55 +170,75 @@ def _resolve(name, idx, ledger):
 
 
 def check_file(path, idx, ledger):
-    """Link-check every symbol the file compiles to -- the named function AND its
+    """Link-check every symbol the file compiles to -- the ones it OWNS AND its
     compiler-emitted passengers (this-adjusting thunks, weak dtor/ctor copies, local
     helpers) -- not just the filename stem, and not just ledger rows.
 
-    The file is compiled once; every emitted function symbol that resolves to a ROM
-    slot (via config/ledger) is checked against that slot. This is the class the
+    Every emitted function symbol that resolves to a ROM slot (via config/**/symbols.txt,
+    falling back to progress/matched.jsonl for module disambiguation) is
+    checked against that slot. This is the class the
     ledger-scoped checks miss -- e.g. PR #86's `_ZThn80_N9AnimationD1Ev` thunk, whose
     tail branch relocated to the wrong dtor. Emitted symbols with no ROM slot (inline
-    or local emissions) are simply not ROM functions and are ignored."""
-    sym = pathlib.Path(path).stem
-    slots = _resolve(sym, idx, ledger)
-    if not slots:
-        return {"file": path, "symbol": sym, "results": [], "note": "unresolved"}
+    or local emissions) are simply not ROM functions and are ignored.
 
-    # Compile once (winning version/flags for the named symbol) so the named function
-    # and its passengers are read from the very same object the ROM was matched with.
+    WHICH SYMBOLS THE FILE OWNS is `srcpath.symbols_for`, not `Path.stem`. For a legacy
+    one-function source those are the same string. For a merged translation unit
+    they are not: `src/actors/ActorBase_SceneNode.cpp` holds two functions and is named
+    after neither, so the stem resolved to nothing and the whole file was reported
+    `unresolved` with `0` slots checked -- a file the PR comment listed as examined and
+    that nothing had looked at. It could not fall through to the passenger loop either,
+    since that loop only runs once the lead symbol has produced an object."""
+    owned = SP.symbols_for(path)
+    named = [(sym, _resolve(sym, idx, ledger)) for sym in owned]
+    named = [(sym, slots) for sym, slots in named if slots]
+    if not named:
+        return {"file": path, "symbol": owned[0], "symbols": owned,
+                "results": [], "note": "unresolved"}
+
     import reloc_audit as RA
-    obj = wsym = None
-    for addr, size, mod in slots:
-        obj, wsym, _ = RA.winning_object(sym, addr, size, mod)
-        if obj is not None:
-            break
+    results, checked_passengers = [], set()
+    for sym, slots in named:
+        # ONE OBJECT PER OWNED SYMBOL, not one per file. `winning_object` runs the
+        # compiled object through objisolate the way rombuild does, and isolation prunes
+        # it to the one function it was asked for -- so a TU's second function is simply
+        # not in its sibling's object, and reusing it reports NO-SYM on a file that is
+        # perfectly correct. (Measured on ActorBase_SceneNode: shared object ->
+        # Reset VERIFIED, SceneNode() NO-SYM; per-symbol -> both VERIFIED.) For the
+        # ordinary one-function sources this is exactly one call, as before.
+        obj = wsym = None
+        for addr, size, mod in slots:
+            obj, wsym, _ = RA.winning_object(sym, addr, size, mod)
+            if obj is not None:
+                break
+        for addr, size, mod in slots:
+            r = LC.linkcheck(sym, addr, size, mod, _NAME_INDEX,
+                             obj=obj, sym=(wsym if obj is not None else None))
+            results.append({"sym": sym, "addr": f"0x{addr:08x}", "module": mod,
+                            "verdict": r["verdict"], "diffs": r.get("diffs", []),
+                            "passenger": False})
 
-    results = []
-    for addr, size, mod in slots:
-        r = LC.linkcheck(sym, addr, size, mod, _NAME_INDEX,
-                         obj=obj, sym=(wsym if obj is not None else None))
-        results.append({"sym": sym, "addr": f"0x{addr:08x}", "module": mod,
-                        "verdict": r["verdict"], "diffs": r.get("diffs", []),
-                        "passenger": False})
-
-    # Full-file: every OTHER function symbol this object emits that also owns a ROM
-    # slot. Checked straight out of the object (a thunk has no source file of its own).
-    if obj is not None:
+        # Full-file: every OTHER function symbol this object emits that also owns a ROM
+        # slot. Checked straight out of the object (a thunk has no source file of its
+        # own). Deduped across a TU's objects, which can each carry the same passenger.
+        if obj is None:
+            continue
         import probe_versions as PV
         try:
             emitted = set(PV.funcs_in(obj).keys())
         except Exception:
             emitted = set()
-        for psym in sorted(emitted - {sym, wsym}):
+        for psym in sorted(emitted - {s for s, _ in named} - {wsym} - checked_passengers):
             pslots = _resolve(psym, idx, ledger)
             if not pslots:
                 continue  # emitted symbol with no ROM slot -- normal, nothing to check
+            checked_passengers.add(psym)
             for addr, size, mod in pslots:
                 r = LC.linkcheck(psym, addr, size, mod, _NAME_INDEX, obj=obj, sym=psym)
                 results.append({"sym": psym, "addr": f"0x{addr:08x}", "module": mod,
                                 "verdict": r["verdict"], "diffs": r.get("diffs", []),
                                 "passenger": True})
-    return {"file": path, "symbol": sym, "results": results, "note": ""}
+    return {"file": path, "symbol": " + ".join(sym for sym, _ in named),
+            "symbols": [sym for sym, _ in named], "results": results, "note": ""}
 
 
 def worst(results):
@@ -249,6 +272,33 @@ def warm_shared_indexes():
     RA.warm_gate_index()
     LC._ranges()
     RV.mod_for("arm9")
+
+
+def source_policy(worst, text):
+    """Apply the two source-text overrides to a link verdict.
+
+    A file whose head declares "// NONMATCHING" is a self-declared draft: it makes no
+    claim to reproduce the ROM and chaos-db counts it as unmatched, so a NO-REPRO
+    verdict on it is expected, not a gate failure. The gate exists to stop files that
+    CLAIM to be matches from landing red; a declared draft cannot inflate any count.
+    WRONG (a resolvable reloc pointing at the wrong symbol) still fails -- a draft's
+    call graph must be honest even if its bytes differ.
+
+    The draft downgrade cannot collide with the transcription check: a transcription
+    has no banner by definition, because a NONMATCHING banner reclassifies it as an
+    honest draft (asm_policy.classify returns None for it).
+
+    This lives outside main() because it is only reachable when a file FAILS, which is
+    the one path a green CI run never exercises. `asm_policy.has_draft_banner` was
+    spelled against the unaliased module name from #1367 until a PR finally produced a
+    NO-REPRO -- and then the validator died on a NameError mid-loop, reporting "worker
+    error" instead of grading the file. Untestable because inline, so untested.
+    """
+    if worst == "NO-REPRO" and AP.has_draft_banner(text):
+        return "DRAFT"
+    if AP.classify(text) == "transcribed":
+        return "RAW-ASM"
+    return worst
 
 
 def main():
@@ -305,8 +355,19 @@ def main():
     # A PR "passes" only when every changed file reproduces the ROM with correct
     # relocation targets (VERIFIED/BENIGN, or BLIND where a slot is unverifiable).
     # WRONG-DEST *and* a non-reproducing NO-REPRO near-miss are both failures — a
-    # near-miss is not a match and must not land.
-    FAIL = {"WRONG", "NO-REPRO"}
+    # near-miss is not a match and must not land. RAW-ASM is the third failure: an
+    # unbannered dcd transcription byte-matches vacuously (the dcd words ARE the
+    # ROM bytes re-spelled), so its VERIFIED slots prove nothing and the file is
+    # rejected on policy — see notes/asm-policy.md and tools/asm_policy.py.
+    #
+    # NO-SYM is the fourth, and it was missing. A file that does not compile, or compiles
+    # without emitting its symbol, is graded NO-SYM — and NO-SYM was not in this set, so
+    # the worst possible outcome scored as a pass. src/func_ov002_020d6c60.cpp has been
+    # unbuildable since #866 (`illegal function overloading`, its local declaration
+    # disagreeing with decl_common.h), carries no NONMATCHING banner, and was edited by a
+    # merged PR while broken. A gate that cannot fail the file it could not even build is
+    # not gating; a self-declared draft still gets the DRAFT pass below.
+    FAIL = {"WRONG", "NO-REPRO", "RAW-ASM", "NO-SYM"}
     reports, bad = [], []
     for path, rep in zip(files, checked):
         reports.append(rep)
@@ -316,25 +377,17 @@ def main():
             continue
         w = worst(rep["results"])
         rep["worst"] = w
-        # A file whose head declares "// NONMATCHING" is a self-declared draft: it makes
-        # no claim to reproduce the ROM and chaos-db counts it as unmatched, so a
-        # NO-REPRO verdict on it is expected, not a gate failure. The gate exists to
-        # stop files that CLAIM to be matches from landing red; a declared draft cannot
-        # inflate any count. WRONG (a resolvable reloc pointing at the wrong symbol)
-        # still fails -- a draft's call graph must be honest even if its bytes differ.
-        declared_draft = False
+        text = ""
         try:
-            head = pathlib.Path(path).read_text(encoding="utf-8", errors="replace")[:200]
-            declared_draft = "NONMATCHING" in head
+            text = pathlib.Path(path).read_text(encoding="utf-8", errors="replace")
         except OSError:
             pass
-        if w == "NO-REPRO" and declared_draft:
-            rep["worst"] = w = "DRAFT"
+        rep["worst"] = w = source_policy(w, text)
         if w in FAIL:
             bad.append((path, w))
         mark = {"WRONG": "WRONG  ", "NO-REPRO": "NOREPRO", "BENIGN": "ok(ben)",
-                "VERIFIED": "ok     ", "BLIND": "ok(bln)",
-                "DRAFT": "ok(drf)"}.get(w, w)
+                "VERIFIED": "ok     ", "BLIND": "ok(bln)", "DRAFT": "ok(drf)",
+                "RAW-ASM": "RAWASM "}.get(w, w)
         npass = sum(1 for r in rep["results"] if r.get("passenger"))
         extra = f", +{npass} passenger" if npass else ""
         print(f"  {mark} {path}  ({len(rep['results'])} slot(s){extra})")
@@ -354,13 +407,15 @@ def main():
 
 
 # Verdict -> a human label for the PR comment. VERIFIED/BENIGN/BLIND are passes;
-# NO-REPRO (near-miss) and WRONG-DEST are the two failures.
+# NO-REPRO (near-miss), WRONG-DEST and RAW-ASM (unbannered transcription) fail.
 _LABEL = {
     "VERIFIED":   "✅ verified",
     "BENIGN":     "✅ benign (equivalent veneer/twin)",
     "BLIND":      "🔶 blind (a reloc slot could not be resolved)",
     "NO-REPRO":   "❌ near-miss (does NOT reproduce the ROM)",
     "WRONG":      "❌ wrong-dest (reloc links to the wrong symbol)",
+    "RAW-ASM":    "🚫 raw-asm (transcription, no banner): dcd words match the ROM "
+                  "vacuously; banner it HAND-ASM PRIMITIVE or NONMATCHING",
     "NO-SYM":     "🔶 no-sym",
     "UNRESOLVED": "🔶 unresolved (symbol not in config/ledger)",
     "DRAFT":      "ok - declared draft (header says NONMATCHING; non-reproduction expected)",

@@ -4,18 +4,18 @@ _ZN16RotatingCogSmall16CleanupResourcesEv kind:function(arm,size=0x88) addr:0x02
 _ZN16RotatingCogSmall6RenderEv kind:function(arm,size=0x28) addr:0x021112c4
 _ZN16RotatingCogSmall8BehaviorEv kind:function(arm,size=0x1f4) addr:0x021112ec
 _ZN16RotatingCogSmall13InitResourcesEv kind:function(arm,size=0x17c) addr:0x021114e0
-RotatingCogSmall_Spawn kind:function(arm,size=0x30) addr:0x0211165c
-func_ov035_0211168c kind:function(arm,size=0x30) addr:0x0211168c
-RotatingClockHand_Spawn kind:function(arm,size=0x30) addr:0x021116bc
-_ZN17RotatingClockHandD1Ev kind:function(arm,size=0x4c) addr:0x021116ec
-_ZN17RotatingClockHandD0Ev kind:function(arm,size=0x60) addr:0x02111738
-func_ov035_02111798 kind:function(arm,size=0x110) addr:0x02111798
-func_ov035_021118a8 kind:function(arm,size=0x48) addr:0x021118a8
-_ZN17RotatingClockHand16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021118f0
-_ZN17RotatingClockHand6RenderEv kind:function(arm,size=0x28) addr:0x02111934
-_ZN17RotatingClockHand8BehaviorEv kind:function(arm,size=0x13c) addr:0x0211195c
-_ZN17RotatingClockHand13InitResourcesEv kind:function(arm,size=0x100) addr:0x02111a98
-SpinningPlatform_Spawn kind:function(arm,size=0x38) addr:0x02111b98
+daObjCtMecha10_c_classInit_CT_MECHA12S kind:function(arm,size=0x30) addr:0x0211165c
+daObjCtMecha10_c_classInit_CT_MECHA12L kind:function(arm,size=0x30) addr:0x0211168c
+daObjCtMecha10_c_classInit_CT_MECHA10 kind:function(arm,size=0x30) addr:0x021116bc
+_ZN16SpinningPlatformD1Ev kind:function(arm,size=0x4c) addr:0x021116ec
+_ZN16SpinningPlatformD0Ev kind:function(arm,size=0x60) addr:0x02111738
+_ZN16SpinningPlatform12UpdateShadowEv kind:function(arm,size=0x110) addr:0x02111798
+_ZN16SpinningPlatform11UpdateModelEv kind:function(arm,size=0x48) addr:0x021118a8
+_ZN16SpinningPlatform16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021118f0
+_ZN16SpinningPlatform6RenderEv kind:function(arm,size=0x28) addr:0x02111934
+_ZN16SpinningPlatform8BehaviorEv kind:function(arm,size=0x13c) addr:0x0211195c
+_ZN16SpinningPlatform13InitResourcesEv kind:function(arm,size=0x100) addr:0x02111a98
+daObjCtMecha11_c_classInit kind:function(arm,size=0x38) addr:0x02111b98
 data_ov035_02111bd0 kind:data(any) addr:0x02111bd0
 data_ov035_02111bd4 kind:data(any) addr:0x02111bd4
 data_ov035_02111bd8 kind:data(any) addr:0x02111bd8
@@ -98,20 +98,20 @@ data_ov035_02112610 kind:data(any) addr:0x02112610 ambiguous
 data_ov035_02112968 kind:data(any) addr:0x02112968 ambiguous
 data_ov035_021129b4 kind:data(any) addr:0x021129b4 ambiguous
 data_ov035_02112a6c kind:data(any) addr:0x02112a6c ambiguous
-data_ov035_02112a84 kind:data(any) addr:0x02112a84
-data_ov035_02112a90 kind:data(any) addr:0x02112a90
-RotatingClockHand_SpawnInfo kind:data(any) addr:0x02112aa4 ambiguous
+_ZTI16daObjCtMecha10_c kind:data(any) addr:0x02112a84
+_ZTS16daObjCtMecha10_c kind:data(any) addr:0x02112a90
+g_profile_CT_MECHA10 kind:data(any) addr:0x02112aa4 ambiguous
 data_ov035_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
-data_ov035_02112ac0 kind:data(any) addr:0x02112ac0 ambiguous
-RotatingCogSmall_SpawnInfo kind:data(any) addr:0x02112adc ambiguous
+g_profile_CT_MECHA12L kind:data(any) addr:0x02112ac0 ambiguous
+g_profile_CT_MECHA12S kind:data(any) addr:0x02112adc ambiguous
 _ZTV16RotatingCogSmall kind:data(any) addr:0x02112b00
 data_ov035_02112b08 kind:data(any) addr:0x02112b08 ambiguous
 data_ov035_02112b80 kind:data(any) addr:0x02112b80
 data_ov035_02112b84 kind:data(any) addr:0x02112b84 ambiguous
-data_ov035_02112b88 kind:data(any) addr:0x02112b88
-data_ov035_02112b94 kind:data(any) addr:0x02112b94
-SpinningPlatform_SpawnInfo kind:data(any) addr:0x02112ba8 ambiguous
-_ZTV17RotatingClockHand kind:data(any) addr:0x02112bcc
+_ZTI16daObjCtMecha11_c kind:data(any) addr:0x02112b88
+_ZTS16daObjCtMecha11_c kind:data(any) addr:0x02112b94
+g_profile_CT_MECHA11 kind:data(any) addr:0x02112ba8 ambiguous
+_ZTV16SpinningPlatform kind:data(any) addr:0x02112bcc
 _ZTV16daObjCtMecha11_c kind:data(any) addr:0x02112bcc
 data_ov035_02112bdc kind:data(any) addr:0x02112bdc ambiguous
 data_ov035_02112bec kind:data(any) addr:0x02112bec ambiguous
@@ -131,7 +131,9 @@ data_ov035_02112c98 kind:bss addr:0x02112c98
 data_ov035_02112ca4 kind:bss addr:0x02112ca4
 data_ov035_02112ca8 kind:bss addr:0x02112ca8 ambiguous
 data_ov035_02112cb0 kind:bss addr:0x02112cb0
+RotatingClockHand_ModelFile kind:bss addr:0x02112cb0
 data_ov035_02112cb8 kind:bss addr:0x02112cb8
+RotatingClockHand_ClsnFile kind:bss addr:0x02112cb8
 data_ov035_02112cc0 kind:bss addr:0x02112cc0
 data_ov035_02112cc8 kind:bss addr:0x02112cc8 ambiguous
 data_ov035_02112ccc kind:bss addr:0x02112ccc

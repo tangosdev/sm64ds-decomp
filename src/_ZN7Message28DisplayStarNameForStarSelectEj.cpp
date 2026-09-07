@@ -33,7 +33,7 @@ void func_0201b7cc(void);
 void func_0201b388(int a);
 }
 
-extern "C" void _ZN7Message28DisplayStarNameForStarSelectEj(unsigned int msg)
+void Message::DisplayStarNameForStarSelect(unsigned int msg)
 {
     volatile int li;
     int p;

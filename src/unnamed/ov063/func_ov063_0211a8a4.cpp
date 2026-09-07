@@ -1,12 +1,12 @@
 //cpp
-struct Actor {
+struct dActor_c {
     int GetSubtraction(short a, short b);
 };
 extern "C" void func_0201267c(int a0, void *a1);
 
 extern "C" int func_ov063_0211a8a4(char *thiz)
 {
-    Actor *a = (Actor*)thiz;
+    dActor_c *a = (dActor_c*)thiz;
     int r6 = a->GetSubtraction(*(short*)(thiz + 0x5b0), *(short*)(thiz + 0x94));
     int r0 = a->GetSubtraction(*(short*)(thiz + 0x94),
                                *(short*)(*(char**)(thiz + 0x484) + 0x8e));

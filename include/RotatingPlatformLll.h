@@ -1,30 +1,39 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RotatingPlatformLll: 6 matched functions, 6 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef ROTATINGPLATFORMLLL_H
 #define ROTATINGPLATFORMLLL_H
+
 #include "types.h"
 
-struct RotatingPlatformLll {
-    u8  pad_000[0x60];
-    s32 mPosY;            /* 0x060 */
-    u8  pad_064[0x2a];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x44];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
-    s32 unk_320;            /* 0x320 */
-    u8  unk_324;            /* 0x324 */
+/* Lethal Lava Land's spinning disc. `koma` is a spinning top.
+ *
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjKaitendai_c, which derives from
+ * dBgActor_c, and the difference is in the bytes rather than only in the RTTI: its
+ * destructor stores THREE vptrs -- its own, daObjKaitendai_c's, then dBgActor_c's.
+ * A one-level chain emits two.
+ *
+ *   _ZTI16daObjFl_Koma_D_c  ov022 0x02113d98
+ *   _ZTS16daObjFl_Koma_D_c  ov022 0x02113db0
+ *   _ZTV19RotatingPlatformLll  ov022 0x02113de8  (its record sits at V-4)
+ *   kind  __si_class_type_info, ONE base, subobject offset 0
+ *   base  daObjKaitendai_c, ov002 0x021091ac
+ *
+ * NO FIELDS OF ITS OWN: daObjFl_Koma_D_c_classInit passes 800 = 0x320 = sizeof(dBgActor_c).
+ * It overrides slots 0 and 3, which the base leaves null.
+ */
+
 #ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
+
+#include "daObjKaitendai_c.h"
+
+struct RotatingPlatformLll : daObjKaitendai_c {
+    /* --- vtable --- */
+    virtual ~RotatingPlatformLll(); /* slots 16 (D1), 17 (D0) */
+
+    int CleanupResources();            /* slot  3 */
+    int InitResources();               /* slot  0 */
 };
 
-#endif
+typedef char RotatingPlatformLll_size_must_be_0x320[sizeof(RotatingPlatformLll) == 0x320 ? 1 : -1];
+
+#endif /* __cplusplus */
+
+#endif /* ROTATINGPLATFORMLLL_H */

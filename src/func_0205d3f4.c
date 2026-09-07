@@ -26,15 +26,15 @@ int func_0205d3f4(Obj *t)
     int woken = 0;
     u32 irq = _ZN3IRQ7DisableEv();
     int busy = (t->flags & 1) ? 1 : 0;
-    if ((int)(((long long)busy)) != 0) {
+    if ((int)((long long)busy) != 0) {
         woken = (t->owner->cur != t) ? 1 : 0;
         if (woken) {
-            *(u32 *)(int)(((long long)(int)((int)t + 0xc))) |= 4;
+            *(u32 *)(int)((int)t + 0xc) |= 4;
         }
         do {
             OS_SleepThread(&t->queue);
             busy = (t->flags & 1) ? 1 : 0;
-        } while ((int)(((long long)busy)) != 0);
+        } while ((int)((long long)busy) != 0);
     }
     _ZN3IRQ7RestoreEj(irq);
     if (woken) {

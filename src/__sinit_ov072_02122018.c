@@ -1,7 +1,7 @@
 extern int func_02017acc();
 extern void func_020731dc();
 extern void func_02017ab4(void);
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern char data_ov072_02122b20[];
 extern char data_ov072_02122b28[];
 
@@ -60,9 +60,9 @@ void __sinit_ov072_02122018(void)
     data_ov072_02122b40[0] = -0xad0000;
     data_ov072_02122b40[1] = 0x290000;
     data_ov072_02122b40[2] = -0x9d0000;
-    func_020731dc(data_ov072_02122b40, &func_020072c0, data_ov072_02122b34);
+    func_020731dc(data_ov072_02122b40, &_ZN7Vector3D1Ev, data_ov072_02122b34);
     data_ov072_02122b58[0] = 0xfeffc000;
     data_ov072_02122b58[1] = 0xffa6f000;
     data_ov072_02122b58[2] = 0x6fe000;
-    func_020731dc(data_ov072_02122b58, &func_020072c0, data_ov072_02122b4c);
+    func_020731dc(data_ov072_02122b58, &_ZN7Vector3D1Ev, data_ov072_02122b4c);
 }

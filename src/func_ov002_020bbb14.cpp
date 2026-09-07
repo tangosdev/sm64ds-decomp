@@ -3,17 +3,17 @@
 // @symbol func_ov002_020bbb14
 /* recovered: shared common types */
 #include "common.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
-extern int _ZNK12WithMeshClsn12TouchesWaterEv(void* p);
-extern void* _ZN5Actor10FindWithIDEj(unsigned id);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
+extern int _ZNK10dBgCh_Actr12TouchesWaterEv(void* p);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* thiz, void* v, unsigned a, int b, unsigned c, unsigned d, unsigned e);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
-extern int _ZN5Actor13DistToCPlayerEv(void* self);
+extern int _ZN8dActor_c13DistToCPlayerEv(void* self);
 extern void func_ov002_020bae9c(char* c);
 }
 
@@ -38,22 +38,22 @@ void func_ov002_020bbb14(char* self)
     unsigned id;
 
     {
-        s16* pa = (s16*)((long long)(int)(self + 0x8c));
+        s16* pa = (s16*)(self + 0x8c);
         *pa = *pa + 0x2000;
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
-    WithMeshClsn_UpdateContinuous_Veneer(self + 0x3c8);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
+    dBgCh_Actr_UpdateContinuous_Veneer(self + 0x3c8);
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x3c8) != 0 ||
-        _ZNK12WithMeshClsn8IsOnWallEv(self + 0x3c8) != 0 ||
-        _ZNK12WithMeshClsn12TouchesWaterEv(self + 0x3c8) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x3c8) != 0 ||
+        _ZNK10dBgCh_Actr8IsOnWallEv(self + 0x3c8) != 0 ||
+        _ZNK10dBgCh_Actr12TouchesWaterEv(self + 0x3c8) != 0) {
         ((Obj*)self)->v31();
         return;
     }
 
     id = *(unsigned*)(self + 0x344);
     if (id != 0) {
-        found = _ZN5Actor10FindWithIDEj(id);
+        found = _ZN8dActor_c10FindWithIDEj(id);
         if (found != 0) {
             if (found != *(void**)(self + 0x5a0)) {
                 b = *(u16*)((char*)found + 0xc);
@@ -70,14 +70,14 @@ void func_ov002_020bbb14(char* self)
 
     _Z14ApproachLinearRiii((int*)(self + 0x98), 0, 0x555);
 
-    if (((MeshColliderBase *)(self + 0x124))->IsEnabled() != 0) {
-        ((MeshColliderBase *)(self + 0x124))->Disable();
+    if (((dBgW *)(self + 0x124))->IsEnabled() != 0) {
+        ((dBgW *)(self + 0x124))->Disable();
     }
 
     b = *(int*)(self + 0xb0) & 8;
     b = b != 0;
     if (b) {
-        if (_ZN5Actor13DistToCPlayerEv(self) > 0x7d0000) {
+        if (_ZN8dActor_c13DistToCPlayerEv(self) > 0x7d0000) {
             func_ov002_020bae9c(self);
         }
     }

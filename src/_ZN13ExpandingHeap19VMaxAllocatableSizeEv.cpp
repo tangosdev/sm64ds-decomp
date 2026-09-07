@@ -1,13 +1,15 @@
 //cpp
 // @symbol _ZN13ExpandingHeap19VMaxAllocatableSizeEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_ExpandingHeapAllocator.h"
-/* recovered: named members + shared header, real C++ method */
+/* ExpandingHeap::VMaxAllocatableSize() at 0x0203c5d0 -- Heap vtable slot 11.
+ * The LARGEST SINGLE free node at 4-byte alignment, not the total; see
+ * VMemoryLeft for why the distinction matters here and not on a solid heap.
+ *
+ * Reached `*(void**)((char*)&unk_014)' through an address cast before the
+ * allocator was a named, typed member. */
 #include "ExpandingHeap.h"
-extern "C" {
-}
+#include "ExpandingHeapAllocator.h"
 
-unsigned int ExpandingHeap::VMaxAllocatableSize()
+u32 ExpandingHeap::VMaxAllocatableSize()
 {
-    return _ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi(*(void**)((char*)&unk_014), 4);
+    return allocator->MaxAllocatableSize(4);
 }

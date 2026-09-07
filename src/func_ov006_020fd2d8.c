@@ -5,20 +5,8 @@ typedef unsigned short u16;
 typedef int s32;
 typedef unsigned int u32;
 
-/* PORT HOST-SAFETY EDIT, run mg5 lane PCOLL. This TU arrived from origin/main
-   carrying two codegen-shaping macros
-       #define ATI(p, off) ((char *)(int)((char *)(p) + (off)))
-       #define ATU(p, off) ((char *)(unsigned int)((char *)(p) + (off)))
-   used at three sites. On the DS a round trip through int is lossless because
-   a pointer IS 32 bits, so mwccarm treats them as free and they exist only to
-   pin the literal-pool order the byte gate wants. The port compiles src/
-   NATIVELY: here a pointer is 64 bits, `(int)` truncates it, and the cast back
-   to char* would have written the three fields below through a pointer with
-   its top half cut off. Each site is rewritten as plain char* plus an integer
-   offset, which is the same address the DS computes and the same address the
-   host computes. The arithmetic is otherwise untouched and no other line of
-   this body was changed; the decomp-side TU is left exactly as it is on main,
-   because the macros are correct there and are load bearing for its match. */
+#define ATI(p, off) ((char *)(int)((char *)(p) + (off)))
+#define ATU(p, off) ((char *)(unsigned int)((char *)(p) + (off)))
 
 extern int RandomIntInternal(int *seed);
 extern int data_0209d4b8;
@@ -38,13 +26,13 @@ void func_ov006_020fd2d8(char *o, int i)
         *(unsigned char *)(o + 0x4690 + idx) += 1;
         if (*(unsigned short *)(o + 0x5c28) > 0xc)
         {
-            *(int *)(o + idx + 0x466c) =
+            *(int *)(ATI(o, idx) + 0x466c) =
                 ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf) << 7) + 0xb80
                 + ((*(unsigned short *)(o + 0x5c28) - 0xc) << 7);
         }
         else
         {
-            *(int *)(o + idx + 0x466c) =
+            *(int *)(ATU(o, idx) + 0x466c) =
                 *(unsigned short *)(o + 0x5c28) * 0xa0
                 + (((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 3) >> 0xf) << 7) + 0x400);
         }
@@ -58,7 +46,7 @@ void func_ov006_020fd2d8(char *o, int i)
             *(int *)(o + idx + 0x4668) = -((*(unsigned short *)(o + 0x5c28) << 7) + 0x600);
             *(unsigned char *)(o + idx + 0x4691) = 0;
         }
-        *(unsigned short *)(o + idx + 0x4688) =
+        *(unsigned short *)((ATI(o, 0) + idx) + 0x4688) =
             ((((((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5) >> 0xf) << 3) + 0x20;
     }
     else

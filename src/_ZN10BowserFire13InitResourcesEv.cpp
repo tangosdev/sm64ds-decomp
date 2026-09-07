@@ -1,60 +1,103 @@
 //cpp
-struct Vector3 { int x, y, z; };
-struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
+// @symbol _ZN10BowserFire13InitResourcesEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * BowserFire holds no file references of its own -- Bowser loads and frees the
+ * whole fight -- so this sets up collision and state rather than resources.
+ *
+ * All three shadow declarations are gone:
+ *   - `struct Vector3 { int x, y, z; }`   -> the real types.h Vector3.
+ *   - `struct dBgCh_Gnd { ... }`      -> the real dBgCh_Gnd.h.
+ *   - `struct dActor_c { }`                  -> the real dActor_c.h.
+ * ...along with the magic offsets on `char *c`, now named BowserFire members.
+ *
+ * The dBgCh_Gnd one is the interesting fix. The stand-in declared
+ * `int floor[12]` at 0x14 and then read `floor[12]` -- one PAST its own bound,
+ * so the index was a magic offset in disguise: 0x14 + 12*4 = 0x44. The real
+ * header names that field `clsnY` and documents it as the search seed on entry
+ * and the hit on exit, which is exactly how it is used here.
+ *
+ * The `dActor_c` one was NOT obviously safe and was measured rather than assumed.
+ * It types the pointer-to-member dispatch through data_ov060_0211af74, and a
+ * pointer to member of a POLYMORPHIC class need not share a representation
+ * with one of an empty class. Under the pin it does: swapping the empty
+ * stand-in for the real dActor_c is byte-identical.
+ *
+ * The `|= 1` at 0x2e8 was briefly named as a BowserFire field of its own. It
+ * is not one. 0x2d0 + 0x18 lands inside mdCcAc_c, and
+ * dCc_c::flags is at 0x18, documented as "bit 0 makes Update bail" --
+ * which is precisely what setting bit 0 does, and precisely what this branch
+ * wants when mVariant is zero. Same mistake, and same correction, as Player's
+ * `mBodyClsnFlags`.
+ *
+ * The doubled write to pos.y is the ROM's own shape and is kept verbatim: the
+ * seed is read into a local, stored, then overwritten with seed + 0x32000.
+ */
+#include "BowserFire.h"
+#include "dBgCh_Gnd.h"
+#include "dActor_c.h"
 
-struct Actor { };
-typedef void (Actor::*ActorFn)();
+typedef void (dActor_c::*ActorFn)();
 
-extern "C" int _ZN11ShadowModel12InitCylinderEv(void* self);
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* actor, int a, int b, unsigned int c, unsigned int d);
-extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int a, int b, void* v, int c);
-extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3& v, void* actor);
-extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
-extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround* self);
+extern "C" {
+extern int _ZN11ShadowModel12InitCylinderEv(void *self);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
+
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
+}
 
 extern ActorFn data_ov060_0211af74[];
 
-extern "C" int _ZN10BowserFire13InitResourcesEv(char* c) {
-    RaycastGround rc;
+int BowserFire::InitResources()
+{
     Vector3 pos;
-    if (_ZN11ShadowModel12InitCylinderEv(c + 0x304) == 0)
+
+    if (_ZN11ShadowModel12InitCylinderEv(&this->mShadowModel) == 0)
         return 0;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x2d0, c, 0x28000, 0x50000, 0x200002, 0);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x110, c, 0x32000, 0x32000, 0, 0);
-    *(int*)(c + 0x9c) = -0x4000;
-    *(int*)(c + 0xa0) = -0x1e000;
-    *(int*)(c + 0x35c) = *(int*)(c + 8) & 7;
-    *(short*)(c + 0x374) = 0;
-    if (*(int*)(c + 0x35c) == 0)
-        *(unsigned char*)(c + 0x379) = 0;
+
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        &this->mdCcAc_c, this, 0x28000, 0x50000, 0x200002, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        &this->mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+
+    this->mVertAccel = -0x4000;
+    this->mTerminalVelocity = -0x1e000;
+    this->mVariant = this->param1 & 7;
+    this->mFrameCount = 0;
+    if (this->mVariant == 0)
+        this->mDropsShadow = 0;
     else
-        *(unsigned char*)(c + 0x379) = 1;
-    *(int*)(c + 0x36c) = 0;
-    *(unsigned char*)(c + 0x378) = (*(unsigned int*)(c + 8) >> 4) & 3;
-    if (*(int*)(c + 0x35c) == 0)
-        *(int*)(((int)c + 0x2e8)) |= 1;
-    *(int*)(c + 0x360) = 0x2000;
-    *(int*)(c + 0x380) = 0;
-    *(int*)(c + 0x37c) = *(int*)(c + 0x380);
-    *(int*)(c + 0x2cc) = 0;
-    _ZN13RaycastGroundC1Ev(&rc);
+        this->mDropsShadow = 1;
+    this->mTimer = 0;
+    this->mVariant_378 = ((unsigned int)this->param1 >> 4) & 3;
+    if (this->mVariant == 0)
+        this->mdCcAc_c.flags |= 1;
+    this->mShadowRadiusScale = 0x2000;
+    this->mParticleHandle_380 = 0;
+    this->mParticleHandle_37c = this->mParticleHandle_380;
+    this->mUniqueID_2cc = 0;
+
+    /* constructed here (not at function top: the ROM constructs after the
+       collider setup), destroyed at the single exit below -- both synthesized */
+    dBgCh_Gnd rc;
     {
         int p60;
-        pos.x = *(int*)(c + 0x5c);
-        p60 = *(int*)(c + 0x60);
+        pos.x = this->mPosX;
+        p60 = this->mPosY;
         pos.y = p60;
-        pos.z = *(int*)(c + 0x64);
+        pos.z = this->mPosZ;
         pos.y = p60 + 0x32000;
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, pos, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(&rc))
-        *(int*)(c + 0x364) = rc.floor[12];
+    rc.SetObjAndPos(pos, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc))
+        this->mGroundY = rc.clsnY;
     else
-        *(int*)(c + 0x364) = *(int*)(c + 0x60);
-    (((Actor*)c)->*data_ov060_0211af74[*(int*)(c + 0x35c)])();
-    *(int*)(c + 0x384) = 0;
-    *(int*)(c + 0x388) = 0;
-    _ZN13RaycastGroundD1Ev(&rc);
+        this->mGroundY = this->mPosY;
+
+    (((dActor_c *)this)->*data_ov060_0211af74[this->mVariant])();
+
+    this->mSoundHandle = 0;
+    this->mSoundID = 0;
     return 1;
 }

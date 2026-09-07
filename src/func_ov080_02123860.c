@@ -20,7 +20,7 @@ void func_ov080_02123860(char *self)
     }
     {
         int raw = *(int *)(self + 0x12c);
-        int *tbl = (int *)(int)(((long long)(int)data_ov080_0212767c));
+        int *tbl = (int *)(int)(data_ov080_0212767c);
         idx = (unsigned int)(raw << 4) >> 0x10;
         *(int *)(self + 0x140) = tbl[idx] << 0xc;
     }

@@ -110,7 +110,7 @@ void func_0204c304(Particle *self, u8 *mgr, List *freelist)
             p->h3a = self->h3a;
 
         {
-            Bf40 *q = (Bf40 *)(((s64)(int)((u8 *)p + 0x40)));
+            Bf40 *q = (Bf40 *)((u8 *)p + 0x40);
             q->f0 = (u16)((self->bf40.f0 * (self->bf40.f5 + 1)) >> 5);
             q->f5 = 0x1f;
         }

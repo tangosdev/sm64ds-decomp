@@ -21,14 +21,14 @@ struct Elem { int w[3]; };
 int PyramidLift::Render()
 {
     {
-        Sub* s = (Sub*)((char*)&mModel1);
+        Sub* s = (Sub*)((char*)&mModel);
         s->m(0);
     }
-    int i = unk_3f8;
+    int i = mNextBullet;
     if (i < 0xa) {
         Elem* e = (Elem*)(((char*)this) + i * 0xc);
         do {
-            Matrix4x3_FromTranslation((Mtx*)((char*)&unk_33c),
+            Matrix4x3_FromTranslation((Mtx*)((char*)&mModel2.mat4x3),
                 e->w[(0x37c)/4] >> 3,
                 e->w[(0x380)/4] >> 3,
                 e->w[(0x384)/4] >> 3);

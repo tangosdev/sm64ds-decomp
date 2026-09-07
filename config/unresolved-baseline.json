@@ -1,0 +1,306 @@
+{
+ "eligible": 11044,
+ "unresolved": {
+  "arm9:0x02017848": {
+   "name": "_ZN5FaderD0Ev",
+   "missing": [
+    "base_dtor_Fader"
+   ]
+  },
+  "arm9:0x02019ebc": {
+   "name": "func_02019ebc",
+   "missing": [
+    "func_02061128"
+   ]
+  },
+  "arm9:0x0201a2f8": {
+   "name": "func_0201a2f8",
+   "missing": [
+    "overlay_0",
+    "overlay_1"
+   ]
+  },
+  "arm9:0x0201a458": {
+   "name": "func_0201a458",
+   "missing": [
+    "func_02140d80"
+   ]
+  },
+  "arm9:0x0201a614": {
+   "name": "func_0201a614",
+   "missing": [
+    "overlay_75"
+   ]
+  },
+  "arm9:0x0201a694": {
+   "name": "func_0201a694",
+   "missing": [
+    "overlay_75"
+   ]
+  },
+  "arm9:0x0201a754": {
+   "name": "func_0201a754",
+   "missing": [
+    "overlay_4",
+    "overlay_6"
+   ]
+  },
+  "arm9:0x0201a798": {
+   "name": "func_0201a798",
+   "missing": [
+    "overlay_4",
+    "overlay_6"
+   ]
+  },
+  "arm9:0x0201a7dc": {
+   "name": "GetSceneOverlayID",
+   "missing": [
+    "overlay_2",
+    "overlay_3",
+    "overlay_5",
+    "overlay_6",
+    "overlay_7"
+   ]
+  },
+  "arm9:0x02029408": {
+   "name": "func_02029408",
+   "missing": [
+    "func_020bd828"
+   ]
+  },
+  "arm9:0x0202df70": {
+   "name": "_Z26LoadOrUnloadObjectOverlaysPFviEi",
+   "missing": [
+    "overlay_102",
+    "overlay_60",
+    "overlay_98"
+   ]
+  },
+  "arm9:0x02034fbc": {
+   "name": "func_02034fbc",
+   "missing": [
+    "overlay_64",
+    "overlay_66"
+   ]
+  },
+  "arm9:0x02044b30": {
+   "name": "func_02044b30",
+   "missing": [
+    "@30"
+   ]
+  },
+  "arm9:0x02058308": {
+   "name": "func_02058308",
+   "missing": [
+    "func_00000000",
+    "func_00000600"
+   ]
+  },
+  "arm9:0x02058df4": {
+   "name": "func_02058df4",
+   "missing": [
+    "func_00000000",
+    "func_00000600"
+   ]
+  },
+  "ov002:0x020bd664": {
+   "name": "func_ov002_020bd664",
+   "missing": [
+    "_ZGVtable$8",
+    "table$8"
+   ]
+  },
+  "ov002:0x020ec670": {
+   "name": "func_ov002_020ec670",
+   "missing": [
+    "func_02123804"
+   ]
+  },
+  "ov002:0x020f7d74": {
+   "name": "func_ov002_020f7d74",
+   "missing": [
+    "_ZGVdata_ov002_0211104c$8",
+    "data_ov002_0211104c$8"
+   ]
+  },
+  "ov002:0x020f83a4": {
+   "name": "_ZN14CutsceneObject13InitResourcesEv",
+   "missing": [
+    "func_02113c20"
+   ]
+  },
+  "ov002:0x020feef4": {
+   "name": "_ZN6Bullet13InitResourcesEv",
+   "missing": [
+    "func_0211d610"
+   ]
+  },
+  "ov004:0x020b2cb8": {
+   "name": "func_ov004_020b2cb8",
+   "missing": [
+    "@7"
+   ]
+  },
+  "ov004:0x020b87e0": {
+   "name": "func_ov004_020b87e0",
+   "missing": [
+    "_ZGVtable$6",
+    "table$6"
+   ]
+  },
+  "ov006:0x020c0a48": {
+   "name": "func_ov006_020c0a48",
+   "missing": [
+    "g0",
+    "g1",
+    "g2"
+   ]
+  },
+  "ov006:0x020c221c": {
+   "name": "func_ov006_020c221c",
+   "missing": [
+    "g0",
+    "g1"
+   ]
+  },
+  "ov006:0x0210bdb0": {
+   "name": "_ZN12dScMgSlot3_c13InitResourcesEv",
+   "missing": [
+    "func_020bc8b4"
+   ]
+  },
+  "ov006:0x0210d1fc": {
+   "name": "_ZN12dScMgSlot1_c13InitResourcesEv",
+   "missing": [
+    "func_020bc8b4"
+   ]
+  },
+  "ov007:0x020cc2cc": {
+   "name": "func_ov007_020cc2cc",
+   "missing": [
+    "overlay_64",
+    "overlay_66"
+   ]
+  },
+  "ov007:0x020cc4c0": {
+   "name": "func_ov007_020cc4c0",
+   "missing": [
+    "overlay_100",
+    "overlay_102"
+   ]
+  },
+  "ov021:0x02111434": {
+   "name": "func_ov021_02111434",
+   "missing": [
+    "conv_ov021"
+   ]
+  },
+  "ov060:0x02117c30": {
+   "name": "_ZN18BowserFireSeaArena13InitResourcesEv",
+   "missing": [
+    "func_021115bc"
+   ]
+  },
+  "ov060:0x02119004": {
+   "name": "_ZN16BowserShockwaves13InitResourcesEv",
+   "missing": [
+    "func_021115e4",
+    "func_021115f4"
+   ]
+  },
+  "ov065:0x0211ba88": {
+   "name": "_ZN15TtcRotatingGear13InitResourcesEv",
+   "missing": [
+    "func_021121b8"
+   ]
+  },
+  "ov065:0x0211bf04": {
+   "name": "_ZN14TTC_MovingBeam13InitResourcesEv",
+   "missing": [
+    "func_02112118"
+   ]
+  },
+  "ov066:0x021166c8": {
+   "name": "func_ov066_021166c8",
+   "missing": [
+    "func_02112c88",
+    "func_02112cc8",
+    "func_02112cd8_updatepos"
+   ]
+  },
+  "ov066:0x02116db0": {
+   "name": "func_ov066_02116db0",
+   "missing": [
+    "func_02112c08",
+    "func_02112d48"
+   ]
+  },
+  "ov066:0x021175e8": {
+   "name": "func_ov066_021175e8",
+   "missing": [
+    "func_02112c08",
+    "func_02112d48"
+   ]
+  },
+  "ov066:0x02117bf0": {
+   "name": "func_ov066_02117bf0",
+   "missing": [
+    "func_02112c08",
+    "func_02112d48"
+   ]
+  },
+  "ov066:0x02118188": {
+   "name": "func_ov066_02118188",
+   "missing": [
+    "func_02112c08",
+    "func_02112d48"
+   ]
+  },
+  "ov066:0x02119ce8": {
+   "name": "_ZN6Eyerok13InitResourcesEv",
+   "missing": [
+    "func_02112c08",
+    "func_02112ca8",
+    "func_02112d48"
+   ]
+  },
+  "ov074:0x02121e98": {
+   "name": "_ZN8Goomboss13InitResourcesEv",
+   "missing": [
+    "func_021123f4",
+    "func_021124ac"
+   ]
+  },
+  "ov075:0x02117bc4": {
+   "name": "func_ov075_02117bc4",
+   "missing": [
+    "overlay_64",
+    "overlay_66"
+   ]
+  },
+  "ov079:0x02126164": {
+   "name": "_ZN5Whomp13InitResourcesEv",
+   "missing": [
+    "func_021135d4"
+   ]
+  },
+  "ov085:0x02129f8c": {
+   "name": "func_ov085_02129f8c",
+   "missing": [
+    "normalize"
+   ]
+  },
+  "ov089:0x0213162c": {
+   "name": "func_ov089_0213162c",
+   "missing": [
+    "data_02111b68"
+   ]
+  },
+  "ov096:0x02137564": {
+   "name": "_ZN7Tornado13InitResourcesEv",
+   "missing": [
+    "func_02112968"
+   ]
+  }
+ }
+}

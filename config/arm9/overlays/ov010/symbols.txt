@@ -1,36 +1,36 @@
-func_ov010_021111a0 kind:function(arm,size=0x4c) addr:0x021111a0
-func_ov010_021111ec kind:function(arm,size=0x60) addr:0x021111ec
-func_ov010_0211124c kind:function(arm,size=0x10) addr:0x0211124c
-func_ov010_0211125c kind:function(arm,size=0x28) addr:0x0211125c
-func_ov010_02111284 kind:function(arm,size=0x30) addr:0x02111284
-func_ov010_021112b4 kind:function(arm,size=0x6c) addr:0x021112b4
-func_ov010_02111320 kind:function(arm,size=0x7c) addr:0x02111320
-func_ov010_0211139c kind:function(arm,size=0x54) addr:0x0211139c
-func_ov010_021113f0 kind:function(arm,size=0x7c) addr:0x021113f0
-func_ov010_0211146c kind:function(arm,size=0xe8) addr:0x0211146c
-func_ov010_02111554 kind:function(arm,size=0x54) addr:0x02111554
-func_ov010_021115a8 kind:function(arm,size=0x38) addr:0x021115a8
-func_ov010_021115e0 kind:function(arm,size=0x74) addr:0x021115e0
-func_ov010_02111654 kind:function(arm,size=0x1f8) addr:0x02111654
-func_ov010_0211184c kind:function(arm,size=0x138) addr:0x0211184c
+_ZN14daObjC1_Trap_cD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
+_ZN14daObjC1_Trap_cD0Ev kind:function(arm,size=0x60) addr:0x021111ec
+_ZN14daObjC1_Trap_c6State4Ev kind:function(arm,size=0x10) addr:0x0211124c
+_ZN14daObjC1_Trap_c6State3Ev kind:function(arm,size=0x28) addr:0x0211125c
+_ZN14daObjC1_Trap_c6State2Ev kind:function(arm,size=0x30) addr:0x02111284
+_ZN14daObjC1_Trap_c6State1Ev kind:function(arm,size=0x6c) addr:0x021112b4
+_ZN14daObjC1_Trap_c6State0Ev kind:function(arm,size=0x7c) addr:0x02111320
+_ZN14daObjC1_Trap_c10GetSpawnerEv kind:function(arm,size=0x54) addr:0x0211139c
+_ZN14daObjC1_Trap_c24UpdateCollisionTransformEv kind:function(arm,size=0x7c) addr:0x021113f0
+_ZN14daObjC1_Trap_c20UpdateModelTransformEv kind:function(arm,size=0xe8) addr:0x0211146c
+_ZN14daObjC1_Trap_c16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x02111554
+_ZN14daObjC1_Trap_c6RenderEv kind:function(arm,size=0x38) addr:0x021115a8
+_ZN14daObjC1_Trap_c8BehaviorEv kind:function(arm,size=0x74) addr:0x021115e0
+_ZN14daObjC1_Trap_c13InitResourcesEv kind:function(arm,size=0x1f8) addr:0x02111654
+_ZN14daObjC1_Trap_c11OnCollisionER8dActor_c kind:function(arm,size=0x138) addr:0x0211184c
 func_ov010_02111984 kind:function(arm,size=0x14) addr:0x02111984
-Trap_Spawn kind:function(arm,size=0x38) addr:0x02111998
-_ZN4TrapD1Ev kind:function(arm,size=0x38) addr:0x021119d0
-_ZN4TrapD0Ev kind:function(arm,size=0x4c) addr:0x02111a08
+daObjC1_Trap_c_classInit kind:function(arm,size=0x38) addr:0x02111998
+_ZN9LightBeamD1Ev kind:function(arm,size=0x38) addr:0x021119d0
+_ZN9LightBeamD0Ev kind:function(arm,size=0x4c) addr:0x02111a08
 func_ov010_02111a54 kind:function(arm,size=0x40) addr:0x02111a54
-_ZN4Trap16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111a94
-_ZN4Trap6RenderEv kind:function(arm,size=0x28) addr:0x02111ab8
-_ZN4Trap8BehaviorEv kind:function(arm,size=0x240) addr:0x02111ae0
-_ZN4Trap13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111d20
-LightBeam_Spawn kind:function(arm,size=0x40) addr:0x02111dd0
+_ZN9LightBeam16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111a94
+_ZN9LightBeam6RenderEv kind:function(arm,size=0x28) addr:0x02111ab8
+_ZN9LightBeam8BehaviorEv kind:function(arm,size=0x240) addr:0x02111ae0
+_ZN9LightBeam13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111d20
+daObjC1Hikari_c_classInit kind:function(arm,size=0x40) addr:0x02111dd0
 _ZN13PeachPaintingD1Ev kind:function(arm,size=0x30) addr:0x02111e10
 _ZN13PeachPaintingD0Ev kind:function(arm,size=0x44) addr:0x02111e40
-func_ov010_02111e84 kind:function(arm,size=0x40) addr:0x02111e84
+_ZN13PeachPainting20UpdateModelTransformEv kind:function(arm,size=0x40) addr:0x02111e84
 _ZN13PeachPainting16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111ec4
 _ZN13PeachPainting6RenderEv kind:function(arm,size=0x40) addr:0x02111ee8
 _ZN13PeachPainting8BehaviorEv kind:function(arm,size=0x98) addr:0x02111f28
 _ZN13PeachPainting13InitResourcesEv kind:function(arm,size=0x44) addr:0x02111fc0
-PeachPainting_Spawn kind:function(arm,size=0x38) addr:0x02112004
+daObjC1Peach_c_classInit kind:function(arm,size=0x38) addr:0x02112004
 __sinit_ov010_0211203c kind:function(arm,size=0xe0) addr:0x0211203c
 __sinit_ov010_0211211c kind:function(arm,size=0x40) addr:0x0211211c
 __sinit_ov010_0211215c kind:function(arm,size=0x40) addr:0x0211215c
@@ -112,26 +112,26 @@ data_ov010_02112a80 kind:data(any) addr:0x02112a80
 data_ov010_02112a88 kind:data(any) addr:0x02112a88
 data_ov010_02112a90 kind:data(any) addr:0x02112a90
 data_ov010_02112a98 kind:data(any) addr:0x02112a98
-data_ov010_02112aa0 kind:data(any) addr:0x02112aa0
+_ZTI14daObjC1_Trap_c kind:data(any) addr:0x02112aa0
 data_ov010_02112aa4 kind:data(any) addr:0x02112aa4 ambiguous
 data_ov010_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
-data_ov010_02112aac kind:data(any) addr:0x02112aac
-Trap_SpawnInfo kind:data(any) addr:0x02112ac0 ambiguous
+_ZTS14daObjC1_Trap_c kind:data(any) addr:0x02112aac
+g_profile_C1_TRAP kind:data(any) addr:0x02112ac0 ambiguous
 data_ov010_02112adc kind:data(any) addr:0x02112adc ambiguous
-data_ov010_02112ae4 kind:data(any) addr:0x02112ae4
+_ZTV14daObjC1_Trap_c kind:data(any) addr:0x02112ae4
 data_ov010_02112b08 kind:data(any) addr:0x02112b08 ambiguous
-data_ov010_02112b64 kind:data(any) addr:0x02112b64
-data_ov010_02112b70 kind:data(any) addr:0x02112b70
-LightBeam_SpawnInfo kind:data(any) addr:0x02112b84 ambiguous
-_ZTV4Trap kind:data(any) addr:0x02112ba8
+_ZTI15daObjC1Hikari_c kind:data(any) addr:0x02112b64
+_ZTS15daObjC1Hikari_c kind:data(any) addr:0x02112b70
+g_profile_C1_HIKARI kind:data(any) addr:0x02112b84 ambiguous
+_ZTV9LightBeam kind:data(any) addr:0x02112ba8
 _ZTV15daObjC1Hikari_c kind:data(any) addr:0x02112ba8
 data_ov010_02112bdc kind:data(any) addr:0x02112bdc ambiguous
 data_ov010_02112bec kind:data(any) addr:0x02112bec ambiguous
 data_ov010_02112c08 kind:data(any) addr:0x02112c08 ambiguous
 data_ov010_02112c18 kind:data(any) addr:0x02112c18 ambiguous
-data_ov010_02112c24 kind:data(any) addr:0x02112c24
-data_ov010_02112c30 kind:data(any) addr:0x02112c30
-PeachPainting_SpawnInfo kind:data(any) addr:0x02112c44 ambiguous
+_ZTI14daObjC1Peach_c kind:data(any) addr:0x02112c24
+_ZTS14daObjC1Peach_c kind:data(any) addr:0x02112c30
+g_profile_C1_PEACH kind:data(any) addr:0x02112c44 ambiguous
 data_ov010_02112c4c kind:data(any) addr:0x02112c4c ambiguous
 data_ov010_02112c58 kind:data(any) addr:0x02112c58 ambiguous
 _ZTV13PeachPainting kind:data(any) addr:0x02112c68

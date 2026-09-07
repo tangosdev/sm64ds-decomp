@@ -19,7 +19,7 @@ void func_ov002_020af950(char *self)
       *((unsigned char *)(self + 0x38e)) = 1;
       func_ov002_020aefa4(self);
       _ZN5Sound9PlayBank3EjRK7Vector3(0x68, self + 0x74);
-      *((unsigned int *)(((long long)(int)(self + 0xb0)))) &= ~1;
+      *((unsigned int *)(self + 0xb0)) &= ~1;
       return;
 
     case 1:
@@ -35,7 +35,7 @@ void func_ov002_020af950(char *self)
       if (*((unsigned short *)(self + 0x100)) != 0x25)
         return;
 
-      *((unsigned int *)(((long long)(int)(self + 0x128)))) &= ~1;
+      *((unsigned int *)(self + 0x128)) &= ~1;
       *((int *)(self + 0x388)) = 1;
       *((int *)(self + 0x9c)) = 0;
       *((int *)(self + 0x98)) = 0xa000;

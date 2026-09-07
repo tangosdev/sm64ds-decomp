@@ -1,12 +1,12 @@
-_ZN8SquasherD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
-_ZN8SquasherD0Ev kind:function(arm,size=0x60) addr:0x021111ec
-func_ov023_0211124c kind:function(arm,size=0xbc) addr:0x0211124c
-func_ov023_02111308 kind:function(arm,size=0x48) addr:0x02111308
-_ZN8Squasher16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111350
-_ZN8Squasher6RenderEv kind:function(arm,size=0x28) addr:0x02111388
-_ZN8Squasher8BehaviorEv kind:function(arm,size=0x2c0) addr:0x021113b0
-_ZN8Squasher13InitResourcesEv kind:function(arm,size=0xb8) addr:0x02111670
-Squasher_Spawn kind:function(arm,size=0x38) addr:0x02111728
+_ZN16daObjFm_Battan_cD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
+_ZN16daObjFm_Battan_cD0Ev kind:function(arm,size=0x60) addr:0x021111ec
+_ZN16daObjFm_Battan_c12UpdateShadowEv kind:function(arm,size=0xbc) addr:0x0211124c
+_ZN16daObjFm_Battan_c20UpdateModelTransformEv kind:function(arm,size=0x48) addr:0x02111308
+_ZN16daObjFm_Battan_c16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111350
+_ZN16daObjFm_Battan_c6RenderEv kind:function(arm,size=0x28) addr:0x02111388
+_ZN16daObjFm_Battan_c8BehaviorEv kind:function(arm,size=0x2c0) addr:0x021113b0
+_ZN16daObjFm_Battan_c13InitResourcesEv kind:function(arm,size=0xb8) addr:0x02111670
+daObjFm_Battan_c_classInit kind:function(arm,size=0x38) addr:0x02111728
 data_ov023_02111760 kind:data(any) addr:0x02111760
 data_ov023_02111764 kind:data(any) addr:0x02111764
 data_ov023_02111768 kind:data(any) addr:0x02111768
@@ -22,8 +22,8 @@ data_ov023_02111994 kind:data(any) addr:0x02111994 ambiguous
 data_ov023_02111a4c kind:data(any) addr:0x02111a4c ambiguous
 data_ov023_02111a58 kind:data(any) addr:0x02111a58 ambiguous
 data_ov023_02111a78 kind:data(any) addr:0x02111a78 ambiguous
-__sinit_ov023_02111aa8 kind:function(arm,size=0x6c) addr:0x02111aa8
-.p__sinit_ov023_02111aa8 kind:data(word) addr:0x02111b14
+__sinit_d_a_obj_fm_battan.cpp kind:function(arm,size=0x6c) addr:0x02111aa8
+.p__sinit_d_a_obj_fm_battan.cpp kind:data(word) addr:0x02111b14
 data_ov023_02111b20 kind:data(any) addr:0x02111b20
 data_ov023_02111b24 kind:data(any) addr:0x02111b24
 data_ov023_02111b28 kind:data(any) addr:0x02111b28
@@ -53,14 +53,14 @@ data_ov023_02111c98 kind:data(any) addr:0x02111c98
 data_ov023_02111cc8 kind:data(any) addr:0x02111cc8 ambiguous
 data_ov023_02111d30 kind:data(any) addr:0x02111d30
 data_ov023_02111e10 kind:data(any) addr:0x02111e10
-data_ov023_02111fa0 kind:data(any) addr:0x02111fa0
-data_ov023_02111fac kind:data(any) addr:0x02111fac
-Squasher_SpawnInfo kind:data(any) addr:0x02111fc0 ambiguous
-_ZTV8Squasher kind:data(any) addr:0x02111fe4
+_ZTI16daObjFm_Battan_c kind:data(any) addr:0x02111fa0
+_ZTS16daObjFm_Battan_c kind:data(any) addr:0x02111fac
+g_profile_FM_BATTAN kind:data(any) addr:0x02111fc0 ambiguous
+_ZTV16daObjFm_Battan_c kind:data(any) addr:0x02111fe4
+data_ov023_02112064 kind:data(any) addr:0x02112064
 data_ov023_02112080 kind:bss addr:0x02112080
 data_ov023_02112088 kind:bss addr:0x02112088
-data_ov023_0211208c kind:bss addr:0x0211208c ambiguous
-data_ov023_02112090 kind:bss addr:0x02112090
-data_ov023_0211209c kind:bss addr:0x0211209c
-data_ov023_021120a4 kind:bss addr:0x021120a4 ambiguous
+@336 kind:bss addr:0x02112090
+@335 kind:bss addr:0x0211209c
+data_ov023_021120a8 kind:bss addr:0x021120a8
 data_ov023_021120bc kind:bss addr:0x021120bc ambiguous

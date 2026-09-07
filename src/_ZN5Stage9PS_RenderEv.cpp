@@ -34,14 +34,14 @@ extern char _ZN3OAM5PAUSEE;
 extern char _ZN3OAM9TINY_STARE;
 extern char _ZN3OAM25SMALL_ARROW_POINTING_LEFTE;
 extern char _ZN3OAM26SMALL_ARROW_POINTING_RIGHTE;
-extern char func_020abac0;
-extern char func_020abad8;
-extern char func_020ab9c8;
-extern void* func_020abd98[];
-extern void* func_020ac218[];
-extern void* func_020ac64c[];
-extern void* func_020acb68[];
-extern void* func_020ad04c[];
+extern char _ZN3OAM16SMALL_STAR_EMPTYE;
+extern char _ZN3OAM4COINE;
+extern char _ZN3OAM5TIMESE;
+extern void* data_ov001_020abd98[];
+extern void* data_ov001_020ac218[];
+extern void* data_ov001_020ac64c[];
+extern void* data_ov001_020acb68[];
+extern void* _ZN3OAM21CONTROLLER_MODE_TEXTSE[];
 }
 
 class Stage {
@@ -99,7 +99,7 @@ void Stage::PS_Render()
                         _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM13MM_SMALL_STARE, var_sb, 0x60, -1, -1, 0);
                         var_r7 = (var_r7 + 1) & 0xff;
                     } else {
-                        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abac0, var_sb, 0x60, -1, -1, 0);
+                        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM16SMALL_STAR_EMPTYE, var_sb, 0x60, -1, -1, 0);
                         sp18 = 1;
                     }
                     var_sb += 0x10;
@@ -107,29 +107,29 @@ void Stage::PS_Render()
                 } while (var_r7 != var_r8);
             }
             if (sp18 == 0 && var_r8 != 7) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abac0, var_sb, 0x60, -1, -1, 0);
+                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM16SMALL_STAR_EMPTYE, var_sb, 0x60, -1, -1, 0);
             }
             unsigned char r5v = _ZN8SaveData13GetCoinRecordEj(data_0209f2c8);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad8, 0x70, 0x70, -1, -1, 0);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, 0x80, 0x78, -1, -1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM4COINE, 0x70, 0x70, -1, -1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, 0x80, 0x78, -1, -1, 0);
             _ZN5Stage12RenderNumberEhiibi(r5v, 0x88, 0x70, 1, 8);
             if (IsStarCollected(data_0209f2c8, 0) != 0) {
                 _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM13MM_SMALL_STARE, 0xb0, 0x78, -1, -1, 0);
             }
         } else {
             _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM13MM_SMALL_STARE, 0x70, 0x60, -1, -1, 0);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, 0x80, 0x60, -1, -1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, 0x80, 0x60, -1, -1, 0);
             _ZN5Stage12RenderNumberEhiibi(CountStarsCollectedInLevelToDisplay(0x1d), 0x88, 0x58, 1, 8);
         }
     } else if (data_0209d45c & 8) {
         if ((unsigned int)data_0209f2c8 < 0xfU) {
             unsigned char r4v = CountStarsCollectedInLevelToDisplay(data_0209f2c8);
             _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM13MM_SMALL_STARE, 0x58, 0x8c, -1, -1, 0);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, 0x68, 0x8c, -1, -1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, 0x68, 0x8c, -1, -1, 0);
             _ZN5Stage12RenderNumberEhiibi(r4v, 0x70, 0x84, 1, 1);
             unsigned char r4v2 = _ZN8SaveData13GetCoinRecordEj(data_0209f2c8);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad8, 0x88, 0x84, -1, -1, 0);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, 0x98, 0x8c, -1, -1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM4COINE, 0x88, 0x84, -1, -1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, 0x98, 0x8c, -1, -1, 0);
             _ZN5Stage12RenderNumberEhiibi(r4v2, 0xa0, 0x84, 1, 1);
         }
         if (data_0209f248 == 0xb) {
@@ -155,22 +155,22 @@ void Stage::PS_Render()
             _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &_ZN3OAM9TINY_STARE, 0x26, ((data_0209f2e0 * 5) + 6) * 8, -1, -1, 0);
         }
         if (GetOwnerLanguage() == 5) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, func_020abd98[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov001_020abd98[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 4) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, func_020ac218[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov001_020ac218[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 3) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, func_020ac64c[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov001_020ac64c[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
             return;
         }
         if (GetOwnerLanguage() == 2) {
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, func_020acb68[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, data_ov001_020acb68[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
             return;
         }
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, func_020ad04c[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
+        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, _ZN3OAM21CONTROLLER_MODE_TEXTSE[data_0209f2dc], 0x80, 0x60, -1, -1, 0x1000, 0x1000, 0, -1);
         return;
     }
 

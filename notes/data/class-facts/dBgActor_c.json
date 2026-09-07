@@ -1,0 +1,156 @@
+{
+  "class": "dBgActor_c",
+  "rtti_name": "10dBgActor_c",
+  "rtti_name_address": "0x02108a04",
+  "typeinfo": {
+    "symbol": "_ZTI10dBgActor_c",
+    "address": "0x021089ec",
+    "kind": "__si_class_type_info",
+    "size": "0xc",
+    "base_typeinfo": "_ZTI8dActor_c (arm9 0x0208e390)"
+  },
+  "overlay": "ov002",
+  "module_base": "0x020ad660",
+  "vtable": {
+    "symbol": "_ZTV10dBgActor_c",
+    "address": "0x0210ae38",
+    "slots": 32,
+    "emitted_storage_size": "0x88",
+    "note": "the symbol IS the address point; the two ABI preamble words (offset-to-top, RTTI pointer) sit at -8 and -4"
+  },
+  "base_class": "dActor_c",
+  "base_evidence": "_ZTI10dBgActor_c is a __si_class_type_info whose +8 word points at _ZTI8dActor_c (arm9 0x0208e390), so the direct base is dActor_c and nothing else. Corroborated by length: _ZTV8dActor_c is 31 slots and _ZTV10dBgActor_c is 32 -- one added slot. tools/rtti_vtables.py --own dBgActor_c.",
+  "overrides": [
+    {
+      "slot": 16,
+      "address": "0x020ee42c",
+      "name": "~dBgActor_c (D1)",
+      "size": "0x38",
+      "note": "body defined INLINE in include/dBgActor_c.h; this out-of-line copy exists only because the vtable is emitted here"
+    },
+    {
+      "slot": 17,
+      "address": "0x020ee464,",
+      "name": "~dBgActor_c (D0, deleting)",
+      "size": "0x4c",
+      "note": "destroy through dBgActor_c and dActor_c, then dActor_c's inline operator delete"
+    },
+    {
+      "slot": 31,
+      "address": "0x020ee55c",
+      "name": "Kill",
+      "size": "0x74",
+      "note": "THE SLOT THIS CLASS ADDS -- dActor_c's table ends at slot 30. Kill is the first out-of-line virtual declared, therefore dBgActor_c's KEY FUNCTION: the TU that defines it emits _ZTV/_ZTI/_ZTS and both destructor variants."
+    }
+  ],
+  "inherited_unchanged_slots": "slots 0-15 and 18-30 still hold dActor_c's own words (all point into arm9); no other override.",
+  "non_virtual": [
+    {
+      "symbol": "_ZN10dBgActor_c14KillByMegaCharER6Player",
+      "address": "0x020ee4b0",
+      "size": "0xac"
+    },
+    {
+      "symbol": "func_ov002_020ee5d0",
+      "address": "0x020ee5d0",
+      "size": "0xa4",
+      "note": "UNNAMED in the ROM config and reached only from UpdateKillByMegaChar (one inbound relocation, ov002 0x020ee5d0). Writes the model matrix at this+0xf0 from the actor's position and Euler angles. A file-local helper of this TU; the original English name is NOT recoverable, so the func_ spelling stands."
+    },
+    {
+      "symbol": "_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE",
+      "address": "0x020ee674",
+      "size": "0x158"
+    },
+    {
+      "symbol": "_ZN10dBgActor_c19UpdateClsnPosAndRotEv",
+      "address": "0x020ee7cc",
+      "size": "0x64"
+    },
+    {
+      "symbol": "_ZN10dBgActor_c21UpdateModelPosAndRotYEv",
+      "address": "0x020ee830",
+      "size": "0x40"
+    },
+    {
+      "symbol": "_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_",
+      "address": "0x020ee870",
+      "size": "0xc4"
+    },
+    {
+      "symbol": "_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_",
+      "address": "0x020ee934",
+      "size": "0x11c"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cC2Ev",
+      "address": "0x020eea50",
+      "size": "0x34",
+      "note": "base-object constructor: dActor_c base step, vptr store of &_ZTV10dBgActor_c[2], then mModel (0xd4) and mMeshCollider (0x124) in declaration order. No C1 in the ROM."
+    }
+  ],
+  "text_span": {
+    "start": "0x020ee42c",
+    "end": "0x020eea84",
+    "bytes": 1624,
+    "functions": 11
+  },
+  "size": "0x320",
+  "size_evidence": "include/dBgActor_c.h carries a compile-time assert at 0x320 and the header's provenance note (notes/platform-provenance.md) derives it from the field span plus the tail padding daObjRc_Guruguru_c::mAngVelY uses. Independently corroborated by commit 72c6dcfb6: daObjMc_Metalnet_c's factory `new` literal is 0x320 and that class adds no field.",
+  "fields": [
+    {
+      "offset": "0x0d4",
+      "name": "mModel",
+      "type": "Model",
+      "evidence": "D1 destroys a Model here (_ZN5ModelD1Ev); UpdateModelPosAndRotY writes its matrix at 0xf0 and translation row at 0x114/0x118/0x11c"
+    },
+    {
+      "offset": "0x124",
+      "name": "mMeshCollider",
+      "type": "dBgW_KcMbg",
+      "evidence": "C2 constructs (_ZN10dBgW_KcMbgC1Ev) and D1 destroys here; IsClsnInRange calls dBgW::Enable/Disable/IsEnabled through it"
+    },
+    {
+      "offset": "0x2ec",
+      "name": "mClsnMat",
+      "type": "Matrix4x3",
+      "evidence": "UpdateClsnPosAndRot copies mModel.mat4x3 here, overwrites m[9..11] with the position, and passes it to dBgW_KcMbg::Transform"
+    },
+    {
+      "offset": "0x31c",
+      "name": "unk_31c",
+      "type": "u8",
+      "evidence": "KillByMegaChar sets it to 1; UpdateKillByMegaChar early-returns 0 unless it is set. Role is proven (the mega-char death state flag); the NAME is not."
+    },
+    {
+      "offset": "0x31d",
+      "name": "unk_31d",
+      "type": "u8",
+      "evidence": "KillByMegaChar sets it to 0x1e; UpdateKillByMegaChar counts it down with DecIfAbove0_Byte and calls Kill at zero. Role proven, NAME not."
+    }
+  ],
+  "pad": [
+    {
+      "offset": "0x0d0",
+      "size": "0x4",
+      "note": "unaccounted gap between dActor_c's end (0xd0) and mModel"
+    }
+  ],
+  "unproven": [
+    "the English names of the two tail bytes at 0x31c/0x31d",
+    "the original name of func_ov002_020ee5d0",
+    "the 4-byte gap at 0x0d0 -- no load or store in this class's 11 functions touches it",
+    "the parameter names of UpdateKillByMegaChar's three s16 angle deltas",
+    "whether IsClsnInRange / IsClsnInRangeOnScreen are the cartridge's spellings: the mangled names in config claim `Fix12<int>` parameters BY VALUE and the bodies refuse that reading (they are consumed as plain ints), so both are still coined and both remain defined as extern \"C\" mangled free functions rather than real members"
+  ],
+  "provenance": {
+    "worktree": "C:/tmp/sm64ds-pilot-dbgactor",
+    "ref": "cpp/dbgactor-tu (from agents/class-pipeline db17d2c40)",
+    "tools": [
+      "tools/tubuild.py inspect ov002/dBgActor_c",
+      "tools/rtti_extract.py",
+      "tools/rtti_vtables.py --own dBgActor_c",
+      "config/arm9/overlays/ov002/symbols.txt",
+      "config/arm9/symbols.txt"
+    ]
+  }
+}

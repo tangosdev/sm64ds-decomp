@@ -5,7 +5,7 @@ extern Vec3 data_ov006_021408a8;
 extern void *data_ov006_0214089c;
 extern int data_02092768[4];
 extern int data_020a0ebc[3];
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern void func_020731dc(int a, int b, void **node);
 extern void func_0203cc28(int *p, int angle);
 extern void Quaternion_FromVector3(int *q, Vec3 *a, Vec3 *b);
@@ -17,7 +17,7 @@ void func_ov006_020ceabc(char *self, int *v1, int *v2, int a3, short a4)
         data_ov006_021408a8.x = 0;
         data_ov006_021408a8.y = 0x1000;
         data_ov006_021408a8.z = 0;
-        func_020731dc((int)&data_ov006_021408a8, (int)func_020072c0, &data_ov006_0214089c);
+        func_020731dc((int)&data_ov006_021408a8, (int)_ZN7Vector3D1Ev, &data_ov006_0214089c);
         data_ov006_0214081c |= 1;
     }
     *(int *)(self + 0x8) = v1[0];
@@ -27,7 +27,7 @@ void func_ov006_020ceabc(char *self, int *v1, int *v2, int a3, short a4)
     *(int *)(self + 0x3c) = v2[1];
     *(int *)(self + 0x40) = v2[2];
     {
-        int *p38 = (int *)(int)(((long long)(int)(self + 0x38)));
+        int *p38 = (int *)(int)(self + 0x38);
         *(int *)(self + 0x44) = p38[0];
         *(int *)(self + 0x48) = p38[1];
         *(int *)(self + 0x4c) = p38[2];
@@ -37,7 +37,7 @@ void func_ov006_020ceabc(char *self, int *v1, int *v2, int a3, short a4)
     *(int *)(self + 0x18) = *(int *)(self + 0xc);
     *(int *)(self + 0x1c) = *(int *)(self + 0x10);
     {
-        int *p14 = (int *)(int)(((long long)(int)(self + 0x14)));
+        int *p14 = (int *)(int)(self + 0x14);
         *(int *)(self + 0x20) = p14[0];
         *(int *)(self + 0x24) = p14[1];
         *(int *)(self + 0x28) = p14[2];

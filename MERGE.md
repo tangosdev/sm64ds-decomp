@@ -2,17 +2,18 @@
 
 The playbook for anyone reviewing, merging, or coordinating work on this repo —
 human maintainers and AI sessions alike. If you are landing a PR or working a
-function, follow this.
+function or class, follow this. See [`AGENTS.md`](AGENTS.md) for what a change
+looks like and what the merge gate checks.
 
-## 1. Claims (before you touch a function)
+## 1. Claims (before you touch a function or class)
 
 - `claims_check` the span first. `claims_lock` (module / start / end) to reserve it,
   `claims_release` when it is banked.
 - Claims are **best-effort**. If they return `401` / "missing key", the claims service
   just is not configured on this machine — note it once and proceed. Each agent already
   gets a distinct batch, so an unclaimed target is fine to work.
-- If you edited [`CLAIMS.md`](CLAIMS.md) to reserve a span, remove your line (or
-  `claims_release`) once the work lands.
+- `CLAIMS.md` is a historical/tooling log (`tools/claims_md.py` and friends read it), not
+  a step in this workflow — don't ask contributors to hand-edit it.
 
 ## 2. What may be merged
 
@@ -36,6 +37,12 @@ function, follow this.
   not a PR problem** — pull on the box and re-run, never override it.
 - **Near-miss DB / notes / tooling PRs** have no `src` match to byte-check; review for sanity
   and merge.
+- **`port/` reference breaks.** A rename, `.c`-to-`.cpp` migration, or file move in `src/`/
+  `include/` can strand a `port/` reference (`slice_gate*.txt`, `CMakeLists.txt` hostgen
+  symbol lists, `port/hal/*.cpp` linkage bridges) — nothing in `validate` catches this since
+  `port/`'s MSVC build isn't part of the decomp toolchain. `python tools/port_refcheck.py`
+  is the check (also runs in `tools/hooks/pre-push`); treat a report from it like any other
+  bug and fix the `port/` side before merging.
 - **Drafts:** never merge someone else's draft. That is the author saying "not ready."
 
 ## 3. How to merge (preserve attribution)
@@ -49,8 +56,8 @@ function, follow this.
 
 ## 4. Conflicts
 
-- `CLAIMS.md` conflicts are the common case (everyone edits it). Resolve by taking **main's**
-  version — the claim is moot once the work lands — and keep the `src` file.
+- A `CLAIMS.md` conflict resolves by taking **main's** version — the claim is moot once the
+  work lands — and keeping the `src` file.
 - For a fork PR with *maintainer edits allowed*, resolve on their branch and push the fix; keep
   their commit so authorship survives. Otherwise ask them to rebase.
 

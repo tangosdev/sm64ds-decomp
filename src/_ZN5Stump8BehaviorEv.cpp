@@ -1,69 +1,72 @@
 //cpp
 // @symbol _ZN5Stump8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "Stump.h"
-struct WithMeshClsn;
-struct CylinderClsn;
-struct Enemy;
-typedef void (Enemy::*PMF)();
-struct Holder { char pad[8]; PMF fn; };
+#include "Player.h"
 
+/* Stump::Behavior -- vtable slot 6, ov091 0x02133738.
+ *
+ * mState/mAngleDelta/mPrevAngle/mAttackCooldown are this class's own fields
+ * (include/Stump.h); mPosX/Y/Z are dActor_c's own. ClosestPlayer,
+ * GetBitInDeathTable, HorzAngleToCPlayer, DistToCPlayer and
+ * TrackInDeathTable are dActor_c's own, called unqualified. SpawnCoins is
+ * not yet declared on dActor_c, so it stays extern "C" under its exact ROM
+ * symbol, same as DecIfAbove0_Byte and IsClsnInRangeOnScreen -- all three
+ * the same as the pre-migration recovery.
+ *
+ * The by-value `V3` parameter below is the pre-migration recovery's own
+ * local struct, kept private under a different name (types.h's real Vector3
+ * is already in scope via Stump.h): its non-trivial ctor/copy-ctor/dtor is
+ * load-bearing for the ABI shape (const Vector3& is passed as a caller-built
+ * temporary, matched by the compiler's own by-value-with-non-trivial-copy
+ * lowering) -- swapping in the real Vector3 changed the ABI enough to add
+ * 4 bytes of register shuffling. */
+struct V3 {
+    int x, y, z;
+    V3() {}
+    V3(const V3 &o) { x = o.x; y = o.y; z = o.z; }
+    ~V3() {}
+};
 extern "C" {
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(Enemy *thiz, WithMeshClsn *c);
-extern void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
-extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(Enemy *thiz, void *clsn);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(Enemy *thiz, WithMeshClsn *wm, unsigned int j);
-extern void _ZN9Animation7AdvanceEv(void *thiz);
+extern unsigned char DecIfAbove0_Byte(unsigned char *p);
+extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *c, int a, int b);
+extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, V3 v, unsigned int n, int f, short s);
 }
-
-struct Enemy { char pad[0x800]; };
 
 int Stump::Behavior()
 {
-    char *c = (char *)((Enemy *)this);
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144)) != 0) {
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        if (*(unsigned char *)(c + 0x107) != 0) {
-            if (*(unsigned short *)(c + 0x104) == 0) {
-                _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    Player *player = ClosestPlayer();
+    if (mState == 3
+        && GetBitInDeathTable() == 0
+        && player->mPosY < mPosY + 0x64000) {
+        int angle = HorzAngleToCPlayer();
+        if (DistToCPlayer() > 0x190000) {
+            mAngleDelta = 0;
+        } else {
+            s16 diff = (s16)(angle - mPrevAngle);
+            int val = mAngleDelta;
+            int *p;
+            if ((val > 0 && diff < -100) || (val < 0 && diff > 100))
+                mAngleDelta = 0;
+            p = &mAngleDelta;
+            *p = *p + diff;
+            {
+                int a = mAngleDelta;
+                if (a < 0) a = -a;
+                if (a > 0x30000 && mBusy == 0
+                    && GetBitInDeathTable() == 0) {
+                    V3 v;
+                    v.x = mPosX;
+                    v.y = mPosY;
+                    v.z = mPosZ;
+                    v.y += 0xc8000;
+                    _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, v, 5, 0x5000, 0);
+                    TrackInDeathTable();
+                }
             }
         }
-        func_ov091_02134094(c);
-        return 1;
+        mPrevAngle = angle;
     }
-
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    {
-        Holder *q = *(Holder **)(c + 0x364);
-        if (q->fn != 0) (((Enemy *)this)->*(q->fn))();
-    }
-    *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    *(short *)(c + 0x90) = *(short *)(c + 0x96);
-    {
-        int v = *(int *)(c + 0xa8) + *(int *)(c + 0x9c);
-        int hi = *(int *)(c + 0xa0);
-        if (v >= hi)
-            hi = v;
-        int tmp = *(int *)(c + 0xac);
-        *(int *)(c + 0xa8) = hi;
-        *(int *)(c + 0xac) = tmp;
-    }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((Enemy *)this), (void *)(c + 0x110));
-    func_ov091_021339fc(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
-
-    if (*(int *)(c + 0x374) == 1) {
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((Enemy *)this), (WithMeshClsn *)(c + 0x144), 0);
-        return 1;
-    }
-
-    _ZN9Animation7AdvanceEv(c + 0x350);
-    func_ov091_02134094(c);
+    DecIfAbove0_Byte((unsigned char *)&mAttackCooldown);
+    _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0);
     return 1;
 }

@@ -78,7 +78,7 @@ int Player::St_Crouch_Main()
     case 2:
         if (_ZN6Player6IsAnimEj(((char*)this), 0x2e) && _ZN6Player12FinishedAnimEv(((char*)this))) {
             _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211013c);
-            unk_6b0 = 0xa;
+            mCrouchTimer = 0xa;
         } else {
             func_ov002_020d1204(((char*)this));
         }

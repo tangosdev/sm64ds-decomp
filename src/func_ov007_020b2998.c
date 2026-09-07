@@ -25,7 +25,7 @@ struct Widget
   u16 f_70;
 };
 
-struct Scene
+struct dScene_c
 {
   char _0[0x34];
   int f_34;
@@ -50,7 +50,7 @@ struct Vec3
   int z;
 };
 
-extern struct Scene *data_ov007_0210342c;
+extern struct dScene_c *data_ov007_0210342c;
 extern void func_ov007_020b283c(void);
 extern int func_ov007_020b2bd4(int a, int b);
 extern int func_ov007_020beaa0(int a, int b);

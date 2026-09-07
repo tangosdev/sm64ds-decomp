@@ -36,7 +36,7 @@ extern void func_0206d868(const SavedIntState *state);
 extern u32 func_0206dab4(u32 val, void *addr);
 extern void func_0206d940(struct Arr *s, u32 index);
 extern void func_0206d8c4(struct Arr *s, u32 index);
-extern void _ZN4cstd8__assertEPKcPKcPKci(const char *, const char *, const char *, int);
+extern void _ZN4cstd8__assertEPKcS1_S1_i(const char *, const char *, const char *, int);
 
 int func_0206d32c(int type, u32 addr, u32 lma, u32 size) {
     int result;
@@ -86,16 +86,16 @@ int func_0206d32c(int type, u32 addr, u32 lma, u32 size) {
                     long long ov = (long long)end - (long long)table->elems[j].a;
                     if (ov <= 0) break;
                     if (!(table->elems[j].c > (u32)ov)) {
-                        _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x121, &data_0208698c, 1);
+                        _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x121, &data_0208698c, 1);
                     }
                     *LM(&EB(table, j)->elems[0].a) += (u32)ov;
                     *LM(&EB(table, j)->elems[0].b) += (u32)ov;
                     *LM(&EB(table, j)->elems[0].c) -= (u32)ov;
                     if (!(table->elems[j].c != 0)) {
-                        _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x127, &data_020869bc, 1);
+                        _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x127, &data_020869bc, 1);
                     }
                     if (!(table->elems[j].c < 0xf0000000)) {
-                        _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x128, &data_020869dc, 1);
+                        _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x128, &data_020869dc, 1);
                     }
                     break;
                 }
@@ -103,10 +103,10 @@ int func_0206d32c(int type, u32 addr, u32 lma, u32 size) {
         } else if (ea <= addr) {
             if (vma64 < (unsigned long long)(u32)ea + (u32)table->elems[i].c) {
                 if (!(ea <= addr)) {
-                    _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x12e, &data_0208690c, 1);
+                    _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x12e, &data_0208690c, 1);
                 }
                 if (!((unsigned long long)(u32)table->elems[i].a + (u32)table->elems[i].c > vma64)) {
-                    _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x12f, &data_0208692c, 1);
+                    _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x12f, &data_0208692c, 1);
                 }
                 if (addr != table->elems[i].a) {
                     u32 ni;
@@ -124,7 +124,7 @@ int func_0206d32c(int type, u32 addr, u32 lma, u32 size) {
                     *LM(&srcb->elems[0].c) -= dstb->elems[0].c;
                 }
                 if (!(addr == table->elems[i].a)) {
-                    _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x13c, &data_0208696c, 1);
+                    _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x13c, &data_0208696c, 1);
                 }
                 if (table->elems[i].c <= size) {
                     found = 1;
@@ -142,7 +142,7 @@ int func_0206d32c(int type, u32 addr, u32 lma, u32 size) {
                             long long ov = (long long)end - (long long)wa;
                             if (ov <= 0) break;
                             if (!(wc > (u32)ov)) {
-                                _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x151, &data_0208698c, 1);
+                                _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x151, &data_0208698c, 1);
                             }
                             *LM(&EB(table, k)->elems[0].a) += (u32)ov;
                             *LM(&EB(table, k)->elems[0].b) += (u32)ov;

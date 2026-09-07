@@ -30,8 +30,8 @@ extern void _ZN3IRQ7RestoreEj(u32 state);
 void DMAStartTransfer(u32 channel, u32 src, u32 dest, u32 ctrl)
 {
     u32 state = _ZN3IRQ7DisableEv();
-    DMAChannelRegs *reg = (DMAChannelRegs *)(((u32)REG_DMA_BASE +
-        channel * sizeof(DMAChannelRegs)) & 0xFFFFFFFFFFFFFFFFULL);
+    DMAChannelRegs *reg = (DMAChannelRegs *)((u32)REG_DMA_BASE +
+        channel * sizeof(DMAChannelRegs));
 
     reg->src = src;
     reg->dest = dest;

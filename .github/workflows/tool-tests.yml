@@ -1,0 +1,409 @@
+# Who tests the tools that nobody runs?
+#
+# `tools/` holds 63 `test_*.py` modules. Before this workflow, SIX of them ran in CI:
+# test_tiers (converted-ratchet.yml), test_check_dead_references (dead-references.yml),
+# test_check_header_offsets (header-offsets.yml), test_check_python_names
+# (python-names.yml), test_source_coverage (source-coverage.yml) and test_check_src_tu
+# (src-tu-refs.yml). The other 53 ran only when a human remembered to run them.
+#
+# That is the same shape as every incident this repo keeps writing workflows about. A
+# gate's FAILURE branch is the one path a green run never exercises: no ROM build can
+# reach it, because these tools are not compiled into the ROM. src-tu-refs.yml exists
+# because #1643 broke 26 translation units while every byte gate stayed green, and the
+# only thing that noticed was a test suite a human had to run. This job runs 514 of
+# those assertions on every PR that touches `tools/` or `nearmiss/`, so the next one is
+# noticed by CI.
+#
+# WHAT THIS DOES NOT COVER, and why. Three groups are deliberately absent.
+#
+#   1. NEEDS THE TOOLCHAIN. mwccarm and the extracted ROM are not on a GitHub runner;
+#      they live on the private build box pr-validate.yml relays to. Re-measured against
+#      8f554bce3 in a tree exported with `git archive origin/main` -- no `extracted/`, no
+#      `tools/mwccarm/`, no `tools/bin/`, which is exactly what this job's checkout is:
+#      test_objisolate skips ALL 34 of its tests (the older note here said 32; the suite
+#      grew), and test_check_src_tu_compiles FAILS 8. Wiring those would buy a green that
+#      means nothing. Also absent for the same reason: test_build_pin, test_dtor_members,
+#      test_fdiff_version, test_gen_header, test_opnew_sizes, test_tubuild.
+#
+#      test_tubuild deserves its own sentence, because it is the worst of the shapes and
+#      it is easy to look at its numbers and conclude the opposite. Run under pytest in
+#      that toolchain-free tree it used to report "2 failed, 43 passed" -- which reads
+#      like a suite that is 95% wirable. It was not: fifteen of its tests opened with
+#      `if not _toolchain(): return`, and fourteen of those returns were bare, so those
+#      tests reported PASS having asserted nothing. A bare `return` guard is strictly
+#      worse than a skip: `pytest -rs` cannot see it and neither can a reviewer reading
+#      a green log.
+#
+#      All sixteen of those guards now `raise unittest.SkipTest(...)` instead, so the
+#      pytest split is honest -- the vacuous passes became named skips and the two real
+#      failures stayed (`tubuild list` needs build/tu_map.json, which regenerates from
+#      the ROM and comes back empty without it). That does NOT make the module wirable,
+#      and the closing paragraph of this file used to imply it would. It has no
+#      `unittest.TestCase` at all, so `python -m unittest tools.test_tubuild` still finds
+#      zero tests; and a third of what it does have still compiles with mwccarm. Wiring
+#      it means converting 55 bare functions to methods, which is a change to the tests
+#      rather than to how they are invoked. Its three toolchain-free vtable-partition
+#      tests were moved out to test_tubuild_vtable_partitions instead -- see below.
+#
+#   2. NEEDS A PIP DEPENDENCY -- RESOLVED for the three modules added below, and that is
+#      what tools/requirements.txt now exists for. A bare runner has no pyelftools,
+#      capstone or ndspy. That import wall -- not the compiler -- is what stops most of
+#      `tools/` on a runner: 24 modules die on `No module named 'elftools'` alone
+#      (test_romdata_check, test_check_references, test_tu_config, test_reloc_audit_*,
+#      test_mangle, test_name_roundtrip, test_pr_linkcheck_*, test_objisolate, and more),
+#      test_swarm and test_worklist on capstone, test_bmg on ndspy.
+#
+#      The wall is TWO packages deep, not one, which is the part that had been guessed
+#      rather than measured. test_rombuild, test_tu_promote and test_tu_production reach
+#      elftools through objisolate.py; satisfying that alone only moves the failure to
+#      rombuild -> romdata_check -> linkcheck -> match -> capstone, and all three still
+#      die at collection. They need both, so requirements.txt pins both.
+#
+#      This does NOT generalise. The other 21 elftools modules were not re-measured with
+#      capstone installed and are not known to be wirable; several of them are in group 1
+#      as well. Adding one is a fresh measurement, not a corollary of this one.
+#
+#   3. PYTEST-ONLY, SO UNITTEST CANNOT SEE THEM. test_dead_references (24 tests) and
+#      test_pr_monitor (4) used to fail on a clean origin/main with ImportError -- they
+#      used bare `from check_dead_references import ...` / `from pr_monitor import ...`,
+#      which only resolves with `tools/` on sys.path. That import is fixed now (they
+#      carry the same `sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))`
+#      bootstrap that 38 other test modules in `tools/` already spell verbatim), but
+#      fixing it does NOT make them wirable: both are pytest-style -- bare
+#      `class TestX:` and bare `def test_*()`, no unittest.TestCase anywhere -- so
+#      `python -m unittest tools.test_dead_references` now prints "Ran 0 tests ... OK"
+#      and exits 0. Adding them to the list below would buy 28 tests' worth of nothing.
+#      They are two of the thirteen modules described in the next paragraph, and wiring
+#      them means converting them to TestCase classes, which is a real change to the
+#      tests rather than to how they are invoked.
+#
+# WHY THE LIST IS SPELLED OUT AND NOT A GLOB. `python -m unittest discover` would absorb
+# every future test_*.py automatically -- including one that needs mwccarm, which does
+# not fail on a runner but SELF-SKIPS, turning this job's green hollow with no diff to
+# review. There is a sharper version of the same trap already in the tree: thirteen of the
+# 63 modules are pytest-style bare functions with no unittest.TestCase, so
+# `python -m unittest tools.test_tubuild` prints "Ran 0 tests ... OK" and exits 0. That
+# is 186 test functions that a glob would have silently counted as passing. Three of
+# them -- test_build_pin, test_dtor_members, test_opnew_sizes -- also carry the
+# bare-`return` toolchain guard that reports PASS rather than SKIP when the compiler is
+# missing. (test_tubuild was the fourth; its sixteen guards are `unittest.SkipTest` now.)
+# An explicit list makes adding a module a reviewed decision.
+#
+# Nearly free: unittest over the working tree, no compiler, no ROM. It now costs one pip
+# step (two wheels, no build) and the network access that implies -- that is the whole
+# price of the three intact-TU modules. Measured at 5.3s for the 312 tests that predate
+# tools.test_premerge_check, on a runner-equivalent container (python:3.12, Linux,
+# none of the three inputs present); that module adds 87, timed at 9.7s on Windows.
+# The three modules added below cost no measurable wall time at all: on one Windows tree,
+# 435 tests in 46.5s before and 498 in 45.7s after -- inside the noise. On the runner
+# itself those 498 took 11.5s, plus about 1s for the two wheels (both are prebuilt;
+# nothing compiles). They are mock- and tempdir-based and touch neither the network nor
+# the tree.
+# The whole-suite timings are dominated by Windows filesystem overhead and do not
+# apply here -- test_tiers alone takes 71s on a Windows checkout and 1.3s on Linux.
+# test_symrecords needs none of the three inputs either: it reads only tracked text
+# (config/**/symbols.txt, symbols/verified.tsv) and imports nothing outside the stdlib.
+#
+# NINE SKIPS ARE EXPECTED and are honest ones that name their own reason: four in
+# test_stamp_provenance_verify ("needs extracted/ (ROM dump)", a real @skipUnless), two
+# in test_match_provenance ("no src samples"), and three in test_rombuild ("mwccarm not
+# present" -- its Retarget class, and only that class, compiles a real object). All nine
+# are @skipUnless with a stated reason, so `-v` shows them; none is a bare `return`.
+# test_premerge_check adds none on a runner with git installed, and test_symrecords,
+# test_nearmiss_db, test_tu_map, test_tu_promote, test_tu_production and
+# test_tubuild_owned_relocs add none anywhere.
+# 505 of the 514 assert something. test_tubuild_vtable_partitions adds four to both
+# halves of that -- all four assert and none skips -- but the 514 was measured in the
+# container and the +4 is arithmetic on it, not a re-measurement. On a Windows tree
+# WITH the toolchain the same 29 modules report 519 and three skips.
+# test_profile_reconstruction adds 11 assertions and no skips to that historical
+# baseline; its fixtures are the tracked pilot outputs and need no private inputs.
+name: tool tests
+
+on:
+  pull_request:
+    paths:
+      - "tools/**"
+      # nearmiss/** too, not just tools/**: test_nearmiss_db holds nearmiss/eval_pin.json
+      # to match.CANONICAL/DEFAULT_FLAGS and nearmiss_db.METRIC_REV, so the guard's whole
+      # job is to fail when the DB and the evaluator disagree -- and a PR that edits only
+      # nearmiss/db.jsonl, or DELETES eval_pin.json, matched neither filter and never ran
+      # it. update-chaos-data.yml rewrites db.jsonl on main, so that is a live path, not a
+      # hypothetical one. A missing check reads exactly like a passing one.
+      - "nearmiss/**"
+      - ".github/workflows/tool-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/**"
+      - "nearmiss/**"
+      - ".github/workflows/tool-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tool-tests-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history, like source-coverage.yml and header-offsets.yml. Several of
+          # these suites read git history rather than the working tree --
+          # test_attribution walks commits, test_validate_merge reads a committed merge,
+          # test_srcpath and test_bytegate resolve tracked paths -- and a shallow
+          # checkout makes those assert against a one-commit repository.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        # Pinned for the same reason python-names.yml pins pyflakes: a runner's default
+        # python moving under a gate that touched no Python is indistinguishable from a
+        # regression.
+        with:
+          python-version: "3.12"
+
+      - name: Pinned tool dependencies
+        # Every module in the list below except four is stdlib-only and would run without
+        # this step. test_rombuild, test_tu_promote and test_tu_production import
+        # rombuild.py, which reaches elftools (via objisolate) and capstone (via
+        # romdata_check -> linkcheck -> match); test_tubuild_owned_relocs imports
+        # tubuild.py, which reaches the same two by its own path. Without both wheels
+        # none of the four fails a test, they fail COLLECTION, which under
+        # `python -m unittest` is a loud error and not a silent zero. Versions live in tools/requirements.txt, not in this line, so a
+        # bump is a reviewable diff. `tools/**` already triggers this workflow, so editing
+        # that file re-runs the job that depends on it.
+        run: pip install -r tools/requirements.txt
+
+      - name: The tools' own tests
+        # ONE unittest invocation, so a single "Ran N tests" line in the log is the
+        # whole claim and a module that stops contributing tests is visible as a drop in
+        # N. Enumerated on purpose -- see the header. Test counts below are from a
+        # toolchain-free python:3.12 container; they are the number to compare against
+        # if this job's total ever moves without a module being added or removed here.
+        run: |
+          python -m unittest -v \
+            tools.test_affected_src \
+            tools.test_asm_policy \
+            tools.test_asset_catalog \
+            tools.test_attribution \
+            tools.test_bytegate \
+            tools.test_check_data_definitions \
+            tools.test_cpp_rename_verify \
+            tools.test_delaunder \
+            tools.test_enroll \
+            tools.test_layout \
+            tools.test_match_attempts \
+            tools.test_match_provenance \
+            tools.test_message_bank \
+            tools.test_nearmiss_db \
+            tools.test_premerge_check \
+            tools.test_profile_reconstruction \
+            tools.test_progress \
+            tools.test_rombuild \
+            tools.test_rombuild_cache \
+            tools.test_rombuild_check \
+            tools.test_rombuild_profile \
+            tools.test_sinit_owners \
+            tools.test_srcpath \
+            tools.test_stamp_provenance_verify \
+            tools.test_symrecords \
+            tools.test_tu_map \
+            tools.test_tu_production \
+            tools.test_tu_promote \
+            tools.test_tubuild_owned_relocs \
+            tools.test_tubuild_vtable_partitions \
+            tools.test_validate_merge
+
+# What each module protects, in the order it runs above:
+#
+#   test_affected_src            (1)   affected_src.py -- which src/ files a changed
+#                                      local header drags into the validation compile.
+#   test_asm_policy             (14)   asm_policy.py -- the one shared answer to "is this
+#                                      an asm transcription?". Guards the VACUOUS match.
+#   test_asset_catalog          (10)   asset_catalog.py -- NitroFS catalog build, the
+#                                      source references into it, and `resolve`, which
+#                                      must read an integer as a runtime handle and
+#                                      never as a NitroFS file ID.
+#   test_attribution            (17)   chaos_db_ci.py -- rebuilds chaos-db.json from
+#                                      COMMITTED history; the credit data the site reads.
+#   test_bytegate               (23)   bytegate.py -- the byte-gate-failure half of the
+#                                      matched test, over layout_check/relocs/srcpath,
+#                                      plus is_zero_size_alias, which decides whether a
+#                                      symbol is in the published DENOMINATOR at all.
+#   test_check_data_definitions  (3)   check_data_definitions.py -- WHICH objects the
+#                                      gate scans. It globbed only build/src/, which
+#                                      eligible.py never writes, so it skipped silently.
+#   test_cpp_rename_verify      (16)   cpp_rename.py -- func_ADDR -> demangled _ZN name
+#                                      renames. A wrong substitution here is silent.
+#   test_delaunder              (25)   delaunder.py -- removing launder idioms one site
+#                                      at a time, each verified against the ROM.
+#   test_enroll                 (11)   enroll.py -- writes src/ entries into
+#                                      config/**/delinks.txt; a bad entry fails closed
+#                                      TREE-WIDE, blocking every module's build.
+#   test_layout                 (11)   layout_check.py -- the invariants that make src/
+#                                      trustworthy; L1 is the one the ROM build cannot
+#                                      catch.
+#   test_match_attempts         (10)   match_attempts.py -- append-only log of every
+#                                      matching attempt.
+#   test_match_provenance       (20)   match_provenance.py -- the durable how-record and
+#                                      ledger behind every banked match. (2 skip)
+#   test_message_bank            (5)   message_bank.py -- message-bank export/rebuild
+#                                      must round-trip to the exact original bytes.
+#   test_nearmiss_db            (21)   nearmiss_db.py -- the persistent near-miss DB, so
+#                                      close attempts are never thrown away, plus the
+#                                      eval-pin guard: stored divergences are only
+#                                      comparable while their evaluator still exists.
+#   test_premerge_check         (87)   premerge_check.py -- runs the static gates on
+#                                      the git merge-tree RESULT, the one tree no CI
+#                                      job ever builds. Pure functions over verdict
+#                                      dicts and a stubbed main(); four honest
+#                                      skipTests need a git binary.
+#   test_profile_reconstruction (14)   profile_reconstruction.py -- preserves the
+#                                      profile/class namespace split, actor/base layout
+#                                      distinction, overlay-address rejection, and the
+#                                      dry-run-only policy for ambiguous factory names.
+#   test_progress                (5)   progress.py -- matched functions/bytes vs the
+#                                      whole game; the number the README reports, both
+#                                      halves of the fraction.
+#   test_rombuild               (37)   rombuild.py -- the source-to-ROM build itself:
+#                                      intact-TU policy resolution, per-file verdicts and
+#                                      the `.init` retargeting that decides which `.text`
+#                                      section dsd's `File.o(.init)` selector lands on.
+#                                      34 of the 37 are mock/tempdir tests that need no
+#                                      compiler; the other 3 are the Retarget class, which
+#                                      compiles a real object and @skipUnless-es itself
+#                                      with "mwccarm not present". CI gets 34. (3 skip)
+#   test_rombuild_cache         (19)   rombuild_cache.py -- the content-addressed object
+#                                      cache. A stale-key bug here silently serves the
+#                                      WRONG object into a byte-gate run.
+#   test_rombuild_check          (9)   rombuild_check.py -- turns a source-built ROM into
+#                                      the fidelity metrics every gate quotes, including
+#                                      the diagnostic row a source-owned NON-.text claim
+#                                      gets when it mismatches. That case is why this
+#                                      module gained 3 tests. It used to be the only
+#                                      intact-TU suite a bare runner could execute,
+#                                      because it imports enroll and srcpath and nothing
+#                                      that reaches elftools; with tools/requirements.txt
+#                                      installed it is one of four.
+#   test_rombuild_profile        (6)   rombuild_profile.py -- isolated stock and
+#                                      intentional-mod build configs.
+#   test_sinit_owners            (9)   sinit_owners.py -- ranks the likely original TU
+#                                      owner of each __sinit_*.
+#   test_srcpath                (47)   srcpath.py -- the one place that answers "where
+#                                      does symbol X live in src/". Everything downstream
+#                                      of enrollment trusts it.
+#   test_stamp_provenance_verify(19)   stamp_provenance.py -- requires, verifies and
+#                                      records the provenance of a match. (4 skip)
+#   test_symrecords             (24)   symrecords.py -- the address join between
+#                                      config/**/symbols.txt and symbols/verified.tsv,
+#                                      and the classifier that decides which mirror rows
+#                                      may be restamped. A verdict wrongly called
+#                                      mechanical would launder a wrong-identity pair
+#                                      straight into the mirror.
+#   test_tu_map                 (10)   tu_map.py -- the call-graph-plus-adjacency
+#                                      partition of every module into translation units.
+#                                      A single caller-cluster is NOT proof of internal
+#                                      linkage, so #2082 made a stray function have to
+#                                      ABUT the cluster that absorbs it. The reason this
+#                                      needs a gate: tu_config.attribute_text claims
+#                                      `.text` from these spans UNCONDITIONALLY -- every
+#                                      other section it attributes is fail-closed -- so a
+#                                      span inflated over a function that does not belong
+#                                      to the TU reaches a generator with nothing
+#                                      downstream able to notice. On the parent commit 6
+#                                      of these 10 fail, which is what makes them a
+#                                      bracket rather than a description. Pure stdlib: it
+#                                      imports tu_map and nothing else, builds its
+#                                      fixtures in-process, and needs no ROM, no
+#                                      compiler, no config/, no build/ and no git. 10 of
+#                                      10 run in CI, none skips, 0.000s.
+#   test_tu_production          (17)   tu_production.py -- the intact-object production
+#                                      route added by #2054, and the stock/ROM-gap control
+#                                      that decides whether a produced object may stand in
+#                                      for the cartridge's. Pure mock and tempdir; needs no
+#                                      compiler, no ROM and no git. 17 of 17 run in CI.
+#   test_tu_promote              (9)   tu_promote.py -- TU promotion, including the
+#                                      per-member scoring #2052 changed and the baseline
+#                                      self-contradiction check #2053 added. Promotion
+#                                      dilutes the CONVERTED tier, so a scoring bug here
+#                                      moves a published number with nothing else
+#                                      noticing. Pure mock; 9 of 9 run in CI.
+#   test_tubuild_owned_relocs    (6)   tubuild.verify_owned_sections' non-text
+#                                      relocation verdict ladder -- specifically the
+#                                      fail-closed `else None` #2059 added for a
+#                                      normalized undefined `_ZTV` import whose manifest
+#                                      addend is BELOW the two-word ABI preamble, and
+#                                      both clauses of the WRONG-DEST conjunction. It
+#                                      stubs `section_contribution` (the only part of
+#                                      that function that parses ELF) and drives the
+#                                      real verifier over a hand-written layout of the
+#                                      documented shape, so it needs no compiler, no
+#                                      ROM, no config/ and no build/. 6 of 6 run in CI,
+#                                      none skips. It exists as its own module rather
+#                                      than as more of test_tubuild.py for the reason
+#                                      spelled out in group 3 of the header: that file
+#                                      contributes zero tests to `python -m unittest`,
+#                                      and the assertions it already has for this code
+#                                      sit behind `if not _toolchain(): return`.
+#                                      Mutation-checked, all six against the whole of
+#                                      test_tubuild.py running WITH the pinned compiler
+#                                      present: `else None` -> `else 0` and
+#                                      -> `else expected_addend` and dropping
+#                                      `expected["target_address"] != cfg[1]` each leave
+#                                      46/46 of that suite green and are each caught
+#                                      here; dropping the candidate-side
+#                                      `cand_addr != expected["target_address"]` is
+#                                      likewise caught here alone; `>=` -> `>` and
+#                                      disabling the normalized bias are caught by both.
+#   test_tubuild_vtable_partitions
+#                                (4)   tubuild's vtable-partition licensing boundary --
+#                                      the fail-closed path #2091 added, which refuses a
+#                                      manifest-declared symbol carved out of a vtable's
+#                                      public range unless `partition_vtable_rebiases`
+#                                      independently validated it against content-bound
+#                                      baseline ELF metadata. Three of the four are
+#                                      #2091's own tests, moved verbatim out of
+#                                      test_tubuild.py (bodies unchanged; `def f():` to
+#                                      `def f(self):` and one indent) because that file
+#                                      contributes zero tests to `python -m unittest`.
+#                                      Mock- and dict-driven: no compiler, no ROM, no
+#                                      config/ and no build/. 4 of 4 run in CI, none
+#                                      skips.
+#                                      WHY IT MATTERS NOW: measured on #2091's merge
+#                                      tree, that boundary licensed nothing at all -- 0
+#                                      of 97 manifest entries, 0 `partition_symbols` rows
+#                                      tree-wide -- and #2096 introduces the first two
+#                                      that have ever existed. It goes from unexercised
+#                                      to load-bearing in one PR.
+#                                      The fourth test is new and pins the invariant that
+#                                      is easiest to re-break: licensing compares
+#                                      `sectionIndex`, never section NAMES, because a
+#                                      linked ELF names a vtable's output section after
+#                                      its overlay (OV036/OV047/OV070 measured on the
+#                                      baseline link) while a manifest section is one of
+#                                      .rodata/.init/.ctor/.data/.bss. Comparing them
+#                                      refuses every real input, which is what made the
+#                                      whole path unreachable; 0b0e319 removed exactly
+#                                      that comparison. Mutation-checked both ways:
+#                                      deleting the `sectionIndex` equality is caught by
+#                                      the new test, and restoring the section-name
+#                                      comparison is caught by it and by the moved
+#                                      licensing test.
+#   test_validate_merge         (35)   validate_merge.py -- builds the machine-readable
+#                                      PR validation report the validator comment renders.
+#
+# The two suites this list still refuses, and the number that says why. test_objisolate
+# is one `@unittest.skipUnless(_compiler(), "mwccarm not present")` class and nothing
+# else, so on a runner it contributes 35 tests and 35 skips -- a green that asserts
+# nothing, which is the exact shape the header refuses a glob for. Adding it would still
+# catch a collection error in objisolate.py; that is not worth a hollow green, so it
+# stays out until its fixtures stop needing mwcc. test_tubuild has no
+# `unittest.TestCase`, so `python -m unittest` finds 0 of its 55 tests; its guards are
+# honest skips now, but that was never the binding constraint. Neither
+# test_tubuild_owned_relocs nor test_tubuild_vtable_partitions is a step toward wiring
+# test_tubuild: both are separate modules precisely so that adding them did not require
+# relaxing that refusal.

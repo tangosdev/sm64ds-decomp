@@ -6,7 +6,19 @@
 struct Player {
     void Hurt(const Vector3&, unsigned int, int, unsigned int, unsigned int, unsigned int);
 };
-namespace Particle { struct System { static void NewSimple(unsigned int, int, int, int); }; }
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *, const Vector3&, unsigned int, int, unsigned int, unsigned int, unsigned int);
+
+namespace Particle { struct System { static void NewSimple(unsigned int, int, int, int); };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
+ }
 extern "C" short ReadUnalignedShort(unsigned char* p);
 extern "C" void Vec3_RotateYAndTranslate(Vector3* out, const Vector3* base, int angle, const Vector3* off);
 
@@ -23,7 +35,7 @@ int func_ov002_020bd250(char* self, unsigned char* p) {
     v.x = out1.x;
     v.y = out1.y;
     v.z = out1.z;
-    ((Player*)self)->Hurt(v, 0, 0xc000, 1, 0, 1);
+    _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj((Player*)self, v, 0, 0xc000, 1, 0, 1);
     *(int*)(self + 0xa8) = 0x20000;
     *(int*)(self + 0x98) = 0xc000;
     if (*(int*)(self + 8) == 1) {
@@ -31,8 +43,8 @@ int func_ov002_020bd250(char* self, unsigned char* p) {
         off2.y = 0x64000;
         off2.z = 0x32000;
         Vec3_RotateYAndTranslate(&out2, (Vector3*)(self + 0x5c), *(short*)(self + 0x8e), &off2);
-        Particle::System::NewSimple(0x43, out2.x, out2.y, out2.z);
-        Particle::System::NewSimple(0x44, out2.x, out2.y, out2.z);
+        Particle::_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, out2.x, out2.y, out2.z);
+        Particle::_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, out2.x, out2.y, out2.z);
     }
     return 1;
 }

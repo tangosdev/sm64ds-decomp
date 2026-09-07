@@ -20,7 +20,7 @@ int ShadowModel::DoSetFile(char *file, int a, int b)
         for (i = 0; i < n; i++) {
             /* (long long)(int) launder: keep the ROM's materialized
                address for the read-modify-write. */
-            *(u32 *)(((long long)(int)&mat->flags)) |= 0x8000;
+            *(u32 *)(&mat->flags) |= 0x8000;
             mat = (BMD_Material *)((char *)mat + 0x30);
         }
     }

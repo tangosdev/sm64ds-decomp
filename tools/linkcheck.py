@@ -53,19 +53,16 @@ import match as M            # noqa: E402
 import reloc_audit as RA     # noqa: E402
 import modules as MOD        # noqa: E402
 
-def _rel_section_for(elf, shndx):
-    """The relocation section that applies to section `shndx`, matched by sh_info.
-
-    Do NOT look this up by name. mwccarm emits ONE section per function and names them all
-    ".text", so `get_section_by_name(".rel.text")` returns whichever came first in the file -
-    some other function's relocations. Any TU that defines several functions (a C++ class with
-    D0/D1/D2 plus its this-adjusting thunks emits five) then gets its slots resolved against
-    the wrong table, which reads as a confident WRONG on a source that is actually correct.
-    sh_info is the only reliable link from a reloc section to the section it patches."""
-    for sec in elf.iter_sections():
-        if sec.header["sh_type"] in ("SHT_REL", "SHT_RELA") and sec.header["sh_info"] == shndx:
-            return sec
-    return None
+# The relocation section that applies to a given section index, matched by sh_info.
+# Do NOT look this up by name: mwccarm emits ONE section per function and names them all
+# ".text", so ".rel.text" is ambiguous and the name lookup answers with the last section
+# of that name -- one fixed function's relocations, whichever function was asked about.
+# Any TU that defines several functions (a C++ class with D0/D1/D2 plus its this-adjusting
+# thunks emits five) then gets its slots resolved against another function's table, which
+# reads as a confident WRONG on a source that is actually correct.
+# sh_info is the only reliable link from a reloc section to the section it patches.
+# Lived here first; now shared with reloc_audit, which had the by-name bug.
+_rel_section_for = RA.rel_section_for
 
 
 # ARM relocation types we know how to link.
@@ -136,6 +133,31 @@ def is_interwork(rom_word, rom_t, cand_t):
     return (rom_word >> 24) in (0xfa, 0xfb) and cand_t is not None and rom_t == cand_t
 
 
+def is_thumb_pointer(rtype, rom_t, cand_t):
+    """True if the ROM slot is a DATA word holding a Thumb function pointer.
+
+    Taking the address of a Thumb function yields ``addr | 1``. Bit 0 is the state
+    bit ``bx``/``blx`` reads, not part of the address, and ``symbols.txt`` names the
+    function at its even address -- so a correct source naming that symbol produces a
+    slot the linker fills with ``addr | 1``, and the raw comparison is off by one.
+
+    ``is_interwork`` above covers the CALL form, a BL the linker rewrote to BLX. This
+    is the literal-pool form -- ``ldr ip, [pc]; bx ip; .word addr|1`` -- which is
+    R_ARM_ABS32 and so never reaches that check.
+
+    Safe because ARM instructions are 4-byte aligned and Thumb 2-byte aligned, so no
+    genuine function address ever carries bit 0. ``rom_t == cand_t | 1`` with an even
+    candidate identifies this case uniquely; every other divergence still reports
+    WRONG.
+
+    Proven on func_0203c178 (arm9 0x0203c178), a veneer whose literal is 0x020527e9
+    for the Thumb symbol func_020527e8: enrolling that range and building the ROM
+    reproduces the cartridge byte for byte while this check called it WRONG.
+    """
+    return (rtype == R_ARM_ABS32 and cand_t is not None
+            and cand_t % 2 == 0 and rom_t == (cand_t | 1))
+
+
 def is_benign(rom_t, cand_t, prefer):
     """True if the ROM target is a veneer to cand_t, or a byte-identical twin of it."""
     if cand_t is None:
@@ -163,7 +185,8 @@ def func_relocs_typed(obj, func, name_index):
     elf = ELFFile(io.BytesIO(obj))
     symtab = elf.get_section_by_name(".symtab")
     syms = list(symtab.iter_symbols())
-    sym = next((s for s in syms if s.name == func), None)
+    sym = next((s for s in syms if s.name == func
+                and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")), None)
     if sym is None:
         return None
     sec = elf.get_section(sym["st_shndx"])
@@ -258,7 +281,8 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
             if rl is not None:
                 rt = rom_target(target, i, rl["type"], addr)
                 rw = int.from_bytes(target[i:i + 4], "little")
-                if is_benign(rt, rl["addr"], prefer) or is_interwork(rw, rt, rl["addr"]):
+                if (is_benign(rt, rl["addr"], prefer) or is_interwork(rw, rt, rl["addr"])
+                        or is_thumb_pointer(rl["type"], rt, rl["addr"])):
                     benign += 1
                     continue
             tgt = (rl["addr"] + rl.get("add", 0)) & 0xFFFFFFFF if rl and rl["addr"] is not None else None

@@ -15,7 +15,7 @@ struct O {
 
 extern "C" {
 extern void func_ov007_020c78dc(void* o);
-extern void _ZN6Player17St_EndingFly_MainEv(void* o);
+extern void func_ov007_020c3d1c(void* o);
 extern void func_ov007_020c8098(void* o);
 extern void func_ov007_020c2bf8(void* o);
 }
@@ -24,15 +24,15 @@ extern "C" void func_ov007_020c6d90(struct O* c, int idx)
 {
     if (c->f38[idx] == 0) return;
     func_ov007_020c78dc(c->f3c[idx]);
-    _ZN6Player17St_EndingFly_MainEv(c->f28[idx]);
-    _ZN6Player17St_EndingFly_MainEv(c->f2c[idx]);
+    func_ov007_020c3d1c(c->f28[idx]);
+    func_ov007_020c3d1c(c->f2c[idx]);
     {
         int i;
         for (i = 0; i < c->f38[idx]->f8; i++)
             func_ov007_020c8098(c->f34[idx][i]);
     }
     func_ov007_020c2bf8(c->f38[idx]);
-    _ZN6Player17St_EndingFly_MainEv(c->f34[idx]);
+    func_ov007_020c3d1c(c->f34[idx]);
     func_ov007_020c8098(c->f40[idx]);
     func_ov007_020c8098(c->f44[idx]);
     c->f38[idx] = 0;

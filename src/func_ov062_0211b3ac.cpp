@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 struct PathPtr { int a, b; };
-extern "C" void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern "C" void _ZN7PathPtrC1Ev(PathPtr* self);
 extern "C" void _ZN7PathPtr6FromIDEj(PathPtr* self, u32 id);
 extern "C" void _ZNK7PathPtr7GetNodeER7Vector3j(PathPtr* self, Vector3* v, u32 i);
@@ -22,14 +22,14 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     int bestDist;
 
     {
-        int *ctr = (int *)(((long long)(int)(sl + 0x460)));
+        int *ctr = (int *)(sl + 0x460);
         *ctr = *ctr + 1;
         *ctr = *ctr & 7;
     }
     if (*(int *)(sl + 0x460) != 0)
         return 0;
 
-    player = (char*)_ZN5Actor13ClosestPlayerEv(sl);
+    player = (char*)_ZN8dActor_c13ClosestPlayerEv(sl);
     _ZN7PathPtrC1Ev(&path);
     _ZN7PathPtr6FromIDEj(&path, *(u32*)(sl + 0x464));
 
@@ -38,7 +38,7 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     best.x = bestIdx; best.y = bestIdx; best.z = bestIdx;
 
     if (player != 0) {
-        int *pp = (int *)(((long long)(int)(player + 0x5c)));
+        int *pp = (int *)(player + 0x5c);
         ppos.x = *pp;
         i = bestIdx;
         ppos.y = pp[1];

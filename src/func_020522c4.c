@@ -25,7 +25,7 @@ void func_020522c4(void)
                     if (*(int *)(r + 0xf8) != 0) {
                         func_0204ffcc(r);
                         {
-                            int *flagsp = (int *)(((long long)(int)(r + 0xf0)));
+                            int *flagsp = (int *)(r + 0xf0);
                             *flagsp |= 2;
                             *flagsp &= ~4;
                         }

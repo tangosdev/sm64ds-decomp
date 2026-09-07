@@ -1,5 +1,6 @@
 //cpp
 #pragma opt_propagation off
+#include "Dorrie.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 
@@ -8,8 +9,8 @@ extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int Vec3_HorzDist(void* a, void* b);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern int AngleDiff(int a, int b);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* p);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* p);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern void _ZN9Animation7AdvanceEv(void* p);
 extern void func_ov065_02118cc4(char* c);
 extern void func_ov065_02118838(char* c);
@@ -18,11 +19,6 @@ extern void func_ov065_02118248(char* c);
 extern PMF data_ov065_0211d7fc[];
 extern short data_02082214[];
 }
-
-class Dorrie {
-public:
-    int Behavior();
-};
 
 int Dorrie::Behavior()
 {
@@ -72,8 +68,8 @@ int Dorrie::Behavior()
             - (int)(((long long)thr * data_02082214[(*(unsigned short*)(c + 0x11a4) >> 4) * 2 + 1] + 0x800) >> 12);
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0xf50);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0xf50);
     *(int*)(c + 0x60) = *(int*)(c + 0x1198) - *(int*)(c + 0x11ac) - *(int*)(c + 0x11a8);
     _ZN9Animation7AdvanceEv(c + 0x13c);
     func_ov065_02118cc4(c);

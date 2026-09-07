@@ -1,10 +1,10 @@
-struct Actor;
+struct dActor_c;
 
 extern int data_02086ed8[3];
 extern int func_02007cec(int a, int b, int c);
 extern void _Z14ApproachLinearRiii(int *p, int value, int speed);
 
-int func_020073a0(struct Actor *actor)
+int func_020073a0(struct dActor_c *actor)
 {
     int stackbuf[3];
     stackbuf[0] = data_02086ed8[0];

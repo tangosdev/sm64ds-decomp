@@ -1,28 +1,40 @@
-#include "types.h"
+//cpp
+// @symbol func_ov006_020f1a70
+/* dScMgLuigi_c per-slot mover, ov006 0x020f1a70 (296 bytes). A slot that has not started is armed at phase 0x4000 or 0xc000 from unk_51ed[idx & 7].
+ * A running slot adds one sine/cosine step (data_02082214, indexed by the
+ * slot's phase) scaled by its speed-level entry to mPosX/mPosY, then wraps
+ * through func_ov006_020f1dbc.
+ *
+ * Plain member access on the class header is the match under 2004/b56: the
+ * twice-read mMovePhase[idx] takes the `this + idx*2 + 0x4f00` base with a
+ * #0x7c offset as a compiler temp, and the two RMWs take the pool-loaded array
+ * base with the scaled index. The raw char* form this replaces pooled 0x4f7c
+ * whole (+8 bytes) and, once that was fixed by hand, still swapped the r4/ip
+ * pair in the second update. */
+#include "dScMgLuigi_c.h"
+
+extern "C" {
+extern void func_ov006_020f1dbc(void *self, int idx);
 extern int data_ov006_0212e858[];
 extern s16 data_02082214[];
+}
 
-void func_ov006_020f1dbc(char* c, int i);
-
-void func_ov006_020f1a70(char* c, int i) {
-    u8* counter = (u8*)(c + 0x5275);
-    if (counter[i] == 0) {
-        counter[i]++;
-        if (*(u8*)(c + (i & 7) + 0x51ed) != 0) {
-            *(u16*)(c + i * 2 + 0x4f7c) = 0x4000;
+extern "C" void func_ov006_020f1a70(dScMgLuigi_c *self, int idx)
+{
+    if (self->mStarted[idx] == 0) {
+        self->mStarted[idx]++;
+        if (self->unk_51ed[idx & 7] != 0) {
+            self->mMovePhase[idx] = 0x4000;
         } else {
-            *(u16*)(c + i * 2 + 0x4f7c) = 0xc000;
+            self->mMovePhase[idx] = 0xc000;
         }
         return;
     }
     {
-        u8* spd = (u8*)(c + 0x5365);
-        int* xs = (int*)(c + 0x47f8);
-        int* ys = (int*)(c + 0x49d8);
-        int a = (int)*(u16*)(c + i * 2 + 0x4f7c) >> 4;
-        xs[i] = xs[i] + (int)(((s64)data_02082214[a * 2 + 1] * data_ov006_0212e858[spd[i]] + 0x800) >> 12);
-        a = (int)*(u16*)(c + i * 2 + 0x4f7c) >> 4;
-        ys[i] = ys[i] + (int)(((s64)data_02082214[a * 2] * data_ov006_0212e858[spd[i]] + 0x800) >> 12);
+        int a = self->mMovePhase[idx] >> 4;
+        self->mPosX[idx] = self->mPosX[idx] + (s32)(((s64)data_02082214[a * 2 + 1] * data_ov006_0212e858[self->mSpeedLevel[idx]] + 0x800) >> 12);
+        a = self->mMovePhase[idx] >> 4;
+        self->mPosY[idx] = self->mPosY[idx] + (s32)(((s64)data_02082214[a * 2] * data_ov006_0212e858[self->mSpeedLevel[idx]] + 0x800) >> 12);
     }
-    func_ov006_020f1dbc(c, i);
+    func_ov006_020f1dbc(self, idx);
 }

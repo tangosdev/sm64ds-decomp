@@ -1,22 +1,26 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class HeapAllocator: 2 matched functions, 3 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Reconstructed from HeapAllocator's constructor and iterator methods. */
 #ifndef HEAPALLOCATOR_H
 #define HEAPALLOCATOR_H
 #include "types.h"
+#include "NestedHeapIterator.h"
 
 struct HeapAllocator {
-    u8  pad_000[0x18];
-    u8  unk_018;            /* 0x018 */
-    u8  pad_019[0x3];
-    u8  unk_01c;            /* 0x01c */
-    u8  pad_01d[0x3];
-    u32 unk_020;            /* 0x020 */
+    u32 mMagic;                    /* 0x000 */
+    HeapAllocator* mPrevious;     /* 0x004 */
+    HeapAllocator* mNext;         /* 0x008 */
+    NestedHeapIterator mChildren; /* 0x00c */
+    void* mStart;                 /* 0x018 */
+    void* mEnd;                   /* 0x01c */
+    u32 mFlags;                   /* 0x020 */
 #ifdef __cplusplus
-    /* methods */
+    HeapAllocator() {}
+
     void Remove();
+    void Destroy();
 #endif
 };
+
+typedef char HeapAllocator_size_must_be_0x24[
+    sizeof(struct HeapAllocator) == 0x24 ? 1 : -1];
 
 #endif

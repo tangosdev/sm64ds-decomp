@@ -1,0 +1,351 @@
+{
+  "id": "ov070/daKrpa_c",
+  "module": "ov070",
+  "source": "src/game/actors/d_a_krpa.cpp",
+  "promoted_source": "src/game/actors/d_a_krpa.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x2121118..0x2121b48, 25 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daKrpa_c",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02121118",
+      "end": "0x02121b48"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN8daKrpa_cD1Ev",
+      "address": "0x02121118",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN8daKrpa_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN8daKrpa_cD0Ev",
+      "address": "0x02121160",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN8daKrpa_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN8daKrpa_c13OnYoshiTryEatEv",
+      "address": "0x021211bc",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN8daKrpa_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov070_021211c4",
+      "address": "0x021211c4",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov070_021211c4.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov070_02121298",
+      "address": "0x02121298",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov070_02121298.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov070_02121310",
+      "address": "0x02121310",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov070_02121310.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov070_021213cc",
+      "address": "0x021213cc",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov070_021213cc.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov070_02121438",
+      "address": "0x02121438",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov070_02121438.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov070_021214f8",
+      "address": "0x021214f8",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov070_021214f8.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov070_02121548",
+      "address": "0x02121548",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov070_02121548.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov070_0212156c",
+      "address": "0x0212156c",
+      "size": "0x0000014c",
+      "legacy_source": "src/func_ov070_0212156c.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov070_021216b8",
+      "address": "0x021216b8",
+      "size": "0x00000058",
+      "legacy_source": "src/func_ov070_021216b8.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov070_02121710",
+      "address": "0x02121710",
+      "size": "0x0000009c",
+      "legacy_source": "src/func_ov070_02121710.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov070_021217ac",
+      "address": "0x021217ac",
+      "size": "0x00000060",
+      "legacy_source": "src/func_ov070_021217ac.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov070_0212180c",
+      "address": "0x0212180c",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov070_0212180c.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov070_02121848",
+      "address": "0x02121848",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov070_02121848.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov070_02121880",
+      "address": "0x02121880",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov070_02121880.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN8daKrpa_c16CleanupResourcesEv",
+      "address": "0x0212189c",
+      "size": "0x00000024",
+      "legacy_source": "src/_ZN8daKrpa_c16CleanupResourcesEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN8daKrpa_c16OnPendingDestroyEv",
+      "address": "0x021218c0",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN8daKrpa_c16OnPendingDestroyEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN8daKrpa_c6RenderEv",
+      "address": "0x021218c4",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN8daKrpa_c6RenderEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN8daKrpa_c8BehaviorEv",
+      "address": "0x021218f4",
+      "size": "0x00000020",
+      "legacy_source": "src/_ZN8daKrpa_c8BehaviorEv.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN8daKrpa_c13InitResourcesEv",
+      "address": "0x02121914",
+      "size": "0x00000150",
+      "legacy_source": "src/_ZN8daKrpa_c13InitResourcesEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov070_02121a64",
+      "address": "0x02121a64",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov070_02121a64.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov070_02121ae0",
+      "address": "0x02121ae0",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov070_02121ae0.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "daKrpa_c_classInit",
+      "address": "0x02121af8",
+      "size": "0x00000050",
+      "legacy_source": "src/daKrpa_c_Spawn.c",
+      "ordinal": 24
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "The genuine Vector3 locals make mwcc emit the deliberately empty inline destructor as vague linkage. This object's copy is the exact four-byte `bx lr` body at its canonical arm9 home, and no surviving section references the discarded duplicate."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits inherited fBase_c typeinfo as vague linkage; romdata_check proves the copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits the inherited fBase_c type-name string as vague linkage; romdata_check proves its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits the inherited dBase_c type-name string as vague linkage; romdata_check proves its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits the inherited dActor_c type-name string as vague linkage; romdata_check proves its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS8daKrpa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov070",
+      "canonical_address": "0x02123334",
+      "reason": "The key-function TU emits daKrpa_c's ROM-named type string; romdata_check proves its exact bytes at the canonical ov070 home before text-only isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTI8daKrpa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov070",
+      "canonical_address": "0x02123340",
+      "reason": "The key-function TU emits daKrpa_c's single-inheritance typeinfo; romdata_check proves its ABI kind, name relocation, and dActor_c base link at the canonical ov070 home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits inherited dActor_c typeinfo as vague linkage; romdata_check proves the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits inherited dBase_c typeinfo as vague linkage; romdata_check proves the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "g_profile_KERONPA",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov070",
+      "canonical_address": "0x0212334c",
+      "reason": "The source reconstructs the 0x1c actor/process profile descriptor with its sole relocation to daKrpa_c_classInit and exact profile/order, flag, and culling words; romdata_check proves all emitted bytes at its ov070 home."
+    },
+    {
+      "symbol": "_ZTV8daKrpa_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov070",
+      "canonical_address": "0x02123370",
+      "reason": "The key-function TU emits the full daKrpa_c vtable storage; romdata_check applies the 8-byte ABI address-point bias and proves all 31 retail slots before text-only isolation discards it."
+    }
+  ],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: this TU began as a hand-assembled reverse-ROM-order concatenation because tubuild create refused the extern-C-wrapped legacy bodies; it has since been reconstructed around the genuine daKrpa_c class and typed owned subobjects.",
+    "25/25 MATCH, objisolate clean, reloc-destinations clean. Natural `new daKrpa_c` was rejected because it relocates to unresolved `_Znwm`; the typed actor-table factory explicitly retains retail `_ZN7fBase_cnwEj` plus the proven base/member constructors and vptr store. The inline virtual destructor makes mwcc emit retail D1 then D0 with no D2. Real Vector3 locals deliberately emit their exact canonical empty destructor duplicate, and the source emits the exact actor descriptor, RTTI, and complete vtable; every discarded object is fail-closed through a canonical-home policy in this text-only manifest.",
+    "daKrpa_c_classInit and g_profile_KERONPA are reconstructed source-style names: SM64DS proves the daKrpa_c RTTI identity, KERONPA registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were FlameChomp_Spawn, daKrpa_c_Spawn, and daKrpa_c_SpawnInfo."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov070-daKrpa_c/daKrpa_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 25,
+    "functions_declared": 25,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        42
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daKrpa_c",
+        "_ZTI8daKrpa_c",
+        "_ZTI8dActor_c",
+        "_ZTI7dBase_c",
+        "g_profile_KERONPA",
+        "_ZTV8daKrpa_c"
+      ],
+      "dataExternalized": [
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI8daKrpa_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTS8daKrpa_c",
+        "_ZTV8daKrpa_c",
+        "g_profile_KERONPA"
+      ]
+    }
+  }
+}

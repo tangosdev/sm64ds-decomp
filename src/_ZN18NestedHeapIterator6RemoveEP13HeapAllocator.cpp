@@ -26,5 +26,5 @@ void NestedHeapIterator::Remove(HeapAllocator * node_)
     }
     *(void**)((char*)node + off) = 0;
     *(void**)((char*)node + off + 4) = 0;
-    *(u16 *)(((u32)((struct NHI*)this) + 8) & 0xFFFFFFFFFFFFFFFFULL) -= 1;
+    *(u16 *)((u32)((struct NHI*)this) + 8) -= 1;
 }

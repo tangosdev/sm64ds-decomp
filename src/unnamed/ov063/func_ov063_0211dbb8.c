@@ -5,7 +5,7 @@ extern void Vec3_Sub(Vec3* out, Vec3* a, Vec3* b);
 extern int LenVec3(Vec3* v);
 extern int func_ov063_0211dd84(int unused, int* c);
 extern void func_ov063_0211ddac(void* c, int i);
-extern void _ZN12CylinderClsn5ClearEv(void* self);
+extern void _ZN5dCc_c5ClearEv(void* self);
 
 extern unsigned char data_0209f21c;
 extern void* data_0209f394[];
@@ -59,7 +59,7 @@ void func_ov063_0211dbb8(char* self) {
         cc = self + 0x48c;
         for (j = 0; j < 2; j++) {
             *(int*)(self + (j << 6) + 0x490) = 0x9b000;
-            _ZN12CylinderClsn5ClearEv(cc);
+            _ZN5dCc_c5ClearEv(cc);
             cc += 0x40;
         }
     }

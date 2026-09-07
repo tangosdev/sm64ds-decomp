@@ -19,7 +19,7 @@ void func_020417d0(char *p)
         return;
     case 9:
         if (*(u32 *)g == 0) return;
-        *(u32 *)(((s32)base + 0x2718) & 0xFFFFFFFFFFFFFFFFull) &= ~(1 << *(u16 *)(p + 0x12));
+        *(u32 *)((s32)base + 0x2718) &= ~(1 << *(u16 *)(p + 0x12));
         return;
     case 0x15: {
         s32 r0 = *(s32 *)(p + 0xc);
@@ -27,7 +27,7 @@ void func_020417d0(char *p)
         if (*(u32 *)g != 0)
         {
             u32 bit = *(u16 *)(p + 0x12);
-            *(u32 *)(((s32)base + 0x2718) & 0xFFFFFFFFFFFFFFFFull) |= (1 << bit);
+            *(u32 *)((s32)base + 0x2718) |= (1 << bit);
             func_020650d8(r0, arg2, bit);
         }
         else

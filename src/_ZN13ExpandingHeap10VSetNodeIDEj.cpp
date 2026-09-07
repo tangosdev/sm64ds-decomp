@@ -1,27 +1,17 @@
 //cpp
-#include "types.h"
-/* ExpandingHeap::VSetNodeID(unsigned) at 0x0203c3f8 -- Heap vtable slot.
- * Forwards to the allocator (ExpandingHeapAllocator* at this+0x14). */
-class ExpandingHeapAllocator
-{
-public:
-    void SetNodeID(u32 id);
-};
+// @symbol _ZN13ExpandingHeap10VSetNodeIDEj
+/* ExpandingHeap::VSetNodeID(u32) at 0x0203c3f8 -- Heap vtable slot 13. Four
+ * instructions: load the allocator from this+0x14 and tail-call it.
+ *
+ * RETURN TYPE: u32, changed from void. The slot returns the PREVIOUS id --
+ * ExpandingHeapAllocator::SetNodeID is declared that way from its own body, and
+ * SolidHeap's override materializes `mov r0,#0' in eight bytes, which void
+ * cannot emit. This one is a pure tail call, so it byte-matches either way and
+ * could never have settled the question itself; it just has to agree. */
+#include "ExpandingHeap.h"
+#include "ExpandingHeapAllocator.h"
 
-class ExpandingHeap
+u32 ExpandingHeap::VSetNodeID(u32 id)
 {
-public:
-    u32 unk00;
-    u32 unk04;
-    u32 unk08;
-    u32 unk0c;
-    u32 unk10;
-    ExpandingHeapAllocator* allocator; /* 0x14 */
-
-    void VSetNodeID(u32 id);
-};
-
-void ExpandingHeap::VSetNodeID(u32 id)
-{
-    allocator->SetNodeID(id);
+    return allocator->SetNodeID(id);
 }

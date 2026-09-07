@@ -9,7 +9,7 @@ void func_ov006_020e5ffc(char *self)
   }
   if ((*((unsigned short *) ((self + 0x5500) + 0xb4))) != 0)
   {
-    *((unsigned short *) (((int)self + 0x55b4) & 0xFFFFFFFFFFFFFFFF)) -= 1;
+    *((unsigned short *) ((int)self + 0x55b4)) -= 1;
     if (*((short *) ((self + 0x5500) + 0xb4)) <= 0)
     {
       *((unsigned short *) ((self + 0x5500) + 0xb4)) = 0;
@@ -46,7 +46,7 @@ void func_ov006_020e5ffc(char *self)
     {
       _ZN5Sound12PlayBank2_2DEj(0x1d7);
     }
-    *((unsigned char *) (((int)self + 0x55ba) & 0xFFFFFFFFFFFFFFFF)) += 1;
+    *((unsigned char *) ((int)self + 0x55ba)) += 1;
     *((int *) (self + 0x5584)) = 0x80000;
     *((int *) (self + 0x5588)) = 0xb0000;
     *((unsigned char *) (self + 0x55b8)) = 0;

@@ -1,4 +1,4 @@
-extern int _ZN9ActorBase18MarkForDestructionEv(void*);
+extern int _ZN7fBase_c18MarkForDestructionEv(void*);
 void func_ov002_020b1a60(void* c) {
   {
     unsigned short* n = (unsigned short*)(((int)c + 0x3a8));
@@ -15,6 +15,6 @@ void func_ov002_020b1a60(void* c) {
     *g += 0xc8000;
   }
   if (*(unsigned short*)((char*)c+0x300+0xa8) < 0x41) return;
-  _ZN9ActorBase18MarkForDestructionEv(c);
+  _ZN7fBase_c18MarkForDestructionEv(c);
   *(unsigned short*)((char*)c+0x300+0xa8) = 0;
 }

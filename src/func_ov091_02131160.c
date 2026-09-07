@@ -1,6 +1,6 @@
 #include "types.h"
 extern void Matrix4x3_FromRotationY(void *m, s16 ang);
-extern int _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
+extern int _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
 extern s16 data_02082214[];
 
 struct V3 { int x, y, z; };
@@ -44,7 +44,7 @@ int func_ov091_02131160(char *c) {
     int s2 = data_02082214[(idx2 << 1) + 1];
     int fac = 0xa0000 - r5;
     if (s2 < 0) s2 = -s2;
-    return _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+    return _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         c, c + 0x320, c + 0x348, a_arg, h,
         (&v2.x)[b5c] + (int)(((long long)fac * s2 + 0x800) >> 12), 0xf);
 }

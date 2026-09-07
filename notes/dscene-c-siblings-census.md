@@ -1,0 +1,309 @@
+# dScene_c's eight unnamed children: vtable maps, so nobody re-derives them
+
+**Status:** mapped, not migrated. Nothing here renames or types anything.
+**Scope:** the eight of `dScene_c`'s ten direct children that have never had a
+single function named in this tree.
+**Provoked by:** migrating `Scene`/`Stage`/`BootScene` to real C++ (2026-08-11,
+branch `cpp/stage-slices`) and wanting to know what's left in the family before
+starting the next slice.
+
+**Update (2026-08-11, branch `cpp/dscmgbase-family`, PR #1396):** `dScMgBase_c`
+itself is now real -- `: Scene` base, D0/D1/D2 verified byte-exact (D2 stays the
+hand-written free function it already was; D0/D1 are real, inline-cascading,
+forcing-TU-emitted), and its 8 overridden slots (1, 2, 5, 6, 7, 9, 10, 12) are
+real methods. Its own D0 no longer carries the OnYoshiTryEat mislabel from §3
+below -- the file was rewritten from scratch, not patched. Its 15 direct / 32
+transitive descendants are NOT yet named; that's still open, see §2's own note
+on scope. `tools/check_header_offsets.py` gained a real fix in the same PR:
+it had never seen a header that declares its destructor/overrides BEFORE its
+fields (dScene_c.h's own convention) and silently reported "0 commented fields"
+for exactly that shape -- dScMgBase_c.h's ~30 real fields were invisible to it
+until fixed.
+
+---
+
+## 0. The ten, and where each one stands
+
+`dScene_c` has exactly ten direct RTTI-confirmed children (`tools/rtti_extract.py`,
+cross-checked against `include/dScene_c.h`'s own census comment):
+
+| class | vtable addr | module | status |
+|---|---|---|---|
+| `dScBoot_c` | 0x02091528 | [arm9](../config/arm9/symbols.txt) | **done** — `include/BootScene.h`, D0/D1 real |
+| `dScStage_c` | 0x020921c0 | [arm9](../config/arm9/symbols.txt) | **done** — `include/Stage.h`, D0/D1/methods real |
+| `dScMB_c` | 0x020943c4 | [arm9](../config/arm9/symbols.txt) | unnamed, 0 attributed functions |
+| `dScTitle_c` | 0x020b1650 | [ov003](../config/arm9/overlays/ov003/symbols.txt) | unnamed, 0 attributed functions |
+| `dScStarSel_c` | 0x020b1704 | [ov003](../config/arm9/overlays/ov003/symbols.txt) | unnamed, 0 attributed functions |
+| `dScGameOver_c` | 0x020b179c | [ov003](../config/arm9/overlays/ov003/symbols.txt) | unnamed, 0 attributed functions |
+| `dScMgBase_c` | 0x020bc0c0 | [ov004](../config/arm9/overlays/ov004/symbols.txt) | **class itself done** (PR #1396) — `: Scene`, real D0/D1/D2, 8/28 own-slots real. 32 descendants unnamed |
+| `dScMiniGm_c` | 0x020c2490 | [ov005](../config/arm9/overlays/ov005/symbols.txt) | unnamed, 0 attributed functions (has a generated header, no named methods) |
+| `dScDSMT_c` | 0x021032e8 | [ov007](../config/arm9/overlays/ov007/symbols.txt) | unnamed, 0 attributed functions |
+| `dScEntry_c` | 0x0211d304 | [ov075](../config/arm9/overlays/ov075/symbols.txt) | unnamed, 0 attributed functions (has a generated header, no named methods) |
+
+"0 attributed functions" means literally no symbol anywhere in `config/**/symbols.txt`
+mangles under that class's English or ROM name — confirmed by grepping every
+mangled prefix (`7dScMB_c`, `10dScTitle_c`, `12dScStarSel_c`, `13dScGameOver_c`,
+`11dScMiniGm_c`, `9dScDSMT_c`, `10dScEntry_c`) tree-wide, zero hits each.
+
+## 1. Vtable slots, all eight
+
+All eight are already-MATCHED source (`build_pin` passes, byte-exact) sitting
+under `func_<mod>_<addr>` names — the blocker is naming/attribution, not
+matching. Every one shares Scene's 18-slot shape; the slots below are the ones
+that differ from Scene's own implementation (a real override, not an inherited
+pointer). Full detail (per-slot addresses beyond what's listed, plus the raw
+`rtti_vtables.json` this was read from) lived in a now-torn-down worktree's
+`build/rtti_vtables.json` — regenerate with
+`python tools/rtti_vtables.py --own <CLASS>` for each of dScMB_c, dScTitle_c,
+dScStarSel_c, dScGameOver_c, dScMiniGm_c, dScDSMT_c, dScEntry_c, dScMgBase_c (the
+flag takes one class at a time; check the tool's current flags) rather than
+trusting this table's addresses blindly
+for anything but orientation.
+
+| class | module | overridden slots | example target |
+|---|---|---|---|
+| `dScMB_c` | [arm9](../config/arm9/symbols.txt) | 0 (InitResources), 3, 6, 9, 16 (D1), 17 (D0) | `func_0203506c` (InitResources) |
+| `dScTitle_c` | [ov003](../config/arm9/overlays/ov003/symbols.txt) | 0, 3, 6, 9, 12, 16, 17 | `func_ov003_020ada9c` |
+| `dScStarSel_c` | [ov003](../config/arm9/overlays/ov003/symbols.txt) | 0, 3, 6, 9, 12, 16, 17 | `func_ov003_020af8a0` |
+| `dScGameOver_c` | [ov003](../config/arm9/overlays/ov003/symbols.txt) | 0, 3, 6, 9, 12, 16, 17 | `func_ov003_020b0b3c` |
+| `dScMiniGm_c` | [ov005](../config/arm9/overlays/ov005/symbols.txt) | 0, 3, 6, 9, 12, 16, 17 | `func_ov005_020c1a20` |
+| `dScDSMT_c` | [ov007](../config/arm9/overlays/ov007/symbols.txt) | 0, 3, 6, 9, 12, 16, 17 | `func_ov007_020cc4c0` |
+| `dScEntry_c` | [ov075](../config/arm9/overlays/ov075/symbols.txt) | 0, 1, 3, 6, 9, 12, 16, 17 | `func_ov075_0211a410` |
+| `dScMgBase_c` | [ov004](../config/arm9/overlays/ov004/symbols.txt) | 1,2,5,6,7,9,10,12,16,17 **+ 18 NEW slots (18-35)** | see §2 |
+
+Slot numbers match Scene's own table (0=InitResources, 1=BeforeInitResources,
+3=CleanupResources, 6=Behavior, 9=Render, 12=OnPendingDestroy, 16=D1, 17=D0) —
+same convention `include/dScene_c.h`/`include/Stage.h` document.
+
+## 2. dScMgBase_c is not a plain sibling -- it's a second hierarchy root
+
+Its vtable is **36 slots**, not 18: it overrides 8 of Scene's own plus D1/D0,
+then adds **18 brand-new slots (18-35)** beyond what Scene/ActorBase declare --
+the same shape `include/dActor_c.h` documents for Actor's own 13 new slots
+(`OnYoshiTryEat`, `OnTurnIntoEgg`, etc.). All 28 override/new-slot targets are
+already matched source. ~24 of them carry `// recovered name: dScMgBase_c_X`
+comments from an earlier, untooled vtable-identity pass -- **trust the D1 (slot
+16) ones, not the D0 (slot 17) ones, see §3.**
+
+`dScMgBase_c` also has **32 further RTTI descendants** -- a whole minigame
+family, 24 of which already have generated headers waiting in `include/`:
+15 direct children (`dScMgAmida_c`, `dScMgCoin_c`, `dScMgCurling_c`/`_2`,
+`dScMgHanachan_c`, `dScMgLuigi_c`, `dScMgPachinko_c`/`_2`, `dScMgPanel_c`,
+`dScMgSlot1_c`, `dScMgSmartball_c`, `dScMgTeresa_c`, `dScMgBomroom_c`, plus two
+abstract intermediates `dScMgD3DBase_c`/`dScMgSingle3DBase_c`) with 17 further
+grandchildren under those two.
+
+**Update (2026-08-11, PR #1398): `MgBounceAndPounce` IS `dScMgD3DBase_c`,
+one of the two abstract intermediates above -- NOT a fifteenth direct
+child, as an earlier draft of this note said.** Its coined English name
+predates understanding the hierarchy: whoever named it thought "Bounce and
+Pounce" (a real minigame) when the class it actually names is the shared
+3D-physics base for FOUR minigames (`dScMgJump_c`, `dScMgJump2_c`,
+`dScMgTrampoline_c`, `dScMgTrampoline2_c`). Confirmed two ways:
+`tools/rtti_vtables.py --own` for all 15 TRUE direct children found no
+match for its D1/D0 addresses (it isn't one of them); its own vtable
+address ([ov006](../config/arm9/overlays/ov006/symbols.txt):0x0213c62c) matches `dScMgD3DBase_c`'s RTTI record exactly,
+and `d_s_mg_jump.cpp`'s construction order corroborates it
+independently -- it writes its OWN vtable mid-construction, then
+`dScMgJump_c`'s vtable (one of its four children) at the very end,
+exactly the base-then-derived order a real constructor produces. **A
+coined name can name the wrong LEVEL of a hierarchy, not just imply the
+wrong class -- don't trust one without an RTTI cross-check, even when it
+already has real matched functions.**
+
+`MgBounceAndPounce`/`dScMgD3DBase_c` is now itself real: `: dScMgBase_c`
+base, real D0/D1, own `operator delete` (unlocking D0 for its own four
+children). See [[destructor-migration-unlocks]] for a real correction
+found doing this -- dScMgBase_c's destructor had to move from
+inline-defined to declared-only-with-real-out-of-line-bodies, because
+mwcc does NOT always inline a non-trivial base destructor into a
+descendant the way it does Scene's trivial one. **This means "inline the
+base's D2/D1" is not a rule to apply blindly at the NEXT level down
+either -- check empirically each time**, the same way this correction had
+to be made for dScMgBase_c itself after Scene's fix suggested it would
+just work.
+
+**Naming the class itself (PR #1396 for dScMgBase_c, PR #1398 for
+dScMgD3DBase_c/MgBounceAndPounce) is done for two of the family; naming
+the other 30 descendants is still the open slice.** `include/dScMgBase_c.h`
+still leaves 18 of its own 28 override/new-slots undeclared (slots 18-35,
+~18 new virtuals beyond Scene/ActorBase) -- their targets are matched
+source but their signatures aren't reconstructed; three of the migrated
+methods reach them through the same local by-vtable-position stand-in the
+recovered sources always used. Reconstructing those 18 signatures is
+likely needed before any descendant's OWN overrides of the same slots can
+become real methods too. `MgBounceAndPounce`/`dScMgD3DBase_c` has its own
+9 undeclared override slots (24-31, 33) for the same reason, one level
+down. Its four real children (`dScMgJump_c` etc.) are untouched but their
+own D0/D1 already exist as matched addresses per the vtable dump -- the
+natural next slice.
+
+**Update (2026-08-11, PR #1400): six of the 13 direct leaf children are now
+real** -- `dScMgCurling_c`, `dScMgCurling2_c`, `dScMgPanel_c`,
+`dScMgBomroom_c`, `dScMgLuigi_c`, `dScMgPachinko2_c`, all the same shape:
+`: dScMgBase_c`, D1/D0 declared with empty bodies (no members need explicit
+destruction, so the compiler-generated own-vtable-write + base-D2-call is
+the whole story), InitResources/Behavior/Render as real methods.
+`dScMgLuigi_c` additionally overrides slot 5 (`AfterCleanupResources`) --
+the real signature is `void`, not the `int` the recovered C source assumed,
+so the migrated method calls the base override as a plain statement instead
+of returning it. **Own fields are drawn ONLY from what the migrated methods
+directly touch** -- each class also has a pile of non-virtual helper
+functions (still raw `extern "C"` calls taking a bare pointer, not migrated)
+that touch many more fields nobody has typed yet; those stay inside a leading
+pad rather than being guessed at. Three real bugs found and fixed along the
+way, all now in [[double-mangling-defect]]: bare `extern` declarations
+silently C++-mangling once a file becomes `.cpp` (invisible to loose
+`build_pin.verify`, only `eligible.py` catches it); `decl_common.h`
+declaring several [ov006](../config/arm9/overlays/ov006/symbols.txt) helpers with empty `()` C-style "unspecified args"
+prototypes that become "exactly zero args" in C++ once a real method calls
+them with `this` (hit in Curling2's, Bomroom's, AND Pachinko2's `Render` --
+recurred a third time) -- fixed by declaring the real signature locally
+instead of including `decl_common.h` in that file at all; and an attribution-
+gate failure from doing a rename and content rewrite in the same commit,
+fixed by always splitting into a pure-`git mv` commit followed by a content
+commit (see [[attribution-gate]]).
+
+**Update (2026-08-11, PR #1404 + #1413): twelve of the 13 direct leaf
+children are now real.** `dScMgCoin_c`, `dScMgPachinko_c`, `dScMgTeresa_c`,
+`dScMgHanachan_c`, `dScMgSlot1_c`, and `dScMgAmida_c` joined the six from
+PR #1400. Three of these needed something genuinely new:
+
+- `dScMgHanachan_c` and `dScMgAmida_c` both have NON-TRIVIAL destructors --
+  real bodies (not the usual empty `{}`) doing explicit `__destroy_arr`
+  calls on member arrays, same idiom `dScMgBase_c`'s own D1/D2 already use
+  for `touchIcon_0f4`. Amida's own `0x4768` array is individually
+  field-accessed and got a real named struct (`dScMgAmida_c_Piece`)
+  instead of raw bytes.
+- `dScMgSlot1_c` has an embedded polymorphic subobject at `0x4660`
+  (`dScMgSlot1_c::betIcon_c : dThIcon_c`, confirmed via `build/rtti.json`
+  independently of `dScMgBase_c`'s own `TouchIcon_c`/`dThIcon_c` pair) --
+  D1/D0 write its two vtables by hand. It ALSO has a real slot (6,
+  `Behavior`) with **no matched source anywhere in the tree** -- simply
+  left undeclared; the ROM's real vtable word for that slot is untouched
+  since a class's `_ZTV` symbol here is always an alias for pre-existing
+  ROM-sourced data, never compiler-synthesized from the C++ definition, so
+  omitting an override is link-safe even though it would NOT be safe in an
+  ordinary from-scratch C++ program.
+- `dScMgAmida_c` has a brand-new own vtable slot (36) that IS genuinely
+  called, virtually, from three of its own real methods -- unlike every
+  other sibling's "leave 18+ alone" precedent. **Measured, not assumed**,
+  that calling it through real `this->` virtual dispatch does NOT
+  reproduce the ROM (compiles 0xc bytes larger, cascading to ~1400
+  unrelated-looking mismatches across the whole module) -- the compiler's
+  own slot for a class's first new virtual lands correctly only when nothing
+  else competes ahead of it in declaration order (works by coincidence for
+  a class whose only new slot is 18; breaks for slot 36, which sits past
+  `dScMgBase_c`'s entire undeclared 18-35 range). Fixed by keeping the
+  pre-migration vtable-shim-struct dispatch at all three call sites while
+  still declaring the method for documentation purposes.
+
+**`dScMgSmartball_c` is a genuine blocker, not a migration problem**: its
+own `InitResources` (slot 0, [ov006](../config/arm9/overlays/ov006/symbols.txt):0x02118b70, 0x8dc bytes) has never been
+decompiled -- no source file, no `delinks.txt` entry, served raw from the
+ROM gap object. This needs original asm-to-C matching work before it can
+even be considered for a struct-to-class migration; skipped entirely.
+
+**A severe shared-worktree hazard hit mid-batch**, worth its own emphasis:
+`C:\tmp\sm64ds-mgleaves` had accumulated stale, uncommitted state from
+unrelated past sessions (old stashes going back to 2026-08-03, a dangling
+BooCage.h merge conflict from an already-merged PR). Debugging this while
+a genuinely concurrent process held a file lock on `build/src/` produced
+real Windows file-lock errors (`OS error 32`) AND a red herring that looked
+exactly like a code regression (~1400 mismatching functions, later
+understood to actually BE a real bug at that moment -- see Amida's Unk36
+finding above -- not corruption). The reliable fix was not debugging in
+place: cherry-pick the verified commits into a brand-new `wt-setup.ps1`
+worktree and re-verify there. See [[concurrent-builds-fake-failures]].
+
+**One leaf child remains truly unclaimed: none** -- of the 13 direct
+children, 12 are real and 1 (`dScMgSmartball_c`) is blocked on separate
+matching work. Still open: `dScMgSingle3DBase_c` (second intermediate
+base, 13 further grandchildren) and `dScMgD3DBase_c`'s own 4 real
+children (`dScMgJump_c`, `dScMgJump2_c`, `dScMgTrampoline_c`,
+`dScMgTrampoline2_c`).
+
+## 3. A tree-wide comment defect, found here, not yet fixed anywhere
+
+**Every slot-17 (D0, the deleting destructor) "recovered name" comment across
+all eight classes above is wrong** -- mislabeled `<Class>_OnYoshiTryEat`, even
+though the function body is unmistakably a deleting destructor (writes the
+class's own vtable, then Scene's, then ActorDerived's, calls
+`ActorBase::~ActorBase`, calls `Memory::Deallocate`). Confirmed by reading the
+actual disassembled bodies directly, not by trusting the comments, in
+`dScMB_c`, `dScTitle_c`, `dScStarSel_c`, `dScGameOver_c`, `dScMgBase_c`,
+`dScMiniGm_c`, `dScDSMT_c`, `dScEntry_c` -- eight for eight. Slot-16 (D1)
+comments on the same files are accurate.
+
+`dScMgBase_c`'s own instance of this is now moot, incidentally rather than by
+design: PR #1396 rewrote its D0 file from scratch as a forcing-TU stub (see
+`include/dScene_c.h`'s own D0/D1 files for the pattern), which carries no
+"recovered name" comment at all. The other seven still have the mislabel.
+
+This is almost certainly not scoped to just these eight -- the "recovered
+name" comment layer covers roughly 700 files tree-wide (untooled, unattributed
+per `notes/runbook-type-reconstruction.md` section 2's warning about the
+`tools/deepen_rtti.py` banner fraud). Nobody has checked whether the D0-labeled-
+as-OnYoshiTryEat pattern is systematic (e.g. every class's D0 happens to sit at
+the same relative vtable-scan position slot-17 shares with something in
+whatever tool or process generated these comments) or coincidental to this
+family. **Whoever names these eight next will be reading these comments --
+don't trust a slot-17 "recovered name" without checking the body first**, and
+consider fixing the mislabeling mechanically before relying on the comment
+layer for anything else in the tree. `tools/dtor_variant_audit.py` already
+separates D0/D1/D2 by ROM structure (never by comment) for exactly this
+reason; it doesn't yet report on the comment layer's own accuracy -- extending
+it to do so would settle the "how far does this spread" question in one run
+instead of by hand.
+
+**Update (2026-08-15): measured, and the answer is that it was systematic and is
+now spent.** Two questions were open above: how the mislabel was minted, and how
+far it spread. Both are answered.
+
+Minting: there is no generator. No script in this tree, in any branch, writes
+either the `// recovered name:` slot names or the `recovered from vtable slot
+identity` tag; `tools/reconcile_names.py` only copies a pre-existing `@emits`
+line into a comment, and derives nothing. The shift came from reading a slot
+table that numbers `virtual` DECLARATIONS instead of vtable WORDS. A class
+declares its destructor once and mwcc emits two words for it (D1 at 16, D0 at
+17), so declaration index equals slot index up to the destructor and is one
+short of it from the destructor onward. That is why a slot-17 D0 collected slot
+18's name, `OnYoshiTryEat`, and it is a uniform +1 from that word on rather than
+a general off-by-one. The tables that carry the shift are gitignored working
+material, not repo content; every table tracked here is correct, including the
+only executable one, `tools/actor_names.py`'s `SLOT_SIGS` (16 = D1, 17 = D0),
+which has been right since PR #211. `notes/actor-vtables.md` states the trap
+directly: D1/D0 land at slots 16 and 17.
+
+Spread, counted against `src/` on this commit and classified by body structure
+rather than by comment (a body is a deleting destructor when it stores a vtable
+into the object and calls `Memory::Deallocate`):
+
+| measure | count |
+|---|---:|
+| `src/` files scanned | 11287 |
+| bodies that are deleting destructors | 208 |
+| of those, carrying a D0/D1/D2 name | 170 |
+| of those, carrying an ordinary method name instead | **0** |
+| files still claiming an `OnYoshiTryEat` name | 31 |
+| of those 31, bodies that are deleting destructors | **0** |
+
+So the D0-labelled-as-OnYoshiTryEat defect no longer has a single instance in
+`src/`. The seven survivors §3 counted were fixed as their classes were named,
+each one settled by reading the body. Two still carry that reasoning in their own
+headers: the deleting destructor of `daIDonketu_c`, whose seven per-function
+sources have since been folded into the source-owned `actors/d_a_i_donketu.cpp`
+(the destructor pair is inline in `include/daIDonketu_c.h` now, and the TU's
+closing comment says why), and `src/_ZN10LavaSeesawD0Ev.cpp`. All 31
+remaining `OnYoshiTryEat` claims sit on genuine slot-18 bodies. The standing
+advice is still right and still cheap: don't trust a slot-17 "recovered name"
+without checking the body.
+
+What is NOT spent is the separate overloaded-marker problem. 531 files carried
+`recovered from vtable slot identity`, a tag that reads as "this body was
+guessed" while in practice it usually records where the NAME came from. 30 of
+them were adjudicated against the ROM and reworded (run linkw w13); 501 still
+carry the bare tag and none of those has been ruled on.
+
+Related: `notes/plan-cpp-language-mode.md`, `notes/dtor-variant-audit.md`,
+`notes/runbook-type-reconstruction.md` section 2.

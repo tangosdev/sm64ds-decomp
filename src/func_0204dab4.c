@@ -23,7 +23,7 @@ struct Entry {
     Node *node;
 };
 
-extern int func_02052f4c(int a, int b);
+extern int _ZN4cstd3divEii(int a, int b);
 extern void func_0204dcc0(int *src, Entry *entry, short *value, int *out);
 
 void func_0204dab4(void *sys, Entry *buf, int count, unsigned int mask, void *cb)
@@ -67,8 +67,7 @@ void func_0204dab4(void *sys, Entry *buf, int count, unsigned int mask, void *cb
         if (slot == 0 && empty != -1 && mask < 4) {
             slot = &buf[empty];
             slot->node = walk;
-            fp6 = (unsigned char *)(((int)slot + 6) &
-                                    0xFFFFFFFFFFFFFFFFULL);
+            fp6 = (unsigned char *)((int)slot + 6);
             *fp6 = (unsigned char)((*fp6 & ~3u) | (mask & 3u));
         }
 
@@ -76,7 +75,7 @@ void func_0204dab4(void *sys, Entry *buf, int count, unsigned int mask, void *cb
             int scale;
 
             scale = 0x1000 -
-                func_02052f4c((int)walk->f2e << 12, walk->f2c);
+                _ZN4cstd3divEii((int)walk->f2e << 12, walk->f2c);
 
             sp[1] = walk->f14 + walk->f8;
             sp[2] = walk->f18 + walk->fc;
@@ -85,8 +84,7 @@ void func_0204dab4(void *sys, Entry *buf, int count, unsigned int mask, void *cb
             fn(&sp[1], slot, (short *)((char *)slot + 2), &sp[0]);
 
             slot->f4 = (short)(((long long)sp[0] * scale + 0x800) >> 12);
-            fp6 = (unsigned char *)(((int)slot + 6) &
-                                    0xFFFFFFFFFFFFFFFFULL);
+            fp6 = (unsigned char *)((int)slot + 6);
             *fp6 = (unsigned char)(*fp6 | 4u);
         }
 
@@ -106,8 +104,7 @@ tail:
                 p->node = 0;
         }
 
-        fp6 = (unsigned char *)(((int)p + 6) &
-                                0xFFFFFFFFFFFFFFFFULL);
+        fp6 = (unsigned char *)((int)p + 6);
         *fp6 = (unsigned char)(*fp6 & ~4u);
         p++;
     } while (++j < count);

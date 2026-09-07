@@ -33,7 +33,7 @@ void func_ov002_020df8f0(char* c)
 
         if (v > 0) {
             if (*(s16*)(c + 0x69e) < 0) {
-                *(s16*)(((s64)(int)(c + 0x69e)) & 0xFFFFFFFFFFFFFFFFLL) += 0x40;
+                *(s16*)(c + 0x69e) += 0x40;
                 if (*(s16*)(c + 0x69e) > 0x20) *(s16*)(c + 0x69e) = 0x20;
             } else {
                 s16 step;
@@ -42,7 +42,7 @@ void func_ov002_020df8f0(char* c)
             }
         } else if (v < 0) {
             if (*(s16*)(c + 0x69e) > 0) {
-                *(s16*)(((s64)(int)(c + 0x69e)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x40;
+                *(s16*)(c + 0x69e) -= 0x40;
                 if (*(s16*)(c + 0x69e) < -0x20) *(s16*)(c + 0x69e) = -0x20;
             } else {
                 s16 step;
@@ -65,7 +65,7 @@ void func_ov002_020df8f0(char* c)
 
         if (v2 > 0) {
             if (*(s16*)(c + 0x69c) < 0) {
-                *(s16*)(((s64)(int)(c + 0x69c)) & 0xFFFFFFFFFFFFFFFFLL) += 0x40;
+                *(s16*)(c + 0x69c) += 0x40;
                 if (*(s16*)(c + 0x69c) > 0x10) *(s16*)(c + 0x69c) = 0x10;
             } else {
                 s16 step;
@@ -74,7 +74,7 @@ void func_ov002_020df8f0(char* c)
             }
         } else if (v2 < 0) {
             if (*(s16*)(c + 0x69c) > 0) {
-                *(s16*)(((s64)(int)(c + 0x69c)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x40;
+                *(s16*)(c + 0x69c) -= 0x40;
                 if (*(s16*)(c + 0x69c) < -0x10) *(s16*)(c + 0x69c) = -0x10;
             } else {
                 s16 step;
@@ -86,27 +86,27 @@ void func_ov002_020df8f0(char* c)
         }
     }
 
-    *(s16*)(((s64)(int)(c + 0x94)) & 0xFFFFFFFFFFFFFFFFLL) += *(s16*)(c + 0x69c);
+    *(s16*)(c + 0x94) += *(s16*)(c + 0x69c);
     *(s16*)(c + 0x96) = (s16)((0 - *(s16*)(c + 0x69c)) * 0x14);
 
-    *(int*)(((s64)(int)(c + 0x640)) & 0xFFFFFFFFFFFFFFFFLL) -= ((*(s16*)(c + 0x92) >> 1) + 0x100);
+    *(int*)(c + 0x640) -= ((*(s16*)(c + 0x92) >> 1) + 0x100);
     if (*(int*)(c + 0x640) < 0) *(int*)(c + 0x640) = -*(int*)(c + 0x640);
 
     {
-        int *p = (int*)(((s64)(int)(c + 0x640)) & 0xFFFFFFFFFFFFFFFFLL);
+        int *p = (int*)(c + 0x640);
         *p -= (0x1000 - data_02082214[((u16)(*(s16*)(c + 0x69c)) >> 4) * 2 + 1]) >> 1;
     }
     if (*(int*)(c + 0x640) < 0) *(int*)(c + 0x640) = 0;
 
     if (*(int*)(c + 0x640) > 0x10000) {
-        *(s16*)(((s64)(int)(c + 0x92)) & 0xFFFFFFFFFFFFFFFFLL) += ((*(int*)(c + 0x640) - 0x20000) * 6) >> 12;
+        *(s16*)(c + 0x92) += ((*(int*)(c + 0x640) - 0x20000) * 6) >> 12;
     } else if (*(int*)(c + 0x640) <= 0x4000) {
-        *(s16*)(((s64)(int)(c + 0x92)) & 0xFFFFFFFFFFFFFFFFLL) -= 0x600;
+        *(s16*)(c + 0x92) -= 0x600;
     } else {
-        *(s16*)(((s64)(int)(c + 0x92)) & 0xFFFFFFFFFFFFFFFFLL) += ((*(int*)(c + 0x640) - 0x20000) * 0xa) >> 12;
+        *(s16*)(c + 0x92) += ((*(int*)(c + 0x640) - 0x20000) * 0xa) >> 12;
     }
 
-    *(s16*)(((s64)(int)(c + 0x92)) & 0xFFFFFFFFFFFFFFFFLL) += *(s16*)(c + 0x69e);
+    *(s16*)(c + 0x92) += *(s16*)(c + 0x69e);
     if (*(s16*)(c + 0x92) > 0x2aaa) *(s16*)(c + 0x92) = 0x2aaa;
     if (*(s16*)(c + 0x92) < (s16)0xd556) *(s16*)(c + 0x92) = (s16)0xd556;
 

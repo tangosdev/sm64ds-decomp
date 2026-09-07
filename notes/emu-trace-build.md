@@ -46,7 +46,7 @@ JIT off is non-negotiable — the stub needs the interpreter core.
 
 ## 2. File layout (all new code under `tools/trace/`)
 
-```
+```sh
 tools/trace/
   README.md            # exact melonDS setup, register-packet layout, run recipes
   rsp.py               # RSP socket client: connect, set/clear bp, read regs/mem, continue
@@ -137,7 +137,7 @@ material for the labeling tier.
 ## 4. The three hazards, with concrete mitigations
 
 1. **Overlay residency / address aliasing.** A bp at `0x0211xxxx` is meaningless
-   when ov063 isn't loaded, and another overlay can map the same address.
+   when [ov063](../config/arm9/overlays/ov063/symbols.txt) isn't loaded, and another overlay can map the same address.
    - *Mitigation A (always):* canary check on every hit (§3.1). Cheap, catches
      aliasing.
    - *Mitigation B (Phase 1):* pick savestates where the target overlay is

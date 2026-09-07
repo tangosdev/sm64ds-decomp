@@ -24,7 +24,7 @@ void func_ov007_020c8498(char* r5)
     if(*(int*)(r5 + 8) == 0) return;
 
     if(*(int*)(r5 + 8) == 1){
-        int* v14 = (int*)((((long long)(int)(r5 + 0x14))));
+        int* v14 = (int*)(r5 + 0x14);
         *v14 += *(int*)(r5 + 0x18);
         if(*(int*)(r5 + 0x14) > 0x1000){
             *(int*)(r5 + 0x14) = 0x1000;

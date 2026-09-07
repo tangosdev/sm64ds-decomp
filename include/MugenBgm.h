@@ -1,27 +1,33 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MugenBgm: 4 matched functions, 5 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef MUGENBGM_H
 #define MUGENBGM_H
-#include "types.h"
 
-struct MugenBgm {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    u8  unk_05c;            /* 0x05c */
-    u8  pad_05d[0x31];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x8];
-    s32 unk_098;            /* 0x098 */
-    u8  pad_09c[0x30];
-    s8  mAreaId;            /* 0x0cc */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-#endif
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daMugenBGM_c -- daMugenBGM_c_classInit (was MugenBgm_Spawn), g_profile_MUGEN_BGM (was MugenBgm_SpawnInfo)
+ */
+
+#include "dActor_c.h"
+
+/* daMugenBGM_c_classInit allocates 0xd4 bytes, constructs dActor_c, and installs
+ * _ZTV8MugenBgm. D1 chains directly to dActor_c::~dActor_c, so the class has
+ * no owned subobjects; its behavior uses only inherited actor state.
+ */
+struct MugenBgm : dActor_c {
+    u8 pad_0d0[0x4];
+
+    virtual ~MugenBgm();
+
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
+    virtual void OnPendingDestroy();
 };
 
-#endif
+typedef char MugenBgm_size_must_be_0xd4[
+    sizeof(MugenBgm) == 0xd4 ? 1 : -1];
+
+#endif /* MUGENBGM_H */

@@ -7,6 +7,7 @@ symbol from the wrong overlay.  The public resolver therefore uses a canonical
 each relocation record.
 """
 import argparse
+import collections
 import json
 import pathlib
 import re
@@ -49,15 +50,58 @@ def normalize_module(module: str) -> str:
     return m
 
 
-def iter_symbol_files(include_itcm_dtcm: bool = True):
-    """Yield ``(module, symbols_path)`` for main, overlays, and optionally RAM."""
-    yield "arm9", SYMS
+def iter_symbol_files(include_itcm_dtcm: bool = True, repo=None):
+    """Yield ``(module, symbols_path)`` for main, overlays, and optionally RAM.
+
+    ``repo`` resolves against a different checkout, the way ``srcpath.set_root`` does.
+    The module-level ``SYMS``/``OVERLAYS`` constants bind this file's own repository at
+    import time, so a caller that has been pointed at another tree -- a worktree, a
+    temporary fixture -- would otherwise silently enumerate THIS one and report its
+    modules as the other tree's. Default is unchanged and yields exactly the constants.
+    """
+    cfg = (pathlib.Path(repo) / "config" / "arm9") if repo is not None else CFG
+    yield "arm9", cfg / "symbols.txt"
     if include_itcm_dtcm:
-        yield "itcm", ITCM_SYMS
-        yield "dtcm", DTCM_SYMS
-    if OVERLAYS.is_dir():
-        for path in sorted(OVERLAYS.glob("ov*/symbols.txt")):
+        yield "itcm", cfg / "itcm" / "symbols.txt"
+        yield "dtcm", cfg / "dtcm" / "symbols.txt"
+    overlays = cfg / "overlays"
+    if overlays.is_dir():
+        for path in sorted(overlays.glob("ov*/symbols.txt")):
             yield normalize_module(path.parent.name), path
+
+
+def module_universe(repo=None) -> list[tuple[pathlib.Path, str]]:
+    """Every module that exists, as ``(symbols.txt, label)``. THE definition.
+
+    Four tools each grew their own copy of this as a regex over config/, and all
+    four returned arm9 plus ovNNN and silently dropped anything else. The cost
+    was the whole itcm module -- 43 functions, 25 unmatched, including the
+    largest unmatched function in the game -- being invisible in the Chaos
+    Viewer, absent from the ledger, and missing from the denominator, which made
+    the project read as further along than it is. modules.py had the same bug
+    and was fixed alone on 2026-08-01; see notes/itcm.md, where the symptom is
+    described as reading "exactly like clean".
+
+    So this does not filter. It enumerates, and then checks itself against the
+    filesystem: any config/**/symbols.txt this function does not yield is a hard
+    failure at the call site, not a silent skip. Adding a module means teaching
+    iter_symbol_files() about it once, and forgetting to is loud."""
+    root = pathlib.Path(repo) if repo is not None else REPO
+    known: dict[pathlib.Path, str] = {}
+    for label, path in iter_symbol_files(repo=repo):
+        if path.is_file():
+            known[path.resolve()] = label
+    missed = sorted(p for p in (root / "config").rglob("symbols.txt")
+                    if p.resolve() not in known)
+    if missed:
+        rels = ", ".join(p.relative_to(root).as_posix() for p in missed)
+        raise SystemExit(
+            f"relocs.module_universe: {len(missed)} symbols.txt not covered by "
+            f"iter_symbol_files(): {rels}\n"
+            "Teach iter_symbol_files about the module rather than filtering it "
+            "out at the call site. A module missing from a count or a viewer "
+            "looks exactly like completed work.")
+    return sorted(known.items(), key=lambda kv: kv[1])
 
 
 def iter_reloc_files(include_itcm_dtcm: bool = True):
@@ -128,6 +172,15 @@ def load_all_syms() -> SymbolIndex:
     for module, path in iter_symbol_files(include_itcm_dtcm=True):
         d.update(load_syms_file(path, module))
     return d
+
+
+def load_symbol_homes(repo=None) -> dict[str, list[tuple[str, int]]]:
+    """Every configured home for every symbol name, preserving aliases/modules."""
+    homes = collections.defaultdict(list)
+    for module, path in iter_symbol_files(include_itcm_dtcm=True, repo=repo):
+        for name, (owner, addr) in iter_syms_pairs(path, module):
+            homes[name].append((owner, addr))
+    return dict(homes)
 
 
 def _fallback_name(addr: int) -> str:

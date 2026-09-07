@@ -23,7 +23,7 @@ int func_ov030_02111b20(char* c) {
   *(s16*)(c+0x94) = *(s16*)(c+0x8e);
   if (d < *(int*)(c+0x98)) {
     n = _ZNK7PathPtr8NumNodesEv(c+0x398);
-    p = (int*)((long long)(int)(c + 0x3a0));
+    p = (int*)(c + 0x3a0);
     n = n - 1;
     *p = *p + 1;
     if (*(int*)(c+0x3a0) >= n) return 1;

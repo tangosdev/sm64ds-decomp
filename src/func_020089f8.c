@@ -10,7 +10,7 @@ void func_020089f8(int *obj)
     if (ptr == 0) {
         return;
     }
-    p = (char *)(((unsigned long long)((char *)ptr + 0x5c)) & 0xFFFFFFFFFFFFFFFFu);
+    p = (char *)((unsigned long long)((char *)ptr + 0x5c));
     obj[0x98 / 4] = *(int *)p;
     obj[0x9c / 4] = *(int *)(p + 4);
     obj[0xa0 / 4] = *(int *)(p + 8);

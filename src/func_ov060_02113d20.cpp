@@ -8,15 +8,15 @@
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov060).
 
 
-struct Actor {
-    Actor *ClosestWithActorID(unsigned int id);
+struct dActor_c {
+    dActor_c *ClosestWithActorID(unsigned int id);
 };
 
 
-extern "C" int func_ov060_02113d20(Actor *self)
+extern "C" int func_ov060_02113d20(dActor_c *self)
 {
     Vector3 v;
-    Actor *closest = self->ClosestWithActorID(0x11c);
+    dActor_c *closest = self->ClosestWithActorID(0x11c);
     if (closest) {
         v.x = *(int *)((char *)self + 0x5c);
         v.y = *(int *)((char *)self + 0x60);

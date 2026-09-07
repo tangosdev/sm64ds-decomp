@@ -8,7 +8,7 @@ void func_ov006_020e1608(char *this) {
         if (*(unsigned char*)(base + 0x4748) == 0) continue;
         if (*(unsigned short*)(base + 0x4746) == 0) continue;
         {
-            volatile unsigned short *t = (volatile unsigned short*)(((unsigned int)base + 0x4746) & 0xFFFFFFFFFFFFFFFFull);
+            volatile unsigned short *t = (volatile unsigned short*)((unsigned int)base + 0x4746);
             *t = *t - 1;
             if (*t != 0) continue;
         }

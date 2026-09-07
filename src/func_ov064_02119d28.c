@@ -2,7 +2,7 @@
 extern s16 data_02082214[];
 extern void func_ov064_02119afc(char* c);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* t);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* t);
 
 int func_ov064_02119d28(char* c) {
     int spd;
@@ -39,6 +39,6 @@ int func_ov064_02119d28(char* c) {
     *(int*)(c + 0x88) = *(int*)(c + 0x80);
     *(int*)(c + 0x84) = *(int*)(c + 0x88);
     if (*(u16*)(c + 0x100) == 0 || *(u8*)(c + 0x380) <= 1)
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     return 1;
 }

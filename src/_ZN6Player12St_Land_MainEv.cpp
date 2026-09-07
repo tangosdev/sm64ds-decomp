@@ -42,7 +42,7 @@ int Player::St_Land_Main()
     if ((u16)(temp_r3 & 0x40) == 0) {
         if ((*(u16*)((char*)data_0209f49e + data_020a0e40 * 0x18) & 2)
             || (u16)(temp_r3 & 0x100) != 0) {
-            *(u16*)(((long long)(int)((char*)&mStateFlags))) &= ~0x100;
+            *(u16*)((char*)&mStateFlags) &= ~0x100;
             if (func_ov002_020e3078(((char*)this), data_ov002_0211055c) != 0
                 && (*(u16*)((char*)data_0209f49c + data_020a0e40 * 0x18) & 0x400)
                 && mHorzSpeed >= 0) {
@@ -66,7 +66,7 @@ int Player::St_Land_Main()
             return func_ov002_020dde74(((char*)this));
         }
     } else {
-        *(u16*)(((long long)(int)((char*)&mStateFlags))) &= ~0x100;
+        *(u16*)((char*)&mStateFlags) &= ~0x100;
     }
 
     _Z14ApproachLinearRiii((int*)((char*)&mHorzSpeed),

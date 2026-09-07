@@ -1,27 +1,19 @@
 //cpp
-#include "types.h"
-/* ExpandingHeap::VReallocate(void*, unsigned) at 0x0203c568 -- Heap vtable slot.
- * Forwards to the allocator (ExpandingHeapAllocator* at this+0x14). */
-class ExpandingHeapAllocator
-{
-public:
-    void* Reallocate(void* ptr, u32 size);
-};
+// @symbol _ZN13ExpandingHeap11VReallocateEPvj
+/* ExpandingHeap::VReallocate(void*, u32) at 0x0203c568 -- Heap vtable slot 8.
+ * Four instructions: load the allocator from this+0x14 and tail-call it.
+ *
+ * RETURN TYPE: u32, changed from void*. THIS FILE IS WHERE THE void* CAME FROM.
+ * It declared its own `class ExpandingHeapAllocator { void* Reallocate(void*,
+ * u32); }', and that local guess propagated outwards until Heap vtable slot 8
+ * was documented as returning a moved pointer. The real definition returns
+ * `size', 0 or `node->size' -- a size every time. Nothing could catch it,
+ * because a tail-call forwarder cannot disagree with its callee about a value it
+ * merely passes on. */
+#include "ExpandingHeap.h"
+#include "ExpandingHeapAllocator.h"
 
-class ExpandingHeap
-{
-public:
-    u32 unk00;
-    u32 unk04;
-    u32 unk08;
-    u32 unk0c;
-    u32 unk10;
-    ExpandingHeapAllocator* allocator; /* 0x14 */
-
-    void* VReallocate(void* ptr, u32 size);
-};
-
-void* ExpandingHeap::VReallocate(void* ptr, u32 size)
+u32 ExpandingHeap::VReallocate(void* ptr, u32 size)
 {
     return allocator->Reallocate(ptr, size);
 }

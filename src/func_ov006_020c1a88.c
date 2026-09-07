@@ -54,9 +54,9 @@ int func_ov006_020c1a88(char *c)
         return 0;
     }
     ip = *(void **)(c + 0x98);
-    *(int *)(((long long)(int)((char *)ip + 0x24))) &= ~1;
-    *(int *)(((long long)(int)((char *)ip + 0x114))) &= ~1;
-    *(int *)(((long long)(int)((char *)ip + 0xe4))) |= 2;
+    *(int *)((char *)ip + 0x24) &= ~1;
+    *(int *)((char *)ip + 0x114) &= ~1;
+    *(int *)((char *)ip + 0xe4) |= 2;
     func_ov006_020c092c(c + 0xdc);
     *(short *)(c + 0x1e0) = 0;
     *(short *)(c + 0x1e2) = 1;

@@ -1,6 +1,6 @@
 extern void func_ov006_0211f454(char *c, int i);
 extern void func_ov006_0211f34c(char *c, int i);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *reg,
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *reg,
     unsigned short a, unsigned short b, int c, unsigned short d);
 extern short data_02082214[];
 
@@ -20,7 +20,7 @@ void func_ov006_0211f224(char *c, int i)
     (*(unsigned char *)(c + 0x4676 + k))++;
     *(unsigned short *)(c + 0x466e + k) = 0;
     if (i == 0)
-        _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4001050, 0, 1,
+        _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4001050, 0, 1,
             0x10 - *(unsigned char *)(c + 0x4676 + k), 0x10);
     if (*(unsigned char *)(c + 0x4676 + k) < 0x10)
         return;

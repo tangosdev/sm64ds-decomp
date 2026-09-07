@@ -1,15 +1,11 @@
 //cpp
-typedef void (*IRQHandler)(void);
+#include "IRQ.h"
+
 extern "C" void func_ov006_020efdf0(void *self, int x);
 extern "C" int func_02053c10(int enable);
 extern "C" unsigned int data_0209f608;
 extern "C" unsigned char data_0209d460;
 extern "C" void func_ov006_020efcf8(void);
-
-namespace IRQ {
-    void SetIRQHandler(unsigned int, IRQHandler);
-    void EnableIRQs(unsigned int);
-}
 
 extern "C" void func_ov006_020f00a4(char *self)
 {

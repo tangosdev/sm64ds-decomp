@@ -27,8 +27,8 @@ void func_ov002_020bbac8(struct Obj* self)
     self->unk98 = 0;
     self->unkA8 = 0;
     other = self->unk59C;
-    py = (int*)(((long long)(int)((char*)self + 0x60)));
-    src = (Vec3*)(((long long)(int)((char*)other + 0x5c)));
+    py = (int*)((char*)self + 0x60);
+    src = (Vec3*)((char*)other + 0x5c);
     self->pos.x = src->x;
     self->pos.y = src->y;
     self->pos.z = src->z;

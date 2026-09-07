@@ -10,16 +10,16 @@ extern int data_ov002_020ff078[];
 
 void func_ov002_020b13e0(char *c);
 void func_ov002_020b1384(char *c);
-char *_ZN5Actor10FindWithIDEj(int id);
+char *_ZN8dActor_c10FindWithIDEj(int id);
 void _ZN5Sound9PlayBank3EjRK7Vector3(int a, void *v);
-int _ZNK12WithMeshClsn10IsOnGroundEv(char *w);
-char *_ZNK12WithMeshClsn14GetFloorResultEv(char *w);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(char *w);
+char *_ZNK10dBgCh_Actr14GetFloorResultEv(char *w);
 int func_02037e58(char *s);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(char *s, Vector3 *v);
-int _ZNK12WithMeshClsn13JustHitGroundEv(char *w);
+int _ZNK10dBgCh_Actr13JustHitGroundEv(char *w);
 int SurfaceInfo_TestFlag0x20(char *s);
 int Vec3_HorzLen(void *v);
-void _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(char *c);
+void _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(char *c);
 int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 int _ZN4cstd4fdivEii(int a, int b);
 
@@ -36,7 +36,7 @@ void func_ov002_020b1cc0(char *c)
 
     func_ov002_020b13e0(c);
     func_ov002_020b1384(c);
-    p = _ZN5Actor10FindWithIDEj(*(int *)(c + 0xd4));
+    p = _ZN8dActor_c10FindWithIDEj(*(int *)(c + 0xd4));
     if (p != 0) {
         t = *(u16 *)(p + 0xc);
         t = t == 0x4f;
@@ -64,15 +64,15 @@ void func_ov002_020b1cc0(char *c)
         }
     }
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1ac) == 0)
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1ac) == 0)
         return;
 
-    fl = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1ac);
+    fl = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1ac);
     attr = func_02037e58(fl + 4);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fl + 4, &n);
 
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1ac) != 0) {
-        if (SurfaceInfo_TestFlag0x20(_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1ac) + 4) == 0) {
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1ac) != 0) {
+        if (SurfaceInfo_TestFlag0x20(_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1ac) + 4) == 0) {
             if (*(u16 *)(c + 0x3a8) > 0xf000)
                 *(u16 *)(c + 0x3a8) = 0xf;
             _ZN5Sound9PlayBank3EjRK7Vector3(0x52, c + 0x74);
@@ -96,14 +96,14 @@ void func_ov002_020b1cc0(char *c)
         *(int *)(c + 0x98) = Vec3_HorzLen(pa);
         if (*(int *)(c + 0x98) > 0x1c000) {
             *(int *)(c + 0x98) = 0x1c000;
-            _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(c);
+            _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(c);
         }
         *(u16 *)(c + 0x94) = _ZN4cstd5atan2E5Fix12IiES1_(*(int *)(c + 0xa4), *(int *)(c + 0xac));
     }
 
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1ac) != 0)
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1ac) != 0)
         return;
-    if (SurfaceInfo_TestFlag0x20(_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1ac) + 4) != 0)
+    if (SurfaceInfo_TestFlag0x20(_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1ac) + 4) != 0)
         return;
 
     if (n.y != 0) {

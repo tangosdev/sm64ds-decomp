@@ -9,14 +9,14 @@ extern int func_ov019_0211131c(void *self);
 extern void func_ov019_021113b0(void *self);
 extern int _ZN9Animation8FinishedEv(void *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int frame, int rate, u32 flags);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 extern int func_ov019_0211140c(void *self, void *clsn);
 extern int func_ov019_0211127c(void *self, Vector3 *v, u32 j);
 extern int _ZNK7PathPtr8NumNodesEv(void *self);
 extern int func_ov019_02111254(void *self, int d);
 extern void _Z14ApproachLinearRiii(int *p, int a, int b);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3j(u32 a, u32 b, u32 cc, void *v, u32 d);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 cc, void *v, u32 d);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int cc, int d, int e, void *f, void *g);
 extern void func_ov019_021122dc(void *self, int a);
 extern void func_ov019_021112b8(void *self);
@@ -40,7 +40,7 @@ int func_ov019_0211197c(void *self)
             *(int *)(c + 0x130) = 0x1000;
             LB(0x38f)++;
         }
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x174);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x174);
         func_ov019_0211140c(c, c + 0x1a8);
         if (c[0x394] == 0 && c[0x393] == 0) {
             {
@@ -75,7 +75,7 @@ int func_ov019_0211197c(void *self)
                 func_ov019_021113b0(c);
             }
         }
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x174);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x174);
         func_ov019_0211140c(c, c + 0x1a8);
         if (c[0x394] == 0 && c[0x393] == 0 &&
             *(int *)(c + 0x36c) < _ZNK7PathPtr8NumNodesEv(c + 0x364) - 2) {
@@ -115,7 +115,7 @@ int func_ov019_0211197c(void *self)
             }
             *(u8 *)(c + 0x392) = 1;
         }
-        *(u32 *)(c + 0x384) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(u32 *)(c + 0x384), 3, 0x185, c + 0x74, 0);
+        *(u32 *)(c + 0x384) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(u32 *)(c + 0x384), 3, 0x185, c + 0x74, 0);
         *(void **)(c + 0x388) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             *(u32 *)(c + 0x388), 0x101, *(int *)(c + 0x5c), *(int *)(c + 0x60) + 0x32000, *(int *)(c + 0x64), 0, 0);
         break;

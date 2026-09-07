@@ -22,10 +22,10 @@ int func_02060ebc(Arg* a)
         int len = 0x200 - off;
         if ((unsigned int)len > (unsigned int)g->f20) len = g->f20;
         CpuCopy8((char*)a + 0x20 + off, (void*)g->f1c, len);
-        int *p18 = (int*)(((int)g + 0x18) & 0xFFFFFFFFFFFFFFFFULL);
-        int *p1c = (int*)(((int)g + 0x1c) & 0xFFFFFFFFFFFFFFFFULL);
+        int *p18 = (int*)((int)g + 0x18);
+        int *p1c = (int*)((int)g + 0x1c);
         *p18 += len;
-        int *p20 = (int*)(((int)g + 0x20) & 0xFFFFFFFFFFFFFFFFULL);
+        int *p20 = (int*)((int)g + 0x20);
         *p1c += len;
         *p20 -= len;
     }

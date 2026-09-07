@@ -13,9 +13,9 @@ struct Obj {
 
 int CheepCheep::Render()
 {
-    int b = ((unk_0b0 & 0x40000) != 0);
+    int b = ((mFlags & 0x40000) != 0);
     if (b) return 1;
-    Obj *o = (Obj*)((char *)&mModelAnim);
+    Obj *o = (Obj*)((char *)&(*(u8 *)&mModelAnim));
     o->Target(0);
     return 1;
 }

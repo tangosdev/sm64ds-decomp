@@ -10,7 +10,7 @@
 #include "types.h"
 
 extern "C" {
-    char* _ZN5Actor13ClosestPlayerEv();
+    char* _ZN8dActor_c13ClosestPlayerEv();
     int func_ov085_0212a788(char* c);
     u32 func_02022cbc(u32 uid, u32 eid, Fix12i x, Fix12i y, Fix12i z, const void* dir);
     Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
@@ -20,18 +20,18 @@ extern "C" {
     int _ZN9Animation8FinishedEv(void* a);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, Fix12i fix, u32 t);
     void ApproachAngle(short* p, s16 target, int a, int b, int step);
-
-    extern int data_0209e650[];
-    extern void* data_ov085_0213066c;
-    extern void* data_ov085_021305d0[];
-    extern void* data_ov085_021305b0[];
-    extern void* data_ov085_021305c0[];
-    extern void* data_ov085_021305c8[];
 }
+
+extern int data_0209e650[];
+extern void* data_ov085_0213066c;
+extern void* data_ov085_021305d0[];
+extern void* data_ov085_021305b0[];
+extern void* data_ov085_021305c0[];
+extern void* data_ov085_021305c8[];
 
 extern "C" int func_ov085_0212b8dc(char* c)
 {
-    char* player = _ZN5Actor13ClosestPlayerEv();
+    char* player = _ZN8dActor_c13ClosestPlayerEv();
     if (player == 0) return 1;
 
     if (func_ov085_0212a788(c) == 1) {

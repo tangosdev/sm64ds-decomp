@@ -1,26 +1,20 @@
 //cpp
 // @symbol _ZN8YoshiEgg6RenderEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_Player.h"
-/* recovered: named members + shared header, real C++ method */
+/* recovered: named members + shared header, real C++ method -- vtable slot 9 */
 #include "YoshiEgg.h"
-struct Obj {
-  virtual void v0();
-  virtual void v1();
-  virtual void v2();
-  virtual void v3();
-  virtual void v4();
-  virtual void m(int a);
-};
-extern "C" {
-}
+#include "Player.h"
 
 int YoshiEgg::Render()
 {
-  int b = (int)((unk_0b0 & 0x40000) != 0);
-  if(b) return 1;
-  if(_ZN6Player16IsInsideOfCannonEv(*(void**)((char*)&mPlayer))) return 1;
-  if(*(unsigned char*)(*(char**)((char*)&mPlayer)+0x6f5) < 1) return 1;
-  ((Obj*)((char*)&mModelAnim))->m(0);
-  return 1;
+    /* The temporary is load-bearing and must not be folded into the `if`, the
+       same way it is in daBakubaku_c::Render: `if (mFlags & 0x40000)` tests the
+       masked word directly, while the ROM materialises the 0/1 first. Folding it
+       changes the function's SIZE, which is what a `999 word(s) differ` says. */
+    int b = (int)((mFlags & 0x40000) != 0);
+    if (b) return 1;
+
+    if (mPlayer->IsInsideOfCannon()) return 1;
+    if (mPlayer->mOpacity < 1) return 1;
+    mModelAnim.Render(0);
+    return 1;
 }

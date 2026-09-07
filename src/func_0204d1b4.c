@@ -53,7 +53,7 @@ void func_0204d1b4(struct Dst *dst, struct Src *src, int t)
     int tmp = __aeabi_idiv((t - 0xff) * d, 0xff - hi);
     r1 = tmp + bb;
   }
-  u16 *p_d = (u16 *) (((unsigned long long) ((unsigned int) (&dst->u40))) & 0xFFFFFFFFFFFFFFFFULL);
+  u16 *p_d = (u16 *) ((unsigned long long) ((unsigned int) (&dst->u40)));
   u32 s = data_020a4d30 * 0x5eedf715u + 0x1b0cb173u;
   data_020a4d30 = s;
   int b = e->field2;

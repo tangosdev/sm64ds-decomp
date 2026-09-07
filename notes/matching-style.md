@@ -149,7 +149,7 @@ These were proven by hand-cracking real functions and watching the divergence co
 - **NEW-CTOR NULL CHECK: put the body INSIDE `if (p) { ... }`, return p after** -- NOT `if (!p) return p;`.
   `p = New(sz); if (p) { Ctor(p); ...installs...; } return p;` -> `movs r4,r0; beq <end>` (branch
   around the body), shared `mov r0,r4; pop; bx` exit. The early-return form predicates (`popeq;bxeq`)
-  and misses. Validated: func_ov003_020adc10 18 -> 7 divergences.
+  and misses. Validated: dScTitle_c_classInit (historical alias func_ov003_020adc10) 18 -> 7 divergences.
 - **MULTI-CONDITION EARLY-OUT TO A SHARED RETURN: use a `&&` chain, not separate `if(x) return K;`**.
   `if (a==0 && b==0 && c==0 && d==0) return 1; return 0;` -> each test `cmp; bne <shared ret0>`
   (branch), with a single shared exit. Separate `if (a) return 0;` statements PREDICATE each
@@ -195,7 +195,7 @@ readable straight off the disassembly before you write any C, and it tells you e
 need laundering.
 
 ROM shape for an RMW at a non-encodable offset:
-```
+```arm
 ldr  r2, [pc]  ; = 0x4c21
 add  r3, r0, r2
 ldrb r2, [r3]
@@ -250,7 +250,8 @@ own fix -- **do not pre-fold the base**. Modelling `self + 0x4694 + (i<<6)` as a
 mwcc pool-load it and hoist the result into callee-saved registers (observed: 7-register push).
 Modelling the same thing as a **stride-0x40 struct array** indexed `[i]` yields the ROM's
 `add rX,self,i,lsl#6; add rX,rX,#0x4000; ldrb [rX,#0x694]` and rematerializes per region.
-(`src/func_ov006_020d69b8.c`, `src/func_ov006_020d816c.c`.)
+(`src/actors/dScMgBomroom_c.cpp`, which absorbed the former `func_ov006_020d69b8`
+shard; and `src/func_ov006_020d816c.c`.)
 
 Related: write the cast **inline** at each use. Hoisting it into a local pointer (`Ent *ents = ...`)
 forces one addressing form everywhere; inline lets mwcc pick per context, which is what the ROM does.
@@ -371,8 +372,8 @@ greppable feature of the *residual* and scan every matched function for it:
 | function | address-nearest siblings | what signature search found |
 |---|---|---|
 | `func_ov063_02119074` | nothing on frame padding | scan for prologue `push {r4,lr}; sub sp,#0x10` + near-zero sp traffic (dead frame space) -> the `volatile int dummy[N]` idiom |
-| `func_ov006_02109aac` | no useful idiom | scan matched ov006 ROM bytes for `add rD, rN, rD, lsl #3` -> `src/func_ov006_02108f2c.c`, same table/compares/callee; 7 words closed in one edit |
-| `func_ov006_021082fc` | adjacent twin 0x38 away, useless | `grep -l Matrix4x3_ApplyInPlaceToTranslation src/*.c` filtered to callers passing a stack Vec3 -> `src/func_ov006_02107ea8.c`; 11 -> 0 |
+| `func_ov006_02109aac` | no useful idiom | scan matched ov006 ROM bytes for `add rD, rN, rD, lsl #3` -> `func_ov006_02108f2c` (now folded into `src/actors/dScMgRoulette_c.cpp`), same table/compares/callee; 7 words closed in one edit |
+| `func_ov006_021082fc` | adjacent twin 0x38 away, useless | `grep -l Matrix4x3_ApplyInPlaceToTranslation src/*.c` filtered to callers passing a stack Vec3 -> `func_ov006_02107ea8` (now folded into `src/actors/dScMgRoulette_c.cpp`); 11 -> 0 |
 
 Practical recipes: grep `src/` for a **callee name** your function also calls (then filter by
 argument shape); scan matched ROM bytes for a distinctive **instruction pattern** from your residual;
@@ -404,7 +405,8 @@ your target before starting.**
 > `volatile` is the one to reach for last: it preserves the stores but pins their order and
 > introduces extra *named webs*, which cost an 11-word rotation on `func_ov006_021082fc`
 > that no declaration-order permutation could fix. Swapping it for form #1 (taken verbatim
-> from the twin `src/func_ov006_02107ea8.c`) closed that function 11 -> 0 in one edit.
+> from the twin `func_ov006_02107ea8`, now part of
+> `src/actors/dScMgRoulette_c.cpp`) closed that function 11 -> 0 in one edit.
 > Form #2 beat `volatile` on `func_ov060_02117db8` for the same reason: dropping `volatile`
 > alone deleted the stores as dead, but merging two stack Vec3s into one `int v[6]` whose
 > address escapes into a call kept them *and* let the scheduler hoist the call-arg setup the

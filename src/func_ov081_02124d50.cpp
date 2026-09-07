@@ -1,6 +1,6 @@
 //cpp
-struct Actor {
-    static Actor* FindWithID(unsigned int id);
+struct dActor_c {
+    static dActor_c* FindWithID(unsigned int id);
 };
 
 extern "C" {
@@ -14,7 +14,7 @@ extern char data_ov081_02128e64[];
 
 extern "C" int func_ov081_02124d50(char* c)
 {
-    char* r5 = (char*)Actor::FindWithID(*(unsigned int*)(c + 0x3fc));
+    char* r5 = (char*)dActor_c::FindWithID(*(unsigned int*)(c + 0x3fc));
     if (r5 != 0 && *(int*)(r5 + 0x9c) == 0) {
         func_ov081_0212423c(c, 1);
         *(int*)(r5 + 0x5c) = *(int*)(c + 0x434);

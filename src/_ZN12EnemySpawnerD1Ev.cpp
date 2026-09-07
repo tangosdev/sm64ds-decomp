@@ -1,14 +1,7 @@
 //cpp
 // @symbol _ZN12EnemySpawnerD1Ev
 
-struct Actor {
-    virtual ~Actor();
-};
-
-
-struct EnemySpawner : Actor {
-    virtual ~EnemySpawner();
-};
+#include "EnemySpawner.h"
 
 EnemySpawner::~EnemySpawner()
 {

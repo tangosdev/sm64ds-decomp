@@ -115,21 +115,89 @@ def resolve_candidate(symname, name_index):
     return None
 
 
-def object_reloc_dests(obj, func, name_index):
+def rel_section_for(elf, shndx):
+    """The relocation section that applies to section `shndx`, matched by sh_info.
+
+    Do NOT look this up by name. mwccarm emits ONE section per function and names them
+    all ".text", so ".rela.text" is ambiguous and pyelftools' name lookup answers with
+    the LAST section of that name -- one fixed function's relocations, whichever
+    function was asked about.
+
+    A destructor TU always defines three functions, emitted D2, D0, D1, so the last
+    table is D1's. D1 therefore got its own by luck and D0 and D2 got D1's. That is
+    exactly backwards from useful: the D0 route is the one this tree has not migrated
+    yet, and it was the one being checked against another function's table.
+
+    The byte compare cannot cover for it. Relocated words are wildcarded, which is the
+    whole reason this destination check exists.
+
+    tools/linkcheck.py hit the same hazard first and documented it; this is the shared
+    copy, and linkcheck imports it rather than keeping a second one."""
+    for sec in elf.iter_sections():
+        if sec.header["sh_type"] in ("SHT_REL", "SHT_RELA") and sec.header["sh_info"] == shndx:
+            return sec
+    return None
+
+
+# objisolate.VTABLE_PREAMBLE; kept a literal so this module stays import-light.
+# mwcc's own `_ZTV<C>` symbol addresses the vtable OBJECT -- offset-to-top,
+# typeinfo, then the slot array -- while symbols.txt's `_ZTV<C>` IS the slot
+# array. The 8-byte gap is exactly what objisolate subtracts when it rewrites a
+# vptr store's addend for the ROM link.
+_VT_PREAMBLE = 8
+
+# The one data-relocation type mwccarm emits. Branch types (R_ARM_PC24/CALL/
+# JUMP24) carry a PC-bias addend, not addressing; see linkcheck.BRANCH_TYPES
+# (linkcheck imports this module, so the constant cannot come from there).
+_R_ARM_ABS32 = 2
+
+
+def object_reloc_dests(obj, func, name_index, vt_form="raw"):
     """[(offset, symname, resolved_module, resolved_addr)] for relocs inside func.
 
-    Returns (None, reason) if the function symbol isn't in the object."""
+    Returns (None, reason) if the function symbol isn't in the object.
+
+    Data relocs (R_ARM_ABS32) are ADDEND-AWARE: config records the DESTINATION
+    the linked word points to, and mwccarm encodes any base+offset access -- a
+    struct field, an array element, a strength-reduced pointer into a global --
+    as the symbol's base plus a nonzero RELA addend. Resolving by name alone
+    drops that offset and reports WRONG-DEST on byte-exact code (measured on
+    func_ov075_02119dc4: data_0209fc5c with addend 1 against config
+    0x0209fc5d:arm9, linkcheck VERIFIED). linkcheck.func_relocs_typed states
+    the same rule for the linking side; this is the destination-compare copy.
+
+    `_ZTV<C>` data relocs need their own arithmetic, not the straight add. A
+    synthesized vptr store names the class's one `_ZTV` symbol for every block
+    it stores -- primary AND each inherited secondary -- and encodes which
+    block in the RELA addend: 8 for the primary (the preamble) plus 0x10 per
+    secondary block past it, while symbols.txt's `_ZTV<C>` is already the slot
+    array (measured on _ZN9dBgCh_LinC1Ev: addends 8/0x18 against
+    _ZTV9dBgCh_Lin 0x020992a4, config destinations 0x020992a4/0x020992b4).
+    The destination the build links is sym + addend - _VT_PREAMBLE.
+
+    Branch relocs keep name-only resolution: their nonzero addends are PC-bias
+    encoding (-8), not addressing, and must not be added on.
+
+    vt_form says which side of objisolate's rewrite `obj` sits on, because the
+    flag cannot be inferred from the object: a raw object's secondary store
+    carries 0x18 while an isolated one carries 0x10, and both are >= the
+    preamble.
+      "raw"      straight from mwccarm (match.py, build_pin.py, bank_harvest,
+                 nearmiss_db, symscope); the preamble is still in the addend
+      "isolated" post-objisolate (reloc_audit's winning_object path);
+                 objisolate already subtracted it
+    """
     elf = ELFFile(io.BytesIO(obj))
     symtab = elf.get_section_by_name(".symtab")
     syms = list(symtab.iter_symbols())
     sym = next((s for s in syms if s.name == func), None)
     if sym is None:
         return None, "func-not-in-obj"
-    sec = elf.get_section(sym["st_shndx"])
     start, size = sym["st_value"], sym["st_size"]
-    rel = elf.get_section_by_name(".rel" + sec.name) or elf.get_section_by_name(".rela" + sec.name)
+    rel = rel_section_for(elf, sym["st_shndx"])
     dests = []
     if rel is not None:
+        is_rela = rel.header["sh_type"] == "SHT_RELA"
         for r in rel.iter_relocations():
             o = r["r_offset"] - start
             if not (0 <= o < size):
@@ -137,8 +205,59 @@ def object_reloc_dests(obj, func, name_index):
             tsym = syms[r["r_info_sym"]]
             res = resolve_candidate(tsym.name, name_index)
             mod, addr = (res if res else (None, None))
+            if is_rela and res is not None:
+                addend = r["r_addend"]
+                if tsym.name.startswith("_ZTV"):
+                    if vt_form == "isolated":
+                        addr += addend
+                    elif addend >= _VT_PREAMBLE:
+                        addr += addend - _VT_PREAMBLE
+                elif r["r_info_type"] == _R_ARM_ABS32:
+                    addr += addend
             dests.append((o & ~3, tsym.name, mod, addr))
     return dests, size
+
+
+def _as_the_build_links_it(obj, name):
+    """Apply objisolate, because the ROM build does and the destinations differ.
+
+    A gate that checks relocation DESTINATIONS has to check the object the linker
+    actually consumes. rombuild runs every enrolled object through objisolate, and
+    one of the things isolation does is correct the vtable addend: mwcc's `_ZTV<C>`
+    addresses the vtable OBJECT, so a vptr store carries an addend that skips the
+    offset-to-top and typeinfo words, while symbols.txt's `_ZTV<C>` IS the slot
+    array. Isolation subtracts that preamble.
+
+    Without this the gate reads the raw addend and resolves to whatever happens to
+    sit there. Observed: `_ZN10ModelAnim2D0Ev`'s secondary vptr store carries
+    addend 44, and `_ZTV10ModelAnim2` (0x0208e9b4) + 44 lands on `_ZTI8dFader_c`
+    (0x0208e9e0) -- an unrelated class's typeinfo, reported as WRONG-DEST on a file
+    whose linked bytes are exactly right. Isolation turns 8 -> 0 and 44 -> 36, which
+    is `_ZTV10ModelAnim2` itself and `VTable_Animation_ModelAnim2Thunk` (0x0208e9d8).
+
+    Multiple inheritance is what made this visible: the single-inheritance addend of
+    8 resolves to a word still inside the same vtable symbol, so it never looked
+    wrong. Fails open -- if isolation cannot plan this object, check it unisolated
+    rather than losing the verdict.
+    """
+    try:
+        import objisolate as OI
+        fd, tmp = tempfile.mkstemp(suffix=".o")
+        os.close(fd)
+        p = pathlib.Path(tmp)
+        try:
+            p.write_bytes(obj)
+            if OI.plan(obj, name).get("error"):
+                return obj
+            OI.isolate(p, name)
+            return p.read_bytes()
+        finally:
+            try:
+                p.unlink()
+            except OSError:
+                pass
+    except Exception:                                             # noqa: BLE001
+        return obj
 
 
 def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
@@ -193,6 +312,7 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
                     obj = M.compile_c(cfile, v, flags, include_dirs)
                     if obj is None:
                         continue
+                    obj = _as_the_build_links_it(obj, name)
                     import probe_versions as PV
                     try:
                         candidate_syms = list(PV.funcs_in(obj).keys())
@@ -285,9 +405,14 @@ def known_modules():
     return {m for m, _path in R.iter_reloc_files(include_itcm_dtcm=True)}
 
 
-def check_destinations(obj, sym, addr, size, mod, name_index, config_relocs, sym_index):
+def check_destinations(obj, sym, addr, size, mod, name_index, config_relocs, sym_index,
+                       vt_form="raw"):
     """Per-reloc destination verdicts for an in-hand object. Shared by the audit
     and the match gate (match.py --strict-relocs).
+
+    vt_form passes through to object_reloc_dests: which side of objisolate's
+    vtable-addend rewrite `obj` sits on. The audit feeds isolated objects
+    (winning_object), every other caller compiles fresh and feeds raw.
 
     Returns (rows, missing) where rows is a list of dicts (one per object reloc in
     the function) and missing is the count of config relocs the candidate lacks.
@@ -304,7 +429,7 @@ def check_destinations(obj, sym, addr, size, mod, name_index, config_relocs, sym
     if normalized not in known_modules():
         return None, (f"unknown module {mod!r} (normalizes to {normalized!r}); "
                       f"expected one of arm9, itcm, dtcm, ovNNN")
-    dests, size_or_reason = object_reloc_dests(obj, sym, name_index)
+    dests, size_or_reason = object_reloc_dests(obj, sym, name_index, vt_form)
     if dests is None:
         return None, size_or_reason
     cfgmap = config_relocs.get(normalized, {})
@@ -341,14 +466,16 @@ def warm_gate_index():
     return _GATE_IDX
 
 
-def gate_wrong_dests(obj, sym, addr, size, mod):
+def gate_wrong_dests(obj, sym, addr, size, mod, vt_form="raw"):
     """Bank-gate wrapper around check_destinations: WRONG-DEST rows only, with the
     three config indexes built once and cached for the process. Returns [] when the
     object's reloc destinations agree with config, None when the symbol is absent
-    from the object (callers treat that as a verification failure)."""
+    from the object (callers treat that as a verification failure). vt_form passes
+    through to check_destinations/object_reloc_dests."""
     name_index, config_relocs, sym_index = warm_gate_index()
     rows, _missing = check_destinations(obj, sym, addr, size, mod,
-                                        name_index, config_relocs, sym_index)
+                                        name_index, config_relocs, sym_index,
+                                        vt_form)
     if rows is None:
         return None
     return [r for r in rows if r["verdict"] == "WRONG-DEST"]
@@ -364,7 +491,8 @@ def audit_entry(entry, name_index, config_relocs, sym_index):
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}",
                 "verdict": "NO-REPRO", "reason": err, "relocs": []}
     rows, missing = check_destinations(obj, sym, addr, size, mod,
-                                       name_index, config_relocs, sym_index)
+                                       name_index, config_relocs, sym_index,
+                                       vt_form="isolated")
     if rows is None:
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}",
                 "verdict": "NO-SYM", "reason": missing, "relocs": []}

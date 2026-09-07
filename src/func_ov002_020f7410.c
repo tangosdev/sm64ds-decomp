@@ -5,7 +5,7 @@ extern void MulVec3Mat4x3(void *out, void *m, void *v);
 extern void Vec3_LslInPlace(void *v, int sh);
 extern int _Z14ApproachLinearRiii(int *p, int target, int step);
 extern void func_0201ef38(void);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *reg,
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile void *reg,
     unsigned short a, unsigned short b, int c, int d);
 
 int func_ov002_020f7410(unsigned char *self, unsigned char *in, int sel)
@@ -33,7 +33,7 @@ int func_ov002_020f7410(unsigned char *self, unsigned char *in, int sel)
         if (r != 0 || a != 0) {
             t = (r * 0xa00) >> 12;
             if (t > 0x10) t = 0x10;
-            _ZN3G2x13SetBlendAlphaEPVttttt((volatile void *)0x4000050, 8, 1, t, 0x10 - t);
+            _ZN3G2x13SetBlendAlphaEPVttttj((volatile void *)0x4000050, 8, 1, t, 0x10 - t);
         }
     }
     return 1;

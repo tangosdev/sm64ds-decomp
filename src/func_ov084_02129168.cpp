@@ -1,7 +1,7 @@
 //cpp
 // @symbol func_ov084_02129168
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
@@ -23,10 +23,10 @@ void func_ov084_02129168(char* c, char* actor)
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, *(void**)((char*)data_ov084_02130cc0 + 4), 0, 0x1000, 0);
     *(int*)(c + 0x434) = 3;
     *(unsigned char*)(c + 0x107) = 0;
-    _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x1b4);
-    _ZN12WithMeshClsn12Unk_0203589cEv(c + 0x1b4);
-    _ZN12WithMeshClsn22ClearJustHitGroundFlagEv(c + 0x1b4);
-    _ZN12WithMeshClsn15ClearGroundFlagEv(c + 0x1b4);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv(c + 0x1b4);
+    _ZN10dBgCh_Actr12Unk_0203589cEv(c + 0x1b4);
+    _ZN10dBgCh_Actr22ClearJustHitGroundFlagEv(c + 0x1b4);
+    _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x1b4);
     func_02012694(0x13a, c + 0x74);
     *(unsigned char*)(c + 0x467) = 0;
 }
