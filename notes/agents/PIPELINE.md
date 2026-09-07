@@ -1,253 +1,155 @@
-# Class reconstruction pipeline
+# GitHub class reconstruction protocol, version 2
 
-Write the game's C++ classes back, one class at a time, with several agents
-working at once and no human holding the thread in their head.
+Reconstruct period-accurate SM64DS C++ and prove its emitted code and relocations
+against the retail ROM under the pinned compiler. Keep ROM observations, inferred
+structure, coined identifiers, and hypotheses about original files distinct.
+A byte match cannot recover every original identifier or prove one unique source.
 
-Every rule an agent must obey lives in this directory as plain Markdown. Nothing
-here depends on a Claude skill, a Claude memory, or a particular model — a Codex
-instance and a Claude instance read the same files and follow the same protocol.
+This file is the operational authority for the coordinated v2 fleet. Repository
+AGENTS.md still defines source and byte requirements. Old notes, harness memories,
+and installed role skills must not override this workflow. Each task records the
+commit containing the protocol/tool version it uses. Upgrading that version is an
+explicit handoff, not a side effect of another worktree fetching main.
 
-## The shape
+## One durable record for each kind of information
 
-One class moves through five stages, plus a sixth that is not per-class. Each is a separate agent run with a fresh
-context, reading the previous stage's written output rather than inheriting a
-conversation.
-
-| stage | role | consumes | produces |
-|---|---|---|---|
-| 1 | `scout` | the ROM | `notes/data/class-facts/<Class>.json` |
-| 2 | `writer` | the facts file | one `src/actors/<Class>.cpp`, its manifest, and the bookkeeping below |
-| 3 | `humanizer` | the written source | a revised source that reads like 2004 EAD C++ |
-| 3b | `writer` again | the humanized source | as many members as byte-match allows turned into real `<Class>::` methods |
-| 4 | `builder` | the revised source | green byte gates, then a PR |
-| 5 | `reviewer` | the PR | merge, or a rejection with a named reason |
-| - | `integrator` | several already-green PRs | one branch, one validator run |
-
-The `integrator` is not a stage - it runs only when several proven class PRs are
-open at once, and it exists purely because the validator is one box. See
-`roles/integrator.md`. It re-derives nothing; it moves proven commits onto a
-fresh base and proves that the composition changed nothing.
-
-Stage 2 is wider than its one row suggests. Besides the source and manifest, a
-promotion edits `delinks.txt`, `converted-baseline.json` (via `tiers_ratchet
---update`, never by hand), `converted-backslide-exceptions.jsonl`, any `port/`
-slice manifest naming a deleted shard, and any prose naming one. Six non-source
-files is typical.
-
-The writer is **gathering, not authoring**: 387 of 429 classes already have a
-real header, and the shards being folded together are existing matched code. Most
-promotions touch no header at all.
-
-## A promoted TU is not a reconstructed class
-
-`status: promoted` proves the shards were folded into one TU that byte-matches. It
-says **nothing** about whether the class got any methods, and until 2026-09-06 no
-role file asked for any. The result, measured on `origin/main` from each manifest's
-`functions[]` (mangled `_Z...` vs `func_*`):
-
-| class | members | real methods |
-|---|---|---|
-| `dScMgCoin_c` | 33 | 0 |
-| `dScMgTeresa_c` | 48 | 2 (D1/D0 only) |
-| `dScMgPanel_c` | 71 | 6 |
-| `dScMgCup_c` | 32 | 15 |
-| `dScMgMemory2_c` | 52 | **51** |
-
-Every one of those is `promoted`, and every queue and coverage metric counts them
-equally. A TU of thirty `extern "C" func_ovNNN_*(char *self)` free functions in
-`src/actors/<Class>.cpp` is a **merged file, not a reconstructed class** -- and the
-goal is writing the classes back.
-
-**The ruling: convert as far as byte-match allows.** `dScMgMemory2_c` is the proof
-the route works end to end -- but read what it cost before you take 51/52 as a
-target. Measured across its promotion commit `e351ffb09`, in
-`config/arm9/overlays/ov006/symbols.txt`:
-
-| | mangled `_ZN14dScMgMemory2_c*` rows |
+| Record | Authority |
 |---|---|
-| `e351ffb09^` | 8 |
-| `e351ffb09` | **51** |
+| GitHub issue | Task objective, scope, decisions, dependencies, links |
+| Git branch `agents/coordination` | Task resources, stage, current owner, accepted input/output SHAs |
+| Working source branch | Source, manifests, facts and a committed handoff snapshot |
+| PR and gate evidence | Review of a specific candidate and composed base |
+| Optional Project board | A view of the records above |
 
-So 43 of that 51 were **renamed in the same commit**, shard and `symbols.txt` row
-together. **51/52 was a coordinated naming pass, not conversion alone.**
+Use one issue per active class or evidenced multi-class TU. A class may have
+several independently scoped tasks over time; use unique task IDs associated with
+that issue. Reserve every constituent class of a multi-class TU. Keep a class
+issue open while agreed reconstruction work remains; partial PRs reference it.
+Use a closing keyword only for the final agreed scope.
 
-That distinction decides what your own ceiling even means. A member already
-carrying a mangled name converts as a codegen question -- does it byte-match.
-A member carrying an auto-generated `func_ovNNN_*` name converts only by being
-**renamed**, which is a different, larger, and riskier act: the new name must
-reach `symbols.txt` in the same commit (see below), and every external caller
-must move with it. Measured on `ov071/Scuttlebug`, all 27 unconverted members
-were auto-named, so its ceiling was **name recovery, not codegen and not
-scope** -- a different wall from `dScMgCurling2_c`'s, where all 29 compiled
-byte-neutrally and 12 were refused for scope alone.
+The issue and handoff document point to authoritative state; do not manually
+maintain a second lock in labels, comments, or another TSV. GitHub account
+assignment is not session identity when several harnesses share an account.
+Give each run a unique session ID, record its harness, and retain its private
+queue receipt in ignored local storage.
 
-State which wall you hit. "10/37" with no wall named is not a result. Stage 3b owns it; it is the same `writer` role file and
-may run as a separate pass on the same branch when stages 2 and 3 have already
-pushed. A member that will not convert byte-neutrally **stays a free function** --
-that is a result, not a failure. Report the count either way: "31/31 MATCH" hides
-"1 of 31 is a method".
+## Roles and continuous ownership
 
-**Renaming a member is one edit, not two.** The new mangled name must reach
-`symbols.txt` in the same commit: any pointer-to-member record in unowned `.data`
-that still spells its target `func_*` links as `0x00000000`, because dsd resolves
-those records by NAME. No byte gate at stage 2 or 3 catches it. And a class member
-function **cannot sit inside an `extern "C" { }` region**, so the one file-scope
-region goes after the last surviving `func_*` member.
+A producer owns one coherent class/TU scope through research, method and layout
+reconstruction, compiler experiments, and a local verified commit. Scouts and
+source reviewers assist that owner. Independent verification follows the finished
+source-quality pass. A verifier does not repair the commit it is judging.
 
-## Coined class names are allowed, and must be recorded as coined
+Domain coordinators choose useful scopes, locate existing facts and branches,
+sequence shared dependencies, and own blocked-task follow-through. The fleet
+coordinator reconciles domains and inventories the running sessions. One integrator
+owns the order and composition of work landing on main.
 
-An earlier version of this file **parked** every class whose name was not read from
-the cartridge's RTTI. That rule is withdrawn: it was stricter than the project's own
-practice and it retroactively condemned merged work. Ten classes with coined names
-have already shipped -- `Player`, `Goomboss`, `Eyerok`, `ActorDerived`,
-`ActorBase_SceneNode`, and five `Mg*` minigame classes.
+The default task sequence is `producer -> verifier -> integrator`. A scout-only
+deliverable or a focused follow-up may use fewer stages if its scope says so.
+A source reviewer normally reports to the producer before handoff; if it edits,
+make that an explicitly owned stage and verify the resulting commit afterward.
+Role names describe responsibilities, not preferred models.
 
-**The standard is disclosure, not abstention.** Promote the class; record the name as
-coined, with the evidence that justifies it, in the manifest and in
-`symbols/actor_renames.tsv`. That is already the discipline for coined *member*
-names -- `dScMgCurling2_c` shipped 17 of them, each with a `why` sentence separating
-what the ROM proves (member-ness, dispatch-table index) from what is invented (the
-word). Apply the same split to a class name: say what the cartridge attests and what
-you chose.
+## Before editing
 
-State the identity either way. `dScMgCurling2_c` is ROM RTTI -- the ov006 bytes at
-`0x0213c4c8` are literally `15dScMgCurling2_c` -- and its facts file says so in
-`identity_evidence`. A coined name needs the same field, saying it is coined and on
-what basis. **Do not run `class_rename.py`** to manufacture agreement.
+1. Read the issue, queue record, input commit, and accepted handoff.
+2. Inspect prior branches, PRs, and local output before rediscovering the class.
+   [IN-FLIGHT.md](IN-FLIGHT.md) preserves the v1 backlog investigation and inventory
+   commands; recompute its dated counts before using them.
+3. Declare classes, TU/source paths, shared headers, symbol/config surfaces, and
+   module-qualified half-open ROM ranges. Names alone do not imply those resources.
+4. Obtain a successful v2 claim for the exact offered stage and input SHA.
+5. Work in your own wired worktree with private build state.
 
-Scale, measured 2026-09-06 against `build/rtti.json` (the parked figure quoted in the
-withdrawn rule was wrong, and wrong in a way that mattered):
+A denied claim or unavailable queue is not permission to proceed. Shared headers
+are shared dependencies even when classes differ. If new resources are needed,
+checkpoint the work and coordinate an atomic reservation update before editing
+them. Do not broaden your scope silently. Global attribution and generated state
+are reconciled in the integration lane.
 
-| | rows | shards |
-|---|---:|---:|
-| `UNATTRIBUTED` / `UNATTRIBUTED-CORE` -- **not classes**, buckets for unattributed functions | 2 | 4,560 |
-| real class rows, unpromoted | 235 | 3,708 |
-| -- name is ROM-proven | 42 | 872 |
-| -- name is coined | 193 | 2,836 |
+Use the repository path resolver and the task's reviewed manifest. A worker does
+not introduce a new directory/naming convention based on a sibling's appearance.
+A deliberate convention change belongs to a separate reviewed decision.
 
-The two `UNATTRIBUTED*` rows are not promotable classes and must be excluded from any
-"how much is left" figure; counting them inflated the cost of this rule by 2.6x.
+## Handoff and resumption
 
-The RTTI test itself is sound -- four independent searches for false negatives
-(`rtti.json` record names, raw ROM string search, the strict length-prefixed `_ZTS`
-form, and nested-scope) turned up exactly one, `dMgPsOpt_c`, attested only as the
-enclosing scope of `dMgPsOpt_c::TouchIcon_c`. **A raw substring search is not that
-test**: `Koopa`, `Door`, `Coin`, `Key` and `Fish` all "match" inside unrelated ROM
-strings.
+Use [the handoff template](templates/handoff.md). Commit it with the source it
+describes. Refer to the candidate as "this commit" inside the document to avoid
+trying to embed its own SHA; the queue records the exact output SHA.
 
-Stage 4 is the only stage that DECIDES whether the bytes are right, and it owns
-`linkcheck` and `rombuild`. That is not the same as "stages 1-3 never run a byte
-gate", which this file used to say and which is actively harmful at stage 3: a
-humanizer's edits move bytes routinely, `tubuild.py verify` costs 2.6 seconds on
-a 71-member TU, and running it after every batch is the difference between
-knowing and bisecting. Stage 3 never changes semantics. Stage 5 is a different
-agent from stage 4 — a producer's own green output is evidence, not review.
+Before publication, read current queue ownership again. Publish the immutable
+output through `classqueue.py v2`; the next stage must accept that exact input.
+Publishing a queue artifact sends its commit history to the remote. Inspect the
+committed files first, and never include private receipts, compiler inputs, or ROMs.
 
-**Every merge to `main` invalidates the pinned base of every other open PR.** So
-the cost of N separately-landed promotions is not N validator runs; it is N runs
-plus N-1 rebases plus the ledger conflicts those rebases cause. Past two or
-three open class PRs, the integrator is cheaper than the queue.
+The task retains its resources while offered to the next stage. Releasing a
+running lease relinquishes that attempt, not the durable task or its evidence.
+The previous output remains discoverable if a harness stops or misses a notification.
+Do not delete a source branch holding unbanked work.
 
-## The queue
+For an interruption, preserve the branch, committed checkpoint, private receipt,
+and exact next action. If a checkpoint does not pass the source gates, label it
+WIP and keep it out of source integration. "Continue" means inspect and resume
+that checkpoint; it never means reset, clean, abandon the branch, or claim a
+different class automatically.
 
-**`notes/data/tu-promotion-queue.tsv` is the live queue.** Each row is a class
-whose method bodies are still scattered across one-function shards, ranked
-best-first by how many shards the promotion absorbs. It carries `shard_count`,
-`promotion_route`, `blockers`, and a `sibling_oracle` naming an already-promoted
-class in the same overlay to copy.
+For verification failure, record evidence and use the queue's rework transition
+back to the producer. Never publish a failed verification as a successful handoff.
+A corrected commit receives a fresh independent verification.
+For a verify-only adopted task with no producer stage, preserve the failure on
+the issue, release, and have the coordinator cancel and register an explicit
+producer continuation as described in queue-v2.
 
-`notes/data/class-build-worklist.tsv` tracks a **different axis** — whether a
-class has a real *header* — and 387 of 429 are already `DONE` there. It is the
-right list for the 27-class header tail and the wrong one for this work:
-`dBgActor_c` reads `DONE` in it while sitting at row 12 of the promotion queue
-with 11 shards outstanding. `classqueue.py` prefers the promotion queue for
-exactly this reason.
+## Communication without realtime delivery
 
-## Claiming work
+Read shared state at startup/resume, before scope changes, and before handoff or
+publication. Coordinators check their assigned tasks at regular checkpoints; a
+small fleet can start with a few-minute polling interval and API backoff. Workers
+doing a long build report its running state at their next available checkpoint.
 
-A claim is a ref under `refs/claims/` pointing at a **parentless commit** unique
-to the claiming agent. Two parentless commits are never ancestor-related, so a
-second claimant's push is always a non-fast-forward and always rejected; the
-claim is then read back from the remote to confirm our object actually landed.
-No shared file is edited — a claims *file* is what produces merge cascades.
+Record milestone updates and actionable blockers on the issue. A blocker names
+the needed fact/action, its responsible role, and the exact artifact to inspect.
+No per-command issue chatter or API heartbeat spam is required. No elapsed-time
+threshold authorizes stealing a claim. A stopped session needs an explicit,
+evidence-preserving recovery.
 
-The parentless part is load-bearing. An earlier version pushed `HEAD`, which git
-rejects only when the pusher is *behind* the holder. Agents branching off one
-commit push the same SHA, git answers `Everything up-to-date` and exits 0, and
-**every agent believes it won**. Do not simplify it back.
+## Source quality and proof are separate
 
-    python tools/classqueue.py next    --role writer
-    python tools/classqueue.py claim   dActor_c --role writer --worktree C:/tmp/sm64ds-dactor
+Each handoff records these dimensions without combining them into one score:
 
-`claim` takes the **bare class name**. `ovNNN/dActor_c` is accepted and
-normalized to the same ref — a class lives in one overlay, so the prefix adds
-nothing. Before that normalization the two spellings built two different refs
-and two agents could hold one class simultaneously; live claims existed in both
-forms. Create the worktree first and claim once with `--worktree`: re-claiming
-to attach the path afterwards is denied against yourself.
+- Exact functions/bytes and relocation destinations, with incomplete coverage named.
+- Compiler-spelled methods versus surviving free-function/ABI bridges.
+- Fields and object layout recovered versus raw-offset or shadow-struct accesses.
+- Lifecycle, key-function, vtable, RTTI, initializer and data ownership.
+- Remaining naming, scope, and measured compiler barriers.
+- Attribution carried through file moves and symbol renames.
 
-**Use forward slashes in `--worktree`, as the example above does — it is
-required, not cosmetic.** A backslash path passed through a shell arrives with
-its separators eaten and the claim records
-`"worktree": "C:tmpsm64ds-memory2-build"`, which points at nothing and defeats
-the whole reason the field exists.
+"Promoted" is a packaging/build state, not a declaration that reconstruction is
+complete. Keep the next concrete improvement on the class issue. Original helper
+functions need not become methods merely to increase a count.
 
-    python tools/classqueue.py release dActor_c --role writer
-    python tools/classqueue.py list
+Required proof is defined by AGENTS.md, the task's change scope, and current gate
+tools. Source/header edits require exact affected-consumer and full-ROM checks;
+TU/lifecycle work also requires complete emitted-object and metadata evidence.
+Treat queued validation, masked byte matches, unexplained blind relocations, and
+report-only success as incomplete. Record the exact tested source and base SHAs.
 
-`claim` exits non-zero when the class is already held. That non-zero is the
-lock. Do not retry it, do not force-push over it — take the next row.
+## Integration and completion
 
-Release your claim when your stage's output is committed and pushed, not when
-you personally are done thinking.
+Only the integrator composes independently accepted candidates, reconciles shared
+bookkeeping, publishes the final PR, and coordinates its landing. Small coherent
+batches may be useful; compatibility follows actual shared resources and dependencies.
+Use the current private validator and relevant static gates on the proposed composition.
+A previous green head/base is not proof for a changed composition.
 
-**A released claim does not mean nobody has done the work.** The claim ref is
-the only thing `classqueue.py` consults, so a class whose scout pushed a branch,
-opened no PR and released its claim is offered again as unclaimed — and the next
-agent rediscovers the whole thing. That happened to `dScMgCoin_c`. Before you
-start, look:
+A queue's completed stages do not themselves prove a merge. The integrator records
+the PR URL, tested candidate, tested base, and resulting main commit in its evidence.
+A squash merge's SHA differs from the candidate SHA; preserve both identities.
 
-    git branch -r --list 'origin/cpp/<Class>*'
+Close superseded PRs after their content is accounted for, preserve contributor
+attribution, and leave no unresolved output without an issue and next owner.
+Tools/CI/protocol work remains separate from source reconstruction PRs.
 
-If one exists, read it before you cut a new one.
-
-This has already happened at scale: as of 2026-09-07 there were **57 unmerged
-`cpp/*` branches with zero open PRs between them**. `notes/agents/IN-FLIGHT.md`
-records that backlog, the four places pipeline state is kept, and the three
-commands that re-derive all of it -- read it before assuming a class is untouched.
-
-## Launching an agent
-
-Point any instance — Claude Code or Codex — at one role file and one class:
-
-    Read notes/agents/PIPELINE.md and notes/agents/roles/<role>.md in
-    C:\Users\andre\source\tangosdev\sm64ds-decomp, then execute that role for
-    the next unclaimed class. Claim it first with tools/classqueue.py.
-
-The role file carries the rest. An agent that finishes its class should claim
-the next one rather than stopping.
-
-## Rules that hold for every role
-
-1. **Name your worktree and your ref in every claim about a file.** This tree
-   routinely has 150+ sibling worktrees at different refs, and the main checkout
-   is itself usually stale. `git show <ref>:<path>` carries the ref in the
-   command; a bare file read does not.
-2. **One worktree per agent**, created with the `decomp-worktree` recipe, torn
-   down with `wt-remove.ps1`. Never `git worktree remove` — it deletes through
-   the junctions and empties the real ROM dump, which cannot be re-downloaded.
-3. **Never edit a shared ledger by hand.** `symbols/actor_renames.tsv` and
-   `notes/data/c-cpp-classification.tsv` are append logs whose row *order* is
-   load-bearing; a hand merge silently inverts rename chains.
-4. **A near-miss never lands in `src/`.** Bank it in `nearmiss/db.jsonl` and
-   restore the matched source.
-5. **Report the outcome, not the effort.** If a gate failed, paste the failure.
-6. **Force-pushes are blocked. Merge, do not rebuild — and do not rebase a
-   branch that is already on the remote at all.** Every stage after the first
-   inherits a pushed branch, so rebasing it makes your own push a
-   non-fast-forward against the remote's copy of *the same commit*; repairing
-   that costs an add/add conflict on the promoted `.cpp`, resolved correctly
-   only by first proving the remote side byte-identical to what you started
-   from. Merge `origin/main` in instead. And a branch rebuilt as a fast-forward
-   from an older commit ships stale tree-derived work past review — which does
-   not look stale, it looks confident.
+See [CUTOVER.md](CUTOVER.md) before starting v2 and [queue-v2.md](queue-v2.md)
+for the actual commands, state transitions, and pilot limitations.
