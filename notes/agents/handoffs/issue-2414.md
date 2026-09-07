@@ -155,14 +155,27 @@ This document describes this commit. The queue records its immutable output SHA.
   `src/actors/daMip_c.cpp` at this commit, with comments stripped first, the
   actual remaining surface is:
 
-  - **15 shadow-struct definitions across 10 distinct names.** Fourteen are
-    block-scope (`RG`, `V3` ×2, `G`, `Vector3` ×2, `V3Blk`, `Mtx43` ×4,
-    `Vector3_local`, `Obj`, `VObj` — 9 names), and one is file-scope:
-    `daMip_cSelf`, forward-declared, used for the `daMip_cStateFn`
-    pointer-to-member typedef, then defined as `{ char pad[0x364]; ... }`.
-    Several are the *same* geometry retyped per member — four separate `Mtx43`
-    and two separate `Vector3` declarations — so folding them is a real
-    consolidation, not cosmetic.
+  - **18 shadow-struct definitions naming 11 distinct types.** Sixteen are
+    written as `struct NAME { ... }`: fifteen block-scope (`RG`, `V3` ×2, `G`,
+    `Vector3` ×3, `V3Blk`, `Mtx43` ×4, `Vector3_local`, `Obj`, `VObj` — 9
+    names) and one file-scope, `daMip_cSelf`, forward-declared, used for the
+    `daMip_cStateFn` pointer-to-member typedef, then defined as
+    `{ char pad[0x364]; ... }`. The remaining two are anonymous structs reached
+    only through a typedef — `typedef struct { s32 x, y, z; } Vector3;` and
+    `typedef volatile struct { Fix12i x, y, z; } Vec3Scratch;` — and they count,
+    because the rule here is *definitions*, with no exclusion for the typedef
+    spelling. Several are the *same* geometry retyped per member: four separate
+    `Mtx43`, and `Vector3` defined four times over (three named plus the
+    anonymous typedef), so folding them is a real consolidation, not cosmetic.
+
+    *Correction, recorded rather than quietly replaced:* an earlier draft of
+    this section said 15 definitions across 10 names, counting only the named
+    form and only two of the three named `Vector3` definitions. A second
+    reviewer put the total at 17, finding one of the two anonymous typedefs;
+    `Vec3Scratch` is the one that reading missed, because `volatile` sits
+    between `typedef` and `struct`. The reproducible figure is 18 — match
+    `struct` optionally followed by a name and then `{`, over the
+    comment-stripped file.
   - **63 block-scope `extern` declarations naming 26 distinct objects.** Nine
     are arm9 `data_0209xxxx`/`data_020a0e68` objects and seventeen are ov085
     `data_ov085_0213xxxx` objects. The most-repeated single object is declared
@@ -174,11 +187,15 @@ This document describes this commit. The queue records its immutable output SHA.
     alias, those drive **252 raw-offset accesses on 220 lines over 49 distinct
     offsets**. **33 of those offsets are at or above `0x110`**, which is the
     boundary above which the layout is this class's own rather than inherited —
-    and the header already names or types many of them, including all five
-    typed sub-objects (`0x110`, `0x144`, `0x300`, `0x368`, `0x3c0`) and fields
-    such as `0x424`, `0x426`, `0x427`, `0x429`, `0x42a`, `0x438`, `0x43c`,
-    `0x440`, `0x444`, `0x448` and `0x45c`. Every one of those is an access that
-    could be spelled as the member it already is.
+    and the header already names or types many of them: three of the five typed
+    sub-objects (`0x144`, `0x300` and `0x368`; `0x110` and `0x3c0` are typed in
+    the header but are *not* among the 33, so no raw access to them survives),
+    and the named fields `0x426`, `0x427`, `0x429`, `0x42a`, `0x438`, `0x43c`,
+    `0x440`, `0x444`, `0x448` and `0x45c`. Every one of those ten is an access
+    that could be spelled as the member it already is. `0x424` is in the 33 too
+    but does not belong on that list: the header declares it `u8 pad_424[0x2]`,
+    a padding span rather than a member, so recovering it means naming the field
+    first, not just respelling the access.
 
     *Method, so this is reproducible rather than asserted:* strip `/* */` and
     `//` comments; match `char *NAME = (char *)this`; split the file into
