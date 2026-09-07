@@ -144,14 +144,14 @@ def _covered_bytes(ranges, base, size):
 
 
 def _code_totals(config_root):
+    """Return the function/byte universe for every module this build analyzes.
+
+    The numerator in :func:`analyze` includes source contributions from ARM9,
+    overlays, ITCM and DTCM.  The denominator must cover that same set; excluding
+    the autoloads makes the reported percentage compare unlike universes.
+    """
     funcs = size = 0
     for sym in sorted(config_root.rglob("symbols.txt")):
-        # Match the project's progress/Chaos Viewer universe: main + overlays.
-        # itcm/dtcm are still byte-checked as modules, but are not part of the
-        # published decompilation coverage denominator.
-        rel = _arm9_relative(sym.parent, config_root)
-        if rel != "." and not re.fullmatch(r"overlays/ov\d+", rel):
-            continue
         for line in sym.read_text(encoding="utf-8", errors="ignore").splitlines():
             m = FUNC_RE.match(line)
             if m:
@@ -171,9 +171,8 @@ def _module_code_bytes(sym_path):
 
     Subtracting this from the module image size is what makes that boundary a number
     instead of an unstated assumption. Computed per module rather than from
-    `_code_totals`, which excludes itcm/dtcm from the published denominator while
-    `moduleFidelity` still compares them -- mixing the two would misattribute their
-    whole size to data.
+    `_code_totals`; this per-module calculation also keeps the composition split
+    explicit and avoids misattributing any module's non-function bytes to another.
     """
     total = 0
     for line in sym_path.read_text(encoding="utf-8", errors="ignore").splitlines():
@@ -362,6 +361,9 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
     unexpected_module_bytes = sum(m["unexpectedDifferingBytes"] for m in module_results)
     compiled_functions = source_functions + mod_functions
     compiled_bytes = source_bytes + mod_bytes
+    retail_gap_code_bytes = max(0, module_code_bytes - source_bytes - mod_bytes)
+    retail_gap_bytes = max(0, compared_module_bytes - source_bytes
+                           - source_data_bytes - mod_bytes)
     mods_applied = all(m["differingBytes"] > 0 for m in intentional) if intentional else True
     passed = bool(module_results) and not bad and not bad_data_claims \
         and not missing_bins and not unexpected_module_bytes \
@@ -396,6 +398,11 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
             "sourceDataBytes": source_data_bytes,
             "unownedDataBytes": max(0, compared_module_bytes - module_code_bytes
                                       - source_data_bytes),
+            "retailGapCodeBytes": retail_gap_code_bytes,
+            "retailGapBytes": retail_gap_bytes,
+            "retailGapBytesOfModulePercent": (
+                100.0 * retail_gap_bytes / compared_module_bytes
+                if compared_module_bytes else 0.0),
             "sourceBytes": source_bytes,
             "sourceBytesOfModulePercent": (100.0 * source_bytes / compared_module_bytes
                                            if compared_module_bytes else 0.0),
@@ -477,7 +484,11 @@ def print_report(report, show=12):
               f"({mc['sourceBytesOfModulePercent']:.1f}%) source-built code, "
               f"{mc.get('sourceDataBytes', 0):,} source-owned data, "
               f"{mc.get('unownedDataBytes', mc['dataBytes']):,} data bytes no complete "
-              f"source entry reaches ({mc['dataBytesVerified']:,} verified)")
+              f"source entry reaches; {mc['dataBytesVerified']:,} compiler-emitted "
+              "data bytes verified overall")
+        print(f"  retail-gap contribution: {mc.get('retailGapBytes', 0):,} module "
+              f"bytes ({mc.get('retailGapCodeBytes', 0):,} function-code, "
+              f"{mc.get('unownedDataBytes', mc['dataBytes']):,} data/non-function)")
     if report["missingModuleBinaries"]:
         print(f"missing module binaries: {report['missingModuleBinaries'][:8]}")
     for f in report["failures"][:show]:
