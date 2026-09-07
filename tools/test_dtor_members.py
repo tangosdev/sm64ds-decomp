@@ -390,12 +390,18 @@ def test_the_frozen_census_reproduces():
         return
     doc = D.harvest(REPO, ext)
     st = doc["meta"]["stats"]
-    bad = {k: (v, st.get(k)) for k, v in D.GATE.items() if st.get(k) != v}
-    assert not bad, bad
+    bad = [
+        "%s: expected %d, got %s (%+d)" %
+        (key, expected, actual, actual - expected)
+        for key, expected in D.GATE.items()
+        for actual in [st.get(key, 0)]
+        if actual != expected
+    ]
+    assert not bad, "census drift:\n  " + "\n  ".join(bad)
 
 
 def test_every_call_site_the_rom_shows_yields_an_offset():
-    """The interpreter is complete over this cartridge: not one of the 2,358 dtor->dtor
+    """The interpreter is complete over this cartridge: not one of the 2,426 dtor->dtor
     calls inside a named destructor fails to produce an offset.  A fall here means a
     codegen shape was introduced or the pool read was lost."""
     ext = _rom()
