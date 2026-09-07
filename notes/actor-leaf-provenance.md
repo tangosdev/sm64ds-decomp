@@ -64,8 +64,8 @@ the rest, so the fifth collection can destroy the whole set from one place.
 | 0x111 | `mClsnDisabled` | nonzero suppresses the `dCcAc_c` member's per-frame `Update()`; its `Clear()` runs either way. |
 | 0x113 | `mDeathTimer` | counted down by `DecIfAbove0_Byte` at the top of `Behavior`; the frame it reaches 0 the coin runs [func_ov002_020f05f4](../config/arm9/overlays/ov002/symbols.txt) and marks itself for destruction. Zero means "not dying". |
 
-Sources: `src/_ZN9daSCoin_c13InitResourcesEv.cpp`,
-`src/_ZN9daSCoin_c8BehaviorEv.cpp`.
+Sources: `src/actors/daSCoin_c.cpp` (`InitResources` and `Behavior`; the
+class's one-function shards were folded into that TU when it was promoted).
 
 Deliberately left `unk_`: 0x10d (`param1 & 0xf`, written and never read);
 0x112 (already documented as touched only by the class's unenrolled
