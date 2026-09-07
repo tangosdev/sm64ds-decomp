@@ -70,15 +70,18 @@
  * nine are this class's own vtable slots: ordinals 0/1 the destructor pair
  * (slots 16/17), 9 OnTurnIntoEgg (19), 10 OnYoshiTryEat (18), 31
  * CleanupResources (3), 32 OnPendingDestroy (12), 33 Render (9), 34 Behavior
- * (6) and 35 InitResources (0). The other 27 stay free functions, so the
- * conversion count for this promotion is 9 of 36. Fourteen of the remaining 27 are ROM-proven
+ * (6) and 35 InitResources (0). These nine symbols already had native member
+ * definitions in the shard sources; promotion consolidates and renames them.
+ * The other 27 stay free functions. Fourteen of those are ROM-proven
  * non-static members of this class -- the 14 {function pointer, 0} descriptors
  * at 0x02108300..0x02108370 are pointer-to-member-function objects with a zero
  * `this` adjustment, and __sinit_ov002_02100adc copies them into the 14-element
  * dispatch array at 0x0210dc00 that ordinal 34 indexes by mMushroomType. Their
- * member-ness and their INDEX are proven; their NAMES are not, and this change
- * invents none, so all 27 keep their address-derived spelling and stay free
- * functions. The 14 are, by index: 0 020aff10, 1 020afe4c, 2 020afd10,
+ * member-ness and their INDEX are proven; their original NAMES are not.
+ * They retain address-derived spellings in this packaging step. Explicitly
+ * coined names and typed methods remain reconstruction work; the other 13
+ * helpers need separate membership evidence. The 14 are, by index:
+ * 0 020aff10, 1 020afe4c, 2 020afd10,
  * 3 020afc44, 4 020afbb4, 5 020afa98, 6 020afa6c, 7 020af950, 8 020af924,
  * 9 020af838, 10 020af7cc, 11 020afa50, 12 020af908, 13 020af724.
  * Every member's ROM ordinal, address and size is on the banner above it.
@@ -182,9 +185,10 @@ void func_ov002_020aefa4(char *self)
    non-virtual methods. The merged TU has both real classes complete through
    da1up_c.h, so the shadows are gone and the calls go through the real types --
    which mangle identically, the class name being the whole of the difference.
-   _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s stays spelt out: its ROM name carries
-   by-value Fix12<int> parameters that mwccarm passes differently at the call
-   site, so declaring the true types breaks the byte match. */
+   _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s stays spelt out. Its reconstructed
+   symbol encodes by-value Fix12<int> parameters; the recorded typed-call
+   experiment changed the bytes. This bridge remains pending further
+   signature/codegen work. */
 extern "C" {
 void func_ov002_020aefb8(char* self) {
     extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *, int, int, short);
@@ -299,7 +303,7 @@ int func_ov002_020af218(char* c, int range){
 extern "C" {
 int func_ov002_020af248(char* c, int n){
   extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void*);
-  int v = *(unsigned short*)(c+0x38c);
+  int v = ((da1up_c*)c)->mStateTimer;
   if(v < n) return 0;
   if(v < n + 0x28){
     *(unsigned char*)(c+0x38f) = (v & 1) != 0;
@@ -314,10 +318,11 @@ int func_ov002_020af248(char* c, int n){
 /* The first of the two file-scope `extern "C"` regions. Ordinal 9 is a class
    member function, so it cannot sit in one and a declaration written in its body
    would mangle; these three have to be here. `func_ov002_020af684` is the one
-   place the merge forced a definition to move: ordinal 9 tail-forwards its
-   result, so it is declared and defined `int` (ordinal 14 returns nothing and
-   lets its own tail call carry r0), while ordinals 19 and 22 keep their
-   `(void*, int, int)` view at block scope. */
+   place promotion changed a void definition to int to agree with ordinal 9.
+   Ordinal 14 still has no return statement; the matched residual-r0 behavior
+   does not establish a valid C++ return contract. That contract remains to be
+   reconstructed across these callers, including ordinals 19 and 22 and their
+   differing `(void*, int, int)` declarations. */
 extern "C" {
 void GiveLives(int count);
 int func_ov002_020af684(char* self, int target, char* player);
@@ -498,8 +503,10 @@ void func_ov002_020af4ec(void* self)
 /* ROM ordinal 14 -- func_ov002_020af684, 0x020af684, size 0xa0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov002_020af684
-/* Declared `int` for ordinal 9's sake and returns nothing: the tail call to
-   KillAndTrackInDeathTable leaves r0 already carrying what the caller reads. */
+/* Unresolved return contract: promotion changed this helper from void to int
+   for ordinal 9, but it still falls through after a void call. The matched
+   register behavior is not a defined C++ return value. A coherent signature
+   correction needs caller-use evidence and fresh byte/relocation proof. */
 extern "C" {
 int func_ov002_020af684(char* self, int target, char* player){
     struct dActor_c;
@@ -584,7 +591,7 @@ void func_ov002_020af7cc(char* c)
     *(int*)(c + 0x384) = 0;
     *(int*)(c + 0x388) = 0;
     *(unsigned short*)(c + 0x100) = 0xffff;
-    *(unsigned short*)(c + 0x38c) = 0xffff;
+    ((da1up_c*)c)->mStateTimer = 0xffff;
 }
 }
 
@@ -1045,17 +1052,6 @@ struct C {
   char pad[0x500];
 };
 
-/* Ordinal 33 reaches the model's own vtable by offset -- slot 5 of whatever
-   ModelBase's table is -- rather than by name; only the slot index is proven. */
-struct Obj {
-    virtual void m0();
-    virtual void m1();
-    virtual void m2();
-    virtual void m3();
-    virtual void m4();
-    virtual void func5(int x);
-};
-
 /* Ordinal 35's view of data_ov002_0210d9b8: a cached model handle whose second
    word is the BMD file pointer. */
 struct ModelCache { int pad0; BMD_File* file; };
@@ -1104,10 +1100,7 @@ int da1up_c::Render()
         if (b)
             return 1;
     }
-    {
-        Obj *o = (Obj *)((char *)&mModel);
-        o->func5(0);
-    }
+    mModel.Render(0);
     return 1;
 }
 
@@ -1135,10 +1128,10 @@ int da1up_c::Behavior()
     C* self = (C*)((char*)this);
     (self->*data_ov002_0210dc00[mMushroomType])();
     ++*(unsigned short*)((void*)(int)(((char*)this) + 0x100));
-    ++*(unsigned short*)((void*)(int)(((char*)this) + 0x38c));
+    ++mStateTimer;
     if(old != unk_388){
       *(unsigned short*)((void*)(int)(((char*)this) + 0x100)) = 0;
-      *(unsigned short*)(((char*)this)+0x300+0x8c) = 0;
+      mStateTimer = 0;
     }
   }
   _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);

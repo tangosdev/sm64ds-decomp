@@ -3,7 +3,8 @@
   "_read_this_first": [
     "The queue row is spelled `OneUpMushroom`. That is a COINED project name and it is NOT in the cartridge.",
     "The cartridge's own RTTI name for this class is `da1up_c`. Write the class as `da1up_c`.",
-    "This file is named after the queue row so the writer can find it from `tu-promotion-queue.tsv`; `class` below is the real identity."
+    "This file is named after the queue row so the writer can find it from `tu-promotion-queue.tsv`; `class` below is the real identity.",
+    "Tree-status references describe the original scout checkpoint. Later review corrects the virtuality interpretation and the 0x38c padding inference below; it does not remeasure the original ROM census."
   ],
 
   "class": "da1up_c",
@@ -143,13 +144,13 @@
     {"offset": "0x380", "width": 4, "accesses": 2,  "name": null},
     {"offset": "0x384", "width": 4, "accesses": 17, "name": null},
     {"offset": "0x388", "width": 4, "accesses": 24, "name": null},
-    {"offset": "0x38c", "width": 2, "accesses": 0,  "name": null, "note": "no access seen -- padding, as include/OneUpMushroom.h already assumes"},
+    {"offset": "0x38c", "width": 2, "accesses": 0, "accesses_scope": "original immediate-displacement census only", "name": "mStateTimer", "name_provenance": "coined for the 16-bit count reset when unk_388 changes; not an original identifier", "note": "Not padding: the matched Behavior body increments and resets this 16-bit storage; func_ov002_020af248 reads it and func_ov002_020af7cc writes 0xffff. The census missed indirect accesses; the total access count has not been remeasured."},
     {"offset": "0x38e", "width": 1, "accesses": 11, "name": null, "note": "ldrb/strb only"},
     {"offset": "0x38f", "width": 1, "accesses": 3,  "name": null, "note": "ldrb/strb only"},
     {"offset": "0x390", "width": 4, "accesses": 3,  "name": null},
     {"offset": "0x394", "width": 4, "accesses": 3,  "name": null}
   ],
-  "fields_evidence": "The 0x110/0x144/0x300/0x350 members are proven twice over: the two factories construct them at those offsets and D1/D0 destroy them at the same offsets in exact reverse order. The 0x378..0x394 tail comes from decoding every immediate-displacement load/store in the run (0x020aee40..0x020b05d0) and tallying displacements >= 0x100 with a non-PC base register; the widths follow from ldr/str vs ldrb/strb. Caveat: that scan does not prove the base register was `this`, so the tail offsets are strong but not airtight. The layout does close exactly on 0x398, and it agrees field-for-field with the existing include/OneUpMushroom.h. No FIELD NAME is proven -- see `unproven`.",
+  "fields_evidence": "The 0x110/0x144/0x300/0x350 members are proven twice over: the two factories construct them at those offsets and D1/D0 destroy them at the same offsets in exact reverse order. The 0x378..0x394 tail comes from decoding every immediate-displacement load/store in the run (0x020aee40..0x020b05d0) and tallying displacements >= 0x100 with a non-PC base register; the widths follow from ldr/str vs ldrb/strb. Caveat: that scan does not prove the base register was `this`, so the tail offsets are strong but not airtight. The layout does close exactly on 0x398, and it agrees field-for-field with the scout checkpoint header. The later 0x38c counter observation shows that a zero immediate-displacement count does not prove padding. No FIELD NAME is proven -- see `unproven`.",
 
   "members": {
     "total_in_run": 38,
@@ -315,7 +316,7 @@
     ],
     "converted_baseline_note": "5 of the 36 shards are in config/converted-baseline.json (2696 entries). Deleting them requires `tiers_ratchet --update`; never hand-edit. A 6th match, src/_ZN10BrickBlock18SpawnOneUpMushroomEv.cpp, belongs to BrickBlock and must NOT be touched.",
     "actor_renames_live_rows": "Last live row for 0x021083c8 is `data_ov002_021083c8 -> _ZTV13OneUpMushroom`. The factories (0x020b0530, 0x020b0580) and profiles (0x02108388, 0x021083a4) have already been renamed to their da1up_c spellings; the CLASS itself has not.",
-    "existing_header": "include/OneUpMushroom.h exists and already states `The ROM's RTTI names this class da1up_c`. Its member layout agrees field-for-field with what I measured. Its struct is still spelled `OneUpMushroom` and it declares Behavior/CleanupResources/InitResources/OnPendingDestroy/Render as NON-virtual, which the ROM contradicts -- they are vtable slots 6/3/0/12/9."
+    "existing_header": "include/OneUpMushroom.h exists and already states `The ROM's RTTI names this class da1up_c`. Its member layout agrees field-for-field with what I measured. Its struct is still spelled `OneUpMushroom`. The comment labels Behavior/CleanupResources/InitResources/OnPendingDestroy/Render non-virtual, but their matching signatures already override inherited virtuals. The ROM slots 6/3/0/12/9 agree with those overrides; the comment is wrong, not their C++ virtuality."
   },
 
   "negative_search": {
@@ -355,8 +356,8 @@
     },
     {
       "severity": "LOW",
-      "title": "include/OneUpMushroom.h contradicts the ROM on virtuality.",
-      "detail": "It declares Behavior, CleanupResources, InitResources, OnPendingDestroy and Render as non-virtual. The ROM puts them at vtable slots 6, 3, 0, 12 and 9 of _ZTV7da1up_c. The header's field layout is right; its virtual/non-virtual split is wrong."
+      "title": "The scout header mislabels inherited virtual overrides in a comment.",
+      "detail": "Behavior, CleanupResources, InitResources, OnPendingDestroy and Render already override matching inherited virtuals even without a repeated virtual keyword. Their non-virtual section comment is misleading. The ROM slots 6, 3, 0, 12 and 9 agree with the inherited C++ virtuality."
     },
     {
       "severity": "LOW",

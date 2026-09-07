@@ -1,6 +1,32 @@
 # Handoff: issue-2411
 
-This document describes this commit. The queue records its immutable output SHA.
+This document preserves the source-stage handoff and later integration notes.
+The queue records immutable stage outputs; source acceptance does not mean every
+source-reconstruction opportunity below is complete.
+
+## Integration status through 19df96cc21d5e2a87a97a22d4de67191319505bd
+
+The accepted source output is `bb5bbfae682dccfc1cdb0aab0defdd702ad919c9`.
+The eight attribution reassignments described as owed in the preserved record
+were reconciled by `e3d7f6e6633078ace023d8478002c36526996933`: ten member
+rows cover eight symbols, including both spellings for D0 and Behavior, and the
+two obsolete bare-path overrides were removed. Behavior retains the raw handle
+`alexsobolew7`, which the aliases map resolves to `ruspecial`. The two unchanged
+credits without explicit member rows remain a durability opportunity, not an
+outstanding reassignment.
+
+The producer-time attribution counts and recipes below are retained as historical
+evidence. Their present-tense statements that eight credits are still owed are
+superseded by that integration commit. This note does not restate old build logs
+as a new validation result.
+
+The source remains a partial reconstruction: nine existing native method symbols
+were consolidated and renamed, while 27 free-function bodies and several ABI
+bridges remain. The non-void `func_ov002_020af684` still has no return statement;
+reproducing residual register contents has not established a valid C++ return
+contract. The inherited `OnTurnIntoEgg` signature also needs caller-use evidence.
+These source questions require an owned follow-up stage and fresh independent
+proof. The documentation corrections in this revision do not resolve them.
 
 ## Identity and resumption
 
@@ -238,7 +264,9 @@ This document describes this commit. The queue records its immutable output SHA.
   D1 and D0). 27 remain `extern "C"` free functions taking `char *`/`void *`
   `this` bridges: 14 of them are ROM-proven non-static members (the PMF
   descriptors) whose NAMES are unknown, and 13 are helpers with no member-ness
-  evidence. This is a naming/evidence wall, not one measured compiler wall.
+  evidence. This is partial reconstruction, not an established compiler wall:
+  original names are unknown, but explicitly coined identifiers are permitted
+  once the implementation role and types are supported.
 - Recovered layout/fields; remaining shadow structs/raw offsets: the header
   is a real `struct da1up_c : dEnemyBase_c` closing at 0x398 with a size
   assert; the eight methods use member names. The 27 free bodies still carry
@@ -367,10 +395,12 @@ This document describes this commit. The queue records its immutable output SHA.
   against a later move of this file. That would bring the TU to 36/36 shards
   covered, on 45 rows -- the 9 renamed members at two spellings each plus the
   27 `func_ov002_*` bodies at one.
-- Remaining agreed issue scope: name the 14 dispatch members and the 13 helpers
-  only if evidence appears (none in the ROM); replace raw offsets in the 27 free
-  bodies with member access without moving bytes; give the dispatch array and
-  descriptors a typed owner. None of that is required for this candidate.
+- Remaining reconstruction scope: investigate and type the 14 proven dispatch
+  members, recording explicitly coined identifiers where original names are
+  unavailable. Determine membership separately for the 13 helpers. Replace raw
+  offsets with supported member access and give the dispatch array/descriptors
+  a typed owner when byte proof supports it. These remain follow-up work beyond
+  the accepted packaging candidate, not a claim that reconstruction is finished.
 
 ## Proof
 
