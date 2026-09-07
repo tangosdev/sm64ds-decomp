@@ -217,7 +217,7 @@
   "provenance": {
     "worktree": "C:/tmp/sm64ds-scout-chilly-0905",
     "ref": "cpp/ChiefChilly-tu",
-    "base": "395afdb2399f7d5e304183d074c5ff670ab766d3",
+    "base": "b266ff4712b9863ff9ea143ff2c57705039bf17a",
     "inputs": [
       "extracted/overlays/overlay_0073.bin",
       "config/arm9/overlays/ov073/symbols.txt",
