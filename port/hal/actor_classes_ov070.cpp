@@ -687,15 +687,29 @@ extern "C" void hal_fill_flame_chomp_fire_vtable(void)
 // (0x02043bf0 CleanupResources / 0x02043af0 Render / 0x02043ac0
 // OnPendingDestroy -- the WATERFALL_MIST reading, same addresses).
 //
-// THREE OWN BODIES ARE INLINE TRANSCRIPTIONS (the stub-guard rule again):
-// src's func_ov002_020b6dd0 / _020b6d84 / _020b6d4c carry the inferred-stub
-// marker. Listings, in full:
+// THREE OWN BODIES WERE INLINE TRANSCRIPTIONS, and GATE 227 REPLACES ALL THREE
+// WITH THE ROM'S OWN. src's func_ov002_020b6dd0 / _020b6d84 / _020b6d4c carry
+// the inferred-stub marker, so port/tools/inferred_stub_guard.py refused them
+// and this file re-typed the listings by hand instead. Lane STUBADJ ran the
+// whole unlinked marker set through tools/match.py at each symbol's config
+// address and size under the pinned mwccarm 2004/b56 with --strict-relocs and
+// ruled these three REAL DECOMP, so the hand copies are gone and the faces
+// below call the real bodies. Listings, kept because they are what the seat is
+// checked against:
 //   InitResources 0x020b6dd0 (0x8):  mov r0, #1; bx lr
 //   Behavior 0x020b6d84 (0x48): r4=self; ClosestPlayer(); r3=r0+0x5c;
 //     func_02022c3c([r4+0xd4], 0xb7, [r3], [r3+4], [r3+8], 0); result back
 //     into [r4+0xd4]; return 1.   (effect 0xb7 tracked at the player's pos)
 //   D0 0x020b6d4c (0x38): store 0x021093e0; Actor::D2; Memory::Deallocate
 //     (self, *data_020a0eac); return self.
+// VERIFIED BY ADDRESS before the seat: the table words at 0x021093e0 + 4*0,
+// + 4*6 and + 4*17 relocate to 0x020b6dd0, 0x020b6d84 and 0x020b6d4c in
+// config/arm9/overlays/ov002/relocs.txt, and each of those addresses has its
+// own kind:function(arm,size=..) record in that overlay's symbols.txt, so none
+// is an interior address of a tail-shared body. The D0's two placeholder names
+// are bound per-TU in port/CMakeLists.txt from its own literal pool
+// (0x020b6d7c -> 0x021093e0, 0x020b6d80 -> 0x020a0eac). All three take nothing
+// past the receiver, so all three faces keep the two-parameter shape.
 // The D1 (func_ov002_020b6d28) carries no marker and links from the slice.
 extern "C" {
 int func_ov002_020b6d28(int *self);            /* slot 16, matched */
@@ -709,31 +723,24 @@ DSSTATE_BEGIN
 void *data_ov002_021093e0[31];
 DSSTATE_END
 }
+/* gate 227: the three ROM bodies that used to be hand copies here. */
+extern "C" {
+int  func_ov002_020b6dd0(void);       /* slot 0  InitResources */
+int  func_ov002_020b6d84(void *self); /* slot 6  Behavior      */
+int *func_ov002_020b6d4c(int *t);     /* slot 17 the D0        */
+}
 static int __fastcall plb_init(void *, void *)
-{ return 1; }
+{ return func_ov002_020b6dd0(); }
 static int __fastcall plb_clean(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::CleanupResources(); }
 static int __fastcall plb_behavior(void *s, void *)
-{
-    char *c = (char *)s;
-    char *pl = (char *)_ZN5Actor13ClosestPlayerEv(s);
-    int *pos = (int *)(pl + 0x5c);
-    *(unsigned *)(c + 0xd4) = func_02022c3c(*(unsigned *)(c + 0xd4), 0xb7,
-                                            pos[0], pos[1], pos[2], 0);
-    return 1;
-}
+{ return func_ov002_020b6d84(s); }
 static int __fastcall plb_render(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::Render(); }
 static int __fastcall plb_d1(void *s, void *)
 { return (int)(size_t)func_ov002_020b6d28((int *)s); }
 static int __fastcall plb_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov002_021093e0;
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov002_020b6d4c((int *)s); }
 extern "C" void hal_fill_popping_lava_bubbles_vtable(void)
 {
     /* ov002 is always mounted; no bring-up needed here. */

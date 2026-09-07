@@ -90,14 +90,14 @@ void *data_ov080_021282b4[33];            /* the host vtable Painting_Spawn inst
 DSSTATE_END
 
 /* The ROM D0 (func_ov080_02125428) is the D1 body plus one Deallocate against
-   the game heap, but its recovered src spells the vtable and the heap through
-   decl_common's generic VT/HEAP externs -- names that would collide with every
-   other class's D0 if the TU were compiled. The port hosts the deleting
-   destructor as its own thunk here, the BrickBlock/BobOmb treatment: it runs
-   D1 (func_ov080_02125404 stores the vtable and calls Actor::~Actor) and then
-   Memory::Deallocate(self, gameHeapPtr), which is exactly the ROM's two-step
-   D0. data_020a0eac is Memory::gameHeapPtr, already host-provided by
-   hal/cxxname_bridge.cpp. */
+   the game heap. This file used to host it as a thunk of its own, the
+   BrickBlock/BobOmb treatment, because the recovered src spells the vtable and
+   the heap through decl_common's generic VT/HEAP externs -- names that would
+   collide with every other class's D0 if the TU were compiled unbound. GATE 227
+   COMPILES THE REAL BODY with those two names bound per-TU out of its own
+   literal pool, so the thunk is gone and pt_d0 is now a face onto the ROM's
+   word. data_020a0eac is Memory::gameHeapPtr, already host-provided by
+   hal/cxxname_bridge.cpp, and it is what the -D row binds HEAP to. */
 void _ZN6Memory10DeallocateEPvP4Heap(void *p, void *heap);
 extern void *data_020a0eac;
 }
@@ -261,9 +261,25 @@ static int __fastcall pt_pdes(void *, void *)
 { func_ov080_02126c1c(); return 0; }
 static int __fastcall pt_d1(void *s, void *)
 { return func_ov080_02125404(s); }
+/* slot 17, the ROM's own D0, GATE 227. This file used to host the deleting
+   destructor as a HAND-WRITTEN THUNK -- run the D1, then Deallocate against the
+   game heap -- because slice_gate50.txt had to exclude the real body: its
+   recovered src spells the vtable and the heap through decl_common's generic
+   VT/HEAP externs, "names that would collide with every other class's D0 if the
+   TU were compiled". The collision is a naming problem, not a body problem, and
+   port/CMakeLists.txt's gate 227 block removes it with a per-TU -D row read out
+   of THIS body's own literal pool: 0x02125458 -> 0x021282b4 (the host array
+   declared above) and 0x0212545c -> 0x020a0eac (Memory::gameHeapPtr).
+   VERIFIED BY ADDRESS, not by name: the table word at 0x021282b4 + 17*4 =
+   0x021282f8 relocates to 0x02125428 in config/arm9/overlays/ov080/relocs.txt,
+   symbols.txt gives that address its own kind:function(arm,size=0x38) record,
+   and the disassembly there is an ARM prologue -- so it is a real entry and not
+   an interior address of a tail-shared body. The ROM body is the thunk's two
+   steps written out (store the vtable, Actor::~Actor, Deallocate), which is why
+   this replaces a stand-in rather than a decline. */
+extern "C" int *func_ov080_02125428(int *t);   /* ov080 0x02125428 */
 static int __fastcall pt_d0(void *s, void *)
-{ func_ov080_02125404(s); _ZN6Memory10DeallocateEPvP4Heap(s, data_020a0eac);
-  return (int)(size_t)s; }
+{ return (int)(size_t)func_ov080_02125428((int *)s); }
 
 extern "C" void hal_fill_painting_vtable(void)
 {

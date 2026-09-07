@@ -1,0 +1,122 @@
+# gate 227 (run link100, lane SEAT): ten ROM bodies that were held out of the
+# port by the inferred-stub marker alone, and are now ruled.
+#
+# Every line below carries the marker "recovered from vtable slot identity" and
+# was therefore refused by port/tools/inferred_stub_guard.py. Lane STUBADJ ran
+# the whole unlinked marker set -- 112 files -- through tools/match.py at each
+# symbol's exact config address and size under the pinned mwccarm 2004/b56 with
+# --strict-relocs, and 112 of 112 reproduce the ROM. Its 71 new REAL_DECOMP
+# rows are in port/tools/inferred_stub_adjudicated.txt; the guard reads them
+# and admits exactly the symbols that carry a ruling.
+#
+# WHAT THIS LANE CHECKED BEFORE SEATING, per body, because a ruling in a file is
+# not the same as a word in the ROM:
+#
+#   1. the TABLE WORD. Read config/<module>/relocs.txt at vtable + 4*slot and
+#      confirmed the destination is this body's address. Never read off a class
+#      name: the tree's recovered names are shifted (Trap=Hikari,
+#      SkiLift=daPgMthr_c), the addresses are not.
+#   2. the ENTRY. config/<module>/symbols.txt carries a
+#      kind:function(arm,size=..) record AT that exact address, and the
+#      disassembly at it is an ARM prologue. None is an interior address of a
+#      tail-shared body -- a fabricated .c at an interior address has been
+#      seated by mistake on this port before.
+#   3. the CALL SHAPE. hal/actor_classes.cpp states the port's contract:
+#      slots 19 and 21..28 are dispatched by a __thiscall caller that PUSHES one
+#      argument, so their faces are THREE-parameter __fastcall and pop it;
+#      slots 20, 29, 31 and the lifecycle slots 0/3/6/9/12/16/17 push nothing
+#      and take the two-parameter shape. Every face below is written at the
+#      arity the ROM body actually takes, read out of the disassembly, and the
+#      trap it replaces is checked against the same contract.
+#   4. the BINDINGS. Where a body spells a global with a shared-header
+#      placeholder (VT/VT0/VT1/HEAP/G0), the -D row in port/CMakeLists.txt is
+#      read out of THAT BODY'S OWN literal pool in config/<module>/relocs.txt,
+#      never out of the recovered name.
+#
+# ---------------------------------------------------------------------------
+# _ZTV8SignPost, ov002 0x02109af8 -- FOUR TAIL SLOTS, all four trapping.
+#
+#   slot 21  0x020bb27c  0xf8  OnGroundPounded. Sinks the post a notch and
+#                              plays bank-3 sound 0x62. Two ROM arguments
+#                              (r0 self, r1 attacker) -> three-parameter face.
+#   slot 22  0x020bb23c  0x40  OnAttacked1. Compares the attacker's id at +0xc
+#                              against 0xce and, on a hit, dispatches its OWN
+#                              slot 31 (ldr r1,[r0]; ldr r1,[r1,#0x7c]; blx r1).
+#                              The src spells that as a C++ VIRTUAL call on a
+#                              32-virtual Base, which MSVC emits as thiscall --
+#                              receiver in ECX, nothing pushed -- so it lands on
+#                              the two-parameter sp_kill correctly. This is the
+#                              distinction port/ov002_frontier.txt draws and
+#                              BigBrickBlock's slot 22 fails: THAT body reaches
+#                              slot 31 through a raw `fn(c)` function pointer,
+#                              a cdecl call that would put the receiver on the
+#                              stack and leave ECX garbage. Slot 22 of
+#                              BigBrickBlock is therefore NOT seated here.
+#   slot 27  0x020bb374  0x44  OnHitByMegaChar. IncMegaKillCount on the player,
+#                              sound 0x1d, Platform::KillByMegaChar, then
+#                              +0x8e = +0x94. Two ROM arguments.
+#   slot 31  0x020bb3b8  0x74  Kill. Particle 0xe at +0x28000 above the post,
+#                              DisappearPoofDustAt, bank-3 sound 0x41, then the
+#                              class's own 0x020bae9c. ONE ROM argument.
+src/func_ov002_020bb27c.c
+src/func_ov002_020bb23c.cpp
+src/func_ov002_020bb374.cpp
+src/func_ov002_020bb3b8.cpp
+#
+# ---------------------------------------------------------------------------
+# BLACK_BRICK_BLOCK's table, ov002 0x02108adc -- slot 27 only.
+#
+#   slot 27  0x020b36b4  0x28  OnHitByMegaChar. IncMegaKillCount then its own
+#                              slot 31 through a C++ virtual, so it lands on the
+#                              seated two-parameter bbb_kill unchanged. This is
+#                              the body port/ov002_frontier.txt ruled
+#                              "convention-clean, held out only by the marker".
+src/func_ov002_020b36b4.cpp
+#
+# ---------------------------------------------------------------------------
+# POPPING_LAVA_BUBBLES, data_ov002_021093e0 -- THREE SLOTS THAT WERE HAND
+# TRANSCRIPTIONS.
+#
+# hal/actor_classes_ov070.cpp did not trap these three; it re-typed them from
+# the listing into plb_init, plb_behavior and plb_d0, and said so ("THREE OWN
+# BODIES ARE INLINE TRANSCRIPTIONS (the stub-guard rule again)"). Seating the
+# real bodies deletes three hand-written stand-ins rather than three declines.
+#
+#   slot 0   0x020b6dd0  0x8    InitResources: mov r0,#1; bx lr.
+#   slot 6   0x020b6d84  0x4c   Behavior: ClosestPlayer, then effect 0xb7
+#                               tracked at the player's position.
+#   slot 17  0x020b6d4c  0x38   the D0. VT and HEAP come from its own pool:
+#                               0x020b6d7c -> 0x021093e0, 0x020b6d80 ->
+#                               0x020a0eac.
+src/func_ov002_020b6dd0.c
+src/func_ov002_020b6d84.c
+src/func_ov002_020b6d4c.c
+#
+# ---------------------------------------------------------------------------
+# THE TWO DELETING DESTRUCTORS that were held out for the same placeholder
+# reason and are bound per-TU below.
+#
+#   data_ov100_02148188 slot 17  0x02144424  0x44  the DOOR's D0. Table word at
+#       0x021481cc relocates to it. Pool: 0x02144460 -> 0x02148188 (the table
+#       the port hosts as _ZTV8daDoor_c), 0x02144464 -> 0x020a0eac. Was
+#       ac_trap17 on the gate-22 reading that nothing destroys a door; the
+#       reading was right and the trap is still never reached, so this is a
+#       linkage seat and not a behaviour change.
+#
+#   data_ov080_021282b4 slot 17  0x02125428  0x38  the PAINTING's D0, and this
+#       one IS dispatched -- hal/actor_classes_painting.cpp hosted it as a
+#       hand-written thunk (run D1, then Memory::Deallocate). The ROM body is
+#       that thunk's own two steps written out: store the vtable, Actor::~Actor,
+#       Deallocate. Pool: 0x02125458 -> 0x021282b4, 0x0212545c -> 0x020a0eac.
+#       slice_gate50.txt excluded it for exactly the placeholder collision the
+#       -D rows below remove, and says so.
+src/func_ov100_02144424.c
+src/func_ov080_02125428.c
+#
+# NOT SEATED HERE, and why, so the next lane does not re-open them:
+#   data_ov080_021282b4 slots 0/6/9 and data_ov100_02148188 slots 6/9 are ruled
+#   REAL_DECOMP too, but their host copies carry PORT_HOST_ABI tags: those
+#   bodies form an mwcc pointer-to-member over an INCOMPLETE class, which MSVC
+#   widens from the ROM's 8-byte {fn,delta} record to its 16-byte general form.
+#   The host copy is the faithful stand-in there, not scaffolding, and
+#   port/unmatched/Painting_Dispatch.cpp records what breaks without it.

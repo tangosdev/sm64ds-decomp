@@ -765,6 +765,19 @@ static int __fastcall bbb_kicked(void *s, void *, void *o)
 extern "C" void func_ov002_020b38a0(char *self);
 static int __fastcall bbb_kill(void *s, void *)
 { func_ov002_020b38a0((char *)s); return 0; }
+/* Slot 27, OnHitByMegaChar(Player &): IncMegaKillCount on the player, then this
+   class's own slot 31. GATE 227. port/ov002_frontier.txt read this body and
+   slot 24's together and ruled both "convention-clean, held out only by the
+   marker": it reaches slot 31 through a C++ VIRTUAL, already thiscall, so it
+   lands on the two-parameter bbb_kill unchanged -- unlike slot 22 below, whose
+   src reaches slot 31 through a cdecl `fn(c)` and still traps for that reason
+   and not for the marker. The table word at 0x02108adc + 27*4 = 0x02108b48
+   relocates to 0x020b36b4 in config/arm9/overlays/ov002/relocs.txt, and
+   symbols.txt gives that address its own kind:function(arm,size=0x28) entry.
+   Three-parameter, like every other seat on slots 21..28 in this file. */
+extern "C" void func_ov002_020b36b4(void *self, void *player);
+static int __fastcall bbb_mega(void *s, void *, void *p)
+{ func_ov002_020b36b4(s, p); return 0; }
 
 extern "C" void hal_fill_black_brick_block_vtable(void)
 {
@@ -810,12 +823,16 @@ extern "C" void hal_fill_black_brick_block_vtable(void)
        through a cdecl `fn(c)`. Slot 22 (OnAttacked1, 0x020b37ec) STAYS TRAPPED:
        a bro's punch/kick never dispatches it, and its body reaches slot 31
        through the same cdecl `fn(c)`, so seating it needs its own host copy --
-       a follow-up, not this change. */
+       a follow-up, not this change.
+       SLOT 27 IS SEATED NOW (gate 227). It was the other half of that reading:
+       convention-clean, reaching slot 31 through a C++ virtual, and held out
+       only by the inferred-stub marker that lane STUBADJ has since ruled. See
+       the bbb_mega block above. */
     vt[21] = (void *)bbb_pounded;
     vt[22] = (void *)ac_trap22;
     vt[23] = (void *)bbb_atk2;
     vt[24] = (void *)bbb_kicked;
-    vt[27] = (void *)ac_trap27;
+    vt[27] = (void *)bbb_mega;      /* gate 227 */
     vt[31] = (void *)bbb_kill;
 }
 
@@ -1004,6 +1021,46 @@ static int __fastcall sp_d0(void *s, void *)
 
 extern "C" void port_sign_post_states_seat(void);   /* port/unmatched */
 
+/* ---- the sign's own interaction tail, gate 227 ----------------------------
+   The four ROM words of _ZTV8SignPost's tail. The comment inside the fill
+   below used to say these were "matched in src and in no slice"; the reason
+   they were in no slice is that all four carry the inferred-stub marker, and
+   port/tools/inferred_stub_guard.py refuses a guess. Lane STUBADJ ruled all
+   four REAL DECOMP against the ROM under the pinned mwccarm 2004/b56 with
+   --strict-relocs, and this lane re-read each table word at
+   0x02109af8 + 4*slot in config/arm9/overlays/ov002/relocs.txt and confirmed
+   the destination, the function entry and the argument count before writing a
+   face. slice_gate227.txt carries the per-body evidence.
+
+   ARITY, which is the thing that has to be right. hal's contract above (see
+   ac_pounded and the comment over it) is that slots 21..28 are dispatched by a
+   __thiscall caller that PUSHES its one argument, so their faces take the
+   dummy edx AND the named parameter and pop it; slot 31 takes nothing. The
+   ROM agrees body by body: 0x020bb27c, 0x020bb23c and 0x020bb374 all read r1,
+   0x020bb3b8 reads only r0.
+
+   SLOT 22 IS THE ONE THAT NEEDED A SECOND LOOK. Its body dispatches its own
+   slot 31 (ldr r1,[r0]; ldr r1,[r1,#0x7c]; blx r1), and src spells that as a
+   C++ virtual call, which MSVC emits as thiscall with the receiver in ECX and
+   nothing pushed -- so it lands on the two-parameter sp_kill correctly.
+   BLACK_BRICK_BLOCK's slot 22 reaches ITS slot 31 through a raw `fn(c)`
+   function pointer instead, a cdecl call that would leave ECX garbage; that is
+   why the block's 22 still traps below and the sign's does not. */
+extern "C" {
+void func_ov002_020bb27c(char *self, void *attacker);  /* 21 OnGroundPounded */
+void func_ov002_020bb23c(void *self, void *attacker);  /* 22 OnAttacked1     */
+void func_ov002_020bb374(char *self, void *player);    /* 27 OnHitByMegaChar */
+int  func_ov002_020bb3b8(char *self);                  /* 31 Kill            */
+}
+static int __fastcall sp_pounded(void *s, void *, void *o)
+{ func_ov002_020bb27c((char *)s, o); return 0; }
+static int __fastcall sp_atk1(void *s, void *, void *o)
+{ func_ov002_020bb23c(s, o); return 0; }
+static int __fastcall sp_mega(void *s, void *, void *p)
+{ func_ov002_020bb374((char *)s, p); return 0; }
+static int __fastcall sp_kill(void *s, void *)
+{ return func_ov002_020bb3b8((char *)s); }
+
 extern "C" void hal_fill_sign_post_vtable(void)
 {
     void **vt = _ZTV8SignPost;
@@ -1025,16 +1082,17 @@ extern "C" void hal_fill_sign_post_vtable(void)
        0x50 later with no padding, and slot 22 therefore landed on the 1-up's
        slot 2 -- Actor::AfterInitResources, called with a sign as `this`. Slot
        21 crashed outright (the confirmed level-3 repro).
-       Four of the tail are the sign's OWN bodies, matched in src and in no
-       slice: 21 OnGroundPounded (ov002 0x020bb27c, the post sinking a notch
-       and playing bank-3 sound 0x62), 22 OnAttacked1 (0x020bb23c), 27
-       OnHitByMegaChar (0x020bb374) and 31 Kill (0x020bb3b8). They decline by
-       name rather than run Actor's shared body, which is not what a sign
-       does. */
-    vt[21] = (void *)ac_trap21;
-    vt[22] = (void *)ac_trap22;
-    vt[27] = (void *)ac_trap27;
-    vt[31] = (void *)ac_trap31;
+       Four of the tail are the sign's OWN bodies: 21 OnGroundPounded (ov002
+       0x020bb27c, the post sinking a notch and playing bank-3 sound 0x62), 22
+       OnAttacked1 (0x020bb23c), 27 OnHitByMegaChar (0x020bb374) and 31 Kill
+       (0x020bb3b8). They used to decline by name rather than run Actor's
+       shared body, which is not what a sign does. GATE 227 SEATS ALL FOUR --
+       the marker was the only thing holding them out, and it is ruled; see the
+       block above the fill for the arity and the table words. */
+    vt[21] = (void *)sp_pounded;
+    vt[22] = (void *)sp_atk1;
+    vt[27] = (void *)sp_mega;
+    vt[31] = (void *)sp_kill;
 }
 
 // ---- ONE_UP_MUSHROOM (actor 276, ov002) x3 ---------------------------------
@@ -2095,6 +2153,19 @@ static int __fastcall dr_pdes(void *, void *)
 extern "C" int *func_ov100_021443f4(int *t);   /* ov100 0x021443f4 */
 static int __fastcall dr_d1(void *s, void *)
 { return (int)(size_t)func_ov100_021443f4((int *)s); }
+/* slot 17, the ROM's own D0, GATE 227. Table word 0x02148188 + 17*4 =
+   0x021481cc relocates to 0x02144424, and symbols.txt gives that address its
+   own kind:function(arm,size=0x44) record. It is the D1 written out inline
+   plus the Deallocate: store the vtable, ModelAnim::~ModelAnim at +0xd4,
+   Actor::~Actor, Memory::Deallocate(this, gameHeapPtr). Its src spells the two
+   loads with the shared header's VT0 and a bare G0, and port/CMakeLists.txt
+   binds them per-TU out of this body's own literal pool (0x02144460 ->
+   0x02148188, which is the table this file hosts as _ZTV8daDoor_c, and
+   0x02144464 -> 0x020a0eac). No arguments beyond the receiver, so the
+   two-parameter shape, the same as dr_d1. */
+extern "C" int *func_ov100_02144424(int *t);   /* ov100 0x02144424 */
+static int __fastcall dr_d0(void *s, void *)
+{ return (int)(size_t)func_ov100_02144424((int *)s); }
 
 extern "C" void hal_fill_door_vtable(void)
 {
@@ -2105,10 +2176,13 @@ extern "C" void hal_fill_door_vtable(void)
     vt[6] = (void *)dr_behavior;
     vt[9] = (void *)dr_render;
     vt[12] = (void *)dr_pdes;
-    /* SLOT 17 STILL TRAPS, on the gate-17 reading: nothing on the castle
-       grounds destroys a door -- the three live from the level boot to the
-       teardown -- and its matched body (func_ov100_02144424) carries the
-       inferred-stub marker besides, so it is not seatable.
+    /* SLOT 17 CARRIES THE ROM'S OWN WORD NOW (gate 227). The old note here
+       said it traps because nothing on the castle grounds destroys a door --
+       the three live from the level boot to the teardown -- and because its
+       matched body (func_ov100_02144424) carries the inferred-stub marker. The
+       first half is still true and is why this is a linkage seat rather than a
+       behaviour change; the second half is what changed, since lane STUBADJ
+       ruled the body REAL DECOMP against the ROM.
        SLOT 16 CARRIES THE ROM'S OWN WORD NOW (run link100 lane TAIL).
        port/tools/tail_slots.py --module ov100 --vtable 0x02148188 --width 31
        reads slot 16 -> 0x021443f4, and that body spells _ZTV8daDoor_c by the
@@ -2117,7 +2191,7 @@ extern "C" void hal_fill_door_vtable(void)
        destroys a ModelAnim at +0xd4, not a CommonModel. Not dispatched either
        way, by the same reading that keeps 17 trapping. */
     vt[16] = (void *)dr_d1;
-    vt[17] = (void *)ac_trap17;
+    vt[17] = (void *)dr_d0;
 }
 
 // ============================================================================

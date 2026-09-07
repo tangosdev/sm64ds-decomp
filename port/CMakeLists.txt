@@ -14369,6 +14369,68 @@ set_source_files_properties(
     "VT0=data_ov002_021096b0;VT1=_ZTV8Platform;G0=data_020a0eac")
 
 # ===========================================================================
+# GATE 227 -- ten more ruled bodies, on four hosted tables and one trap pair
+# ===========================================================================
+#
+# Gate 226 above seated the seven slots of one ov002 table. This seats ten more
+# out of the same ruling set: the four tail slots of _ZTV8SignPost, one tail
+# slot of BLACK_BRICK_BLOCK's table, the three POPPING_LAVA_BUBBLES bodies that
+# hal/actor_classes_ov070.cpp had re-typed by hand from the listing, and the two
+# deleting destructors gate 22 and gate 50 excluded for a placeholder collision.
+#
+# The per-body evidence -- table word, function entry, call shape, bindings --
+# is in slice_gate227.txt, one block per table. The rulings are lane STUBADJ's
+# rows in port/tools/inferred_stub_adjudicated.txt.
+#
+# ON ALL THREE BIG TARGETS, gate 226's reason unchanged: every one of these is
+# reached only through a table its own hal file already fills, and all four of
+# those hal files are already on all three targets.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate227.txt" SLICE227_LINES)
+set(SLICE227_SOURCES "")
+foreach(line IN LISTS SLICE227_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE227_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t227 walk_window walk_window_hires smoke_player)
+    target_sources(${_t227} PRIVATE ${SLICE227_SOURCES})
+endforeach()
+#
+# THREE BINDINGS, each read out of the body's OWN literal pool in
+# config/<module>/relocs.txt -- the rule the gate 226 block above states.
+#
+#   func_ov002_020b6d4c  0x020b6d7c -> 0x021093e0   0x020b6d80 -> 0x020a0eac
+#         The lava bubbles' D0. VT is the class's own table, which
+#         hal/actor_classes_ov070.cpp hosts under that same C name; HEAP is
+#         Memory::gameHeapPtr, the same word gate 226 binds as G0.
+#
+#   func_ov100_02144424  0x02144460 -> 0x02148188   0x02144464 -> 0x020a0eac
+#         The door's D0. config calls the table data_ov100_02148188 and the
+#         port hosts it as _ZTV8daDoor_c (hal/actor_classes.cpp, gate 22),
+#         because config swapped the two doors' names -- ov100_syms.txt keeps
+#         it out of the mount for that reason, so the host array is the only
+#         object and the binding names it.
+#
+#   func_ov080_02125428  0x02125458 -> 0x021282b4   0x0212545c -> 0x020a0eac
+#         The painting's D0. ov080_syms.txt likewise keeps 0x021282b4 out of
+#         the mount and hal/actor_classes_painting.cpp declares the host array
+#         under the config name, so VT binds to that name directly.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020b6d4c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT=data_ov002_021093e0;HEAP=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov100_02144424.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV8daDoor_c;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov080_02125428.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT=data_ov080_021282b4;HEAP=data_020a0eac")
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
