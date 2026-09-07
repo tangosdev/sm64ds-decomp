@@ -262,3 +262,81 @@ worktree, against merge-base `26f54f8fc`, after the rebase.
    whose factory is spelled `<class>_classInit_<SUFFIX>` while the class still
    carries a coined name. That is issue #2436, and the measurement recorded above
    is its evidence.
+
+## Revise stage: sanbo-ov096-0907b
+
+Independent verification of `0d10e3435` confirmed every byte claim above -- 36/36
+MATCH, 36 symbol-driven link checks VERIFIED with zero blind slots, the built overlay
+image byte-identical to the cartridge, and the 36-entry fold summing to `0x16b0` --
+and failed the candidate on one CI gate the producer stage never ran. Commit
+`e42a9b611` fixes it and two defects the verifier found alongside it. Byte-neutral:
+the ROM still builds to `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`
+and all 36 functions still MATCH.
+
+- `tools/check_tubuild_conflicts.py --list` went from exit 1, `5 unreconciled conflict
+  record(s)`, to exit 0. All five conflicts had in fact been reconciled during the
+  fold -- no `TUBUILD CONFLICT` marker survives in the source and each contested name
+  has exactly one live spelling -- but the manifest notes still claimed them open. They
+  now read `tubuild create warning (RESOLVED): CONFLICT: ...`, the spelling the check
+  names, and each records what was actually done instead of the generator's "the other
+  is commented out for review", which was no longer true of any of them. Two of the
+  five were not simple "keep the winner" choices and now say so: the live
+  `func_ov096_02135800` and `Vec3_HorzAngle` declarations each take part of their
+  signature from the losing observation, and the `struct Obj` conflict was two
+  different objects the generator collided on one name, so the loser became
+  `RenderView` rather than being discarded.
+- The pass was checked for blindness before being accepted. All five notes still parse
+  under the check's own `NOTE_RE` with `resolved=True` and every field intact, and
+  re-adding a single marker to the source makes the check fail `REOPENED` on exactly
+  that record. So the entry is still under the gate, and the exit 0 is a reconciliation
+  rather than a record the tool stopped seeing.
+- `include/daSanbo_c.h` carried five field-provenance citations naming one-function
+  sources that never existed. They named real files before the rename, which rewrote
+  the coined spelling INSIDE the citation text, and the promotion then deleted the
+  files. `tools/check_dead_references.py` cannot see them because they carry no
+  repo-rooted `src/` prefix. They now name the member and `src/actors/daSanbo_c.cpp`,
+  which the gate does check and which resolves.
+- The same header still spelt its size assert with a coined-name identifier. It now
+  takes the ROM name. The header has exactly one consumer, so there is no fan-out.
+- `boundary_confidence` stays `medium`, and `boundary_evidence` now records why:
+  `tools/tubuild.py` reuses `tu_map.boundary_confidence` exactly, as a mechanical
+  per-boundary score taken as the worse of the TU's two edges, not as a place to record
+  how strong the evidence is. `ov102/daBmb_c` and `ov081/daGmch_c` both extended their
+  run over a factory `tu_map` had cut off, on the same kind of cartridge evidence, and
+  both kept `medium`.
+- A stray NUL that a shell heredoc left inside one `compiler_only_output` reason string
+  was removed; the prose there meant to write a string terminator.
+
+Re-run after the edits: `tubuild verify` 36/36 MATCH with objisolate clean and
+ROM-ascending order; `rombuild.py -j16` 106/106 exact, 11,192 reproducing, 0
+mismatching, ROM sha unchanged; `romdata_check` 9 records, 5 VERIFIED, 4 PARTIAL, 0
+DIFFERS; `premerge_check` nothing green to red on a clean merge tree;
+`validate_merge` +0 byte-verified with 0 added, 0 changed, 0 lost; converted and
+langmode ratchets PASS; `check_rename_ledger`, `check_dead_references`,
+`port_refcheck`, `check_profile_campaign`, `check_python_names`, `check_src_tu`,
+`source_coverage` and `merge_stranding` all exit 0. `queue_audit --check` still fails
+on the same three rows this branch does not own; regenerating confirms it would rewrite
+only `daObjFire_c`, `daSCoin_c` and `daObjLava_c+daObjLava_c`, never this class's row.
+
+### Finding 5: premerge_check does not cover every gate CI runs on every PR
+
+This is why the failure reached a verifier. `premerge_check` runs 8 gates;
+`.github/workflows/` invokes about fifteen distinct check tools, and
+`check_tubuild_conflicts.py` is one of the ones outside that table -- its workflow has
+no `paths:` filter, so it runs on every pull request whatever the diff touches. A
+producer who runs `premerge_check` and reads "nothing goes green to red" has not
+covered CI, and nothing in the run says so. `check_tubuild_conflicts.py` is pure
+Python, whole-tree and cheap, so the gate table is its natural home; failing that, the
+producer role file should carry the list of CI gates that live outside
+`premerge_check`, which currently also includes `check_rename_ledger`,
+`port_refcheck`, `check_profile_campaign`, `check_python_names`, `merge_stranding`,
+`bytegate`, `pr_linkcheck` and `check_src_tu_compiles`.
+
+### Correction to claim 5 above, from the verifier
+
+The gap object relocates the vtable by NAME as well, and the twelve `_ZN9daSanbo_c*`
+names DID change in the rename. Those, not the pointer-to-member records, were what a
+rename could have unwired. They all resolve. The statement above -- that all twelve
+state records point at `func_ov096_*` names the rename never touched -- is still true
+and still the reason those records survived; it was simply not the whole of the
+rename's exposure.
