@@ -45,7 +45,38 @@ struct dCcAcPos_c : dCcAc_c {
     Vector3 pos;            /* 0x34 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
+#ifndef _MSC_VER
     virtual ~dCcAcPos_c();   /* slots 0 (D1), 1 (D0) */
+#else
+    /* THE DESTRUCTOR PAIR AS TWO PLAIN VIRTUALS, HOST ONLY.
+
+       mwccarm gives `virtual ~dCcAcPos_c()` TWO vtable entries -- D1 complete and
+       D0 deleting, the Itanium pair this header's own slot map reads out of
+       the ROM at slots 0 and 1. MSVC folds them into ONE. Spelt as a
+       destructor the declaration indexes correctly on the ARM and ONE SLOT
+       EARLY on the host: every virtual declared after it moves down a slot,
+       so host-compiled dispatch through this class reaches the wrong ROM
+       slot. It is not theoretical -- `dCcAcPos_c::Process` came out as
+       `call [eax+4]` for GetPos (ROM slot 1, the DELETING DESTRUCTOR) and
+       `call [eax+8]` for GetOwnerID (ROM slot 2, GetPos), and the matched
+       symbol had to be switched off behind a host transcription. Two
+       ordinary virtuals occupy the SAME two entries under MSVC, so the host
+       lands where the ARM does. Neither is ever called by name; they hold
+       the two slots the ROM's table holds, and the SAME TWO NAMES must be
+       used in every derived class or MSVC appends a slot instead of
+       overriding.
+
+       INVISIBLE TO THE ROM BUILD, and that is measured, not assumed: the
+       pinned compiler (mwccarm 2004/b56) does not define _MSC_VER -- a
+       translation unit whose whole body is `#ifdef _MSC_VER  #error ...
+       #endif` compiles clean under the pinned flags -- so the preprocessor
+       never enters this arm and the token stream mwccarm sees is unchanged.
+       Verified per translation unit: `mwccarm -E` output is byte-identical
+       before and after this commit for every source that includes this
+       header. */
+    virtual void Destructor1();  /* slot 0 (D1) */
+    virtual void Destructor0();  /* slot 1 (D0) */
+#endif
     virtual Vector3 &GetPos();              /* slot 2 - our pos, not the owner's */
     /* slot 3 GetOwnerID is inherited through a linker veneer; see above. */
 

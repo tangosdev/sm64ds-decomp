@@ -170,7 +170,34 @@ struct Heap {
        strict object isolation retains only the licensed function section while
        rebinding _ZTV4Heap to the ROM's existing address-point symbol. */
     Heap(void* start, u32 size, Heap* root);
+#ifndef _MSC_VER
     virtual ~Heap();
+#else
+    /* THE DESTRUCTOR PAIR AS TWO PLAIN VIRTUALS, HOST ONLY.
+
+       mwccarm gives `virtual ~Heap()` TWO vtable entries -- D1 complete and D0
+       deleting, the Itanium pair the ROM's _ZTV4Heap carries at 0x02099d90
+       (0x0203ca44 and 0x0203ca20), and the slot map above numbers them 0 and
+       1. MSVC folds them into ONE, so all FOURTEEN pure virtuals below move
+       down a slot on the host. Measured consequence: Heap::ResizeToFit's own
+       `VResizeToFit()` compiled to `call [eax+38h]` = index 14, which in the
+       sixteen-slot ROM-ordered table is VGetNodeID. Two ordinary virtuals
+       occupy the SAME two entries under MSVC, so the host lands where the ARM
+       does. Neither is ever called by name; they hold the two slots the ROM's
+       table holds, and SolidHeap and ExpandingHeap must use the SAME TWO
+       NAMES or MSVC appends a slot instead of overriding.
+
+       INVISIBLE TO THE ROM BUILD, and that is measured, not assumed: the
+       pinned compiler (mwccarm 2004/b56) does not define _MSC_VER -- a
+       translation unit whose whole body is `#ifdef _MSC_VER  #error ...
+       #endif` compiles clean under the pinned flags -- so the preprocessor
+       never enters this arm and the token stream mwccarm sees is unchanged.
+       Verified per translation unit: `mwccarm -E` output is byte-identical
+       before and after this commit for every source that includes this
+       header. */
+    virtual void Destructor1();  /* slot 0 (D1) */
+    virtual void Destructor0();  /* slot 1 (D0) */
+#endif
 
     /* Pure, because the ROM says so: Heap's own sixteen slots hold code only at
        0 and 1, and NULL at 2..15. Every one of these is implemented by
