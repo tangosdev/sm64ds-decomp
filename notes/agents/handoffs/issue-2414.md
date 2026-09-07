@@ -6,12 +6,27 @@ This document describes this commit. The queue records its immutable output SHA.
 
 - **Issue URL, task ID, stage, session and harness:**
   https://github.com/tangosdev/sm64ds-decomp/issues/2414 — task `issue-2414`,
-  stage `reconstruct` (role `producer`), session `prod-2414-0907`, harness
+  stage `reconstruct` (role `producer`), session `prod-2414b-0907`, harness
   Claude Code (Opus 5). Claimed against the exact SHA the queue offered.
-- **Source branch and previous accepted input SHA:** branch `cpp/daMip_c-v2`,
-  branched at `f10902c14b91ceb4618062c119c3075852292519` — the accepted input,
-  and the tip of the v1 branch `cpp/Rabbit-tu`. Nothing was rebased, reset or
-  restarted; the v1 branch is untouched and still holds that tip.
+- **This is a text-only continuation stage.** The preceding `reconstruct`
+  attempt (session `prod-2414-0907`) produced
+  `d004de771d55ddf2ff4699250a57b940d27c4f97`, which an independent verifier
+  (session `vfy-2414-0907`) then confirmed substantively — including
+  reproducing the langmode red on the accepted input, and a forced clean
+  recompile in each declaration position that produced a byte-identical
+  27,752-byte object with the same sha256, against a deliberate control that
+  did change the hash. That verification stands. **This stage changes no
+  source whatsoever**; it corrects and completes the prose of this document,
+  which is why the byte proof carries over unchanged rather than needing to be
+  re-established. Every measurement below was re-checked against the tree, not
+  copied forward.
+- **Source branch and previous accepted input SHA:** branch `cpp/daMip_c-v2b`,
+  branched at `d004de771d55ddf2ff4699250a57b940d27c4f97` — the accepted input
+  for this stage. That commit sits on `cpp/daMip_c-v2`, which in turn branched
+  at `f10902c14b91ceb4618062c119c3075852292519`, the tip of the v1 branch
+  `cpp/Rabbit-tu`. Nothing was rebased, reset or restarted, and no branch in
+  that chain was moved; `origin/main` was deliberately **not** merged in (see
+  the integrator precondition).
 - **Original source base SHA and installed workflow/tool SHA:** both
   `f327f7b6460e157153eb7fc0749dbbe60dd854f1`.
 - **Separate evidence commits and required artifacts in this commit:** the task
@@ -20,13 +35,29 @@ This document describes this commit. The queue records its immutable output SHA.
   the retired coined name — see remaining work). The stage's required artifacts,
   `src/actors/daMip_c.cpp` and `config/tu_manifest.d/ov085/daMip_c.json`, are
   both present.
-- **Next action, responsible role and blockers:** independent byte verification
-  of this commit by a session that is not `prod-2414-0907` and is not the v1
-  producer recorded in this branch's history. No blocker inside this scope. Two
-  items are deliberately left for the integration lane, both listed below.
-- **Status:** verified candidate for the checks a producer can run. The full-ROM
-  build, the TU byte/relocation pass and the composed static gates all pass at
-  this content; the private validator has not been run and no PR exists yet.
+- **Next action, responsible role and blockers:** independent verification of
+  this commit by a session that is none of `prod-2414-0907`, `prod-2414b-0907`,
+  `vfy-2414-0907`, or the v1 producer recorded in this branch's history. Because
+  this stage changed only prose, that verification is a document review against
+  the tree plus whatever re-confirmation the verifier wants of the unchanged
+  byte proof — the source content is bit-identical to the already-verified
+  `d004de771`. No blocker inside this scope.
+- **Status:** verified candidate for the checks a producer can run, with the
+  source unchanged from an independently verified commit. The full-ROM build,
+  the TU byte/relocation pass and the composed static gates passed at this
+  content when `d004de771` was produced and were reproduced independently; the
+  private validator has not been run and no PR exists yet.
+- **Gates re-run at this stage, and the ones deliberately not re-run:** this
+  stage edits one Markdown file under `notes/` and nothing else, so only the
+  gates a prose change can affect were re-run: `check_dead_references.py` and
+  `check_python_names.py`, both exit 0. The byte and link gates —
+  `rombuild.py`, `tubuild.py verify`, `romdata_check.py`,
+  `prepush_linkcheck.py`, `premerge_check.py` and the rest recorded under
+  **Proof** — were **not** re-run here, because the source tree they measure is
+  byte-identical to `d004de771`; their recorded results carry over unchanged and
+  should be read as evidence about that commit's content, which is this
+  commit's content. Nothing in this document should be read as a fresh full-gate
+  pass at this SHA.
 - **Remaining uncommitted/local-only material and where it is preserved:** none.
   Working tree clean. The private queue receipt and every build log stay in the
   worktree's gitignored `build/` and are not committed.
@@ -71,11 +102,33 @@ This document describes this commit. The queue records its immutable output SHA.
   changed to `int[]` so it agrees with the spelling `include/decl_common.h`
   already carries. The counts return to 165/168 and the bytes do not move: the
   TU still verifies 32/32.
-  The hand-written store itself stays. A natural `new daMip_c()` would select
-  the global `operator new`, which this image does not contain, and `fBase_c`
-  cannot declare its own `operator new` in-class; `include/fBase_c.h` records
-  that measurement and `src/actors/Scuttlebug.cpp` retains the same seam for the
-  same reason.
+  The hand-written store itself stays, and the barrier is *which* allocator a
+  natural `new` would select, not the absence of one.
+  **Correction, recorded rather than quietly dropped:** an earlier draft of this
+  document, and the immutable commit message of `33e458302`, both assert that a
+  natural `new daMip_c()` would select "the global `operator new`, which this
+  image does not contain". That is false. `_Znwj` is present at arm9
+  `0x0203cbe4` in `config/arm9/symbols.txt`, and `src/_Znwj.cpp` defines it as a
+  tail-call veneer to `func_0203cc0c`. The commit message cannot be edited, so
+  the error stays in this branch's history; this paragraph is the correction.
+  The real, measured barrier is the one `src/actors/Scuttlebug.cpp` states for
+  its own factory: natural `new` selects the **wrong allocator**. The cartridge
+  factory allocates through `fBase_c::operator new`, and mwccarm 2004/b56
+  rejects an in-class `operator new` declaration — `include/fBase_c.h:150`
+  records that restriction, and is cited correctly above — so `fBase_c` cannot
+  expose that allocator under the natural spelling at all. The mangled call is
+  therefore the only way to reach the allocator the ROM actually used.
+  Scuttlebug retains the same seam for the same reason, but it records this
+  different and correct measurement; it does **not** record the "no global
+  `operator new`" claim this document previously attributed to it.
+
+  Noted in passing, not repaired here because it is source outside this
+  stage's text-only scope: the adjacent comment in `include/fBase_c.h` says the
+  global `_ZdlPv` "exists nowhere in this image", while
+  `config/arm9/symbols.txt` lists `_ZdlPv` at `0x0203cbf0`. The in-class
+  `operator delete` requirement it argues for may still hold on other grounds,
+  but that particular justification needs re-measuring by whoever next owns
+  `fBase_c`.
 
 ## Reconstruction dimensions
 
@@ -94,17 +147,70 @@ This document describes this commit. The queue records its immutable output SHA.
 - **Recovered layout/fields; remaining shadow structs/raw offsets:** the class
   is a real `daMip_c : dEnemyBase_c` and the five sub-objects at `0x110`,
   `0x144`, `0x300`, `0x368` and `0x3c0` are typed and close on each other; the
-  `0x474` size assert is the ROM's own allocation literal. Still unrecovered:
+  `0x474` size assert is the ROM's own allocation literal.
+
+  **This is the weakest dimension of the candidate, and a previous draft of
+  this section understated it badly** by naming only seven pads, `mState`,
+  `daMip_cSelf`, one `V3Blk` and "the ov085 file statics". Measured over
+  `src/actors/daMip_c.cpp` at this commit, with comments stripped first, the
+  actual remaining surface is:
+
+  - **15 shadow-struct definitions across 10 distinct names.** Fourteen are
+    block-scope (`RG`, `V3` ×2, `G`, `Vector3` ×2, `V3Blk`, `Mtx43` ×4,
+    `Vector3_local`, `Obj`, `VObj` — 9 names), and one is file-scope:
+    `daMip_cSelf`, forward-declared, used for the `daMip_cStateFn`
+    pointer-to-member typedef, then defined as `{ char pad[0x364]; ... }`.
+    Several are the *same* geometry retyped per member — four separate `Mtx43`
+    and two separate `Vector3` declarations — so folding them is a real
+    consolidation, not cosmetic.
+  - **63 block-scope `extern` declarations naming 26 distinct objects.** Nine
+    are arm9 `data_0209xxxx`/`data_020a0e68` objects and seventeen are ov085
+    `data_ov085_0213xxxx` objects. The most-repeated single object is declared
+    seven times in seven different members.
+  - **19 `char *` aliases of `this`** (`char *c = (char *)this;` and two
+    `self`/one `p` variants), plus two further `((char*)this)` casts passed
+    directly as call arguments at the `dCcAc_c::Init`/`dBgCh_Actr::Init` seam.
+    Counting `<alias> + <constant>` inside the function body that declares each
+    alias, those drive **252 raw-offset accesses on 220 lines over 49 distinct
+    offsets**. **33 of those offsets are at or above `0x110`**, which is the
+    boundary above which the layout is this class's own rather than inherited —
+    and the header already names or types many of them, including all five
+    typed sub-objects (`0x110`, `0x144`, `0x300`, `0x368`, `0x3c0`) and fields
+    such as `0x424`, `0x426`, `0x427`, `0x429`, `0x42a`, `0x438`, `0x43c`,
+    `0x440`, `0x444`, `0x448` and `0x45c`. Every one of those is an access that
+    could be spelled as the member it already is.
+
+    *Method, so this is reproducible rather than asserted:* strip `/* */` and
+    `//` comments; match `char *NAME = (char *)this`; split the file into
+    top-level brace regions and, within each region declaring such an alias,
+    count `NAME` followed by `+` and an integer literal. A narrower count that
+    only accepts a dereference form, or that excludes aliases passed on as
+    arguments, lands lower — an independent measurement of the same file
+    reported 18 aliases, 187 accesses, 165 lines, 39 offsets and 28 at or above
+    `0x110`. Both measurements support the same conclusion; treat the shape,
+    not the exact integer, as the finding.
+
+  Individually still unrecovered, and named so the next owner can plan:
   seven padding spans (`pad_390`, `pad_3e8`, `pad_424`, `pad_42b`, `pad_44c`,
   `pad_460`, `pad_46c`); `mState` at `0x364`, which is really a pointer to a
   state record but is kept an opaque `s32` because `Behavior` compares it by
-  address against four ov085 objects; the `daMip_cSelf` shadow struct the
-  pointer-to-member call goes through; a `V3Blk { s32 w[3]; }` block in
+  address against four ov085 objects; **`mTalkingPlayer` at `0x45c`, which the
+  header's own comment documents as "A Player *" while declaring it `s32`, and
+  which the body then round-trips through `*(void **)&mTalkingPlayer` at three
+  sites** — it was missing from the previous list entirely and is the cheapest
+  correct field recovery left in the class; the `daMip_cSelf` shadow struct the
+  pointer-to-member call goes through; the `V3Blk { s32 w[3]; }` block in
   `StateFleeMain`, which is load-bearing — the scalar spelling costs eight
   bytes; and the ov085 file statics, which stay block-scope inside the member
   that recovered each one, because the legacy shards disagreed about their
   types and canonicalising them is a measured codegen hazard rather than a
   tidy-up.
+
+  None of this weakens the byte proof, which is exact and independently
+  reproduced. It is the gap between "the bytes are right" and "the class is
+  reconstructed". Anyone sizing this class's remaining work from the previous
+  wording would have underestimated it by a wide margin; "promoted" is a
+  packaging state, not a claim that reconstruction is complete.
 - **Lifecycle, vtable/RTTI, initializer and data ownership:** `~daMip_c` is
   declared first among the virtuals and defined out of line, so it is the key
   function and this TU emits `_ZTV7daMip_c`, `_ZTI7daMip_c` and `_ZTS7daMip_c`.
@@ -117,6 +223,17 @@ This document describes this commit. The queue records its immutable output SHA.
   the manifest: `_ZN7daMip_cD2Ev` (the cartridge runs D1 straight into D0 with
   no third variant) and `_ZN7Vector3D1Ev`. The TU claims `.text` only; it owns
   no `.data` or `.bss`.
+
+  **Coverage limit on the vtable evidence, stated rather than left implicit:**
+  because this TU claims `.text` only, `ov085/daMip_c` is not an intact TU —
+  the same condition that makes `tubuild.py linkcheck` refuse it below. It is
+  therefore absent from the build report's `intactTus` list, objisolate
+  discards the vtable and RTTI this TU emits, and the ROM gap supplies those
+  bytes at link time instead. The consequence is that `tools/romdata_check.py`
+  is the **only** evidence for this class's vtable. The full-ROM build does not
+  independently corroborate it, because the vtable bytes it linked came from
+  the cartridge gap rather than from this source. Read the vtable claim as one
+  gate's verdict, not as two agreeing ones.
 - **Attribution preserved through each move/rename:** every one of the 32
   functions carries its originating shard path in the manifest's per-function
   `legacy_source` field, and each member carries an `// @symbol` marker. The
@@ -184,6 +301,50 @@ against base `origin/main` `88dbe66db2cb3f0cd1dc704e9f2775eb37aea646`.
   No PR is open for this branch. Nothing above should be read as a validator
   pass, and the terminal private validation the issue requires for acceptance
   has not happened.
+
+### Integrator precondition: compose forward before validating
+
+**Read this before running the private validation. Skipping it produces a false
+failure that looks exactly like a real ROM-data regression.**
+
+This class is a `#2425` case. On `origin/main` the class is still the coined
+`Rabbit`, spread across per-function shards, and the ov085 `symbols.txt` names
+its vtable `_ZTV6Rabbit` at `0x021300f8`. On main, the `Rabbit.h` header
+declares `virtual ~Rabbit()` first among the virtuals (line 100 there), so the
+`_ZN6RabbitD1Ev` shard is the key function and emits that vtable. Both of those
+files exist only on `origin/main` — this branch is what retires them, folding
+the shards into one TU and the header into `include/daMip_c.h` — so they are
+named here without repo-rooted paths on purpose: those paths are dead in *this*
+tree by design, and spelling them out would trip the dead-reference gate over
+the very rename the branch exists to make. On this
+branch the same address `0x021300f8` carries `_ZTV7daMip_c`. Nothing about the
+cartridge data changed — only the source-side name — so a name-keyed
+comparison reads the whole vtable as a **loss** that never happened.
+
+`origin/main` already fixes this: commit `1c93d2663` ("Anchor the ROM-data diff
+on the cartridge address, not the symbol name (#2425)") makes
+`validate_merge._data_anchor` key on `module`, `addr` and `bytes`. But that
+function returns `None` for any report row missing those keys, and falls back to
+name comparison when it does — **and this branch's own
+`tools/romdata_check.py:361-364` still emits `{"module", "symbol"}` only.** It
+predates the fix. So running the validation with *this branch's* tools produces
+anchorless rows and reproduces the phantom loss even when `validate_merge` on
+main is new enough. Both halves have to be forward of the fix, not just one.
+
+Therefore, for the integrator:
+
+1. **Merge `origin/main` at or beyond `1c93d2663` into the composition before
+   running the private validation.** Do not validate this branch standing alone.
+2. **Regenerate the base ROM report; do not reuse a cached one.** A report
+   produced by the older `romdata_check` carries no `addr`/`bytes` keys, so
+   feeding it to the new `validate_merge` silently re-enters the name-only path
+   and re-creates the same false failure.
+
+Composing forward is also why this stage did **not** merge `origin/main` into
+the branch itself: the byte proof recorded above — and the independent
+verification of it — is pinned to exactly this content, and re-cutting the
+commit to absorb main would discard that proof for no gain. Compose at
+integration time instead.
 
 ### Left to the integration lane, deliberately
 
