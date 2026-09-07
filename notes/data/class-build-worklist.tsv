@@ -311,7 +311,7 @@ da1up_c	DONE	include\da1up_c.h	dEnemyBase_c	0	ov002	9
 daBakubaku_c	DONE	include\daBakubaku_c.h	dEnemyBase_c	0	ov032	8
 daBasabasa_c	DONE	include\Swoop.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov065	10
 daBbl_c	DONE	include\LavaBubble.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov064	8
-daBmb_c	DONE	include\BobOmb.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov102	9
+daBmb_c	DONE	include\daBmb_c.h	dEnemyBase_c	0	ov102	9
 daBombking_c	DONE	include\KingBobOmb.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov078	8
 daBook_c	DONE	include\BookShot.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov020	8
 daBtn_c	DONE	include\Whomp.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov079	9
