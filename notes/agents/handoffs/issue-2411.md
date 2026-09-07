@@ -79,20 +79,22 @@ This document describes this commit. The queue records its immutable output SHA.
   `39229e56`. The second
   independent verification checked the deferral rather than granting it, and
   the third flagged its figures as stale by construction -- a drift count ages
-  every time main moves, and this one aged twice while the task sat in the
-  integration lane. **Re-measured by the integrator at compose time**, against
-  `e4fb1300e`: since `69d973f125` main has moved **123 files, 88 of them under
-  `src/`, `config/` or `include/`**, not the 21/2 recorded here earlier and not
-  the 79/48 that held an hour before. The conclusion survives every
-  re-measurement, because the 88 are two unrelated class promotions -- the
-  ov081 `daGmch_c` fold and the ov102 `daBmb_c` fold -- plus the append-only
-  ledgers. There is still zero overlap with this task's blast radius: main
-  touches **0** ov002 files, and its `include/decl_common.h` hunks land at
-  lines 704, 752, 1565, 2817 and 2909, while this change's single hunk removes
-  the `_ZTV13OneUpMushroom` declaration at line 510. `git merge-tree` is clean.
-  The integrator composes onto a current base containing `1c93d2663` -- an
-  integration-lane merge with its own gate run, not a rebase this task should
-  perform.
+  every time main moves, and this one aged four times while the task sat in the
+  integration lane. **Re-measured by the integrator at every compose**, most
+  recently against `fb7df3a7a`: since `69d973f125` main has moved **177 files,
+  140 of them under `src/`, `config/` or `include/`**. The figures recorded
+  here earlier -- 21/2, then 79/48, then 123/88 -- are each superseded. This
+  number is expected to keep moving; re-measure it, never quote it.
+  The conclusion survives every re-measurement, because the 140 are four
+  unrelated class promotions -- the ov081 `daGmch_c`, ov102 `daBmb_c` and
+  ov030 `daMky_c` folds -- plus the append-only ledgers. There is still zero
+  overlap with this task's blast radius: main touches **0** ov002 files. Its
+  `include/decl_common.h` hunks land at lines 517, 704, 752, 1565, 2817 and
+  2909, while this change's single hunk removes the `_ZTV13OneUpMushroom`
+  declaration at line 510 -- the nearest is `daMky_c`'s at 517, seven lines
+  clear, and git merged the two with no conflict. The integrator composes onto
+  a current base containing `1c93d2663` -- an integration-lane merge with its
+  own gate run, not a rebase this task should perform.
 - Source placement (raised as blocking by the first verification, overturned):
   the TU stays at `src/actors/da1up_c.cpp`. The measurement behind that ruling,
   made by the domain coordinator and posted on

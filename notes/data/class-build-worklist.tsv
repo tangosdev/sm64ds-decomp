@@ -132,7 +132,7 @@ daKpa_c	DONE	include\Bowser.h  [alias: header uses pre-rename name]	dActor_c	0	o
 daKrpa_c	DONE	include\daKrpa_c.h	dActor_c	0	ov070	8
 daLuigi_c	DONE	include\MirrorLuigi.h  [alias: header uses pre-rename name]	dActor_c	0	ov055	7
 daMcFlag_c	DONE	include\daMcFlag_c.h	dActor_c	0	ov009	6
-daMky_c	DONE	include\Ukiki.h  [alias: header uses pre-rename name]	dActor_c	0	ov030	9
+daMky_c	DONE	include\daMky_c.h	dActor_c	0	ov030	9
 daMugenBGM_c	DONE	include\MugenBgm.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	7
 daObj1UpLogo_c	DONE	include\OneUpLogo.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	6
 daObjAbuku_c	DONE	include\daObjAbuku_c.h	dActor_c	0	ov002	4
