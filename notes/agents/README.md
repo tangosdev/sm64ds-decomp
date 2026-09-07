@@ -11,6 +11,10 @@ work. [queue-v2.md](queue-v2.md) documents the executable queue.
 The workflow files can be installed before cutover. Installation does not stop
 old agents or activate the new queue. Do not start v2 work until CUTOVER is complete.
 
+The 2026-09-07 cutover is done: [CUTOVER-0907.md](CUTOVER-0907.md) records the
+pinned workflow commit, what the branch inventory found, and what is deliberately
+not adopted yet. Read it before assuming a branch is abandoned.
+
 ## Read only what your task needs
 
 - Everyone: PIPELINE, then their current task and accepted handoff.
