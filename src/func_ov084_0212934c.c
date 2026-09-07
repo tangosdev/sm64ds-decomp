@@ -1,4 +1,4 @@
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 extern void func_02012694(int a, void* p);
 
 extern int data_ov084_02130ce8[2];
@@ -19,7 +19,7 @@ void func_ov084_0212934c(char* c)
     if (*(int*)(c + 0x434) != 0)
         return;
 
-    if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1b4))
+    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4))
         return;
 
     /* kind before type load: forces v=r3 / type1=r1 coloring (short extract form) */

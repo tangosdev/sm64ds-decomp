@@ -1,7 +1,7 @@
 // func_02007b0c @ 0x02007b0c (size 0x8c) - Camera member.
 // Reads a packed offset record (3 unaligned shorts + a byte step) from arg1,
 // builds a Fix12i Vector3 offset (each short << 12), rotates it about the
-// owner Actor's Y angle (+0x8000, facing opposite the player) and translates
+// owner dActor_c's Y angle (+0x8000, facing opposite the player) and translates
 // by the owner's position into a result vector, then approaches the camera's
 // field_0x80 Vector3 toward that result with a per-axis step (byte6 << 4).
 
@@ -15,18 +15,18 @@ typedef struct Vector3_16 {
     short x, y, z;
 } Vector3_16;
 
-typedef struct Actor {
+typedef struct dActor_c {
     char _pad0[0x5c];
     Vector3 pos;        // 0x5c
     char _pad1[0x8c - (0x5c + 0xc)];
     Vector3_16 ang;     // 0x8c
-} Actor;
+} dActor_c;
 
 typedef struct Camera {
     char _pad0[0x80];
     Vector3 field_0x80; // 0x80
     char _pad1[0x110 - (0x80 + 0xc)];
-    Actor* owner;       // 0x110
+    dActor_c* owner;       // 0x110
 } Camera;
 
 typedef struct Packed {
@@ -44,7 +44,7 @@ extern void func_02007cec(Vector3* dest, const Vector3* src, int step);         
 int func_02007b0c(Camera* self, const char* rec) {
     Vector3 v;
     Vector3 res;
-    Actor* owner;
+    dActor_c* owner;
     int step;
     Fix12i vx, vy, vz;
     vz = (Fix12i)ReadUnalignedShort(rec + 4) << 12;

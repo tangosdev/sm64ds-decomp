@@ -1,39 +1,46 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Bully: 6 matched functions, 11 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BULLY_H
 #define BULLY_H
-#include "types.h"
 
-struct Bully {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x2c];
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x36];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x43];
-    u8  mModelAnim;            /* 0x110 */
-    u8  pad_111[0x63];
-    u8  mWithMeshClsn;            /* 0x174 */
-    u8  pad_175[0x1bb];
-    s32 mFileTable;            /* 0x330 */
-    u8  pad_334[0x8];
-    u8  mMovingCylinderClsn;            /* 0x33c */
-    u8  pad_33d[0x33];
-    u8  mShadowModel;            /* 0x370 */
-    u8  pad_371[0x8b];
-    s32 unk_3fc;            /* 0x3fc */
-#ifdef __cplusplus
+#include "types.h"
+#include "daOts_c.h"
+
+/* daDonketu_c in the ROM's RTTI. Derives from daOts_c, which owns every member this
+ * header used to restate -- the ModelAnim, the dBgCh_Actr, the file table, the
+ * dCcAc_c and the ShadowModel are all the base's, and daDonketu_c_classInit proves
+ * it by constructing them between the two vtable stores.
+ *
+ * SIZE 0x400, which is the literal in daDonketu_c_classInit's fBase_c::operator new. The base
+ * ends at 0x398, so everything below is Bully's own.
+ *
+ * SM64DS RTTI names the implementation daDonketu_c. The reconstructed
+ * factory daDonketu_c_classInit (historical alias
+ * Bully_Spawn) constructs it for the DONKETU
+ * registry profile.
+ */
+struct Bully : daOts_c {
+    u8  pad_398[0x64];
+    /* An actor unique ID, not a count: Behavior passes it to dActor_c::FindWithID and
+       increments the byte at +0x3fe of whatever comes back; InitResources zeroes it.
+       Left unnamed because that is as far as the bytes go -- BigBully's u8 at the
+       same offset is a different field with a different use, so the offset is no
+       guide. */
+    s32 mBigBullyID;                    /* 0x3fc */
+
+    virtual ~Bully();
+
     /* methods */
     int Behavior();
     int CleanupResources();
     int Render();
-    void InitResources();
-#endif
+    int InitResources();
+    virtual int UpdateRunState();
+    virtual void UpdateDeathState();
+    virtual void PlayStepSound();
+    virtual void PlayHitSound();
+    virtual void PlayShellHitSound();
+    virtual void PlayDeathSound();
 };
 
-#endif
+typedef char Bully_size_must_be_0x400[sizeof(Bully) == 0x400 ? 1 : -1];
+
+#endif /* BULLY_H */

@@ -3,9 +3,9 @@ unsigned char NumStars(void);
 void func_ov003_020ae1a4(void *sl, int r);
 void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int b, void *attr, int x, int y, int a, int cc, void *m);
 extern signed char data_02092110[];
-extern void *func_020aba70[];
-extern void *func_020ab9c8;
-extern void *func_020abad0;
+extern void *_ZN3OAM7NUMBERSE[];
+extern void *_ZN3OAM5TIMESE;
+extern void *_ZN3OAM10POWER_STARE;
 void func_ov003_020ae0b0(char *sl)
 {
   int sb;
@@ -28,13 +28,13 @@ void func_ov003_020ae0b0(char *sl)
       signed char d = *((signed char *) ((sl + i) + 0x121));
       if (d >= 0)
       {
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[d], sb, r8, 8, -1, 0);
+        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[d], sb, r8, 8, -1, 0);
         sb -= 9;
       }
       i--;
     }
     while (i >= 0);
   }
-  _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, sb, r8 + 8, -1, -1, 0);
-  _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad0, sb - 0x10, r8 + 8, -1, -1, 0);
+  _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, sb, r8 + 8, -1, -1, 0);
+  _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM10POWER_STARE, sb - 0x10, r8 + 8, -1, -1, 0);
 }

@@ -1,64 +1,61 @@
 //cpp
 // @symbol _ZN7SkiLift13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "SkiLift.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "daObjSm_Lift_c.h"
+// recovered name: daObjSm_Lift_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daObjSm_Lift_c::InitResources - recovered from vtable slot identity */
+struct PathPtr { char b[8]; };
 extern "C" {
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
-extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *f);
-extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
-extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *act, int a, int b, unsigned int c2, unsigned int d);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *c2, void *d);
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *act);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
-extern void func_ov018_02111d28(char *c, int r1);
-extern void _ZN13RaycastGroundD1Ev(void *self);
-extern int data_ov018_02113c00[];
-extern int data_ov018_02112c04[];
-}
+extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
+extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* th, void* f, int a, int b);
+extern void func_ov018_02111278(void* c);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* c);
+extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* sfp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* th, void* kf, void* mtx, int fx, short s, void* clps);
+extern void func_020393d4(int* p, int v);
+extern void func_020393c4(int* p, int v);
+extern void _ZN7PathPtrC1Ev(PathPtr* p);
+extern void _ZN7PathPtr6FromIDEj(PathPtr* p, unsigned int id);
+extern int _ZNK7PathPtr8NumNodesEv(PathPtr* p);
+extern int data_ov018_02113bc8[];
+extern int data_ov018_02113bc0[];
+extern int data_ov018_02112f48[];
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
+extern int func_ov018_02111804[];
 
-int SkiLift::InitResources()
-{
-    void *m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov018_02113c00);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this)+0xd4, m, 1, 1);
-    for (int i = 0; i < 2; i++)
-        _ZN9Animation8LoadFileER13SharedFilePtr((void*)data_ov018_02112c0c[i]);
-    for (int i = 0; i < 2; i++) {
-        void *t = (void*)data_ov018_02112c04[i];
-        _ZN15TextureSequence8LoadFileER13SharedFilePtr(t);
-        _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File((void*)data_ov018_02113c00[1], (void*)((int*)t)[1]);
-    }
-    if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0) return 0;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this)+0x174, ((char *)this), 0x104000, 0x12c000, 0x4800004, 0x900000);
-    func_ov018_021123d0((char *)this, 0);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this)+0x1a8, ((char *)this), 0x32000, 0x32000, 0, 0);
-    char rg[0x54];
-    int v[3];
-    v[0] = mPosX;
-    v[1] = mPosY;
-    v[2] = mPosZ;
-    v[1] += 0x14000;
-    _ZN13RaycastGroundC1Ev(rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, v, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(rg))
-        mPosY = *(int*)(rg+0x44);
-    else
-        mPosY = v[1];
-    unk_364 = mPosX;
-    unk_368 = mPosY;
-    unk_36c = mPosZ;
-    unk_374 = 0;
-    func_ov018_02111d28(((char *)this), 0);
-    _ZN13RaycastGroundD1Ev(rg);
-    return 1;
+s32 SkiLift::InitResources() {
+    char* c = (char*)this;
+    struct daObjSm_Lift_c *self = (struct daObjSm_Lift_c *)(void *)c;
+  self->mPathId = *(int*)(c+8) & 0xff;
+  if(self->mPathId == 0xff) return 0;
+  void* f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov018_02113bc8);
+  _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
+  func_ov018_02111278(c);
+  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+  void* kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov018_02113bc0);
+  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c+0x124, kf, c+0x2ec, 0x1000, self->mAngleY, data_ov018_02112f48);
+  func_020393d4((int*)(c+0x124), (int)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+  func_020393c4((int*)(c+0x124), (int)func_ov018_02111804);
+  self->unk_331 = 0x3c;
+  PathPtr p;
+  self->mBasePosX = self->mPosX;
+  self->mBasePosY = self->mPosY;
+  self->mBasePosZ = self->mPosZ;
+  {
+    short* ang = (short*)(c + 0x8e);
+    *ang = *ang - 0x4000;
+  }
+  _ZN7PathPtrC1Ev(&p);
+  _ZN7PathPtr6FromIDEj(&p, self->mPathId);
+  self->mNodeCount = _ZNK7PathPtr8NumNodesEv(&p);
+  self->mNodeStep = 1;
+  {
+    int* ip = (int*)(c + 0x33c);
+    *ip = *ip + self->mNodeStep;
+  }
+  self->unk_320 = 0;
+  return 1;
+}
 }

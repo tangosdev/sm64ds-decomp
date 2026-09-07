@@ -85,6 +85,6 @@ void func_ov007_020b9ca8(void)
         *(u16 *)(*(char **)(data_ov007_0210342c + 0x54)) != 0) {
         *(int *)(data_ov007_02104ba0 + 0x28) = 0;
     } else {
-        (*(int *)(int)(((long long)(int)(data_ov007_02104ba0 + 0x28))))++;
+        (*(int *)(int)(data_ov007_02104ba0 + 0x28))++;
     }
 }

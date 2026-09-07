@@ -20,7 +20,7 @@ void func_ov006_020c4148(void)
 {
     int i;
     for (i = 0; i < data_ov006_02140328; i++) {
-        int *v = (int *)(((long long)(int)&data_ov006_02140324[i].x));
+        int *v = (int *)(&data_ov006_02140324[i].x);
         volatile int *q = (volatile int *)data_ov006_0213afc8;
         if (v[0] != data_ov006_0213afc8[0]
             || (v[1] != q[1] && data_ov006_02140324[i].x != 0))

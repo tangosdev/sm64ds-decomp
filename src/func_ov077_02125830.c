@@ -5,7 +5,7 @@ int func_ov077_02125830(char *c)
     if (((*(int *)(c + 0xb0) & 0x40000) ? 1 : 0) != 0)
     {
         char *p = *(char **)(c + 0xd0);
-        int *src = (int *)(((long long)(int)(p + 0x5c)));
+        int *src = (int *)(p + 0x5c);
         *(int *)(c + 0x5c) = src[0];
         *(int *)(c + 0x60) = src[1];
         *(int *)(c + 0x64) = src[2];

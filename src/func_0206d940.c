@@ -1,4 +1,4 @@
-extern void _ZN4cstd8__assertEPKcPKcPKci(const char *, const char *, const char *, int);
+extern void _ZN4cstd8__assertEPKcS1_S1_i(const char *, const char *, const char *, int);
 extern const char data_020868fc;
 extern const char data_02086a30;
 
@@ -16,7 +16,7 @@ void func_0206d940(struct Arr *s, unsigned int index) {
     unsigned int n;
     int i;
     if (index > s->count) {
-        _ZN4cstd8__assertEPKcPKcPKci(&data_020868fc, (const char *)0x42, &data_02086a30, 1);
+        _ZN4cstd8__assertEPKcS1_S1_i(&data_020868fc, (const char *)0x42, &data_02086a30, 1);
     }
     n = s->count;
     if (n - index != 0) {

@@ -1,5 +1,5 @@
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *a);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *a);
 extern void func_ov062_02118004(void *c, int a1);
 extern void func_ov062_02117994(char *c, int idx);
 extern int _ZNK9Animation12WillHitFrameEi(void *anim, int f);
@@ -12,7 +12,7 @@ void func_ov062_02118588(char *c)
     int match = 0;
     if (*(int *)(c + 0x38c) == 2) {
         if (*(unsigned int *)(c + 0x134) != 0) {
-            found = _ZN5Actor10FindWithIDEj(*(unsigned int *)(c + 0x134));
+            found = _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x134));
             if (found != 0) {
                 int t = *(unsigned short *)((char *)found + 0xc);
                 t = (t == 0x11d);
@@ -26,11 +26,11 @@ void func_ov062_02118588(char *c)
         }
     }
     if (match != 0) {
-        int *hp = (int *)(((long long)(int)(c + 0x98)));
+        int *hp = (int *)(c + 0x98);
         *(int *)(c + 0x390) = 0;
         *(int *)(c + 0x38c) = 4;
         *hp = *hp / 2;
-        _ZN9ActorBase18MarkForDestructionEv(found);
+        _ZN7fBase_c18MarkForDestructionEv(found);
         return;
     }
     if (*(int *)(c + 0x98) != 0) {
@@ -40,7 +40,7 @@ void func_ov062_02118588(char *c)
 
     {
         if (*(unsigned short *)(c + 0x3c6) != 0) {
-            unsigned short *q = (unsigned short *)(((long long)(int)(c + 0x3c6)));
+            unsigned short *q = (unsigned short *)(c + 0x3c6);
             char *p = c + 0x300;
             *q = (unsigned short)(*q - 1);
             if (*(unsigned short *)(p + 0xc6) != 0)

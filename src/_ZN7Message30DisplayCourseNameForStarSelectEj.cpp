@@ -34,7 +34,8 @@ void func_0201b7cc(void);
 void func_0201b388(int a);
 }
 
-extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(struct Message *self) {
+void Message::DisplayCourseNameForStarSelect(u32 base)
+{
     volatile unsigned short ls;
     volatile int li1;
     volatile int li2;
@@ -44,7 +45,7 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(struct Message *se
     int div;
     int div2;
 
-    data_0209d6d4 = (short)((unsigned int)&self->unk_196);
+    data_0209d6d4 = (short)(base + 0x196);
     data_0209d660 = 0;
     func_0201eaac();
 
@@ -93,7 +94,7 @@ extern "C" void _ZN7Message30DisplayCourseNameForStarSelectEj(struct Message *se
 
     data_0209d6c0 = 1;
     {
-        StarEntry* e = (StarEntry*)(int)(((long long)(int)((char*)data_0209d708 + 0x1470)));
+        StarEntry* e = (StarEntry*)(int)((char*)data_0209d708 + 0x1470);
         data_0209d6f0 = e;
         sum = data_0209d6fc + 0x28;
         sum += data_0209d70c[1];

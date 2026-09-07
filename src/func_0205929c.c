@@ -22,7 +22,7 @@ void *func_0205929c(void *ap, void *bp)
     if (cur != 0) {
         cur->prev = b;
         if ((Block *)((char *)b + b->size) == cur) {
-            int *bsize = (int *)(((long long)(int)&b->size));
+            int *bsize = (int *)(&b->size);
             *bsize += cur->size;
             cur = cur->next;
             b->next = cur;
@@ -33,7 +33,7 @@ void *func_0205929c(void *ap, void *bp)
     if (prev != 0) {
         prev->next = b;
         if ((Block *)((char *)prev + prev->size) == b) {
-            int *psize = (int *)(((long long)(int)&prev->size));
+            int *psize = (int *)(&prev->size);
             *psize += b->size;
             prev->next = cur;
             if (cur != 0)

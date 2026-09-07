@@ -1,0 +1,283 @@
+{
+  "class": "daObjCtMecha04_c",
+  "rtti_name": "16daObjCtMecha04_c",
+  "rtti_name_address": "0x0211d180",
+  "typeinfo": {
+    "symbol": "_ZTI16daObjCtMecha04_c",
+    "address": "0x0211d174",
+    "kind": "__si_class_type_info",
+    "size": "0x0c",
+    "kind_vtable": "_ZTVN3abi20__si_class_type_infoE (arm9 0x0209a764)",
+    "name_pointer": "0x0211d180",
+    "base_typeinfo": "_ZTI10dBgActor_c (ov002 0x021089ec)",
+    "raw_words": [
+      "0x0209a764",
+      "0x0211d180",
+      "0x021089ec"
+    ]
+  },
+  "overlay": "ov065",
+  "module_base": "0x02115ee0",
+  "vtable": {
+    "symbol": "_ZTV16daObjCtMecha04_c",
+    "address": "0x0211d1ec",
+    "slots": 32,
+    "emitted_storage_start": "0x0211d1e4",
+    "emitted_storage_end": "0x0211d26c",
+    "emitted_storage_size": "0x88",
+    "preamble": {
+      "offset_to_top_address": "0x0211d1e4",
+      "offset_to_top": "0x00000000",
+      "typeinfo_pointer_address": "0x0211d1e8",
+      "typeinfo_pointer": "0x0211d174"
+    },
+    "extent_evidence": "The ROM contains 32 consecutive function pointers from the address point at 0x0211d1ec through 0x0211d268. The following word at 0x0211d26c is 0x64370c01, not a function pointer; the next __si_class_type_info record starts at 0x0211d270. Thus 0x0211d26c is the exclusive end and the emitted preamble-plus-slots storage is exactly 0x88 bytes.",
+    "slot_name_note": "Names are inherited interface labels from include/dActor_c.h/include/dBgActor_c.h or ABI destructor labels. The ROM proves slot identity and target addresses, but does not independently preserve those English spellings.",
+    "slot_dump": [
+      {"slot": 0, "target": "0x0211a870", "module": "ov065", "symbol": "_ZN16daObjCtMecha04_c13InitResourcesEv", "ownership": "own"},
+      {"slot": 1, "target": "0x02011268", "module": "arm9", "symbol": "_ZN8dActor_c19BeforeInitResourcesEv", "ownership": "inherited"},
+      {"slot": 2, "target": "0x02011244", "module": "arm9", "symbol": "_ZN8dActor_c18AfterInitResourcesEj", "ownership": "inherited"},
+      {"slot": 3, "target": "0x0211a638", "module": "ov065", "symbol": "_ZN16daObjCtMecha04_c16CleanupResourcesEv", "ownership": "own"},
+      {"slot": 4, "target": "0x02011220", "module": "arm9", "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv", "ownership": "inherited"},
+      {"slot": 5, "target": "0x02011214", "module": "arm9", "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj", "ownership": "inherited"},
+      {"slot": 6, "target": "0x0211a6d0", "module": "ov065", "symbol": "_ZN16daObjCtMecha04_c8BehaviorEv", "ownership": "own"},
+      {"slot": 7, "target": "0x02010fd4", "module": "arm9", "symbol": "_ZN8dActor_c14BeforeBehaviorEv", "ownership": "inherited"},
+      {"slot": 8, "target": "0x02010fc8", "module": "arm9", "symbol": "_ZN8dActor_c13AfterBehaviorEj", "ownership": "inherited"},
+      {"slot": 9, "target": "0x0211a69c", "module": "ov065", "symbol": "_ZN16daObjCtMecha04_c6RenderEv", "ownership": "own"},
+      {"slot": 10, "target": "0x02010f78", "module": "arm9", "symbol": "_ZN8dActor_c12BeforeRenderEv", "ownership": "inherited"},
+      {"slot": 11, "target": "0x02010f6c", "module": "arm9", "symbol": "_ZN8dActor_c11AfterRenderEj", "ownership": "inherited"},
+      {"slot": 12, "target": "0x02043ac0", "module": "arm9", "symbol": "_ZN7fBase_c16OnPendingDestroyEv", "ownership": "inherited"},
+      {"slot": 13, "target": "0x0204357c", "module": "arm9", "symbol": "_ZN7fBase_c9Virtual34Ejj", "ownership": "inherited"},
+      {"slot": 14, "target": "0x0204349c", "module": "arm9", "symbol": "_ZN7fBase_c9Virtual38Ejj", "ownership": "inherited"},
+      {"slot": 15, "target": "0x02043494", "module": "arm9", "symbol": "_ZN7fBase_c13OnHeapCreatedEv", "ownership": "inherited"},
+      {"slot": 16, "target": "0x0211a494", "module": "ov065", "symbol": "_ZN16daObjCtMecha04_cD1Ev", "ownership": "own"},
+      {"slot": 17, "target": "0x0211a4e8", "module": "ov065", "symbol": "_ZN16daObjCtMecha04_cD0Ev", "ownership": "own"},
+      {"slot": 18, "target": "0x02010160", "module": "arm9", "symbol": "_ZN8dActor_c13OnYoshiTryEatEv", "ownership": "inherited"},
+      {"slot": 19, "target": "0x02010154", "module": "arm9", "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player", "ownership": "inherited"},
+      {"slot": 20, "target": "0x0201014c", "module": "arm9", "symbol": "_ZN8dActor_c9Virtual50Ev", "ownership": "inherited"},
+      {"slot": 21, "target": "0x02010148", "module": "arm9", "symbol": "_ZN8dActor_c15OnGroundPoundedERS_", "ownership": "inherited"},
+      {"slot": 22, "target": "0x02010144", "module": "arm9", "symbol": "_ZN8dActor_c11OnAttacked1ERS_", "ownership": "inherited"},
+      {"slot": 23, "target": "0x02010140", "module": "arm9", "symbol": "_ZN8dActor_c11OnAttacked2ERS_", "ownership": "inherited"},
+      {"slot": 24, "target": "0x0201013c", "module": "arm9", "symbol": "_ZN8dActor_c8OnKickedERS_", "ownership": "inherited"},
+      {"slot": 25, "target": "0x02010138", "module": "arm9", "symbol": "_ZN8dActor_c8OnPushedERS_", "ownership": "inherited"},
+      {"slot": 26, "target": "0x02010134", "module": "arm9", "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_", "ownership": "inherited"},
+      {"slot": 27, "target": "0x02010130", "module": "arm9", "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player", "ownership": "inherited"},
+      {"slot": 28, "target": "0x0201012c", "module": "arm9", "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_", "ownership": "inherited"},
+      {"slot": 29, "target": "0x02010124", "module": "arm9", "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv", "ownership": "inherited"},
+      {"slot": 30, "target": "0x020100dc", "module": "arm9", "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv", "ownership": "inherited"},
+      {"slot": 31, "target": "0x020ee55c", "module": "ov002", "symbol": "_ZN10dBgActor_c4KillEv", "ownership": "inherited"}
+    ]
+  },
+  "base_class": "dBgActor_c",
+  "base_evidence": "At 0x0211d174 the ROM record is a 0x0c-byte __si_class_type_info object: +0x00 points to the ABI __si_class_type_info vtable at arm9 0x0209a764, +0x04 points to the RTTI string at 0x0211d180, and +0x08 points directly to _ZTI10dBgActor_c in ov002 at 0x021089ec. The +0x08 edge proves dBgActor_c is the direct base; the 32-slot table, whose slot 31 is dBgActor_c::Kill, only corroborates it.",
+  "overrides": [
+    {
+      "slot": 0,
+      "address": "0x0211a870",
+      "size": "0x1c8",
+      "name": "InitResources",
+      "symbol": "_ZN16daObjCtMecha04_c13InitResourcesEv",
+      "note": "Own ov065 target. Initializes the typed tail members, installs the collision callback, initializes belt-speed state, and samples ground height."
+    },
+    {
+      "slot": 3,
+      "address": "0x0211a638",
+      "size": "0x64",
+      "name": "CleanupResources",
+      "symbol": "_ZN16daObjCtMecha04_c16CleanupResourcesEv",
+      "note": "Own ov065 target. Disables the dBgW_KcMbg at 0x0124 if enabled and releases the model/collision files selected by the byte at 0x039e."
+    },
+    {
+      "slot": 6,
+      "address": "0x0211a6d0",
+      "size": "0x1a0",
+      "name": "Behavior",
+      "symbol": "_ZN16daObjCtMecha04_c8BehaviorEv",
+      "note": "Own ov065 target. Updates the collider callback, belt speed, texture animation, looped sound token, collision range, and the shadow helper."
+    },
+    {
+      "slot": 9,
+      "address": "0x0211a69c",
+      "size": "0x34",
+      "name": "Render",
+      "symbol": "_ZN16daObjCtMecha04_c6RenderEv",
+      "note": "Own ov065 target. Updates the TextureTransformer at 0x0320 against model components at 0x00dc, then invokes the Model virtual render entry."
+    },
+    {
+      "slot": 16,
+      "address": "0x0211a494",
+      "size": "0x54",
+      "name": "~daObjCtMecha04_c (D1)",
+      "symbol": "_ZN16daObjCtMecha04_cD1Ev",
+      "note": "Own ov065 target. Restores this vptr, destroys ShadowModel at 0x0334 then TextureTransformer at 0x0320, restores the dBgActor_c vptr, destroys dBgW_KcMbg at 0x0124 and Model at 0x00d4, then calls dActor_c D2."
+    },
+    {
+      "slot": 17,
+      "address": "0x0211a4e8",
+      "size": "0x68",
+      "name": "~daObjCtMecha04_c (D0, deleting)",
+      "symbol": "_ZN16daObjCtMecha04_cD0Ev",
+      "note": "Own ov065 target. Performs the same destruction sequence as D1 and then deallocates the object from GAME_HEAP_PTR."
+    }
+  ],
+  "inherited_unchanged_slots": "Slots 1-2, 4-5, 7-8, 10-15, and 18-31 retain dActor_c/dBgActor_c/fBase_c targets. No other slot points into ov065, so the ROM proves exactly six own overrides.",
+  "non_virtual": [
+    {
+      "symbol": "_ZN16daObjCtMecha04_c12UpdateShadowEv",
+      "address": "0x0211a550",
+      "size": "0xe8",
+      "current_label_confidence": "class ownership and no-argument call shape proven; English identifier inferred",
+      "evidence": "The only ov065 inbound call relocation is Behavior at 0x0211a840, which passes the same object pointer. The body reads actor position/angle fields, writes a Matrix4x3 at 0x035c, and passes this object, ShadowModel at 0x0334, and that matrix to dActor_c::DropShadowScaleXYZ."
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c",
+      "address": "0x0211aa38",
+      "size": "0x94",
+      "current_label_confidence": "class ownership, two-pointer register ABI, and behavior proven; English identifier and reference/type spelling inferred",
+      "evidence": "The callback thunk at 0x0211aacc is the only ov065 inbound reference, via its literal at 0x0211aadc. This body treats r0 as the conveyor object (reads angle 0x008e and speed 0x038c) and r1 as a target object, adding sine/cosine-scaled displacement to words at target offsets 0x005c and 0x0064. The ROM cannot distinguish a C++ reference from a pointer or recover the exact target class spelling."
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_",
+      "address": "0x0211aacc",
+      "size": "0x14",
+      "current_label_confidence": "callback ownership and forwarding registers proven; English identifier, static/free/member form, and pointer/type spellings inferred",
+      "evidence": "Its address is installed twice on this object's dBgW_KcMbg at 0x0124: InitResources loads it at 0x0211aa2c and Behavior loads it at 0x0211a858, each immediately before calling arm9 0x020393c4. The arm9 body at 0x020393c4 is `str r1,[r0,#0x1c]; bx lr`, proving callback-slot installation. The thunk ignores incoming r0, forwards incoming r1 as helper r0 and incoming r2 as helper r1, and tail-branches through the relocated 0x0211aa38 literal. No parameter type encoding exists in the ROM bytes."
+    }
+  ],
+  "text_span": {
+    "start": "0x0211a494",
+    "end": "0x0211aae0",
+    "bytes": 1612,
+    "functions": 9,
+    "note": "The nine function extents are contiguous and sum to 0x64c bytes. The two allocation factories begin at the exclusive end and are recorded separately as size witnesses."
+  },
+  "size": "0x3a0",
+  "size_evidence": "Both class factories execute `mov r0,#0x3a0` immediately before a relocated call to fBase_c::operator new: the CT_MECHA04L-associated factory calls at 0x0211aae8 and the CT_MECHA04S-associated factory calls at 0x0211ab28. Each then calls dBgActor_c C2 and constructs TextureTransformer at 0x0320 and ShadowModel at 0x0334, so the allocation literal and object-construction shape independently agree.",
+  "factory_witnesses": [
+    {
+      "current_symbol": "daObjCtMecha04_c_classInit_CT_MECHA04L",
+      "address": "0x0211aae0",
+      "size": "0x40",
+      "profile_descriptor": "0x0211d1c8",
+      "allocation_call": "0x0211aae8",
+      "allocation_size": "0x3a0",
+      "vtable_literal": "0x0211ab1c",
+      "note": "The descriptor's first word is 0x0211aae0. The current factory/global English labels are reconstructed; the ROM association and construction behavior are proven."
+    },
+    {
+      "current_symbol": "daObjCtMecha04_c_classInit_CT_MECHA04S",
+      "address": "0x0211ab20",
+      "size": "0x40",
+      "profile_descriptor": "0x0211d1ac",
+      "allocation_call": "0x0211ab28",
+      "allocation_size": "0x3a0",
+      "vtable_literal": "0x0211ab5c",
+      "note": "The descriptor's first word is 0x0211ab20. The current factory/global English labels are reconstructed; the ROM association and construction behavior are proven."
+    }
+  ],
+  "fields": [
+    {
+      "offset": "0x0320",
+      "size": "0x14",
+      "name": "mTextureTransformer",
+      "type": "TextureTransformer",
+      "evidence": "Both factories call TextureTransformer C1 on object+0x0320; D1/D0 call TextureTransformer D1 there; InitResources calls Prepare/SetFile and Render calls Update on the same subobject. Type and extent to the next constructed member are ROM-proven; the member identifier is descriptive, not preserved."
+    },
+    {
+      "offset": "0x0334",
+      "size": "0x28",
+      "name": "mShadowModel",
+      "type": "ShadowModel",
+      "evidence": "Both factories call ShadowModel C1 on object+0x0334; D1/D0 call ShadowModel D1 there; InitResources calls InitCuboid and the shadow helper passes it as ShadowModel&. Type and extent to the matrix are ROM-proven; the member identifier is descriptive, not preserved."
+    },
+    {
+      "offset": "0x035c",
+      "size": "0x30",
+      "name": "mShadowMatrix",
+      "type": "Matrix4x3",
+      "evidence": "The shadow helper passes object+0x035c to Matrix4x3_FromRotationY and then as the Matrix4x3& argument of dActor_c::DropShadowScaleXYZ. It writes translation words at 0x0380/0x0384/0x0388, closing the 0x30-byte matrix. The member identifier is descriptive, not preserved."
+    },
+    {
+      "offset": "0x038c",
+      "size": "0x04",
+      "name": "unk_38c",
+      "type": "s32",
+      "evidence": "Behavior passes its address to the signed 32-bit ApproachLinear routine, copies it to TextureTransformer+0x0c, and the movement helper uses it as a fixed-point belt displacement. The binary proves a signed word used with fixed-point scaling; an exact Fix12<int> source wrapper and English name are not recoverable."
+    },
+    {
+      "offset": "0x0390",
+      "size": "0x04",
+      "name": "unk_390",
+      "type": "s32",
+      "evidence": "InitResources loads a per-state word here; Behavior passes the value to ApproachLinear as the target and can replace it with +0x1000 or -0x1000. This proves a signed 32-bit fixed-point target value, not its original identifier or wrapper type."
+    },
+    {
+      "offset": "0x0394",
+      "size": "0x04",
+      "name": "unk_394",
+      "type": "s32",
+      "evidence": "InitResources initializes it from actor Y minus 0xa000 and replaces it with dBgCh_Gnd's detected ground-height word when collision succeeds. The shadow helper subtracts it from actor Y and uses it as a fixed-point height."
+    },
+    {
+      "offset": "0x0398",
+      "size": "0x04",
+      "name": "unk_398",
+      "type": "32-bit sound token",
+      "evidence": "Behavior passes the word as the first argument to Sound::PlayLong at arm9 0x02012328 and stores that routine's returned word back here. Handle/token role and width are proven; exact C++ typedef, signedness, and member name are not."
+    },
+    {
+      "offset": "0x039c",
+      "size": "0x02",
+      "name": "unk_39c",
+      "type": "u16",
+      "evidence": "Behavior passes its address to arm9 0x0203adbc, whose ROM body uses ldrh/strh to decrement a nonzero value and return the remaining halfword; Behavior also stores only a halfword here. Countdown role and unsigned 16-bit behavior are proven."
+    },
+    {
+      "offset": "0x039e",
+      "size": "0x01",
+      "name": "unk_39e",
+      "type": "u8",
+      "evidence": "InitResources stores 0 for profile ID 0x006f and 1 for 0x0070, and InitResources/CleanupResources repeatedly use ldrb from this offset to select one of two model/collision resource records. Variant-index role and byte width are proven."
+    }
+  ],
+  "pad": [
+    {
+      "offset": "0x039f",
+      "size": "0x01",
+      "note": "Tail byte needed to reach the proven allocation size 0x03a0; none of the nine class-range functions accesses it."
+    }
+  ],
+  "unproven": [
+    "The original English spellings `UpdateShadow`, `MoveActorOnBelt`, and `AfterClsnCallback`: all three current config labels were introduced by reconstruction; the ROM proves their ownership/roles but carries no source identifiers.",
+    "Whether the function at 0x0211aa38 was written as a non-static class member taking `dActor_c&`, as a member taking a pointer or another layout-compatible actor type, or as a file-local helper with explicit owner and target pointers. The ROM proves only the two pointer-width register arguments and accessed layouts.",
+    "The exact source declaration at 0x0211aacc: static member versus free callback, its return spelling, its pointer/reference parameter spellings, the exact types of incoming r0/r1/r2, and whether ignored trailing arguments existed. Its installed callback role and r1/r2 forwarding are proven.",
+    "The exact original member names at offsets 0x0320 through 0x039e. Type-derived/descriptive names are used only where behavior proves the role.",
+    "Whether the signed fixed-point words at 0x038c, 0x0390, and 0x0394 were spelled `s32`, `int`, or `Fix12<int>` in the original source; those spellings are ABI-identical here.",
+    "The exact C++ handle/typedef and signedness of the 32-bit Sound::PlayLong token at 0x0398.",
+    "Any semantic meaning for the untouched tail byte at 0x039f beyond allocation padding.",
+    "The exact original English names of the two factory functions and profile globals. ROM descriptor pointers prove that 0x0211d1c8 selects factory 0x0211aae0 and 0x0211d1ac selects factory 0x0211ab20; the CT_MECHA04L/CT_MECHA04S names come from the separate literal actor-debug registry and later reconstruction.",
+    "Whether the derived construction sequence had an explicit source-level daObjCtMecha04_c constructor. Both factories inline the dBgActor_c C2 call, derived vptr store, and member C1 calls; no out-of-line derived constructor exists in the sealed text span.",
+    "Any original translation-unit boundary beyond the supplied contiguous text span 0x0211a494-0x0211aae0 and its immediately adjacent factory witnesses."
+  ],
+  "provenance": {
+    "worktree": "C:/tmp/sm64ds-ctmecha04-scout",
+    "ref": "cpp/daObjCtMecha04_c-tu at 379bd67f9a17a29290ee0178fb985d92375e0dd8",
+    "rom_inputs": [
+      "extracted/overlays/overlay_0065.bin",
+      "extracted/arm9_dec.bin"
+    ],
+    "evidence_maps": [
+      "config/arm9/overlays/ov065/relocs.txt",
+      "config/arm9/overlays/ov065/symbols.txt",
+      "config/arm9/overlays/ov002/symbols.txt",
+      "config/arm9/symbols.txt"
+    ],
+    "inspection_tools": [
+      "tools/modules.py",
+      "tools/disasm.py",
+      "tools/m2c_draft.py",
+      "direct little-endian word/string reads from overlay_0065.bin"
+    ],
+    "source_policy": "No reconstructed src file was used as evidence. include/dActor_c.h and include/dBgActor_c.h were consulted only for inherited slot labels after raw slot addresses and ownership were established."
+  }
+}

@@ -1,8 +1,14 @@
 # On every push to main, regenerate all the derived progress views from committed
 # data and land them in ONE commit (README bar + treemap + contributions.json on
-# main; chaos-db.json on the chaos-data branch), so the hosted viewer and charts
-# self-update without spamming the #github channel with a commit per file. details/
-# chunks on the chaos-data branch are preserved (they need the ROM; refreshed locally).
+# main; chaos-db.json + langmode-baseline.json on the chaos-data branch), so the
+# hosted viewer and charts self-update without spamming the #github channel with a
+# commit per file. details/ chunks on the chaos-data branch are preserved (they need
+# the ROM; refreshed locally).
+#
+# The push to main was rejected between 2026-08-06 and 2026-08-07 and recovered on
+# 2026-08-08 (c23948eef); see the ssh-key comment below. Both halves land normally now.
+# langmode-baseline.json stays banked on chaos-data anyway, for the merge-conflict
+# reason given at its own step, not because this push is broken.
 name: update-chaos-data
 
 on:
@@ -11,10 +17,20 @@ on:
     paths:
       - "src/**"
       - "config/**"
+      - "include/**"
       - "nearmiss/**"
       - "tools/chaos_db_ci.py"
       - "tools/chaosviewer.config.json"
+      - "tools/langmode_audit.py"
+      # tiers.py holds the pinned CONVERTED criteria, so editing it moves a published
+      # percentage and must republish. The LINKED stamp needs no line of its own:
+      # config/** already covers config/port_linkage.json.
+      - "tools/tiers.py"
       - "attribution.json"
+      # include/** and tools/langmode_audit.py are here for the langmode re-bank below,
+      # which reads both; neither feeds chaos-db. The baseline itself is not listed
+      # because it no longer lives in this tree -- it is banked on chaos-data, and a
+      # push to that branch does not trigger this job (it watches main only).
   workflow_dispatch:
 
 permissions:
@@ -30,11 +46,36 @@ jobs:
     # This job's own refresh commit now touches config/ (the provenance ledger), which
     # is a watched path, so without this guard it would retrigger itself once per run.
     # Skipping the bot's own pushes is safe: a refresh commit never contains new matches.
+    # Secondary defense now: the refresh commit below carries [skip ci], because a
+    # deploy-key push is not attributed to github-actions[bot] and slips past this.
     if: github.event_name == 'workflow_dispatch' || github.actor != 'github-actions[bot]'
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # full history: per-function authors come from git log
+          # main is gated by the "main: validation + review gate" ruleset, which requires
+          # a PR for every change. GitHub Actions cannot hold a ruleset bypass on this
+          # repo because tangosdev is a user account and not an org, and GitHub only
+          # accepts an Integration bypass actor from the ruleset source or owner org.
+          # So the refresh push at the end of this job authenticates with a write deploy
+          # key. A deploy key can push; it cannot approve or merge a pull request, which
+          # is the hole that closes.
+          #
+          # This broke once and the failure mode is worth keeping. Between 2026-08-06 and
+          # 2026-08-07 the ruleset "main: review gate" (id 20487553) had bypass_actors:
+          # null, so the deploy key was NOT exempt and every push to main was rejected:
+          #     GH013 ... - Changes must be made through a pull request.
+          # Every run failed on its last step, freezing README/treemap/contributions/
+          # provenance on main for two days. It went unnoticed because everything above
+          # the "Push if changed" step kept working, so the viewer stayed current while
+          # main did not. Fixed by adding a DeployKey bypass actor to that ruleset;
+          # refreshes have landed normally since 2026-08-08 (c23948eef).
+          #
+          # What made it expensive rather than cosmetic: contributions.json pays the
+          # DELTA between refreshes, so every match that landed during the outage was
+          # uncredited until the first successful refresh caught up. If this job starts
+          # failing on its last step again, check that ruleset's bypass_actors first.
+          ssh-key: ${{ secrets.CHAOS_PUSH_KEY }}
       - uses: actions/checkout@v4
         with:
           ref: chaos-data
@@ -49,17 +90,51 @@ jobs:
         run: pip install pyelftools capstone
       - name: Regenerate chaos-db.json + contributions.json
         run: python tools/chaos_db_ci.py --out _chaos_data/chaos-db.json --contrib-out contributions.json
+      - name: Re-bank the langmode ratchet
+        # Banked on chaos-data, not main. The baseline is a generated counter file with no
+        # meaningful hand-merge, and re-banking it by hand in every migration PR meant each
+        # merge to main moved it under every other PR in flight -- four conflicted on it in
+        # one session. main would be the natural home, but the refresh push to main below has
+        # been rejected by the "main: review gate" ruleset since 2026-08-06 and the deploy-key
+        # bypass that would fix it needs repo admin; pushes to chaos-data are unaffected. So
+        # it rides along with chaos-db.json, in the push that actually works.
+        #
+        # Safe in the only direction that matters: --check fails on a RISE only, so a stale-
+        # high baseline (between a merge and this refresh) is permissive, never falsely red.
+        # A PR that legitimately RAISES a count overrides this with a root langmode-baseline.json
+        # of its own -- see langmode-ratchet.yml. This step runs post-merge and so cannot be
+        # used to launder a rise past the gate.
+        run: python tools/langmode_audit.py --json _chaos_data/langmode-baseline.json
       - name: Push if changed
         run: |
           cd _chaos_data
-          if git diff --quiet -- chaos-db.json; then
+          if git diff --quiet -- chaos-db.json langmode-baseline.json; then
             echo "no data change"; exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add chaos-db.json
-          git commit -m "Refresh Chaos Viewer data from $(git -C .. rev-parse --short HEAD)"
-          git push origin chaos-data
+          base=$(git rev-parse HEAD)
+          git add chaos-db.json langmode-baseline.json
+          git commit -m "Refresh Chaos Viewer data + langmode baseline from $(git -C .. rev-parse --short HEAD)"
+          # Two PRs merging seconds apart start this job twice, and cancel-in-progress only
+          # kills the older run if it has not reached this step yet. Past that point both runs
+          # push and the loser is rejected, because chaos-data moved under it. That failure is
+          # not cosmetic: the run goes red having published nothing, so the matches that just
+          # merged stay off the viewer until the NEXT merge happens to republish them.
+          #
+          # So retry onto the moved branch. If it moved because another run already republished
+          # chaos-db.json, that run read a newer main than this one did and its file is the
+          # better one - stand down rather than overwrite it with older data.
+          for attempt in 1 2 3; do
+            if git push origin chaos-data; then exit 0; fi
+            git fetch -q origin chaos-data
+            if ! git diff --quiet "$base" FETCH_HEAD -- chaos-db.json langmode-baseline.json; then
+              echo "another run already published newer data - standing down"; exit 0
+            fi
+            echo "chaos-data moved under the push - rebasing (attempt $attempt)"
+            git rebase FETCH_HEAD || { echo "rebase onto the moved branch failed"; exit 1; }
+          done
+          echo "chaos-data kept moving - could not land chaos-db.json"; exit 1
       - name: Stamp provenance for functions that landed in this push
         # HOW a match was made is only knowable as it lands: a later backfill can
         # recover the method for ~13% of matches and no more. Declines to guess, so an
@@ -73,19 +148,47 @@ jobs:
         run: python tools/nearmiss_db.py dedupe
       - name: Refresh README progress bar
         run: python tools/progress.py --write-readme --from-db _chaos_data/chaos-db.json
+      - name: Refresh README tier block
+        # MATCHED here reads the same db the bar just used, so the two blocks cannot
+        # drift apart. CONVERTED is rescanned from src/. LINKED is read from the stamp
+        # in config/port_linkage.json and is deliberately NOT recomputed: it needs an
+        # MSVC port build this runner does not have. README.md is already in the
+        # refresh commit's file list below, so that needs no change.
+        run: python tools/tiers.py --write-readme --from-db _chaos_data/chaos-db.json
       - name: Regenerate treemap (README SVG + Pages HTML)
         run: python tools/treemap.py --from-db _chaos_data/chaos-db.json --out docs/index.html --svg docs/progress-treemap.svg
       - name: Commit progress refresh if changed
         # README bar + treemap + contributions in ONE commit, to keep the #github channel
         # from filling with a separate refresh commit per generated file.
         # safe from retrigger loops: no workflow watches README.md, docs/**, or contributions.json
+        # on push. config/** is the one watched path here, which is what [skip ci] covers.
         run: |
           if git diff --quiet -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
             echo "progress unchanged"; exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          base=$(git rev-parse HEAD)
           git add README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl
-          git commit -m "Refresh progress (README, treemap, contributions, provenance)"
-          git pull --rebase origin main
-          git push origin main
+          # [skip ci] is load-bearing since the push moved to a deploy key. A GITHUB_TOKEN
+          # push never triggers workflows, so this commit used to be inert; a deploy-key
+          # push is an ordinary push and does trigger them. Without the marker this commit
+          # would retrigger this job (it touches config/) and newly fire report.yml.
+          git commit -m "Refresh progress (README, treemap, contributions, provenance, langmode) [skip ci]"
+          # The rebase is not enough on its own: main can move again between it and the push.
+          # A rejected push here leaves contributions.json unmoved, and per the coin ledger's
+          # contract - it pays the DELTA between that file and what it last paid - a match whose
+          # refresh never lands never earns its author anything. Retry the pair; if another
+          # refresh has already landed these same files it read a newer main than this run did,
+          # so stand down instead of fighting it or going red.
+          for attempt in 1 2 3; do
+            if git pull --rebase origin main && git push origin main; then exit 0; fi
+            git rebase --abort 2>/dev/null || true
+            git fetch -q origin main
+            if ! git diff --quiet "$base" FETCH_HEAD -- README.md docs/index.html docs/progress-treemap.svg contributions.json config/match_provenance.jsonl config/match_attempts.jsonl nearmiss/db.jsonl; then
+              echo "another refresh already landed these files - standing down"; exit 0
+            fi
+            echo "main moved under the refresh push - retrying (attempt $attempt)"
+            sleep 5
+          done
+          echo "main kept moving - could not land the progress refresh"; exit 1

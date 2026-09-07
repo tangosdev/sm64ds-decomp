@@ -18,7 +18,7 @@ extern char data_ov070_02123650[];
 extern char func_02017ab4[];
 extern char SharedFilePtr_Destruct_Anim[];
 extern char SharedFilePtr_Destruct_TexSeq[];
-extern char func_020072c0[];
+extern char _ZN7Vector3D1Ev[];
 extern char data_ov070_02123644[];
 
 struct S2 { int w[2]; };
@@ -55,6 +55,6 @@ void __sinit_ov070_02122d80(void) {
     data_ov070_0212365c[0] = 0;
     data_ov070_0212365c[1] = -0x28000;
     data_ov070_0212365c[2] = 0;
-    func_020731dc(data_ov070_0212365c, func_020072c0, data_ov070_02123644);
+    func_020731dc(data_ov070_0212365c, _ZN7Vector3D1Ev, data_ov070_02123644);
 }
 }

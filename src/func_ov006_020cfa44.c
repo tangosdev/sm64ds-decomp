@@ -1,10 +1,10 @@
 #include "types.h"
 typedef struct { int x, y, z; } Vec3;
 
-#define LA(p) ((int)(((s64)(int)(p))))
+#define LA(p) ((int)(p))
 
 extern s16 data_02082214[];
-extern void func_ov006_020cfc74(char *o);
+extern int func_ov006_020cfc74(char *o);
 extern int _Z14ApproachLinearRiii(int *cur, int target, int step);
 extern int _Z15ApproachLinear2Rsss(short *cur, short target, short step);
 extern void func_ov006_020cf124(char *o);

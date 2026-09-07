@@ -1,53 +1,73 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class UnchainedChomp: 5 matched functions, 23 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef UNCHAINEDCHOMP_H
 #define UNCHAINEDCHOMP_H
-#include "types.h"
 
-struct UnchainedChomp {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x2];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x4];
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x6];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x6c];
-    u8  mMovingCylinderClsnWithPos;            /* 0x110 */
-    u8  pad_111[0x3f];
-    u8  mWithMeshClsn;            /* 0x150 */
-    u8  pad_151[0x1bb];
-    u8  mModelAnim;            /* 0x30c */
-    u8  pad_30d[0x333];
-    u8  mShadowModel;            /* 0x640 */
-    u8  pad_641[0x6b];
-    s32 unk_6ac;            /* 0x6ac */
-    s32 unk_6b0;            /* 0x6b0 */
-    s32 unk_6b4;            /* 0x6b4 */
-    s32 unk_6b8;            /* 0x6b8 */
+#include "types.h"
+#include "dEnemyBase_c.h"
+#include "Model.h"
+#include "ModelAnim.h"
+#include "dCcAcPos_c.h"
+#include "ShadowModel.h"
+#include "dBgCh_Actr.h"
+
+/* daWanwan2_c in the ROM's RTTI. Derives from dEnemyBase_c, and the destructor is an
+ * unusually strong witness because six of the nine members are ARRAYS: __destroy_arr
+ * takes a count and a stride, so it names not just the type at an offset but how many
+ * and how far apart. Six arrays tile 0x370..0x78c with no overlap and no gap:
+ *
+ *     0x370  Model       x6   stride 0x50
+ *     0x550  ShadowModel x6   stride 0x28
+ *     0x640  ShadowModel  1
+ *     0x6d8  Vector3     x6   stride 0x0c
+ *     0x720  Vector3     x6   stride 0x0c
+ *     0x768  Vector3s    x6   stride 0x06   -> ends 0x78c
+ *
+ * daWanwan2_c_classInit constructs the same six through func_020733a8, which takes the
+ * same counts and strides, and allocates 0x7a4 -- so 0x18 of tail is spare and stays
+ * padding.
+ *
+ * SM64DS RTTI names the implementation daWanwan2_c. The reconstructed
+ * factory daWanwan2_c_classInit (historical alias
+ * UnchainedChomp_Spawn) constructs it for the WANWAN2
+ * registry profile.
+ */
+struct UnchainedChomp : dEnemyBase_c {
+    dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
+    dBgCh_Actr        mWithMeshClsn;      /* 0x150 */
+    ModelAnim           mModelAnim;         /* 0x30c */
+    Model               mModels[6];         /* 0x370 */
+    ShadowModel         mShadowModels[6];   /* 0x550 */
+    ShadowModel         mShadowModel;       /* 0x640 */
+    /* Behavior loads a pointer from here and calls a member function through it --
+       see the note in _ZN14UnchainedChomp8BehaviorEv.cpp. */
+    void               *unk_668;            /* 0x668 */
+    u8  pad_66c[0x40];
+    s32 unk_6ac;                            /* 0x6ac */
+    s32 unk_6b0;                            /* 0x6b0 */
+    s32 unk_6b4;                            /* 0x6b4 */
+    s32 unk_6b8;                            /* 0x6b8 */
     u8  pad_6bc[0xd];
-    u8  unk_6c9;            /* 0x6c9 */
+    u8  unk_6c9;                            /* 0x6c9 */
     u8  pad_6ca[0x2];
-    s32 unk_6cc;            /* 0x6cc */
-    s32 unk_6d0;            /* 0x6d0 */
-    s32 unk_6d4;            /* 0x6d4 */
-#ifdef __cplusplus
+    s32 unk_6cc;                            /* 0x6cc */
+    s32 unk_6d0;                            /* 0x6d0 */
+    s32 unk_6d4;                            /* 0x6d4 */
+    Vector3             mUnk_6d8[6];        /* 0x6d8 */
+    Vector3             mUnk_720[6];        /* 0x720 */
+    Vector3s            mUnk_768[6];        /* 0x768 */
+    u8  pad_78c[0x18];
+
+    virtual ~UnchainedChomp();
+
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     /* methods */
     int Behavior();
+    int CleanupResources();
+    int InitResources();
+    void OnPendingDestroy();
     int Render();
-#endif
 };
 
-#endif
+typedef char UnchainedChomp_size_must_be_0x7a4[sizeof(UnchainedChomp) == 0x7a4 ? 1 : -1];
+
+#endif /* UNCHAINEDCHOMP_H */

@@ -4,19 +4,19 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-struct Actor;
+struct dActor_c;
 
 
 
-extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
+extern struct dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* self, void* bca, int n, int fix, u32 flags);
-extern void _ZN12CylinderClsn5ClearEv(char* c);
+extern void _ZN5dCc_c5ClearEv(char* c);
 extern void func_0201267c(u32 id, char* p);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern void _Z14ApproachLinearRiii(int* p, int target, int step);
 extern void _Z14ApproachLinearRsss(s16* p, s16 target, s16 step);
-extern void _ZN12CylinderClsn6UpdateEv(char* c);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char* c, const struct Vector3* v);
+extern void _ZN5dCc_c6UpdateEv(char* c);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char* c, const struct Vector3* v);
 
 void func_ov065_02118634(char* self)
 {
@@ -25,7 +25,7 @@ void func_ov065_02118634(char* self)
     {
         u32 id = *(u32*)(self + 0x1164);
         if (id != 0) {
-            struct Actor* p = _ZN5Actor10FindWithIDEj(id);
+            struct dActor_c* p = _ZN8dActor_c10FindWithIDEj(id);
             if (p != 0) {
                 if (*(u8*)((char*)p + 0x6de) == 0) found = 1;
             }
@@ -37,8 +37,8 @@ void func_ov065_02118634(char* self)
         *(int*)(self + 0x98) = 0;
         *(s16*)(self + 0x11a6) = 0;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0xec, data_ov065_0211d768[1], 0x40000000, 0x1000, 0);
-        _ZN12CylinderClsn5ClearEv(self + 0x110c);
-        _ZN12CylinderClsn5ClearEv(self + 0x1140);
+        _ZN5dCc_c5ClearEv(self + 0x110c);
+        _ZN5dCc_c5ClearEv(self + 0x1140);
         *(s16*)(self + 0x11b2) = 0;
         *(u8*)(self + 0x11b0) = 0;
         *(int*)(self + 0x11a8) = *(u8*)(self + 0x11b0);
@@ -71,16 +71,16 @@ void func_ov065_02118634(char* self)
         }
         *(s16*)(self + 0x94) = *(s16*)(self + 0x8e);
 
-        _ZN12CylinderClsn5ClearEv(self + 0x110c);
-        _ZN12CylinderClsn5ClearEv(self + 0x1140);
-        _ZN12CylinderClsn6UpdateEv(self + 0x110c);
+        _ZN5dCc_c5ClearEv(self + 0x110c);
+        _ZN5dCc_c5ClearEv(self + 0x1140);
+        _ZN5dCc_c6UpdateEv(self + 0x110c);
         {
             struct Vector3 v;
             v.x = 0;
             v.y = 0x50000;
             v.z = 0x150000;
-            _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(self + 0x1140, &v);
+            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(self + 0x1140, &v);
         }
-        _ZN12CylinderClsn6UpdateEv(self + 0x1140);
+        _ZN5dCc_c6UpdateEv(self + 0x1140);
     }
 }

@@ -1,33 +1,42 @@
 //cpp
 // @symbol _ZN15FireSeaElevator13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "FireSeaElevator.h"
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: renamed to Class_Method, RTTI class fields named */
+#include "daObjKm2_Agaru_c.h"
+// recovered name: daObjKm2_Agaru_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daObjKm2_Agaru_c::InitResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* f, int a, int b);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* thiz);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* thiz);
-extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, void* act, int fix, int t, unsigned int a, unsigned int b);
+extern int _ZN5Model8LoadFileER13SharedFilePtr(void *f);
+extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *p, int file, int a, int b);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *p);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *p);
+extern int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *f);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *p, int kcl, void *mtx, int fix, short s, void *clps);
+extern void func_020393d4(void *p, int v);
+extern void func_020393c4(void *p, int v);
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
+extern void func_ov045_021114c8(void*, int);
 }
 
-int FireSeaElevator::InitResources()
-{
-    void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_021131b0);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, -1);
-    if (unk_008 != 0xffff) {
-        int* p = (int*)(((int)((char*)this) + 0x60));
-        *p -= 0x12c000;
-    }
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
-    void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov045_021131a8);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x199, unk_08e, data_ov045_02112510);
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
-        ((char*)this) + 0x320, ((char*)this), 0x35555, 0x258000, 0x280000c, 0);
-    return 1;
+s32 FireSeaElevator::InitResources() {
+    char * c = (char *)this;
+    struct daObjKm2_Agaru_c *self = (struct daObjKm2_Agaru_c *)(void *)c;
+  int f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_02113188);
+  _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
+  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+  f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov045_02113180);
+  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    c+0x124, f, c+0x2ec, 0x199, self->mAngleY, data_ov045_021125d0);
+  func_020393d4(c+0x124, (int)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+  func_020393c4(c+0x124, (int)func_ov045_021114c8);
+  *(short*)(c+0x300+0x24) = 0;
+  self->unk_327 = 0;
+  self->unk_320 = self->mPosY;
+  return 1;
 }

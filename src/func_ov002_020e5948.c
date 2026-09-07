@@ -150,7 +150,7 @@ void func_ov002_020e5948(void* arg0)
 
     if (data_0209f310[*(u8*)(c + 0x6D8)] != 0) {
         LoadSilverStarAndNumber();
-        *(u8*)(((long long)(int)(c + 0x718))) |= 1;
+        *(u8*)(c + 0x718) |= 1;
     }
 
     {
@@ -160,15 +160,15 @@ void func_ov002_020e5948(void* arg0)
         switch (b) {
         case 0:
             _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da40);
-            *(u8*)(((long long)(int)(c + 0x718))) |= 2;
+            *(u8*)(c + 0x718) |= 2;
             break;
         case 1:
             _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a0);
-            *(u8*)(((long long)(int)(c + 0x718))) |= 4;
+            *(u8*)(c + 0x718) |= 4;
             break;
         case 2:
             _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9c0);
-            *(u8*)(((long long)(int)(c + 0x718))) |= 8;
+            *(u8*)(c + 0x718) |= 8;
             break;
         }
     }
@@ -336,7 +336,7 @@ void func_ov002_020e5948(void* arg0)
             _ZN9ModelBase7SetFileEP8BMD_Fileii(*(void**)(c + 0x1D8), _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da38), 1, -1);
 
             if (data_0209f2f8 != 2 && data_0209f2f8 != 5 && data_0209f2f8 != 4) {
-                *(u8*)(((long long)(int)(c + 0x718))) |= 0x20;
+                *(u8*)(c + 0x718) |= 0x20;
                 p = _Znwj(0x78);
                 if (p != 0) {
                     p = _ZN10ModelAnim2C1Ev(p);

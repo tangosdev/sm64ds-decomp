@@ -8,11 +8,11 @@ src/_ZN14UnknownVsEntryD1Ev.cpp:
     complete
     .text start:0x02113ee0 end:0x02113f54
 
-src/_ZN14UnknownVsEntryD0Ev.c:
+src/_ZN14UnknownVsEntryD0Ev.cpp:
     complete
     .text start:0x02113f54 end:0x02113fdc
 
-src/func_ov075_02113fdc.c:
+src/_ZN15UnknownVsPlayerD1Ev.cpp:
     complete
     .text start:0x02113fdc end:0x02114010
 
@@ -49,6 +49,7 @@ src/func_ov075_02114390.c:
     .text start:0x02114390 end:0x021143e4
 
 src/func_ov075_021143e4.cpp:
+    complete
     .text start:0x021143e4 end:0x02114560
 
 src/func_ov075_02114560.cpp:
@@ -112,6 +113,7 @@ src/func_ov075_02114be4.cpp:
     .text start:0x02114be4 end:0x02114cd8
 
 src/func_ov075_02114cd8.cpp:
+    complete
     .text start:0x02114cd8 end:0x02114ddc
 
 src/func_ov075_02114ddc.cpp:
@@ -147,6 +149,7 @@ src/func_ov075_02115290.c:
     .text start:0x02115290 end:0x021152d4
 
 src/func_ov075_021152d4.cpp:
+    complete
     .text start:0x021152d4 end:0x02115388
 
 src/_ZN14UnknownVsEntry16CleanupResourcesEv.cpp:
@@ -165,31 +168,35 @@ src/_ZN14UnknownVsEntry13InitResourcesEv.cpp:
     complete
     .text start:0x021156e0 end:0x021159f4
 
-src/UnknownVsEntry_Spawn.cpp:
+src/d_ent_obj.cpp:
     complete
     .text start:0x021159f4 end:0x02115a88
 
-src/func_ov075_02115a88.c:
+src/_ZN15UnknownVsPlayerC1Ev.cpp:
     complete
     .text start:0x02115a88 end:0x02115ab8
 
-src/func_ov075_02115ab8.cpp:
+src/_ZN10dScEntry_cD1Ev.cpp:
     complete
     .text start:0x02115ab8 end:0x02115b28
 
-src/func_ov075_02115b28.c:
+src/_ZN10dScEntry_cD0Ev.cpp:
     complete
     .text start:0x02115b28 end:0x02115bac
 
-src/func_ov075_02115bac.c:
+src/_ZN10dScEntry_c6icon_cD1Ev.cpp:
     complete
     .text start:0x02115bac end:0x02115bc8
 
-src/func_ov075_02115bc8.c:
+src/_ZN12OamAnimationD1Ev.cpp:
     complete
     .text start:0x02115bc8 end:0x02115bcc
 
-src/func_ov075_02115e1c.cpp:
+src/_ZN10dScEntry_c6icon_c6RenderEv.cpp:
+    complete
+    .text start:0x02115bcc end:0x02115e1c
+
+src/_ZN10dScEntry_c6icon_c8BehaviorEv.cpp:
     complete
     .text start:0x02115e1c end:0x02115e8c
 
@@ -209,17 +216,25 @@ src/func_ov075_02116030.c:
     complete
     .text start:0x02116030 end:0x02116040
 
-src/func_ov075_02116040.c:
+src/_ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev.cpp:
     complete
     .text start:0x02116040 end:0x021160b4
 
-src/func_ov075_021160b4.c:
+src/_ZN10dScEntry_c15graphCallback_cC1Ev.cpp:
     complete
     .text start:0x021160b4 end:0x021160dc
 
 src/func_ov075_021160dc.cpp:
     complete
     .text start:0x021160dc end:0x02116128
+
+src/func_ov075_021165b0.c:
+    complete
+    .text start:0x021165b0 end:0x02116818
+
+src/func_ov075_02116818.c:
+    complete
+    .text start:0x02116818 end:0x02116ad4
 
 src/func_ov075_02116ad4.c:
     complete
@@ -258,13 +273,19 @@ src/func_ov075_02116ebc.c:
     .text start:0x02116ebc end:0x02116f40
 
 src/func_ov075_02116f40.cpp:
+    complete
     .text start:0x02116f40 end:0x0211705c
+
+src/func_ov075_0211705c.c:
+    complete
+    .text start:0x0211705c end:0x021173a8
 
 src/func_ov075_021173a8.c:
     complete
     .text start:0x021173a8 end:0x02117590
 
 src/func_ov075_02117590.cpp:
+    complete
     .text start:0x02117590 end:0x0211763c
 
 src/func_ov075_0211763c.c:
@@ -290,6 +311,10 @@ src/func_ov075_02117c0c.c:
     complete
     .text start:0x02117c0c end:0x02117d80
 
+src/func_ov075_02117d80.cpp:
+    complete
+    .text start:0x02117d80 end:0x02117e84
+
 src/func_ov075_02117e84.c:
     complete
     .text start:0x02117e84 end:0x02117f5c
@@ -310,9 +335,13 @@ src/func_ov075_02118378.c:
     complete
     .text start:0x02118378 end:0x021184b0
 
-src/func_ov075_021184b0.c:
+src/func_ov075_021184b0.cpp:
     complete
     .text start:0x021184b0 end:0x0211867c
+
+src/func_ov075_0211867c.c:
+    complete
+    .text start:0x0211867c end:0x021188b4
 
 src/func_ov075_021188b4.c:
     complete
@@ -346,6 +375,10 @@ src/func_ov075_02118f38.c:
     complete
     .text start:0x02118f38 end:0x021190a4
 
+src/func_ov075_021190a4.c:
+    complete
+    .text start:0x021190a4 end:0x0211919c
+
 src/func_ov075_0211919c.c:
     complete
     .text start:0x0211919c end:0x021192bc
@@ -359,6 +392,7 @@ src/func_ov075_0211944c.c:
     .text start:0x0211944c end:0x021194e4
 
 src/func_ov075_021194e4.cpp:
+    complete
     .text start:0x021194e4 end:0x02119640
 
 src/func_ov075_02119640.c:
@@ -386,6 +420,7 @@ src/func_ov075_02119918.c:
     .text start:0x02119918 end:0x021199d8
 
 src/func_ov075_021199d8.cpp:
+    complete
     .text start:0x021199d8 end:0x02119b34
 
 src/func_ov075_02119b34.c:
@@ -408,6 +443,10 @@ src/func_ov075_02119d78.c:
     complete
     .text start:0x02119d78 end:0x02119dc4
 
+src/func_ov075_02119dc4.cpp:
+    complete
+    .text start:0x02119dc4 end:0x0211a100
+
 src/func_ov075_0211a100.c:
     complete
     .text start:0x0211a100 end:0x0211a148
@@ -420,45 +459,49 @@ src/func_ov075_0211a194.cpp:
     complete
     .text start:0x0211a194 end:0x0211a210
 
-src/func_ov075_0211a210.c:
+src/_ZN10dScEntry_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a210 end:0x0211a268
 
-src/func_ov075_0211a268.c:
+src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211a268 end:0x0211a26c
 
-src/func_ov075_0211a26c.cpp:
+src/_ZN10dScEntry_c6RenderEv.cpp:
     complete
     .text start:0x0211a26c end:0x0211a2b8
 
-src/func_ov075_0211a2b8.cpp:
+src/_ZN10dScEntry_c8BehaviorEv.cpp:
     complete
     .text start:0x0211a2b8 end:0x0211a410
 
-src/func_ov075_0211a410.cpp:
+src/_ZN10dScEntry_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211a410 end:0x0211a734
 
-src/func_ov075_0211a734.c:
+src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x0211a734 end:0x0211a740
 
-src/func_ov075_0211a740.c:
+src/d_s_entry_result.cpp:
     complete
     .text start:0x0211a740 end:0x0211a834
 
-src/func_ov075_0211a834.c:
+src/_ZN12OamAnimationC1Ev.cpp:
     complete
     .text start:0x0211a834 end:0x0211a838
 
-src/func_ov075_0211a838.c:
+src/_ZN10dScEntry_c6icon_cC1Ev.cpp:
     complete
     .text start:0x0211a838 end:0x0211a854
 
-src/func_ov075_0211a854.c:
+src/d_s_entry_entry.cpp:
     complete
     .text start:0x0211a854 end:0x0211a948
+
+src/func_ov075_0211a948.c:
+    complete
+    .text start:0x0211a948 end:0x0211aa00
 
 src/func_ov075_0211aa00.c:
     complete
@@ -501,6 +544,7 @@ src/func_ov075_0211af84.c:
     .text start:0x0211af84 end:0x0211afb0
 
 src/func_ov075_0211b1cc.c:
+    complete
     .text start:0x0211b1cc end:0x0211b260
 
 src/func_ov075_0211b260.c:
@@ -524,10 +568,13 @@ src/func_ov075_0211b458.cpp:
     .text start:0x0211b458 end:0x0211b524
 
 src/__sinit_ov075_0211b5e0.c:
+    complete
     .init start:0x0211b5e0 end:0x0211bb00
 
 src/__sinit_ov075_0211bb00.c:
+    complete
     .init start:0x0211bb00 end:0x0211c51c
 
 src/__sinit_ov075_0211c51c.c:
+    complete
     .init start:0x0211c51c end:0x0211c5a4

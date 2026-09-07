@@ -1,9 +1,30 @@
 //cpp
-#include "types.h"
-/* _ZN10KoopaShell8BehaviorEv @ 0x0214d2e8 (ov102, size 0x264)
- * Enemy main behavior dispatcher: yoshi-eat handling, state PMF call,
- * collision update and ground/wall reactions.
+// @symbol _ZN10KoopaShell8BehaviorEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * One frame of the shell, in five stages: shared enemy pre-pass, Yoshi's
+ * mouth, the despawn countdown, the state tick, then movement and terrain.
+ *
+ * The Yoshi branch is where mSpawnAngleY earns its name: when the shell is
+ * spat back out, the heading it had is stashed there, the state is forced to
+ * data_ov102_0214ea78, and flag 0x80000 is cleared.
+ *
+ * The despawn countdown only runs in ONE state (0214ea68). In any other state
+ * the timer is reset to 0 rather than being left to run, so a shell that is
+ * picked back up stops expiring.
+ *
+ * The state tick is a pointer-to-member read out of the state record at +0x8
+ * and null-checked before the call -- a null tick reads as "keep going", and
+ * any state returning 0 ends the frame early.
+ *
+ * Terrain only matters while mVertAccel is non-zero. Hitting a wall in the spat-out
+ * state kills the shell (and returns 0, the one non-1 exit); landing in the
+ * rolling state zeroes both speeds. Two other states are exempt from the
+ * on-ground call entirely.
  */
+#include "types.h"
+#include "KoopaShell.h"
+
 struct C {};
 typedef int (C::*PMF)();
 struct EState {
@@ -19,54 +40,57 @@ extern char data_ov102_0214ea78;
 
 extern "C" {
 extern int func_ov002_020ad660(char *, char *, char *, int);
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(char *, char *);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(char *, char *);
 extern void func_ov102_0214d1f8(char *, void *);
 extern void func_ov102_0214ce60(char *);
-extern void _ZN12CylinderClsn5ClearEv(char *);
+extern void _ZN5dCc_c5ClearEv(char *);
 extern int DecIfAbove0_Byte(char *);
-extern void _ZN9ActorBase18MarkForDestructionEv(char *);
+extern void _ZN7fBase_c18MarkForDestructionEv(char *);
 extern int DecIfAbove0_Short(char *);
 extern void func_ov102_0214cbec(char *);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char *, char *);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(char *, char *, u32);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(char *);
-extern void _ZN5Actor8PoofDustEv(char *);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char *, char *);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(char *, char *, u32);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(char *);
+extern void _ZN8dActor_c8PoofDustEv(char *);
 extern void func_ov102_0214c7fc(char *);
 extern void func_ov102_0214c84c(char *);
-extern void _ZN12CylinderClsn6UpdateEv(char *);
+extern void _ZN5dCc_c6UpdateEv(char *);
+}
 
-int _ZN10KoopaShell8BehaviorEv(char *c)
+int KoopaShell::Behavior()
 {
-    if (func_ov002_020ad660(c, c + 0x144, c + 0x300, 3) != 0)
+    char *c = (char *)this;
+
+    if (func_ov002_020ad660(c, (char *)&mMeshClsn, (char *)&mModel, 3) != 0)
         return 1;
 
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, c + 0x144) != 0) {
-        if (*(u8 *)(c + 0x107) != 0) {
-            *(s16 *)(c + 0x3bc) = *(s16 *)(c + 0x94);
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, (char *)&mMeshClsn) != 0) {
+        if (mEatenByYoshi != 0) {
+            mSpawnAngleY = mPrevAngleY;
             func_ov102_0214d1f8(c, &data_ov102_0214ea78);
-            *(u32 *)(int)(((long long)(int)(c + 0xb0))) &= ~0x80000;
-            *(u8 *)(c + 0x107) = 0;
+            mFlags &= ~0x80000u;
+            mEatenByYoshi = 0;
         }
         func_ov102_0214ce60(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
+        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         return 1;
     }
 
-    if (*(u8 *)(c + 0x3c6) != 0 &&
-        *(void **)(c + 0x3ac) == (void *)&data_ov102_0214ea68) {
-        if (DecIfAbove0_Byte(c + 0x3c6) == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+    if (mDespawnTimer != 0 &&
+        mState == (void *)&data_ov102_0214ea68) {
+        if (DecIfAbove0_Byte((char *)&mDespawnTimer) == 0) {
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 1;
         }
     } else {
-        *(u8 *)(c + 0x3c6) = 0;
+        mDespawnTimer = 0;
     }
 
-    DecIfAbove0_Short(c + 0x100);
+    DecIfAbove0_Short((char *)&mStateTimer);
 
     {
-        EState *st = *(EState **)(c + 0x3ac);
+        EState *st = (EState *)mState;
         int res;
         if (*(int *)&st->fn == 0)
             res = 1;
@@ -78,36 +102,35 @@ int _ZN10KoopaShell8BehaviorEv(char *c)
 
     func_ov102_0214cbec(c);
 
-    if (*(u32 *)(c + 0x9c) != 0) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x144, 0);
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) != 0 ||
-            _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0) {
-            if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0) {
-                if (*(void **)(c + 0x3ac) == (void *)&data_ov102_0214ea78) {
-                    _ZN5Actor8PoofDustEv(c);
-                    _ZN9ActorBase18MarkForDestructionEv(c);
+    if (mVertAccel != 0) {
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char *)&mdCc_c);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, (char *)&mMeshClsn, 0);
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mMeshClsn) != 0 ||
+            _ZNK10dBgCh_Actr8IsOnWallEv((char *)&mMeshClsn) != 0) {
+            if (_ZNK10dBgCh_Actr8IsOnWallEv((char *)&mMeshClsn) != 0) {
+                if (mState == (void *)&data_ov102_0214ea78) {
+                    _ZN8dActor_c8PoofDustEv(c);
+                    _ZN7fBase_c18MarkForDestructionEv(c);
                     return 0;
                 }
             }
-            if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) != 0) {
-                if (*(void **)(c + 0x3ac) == (void *)&data_ov102_0214ea68) {
-                    *(u32 *)(c + 0x9c) = 0;
-                    *(u32 *)(c + 0xa8) = 0;
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mMeshClsn) != 0) {
+                if (mState == (void *)&data_ov102_0214ea68) {
+                    mVertAccel = 0;
+                    mVertSpeed = 0;
                 }
-                if (*(void **)(c + 0x3ac) != (void *)&data_ov102_0214ea48 &&
-                    *(void **)(c + 0x3ac) != (void *)&data_ov102_0214ea58)
+                if (mState != (void *)&data_ov102_0214ea48 &&
+                    mState != (void *)&data_ov102_0214ea58)
                     func_ov102_0214c7fc(c);
             }
         }
     }
 
-    if (*(u8 *)(c + 0x3c4) == 0)
+    if (mModelIndex == 0)
         func_ov102_0214c84c(c);
     func_ov102_0214ce60(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    if (*(void **)(c + 0x3ac) != (void *)&data_ov102_0214ea48)
-        _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    _ZN5dCc_c5ClearEv((char *)&mdCc_c);
+    if (mState != (void *)&data_ov102_0214ea48)
+        _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
     return 1;
-}
 }

@@ -1,0 +1,137 @@
+//cpp
+// @symbol _ZN6Bowser13InitResourcesEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * The other half of Bowser::CleanupResources. Every handle this loads is one
+ * the cleanup releases, in the same order and with the same counts -- one
+ * single, a 0x1c-entry table, a six-entry table, then two more singles, the
+ * last of which (data_ov089_02132c50) lives in ov089 rather than this overlay.
+ * That pairing is why the siblings' CleanupResources are bare `return 1`s:
+ * Bowser loads the whole fight's resources, so Bowser frees them.
+ *
+ * The two loops are reproduced rather than unrolled, for the same reason as in
+ * the cleanup: 0x1c and 6 are the counts the ROM's own comparisons test.
+ *
+ * `Vector3 pos` was a local shadow typedef; it is the real types.h Vector3
+ * here, which is layout-identical (Fix12i is s32) and costs nothing.
+ *
+ * The fields this used to spell as unk_ are the base classes' and are named now:
+ * mVertAccel / mTerminalVelocity are dActor_c::mVertAccel and dActor_c::mTerminalVelocity -- and the
+ * values written here, -0x2000 and -0x3c000, are fix12 gravity and terminal
+ * velocity, which is the same evidence dActor_c.h cites from BooCage and MadPiano.
+ * mParam is fBase_c::param1, uniqueID is fBase_c::uniqueID, and mAreaId is
+ * dActor_c::mAreaId -- which is why it is read as a signed char and handed straight
+ * to dActor_c::Spawn's areaID parameter.
+ *
+ * The early `return 0` when ShadowModel::InitCylinder fails is the ROM's -- the
+ * only failure path in the function.
+ */
+#include "Bowser.h"
+#include "TextureSequence.h"
+
+extern "C" {
+extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
+extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
+extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
+extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
+extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int b, unsigned int d);
+extern void _ZN9Animation8SetFlagsEi(void *self, int flags);
+extern int _ZN11ShadowModel12InitCylinderEv(void *self);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int c3, int d, unsigned int e, unsigned int f);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *d1, void *d2);
+extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *self);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *dir, int e, int f);
+extern void func_ov060_02111cc0(void *c, int a, int b);
+extern void func_ov060_021123dc(void *c);
+extern void func_02011d50(void *a);
+
+extern int data_ov060_0211ac78[];
+extern int data_ov060_021192dc[];
+extern int data_ov060_0211927c[];
+extern int data_ov060_0211b208[];
+extern int data_ov089_02132c50[];
+extern int data_ov060_0211ac28[];
+}
+
+int Bowser::InitResources()
+{
+    int i;
+    Vector3 pos;
+    void *a1;
+    void *a2;
+
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&this->mModelAnim,
+        _ZN5Model8LoadFileER13SharedFilePtr(data_ov060_0211ac78), 1, 0x16);
+
+    for (i = 0; i < 0x1c; i++)
+        _ZN9Animation8LoadFileER13SharedFilePtr((void *)data_ov060_021192dc[i]);
+
+    for (i = 0; i < 6; i++)
+        _ZN15TextureSequence8LoadFileER13SharedFilePtr((void *)data_ov060_0211927c[i]);
+
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov060_0211b208);
+    _ZN5Model8LoadFileER13SharedFilePtr(data_ov089_02132c50);
+
+    if (_ZN11ShadowModel12InitCylinderEv(&this->mShadowModel) == 0)
+        return 0;
+
+    func_ov060_02111cc0(this, 0x10, 0);
+
+    TextureSequence::Prepare(*(BMD_File *)data_ov060_0211ac78[1],
+                             *(BTP_File *)data_ov060_0211ac28[1]);
+
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
+        &this->mTextureSequence, (void *)data_ov060_0211ac28[1], 0, 0x1000, 0);
+
+    _ZN9Animation8SetFlagsEi(&this->mTextureSequence, 0x40000000);
+
+    pos.x = 0;
+    pos.y = 0;
+    pos.z = 0;
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        &this->mdCcAcPos_c, this, &pos, 0x78000, 0x118000, 0x200004, 0);
+
+    this->mHomePosX = this->mPosX;
+    this->mHomePosY = this->mPosY;
+    this->mHomePosZ = this->mPosZ;
+    this->mVertAccel = -0x2000;
+    this->mTerminalVelocity = -0x3c000;
+    this->mTargetPlayer = 0;
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        &this->mWithMeshClsn, this, 0x50000, 0x50000, 0, 0);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv(&this->mWithMeshClsn);
+
+    this->mState = 0;
+    this->mVariantID = (char)(this->param1 & 3);
+    this->unk_416 = (char)(((unsigned int)this->param1 >> 2) & 1);
+    this->mTimer = 0;
+    this->unk_423 = 0;
+    this->mDropsShadow = 1;
+    this->mBounceOnLand = 0;
+    this->mScaleX = 0x1000;
+    this->mScaleY = 0x1000;
+    this->mScaleZ = 0x1000;
+    this->mAnimSpeed = 0x1000;
+    this->unk_429 = 1;
+    func_ov060_021123dc(this);
+
+    this->mTalkStep = 0;
+    this->mCutsceneStep = 0;
+
+    a1 = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+        0x118, 0, &this->mPosX, 0, this->mAreaId, -1);
+    *(int *)((char *)a1 + 0x2cc) = this->uniqueID;
+
+    a2 = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+        0x116, 0, &this->mPosX, 0, this->mAreaId, -1);
+    this->mUniqueID_3a8 = *(int *)((char *)a2 + 4);
+    *(int *)((char *)a2 + 0x108) = this->uniqueID;
+    this->unk_42a = 5;
+    this->mCapActorAlive = 0;
+    this->mParticleHandle = 0;
+    this->mStompFxLatch = 0;
+    this->mSoundHandle = 0;
+    this->mSoundID = 0;
+    func_02011d50(a2);
+    return 1;
+}

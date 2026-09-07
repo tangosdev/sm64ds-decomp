@@ -23,7 +23,7 @@ struct C70 {
 };
 
 extern "C" {
-extern char *func_020beb68;
+extern char *data_ov004_020beb68;
 extern unsigned int data_ov006_0212e594[];
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
@@ -48,11 +48,11 @@ extern "C" void func_ov006_020e989c(C70 *cc)
         (*(u16 *)(int)(((long long)(int)(c + 0x5548))))--;
         if (*(u16 *)(c + 0x5548) == 0x40) {
             if (*(u8 *)(c + 0x5550) != 0) {
-                int idx = func_020beb68 != 0 ? *(int *)(func_020beb68 + 0xb4) : 0;
+                int idx = data_ov004_020beb68 != 0 ? *(int *)(data_ov004_020beb68 + 0xb4) : 0;
                 while (idx >= 5)
                     idx -= 5;
-                if (func_020beb68 != 0) {
-                    char *g = func_020beb68;
+                if (data_ov004_020beb68 != 0) {
+                    char *g = data_ov004_020beb68;
                     if (*(int *)(g + 0xb4) < 9999)
                         (*(int *)(int)(((long long)(int)(g + 0xb4))))++;
                     if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
@@ -67,8 +67,8 @@ extern "C" void func_ov006_020e989c(C70 *cc)
             return;
         if (*(u8 *)(c + 0x5550) != 0) {
             int rem, quot;
-            func_ov004_020adb1c(func_020beb68 != 0 ? *(int *)(func_020beb68 + 0xb4) : 0);
-            rem = func_020beb68 != 0 ? *(int *)(func_020beb68 + 0xb4) : 0;
+            func_ov004_020adb1c(data_ov004_020beb68 != 0 ? *(int *)(data_ov004_020beb68 + 0xb4) : 0);
+            rem = data_ov004_020beb68 != 0 ? *(int *)(data_ov004_020beb68 + 0xb4) : 0;
             quot = 0;
             while (rem >= 5) {
                 rem -= 5;

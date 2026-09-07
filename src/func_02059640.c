@@ -1,2 +1,2 @@
-extern unsigned short G;
-int func_02059640(void) { return G; }
+#include "nitro/hw/registers.h"
+int func_02059640(void) { return REG_TM0CNT_L; }

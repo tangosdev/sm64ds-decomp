@@ -1,8 +1,8 @@
-struct Actor;
+struct dActor_c;
 extern unsigned char data_0209f2d8;
 extern unsigned char data_0208a0e0;
 extern void *data_0209f394[];
-extern int *_ZN5Actor13ClosestPlayerEv(void *self);
+extern int *_ZN8dActor_c13ClosestPlayerEv(void *self);
 
 int func_02005e28(unsigned char *self)
 {
@@ -20,7 +20,7 @@ int func_02005e28(unsigned char *self)
         }
         return 0;
     } else {
-        int *p = _ZN5Actor13ClosestPlayerEv(self);
+        int *p = _ZN8dActor_c13ClosestPlayerEv(self);
         int r1;
         if (p != 0) r1 = p[2];
         else r1 = self[0x113];

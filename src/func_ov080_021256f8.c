@@ -2,7 +2,7 @@
 typedef struct { int x, y, z; } Vec3;
 typedef struct { int m[12]; } Mtx;
 
-extern char *_ZN5Actor13ClosestPlayerEv(char *self);
+extern char *_ZN8dActor_c13ClosestPlayerEv(char *self);
 extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 extern void MulVec3Mat4x3(const Vec3 *v, void *m, Vec3 *out);
 extern void func_ov080_02125de0(char *c, int a, int b, int d);
@@ -23,7 +23,7 @@ void func_ov080_021256f8(char *r4)
     u32 raw;
     u8 nib;
 
-    r5 = _ZN5Actor13ClosestPlayerEv(r4);
+    r5 = _ZN8dActor_c13ClosestPlayerEv(r4);
     if (r5 == 0)
         return;
 

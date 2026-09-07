@@ -326,14 +326,23 @@ def main():
                 touched += 1
         print(f"REWROTE references in {touched} src files")
 
-        # keep the src/<symbol>.c invariant: rename files whose stem was renamed
-        moved = 0
+        # keep the src/<symbol>.c invariant: rename files whose stem was renamed.
+        # Ask srcpath for the destination rather than with_name(): a file in
+        # src/unnamed/<mod>/ that gains a class name has to leave that bucket, or it
+        # both misfiles itself and splits its class across two directories, which
+        # disables placement for the whole class.
+        moved = relocated = 0
         for p in list(SP.iter_sources()):
             new = repl_all.get(p.stem)
             if new:
-                p.rename(p.with_name(new + "".join(p.suffixes)))
+                dest = SP.rename_target(p, new)
+                dest.parent.mkdir(parents=True, exist_ok=True)
+                p.rename(dest)
                 moved += 1
+                relocated += dest.parent != p.parent
         SP.invalidate()
+        if relocated:
+            print(f"  ({relocated} of them moved directory to follow their new name)")
         print(f"RENAMED {moved} src files")
 
         # sync the local (gitignored) progress ledgers so linkcheck/progress

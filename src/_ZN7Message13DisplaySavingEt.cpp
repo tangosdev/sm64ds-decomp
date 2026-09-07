@@ -44,7 +44,7 @@ void _ZN7Message6UpdateEv(void);
 void _ZN3G2x18SetBlendBrightnessEPVtts(void *p, int val, int amt);
 }
 
-extern "C" void _ZN7Message13DisplaySavingEt(unsigned short n)
+void Message::DisplaySaving(unsigned short n)
 {
     volatile int li;
     volatile unsigned short ls;

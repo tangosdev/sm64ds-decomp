@@ -5,11 +5,11 @@
 #include "BMD_File.h"
 #include "math/Matrix.h"
 
-/* The root of the model hierarchy, vtable at 0x0208e87c (data_0208e87c).
+/* The root of the model hierarchy, vtable at 0x0208e87c (_ZTV9ModelBase).
  *
  * The chain is ModelBase -> Model -> (the ModelAnim family), with CommonModel
  * and ShadowModel as further ModelBase-derived siblings. Model derives from
- * ModelBase DIRECTLY: Model::C2 calls ModelBase::C1 and then stores its own
+ * ModelBase DIRECTLY: Model::C2 calls ModelBase::C2 and then stores its own
  * vptr, one intermediate store, no more.
  *
  * VTABLE is read out of the ROM at 0x0208e87c:
@@ -22,16 +22,33 @@
  * dispatches vtable+0x8 on a ModelBase*; every derived vtable (CommonModel,
  * Model) carries its DoSetFile override in that slot.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD. It is the
- * first virtual, which makes it the key function, and CW 1.2 emits the class
- * vtable into whichever TU defines the key function -- colliding with the
- * copy the module's gap object already supplies from ROM data. The D0/D1/D2
- * bodies stay C translation units (src/_ZN9ModelBaseD*Ev.c) that never see
- * this class, so no TU ever defines the key function and no vtable is ever
- * emitted. Same arrangement as ActorBase::InitResources, see
- * include/ActorBase.h and PR #974.
+ * THE KEY-FUNCTION RULE, AND WHY IT NO LONGER FORBIDS A REAL D1. The
+ * destructor is declared first, which makes it the key function, and CW 1.2
+ * emits the class vtable into whichever TU defines the key function --
+ * colliding with the copy the module's gap object already supplies from ROM
+ * data. That is why the D0/D1/D2 bodies in this family were all C translation
+ * units that never saw the class: no TU defined the key function, so no vtable
+ * was ever emitted. Same arrangement as fBase_c::InitResources, see
+ * include/fBase_c.h and PR #974.
  *
- * LAYOUT evidence: ModelBase::C1 stores the vptr at +0x0 and zeroes +0x4;
+ * tools/objisolate.py retired that constraint. It keeps the declared
+ * function's .text, drops the vtable and typeinfo the TU emitted alongside it,
+ * and rebinds the reference to the ROM's own carved-out _ZTV symbol, so a
+ * key-function TU is eligible after all. The rule was real and not imagined:
+ * run `python tools/eligible.py --no-isolate` and every D1 in this family that
+ * has since become a real method drops straight back out of the eligible set.
+ *
+ * So every destructor variant may now be retained from a real `~Class()`
+ * definition wherever the layout is known. D2 and D0 are compiler-generated,
+ * not separately writable methods; the one-function intake format repeats the
+ * real definition and objisolate keeps the enrolled ABI variant. ModelBase's
+ * own D2/D0/D1 are now retained this way too: one destructor body owns the
+ * model-file release, while the compiler supplies the vptr and delete paths.
+ *
+ * What has NOT changed is the declaration order. The destructor stays first,
+ * because for a root class vtable slot order IS declaration order.
+ *
+ * LAYOUT evidence: ModelBase::C2 stores the vptr at +0x0 and zeroes +0x4;
  * the destructors Deallocate +0x4 when set; Model::LoadAndSetFile stores the
  * loaded file at +0x4. The base ENDS at 0x8. Each derived class puts its
  * view of the components at +0x8 -- Model EMBEDS a ModelComponents there,
@@ -62,17 +79,50 @@ struct ModelComponents {
     void Render(Matrix4x3 *mat, Vector3 *scale); /* 0x020443c8 */
 };
 
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct ModelBase {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     BMD_File *modelFile;    /* 0x04 - owned; the destructors Deallocate it */
+
+    /* DECLARED, NEVER DEFINED HERE, and that is the point -- same key-function
+       reasoning as Model (include/Model.h). Left undeclared, the compiler
+       synthesises this constructor and INLINES it into every derived
+       constructor, emitting the vptr store + zero of modelFile straight into
+       the caller. The ROM calls _ZN9ModelBaseC2Ev (0x02017150) out of line
+       instead, so the declaration is what makes a derived constructor
+       reproduce. */
+    ModelBase();
 
     /* --- vtable, in ROM order at 0x0208e87c. Do not reorder. --- */
     virtual ~ModelBase();                            /* slots 0 (D1), 1 (D0) */
     virtual int DoSetFile(char *file, int a, int b) = 0;  /* slot 2, null here */
 
     /* --- non-virtual --- */
-    void SetFile(BMD_File *file, int a, int b);      /* dispatches DoSetFile */
+    /* RETURNS int, not void. The definition at 0x02016fd4 is eight
+       instructions: load the vtable, `blx` slot 2 (DoSetFile, which returns
+       int), then the epilogue -- r0 is never touched after the call, so it
+       flows straight out. Callers corroborate: KoopaShell::InitResources tests
+       the result and bails on 0. */
+    int SetFile(BMD_File *file, int a, int b);       /* dispatches DoSetFile */
     void ApplyOpacity(u32 a);
+
+    /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
+       The compiler generates D0 as "run the destructor body, then call operator
+       delete on the class". Without this it emits the global `_ZdlPv`, which
+       exists nowhere in this image, and the D0 comes out one relocated word
+       different from the ROM -- a difference build_pin.verify CANNOT SEE,
+       because it wildcards relocated words. Only the link catches it.
+
+       This family deallocates through Memory::operator_delete2, not the actor
+       heap: every D0 below ends with a call to 0x0203cbcc. dActor_c's copy of this
+       member calls Memory::Deallocate instead, which is why each needs its own.
+
+       Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
+       in the class or one level up, as include/dActor_c.h records. No layout
+       effect: a non-virtual inline member adds no field and no vtable slot. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+
 };
 
 typedef char ModelComponents_size_must_be_0x14[sizeof(ModelComponents) == 0x14 ? 1 : -1];

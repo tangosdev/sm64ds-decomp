@@ -8,7 +8,7 @@
 extern void func_0201267c(unsigned int a, void *p);
 extern void _Z14ApproachLinearRsss(s16 *val, s16 target, s16 step);
 extern int _ZN9Animation8FinishedEv(void *anim);
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN6Player16IncMegaKillCountEv(void *player);
 extern void func_02012694(unsigned int a, void *p);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
@@ -50,7 +50,7 @@ void func_ov084_0212f6d8(char *c)
 
     /* cylinder 0 (id @ +0x3a4, flags @ +0x3a0) */
     if (*(u32 *)(c + 0x3a4) != 0) {
-        actor = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x3a4));
+        actor = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x3a4));
         if (actor != 0) {
             type = *(u16 *)((char *)actor + 0xc);
             isPlayer = (int)(type == 0xbf);
@@ -90,7 +90,7 @@ void func_ov084_0212f6d8(char *c)
 
     /* cylinder 1 (id @ +0x3d8, flags @ +0x3d4; mega bit read from +0x3a0 per ROM) */
     if (*(u32 *)(c + 0x3d8) != 0) {
-        actor = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x3d8));
+        actor = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x3d8));
         if (actor != 0) {
             type = *(u16 *)((char *)actor + 0xc);
             isPlayer = (int)(type == 0xbf);
@@ -123,7 +123,7 @@ void func_ov084_0212f6d8(char *c)
     /* cylinder 2 (id @ +0x40c, flags @ +0x408) — player only */
     if (*(u32 *)(c + 0x40c) == 0)
         return;
-    actor = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x40c));
+    actor = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x40c));
     if (actor == 0)
         return;
     type = *(u16 *)((char *)actor + 0xc);

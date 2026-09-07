@@ -8,7 +8,7 @@ void Player::RegisterEggCoinCount(unsigned int count, bool b2, bool b3)
 {
 	mEggParams = (count & 0xf) << 2;
 	if (b3)
-		*(unsigned char *)(((long long)(int)((char*)&mEggParams))) |= 0x40;
+		*(unsigned char *)((char*)&mEggParams) |= 0x40;
 	if (b2)
-		*(unsigned char *)(((long long)(int)((char*)&mEggParams))) |= 0x80;
+		*(unsigned char *)((char*)&mEggParams) |= 0x80;
 }

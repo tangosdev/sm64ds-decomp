@@ -43,7 +43,7 @@ int func_ov002_020e2c84(char *self)
 
         if (func_ov002_020d91e0(self, 0x400, 1) != 0) {
             {
-                u8 *p = (u8 *)(((long long)(int)(self + 0x6e3)));
+                u8 *p = (u8 *)(self + 0x6e3);
                 *p &= 1;
             }
             _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211010c);
@@ -58,7 +58,7 @@ int func_ov002_020e2c84(char *self)
             if (func_ov002_020d91e0(self, 0x200, 1) != 0) {
                 if (_ZN6Player7IsStateERNS_5StateE(self, &data_ov002_02110094) != 0) {
                     {
-                        u8 *p = (u8 *)(((long long)(int)(self + 0x6e3)));
+                        u8 *p = (u8 *)(self + 0x6e3);
                         *p &= 1;
                     }
                     _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211010c);

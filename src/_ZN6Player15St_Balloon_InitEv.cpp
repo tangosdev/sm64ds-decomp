@@ -25,6 +25,6 @@ int Player::St_Balloon_Init()
   unk_69e=0x100;
   mPrevVertSpeed=mVertSpeed;
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((void*)((char*)&mModelAnim3), (void*)data_ov002_0210e750[1], 0x40000000, 0x1000, 0);
-  unk_148=0;
+  mModelAnim3.currFrame = 0;
   return 1;
 }

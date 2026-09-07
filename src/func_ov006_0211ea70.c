@@ -1,37 +1,44 @@
-//cpp
-// NONMATCHING: register allocation (div=35). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
-typedef unsigned char u8;
-typedef short s16;
-typedef unsigned short u16;
-typedef int s32;
+#include "common.h"
 
-extern "C" int *_ZN3G2S13GetBG0CharPtrEv(void);
+#pragma opt_common_subs off
 
-extern "C" void func_ov006_0211ea70(int self, int idx)
+extern int *_ZN3G2S13GetBG0CharPtrEv(void);
+
+void func_ov006_0211ea70(char *self, int idx)
 {
-    int x, y;
-    int cnt = 0;
-    s32 *pA = (s32 *)(self + idx * 0x24 + 0x4660);
-    s32 *pB = (s32 *)(self + idx * 0x24 + 0x4664);
+    int gx, gy;
+    int cnt;
+    int y;
+    int x;
+    int *pA;
+    int *pB;
+    char *tile;
+    int tidx;
+    int *row;
+    int word;
+    int off;
 
+    off = idx * 0x24;
+    cnt = 0;
+    pA = (int *)(self + off + 0x4660);
+    pB = (int *)(self + off + 0x4664);
     for (y = 0; y < 8; y++) {
         for (x = 0; x < 8; x++) {
-            int gx = x + ((*pA >> 12) - 4);
-            int gy = y + ((*pB >> 12) - 4);
-            int *p = _ZN3G2S13GetBG0CharPtrEv();
-            int word = p[((gx >> 3) + ((gy >> 3) << 5)) * 0x20 + (gy & 7)];
-            int nib = (word >> ((gx & 7) << 2)) & 0xf;
-            if (nib == 0)
+            gx = x + ((*pA >> 12) - 4);
+            gy = y + ((*pB >> 12) - 4);
+            tile = (char *)_ZN3G2S13GetBG0CharPtrEv();
+            tidx = (gx >> 3) + ((gy >> 3) << 5);
+            row = (int *)(tile + (tidx << 5));
+            /* pin row complete before nibble extract */
+            row = (int *)((char *)row + (gy - gy));
+            word = row[gy & 7];
+            if (((word >> ((gx & 7) << 2)) & 0xf) == 0)
                 cnt++;
         }
     }
-
     if (cnt == 0)
         return;
-    if (*(u8 *)(self + idx * 0x24 + 0x4000 + 0x67f) == 0)
+    if (*(u8 *)(self + off + 0x467f) == 0)
         return;
-
-    *(s16 *)((char *)(self + 0x466c) + idx * 0x24) += 0x8000;
+    *(u16 *)(self + 0x466c + idx * 0x24) += 0x8000;
 }

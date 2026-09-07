@@ -5,21 +5,22 @@
     .data       start:0x02127f80 end:0x021283c0 kind:data align:32
     .bss        start:0x021283c0 end:0x02128860 kind:bss align:32
 src/_ZN9MontyMoleD1Ev.cpp:
+    complete
     .text start:0x02123740 end:0x02123778
 
-src/_ZN9MontyMoleD0Ev.c:
+src/_ZN9MontyMoleD0Ev.cpp:
     complete
     .text start:0x02123778 end:0x021237c4
 
-src/_ZN13MontyMoleRockD1Ev.c:
+src/_ZN13MontyMoleRockD1Ev.cpp:
     complete
     .text start:0x021237c4 end:0x02123804
 
-src/_ZN13MontyMoleRockD0Ev.c:
+src/_ZN13MontyMoleRockD0Ev.cpp:
     complete
     .text start:0x02123804 end:0x02123858
 
-src/func_ov080_02123858.c:
+src/_ZN9MontyMole16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02123858 end:0x02123860
 
@@ -40,6 +41,7 @@ src/func_ov080_02123c24.c:
     .text start:0x02123c24 end:0x02123ecc
 
 src/func_ov080_02123ecc.cpp:
+    complete
     .text start:0x02123ecc end:0x02123fcc
 
 src/func_ov080_02123fcc.cpp:
@@ -47,6 +49,7 @@ src/func_ov080_02123fcc.cpp:
     .text start:0x02123fcc end:0x02124088
 
 src/func_ov080_02124088.cpp:
+    complete
     .text start:0x02124088 end:0x02124208
 
 src/func_ov080_02124208.c:
@@ -65,11 +68,11 @@ src/func_ov080_02124418.c:
     complete
     .text start:0x02124418 end:0x02124458
 
-src/_ZN9MontyMole16CleanupResourcesEv.c:
+src/_ZN9MontyMole16CleanupResourcesEv.cpp:
     complete
     .text start:0x02124458 end:0x021244b4
 
-src/_ZN13MontyMoleRock16CleanupResourcesEv.c:
+src/_ZN13MontyMoleRock16CleanupResourcesEv.cpp:
     complete
     .text start:0x021244b4 end:0x021244d8
 
@@ -86,6 +89,7 @@ src/_ZN9MontyMole8BehaviorEv.cpp:
     .text start:0x02124530 end:0x0212459c
 
 src/_ZN13MontyMoleRock8BehaviorEv.cpp:
+    complete
     .text start:0x0212459c end:0x0212478c
 
 src/_ZN9MontyMole13InitResourcesEv.cpp:
@@ -96,22 +100,23 @@ src/_ZN13MontyMoleRock13InitResourcesEv.cpp:
     complete
     .text start:0x021248b4 end:0x02124998
 
-src/MontyMoleRock_Spawn.c:
+src/d_a_choro_rock.c:
     complete
     .text start:0x02124998 end:0x021249e0
 
-src/MontyMole_Spawn.c:
+src/d_a_choropu.c:
     complete
     .text start:0x021249e0 end:0x02124a20
 
 src/_ZN11CrazedCrateD1Ev.cpp:
+    complete
     .text start:0x02124a20 end:0x02124a68
 
-src/_ZN11CrazedCrateD0Ev.c:
+src/_ZN11CrazedCrateD0Ev.cpp:
     complete
     .text start:0x02124a68 end:0x02124ac4
 
-src/func_ov080_02124ac4.c:
+src/_ZN11CrazedCrate13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02124ac4 end:0x02124acc
 
@@ -159,11 +164,11 @@ src/func_ov080_0212513c.c:
     complete
     .text start:0x0212513c end:0x02125158
 
-src/_ZN11CrazedCrate16CleanupResourcesEv.c:
+src/_ZN11CrazedCrate16CleanupResourcesEv.cpp:
     complete
     .text start:0x02125158 end:0x0212517c
 
-src/_ZN11CrazedCrate16OnPendingDestroyEv.c:
+src/_ZN11CrazedCrate16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212517c end:0x02125180
 
@@ -179,20 +184,25 @@ src/_ZN11CrazedCrate13InitResourcesEv.cpp:
     complete
     .text start:0x021251ec end:0x02125318
 
-src/func_ov080_02125318.cpp:
+src/_ZN11CrazedCrate13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02125318 end:0x021253b4
 
-src/CrazedCrate_Spawn.c:
+src/d_a_btt_bk.c:
     complete
     .text start:0x021253b4 end:0x02125404
 
-src/func_ov080_02125404.c:
+src/_ZN8PaintingD1Ev.cpp:
     complete
     .text start:0x02125404 end:0x02125428
 
-src/func_ov080_02125428.c:
+src/_ZN8PaintingD0Ev.cpp:
+    complete
     .text start:0x02125428 end:0x02125460
+
+src/func_ov080_02125460.c:
+    complete
+    .text start:0x02125460 end:0x0212555c
 
 src/func_ov080_0212555c.c:
     complete
@@ -219,6 +229,7 @@ src/func_ov080_02125bb0.c:
     .text start:0x02125bb0 end:0x02125cd4
 
 src/func_ov080_02125cd4.c:
+    complete
     .text start:0x02125cd4 end:0x02125d08
 
 src/func_ov080_02125d08.c:
@@ -269,37 +280,39 @@ src/func_ov080_02126a54.c:
     complete
     .text start:0x02126a54 end:0x02126bfc
 
-src/func_ov080_02126bfc.c:
+src/_ZN8Painting16CleanupResourcesEv.cpp:
     complete
     .text start:0x02126bfc end:0x02126c1c
 
-src/func_ov080_02126c1c.c:
+src/_ZN8Painting16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02126c1c end:0x02126c20
 
-src/func_ov080_02126c20.cpp:
+src/_ZN8Painting6RenderEv.cpp:
     complete
     .text start:0x02126c20 end:0x02126c60
 
-src/func_ov080_02126c60.cpp:
+src/_ZN8Painting8BehaviorEv.cpp:
     complete
     .text start:0x02126c60 end:0x02126ca0
 
-src/func_ov080_02126ca0.cpp:
+src/_ZN8Painting13InitResourcesEv.cpp:
     complete
     .text start:0x02126ca0 end:0x02126f8c
 
-src/Painting_Spawn.c:
+src/d_a_pic_gate.c:
     complete
     .text start:0x02126f8c end:0x02126fbc
 
-src/func_ov080_02126fbc.c:
+src/_ZN13daObjMaruta_cD0Ev.cpp:
+    complete
     .text start:0x02126fbc end:0x02127014
 
-src/func_ov080_02127014.c:
+src/_ZN13daObjMaruta_cD1Ev.cpp:
+    complete
     .text start:0x02127014 end:0x02127058
 
-src/func_ov080_02127058.c:
+src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02127058 end:0x02127094
 
@@ -311,7 +324,7 @@ src/func_ov080_021270dc.c:
     complete
     .text start:0x021270dc end:0x02127124
 
-src/func_ov080_02127124.cpp:
+src/_ZN13daObjMaruta_c6RenderEv.cpp:
     complete
     .text start:0x02127124 end:0x0212714c
 
@@ -332,10 +345,13 @@ src/func_ov080_02127658.c:
     .text start:0x02127658 end:0x0212766c
 
 src/__sinit_ov080_021278c0.c:
+    complete
     .init start:0x021278c0 end:0x02127a60
 
 src/__sinit_ov080_02127a60.c:
+    complete
     .init start:0x02127a60 end:0x02127b2c
 
 src/__sinit_ov080_02127b2c.c:
+    complete
     .init start:0x02127b2c end:0x02127f60

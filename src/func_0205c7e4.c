@@ -16,7 +16,7 @@ int func_0205c7e4(char* self)
     bit = (enum Bool)((*(int*)(self + 0x10) & 8) != 0);
     notset = (enum Bool)(bit == FALSE);
     if (notset == FALSE) {
-        int *p = (int*)(((unsigned long long)(self + 0x10)) & 0xFFFFFFFFFFFFFFFFULL);
+        int *p = (int*)((unsigned long long)(self + 0x10));
         *p = *p & ~8;
         r = func_0205d044(self);
     }

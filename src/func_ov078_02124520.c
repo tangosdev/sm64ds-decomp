@@ -7,7 +7,7 @@ extern void func_ov078_02125c24(void *c, int a);
 extern void func_02012694(int a, void *v);
 extern void MulMat4x3Mat4x3(void *a, void *b, void *dst);
 extern void Vec3_Lsl(Vector3 *d, Vector3 *s, int sh);
-extern void _ZN5Actor17HugeLandingDustAtER7Vector3b(void *actor, Vector3 *v, int b);
+extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *actor, Vector3 *v, int b);
 extern int _ZN6Player12GetTalkStateEv(void *player);
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -57,7 +57,7 @@ int func_ov078_02124520(char *c)
         dust.y = tmp.y;
         a.z = tmp.z;
         dust.z = tmp.z;
-        _ZN5Actor17HugeLandingDustAtER7Vector3b(c, &dust, 1);
+        _ZN8dActor_c17HugeLandingDustAtER7Vector3b(c, &dust, 1);
     }
     player = *(char **)(c + 0x430);
     if (_ZN6Player12GetTalkStateEv(player) != -1) {

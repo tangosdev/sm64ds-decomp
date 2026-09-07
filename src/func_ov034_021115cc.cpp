@@ -50,7 +50,7 @@ i = 0;
     }
 
     {
-        unsigned char *t = (unsigned char *)(void *)(unsigned long long)(unsigned)(self + 0x8da);
+        unsigned char *t = (unsigned char *)(void *)(self + 0x8da);
         *t = (unsigned char)(*t + 1);
     }
     if (*(unsigned char *)(self + 0x8da) > 0xc)

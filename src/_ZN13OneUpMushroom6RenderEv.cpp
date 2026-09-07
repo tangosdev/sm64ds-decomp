@@ -11,12 +11,12 @@ struct Obj {
     virtual void func5(int x);
 };
 
-unsigned int OneUpMushroom::Render()
+int OneUpMushroom::Render()
 {
     if (unk_38e == 0 || unk_38f == 0)
         return 1;
     {
-        int b = (unk_0b0 & 0x40000) ? 1 : 0;
+        int b = (mFlags & 0x40000) ? 1 : 0;
         if (b)
             return 1;
     }

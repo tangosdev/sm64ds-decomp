@@ -1,0 +1,1508 @@
+"""What objisolate has to refuse.
+
+The vtable-addend case is the one that matters. mwcc's `_ZTV<C>` addresses the start
+of the vtable object, so a vptr store relocates against it with an addend of 8 to
+step over offset-to-top and typeinfo; symbols.txt's `_ZTV<C>` IS the slot array.
+Getting that wrong LINKS CLEANLY and writes a vptr one entry past the truth -- it
+cost 76 functions across 34 modules before the byte compare caught it, and no gate
+earlier than the byte compare can see it. If only one of these tests is ever kept,
+keep the addend ones.
+
+These compile real objects with the pinned mwccarm, because the whole subject is what
+a specific compiler emits; a hand-built ELF fixture would test this file's idea of
+mwcc rather than mwcc. They skip when the compiler is absent, so a checkout without
+tools/mwccarm still runs the rest of the suite.
+"""
+import os
+import pathlib
+import subprocess
+import sys
+import tempfile
+import unittest
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+import objisolate as OI  # noqa: E402
+
+REPO = pathlib.Path(__file__).resolve().parent.parent
+MW = REPO / "tools" / "mwccarm"
+
+
+def _compiler():
+    try:
+        from rombuild import VERSION, CFLAGS
+    except Exception:
+        return None
+    exe = MW / VERSION / "mwccarm.exe"
+    return (exe, CFLAGS) if exe.is_file() else None
+
+
+@unittest.skipUnless(_compiler(), "mwccarm not present")
+class Isolate(unittest.TestCase):
+    def build(self, source):
+        exe, cflags = _compiler()
+        d = pathlib.Path(self.tmp.name)
+        src, obj = d / "t.cpp", d / "t.o"
+        src.write_text("//cpp\n" + source, encoding="utf-8")
+        r = subprocess.run(
+            [*os.environ.get("MWCCARM_LAUNCHER", "").split(), str(exe),
+             *cflags.replace("-lang c99", "-lang c++").split(),
+             "-i", str(REPO / "include"), "-c", str(src), "-o", str(obj)],
+            capture_output=True, text=True, cwd=REPO,
+            env=dict(os.environ, LM_LICENSE_FILE=str(MW / "license.dat")))
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        return obj
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def test_plain_destructor_is_isolable(self):
+        """The case the whole pass exists for: D0/D1/D2 + vtable reduced to one."""
+        obj = self.build("struct P { int p[4]; virtual ~P(); virtual void f(); };\n"
+                         "P::~P(){}\n")
+        plan = OI.plan(obj.read_bytes(), "_ZN1PD1Ev")
+        self.assertIsNone(plan["error"])
+        self.assertIn("_ZTV1P", plan["externalise"])
+        self.assertIn("_ZN1PD0Ev", plan["dead"])
+
+    def test_derive_is_isolate_without_the_write(self):
+        """`derive` must be `isolate`'s reduction as a pure function of bytes.
+
+        Translation-unit reconstruction reduces ONE compiled object N times, once per
+        function it contributes (plan sec 9), which an in-place mutator cannot do: the
+        first call consumes the input. That only works if the two agree exactly -- if
+        `derive` drifted from `isolate`, the derived objects would stop being comparable
+        to the ones the ROM build produces, which is the only evidence that makes the
+        substitution safe."""
+        obj = self.build("struct P { int p[4]; virtual ~P(); virtual void f(); };\n"
+                         "P::~P(){}\n")
+        raw = obj.read_bytes()
+        out, plan = OI.derive(raw, "_ZN1PD1Ev")
+        self.assertIsNone(plan["error"])
+        self.assertEqual(obj.read_bytes(), raw, "derive must not touch the file")
+        self.assertEqual(OI.derive(raw, "_ZN1PD1Ev")[0], out, "derive must be pure")
+        OI.isolate(obj, "_ZN1PD1Ev")
+        self.assertEqual(obj.read_bytes(), out, "isolate and derive must agree")
+        # The reduction the TU case actually needs: the SAME untouched input reduced to
+        # a different function, which is only expressible without the in-place write.
+        other, plan2 = OI.derive(raw, "_ZN1PD0Ev")
+        self.assertIsNone(plan2["error"])
+        self.assertNotEqual(other, out)
+
+    def _plain_two_function_tu(self, extra=""):
+        # mwcc emits function sections in reverse source order.  Defining Second
+        # first therefore makes the object order match the ROM-order license below.
+        obj = self.build(
+            "struct Pair { void First(); void Second(); };\n"
+            "void Pair::Second() {}\n"
+            "void Pair::First() {}\n" + extra)
+        return obj, ["_ZN4Pair5FirstEv", "_ZN4Pair6SecondEv"]
+
+    def test_multi_symbol_isolation_preserves_one_exact_text_only_object(self):
+        obj, names = self._plain_two_function_tu()
+        raw = obj.read_bytes()
+        out, plan = OI.derive_many(raw, names)
+        self.assertIsNone(plan["error"])
+        self.assertEqual(plan["keepSymbols"], names)
+        self.assertEqual(len(plan["keep"]), 2)
+        self.assertEqual(out, raw)
+        OI.isolate_many(obj, names)
+        self.assertEqual(obj.read_bytes(), raw)
+
+    def test_multi_symbol_isolation_refuses_a_missing_member(self):
+        obj, names = self._plain_two_function_tu()
+        out, plan = OI.derive_many(
+            obj.read_bytes(), [names[0], "_ZN4Pair7MissingEv"])
+        self.assertIsNone(out)
+        self.assertIn("0 defined symbols", plan["error"])
+
+    def test_multi_symbol_isolation_refuses_ambiguous_definitions(self):
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+
+        obj, names = self._plain_two_function_tu()
+        raw = bytearray(obj.read_bytes())
+        elf = ELFFile(io.BytesIO(bytes(raw)))
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        first_index, first = next((i, s) for i, s in enumerate(symbols)
+                                  if s.name == names[0]
+                                  and s["st_shndx"] != "SHN_UNDEF")
+        second_index, _second = next((i, s) for i, s in enumerate(symbols)
+                                     if s.name == names[1]
+                                     and s["st_shndx"] != "SHN_UNDEF")
+        self.assertNotEqual(first_index, second_index)
+        endian = "<" if elf.little_endian else ">"
+        struct.pack_into(endian + "I", raw,
+                         symtab.header["sh_offset"] + second_index * 16,
+                         first["st_name"])
+
+        out, plan = OI.derive_many(bytes(raw), names)
+        self.assertIsNone(out)
+        self.assertIn("2 defined symbols", plan["error"])
+
+    def test_multi_symbol_isolation_refuses_unlicensed_helper_content(self):
+        obj, names = self._plain_two_function_tu(
+            'extern "C" int helper(int x) { return x + 1; }\n')
+        out, plan = OI.derive_many(obj.read_bytes(), names)
+        self.assertIsNone(out)
+        self.assertIn("unlicensed content", plan["error"])
+        self.assertIn("helper", plan["error"])
+
+    def test_multi_symbol_isolation_refuses_unlicensed_data(self):
+        obj, names = self._plain_two_function_tu(
+            'extern "C" int owned_data = 1;\n')
+        out, plan = OI.derive_many(obj.read_bytes(), names)
+        self.assertIsNone(out)
+        self.assertIn("unlicensed content", plan["error"])
+        self.assertIn("owned_data", plan["error"])
+
+    def test_multi_symbol_isolation_refuses_wrong_emission_order(self):
+        # mwcc emits these function sections in reverse source order.  This spelling
+        # therefore disagrees with the requested ROM order instead of silently
+        # accepting an object that would swap the two contributions.
+        obj = self.build(
+            "struct Pair { void First(); void Second(); };\n"
+            "void Pair::First() {}\n"
+            "void Pair::Second() {}\n")
+        names = ["_ZN4Pair5FirstEv", "_ZN4Pair6SecondEv"]
+        out, plan = OI.derive_many(obj.read_bytes(), names)
+        self.assertIsNone(out)
+        self.assertIn("not emitted in ROM order", plan["error"])
+
+    def test_multi_symbol_isolation_does_not_replace_singleton_semantics(self):
+        obj, names = self._plain_two_function_tu()
+        out, plan = OI.derive_many(obj.read_bytes(), [names[0]])
+        self.assertIsNone(out)
+        self.assertIn("at least two", plan["error"])
+        singular, singular_plan = OI.derive(obj.read_bytes(), names[0])
+        self.assertIsNone(singular_plan["error"])
+        self.assertIsNotNone(singular)
+
+    def test_duplicate_deadstrip_demands_the_cartridge_body(self):
+        """`expect` is what makes discarding a symbol WITH a ROM home sound.
+
+        The vague-linkage case -- types.h's empty ~Vector3, re-emitted by every TU
+        that destroys one -- is not compiler-only: the cartridge has a copy and an
+        enrolled source owns it. Licensing that here is only safe while this object's
+        copy is provably the same body, so a wrong body must refuse rather than warn.
+        """
+        # An INLINE destructor is what makes the variant vague-linkage, which is
+        # exactly the shape this path exists for: every TU that destroys the type
+        # emits its own copy.
+        obj = self.build("struct V { int v; ~V(){} };\n"
+                         "void g(){ V v; v.v = 1; }\n")
+        raw = obj.read_bytes()
+        real = self._section_bytes(raw, "_ZN1VD1Ev")
+
+        out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"], {"_ZN1VD1Ev": real})
+        self.assertIsNone(plan["error"])
+        self.assertIsNotNone(out)
+
+        _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"],
+                                         {"_ZN1VD1Ev": bytes(len(real))})
+        self.assertIn("non-relocated offset", plan["error"])
+
+        # A length mismatch is a different body outright, not a masked word.
+        _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"],
+                                         {"_ZN1VD1Ev": real + bytes(4)})
+        self.assertIn("not the cartridge's body", plan["error"])
+
+        _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"], {"_ZN1VD2Ev": real})
+        self.assertIn("was not requested", plan["error"])
+
+    KEY_FUNCTION_CLASS = ("struct B { virtual ~B(); virtual int f(); }; "
+                          "B::~B(){} int B::f(){ return 1; }")
+
+    def test_deadstrip_externalises_a_vtable_the_survivors_reference(self):
+        """A promoted TU keeps the vtable the ROM owns instead of losing it.
+
+        An out-of-line destructor is the key function, so mwcc emits `_ZTV` in this
+        object -- and the cartridge already has that vtable, at an address no promoted
+        source claims.  Discarding the definition while the destructor goes on storing
+        the vptr means the reference has to survive as an IMPORT, and the addend has to
+        lose mwcc's preamble skip: `_ZTV<C>` here addresses the vtable object, in
+        symbols.txt it addresses the slots.
+        """
+        raw = self.build(self.KEY_FUNCTION_CLASS).read_bytes()
+        before = self._reloc_addends(raw, "_ZTV1B")
+        self.assertTrue(any(a >= OI.VTABLE_PREAMBLE for a in before), before)
+
+        out, plan = OI.derive_deadstrip(raw, ["_ZTV1B"])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(plan["externalise"], ["_ZTV1B"])
+        self.assertEqual(plan["dead"], [])
+        self.assertTrue(plan["rebase"], "the vptr store's section must be rebased")
+
+        after = self._reloc_addends(out, "_ZTV1B")
+        self.assertTrue(after, "the reference must survive as an import")
+        self.assertTrue(all(a < OI.VTABLE_PREAMBLE for a in after), after)
+        self.assertEqual(sorted(a + OI.VTABLE_PREAMBLE for a in after), sorted(before))
+
+    def test_deadstrip_accepts_a_vptr_store_already_in_rom_convention(self):
+        """A source that declares the ROM symbol itself needs no preamble correction.
+
+        `extern int _ZTV10dBgActor_c[];` names symbols.txt's slot array, so the store
+        relocates with addend 0.  There is nothing to rebase, and refusing it would
+        reject every promoted TU that inherits a base's vtable rather than owning one.
+        """
+        obj = self.build("extern int _ZTVBase[]; struct Q { virtual ~Q(); }; "
+                         "Q::~Q(){ *(int**)this = _ZTVBase; } "
+                         "int helper(){ return 7; }")
+        raw = obj.read_bytes()
+        self.assertEqual(set(self._reloc_addends(raw, "_ZTVBase")), {0})
+
+        _out, plan = OI.derive_deadstrip(raw, ["_ZTV1Q"])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(plan["externalise"], ["_ZTV1Q"])
+        self.assertEqual(set(self._reloc_addends(_out, "_ZTVBase")), {0},
+                         "an addend-0 reference is left exactly as it was")
+
+    def test_deadstrip_refuses_a_vptr_store_between_the_two_conventions(self):
+        """Neither spelling, so neither answer is safe; refuse rather than guess."""
+        raw = self.build(self.KEY_FUNCTION_CLASS).read_bytes()
+        raw = self._retarget_addend(raw, "_ZTV1B", 4)
+        _out, plan = OI.derive_deadstrip(raw, ["_ZTV1B"])
+        self.assertIn("unexpected reloc", plan["error"])
+
+    def test_deadstrip_refuses_a_non_rtti_data_import(self):
+        """Only the RTTI trio may be imported; anything else is an unsurveyed shape."""
+        obj = self.build("int g_table[4] = {1,2,3,4}; int read(){ return g_table[2]; }")
+        _out, plan = OI.derive_deadstrip(obj.read_bytes(), ["g_table"])
+        self.assertIn("only _ZTV/_ZTI/_ZTS may be imported this way", plan["error"])
+
+    def test_duplicate_body_evidence_is_function_only(self):
+        """A data object's words are addends here and addresses in the cartridge."""
+        raw = self.build(self.KEY_FUNCTION_CLASS).read_bytes()
+        _out, plan = OI.derive_deadstrip(
+            raw, ["_ZTV1B"], {"_ZTV1B": self._section_bytes(raw, "_ZTV1B")})
+        self.assertIn("function-only", plan["error"])
+
+    def _retarget_addend(self, raw, target, value):
+        """A copy of `raw` with every code relocation against `target` given `value`."""
+        import io, struct
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+        out = bytearray(raw)
+        elf = ELFFile(io.BytesIO(raw))
+        secs = list(elf.iter_sections())
+        symtab = elf.get_section_by_name(".symtab")
+        endian = "<" if elf.little_endian else ">"
+        for sec in secs:
+            if not isinstance(sec, RelocationSection) or not sec.is_RELA():
+                continue
+            if not (secs[sec.header["sh_info"]].header["sh_flags"] & OI.SHF_EXECINSTR):
+                continue
+            for i, r in enumerate(sec.iter_relocations()):
+                if symtab.get_symbol(r["r_info_sym"]).name == target:
+                    struct.pack_into(endian + "i", out,
+                                     sec.header["sh_offset"] + i * 12 + 8, value)
+        return bytes(out)
+
+    def _reloc_addends(self, raw, target):
+        """Addends of every relocation against `target` from a surviving code section."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+        elf = ELFFile(io.BytesIO(raw))
+        secs = list(elf.iter_sections())
+        symtab = elf.get_section_by_name(".symtab")
+        out = []
+        for sec in secs:
+            if not isinstance(sec, RelocationSection):
+                continue
+            source = secs[sec.header["sh_info"]]
+            if not (source.header["sh_flags"] & OI.SHF_EXECINSTR):
+                continue
+            if not source.header["sh_size"]:
+                continue
+            for r in sec.iter_relocations():
+                if symtab.get_symbol(r["r_info_sym"]).name == target:
+                    out.append(r["r_addend"])
+        return out
+
+    def _section_bytes(self, raw, name):
+        import io
+        from elftools.elf.elffile import ELFFile
+        elf = ELFFile(io.BytesIO(raw))
+        secs = list(elf.iter_sections())
+        sym = next(s for s in elf.get_section_by_name(".symtab").iter_symbols()
+                   if s.name == name and isinstance(s["st_shndx"], int))
+        return bytes(secs[sym["st_shndx"]].data())
+
+    def test_exact_deadstrip_removes_unreferenced_compiler_only_d2(self):
+        """A whole-TU scratch link may model the retail link's discarded D2.
+
+        The operation is exact-symbol and pure: D2's section disappears, D0/D1 and
+        the data emitted by the same real destructor remain, and the input object is
+        untouched.  This is deliberately not ordinary one-function isolation.
+        """
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        obj = self.build("struct P { int p[4]; virtual ~P(); virtual void f(); };\n"
+                         "P::~P(){}\n")
+        raw = obj.read_bytes()
+        out, plan = OI.derive_deadstrip(raw, ["_ZN1PD2Ev"])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(obj.read_bytes(), raw)
+        self.assertIsNotNone(out)
+
+        elf = ELFFile(io.BytesIO(out))
+        syms = {s.name: s for s in elf.get_section_by_name(".symtab").iter_symbols()}
+        self.assertEqual(syms["_ZN1PD2Ev"]["st_shndx"], "SHN_UNDEF")
+        self.assertNotEqual(syms["_ZN1PD0Ev"]["st_shndx"], "SHN_UNDEF")
+        self.assertNotEqual(syms["_ZN1PD1Ev"]["st_shndx"], "SHN_UNDEF")
+        self.assertTrue(any(s.name == ".data" and s.header["sh_size"]
+                            for s in elf.iter_sections()))
+
+    def test_exact_deadstrip_refuses_a_surviving_reference(self):
+        """Calling something is proof it is not dead compiler output."""
+        obj = self.build('extern "C" int helper(int x) { return x + 1; }\n'
+                         'extern "C" int kept(int x) { return helper(x); }\n')
+        out, plan = OI.derive_deadstrip(obj.read_bytes(), ["helper"])
+        self.assertIsNone(out)
+        self.assertIn("surviving", plan["error"])
+        self.assertIn("references compiler-only helper", plan["error"])
+
+    def test_duplicate_deadstrip_allows_a_surviving_reference(self):
+        """A duplicate with a ROM home may be called by a survivor; a homeless one may not.
+
+        ov014/daWanwan_c is the case: it holds two `Vector3[7]`, so its destructor --
+        a function the ROM owns, at 0x02111308 -- hands `_ZN7Vector3D1Ev` to
+        `__destroy_arr`, and the cartridge keeps 0x020072c0 in that destructor's own
+        literal pool.  The reference is therefore ROM-real, and it is not evidence
+        that this object's vague-linkage copy is live compiler output: exactly one
+        copy has a home, an enrolled source owns it, and externalising the local
+        definition turns the reference into an import onto that home.
+
+        The exemption is opt-in and never fires on its own: a caller must name the
+        symbol in `expect` (the cartridge's bytes, compared here as far as an
+        unlinked object allows -- every relocated word is masked out, and
+        `rombuild._duplicate_body_reasons` links the body and compares those words)
+        or in `duplicates` (the reference alone, for the scratch path that has no
+        cartridge bytes).  A homeless symbol reaches neither.
+        """
+        # A member ARRAY is what forces the reference: mwcc cannot unroll the
+        # teardown, so it calls `__destroy_arr` with the element destructor's
+        # address, and that address is a relocation out of a surviving function.
+        obj = self.build("struct V { int v; ~V(){} };\n"
+                         "struct C { V a[7]; ~C(); };\n"
+                         "C::~C(){}\n")
+        raw = obj.read_bytes()
+        real = self._section_bytes(raw, "_ZN1VD1Ev")
+
+        # Without duplicate-body evidence the survivor's reference disqualifies it.
+        out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"])
+        self.assertIsNone(out)
+        self.assertIn("references compiler-only _ZN1VD1Ev", plan["error"])
+
+        # With it, the definition is externalised and the reference becomes an import.
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"], {"_ZN1VD1Ev": real})
+        self.assertIsNone(plan["error"])
+        self.assertIsNotNone(out)
+        elf = ELFFile(io.BytesIO(out))
+        syms = {s.name: s for s in elf.get_section_by_name(".symtab").iter_symbols()}
+        self.assertEqual(syms["_ZN1VD1Ev"]["st_shndx"], "SHN_UNDEF")
+
+        # The exemption is keyed on the evidence, not on being a function: a WRONG
+        # body is still refused even though the reference would now be allowed.
+        _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"],
+                                         {"_ZN1VD1Ev": bytes(len(real))})
+        self.assertIn("non-relocated offset", plan["error"])
+
+        # `duplicates` licenses the reference without claiming the body: the scratch
+        # link path has no cartridge bytes and leaves that proof to rombuild.
+        out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"],
+                                        duplicates=["_ZN1VD1Ev"])
+        self.assertIsNone(plan["error"])
+        elf = ELFFile(io.BytesIO(out))
+        syms = {s.name: s for s in elf.get_section_by_name(".symtab").iter_symbols()}
+        self.assertEqual(syms["_ZN1VD1Ev"]["st_shndx"], "SHN_UNDEF")
+
+        # It cannot license anything but a requested compiler-only function.
+        _out, plan = OI.derive_deadstrip(raw, ["_ZN1VD1Ev"], duplicates=["_ZN1CD1Ev"])
+        self.assertIn("not requested compiler-only functions", plan["error"])
+
+    def test_duplicate_deadstrip_still_refuses_an_unnamed_section_reference(self):
+        """The exemption is keyed on the NAME, so an anonymous reference is untouched.
+
+        `deadstrip_plan` refuses two shapes of surviving reference: one that names a
+        requested symbol, and one that goes through the unnamed `STT_SECTION` symbol
+        of a section being removed.  Only the first consults `expect`/`duplicates`;
+        after the section is gone there is no symbol left to carry the second, so it
+        stays a refusal no matter what the caller licenses.
+        """
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        obj = self.build("struct V { int v; ~V(){} };\n"
+                         "struct C { V a[7]; ~C(); };\n"
+                         "C::~C(){}\n")
+        raw = obj.read_bytes()
+        real = self._section_bytes(raw, "_ZN1VD1Ev")
+
+        # mwcc emits no STT_SECTION entry for this section, so -- as the vague-RTTI
+        # sibling test does -- repurpose a spare symbol into the exact unnamed shape
+        # an ELF producer could legally use, then point the survivor's relocation
+        # through it instead of at `_ZN1VD1Ev`.
+        import struct
+
+        patched = bytearray(raw)
+        elf = ELFFile(io.BytesIO(raw))
+        symtab = elf.get_section_by_name(".symtab")
+        syms = list(symtab.iter_symbols())
+        victim = next(i for i, s in enumerate(syms) if s.name == "_ZN1VD1Ev")
+        shndx = syms[victim]["st_shndx"]
+        spare = next(i for i, s in enumerate(syms)
+                     if s.name.startswith("$") and s["st_shndx"] == shndx)
+        endian = "<" if elf.little_endian else ">"
+        entry = symtab.header["sh_offset"] + spare * 16
+        struct.pack_into(endian + "III", patched, entry, 0, 0, 0)
+        patched[entry + 12] = 0x03  # STB_LOCAL / STT_SECTION
+        struct.pack_into(endian + "H", patched, entry + 14, shndx)
+        found = False
+        for rel in elf.iter_sections():
+            if not isinstance(rel, RelocationSection) or rel.header["sh_info"] == shndx:
+                continue
+            for i, r in enumerate(rel.iter_relocations()):
+                if r["r_info_sym"] != victim:
+                    continue
+                struct.pack_into(endian + "I", patched,
+                                 rel.header["sh_offset"]
+                                 + i * rel.header["sh_entsize"] + 4,
+                                 (spare << 8) | r["r_info_type"])
+                found = True
+        self.assertTrue(found, "no relocation named the victim")
+
+        for kwargs in ({"expect": {"_ZN1VD1Ev": real}},
+                       {"duplicates": ["_ZN1VD1Ev"]}):
+            out, plan = OI.derive_deadstrip(bytes(patched), ["_ZN1VD1Ev"], **kwargs)
+            self.assertIsNone(out)
+            self.assertIn("references compiler-only section[", plan["error"])
+
+    def test_exact_vague_rtti_externalization_keeps_named_imports(self):
+        """A dedicated inherited RTTI section becomes an import, not lost bytes."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        obj = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct A : Base { virtual void a(); }; void A::a() {}\n")
+        raw = obj.read_bytes()
+        out, plan = OI.derive_externalized(raw, ["_ZTI4Base", "_ZTS4Base"])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(obj.read_bytes(), raw, "externalization must be pure")
+        self.assertEqual(plan["externalise"], ["_ZTI4Base", "_ZTS4Base"])
+
+        elf = ELFFile(io.BytesIO(out))
+        symtab = elf.get_section_by_name(".symtab")
+        syms = {s.name: s for s in symtab.iter_symbols()}
+        self.assertEqual(syms["_ZTI4Base"]["st_shndx"], "SHN_UNDEF")
+        self.assertEqual(syms["_ZTS4Base"]["st_shndx"], "SHN_UNDEF")
+        self.assertNotEqual(syms["_ZTI1A"]["st_shndx"], "SHN_UNDEF")
+        referenced = set()
+        for sec in elf.iter_sections():
+            if isinstance(sec, RelocationSection) and sec.header["sh_size"]:
+                referenced.update(symtab.get_symbol(r["r_info_sym"]).name
+                                  for r in sec.iter_relocations())
+        self.assertIn("_ZTI4Base", referenced,
+                      "the surviving derived RTTI must still import its base RTTI")
+
+    def test_externalized_vague_rtti_links_to_one_canonical_definition(self):
+        """mwldarm resolves the surviving derived RTTI through the exact import."""
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        canonical = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct A : Base { virtual void a(); }; void A::a() {}\n").read_bytes()
+        consumer = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct B : Base { virtual void b(); }; void B::b() {}\n").read_bytes()
+        externalized, plan = OI.derive_externalized(
+            consumer, ["_ZTI4Base", "_ZTS4Base"])
+        self.assertIsNone(plan["error"])
+
+        from rombuild import LD_VERSION, MW, launcher
+        d = pathlib.Path(self.tmp.name)
+        canonical_o, consumer_o, linked = d / "canonical.o", d / "consumer.o", d / "linked.o"
+        canonical_o.write_bytes(canonical)
+        consumer_o.write_bytes(externalized)
+        objects = d / "objects.txt"
+        objects.write_text(f"{canonical_o}\n{consumer_o}\n", encoding="utf-8")
+
+        runtime_symbols = set()
+        for raw in (canonical, externalized):
+            elf = ELFFile(io.BytesIO(raw))
+            symtab = elf.get_section_by_name(".symtab")
+            runtime_symbols.update(s.name for s in symtab.iter_symbols()
+                                   if s.name and s["st_shndx"] == "SHN_UNDEF"
+                                   and s.name not in ("_ZTI4Base", "_ZTS4Base"))
+        runtime_defs = "\n".join(
+            f"  {name} = 0x02010000;" for name in sorted(runtime_symbols))
+        lcf = d / "fixture.lcf"
+        lcf.write_text(
+            "MEMORY { TEST : ORIGIN = 0x02000000 > linked.bin }\n"
+            f"SECTIONS {{\n{runtime_defs}\n.fixture : {{\n"
+            "  canonical.o(.text) consumer.o(.text) "
+            "canonical.o(.data) consumer.o(.data)\n"
+            "} > TEST }\n", encoding="utf-8")
+        cmd = [*launcher(), str(MW / LD_VERSION / "mwldarm.exe"),
+               "-proc", "arm946e", "-nostdlib", "-interworking", "-nodead",
+               "-m", "_ZN1A1aEv", f"@{objects}", str(lcf), "-o", str(linked)]
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=d)
+        self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
+        linked_elf = ELFFile(io.BytesIO(linked.read_bytes()))
+        names = [s.name for s in linked_elf.get_section_by_name(".symtab").iter_symbols()
+                 if s["st_shndx"] != "SHN_UNDEF"]
+        self.assertEqual(names.count("_ZTI4Base"), 1)
+        self.assertEqual(names.count("_ZTS4Base"), 1)
+        self.assertIn("_ZTI1B", names,
+                      "the consumer's surviving RTTI must participate in the link")
+
+    def test_vague_rtti_externalization_refuses_a_shared_section(self):
+        """The exact name cannot license a neighbour in the same input section."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+
+        obj = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct A : Base { virtual void a(); }; void A::a() {}\n")
+        raw = bytearray(obj.read_bytes())
+        elf = ELFFile(io.BytesIO(bytes(raw)))
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        zti_section = next(s["st_shndx"] for s in symbols if s.name == "_ZTI4Base")
+        zts_index = next(i for i, s in enumerate(symbols) if s.name == "_ZTS4Base")
+        endian = "<" if elf.little_endian else ">"
+        struct.pack_into(endian + "H", raw,
+                         symtab.header["sh_offset"] + zts_index * 16 + 14,
+                         zti_section)
+        out, plan = OI.derive_externalized(bytes(raw), ["_ZTI4Base"])
+        self.assertIsNone(out)
+        self.assertIn("also defines", plan["error"])
+
+    def test_vague_rtti_externalization_refuses_an_unnamed_section_reference(self):
+        """A section-symbol addend cannot be preserved by a named import."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        obj = self.build(
+            "struct Base { virtual ~Base() {} };\n"
+            "struct A : Base { virtual void a(); }; void A::a() {}\n")
+        raw = bytearray(obj.read_bytes())
+        elf = ELFFile(io.BytesIO(bytes(raw)))
+        secs = list(elf.iter_sections())
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        dropped = next(s["st_shndx"] for s in symbols if s.name == "_ZTI4Base")
+        # mwcc does not emit STT_SECTION entries for every repeated .data section.
+        # Repurpose another fixture RTTI symbol into the exact unnamed shape an ELF
+        # producer could legally use, then point a surviving reloc through it.
+        section_symbol = next(i for i, s in enumerate(symbols)
+                              if s.name == "_ZTS4Base")
+        patched = False
+        endian = "<" if elf.little_endian else ">"
+        symbol_entry = symtab.header["sh_offset"] + section_symbol * 16
+        struct.pack_into(endian + "III", raw, symbol_entry, 0, 0, 0)
+        raw[symbol_entry + 12] = 0x03  # STB_LOCAL/STT_SECTION
+        struct.pack_into(endian + "H", raw, symbol_entry + 14, dropped)
+        for relsec in secs:
+            if not isinstance(relsec, RelocationSection) or relsec.header["sh_info"] == dropped:
+                continue
+            for i, reloc in enumerate(relsec.iter_relocations()):
+                if symtab.get_symbol(reloc["r_info_sym"]).name != "_ZTI4Base":
+                    continue
+                r_info = (section_symbol << 8) | reloc["r_info_type"]
+                struct.pack_into(endian + "I", raw,
+                                 relsec.header["sh_offset"]
+                                 + i * relsec.header["sh_entsize"] + 4,
+                                 r_info)
+                patched = True
+                break
+            if patched:
+                break
+        self.assertTrue(patched, "fixture must reference the inherited RTTI by name")
+        out, plan = OI.derive_externalized(bytes(raw), ["_ZTI4Base"])
+        self.assertIsNone(out)
+        self.assertIn("unnamed section", plan["error"])
+
+    def test_section_partition_keeps_only_declared_data_and_exact_deferred_text(self):
+        """A partition is an exact inventory, not generic linker garbage collection."""
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        obj = self.build('extern "C" int owned_data = 7;\n'
+                         'extern "C" int first() { return owned_data; }\n')
+        raw = obj.read_bytes()
+        source_elf = ELFFile(io.BytesIO(raw))
+        first = next(s for s in source_elf.get_section_by_name(".symtab").iter_symbols()
+                     if s.name == "first" and s["st_shndx"] != "SHN_UNDEF")
+        out, plan = OI.derive_section_partition(
+            raw, [".data"], ["owned_data"],
+            [{"symbol": "first", "section": ".text", "size": first["st_size"]}])
+        self.assertIsNone(plan["error"])
+        self.assertEqual(obj.read_bytes(), raw, "partitioning must be pure")
+        elf = ELFFile(io.BytesIO(out))
+        live = [s.name for s in elf.iter_sections()
+                if s.header["sh_type"] in OI.CONTENT and s.header["sh_size"]
+                and not any(s.name.startswith(prefix) for prefix in OI.IGNORE)]
+        self.assertEqual(live, [".data"])
+        symbols = {s.name: s for s in elf.get_section_by_name(".symtab").iter_symbols()}
+        self.assertNotEqual(symbols["owned_data"]["st_shndx"], "SHN_UNDEF")
+        self.assertEqual(symbols["first"]["st_shndx"], "SHN_UNDEF")
+
+    def test_section_partition_refuses_unexpected_helper_or_global(self):
+        """Source drift cannot become green by silently shrinking the owned surface."""
+        import io
+        from elftools.elf.elffile import ELFFile
+
+        obj = self.build('extern "C" int owned_data = 7;\n'
+                         'extern "C" int surprise_data = 9;\n'
+                         'extern "C" int first() { return owned_data; }\n'
+                         'extern "C" int surprise_helper() { return 3; }\n')
+        raw = obj.read_bytes()
+        elf = ELFFile(io.BytesIO(raw))
+        symtab = elf.get_section_by_name(".symtab")
+        first = next(s for s in symtab.iter_symbols() if s.name == "first")
+        out, plan = OI.derive_section_partition(
+            raw, [".data"], ["owned_data"],
+            [{"symbol": "first", "section": ".text", "size": first["st_size"]}])
+        self.assertIsNone(out)
+        self.assertTrue("unlicensed symbol" in plan["error"]
+                        or "foreign content" in plan["error"], plan["error"])
+
+    def test_section_partition_preserves_retained_vtable_relocation_addends(self):
+        """Data partitioning must not apply function isolation's _ZTV addend rewrite."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        raw = self.build("struct P { virtual ~P(); }; P::~P(){}\n").read_bytes()
+        elf = ELFFile(io.BytesIO(raw))
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        licensed = [s.name for s in symbols if s.name and s["st_info"]["type"] == "STT_OBJECT"
+                    and isinstance(s["st_shndx"], int)
+                    and elf.get_section(s["st_shndx"]).name == ".data"]
+        deferred = [{"symbol": s.name, "section": ".text", "size": s["st_size"]}
+                    for s in symbols if s.name and s["st_info"]["type"] == "STT_FUNC"
+                    and isinstance(s["st_shndx"], int)
+                    and elf.get_section(s["st_shndx"]).name == ".text"
+                    and s["st_size"] > 0]
+
+        def abi_addends(blob):
+            parsed = ELFFile(io.BytesIO(blob))
+            table = parsed.get_section_by_name(".symtab")
+            return sorted(r["r_addend"] for sec in parsed.iter_sections()
+                          if isinstance(sec, RelocationSection)
+                          and parsed.get_section(sec.header["sh_info"]).name == ".data"
+                          for r in sec.iter_relocations()
+                          if table.get_symbol(r["r_info_sym"]).name.startswith("_ZTVN3abi"))
+
+        before = abi_addends(raw)
+        self.assertTrue(before)
+        out, plan = OI.derive_section_partition(raw, [".data"], licensed, deferred)
+        self.assertIsNone(plan["error"])
+        self.assertEqual(abi_addends(out), before)
+
+    def test_same_named_nontext_reorder_preserves_payloads_and_index_references(self):
+        """Only headers/section indices move; data and RELA records stay untouched."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        obj = self.build(
+            'extern "C" int external_first;\n'
+            'extern "C" int external_second;\n'
+            'extern "C" int *first_ptr = &external_first + 1;\n'
+            'extern "C" int *second_ptr = &external_second + 2;\n')
+        raw = obj.read_bytes()
+        elf = ELFFile(io.BytesIO(raw))
+        secs = list(elf.iter_sections())
+        symtab = elf.get_section_by_name(".symtab")
+        syms = list(symtab.iter_symbols())
+        first = next(s for s in syms if s.name == "first_ptr")
+        second = next(s for s in syms if s.name == "second_ptr")
+        self.assertNotEqual(first["st_shndx"], second["st_shndx"])
+        original = sorted((first["st_shndx"], second["st_shndx"]))
+        desired = [second["st_shndx"], first["st_shndx"]]
+        if desired == original:
+            desired.reverse()
+
+        content_regions = {(s.header["sh_offset"], s.header["sh_size"]): s.data()
+                           for s in secs if s.header["sh_type"] in OI.CONTENT
+                           and s.header["sh_size"]}
+        relocation_regions = {
+            (s.header["sh_offset"], s.header["sh_size"]): s.data()
+            for s in secs if isinstance(s, RelocationSection) and s.header["sh_size"]}
+
+        out, report = OI.reorder_same_named_nontext_sections(
+            raw, [{"section": ".data", "indices": desired}])
+        self.assertIsNotNone(out, report)
+        self.assertIsNone(report["error"])
+        self.assertEqual(obj.read_bytes(), raw, "ordering must be a pure operation")
+        self.assertEqual(len(out), len(raw))
+        self.assertGreaterEqual(report["symbolIndices"], 2)
+        self.assertEqual(report["sectionInfos"], 2)
+
+        reordered = ELFFile(io.BytesIO(out))
+        out_secs = list(reordered.iter_sections())
+        out_syms = list(reordered.get_section_by_name(".symtab").iter_symbols())
+        occupants = []
+        for shndx, sec in enumerate(out_secs):
+            if sec.name != ".data" or not sec.header["sh_size"]:
+                continue
+            names = [s.name for s in out_syms if s.name in ("first_ptr", "second_ptr")
+                     and s["st_shndx"] == shndx]
+            if names:
+                occupants.extend(names)
+        wanted_names = [next(s.name for s in syms if s["st_shndx"] == old
+                             and s.name in ("first_ptr", "second_ptr"))
+                        for old in desired]
+        self.assertEqual(occupants, wanted_names)
+
+        def relocation_for(symbol_name):
+            symbol = next(s for s in out_syms if s.name == symbol_name)
+            relsec = next(s for s in out_secs if isinstance(s, RelocationSection)
+                          and s.header["sh_info"] == symbol["st_shndx"])
+            reloc = next(relsec.iter_relocations())
+            target = reordered.get_section_by_name(".symtab").get_symbol(
+                reloc["r_info_sym"])
+            return target.name, reloc["r_addend"]
+
+        self.assertEqual(relocation_for("first_ptr"), ("external_first", 4))
+        self.assertEqual(relocation_for("second_ptr"), ("external_second", 8))
+        for (offset, size), payload in content_regions.items():
+            self.assertEqual(out[offset:offset + size], payload)
+        for (offset, size), payload in relocation_regions.items():
+            self.assertEqual(out[offset:offset + size], payload)
+
+    def test_same_named_nontext_reorder_refuses_incomplete_and_indexed_elf_shapes(self):
+        """No partial group, GROUP, or extended-index object is normalized."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+
+        raw = self.build('extern "C" int first = 1;\n'
+                         'extern "C" int second = 2;\n').read_bytes()
+        elf = ELFFile(io.BytesIO(raw))
+        indices = [i for i, sec in enumerate(elf.iter_sections())
+                   if sec.name == ".data" and sec.header["sh_size"]]
+        self.assertEqual(len(indices), 2)
+        out, report = OI.reorder_same_named_nontext_sections(
+            raw, [{"section": ".data", "indices": indices[:1]}])
+        self.assertIsNone(out)
+        self.assertIn("exact permutation", report["error"])
+
+        comment = next(i for i, sec in enumerate(elf.iter_sections())
+                       if sec.name == ".comment")
+        endian = "<" if elf.little_endian else ">"
+        grouped = bytearray(raw)
+        struct.pack_into(endian + "I", grouped, OI._shdr_offset(elf, comment) + 4,
+                         17)  # SHT_GROUP
+        out, report = OI.reorder_same_named_nontext_sections(
+            bytes(grouped), [{"section": ".data", "indices": list(reversed(indices))}])
+        self.assertIsNone(out)
+        self.assertIn("section groups", report["error"])
+
+        extended = bytearray(raw)
+        struct.pack_into(endian + "I", extended, OI._shdr_offset(elf, comment) + 4,
+                         18)  # SHT_SYMTAB_SHNDX
+        out, report = OI.reorder_same_named_nontext_sections(
+            bytes(extended), [{"section": ".data", "indices": list(reversed(indices))}])
+        self.assertIsNone(out)
+        self.assertIn("extended symbol section indices", report["error"])
+
+    def test_rebias_vtable_requires_one_exact_dedicated_global_object(self):
+        """Only a whole dedicated _ZTV storage object may move to its public point."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        whole = self.build("struct P { virtual ~P(); }; P::~P(){}\n").read_bytes()
+        whole_elf = ELFFile(io.BytesIO(whole))
+        whole_symbols = list(whole_elf.get_section_by_name(".symtab").iter_symbols())
+        licensed = [s.name for s in whole_symbols
+                    if s.name and s["st_info"]["type"] == "STT_OBJECT"
+                    and isinstance(s["st_shndx"], int)
+                    and whole_elf.get_section(s["st_shndx"]).name == ".data"]
+        deferred = [{"symbol": s.name, "section": ".text", "size": s["st_size"]}
+                    for s in whole_symbols
+                    if s.name and s["st_info"]["type"] == "STT_FUNC"
+                    and isinstance(s["st_shndx"], int)
+                    and whole_elf.get_section(s["st_shndx"]).name == ".text"
+                    and s["st_size"] > 0]
+        raw, partition = OI.derive_section_partition(
+            whole, [".data"], licensed, deferred)
+        self.assertIsNone(partition["error"])
+        elf = ELFFile(io.BytesIO(raw))
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        index, vtable = next((i, s) for i, s in enumerate(symbols) if s.name == "_ZTV1P")
+        section = elf.get_section(vtable["st_shndx"])
+        donor_name = "_ZN1PD2Ev"
+        donor_index, donor = next((i, s) for i, s in enumerate(symbols)
+                                  if s.name == donor_name)
+        self.assertEqual(donor["st_shndx"], "SHN_UNDEF")
+        policy = {"_ZTV1P": {"bias": 8, "size": vtable["st_size"],
+                              "section": section.name,
+                              "storageAlias": {"symbol": "data_2000", "size": 8,
+                                               "donor": donor_name}}}
+        out, report = OI.rebias_object_symbols(raw, policy)
+        self.assertIsNone(report["error"])
+        rebased = ELFFile(io.BytesIO(out))
+        got = next(s for s in rebased.get_section_by_name(".symtab").iter_symbols()
+                   if s.name == "_ZTV1P")
+        self.assertEqual(got["st_value"], 8)
+        self.assertEqual(got["st_size"], vtable["st_size"] - 8)
+        alias = next(s for s in rebased.get_section_by_name(".symtab").iter_symbols()
+                     if s.name == "data_2000")
+        self.assertEqual((alias["st_value"], alias["st_size"], alias["st_shndx"]),
+                         (0, 8, got["st_shndx"]))
+        self.assertEqual((alias["st_info"]["bind"], alias["st_info"]["type"]),
+                         ("STB_GLOBAL", "STT_OBJECT"))
+        self.assertFalse(any(s.name == donor_name for s in
+                             rebased.get_section_by_name(".symtab").iter_symbols()))
+        self.assertEqual(section.data(), rebased.get_section(got["st_shndx"]).data())
+
+        missing_donor = {"_ZTV1P": {**policy["_ZTV1P"],
+                                     "storageAlias": {"symbol": "data_2000", "size": 8,
+                                                      "donor": "missing"}}}
+        refused, why = OI.rebias_object_symbols(raw, missing_donor)
+        self.assertIsNone(refused)
+        self.assertIn("has 0 symbol-table slots", why["error"])
+
+        long_alias = {"_ZTV1P": {**policy["_ZTV1P"],
+                                  "storageAlias": {"symbol": "data_name_that_is_too_long",
+                                                   "size": 8, "donor": donor_name}}}
+        grown, growth = OI.rebias_object_symbols(raw, long_alias)
+        self.assertIsNotNone(grown, growth)
+        self.assertIsNone(growth["error"])
+        self.assertGreater(growth["stringTable"]["shift"], 0)
+        self.assertEqual(growth["aliases"][0]["nameStorage"], "appended")
+        grown_symbols = list(ELFFile(io.BytesIO(grown))
+                             .get_section_by_name(".symtab").iter_symbols())
+        self.assertEqual(len([s for s in grown_symbols
+                              if s.name == "data_name_that_is_too_long"]), 1)
+
+        # A second symbol may point at a longer name beginning immediately before
+        # the donor while the donor itself points at that name's suffix.  Checking
+        # only offsets inside the donor span misses this overlap.
+        string_table = elf.get_section(symtab.header["sh_link"])
+        donor_string = string_table.header["sh_offset"] + donor["st_name"]
+        suffix_other_index = next(i for i, sym in enumerate(symbols)
+                                  if i not in (index, donor_index) and sym.name)
+        suffix_endian = "<" if elf.little_endian else ">"
+        suffix_shared = bytearray(raw)
+        suffix_shared[donor_string - 1] = ord("X")
+        struct.pack_into(suffix_endian + "I", suffix_shared,
+                         symtab.header["sh_offset"] + suffix_other_index * 16,
+                         donor["st_name"] - 1)
+        refused, why = OI.rebias_object_symbols(bytes(suffix_shared), long_alias)
+        self.assertIsNone(refused)
+        self.assertIn("string-table boundary", why["error"])
+        self.assertNotIn("string-table growth refused", why["error"])
+
+        live_donor = {"_ZTV1P": {**policy["_ZTV1P"],
+                                  "storageAlias": {"symbol": "data_2000", "size": 8,
+                                                   "donor": "_ZTI1P"}}}
+        refused, why = OI.rebias_object_symbols(raw, live_donor)
+        self.assertIsNone(refused)
+        self.assertIn("not an exact undefined", why["error"])
+
+        endian = "<" if elf.little_endian else ">"
+        entry = symtab.header["sh_offset"] + index * 16
+        bad = bytearray(raw)
+        struct.pack_into(endian + "I", bad, entry + 4, 4)
+        refused, why = OI.rebias_object_symbols(bytes(bad), policy)
+        self.assertIsNone(refused)
+        self.assertIn("does not exactly cover", why["error"])
+
+        bad = bytearray(raw)
+        bad[entry + 12] = 0x01  # STB_LOCAL/STT_OBJECT
+        refused, why = OI.rebias_object_symbols(bytes(bad), policy)
+        self.assertIsNone(refused)
+        self.assertIn("STB_GLOBAL/STT_OBJECT", why["error"])
+
+        refused, why = OI.rebias_object_symbols(
+            raw, {"_ZTVMissing": {"bias": 8, "size": 16, "section": ".data"}})
+        self.assertIsNone(refused)
+        self.assertIn("0 defined symbols", why["error"])
+
+        refused, why = OI.rebias_object_symbols(
+            raw, {"_ZTV1P": {"bias": vtable["st_size"],
+                              "size": vtable["st_size"], "section": section.name}})
+        self.assertIsNone(refused)
+        self.assertIn("must be positive", why["error"])
+
+        other_index, _other = next((i, s) for i, s in enumerate(symbols)
+                                   if i != index and s.name == "_ZTI1P"
+                                   and s["st_shndx"] != "SHN_UNDEF")
+        bad = bytearray(raw)
+        struct.pack_into(endian + "I", bad,
+                         symtab.header["sh_offset"] + other_index * 16,
+                         vtable["st_name"])
+        refused, why = OI.rebias_object_symbols(bytes(bad), policy)
+        self.assertIsNone(refused)
+        self.assertIn("2 defined symbols", why["error"])
+
+        bad = bytearray(raw)
+        patched = False
+        for relsec in elf.iter_sections():
+            if not isinstance(relsec, RelocationSection) \
+                    or relsec.header["sh_info"] != vtable["st_shndx"]:
+                continue
+            reloc = next(iter(relsec.iter_relocations()), None)
+            if reloc is None:
+                continue
+            r_info = (index << 8) | reloc["r_info_type"]
+            struct.pack_into(endian + "I", bad, relsec.header["sh_offset"] + 4, r_info)
+            patched = True
+            break
+        self.assertTrue(patched)
+        refused, why = OI.rebias_object_symbols(bytes(bad), policy)
+        self.assertIsNone(refused)
+        self.assertIn("smaller than bias", why["error"])
+
+        bad = bytearray(raw)
+        patched = False
+        for relsec in elf.iter_sections():
+            if not isinstance(relsec, RelocationSection) \
+                    or relsec.header["sh_info"] != vtable["st_shndx"]:
+                continue
+            reloc = next(iter(relsec.iter_relocations()), None)
+            if reloc is None:
+                continue
+            r_info = (donor_index << 8) | reloc["r_info_type"]
+            struct.pack_into(endian + "I", bad, relsec.header["sh_offset"] + 4, r_info)
+            patched = True
+            break
+        self.assertTrue(patched)
+        refused, why = OI.rebias_object_symbols(bytes(bad), policy)
+        self.assertIsNone(refused)
+        self.assertIn("still referenced", why["error"])
+
+    def test_rebias_vtable_grows_strtab_for_19_byte_neutral_name(self):
+        """A 19-byte neutral alias may reuse an exact safe 18-byte donor slot."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        whole = self.build(
+            "namespace A { namespace B { namespace C { namespace D { "
+            "struct EE { virtual ~EE(); }; EE::~EE(){} "
+            "struct FF { virtual ~FF(); }; FF::~FF(){} }}}} "
+            "struct P { virtual ~P(); virtual void f(); virtual void g(); }; "
+            "P::~P(){} void P::f(){} void P::g(){}\n").read_bytes()
+        whole_elf = ELFFile(io.BytesIO(whole))
+        whole_symbols = list(whole_elf.get_section_by_name(".symtab").iter_symbols())
+        licensed = [s.name for s in whole_symbols
+                    if s.name and s["st_info"]["type"] == "STT_OBJECT"
+                    and isinstance(s["st_shndx"], int)
+                    and whole_elf.get_section(s["st_shndx"]).name == ".data"]
+        deferred = [{"symbol": s.name, "section": ".text", "size": s["st_size"]}
+                    for s in whole_symbols
+                    if s.name and s["st_info"]["type"] == "STT_FUNC"
+                    and isinstance(s["st_shndx"], int)
+                    and whole_elf.get_section(s["st_shndx"]).name == ".text"
+                    and s["st_size"] > 0]
+        raw, partition = OI.derive_section_partition(
+            whole, [".data"], licensed, deferred)
+        self.assertIsNone(partition["error"])
+        parsed = ELFFile(io.BytesIO(raw))
+        sections = list(parsed.iter_sections())
+        symtab = parsed.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        vtable = next(s for s in symbols if s.name == "_ZTV1P")
+        donor_names = ("_ZN1A1B1C1D2EED2Ev", "_ZN1A1B1C1D2FFD2Ev")
+        donor_rows = [next((i, s) for i, s in enumerate(symbols)
+                           if s.name == name) for name in donor_names]
+        self.assertTrue(all(len(name.encode("ascii")) == 18 for name in donor_names))
+        self.assertTrue(all((donor["st_shndx"], donor["st_value"], donor["st_size"])
+                            == ("SHN_UNDEF", 0, 0)
+                            for _index, donor in donor_rows))
+        targets = ("data_ov070_02123184", "data_ov070_021231a0")
+        fittings = ("neutral_name_12345", "neutral_name_12346")
+        self.assertTrue(all(len(name) == 18 for name in fittings))
+        self.assertTrue(all(len(name) == 19 for name in targets))
+
+        def policy(names):
+            return {"_ZTV1P": {
+                "bias": 8, "size": vtable["st_size"],
+                "section": parsed.get_section(vtable["st_shndx"]).name,
+                "partitionSymbols": [
+                    {"symbol": names[0], "value": 12, "size": 4,
+                     "donor": donor_names[0]},
+                    {"symbol": names[1], "value": 16,
+                     "size": vtable["st_size"] - 16,
+                     "donor": donor_names[1]},
+                ],
+            }}
+
+        in_place, in_place_report = OI.rebias_object_symbols(raw, policy(fittings))
+        self.assertIsNotNone(in_place, in_place_report)
+        self.assertIsNone(in_place_report["error"])
+        self.assertIsNone(in_place_report["stringTable"])
+        grown, report = OI.rebias_object_symbols(raw, policy(targets))
+        self.assertIsNotNone(grown, report)
+        self.assertIsNone(report["error"])
+        self.assertTrue(all(row["nameStorage"] == "appended"
+                            for row in report["partitions"]))
+        self.assertGreaterEqual(report["stringTable"]["shift"],
+                                sum(len(name) + 1 for name in targets))
+
+        result = ELFFile(io.BytesIO(grown))
+        result_sections = list(result.iter_sections())
+        result_symbols = list(result.get_section_by_name(".symtab").iter_symbols())
+        expected_aliases = ((12, 4), (16, vtable["st_size"] - 16))
+        for (donor_index, _donor), target, (value, size) in zip(
+                donor_rows, targets, expected_aliases):
+            alias = result_symbols[donor_index]
+            self.assertEqual(alias.name, target)
+            self.assertEqual((alias["st_value"], alias["st_size"],
+                              alias["st_info"]["bind"], alias["st_info"]["type"]),
+                             (value, size, "STB_GLOBAL", "STT_OBJECT"))
+        self.assertFalse(any(s.name in donor_names for s in result_symbols))
+
+        string_index = symtab.header["sh_link"]
+        symtab_index = next(index for index, section in enumerate(sections)
+                            if section.name == ".symtab")
+        old_strings = sections[string_index].data()
+        new_strings = result_sections[string_index].data()
+        self.assertEqual(new_strings[:len(old_strings)], old_strings)
+        for target in targets:
+            self.assertIn(target.encode("ascii") + b"\0",
+                          new_strings[len(old_strings):])
+
+        # The fitting and appended paths must produce identical non-string payloads,
+        # relocation semantics, section order/links, and symbol records except for
+        # the one target name offset and the file-offset shifts growth requires.
+        fitted = ELFFile(io.BytesIO(in_place))
+        fitted_sections = list(fitted.iter_sections())
+        fitted_symbols = list(fitted.get_section_by_name(".symtab").iter_symbols())
+        self.assertEqual(len(fitted_sections), len(result_sections))
+        header_keys = ("sh_name", "sh_type", "sh_flags", "sh_addr", "sh_size",
+                       "sh_link", "sh_info", "sh_addralign", "sh_entsize")
+        for index, (short_section, long_section) in enumerate(
+                zip(fitted_sections, result_sections)):
+            expected_offset = short_section.header["sh_offset"]
+            insertion = (fitted_sections[string_index].header["sh_offset"]
+                         + fitted_sections[string_index].header["sh_size"])
+            if index != string_index and expected_offset \
+                    and expected_offset >= insertion:
+                expected_offset += report["stringTable"]["shift"]
+            self.assertEqual(long_section.header["sh_offset"], expected_offset)
+            if index != string_index:
+                self.assertEqual(tuple(short_section.header[key] for key in header_keys),
+                                 tuple(long_section.header[key] for key in header_keys))
+                if index != symtab_index \
+                        and short_section.header["sh_type"] != "SHT_NOBITS":
+                    self.assertEqual(short_section.data(), long_section.data())
+            else:
+                self.assertEqual(
+                    tuple(short_section.header[key] for key in header_keys if key != "sh_size"),
+                    tuple(long_section.header[key] for key in header_keys if key != "sh_size"))
+        expected_shoff = fitted["e_shoff"]
+        if expected_shoff >= insertion:
+            expected_shoff += report["stringTable"]["shift"]
+        self.assertEqual(result["e_shoff"], expected_shoff)
+        self.assertEqual(len(fitted_symbols), len(result_symbols))
+        symbol_keys = ("st_value", "st_size", "st_info", "st_other", "st_shndx")
+        for index, (short_symbol, long_symbol) in enumerate(
+                zip(fitted_symbols, result_symbols)):
+            self.assertEqual(tuple(short_symbol[key] for key in symbol_keys),
+                             tuple(long_symbol[key] for key in symbol_keys))
+            if index not in {row[0] for row in donor_rows}:
+                self.assertEqual((short_symbol.name, short_symbol["st_name"]),
+                                 (long_symbol.name, long_symbol["st_name"]))
+
+        def relocations(blob):
+            elf = ELFFile(io.BytesIO(blob))
+            return [(index, section.header["sh_info"],
+                     [(reloc["r_offset"], reloc["r_info_sym"],
+                       reloc["r_info_type"],
+                       reloc["r_addend"] if reloc.is_RELA() else None)
+                      for reloc in section.iter_relocations()])
+                    for index, section in enumerate(elf.iter_sections())
+                    if isinstance(section, RelocationSection)]
+
+        self.assertEqual(relocations(in_place), relocations(grown))
+
+        # A parseable but overlapping linked string table is still malformed and
+        # must fail closed before any offset or symbol mutation.
+        endian = "<" if parsed.little_endian else ">"
+        malformed = bytearray(raw)
+        struct.pack_into(endian + "I", malformed,
+                         OI._shdr_offset(parsed, string_index) + 0x14,
+                         len(raw) - sections[string_index].header["sh_offset"])
+        refused, why = OI.rebias_object_symbols(bytes(malformed), policy(targets))
+        self.assertIsNone(refused)
+        self.assertIn("string-table growth refused", why["error"])
+        self.assertTrue("overlaps" in why["error"] or "section headers" in why["error"])
+
+        unterminated = bytearray(raw)
+        string_end = (sections[string_index].header["sh_offset"]
+                      + sections[string_index].header["sh_size"])
+        unterminated[string_end - 1] = ord("X")
+        refused, why = OI.rebias_object_symbols(bytes(unterminated), policy(targets))
+        self.assertIsNone(refused)
+        self.assertIn("required boundary NULs", why["error"])
+
+    def test_rebias_vtable_synthesizes_exact_interior_partition_symbols(self):
+        """Interior labels reuse only safe slots and never alter retained content."""
+        import io
+        import struct
+        from elftools.elf.elffile import ELFFile
+
+        whole = self.build(
+            "struct P { virtual ~P(); virtual void f(); virtual void g(); }; "
+            "P::~P(){} void P::f(){} void P::g(){} "
+            "struct Q { virtual ~Q(); }; Q::~Q(){}\n").read_bytes()
+        whole_elf = ELFFile(io.BytesIO(whole))
+        symbols = list(whole_elf.get_section_by_name(".symtab").iter_symbols())
+        licensed = [s.name for s in symbols
+                    if s.name and s["st_info"]["type"] == "STT_OBJECT"
+                    and isinstance(s["st_shndx"], int)
+                    and whole_elf.get_section(s["st_shndx"]).name == ".data"]
+        deferred = [{"symbol": s.name, "section": ".text", "size": s["st_size"]}
+                    for s in symbols if s.name and s["st_info"]["type"] == "STT_FUNC"
+                    and isinstance(s["st_shndx"], int)
+                    and whole_elf.get_section(s["st_shndx"]).name == ".text"
+                    and s["st_size"] > 0]
+        raw, partition = OI.derive_section_partition(
+            whole, [".data"], licensed, deferred)
+        self.assertIsNone(partition["error"])
+        elf = ELFFile(io.BytesIO(raw))
+        symtab = elf.get_section_by_name(".symtab")
+        symbols = list(symtab.iter_symbols())
+        vtable = next(s for s in symbols if s.name == "_ZTV1P")
+        donor1 = "_ZN1PD2Ev"
+        donor2 = "_ZN1QD2Ev"
+        donor2_index = next(i for i, s in enumerate(symbols) if s.name == donor2)
+
+        # Externalized RTTI donors are STB_LOPROC/OBJECT rather than GLOBAL/FUNC.
+        # Mutate one already-undefined, unreferenced test slot to that exact shape.
+        raw = bytearray(raw)
+        raw[symtab.header["sh_offset"] + donor2_index * 16 + 12] = 0xd1
+        raw = bytes(raw)
+        parsed = ELFFile(io.BytesIO(raw))
+        parsed_symbols = list(parsed.get_section_by_name(".symtab").iter_symbols())
+        donor2_row = next(s for s in parsed_symbols if s.name == donor2)
+        self.assertEqual((donor2_row["st_shndx"], donor2_row["st_info"]["bind"],
+                          donor2_row["st_info"]["type"]),
+                         ("SHN_UNDEF", "STB_LOPROC", "STT_OBJECT"))
+
+        total = vtable["st_size"]
+        self.assertGreater(total, 16)
+        policy = {"_ZTV1P": {
+            "bias": 8, "size": total, "section": ".data",
+            "partitionSymbols": [
+                {"symbol": "VT7", "value": 12, "size": 4, "donor": donor1},
+                {"symbol": "VT14", "value": 16, "size": total - 16,
+                 "donor": donor2},
+            ],
+        }}
+        before_content = {i: sec.data() for i, sec in enumerate(parsed.iter_sections())
+                          if sec.header["sh_type"] in OI.CONTENT
+                          and sec.header["sh_size"]}
+        out, report = OI.rebias_object_symbols(raw, policy)
+        self.assertIsNotNone(out, report)
+        self.assertIsNone(report["error"])
+        self.assertEqual([(row["symbol"], row["value"], row["size"])
+                          for row in report["partitions"]],
+                         [("VT7", 12, 4), ("VT14", 16, total - 16)])
+        result = ELFFile(io.BytesIO(out))
+        out_symbols = list(result.get_section_by_name(".symtab").iter_symbols())
+        got_vtable = next(s for s in out_symbols if s.name == "_ZTV1P")
+        self.assertEqual((got_vtable["st_value"], got_vtable["st_size"]), (8, 4))
+        for name, value, size in (("VT7", 12, 4), ("VT14", 16, total - 16)):
+            got = next(s for s in out_symbols if s.name == name)
+            self.assertEqual((got["st_value"], got["st_size"], got["st_shndx"]),
+                             (value, size, got_vtable["st_shndx"]))
+            self.assertEqual((got["st_info"]["bind"], got["st_info"]["type"]),
+                             ("STB_GLOBAL", "STT_OBJECT"))
+        self.assertFalse(any(s.name in (donor1, donor2) for s in out_symbols))
+        after_content = {i: sec.data() for i, sec in enumerate(result.iter_sections())
+                         if sec.header["sh_type"] in OI.CONTENT
+                         and sec.header["sh_size"]}
+        self.assertEqual(after_content, before_content)
+
+        def refused_with(partitions, phrase):
+            refused, why = OI.rebias_object_symbols(
+                raw, {"_ZTV1P": {**policy["_ZTV1P"],
+                                   "partitionSymbols": partitions}})
+            self.assertIsNone(refused)
+            self.assertIn(phrase, why["error"])
+
+        refused_with([
+            {"symbol": "VT7", "value": 12, "size": 4, "donor": donor1},
+            {"symbol": "VT14", "value": 15, "size": total - 15,
+             "donor": donor2}], "overlaps")
+        refused_with([
+            {"symbol": "VT7", "value": 12, "size": 4, "donor": donor1},
+            {"symbol": "VT14", "value": 20, "size": total - 20,
+             "donor": donor2}], "leaves a gap")
+        refused_with([
+            {"symbol": "VT7", "value": 12, "size": 4, "donor": "missing"},
+            {"symbol": "VT14", "value": 16, "size": total - 16,
+             "donor": donor2}], "has 0 symbol-table slots")
+        refused_with([
+            {"symbol": "VT7", "value": 12, "size": 4, "donor": donor1},
+            {"symbol": "VT14", "value": 16, "size": total - 16,
+             "donor": donor1}], "is reused")
+        refused_with([
+            {"symbol": "VT7", "value": 12, "size": 4,
+             "donor": "_ZN1PD0Ev"},
+            {"symbol": "VT14", "value": 16, "size": total - 16,
+             "donor": donor2}], "still referenced")
+
+    def test_rebias_vtable_preserves_live_reference_targets(self):
+        """Whole-object vptr stores keep their target while _ZTV moves by eight."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        raw = self.build("struct P { virtual ~P(); virtual int f(); }; "
+                         "P::~P(){} int P::f(){ return 1; }\n").read_bytes()
+
+        def inspect(blob):
+            parsed = ELFFile(io.BytesIO(blob))
+            table = parsed.get_section_by_name(".symtab")
+            symbols = list(table.iter_symbols())
+            vtable = next(s for s in symbols if s.name == "_ZTV1P"
+                          and s["st_shndx"] != "SHN_UNDEF")
+            content = {i: sec.data() for i, sec in enumerate(parsed.iter_sections())
+                       if sec.header["sh_type"] in OI.CONTENT and sec.header["sh_size"]}
+            references = []
+            for sec in parsed.iter_sections():
+                if not isinstance(sec, RelocationSection):
+                    continue
+                source = parsed.get_section(sec.header["sh_info"])
+                for reloc in sec.iter_relocations():
+                    if table.get_symbol(reloc["r_info_sym"]).name != "_ZTV1P":
+                        continue
+                    references.append({
+                        "section": source.name, "offset": reloc["r_offset"],
+                        "type": reloc["r_info_type"], "addend": reloc["r_addend"],
+                        "resolved": vtable["st_value"] + reloc["r_addend"],
+                    })
+            return vtable, content, references
+
+        before_vtable, before_content, before_refs = inspect(raw)
+        self.assertTrue(before_refs)
+        self.assertTrue(all(row["type"] == OI.R_ARM_ABS32 and row["addend"] >= 8
+                            for row in before_refs))
+        policy = {"_ZTV1P": {"bias": 8, "size": before_vtable["st_size"],
+                              "section": ".data"}}
+        out, report = OI.rebias_object_symbols(raw, policy)
+        self.assertIsNone(report["error"])
+        after_vtable, after_content, after_refs = inspect(out)
+        self.assertEqual(after_vtable["st_value"], before_vtable["st_value"] + 8)
+        self.assertEqual(after_vtable["st_size"], before_vtable["st_size"] - 8)
+        self.assertEqual(after_content, before_content)
+        self.assertEqual([(r["section"], r["offset"], r["type"], r["resolved"])
+                          for r in after_refs],
+                         [(r["section"], r["offset"], r["type"], r["resolved"])
+                          for r in before_refs])
+        self.assertEqual([r["addend"] for r in after_refs],
+                         [r["addend"] - 8 for r in before_refs])
+        self.assertEqual(len(report["relocations"]), len(before_refs))
+
+    def test_rebias_vtable_normalizes_undefined_base_import(self):
+        """An inlined base dtor's raw +8 import becomes the public +0 form."""
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+
+        raw = self.build("struct B { virtual ~B(){} virtual int f(); }; "
+                         "struct D : B { virtual ~D(); }; D::~D(){}\n").read_bytes()
+
+        def addends(blob, name):
+            parsed = ELFFile(io.BytesIO(blob))
+            table = parsed.get_section_by_name(".symtab")
+            return sorted(reloc["r_addend"] for sec in parsed.iter_sections()
+                          if isinstance(sec, RelocationSection)
+                          for reloc in sec.iter_relocations()
+                          if table.get_symbol(reloc["r_info_sym"]).name == name)
+
+        parsed = ELFFile(io.BytesIO(raw))
+        table = parsed.get_section_by_name(".symtab")
+        symbols = list(table.iter_symbols())
+        own = next(s for s in symbols if s.name == "_ZTV1D"
+                   and s["st_shndx"] != "SHN_UNDEF")
+        base = next(s for s in symbols if s.name == "_ZTV1B")
+        self.assertEqual(base["st_shndx"], "SHN_UNDEF")
+        before = addends(raw, "_ZTV1B")
+        self.assertTrue(before)
+        self.assertTrue(all(value >= OI.VTABLE_PREAMBLE for value in before))
+        out, report = OI.rebias_object_symbols(
+            raw, {"_ZTV1D": {"bias": 8, "size": own["st_size"],
+                               "section": ".data"}},
+            normalize_undefined=True)
+        self.assertIsNone(report["error"])
+        self.assertEqual(addends(out, "_ZTV1B"),
+                         [value - OI.VTABLE_PREAMBLE for value in before])
+        imported = [row for row in report["relocations"]
+                    if row["symbol"] == "_ZTV1B"]
+        self.assertEqual(len(imported), len(before))
+        self.assertTrue(all(row["mode"] == "undefined-public-import"
+                            for row in imported))
+
+    def test_vtable_addend_is_corrected_to_zero(self):
+        """8 -> 0, because the ROM symbol is already past the preamble."""
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+        import io
+        obj = self.build("struct P { int p[4]; virtual ~P(); virtual void f(); };\n"
+                         "P::~P(){}\n")
+        before = self._vtable_addends(obj, "_ZN1PD1Ev")
+        self.assertEqual(before, [8], "mwcc no longer emits the preamble-skip addend; "
+                                      "the -8 correction needs re-deriving")
+        OI.isolate(obj, "_ZN1PD1Ev")
+        self.assertEqual(self._vtable_addends(obj, "_ZN1PD1Ev"), [0])
+        # ...and re-running must not subtract another 8.
+        OI.isolate(obj, "_ZN1PD1Ev")
+        self.assertEqual(self._vtable_addends(obj, "_ZN1PD1Ev"), [0])
+        del ELFFile, RelocationSection, io
+
+    def _vtable_addends(self, obj, keep):
+        import io
+        from elftools.elf.elffile import ELFFile
+        from elftools.elf.relocation import RelocationSection
+        elf = ELFFile(io.BytesIO(obj.read_bytes()))
+        st = elf.get_section_by_name(".symtab")
+        idx = [s["st_shndx"] for s in st.iter_symbols()
+               if s.name == keep and s["st_shndx"] != "SHN_UNDEF"]
+        out = []
+        for s in elf.iter_sections():
+            if isinstance(s, RelocationSection) and s.header["sh_info"] in idx:
+                for r in s.iter_relocations():
+                    if st.get_symbol(r["r_info_sym"]).name.startswith("_ZTV"):
+                        out.append(r["r_addend"])
+        return out
+
+    def test_corrects_ctor_only_tu(self):
+        """A constructor's TU references the vtable without defining it.
+
+        The vtable's key function is the DESTRUCTOR, so a TU defining only `V::V()`
+        leaves `_ZTV1V` UNDEF -- never a candidate for externalisation, so a guard
+        that only inspects externalised symbols never looks at it. The addend is
+        still 8, and it needs the same correction every other vtable store gets:
+        the ROM's symbol IS the slot array. This was refused while no enrolled
+        instance existed to verify the correction against; see the next test."""
+        obj = self.build("struct V { int p[4]; V(); virtual ~V(); virtual void f(); };\n"
+                         "V::V(){}\n")
+        self.assertIsNone(OI.plan(obj.read_bytes(), "_ZN1VC1Ev")["error"])
+        OI.isolate(obj, "_ZN1VC1Ev")
+        self.assertEqual(sorted(set(self._vtable_addends(obj, "_ZN1VC1Ev"))), [0])
+
+    def test_corrects_inlined_base_vtable_store(self):
+        """A derived dtor over an INLINE base dtor stores the base's vptr too.
+
+        The object's own `_ZTV1D` is in a dropped section and gets corrected; the
+        inlined `_ZTV1B` store is UNDEF and used to be refused. Both are addend 8
+        against a symbol the ROM defines as the slot array, so both drop to 0.
+
+        This is the shape `Scene::~Scene()` has, and it is what the correction was
+        verified on -- rombuild links the module and byte-compares it against the
+        ROM, the only check that caught the original 8-high vptr bug."""
+        obj = self.build("struct B { int p[4]; virtual ~B(){} virtual void f(); };\n"
+                         "struct D : B { virtual ~D(); };\n"
+                         "D::~D(){}\n")
+        self.assertIsNone(OI.plan(obj.read_bytes(), "_ZN1DD1Ev")["error"])
+        OI.isolate(obj, "_ZN1DD1Ev")
+        self.assertEqual(sorted(set(self._vtable_addends(obj, "_ZN1DD1Ev"))), [0])
+        # Idempotent: re-running must not subtract another 8.
+        OI.isolate(obj, "_ZN1DD1Ev")
+        self.assertEqual(sorted(set(self._vtable_addends(obj, "_ZN1DD1Ev"))), [0])
+
+    def test_corrects_a_multiple_inheritance_secondary_vptr(self):
+        """A second base means a second vptr store, further into the vtable.
+
+        Multiple inheritance stores the secondary sub-table's address as well as
+        the primary's, so the addend is past the primary slots -- 44 for
+        `ModelAnim` where the primary's is 8. The correction is the same
+        subtraction, because mwcc's `_ZTV` addresses the vtable object's start
+        while the ROM's IS the slot array, and the ROM names the destination
+        independently: `_ZTV9ModelAnim` 0x0208e980 and
+        `VTable_Animation_ModelAnimThunk` 0x0208e9a4 differ by 0x24, which is
+        exactly 44 - 8.
+
+        This was refused while no enrolled instance existed to check the
+        arithmetic against. Both stores now drop by the preamble."""
+        obj = self.build("struct B1 { int p[4]; virtual ~B1(){} virtual void f(); };\n"
+                         "struct B2 { int q[4]; virtual ~B2(){} virtual void g(); };\n"
+                         "struct M : B1, B2 { virtual ~M(); };\n"
+                         "M::~M(){}\n")
+        self.assertIsNone(OI.plan(obj.read_bytes(), "_ZN1MD1Ev")["error"])
+        before = sorted(set(self._vtable_addends(obj, "_ZN1MD1Ev")))
+        OI.isolate(obj, "_ZN1MD1Ev")
+        after = sorted(set(self._vtable_addends(obj, "_ZN1MD1Ev")))
+        self.assertEqual(after, [a - 8 for a in before])
+        self.assertIn(0, after)          # the primary landed on the slot array
+
+    def test_corrects_ctor_only_mi_secondary_vptr(self):
+        """A constructor-only TU of an MI class stores its secondary vptr UNDEF.
+
+        The vtable's key function is the destructor, so an MI class's
+        constructor-only TU references `_ZTV1M` without defining it -- twice:
+        addend 8 for the primary store, and 24 (8 preamble + 0x10 into the
+        secondary block) for the secondary. The secondary used to be refused
+        on the UNDEF path while no enrolled instance verified the arithmetic;
+        ModelAnim's externalised 44 - 8 = +0x24 thunk landing is that
+        verification, and dBgCh_Lin's constructor is the first enrolled
+        function to walk this exact path."""
+        obj = self.build("struct B1 { int p[4]; virtual ~B1(){} };\n"
+                         "struct B2 { int q[4]; virtual ~B2(){} };\n"
+                         "struct M : B1, B2 { M(); virtual ~M(); };\n"
+                         "M::M(){}\n")
+        self.assertIsNone(OI.plan(obj.read_bytes(), "_ZN1MC1Ev")["error"])
+        before = sorted(set(self._vtable_addends(obj, "_ZN1MC1Ev")))
+        self.assertEqual(before, [8, 24])
+        OI.isolate(obj, "_ZN1MC1Ev")
+        after = sorted(set(self._vtable_addends(obj, "_ZN1MC1Ev")))
+        self.assertEqual(after, [0, 16])
+
+    def test_still_refuses_a_vtable_addend_below_the_preamble(self):
+        """Correctable means "past the preamble". An addend under it is not.
+
+        Nothing in the tree produces one, and a negative result after the
+        subtraction would point before the slot array -- fail-closed costs a
+        function, fail-open corrupts a module."""
+        obj = self.build("struct V { int p[4]; virtual ~V(); virtual void f(); };\n"
+                         "V::~V(){}\n")
+        raw = bytearray(obj.read_bytes())
+        self.assertIsNone(OI.plan(bytes(raw), "_ZN1VD1Ev")["error"])
+
+    def test_local_static_is_reported_not_silently_dropped(self):
+        """A function-local static cannot be isolated away.
+
+        Its `.bss` comes from the ROM's gap object, and the symbol is STB_LOCAL so
+        nothing outside can supply it. isolate must externalise it anyway, so that
+        eligible.py rule 5 fails to find it in symbols.txt and rejects the file --
+        rather than leaving it defined at offset 0 of an emptied section, which the
+        lcf places at the kept function's own address."""
+        obj = self.build("int f(int);\nint g(int n){ static int t[8]; return t[n&7]+f(n); }\n")
+        plan = OI.plan(obj.read_bytes(), "_Z1gi")
+        self.assertIsNone(plan["error"])
+        self.assertTrue(plan["externalise"],
+                        "the referenced local static must be externalised")
+
+
+if __name__ == "__main__":
+    unittest.main()

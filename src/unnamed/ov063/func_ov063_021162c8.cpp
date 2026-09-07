@@ -3,10 +3,10 @@
 /* recovered: shared common types */
 #include "common.h"
 struct Vector3; struct Vector3_16;
-struct CapEnemy { void ReleaseCap(const Vector3 &v); };
-struct Actor {
-    static Actor *Spawn(unsigned int a, unsigned int b, const Vector3 &v,
-                        const Vector3_16 *p, int e, int f);
+struct dCapEnemy_c { void ReleaseCap(const Vector3 &v); };
+struct dActor_c {
+    static dActor_c *Spawn(unsigned int a, unsigned int b, const Vector3 &v,
+                        const Vector3_16 *p, signed char e, short f);
 };
 extern "C" void func_0201267c(int a, void *b);
 
@@ -20,11 +20,11 @@ extern "C" void func_ov063_021162c8(char *self)
         v.x = *(int*)(self + 0x564);
         v.y = *(int*)(self + 0x568);
         v.z = *(int*)(self + 0x56c);
-        ((CapEnemy*)self)->ReleaseCap(*(Vector3*)&v);
+        ((dCapEnemy_c*)self)->ReleaseCap(*(Vector3*)&v);
         if ((unsigned int)(*(unsigned short*)(self + 0x5d4) << 0x1e) >> 0x1f) {
             unsigned int flags = 2;
             if (*(unsigned short*)(self + 0x4a0) == 0x121) flags |= 0x10;
-            Actor *a = Actor::Spawn(*(unsigned short*)(self + 0x4a0), flags,
+            dActor_c *a = dActor_c::Spawn(*(unsigned short*)(self + 0x4a0), flags,
                                     *(Vector3*)(self + 0x504), 0,
                                     *(signed char*)(self + 0x5d0), -1);
             if (a != 0) {
@@ -32,7 +32,7 @@ extern "C" void func_ov063_021162c8(char *self)
                 if (*(unsigned short*)(self + 0x4a0) == 0x121)
                     *(unsigned short*)((char*)a + 0x3a8) = 0;
             }
-            unsigned short *ip = (unsigned short *)(((long long)(int)(self + 0x5d4)));
+            unsigned short *ip = (unsigned short *)(self + 0x5d4);
             *ip = (unsigned short)(*ip & ~2);
         }
     }

@@ -9,12 +9,12 @@ typedef struct { s32 x, y, z; } Vector3;
 typedef s32 Fix12;
 
 extern "C" {
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* clsn, void* player);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* self, void* clsn, void* player);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, Fix12 f);
 extern int func_0201267c(u32 a, void* b);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
-extern void func_020ada40(void* c, void* v, void* r4, s32 flag);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void* c, void* v, void* r4, s32 flag);
 }
 
 extern "C" int func_ov063_0211a0dc(char* c)
@@ -31,7 +31,7 @@ extern "C" int func_ov063_0211a0dc(char* c)
         void* found;
 
         *(u32*)(int)(((long long)(int)(c + 0x19c))) |= 1;
-        found = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x1a8));
+        found = _ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x1a8));
         if (found) {
             *(void**)(c + 0x488) = found;
 
@@ -48,7 +48,7 @@ extern "C" int func_ov063_0211a0dc(char* c)
         return 1;
     }
 
-    r4 = _ZN5Actor10FindWithIDEj(id);
+    r4 = _ZN8dActor_c10FindWithIDEj(id);
     if (!r4)
         goto ret0;
     if (!(*(s32*)(c + 0x1a4) & 0x400000))
@@ -58,11 +58,11 @@ extern "C" int func_ov063_0211a0dc(char* c)
 
     if (*(u8*)((char*)r4 + 0x6f9) != 0) {
         *(u32*)(int)(((long long)(int)(c + 0x19c))) |= 1;
-        *(void**)(c + 0x488) = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x1a8));
+        *(void**)(c + 0x488) = _ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x1a8));
         return 1;
     }
 
-    if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x184, r4) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x184, r4) != 0) {
         _ZN6Player6BounceE5Fix12IiE(r4, 0x28000);
         func_0201267c(0x149, c + 0x74);
         return -1;
@@ -102,15 +102,15 @@ found_kind:
             s16 v[3];
 
             *(u32*)(int)(((long long)(int)(c + 0x19c))) |= 1;
-            found2 = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x1a8));
+            found2 = _ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x1a8));
             if (!found2)
                 goto ret0;
-            *(void**)(c + 0x488) = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x1a8));
+            *(void**)(c + 0x488) = _ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x1a8));
 
             v[0] = -0x2000;
             v[1] = 0;
             v[2] = 0;
-            func_020ada40(c, v, found2, 0);
+            _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(c, v, found2, 0);
 
             {
                 s16* ap = (s16*)(int)(((long long)(int)(c + 0x8e)));

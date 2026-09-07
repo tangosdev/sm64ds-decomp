@@ -11,7 +11,7 @@ extern int _ZN9Animation8FinishedEv(void *a);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, BCA_File *f, int a, int fix, unsigned int j);
 extern void func_02012694(int a, void *v);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
-extern int _ZN5Sound8PlayLongEjjjRK7Vector3j(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
+extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fix, int e);
 
 extern int *data_ov084_02130df4;
@@ -32,7 +32,7 @@ void func_ov084_0212fa7c(char *c) {
             return;
         }
     }
-    *(int *)(c + 0x478) = _ZN5Sound8PlayLongEjjjRK7Vector3j(*(int *)(c + 0x478), 3, 0x174, c + 0x74, 0);
+    *(int *)(c + 0x478) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(int *)(c + 0x478), 3, 0x174, c + 0x74, 0);
     if (*(int *)(c + 0x464) < 0x352000) {
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0, 0x7f, 0x1451, 0);
         *(unsigned char *)(c + 0x45d) = 0;

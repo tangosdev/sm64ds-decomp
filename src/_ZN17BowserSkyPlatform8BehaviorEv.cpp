@@ -1,33 +1,26 @@
 //cpp
 // @symbol _ZN17BowserSkyPlatform8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "BowserSkyPlatform.h"
-extern "C" {
-extern void _ZN12CylinderClsn5ClearEv(void* p);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* p, void* v);
-extern void _ZN12CylinderClsn6UpdateEv(void* p);
-struct V3 { int x,y,z; };
-}
-
-int BowserSkyPlatform::Behavior()
-{
-  int idx = unk_170;
-  char* ent = (char*)&data_ov060_0211b1d8[idx*2];
-  int adj = *(int*)(ent+4);
-  char* self = ((char*)this) + (adj>>1);
-  void* fn;
-  if(adj&1){ void* vt=*(void**)self; fn=*(void**)((char*)vt + *(int*)ent); }
-  else fn=*(void**)ent;
-  ((void(*)(char*))fn)(self);
-  func_ov060_02118690(((char*)this));
-  _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
-  struct V3 v;
-  v.x = 0;
-  v.y = -0x96000;
-  v.z = 0;
-  _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this)+0x124, &v);
-  _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
-  return 1;
+// recovered name: daKpa3Bg_c_Behavior
+/* recovered: renamed to Class_Method */
+/* daKpa3Bg_c::Behavior - recovered from vtable slot identity */
+struct C;
+typedef void (C::*PMF)();
+struct Entry { PMF pmf; };
+extern Entry data_ov060_0211b1ac[];
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* p);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* p);
+struct C {
+    unsigned char pad[0x328];
+    unsigned char idx;
+    unsigned char pad2[2];
+    unsigned char flag;
+};
+s32 BowserSkyPlatform::Behavior() {
+    C* c = (C*)this;
+    (c->*(data_ov060_0211b1ac[c->idx].pmf))();
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+    c->flag = 0;
+    return 1;
 }

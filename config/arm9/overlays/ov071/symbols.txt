@@ -1,7 +1,7 @@
 _ZN10ScuttlebugD1Ev kind:function(arm,size=0x48) addr:0x0211f000
 _ZN10ScuttlebugD0Ev kind:function(arm,size=0x5c) addr:0x0211f048
-func_ov071_0211f0a4 kind:function(arm,size=0x8) addr:0x0211f0a4
-func_ov071_0211f0ac kind:function(arm,size=0x8) addr:0x0211f0ac
+_ZN10Scuttlebug13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x0211f0a4
+_ZN10Scuttlebug16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211f0ac
 func_ov071_0211f0b4 kind:function(arm,size=0x94) addr:0x0211f0b4
 func_ov071_0211f148 kind:function(arm,size=0x154) addr:0x0211f148
 func_ov071_0211f29c kind:function(arm,size=0x1fc) addr:0x0211f29c
@@ -33,8 +33,8 @@ _ZN10Scuttlebug16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02120338
 _ZN10Scuttlebug6RenderEv kind:function(arm,size=0x5c) addr:0x0212033c
 _ZN10Scuttlebug8BehaviorEv kind:function(arm,size=0x60) addr:0x02120398
 _ZN10Scuttlebug13InitResourcesEv kind:function(arm,size=0x188) addr:0x021203f8
-func_ov071_02120580 kind:function(arm,size=0x98) addr:0x02120580
-Scuttlebug_Spawn kind:function(arm,size=0x50) addr:0x02120618
+_ZN10Scuttlebug13OnTurnIntoEggER6Player kind:function(arm,size=0x98) addr:0x02120580
+daSpd_c_classInit kind:function(arm,size=0x50) addr:0x02120618
 _ZN3MrID1Ev kind:function(arm,size=0x48) addr:0x02120668
 _ZN3MrID0Ev kind:function(arm,size=0x5c) addr:0x021206b0
 func_ov071_0212070c kind:function(arm,size=0x154) addr:0x0212070c
@@ -58,21 +58,21 @@ _ZN3MrI16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021216b4
 _ZN3MrI6RenderEv kind:function(arm,size=0x34) addr:0x021216b8
 _ZN3MrI8BehaviorEv kind:function(arm,size=0x48) addr:0x021216ec
 _ZN3MrI13InitResourcesEv kind:function(arm,size=0x298) addr:0x02121734
-BigMrI_Spawn kind:function(arm,size=0x50) addr:0x021219cc
-MrI_Spawn kind:function(arm,size=0x50) addr:0x02121a1c
-_ZN14MrI_ProjectileD1Ev kind:function(arm,size=0x40) addr:0x02121a6c
-_ZN14MrI_ProjectileD0Ev kind:function(arm,size=0x54) addr:0x02121aac
-func_ov071_02121b00 kind:function(arm,size=0x8) addr:0x02121b00
-func_ov071_02121b08 kind:function(arm,size=0x48) addr:0x02121b08
-func_ov071_02121b50 kind:function(arm,size=0x54) addr:0x02121b50
-func_ov071_02121ba4 kind:function(arm,size=0xc8) addr:0x02121ba4
-func_ov071_02121c6c kind:function(arm,size=0x9c) addr:0x02121c6c
-_ZN14MrI_Projectile16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02121d08
-_ZN14MrI_Projectile16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02121d10
-_ZN14MrI_Projectile6RenderEv kind:function(arm,size=0x6c) addr:0x02121d14
-_ZN14MrI_Projectile8BehaviorEv kind:function(arm,size=0x134) addr:0x02121d80
-_ZN14MrI_Projectile13InitResourcesEv kind:function(arm,size=0xe8) addr:0x02121eb4
-MrI_Projectile_Spawn kind:function(arm,size=0x48) addr:0x02121f9c
+daEykn_c_classInit_EYEKUN_BOSS kind:function(arm,size=0x50) addr:0x021219cc
+daEykn_c_classInit_EYEKUN kind:function(arm,size=0x50) addr:0x02121a1c
+_ZN8daEyBm_cD1Ev kind:function(arm,size=0x40) addr:0x02121a6c
+_ZN8daEyBm_cD0Ev kind:function(arm,size=0x54) addr:0x02121aac
+_ZN8daEyBm_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02121b00
+_ZN8daEyBm_c18SpawnDestroyEffectEv kind:function(arm,size=0x48) addr:0x02121b08
+_ZN8daEyBm_c15UpdateCollisionER10dBgCh_Actr kind:function(arm,size=0x54) addr:0x02121b50
+_ZN8daEyBm_c10HurtPlayerEv kind:function(arm,size=0xc8) addr:0x02121ba4
+_ZN8daEyBm_c12UpdateShadowEv kind:function(arm,size=0x9c) addr:0x02121c6c
+_ZN8daEyBm_c16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02121d08
+_ZN8daEyBm_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02121d10
+_ZN8daEyBm_c6RenderEv kind:function(arm,size=0x6c) addr:0x02121d14
+_ZN8daEyBm_c8BehaviorEv kind:function(arm,size=0x134) addr:0x02121d80
+_ZN8daEyBm_c13InitResourcesEv kind:function(arm,size=0xe8) addr:0x02121eb4
+daEyBm_c_classInit kind:function(arm,size=0x48) addr:0x02121f9c
 _ZN6CoffinD1Ev kind:function(arm,size=0x44) addr:0x02121fe4
 _ZN6CoffinD0Ev kind:function(arm,size=0x58) addr:0x02122028
 func_ov071_02122080 kind:function(arm,size=0x48) addr:0x02122080
@@ -86,7 +86,7 @@ _ZN6Coffin16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02122460
 _ZN6Coffin6RenderEv kind:function(arm,size=0x28) addr:0x021224a4
 _ZN6Coffin8BehaviorEv kind:function(arm,size=0x90) addr:0x021224cc
 _ZN6Coffin13InitResourcesEv kind:function(arm,size=0x114) addr:0x0212255c
-Coffin_Spawn kind:function(arm,size=0x30) addr:0x02122670
+daObjCasket_c_classInit kind:function(arm,size=0x30) addr:0x02122670
 data_ov071_021226a0 kind:data(any) addr:0x021226a0
 data_ov071_021226a4 kind:data(any) addr:0x021226a4
 __sinit_ov071_021226ac kind:function(arm,size=0x21c) addr:0x021226ac
@@ -115,9 +115,9 @@ data_ov071_02122bd0 kind:data(any) addr:0x02122bd0
 data_ov071_02122bd8 kind:data(any) addr:0x02122bd8
 data_ov071_02122be0 kind:data(any) addr:0x02122be0
 data_ov071_02122be8 kind:data(any) addr:0x02122be8
-data_ov071_02122bf0 kind:data(any) addr:0x02122bf0
-data_ov071_02122bfc kind:data(any) addr:0x02122bfc
-Scuttlebug_SpawnInfo kind:data(any) addr:0x02122c08 ambiguous
+_ZTS7daSpd_c kind:data(any) addr:0x02122bf0
+_ZTI7daSpd_c kind:data(any) addr:0x02122bfc
+g_profile_SPIDER kind:data(any) addr:0x02122c08 ambiguous
 _ZTV10Scuttlebug kind:data(any) addr:0x02122c2c
 _ZTV7daSpd_c kind:data(any) addr:0x02122c2c
 data_ov071_02122ca8 kind:data(any) addr:0x02122ca8
@@ -126,16 +126,15 @@ data_ov071_02122cb8 kind:data(any) addr:0x02122cb8
 data_ov071_02122cc0 kind:data(any) addr:0x02122cc0
 data_ov071_02122cc8 kind:data(any) addr:0x02122cc8
 data_ov071_02122cd0 kind:data(any) addr:0x02122cd0
-data_ov071_02122cd8 kind:data(any) addr:0x02122cd8
-data_ov071_02122ce4 kind:data(any) addr:0x02122ce4
-MrI_SpawnInfo kind:data(any) addr:0x02122cf0 ambiguous
-BigMrI_SpawnInfo kind:data(any) addr:0x02122d0c ambiguous
+_ZTS8daEykn_c kind:data(any) addr:0x02122cd8
+_ZTI8daEykn_c kind:data(any) addr:0x02122ce4
+g_profile_EYEKUN kind:data(any) addr:0x02122cf0 ambiguous
+g_profile_EYEKUN_BOSS kind:data(any) addr:0x02122d0c ambiguous
 _ZTV3MrI kind:data(any) addr:0x02122d30
 _ZTV8daEykn_c kind:data(any) addr:0x02122d30
-data_ov071_02122dac kind:data(any) addr:0x02122dac
-data_ov071_02122db8 kind:data(any) addr:0x02122db8
-MrI_Projectile_SpawnInfo kind:data(any) addr:0x02122dc4 ambiguous
-_ZTV14MrI_Projectile kind:data(any) addr:0x02122de8
+_ZTS8daEyBm_c kind:data(any) addr:0x02122dac
+_ZTI8daEyBm_c kind:data(any) addr:0x02122db8
+g_profile_EYEKUN_BEAM kind:data(any) addr:0x02122dc4 ambiguous
 _ZTV8daEyBm_c kind:data(any) addr:0x02122de8
 data_ov071_02122e64 kind:data(any) addr:0x02122e64
 data_ov071_02122e6c kind:data(any) addr:0x02122e6c
@@ -144,10 +143,11 @@ data_ov071_02122e78 kind:data(any) addr:0x02122e78 ambiguous
 data_ov071_02122e7c kind:data(any) addr:0x02122e7c
 data_ov071_02122e84 kind:data(any) addr:0x02122e84
 data_ov071_02122e8c kind:data(any) addr:0x02122e8c
-data_ov071_02122e94 kind:data(any) addr:0x02122e94
-data_ov071_02122ea0 kind:data(any) addr:0x02122ea0
-Coffin_SpawnInfo kind:data(any) addr:0x02122eb0 ambiguous
+_ZTI13daObjCasket_c kind:data(any) addr:0x02122e94
+_ZTS13daObjCasket_c kind:data(any) addr:0x02122ea0
+g_profile_CASKET kind:data(any) addr:0x02122eb0 ambiguous
 data_ov071_02122ecc kind:data(any) addr:0x02122ecc
+_ZTV13daObjCasket_c kind:data(any) addr:0x02122efc
 _ZTV6Coffin kind:data(any) addr:0x02122efc
 data_ov071_02122f80 kind:bss addr:0x02122f80
 data_ov071_02122f88 kind:bss addr:0x02122f88

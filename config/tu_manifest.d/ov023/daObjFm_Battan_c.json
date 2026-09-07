@@ -1,0 +1,1006 @@
+{
+  "id": "ov023/daObjFm_Battan_c",
+  "module": "ov023",
+  "source": "src/game/actors/d_a_obj_fm_battan.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_fm_battan.cpp",
+  "production_mode": "intact-object",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21111a0..0x2111760, 9 functions, from build/tu_map.json (tools/tu_map.py)",
+    "ROM class identity: _ZTI16daObjFm_Battan_c at 0x02111fa0 and _ZTS16daObjFm_Battan_c at 0x02111fac",
+    "the compiler-generated __sinit_d_a_obj_fm_battan.cpp is byte-identical to retail __sinit_ov023_02111aa8 and has the same ten relocation sites and destinations",
+    "retail .ctor points to that initializer; class RTTI/profile/vtable occupy 0x02111fa0..0x02112064; the two resource handles and two registration nodes occupy 0x02112080..0x021120a8",
+    "ov023 also contains independently extracted level-data bands in .rodata and .data; those remain ROM-gap linker inputs and are not attributed to this actor TU"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x02111760"
+    },
+    {
+      "name": ".init",
+      "start": "0x02111aa8",
+      "end": "0x02111b14"
+    },
+    {
+      "name": ".ctor",
+      "start": "0x02111b14",
+      "end": "0x02111b18"
+    },
+    {
+      "name": ".data",
+      "start": "0x02111fa0",
+      "end": "0x02112064"
+    },
+    {
+      "name": ".bss",
+      "start": "0x02112080",
+      "end": "0x021120a8"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjFm_Battan_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN8SquasherD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_cD0Ev",
+      "address": "0x021111ec",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN8SquasherD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c12UpdateShadowEv",
+      "address": "0x0211124c",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov023_0211124c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c20UpdateModelTransformEv",
+      "address": "0x02111308",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov023_02111308.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c16CleanupResourcesEv",
+      "address": "0x02111350",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN8Squasher16CleanupResourcesEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c6RenderEv",
+      "address": "0x02111388",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN8Squasher6RenderEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c8BehaviorEv",
+      "address": "0x021113b0",
+      "size": "0x000002c0",
+      "legacy_source": "src/_ZN8Squasher8BehaviorEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN16daObjFm_Battan_c13InitResourcesEv",
+      "address": "0x02111670",
+      "size": "0x000000b8",
+      "legacy_source": "src/_ZN8Squasher13InitResourcesEv.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "daObjFm_Battan_c_classInit",
+      "address": "0x02111728",
+      "size": "0x00000038",
+      "legacy_source": "src/Squasher_Spawn.c",
+      "ordinal": 8
+    }
+  ],
+  "init": [
+    {
+      "symbol": "__sinit_d_a_obj_fm_battan.cpp",
+      "address": "0x02111aa8",
+      "size": "0x6c",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated static initializer is raw-byte-identical to retail and carries the same ten relocation sites"
+    }
+  ],
+  "ctor": [
+    {
+      "symbol": ".p__sinit_d_a_obj_fm_battan.cpp",
+      "address": "0x02111b14",
+      "size": "0x4",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated constructor-table word relocates to the owned initializer exactly as retail"
+    }
+  ],
+  "data": [
+    {
+      "symbol": "_ZTI16daObjFm_Battan_c",
+      "address": "0x02111fa0",
+      "size": "0xc",
+      "evidence": "ROM RTTI identity and compiler-emitted single-inheritance record"
+    },
+    {
+      "symbol": "_ZTS16daObjFm_Battan_c",
+      "address": "0x02111fac",
+      "size": "0x13",
+      "evidence": "ROM type-name string and exact compiler emission"
+    },
+    {
+      "symbol": "g_profile_FM_BATTAN",
+      "address": "0x02111fc0",
+      "size": "0x1c",
+      "evidence": "typed actor profile; class initializer relocation and all seven fields match retail"
+    },
+    {
+      "symbol": "_ZTV16daObjFm_Battan_c",
+      "address": "0x02111fe4",
+      "emitted_storage_address": "0x02111fdc",
+      "address_point_bias": "0x8",
+      "size": "0x88",
+      "evidence": "compiler storage includes the two-word ABI preamble; all 32 public slots match retail destinations"
+    }
+  ],
+  "bss": [
+    {
+      "symbol": "data_ov023_02112080",
+      "address": "0x02112080",
+      "size": "0x8",
+      "evidence": "collision resource handle constructed with file ID 1559"
+    },
+    {
+      "symbol": "data_ov023_02112088",
+      "address": "0x02112088",
+      "size": "0x8",
+      "evidence": "model resource handle constructed with file ID 1558"
+    },
+    {
+      "symbol": "@336",
+      "address": "0x02112090",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated collision resource destructor-registration node"
+    },
+    {
+      "symbol": "@335",
+      "address": "0x0211209c",
+      "size": "0xc",
+      "binding": "STB_GLOBAL",
+      "evidence": "compiler-generated model resource destructor-registration node"
+    }
+  ],
+  "undefined_symbol_aliases": [
+    {
+      "symbol": "_ZN18BattanModelFilePtrC1Ej",
+      "canonical_symbol": "func_02017acc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017acc",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN18BattanModelFilePtrD1Ev",
+      "canonical_symbol": "func_02017ab4",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017ab4",
+      "evidence": "retail destructor registration destination and the wrapper destructor's exact ABS32 relocation"
+    },
+    {
+      "symbol": "_ZN22BattanCollisionFilePtrC1Ej",
+      "canonical_symbol": "func_02017b4c",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b4c",
+      "evidence": "retail initializer call destination and the wrapper constructor's exact PC24 relocation"
+    },
+    {
+      "symbol": "_ZN22BattanCollisionFilePtrD1Ev",
+      "canonical_symbol": "SharedFilePtr_Destruct_Clsn",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02017b34",
+      "evidence": "retail destructor registration destination and the collision SharedFilePtr family identity"
+    },
+    {
+      "symbol": "__register_global_object",
+      "canonical_symbol": "func_020731dc",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020731dc",
+      "evidence": "compiler-generated static initialization call shape and four direct retail references in this initializer"
+    }
+  ],
+  "symbol_binding_rewrites": [
+    {
+      "symbol": "__sinit_d_a_obj_fm_battan.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the TU initializer local; DSD requires a configured global relocation destination at the same exact address"
+    },
+    {
+      "symbol": ".p__sinit_d_a_obj_fm_battan.cpp",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
+    },
+    {
+      "symbol": "@336",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x02112090"
+    },
+    {
+      "symbol": "@335",
+      "from": "STB_LOCAL",
+      "to": "STB_GLOBAL",
+      "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x0211209c"
+    }
+  ],
+  "relocations": [
+    {
+      "section": ".init",
+      "source": "0x02111ab8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017acc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017acc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111ac8",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111ad4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_02017b4c",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x02017b4c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111ae4",
+      "type": "R_ARM_PC24",
+      "kind": "arm_call",
+      "symbol": "func_020731dc",
+      "addend": -8,
+      "target_module": "arm9",
+      "target_address": "0x020731dc"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111af4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov023_02112088",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02112088"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111afc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02017ab4",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017ab4"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111b00",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@335",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x0211209c"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111b04",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "data_ov023_02112080",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02112080"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111b0c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "SharedFilePtr_Destruct_Clsn",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02017b34"
+    },
+    {
+      "section": ".init",
+      "source": "0x02111b10",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@336",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02112090"
+    },
+    {
+      "section": ".ctor",
+      "source": "0x02111b14",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__sinit_d_a_obj_fm_battan.cpp",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02111aa8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111fa0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTVN3abi20__si_class_type_infoE",
+      "addend": 8,
+      "target_module": "arm9",
+      "target_address": "0x0209a764"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111fa4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTS16daObjFm_Battan_c",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02111fac"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111fa8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI10dBgActor_c",
+      "addend": 0,
+      "target_module": "ov002",
+      "target_address": "0x021089ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111fc0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "daObjFm_Battan_c_classInit",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02111728"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111fe0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZTI16daObjFm_Battan_c",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02111fa0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111fe4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFm_Battan_c13InitResourcesEv",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02111670"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111fe8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011268"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111fec",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011244"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111ff0",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFm_Battan_c16CleanupResourcesEv",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02111350"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111ff4",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011220"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111ff8",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02011214"
+    },
+    {
+      "section": ".data",
+      "source": "0x02111ffc",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFm_Battan_c8BehaviorEv",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x021113b0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112000",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fd4"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112004",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010fc8"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112008",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFm_Battan_c6RenderEv",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x02111388"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211200c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c12BeforeRenderEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f78"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112010",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11AfterRenderEj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010f6c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112014",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043ac0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112018",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual34Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204357c"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211201c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c9Virtual38Ejj",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0204349c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112020",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02043494"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112024",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFm_Battan_cD1Ev",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x021111a0"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112028",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN16daObjFm_Battan_cD0Ev",
+      "addend": 0,
+      "target_module": "ov023",
+      "target_address": "0x021111ec"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211202c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010160"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112030",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010154"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112034",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c9Virtual50Ev",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201014c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112038",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010148"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211203c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010144"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112040",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010140"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112044",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnKickedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201013c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112048",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c8OnPushedERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010138"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211204c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010134"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112050",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010130"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112054",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0201012c"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112058",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02010124"
+    },
+    {
+      "section": ".data",
+      "source": "0x0211205c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x020100dc"
+    },
+    {
+      "section": ".data",
+      "source": "0x02112060",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "_ZN10dBgActor_c4KillEv",
+      "addend": 0,
+      "target_module": "overlays(2,7)",
+      "target_address": "0x020ee55c"
+    }
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy at its canonical arm9 home before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Inherited vague-linkage type-name string; romdata_check proves the natural compiler copy before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before text-only isolation discards it."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Immediate-base vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations at its ov002 home before isolation."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Immediate-base vague-linkage type-name string; romdata_check proves the natural compiler copy at its ov002 home before isolation."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Inherited vague-linkage RTTI; romdata_check proves the natural compiler copy and relocations before text-only isolation discards it."
+    }
+  ],
+  "notes": [
+    "Genuine lifecycle source form: daObjFm_Battan_c defines its virtual destructor inline and InitResources as the key function. The compiler, not hand-written RTTI/vtable or a forcing object, owns the class destructor variants and class data.",
+    "UpdateShadow and UpdateModelTransform are truthful inferred private spellings. Their class ownership, inbound calls, bodies, layout, relocations, and codegen are proven; the exact original English names are not.",
+    "daObjFm_Battan_c_classInit and g_profile_FM_BATTAN are reconstructed source-style names: SM64DS proves the RTTI class, FM_BATTAN registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were Squasher_Spawn and Squasher_SpawnInfo. Natural new was measured elsewhere in this actor family to target the wrong global allocator, so the factory retains retail's narrow allocator/base/member-constructor/vptr seam.",
+    "The ov023 resource at 0x02112080 is the collision handle and 0x02112088 is the model handle. Their compiler-generated initialization and destructor-registration topology now belong to this same intact object. The old RotatingPlatformWdw symbol at the same virtual address in ov029 -- that class is now named daObjWc_Obj07_c after its cartridge RTTI -- was a cross-overlay collision and is not used here.",
+    "The actor TU owns .text, .init, .ctor, its class .data, and its resource .bss. The intervening level .rodata/.data remains independently extracted ROM-gap input in the same final overlay link.",
+    "Legacy per-function contribution comparison is intentionally inapplicable across the earlier atomic identity correction: those objects define the old Squasher mangles while this genuine object defines ROM-proven daObjFm_Battan_c mangles. Current production evidence is the intact object's exact owned-section/relocation audit plus the ordinary whole-module and stock-ROM link."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov023-daObjFm_Battan_c/daObjFm_Battan_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 9,
+    "functions_declared": 9,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "unhandled": [
+        "__sinit_d_a_obj_fm_battan.cpp"
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI16daObjFm_Battan_c",
+        "_ZTS16daObjFm_Battan_c",
+        "g_profile_FM_BATTAN",
+        "_ZTV16daObjFm_Battan_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 18 unlicensed section/symbol(s), 1 compiler-only policy error(s)",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-data-verified",
+      "scratch": "build/tu/ov023-daObjFm_Battan_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x021111a0",
+        "end": "0x02111760",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x021111a0",
+          "end": "0x02111760",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".init",
+          "start": "0x02111aa8",
+          "end": "0x02111b14",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".ctor",
+          "start": "0x02111b14",
+          "end": "0x02111b18",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".data",
+          "start": "0x02111fa0",
+          "end": "0x02112064",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        {
+          "section": ".bss",
+          "start": "0x02112080",
+          "end": "0x021120a8",
+          "comparison": "NOBITS -- symbol/module gates"
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 19
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [
+          {
+            "section": ".init",
+            "original": [
+              47
+            ],
+            "desired": [
+              47
+            ]
+          },
+          {
+            "section": ".ctor",
+            "original": [
+              45
+            ],
+            "desired": [
+              45
+            ]
+          },
+          {
+            "section": ".data",
+            "original": [
+              18,
+              23,
+              24,
+              26
+            ],
+            "desired": [
+              18,
+              23,
+              24,
+              26
+            ]
+          },
+          {
+            "section": ".bss",
+            "original": [
+              5,
+              6,
+              20,
+              21
+            ],
+            "desired": [
+              6,
+              5,
+              21,
+              20
+            ]
+          }
+        ],
+        "objisolate": {
+          "reordered": [
+            {
+              "section": ".bss",
+              "original": [
+                5,
+                6,
+                20,
+                21
+              ],
+              "desired": [
+                6,
+                5,
+                21,
+                20
+              ],
+              "slots": [
+                5,
+                6,
+                20,
+                21
+              ]
+            }
+          ],
+          "symbolIndices": 4,
+          "sectionLinks": 0,
+          "sectionInfos": 0,
+          "error": null
+        },
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}

@@ -1,0 +1,29 @@
+# Python packages the tools/ test suites need on a bare CI runner.
+#
+# Scope: this file pins exactly what .github/workflows/tool-tests.yml installs, and
+# nothing else. It is NOT a general "everything tools/ can import" manifest -- ndspy
+# (tools/bmg.py, tools/test_bmg.py) is deliberately absent because no wired suite
+# reaches it, and adding a dependency here should mean a suite now needs it.
+#
+# WHY BOTH, when the blocker is usually described as "pyelftools". The import wall the
+# intact-TU suites hit is two packages deep, not one, and the second is easy to miss
+# because it only shows up once the first is satisfied:
+#
+#   test_rombuild      -> rombuild -> objisolate      -> elftools.elf.elffile
+#   test_tu_promote    -> tu_promote -> rombuild -> romdata_check -> linkcheck
+#                                                 -> match -> capstone
+#   test_tu_production -> rombuild (both chains above)
+#
+# Installing pyelftools alone moves the failure from objisolate.py to match.py; all
+# three modules still die at collection. Measured, not assumed.
+#
+# Versions are pinned for the reason python-names.yml pins pyflakes: a runner's
+# transitive dependency moving under a gate that touched no Python is
+# indistinguishable from a regression, and these two packages parse the ELF objects
+# and ARM encodings that every byte-fidelity claim in this repo is built on.
+#
+# .github/workflows/update-chaos-data.yml installs the same two packages UNPINNED in a
+# `run:` line. Pointing it here is a fair follow-up; it is a different change from this
+# one, and it touches a workflow that writes commits to main.
+pyelftools==0.33
+capstone==5.0.9

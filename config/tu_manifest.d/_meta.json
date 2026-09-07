@@ -1,0 +1,4 @@
+{
+  "schema_version": 1,
+  "about": "Recovered translation-unit membership and licensed ranges. See notes/translation-unit-reconstruction-plan.md section 6 for the entry schema and section 13 for the invariants this file is meant to carry. Nothing here is enrolled: no entry in this manifest affects the ROM build, and config/**/delinks.txt remains the sole authority over what is compiled."
+}

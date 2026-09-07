@@ -17,11 +17,11 @@ int func_ov002_020f7038(char* c, int a, int arg)
     }
     if (*(int*)(c + 0x60) >= 0x514000) {
         if (*(int*)(c + 0xf8) < 0x3c000) {
-            *(int*)(((long long)(int)(c + 0xf8))) += 0x5000;
+            *(int*)(c + 0xf8) += 0x5000;
         }
     } else {
         if (*(int*)(c + 0xf8) > 0x1a000) {
-            *(int*)(((long long)(int)(c + 0xf8))) -= 0x2000;
+            *(int*)(c + 0xf8) -= 0x2000;
         }
     }
     {
@@ -30,7 +30,7 @@ int func_ov002_020f7038(char* c, int a, int arg)
             func_ov002_020f6514((unsigned char*)obj, &data_ov002_0210bc88, 1);
         }
     }
-    *(int*)(((long long)(int)(c + 0x60))) -=
+    *(int*)(c + 0x60) -=
         (int)(((long long)*(int*)(c + 0xf8) * 0x199 + 0x800) >> 12);
     {
         struct Vector3 pos;

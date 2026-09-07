@@ -1,78 +1,86 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef long long s64;
+// @symbol _ZN6Player19St_TornadoSpin_MainEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * Being carried up a tornado. The player orbits mAttachedActor: the horizontal
+ * offset is rotated by an ever-increasing mAngleYSpeed while mAttachOffsetY
+ * climbs at mVertSpeed. Leaving happens at the tornado's own height limit
+ * (+0xdc on it) or on a collision bit. A dBgCh_Gnd from 0x64000 above the
+ * candidate position decides whether the player is placed there or clamped to
+ * mGroundY.
+ */
+#include "Player.h"
 
-struct Vector3 { int x, y, z; };
-struct RaycastGround { int filler[21]; };
+struct dBgCh_Gnd { int filler[21]; };
 
 extern "C" {
-extern void _ZN6Player11ChangeStateERNS_5StateE(char* self, int state);
-extern void _ZN13RaycastGroundC1Ev(struct RaycastGround* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround* self, const struct Vector3* pos, char* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround* self);
-extern void Player_AdvanceAnims(char* self);
-extern void _ZN13RaycastGroundD1Ev(struct RaycastGround* self);
+extern void _ZN6Player11ChangeStateERNS_5StateE(void* self, int state);
+extern void _ZN9dBgCh_GndC1Ev(struct dBgCh_Gnd* self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct dBgCh_Gnd* self, const Vector3* pos, void* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct dBgCh_Gnd* self);
+extern void Player_AdvanceAnims(void* self);
+extern void _ZN9dBgCh_GndD1Ev(struct dBgCh_Gnd* self);
 extern int data_ov002_02110454[];
 extern short data_02082214[];
+}
 
-int _ZN6Player19St_TornadoSpin_MainEv(char* c)
+int Player::St_TornadoSpin_Main()
 {
-    struct Vector3 pos;
-    struct Vector3 clsnPos;
-    struct RaycastGround rc;
-    int dx = *(int*)(c + 0x5c) - *(int*)(*(char**)(c + 0x364) + 0x5c);
-    int dz = *(int*)(c + 0x64) - *(int*)(*(char**)(c + 0x364) + 0x64);
+    Vector3 pos;
+    Vector3 clsnPos;
+    struct dBgCh_Gnd rc;
+    int dx = mPosX - ((dActor_c*)mAttachedActor)->mPosX;
+    int dz = mPosZ - ((dActor_c*)mAttachedActor)->mPosZ;
     int sx = (int)((dx * 0xf33LL + 0x800) >> 12);
     int sz = (int)((dz * 0xf33LL + 0x800) >> 12);
-    int spd = *(int*)(c + 0xa8);
+    int spd = mVertSpeed;
     if (spd < 0) {
-        *(int*)(c + 0xa8) = 0x1000;
+        mVertSpeed = 0x1000;
     } else if (spd < 0x3c000) {
-        *(int*)(((s64)(int)(c + 0xa8))) += 0x1000;
+        mVertSpeed += 0x1000;
     }
-    *(int*)(((s64)(int)(c + 0x688))) += *(int*)(c + 0xa8);
-    if (*(int*)(c + 0x688) < 0)
-        *(int*)(c + 0x688) = 0;
-    if (*(int*)(c + 0x688) > *(int*)(*(char**)(c + 0x364) + 0xdc) || (*(u8*)(c + 0x6e9) & 4) != 0) {
-        *(u8*)(c + 0x6e6) = 0;
-        _ZN6Player11ChangeStateERNS_5StateE(c, (int)data_ov002_02110454);
-        if (*(int*)(c + 0xa8) < 0x14000)
-            *(int*)(c + 0xa8) = 0x14000;
+    mAttachOffsetY += mVertSpeed;
+    if (mAttachOffsetY < 0)
+        mAttachOffsetY = 0;
+    /* +0xdc on the tornado is past sizeof(dActor_c); it belongs to whatever
+       concrete actor class this is, which nothing here evidences. */
+    if (mAttachOffsetY > *(int*)((char*)mAttachedActor + 0xdc) || (mClsnFlags & 4) != 0) {
+        mStatePhase = 0;
+        _ZN6Player11ChangeStateERNS_5StateE(this, (int)data_ov002_02110454);
+        if (mVertSpeed < 0x14000)
+            mVertSpeed = 0x14000;
         return 1;
     }
-    if (*(s16*)(c + 0x69c) < 0x3000)
-        *(s16*)(((s64)(int)(c + 0x69c))) += 0x100;
-    *(s16*)(((s64)(int)(c + 0x8e))) += *(s16*)(c + 0x69c);
+    if (mAngleYSpeed < 0x3000)
+        mAngleYSpeed += 0x100;
+    mAngleY += mAngleYSpeed;
     {
-        int v = *(s16*)(c + 0x69c);
+        int v = mAngleYSpeed;
         if (v >= 0x1000) v = 0x1000;
         {
             int k = (u16)v >> 4;
             int sinv = data_02082214[k * 2 + 1];
             int cosv = data_02082214[k * 2];
-            ((int*)&pos)[0] = (int)(((s64)sz * cosv + 0x800) >> 12) + (*(int*)(*(char**)(c + 0x364) + 0x5c) + (int)(((s64)sx * sinv + 0x800) >> 12));
-            ((int*)&pos)[2] = (int)(((s64)sz * sinv + 0x800) >> 12) + (*(int*)(*(char**)(c + 0x364) + 0x64) - (int)(((s64)sx * cosv + 0x800) >> 12));
-            ((int*)&pos)[1] = *(int*)(c + 0x688) + *(int*)(*(char**)(c + 0x364) + 0x60);
+            ((int*)&pos)[0] = (int)(((s64)sz * cosv + 0x800) >> 12) + (((dActor_c*)mAttachedActor)->mPosX + (int)(((s64)sx * sinv + 0x800) >> 12));
+            ((int*)&pos)[2] = (int)(((s64)sz * sinv + 0x800) >> 12) + (((dActor_c*)mAttachedActor)->mPosZ - (int)(((s64)sx * cosv + 0x800) >> 12));
+            ((int*)&pos)[1] = mAttachOffsetY + ((dActor_c*)mAttachedActor)->mPosY;
         }
     }
-    _ZN13RaycastGroundC1Ev(&rc);
+    _ZN9dBgCh_GndC1Ev(&rc);
     clsnPos = pos;
     clsnPos.y += 0x64000;
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, &clsnPos, c);
-    if (_ZN13RaycastGround10DetectClsnEv(&rc) != 0) {
-        *(int*)(c + 0x5c) = pos.x;
-        *(int*)(c + 0x60) = pos.y;
-        *(int*)(c + 0x64) = pos.z;
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &clsnPos, this);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0) {
+        mPosX = pos.x;
+        mPosY = pos.y;
+        mPosZ = pos.z;
     } else {
-        if (*(int*)(c + 0x60) >= *(int*)(c + 0x644))
-            *(int*)(c + 0x60) = pos.y;
+        if (mPosY >= mGroundY)
+            mPosY = pos.y;
         else
-            *(int*)(c + 0x60) = *(int*)(c + 0x644);
+            mPosY = mGroundY;
     }
-    Player_AdvanceAnims(c);
-    _ZN13RaycastGroundD1Ev(&rc);
+    Player_AdvanceAnims(this);
+    _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
-}
 }

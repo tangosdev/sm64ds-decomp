@@ -45,15 +45,15 @@ void func_02066a94(int arg0, char *arg1)
                 if (slot != -1) {
                     u32 off = (u8)slot * 0x5c4;
                     u32 mask = ~(1 << id);
-                    *(u16 *)(((long long)(int)(data_020a9db8 + off + 0x1d46))) &= mask;
-                    *(u16 *)(((long long)(int)(data_020a9db8 + off + 0x1d48))) |= (1 << id);
+                    *(u16 *)(data_020a9db8 + off + 0x1d46) &= mask;
+                    *(u16 *)(data_020a9db8 + off + 0x1d48) |= (1 << id);
                     *(s8 *)(data_020a9db8 + (id - 1) + 0x1526) = -1;
-                    *(u16 *)(((long long)(int)(data_020a9db8 + off + 0x1d44))) &= mask;
+                    *(u16 *)(data_020a9db8 + off + 0x1d44) &= mask;
                 }
             }
             if (*(u16 *)(data_020a9db8 + 0x1536) & (1 << *(u16 *)(arg1 + 0x10))) {
-                *(u8 *)(((long long)(int)(data_020a9db8 + 0x1535))) -= 1;
-                *(u16 *)(((long long)(int)(data_020a9db8 + 0x1536))) &= ~(1 << *(u16 *)(arg1 + 0x10));
+                *(u8 *)(data_020a9db8 + 0x1535) -= 1;
+                *(u16 *)(data_020a9db8 + 0x1536) &= ~(1 << *(u16 *)(arg1 + 0x10));
             }
             {
                 u16 id2 = *(u16 *)(arg1 + 0x10);

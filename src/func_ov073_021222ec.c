@@ -1,10 +1,10 @@
 #include "types.h"
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* t);
+extern char* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, char* t);
 
 int func_ov073_021222ec(char* c) {
   if (DecIfAbove0_Short((unsigned short*)(c+0x330)) == 1) {
-    char* a = _ZN5Actor15FindWithActorIDEjPS_(0xda, 0);
+    char* a = _ZN8dActor_c15FindWithActorIDEjPS_(0xda, 0);
     if (a != 0) {
       switch (*(u16*)(c+0xc)) {
       case 0xaa:

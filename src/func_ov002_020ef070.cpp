@@ -1,5 +1,6 @@
 //cpp
-typedef struct { int x, y, z; } Vector3;
+#include "dBgCh_Lin.h"
+
 typedef struct {
     void *tag;
     int f04, f08, f0c, f10, f14;
@@ -8,15 +9,10 @@ typedef struct {
 } ClsnResultTmp;
 
 extern "C" {
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *self, void *a, void *b, void *act);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void func_ov002_020d8838(void *actor);
-extern unsigned _ZNK10ClsnResult9GetClsnIDEv(void *self);
-extern void *_ZN5Actor10FindWithIDEj(unsigned id);
-extern void _ZN10ClsnResultD1Ev(void *self);
-
+extern unsigned _ZNK5dBgPi9GetClsnIDEv(void *self);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
+extern void _ZN5dBgPiD1Ev(void *self);
 extern int data_02099368;
 extern short data_02082214[];
 }
@@ -25,11 +21,10 @@ extern "C" int func_ov002_020ef070(void *unused, char *actor)
 {
     Vector3 v1, v2;
     ClsnResultTmp tmp;
-    char rl[0x78];
 
-    _ZN11RaycastLineC1Ev(rl);
+    dBgCh_Lin line;
 
-    Vector3 *pos = (Vector3 *)(((long long)(int)(actor + 0x5c)));
+    Vector3 *pos = (Vector3 *)(actor + 0x5c);
     int x = pos->x;
     v1.x = x;
     int y = pos->y;
@@ -46,39 +41,37 @@ extern "C" int func_ov002_020ef070(void *unused, char *actor)
     v2.x = scale * data_02082214[(*(unsigned short *)(actor + 0x8e) >> 4) << 1] + v2.x;
     v2.z = scale * data_02082214[((*(unsigned short *)(actor + 0x8e) >> 4) << 1) + 1] + v2.z;
 
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &v1, &v2, actor);
-    if (_ZN11RaycastLine10DetectClsnEv(rl)) {
+    line.SetObjAndLine(v1, v2, (dActor_c*)actor);
+    if (line.DetectClsn()) {
         int t = (*(unsigned short *)(actor + 0xc) == 0xbf);
         if (t != false) {
             func_ov002_020d8838(actor);
         }
         {
             int *dst = &tmp.f04;
-            int w0 = *(int *)(rl + 0x14);
-            int w1 = *(int *)(rl + 0x18);
+            int w0 = *(int *)((char *)&line + 0x14);
+            int w1 = *(int *)((char *)&line + 0x18);
             dst[0] = w1 ? w0 : w0;
             dst[1] = w1;
-            dst[2] = *(int *)(rl + 0x1c);
-            dst[3] = *(int *)(rl + 0x20);
-            dst[4] = *(int *)(rl + 0x24);
+            dst[2] = *(int *)((char *)&line + 0x1c);
+            dst[3] = *(int *)((char *)&line + 0x20);
+            dst[4] = *(int *)((char *)&line + 0x24);
             tmp.tag = &data_02099368;
-            tmp.f18 = *(unsigned short *)(rl + 0x28);
-            tmp.f1a = *(unsigned short *)(rl + 0x2a);
-            tmp.f1c = *(int *)(rl + 0x2c);
-            tmp.f20 = *(int *)(rl + 0x30);
-            tmp.f24 = *(int *)(rl + 0x34);
-            if (_ZNK10ClsnResult9GetClsnIDEv(&tmp) != 0xffffffff) {
-                void *a = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&tmp));
+            tmp.f18 = *(unsigned short *)((char *)&line + 0x28);
+            tmp.f1a = *(unsigned short *)((char *)&line + 0x2a);
+            tmp.f1c = *(int *)((char *)&line + 0x2c);
+            tmp.f20 = *(int *)((char *)&line + 0x30);
+            tmp.f24 = *(int *)((char *)&line + 0x34);
+            if (_ZNK5dBgPi9GetClsnIDEv(&tmp) != 0xffffffff) {
+                void *a = _ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(&tmp));
                 if (a) {
                     (*(void (**)(void *, char *))(*(int *)a + 0x5c))(a, actor);
-                    _ZN10ClsnResultD1Ev(&tmp);
-                    _ZN11RaycastLineD1Ev(rl);
+                    _ZN5dBgPiD1Ev(&tmp);
                     return 1;
                 }
             }
-            _ZN10ClsnResultD1Ev(&tmp);
+            _ZN5dBgPiD1Ev(&tmp);
         }
     }
-    _ZN11RaycastLineD1Ev(rl);
     return 0;
 }

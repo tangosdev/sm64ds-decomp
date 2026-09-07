@@ -1,12 +1,12 @@
 //cpp
 extern "C" {
-int _ZN5Actor22ClosestNonVanishPlayerEv(void*);
+int _ZN8dActor_c22ClosestNonVanishPlayerEv(void*);
 int Vec3_HorzDist(void*, void*);
 short Vec3_HorzAngle(void*, void*);
 void _Z14ApproachLinearRsss(short*, short, short);
 int func_ov096_02135878(void*, int);
 void func_ov096_021358c8(char* c){
-  char* p = (char*)_ZN5Actor22ClosestNonVanishPlayerEv(c);
+  char* p = (char*)_ZN8dActor_c22ClosestNonVanishPlayerEv(c);
   char* tgt;
   if(p){
     int d = Vec3_HorzDist(c+0x36c, p+0x5c);

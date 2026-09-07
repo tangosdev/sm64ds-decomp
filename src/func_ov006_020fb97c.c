@@ -1,5 +1,5 @@
 extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
-extern void func_0205a448(unsigned short val, void* dst, int nbytes);
+extern void MultiStore16(unsigned short val, void* dst, int nbytes);
 extern void func_ov006_020fe1a8(char* p);
 extern void func_ov006_020fc1b4(char* base, int val);
 
@@ -23,7 +23,7 @@ void func_ov006_020fb97c(char* c){
   {
     unsigned r = _ZN3G2S13GetBG2CharPtrEv();
     sp = 0;
-    func_0205a448(sp, (void*)r, 0x6000);
+    MultiStore16(sp, (void*)r, 0x6000);
   }
   *(unsigned char*)(c + 0x5c30) = 0;
   func_ov006_020fe1a8(c);

@@ -18,8 +18,8 @@ int func_ov004_020af5e0(Item* src, Item* dst, int add)
         dst[i].w0 = src->w0;
         *(u32*)((char*)&dst[i] + 4) = *(u32*)((char*)src + 4);
         w = (add + src->val) & 0x3ff;
-        p = (u32*)(((long long)(int)((char*)q + 4)));
-        *p = (*p & ~0x3ff) | ((u32)(((long long)(int)w)) & 0x3ff);
+        p = (u32*)((char*)q + 4);
+        *p = (*p & ~0x3ff) | ((u32)(w) & 0x3ff);
         if (*(u16*)((char*)src + 6) == 0xffff)
             break;
         if (i == 0x1f) {

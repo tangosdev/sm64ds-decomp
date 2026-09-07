@@ -1,0 +1,47 @@
+{
+ "_comment": "Symbols the pinned mwccarm cannot emit. Written by tools/name_roundtrip.py --write-baseline. Every 'proposed' spelling below was produced by the compiler, not hand-derived; more than one means the mangling alone cannot choose.",
+ "version": "2004/b56",
+ "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+ "failing": {
+  "_ZN10MemoryNode6TargetC1EP10MemoryNode": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN10MemoryNode6TargetC1EPS_', '_ZN10MemoryNode6TargetC2EPS_'], claimed _ZN10MemoryNode6TargetC1EP10MemoryNode",
+   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
+   "module": "arm9",
+   "addr": "0x0204e938",
+   "proposed": [
+    "_ZN10MemoryNode6TargetC1EPS_"
+   ]
+  },
+  "_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN4cstd10fdiv_asyncE5Fix12IiES1_'], claimed _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE",
+   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
+   "module": "arm9",
+   "addr": "0x02052fa4",
+   "proposed": [
+    "_ZN4cstd10fdiv_asyncE5Fix12IiES1_"
+   ]
+  },
+  "_ZN7fBase_cnwEj": {
+   "verdict": "REJECTED",
+   "reason": "line 4: illegal 'operator' declaration",
+   "cause": "GCC size_t spelling: an allocation operator's size argument is 'j' (unsigned int).  CodeWarrior's size_t is unsigned long, so it will only accept 'm'",
+   "module": "arm9",
+   "addr": "0x02043444",
+   "proposed": [
+    "_ZN7fBase_cnwEm"
+   ]
+  },
+  "_Znwj": {
+   "verdict": "REJECTED",
+   "reason": "line 2: illegal 'operator' declaration",
+   "cause": "GCC size_t spelling: an allocation operator's size argument is 'j' (unsigned int).  CodeWarrior's size_t is unsigned long, so it will only accept 'm'",
+   "module": "arm9",
+   "addr": "0x0203cbe4",
+   "proposed": [
+    "_Znwm"
+   ]
+  }
+ }
+}

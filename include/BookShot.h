@@ -1,72 +1,78 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BookShot: 6 matched functions, 35 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BOOKSHOT_H
 #define BOOKSHOT_H
+
 #include "types.h"
 
-struct BookShot {
-    u8  pad_000[0xc];
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x2];
-    u8  unk_08e;            /* 0x08e */
-    u8  pad_08f[0x9];
-    s32 unk_098;            /* 0x098 */
-    u8  pad_09c[0xc];
-    s32 unk_0a8;            /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x50];
-    u16 unk_104;            /* 0x104 */
-    u8  pad_106[0x1];
-    u8  unk_107;            /* 0x107 */
-    u8  unk_108;            /* 0x108 */
-    u8  pad_109[0x7];
-    u8  mModelAnim;            /* 0x110 */
-    u8  pad_111[0x63];
-    u8  mModel;            /* 0x174 */
-    u8  pad_175[0x4f];
-    u8  mShadowModel;            /* 0x1c4 */
-    u8  pad_1c5[0x27];
-    u8  unk_1ec;            /* 0x1ec */
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout: the
+ * class's own destructor `_ZN8BookShotD1Ev` destroys each member, and
+ * `daBook_c_classInit_SHOOT_BOOK` constructs the same types at the same offsets before
+ * storing `_ZTV8BookShot`. Everything this header used to restate below 0x110
+ * belongs to dEnemyBase_c and dActor_c and is inherited now.
+ *
+ * The members close on each other, which is what makes the layout a reading
+ * rather than a guess:
+ *
+ *     0x110 ModelAnim                  0x64    -> 0x174
+ *     0x174 Model                      0x50    -> 0x1c4
+ *     0x1c4 ShadowModel                0x28    -> 0x1ec
+ *     0x21c dCcAcPos_c  0x40    -> 0x25c
+ *     0x25c dBgCh_Actr               0x1bc   -> 0x418
+ *
+ * SIZE IS THE ROM'S OWN: `daBook_c_classInit_SHOOT_BOOK` calls `fBase_c::operator new(1108)`
+ * -- 0x454 -- and stores this class's vtable, so that literal IS this
+ * class's sizeof.
+ *
+ * The ROM's RTTI names this class daBook_c.
+ *
+ * SM64DS RTTI names the implementation daBook_c. The reconstructed factory
+ * daBook_c_classInit_SHOOT_BOOK (historical alias BookShot_Spawn) installs this class's
+ * cartridge vtable for the SHOOT_BOOK registry profile.
+ */
+
+#include "dEnemyBase_c.h"
+#include "Model.h"
+#include "ModelAnim.h"
+#include "dCcAcPos_c.h"
+#include "ShadowModel.h"
+#include "dBgCh_Actr.h"
+
+struct BookShot : dEnemyBase_c {
+    ModelAnim                    mModelAnim;            /* 0x110 */
+    Model                        mModel;                /* 0x174 */
+    ShadowModel                  mShadowModel;          /* 0x1c4 */
+    u8                           unk_1ec;               /* 0x1ec */
     u8  pad_1ed[0x2f];
-    u8  mMovingCylinderClsnWithPos;            /* 0x21c */
-    u8  pad_21d[0x17];
-    u8  unk_234;            /* 0x234 */
-    u8  pad_235[0x3];
-    u8  unk_238;            /* 0x238 */
-    u8  pad_239[0x23];
-    u8  mWithMeshClsn;            /* 0x25c */
-    u8  pad_25d[0x1bb];
-    s32 unk_418;            /* 0x418 */
-    s32 unk_41c;            /* 0x41c */
-    s32 unk_420;            /* 0x420 */
-    s32 mState;            /* 0x424 */
-    s32 unk_428;            /* 0x428 */
-    s32 unk_42c;            /* 0x42c */
-    s32 unk_430;            /* 0x430 */
-    s32 unk_434;            /* 0x434 */
-    s32 unk_438;            /* 0x438 */
-    s32 unk_43c;            /* 0x43c */
-    s32 unk_440;            /* 0x440 */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x21c */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x25c */
+    s32                          unk_418;               /* 0x418 */
+    s32                          unk_41c;               /* 0x41c */
+    s32                          unk_420;               /* 0x420 */
+    s32                          mState;                /* 0x424 */
+    s32                          unk_428;               /* 0x428 */
+    s32                          unk_42c;               /* 0x42c */
+    s32                          unk_430;               /* 0x430 */
+    s32                          unk_434;               /* 0x434 */
+    s32                          unk_438;               /* 0x438 */
+    s32                          unk_43c;               /* 0x43c */
+    s32                          unk_440;               /* 0x440 */
     u8  pad_444[0x8];
-    s32 unk_44c;            /* 0x44c */
-    s8  unk_450;            /* 0x450 */
-#ifdef __cplusplus
-    /* methods */
+    s32                          unk_44c;               /* 0x44c */
+    u8                           unk_450;               /* 0x450 */
+    u8  pad_451[0x3];
+
+    /* --- vtable --- */
+    virtual ~BookShot();
+
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
+    /* --- non-virtual --- */
     int Behavior();
     int CleanupResources();
     int InitResources();
-#endif
+    int Render();
 };
 
-#endif
+typedef char BookShot_size_must_be_0x454[sizeof(BookShot) == 0x454 ? 1 : -1];
+
+#endif /* BOOKSHOT_H */

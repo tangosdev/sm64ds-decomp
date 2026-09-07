@@ -5,7 +5,7 @@
 #include "common.h"
 typedef int Fix12i;
 
-extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char* thiz, const struct Vector3* v, unsigned int n, Fix12i f, short s);
+extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(char* thiz, const struct Vector3* v, unsigned int n, Fix12i f, short s);
 extern int func_ov002_020ec628(char* p);
 
 void func_ov002_020ec728(char* c)
@@ -29,7 +29,7 @@ void func_ov002_020ec728(char* c)
         v2.x = vec.x;
         v2.y = vec.y;
         v2.z = vec.z;
-        _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v2, n, 0x2000, 0);
+        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v2, n, 0x2000, 0);
     }
     if (func_ov002_020ec628(c)) {
         struct Vector3 v3;

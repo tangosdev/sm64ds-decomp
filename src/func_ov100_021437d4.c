@@ -15,7 +15,7 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* mF, int angX);
 extern void Vec3_Sub(struct Vector3* out, struct Vector3* a, struct Vector3* b);
 extern void Vec3_MulScalar(struct Vector3* out, const struct Vector3* in, int scale);
-#define M(p) ((long long)(int)(p))
+#define M(p) (p)
 
 
 void func_ov100_021437d4(char* thisx)

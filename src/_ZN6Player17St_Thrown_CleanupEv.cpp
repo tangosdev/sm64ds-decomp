@@ -8,6 +8,6 @@
 
 int Player::St_Thrown_Cleanup()
 {
-    *(unsigned int *)(((long long)(int)((char *)&mBodyClsnFlags))) &= ~0x2000;
+    *(unsigned int *)((char *)&mdCcAcPos_c.flags) &= ~0x2000;
     return 1;
 }

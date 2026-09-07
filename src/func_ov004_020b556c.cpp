@@ -49,7 +49,7 @@ extern "C" void func_ov004_020b556c(void)
             sp[1] = sp[1] + rx;
             func_ov004_020b4b84(ei.e, sp);
             {
-                short* p = (short*)(int)(((unsigned long long)(int)(ei.e + 0x20)) & 0xFFFFFFFFFFFFFFFFULL);
+                short* p = (short*)(int)(ei.e + 0x20);
                 int cur = load_s(p);
                 *p = cur + ei.i;
             }

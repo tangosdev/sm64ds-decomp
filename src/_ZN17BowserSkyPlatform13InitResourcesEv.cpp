@@ -1,56 +1,66 @@
 //cpp
 // @symbol _ZN17BowserSkyPlatform13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "BowserSkyPlatform.h"
+// recovered name: daKpa3Bg_c_InitResources
+/* recovered: renamed to Class_Method */
+/* daKpa3Bg_c::InitResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. Model, ModelBase, dBgW_Kc, dBgW_KcMbg and
+   dBgW are the real classes, pulled in transitively through
+   BowserSkyPlatform.h -> dBgActor_c.h; declaring local shadows with bodies
+   for them (as the pre-header-include draft did) redefines the real class
+   and fails to compile, so this uses the real types directly. */
+struct BMD_File; struct KCL_File; struct dActor_c; struct Matrix4x3;
+struct CLPS_Block;
 
-extern "C" {
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *f, int a, int b);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-    void *thiz, void *actor, const Vector3 &v, int radius, int height, unsigned a, unsigned b);
-extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
-extern int Vec3_HorzLen(const Vector3 *v);
-}
+/* Declared by its final name rather than as a shadow method: the ROM's symbol takes
+   Fix12<int> where the call site has an int, and Fix12<int> is an aggregate with no
+   converting constructor, so a shadow declaration cannot be both callable and mangle
+   correctly. Spelling the symbol literally sidesteps the mangling entirely -- the
+   parameter types then only decide the call ABI, and a Fix12 passes in one register
+   bit-identical to an int. */
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void* self, KCL_File* f, const Matrix4x3& m, int fix, short sh, CLPS_Block& b);
 
-int BowserSkyPlatform::InitResources()
+extern "C" void CopyTexPalFromLevelModel(void* p);
+extern "C" void func_020393d4(void* p, void* v);
+extern "C" void func_020393c4(void* p, void* v);
+
+extern "C" int data_0208e738;
+extern "C" SharedFilePtr* data_ov060_02119514[];
+extern "C" SharedFilePtr* data_ov060_0211953c[];
+extern "C" CLPS_Block* data_ov060_0211a980[];
+extern "C" void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
+extern "C" void func_ov060_021183f4();
+
+s32 BowserSkyPlatform::InitResources()
 {
-    Vector3 v;
-    Vector3 z;
-    void *file;
-    int *p178;
-    int t;
-
-    file = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov060_0211b1c4);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, file, 1, -1);
-    v.x = 0;
-    v.y = -0x96000;
-    v.z = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-        ((char *)this) + 0x124, ((char *)this), v, 0x96000, 0x12c000, 0x204004, 0);
-    mScaleX = 0x1000;
-    mScaleY = 0x1000;
-    mScaleZ = 0x1000;
-    unk_1ae = 0xff;
-    z.x = 0;
-    z.y = 0;
-    z.z = 0;
-    Vec3_HorzAngle(&z, (const Vector3 *)((char *)&mPosX));
-    p178 = (int *)(((long long)(int)((char *)&unk_178)));
-    unk_184 = 0x2ee000;
-    t = mPosX;
-    /* materialize r0 = ((char *)this)+0x5c between load and store */
+    char* self = (char*)this;
+    int idx = *(int*)(self + 8) & 0xf;
+    *(unsigned char*)(self + 0x329) = (unsigned char)idx;
+    data_0208e738 = 0;
+    ((ModelBase*)(self + 0xd4))->SetFile(
+        (BMD_File*)Model::LoadFile(*data_ov060_02119514[*(unsigned char*)(self + 0x329)]), 1, -1);
+    CopyTexPalFromLevelModel(self + 0xdc);
+    data_0208e738 = 1;
+    this->UpdateClsnPosAndRot();
     {
-        Vector3 *pos = (Vector3 *)(((long long)(int)((char *)&mPosX)));
-        (void)pos;
+        int i = *(unsigned char*)(self + 0x329);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            self + 0x124, (KCL_File*)dBgW_Kc::LoadFile(*data_ov060_0211953c[i]),
+            *(Matrix4x3*)(self + 0x2ec), 0x1000, *(short*)(self + 0x8e),
+            *data_ov060_0211a980[i]);
     }
-    unk_174 = t;
-    unk_178 = mPosY;
-    unk_17c = mPosZ;
-    *p178 = *p178 + (unk_184 >> 3);
-    unk_180 = Vec3_HorzLen((const Vector3 *)((char *)&mPosX));
-    unk_170 = 0;
-    unk_1a8 = AddSpikeBomb(((char *)this));
+    func_020393d4(self + 0x124, (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    func_020393c4(self + 0x124, (void*)&func_ov060_021183f4);
+    ((dBgW*)(self + 0x124))->Enable((dActor_c*)self);
+    *(int*)(self + 0x320) = 0;
+    *(unsigned char*)(self + 0x32b) = 0;
+    *(unsigned char*)(self + 0x328) = 0;
+    *(unsigned char*)(self + 0x32a) = 0;
+    *(unsigned short*)(self + 0x326) = 0;
+    *(unsigned short*)(self + 0x324) = *(unsigned short*)(self + 0x326);
+    *(int*)(self + 0x9c) = 0;
+    *(int*)(self + 0xa0) = -0x1e000;
     return 1;
 }

@@ -1,5 +1,5 @@
 extern void ClearSpikeBomb(int idx);
-extern char *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char *p);
+extern char *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, char *p);
 
 void func_ov060_021184bc(char *c)
 {
@@ -17,7 +17,7 @@ void func_ov060_021184bc(char *c)
     j = 0;
     id = 0x11c;
     while (1) {
-        a = _ZN5Actor15FindWithActorIDEjPS_(id, a);
+        a = _ZN8dActor_c15FindWithActorIDEjPS_(id, a);
         if (a == 0)
             break;
         if (a != c) {

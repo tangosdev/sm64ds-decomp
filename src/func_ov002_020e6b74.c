@@ -1,6 +1,6 @@
 void func_ov002_020e6b74(char *c, int *src)
 {
-    char *base = (char *)(((long long)(int)(c + 8)));
+    char *base = (char *)(c + 8);
     void *obj = *(void **)base;
     unsigned int n = *(unsigned int *)((char *)obj + 0x24);
     char *dst = *(char **)(base + 4);

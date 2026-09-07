@@ -1,2 +1,2 @@
-extern unsigned short G[];
-void func_02057128(void) { *(unsigned short*)G |= 128; }
+#include "nitro/hw/registers.h"
+void func_02057128(void) { REG_EXMEMCNT |= 128; }

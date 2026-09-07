@@ -3,7 +3,7 @@ extern void func_020731dc(void*, void*, void*);
 extern void func_02017b4c();
 extern int func_02017ab4[];
 extern int SharedFilePtr_Destruct_Clsn[];
-extern int func_020072c0[];
+extern int _ZN7Vector3D1Ev[];
 extern int data_ov021_021149a0[];
 extern int data_ov021_021149a8[];
 extern int data_ov021_021149b0[];
@@ -37,14 +37,14 @@ void __sinit_ov021_02113500(void)
     data_ov021_02114a20.x = 0;
     data_ov021_02114a20.y = 0x32000;
     data_ov021_02114a20.z = 0xc8000;
-    func_020731dc(&data_ov021_02114a20, func_020072c0, data_ov021_021149fc);
+    func_020731dc(&data_ov021_02114a20, _ZN7Vector3D1Ev, data_ov021_021149fc);
 
     { volatile V3* p = (volatile V3*)&data_ov021_02114a2c; p->x = 0; p->y = 0x32000; p->z = -0xc8000; }
-    func_020731dc(&data_ov021_02114a2c, func_020072c0, data_ov021_02114a08);
+    func_020731dc(&data_ov021_02114a2c, _ZN7Vector3D1Ev, data_ov021_02114a08);
 
     { volatile V3* p = (volatile V3*)&data_ov021_02114a38; p->x = 0xc8000; p->y = 0x32000; p->z = 0; }
-    func_020731dc(&data_ov021_02114a38, func_020072c0, data_ov021_021149d8);
+    func_020731dc(&data_ov021_02114a38, _ZN7Vector3D1Ev, data_ov021_021149d8);
 
     { volatile V3* p = (volatile V3*)&data_ov021_02114a44; p->x = -0xc8000; p->y = 0x32000; p->z = 0; }
-    func_020731dc(&data_ov021_02114a44, func_020072c0, data_ov021_021149cc);
+    func_020731dc(&data_ov021_02114a44, _ZN7Vector3D1Ev, data_ov021_021149cc);
 }

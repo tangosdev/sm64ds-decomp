@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-char* _ZN5Actor13ClosestPlayerEv(void);
+char* _ZN8dActor_c13ClosestPlayerEv(void);
 void func_ov002_020c3f18(char* p);
 void _Z14ApproachLinearRsss(short&, short, short);
 void func_ov085_0212e728(char* c, void* p);
@@ -8,7 +8,7 @@ extern char data_ov085_021307c0[];
 
 int func_ov085_0212dd10(char* c)
 {
-    char* p = _ZN5Actor13ClosestPlayerEv();
+    char* p = _ZN8dActor_c13ClosestPlayerEv();
     if (!p) return 1;
     {
         short v = *(short*)(c + 0x8e);

@@ -16,7 +16,7 @@ int Player::St_ButtSlide_Init()
   if(mSlideType){
     func_0200d544(data_0209f318, mPlayerNo);
   }
-  unk_6e6=0;
+  mStatePhase=0;
   mStateArg=mSlideType;
   *(short*)(((char*)this)+0x600+0xa6)=6;
   mIsSlidingOnGround=0;

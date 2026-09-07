@@ -24,7 +24,7 @@ void func_ov002_020afd10(char* c)
     switch (*(int*)(c + 0x388)) {
     case 0:
         func_ov002_020af218(c, 0xbb8);
-        if (_ZN5Actor15IsPlayerInRangeEi(c, 0x3e8)) {
+        if (_ZN8dActor_c15IsPlayerInRangeEi(c, 0x3e8)) {
             *(Fix12i*)(c + 0x9c) = -0x4000;
             *(int*)(c + 0x388) = 1;
         }

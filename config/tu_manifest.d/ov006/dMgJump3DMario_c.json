@@ -1,0 +1,399 @@
+{
+  "id": "ov006/dMgJump3DMario_c",
+  "module": "ov006",
+  "source": "src/actors/dMgJump3DMario_c.cpp",
+  "promoted_source": "src/actors/dMgJump3DMario_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run 0x020c762c..0x020c8a30, 28 function(s), from build/tu_map.json (tools/tu_map.py); the 28 symbols.txt sizes sum to exactly 0x1404 and every function starts where the previous one ends, so the run has no hole and no segment choice.",
+    "class label(s): dMgJump3DMario_c. The class name is the cartridge's own RTTI: the 19 bytes at ov006 0x0213b0b0 are literally `16dMgJump3DMario_c` + NUL, at file offset 0x7b1f0 of extracted/overlays/overlay_0006.bin (module base 0x020bfec0, NOT 0x020c0000).",
+    "The run holds the key function. The destructor is not virtual -- no vtable slot is 0x020c893c and no deleting stub exists in the ROM -- so the key function is the first non-inline virtual declared in include/dMgJump3DMario_c.h, Unk_020c76d8 at 0x020c76d8, which is inside the run. D1 (0x020c893c) and C1 (0x020c8a04) are inside it too.",
+    "BOUNDARY CAVEAT, carried forward from the scout's facts file: tu_map cuts on symbol NAME, and only five of the 28 symbols carry the class name. Both neighbours abut with ZERO gap -- func_ov006_020c7574 ends exactly at 0x020c762c and func_ov006_020c8a30 starts exactly at 0x020c8a30 -- and seven still-unpromoted `.c` shards immediately below the run (0x020c70d0..0x020c7574) call eight of this class's members, while src/func_ov006_020c7300.c installs one of this class's own pointer-to-member states from the record at 0x0213b040. Whether the original .cpp was exactly this run, or was wider, is NOT settled. The claim taken here is the run tu_map cuts.",
+    "module sinit corroboration: 31 sinit(s) / 31 .ctor entries, sinit_vs_tu=ok, module-wide and NOT narrowed to this TU. Independently: no entry in ov006's .ctor table at 0x0213356c..0x021335ec points anywhere inside 0x020c762c..0x020c8a30, so this TU has no static initialiser of its own and the 15 pointer-to-member records in .data are baked in rather than filled at runtime."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020c762c",
+      "end": "0x020c8a30"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16dMgJump3DMario_c12Unk_020c762cEv",
+      "address": "0x020c762c",
+      "size": "0x000000a4",
+      "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c762cEv.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d0Ev",
+      "address": "0x020c76d0",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c76d0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c12Unk_020c76d8Ev",
+      "address": "0x020c76d8",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN16dMgJump3DMario_c12Unk_020c76d8Ev.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov006_020c76e0",
+      "address": "0x020c76e0",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov006_020c76e0.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov006_020c7734",
+      "address": "0x020c7734",
+      "size": "0x0000012c",
+      "legacy_source": "src/func_ov006_020c7734.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov006_020c7860",
+      "address": "0x020c7860",
+      "size": "0x0000008c",
+      "legacy_source": "src/func_ov006_020c7860.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c9StateDampEv",
+      "address": "0x020c78ec",
+      "size": "0x000000bc",
+      "legacy_source": "src/func_ov006_020c78ec.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c9EnterDampEv",
+      "address": "0x020c79a8",
+      "size": "0x00000088",
+      "legacy_source": "src/func_ov006_020c79a8.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c9StateHoldEv",
+      "address": "0x020c7a30",
+      "size": "0x00000174",
+      "legacy_source": "src/func_ov006_020c7a30.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c9EnterHoldEv",
+      "address": "0x020c7ba4",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov006_020c7ba4.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c9StateMoveEv",
+      "address": "0x020c7c68",
+      "size": "0x000003c4",
+      "legacy_source": "src/func_ov006_020c7c68.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c9EnterMoveEv",
+      "address": "0x020c802c",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_020c802c.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c12StateFallOutEv",
+      "address": "0x020c8048",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov006_020c8048.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov006_020c8084",
+      "address": "0x020c8084",
+      "size": "0x000000c8",
+      "legacy_source": "src/func_ov006_020c8084.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c12StateRiseOutEv",
+      "address": "0x020c814c",
+      "size": "0x00000094",
+      "legacy_source": "src/func_ov006_020c814c.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov006_020c81e0",
+      "address": "0x020c81e0",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov006_020c81e0.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c8EnterHitEv",
+      "address": "0x020c8270",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov006_020c8270.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c11StateBounceEv",
+      "address": "0x020c833c",
+      "size": "0x00000264",
+      "legacy_source": "src/func_ov006_020c833c.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c11EnterBounceEv",
+      "address": "0x020c85a0",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov006_020c85a0.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c11StateWindUpEv",
+      "address": "0x020c85bc",
+      "size": "0x00000070",
+      "legacy_source": "src/func_ov006_020c85bc.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov006_020c862c",
+      "address": "0x020c862c",
+      "size": "0x00000020",
+      "legacy_source": "src/func_ov006_020c862c.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c9StateIdleEv",
+      "address": "0x020c864c",
+      "size": "0x0000000c",
+      "legacy_source": "src/func_ov006_020c864c.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov006_020c8658",
+      "address": "0x020c8658",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov006_020c8658.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c12StateRespawnEv",
+      "address": "0x020c8680",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov006_020c8680.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_c12EnterRespawnEv",
+      "address": "0x020c8768",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov006_020c8768.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov006_020c87d0",
+      "address": "0x020c87d0",
+      "size": "0x0000016c",
+      "legacy_source": "src/func_ov006_020c87d0.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_cD1Ev",
+      "address": "0x020c893c",
+      "size": "0x000000c8",
+      "legacy_source": "src/_ZN16dMgJump3DMario_cD1Ev.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_cC1Ev",
+      "address": "0x020c8a04",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN16dMgJump3DMario_cC1Ev.cpp",
+      "ordinal": 27
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov006_020c76e0.cpp (func_ov006_020c76e0) did not split (the definition is inside the extern \"C\" block opened on line 5, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_020c814c.cpp (func_ov006_020c814c) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov006_020c87d0.cpp (func_ov006_020c87d0) did not split (the definition is inside the extern \"C\" block opened on line 8, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c7ba4; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Sound_PlayBank1Panned' differs between the legacy file that used to hold func_ov006_020c7ba4 and the one that held func_ov006_020c7c68; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c7c68; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c8658' differs between the legacy file that used to hold func_ov006_020c8048 and the one that held func_ov006_020c8084; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c8084; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c81e0; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound12PlayBank2_2DEj' differs between the legacy file that used to hold func_ov006_020c78ec and the one that held func_ov006_020c81e0; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold func_ov006_020c7c68 and the one that held func_ov006_020c81e0; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c8270; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012718' differs between the legacy file that used to hold func_ov006_020c7c68 and the one that held func_ov006_020c8270; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Sound_PlayBank1Panned' differs between the legacy file that used to hold func_ov006_020c7ba4 and the one that held func_ov006_020c8270; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_0214041c' differs between the legacy file that used to hold func_ov006_020c8270 and the one that held func_ov006_020c833c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c802c' differs between the legacy file that used to hold func_ov006_020c7a30 and the one that held func_ov006_020c833c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c7c68' differs between the legacy file that used to hold func_ov006_020c7a30 and the one that held func_ov006_020c833c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c833c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Sound_PlayBank1Panned' differs between the legacy file that used to hold func_ov006_020c7ba4 and the one that held func_ov006_020c833c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c8270' differs between the legacy file that used to hold func_ov006_020c7a30 and the one that held func_ov006_020c833c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c7ba4' differs between the legacy file that used to hold func_ov006_020c7c68 and the one that held func_ov006_020c833c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z11UpdateAngleRssis' differs between the legacy file that used to hold func_ov006_020c7c68 and the one that held func_ov006_020c833c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z15ApproachLinear2Rsss' differs between the legacy file that used to hold func_ov006_020c7a30 and the one that held func_ov006_020c85bc; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c8270' differs between the legacy file that used to hold func_ov006_020c7a30 and the one that held func_ov006_020c85bc; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_0213b00c' differs between the legacy file that used to hold func_ov006_020c7c68 and the one that held func_ov006_020c85bc; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c8680; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov006_020c802c' differs between the legacy file that used to hold func_ov006_020c7a30 and the one that held func_ov006_020c8680; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c8768; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_02140424' differs between the legacy file that used to hold func_ov006_020c8680 and the one that held _ZN16dMgJump3DMario_cD1Ev; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov006_0214042c' differs between the legacy file that used to hold func_ov006_020c8084 and the one that held _ZN16dMgJump3DMario_cD1Ev; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so no declaration was merged and nothing was commented out -- every member carries its own declarations at BLOCK scope inside its own body, where each keeps the exact spelling its shard used. Global data names are not mangled in C++ and a block-scope function declaration inherits the enclosing file-scope `extern \"C\"`, so both spellings still name the same ROM symbol. The one merged file-scope `extern \"C\"` region holds only the declarations every user agreed on. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'ModelAnim') differs between the legacy file that used to hold func_ov006_020c79a8 and the one that held func_ov006_020c8084; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so neither struct was hoisted to file scope and nothing was commented out -- each member declares the shape it needs inside its own body, so the two disagreeing definitions never meet. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'S') differs between the legacy file that used to hold func_ov006_020c802c and the one that held func_ov006_020c862c; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so neither struct was hoisted to file scope and nothing was commented out -- each member declares the shape it needs inside its own body, so the two disagreeing definitions never meet. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'S') differs between the legacy file that used to hold func_ov006_020c802c and the one that held func_ov006_020c8658; kept the first, the other is commented out for review RESOLVED: the generated preamble was discarded and the TU was assembled by hand from the 28 shards, so neither struct was hoisted to file scope and nothing was commented out -- each member declares the shape it needs inside its own body, so the two disagreeing definitions never meet. 28/28 MATCH; no TUBUILD CONFLICT marker exists in the source.",
+    "METHOD CONVERSION (PIPELINE.md stage 3b): 20 of the 28 members are real dMgJump3DMario_c:: methods -- the three virtuals, D1 and C1 that already carried mangled names, plus fifteen converted in this commit. It cost no bytes: 28/28 MATCH before and after the conversion, objisolate clean, emission order still ROM-ascending. The other eight keep their `func_ov006_*` names because twelve direct `bl` sites in seven `.c` shards below the run name them by their C spelling; two independent scans (relocs.txt filtered on `module:overlay(6)`, and a raw ARM BL decode of the overlay image) agreed on the same 12 sites and the same 8 targets. They convert when those shards are promoted, not before.",
+    "THE FIFTEEN NEW MEMBER NAMES ARE COINED. The cartridge proves each member's address, size, that its first argument is the object, and -- for the nine reached through a pointer-to-member -- which 8-byte record in the unowned .data at 0x0213b020..0x0213b098 installs it and which member writes that record. It proves no spelling. The derivation is written out in include/dMgJump3DMario_c.h and the fifteen rows are logged in symbols/actor_renames.tsv. The three virtual names stay address-derived (Unk_020c76d8 / Unk_020c76d0 / Unk_020c762c); nothing in the ROM carries their 2004 spelling.",
+    "SYMBOLS.TXT MOVED IN THIS COMMIT -- 15 rows in config/arm9/overlays/ov006/symbols.txt. That is not the usual text-only promotion, which touches no symbols.txt at all. Fifteen 8-byte pointer-to-member records sit in ov006's UNOWNED .data at 0x0213b020..0x0213b098 and dsd resolves each record's code word by the NAME symbols.txt gives at the target address, so a converted member whose row still said `func_ov006_*` would link its .data word as 0x00000000 with a green compile. No byte gate at verify or linkcheck-of-the-TU catches it.",
+    "include/dMgJump3DMario_c.h gained fifteen non-virtual member declarations and no field or virtual. Byte-neutrality was PROVEN rather than asserted: src/minigames/d_s_mg_jump2.cpp, src/minigames/d_s_mg_trampoline2.cpp, src/_ZN22dMg3DHeyhoObjAdapter_cC2Ev.cpp and all five of this class's own shards were compiled with the pinned mwccarm 2004/b56 at the build's flags before and after the edit; all eight object sha256s are identical. The two minigame TUs are already promoted and their manifests are not regenerated by this change.",
+    "ONE MEASURED DIFF, and its fix. func_ov006_020c81e0's shard spelled the 8-byte record it copies into +0x3c as `struct { int a, b; }`. C block-moved it; C++ scalarises two named ints and schedules the load after the store -- two words differing at +0x64 and +0x68 with no size change. Spelling it as an array member restored 28/28. Every other record copy in this TU already used an array."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov006-dMgJump3DMario_c/dMgJump3DMario_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 28,
+    "functions_declared": 28,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN16dMgJump3DMario_cD2Ev",
+        "_ZN16dMgJump3DMario_cD0Ev",
+        "_ZN16dMgJump3DMario_cC2Ev",
+        "_ZN22dMg3DHeyhoObjAdapter_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN16dMgJump3DMario_cC2Ev",
+        "_ZN16dMgJump3DMario_cD0Ev",
+        "_ZN16dMgJump3DMario_cD2Ev",
+        "_ZN22dMg3DHeyhoObjAdapter_cD2Ev"
+      ],
+      "droppedSections": [
+        56,
+        57,
+        58,
+        59,
+        60,
+        61,
+        64,
+        65,
+        66,
+        67,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75
+      ],
+      "data": [
+        "_ZTV16dMgJump3DMario_c",
+        "_ZTI16dMgJump3DMario_c",
+        "_ZTS16dMgJump3DMario_c",
+        "_ZTV22dMg3DHeyhoObjAdapter_c",
+        "_ZTI22dMg3DHeyhoObjAdapter_c",
+        "_ZTS22dMg3DHeyhoObjAdapter_c"
+      ],
+      "dataExternalized": [
+        "_ZTI16dMgJump3DMario_c",
+        "_ZTI22dMg3DHeyhoObjAdapter_c",
+        "_ZTS16dMgJump3DMario_c",
+        "_ZTS22dMg3DHeyhoObjAdapter_c",
+        "_ZTV16dMgJump3DMario_c",
+        "_ZTV22dMg3DHeyhoObjAdapter_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "intact_object_route": "`tubuild.py linkcheck ov006/dMgJump3DMario_c` REFUSES at [4/8]: \"isolate: intact TU preparation refused: ov006/dMgJump3DMario_c: intact production requires one .text claim and at least one non-text claim\". That is the expected, benign refusal for a text-only promotion, not a defect: this TU claims .text 0x020c762c..0x020c8a30 and nothing else, because all six of its vague-linkage data records live in ov006's UNOWNED .data outside the run and are dispositioned deadstrip-data. The command reached [4/8] cleanly -- it reported `delinks.txt already contains the exact final intact-object entry; no scratch splice is needed` and pinned the file to 2004/b56 -- so the refusal is about the production ROUTE, not about this TU's bytes.",
+      "whole_rom_control": "`tubuild.py linkcheck --baseline --module ov006 -j8`, run against the FULLY PROMOTED tree, is the real link evidence. The symbols.txt rename and the promotion are one atomic edit, so no intermediate tree state exists in which a no-substitution baseline would link; the promoted tree is the only consistent one. Result: [5/8] mwldarm ok, [6/8] module ov006 built 525344 bytes vs retail 525344 at base 0x020bfec0, module fidelity 106/106 exact, 100.000000% of compared bytes, 10,933 source-built functions reproducing / 0 mismatching, ROM-build analysis PASS, `dsd check modules --fail` PASS, and [8/8] built build/tu/_baseline/link/sm64ds-tu.nds at 16777216 bytes, sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 -- the pristine baseline ROM hash. Every one of the 15 renamed pointer-to-member .data words therefore resolved to a real address, which is the failure this rename could have caused and did not.",
+      "preexisting_failure": "[7/8] `dsd check symbols --fail` FAILs with 9 errors, all of them in ARM9 main and ITCM (overlay_100, overlay_102, data_020ad524, data_020ad560, func_01ff98f4, func_01ff99a4, func_01ff9d40, _deq, func_01ff9e2c). None names ov006 or this class. It is a --baseline run with NO TU substitution, so by construction these belong to the tree, not to this promotion."
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTV16dMgJump3DMario_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own vtable. This TU owns dMgJump3DMario_c's key function. The destructor is NOT virtual (none of the three vtable slots is 0x020c893c), so the key function is the first non-inline virtual DECLARED in include/dMgJump3DMario_c.h -- Unk_020c76d8, at 0x020c76d8, inside the licensed run -- and mwcc therefore emits this class's and its base's vtable, typeinfo and typeinfo-name records here as vague-linkage passengers. The _ZTV symbol IS the address point: the offset-to-top and typeinfo words sit at 0x0213b0c4 and 0x0213b0c8, so the emitted 0x14-byte section starts 8 bytes below the address recorded here. Three slots (0x020c76d8, 0x020c76d0, 0x020c762c), corroborated three ways: the relocation run in config/arm9/overlays/ov006/relocs.txt covers 0x0213b0c8..0x0213b0d4 and stops, the next symbols.txt row is data_ov006_0213b0d8 with no interior phantom between, and the word at 0x0213b0d8 (0x02134b6c) is an ov006 .data address, not code. The cartridge keeps its canonical copy at ov006:0x0213b0cc, in the module's unowned .data and outside this TU's only licensed range (.text 0x020c762c-0x020c8a30), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. Emitted size 0x14 equals the cartridge's own storage extent for the symbol.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b0cc"
+    },
+    {
+      "symbol": "_ZTI16dMgJump3DMario_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU owns dMgJump3DMario_c's key function. The destructor is NOT virtual (none of the three vtable slots is 0x020c893c), so the key function is the first non-inline virtual DECLARED in include/dMgJump3DMario_c.h -- Unk_020c76d8, at 0x020c76d8, inside the licensed run -- and mwcc therefore emits this class's and its base's vtable, typeinfo and typeinfo-name records here as vague-linkage passengers. It is a 3-word __si_class_type_info: vptr _ZTVN3abi20__si_class_type_infoE (arm9 0x0209a764), name pointer 0x0213b0b0, base 0x0213b000 = _ZTI22dMg3DHeyhoObjAdapter_c. The cartridge keeps its canonical copy at ov006:0x0213b0a4, in the module's unowned .data and outside this TU's only licensed range (.text 0x020c762c-0x020c8a30), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. Emitted size 0xc equals the cartridge's own storage extent for the symbol.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b0a4"
+    },
+    {
+      "symbol": "_ZTS16dMgJump3DMario_c",
+      "disposition": "deadstrip-data",
+      "reason": "Own record. This TU owns dMgJump3DMario_c's key function. The destructor is NOT virtual (none of the three vtable slots is 0x020c893c), so the key function is the first non-inline virtual DECLARED in include/dMgJump3DMario_c.h -- Unk_020c76d8, at 0x020c76d8, inside the licensed run -- and mwcc therefore emits this class's and its base's vtable, typeinfo and typeinfo-name records here as vague-linkage passengers. The 19 bytes at 0x0213b0b0 are literally `16dMgJump3DMario_c\\0`, read out of extracted/overlays/overlay_0006.bin at file offset 0x7b1f0 (module base 0x020bfec0). The class name is the cartridge's own RTTI spelling, not a coined one, so this row is comparable against the ROM. The cartridge keeps its canonical copy at ov006:0x0213b0b0, in the module's unowned .data and outside this TU's only licensed range (.text 0x020c762c-0x020c8a30), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. Emitted size 0x13 equals the cartridge's own storage extent for the symbol.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b0b0"
+    },
+    {
+      "symbol": "_ZTV22dMg3DHeyhoObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "reason": "Base vtable. dMg3DHeyhoObjAdapter_c is ABSTRACT -- all three slots of _ZTV22dMg3DHeyhoObjAdapter_c at 0x0213afd8 are 0x00000000, which is what mwccarm emits for a pure virtual -- so it has no key function of its own and every TU that odr-uses it emits its table. This TU odr-uses it because _ZN16dMgJump3DMario_cD1Ev, at 0x020c893c and inside the licensed run, restores that vptr at 0x020c89c0 from the literal at 0x020c8a00. This is the row the queue's compiler-only floor of >=5 cannot see. tools/rtti_vtables.py --own reports 0 slots for it because its trailing-null trimmer eats all three; the cartridge has three zero words between the address point 0x0213afd8 and _ZTS22dMg3DHeyhoObjAdapter_c at 0x0213afe4, and mwccarm emits the table at exactly 0x14 bytes. The cartridge keeps its canonical copy at ov006:0x0213afd8, in the module's unowned .data and outside this TU's only licensed range (.text 0x020c762c-0x020c8a30), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. Emitted size 0x14 equals the cartridge's own storage extent for the symbol.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213afd8"
+    },
+    {
+      "symbol": "_ZTI22dMg3DHeyhoObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "reason": "Base record. dMg3DHeyhoObjAdapter_c is ABSTRACT -- all three slots of _ZTV22dMg3DHeyhoObjAdapter_c at 0x0213afd8 are 0x00000000, which is what mwccarm emits for a pure virtual -- so it has no key function of its own and every TU that odr-uses it emits its table. This TU odr-uses it because _ZN16dMgJump3DMario_cD1Ev, at 0x020c893c and inside the licensed run, restores that vptr at 0x020c89c0 from the literal at 0x020c8a00. This is the row the queue's compiler-only floor of >=5 cannot see. It is only 8 bytes -- the next symbol, data_ov006_0213b008, starts at 0x0213b008 -- and its vptr word is 0x0209a774 = _ZTVN3abi17__class_type_infoE, the ROOT __class_type_info with no base word. That is what proves the chain is exactly two classes deep. The cartridge keeps its canonical copy at ov006:0x0213b000, in the module's unowned .data and outside this TU's only licensed range (.text 0x020c762c-0x020c8a30), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. Emitted size 0x8 equals the cartridge's own storage extent for the symbol.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213b000"
+    },
+    {
+      "symbol": "_ZTS22dMg3DHeyhoObjAdapter_c",
+      "disposition": "deadstrip-data",
+      "reason": "Base record. dMg3DHeyhoObjAdapter_c is ABSTRACT -- all three slots of _ZTV22dMg3DHeyhoObjAdapter_c at 0x0213afd8 are 0x00000000, which is what mwccarm emits for a pure virtual -- so it has no key function of its own and every TU that odr-uses it emits its table. This TU odr-uses it because _ZN16dMgJump3DMario_cD1Ev, at 0x020c893c and inside the licensed run, restores that vptr at 0x020c89c0 from the literal at 0x020c8a00. This is the row the queue's compiler-only floor of >=5 cannot see. The 25 bytes at 0x0213afe4 are literally `22dMg3DHeyhoObjAdapter_c\\0`, read out of the cartridge at file offset 0x7b124. The cartridge keeps its canonical copy at ov006:0x0213afe4, in the module's unowned .data and outside this TU's only licensed range (.text 0x020c762c-0x020c8a30), so dsd delinks it from the cartridge independently and discarding this object's copy cannot cost the image a byte. romdata_check compares the emitted copy against the cartridge, relocations applied, before production isolation discards it. Emitted size 0x19 equals the cartridge's own storage extent for the symbol.",
+      "canonical_module": "ov006",
+      "canonical_address": "0x0213afe4"
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. mwcc emits three destructor variants from the one out-of-line definition -- D1, D0, D2 in that order under `#pragma defer_codegen off` -- and the cartridge carries only D1, at 0x020c893c. dMgJump3DMario_c is a confirmed leaf: no edge in build/rtti.json names ov006:0x0213b0a4 as a base, so its base-object destructor is never odr-used, no address anywhere in config/ names a D2 for this class and no instruction in the image calls one. No ROM home, so plain deadstrip rather than deadstrip-duplicate. It is emitted immediately after D0 and before the constructor group, so it does not disturb the licensed run's ROM-ascending emission order."
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_cD0Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless, and this one is worth stating out loud: mwcc emits a DELETING destructor even though this class's destructor is not virtual -- the vtable has three slots and none of them is a deleting stub. There is no D0 for this class at any address in any symbols.txt, and nothing in the image calls one. Plain deadstrip. Emitted between D1 and D2, inside the same group, so the licensed run's emission order is unaffected."
+    },
+    {
+      "symbol": "_ZN16dMgJump3DMario_cC2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. The cartridge carries only C1, at 0x020c8a04; the class is a leaf, so its base-object constructor is never called and no address in config/ names a C2 for it. Plain deadstrip. Emitted in the constructor group below the licensed C1, so the emission order is unaffected."
+    },
+    {
+      "symbol": "_ZN22dMg3DHeyhoObjAdapter_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. include/dMgJump3DMario_c.h gives the base an inline empty destructor, which is what the cartridge shows: the only trace of it is the base-vptr store inlined at the tail of _ZN16dMgJump3DMario_cD1Ev (0x020c89c0), and there is no out-of-line copy at any ov006 address. mwcc emits one anyway as vague linkage. Plain deadstrip."
+    }
+  ],
+  "externalized_output": []
+}

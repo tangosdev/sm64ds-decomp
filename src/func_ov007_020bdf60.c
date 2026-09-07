@@ -1,6 +1,6 @@
 extern void func_0204fa2c(char* p, int v);
 extern void func_0204f934(char* p);
-extern void _ZN6Player17St_EndingFly_MainEv(char* p);
+extern void func_ov007_020c3d1c(char* p);
 extern char* data_ov007_02104bbc;
 extern char* data_ov007_02104bb8;
 
@@ -14,11 +14,11 @@ void func_ov007_020bdf60(void){
     func_0204f934(data_ov007_02104bbc + off);
   }
   if (data_ov007_02104bb8 != 0) {
-    _ZN6Player17St_EndingFly_MainEv(data_ov007_02104bb8);
+    func_ov007_020c3d1c(data_ov007_02104bb8);
     data_ov007_02104bb8 = 0;
   }
   if (data_ov007_02104bbc != 0) {
-    _ZN6Player17St_EndingFly_MainEv(data_ov007_02104bbc);
+    func_ov007_020c3d1c(data_ov007_02104bbc);
     data_ov007_02104bbc = 0;
   }
 }

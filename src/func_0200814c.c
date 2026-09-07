@@ -4,12 +4,12 @@
  */
 typedef struct Vec3 { int x, y, z; } Vec3;
 
-extern struct Actor *func_0200e6d8(unsigned int arg0);
+extern struct dActor_c *func_0200e6d8(unsigned int arg0);
 extern void Vec3_RotateYAndTranslate(Vec3 *out, const Vec3 *trans, short ang, const Vec3 *add);
 
 int func_0200814c(int self)
 {
-    struct Actor *a;
+    struct dActor_c *a;
     int diff, absdiff, val;
     Vec3 v;
 

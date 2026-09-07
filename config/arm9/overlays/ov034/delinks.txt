@@ -4,11 +4,11 @@
     .ctor       start:0x02114078 end:0x0211407c kind:rodata align:4
     .data       start:0x02114080 end:0x02114620 kind:data align:32
     .bss        start:0x02114620 end:0x021148e0 kind:bss align:32
-src/_ZN7WigglerD1Ev.c:
+src/_ZN7WigglerD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021112b0
 
-src/_ZN7WigglerD0Ev.c:
+src/_ZN7WigglerD0Ev.cpp:
     complete
     .text start:0x021112b0 end:0x021113d4
 
@@ -37,6 +37,7 @@ src/func_ov034_02111720.c:
     .text start:0x02111720 end:0x02111788
 
 src/func_ov034_02111788.cpp:
+    complete
     .text start:0x02111788 end:0x02111974
 
 src/func_ov034_02111974.c:
@@ -123,7 +124,7 @@ src/func_ov034_021129ec.c:
     complete
     .text start:0x021129ec end:0x02112a5c
 
-src/_ZN7Wiggler16CleanupResourcesEv.c:
+src/_ZN7Wiggler16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112a5c end:0x02112af4
 
@@ -131,12 +132,18 @@ src/_ZN7Wiggler6RenderEv.cpp:
     complete
     .text start:0x02112af4 end:0x02112b5c
 
+src/_ZN7Wiggler8BehaviorEv.cpp:
+    complete
+    .text start:0x02112b5c end:0x0211323c
+
 src/_ZN7Wiggler13InitResourcesEv.cpp:
     complete
     .text start:0x0211323c end:0x021136a4
 
-src/Wiggler_Spawn.c:
+src/d_a_hanachan.c:
+    complete
     .text start:0x021136a4 end:0x02113820
 
 src/__sinit_ov034_021138ec.c:
+    complete
     .init start:0x021138ec end:0x02114078

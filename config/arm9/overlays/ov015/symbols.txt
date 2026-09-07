@@ -1,27 +1,27 @@
-func_ov015_021111a0 kind:function(arm,size=0x30) addr:0x021111a0
-func_ov015_021111d0 kind:function(arm,size=0x44) addr:0x021111d0
+_ZN18daObjBkBillboard_cD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN18daObjBkBillboard_cD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov015_02111214 kind:function(arm,size=0x40) addr:0x02111214
-func_ov015_02111254 kind:function(arm,size=0x24) addr:0x02111254
-func_ov015_02111278 kind:function(arm,size=0x28) addr:0x02111278
-func_ov015_021112a0 kind:function(arm,size=0x3c) addr:0x021112a0
-PoleBillboard_Spawn kind:function(arm,size=0x38) addr:0x021112dc
-_ZN13PoleBillboardD1Ev kind:function(arm,size=0x4c) addr:0x02111314
-_ZN13PoleBillboardD0Ev kind:function(arm,size=0x60) addr:0x02111360
-func_ov015_021113c0 kind:function(arm,size=0x3c) addr:0x021113c0
-func_ov015_021113fc kind:function(arm,size=0xc) addr:0x021113fc
-func_ov015_02111408 kind:function(arm,size=0xc) addr:0x02111408
+_ZN18daObjBkBillboard_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
+_ZN18daObjBkBillboard_c6RenderEv kind:function(arm,size=0x28) addr:0x02111278
+_ZN18daObjBkBillboard_c13InitResourcesEv kind:function(arm,size=0x3c) addr:0x021112a0
+daObjBkBillboard_c_classInit kind:function(arm,size=0x38) addr:0x021112dc
+_ZN14KnockDownPlankD1Ev kind:function(arm,size=0x4c) addr:0x02111314
+_ZN14KnockDownPlankD0Ev kind:function(arm,size=0x60) addr:0x02111360
+_ZN14KnockDownPlank15OnHitByMegaCharER6Player kind:function(arm,size=0x3c) addr:0x021113c0
+_ZN14KnockDownPlank8OnKickedER8dActor_c kind:function(arm,size=0xc) addr:0x021113fc
+_ZN14KnockDownPlank11OnAttacked2ER8dActor_c kind:function(arm,size=0xc) addr:0x02111408
 func_ov015_02111414 kind:function(arm,size=0xdc) addr:0x02111414
 func_ov015_021114f0 kind:function(arm,size=0x17c) addr:0x021114f0
 func_ov015_0211166c kind:function(arm,size=0x48) addr:0x0211166c
-_ZN13PoleBillboard16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021116b4
-_ZN13PoleBillboard6RenderEv kind:function(arm,size=0x28) addr:0x021116f8
-_ZN13PoleBillboard8BehaviorEv kind:function(arm,size=0x240) addr:0x02111720
-_ZN13PoleBillboard13InitResourcesEv kind:function(arm,size=0x208) addr:0x02111960
-KnockDownPlank_Spawn kind:function(arm,size=0x38) addr:0x02111b68
-_ZN14KnockDownPlankD1Ev kind:function(arm,size=0x44) addr:0x02111ba0
-_ZN14KnockDownPlankD0Ev kind:function(arm,size=0x58) addr:0x02111be4
-func_ov015_02111c3c kind:function(arm,size=0x7c) addr:0x02111c3c
-func_ov015_02111cb8 kind:function(arm,size=0x28) addr:0x02111cb8
+_ZN14KnockDownPlank16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021116b4
+_ZN14KnockDownPlank6RenderEv kind:function(arm,size=0x28) addr:0x021116f8
+_ZN14KnockDownPlank8BehaviorEv kind:function(arm,size=0x240) addr:0x02111720
+_ZN14KnockDownPlank13InitResourcesEv kind:function(arm,size=0x208) addr:0x02111960
+daObjBk_Botaosi_c_classInit kind:function(arm,size=0x38) addr:0x02111b68
+_ZN9MovingBarD1Ev kind:function(arm,size=0x44) addr:0x02111ba0
+_ZN9MovingBarD0Ev kind:function(arm,size=0x58) addr:0x02111be4
+_ZN9MovingBar4KillEv kind:function(arm,size=0x7c) addr:0x02111c3c
+_ZN9MovingBar15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x02111cb8
 func_ov015_02111ce0 kind:function(arm,size=0x48) addr:0x02111ce0
 func_ov015_02111d28 kind:function(arm,size=0x24) addr:0x02111d28
 func_ov015_02111d4c kind:function(arm,size=0x40) addr:0x02111d4c
@@ -37,41 +37,41 @@ func_ov015_02111f4c kind:function(arm,size=0x20) addr:0x02111f4c
 func_ov015_02111f6c kind:function(arm,size=0x40) addr:0x02111f6c
 func_ov015_02111fac kind:function(arm,size=0xc) addr:0x02111fac
 func_ov015_02111fb8 kind:function(arm,size=0x4c) addr:0x02111fb8
-_ZN14KnockDownPlank16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02112004
-_ZN14KnockDownPlank6RenderEv kind:function(arm,size=0x28) addr:0x02112068
-_ZN14KnockDownPlank8BehaviorEv kind:function(arm,size=0x6c) addr:0x02112090
-_ZN14KnockDownPlank13InitResourcesEv kind:function(arm,size=0x134) addr:0x021120fc
-MovingBarBig_Spawn kind:function(arm,size=0x30) addr:0x02112230
-MovingBarSmall_Spawn kind:function(arm,size=0x30) addr:0x02112260
-_ZN14MovingBarSmallD1Ev kind:function(arm,size=0x4c) addr:0x02112290
-_ZN14MovingBarSmallD0Ev kind:function(arm,size=0x60) addr:0x021122dc
-func_ov015_0211233c kind:function(arm,size=0x64) addr:0x0211233c
-func_ov015_021123a0 kind:function(arm,size=0x28) addr:0x021123a0
+_ZN9MovingBar16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02112004
+_ZN9MovingBar6RenderEv kind:function(arm,size=0x28) addr:0x02112068
+_ZN9MovingBar8BehaviorEv kind:function(arm,size=0x6c) addr:0x02112090
+_ZN9MovingBar13InitResourcesEv kind:function(arm,size=0x134) addr:0x021120fc
+daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L kind:function(arm,size=0x30) addr:0x02112230
+daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S kind:function(arm,size=0x30) addr:0x02112260
+_ZN9TowerStepD1Ev kind:function(arm,size=0x4c) addr:0x02112290
+_ZN9TowerStepD0Ev kind:function(arm,size=0x60) addr:0x021122dc
+_ZN9TowerStep4KillEv kind:function(arm,size=0x64) addr:0x0211233c
+_ZN9TowerStep15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x021123a0
 func_ov015_021123c8 kind:function(arm,size=0x9c) addr:0x021123c8
-_ZN14MovingBarSmall16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112464
-_ZN14MovingBarSmall6RenderEv kind:function(arm,size=0x28) addr:0x021124a8
-_ZN14MovingBarSmall8BehaviorEv kind:function(arm,size=0x1cc) addr:0x021124d0
-_ZN14MovingBarSmall13InitResourcesEv kind:function(arm,size=0x24c) addr:0x0211269c
+_ZN9TowerStep16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112464
+_ZN9TowerStep6RenderEv kind:function(arm,size=0x28) addr:0x021124a8
+_ZN9TowerStep8BehaviorEv kind:function(arm,size=0x1cc) addr:0x021124d0
+_ZN9TowerStep13InitResourcesEv kind:function(arm,size=0x24c) addr:0x0211269c
 func_ov015_021128e8 kind:function(arm,size=0x10) addr:0x021128e8
 func_ov015_021128f8 kind:function(arm,size=0x14) addr:0x021128f8
-TowerStep_Spawn kind:function(arm,size=0x38) addr:0x0211290c
-_ZN9TowerStepD1Ev kind:function(arm,size=0x44) addr:0x02112944
-_ZN9TowerStepD0Ev kind:function(arm,size=0x58) addr:0x02112988
-_ZN9TowerStep16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021129e0
-_ZN9TowerStep6RenderEv kind:function(arm,size=0x28) addr:0x02112a24
-_ZN9TowerStep8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112a4c
-_ZN9TowerStep13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02112b04
-RotatingBridge_Spawn kind:function(arm,size=0x30) addr:0x02112ba0
-func_ov015_02112bd0 kind:function(arm,size=0x50) addr:0x02112bd0
-func_ov015_02112c20 kind:function(arm,size=0x64) addr:0x02112c20
-func_ov015_02112c84 kind:function(arm,size=0x14) addr:0x02112c84
-func_ov015_02112c98 kind:function(arm,size=0x20) addr:0x02112c98
-RotatingPlatformWf_Spawn kind:function(arm,size=0x3c) addr:0x02112cb8
-_ZN11FallBlockWfD1Ev kind:function(arm,size=0x50) addr:0x02112cf4
-_ZN11FallBlockWfD0Ev kind:function(arm,size=0x64) addr:0x02112d44
-_ZN11FallBlockWf16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112da8
-_ZN11FallBlockWf13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112dbc
-FallBlockWf_Spawn kind:function(arm,size=0x3c) addr:0x02112dd0
+daObjBk_Lift_c_classInit kind:function(arm,size=0x38) addr:0x0211290c
+_ZN17daObjBk_Rotebar_cD1Ev kind:function(arm,size=0x44) addr:0x02112944
+_ZN17daObjBk_Rotebar_cD0Ev kind:function(arm,size=0x58) addr:0x02112988
+_ZN17daObjBk_Rotebar_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021129e0
+_ZN17daObjBk_Rotebar_c6RenderEv kind:function(arm,size=0x28) addr:0x02112a24
+_ZN17daObjBk_Rotebar_c8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112a4c
+_ZN17daObjBk_Rotebar_c13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02112b04
+daObjBk_Rotebar_c_classInit kind:function(arm,size=0x30) addr:0x02112ba0
+_ZN17daObjBk_Ukisima_cD1Ev kind:function(arm,size=0x50) addr:0x02112bd0
+_ZN17daObjBk_Ukisima_cD0Ev kind:function(arm,size=0x64) addr:0x02112c20
+_ZN17daObjBk_Ukisima_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112c84
+_ZN17daObjBk_Ukisima_c13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112c98
+daObjBk_Ukisima_c_classInit kind:function(arm,size=0x3c) addr:0x02112cb8
+_ZN20daObjBk_Fall_Block_cD1Ev kind:function(arm,size=0x50) addr:0x02112cf4
+_ZN20daObjBk_Fall_Block_cD0Ev kind:function(arm,size=0x64) addr:0x02112d44
+_ZN20daObjBk_Fall_Block_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112da8
+_ZN20daObjBk_Fall_Block_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112dbc
+daObjBk_Fall_Block_c_classInit kind:function(arm,size=0x3c) addr:0x02112dd0
 data_ov015_02112e0c kind:data(any) addr:0x02112e0c
 data_ov015_02112e10 kind:data(any) addr:0x02112e10
 data_ov015_02112e14 kind:data(any) addr:0x02112e14
@@ -195,16 +195,16 @@ data_ov015_02114108 kind:data(any) addr:0x02114108 ambiguous
 data_ov015_0211417c kind:data(any) addr:0x0211417c ambiguous
 data_ov015_021141cc kind:data(any) addr:0x021141cc ambiguous
 data_ov015_021142a0 kind:data(any) addr:0x021142a0 ambiguous
-data_ov015_02114318 kind:data(any) addr:0x02114318
-data_ov015_02114324 kind:data(any) addr:0x02114324
-PoleBillboard_SpawnInfo kind:data(any) addr:0x0211433c ambiguous
+_ZTI18daObjBkBillboard_c kind:data(any) addr:0x02114318
+_ZTS18daObjBkBillboard_c kind:data(any) addr:0x02114324
+g_profile_BK_BILLBOARD kind:data(any) addr:0x0211433c ambiguous
 data_ov015_02114350 kind:data(any) addr:0x02114350 ambiguous
-data_ov015_02114360 kind:data(any) addr:0x02114360
+_ZTV18daObjBkBillboard_c kind:data(any) addr:0x02114360
 data_ov015_02114380 kind:data(any) addr:0x02114380 ambiguous
-data_ov015_021143dc kind:data(any) addr:0x021143dc
-data_ov015_021143e8 kind:data(any) addr:0x021143e8
-KnockDownPlank_SpawnInfo kind:data(any) addr:0x021143fc ambiguous
-_ZTV13PoleBillboard kind:data(any) addr:0x02114420
+_ZTI17daObjBk_Botaosi_c kind:data(any) addr:0x021143dc
+_ZTS17daObjBk_Botaosi_c kind:data(any) addr:0x021143e8
+g_profile_BK_BOTAOSI kind:data(any) addr:0x021143fc ambiguous
+_ZTV14KnockDownPlank kind:data(any) addr:0x02114420
 _ZTV17daObjBk_Botaosi_c kind:data(any) addr:0x02114420
 data_ov015_02114458 kind:data(any) addr:0x02114458 ambiguous
 data_ov015_02114498 kind:data(any) addr:0x02114498 ambiguous
@@ -222,51 +222,53 @@ data_ov015_021144f0 kind:data(any) addr:0x021144f0
 data_ov015_021144f8 kind:data(any) addr:0x021144f8
 data_ov015_02114500 kind:data(any) addr:0x02114500
 data_ov015_02114508 kind:data(any) addr:0x02114508
-data_ov015_02114510 kind:data(any) addr:0x02114510
-data_ov015_0211451c kind:data(any) addr:0x0211451c
+_ZTI19daObjBk_Dossunbar_c kind:data(any) addr:0x02114510
+_ZTS19daObjBk_Dossunbar_c kind:data(any) addr:0x0211451c
 data_ov015_02114534 kind:data(any) addr:0x02114534
 data_ov015_02114538 kind:data(any) addr:0x02114538
 data_ov015_0211453c kind:data(any) addr:0x0211453c
-MovingBarSmall_SpawnInfo kind:data(any) addr:0x0211454c ambiguous
-MovingBarBig_SpawnInfo kind:data(any) addr:0x02114568 ambiguous
-_ZTV14KnockDownPlank kind:data(any) addr:0x0211458c
+g_profile_BK_DOSSUNBAR_S kind:data(any) addr:0x0211454c ambiguous
+g_profile_BK_DOSSUNBAR_L kind:data(any) addr:0x02114568 ambiguous
+_ZTV9MovingBar kind:data(any) addr:0x0211458c
 data_ov015_02114598 kind:data(any) addr:0x02114598 ambiguous
 data_ov015_021145e4 kind:data(any) addr:0x021145e4 ambiguous
-data_ov015_0211460c kind:data(any) addr:0x0211460c
-data_ov015_02114618 kind:data(any) addr:0x02114618
-TowerStep_SpawnInfo kind:data(any) addr:0x0211462c ambiguous
-_ZTV14MovingBarSmall kind:data(any) addr:0x02114650
+_ZTI14daObjBk_Lift_c kind:data(any) addr:0x0211460c
+_ZTS14daObjBk_Lift_c kind:data(any) addr:0x02114618
+g_profile_BK_LIFT01 kind:data(any) addr:0x0211462c ambiguous
+_ZTV9TowerStep kind:data(any) addr:0x02114650
 _ZTV14daObjBk_Lift_c kind:data(any) addr:0x02114650
-data_ov015_021146d0 kind:data(any) addr:0x021146d0
-data_ov015_021146dc kind:data(any) addr:0x021146dc
-RotatingBridge_SpawnInfo kind:data(any) addr:0x021146f0 ambiguous
-_ZTV9TowerStep kind:data(any) addr:0x02114714
+_ZTI17daObjBk_Rotebar_c kind:data(any) addr:0x021146d0
+_ZTS17daObjBk_Rotebar_c kind:data(any) addr:0x021146dc
+g_profile_BK_ROTEBAR kind:data(any) addr:0x021146f0 ambiguous
+_ZTV17daObjBk_Rotebar_c kind:data(any) addr:0x02114714
 data_ov015_02114750 kind:data(any) addr:0x02114750 ambiguous
 data_ov015_02114768 kind:data(any) addr:0x02114768 ambiguous
 data_ov015_02114794 kind:data(any) addr:0x02114794
-data_ov015_02114798 kind:data(any) addr:0x02114798
+_ZTI17daObjBk_Ukisima_c kind:data(any) addr:0x02114798
 data_ov015_021147a4 kind:data(any) addr:0x021147a4
-data_ov015_021147b0 kind:data(any) addr:0x021147b0
-RotatingPlatformWf_SpawnInfo kind:data(any) addr:0x021147c4 ambiguous
-data_ov015_021147e8 kind:data(any) addr:0x021147e8
+_ZTS17daObjBk_Ukisima_c kind:data(any) addr:0x021147b0
+g_profile_BK_UKISIMA kind:data(any) addr:0x021147c4 ambiguous
+_ZTV17daObjBk_Ukisima_c kind:data(any) addr:0x021147e8
 data_ov015_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov015_02114860 kind:data(any) addr:0x02114860 ambiguous
-data_ov015_02114868 kind:data(any) addr:0x02114868
-data_ov015_02114874 kind:data(any) addr:0x02114874
+_ZTI20daObjBk_Fall_Block_c kind:data(any) addr:0x02114868
+_ZTI16daObjFallBlock_c kind:data(any) addr:0x02114874
 data_ov015_0211487c kind:data(any) addr:0x0211487c ambiguous
 data_ov015_02114880 kind:data(any) addr:0x02114880
-data_ov015_0211488c kind:data(any) addr:0x0211488c
+_ZTS16daObjFallBlock_c kind:data(any) addr:0x0211488c
 data_ov015_02114898 kind:data(any) addr:0x02114898 ambiguous
-data_ov015_021148a0 kind:data(any) addr:0x021148a0
+_ZTS20daObjBk_Fall_Block_c kind:data(any) addr:0x021148a0
 data_ov015_021148b4 kind:data(any) addr:0x021148b4 ambiguous
-FallBlockWf_SpawnInfo kind:data(any) addr:0x021148b8 ambiguous
-_ZTV11FallBlockWf kind:data(any) addr:0x021148dc
+g_profile_BK_DOWN_B kind:data(any) addr:0x021148b8 ambiguous
+_ZTV20daObjBk_Fall_Block_c kind:data(any) addr:0x021148dc
 data_ov015_021148e0 kind:data(any) addr:0x021148e0 ambiguous
 data_ov015_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 data_ov015_02114960 kind:bss addr:0x02114960
 data_ov015_02114968 kind:bss addr:0x02114968
 data_ov015_02114974 kind:bss addr:0x02114974
+PoleBillboard_ClsnFile kind:bss addr:0x02114974
 data_ov015_0211497c kind:bss addr:0x0211497c
+PoleBillboard_ModelFile kind:bss addr:0x0211497c
 data_ov015_02114984 kind:bss addr:0x02114984
 data_ov015_02114990 kind:bss addr:0x02114990
 data_ov015_0211499c kind:bss addr:0x0211499c
@@ -283,11 +285,15 @@ data_ov015_021149fc kind:bss addr:0x021149fc ambiguous
 data_ov015_02114a18 kind:bss addr:0x02114a18 ambiguous
 data_ov015_02114a24 kind:bss addr:0x02114a24
 data_ov015_02114a5c kind:bss addr:0x02114a5c
+MovingBarSmall_ClsnFile kind:bss addr:0x02114a5c
 data_ov015_02114a64 kind:bss addr:0x02114a64
+MovingBarSmall_ModelFile kind:bss addr:0x02114a64
 data_ov015_02114a6c kind:bss addr:0x02114a6c
 data_ov015_02114a78 kind:bss addr:0x02114a78
 data_ov015_02114a84 kind:bss addr:0x02114a84
+TowerStep_ClsnFile kind:bss addr:0x02114a84
 data_ov015_02114a8c kind:bss addr:0x02114a8c
+TowerStep_ModelFile kind:bss addr:0x02114a8c
 data_ov015_02114a94 kind:bss addr:0x02114a94
 data_ov015_02114aa0 kind:bss addr:0x02114aa0
 data_ov015_02114aac kind:bss addr:0x02114aac

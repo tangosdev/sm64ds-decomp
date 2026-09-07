@@ -1,5 +1,5 @@
 extern void Scuttlebug_SetState(void* t, int n);
-extern void _ZN12CylinderClsn5ClearEv(void* clsn);
+extern void _ZN5dCc_c5ClearEv(void* clsn);
 
 int func_ov071_0211fa54(void* thiz)
 {
@@ -30,6 +30,6 @@ int func_ov071_0211fa54(void* thiz)
         Scuttlebug_SetState(c, 2);
     }
 done:
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
     return 1;
 }

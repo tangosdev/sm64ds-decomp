@@ -1,26 +1,21 @@
 //cpp
 // @symbol _ZN5Swoop6RenderEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: named members + shared header, real C++ method
+ *
+ * The six-slot `struct Base` this file used to cast each ModelAnim to was
+ * ModelAnim's own vtable, and the slot it called is Render. unk_43c picks
+ * which of the two models is drawn.
+ */
 #include "Swoop.h"
-struct Base {
-    virtual void v0();
-    virtual void v1();
-    virtual void v2();
-    virtual void v3();
-    virtual void v4();
-    virtual void m(int a);
-};
 
 int Swoop::Render()
 {
-    int flag = (unk_0b0 & 0x40000) != 0;
+    int flag = (mFlags & 0x40000) != 0;
     if (flag != 0) return 1;
     if (unk_43c == 1) {
-        Base *b = (Base *)((char *)&mModelAnim1);
-        b->m(0);
+        mModelAnim1.Render(0);
     } else {
-        Base *b = (Base *)((char *)&mModelAnim2);
-        b->m(0);
+        mModelAnim2.Render(0);
     }
     return 1;
 }

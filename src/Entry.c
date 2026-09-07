@@ -3,17 +3,17 @@
 // mode stacks in DTCM, runs the autoload/segment initializers, clears DTCM/palette/OAM,
 // stores the interrupt-check word, then jumps to the game entry via bx with a hand-loaded
 // lr -- no C compiler emits msr/bx-with-pooled-lr, so there is no C to decompile it to.
-extern void func_020049f0(void);
+extern void _ZN4CP1511SystemSetupEv(void);
 extern void func_020048d8(void);
 extern void func_0200497c(void);
-extern void func_0205a47c(void);
+extern void MultiStore_Int(void);
 extern void func_01ffafd4(void);
 extern void func_02019780(void);
 extern void func_02072f94(void);
 asm void Entry(void) {
     mov     ip, #0x4000000
     str     ip, [ip, #0x208]
-    bl      func_020049f0
+    bl      _ZN4CP1511SystemSetupEv
     mov     r0, #0x13
     msr     cpsr_c, r0
     ldr     r0, =0x023c0000
@@ -37,15 +37,15 @@ asm void Entry(void) {
     mov     r0, #0
     ldr     r1, =0x023c0000
     mov     r2, #0x4000
-    bl      func_0205a47c
+    bl      MultiStore_Int
     mov     r0, #0
     ldr     r1, =0x5000000
     mov     r2, #0x400
-    bl      func_0205a47c
+    bl      MultiStore_Int
     mov     r0, #0x200
     ldr     r1, =0x7000000
     mov     r2, #0x400
-    bl      func_0205a47c
+    bl      MultiStore_Int
     ldr     r1, =0x023c0000
     add     r1, r1, #0x3fc0
     add     r1, r1, #0x3c

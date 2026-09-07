@@ -1,5 +1,5 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 // func_ov098_021388bc at 0x021388bc
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
 struct Obj {
@@ -14,13 +14,13 @@ struct Obj {
 };
 
 extern "C" {
-void WithMeshClsn_UpdateContinuous_Veneer(void *p);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
-void *_ZNK12WithMeshClsn14GetFloorResultEv(void *p);
+void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *p);
 int SurfaceInfo_TestFlag0x20(int *p);
 void _ZN6Player9DropActorEv(void *p);
 void Crate_SetState(void *c, int i);
-void _ZN12CylinderClsn5ClearEv(void *p);
+void _ZN5dCc_c5ClearEv(void *p);
 void func_ov098_02139850(void *c);
 void func_ov098_021396a4(void *c);
 }
@@ -30,9 +30,9 @@ extern "C" void func_ov098_021388bc(char *c)
     int flags;
     bool t;
 
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) != 0) {
-        if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x320) + 4)) != 0) {
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x320);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x320) != 0) {
+        if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x320) + 4)) != 0) {
             void *p = *(void **)(c + 0x5e4);
             if (p != 0) {
                 _ZN6Player9DropActorEv(p);
@@ -58,10 +58,10 @@ extern "C" void func_ov098_021388bc(char *c)
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x564);
+    _ZN5dCc_c5ClearEv(c + 0x564);
     func_ov098_02139850(c);
     func_ov098_021396a4(c);
-    if (((MeshColliderBase *)(c + 0x124))->IsEnabled()) {
-        ((MeshColliderBase *)(c + 0x124))->Disable();
+    if (((dBgW *)(c + 0x124))->IsEnabled()) {
+        ((dBgW *)(c + 0x124))->Disable();
     }
 }

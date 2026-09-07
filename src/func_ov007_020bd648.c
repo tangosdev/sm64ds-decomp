@@ -3,7 +3,7 @@ extern void func_020541a4(void);
 extern void _ZN2GX15SetGraphicsModeEiii(int a, int b, int c);
 extern void _ZN2GX12SetBankForBGEt(u16 x);
 extern void func_02054430(int a);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
+extern void _ZN3G2x13SetBlendAlphaEPVttttj(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
 
 #define BG0CNT (*(volatile u16 *)0x4000008)
 #define BG1CNT (*(volatile u16 *)0x400000a)
@@ -40,7 +40,7 @@ void func_ov007_020bd648(int mode)
         BG3CNT = (BG3CNT & ~3) | 1;
         BG2CNT = (BG2CNT & 0x43) | 4;
         BG2CNT = (BG2CNT & ~3);
-        _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4000050, 0, 8, 0, 0x10);
+        _ZN3G2x13SetBlendAlphaEPVttttj((volatile u16 *)0x4000050, 0, 8, 0, 0x10);
         break;
     case 4:
         BG0CNT = (BG0CNT & ~3) | 1;

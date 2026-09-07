@@ -8,7 +8,7 @@ extern int data_ov006_0213b0ec;
 
 void func_ov006_020cc2ac(char *c)
 {
-    s16 *p = (s16 *)(((int)c + 0x60) & 0xFFFFFFFFFFFFFFFFULL);
+    s16 *p = (s16 *)((int)c + 0x60);
     *p = *p - 1;
     if (*(s16 *)(c + 0x60) == 0) {
         func_ov006_020c8c78(*(s16 *)(c + 0x4e), 0xc0);

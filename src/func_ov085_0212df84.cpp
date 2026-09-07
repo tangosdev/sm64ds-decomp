@@ -6,7 +6,7 @@
 #include "common.h"
 
 
-extern "C" void* _ZN5Actor13ClosestPlayerEv(void*);
+extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void*);
 extern "C" void _ZN6Camera9SetFlag_3Ev(void*);
 extern "C" void _ZN6Camera9SetLookAtERK7Vector3(void*, const Vector3*);
 extern "C" void _ZN6Camera6SetPosERK7Vector3(void*, const Vector3*);
@@ -21,7 +21,7 @@ extern "C" int func_ov085_0212df84(char* c)
     *(int*)(c + 0x2a4) = -0x5a0000;
     *(int*)(c + 0x2a8) = 0x1c0000;
     *(int*)(c + 0x2ac) = 0x1a66000;
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (player) {
         *(short*)(c + 0x2d4) = *(short*)((char*)player + 0x8e);
         func_ov002_020d228c(player);

@@ -17,7 +17,7 @@ void func_02019390(void);
 void func_0203bb60(void);
 void func_0203bc7c(void);
 void func_02023498(void);
-void _ZN5Scene16SpawnIfNecessaryEv(void);
+void _ZN8dScene_c16SpawnIfNecessaryEv(void);
 void func_02044120(void);
 void func_02019404(void);
 void _ZN3IRQ11DisableIRQsEj(unsigned int);
@@ -43,7 +43,7 @@ void func_020197b8(void) {
         data_0209d51c = v;
         data_0209d4e8 = (data_0209d4e8 + 1) & 0x1f;
         func_02023498();
-        data_0209d50c = 3; _ZN5Scene16SpawnIfNecessaryEv();
+        data_0209d50c = 3; _ZN8dScene_c16SpawnIfNecessaryEv();
         data_0209d50c = 4; func_02044120();
         data_0209d50c = 5; func_02019404();
         data_0209d50c = 6;

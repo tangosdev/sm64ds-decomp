@@ -19,7 +19,7 @@ void func_ov006_020cc8c8(char *p) {
     *(int *)(p + 0x34) = z;
     *(int *)(p + 0x38) = z;
     *(int *)(p + 0x3c) = z;
-    cur = (int *)(((long long)(int)(p + 0x64)));
+    cur = (int *)(p + 0x64);
     want = data_ov006_0213b204;
     if (cur[0] == want[0] && (cur[1] == want[1] || *(int *)(p + 0x64) == 0)) {
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(p + 0x6c, data_ov006_0214057c, 0x40000000, 0x800, 0);

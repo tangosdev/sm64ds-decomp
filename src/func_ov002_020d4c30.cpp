@@ -18,6 +18,12 @@ namespace Particle {
     struct System {
         static void NewSimple(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
     };
+/* Signature deliberately copied from the local declaration above: the
+   ROM name carries by-value class parameters (e.g. Fix12<int>), which
+   mwccarm passes differently at the call site, so declaring the true
+   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
+
 }
 
 struct Obj {
@@ -73,5 +79,5 @@ extern "C" void func_ov002_020d4c30(Obj *self)
         } else id = 0xe4;
     } else id = 0xe5;
     if (id == -1) return;
-    Particle::System::NewSimple(id, self->p5c, self->p60, self->p64);
+    Particle::_ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(id, self->p5c, self->p60, self->p64);
 }

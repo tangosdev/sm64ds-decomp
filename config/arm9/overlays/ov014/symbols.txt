@@ -1,11 +1,11 @@
-_ZN10ShutterBobD1Ev kind:function(arm,size=0x50) addr:0x021111a0
-_ZN10ShutterBobD0Ev kind:function(arm,size=0x64) addr:0x021111f0
-_ZN10ShutterBob16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111254
-_ZN10ShutterBob8BehaviorEv kind:function(arm,size=0x2c) addr:0x02111268
-_ZN10ShutterBob13InitResourcesEv kind:function(arm,size=0x38) addr:0x02111294
-ShutterBob_Spawn kind:function(arm,size=0x3c) addr:0x021112cc
-_ZN10ChainChompD1Ev kind:function(arm,size=0xb4) addr:0x02111308
-_ZN10ChainChompD0Ev kind:function(arm,size=0xc8) addr:0x021113bc
+_ZN14daObjBSwdoor_cD1Ev kind:function(arm,size=0x50) addr:0x021111a0
+_ZN14daObjBSwdoor_cD0Ev kind:function(arm,size=0x64) addr:0x021111f0
+_ZN14daObjBSwdoor_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111254
+_ZN14daObjBSwdoor_c8BehaviorEv kind:function(arm,size=0x2c) addr:0x02111268
+_ZN14daObjBSwdoor_c13InitResourcesEv kind:function(arm,size=0x38) addr:0x02111294
+daObjBSwdoor_c_classInit kind:function(arm,size=0x3c) addr:0x021112cc
+_ZN10daWanwan_cD1Ev kind:function(arm,size=0xb4) addr:0x02111308
+_ZN10daWanwan_cD0Ev kind:function(arm,size=0xc8) addr:0x021113bc
 func_ov014_02111484 kind:function(arm,size=0x54) addr:0x02111484
 func_ov014_021114d8 kind:function(arm,size=0x34) addr:0x021114d8
 func_ov014_0211150c kind:function(arm,size=0xb4) addr:0x0211150c
@@ -28,19 +28,19 @@ func_ov014_021122dc kind:function(arm,size=0x90) addr:0x021122dc
 func_ov014_0211236c kind:function(arm,size=0x1a0) addr:0x0211236c
 func_ov014_0211250c kind:function(arm,size=0x27c) addr:0x0211250c
 func_ov014_02112788 kind:function(arm,size=0x1c4) addr:0x02112788
-_ZN10ChainChomp16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0211294c
-_ZN10ChainChomp6RenderEv kind:function(arm,size=0x58) addr:0x02112994
-_ZN10ChainChomp8BehaviorEv kind:function(arm,size=0x128) addr:0x021129ec
-_ZN10ChainChomp13InitResourcesEv kind:function(arm,size=0x208) addr:0x02112b14
-ChainChomp_Spawn kind:function(arm,size=0xf0) addr:0x02112d1c
-_ZN15ChainChompFenceD1Ev kind:function(arm,size=0x44) addr:0x02112e0c
-_ZN15ChainChompFenceD0Ev kind:function(arm,size=0x58) addr:0x02112e50
+_ZN10daWanwan_c16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0211294c
+_ZN10daWanwan_c6RenderEv kind:function(arm,size=0x58) addr:0x02112994
+_ZN10daWanwan_c8BehaviorEv kind:function(arm,size=0x128) addr:0x021129ec
+_ZN10daWanwan_c13InitResourcesEv kind:function(arm,size=0x208) addr:0x02112b14
+daWanwan_c_classInit kind:function(arm,size=0xf0) addr:0x02112d1c
+_ZN20daObjWanwanShutter_cD1Ev kind:function(arm,size=0x44) addr:0x02112e0c
+_ZN20daObjWanwanShutter_cD0Ev kind:function(arm,size=0x58) addr:0x02112e50
 func_ov014_02112ea8 kind:function(arm,size=0x94) addr:0x02112ea8
-_ZN15ChainChompFence16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112f3c
-_ZN15ChainChompFence6RenderEv kind:function(arm,size=0x40) addr:0x02112f80
-_ZN15ChainChompFence8BehaviorEv kind:function(arm,size=0x3c) addr:0x02112fc0
-_ZN15ChainChompFence13InitResourcesEv kind:function(arm,size=0x80) addr:0x02112ffc
-ChainChompFence_Spawn kind:function(arm,size=0x30) addr:0x0211307c
+_ZN20daObjWanwanShutter_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112f3c
+_ZN20daObjWanwanShutter_c6RenderEv kind:function(arm,size=0x40) addr:0x02112f80
+_ZN20daObjWanwanShutter_c8BehaviorEv kind:function(arm,size=0x3c) addr:0x02112fc0
+_ZN20daObjWanwanShutter_c13InitResourcesEv kind:function(arm,size=0x80) addr:0x02112ffc
+daObjWanwanShutter_c_classInit kind:function(arm,size=0x30) addr:0x0211307c
 __sinit_ov014_021130ac kind:function(arm,size=0x6c) addr:0x021130ac
 __sinit_ov014_02113118 kind:function(arm,size=0x1e4) addr:0x02113118
 __sinit_ov014_021132fc kind:function(arm,size=0x6c) addr:0x021132fc
@@ -155,11 +155,11 @@ data_ov014_02114558 kind:data(any) addr:0x02114558
 data_ov014_02114568 kind:data(any) addr:0x02114568 ambiguous
 data_ov014_02114578 kind:data(any) addr:0x02114578
 data_ov014_02114598 kind:data(any) addr:0x02114598 ambiguous
-data_ov014_021145b8 kind:data(any) addr:0x021145b8
+_ZTI14daObjBSwdoor_c kind:data(any) addr:0x021145b8
 data_ov014_021145c4 kind:data(any) addr:0x021145c4
-data_ov014_021145d0 kind:data(any) addr:0x021145d0
-ShutterBob_SpawnInfo kind:data(any) addr:0x021145e4 ambiguous
-_ZTV10ShutterBob kind:data(any) addr:0x02114608
+_ZTS14daObjBSwdoor_c kind:data(any) addr:0x021145d0
+g_profile_SWITCHDOOR kind:data(any) addr:0x021145e4 ambiguous
+_ZTV14daObjBSwdoor_c kind:data(any) addr:0x02114608
 data_ov014_0211462c kind:data(any) addr:0x0211462c ambiguous
 data_ov014_02114688 kind:data(any) addr:0x02114688
 data_ov014_02114690 kind:data(any) addr:0x02114690
@@ -178,23 +178,23 @@ data_ov014_021146f0 kind:data(any) addr:0x021146f0
 data_ov014_021146f8 kind:data(any) addr:0x021146f8
 data_ov014_02114700 kind:data(any) addr:0x02114700
 data_ov014_0211470c kind:data(any) addr:0x0211470c
-data_ov014_02114718 kind:data(any) addr:0x02114718
+_ZTI10daWanwan_c kind:data(any) addr:0x02114718
 data_ov014_02114724 kind:data(any) addr:0x02114724
 data_ov014_02114730 kind:data(any) addr:0x02114730
-data_ov014_02114740 kind:data(any) addr:0x02114740
-ChainChomp_SpawnInfo kind:data(any) addr:0x02114750 ambiguous
+_ZTS10daWanwan_c kind:data(any) addr:0x02114740
+g_profile_WANWAN kind:data(any) addr:0x02114750 ambiguous
 data_ov014_02114768 kind:data(any) addr:0x02114768 ambiguous
 data_ov014_0211476c kind:data(any) addr:0x0211476c
 data_ov014_021147c4 kind:data(any) addr:0x021147c4 ambiguous
-_ZTV10ChainChomp kind:data(any) addr:0x021147ec
+_ZTV10daWanwan_c kind:data(any) addr:0x021147ec
 data_ov014_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov014_02114860 kind:data(any) addr:0x02114860 ambiguous
-data_ov014_02114868 kind:data(any) addr:0x02114868
-data_ov014_02114874 kind:data(any) addr:0x02114874
+_ZTI20daObjWanwanShutter_c kind:data(any) addr:0x02114868
+_ZTS20daObjWanwanShutter_c kind:data(any) addr:0x02114874
 data_ov014_0211487c kind:data(any) addr:0x0211487c ambiguous
-ChainChompFence_SpawnInfo kind:data(any) addr:0x0211488c ambiguous
+g_profile_WANWAN_SHUTTER kind:data(any) addr:0x0211488c ambiguous
 data_ov014_02114898 kind:data(any) addr:0x02114898 ambiguous
-_ZTV15ChainChompFence kind:data(any) addr:0x021148b0
+_ZTV20daObjWanwanShutter_c kind:data(any) addr:0x021148b0
 data_ov014_021148b4 kind:data(any) addr:0x021148b4 ambiguous
 data_ov014_021148b8 kind:data(any) addr:0x021148b8 ambiguous
 data_ov014_021148e0 kind:data(any) addr:0x021148e0 ambiguous

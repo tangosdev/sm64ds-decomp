@@ -1,48 +1,58 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MirrorLuigi: 5 matched functions, 16 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Mirror Luigi's camera-space reflection actor.
+ *
+ * The cartridge's RTTI record names this class `daLuigi_c` and gives it one
+ * zero-offset dActor_c base. The repository's configured function symbols use
+ * the readable compatibility spelling `MirrorLuigi`; compiler-emitted
+ * `_ZTI11MirrorLuigi` / `_ZTS11MirrorLuigi` are therefore isolation-only
+ * passengers, not names for the ROM metadata at ov055 0x02111aa4..0x02111abc.
+ *
+ * The 0x20c allocation literal in daLuigi_c_classInit fixes the total size. Its
+ * factory constructs the four owned member regions in declaration order and
+ * D1/D0 destroy them in reverse order, independently proving the layout below:
+ * ModelAnim @ 0x0d4, Model @ 0x138, ShadowModel @ 0x188, and two
+ * TextureSequence objects @ 0x1b0. The remaining tail is a state descriptor
+ * pointer followed by the shadow matrix used by Behavior.
+ *
+ * The ROM vtable has exactly dActor_c's 31 slots. Slots 0, 3, 6, 9, 12, 16
+ * and 17 point at the overrides declared here; every other destination is
+ * inherited unchanged.
+ *
+ * SM64DS RTTI names the implementation daLuigi_c. The reconstructed factory
+ * daLuigi_c_classInit (historical alias MirrorLuigi_Spawn)
+ * installs this class's cartridge vtable; the reconstructed profile
+ * global g_profile_LUIGI (historical alias MirrorLuigi_SpawnInfo)
+ * is its registry descriptor.
+ */
 #ifndef MIRRORLUIGI_H
 #define MIRRORLUIGI_H
-#include "types.h"
 
-struct MirrorLuigi {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x6c];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x7];
-    u8  unk_0dc;            /* 0x0dc */
-    u8  pad_0dd[0xb];
-    u8  unk_0e8;            /* 0x0e8 */
-    u8  pad_0e9[0x4f];
-    u8  mModel;            /* 0x138 */
-    u8  pad_139[0x7];
-    u8  unk_140;            /* 0x140 */
-    u8  pad_141[0xb];
-    u8  unk_14c;            /* 0x14c */
-    u8  pad_14d[0x7];
-    u8  unk_154;            /* 0x154 */
-    u8  pad_155[0x33];
-    u8  mShadowModel;            /* 0x188 */
-    u8  pad_189[0x27];
-    u8  unk_1b0;            /* 0x1b0 */
-    u8  pad_1b1[0x7];
-    s32 unk_1b8;            /* 0x1b8 */
-    u8  pad_1bc[0x8];
-    u8  unk_1c4;            /* 0x1c4 */
-    u8  pad_1c5[0x7];
-    s32 unk_1cc;            /* 0x1cc */
-    u8  pad_1d0[0x8];
-    u8  unk_1d8;            /* 0x1d8 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+#include "dActor_c.h"
+#include "ModelAnim.h"
+#include "Model.h"
+#include "ShadowModel.h"
+#include "TextureSequence.h"
+#include "math/Matrix.h"
+
+struct MirrorLuigiState;
+
+struct MirrorLuigi : dActor_c {
+    u8 pad_0d0[0x4];
+    ModelAnim mModelAnim;                     /* 0x0d4 */
+    Model mModel;                             /* 0x138 */
+    ShadowModel mShadowModel;                 /* 0x188 */
+    TextureSequence mTextureSequences[2];     /* 0x1b0 */
+    MirrorLuigiState *mState;                 /* 0x1d8 */
+    Matrix4x3 mShadowMatrix;                  /* 0x1dc */
+
+    virtual ~MirrorLuigi();                   /* slots 16, 17 */
+    virtual s32 InitResources();              /* slot  0 */
+    virtual s32 CleanupResources();           /* slot  3 */
+    virtual s32 Behavior();                   /* slot  6 */
+    virtual s32 Render();                     /* slot  9 */
+    virtual void OnPendingDestroy();          /* slot 12 */
 };
 
-#endif
+typedef char MirrorLuigi_size_must_be_0x20c[
+    sizeof(MirrorLuigi) == 0x20c ? 1 : -1];
+
+#endif /* MIRRORLUIGI_H */

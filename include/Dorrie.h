@@ -1,59 +1,92 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Dorrie: 5 matched functions, 27 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
+/* Dorrie, reconstructed from its factory, destructor pair, vtable/RTTI and
+ * five matched methods.
+ *
+ * The cartridge calls this class daDossy_c in RTTI, while its configured
+ * methods use the compatibility spelling Dorrie. The compiler-facing Dorrie
+ * metadata is therefore a per-function passenger; the ROM-owned vtable still
+ * has to be checked directly for its exact 31-slot dActor_c shape.
+ *
+ * DorriePlatform is independently corroborated by the two 0x1c callbacks used
+ * by daDossy_c_classInit and the D1/D0 pair: each callback constructs or destroys a
+ * dBgW_KcMbg at +0x30, the array stride is 0x200, and InitResources advances
+ * the matrix and collider views at exactly that stride. Matrix4x3 (0x30) plus
+ * dBgW_KcMbg (0x1c8) plus Vector3_16 (0x6) naturally pads to 0x200.
+ *
+ * SM64DS RTTI names the implementation daDossy_c. The reconstructed
+ * factory daDossy_c_classInit (historical alias
+ * Dorrie_Spawn) constructs it for the DOSSY
+ * registry profile.
+ */
 #ifndef DORRIE_H
 #define DORRIE_H
-#include "types.h"
 
-struct Dorrie {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x3c];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x7];
-    s32 unk_0d4;            /* 0x0d4 */
-    s32 unk_0d8;            /* 0x0d8 */
-    s32 unk_0dc;            /* 0x0dc */
-    s32 unk_0e0;            /* 0x0e0 */
-    u8  pad_0e4[0x4];
-    u8  unk_0e8;            /* 0x0e8 */
-    u8  pad_0e9[0x3];
-    u8  mModelAnim;            /* 0x0ec */
-    u8  pad_0ed[0xe63];
-    u8  mWithMeshClsn;            /* 0xf50 */
-    u8  pad_f51[0x1bb];
-    u8  unk_110c;           /* 0x110c */
-    u8  pad_110d[0x33];
-    u8  unk_1140;           /* 0x1140 */
-    u8  pad_1141[0x3f];
-    s32 unk_1180;           /* 0x1180 */
-    s32 unk_1184;           /* 0x1184 */
-    s32 unk_1188;           /* 0x1188 */
-    s32 unk_118c;           /* 0x118c */
-    s32 unk_1190;           /* 0x1190 */
-    s32 unk_1194;           /* 0x1194 */
-    s32 unk_1198;           /* 0x1198 */
-    s32 unk_119c;           /* 0x119c */
-    u8  pad_11a0[0x8];
-    s32 unk_11a8;           /* 0x11a8 */
-    s32 unk_11ac;           /* 0x11ac */
-    u8  pad_11b0[0x2];
-    s16 unk_11b2;           /* 0x11b2 */
-    u8  pad_11b4[0x1];
-    u8  unk_11b5;           /* 0x11b5 */
-#ifdef __cplusplus
-    /* methods */
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
+#include "dActor_c.h"
+#include "ModelAnim.h"
+#include "dBgW_KcMbg.h"
+#include "dBgCh_Actr.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
+
+struct daDossyCap_c;
+
+struct DorriePlatform {
+    Matrix4x3 mClsnNextMat;     /* 0x000 */
+    dBgW_KcMbg mClsn;           /* 0x030 */
+    Vector3_16 mRot;            /* 0x1f8 */
+
+    DorriePlatform();
+    ~DorriePlatform();
 };
 
-#endif
+typedef char DorriePlatform_size_must_be_0x200[
+    sizeof(DorriePlatform) == 0x200 ? 1 : -1];
+
+struct Dorrie : dActor_c {
+    u32 unk_0d0;                 /* 0x0d0 */
+    daDossyCap_c *mCap;         /* 0x0d4 */
+    s32 mCapPosX;               /* 0x0d8 */
+    s32 mCapPosY;               /* 0x0dc */
+    s32 mCapPosZ;               /* 0x0e0 */
+    s16 mHeadRotX;              /* 0x0e4 */
+    u16 mUnkTimer;              /* 0x0e6 */
+    u8  mHasCap;                /* 0x0e8 */
+    u8  pad_0e9[0x3];
+    ModelAnim mModelAnim;       /* 0x0ec */
+    DorriePlatform mPlatforms[7]; /* 0x150 */
+    dBgCh_Actr mWithMeshClsn;   /* 0xf50 */
+    dCcAc_c mCylClsn1;          /* 0x110c */
+    dCcAcPos_c mCylClsn2;       /* 0x1140 */
+    s32 mHomePosX;              /* 0x1180 */
+    s32 mHomePosY;              /* 0x1184 */
+    s32 mHomePosZ;              /* 0x1188 */
+    dActor_c *mClsnPlayer;      /* 0x118c */
+    dActor_c *mRider;           /* 0x1190 */
+    s32 mSpawnPosX;             /* 0x1194 */
+    s32 mSpawnPosY;             /* 0x1198 */
+    s32 mSpawnPosZ;             /* 0x119c */
+    s32 mDistToCenter;          /* 0x11a0 */
+    s16 mAngToCenter;           /* 0x11a4 */
+    s16 mAngVelY;               /* 0x11a6 */
+    s32 mPushDownHeight;        /* 0x11a8 */
+    s32 mSinkHeight;            /* 0x11ac */
+    u8  mStateState;            /* 0x11b0 */
+    u8  pad_11b1;
+    u16 mStateTimer;            /* 0x11b2 */
+    u8  mState;                 /* 0x11b4 */
+    u8  mClsnState;             /* 0x11b5 */
+    u8  pad_11b6[0x2];
+
+    /* Inline is load-bearing: explicit use in the destructor source files
+     * emits D1 then D0 without inventing a homeless D2. */
+    virtual ~Dorrie() {}
+
+    virtual int InitResources();
+    virtual int CleanupResources();
+    virtual int Behavior();
+    virtual int Render();
+};
+
+typedef char Dorrie_size_must_be_0x11b8[
+    sizeof(Dorrie) == 0x11b8 ? 1 : -1];
+
+#endif /* DORRIE_H */

@@ -1,20 +1,20 @@
 //cpp
 extern "C" {
-struct WithMeshClsn;
+struct dBgCh_Actr;
 int func_02038414(void* c);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
-void* _ZNK12WithMeshClsn14GetFloorResultEv(void* c);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
+void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* c);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, int* out);
 int _ZN4cstd4fdivEii(int a, int b);
-int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
-void* _ZNK12WithMeshClsn13GetWallResultEv(void* c);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
+void* _ZNK10dBgCh_Actr13GetWallResultEv(void* c);
 int func_ov019_0211140c(int* self, void* clsn)
 {
     int n0[3];
     int n1[3];
     func_02038414(clsn);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn14GetFloorResultEv(clsn)+4, n0);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn)+4, n0);
         if (n0[1] != 0) {
             long long a = (long long)n0[0] * (long long)self[0xa4/4];
             long long b = (long long)n0[2] * (long long)self[0xac/4];
@@ -24,8 +24,8 @@ int func_ov019_0211140c(int* self, void* clsn)
             if (self[0xa8/4] > 0) self[0xa8/4] = 0;
         }
     }
-    if (_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn13GetWallResultEv(clsn)+4, n1);
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4, n1);
     }
 }
 }

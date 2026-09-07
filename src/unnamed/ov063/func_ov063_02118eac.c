@@ -4,7 +4,7 @@ struct Vector3 {
     int z;
 };
 
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov063_02118f24(void *c, void *vec);
 
 void func_ov063_02118eac(char *c)
@@ -22,7 +22,7 @@ void func_ov063_02118eac(char *c)
         return;
     }
     id = *(unsigned int *)(c + 0x49c);
-    p = _ZN5Actor10FindWithIDEj(id);
+    p = _ZN8dActor_c10FindWithIDEj(id);
     *(void **)(c + 0x48c) = p;
     if (*(void **)(c + 0x48c) != 0) {
         func_ov063_02118f24(*(void **)(c + 0x48c), &v);

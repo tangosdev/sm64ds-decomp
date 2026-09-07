@@ -20,13 +20,13 @@
 extern "C" {
 #endif
 
-extern int _ZN5Scene14BeforeBehaviorEv();
-extern int _ZN5Scene15SetSceneToSpawnEjj(u32, u32);
-extern int _ZN5Scene19BeforeInitResourcesEv(void*);
-extern void _ZN5Scene20Initialise3dGraphicsEv(void);
-extern void _ZN5Scene20SetAndStopColorFaderEv(void);
-extern void _ZN5Scene21AfterCleanupResourcesEj(char*, unsigned int);
-extern void _ZN5Scene9SetFadersEP15FaderBrightness(void*);
+extern int _ZN8dScene_c14BeforeBehaviorEv();
+extern int _ZN8dScene_c15SetSceneToSpawnEjj(u32, u32);
+extern int _ZN8dScene_c19BeforeInitResourcesEv(void*);
+extern void _ZN8dScene_c20Initialise3dGraphicsEv(void);
+extern void _ZN8dScene_c20SetAndStopColorFaderEv(void);
+extern void _ZN8dScene_c21AfterCleanupResourcesEj(char*, unsigned int);
+extern void _ZN8dScene_c9SetFadersEP15FaderBrightness(void*);
 
 
 #ifdef __cplusplus

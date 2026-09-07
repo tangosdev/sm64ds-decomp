@@ -11,7 +11,7 @@ extern void MulMat4x3Mat4x3(void* a, void* b, void* c);
 extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3 *mF, s16 angX);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(struct Matrix4x3 *mF, s16 angZ);
 extern void Matrix4x3_ApplyInPlaceToRotationY(struct Matrix4x3 *mF, s16 angY);
-extern void _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(void* self, void* mtx, s16 a);
+extern void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void* self, void* mtx, s16 a);
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12 x, Fix12 y, Fix12 z);
 
 
@@ -35,7 +35,7 @@ void func_ov021_0211129c(char* c) {
     Matrix4x3_ApplyInPlaceToRotationZ((struct Matrix4x3*)&data_020a0e68, *(s16*)(c+0x90));
     Matrix4x3_ApplyInPlaceToRotationY((struct Matrix4x3*)&data_020a0e68, *(s16*)(c+0x8e));
     *(struct Matrix4x3*)(c+0x2ec) = data_020a0e68;
-    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(c+0x124, c+0x2ec, *(s16*)(c+0x8e));
+    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(c+0x124, c+0x2ec, *(s16*)(c+0x8e));
 
     tr = (char*)&data_ov021_02114a20[0];
     i = 0;
@@ -57,7 +57,7 @@ void func_ov021_0211129c(char* c) {
         Matrix4x3_ApplyInPlaceToTranslation((struct Matrix4x3*)&data_020a0e68, v[0], v[1], v[2]);
         Matrix4x3_ApplyInPlaceToRotationY((struct Matrix4x3*)&data_020a0e68, data_ov021_02114740[i]);
         *(struct Matrix4x3*)(obj+0x460) = data_020a0e68;
-        _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(transform, col, *(s16*)(c+0x8e));
+        _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(transform, col, *(s16*)(c+0x8e));
         tr += 0xc;
         obj += 0x30;
         col += 0x30;

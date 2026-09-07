@@ -30,7 +30,7 @@ int func_ov081_0212538c(char *c)
         *(int *)(c + 0x5c) = node.x;
         *(int *)(c + 0x60) = node.y;
         *(int *)(c + 0x64) = node.z;
-        (*(int *)(((long long)(int)(c + 0x424))))++;
+        (*(int *)(c + 0x424))++;
         if (*(int *)(c + 0x424) >= *(int *)(c + 0x420))
             *(int *)(c + 0x424) = 0;
         *(int *)(c + 0x408) = 1;

@@ -4,15 +4,15 @@
     .ctor       start:0x02128824 end:0x02128838 kind:rodata align:4
     .data       start:0x02128840 end:0x02128d60 kind:data align:32
     .bss        start:0x02128d60 end:0x02129000 kind:bss align:32
-src/_ZN9SpindriftD1Ev.c:
+src/_ZN9SpindriftD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123788
 
-src/_ZN9SpindriftD0Ev.c:
+src/_ZN9SpindriftD0Ev.cpp:
     complete
     .text start:0x02123788 end:0x021237e4
 
-src/func_ov081_021237e4.c:
+src/_ZN9Spindrift16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021237e4 end:0x021237ec
 
@@ -21,13 +21,14 @@ src/func_ov081_021237ec.cpp:
     .text start:0x021237ec end:0x02123910
 
 src/func_ov081_02123910.cpp:
+    complete
     .text start:0x02123910 end:0x02123b20
 
 src/func_ov081_02123b20.cpp:
     complete
     .text start:0x02123b20 end:0x02123bec
 
-src/_ZN9Spindrift16CleanupResourcesEv.c:
+src/_ZN9Spindrift16CleanupResourcesEv.cpp:
     complete
     .text start:0x02123bec end:0x02123c1c
 
@@ -40,25 +41,26 @@ src/_ZN9Spindrift8BehaviorEv.cpp:
     .text start:0x02123c6c end:0x02123ed0
 
 src/_ZN9Spindrift13InitResourcesEv.cpp:
+    complete
     .text start:0x02123ed0 end:0x02123fd8
 
-src/func_ov081_02123fd8.cpp:
+src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02123fd8 end:0x02124038
 
-src/func_ov081_02124038.c:
+src/_ZN9Spindrift13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02124038 end:0x02124040
 
-src/Spindrift_Spawn.c:
+src/d_a_huwa.c:
     complete
     .text start:0x02124040 end:0x02124090
 
-src/_ZN10MrBlizzardD1Ev.c:
+src/_ZN10MrBlizzardD1Ev.cpp:
     complete
     .text start:0x02124090 end:0x021240d8
 
-src/_ZN10MrBlizzardD0Ev.c:
+src/_ZN10MrBlizzardD0Ev.cpp:
     complete
     .text start:0x021240d8 end:0x02124134
 
@@ -71,6 +73,7 @@ src/func_ov081_0212423c.c:
     .text start:0x0212423c end:0x021243cc
 
 src/func_ov081_021243cc.cpp:
+    complete
     .text start:0x021243cc end:0x021245e8
 
 src/func_ov081_021245e8.c:
@@ -106,6 +109,7 @@ src/func_ov081_02124b98.cpp:
     .text start:0x02124b98 end:0x02124d14
 
 src/func_ov081_02124d14.cpp:
+    complete
     .text start:0x02124d14 end:0x02124d50
 
 src/func_ov081_02124d50.cpp:
@@ -137,6 +141,7 @@ src/func_ov081_02125038.cpp:
     .text start:0x02125038 end:0x02125068
 
 src/func_ov081_02125068.cpp:
+    complete
     .text start:0x02125068 end:0x021250c8
 
 src/func_ov081_021250c8.c:
@@ -163,11 +168,11 @@ src/func_ov081_021254d8.cpp:
     complete
     .text start:0x021254d8 end:0x021257b0
 
-src/_ZN10MrBlizzard16CleanupResourcesEv.c:
+src/_ZN10MrBlizzard16CleanupResourcesEv.cpp:
     complete
     .text start:0x021257b0 end:0x0212581c
 
-src/_ZN10MrBlizzard16OnPendingDestroyEv.c:
+src/_ZN10MrBlizzard16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212581c end:0x02125820
 
@@ -180,21 +185,22 @@ src/_ZN10MrBlizzard8BehaviorEv.cpp:
     .text start:0x0212588c end:0x02125ba0
 
 src/_ZN10MrBlizzard13InitResourcesEv.cpp:
+    complete
     .text start:0x02125ba0 end:0x02125eb8
 
-src/func_ov081_02125eb8.c:
+src/_ZN10MrBlizzard16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02125eb8 end:0x02125ec0
 
-src/MrBlizzard_Spawn.c:
+src/d_a_snowman.c:
     complete
     .text start:0x02125ec0 end:0x02125f14
 
-src/_ZN8SnowballD1Ev.c:
+src/_ZN8SnowballD1Ev.cpp:
     complete
     .text start:0x02125f14 end:0x02125f5c
 
-src/_ZN8SnowballD0Ev.c:
+src/_ZN8SnowballD0Ev.cpp:
     complete
     .text start:0x02125f5c end:0x02125fb8
 
@@ -218,11 +224,11 @@ src/func_ov081_02126224.c:
     complete
     .text start:0x02126224 end:0x02126298
 
-src/_ZN8Snowball16CleanupResourcesEv.c:
+src/_ZN8Snowball16CleanupResourcesEv.cpp:
     complete
     .text start:0x02126298 end:0x021262bc
 
-src/_ZN8Snowball16OnPendingDestroyEv.c:
+src/_ZN8Snowball16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021262bc end:0x021262c0
 
@@ -238,22 +244,23 @@ src/_ZN8Snowball13InitResourcesEv.cpp:
     complete
     .text start:0x021263b8 end:0x021264b4
 
-src/Snowball_Spawn.c:
+src/d_a_snowball.c:
     complete
     .text start:0x021264b4 end:0x02126504
 
 src/_ZN8MoneybagD1Ev.cpp:
+    complete
     .text start:0x02126504 end:0x02126554
 
-src/_ZN8MoneybagD0Ev.c:
+src/_ZN8MoneybagD0Ev.cpp:
     complete
     .text start:0x02126554 end:0x021265b8
 
-src/func_ov081_021265b8.c:
+src/_ZN8Moneybag13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021265b8 end:0x021265c0
 
-src/func_ov081_021265c0.c:
+src/_ZN8Moneybag16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021265c0 end:0x021265c8
 
@@ -286,6 +293,7 @@ src/func_ov081_02126c8c.cpp:
     .text start:0x02126c8c end:0x02126d64
 
 src/func_ov081_02126d64.c:
+    complete
     .text start:0x02126d64 end:0x02126e28
 
 src/func_ov081_02126e28.c:
@@ -360,11 +368,11 @@ src/func_ov081_0212777c.c:
     complete
     .text start:0x0212777c end:0x02127798
 
-src/_ZN8Moneybag16CleanupResourcesEv.c:
+src/_ZN8Moneybag16CleanupResourcesEv.cpp:
     complete
     .text start:0x02127798 end:0x021277dc
 
-src/_ZN8Moneybag16OnPendingDestroyEv.c:
+src/_ZN8Moneybag16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021277dc end:0x021277e0
 
@@ -380,28 +388,31 @@ src/_ZN8Moneybag13InitResourcesEv.cpp:
     complete
     .text start:0x021278a8 end:0x02127a7c
 
-src/func_ov081_02127a7c.cpp:
+src/_ZN8Moneybag13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02127a7c end:0x02127adc
 
-src/Moneybag_Spawn.c:
+src/d_a_gmch.c:
     complete
     .text start:0x02127adc end:0x02127b34
 
-src/_ZN8IceBlockD1Ev.c:
+src/_ZN8IceBlockD1Ev.cpp:
+    complete
     .text start:0x02127b34 end:0x02127b80
 
-src/_ZN8IceBlockD0Ev.c:
+src/_ZN8IceBlockD0Ev.cpp:
+    complete
     .text start:0x02127b80 end:0x02127be0
 
 src/func_ov081_02127be0.cpp:
+    complete
     .text start:0x02127be0 end:0x02127ccc
 
-src/func_ov081_02127ccc.cpp:
+src/_ZN8IceBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02127ccc end:0x02127cf4
 
-src/func_ov081_02127cf4.c:
+src/_ZN8IceBlock4KillEv.cpp:
     complete
     .text start:0x02127cf4 end:0x02127d98
 
@@ -421,21 +432,26 @@ src/_ZN8IceBlock13InitResourcesEv.cpp:
     complete
     .text start:0x02127ff0 end:0x021280a0
 
-src/IceBlock_Spawn.c:
+src/d_a_obj_ice_block.c:
     complete
     .text start:0x021280a0 end:0x021280d8
 
 src/__sinit_ov081_021280e8.c:
+    complete
     .init start:0x021280e8 end:0x02128154
 
 src/__sinit_ov081_02128154.c:
+    complete
     .init start:0x02128154 end:0x021284b4
 
 src/__sinit_ov081_021284b4.c:
+    complete
     .init start:0x021284b4 end:0x021284f0
 
 src/__sinit_ov081_021284f0.c:
+    complete
     .init start:0x021284f0 end:0x021287b8
 
 src/__sinit_ov081_021287b8.c:
+    complete
     .init start:0x021287b8 end:0x02128824

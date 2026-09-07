@@ -8,18 +8,18 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
  */
-struct Actor;
+struct dActor_c;
 
 
-extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
+extern struct dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern int func_ov002_020ed63c(char* c, int i);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(struct Actor* self, const struct Vector3* pos, u32 a, int fix, u32 b, u32 c, u32 d);
+extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(struct dActor_c* self, const struct Vector3* pos, u32 a, int fix, u32 b, u32 c, u32 d);
 extern void func_ov002_020edca4(char* c);
 
 int func_ov002_020eddc4(char* self)
 {
-    struct Actor* actor;
-    struct Actor* other;
+    struct dActor_c* actor;
+    struct dActor_c* other;
     u32 id;
     u32 flags;
     u16 type;
@@ -27,10 +27,10 @@ int func_ov002_020eddc4(char* self)
     id = *(u32*)(self + 0x134);
     if (id == 0) goto fail;
 
-    actor = _ZN5Actor10FindWithIDEj(id);
+    actor = _ZN8dActor_c10FindWithIDEj(id);
     if (actor == 0) goto fail;
 
-    if (actor == *(struct Actor**)(self + 0x38c)) goto fail;
+    if (actor == *(struct dActor_c**)(self + 0x38c)) goto fail;
 
     {
         int t = (int)(*(u16*)((char*)actor + 0xc) == 0xbf);
@@ -65,7 +65,7 @@ int func_ov002_020eddc4(char* self)
     other = 0;
     id = *(u32*)(self + 0x410);
     if (id != 0) {
-        other = _ZN5Actor10FindWithIDEj(id);
+        other = _ZN8dActor_c10FindWithIDEj(id);
     }
     if (other != actor) goto fail;
 

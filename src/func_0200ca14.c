@@ -6,7 +6,7 @@ void func_0200ca14(int r0, unsigned int r1, int r2)
         return;
 
     if (r2 == 0)
-        *(unsigned *)(((long long)(int)(r0 + 0x154))) |= 0x20000;
+        *(unsigned *)(r0 + 0x154) |= 0x20000;
     else
-        *(unsigned *)(((long long)(int)(r0 + 0x154))) |= 0x10000;
+        *(unsigned *)(r0 + 0x154) |= 0x10000;
 }

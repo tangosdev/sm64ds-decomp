@@ -5,7 +5,7 @@
 
 extern int data_0209e650;
 extern "C" int RandomIntInternal(int *seed);
-extern "C" void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+extern "C" void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern "C" short Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);
 extern "C" void _Z14ApproachLinearRsss(short *p, short target, short step);
 extern "C" void Vec3_Sub(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
@@ -27,7 +27,7 @@ extern "C" void func_ov100_021464f4(char *c){
     int *p98 = (int*)(((int)c + 0x98));
     *p98 += 0x800;
   }
-  pl = _ZN5Actor13ClosestPlayerEv(c);
+  pl = _ZN8dActor_c13ClosestPlayerEv(c);
   if(pl == 0) return;
   _Z14ApproachLinearRsss((short*)(c+0x94), Vec3_HorzAngle((struct Vector3*)((char*)pl+0x5c), (struct Vector3*)(c+0x5c)), *(short*)(c+0x154));
   Vec3_Sub(&v, (struct Vector3*)(c+0x5c), (struct Vector3*)((char*)pl+0x5c));

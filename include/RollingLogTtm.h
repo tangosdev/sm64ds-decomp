@@ -1,60 +1,46 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RollingLogTtm: 5 matched functions, 27 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef ROLLINGLOGTTM_H
 #define ROLLINGLOGTTM_H
+
 #include "types.h"
 
-struct RollingLogTtm {
-    u8  pad_000[0xc];
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x10];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x18];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x7];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x5b];
-    s32 unk_130;            /* 0x130 */
-    u8  pad_134[0x4];
-    u8  mShadowModel;            /* 0x138 */
-    u8  pad_139[0x27];
-    u8  mMovingCylinderClsn;            /* 0x160 */
-    u8  pad_161[0x33];
-    u8  mWithMeshClsn;            /* 0x194 */
-    u8  pad_195[0x1eb];
-    s32 unk_380;            /* 0x380 */
-    s32 unk_384;            /* 0x384 */
-    s32 unk_388;            /* 0x388 */
-    s32 unk_38c;            /* 0x38c */
-    s32 unk_390;            /* 0x390 */
-    s32 unk_394;            /* 0x394 */
-    u8  pad_398[0x10];
-    s32 unk_3a8;            /* 0x3a8 */
-    s32 unk_3ac;            /* 0x3ac */
-    u32 unk_3b0;            /* 0x3b0 */
-    u8  pad_3b4[0x14];
-    u8  unk_3c8;            /* 0x3c8 */
-    u8  pad_3c9[0x2];
-    u8  unk_3cb;            /* 0x3cb */
+/* Tall, Tall Mountain's rolling log. `hm` is the ROM's tag for that stage.
+ *
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjMaruta_c, which derives from
+ * dBgActor_c, and the difference is in the bytes rather than only in the RTTI: its
+ * destructor stores THREE vptrs -- its own, daObjMaruta_c's, then dBgActor_c's.
+ * A one-level chain emits two.
+ *
+ *   _ZTI15daObjHmMaruta_c  ov030 0x021159f8
+ *   _ZTS15daObjHmMaruta_c  ov030 0x02115a10
+ *   _ZTV13RollingLogTtm  ov030 0x02115a48  (its record sits at V-4)
+ *   kind  __si_class_type_info, ONE base, subobject offset 0
+ *   base  daObjMaruta_c, ov022 0x02114350
+ *
+ * SIZE 0x344, from daObjHmMaruta_c_classInit's literal 836 (historical alias
+ * RollingLogTtm_Spawn). It overrides slots 0, 3 and 6,
+ * all three of which the base leaves null.
+ */
+
 #ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+
+#include "daObjMaruta_c.h"
+
+struct RollingLogTtm : daObjMaruta_c {
+    /* UNOBSERVED, not inherited. Nothing in the tree reads this span: neither this
+       class's own three methods nor daObjMaruta_c's. It is here rather than on the
+       base because the base's Behavior slot is null, so no method of the base could
+       be reading it -- see include/daObjMaruta_c.h. */
+    u8  pad_320[0x24];
+    /* --- vtable --- */
+    virtual ~RollingLogTtm();      /* slots 16 (D1), 17 (D0) */
+
+    int Behavior();                    /* slot  6 */
+    int CleanupResources();            /* slot  3 */
+    int InitResources();               /* slot  0 */
 };
 
-#endif
+typedef char RollingLogTtm_size_must_be_0x344[sizeof(RollingLogTtm) == 0x344 ? 1 : -1];
+
+#endif /* __cplusplus */
+
+#endif /* ROLLINGLOGTTM_H */

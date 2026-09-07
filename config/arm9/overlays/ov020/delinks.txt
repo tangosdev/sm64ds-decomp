@@ -4,21 +4,24 @@
     .ctor       start:0x02113768 end:0x02113770 kind:rodata align:4
     .data       start:0x02113780 end:0x02114aa0 kind:data align:32
     .bss        start:0x02114aa0 end:0x02114b20 kind:bss align:32
-src/_ZN8BookShotD1Ev.c:
+src/_ZN8BookShotD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/_ZN8BookShotD0Ev.c:
+src/_ZN8BookShotD0Ev.cpp:
     complete
     .text start:0x021111f0 end:0x02111254
 
 src/_ZN15BookShotSpawnerD1Ev.cpp:
+    complete
     .text start:0x02111254 end:0x02111278
 
-src/_ZN15BookShotSpawnerD0Ev.c:
+src/_ZN15BookShotSpawnerD0Ev.cpp:
+    complete
     .text start:0x02111278 end:0x021112b0
 
 src/func_ov020_021112b0.c:
+    complete
     .text start:0x021112b0 end:0x02111340
 
 src/func_ov020_02111340.c:
@@ -98,68 +101,70 @@ src/_ZN8BookShot13InitResourcesEv.cpp:
     .text start:0x021124e4 end:0x02112768
 
 src/_ZN15BookShotSpawner13InitResourcesEv.cpp:
+    complete
     .text start:0x02112768 end:0x021127a4
 
-src/func_ov020_021127a4.cpp:
+src/_ZN8BookShot16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021127a4 end:0x021127cc
 
-src/func_ov020_021127cc.c:
+src/_ZN8BookShot13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021127cc end:0x021127f4
 
-src/func_ov020_021127f4.c:
+src/d_a_book_book_switch.c:
     complete
     .text start:0x021127f4 end:0x02112850
 
-src/BookShotSpawner_Spawn.c:
+src/d_a_book_gen.c:
     complete
     .text start:0x02112850 end:0x02112880
 
-src/Bookend_Spawn.c:
+src/d_a_book_killer_book.c:
     complete
     .text start:0x02112880 end:0x021128dc
 
-src/BookShot_Spawn.c:
+src/d_a_book_shoot_book.c:
     complete
     .text start:0x021128dc end:0x02112938
 
 src/_ZN12HauntedChairD1Ev.cpp:
+    complete
     .text start:0x02112938 end:0x02112980
 
-src/_ZN12HauntedChairD0Ev.c:
+src/_ZN12HauntedChairD0Ev.cpp:
     complete
     .text start:0x02112980 end:0x021129dc
 
-src/func_ov020_021129dc.c:
+src/_ZN12HauntedChair6State3Ev.cpp:
     complete
     .text start:0x021129dc end:0x02112b00
 
-src/func_ov020_02112b00.c:
+src/_ZN12HauntedChair6State2Ev.cpp:
     complete
     .text start:0x02112b00 end:0x02112e94
 
-src/func_ov020_02112e94.c:
+src/_ZN12HauntedChair6State1Ev.cpp:
     complete
     .text start:0x02112e94 end:0x021130c8
 
-src/func_ov020_021130c8.c:
+src/_ZN12HauntedChair6State0Ev.cpp:
     complete
     .text start:0x021130c8 end:0x02113148
 
-src/func_ov020_02113148.c:
+src/_ZN12HauntedChair18ApproachStateValueEPsS0_isis.cpp:
     complete
     .text start:0x02113148 end:0x021131f8
 
-src/func_ov020_021131f8.c:
+src/_ZN12HauntedChair5BreakEv.cpp:
     complete
     .text start:0x021131f8 end:0x02113240
 
-src/func_ov020_02113240.cpp:
+src/_ZN12HauntedChair11UpdateModelEv.cpp:
     complete
     .text start:0x02113240 end:0x021132d8
 
-src/_ZN12HauntedChair16CleanupResourcesEv.c:
+src/_ZN12HauntedChair16CleanupResourcesEv.cpp:
     complete
     .text start:0x021132d8 end:0x021132fc
 
@@ -175,12 +180,14 @@ src/_ZN12HauntedChair13InitResourcesEv.cpp:
     complete
     .text start:0x021133b0 end:0x02113494
 
-src/HauntedChair_Spawn.c:
+src/d_a_chair.c:
     complete
     .text start:0x02113494 end:0x021134e4
 
 src/__sinit_ov020_02113674.c:
+    complete
     .init start:0x02113674 end:0x0211372c
 
 src/__sinit_ov020_0211372c.c:
+    complete
     .init start:0x0211372c end:0x02113768

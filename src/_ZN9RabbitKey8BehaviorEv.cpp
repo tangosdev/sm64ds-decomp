@@ -4,12 +4,12 @@
 #include "RabbitKey.h"
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void* a, void* b);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* a, void* b);
 }
 
 int RabbitKey::Behavior()
 {
-  DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
+  DecIfAbove0_Short((unsigned short*)((char*)&mStateTimer));
   void* o = *(void**)((char*)&unk_188);
   if(*(int*)((char*)o+8)){
     char* base = (char*)o+8;
@@ -20,12 +20,12 @@ int RabbitKey::Behavior()
     else fn=*(void**)base;
     ((void(*)(char*))fn)(self);
   }
-  int s = unk_0a8 + unk_09c;
-  int lim = unk_0a0;
+  int s = mVertSpeed + mVertAccel;
+  int lim = mTerminalVelocity;
   if(s >= lim) lim = s;
   int t = unk_0ac;
-  unk_0a8 = lim;
+  mVertSpeed = lim;
   unk_0ac = t;
-  _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char*)this), 0);
+  _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char*)this), 0);
   return 1;
 }

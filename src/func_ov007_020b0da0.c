@@ -43,7 +43,7 @@ void func_ov007_020b0da0(void* arg0) {
                 if (a >= 0x60 && a <= 0xa0) {
                     int b = *(u16*)(rp + 0xa);
                     if (b >= 0x40 && b <= 0x80) {
-                        int* pflag = (int*)(((long long)(int)(st + 4)));
+                        int* pflag = (int*)(st + 4);
                         *pflag |= 2;
                         data_ov007_02103340 = counter;
                         func_ov007_020bdeb0(0x34);

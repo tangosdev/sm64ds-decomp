@@ -1,0 +1,253 @@
+{
+  "id": "ov065/daObjCtMecha05_c",
+  "module": "ov065",
+  "source": "src/game/actors/daObjCtMecha05_c.cpp",
+  "promoted_source": "src/game/actors/daObjCtMecha05_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x211ab60..0x211b328, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjCtMecha05_c",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0211ab60",
+      "end": "0x0211b328"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN16daObjCtMecha05_cD1Ev",
+      "address": "0x0211ab60",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN16daObjCtMecha05_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha05_cD0Ev",
+      "address": "0x0211abac",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN16daObjCtMecha05_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov065_0211ac0c",
+      "address": "0x0211ac0c",
+      "size": "0x000000f8",
+      "legacy_source": "src/func_ov065_0211ac0c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha05_c16CleanupResourcesEv",
+      "address": "0x0211ad04",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN16daObjCtMecha05_c16CleanupResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha05_c6RenderEv",
+      "address": "0x0211ad48",
+      "size": "0x00000028",
+      "legacy_source": "src/_ZN16daObjCtMecha05_c6RenderEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov065_0211ad70",
+      "address": "0x0211ad70",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov065_0211ad70.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha05_c8BehaviorEv",
+      "address": "0x0211ae08",
+      "size": "0x000003cc",
+      "legacy_source": "src/_ZN16daObjCtMecha05_c8BehaviorEv.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN16daObjCtMecha05_c13InitResourcesEv",
+      "address": "0x0211b1d4",
+      "size": "0x00000154",
+      "legacy_source": "src/_ZN16daObjCtMecha05_c13InitResourcesEv.cpp",
+      "ordinal": 7
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "The genuine dBgCh_Gnd local makes mwccarm emit Vector3's deliberately empty inline destructor as vague linkage. This copy is the exact four-byte `bx lr` body at its canonical arm9 home and no surviving section in this object references the discarded duplicate."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits inherited fBase_c typeinfo as vague linkage; romdata_check proves the copy at its canonical arm9 home before text-only production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits inherited fBase_c's type-name string as vague linkage; romdata_check proves its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits inherited dBase_c's type-name string as vague linkage; romdata_check proves its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits inherited dActor_c's type-name string as vague linkage; romdata_check proves its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits inherited dBase_c typeinfo as vague linkage; romdata_check proves the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "The key-function TU emits inherited dBgActor_c typeinfo as vague linkage; romdata_check proves the complete single-inheritance record at its canonical ov002 home."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "The key-function TU emits inherited dBgActor_c's type-name string as vague linkage; romdata_check proves its compiler-sized payload at the canonical ov002 home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits inherited dActor_c typeinfo as vague linkage; romdata_check proves the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI16daObjCtMecha05_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d270",
+      "reason": "The genuine class identity naturally emits daObjCtMecha05_c's 12-byte single-inheritance typeinfo record. romdata_check proves its ABI kind, type-name relocation, and dBgActor_c base link at the canonical ov065 home."
+    },
+    {
+      "symbol": "_ZTS16daObjCtMecha05_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d27c",
+      "reason": "The genuine class identity naturally emits the ROM-named daObjCtMecha05_c type string; romdata_check proves its exact compiler-sized bytes at the canonical ov065 home."
+    },
+    {
+      "symbol": "g_profile_CT_MECHA05",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d290",
+      "reason": "The source reconstructs the 0x1c actor descriptor with its relocation to the separately enrolled C ABI factory and the exact priorities, flags, and culling words; romdata_check proves the complete object at its ov065 home."
+    },
+    {
+      "symbol": "_ZTV16daObjCtMecha05_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211d2b4",
+      "reason": "The key-function TU emits the full daObjCtMecha05_c vtable storage. romdata_check applies the eight-byte ABI address-point bias and proves all 32 retail slots plus the storage preamble before text-only production isolation discards it."
+    }
+  ],
+  "notes": [
+    "The live linker map bounds this class translation unit at 0x0211ab60..0x0211b328. daObjCtMecha05_c_classInit immediately follows at 0x0211b328 but remains a separately enrolled C ABI factory because there is no independent evidence that it belonged to the class TU.",
+    "One inline genuine destructor makes mwccarm emit the retail D1 then D0 pair without a D2. The dBgCh_Gnd local also emits an exact, unreferenced duplicate of Vector3's inline D1; the manifest records that compiler-only output for dead stripping.",
+    "The unisolated object naturally emits daObjCtMecha05_c RTTI, type-name, typed SpawnInfo, and full vtable storage in retail order. romdata_check reports zero differing or unnamed objects; inherited vague-linkage RTTI is explicitly externalized to its canonical homes.",
+    "Production enrollment verifies all eight class functions and the separate typed factory at blind:0, and a full normal ROM build reproduces all 106 modules. InitResources retains the measured Fix12-by-value ABI seam and an explicit model-file local required for retail code shape. daObjCtMecha05_c_classInit and g_profile_CT_MECHA05 are lineage-supported reconstructions from the ROM RTTI class, literal registry ID, measured factory shape, and descriptor relationship; exact original SM64DS spellings are not preserved. Historical aliases were TTC_MovingBar_Spawn and TTC_MovingBar_SpawnInfo."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov065-daObjCtMecha05_c/daObjCtMecha05_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 8,
+    "functions_declared": 8,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        30
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI16daObjCtMecha05_c",
+        "_ZTS16daObjCtMecha05_c",
+        "g_profile_CT_MECHA05",
+        "_ZTV16daObjCtMecha05_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI16daObjCtMecha05_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS16daObjCtMecha05_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV16daObjCtMecha05_c",
+        "g_profile_CT_MECHA05"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

@@ -12,19 +12,19 @@ typedef struct Vector3_16 {
     short x, y, z;
 } Vector3_16;
 
-typedef struct Actor {
+typedef struct dActor_c {
     char _pad0[0x5c];
     Vector3 pos;        // 0x5c
     char _pad1[0x8c - (0x5c + 0xc)];
     Vector3_16 ang;     // 0x8c
-} Actor;
+} dActor_c;
 
 typedef struct Camera {
     char _pad0[0x80];
     Vector3 field_0x80; // 0x80
     Vector3 field_0x8c; // 0x8c
     char _pad1[0x110 - (0x8c + 0xc)];
-    Actor* owner;       // 0x110
+    dActor_c* owner;       // 0x110
 } Camera;
 
 extern short ReadUnalignedShort(const char* from);
@@ -34,7 +34,7 @@ extern void Vec3_RotateYAndTranslate(Vector3* res, const Vector3* translation,
 int func_02007698(Camera* self, const char* rec) {
     Vector3 v;
     Vector3 w;
-    Actor* owner;
+    dActor_c* owner;
     short angle;
     Vector3* pos;
     int vx, vy, vz;

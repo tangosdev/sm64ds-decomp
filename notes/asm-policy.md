@@ -85,7 +85,7 @@ restored to its exact pre-reclassify content and re-verified: nine `VERIFIED`, o
 `config/**/symbols.txt` and could not be link-checked; the rest of that function verified.
 
 The remaining **106 stay `// NONMATCHING`**. They are ordinary ARM — game logic
-(`UkikiCage::Behavior`, actor `InitResources`/`CleanupResources`, and similar) that was C in
+(`daObjHmBskt_c::Behavior`, actor `InitResources`/`CleanupResources`, and similar) that was C in
 the original and is sitting on a codegen wall. The byte-exact reference and the wall analysis
 stay in each file, so the work is preserved and the next attempt starts from it. They are
 drafts, not losses.

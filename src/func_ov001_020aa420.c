@@ -32,10 +32,10 @@ extern u8 data_0208a0e0;
 extern CapRequest *data_0209f394[];
 
 extern int func_ov001_020aa79c(int x);
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int func_0202a8e0(int a, u8 b);
 extern void func_ov001_020aa6b0(void *p, int flag);
-extern void func_ov001_020ab110(void *p);
+extern void _ZN10dCapIcon_c6UnlinkEv(void *p);
 extern int func_ov001_020aa7b8(int idx, void *p);
 extern void func_ov001_020aa6e4(int idx, unsigned int val, void *obj);
 extern int _ZN6Player15IsCollectingCapEv(void *self);
@@ -70,7 +70,7 @@ void func_ov001_020aa420(void) {
         if (reqFlag == 0) {
             if (node != 0) {
                 do {
-                    *(u8 *)(((long long)(int)((char *)node + 0x1b))) &= ~2;
+                    *(u8 *)((char *)node + 0x1b) &= ~2;
                     if (node->field19 == 1) {
                         *flagByte = 1;
                     }
@@ -92,12 +92,12 @@ void func_ov001_020aa420(void) {
 
         if (node != 0) {
             do {
-                found = _ZN5Actor10FindWithIDEj(node->field8);
+                found = _ZN8dActor_c10FindWithIDEj(node->field8);
                 if (found != 0 || (int)found != node->field4) {
                     if (node->flags.b0) {
                         if (node->soundHandle == -1) {
                             node->soundHandle = func_0202a8e0(node->field4, node->field18);
-                            *(u8 *)(((long long)(int)((char *)node + 0x1b))) |= 2;
+                            *(u8 *)((char *)node + 0x1b) |= 2;
                             func_ov001_020aa6b0(node, 1);
                         }
                         handled = 1;
@@ -111,18 +111,18 @@ void func_ov001_020aa420(void) {
                         if (node->flags.b3) {
                             best = node;
                         } else {
-                            *(u8 *)(((long long)(int)((char *)node + 0x1b))) |= 8;
+                            *(u8 *)((char *)node + 0x1b) |= 8;
                         }
                     }
                 } else {
-                    func_ov001_020ab110(node);
+                    _ZN10dCapIcon_c6UnlinkEv(node);
                 }
                 node = node->next;
             } while (node != 0);
         }
 
         if (func_ov001_020aa7b8(i, best) != 0) {
-            *(u8 *)(((long long)(int)((char *)best + 0x1b))) |= 2;
+            *(u8 *)((char *)best + 0x1b) |= 2;
             best->soundHandle = func_0202a8e0(best->field4, best->field18);
             func_ov001_020aa6b0(best, 1);
             func_ov001_020aa6e4(i, best->field19, best);

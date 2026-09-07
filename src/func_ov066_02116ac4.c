@@ -1,6 +1,6 @@
 extern void func_0200d8c8(void* cam, void* v, int strength);
 extern int data_0209f318;
-extern void _ZN5Actor15HugeLandingDustEb(void* thiz, int b);
+extern void _ZN8dActor_c15HugeLandingDustEb(void* thiz, int b);
 extern void func_02012694(int a, void* b);
 
 void func_ov066_02116ac4(char* c, int strength) {
@@ -14,7 +14,7 @@ void func_ov066_02116ac4(char* c, int strength) {
     else
         *(int*)(((long)c + 0x5c)) += 0x80000;
     *(int*)(((long)c + 0x64)) += 0x80000;
-    _ZN5Actor15HugeLandingDustEb(c, 1);
+    _ZN8dActor_c15HugeLandingDustEb(c, 1);
     func_02012694(0x143, c + 0x74);
     *(int*)(c + 0x5c) = s0;
     *(int*)(c + 0x60) = s1;

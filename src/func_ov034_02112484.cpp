@@ -6,7 +6,7 @@
 extern int data_ov034_02114488;
 extern char data_020a0e68[];
 
-extern "C" int _ZN5Actor18HorzAngleToCPlayerEv(void *self);
+extern "C" int _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
 extern "C" void Matrix4x3_FromRotationY(void *m, int angle);
 extern "C" void MulVec3Mat4x3(struct Vector3 *in, void *m, struct Vector3 *out);
 extern "C" void Vec3_Add(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
@@ -33,7 +33,7 @@ extern "C" void func_ov034_02112484(char *sl)
             *(int *)(r8 + 0x3d0) = *(int *)(sl + 0x60);
             *(int *)(r8 + 0x3d4) = *(int *)(sl + 0x64);
             {
-                short ang = (short)_ZN5Actor18HorzAngleToCPlayerEv(sl);
+                short ang = (short)_ZN8dActor_c18HorzAngleToCPlayerEv(sl);
                 *(short *)(r7 + 0x446) = ang;
                 *(short *)(sl + 0x94) = *(short *)(r7 + 0x446);
             }

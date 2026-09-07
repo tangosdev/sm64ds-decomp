@@ -19,7 +19,7 @@ void func_ov002_020afa98(char *c)
         *(u8 *)(c + 0x38e) = 1;
         func_ov002_020aefa4(c);
         _ZN5Sound9PlayBank3EjRK7Vector3(0x68, (struct Vector3 *)(c + 0x74));
-        *(u32 *)(((long long)(int)(c + 0xb0))) &= ~1;
+        *(u32 *)(c + 0xb0) &= ~1;
         return;
     case 1:
         func_ov002_020aefb8(c);
@@ -39,7 +39,7 @@ void func_ov002_020afa98(char *c)
         func_ov002_020af474(c);
         if (*(u16 *)(c + 0x100) != 0x25)
             return;
-        *(u32 *)(((long long)(int)(c + 0x128))) &= ~1;
+        *(u32 *)(c + 0x128) &= ~1;
         *(s32 *)(c + 0x388) = 1;
         *(u32 *)(c + 0x98) = 0x8000;
         return;

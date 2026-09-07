@@ -25,7 +25,7 @@ void func_0205cfa4(Node *self)
             OS_WakeupThread(&self->f18);
             return;
         }
-        *(u32 *)(((u32)self + 0xc) & 0xFFFFFFFFFFFFFFFFull) |= 8u;
+        *(u32 *)((u32)self + 0xc) |= 8u;
         _ZN3IRQ7RestoreEj(saved);
         if (func_0205c5e4(self, self->f10) == 6) return;
         self = (Node *)func_0205d044(pool);

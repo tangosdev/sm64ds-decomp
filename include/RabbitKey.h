@@ -1,40 +1,48 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RabbitKey: 5 matched functions, 12 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef RABBITKEY_H
 #define RABBITKEY_H
+
 #include "types.h"
 
-struct RabbitKey {
-    u8  pad_000[0x8];
-    s32 unk_008;            /* 0x008 */
-    u8  pad_00c[0x82];
-    u8  unk_08e;            /* 0x08e */
-    u8  pad_08f[0xd];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
-    s32 unk_0ac;            /* 0x0ac */
-    u8  pad_0b0[0x50];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    u8  mModel;            /* 0x110 */
-    u8  pad_111[0x4f];
-    u8  mShadowModel;            /* 0x160 */
-    u8  pad_161[0x27];
-    u8  unk_188;            /* 0x188 */
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
+ * the class's own destructor `_ZN9RabbitKeyD1Ev` destroys each member, and
+ * `daObj_Mip_Key_c_classInit` constructs the same types at the same offsets before
+ * storing `_ZTV9RabbitKey`. Everything this header used to restate below
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
+ *
+ * The members close on each other, which is what makes the layout a
+ * reading rather than a guess:
+ *
+ *     0x110 Model                      0x50    -> 0x160
+ *     0x160 ShadowModel                0x28    -> 0x188
+ *
+ * SIZE IS THE ROM'S OWN: `daObj_Mip_Key_c_classInit` calls
+ * `fBase_c::operator new(416)` -- 0x1a0 -- and stores this class's
+ * vtable, so that literal IS this class's sizeof.
+ */
+
+#include "dEnemyBase_c.h"
+#include "Model.h"
+#include "ShadowModel.h"
+
+struct RabbitKey : dEnemyBase_c {
+    Model                        mModel;                /* 0x110 */
+    ShadowModel                  mShadowModel;          /* 0x160 */
+    u8                           unk_188;               /* 0x188 */
     u8  pad_189[0x7];
-    s32 unk_190;            /* 0x190 */
+    s32                          unk_190;               /* 0x190 */
     u8  pad_194[0x8];
-    s32 unk_19c;            /* 0x19c */
-#ifdef __cplusplus
-    /* methods */
+    s32                          unk_19c;               /* 0x19c */
+
+    /* --- vtable --- */
+    virtual ~RabbitKey();
+
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
-#endif
 };
 
-#endif
+typedef char RabbitKey_size_must_be_0x1a0[sizeof(RabbitKey) == 0x1a0 ? 1 : -1];
+
+#endif /* RABBITKEY_H */

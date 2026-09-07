@@ -1,0 +1,14 @@
+{
+  "_comment": "Coined actor_renames.tsv claims that config/**/symbols.txt does not carry at that address, banked so tools/check_profile_campaign.py fails only on NEW drift. An entry stops matching as soon as either side changes, so rebanking cannot silence an address permanently -- only the exact divergence someone looked at. Every entry here is a real defect awaiting an owner, not an accepted exception; the tool prints the banked count on every run so a green is not read as a clean file. The 17 divergences this file shipped with have been adjudicated: 16 are fixed in the tree and removed from this list, and the one that remains is fixed in an open PR.",
+  "known": [
+    {
+      "module": "ov070",
+      "address": "0x02120520",
+      "claimed": "daPropeller_Heyho_c_classInit",
+      "actual": [
+        "FlyGuy_Spawn"
+      ],
+      "note": "ledger AHEAD of the tree: the campaign name was written into this ledger row but never reached symbols.txt. FIXED in PR #2238 (cpp/profile-reconstruction-wave31), which renames it in symbols.txt, in the promoted intact-object TU src/actors/daPropeller_Heyho_c.cpp that defines it, and in that TU manifest. This entry is retained only because #2238 is not yet merged; drop it in the same change that lands #2238. Every other entry banked with this gate has been adjudicated and removed."
+    }
+  ]
+}

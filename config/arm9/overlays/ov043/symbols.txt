@@ -1,25 +1,25 @@
-func_ov043_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov043_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
-func_ov043_0211123c kind:function(arm,size=0x44) addr:0x0211123c
-func_ov043_02111280 kind:function(arm,size=0x28) addr:0x02111280
-func_ov043_021112a8 kind:function(arm,size=0x78) addr:0x021112a8
-func_ov043_02111320 kind:function(arm,size=0xac) addr:0x02111320
-DiamondLift_Spawn kind:function(arm,size=0x30) addr:0x021113cc
-func_ov043_021113fc kind:function(arm,size=0x50) addr:0x021113fc
-func_ov043_0211144c kind:function(arm,size=0x64) addr:0x0211144c
-func_ov043_021114b0 kind:function(arm,size=0x14) addr:0x021114b0
-func_ov043_021114c4 kind:function(arm,size=0x18) addr:0x021114c4
-RickshawBdw_Spawn kind:function(arm,size=0x3c) addr:0x021114dc
-_ZN11RickshawBdwD1Ev kind:function(arm,size=0x50) addr:0x02111518
-_ZN11RickshawBdwD0Ev kind:function(arm,size=0x64) addr:0x02111568
-_ZN11RickshawBdw16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021115cc
-_ZN11RickshawBdw13InitResourcesEv kind:function(arm,size=0x14) addr:0x021115e0
-RickshawPlatformBdw_Spawn kind:function(arm,size=0x3c) addr:0x021115f4
-_ZN19RickshawPlatformBdwD1Ev kind:function(arm,size=0x80) addr:0x02111630
-_ZN19RickshawPlatformBdwD0Ev kind:function(arm,size=0x94) addr:0x021116b0
-_ZN19RickshawPlatformBdw16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111744
-_ZN19RickshawPlatformBdw13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111758
-StairsBdw_Spawn kind:function(arm,size=0x90) addr:0x0211176c
+_ZN19daObjKm1_Ukishima_cD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN19daObjKm1_Ukishima_cD0Ev kind:function(arm,size=0x58) addr:0x021111e4
+_ZN19daObjKm1_Ukishima_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211123c
+_ZN19daObjKm1_Ukishima_c6RenderEv kind:function(arm,size=0x28) addr:0x02111280
+_ZN19daObjKm1_Ukishima_c8BehaviorEv kind:function(arm,size=0x78) addr:0x021112a8
+_ZN19daObjKm1_Ukishima_c13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111320
+daObjKm1_Ukishima_c_classInit kind:function(arm,size=0x30) addr:0x021113cc
+_ZN11RickshawBdwD1Ev kind:function(arm,size=0x50) addr:0x021113fc
+_ZN11RickshawBdwD0Ev kind:function(arm,size=0x64) addr:0x0211144c
+_ZN11RickshawBdw16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114b0
+_ZN11RickshawBdw13InitResourcesEv kind:function(arm,size=0x18) addr:0x021114c4
+daObjKm1_Kurumajiku_c_classInit kind:function(arm,size=0x3c) addr:0x021114dc
+_ZN17daObjKm1_Kuruma_cD1Ev kind:function(arm,size=0x50) addr:0x02111518
+_ZN17daObjKm1_Kuruma_cD0Ev kind:function(arm,size=0x64) addr:0x02111568
+_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021115cc
+_ZN17daObjKm1_Kuruma_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x021115e0
+daObjKm1_Kuruma_c_classInit kind:function(arm,size=0x3c) addr:0x021115f4
+_ZN17daObjKm1_Dorifu_cD1Ev kind:function(arm,size=0x80) addr:0x02111630
+_ZN17daObjKm1_Dorifu_cD0Ev kind:function(arm,size=0x94) addr:0x021116b0
+_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111744
+_ZN17daObjKm1_Dorifu_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111758
+daObjKm1_Dorifu_c_classInit kind:function(arm,size=0x90) addr:0x0211176c
 __sinit_ov043_021117fc kind:function(arm,size=0x6c) addr:0x021117fc
 __sinit_ov043_02111868 kind:function(arm,size=0x6c) addr:0x02111868
 __sinit_ov043_021118d4 kind:function(arm,size=0x6c) addr:0x021118d4
@@ -77,46 +77,41 @@ data_ov043_021121c0 kind:data(any) addr:0x021121c0 ambiguous
 data_ov043_021121dc kind:data(any) addr:0x021121dc ambiguous
 data_ov043_021121f8 kind:data(any) addr:0x021121f8 ambiguous
 data_ov043_02112258 kind:data(any) addr:0x02112258 ambiguous
-data_ov043_02112270 kind:data(any) addr:0x02112270
-data_ov043_0211227c kind:data(any) addr:0x0211227c
-DiamondLift_SpawnInfo kind:data(any) addr:0x02112294 ambiguous
+_ZTI19daObjKm1_Ukishima_c kind:data(any) addr:0x02112270
+_ZTS19daObjKm1_Ukishima_c kind:data(any) addr:0x0211227c
+g_profile_KM1_UKISHIMA kind:data(any) addr:0x02112294 ambiguous
 data_ov043_0211229c kind:data(any) addr:0x0211229c ambiguous
-data_ov043_021122b8 kind:data(any) addr:0x021122b8
+_ZTV19daObjKm1_Ukishima_c kind:data(any) addr:0x021122b8
 data_ov043_02112320 kind:data(any) addr:0x02112320 ambiguous
-data_ov043_02112338 kind:data(any) addr:0x02112338
+_ZTI21daObjKm1_Kurumajiku_c kind:data(any) addr:0x02112338
 data_ov043_02112344 kind:data(any) addr:0x02112344
-data_ov043_02112350 kind:data(any) addr:0x02112350
+_ZTS21daObjKm1_Kurumajiku_c kind:data(any) addr:0x02112350
 data_ov043_02112358 kind:data(any) addr:0x02112358 ambiguous
-RickshawBdw_SpawnInfo kind:data(any) addr:0x02112368 ambiguous
-data_ov043_0211238c kind:data(any) addr:0x0211238c
+g_profile_KM1_KURUMAJIKU kind:data(any) addr:0x02112368 ambiguous
+_ZTV11RickshawBdw kind:data(any) addr:0x0211238c
 data_ov043_021123e4 kind:data(any) addr:0x021123e4 ambiguous
 data_ov043_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov043_02112404 kind:data(any) addr:0x02112404 ambiguous
-data_ov043_0211240c kind:data(any) addr:0x0211240c
+_ZTI17daObjKm1_Kuruma_c kind:data(any) addr:0x0211240c
 data_ov043_02112418 kind:data(any) addr:0x02112418
 data_ov043_0211241c kind:data(any) addr:0x0211241c ambiguous
-data_ov043_02112424 kind:data(any) addr:0x02112424
+_ZTS17daObjKm1_Kuruma_c kind:data(any) addr:0x02112424
 data_ov043_02112428 kind:data(any) addr:0x02112428 ambiguous
 data_ov043_02112434 kind:data(any) addr:0x02112434 ambiguous
-RickshawPlatformBdw_SpawnInfo kind:data(any) addr:0x02112438 ambiguous
+g_profile_KM1_KURUMA kind:data(any) addr:0x02112438 ambiguous
 data_ov043_0211244c kind:data(any) addr:0x0211244c ambiguous
-_ZTV11RickshawBdw kind:data(any) addr:0x0211245c
+_ZTV17daObjKm1_Kuruma_c kind:data(any) addr:0x0211245c
 data_ov043_02112464 kind:data(any) addr:0x02112464 ambiguous
 data_ov043_02112494 kind:data(any) addr:0x02112494 ambiguous
 data_ov043_021124ac kind:data(any) addr:0x021124ac ambiguous
 data_ov043_021124c4 kind:data(any) addr:0x021124c4 ambiguous
 data_ov043_021124d4 kind:data(any) addr:0x021124d4 ambiguous
-data_ov043_021124dc kind:data(any) addr:0x021124dc
-data_ov043_021124e8 kind:data(any) addr:0x021124e8
-data_ov043_021124ec kind:data(any) addr:0x021124ec ambiguous
-data_ov043_021124f8 kind:data(any) addr:0x021124f8 ambiguous
-StairsBdw_SpawnInfo kind:data(any) addr:0x021124fc ambiguous
+_ZTI17daObjKm1_Dorifu_c kind:data(any) addr:0x021124dc
+_ZTS17daObjKm1_Dorifu_c kind:data(any) addr:0x021124e8
+g_profile_KM1_DORIFU kind:data(any) addr:0x021124fc
 data_ov043_02112518 kind:data(any) addr:0x02112518
-data_ov043_02112530 kind:data(any) addr:0x02112530 ambiguous
-_ZTV19RickshawPlatformBdw kind:data(any) addr:0x0211255c
-data_ov043_02112570 kind:data(any) addr:0x02112570 ambiguous
-data_ov043_02112590 kind:data(any) addr:0x02112590 ambiguous
-data_ov043_021125cc kind:data(any) addr:0x021125cc ambiguous
+_ZTV17daObjKm1_Dorifu_c kind:data(any) addr:0x0211255c
+data_ov043_021125dc kind:data(any) addr:0x021125dc ambiguous
 data_ov043_021125e0 kind:bss addr:0x021125e0
 data_ov043_021125e8 kind:bss addr:0x021125e8
 data_ov043_021125f0 kind:bss addr:0x021125f0

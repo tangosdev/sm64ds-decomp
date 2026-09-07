@@ -63,14 +63,14 @@ body:
                 *(s16 *)((char *)this + 0x6e) = 0x10;
                 flags = 1;
             } else {
-                *(s16 *)(((int)this + 0x6e) & 0xFFFFFFFFFFFFFFFFULL) += 4;
+                *(s16 *)((int)this + 0x6e) += 4;
             }
             if (data_0209f2fc == 1) {
                 if (*(s16 *)((char *)this + 0x70) <= 0xf0) {
                     *(s16 *)((char *)this + 0x70) = 0xf0;
                     flags |= 2;
                 } else {
-                    *(s16 *)(((int)this + 0x70) & 0xFFFFFFFFFFFFFFFFULL) -= 4;
+                    *(s16 *)((int)this + 0x70) -= 4;
                 }
             } else {
                 flags |= 2;
@@ -83,11 +83,11 @@ body:
                 if (*(s16 *)((char *)this + 0x6e) < -0x38) {
                     flags = 1;
                 } else {
-                    *(s16 *)(((int)this + 0x6e) & 0xFFFFFFFFFFFFFFFFULL) -= 4;
+                    *(s16 *)((int)this + 0x6e) -= 4;
                 }
                 if (data_0209f2fc == 1) {
                     if (*(s16 *)((char *)this + 0x70) <= n + 0x120) {
-                        *(s16 *)(((int)this + 0x70) & 0xFFFFFFFFFFFFFFFFULL) += 4;
+                        *(s16 *)((int)this + 0x70) += 4;
                     } else {
                         flags |= 2;
                     }
@@ -103,14 +103,14 @@ body:
                 *(s16 *)((char *)this + 0x6e) = 0x10;
                 flags = 1;
             } else {
-                *(s16 *)(((int)this + 0x6e) & 0xFFFFFFFFFFFFFFFFULL) += 4;
+                *(s16 *)((int)this + 0x6e) += 4;
             }
             if (data_0209f2fc == 1 || *(u8 *)((char *)this + 0x78) != 0) {
                 if (*(s16 *)((char *)this + 0x70) <= 0xf0) {
                     *(s16 *)((char *)this + 0x70) = 0xf0;
                     flags |= 2;
                 } else {
-                    *(s16 *)(((int)this + 0x70) & 0xFFFFFFFFFFFFFFFFULL) -= 4;
+                    *(s16 *)((int)this + 0x70) -= 4;
                 }
             } else {
                 flags |= 2;

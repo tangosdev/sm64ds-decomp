@@ -1,0 +1,24 @@
+# Ranges that are ALLOWED to have stopped being built from source.
+#
+# tools/source_coverage.py --check fails when the bytes this repo compiles out of src/
+# go DOWN, because a range that stops being `complete` in a delinks.txt is refilled by
+# dsd with retail cartridge bytes and the ROM still matches perfectly -- no other gate
+# in the tree can see it.
+#
+# A decrease is sometimes CORRECT, though: a fakematch retracted, a file demoted to a
+# ROM-byte placeholder because its match turned out to be a relocation artefact, an
+# entry removed because the range belonged to another module. Those are the tree
+# getting more honest. Record them here rather than leaving a known-bad match enrolled
+# to keep a number up.
+#
+# One JSON object per line. Every field is required; a row with no `reason` is rejected
+# loudly, not honoured -- an unexplained waiver is exactly the failure this gate exists
+# to prevent.
+#
+#   {"module": "ov010", "section": ".text", "start": "0x021e4f00",
+#    "end": "0x021e4f80", "reason": "func_021e4f00 was a fakematch; demoted in #1234"}
+#
+# Waivers are consumed ONCE. After the decrease lands, main's own total is the new floor
+# and the row does nothing; stale rows are harmless and can be pruned in a later sweep.
+#
+# Empty on purpose: the tree currently hands back zero bytes.

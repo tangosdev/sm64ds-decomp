@@ -12,7 +12,7 @@ void func_02060d1c(void)
 {
   DmaCh *new_var;
   char *g = data_020a8180;
-  DmaCh *ch = (DmaCh *) ((0x40000b0 + ((*((u32 *) (g + 0x24))) * 0xc)) & 0xFFFFFFFFFFFFFFFFULL);
+  DmaCh *ch = (DmaCh *) (0x40000b0 + ((*((u32 *) (g + 0x24))) * 0xc));
   u32 v;
   new_var = ch;
   new_var->a = 0x4100010;

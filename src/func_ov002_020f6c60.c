@@ -18,7 +18,7 @@ extern char *data_0209f318;
 extern int data_ov002_0210b614;
 extern int data_ov002_02110b0c;
 extern int data_ov002_02110c20[];
-extern int func_020072c0;
+extern int _ZN7Vector3D1Ev;
 extern int data_ov002_02110db8;
 extern int data_ov002_0210b958;
 extern int data_0209b41c;
@@ -64,7 +64,7 @@ int func_ov002_020f6c60(void *arg0, void *arg1, int arg2, int arg3)
       data_ov002_02110c20[0] = 0xffdd6000;
       data_ov002_02110c20[1] = 0xbe4000;
       data_ov002_02110c20[2] = 0x2ae000;
-      func_020731dc((int) data_ov002_02110c20, (int) (&func_020072c0), (void **) (&data_ov002_02110db8));
+      func_020731dc((int) data_ov002_02110c20, (int) (&_ZN7Vector3D1Ev), (void **) (&data_ov002_02110db8));
       data_ov002_02110b0c |= 1;
     }
     func_ov002_020f6f48(c, (Vec3 *) data_ov002_02110c20, 0x20);

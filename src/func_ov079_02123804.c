@@ -8,7 +8,7 @@ extern s16 data_02082214[];
 extern int* data_ov079_021275ec[];
 
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
-extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char* self, const struct Vector3* pos, u32 n, int fix, s16 s);
+extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(char* self, const struct Vector3* pos, u32 n, int fix, s16 s);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* self, void* bca, int n, int fix, u32 flags);
 
 void func_ov079_02123804(char* self, char* other)
@@ -74,7 +74,7 @@ void func_ov079_02123804(char* self, char* other)
             pos.x = q[0];
             pos.y = q[1];
             pos.z = q[2];
-            _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &pos, 1, 0, 0);
+            _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &pos, 1, 0, 0);
         }
         *(int*)(self + 0x98) = 0;
         {

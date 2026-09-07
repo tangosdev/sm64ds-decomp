@@ -7,7 +7,7 @@ void func_ov006_020c42bc(void);
 #pragma optimize_for_size on
 void func_ov006_020ee5b8(char* c){
     int v;
-    short* d = (short*)(((unsigned long long)(c+0x5014)) & 0xFFFFFFFFFFFFFFFFull);
+    short* d = (short*)((unsigned long long)(c+0x5014));
     char* base = c + 0x5000;
     *d = *d - 1;
     v = *(short*)(base + 0x14);

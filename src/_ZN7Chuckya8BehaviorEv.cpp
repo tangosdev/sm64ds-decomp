@@ -1,20 +1,48 @@
 //cpp
-typedef short s16;
-typedef int Fix12;
+// @symbol _ZN7Chuckya8BehaviorEv
+/* recovered: named members + shared header, real C++ method
+ *
+ * One frame of Chuckya. The state tick runs first; everything after it is
+ * gated on WHICH state is current, compared by address against seven
+ * file-scope state objects.
+ *
+ * Three separate gates, not one:
+ *   0211dea0                       skips terrain entirely
+ *   0211dec0 / 0211de70            run terrain but skip the cliff check
+ *   0211ded0/dee0/de90/df00        additionally call func_ov062_02116010
+ *
+ * The cliff check is how Chuckya refuses to walk off an edge, and it rewinds
+ * rather than stops: on a trip it zeroes mHorzSpeed, sets unk_3e4, and restores
+ * mPos from mPrevPos -- last frame's position, republished at the end of every
+ * frame that runs terrain. Two hard bounds sit alongside it, selected by the
+ * level in data_0209f2f8 (0x16 tests X, 0x15 tests Z), so a level can fence
+ * Chuckya in where the mesh alone would not.
+ *
+ * The angle triple at 0x92 is copied wholesale into mAngleX/Y/Z right after
+ * the tick, so the state writes there and this publishes it -- see Chuckya.h
+ * for why those three keep unk_ names.
+ *
+ * The early exit is the throw: when something is held, flag 0x4000 is set and
+ * the held object's +0xc8 is non-zero, func_ov062_02116d28 runs and the frame
+ * ends before the cylinder update and the three zeroed words. Chuckya::Render
+ * asks the identical triple.
+ */
+#include "Chuckya.h"
+
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
-struct CylinderClsn;
-struct WithMeshClsn;
+struct dCc_c;
+struct dBgCh_Actr;
 
 extern "C" {
-int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
+int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
 unsigned short DecIfAbove0_Short(unsigned short* p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
-int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, WithMeshClsn* wm, Fix12 a, s16 b, int c, int d, void* e);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, dCc_c* cc);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(void* self, dBgCh_Actr* wm, int a, s16 b, int c, int d, void* e);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* self, dBgCh_Actr* wm, unsigned int j);
 void func_ov062_02116010(void* self);
-void _ZN12CylinderClsn5ClearEv(CylinderClsn* self);
-void _ZN12CylinderClsn6UpdateEv(CylinderClsn* self);
+void _ZN5dCc_c5ClearEv(dCc_c* self);
+void _ZN5dCc_c6UpdateEv(dCc_c* self);
 void _ZN9Animation7AdvanceEv(void* self);
 void func_ov062_02116d28(char* c);
 void func_ov062_02116e80(void* c);
@@ -29,67 +57,69 @@ extern char data_ov062_0211de90[];
 extern char data_ov062_0211df00[];
 }
 
-extern "C" int _ZN7Chuckya8BehaviorEv(char* c)
+int Chuckya::Behavior()
 {
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, c + 0x144, c + 0x300, 3))
+    char* c = (char*)this;
+
+    if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(c, &mMeshClsn, &mModel, 3))
         return 1;
 
-    DecIfAbove0_Short((unsigned short*)(c + 0x100));
-    DecIfAbove0_Short((unsigned short*)(c + 0x3e6));
-    DecIfAbove0_Short((unsigned short*)(c + 0x3e8));
+    DecIfAbove0_Short((unsigned short *)&mStateTimer);
+    DecIfAbove0_Short(&unk_3e6);
+    DecIfAbove0_Short(&unk_3e8);
 
     {
-        M* m = *(M**)(c + 0x364);
+        M* m = (M*)mState;
         if (m->pmf != 0)
             (((Klass*)c)->*(m->pmf))();
     }
 
-    *(s16*)(c + 0x8c) = *(s16*)(c + 0x92);
-    *(s16*)(c + 0x8e) = *(s16*)(c + 0x94);
-    *(s16*)(c + 0x90) = *(s16*)(c + 0x96);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, (CylinderClsn*)(c + 0x110));
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, (dCc_c*)&mdCc_c);
 
-    if (*(void**)(c + 0x364) != (void*)data_ov062_0211dea0) {
-        if (*(void**)(c + 0x364) != (void*)data_ov062_0211dec0
-            && *(void**)(c + 0x364) != (void*)data_ov062_0211de70) {
+    if (mState != (void*)data_ov062_0211dea0) {
+        if (mState != (void*)data_ov062_0211dec0
+            && mState != (void*)data_ov062_0211de70) {
             int r2 = 0;
             signed char t = data_0209f2f8;
             if (t == 0x16) {
-                if (*(int*)(c + 0x5c) > (int)0xff95c000)
+                if (mPosX > (int)0xff95c000)
                     r2 = 1;
             } else if (t == 0x15) {
-                if (*(int*)(c + 0x64) < (int)0xff2f4000)
+                if (mPosZ < (int)0xff2f4000)
                     r2 = 1;
             }
             if (r2 != 0
-                || (*(int*)(c + 0x98) != 0
-                    && _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
-                           c, (WithMeshClsn*)(c + 0x144), 0x3c000, (s16)0x2888, 0, 1, (void*)0x32000))) {
-                *(int*)(c + 0x98) = 0;
-                *(char*)(c + 0x3e4) = 1;
-                *(int*)(c + 0x5c) = *(int*)(c + 0x3d8);
-                *(int*)(c + 0x60) = *(int*)(c + 0x3dc);
-                *(int*)(c + 0x64) = *(int*)(c + 0x3e0);
+                || (mHorzSpeed != 0
+                    && _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actrisbbi(
+                           c, (dBgCh_Actr*)&mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, (void*)0x32000))) {
+                mHorzSpeed = 0;
+                unk_3e4 = 1;
+                mPosX = mPrevPosX;
+                mPosY = mPrevPosY;
+                mPosZ = mPrevPosZ;
             } else {
-                if (*(unsigned char*)(c + 0x3e4) == 1)
-                    *(char*)(c + 0x3e4) = 0;
+                if (unk_3e4 == 1)
+                    unk_3e4 = 0;
             }
         }
-        *(int*)(c + 0x3d8) = *(int*)(c + 0x5c);
-        *(int*)(c + 0x3dc) = *(int*)(c + 0x60);
-        *(int*)(c + 0x3e0) = *(int*)(c + 0x64);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn*)(c + 0x144), 3);
+        mPrevPosX = mPosX;
+        mPrevPosY = mPosY;
+        mPrevPosZ = mPosZ;
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, (dBgCh_Actr*)&mMeshClsn, 3);
     }
 
-    if (*(void**)(c + 0x364) == (void*)data_ov062_0211ded0
-        || *(void**)(c + 0x364) == (void*)data_ov062_0211dee0
-        || *(void**)(c + 0x364) == (void*)data_ov062_0211de90
-        || *(void**)(c + 0x364) == (void*)data_ov062_0211df00) {
+    if (mState == (void*)data_ov062_0211ded0
+        || mState == (void*)data_ov062_0211dee0
+        || mState == (void*)data_ov062_0211de90
+        || mState == (void*)data_ov062_0211df00) {
         func_ov062_02116010(c);
     }
 
-    _ZN12CylinderClsn5ClearEv((CylinderClsn*)(c + 0x110));
-    _ZN9Animation7AdvanceEv(c + 0x350);
+    _ZN5dCc_c5ClearEv((dCc_c*)&mdCc_c);
+    mModel.Advance();
 
     {
         char* o = (char*)(((int)c + 0x300));
@@ -97,9 +127,9 @@ extern "C" int _ZN7Chuckya8BehaviorEv(char* c)
     }
 
     {
-        char* p3f8 = *(char**)(c + 0x3f8);
+        char* p3f8 = (char*)mHeld;
         if (p3f8 != 0) {
-            int flag = (*(int*)(c + 0xb0) & 0x4000) != 0;
+            int flag = (mFlags & 0x4000) != 0;
             if (flag) {
                 if (*(int*)(p3f8 + 0xc8) != 0) {
                     func_ov062_02116d28(c);
@@ -109,10 +139,10 @@ extern "C" int _ZN7Chuckya8BehaviorEv(char* c)
         }
     }
 
-    _ZN12CylinderClsn6UpdateEv((CylinderClsn*)(c + 0x110));
-    *(int*)(c + 0x42c) = 0;
-    *(int*)(c + 0x430) = 0;
-    *(int*)(c + 0x434) = 0;
+    _ZN5dCc_c6UpdateEv((dCc_c*)&mdCc_c);
+    unk_42c = 0;
+    unk_430 = 0;
+    unk_434 = 0;
     func_ov062_02116e80(c);
     func_ov062_02116dbc(c);
 

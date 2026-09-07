@@ -1,0 +1,323 @@
+//cpp
+/* PROMOTED translation unit -- ov029/daObjWc_Obj04_c (9 function(s)).
+ * HAND-ASSEMBLED: tubuild create refused this TU (legacy bodies wrapped in
+ * extern "C" { }), so this is a raw concatenation of the complete legacy files
+ * in REVERSE ROM order -- mwccarm 2004/b56 emits one .text section per function
+ * in the reverse of source order, so the highest-address ROM function is
+ * written FIRST. Do not reorder. Conflicting declarations were reconciled by
+ * hand; see the manifest notes.
+ *
+ * This file is compiled and linked into the ROM: ov029's delinks.txt gives it
+ * the whole .text run 0x02112630..0x0211299c as one `complete` entry, and the
+ * nine legacy one-function sources listed below are deleted -- they are named
+ * for provenance only.
+ *
+ * The class is spelled as the cartridge spells it. ov029's _ZTV at 0x021141a0
+ * is preceded by its _ZTI at 0x0211415c, whose _ZTS at 0x02114168 reads
+ * `15daObjWc_Obj04_c`, and the record immediately before the vtable, at
+ * 0x0211417c, is the spawn profile g_profile_WC_OBJ04 -- the ROM's own actor
+ * id agrees with the RTTI string.
+ * The coined alias `_ZTV20SwitchActivatedPlank`, which used to name that same
+ * address, is gone.
+ *
+ * NOTHING HOMES THIS CLASS'S VTABLE. include/daObjWc_Obj04_c.h declares
+ * ~daObjWc_Obj04_c() -- the first virtual it declares, hence the key function --
+ * but no TU DEFINES it as a C++ member: the cartridge's D1 and D0 live below as
+ * `// @symbol` marked bodies under their mangled names, which the compiler sees
+ * as unrelated functions. With the key function undefined, mwccarm emits this
+ * class's _ZTV/_ZTI/_ZTS here as vague linkage, plus the eight inherited
+ * base-chain records (fBase_c, dBase_c, dActor_c, dBgActor_c). All eleven are
+ * licensed in the manifest's compiler_only_output as deadstrip-data -- each has
+ * a canonical ROM home outside this entry's licensed .text, which dsd supplies
+ * independently -- and tools/romdata_check.py word-compares every one against
+ * the cartridge: 6 VERIFIED, 5 PARTIAL, 0 DIFFERS. The PARTIALs are extent
+ * shortfalls, not disagreements: every byte compared is equal.
+ *
+ *
+ * WHY D1 AND D0 ARE MANGLED BODIES RATHER THAN A REAL DESTRUCTOR. Defining
+ * ~daObjWc_Obj04_c() once as a C++ member was tried on this tree and the build
+ * refused it: mwccarm emits the D2/D1/D0 triple as one group, in the order
+ * D0-then-D1, while the cartridge keeps D1 at 0x02112630 BELOW D0 at
+ * 0x0211267c -- objisolate reports `requested functions are not emitted in ROM
+ * order`, and the group also brings an unhomed D2 along. Placing the two at
+ * their ROM addresses means writing them as separate functions, which is only
+ * possible under their mangled names. That costs both of them the CONVERTED
+ * tier's no-raw-offset and no-mangled-refs criteria; the two removals are
+ * banked in config/converted-backslide-exceptions.jsonl with that reason. The
+ * one-line member versions this promotion deletes are in git history if the
+ * placement rule ever changes.
+ * `#pragma optimize_for_size on`, carried in from the legacy Behavior file,
+ * covers ROM ordinals 6 down to 0 -- everything from Behavior to the end of the
+ * file. It is bracketed with an explicit `off` at the tail so its extent is
+ * stated rather than inferred from where the file happens to end; do not move
+ * either directive, and do not add a function between them without checking it
+ * still byte-matches.
+ *
+ * Assembled from these legacy one-function sources (ROM address order):
+ *   [0] 0x02112630  src/_ZN15daObjWc_Obj04_cD1Ev.cpp
+ *   [1] 0x0211267c  src/_ZN15daObjWc_Obj04_cD0Ev.cpp
+ *   [2] 0x021126dc  src/func_ov029_021126dc.c
+ *   [3] 0x02112710  src/func_ov029_02112710.c
+ *   [4] 0x02112750  src/_ZN15daObjWc_Obj04_c16CleanupResourcesEv.cpp
+ *   [5] 0x02112794  src/_ZN15daObjWc_Obj04_c6RenderEv.cpp
+ *   [6] 0x021127cc  src/_ZN15daObjWc_Obj04_c8BehaviorEv.cpp
+ *   [7] 0x021128b0  src/_ZN15daObjWc_Obj04_c13InitResourcesEv.cpp
+ *   [8] 0x02112964  src/daObjWc_Obj04_c_classInit.c
+ */
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 8 -- daObjWc_Obj04_c_classInit, 0x02112964, size 0x38 */
+/* -------------------------------------------------------------------------- */
+extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol daObjWc_Obj04_c_classInit
+/* recovered: vtable identified, globals resolved, declarations from a shared header */
+#include "decl_ActorBase.h"
+#include "decl_Model.h"
+#include "decl_Platform.h"
+#include "decl_common.h"
+/* recovered: vtable identified, globals resolved */
+/* resolved: VT0 = _ZTV15daObjWc_Obj04_c */
+/* Reconstructed source-style name; exact original SM64DS spelling is not
+ * preserved. Historical alias: SwitchActivatedPlank_Spawn. */
+int *daObjWc_Obj04_c_classInit(void)
+{
+    int *p = (int *)_ZN7fBase_cnwEj(936);
+    if (p) {
+        _ZN10dBgActor_cC2Ev(p);
+        p[0] = (int)_ZTV15daObjWc_Obj04_c;
+        _ZN5ModelC1Ev((char *)p + 0x320);
+    }
+    return p;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 7 -- _ZN15daObjWc_Obj04_c13InitResourcesEv, 0x021128b0, size 0xb4 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjWc_Obj04_c13InitResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "daObjWc_Obj04_c.h"
+typedef int Fix12i;
+struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
+/* Model and ModelBase are the real classes now, through this actor's header --
+ * and since #1643 so are dBgW_Kc and dBgW_KcMbg, which arrive via
+ * daObjWc_Obj04_c.h -> include/dBgW_Kc.h / include/dBgW_KcMbg.h. The two
+ * one-int placeholder definitions that used to stand in for them here made the
+ * whole TU fail to compile ("class 'dBgW_Kc' redefined", then an internal
+ * compiler error at the D1 body), and nothing noticed: an unbuildable source
+ * file is an ABSENT one, so every byte gate stayed green over a TU that produced
+ * no object at all. Only the references were repaired in #1667; this is the
+ * type-level half the reference gate cannot see. All 9 functions byte-match the
+ * ROM again with the placeholders gone.
+ */
+
+extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
+extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
+extern "C" KCL_File* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr&);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
+extern "C" void func_020393d4(int* p, int v);
+
+extern SharedFilePtr data_ov029_0211432c;
+extern SharedFilePtr data_ov029_02114324;
+extern CLPS_Block data_ov029_0211304c;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
+
+int daObjWc_Obj04_c::InitResources()
+{
+    char* c = ((char*)this);
+    BMD_File* bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_0211432c);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii((ModelBase*)(c + 0x320), bmd, 1, -1);
+    func_ov029_02112710(c);
+    func_ov029_021126dc(c);
+    {
+        KCL_File* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov029_02114324);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            (dBgW_KcMbg*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x370),
+            0x199, *(short*)(c + 0x8e), data_ov029_0211304c);
+    }
+    func_020393d4((int*)(c + 0x124), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+    *(unsigned char*)(c + 0x3a2) = 0;
+    *(short*)(c + 0x3a0) = 0;
+    *(unsigned char*)(c + 0x3a3) = 0;
+    *(unsigned char*)(c + 0x3a4) = (unsigned char)(*(int*)(c + 8) & 0x1f);
+    return 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 6 -- _ZN15daObjWc_Obj04_c8BehaviorEv, 0x021127cc, size 0xe4 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjWc_Obj04_c8BehaviorEv
+/* recovered: named members + shared header */
+#include "daObjWc_Obj04_c.h"
+#include "dBgW.h"
+extern "C" {
+void func_020393a4(void* p, int v);
+int _ZN5Event6GetBitEj(unsigned int);
+void func_ov029_021126dc(char* c);
+int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void*, void*, int);
+
+#pragma optimize_for_size on
+
+int _ZN15daObjWc_Obj04_c8BehaviorEv(struct daObjWc_Obj04_c *self) {
+    func_020393a4(((char*)self)+0x124, 0x100000);
+
+    switch(self->mState){
+    case 0:
+        if(_ZN5Event6GetBitEj(self->mEventID) == 0) break;
+
+        {
+            unsigned char* st_ptr = (unsigned char*)(((int)((char*)self) + 0x3a2));
+            *st_ptr = *st_ptr + 1;
+        }
+
+        *(short*)(((char*)self) + 0x300 + 0xa0) = 0;
+        self->mVisible = 1;
+
+        ((dBgW *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
+        func_ov029_021126dc(((char*)self));
+        _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(((char*)self)+0x124, ((char*)self)+0x370, self->mAngleY);
+        break;
+
+    case 1: {
+        unsigned short* p = (unsigned short*)((char*)&self->mStateTimer);
+        if (*(unsigned short*)(((char*)self) + 0x300 + 0xa0) > 0x168) {
+            self->mVisible = *(unsigned short*)(((char*)self) + 0x300 + 0xa0) & 1;
+        }
+        *p = *p + 1;
+        if (_ZN5Event6GetBitEj(self->mEventID) != 0) break;
+        ((dBgW *)((char*)&self->mMeshCollider))->Disable();
+        self->mState = 0;
+        self->mVisible = 0;
+        break;
+    }
+    }
+
+    return 1;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 5 -- _ZN15daObjWc_Obj04_c6RenderEv, 0x02112794, size 0x38 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjWc_Obj04_c6RenderEv
+/* recovered: named members + shared header, real C++ method */
+#include "daObjWc_Obj04_c.h"
+struct Sub { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void v5(int); };
+
+int daObjWc_Obj04_c::Render()
+{
+  if (mVisible != 0) {
+    Sub *s = (Sub*)((char *)&mModel2);
+    s->v5(0);
+  }
+  return 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 4 -- _ZN15daObjWc_Obj04_c16CleanupResourcesEv, 0x02112750, size 0x44 */
+/* -------------------------------------------------------------------------- */
+// @symbol _ZN15daObjWc_Obj04_c16CleanupResourcesEv
+/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+#include "decl_common.h"
+/* recovered: named members + shared header, real C++ method */
+#include "daObjWc_Obj04_c.h"
+#include "SharedFilePtr.h"
+#include "dBgW.h"
+
+int daObjWc_Obj04_c::CleanupResources()
+{
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
+    }
+    ((SharedFilePtr *)&data_ov029_0211432c)->Release();
+    ((SharedFilePtr *)&data_ov029_02114324)->Release();
+    return 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 3 -- func_ov029_02112710, 0x02112710, size 0x40 */
+/* -------------------------------------------------------------------------- */
+extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol func_ov029_02112710
+extern void Matrix4x3_FromRotationY(void *, int);
+void func_ov029_02112710(char *t)
+{
+    Matrix4x3_FromRotationY(t + 0x33c, *(short *)(t + 0x8e));
+    *(int *)(t + 0x360) = *(int *)(t + 0x5c) >> 3;
+    *(int *)(t + 0x364) = *(int *)(t + 0x60) >> 3;
+    *(int *)(t + 0x368) = *(int *)(t + 0x64) >> 3;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 2 -- func_ov029_021126dc, 0x021126dc, size 0x34 */
+/* -------------------------------------------------------------------------- */
+extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol func_ov029_021126dc
+extern void Matrix4x3_FromRotationY(void *, int);
+
+void func_ov029_021126dc(char *c) {
+    Matrix4x3_FromRotationY(c + 0x370, *(short *)(c + 0x8e));
+    *(int *)(c + 0x394) = *(int *)(c + 0x5c);
+    *(int *)(c + 0x398) = *(int *)(c + 0x60);
+    *(int *)(c + 0x39c) = *(int *)(c + 0x64);
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 1 -- _ZN15daObjWc_Obj04_cD0Ev, 0x0211267c, size 0x60 */
+/* -------------------------------------------------------------------------- */
+extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15daObjWc_Obj04_cD0Ev
+/* recovered: named members + shared header, vtable identified, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_dBgW_KcMbg.h"
+#include "decl_common.h"
+extern int _ZTV10dBgActor_c[];
+/* recovered: named members + shared header, vtable identified */
+/* vtable identified: VT0 = _ZTV15daObjWc_Obj04_c; VT1 = _ZTV10dBgActor_c */
+extern void *data_020a0eac;
+int *_ZN15daObjWc_Obj04_cD0Ev(int *t)
+{
+    t[0] = (int)_ZTV15daObjWc_Obj04_c;
+    _ZN5ModelD1Ev((char *)t + 0x320);
+    t[0] = (int)_ZTV10dBgActor_c;
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
+    _ZN5ModelD1Ev((char *)t + 0xd4);
+    _ZN8dActor_cD2Ev(t);
+    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
+    return t;
+}
+}
+
+/* -------------------------------------------------------------------------- */
+/* ROM ordinal 0 -- _ZN15daObjWc_Obj04_cD1Ev, 0x02112630, size 0x4c */
+/* -------------------------------------------------------------------------- */
+extern "C" {  /* .c-derived member: C linkage for the whole block */
+// @symbol _ZN15daObjWc_Obj04_cD1Ev
+/* recovered: named members + shared header, vtable identified, declarations from a shared header */
+#include "decl_Actor.h"
+#include "decl_Model.h"
+#include "decl_dBgW_KcMbg.h"
+#include "decl_common.h"
+extern int _ZTV10dBgActor_c[];
+/* recovered: named members + shared header, vtable identified */
+/* vtable identified: VT0 = _ZTV15daObjWc_Obj04_c; VT1 = _ZTV10dBgActor_c */
+int *_ZN15daObjWc_Obj04_cD1Ev(int *t)
+{
+    t[0] = (int)_ZTV15daObjWc_Obj04_c;
+    _ZN5ModelD1Ev((char *)t + 0x320);
+    t[0] = (int)_ZTV10dBgActor_c;
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
+    _ZN5ModelD1Ev((char *)t + 0xd4);
+    _ZN8dActor_cD2Ev(t);
+    return t;
+}
+}
+
+/* Closes the `optimize_for_size on` opened above ROM ordinal 6. */
+#pragma optimize_for_size off

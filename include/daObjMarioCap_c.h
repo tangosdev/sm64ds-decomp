@@ -1,0 +1,103 @@
+#ifndef DAOBJMARIOCAP_C_H
+#define DAOBJMARIOCAP_C_H
+
+/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
+ * implementation(s) below; the registry profile object and the factory
+ * spelling are Tier B reconstructions -- evidence-bounded proposals, not
+ * recovered SM64DS symbols. Exact original spellings are not preserved.
+ *
+ *   daObjMarioCap_c -- daObjMarioCap_c_classInit (was Cap_Spawn), g_profile_OBJ_MARIO_CAP (was Cap_SpawnInfo)
+ */
+
+#include "types.h"
+#include "dEnemyBase_c.h"
+#include "CapIcon.h"
+#include "ModelAnim.h"
+#include "dCcAc_c.h"
+#include "ShadowModel.h"
+#include "dBgCh_Actr.h"
+
+/* Derives from dEnemyBase_c, and both witnesses agree offset for offset:
+ *
+ *   daObjMarioCap_c_classInit (ov002) allocates 0x410, calls _ZN12dEnemyBase_cC2Ev, stores
+ *   _ZTV15daObjMarioCap_c, then constructs dCcAc_c 0x110, dBgCh_Actr 0x144,
+ *   ModelAnim 0x300, ShadowModel 0x364 and the CapIcon at 0x3d0.
+ *
+ *   _ZN15daObjMarioCap_cD1Ev tears the same five down in exactly the reverse order and
+ *   chains to _ZN12dEnemyBase_cD2Ev.
+ *
+ * THE 0x3d0 MEMBER IS dCapIcon_c (the CapIcon compatibility spelling), whose
+ * ROM RTTI and two-slot vtable identify its constructor/destructor at
+ * 0x020ab3c4 / 0x020ab3a0. It is the same member dCapEnemy_c holds at 0x164.
+ * Left as padding the destructor emits a short chain and comes out a different
+ * SIZE, which reads as `999 word(s) differ` and looks like a total failure
+ * rather than one missing member.
+ *
+ * SIZE 0x410, the literal in daObjMarioCap_c_classInit's fBase_c::operator new. CapIcon is 0x1c, so
+ * 0x3d0 + 0x1c = 0x3ec closes onto the scalars below it.
+ *
+ * THE CLASS USED TO BE CALLED WaterfallMist, and the previous revision of this comment
+ * said the name was "probably wrong" but left it. It is wrong, and the RTTI settles it
+ * outright rather than by inference: build/rtti.json has a record at ov002 0x021095ac,
+ * mangled 15daObjMarioCap_c, whose `vtable` field is 0x021095f0 -- the very address the
+ * tree was calling _ZTV13WaterfallMist. The circumstantial evidence all points the same
+ * way: the factory is daObjMarioCap_c_classInit, and the class holds a CapIcon.
+ *
+ * The historical WaterfallMist_Spawn and WaterfallMist_SpawnInfo aliases belong
+ * to a different actor: daObjWaterfall_c_classInit allocates 220 bytes
+ * and stores the vtable at 0x021094a0, whose RTTI record is daObjWaterfall_c. For that
+ * class the name is apt, so it stays. The defect was one name serving two classes.
+ *
+ * The separate 0x021094a0 table-name defect is now fixed: it is configured as
+ * _ZTV16daObjWaterfall_c, matching the adjacent retail RTTI. The preceding
+ * 0x021093e0 table still belongs to the distinct daObjLava_c actor represented
+ * in this tree by PoppingLavaBubbles.
+ */
+struct daObjMarioCap_c : dEnemyBase_c {
+    dCcAc_c  mdCcAc_c;    /* 0x110 */
+    dBgCh_Actr        mWithMeshClsn;          /* 0x144 */
+    ModelAnim           mModelAnim;             /* 0x300 */
+    ShadowModel         mShadowModel;           /* 0x364 */
+    u8  pad_38c[0x30];
+    s32 unk_3bc;                                /* 0x3bc */
+    s32 unk_3c0;                                /* 0x3c0 */
+    s32 unk_3c4;                                /* 0x3c4 */
+    s32 unk_3c8;                                /* 0x3c8 */
+    s32 unk_3cc;                                /* 0x3cc */
+    dCapIcon_c mCapIcon;                        /* 0x3d0 */
+    s32 unk_3ec;                                /* 0x3ec */
+    s32 mType;                                  /* 0x3f0 */
+    s32 mModelIndex;                            /* 0x3f4 */
+    u8  pad_3f8[0x7];
+    u8  unk_3ff;                                /* 0x3ff */
+    u8  unk_400;                                /* 0x400 */
+    u8  unk_401;                                /* 0x401 */
+    u8  pad_402[0xe];
+
+    /* INLINE, AND DECLARED FIRST. The cartridge puts D1 at 0x020b6f18 below
+       D0 at 0x020b6f68 and carries no D2, which is exactly what mwccarm 2004
+       emits for an inline destructor; an out-of-line one emits D2/D0/D1 in the
+       wrong order plus a homeless D2. The typed member list below makes the
+       empty body own the dCapIcon_c, ShadowModel, ModelAnim, dBgCh_Actr and
+       dCcAc_c teardowns and the chain into _ZN12dEnemyBase_cD2Ev.
+
+       With the destructor inline, OnYoshiTryEat becomes the first out-of-line
+       virtual this class declares -- the key function -- so the vtable and the
+       RTTI group land in the translation unit that defines it,
+       src/actors/daObjMarioCap_c.cpp. */
+    virtual ~daObjMarioCap_c() {}
+
+    virtual s32   OnYoshiTryEat();         /* slot 18 -- key function */
+
+    /* methods */
+    int Behavior();
+    int CleanupResources();
+    int InitResources();
+    int Render();
+    void OnPendingDestroy();
+    int OnTurnIntoEgg(Player &player);  /* slot 19, ov002 0x020b81e0 */
+};
+
+typedef char daObjMarioCap_c_size_must_be_0x410[sizeof(daObjMarioCap_c) == 0x410 ? 1 : -1];
+
+#endif /* DAOBJMARIOCAP_C_H */

@@ -7,23 +7,23 @@
 
 struct daObjPile_c {
     u8  pad_000[0x5c];
-    s32 unk_05c;            /* 0x05c */
-    s32 unk_060;            /* 0x060 */
-    s32 unk_064;            /* 0x064 */
+    s32 mPosX;            /* 0x05c */
+    s32 mPosY;            /* 0x060 */
+    s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x26];
-    s16 unk_08e;            /* 0x08e */
+    s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x2];
-    s16 unk_092;            /* 0x092 */
-    s16 unk_094;            /* 0x094 */
+    s16 mPrevAngleX;            /* 0x092 */
+    s16 mPrevAngleY;            /* 0x094 */
     u8  pad_096[0x1a];
-    s32 unk_0b0;            /* 0x0b0 */
+    s32 mFlags;            /* 0x0b0 */
     u8  pad_0b4[0x26a];
-    u8  unk_31e;            /* 0x31e */
-    u8  unk_31f;            /* 0x31f */
-    u8  unk_320;            /* 0x320 */
+    u8  mState;            /* 0x31e */
+    u8  mAttackCooldown;            /* 0x31f */
+    u8  mBusy;            /* 0x320 */
     u8  pad_321[0x3];
-    s32 unk_324;            /* 0x324 */
-    s16 unk_328;            /* 0x328 */
+    s32 mAngleDelta;            /* 0x324 */
+    s16 mPrevAngle;            /* 0x328 */
 };
 
 #endif

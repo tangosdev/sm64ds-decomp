@@ -11,5 +11,5 @@ long long func_02059650(void)
     if ((*(volatile u32*)0x4000214 & 8) && !(timer & 0x8000))
         counter = counter + 1;
     _ZN3IRQ7RestoreEj(tok);
-    return ((long long)counter << 16) | (int)(((long long)(int)timer));
+    return ((long long)counter << 16) | (int)(timer);
 }

@@ -17,13 +17,14 @@
  *   slot 4  0x02016bb8  Virtual10(Matrix4x3 &)
  *   slot 5  0x02016b78  Render(Vector3 const *)
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD, for the
- * same key-function reason as ModelBase (see include/ModelBase.h): the
- * D0/D1/D2 bodies stay C files so no TU ever emits _ZTV5Model, which the
- * module's gap object already supplies from ROM data.
+ * THE DESTRUCTOR IS DECLARED FIRST. Each enrolled destructor-variant
+ * translation unit defines the same real method; mwcc emits D2/D0/D1 together
+ * and objisolate keeps the variant named by that file's enrollment. The
+ * key-function vtable emitted beside it is stripped and rebound to the ROM's
+ * carved-out _ZTV5Model, as described in ModelBase.h.
  *
- * LAYOUT evidence: Model::C2 calls ModelBase::C1, stores _ZTV5Model, copies
- * mat4x3 from data_02082128 and zeroes +0x4c. Model::DoSetFile allocates
+ * LAYOUT evidence: Model::C2 calls ModelBase::C2, stores _ZTV5Model, copies
+ * mat4x3 from IDENTITY_MATRIX4X3 and zeroes +0x4c. Model::DoSetFile allocates
  * transformsBuf with Memory::operator_new2 and the destructors operator
  * delete it. Model::Render multiplies mat4x3 into a stack temp before
  * handing it to ModelComponents::Render.
@@ -44,6 +45,13 @@ struct Model : ModelBase {
     ModelComponents data;      /* 0x08 - embedded, unlike its pointer-holding siblings */
     Matrix4x3 mat4x3;          /* 0x1c */
     void *transformsBuf;       /* 0x4c - owned; sized by func_02046564(file) */
+
+    /* DECLARED, NEVER DEFINED HERE, and that is the point. Left undeclared, the
+       compiler synthesises a constructor and INLINES it into every class that
+       holds a Model, emitting the base-chain vtable stores straight into the
+       holder. The ROM calls _ZN5ModelC1Ev (0x02016d58) out of line instead, so
+       the declaration is what makes a holder's constructor reproduce. */
+    Model();
 
     /* --- vtable, in _ZTV5Model order. Do not reorder. --- */
     virtual ~Model();                                 /* slots 0 (D1), 1 (D0) */

@@ -1,6 +1,6 @@
 #include "types.h"
+#include "nitro/hw/registers.h"
 extern char data_023c0000[];
-extern volatile u16 data_04000006;
 extern int data_0209f608;
 extern int data_0209f648[][192];
 extern void func_ov006_020efdac(void);
@@ -10,7 +10,7 @@ void func_ov006_020efcf8(void)
 {
     int v;
     *(int *)(((int)data_023c0000 + 0x3ff8)) |= 2;
-    v = data_04000006 + 1;
+    v = REG_VCOUNT + 1;
     if (v >= 0xc0) {
         func_ov006_020efdac();
     } else if (v <= 0xc0) {

@@ -1,19 +1,10 @@
 //cpp
-struct Vector3;
-struct Actor;
+#include "dBgCh_Gnd.h"
 
-struct RaycastGround {
-    char pad[0x44];
-    int result;       // offset 0x44
-    char pad2[0xc];
-    RaycastGround();
-    ~RaycastGround();
-    void SetObjAndPos(const Vector3 &pos, Actor *a);
-    int DetectClsn();
-};
+struct dActor_c;
 
-extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(int self);
-extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(int self);
+extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     int self, int sm, int mat, int fix, int t, unsigned int j);
 
 extern "C" void func_ov102_0214b444(int c)
@@ -24,11 +15,11 @@ extern "C" void func_ov102_0214b444(int c)
         return;
 
     v = *(int*)(c + 0x60);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) == 0) {
-        RaycastGround rg;
-        rg.SetObjAndPos(*(const Vector3*)(c + 0x5c), (Actor*)0);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) == 0) {
+        dBgCh_Gnd rg;
+        rg.SetObjAndPos(*(const Vector3*)(c + 0x5c), (dActor_c*)0);
         if (rg.DetectClsn() != 0)
-            v = rg.result;
+            v = rg.clsnY;
     }
 
     {
@@ -46,6 +37,6 @@ extern "C" void func_ov102_0214b444(int c)
     *(int*)(c + 0x3bc) = v >> 3;
     *(int*)(c + 0x3c0) = *(int*)(c + 0x64) >> 3;
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x364, c + 0x394, *(int*)(c + 0x80) * 0x50, 0x1e000, 0xf);
 }

@@ -8,18 +8,18 @@ extern "C" {
     void func_ov071_02120c90(void *c);
 }
 
-struct CylinderClsn {
-    void Clear();
-    void Update();
-};
+/* dCc_c comes from the real dCcAc_c chain now that MrI.h types mdCcAcPos_c;
+   the ad-hoc redeclaration that used to stand in for it ICEd mwccarm
+   (CClass.c:3328) once the real class was visible. Clear and Update are
+   non-virtual there, so the direct bl is unchanged. */
 
 int MrI::Behavior()
 {
     func_ov071_021215c0(((char *)this));
     func_0200f760(((char *)this), ((char *)this) + 0x174);
-    unk_20c = mAngleY;
-    ((CylinderClsn*)((char *)&mMovingCylinderClsnWithPos))->Clear();
-    ((CylinderClsn*)((char *)&mMovingCylinderClsnWithPos))->Update();
+    mTurnRefAngleY = mAngleY;
+    ((dCc_c*)((char *)&mdCcAcPos_c))->Clear();
+    ((dCc_c*)((char *)&mdCcAcPos_c))->Update();
     func_ov071_02120c90(((char *)this));
     return 1;
 }

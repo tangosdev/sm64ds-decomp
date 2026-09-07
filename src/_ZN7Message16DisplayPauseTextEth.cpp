@@ -8,13 +8,19 @@ extern "C" {
 extern short data_0209d6d4;
 extern unsigned char data_0209d6a8;
 extern unsigned char data_0209d668;
-extern int func_0201d850(unsigned char a);
+/* func_0201d850 comes from decl_common.h. It used to be declared here as
+   `int func_0201d850(unsigned char a)` and, in DisplayLevelClearText, as
+   `int func_0201d850(signed char course)` -- one function, two signatures, neither
+   matching the definition's `void func_0201d850(u32)`. */
 extern int _ZN3G2S13GetBG0CharPtrEv(void);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
 
-void _ZN7Message16DisplayPauseTextEth(unsigned short n, unsigned char b) {
+}
+
+void Message::DisplayPauseText(unsigned short n, unsigned char b)
+{
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -35,5 +41,4 @@ void _ZN7Message16DisplayPauseTextEth(unsigned short n, unsigned char b) {
     Message_DrawCenteredLine(0x120, 0x20);
     data_0209d6d4 = 0x28b;
     Message_DrawCenteredLine(0x1c0, 0x20);
-}
 }

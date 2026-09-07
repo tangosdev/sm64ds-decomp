@@ -5,17 +5,18 @@
     .data       start:0x02122b60 end:0x02122f80 kind:data align:32
     .bss        start:0x02122f80 end:0x02123100 kind:bss align:32
 src/_ZN10ScuttlebugD1Ev.cpp:
+    complete
     .text start:0x0211f000 end:0x0211f048
 
-src/_ZN10ScuttlebugD0Ev.c:
+src/_ZN10ScuttlebugD0Ev.cpp:
     complete
     .text start:0x0211f048 end:0x0211f0a4
 
-src/func_ov071_0211f0a4.c:
+src/_ZN10Scuttlebug13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211f0a4 end:0x0211f0ac
 
-src/func_ov071_0211f0ac.c:
+src/_ZN10Scuttlebug16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0211f0ac end:0x0211f0b4
 
@@ -47,7 +48,8 @@ src/func_ov071_0211f6f8.cpp:
     complete
     .text start:0x0211f6f8 end:0x0211f7d4
 
-src/func_ov071_0211f7d4.c:
+src/func_ov071_0211f7d4.cpp:
+    complete
     .text start:0x0211f7d4 end:0x0211f8d0
 
 src/func_ov071_0211f8d0.cpp:
@@ -122,11 +124,11 @@ src/Scuttlebug_SetState.c:
     complete
     .text start:0x021202ec end:0x02120308
 
-src/_ZN10Scuttlebug16CleanupResourcesEv.c:
+src/_ZN10Scuttlebug16CleanupResourcesEv.cpp:
     complete
     .text start:0x02120308 end:0x02120338
 
-src/_ZN10Scuttlebug16OnPendingDestroyEv.c:
+src/_ZN10Scuttlebug16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02120338 end:0x0212033c
 
@@ -139,20 +141,22 @@ src/_ZN10Scuttlebug8BehaviorEv.cpp:
     .text start:0x02120398 end:0x021203f8
 
 src/_ZN10Scuttlebug13InitResourcesEv.cpp:
+    complete
     .text start:0x021203f8 end:0x02120580
 
-src/func_ov071_02120580.cpp:
+src/_ZN10Scuttlebug13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02120580 end:0x02120618
 
-src/Scuttlebug_Spawn.c:
+src/d_a_spd.c:
     complete
     .text start:0x02120618 end:0x02120668
 
 src/_ZN3MrID1Ev.cpp:
+    complete
     .text start:0x02120668 end:0x021206b0
 
-src/_ZN3MrID0Ev.c:
+src/_ZN3MrID0Ev.cpp:
     complete
     .text start:0x021206b0 end:0x0212070c
 
@@ -184,15 +188,24 @@ src/func_ov071_02120c90.cpp:
     complete
     .text start:0x02120c90 end:0x02120d30
 
+src/func_ov071_02120d30.c:
+    complete
+    .text start:0x02120d30 end:0x0212110c
+
 src/func_ov071_0212110c.c:
     complete
     .text start:0x0212110c end:0x021211e0
+
+src/func_ov071_021211e0.c:
+    complete
+    .text start:0x021211e0 end:0x021214f4
 
 src/func_ov071_021214f4.c:
     complete
     .text start:0x021214f4 end:0x0212152c
 
 src/func_ov071_0212152c.c:
+    complete
     .text start:0x0212152c end:0x02121570
 
 src/func_ov071_02121570.c:
@@ -215,7 +228,7 @@ src/_ZN3MrI16CleanupResourcesEv.cpp:
     complete
     .text start:0x02121650 end:0x021216b4
 
-src/_ZN3MrI16OnPendingDestroyEv.c:
+src/_ZN3MrI16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021216b4 end:0x021216b8
 
@@ -227,68 +240,24 @@ src/_ZN3MrI8BehaviorEv.cpp:
     complete
     .text start:0x021216ec end:0x02121734
 
-src/BigMrI_Spawn.c:
+src/d_a_eykn_eyekun_boss.c:
     complete
     .text start:0x021219cc end:0x02121a1c
 
-src/MrI_Spawn.c:
+src/d_a_eykn_eyekun.c:
     complete
     .text start:0x02121a1c end:0x02121a6c
 
-src/_ZN14MrI_ProjectileD1Ev.cpp:
-    .text start:0x02121a6c end:0x02121aac
-
-src/_ZN14MrI_ProjectileD0Ev.c:
+src/game/actors/d_a_ey_bm.cpp:
     complete
-    .text start:0x02121aac end:0x02121b00
+    .text start:0x02121a6c end:0x02121fe4
 
-src/func_ov071_02121b00.c:
+src/_ZN6CoffinD1Ev.cpp:
     complete
-    .text start:0x02121b00 end:0x02121b08
-
-src/func_ov071_02121b08.c:
-    complete
-    .text start:0x02121b08 end:0x02121b50
-
-src/func_ov071_02121b50.c:
-    complete
-    .text start:0x02121b50 end:0x02121ba4
-
-src/func_ov071_02121ba4.cpp:
-    .text start:0x02121ba4 end:0x02121c6c
-
-src/func_ov071_02121c6c.cpp:
-    complete
-    .text start:0x02121c6c end:0x02121d08
-
-src/_ZN14MrI_Projectile16CleanupResourcesEv.c:
-    complete
-    .text start:0x02121d08 end:0x02121d10
-
-src/_ZN14MrI_Projectile16OnPendingDestroyEv.c:
-    complete
-    .text start:0x02121d10 end:0x02121d14
-
-src/_ZN14MrI_Projectile6RenderEv.cpp:
-    complete
-    .text start:0x02121d14 end:0x02121d80
-
-src/_ZN14MrI_Projectile8BehaviorEv.cpp:
-    complete
-    .text start:0x02121d80 end:0x02121eb4
-
-src/_ZN14MrI_Projectile13InitResourcesEv.cpp:
-    complete
-    .text start:0x02121eb4 end:0x02121f9c
-
-src/MrI_Projectile_Spawn.c:
-    complete
-    .text start:0x02121f9c end:0x02121fe4
-
-src/_ZN6CoffinD1Ev.c:
     .text start:0x02121fe4 end:0x02122028
 
-src/_ZN6CoffinD0Ev.c:
+src/_ZN6CoffinD0Ev.cpp:
+    complete
     .text start:0x02122028 end:0x02122080
 
 src/func_ov071_02122080.c:
@@ -320,6 +289,7 @@ src/func_ov071_02122414.cpp:
     .text start:0x02122414 end:0x02122460
 
 src/_ZN6Coffin16CleanupResourcesEv.cpp:
+    complete
     .text start:0x02122460 end:0x021224a4
 
 src/_ZN6Coffin6RenderEv.cpp:
@@ -331,20 +301,25 @@ src/_ZN6Coffin8BehaviorEv.cpp:
     .text start:0x021224cc end:0x0212255c
 
 src/_ZN6Coffin13InitResourcesEv.cpp:
+    complete
     .text start:0x0212255c end:0x02122670
 
-src/Coffin_Spawn.c:
+src/d_a_obj_casket.c:
     complete
     .text start:0x02122670 end:0x021226a0
 
 src/__sinit_ov071_021226ac.c:
+    complete
     .init start:0x021226ac end:0x021228c8
 
 src/__sinit_ov071_021228c8.c:
+    complete
     .init start:0x021228c8 end:0x02122a1c
 
 src/__sinit_ov071_02122a1c.c:
+    complete
     .init start:0x02122a1c end:0x02122a64
 
 src/__sinit_ov071_02122a64.c:
+    complete
     .init start:0x02122a64 end:0x02122b30

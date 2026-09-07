@@ -12,7 +12,7 @@ extern u8 data_0209f270;
 extern u8 data_0209f24c;
 extern unsigned short data_0209f5e8;
 
-extern void _ZN5Scene20SetAndStopColorFaderEv(void);
+extern void _ZN8dScene_c20SetAndStopColorFaderEv(void);
 extern void SetNextStar(void);
 extern int SublevelToLevel(int i);
 
@@ -22,7 +22,7 @@ void LoadLevel(s8 levelID, u8 entranceID, s8 starID, u8 arg3, s8 returnState)
     int chk;
 
     if (data_02092110 < 0) {
-        _ZN5Scene20SetAndStopColorFaderEv();
+        _ZN8dScene_c20SetAndStopColorFaderEv();
         *(unsigned short *)((char *)&data_0209f5e8 + 0xc) = 0;
     }
     data_02092110 = levelID;

@@ -4,13 +4,13 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 extern char data_ov100_02148204[];
 
 extern void _ZN6Player11OpenBigDoorEv(void* p);
 extern void func_020731dc(int a, int b, void** node);
 extern void Vec3_RotateYAndTranslate(void* dst, void* src, short angle, void* unk);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const struct Vector3* pos, const struct Vector3_16* rot,
     s32 areaID, s32 deathTableID);
 
@@ -25,7 +25,7 @@ int func_ov100_02144a38(char* c, char* p)
         data_ov100_02148880.x = 0x4b000;
         data_ov100_02148880.y = 0;
         data_ov100_02148880.z = 0x6e000;
-        func_020731dc((int)&data_ov100_02148880, (int)func_020072c0, &data_ov100_02148850);
+        func_020731dc((int)&data_ov100_02148880, (int)_ZN7Vector3D1Ev, &data_ov100_02148850);
         data_ov100_02148720 |= 1;
     }
 
@@ -33,7 +33,7 @@ int func_ov100_02144a38(char* c, char* p)
         data_ov100_0214879c.x = 0x4b000;
         data_ov100_0214879c.y = 0;
         data_ov100_0214879c.z = -0x6e000;
-        func_020731dc((int)&data_ov100_0214879c, (int)func_020072c0, &data_ov100_02148790);
+        func_020731dc((int)&data_ov100_0214879c, (int)_ZN7Vector3D1Ev, &data_ov100_02148790);
         data_ov100_02148718 |= 1;
     }
 
@@ -43,7 +43,7 @@ int func_ov100_02144a38(char* c, char* p)
         data_ov100_021487f0.x = -0x4c000;
         data_ov100_021487f0.y = 0;
         data_ov100_021487f0.z = 0x6d000;
-        func_020731dc((int)&data_ov100_021487f0, (int)func_020072c0, &data_ov100_021487d8);
+        func_020731dc((int)&data_ov100_021487f0, (int)_ZN7Vector3D1Ev, &data_ov100_021487d8);
         data_ov100_0214871c |= 1;
     }
 
@@ -52,7 +52,7 @@ int func_ov100_02144a38(char* c, char* p)
     Vec3_RotateYAndTranslate(&pos, p + 0x5c, *(s16*)(p + 0x8e), &data_ov100_021487f0);
 
     {
-        void* actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+        void* actor = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x11a, (u32)*(s8*)(e + 9), &pos,
             (struct Vector3_16*)(p + 0x8c), *(s8*)(p + 0xcc), -1);
         if (actor != 0) {

@@ -1,45 +1,69 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Spiny: 5 matched functions, 15 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SPINY_H
 #define SPINY_H
-#include "types.h"
 
-struct Spiny {
-    u8  pad_000[0x60];
-    s32 mPosY;            /* 0x060 */
-    u8  pad_064[0x1c];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  unk_08c;            /* 0x08c */
-    u8  pad_08d[0x5];
-    u8  unk_092;            /* 0x092 */
-    u8  pad_093[0x1d];
-    u8  unk_0b0;            /* 0x0b0 */
-    u8  pad_0b1[0x23];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mModelAnim;            /* 0x124 */
-    u8  pad_125[0x63];
-    u8  mShadowModel;            /* 0x188 */
-    u8  pad_189[0x27];
-    u8  mMovingCylinderClsn;            /* 0x1b0 */
-    u8  pad_1b1[0x33];
-    u8  mWithMeshClsn;            /* 0x1e4 */
-    u8  pad_1e5[0x1bb];
-    u8  unk_3a0;            /* 0x3a0 */
+#include "types.h"
+#include "dActor_c.h"
+#include "Model.h"
+#include "ModelAnim.h"
+#include "ShadowModel.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
+
+/* TWO WITNESSES, and they close on each other:
+ *
+ *   daTgz_c_classInit  fBase_c::operator new(1004 = 0x3ec), dActor_c::dActor_c(), stores _ZTV5Spiny,
+ *                then the five members below in this order.
+ *   ~Spiny       the same members destroyed in reverse, then ~dActor_c.
+ *
+ * SIZE 0x3ec is the factory's own literal, and the trailing byte fields close exactly on it.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov077). Only the
+ * slots declared below differ; every other slot holds the base's own word and is inherited,
+ * so it is deliberately not redeclared here.
+ *
+ * SM64DS RTTI names the implementation daTgz_c. The reconstructed
+ * factory daTgz_c_classInit (historical alias
+ * Spiny_Spawn) constructs it for the TOGEZO
+ * registry profile.
+ */
+struct Spiny : dActor_c {
+    u8  pad_0d0[0x4];
+    Model mModel;                            /* 0x0d4 */
+    ModelAnim mModelAnim;                    /* 0x124 */
+    ShadowModel mShadowModel;                /* 0x188 */
+    dCcAc_c mdCcAc_c;  /* 0x1b0 */
+    dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
+    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, so it begins a
+       Matrix4x3. Still spelt u8 + pad so the header need not pull in
+       math/Matrix.h. [_ZN5Spiny13InitResourcesEv.cpp] */
+    u8  mMatrix;            /* 0x3a0 */
     u8  pad_3a1[0x37];
-    s32 unk_3d8;            /* 0x3d8 */
+    /* Render draws the still Model in states 0 and 4 and the ModelAnim
+       otherwise; Behavior treats 1 (only once on the ground), 4 and 5 as states
+       that must keep running whatever the distance to the player.
+       [_ZN5Spiny6RenderEv.cpp, _ZN5Spiny8BehaviorEv.cpp] */
+    s32 mState;            /* 0x3d8 */
     u8  pad_3dc[0xd];
-    u8  unk_3e9;            /* 0x3e9 */
-#ifdef __cplusplus
-    /* methods */
+    /* Seeded 0x2c (44 frames) in InitResources and counted down ONLY on the
+       frames Spiny is too far from the player to behave; at 0 it marks itself
+       for destruction. [_ZN5Spiny13InitResourcesEv.cpp,
+        _ZN5Spiny8BehaviorEv.cpp] */
+    u8  mDespawnTimer;            /* 0x3e9 */
+    u8  pad_3ea[0x2];
+
+    virtual ~Spiny();            /* slots 16 (D1), 17 (D0) */
+
+    virtual int   OnYoshiTryEat();               /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual int   OnAimedAtWithEgg();            /* slot 29 */
+
     int Behavior();
+    int CleanupResources();                  /* slot  3 */
     int InitResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
-#endif
 };
 
-#endif
+typedef char Spiny_size_must_be_0x3ec[sizeof(Spiny) == 0x3ec ? 1 : -1];
+
+#endif /* SPINY_H */

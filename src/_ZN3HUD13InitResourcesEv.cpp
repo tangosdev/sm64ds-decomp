@@ -8,17 +8,17 @@ extern "C" {
     u8 NumStars(void);
     void func_0203da4c(void);
 
-    u8 data_0209f2d8;
-    s8 data_0209f2f8;
-    u8 data_0209f2fc;
-    u8 data_0209f250;
-    void* data_0209f394[];
-    s8 data_ov002_02111178;
-    u8 data_ov002_0211117c;
-    s8 data_ov002_02111184;
-    s16 data_ov002_02111188;
+    extern u8 data_0209f2d8;
+    extern s8 data_0209f2f8;
+    extern u8 data_0209f2fc;
+    extern u8 data_0209f250;
+    extern void* data_0209f394[];
+    extern s8 data_ov002_02111178;
+    extern u8 data_ov002_0211117c;
+    extern s8 data_ov002_02111184;
+    extern s16 data_ov002_02111188;
     struct CAA0 { char pad[8]; int unk8; };
-    CAA0 data_0209caa0;
+    extern CAA0 data_0209caa0;
 }
 
 struct Player { u8 GetHealth(); };

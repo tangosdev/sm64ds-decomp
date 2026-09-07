@@ -10,14 +10,10 @@ struct Base {
     virtual int vf4(int);
     virtual int vfunc(int a);
 };
-struct Obj {
-    char pad[0xd4];
-    Base sub;
-};
 
 int FortressWall::Render()
 {
-    if (*(unsigned char*)((char*)&unk_321) != 0) return 1;
-    ((Obj *)this)->sub.vfunc(0);
+    if (mBroken != 0) return 1;
+    ((Base *)&mModel)->vfunc(0);
     return 1;
 }

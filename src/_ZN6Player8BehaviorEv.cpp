@@ -7,27 +7,22 @@
 #include "Player.h"
 struct C3;
 typedef int (C3::*PMF)();
-struct State {
-    PMF onEnter;
-    PMF main;
-    PMF onExit;
-};
 struct G_ee90 {
     char pad[0x26c];
     s32 flag26c;
 };
 
-#define LAU(p) ((long long)(int)(p))
+#define LAU(p) (p)
 
 extern "C" {
 extern u16 DecIfAbove0_Short(u16 *p);
 extern s16 GetAngleToCamera(u8 playerID);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 charID, u32 soundID, const Vector3 *pos);
-extern int _ZN6Player11ChangeStateERNS_5StateE(void *self, State *s);
-extern int _ZN6Player7IsStateERNS_5StateE(void *self, State *s);
+extern int _ZN6Player11ChangeStateERNS_5StateE(void *self, Player::State *s);
+extern int _ZN6Player7IsStateERNS_5StateE(void *self, Player::State *s);
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern void func_02035684(void *p, s32 v);
 extern void func_0203568c(void *p, s32 v);
@@ -45,19 +40,19 @@ extern s32 data_0209fc68;
 extern u8 data_020a0e40;
 extern G_ee90 data_0209ee90;
 
-extern State data_ov002_0210ffec;
-extern State data_ov002_021101b4;
-extern State data_ov002_0211031c;
-extern State data_ov002_02110334;
-extern State data_ov002_02110454;
-extern State data_ov002_021104b4;
-extern State data_ov002_021104e4;
-extern State data_ov002_021104fc;
-extern State data_ov002_02110514;
-extern State data_ov002_021105bc;
-extern State data_ov002_0211061c;
-extern State data_ov002_02110634;
-extern State data_ov002_021106f4;
+extern Player::State data_ov002_0210ffec;
+extern Player::State data_ov002_021101b4;
+extern Player::State data_ov002_0211031c;
+extern Player::State data_ov002_02110334;
+extern Player::State data_ov002_02110454;
+extern Player::State data_ov002_021104b4;
+extern Player::State data_ov002_021104e4;
+extern Player::State data_ov002_021104fc;
+extern Player::State data_ov002_02110514;
+extern Player::State data_ov002_021105bc;
+extern Player::State data_ov002_0211061c;
+extern Player::State data_ov002_02110634;
+extern Player::State data_ov002_021106f4;
 }
 
 int Player::Behavior()
@@ -90,7 +85,7 @@ int Player::Behavior()
     temp = (s32)(((s64)r2 * 0x32000 + 0x800) >> 12);
     func_0203568c(((char *)this) + 0x380, temp);
     func_02035684(((char *)this) + 0x380, temp);
-    unk_2d8 = scale * 0x28;
+    mdCcAcPos_c.radius = scale * 0x28;
     mul = 0x96;
     if (_ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_021104e4)
         || _ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_02110514)
@@ -101,12 +96,12 @@ int Player::Behavior()
         || _ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_02110634)) {
         mul = 0x5a;
     }
-    unk_2dc = mul * scale;
+    mdCcAcPos_c.height = mul * scale;
 
     if (mIsMega != 0)
-        *(u32 *)LAU((char *)&mBodyClsnFlags) |= 0x10;
+        *(u32 *)LAU((char *)&mdCcAcPos_c.flags) |= 0x10;
     else
-        *(u32 *)LAU((char *)&mBodyClsnFlags) &= ~0x10;
+        *(u32 *)LAU((char *)&mdCcAcPos_c.flags) &= ~0x10;
 
     if (data_0209fc68 == 0) {
         if (data_0209fc48 != 0)
@@ -124,49 +119,49 @@ after_player_slot:
     if (func_ov002_020c4188(((char *)this)) != 0)
         return 1;
 
-    DecIfAbove0_Short((u16 *)((char *)&mStateTimer));
-    DecIfAbove0_Short((u16 *)((char *)&mStateWaitTimer));
-    DecIfAbove0_Short((u16 *)((char *)&mInvincibleTimer));
-    DecIfAbove0_Short((u16 *)((char *)&mJumpComboTimer));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6aa));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6ac));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6b0));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6b2));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6b4));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6b6));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6b8));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6ba));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6bc));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6c4));
-    DecIfAbove0_Short((u16 *)((char *)&unk_6c8));
+    DecIfAbove0_Short(&mStateTimer);
+    DecIfAbove0_Short(&mStateWaitTimer);
+    DecIfAbove0_Short(&mInvincibleTimer);
+    DecIfAbove0_Short(&mJumpComboTimer);
+    DecIfAbove0_Short(&mPunchKickCooldown);
+    DecIfAbove0_Short(&unk_6ac);
+    DecIfAbove0_Short(&mCrouchTimer);
+    DecIfAbove0_Short(&unk_6b2);
+    DecIfAbove0_Short(&mHoldHeavyTimer);
+    DecIfAbove0_Short(&unk_6b6);
+    DecIfAbove0_Short(&mWalkTimer);
+    DecIfAbove0_Short(&unk_6ba);
+    DecIfAbove0_Short(&unk_6bc);
+    DecIfAbove0_Short(&unk_6c4);
+    DecIfAbove0_Short(&mTeleportTimer);
 
-    if (unk_6c8 == 1)
+    if (mTeleportTimer == 1)
         data_0209f284 = 0;
 
     if (mIsControlDisabled == 0) {
-        DecIfAbove0_Short((u16 *)((char *)&unk_6c0));
-        if (DecIfAbove0_Short((u16 *)((char *)&unk_6be)) == 0)
+        DecIfAbove0_Short(&mBalloonTimer);
+        if (DecIfAbove0_Short(&unk_6be) == 0)
             func_ov002_020d80d0(((char *)this));
-        if (DecIfAbove0_Short((u16 *)((char *)&unk_6ae)) == 0) {
+        if (DecIfAbove0_Short(&mPowerupTimer) == 0) {
             func_ov002_020e032c(((char *)this));
             func_ov002_020bdef0(((char *)this));
             func_ov002_020bdd9c(((char *)this));
         }
-        if (DecIfAbove0_Short((u16 *)((char *)&unk_6c2)) == 0)
+        if (DecIfAbove0_Short(&unk_6c2) == 0)
             func_ov002_020bdd2c(((char *)this));
 
-        if (unk_6a2 != mAreaId) {
-            unk_6a2 = mAreaId;
-            unk_6c6 = 0;
+        if (mPrevAreaId != mAreaId) {
+            mPrevAreaId = mAreaId;
+            mMouthHoldTimer = 0;
         }
-        if (DecIfAbove0_Short((u16 *)((char *)&unk_6c6)) == 0 && mObjInMouth != 0)
+        if (DecIfAbove0_Short(&mMouthHoldTimer) == 0 && mObjInMouth != 0)
             func_ov002_020d6790(((char *)this));
     }
 
     {
         s16 ang = mDesiredAngleY;
         s32 stride = 0x18;
-        unk_6d4 = ang;
+        mPrevDesiredAngleY = ang;
         mDesiredAngleY = *(s16 *)((char *)&data_0209f4a6 + data_020a0e40 * stride);
         if (data_0209fc68 == 0) {
             s16 add = GetAngleToCamera(0);
@@ -184,9 +179,9 @@ after_player_slot:
     func_ov002_020d8158(((char *)this));
 
     {
-        State *st = *(State **)((char *)&unk_370);
-        if (*(void **)&st->main != 0)
-            (((C3 *)((char *)this))->*(st->main))();
+        State *st = mState;
+        if (*(void **)&st->mMain != 0)
+            (this->*(st->mMain))();
     }
 
     if ((u16)(mStateFlags & 0x80) != 0) {
@@ -219,15 +214,15 @@ after_player_slot:
     if (mIsInShallowWater != 0 && mIsUnderwater == 0 && mIsAirborne == 0)
         func_ov002_020ce8bc(((char *)this), mHorzSpeed);
 
-    unk_6d6 = mAngleY;
+    mPreClsnAngleY = mAngleY;
     *(u16 *)LAU((char *)&mStateFlags) &= ~0x440;
 
     if (mHasWings != 0)
-        _ZN9Animation7AdvanceEv((char *)&mAnimation2);
+        mModelAnim4.Advance();
 
-    unk_548 = mPosX;
-    unk_54c = mPosY;
-    unk_550 = mPosZ;
+    mPreClsnPosX = mPosX;
+    mPreClsnPosY = mPosY;
+    mPreClsnPosZ = mPosZ;
     func_ov002_020bf36c(((char *)this), ((char *)this) + 0x2d4);
     func_ov002_020bf13c(((char *)this));
 
@@ -255,7 +250,7 @@ after_player_slot:
     v1.x = v0.x;
     v1.y = v0.y;
     v1.z = v0.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char *)this) + 0x2d4, &v1);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char *)this) + 0x2d4, &v1);
     func_ov002_020c2db8(((char *)this));
 
     if (mIsInShallowWater != 0)
@@ -275,15 +270,15 @@ after_player_slot:
         u16 t = mInvincibleTimer;
         if (t != 0) {
             if (t == 1)
-                *(u32 *)LAU((char *)&unk_2f0) |= 0x10000000;
+                *(u32 *)LAU((char *)&mdCcAcPos_c.vulnFlags) |= 0x10000000;
             else
-                *(u32 *)LAU((char *)&unk_2f0) &= ~0x10000000;
+                *(u32 *)LAU((char *)&mdCcAcPos_c.vulnFlags) &= ~0x10000000;
         }
     }
 
-    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv((char *)&mdCcAcPos_c);
     if (mIsBodyClsnEnabled != 0)
-        _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsnWithPos);
+        _ZN5dCc_c6UpdateEv((char *)&mdCcAcPos_c);
 
     if (data_0209fc68 == 0)
         data_020a0e40 = 0;

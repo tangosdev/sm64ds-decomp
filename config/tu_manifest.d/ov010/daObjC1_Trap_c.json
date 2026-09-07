@@ -1,0 +1,304 @@
+{
+  "id": "ov010/daObjC1_Trap_c",
+  "module": "ov010",
+  "source": "src/game/actors/d_a_obj_c1_trap.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_c1_trap.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous class linker run: 0x021111a0..0x021119d0, 17 functions, including the collision callback body, its three-argument adapter, and the actor-table factory",
+    "the PMF descriptors at 0x02112a78..0x02112aa0 relocate to the five state methods inside this run, while the class RTTI/SpawnInfo/vtable group at 0x02112aa0..0x02112b64 relocates back to its key function, lifecycle methods, destructor pair, and factory",
+    "the adjacent deferred initializer corroborates the five state PMFs but remains separately enrolled because its SharedFilePtr special-member relocation identities are not yet proven"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021111a0",
+      "end": "0x021119d0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN14daObjC1_Trap_cD1Ev",
+      "address": "0x021111a0",
+      "size": "0x0000004c",
+      "legacy_source": "src/_ZN14daObjC1_Trap_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_cD0Ev",
+      "address": "0x021111ec",
+      "size": "0x00000060",
+      "legacy_source": "src/_ZN14daObjC1_Trap_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c6State4Ev",
+      "address": "0x0211124c",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov010_0211124c.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c6State3Ev",
+      "address": "0x0211125c",
+      "size": "0x00000028",
+      "legacy_source": "src/func_ov010_0211125c.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c6State2Ev",
+      "address": "0x02111284",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov010_02111284.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c6State1Ev",
+      "address": "0x021112b4",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov010_021112b4.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c6State0Ev",
+      "address": "0x02111320",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov010_02111320.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c10GetSpawnerEv",
+      "address": "0x0211139c",
+      "size": "0x00000054",
+      "legacy_source": "src/func_ov010_0211139c.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c24UpdateCollisionTransformEv",
+      "address": "0x021113f0",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov010_021113f0.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c20UpdateModelTransformEv",
+      "address": "0x0211146c",
+      "size": "0x000000e8",
+      "legacy_source": "src/func_ov010_0211146c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c16CleanupResourcesEv",
+      "address": "0x02111554",
+      "size": "0x00000054",
+      "legacy_source": "src/_ZN14daObjC1_Trap_c16CleanupResourcesEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c6RenderEv",
+      "address": "0x021115a8",
+      "size": "0x00000038",
+      "legacy_source": "src/_ZN14daObjC1_Trap_c6RenderEv.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c8BehaviorEv",
+      "address": "0x021115e0",
+      "size": "0x00000074",
+      "legacy_source": "src/_ZN14daObjC1_Trap_c8BehaviorEv.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c13InitResourcesEv",
+      "address": "0x02111654",
+      "size": "0x000001f8",
+      "legacy_source": "src/_ZN14daObjC1_Trap_c13InitResourcesEv.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN14daObjC1_Trap_c11OnCollisionER8dActor_c",
+      "address": "0x0211184c",
+      "size": "0x00000138",
+      "legacy_source": "src/func_ov010_0211184c.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov010_02111984",
+      "address": "0x02111984",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov010_02111984.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "daObjC1_Trap_c_classInit",
+      "address": "0x02111998",
+      "size": "0x00000038",
+      "legacy_source": "src/Trap_Spawn.c",
+      "ordinal": 16
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits inherited fBase_c typeinfo as vague linkage; romdata_check proves the exact copy at its canonical arm9 home before text-only production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits fBase_c's inherited type-name string as vague linkage; romdata_check proves its canonical arm9 bytes."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits dBase_c's inherited type-name string as vague linkage; romdata_check proves its canonical arm9 bytes."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits dActor_c's inherited type-name string as vague linkage; romdata_check proves its canonical arm9 bytes."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits inherited dBase_c typeinfo as vague linkage; romdata_check proves the exact canonical arm9 record."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "The key-function TU emits inherited dBgActor_c typeinfo as vague linkage; romdata_check proves the exact single-inheritance record at its canonical ov002 home."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "The key-function TU emits dBgActor_c's inherited type-name string as vague linkage; romdata_check proves its canonical ov002 bytes."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits inherited dActor_c typeinfo as vague linkage; romdata_check proves the exact canonical arm9 record."
+    },
+    {
+      "symbol": "_ZTI14daObjC1_Trap_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov010",
+      "canonical_address": "0x02112aa0",
+      "reason": "InitResources naturally owns the class's single-inheritance typeinfo; romdata_check proves its ABI kind, name relocation, and dBgActor_c base relocation at the canonical ov010 home."
+    },
+    {
+      "symbol": "_ZTS14daObjC1_Trap_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov010",
+      "canonical_address": "0x02112aac",
+      "reason": "The genuine class declaration naturally emits the exact ROM type-name string at its canonical ov010 home."
+    },
+    {
+      "symbol": "g_profile_C1_TRAP",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov010",
+      "canonical_address": "0x02112ac0",
+      "reason": "The source naturally defines the typed 0x1c actor descriptor with the daObjC1_Trap_c_classInit relocation and exact scheduling, flags, and culling words; romdata_check proves the complete object."
+    },
+    {
+      "symbol": "_ZTV14daObjC1_Trap_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov010",
+      "canonical_address": "0x02112ae4",
+      "reason": "InitResources owns the complete 0x88-byte vtable storage. romdata_check applies the eight-byte public-address-point bias and proves the preamble plus every retail slot before isolation discards the copy."
+    }
+  ],
+  "notes": [
+    "State0..State4, GetSpawner, UpdateCollisionTransform, UpdateModelTransform, and OnCollision are inferred class-anchored aliases: the class identity, relationships, relocations, and codegen are proven, but the original private source spellings are not. Behavior dispatches through the typed PMF table initialized by the separately retained __sinit source.",
+    "The inline virtual destructor plus out-of-line InitResources key function emits retail's D1 then D0 pair with no D2 and no forcing or dummy output. A POD position local avoids introducing Vector3's unrelated vague-linkage destructor helper.",
+    "daObjC1_Trap_c_classInit (historical alias Trap_Spawn) and func_ov010_02111984 retain their proven C ABI linkage. The factory keeps the exact actor allocator/base/member constructor/vptr sequence because natural new selects the wrong allocator; the adapter is the measured three-argument callback boundary and immediately calls typed OnCollision.",
+    "The PMF descriptor band, deferred initializer, SharedFilePtr resources, CLPS block, ctor pointer, and BSS remain externally owned. A natural initializer probe matched, but its resource special-member relocation identities are not yet proven, so this promotion deliberately claims none of those ranges."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole production class TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov010-daObjC1_Trap_c/daObjC1_Trap_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 17,
+    "functions_declared": 17,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI8dActor_c",
+        "_ZTI14daObjC1_Trap_c",
+        "_ZTS14daObjC1_Trap_c",
+        "g_profile_C1_TRAP",
+        "_ZTV14daObjC1_Trap_c"
+      ],
+      "dataExternalized": [
+        "g_profile_C1_TRAP",
+        "_ZTI10dBgActor_c",
+        "_ZTI14daObjC1_Trap_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS14daObjC1_Trap_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV14daObjC1_Trap_c"
+      ]
+    }
+  }
+}

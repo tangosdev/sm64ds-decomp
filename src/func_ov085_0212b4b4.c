@@ -4,8 +4,8 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daPeach_c::Kill - verified 2004/b56 byte-match (ov085), strict-reloc */
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+/* daPeach_c::Kill - recovered from vtable slot identity */
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void func_ov085_0212bc78(void *c, void *p);
 extern void func_02012694(int a, void *b);
@@ -19,7 +19,7 @@ extern s32 LenVec3(const Vector3 *v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *);
 int func_ov085_0212b4b4(char *c)
 {
   void *pl;
@@ -35,7 +35,7 @@ int func_ov085_0212b4b4(char *c)
   s16 ang;
   int idx;
   int ysave;
-  pl = _ZN5Actor13ClosestPlayerEv(c);
+  pl = _ZN8dActor_c13ClosestPlayerEv(c);
   if (pl != 0)
   {
     v = *((Vector3 *) (((char *) pl) + 0x5c));
@@ -138,7 +138,7 @@ int func_ov085_0212b4b4(char *c)
       }
       if ((*((s32 *) (c + 0x41c))) == 0)
       {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0)
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0)
         {
           *((s32 *) (c + 0xa8)) = 0xa000;
           *((s32 *) (c + 0x41c)) = 1;

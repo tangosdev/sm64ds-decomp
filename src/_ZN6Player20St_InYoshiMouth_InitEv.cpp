@@ -16,8 +16,8 @@ int Player::St_InYoshiMouth_Init()
     func_ov002_020bdb50(((char *)this), 0);
     r3 = 0;
     mStateWork = (unsigned char)r3;
-    unk_6e6 = (unsigned char)r3;
-    slot = (char *)(((long long)(int)((char *)&mBodyClsnFlags)));
+    mStatePhase = (unsigned char)r3;
+    slot = (char *)((char *)&mdCcAcPos_c.flags);
     r1 = *(unsigned int *)slot;
     r1 |= 2u;
     *(unsigned int *)slot = r1;

@@ -28,7 +28,7 @@ int func_ov007_020ba368(int t)
     }
 
     if (t == 0) {
-        int *p = (int *)(((s64)(int)(*(char **)data_ov007_02104ba0 + 0x20)));
+        int *p = (int *)(*(char **)data_ov007_02104ba0 + 0x20);
         *p += 1;
         if (*(int *)(*(char **)data_ov007_02104ba0 + 0x20) >= 5) {
             *(int *)(*(char **)data_ov007_02104ba0 + 0x20) = 0;

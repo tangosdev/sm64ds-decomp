@@ -61,22 +61,156 @@ sys.path.insert(0, str(REPO / "tools"))
 import chaos_db_ci as CDB  # noqa: E402
 
 
+def overrides_at(rev):
+    """Path-wide attribution overrides as of ``rev``."""
+    try:
+        raw = subprocess.run(["git", "show", f"{rev}:attribution.json"], cwd=REPO,
+                             capture_output=True, text=True, encoding="utf-8",
+                             errors="replace", check=True).stdout
+        data = json.loads(raw)
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        return {}
+    ov = data.get("overrides", {}) if isinstance(data, dict) else {}
+    return {k: v for k, v in ov.items()
+            if isinstance(k, str) and k.startswith("src/") and "#" not in k
+            and isinstance(v, str) and v}
+
+
+def member_overrides_at(rev):
+    """``symbol -> (source path, author)`` for consolidated-TU overrides.
+
+    ``validate_merge.attribution_snapshot`` resolves ``source.cpp#symbol`` before a
+    path-wide override.  Reading the same keys here lets a deliberate many-files-to-one
+    consolidation preserve each old symbol's author instead of reporting every legacy
+    basename as lost.
+    """
+    try:
+        raw = subprocess.run(["git", "show", f"{rev}:attribution.json"], cwd=REPO,
+                             capture_output=True, text=True, encoding="utf-8",
+                             errors="replace", check=True).stdout
+        data = json.loads(raw)
+    except (subprocess.CalledProcessError, json.JSONDecodeError):
+        return {}
+    ov = data.get("overrides", {}) if isinstance(data, dict) else {}
+    out = {}
+    for key, author in ov.items():
+        if (not isinstance(key, str) or not key.startswith("src/") or "#" not in key
+                or not isinstance(author, str) or not author):
+            continue
+        path, symbol = key.rsplit("#", 1)
+        if symbol:
+            out[symbol] = (path, author)
+    return out
+
+
 def lineage(rev):
-    """{stem-without-extension: handle} at `rev`.
+    """{stem-without-extension: handle} at `rev`, resolved the way the merge gate resolves it.
+
+    This must be the COMPOSITE -- overrides, then finishers, then first_matchers -- because
+    that is exactly what `validate_merge.attribution_snapshot` compares, and a gate that
+    models only part of it reports clean on pushes the gate rejects.
+
+    Checking `first_matchers` alone left a gap wide enough to lose real credit through. A
+    1,798-file relocation passed this check with "0 changed, 0 lost" while quietly moving 75
+    functions' composite author to whoever ran the move: `match_finishers` carried a file's
+    draft history across the rename but not its finisher, so every moved file read as a fresh
+    finish by the mover. The finisher layer is fixed in chaos_db_ci now; this makes the gate
+    able to see that layer at all, so the next such bug fails here instead of at merge.
 
     Keyed on the path minus its extension rather than the full path, because a legitimate
     move or a .c -> .cpp promotion changes the path while the function -- and therefore who
     deserves credit for it -- stays the same. Comparing full paths would report every
     intentional move as a loss.
     """
+    first = CDB.first_matchers(rev)
+    finishers = CDB.match_finishers(rev)
+    overrides = overrides_at(rev)
     out = {}
-    for path, who in CDB.first_matchers(rev).items():
-        out[path.rsplit(".", 1)[0]] = who
+    for path in set(first) | set(finishers) | set(overrides):
+        who = overrides.get(path) or finishers.get(path) or first.get(path)
+        if who:
+            out[path.rsplit(".", 1)[0]] = who
     return out
 
 
 def basename_key(stem):
     return stem.rsplit("/", 1)[-1]
+
+
+def renames_between(base, head):
+    """{old basename: new basename} for renames git itself detected under src/.
+
+    Why this exists: `lineage` keys on the basename so that a directory move or a
+    `.c -> .cpp` promotion is not read as a loss. A **symbol correction** changes
+    the basename itself -- `_ZN5SceneD2Ev` is really `BootScene`'s D1, so the file
+    has to be called something else -- and without this the old name simply
+    vanishes and reads as lost, no matter how the commits are arranged.
+
+    That was not hypothetical. Splitting rewrite from move exactly as THE RULE
+    above prescribes still reported 8 lost, because that remedy addresses
+    *similarity*-based lineage loss and this is *identity* loss. #1160 hit the same
+    wall (`_ZN3IRQ13DmaTimHandlerEv` -> `...Ej`) and landed with the loss recorded.
+
+    The gate keeps its teeth: this consults git's own rename detection -- the same
+    authority `first_matchers` relies on via `git log -M` -- so a delete+add git
+    does NOT pair stays unpaired here, and a pairing whose credit actually moved is
+    reported as changed rather than waved through. Verified by rewriting and moving
+    a file in one commit: still 1 lost, still exit 1.
+
+    Renames are collected **per commit and returned in order**, not from one
+    base..head diff, and are replayed rather than composed -- see project(). That matters for exactly the sequence THE RULE prescribes: rewrite in one
+    commit, move in the next. Across the whole range those two show up as a single
+    change whose similarity can fall under git's 50% threshold -- which it did for 3
+    of 8 real cases, the small files whose comments were rewritten most. Per commit,
+    the move is the R100 git already recorded.
+    """
+    log = subprocess.run(
+        ["git", "log", "-M", "--reverse", "--name-status", "--format=@@%H",
+         f"{base}..{head}", "--", "src/"],
+        cwd=REPO, capture_output=True, text=True, encoding="utf-8", errors="replace")
+
+    steps = []
+    for ln in log.stdout.splitlines():
+        parts = ln.split("\t")
+        if len(parts) == 3 and parts[0].startswith("R"):
+            old = basename_key(parts[1].rsplit(".", 1)[0])
+            new = basename_key(parts[2].rsplit(".", 1)[0])
+            if old != new:
+                steps.append((old, new))
+
+    return steps
+
+
+def project(before_by_name, steps):
+    """Replay `steps` in COMMIT ORDER onto a moving {name: credit} map.
+
+    This used to compose the steps into a single {old: final} map and chase it
+    forward, which is right for a file that really moved A -> B -> C over time and
+    WRONG for a permutation. Renaming a family of classes so each takes the next
+    one's name produces, in this order:
+
+        commit 1   VirtualDoor -> Exit
+        commit 3   CameraTag   -> VirtualDoor
+
+    Chased forward, those compose to `CameraTag -> Exit`: the map says CameraTag's
+    credit ended up on Exit, when Exit's credit is VirtualDoor's and CameraTag's is
+    on VirtualDoor. Every name in the cycle then reads as CREDIT CHANGED even though
+    git recorded an R100 for each step and no author lost anything. Order is the
+    whole point -- step 2 only means what it means because step 1 already vacated
+    the name.
+
+    Replaying is also strictly stricter than composing, not looser: a rewrite-and-
+    move in one commit is still not a rename to git, so it contributes no step, the
+    old name is still projected as present, and it is still reported lost.
+    """
+    state = dict(before_by_name)
+    origin = {name: name for name in state}
+    for old, new in steps:
+        if old not in state:
+            continue
+        state[new] = state.pop(old)
+        origin[new] = origin.pop(old, old)
+    return state, origin
 
 
 def main():
@@ -100,18 +234,35 @@ def main():
     before_by_name = {basename_key(s): (s, w) for s, w in before.items()}
     after_by_name = {basename_key(s): (s, w) for s, w in after.items()}
 
-    changed, lost, moved_ok = [], [], []
+    steps = renames_between(args.base, args.head)
+    # Where each name's credit SHOULD have ended up, following git's own rename
+    # detection step by step. Comparing `after` against this instead of against
+    # `before` is what lets a deliberate symbol correction pass while a
+    # rewrite-and-move in one commit still fails.
+    projected, origin = project(before_by_name, steps)
+
+    changed, lost, moved_ok, renamed_ok, consolidated_ok = [], [], [], [], []
     for name, (new_stem, new_who) in after_by_name.items():
-        if name not in before_by_name:
+        if name not in projected:
             continue                                   # genuinely new work
-        old_stem, old_who = before_by_name[name]
+        old_stem, old_who = projected[name]
+        came_from = origin.get(name, name)
         if old_who != new_who:
             changed.append((name, old_stem, new_stem, old_who, new_who))
+        elif came_from != name:
+            renamed_ok.append((came_from, name, old_stem, new_stem, old_who))
         elif old_stem != new_stem:
             moved_ok.append((name, old_stem, new_stem, old_who))
-    for name, (old_stem, old_who) in before_by_name.items():
+    members = member_overrides_at(args.head)
+    for name, (old_stem, old_who) in projected.items():
         if name not in after_by_name:
-            lost.append((name, old_stem, old_who))
+            member = members.get(name)
+            if member and member[1] == old_who:
+                consolidated_ok.append((name, old_stem, member[0], old_who))
+            elif member:
+                changed.append((name, old_stem, member[0], old_who, member[1]))
+            else:
+                lost.append((origin.get(name, name), old_stem, old_who))
 
     for name, old_stem, new_stem, old_who, new_who in changed:
         print(f"  CREDIT CHANGED  {name}")
@@ -121,13 +272,20 @@ def main():
         print(f"  CREDIT LOST     {name}  was {old_stem} [{old_who}]")
     for name, old_stem, new_stem, who in moved_ok:
         print(f"  moved, credit intact: {name}  [{who}]")
+    for name, target, old_stem, new_stem, who in renamed_ok:
+        print(f"  renamed, credit intact: {name} -> {target}  [{who}]")
+    for name, old_stem, new_path, who in consolidated_ok:
+        print(f"  consolidated, credit intact: {name}  {old_stem} -> {new_path}  [{who}]")
 
     print(f"\n{len(after_by_name)} tracked, {len(moved_ok)} moved with credit intact, "
+          f"{len(renamed_ok)} renamed with credit intact, "
+          f"{len(consolidated_ok)} consolidated with credit intact, "
           f"{len(changed)} changed, {len(lost)} lost")
 
     if args.json:
         pathlib.Path(args.json).write_text(json.dumps(
-            {"changed": changed, "lost": lost, "moved_ok": moved_ok}, indent=2),
+            {"changed": changed, "lost": lost, "moved_ok": moved_ok,
+             "renamed_ok": renamed_ok, "consolidated_ok": consolidated_ok}, indent=2),
             encoding="utf-8")
 
     if changed or lost:

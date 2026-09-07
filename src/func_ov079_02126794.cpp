@@ -2,7 +2,7 @@
 extern "C" {
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int a, int b, int c);
 extern void func_02012694(int a, void* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* a);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* a);
 void func_ov079_02126794(char* c) {
   if (*(unsigned short*)(c + 0x100) == 0) {
     *(int*)(c + 0x98) = -0x1e000;
@@ -17,6 +17,6 @@ void func_ov079_02126794(char* c) {
   if (*p100 <= 0x5a) return;
   _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8f, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
   func_02012694(0x78, c + 0x74);
-  _ZN9ActorBase18MarkForDestructionEv(c);
+  _ZN7fBase_c18MarkForDestructionEv(c);
 }
 }

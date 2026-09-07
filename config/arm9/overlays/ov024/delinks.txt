@@ -4,16 +4,19 @@
     .ctor       start:0x02112874 end:0x02112878 kind:rodata align:4
     .data       start:0x02112880 end:0x02113960 kind:data align:32
     .bss        start:0x02113960 end:0x021139a0 kind:bss align:32
-src/_ZN10PyramidTopD1Ev.c:
+src/_ZN10PyramidTopD1Ev.cpp:
+    complete
     .text start:0x021111a0 end:0x021111ec
 
-src/_ZN10PyramidTopD0Ev.c:
+src/_ZN10PyramidTopD0Ev.cpp:
+    complete
     .text start:0x021111ec end:0x0211124c
 
 src/_ZN10PyramidTagD1Ev.cpp:
+    complete
     .text start:0x0211124c end:0x0211127c
 
-src/_ZN10PyramidTagD0Ev.c:
+src/_ZN10PyramidTagD0Ev.cpp:
     complete
     .text start:0x0211127c end:0x021112c0
 
@@ -57,13 +60,14 @@ src/_ZN10PyramidTag13InitResourcesEv.cpp:
     complete
     .text start:0x021117c8 end:0x0211183c
 
-src/PyramidTag_Spawn.c:
+src/d_a_obj_dl_pyramid_dummy.c:
     complete
     .text start:0x0211183c end:0x02111874
 
-src/PyramidTop_Spawn.c:
+src/d_a_obj_dl_pyramid.c:
     complete
     .text start:0x02111874 end:0x021118ac
 
 src/__sinit_ov024_02112808.c:
+    complete
     .init start:0x02112808 end:0x02112874

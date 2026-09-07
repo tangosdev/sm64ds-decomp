@@ -1,6 +1,6 @@
 # Assessment: reusing `cybervisi0n/pokeplatinum@pc_port` + the libntr suite for an SM64DS PC port
 
-*Status: research + plan, not yet actioned. Slots into [`roadmap.md`](roadmap.md)
+*Status: research + plan, not yet actioned. Slots into [`notes/roadmap.md`](../../notes/roadmap.md)
 Phases 2–3 (LIFT / PORT). Investigated 2026-08-01; revised after adversarial review.*
 
 ---
@@ -119,7 +119,8 @@ register the host layer leaves inert is a deadlock in the boot path.
 two sample files. Measured over the whole tree:
 
 - **317 files** contain real MMIO accesses — **1,959 references** (measured by
-  `tools/mmio_inventory.py`; an earlier "~670" was a regex artifact, see the appendix).
+  `port/tools/mmio_inventory.py` on the unlanded branch `port/salvage-port-repo-tools`;
+an earlier "~670" was a regex artifact, see the appendix).
 - **3 files** — `func_0204af3c.c`, `func_ov007_020c1448.c`, `func_ov007_020ca86c.c` —
   define *any* named `G3_`/`GX_`/`G2_` inline. Not "overwhelmingly." Three.
 - The norm is a bare store, sometimes not even volatile:
@@ -150,8 +151,8 @@ That grep proves nothing in a tree that names unknowns `func_XXXX`. Re-examined:
   is a flat count/offset header, and name lookup is linear `strcmp`
   (`src/func_020471ac.c`) where NNS G3d uses radix dictionaries. Hand-rolled EAD readers.
 - **FND heaps: NNS under EAD names.** The signatures are literal NNS FND tags —
-  `0x46524d48` = `'FRMH'` (`src/_ZN18SolidHeapAllocatorC1EPvj.c:14`) and `0x45585048` =
-  `'EXPH'` (`src/_ZN22ExpandingHeapAllocatorC1EPvj.c:24`).
+  `0x46524d48` = `'FRMH'` (`src/_ZN18SolidHeapAllocatorC1EPvj.cpp:10`) and `0x45585048` =
+  `'EXPH'` (`src/_ZN22ExpandingHeapAllocatorC1EPvj.cpp:12`).
 
 Correct statement: *SM64DS does not use NNS G2d/G3d; its heap and sound layers are
 NNS/SDK-shaped under EAD names.* And write "BMD/BTP/BCA," not "BMD0/BTP0/BCA0" — the
@@ -199,7 +200,7 @@ We have the same problem plus in-place 32-bit fixup written back into loaded fil
 ```c
 /* src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp */
 int base = (int)&file;
-if (*(int *)(m + 4)) *(int *)(m + 4) += base;
+if (g->lists) g->lists = (BMD_DisplayList *)((int)g->lists + base);
 ```
 
 **The first draft proposed a low-2GB arena so truncating casts round-trip. That is right
@@ -230,7 +231,7 @@ mirrored 1:1. And use `-fno-strict-aliasing` regardless.)
 
 **All five `cybervisi0n` repos are GitHub forks of `ntrtwl/*`**, verified via the API:
 
-```
+```sh
 libntr        fork=true  parent=ntrtwl/NitroSDK     license=none
 libntrsystem  fork=true  parent=ntrtwl/NitroSystem  license=none
 libntrwifi    fork=true  parent=ntrtwl/NitroWiFi    license=none
@@ -265,7 +266,7 @@ That reframes the question. Three distinct bodies of material, three answers:
 
 | Material | What it is | Our position |
 |---|---|---|
-| **1. SDK/NNS API surface** — names, signatures, register offsets, struct layouts | Facts / interface | **Already permitted.** `CREDITS.md`: *"import knowledge, write code."* Same category as the leaked licensee docs `notes/nds-software-stack.md` already credits. |
+| **1. SDK/NNS API surface** — names, signatures, register offsets, struct layouts | Facts / interface | **Already permitted.** `CREDITS.md`: *"import knowledge, write code."* Same category as the leaked licensee docs `CREDITS.md` already credits. |
 | **2. SDK/NNS implementations** (`ntrtwl/*`) | Nintendo's code, unlicensed | **Never vendor into `src/`.** A build-time `.wrap` is defensible — it is what pret does, and it mirrors our own "supply your own ROM locally" model. |
 | **3. cybervisi0n's port layer** — `libraries/sim/*`, the GL translator, the `SDK_PORT` branches, X86 ioreg generation | **Their** original work, unlicensed | **The real restriction lives here.** Plain copyright, reachable rights holder. Don't copy; ask them to license it. |
 
@@ -459,4 +460,4 @@ pattern `0x0?4[0-9a-f]{6}` lacked a word boundary, so it counted `0x40000000` (a
 flag, 482 occurrences), `0x84400000` (a DMA control word), and even `0x46524d48` —
 which is `'FRMH'`, the NNS heap tag from section 2c — as hardware addresses. With ``
 the figure is 361 files; restricted to real MMIO ranges, **317 files / 1,959 references**,
-now measured properly by `tools/mmio_inventory.py`.
+now measured properly by `port/tools/mmio_inventory.py` (unlanded; see above).

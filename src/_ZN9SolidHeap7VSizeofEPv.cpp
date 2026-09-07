@@ -1,13 +1,19 @@
 //cpp
 // @symbol _ZN9SolidHeap7VSizeofEPv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
+/* SolidHeap::VSizeof(void*) at 0x0203c428 -- Heap vtable slot 9.
+ *
+ * A linear allocator does not record block sizes, so asking is a programming
+ * error: it calls Crash() and, if that ever returns, reports -1 -- the failure
+ * value Heap::Sizeof tests for.
+ *
+ * Return type widened from int to u32 to match the slot. Byte-unobservable:
+ * both spellings lower the -1 to `mvn r0,#0'. It is a consistency change, not
+ * evidence of a width. */
 #include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
 #include "SolidHeap.h"
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7(); virtual void v8(); virtual int m(void*); };
 
-int SolidHeap::VSizeof(void * a)
+u32 SolidHeap::VSizeof(void* ptr)
 {
-  Crash();
-  return -1;
+    Crash();
+    return (u32)-1;
 }

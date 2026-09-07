@@ -15,7 +15,7 @@ int Player::St_Wait_Init()
     unsigned char f2d8;
     int b0;
 
-    unk_6e6 = 0;
+    mStatePhase = 0;
     f2d8 = data_0209f2d8;
     b0 = (f2d8 == 1);
     if (b0 != 0) goto L80;
@@ -42,7 +42,7 @@ Ld8:
     if (unk_650 == 0x80000000) goto L13c;
     if (mPosY >= unk_650 - 0x64000) goto L13c;
     if (mIsMetal != 0) goto L13c;
-    if (unk_6fb != 0) goto L13c;
+    if (mIsVanish != 0) goto L13c;
     mStateStep = 0xa;
     _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 5, 0, 0x1000, 0);
     return 1;

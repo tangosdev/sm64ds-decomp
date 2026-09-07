@@ -3,7 +3,7 @@ extern int func_ov075_02119dc4(void* c, void* p);
 extern int func_02020168(void);
 extern void func_020200e0(void);
 extern void func_02030994(void);
-extern void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
 extern int func_0203d9b4(void);
 extern int func_ov075_02116ce4(void* c);
 extern void func_02020124(void);
@@ -30,7 +30,7 @@ void func_ov075_02117e84(void* c)
         data_0209d45c = data_0209d45c & ~0xe;
         *(unsigned char*)((char*)c + 0x287) = 0;
         *(struct W2*)((char*)c + 0x64) = *(struct W2*)data_02086b58;
-        _ZN5Scene14StartSceneFadeEjjt(6, 2, 0);
+        _ZN8dScene_c14StartSceneFadeEjjt(6, 2, 0);
         data_02092778 = 1;
         return;
     }

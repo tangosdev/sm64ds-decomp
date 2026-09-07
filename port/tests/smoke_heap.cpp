@@ -17,6 +17,8 @@ extern "C" {
 ExpandingHeapAllocator *_ZN4Heap28CreateExpandingHeapAllocatorEPvjj(void *address, u32 size, u32 flags);
 void *_ZN22ExpandingHeapAllocator8AllocateEji(ExpandingHeapAllocator *self, u32 size, int align);
 int _ZN22ExpandingHeapAllocator10DeallocateEPv(ExpandingHeapAllocator *self, void *ptr);
+extern int _ZN6Memory25isRootHeapIterInitializedE;
+extern int data_020a4d34;
 }
 #define CreateAllocator _ZN4Heap28CreateExpandingHeapAllocatorEPvjj
 #define Alloc(a, n)     _ZN22ExpandingHeapAllocator8AllocateEji((a), (n), 4)
@@ -34,6 +36,9 @@ static u32 lcg(void) { return lcg_state = lcg_state * 1664525u + 1013904223u; }
 
 int main(void)
 {
+    /* These are two names for the same DS address, never two host globals. */
+    CHECK(&data_020a4d34 == &_ZN6Memory25isRootHeapIterInitializedE);
+
     void *arena = malloc(ARENA);
     CHECK(arena != NULL);
     ExpandingHeapAllocator *heap = CreateAllocator(arena, ARENA, 0);

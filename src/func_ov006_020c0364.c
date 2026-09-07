@@ -51,7 +51,7 @@ void func_ov006_020c0364(char *c)
             Vector3 next;
             int *p;
 
-            p = (int *)(((long long)(int)(c + 0xe0)));
+            p = (int *)(c + 0xe0);
             *p = *p + 1;
 
             path = *(char **)(c + 0xb0);

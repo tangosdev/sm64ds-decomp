@@ -3,7 +3,7 @@ extern void *_ZN2G212GetBG1ScrPtrEv(void);
 extern u64 func_020427c4(void);
 extern void *func_0202e118(void);
 extern int func_020441bc(int i);
-extern int func_020233d4(unsigned int i);
+extern int GetActorDebugName(unsigned int i);
 extern int _ZN4Heap6IntactEv(void *heap);
 extern int _ZN4Heap21MaxAllocationUnitSizeEv(void *heap);
 
@@ -63,7 +63,7 @@ void ShowCrashScreen(void)
         : *(u16 *)&data_020a4b50;
     if (hp != 0xffff) {
         int bb = data_020a4b4c;
-        nds_printf(scr + 0x1c0, data_0208e59c, hp, bb, func_020233d4(hp));
+        nds_printf(scr + 0x1c0, data_0208e59c, hp, bb, GetActorDebugName(hp));
     }
 
     if (data_0209d3bc != 0)
@@ -86,7 +86,7 @@ void ShowCrashScreen(void)
             int *tail;
             { i = 0; if (i < 17) do { nds_printf(scr + (i + 3) * 0x40 + 0x28, data_0208e5e4,
                     &buf.c[i * 3], regs[i]); i++; } while (i < 17); }
-            tail = (int *)(int)(((long long)(int)(data_0209cddc + 0x19)));
+            tail = (int *)(int)(data_0209cddc + 0x19);
             nds_printf(scr + 0x528, data_0208e5f0, tail[0]);
             nds_printf(scr + 0x568, data_0208e5fc, tail[1]);
         }

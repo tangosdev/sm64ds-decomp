@@ -16,7 +16,7 @@ int FirePiranhaPlantBig::Render()
 {
     int v = mScale;
     int b;
-    if (v == 0 || (b = (unk_0b0 & 0x40000) != 0, b != 0)) {
+    if (v == 0 || (b = (mFlags & 0x40000) != 0, b != 0)) {
         return 1;
     }
     V3 s;

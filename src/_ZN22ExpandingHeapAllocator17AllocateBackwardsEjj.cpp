@@ -1,13 +1,29 @@
 //cpp
+// @symbol _ZN22ExpandingHeapAllocator17AllocateBackwardsEjj
+#include "ExpandingHeapAllocator.h"
+
+/* ExpandingHeapAllocator::AllocateBackwards(u32 size, u32 align) at 0x0204e504 --
+ * uses `this`. `Ejj` is two declared parameters, three body arguments, so the leading
+ * one is `this`.
+ *
+ * The mirror of AllocateForwards: walks the free list from the TAIL and aligns
+ * DOWNWARD -- `(node->size + data - size) & ~mask` puts the block at the high end of
+ * the node, so the alignment padding lands below it rather than above. The fit test is
+ * therefore `aligned - data >= 0` (did it stay inside the node) rather than a
+ * size-plus-padding comparison.
+ *
+ * Same first-fit/best-fit flag as the forward search, and the same trailing 1 vs 0 to
+ * AllocateNode telling it which end was taken.
+ *
+ * AllocateNode is now a declared member and is called as one, so the call target is
+ * mangled from the declaration rather than hand-spelled here. Its fifth parameter is a
+ * u16 (`Pvjt`, not the imported `Pvjj`); the flag is stack-passed and AAPCS widens it to
+ * a word regardless, so these bytes are unchanged by that correction.
+ */
 extern "C" {
 
-struct MemoryNode {
-  unsigned short tag;
-  unsigned short flags;
-  unsigned int size;
-  MemoryNode* prev;
-  MemoryNode* next;
-};
+/* MemoryNode now comes from include/MemoryNode.h via ExpandingHeapAllocator.h.
+   The local copy this file used to carry was identical to it. */
 
 struct NodeList {
   MemoryNode* head;
@@ -16,10 +32,11 @@ struct NodeList {
   unsigned short flag;
 };
 
-void* _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjj(NodeList* c, MemoryNode* node, void* target, unsigned int size, unsigned int z);
+}
 
-void* _ZN22ExpandingHeapAllocator17AllocateBackwardsEjj(void* thiz, unsigned int size, unsigned int align) {
-  NodeList* c = (NodeList*)((char*)thiz + 0x24);
+void* ExpandingHeapAllocator::AllocateBackwards(u32 size, u32 align)
+{
+  NodeList* c = (NodeList*)((char*)this + 0x24);
   unsigned short flag = c->flag;
   int firstFit = ((unsigned short)(flag & 1) == 0);
   MemoryNode* best = 0;
@@ -44,6 +61,5 @@ void* _ZN22ExpandingHeapAllocator17AllocateBackwardsEjj(void* thiz, unsigned int
     } while (node != 0);
   }
   if (best == 0) return 0;
-  return _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjj(c, best, bestTarget, size, 1);
-}
+  return AllocateNode((MemoryNode*)c, best, bestTarget, size, 1);
 }

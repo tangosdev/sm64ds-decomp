@@ -8,8 +8,8 @@ void func_ov063_02119ab0(char *self)
     *(int *)(self + 0x50c) = *(int *)(self + 0x64);
 
     if (*(unsigned short *)(self + 0x4a0) == 0xd4) {
-        *(int *)(((long long)(int)(self + 0x508))) += 0x3c000;
+        *(int *)(self + 0x508) += 0x3c000;
         return;
     }
-    *(int *)(((long long)(int)(self + 0x508))) += 0xa000;
+    *(int *)(self + 0x508) += 0xa000;
 }

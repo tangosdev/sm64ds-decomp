@@ -1,58 +1,47 @@
 //cpp
-// _ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE at 0x0204e40c
-// Matched byte-for-byte with mwccarm 1.2/sp2p3 (arm9 main).
-extern "C" {
+// @symbol _ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE
+#include "ExpandingHeapAllocator.h"
 
-struct MemoryNode {
-  unsigned short tag;
-  unsigned short pad;
-  int size;
-  int prev;
-  int next;
-};
+/* Merge a released extent into the allocator's address-ordered free list.
+   The first parameter is the embedded list sentinel, not an allocator object:
+   both exact callers pass this+0x24 and provide only this pair of arguments. */
+int ExpandingHeapAllocator::FreeNode(
+    MemoryNode *list,
+    MemoryNode::Target *extent)
+{
+    struct TargetWords { u32 words[2]; };
+    MemoryNode::Target merged;
 
-struct Target {
-  int start;
-  int end;
-};
+    *(TargetWords *)&merged = *(TargetWords *)extent;
 
-extern void* _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(void* c, MemoryNode* node);
-extern MemoryNode* _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(Target* t, unsigned short tt);
-extern void* _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_(void* c, MemoryNode* node, MemoryNode* r2);
+    MemoryNode *below = 0;
+    MemoryNode *node = *(MemoryNode **)list;
 
-int _ZN22ExpandingHeapAllocator8FreeNodeEP10MemoryNodePNS0_6TargetE(int* c, Target* node, void* target) {
-  Target tgt = *node;
-
-  MemoryNode* below = 0;
-  MemoryNode* p = (MemoryNode*)c[0];
-  while (p) {
-    if ((unsigned)p < (unsigned)node->start) {
-      below = p;
-    } else {
-      if ((unsigned)p == (unsigned)node->end) {
-        tgt.end = p->size + ((int)p + 0x10);
-        _ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(c, p);
-      }
-      break;
+    while (node != 0) {
+        if ((u32)node < (u32)extent->start) {
+            below = node;
+        } else {
+            if ((u32)node == (u32)extent->end) {
+                merged.end = (char *)(node->size + ((u32)node + 0x10));
+                UnlinkNode(list, node);
+            }
+            break;
+        }
+        node = node->next;
     }
-    p = (MemoryNode*)p->next;
-  }
 
-  if (below) {
-    int e = below->size + ((int)below + 0x10);
-    if (e == node->start) {
-      tgt.start = (int)below;
-      below = (MemoryNode*)_ZN22ExpandingHeapAllocator10UnlinkNodeEP10MemoryNodeS1_(c, below);
+    if (below != 0) {
+        u32 belowEnd = below->size + ((u32)below + 0x10);
+        if ((char *)belowEnd == extent->start) {
+            merged.start = (char *)below;
+            below = (MemoryNode *)UnlinkNode(list, below);
+        }
     }
-  }
 
-  if ((unsigned)(tgt.end - tgt.start) < 0x10u) {
-    return 0;
-  }
+    if ((u32)(merged.end - merged.start) < 0x10)
+        return 0;
 
-  MemoryNode* nn = _ZN22ExpandingHeapAllocator10CreateNodeEPN10MemoryNode6TargetEt(&tgt, 0x4652);
-  _ZN22ExpandingHeapAllocator8LinkNodeEP10MemoryNodeS1_S1_(c, nn, below);
-  return 1;
-}
-
+    MemoryNode *node_ = (MemoryNode *)CreateNode(&merged, 0x4652);
+    LinkNode(list, node_, below);
+    return 1;
 }

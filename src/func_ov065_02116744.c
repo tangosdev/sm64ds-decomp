@@ -1,13 +1,13 @@
 typedef short s16;
 
 extern int Vec3_Dist(void *a, void *b);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *m);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *m);
 extern s16 Vec3_HorzAngle(void *a, void *b);
 extern void ApproachAngle(s16 *p, s16 target, int a, int b, int limit);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 extern int func_ov065_0211691c(void *c, void *p);
-extern char *_ZN5Actor22ClosestNonVanishPlayerEv(void *self);
+extern char *_ZN8dActor_c22ClosestNonVanishPlayerEv(void *self);
 
 extern char data_020a0e68[];
 extern char data_ov065_0211d670[];
@@ -25,7 +25,7 @@ int func_ov065_02116744(char *c)
     in[2] = 0;
 
     if (Vec3_Dist(c + 0x5c, c + 0x3cc) > 0x1f4000 ||
-        _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0) {
+        _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0) {
         *(s16 *)(c + 0x300 + 0xe0) =
             Vec3_HorzAngle(c + 0x5c, c + 0x3cc);
         if (*(unsigned short *)(c + 0x100) < 0x14)
@@ -46,7 +46,7 @@ int func_ov065_02116744(char *c)
         return 1;
     }
 
-    pl = _ZN5Actor22ClosestNonVanishPlayerEv(c);
+    pl = _ZN8dActor_c22ClosestNonVanishPlayerEv(c);
     if (pl != 0) {
         pos = (int *)(((int)pl + 0x5c));
         dp[0] = pos[0];

@@ -2,8 +2,8 @@
 extern s16 data_02082214[];
 extern void func_ov096_02136928(char* c, int n);
 extern void func_ov096_02135948(char* c);
-extern void _ZN12CylinderClsn5ClearEv(char* p);
-extern void _ZN12CylinderClsn6UpdateEv(char* p);
+extern void _ZN5dCc_c5ClearEv(char* p);
+extern void _ZN5dCc_c6UpdateEv(char* p);
 
 int func_ov096_02136754(char* self)
 {
@@ -56,7 +56,7 @@ int func_ov096_02136754(char* self)
 
     }
     func_ov096_02135948(self);
-    _ZN12CylinderClsn5ClearEv(self + 0x14c);
-    _ZN12CylinderClsn6UpdateEv(self + 0x14c);
+    _ZN5dCc_c5ClearEv(self + 0x14c);
+    _ZN5dCc_c6UpdateEv(self + 0x14c);
     return 1;
 }

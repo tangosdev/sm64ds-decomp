@@ -11,16 +11,16 @@ extern void func_ov085_0212bc78(void *c, void *p);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void _Z14ApproachLinearRsss(s16 *p, s16 t, s16 step);
 extern int AngleDiff(int a, int b);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *actor, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *self, void *actor, int b);
 extern int func_02013890(int a, int b);
 extern void _ZN7Message11PrepareTalkEv(void);
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, Fix12 d, int e);
 extern int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(void *self, void *ab, u32 id, const Vector3 *pos, u32 e, u32 f);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *self, void *ab, u32 id, const Vector3 *pos, u32 e, u32 f);
 extern void func_02012694(int a, void *b);
 extern int _ZN6Player12GetTalkStateEv(void *p);
 extern void _ZN6Player9DropActorEv(void *p);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
 extern void func_02012790(int a);
 extern int func_02013944(void);
 extern void _ZN7Message7EndTalkEv(void);
@@ -49,7 +49,7 @@ int func_ov085_0212ae08(char *c)
 
     if (*(s32 *)(c + 0x41c) == 0) {
         {
-            int *ps = (int *)(((long long)(int)(pl + 0x5c)));
+            int *ps = (int *)(pl + 0x5c);
             pv.x = ps[0];
             pv.y = ps[1];
             pv.z = ps[2];
@@ -69,7 +69,7 @@ int func_ov085_0212ae08(char *c)
                     goto after_first_section;
             }
             {
-                if (_ZN6Player9StartTalkER9ActorBaseb(pl, c, 1) != 0) {
+                if (_ZN6Player9StartTalkER7fBase_cb(pl, c, 1) != 0) {
                     pos.x = *(s32 *)(c + 0x5c);
                     r4 = 0;
                     pos.y = *(s32 *)(c + 0x60);
@@ -150,7 +150,7 @@ int func_ov085_0212ae08(char *c)
                         int zero = 0;
                         y = y + 0x64000;
                         pos.y = y;
-                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3jj(pl, c, (u32)msg, &pos, zero, zero) == 1) {
+                        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl, c, (u32)msg, &pos, zero, zero) == 1) {
                             *(s32 *)(c + 0x41c) = 1;
                             if (r4 != 0)
                                 func_02012694(r4, c + 0x74);
@@ -187,7 +187,7 @@ int func_ov085_0212ae08(char *c)
     /* talk ended */
     _ZN6Player9DropActorEv(pl);
     {
-        s32 *p128 = (s32 *)(((long long)(int)(c + 0x128)));
+        s32 *p128 = (s32 *)(c + 0x128);
         *p128 = *p128 & ~2;
     }
     *(s32 *)(c + 0x98) = 0;
@@ -200,7 +200,7 @@ int func_ov085_0212ae08(char *c)
         {
             s8 cc = *(s8 *)(c + 0xcc);
             int m1 = -1;
-            void *spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+            void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xe5, *(s32 *)(c + 0x43c), &pos7, (void *)(c + 0x8c), cc, m1);
             if (spawned != 0)
                 *(s32 *)((char *)spawned + 0x190) = *(s32 *)(c + 4);
@@ -232,7 +232,7 @@ int func_ov085_0212ae08(char *c)
             {
                 s8 cc = *(s8 *)(c + 0xcc);
                 int m1 = -1;
-                void *spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
+                void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0xe5, param, &posR, 0, cc, m1);
                 if (spawned != 0)
                     *(s32 *)((char *)spawned + 0x190) = *(s32 *)(c + 4);
@@ -240,7 +240,7 @@ int func_ov085_0212ae08(char *c)
             func_02012790(0xa);
             *(u8 *)(c + 0x427) = 0;
             {
-                u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)));
+                u16 *pf = (u16 *)(pl + 0x6ce);
                 *pf = (u16)(*pf | 0x800);
             }
         }
@@ -249,7 +249,7 @@ int func_ov085_0212ae08(char *c)
 no_spawn:
     if (*(u8 *)(c + 0x427) == 2) {
         {
-            u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)));
+            u16 *pf = (u16 *)(pl + 0x6ce);
             *pf = (u16)(*pf & ~0x800);
         }
         *(u8 *)(c + 0x427) = 0;
@@ -272,7 +272,7 @@ do_306bc:
     goto final_return;
 flag_path:
     {
-        u16 *pf = (u16 *)(((long long)(int)(pl + 0x6ce)));
+        u16 *pf = (u16 *)(pl + 0x6ce);
         *pf = (u16)(*pf | 0x800);
     }
     *(char **)(c + 0x460) = pl;

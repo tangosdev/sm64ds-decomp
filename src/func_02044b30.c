@@ -72,7 +72,12 @@ void func_02044b30(char *obj, int idx)
 
     case 2:
     {
-      s16 buf[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+      /* The ROM's template for this array is data_02099f94 = {4,8,16,32,64,128,256,512},
+         i.e. 4 << i, a texture-size table. What stood here was {1,2,...,8}, invented and
+         never compared to anything: mwccarm puts a local initializer in an anonymous
+         .rodata object (`@30`) that objisolate drops, and match.py wildcards the
+         relocation to it, so the file byte-matched with the wrong data in it. */
+      s16 buf[8] = {4, 8, 16, 32, 64, 128, 256, 512};
       int idx1;
       int idx2;
       s16 sa;

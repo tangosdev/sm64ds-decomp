@@ -57,7 +57,7 @@ void func_0206f338(struct S *s, int p)
     }
 
     if (carry != 0) {
-        short *pc = (short *)(((int)s + 2) & 0xFFFFFFFFFFFFFFFFULL);
+        short *pc = (short *)((int)s + 2);
         *pc = *pc + 1;
         s->len = 1;
         s->digits[0] = 0x31;

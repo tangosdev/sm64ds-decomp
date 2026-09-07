@@ -1,57 +1,77 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class HeaveHo: 5 matched functions, 24 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef HEAVEHO_H
 #define HEAVEHO_H
+
 #include "types.h"
 
-struct HeaveHo {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x26];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x4];
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x6];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x5c];
-    u8  unk_100;            /* 0x100 */
-    u8  pad_101[0xf];
-    u8  mMovingCylinderClsn;            /* 0x110 */
-    u8  pad_111[0x33];
-    u8  mMovingCylinderClsnWithPos;            /* 0x144 */
-    u8  pad_145[0x3f];
-    u8  mWithMeshClsn;            /* 0x184 */
-    u8  pad_185[0x1bb];
-    u8  mModelAnim;            /* 0x340 */
-    u8  pad_341[0x4f];
-    u8  mAnimation;            /* 0x390 */
-    u8  pad_391[0xb];
-    s32 unk_39c;            /* 0x39c */
-    u8  pad_3a0[0x4];
-    u8  mShadowModel;            /* 0x3a4 */
-    u8  pad_3a5[0x57];
-    u8  unk_3fc;            /* 0x3fc */
-    u8  pad_3fd[0x3];
-    s32 unk_400;            /* 0x400 */
-    s32 unk_404;            /* 0x404 */
-    s32 unk_408;            /* 0x408 */
-    s32 unk_40c;            /* 0x40c */
-    s32 unk_410;            /* 0x410 */
-    s32 unk_414;            /* 0x414 */
-    s32 unk_418;            /* 0x418 */
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN7HeaveHoD1Ev`
+ * stores this vtable, destroys its members in reverse declaration order, then
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
+ * belongs to that chain and is inherited now.
+ *
+ * The members close exactly on one another:
+ *
+ *     0x110 dCcAc_c         0x34   -> 0x144
+ *     0x144 dCcAcPos_c  0x40   -> 0x184
+ *     0x184 dBgCh_Actr               0x1bc  -> 0x340
+ *     0x340 ModelAnim                  0x64   -> 0x3a4
+ *     0x3a4 ShadowModel                0x28   -> 0x3cc
+ *
+ * Typing them absorbed these markers, which were a member's insides:
+ *   - 0x390 mAnimation   = mModelAnim + 0x50
+ *   - 0x39c unk_39c      = mModelAnim + 0x5c
+ *
+ * Member NAMES are the ones this header already used -- a rebase should not
+ * also rename things its callers spell.
+ *
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daPopoi_c_classInit` calls
+ * `fBase_c::operator new(1068)` -- 0x42c -- and stores `_ZTV7HeaveHo`,
+ * so that literal IS this class's sizeof. The observed fields only span to
+ * 0x428; the difference is trailing space no source reads.
+ *
+ * SM64DS RTTI names the implementation daPopoi_c. The reconstructed
+ * factory daPopoi_c_classInit (historical alias
+ * HeaveHo_Spawn) constructs it for the POPOI
+ * registry profile.
+ */
+
+#include "dEnemyBase_c.h"
+#include "Model.h"
+#include "ModelAnim.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
+#include "ShadowModel.h"
+#include "TextureTransformer.h"
+#include "dBgCh_Actr.h"
+
+struct HeaveHo : dEnemyBase_c {
+    dCcAc_c           mdCcAc_c;   /* 0x110 */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x144 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x184 */
+    ModelAnim                    mModelAnim;            /* 0x340 */
+    ShadowModel                  mShadowModel;          /* 0x3a4 */
+    u8  pad_3cc[0x30];
+    s32                          unk_3fc;               /* 0x3fc */
+    s32                          unk_400;               /* 0x400 */
+    s32                          unk_404;               /* 0x404 */
+    s32                          unk_408;               /* 0x408 */
+    s32                          unk_40c;               /* 0x40c */
+    s32                          unk_410;               /* 0x410 */
+    s32                          unk_414;               /* 0x414 */
+    s32                          unk_418;               /* 0x418 */
     u8  pad_41c[0xa];
-    u8  unk_426;            /* 0x426 */
-#ifdef __cplusplus
-    /* methods */
+    u8                           unk_426;               /* 0x426 */
+    u8  pad_427[0x5];
+
+    /* --- vtable --- */
+    virtual ~HeaveHo();
+
     int Behavior();
     int InitResources();
     int Render();
-#endif
+    int CleanupResources();
+    void OnPendingDestroy();
 };
 
-#endif
+typedef char HeaveHo_size_must_be_0x42c[sizeof(HeaveHo) == 0x42c ? 1 : -1];
+
+#endif /* HEAVEHO_H */

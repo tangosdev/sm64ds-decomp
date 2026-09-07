@@ -4,14 +4,15 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SnowmanBody.h"
-struct CylinderClsn { void Clear(); void Update(); };
-extern "C" void func_ov072_0211f3e4(void *c);
-
+/* dCc_c comes from the real dCcAc_c chain now that SnowmanBody.h types
+   mdCcAc_c; the ad-hoc redeclaration that used to stand in for it ICEd
+   mwccarm (CClass.c:3328) once the real class was visible. Clear and Update
+   are non-virtual there, so the direct bl is unchanged. */
 int SnowmanBody::Behavior()
 {
-    func_ov072_0211fc3c(((char *)this));
-    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Clear();
-    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Update();
-    func_ov072_0211f3e4(((char *)this));
+    CallStateBehavior();
+    ((dCc_c*)((char *)&mCylinder))->Clear();
+    ((dCc_c*)((char *)&mCylinder))->Update();
+    UpdateModel();
     return 1;
 }

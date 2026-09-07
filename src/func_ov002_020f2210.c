@@ -1,6 +1,6 @@
 #include "types.h"
-#define LP(x) ((void*)(int)(((long long)(int)(x))))
-#define LI(x) ((int)(((long long)(int)(x))))
+#define LP(x) ((void*)(int)(x))
+#define LI(x) ((int)((long long)(int)(x)))
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
 

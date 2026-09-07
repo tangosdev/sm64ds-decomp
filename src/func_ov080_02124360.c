@@ -1,5 +1,5 @@
 extern int RandomIntInternal(int *seed);
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int data_0209e650;
 
 void *func_ov080_02124360(char *c)
@@ -14,7 +14,7 @@ void *func_ov080_02124360(char *c)
         unsigned int cnt = *(unsigned char *)(c + 0x183);
         unsigned int idx = r % cnt;
         unsigned int id = *(unsigned int *)(c + 0x16c + (idx * 4));
-        obj = _ZN5Actor10FindWithIDEj(id);
+        obj = _ZN8dActor_c10FindWithIDEj(id);
         if (obj == 0)
             continue;
         if (*(unsigned char *)((char *)obj + 0x181) != 0)

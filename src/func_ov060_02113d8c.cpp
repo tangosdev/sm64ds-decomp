@@ -1,11 +1,7 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
+#include "dBgCh_Actr.h"
 
-struct Fix12 { int v; Fix12(int a) : v(a) {} };
-
-struct Actor { int GetSubtraction(short a, short b); };
-struct WithMeshClsn { int IsOnGround() const; };
+struct dActor_c { int GetSubtraction(short a, short b); };
 
 extern "C" {
 void func_ov060_02111cc0(char *c, int idx, int fix);
@@ -32,12 +28,12 @@ extern "C" void func_ov060_02113d8c(char *r4)
         func_ov060_02111cc0(r4, 0x19, 0);
         *(int *)(r4 + 0x98) = 0x2a000;
         if (Bowser_IsAnimAtLastFrame(r4) != 0) {
-            u16 *p = (u16 *)(((long long)(int)(r4 + 0x3fe)));
+            u16 *p = (u16 *)(r4 + 0x3fe);
             *p = *p + 1;
             if (*(u16 *)((r4 + 0x300) + 0xfe) > 0xa)
                 *(u8 *)(r4 + 0x423) = 3;
             if (*(u16 *)((r4 + 0x300) + 0xfe) >= 2) {
-                if (((Actor *)r4)->GetSubtraction(*(short *)(r4 + 0x406), *(short *)(r4 + 0x8e)) > 0x2000) {
+                if (((dActor_c *)r4)->GetSubtraction(*(short *)(r4 + 0x406), *(short *)(r4 + 0x8e)) > 0x2000) {
                     *(u8 *)(r4 + 0x423) = 3;
                     *(int *)(r4 + 0x448) = 0;
                 }
@@ -65,7 +61,7 @@ extern "C" void func_ov060_02113d8c(char *r4)
                 *(int *)(r4 + 0x3f8) = 0x1000;
             }
             {
-                u16 *p = (u16 *)(((long long)(int)(r4 + 0x3fe)));
+                u16 *p = (u16 *)(r4 + 0x3fe);
                 *p = *p + 1;
             }
         }
@@ -74,7 +70,7 @@ extern "C" void func_ov060_02113d8c(char *r4)
         break;
     }
 
-    if (((WithMeshClsn *)(r4 + 0x14c))->IsOnGround())
+    if (((dBgCh_Actr *)(r4 + 0x14c))->IsOnGround())
         return;
     *(int *)(r4 + 0x40c) = 0xa;
     *(int *)(r4 + 0x5c) = *(int *)(r4 + 0x3c8);

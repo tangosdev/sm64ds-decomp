@@ -1,55 +1,69 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RollingRock: 5 matched functions, 22 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef ROLLINGROCK_H
 #define ROLLINGROCK_H
+
 #include "types.h"
 
-struct RollingRock {
-    u8  pad_000[0x4];
-    u32 unk_004;            /* 0x004 */
-    u8  pad_008[0x54];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    u8  unk_08c;            /* 0x08c */
-    u8  pad_08d[0x1];
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x2];
-    u8  unk_092;            /* 0x092 */
-    u8  pad_093[0x1];
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
-    u8  pad_09c[0x30];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x33];
-    u16 unk_100;            /* 0x100 */
-    u8  pad_102[0xa];
-    s32 unk_10c;            /* 0x10c */
-    u8  mModel;            /* 0x110 */
-    u8  pad_111[0x4f];
-    u8  mShadowModel;            /* 0x160 */
-    u8  pad_161[0x57];
-    u8  mMovingCylinderClsnWithPos;            /* 0x1b8 */
-    u8  pad_1b9[0x3f];
-    u8  mWithMeshClsn;            /* 0x1f8 */
-    u8  pad_1f9[0x1bb];
-    u32 unk_3b4;            /* 0x3b4 */
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN11RollingRockD1Ev`
+ * stores this vtable, destroys its members in reverse declaration order, then
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
+ * belongs to that chain and is inherited now.
+ *
+ * The members close exactly on one another:
+ *
+ *     0x110 Model                      0x50   -> 0x160
+ *     0x160 ShadowModel                0x28   -> 0x188
+ *     0x1b8 dCcAcPos_c  0x40   -> 0x1f8
+ *     0x1f8 dBgCh_Actr               0x1bc  -> 0x3b4
+ *
+ * Member NAMES are the ones this header already used -- a rebase should not
+ * also rename things its callers spell.
+ *
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daGrock_c_classInit` calls
+ * `fBase_c::operator new(968)` -- 0x3c8 -- and stores `_ZTV11RollingRock`,
+ * so that literal IS this class's sizeof. The observed fields only span to
+ * 0x3c4; the difference is trailing space no source reads.
+ *
+ * SM64DS RTTI names the implementation daGrock_c. The reconstructed factory
+ * daGrock_c_classInit (historical alias RollingRock_Spawn) installs this class's
+ * cartridge vtable; the reconstructed profile global g_profile_GORO_ROCK
+ * (historical alias RollingRock_SpawnInfo) is its registry descriptor.
+ */
+
+#include "dEnemyBase_c.h"
+#include "Model.h"
+#include "ModelAnim.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
+#include "ShadowModel.h"
+#include "TextureTransformer.h"
+#include "dBgCh_Actr.h"
+
+struct RollingRock : dEnemyBase_c {
+    Model                        mModel;                /* 0x110 */
+    ShadowModel                  mShadowModel;          /* 0x160 */
+    u8  pad_188[0x30];
+    dCcAcPos_c    mdCcAcPos_c; /* 0x1b8 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x1f8 */
+    u32                          unk_3b4;               /* 0x3b4 */
     u8  pad_3b8[0x6];
-    u8  mType;            /* 0x3be */
-    u8  unk_3bf;            /* 0x3bf */
-    u8  unk_3c0;            /* 0x3c0 */
-    u8  unk_3c1;            /* 0x3c1 */
-    u8  unk_3c2;            /* 0x3c2 */
-#ifdef __cplusplus
-    /* methods */
+    u8                           mType;                 /* 0x3be */
+    u8                           unk_3bf;               /* 0x3bf */
+    u8                           unk_3c0;               /* 0x3c0 */
+    u8                           unk_3c1;               /* 0x3c1 */
+    u8                           unk_3c2;               /* 0x3c2 */
+    u8  pad_3c3[0x5];
+
+    /* --- vtable --- */
+    virtual ~RollingRock();
+
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     int Behavior();
     int InitResources();
     int Render();
-#endif
+    int CleanupResources();
 };
 
-#endif
+typedef char RollingRock_size_must_be_0x3c8[sizeof(RollingRock) == 0x3c8 ? 1 : -1];
+
+#endif /* ROLLINGROCK_H */

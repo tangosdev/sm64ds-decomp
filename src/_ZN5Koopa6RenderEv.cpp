@@ -19,7 +19,7 @@ struct V3 { int x, y, z; };
 int Koopa::Render()
 {
   volatile struct V3 saved;
-  int b = (unk_0b0 & 0x40000) != 0;
+  int b = (mFlags & 0x40000) != 0;
   if (b) return 1;
   if (mKoopaVariant == 1) {
     _ZN5Model12ShowMaterialEii(((char*)this) + 0x300, 0, 1);
@@ -31,7 +31,7 @@ int Koopa::Render()
   saved.x = mScaleX;
   saved.y = mScaleY;
   saved.z = mScaleZ;
-  if (unk_10c == 1 && mKoopaVariant == 2) {
+  if (mDeathState == 1 && mKoopaVariant == 2) {
     mScaleX = (int)(((long long)*(volatile int*)((char*)&mScaleX) * 0x800 + 0x800) >> 12);
     mScaleY = (int)(((long long)*(volatile int*)((char*)&mScaleY) * 0x800 + 0x800) >> 12);
     mScaleZ = (int)(((long long)*(volatile int*)((char*)&mScaleZ) * 0x800 + 0x800) >> 12);

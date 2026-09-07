@@ -1,15 +1,34 @@
 //cpp
 // @symbol func_ov002_020e3e00
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
 //
+
+/* decl_common.h is deliberately NOT included. This file declares its callees
+   concretely -- `const int *`, `unsigned int`, `Model *` -- while the header
+   declares the same symbols with generic `void*`/`int`. Under `extern "C"`
+   those are not compatible redeclarations but illegal overloads, so the file
+   did not compile AT ALL (errors on the MulMat3x3Mat3x3, func_02016acc and
+   func_ov002_020e3e00 lines) for as long as the include was here -- which is
+   why no gate ever noticed: an uncompilable file is dropped by all of them.
+   Only two declarations were ever needed from the header; they are restated
+   below under their real names. */
 
 extern "C" {
     extern signed char data_0209f2f8;
     extern signed char data_02092120;
     extern int data_020a0e68[12];
+
+    /* Were spelled `func_02111b64` / `func_02111b6c` -- invented names that
+       exist in no symbols.txt anywhere in config/. ov002's own relocs record
+       both sites as `kind:load` to an address claimed by 17 and 13 modules
+       respectively (config/arm9/overlays/ov002/relocs.txt:6676-6677). A `load`
+       cannot answer a function, which rules out ov012/ov025/ov045/ov052; of
+       the data claimants that remain, ov055 alone declares BOTH addresses
+       unambiguous `kind:bss`. ov017 and ov033 are clean at 0x02111b6c but
+       ambiguous at 0x02111b64; every other candidate is ambiguous at both. */
+    extern int data_ov055_02111b64;
+    extern int data_ov055_02111b6c;
 
     void func_0203c178(int *dst, int a, int b, int c);
     void MulMat3x3Mat3x3(int *dst, const int *a, const int *b);
@@ -35,7 +54,7 @@ extern "C" void func_ov002_020e3e00(Model *obj, Vector3 *vec, unsigned int opaci
 
     if (ip) {
         int ok;
-        if (func_02111b6c == 0 || (func_02111b64 & 0x20000) != 0)
+        if (data_ov055_02111b6c == 0 || (data_ov055_02111b64 & 0x20000) != 0)
             ok = 1;
         else
             ok = 0;

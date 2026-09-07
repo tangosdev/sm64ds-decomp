@@ -10,7 +10,7 @@ extern s16 data_ov081_021289a6;
 extern s16 data_ov081_021289a8;
 extern char data_ov081_02128e94;
 
-extern char* _ZN5Actor22ClosestNonVanishPlayerEv(char* self);
+extern char* _ZN8dActor_c22ClosestNonVanishPlayerEv(char* self);
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern void ApproachAngle(s16* p, int target, int a, int b, int c);
 extern int AngleDiff(int a, int b);
@@ -28,7 +28,7 @@ void func_ov081_0212423c(char* self, int idx)
     s16* p414;
     int lim;
 
-    player = _ZN5Actor22ClosestNonVanishPlayerEv(self);
+    player = _ZN8dActor_c22ClosestNonVanishPlayerEv(self);
     if (player == 0)
         return;
 

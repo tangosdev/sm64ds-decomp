@@ -4,17 +4,19 @@
     .ctor       start:0x021373b4 end:0x021373bc kind:rodata align:4
     .data       start:0x021373c0 end:0x02137780 kind:data align:32
     .bss        start:0x02137780 end:0x02137940 kind:bss align:32
-src/_ZN9SeesawBobD1Ev.c:
+src/_ZN9SeesawBobD1Ev.cpp:
+    complete
     .text start:0x02135700 end:0x02135744
 
-src/_ZN9SeesawBobD0Ev.c:
+src/_ZN9SeesawBobD0Ev.cpp:
+    complete
     .text start:0x02135744 end:0x0213579c
 
 src/func_ov095_0213579c.c:
     complete
     .text start:0x0213579c end:0x021357d8
 
-src/func_ov095_021357d8.c:
+src/_ZN9SeesawBob15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x021357d8 end:0x021358cc
 
@@ -50,38 +52,40 @@ src/func_ov095_02135e90.c:
     complete
     .text start:0x02135e90 end:0x02135ea4
 
-src/SeesawRr_Spawn.c:
+src/d_a_obj_seesaw_rc_seesaw.c:
     complete
     .text start:0x02135ea4 end:0x02135ed4
 
-src/SeesawBsZigZag_Spawn.c:
+src/d_a_obj_seesaw_km3_yokoseesaw.c:
     complete
     .text start:0x02135ed4 end:0x02135f04
 
-src/SeesawBsPlank_Spawn.c:
+src/d_a_obj_seesaw_km3_seesaw.c:
     complete
     .text start:0x02135f04 end:0x02135f34
 
-src/SeesawBfs_Spawn.c:
+src/d_a_obj_seesaw_km2_yokoseesaw.c:
     complete
     .text start:0x02135f34 end:0x02135f64
 
-src/SeesawBdw_Spawn.c:
+src/d_a_obj_seesaw_km1_seesaw.c:
     complete
     .text start:0x02135f64 end:0x02135f94
 
-src/SeesawBob_Spawn.c:
+src/d_a_obj_seesaw_bomb_seesaw.c:
     complete
     .text start:0x02135f94 end:0x02135fc4
 
-src/SeesawUtm_Spawn.c:
+src/d_a_obj_seesaw_seesaw.c:
     complete
     .text start:0x02135fc4 end:0x02135ff4
 
-src/_ZN13UpDownLiftBbhD1Ev.c:
+src/_ZN13UpDownLiftBbhD1Ev.cpp:
+    complete
     .text start:0x02135ff4 end:0x02136038
 
-src/_ZN13UpDownLiftBbhD0Ev.c:
+src/_ZN13UpDownLiftBbhD0Ev.cpp:
+    complete
     .text start:0x02136038 end:0x02136090
 
 src/func_ov095_02136090.cpp:
@@ -128,15 +132,15 @@ src/func_ov095_02136788.c:
     complete
     .text start:0x02136788 end:0x0213679c
 
-src/UpDownLiftRr_Spawn.c:
+src/d_a_udlift_rc_rift02.c:
     complete
     .text start:0x0213679c end:0x021367cc
 
-src/UpDownLiftHmc_Spawn.c:
+src/d_a_udlift_udlift.c:
     complete
     .text start:0x021367cc end:0x021367fc
 
-src/UpDownLiftBbh_Spawn.c:
+src/d_a_udlift_udlift_teresa.c:
     complete
     .text start:0x021367fc end:0x0213682c
 
@@ -148,16 +152,22 @@ src/_ZN12FlamethrowerD0Ev.cpp:
     complete
     .text start:0x02136884 end:0x021368f0
 
+src/_ZN12Flamethrower8BehaviorEv.cpp:
+    complete
+    .text start:0x021368f0 end:0x02136d60
+
 src/_ZN12Flamethrower13InitResourcesEv.cpp:
     complete
     .text start:0x02136d60 end:0x02136ed4
 
-src/Flamethrower_Spawn.cpp:
+src/d_a_obj_flamethrower.cpp:
     complete
     .text start:0x02136ed4 end:0x02136f58
 
 src/__sinit_ov095_02136fe0.c:
+    complete
     .init start:0x02136fe0 end:0x0213722c
 
 src/__sinit_ov095_0213722c.c:
+    complete
     .init start:0x0213722c end:0x021373b4

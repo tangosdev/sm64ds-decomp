@@ -17,7 +17,7 @@ Status: **Phase 0 spike** (attach + breakpoint + canary + register/mem dump).
 
 1. Install melonDS (Qt frontend — the GDB stub lives there).
 2. Emu settings → enable the GDB stub. In `melonDS.ini` the keys are roughly:
-   ```
+   ```ini
    GdbEnabled=1
    GdbPortARM9=3333
    GdbPortARM7=3334
@@ -34,7 +34,7 @@ DeSmuME fallback: launch with `--arm9gdb=3333`; everything below is identical.
 
 ## Run the spike
 
-```
+```sh
 # default: 6 small always-resident arm9 funcs, 20s window
 python tools/trace/gdb_harness.py --duration 20
 
@@ -118,7 +118,7 @@ Port=3333 BreakOnStartup=true`, `[JIT] Enable=false`; clone
 `reference/DynamicAllocationDecomp` for actor-ID names.
 
 Use:
-```
+```sh
 1. start melonDS with sm64.nds        (game waits, halted, for the client)
 2. python tools/trace/actors.py       (attaches, releases the boot, prompts)
 3. play; press Enter to snapshot, or type "star exploded" + Enter to tag one

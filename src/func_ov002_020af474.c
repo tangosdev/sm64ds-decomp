@@ -11,7 +11,7 @@ void func_ov002_020af474(char* o)
     }
 
     {
-        s16* p = (s16*)(((long long)(int)(o + 0x92)));
+        s16* p = (s16*)(o + 0x92);
         *p = *p - 0x1000;
     }
 

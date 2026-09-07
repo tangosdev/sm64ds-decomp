@@ -1,0 +1,213 @@
+{
+  "id": "ov002/daObjAbuku_c",
+  "module": "ov002",
+  "source": "src/game/actors/d_a_obj_abuku.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_abuku.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20b3298..0x20b35a0, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daObjAbuku_c",
+    "both neighbouring cuts are high-confidence in the regenerated current-main TU map"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020b3298",
+      "end": "0x020b35a0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN12daObjAbuku_cD1Ev",
+      "address": "0x020b3298",
+      "size": "0x00000030",
+      "legacy_source": "src/_ZN12daObjAbuku_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN12daObjAbuku_cD0Ev",
+      "address": "0x020b32c8",
+      "size": "0x00000044",
+      "legacy_source": "src/_ZN12daObjAbuku_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020b330c",
+      "address": "0x020b330c",
+      "size": "0x00000038",
+      "legacy_source": "src/func_ov002_020b330c.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020b3344",
+      "address": "0x020b3344",
+      "size": "0x00000098",
+      "legacy_source": "src/func_ov002_020b3344.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN12daObjAbuku_c8BehaviorEv",
+      "address": "0x020b33dc",
+      "size": "0x0000013c",
+      "legacy_source": "src/_ZN12daObjAbuku_c8BehaviorEv.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN12daObjAbuku_c13InitResourcesEv",
+      "address": "0x020b3518",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN12daObjAbuku_c13InitResourcesEv.cpp",
+      "ordinal": 5
+    },
+    {
+      "symbol": "daObjAbuku_c_classInit",
+      "address": "0x020b3568",
+      "size": "0x00000038",
+      "legacy_source": "src/daObjAbuku_c_Spawn.c",
+      "ordinal": 6
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI12daObjAbuku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108924",
+      "reason": "The key function emits daObjAbuku_c's typeinfo record. Its cartridge home is outside this text-only entry, so dsd supplies the canonical bytes; romdata_check proves this emitted copy before production isolation discards it."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key function emits the inherited dBase_c typeinfo record as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key function emits the inherited fBase_c typeinfo record as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key function emits the inherited dActor_c typeinfo record as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTS12daObjAbuku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108930",
+      "reason": "The key function emits daObjAbuku_c's type-name string. Its cartridge home is outside this text-only entry, so dsd supplies it and romdata_check proves the emitted string before isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key function emits the inherited dBase_c type-name string as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key function emits the inherited fBase_c type-name string as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key function emits the inherited dActor_c type-name string as vague linkage. Its canonical arm9 home is outside this text-only entry and romdata_check proves this copy before it is discarded."
+    },
+    {
+      "symbol": "_ZTV12daObjAbuku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108964",
+      "reason": "InitResources is the key function and emits the complete daObjAbuku_c vtable with its ABI preamble. The configured public address point is outside this text-only entry; romdata_check applies the measured eight-byte address-point convention and proves every emitted slot before isolation discards the copy."
+    },
+    {
+      "symbol": "g_profile_OBJ_ABUKU",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108940",
+      "reason": "The actor-table descriptor is naturally defined beside its factory in this TU. Its canonical gap-owned home is outside the text-only claim; romdata_check proves the factory relocation and all descriptor words before production isolation discards the duplicate."
+    }
+  ],
+  "notes": [
+    "Genuine lifecycle source form: daObjAbuku_c defines its virtual destructor inline in the class body and defines InitResources as the key function in this TU. The emitted vtable naturally requires D1 then D0 in retail order; mwcc emits no D2 and the source contains no hand-spelled destructor body or forcing helper.",
+    "The actor-table factory remains the one genuine C ABI construction boundary. Plain `new daObjAbuku_c` was measured and rejected because mwccarm calls unresolved `_Znwm`, while retail calls the actor-specific `_ZN7fBase_cnwEj`; the exact manual allocator/base/member-constructor sequence is retained rather than hiding a wrong relocation.",
+    "daObjAbuku_c_classInit and g_profile_OBJ_ABUKU are reconstructed source-style names: SM64DS proves the daObjAbuku_c RTTI identity, OBJ_ABUKU registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical aliases were Bubble_Spawn, daObjAbuku_c_Spawn, and Bubble_SpawnInfo. The manifest is deliberately text-only; all ten compiler-emitted data objects have exact fail-closed deadstrip-data rows at their configured canonical homes.",
+    "The older partitioned-link record described an out-of-line destructor source form that emitted D0, D1 and D2 in the wrong order. It was removed rather than carried forward as stale evidence after the inline/key-function form eliminated D2 and corrected section order."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-daObjAbuku_c/daObjAbuku_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 7,
+    "functions_declared": 7,
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "data": [
+        "_ZTI12daObjAbuku_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12daObjAbuku_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daObjAbuku_c",
+        "g_profile_OBJ_ABUKU"
+      ],
+      "dataExternalized": [
+        "_ZTI12daObjAbuku_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12daObjAbuku_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV12daObjAbuku_c",
+        "g_profile_OBJ_ABUKU"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

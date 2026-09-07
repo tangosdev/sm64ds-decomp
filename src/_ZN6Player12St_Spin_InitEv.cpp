@@ -21,11 +21,11 @@ int Player::St_Spin_Init()
   mLandSoundPlayed = 0;
   _ZN6Player7SetAnimEji5Fix12IiEj(((char*)this), 0x5f, 0, 0x1000, 0);
   mTerminalVelocity = -0x10000;
-  if (unk_6e6) {
+  if (mStatePhase) {
     mVertSpeed = 0x50000;
     func_ov002_020e25f0(((char*)this), 2);
   }
-  int* p = (int*)(((int)((char*)this) + 0x2ec) & 0xFFFFFFFFFFFFFFFFull);
+  int* p = (int*)((int)((char*)this) + 0x2ec);
   int old = *p;
   int** cam_ptr_ptr = &data_0209f318;
   *p = old | 0x20;

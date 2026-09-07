@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "Minimap.h"
 extern "C" {
 extern s8 data_0209f2f8;
 extern u8 data_0209f220;
@@ -14,10 +15,6 @@ namespace G2S {
 
 struct Event {
     static int GetBit(unsigned int bit);
-};
-
-struct Minimap {
-    static void UpdateLevelSpecific();
 };
 
 void Minimap::UpdateLevelSpecific()
@@ -163,7 +160,7 @@ void Minimap::UpdateLevelSpecific()
     case 0x19: {
         u16* p;
         if (!Event::GetBit(0xe)) return;
-        p = (u16*)(((int)G2S::GetBG3CharPtr() - 0x712) & 0xFFFFFFFFFFFFFFFFULL);
+        p = (u16*)((int)G2S::GetBG3CharPtr() - 0x712);
         p[0] = 0x3fe;
         p[1] = 0x3ff;
         break;

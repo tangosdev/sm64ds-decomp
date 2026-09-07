@@ -1,4 +1,4 @@
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
 struct S2 { void *w[2]; };
 extern struct S2 data_ov081_02128da8;
@@ -7,7 +7,7 @@ int func_ov081_02124b08(char *c)
 {
     unsigned int id = *(unsigned int *)(c + 0x3fc);
     if (id != 0) {
-        char *a = (char *)_ZN5Actor10FindWithIDEj(id);
+        char *a = (char *)_ZN8dActor_c10FindWithIDEj(id);
         if (a != 0) {
             int n = 0x2000;
             *(int *)(a + 0x9c) = -n;

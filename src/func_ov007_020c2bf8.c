@@ -2,7 +2,7 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov007).
  */
-extern void _ZN6Player17St_EndingFly_MainEv(void *);
+extern void func_ov007_020c3d1c(void *);
 
 struct S {
     int state;        /* +0 */
@@ -23,16 +23,16 @@ void func_ov007_020c2bf8(struct S *s)
 {
     switch (s->state) {
     case 0:
-        _ZN6Player17St_EndingFly_MainEv(s->p24);
-        _ZN6Player17St_EndingFly_MainEv(s->p28);
-        _ZN6Player17St_EndingFly_MainEv(s->p1c);
+        func_ov007_020c3d1c(s->p24);
+        func_ov007_020c3d1c(s->p28);
+        func_ov007_020c3d1c(s->p1c);
         break;
     case 1:
-        _ZN6Player17St_EndingFly_MainEv(s->p2c);
+        func_ov007_020c3d1c(s->p2c);
         break;
     }
-    _ZN6Player17St_EndingFly_MainEv(s->p18);
+    func_ov007_020c3d1c(s->p18);
     if (s->flags & 1)
-        _ZN6Player17St_EndingFly_MainEv(s->p20);
-    _ZN6Player17St_EndingFly_MainEv(s);
+        func_ov007_020c3d1c(s->p20);
+    func_ov007_020c3d1c(s);
 }

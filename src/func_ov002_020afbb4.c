@@ -1,4 +1,4 @@
-extern int _ZN5Actor15IsPlayerInRangeEi(char* c, int r);
+extern int _ZN8dActor_c15IsPlayerInRangeEi(char* c, int r);
 extern void func_ov002_020aefb8(void);
 extern void func_ov002_020afde4(char* c);
 extern void func_ov002_020aeee4(char* c);
@@ -10,7 +10,7 @@ void func_ov002_020afbb4(char* c)
 {
     switch (*(int*)(c + 0x388)) {
     case 0:
-        if (_ZN5Actor15IsPlayerInRangeEi(c, 0x3e8)) {
+        if (_ZN8dActor_c15IsPlayerInRangeEi(c, 0x3e8)) {
             *(int*)(c + 0xa8) = 0x28000;
             *(int*)(c + 0x388) = 1;
         }

@@ -1,10 +1,10 @@
 //cpp
-/* _ZN4Heap11_DeallocateEPv @ 0x203c280 (arm9) -- tail-call veneer to _ZN4Heap10DeallocateEPv (0x203c538).
- * ldr ip, [pc]; bx ip; .word 0x203c538
- */
-extern "C" {
-extern void _ZN4Heap10DeallocateEPv(void);
-void _ZN4Heap11_DeallocateEPv(void) {
-    _ZN4Heap10DeallocateEPv();
-}
+// @symbol _ZN4Heap11_DeallocateEPv
+/* Heap::_Deallocate(void*) at 0x0203c280 -- three-word tail-call veneer to
+ * Heap::Deallocate (0x0203c538): `ldr ip,[pc] / bx ip / .word 0x0203c538'. */
+#include "Heap.h"
+
+void Heap::_Deallocate(void* ptr)
+{
+    Deallocate(ptr);
 }

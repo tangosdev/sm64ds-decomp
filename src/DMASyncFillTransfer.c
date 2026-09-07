@@ -33,7 +33,7 @@ void DMASyncFillTransfer(u32 channel, void *dst, u32 data, u32 size)
     while (*dmaCtrl & DMA_CONTROL_ENABLE)
         ;
 
-    fillReg = (vu32 *)(REG_DMA_FILL_ADDR(channel) & 0xFFFFFFFFFFFFFFFF);
+    fillReg = (vu32 *)(REG_DMA_FILL_ADDR(channel));
     *fillReg = data;
     DMAStartTransferFB(channel, (void *)fillReg, dst,
                        (size >> 2) | DMA_CONTROL_ENABLE |

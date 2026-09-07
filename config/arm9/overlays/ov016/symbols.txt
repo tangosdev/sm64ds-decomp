@@ -18,7 +18,7 @@ _ZN5Unagi16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111f80
 _ZN5Unagi6RenderEv kind:function(arm,size=0x8c) addr:0x02111f84
 _ZN5Unagi8BehaviorEv kind:function(arm,size=0x1b0) addr:0x02112010
 _ZN5Unagi13InitResourcesEv kind:function(arm,size=0x3c8) addr:0x021121c0
-Unagi_Spawn kind:function(arm,size=0x84) addr:0x02112588
+daMoray_c_classInit kind:function(arm,size=0x84) addr:0x02112588
 _ZN6ShipUpD1Ev kind:function(arm,size=0x44) addr:0x0211260c
 _ZN6ShipUpD0Ev kind:function(arm,size=0x58) addr:0x02112650
 func_ov016_021126a8 kind:function(arm,size=0x48) addr:0x021126a8
@@ -26,28 +26,28 @@ _ZN6ShipUp16CleanupResourcesEv kind:function(arm,size=0x54) addr:0x021126f0
 _ZN6ShipUp6RenderEv kind:function(arm,size=0x28) addr:0x02112744
 _ZN6ShipUp8BehaviorEv kind:function(arm,size=0xd0) addr:0x0211276c
 _ZN6ShipUp13InitResourcesEv kind:function(arm,size=0x164) addr:0x0211283c
-ShipUp_Spawn kind:function(arm,size=0x30) addr:0x021129a0
-ShipDown_Spawn kind:function(arm,size=0x30) addr:0x021129d0
-func_ov016_02112a00 kind:function(arm,size=0x44) addr:0x02112a00
-func_ov016_02112a44 kind:function(arm,size=0x58) addr:0x02112a44
+daObjKi_Fune_c_classInit_KI_FUNE_UP kind:function(arm,size=0x30) addr:0x021129a0
+daObjKi_Fune_c_classInit_KI_FUNE kind:function(arm,size=0x30) addr:0x021129d0
+_ZN10RockPillarD1Ev kind:function(arm,size=0x44) addr:0x02112a00
+_ZN10RockPillarD0Ev kind:function(arm,size=0x58) addr:0x02112a44
 func_ov016_02112a9c kind:function(arm,size=0x48) addr:0x02112a9c
-func_ov016_02112ae4 kind:function(arm,size=0x44) addr:0x02112ae4
-func_ov016_02112b28 kind:function(arm,size=0x28) addr:0x02112b28
-func_ov016_02112b50 kind:function(arm,size=0x2cc) addr:0x02112b50
-func_ov016_02112e1c kind:function(arm,size=0xa8) addr:0x02112e1c
-RockPillar_Spawn kind:function(arm,size=0x30) addr:0x02112ec4
-func_ov016_02112ef4 kind:function(arm,size=0x50) addr:0x02112ef4
-func_ov016_02112f44 kind:function(arm,size=0x64) addr:0x02112f44
-func_ov016_02112fa8 kind:function(arm,size=0x14) addr:0x02112fa8
-FloatOnWaterPlatformJrb_Spawn kind:function(arm,size=0x3c) addr:0x02112fbc
-_ZN23FloatOnWaterPlatformJrbD1Ev kind:function(arm,size=0x4c) addr:0x02112ff8
-_ZN23FloatOnWaterPlatformJrbD0Ev kind:function(arm,size=0x60) addr:0x02113044
-func_ov016_021130a4 kind:function(arm,size=0x48) addr:0x021130a4
-_ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021130ec
-_ZN23FloatOnWaterPlatformJrb6RenderEv kind:function(arm,size=0x28) addr:0x02113130
-_ZN23FloatOnWaterPlatformJrb8BehaviorEv kind:function(arm,size=0x2dc) addr:0x02113158
-_ZN23FloatOnWaterPlatformJrb13InitResourcesEv kind:function(arm,size=0xdc) addr:0x02113434
-SlidingBox_Spawn kind:function(arm,size=0x3c) addr:0x02113510
+_ZN10RockPillar16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112ae4
+_ZN10RockPillar6RenderEv kind:function(arm,size=0x28) addr:0x02112b28
+_ZN10RockPillar8BehaviorEv kind:function(arm,size=0x2cc) addr:0x02112b50
+_ZN10RockPillar13InitResourcesEv kind:function(arm,size=0xa8) addr:0x02112e1c
+daObjKi_Hasira_c_classInit kind:function(arm,size=0x30) addr:0x02112ec4
+_ZN13daObjKi_Ita_cD1Ev kind:function(arm,size=0x50) addr:0x02112ef4
+_ZN13daObjKi_Ita_cD0Ev kind:function(arm,size=0x64) addr:0x02112f44
+_ZN13daObjKi_Ita_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112fa8
+daObjKi_Ita_c_classInit kind:function(arm,size=0x3c) addr:0x02112fbc
+_ZN10SlidingBoxD1Ev kind:function(arm,size=0x4c) addr:0x02112ff8
+_ZN10SlidingBoxD0Ev kind:function(arm,size=0x60) addr:0x02113044
+_ZN10SlidingBox11UpdateModelEv kind:function(arm,size=0x48) addr:0x021130a4
+_ZN10SlidingBox16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021130ec
+_ZN10SlidingBox6RenderEv kind:function(arm,size=0x28) addr:0x02113130
+_ZN10SlidingBox8BehaviorEv kind:function(arm,size=0x2dc) addr:0x02113158
+_ZN10SlidingBox13InitResourcesEv kind:function(arm,size=0xdc) addr:0x02113434
+daSlide_Box_c_classInit kind:function(arm,size=0x3c) addr:0x02113510
 data_ov016_0211354c kind:data(any) addr:0x0211354c
 data_ov016_02113550 kind:data(any) addr:0x02113550
 data_ov016_02113554 kind:data(any) addr:0x02113554
@@ -163,32 +163,32 @@ data_ov016_021148b0 kind:data(any) addr:0x021148b0
 data_ov016_021148b4 kind:data(any) addr:0x021148b4 ambiguous
 data_ov016_021148b8 kind:data(any) addr:0x021148b8
 data_ov016_021148c0 kind:data(any) addr:0x021148c0
-data_ov016_021148c8 kind:data(any) addr:0x021148c8
-data_ov016_021148d4 kind:data(any) addr:0x021148d4
-Unagi_SpawnInfo kind:data(any) addr:0x021148e0 ambiguous
+_ZTS9daMoray_c kind:data(any) addr:0x021148c8
+_ZTI9daMoray_c kind:data(any) addr:0x021148d4
+g_profile_MORAY kind:data(any) addr:0x021148e0 ambiguous
 data_ov016_021148f0 kind:data(any) addr:0x021148f0 ambiguous
 data_ov016_02114908 kind:data(any) addr:0x02114908
 _ZTV5Unagi kind:data(any) addr:0x02114958
 data_ov016_021149d4 kind:data(any) addr:0x021149d4
-data_ov016_021149dc kind:data(any) addr:0x021149dc
-data_ov016_021149e8 kind:data(any) addr:0x021149e8
+_ZTI14daObjKi_Fune_c kind:data(any) addr:0x021149dc
+_ZTS14daObjKi_Fune_c kind:data(any) addr:0x021149e8
 data_ov016_021149f0 kind:data(any) addr:0x021149f0 ambiguous
-ShipDown_SpawnInfo kind:data(any) addr:0x021149fc ambiguous
-ShipUp_SpawnInfo kind:data(any) addr:0x02114a18 ambiguous
+g_profile_KI_FUNE kind:data(any) addr:0x021149fc ambiguous
+g_profile_KI_FUNE_UP kind:data(any) addr:0x02114a18 ambiguous
 _ZTV6ShipUp kind:data(any) addr:0x02114a3c
-data_ov016_02114abc kind:data(any) addr:0x02114abc
-data_ov016_02114ac8 kind:data(any) addr:0x02114ac8
-RockPillar_SpawnInfo kind:data(any) addr:0x02114adc ambiguous
-data_ov016_02114b00 kind:data(any) addr:0x02114b00
-data_ov016_02114b80 kind:data(any) addr:0x02114b80
+_ZTI16daObjKi_Hasira_c kind:data(any) addr:0x02114abc
+_ZTS16daObjKi_Hasira_c kind:data(any) addr:0x02114ac8
+g_profile_KI_HASIRA kind:data(any) addr:0x02114adc ambiguous
+_ZTV10RockPillar kind:data(any) addr:0x02114b00
+_ZTI13daObjKi_Ita_c kind:data(any) addr:0x02114b80
 data_ov016_02114b8c kind:data(any) addr:0x02114b8c
-data_ov016_02114b98 kind:data(any) addr:0x02114b98
-FloatOnWaterPlatformJrb_SpawnInfo kind:data(any) addr:0x02114ba8
-data_ov016_02114bcc kind:data(any) addr:0x02114bcc
-data_ov016_02114c4c kind:data(any) addr:0x02114c4c
-data_ov016_02114c58 kind:data(any) addr:0x02114c58
-SlidingBox_SpawnInfo kind:data(any) addr:0x02114c68
-_ZTV23FloatOnWaterPlatformJrb kind:data(any) addr:0x02114c8c
+_ZTS13daObjKi_Ita_c kind:data(any) addr:0x02114b98
+g_profile_KI_ITA kind:data(any) addr:0x02114ba8
+_ZTV13daObjKi_Ita_c kind:data(any) addr:0x02114bcc
+_ZTI13daSlide_Box_c kind:data(any) addr:0x02114c4c
+_ZTS13daSlide_Box_c kind:data(any) addr:0x02114c58
+g_profile_SLIDE_BOX kind:data(any) addr:0x02114c68
+_ZTV10SlidingBox kind:data(any) addr:0x02114c8c
 _ZTV13daSlide_Box_c kind:data(any) addr:0x02114c8c
 data_ov016_02114d20 kind:bss addr:0x02114d20
 data_ov016_02114d28 kind:bss addr:0x02114d28
@@ -213,7 +213,9 @@ data_ov016_02114df8 kind:bss addr:0x02114df8
 data_ov016_02114e04 kind:bss addr:0x02114e04
 data_ov016_02114e10 kind:bss addr:0x02114e10
 data_ov016_02114e1c kind:bss addr:0x02114e1c
+RockPillar_ClsnFile kind:bss addr:0x02114e1c
 data_ov016_02114e24 kind:bss addr:0x02114e24
+RockPillar_ModelFile kind:bss addr:0x02114e24
 data_ov016_02114e2c kind:bss addr:0x02114e2c
 data_ov016_02114e38 kind:bss addr:0x02114e38
 data_ov016_02114e44 kind:bss addr:0x02114e44

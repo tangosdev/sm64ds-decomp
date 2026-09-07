@@ -3,7 +3,7 @@ extern void func_020731dc(void *, void *, void **);
 extern int _ZN13SharedFilePtr9ConstructEj(void *, int);
 extern void func_02017ab4(void);
 extern void SharedFilePtr_Destruct_Anim(void);
-extern void func_020072c0(void);
+extern void _ZN7Vector3D1Ev(void);
 
 typedef struct { int a, b; } S8;
 typedef struct { S8 a, b; } S16;
@@ -81,27 +81,27 @@ void __sinit_ov072_02122414(void)
     data_ov072_02122d3c.x = 0x1c000;
     data_ov072_02122d3c.y = 0;
     data_ov072_02122d3c.z = 0x1e000;
-    func_020731dc(&data_ov072_02122d3c, (void *)&func_020072c0, (void **)&data_ov072_02122cd0);
+    func_020731dc(&data_ov072_02122d3c, (void *)&_ZN7Vector3D1Ev, (void **)&data_ov072_02122cd0);
 
     {
         unsigned int *p = (unsigned int *)&data_ov072_02122d48;
         p[0] = 0x1c000;
         p[1] = 0;
         p[2] = 0x1e000;
-        func_020731dc(p, (void *)&func_020072c0, (void **)&data_ov072_02122cdc);
+        func_020731dc(p, (void *)&_ZN7Vector3D1Ev, (void **)&data_ov072_02122cdc);
     }
     {
         unsigned int *p = (unsigned int *)&data_ov072_02122d54;
         p[0] = 0x2b000;
         p[1] = 0;
         p[2] = 0x1e000;
-        func_020731dc(p, (void *)&func_020072c0, (void **)&data_ov072_02122ce8);
+        func_020731dc(p, (void *)&_ZN7Vector3D1Ev, (void **)&data_ov072_02122ce8);
     }
     {
         unsigned int *p = (unsigned int *)&data_ov072_02122d60;
         p[0] = 0x30000;
         p[1] = 0;
         p[2] = 0x32000;
-        func_020731dc(p, (void *)&func_020072c0, (void **)&data_ov072_02122cf4);
+        func_020731dc(p, (void *)&_ZN7Vector3D1Ev, (void **)&data_ov072_02122cf4);
     }
 }

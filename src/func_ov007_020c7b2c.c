@@ -5,7 +5,7 @@ struct B { struct P *p; int f4; int f8; int fc; int f10; int f14; };
 struct J { struct B *a; struct B *b; int f8; int fc; int f10; };
 
 #define FXM(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
-#define AT(p, off) (*(int *)(int)(((long long)(int)((char *)(p) + (off)))))
+#define AT(p, off) (*(int *)(int)((char *)(p) + (off)))
 
 void func_ov007_020c7b2c(struct J *self, int m1, int m2)
 {

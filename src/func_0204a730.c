@@ -33,7 +33,7 @@ extern void func_0204d150(void *, void *, u32);
 extern void func_0204d104(void *, void *, u32);
 extern void func_0204d0b8(void *, void *, u32);
 
-#define LP(T, e) ((T *)(int)(((long long)(int)(e))))
+#define LP(T, e) ((T *)(int)(e))
 
 #pragma opt_common_subs off
 

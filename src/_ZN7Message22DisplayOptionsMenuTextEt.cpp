@@ -13,7 +13,10 @@ extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern void MultiStore_Int(int a, int b, int n);
 extern void MultiStore16(int a, int b, int n);
 
-void _ZN7Message22DisplayOptionsMenuTextEt(unsigned short n) {
+}
+
+void Message::DisplayOptionsMenuText(unsigned short n)
+{
     volatile int li;
     volatile unsigned short ls;
     int p, s;
@@ -32,5 +35,4 @@ void _ZN7Message22DisplayOptionsMenuTextEt(unsigned short n) {
     data_0209d6a8 = data_0209d6a8 << 1;
     data_0209d6d4 = 0x283;
     Message_DrawCenteredLine(0x280, 0x20);
-}
 }

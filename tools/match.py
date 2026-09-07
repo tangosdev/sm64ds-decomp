@@ -146,7 +146,8 @@ def extract_func(obj: bytes, func: str):
     import io
     elf = ELFFile(io.BytesIO(obj))
     symtab = elf.get_section_by_name(".symtab")
-    sym = next((s for s in symtab.iter_symbols() if s.name == func), None)
+    sym = next((s for s in symtab.iter_symbols()
+                if s.name == func and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")), None)
     if sym is None:
         return None, None
     sec = elf.get_section(sym["st_shndx"])
@@ -166,6 +167,32 @@ def extract_func(obj: bytes, func: str):
             if 0 <= o < size:
                 relocs.add(o & ~3)
     return code, relocs
+
+
+def sole_func_symbol(obj: bytes):
+    """Name of the object's ONLY defined, sized STT_FUNC symbol -- or None when it
+    defines zero or two-or-more.
+
+    extract_func matches a symbol by exact string, which is the right default but has
+    two known ways to miss a function the object plainly defines:
+      * the stored name is a stale func_<addr> placeholder (or, symmetrically, the
+        C++ symbol) while the source spells the other one -- a symbol import renamed
+        one side and not the other;
+      * the repo spells a substitution-COMPRESSED Itanium mangling and mwccarm emits
+        the expanded form for the same signature (_ZN5Model27LoadCompressedTextureToVramEPcjS0_
+        vs ...EPcjPc). No exact-string lookup can ever bridge that.
+    Neither is a real absence, and both are unambiguous when the object holds exactly
+    one function. Two or more and there is nothing to disambiguate with, so callers
+    must keep treating the miss as a miss."""
+    import io
+    elf = ELFFile(io.BytesIO(obj))
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None
+    funcs = [s.name for s in symtab.iter_symbols()
+             if s["st_info"]["type"] == "STT_FUNC" and s["st_size"]
+             and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS") and s.name]
+    return funcs[0] if len(set(funcs)) == 1 else None
 
 
 def compare(target: bytes, cand: bytes, relocs: set, verbose: bool = True):

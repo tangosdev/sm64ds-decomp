@@ -1,10 +1,10 @@
 //cpp
 // @symbol func_ov102_0214b248
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
+    extern void func_ov102_0214ae1c(void*);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void func_0203568c(int *p, int v);
 extern void func_02035684(int *p, int v);
@@ -12,7 +12,7 @@ extern void func_ov002_020ef228(void *c, int arg);
 extern int func_ov102_0214b128(void *c);
 }
 
-namespace Sound { unsigned int PlayLong(unsigned int, unsigned int, unsigned int, Vector3 const &, unsigned int); }
+namespace Sound { unsigned int PlayLong(unsigned int, unsigned int, unsigned int, Vector3 const &, short); }
 
 extern "C" int func_ov102_0214b248(char *c)
 {

@@ -4,28 +4,30 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PoleLift.h"
-#include "MeshColliderBase.h"
-typedef int Fix12;
 extern "C" {
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
-extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
-extern int _ZN21ExtendingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, Fix12, short, void*);
+extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
+extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* f, int a, int b);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* thiz);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* thiz);
+extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* act, int fix, int t, unsigned int a, unsigned int b);
 }
 
 int PoleLift::InitResources()
 {
-  void* mdl;
-  void* kcl;
-  mdl = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_021131d8);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd8, mdl, 1, -1);
-  func_ov045_021118f8(((char*)this));
-  func_ov045_021118c4(((char*)this));
-  kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov045_021131d0);
-  _ZN21ExtendingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x158, kcl, ((char*)this)+0x128, 0x1000, unk_08e, data_ov045_021125b0);
-  func_020396c0(((char*)this)+0x158, 4);
-  unk_1a5 = 1;
-  ((MeshColliderBase *)(((char*)this)+0x158))->Enable((Actor *)(((char*)this)));
-  unk_0d4 = 1;
-  return 1;
+    void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_021131b0);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, -1);
+    if ((*(s32 *)&param1) != 0xffff) {
+        int* p = (int*)(((int)((char*)this) + 0x60));
+        *p -= 0x12c000;
+    }
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
+    void* mc = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov045_021131a8);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov045_02112510);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        ((char*)this) + 0x320, ((char*)this), 0x35555, 0x258000, 0x280000c, 0);
+    return 1;
 }

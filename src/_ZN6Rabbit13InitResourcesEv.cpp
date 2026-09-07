@@ -5,15 +5,6 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Rabbit.h"
-typedef int s32;
-typedef short s16;
-typedef unsigned int u32;
-typedef unsigned short u16;
-typedef signed char s8;
-typedef unsigned char u8;
-
-typedef s32 Fix12;
-
 extern char data_ov085_021305d0;
 extern int data_0209caa0[];
 extern s8 data_0209f2f8;
@@ -24,13 +15,13 @@ extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, void* actor, s32 a, s32 b, u32 c, u32 d);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 a, s32 b, void* v, void* w);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, s32 a, s32 b, u32 c, u32 d);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 a, s32 b, void* v, void* w);
 extern void _ZN7PathPtrC1Ev(void* thiz);
 extern void _ZN7PathPtr6FromIDEj(void* thiz, u32 id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* thiz, void* v, u32 idx);
 extern void func_ov085_0212bcc8(char* c);
-extern void* _ZN5Actor13ClosestPlayerEv(void* c);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern u32 RandomIntInternal(int* seed);
 extern u8 NumStars(void);
 extern void func_ov085_0212bc78(void* c, void* p);
@@ -49,19 +40,23 @@ int Rabbit::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305c8);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305c0);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021305d8);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x300, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021305e0), 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021305e0), 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel2);
 
-    unk_438 = unk_008 & 0xff;
-    if (unk_438 == 0xff)
-        unk_438 = 0;
+    mPathId = param1 & 0xff;
+    if (mPathId == 0xff)
+        mPathId = 0;
 
-    mRabbitId = (unk_008 & 0xf00) >> 8;
+    /* dActor_c declares param1 u32, but the ROM shifts these two with ASR, not
+       LSR -- so this call site reads it signed. Without the casts the function
+       comes out two words different; the flat header called 0x008 an s32,
+       which is why this was invisible before the rebase. */
+    mRabbitId = ((s32)param1 & 0xf00) >> 8;
     if (mRabbitId == 0xff)
         mRabbitId = 0;
 
-    mCharacterId = (unk_008 & 0xf000) >> 0xc;
+    mCharacterId = ((s32)param1 & 0xf000) >> 0xc;
     if (mCharacterId == 0xf)
         mCharacterId = 0;
 
@@ -85,31 +80,31 @@ check18:
         return 0;
 
 skip17:
-    unk_09c = -0x1000;
-    unk_0a0 = -0x1e000;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
-    unk_45c = 0;
-    unk_35c = 0x1000;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x28000, 0x28000, 0, 0);
+    mVertAccel = -0x1000;
+    mTerminalVelocity = -0x1e000;
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
+    mTalkingPlayer = 0;
+    mModelAnim.speed = 0x1000;
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN7PathPtrC1Ev(sp8);
-    _ZN7PathPtr6FromIDEj(sp8, unk_438);
-    unk_448 = 1;
-    _ZNK7PathPtr7GetNodeER7Vector3j(sp8, ((char*)this) + 0x5c, unk_448);
-    unk_444 = _ZNK7PathPtr8NumNodesEv(sp8);
+    _ZN7PathPtr6FromIDEj(sp8, mPathId);
+    mPathNodeIndex = 1;
+    _ZNK7PathPtr7GetNodeER7Vector3j(sp8, &mPosX, mPathNodeIndex);
+    mNumPathNodes = _ZNK7PathPtr8NumNodesEv(sp8);
     func_ov085_0212bcc8(((char*)this));
-    unk_0d0 = 0;
-    mScale = 0x1000;
-    unk_088 = mScale;
-    unk_084 = unk_088;
+    mEatingPlayer = 0;
+    mScaleX = 0x1000;
+    mScaleZ = mScaleX;
+    mScaleY = mScaleZ;
 
     if (mRabbitId == 7) {
         if (data_0209caa0[1] & 0x40)
             return 0;
-        unk_428 = 1;
+        mIsDisabled = 1;
         goto block_26;
     }
 
-    r0 = _ZN5Actor13ClosestPlayerEv(((char*)this));
+    r0 = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
     if (r0 == 0)
         return 0;
     if (data_0209f2f8 != 0x32) {
@@ -127,7 +122,7 @@ block_26:
         goto block_out;
     }
 
-    r6 = _ZN5Actor13ClosestPlayerEv(((char*)this));
+    r6 = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
     if (r6 == 0)
         goto block_out;
 
@@ -157,17 +152,17 @@ block_26:
             }
             if (mColorVariant == 5) {
                 data_ov085_021305ac += 1;
-                unk_429 = 1;
+                mIsGlowing = 1;
             }
         }
     }
 
 block_out:
     if (data_0209f2f8 == 5) {
-        if (unk_0cc == 3)
-            unk_0b0 = 0x8280;
+        if (mAreaId == 3)
+            mFlags = 0x8280;
     }
-    unk_468 = (mColorVariant << 1) + *(s32*)(*(char**)((char*)&unk_30c) + 0x20);
+    mMaterialColor = (mColorVariant << 1) + *(s32*)((char*)mModelAnim.data.materials + 0x20);
     func_ov085_0212bc78(((char*)this), &data_ov085_021306cc);
     return 1;
 }

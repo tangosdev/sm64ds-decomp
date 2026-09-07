@@ -19,10 +19,10 @@ extern "C" int func_ov090_02131b94(char* thiz)
     unsigned int r;
     short* s;
     r = (unsigned)RandomIntInternal(&data_0209e650);
-    s = (short*)(((unsigned int)c + 0x39a) & 0xFFFFFFFFFFFFFFFFull);
+    s = (short*)((unsigned int)c + 0x39a);
     *s = (short)(*s + ((int)(((r >> 8) & 3) << 0x1e) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650);
-    s = (short*)(((long long)(int)(c + 0x39a)) & 0xFFFFFFFFFFFFFFFFll);
+    s = (short*)(c + 0x39a);
     *s = (short)(*s + ((int)(((r >> 8) & 7) << 0x1d) >> 16));
     r = (unsigned)RandomIntInternal(&data_0209e650);
     *(short*)(c + 0x100) = (short)(((r >> 8) & 0x1f) + 0x96);

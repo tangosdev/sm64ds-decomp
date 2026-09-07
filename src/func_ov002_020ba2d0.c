@@ -2,7 +2,7 @@ extern signed char data_0209f2f8;
 extern void func_ov002_020ba01c(char* c, int a, int b, int fix, int e);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void* v);
 extern void func_ov002_020e7104(char* c, int n);
-extern void _ZN5Actor13SpawnSoundObjEj(char* c, unsigned int n);
+extern void _ZN8dActor_c13SpawnSoundObjEj(char* c, unsigned int n);
 extern void _ZN5Event6SetBitEj(unsigned int b);
 extern void func_ov002_020ba4d8(char* c, int i);
 void func_ov002_020ba2d0(char* c){
@@ -17,7 +17,7 @@ void func_ov002_020ba2d0(char* c){
     }
   }else{
     if(data_0209f2f8 == 0xd && *(int*)(c+0x5c) == -0x140000){
-      _ZN5Actor13SpawnSoundObjEj(c, 0);
+      _ZN8dActor_c13SpawnSoundObjEj(c, 0);
     }
     _ZN5Event6SetBitEj(*(unsigned char*)(c+0x34e));
   }

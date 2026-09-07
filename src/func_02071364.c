@@ -54,7 +54,7 @@ void func_02071364(Decimal *result, const Decimal *x, const Decimal *y)
     result->exp = (short)(x->exp + y->exp);
 
     if (accumulator) {
-        short *exp = (short *)(int)(((long long)(int)((char *)result + 2)));
+        short *exp = (short *)(int)((char *)result + 2);
         *--ip = (unsigned char)accumulator;
         *exp = *exp + 1;
     }

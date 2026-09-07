@@ -19,9 +19,10 @@
  * The ROM's RTTI names this class dExtFrameCtrl_c -- a frame controller,
  * i.e. the playback cursor, not the animation data.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
- * key-function arrangement from include/ModelBase.h. C1/C2/D0/D1/D2 stay
- * self-contained translation units.
+ * The destructor is declared first, which makes it the key virtual function.
+ * Each enrolled destructor-variant translation unit defines the same real
+ * `Animation::~Animation()`; mwcc emits D2/D0/D1 together and objisolate keeps
+ * the variant named by that file's enrollment.
  *
  * LAYOUT is 0x10 bytes, pinned by C2 (vptr store, +0x8 zeroed, +0xc set
  * to 0x1000 = 1.0) and read consistently by Copy/Advance/Finished:
@@ -43,6 +44,8 @@
 struct BCA_File;
 struct SharedFilePtr;
 
+extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+
 struct Animation {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     u32 numFramesAndFlags;   /* 0x04 - count in bits 0..29, loop flags in 30..31 */
@@ -51,6 +54,13 @@ struct Animation {
 
     /* --- vtable, in ROM order: the destructor pair and nothing else. --- */
     virtual ~Animation();                /* slots 0 (D1), 1 (D0) */
+
+    /* DECLARED, never defined as a method here -- src/_ZN9AnimationC1Ev.cpp
+       owns C1 and src/_ZN9AnimationC2Ev.cpp the base-subobject variant
+       (notes/ctor-migration.md section 2). Declaring it is what makes
+       MaterialChanger/TextureTransformer/TextureSequence (and ModelAnim's
+       base step) emit `bl _ZN9AnimationC2Ev' instead of synthesising inline. */
+    Animation();
 
     /* --- non-virtual --- */
     void SetAnimation(u16 numFrames, int flags, Fix12<int> speed,
@@ -69,6 +79,23 @@ struct Animation {
     /* --- static --- */
     static char *LoadFile(SharedFilePtr &ptr);
     static void UpdateFileOffsets(BCA_File &file);
+
+    /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
+       The compiler generates D0 as "run the destructor body, then call operator
+       delete on the class". Without this it emits the global `_ZdlPv`, which
+       exists nowhere in this image, and the D0 comes out one relocated word
+       different from the ROM -- a difference build_pin.verify CANNOT SEE,
+       because it wildcards relocated words. Only the link catches it.
+
+       This family deallocates through Memory::operator_delete2, not the actor
+       heap: every D0 below ends with a call to 0x0203cbcc. dActor_c's copy of this
+       member calls Memory::Deallocate instead, which is why each needs its own.
+
+       Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
+       in the class or one level up, as include/dActor_c.h records. No layout
+       effect: a non-virtual inline member adds no field and no vtable slot. */
+    void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
+
 };
 
 typedef char Animation_size_must_be_0x10[sizeof(Animation) == 0x10 ? 1 : -1];

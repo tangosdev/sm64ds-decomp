@@ -21,6 +21,7 @@ import sys
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
+import asm_policy  # noqa: E402
 import ledger as L
 import worklist as WL
 
@@ -107,7 +108,7 @@ def main():
         # gitignored). A "// NONMATCHING" draft is NOT matched and stays a valid target,
         # but one settled under the asm-primitive policy is done and must not be offered.
         src = WL.read_src_text(name)
-        if src is not None and ("// NONMATCHING" not in src[:200] or WL.is_policy_done(src)):
+        if src is not None and (not asm_policy.has_draft_banner(src) or WL.is_policy_done(src)):
             continue
         code = a9[ad - BASE: ad - BASE + sz]
         cs = callees(code, ad, sz)

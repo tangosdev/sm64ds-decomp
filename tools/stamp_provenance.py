@@ -3,14 +3,14 @@
 
 A successful match must permanently record how it was matched:
 
-  AI:    --kind ai --model … --reasoning … --harness …
-  Human: --kind human [--by …] [--note …]
+  AI:    --kind ai --model ... --reasoning ... --harness ...
+  Human: --kind human [--by ...] [--note ...]
 
 Missing/incomplete AI provenance aborts (exit 2). This is the only supported
 banking path for provenance; do not hand-edit src/ alone without a ledger row.
 
 Repo root is discovered via --repo, DECOMP_ROOT / MATCH_REPO, cwd walk, then
-__file__ walk — so copies of this script under /tmp still work if you pass
+__file__ walk -- so copies of this script under /tmp still work if you pass
 --repo or run from the decomp tree.
 
 Examples:
@@ -28,7 +28,7 @@ Examples:
       --src src/arm9/func_0200abcd.c --kind ai --author lunavyqo \\
       --model grok-4.5 --reasoning high --harness grok-build --no-verify
 
-  # Verify + promote scratch → src + ledger
+  # Verify + promote scratch -> src + ledger
   python tools/bank.py --c scratch/foo.c --func func_0200abcd \\
       --kind ai --author lunavyqo --model claude-opus-4 --reasoning high \\
       --harness cursor-agent --promote
@@ -121,6 +121,52 @@ def resolve_from_src(src: pathlib.Path) -> tuple[str, str, int, int]:
     return name, module, addr, 0
 
 
+VERDICT_RE = re.compile(r"^MATCHING VERSIONS:\s*(.*)$")
+
+
+def matching_versions(out: str) -> list[str] | None:
+    """The versions match.py's verdict line reports. None if it never printed one.
+
+    match.py exits 0 whether or not anything reproduced, and its last line is always
+    "MATCHING VERSIONS: <comma list, or none>". So the string "MATCH" is present in
+    every run's output, failures included -- it is a substring of "MATCHING". Anything
+    gating on that substring cannot fail. Read the verdict line and its payload.
+
+    None (no verdict line at all) is not a pass either: it means match.py died before
+    it could grade anything, and a gate that waves through what it could not check is
+    not a gate.
+    """
+    found = None
+    for line in out.splitlines():
+        m = VERDICT_RE.match(line.strip())
+        if not m:
+            continue
+        payload = m.group(1).strip()
+        if payload in ("", "none"):
+            found = []
+        else:
+            found = [v.strip() for v in payload.split(",") if v.strip()]
+    return found
+
+
+def module_target(module: str) -> tuple[pathlib.Path, int] | None:
+    """(binary, load address) for a module, from the registry match.py itself reads.
+
+    tools/modules.py is the single source of truth for this: main ARM9 is
+    extracted/arm9_dec.bin at 0x02004000, and every overlay and autoload takes its
+    base from the LOWEST symbol address in the module's config symbols.txt -- dsd's
+    delinked space, not the ROM overlay table's ramAddress. Deriving it any other way
+    makes addr - base land outside the image.
+    """
+    import modules as MOD
+
+    for mod in MOD.modules():
+        label = "arm9" if mod["name"] == "main" else mod["name"]
+        if label == module:
+            return pathlib.Path(mod["bin"]), int(mod["base"])
+    return None
+
+
 def run_match(
     c_path: pathlib.Path,
     func: str,
@@ -131,6 +177,23 @@ def run_match(
 ) -> None:
     if size <= 0:
         raise SystemExit("--size required for verify (symbol not found or size 0)")
+    # The target image has to be the symbol's OWN module. This used to pass
+    # `module if module in ("arm9", "arm7") else "arm9"`, so every overlay function was
+    # compared against extracted/arm9_dec.bin. That file is 0x9cfb8 bytes, an overlay
+    # address is far past its end, target_bytes() sliced an empty string, and match.py
+    # reported "size differs: target 0x0 vs candidate 0x...". Guaranteed non-match, on
+    # every overlay, forever. --module also selects config/<module>/relocs.txt for the
+    # reloc-destination check, so the coercion pointed that at the wrong config too.
+    target = module_target(module)
+    if target is None:
+        raise SystemExit(
+            f"cannot verify {func}: no target binary for module {module!r} in "
+            "tools/modules.py (needs extracted/; arm7 has no config module here). "
+            "Fix the module or pass --no-verify and say so."
+        )
+    bin_path, base = target
+    if not bin_path.is_file():
+        raise SystemExit(f"cannot verify {func}: module {module} binary missing: {bin_path}")
     match_py = get_repo() / "tools" / "match.py"
     cmd = [
         sys.executable,
@@ -144,16 +207,31 @@ def run_match(
         "--size",
         hex(size),
         "--module",
-        module if module in ("arm9", "arm7") else "arm9",
+        module,
+        "--bin",
+        str(bin_path),
+        "--base",
+        hex(base),
         "--version",
         version,
         "--brief",
     ]
     r = subprocess.run(cmd, cwd=get_repo(), capture_output=True, text=True, timeout=180)
     out = (r.stdout or "") + (r.stderr or "")
-    if r.returncode != 0 or "MATCH" not in out:
+    versions = matching_versions(out)
+    if r.returncode != 0:
+        reason = f"match.py exited {r.returncode}"
+    elif versions is None:
+        reason = "match.py printed no MATCHING VERSIONS verdict"
+    elif not versions:
+        reason = f"no version reproduced the target ({module}:{addr:#x})"
+    elif version not in versions:
+        reason = f"reproduced under {', '.join(versions)} but not the requested {version}"
+    else:
+        reason = None
+    if reason:
         print(out, file=sys.stderr)
-        raise SystemExit("match verification failed — not banking")
+        raise SystemExit(f"match verification failed ({reason}) -- not banking")
     print("\n".join(out.strip().splitlines()[-5:]))
 
 
@@ -190,12 +268,12 @@ def main() -> None:
     ap.add_argument("--kind", required=True, choices=("human", "ai"))
     ap.add_argument(
         "--model",
-        help="AI model id (required for --kind ai). Spaces ok; slugified (Grok 4.5 → grok-4.5)",
+        help="AI model id (required for --kind ai). Spaces ok; slugified (Grok 4.5 -> grok-4.5)",
     )
     ap.add_argument("--reasoning", help="AI reasoning/effort level (required for ai)")
     ap.add_argument(
         "--harness",
-        help="AI harness/pipeline id (required for ai). Spaces ok; slugified (Grok Build → grok-build)",
+        help="AI harness/pipeline id (required for ai). Spaces ok; slugified (Grok Build -> grok-build)",
     )
     ap.add_argument(
         "--author",
@@ -238,7 +316,7 @@ def main() -> None:
         type=int,
         default=None,
         dest="batch_size",
-        help="Functions in the session (1 if focused; required ≥2 if batch)",
+        help="Functions in the session (1 if focused; required >=2 if batch)",
     )
     args = ap.parse_args()
 
@@ -260,7 +338,7 @@ def main() -> None:
     except ProvenanceError as e:
         print(f"ERROR: provenance invalid: {e}", file=sys.stderr)
         print(
-            "AI matches require: --kind ai --model … --reasoning … --harness …",
+            "AI matches require: --kind ai --model ... --reasoning ... --harness ...",
             file=sys.stderr,
         )
         print(f"Hint: {TOKEN_HELP}", file=sys.stderr)
@@ -350,7 +428,7 @@ def main() -> None:
         if size is None or size <= 0:
             print("ERROR: --size required for verify", file=sys.stderr)
             sys.exit(2)
-        print(f"Verifying {name} @ {module}:0x{addr:08x} size 0x{size:x} …")
+        print(f"Verifying {name} @ {module}:0x{addr:08x} size 0x{size:x} ...")
         run_match(verify_c, name, addr, size, module, args.version)
     else:
         print("Skipping verify (--no-verify)")
@@ -363,7 +441,7 @@ def main() -> None:
         dest = default_src_path(module, name, ext)
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(c_path, dest)
-        print(f"Promoted → {dest.relative_to(get_repo())}")
+        print(f"Promoted -> {dest.relative_to(get_repo())}")
         src_rel = dest.relative_to(get_repo()).as_posix()
     elif src_path:
         try:
@@ -383,7 +461,7 @@ def main() -> None:
 
     if src_rel and not src_rel.startswith("src/"):
         print(
-            f"WARNING: path {src_rel!r} is not under src/ — "
+            f"WARNING: path {src_rel!r} is not under src/ -- "
             "atlas only counts files under src/ as matched.",
             file=sys.stderr,
         )
@@ -435,7 +513,7 @@ def main() -> None:
                 batch_size=args.batch_size,
             )
             print(
-                "Logged attempt status=matched → config/match_attempts.jsonl "
+                "Logged attempt status=matched -> config/match_attempts.jsonl "
                 "(no prior matched try; bank-only path)"
             )
         except ProvenanceError as e:
@@ -457,7 +535,7 @@ def main() -> None:
                     db.pop(k, None)
             save_db(db)
             print(f"Pruned near-miss tip for {module}:{addr:#x} from nearmiss/db.jsonl")
-    print("OK — regenerate atlas with: python tools/chaos_db_ci.py")
+    print("OK -- regenerate atlas with: python tools/chaos_db_ci.py")
 
 
 def json_dumps(obj: dict) -> str:

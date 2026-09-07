@@ -1,6 +1,6 @@
 struct Vec3 { int x; int y; int z; };
 
-#define LAUNDER(p) ((long long)(int)(p))
+#define LAUNDER(p) (p)
 
 extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
 

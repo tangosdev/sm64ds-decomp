@@ -5,12 +5,12 @@ struct Vec3
   int y;
   int z;
 };
-extern char *_ZN5Actor13ClosestPlayerEv(void *c);
+extern char *_ZN8dActor_c13ClosestPlayerEv(void *c);
 extern short Vec3_HorzAngle(struct Vec3 *a, struct Vec3 *b);
 extern int Vec3_HorzDist(struct Vec3 *a, struct Vec3 *b);
 int func_ov026_02111cb4(char *c)
 {
-  char *p = _ZN5Actor13ClosestPlayerEv(c);
+  char *p = _ZN8dActor_c13ClosestPlayerEv(c);
   if (p)
   {
     struct Vec3 *sp = (struct Vec3 *) (((int) p + 0x5c));

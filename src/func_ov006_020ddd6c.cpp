@@ -1,6 +1,6 @@
 //cpp
-struct Actor;
-typedef void (Actor::*PMF)(int);
+struct dActor_c;
+typedef void (dActor_c::*PMF)(int);
 struct Entry { PMF pmf; };
 extern "C" Entry data_ov006_02141840[];
 extern "C" void _ZN5Sound12PlayBank2_2DEj(unsigned int);
@@ -8,7 +8,7 @@ extern "C" void func_ov006_020dde28(void *thiz, int i);
 
 extern "C" void func_ov006_020ddd6c(char *thiz)
 {
-    Actor *self = (Actor*)thiz;
+    dActor_c *self = (dActor_c*)thiz;
     int n = 0;
     int i = 0;
     char *p = thiz;

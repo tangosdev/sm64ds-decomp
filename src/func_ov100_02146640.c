@@ -7,7 +7,7 @@ typedef short s16;
 
 
 extern int RandomIntInternal(int* seed);
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern s16 Vec3_HorzAngle(struct Vector3* v0, struct Vector3* v1);
 extern int _Z14ApproachLinearRsss(s16* a, s16 b, s16 c);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int b, int fix, unsigned int e);
@@ -32,7 +32,7 @@ void func_ov100_02146640(char* c)
         *(int*)(c + 0x130) = 0x1000;
     }
 
-    char* p = (char*)_ZN5Actor13ClosestPlayerEv(c);
+    char* p = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     if (p) {
         s16 ang = Vec3_HorzAngle((struct Vector3*)(c + 0x5c), (struct Vector3*)(p + 0x5c));
         if (_Z14ApproachLinearRsss((s16*)(c + 0x94), ang, 0x400) != 0) {

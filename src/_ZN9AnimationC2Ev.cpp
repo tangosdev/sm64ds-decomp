@@ -1,14 +1,16 @@
 //cpp
 // @symbol _ZN9AnimationC2Ev
-/* Stays a mangled free function: the destructor is the key function and
- * defining any structor as a real method risks the compiler emitting the
- * class vtable over the gap object's ROM copy. See include/ModelBase.h. */
+/* recovered: real C++ constructor -- the base-subobject variant of C1; the
+ * body is identical (root class, nothing to chain). Every ROM caller is a
+ * derived base step (MaterialChanger / TextureTransformer / TextureSequence /
+ * ModelAnim construct their Animation at its base offset), so this variant's
+ * enrolled home is this file and the C1 sibling it emits is stripped by
+ * objisolate -- section 1 of notes/ctor-migration.md.
+ */
 #include "Animation.h"
-extern "C" {
-extern int _ZTV9Animation[];   /* vtable for Animation */
-void _ZN9AnimationC2Ev(Animation *self) {
-  *(int*)((char*)self) = (int)_ZTV9Animation;
-  *(int*)((char*)&self->currFrame) = 0;
-  *(int*)((char*)&self->speed) = 0x1000;
-}
+
+Animation::Animation()
+{
+    currFrame = 0;
+    speed = 0x1000;
 }

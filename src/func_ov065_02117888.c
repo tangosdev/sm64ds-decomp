@@ -1,13 +1,13 @@
 typedef struct { int x, y, z; } Vector3;
 typedef int Fix12i;
-extern char* _ZN5Actor22ClosestNonVanishPlayerEv(void);
+extern char* _ZN8dActor_c22ClosestNonVanishPlayerEv(void);
 extern Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
 extern void func_ov065_02117944(void* c, void* p);
 extern void* data_ov065_0211d710;
 
 int func_ov065_02117888(char* c)
 {
-    char* p = _ZN5Actor22ClosestNonVanishPlayerEv();
+    char* p = _ZN8dActor_c22ClosestNonVanishPlayerEv();
     if (p) {
         Vector3 v;
         int* q = (int*)(((int)p + 0x5c));

@@ -2,6 +2,6 @@
 // base to materialize (add r2,self,#0xb0) instead of folding the offset.
 int func_ov002_020f7020(char *self)
 {
-    *(unsigned int *)(((long long)(int)(self + 0xb0))) &= ~0x2;
+    *(unsigned int *)(self + 0xb0) &= ~0x2;
     return 1;
 }

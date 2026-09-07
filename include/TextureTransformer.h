@@ -9,15 +9,16 @@
  * two slots, the destructor pair, nothing else. Update and Prepare are
  * plain methods.
  *
- * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- see
- * include/ModelBase.h. The structors stay self-contained C files.
+ * THE DESTRUCTOR IS DECLARED FIRST AND D1 IS A REAL METHOD -- see
+ * include/ModelBase.h for the key-function rule and the objisolate exemption
+ * to it. D0 stays a C file.
  *
  * Prepare's ROM body is a 0xc long-call veneer (ldr ip, [pc]; bx ip;
  * .word func_02046b64) -- no argument shuffling, so the real body's
  * signature IS the call surface. The matched func_02046b64.c takes TWO
  * arguments and no this: the BMD's texture-name table and the BTA
  * object whose name entries it resolves against it. Every matched
- * caller (Tornado, Submarine, the ov006 users, CastleWater) passes
+ * caller (Tornado, Whirlpool, the ov006 users, daObjMcWater_c) passes
  * exactly those two, and the sibling veneers at 0x0201577c
  * (MaterialChanger) and 0x0201597c (TextureSequence) are called the
  * same way. Declared static below: a static member mangles identically,
@@ -37,6 +38,10 @@ struct TextureTransformer : Animation {
 
     /* --- vtable: the destructor pair only. --- */
     virtual ~TextureTransformer();                       /* slots 0 (D1), 1 (D0) */
+
+    /* DECLARED, never defined as a method here -- src/_ZN18TextureTransformerC1Ev.cpp
+       owns C1 (notes/ctor-migration.md section 2). */
+    TextureTransformer();
 
     /* --- non-virtual --- */
     static void Prepare(BMD_File &model, BTA_File &animFile);

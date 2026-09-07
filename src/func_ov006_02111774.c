@@ -1,11 +1,11 @@
 extern void func_ov006_0211474c(void* a, int b, int c, void* s);
-extern int data_ov006_0213ed4c[];
+extern int _ZTV18cMgSmartball_ana_c[];
 int func_ov006_02111774(char* c, int b, int d, int* s){
   int tmp[2];
   tmp[0] = s[0];
   tmp[1] = s[1];
   func_ov006_0211474c(c, b, d, tmp);
-  *(int*)c = (int)data_ov006_0213ed4c;
+  *(int*)c = (int)_ZTV18cMgSmartball_ana_c;
   *(int*)(c+0x28) = 0x10000;
   return (int)c;
 }

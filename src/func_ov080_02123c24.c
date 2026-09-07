@@ -9,7 +9,7 @@ extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_
     unsigned int a, unsigned int b, int x, int y, int z, void *vel, void *cb);
 extern int RandomIntInternal(int *seed);
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *anim, void *file, int a, int b, unsigned int u);
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 
 
 
@@ -78,7 +78,7 @@ void func_ov080_02123c24(char *c)
     }
 
     {
-        char *player = (char *)_ZN5Actor13ClosestPlayerEv(c);
+        char *player = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
         if (player == 0) {
             *(int *)(c + 0x17c) = 3;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, (void *)data_ov080_021283e0.w[1], 0x40000000, 0x1000, 0);

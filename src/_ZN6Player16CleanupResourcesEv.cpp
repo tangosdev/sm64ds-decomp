@@ -14,13 +14,15 @@ struct VB { virtual void v0(); virtual void v1(); };
 #pragma opt_strength_reduction off
 
 extern "C" {
-void func_ov002_020bdd2c(char *c);
-void func_ov002_020bdef0(char *c);
-void func_ov002_020bdd9c(char *c);
-void func_ov002_020e032c(char *c);
+/* func_ov002_020bdd2c, _020bdef0, _020bdd9c, _020e032c and func_02073244 come from
+   decl_common.h above. Declaring them again here with `char *` where that header
+   says `void *` is not a redeclaration but an attempt to overload a C-linkage
+   name, which mwccarm rejects outright -- so this file has not compiled since it
+   gained that include. Nothing caught it: a file that will not compile is never
+   enrolled, so every byte gate skips it and the ROM keeps the original bytes for
+   this range. Declare only what decl_common.h does not. */
 void func_0203cbc0(int p);
-void func_020072c0(void);
-void func_02073244(int p, int a, int b, void (*f)(void));
+void _ZN7Vector3D1Ev(void *self);
 void func_ov002_020bebd4(char *c);
 void UnloadSilverStarAndNumber(void);
 void UnloadKeyModels(int n);
@@ -51,30 +53,30 @@ int Player::CleanupResources()
     func_ov002_020e032c(((char *)this));
     for (i = 0; i < 4; i++) {
         int j;
-        VB *p = *(VB **)(((char *)this) + i * 4 + 0xdc);
+        VB *p = (VB *)mBodyModels[i];
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
-        p = *(VB **)(((char *)this) + i * 4 + 0x154);
+        p = (VB *)unk_154[i];
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
         j = i + 4;
-        p = *(VB **)(((char *)this) + j * 4 + 0x154);
+        p = (VB *)unk_154[j];
         if (p != 0) {
             if (p != 0)
                 p->v1();
         }
         {
-            int q = *(int *)(((char *)this) + i * 4 + 0x27c);
+            int q = unk_27c[i];
             if (q != 0)
                 func_0203cbc0(q);
-            q = *(int *)(((char *)this) + i * 4 + 0x28c);
+            q = unk_28c[i];
             if (q != 0)
                 func_0203cbc0(q);
-            q = *(int *)(((char *)this) + j * 4 + 0x28c);
+            q = unk_28c[j];
             if (q != 0)
                 func_0203cbc0(q);
         }
@@ -94,7 +96,7 @@ int Player::CleanupResources()
     {
         int q = unk_578;
         if (q != 0)
-            func_02073244(q, 0xc, 8, func_020072c0);
+            func_02073244((void *)q, 0xc, 8, _ZN7Vector3D1Ev);
         q = unk_57c;
         if (q != 0)
             func_0203cbc0(q);
@@ -214,7 +216,7 @@ int Player::CleanupResources()
     if (mLoadedResourceFlags & 8)
         ((SharedFilePtr *)(data_ov002_0210d9c0))->Release();
     if (mLoadedResourceFlags & 0x10)
-        UnloadKeyModels(unk_719);
+        UnloadKeyModels(mKeyModelId);
     b = data_0209f2d8;
     b = b == 1;
     if (b == false_) {
@@ -229,7 +231,7 @@ int Player::CleanupResources()
     if (mLoadedResourceFlags & 0x40) {
         u32 idx = mHatCharacter;
         if (idx == (u32)param1)
-            idx = unk_6dc;
+            idx = mPrevCharacter;
         ((SharedFilePtr *)(data_ov002_020ff480[mCharFileBase + idx]))->Release();
     }
     return 1;

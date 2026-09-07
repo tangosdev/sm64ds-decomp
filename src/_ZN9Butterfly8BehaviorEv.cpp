@@ -1,37 +1,27 @@
 //cpp
-typedef int Fix12;
+#include "Butterfly.h"
 typedef short s16;
 struct Mtx { int w[12]; };
-struct PMF { int fn; int ptr; };
+typedef void (Butterfly::*ButterflyState)();
 
 extern "C" {
 void Vec3_Asr(void* d, void* s, int sh);
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void* m, s16 ang);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void* a, void* clsn);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* a, void* clsn);
 void _ZN9Animation7AdvanceEv(void* a);
-void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-    void* a, void* sm, void* m, Fix12 r, Fix12 h, unsigned int f);
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    void* a, void* sm, void* m, int r, int h, unsigned int f);
 }
 
 extern struct Mtx data_020a0e68;
 extern s16 data_02082214[];
-extern struct PMF data_ov100_02148628[];
+extern "C" ButterflyState data_ov100_02148628[];
 
-extern "C" int _ZN9Butterfly8BehaviorEv(char* c)
+int Butterfly::Behavior()
 {
-    {
-        int idx = *(int*)(c + 0x3e4);
-        struct PMF* m = &data_ov100_02148628[idx];
-        char* obj = c + (m->ptr >> 1);
-        int p = m->ptr;
-        void (*f)(void*);
-        if (p & 1)
-            f = *(void(**)(void*))(*(int*)obj + m->fn);
-        else
-            f = (void(*)(void*))m->fn;
-        f(obj);
-    }
+    char* c = (char*)this;
+    (this->*data_ov100_02148628[mState])();
 
     if (*(unsigned char*)(c + 0x3f0) != 0) {
         int spd = *(int*)(c + 0x3e0);
@@ -58,7 +48,7 @@ extern "C" int _ZN9Butterfly8BehaviorEv(char* c)
                 *(int*)(c + 0xac) = (int)((p + 0x800) >> 0xc);
             }
         }
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
+        _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, 0);
         (*(int*)(((int)c + 0x3e8)))++;
     }
 
@@ -70,12 +60,12 @@ extern "C" int _ZN9Butterfly8BehaviorEv(char* c)
         Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(s16*)(c + 0x8e));
         if (*(unsigned char*)(c + 0x3f1) != 0) {
             *(struct Mtx*)(c + 0xf0) = data_020a0e68;
-            _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
                 c, c + 0x188, c + 0xf0, 0x14000, 0x12c000, 0xf);
             _ZN9Animation7AdvanceEv(c + 0x124);
         } else {
             *(struct Mtx*)(c + 0x154) = data_020a0e68;
-            _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
                 c, c + 0x1b0, c + 0x154, 0x64000, 0x12c000, 0xf);
         }
     }
