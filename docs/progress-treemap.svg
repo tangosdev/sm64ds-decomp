@@ -41421,147 +41421,147 @@ matched: yes</title></rect><rect x="1212.34" y="774.02" width="4.84" height="7.6
 module: ov081
 addr: 0x021264b4
 size: 80 bytes
-matched: yes</title></rect><rect x="1212.34" y="781.69" width="4.84" height="7.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MoneybagD1Ev
+matched: yes</title></rect><rect x="1212.34" y="781.69" width="4.84" height="7.67" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_cD1Ev
 module: ov081
 addr: 0x02126504
 size: 80 bytes
-matched: yes</title></rect><rect x="1212.34" y="789.35" width="4.84" height="9.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8MoneybagD0Ev
+matched: yes</title></rect><rect x="1212.34" y="789.35" width="4.84" height="9.59" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_cD0Ev
 module: ov081
 addr: 0x02126554
 size: 100 bytes
-matched: yes</title></rect><rect x="1212.34" y="798.94" width="4.84" height="0.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Moneybag13OnYoshiTryEatEv
+matched: yes</title></rect><rect x="1212.34" y="798.94" width="4.84" height="0.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c13OnYoshiTryEatEv
 module: ov081
 addr: 0x021265b8
 size: 8 bytes
-matched: yes</title></rect><rect x="1212.34" y="799.71" width="4.84" height="0.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Moneybag16OnAimedAtWithEggEv
+matched: yes</title></rect><rect x="1212.34" y="799.71" width="4.84" height="0.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c16OnAimedAtWithEggEv
 module: ov081
 addr: 0x021265c0
 size: 8 bytes
-matched: yes</title></rect><rect x="1212.34" y="800.47" width="4.84" height="29.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_021265c8
+matched: yes</title></rect><rect x="1212.34" y="800.47" width="4.84" height="29.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c15ChooseNextStateEv
 module: ov081
 addr: 0x021265c8
 size: 312 bytes
-matched: yes</title></rect><rect x="1212.34" y="830.38" width="4.84" height="8.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126700
+matched: yes</title></rect><rect x="1212.34" y="830.38" width="4.84" height="8.43" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c16SpawnCoinsAndDieEv
 module: ov081
 addr: 0x02126700
 size: 88 bytes
-matched: yes</title></rect><rect x="1217.18" y="774.02" width="22.72" height="10.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126758
+matched: yes</title></rect><rect x="1217.18" y="774.02" width="22.72" height="10.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c18CheckPlayerContactEv
 module: ov081
 addr: 0x02126758
 size: 504 bytes
-matched: yes</title></rect><rect x="1239.91" y="774.02" width="9.38" height="10.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126950
+matched: yes</title></rect><rect x="1239.91" y="774.02" width="9.38" height="10.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c21ApplySlopeToVertSpeedEPv
 module: ov081
 addr: 0x02126950
 size: 208 bytes
-matched: yes</title></rect><rect x="1249.28" y="774.02" width="23.08" height="10.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126a20
+matched: yes</title></rect><rect x="1249.28" y="774.02" width="23.08" height="10.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c18UpdateDrawMatricesEv
 module: ov081
 addr: 0x02126a20
 size: 512 bytes
-matched: yes</title></rect><rect x="1272.37" y="774.02" width="4.87" height="10.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126c20
+matched: yes</title></rect><rect x="1272.37" y="774.02" width="4.87" height="10.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState8Ev
 module: ov081
 addr: 0x02126c20
 size: 108 bytes
-matched: yes</title></rect><rect x="1217.18" y="784.32" width="8.11" height="12.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126c8c
+matched: yes</title></rect><rect x="1217.18" y="784.32" width="8.11" height="12.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState8Ev
 module: ov081
 addr: 0x02126c8c
 size: 216 bytes
-matched: yes</title></rect><rect x="1217.18" y="796.68" width="8.11" height="11.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126d64
+matched: yes</title></rect><rect x="1217.18" y="796.68" width="8.11" height="11.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState7Ev
 module: ov081
 addr: 0x02126d64
 size: 196 bytes
-matched: yes</title></rect><rect x="1217.18" y="807.90" width="8.11" height="21.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126e28
+matched: yes</title></rect><rect x="1217.18" y="807.90" width="8.11" height="21.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState7Ev
 module: ov081
 addr: 0x02126e28
 size: 380 bytes
-matched: yes</title></rect><rect x="1217.18" y="829.65" width="8.11" height="9.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02126fa4
+matched: yes</title></rect><rect x="1217.18" y="829.65" width="8.11" height="9.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState6Ev
 module: ov081
 addr: 0x02126fa4
 size: 160 bytes
-matched: yes</title></rect><rect x="1225.30" y="784.32" width="3.17" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127044
+matched: yes</title></rect><rect x="1225.30" y="784.32" width="3.17" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState6Ev
 module: ov081
 addr: 0x02127044
 size: 44 bytes
-matched: yes</title></rect><rect x="1228.47" y="784.32" width="14.14" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127070
+matched: yes</title></rect><rect x="1228.47" y="784.32" width="14.14" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState5Ev
 module: ov081
 addr: 0x02127070
 size: 196 bytes
-matched: yes</title></rect><rect x="1242.61" y="784.32" width="6.06" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127134
+matched: yes</title></rect><rect x="1242.61" y="784.32" width="6.06" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState5Ev
 module: ov081
 addr: 0x02127134
 size: 84 bytes
-matched: yes</title></rect><rect x="1248.67" y="784.32" width="6.93" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127188
+matched: yes</title></rect><rect x="1248.67" y="784.32" width="6.93" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState4Ev
 module: ov081
 addr: 0x02127188
 size: 96 bytes
-matched: yes</title></rect><rect x="1255.60" y="784.32" width="6.35" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_021271e8
+matched: yes</title></rect><rect x="1255.60" y="784.32" width="6.35" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState4Ev
 module: ov081
 addr: 0x021271e8
 size: 88 bytes
-matched: yes</title></rect><rect x="1261.94" y="784.32" width="15.29" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127240
+matched: yes</title></rect><rect x="1261.94" y="784.32" width="15.29" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState3Ev
 module: ov081
 addr: 0x02127240
 size: 212 bytes
-matched: yes</title></rect><rect x="1225.30" y="790.75" width="5.60" height="10.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127314
+matched: yes</title></rect><rect x="1225.30" y="790.75" width="5.60" height="10.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState3Ev
 module: ov081
 addr: 0x02127314
 size: 132 bytes
-matched: yes</title></rect><rect x="1225.30" y="801.69" width="5.60" height="6.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127398
+matched: yes</title></rect><rect x="1225.30" y="801.69" width="5.60" height="6.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState2Ev
 module: ov081
 addr: 0x02127398
 size: 80 bytes
-matched: yes</title></rect><rect x="1225.30" y="808.32" width="5.60" height="7.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_021273e8
+matched: yes</title></rect><rect x="1225.30" y="808.32" width="5.60" height="7.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState2Ev
 module: ov081
 addr: 0x021273e8
 size: 88 bytes
-matched: yes</title></rect><rect x="1225.30" y="815.61" width="5.60" height="11.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127440
+matched: yes</title></rect><rect x="1225.30" y="815.61" width="5.60" height="11.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState1Ev
 module: ov081
 addr: 0x02127440
 size: 136 bytes
-matched: yes</title></rect><rect x="1225.30" y="826.88" width="5.60" height="11.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_021274c8
+matched: yes</title></rect><rect x="1225.30" y="826.88" width="5.60" height="11.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState1Ev
 module: ov081
 addr: 0x021274c8
 size: 144 bytes
-matched: yes</title></rect><rect x="1230.90" y="790.75" width="24.75" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127558
+matched: yes</title></rect><rect x="1230.90" y="790.75" width="24.75" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c12UpdateState0Ev
 module: ov081
 addr: 0x02127558
 size: 344 bytes
-matched: yes</title></rect><rect x="1255.65" y="790.75" width="6.33" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_021276b0
+matched: yes</title></rect><rect x="1255.65" y="790.75" width="6.33" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c11EnterState0Ev
 module: ov081
 addr: 0x021276b0
 size: 88 bytes
-matched: yes</title></rect><rect x="1261.98" y="790.75" width="4.32" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127708
+matched: yes</title></rect><rect x="1261.98" y="790.75" width="4.32" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c15CallStateUpdateEv
 module: ov081
 addr: 0x02127708
 size: 60 bytes
-matched: yes</title></rect><rect x="1266.30" y="790.75" width="4.03" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127744
+matched: yes</title></rect><rect x="1266.30" y="790.75" width="4.03" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c14CallStateEnterEv
 module: ov081
 addr: 0x02127744
 size: 56 bytes
-matched: yes</title></rect><rect x="1270.33" y="790.75" width="2.01" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_0212777c
+matched: yes</title></rect><rect x="1270.33" y="790.75" width="2.01" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c8SetStateEi
 module: ov081
 addr: 0x0212777c
 size: 28 bytes
-matched: yes</title></rect><rect x="1272.34" y="790.75" width="4.89" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Moneybag16CleanupResourcesEv
+matched: yes</title></rect><rect x="1272.34" y="790.75" width="4.89" height="6.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c16CleanupResourcesEv
 module: ov081
 addr: 0x02127798
 size: 68 bytes
-matched: yes</title></rect><rect x="1230.90" y="797.21" width="2.28" height="0.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Moneybag16OnPendingDestroyEv
+matched: yes</title></rect><rect x="1230.90" y="797.21" width="2.28" height="0.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c16OnPendingDestroyEv
 module: ov081
 addr: 0x021277dc
 size: 4 bytes
-matched: yes</title></rect><rect x="1230.90" y="798.02" width="2.28" height="23.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Moneybag6RenderEv
+matched: yes</title></rect><rect x="1230.90" y="798.02" width="2.28" height="23.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c6RenderEv
 module: ov081
 addr: 0x021277e0
 size: 116 bytes
-matched: yes</title></rect><rect x="1230.90" y="821.68" width="2.28" height="17.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Moneybag8BehaviorEv
+matched: yes</title></rect><rect x="1230.90" y="821.68" width="2.28" height="17.13" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c8BehaviorEv
 module: ov081
 addr: 0x02127854
 size: 84 bytes
-matched: yes</title></rect><rect x="1233.18" y="797.21" width="9.20" height="23.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Moneybag13InitResourcesEv
+matched: yes</title></rect><rect x="1233.18" y="797.21" width="9.20" height="23.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c13InitResourcesEv
 module: ov081
 addr: 0x021278a8
 size: 468 bytes
-matched: yes</title></rect><rect x="1233.18" y="820.84" width="9.20" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8Moneybag13OnTurnIntoEggER6Player
+matched: yes</title></rect><rect x="1233.18" y="820.84" width="9.20" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8daGmch_c13OnTurnIntoEggER6Player
 module: ov081
 addr: 0x02127a7c
 size: 96 bytes
