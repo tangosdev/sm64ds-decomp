@@ -168,14 +168,27 @@ This document describes this commit. The queue records its immutable output SHA.
     `Mtx43`, and `Vector3` defined four times over (three named plus the
     anonymous typedef), so folding them is a real consolidation, not cosmetic.
 
-    *Correction, recorded rather than quietly replaced:* an earlier draft of
-    this section said 15 definitions across 10 names, counting only the named
-    form and only two of the three named `Vector3` definitions. A second
-    reviewer put the total at 17, finding one of the two anonymous typedefs;
-    `Vec3Scratch` is the one that reading missed, because `volatile` sits
-    between `typedef` and `struct`. The reproducible figure is 18 — match
-    `struct` optionally followed by a name and then `{`, over the
-    comment-stripped file.
+    *Counting rule, stated so the next census does not miss the same two
+    things:* strip `/* */` and `//` comments first, then match the keyword
+    `struct`, **an optional name**, and then `{`. Both halves of that matter.
+    Making the name optional is what catches `typedef struct { ... } NAME;`,
+    and allowing anything between `typedef` and `struct` is what catches
+    `typedef volatile struct { ... } NAME;` — a pattern anchored on the literal
+    text `typedef struct` silently drops it. Count *definitions*, not distinct
+    names: the same geometry redeclared per member is exactly the debt this
+    figure is meant to size, so collapsing repeats understates it. Report the
+    distinct-name count beside the definition count rather than instead of it.
+
+    *Correction, recorded rather than quietly replaced:* this section has now
+    been miscounted twice, in the same direction, which is why the rule above is
+    written out. An earlier draft said 15 definitions across 10 names, counting
+    only the named form and only two of the three named `Vector3` definitions.
+    An independent review then put the total at 17, finding the anonymous
+    `Vector3` typedef but not `Vec3Scratch`, because `volatile` sits between
+    `typedef` and `struct`. Applying the rule above gives 18 definitions naming
+    11 distinct types, and every earlier figure was an undercount — the error
+    has always understated the debt and strengthened the document's own
+    consolidation argument, so treat a low number here with suspicion.
   - **63 block-scope `extern` declarations naming 26 distinct objects.** Nine
     are arm9 `data_0209xxxx`/`data_020a0e68` objects and seventeen are ov085
     `data_ov085_0213xxxx` objects. The most-repeated single object is declared
