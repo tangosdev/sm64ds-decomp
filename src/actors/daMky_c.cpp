@@ -1547,7 +1547,7 @@ int func_ov030_021136b0(char *c)
 
 
     extern void _ZN8SaveData13PlayerLoseCapEv(void);
-    /* ROM symbol is Vector3_16 (not Vector3s) â€” wrong mangling left this BLIND and broke mwldarm. */
+    /* ROM symbol is Vector3_16 (not Vector3s) — wrong mangling left this BLIND and broke mwldarm. */
     extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         u32 actorID, u32 param1, const Vector3 *pos,
         const void *rot, int areaID, int deathTableID);
