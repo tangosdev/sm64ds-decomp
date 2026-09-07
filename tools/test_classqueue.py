@@ -7,8 +7,12 @@ name that does not exist.
 """
 import unittest
 import pathlib
+import sys
 import tempfile
+import types
 import unittest.mock
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import classqueue
 
@@ -45,6 +49,17 @@ class CommentRowsTest(unittest.TestCase):
             _path, rows = classqueue.rows()
         workable = [r["class_name"] for r in rows if classqueue.workable(r)]
         self.assertEqual(workable, ["dBgActor_c"])
+
+    def test_updated_legacy_acquisition_refuses_active_v2(self):
+        result = types.SimpleNamespace(stdout="123\trefs/heads/agents/coordination\n")
+        with unittest.mock.patch.object(classqueue, "git", return_value=result):
+            with self.assertRaisesRegex(SystemExit, "v2 coordination is active"):
+                classqueue.require_legacy_queue()
+
+    def test_legacy_transport_failure_does_not_mean_queue_is_empty(self):
+        with unittest.mock.patch.object(classqueue, "git", side_effect=SystemExit("transport failed")):
+            with self.assertRaisesRegex(SystemExit, "transport failed"):
+                classqueue.require_legacy_queue()
 
 
 if __name__ == "__main__":

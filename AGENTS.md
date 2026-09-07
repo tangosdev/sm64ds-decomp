@@ -15,6 +15,13 @@ automates batch coordination, ROM verification, `src/` conventions, and PR
 formatting, and connects you to the repo's toolchain over MCP. Hand-driving
 the tools below works fine too.
 
+## Coordinated agent work
+
+For multi-agent class/TU work, start at [notes/agents/README.md](notes/agents/README.md).
+The GitHub-backed v2 protocol defines ownership, independent verification, and
+handoffs across harnesses. Complete its cutover checklist before restarting old
+workers; installing the files alone does not switch the live fleet.
+
 ## The one rule that matters
 
 **Every file you add to `src/` must byte-reproduce the ROM.**
