@@ -7,9 +7,9 @@
  * config/arm9/overlays/ov015/relocs.txt has
  * `from:0x021146cc kind:load to:0x0211233c` -- while _ZTV10dBgActor_c's word at the
  * same slot (from:0x0210aeb4) relocates to 0x020ee55c, _ZN10dBgActor_c4KillEv. The
- * file used to say `recovered name: MovingBarSmall_Kill`; MovingBar is a
+ * file used to say `recovered name: MovingBarSmall_Kill`; daObjBk_Dossunbar_c is a
  * different class, with its own slot-31 override at 0x02111c3c reached through
- * _ZTV9MovingBar+0x7c. That comment is deleted rather than carried forward.
+ * _ZTV19daObjBk_Dossunbar_c+0x7c. That comment is deleted rather than carried forward.
  *
  * The plainest member of the family: particle 0x48 at the step's own position,
  * no vertical offset, then the poof at that same position built from the fields

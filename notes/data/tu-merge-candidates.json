@@ -725,15 +725,15 @@
    "start": "0x2111ba0",
    "end": "0x2112230",
    "classes": [
-    "MovingBar"
+    "daObjBk_Dossunbar_c"
    ],
    "n_functions_map": 23,
    "n_files": 23,
    "files": [
-    "src/_ZN9MovingBarD1Ev.cpp",
-    "src/_ZN9MovingBarD0Ev.cpp",
-    "src/_ZN9MovingBar4KillEv.cpp",
-    "src/_ZN9MovingBar15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN19daObjBk_Dossunbar_cD1Ev.cpp",
+    "src/_ZN19daObjBk_Dossunbar_cD0Ev.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c4KillEv.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player.cpp",
     "src/func_ov015_02111ce0.cpp",
     "src/func_ov015_02111d28.c",
     "src/func_ov015_02111d4c.c",
@@ -749,10 +749,10 @@
     "src/func_ov015_02111f6c.c",
     "src/func_ov015_02111fac.c",
     "src/func_ov015_02111fb8.c",
-    "src/_ZN9MovingBar16CleanupResourcesEv.cpp",
-    "src/_ZN9MovingBar6RenderEv.cpp",
-    "src/_ZN9MovingBar8BehaviorEv.cpp",
-    "src/_ZN9MovingBar13InitResourcesEv.cpp"
+    "src/_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c6RenderEv.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c8BehaviorEv.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 10,
@@ -37561,13 +37561,13 @@
    "start": "0x2111ba0",
    "end": "0x2112230",
    "classes": [
-    "MovingBar"
+    "daObjBk_Dossunbar_c"
    ],
    "files": [
-    "src/_ZN9MovingBarD1Ev.cpp",
-    "src/_ZN9MovingBarD0Ev.cpp",
-    "src/_ZN9MovingBar4KillEv.cpp",
-    "src/_ZN9MovingBar15OnHitByMegaCharER6Player.cpp",
+    "src/_ZN19daObjBk_Dossunbar_cD1Ev.cpp",
+    "src/_ZN19daObjBk_Dossunbar_cD0Ev.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c4KillEv.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player.cpp",
     "src/func_ov015_02111ce0.cpp",
     "src/func_ov015_02111d28.c",
     "src/func_ov015_02111d4c.c",
@@ -37583,10 +37583,10 @@
     "src/func_ov015_02111f6c.c",
     "src/func_ov015_02111fac.c",
     "src/func_ov015_02111fb8.c",
-    "src/_ZN9MovingBar16CleanupResourcesEv.cpp",
-    "src/_ZN9MovingBar6RenderEv.cpp",
-    "src/_ZN9MovingBar8BehaviorEv.cpp",
-    "src/_ZN9MovingBar13InitResourcesEv.cpp"
+    "src/_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c6RenderEv.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c8BehaviorEv.cpp",
+    "src/_ZN19daObjBk_Dossunbar_c13InitResourcesEv.cpp"
    ],
    "ext_mix": {
     ".cpp": 10,
