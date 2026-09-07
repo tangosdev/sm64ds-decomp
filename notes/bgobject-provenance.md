@@ -351,7 +351,7 @@ same nine functions are now compiled and linked into the ROM from one file.
 
 ---
 
-## MovingBar (`include/MovingBar.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x338)
+## daObjBk_Dossunbar_c (`include/daObjBk_Dossunbar_c.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x338)
 
 | Offset | Name | Evidence |
 | --- | --- | --- |

@@ -749,12 +749,12 @@ ov015	0x02111720	func_ov015_02111720	_ZN14KnockDownPlank8BehaviorEv	vtable slot 
 ov015	0x02111960	func_ov015_02111960	_ZN14KnockDownPlank13InitResourcesEv	vtable slot 0 (was _ZN18daObjBkBillboard_c13InitResourcesEv)
 ov015	0x02111b68	func_ov015_02111b68	KnockDownPlank_Spawn	spawnfunc
 ov015	0x02111b68	KnockDownPlank_Spawn	daObjBk_Botaosi_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov015	0x02111ba0	func_ov015_02111ba0	_ZN9MovingBarD1Ev	vtable slot 16 (was _ZN14KnockDownPlankD1Ev)
-ov015	0x02111be4	func_ov015_02111be4	_ZN9MovingBarD0Ev	vtable slot 17 (was _ZN14KnockDownPlankD0Ev)
-ov015	0x02112004	func_ov015_02112004	_ZN9MovingBar16CleanupResourcesEv	vtable slot 3 (was _ZN14KnockDownPlank16CleanupResourcesEv)
-ov015	0x02112068	func_ov015_02112068	_ZN9MovingBar6RenderEv	vtable slot 9 (was _ZN14KnockDownPlank6RenderEv)
-ov015	0x02112090	func_ov015_02112090	_ZN9MovingBar8BehaviorEv	vtable slot 6 (was _ZN14KnockDownPlank8BehaviorEv)
-ov015	0x021120fc	func_ov015_021120fc	_ZN9MovingBar13InitResourcesEv	vtable slot 0 (was _ZN14KnockDownPlank13InitResourcesEv)
+ov015	0x02111ba0	func_ov015_02111ba0	_ZN19daObjBk_Dossunbar_cD1Ev	vtable slot 16 (was _ZN14KnockDownPlankD1Ev)
+ov015	0x02111be4	func_ov015_02111be4	_ZN19daObjBk_Dossunbar_cD0Ev	vtable slot 17 (was _ZN14KnockDownPlankD0Ev)
+ov015	0x02112004	func_ov015_02112004	_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv	vtable slot 3 (was _ZN14KnockDownPlank16CleanupResourcesEv)
+ov015	0x02112068	func_ov015_02112068	_ZN19daObjBk_Dossunbar_c6RenderEv	vtable slot 9 (was _ZN14KnockDownPlank6RenderEv)
+ov015	0x02112090	func_ov015_02112090	_ZN19daObjBk_Dossunbar_c8BehaviorEv	vtable slot 6 (was _ZN14KnockDownPlank8BehaviorEv)
+ov015	0x021120fc	func_ov015_021120fc	_ZN19daObjBk_Dossunbar_c13InitResourcesEv	vtable slot 0 (was _ZN14KnockDownPlank13InitResourcesEv)
 ov015	0x02112230	func_ov015_02112230	MovingBarBig_Spawn	spawnfunc
 ov015	0x02112230	MovingBarBig_Spawn	daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov015	0x02112260	func_ov015_02112260	MovingBarSmall_Spawn	spawnfunc
@@ -792,7 +792,7 @@ ov015	0x0211454c	data_ov015_0211454c	MovingBarSmall_SpawnInfo	spawninfo
 ov015	0x0211454c	MovingBarSmall_SpawnInfo	g_profile_BK_DOSSUNBAR_S	reconstructed profile global; literal ROM ID BK_DOSSUNBAR_S+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov015	0x02114568	data_ov015_02114568	MovingBarBig_SpawnInfo	spawninfo
 ov015	0x02114568	MovingBarBig_SpawnInfo	g_profile_BK_DOSSUNBAR_L	reconstructed profile global; literal ROM ID BK_DOSSUNBAR_L+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov015	0x0211458c	data_ov015_0211458c	_ZTV9MovingBar	vtable alloc=? (was _ZTV14KnockDownPlank)
+ov015	0x0211458c	data_ov015_0211458c	_ZTV19daObjBk_Dossunbar_c	vtable alloc=? (was _ZTV14KnockDownPlank)
 ov015	0x0211462c	data_ov015_0211462c	TowerStep_SpawnInfo	spawninfo
 ov015	0x0211462c	TowerStep_SpawnInfo	g_profile_BK_LIFT01	reconstructed profile global; literal ROM ID BK_LIFT01+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov015	0x02114650	data_ov015_02114650	_ZTV9TowerStep	vtable alloc=? (was _ZTV14MovingBarSmall)
