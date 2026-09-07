@@ -148,7 +148,7 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 
 Left `unk_`:
 
-- **0x470** — `mParticleHandle`. [func_ov084_0212f460](../src/func_ov084_0212f460.cpp) stores `Particle::System::New`'s
+- **0x470** — `mParticleHandle`. [func_ov084_0212f460](../src/actors/daPkn_c.cpp) stores `Particle::System::New`'s
   return in it and reads it straight back as the `slot` argument of the next call.
 - **0x45d** (set to 1), **0x460** (0), **0x464** (`0x7fffffff`), **0x46c** (0),
   **0x474** (0) — written in `InitResources`, never read in a matched body, including

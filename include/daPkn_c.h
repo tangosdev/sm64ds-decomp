@@ -22,18 +22,19 @@
  *   - 0x160 mAnimation   = the Animation base of mModelAnim
  *   - 0x170 unk_170      = mModelAnim.file (+0x60)
  *
- * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
- * is not independent evidence about the ROM.
+ * SIZE IS THE ROM'S OWN, and the observed field span agrees with it:
+ * daPkn_c_classInit loads the literal 0x47c from ov084 0x0213016c and hands it
+ * to fBase_c::operator new, and the last touched word (0x478) closes on 0x47c.
  *
- * SM64DS proves this class as daPkn_c through RTTI, allocation size and
- * vtable identity. The factory and profile spellings below are reconstructed
- * source-style names -- evidence-bounded proposals, not recovered SM64DS
- * symbols.
- *
- * daPkn_c_classInit at 0x02130110 (historical alias PiranhaPlant_Spawn)
- * allocates 0x47c and installs this class's cartridge vtable. It backs the
- * PAKUN registry profile, whose descriptor at 0x02130c04 is reconstructed as
- * g_profile_PAKUN.
+ * THE NAME IS THE CARTRIDGE'S OWN. ov084 0x02130bec holds the bytes
+ * "7daPkn_c\0" -- the length-prefixed mangled type name -- _ZTI7daPkn_c at
+ * 0x02130bf8 points its +4 word back at that string, and the vtable's -4 header
+ * word at 0x02130c24 points back at the _ZTI. The class was carried here under
+ * the coined name PiranhaPlant, which occurs in none of the 106 extracted
+ * images; that spelling is gone and every member now mangles as _ZN7daPkn_c*.
+ * The reconstructed factory daPkn_c_classInit (historical alias
+ * PiranhaPlant_Spawn) constructs it for the PAKUN registry profile at
+ * 0x02130c04, whose id is 0xfa.
  */
 
 #include "dEnemyBase_c.h"
@@ -68,9 +69,23 @@ struct daPkn_c : dEnemyBase_c {
     s32                          unk_478;               /* 0x478 */
 
     /* --- vtable --- */
-    virtual ~daPkn_c();
 
-    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+    /* INLINE, AND DECLARED FIRST. The cartridge puts D1 at 0x0212eaf0 below D0
+       at 0x0212eb48 and carries no D2 anywhere, which is what mwccarm 2004/b56
+       emits for an inline in-class destructor; the out-of-line form emits
+       D2/D0/D1 in the wrong order plus a homeless D2. The typed member list
+       above makes the empty body own the dCcAcPos_c, the two dCcAc_c, the
+       dBgCh_Actr, the Model and the ModelAnim teardowns in that
+       reverse-declaration order, and the chain into _ZN12dEnemyBase_cD2Ev --
+       which is exactly what both ROM bodies do.
+
+       With the destructor inline, OnAimedAtWithEgg becomes the first
+       out-of-line virtual this class declares -- the key function -- so the
+       vtable and the RTTI group land in the translation unit that defines it,
+       src/actors/daPkn_c.cpp. */
+    virtual ~daPkn_c() {}
+
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 -- key function */
 
     int Behavior();
     int CleanupResources();
@@ -80,5 +95,15 @@ struct daPkn_c : dEnemyBase_c {
 };
 
 typedef char daPkn_c_size_must_be_0x47c[sizeof(daPkn_c) == 0x47c ? 1 : -1];
+
+/* The class's own vtable, declared next to the class rather than restated in
+   the one translation unit that stores it. config/arm9/overlays/ov084/symbols.txt
+   binds _ZTV7daPkn_c to the public ADDRESS POINT at 0x02130c28; mwcc's own
+   emitted symbol addresses the vtable OBJECT two words lower, so the factory in
+   src/actors/daPkn_c.cpp addresses it as `_ZTV7daPkn_c + 2` (int-indexed, eight
+   bytes) to agree with the addend-8 vptr stores the compiler emits in the
+   destructor. include/decl_common.h already carries the same declaration for
+   the C shards that read it. */
+extern int _ZTV7daPkn_c[];
 
 #endif /* DAPKN_C_H */
