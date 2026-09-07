@@ -99,6 +99,10 @@ struct daBgSnmBdy_c : dActor_c {
     void UpdateRollAngle();
     int AdvancePath();
     int HurtPlayer();
+    /* The mangled spelling P10dBgCh_Actr asserts a POINTER parameter. The bytes
+       cannot distinguish a pointer from a reference here -- R10dBgCh_Actr would
+       have matched equally well -- so the parameter type is a disclosed guess,
+       not a recovered fact. */
     void UpdateGroundCollision(dBgCh_Actr *collision);
     void UpdateModel();
     void CallStateBehavior();
