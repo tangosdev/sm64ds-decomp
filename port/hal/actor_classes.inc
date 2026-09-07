@@ -301,13 +301,21 @@ void hal_fill_door_vtable(void);
 extern unsigned char StarDoor_SpawnInfo[];              /* ov100 0x021483a8 */
 void *StarDoor_Spawn(void);                             /* ov100 0x021461d4 */
 void hal_fill_star_door_vtable(void);
-/* ---- gate 41: ov010's TRAP (36) and LIGHT_BEAM (37) ----
-   Level 2's own overlay, mounted per symbol (ov010_syms.txt). LIGHT_BEAM has
-   no fill of its own: its factory installs _ZTV4Trap, which the TRAP row
-   fills. Both records' +4 halfwords read 36 / 37. */
+/* ---- gate 41: ov010's TRAP (36) and LIGHT_BEAM (37), CORRECTED by link100
+   SPAWN2 gate 232. Level 2's own overlay, mounted per symbol
+   (ov010_syms.txt). These are TWO classes with TWO tables, not one table
+   under three names: the RTTI name string at each table's vtable-4 record
+   says 0x02112ae4 is "14daObjC1_Trap_c" and 0x02112ba8 is
+   "15daObjC1Hikari_c", and each factory's own literal pool loads its own
+   one (Trap_Spawn at 0x021119cc -> 0x02112ae4, LightBeam_Spawn at
+   0x02111e0c -> 0x02112ba8). So the fill that used to sit on the 36 row has
+   moved to the 37 row, which is the one that really installs _ZTV4Trap, and
+   36 gets its own table and its own six bodies from
+   hal/actor_classes_ov010.cpp. Both records' +4 halfwords read 36 / 37. */
 extern unsigned char Trap_SpawnInfo[];                  /* ov010 0x02112ac0 */
 void *Trap_Spawn(void);                                 /* ov010 0x02111998 */
 void hal_fill_trap_vtable(void);
+void hal_fill_ov010_trap36_vtable(void);                /* data_ov010_02112ae4, 32 */
 extern unsigned char LightBeam_SpawnInfo[];             /* ov010 0x02112b84 */
 void *LightBeam_Spawn(void);                            /* ov010 0x02111dd0 */
 /* ---- gate 42: ov010's PEACH_PAINTING (38) ----
@@ -2173,10 +2181,15 @@ void hal_fill_cloud_vtable(void);               /* _ZTV5Cloud 0x02111858, 31 */
     /* ---- gates 40-44: levels 1 and 2 (append-only block) ---- */            \
     {354, "STAR_DOOR", StarDoor_SpawnInfo, StarDoor_Spawn,                     \
      hal_fill_star_door_vtable},                                              \
-    {36, "TRAP", Trap_SpawnInfo, Trap_Spawn, hal_fill_trap_vtable},            \
-    /* LIGHT_BEAM has no fill of its own: its factory installs _ZTV4Trap,     \
-       which the TRAP row above already fills. */                            \
-    {37, "LIGHT_BEAM", LightBeam_SpawnInfo, LightBeam_Spawn, 0},               \
+    {36, "TRAP", Trap_SpawnInfo, Trap_Spawn,                                \
+     hal_fill_ov010_trap36_vtable},                                         \
+    /* GATE 232 (link100 SPAWN2) MOVED THE FILL HERE. _ZTV4Trap 0x02112ba8 \
+       is LIGHT_BEAM's own table -- its RTTI string reads                   \
+       "15daObjC1Hikari_c" and LightBeam_Spawn's pool word 0x02111e0c loads \
+       it -- so the row that installs it is this one, not TRAP's. TRAP has  \
+       its own table 0x02112ae4 and its own fill now. */                    \
+    {37, "LIGHT_BEAM", LightBeam_SpawnInfo, LightBeam_Spawn,                \
+     hal_fill_trap_vtable},                                                 \
     /* ---- gate 50: ov080's PAINTING (append-only block) ---- */              \
     {307, "PAINTING", Painting_SpawnInfo, Painting_Spawn,                      \
      hal_fill_painting_vtable},                                               \

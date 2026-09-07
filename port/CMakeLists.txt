@@ -14844,6 +14844,92 @@ set_source_files_properties(
 # corrected in place for the missing G0).
 
 # ===========================================================================
+# GATE 232 (run link100, lane SPAWN2) -- ov010's TRAP (actor 36) is bound to
+# the WRONG vtable, and this is the correction
+# ===========================================================================
+#
+# hal/actor_classes.cpp binds /alternatename:__ZTV14daObjC1_Trap_c=__ZTV4Trap on
+# the reading that one ov010 table wears three names. The ROM says two tables of
+# two classes: the RTTI name string at each table's vtable-4 record reads
+# "14daObjC1_Trap_c" (0x02112ae4, via 0x02112aa0 -> 0x02112aac) and
+# "15daObjC1Hikari_c" (0x02112ba8, via 0x02112b64 -> 0x02112b70), and each
+# factory's own literal pool loads its own one -- Trap_Spawn's word at 0x021119cc
+# is 0x02112ae4, LightBeam_Spawn's at 0x02111e0c is 0x02112ba8. The full
+# derivation, and the four independent reads it rests on, is the header of
+# hal/actor_classes_ov010.cpp. The alias itself is NOT removed: once the two
+# per-source rows below rename the only two spellings of it, no TU asks for the
+# bare name and the directive simply stops firing, which keeps this gate out of
+# a file it does not own.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_trap36.txt" SLICE232_LINES)
+set(SLICE232_SOURCES "")
+foreach(line IN LISTS SLICE232_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE232_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# The fill itself rides the same list rather than being threaded into the three
+# long per-target source blocks above; target_sources appends either way.
+list(APPEND SLICE232_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/hal/actor_classes_ov010.cpp")
+foreach(_t232 walk_window walk_window_hires smoke_player)
+    target_sources(${_t232} PRIVATE ${SLICE232_SOURCES})
+endforeach()
+#
+# THE TWO SPELLINGS OF THE TABLE. src/Trap_Spawn.c makes ONE vptr store and its
+# pool holds one word (0x021119cc -> 0x02112ae4), so there is no dead first store
+# to disentangle here. src/func_ov010_021111a0.c (the D1) makes two, and the pool
+# order matches the source order: 0x021111e4 -> 0x02112ae4 for the class's own
+# table, 0x021111e8 -> 0x0210ae38 which is _ZTV8Platform.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/Trap_Spawn.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjC1_Trap_c=data_ov010_02112ae4")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov010_021111a0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV14daObjC1_Trap_c=data_ov010_02112ae4;_ZTV10dBgActor_c=_ZTV8Platform")
+# The D0 (0x021111ec) spells all three of its words as placeholders. Its pool, in
+# store order: 0x02111240 -> 0x02112ae4 (VT0), 0x02111244 -> 0x0210ae38 (VT1,
+# _ZTV8Platform), 0x02111248 -> 0x020a0eac (G0, the game heap pointer it hands to
+# Memory::Deallocate). G0 is written out rather than left to the global
+# cxx_aliases binding, the gate-229 lesson: a -D row that has never been compiled
+# is a row nothing has ever checked.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov010_021111ec.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov010_02112ae4;VT1=_ZTV8Platform;G0=data_020a0eac")
+#
+# SLOT 3'S TWO CROSS-OVERLAY MISNAMES. src/func_ov010_02111554.cpp spells
+# data_ov025_02112d08 and data_ov024_02112d00; the ROM's loads inside that body,
+# at 0x021115a0 and 0x021115a4, are data_ov010_02112d08 and data_ov010_02112d00,
+# both mounted. An /alternatename onto the dsd spellings would be DEFEATED AND
+# SILENT -- data_ov025_02112d08 is really defined by ov025's own mount and is in
+# walk_window.map today -- and a -D straight onto the mount names is a C2040,
+# because decl_common.h declares data_ov024_02112d00 as `char[]` while declaring
+# data_ov010_02112d00 as a scalar `void *`. So both take the PATH_LIFT remedy: a
+# -D to two private names this seat owns, bound onto the mounted objects by
+# /alternatename in hal/actor_classes_ov010.cpp.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov010_02111554.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov025_02112d08=port_ov010_trap_modelfile;data_ov024_02112d00=port_ov010_trap_clsnfile")
+#
+# SLOT 6'S DISPATCH CELLS. src/func_ov010_021115e0.cpp declares
+# `extern PMF data_ov010_02112d28[];` OUTSIDE extern "C" over a forward-declared
+# class, so MSVC decorates it with the pointer-to-member type and no C-named
+# mount object can satisfy the reference. Renaming it here to a symbol
+# hal/actor_classes_ov010.cpp DEFINES with the identical two declarations makes
+# both TUs mangle to the same name, so it resolves with no alias and no
+# decoration guessed off a link error. The cells are filled by
+# port_trap36_states_seat() from the five mounted ROM records, each verified
+# against the address its own relocation names before it is used.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov010_021115e0.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov010_02112d28=port_trap36_states")
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

@@ -1,0 +1,64 @@
+# link100 lane SPAWN2, gate 232: actor id 36, TRAP / daObjC1_Trap_c, ov010
+# (the castle interior's traps, level 2 x1).
+#
+# THIS IS A CORRECTION, NOT A NEW SEAT. The class has been registered since gate
+# 41 and its factory src/Trap_Spawn.c has been linked since then (it is on
+# slice_gate41.txt and is NOT repeated here). What was wrong is which table the
+# factory installs. hal/actor_classes.cpp binds
+# /alternatename:__ZTV14daObjC1_Trap_c=__ZTV4Trap on the reading that one table
+# wears three names; the ROM says two tables of two classes, and it says so four
+# ways -- the RTTI name string at each vtable-4 record ("14daObjC1_Trap_c" at
+# 0x02112aac for 0x02112ae4, "15daObjC1Hikari_c" at 0x02112b70 for 0x02112ba8),
+# each factory's own literal pool (Trap_Spawn 0x021119cc -> 0x02112ae4,
+# LightBeam_Spawn 0x02111e0c -> 0x02112ba8), the two disjoint sets of loads over
+# the whole overlay, and the slot bodies themselves. The full derivation is the
+# header of hal/actor_classes_ov010.cpp.
+#
+# THE SIX OWN SLOTS of data_ov010_02112ae4, each the destination of the reloc at
+# vtable + 4*N with a kind:function(arm,size=..) record at exactly that address:
+#
+#   slot 0   0x02112ae4 -> 0x02111654  func_ov010_02111654  0x1f8  RULED
+#   slot 3   0x02112af0 -> 0x02111554  func_ov010_02111554  0x54   RULED
+#   slot 6   0x02112afc -> 0x021115e0  func_ov010_021115e0  0x74   RULED
+#   slot 9   0x02112b08 -> 0x021115a8  func_ov010_021115a8  0x38   RULED
+#   slot 16  0x02112b24 -> 0x021111a0  func_ov010_021111a0  0x4c
+#   slot 17  0x02112b28 -> 0x021111ec  func_ov010_021111ec  0x60   RULED
+#
+# RULED = lane STUBADJ's REAL_DECOMP rows in
+# port/tools/inferred_stub_adjudicated.txt, each a match.py 2004/b56
+# strict-reloc MATCH against the ROM with 0 WRONG-DEST. The D1 never carried the
+# marker. dsd's data_ov010_02112b08 is a symbol landed INSIDE the table at +0x24,
+# which is why the census keys two of these as "02112b08 slot 8" and "slot 0" --
+# the array's slots 17 and 9.
+#
+# THE CLOSURE, from port/tools/ov_closure.py over the six plus the factory. Nine
+# more TUs, none of them in any slice before this gate:
+#   InitResources (0x02111654) calls func_ov010_0211146c and func_ov010_021113f0
+#     and hands func_ov010_02111984 to func_020393c4 as the collision callback;
+#     02111984 tail-calls func_ov010_0211184c.
+#   Behavior (0x021115e0) calls the same two, and dispatches five state bodies
+#     through pointer-to-member cells: 0x02111320, 0x021112b4, 0x02111284,
+#     0x0211125c, 0x0211124c. Three of those five call func_ov010_0211139c.
+#
+# ONE TU ov_closure NAMES AND THIS SLICE DELIBERATELY LEAVES OUT:
+# src/_ZN5Actor13DistToCPlayerEv.c, which Behavior calls. That symbol is already
+# DEFINED by port/unmatched/Actor_ClosestPlayerWrappers.cpp and is in
+# walk_window.map; enrolling the matched TU would be LNK2005. It is a host copy
+# in a file this lane does not own, and it is named here so the next reader does
+# not have to rediscover it.
+src/func_ov010_02111654.c
+src/func_ov010_02111554.cpp
+src/func_ov010_021115e0.cpp
+src/func_ov010_021115a8.cpp
+src/func_ov010_021111a0.c
+src/func_ov010_021111ec.c
+src/func_ov010_0211146c.c
+src/func_ov010_021113f0.c
+src/func_ov010_02111984.c
+src/func_ov010_0211184c.c
+src/func_ov010_0211139c.cpp
+src/func_ov010_02111320.c
+src/func_ov010_021112b4.c
+src/func_ov010_02111284.c
+src/func_ov010_0211125c.c
+src/func_ov010_0211124c.c
