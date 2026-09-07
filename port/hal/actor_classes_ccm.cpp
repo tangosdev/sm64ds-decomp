@@ -920,22 +920,20 @@ static int __fastcall skl_kill(void *s, void *)
    Nothing dispatches between the two stores or after them; D1's caller,
    ActorBase::AfterCleanupResources, frees the object next, which is why D1
    stops before the Deallocate in both spellings.
-   SLOT 17 KEEPS ITS THUNK: func_ov018_021111e4 carries the inferred-stub
-   marker (dsd's recovered name even calls it OnYoshiTryEat), and
-   port/tools/inferred_stub_guard.py refuses new seats of those. */
+   SLOT 17 IS SEATED NOW (gate 228). func_ov018_021111e4 carries the
+   inferred-stub marker -- dsd's recovered name even calls it OnYoshiTryEat,
+   which is the recurring name defect and not a body defect -- and lane STUBADJ
+   ruled the BODY REAL DECOMP against the ROM. Table word 0x021138cc + 17*4 =
+   0x02113910 relocates to 0x021111e4, kind:function(arm,size=0x58). Bound per
+   TU from its own pool: 0x02111230 -> 0x021138cc (VT0), 0x02111234 ->
+   0x0210ae38 (VT1) and 0x02111238 -> 0x020a0eac (G0), so the base-table store
+   the thunk dropped comes back here the same way it did on slot 16. */
 extern "C" int *func_ov018_021111a0(int *t);   /* ov018 0x021111a0, slot 16 */
+extern "C" int *func_ov018_021111e4(int *t);   /* ov018 0x021111e4, slot 17 */
 static int __fastcall skl_d1(void *s, void *)
 { return (int)(size_t)func_ov018_021111a0((int *)s); }
 static int __fastcall skl_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov018_021138cc;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov018_021111e4((int *)s); }
 
 extern "C" void hal_fill_ski_lift_vtable(void)
 {

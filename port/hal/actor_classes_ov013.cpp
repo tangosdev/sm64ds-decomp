@@ -251,21 +251,20 @@ static int __fastcall cp_render(void *s, void *)
    no store to reorder -- the same three statements, reached by their own symbol
    instead of copied. port/tools/tail_slots.py --module ov013 --vtable
    0x02112128 --width 32 reads slot 16 -> 0x021111a0.
-   SLOT 17 KEEPS ITS THUNK: the matched D0 (func_ov013_021111d0) carries the
-   inferred-stub marker, and port/tools/inferred_stub_guard.py refuses new
-   seats of those. */
+   SLOT 17 IS SEATED NOW (gate 228), for the reason that changed rather than
+   the one that did not: the matched D0 (func_ov013_021111d0) carries the
+   inferred-stub marker, and lane STUBADJ ruled it REAL DECOMP against the ROM.
+   Table word 0x02112128 + 17*4 = 0x0211216c relocates to 0x021111d0,
+   kind:function(arm,size=0x44). One vptr store, one Model at +0xd4, Actor's D2
+   and the Deallocate -- the four statements this thunk had copied. Its two
+   placeholder names are bound per TU from its own pool: 0x0211120c ->
+   0x02112128 (VT0) and 0x02111210 -> 0x020a0eac (G0). */
 extern "C" int *func_ov013_021111a0(int *t);   /* ov013 0x021111a0, slot 16 */
+extern "C" int *func_ov013_021111d0(int *t);   /* ov013 0x021111d0, slot 17 */
 static int __fastcall cp_d1(void *s, void *)
 { return (int)(size_t)func_ov013_021111a0((int *)s); }
 static int __fastcall cp_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov013_02112128;
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov013_021111d0((int *)s); }
 
 extern "C" void hal_fill_clock_pendulum_vtable(void)
 {

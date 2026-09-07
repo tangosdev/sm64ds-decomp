@@ -1,0 +1,107 @@
+# gate 228 (run link100, lane SEAT): eleven more ruled bodies, and nine of
+# them replace a HAND-WRITTEN THUNK rather than a decline.
+#
+# Same ruling set and same discipline as gate 227 (read that file's header for
+# the four checks). What is different here is what the seats replace. Nine of
+# the twelve sit on slots hal already dispatched through a thunk this port
+# typed out by hand, and every one of those nine hal files says in prose that
+# the inferred-stub marker is the ONLY reason the real body was not used:
+#
+#   hal/actor_classes_jrb.cpp:436   "SLOT 17 KEEPS ITS THUNK: func_ov016_02112a44
+#                                    carries the inferred-stub marker, and
+#                                    port/tools/inferred_stub_guard.py refuses
+#                                    new seats of those."
+#   hal/actor_classes_ccm.cpp:923    the same sentence, func_ov018_021111e4.
+#   hal/actor_classes_ov012.cpp:236  the same sentence, func_ov012_021111e4.
+#   hal/actor_classes_ov013.cpp:254  the same sentence, func_ov013_021111d0.
+#   hal/actor_classes_bob_enemy.cpp:305  slot 18 "keeps the shared Actor
+#                                    default ... so inferred_stub_guard keeps it
+#                                    trapped out of the live fill".
+#   hal/actor_classes_bob_enemy.cpp:691  slot 17 "keeps the trap -- ... written
+#                                    over the shared-header VT0/VT1/G0
+#                                    placeholders, which are single global names
+#                                    in this build and would resolve to another
+#                                    TU's objects".
+#   hal/actor_classes_koopa_chuckya.cpp:437  slot 29 "carries the 'recovered
+#                                    from vtable slot identity' GUESS marker, so
+#                                    it is NOT enrolled".
+#
+# THE PLACEHOLDER COMPLAINT IS THE ONE THE -D ROWS ANSWER, and it is worth being
+# exact about what changes at runtime. Every hand thunk here is the ROM body
+# with the second (and for one class the second AND third) vptr store ELIDED,
+# because the port could not name the placeholder table. The -D rows in
+# port/CMakeLists.txt name it per TU out of each body's own literal pool, so the
+# seated bodies do the stores the ROM does. Those stores land on tables the port
+# dual-fills (_ZTV8Platform and _ZTV10dBgActor_c are one ROM table under two
+# host arrays, both filled identically; data_ov002_02108fdc is hosted in
+# hal/actor_base_tables_ov002.cpp), and they happen inside a destructor whose
+# next act is Memory::Deallocate, so nothing dispatches through them.
+#
+# ---------------------------------------------------------------------------
+# TWO THAT NEED NO BINDING AT ALL
+#
+#   ov102 _ZTV7daShl_c 0x0214e650 slot 18   0x0214d6a0  0x14
+#       KoopaShell's OnYoshiTryEat. Word 0x0214e698 -> 0x0214d6a0. The whole
+#       body is `return p[0x3c4] == 0 ? 6 : 5`. Slot 18 sits on the shared
+#       two-parameter ac_yoshi and the body takes only the receiver, so the
+#       face keeps that shape.
+#   ov062 _ZTV9daJango_c 0x0211dd5c slot 29  0x0211ce78  0x8
+#       Klepto's OnAimedAtWithEgg. Word 0x0211ddd0 -> 0x0211ce78. The whole body
+#       is `return 458752`. Slot 29 sits on the shared two-parameter ac_egg and
+#       the body takes NOTHING, not even the receiver.
+src/func_ov102_0214d6a0.c
+src/func_ov062_0211ce78.c
+#
+#   NOT ov016 data_ov016_02114b00 slot 9 (0x02112b28, RockPillar's Render),
+#   which this lane looked at and put back. Its call shape is fine --
+#   hal/cxxname_bridge.cpp dual-fills _ZTV5Model[4] AND [5] with mv_render, a
+#   THREE-parameter __fastcall, so the local shadow's thiscall push is popped --
+#   but port/unmatched/Jrb_Renders.cpp DEFINES func_ov016_02112b28 as a
+#   PORT_HOST_ABI host copy, so seating the src TU is an LNK2005 and the tag is
+#   a ruling that the host body is the faithful stand-in. The marker was never
+#   this one's blocker.
+#
+# ---------------------------------------------------------------------------
+# NINE DELETING DESTRUCTORS, each bound out of its own literal pool
+#
+#   ov002 0x02108964 s17  0x020b32c8  word 0x021089a8. pool 0x020b3304 ->
+#         0x02108964, 0x020b3308 -> 0x020a0eac. daObjAbuku_c, the bubble.
+#   ov002 0x0210acbc s17  0x020ec3b8  word 0x0210ad00. pool 0x020ec3f4 ->
+#         0x0210acbc, 0x020ec3f8 -> 0x020a0eac. daWarpkun_c.
+#   ov002 0x0210b030 s17  0x020f03f4  word 0x0210b074. pool 0x020f0430 ->
+#         0x0210b030, 0x020f0434 -> 0x020a0eac. daSCoin_c.
+#   ov012 0x02112344 s17  0x021111e4  word 0x02112388. pool 0x02111230 ->
+#         0x02112344, 0x02111234 -> 0x0210ae38, 0x02111238 -> 0x020a0eac.
+#   ov013 0x02112128 s17  0x021111d0  word 0x0211216c. pool 0x0211120c ->
+#         0x02112128, 0x02111210 -> 0x020a0eac.
+#   ov018 0x021138cc s17  0x021111e4  word 0x02113910. pool 0x02111230 ->
+#         0x021138cc, 0x02111234 -> 0x0210ae38, 0x02111238 -> 0x020a0eac.
+#   ov016 0x02114b00 s17  0x02112a44  word 0x02114b44. pool 0x02112a90 ->
+#         0x02114b00, 0x02112a94 -> 0x0210ae38, 0x02112a98 -> 0x020a0eac.
+#   ov016 0x02114bcc s17  0x02112f44  word 0x02114c10. THREE vptr stores, in the
+#         ROM's own order: pool 0x02112f98 -> 0x02114bcc, 0x02112f9c ->
+#         0x02108fdc, 0x02112fa0 -> 0x0210ae38, 0x02112fa4 -> 0x020a0eac.
+#   ov091 0x021352bc s17  0x02133440  word 0x02135300. pool 0x0213348c ->
+#         0x021352bc, 0x02133490 -> 0x0210ae38, 0x02133494 -> 0x020a0eac.
+src/func_ov002_020b32c8.c
+src/func_ov002_020ec3b8.c
+src/func_ov002_020f03f4.c
+src/func_ov012_021111e4.c
+src/func_ov013_021111d0.c
+src/func_ov018_021111e4.c
+src/func_ov016_02112a44.c
+src/func_ov016_02112f44.c
+src/func_ov091_02133440.c
+#
+# ---------------------------------------------------------------------------
+# ONE MORE RULED BODY ON THIS LIST'S OWN SHAPE THAT IS NOT SEATED, and the
+# reason is worth carrying because it is the trap this class of work sets.
+#
+#   ov064 data_ov064_0211c1d8 slot 17, func_ov064_02118c10. Its pool binds VT to
+#   0x0211c1d8, and the port's symbol of that name is the MOUNTED table -- raw
+#   DS words, pack-checked, never dispatchable. hal/actor_classes_bowserpuzzle.cpp
+#   dispatches through a separate FILE-STATIC host array, port_bp_shell_vtable,
+#   which no other translation unit can name. Binding the body to the mount
+#   would have stored DS addresses into a live object's slot 0. Seating it needs
+#   that host array given external linkage first, which is a change to another
+#   lane's file and not this one's to make.

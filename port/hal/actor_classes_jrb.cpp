@@ -433,21 +433,21 @@ static int __fastcall rkp_kill(void *s, void *)
    thunk plus the base-table store the ROM makes and the thunk left out.
    Nothing dispatches between the two stores; the caller is
    ActorBase::AfterCleanupResources, which frees the object next.
-   SLOT 17 KEEPS ITS THUNK: func_ov016_02112a44 carries the inferred-stub
-   marker, and port/tools/inferred_stub_guard.py refuses new seats of those. */
+   SLOT 17 IS SEATED NOW (gate 228), by the same -D that unblocked slot 16 plus
+   a ruling. func_ov016_02112a44 carries the inferred-stub marker and lane
+   STUBADJ ruled it REAL DECOMP against the ROM. Table word 0x02114b00 + 17*4 =
+   0x02114b44 relocates to 0x02112a44, kind:function(arm,size=0x58), and its own
+   pool says which addresses its three words are --
+     0x02112a90 -> ov016 0x02114b00 (data_ov016_02114b00)
+     0x02112a94 -> ov002 0x0210ae38 (_ZTV8Platform)
+     0x02112a98 -> main  0x020a0eac (the game heap word)
+   -- so the base-table store this thunk left out comes back here too. */
 extern "C" int *func_ov016_02112a00(int *t);   /* ov016 0x02112a00, slot 16 */
+extern "C" int *func_ov016_02112a44(int *t);   /* ov016 0x02112a44, slot 17 */
 static int __fastcall rkp_d1(void *s, void *)
 { return (int)(size_t)func_ov016_02112a00((int *)s); }
 static int __fastcall rkp_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov016_02114b00;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov016_02112a44((int *)s); }
 
 extern "C" void hal_fill_rock_pillar_vtable(void)
 {
@@ -542,16 +542,18 @@ static int __fastcall fow_d1(void *s, void *)
     _ZN5ActorD2Ev(t);
     return (int)(size_t)s;
 }
+/* slot 17, the ROM's own D0, GATE 228. Table word 0x02114bcc + 17*4 =
+   0x02114c10 relocates to 0x02112f44, kind:function(arm,size=0x64). This is the
+   daObjKi_Ita_c BASE table's deleting destructor, not SLIDING_BOX's 0x02113044
+   -- the two are different classes and the header above keeps them apart. It
+   makes THREE vptr stores where this thunk made one, and its own pool says
+   which: 0x02112f98 -> ov016 0x02114bcc, 0x02112f9c -> ov002 0x02108fdc (the
+   base table hal/actor_base_tables_ov002.cpp hosts), 0x02112fa0 -> ov002
+   0x0210ae38 (_ZTV8Platform), 0x02112fa4 -> 0x020a0eac. Held out until now by
+   the inferred-stub marker, which lane STUBADJ ruled REAL DECOMP. */
+extern "C" int *func_ov016_02112f44(int *t);   /* ov016 0x02112f44, slot 17 */
 static int __fastcall fow_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov016_02114bcc;
-    _ZN18MovingMeshColliderD1Ev(t + 0x124);
-    _ZN5ModelD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov016_02112f44((int *)s); }
 
 extern "C" void hal_fill_float_on_water_jrb_vtable(void)
 {

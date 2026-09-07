@@ -14431,6 +14431,78 @@ set_source_files_properties(
     "VT=data_ov080_021282b4;HEAP=data_020a0eac")
 
 # ===========================================================================
+# GATE 228 -- eleven more ruled bodies, nine of them over a hand thunk
+# ===========================================================================
+#
+# The same ruling set as gate 227. What is different is what these replace:
+# nine of the eleven sit on slots hal already dispatched through a destructor
+# thunk this port typed out by hand, and each of those hal files says in prose
+# that the inferred-stub marker is the only reason the real body was not used.
+# slice_gate228.txt quotes each of those sentences next to the body it refused.
+#
+# THE ELIDED VPTR STORE IS WHAT COMES BACK. Every hand thunk is the ROM body
+# minus its second (and for data_ov016_02114bcc, second and third) vptr store,
+# because the port could not name the shared-header placeholder those stores
+# spell. The -D rows below name it per TU out of each body's own literal pool.
+# The tables they land on are live host arrays -- _ZTV8Platform and
+# _ZTV10dBgActor_c are one ROM table under two host arrays that
+# hal/actor_classes.cpp dual-fills, and data_ov002_02108fdc is hosted in
+# hal/actor_base_tables_ov002.cpp -- and the store happens inside a destructor
+# whose next act is Memory::Deallocate, so nothing dispatches through it.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate228.txt" SLICE228_LINES)
+set(SLICE228_SOURCES "")
+foreach(line IN LISTS SLICE228_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE228_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_t228 walk_window walk_window_hires smoke_player)
+    target_sources(${_t228} PRIVATE ${SLICE228_SOURCES})
+endforeach()
+#
+# NINE BINDINGS. Every address on the right of an = was read at the address on
+# the left in config/<module>/relocs.txt, inside the body's own span. Nothing
+# here comes from a recovered name.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020b32c8.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov002_02108964;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020ec3b8.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov002_0210acbc;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020f03f4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov002_0210b030;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov012_021111e4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov012_02112344;VT1=_ZTV8Platform;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov013_021111d0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov013_02112128;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov018_021111e4.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov018_021138cc;VT1=_ZTV8Platform;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov016_02112a44.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov016_02114b00;VT1=_ZTV8Platform;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov016_02112f44.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov016_02114bcc;VT1=data_ov002_02108fdc;VT2=_ZTV8Platform;G0=data_020a0eac")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov091_02133440.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=_ZTV11daObjPile_c;VT1=_ZTV8Platform;G0=data_020a0eac")
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

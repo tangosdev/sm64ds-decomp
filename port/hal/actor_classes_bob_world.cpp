@@ -1307,6 +1307,13 @@ static int __fastcall is_render(void *s, void *)
 { return ((ActorBase *)s)->ActorBase::Render(); }
 static int __fastcall is_d1(void *s, void *)
 { return (int)(size_t)func_ov002_020f03c4((int *)s); }
+/* slot 17, the ROM's own D0, GATE 228. Word 0x0210b030 + 17*4 = 0x0210b074
+   relocates to 0x020f03f4, kind:function(arm,size=0x44). Was bw_trap17 on the
+   inferred-stub marker, which lane STUBADJ ruled. Bound per TU from its own
+   pool: 0x020f0430 -> 0x0210b030 (VT0), 0x020f0434 -> 0x020a0eac (G0). */
+extern "C" int *func_ov002_020f03f4(int *t);   /* ov002 0x020f03f4 */
+static int __fastcall is_d0(void *s, void *)
+{ return (int)(size_t)func_ov002_020f03f4((int *)s); }
 extern "C" void hal_fill_invisible_secret_vtable(void)
 {
     void **vt = data_ov002_0210b030;
@@ -1317,7 +1324,7 @@ extern "C" void hal_fill_invisible_secret_vtable(void)
     vt[9] = (void *)is_render;
     vt[12] = (void *)bw_pdes_base;
     vt[16] = (void *)is_d1;
-    vt[17] = (void *)bw_trap17;
+    vt[17] = (void *)is_d0;      /* gate 228 */
 }
 
 // ---- INVISIBLE_POLE (287, ov002) -- gate 46 --------------------------------
@@ -1819,6 +1826,14 @@ static int __fastcall warp_pdes(void *s, void *)
 { func_ov002_020ec404((char *)s); return 0; }
 static int __fastcall warp_d1(void *s, void *)
 { return (int)(size_t)func_ov002_020ec388((int *)s); }
+/* slot 17, the ROM's own D0, GATE 228. Word 0x0210acbc + 17*4 = 0x0210ad00
+   relocates to 0x020ec3b8, which symbols.txt records as
+   kind:function(arm,size=0x44). It was bw_trap17 because the body carries the
+   inferred-stub marker; lane STUBADJ ruled it REAL DECOMP. Bound per TU from
+   its own pool: 0x020ec3f4 -> 0x0210acbc (VT0), 0x020ec3f8 -> 0x020a0eac (G0). */
+extern "C" int *func_ov002_020ec3b8(int *t);   /* ov002 0x020ec3b8 */
+static int __fastcall warp_d0(void *s, void *)
+{ return (int)(size_t)func_ov002_020ec3b8((int *)s); }
 extern "C" void hal_fill_warp_vtable(void)
 {
     void **vt = data_ov002_0210acbc;
@@ -1829,7 +1844,7 @@ extern "C" void hal_fill_warp_vtable(void)
     vt[9] = (void *)warp_render;
     vt[12] = (void *)warp_pdes;
     vt[16] = (void *)warp_d1;
-    vt[17] = (void *)bw_trap17;
+    vt[17] = (void *)warp_d0;    /* gate 228 */
 }
 
 // ---- THE WATCH (port mod) --------------------------------------------------

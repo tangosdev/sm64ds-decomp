@@ -434,10 +434,12 @@ int _ZN5Koopa8BehaviorEv(void *self)
 // at 0x334, ShadowModel at 0x3a4.
 //
 // Slot 29 (OnAimedAtWithEgg) has a ROM body of its own, func_ov062_0211ce78,
-// but it carries the "recovered from vtable slot identity" GUESS marker, so it
-// is NOT enrolled and slot 29 keeps the shared Actor default (kc182_aimed_actor)
-// -- inferred_stub_guard stays green. Every other tail slot is the Actor
-// default the reloc run already lands on.
+// and GATE 228 seats it. It used to keep the shared Actor default
+// (kc182_aimed_actor) because the body carries the "recovered from vtable slot
+// identity" marker; lane STUBADJ disassembled it and ruled it REAL DECOMP, so
+// the marker no longer stands between the ROM's word and the fill.
+// inferred_stub_guard is still green, on a ruling rather than on a refusal.
+// Every other tail slot is the Actor default the reloc run already lands on.
 //
 // KLEPTO IS A TWO-PMF-DISPATCHER CLASS. func_ov062_0211c658 (the state setter)
 // and Klepto::Behavior (the per-frame tick) both form the pointer-to-member
@@ -537,6 +539,11 @@ static int __fastcall klp_d1(void *s, void *)
 { return (int)(size_t)_ZN6KleptoD1Ev((int *)s); }
 static int __fastcall klp_d0(void *s, void *)
 { return (int)(size_t)_ZN6KleptoD0Ev((int *)s); }
+/* slot 29, OnAimedAtWithEgg. GATE 228; see the fill for the table word. The ROM
+   body takes no parameters at all, receiver included. */
+extern "C" int func_ov062_0211ce78(void);   /* ov062 0x0211ce78 */
+static int __fastcall klp_aimed(void *, void *)
+{ return func_ov062_0211ce78(); }
 
 extern "C" void hal_fill_klepto_vtable(void)
 {
@@ -551,9 +558,17 @@ extern "C" void hal_fill_klepto_vtable(void)
     vt[12] = (void *)klp_pdes;
     vt[16] = (void *)klp_d1;
     vt[17] = (void *)klp_d0;
-    /* slots 18/19/29 stay the shared Actor defaults kc182_fill_shared_0_30 seats:
-       the reloc run lands 18/19 on the Actor defaults, and slot 29's ROM body
-       func_ov062_0211ce78 is a vtable-slot-identity guess, kept trapped. */
+    /* slots 18/19 stay the shared Actor defaults kc182_fill_shared_0_30 seats:
+       the reloc run lands both on the Actor defaults.
+       SLOT 29 IS THE ROM'S OWN WORD NOW (gate 228). It stayed on the shared
+       default while func_ov062_0211ce78 was only a vtable-slot-identity name;
+       lane STUBADJ disassembled the body and ruled it REAL DECOMP. Table word
+       _ZTV9daJango_c 0x0211dd5c + 29*4 = 0x0211ddd0 relocates to 0x0211ce78,
+       kind:function(arm,size=0x8), and the whole body is `return 458752` --
+       0x70000, the egg-aim reach Klepto answers with, where Actor's default
+       answers something else. It takes NOTHING, not even the receiver, so the
+       face is the two-parameter shape ac_egg already had. */
+    vt[29] = (void *)klp_aimed;
 }
 
 // ---- Klepto method faces ---------------------------------------------------

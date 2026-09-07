@@ -382,15 +382,18 @@ static int __fastcall bub_behavior(void *s, void *)
   return func_ov002_020b33dc((char *)s); }
 static int __fastcall bub_d1(void *s, void *)
 { return (int)(size_t)func_ov002_020b3298((int *)s); }
+/* slot 17, the ROM's own D0, GATE 228. This was a hand copy of the ROM body:
+   the table word at 0x02108964 + 17*4 = 0x021089a8 relocates to 0x020b32c8 in
+   config/arm9/overlays/ov002/relocs.txt, symbols.txt gives that address its own
+   kind:function(arm,size=0x44) record, and the body there is exactly the four
+   steps typed out below. The only thing that kept it out of the build was the
+   inferred-stub marker on src/func_ov002_020b32c8.c, which lane STUBADJ ruled
+   REAL DECOMP against the ROM. Its two placeholder names are bound per TU in
+   port/CMakeLists.txt from its own pool: 0x020b3304 -> 0x02108964 (VT0, the
+   table this file declares) and 0x020b3308 -> 0x020a0eac (G0). */
+extern "C" int *func_ov002_020b32c8(int *t);   /* ov002 0x020b32c8 */
 static int __fastcall bub_d0(void *s, void *)
-{
-    char *t = (char *)s;
-    *(void **)t = (void *)data_ov002_02108964;
-    _ZN18MovingCylinderClsnD1Ev(t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return (int)(size_t)s;
-}
+{ return (int)(size_t)func_ov002_020b32c8((int *)s); }
 
 extern "C" void hal_fill_bubble_vtable(void)
 {

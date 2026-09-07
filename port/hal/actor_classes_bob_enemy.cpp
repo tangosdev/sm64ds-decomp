@@ -301,9 +301,10 @@ int _ZN6BobOmb13InitResourcesEv(void *self)
 // _ZTV10KoopaShell / _ZTV7daShl_c, ov102 0x0214e650. The green shell a stomped
 // Koopa leaves behind and the item a GREEN_SHELL_BLOCK_TAG cracks open. An Enemy
 // subclass on the same 31-slot table shape as BOB_OMB, overriding the six
-// lifecycle slots. Slot 18 (OnYoshiTryEat) keeps the shared Actor default:
-// the ROM body func_ov102_0214d6a0 is a vtable-slot-identity GUESS, not a named
-// decompilation, so inferred_stub_guard keeps it trapped out of the live fill.
+// lifecycle slots. Slot 18 (OnYoshiTryEat) CARRIES THE ROM'S OWN WORD as of
+// gate 228. It kept the shared Actor default while func_ov102_0214d6a0 was only
+// a vtable-slot-identity name rather than a named decompilation; lane STUBADJ
+// disassembled the body and ruled it REAL DECOMP, so the fill takes it.
 //
 // Its SpawnInfo is already in port/ov102_syms.txt (gate 23 mounted the overlay)
 // and its own +4 halfword reads 285, the registry's cross-check. It is spawned
@@ -356,6 +357,10 @@ static int __fastcall ksh_d1(void *s, void *)
 { return (int)(size_t)_ZN10KoopaShellD1Ev((int *)s); }
 static int __fastcall ksh_d0(void *s, void *)
 { return (int)(size_t)_ZN10KoopaShellD0Ev((int *)s); }
+/* slot 18, OnYoshiTryEat. GATE 228; see the fill for the table word. */
+extern "C" int func_ov102_0214d6a0(unsigned char *self);   /* ov102 0x0214d6a0 */
+static int __fastcall ksh_yoshi(void *s, void *)
+{ return func_ov102_0214d6a0((unsigned char *)s); }
 
 extern "C" void port_koopa_shell_states_seat(void);   /* port/unmatched */
 
@@ -372,8 +377,15 @@ extern "C" void hal_fill_koopa_shell_vtable(void)
     vt[12] = (void *)ksh_pdes;
     vt[16] = (void *)ksh_d1;
     vt[17] = (void *)ksh_d0;
-    /* slot 18 (OnYoshiTryEat) stays the shared Actor default: its ROM body
-       func_ov102_0214d6a0 is a vtable-slot-identity guess, kept trapped. */
+    /* slot 18 (OnYoshiTryEat) IS THE ROM'S OWN WORD NOW (gate 228). It stayed
+       on the shared Actor default while func_ov102_0214d6a0 was only a
+       vtable-slot-identity name; lane STUBADJ disassembled the body and ruled it
+       REAL DECOMP. Table word 0x0214e650 + 18*4 = 0x0214e698 relocates to
+       0x0214d6a0, kind:function(arm,size=0x14), and the whole body is
+       `return self[0x3c4] == 0 ? 6 : 5` -- the shell answering "swallow me" or
+       "spit me" by whether its +0x3c4 flag is set. Nullary past the receiver, so
+       the two-parameter shape the shared ac_yoshi already had. */
+    vt[18] = (void *)ksh_yoshi;
 }
 
 // ============================================================================
@@ -689,10 +701,19 @@ static int __fastcall pile_render(void *s, void *)
 { port_actor_render_probe("STUMP", (char *)s + 0xd4);
   return func_ov091_02133710(s); }
 /* SLOT 16 IS LIVE: a post that has taken its third pound marks itself for
-   destruction and the cleanup pass dispatches D1 the next frame. Slot 17
-   keeps the trap -- src/func_ov091_02133440 is the deleting form and it is
-   written over the shared-header VT0/VT1/G0 placeholders, which are single
-   global names in this build and would resolve to another TU's objects. */
+   destruction and the cleanup pass dispatches D1 the next frame. SLOT 17 IS
+   SEATED NOW (gate 228). The old note here was right about the defect and wrong
+   about the remedy: src/func_ov091_02133440 IS written over the shared-header
+   VT0/VT1/G0 placeholders, and those are single global names -- which is why
+   port/CMakeLists.txt binds them PER SOURCE out of this body's own literal pool
+   (0x0213348c -> ov091 0x021352bc, this class's table; 0x02133490 -> ov002
+   0x0210ae38, _ZTV8Platform; 0x02133494 -> 0x020a0eac, the game heap word)
+   instead of leaving them to resolve to another TU's objects. Table word
+   0x021352bc + 17*4 = 0x02135300 relocates to 0x02133440,
+   kind:function(arm,size=0x58); lane STUBADJ ruled the body REAL DECOMP. */
+extern "C" int *func_ov091_02133440(int *t);   /* ov091 0x02133440, slot 17 */
+static int __fastcall pile_d0(void *s, void *)
+{ return (int)(size_t)func_ov091_02133440((int *)s); }
 static int __fastcall pile_d1(void *s, void *)
 { return (int)(size_t)func_ov091_021333fc((int *)s); }
 static int __fastcall pile_pounded(void *s, void *, void *o)
@@ -712,6 +733,7 @@ extern "C" void hal_fill_stump_vtable(void)
     vt[6] = (void *)pile_behavior;
     vt[9] = (void *)pile_render;
     vt[16] = (void *)pile_d1;
+    vt[17] = (void *)pile_d0;      /* gate 228 */
     vt[21] = (void *)pile_pounded;
     vt[27] = (void *)pile_mega;
     vt[31] = (void *)pile_kill;
