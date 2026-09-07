@@ -6,7 +6,8 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x214a96c..0x214c6f8, 34 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "tu_map cut (build/tu_map.json, tools/tu_map.py): 0x214a96c..0x214c6f8, 34 function(s). That cut is one function SHORT of the physical run: tu_map segments on symbol NAME, and daBmb_c_classInit (0x0214c6f8..0x0214c748) does not look like a member of daBmb_c, so it was cut off from a run it physically abuts. delinks.txt has no gap between them.",
+    "shipped span: .text 0x0214a96c..0x0214c748, 35 function(s) -- the tu_map 34 plus the abutting registry factory daBmb_c_classInit. One contiguous .text claim, no coverage hole; see sections[] and functions[], which are the authoritative rows.",
     "class label(s): daBmb_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
