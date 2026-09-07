@@ -104,10 +104,11 @@ struct daGmch_c : dActor_c {
 
 
     /* ---------------------------------------------------------------------
-     * The 26 members below are NOT cartridge names.  The ROM gives this class
-     * ten mangled symbols and no more; these 26 are auto-named
-     * `func_ov081_<address>` in config/arm9/overlays/ov081/symbols.txt and the
-     * names here replace those.  Each is bounded by what the bytes prove and
+     * The 26 members below have reconstructed names.  Ten other members already
+     * had reconstructed mangled names in the tree; these 26 replace the former
+     * `func_ov081_<address>` names in config/arm9/overlays/ov081/symbols.txt.
+     * The ROM preserves the RTTI class name, not these function spellings.
+     * Each name is bounded by what the bytes prove and
      * nothing further -- for the state machine that is the state INDEX (the
      * literal each member writes to mStateIndex, or the literal SetState is
      * called with) and which HALF of the state's pointer-to-member pair the
@@ -141,6 +142,8 @@ struct daGmch_c : dActor_c {
     /* The three state-machine primitives, all proven by the bytes: SetState
        stores &table[n] in mStatePmfPair and tail-calls the enter half;
        CallStateEnter invokes pair slot 0 and CallStateUpdate pair slot 1. */
+    /* int (Ei) is a reconstruction choice; the original state-index parameter
+       type is not recovered from the shift/add and table store. */
     void SetState(int n);    /* 0x0212777c */
     void CallStateEnter();   /* 0x02127744 */
     void CallStateUpdate();  /* 0x02127708 */
@@ -151,6 +154,8 @@ struct daGmch_c : dActor_c {
     void ChooseNextState();          /* 0x021265c8 */
     void SpawnCoinsAndDie();         /* 0x02126700 */
     void CheckPlayerContact();       /* 0x02126758 */
+    /* void* (EPv) is a reconstruction choice; the original parameter type
+       and pointer/reference spelling are not recovered from the body. */
     int  ApplySlopeToVertSpeed(void *clsn); /* 0x02126950 */
     void UpdateDrawMatrices();       /* 0x02126a20 */
 
