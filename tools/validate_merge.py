@@ -400,17 +400,71 @@ def _rom_state(report):
             "failure": failure}
 
 
-def _data_symbol_set(data, field):
-    """Return stable ``(module, symbol)`` identities, or None for an old report."""
+def _data_symbol_rows(data, field):
+    """Return the report's per-symbol rows, or None for an old/unparsable report."""
     rows = data.get(field)
     if not isinstance(rows, list):
         return None
-    out = set()
+    out = []
     for row in rows:
         if not isinstance(row, dict) or not isinstance(row.get("symbol"), str):
             return None
-        out.add((row.get("module"), row["symbol"]))
+        out.append(row)
     return out
+
+
+def _data_identity(row):
+    return (row.get("module"), row["symbol"])
+
+
+def _data_anchor(row):
+    """The cartridge anchor a rename cannot move: module, ROM address, proven bytes.
+
+    A symbol NAME is a source-side choice; the address and the number of bytes that
+    byte-verified there are ROM facts. Retiring a coined ``_ZTV<Coined>`` in favour
+    of the ROM's own ``_ZTV<RomName>`` at the same address proves exactly the same
+    cartridge data, so it is a rename and not a loss. Returns None for a report that
+    predates the addresses -- `romdata_check.summarize` used to drop them -- which is
+    what puts the diff back on its old name-only footing.
+    """
+    addr, size = row.get("addr"), row.get("bytes")
+    if isinstance(addr, bool) or not isinstance(addr, int):
+        return None
+    if isinstance(size, bool) or not isinstance(size, int):
+        return None
+    return (row.get("module"), addr, size)
+
+
+def _data_departures(base_rows, head_rows):
+    """Base identities absent from head, after cancelling address-anchored renames.
+
+    Identity by ``(module, symbol)`` alone reads every symbol RENAME as a deletion,
+    which is what blocked adopting the ROM's own RTTI name over a coined one. The
+    address anchor cannot be forged from source: a head symbol has to byte-verify at
+    that address to appear in the report at all, and neither an alias row in
+    `symbols.txt` nor the PR's own rename ledger takes part in the decision.
+
+    Matching is strictly one-to-one per anchor, so two departures answered by a
+    single arrival still lose one symbol, and a departure whose only arrival sits at
+    a different address -- or proves a different number of bytes -- is still a loss.
+    A row carrying no anchor, on either side, never matches; that is exactly the
+    pre-existing name-only behaviour.
+    """
+    head_ids = {_data_identity(r) for r in head_rows}
+    base_ids = {_data_identity(r) for r in base_rows}
+    gone = [r for r in base_rows if _data_identity(r) not in head_ids]
+    arrivals = collections.Counter(
+        anchor for anchor in (_data_anchor(r) for r in head_rows
+                              if _data_identity(r) not in base_ids)
+        if anchor is not None)
+    lost = []
+    for row in sorted(gone, key=lambda r: (r.get("module") or "", r["symbol"])):
+        anchor = _data_anchor(row)
+        if anchor is not None and arrivals[anchor] > 0:
+            arrivals[anchor] -= 1
+            continue
+        lost.append(_data_identity(row))
+    return lost
 
 
 def _data_name(identity):
@@ -426,10 +480,10 @@ def rom_data_regressions(base_data, head_data):
         return ["head full-ROM report omitted the ROM-data measurement"]
 
     out = []
-    base_verified = _data_symbol_set(base_data, "verifiedSymbols")
-    head_verified = _data_symbol_set(head_data, "verifiedSymbols")
+    base_verified = _data_symbol_rows(base_data, "verifiedSymbols")
+    head_verified = _data_symbol_rows(head_data, "verifiedSymbols")
     if base_verified is not None and head_verified is not None:
-        lost = sorted(base_verified - head_verified, key=lambda x: (x[0] or "", x[1]))
+        lost = _data_departures(base_verified, head_verified)
         if lost:
             names = ", ".join(_data_name(x) for x in lost[:3])
             more = f", +{len(lost) - 3} more" if len(lost) > 3 else ""
@@ -447,10 +501,16 @@ def rom_data_regressions(base_data, head_data):
             f"ROM data verified bytes fell from {base_data['verifiedBytes']} to "
             f"{head_data['verifiedBytes']}")
 
-    base_differing = _data_symbol_set(base_data, "differingSymbols")
-    head_differing = _data_symbol_set(head_data, "differingSymbols")
+    base_differing = _data_symbol_rows(base_data, "differingSymbols")
+    head_differing = _data_symbol_rows(head_data, "differingSymbols")
     if base_differing is not None and head_differing is not None:
-        new = sorted(head_differing - base_differing, key=lambda x: (x[0] or "", x[1]))
+        # Symmetric, and for the same reason: a symbol that was already wrong on base
+        # and is still wrong at the same address under a new name is not a NEWLY wrong
+        # symbol. Reversing the arguments makes an ARRIVAL the thing to cancel. A
+        # genuinely new differing symbol has no departure to answer it, and a symbol
+        # that went VERIFIED -> DIFFERS across a rename is still caught, by the
+        # verified-loss diff above.
+        new = _data_departures(head_differing, base_differing)
         if new:
             names = ", ".join(_data_name(x) for x in new[:3])
             more = f", +{len(new) - 3} more" if len(new) > 3 else ""
