@@ -1,0 +1,269 @@
+{
+  "class": "Klepto",
+  "class_name_is_coined": true,
+  "rtti_name": "9daJango_c",
+  "rtti_name_address": "0x0211dd20",
+  "overlay": "ov062",
+  "module_base": "0x02115ee0",
+
+  "scouted_at_base": {
+    "commit": "2ab05bae3",
+    "ref": "origin/main",
+    "branch": "cpp/Klepto-tu",
+    "worktree": "C:/tmp/sm64ds-klepto-scout",
+    "verified_after": "git rev-parse HEAD == origin/main == 2ab05bae3; `git log --oneline HEAD..origin/main` empty. Checked AFTER the derivations below, per roles/scout.md.",
+    "note": "Every ROM-derived field below is cut from extracted/ and cannot rot. Every field marked tree_derived was re-derived at this commit and WILL rot on the next promotion into ov062."
+  },
+
+  "identity_evidence": {
+    "verdict": "Klepto is COINED. The cartridge's class name is daJango_c. Promotion is allowed under PIPELINE.md's disclosure rule, but the name must never be presented as ROM-proven -- this field is that record.",
+    "rom_string": "extracted/overlays/overlay_0062.bin, file offset 0x7e40 -> address 0x0211dd20 (0x02115ee0 + 0x7e40), bytes 39 64 61 4a 61 6e 67 6f 5f 63 00 = \"9daJango_c\\0\". That is the Itanium length-prefixed _ZTS form: length 9, then the 9 characters d a J a n g o _ c. Read as raw bytes from the overlay image, not via any tool.",
+    "negative_search": "Scope: all 106 extracted images -- extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin and all 103 extracted/overlays/*.bin -- 3,582,144 bytes (3.4 MB) total. Byte patterns and case: b'Klepto' CASE-SENSITIVE -> 0 hits; b'Klepto' CASE-FOLDED (haystack and needle both lowercased) -> 0 hits; the strict length-prefixed form b'6Klepto\\0' -> 0 hits. So no spelling of 'Klepto' in any case exists anywhere in this cartridge.",
+    "positive_search_for_the_rom_sense": "The case-folded search DOES change the answer for the ROM's own word, which is why it was run. b'daJango_c' case-sensitive -> 1 hit (overlay_0062.bin @0x7e41, the _ZTS above). b'JANGO' upper-case -> 1 hit, extracted/arm9_dec.bin @0x8b6d0, inside the profile-name table (neighbours: DSMT, LAVA, PILE, TREE, COIN, JANGO, DOKAN, POPOI, CHAIR, PAKUN). b'jango' case-folded -> 10 hits: the one RTTI string, the one JANGO profile name, and 8 occurrences inside asset paths in overlay_0000.bin -- 'data/enemy/jango/jango.bmd' (@0x16e7), 'data/enemy/jango/jango_fly.bca' (@0x44b7), 'data/enemy/jango/jango_attack.bca' (@0x659f), 'data/enemy/jango/jango_damage.bca' (@0x65c3). The cartridge therefore names this actor 'jango' consistently across three independent registers -- asset directory, profile name, RTTI class -- and names it 'Klepto' in none.",
+    "whole_overlay_string_census": "ov062 contains exactly 5 printable runs of >=5 characters in its whole 0x7f00 bytes, and all five are _ZTS records: 10daHolhei_c (0x0211d9ac), 8daNknk_c (0x0211da5c), 7daRNk_c (0x0211db60), 9daRFlag_c (0x0211dc18), 9daJango_c (0x0211dd20). There is no room for a hidden English name in this overlay.",
+    "tooling_corroboration": "tools/rtti_extract.py at this commit wrote build/rtti.json with 429 records, 413 edges, 0 unresolved. Its record: {module: ov062, addr: 0x0211dd2c, kind: si, mangled: 9daJango_c, name: daJango_c, name_addr: 0x0211dd20, vtable: 0x0211dd5c, vtable_module: ov062}. `tools/rtti_vtables.py --own daJango_c` prints the override set; `--own Klepto` prints 'no vtable for Klepto' -- the ROM-derived database has never heard the coined name.",
+    "symbols_txt_asymmetry": "config/arm9/overlays/ov062/symbols.txt aliases the VTABLE under both spellings at one address (_ZTV6Klepto and _ZTV9daJango_c, both addr:0x0211dd5c) but registers _ZTS and _ZTI under the ROM spelling ONLY (_ZTS9daJango_c 0x0211dd20, _ZTI9daJango_c 0x0211dd2c). The sibling daHolhei_c/Chuckya is aliased the same way. src_tu/actors/Chuckya.cpp emits the coined spelling (_ZTV7Chuckya), so the writer should emit _ZTV6Klepto to match the tree convention."
+  },
+
+  "vtable": {
+    "symbol": "_ZTV6Klepto",
+    "rom_symbol": "_ZTV9daJango_c",
+    "address": "0x0211dd5c",
+    "module": "ov062",
+    "slots": 31,
+    "extent": "0x0211dd5c..0x0211ddd8",
+    "storage_size_with_header": "0x84 (0x0211dd54..0x0211ddd8)",
+    "header_words": {
+      "offset_to_top": {"address": "0x0211dd54", "value": "0x00000000"},
+      "rtti_pointer": {"address": "0x0211dd58", "value": "0x0211dd2c"}
+    },
+    "address_point_evidence": "CARTRIDGE. The symbol IS the address point: 0x0211dd5c holds slot 0 (0x0211cb4c = InitResources) and the two header words sit at -8 and -4. Three independent literal-pool words in ov062 hold 0x0211dd5c and store it at [this]+0: 0x0211b294 (in _ZN6KleptoD1Ev), 0x0211b2f4 (in _ZN6KleptoD0Ev) and 0x0211ced4 (in daJango_c_classInit). Emit it as &_ZTV6Klepto[2], the convention src_tu/actors/Chuckya.cpp already uses.",
+    "extent_evidence": "CARTRIDGE, three ways. (1) Slots 0..30 are 31 non-null words ending exactly at 0x0211ddd8; the words at 0x0211ddd8 and 0x0211dddc are zero and .data ends at 0x0211dde0 with align:32 (0x0211dde0 & 0x1f == 0), so those 8 bytes are section alignment padding, not slots. (2) The direct base dEnemyBase_c also has 31 slots, and Klepto declares no new virtual -- it only overrides -- so the table cannot be longer. (3) Two sibling dEnemyBase_c descendants in this same .data prove the 31-word length with a hard right-hand boundary: _ZTV7Chuckya at 0x0211d9e0 runs 31 words and ends EXACTLY where _ZTS8daNknk_c begins at 0x0211da5c, and _ZTV9KoopaFlag at 0x0211dc54 runs 31 words and ends EXACTLY where the first pointer-to-member record begins at 0x0211dcd0. Neither leaves a gap.",
+    "trailing_null_caveat": "The two zero words after the table are read here as .data padding rather than as truncated trailing null slots. Both readings produce identical bytes; the 31-slot count is fixed independently by the base's own slot count and by the two siblings' hard boundaries, so nothing downstream depends on which reading is preferred."
+  },
+
+  "base_class": "dEnemyBase_c",
+  "base_evidence": "CARTRIDGE. _ZTI9daJango_c at ov062:0x0211dd2c is a 3-word __si_class_type_info record read directly from overlay_0062.bin: +0 = 0x0209a764 (the __si_class_type_info vtable -- build/rtti.json meta confirms 0x209a764 is the 'si' kind), +4 = 0x0211dd20 (-> _ZTS9daJango_c), +8 = 0x021081c0. That +8 word IS the direct base and it points at _ZTI12dEnemyBase_c. The address 0x021081c0 is ambiguous between ov002 and ov006 by load-range alone; it is resolved to ov002 because config/arm9/overlays/ov002/symbols.txt names it (_ZTI12dEnemyBase_c addr:0x021081c0) and ov006/symbols.txt does not.",
+  "base_corroboration": [
+    "CARTRIDGE: _ZN6KleptoD1Ev at 0x0211b284 ends with `bl 0x020aed18` = _ZN12dEnemyBase_cD2Ev (ov002/symbols.txt).",
+    "CARTRIDGE: daJango_c_classInit at 0x0211ce94 calls `bl 0x020aed98` = _ZN12dEnemyBase_cC2Ev (ov002/symbols.txt). Note ov007/symbols.txt also names 0x020aed98, as func_ov007_020aed98 -- overlays share address space, so the ov002 reading is the one the ov062 relocation attests (module:overlay(2)).",
+    "CORROBORATION ONLY, not the reason: the 31-word table length is what a dEnemyBase_c descendant has, matching all four siblings in ov062."
+  ],
+  "ancestor_chain": ["daJango_c", "dEnemyBase_c", "dActor_c", "dBase_c", "fBase_c"],
+  "ancestor_chain_evidence": "CARTRIDGE, via build/rtti.json edges, each edge being a __si_class_type_info +8 word: daJango_c(ov062:0x0211dd2c) -> dEnemyBase_c(ov002:0x021081c0) -> dActor_c(arm9:0x0208e390) -> dBase_c(arm9:0x02086e78) -> fBase_c(arm9:0x02086d70). fBase_c is kind 'class' (a root, no base). 5 classes including self, which is what the queue row's blocker estimate assumed.",
+
+  "typeinfo": {
+    "ZTS": "0x0211dd20", "ZTS_module": "ov062",
+    "ZTI": "0x0211dd2c", "ZTI_module": "ov062",
+    "ZTV": "0x0211dd5c", "ZTV_module": "ov062",
+    "note": "CARTRIDGE. All three are in ONE module. There is no vague-linkage split here -- unlike daOts_c, whose _ZTV is in ov064 while its _ZTI/_ZTS sit in ov027. config/arm9/overlays/ov062/symbols.txt names all three addresses, and no other overlay's symbols.txt does."
+  },
+  "modules_touched": ["ov062", "ov002", "arm9"],
+
+  "text_run": {
+    "start": "0x0211b248",
+    "end": "0x0211ced8",
+    "size": "0x1c90",
+    "shard_count": 24,
+    "evidence": "config/arm9/overlays/ov062/delinks.txt at 2ab05bae3 lists 24 consecutive .text delink entries from src/_ZN6KleptoD1Ev.cpp (0x0211b248) through src/d_a_jango.c (ending 0x0211ced8). The run ends exactly at the end of ov062's .text section, so Klepto is the LAST translation unit in this overlay's .text.",
+    "queue_row_says_23": "The queue's shard_count of 23 UNDERCOUNTS BY ONE, and the reason is systematic rather than a typo. Regenerated at this commit in the correct generator order (rtti_extract.py -> rtti_vtables.py -> tu_map.py; 691 TUs / 333 with a class, the non-degraded figure), build/tu_map.json segments ov062 into 10 units and splits EVERY class's *_classInit factory into its own trailing unit carrying no class label: Chuckya 0x2115ee0..0x2117478 (35) + 0x2117478..0x21174cc (1, no class); Koopa 37 + 2; KoopaTheQuick 17 + 1; KoopaFlag 7 + 1; Klepto 0x211b248..0x211ce80 (23) + 0x211ce80..0x211ced8 (1, no class). The queue takes only the class-labelled unit -- tools/queue_audit.py's own measure() for Klepto returns src_files=23, total_lines=1203, run 0x211b248..0x211ce80, i.e. exactly the queue row. But every sibling manifest already in the tree folds the factory unit back in: the manifest function count equals the FULL delink-entry count of the combined run for all four (Chuckya 36/36, Koopa+KoopaSmall 39/39, KoopaTheQuick 18/18, KoopaFlag 8/8). The underlying cause is that daJango_c_classInit / daHolhei_c_classInit are the `_classInit` factory spelling tu_map does not attribute to a class, which is also why notes/data/c-cpp-classification.tsv row 216 gives src/d_a_jango.c an EMPTY rtti_class (row 69 does the same for src/d_a_holhei.c). Klepto's TU is 24."
+  },
+
+  "module_sections": {
+    "evidence": "config/arm9/overlays/ov062/delinks.txt; base_address/code_size/bss_size from extracted/dsd/arm9_overlays/overlays.yaml id 62 (base_address 34692832 = 0x02115ee0, code_size 32512 = 0x7f00, bss_size 960 = 0x3c0).",
+    ".text":   "0x02115ee0..0x0211ced8",
+    ".rodata": "0x0211ced8..0x0211cf30",
+    ".init":   "0x0211cf30..0x0211d8cc",
+    ".ctor":   "0x0211d8cc..0x0211d8e0",
+    ".data":   "0x0211d900..0x0211dde0",
+    ".bss":    "0x0211dde0..0x0211e1a0"
+  },
+
+  "overrides": [
+    {"slot": 0,  "address": "0x0211cb4c", "size": "0x32c", "symbol": "_ZN6Klepto13InitResourcesEv",    "inherited_from": "fBase_c::InitResources"},
+    {"slot": 3,  "address": "0x0211c8b0", "size": "0x6c",  "symbol": "_ZN6Klepto16CleanupResourcesEv", "inherited_from": "fBase_c::CleanupResources"},
+    {"slot": 6,  "address": "0x0211c94c", "size": "0x200", "symbol": "_ZN6Klepto8BehaviorEv",          "inherited_from": "fBase_c::Behavior"},
+    {"slot": 9,  "address": "0x0211c920", "size": "0x2c",  "symbol": "_ZN6Klepto6RenderEv",            "inherited_from": "fBase_c::Render"},
+    {"slot": 12, "address": "0x0211c91c", "size": "0x4",   "symbol": "_ZN6Klepto16OnPendingDestroyEv", "inherited_from": "fBase_c::OnPendingDestroy"},
+    {"slot": 16, "address": "0x0211b248", "size": "0x50",  "symbol": "_ZN6KleptoD1Ev",                 "inherited_from": "fBase_c::~fBase_c (D1, complete)"},
+    {"slot": 17, "address": "0x0211b298", "size": "0x64",  "symbol": "_ZN6KleptoD0Ev",                 "inherited_from": "fBase_c::~fBase_c (D0, deleting)"},
+    {"slot": 29, "address": "0x0211ce78", "size": "0x8",   "symbol": "_ZN6Klepto16OnAimedAtWithEggEv",  "inherited_from": "dActor_c::OnAimedAtWithEgg"}
+  ],
+  "override_count": 8,
+  "override_evidence": "CARTRIDGE, two independent ways that agree exactly. (1) Raw dump of the 31 vtable words at 0x0211dd5c: exactly 8 of them point inside ov062 (0x0211cb4c, 0x0211c8b0, 0x0211c94c, 0x0211c920, 0x0211c91c, 0x0211b248, 0x0211b298, 0x0211ce78); the other 23 point into arm9. (2) config/arm9/overlays/ov062/relocs.txt carries a `kind:load module:overlay(62)` relocation at exactly those 8 vtable word addresses (0x0211dd5c, dd68, dd74, dd80, dd8c, dd9c, dda0, ddd0) and at no other word of the table. `tools/rtti_vtables.py --own daJango_c` prints the same 8. Slot names come from the base chain headers: slots 0/3/6/9/12/16/17 from include/fBase_c.h, slot 29 from include/dActor_c.h.",
+  "inherited_slots_identical_to_sibling": "CARTRIDGE. All 23 non-overridden slots of _ZTV6Klepto are word-for-word identical to the corresponding slots of _ZTV7Chuckya, and the two classes override the SAME 8 slot indices. This is corroboration for the slot map, not for anything about Klepto's bodies.",
+
+  "destructors": {
+    "variants_present": ["D1", "D0"],
+    "D1": {"address": "0x0211b248", "size": "0x50", "slot": 16},
+    "D0": {"address": "0x0211b298", "size": "0x64", "slot": 17},
+    "D2_present": false,
+    "evidence": "CARTRIDGE. Disassembled from overlay_0062.bin. Both are out-of-line and both begin by storing the vtable address point: `ldr r1,[pc,#..] = 0x0211dd5c; str r1,[r4]`. Both then destroy the five sub-objects in REVERSE declaration order -- +0x3a4 (_ZN11ShadowModelD1Ev), +0x334 (_ZN14BlendModelAnimD1Ev), +0x178 (_ZN10dBgCh_ActrD1Ev), +0x144 (_ZN7dCcAc_cD1Ev), +0x110 (_ZN7dCcAc_cD1Ev) -- and then call `bl 0x020aed18` = _ZN12dEnemyBase_cD2Ev. D0 additionally runs the deleting tail: `ldr r1,[0x020a0eac]; ldr r1,[r1]; bl 0x0203c1e8` = _ZN6Memory10DeallocateEPvP4Heap. No _ZN6KleptoD2Ev symbol exists in config/arm9/overlays/ov062/symbols.txt and no third destructor body exists in the run: the 24 delink entries are fully accounted for with no leftover.",
+    "emission_order": "D1 at 0x0211b248 precedes D0 at 0x0211b298 in ascending address order, and they are the two lowest-addressed functions of the whole run.",
+    "key_function_note": "An out-of-line destructor is the key function, so the TU that owns D1/D0 is the TU that anchors _ZTV6Klepto. Klepto owns both, so this TU emits the vtable -- the same situation as the oracle, whose src_tu/actors/Chuckya.cpp writes `p[0] = (int)&_ZTV7Chuckya[2];  /* this TU defines the vtable */`."
+  },
+
+  "size": "0x490",
+  "size_evidence": "CARTRIDGE. daJango_c_classInit at 0x0211ce80 begins `push {r4,lr}; mov r0,#0x490; bl 0x02043444`, and 0x02043444 is _ZN7fBase_cnwEj (fBase_c::operator new) per config/arm9/symbols.txt. So the allocation size is 0x490 = 1168 bytes. include/Klepto.h's static assert (sizeof(Klepto) == 0x490) agrees, but the ROM instruction is the evidence, not the header.",
+
+  "sub_objects": [
+    {"offset": "0x110", "type": "dCcAc_c",        "ctor": "0x020149c8", "dtor": "0x020149a4"},
+    {"offset": "0x144", "type": "dCcAc_c",        "ctor": "0x020149c8", "dtor": "0x020149a4"},
+    {"offset": "0x178", "type": "dBgCh_Actr",     "ctor": "0x02037430", "dtor": "0x020373f8"},
+    {"offset": "0x334", "type": "BlendModelAnim", "ctor": "0x020166d4", "dtor": "0x02016690"},
+    {"offset": "0x3a4", "type": "ShadowModel",    "ctor": "0x02016068", "dtor": "0x02015ff8"}
+  ],
+  "sub_object_evidence": "CARTRIDGE. The OFFSETS are the `add r0, r4, #X` operands in daJango_c_classInit (0x0211ce9c/cea8/ceb0/ceb8/cec0) and again, in reverse, in both destructors. The TYPES are the arm9 symbols the adjacent `bl` targets resolve to in config/arm9/symbols.txt: _ZN7dCcAc_cC1Ev, _ZN10dBgCh_ActrC1Ev, _ZN14BlendModelAnimC1Ev, _ZN11ShadowModelC1Ev and the matching D1s. Note the ctor list runs base-then-ascending-offset and the dtor list runs descending, which fixes the declaration order.",
+
+  "fields_proven": [
+    {"offset": "0x42c", "width": 4, "accesses": 5,  "header_name": "mState", "evidence": "STRONGEST IN THIS FILE. func_ov062_0211c658 (0x0211c658, size 0x50) is byte-for-byte identical to the oracle's Chuckya_ChangeState (0x02116cd8, size 0x50) in 18 of its 20 words. The only two differing words are 0xe5801364 vs 0xe580142c and 0xe5903364 vs 0xe590342c -- i.e. `str r1,[r0,#0x364]`/`ldr r3,[r0,#0x364]` against `str r1,[r0,#0x42c]`/`ldr r3,[r0,#0x42c]`. 0x364 is Chuckya's own mState. So Klepto's state-pointer field is at 0x42c and func_ov062_0211c658 is the same ChangeState routine."},
+    {"offset": "0x430", "width": 4, "accesses": 2,  "header_name": "mPathNodePosX", "evidence": "ldr/str displacement; also taken by address (`add r1,rN,#0x430` at 0x0211b4bc, 0x0211be44, 0x0211ccd4), the Vector3-by-pointer shape."},
+    {"offset": "0x434", "width": 4, "accesses": 4,  "header_name": "mPathNodePosY", "evidence": "ldr/str displacement"},
+    {"offset": "0x438", "width": 4, "accesses": 2,  "header_name": "mPathNodePosZ", "evidence": "ldr/str displacement"},
+    {"offset": "0x444", "width": 2, "accesses": 11, "header_name": "mTimer", "evidence": "HALFWORD, reached only through a computed base: `add rN,this,#0x400` then `ldrh/strh [rN,#0x44]`. ARM's halfword immediate offset is 8 bits, so any 16-bit field past this+0xff needs this idiom -- which is why displacement 0x400 appears 22 times in the run. A displacement-only scan reports 0x444 as never touched; that is a scan artifact, not a fact about the ROM."},
+    {"offset": "0x448", "width": 1, "accesses": 11, "header_name": "unk_448", "evidence": "ldrb/strb displacement"},
+    {"offset": "0x44a", "width": 2, "accesses": 10, "header_name": "unk_44a", "evidence": "HALFWORD via the same computed base; e.g. 0x0211c228 `add r1,r4,#0x400` then 0x0211c230 `strh r2,[r1,#0x4a]`."},
+    {"offset": "0x44c", "width": 4, "accesses": 15, "header_name": "mHeldActorID", "evidence": "ldr/str displacement"},
+    {"offset": "0x450", "width": 4, "accesses": 6,  "header_name": "mHeldPosX", "evidence": "ldr/str displacement; also `add r6,r5,#0x450` at 0x0211c760"},
+    {"offset": "0x454", "width": 4, "accesses": 4,  "header_name": "mHeldPosY", "evidence": "ldr/str displacement"},
+    {"offset": "0x458", "width": 4, "accesses": 4,  "header_name": "mHeldPosZ", "evidence": "ldr/str displacement"},
+    {"offset": "0x464", "width": 4, "accesses": 8,  "header_name": "mPathId", "evidence": "ldr/str displacement"},
+    {"offset": "0x468", "width": 4, "accesses": 15, "header_name": "mCarriedItem", "evidence": "ldr/str displacement"},
+    {"offset": "0x46c", "width": 4, "accesses": 3,  "header_name": "mHeldItemParam", "evidence": "ldr/str displacement"},
+    {"offset": "0x470", "width": 4, "accesses": 2,  "header_name": "unk_470", "evidence": "ldr/str displacement"},
+    {"offset": "0x474", "width": 4, "accesses": 10, "header_name": "mPathNodeIndex", "evidence": "ldr/str displacement"},
+    {"offset": "0x484", "width": 4, "accesses": 1,  "header_name": "mSpawnPosX", "evidence": "ldr/str displacement"},
+    {"offset": "0x488", "width": 4, "accesses": 1,  "header_name": "mSpawnPosY", "evidence": "ldr/str displacement"},
+    {"offset": "0x48c", "width": 4, "accesses": 1,  "header_name": "mSpawnPosZ", "evidence": "ldr/str displacement"}
+  ],
+  "fields_scan_method": "CARTRIDGE. Every one of the 24 shard bodies was disassembled (capstone, restarting after each undecodable literal-pool word) and every ldr*/str* memory operand collected. Displacements >= 0x100 were taken directly; smaller ones were resolved through a tracked `add rD,rB,#imm` computed base. Counts above are occurrences in the Klepto run only. This proves the OFFSET and the ACCESS WIDTH. It does NOT prove the base register held `this` in every instance -- though for each offset listed the same base register also carries other confirmed Klepto fields inside the same function. The NAMES are the coined ones already in include/Klepto.h; none is ROM-attested.",
+
+  "fields_live_but_hidden_inside_header_padding": [
+    {"offset": "0x403", "width": 1, "accesses": 1,  "header_covers_it_with": "pad_3cc[0x60]"},
+    {"offset": "0x43c", "width": 4, "accesses": 14, "header_covers_it_with": "pad_43c[0x8]"},
+    {"offset": "0x440", "width": 4, "accesses": 7,  "header_covers_it_with": "pad_43c[0x8]"},
+    {"offset": "0x446", "width": 1, "accesses": 5,  "header_covers_it_with": "pad_446[0x2]"},
+    {"offset": "0x447", "width": 1, "accesses": 3,  "header_covers_it_with": "pad_446[0x2]"},
+    {"offset": "0x460", "width": 4, "accesses": 6,  "header_covers_it_with": "pad_45c[0x8]"}
+  ],
+  "fields_padding_note": "CARTRIDGE. These six offsets are read and/or written by Klepto's own code but include/Klepto.h has no member at them -- they fall inside its pad_ arrays. 0x43c in particular is the single busiest word in the class after mHeldActorID/mCarriedItem (14 accesses, stores of constants 1, 2, 0 and a computed 0x300+n). Two more offsets inside pad_3cc[0x60] are taken by ADDRESS and passed to calls: 0x3cc (0x0211c854) and 0x3fc (0x0211c740, 0x0211c814, 0x0211c824). This is not a byte-match problem for stage 2 -- the shards reach these through casts -- but it IS the stage-3b ceiling: a member converted to a real Klepto:: method must spell its fields as this->name, and a field with no name cannot be spelled. Naming them requires a header edit, which is out of scope for a text-only promotion. Do NOT silently widen or rename the pad_ arrays without re-proving sizeof stays 0x490. Also note 0x400 itself is almost certainly NOT a field: its 22 occurrences are the `add rN,this,#0x400` computed-base idiom used to reach the halfwords at 0x444 and 0x44a.",
+
+  "non_virtual": {
+    "file_local_helpers": [
+      {"address": "0x0211b2fc", "size": "0xb0",  "legacy_source": "src/func_ov062_0211b2fc.c",   "call_sites": 4},
+      {"address": "0x0211b3ac", "size": "0x170", "legacy_source": "src/func_ov062_0211b3ac.cpp", "call_sites": 2},
+      {"address": "0x0211b51c", "size": "0x2e4", "legacy_source": "src/func_ov062_0211b51c.c",   "call_sites": 2},
+      {"address": "0x0211c658", "size": "0x50",  "legacy_source": "src/func_ov062_0211c658.cpp", "call_sites": 16,
+       "note": "This is Klepto's ChangeState. Byte-identical to Chuckya_ChangeState except for the two member displacements (0x42c vs 0x364). A coined name for it at stage 3b is well evidenced; the ROM does not supply the word."},
+      {"address": "0x0211c6a8", "size": "0x208", "legacy_source": "src/func_ov062_0211c6a8.c",   "call_sites": 1}
+    ],
+    "factory": {"address": "0x0211ce80", "size": "0x58", "symbol": "daJango_c_classInit", "legacy_source": "src/d_a_jango.c",
+                "note": "Reached only from g_profile_JANGO+0x00. Unattributed in c-cpp-classification.tsv but part of the run."},
+    "evidence": "CARTRIDGE, two independent methods that agree exactly. (1) config/arm9/overlays/ov062/relocs.txt filtered on destination module: 25 rows of kind:arm_call with a destination inside 0x0211b248..0x0211ced8 and module:overlay(62). (2) A raw BL/BLX-encoding scan (bits 27:25 == 0b101) of the WHOLE ov062 .text, 0x02115ee0..0x0211ced8, found 740 direct call instructions, of which the same 25 target the Klepto run, hitting the same 5 distinct addresses with the same per-target site counts (16/4/2/2/1). Capstone alone found only 123 of those 740 -- it halts at the first undecodable literal-pool word -- so the raw-encoding scan is the one to trust."
+  },
+
+  "callers": {
+    "external_callers": 0,
+    "evidence": "CARTRIDGE. All 106 config/arm9/**/relocs.txt files were scanned (91,808 relocation rows total). 662 rows have a destination inside 0x0211b248..0x0211ced8; of those, 618 were REJECTED because their destination module is not this overlay -- they belong to overlay(6):41, overlay(63):25, overlay(64):282, overlay(65):93, overlay(75):168, overlays(64,65):1, overlays(64,75):4, overlays(65,75):4 -- overlays that share ov062's address space. The 44 accepted rows (module:overlay(62)) ALL originate inside ov062 itself, and every one of the 25 arm_call rows among them originates inside the Klepto run. No function in any other ov062 translation unit, and no function in any other module, calls into this class.",
+    "filter_sanity_check": "The module spelling in relocs.txt is `overlay(62)`, not `ov062`. A filter written against `ov062` matches nothing and reports zero callers for every function, which reads like a clean self-contained result. This scan was checked against that failure mode by counting the rows it rejected: 618 rejected on module and 91,146 rejected on range, i.e. the filter demonstrably accepts and rejects. The 'no external callers' finding is therefore a measurement, not a broken filter.",
+    "profile_reference": {
+      "from": "arm9:0x02090c20", "to": "g_profile_JANGO (0x0211dd38)", "kind": "load",
+      "note": "The one and only reference into any Klepto-owned datum from outside ov062. 0x02090c20 lies inside ACTOR_SPAWN_TABLE (config/arm9/symbols.txt, addr:0x02090864). (0x02090c20 - 0x02090864)/4 = 239 = 0xef, which is exactly the actor id stored in the profile record itself."
+    }
+  },
+
+  "profile": {
+    "symbol": "g_profile_JANGO",
+    "address": "0x0211dd38",
+    "size": "0x1c",
+    "words": ["0x0211ce80", "0x005e00ef", "0x10000002", "0x00064000", "0x00258000", "0x01f40000", "0x01f40000"],
+    "actor_id": "0xef",
+    "evidence": "CARTRIDGE. +0x00 = 0x0211ce80 = daJango_c_classInit (a kind:load relocation at 0x0211dd38 confirms it). The actor id 0xef is proven twice over: it is the low halfword of the +0x04 word, and it is also the index at which ACTOR_SPAWN_TABLE points back at this record. The remaining five words are recorded raw -- their MEANING is not established here. For scale, the sibling g_profile_HOLHEI at 0x0211d9bc has the same 7-word shape with id 0xbe."
+  },
+
+  "data_band": {
+    "owned_by_the_TU": "none",
+    "evidence": "config/arm9/overlays/ov062/delinks.txt assigns delink files only to .text and .init. The .rodata, .ctor, .data and .bss sections have no per-file entries at all, so no TU owns them. All four existing ov062 manifests record sections as .text only, with data: [] and bss: []. This is what promotion_route: text-only means here.",
+    "rodata_is_not_klepto": "PROVEN, not assumed. The .rodata block at 0x0211ced8..0x0211cf30 sits immediately after Klepto's .text, but all 8 relocations into it (filtered on module:overlay(62); 7 further rows rejected as belonging to overlay(6)/(63)/(65)/(75)) originate at 0x021179dc, 0x02118f74-0x02118f7c and 0x021195f0-0x02119600 -- every one of them inside the Koopa+KoopaSmall run (0x021174cc..0x0211975c). Klepto references none of it.",
+    "pointer_to_member_records": {
+      "location": "0x0211dcd0..0x0211dd20",
+      "count": 10,
+      "record_size": 8,
+      "alignment_note": "The band is 8-byte aligned starting at 0x0211dcd0 and each record is {function pointer, adjustment}. Read 4 bytes off, it yields no valid records and looks empty. The left boundary is hard: _ZTV9KoopaFlag ends exactly at 0x0211dcd0. The right boundary is hard: _ZTS9daJango_c begins at 0x0211dd20. 0x50 bytes / 8 = 10 records exactly.",
+      "records": [
+        {"address": "0x0211dcd0", "target": "0x0211ba84", "adj": "0x00000000", "symbol": "func_ov062_0211ba84"},
+        {"address": "0x0211dcd8", "target": "0x0211c594", "adj": "0x00000000", "symbol": "func_ov062_0211c594"},
+        {"address": "0x0211dce0", "target": "0x0211bd10", "adj": "0x00000000", "symbol": "func_ov062_0211bd10"},
+        {"address": "0x0211dce8", "target": "0x0211b880", "adj": "0x00000000", "symbol": "func_ov062_0211b880"},
+        {"address": "0x0211dcf0", "target": "0x0211c2f4", "adj": "0x00000000", "symbol": "func_ov062_0211c2f4"},
+        {"address": "0x0211dcf8", "target": "0x0211bc54", "adj": "0x00000000", "symbol": "func_ov062_0211bc54"},
+        {"address": "0x0211dd00", "target": "0x0211b8d8", "adj": "0x00000000", "symbol": "func_ov062_0211b8d8"},
+        {"address": "0x0211dd08", "target": "0x0211b800", "adj": "0x00000000", "symbol": "func_ov062_0211b800"},
+        {"address": "0x0211dd10", "target": "0x0211c218", "adj": "0x00000000", "symbol": "func_ov062_0211c218"},
+        {"address": "0x0211dd18", "target": "0x0211b930", "adj": "0x00000000", "symbol": "func_ov062_0211b930"}
+      ],
+      "evidence": "CARTRIDGE. All ten targets lie inside the Klepto .text run, and config/arm9/overlays/ov062/relocs.txt carries a kind:load module:overlay(62) relocation at each of the ten record addresses -- and at no other 8-byte slot in the band."
+    },
+    "bss_state_records": {
+      "location": "0x0211e14c..0x0211e19c",
+      "count": 5,
+      "record_size": 16,
+      "shape": "Each 16-byte record is TWO pointer-to-member values, one at +0x00 and one at +0x08.",
+      "records": [
+        {"address": "0x0211e14c", "pmf_at_0x00": "func_ov062_0211b930", "pmf_at_0x08": "func_ov062_0211b8d8"},
+        {"address": "0x0211e15c", "pmf_at_0x00": "func_ov062_0211c594", "pmf_at_0x08": "func_ov062_0211c2f4"},
+        {"address": "0x0211e16c", "pmf_at_0x00": "func_ov062_0211b880", "pmf_at_0x08": "func_ov062_0211b800"},
+        {"address": "0x0211e17c", "pmf_at_0x00": "func_ov062_0211c218", "pmf_at_0x08": "func_ov062_0211bd10"},
+        {"address": "0x0211e18c", "pmf_at_0x00": "func_ov062_0211bc54", "pmf_at_0x08": "func_ov062_0211ba84"}
+      ],
+      "evidence": "CARTRIDGE. __sinit_ov062_0211d6fc was disassembled and its literal pool resolved. From 0x0211d774 it runs five identical 11-instruction blocks, each loading a destination and two source records and copying 8 bytes into dest+0x00 and 8 bytes into dest+0x08. That consumes all ten .data PMF records and fills all five .bss records, with nothing left over on either side.",
+      "dispatch_note": "func_ov062_0211c658 (ChangeState) stores the record pointer into this->0x42c and immediately calls the PMF at the record's +0x00 (`ldr r2,[r3]; cmp r2,#0`). include/Klepto.h states Behavior calls the PMF at +0x08 each frame. The two-PMF-per-state shape is proven; which of the pair is the enter hook and which the per-frame hook is inference from those two call sites."
+    },
+    "sinit": {
+      "symbol": "__sinit_ov062_0211d6fc",
+      "range": "0x0211d6fc..0x0211d8cc",
+      "delink_file": "src/__sinit_ov062_0211d6fc.c",
+      "ctor_slot": "0x0211d8dc (.p__sinit_ov062_0211d6fc, last of 5 .ctor entries)",
+      "owns_bss": "0x0211e0fc..0x0211e19c",
+      "evidence": "CARTRIDGE, by disjointness rather than by position. ov062 has 5 sinits and 5 .ctor entries. The literals of __sinit_ov062_0211d6fc resolve to 0x0211e0fc, 0x0211e104, 0x0211e10c, 0x0211e114, 0x0211e11c, 0x0211e128, 0x0211e134, 0x0211e140 plus the five state records at 0x0211e14c..0x0211e19c -- a contiguous band running to the end of .bss. The preceding sinit __sinit_ov062_0211d690 touches only 0x0211e0d4/0x0211e0dc/0x0211e0e4/0x0211e0f0, strictly below. The boundary at 0x0211e0fc is clean, so this sinit was not read by assuming 'last sinit = last TU'.",
+      "IMPORTANT": "This sinit is NOT part of the Klepto TU. It is its own delink file in the .init section, and the four existing ov062 manifests all exclude their sinits. Do not fold it in."
+    }
+  },
+
+  "sibling_oracle": {
+    "name": "Chuckya",
+    "same_overlay": true,
+    "IS_NOT_PROMOTED": "The task brief called Chuckya 'a promoted class'. At 2ab05bae3 it is NOT. config/tu_manifest.d/ov062/Chuckya.json has status 'text-verified', its promoted_source field names src/actors/Chuckya.cpp and THAT FILE DOES NOT EXIST. The merged TU lives at src_tu/actors/Chuckya.cpp only.",
+    "no_class_in_ov062_is_promoted": "All four ov062 manifests -- Chuckya, Koopa+KoopaSmall, KoopaTheQuick, KoopaFlag -- are status 'text-verified' with a non-existent promoted_source. There is no Klepto manifest at all. Klepto will be the FIRST promotion in this overlay, so there is no in-overlay example of the finished shape to copy; Chuckya supplies the shadow-TU shape and the codegen conventions only.",
+    "conventions_worth_copying_from_src_tu/actors/Chuckya.cpp": [
+      "`//cpp` as the first bytes of the file.",
+      "Function order is the REVERSE of ROM address order (mwccarm 2004/b56 emits .text per function in reverse source order), so 0x0211ce80 d_a_jango.c is written FIRST and 0x0211b248 D1 LAST.",
+      "The vptr store is written `p[0] = (int)&_ZTV6Klepto[2];` -- the [2] steps past the offset-to-top and RTTI header words to the address point.",
+      "A .c-derived member is wrapped in its own `extern \"C\" { }` block.",
+      "Chuckya carries a positional `#pragma long_calls` bracketed off around one member and leaves file-global pragmas out with a written note. Klepto's own pragma inventory is a stage-2 question and was not audited here; the queue lists no pragma blocker for Klepto (it lists `pragma:2` for Koopa, and nothing for Klepto)."
+    ]
+  },
+
+  "blockers_for_the_writer": [
+    "SHARD COUNT: fold 24 shards, not the queue's 23. src/d_a_jango.c is unattributed in the classification but is part of the linker run, exactly as src/d_a_holhei.c is part of Chuckya's 36.",
+    "RENAMING A PMF TARGET IS ONE EDIT, NOT TWO. Ten of the 24 members (0x0211b800, b880, b8d8, b930, ba84, bc54, bd10, c218, c2f4, c594) are reached ONLY through pointer-to-member records that sit in UNOWNED .data at 0x0211dcd0..0x0211dd20. dsd resolves those records by symbol NAME. If stage 3b renames any of the ten from func_ov062_* to a mangled _ZN6Klepto* name, the new name must reach config/arm9/overlays/ov062/symbols.txt in the SAME commit or that .data word links as 0x00000000. No byte gate at stage 2 or 3 catches it.",
+    "A class member function cannot sit inside an `extern \"C\" { }` region, so the file-scope extern \"C\" block must go after the last surviving func_* member.",
+    "STAGE 3B CEILING IS NAMING AND HEADER SCOPE, NOT CODEGEN. 8 of the 24 members already carry mangled _ZN6Klepto* names and convert as a pure codegen question. The other 16 (5 helpers, 10 PMF handlers, 1 factory) are auto-named func_* or d_a_jango, so converting them means renaming, which drags symbols.txt and the ten .data PMF words with it. Separately, six offsets the code actually uses (0x403, 0x43c, 0x440, 0x446, 0x447, 0x460) have no member in include/Klepto.h, so any member touching them cannot be spelled as this->field without a header edit.",
+    "DO NOT FOLD THE SINIT. __sinit_ov062_0211d6fc is a separate delink file in .init; every existing ov062 manifest excludes its sinit."
+  ],
+
+  "unproven": [
+    "The class name 'Klepto' -- COINED. The cartridge's name is daJango_c. Zero occurrences of 'Klepto' in any case in any of the 106 extracted images.",
+    "Every field NAME in include/Klepto.h (mState, mTimer, mHeldActorID, mCarriedItem, mPathId, mPathNodeIndex, mSpawnPos*, mHeldPos*, mPathNodePos*, mHeldItemParam, unk_448, unk_44a, unk_470). The OFFSETS and ACCESS WIDTHS are cartridge-proven above; the words are invented. No mangled name in this cartridge spells any member of this class.",
+    "The member names in include/Klepto.h for the five sub-objects (mdCcAc_c1, mdCcAc_c2, mWithMeshClsn, mBlendModelAnim, mShadowModel). Their offsets, types and declaration order ARE proven from classInit and both destructors; the identifiers are invented.",
+    "Whether the two dCcAc_c sub-objects at 0x110 and 0x144 have distinct roles. They are constructed and destroyed by the same functions; nothing distinguishes them in this run.",
+    "Names for the six live fields hidden inside pad_ arrays (0x403, 0x43c, 0x440, 0x446, 0x447, 0x460) and for the two addresses taken inside pad_3cc (0x3cc, 0x3fc). Do not invent names for these; their existence is proven, their meaning is not.",
+    "The meaning of profile words +0x08..+0x18 of g_profile_JANGO (0x10000002, 0x00064000, 0x00258000, 0x01f40000, 0x01f40000). Only the factory pointer and the actor id 0xef are established.",
+    "The high halfword 0x005e of g_profile_JANGO+0x04. Unlike the low halfword it has no independent cross-check.",
+    "A name for func_ov062_0211c658. It IS the ChangeState routine on strong byte evidence, but 'ChangeState' is the project's coined word carried over from Chuckya_ChangeState; the ROM supplies no name.",
+    "Which PMF of each 16-byte state record is the enter hook and which the per-frame hook. The two-PMF shape is proven from the sinit; the roles are inferred from two call sites.",
+    "That 0x400 is a field. It is far more likely just the computed base register mwccarm materialises to reach the halfwords at 0x444 and 0x44a, since ARM halfword loads carry only an 8-bit displacement.",
+    "The pragma inventory of Klepto's 24 legacy shards. Not audited at this stage; the queue lists no pragma blocker for Klepto, but that is a queue estimate, not a measurement.",
+    "The queue row's `compiler-only:>=11` figure. Per notes/data/tu-promotion-queue.tsv it is explicitly an ESTIMATE derived from the chain length (2x5+1), not a count of anything measured in the ROM."
+  ]
+}
