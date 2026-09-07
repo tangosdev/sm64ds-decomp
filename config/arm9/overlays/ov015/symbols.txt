@@ -18,10 +18,10 @@ _ZN14KnockDownPlank6RenderEv kind:function(arm,size=0x28) addr:0x021116f8
 _ZN14KnockDownPlank8BehaviorEv kind:function(arm,size=0x240) addr:0x02111720
 _ZN14KnockDownPlank13InitResourcesEv kind:function(arm,size=0x208) addr:0x02111960
 daObjBk_Botaosi_c_classInit kind:function(arm,size=0x38) addr:0x02111b68
-_ZN9MovingBarD1Ev kind:function(arm,size=0x44) addr:0x02111ba0
-_ZN9MovingBarD0Ev kind:function(arm,size=0x58) addr:0x02111be4
-_ZN9MovingBar4KillEv kind:function(arm,size=0x7c) addr:0x02111c3c
-_ZN9MovingBar15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x02111cb8
+_ZN19daObjBk_Dossunbar_cD1Ev kind:function(arm,size=0x44) addr:0x02111ba0
+_ZN19daObjBk_Dossunbar_cD0Ev kind:function(arm,size=0x58) addr:0x02111be4
+_ZN19daObjBk_Dossunbar_c4KillEv kind:function(arm,size=0x7c) addr:0x02111c3c
+_ZN19daObjBk_Dossunbar_c15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x02111cb8
 func_ov015_02111ce0 kind:function(arm,size=0x48) addr:0x02111ce0
 func_ov015_02111d28 kind:function(arm,size=0x24) addr:0x02111d28
 func_ov015_02111d4c kind:function(arm,size=0x40) addr:0x02111d4c
@@ -37,10 +37,10 @@ func_ov015_02111f4c kind:function(arm,size=0x20) addr:0x02111f4c
 func_ov015_02111f6c kind:function(arm,size=0x40) addr:0x02111f6c
 func_ov015_02111fac kind:function(arm,size=0xc) addr:0x02111fac
 func_ov015_02111fb8 kind:function(arm,size=0x4c) addr:0x02111fb8
-_ZN9MovingBar16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02112004
-_ZN9MovingBar6RenderEv kind:function(arm,size=0x28) addr:0x02112068
-_ZN9MovingBar8BehaviorEv kind:function(arm,size=0x6c) addr:0x02112090
-_ZN9MovingBar13InitResourcesEv kind:function(arm,size=0x134) addr:0x021120fc
+_ZN19daObjBk_Dossunbar_c16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02112004
+_ZN19daObjBk_Dossunbar_c6RenderEv kind:function(arm,size=0x28) addr:0x02112068
+_ZN19daObjBk_Dossunbar_c8BehaviorEv kind:function(arm,size=0x6c) addr:0x02112090
+_ZN19daObjBk_Dossunbar_c13InitResourcesEv kind:function(arm,size=0x134) addr:0x021120fc
 daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_L kind:function(arm,size=0x30) addr:0x02112230
 daObjBk_Dossunbar_c_classInit_BK_DOSSUNBAR_S kind:function(arm,size=0x30) addr:0x02112260
 _ZN9TowerStepD1Ev kind:function(arm,size=0x4c) addr:0x02112290
@@ -229,7 +229,7 @@ data_ov015_02114538 kind:data(any) addr:0x02114538
 data_ov015_0211453c kind:data(any) addr:0x0211453c
 g_profile_BK_DOSSUNBAR_S kind:data(any) addr:0x0211454c ambiguous
 g_profile_BK_DOSSUNBAR_L kind:data(any) addr:0x02114568 ambiguous
-_ZTV9MovingBar kind:data(any) addr:0x0211458c
+_ZTV19daObjBk_Dossunbar_c kind:data(any) addr:0x0211458c
 data_ov015_02114598 kind:data(any) addr:0x02114598 ambiguous
 data_ov015_021145e4 kind:data(any) addr:0x021145e4 ambiguous
 _ZTI14daObjBk_Lift_c kind:data(any) addr:0x0211460c

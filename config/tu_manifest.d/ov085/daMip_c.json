@@ -1,0 +1,484 @@
+{
+  "id": "ov085/daMip_c",
+  "module": "ov085",
+  "source": "src/actors/daMip_c.cpp",
+  "promoted_source": "src/actors/daMip_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x212a6d4..0x212cc2c, 31 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): daMip_c",
+    "module sinit corroboration: 6 sinit(s) / 6 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0212a6d4",
+      "end": "0x0212cc88"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7daMip_cD1Ev",
+      "address": "0x0212a6d4",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN6RabbitD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7daMip_cD0Ev",
+      "address": "0x0212a724",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN6RabbitD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN7daMip_c14TestWaterBelowEv",
+      "address": "0x0212a788",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov085_0212a788.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN7daMip_c10UpdateGrabEv",
+      "address": "0x0212a828",
+      "size": "0x000000dc",
+      "legacy_source": "src/func_ov085_0212a828.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "_ZN7daMip_c17StateSaveTalkMainEv",
+      "address": "0x0212a904",
+      "size": "0x000001a0",
+      "legacy_source": "src/func_ov085_0212a904.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "_ZN7daMip_c17StateSaveTalkInitEv",
+      "address": "0x0212aaa4",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov085_0212aaa4.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "_ZN7daMip_c13StateTalkMainEv",
+      "address": "0x0212aaec",
+      "size": "0x00000150",
+      "legacy_source": "src/func_ov085_0212aaec.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "_ZN7daMip_c13StateTalkInitEv",
+      "address": "0x0212ac3c",
+      "size": "0x00000010",
+      "legacy_source": "src/func_ov085_0212ac3c.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "_ZN7daMip_c17StateReleasedMainEv",
+      "address": "0x0212ac4c",
+      "size": "0x00000140",
+      "legacy_source": "src/func_ov085_0212ac4c.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN7daMip_c17StateReleasedInitEv",
+      "address": "0x0212ad8c",
+      "size": "0x0000007c",
+      "legacy_source": "src/func_ov085_0212ad8c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN7daMip_c15StateCaughtMainEv",
+      "address": "0x0212ae08",
+      "size": "0x000005f4",
+      "legacy_source": "src/func_ov085_0212ae08.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "_ZN7daMip_c15StateCaughtInitEv",
+      "address": "0x0212b3fc",
+      "size": "0x00000048",
+      "legacy_source": "src/func_ov085_0212b3fc.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "_ZN7daMip_c13StateRestMainEv",
+      "address": "0x0212b444",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov085_0212b444.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "_ZN7daMip_c13StateRestInitEv",
+      "address": "0x0212b478",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov085_0212b478.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN7daMip_c13StateFleeMainEv",
+      "address": "0x0212b4b4",
+      "size": "0x000002a8",
+      "legacy_source": "src/func_ov085_0212b4b4.c",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN7daMip_c13StateFleeInitEv",
+      "address": "0x0212b75c",
+      "size": "0x00000110",
+      "legacy_source": "src/func_ov085_0212b75c.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN7daMip_c16StateStartleMainEv",
+      "address": "0x0212b86c",
+      "size": "0x00000034",
+      "legacy_source": "src/func_ov085_0212b86c.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN7daMip_c16StateStartleInitEv",
+      "address": "0x0212b8a0",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov085_0212b8a0.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN7daMip_c13StateIdleMainEv",
+      "address": "0x0212b8dc",
+      "size": "0x00000338",
+      "legacy_source": "src/func_ov085_0212b8dc.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN7daMip_c13StateIdleInitEv",
+      "address": "0x0212bc14",
+      "size": "0x00000064",
+      "legacy_source": "src/func_ov085_0212bc14.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN7daMip_c8SetStateEPv",
+      "address": "0x0212bc78",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov085_0212bc78.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN7daMip_c21UpdateMatrixAndShadowEv",
+      "address": "0x0212bcc8",
+      "size": "0x000000f4",
+      "legacy_source": "src/func_ov085_0212bcc8.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "_ZN7daMip_c19UpdateCarriedMatrixEv",
+      "address": "0x0212bdbc",
+      "size": "0x00000120",
+      "legacy_source": "src/func_ov085_0212bdbc.cpp",
+      "ordinal": 22
+    },
+    {
+      "symbol": "_ZN7daMip_c18UpdateMirrorShadowEv",
+      "address": "0x0212bedc",
+      "size": "0x00000128",
+      "legacy_source": "src/func_ov085_0212bedc.cpp",
+      "ordinal": 23
+    },
+    {
+      "symbol": "_ZN7daMip_c16CleanupResourcesEv",
+      "address": "0x0212c004",
+      "size": "0x0000006c",
+      "legacy_source": "src/_ZN6Rabbit16CleanupResourcesEv.cpp",
+      "ordinal": 24
+    },
+    {
+      "symbol": "_ZN7daMip_c16OnPendingDestroyEv",
+      "address": "0x0212c070",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN6Rabbit16OnPendingDestroyEv.cpp",
+      "ordinal": 25
+    },
+    {
+      "symbol": "_ZN7daMip_c6RenderEv",
+      "address": "0x0212c074",
+      "size": "0x000000dc",
+      "legacy_source": "src/_ZN6Rabbit6RenderEv.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "_ZN7daMip_c17RenderMirrorImageEv",
+      "address": "0x0212c150",
+      "size": "0x000000e0",
+      "legacy_source": "src/func_ov085_0212c150.cpp",
+      "ordinal": 27
+    },
+    {
+      "symbol": "_ZN7daMip_c8BehaviorEv",
+      "address": "0x0212c230",
+      "size": "0x000005cc",
+      "legacy_source": "src/_ZN6Rabbit8BehaviorEv.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "_ZN7daMip_c13InitResourcesEv",
+      "address": "0x0212c7fc",
+      "size": "0x0000041c",
+      "legacy_source": "src/_ZN6Rabbit13InitResourcesEv.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "_ZN7daMip_c13OnYoshiTryEatEv",
+      "address": "0x0212cc18",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN6Rabbit13OnYoshiTryEatEv.cpp",
+      "ordinal": 30
+    },
+    {
+      "symbol": "daMip_c_classInit",
+      "address": "0x0212cc2c",
+      "size": "0x0000005c",
+      "legacy_source": "src/d_a_mip.c",
+      "ordinal": 31
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning (RESOLVED): RAW: src/func_ov085_0212a828.cpp (func_ov085_0212a828) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): RAW: src/func_ov085_0212bdbc.cpp (func_ov085_0212bdbc) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212aaec; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212aaec; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212bc78' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212aaec; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212bc78' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212ac4c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov085_0212aaa4 and the one that held func_ov085_0212ad8c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_Z14ApproachLinearRsss' differs between the legacy file that used to hold func_ov085_0212aaec and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player9StartTalkER7fBase_cb' differs between the legacy file that used to hold func_ov085_0212ac4c and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound7PlaySubEjjj5Fix12IiEb' differs between the legacy file that used to hold func_ov085_0212aaec and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02013944' differs between the legacy file that used to hold func_ov085_0212aaa4 and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209d660' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov085_0212aaa4 and the one that held func_ov085_0212b3fc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212bc78' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212b444; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov085_0212aaa4 and the one that held func_ov085_0212b478; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212ac4c and the one that held func_ov085_0212b4b4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212b4b4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212b4b4; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212ac4c and the one that held func_ov085_0212b75c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7PathPtr6FromIDEj' differs between the legacy file that used to hold func_ov085_0212b4b4 and the one that held func_ov085_0212b75c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK7PathPtr7GetNodeER7Vector3j' differs between the legacy file that used to hold func_ov085_0212b4b4 and the one that held func_ov085_0212b75c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov085_0212b4b4 and the one that held func_ov085_0212b75c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov085_0212b444 and the one that held func_ov085_0212b86c; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov085_0212aaa4 and the one that held func_ov085_0212b8a0; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212ac4c and the one that held func_ov085_0212b8dc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212bc78' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212b8dc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212b8dc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9Animation8FinishedEv' differs between the legacy file that used to hold func_ov085_0212b444 and the one that held func_ov085_0212b8dc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov085_0212aaa4 and the one that held func_ov085_0212b8dc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212b8dc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov085_0212aaa4 and the one that held func_ov085_0212bc14; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021305c0' differs between the legacy file that used to hold func_ov085_0212ad8c and the one that held func_ov085_0212bc14; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzDist' differs between the legacy file that used to hold func_ov085_0212b8dc and the one that held func_ov085_0212bedc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held func_ov085_0212bedc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromTranslation' differs between the legacy file that used to hold func_ov085_0212bcc8 and the one that held func_ov085_0212bedc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j' differs between the legacy file that used to hold func_ov085_0212bcc8 and the one that held func_ov085_0212bedc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov085_0212bcc8 and the one that held func_ov085_0212bedc; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021305c0' differs between the legacy file that used to hold func_ov085_0212ad8c and the one that held _ZN7daMip_c16CleanupResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_020a0e68' differs between the legacy file that used to hold func_ov085_0212bcc8 and the one that held func_ov085_0212c150; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f2f8' differs between the legacy file that used to hold _ZN7daMip_c6RenderEv and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_02092120' differs between the legacy file that used to hold _ZN7daMip_c6RenderEv and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021305c0' differs between the legacy file that used to hold func_ov085_0212ad8c and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov085_021306dc' differs between the legacy file that used to hold func_ov085_0212ac4c and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212ac4c and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7Message11PrepareTalkEv' differs between the legacy file that used to hold func_ov085_0212ae08 and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02013890' differs between the legacy file that used to hold func_ov085_0212ae08 and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound7PlaySubEjjj5Fix12IiEb' differs between the legacy file that used to hold func_ov085_0212aaec and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8SaveData22NumGlowingRabbitsFoundEv' differs between the legacy file that used to hold func_ov085_0212ae08 and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov085_0212ae08 and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player12GetTalkStateEv' differs between the legacy file that used to hold func_ov085_0212aaec and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN6Player9DropActorEv' differs between the legacy file that used to hold func_ov085_0212ae08 and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212bc78' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov085_0212aaa4 and the one that held _ZN7daMip_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f2f8' differs between the legacy file that used to hold _ZN7daMip_c6RenderEv and the one that held _ZN7daMip_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7PathPtrC1Ev' differs between the legacy file that used to hold func_ov085_0212b4b4 and the one that held _ZN7daMip_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN7PathPtr6FromIDEj' differs between the legacy file that used to hold func_ov085_0212b4b4 and the one that held _ZN7daMip_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK7PathPtr7GetNodeER7Vector3j' differs between the legacy file that used to hold func_ov085_0212b4b4 and the one that held _ZN7daMip_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212bcc8' differs between the legacy file that used to hold _ZN7daMip_c8BehaviorEv and the one that held _ZN7daMip_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c13ClosestPlayerEv' differs between the legacy file that used to hold func_ov085_0212ac4c and the one that held _ZN7daMip_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov085_0212b8dc and the one that held _ZN7daMip_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov085_0212bc78' differs between the legacy file that used to hold func_ov085_0212a904 and the one that held _ZN7daMip_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Vector3') differs between the legacy file that used to hold func_ov085_0212a788 and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('typedef', 'Fix12') differs between the legacy file that used to hold func_ov085_0212aaec and the one that held func_ov085_0212ae08; kept the first, the other is commented out for review",
+    "tubuild reconcile note: the generated preamble was discarded and the TU hand-curated, so none of the conflict markers the warnings above were frozen against are present in src_tu/actors/daMip_c.cpp. Each was reconciled deliberately rather than by picking a side. FUNCTION declarations were reduced to ONE signature per symbol in a single file-scope extern \"C\" region -- a class member function may not sit inside a linkage specification, so there is no other place to put them -- and the reconciled spelling is the widest that keeps every call site's codegen: pointer parameters became void *, and two return types were forced by use rather than by majority (Sound::PlaySub and _Z14ApproachLinearRsss are tested in an `if` by StateTalkMain, so the `void` three of the four legacy files declared cannot be right, and RandomIntInternal is unsigned because InitResources shifts its result right by 8 and the ROM uses LSR). DATA declarations were NOT reconciled: each stays block-scope inside the member that recovered it, because the legacy files genuinely disagreed about the shape of the same ov085 statics -- 0x021305c0 alone was spelled int[], struct G { int w[2]; }, an incomplete struct S, void *[] and plain char -- and mwccarm leaves a file-scope variable's name unmangled in C++, so a block-scope extern still names the ROM symbol. The two shadow-type conflicts went the same way: the Vector3 and Fix12 typedefs stay inside their own members. The two RAW warnings are likewise resolved -- both bodies were carried out of their legacy extern \"C\" blocks and are now real daMip_c methods. Marked (RESOLVED) rather than deleted, so the record that the legacy files disagreed about these names survives. Checked by tools/check_tubuild_conflicts.py.",
+    "linkcheck note: `tools/tubuild.py linkcheck ov085/daMip_c` cannot be the pre-promotion proof for THIS TU, and the reason is structural rather than a failure of the fold. The promotion carries a symbol rename -- 23 auto-named ov085 members become daMip_c methods in config/arm9/overlays/ov085/symbols.txt -- so there is no intermediate tree state that links: before the rename the merged TU defines names symbols.txt does not carry, and after it the 32 legacy shards define names it no longer carries. Once the spliced delinks entry exists, tubuild.py:4641 classifies the source as an already-enrolled intact-object candidate and routes it through tu_production.prepare_intact_object, which refuses a .text-only claim. The link evidence recorded instead is `tools/tubuild.py linkcheck --baseline --module ov085` run over the fully promoted tree: 9136 enrolled sources, 0 compile failures, 10,935/10,935 source-built functions reproducing, module fidelity 106/106 exact at 100.000000% of compared bytes, ROM-build analysis PASS, ROM built, and `dsd check symbols --fail` failing with exactly the nine pre-existing tree-wide errors it fails with on main. That is the same scratch pipeline, the same linker and the same comparison; only the entry point differs."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov085-daMip_c/daMip_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 32,
+    "functions_declared": 32,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7daMip_cD2Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN7daMip_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        38,
+        68,
+        69,
+        70,
+        71,
+        72,
+        73,
+        74,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84
+      ],
+      "data": [
+        "_ZTV7daMip_c",
+        "_ZTI7daMip_c",
+        "_ZTS7daMip_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7daMip_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7daMip_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7daMip_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7daMip_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "mwccarm emits the base-object destructor beside the licensed D1/D0 pair. The cartridge has no D2 for this class -- ov085 runs D1 at 0x0212a6d4 straight into D0 at 0x0212a724 and then into TestWaterBelow at 0x0212a788, with no third variant anywhere in the image -- so there is no configured home and no surviving relocation references it."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "StateFleeInit declares three Vector3 locals, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZTV7daMip_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021300f8",
+      "reason": "This TU owns daMip_c's key function -- ~daMip_c is the first virtual declared and its body is out of line here -- so mwcc emits the complete 0x84-byte class vtable storage with its ABI preamble. The cartridge's public address point is ov085:0x021300f8, eight bytes above the start of storage and outside this text-only entry's licensed range, so dsd supplies that ROM data independently. romdata_check applies the measured eight-byte address-point bias and proves every emitted slot and relocation against the cartridge before production isolation discards the copy."
+    },
+    {
+      "symbol": "_ZTI7daMip_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021300c8",
+      "reason": "this class RTTI record; the canonical cartridge copy remains ROM-gap owned"
+    },
+    {
+      "symbol": "_ZTS7daMip_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov085",
+      "canonical_address": "0x021300bc",
+      "reason": "this class RTTI name; the canonical cartridge copy remains ROM-gap owned. These nine bytes are why the class is spelled daMip_c and not the tree's old coined Rabbit: they read 37 64 61 4d 69 70 5f 63 00, the length-prefixed string \"7daMip_c\"."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "ancestor RTTI passenger; the canonical cartridge copy is independently enrolled"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "ancestor RTTI name passenger; the canonical cartridge copy is independently enrolled"
+    }
+  ]
+}
