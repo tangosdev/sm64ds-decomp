@@ -413,3 +413,143 @@ Please ratify both with `classqueue.py v2 amend` on this task, or tell the
 producer to drop those commits.
 
 A log generated after this commit belongs in separately recorded evidence.
+
+## Reconstruction follow-on, branch `cpp/daBgSnmBdy_c-recon`
+
+Everything above describes the promotion candidate at
+`ef86e2f07aee40c2a7c6420c9fb820bf232d6945`, which is frozen. This section
+describes the follow-on branch built on top of it and supersedes, for that
+branch only, the raw-offset figures in "Reconstruction dimensions".
+
+Scope agreed with the coordinator: replace raw byte offsets with named field
+accesses across the out-of-line members, byte-neutrally. `unk_3a4` and the ~30
+mangled other-module seams were explicitly left alone.
+
+### Result
+
+All 27 out-of-line members now reach the object through named fields.
+`tools/tiers.py`'s own `RAW_OFFSET` regex, run over the same file:
+
+| | candidate `ef86e2f07` | recon head |
+|---|---|---|
+| members matching `RAW_OFFSET` | 18 of 27 | 0 of 27 |
+| occurrences in the file | 154 | 0 |
+
+Byte-neutrality held at every step. The loop was `tubuild.py verify`, which
+takes about three seconds here, so it was run after each member and after each
+bisection step inside a member rather than once at the end.
+
+### Where the ROM told me a field's type, and where I had to infer it
+
+This is the part worth carrying forward.
+
+The ROM pins offsets and widths. It does not pin names, and for this class it
+does not pin every type either. Three different grades of evidence turned up:
+
+1. **Witnessed by a typed subobject already in the header.** `mModel` (0xd4),
+   `mShadowModel` (0x124), `mCylinder` (0x14c), `mWithMeshClsn` (0x180),
+   `mShadowMat` (0x350) and `mPath` (0x380) were established during the
+   promotion from the constructor call chain and the vtable, so every access
+   through them is derived, not guessed. `mModel.mat4x3` at 0xf0 and its
+   translation row at 0x114/0x118/0x11c follow from `include/Model.h` plus
+   `include/math/Matrix.h`; `mCylinder.radius`, `.height` and `.otherOwner` at
+   0x150/0x154/0x170 follow from `include/dCc_c.h`. Nothing here is a new claim.
+
+2. **Witnessed by the base class header, which itself says the names are a
+   reading.** `mPosX/Y/Z`, `mCamSpacePosX`, `mScaleX/Y/Z`, `mAngleX/Y/Z`,
+   `mPrevAngleY`, `mHorzSpeed`, `mVertAccel`, `mVertSpeed`,
+   `mTerminalVelocity` and `mFlags` all come from `include/dActor_c.h`, which
+   states in its own preamble that offsets, widths and vtable slots are pinned
+   by the bytes while field names are not. Two fields in that region have no
+   reading at all and kept their offset-derived names, `unk_0a4` and `unk_0ac`,
+   rather than being given invented ones.
+
+3. **Inferred, and the inference is ours.** Every access through `mTalkPlayer`
+   rests on the local `struct Player : dActor_c` declared in this TU. This
+   cartridge has no RTTI record for `Player` anywhere in its 429, so that base
+   clause is the tree's claim and not something the image witnesses. It is
+   consistent with the call sites and with the offsets used, and it is not
+   proven. A reader should not take a `Player *` in this file as ROM-attested.
+   The same caution applies to `struct MatrixWords` in `InitResources`, which
+   exists only to spell a 12-word copy and names nothing.
+
+One offset stayed raw on purpose: `State3` writes byte +0x336 of the actor
+returned by `FindWithActorID(0x111)`. That is a foreign object whose class has
+no header in this tree. Inventing one to make the offset disappear would turn a
+guess into an apparent fact, so the write is left as an offset with a comment
+saying whose byte it is.
+
+### Three findings that generalise
+
+- `Fix12i` in `include/types.h` is `typedef s32 Fix12i;`, not the `Fix12<int>`
+  template in `include/math/Fix12.h`. Writing `.val` on one is an expression
+  syntax error, not a type error, so the message does not point at the cause.
+- A read-modify-write on a member needs the compound-assign spelling.
+  `mSubstate = mSubstate + 1` changes the function's size; `mSubstate++`,
+  `mSubstate += 1` and the original cached-pointer form all match. Confirmed on
+  a `u8`.
+- `State1` only matched once the `extern` declaration for
+  `_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh` took a `Player *` first
+  parameter rather than an `int`. The seam's spelling, not just the call site,
+  can be load-bearing.
+
+### What the metric says, and why it is not the result
+
+Reported as an observation, not as the goal.
+
+`tiers_ratchet --check` moves from `+4 gained` at the candidate to `+10 gained`
+at the recon head: six members crossed into CONVERTED, namely `InitState1`
+through `InitState5` and `IsPlayerNearCenter`. The other twelve members that
+lost all their raw offsets did not cross, because they are held by the mangled
+other-module seams that are out of scope for this pass.
+
+Two things the metric got wrong here and one it got right:
+
+- `UpdateGroundCollision` scored *worse* on a criterion by becoming more
+  truthful. Replacing a hand-computed load at +0xa4 with the honest `unk_0a4`
+  clears `no_raw_offset` and trips `no_unk_field`. Naming a field you cannot
+  name yet is invisible-to-negative to the score.
+- `State3`'s live foreign-object write is not counted at all. The regex keys on
+  the shape of an offset applied to a plain identifier, so a double-cast through
+  another object's pointer slips past it. The member reads as clean and is not.
+- It did correctly stop counting all 154 real cases, which is the movement the
+  table above records.
+
+### Proof at the recon head
+
+Worktree `C:/tmp/sm64ds-sm64ds-snmbdy-recon`, branch `cpp/daBgSnmBdy_c-recon`,
+base pinned at `ef86e2f07aee40c2a7c6420c9fb820bf232d6945`.
+
+- `rombuild.py -j16`: ROM sha256
+  `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`, identical
+  to the candidate's. Module fidelity 106/106 exact. ROM data from source: 697
+  verified, 220 partial, 4 differ, unchanged from the candidate.
+- `tubuild.py verify ov072/daBgSnmBdy_c`: 29/29 MATCH, objisolate clean,
+  emission order as expected. It still exits 1 on the six inherited
+  vague-linkage RTTI records, exactly as the landed ov072 sibling does on main,
+  so read the byte-comparison line rather than the exit code.
+- `tubuild.py linkcheck ov072/daBgSnmBdy_c`: SCRATCH-DATA-VERIFIED, both
+  licensed ranges reproduce, TU-linked ROM identical to the stock build, and the
+  nine pre-existing ITCM symbol errors are unchanged (0 new, 0 resolved) — that
+  check is not green and is not reported as green.
+- `pr_linkcheck.py --base ef86e2f07`: ok, 29 slots.
+- `premerge_check.py --base ef86e2f07 98179d4de...`: all eight gates
+  pass to pass, nothing goes green to red.
+- `tiers_ratchet.py --check`, `langmode_audit.py --check`, `romdata_check.py`,
+  `check_src_tu.py`, `check_dead_references.py`, `check_data_definitions.py`,
+  `check_layout_free.py`, `check_duplicate_sources.py`: all exit 0. Exit codes
+  were captured directly, not through a pipe.
+- `validate_merge.py` was deliberately not re-run. It needs a base and a head
+  ROM report, and the head ROM here is bit-identical to the candidate's, so
+  every ROM-derived figure is identical by construction; no symbol moved, no
+  rename happened, and `attribution.json` is untouched on this branch.
+
+### A gate hazard this pass exposed
+
+A shell loop that split its work items on a colon silently truncated three
+regexes that themselves contained a qualified member name, the helper exited 1
+with its "NOT FOUND" message swallowed by a redirect, and `tubuild.py verify`
+then reported 29/29 MATCH on a file it had not changed. A green verify after an
+edit proves the file compiles to the right bytes; it does not prove the edit
+landed. Confirm the edit independently — here, by re-counting the offsets —
+before believing a pass.
