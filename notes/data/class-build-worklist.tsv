@@ -132,7 +132,7 @@ daKpa_c	DONE	include\Bowser.h  [alias: header uses pre-rename name]	dActor_c	0	o
 daKrpa_c	DONE	include\daKrpa_c.h	dActor_c	0	ov070	8
 daLuigi_c	DONE	include\MirrorLuigi.h  [alias: header uses pre-rename name]	dActor_c	0	ov055	7
 daMcFlag_c	DONE	include\daMcFlag_c.h	dActor_c	0	ov009	6
-daMky_c	DONE	include\Ukiki.h  [alias: header uses pre-rename name]	dActor_c	0	ov030	9
+daMky_c	DONE	include\daMky_c.h	dActor_c	0	ov030	9
 daMugenBGM_c	DONE	include\MugenBgm.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	7
 daObj1UpLogo_c	DONE	include\OneUpLogo.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	6
 daObjAbuku_c	DONE	include\daObjAbuku_c.h	dActor_c	0	ov002	4
@@ -144,7 +144,7 @@ daObjClockHuriko_c	DONE	include\daObjClockHuriko_c.h	dActor_c	0	ov013	6
 daObjClock_c	DONE	include\ClockPaintingHandShort.h  [alias: header uses pre-rename name]	dActor_c	0	ov013	6
 daObjCloset_c	DONE	include\RecRoomCupboard.h  [alias: header uses pre-rename name]	dActor_c	0	ov058	5
 daObjDlPyramidDummy_c	DONE	include\PyramidTag.h  [alias: header uses pre-rename name]	dActor_c	0	ov024	4
-daObjFire_c	DONE	include\BlueFlame.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	6
+daObjFire_c	DONE	include\daObjFire_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	6
 daObjFl_Coin_c	PARTIAL	include\daObjFl_Coin_c.h	dActor_c	0	ov064	4
 daObjFlamethrower_c	DONE	include\Flamethrower.h  [alias: header uses pre-rename name]	dActor_c	0	ov095	4
 daObjHeart_c	DONE	include\HealingHeart.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	6
@@ -153,7 +153,7 @@ daObjKb1Billboard_c	DONE	include\daObjKb1Billboard_c.h	dActor_c	0	ov044	6
 daObjKinokoTag_c	DONE	include\daObjKinokoTag_c.h	dActor_c	0	ov002	7
 daObjKm2_Nobiru_c	DONE	include\ExtendingPlatform.h  [alias: header uses pre-rename name]	dActor_c	0	ov045	9
 daObjKumo_c	DONE	include\daObjKumo_c.h	dActor_c	0	ov039	6
-daObjLava_c	DONE	include\PoppingLavaBubbles.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	3
+daObjLava_c	DONE	include\daObjLava_c.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	3
 daObjNumber_c	DONE	include\Number.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	6
 daObjPowerUpItem_c	DONE	include\PowerFlower.h  [alias: header uses pre-rename name]	dActor_c	0	ov002	7
 daObjRc_Hane_c	DONE	include\daObjRc_Hane_c.h	dActor_c	0	ov036	6

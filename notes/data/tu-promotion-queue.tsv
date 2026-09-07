@@ -40,7 +40,7 @@ class_name	shard_count	total_lines	overlay	has_header	already_promoted	blockers	
 dMg3DEspAnimSet_c+dMg3DEspModel_c+dScMg3DEsp_c	68	1845	ov006	yes	no	pragma:8;multi-class-tu:3;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1; excludes 2 unresolved: dMg3DEspAnimSet_c,dMg3DEspModel_c)	dScMgSingle3DBase_c	text-only
 dMgJump3DMario_c	1	1077	ov006	yes	yes	classif:no-header:dMgJump3DMario_c;compiler-only:>=5(derived from own chain: 2 classes incl. self via build/rtti.json; floor 2x2+1)	dScMgSingle3DBase_c	text-only
 dScMgD3DBase_c	1	820	ov006	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
-Ukiki	44	1983	ov030	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only
+daMky_c	3	2380	ov030	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
 OneUpMushroom	36	972	ov002	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daBar_c	text-only
 daOts_c	1	700	ov064	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daObjFl_Gura_c	text-only
 Scuttlebug	3	1059	ov071	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daEyBm_c	text-only
@@ -114,7 +114,7 @@ Coffin	13	288	ov071	yes	no	compiler-only:>=11(derived from own chain: 5 classes 
 WaterBomb	13	474	ov098	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	ArrowSignRight	text-only
 RabbitKey	14	433	ov085	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 CheepCheep	14	316	ov090	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
-BlueFlame	6	141	ov002	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daBar_c	text-only
+daObjFire_c	6	141	ov002	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daBar_c	text-only
 BookShot+BookShotSpawner	27	919	ov020	yes	no	multi-class-tu:2;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	HauntedChair	text-only
 RollingRock	12	474	ov021	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjCvShutter_c	text-only
 ExtendingPlatform	9	136	ov045	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	PoleLift	text-only
@@ -129,7 +129,7 @@ Spindrift	12	422	ov081	yes	no	compiler-only:>=11(derived from own chain: 5 class
 Snowball+daSnowman_c	13	290	ov081	partial	no	multi-class-tu:2;classif:no-header:daSnowman_c;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	-	text-only
 MantaRay+daMenbo_c	13	527	ov090	partial	no	multi-class-tu:2;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	-	text-only
 Shark+daPukupuku_c	13	330	ov090	partial	no	multi-class-tu:2;classif:no-header:daPukupuku_c;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	-	text-only
-PoppingLavaBubbles+daObjLava_c	5	77	ov002	partial	no	multi-class-tu:2;classif:no-header:daObjLava_c;compiler-only:>=12(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+2)	daBar_c	text-only
+daObjLava_c+daObjLava_c	5	77	ov002	partial	no	multi-class-tu:2;classif:no-header:daObjLava_c;compiler-only:>=12(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+2)	daBar_c	text-only
 StarCamera	1	10	ov002	no	no	compiler-only:unknown(no chain for StarCamera: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	daBar_c	text-only
 Bully	10	238	ov064	yes	no	compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+1)	daObjFl_Gura_c	text-only
 MirrorLuigi	11	276	ov055	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	-	text-only

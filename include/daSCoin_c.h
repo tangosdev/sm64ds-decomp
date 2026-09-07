@@ -45,13 +45,10 @@
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c: only slot 0
  * (InitResources), slot 3 (CleanupResources) and slot 6 (Behavior) differ,
  * all still fBase_c's own slots in dActor_c -- Render, OnPendingDestroy,
- * OnYoshiTryEat and OnTurnIntoEgg are all still the base's own words. All
- * three are extern "C" free functions under their mangled names (the same
- * idiom fBase_c.h itself uses for its own slot 0), and the destructor is
- * declared but never defined out of line -- like dActor_c's own
- * _ZTV8dActor_c, this class's vtable stays ROM-supplied data
- * (kind:data(any) in symbols.txt), not compiler-emitted; D1/D0 stay the
- * pre-existing extern "C" free functions, just renamed.
+ * OnYoshiTryEat and OnTurnIntoEgg are all still the base's own words. The
+ * promoted TU src/actors/daSCoin_c.cpp defines all three as real methods and
+ * emits the class's vtable and RTTI itself; the destructor pair comes from
+ * the inline definition below.
  */
 struct daSCoin_c : dActor_c {
     u8  pad_0d0[0x4];
@@ -90,7 +87,12 @@ struct daSCoin_c : dActor_c {
        destruction. Zero means "not dying". [_ZN9daSCoin_c8BehaviorEv.cpp] */
     u8  mDeathTimer;            /* 0x113 */
 
-    virtual ~daSCoin_c();            /* slots 16 (D1), 17 (D0) */
+    /* Inline, and declared FIRST. This TU defines every virtual the class
+       has, so it emits the vtable and RTTI; out of line, mwccarm emits a
+       D2/D0/D1 triple, while retail holds D1 (0x020f03c4) above D0
+       (0x020f03f4) and no D2 at all, and objisolate then refuses the whole
+       TU for emitting out of ROM address order. */
+    virtual ~daSCoin_c() {}          /* slots 16 (D1), 17 (D0) */
 
     virtual s32  InitResources();         /* slot  0 */
     virtual s32  CleanupResources();      /* slot  3 */
