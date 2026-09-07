@@ -35,8 +35,7 @@ the historical `ghidra_out` drafts ran elsewhere or has been removed.
 **G1.5 — The historical verdict on raw Ghidra drafts is mixed, and recorded.** [high]
 `CLAIMS.md` cites them by name both ways: a win ([ov102](../config/arm9/overlays/ov102/symbols.txt) [func_ov102_0214b53c](../src/func_ov102_0214b53c.c) — "Ghidra
 dest + ROM-order angle" → byte-identical) and repeated losses ([ov006](../config/arm9/overlays/ov006/symbols.txt) [func_ov006_020dbe9c](../src/func_ov006_020dbe9c.c) — "Ghidra missed s64 matrix"; [arm9](../config/arm9/symbols.txt) `OAM::Render` — "Ghidra dump div=999 (frame 0x44)";
-— "Ghidra missed s64 matrix"; [arm9](../config/arm9/symbols.txt) `OAM::Render` — "Ghidra dump div=999 (frame 0x44)";
-[ov006](../config/arm9/overlays/ov006/symbols.txt) [func_ov006_0211e72c](../src/actors/dScMgTeresa_c.cpp) — "Ghidra-shaped 30w attractor" that *stalls* at 26 words).
+[ov006](../config/arm9/overlays/ov006/symbols.txt) [func_ov006_0211e72c](../src/actors/dScMgTeresa_c.cpp) — "Ghidra-shaped 30w attractor" that*stalls* at 26 words).
 `README.md:102` states the house position: useful for reading a function, "its output
 never matches on its own."
 

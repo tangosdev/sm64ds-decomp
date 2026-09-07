@@ -416,11 +416,11 @@ name -- a wrong name is a claim the next reader will trust.
 | 0x4724 | `mLanePos[4][2]` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) seeds `{ (0x20 + 0x40*i) << 12, 0xb0 << 12 }`; Behavior adds `mLaneVel` into it; Render draws the lane sprite at `>> 12`. |
 | 0x4744 | `mLaneVel[4][2]` | Added into `mLanePos` once a tick, and its y component loses a fixed 0x100 every tick -- a velocity under gravity. Zeroed by the same reset. |
 | 0x4768 | `mPieces[0x80]` | Renamed from `arr4768`; the element layout is unchanged (see the section above). |
-| 0x5368 | `mScrollSpeed` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) computes it from the pattern table [data_ov006_0212e1b0](../config/arm9/overlays/ov004/symbols.txt) `+ mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
+| 0x5368 | `mScrollSpeed` | [src/func_ov006_020d3ba0.cpp](../src/func_ov006_020d3ba0.cpp) computes it from the pattern table [data_ov006_0212e1b0](../config/arm9/overlays/ov006/symbols.txt) `+ mPatternIndex * 0x1c`, biases it by the inherited 0xbc, and clamps it to 0x64. |
 | 0x536c | `mScrollAccum` | Behavior adds `mScrollSpeed` into it, keeps the low four bits (`&= 0xf`) and runs [func_ov006_020d27dc](../config/arm9/overlays/ov006/symbols.txt) once per 16 accumulated -- a fixed-point step accumulator. |
 | 0x5374 | `mRoundCount` | Zeroed by the reset; Behavior replays the board while it is below 5 and finishes at 5, and scales the fast-forward speed by `n * 5 + 0x20`. |
 | 0x539c | `mLaneAnimTimer[4]` | Render bumps entry `i` each frame and wraps it on the per-lane period it copies out of [data_ov006_0213b880](../config/arm9/overlays/ov006/symbols.txt). |
-| 0x53ac | `mLaneAnimFrame[4]` | Bumped when the timer above wraps, cycles 0..0xd, and indexes the sprite table [data_o006_0213a458](../config/arm9/overlays/ov006/symbols.txt). |
+| 0x53ac | `mLaneAnimFrame[4]` | Bumped when the timer above wraps, cycles 0..0xd, and indexes the sprite table [data_ov006_0213a458](../config/arm9/overlays/ov006/symbols.txt). |
 | 0x53bc | `mBgScrollPhase` | u16. Render adds 0xc0 a frame and feeds `>> 4` into the shared sine table [data_02082214](../config/arm9/symbols.txt) to get the sub-screen BG2 offset. The 16-bit width comes from the reset's own `*(s16*)` store. |
 | 0x53c0 | `mResultWaitTimer` | Loaded with 0x3c on entry to state 2 and counted down there; at 0 the scene clears `mPromptEnabled` and moves to state 3. |
 | 0x53c4 | `mStartBannerTimer` | Reset to 0x3c right after [func_ov004_020b0cac](../src/func_ov004_020b0cac.c)`(0xd, 0x80, 0x60, ...)` puts banner 0xd on screen; Behavior counts it down and calls `FreeGfxSlotsById(0xd)` on expiry. |
@@ -458,7 +458,7 @@ the previous header held as four pads, and a run/HUD block at 0xb9d8.
 | 0xaba0 | `mBallSize` | Seeded 0x4000; grows by the uphill distance, capped at 0x37000; Render scales mModel by `n/2 + n*4`; the melt state subtracts 0x1000 a tick until it reaches 0. |
 | 0xac58 | `mArray1Active[0x80]` | Render skips an mArray1 slot unless this byte is 1. |
 | 0xb0d8 | `mArray1Kind[0x80]` | 1 picks the eight-frame animated sprite table, anything else the single static sprite. |
-| 0xb2d8 | `mArray1Hit[0x80]` | [func_ov006_021279b0](../src/func_ov006_021279b0.cpp) sets it to 1 on contact; Render then adds 8 to the sprite frame. |
+| 0xb2d8 | `mArray1Hit[0x80]` | [func_ov006_02125bbc.c](../src/func_ov006_02125bbc.c) sets it to 1 on contact; Render then adds 8 to the sprite frame. |
 | 0xb358 | `mArray2Active[0x80]` | The same gate for mArray2. |
 | 0xb3d8 | `mArray2Kind[0x80]` | Render's `switch`: 0..2 draw one sprite, 3 picks between two by X. |
 | 0xb9d8 | `mAnimCounter` | Render bumps it and wraps it at 0x20; the obstacle frame is `(n / 4) & 7`. |
@@ -488,7 +488,7 @@ any matched body reads).
 | 0x5000 | `mState` | Behavior's whole body is `(self->*`[data_ov006_02142bdc](../config/arm9/overlays/ov006/symbols.txt)`[n])()` -- it is the index into that pointer-to-member table. Render tests it against 3, 4, 6 and 7 to pick which pass to draw. |
 | 0x500c | `mReelDrawY` | While positive the two marker rows are drawn at `n + 0x10` and `n + 0x60`; at 0 or below a single row is drawn at 0x60. |
 | 0x5010 | `mWinColumn` | Used as `n * 0x50 + 0x20/0x30/0x40` for the payout caption's x, against the same 0x50 column pitch the reels use; a negative value selects the "no win" caption instead. |
-| 0x5018 | `mLamp1Angle` / `mLamp2Angle` (0x501a) | u16 each. Behavior subtracts 0x200 and 0x400 a tick while `mState == 1`; Render hands each to `[func_ov004_020afb20](../src/func_ov004_020afb20.cpp) in its rotation argument. InitResources zeroes both. |
+| 0x5018 | `mLamp1Angle` / `mLamp2Angle` (0x501a) | u16 each. Behavior subtracts 0x200 and 0x400 a tick while `mState == 1`; Render hands each to [func_ov004_020afb20](../src/func_ov004_020afb20.cpp) in its rotation argument. InitResources zeroes both. |
 | 0x501c | `mReelStrip[3][5]` | Render walks it as `*(u8*)(p + row + 0x501c)` with `p` advancing 5 a reel and `row` taken modulo `mStripLength` -- three reels of five stops. |
 | 0x502e | `mLineActive[3]` | Three bytes gating both the payout-marker pass and the win chime. |
 | 0x5031 | `mResultSymbols[3][3]` | The same walk with `p` advancing 3 a reel, indexed 0..2 -- the 3x3 window the reels stopped on, compared against `mWinSymbol`. |
