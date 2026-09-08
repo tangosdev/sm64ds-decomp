@@ -219,6 +219,60 @@
 #     hal/actor_classes_ov063.cpp; it is taken in this lane's gate 2.
 #
 # ===========================================================================
+# GATE 2 -- THE MEASURED LEFTOVERS
+# ===========================================================================
+#
+# Three rows, each blocked by something that is not a table:
+#
+#   func_ov064_02117d24   ov064 02117d24  data_ov064_0211c750  3 cells
+#     ROM `add r3,r0,r4,lsl #3` at 02117d38, pool 02117e3c = 0211c750, STRIDE 8;
+#     emitted [esi*8]/[esi*8+4], ARITY 0; three whole-pair {code,0} sources
+#     (0211bc0c/14/1c) from __sinit_ov064_0211afc0; span 0211c750..0211c768 = 24
+#     bytes = exactly the three filled cells. Its src DEFINES THE FLAT C NAME,
+#     so unlike gate 1's nine it needs no forwarder. What blocked it is that
+#     src/func_ov064_02117d24.c is a .c FILE CONTAINING C++ member-pointer
+#     syntax: `typedef void (C::*PMF)();` is not C and cl will not read it as C
+#     at all. LANGUAGE CXX beside the gate row is the tree's standing treatment
+#     (lane PMFB2, src/func_ov002_020aea30.c). Its table comes in decorated,
+#     ?data_ov064_0211c750@@3PAUEntry@@A, read off the object with dumpbin.
+#
+#   _ZN12MansionSteps8BehaviorEv  ov063 0211ce74  data_ov063_0211ef38  4 cells
+#     ROM `add r3,r1,r0,lsl #3` at 0211ce8c, pool 0211cefc = 0211ef38, STRIDE 8;
+#     emitted [eax*8]/[eax*8+4], ARITY 0; four whole-pair {code,0} sources
+#     (0211e9ac/b4/bc/c4) from src/unnamed/ov063/__sinit_ov063_0211e3cc.c in the
+#     `TAB.<m> = SRC` spelling; span 0211ef38..0211ef58 = 32 bytes = the four
+#     filled cells. The tenth member-defining row: its forwarder joins gate 1's
+#     nine in port/hal/fwd_forwarders.cpp. What kept it out of PMFB5 is that its
+#     source-pair seat is ov63_bringup in hal/actor_classes_ov063.cpp, and every
+#     row that lane took seated from inside a file it already owned.
+#
+#   func_ov006_0212a2e0   ov006 0212a2e0  data_ov006_02143038  3 cells
+#     ROM `add r3,r2,r1,lsl #3` at 0212a324, pool 0212a3b4 = 02143038, STRIDE 8;
+#     emitted [eax*8]/[eax*8+4]; three whole-pair {code,0} sources (0213ff88,
+#     0213ffb0, 0213ff78) from __sinit_ov006_021333e0; span 02143038..02143050 =
+#     24 bytes = the three filled cells. ITS ARITY IS ONE, the only one in this
+#     lane: the listing pushes the element index before the call and the caller
+#     does NOT clean up after it, because __thiscall's stack half is
+#     callee-popped -- so its faces are __fastcall(self, dead_edx, int), which
+#     pops its own stack argument the same way. Its table comes in as the plain
+#     _data_ name and needs no alias.
+#     ITS SEAT IS ON THE .bss TABLE, not on the source pairs, because
+#     __sinit_ov006_021333e0 runs from hal/scene_mg.cpp before any minigame seat
+#     in that list does. That is the MgCup shape, one file over.
+#     WHAT IT COST, AND IT IS WORTH NAMING: the host copy WAS the loop over the
+#     fifty elements, so it could publish "how many were live on the last pass"
+#     and hal/scene_mg_snowball.cpp's census printed exactly that. With the loop
+#     inside the matched TU nothing outside it can see a pass boundary, so the
+#     faces count first-level dispatches instead and the census line says so.
+#     The per-slot counters and the selector range are UNCHANGED and still
+#     exact: the cell number IS the selector byte the ROM indexed with. A
+#     counter left behind a seat that reads zero forever is lane PMFB3's
+#     tapped-pad trap, and this is the same trap answered rather than ignored.
+#     The two second-level dispatchers (func_ov006_0212a224 and
+#     func_ov006_02129d94) STAY host copies in that file, so the eleven cells of
+#     the other three tables keep their address-switch route.
+#
+# ===========================================================================
 port/hal/fwd_forwarders.cpp
 src/_ZN14KnockDownPlank8BehaviorEv.cpp
 src/_ZN10BowserFire8BehaviorEv.cpp
@@ -229,3 +283,7 @@ src/_ZN9MontyMole8BehaviorEv.cpp
 src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp
 src/_ZN6Cannon8BehaviorEv.cpp
 src/_ZN4Fish8BehaviorEv.cpp
+# ---- gate 2 ----
+src/func_ov064_02117d24.c
+src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp
+src/func_ov006_0212a2e0.cpp

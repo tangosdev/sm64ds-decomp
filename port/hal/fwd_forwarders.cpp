@@ -51,6 +51,8 @@
 #include "RotatingUpDownPlatform.h"
 #include "Cannon.h"
 #include "Fish.h"
+/* run link100 lane FWD gate 2 */
+#include "MansionSteps.h"
 
 /* include/BowserPuzzleManager.h and include/Dorrie.h do NOT declare
    Behavior -- their matched TUs declare the class themselves -- so these two
@@ -101,6 +103,18 @@ int _ZN6Cannon8BehaviorEv(void *self)
 int _ZN4Fish8BehaviorEv(void *self)
 { return ((Fish *)self)->Fish::Behavior(); }
 
+
+
+/* ov063 0x0211ce74 -- data_ov063_0211ef38, 4 cells. Run link100 lane FWD gate
+   2: the tenth member-defining row, held out of gate 1 only because its
+   source-pair seat is ov63_bringup in hal/actor_classes_ov063.cpp. The ROM
+   strides it `add r3,r1,r0,lsl #3` at 0211ce8c on the pool word 0211cefc, the
+   matched TU emits [eax*8]/[eax*8+4] with arity 0, its four sources are
+   whole-pair {code,0} and its span is 32 bytes = exactly the four filled
+   cells. */
+int _ZN12MansionSteps8BehaviorEv(void *self)
+{ return ((MansionSteps *)self)->MansionSteps::Behavior(); }
+
 }  /* extern "C" */
 
 /* ---- THE TABLE ALIASES ---------------------------------------------------
@@ -125,6 +139,11 @@ int _ZN4Fish8BehaviorEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov080_02128438@@3PAUEntry@@A=_data_ov080_02128438")
 /* Whomp's TU also declares the arm9 global data_0209f318 as a plain int at C++ linkage; hal/cxx_aliases.cpp:929/932/947 already carry three OTHER spellings of the same storage (@@3PAUCamera@@A, @@3PAHA, @@3PAXA), so this is the fourth view of one address, not a new one */
 #pragma comment(linker, "/alternatename:?data_0209f318@@3HA=_data_0209f318")
+/* gate 2. MansionSteps::Behavior's table, read off its object with dumpbin */
+#pragma comment(linker, "/alternatename:?data_ov063_0211ef38@@3PAP8C@@AEXXZA=_data_ov063_0211ef38")
+/* gate 2. func_ov064_02117d24's table, the same shape. That TU defines the
+   FLAT C name and needs no forwarder -- only this alias. */
+#pragma comment(linker, "/alternatename:?data_ov064_0211c750@@3PAUEntry@@A=_data_ov064_0211c750")
 
 /* ---- THE TWO PLACEHOLDER NAMES -------------------------------------------
  * src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp calls two names that

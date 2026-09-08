@@ -78,39 +78,16 @@ void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
 int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch over an 8-byte {fn,delta}
-   record (the Scuttlebug stride trap); MSVC would make the stride 4. */
-int func_ov064_02117d24(void *cv)
-{
-    char *c = (char *)cv;
-    int idx = *(unsigned char *)(c + 0x33b);
-    /* PORT_HOST_ABI: mwcc `(c->*data_ov064_0211c750[idx].pmf)()` with the 8-byte
-       record stride; call fn(this). */
-    ((void (*)(void *))(size_t)data_ov064_0211c750[idx].fn)(c);
-    unsigned short *p338 = (unsigned short *)(c + 0x338);
-    *p338 = (unsigned short)(*p338 + 1);
-    if (idx != *(unsigned char *)(c + 0x33b))
-        *(short *)(c + 0x300 + 0x38) = 0;
-    int target = *(unsigned char *)(c + 0x33a) ? -0x28000 : 0;
-    if (_Z14ApproachLinearRiii((int *)(c + 0x320), target, 0x5000)) {
-        short *pAng = (short *)(c + 0x328);
-        *pAng = (short)(*pAng + 0xa00);
-        unsigned short h = *(unsigned short *)(c + 0x300 + 0x28);
-        short s = data_02082214[(h >> 4) * 2];
-        *(int *)(c + 0x324) = s * 10;
-    }
-    int t330 = *(int *)(c + 0x330);
-    int t320 = *(int *)(c + 0x320);
-    int t324 = *(int *)(c + 0x324);
-    int saved = *(int *)(c + 0x60);
-    *(int *)(c + 0x60) = t324 + (t330 + t320);
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
-    *(int *)(c + 0x60) = saved;
-    *(unsigned char *)(c + 0x33a) = 0;
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane FWD gate 2. src/func_ov064_02117d24.c
+   compiles and dispatches data_ov064_0211c750 itself. TWO THINGS HAD TO BE
+   TRUE AND BOTH WERE MEASURED: the file is a .c whose own text spells
+   `typedef void (C::*PMF)();`, which is not C, so it carries LANGUAGE CXX in
+   block R10e -- lane PMFB2's treatment for src/func_ov002_020aea30.c -- and
+   its table comes in decorated as ?data_ov064_0211c750@@3PAUEntry@@A, which
+   port/hal/fwd_forwarders.cpp aliases onto the mounted C name. Its src defines
+   the FLAT C symbol, so unlike gate 1's nine rows it needs no forwarder; the
+   "MSVC would make the stride 4" reading the retired banner carried expired
+   when block R8's /vmg /vmm landed, and the emitted [esi*8] says so. */
 
 /* ---- LAVA_BUBBLE (214) seeder-dispatcher func_ov064_021187ec ----------------
    src: `c->pp = p; if (*p == 0) return 1; return (c->**p)()` -- store the table
@@ -208,17 +185,36 @@ extern PortPmf data_ov064_0211be90, data_ov064_0211be98,
                data_ov064_0211bea0, data_ov064_0211bea8;
 }  /* extern "C" */
 
-static const struct { PortPmf *slot; unsigned rom; int (*host)(void *); }
+/* RUN link100, LANE FWD gate 2: THE AMILIFT'S THREE CELLS HOLD __fastcall
+   FACES NOW. src/func_ov064_02117d24.c dispatches data_ov064_0211c750 itself
+   since the host copy above was retired, and a matched TU dispatches a pointer
+   to member as `mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] / add ecx, this /
+   call eax` -- receiver in ecx, nothing pushed (read off its /FAsc listing,
+   runs/link100/out/FWD/emit_gate2_out.txt). THE FOUR LAVABUBBLE ROWS DO NOT
+   CHANGE: their dispatcher _ZN10LavaBubble8BehaviorEv is still a host copy in
+   this file calling the cell cdecl with an explicit self. */
+#define AMI_FACE(cell, sym)                                               \
+    static void __fastcall ami_c##cell(void *self, void *dead_edx)        \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym(self);                                                        \
+    }
+
+AMI_FACE(0, func_ov064_02117c24)
+AMI_FACE(1, func_ov064_02117bdc)
+AMI_FACE(2, func_ov064_02117b8c)
+
+static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_ov064_gate178_sources[] = {
     /* Amilift Behavior states, source -> __sinit_ov064_0211afc0 -> c750[0..2] */
-    {&data_ov064_0211bc0c, 0x02117c24, func_ov064_02117c24},
-    {&data_ov064_0211bc14, 0x02117bdc, func_ov064_02117bdc},
-    {&data_ov064_0211bc1c, 0x02117b8c, func_ov064_02117b8c},
+    {&data_ov064_0211bc0c, 0x02117c24, (void *)ami_c0},
+    {&data_ov064_0211bc14, 0x02117bdc, (void *)ami_c1},
+    {&data_ov064_0211bc1c, 0x02117b8c, (void *)ami_c2},
     /* LavaBubble states, source -> __sinit_ov064_0211b150 -> c7b8/c7c8 */
-    {&data_ov064_0211be90, 0x02118760, func_ov064_02118760},
-    {&data_ov064_0211be98, 0x02118644, func_ov064_02118644},
-    {&data_ov064_0211bea0, 0x021187d0, func_ov064_021187d0},
-    {&data_ov064_0211bea8, 0x0211873c, func_ov064_0211873c},
+    {&data_ov064_0211be90, 0x02118760, (void *)func_ov064_02118760},
+    {&data_ov064_0211be98, 0x02118644, (void *)func_ov064_02118644},
+    {&data_ov064_0211bea0, 0x021187d0, (void *)func_ov064_021187d0},
+    {&data_ov064_0211bea8, 0x0211873c, (void *)func_ov064_0211873c},
 };
 
 extern "C" void port_ov064_gate178_states_seat(void)

@@ -246,7 +246,7 @@ void *MgSnowballSlalom_Spawn(void);
 /* unmatched/MgSnowball_StateDispatch.cpp */
 unsigned port_mg_snowball_state_hits(void);
 unsigned port_mg_snowball_floor_hits(void);
-unsigned port_mg_snowball_live(void);
+unsigned port_mg_snowball_dispatches(void);
 void     port_mg_snowball_sel_range(int *lo, int *hi);
 void     port_mg_snowball_slot_hits(const unsigned **v, unsigned *n);
 
@@ -617,11 +617,11 @@ extern "C" void port_scene_snowball_hits(void)
         std::printf("[scene] dScMgSnowball_c state dispatch: %u routed to one "
                     "of the class's 14 table slots (14 distinct bodies), %u "
                     "bodiless want(s); first-level selector range entered "
-                    "%d..%d; %u live element(s) on the last Behavior pass; "
+                    "%d..%d; %u first-level dispatch(es) in total; "
                     "%u framework call(s), %u UNHANDLED address(es)\n",
                     port_mg_snowball_state_hits(),
                     port_mg_snowball_floor_hits(), lo, hi,
-                    port_mg_snowball_live(), calls, unknown);
+                    port_mg_snowball_dispatches(), calls, unknown);
 
         std::printf("[scene] dScMgSnowball_c per-slot:");
         {

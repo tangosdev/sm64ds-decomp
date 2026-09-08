@@ -35,29 +35,17 @@ extern int func_ov063_0211c6f8(char *c);
 
 typedef void (*BbhPmfFn)(char *self);
 
-/* one mwcc {fn, delta} dispatch, layout spelled out */
-static void bbh_pmf_call(unsigned char *pair, char *self)
-{
-    BbhPmfFn fn = (BbhPmfFn) *(void **)pair;
-    fn(self + *(int *)(pair + 4));
-}
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (8-byte {fn,delta} vs
-   MSVC's 16-byte form); the matched _ZN12MansionSteps8BehaviorEv.cpp strides
-   data_ov063_0211ef38 wrong under MSVC. Layout hand-rolled here. */
-int _ZN12MansionSteps8BehaviorEv(char *c)
-{
-    unsigned char before = *(unsigned char *)(c + 0x150);
-    int idx = *(int *)(c + 0x140);
-    bbh_pmf_call(data_ov063_0211ef38 + idx * 8, c);
-    *(unsigned short *)(c + 0x14c) = (unsigned short)(*(unsigned short *)(c + 0x14c) + 1);
-    if (before != *(unsigned char *)(c + 0x150))
-        *(unsigned short *)(c + 0x14c) = 0;
-    func_ov063_0211c684(c);
-    func_ov063_0211c6f8(c);
-    *(int *)(c + 0x124) = 0;
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane FWD gate 2.
+   src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp dispatches
+   data_ov063_0211ef38 now. The banner's reading -- "MSVC's 16-byte form" --
+   expired when block R8's /vmg /vmm landed: MSVC's pointer to member on this
+   target IS the ROM's eight-byte {fn, delta} pair, and the matched TU emits
+   [eax*8] against the ROM's own `add r3,r1,r0,lsl #3`. What was actually left
+   was the definition form (the TU defines the C++ MEMBER
+   ?Behavior@MansionSteps@@QAEHXZ where hal/actor_classes_ov063.cpp's
+   ms_behavior face calls the flat C name), and port/hal/fwd_forwarders.cpp
+   bridges it. bbh_pmf_call went with this body: it had no other caller. */
 
 /* func_ov063_0211ddac and func_ov063_0211ddf4 RETIRED (run link100, lane
    PMFB1). src/unnamed/ov063/func_ov063_0211ddac.cpp and

@@ -267,6 +267,21 @@ DSSTATE_BEGIN
 static int g_ov63_bringup_done;
 DSSTATE_END
 
+/* run link100 lane FWD gate 2: the four faces the bring-up seats below.
+   The bodies are the matched ov063 state TUs, unchanged; the face only puts
+   the receiver where the matched dispatcher passes it. */
+#define MS_STATE_FACE(cell, sym)                                          \
+    static void __fastcall ms_state_c##cell(void *self, void *dead_edx)   \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self);                                                \
+    }
+
+MS_STATE_FACE(0, func_ov063_0211cc18)
+MS_STATE_FACE(1, func_ov063_0211cb54)
+MS_STATE_FACE(2, func_ov063_0211c89c)
+MS_STATE_FACE(3, func_ov063_0211c7b0)
+
 extern "C" void port_ov63_bringup(void)
 {
     if (g_ov63_bringup_done)
@@ -278,10 +293,20 @@ extern "C" void port_ov63_bringup(void)
        copy them into the two bss dispatch tables (the Painting recipe; the
        header block has the ROM pair values). The delta word stays the ROM's
        zero. */
-    *(void **)data_ov063_0211e9b4 = (void *)func_ov063_0211cc18;
-    *(void **)data_ov063_0211e9bc = (void *)func_ov063_0211cb54;
-    *(void **)data_ov063_0211e9c4 = (void *)func_ov063_0211c89c;
-    *(void **)data_ov063_0211e9ac = (void *)func_ov063_0211c7b0;
+    /* RUN link100, LANE FWD gate 2: MANSIONSTEPS' FOUR CELLS TAKE __fastcall
+       FACES. src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp
+       dispatches data_ov063_0211ef38 itself now that the host copy in
+       port/unmatched/Bbh_PmfDispatch.c is retired, and a matched TU dispatches
+       a pointer to member with the receiver in ecx and nothing pushed. The
+       four LATER writes (0211ecd8/ece0/ece8/ecf0) feed the piano table, whose
+       dispatchers are src/unnamed/ov063/func_ov063_0211ddac.cpp and
+       _0211ddf4.cpp -- lane PMF2 measured both as TAIL JUMPS, which leave the
+       caller's own first argument at [esp+4], so those keep plain cdecl
+       bodies. */
+    *(void **)data_ov063_0211e9b4 = (void *)ms_state_c0;
+    *(void **)data_ov063_0211e9bc = (void *)ms_state_c1;
+    *(void **)data_ov063_0211e9c4 = (void *)ms_state_c2;
+    *(void **)data_ov063_0211e9ac = (void *)ms_state_c3;
     *(void **)data_ov063_0211ecd8 = (void *)func_ov063_0211dd78;
     *(void **)data_ov063_0211ece8 = (void *)func_ov063_0211dbb8;
     *(void **)data_ov063_0211ece0 = (void *)func_ov063_0211dba4;

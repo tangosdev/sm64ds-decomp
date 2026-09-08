@@ -134,6 +134,7 @@
 // re-derivation of behaviour.
 
 #include <cstdio>
+#include <cstdlib>   /* run link100 lane FWD gate 2: the seat aborts on wrong bytes */
 
 /* The ROM's member-pointer record with no member-pointer type anywhere: two
    words, {code, adjustment}, which is what the ROM actually stores and what
@@ -191,7 +192,17 @@ static unsigned g_snw_slot_hits[14];
 /* The first-level selector's low and high water marks: the byte at +0xbeaf of
    an element, which chooses between the three second-level machines. */
 static int g_snw_sel_lo = -1, g_snw_sel_hi = -1;
-/* How many of the fifty elements were live on the last slot-6 pass. */
+/* HOW MANY FIRST-LEVEL DISPATCHES HAVE HAPPENED, run link100 lane FWD gate 2.
+   This counter used to be "how many of the fifty elements were live on the
+   last slot-6 pass", and it could be: the host copy of func_ov006_0212a2e0 WAS
+   the loop over the fifty elements, so it could reset a per-pass count at the
+   top and publish it at the bottom. With that host copy retired, the loop is
+   inside src/func_ov006_0212a2e0.cpp and nothing outside it can see a pass
+   boundary. What the faces below CAN count exactly is the thing the census is
+   actually for -- that the machine was entered, and how often -- so this is a
+   running total of first-level dispatches instead of a snapshot of one pass.
+   The per-slot counters and the selector range are unchanged and still exact:
+   the cell number IS the selector byte the ROM indexed with. */
 static unsigned g_snw_live_last;
 
 static int snowball_try_1(void *self, unsigned code, int a)
@@ -238,7 +249,7 @@ extern "C" void port_mg_snowball_call1(void *self, unsigned code, int adj,
 
 extern "C" unsigned port_mg_snowball_state_hits(void) { return g_snw_state_hits; }
 extern "C" unsigned port_mg_snowball_floor_hits(void) { return g_snw_floor_hits; }
-extern "C" unsigned port_mg_snowball_live(void)       { return g_snw_live_last; }
+extern "C" unsigned port_mg_snowball_dispatches(void) { return g_snw_live_last; }
 
 extern "C" void port_mg_snowball_sel_range(int *lo, int *hi)
 {
@@ -252,9 +263,11 @@ extern "C" void port_mg_snowball_slot_hits(const unsigned **v, unsigned *n)
     if (n) *n = 14;
 }
 
-// ---- 4. THE THREE HOST COPIES ---------------------------------------------
+// ---- 4. THE TWO HOST COPIES LEFT, AND THE FIRST LEVEL'S SEAT --------------
 //
-// func_ov006_0212a2e0 -- the FIRST level, and slot 6's only route in.
+// func_ov006_0212a2e0 -- the FIRST level, and slot 6's only route in. ITS HOST
+// COPY IS RETIRED (run link100 lane FWD gate 2) and the derivation below is
+// kept because it is what the seat's three cells were checked against.
 //
 // Fifty elements of 0x24 bytes starting at +0xbe94.  For each live one (the
 // byte at +0xbeae) it dispatches data_ov006_02143038 on the byte at +0xbeaf,
@@ -274,46 +287,60 @@ extern "C" void port_mg_snowball_slot_hits(const unsigned **v, unsigned *n)
 // is the ROM's: RandomIntInternal returns 32 bits, the top half is taken,
 // masked to 15 bits, then folded to a small lane index and re-scaled by 0xf.
 
-// PORT_HOST_ABI: first-level pmf dispatcher for data_ov006_02143038 and slot 6's only route in; the mwcc eight-byte member-pointer table MSVC's four-byte pmf cannot stride, so the host strides the {code, adj} pairs directly.
-extern "C" void func_ov006_0212a2e0(char *o)
+/* HOST COPY RETIRED, run link100 lane FWD gate 2, and the banner it carried
+   -- "the mwcc eight-byte member-pointer table MSVC's four-byte pmf cannot
+   stride" -- expired when block R8's /vmg /vmm landed. Measured on this tree:
+   the ROM strides `add r3, r2, r1, lsl #3` at 0212a324 on the pool word
+   0212a3b4 = 02143038, and src/func_ov006_0212a2e0.cpp emits
+   _data_ov006_02143038[eax*8] and [eax*8+4] against it -- eight both sides.
+   ITS ARITY IS ONE, unlike gate 1's nine rows: the listing pushes the element
+   index before the call and the caller does NOT clean up afterwards, because
+   __thiscall's stack half is callee-popped. So the faces below are
+   __fastcall(self, dead_edx, int), which pops its own stack argument the same
+   way.
+   THE SEAT IS ON THE .bss TABLE, not on the source pairs, because
+   __sinit_ov006_021333e0 runs from hal/scene_mg.cpp before any minigame seat
+   in that list does -- the MgCup shape, one file over. */
+#define SNW_FACE(cell, sym)                                               \
+    static void __fastcall snw_c##cell(void *self, void *dead_edx, int a) \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        ++g_snw_slot_hits[cell];                                          \
+        ++g_snw_state_hits;                                               \
+        ++g_snw_live_last;                                                \
+        if (g_snw_sel_lo < 0 || (cell) < g_snw_sel_lo) g_snw_sel_lo = (cell); \
+        if ((cell) > g_snw_sel_hi) g_snw_sel_hi = (cell);                 \
+        sym((char *)self, a);                                             \
+    }
+
+SNW_FACE(0, func_ov006_0212a274)
+SNW_FACE(1, func_ov006_0212a224)
+SNW_FACE(2, func_ov006_02129d94)
+
+extern "C" void port_mg_snowball_states_seat(void)
 {
-    int i;
-    char *q;
-    int mask;
-    unsigned live = 0;
+    static int done;
+    if (done)
+        return;
+    done = 1;
 
-    q = o;
-    i = 0;
-    mask = 0x7fff;
-    do {
-        if (*(unsigned char *)(q + 0xbeae) != 0) {
-            unsigned char fidx = *(unsigned char *)(q + 0xbeaf);
-            const MgPmf *e = &data_ov006_02143038[fidx];
+    static const struct { unsigned slot; unsigned rom; void *face; } seats[] = {
+        {0, 0x0212a274u, (void *)snw_c0},
+        {1, 0x0212a224u, (void *)snw_c1},
+        {2, 0x02129d94u, (void *)snw_c2},
+    };
 
-            ++live;
-            if (g_snw_sel_lo < 0 || (int)fidx < g_snw_sel_lo)
-                g_snw_sel_lo = (int)fidx;
-            if ((int)fidx > g_snw_sel_hi)
-                g_snw_sel_hi = (int)fidx;
-
-            port_mg_snowball_call1(o, e->code, e->adj, i);
-
-            if ((*(int *)(q + 0xbe98) - *(int *)(o + 0xab6c)) >> 12 >= 0xc8) {
-                unsigned rnd = ((unsigned)RandomIntInternal(&data_0209d4b8) >> 16)
-                             & (unsigned)mask;
-                rnd = (rnd << 5) >> 0xf;
-                *(int *)(q + 0xbe94) = (int)(rnd << 0xf);
-                *(int *)(q + 0xbe98) = *(int *)(o + 0xab6c) - 0x8000;
-                *(unsigned char *)(q + 0xbeb0) = 0;
-                *(unsigned char *)(q + 0xbeaf) = 0;
-                *(unsigned char *)(q + 0xbeb1) = 0;
-            }
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &data_ov006_02143038[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgSnowball_c state table 02143038 "
+                         "slot %u: the sinit left %08x/%d, the ROM's own pairs "
+                         "say %08x/0 -- WRONG BYTES\n", seats[i].slot,
+                         p->code, p->adj, seats[i].rom);
+            std::abort();
         }
-        i++;
-        q += 0x24;
-    } while (i < 0x32);
-
-    g_snw_live_last = live;
+        p->code = (unsigned)(size_t)seats[i].face;
+    }
 }
 
 // func_ov006_0212a224 -- second level, table data_ov006_02143050.

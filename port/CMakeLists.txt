@@ -15870,6 +15870,13 @@ endforeach()
 # of /FAsc listings came back identical outside the TITLE line naming the .obj.
 # R10a's rule for that case is to leave the option off rather than make a claim
 # nothing measured.
+# GATE 2. src/func_ov064_02117d24.c is a //cpp-marked .c whose own text spells
+# `typedef void (C::*PMF)();`, which is not C. The tree's standing treatment for
+# that is LANGUAGE CXX on the source (lane PMFB2 did it for
+# src/func_ov002_020aea30.c), and this is one more of them.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov064_02117d24.c"
+    PROPERTIES LANGUAGE CXX)
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_fwd.txt" SLICE_FWD_LINES)
 set(SLICE_FWD_SOURCES "")
 foreach(line IN LISTS SLICE_FWD_LINES)
