@@ -194,6 +194,7 @@
 
 #include <cstdio>
 #include <cstring>
+#include <stdint.h>
 
 #include "dsstate_seg.h"
 
@@ -224,10 +225,10 @@ int port_r2a_saveblock_layout(void)
     };
     int bad = 0;
     for (int i = 0; i < 5; ++i) {
-        long at = (long)(k[i].p - data_0209caa0);
-        if (at != k[i].want) {
+        uintptr_t at = (uintptr_t)k[i].p - (uintptr_t)data_0209caa0;
+        if (at != (uintptr_t)k[i].want) {
             std::fprintf(stderr, "  [r2a] SAVE BLOCK RUN BROKEN: %s at +0x%lx, "
-                                 "ROM says +0x%lx\n", k[i].n, at, k[i].want);
+                                 "ROM says +0x%lx\n", k[i].n, (unsigned long)at, k[i].want);
             bad = 1;
         }
     }
@@ -327,24 +328,26 @@ void port_rom_a054_arms(void)
         func_02042f68(0xd01, data_0208ee50);
         std::memcpy(&row_after, data_020a8760, sizeof row_after);
         if (!row_after) {
-            std::fprintf(stderr, "  [rom-a054] R2c func_02042f68: NO DEVICE ROW "
-                                 "-- func_02060398 found no 0xd01 in "
-                                 "data_020867bc\n");
+            std::fprintf(stderr, "  [rom-a054] R2c func_02042f68: the device "
+                                 "pointer is null after the call\n");
         } else {
+            uintptr_t row = (uintptr_t)row_after;
+            uintptr_t table = (uintptr_t)data_020867bc;
+            std::fprintf(stderr, "  [rom-a054] R2c func_02042f68: device row ");
+            if (row >= table && row - table < 0xa0)
+                std::fprintf(stderr, "+0x%x of data_020867bc", (unsigned)(row - table));
+            else
+                std::fprintf(stderr, "%p outside data_020867bc", (void *)row_after);
             std::fprintf(stderr,
-                         "  [rom-a054] R2c func_02042f68: the ROM identified "
-                         "its own backup device -- row +0x%x of data_020867bc, "
-                         "type 0x%x, size %d bytes, kind %d; tag \"%.8s\"\n",
-                         (unsigned)(row_after - data_020867bc),
+                         ", type 0x%x, size %d bytes, kind %d; tag \"%.8s\"\n",
                          *(unsigned *)row_after,
                          *(int *)(row_after + 4),
                          (int)*(unsigned short *)data_020a8764,
                          (const char *)data_020a4b40);
         }
         if (row_before == row_after)
-            std::fprintf(stderr, "  [rom-a054] R2c NOTE: the device pointer did "
-                                 "not move; the identify did not reach "
-                                 "func_02060364\n");
+            std::fprintf(stderr, "  [rom-a054] R2c NOTE: the device pointer "
+                                 "is unchanged\n");
     }
 }
 

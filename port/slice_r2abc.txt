@@ -40,6 +40,8 @@
 # and a 796-byte memset onto a reordered layout is silent corruption rather
 # than a fault. port_r2a_saveblock_layout() asserts the five offsets on every
 # boot and the arm REFUSES rather than memsetting if one has moved.
+# The guard compares integer host addresses: the separately declared globals
+# do not become a single C++ array merely because the linker places them together.
 #
 # WHAT THE WRITE DOES ON THIS PATH: nothing observable, and that is stated
 # rather than hidden. All five sections are zero-initialised and every host
@@ -175,6 +177,9 @@ src/func_02013e64.c
 # 0x00002000, 0x00020020, 0x0000004f -- the same five words that file typed
 # into data_port_backup_device by hand. So func_0206045c still returns 8192 and
 # save_proof still measures the same medium; the ROM is just the one deciding.
+# The boot diagnostic reports the observed row after the call. An unchanged
+# pointer does not prove whether the identify helper ran, and a retained host
+# default row is reported outside the table rather than as an offset within it.
 #
 # ARM 3 IS INLINE IN func_02042f68 AND CAME FOR FREE: clear data_020a4b40 and
 # copy data_0208ee50 into it eight bytes at a time, stopping at the first zero.
