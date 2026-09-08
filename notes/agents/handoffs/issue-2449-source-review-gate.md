@@ -21,8 +21,12 @@ activation upgrades remote state to 3 while retaining receipt format 2 and all
 existing task history. Trusted default-branch GitHub tooling publishes Source review
 for the actual PR head/base and complete relevant changed-path set.
 
-Local validation at this checkpoint: 37 queue tests pass against disposable local
-bare remotes; 15 source-review/API fixture tests pass. These include stale and
+At `f40639d3`, independent validation passed 37 queue tests against disposable local
+bare remotes and 15 source-review/API fixture tests. The successor fixes the
+reviewer's queue-size finding by requesting raw contents at the pinned queue commit;
+16 source-review/API fixture tests pass, including a queue larger than 1 MiB.
+The queue implementation and its tests are unchanged from `f40639d3`.
+These tests include stale and
 missing review, self-review, retained findings, fake composition-review assertions,
 changed queue snapshots, read-only adoption and preserving existing receipts.
 Independent verification and publication are recorded by the queue successor.
