@@ -92,54 +92,8 @@ namespace cstd { int fdiv(int,int); }
 /* shadow struct 'Mtx43' */
 struct Mtx43 { Fix12i a[12]; };
 
-/* shadow struct 'VObj' */
-struct VObj {
-    virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
-    virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
-    virtual void v08(); virtual void v09(); virtual void v10(); virtual void v11();
-    virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
-    virtual void v16(); virtual void v17(); virtual void v18(); virtual void v19();
-    virtual void v20(); virtual void v21(); virtual void v22(); virtual void v23();
-    virtual void v24(); virtual void v25(); virtual void v26(); virtual void v27();
-    virtual void v28(); virtual int  m29();  // slot 0x74 = index 29
-};
-
 /* shadow enum 'Bool' */
 enum Bool { FALSE, TRUE };
-
-/* shadow struct 'Obj' */
-struct Obj {
-  virtual int d0();
-  virtual int d1();
-  virtual int d2();
-  virtual int d3();
-  virtual int d4();
-  virtual int d5();
-  virtual int d6();
-  virtual int d7();
-  virtual int d8();
-  virtual int d9();
-  virtual int d10();
-  virtual int d11();
-  virtual int d12();
-  virtual int d13();
-  virtual int d14();
-  virtual int d15();
-  virtual int d16();
-  virtual int d17();
-  virtual int d18();
-  virtual int d19();
-  virtual int d20();
-  virtual int d21();
-  virtual int d22();
-  virtual int d23();
-  virtual int d24();
-  virtual int d25();
-  virtual int d26();
-  virtual int d27();
-  virtual int d28();
-  virtual int GetY();
-};
 
 /* shadow struct 'Vector3' */
 struct Vector3;
@@ -792,9 +746,9 @@ extern "C" int func_ov096_02136134(char* c){
     *(int*)(c+0xa8) = 0x28000;
     *(int*)(c+0x98) = 0xa000;
     *(unsigned char*)(c+0x3ac) = 0x2d;
-    Obj* o = (Obj*)c;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, *(int*)(c+0x5c), *(int*)(c+0x60)+o->GetY(), *(int*)(c+0x64));
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, *(int*)(c+0x5c), *(int*)(c+0x60)+o->GetY(), *(int*)(c+0x64));
+    daSanbo_c* o = (daSanbo_c*)c;
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, *(int*)(c+0x5c), *(int*)(c+0x60)+o->OnAimedAtWithEgg(), *(int*)(c+0x64));
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, *(int*)(c+0x5c), *(int*)(c+0x60)+o->OnAimedAtWithEgg(), *(int*)(c+0x64));
     *(int*)(c+0x38c) = 5;
   }
   return 1;
@@ -838,13 +792,13 @@ extern "C" void func_ov096_02135efc(void* cv)
             Vec3_Asr(&v, (struct Vector3*)(c + 0x5c), 3);
             Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
 
-            y1 = ((VObj*)c)->m29() >> 3;
+            y1 = ((daSanbo_c*)c)->OnAimedAtWithEgg() >> 3;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y1, 0);
 
             Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
                 *(s16*)(c + 0x8c), *(s16*)(c + 0x8e), *(s16*)(c + 0x90));
 
-            y2 = (-((VObj*)c)->m29()) >> 3;
+            y2 = (-((daSanbo_c*)c)->OnAimedAtWithEgg()) >> 3;
             Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, y2, 0);
 
             *(struct Mtx43*)(c + 0xf0) = data_020a0e68;
