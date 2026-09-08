@@ -73,6 +73,80 @@ void func_ov085_0212e5ac(void *); void func_ov085_0212e720(void *);
 
 }  /* extern "C" */
 
+/* ---- RUN link100 LANE PMFB7 GATE 2: THE PER-FRAME RECORDS ARE FACES -------
+ * LakituBro's matched TU dispatches its state cell's +8 half as a real
+ * pointer to member -- mov eax,[cell+8] / test eax,eax / je /
+ * mov ecx,[cell+12] / add ecx,this / call eax, the ROM's own offsets, receiver
+ * in ecx, NOTHING pushed, ARITY ZERO, /Zp4 diff 0 lines
+ * (runs/link100/out/PMFB7/emit_all21_out.txt). The seat used to install plain
+ * cdecl bodies that take their self off the stack, so each PER-FRAME record now
+ * holds a zero-argument __fastcall face that forwards the receiver as the one
+ * cdecl argument the ROM's own state body takes -- the same call the cell held
+ * before, made through ecx instead of the stack.
+ *
+ * THE ENTER RECORDS DO NOT CHANGE: they are reached by the class's state-change
+ * helper, which MSVC compiles as a one-call forwarder ending in `jmp`, so the
+ * caller's own frame is reused and a plain cdecl body is right there.
+ *
+ * WHICH RECORD IS WHICH is read out of the class's own __sinit
+ * (runs/link100/out/PMFB7/slots_gate2.txt), never assumed.
+ */
+static void __fastcall pmfb7_ov085_0212e4a4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0213026c, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212e4a4)(self);
+}
+static void __fastcall pmfb7_ov085_0212d5dc(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02130274, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212d5dc)(self);
+}
+static void __fastcall pmfb7_ov085_0212d9b8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0213027c, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212d9b8)(self);
+}
+static void __fastcall pmfb7_ov085_0212d73c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02130284, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212d73c)(self);
+}
+static void __fastcall pmfb7_ov085_0212dd10(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0213028c, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212dd10)(self);
+}
+static void __fastcall pmfb7_ov085_0212e19c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02130294, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212e19c)(self);
+}
+static void __fastcall pmfb7_ov085_0212dbdc(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 021302b4, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212dbdc)(self);
+}
+static void __fastcall pmfb7_ov085_0212e5ac(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 021302d4, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212e5ac)(self);
+}
+static void __fastcall pmfb7_ov085_0212e310(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 021302dc, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212e310)(self);
+}
+static void __fastcall pmfb7_ov085_0212e078(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 021302f4, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212e078)(self);
+}
+static void __fastcall pmfb7_ov085_0212de5c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 021302fc, the per-frame half */
+    ((void (*)(void *))(void *)func_ov085_0212de5c)(self);
+}
+
 static const struct {
     PortPmf *slot;
     unsigned rom;
@@ -82,25 +156,25 @@ static const struct {
     {data_ov085_02130254, 0x0212e480, func_ov085_0212e480, "02130254"},
     {data_ov085_0213025c, 0x0212e720, func_ov085_0212e720, "0213025c"},
     {data_ov085_02130264, 0x0212e180, func_ov085_0212e180, "02130264"},
-    {data_ov085_0213026c, 0x0212e4a4, func_ov085_0212e4a4, "0213026c"},
-    {data_ov085_02130274, 0x0212d5dc, func_ov085_0212d5dc, "02130274"},
-    {data_ov085_0213027c, 0x0212d9b8, func_ov085_0212d9b8, "0213027c"},
-    {data_ov085_02130284, 0x0212d73c, func_ov085_0212d73c, "02130284"},
-    {data_ov085_0213028c, 0x0212dd10, func_ov085_0212dd10, "0213028c"},
-    {data_ov085_02130294, 0x0212e19c, func_ov085_0212e19c, "02130294"},
+    {data_ov085_0213026c, 0x0212e4a4, (void (*)(void *))(void *)pmfb7_ov085_0212e4a4, "0213026c"},
+    {data_ov085_02130274, 0x0212d5dc, (void (*)(void *))(void *)pmfb7_ov085_0212d5dc, "02130274"},
+    {data_ov085_0213027c, 0x0212d9b8, (void (*)(void *))(void *)pmfb7_ov085_0212d9b8, "0213027c"},
+    {data_ov085_02130284, 0x0212d73c, (void (*)(void *))(void *)pmfb7_ov085_0212d73c, "02130284"},
+    {data_ov085_0213028c, 0x0212dd10, (void (*)(void *))(void *)pmfb7_ov085_0212dd10, "0213028c"},
+    {data_ov085_02130294, 0x0212e19c, (void (*)(void *))(void *)pmfb7_ov085_0212e19c, "02130294"},
     {data_ov085_0213029c, 0x0212d724, func_ov085_0212d724, "0213029c"},
     {data_ov085_021302a4, 0x0212e2ec, func_ov085_0212e2ec, "021302a4"},
     {data_ov085_021302ac, 0x0212d8ec, func_ov085_0212d8ec, "021302ac"},
-    {data_ov085_021302b4, 0x0212dbdc, func_ov085_0212dbdc, "021302b4"},
+    {data_ov085_021302b4, 0x0212dbdc, (void (*)(void *))(void *)pmfb7_ov085_0212dbdc, "021302b4"},
     {data_ov085_021302bc, 0x0212e59c, func_ov085_0212e59c, "021302bc"},
     {data_ov085_021302c4, 0x0212db04, func_ov085_0212db04, "021302c4"},
     {data_ov085_021302cc, 0x0212df84, func_ov085_0212df84, "021302cc"},
-    {data_ov085_021302d4, 0x0212e5ac, func_ov085_0212e5ac, "021302d4"},
-    {data_ov085_021302dc, 0x0212e310, func_ov085_0212e310, "021302dc"},
+    {data_ov085_021302d4, 0x0212e5ac, (void (*)(void *))(void *)pmfb7_ov085_0212e5ac, "021302d4"},
+    {data_ov085_021302dc, 0x0212e310, (void (*)(void *))(void *)pmfb7_ov085_0212e310, "021302dc"},
     {data_ov085_021302e4, 0x0212dcfc, func_ov085_0212dcfc, "021302e4"},
     {data_ov085_021302ec, 0x0212ddc4, func_ov085_0212ddc4, "021302ec"},
-    {data_ov085_021302f4, 0x0212e078, func_ov085_0212e078, "021302f4"},
-    {data_ov085_021302fc, 0x0212de5c, func_ov085_0212de5c, "021302fc"},
+    {data_ov085_021302f4, 0x0212e078, (void (*)(void *))(void *)pmfb7_ov085_0212e078, "021302f4"},
+    {data_ov085_021302fc, 0x0212de5c, (void (*)(void *))(void *)pmfb7_ov085_0212de5c, "021302fc"},
 };
 
 extern "C" void port_lakitu_bro_states_seat(void)
@@ -127,31 +201,10 @@ extern "C" void port_lakitu_bro_states_seat(void)
     }
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN9LakituBro8BehaviorEv(void *selfv)
-{
-    char *p = (char *)selfv;
-    DecIfAbove0_Short((unsigned short *)(p + 0x100));
-    {
-        const unsigned char *st = *(const unsigned char *const *)(p + 0x1ec);
-        unsigned fn = *(const unsigned *)(st + 8);
-        if (fn)
-            ((void (*)(void *))(size_t)fn)(p);
-    }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(p, 0);
-    _ZN9Animation7AdvanceEv(p + 0x160);
-    _ZN9Animation7AdvanceEv(p + 0x1d8);
-    if (*(const unsigned char *const *)(p + 0x1ec) == data_ov085_021307d0) {
-        *(short *)(p + 0x8c) = *(short *)(p + 0x92);
-        *(short *)(p + 0x8e) = *(short *)(p + 0x94);
-        *(short *)(p + 0x90) = *(short *)(p + 0x96);
-    }
-    if (*(const unsigned char *const *)(p + 0x1ec) == data_ov085_021307e0)
-        return 1;
-    if (*(const int *)(p + 0x2d0) == 0)
-        func_ov085_0212e858(p);
-    else
-        func_ov085_0212e778(p);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN9LakituBro8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */

@@ -109,3 +109,68 @@ src/_ZN5Swoop8BehaviorEv.cpp
 src/_ZN12WaterSuction8BehaviorEv.cpp
 src/_ZN9Submarine8BehaviorEv.cpp
 src/_ZN6Bullet8BehaviorEv.cpp
+
+# ---- gate 2: THE REMAINING NINE OBJECT-FIELD ROWS, ONE PER OVERLAY --------
+#
+#  row                          ov   class code block       pairs  run
+#  _ZN7Chuckya8BehaviorEv      062  02115ee0..02117470    20   0211d900..0211d9a0
+#  _ZN6Eyerok8BehaviorEv       066  02115ee0..0211a2dc    38   0211abe8..0211ad18
+#  _ZN11ChiefChilly8Behavi..   073  0211f000..02121ec0    32   02122f40..02123040
+#  _ZN7HeaveHo8BehaviorEv      077  0212624c..021271d4    10   02127a00..02127a50
+#  _ZN10KingBobOmb8Behavio..   078  02123740..021265f4    36   02126ce0..02126e00
+#  _ZN9LakituBro8BehaviorEv    085  0212d528..0212ed54    22   02130254..02130304
+#  _ZN5Stump8BehaviorEv        091  02133968..02134484     6   0213533c..0213536c
+#  _ZN10HootTheOwl8Behavio..   094  02135700..02136798    10   021369c0..02136a10
+#                                                       ^ NOT TAKEN, see below
+#  _ZN14UnchainedChomp8Beh..   100  021431c4..021442d4     2   02147ff8..02148008
+#
+# The block is derived from the class the same way gate 1's twelve are: the
+# first-to-last address range of every function symbol in that overlay's
+# symbols.txt whose mangled name names the class. Nine for nine the sweep gives
+# ONE SOLID run of {code,0} pairs, stride 8, no gap, with as many distinct code
+# words as holders, and nine for nine every reference into the run from outside
+# the block is the class's OWN __sinit -- the owning symbol of each is named in
+# runs/link100/out/PMFB7/sweep_gate2_owners.txt. No by-value sentinel, so a face
+# per record is exact.
+#
+# Nine for nine the emitted dispatch is `mov eax,[cell+8] / test eax,eax / je /
+# mov ecx,[cell+12] / add ecx,this / call eax` -- ARITY ZERO, receiver in ecx --
+# and /Zp4 changes 0 listing lines outside the TITLE. Chuckya's second indirect
+# site is an ordinary virtual call through the model's vptr+0xc, not a pointer to
+# member, and it is untouched.
+#
+# Only the PER-FRAME half of each cell takes a face. The enter half is reached by
+# the class's state-change helper, which compiles as a one-call forwarder ending
+# in `jmp`, so the caller's own cdecl frame is reused and a plain cdecl body is
+# right there. The split is read out of each class's own __sinit
+# (runs/link100/out/PMFB7/slots_gate2.txt); where a seat file already carried
+# enter/tick labels -- ov091's FWOOSH rows, ov094's cells, ov066's cells -- they
+# agree with it row for row.
+#
+# HootTheOwl IS NOT TAKEN, and what stops it is not the sweep. Its universe
+# closes like the other eight -- ten pairs, five cells, no sentinel -- but the
+# matched TU carries a WRONG-OVERLAY CROSSING: the ROM's own Behavior at
+# 0x02136478 calls 0x021357a4 at 0x021365fc, ov094 and ov096 share the base
+# 0x02135700, and src/_ZN10HootTheOwl8BehaviorEv.cpp spells that call
+# func_ov096_021357a4 -- an EIGHT-byte ov096 stub -- where the ROM reaches
+# ov094's own 0x110-byte body. The host copy this row would have retired
+# spelled it func_ov094_021357a4 and was right. Seating the row therefore
+# RAISES the linkage count and makes the port call the wrong body, and it is
+# visible in the count: func_ov094_021357a4 loses its last referrer and
+# /OPT:REF strips it, and src/func_ov002_020df840.c goes with it because
+# 021357a4 was ITS last referrer. Two matched TUs leave the binary to gain one.
+# The unblock is decomp-side -- the crossing has to be corrected in
+# src/_ZN10HootTheOwl8BehaviorEv.cpp -- and it is not this lane's file.
+# The other TWENTY rows of this slice were checked the same way, EXTRN list
+# against the row's own overlay, and none carries a foreign-overlay call.
+#
+# Five of the eight need a forwarder; Chuckya, Eyerok and ChiefChilly define the
+# flat extern "C" name themselves.
+src/_ZN7Chuckya8BehaviorEv.cpp
+src/_ZN6Eyerok8BehaviorEv.cpp
+src/_ZN11ChiefChilly8BehaviorEv.cpp
+src/_ZN7HeaveHo8BehaviorEv.cpp
+src/_ZN10KingBobOmb8BehaviorEv.cpp
+src/_ZN9LakituBro8BehaviorEv.cpp
+src/_ZN5Stump8BehaviorEv.cpp
+src/_ZN14UnchainedChomp8BehaviorEv.cpp

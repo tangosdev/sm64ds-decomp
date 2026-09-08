@@ -250,3 +250,47 @@ int _ZN5Swoop8BehaviorEv(void *self)
 int _ZN10CheepCheep8BehaviorEv(void *self)
 { return ((CheepCheep *)self)->CheepCheep::Behavior(); }
 }  /* extern "C" */
+
+/* ---- RUN link100 LANE PMFB7 GATE 2 ---------------------------------------
+ * Six of gate 2's nine rows define a real C++ MEMBER (?Behavior@<Class>@@QAEHXZ,
+ * read off each TU's own object) while the port's actor class table calls the
+ * flat name; Chuckya, Eyerok and ChiefChilly define the flat extern "C" name
+ * themselves and need nothing here. Every one of the six declares
+ * `int Behavior();` in the tree's own include/<Class>.h, so all six decorate
+ * ...@@QAEHXZ, checked object against object in
+ * runs/link100/out/PMFB7/undef_gate2.txt.
+ */
+#include "HeaveHo.h"
+#include "KingBobOmb.h"
+#include "LakituBro.h"
+#include "Stump.h"
+#include "UnchainedChomp.h"
+
+extern "C" {
+/* ov077 0x02126e88 -- five two-record cells data_ov077_02127cd8..d18 */
+int _ZN7HeaveHo8BehaviorEv(void *self)
+{ return ((HeaveHo *)self)->HeaveHo::Behavior(); }
+/* ov078 0x02126104 -- eighteen two-record cells from __sinit_ov078_02126660 */
+int _ZN10KingBobOmb8BehaviorEv(void *self)
+{ return ((KingBobOmb *)self)->KingBobOmb::Behavior(); }
+/* ov085 0x0212eb18 -- eleven two-record cells from __sinit_ov085_0212fe4c */
+int _ZN9LakituBro8BehaviorEv(void *self)
+{ return ((LakituBro *)self)->LakituBro::Behavior(); }
+/* ov091 0x021341ec -- the three FWOOSH cells 021356b0/c0/d0 */
+int _ZN5Stump8BehaviorEv(void *self)
+{ return ((Stump *)self)->Stump::Behavior(); }
+/* ov100 0x02143d64 -- the cell data_ov100_021486f4, hi half at +8 */
+int _ZN14UnchainedChomp8BehaviorEv(void *self)
+{ return ((UnchainedChomp *)self)->UnchainedChomp::Behavior(); }
+}  /* extern "C" */
+
+/* run link100 lane PMFB7 gate 2. LakituBro's matched TU declares the two ov085
+   State cells its Behavior compares a POINTER against -- `extern State
+   data_ov085_021307d0;` at line 15 and _021307e0 at line 16 -- OUTSIDE its own
+   extern "C" block, so MSVC decorates both references. The mount defines the
+   plain names and walk_window.map already carries them; read off the TU's own
+   object with dumpbin before the link, not guessed
+   (runs/link100/out/PMFB7/undef_gate2.txt). The comparison itself is on the
+   CELL ADDRESS and not on a pair's contents, so this gate does not disturb it. */
+#pragma comment(linker, "/alternatename:?data_ov085_021307d0@@3UState@@A=_data_ov085_021307d0")
+#pragma comment(linker, "/alternatename:?data_ov085_021307e0@@3UState@@A=_data_ov085_021307e0")

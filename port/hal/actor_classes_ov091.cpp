@@ -290,6 +290,40 @@ void __fastcall ov91_lift_c0(void *self, void *) { func_ov091_02132000(self); }
 void __fastcall ov91_lift_c1(void *self, void *) { func_ov091_02131f9c(self); }
 void __fastcall ov91_lift_c2(void *self, void *) { func_ov091_02131ef0(self); }
 
+/* ---- RUN link100 LANE PMFB7 GATE 2: THE PER-FRAME RECORDS ARE FACES -------
+ * Stump's matched TU dispatches its state cell's +8 half as a real
+ * pointer to member -- mov eax,[cell+8] / test eax,eax / je /
+ * mov ecx,[cell+12] / add ecx,this / call eax, the ROM's own offsets, receiver
+ * in ecx, NOTHING pushed, ARITY ZERO, /Zp4 diff 0 lines
+ * (runs/link100/out/PMFB7/emit_all21_out.txt). The seat used to install plain
+ * cdecl bodies that take their self off the stack, so each PER-FRAME record now
+ * holds a zero-argument __fastcall face that forwards the receiver as the one
+ * cdecl argument the ROM's own state body takes -- the same call the cell held
+ * before, made through ecx instead of the stack.
+ *
+ * THE ENTER RECORDS DO NOT CHANGE: they are reached by the class's state-change
+ * helper, which MSVC compiles as a one-call forwarder ending in `jmp`, so the
+ * caller's own frame is reused and a plain cdecl body is right there.
+ *
+ * WHICH RECORD IS WHICH is read out of the class's own __sinit
+ * (runs/link100/out/PMFB7/slots_gate2.txt), never assumed.
+ */
+static void __fastcall pmfb7_ov091_02133c6c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0213533c, the per-frame half */
+    ((void (*)(void *))(void *)func_ov091_02133c6c)(self);
+}
+static void __fastcall pmfb7_ov091_02133d30(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02135354, the per-frame half */
+    ((void (*)(void *))(void *)func_ov091_02133d30)(self);
+}
+static void __fastcall pmfb7_ov091_02133f60(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0213535c, the per-frame half */
+    ((void (*)(void *))(void *)func_ov091_02133f60)(self);
+}
+
 const Ov091Seat g_ov091_seats[] = {
     /* the lifts, into data_ov091_021354e0 by __sinit_ov091_021345dc */
     {data_ov091_02134e54, 0x02132000, as_state(ov91_lift_c0), "lift/state0"},
@@ -297,11 +331,11 @@ const Ov091Seat g_ov091_seats[] = {
     {data_ov091_02134e4c, 0x02131ef0, as_state(ov91_lift_c2), "lift/state2"},
     /* FWOOSH, into 021356d0 / 021356b0 / 021356c0 by __sinit_ov091_02134a30 */
     {data_ov091_02135364, 0x0213400c, as_state(func_ov091_0213400c), "fwoosh/d0-enter"},
-    {data_ov091_0213535c, 0x02133f60, as_state(func_ov091_02133f60), "fwoosh/d0-tick"},
+    {data_ov091_0213535c, 0x02133f60, as_state(pmfb7_ov091_02133f60), "fwoosh/d0-tick"},
     {data_ov091_0213534c, 0x02133f24, as_state(func_ov091_02133f24), "fwoosh/b0-enter"},
-    {data_ov091_02135354, 0x02133d30, as_state(func_ov091_02133d30), "fwoosh/b0-tick"},
+    {data_ov091_02135354, 0x02133d30, as_state(pmfb7_ov091_02133d30), "fwoosh/b0-tick"},
     {data_ov091_02135344, 0x02133d1c, as_state(func_ov091_02133d1c), "fwoosh/c0-enter"},
-    {data_ov091_0213533c, 0x02133c6c, as_state(func_ov091_02133c6c), "fwoosh/c0-tick"},
+    {data_ov091_0213533c, 0x02133c6c, as_state(pmfb7_ov091_02133c6c), "fwoosh/c0-tick"},
 };
 bool g_ov091_seated = false;
 }  /* namespace */

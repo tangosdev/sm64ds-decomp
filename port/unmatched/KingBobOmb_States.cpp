@@ -116,82 +116,10 @@ static void port_king_call(const PortKingPmf *m, void *self, const char *half)
    init half returns, which is what the ROM does. Behavior ignores the value.
    port_king_call and PORT_KING_STATE stay because Behavior uses both. */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN10KingBobOmb8BehaviorEv(void *self)
-{
-    char *c = (char *)self;
-    PortKingState *st;
-
-    if (_ZN5Actor13DistToCPlayerEv(c) < 0x1770000)
-        *(void **)((char *)data_0209f318 + 0x114) = c;
-
-    st = PORT_KING_STATE(c);
-    if (st->main.fn != 0)
-        port_king_call(&st->main, c, "main");
-
-    /* ((Base *)&mBlendModelAnim)->v3() -- the shadow declares four virtuals
-       and takes the fourth, so ROM slot 3, which on a BlendModelAnim is
-       UpdateVerts. hal/blend_vtable.cpp fills that array in MSVC order, where
-       slot 3 is Virtual10 and takes an argument, so the dispatch is spelled
-       qualified rather than through the array. */
-    *(int *)(c + 0x328) = *(int *)(c + 0x4fc) << 0xc;
-    ((BlendModelAnim *)(c + 0x2cc))->BlendModelAnim::UpdateVerts();
-    _ZN14BlendModelAnim7AdvanceEv(c + 0x2cc);
-
-    if (st == &data_ov078_0212707c) {
-        void *r1 = *(void **)(c + 0x494);
-        int skip = 0;
-        if (r1 != 0 && (*(int *)(c + 0xb0) & 0x4000) != 0 &&
-            *(int *)((char *)r1 + 0xc8) != 0)
-            skip = 1;
-        if (!skip)
-            func_ov078_02125de0(c);
-        func_ov078_02125c98(c);
-        return 1;
-    }
-
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    DecIfAbove0_Byte((unsigned char *)(c + 0x505));
-    DecIfAbove0_Byte((unsigned char *)(c + 0x504));
-
-    if (st != &data_ov078_021270bc)
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x33c);
-    else
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0x33c);
-
-    if (st != &data_ov078_021270bc || *(unsigned char *)(c + 0x499) == 1)
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x110, 0);
-
-    if (st == &data_ov078_0212703c || st == &data_ov078_021270fc) {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x110) != 0 ||
-            _ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) == 0 ||
-            (*(int *)(c + 0x4d8) - 0x28000) > *(int *)(c + 0x60))
-            KingBobOmb_SetState(c, &data_ov078_021270bc);
-    }
-
-    {
-        int v[3];
-        v[0] = data_ov078_02126e00[0];
-        v[1] = data_ov078_02126e00[1];
-        v[2] = data_ov078_02126e00[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-            c + 0x33c, v);
-    }
-    {
-        int v[3];
-        v[0] = data_ov078_02126e00[0];
-        v[1] = data_ov078_02126e00[1];
-        v[2] = data_ov078_02126e00[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-            c + 0x37c, v);
-    }
-    _ZN12CylinderClsn5ClearEv(c + 0x33c);
-    _ZN12CylinderClsn6UpdateEv(c + 0x33c);
-    _ZN12CylinderClsn5ClearEv(c + 0x37c);
-    _ZN12CylinderClsn6UpdateEv(c + 0x37c);
-
-    func_ov078_02125de0(c);
-    func_ov078_02125c98(c);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN10KingBobOmb8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
