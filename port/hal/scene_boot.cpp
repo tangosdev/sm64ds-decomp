@@ -6874,6 +6874,24 @@ extern "C" int port_scene_finish(int frames_run)
     return 0;
 }
 
+/* THE ROM'S FRAME STATE (hal/rom_frame.cpp), run link100 boot plan rung R3a,
+   brought to THIS loop by rung R3b step B0. The windowed scene loop in
+   tests/walk_window.cpp has called these three since R3a; the headless one
+   below did not, and the headless one is the loop the battery's 36 scene rows
+   and tail2's title actually take (walk_window.cpp:6626 says the harness scrubs
+   SM64DS_SCENE_WINDOW). So the scene half of R3a's harness conversion was
+   exercised by NOTHING in the gate: a green battery said only that the scene
+   did not crash, never that the ROM's phase-6 step count agreed with the loop's
+   own counter on every frame of it. These calls are the same three, in the same
+   order and at the same points as the windowed loop's (:6756, :6889, :6943,
+   :6981), so the two scene paths now report the same account. */
+extern "C" {
+void port_rom_frame_begin(const char *loop);
+void port_rom_frame_phase6(void);
+int  port_rom_frame_checked(int host, const char *reader);
+void port_rom_frame_report(void);
+}
+
 /* THE HEADLESS RUN, which is the composition of the three above and nothing
    else. Every statement a scene run made before the split still runs, in the
    same order, with hwnd null, zoom 1 and the game ticking on every frame. */
@@ -6882,7 +6900,17 @@ extern "C" int port_scene_run(void)
     const int rc = port_scene_begin(nullptr, 1);
     if (rc)
         return rc;
-    for (int frame = 0; frame < scn_frames; ++frame)
-        port_scene_tick(frame, 1);
+    port_rom_frame_begin("scene loop (headless)");
+    for (int frame = 0; frame < scn_frames; ++frame) {
+        /* the frame number the scene's own work reads is the ROM's, checked
+           against this loop's counter -- the windowed loop's :6889 line. */
+        port_scene_tick(port_rom_frame_checked(frame, "scene-headless-tick"), 1);
+        /* THE FRAME BOUNDARY. func_020197b8.c:49 is `data_0209d50c = 6;` and
+           this is where this loop's frame ends, so this is where the ROM's
+           phase-6 body runs -- after the frame's work, before the frame ends,
+           exactly as the windowed loop runs it at :6943. */
+        port_rom_frame_phase6();
+    }
+    port_rom_frame_report();
     return port_scene_finish(scn_frames);
 }

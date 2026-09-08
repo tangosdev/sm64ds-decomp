@@ -16543,10 +16543,20 @@ endforeach()
 # number from, and the cross-check that refuses to return a number the host
 # loop's own counter disagrees with.
 #
-# The same two targets as rom_main.cpp above, and for the same reason: they are
-# the only ones that compile tests/walk_window.cpp, which is the caller. This
-# rung enrols no matched TU and moves the linkage count by zero, by design.
-foreach(_tromframe walk_window walk_window_hires)
+# R3a enrolled the same two targets as rom_main.cpp above, on the reason that
+# they are the only ones that compile tests/walk_window.cpp, which was then the
+# only caller. RUNG R3b STEP B0 ADDS smoke_player, and the LINK is what said so:
+# B0 puts the same three calls into hal/scene_boot.cpp's HEADLESS scene loop --
+# the loop the battery's 36 scene rows and tail2's title actually take -- and
+# scene_boot.cpp is compiled into all three of these targets, so smoke_player
+# answered with four unresolved externals (_port_rom_frame_begin, _phase6,
+# _checked, _report, referenced in _port_scene_run). rom_frame.cpp is host code
+# with no matched TU behind it, so enrolling it in the third target that
+# compiles its caller changes no count; it is the same problem the walker's
+# installed filter pointer solved in lane R3CFIX, one step simpler, because
+# there is nothing here for a smoke binary to be unable to pay for. This rung
+# still enrols no matched TU and moves the linkage count by zero, by design.
+foreach(_tromframe walk_window walk_window_hires smoke_player)
     target_sources(${_tromframe} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/rom_frame.cpp")
 endforeach()
