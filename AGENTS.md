@@ -135,7 +135,7 @@ and giving an out-of-line member back its implicit `this`), and reports each
 disagreement with the file and line on both sides. `--changed <base>` scopes it to a
 branch plus every declaration of the symbols that branch defines; `--symbol <name>`
 prints one symbol's whole declaration population; `--inventory` prints the headline and
-the worst offenders. It is a **ratchet**: the 23,147 disagreements the tree already
+the worst offenders. It is a **ratchet**: the 23,149 disagreements the tree already
 carries are banked in `config/decl-agreement-baseline.json` and only a new one fails.
 Do not treat a banked entry as a text edit — changing a declaration can change
 instruction selection at the call site, so fixing one is matching work that needs a

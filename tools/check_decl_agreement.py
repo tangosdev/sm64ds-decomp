@@ -17,12 +17,13 @@ in one file, `void* f(void*, int, int, void*, void*)` in a second, and DEFINED
 owns stays green: the bytes are right in all three objects, the link resolves by NAME, and
 `check_references.py` only asks whether the name exists at all.
 
-Measured on this tree the day the gate was written, `__cxa_vec_ctor` was declared with a
-`void` return in 42 files, `int` in 3 and `void *` in 2, against a definition that returns
-`void`. That is not a curiosity. A declaration is the only surviving statement about what
-the original C++ said, the host port compiles these same files with a compiler that DOES
-check them, and a wrong return type is the shape that silently smashes a caller's stack
-the first time someone reuses the declaration for real work.
+Measured on this tree the day the gate was written, `__cxa_vec_ctor` carried 52 extern
+declarations: 47 returning `void`, 3 returning `int` and 2 returning `void *`, against a
+definition that returns `void`. That is not a curiosity. A declaration is the only
+surviving statement about what the original C++ said, the host port compiles these same
+files with a compiler that DOES check them, and a wrong return type is the shape that
+silently smashes a caller's stack the first time someone reuses the declaration for real
+work.
 
 `.claude/skills/decomp-match-review` names this "the highest-value unbuilt item, and the
 one the byte gate can never do". This is that gate.
@@ -57,8 +58,8 @@ the linker, not none: the `this` pointer is the first. This tree declares such s
 and writes that `this` out by hand, in roughly equal thirds as `void *`, `char *` and
 `<Class> *`, so the implicit parameter is compared as a wildcard that any pointer satisfies
 and nothing else does. Without that, every correct flat extern of a member would be billed
-for an arity disagreement -- 1,451 of them, measured. It still catches the case that matters,
-a `this` declared `int`.
+for an arity disagreement -- 1,451 of them, across the 1,216 member definitions the tree
+holds. It still catches the case that matters, a `this` declared `int`.
 
 TYPEDEF ALIASES ARE NOT DISAGREEMENTS. `include/types.h` is parsed for its scalar typedefs
 and they are resolved transitively before comparison, so `u32` and `unsigned int` and
@@ -134,8 +135,8 @@ LEADING_SPECIFIERS = {"extern", "static", "inline", "__inline", "register",
 TAG_KEYWORDS = {"struct", "union", "enum", "class"}
 
 # `int f()` in C declares a function with an UNSPECIFIED parameter list, not one
-# with none. Treating those 304 declarations as a claim of zero parameters would
-# fabricate an arity disagreement against every single one of them.
+# with none. This tree carries 800 such declarations across 305 files; treating them
+# as a claim of zero parameters would fabricate an arity disagreement against each.
 UNSPECIFIED = None
 
 SKIP_DIRS = {".git", "build", "extracted", "__pycache__", ".mypy_cache",
@@ -569,7 +570,8 @@ def _brace_kind(head):
     tail = " ".join(head.split())
     if re.search(r'extern\s+"C(\+\+)?"\s*$', tail):
         return "linkage"
-    if re.match(r"^(inline\s+)?namespace\b", tail) or re.search(r"\bnamespace\b[^;]*$", tail):
+    if (re.match(r"^(inline\s+)?namespace\b", tail)
+            or re.search(r"\bnamespace\b[^;]*$", tail)):
         return "scope"
     if tail.endswith("=") or tail.endswith(","):
         return "aggregate"          # an initialiser list

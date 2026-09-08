@@ -7,8 +7,8 @@
 # gate this repo owns stays green: the bytes are right in all three objects, and
 # `check_references.py` only asks whether the name exists at all.
 #
-# THIS IS NOT HYPOTHETICAL AND IT IS NOT SMALL. The first whole-tree run found 23,147
-# disagreements across 4,729 symbols, among them the five wrong declarations of
+# THIS IS NOT HYPOTHETICAL AND IT IS NOT SMALL. The first whole-tree run found 23,149
+# disagreements across 4,730 symbols, among them the five wrong declarations of
 # `__cxa_vec_ctor` that the review of #2455 found by hand -- three files declaring an
 # `int` return and two a `void *`, against a definition that returns `void`. That
 # review's own words: this is "the declaration-agreement gap the skill names as the
