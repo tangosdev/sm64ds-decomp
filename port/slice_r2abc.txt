@@ -1,10 +1,23 @@
 # slice_r2abc.txt -- THE REFUSED ARMS OF func_0201a054.
 # run link100, lane R2ABC, rungs R2a / R2b / R2c of lane BOOTSCOUT's boot plan.
 #
-# Read port/hal/boot_arms.cpp first: it carries the derivation for every line
-# below and it is what calls them, from hal/rom_main.cpp's a054 seam, in the
-# ROM's own order. hal/boot_os.cpp's transcription of func_0201a054 is not
-# moved and not duplicated -- these are the calls it refused.
+# THIS FILE CARRIES THE DERIVATION. port/hal/boot_arms.cpp is what calls the
+# arms, from hal/rom_main.cpp's a054 seam, in the ROM's own order; its comments
+# explain the boot order, the storage checks and the one edge that is still a
+# host bridge, and everything else -- which refusal was stale and which still
+# holds, the ROM's own bytes, the device table the identify walks, the two
+# blockers under R2b -- is measured here. hal/boot_os.cpp's transcription of
+# func_0201a054 is not moved and not duplicated: these are the calls it refused.
+#
+# WHAT THE SEVEN NEWLY LINKED TUs ARE: LINKAGE COVERAGE. src/func_02013e64.c on
+# R2a and the six of R2c are the ROM's own code running on this path where host
+# code used to stand in, and that is what the count measures. They are not seven
+# removals of host behaviour, and each section below says what the host keeps:
+# R2a's memset writes zeros over zeros on this path, the identify reaches the
+# same row ntr/backup.cpp already parks statically (so func_0206045c returns the
+# same 8192 either way and that row stays as the pre-boot default), and arm 1 of
+# R2c is still a host body behind a rename. What the seat changes is who
+# decides, on the ROM's own object, at the ROM's own point in its own boot.
 #
 # ===========================================================================
 # R2a -- src/func_02013e64.c, the save block clear
@@ -32,14 +45,37 @@
 #
 # 0x14 + 0x1e + 0x12 + 0x10 + 728 = 0x32c, and 0x0209caa0 + 0x32c = 0x0209cdcc
 # is the next symbol in config/arm9/symbols.txt after the four names inside
-# the run. Measured in this tree's map before the seat: caa0 at 0004:0010667c,
-# cab4 +0x14, cad2 +0x1e, cae4 +0x12, caf4 +0x10, the run ending 0x1332 bytes
-# below _dsstate_hi, so all 796 bytes are inside the captured span.
+# the run. The five grouped sections and the offsets they must produce:
+#
+#     .dsstate$savblk0000  data_0209caa0  0x14   +0x000
+#     .dsstate$savblk0001  data_0209cab4  0x1e   +0x014
+#     .dsstate$savblk0002  data_0209cad2  0x12   +0x032
+#     .dsstate$savblk0003  data_0209cae4  0x10   +0x044
+#     .dsstate$savblk0004  data_0209caf4  728    +0x054 .. +0x32c
+#
+# MEASURED IN THIS TREE'S OWN MAP before the seat, not reasoned about:
+#
+#     _data_0209caa0 0004:0010667c   _data_0209cab4 0004:00106690  (+0x14)
+#     _data_0209cad2 0004:001066ae   (+0x1e)  _data_0209cae4 0004:001066c0 (+0x12)
+#     _data_0209caf4 0004:001066d0   (+0x10)  end +0x32c = 0004:001069a8
+#     _dsstate_hi    0004:00107b88            -- the whole run is captured.
+#
+# so the run ends 0x1332 bytes below _dsstate_hi and all 796 bytes are inside
+# the captured span.
 #
 # WHAT THIS LANE ADDS is the check, because a grouped-section run is a layout
 # and a 796-byte memset onto a reordered layout is silent corruption rather
 # than a fault. port_r2a_saveblock_layout() asserts the five offsets on every
 # boot and the arm REFUSES rather than memsetting if one has moved.
+#
+# HOW THE CHECK IS WRITTEN, after Andrew's review of PR #2474. The five names
+# are separately declared globals the linker places adjacently because their
+# grouped sections sort that way; adjoining sections do not make them one C++
+# array. So each address is reduced to an address-sized integer first --
+# (unsigned)(size_t), the port's own spelling for a host pointer and lossless
+# in this 32-bit build -- and the offsets are differences of integers, not
+# pointer subtraction across distinct array objects. The refusal path is
+# unchanged and the message still names the symbol and both offsets.
 #
 # WHAT THE WRITE DOES ON THIS PATH: nothing observable, and that is stated
 # rather than hidden. All five sections are zero-initialised and every host
@@ -149,6 +185,15 @@ src/func_02013e64.c
 # R2c -- src/func_02042f68.c and the device identify
 # ===========================================================================
 #
+# THE ROM BODY, verified instruction for instruction against
+# extracted/arm9_dec.bin at 0x02042f68 (flat, load base 0x02004000):
+#
+#     02042f78  bl 0x0203da3c        if (func_0203da3c() == 2) return;
+#     02042f8c  bl 0x02060890        arm 1: the card driver's bring-up
+#     02042f94  bl 0x020603c8        arm 2: the device identify, r5 = 0xd01
+#     02042fa4  bl 0x0205a588        arm 3: memset(data_020a4b40, 0, 8)
+#     02042fa8..                     then eight bytes of the tag, stop at NUL
+#
 # THE REFUSALS, and what actually retired each. hal/boot_os.cpp calls
 # func_0206002c() directly at this line today and names two things it skips:
 #
@@ -175,6 +220,36 @@ src/func_02013e64.c
 # 0x00002000, 0x00020020, 0x0000004f -- the same five words that file typed
 # into data_port_backup_device by hand. So func_0206045c still returns 8192 and
 # save_proof still measures the same medium; the ROM is just the one deciding.
+#
+# WHAT ARM 2 THEN DOES, body by body. func_02060364 parks that row in
+# data_020a8760 and copies its +0x0e halfword (2) to data_020a8764;
+# func_020607e8 puts the type word in the shared command block at +0x04 and
+# sends command 2, which ntr/backup.cpp's ARM7 face answers yes to because the
+# word matches its own row; func_0206081c clears the busy bits and wakes the
+# (empty) queue.
+#
+# THE ONE WORD THAT NEEDED HOSTING is data_020a8764, and hal/boot_arms.cpp
+# hosts it. hal/globals_link100.cpp had measured its boundary and left it --
+# "data_020a8764 is the neighbour above the top ... nothing spans the boundary
+# and data_020a8764 stays whatever hosts it" -- and nothing did. It is hosted
+# at its ROM SPAN, 0x020a8764 to data_020a8780 = 28 bytes, not at the four
+# bytes func_02060364's own `unsigned int` declaration writes; that width is
+# the undersized-hosted-global bug this port keeps finding.
+#
+# WHAT THE CAPTURED-RUN DIAGNOSTIC MAY AND MAY NOT CLAIM, after Andrew's review
+# of PR #2474. src/func_02060364.c writes data_020a8760 and data_020a8764 and
+# nothing else, so re-selecting the same row writes the same two words: an
+# unchanged pointer is NOT proof the identify never reached that body. The NOTE
+# line therefore reports only what it observes -- that the pointer in
+# data_020a8760 did not move across the call -- and claims nothing about
+# func_02060364. Measuring the call itself would need a counter inside ROM code,
+# or a sentinel written over DS state before the call and left behind when it
+# does not run, and both are refused. The row-offset line is guarded the same
+# way: an offset into data_020867bc means something only if the row is inside
+# data_020867bc's hosted 160 bytes, which is tested on integer addresses first,
+# because until the ROM's identify runs the retained pointer names
+# ntr/backup.cpp's separately hosted default row (data_port_backup_device) and
+# the difference between those two objects is not an offset into anything.
 #
 # ARM 3 IS INLINE IN func_02042f68 AND CAME FOR FREE: clear data_020a4b40 and
 # copy data_0208ee50 into it eight bytes at a time, stopping at the first zero.
