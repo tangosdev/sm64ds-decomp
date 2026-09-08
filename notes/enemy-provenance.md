@@ -387,12 +387,13 @@ scores the source text and read the raw-offset cast as a backslide.
 
 ---
 
-## BobOmb (`include/BobOmb.h`, ov102)
+## daBmb_c (`include/daBmb_c.h`, ov102)
 
-Bodies read: `src/_ZN6BobOmb13InitResourcesEv.cpp`,
-`src/_ZN6BobOmb8BehaviorEv.cpp`, `src/_ZN6BobOmb6RenderEv.cpp`,
-`src/_ZN6BobOmb13OnYoshiTryEatEv.cpp`,
-`src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp`.
+Bodies read: `daBmb_c::InitResources`, `daBmb_c::Behavior`, `daBmb_c::Render`,
+`daBmb_c::OnYoshiTryEat` and `daBmb_c::OnTurnIntoEgg`, all now in the promoted
+translation unit `src/actors/daBmb_c.cpp`. The class was carried under the coined
+name `BobOmb` when these fields were named; ov102 0x0214e4fc holds `7daBmb_c`, so
+the class and its members were renamed to the cartridge's own spelling.
 
 | offset | name | evidence |
 | --- | --- | --- |
@@ -404,10 +405,22 @@ Bodies read: `src/_ZN6BobOmb13InitResourcesEv.cpp`,
 
 Left `unk_`:
 
-* **0x390, 0x3e0, 0x3e8, 0x3ea, 0x3ec, 0x3f2** — written once by `InitResources`
-  (0, 2, 0, 0, 0x2000, 0) and never read anywhere in the tree.
+* **0x3e0, 0x3e8, 0x3ea, 0x3ec, 0x3f2** — written once by `InitResources`
+  (2, 0, 0, 0x2000, 0) and never read anywhere in the tree.
+
+  0x390 WAS in this list and does not belong here: the whole-TU merge put the
+  bodies that read it in front of the same reader for the first time. It is now
+  `mCarrier`, a `Player *`, on the strength of what is done to it —
+  `func_ov102_0214b53c` passes it as the `Player &` argument of
+  `dActor_c::UpdateCarry(Player &, Vector3 const &)` and calls
+  `Player::IsFrontSliding` and `Player::LostGrabbedObject` on it,
+  `func_ov102_0214ae1c` calls `Player::DropActor` and `Player::Hurt` on it and then
+  clears it, `func_ov102_0214b3f0` is the setter and `func_ov102_0214b3b8` the
+  clearer. "No reader anywhere in the tree" was true only of the five shards this
+  section had read.
 * **0x3ee, 0x3f4** — no reader and no writer in any matched body.
-* **0x3f6** — a latch: while non-zero `Behavior` calls `func_ov102_0214ae1c` and
+* **0x3f6** — a latch: while non-zero `Behavior` calls `func_ov102_0214ae1c` (the
+  detonation routine) and
   returns, doing nothing else. `InitResources` clears it and nothing matched sets
   it, so the diversion is evidenced but its meaning is not.
 
