@@ -15539,7 +15539,7 @@ endforeach()
 # lane EXCEPT's own file because it is the same mechanism); a matched source
 # that defines the plain C name itself needs nothing. NOT ONE FILL SITE
 # CHANGES in either case.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_facef.txt" SLICE_FACEF_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_facef.txt" SLICE_FACEF_LINES)
 set(SLICE_FACEF_SOURCES "")
 foreach(line IN LISTS SLICE_FACEF_LINES)
     string(STRIP "${line}" line)
