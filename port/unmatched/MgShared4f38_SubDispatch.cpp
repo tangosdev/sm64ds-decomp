@@ -200,6 +200,7 @@
 // be an LNK2005.
 
 #include <cstdio>
+#include <cstdlib>
 
 extern "C" {
 
@@ -237,6 +238,8 @@ unsigned port_mg_sub4f38_calls(void);
 unsigned port_mg_sub4f38_routed(void);
 unsigned port_mg_sub4f38_idle(void);
 unsigned port_mg_sub4f38_unknown(void);
+/* run link100 lane PMFB6 gate 3: the seat over the seven pairs */
+void     port_mg_sub4f38_seat(void);
 
 }  /* extern "C" */
 
@@ -292,55 +295,118 @@ static int sub_call(void *p, unsigned code)
    and CHAINS (BOX). All three refusal arms are dead in both measured scenes --
    361 and 367 each report 0 UNHANDLED over 1153 calls -- so no census number
    depends on which half of the union fires. */
-// PORT_HOST_ABI: the shared +0x4f38 sub-object's field-held pmf dispatcher; MSVC's four-byte single-inheritance member pointer reads word 0 of the mounted sub-object as a raw DS code address and jumps to it, so the host reads the {code, adj} pair and routes it.
-extern "C" void func_ov006_020c2b8c(char *c)
-{
-    ++g_sub_calls;
 
-    func_ov006_020c2be8(c);
+// ---- run link100 LANE PMFB6, GATE 3: THE SEVEN PAIRS ARE SEATED ------------
+//
+// THE PARAGRAPH ABOVE THIS ONE IS SUPERSEDED, and the measurement that
+// supersedes it is the point. "THE STORED WORD IS DELIBERATELY NOT REWRITTEN"
+// refused a seat because src/func_ov006_020c2994.c compares an object's stored
+// pair BY VALUE against data_ov006_0213adb8, so writing host addresses over the
+// pairs "would make that comparison ask whether a host address equals a DS
+// address, which is false forever".
+//
+// That is true of a face per RECORD and false of a face per CODE WORD, which is
+// the rule lane FWD wrote for exactly this shape. 0213adb8 (the sentinel) and
+// 0213adc8 (the installed idle state) hold the SAME code word 0x020c27c4. Seat
+// both with the same face and the predicate compares the same host address
+// against itself: it answers what it answered before, on every path. The null
+// case is unchanged too -- a field nothing installed still reads {0,0} and
+// still fails the first test, because the sentinel's word is non-zero either
+// way.
+//
+// THE UNIVERSE IS CLOSED, re-measured for this gate rather than carried
+// (runs/link100/out/PMFB6/sweep_shared4f38.txt): every `load` relocation in
+// ov006 whose destination lands in this class's own code block
+// 0x020c2290..0x020c2a00, kept when the word reads the target and the following
+// word is zero, gives exactly SEVEN pairs and they are exactly the run
+// 0x0213adb8..0x0213adf8 this file already names. Nothing else in ov006 can
+// hand this field an address in this class. Every reference INTO that run comes
+// from inside the same block except sixteen that point at 0x0213add8 and
+// 0x0213ade8, the two bone-name strings interleaved in it.
+//
+// THE EMITTED SIDE, off src/func_ov006_020c2b8c.cpp's own /FAsc listing under
+// the port's own flags (runs/link100/out/PMFB6/emit_gate3_out.txt):
+//     mov eax,[esi] / test eax,eax / je / mov ecx,[esi+4] / add ecx,esi /
+//     call eax
+// -- word 0 the code, word 4 the adjustment, the ROM's own null guard, receiver
+// in ecx and ARITY ZERO. /Zp4 changes 0 listing lines outside the TITLE. Block
+// R8's /vmg /vmm is what makes the field eight bytes; the "MSVC's
+// single-inheritance member pointer is FOUR bytes" paragraph above predates it.
+//
+// WHAT THE CENSUS CAN STILL SEE. The dispatch is inside the matched TU now, so
+// the faces count what they can and this file says what they cannot rather than
+// leaving a counter that reads zero forever (lane PMFB3's tapped-pad trap):
+//   calls   / routed  bumped by every face, one per dispatch, still exact;
+//   idle    NO LONGER OBSERVABLE. It counted entries the ROM's own null guard
+//           skipped, and that guard is now inside src/func_ov006_020c2b8c.cpp
+//           where nothing outside can see it. It reads 0 and the seat says so.
+//   unknown STRUCTURALLY ZERO. An unrouted code word was a field holding an
+//           address this file did not know; after the seat the field can only
+//           hold one of the six faces, because the sweep above says the six are
+//           the whole universe.
 
-    {
-        const unsigned code = *(const unsigned *)(c + 0);
+static unsigned g_sub_face_calls;
 
-        if (code == 0) {
-            /* the ROM's own `cmp r2,#0 / beq`, which src spells `if (c->pmf)`.
-               The ROM does not read the adjustment on this path either -- the
-               `ldr r1,[r4,#4]` at 0x020c2ba4 sits past the branch target, which
-               is why the adjustment is read below and not above. */
-            ++g_sub_idle;
-        } else {
-            const int   adj  = *(const int *)(c + 4);
-            /* `add r0, r4, r1, asr #1` -- the ROM's advanced receiver. Every
-               measured adjustment is zero, so this is the object itself; it is
-               spelled the ROM's way rather than the measured way on purpose. */
-            char *const self = c + (adj >> 1);
-
-            if (adj & 1) {
-                /* The virtual arm. The ROM reads the vtable at [r0] and indexes
-                   it by the code word as a BYTE OFFSET. No pair in this closure
-                   sets the bit, so there is nothing to verify an implementation
-                   against and it reports instead. */
-                sub_unhandled("through the VIRTUAL arm of the member pointer, "
-                              "which no measured pair in this closure uses",
-                              code, adj);
-                port_mg_call0(self, code, adj);
-            } else if (adj != 0) {
-                sub_unhandled("with a NONZERO ADJUSTMENT, which no measured "
-                              "pair in this closure has", code, adj);
-                port_mg_call0(self, code, adj);
-            } else if (sub_call(self, code)) {
-                ++g_sub_routed;
-            } else {
-                sub_unhandled("UNHANDLED by this switch -- the sub-object's "
-                              "state universe is larger than the six code words "
-                              "the ROM's own literal pools install", code, adj);
-                port_mg_call0(self, code, adj);
-            }
-        }
+#define SUB_FACE(tag, sym, cast)                                          \
+    static void __fastcall sub4f38_##tag(void *self, void *dead_edx)      \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        ++g_sub_calls;                                                    \
+        ++g_sub_routed;                                                   \
+        ++g_sub_face_calls;                                               \
+        sym((cast)self);                                                  \
     }
 
-    _ZN9Animation7AdvanceEv(c + 0xc8);
-    _ZN9Animation7AdvanceEv(c + 0xdc);
-    _ZN14BlendModelAnim7AdvanceEv(c + 8);
-    func_ov006_020c2290(c);
+SUB_FACE(020c22d8, func_ov006_020c22d8, char *)
+SUB_FACE(020c23a8, func_ov006_020c23a8, void *)
+SUB_FACE(020c24e4, func_ov006_020c24e4, void *)
+SUB_FACE(020c263c, func_ov006_020c263c, char *)
+SUB_FACE(020c26f4, func_ov006_020c26f4, char *)
+SUB_FACE(020c27c4, func_ov006_020c27c4, char *)
+
+namespace {
+struct SubSeat { unsigned *rec; unsigned rom; void *face; const char *what; };
+const SubSeat g_sub4f38_seats[] = {
+    {0, 0x020c27c4, (void *)sub4f38_020c27c4, "0213adb8 the idle SENTINEL"},
+    {0, 0x020c24e4, (void *)sub4f38_020c24e4, "0213adc0"},
+    {0, 0x020c27c4, (void *)sub4f38_020c27c4, "0213adc8 the idle state"},
+    {0, 0x020c22d8, (void *)sub4f38_020c22d8, "0213add0"},
+    {0, 0x020c26f4, (void *)sub4f38_020c26f4, "0213ade0"},
+    {0, 0x020c263c, (void *)sub4f38_020c263c, "0213adf0"},
+    {0, 0x020c23a8, (void *)sub4f38_020c23a8, "0213adf8"},
+};
+}  /* namespace */
+
+extern "C" {
+extern unsigned data_ov006_0213adb8[], data_ov006_0213adc0[],
+    data_ov006_0213adc8[], data_ov006_0213add0[], data_ov006_0213ade0[],
+    data_ov006_0213adf0[], data_ov006_0213adf8[];
 }
+
+extern "C" void port_mg_sub4f38_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    unsigned *recs[] = {
+        data_ov006_0213adb8, data_ov006_0213adc0, data_ov006_0213adc8,
+        data_ov006_0213add0, data_ov006_0213ade0, data_ov006_0213adf0,
+        data_ov006_0213adf8,
+    };
+    for (unsigned i = 0; i < sizeof recs / sizeof recs[0]; ++i) {
+        unsigned *p = recs[i];
+        if (p[0] != g_sub4f38_seats[i].rom || p[1] != 0) {
+            std::fprintf(stderr, "FATAL: +0x4f38 sub-object pair %s: the mount "
+                         "holds %08x/%08x, the cartridge's own record says "
+                         "%08x/0 -- WRONG BYTES\n", g_sub4f38_seats[i].what,
+                         p[0], p[1], g_sub4f38_seats[i].rom);
+            std::abort();
+        }
+        p[0] = (unsigned)(size_t)g_sub4f38_seats[i].face;
+        p[1] = 0;
+    }
+}
+
+/* HOST COPY RETIRED, run link100 lane PMFB6 gate 3.
+   src/func_ov006_020c2b8c.cpp dispatches its own field now. */

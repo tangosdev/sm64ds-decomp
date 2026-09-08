@@ -368,6 +368,11 @@ void port_mg_curling_states_seat(void);     /* unmatched/MgCurling_StateDispatch
 void port_mg_snowball_states_seat(void);    /* unmatched/MgSnowball_StateDispatch.cpp */
 /* run link100 lane FWD gate 3: dScMgTrampoline2_c's seventeen field pairs */
 void port_mg_tte_pairs_seat(void);          /* unmatched/MgTrampolineTerror_MarioDispatch.cpp */
+/* run link100 lane PMFB6 gate 3: the two ov006 object-field runs the range
+   sweep closes -- the shared +0x4f38 sub-object's seven pairs and the
+   D3DBase/Jump2 family's thirty-eight */
+void port_mg_sub4f38_seat(void);            /* unmatched/MgShared4f38_SubDispatch.cpp */
+void port_mg_objstate_seat(void);           /* unmatched/MgD3DBase_ObjStateDispatch.cpp */
 
 /* THE BLOCKER'S SUBJECT. arm9 bss, hosted by hal/auto_bss.cpp as
    `int data_0209f61c[0x2c / 4]`. Its first word is the vptr; see the
@@ -1056,6 +1061,8 @@ extern "C" void port_scene_mg_overlay_load(void)
     port_mg_curling_states_seat();
     port_mg_snowball_states_seat();
     port_mg_tte_pairs_seat();
+    port_mg_sub4f38_seat();
+    port_mg_objstate_seat();
 
     std::printf("[scene] ov004+ov006 mounted and all 35 overlay "
                 "constructors run (ov004 4/4, ov006 31/31)\n");

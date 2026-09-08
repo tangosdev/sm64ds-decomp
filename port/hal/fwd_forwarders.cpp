@@ -53,6 +53,9 @@
 #include "Fish.h"
 /* run link100 lane FWD gate 2 */
 #include "MansionSteps.h"
+/* run link100 lane PMFB6 gate 2: the two member-defining EXTENT rows */
+#include "Key.h"
+#include "UpDownLiftBbh.h"
 
 /* include/BowserPuzzleManager.h and include/Dorrie.h do NOT declare
    Behavior -- their matched TUs declare the class themselves -- so these two
@@ -115,6 +118,32 @@ int _ZN4Fish8BehaviorEv(void *self)
 int _ZN12MansionSteps8BehaviorEv(void *self)
 { return ((MansionSteps *)self)->MansionSteps::Behavior(); }
 
+/* ---- run link100 LANE PMFB6, GATE 2: THE TWO MEMBER-DEFINING EXTENT ROWS --
+   Lane FWD measured Key and UpDownLiftBbh clean on stride, pairs and dispatch
+   shape and refused both for one reason only: each table is the LAST symbol in
+   its overlay's config symbols.txt, so the next-symbol rule cannot bound the
+   extent. delinks.txt bounds it instead -- a bss symbol cannot run past the end
+   of .bss -- and both seats now cover the maximum span the section allows, with
+   an aborting face in every cell past the filled run (ov089's two; ov095's one
+   slack cell has no mounted storage and its file says so). The measurements are
+   in runs/link100/out/PMFB6/rom_gate2.txt and emit_gate2_out.txt.
+
+   Both matched TUs define a real C++ MEMBER -- ?Behavior@Key@@QAEHXZ and
+   ?Behavior@UpDownLiftBbh@@QAEHXZ, read off their own objects -- while the
+   port's actor-class face and vtable fill call the flat C name with the
+   receiver on the stack. Same two symbols, same two conventions, same bridge.
+   Both classes declare `int Behavior();` in the tree's own include/, so
+   neither needs an invented declaration.
+
+   ToxBox is the third row of that gate and is NOT here: its matched TU defines
+   the FLAT extern "C" name already, so it needs no forwarder -- only the table
+   alias below. */
+int _ZN3Key8BehaviorEv(void *self)
+{ return ((Key *)self)->Key::Behavior(); }
+
+int _ZN13UpDownLiftBbh8BehaviorEv(void *self)
+{ return ((UpDownLiftBbh *)self)->UpDownLiftBbh::Behavior(); }
+
 }  /* extern "C" */
 
 /* ---- THE TABLE ALIASES ---------------------------------------------------
@@ -144,6 +173,16 @@ int _ZN12MansionSteps8BehaviorEv(void *self)
 /* gate 2. func_ov064_02117d24's table, the same shape. That TU defines the
    FLAT C name and needs no forwarder -- only this alias. */
 #pragma comment(linker, "/alternatename:?data_ov064_0211c750@@3PAUEntry@@A=_data_ov064_0211c750")
+/* run link100 lane PMFB6 gate 2. Key's table: its TU declares
+   `struct PmfEntry { PMF pmf; }; extern PmfEntry data_ov089_02132cec[];`
+   OUTSIDE its own extern "C" block, so MSVC decorates the reference. Read off
+   the TU's object, not guessed (runs/link100/out/PMFB6/undef_gate2.txt). */
+#pragma comment(linker, "/alternatename:?data_ov089_02132cec@@3PAUPmfEntry@@A=_data_ov089_02132cec")
+/* run link100 lane PMFB6 gate 2. ToxBox's table, the same shape, and this row
+   needs no forwarder: its matched TU defines the flat extern "C" name. */
+#pragma comment(linker, "/alternatename:?data_ov092_02132568@@3PAUTableEnt@@A=_data_ov092_02132568")
+/* UpDownLiftBbh's table needs NO directive: that TU declares it INSIDE its own
+   extern "C" block, so it comes in as the plain _data_ov095_02137910. */
 
 /* ---- THE TWO PLACEHOLDER NAMES -------------------------------------------
  * src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp calls two names that

@@ -155,6 +155,11 @@ void func_ov092_02131650(void *);
 void func_ov092_02131680(void *);
 void func_ov092_021316b0(void *);
 
+/* the runtime table itself (bss, filled by the sinit); the mount is the whole
+   88-byte span to the end of ov092's .bss, so cells 9 and 10 are real storage
+   this file can write. */
+extern unsigned int data_ov092_02132568[];
+
 /* the mounted SOURCE records, one 8-byte {fn, delta} pair each. */
 extern unsigned int data_ov092_02132240[], data_ov092_02132248[],
     data_ov092_02132250[], data_ov092_02132258[], data_ov092_02132260[],
@@ -162,11 +167,82 @@ extern unsigned int data_ov092_02132240[], data_ov092_02132248[],
     data_ov092_02132280[];
 }
 
+/* RUN link100 LANE PMFB6, GATE 2: THE CELLS HOLD __fastcall FACES NOW, and
+   the seat covers the MAXIMUM SPAN ov092's .bss allows.
+
+   The host copy in port/unmatched/ToxBox_HostSites.cpp is retired and
+   src/_ZN6ToxBox8BehaviorEv.cpp dispatches the table itself. A matched TU
+   dispatches a pointer to member as
+       mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] / add ecx, this / call eax
+   -- receiver in ecx, NOTHING pushed and no `add esp` after, read off that
+   TU's own /FAsc listing (runs/link100/out/PMFB6/emit_gate2_out.txt) -- where
+   this seat used to install a plain cdecl body that takes its self off the
+   stack. A zero-argument __fastcall face has exactly that convention and hands
+   the receiver on as the cdecl argument the ROM's state bodies take. ONE FACE
+   PER CELL.
+
+   THE EXTENT. data_ov092_02132568 is the LAST symbol in ov092's symbols.txt,
+   which is why lane FWD refused this row; delinks.txt bounds it instead. ov092's
+   .bss runs 0x02132540..0x021325c0, the nine filled cells end at 0x021325b0,
+   and the slack is 0x10 = TWO more 8-byte cells, so the maximum table length is
+   ELEVEN. The mount is 88 bytes, the whole span, so those two cells are real
+   storage: they get an aborting face written straight into bss after asserting
+   the mounted bytes are zero, because a zero cell would be CALLED as address 0
+   and an aborting face names itself instead. */
+static void ov092_unhosted_cell(unsigned idx)
+{
+    std::fprintf(stderr, "UNHOSTED: data_ov092_02132568[%u] is past the nine "
+                 "cells __sinit_ov092_021320cc fills. ov092's .bss allows "
+                 "eleven, so this cell exists and the ROM never writes it -- "
+                 "see port/unmatched/ToxBox_HostSites.cpp\n", idx);
+    std::abort();
+}
+
+#define OV092_FACE(cell, sym)                                             \
+    static void __fastcall ov092_c##cell(void *self, void *dead_edx)      \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym(self);                                                        \
+    }
+#define OV092_FACEC(cell, sym)                                            \
+    static void __fastcall ov092_c##cell(void *self, void *dead_edx)      \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self);                                                \
+    }
+#define OV092_FACEU(cell, sym)                                            \
+    static void __fastcall ov092_c##cell(void *self, void *dead_edx)      \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((unsigned char *)self);                                       \
+    }
+#define OV092_ABORT(cell)                                                 \
+    static void __fastcall ov092_c##cell(void *self, void *dead_edx)      \
+    {                                                                     \
+        (void)self;                                                       \
+        (void)dead_edx;                                                   \
+        ov092_unhosted_cell(cell);                                        \
+    }
+
+/* the STATE index each face serves, which is the sinit's permutation and not
+   the source records' address order */
+OV092_FACEC(0, func_ov092_021315ac)
+OV092_FACEC(1, func_ov092_02131578)
+OV092_FACE (2, func_ov092_021316b0)
+OV092_FACE (3, func_ov092_02131680)
+OV092_FACE (4, func_ov092_02131650)
+OV092_FACE (5, func_ov092_02131620)
+OV092_FACE (6, func_ov092_021311b0)
+OV092_FACEU(7, func_ov092_02131010)
+OV092_FACEC(8, func_ov092_02130fcc)
+OV092_ABORT(9)
+OV092_ABORT(10)
+
 namespace {
 struct Ov092Seat {
     unsigned int *rec;      /* the mounted source record        */
     unsigned int rom;       /* what its fn word must read first */
-    void *host;             /* the host body to seat            */
+    void *host;             /* the face to seat                 */
     const char *name;
 };
 /* Each row's `rom` is the ROM's own relocation target for that record's word 0
@@ -177,16 +253,18 @@ struct Ov092Seat {
    permutation and not the address order -- see the table in
    port/unmatched/ToxBox_HostSites.cpp. */
 const Ov092Seat g_ov092_seats[] = {
-    {data_ov092_02132240, 0x02131680, (void *)func_ov092_02131680, "toxbox/02132240 state3"},
-    {data_ov092_02132248, 0x021311b0, (void *)func_ov092_021311b0, "toxbox/02132248 state6"},
-    {data_ov092_02132250, 0x02131650, (void *)func_ov092_02131650, "toxbox/02132250 state4"},
-    {data_ov092_02132258, 0x021316b0, (void *)func_ov092_021316b0, "toxbox/02132258 state2"},
-    {data_ov092_02132260, 0x02131620, (void *)func_ov092_02131620, "toxbox/02132260 state5"},
-    {data_ov092_02132268, 0x021315ac, (void *)func_ov092_021315ac, "toxbox/02132268 state0"},
-    {data_ov092_02132270, 0x02130fcc, (void *)func_ov092_02130fcc, "toxbox/02132270 state8"},
-    {data_ov092_02132278, 0x02131010, (void *)func_ov092_02131010, "toxbox/02132278 state7"},
-    {data_ov092_02132280, 0x02131578, (void *)func_ov092_02131578, "toxbox/02132280 state1"},
+    {data_ov092_02132240, 0x02131680, (void *)ov092_c3, "toxbox/02132240 state3"},
+    {data_ov092_02132248, 0x021311b0, (void *)ov092_c6, "toxbox/02132248 state6"},
+    {data_ov092_02132250, 0x02131650, (void *)ov092_c4, "toxbox/02132250 state4"},
+    {data_ov092_02132258, 0x021316b0, (void *)ov092_c2, "toxbox/02132258 state2"},
+    {data_ov092_02132260, 0x02131620, (void *)ov092_c5, "toxbox/02132260 state5"},
+    {data_ov092_02132268, 0x021315ac, (void *)ov092_c0, "toxbox/02132268 state0"},
+    {data_ov092_02132270, 0x02130fcc, (void *)ov092_c8, "toxbox/02132270 state8"},
+    {data_ov092_02132278, 0x02131010, (void *)ov092_c7, "toxbox/02132278 state7"},
+    {data_ov092_02132280, 0x02131578, (void *)ov092_c1, "toxbox/02132280 state1"},
 };
+/* the slack the .bss end allows past the nine filled cells */
+void *const g_ov092_tail[] = { (void *)ov092_c9, (void *)ov092_c10 };
 DSSTATE_BEGIN
 bool g_ov092_seated = false;
 DSSTATE_END
@@ -216,6 +294,22 @@ extern "C" void port_ov092_states_seat(void)
             std::abort();
         }
         s.rec[0] = (unsigned int)(size_t)s.host;
+    }
+    /* THE TAIL. The extent bound says eleven cells; the sinit fills nine. The
+       two past the filled run must read {0,0} in the mount -- a non-zero word
+       there would mean the table is longer than delinks.txt says and this seat
+       has the extent wrong, which is worth stopping for. */
+    for (unsigned k = 0; k < sizeof g_ov092_tail / sizeof g_ov092_tail[0]; ++k) {
+        unsigned int *p = (unsigned int *)&data_ov092_02132568[9 + k];
+        if (p[0] != 0 || p[1] != 0) {
+            std::fprintf(stderr,
+                "FATAL: ov092 tail cell [%u] reads %08x/%08x and the ROM never "
+                "writes it -- the table is longer than ov092's .bss extent "
+                "says\n", 9 + k, p[0], p[1]);
+            std::abort();
+        }
+        p[0] = (unsigned int)(size_t)g_ov092_tail[k];
+        p[1] = 0;
     }
     g_ov092_seated = true;
 }
