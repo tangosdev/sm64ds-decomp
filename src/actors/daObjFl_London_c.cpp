@@ -76,11 +76,14 @@ int *daObjFl_London_c_classInit(void)
 }
 
 /* The 0x1c actor descriptor the profile table points at. Word 0 relocates to
- * the factory above; the rest is the ROM's, read back at 0x02113f4c. */
+ * the factory above; the rest is the ROM's, read back at 0x02113f4c.
+ * The fBase_c constructor passes +4/+6 to behavior/render priority setters.
+ * These names describe that use; the retained s16 storage does not establish
+ * the original signedness. */
 struct LondonSpawnInfo {
     int *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
+    s16 behaviorPriority;
+    s16 renderPriority;
     u32 actorFlags;
     s32 clipOffsetY;
     s32 clipRadius;
