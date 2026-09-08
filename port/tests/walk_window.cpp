@@ -6757,7 +6757,9 @@ static int scene_window_run(void)
     MSG msg;
     static XPad pad;
     while (!quit) {
-        if (scene_menu_at >= 0 && frame == scene_menu_at) menu_on = 1;
+        if (scene_menu_at >= 0 &&
+            port_rom_frame_checked(frame, "scene-menu-at") == scene_menu_at)
+            menu_on = 1;
         while (W.PeekMessageA_(&msg, 0, 0, 0, PM_REMOVE)) {
             if (msg.message == WM_QUIT) { quit = 1; break; }
             W.TranslateMessage_(&msg);
@@ -6782,7 +6784,8 @@ static int scene_window_run(void)
 
         int pad_live = port_pad_poll(&pad);
         pad_focus_gate(&pad_live, &pad);
-        pad_test_apply(frame, &pad_live, &pad);
+        pad_test_apply(port_rom_frame_checked(frame, "scene-pad-test"),
+                       &pad_live, &pad);
         /* the pad layout learn flow, the same call the level loop makes;
            inert unless the menu's row armed it */
         padlearn_frame(&pad_live);
@@ -6790,7 +6793,8 @@ static int scene_window_run(void)
         /* SM64DS_CLICK_TEST: the scripted stylus, driven BEFORE the tick that
            polls it, so a press is in the OS's button state by the time
            hal_sub_screen_frame_begin reads it on this same frame. */
-        click_test_apply(hwnd, frame);
+        click_test_apply(hwnd,
+                         port_rom_frame_checked(frame, "scene-click-test"));
 #endif
 
         /* THE DEBUG MENU, the same block main runs. g_menu_host is left zeroed
@@ -6882,7 +6886,7 @@ static int scene_window_run(void)
 
         /* the scene's own frame; the menu's pause is its second argument, the
            same switch the level loop's game_ticked is */
-        port_scene_tick(frame, !menu_on);
+        port_scene_tick(port_rom_frame_checked(frame, "scene-tick"), !menu_on);
 
         /* THE STACKED IMAGE IS BUILT BEFORE THE OVERLAYS, and the order is the
            whole of this lane's change on this path. Every line ABOVE this one
@@ -6938,9 +6942,12 @@ static int scene_window_run(void)
            path has no rollback boundary, so there is no re-anchor here. */
         port_rom_frame_phase6();
         ++frame;
-        port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */
+        /* fault_probe.h: crash.txt/exit.txt context, the ROM's frame number and
+           this path's every-frame cross-check. */
+        port_last_frame = port_rom_frame_checked(frame, "scene-fault-context");
         fflush(stdout);
-        if (budget && frame >= budget)
+        if (budget &&
+            port_rom_frame_checked(frame, "scene-budget") >= budget)
             break;
         /* THE TITLE HANDOFF (hal/title_entry.cpp), tested here for the same
            reason the headless bridge tests it after its tick: the title writes
@@ -6950,7 +6957,8 @@ static int scene_window_run(void)
            of a cached int. */
         if (port_title_entry_should_stop()) {
             fprintf(stderr, "[title-entry] a save file was picked; leaving the "
-                            "title after %d frame(s)\n", frame);
+                            "title after %d frame(s)\n",
+                    port_rom_frame_checked(frame, "title-entry"));
             break;
         }
         /* THE PACE, off the scene's own divider and not off a constant. A
@@ -6968,9 +6976,11 @@ static int scene_window_run(void)
 #ifndef PORT_ROM_CLEAN
     click_test_finish();
 #endif
-    fprintf(stderr, "[scene] window closed after %d frame(s)\n", frame);
+    fprintf(stderr, "[scene] window closed after %d frame(s)\n",
+            port_rom_frame_checked(frame, "scene-closed"));
     port_rom_frame_report();   /* R3a: this loop's frame account, one line */
-    const int scene_rc = port_scene_finish(frame);
+    const int scene_rc =
+        port_scene_finish(port_rom_frame_checked(frame, "scene-finish"));
     /* AFTER the census, so a run that enters the adventure still leaves the
        title's own slot hits, captures and trap counts behind. Answers 0 and
        prints nothing unless the bridge is armed AND the handoff completed. */
@@ -9135,13 +9145,14 @@ int main(void)
         /* SM64DS_PAD_TEST: DBG1's scripted pad, at file scope now so the
            windowed scene loop gets the same one. Inert unless the variable is
            set and unreachable from a selftest; see its banner. */
-        pad_test_apply(frame, &pad_live, &pad);
+        pad_test_apply(port_rom_frame_checked(frame, "pad-test"),
+                       &pad_live, &pad);
 #ifndef PORT_ROM_CLEAN
         /* SM64DS_CLICK_TEST: the scripted stylus, the same call the windowed
            scene loop makes and for the same reason -- the level path is where
            the inset panel's transform lives, so it is the half of the click
            grid that guards against a stacked fix moving a level. */
-        click_test_apply(hwnd, frame);
+        click_test_apply(hwnd, port_rom_frame_checked(frame, "click-test"));
 #endif
         /* ---- THE REBIND CAPTURE, ahead of every other reader of this frame's
            input. The keyboard half already arrived through the window
@@ -9516,7 +9527,8 @@ int main(void)
                frame into the raw pad mirror BEFORE CheckInput, so the remap and
                the direct readers (IsButtonInputValid, Message::Update) both see
                it. Does nothing without the env var. */
-            port_input_probe_apply(frame);
+            port_input_probe_apply(port_rom_frame_checked(frame,
+                                                          "input-probe"));
             /* THIS FRAME'S PAD, STASHED FOR THE Ctrl BRIDGE (run link100, lane
                FRAME). port_frame_ctrl_publish runs from inside port_actor_tick
                -- hal/stage_frame.cpp's slot-6 thunk calls it the instant the
@@ -9809,7 +9821,8 @@ int main(void)
                StartTalk's b==0 gate (data_0209f49e & 3) sees the press, and the
                camera-rotate readers do not (mask to bits 0-1). SM64DS_PROBE_INPUT. */
             if (!menu_on)
-                btn |= (unsigned short)(port_input_probe_bits(frame) & 0x3);
+                btn |= (unsigned short)(port_input_probe_bits(
+                    port_rom_frame_checked(frame, "input-probe-bits")) & 0x3);
             /* run mg16 lane MPBTN: the button half of the published key word,
                stashed HERE because this is the first line where btn is final
                (bindings, run-mode AUTO, the selftest probes, the menu's zero,
@@ -9821,7 +9834,8 @@ int main(void)
                headless proof exactly like a held key. */
             port_raw_btn_stash((unsigned short)(
                 host_btn_to_raw_keys(btn) |
-                (menu_on ? 0 : port_input_probe_bits(frame))));
+                (menu_on ? 0 : port_input_probe_bits(
+                    port_rom_frame_checked(frame, "input-probe-raw")))));
             /* ---- THE THIRD BUTTON WRITER, AND THE ONE HIS HANDS FOUND ------
              *
              * Run mg16 lane MP4, second field re-test. This is the LEVEL path's
@@ -11791,7 +11805,12 @@ int main(void)
             fprintf(stderr,
                     "[f%03d] pos=(%.1f,%.1f,%.1f) spd=%d st=%08x mag=%d "
                     "body=%u anim(len=%u fl=%u cur=%.1f) bones=%08x path=%x\n",
-                    frame, *(int *)(c + 0x5c) / 4096.0f,
+                    /* R3a: tail2_states_proof's opening gate reads this line's
+                       frame number, so it is the ROM's now. It prints the same
+                       digits: the accessor is cross-checked against `frame` on
+                       this very call. */
+                    port_rom_frame_checked(frame, "opening-gate"),
+                    *(int *)(c + 0x5c) / 4096.0f,
                     *(int *)(c + 0x60) / 4096.0f,
                     *(int *)(c + 0x64) / 4096.0f, *(int *)(c + 0x98),
                     st ? *(unsigned *)st : 0u, *(short *)(data_0209f4a0 + 0),
@@ -13186,11 +13205,13 @@ int main(void)
                 if (df) dump_from = atoi(df);
                 if (dt) dump_to = atoi(dt);
             }
-            if (selftest && dump_from >= 0 && frame >= dump_from &&
-                frame <= dump_to) {
-                char nm[64];
-                snprintf(nm, sizeof nm, "walk_frame_%03d.bmp", frame);
-                ntr::ppu_write_bmp(nm, fb);
+            if (selftest && dump_from >= 0) {
+                const int rf = port_rom_frame_checked(frame, "dump-window");
+                if (rf >= dump_from && rf <= dump_to) {
+                    char nm[64];
+                    snprintf(nm, sizeof nm, "walk_frame_%03d.bmp", rf);
+                    ntr::ppu_write_bmp(nm, fb);
+                }
             }
         }
         { const double t_snd = ovl_now_ms();
@@ -13228,8 +13249,13 @@ int main(void)
            above may REWIND `frame` and re-run, so an equality test can be
            stepped over and never fire. Latching on >= cannot be missed, and
            setting menu_on when it is already set is a no-op. */
-        if (menu_at >= 0 && frame >= menu_at) menu_on = 1;
-        port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */
+        if (menu_at >= 0 &&
+            port_rom_frame_checked(frame, "menu-at") >= menu_at) menu_on = 1;
+        /* fault_probe.h: crash.txt/exit.txt context. The ROM's frame number,
+           and this is the ONE reader that runs on every frame of every run, so
+           the cross-check below it is what makes a green row a proof that the
+           two counters agreed on all of it. */
+        port_last_frame = port_rom_frame_checked(frame, "fault-context");
         /* the frame's stdout, one write; the setvbuf note above is why */
         fflush(stdout);
         /* SM64DS_COMMS_STOP_ROUND=R (run rel0215 lane LAGDELAY): under a
@@ -13251,7 +13277,8 @@ int main(void)
                         "ending the selftest at the agreed round rather than "
                         "this window's own frame budget\n",
                         (unsigned long long)cr.rounds,
-                        (unsigned long long)stop_round, frame);
+                        (unsigned long long)stop_round,
+                        port_rom_frame_checked(frame, "comms-stop-round"));
                 /* AND HOLD THE SEAT OPEN WHILE THE OTHERS FINISH. The first
                    run of the stop-round sweep stopped every window at round
                    900 and three of six pairings still disagreed on the LAST
@@ -13280,7 +13307,9 @@ int main(void)
                 }
             }
         }
-        if (selftest && (frame >= selftest || stop_round_hit)) {
+        if (selftest &&
+            (port_rom_frame_checked(frame, "selftest-exit") >= selftest ||
+             stop_round_hit)) {
             for (int k = 0; k < g_amb_n; ++k) {
                 char *o = (char *)g_amb[k].o;
                 int moved = *(int *)(o + 0x5c) != g_amb[k].p0[0] ||
@@ -13335,8 +13364,9 @@ int main(void)
                 fprintf(stderr, "[heap] %u free after %d frames\n",
                         _ZN22ExpandingHeapAllocator10MemoryLeftEv(
                             *(void **)((char *)data_020a0eac_c + 0x14)),
-                        frame);
-            printf("selftest: %d frames, pos=(%d, %d, %d)\n", frame,
+                        port_rom_frame_checked(frame, "heap-line"));
+            printf("selftest: %d frames, pos=(%d, %d, %d)\n",
+                   port_rom_frame_checked(frame, "selftest-summary"),
                    *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
             /* R3a: the frame account this run ends on -- how many reads went
                through the ROM's frame state, and the measured gap between its
