@@ -65,6 +65,36 @@ across a whole gate -- pays nothing and keeps its own hold. Nothing changes
 when SM64DS_TEST_LOCK is unset: slot_lock is opt-in and a bare run launches
 exactly as it always did.
 
+AND IT READS A ROLLBACK LOG, WHICH IS WHAT IT IS. Run link100, lane VS4BISECT.
+The port runs rollback netcode in a VS session (hal/rollback.cpp; the windows
+log "rollback moved the host counter N -> M; re-anchoring the ROM frame number
+with it"), so ONE frame number is simulated more than once: once on predicted
+remote input, then again after each rewind on the real input. Measured here,
+about 150 of 401 frames per window are re-simulated, up to four times, and the
+count differs per window every run because it follows packet timing.
+
+Every rung below that indexes by frame therefore has to say WHICH simulation of
+that frame it means. Two of them did not:
+
+  * rungs 3-6 read the [vs] probe rows into a frame-keyed dict, so they hold the
+    last emission -- the settled one -- but rung 6 then compared at
+    max(shared frame), the very LAST frame of the run. That frame is where each
+    window's selftest budget expired mid-frame, so it is the one frame whose
+    settled value is not settled. It produced "slot 0 worst delta 4098529
+    Fix12i" on windows whose worlds were byte-identical everywhere else.
+  * rung 8 handed dhdiff.py the raw logs. dhdiff reads last-wins too, but its
+    alignment gate compares the rounds= column on EVERY shared frame including
+    that same ragged last one, and refuses the whole comparison (rc=2) over a
+    one-frame disagreement. A refusal is not a divergence and must not be
+    reported as one.
+
+So this file now computes a SETTLED FRAME -- the latest frame that every window
+has finished and that all four agree the round number of -- compares rungs 3-6
+there, and hands rung 8 copies of the logs with the unsettled tail trimmed. It
+also separates dhdiff rc=2 (REFUSED, nothing was compared) from rc=1 (DIVERGED).
+Nothing is relaxed: a divergence in settled state is still red on every pairing,
+which is the only thing a lockstep session promises.
+
     python port/tools/vs4_proof.py [--frames N] [--map 0..3] [--keep]
 """
 import argparse
@@ -111,6 +141,11 @@ ROUND0 = re.compile(r"(?:accepted as slot \d+|slot \d+ joined) at round (\d+)")
 MATCHOVER = re.compile(
     r"^\[vs\] MATCH OVER f(\d+) win=(\S+) scores=(-?\d+),(-?\d+),(-?\d+),(-?\d+)",
     re.M)
+# The divergence detector's own lines (hal/comms_sync.cpp). rounds= is the
+# EXCHANGED counter both consoles agree on, which is why dhdiff.py aligns on it
+# and why the settled frame below is defined by it.
+DH = re.compile(r"^\[dh\] f(\d+) .*?rounds=(\d+)", re.M)
+DHLINE = re.compile(r"^\[dh[=+]?\] f(\d+)\b")
 
 
 def rows(t):
@@ -228,7 +263,81 @@ def _launch(out, frames, vsmap, base, star_target, stagger):
     return res
 
 
-def common_frame(all_rows, want_slots=4):
+def dh_rounds(t):
+    """-> {frame: rounds}, LAST emission wins -- exactly how dhdiff.py loads it.
+
+    Under rollback a frame appears more than once; the last appearance is the
+    one simulated on the real remote input, so it is the one that means "the
+    state of frame N".
+    """
+    out = {}
+    for m in DH.finditer(t):
+        out[int(m.group(1))] = int(m.group(2))
+    return out
+
+
+def resim_report(t):
+    """-> (distinct frames, frames simulated more than once, worst count)."""
+    seen = {}
+    for m in DH.finditer(t):
+        f = int(m.group(1))
+        seen[f] = seen.get(f, 0) + 1
+    if not seen:
+        return 0, 0, 0
+    return (len(seen), sum(1 for v in seen.values() if v > 1), max(seen.values()))
+
+
+def settled_frame(all_rounds):
+    """The latest frame every window has FINISHED and agrees the round of.
+
+    Two conditions, and both are needed:
+
+      * it is not any window's own last frame. The run ends when the selftest
+        budget expires, and a window can stop part-way through a frame it has
+        already logged, so the last frame's state is whatever that window
+        happened to reach -- not a simulated frame's settled result.
+      * all four report the same rounds=. That is dhdiff.py's own alignment
+        criterion, applied here so rungs 3-6 compare the same moment rather
+        than trusting a position tolerance to absorb a whole consumed round.
+
+    Returns None when no such frame exists, which is itself a finding: the four
+    windows never agreed on a round, and the caller says so rather than
+    comparing anyway.
+    """
+    if any(not r for r in all_rounds):
+        return None
+    tails = [max(r) for r in all_rounds]
+    cand = set(all_rounds[0])
+    for r in all_rounds[1:]:
+        cand &= set(r)
+    cand = [f for f in cand if all(f < t for t in tails)]
+    agree = [f for f in cand
+             if len(set(r[f] for r in all_rounds)) == 1]
+    return max(agree) if agree else None
+
+
+def trim_log(src, dst, last_frame):
+    """Copy `src` to `dst`, dropping detector lines after `last_frame`.
+
+    Only the [dh]/[dh=]/[dh+] family is trimmed, and only past the settled
+    frame: the unsettled tail is removed, nothing inside the compared span is
+    touched, and every other line is copied through so the trimmed file is
+    still a readable log. dhdiff then compares a span both windows finished.
+    """
+    kept = 0
+    with open(src, "r", encoding="utf-8", errors="replace") as fi, \
+            open(dst, "w", encoding="utf-8", errors="replace") as fo:
+        for line in fi:
+            m = DHLINE.match(line)
+            if m and int(m.group(1)) > last_frame:
+                continue
+            if m:
+                kept += 1
+            fo.write(line)
+    return kept
+
+
+def common_frame(all_rows, want_slots=4, at_most=None):
     """The latest frame every window probed with all `want_slots` seated."""
     shared = None
     for r in all_rows:
@@ -236,6 +345,10 @@ def common_frame(all_rows, want_slots=4):
                    if len(d) >= want_slots
                    and all(d.get(s) for s in range(want_slots)))
         shared = have if shared is None else (shared & have)
+    if not shared:
+        return None
+    if at_most is not None:
+        shared = set(f for f in shared if f <= at_most)
     return max(shared) if shared else None
 
 
@@ -261,6 +374,27 @@ def main():
     logs = [p for _, _, p in res]
     all_rows = [rows(t) for t in texts]
     ok = True
+
+    # THE ROLLBACK READING, stated before any rung uses it. These counts are
+    # not a warning -- they are how a VS session runs here -- but they are what
+    # makes "frame N" ambiguous, so the numbers go in the log.
+    all_rounds = [dh_rounds(t) for t in texts]
+    for k, t in enumerate(texts):
+        n, again, worst = resim_report(t)
+        print("  [rollback] window %d: %d frames, %d re-simulated after a "
+              "rewind (worst %d simulations of one frame)"
+              % (k, n, again, worst))
+    settled = settled_frame(all_rounds)
+    if settled is None:
+        print("  [rollback] NO SETTLED FRAME: the four windows never agreed on "
+              "a round number for a frame they had all finished. Rungs 3-8 run "
+              "on the raw tail, and a red below may be that.")
+    else:
+        tails = [max(r) for r in all_rounds if r]
+        print("  [rollback] settled frame %d (last frames %s): the latest frame "
+              "every window finished and all four agree the round of. Rungs 3-6 "
+              "compare there and rung 8 compares up to there."
+              % (settled, tails))
 
     for k, (rc, _, lg) in enumerate(res):
         ok &= M.verdict(rc == 0, "window %d exited clean | rc=%d %s"
@@ -311,13 +445,15 @@ def main():
                        else "windows %s gave up short" % short))
 
     # ---- rungs 3/4/5: bodies, colours, pads --------------------------------
-    cf = common_frame(all_rows)
+    cf = common_frame(all_rows, at_most=settled)
     if cf is None:
         M.verdict(False, "no frame has all four slots seated in all four "
-                         "windows; rungs 3-6 cannot run")
+                         "windows at or before the settled frame; rungs 3-6 "
+                         "cannot run")
         print("\n".join(M.VERDICTS))
         return 1
-    print("  (comparing at frame %d, the latest all four windows share)" % cf)
+    print("  (comparing at frame %d, the latest SETTLED frame all four "
+          "windows share)" % cf)
 
     for k, r in enumerate(all_rows):
         d = r[cf]
@@ -379,15 +515,32 @@ def main():
 
     # ---- rung 8: the digest, all six pairings ------------------------------
     dh = os.path.join(os.path.dirname(os.path.abspath(__file__)), "dhdiff.py")
+    # THE TRIMMED COPIES, and the raw logs are untouched beside them. Trimming
+    # the unsettled tail is what stops dhdiff's alignment gate refusing the
+    # whole run over the one frame each window stopped part-way through; it
+    # removes nothing inside the span being compared.
+    use = list(logs)
+    if settled is not None:
+        use = []
+        for k, lg in enumerate(logs):
+            dst = os.path.join(os.path.dirname(lg), "run.settled.log")
+            trim_log(lg, dst, settled)
+            use.append(dst)
     for a in range(4):
         for b in range(a + 1, 4):
-            r = subprocess.run([sys.executable, dh, logs[a], logs[b]],
+            r = subprocess.run([sys.executable, dh, use[a], use[b]],
                                capture_output=True, text=True)
             tail = (r.stdout or r.stderr).strip().splitlines()
+            # rc=2 IS NOT rc=1. Two windows that could not be compared have not
+            # been shown to disagree, and reporting a refusal in the same words
+            # as a divergence is how an infra condition gets read as a desync.
+            what = {0: "AGREE", 1: "DIVERGED", 2: "REFUSED (nothing compared)"}
             ok &= M.verdict(r.returncode == 0,
-                            "rung8 p%d vs p%d agree on every common frame | "
-                            "dhdiff rc=%d %s" % (a, b, r.returncode,
-                                                 tail[-1] if tail else ""))
+                            "rung8 p%d vs p%d agree on every settled frame | "
+                            "%s, dhdiff rc=%d, raw logs %s %s | %s"
+                            % (a, b, what.get(r.returncode, "rc"),
+                               r.returncode, logs[a], logs[b],
+                               tail[-1] if tail else ""))
             if r.returncode != 0:
                 print("\n".join("      " + x for x in tail[-12:]))
 
