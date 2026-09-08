@@ -1,0 +1,68 @@
+# The card mount: the ROM's own LoadArchive, on the ROM's own mount table.
+#
+# Run link100, lane CARDFS. Head of the chain out/GATES/closure_LoadArchive.json
+# measured, and the answer to the refusal hal/scene_boot.cpp carried since run
+# link60 ("that is a fake, not a fix"). What made it answerable was not new
+# tooling: it was noticing that the ROM's mount call asks one question --
+# is archive N resident -- and that on the host the answer is yes for all
+# thirteen, because hal/fs.cpp reads each NARC whole on first use and never
+# releases it. hal/card_mount.cpp hosts data_0208ecf4 at its ROM span and
+# hal/fs.cpp fills each entry's residency word with the image it already holds.
+#
+# WHY THESE TUs LINK, one at a time, no link roots and no /include:
+#
+#   LoadArchive             called by nine live TUs that called the retired
+#                           face yesterday: LoadTextNarcs (the language
+#                           switch), Stage::InitResources (level archives),
+#                           func_02034fbc, func_ov003_020af8a0,
+#                           func_ov005_020c1a20, func_ov007_020cc2cc,
+#                           func_ov075_02118bf8, func_ov075_02119640,
+#                           func_ov075_0211977c and func_ov075_0211a410.
+#   func_02018934           the ROM's mount body; LoadArchive's only callee.
+#   func_02018d98           func_02018934 opens the NARC through it.
+#   _ZN4Heap9_AllocateEji   the tail-call veneer at 0x0203c29c that
+#                           func_02018934 allocates the archive through
+#                           (ldr ip,[pc]; bx ip; .word 0x203c6cc -- a
+#                           hand-asm veneer, matched as asm).
+#
+# FOUR MORE COUNT AND ARE NOT LISTED HERE. func_0204ee40, func_0204ef9c,
+# func_0205cbe4 and func_0205d518 are already on port/slice_scene1.txt and were
+# /OPT:REF-dropped for want of a caller on the link line. func_02018934 and
+# func_02018d98 call them, so they stop being dropped. Listing them again would
+# be an LNK2005, and the count they add is real: the ROM's reference graph
+# reaches them now and did not before.
+#
+# TWO REGISTER RIDE-THROUGHS RIDE IN WITH THESE TUs AND BOTH SIT ON THE BRANCH
+# THE PORT DOES NOT TAKE. Said out loud rather than left to be met:
+#
+#   src/func_02018934.c calls func_02018d98(FSFile *, const char *path), and
+#   src/func_02018d98.c's own definition takes NO parameters and passes none to
+#   func_0205d518 -- the ARM original carries r0 and r1 straight through. On the
+#   host the callee therefore reads whatever the calling convention left it.
+#   src/_ZN4Heap9_AllocateEji.cpp is the same shape: it is a two-instruction
+#   tail-call veneer (ldr ip,[pc]; bx ip) decompiled as a void() calling a
+#   void(), so its three arguments and its return value both ride registers the
+#   host does not promise.
+#
+# Neither is reachable unless src/LoadArchive.c takes its mount branch, and the
+# mount branch is exactly what hal/card_mount.cpp's residency publish keeps it
+# from taking (and what that file's audit line proves it never took: the ROM
+# writes the entry's heap word on the way in and the port never does). So they
+# LINK, which is what this lane is counting, and they do not RUN. When the two
+# DS string pointers are hosted and the mount becomes live, both are
+# arity fixes on the port_fastcall_face list before anything else.
+#
+# WHAT IS DELIBERATELY ABSENT. The other half of the seam
+# out/GATES/closure_LoadFile.json measured -- LoadFile, func_0201818c,
+# func_020185c0, func_020186c0, func_02018598, func_0204eda4, func_0204ede8 --
+# is not takeable from this lane. hal/level_boot.cpp defines LoadFile as a
+# PORT_HOST_ABI face and that file belongs to another lane tonight; the five
+# below it hang off func_0201818c and would be dropped again if listed. The
+# mount table this lane hosts is already the right SHAPE for them: the object
+# published into +0x00 carries the +0x50 image, +0x54 BTAF and +0x58 file-base
+# words src/func_0204ee40.c writes, which are the three
+# src/func_0204eda4.c and src/func_0204ede8.c read.
+src/LoadArchive.c
+src/func_02018934.c
+src/func_02018d98.c
+src/_ZN4Heap9_AllocateEji.cpp

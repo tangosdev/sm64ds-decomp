@@ -228,7 +228,8 @@ unsigned char data_0208eb54[4] = { 0xff, 0x00, 0x00, 0x00 };
 unsigned char data_0208ec74[20] = "myFS_OpenFileFast\0\0";
 
 /* arm9 .data, twenty-eight bytes by span -- the next symbol is data_0208ecf4,
-   which is the 13-entry archive-mount table hal/scene_boot.cpp's LoadArchive
+   which is the 13-entry archive-mount table hal/card_mount.cpp hosts and the
+   ROM's own src/LoadArchive.c (before run link100 it was a face here; that
    face describes. Read at (0x0208ecd8 - 0x02004000) out of
    extracted/arm9_dec.bin: the string "myFS_ConvertPathToFileID" plus four
    NULs, the NitroFS entry-point name the card loader hands its own resolver.
@@ -385,9 +386,20 @@ DSSTATE_END
  *   "not mounted". There is nothing for an unmount to undo, and hosting a
  *   pointer-bearing ROM table to drive one would be "a fake, not a fix".
  *
+ * TWO SENTENCES OF THAT ARE NOW FALSE (run link100, lane CARDFS). The port
+ * DOES mount: hal/card_mount.cpp hosts data_0208ecf4 at its ROM span, the
+ * LoadArchive face this block quotes is retired, and src/LoadArchive.c reads
+ * residency out of the real table. What survives is the reason THIS face is
+ * still a face, and it moved from "there is nothing to undo" to something
+ * narrower: the mounted object is static host storage and its heap word at
+ * +0x04 is zero, so the ROM's func_02018908 would free it back to a null heap.
+ * hal/stage_slot0.cpp, where the surviving definition lives, carries the
+ * rewritten note and the one condition that would make the ROM's body
+ * takeable.
+ *
  * THE OBSERVABLE IS NOTHING. The ROM's UnloadArchive returns void, has no
- * out-parameter, and its only effect is to zero two words of a table the host
- * does not have. So the face is empty, and empty is the whole of it.
+ * out-parameter, and its only effect is to zero two words the port's own mount
+ * does not use. So the face is empty, and empty is the whole of it.
  *
  * AND ITS ONE CALLER DROPS THE ARGUMENT. src/func_02018770.c:9 declares
  * `extern void UnloadArchive(void);` and calls it with none, while the real
