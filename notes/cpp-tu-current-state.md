@@ -18,7 +18,7 @@ python tools/cpp_tu_state.py --check-note
 
 | Measure | Live value |
 | --- | ---: |
-| MATCHED functions | 11311 / 11392 (99.29%) |
+| MATCHED functions | 11311 / 11393 (99.28%) |
 | MATCHED code bytes | 2185368 / 2238108 (97.64%) |
 | Strict CONVERTED source functions | 2704 / 11358 (23.81%) |
 | Physical production source files | 9125 |
