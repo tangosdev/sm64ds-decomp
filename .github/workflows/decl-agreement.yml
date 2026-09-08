@@ -79,6 +79,11 @@ jobs:
       # step below looked at anything at all: a wrong return type MUST be reported, an
       # arity mismatch MUST be reported, `u32` and `unsigned int` MUST NOT be, and a
       # two-file scan MUST exit non-zero instead of reporting a clean tree.
+      #
+      # Four more are the false-pass paths reported on #2471, and they cost about a
+      # minute between them: `--changed` only means anything on a scan past the tool's
+      # own floors, so each one builds a 2,100-source git repo and mutates it rather
+      # than asserting over a two-file toy the tool would refuse to pass at all.
       - name: The gate's own tests
         run: python -m unittest tools.test_check_decl_agreement -v
 
