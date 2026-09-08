@@ -1,6 +1,8 @@
 """PR merge-check tests; all API calls are fixtures, with no network or writes."""
 import copy
+import json
 import pathlib
+import subprocess
 import sys
 import unittest
 from unittest.mock import patch
@@ -20,6 +22,20 @@ def state():
 
 
 class PRSourceReviewTest(unittest.TestCase):
+    def test_large_queue_uses_raw_content_at_the_pinned_commit(self):
+        sha = "d" * 40
+        snapshot = state()
+        snapshot["history_fixture"] = "x" * 1_100_000
+        replies = [json.dumps({"object": {"sha": sha}}), json.dumps(snapshot)]
+        with patch.object(gate.subprocess, "run", side_effect=[
+                subprocess.CompletedProcess([], 0, stdout=reply, stderr="")
+                for reply in replies]) as run:
+            self.assertEqual(gate.queue_state("tangosdev/sm64ds-decomp"), (sha, snapshot))
+        self.assertEqual(run.call_count, 2)
+        self.assertEqual(run.call_args_list[1].args[0], [
+            "gh", "api", f"repos/tangosdev/sm64ds-decomp/contents/state.json?ref={sha}",
+            "-H", "Accept: application/vnd.github.raw+json"])
+
     def test_old_queue_and_unreviewed_source_block_but_tooling_can_land(self):
         self.assertEqual(gate.evaluate({}, HEAD, BASE, ["src/actor.cpp"])["result"], "fail")
         self.assertEqual(gate.evaluate({}, HEAD, BASE, ["tools/source_review.py"])["result"], "pass")

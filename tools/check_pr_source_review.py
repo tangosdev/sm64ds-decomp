@@ -4,7 +4,6 @@ Read-only by default. --publish creates a GitHub Actions check when run by the
 trusted workflow. Repository rules must separately require that app-owned check.
 """
 import argparse
-import base64
 import json
 import re
 import subprocess
@@ -50,8 +49,10 @@ def evaluate(state, head, base, files):
             "accepted_tasks": sorted(set(accepted))}
 
 
-def api(path, payload=None, paginate=False):
+def api(path, payload=None, paginate=False, raw=False):
     args = ["gh", "api", path]
+    if raw:
+        args += ["-H", "Accept: application/vnd.github.raw+json"]
     if paginate:
         args += ["--paginate", "--slurp"]
     if payload is not None:
@@ -66,10 +67,9 @@ def api(path, payload=None, paginate=False):
 def queue_state(repo):
     ref = api(f"repos/{repo}/git/ref/heads/agents/coordination")
     sha = ref["object"]["sha"]
-    contents = api(f"repos/{repo}/contents/state.json?ref={sha}")
-    if contents.get("encoding") != "base64":
-        raise RuntimeError("queue state was not returned as base64 content")
-    return sha, json.loads(base64.b64decode(contents["content"]))
+    # The default Contents response omits inline content above 1 MiB.
+    contents = api(f"repos/{repo}/contents/state.json?ref={sha}", raw=True)
+    return sha, contents
 
 
 def check_pr(repo, number, publish=False):
