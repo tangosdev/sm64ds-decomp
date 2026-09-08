@@ -189,6 +189,22 @@
 # different writer family and its own gate; the nine ov004 pairs it needs are
 # the nine the sweep above leaves unseated, and they are named there so the next
 # lane starts from the measurement.
+#
+# ---- GATE 2: THE dScMgCard_c +0x4f38 MODEL SUB-OBJECT ---------------------
+#
+# One more object-field row, from a different writer family: the eleven .data
+# pairs that reach the +0x00 field of the model sub-object at this+0x4f38.
+# port/unmatched/MgMemory2_FieldPmf.cpp's own seat block carries the whole
+# derivation -- the range sweep that closes the universe (every `load` reloc
+# into the model code block 0x020c0000..0x020c2000 whose following word reads
+# zero is one of exactly fifteen pairs, and the four non-pairs are pool words
+# inside code), the split by field that keeps the two code-word sets disjoint,
+# the four by-value sentinels that move with their installs, the __fastcall
+# face shape off the TU's own listing, and the two measured reasons
+# func_ov006_020c07e8 is NOT taken with it (its src TU needs /Zp4, and neither
+# the ROM nor the src guards a null pair at 0x020c07e8 so the port's added
+# guard is load-bearing).
+src/func_ov006_020c19d0.cpp
 src/func_ov004_020b31b4.cpp
 src/func_ov004_020b321c.cpp
 src/func_ov004_020b3278.cpp

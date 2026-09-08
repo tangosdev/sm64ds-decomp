@@ -347,6 +347,7 @@ void __sinit_ov006_021333e0(void);
 void port_mg_sound_states_seat(void);
 void port_mg_framework_states_seat(void);   /* unmatched/MgBase_StateDispatch.cpp */
 void port_mg_base_writer_seat(void);        /* unmatched/MgBase_StateSetter.cpp */
+void port_mg_memory2_model_seat(void);      /* unmatched/MgMemory2_FieldPmf.cpp */
 void port_mg_panel_states_seat(void);       /* unmatched/MgPanel_StateDispatch.cpp */
 void port_mg_bomroom_states_seat(void);     /* unmatched/MgBomroom_StateDispatch.cpp */
 void port_mg_luigi_states_seat(void);       /* unmatched/MgLuigi_StateDispatch.cpp */
@@ -1032,6 +1033,11 @@ extern "C" void port_scene_mg_overlay_load(void)
     port_mg_pachinko2_states_seat();
     port_mg_memory1_states_seat();
     port_mg_memory2_states_seat();
+    /* run link100 lane MGWRITER. The +0x4f38 model sub-object's own eleven
+       pairs, so the ROM's own func_ov006_020c19d0 reads a host word out of the
+       field its writers fill. ov006 .data, live from the mount, so the position
+       in this list is not load-bearing; it stands beside its class. */
+    port_mg_memory2_model_seat();
     port_mg_pachinko_states_seat();
 
     std::printf("[scene] ov004+ov006 mounted and all 35 overlay "

@@ -159,6 +159,7 @@
 // UNHANDLED is the evidence; this header is not.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the model seat below (lane MGWRITER) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on both
    machines.  The same struct MgMemory2_StateDispatch.cpp uses; each TU declares
@@ -215,6 +216,179 @@ void func_ov006_020c07e8(void *x);
 
 }  /* extern "C" */
 
+// ---- THE MODEL SUB-OBJECT'S +0x00 SEAT, run link100 lane MGWRITER ----------
+//
+// WHAT THIS REPLACES. func_ov006_020c19d0's host copy stood below and handed
+// the field's DS code word to mem2_field_try. It is src/func_ov006_020c19d0.cpp
+// again, on port/slice_mgwriter.txt, because the ELEVEN .data pairs that can
+// ever reach the +0x00 field now hold host addresses installed at boot.
+//
+// ---- WHY SECTION 3'S RULE DOES NOT FORBID THIS ----------------------------
+//
+// Section 3 says a seat that writes host addresses over the mounted pairs
+// "would leave that comparison permanently false while the dispatch itself
+// looked fine", and that is true of a seat that writes ONE SIDE. Four of the
+// eleven pairs below are not installs at all; they are the by-value sentinels
+// the class asks "is this slot idle" against:
+//
+//   data_ov006_0213ac58  src/func_ov006_020c1718.c   returns "idle" when the
+//                        stored pair equals it (states 2, 5 and 7 of
+//                        dScMgCard_c gate on this, and hal/scene_mg_card.cpp
+//                        prints the same test as its census line)
+//   data_ov006_0213ac90  src/func_ov006_020c16b4.c   the same test one caller over
+//   data_ov006_0213acb0  src/func_ov006_020c0f0c.c   the first arm of its answer
+//   data_ov006_0213aca8  src/func_ov006_020c0f0c.c   the second arm
+//
+// Every one of the four holds the SAME code word as an install in the same
+// group (0x020c1760 twice, 0x020c11c0, 0x020c0f9c), so seating BOTH SIDES with
+// the same host body leaves every comparison answering exactly what the
+// cartridge answers, and `p[0] == 0` stays zero on an unwritten slot. That is
+// the rule this lane derived at data_ov004_020bc254 in
+// port/unmatched/MgBase_StateSetter.cpp and it is the same shape here.
+//
+// ---- THE UNIVERSE IS CLOSED BY RANGE, NOT BY A CONSUMER LIST -------------
+//
+// Section 6 says a run is still the only detector, because a field pmf can be
+// written by any code that can reach the object. That is answered for this
+// field. A relocation sweep over ov006 for every `load` row whose destination
+// lands anywhere in the model sub-object's own code block 0x020c0000 ..
+// 0x020c2000, keeping the rows whose FOLLOWING word reads zero, returns
+// EXACTLY FIFTEEN pairs -- the fifteen section 5 lists, and nothing else. The
+// four rows in that range that are not pairs are literal-pool words inside
+// code, each followed by an ARM instruction (0x020c0af4, _020c1ef4, _020c228c
+// and _020c3b7c, all holding 0x020c0134). So no storage anywhere in this
+// overlay can hand this field a model-block address that is not one of the
+// nine, and a code word from outside the block cannot be one of this class's
+// own states. runs/link100/out/MGWRITER/sweep_ov006.txt is the listing.
+//
+// ---- THE SPLIT IS BY FIELD, AND THE TWO HALVES ARE DISJOINT --------------
+//
+// The fifteen serve TWO fields, and only the +0x00 one is seated here:
+//
+//   +0x00  func_ov006_020c19d0's field, ELEVEN pairs, SEVEN code words
+//          (0x020c0b74, _0ce8, _0df0, _0f9c, _11c0, _14bc, _1760)
+//          installs  ac48 ac50 ac60 ac80 ac98 aca0 acb8
+//          sentinels ac58 ac90 aca8 acb0
+//   +0xb4  func_ov006_020c07e8's field, FOUR pairs, TWO code words
+//          (0x020c0264, _0364): ac68 (src/func_ov006_020c057c.cpp), ac70
+//          (src/func_ov006_020c0304.c), ac88 (src/func_ov006_020c0264.cpp) and
+//          the sentinel ac78 that body reads itself
+//
+// The two code-word sets are DISJOINT, so seating one half cannot hand the
+// other half's dispatcher a host word: mem2_field_try keeps its 0x020c0264 and
+// 0x020c0364 arms for func_ov006_020c07e8, and its eight ov004 arms for
+// func_ov004_020b52fc, and loses only the seven this seat made unreachable.
+//
+// ---- WHY func_ov006_020c07e8 IS NOT TAKEN WITH IT ------------------------
+//
+// Two reasons, both measured. First, its src TU NEEDS /Zp4 and the tree does
+// not carry it: the ROM reads the pair at `add r3, r6, #0xb4` (0x020c07f4) and
+// MSVC without the option emits `mov ecx,[esi+188] / mov eax,[esi+184]`, which
+// is +0xb8 -- section 3's own alignment case, four bytes late, a silent wrong
+// read rather than a link error. With /Zp4 it emits +0xb4 and agrees with the
+// ROM. Second, and this is the one that stops it rather than costs it an
+// option: NEITHER the ROM nor the src has a null guard at 0x020c07e8 (fourteen
+// instructions, no `cmp` before the `blx`), so retiring the host copy would
+// take away the `if (code == 0) return` this port adds through
+// port_mg_memory2_field_call, and an unwritten +0xb4 field would branch to
+// zero. func_ov006_020c19d0 has no such exposure: `ldr r2,[r4]; cmp r2,#0;
+// beq` is the ROM's OWN guard at 0x020c19d8 and its src spells it, so the
+// retired TU refuses a zero exactly where the cartridge refuses it.
+//
+// ---- THE DISPATCH SHAPE, OFF THE TU'S OWN /FAsc LISTING ------------------
+//
+//   ROM       ldr r2,[r4] / cmp r2,#0 / ldr r1,[r4,#4] / add r0,r4,r1,asr #1 /
+//             ands r1,r1,#1 / ldreq r1,[r4] / blx r1 -- zero argument, this in r0
+//   EMITTED   mov eax,[esi] / test eax,eax / mov ecx,[esi+4] / add ecx,esi /
+//             CALL eax, with no push before it and no add esp after it
+//
+// so the receiver is in ecx with ZERO stack arguments and the callee cleans
+// nothing: the seven cells hold __fastcall FACES, not plain bodies. /Zp4 is a
+// measured no-op on this TU (compiled both ways, the only differing listing
+// line is the TITLE naming the .obj).
+//
+// ONE /alternatename. The matched TU declares `extern short
+// data_ov006_0212b89c[]` outside its extern "C" block, so MSVC spells the
+// reference ?data_ov006_0212b89c@@3PAFA -- read off the TU's own listing --
+// while the ov006 mount defines the plain C name. Nothing in the tree DEFINES
+// that LHS, so it cannot be silently defeated.
+
+#pragma comment(linker, "/alternatename:?data_ov006_0212b89c@@3PAFA=_data_ov006_0212b89c")
+
+extern "C" {
+extern MgPmf data_ov006_0213ac48;
+extern MgPmf data_ov006_0213ac50;
+extern MgPmf data_ov006_0213ac58;
+extern MgPmf data_ov006_0213ac60;
+extern MgPmf data_ov006_0213ac80;
+extern MgPmf data_ov006_0213ac90;
+extern MgPmf data_ov006_0213ac98;
+extern MgPmf data_ov006_0213aca0;
+extern MgPmf data_ov006_0213aca8;
+extern MgPmf data_ov006_0213acb0;
+extern MgPmf data_ov006_0213acb8;
+}
+
+static unsigned g_m4f38_hits;
+static unsigned g_m4f38_seated;
+
+static void __fastcall m4f38_020c0b74(void *self, void *) { ++g_m4f38_hits; func_ov006_020c0b74((char *)self); }
+static void __fastcall m4f38_020c0ce8(void *self, void *) { ++g_m4f38_hits; func_ov006_020c0ce8((char *)self); }
+static void __fastcall m4f38_020c0df0(void *self, void *) { ++g_m4f38_hits; func_ov006_020c0df0((char *)self); }
+static void __fastcall m4f38_020c0f9c(void *self, void *) { ++g_m4f38_hits; func_ov006_020c0f9c(self); }
+static void __fastcall m4f38_020c11c0(void *self, void *) { ++g_m4f38_hits; func_ov006_020c11c0((char *)self); }
+static void __fastcall m4f38_020c14bc(void *self, void *) { ++g_m4f38_hits; func_ov006_020c14bc((char *)self); }
+static void __fastcall m4f38_020c1760(void *self, void *) { ++g_m4f38_hits; func_ov006_020c1760(); }
+
+typedef void (*SeatFn)(void *);
+
+/* Compare against the cartridge's own code word and a zero adjustment first,
+   abort loudly on either mismatch, then write the host body. */
+extern "C" void port_mg_memory2_model_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *cell;
+        const char *name;
+        unsigned rom;
+        SeatFn host;
+    } seats[] = {
+    { &data_ov006_0213ac48, "0213ac48", 0x020c11c0u, (SeatFn)m4f38_020c11c0 },
+    { &data_ov006_0213ac50, "0213ac50", 0x020c1760u, (SeatFn)m4f38_020c1760 },
+    { &data_ov006_0213ac58, "0213ac58", 0x020c1760u, (SeatFn)m4f38_020c1760 },
+    { &data_ov006_0213ac60, "0213ac60", 0x020c14bcu, (SeatFn)m4f38_020c14bc },
+    { &data_ov006_0213ac80, "0213ac80", 0x020c0b74u, (SeatFn)m4f38_020c0b74 },
+    { &data_ov006_0213ac90, "0213ac90", 0x020c1760u, (SeatFn)m4f38_020c1760 },
+    { &data_ov006_0213ac98, "0213ac98", 0x020c0ce8u, (SeatFn)m4f38_020c0ce8 },
+    { &data_ov006_0213aca0, "0213aca0", 0x020c0df0u, (SeatFn)m4f38_020c0df0 },
+    { &data_ov006_0213aca8, "0213aca8", 0x020c0f9cu, (SeatFn)m4f38_020c0f9c },
+    { &data_ov006_0213acb0, "0213acb0", 0x020c11c0u, (SeatFn)m4f38_020c11c0 },
+    { &data_ov006_0213acb8, "0213acb8", 0x020c0f9cu, (SeatFn)m4f38_020c0f9c },
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        if (seats[i].cell->code != seats[i].rom || seats[i].cell->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgCard_c model sub-object pair "
+                         "data_ov006_%s: the mount holds %08x/%d, the ROM's own "
+                         "bytes say %08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].cell->code, seats[i].cell->adj, seats[i].rom);
+            std::abort();
+        }
+        seats[i].cell->code = (unsigned)(size_t)seats[i].host;
+        ++g_m4f38_seated;
+    }
+}
+
+extern "C" void port_mg_memory2_model_counts(unsigned *seated, unsigned *hits)
+{
+    if (seated) *seated = g_m4f38_seated;
+    if (hits)   *hits   = g_m4f38_hits;
+}
+
 // ---- the field switch -------------------------------------------------------
 
 static unsigned g_mem2_field_calls;
@@ -233,16 +407,16 @@ static int mem2_field_try(void *self, unsigned code)
     case 0x020b4ff0u: func_ov004_020b4ff0(c); return 1;
     case 0x020b51f0u: func_ov004_020b51f0(c); return 1;
     case 0x020b5288u: func_ov004_020b5288(c); return 1;
-    /* ov006, the model sub-object's fourteen pairs, nine distinct */
+    /* ov006, the model sub-object's +0xb4 field, the only half left. Run
+       link100 lane MGWRITER took the other seven arms out: the +0x00 field's
+       eleven pairs hold host bodies now and func_ov006_020c19d0 dispatches
+       them itself, so no path can present 0x020c0b74, _0ce8, _0df0, _0f9c,
+       _11c0, _14bc or _1760 here again. These two stay because
+       func_ov006_020c07e8 is still a host copy: the seat block above says why
+       (its src TU needs /Zp4 and neither the ROM nor the src guards a null
+       pair at 0x020c07e8, so the guard this file adds is load-bearing). */
     case 0x020c0264u: func_ov006_020c0264(c); return 1;
     case 0x020c0364u: func_ov006_020c0364(c); return 1;
-    case 0x020c0b74u: func_ov006_020c0b74(c); return 1;
-    case 0x020c0ce8u: func_ov006_020c0ce8(c); return 1;
-    case 0x020c0df0u: func_ov006_020c0df0(c); return 1;
-    case 0x020c0f9cu: func_ov006_020c0f9c(c); return 1;
-    case 0x020c11c0u: func_ov006_020c11c0(c); return 1;
-    case 0x020c14bcu: func_ov006_020c14bc(c); return 1;
-    case 0x020c1760u: func_ov006_020c1760();  return 1;  /* bx lr body */
     default:                                  return 0;
     }
 }
@@ -284,33 +458,11 @@ extern "C" void func_ov004_020b52fc(void *c)
     port_mg_memory2_field_call(c, p->code, p->adj);
 }
 
-/* src/func_ov006_020c19d0.cpp, section 2.  The pair is at offset 0, the null
-   guard is src's own (and the ROM's), and every other statement -- the
-   BlendModelAnim advance at +0x1c, the ApproachLinear2 at +0x1e0, the +0x1e2
-   counter, the data_ov006_0212b89c lookup keyed on +0x1e2, the +0x1e4 spin and
-   the tail call into func_ov006_020c07e8 on c+0xdc -- is verbatim. */
-// PORT_HOST_ABI: mwcc field pointer-to-member dispatch on the sub-object 8-byte pair MSVC's 4-byte pmf cannot reproduce
-extern "C" void func_ov006_020c19d0(void *thiz)
-{
-    char *c = (char *)thiz;
-    if (*(int *)c != 0) {
-        const MgPmf *p = (const MgPmf *)c;
-        port_mg_memory2_field_call(c, p->code, p->adj);
-    }
-    _ZN14BlendModelAnim7AdvanceEv(c + 0x1c);
-    if (_Z15ApproachLinear2Rsss(*(short *)(c + 0x1e0), 0, 1) != 0) {
-        short *q = (short *)(c + 0x1e2);
-        *q = (short)(*q + 1);
-        if (*(short *)(c + 0x100 + 0xe2) > 7)
-            *(short *)(c + 0x100 + 0xe2) = 1;
-        *(short *)(c + 0x1e0) = data_ov006_0212b89c[*(short *)(c + 0x100 + 0xe2)];
-    }
-    {
-        short *r = (short *)(c + 0x1e4);
-        *r = (short)(*r + 0x400);
-    }
-    func_ov006_020c07e8(c + 0xdc);
-}
+/* func_ov006_020c19d0 IS GONE, run link100 lane MGWRITER: its host copy is
+   src/func_ov006_020c19d0.cpp again, on port/slice_mgwriter.txt. The seat block
+   above is the derivation. Its callee below is unchanged and still hosted, and
+   the matched TU calls it by the same C name on c+0xdc, exactly as the src
+   spells it. */
 
 /* src/func_ov006_020c07e8.cpp, section 3.  The struct below is that file's own,
    with `PMF pmf` replaced by `MgPmf pmf` -- which is what makes the pads it
