@@ -1,0 +1,204 @@
+# RUNG W4 AND RUNG W5 OF THE WIRELESS PLAN: THE ROM'S OWN RADIO PROTOCOL.
+# Run link100, lane WM3, on top of lane WM1's rung W0 and lane WM2's rung W1.
+#
+# The plan is lane WMSCOUT's (runs/link100/out/WMSCOUT/report.md section 3).
+# W0 gave back the two state readers, W1 gave back the OPEN and let the ROM's
+# own WM_Init run with an ARM7 that answered nothing. This rung is the payoff:
+# src/func_02040820.c and src/func_02040790.c -- BECOME PARENT and BECOME CHILD
+# -- plus src/func_02040724.c (LEAVE, which WMSCOUT scored separately as W5 and
+# which costs nothing extra here because its only callee, Wireless_Reset, is
+# already in this closure).
+#
+# WHAT IS IN THE LIST. The call closure of those three roots, measured over
+# src/ and then walked back edge by edge: every TU below is reached from one of
+# the three by a real call, and port/tools/closure.py over exactly this set
+# against the pre-rung map reported twenty-four unresolved externals and three
+# duplicate definitions (the three faces this rung retires). The bands:
+#
+#   0x0203fxxx..0x02042xxx   the game's own wireless framework: the role
+#                            machine, the WM callbacks it installs, the lobby
+#                            and record bookkeeping, the post-connect tail
+#   0x02058xxx..0x0205exxx   the PXI queue and OS support those reach
+#   0x02061xxx..0x02065xxx   the NITRO WM SDK itself -- the command senders,
+#                            the state machine, the packers, and the
+#                            0x02065xxx work-queue band the MP start tail runs
+#   WM_SendCommand, WM_SetCallbackTable, Wireless_Reset   the named three
+#
+# WHAT MADE IT LINKABLE IS NOT IN THIS FILE. port/hal/wm_arm7.cpp: a host ARM7
+# that answers the WM commands these bodies send on PXI channel 0xa with the
+# fields the ROM's OWN callbacks read, so the ROM's protocol state machine
+# climbs its own ladder (0 READY -> 1 STOP -> 2 IDLE -> 7 PARENT or 8 CHILD ->
+# 9 MP_PARENT or 0xa MP_CHILD) rather than being handed a state by a face.
+# Every reply field in that file names the src line that consumes it. The
+# ladder itself is not assumed either: it is the only assignment consistent
+# with the ten WM_CheckStateEx preconditions the ROM's own senders carry.
+#
+# THREE THINGS THIS SET NEEDED THAT WERE NOT MATCHED TUs, all in
+# port/hal/wm_arm7.cpp and all argued at the line there:
+#
+#   func_02059d1c and func_02059d30. src/func_0205cd5c.c names them; the ROM
+#   says 0x02059d1c IS _ZN3IRQ7DisableEv and 0x02059d30 IS _ZN3IRQ7RestoreEj,
+#   already in the link under those names. Two linker aliases, no new code.
+#
+#   func_0206470c. src/func_0206470c.c carries a NONMATCHING banner -- hand-
+#   written ARM assembly on a mwccarm register-allocation wall -- so it is not
+#   matched code, MSVC cannot compile it, and it is NOT in this list. Hosted
+#   from the ROM's own instructions instead. Its only caller sits behind
+#   src/func_02065170.c's early return, so nothing in this build runs it.
+#
+#   TWENTY DS GLOBALS, hosted in .dsstate$ywmd00..19, tail-appended past lane
+#   WM2's $ywmc18 so no existing hosted global moves a byte. SIX OF THEM ARE
+#   INITIALISED DATA, not bss, and their values were read out of
+#   extracted/arm9_dec.bin rather than assumed zero.
+#
+# WHAT THE STUB DOES NOT FABRICATE. It never posts a connect indication to a
+# parent (apiid 8 with state code 7). src/func_02040014.c answers one by
+# looking the joining child's MAC up in data_020a0f9d / data_020a0fbe -- the
+# lobby's accepted-peer table, which nothing in this build fills -- so every
+# lookup would miss and the ROM would answer its own peer with a DISCONNECT.
+# The parent reaches MP_PARENT on its own and the child reaches MP_CHILD on its
+# own; the session's actual bytes are the transport's, exactly as before.
+#
+# THE ROM-VISIBLE SESSION IS FOUR AND THE WIDE ONE IS STILL SIXTEEN. The
+# cartridge's parent parameters (0x02075358, copied through data_020a1064) say
+# three children at +0x0e, 0x200 parent bytes at +0x32 and 0x20 child bytes at
+# +0x34, and this stub answers for exactly those and claims no limit the SDK
+# would not. hal/vs_width.h's sixteen-player mod lives BELOW the protocol, in
+# the transport and the fan-out tails, and is untouched by this rung: the
+# sixteen-window ladder still forms.
+#
+# SOLO IS BYTE-IDENTICAL AND SILENT. The role byte data_020a0f04 never leaves 0
+# in a single-player boot, so src/func_0203df40.c takes its solo arm, none of
+# these bodies is called, and the per-tag census must read ZERO words on tag 10
+# -- the same measurement rung W1 was gated on, and it still holds.
+src/WM_SendCommand.c
+src/WM_SetCallbackTable.c
+src/Wireless_Reset.c
+src/func_0203fa50.c
+src/func_0203faa8.c
+src/func_0203fb5c.c
+src/func_0203fb98.c
+src/func_0203fbc4.c
+src/func_0203fc38.c
+src/func_0203fc74.c
+src/func_0203fcb0.c
+src/func_0203fcec.c
+src/func_0203fd28.c
+src/func_0203fdac.c
+src/func_0203fec4.c
+src/func_02040014.c
+src/func_020401e8.c
+src/func_020402a0.c
+src/func_02040384.c
+src/func_02040388.c
+src/func_02040408.c
+src/func_02040504.c
+src/func_020405b4.c
+src/func_02040638.c
+src/func_02040724.c
+src/func_02040790.c
+src/func_02040820.c
+src/func_02040aa4.c
+src/func_02040bb0.c
+src/func_02040f30.c
+src/func_02041224.c
+src/func_020418f0.c
+src/func_02041930.c
+src/func_02041a00.c
+src/func_02041e14.c
+src/func_02042160.c
+src/func_020421b4.c
+src/func_020423dc.c
+src/func_02042668.c
+src/func_020426f0.c
+src/func_020426f8.c
+src/func_0205816c.c
+src/func_020587e4.c
+src/func_0205c864.c
+src/func_0205caa8.c
+src/func_0205cd5c.c
+src/func_0205d28c.c
+src/func_0205db88.c
+src/func_0205de9c.c
+src/func_0205e0f4.c
+src/func_0205e280.c
+src/func_0205e3d4.c
+src/func_0205e6e4.c
+src/func_0205e7e0.c
+src/func_0205e89c.c
+src/func_0205e904.c
+src/func_020614d0.c
+src/func_02061ab0.c
+src/func_02061b9c.c
+src/func_02061c20.c
+src/func_02061ce4.c
+src/func_02061d30.c
+src/func_02061e38.c
+src/func_02061fdc.c
+src/func_02062024.c
+src/func_020620b0.c
+src/func_02062200.c
+src/func_020622a8.c
+src/func_020622f0.c
+src/func_02062338.c
+src/func_02062380.c
+src/func_020623ec.c
+src/func_02062428.c
+src/func_020625fc.c
+src/func_02062734.c
+src/func_020627e8.c
+src/func_02062990.c
+src/func_02062aa4.cpp
+src/func_02062bdc.cpp
+src/func_02062d10.cpp
+src/func_020631dc.c
+src/func_02063718.c
+src/func_02063980.c
+src/func_02063ae4.c
+src/func_02063bc4.c
+src/func_02063d3c.c
+src/func_02063da0.c
+src/func_02063e08.c
+src/func_02064554.c
+src/func_020647fc.c
+src/func_02064888.c
+src/func_0206491c.c
+src/func_02064a28.c
+src/func_02064a94.c
+src/func_02064b2c.c
+src/func_02064bac.c
+src/func_02064c2c.c
+src/func_02064cd8.c
+src/func_02064d6c.c
+src/func_02064e18.c
+src/func_02064eac.c
+src/func_02064f54.c
+src/func_02064fe8.c
+src/func_020650a0.c
+src/func_02065138.c
+src/func_02065170.c
+src/func_020653cc.c
+src/func_02065538.c
+src/func_020656d4.c
+src/func_02065730.c
+src/func_02065788.c
+src/func_020657d0.c
+src/func_02065970.c
+src/func_020659a0.c
+src/func_020659f8.c
+src/func_02065a4c.c
+src/func_02065a74.c
+src/func_02065a84.c
+src/func_02065a94.c
+src/func_02065ad0.c
+src/func_02065ae0.c
+src/func_02065af0.c
+src/func_02065b88.c
+src/func_02065b94.c
+src/func_02065ba0.c
+src/func_02065bb0.c
+src/func_02065bc0.c
+src/func_02065bd0.c
+src/func_02065be0.c
+src/func_02065bf4.c
+src/func_02065c1c.c

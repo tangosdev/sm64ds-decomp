@@ -88,70 +88,48 @@ void comms_note_wire_activity() { ++g_wire_activity; }
 uint64_t comms_wire_activity() { return g_wire_activity; }
 
 // ===========================================================================
-// THE TWO WORDS, PUBLISHED. Run link100, lane WM1, rung W0.
+// THE TWO WORDS. Run link100, lane WM1 rung W0, NARROWED BY LANE WM3 RUNG W4.
 //
-// src/func_02040714.c and src/func_02040704.c are linked and their host faces
-// are gone, so the game now reads data_020a0f94 and data_020a0f24 rather than
-// asking the transport. On the DS the wireless thread writes both words as the
-// radio progresses. Here the seam writes them, and the whole question this
-// function has to answer is WHEN.
+// WHAT RUNG W0 BUILT. src/func_02040714.c (`return data_020a0f94`) and
+// src/func_02040704.c (`return data_020a0f24`) became linked bodies, so the
+// game reads those two words instead of asking the transport, and something
+// had to keep them fresh. This function was that something: it wrote
+// t->state() into data_020a0f94 and t->slot() into data_020a0f24 from every
+// seam face, from the exchange face once per wait turn, and from a pump chained
+// onto hal/os_thread.h's hook to cover src/func_0203ea5c.c's case 2, which
+// calls nothing at all.
 //
-// WHERE IT IS CALLED, and each is a moment the transport can have changed its
-// mind about the session:
+// WHAT RUNG W4 TOOK BACK, AND WHY THE MIRROR HAD TO GO. The ROM's own WM
+// callbacks are linked now, and THEY WRITE BOTH WORDS. data_020a0f94 is written
+// by src/func_0203fdac.c (`data_020a0f94 = data_020a0f5c`, the 3 or 4 that a
+// formed session means), by src/func_02040820.c and src/func_02040790.c
+// themselves (`= 2`, connecting), by src/func_02040504.c (`= 0`) and by five
+// callbacks on their failure arms (`= 1`). A mirror that kept writing
+// t->state() into that word would FIGHT every one of them -- and worse than
+// fight: the ROM's own state machine SWITCHES on it, so a mirror write of 4
+// while the ROM sits at 2 sends func_02040820 down its `case 4: Wireless_Reset`
+// arm and tears the session down. So data_020a0f94 IS NOT WRITTEN HERE. The
+// case-2 pump goes with it: the ROM's own callbacks are the path out of
+// connecting now, which is what case 2 was always waiting for on hardware.
 //
-//   func_020408b0   open       -- and it writes the same two zeroes the ROM's
-//                                 own body writes (src/func_020408b0.c:25-27)
-//   func_02040820   parent     -- the request is in; whatever the transport
-//   func_02040790   child         answers is the new state
-//   func_02040724   leave
-//   func_020406b4   exchange   -- ONCE PER TURN of the ROM's own wait loop in
-//                                 states 3 and 4, which is what keeps a live
-//                                 session's words from going stale, and what
-//                                 makes src/func_0203ea5c.c:252 read a slot
-//                                 that was published in the same invocation
-//                                 (:223 runs before :252)
-//   hal/comms_conductor.cpp, comms_wait_for_session -- the one read that
-//                                 happens BEFORE any lockstep round could have
-//                                 published anything. See the hunk there.
+// AND ONE WRITE STAYS, NARROWED TO THE ONE PLACE THE ROM CANNOT HAVE REACHED
+// YET. data_020a0f24, the aid. The ROM writes it too -- src/func_0203fec4.c:25
+// takes it out of the connect reply -- but that reply is posted only once the
+// transport reports the child connected, and hal/comms_conductor.cpp's
+// comms_wait_for_session ends its wait on the SAME transport signal and then
+// immediately reads the slot through the ROM's accessor. So there is a window,
+// one turn wide, where the wait has released and the reply has not been
+// dispatched, and reading the word there gives 0 -- which is the exact field
+// failure lane WM1 recorded ("session up after 1 turns: link=4 slot=1" followed
+// by "I am slot 0"). The publish is kept for that ONE read, and the value it
+// writes is the same t->slot() the reply will carry, so the ROM's own write
+// lands on the same number a turn later. The exchange face keeps calling it for
+// the same reason at the same cost: it is idempotent with the ROM's writer.
 //
-// AND THE ONE WINDOW THE FACES CANNOT COVER, WHICH IS WHY THERE IS A PUMP.
-//
-// src/func_0203ea5c.c's case 2 -- kCommsConnecting -- is a bare `sp8 = 0`. It
-// calls NOTHING, so no seam face runs, so a word that says 2 when the ROM
-// reaches that arm would stay 2 for the rest of the ROM's wait bound and then
-// drop the session to solo. And 2 is not a theoretical value: the loopback
-// carrier reports it after become_parent/become_child and again whenever the
-// live mask falls back to one (hal/comms_loopback.cpp:1929, :2219, :3280,
-// :3295), which is a peer leaving mid-session -- a state it has a documented
-// path OUT of, since a child re-JOINs while connecting (:2893). Before this
-// rung func_02040714 read the transport live and that recovery worked; a mirror
-// that freezes at 2 would silently take it away. That is exactly the failure
-// lane DF40's note predicted for this closure, and it is the one thing here
-// that had to be built rather than argued.
-//
-// So the seam chains a pump. hal/os_thread.h's pump runs once per turn of the
-// ROM's own OS_SleepThread wait -- the same hook hal/comms_conductor.cpp's
-// conductor_pump uses to call poll() -- and mirror_pump publishes after it.
-// Every turn of case 2 is a pump turn, so the recovery is seen on the turn the
-// carrier sees it.
-//
-// IT INSTALLS ITSELF LAST, ON PURPOSE. conductor_pump is written to hand its
-// vote to a pump that was already there ("A PREVIOUSLY INSTALLED PUMP KEEPS ITS
-// VOTE"), and that vote is what paces a connected wait turn at a DS VBlank --
-// the 2026-08-28 field collapse this port paid for once. If this pump were
-// installed FIRST it would become conductor_pump's g_prev_pump and conductor
-// would return this function's vote instead of its own, undoing that pacing.
-// So the install is lazy and refuses to run until there is already a pump to
-// chain: it happens on the first publish, which is a seam face, which is long
-// after hal/comms_loopback.cpp has installed the conductor's. This one is
-// always the OUTER pump and never anybody's g_prev_pump.
-//
-// SOLO IS UNTOUCHED. With no transport this writes kCommsIdle and 0, which is
-// what both words already hold -- and in a solo boot the role byte is 0, so
-// src/func_0203df40.c takes its solo arm and not one of these faces is ever
-// called at all. The only other writer of data_020a0f94 in the whole link is
-// src/func_0203fd64.c, and its `= 1` arm is dead here because the port's
-// func_0206259c always answers 2 (hal/comms_conductor.cpp's "2 or hang").
+// SOLO IS UNTOUCHED, more so than before: with no transport this now writes
+// nothing at all, where it used to write a zero over a zero. In a solo boot the
+// role byte never leaves 0, so src/func_0203df40.c takes its solo arm, no seam
+// face is called and no WM command is ever sent.
 // ===========================================================================
 // ===========================================================================
 // THE HOST ARM7 GETS A TURN WHENEVER THE ARM9 TOUCHES THE RADIO.
@@ -197,43 +175,19 @@ namespace {
 
 void publish_now() {
     const CommsTransport *t = g_transport;
-    const int st   = t ? t->state() : g_solo_state;
-    const int slot = t ? t->slot()  : g_solo_slot;
-    // data_020a0f94 is a word (src/func_02040714.c reads it as int);
+    if (!t) return;              // solo: neither word has a publisher, or needs one
     // data_020a0f24 is the low halfword of its own 4-byte ROM span (every ROM
     // writer -- src/func_020408b0.c:27, src/func_02040014.c, src/func_020402a0.c,
     // src/func_0203fec4.c:23 -- writes it as u16).
-    *reinterpret_cast<volatile int *>(data_020a0f94) = st;
+    //
+    // AND data_020a0f94 IS NOT WRITTEN HERE ANY MORE. See the banner.
     *reinterpret_cast<volatile unsigned short *>(data_020a0f24) =
-        (unsigned short)slot;
-}
-
-ThreadPump g_pump_prev = nullptr;
-bool       g_pump_installed = false;
-
-// One turn of the ROM's own wait: whatever pump was already there decides
-// whether the wait continues, and then the two words are refreshed. The vote is
-// NOT this function's to make -- see the banner above.
-bool mirror_pump(unsigned spin) {
-    const bool go = g_pump_prev ? g_pump_prev(spin) : false;
-    publish_now();
-    return go;
+        (unsigned short)t->slot();
 }
 
 }  // namespace
 
 void comms_publish_link_words() {
-    // Only with a transport (there is nothing to mirror without one, and a solo
-    // boot must not grow a pump it never had), and only when there is already a
-    // pump to chain, so this can never end up as conductor_pump's g_prev_pump.
-    if (!g_pump_installed && g_transport) {
-        const ThreadPump had = thread_pump();
-        if (had) {
-            g_pump_installed = true;
-            g_pump_prev = had;
-            thread_set_pump(mirror_pump);
-        }
-    }
     publish_now();
 }
 
@@ -368,9 +322,40 @@ void func_020408b0(unsigned short mode) {
 }
 #endif
 
+// ===========================================================================
+// RUNGS W4 AND W5: BECOME PARENT, BECOME CHILD AND LEAVE ARE THE ROM'S AGAIN.
+//
+// Run link100, lane WM3. src/func_02040820.c, src/func_02040790.c and
+// src/func_02040724.c are linked bodies now, and 128 more TUs came with them:
+// the NITRO WM command layer, the game's own wireless framework and the
+// 0x02065xxx work-queue band. port/slice_wm3.txt carries the list, the measured
+// closure and the argument.
+//
+// WHAT MADE IT POSSIBLE was not these three files, it was hal/wm_arm7.cpp -- a
+// host ARM7 that answers the WM commands those bodies send on PXI channel 0xa
+// with the fields the ROM's OWN callbacks read, so the ROM's protocol state
+// machine climbs its own ladder (0 -> 1 -> 2 -> 7 or 8 -> 9 or 0xa) instead of
+// being handed a state by a face. The seam is still the cut it always was; what
+// changed is that the layer immediately above the radio is the cartridge's
+// again, and the transport is reached THROUGH it: become_parent() when the ROM
+// sends apiid 8, become_child() on 0x0c, close() on 0x0d.
+//
+// AND THE TWO WORDS ARE THE ROM'S OWN WRITERS NOW, which is what retires most
+// of rung W0's publish -- see comms_publish_link_words' banner above.
+//
+// THE PROBE KEEPS ALL THREE, and only the probe. tests/mp_comms_seam.cpp calls
+// func_02040820, func_02040790 and func_02040724 at :159-167 to check the
+// seam's SOLO answers, and it links neither the WM command layer nor a heap nor
+// the host ARM7. It gets the stand-ins under a define of its own, exactly the
+// way it keeps the retired func_020408b0 under
+// PORT_COMMS_SEAM_PROBE_FACE_020408B0 and the retired OS_SleepThread pair under
+// PORT_OS_THREAD_HOST_PAIR: a retired host body stays reachable WHERE IT IS
+// MEASURED and nowhere else. No shipped target compiles the three below.
+// ===========================================================================
+#ifdef PORT_COMMS_SEAM_PROBE_FACES_W4
+
 // src/func_02040820.c: the ROM's become-parent state machine over
 // data_020a0f94/data_020a0f5c, with Wireless_Reset on a role flip.
-// PORT_HOST_ABI: hosted WM/radio seam face; ROM body is the become-parent state machine over the NITRO WM SDK / arm7.bin radio, which this repo does not decompile.
 void func_02040820(void) {
     port::comms_arm7_turn();
     const port::CommsTransport *t = port::comms_transport();
@@ -383,7 +368,6 @@ void func_02040820(void) {
 }
 
 // src/func_02040790.c, the child half of the same machine.
-// PORT_HOST_ABI: hosted WM/radio seam face; the become-child half of the same WM SDK / arm7.bin state machine this repo does not decompile.
 void func_02040790(void) {
     port::comms_arm7_turn();
     const port::CommsTransport *t = port::comms_transport();
@@ -393,7 +377,6 @@ void func_02040790(void) {
 }
 
 // src/func_02040724.c: leave.
-// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body closes the NITRO WM SDK session over arm7.bin, which this repo does not decompile.
 void func_02040724(void) {
     const port::CommsTransport *t = port::comms_transport();
     if (t) { t->close(); port::comms_publish_link_words(); return; }
@@ -401,6 +384,8 @@ void func_02040724(void) {
     port::g_solo_slot = 0;
     port::comms_publish_link_words();
 }
+
+#endif  // PORT_COMMS_SEAM_PROBE_FACES_W4
 
 // ===========================================================================
 // THE NEXT TWO WERE CLOSABLE, AND RUNG W0 CLOSED THEM.
