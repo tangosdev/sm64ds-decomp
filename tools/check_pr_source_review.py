@@ -8,6 +8,7 @@ import json
 import re
 import subprocess
 import sys
+from urllib.parse import quote
 
 import source_review as sr
 
@@ -72,13 +73,29 @@ def queue_state(repo):
     return sha, contents
 
 
+def target_branch(repo, pr):
+    """Resolve the live target ref; PR base.sha can retain an older commit."""
+    base = pr["base"]
+    base_repo = base["repo"]["full_name"]
+    sr.require(isinstance(base_repo, str) and base_repo.casefold() == repo.casefold(),
+               "PR targets a different repository")
+    branch = base["ref"]
+    sr.require(isinstance(branch, str) and bool(branch), "PR target branch is missing")
+    ref = api(f"repos/{repo}/git/ref/heads/{quote(branch, safe='')}")
+    sr.require(ref["ref"] == "refs/heads/" + branch, "API returned a different target ref")
+    sr.require(ref["object"]["type"] == "commit", "Target branch does not identify a commit")
+    return branch, sr.commit(ref["object"]["sha"], "target branch commit")
+
+
 def check_pr(repo, number, publish=False):
     pr = api(f"repos/{repo}/pulls/{number}")
     if pr["state"] != "open":
         return {"pr": number, "result": "closed"}
-    head, base = pr["head"]["sha"], pr["base"]["sha"]
+    head = pr["head"]["sha"]
+    base, branch = None, None
     state_sha = None
     try:
+        branch, base = target_branch(repo, pr)
         pages = api(f"repos/{repo}/pulls/{number}/files?per_page=100", paginate=True)
         files = [f for page in pages for f in page]
         sr.require(len(files) == pr["changed_files"], "incomplete PR file list; review coverage unknown")
@@ -91,15 +108,29 @@ def check_pr(repo, number, publish=False):
         report = evaluate(state, head, base, paths)
     except (RuntimeError, sr.ReviewError, ValueError, KeyError, TypeError) as exc:
         report = {"result": "fail", "summary": "Source review could not be established: " + str(exc)}
-    report.update(pr=number, head=head, base=base, queue_commit=state_sha)
-    if publish:
+    report.update(pr=number, head=head, base=base, base_ref=branch,
+                  pr_base=pr["base"].get("sha"), queue_commit=state_sha)
+    if not publish and report["result"] != "pass":
+        return report
+    current_head_confirmed = False
+    try:
         current = api(f"repos/{repo}/pulls/{number}")
-        if (current["head"]["sha"], current["base"]["sha"], current["state"]) != (head, base, "open"):
-            raise RuntimeError("PR changed while checking; rerun before publishing a verdict")
+        sr.require((current["head"]["sha"], current["state"]) == (head, "open"),
+                   "PR changed while checking; rerun before using the verdict")
+        current_head_confirmed = True
         if state_sha is not None:
             current_queue = api(f"repos/{repo}/git/ref/heads/agents/coordination")["object"]["sha"]
             if current_queue != state_sha:
                 report.update(result="fail", summary="Queue changed during review; refresh the check.")
+        # Read the actual branch tip last, before returning or creating a check.
+        # Re-reading the PR's cached base.sha cannot detect main advancing.
+        current_branch, current_base = target_branch(repo, current)
+        if (current_branch, current_base) != (branch, base):
+            report.update(result="fail", summary="Target branch changed during review; refresh the check.",
+                          observed_base=current_base, observed_base_ref=current_branch)
+    except (RuntimeError, sr.ReviewError, ValueError, KeyError, TypeError) as exc:
+        report.update(result="fail", summary="Final review inputs could not be confirmed: " + str(exc))
+    if publish and current_head_confirmed:
         api(f"repos/{repo}/check-runs", {
             "name": "Source review", "head_sha": head, "status": "completed",
             "conclusion": "success" if report["result"] == "pass" else "failure",
