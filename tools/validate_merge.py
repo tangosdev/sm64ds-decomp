@@ -272,9 +272,17 @@ def classify_merge(bf, hf, be, he, compiled):
     linked and byte-compared against the cartridge; everything else is filled by a gap
     object holding the ROM's own bytes (`verification_split` states this). So requiring
     that EVERY address the merge removes is newly covered by a `complete` range, and that
-    `sourceBytes` rises by exactly the size of those new ranges, ties the carve-out to a
-    build. Merging a hundred junk symbols yields no new `complete` range; forging one for
-    a range that does not reproduce fails module fidelity in the same validator run.
+    `sourceBytes` rises by exactly the NEW coverage those ranges add, ties the carve-out
+    to a build. Merging a hundred junk symbols yields no new `complete` range; forging one
+    for a range that does not reproduce fails module fidelity in the same validator run.
+
+    NEW COVERAGE, NOT NEW EXTENT. A range's extent and the coverage it ADDS differ
+    whenever the merge swallows a `complete` entry the base already had: those bytes were
+    in `sourceBytes` before and are in it after, so they are not new. Comparing against
+    the raw extent refused the honest fold and would have kept refusing it forever. The
+    subtraction is of base entries lying WHOLLY INSIDE a new range only; one lying outside
+    is coverage this merge really lost and still shortens the delta, which is what stops
+    an unrelated range leaving under cover of the merge.
 
     THE RANGE IS NOT EVIDENCE BY ITSELF; ITS SOURCE HAS TO BE COMPILED CODE. The forging
     argument above covers a range that FAILS to reproduce. It does not cover one that
@@ -351,11 +359,20 @@ def classify_merge(bf, hf, be, he, compiled):
                            record["addr"] + record["size"]):
             return None
 
-    # sourceBytes rises by exactly the newly-complete extent -- no other range may
-    # quietly join or leave under cover of the merge.
+    # sourceBytes rises by exactly the newly-complete extent, less whatever of it the
+    # base was ALREADY compiling. A base entry lying wholly inside one of the new ranges
+    # is not new coverage -- its bytes moved from one `complete` entry to another and
+    # were already in `sourceBytes`. A base entry that lies OUTSIDE every new range is
+    # coverage this merge LOST: it is not subtracted, so it still shortens the delta and
+    # the comparison below still refuses it. That is the clause that stops an unrelated
+    # range leaving under cover of the merge, and it is untouched.
     new_bytes = sum(stop - start
                     for spans in new_ranges.values() for start, stop in spans)
-    if he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"] != new_bytes:
+    absorbed_bytes = sum(entry["size"] for key, entry in be["source"].items()
+                         if key not in he["source"]
+                         and _inside_new(entry["module"], entry["addr"], entry["end"]))
+    if (he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"]
+            != new_bytes - absorbed_bytes):
         return None
 
     # Surviving matched records keep their size unless they grew into a new range.
@@ -373,7 +390,9 @@ def classify_merge(bf, hf, be, he, compiled):
             "functionDelta": hf["stats"]["totalFunctions"] - bf["stats"]["totalFunctions"],
             "added": sorted(set(hf["functions"]) - set(bf["functions"])),
             "removed": removed,
-            "sourceByteDelta": new_bytes}
+            "newExtent": new_bytes,
+            "absorbedBytes": absorbed_bytes,
+            "sourceByteDelta": new_bytes - absorbed_bytes}
 
 
 def classify_repartition(bf, hf):
@@ -1057,7 +1076,9 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         # evidence and a reader auditing one should not have to guess.
         if repartition["kind"] == "merge":
             basis = (f"newly `complete` delinks coverage of every removed range, "
-                     f"sourceBytes {repartition['sourceByteDelta']:+d} -- see "
+                     f"sourceBytes {repartition['sourceByteDelta']:+d} "
+                     f"(new extent {repartition['newExtent']}, of which "
+                     f"{repartition['absorbedBytes']} the base already compiled) -- see "
                      f"classify_merge")
         else:
             basis = ("identical matched set and matched sizes -- see "

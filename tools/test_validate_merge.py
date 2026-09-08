@@ -949,6 +949,50 @@ class MergeEvidence(unittest.TestCase):
         self.assertIsNone(VM.classify_merge(base, head, None, None, set()))
 
 
+class MergeArithmetic(unittest.TestCase):
+    """`sourceBytes` must rise by the NEW coverage, which is not the new extent.
+
+    A range the base was already compiling, lying wholly inside one of the merge's new
+    ranges, did not become covered here: its bytes moved from one `complete` entry to
+    another and were in `sourceBytes` all along. Comparing against the raw extent made
+    an honest fold over an already-enrolled neighbour fail for arithmetic (+80 against
+    an extent of 84) with nothing wrong.
+
+    A base range that leaves from OUTSIDE every new range is the opposite: real lost
+    coverage, and it is deliberately not subtracted, so it still shortens the delta and
+    the comparison still refuses it. That clause is the anti-smuggling one, and the
+    second test holds it in place.
+    """
+
+    BODY, EPILOGUE = 0x02071644, 0x02071694
+    ELSEWHERE = 0x02050000
+
+    def test_bytes_the_base_already_compiled_are_not_new_coverage(self):
+        base = _snap([("func_02071644", self.BODY, 0x50, False),
+                      ("func_02071694", self.EPILOGUE, 0x4, False)])
+        head = _snap([("func_02071644", self.BODY, 0x54, True)])
+        be = _enr([(self.EPILOGUE, self.EPILOGUE + 0x4)])
+        he = _enr([(self.BODY, self.BODY + 0x54)])
+        # sourceBytes: 4 -> 84, a rise of 80 against a new extent of 84.
+        self.assertEqual(he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"], 0x50)
+        got = VM.classify_merge(base, head, be, he, _compiled(he))
+        self.assertIsNotNone(got)
+        self.assertEqual(got["newExtent"], 0x54)
+        self.assertEqual(got["absorbedBytes"], 0x4)
+        self.assertEqual(got["sourceByteDelta"], 0x50)
+
+    def test_an_unrelated_range_leaving_under_cover_of_the_merge_still_fails(self):
+        # The outside-a-range clause, unchanged: this range is nowhere near the merge,
+        # so its bytes are not subtracted and the arithmetic catches the loss.
+        base = _snap([("func_02071644", self.BODY, 0x50, False),
+                      ("func_02071694", self.EPILOGUE, 0x4, False)])
+        head = _snap([("func_02071644", self.BODY, 0x54, True)])
+        be = _enr([(self.EPILOGUE, self.EPILOGUE + 0x4),
+                   (self.ELSEWHERE, self.ELSEWHERE + 0x40)])
+        he = _enr([(self.BODY, self.BODY + 0x54)])
+        self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he)))
+
+
 class MergeEvidenceThroughBuildReport(unittest.TestCase):
     """The same rule driven through `build_report` on a real tree, not hand-built dicts.
 
