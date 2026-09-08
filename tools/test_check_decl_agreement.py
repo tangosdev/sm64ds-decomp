@@ -922,6 +922,21 @@ class RenamedDefinitionScopeTests(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("src/ren_user.c", out)
 
+    def test_the_old_side_is_read_out_of_the_base_commit(self):
+        """The path that is gone still says which symbols it used to define."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.git("mv", "src/ren_old.c", "src/ren_new.c")
+        repo.write("src/ren_new.c", _ren("int").replace("ren_target", "ren_moved"))
+        repo.git("add", "-A")
+        repo.git("commit", "-qm", "rename the file and the symbol with it")
+        touched, defined, _total, err = CDA.changed_scope("HEAD~1", repo.root)
+        self.assertIsNone(err)
+        self.assertIn("src/ren_old.c", touched)
+        self.assertIn("src/ren_new.c", touched)
+        self.assertIn("ren_target", defined)
+        self.assertIn("ren_moved", defined)
+
 
 class DataDefinitionTests(unittest.TestCase):
     """Path 4, `:854`: an initialised data definition is a definition.

@@ -1187,30 +1187,70 @@ def _git_lines(args, repo=REPO):
     return [ln.strip() for ln in proc.stdout.splitlines() if ln.strip()], None
 
 
+def _git_status_rows(args, repo=REPO):
+    """[(status, [path, ...])] for a `git diff --name-status` invocation."""
+    proc = subprocess.run(["git", *args], cwd=str(repo), capture_output=True,
+                          text=True)
+    if proc.returncode != 0:
+        return None, "git %s failed: %s" % (" ".join(args), proc.stderr.strip())
+    rows = []
+    for line in proc.stdout.splitlines():
+        fields = [f.strip() for f in line.split("\t") if f.strip()]
+        if len(fields) < 2:
+            continue
+        rows.append((fields[0], fields[1:]))
+    return rows, None
+
+
+def _paths_of(rows):
+    """Every path in a diff that can hold a declaration or a definition now or before.
+
+    BOTH SIDES of a rename (`R`) and of a copy (`C`). Git reports a rename as ONE row
+    whose status is neither `A` nor `M`, so a `--diff-filter=AM` list drops the file
+    outright: a definition that moved and changed signature in the same commit was
+    invisible to `--changed` while the full scan rejected it. The old side matters as
+    much as the new one, because the symbols it used to define are the ones whose
+    declarations elsewhere have just been orphaned or retyped.
+
+    A pure deletion (`D`) is deliberately not folded in. A declaration whose definition
+    vanished is a name that no longer resolves, which is `check_references.py`'s
+    question, not this one's.
+    """
+    out = set()
+    for status, paths in rows:
+        code = status[:1]
+        if code in ("A", "M", "T"):
+            out.add(paths[0])
+        elif code in ("R", "C"):
+            out.update(paths[:2])
+    return out
+
+
 def changed_paths(base, repo=REPO, head="HEAD"):
-    """Every added/modified path of this branch, working tree and untracked included.
+    """Every path this branch added, modified, renamed or copied; untracked included.
 
     Three sources, unioned, for the reason `check_header_offsets.changed_paths` gives:
     a header edited and not yet committed is in none of the commits, and a
     pre-commit run that reports a pass over a file it never opened is worse than no
     gate at all.
     """
-    commits, err = _git_lines(["diff", "--name-only", "--diff-filter=AM",
-                               "%s...%s" % (base, head)], repo)
+    rows, err = _git_status_rows(["diff", "--name-status", "-M", "-C",
+                                  "%s...%s" % (base, head)], repo)
     if err:
         return None, err
+    paths = _paths_of(rows)
     if head == "HEAD":
-        dirty, err = _git_lines(["diff", "--name-only", "--diff-filter=AM", "HEAD"],
-                                repo)
+        rows, err = _git_status_rows(["diff", "--name-status", "-M", "-C", "HEAD"],
+                                     repo)
         if err:
             return None, err
+        paths |= _paths_of(rows)
         untracked, err = _git_lines(["ls-files", "--others", "--exclude-standard"],
                                     repo)
         if err:
             return None, err
-    else:
-        dirty = untracked = []
-    return sorted(set(commits) | set(dirty) | set(untracked)), None
+        paths |= set(untracked)
+    return sorted(paths), None
 
 
 def changed_scope(base, root=REPO, head="HEAD"):
@@ -1221,6 +1261,10 @@ def changed_scope(base, root=REPO, head="HEAD"):
     a definition invalidates declarations in files the diff never touched, so a gate
     that looked only at the diff would call that clean. The caller widens the report
     to every file declaring one of these, using declarations it has already parsed.
+
+    The OLD side of a rename is in `touched` and is not on disk any more, so it is
+    read out of the base commit. What it used to define is exactly what the rest of
+    the tree may still be declaring.
     """
     total, err = changed_paths(base, root, head)
     if total is None:
@@ -1232,13 +1276,26 @@ def changed_scope(base, root=REPO, head="HEAD"):
     aliases = scalar_typedefs(root)
     defined = set()
     for rel in touched:
-        path = root / rel
-        if not path.exists():
+        text = file_text(rel, base, root)
+        if text is None:
             continue
-        _d, defs, _u = parse_file(
-            rel, path.read_text(encoding="utf-8", errors="replace"), aliases)
+        _d, defs, _u = parse_file(rel, text, aliases)
         defined.update(d.symbol for d in defs)
     return touched, defined, total, None
+
+
+def file_text(rel, base, root=REPO):
+    """A changed file's text: the working tree's, or the base commit's if it is gone.
+
+    `None` when neither has it -- a path that was deleted outright, or a base ref that
+    never carried it.
+    """
+    path = root / rel
+    if path.exists():
+        return path.read_text(encoding="utf-8", errors="replace")
+    proc = subprocess.run(["git", "show", "%s:%s" % (base, rel)], cwd=str(root),
+                          capture_output=True, text=True)
+    return proc.stdout if proc.returncode == 0 else None
 
 
 # ------------------------------------------------------------------- reporting
