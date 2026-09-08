@@ -56,12 +56,18 @@
 # TRIGGER. Deliberately manual plus push-to-lane, not pull_request: this is a
 # measurement lanes ask for, not a gate that blocks a merge. Making it required
 # would put a 30+ minute build in front of every PR to buy a number nobody is
-# waiting on at that moment. Wire it to pull_request only once the timing below
-# is confirmed on a real runner.
+# waiting on at that moment. Wired to pull_request on 2026-09-08 for pull
+# requests INTO the shipping branch only, once the timing was confirmed on a real
+# runner (linkage about 7 minutes, smoke about 3): the branch rule on
+# port-mount-noseat-cluster requires the linkage and smoke checks, so a landing
+# there is a pull request from the integration branch that GitHub has counted first.
 
 name: port-linkage
 
 on:
+  pull_request:
+    branches:
+      - "port-mount-noseat-cluster"
   workflow_dispatch:
     inputs:
       ref:
