@@ -23,13 +23,13 @@
  * (NullDestructor_0203d47c, func_ov006_020deac4, func_ov006_020c3288).
  * Nothing is left over either way.
  *
- * TABLE at 0x4f38 is opaque, but it does NOT run all the way to mArray1 as
- * the first draft of this header claimed. Three s32 sit at 0x50d4, spelled
- * as the SPLIT LITERAL `*(int*)(c + 0x5000 + 0xd4 / 0xd8 / 0xdc)` in
- * StateSelect and OnYoshiTryEat -- a form no single-literal grep
- * finds, which is exactly how the wrong bound got written. So the table is
- * bounded at 0x19c, and 8 bytes stay unclaimed between those three fields
- * and mArray1.
+ * COMPONENT at 0x4f38 has an unknown full extent. The current raw-storage
+ * declaration ends at +0x19c, where three s32 declarations begin at 0x50d4.
+ * StateSelect and OnYoshiTryEat access them using split offset literals.
+ * This declaration boundary is not a proven component boundary: its
+ * constructor func_ov006_020c33dc writes component +0x1a4 and +0x1a8,
+ * corresponding to scene 0x50dc and 0x50e0. Preserve this storage layout
+ * until a measured component/field reconstruction replaces it.
  *
  * OWN TAIL, 0x5400..0x5470, IS THE CLASS'S STATE MACHINE, not the
  * unclaimed trailing space the first draft of this header called it. The
@@ -38,7 +38,8 @@
  * InitResources
  * (src/actors/dScMgCup_c.cpp, slot 0) already carries a local struct naming
  * `ones[3]` at 0x540c, `ids[3]` at 0x5420 and `flags[3]` at 0x5465; and
- * slot 9's Render reads 0x5462 and 0x5468. Matched access runs to 0x5469.
+ * slot 9's Render reads 0x5462 and 0x5468. State code also accesses
+ * 0x5469..0x546d; the remaining byte storage below does not mean it is unused.
  *
  * The size is unaffected -- 0x5470 is the factory's literal either way --
  * but the span and the literal AGREE here, which the first draft denied.
@@ -89,15 +90,15 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     void StateIdle();
     s32 InitResources();  /* slot  0 -- src/actors/dScMgCup_c.cpp */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    virtual int  Virtual50();                          /* slot 20 */
+    virtual void Virtual50();                          /* slot 20 */
     s32 Behavior();       /* slot  6 -- src/actors/dScMgCup_c.cpp */
     s32 Render();         /* slot  9 -- src/actors/dScMgCup_c.cpp */
 
-    u8  pad_4f38[0x19c];  /* 0x4f38 -- opaque table, see file banner */
+    u8  pad_4f38[0x19c];  /* 0x4f38 -- raw component storage prefix, see banner */
     s32 unk_50d4;         /* 0x50d4 -- split-literal access, see file banner */
     s32 unk_50d8;         /* 0x50d8 */
     s32 unk_50dc;         /* 0x50dc */
-    u8  pad_50e0[0x8];    /* 0x50e0 -- no matched access */
+    u8  pad_50e0[0x8];    /* 0x50e0 -- component ctor writes here; typing pending */
     u8  mArray1[0x300];   /* 0x50e8 -- 0x20 * 0x18, elem dtor func_ov006_020deac4 */
     u8  mArray2[0x18];    /* 0x53e8 -- 3 * 8, elem dtor NullDestructor_0203d47c.
                              InitResources already recovers the element
@@ -119,7 +120,7 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     u8  unk_5462[3];      /* 0x5462 */
     u8  mFlags[3];        /* 0x5465 -- named `flags[3]` by InitResources' own struct */
     u8  unk_5468;         /* 0x5468 */
-    u8  pad_5469[0x7];    /* 0x5469 -- rounds up to the 0x5470 boundary */
+    u8  pad_5469[0x7];    /* 0x5469 -- live bytes through 0x546d; typing pending */
 };
 
 typedef char dScMgCup_c_size_must_be_0x5470[sizeof(dScMgCup_c) == 0x5470 ? 1 : -1];

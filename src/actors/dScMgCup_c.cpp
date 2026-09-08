@@ -896,14 +896,11 @@ void dScMgCup_c::StateSetup()
 }
 
 /* [25] 0x020dfed4  _ZN10dScMgCup_c9Virtual50Ev  size 0x18 */
-/* Vtable slot 20. The original name is not in the ROM; `Virtual50` is the
-   tree's placeholder spelling for this slot. The current int-declared body
-   forwards to the 0x4f38 table's entry point without a return statement.
-   The minigame slot-20 return contract remains unresolved (CUP-05, issue
-   #2492); the forwarding instructions alone do not establish its return type.
-   A correction needs the base, callers and overrides audited together. */
+/* Minigame slot 20; Virtual50 is a placeholder. This forwards to the
+   void component helper at this + 0x4f38. See dScMgBase_c.h for the
+   reconstructed return contract. */
 // @symbol _ZN10dScMgCup_c9Virtual50Ev
-int dScMgCup_c::Virtual50()
+void dScMgCup_c::Virtual50()
 {
     char *p = (char *)this;
 

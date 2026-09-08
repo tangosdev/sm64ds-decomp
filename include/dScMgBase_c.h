@@ -109,110 +109,43 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            -- recovered before the vtable walk that placed it at 18. Unlike
            slots 19-30, this slot carries NO `recovered name:` comment on
            either side; the name is inherited, not independently proven here.
-           Only the signature is measured. dActor_c.h declares it with no
-           parameter, which the measurement above contradicts. */
+           These observations support the minigame signature; they do not
+           disprove a declaration in the separate dActor_c hierarchy. */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
-    /* Slot 19 -- MEASURED, and dActor_c.h is wrong here too:
+    /* Slot 19 -- minigame body observations:
          arity: two of the eleven descendant overrides read r1, and both
            COMPARE it against small integer constants rather than
            dereferencing it -- dScMgJump_c does `if (sel == 0)`,
            dScMgBSC_c does `if (mode == 4) ... else if (mode == 5)`.
-           Comparing a reference against 4 and 5 is meaningless, so the
-           parameter is an int, not the `Player &` dActor_c.h:132 declares.
+           The minigame interface models this selector as int. The separate
+           actor declaration does not determine this scene contract.
            Dereference-versus-compare is the discriminator whenever a word
            in r1 could be either: both occupy one register, so codegen
            alone cannot separate `Ei` from `ER6Player`.
          return type: int, and this one needs no argument -- the ov004 base
            body ends `return 1;` and all eleven overrides return a value.
-         name: unlike slot 18, independently recovered. dScMgJump_c and
-           dScMgBSC_c each carry a `recovered name: <class>_OnTurnIntoEgg`
-           comment in their own legacy source, so the name here does not
-           rest on dActor_c.h at all. */
+         name: OnTurnIntoEgg is an existing reconstruction label. The
+           dScMgJump_c and dScMgBSC_c legacy comments use it, but those
+           comments do not establish an original source spelling. */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
-    /* Slot 20 -- and this one has no name.  `Virtual50` is the placeholder
-       include/dActor_c.h:133 already uses, spelled from the byte offset
-       (slot 20 x 4 = 0x50).  All five bodies carry a
-       `recovered name: <class>_Virtual50` comment, but every one of them is
-       that same coined placeholder rather than a name read out of anything,
-       so five of them are not five pieces of evidence.  Naming it would be
-       inventing, so it keeps the placeholder until something real turns up.
-         arity: no explicit parameters.  dScMg3DEsp_c and dScMgTeresa_c take
-           nothing and tail-call `FreeGfxSlotsById(8)`; dScMgCup_c and
-           dScMgSound_c read only `this`, passing `this + 0x4f38` on.  No
-           override touches a second argument register.
-         return type: NOT determined here, and said plainly rather than
-           implied.  The ov004 base body is a bare `bx lr`, and all four
-           overrides are single tail calls -- both emit identical code under
-           `int` and under `void`, so the dereference-versus-compare trick that
-           settled slot 19 has nothing to bite on.  This takes
-           dActor_c.h:133's `int` as a hint that has held five times out of
-           six; the count, and why it is a count and not an authority, is
-           worked out under slot 21 below.  If a later override with an early
-           return shows otherwise, that override is the evidence and this
-           changes. */
-    virtual int  Virtual50();                          /* slot 20 */
-/* Slot 21 -- OnGroundPounded.  The name comes from all five bodies' own
-   `recovered name: <class>_OnGroundPounded` comments AND from
-   include/dActor_c.h:138, which is a different hierarchy that shares slot
-   indices; two sources, but the second has already been measured wrong twice
-   in this campaign (slot 18's arity, slot 19's parameter type), so treat it as
-   a hint that agrees rather than as a second measurement.
-     arity: no explicit parameters.  The ov004 base body is empty and none of
-       the four overrides reads a second argument register -- dScMgBSC_c and
-       dScMgCard_c both branch on `this->mHudScore` alone, and the two Memory
-       classes tail-call on one field of `this`.  dActor_c.h:138 spells a
-       `dActor_c &` here; nothing in these five bodies would emit differently
-       with or without it, so it is not carried.
-     return type: NOT determined by these five bodies.  All four overrides
-       converge on a single tail call, and a tail call emits the same `b` under
-       `int` and under `void`, so the discriminator that settled nothing at
-       slot 20 finds nothing here either.  This takes `void` from
-       dActor_c.h:138, whose comment records that slots 21, 24 and 27 were
-       MEASURED to return void via an override with early returns -- in that
-       hierarchy.
-       How much that is worth is a count, not a rule, and an earlier draft of
-       this comment got the count wrong.  It said dActor_c.h had been right on
-       every return type this campaign checked.  It has not.  Of the
-       eight dScMgBase_c slots with a body of their own that pins a return
-       type, dActor_c.h's type matches seven and differs on one:
-           18  int  / int   agree   sets r0 on a constant-return path
-           19  int  / int   agree   sets r0 on a constant-return path
-           22  int  / int   agree   OnAttacked1's body is `return 1;`
-           23  int  / int   agree   OnAttacked2's body is `return 1;`
-           24  int  / void  DIFFER  OnKicked's body ends `return 1;`
-           25  int  / int   agree   OnPushed returns `mMenuOpen == 0`
-           26  int  / int   agree   three bodies, three constants: 0, 1, 2
-           27  void / void  agree   MEASURED here: bare return, sets no r0
-       Slot 24 is the one that matters, because dActor_c.h names 24 as one of
-       its three MEASURED voids -- and it is right about its own hierarchy;
-       Stump and BigBrickBlock proved it there.  dScMgBase_c's slot-24 body
-       sets r0 to 1 and reproduces byte-exact, so this hierarchy returns `int`
-       at that same index.  Both measurements stand.  The two hierarchies
-       simply do not hold the same function at slot 24: they are parallel
-       branches that each began adding virtuals at 18 -- dActor_c off dBase_c
-       directly, this class off dBase_c through dScene_c -- and the
-       `recovered name:` comments that make the slots look paired were assigned
-       BY that index, so they cannot also be evidence for it.
-       So dActor_c.h transfers no better on return types than on parameter
-       lists; it is seven-for-eight rather than wrong-every-time, which is why
-       this line still follows it where the arity line above does not.
-       Seven-for-eight is the whole case for `void` here and is offered as a hint,
-       not a measurement.  Flipping all four overrides between `int` and `void`
-       was tried and moves no ROM byte, so nothing in the cartridge rides on
-       the choice -- but a later override with an early return would settle it,
-       and that override would outrank this count.
-       Slot 27 is now that case, for its own index only.  dScMgBase_c's own
-       body there takes an early `popne {r4,lr}; bxne lr` with nothing setting
-       r0 on either path out, so 27's `void` is MEASURED and the row above says
-       so rather than `agree`.  It settles 27 and nothing else; the other seven
-       rows are still the count.
-       Slot 28 is the opposite case and the first of its kind: NO body pins it
-       at all.  Neither dScMgBase_c's nor dScMgSlot1_c's sets r0 deliberately,
-       and all three callers that dispatch through vtable+0x70 throw the result
-       away -- two tail-call it out without reading it, the third overwrites r0
-       on the next instruction.  It gets no row above, and its `int` rests on
-       this count and on nothing else. */
+    /* Slot 20. Virtual50 is a placeholder named for the vtable byte offset,
+       not an original source name. The minigame return contract is
+       reconstructed as void: the base does nothing, Cup and Sound forward
+       to a void component helper, and 3DEsp and Teresa call the void
+       FreeGfxSlotsById function. The recorded caller in
+       func_ov004_020b6ddc discards the result. These bodies reproduce under
+       the coherent void declarations with 2004/b56; this does not recover
+       the original return-type spelling. The separate dActor_c slot 20
+       remains int. See issue #2492 for caller coverage and proof limits. */
+    virtual void Virtual50();                          /* slot 20 */
+    /* Slot 21. OnGroundPounded is an existing reconstruction name.
+       The base is empty; BSC/Card branch on mHudScore, and the two Memory
+       overrides forward a component of this scene. These bodies alone do
+       not settle the return contract. Keep the existing void declaration;
+       the slot-20 caller audit does not establish this slot's signature.
+       Prior int/void experiments and separate slot-27/28 observations are
+       retained in the original source history cited by issue #2492's handoff. */
     virtual void OnGroundPounded();                    /* slot 21 */
 /* Slot 22 -- OnAttacked1.  Name from the ov004 body's own
    `recovered name: dScMgBase_c_OnAttacked1` comment, agreeing with
@@ -1031,8 +964,9 @@ public:
     virtual int GraphCallback3();                            /* slot 3 */
 };
 
-/* A floor, not a claim the object ends here: 0x465c is the last field any
-   matched body has observed. See notes/minigame-provenance.md. */
+/* The modeled storage spans 0x4660. The constructor initializes the
+   halfword mSceneKind at 0x465e; 0x465c is not the last observed field.
+   See notes/minigame-provenance.md for the earlier layout evidence. */
 typedef char dScMgBase_c_size_must_be_0x4660[sizeof(dScMgBase_c) == 0x4660 ? 1 : -1];
 
 #endif
