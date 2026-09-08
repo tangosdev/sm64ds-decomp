@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN11VolcanoFire8BehaviorEv
+// @symbol _ZN21daObj_volcanoCannon_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "VolcanoFire.h"
+#include "daObj_volcanoCannon_c.h"
 struct Vector3_16f;
 
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
@@ -11,7 +11,7 @@ extern "C" void _ZN5dCc_c6UpdateEv(void* c);
 extern "C" unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     unsigned int a, unsigned int b, Fix12i c, Fix12i d, Fix12i e, const Vector3_16f* f);
 
-int VolcanoFire::Behavior()
+int daObj_volcanoCannon_c::Behavior()
 {
     DecIfAbove0_Short(&mKillTimer);
     if (mState->behavior != 0)
