@@ -58,25 +58,23 @@ extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z)
 extern Matrix4x3 data_020a0e68;
 extern int func_ov074_021222e0(char *c);
 
-/* ---- (1) Goomboss::Render, ROM 0x02121b70 -------------------------------
-   Control flow is the matched source line for line. mParam is at +0x008,
-   unk_60a at +0x60a, mScaleX at +0x080, mModelAnim at +0x210 and the
-   ModelComponents the three Updates take at +0x218. */
-// PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case.
-int _ZN8Goomboss6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    if (*(int *)(c + 0x008) == 0x1111)
-        return func_ov074_021222e0(c);
-    if (*(unsigned char *)(c + 0x60a) == 0)
-        return 1;
-    /* ((Sub *)&mModelAnim)->m(&mScaleX) -- ROM slot 5, spelled qualified */
-    ((ModelAnim *)(c + 0x210))->ModelAnim::Render((const Vector3 *)(c + 0x080));
-    _ZN15TextureSequence6UpdateER15ModelComponents(c + 0x3e4, c + 0x218);
-    _ZN15MaterialChanger6UpdateER15ModelComponents(c + 0x3d0, c + 0x218);
-    _ZN18TextureTransformer6UpdateER15ModelComponents(c + 0x3f8, c + 0x218);
-    return 1;
-}
+/* ---- (1) Goomboss::Render, ROM 0x02121b70 -- RETIRED --------------------
+   Run link100, lane FACEF. The stated reason above ("hal/cxxname_bridge.cpp
+   fills _ZTV9ModelAnim in MSVC numbering where slot 5 is Virtual18") stopped
+   being true when lane SLOT5F respelled the ROM's destructor pair under
+   _MSC_VER in include/ModelBase.h: cxxname_bridge.cpp:577 now fills
+   _ZTV9ModelAnim[5] with ma2_render, so the matched TU's own six-virtual
+   ROM-order shadow reaches Render at index 5, which is the draw the ROM
+   means. Read first-hand out of extracted/overlays/overlay_0074.bin at base
+   0x0211f000: _ZTV8Goomboss[9] @ 0x02122edc = 0x02121b70, the vtable's own
+   RTTI name string reads "12daKuriKing_c", and the body's dispatch at
+   0x02121bb0 is `add r1,r4,#0x80 / ldr r2,[r2,#0x14] / blx r2` -- byte +0x14,
+   the SIXTH word, ROM slot 5, with mScaleX as the argument.
+   src/_ZN8Goomboss6RenderEv.cpp is on port/slice_facef.txt and its Itanium C
+   name comes from hal/except_faces.cpp. The mParam == 0x1111 path still calls
+   func_ov074_021222e0, which is defined below and stays here: its own second
+   reason (the ov070/ov074 shared-window name race, hal/cxx_aliases.cpp:1133)
+   is a different mechanism and is untouched by this lane. */
 
 /* ---- (2) func_ov074_021222e0, ROM 0x021222e0 ----------------------------
    The mParam == 0x1111 Render. Same slot-5 collision, null scale.

@@ -7265,7 +7265,15 @@ set(SLICE_BNP_SOURCES hal/scene_mg_jump.cpp
                       # before adding any of these from another family lane.
                       unmatched/MgD3DBase_Slots.cpp
                       unmatched/MgD3DBase_DeclConflict.cpp
-                      unmatched/MgD3DBase_ModelAnimRender.cpp
+                      # unmatched/MgD3DBase_ModelAnimRender.cpp RETIRED
+                      # (run link100, lane FACEF): all four bodies were the
+                      # mwcc virtual-shadow dispatch onto ModelAnim ROM slot 5,
+                      # and lane SLOT5F's respelling of the ROM's D1/D0 pair
+                      # put Render back at _ZTV9ModelAnim[5] with Virtual18 at
+                      # its own slot 6. src/func_ov006_020c4c54.cpp,
+                      # _020c7734.cpp, _020c8e90.cpp and _02122814.cpp are on
+                      # port/slice_facef.txt; all four define their C name
+                      # themselves and none needs a face.
                       unmatched/MgD3DBase_ObjStateDispatch.cpp
                       ${BNP_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_BNP_LINES)
@@ -7447,7 +7455,15 @@ set(SLICE_BNT_SOURCES hal/scene_mg_jump2.cpp
                       # two-argument body with one argument and faulted the
                       # RENDERED battery row. Shared with the sibling lanes for
                       # the same reason the file above is.
-                      unmatched/MgD3DBase_ModelAnimRender.cpp
+                      # unmatched/MgD3DBase_ModelAnimRender.cpp RETIRED
+                      # (run link100, lane FACEF): all four bodies were the
+                      # mwcc virtual-shadow dispatch onto ModelAnim ROM slot 5,
+                      # and lane SLOT5F's respelling of the ROM's D1/D0 pair
+                      # put Render back at _ZTV9ModelAnim[5] with Virtual18 at
+                      # its own slot 6. src/func_ov006_020c4c54.cpp,
+                      # _020c7734.cpp, _020c8e90.cpp and _02122814.cpp are on
+                      # port/slice_facef.txt; all four define their C name
+                      # themselves and none needs a face.
                       # The link faces the FIRST link of this seat asked for:
                       # 27 C++-linkage spellings of C-named DS data, one bare
                       # func_-prefixed name for an ov004 bss word, and three
@@ -8081,7 +8097,15 @@ set(SLICE_TTE_SOURCES hal/scene_mg_trampoline2.cpp
                       # The family's two mwcc virtual-shadow dispatches onto
                       # ModelAnim's ROM slot 5. Same non-lane-scoped naming
                       # rule as the file above.
-                      unmatched/MgD3DBase_ModelAnimRender.cpp
+                      # unmatched/MgD3DBase_ModelAnimRender.cpp RETIRED
+                      # (run link100, lane FACEF): all four bodies were the
+                      # mwcc virtual-shadow dispatch onto ModelAnim ROM slot 5,
+                      # and lane SLOT5F's respelling of the ROM's D1/D0 pair
+                      # put Render back at _ZTV9ModelAnim[5] with Virtual18 at
+                      # its own slot 6. src/func_ov006_020c4c54.cpp,
+                      # _020c7734.cpp, _020c8e90.cpp and _02122814.cpp are on
+                      # port/slice_facef.txt; all four define their C name
+                      # themselves and none needs a face.
                       # This slice's own two light bodies plus the one it
                       # shares with slice_tti. The shared path is listed by
                       # BOTH slices on purpose -- CMake dedupes the identical
@@ -8691,7 +8715,13 @@ set(LEVELBOOT_HOST_SOURCES
     unmatched/UnchainedChomp_Behavior.cpp
     # gate 22: the sixth, plus the Model slot the dual fill cannot serve
     unmatched/Door_Behavior.cpp
-    unmatched/Door_Render.cpp
+    # unmatched/Door_Render.cpp RETIRED (run link100, lane FACEF): its reason
+    # was the destructor fold on BOTH model tables at once -- "MSVC's slot 4 on
+    # Model is Render, and dispatching there would draw the door's key twice
+    # and never place it" -- and lane SLOT5F's respelling of the ROM's D1/D0
+    # pair put Virtual10 back at _ZTV5Model[4] and Render at [5]
+    # (cxxname_bridge.cpp:521-522). src/func_ov100_021454c8.cpp is on
+    # port/slice_facef.txt; it defines the C name itself and needs no face.
     # gate 23: the seventh, and the last on this level
     unmatched/QuestionBlock_States.cpp
     unmatched/QuestionBlock_BounceDispatch.cpp)
@@ -13537,7 +13567,18 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     ${SLICE_W3C_SOURCES}
-    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/Player_BlowAway.cpp
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp
+    # unmatched/Player_BlowAway.cpp RETIRED (run link100, lane FACEF): its tag
+    # read "cdecl C name the caller wants versus the matched TU's thiscall
+    # Player::BlowAway method, whose src ALSO cannot compile in-tree
+    # (decomp-side Player.h gap)". The first half is the ordinary face repair;
+    # the second half was MEASURED FALSE -- src/_ZN6Player8BlowAwayEs.cpp
+    # compiles clean standalone under this build's own flags today, because
+    # include/Player.h now carries BlowAway (:534), mIsMetal (:236) and
+    # mIsBalloon (:240) and include/Actor.h mAngleY (:92) and mPrevAngleY
+    # (:95), which are the four fields the ROM listing in the retired file
+    # names. src/_ZN6Player8BlowAwayEs.cpp is on port/slice_facef.txt and its
+    # C name comes from hal/except_faces.cpp.
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
@@ -13555,7 +13596,16 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
-    hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
+    hal/actor_classes_jrb.cpp ${SLICE188_SOURCES}
+    # unmatched/Jrb_Renders.cpp RETIRED (run link100, lane FACEF): all four of
+    # its bodies were the ROM-order model slot-5 draw, and both halves of its
+    # stated reason are dead -- the numbering with lane SLOT5F's respelling,
+    # and the return-type half because an indirect call through the object's
+    # own vptr decorates nothing. src/_ZN6ShipUp6RenderEv.cpp,
+    # src/_ZN23FloatOnWaterPlatformJrb6RenderEv.cpp, src/func_ov016_02112b28.cpp
+    # and src/func_ov002_020b5c24.cpp are on port/slice_facef.txt; the two
+    # method recoveries take a cdecl face in hal/except_faces.cpp and the two
+    # C names need none.
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
@@ -13791,7 +13841,18 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     ${SLICE_W3C_SOURCES}
-    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/Player_BlowAway.cpp
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp
+    # unmatched/Player_BlowAway.cpp RETIRED (run link100, lane FACEF): its tag
+    # read "cdecl C name the caller wants versus the matched TU's thiscall
+    # Player::BlowAway method, whose src ALSO cannot compile in-tree
+    # (decomp-side Player.h gap)". The first half is the ordinary face repair;
+    # the second half was MEASURED FALSE -- src/_ZN6Player8BlowAwayEs.cpp
+    # compiles clean standalone under this build's own flags today, because
+    # include/Player.h now carries BlowAway (:534), mIsMetal (:236) and
+    # mIsBalloon (:240) and include/Actor.h mAngleY (:92) and mPrevAngleY
+    # (:95), which are the four fields the ROM listing in the retired file
+    # names. src/_ZN6Player8BlowAwayEs.cpp is on port/slice_facef.txt and its
+    # C name comes from hal/except_faces.cpp.
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
@@ -13809,7 +13870,16 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
-    hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
+    hal/actor_classes_jrb.cpp ${SLICE188_SOURCES}
+    # unmatched/Jrb_Renders.cpp RETIRED (run link100, lane FACEF): all four of
+    # its bodies were the ROM-order model slot-5 draw, and both halves of its
+    # stated reason are dead -- the numbering with lane SLOT5F's respelling,
+    # and the return-type half because an indirect call through the object's
+    # own vptr decorates nothing. src/_ZN6ShipUp6RenderEv.cpp,
+    # src/_ZN23FloatOnWaterPlatformJrb6RenderEv.cpp, src/func_ov016_02112b28.cpp
+    # and src/func_ov002_020b5c24.cpp are on port/slice_facef.txt; the two
+    # method recoveries take a cdecl face in hal/except_faces.cpp and the two
+    # C names need none.
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
@@ -14102,7 +14172,18 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # run rel0215 wave 2 (lane cast-ov066): EYEROK (176), ov066, level 17.
     ${SLICE_OV066_SOURCES}
     ${SLICE_W3C_SOURCES}
-    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp unmatched/Player_BlowAway.cpp
+    hal/actor_classes_ov027.cpp ${SLICE_OV027CAST_SOURCES} unmatched/DaPgDfdr_StateDispatch.cpp
+    # unmatched/Player_BlowAway.cpp RETIRED (run link100, lane FACEF): its tag
+    # read "cdecl C name the caller wants versus the matched TU's thiscall
+    # Player::BlowAway method, whose src ALSO cannot compile in-tree
+    # (decomp-side Player.h gap)". The first half is the ordinary face repair;
+    # the second half was MEASURED FALSE -- src/_ZN6Player8BlowAwayEs.cpp
+    # compiles clean standalone under this build's own flags today, because
+    # include/Player.h now carries BlowAway (:534), mIsMetal (:236) and
+    # mIsBalloon (:240) and include/Actor.h mAngleY (:92) and mPrevAngleY
+    # (:95), which are the four fields the ROM listing in the retired file
+    # names. src/_ZN6Player8BlowAwayEs.cpp is on port/slice_facef.txt and its
+    # C name comes from hal/except_faces.cpp.
     ${SLICE_OV074_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
@@ -14120,7 +14201,16 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_ov064_w9.cpp ${SLICEW9A_SOURCES} ${SLICEW9B_SOURCES} ${SLICEW9C_SOURCES} ${SLICEW9D_SOURCES}
-    hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
+    hal/actor_classes_jrb.cpp ${SLICE188_SOURCES}
+    # unmatched/Jrb_Renders.cpp RETIRED (run link100, lane FACEF): all four of
+    # its bodies were the ROM-order model slot-5 draw, and both halves of its
+    # stated reason are dead -- the numbering with lane SLOT5F's respelling,
+    # and the return-type half because an indirect call through the object's
+    # own vptr decorates nothing. src/_ZN6ShipUp6RenderEv.cpp,
+    # src/_ZN23FloatOnWaterPlatformJrb6RenderEv.cpp, src/func_ov016_02112b28.cpp
+    # and src/func_ov002_020b5c24.cpp are on port/slice_facef.txt; the two
+    # method recoveries take a cdecl face in hal/except_faces.cpp and the two
+    # C names need none.
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
@@ -15426,6 +15516,40 @@ list(APPEND SLICE_EXCEPT2_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/hal/except_faces.cpp")
 foreach(_texcept2 walk_window walk_window_hires smoke_player)
     target_sources(${_texcept2} PRIVATE ${SLICE_EXCEPT2_SOURCES})
+endforeach()
+
+# ===========================================================================
+# LANE FACEF: the calling-convention-face rows (family F + family E leftovers)
+# ===========================================================================
+#
+# out/EXCEPT/census.md ranked the port's 414 documented host-ABI exceptions by
+# the mechanism each row's own tag states, and left family F -- "calling-
+# convention face through a raw vtable word", 19 rows -- plus twelve family E
+# slot-5 rows that carried a NAMED SECOND REASON, for a later lane. This is
+# that lane. Every row was re-derived from the ROM one at a time: the referrer
+# is the class's own vtable slot 9 word read out of the RAW overlay image (with
+# the RTTI name string at vtable-4, so the table is identified by what the ROM
+# calls it), or the arm_call row in that overlay's relocs.txt for a body the
+# ROM calls directly; the destination carries a kind:function(arm,size=..)
+# record; and the matched TU's one dispatch instruction was read at its own
+# address. The table, per row, is port/slice_facef.txt.
+#
+# A matched source that recovered as a real C++ method needs a cdecl face for
+# the Itanium C name its fill site calls (hal/except_faces.cpp, appended to
+# lane EXCEPT's own file because it is the same mechanism); a matched source
+# that defines the plain C name itself needs nothing. NOT ONE FILL SITE
+# CHANGES in either case.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_facef.txt" SLICE_FACEF_LINES)
+set(SLICE_FACEF_SOURCES "")
+foreach(line IN LISTS SLICE_FACEF_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_FACEF_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tfacef walk_window walk_window_hires smoke_player)
+    target_sources(${_tfacef} PRIVATE ${SLICE_FACEF_SOURCES})
 endforeach()
 
 # ===========================================================================
