@@ -949,5 +949,109 @@ class MergeEvidence(unittest.TestCase):
         self.assertIsNone(VM.classify_merge(base, head, None, None, set()))
 
 
+class MergeEvidenceThroughBuildReport(unittest.TestCase):
+    """The same rule driven through `build_report` on a real tree, not hand-built dicts.
+
+    Every test above calls `classify_merge` directly and invents the `compiled` set, so
+    none of them touches the wiring: `compiled_src` is keyed on the paths
+    `diff_snapshot` reports, while the ranges are keyed on the paths written in
+    `delinks.txt`. If those two spellings ever stopped agreeing, the source clause would
+    reject EVERY merge and the carve-out would be dead -- and the suite above would
+    still be green, because it never asks a real tree for either one.
+
+    So both halves are asserted here from one committed base: the transcription is
+    refused, and the compiled source is still allowed. A fix that only refuses is not a
+    fix, and this is the test that can tell the difference.
+    """
+
+    DESTROY, CATCH = 0x0207328c, 0x020732e8
+
+    # Real C++: the shape #2429 exists for -- the catch handler reunited with the body
+    # it belongs to, compiled and byte-compared by the ROM build.
+    COMPILED = (
+        "void __destroy_arr(void *base, int size, int n, void (*dtor)(void *)) {\n"
+        "    char *p = (char *)base + size * n;\n"
+        "    while (n--) { p -= size; dtor(p); }\n"
+        "}\n")
+    # The attack: the ROM's own words re-spelled. It byte-compares against retail by
+    # construction, so module fidelity passes, and `asm_policy.classify` returns None
+    # because the banner excuses the `dcd` body.
+    TRANSCRIBED = ("// HAND-ASM PRIMITIVE\n"
+                   "asm void __destroy_arr(void) {\n"
+                   "    dcd 0xe92d4070\n"
+                   "    dcd 0xe1a04000\n"
+                   "    dcd 0xe8bd8070\n"
+                   "}\n")
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.repo = pathlib.Path(self.tmp.name)
+        git(self.repo, "init", "-q", ".")
+        (self.repo / "src").mkdir()
+        self.config = self.repo / "config" / "arm9"
+        self.config.mkdir(parents=True)
+        # An unrelated `complete` range in both revisions, so the merge's own range is
+        # the only NEW one and `sourceBytes` has something to rise from.
+        (self.config / "symbols.txt").write_text(
+            "Anchor kind:function(arm,size=0x4) addr:0x02000000\n"
+            f"__destroy_arr kind:function(arm,size=0x5c) addr:0x{self.DESTROY:08x}\n"
+            f"func_{self.CATCH:08x} kind:function(arm,size=0x18) "
+            f"addr:0x{self.CATCH:08x}\n",
+            encoding="utf-8")
+        (self.config / "delinks.txt").write_text(
+            "    .text start:0x02000000 end:0x02100000 kind:code\n\n"
+            "src/Anchor.c:\n    complete\n    .text start:0x02000000 end:0x02000004\n",
+            encoding="utf-8")
+        (self.repo / "src" / "Anchor.c").write_text("int Anchor(void) { return 0; }\n")
+        # Both halves unmatched in base -- a merge may absorb an ASM stub, never a match.
+        (self.repo / "src" / "__destroy_arr.c").write_text(
+            "// NONMATCHING\nvoid __destroy_arr(void) {}\n")
+        (self.repo / "src" / f"func_{self.CATCH:08x}.c").write_text(
+            "// NONMATCHING\nvoid stub(void) {}\n")
+        self.base = commit(self.repo, "base", "alice")
+        self.old_repo = VM.REPO
+        VM.REPO = self.repo
+
+    def tearDown(self):
+        VM.REPO = self.old_repo
+        self.tmp.cleanup()
+
+    def _fold(self, source):
+        """Commit the fold: 0x5c + 0x18 become one 0x74 record, enrolled `complete`."""
+        (self.config / "symbols.txt").write_text(
+            "Anchor kind:function(arm,size=0x4) addr:0x02000000\n"
+            f"__destroy_arr kind:function(arm,size=0x74) addr:0x{self.DESTROY:08x}\n",
+            encoding="utf-8")
+        (self.config / "delinks.txt").write_text(
+            "    .text start:0x02000000 end:0x02100000 kind:code\n\n"
+            "src/Anchor.c:\n    complete\n    .text start:0x02000000 end:0x02000004\n\n"
+            "src/__destroy_arr.c:\n    complete\n"
+            f"    .text start:0x{self.DESTROY:08x} "
+            f"end:0x{self.DESTROY + 0x74:08x}\n",
+            encoding="utf-8")
+        (self.repo / "src" / "__destroy_arr.c").write_text(source)
+        os.remove(self.repo / "src" / f"func_{self.CATCH:08x}.c")
+        return VM.build_report(self.base, commit(self.repo, "fold", "bob"))
+
+    def test_a_transcribed_source_cannot_carry_the_merge_through_the_report(self):
+        # Measured on 660900ee3 against this exact tree: reasons [], repartition
+        # {'kind': 'merge', 'functionDelta': -1, 'sourceByteDelta': 116}.
+        report = self._fold(self.TRANSCRIBED)
+        self.assertIsNone(report["repartition"])
+        self.assertIn("function/byte coverage denominator changed", report["reasons"])
+
+    def test_a_compiled_source_still_carries_the_merge_through_the_report(self):
+        # The delinks spelling `src/__destroy_arr.c` and the diff spelling of the same
+        # file have to agree for this to pass at all -- that agreement is the point.
+        report = self._fold(self.COMPILED)
+        self.assertEqual(report["reasons"], [])
+        self.assertIsNotNone(report["repartition"])
+        self.assertEqual(report["repartition"]["kind"], "merge")
+        self.assertEqual(report["repartition"]["functionDelta"], -1)
+        self.assertEqual(report["repartition"]["sourceByteDelta"], 0x74)
+        self.assertEqual(report["repartition"]["removed"],
+                         [f"arm9:0x{self.CATCH:08x}"])
+
+
 if __name__ == "__main__":
     unittest.main()
