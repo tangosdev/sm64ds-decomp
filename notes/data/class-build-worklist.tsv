@@ -405,7 +405,7 @@ daObjHmMaruta_c	PARTIAL	include\daObjHmMaruta_c.h	daObjMaruta_c	0	ov030	5
 daObjBSwdoor_c	DONE	include\daObjBSwdoor_c.h	daObjSwdoor_c	0	ov014	5
 daObjCvShutter_c	DONE	include\daObjCvShutter_c.h	daObjSwdoor_c	0	ov021	5
 daObjFl_Ukiyuka_c	DONE	include\FloatingFloorLllSmall.h  [alias: header uses pre-rename name]	daObjUkiyuka_c	0	ov022	4
-daObjKm2_Ukishima_c	DONE	include\FloatingFloorBfs.h  [alias: header uses pre-rename name]	daObjUkiyuka_c	0	ov045	4
+daObjKm2_Ukishima_c	DONE	include\daObjKm2_Ukishima_c.h	daObjUkiyuka_c	0	ov045	4
 daBDonketu_c	DONE	include\BigBully.h  [alias: header uses pre-rename name]	daOts_c	0	ov064	7
 daDonketu_c	DONE	include\Bully.h  [alias: header uses pre-rename name]	daOts_c	0	ov064	10
 daIDonketu_c	DONE	include\daIDonketu_c.h	daOts_c	0	ov027	6
