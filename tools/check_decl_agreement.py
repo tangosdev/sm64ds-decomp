@@ -561,7 +561,7 @@ def parse_declarator(text, aliases, cxx=True):
 # ------------------------------------------------------------------- unit walk
 
 def _brace_kind(head):
-    """linkage | scope | aggregate | body.
+    """linkage | scope | aggregate | initializer | body.
 
     The `aggregate` verdict is what stops `typedef struct Vector3 { ... } Vector3;`
     from being read as a declaration of a symbol called `Vector3`: the block AND the
@@ -573,22 +573,23 @@ def _brace_kind(head):
     if (re.match(r"^(inline\s+)?namespace\b", tail)
             or re.search(r"\bnamespace\b[^;]*$", tail)):
         return "scope"
-    if tail.endswith("=") or tail.endswith(","):
-        return "aggregate"          # an initialiser list
+    if tail.endswith("="):
+        return "initializer"
+    if tail.endswith(","):
+        return "aggregate"
     if re.search(r"\b(struct|union|enum|class)\b", tail) and not tail.endswith(")"):
         return "aggregate"
     return "body"
 
 
 def top_level_units(code, default_linkage):
-    """Yield (start, text, terminator, linkage, in_block) per top-level statement.
+    """Yield (start, text, terminator, linkage, in_block, in_namespace) per statement.
 
     `in_block` says the statement sits inside an explicit `extern "C" { ... }`, where
     a declaration does not have to repeat the `extern` keyword to be one.
 
-    Function bodies, aggregates and initialisers are skipped whole: their contents are
-    not `extern` declarations of anything, and walking into them is how a naive scanner
-    starts reporting struct fields as symbols.
+    Bodies and aggregate contents are skipped so fields are not mistaken for
+    symbols. An initializer head is retained to identify its object definition.
     """
     i = 0
     n = len(code)
@@ -598,13 +599,14 @@ def top_level_units(code, default_linkage):
     kinds = []
     while i < n:
         block = "linkage" in kinds
+        in_namespace = "scope" in kinds
         ch = code[i]
         if ch in "([":
             paren += 1
         elif ch in ")]":
             paren -= 1
         elif paren <= 0 and ch == ";":
-            yield start, code[start:i], ";", linkage[-1], block
+            yield start, code[start:i], ";", linkage[-1], block, in_namespace
             start = i + 1
         elif paren <= 0 and ch == "{":
             head = code[start:i]
@@ -619,8 +621,10 @@ def top_level_units(code, default_linkage):
                 kinds.append(kind)
                 start = i + 1
             else:
-                if kind != "aggregate":
-                    yield start, head, "{", linkage[-1], block
+                if kind == "initializer":
+                    yield start, head, "initializer", linkage[-1], block, in_namespace
+                elif kind != "aggregate":
+                    yield start, head, "{", linkage[-1], block, in_namespace
                 depth = 0
                 while i < n:
                     if code[i] == "{":
@@ -631,9 +635,9 @@ def top_level_units(code, default_linkage):
                             i += 1
                             break
                     i += 1
-                if kind == "aggregate":
-                    # `} Vector3;` -- the trailing declarator list names the TYPE,
-                    # not an extern. Consume it with the block.
+                if kind in ("aggregate", "initializer"):
+                    # Consume the aggregate tail or the initializer terminator;
+                    # neither belongs to the following statement.
                     tail_paren = 0
                     while i < n:
                         if code[i] in "([":
@@ -807,12 +811,12 @@ def parse_file(rel, text, aliases):
         aliases = merged
     decls, defs = [], []
     unparsed = 0
-    for start, chunk, term, linkage, in_block in top_level_units(code,
-                                                                default_linkage):
+    for start, chunk, term, linkage, in_block, in_namespace in top_level_units(
+            code, default_linkage):
         body = " ".join(chunk.split())
         if not body:
             continue
-        if re.match(r"^(typedef|using|template)\b", body):
+        if re.match(r"^(typedef|using|template|static_assert|_Static_assert)\b", body):
             continue
         rest, saw_extern, saw_static, override = _strip_specifiers(body)
         if override:
@@ -848,28 +852,36 @@ def parse_file(rel, text, aliases):
                                "C" if linkage == "C" else linkage, True, member))
             continue
 
-        has_init = "=" in rest
-        if has_init:
-            rest = split_top(rest, seps=("=",))[0].strip()
-        if not saw_extern:
-            # An initialised or `static` file-scope object is a DEFINITION, not a
-            # declaration of somebody else's symbol -- including `const char *s =
-            # "...";`, whose blanked string literal used to leave `const char *s`
-            # looking exactly like an extern.
-            if saw_static or has_init:
-                continue
-            # Inside `extern "C" { ... }` a declaration need not repeat `extern`.
-            if not in_block and rel.endswith(SOURCE_SUFFIXES):
-                continue
+        if saw_static:
+            continue
         for piece in _declarator_pieces(rest):
-            parsed = parse_declarator(piece, aliases, cxx)
+            parts = split_top(piece, seps=("=",))
+            has_init = len(parts) > 1
+            declarator = parts[0].strip()
+            parsed = parse_declarator(declarator, aliases, cxx)
             if parsed is None:
-                if not IDENT.fullmatch(piece.strip()):
+                if not IDENT.fullmatch(declarator):
                     unparsed += 1
                 continue
             name, ret, params, is_fn, _member = parsed
-            decls.append(Record(name, rel, line, ret, params, is_fn, linkage,
-                                False, False))
+            is_data_definition = not is_fn and (
+                has_init or (not saw_extern and rel.endswith(SOURCE_SUFFIXES)))
+            if is_data_definition:
+                # C++ namespace-scope const objects have internal linkage unless
+                # explicitly extern. Pointee const does not make the object const.
+                names = list(re.finditer(r"\b" + re.escape(name) + r"\b", declarator))
+                lead = declarator[:names[-1].start()] if names else declarator
+                qualifiers = re.split(r"[*&]", lead)[-1]
+                if cxx and not saw_extern and re.search(r"\bconst\b", qualifiers):
+                    continue
+                marked = [s for idx, s in marks if start <= idx < decl_start]
+                if ("::" in declarator or in_namespace) and not marked:
+                    continue  # A qualified object's linker name needs its marker.
+                defs.append(Record(marked[-1] if marked else name, rel, line,
+                                   ret, params, False, linkage, True))
+            elif saw_extern or in_block or rel.endswith(HEADER_SUFFIXES):
+                decls.append(Record(name, rel, line, ret, params, is_fn, linkage,
+                                    False, False))
     return decls, defs, unparsed
 
 
@@ -878,12 +890,12 @@ def _declarator_pieces(rest):
     parts = split_top(rest)
     if len(parts) == 1:
         return [rest]
-    base = parts[0].strip()
+    base = split_top(parts[0], seps=("=",))[0].strip()
     m = re.match(r"^(.*?)([A-Za-z_][A-Za-z0-9_]*\s*(\[[^\[\]]*\])*)$", base)
     if not m or not m.group(1).strip():
         return [rest]
     prefix = m.group(1).strip().rstrip("*&")
-    out = [base]
+    out = [parts[0].strip()]
     for extra in parts[1:]:
         extra = extra.strip()
         if not extra or "(" in extra:
@@ -1152,20 +1164,21 @@ def _git_lines(args, repo=REPO):
 
 
 def changed_paths(base, repo=REPO, head="HEAD"):
-    """Every added/modified path of this branch, working tree and untracked included.
+    """Changed paths, including both sides of renames and deleted inputs.
 
     Three sources, unioned, for the reason `check_header_offsets.changed_paths` gives:
     a header edited and not yet committed is in none of the commits, and a
     pre-commit run that reports a pass over a file it never opened is worse than no
     gate at all.
     """
-    commits, err = _git_lines(["diff", "--name-only", "--diff-filter=AM",
-                               "%s...%s" % (base, head)], repo)
+    commits, err = _git_lines(
+        ["diff", "--name-only", "--no-renames", "--diff-filter=AMD",
+         "%s...%s" % (base, head)], repo)
     if err:
         return None, err
     if head == "HEAD":
-        dirty, err = _git_lines(["diff", "--name-only", "--diff-filter=AM", "HEAD"],
-                                repo)
+        dirty, err = _git_lines(
+            ["diff", "--name-only", "--no-renames", "--diff-filter=AMD", "HEAD"], repo)
         if err:
             return None, err
         untracked, err = _git_lines(["ls-files", "--others", "--exclude-standard"],
@@ -1177,10 +1190,22 @@ def changed_paths(base, repo=REPO, head="HEAD"):
     return sorted(set(commits) | set(dirty) | set(untracked)), None
 
 
+def needs_full_scan(paths, root=REPO):
+    """Shared parser inputs and removed source can affect untouched declarations."""
+    tools = {"tools/check_decl_agreement.py", "tools/demangle.py",
+             "config/decl-agreement-baseline.json"}
+    return any(p in tools or
+               (p.startswith(("src/", "include/")) and p.endswith(HEADER_SUFFIXES)) or
+               (p.startswith("config/") and p.endswith("/symbols.txt")) or
+               (p.startswith(("src/", "include/")) and p.endswith(SCAN_SUFFIXES)
+                and not (root / p).exists()) for p in paths)
+
+
 def changed_scope(base, root=REPO, head="HEAD"):
     """(touched, defined_symbols, total_changed, error).
 
-    `touched` is the changed src/ and include/ sources. `defined_symbols` is every
+    `touched` includes removed paths as well as changed src/ and include/ sources.
+    `defined_symbols` is every
     symbol those files DEFINE, and it is the half that matters: retyping or renaming
     a definition invalidates declarations in files the diff never touched, so a gate
     that looked only at the diff would call that clean. The caller widens the report
@@ -1266,15 +1291,20 @@ def main(argv=None):
             return 1
         if not total:
             print("check_decl_agreement: the diff against %s is EMPTY -- no file "
-                  "added or modified anywhere in the tree." % args.changed,
+                  "changed anywhere in the tree." % args.changed,
                   file=sys.stderr)
             print("check_decl_agreement: that is a base ref that resolved to nothing, "
                   "not a change that touches no source. Check that %s exists and is "
                   "fetched (a shallow clone has no merge base)." % args.changed,
                   file=sys.stderr)
             return 1
-        if not touched:
-            print("check_decl_agreement: %d file(s) added or modified vs %s, 0 of them "
+        full_scan = needs_full_scan(total, REPO)
+        if full_scan:
+            print("check_decl_agreement: shared inputs or removed source changed; "
+                  "checking the whole tree.")
+            touched = None
+        if not touched and not full_scan:
+            print("check_decl_agreement: %d file(s) changed vs %s, 0 of them "
                   "a src/ or include/ source -- nothing for this gate to check."
                   % (len(total), args.changed))
             return 0

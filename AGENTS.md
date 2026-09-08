@@ -133,10 +133,12 @@ parameter types against the symbol's definition (resolving `include/types.h`'s s
 typedefs and each file's own typedefs first, so `u32` and `unsigned int` are one type,
 and giving an out-of-line member back its implicit `this`), and reports each
 disagreement with the file and line on both sides. `--changed <base>` scopes it to a
-branch plus every declaration of the symbols that branch defines; `--symbol <name>`
+branch plus every declaration of the symbols that branch defines. Header, symbol-table,
+gate-tool and baseline changes, and removed source paths, check the whole tree; both
+sides of a rename are retained. External data definitions are compared too, including
+initialized objects and arrays. `--symbol <name>`
 prints one symbol's whole declaration population; `--inventory` prints the headline and
-the worst offenders. It is a **ratchet**: the 23,149 disagreements the tree already
-carries are banked in `config/decl-agreement-baseline.json` and only a new one fails.
+the worst offenders. It is a **ratchet**: existing disagreements are banked in `config/decl-agreement-baseline.json` and only a new one fails.
 Do not treat a banked entry as a text edit — changing a declaration can change
 instruction selection at the call site, so fixing one is matching work that needs a
 rebuild and byte proof (`tools/match.py`), and the `declaration agreement` CI job will
