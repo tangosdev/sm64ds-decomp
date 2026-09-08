@@ -1452,6 +1452,31 @@ extern "C" void port_cylinder_clsn_process(void);
    ntr::gx_swap_apply is the boundary that consumes what it asked for; read
    THE PENDING SWAP in ntr/gx.cpp before moving either. */
 extern "C" void func_020190b8(void);
+/* THE ROM'S "THE LOOP IS WAITING" FLAG (rung R3b, step B1). 0x0209d4f0,
+   hosted at four bytes in hal/boot_globals.cpp:311. func_020197b8.c:53-56
+   raises it after the swap, under IRQ::DisableIRQs(1), and drops it the
+   instant the phase-7 wait returns; src/_ZN3IRQ13VBlankHandlerEv.c:15 is
+   the only reader, and its whole wake is gated on it:
+       if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0)
+           OS_WakeupThread(&data_0209d500);
+   THIS PORT HAS NEVER WRITTEN IT. Nothing here raised the flag, so the
+   gate was permanently shut and the ROM's own frame wake could not have
+   fired even if the handler ran. Writing it costs nothing today and it is
+   the half of R3d that has to be true before the ROM's loop can sleep on
+   its own VBlank -- so it goes in first, alone, and the [thr] line at the
+   run's end is what says whether anything downstream moved.
+   MEASURED, NOT ASSUMED: it is inert on this binary and here is why.
+   ntr/runtime.cpp:190 _ZN3IRQ13SetIRQHandlerEjPFvvE stores mask 0x200000
+   (GXFIFO) and mask 2 (HBlank) and DROPS every other mask, so
+   _ZN3IRQ13GetIRQHandlerEj(1) answers null and IRQ::VBlankHandler -- which
+   IS linked, walk_window.map 0001:00280510 -- is dispatched by nothing.
+   hal/boot2_thread.cpp's CP15::WaitForInterrupt step 2 is that lookup, and
+   the wait itself is not on this path either: its only callers are the
+   ROM's idle loops func_02057e34 and func_0201a028, and this loop drives
+   the frame instead of sleeping. Both of those are R3d's to close and
+   neither file is this rung's to edit. */
+extern "C" unsigned char data_0209d4f0[4];
+namespace port { void thread_sched_report(const char *tag); }
 namespace ntr {
 void gx_swap_apply();
 void gx_swap_counts(unsigned &requested, unsigned &applied,
@@ -13270,6 +13295,12 @@ int main(void)
            EXECUTED' (lane R3CFIX2, status/R3CFIX2.md 18:22). */
         func_020190b8();
         ntr::gx_swap_apply();
+        /* func_020197b8.c:53 -- the flag goes up here, between the swap and
+           the wait. The ROM raises it inside IRQ::DisableIRQs(1)/EnableIRQs
+           (:51 and :54); this host has no interrupt to race with at this
+           point -- the VBlank handler is dispatched by nothing (see the
+           banner) -- so the bracket is left out rather than faked. */
+        data_0209d4f0[0] = 1;
         ++frame;   /* counts in live mode too -- the [cam-in]-style live
                       diagnostics carry a real frame number */
         /* SM64DS_MENU_AT: arm the freeze once the named frame is reached. It
@@ -13417,6 +13448,17 @@ int main(void)
                         port_rom_frame());
                 fflush(stderr);
             }
+            {   /* THE RUNG'S OWN LINE (R3b, step B1), and it is a
+                   MEASUREMENT rather than a claim: the flag is raised and
+                   dropped on every frame of this run, and these counters
+                   say what -- if anything -- downstream of it moved. */
+                fprintf(stderr, "[r3b] B1: the ROM's wait flag "
+                        "data_0209d4f0 is raised at this loop's frame foot "
+                        "and dropped after the pace (func_020197b8.c:53 and "
+                        ":56), %d times over this run; it reads %u at exit\n",
+                        port_rom_frame(), (unsigned)data_0209d4f0[0]);
+                port::thread_sched_report("r3b-b1");
+            }
             return 0;
         }
         /* THE PACE. Stage::InitResources writes data_0208ee44 = 2 for a 3D
@@ -13435,5 +13477,10 @@ int main(void)
         frame_stat();
         if ((!rb_replaying() || rb_presented_frame()) &&
             (!selftest || port_pace_selftest())) frame_pace();
+        /* func_020197b8.c:56 -- and down the instant the wait returns. The
+           pace above IS this loop's wait: it is the sleep that ends the
+           frame, which is what phase 7 is. Under R3d the flag's two writes
+           are func_020197b8's own lines and this pair goes. */
+        data_0209d4f0[0] = 0;
     }
 }
