@@ -21,13 +21,13 @@ _ZN19FloatOnLavaPlatform13InitResourcesEv kind:function(arm,size=0xac) addr:0x02
 func_ov022_0211191c kind:function(arm,size=0x20) addr:0x0211191c
 func_ov022_0211193c kind:function(arm,size=0x14) addr:0x0211193c
 daObjFl_Block_c_classInit kind:function(arm,size=0x30) addr:0x02111950
-_ZN10LavaBridgeD1Ev kind:function(arm,size=0x44) addr:0x02111980
-_ZN10LavaBridgeD0Ev kind:function(arm,size=0x58) addr:0x021119c4
+_ZN16daObjFl_London_cD1Ev kind:function(arm,size=0x44) addr:0x02111980
+_ZN16daObjFl_London_cD0Ev kind:function(arm,size=0x58) addr:0x021119c4
 func_ov022_02111a1c kind:function(arm,size=0x48) addr:0x02111a1c
-_ZN10LavaBridge16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111a64
-_ZN10LavaBridge6RenderEv kind:function(arm,size=0x28) addr:0x02111aa8
-_ZN10LavaBridge8BehaviorEv kind:function(arm,size=0x10c) addr:0x02111ad0
-_ZN10LavaBridge13InitResourcesEv kind:function(arm,size=0xa0) addr:0x02111bdc
+_ZN16daObjFl_London_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111a64
+_ZN16daObjFl_London_c6RenderEv kind:function(arm,size=0x28) addr:0x02111aa8
+_ZN16daObjFl_London_c8BehaviorEv kind:function(arm,size=0x10c) addr:0x02111ad0
+_ZN16daObjFl_London_c13InitResourcesEv kind:function(arm,size=0xa0) addr:0x02111bdc
 daObjFl_London_c_classInit kind:function(arm,size=0x30) addr:0x02111c7c
 _ZN10LavaSeesawD1Ev kind:function(arm,size=0x44) addr:0x02111cac
 _ZN10LavaSeesawD0Ev kind:function(arm,size=0x58) addr:0x02111cf0
@@ -61,15 +61,15 @@ _ZN13RollingLogLll16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112
 _ZN13RollingLogLll8BehaviorEv kind:function(arm,size=0x30) addr:0x02112560
 _ZN13RollingLogLll13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112590
 daObjFlMaruta_c_classInit kind:function(arm,size=0x3c) addr:0x021125a4
-_ZN11VolcanoFireD1Ev kind:function(arm,size=0x30) addr:0x021125e0
-_ZN11VolcanoFireD0Ev kind:function(arm,size=0x44) addr:0x02112610
+_ZN21daObj_volcanoCannon_cD1Ev kind:function(arm,size=0x30) addr:0x021125e0
+_ZN21daObj_volcanoCannon_cD0Ev kind:function(arm,size=0x44) addr:0x02112610
 func_ov022_02112654 kind:function(arm,size=0x58) addr:0x02112654
 func_ov022_021126ac kind:function(arm,size=0x64) addr:0x021126ac
 func_ov022_02112710 kind:function(arm,size=0x80) addr:0x02112710
-_ZN11VolcanoFire11ChangeStateEPNS_5StateE kind:function(arm,size=0x50) addr:0x02112790
-_ZN11VolcanoFire16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x021127e0
-_ZN11VolcanoFire8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112800
-_ZN11VolcanoFire13InitResourcesEv kind:function(arm,size=0x60) addr:0x021128b8
+_ZN21daObj_volcanoCannon_c11ChangeStateEPNS_5StateE kind:function(arm,size=0x50) addr:0x02112790
+_ZN21daObj_volcanoCannon_c16CleanupResourcesEv kind:function(arm,size=0x20) addr:0x021127e0
+_ZN21daObj_volcanoCannon_c8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112800
+_ZN21daObj_volcanoCannon_c13InitResourcesEv kind:function(arm,size=0x60) addr:0x021128b8
 daObj_volcanoCannon_c_classInit kind:function(arm,size=0x38) addr:0x02112918
 data_ov022_02112950 kind:data(any) addr:0x02112950
 data_ov022_02112954 kind:data(any) addr:0x02112954
@@ -213,8 +213,7 @@ data_ov022_02113f20 kind:data(any) addr:0x02113f20 ambiguous
 _ZTI16daObjFl_London_c kind:data(any) addr:0x02113f2c
 _ZTS16daObjFl_London_c kind:data(any) addr:0x02113f38
 g_profile_FL_LONDON kind:data(any) addr:0x02113f4c ambiguous
-_ZTV10LavaBridge kind:data(any) addr:0x02113f70
-data_ov022_02113f78 kind:data(any) addr:0x02113f78 ambiguous
+_ZTV16daObjFl_London_c kind:data(any) addr:0x02113f70
 _ZTI16daObjFl_Seesaw_c kind:data(any) addr:0x02113ff0
 data_ov022_02113ff4 kind:data(any) addr:0x02113ff4 ambiguous
 _ZTS16daObjFl_Seesaw_c kind:data(any) addr:0x02113ffc
@@ -251,7 +250,6 @@ data_ov022_0211442c kind:data(any) addr:0x0211442c
 _ZTI21daObj_volcanoCannon_c kind:data(any) addr:0x02114434
 _ZTS21daObj_volcanoCannon_c kind:data(any) addr:0x02114440
 g_profile_OBJ_VOLCANO_CANNON kind:data(any) addr:0x02114458 ambiguous
-_ZTV11VolcanoFire kind:data(any) addr:0x0211447c
 _ZTV21daObj_volcanoCannon_c kind:data(any) addr:0x0211447c
 data_ov022_02114498 kind:data(any) addr:0x02114498 ambiguous
 data_ov022_02114500 kind:bss addr:0x02114500
