@@ -160,6 +160,7 @@
 // unknown address, which is MgBase_StateDispatch's mg_unhandled.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the boot installer below (lane PMFB4) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -222,6 +223,10 @@ extern MgPmf data_ov006_02142734[];
    existed for this one symbol and nothing else -- is DELETED. A trap standing
    beside a real definition is a duplicate symbol, not a safety net. */
 void func_ov006_0210076c(void *c, int i);
+
+/* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
+   the ov006 constructors have filled the tables. */
+void port_mg_pachinko2_states_seat(void);
 
 }  /* extern "C" */
 
@@ -348,73 +353,149 @@ extern "C" void port_mg_pachinko2_state_counts(unsigned *hits, unsigned *missing
 // resolves to. The offsets are the src's own AND the ROM's -- both were read,
 // and they agree.
 
-/* src/func_ov006_020fff84.cpp, table data_ov006_021426cc.
-   Its src reads
-       for (i = 0; i < 2; i++) {
-           char *b = (char *)c + (i << 5);
-           if (*(unsigned char *)(b + 0x5634) != 0)
-               (c->*data_ov006_021426cc[*(unsigned char *)(b + 0x5635)].pmf)(i);
-       }
-   Note the receiver: the guard and the index are read off the PER-ENTRY base
-   b, and the call is made on c. The ROM agrees -- r6 is never reassigned. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020fff84(void *self)
-{
-    char *c = (char *)self;
-    for (int i = 0; i < 2; i++) {
-        char *b = c + (i << 5);
-        if (*(unsigned char *)(b + 0x5634) != 0) {
-            const MgPmf *p = &data_ov006_021426cc[*(unsigned char *)(b + 0x5635)];
-            lkt_call1(c, p->code, p->adj, i);
-        }
-    }
-}
+// ---- ALL THREE TABLES SEATED, AND TWENTY-EIGHT FACES -----------------------
+//
+// Run link100 lane PMFB4. All three of dScMgPachinko2_c's state tables now hold
+// HOST addresses, written at boot by port_mg_pachinko2_states_seat below after
+// every cell has been compared against the ROM's own code word and a zero
+// adjustment word, so NO HOST COPY OF A dScMgPachinko2_c DISPATCHER IS LEFT:
+//
+//   func_ov006_020fff84  data_ov006_021426cc   5 slots  arity 1
+//   func_ov006_02102e8c  data_ov006_021426f4   8 slots  arity 1
+//   func_ov006_0210246c  data_ov006_02142734  15 slots  arity 1
+//
+// 5+8+15 = 28, the whole census this file's header counts.
+//
+// THE SWITCH IS KEPT AND IS NOW UNREACHABLE. port_mg_try_pachinko2_1 was called
+// only by the three host copies. It stays because it is the written record of
+// which address belongs to which table, and because g_pachinko2_state_missing
+// reading zero is a structural fact now rather than a measurement.
+//
+// THE STRIDE, BOTH SIDES (runs/link100/out/PMFB4/rom_gate3.txt, emit_gate3.txt):
+//   020fff84  ROM add r3,r4,r0,lsl #3 at 020fffac, pool 020fffe8 = 021426cc
+//   02102e8c  ROM add r3,r4,r0,lsl #3 at 02102eb4, pool 02102ef0 = 021426f4
+//   0210246c  ROM add r3,r4,r0,lsl #3 at 02102494, pool 021024dc = 02142734
+// emitted [eax*8] and [eax*8+4] in all three listings. ROM 8 == emitted 8. The
+// `lsl #5` and `lsl #6` adds in those bodies stride the ENTITY array off `this`;
+// the record stride is the add whose base register the literal pool loaded with
+// the table address, which is the one quoted. /Zp4 leaves every listing
+// identical but for the TITLE line, so it is not claimed.
+//
+// THE TWENTY-EIGHT SOURCE PAIRS all read {code, 0} in overlay_0006.bin at the
+// addresses src/__sinit_ov006_02131cd0.c copies each slot from, all whole-pair
+// copies, no field-form fill.
+//
+// THE DISPATCH SHAPE, off each row's own listing: `mov ecx, tab[i*8+4] /
+// mov eax, tab[i*8] / add ecx, <this> / call eax` with no `add esp,N` after it,
+// and one pushed argument on all three (edi, edi, esi -- the loop counter).
+//
+// TWO /alternatename DIRECTIVES, read off the objects with dumpbin /symbols.
+// src/func_ov006_0210246c.cpp declares its table inside extern "C" and needs
+// none.
+//
+// THE PER-SLOT CENSUS MOVES INTO THE FACES. g_lkt_cc, g_lkt_f4 and g_lkt_34 are
+// per-slot counts fed by lkt_census from inside the switch, and
+// hal/scene_mg_slot3.cpp prints them to say which state of which table ran. A
+// face runs once per dispatch of its own cell, so each face takes its own count.
+#pragma comment(linker, "/alternatename:?data_ov006_021426cc@@3PAUEntry@@A=_data_ov006_021426cc")
+#pragma comment(linker, "/alternatename:?data_ov006_021426f4@@3PAUEntry@@A=_data_ov006_021426f4")
 
-/* src/func_ov006_0210246c.cpp, table data_ov006_02142734.
-   Its src reads
-       Row *rows = (Row *)self;               // Row is u8 d[0x40]
-       for (int i = 0; i < 3; i++)
-           if (rows[i].d[0x5294]) {
-               (self->*data_ov006_02142734[rows[i].d[0x5296]])(i);
-               func_ov006_0210076c(self, i);
-           }
-   THE ONE OF THE THREE A LINK COULD NOT HAVE NAMED: its table is declared
-   inside extern "C", so the global mangles to the plain C name the mount
-   already defines. The trailing call is kept because the ROM makes it
-   unconditionally after every dispatch (bl 0x210076c at 0x021024c4, inside the
-   guarded arm), and its callee has no body -- see the trap file. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_0210246c(void *self)
-{
-    char *c = (char *)self;
-    for (int i = 0; i < 3; i++) {
-        char *b = c + i * 0x40;
-        if (*(unsigned char *)(b + 0x5294)) {
-            const MgPmf *p = &data_ov006_02142734[*(unsigned char *)(b + 0x5296)];
-            lkt_call1(c, p->code, p->adj, i);
-            func_ov006_0210076c(c, i);
-        }
+#define P2_FACE(sym, row, n, slot)                                            \
+    static void __fastcall p2_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_pachinko2_state_hits;                                             \
+        lkt_census(row, n, slot);                                             \
+        sym(self, i);                                                         \
     }
-}
 
-/* src/func_ov006_02102e8c.cpp, table data_ov006_021426f4.
-   Its src reads
-       for (i = 0; i < 0x30; i++)
-           if (*(unsigned char *)((char *)c + i * 0x40 + 0x4698) != 0) {
-               unsigned char k = *(unsigned char *)((char *)c + i*0x40 + 0x4699);
-               (c->*data_ov006_021426f4[k].pmf)(i);
-           }
-   Forty-eight entries at a 0x40 stride, which is the widest of the three and
-   the one that carries this class's per-object cast. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_02102e8c(void *self)
+/* data_ov006_021426cc */
+P2_FACE(func_ov006_020fff54, g_lkt_cc, 5, 0)
+P2_FACE(func_ov006_020ffde4, g_lkt_cc, 5, 1)
+P2_FACE(func_ov006_020ffb54, g_lkt_cc, 5, 2)
+P2_FACE(func_ov006_020ff8c8, g_lkt_cc, 5, 3)
+P2_FACE(func_ov006_020ff690, g_lkt_cc, 5, 4)
+/* data_ov006_021426f4 */
+P2_FACE(func_ov006_02102f3c, g_lkt_f4, 8, 0)
+P2_FACE(func_ov006_02102fe8, g_lkt_f4, 8, 1)
+P2_FACE(func_ov006_02103360, g_lkt_f4, 8, 2)
+P2_FACE(func_ov006_02103608, g_lkt_f4, 8, 3)
+P2_FACE(func_ov006_0210371c, g_lkt_f4, 8, 4)
+P2_FACE(func_ov006_02103870, g_lkt_f4, 8, 5)
+P2_FACE(func_ov006_0210397c, g_lkt_f4, 8, 6)
+P2_FACE(func_ov006_02103994, g_lkt_f4, 8, 7)
+/* data_ov006_02142734 */
+P2_FACE(func_ov006_02102274, g_lkt_34, 15, 0)
+P2_FACE(func_ov006_021020c4, g_lkt_34, 15, 1)
+P2_FACE(func_ov006_02101e88, g_lkt_34, 15, 2)
+P2_FACE(func_ov006_02101af0, g_lkt_34, 15, 3)
+P2_FACE(func_ov006_021019e0, g_lkt_34, 15, 4)
+P2_FACE(func_ov006_021016ec, g_lkt_34, 15, 5)
+P2_FACE(func_ov006_021012cc, g_lkt_34, 15, 6)
+P2_FACE(func_ov006_02101224, g_lkt_34, 15, 7)
+P2_FACE(func_ov006_02101088, g_lkt_34, 15, 8)
+P2_FACE(func_ov006_02100f7c, g_lkt_34, 15, 9)
+P2_FACE(func_ov006_02100e3c, g_lkt_34, 15, 10)
+P2_FACE(func_ov006_02100d90, g_lkt_34, 15, 11)
+P2_FACE(func_ov006_02100bac, g_lkt_34, 15, 12)
+P2_FACE(func_ov006_02100b08, g_lkt_34, 15, 13)
+P2_FACE(func_ov006_021009b8, g_lkt_34, 15, 14)
+
+extern "C" void port_mg_pachinko2_states_seat(void)
 {
-    char *c = (char *)self;
-    for (int i = 0; i < 0x30; i++) {
-        char *b = c + i * 0x40;
-        if (*(unsigned char *)(b + 0x4698) != 0) {
-            const MgPmf *p = &data_ov006_021426f4[*(unsigned char *)(b + 0x4699)];
-            lkt_call1(c, p->code, p->adj, i);
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {data_ov006_021426cc, "021426cc", 0, 0x020fff54u, (void *)p2_func_ov006_020fff54},
+        {data_ov006_021426cc, "021426cc", 1, 0x020ffde4u, (void *)p2_func_ov006_020ffde4},
+        {data_ov006_021426cc, "021426cc", 2, 0x020ffb54u, (void *)p2_func_ov006_020ffb54},
+        {data_ov006_021426cc, "021426cc", 3, 0x020ff8c8u, (void *)p2_func_ov006_020ff8c8},
+        {data_ov006_021426cc, "021426cc", 4, 0x020ff690u, (void *)p2_func_ov006_020ff690},
+
+        {data_ov006_021426f4, "021426f4", 0, 0x02102f3cu, (void *)p2_func_ov006_02102f3c},
+        {data_ov006_021426f4, "021426f4", 1, 0x02102fe8u, (void *)p2_func_ov006_02102fe8},
+        {data_ov006_021426f4, "021426f4", 2, 0x02103360u, (void *)p2_func_ov006_02103360},
+        {data_ov006_021426f4, "021426f4", 3, 0x02103608u, (void *)p2_func_ov006_02103608},
+        {data_ov006_021426f4, "021426f4", 4, 0x0210371cu, (void *)p2_func_ov006_0210371c},
+        {data_ov006_021426f4, "021426f4", 5, 0x02103870u, (void *)p2_func_ov006_02103870},
+        {data_ov006_021426f4, "021426f4", 6, 0x0210397cu, (void *)p2_func_ov006_0210397c},
+        {data_ov006_021426f4, "021426f4", 7, 0x02103994u, (void *)p2_func_ov006_02103994},
+
+        {data_ov006_02142734, "02142734",  0, 0x02102274u, (void *)p2_func_ov006_02102274},
+        {data_ov006_02142734, "02142734",  1, 0x021020c4u, (void *)p2_func_ov006_021020c4},
+        {data_ov006_02142734, "02142734",  2, 0x02101e88u, (void *)p2_func_ov006_02101e88},
+        {data_ov006_02142734, "02142734",  3, 0x02101af0u, (void *)p2_func_ov006_02101af0},
+        {data_ov006_02142734, "02142734",  4, 0x021019e0u, (void *)p2_func_ov006_021019e0},
+        {data_ov006_02142734, "02142734",  5, 0x021016ecu, (void *)p2_func_ov006_021016ec},
+        {data_ov006_02142734, "02142734",  6, 0x021012ccu, (void *)p2_func_ov006_021012cc},
+        {data_ov006_02142734, "02142734",  7, 0x02101224u, (void *)p2_func_ov006_02101224},
+        {data_ov006_02142734, "02142734",  8, 0x02101088u, (void *)p2_func_ov006_02101088},
+        {data_ov006_02142734, "02142734",  9, 0x02100f7cu, (void *)p2_func_ov006_02100f7c},
+        {data_ov006_02142734, "02142734", 10, 0x02100e3cu, (void *)p2_func_ov006_02100e3c},
+        {data_ov006_02142734, "02142734", 11, 0x02100d90u, (void *)p2_func_ov006_02100d90},
+        {data_ov006_02142734, "02142734", 12, 0x02100bacu, (void *)p2_func_ov006_02100bac},
+        {data_ov006_02142734, "02142734", 13, 0x02100b08u, (void *)p2_func_ov006_02100b08},
+        {data_ov006_02142734, "02142734", 14, 0x021009b8u, (void *)p2_func_ov006_021009b8},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgPachinko2_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
         }
+        p->code = (unsigned)(size_t)seats[i].face;
     }
 }

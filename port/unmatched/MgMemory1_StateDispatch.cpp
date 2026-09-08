@@ -172,6 +172,7 @@
 // nonzero adjustment means and how an unhandled address is reported.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the boot installer below (lane PMFB4) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on both
    machines: two words, no member-pointer type anywhere. */
@@ -239,6 +240,10 @@ void func_ov006_020c19d0(void *c);
 void func_ov006_020f5164(void *c);
 void func_ov006_020f50f8(void *c);
 void func_ov006_020f3f10(void *c);
+
+/* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
+   the ov006 constructors have filled the tables. */
+void port_mg_memory1_states_seat(void);
 
 }  /* extern "C" */
 
@@ -329,32 +334,6 @@ extern "C" unsigned port_mg_memory1_floor_hits(void) { return g_mem1_floor_hits;
 // rather than `(c->*table[i].pmf)()`).  Where anything else moved it is stated
 // on the line.
 
-/* src/func_ov006_020f5388.cpp -- dScMgMemory_c::Behavior, vtable SLOT 6.  Its
-   src reads
-       struct C; typedef void (C::*PMF)();
-       struct Entry { PMF pmf; };
-       extern "C" Entry data_ov006_021422dc[];
-       struct C { char pad[0x5314]; int idx; };
-       (c->*(data_ov006_021422dc[c->idx].pmf))();
-       func_ov004_020b65e4();
-       func_ov006_020c19d0((char*)c + 0x4f38);
-       return 1;
-   NOTE THE `extern "C"` ON THE TABLE: this one is SILENT to a link.  It mangles
-   as the plain C name the ov006 mount already defines, so the linker is
-   satisfied while MSVC strides the eight-byte table by four.  It is one of the
-   two silent shapes port/mg_fanout_costs.txt section 4 names, and only the
-   `::*` sweep finds it. */
-// PORT_HOST_ABI: mwcc table pointer-to-member dispatch, the 8-byte pair MSVC's 4-byte pmf strides wrong
-extern "C" int func_ov006_020f5388(void *self)
-{
-    char *c = (char *)self;
-    const MgPmf *e = &data_ov006_021422dc[*(int *)(c + 0x5314)];
-    port_mg_memory1_call0(c, e->code, e->adj);
-    func_ov004_020b65e4();
-    func_ov006_020c19d0(c + 0x4f38);
-    return 1;
-}
-
 /* src/func_ov006_020f5164.cpp.  Its table is declared at C++ linkage
    (`extern Entry data_ov006_02142304[];`), so this one IS link-visible, as
    ?data_ov006_02142304@@3PAUEntry@@A -- the PAU spelling that slips both of
@@ -391,29 +370,142 @@ extern "C" void func_ov006_020f50f8(void *c)
     port_mg_memory1_call0(p, e->code, e->adj);
 }
 
-/* src/func_ov006_020f3f10.cpp -- the arity-1 per-record loop.  Its src reads
-       struct C75; typedef void (C75::*PMF)(int);
-       extern PMF data_ov006_02142334[];
-       for (i = 0; i < 0xc; i++) {
-           if (*(unsigned char*)(s + 0x51bb))
-               (this->*data_ov006_02142334[*(unsigned char*)(s + 0x51bc)])(i);
-           s += 0x18;
-       }
-   and `this` in that expression is the CLASS BASE, not the record cursor `s`.
-   The ROM keeps them in two registers (r7 and r5) and only ever adds the
-   adjustment to r7; section 2 has the disassembly.  Twelve records, which is
-   this class's whole board -- src/func_ov006_020f4f94.c clears twelve and
-   src/func_ov006_020f4cd8.c deals 8, 10 or 12 of them. */
-// PORT_HOST_ABI: mwcc arity-1 table pointer-to-member dispatch, the 8-byte pair MSVC's 4-byte pmf strides wrong
-extern "C" void func_ov006_020f3f10(void *c)
+// ---- TWO TABLES SEATED, AND TWELVE FACES -----------------------------------
+//
+// Run link100 lane PMFB4. Two of dScMgMemory_c's tables now hold HOST addresses,
+// written at boot by port_mg_memory1_states_seat below after every cell has been
+// compared against the ROM's own code word and a zero adjustment word, so two of
+// the four host copies are gone:
+//
+//   func_ov006_020f5388  data_ov006_021422dc   5 slots  arity 0  (vtable slot 6)
+//   func_ov006_020f3f10  data_ov006_02142334   7 slots  arity 1
+//
+// THE TWO HOST COPIES THAT STAY are func_ov006_020f5164 and func_ov006_020f50f8,
+// which are STATE BODIES of data_ov006_021422dc rather than dispatchers of a
+// table of their own. The installer writes faces that call them, so they keep
+// working from the seated cells. The switch stays live for the tables this lane
+// did not seat.
+//
+// THE STRIDE, BOTH SIDES (runs/link100/out/PMFB4/rom_gate3.txt, emit_gate3.txt):
+//   020f5388  ROM add r3,r1,r0,lsl #3 at 020f539c, pool 020f53dc = 021422dc
+//   020f3f10  ROM add r3,r4,r0,lsl #3 at 020f3f3c, pool 020f3f80 = 02142334
+// emitted [eax*8] and [eax*8+4] in both listings. ROM 8 == emitted 8, and /Zp4
+// leaves both listings identical but for the TITLE line.
+//
+// THE TWELVE SOURCE PAIRS all read {code, 0} in overlay_0006.bin at the
+// addresses src/__sinit_ov006_021311c8.c copies each slot from, every one a
+// whole-pair copy with no field-form fill:
+//
+//   021422dc[0] <- 0213cfd0 020f51b0/0    02142334[0] <- 0213d018 020f43c4/0
+//   021422dc[1] <- 0213cfc0 020f5164/0    02142334[1] <- 0213cff0 020f43c0/0
+//   021422dc[2] <- 0213d088 020f5140/0    02142334[2] <- 0213cfe8 020f4248/0
+//   021422dc[3] <- 0213d080 020f50f8/0    02142334[3] <- 0213cfc8 020f41b0/0
+//   021422dc[4] <- 0213d078 020f50c0/0    02142334[4] <- 0213d010 020f41ac/0
+//                                         02142334[5] <- 0213d008 020f411c/0
+//                                         02142334[6] <- 0213d070 020f3f84/0
+//
+// THE DISPATCH SHAPE, off each row's own listing: `mov ecx, tab[i*8+4] /
+// mov eax, tab[i*8] / add ecx, <this> / call eax`, no `add esp,N` after it.
+// 020f3f10 pushes edi at BOTH of its two indirect call sites (it compiles its
+// loop with a peeled first iteration, and both were read); 020f5388 pushes
+// nothing. So 02142334 takes one-argument faces and 021422dc zero-argument ones.
+//
+// ONE /alternatename: src/func_ov006_020f3f10.cpp declares its table at
+// namespace scope through its own shadow class, so MSVC spells
+// ?data_ov006_02142334@@3PAP8C75@@AEXH@ZA -- the C75 is that TU's own class
+// name, part of the decoration -- read off the object with dumpbin /symbols.
+// src/func_ov006_020f5388.cpp declares its table inside extern "C".
+//
+// ONE GUESS MARKER, ADJUDICATED: src/func_ov006_020f5388.cpp carries "recovered
+// from vtable slot identity"; port/tools/inferred_stub_adjudicated.txt:760 rules
+// it REAL_DECOMP.
+//
+// TWO OF THE TWELVE SLOTS TAKE NO ARGUMENT AT ALL (their src TUs are `void(void)`
+// empty bodies in one-argument cells), which is the ride-through shape
+// port/tools/aritycheck.py checks; their faces call them with nothing.
+//
+// STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg_memory1.cpp:247-251 still
+// calls func_ov006_020f5388 "the HOST COPY". Its declaration beside it is
+// correct: same C linkage, one pointer, int return.
+#pragma comment(linker, "/alternatename:?data_ov006_02142334@@3PAP8C75@@AEXH@ZA=_data_ov006_02142334")
+
+/* EVERY FACE COUNTS: g_mem1_state_hits keeps counting exactly the dispatches
+   that happen, as the switch counted them while the host copies routed. */
+#define M1_FACE1(sym, cast)                                                   \
+    static void __fastcall m1_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_mem1_state_hits;                                                  \
+        sym(cast self, i);                                                    \
+    }
+#define M1_FACE1_VOID(sym)                                                    \
+    static void __fastcall m1_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)self; (void)dead_edx; (void)i;                                  \
+        ++g_mem1_state_hits;                                                  \
+        sym();                                                                \
+    }
+#define M1_FACE0(sym, cast)                                                   \
+    static void __fastcall m1_##sym(void *self, void *dead_edx)               \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_mem1_state_hits;                                                  \
+        sym(cast self);                                                       \
+    }
+
+/* data_ov006_021422dc, arity 0. Slots 1 and 3 are host copies above. */
+M1_FACE0(func_ov006_020f51b0, (char *))
+M1_FACE0(func_ov006_020f5164, (char *))
+M1_FACE0(func_ov006_020f5140, (char *))
+M1_FACE0(func_ov006_020f50f8, (char *))
+M1_FACE0(func_ov006_020f50c0, (char *))
+/* data_ov006_02142334, arity 1 */
+M1_FACE1(func_ov006_020f43c4, (char *))
+M1_FACE1_VOID(func_ov006_020f43c0)
+M1_FACE1(func_ov006_020f4248, (char *))
+M1_FACE1(func_ov006_020f41b0, (char *))
+M1_FACE1_VOID(func_ov006_020f41ac)
+M1_FACE1(func_ov006_020f411c, (char *))
+M1_FACE1(func_ov006_020f3f84, (char *))
+
+extern "C" void port_mg_memory1_states_seat(void)
 {
-    char *base = (char *)c;
-    char *rec  = base;
-    for (int i = 0; i < 0xc; ++i, rec += 0x18) {
-        if (*(unsigned char *)(rec + 0x51bb) == 0)
-            continue;
-        const MgPmf *e =
-            &data_ov006_02142334[*(unsigned char *)(rec + 0x51bc)];
-        port_mg_memory1_call1(base, e->code, e->adj, i);
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {data_ov006_021422dc, "021422dc", 0, 0x020f51b0u, (void *)m1_func_ov006_020f51b0},
+        {data_ov006_021422dc, "021422dc", 1, 0x020f5164u, (void *)m1_func_ov006_020f5164},
+        {data_ov006_021422dc, "021422dc", 2, 0x020f5140u, (void *)m1_func_ov006_020f5140},
+        {data_ov006_021422dc, "021422dc", 3, 0x020f50f8u, (void *)m1_func_ov006_020f50f8},
+        {data_ov006_021422dc, "021422dc", 4, 0x020f50c0u, (void *)m1_func_ov006_020f50c0},
+
+        {data_ov006_02142334, "02142334", 0, 0x020f43c4u, (void *)m1_func_ov006_020f43c4},
+        {data_ov006_02142334, "02142334", 1, 0x020f43c0u, (void *)m1_func_ov006_020f43c0},
+        {data_ov006_02142334, "02142334", 2, 0x020f4248u, (void *)m1_func_ov006_020f4248},
+        {data_ov006_02142334, "02142334", 3, 0x020f41b0u, (void *)m1_func_ov006_020f41b0},
+        {data_ov006_02142334, "02142334", 4, 0x020f41acu, (void *)m1_func_ov006_020f41ac},
+        {data_ov006_02142334, "02142334", 5, 0x020f411cu, (void *)m1_func_ov006_020f411c},
+        {data_ov006_02142334, "02142334", 6, 0x020f3f84u, (void *)m1_func_ov006_020f3f84},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgMemory_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].face;
     }
 }

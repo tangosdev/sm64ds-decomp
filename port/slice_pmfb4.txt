@@ -359,3 +359,149 @@ src/func_ov006_020de26c.cpp
 src/func_ov006_020e9e00.cpp
 src/func_ov006_020e9374.cpp
 src/func_ov006_020e8d08.cpp
+#
+# ---- BATCH 3: dScMgPachinko2_c, ALL THREE TABLES (the class closes) ---------
+#
+# port/unmatched/MgPachinko2_StateDispatch.cpp owned three host copies over
+# three tables, which is the whole class:
+#
+#   func_ov006_020fff84  data_ov006_021426cc   5 slots  arity 1
+#   func_ov006_02102e8c  data_ov006_021426f4   8 slots  arity 1
+#   func_ov006_0210246c  data_ov006_02142734  15 slots  arity 1
+#
+# 5+8+15 = 28, the whole census that file's header counts, so NO HOST COPY OF A
+# dScMgPachinko2_c DISPATCHER IS LEFT.
+#
+# THE STRIDE, ROM SIDE (runs/link100/out/PMFB4/rom_gate3.txt):
+#   020fff84  add r3,r4,r0,lsl #3 at 020fffac, pool 020fffe8 = 021426cc
+#   02102e8c  add r3,r4,r0,lsl #3 at 02102eb4, pool 02102ef0 = 021426f4
+#   0210246c  add r3,r4,r0,lsl #3 at 02102494, pool 021024dc = 02142734
+# The `lsl #5` and `lsl #6` adds in those bodies stride the ENTITY array off
+# `this`, which is what the file's own header already records as the element
+# stride; the record stride is the add whose base register the literal pool
+# loaded with the table address.
+# EMITTED: [eax*8]/[eax*8+4] in all three; /Zp4 a no-op on all three.
+#
+# THE TWENTY-EIGHT SOURCE PAIRS all read {code, 0} at src/__sinit_ov006_02131cd0
+# .c's own addresses, all whole-pair copies. ARITY: one pushed argument on all
+# three (edi, edi, esi -- the loop counter), receiver in ecx, callee cleanup.
+#
+# TWO /alternatename DIRECTIVES, read off the objects with dumpbin /symbols;
+# src/func_ov006_0210246c.cpp declares its table inside extern "C".
+#
+# THE PER-SLOT CENSUS MOVES INTO THE FACES. g_lkt_cc, g_lkt_f4 and g_lkt_34 are
+# twenty-eight per-slot counts fed from inside the switch and printed by
+# hal/scene_mg_slot3.cpp to say which state of which table ran. Each face takes
+# its own count, one per dispatch of its own cell.
+src/func_ov006_020fff84.cpp
+src/func_ov006_02102e8c.cpp
+src/func_ov006_0210246c.cpp
+#
+# ---- BATCH 3 CONTINUED: dScMgMemory_c, TWO TABLES --------------------------
+#
+#   func_ov006_020f5388  data_ov006_021422dc   5 slots  arity 0  (vtable slot 6)
+#   func_ov006_020f3f10  data_ov006_02142334   7 slots  arity 1
+#
+# ROM: add r3,r1,r0,lsl #3 at 020f539c on pool 020f53dc = 021422dc, and
+# add r3,r4,r0,lsl #3 at 020f3f3c on pool 020f3f80 = 02142334. EMITTED [eax*8]
+# both; /Zp4 a no-op both. Twelve source pairs, all {code, 0}, all whole-pair,
+# at src/__sinit_ov006_021311c8.c's own addresses.
+#
+# ARITY: 020f3f10 pushes edi at BOTH of its two indirect call sites (its loop
+# compiles with a peeled first iteration and both sites were read); 020f5388
+# pushes nothing. Two of the twelve slots hold `void(void)` empty bodies in
+# one-argument cells and their faces call them with nothing, which is the
+# ride-through shape port/tools/aritycheck.py checks.
+#
+# TWO HOST COPIES STAY: func_ov006_020f5164 and func_ov006_020f50f8 are STATE
+# BODIES of data_ov006_021422dc, not dispatchers of a table of their own, so
+# the installer writes faces that call them.
+#
+# ONE /alternatename (?data_ov006_02142334@@3PAP8C75@@AEXH@ZA) and one
+# adjudicated guess marker (src/func_ov006_020f5388.cpp, REAL_DECOMP at
+# port/tools/inferred_stub_adjudicated.txt:760).
+#
+# STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg_memory1.cpp:247-251.
+src/func_ov006_020f5388.cpp
+src/func_ov006_020f3f10.cpp
+#
+# ---- BATCH 3 CONTINUED: dScMgMemory2_c, TWO TABLES -------------------------
+#
+#   func_ov006_020f7458  data_ov006_021423e0   5 slots  arity 0  (vtable slot 6)
+#   func_ov006_020f5c40  data_ov006_02142408   7 slots  arity 1
+#
+# ROM: add r3,r1,r0,lsl #3 at 020f746c on pool 020f74ac = 021423e0, and
+# add r3,r4,r0,lsl #3 at 020f5c6c on pool 020f5cb0 = 02142408. EMITTED [eax*8]
+# both; /Zp4 a no-op both.
+#
+# A THIRD WHOLE-PAIR SPELLING, AND IT NEARLY COST THIS BATCH TWO TABLES.
+# src/__sinit_ov006_021314e4.c writes `data_ov006_TAB.p[N] = data_ov006_SRC;` --
+# an assignment of the whole eight-byte Pair into element N of an array member --
+# where the Bomroom and Luigi constructors write `TAB.pN = SRC` and the ov006
+# sound constructor writes `TAB[N] = SRC`. This lane's reader knew the first two
+# and read ZERO pairs for both of these tables, which would have read as "the
+# sinit does not fill them" rather than as a reader gap. The reader was widened,
+# both tables came back with their full twelve pairs, and gate 1 and gate 2 were
+# re-read with the wider reader and came back unchanged (41 and 51). A
+# field-form fill in this spelling would be `.p[N].a =`, and there is not one.
+#
+# ARITY: 020f5c40 pushes edi at both of its two call sites, 020f7458 pushes
+# nothing. Two slots are `void(void)` empty bodies in one-argument cells.
+#
+# TWO HOST COPIES STAY: func_ov006_020f7234 and func_ov006_020f71c8, state
+# bodies of data_ov006_021423e0. The switch arm that counts the NONMATCHING body
+# at 0x020f6904 is in neither seated table and is untouched.
+#
+# ONE /alternatename (?data_ov006_02142408@@3PAP8C77@@AEXH@ZA) and one
+# adjudicated guess marker (src/func_ov006_020f7458.cpp, REAL_DECOMP at
+# port/tools/inferred_stub_adjudicated.txt:326).
+#
+# STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg_memory2.cpp:188-192.
+src/func_ov006_020f7458.cpp
+src/func_ov006_020f5c40.cpp
+#
+# ---- BATCH 3 CONTINUED: dScMgPachinko_c, TWO TABLES ------------------------
+#
+#   func_ov006_020fad34  data_ov006_02142604   4 slots  arity 1
+#   func_ov006_020fb60c  data_ov006_0214266c   5 slots  arity 1
+#
+# ROM: add r3,r1,r0,lsl #3 at 020fad54 on pool 020fad8c = 02142604, and at
+# 020fb630 on pool 020fb66c = 0214266c. EMITTED [eax*8] both; /Zp4 a no-op both.
+# Nine source pairs, all {code, 0}, all whole-pair, at src/__sinit_ov006_02131a38
+# .c's own addresses.
+#
+# ARITY: both push a literal 0, which is each src's own `(0)` and what the ROM
+# does; receiver in ecx, callee cleanup.
+#
+# BOTH OF THIS FILE'S HOST COPIES GO, and the switch still stays: the eleven
+# addresses of data_ov006_02142624 are routed by three dispatchers that compile
+# from src with hostgen's MG_PMF_CALL swap and reach the switch through
+# port_mg_pachinko_call1. Nothing on that path moves.
+#
+# ONE /alternatename (?data_ov006_0214266c@@3PAP8C@@AEXH@ZA).
+src/func_ov006_020fad34.cpp
+src/func_ov006_020fb60c.cpp
+#
+# ---- NOT TAKEN IN BATCH 3, WITH THE MEASUREMENT THAT STOPS IT --------------
+#
+# func_ov006_020e3078 (dScMgCurling_c) READS TWO TABLES, NOT ONE. Its listing
+# carries EXTRNs for BOTH data_ov006_021418b0 and data_ov006_02141910 and it has
+# two indirect call sites, one per table. The census names only 021418b0. A seat
+# for one table alone would leave the second dispatch reading a cartridge code
+# word and calling it, so retiring this row needs BOTH tables seated -- 2 + 4
+# pairs, all {code, 0}, all whole-pair, both measured for this lane and recorded
+# in runs/link100/out/PMFB4/rom_gate3.txt -- and slot 1 of 021418b0 is
+# func_ov006_020e1854, the hand-transcribed body in
+# unmatched/MgCurling_State_020e1854.cpp rather than a matched src TU, so the
+# face for it has to name that file's symbol and not the ROM's. Its sibling
+# func_ov006_020e3528 (data_ov006_02141950, 5 slots) is clean and single-table
+# but slot 1 of that table IS func_ov006_020e3078, so the two rows have to move
+# together or one of them installs a face pointing at a host copy that is about
+# to be retired. Left as one coherent piece of work for the next lane rather
+# than half-done here.
+#
+# THE CHECK THAT FOUND IT IS WORTH KEEPING. After gate 2's link failure this
+# lane started scanning EVERY matched TU's listing for ALL data-table EXTRNs
+# rather than only the one the census names. Of the thirty rows measured across
+# the three gates, exactly one reads two tables. A census row names the table a
+# dispatcher was FOUND by; it does not promise that is the only one it reads.

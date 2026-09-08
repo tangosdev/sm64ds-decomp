@@ -105,6 +105,7 @@
 // unknown address, which is MgBase_StateDispatch's mg_unhandled.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the boot installer below (lane PMFB4) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -175,6 +176,10 @@ extern MgPmf data_ov006_02142694[];
 /* the ordinary callees the host copies below keep, from their own src */
 void func_ov006_020fa844(void *c);
 void func_ov006_020faf6c(void *c, int a);
+
+/* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
+   the ov006 constructors have filled the tables. */
+void port_mg_pachinko_states_seat(void);
 
 }  /* extern "C" */
 
@@ -294,48 +299,102 @@ extern "C" void port_mg_pachinko_state_counts(unsigned *hits, unsigned *missing)
 // re-derived: these five TUs are matched, so their field arithmetic is what
 // the byte gate already checks.
 
-/* src/func_ov006_020fad34.cpp, table data_ov006_02142604.
-   Its src reads
-       struct C { char pad[0x5c0e]; unsigned char guard; unsigned char idx; };
-       if (c->guard) (c->*(data_ov006_02142604[c->idx].pmf))(0);
-       func_ov006_020fa844(c);
-   so guard is at +0x5c0e and idx at +0x5c0f. THE STRUCT WRAPPER is what hides
-   this one from a link and from port/tools/facegen.py's WALL test, the finding
-   port/mg_fanout_costs.txt section 10 records as tool finding 1. The dispatch
-   argument is the literal 0, not the loop index -- this table is dispatched
-   once per call, not per entry. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020fad34(void *self)
-{
-    char *c = (char *)self;
-    if (*(unsigned char *)(c + 0x5c0e)) {
-        unsigned char k = *(unsigned char *)(c + 0x5c0f);
-        const MgPmf *p = &data_ov006_02142604[k];
-        pch_call1(c, p->code, p->adj, 0);
-    }
-    func_ov006_020fa844(c);
-}
+// ---- TWO TABLES SEATED, AND NINE FACES -------------------------------------
+//
+// Run link100 lane PMFB4. Two of dScMgPachinko_c's tables now hold HOST
+// addresses, written at boot by port_mg_pachinko_states_seat below after every
+// cell has been compared against the ROM's own code word and a zero adjustment
+// word, and BOTH of this file's host copies are gone:
+//
+//   func_ov006_020fad34  data_ov006_02142604   4 slots  arity 1
+//   func_ov006_020fb60c  data_ov006_0214266c   5 slots  arity 1
+//
+// THE SWITCH STAYS LIVE. data_ov006_02142624's eleven addresses are still routed
+// through port_mg_try_pachinko_1 by the three dispatchers that compile from src
+// with hostgen's MG_PMF_CALL swap (func_ov006_020fc7d0, _020fe248, _020fda7c),
+// which reach it through port_mg_pachinko_call1. Nothing about that path moves.
+//
+// THE STRIDE, BOTH SIDES (runs/link100/out/PMFB4/rom_gate3.txt, emit_gate3.txt):
+//   020fad34  ROM add r3,r1,r0,lsl #3 at 020fad54, pool 020fad8c = 02142604
+//   020fb60c  ROM add r3,r1,r0,lsl #3 at 020fb630, pool 020fb66c = 0214266c
+// emitted [eax*8] and [eax*8+4] in both listings; /Zp4 a no-op on both.
+//
+// THE NINE SOURCE PAIRS all read {code, 0} in overlay_0006.bin at the addresses
+// src/__sinit_ov006_02131a38.c copies each slot from, all whole-pair copies:
+//   02142604[0] <- 0213d928 020fac48/0    0214266c[0] <- 0213d878 020fb4e0/0
+//   02142604[1] <- 0213d918 020fab70/0    0214266c[1] <- 0213d8e8 020fb45c/0
+//   02142604[2] <- 0213d8a0 020faac8/0    0214266c[2] <- 0213d8e0 020fb230/0
+//   02142604[3] <- 0213d900 020fa9c8/0    0214266c[3] <- 0213d890 020fb1c4/0
+//                                         0214266c[4] <- 0213d888 020fb0fc/0
+//
+// THE DISPATCH SHAPE: both TUs emit `push 0 / mov ecx, tab[i*8+4] /
+// mov eax, tab[i*8] / add ecx, <this> / call eax` with no caller cleanup -- the
+// pushed argument is each src's own literal `(0)`, which is what the ROM does
+// too, so both tables take one-argument faces.
+//
+// ONE /alternatename: ?data_ov006_0214266c@@3PAP8C@@AEXH@ZA, read off the object
+// with dumpbin /symbols. src/func_ov006_020fad34.cpp declares its table inside
+// extern "C" and needs none.
+#pragma comment(linker, "/alternatename:?data_ov006_0214266c@@3PAP8C@@AEXH@ZA=_data_ov006_0214266c")
 
-/* src/func_ov006_020fb60c.cpp, table data_ov006_0214266c.
-   Its src reads
-       struct C { char pad[0x5bc6]; unsigned char g; char gap; unsigned char idx; };
-       if (c->g == 0) return;
-       (c->*data_ov006_0214266c[c->idx])(0);
-       func_ov006_020faf6c(c, 0);
-   so g is at +0x5bc6 and idx at +0x5bc8, the one-byte gap being the struct's
-   own. THE ONLY ONE OF THE FIVE A LINK WOULD HAVE NAMED: its table is declared
-   at file scope outside extern "C", so MSVC mangles the member-pointer type
-   into the symbol. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPachinko_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020fb60c(void *self)
-{
-    char *c = (char *)self;
-    if (*(unsigned char *)(c + 0x5bc6) == 0)
-        return;
-    {
-        unsigned char k = *(unsigned char *)(c + 0x5bc8);
-        const MgPmf *p = &data_ov006_0214266c[k];
-        pch_call1(c, p->code, p->adj, 0);
+/* EVERY FACE COUNTS. g_pachinko_state_hits keeps counting exactly the dispatches
+   that happen, which is what hal/scene_mg.cpp reads through
+   port_mg_pachinko_state_counts. */
+#define PC_FACE(sym)                                                          \
+    static void __fastcall pc_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_pachinko_state_hits;                                              \
+        sym(self, i);                                                         \
     }
-    func_ov006_020faf6c(c, 0);
+
+/* data_ov006_02142604 */
+PC_FACE(func_ov006_020fac48)
+PC_FACE(func_ov006_020fab70)
+PC_FACE(func_ov006_020faac8)
+PC_FACE(func_ov006_020fa9c8)
+/* data_ov006_0214266c */
+PC_FACE(func_ov006_020fb4e0)
+PC_FACE(func_ov006_020fb45c)
+PC_FACE(func_ov006_020fb230)
+PC_FACE(func_ov006_020fb1c4)
+PC_FACE(func_ov006_020fb0fc)
+
+extern "C" void port_mg_pachinko_states_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {data_ov006_02142604, "02142604", 0, 0x020fac48u, (void *)pc_func_ov006_020fac48},
+        {data_ov006_02142604, "02142604", 1, 0x020fab70u, (void *)pc_func_ov006_020fab70},
+        {data_ov006_02142604, "02142604", 2, 0x020faac8u, (void *)pc_func_ov006_020faac8},
+        {data_ov006_02142604, "02142604", 3, 0x020fa9c8u, (void *)pc_func_ov006_020fa9c8},
+
+        {data_ov006_0214266c, "0214266c", 0, 0x020fb4e0u, (void *)pc_func_ov006_020fb4e0},
+        {data_ov006_0214266c, "0214266c", 1, 0x020fb45cu, (void *)pc_func_ov006_020fb45c},
+        {data_ov006_0214266c, "0214266c", 2, 0x020fb230u, (void *)pc_func_ov006_020fb230},
+        {data_ov006_0214266c, "0214266c", 3, 0x020fb1c4u, (void *)pc_func_ov006_020fb1c4},
+        {data_ov006_0214266c, "0214266c", 4, 0x020fb0fcu, (void *)pc_func_ov006_020fb0fc},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgPachinko_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].face;
+    }
 }
