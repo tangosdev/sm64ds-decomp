@@ -16059,6 +16059,49 @@ target_compile_definitions(mp_comms_seam PRIVATE
     PORT_COMMS_SEAM_PROBE_FACE_020408B0)
 
 # ===========================================================================
+# THE WIRELESS PLAN, RUNGS W4 AND W5 (run link100, lane WM3)
+# ===========================================================================
+#
+# src/func_02040820.c and src/func_02040790.c -- the ROM's own become-parent and
+# become-child state machines -- src/func_02040724.c (leave), and the 128 TUs
+# their call closure reaches: the NITRO WM command layer, the game's own
+# wireless framework and the 0x02065xxx work-queue band. The list, the measured
+# closure, the three non-matched things it needed and what the host ARM7 does
+# and does not fabricate are all in port/slice_wm3.txt's own header.
+#
+# THE ANSWERING HALF IS hal/wm_arm7.cpp, added to the same three targets right
+# below. It goes exactly where hal/boot2_ipc.cpp goes and nowhere else: it is
+# the other half of the same host ARM7, and mp_comms_seam links neither.
+#
+# Plain C except for four .cpp TUs the tree already carries as C++
+# (func_02062aa4, func_02062bdc, func_02062d10, func_020627e8 and the others
+# with a //cpp marker are picked up by the same LANGUAGE CXX rule every other
+# slice uses); no struct layout option, no pointer-to-member, no packed field in
+# any of the 131.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm3.txt" SLICE_WM3_LINES)
+set(SLICE_WM3_SOURCES "")
+foreach(line IN LISTS SLICE_WM3_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_twm3 walk_window walk_window_hires smoke_player)
+    target_sources(${_twm3} PRIVATE ${SLICE_WM3_SOURCES}
+                   "${CMAKE_CURRENT_SOURCE_DIR}/hal/wm_arm7.cpp")
+endforeach()
+# AND NOT THE SEAM PROBE, for the same reason rung W1 kept it out: tests/
+# mp_comms_seam.cpp calls func_02040820, func_02040790 and func_02040724 at
+# :159-167 to check the seam's SOLO answers, and it links neither the WM command
+# layer, nor a heap, nor the host ARM7 that would have to answer the commands
+# these bodies send. It keeps the three retired stand-ins instead, under a
+# define of its own -- the same shape as PORT_COMMS_SEAM_PROBE_FACE_020408B0
+# above and PORT_OS_THREAD_HOST_PAIR before it.
+target_compile_definitions(mp_comms_seam PRIVATE
+    PORT_COMMS_SEAM_PROBE_FACES_W4)
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

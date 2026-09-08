@@ -26,13 +26,15 @@
 //
 //   THE COMMAND CHANNELS.  Every word the ARM9 pushes is decoded and logged,
 //   and the table below says, per channel, whether this ARM7 answers it.
-//   Four are held and OBSERVED ONLY, each for a reason:
+//   CHANNEL 0xA IS ANSWERED as of run link100 lane WM3 (rung W4): the ROM's own
+//   become-parent and become-child bodies are linked and they send WM commands,
+//   and hal/wm_arm7.cpp is the driver behind the channel. It was held
+//   observed-only for as long as nothing asked it anything, which was the whole
+//   life of this port until that rung.
+//   Three are held and OBSERVED ONLY, each for a reason:
 //     7    hal/sdat/consumer.cpp is already the port's ARM7 sound driver and
 //          it is driven from func_0205b5d4. Consuming the batch here as well
 //          would run it twice.
-//     0xa  nothing in this build runs WM_Init (src/func_020616e8.c), so a
-//          fabricated wireless answer would be answering a question no one
-//          asked.
 //     6    the ARM9 half is not enrolled (see arm9_bring_up below).
 //     0xd  likewise.
 //   The two it does answer are the two whose ARM9 halves this lane enrolled.
@@ -115,6 +117,16 @@ DSSTATE_END
 extern unsigned char data_020a0f14[];
 // hal/comms_seam.cpp's read-back of the data_020a89ec/data_020a8a00 pair.
 int port_wm_message_layout_check(void);
+// THE HOSTED WM DRIVER, hal/wm_arm7.cpp. Run link100, lane WM3, rung W4: the
+// ROM's own become-parent and become-child bodies are linked now and they SEND,
+// so channel 0xa stops being observed-only. The command is handed over from
+// arm7_recv; the reply is posted from a TURN and never from there. That is the
+// same reentrancy this file's channel-0xb note calls "THE WAIT CLOSES EARLY",
+// and for the radio it is fatal rather than survivable.
+void port_wm_arm7_command(unsigned int word);
+void port_wm_arm7_turn(void);
+void port_wm_arm7_census(void);
+int  port_wm_arm7_saw_traffic(void);
 
 // The matched bodies this file brings up. Declared, never defined here.
 void func_0205b858(void);            // tail veneer to func_0205bad8, PXI init
@@ -141,10 +153,17 @@ const Channel kChannels[] = {
     { 0x7, "sound command  (src/func_0205ae64.c; driven by "
            "hal/sdat/consumer.cpp)",                                 false },
     { 0x8, "channel 8      (src/func_0205fde8.c -> func_0205fcfc)",  true  },
-    { 0xa, "wireless       (src/func_020616e8.c, WM_SendCommand)",   false },
+    { 0xa, "wireless       (src/func_020616e8.c, WM_SendCommand; "
+           "answered by hal/wm_arm7.cpp)",                           true  },
     // Rung W1 (run link100, lane WM2) linked src/func_020616e8.c, so WM_Init
-    // really runs now -- but it SENDS NOTHING, so this row is still answer=false
-    // and honestly so. See THE WIRELESS ARM below.
+    // really runs -- but it SENDS NOTHING, and this row was answer=false and
+    // honestly so. Rung W4 (lane WM3) linked src/func_02040820.c and
+    // src/func_02040790.c, the ROM's own become-parent and become-child state
+    // machines, and THEY send: apiids 01 03 04 05 06 07 08 0c 0d 0e. So the row
+    // is answer=true now and hal/wm_arm7.cpp is what makes it true. A solo boot
+    // still sends nothing at all -- the role byte never leaves 0, so
+    // src/func_0203df40.c takes its solo arm and neither body is ever called --
+    // and the per-tag census must still read ZERO on tag 10 there.
     { 0xc, "channel 0xc    (src/func_02059e48.c -> func_02059e04)",  true  },
     { 0xd, "GBA slot       (src/func_0206a88c.c -> func_0206a694)",  false },
     { 0xb, "cart backup    (src/func_02060f60.cpp; ntr/backup.cpp faces the "
@@ -217,6 +236,23 @@ void arm7_recv(uint32_t word) {
     }
 
     const Channel *c = find_channel(tag);
+
+    // THE RADIO. Run link100, lane WM3, rung W4. src/WM_SendCommand.c's
+    // IPCSend(0xa, buf, 0) lands here with the 0x100 command buffer's address
+    // in the payload, and hal/wm_arm7.cpp is the driver behind the channel.
+    // NOTHING IS POSTED FROM HERE: this call runs INSIDE the ARM9's store into
+    // IPCFIFOSEND (ntr/ipc.cpp's fifo_send hands the word over inline), and the
+    // WM callback path sends its next command from inside the callback -- so a
+    // reply posted here would dispatch nested and the next one would hit
+    // raise_rx_irq's g_in_rx guard and be dropped without a word. The command
+    // is queued and answered from port_wm_arm7_turn(), at the points the ARM9
+    // yields.
+    if (tag == 0xa) {
+        ++g_answered;
+        port_wm_arm7_command(word);
+        return;
+    }
+
     if (c && !c->answer) {
         ++g_observed;
         if (ntr::ipc_log_on())
@@ -466,6 +502,11 @@ void exit_report()
     }
     std::fprintf(stderr, "[arm7:census] answered %lu, observed %lu, "
                  "refused %lu\n", g_answered, g_observed, g_refused);
+    // AND THE RADIO'S OWN THREE NUMBERS beside them (run link100, lane WM3).
+    // Printed on every logged run, including a solo one where all three are
+    // zero -- "the ARM7 was never asked" is the measurement a solo run owes,
+    // not an absence of output.
+    port_wm_arm7_census();
     std::fflush(stderr);
 }
 
@@ -524,7 +565,19 @@ Attach g_attach;
 }  // namespace
 
 // hal/comms_seam.cpp's comms_arm7_turn calls this. See THE WIRELESS ARM above.
-extern "C" void port_arm7_wireless_tick(void) { wireless_tick(); }
+//
+// TWO THINGS HAPPEN IN A TURN, and the order is the DS's. First the ARM7 looks
+// for the ROM's channel-0xa claim and opens the transport on it (rung W1's
+// arm); then it answers ONE queued WM command (rung W4's). The open has to come
+// first because the frozen contract refuses a become_parent()/become_child()
+// that arrives before open(), and on the very first turn of a session both
+// happen -- the ROM registers the channel inside func_020408b0 and asks for a
+// role in the same breath (hal/comms_conductor.cpp:1137-1139).
+extern "C" void port_arm7_wireless_tick(void)
+{
+    wireless_tick();
+    port_wm_arm7_turn();
+}
 
 // Called by hal/boot_os.cpp at the end of port_boot_rom_pre_main(), i.e. after
 // the ROM's own PXI arms have run against the model: the report and the

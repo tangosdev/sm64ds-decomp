@@ -1134,9 +1134,50 @@ bool comms_wait_for_session(int frames) {
     // here: a second open() while open is a documented no-op, so the
     // conductor's own open() a few frames later costs nothing and does not drop
     // the live session.
+    // AND ALL THREE ARE THE ROM'S OWN BODIES NOW (run link100, lane WM3, rung
+    // W4). func_02040820 and func_02040790 no longer ask the transport for a
+    // role: they send WM commands down PXI channel 0xa and RETURN, and the rest
+    // of the bring-up happens inside the replies. So the ARM7 has to be given
+    // turns for the session to form at all -- see the turn in the wait loop
+    // below, which is where the ROM's own protocol climbs its ladder.
+    // THE TURN BETWEEN THEM IS LOAD-BEARING and it is what the retired faces
+    // used to do for themselves. func_020408b0 registers channel 0xa in its
+    // last statement (src/func_020616e8.c's closing func_0205ba64); the host
+    // ARM7 opens the transport when it SEES that claim, and the claim is a
+    // plain store that nothing traps, so it has to be looked for. The frozen
+    // contract refuses a become_parent()/become_child() that arrives before
+    // open() and leaves the state idle for good, so the look has to happen
+    // here, between the two lines, exactly where hal/comms_seam.cpp's
+    // comms_arm7_turn banner says it does.
     func_020408b0(2);
+    comms_arm7_turn();
     if (data_020a0f04[0] == kCommsRoleParent)      func_02040820();
     else if (data_020a0f04[0] == kCommsRoleChild)  func_02040790();
+
+    // AND THE ONE-SHOT IS SPENT, which rung W4 made load-bearing. data_02099e1c
+    // is the "open the radio" request the DS's multiplayer menu seats, and
+    // src/func_0203ea5c.c:152-155 answers it by calling func_020408b0(2) and
+    // clearing it. comms_seat_session_request seats it, and the three lines
+    // above ARE that answer, run here because the session has to precede the
+    // world. Leaving it set means the lockstep answers it a SECOND time on the
+    // first frame -- and func_020408b0 begins `data_020a0f94 = 0`, which wipes
+    // the link state the bring-up just earned, after which the ROM's case-0 arm
+    // asks for a role again and src/func_02062380.c refuses it: WM_Enable
+    // requires the WM state halfword to be 0 and the ARM7 is already at 9 or
+    // 0xa, so src/func_0203fd28.c writes data_020a0f94 = 1 and the session is
+    // dead for good.
+    //
+    // IT WAS INVISIBLE BEFORE THIS RUNG, which is why the line is new rather
+    // than old. Until W4 the seam MIRRORED t->state() into data_020a0f94 from
+    // the exchange face and a chained pump, so the zero the second open wrote
+    // was overwritten a turn later and the ROM's own case-0 arm never got to
+    // act on it. The ROM owns that word now (see comms_publish_link_words'
+    // banner in hal/comms_seam.cpp), so the one-shot has to be honest.
+    //
+    // ONLY HERE. A path that reaches the lockstep WITHOUT coming through this
+    // wait -- there is none today, but the arm is the ROM's and stays -- still
+    // finds the one-shot set and opens the radio itself, exactly as written.
+    data_02099e1c[0] = 0;
 
     // ONE DEADLINE, SCALED BY HOW MANY ARE EXPECTED. A turn is one poll and a
     // 4 ms sleep, so the caller's 600 is about two and a half seconds. That is
@@ -1169,6 +1210,17 @@ bool comms_wait_for_session(int frames) {
     if (want > 2) frames *= 6;
     for (int i = 0; i < frames; ++i) {
         t->poll();                         // service the carrier
+        // AND GIVE THE HOST ARM7 A TURN (run link100, lane WM3, rung W4). This
+        // is where the ROM's own WM bring-up actually happens: func_02040820
+        // above only sent the first command, and every command after it is sent
+        // from inside the reply to the one before. One reply is posted per
+        // turn, in arrival order, from OUTSIDE any dispatch -- which is the
+        // whole reason the stub queues instead of answering on the store. The
+        // parent's ladder is four replies deep (enable, power on, set parent
+        // parameter, start parent, start MP) and the child's three, so a
+        // session forms within a handful of turns of the transport being ready
+        // and nowhere near the 600 this loop budgets.
+        comms_arm7_turn();
         const int st = t->state();
         if ((st == kCommsParentConnected || st == kCommsChildConnected) &&
             session_is_whole(t, want)) {
@@ -1411,6 +1463,15 @@ bool conductor_pump(unsigned spin) {
     const CommsTransport *t = comms_transport();
     if (t)
         t->poll();                       // THE CONTRACT'S OWN SENTENCE, honoured
+    // AND THE HOST ARM7 GETS A TURN ON EVERY TURN OF THE ROM'S OWN WAIT (run
+    // link100, lane WM3, rung W4). The seam's lifecycle faces used to be where
+    // the ARM7 was handed its moments; they are the ROM's own bodies now, and
+    // the exchange face only runs once a round is being exchanged. This pump is
+    // the one place that turns during EVERY wait the game takes, including
+    // src/func_0203ea5c.c's case 2 -- the connecting arm, which calls nothing
+    // at all and is exactly where the ROM sits while its own WM bring-up is
+    // still climbing. Cheap and idempotent: with an empty queue it is one test.
+    comms_arm7_turn();
     if (g_prev_pump) return g_prev_pump(spin);
 
     const int st = t ? t->state() : kCommsIdle;
