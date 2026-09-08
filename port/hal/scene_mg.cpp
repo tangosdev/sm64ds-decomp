@@ -336,6 +336,16 @@ void __sinit_ov006_0213322c(void);
 void __sinit_ov006_0213326c(void);
 void __sinit_ov006_021333e0(void);
 
+/* RUN link100 LANE PMFB2. dScMgSound_c's two LEVEL-1 state tables are ov006
+   storage that __sinit_ov006_02132970 fills with the ROM's own DS code words.
+   Nothing can dispatch through them until a host address is in the code word,
+   and the only place in the tree that runs that constructor is the ov006 sinit
+   run below, so the installer is called from there and from nowhere else. It
+   refuses (loudly, with an abort) any slot whose word is not the ROM address
+   its own pairs carry or whose adjust word is not zero.
+   port/unmatched/MgSound_StateDispatch.cpp holds the derivation. */
+void port_mg_sound_states_seat(void);
+
 /* THE BLOCKER'S SUBJECT. arm9 bss, hosted by hal/auto_bss.cpp as
    `int data_0209f61c[0x2c / 4]`. Its first word is the vptr; see the
    pre-flight check in the fill. */
@@ -991,6 +1001,8 @@ extern "C" void port_scene_mg_overlay_load(void)
     __sinit_ov006_02132894(); __sinit_ov006_02132970();
     __sinit_ov006_02132f68(); __sinit_ov006_0213322c();
     __sinit_ov006_0213326c(); __sinit_ov006_021333e0();
+
+    port_mg_sound_states_seat();
 
     std::printf("[scene] ov004+ov006 mounted and all 35 overlay "
                 "constructors run (ov004 4/4, ov006 31/31)\n");

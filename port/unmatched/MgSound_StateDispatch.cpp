@@ -169,8 +169,13 @@
 // port/unmatched/MgSound_ShadowSlot35.cpp rather than sliced. That file
 // carries the evidence.
 
-/* <cstdio> is gone with the floor's reporting case: this file prints nothing
-   now, it counts. The seat does the printing. */
+/* <cstdio> came BACK with run link100 lane PMFB2's boot installer, and for the
+   reason the reporting case did not deserve: port_mg_sound_states_seat refuses
+   to install over bytes the ROM's own pairs do not describe, and a refusal has
+   to say which slot and what it found. Nothing on the per-frame path prints. */
+#include <cstdio>
+#include <cstdlib>
+
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -288,9 +293,12 @@ unsigned port_mg_sub4f38_calls(void);
 unsigned port_mg_sub4f38_routed(void);
 unsigned port_mg_sub4f38_unknown(void);
 
-/* what this file DEFINES, so the seat can name it */
-void func_ov006_0211b954(char *c);
-void func_ov006_0211b5e0(char *c);
+/* what this file DEFINES, so the seat can name it. func_ov006_0211b954 and
+   func_ov006_0211b5e0 ARE NOT HERE ANY MORE: run link100 lane PMFB2 retired
+   both host copies onto their own matched TUs (port/slice_pmfb2.txt) and
+   replaced the call-time address switch they needed with the boot installer
+   port_mg_sound_states_seat below. */
+void port_mg_sound_states_seat(void);
 void port_mg_sound_counts(unsigned *hits, unsigned *floor, unsigned *unknown,
                           unsigned *field_calls, unsigned *field_routed,
                           unsigned *field_unknown);
@@ -414,6 +422,108 @@ extern "C" void port_mg_sound_call1(void *self, unsigned code, int adj, int a)
 }
 
 
+/* ---- THE BOOT INSTALLER, run link100 lane PMFB2 --------------------------
+   WHAT THIS REPLACES. Until this lane the two LEVEL-1 tables were reached only
+   through the call-time address switch above: the host copies of
+   func_ov006_0211b954 and func_ov006_0211b5e0 read the DS code word the sinit
+   left in place and sound_try_1 turned it into a host body by name. That shape
+   cannot retire, because retiring the host copy takes the switch with it and
+   the matched TU would call a DS address. Turning the switch inside out fixes
+   it once: install HOST addresses into the eighteen level-1 slots at boot, and
+   the ROM's own two dispatchers -- which read the pair, decode it and call it
+   with a plain cdecl `call eax` -- reach the same host bodies with no switch at
+   all. The other THIRTEEN tables (the level-2 sets each sub-dispatcher reads)
+   still hold DS words and still go through sound_try_1; they are the next
+   lane's, and every one of their host copies is unchanged.
+
+   WHY THIS IS THE ov085 SHAPE AND NOT THE ONE THE HEADER REFUSES. The header
+   above rules out writing host addresses over the .data SOURCE pairs, because
+   this class's source span is shared with MgBoomBox_SpawnInfo. This installer
+   does not touch the source pairs. It writes the DESTINATION storage, after
+   __sinit_ov006_02132970 has copied into it, which is exactly what
+   port_pushblock_states_seat does to data_ov002_021097bc, and it is called from
+   the one place in the tree that runs those constructors (hal/scene_mg.cpp).
+
+   THE EIGHTEEN PAIRS, RE-READ FOR THIS LANE out of
+   extracted/overlays/overlay_0006.bin at the addresses
+   src/__sinit_ov006_02132970.c assigns from, not out of prose
+   (runs/link100/out/PMFB2/rom_pairs.txt):
+     02142df8 <- 0213f594 0213f694 0213f6a4 0213f634 0213f64c
+     02142e20 <- 0213f6c4 0213f5b4 0213f63c 0213f5c4 0213f5a4 0213f5ac
+                 0213f62c 0213f554 0213f5e4 0213f55c 0213f53c 0213f564
+                 0213f604
+   All eighteen adjustment words read ZERO, so `this` is unadjusted and the ROM
+   takes the `ldreq` arm: the code word is called directly. Both dispatchers
+   stride the table by EIGHT (`add r3, r4, r0, lsl #3` at 0x0211b96c and
+   0x0211b60c), and the matched TUs emit `[ebx*8]` with and without /Zp4 -- the
+   record here is two plain ints, not the twenty-byte struct-containing-a-
+   pointer-to-member that lane PMFB1 had to pack.
+
+   NO FACE IS NEEDED ON THIS TABLE, unlike the family-C call-shape rows. Both
+   matched TUs open-code the pair as two ints and dispatch
+   `((void(*)(void*,int))fn)(obj,i)`, which MSVC emits as `push esi / push edx /
+   call eax / add esp,8`: a plain cdecl call with the receiver PUSHED. That is
+   the signature the eighteen host bodies already have.
+
+   THE CHECK IS THE POINT. Every slot is compared against the ROM's own code
+   word and against a zero adjust word before anything is written, and either
+   mismatch is a loud abort rather than a silent wrong dispatch -- the
+   port_pushblock_states_seat rule. */
+extern "C" void port_mg_sound_states_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void (*host)(char *, int);
+    } seats[] = {
+        /* data_ov006_02142df8, 5 slots, read by func_ov006_0211b954 */
+        {data_ov006_02142df8, "02142df8",  0, 0x0211bf44u, func_ov006_0211bf44},
+        {data_ov006_02142df8, "02142df8",  1, 0x0211bc8cu, func_ov006_0211bc8c},
+        {data_ov006_02142df8, "02142df8",  2, 0x0211bc68u, func_ov006_0211bc68},
+        {data_ov006_02142df8, "02142df8",  3, 0x0211bbe0u, func_ov006_0211bbe0},
+        /* the one state that returns a value; cdecl leaves eax to the caller,
+           and the ROM's own dispatch ignores it exactly as this cast does. */
+        {data_ov006_02142df8, "02142df8",  4, 0x0211ba88u,
+                                    (void (*)(char *, int))func_ov006_0211ba88},
+        /* data_ov006_02142e20, 13 slots, read by func_ov006_0211b5e0. Every
+           one of the thirteen is itself a sub-dispatcher, still host-copied
+           below, still reading a level-2 table full of DS words. */
+        {data_ov006_02142e20, "02142e20",  0, 0x0211b590u, func_ov006_0211b590},
+        {data_ov006_02142e20, "02142e20",  1, 0x0211b398u, func_ov006_0211b398},
+        {data_ov006_02142e20, "02142e20",  2, 0x0211b17cu, func_ov006_0211b17c},
+        {data_ov006_02142e20, "02142e20",  3, 0x0211af60u, func_ov006_0211af60},
+        {data_ov006_02142e20, "02142e20",  4, 0x0211ad44u, func_ov006_0211ad44},
+        {data_ov006_02142e20, "02142e20",  5, 0x0211abdcu, func_ov006_0211abdc},
+        {data_ov006_02142e20, "02142e20",  6, 0x0211aa44u, func_ov006_0211aa44},
+        {data_ov006_02142e20, "02142e20",  7, 0x0211a7acu, func_ov006_0211a7ac},
+        {data_ov006_02142e20, "02142e20",  8, 0x0211a648u, func_ov006_0211a648},
+        {data_ov006_02142e20, "02142e20",  9, 0x0211a4b0u, func_ov006_0211a4b0},
+        {data_ov006_02142e20, "02142e20", 10, 0x0211a2c4u, func_ov006_0211a2c4},
+        {data_ov006_02142e20, "02142e20", 11, 0x0211a0d8u, func_ov006_0211a0d8},
+        {data_ov006_02142e20, "02142e20", 12, 0x02119eecu, func_ov006_02119eec},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgSound_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].host;
+    }
+}
+
+
 /* THE SECOND PARAMETER IS STILL SPELLED `floor` SO THE SEAT'S CALL AND EVERY
    OTHER CALLER'S KEEP THE SAME ABI ACROSS THIS CHANGE -- a six-argument
    signature that changed arity here would be exactly the cross-TU drift
@@ -437,61 +547,34 @@ extern "C" void port_mg_sound_counts(unsigned *hits, unsigned *floor,
     if (field_unknown) *field_unknown = port_mg_sub4f38_unknown();
 }
 
-// ---- the sixteen host copies -----------------------------------------------
+// ---- the thirteen host copies left --------------------------------------
 //
-// Each is its src TU with the pair declaration replaced by MgPmf and the
-// dispatch replaced by port_mg_sound_call1. Everything else is verbatim, and
-// every offset below was read off the ROM disassembly rather than off the src
-// struct.
+// SIXTEEN UNTIL run link100 lane PMFB2. The two level-1 dispatchers are gone;
+// what remains is the thirteen sub-dispatchers, each still reading a level-2
+// table whose code words are still DS addresses, so each still routes through
+// port_mg_sound_call1. Each is its src TU with the pair declaration replaced
+// by MgPmf and the dispatch replaced by port_mg_sound_call1. Everything else
+// is verbatim, and every offset below was read off the ROM disassembly rather
+// than off the src struct.
 
-/* src/func_ov006_0211b954.cpp, table 02142df8, arity 1. THE FIRST OF THE TWO
-   THIRD-SHAPE TUs: the src reads the pair as two ints and open-codes the
-   decode, so neither a link nor a `::*` sweep sees it.
-   ROM 0x0211b954, 0x74: r7 = this, r5 = the walking entity pointer, r6 = the
-   loop counter. Per iteration `add r0,r5,#0x5000 / ldrb r1,[r0,#0xf5]` is the
-   in-play gate at +0x50f5 and `ldrb r0,[r0,#0xf4]` is the state index at
-   +0x50f4; `add r3,r4,r0,lsl #3` is an EIGHT-byte stride off the pool word
-   0x0211b9c4 = 02142df8. The dispatch takes `this` from r7 -- the ORIGINAL
-   object, not the entity -- and `mov r1,r6` puts the loop counter in the
-   argument register. `add r5,r5,#0x14 / cmp r6,#0xa` is ten entities at stride
-   0x14. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch open-coded as two ints, arity-1 loop MSVC's pmf ABI cannot reproduce
-extern "C" void func_ov006_0211b954(char *c)
-{
-    int i = 0;
-    char *e = c;
-    do {
-        if (*(unsigned char *)(e + 0x50f5) != 0) {
-            const unsigned char idx = *(unsigned char *)(e + 0x50f4);
-            const MgPmf *p = &data_ov006_02142df8[idx];
-            port_mg_sound_call1(c, p->code, p->adj, i);
-        }
-        i++;
-        e += 0x14;
-    } while (i < 10);
-}
+/* func_ov006_0211b954 AND func_ov006_0211b5e0 ARE RETIRED (run link100, lane
+   PMFB2). Both are on port/slice_pmfb2.txt now and compile from
+   src/func_ov006_0211b954.cpp and src/func_ov006_0211b5e0.cpp, which are the
+   ROM's own sources for them: they open-code the pair as two ints, decode
+   `adj >> 1` / `adj & 1` themselves and call the code word with a plain cdecl
+   `call eax`. What used to make that impossible was the DS address in the code
+   word; port_mg_sound_states_seat above puts the host body there at boot, so
+   the matched TUs run the ROM's own dispatch against host code.
 
-/* src/func_ov006_0211b5e0.cpp, table 02142e20, arity 1. THE SECOND THIRD-SHAPE
-   TU, and the same nineteen-instruction body with three constants changed.
-   ROM 0x0211b5e0, 0x74: the gate is `ldrb r1,[r0,#0x1cc]` at +0x51cc, the
-   index is `ldrb r0,[r0,#0x1d0]` at +0x51d0, the pool word 0x0211b650 is
-   02142e20, and `add r5,r5,#0x24 / cmp r6,#0x1e` is THIRTY entities at stride
-   0x24. `mov r1,r6` again, so arity 1. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch open-coded as two ints, arity-1 loop MSVC's pmf ABI cannot reproduce
-extern "C" void func_ov006_0211b5e0(char *c)
-{
-    int i = 0;
-    char *e = c;
-    do {
-        if (*(unsigned char *)(e + 0x51cc) != 0) {
-            const unsigned char idx = *(unsigned char *)(e + 0x51d0);
-            const MgPmf *p = &data_ov006_02142e20[idx];
-            port_mg_sound_call1(c, p->code, p->adj, i);
-        }
-        i++;
-        e += 0x24;
-    } while (i < 30);
-}
+   THEIR TWO ROM READINGS ARE KEPT, because the sub-dispatchers below and
+   hal/scene_mg_boombox.cpp's entity printouts are derived from them:
+     0x0211b954, 0x74: TEN records at stride 0x14 off `this`, the in-play gate
+     at +0x50f5 and the state index at +0x50f4, `add r3,r4,r0,lsl #3` on the
+     pool word 0x0211b9c4 = 02142df8, `mov r1,r6` (the loop counter) into the
+     argument register, and `this` taken from r7 -- the ORIGINAL object, not
+     the walking entity.
+     0x0211b5e0, 0x74: THIRTY records at stride 0x24, gate at +0x51cc, index at
+     +0x51d0, pool word 0x0211b650 = 02142e20, same `mov r1,r6`, same r7. */
 
 /* THE THIRTEEN SUB-DISPATCHERS. One shape, thirteen tables. Every one of the
    thirteen ROM bodies is byte identical to 0x0211b590 over its first nineteen

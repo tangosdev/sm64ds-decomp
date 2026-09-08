@@ -15638,6 +15638,41 @@ foreach(_tfacef walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# R10a, run link100 lane PMFB2: THE SEATED-TABLE ROWS
+# ===========================================================================
+#
+# Rows that were host-copied only because the DATA under them held a DS code
+# word, taken off their host copies once a boot-time installer puts a host
+# address there. Nothing in this block changes a ROM reference, a linker
+# option or a call the ROM does not make; the per-row derivation, the ROM
+# stride and the emitted stride are in port/slice_pmfb2.txt.
+#
+# THE /Zp4 IS LANE PMFB1's BLOCK R9d LEVER, CARRIED. PMFB1 found that MSVC
+# gives any struct CONTAINING a pointer-to-member an alignment of eight, which
+# rounded eleven twenty-byte ROM records up to twenty-four and would have made
+# every state after state 0 read the wrong record, silently. Every TU listed
+# here had its ROM stride re-derived out of the overlay image and its emitted
+# stride read off a /FAsc listing for THIS lane, and the option is on the set
+# whether or not it moves that TU today, so that a later header edit cannot
+# reintroduce the defect without the measurement being redone.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211b954.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211b5e0.cpp"
+    PROPERTIES COMPILE_OPTIONS "/Zp4")
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb2.txt" SLICE_PMFB2_LINES)
+set(SLICE_PMFB2_SOURCES "")
+foreach(line IN LISTS SLICE_PMFB2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFB2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tpmfb2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tpmfb2} PRIVATE ${SLICE_PMFB2_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

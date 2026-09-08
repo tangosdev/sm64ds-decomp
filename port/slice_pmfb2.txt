@@ -1,0 +1,52 @@
+# ===========================================================================
+# SLICE pmfb2 -- run link100, lane PMFB2
+# ===========================================================================
+#
+# Matched translation units this lane took OFF a host copy. Every row was
+# re-derived at its own ROM address for this lane; nothing here is carried
+# over from a prose file. The CMake gate block is R10a in port/CMakeLists.txt.
+#
+# ---- BATCH 1: dScMgSound_c's two LEVEL-1 pointer-to-member dispatchers -----
+#
+# THE WALL, and what took it down. Both TUs open-code the mwcc member pointer
+# as two plain ints and do the decode themselves:
+#     int adj = e->b;  char *obj = c + (adj >> 1);
+#     fn = (adj & 1) ? *(int *)(*(int *)obj + e->a) : e->a;
+#     ((void (*)(void *, int))fn)(obj, i);
+# so neither a link error nor a `::*` source sweep ever saw them (lane PMFC2's
+# third shape). Nothing about the SOURCE was ever the problem. The problem was
+# the DATA: the code word held a DS address, because
+# __sinit_ov006_02132970 copies the ov006 image's own pairs into the
+# destination storage. port/unmatched/MgSound_StateDispatch.cpp stood in with
+# a call-time address switch, which cannot retire, because retiring the host
+# copy takes the switch with it. port_mg_sound_states_seat, added to that same
+# file in this commit and called once from hal/scene_mg.cpp right after the
+# ov006 constructors run, installs the eighteen host addresses at boot instead.
+#
+# THE STRIDE, re-derived out of extracted/overlays/overlay_0006.bin at ov006's
+# own base for this lane (runs/link100/out/PMFB2/rom_pairs.txt):
+#     func_ov006_0211b954  0x0211b96c  add r3, r4, r0, lsl #3   -> 8 bytes
+#     func_ov006_0211b5e0  0x0211b60c  add r3, r4, r0, lsl #3   -> 8 bytes
+# and the emitted stride, read off a /FAsc listing of each TU under the port's
+# own flags (runs/link100/out/PMFB2/listings/):
+#     _data_ov006_02142df8[ebx*8]  and  _data_ov006_02142e20[ebx*8]
+# so ROM 8 == emitted 8 on both. THE /Zp4 IN THE GATE BLOCK IS A NO-OP HERE
+# AND IS ON THE SET ANYWAY: the two listings are byte-identical with and
+# without it (only the TITLE line differs), because these records are two
+# plain ints and not the twenty-byte struct-containing-a-pointer-to-member
+# that forced lane PMFB1 to pack. It is carried so a later header change
+# cannot move the stride silently, which is exactly the defect PMFB1 found.
+#
+# THE EIGHTEEN ADJUST WORDS ALL READ ZERO in the image, at the eighteen source
+# addresses the matched sinit assigns from, so `this` is unadjusted and the
+# ROM takes the ldreq arm. NO FACE IS NEEDED: MSVC emits the dispatch as
+# `push esi / push edx / call eax / add esp,8`, a plain cdecl call with the
+# receiver PUSHED, which is the signature the eighteen host bodies already
+# have. (The family-C CALL SHAPE rows are the opposite case and do need one.)
+#
+# NOT TAKEN HERE: the thirteen level-2 tables the sub-dispatchers read. Their
+# code words are still DS addresses and their host copies still route through
+# port_mg_sound_call1. Installing them is the same shape one level down and is
+# the next lane's work.
+src/func_ov006_0211b954.cpp
+src/func_ov006_0211b5e0.cpp
