@@ -329,6 +329,7 @@
 // happening.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the seat and the two refusals (lane MGWRITER) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on both
    machines: two words, no member-pointer type anywhere. The same struct
@@ -366,6 +367,54 @@ extern MgPmf data_ov004_020bca0c;
 
 /* arm9 .data, the null pair. build/port/host-src/romdata.c defines it. */
 extern MgPmf data_02086b58;
+
+/* ---- run link100 lane MGWRITER: THE OTHER THIRTY-SIX PAIR GLOBALS --------
+   The twenty above are the ones this function's own in-function table holds.
+   These thirty-six are the rest of what the seat at the bottom of this file
+   rewrites: the twenty-three the state bodies install as the per-frame tick at
+   the object's +0x08 and +0x10, the six more the tick bodies install one level
+   further down, and the seven that belong to the OTHER dScMgBase_c object --
+   the one func_ov004_020b3278 fills and func_ov004_020b31b4 and _020b321c
+   dispatch. Every one was read out of extracted/overlays/overlay_0004.bin at
+   its own address with the overlay's own `load` relocation row confirming the
+   code word and the second word reading zero
+   (runs/link100/out/MGWRITER/rom_gate1.txt). */
+extern MgPmf data_ov004_020bc17c;
+extern MgPmf data_ov004_020bc1b4;
+extern MgPmf data_ov004_020bc1ec;
+extern MgPmf data_ov004_020bc20c;
+extern MgPmf data_ov004_020bc224;
+extern MgPmf data_ov004_020bc254;
+extern MgPmf data_ov004_020bc274;
+extern MgPmf data_ov004_020bc8bc;
+extern MgPmf data_ov004_020bc8c4;
+extern MgPmf data_ov004_020bc8cc;
+extern MgPmf data_ov004_020bc8d4;
+extern MgPmf data_ov004_020bc8dc;
+extern MgPmf data_ov004_020bc8e4;
+extern MgPmf data_ov004_020bc8ec;
+extern MgPmf data_ov004_020bc8f4;
+extern MgPmf data_ov004_020bc8fc;
+extern MgPmf data_ov004_020bc904;
+extern MgPmf data_ov004_020bc90c;
+extern MgPmf data_ov004_020bc914;
+extern MgPmf data_ov004_020bc91c;
+extern MgPmf data_ov004_020bc924;
+extern MgPmf data_ov004_020bc93c;
+extern MgPmf data_ov004_020bc98c;
+extern MgPmf data_ov004_020bc994;
+extern MgPmf data_ov004_020bc9ac;
+extern MgPmf data_ov004_020bc9b4;
+extern MgPmf data_ov004_020bc9c4;
+extern MgPmf data_ov004_020bc9cc;
+extern MgPmf data_ov004_020bc9e4;
+extern MgPmf data_ov004_020bc9fc;
+extern MgPmf data_ov004_020bca04;
+extern MgPmf data_ov004_020bca14;
+extern MgPmf data_ov004_020bca1c;
+extern MgPmf data_ov004_020bca24;
+extern MgPmf data_ov004_020bca2c;
+extern MgPmf data_ov004_020bca34;
 
 /* ---- the twenty state bodies the table holds --------------------------- */
 /* Signatures are their src TUs', unchanged. Every one of them is reached ONLY
@@ -447,9 +496,10 @@ void func_ov004_020b7a18(char *c);
 void func_ov004_020b7c04(char *c);
 void func_ov004_020b7fec(char *c);
 
-/* the ONE entry point for a zero-argument state call, and the one place that
-   decides what an adjustment word means. unmatched/MgBase_StateDispatch.cpp. */
-void port_mg_call0(void *self, unsigned code, int adj);
+/* the boot installer that puts host bodies in the three .bss framework tables,
+   called by the seat at the bottom of this file so there is one entry point for
+   the whole family. unmatched/MgBase_StateDispatch.cpp. */
+void port_mg_framework_tables_seat(void);
 
 }  /* extern "C" */
 
@@ -496,81 +546,38 @@ static void setter_bad_index(int idx)
     std::fflush(stderr);
 }
 
-/* The twenty the setter's own table holds, plus the twenty the state bodies
-   install as per-frame ticks. Two groups, one switch, because the two groups are
-   dispatched through the same port_mg_call0 and an address is an address. */
-extern "C" int port_mg_try_base_state(void *self, unsigned code)
-{
-    switch (code) {
-    /* ---- group A: the setter's twenty, slot order ---- */
-    case 0x020b8688u: ++g_base_state_hits; func_ov004_020b8688((char *)self); return 1;
-    case 0x020b853cu: ++g_base_state_hits; func_ov004_020b853c((char *)self); return 1;
-    case 0x020b83acu: ++g_base_state_hits; func_ov004_020b83ac((char *)self); return 1;
-    case 0x020b81f8u: ++g_base_state_hits; func_ov004_020b81f8((char *)self); return 1;
-    case 0x020b7f5cu: ++g_base_state_hits; func_ov004_020b7f5c((char *)self); return 1;
-    case 0x020b7e38u: ++g_base_state_hits; func_ov004_020b7e38((char *)self); return 1;
-    case 0x020b7b90u: ++g_base_state_hits; func_ov004_020b7b90((char *)self); return 1;
-    case 0x020b79b0u: ++g_base_state_hits; func_ov004_020b79b0((char *)self); return 1;
-    case 0x020b798cu: ++g_base_state_hits; func_ov004_020b798c((char *)self); return 1;
-    case 0x020b7854u: ++g_base_state_hits; func_ov004_020b7854((char *)self); return 1;
-    case 0x020b7744u: ++g_base_state_hits; func_ov004_020b7744((char *)self); return 1;
-    case 0x020b7594u: ++g_base_state_hits; func_ov004_020b7594((char *)self); return 1;
-    /* slot 12, the veneer. Routed to the host copy above, which is the only
-       definition of the symbol in the build. */
-    case 0x020b7460u: ++g_base_state_hits; func_ov004_020b7460(self);         return 1;
-    case 0x020b743cu: ++g_base_state_hits; func_ov004_020b743c((char *)self); return 1;
-    case 0x020b724cu: ++g_base_state_hits; func_ov004_020b724c((char *)self); return 1;
-    case 0x020b70b4u: ++g_base_state_hits; func_ov004_020b70b4((char *)self); return 1;
-    case 0x020b7020u: ++g_base_state_hits; func_ov004_020b7020((char *)self); return 1;
-    case 0x020b6f14u: ++g_base_state_hits; func_ov004_020b6f14((char *)self); return 1;
-    case 0x020b6d6cu: ++g_base_state_hits; func_ov004_020b6d6c((char *)self); return 1;
-    case 0x020b6c10u: ++g_base_state_hits; func_ov004_020b6c10((char *)self); return 1;
+/* port_mg_try_base_state IS GONE, run link100 lane MGWRITER, and it is gone
+   because every one of its fifty-six arms is UNREACHABLE rather than merely
+   unused. Its three groups went three different ways.
 
-    /* ---- group B: the twenty per-frame ticks, address order ---- */
-    case 0x020b68e8u: ++g_base_tick_hits; func_ov004_020b68e8((int *)self);  return 1;
-    case 0x020b6948u: ++g_base_tick_hits; func_ov004_020b6948();             return 1;
-    case 0x020b6ad8u: ++g_base_tick_hits; func_ov004_020b6ad8();             return 1;
-    case 0x020b6b40u: ++g_base_tick_hits; func_ov004_020b6b40(self);         return 1;
-    case 0x020b6c9cu: ++g_base_tick_hits; func_ov004_020b6c9c(self);         return 1;
-    case 0x020b6ddcu: ++g_base_tick_hits; func_ov004_020b6ddc((char *)self); return 1;
-    case 0x020b6f88u: ++g_base_tick_hits; func_ov004_020b6f88((char *)self); return 1;
-    case 0x020b7124u: ++g_base_tick_hits; func_ov004_020b7124((char *)self); return 1;
-    case 0x020b72d4u: ++g_base_tick_hits; func_ov004_020b72d4((char *)self); return 1;
-    case 0x020b746cu: ++g_base_tick_hits; func_ov004_020b746c((char *)self); return 1;
-    case 0x020b75e4u: ++g_base_tick_hits; func_ov004_020b75e4((char *)self); return 1;
-    case 0x020b77b4u: ++g_base_tick_hits; func_ov004_020b77b4((char *)self); return 1;
-    case 0x020b78f4u: ++g_base_tick_hits; func_ov004_020b78f4((char *)self); return 1;
-    case 0x020b7b20u: ++g_base_tick_hits; func_ov004_020b7b20((char *)self); return 1;
-    case 0x020b7cd0u: ++g_base_tick_hits; func_ov004_020b7cd0((char *)self); return 1;
-    case 0x020b7eacu: ++g_base_tick_hits; func_ov004_020b7eac((char *)self); return 1;
-    case 0x020b8098u: ++g_base_tick_hits; func_ov004_020b8098((char *)self); return 1;
-    case 0x020b8284u: ++g_base_tick_hits; func_ov004_020b8284((char *)self); return 1;
-    case 0x020b841cu: ++g_base_tick_hits; func_ov004_020b841c((char *)self); return 1;
-    case 0x020b8560u: ++g_base_tick_hits; func_ov004_020b8560((char *)self); return 1;
+   GROUP A, the twenty this function's own table holds. The setter still
+   dispatches them, but it now dispatches the HOST address the seat put in the
+   pair global, directly, with no switch: mgbase_dispatch_seated below.
 
+   GROUP B, the twenty the state bodies install as the per-frame tick. Their
+   only two dispatchers were the host copies of func_ov004_020b8714 (the pmf at
+   +0x10) and func_ov004_020b8778 (the pmf at +0x08). Both are src/ TUs again
+   on port/slice_mgwriter.txt, and both compile their dispatch to a TAIL JUMP
+   through the object's own field, so they reach the seated host word with
+   nothing in between.
 
-    /* ---- group C: the closure, address order. Section 8 of the header is the
-       derivation and the bound. ---- */
-    case 0x020b369cu: ++g_base_closure_hits; func_ov004_020b369c((char *)self); return 1;
-    case 0x020b37c4u: ++g_base_closure_hits; func_ov004_020b37c4((char *)self); return 1;
-    case 0x020b38acu: ++g_base_closure_hits; func_ov004_020b38ac((char *)self); return 1;
-    case 0x020b3978u: ++g_base_closure_hits; func_ov004_020b3978((char *)self); return 1;
-    case 0x020b410cu: ++g_base_closure_hits; func_ov004_020b410c((char *)self); return 1;
-    case 0x020b4214u: ++g_base_closure_hits; func_ov004_020b4214((char *)self); return 1;
-    case 0x020b4aa4u: ++g_base_closure_hits; func_ov004_020b4aa4((char *)self); return 1;
-    case 0x020b4c30u: ++g_base_closure_hits; func_ov004_020b4c30((char *)self); return 1;
-    case 0x020b4d50u: ++g_base_closure_hits; func_ov004_020b4d50((char *)self); return 1;
-    case 0x020b4dfcu: ++g_base_closure_hits; func_ov004_020b4dfc((char *)self); return 1;
-    case 0x020b4f44u: ++g_base_closure_hits; func_ov004_020b4f44((char *)self); return 1;
-    case 0x020b4ff0u: ++g_base_closure_hits; func_ov004_020b4ff0((char *)self); return 1;
-    case 0x020b5288u: ++g_base_closure_hits; func_ov004_020b5288((char *)self); return 1;
-    case 0x020b7a18u: ++g_base_closure_hits; func_ov004_020b7a18((char *)self); return 1;
-    case 0x020b7c04u: ++g_base_closure_hits; func_ov004_020b7c04((char *)self); return 1;
-    case 0x020b7fecu: ++g_base_closure_hits; func_ov004_020b7fec((char *)self); return 1;
+   GROUP C, the sixteen of the closure. NINE of them reach an object field this
+   lane seats: six through func_ov004_020b39a4, _020b37f0 and _020b422c into
+   the 020b3278 object at +0x00 and +0x08, and three (0x020b7a18, 0x020b7c04,
+   0x020b7fec) through func_ov004_020b7b20, _020b7a18, _020b7cd0, _020b72d4,
+   _020b75e4 and _020b8098 into the setter's own object at +0x08. The other
+   SEVEN (0x020b4aa4, _020b4c30, _020b4d50, _020b4dfc, _020b4f44, _020b4ff0,
+   _020b5288) belong to dScMgMemory2_c, whose pairs live in the
+   data_ov004_020bc7d4 block and reach func_ov004_020b52fc, and
+   port/unmatched/MgMemory2_FieldPmf.cpp's own mem2_field_try switch has routed
+   all seven since it was written -- it tries them BEFORE handing anything on to
+   the framework, so this arm never saw them. That class is the next gate's
+   work, and its nine pairs are the only ones the sweep in
+   runs/link100/out/MGWRITER/sweep.txt leaves unseated in this overlay.
 
-    default: return 0;
-    }
-}
+   A switch left standing beside a seated table is not a safety net: it is a
+   second opinion about an address that can no longer arrive. */
+
 
 // ---- the host copy ---------------------------------------------------------
 //
@@ -624,7 +631,10 @@ static void mgbase_build_table(void)
     g_table[19] = data_ov004_020bca0c;
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member state setter (dScMgBase_c); builds and indexes an 8-byte {code,adj} table and dispatches through it, host-copied as an address switch */
+static unsigned g_writer_seated;
+static void mgbase_dispatch_seated(void *self, MgPmf p);
+
+/* PORT_HOST_ABI: mwcc pointer-to-member state setter (dScMgBase_c); builds and indexes an 8-byte {code,adj} table and dispatches through it, host-copied because MSVC cannot compile the src TU */
 extern "C" void func_ov004_020b87e0(void *cv, int idx)
 {
     SetterObj *self = (SetterObj *)cv;
@@ -656,7 +666,8 @@ extern "C" void func_ov004_020b87e0(void *cv, int idx)
     /* the ROM's own null guard, and it tests the CODE word only */
     if (self->pmf0.code) {
         ++g_setter_dispatched;
-        port_mg_call0(self, self->pmf0.code, self->pmf0.adj);
+        ++g_base_state_hits;
+        mgbase_dispatch_seated(self, self->pmf0);
     }
 }
 
@@ -684,4 +695,219 @@ extern "C" unsigned port_mg_base_setter_index_hits(unsigned *out, unsigned n)
     for (i = 0; i < n && i < 20; ++i)
         out[i] = g_setter_idx[i];
     return i;
+}
+
+// ---- run link100 lane MGWRITER ---------------------------------------------
+
+/* THE SETTER'S OWN DISPATCH, WITH THE SWITCH TAKEN OUT. The ROM's five
+   instructions are `add r3,r0,r1,asr #1` (this, adjusted), `ands r1,r1,#1` (the
+   virtual bit), the two conditional loads and `blx r1` with r0 = r3 -- a
+   ZERO-ARGUMENT call. What used to stand here handed the DS code word to
+   port_mg_call0's address switch. It cannot any more: the twenty pair globals
+   this function's table is built from now hold HOST addresses, put there by the
+   seat below and checked against the cartridge's own words first. So the call
+   is the call, and the two things the ROM tests are tested here.
+
+   THE DS-WORD REFUSAL IS THE POINT OF THE ABORT. A DS address arriving here
+   means the seat missed a source the writer copies from, and the failure that
+   would follow is not a wrong value, it is a jump into unmapped memory. It is
+   caught by name, at the moment it is provable, rather than as a fault address
+   that moves with the build. */
+static void mgbase_dispatch_seated(void *self, MgPmf p)
+{
+    if (p.adj != 0) {
+        std::fprintf(stderr, "FATAL: func_ov004_020b87e0: state pair "
+                     "%08x/%d carries a NONZERO ADJUSTMENT. Every measured pair "
+                     "in this family reads zero and no host body implements the "
+                     "this-adjustment or the virtual branch. "
+                     "port/unmatched/MgBase_StateSetter.cpp\n", p.code, p.adj);
+        std::fflush(stderr);
+        std::abort();
+    }
+    if (p.code >= 0x02000000u && p.code < 0x02400000u) {
+        std::fprintf(stderr, "FATAL: func_ov004_020b87e0: state pair code "
+                     "%08x is still a DS ADDRESS. The seat did not rewrite the "
+                     "pair global this state came from, so there is no host "
+                     "body to call. port/unmatched/MgBase_StateSetter.cpp\n",
+                     p.code);
+        std::fflush(stderr);
+        std::abort();
+    }
+    ((void (*)(void *))(size_t)p.code)(self);
+}
+
+/* ---- THE COUNTING WRAPPERS -----------------------------------------------
+   Twenty-nine of the fifty-six code words go into the pair globals through a
+   wrapper rather than bare, and the reason is a witness rather than a
+   preference. hal/scene_mg.cpp has always printed how many state bodies, ticks
+   and closure entries the framework actually dispatched, and it read those off
+   this file's switch. Once the ROM's own dispatchers read the object field
+   directly there is nothing left in this file for a counter to sit on, so the
+   count would silently become zero and a reader would see a regression where
+   there is none. A wrapper keeps the number and the meaning: same convention in
+   and out, same body called, one increment. It is the shape lane PMFB3 used for
+   the tapped-pad witness (snd1_state1_0211bc8c).
+
+   The dispatcher tail-jumps into the wrapper's frame, so the wrapper reads the
+   receiver at [esp+4] exactly where the body would, and cleans nothing --
+   the argument belongs to the dispatcher's caller. Group A does NOT get one:
+   the setter dispatches those itself, three lines above, and counts there. */
+static void bw_020b369c(void *c) { ++g_base_closure_hits; func_ov004_020b369c((char *)c); }
+static void bw_020b37c4(void *c) { ++g_base_closure_hits; func_ov004_020b37c4((char *)c); }
+static void bw_020b38ac(void *c) { ++g_base_closure_hits; func_ov004_020b38ac((char *)c); }
+static void bw_020b3978(void *c) { ++g_base_closure_hits; func_ov004_020b3978((char *)c); }
+static void bw_020b410c(void *c) { ++g_base_closure_hits; func_ov004_020b410c((char *)c); }
+static void bw_020b4214(void *c) { ++g_base_closure_hits; func_ov004_020b4214((char *)c); }
+static void bw_020b68e8(void *c) { ++g_base_tick_hits; func_ov004_020b68e8((int *)c); }
+static void bw_020b6948(void *c) { ++g_base_tick_hits; func_ov004_020b6948(); }
+static void bw_020b6ad8(void *c) { ++g_base_tick_hits; func_ov004_020b6ad8(); }
+static void bw_020b6b40(void *c) { ++g_base_tick_hits; func_ov004_020b6b40(c); }
+static void bw_020b6c9c(void *c) { ++g_base_tick_hits; func_ov004_020b6c9c(c); }
+static void bw_020b6ddc(void *c) { ++g_base_tick_hits; func_ov004_020b6ddc((char *)c); }
+static void bw_020b6f88(void *c) { ++g_base_tick_hits; func_ov004_020b6f88((char *)c); }
+static void bw_020b7124(void *c) { ++g_base_tick_hits; func_ov004_020b7124((char *)c); }
+static void bw_020b72d4(void *c) { ++g_base_tick_hits; func_ov004_020b72d4((char *)c); }
+static void bw_020b746c(void *c) { ++g_base_tick_hits; func_ov004_020b746c((char *)c); }
+static void bw_020b75e4(void *c) { ++g_base_tick_hits; func_ov004_020b75e4((char *)c); }
+static void bw_020b77b4(void *c) { ++g_base_tick_hits; func_ov004_020b77b4((char *)c); }
+static void bw_020b78f4(void *c) { ++g_base_tick_hits; func_ov004_020b78f4((char *)c); }
+static void bw_020b7a18(void *c) { ++g_base_closure_hits; func_ov004_020b7a18((char *)c); }
+static void bw_020b7b20(void *c) { ++g_base_tick_hits; func_ov004_020b7b20((char *)c); }
+static void bw_020b7c04(void *c) { ++g_base_closure_hits; func_ov004_020b7c04((char *)c); }
+static void bw_020b7cd0(void *c) { ++g_base_tick_hits; func_ov004_020b7cd0((char *)c); }
+static void bw_020b7eac(void *c) { ++g_base_tick_hits; func_ov004_020b7eac((char *)c); }
+static void bw_020b7fec(void *c) { ++g_base_closure_hits; func_ov004_020b7fec((char *)c); }
+static void bw_020b8098(void *c) { ++g_base_tick_hits; func_ov004_020b8098((char *)c); }
+static void bw_020b8284(void *c) { ++g_base_tick_hits; func_ov004_020b8284((char *)c); }
+static void bw_020b841c(void *c) { ++g_base_tick_hits; func_ov004_020b841c((char *)c); }
+static void bw_020b8560(void *c) { ++g_base_tick_hits; func_ov004_020b8560((char *)c); }
+
+typedef void (*SeatFn)(void *);
+
+/* ---- THE SEAT ------------------------------------------------------------
+   Fifty-six .data pair globals, every one of them a place the ROM's own code
+   copies an eight-byte {code, adjust} pair out of and into an object field one
+   of this gate's five retired dispatchers reads. Each row carries the code word
+   the cartridge itself holds at that address, read out of
+   extracted/overlays/overlay_0004.bin and confirmed by the overlay's own `load`
+   relocation row, and the seat compares before it writes: a wrong code word or
+   a nonzero adjustment is a loud abort, never a silent wrong dispatch.
+
+   THE SET IS COMPLETE AND THAT IS MEASURED, not asserted. See section 2 of
+   port/unmatched/MgBase_StateDispatch.cpp's seat block: an address-targeted
+   relocation sweep over the whole overlay finds ninety-nine pairs holding one
+   of the eighty-four routed code words, and they account exactly as 4 + 30 + 7
+   + 9 + 49. The forty-nine and the seven are here; the thirty and the four are
+   sinit sources whose destinations are seated instead; the nine belong to
+   dScMgMemory2_c and are the next gate's.
+
+   ONE OF THE FIFTY-SIX IS NOT AN INSTALL, and it is the one that would have
+   broken quietly. data_ov004_020bc254 is never copied into an object at all:
+   src/func_ov004_020b40c0.c COMPARES the object's own pair against it
+   (`o[0] == d[0] && (o[1] == d[1] || o[0] == 0)`), which is an identity test on
+   the code word. Seating the field without seating the sentinel would make that
+   test answer false forever, silently, with no crash and no report. It holds
+   the same word as data_ov004_020bc224, which func_ov004_020b422c installs into
+   the same field, so both sides move together and the test answers what the
+   cartridge answers. */
+extern "C" void port_mg_base_writer_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    /* the three .bss framework tables first, so the whole family is seated by
+       the time anything can dispatch out of either object */
+    port_mg_framework_tables_seat();
+
+    static const struct {
+        MgPmf *cell;
+        const char *name;
+        unsigned rom;
+        SeatFn host;
+    } seats[] = {
+    { &data_ov004_020bc17c, "020bc17c", 0x020b3978u, (SeatFn)bw_020b3978 },
+    { &data_ov004_020bc1b4, "020bc1b4", 0x020b369cu, (SeatFn)bw_020b369c },
+    { &data_ov004_020bc1ec, "020bc1ec", 0x020b38acu, (SeatFn)bw_020b38ac },
+    { &data_ov004_020bc20c, "020bc20c", 0x020b37c4u, (SeatFn)bw_020b37c4 },
+    { &data_ov004_020bc224, "020bc224", 0x020b4214u, (SeatFn)bw_020b4214 },
+    { &data_ov004_020bc254, "020bc254", 0x020b4214u, (SeatFn)bw_020b4214 },
+    { &data_ov004_020bc274, "020bc274", 0x020b410cu, (SeatFn)bw_020b410c },
+    { &data_ov004_020bc8bc, "020bc8bc", 0x020b841cu, (SeatFn)bw_020b841c },
+    { &data_ov004_020bc8c4, "020bc8c4", 0x020b8284u, (SeatFn)bw_020b8284 },
+    { &data_ov004_020bc8cc, "020bc8cc", 0x020b6ad8u, (SeatFn)bw_020b6ad8 },
+    { &data_ov004_020bc8d4, "020bc8d4", 0x020b8098u, (SeatFn)bw_020b8098 },
+    { &data_ov004_020bc8dc, "020bc8dc", 0x020b7fecu, (SeatFn)bw_020b7fec },
+    { &data_ov004_020bc8e4, "020bc8e4", 0x020b6f88u, (SeatFn)bw_020b6f88 },
+    { &data_ov004_020bc8ec, "020bc8ec", 0x020b7eacu, (SeatFn)bw_020b7eac },
+    { &data_ov004_020bc8f4, "020bc8f4", 0x020b7cd0u, (SeatFn)bw_020b7cd0 },
+    { &data_ov004_020bc8fc, "020bc8fc", 0x020b72d4u, (SeatFn)bw_020b72d4 },
+    { &data_ov004_020bc904, "020bc904", 0x020b7c04u, (SeatFn)bw_020b7c04 },
+    { &data_ov004_020bc90c, "020bc90c", 0x020b7b20u, (SeatFn)bw_020b7b20 },
+    { &data_ov004_020bc914, "020bc914", 0x020b7fecu, (SeatFn)bw_020b7fec },
+    { &data_ov004_020bc91c, "020bc91c", 0x020b68e8u, (SeatFn)bw_020b68e8 },
+    { &data_ov004_020bc924, "020bc924", 0x020b6c9cu, (SeatFn)bw_020b6c9c },
+    { &data_ov004_020bc92c, "020bc92c", 0x020b79b0u, (SeatFn)func_ov004_020b79b0 },
+    { &data_ov004_020bc934, "020bc934", 0x020b798cu, (SeatFn)func_ov004_020b798c },
+    { &data_ov004_020bc93c, "020bc93c", 0x020b7a18u, (SeatFn)bw_020b7a18 },
+    { &data_ov004_020bc944, "020bc944", 0x020b7b90u, (SeatFn)func_ov004_020b7b90 },
+    { &data_ov004_020bc94c, "020bc94c", 0x020b7e38u, (SeatFn)func_ov004_020b7e38 },
+    { &data_ov004_020bc954, "020bc954", 0x020b7f5cu, (SeatFn)func_ov004_020b7f5c },
+    { &data_ov004_020bc95c, "020bc95c", 0x020b81f8u, (SeatFn)func_ov004_020b81f8 },
+    { &data_ov004_020bc964, "020bc964", 0x020b83acu, (SeatFn)func_ov004_020b83ac },
+    { &data_ov004_020bc96c, "020bc96c", 0x020b853cu, (SeatFn)func_ov004_020b853c },
+    { &data_ov004_020bc974, "020bc974", 0x020b8688u, (SeatFn)func_ov004_020b8688 },
+    { &data_ov004_020bc97c, "020bc97c", 0x020b7854u, (SeatFn)func_ov004_020b7854 },
+    { &data_ov004_020bc984, "020bc984", 0x020b7744u, (SeatFn)func_ov004_020b7744 },
+    { &data_ov004_020bc98c, "020bc98c", 0x020b7c04u, (SeatFn)bw_020b7c04 },
+    { &data_ov004_020bc994, "020bc994", 0x020b7124u, (SeatFn)bw_020b7124 },
+    { &data_ov004_020bc99c, "020bc99c", 0x020b7594u, (SeatFn)func_ov004_020b7594 },
+    { &data_ov004_020bc9a4, "020bc9a4", 0x020b7460u, (SeatFn)func_ov004_020b7460 },
+    { &data_ov004_020bc9ac, "020bc9ac", 0x020b78f4u, (SeatFn)bw_020b78f4 },
+    { &data_ov004_020bc9b4, "020bc9b4", 0x020b78f4u, (SeatFn)bw_020b78f4 },
+    { &data_ov004_020bc9bc, "020bc9bc", 0x020b724cu, (SeatFn)func_ov004_020b724c },
+    { &data_ov004_020bc9c4, "020bc9c4", 0x020b6948u, (SeatFn)bw_020b6948 },
+    { &data_ov004_020bc9cc, "020bc9cc", 0x020b6ddcu, (SeatFn)bw_020b6ddc },
+    { &data_ov004_020bc9d4, "020bc9d4", 0x020b70b4u, (SeatFn)func_ov004_020b70b4 },
+    { &data_ov004_020bc9dc, "020bc9dc", 0x020b7020u, (SeatFn)func_ov004_020b7020 },
+    { &data_ov004_020bc9e4, "020bc9e4", 0x020b77b4u, (SeatFn)bw_020b77b4 },
+    { &data_ov004_020bc9ec, "020bc9ec", 0x020b6f14u, (SeatFn)func_ov004_020b6f14 },
+    { &data_ov004_020bc9f4, "020bc9f4", 0x020b6d6cu, (SeatFn)func_ov004_020b6d6c },
+    { &data_ov004_020bc9fc, "020bc9fc", 0x020b75e4u, (SeatFn)bw_020b75e4 },
+    { &data_ov004_020bca04, "020bca04", 0x020b7124u, (SeatFn)bw_020b7124 },
+    { &data_ov004_020bca0c, "020bca0c", 0x020b6c10u, (SeatFn)func_ov004_020b6c10 },
+    { &data_ov004_020bca14, "020bca14", 0x020b7fecu, (SeatFn)bw_020b7fec },
+    { &data_ov004_020bca1c, "020bca1c", 0x020b8560u, (SeatFn)bw_020b8560 },
+    { &data_ov004_020bca24, "020bca24", 0x020b746cu, (SeatFn)bw_020b746c },
+    { &data_ov004_020bca2c, "020bca2c", 0x020b68e8u, (SeatFn)bw_020b68e8 },
+    { &data_ov004_020bca34, "020bca34", 0x020b6b40u, (SeatFn)bw_020b6b40 },
+    { &data_ov004_020bca3c, "020bca3c", 0x020b743cu, (SeatFn)func_ov004_020b743c },
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        if (seats[i].cell->code != seats[i].rom || seats[i].cell->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgBase_c pair global data_ov004_%s: "
+                         "the mount holds %08x/%d, the ROM's own bytes say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].cell->code, seats[i].cell->adj, seats[i].rom);
+            std::abort();
+        }
+        seats[i].cell->code = (unsigned)(size_t)seats[i].host;
+        ++g_writer_seated;
+    }
+
+    /* The setter's function-local static table is a COPY of twenty of those
+       globals, built on the first call. Nothing can have called the setter this
+       early -- hal/scene_mg.cpp runs this beside the overlay constructors, long
+       before a minigame asks for a message -- but the copy is the one place a
+       stale DS word could survive the seat, so the guard word is cleared and
+       the table is rebuilt from the seated globals rather than assumed unbuilt. */
+    g_table_built = 0;
+    mgbase_build_table();
+}
+
+extern "C" unsigned port_mg_base_writer_seat_count(void)
+{
+    return g_writer_seated;
 }

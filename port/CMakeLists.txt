@@ -15766,6 +15766,51 @@ foreach(_tpmfb4 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# R10d, run link100 lane MGWRITER: THE OBJECT-FIELD ROWS AND THEIR WRITER
+# ===========================================================================
+#
+# Blocks R10a, R10b and R10c took rows that read a TABLE. This block takes rows
+# that read an OBJECT FIELD: there is no table for a boot installer to verify
+# and rewrite, so what the installer seats is the SOURCE the writer copies from,
+# and the field carries a host word from the moment the writer runs. Four of the
+# six rows lane PMFB3 measured and left, plus the writer that fills two of the
+# fields, come off their host copies here. Nothing in this block changes a ROM
+# reference, a linker option or a call the ROM does not make; the per-row ROM
+# disassembly, emitted dispatch shape, source pairs, sweep and alias spelling
+# are in port/slice_mgwriter.txt and the raw measurements in
+# runs/link100/out/MGWRITER/.
+#
+# NO /Zp4 ON THIS BLOCK, measured per TU rather than inherited. R10a carries
+# lane PMFB1's lever because MSVC gives any struct CONTAINING a pointer to
+# member eight-byte alignment, which silently strides twenty-four where the ROM
+# strides twenty. Four of these five TUs hold the pointer to member as a FIELD
+# rather than in a table, and the fifth reads an array of the bare pointer to
+# member; every one was compiled under the port's own flags with and without the
+# option for this lane and each pair of /FAsc listings came back identical
+# except for the TITLE line naming the .obj. R10a's rule for that case is to
+# leave the option off rather than make a claim nothing measured.
+#
+# WHAT MAKES THE FOUR FIELD ROWS COMPILE AT ALL is block R8's /vmg /vmm on the
+# whole target: their src structs put a state word after a pointer to member and
+# the ROM reads it at +0x20, which is only true at the ROM's own eight-byte
+# member pointer. The four emitted field offsets (+0x0c, +0x04, +0x14, +0x0c)
+# agree with the ROM's own word for word, so the structs are right and the old
+# note in unmatched/MgBase_StateDispatch.cpp about a four-byte member pointer
+# moving every later field is a premise that expired when R8 landed.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mgwriter.txt" SLICE_MGWRITER_LINES)
+set(SLICE_MGWRITER_SOURCES "")
+foreach(line IN LISTS SLICE_MGWRITER_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_MGWRITER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tmgw walk_window walk_window_hires smoke_player)
+    target_sources(${_tmgw} PRIVATE ${SLICE_MGWRITER_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

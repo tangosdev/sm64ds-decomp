@@ -1,0 +1,196 @@
+# ===========================================================================
+# SLICE mgwriter -- run link100, lane MGWRITER
+# ===========================================================================
+#
+# THE ROWS THIS LANE TOOK OFF A HOST COPY, and the class of row it opens. Lane
+# PMFB3 measured the nine dScMgBase_c framework rows, took the three that read a
+# TABLE, and named the other six with the measurement that stopped them:
+#
+#   "None of the six reads a TABLE. Each reads the eight-byte pair out of an
+#    OBJECT FIELD, so there is no storage a boot installer can verify and
+#    rewrite: what has to change is the WRITER."
+#
+# This is that work for four of the six, plus the writer itself. The CMake gate
+# block is R10d in port/CMakeLists.txt.
+#
+# ---- THE FIVE ROWS ---------------------------------------------------------
+#
+#   func_ov004_020b31b4  pmf at self+0x08, guard *(int*)(self+0x20) == 0x1d
+#   func_ov004_020b321c  pmf at self+0x00, same guard
+#   func_ov004_020b8714  pmf at self+0x10, guard *(int*)(self+0x18) == -1
+#   func_ov004_020b8778  pmf at self+0x08, same guard, ApproachLinear on +0x1c
+#   func_ov004_020b3278  THE WRITER of the first two objects' fields, and the
+#                        one TABLE dispatch in the set, on data_ov004_020bf490
+#
+# Two DIFFERENT classes, and that is read off the ROM rather than off the
+# names. The first two test a state word at +0x20 and are the object
+# func_ov004_020b3278 fills; the second two test a message index at +0x18 and
+# are the object func_ov004_020b87e0 (the state SETTER, still a host copy) fills.
+#
+# ---- THE ROM, AT EACH ROW'S OWN ADDRESS ------------------------------------
+#
+# Disassembled out of extracted/overlays/overlay_0004.bin at ov004 base
+# 0x020ad660 (runs/link100/out/MGWRITER/rom_gate1.txt). All five are
+# ZERO-ARGUMENT dispatches with `this` in r0:
+#
+#   020b31b4  ldr r1,[r0,#0x20]; cmp #0x1d | ldr r1,[r0,#8]; cmp #0
+#             add r3,r0,#8 | ldr r1,[r3,#4] | add r0,r0,r1,asr #1
+#             ands r1,r1,#1 | ldreq r1,[r3] | blx r1
+#   020b321c  ldr r1,[r0,#0x20]; cmp #0x1d | ldr r2,[r0]; cmp #0
+#             ldr r1,[r0,#4] | add r3,r0,r1,asr #1 | ldreq r1,[r0]
+#             mov r0,r3 | blx r1
+#   020b8714  ldr r2,[r0,#0x18]; cmp mvn #0 | ldr r1,[r0,#0x10]; cmp #0
+#             add r3,r0,#0x10 | ldr r1,[r3,#4] | ldreq r1,[r3] | blx r1
+#   020b8778  ldr r1,[r4,#0x18]; cmp mvn #0 | bl 0x203ae58 on r4+0x1c
+#             ldr r0,[r4,#8]; cmp #0 | add r3,r4,#8 | ldreq r1,[r3] | blx r1
+#   020b3278  ldr r0,[r1,r2,lsl #3]  -- STRIDE EIGHT on data_ov004_020bf490
+#             cmp r0,#0 | add r0,r8,r1,asr #1 | ldreq r1,[r3] | blx r1
+#
+# The null guard is a test of the CODE word alone in every one of the five, and
+# the adjustment word is read, tested for its LSB and shifted right by one --
+# which is the mwcc Itanium sequence, and which is why the src TUs are right to
+# spell a real pointer to member.
+#
+# ---- THE EMITTED SIDE, PER ROW, OFF ITS OWN /FAsc LISTING -----------------
+#
+# Compiled under the port's own flags (runs/link100/out/MGWRITER/listings/ and
+# emit_gate1.txt). The port carries /vmg /vmm on the whole target (block R8), so
+# MSVC's pointer to member here is the ROM's own eight-byte {function, delta}
+# pair, and every field after one lands where the ROM reads it:
+#
+#   020b31b4   mov ecx,[eax+12]  add ecx,eax  pop ebp  JMP edx
+#   020b321c   mov ecx,[eax+4]   add ecx,eax  pop ebp  JMP edx
+#   020b8714   mov ecx,[eax+20]  add ecx,eax  pop ebp  JMP edx
+#   020b8778   mov ecx,[esi+12]  add ecx,esi  pop esi  pop ebp  JMP eax
+#   020b3278   mov eax,?data_ov004_020bf490@@3PAP8Base@@AEXXZA[ecx*8]
+#              test eax,eax
+#              mov ecx,?data_ov004_020bf490@@3PAP8Base@@AEXXZA[ecx*8+4]
+#              add ecx,esi
+#              CALL eax        -- no push before it, no add esp after it
+#
+# The four emitted offsets +0x0c, +0x04, +0x14, +0x0c are the ROM's own +4 words
+# read at +0x08, +0x00, +0x10 and +0x08. ROM 8 == emitted 8 on the one table.
+#
+# WHAT THAT DECIDES, AND IT IS DECIDED PER ROW. The four are TAIL JUMPS with the
+# frame fully restored, so the callee is entered on the forwarder's own cdecl
+# frame and finds the receiver at [esp+4] where its one declared argument lives:
+# a PLAIN CDECL BODY is correct in those cells and no face is written for them.
+# func_ov004_020b3278 is a __thiscall indirect with the receiver in ecx and ZERO
+# stack arguments, so its twelve cells hold __FASTCALL FACES.
+#
+# /Zp4 IS A MEASURED NO-OP on all five: each TU was compiled both ways and the
+# only differing line between the two listings is the TITLE, which names the
+# .obj. It is not claimed on this block.
+#
+# ---- THE SEAT, AND WHY IT IS THE SOURCE AND NOT THE ROW -------------------
+#
+# An object-field row has no table a boot installer can rewrite. What a seat can
+# rewrite is the STORAGE THE WRITER COPIES FROM, and then every field written
+# afterwards carries a host word for free. Two installers, both the
+# abort-on-mismatch shape (compare the cell against the ROM's own code word and
+# a zero adjustment, then write the host body):
+#
+#   port_mg_framework_tables_seat   unmatched/MgBase_StateDispatch.cpp
+#       the THIRTY code-bearing cells of data_ov004_020bf428 (11),
+#       data_ov004_020bf4f8 (7) and data_ov004_020bf490 (12), which are ov004
+#       .bss filled by __sinit_ov004_020b955c. The seat runs AFTER that
+#       constructor, so the DESTINATION is what is rewritten and the thirty
+#       .data sources it copies from are left alone -- seating a source ahead of
+#       a sinit would make lane PMFB3's framework seat, which checks
+#       data_ov004_020beb88 and _020beb98 against the ROM's own words at the
+#       same point in the boot, refuse.
+#
+#   port_mg_base_writer_seat        unmatched/MgBase_StateSetter.cpp
+#       the FIFTY-SIX .data pair globals the state bodies copy into the object:
+#       seven for the 020b3278 object (+0x00 and +0x08) and forty-nine for the
+#       setter's object (+0x00, +0x08 and +0x10). It calls the first one, so
+#       hal/scene_mg.cpp gains exactly ONE line.
+#
+# THE SET IS COMPLETE AND THAT IS MEASURED. runs/link100/out/MGWRITER/sweep.txt
+# takes every `load` relocation row in config/arm9/overlays/ov004/relocs.txt
+# whose destination is one of the EIGHTY-FOUR code words the port's own two
+# ov004 switches already routed, and keeps the ones whose following word reads
+# zero. That is an ADDRESS-TARGETED sweep and not the blind pair sweep over a
+# range that port/mg_fanout_costs.txt section 4 refuses: every needle is an
+# address an earlier lane already adjudicated as a pointer-to-member target with
+# a matched src TU and a delink block. It finds NINETY-NINE pairs, and they
+# account exactly:
+#
+#     4   data_ov004_020bbf4c/_bf54/_bf5c/_bf64  sinit sources for the two
+#         framework tables lane PMFB3 seated at the destination
+#    30   data_ov004_020bc154.._020bc26c         sinit sources for the three
+#         tables this lane seats at the destination
+#     7   _020bc17c _020bc1b4 _020bc1ec _020bc20c _020bc224 _020bc254 _020bc274
+#         the 020b3278 object's own fields                    SEATED HERE
+#     9   _020bc7d8 .. _020bc820                 dScMgMemory2_c, NOT this gate
+#    49   _020bc8bc .. _020bca3c                 the setter's object   SEATED HERE
+#
+# and ONE row was reported and NOT written, on exactly the test that makes the
+# sweep safe: 0x020b7468 is the literal-pool word of the 0x020b7460 tail-jump
+# veneer, and the word after it is the next function's `stmdb`, not a zero.
+#
+# ---- THE ONE ROW THAT WOULD HAVE BROKEN QUIETLY ---------------------------
+#
+# data_ov004_020bc254 is never copied into an object at all.
+# src/func_ov004_020b40c0.c COMPARES the object's own pair against it:
+#
+#     if (o[0] == d[0] && (o[1] == d[1] || o[0] == 0) && o[9] == o[10])
+#
+# an identity test on the code word. Seating the field without seating the
+# sentinel would make that test answer false forever, with no crash and no
+# report -- the failure shape a byte gate cannot see and a battery would not
+# convict. It holds the same word (0x020b4214) as data_ov004_020bc224, which
+# func_ov004_020b422c installs into the same field, so both sides move together
+# and the test answers what the cartridge answers.
+#
+# ---- WHAT THE SEAT KILLED --------------------------------------------------
+#
+# mg_try_ov004_0 (28 arms) and port_mg_try_base_state (56 arms) are DELETED, and
+# they are deleted because every arm is now unreachable rather than merely
+# unused. Their three groups went three ways:
+#   the setter's own twenty are dispatched DIRECTLY by func_ov004_020b87e0,
+#     which now calls the host address the seat wrote and aborts loudly if it
+#     is ever handed a DS one;
+#   the twenty per-frame ticks and nine of the sixteen closure addresses are
+#     dispatched by the four retired rows, straight out of the object field;
+#   the other seven closure addresses belong to dScMgMemory2_c and have been
+#     routed by unmatched/MgMemory2_FieldPmf.cpp's own mem2_field_try since it
+#     was written -- it tries them BEFORE handing anything to the framework, so
+#     this arm never saw them.
+# port_mg_call0 and port_mg_call1 STAY: eleven other classes route unseated
+# tables and fields through them. Both gained a HOST-WORD REFUSAL that names
+# itself, so a seated word reaching a DS switch can never again be reported as
+# an unknown DS address with nothing called.
+#
+# TWENTY-NINE COUNTING WRAPPERS, and they are a witness rather than a
+# preference. hal/scene_mg.cpp has always printed how many state bodies, ticks
+# and closure entries the framework dispatched, read off the switch this lane
+# deletes. The wrapper keeps the number and its meaning: same convention in and
+# out, same body called, one increment. It is lane PMFB3's shape for the
+# tapped-pad witness (snd1_state1_0211bc8c). Group A gets none: the setter
+# dispatches those itself and counts there.
+#
+# ONE /alternatename, in unmatched/MgBase_StateDispatch.cpp.
+# src/func_ov004_020b3278.cpp declares `extern PMF data_ov004_020bf490[]` at
+# namespace scope, so MSVC encodes the member-pointer type into the reference
+# and spells it ?data_ov004_020bf490@@3PAP8Base@@AEXXZA -- read off that TU's
+# own /FAsc listing, not guessed -- while the ov004 mount defines the plain C
+# name. Its seven other data references already have their aliases in
+# hal/scene_mg_faces_gen.cpp and hal/scene_mg_faces.cpp. Safe under
+# port/tools/alternatename_guard.py for hal/pmfc_aliases.cpp's reason: nothing
+# in the tree DEFINES that LHS.
+#
+# ---- NOT TAKEN, WITH THE MEASUREMENT --------------------------------------
+#
+# func_ov004_020b52fc and func_ov006_020cf758, the other two of PMFB3's six.
+# Both read the pair at self+0x00 of dScMgMemory2_c and dScMgTrampoline_c, whose
+# writers are constructors filling their own +0x00 out of the
+# data_ov004_020bc7d4 block and the ov006 trampoline records. That is a
+# different writer family and its own gate; the nine ov004 pairs it needs are
+# the nine the sweep above leaves unseated, and they are named there so the next
+# lane starts from the measurement.
+src/func_ov004_020b31b4.cpp
+src/func_ov004_020b321c.cpp
+src/func_ov004_020b3278.cpp
+src/func_ov004_020b8714.cpp
+src/func_ov004_020b8778.cpp

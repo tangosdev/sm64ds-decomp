@@ -346,6 +346,7 @@ void __sinit_ov006_021333e0(void);
    port/unmatched/MgSound_StateDispatch.cpp holds the derivation. */
 void port_mg_sound_states_seat(void);
 void port_mg_framework_states_seat(void);   /* unmatched/MgBase_StateDispatch.cpp */
+void port_mg_base_writer_seat(void);        /* unmatched/MgBase_StateSetter.cpp */
 void port_mg_panel_states_seat(void);       /* unmatched/MgPanel_StateDispatch.cpp */
 void port_mg_bomroom_states_seat(void);     /* unmatched/MgBomroom_StateDispatch.cpp */
 void port_mg_luigi_states_seat(void);       /* unmatched/MgLuigi_StateDispatch.cpp */
@@ -1014,6 +1015,13 @@ extern "C" void port_scene_mg_overlay_load(void)
     __sinit_ov006_0213326c(); __sinit_ov006_021333e0();
 
     port_mg_framework_states_seat();
+    /* run link100 lane MGWRITER. The object-field half of the same family: it
+       seats the fifty-six .data pair globals the framework's state bodies copy
+       into the object, and calls port_mg_framework_tables_seat for the thirty
+       .bss cells __sinit_ov004_020b955c fills. After the constructors, for the
+       same reason the line above is: those three tables are .bss and the sinit
+       is what puts the cartridge's own words in them. */
+    port_mg_base_writer_seat();
     port_mg_panel_states_seat();
     port_mg_sound_states_seat();
     port_mg_bomroom_states_seat();

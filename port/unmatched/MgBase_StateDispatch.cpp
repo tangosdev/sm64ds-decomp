@@ -354,19 +354,12 @@ void func_ov004_020b4a64(void *self);
 int port_mg_try_ov006_0(void *self, unsigned code);
 int port_mg_try_ov006_1(void *self, unsigned code, int a);
 
-/* Run mg5 lane BASESET. The framework's STATE SETTER half, forty more ov004
-   addresses: the twenty src/func_ov004_020b87e0.cpp's own table holds and the
-   twenty its state bodies install as per-frame ticks. It joins the chain here
-   rather than growing mg_try_ov004_0, because the two sets are derived from
-   different ROM structures and a reader should be able to tell which file ruled
-   which address. port/unmatched/MgBase_StateSetter.cpp. */
-int port_mg_try_base_state(void *self, unsigned code);
-
-/* the bodies the host copies below call, unchanged from their src */
-void DecompressLZ16(int src, int dst);
-int  func_ov004_020af5e0(int a, void *b, int c, int d);
-void func_ov004_020b42c0(char *self);   /* derefs [this+0x34/0x10/0x12/0x1c/0x18/0x20] */
-void _Z14ApproachLinearRiii(int &, int, int);
+/* RETIRED, run link100 lane MGWRITER. port_mg_try_base_state and the four
+   host-copy declarations that used to stand here are gone with the bodies that
+   needed them. The setter's own forty addresses now sit in the ROM's own pair
+   globals as HOST addresses, and the four self-field dispatchers below are
+   src/ TUs again, so nothing hands a DS framework address to a switch any
+   more. THE SEAT at the bottom of this file is what replaced them. */
 
 }  /* extern "C" */
 
@@ -394,54 +387,43 @@ static void mg_unhandled(const char *what, unsigned code, int adj)
     std::fflush(stderr);
 }
 
-/* dScMgBase_c's own four. The framework half of the switch, and the reason
-   this file is paid once: all thirty minigames dispatch these same four
-   addresses out of the same two tables. */
-static int mg_try_ov004_0(void *self, unsigned code)
+/* mg_try_ov004_0 IS GONE, run link100 lane MGWRITER, and it is gone because
+   every one of its twenty-eight arms is now UNREACHABLE rather than merely
+   unused. Four (0x020adc80, _adcc8, _addcc, _adeb0) were retired by lane
+   PMFB3, which installed host bodies into data_ov004_020beb88 and _020beb98.
+   The other twenty-four are __sinit_ov004_020b955c's three tables, and THE
+   SEAT below installs host bodies into all thirty of their code-bearing cells,
+   so the two matched TUs that read them through an object field
+   (src/func_ov004_020b31b4.cpp and src/func_ov004_020b321c.cpp, whose fields
+   src/func_ov004_020b3278.cpp writes) and 020b3278's own direct dispatch on
+   data_ov004_020bf490 all reach a host address with no switch in the path. A
+   switch left standing beside a seated table is not a safety net: it is a
+   second opinion about an address that can no longer arrive. */
+
+/* THE HOST-WORD REFUSAL, run link100 lane MGWRITER. Everything below this line
+   routes a DS address through a switch. Once a source table has been seated the
+   words that come out of it are HOST addresses, and a host address handed to a
+   DS switch is the one failure this lane exists to make impossible: the switch
+   would not match it, mg_unhandled would report an address that reads like
+   nonsense, and NOTHING WOULD BE CALLED -- which for a state machine is the
+   freeze the setter's own trap used to cause. So a code word outside the DS
+   address space is refused HERE, by name, rather than falling through to a
+   report about an unknown DS address. It cannot fire on any path this tree has
+   after the seat: every ov004 word the framework dispatches is seated and
+   dispatched directly, and every remaining caller of these two entry points
+   reads an UNSEATED table or field whose words are still the cartridge's own.
+   If it ever does fire, the line names the seat that has to grow. */
+static int mg_is_ds_code(unsigned code, const char *who)
 {
-    switch (code) {
-    case 0x020adc80u: func_ov004_020adc80((int *)self);   return 1;
-    case 0x020adcc8u: func_ov004_020adcc8((short *)self); return 1;
-    case 0x020addccu: func_ov004_020addcc((char *)self);  return 1;
-    case 0x020adeb0u: func_ov004_020adeb0((char *)self);  return 1;
-    /* run mg5 lane FWK. data_ov004_020bf4f8.p12, copied to self+0x08 by
-       func_ov004_020b3278 and dispatched by func_ov004_020b31b4. One argument,
-       `this`, which is the same object 020b3278 filled the fields of. */
-    case 0x020b35d8u: func_ov004_020b35d8(self);          return 1;
-    /* run mg5 lane FWK. data_ov004_020bf490.p12, dispatched directly by
-       func_ov004_020b3278. The ROM body is one `bx lr`, so (void) is exact. */
-    case 0x020b3698u: func_ov004_020b3698();              return 1;
-
-    /* run mg5 lane BASESET: the other twenty-two of __sinit_ov004_020b955c's
-       twenty-four. The comment above their declarations is the derivation. The
-       slot each one arrives from is named so a reader can go back to the
-       constructor without re-resolving anything; * marks the seven a scene 378
-       sweep reached on the first run after the state setter was seated. */
-    case 0x020b3834u: func_ov004_020b3834(self);          return 1;  /* bf428.p11 */
-    case 0x020b3888u: func_ov004_020b3888(self);          return 1;  /* bf490.p11 */
-    case 0x020b3b38u: func_ov004_020b3b38(self);          return 1;  /* bf4f8.p10 */
-    case 0x020b3c58u: func_ov004_020b3c58(self);          return 1;  /* bf428.p10 */
-    case 0x020b3c9cu: func_ov004_020b3c9c(self);          return 1;  /* bf490.p10 */
-    case 0x020b3cb8u: func_ov004_020b3cb8(self);          return 1;  /* bf4f8.p9  */
-    case 0x020b3e9cu: func_ov004_020b3e9c(self);          return 1;  /* bf4f8.p6  */
-    case 0x020b4080u: func_ov004_020b4080(self);          return 1;  /* bf428.p6, p9 */
-    case 0x020b40acu: func_ov004_020b40ac(self);          return 1;  /* bf490.p6, p9 */
-    case 0x020b433cu: func_ov004_020b433c(self);          return 1;  /* bf490.p7  */
-    case 0x020b4360u: func_ov004_020b4360(self);          return 1;  /* bf4f8.p8  * */
-    case 0x020b45c0u: func_ov004_020b45c0(self);          return 1;  /* bf4f8.p5, p7 */
-    case 0x020b4820u: func_ov004_020b4820(self);          return 1;  /* bf428.p5, p7, p8 * */
-    case 0x020b484cu: func_ov004_020b484c(self);          return 1;  /* bf490.p5, p8 * */
-    case 0x020b49b8u: func_ov004_020b49b8(self);          return 1;  /* bf428.p4  * */
-    case 0x020b49e4u: func_ov004_020b49e4(self);          return 1;  /* bf490.p4  * */
-    case 0x020b49f0u: func_ov004_020b49f0(self);          return 1;  /* bf428.p3  * */
-    case 0x020b4a1cu: func_ov004_020b4a1c(self);          return 1;  /* bf490.p3  * */
-    case 0x020b4a28u: func_ov004_020b4a28(self);          return 1;  /* bf428.p2  */
-    case 0x020b4a40u: func_ov004_020b4a40(self);          return 1;  /* bf490.p2  */
-    case 0x020b4a4cu: func_ov004_020b4a4c(self);          return 1;  /* bf428.p1  */
-    case 0x020b4a64u: func_ov004_020b4a64(self);          return 1;  /* bf490.p1  */
-
-    default:                                              return 0;
-    }
+    if (code >= 0x02000000u && code < 0x02400000u)
+        return 1;
+    std::fprintf(stderr, "  [scene] %s WAS HANDED A HOST ADDRESS 0x%08x. A "
+                 "seated table's word reached the DS address switch, which "
+                 "cannot match it, so nothing was called. The seat that owns "
+                 "that word has to dispatch it directly. "
+                 "port/unmatched/MgBase_StateDispatch.cpp\n", who, code);
+    std::fflush(stderr);
+    return 0;
 }
 
 /* THE ONE ENTRY POINT for a zero-argument state call. Both host-copy files
@@ -462,9 +444,7 @@ extern "C" void port_mg_call0(void *self, unsigned code, int adj)
                      "this closure has", code, adj);
         return;
     }
-    if (mg_try_ov004_0(self, code))
-        return;
-    if (port_mg_try_base_state(self, code))
+    if (!mg_is_ds_code(code, "port_mg_call0"))
         return;
     if (port_mg_try_ov006_0(self, code))
         return;
@@ -481,6 +461,8 @@ extern "C" void port_mg_call1(void *self, unsigned code, int adj, int a)
                      "this closure has", code, adj);
         return;
     }
+    if (!mg_is_ds_code(code, "port_mg_call1"))
+        return;
     /* ov004 contributes no one-argument state table to this closure: both of
        dScMgBase_c's are zero-argument. The chain still runs through here so a
        derived class's table holding a framework address finds it. */
@@ -617,243 +599,238 @@ extern "C" void port_mg_framework_states_seat(void)
     }
 }
 
-// ---- the four self-field dispatchers ---------------------------------------
+// ---- THE SEAT, run link100 lane MGWRITER -----------------------------------
 //
-// These read the pmf out of the OBJECT, so the four-byte MSVC member pointer
-// in their src structs moves every later field. The offsets below are the
-// ROM's, read off the disassembly rather than off the struct:
+// WHAT THIS REPLACES. Five host copies stood here: the four self-field
+// dispatchers (func_ov004_020b31b4, _020b321c, _020b8714, _020b8778) and the
+// writer func_ov004_020b3278. All five are src/ TUs again, on
+// port/slice_mgwriter.txt. What made that possible is not a new idea about
+// pointers to member; it is that the STORAGE THEY READ now holds host words.
 //
-//   func_ov004_020b31b4   state [r0,#0x20]   pmf r0+0x08
-//   func_ov004_020b321c   state [r0,#0x20]   pmf r0+0x00
-//   func_ov004_020b8714   field [r0,#0x18]   pmf r0+0x10
-//   func_ov004_020b8778   field [r4,#0x18]   pmf r4+0x08, ApproachLinear on +0x1c
+// ---- 1. THE FIVE ROWS, RE-DERIVED AT THEIR OWN ROM ADDRESSES --------------
 //
-// Two of them agree on state at 0x20 with the pmf at different offsets, which
-// is two different classes and not a transcription slip: 020b31b4 opens the
-// pair with `add r3, r0, #8` and 020b321c with `ldr r2, [r0]`.
+// Read out of extracted/overlays/overlay_0004.bin at ov004 base 0x020ad660
+// (runs/link100/out/MGWRITER/rom_gate1.txt). Every one is a ZERO-ARGUMENT
+// dispatch with `this` in r0, past an adjustment word whose LSB the ROM tests
+// and whose value it shifts right by one -- and every measured adjustment in
+// this family is zero, so `this` is the object unchanged:
+//
+//   func_ov004_020b31b4  ldr r1,[r0,#0x20] cmp #0x1d | ldr r1,[r0,#8] cmp #0
+//                        add r3,r0,#8 | ldr r1,[r3,#4] | ldreq r1,[r3] | blx r1
+//   func_ov004_020b321c  ldr r1,[r0,#0x20] cmp #0x1d | ldr r2,[r0] cmp #0
+//                        ldr r1,[r0,#4] | add r3,r0,r1,asr #1 | mov r0,r3 | blx
+//   func_ov004_020b8714  ldr r2,[r0,#0x18] cmp mvn #0 | ldr r1,[r0,#0x10] cmp 0
+//                        add r3,r0,#0x10 | ldr r1,[r3,#4] | ldreq r1,[r3] | blx
+//   func_ov004_020b8778  ldr r1,[r4,#0x18] cmp mvn #0 | bl ApproachLinear on
+//                        r4+0x1c | ldr r0,[r4,#8] cmp #0 | add r3,r4,#8 | blx
+//   func_ov004_020b3278  ldr r0,[r1,r2,lsl #3] cmp #0 | add r0,r8,r1,asr #1 |
+//                        ldreq r1,[r3] | blx r1 -- the ONE table dispatch, on
+//                        data_ov004_020bf490, stride EIGHT
+//
+// THE EMITTED SIDE, off each TU's own /FAsc listing under the port's own flags
+// (runs/link100/out/MGWRITER/listings/, emit_gate1.txt):
+//
+//   the four dispatchers   mov ecx,[eax+12] / [eax+4] / [eax+20] / [esi+12]
+//                          add ecx,<this> ; pop ebp ; JMP edx or eax
+//   func_ov004_020b3278    mov eax,?data_ov004_020bf490@@...[ecx*8]
+//                          test eax,eax ; mov ecx,...[ecx*8+4] ; add ecx,esi
+//                          CALL eax, with NO push and NO add esp after it
+//
+// so the four are TAIL JUMPS with the frame fully restored -- the callee finds
+// the receiver at [esp+4] where its one declared cdecl argument lives -- and
+// 020b3278 is a __thiscall indirect with ZERO stack arguments. The emitted
+// field offsets (+0x0c, +0x04, +0x14, +0x0c) agree with the ROM's own offsets
+// word for word, which is what says the src structs are right at the EIGHT-byte
+// member pointer /vmg /vmm gives this target (block R8 of port/CMakeLists.txt).
+// So the tables below get PLAIN CDECL bodies and data_ov004_020bf490 gets
+// __fastcall FACES, and that difference is measured per row rather than assumed
+// per family.
+//
+// /Zp4 IS A MEASURED NO-OP on all five: each TU was compiled both ways and the
+// only differing line in the two listings is the TITLE, which is the output
+// filename. It is not claimed on any of them.
+//
+// ---- 2. WHY A SEAT AND NOT A SWITCH --------------------------------------
+//
+// An object-field row has no table for a boot installer to rewrite: the pair is
+// a FIELD, written at play time. What a seat can rewrite is the source the
+// writer copies FROM, and then every field written afterwards carries a host
+// word for free. This file seats the thirty code-bearing cells of the three
+// .bss tables __sinit_ov004_020b955c fills; port/unmatched/MgBase_StateSetter
+// .cpp seats the fifty-six .data pair globals the state bodies copy into the
+// object. Together they are every storage location in ov004 that can hand one
+// of the eighty-four routed code words to anything, and that is a SWEEP rather
+// than a hope: runs/link100/out/MGWRITER/sweep.txt takes every `load`
+// relocation row in config/arm9/overlays/ov004/relocs.txt whose destination is
+// one of the eighty-four, keeps the ones whose FOLLOWING word reads zero, and
+// finds NINETY-NINE pairs. They account exactly: 4 + 30 + 7 + 9 + 49, which is
+// the four lane PMFB3 already seated in data_ov004_020beb88 and _020beb98, the
+// thirty this constructor copies FROM (dead once the destination is seated),
+// the seven this lane seats for the 020b3278 object, the nine that belong to
+// dScMgMemory2_c and are NOT this gate's, and the forty-nine of the setter's
+// own object. Nothing else in the overlay holds one. That sweep is an
+// ADDRESS-TARGETED one rather than the blind pair sweep over a range that
+// port/mg_fanout_costs.txt section 4 refuses: the needles are the eighty-four
+// code words the port's own two switches already routed, each with a matched
+// src TU and a delink block, so a false positive would have to be a word that
+// equals one of those addresses, carries the overlay's own load relocation to
+// it, and is followed by a zero. One row was reported and NOT written on
+// exactly that test: 0x020b7468, the literal pool word of the 0x020b7460 tail
+// jump veneer, whose following word is the next function's `stmdb`.
+//
+// ---- 3. THE THIRTY CELLS, AND WHY THE DESTINATION AND NOT THE SOURCE -----
+//
+// data_ov004_020bf428, _020bf4f8 and _020bf490 are ov004 .bss past the end of
+// the overlay image, filled by __sinit_ov004_020b955c out of thirty named .data
+// pairs. The seat runs AFTER that constructor (hal/scene_mg.cpp calls it beside
+// the other twelve), so the destination already holds the cartridge's own words
+// and the destination is what is rewritten. The sources are left alone on
+// purpose: lane PMFB3's framework seat checks data_ov004_020beb88 and _020beb98
+// against the ROM's own DS words at that same point in the boot, and seating a
+// source ahead of a sinit would make that check refuse.
+//
+// Nine slots hold the arm9 NULL pair {0,0} rather than a code word
+// (data_ov004_020bf428.p0 and .p12, and _020bf4f8.p0 through .p4 and .p11 --
+// .p0 field-form, the rest whole-pair copies of the same local). They are not
+// seated because there is no cartridge word to compare against, and the ROM's
+// own null-code guard is what reads them.
+//
+// THE CHECK IS THE POINT, as in every other seat in this tree: each cell is
+// compared with the ROM's own code word and a zero adjustment before anything
+// is written, and either mismatch is a loud abort rather than a silent wrong
+// dispatch.
 
-static inline const MgPmf *mg_self_pmf(void *self, unsigned off)
-{
-    return (const MgPmf *)((char *)self + off);
+static unsigned g_fwk_field_hits;
+static unsigned g_fwk_490_hits;
+static unsigned g_fwk_seated;
+
+/* ---- THE ALIAS src/func_ov004_020b3278.cpp ASKS FOR ---------------------
+   That TU declares `extern PMF data_ov004_020bf490[]` at namespace scope with
+   PMF a pointer to member, so MSVC encodes the member-pointer type into the
+   reference and spells it as below -- read off the TU's own /FAsc listing
+   (runs/link100/out/MGWRITER/listings/func_ov004_020b3278_nozp.asm), not
+   guessed -- while the ov004 mount defines the same address under C linkage.
+   Its seven other data references (_020beb68, _020bf3e8, _020bf428, _020bf4f8,
+   _020bf560, _020bf5d4, _020bc27c) already have their aliases in
+   hal/scene_mg_faces_gen.cpp and hal/scene_mg_faces.cpp. Safe under
+   port/tools/alternatename_guard.py for hal/pmfc_aliases.cpp's reason: nothing
+   in the tree DEFINES this LHS, so it cannot acquire a real definition and be
+   silently defeated. */
+#pragma comment(linker, "/alternatename:?data_ov004_020bf490@@3PAP8Base@@AEXXZA=_data_ov004_020bf490")
+
+extern "C" {
+extern MgPmf data_ov004_020bf428[];
+extern MgPmf data_ov004_020bf4f8[];
+extern MgPmf data_ov004_020bf490[];
 }
 
-/* src/func_ov004_020b31b4.cpp */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
-extern "C" void func_ov004_020b31b4(void *self)
+/* The counting wrappers for the two field tables. A wrapper rather than the
+   bare body because the census in hal/scene_mg.cpp has always printed how many
+   framework dispatches actually happened, and once the ROM's own dispatchers
+   read the table directly there is nothing left in this file for a counter to
+   sit on. Same convention in and out, same body called, one increment: the
+   dispatcher tail-jumps into the wrapper's own frame, the wrapper reads the
+   receiver at [esp+4] exactly as the body would, and cleans nothing because the
+   frame belongs to the dispatcher's caller. */
+static void fw_020b35d8(void *c) { ++g_fwk_field_hits; func_ov004_020b35d8(c); }
+static void fw_020b3834(void *c) { ++g_fwk_field_hits; func_ov004_020b3834(c); }
+static void fw_020b3b38(void *c) { ++g_fwk_field_hits; func_ov004_020b3b38(c); }
+static void fw_020b3c58(void *c) { ++g_fwk_field_hits; func_ov004_020b3c58(c); }
+static void fw_020b3cb8(void *c) { ++g_fwk_field_hits; func_ov004_020b3cb8(c); }
+static void fw_020b3e9c(void *c) { ++g_fwk_field_hits; func_ov004_020b3e9c(c); }
+static void fw_020b4080(void *c) { ++g_fwk_field_hits; func_ov004_020b4080(c); }
+static void fw_020b4360(void *c) { ++g_fwk_field_hits; func_ov004_020b4360(c); }
+static void fw_020b45c0(void *c) { ++g_fwk_field_hits; func_ov004_020b45c0(c); }
+static void fw_020b4820(void *c) { ++g_fwk_field_hits; func_ov004_020b4820(c); }
+static void fw_020b49b8(void *c) { ++g_fwk_field_hits; func_ov004_020b49b8(c); }
+static void fw_020b49f0(void *c) { ++g_fwk_field_hits; func_ov004_020b49f0(c); }
+static void fw_020b4a28(void *c) { ++g_fwk_field_hits; func_ov004_020b4a28(c); }
+static void fw_020b4a4c(void *c) { ++g_fwk_field_hits; func_ov004_020b4a4c(c); }
+
+/* The faces for data_ov004_020bf490. src/func_ov004_020b3278.cpp compiles its
+   dispatch to `call eax` with the receiver in ecx and NOTHING pushed, so these
+   twelve cells hold ten one-cell __fastcall faces (0x020b484c and 0x020b40ac
+   each fill two slots). func_ov004_020b3698 is four bytes of `bx lr` in the ROM
+   and its src TU takes no argument, so its face drops the receiver, which is
+   exact rather than a dropped pointer. */
+static void __fastcall f490_020b3698(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b3698(); }
+static void __fastcall f490_020b3888(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b3888(self); }
+static void __fastcall f490_020b3c9c(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b3c9c(self); }
+static void __fastcall f490_020b40ac(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b40ac(self); }
+static void __fastcall f490_020b433c(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b433c(self); }
+static void __fastcall f490_020b484c(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b484c(self); }
+static void __fastcall f490_020b49e4(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b49e4(self); }
+static void __fastcall f490_020b4a1c(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b4a1c(self); }
+static void __fastcall f490_020b4a40(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b4a40(self); }
+static void __fastcall f490_020b4a64(void *self, void *) { ++g_fwk_490_hits; func_ov004_020b4a64(self); }
+
+typedef void (*SeatFn)(void *);
+
+extern "C" void port_mg_framework_tables_seat(void)
 {
-    char *c = (char *)self;
-    if (*(int *)(c + 0x20) == 0x1d)
+    static int done;
+    if (done)
         return;
-    const MgPmf *p = mg_self_pmf(c, 8);
-    if (p->code != 0) {
-        port_mg_call0(c, p->code, p->adj);
-        return;
-    }
-    func_ov004_020b42c0(c);
-}
+    done = 1;
 
-/* src/func_ov004_020b321c.cpp. The ROM moves `this` to the adjusted pointer
-   before the call (mov r0, r3); with every measured adjustment zero that is
-   the object itself, and port_mg_call0 refuses any nonzero one. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
-extern "C" void func_ov004_020b321c(void *self)
-{
-    char *c = (char *)self;
-    if (*(int *)(c + 0x20) == 0x1d)
-        return;
-    const MgPmf *p = mg_self_pmf(c, 0);
-    if (p->code == 0)
-        return;
-    port_mg_call0(c, p->code, p->adj);
-}
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        SeatFn host;
+    } cells[] = {
+    { data_ov004_020bf428, "020bf428",  1, 0x020b4a4cu, (SeatFn)fw_020b4a4c },   /* sinit copies data_ov004_020bc22c */
+    { data_ov004_020bf428, "020bf428",  2, 0x020b4a28u, (SeatFn)fw_020b4a28 },   /* sinit copies data_ov004_020bc19c */
+    { data_ov004_020bf428, "020bf428",  3, 0x020b49f0u, (SeatFn)fw_020b49f0 },   /* sinit copies data_ov004_020bc184 */
+    { data_ov004_020bf428, "020bf428",  4, 0x020b49b8u, (SeatFn)fw_020b49b8 },   /* sinit copies data_ov004_020bc204 */
+    { data_ov004_020bf428, "020bf428",  5, 0x020b4820u, (SeatFn)fw_020b4820 },   /* sinit copies data_ov004_020bc18c */
+    { data_ov004_020bf428, "020bf428",  6, 0x020b4080u, (SeatFn)fw_020b4080 },   /* sinit copies data_ov004_020bc1fc */
+    { data_ov004_020bf428, "020bf428",  7, 0x020b4820u, (SeatFn)fw_020b4820 },   /* sinit copies data_ov004_020bc1f4 */
+    { data_ov004_020bf428, "020bf428",  8, 0x020b4820u, (SeatFn)fw_020b4820 },   /* sinit copies data_ov004_020bc154 */
+    { data_ov004_020bf428, "020bf428",  9, 0x020b4080u, (SeatFn)fw_020b4080 },   /* sinit copies data_ov004_020bc1dc */
+    { data_ov004_020bf428, "020bf428", 10, 0x020b3c58u, (SeatFn)fw_020b3c58 },   /* sinit copies data_ov004_020bc1e4 */
+    { data_ov004_020bf428, "020bf428", 11, 0x020b3834u, (SeatFn)fw_020b3834 },   /* sinit copies data_ov004_020bc214 */
+    { data_ov004_020bf4f8, "020bf4f8",  5, 0x020b45c0u, (SeatFn)fw_020b45c0 },   /* sinit copies data_ov004_020bc1a4 */
+    { data_ov004_020bf4f8, "020bf4f8",  6, 0x020b3e9cu, (SeatFn)fw_020b3e9c },   /* sinit copies data_ov004_020bc24c */
+    { data_ov004_020bf4f8, "020bf4f8",  7, 0x020b45c0u, (SeatFn)fw_020b45c0 },   /* sinit copies data_ov004_020bc21c */
+    { data_ov004_020bf4f8, "020bf4f8",  8, 0x020b4360u, (SeatFn)fw_020b4360 },   /* sinit copies data_ov004_020bc26c */
+    { data_ov004_020bf4f8, "020bf4f8",  9, 0x020b3cb8u, (SeatFn)fw_020b3cb8 },   /* sinit copies data_ov004_020bc1cc */
+    { data_ov004_020bf4f8, "020bf4f8", 10, 0x020b3b38u, (SeatFn)fw_020b3b38 },   /* sinit copies data_ov004_020bc174 */
+    { data_ov004_020bf4f8, "020bf4f8", 12, 0x020b35d8u, (SeatFn)fw_020b35d8 },   /* sinit copies data_ov004_020bc194 */
+    { data_ov004_020bf490, "020bf490",  1, 0x020b4a64u, (SeatFn)f490_020b4a64 },   /* sinit copies data_ov004_020bc234 */
+    { data_ov004_020bf490, "020bf490",  2, 0x020b4a40u, (SeatFn)f490_020b4a40 },   /* sinit copies data_ov004_020bc23c */
+    { data_ov004_020bf490, "020bf490",  3, 0x020b4a1cu, (SeatFn)f490_020b4a1c },   /* sinit copies data_ov004_020bc244 */
+    { data_ov004_020bf490, "020bf490",  4, 0x020b49e4u, (SeatFn)f490_020b49e4 },   /* sinit copies data_ov004_020bc16c */
+    { data_ov004_020bf490, "020bf490",  5, 0x020b484cu, (SeatFn)f490_020b484c },   /* sinit copies data_ov004_020bc1bc */
+    { data_ov004_020bf490, "020bf490",  6, 0x020b40acu, (SeatFn)f490_020b40ac },   /* sinit copies data_ov004_020bc1ac */
+    { data_ov004_020bf490, "020bf490",  7, 0x020b433cu, (SeatFn)f490_020b433c },   /* sinit copies data_ov004_020bc25c */
+    { data_ov004_020bf490, "020bf490",  8, 0x020b484cu, (SeatFn)f490_020b484c },   /* sinit copies data_ov004_020bc264 */
+    { data_ov004_020bf490, "020bf490",  9, 0x020b40acu, (SeatFn)f490_020b40ac },   /* sinit copies data_ov004_020bc1c4 */
+    { data_ov004_020bf490, "020bf490", 10, 0x020b3c9cu, (SeatFn)f490_020b3c9c },   /* sinit copies data_ov004_020bc164 */
+    { data_ov004_020bf490, "020bf490", 11, 0x020b3888u, (SeatFn)f490_020b3888 },   /* sinit copies data_ov004_020bc15c */
+    { data_ov004_020bf490, "020bf490", 12, 0x020b3698u, (SeatFn)f490_020b3698 },   /* sinit copies data_ov004_020bc1d4 */
+    };
 
-/* src/func_ov004_020b8714.cpp */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
-extern "C" void func_ov004_020b8714(void *self)
-{
-    char *c = (char *)self;
-    if (*(int *)(c + 0x18) == -1)
-        return;
-    const MgPmf *p = mg_self_pmf(c, 0x10);
-    if (p->code == 0)
-        return;
-    port_mg_call0(c, p->code, p->adj);
-}
-
-/* src/func_ov004_020b8778.cpp */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
-extern "C" void func_ov004_020b8778(void *self)
-{
-    char *c = (char *)self;
-    if (*(int *)(c + 0x18) == -1)
-        return;
-    _Z14ApproachLinearRiii(*(int *)(c + 0x1c), 0, 1);
-    const MgPmf *p = mg_self_pmf(c, 8);
-    if (p->code == 0)
-        return;
-    port_mg_call0(c, p->code, p->adj);
-}
-
-// ---- func_ov004_020b3278 ---------------------------------------------------
-//
-// The one big body in the set, and the only one whose OTHER declarations
-// matter: it names seven globals at C++ linkage and seven of the nineteen
-// generated aliases exist for exactly those references. They are transcribed
-// unchanged for that reason. Only `PMF data_ov004_020bf490[]` becomes MgPmf.
-//
-// data_ov004_020bf490 IS ov004 .bss PAST THE END OF THE OVERLAY IMAGE
-// (overlay_0004.bin covers 0x020ad660..0x020beb60), so nothing in the image
-// itself fills it. The constructor that fills it is __sinit_ov004_020b955c, and
-// that constructor RUNS on the port: src/__sinit_ov004_020b955c.c is a full
-// body, config/arm9/overlays/ov004/delinks.txt carries its block,
-// port/slice_mg1.txt lists it, and a scene boot prints `ov004 4/4`. So the
-// table holds live pairs, the ROM's own `if (data_ov004_020bf490[st])` guard
-// passes, and the slots ARE dispatched.
-//
-// This block used to argue the opposite, from a premise about that constructor
-// having no delink block and no source. Section 5 at the top of the file
-// records the correction, the hole the stale premise hid, which of these slots
-// the switch below routes today, and how data_ov004_020bf428 and _020bf4f8 two
-// blocks down reach their callees, which is not through this body.
-
-struct Obj {
-    virtual int m00(); virtual int m01(); virtual int m02(); virtual int m03();
-    virtual int m04(); virtual int m05(); virtual int m06(); virtual int m07();
-    virtual int m08(); virtual int m09(); virtual int m10(); virtual int m11();
-    virtual int m12(); virtual int m13(); virtual int m14(); virtual int m15();
-    virtual int m16(); virtual int m17(); virtual int m18(); virtual int m19();
-    virtual int m20(); virtual int m21(); virtual int m22(); virtual int m23();
-    virtual int m24(); virtual int m25(); virtual int m26();
-};
-
-struct Pair { int w0; int w1; };
-struct S3 { int v[3]; };
-
-extern Obj *data_ov004_020beb68;
-extern unsigned char data_ov004_020bf3e8[];
-extern int data_ov004_020bf560[];
-extern S3 data_ov004_020bc27c;
-extern int data_ov004_020bf5d4[];
-extern Pair data_ov004_020bf428[];
-extern Pair data_ov004_020bf4f8[];
-extern "C" MgPmf data_ov004_020bf490[];
-
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
-extern "C" void func_ov004_020b3278(char *self, int arg1, short arg2, short arg3, int arg4, int arg5, short arg6)
-{
-    int a, b;
-
-    if (data_ov004_020beb68->m26() == 2) {
-        a = 0x6400000;
-        b = 0;
-    } else {
-        a = 0x6600000;
-        b = 0x6400000;
-    }
-
-    switch (arg1) {
-    case 3: case 4: case 5: case 6:
-    case 8: case 9: case 10: case 11: case 12:
-    case 14: case 16: case 17: case 18: case 19: case 20: case 21:
-        if (data_ov004_020bf3e8[0] != 0)
-            return;
-        DecompressLZ16(data_ov004_020bf560[arg1], a + 0x7000);
-        if (b != 0)
-            DecompressLZ16(data_ov004_020bf560[arg1], b + 0x7000);
-        *(short *)(self + 0x30) = 0;
-        data_ov004_020bf3e8[0] = 1;
-        break;
-    default:
-        if (data_ov004_020bf3e8[1] == 0) {
-            DecompressLZ16(data_ov004_020bf560[arg1], a + 0x6000);
-            if (b != 0)
-                DecompressLZ16(data_ov004_020bf560[arg1], b + 0x6000);
-            *(short *)(self + 0x30) = 1;
-            data_ov004_020bf3e8[1] = 1;
-            break;
+    for (unsigned i = 0; i < sizeof cells / sizeof cells[0]; ++i) {
+        MgPmf *p = &cells[i].table[cells[i].slot];
+        if (p->code != cells[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgBase_c framework table "
+                         "data_ov004_%s slot %u: __sinit_ov004_020b955c left "
+                         "%08x/%d, the ROM's own source pair says %08x/0 -- "
+                         "WRONG BYTES\n", cells[i].name, cells[i].slot,
+                         p->code, p->adj, cells[i].rom);
+            std::abort();
         }
-        if (data_ov004_020bf3e8[2] == 0) {
-            DecompressLZ16(data_ov004_020bf560[arg1], a + 0x6800);
-            if (b != 0)
-                DecompressLZ16(data_ov004_020bf560[arg1], b + 0x6800);
-            *(short *)(self + 0x30) = 2;
-            data_ov004_020bf3e8[2] = 1;
-            break;
-        }
-        return;
+        p->code = (unsigned)(size_t)cells[i].host;
+        ++g_fwk_seated;
     }
+}
 
-    *(int *)(self + 0x20) = arg1;
-    *(short *)(self + 0x10) = arg2;
-    *(short *)(self + 0x12) = arg3;
-    *(short *)(self + 0x14) = *(short *)(self + 0x10);
-    *(short *)(self + 0x16) = *(short *)(self + 0x12);
-    *(int *)(self + 0x1c) = arg4;
-    *(int *)(self + 0x18) = arg5;
-    *(short *)(self + 0x32) = 0;
-
-    if (arg6 != 0xd) {
-        *(short *)(self + 0x2e) = arg6;
-    } else {
-        switch (arg1) {
-        case 11:
-            *(short *)(self + 0x2e) = 7;
-            break;
-        case 3: case 4: case 5: case 6: case 20: case 21:
-            *(short *)(self + 0x2e) = 8;
-            break;
-        case 8: case 14:
-            *(short *)(self + 0x2e) = 9;
-            break;
-        case 0:
-            *(short *)(self + 0x2e) = 3;
-            break;
-        case 1: case 2:
-            *(short *)(self + 0x2e) = 4;
-            break;
-        case 13:
-            *(short *)(self + 0x2e) = 0xc;
-            break;
-        default:
-            *(short *)(self + 0x2e) = 0;
-            break;
-        }
-    }
-
-    {
-        S3 tmp = data_ov004_020bc27c;
-        *(short *)(self + 0x2c) = (short)func_ov004_020af5e0(
-            data_ov004_020bf5d4[*(int *)(self + 0x20)],
-            self + 0x34,
-            tmp.v[*(short *)(self + 0x30)],
-            *(int *)(self + 0x20));
-    }
-
-    /* THE ONE CHANGED CALL. The src reads
-           if (data_ov004_020bf490[st])
-               (((Base *)self)->*data_ov004_020bf490[st])();
-       and its null test is a test of the code word, which is what it becomes. */
-    {
-        int st = *(short *)(self + 0x2e);
-        const MgPmf *p = &data_ov004_020bf490[st];
-        if (p->code != 0)
-            port_mg_call0(self, p->code, p->adj);
-    }
-
-    {
-        short st;
-        Pair *e;
-        st = *(short *)(self + 0x2e);
-        e = &data_ov004_020bf428[st];
-        a = data_ov004_020bf428[st].w0;
-        b = e->w1;
-        *(int *)(self + 0) = b ? a : a;
-        *(int *)(self + 4) = b;
-        st = *(short *)(self + 0x2e);
-        e = &data_ov004_020bf4f8[st];
-        a = data_ov004_020bf4f8[st].w0;
-        b = e->w1;
-        *(int *)(self + 8) = b ? a : a;
-        *(int *)(self + 0xc) = b;
-    }
+extern "C" void port_mg_framework_seat_counts(unsigned *seated, unsigned *field,
+                                              unsigned *table)
+{
+    if (seated) *seated = g_fwk_seated;
+    if (field)  *field  = g_fwk_field_hits;
+    if (table)  *table  = g_fwk_490_hits;
 }
