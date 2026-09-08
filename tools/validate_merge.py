@@ -37,6 +37,9 @@ SOURCE_SUFFIXES = (".c", ".cpp")
 # Credit moves named in the one-line reason, and rows in the check body's table.
 CREDIT_NAMED = 3
 CREDIT_ROWS = 25
+# Relocation-evidence defects carried in the JSON report. The count always travels;
+# a broken config can produce thousands of rows and the report has a size budget.
+RELOC_DEFECTS_SHOWN = 10
 # tangos-backend's /result cap. Kept here so the report clips itself rather than being
 # rejected whole -- see the clamp in build_report.
 SUMMARY_LIMIT = 500
@@ -136,6 +139,173 @@ def _rev_enrolment(rev):
                     i += 1
         _ENROLMENT_CACHE[rev] = (addrs, owner)
     return _ENROLMENT_CACHE[rev]
+
+
+# The two row shapes dsd writes into a `relocs.txt`, and nothing else. Measured over
+# the whole tree at cd3a7eb59: 106 files, 91,809 rows, 91,808 of the first shape and
+# exactly one of the second (`config/arm9/relocs.txt`, the ARM9_CTOR_START link-time
+# constant, which names no destination address at all).
+#
+#   from:0x<addr> kind:<kind> to:0x<addr> module:<token>
+#   from:0x<addr> kind:link_time_const(<NAME>)
+#
+# Anchored at both ends on purpose. A leading BOM, leading whitespace, a truncated
+# tail row or a row from some future dsd all fail to match here, and a row that fails
+# to match is a DEFECT, never a line to skip -- see `_reloc_index`.
+_RELOC_ROW = re.compile(
+    r"^from:0x[0-9a-fA-F]+ +kind:\S+ +to:0x([0-9a-fA-F]+) +module:(\S+)$")
+_RELOC_CONST = re.compile(r"^from:0x[0-9a-fA-F]+ +kind:link_time_const\([^()]+\)$")
+# The documented destination tokens. `main` and `overlay(N)`/`overlays(N,M)` name a
+# symbol-table module; `itcm`, `dtcm` and `none` are real tokens that name none.
+_RELOC_OVERLAY = re.compile(r"^overlays?\((\d+(?: *, *\d+)*)\)$")
+_RELOC_UNMAPPED = ("itcm", "dtcm", "none")
+_RELOC_ANY = "*"
+_RELOC_CACHE = {}
+
+
+def _is_reloc_file(path):
+    return path.startswith("config/arm9/") and path.endswith("/relocs.txt") \
+        or path == "config/arm9/relocs.txt"
+
+
+def _is_symbols_file(path):
+    return path.startswith("config/arm9/") and path.endswith("/symbols.txt") \
+        or path == "config/arm9/symbols.txt"
+
+
+def _reloc_index(rev):
+    """The relocation destination index at ``rev``, WITH the defects that invalidate it.
+
+    Returns ``{"dests": module -> sorted destination addresses, "defects": [str]}``.
+
+    Read from git like every other snapshot here, and read from EVERY ``relocs.txt``
+    under ``config/arm9``, not just the ones whose own module has a symbol table. A
+    relocation names the module of its DESTINATION, so where the reference LIVES is
+    irrelevant: a call from an overlay into the main binary is an incoming destination
+    for arm9, and the arm9 file alone would not see it. Reading only the files that
+    match `config/arm9/(overlays/ovNNN/)?relocs.txt` -- the shape `_module_from_symbols`
+    and `_module_from_delinks` use for the modules this report counts -- covers 104 of
+    the 106 and silently drops `config/arm9/itcm/relocs.txt`, whose 142 `module:main`
+    rows are 142 incoming references into arm9 that no other file records, along with
+    `config/arm9/dtcm/relocs.txt`.
+
+    DEFECTS, NOT SKIPPED INPUT. Nothing here quietly tolerates missing or unreadable
+    evidence, because the only thing this index is ever used for is deciding whether
+    NOTHING points at an address, and an index that skipped its input answers that
+    question "nothing" for every address in the cartridge. So:
+
+      * every module whose ``symbols.txt`` declares at least one function must have a
+        ``relocs.txt`` beside it, present and non-empty, at this revision;
+      * a module that declares no function may have an empty file (15 of them at
+        cd3a7eb59: `config/arm9/dtcm` and fourteen overlays whose sections are all
+        zero-length, e.g. ov061's `.text start:0x02115ec0 end:0x02115ec0`);
+      * every line of every file must be one of the two documented row shapes, and
+        every destination token one of the documented set;
+      * an unreadable blob is a defect rather than an exception, so the caller fails
+        closed with a reason naming the file instead of the worker failing with a
+        traceback.
+
+    A defect does not make this function raise and does not empty the index. It makes
+    the EVIDENCE invalid, and callers that need valid evidence to permit something must
+    check `defects` and refuse. See `_reloc_evidence`.
+    """
+    # Keyed by (repo, rev), not by rev: the tests point `REPO` at one temporary
+    # repository after another, and two of them holding the same tree, author and
+    # second produce the same sha. A cache keyed on the sha alone would answer the
+    # second repository with the first one's index.
+    key = (str(REPO), rev)
+    if key not in _RELOC_CACHE:
+        try:
+            paths = tree_paths(rev, "config/arm9")
+        except RuntimeError as exc:
+            _RELOC_CACHE[key] = {"dests": {},
+                                 "defects": [f"config/arm9 unreadable: {exc}"]}
+            return _RELOC_CACHE[key]
+        defects = []
+        reloc_paths = sorted(p for p in paths if _is_reloc_file(p))
+        texts = {}
+        for path in reloc_paths:
+            try:
+                texts[path] = git_text(rev, path)
+            except RuntimeError as exc:
+                defects.append(f"{path} is unreadable at {rev[:12]}: {exc}")
+        # INVENTORY. A module missing from the index reads exactly like a module that
+        # references nothing, so the inventory is checked before the rows are.
+        for path in sorted(p for p in paths if _is_symbols_file(p)):
+            sibling = path[:-len("symbols.txt")] + "relocs.txt"
+            try:
+                declared = sum(1 for line in git_text(rev, path).splitlines()
+                               if FUNC_RE.match(line))
+            except RuntimeError as exc:
+                defects.append(f"{path} is unreadable at {rev[:12]}: {exc}")
+                continue
+            if sibling not in texts:
+                defects.append(f"{sibling} is missing at {rev[:12]} while {path} "
+                               f"declares {declared} function(s)")
+            elif declared and not texts[sibling].strip():
+                defects.append(f"{sibling} is empty at {rev[:12]} while {path} "
+                               f"declares {declared} function(s)")
+        dests = collections.defaultdict(list)
+        for path in reloc_paths:
+            for number, line in enumerate(texts.get(path, "").splitlines(), 1):
+                m = _RELOC_ROW.match(line)
+                if not m:
+                    if not _RELOC_CONST.match(line):
+                        defects.append(f"{path}:{number} is not a relocation row: "
+                                       f"{line[:60]!r}")
+                    continue
+                addr, token = int(m.group(1), 16), m.group(2)
+                if token == "main":
+                    modules = ("arm9",)
+                elif token in _RELOC_UNMAPPED:
+                    # A documented token naming no symbol-table module. Filed under `*`
+                    # and counted for EVERY module: the conservative direction, because
+                    # the only use of a destination count is refusing to let a matched
+                    # record leave.
+                    modules = (_RELOC_ANY,)
+                else:
+                    ov = _RELOC_OVERLAY.match(token)
+                    if ov is None:
+                        defects.append(f"{path}:{number} names an undocumented "
+                                       f"destination module {token!r}")
+                        continue
+                    modules = tuple(f"ov{int(n):03d}" for n in ov.group(1).split(","))
+                for module in modules:
+                    dests[module].append(addr)
+        _RELOC_CACHE[key] = {"dests": {k: sorted(v) for k, v in dests.items()},
+                             "defects": defects}
+    return _RELOC_CACHE[key]
+
+
+def _reloc_evidence(base, head):
+    """The relocation index over BOTH revisions, with every defect either one carries.
+
+    The union is the conservative direction: a reference present in either revision
+    counts, so a PR cannot earn "nothing points here" by deleting the row that says
+    something does. The defects are the union too -- evidence that is invalid at one
+    end is invalid.
+    """
+    dests, defects = collections.defaultdict(list), []
+    for rev in (base, head):
+        index = _reloc_index(rev)
+        defects.extend(index["defects"])
+        for module, addrs in index["dests"].items():
+            dests[module].extend(addrs)
+    return {"dests": {k: sorted(v) for k, v in dests.items()},
+            "defects": defects,
+            "valid": not defects}
+
+
+def _incoming_relocations(dests, module, addr, end):
+    """How many relocation destinations land inside ``[addr, end)`` of ``module``."""
+    total = 0
+    for key in (module, _RELOC_ANY):
+        addrs = dests.get(key) or []
+        i = bisect.bisect_left(addrs, addr)
+        while i < len(addrs) and addrs[i] < end:
+            total += 1
+            i += 1
+    return total
 
 
 def function_snapshot(rev):
@@ -922,6 +1092,11 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     bv, hv = verification_split(bf, be), verification_split(hf, he)
     ba, ha = attribution_snapshot(base_sha, bf), attribution_snapshot(head_sha, hf)
     diff = diff_snapshot(base_sha, head_sha, set(tree_paths(head_sha, "src/")))
+    # The relocation index over both revisions, and whether it is fit to be relied on.
+    # Reported whether or not anything consumes it: "the evidence this run had" is a
+    # fact a reader auditing a decision needs, and a silent index is how missing
+    # evidence gets mistaken for an answer.
+    reloc = _reloc_evidence(base_sha, head_sha)
 
     # The transcription gate for the PR itself, scoped STRICTLY to the sources this
     # merge adds or modifies (never renames-only or pre-existing files, so an old
@@ -1205,6 +1380,12 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered,
                       "strandedMarkers": stranded_markers},
         "matchedWithdrawn": withdrawn,
+        "relocationEvidence": {
+            "valid": reloc["valid"],
+            "modules": len(reloc["dests"]),
+            "destinations": sum(len(v) for v in reloc["dests"].values()),
+            "defects": reloc["defects"][:RELOC_DEFECTS_SHOWN],
+            "defectCount": len(reloc["defects"])},
         "repartition": repartition,
         "linkcheck": link,
         "portRefcheck": port,

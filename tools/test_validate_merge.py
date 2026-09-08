@@ -1099,3 +1099,150 @@ class MergeEvidenceThroughBuildReport(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RelocIndex(unittest.TestCase):
+    """`_reloc_index` reads the module of the DESTINATION, from every file, and says
+    when its own input is not fit to be relied on.
+
+    The index answers exactly one question -- "does anything point at these bytes" --
+    and it is asked in order to PERMIT something. An index that skipped unreadable
+    input would answer "nothing" for every address in the cartridge, so every way the
+    input can be defective is a defect here rather than a line to skip.
+    """
+
+    ARM9_ROWS = ("from:0x02004808 kind:arm_call to:0x020049f0 module:main\n"
+                 "from:0x0203b5bc kind:arm_call to:0x01ffa4bc module:none\n"
+                 "from:0x02005efc kind:arm_call to:0x020ab110 module:overlay(1)\n")
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.repo = pathlib.Path(self.tmp.name)
+        git(self.repo, "init", "-q", ".")
+        self.cfg = self.repo / "config" / "arm9"
+        (self.cfg / "overlays" / "ov001").mkdir(parents=True)
+        (self.cfg / "itcm").mkdir(parents=True)
+        self.write("symbols.txt",
+                   "Anchor kind:function(arm,size=0x4) addr:0x02000000\n")
+        self.write("overlays/ov001/symbols.txt",
+                   "OvOne kind:function(arm,size=0x4) addr:0x020ab110\n")
+        self.write("itcm/symbols.txt",
+                   "ItcmOne kind:function(arm,size=0x4) addr:0x01ff8000\n")
+        self.write("relocs.txt", self.ARM9_ROWS)
+        # A call from an overlay INTO the main binary. The arm9 file never sees it.
+        self.write("overlays/ov001/relocs.txt",
+                   "from:0x020aa42c kind:arm_call to:0x0201a9ec module:main\n"
+                   "from:0x020aa438 kind:load to:0x020ff028 module:overlays(2,7)\n")
+        # And one from ITCM, in a directory `_module_from_relocs` never recognised.
+        self.write("itcm/relocs.txt",
+                   "from:0x01ff8100 kind:arm_call to:0x0201b000 module:main\n")
+        self.old_repo = VM.REPO
+        VM.REPO = self.repo
+        VM._RELOC_CACHE.clear()
+        self.addCleanup(VM._RELOC_CACHE.clear)
+        self.addCleanup(setattr, VM, "REPO", self.old_repo)
+
+    def write(self, rel, text):
+        (self.cfg / rel).write_text(text, encoding="utf-8", newline="\n")
+
+    def index(self):
+        VM._RELOC_CACHE.clear()
+        return VM._reloc_index(commit(self.repo, "relocs", "tester"))
+
+    def test_every_module_file_supplies_destinations_and_the_index_is_valid(self):
+        index = self.index()
+        self.assertEqual(index["defects"], [])
+        dests = index["dests"]
+        # 0x0201b000 is the ITCM file's row: the whole point of reading every file.
+        self.assertEqual(dests["arm9"], [0x020049f0, 0x0201a9ec, 0x0201b000])
+        self.assertEqual(dests["ov001"], [0x020ab110])
+        self.assertEqual(dests["ov002"], [0x020ff028])
+        self.assertEqual(dests["ov007"], [0x020ff028])
+        # A documented token naming no module counts for every module, not for none.
+        self.assertEqual(dests["*"], [0x01ffa4bc])
+        self.assertEqual(
+            VM._incoming_relocations(dests, "arm9", 0x0201b000, 0x0201b004), 1)
+        self.assertEqual(
+            VM._incoming_relocations(dests, "arm9", 0x0201affc, 0x0201b000), 0)
+        self.assertEqual(
+            VM._incoming_relocations(dests, "ov001", 0x01ffa4bc, 0x01ffa4c0), 1)
+
+    def test_a_link_time_constant_row_is_documented_and_carries_no_destination(self):
+        # The one row in the whole tree that names no address.
+        self.write("relocs.txt",
+                   self.ARM9_ROWS
+                   + "from:0x02072fc8 kind:link_time_const(ARM9_CTOR_START)\n")
+        index = self.index()
+        self.assertEqual(index["defects"], [])
+        self.assertEqual(index["dests"]["arm9"], [0x020049f0, 0x0201a9ec, 0x0201b000])
+
+    def test_a_missing_file_for_a_module_that_declares_functions_is_a_defect(self):
+        os.remove(self.cfg / "overlays" / "ov001" / "relocs.txt")
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("config/arm9/overlays/ov001/relocs.txt is missing", defects[0])
+
+    def test_an_empty_file_for_a_module_that_declares_functions_is_a_defect(self):
+        self.write("relocs.txt", "")
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("config/arm9/relocs.txt is empty", defects[0])
+
+    def test_an_empty_file_for_a_module_that_declares_nothing_is_fine(self):
+        # 15 of these at cd3a7eb59: dtcm and fourteen zero-length overlays.
+        (self.cfg / "overlays" / "ov061").mkdir(parents=True)
+        self.write("overlays/ov061/symbols.txt", "")
+        self.write("overlays/ov061/relocs.txt", "")
+        self.assertEqual(self.index()["defects"], [])
+
+    def test_a_malformed_row_is_a_defect(self):
+        self.write("relocs.txt", self.ARM9_ROWS + "garbage\n")
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("config/arm9/relocs.txt:4 is not a relocation row", defects[0])
+
+    def test_a_truncated_last_row_is_a_defect(self):
+        self.write("relocs.txt", self.ARM9_ROWS + "from:0x0203b5c0 kind:arm_call to:0x0207\n")
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("config/arm9/relocs.txt:4 is not a relocation row", defects[0])
+
+    def test_a_leading_byte_order_mark_is_a_defect(self):
+        self.write("relocs.txt", "﻿" + self.ARM9_ROWS)
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("config/arm9/relocs.txt:1 is not a relocation row", defects[0])
+
+    def test_leading_whitespace_is_a_defect(self):
+        self.write("relocs.txt", " " + self.ARM9_ROWS)
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("config/arm9/relocs.txt:1 is not a relocation row", defects[0])
+
+    def test_an_undocumented_destination_token_is_a_defect(self):
+        self.write("relocs.txt",
+                   self.ARM9_ROWS
+                   + "from:0x0203b5c0 kind:arm_call to:0x02071694 module:elsewhere\n")
+        index = self.index()
+        self.assertEqual(len(index["defects"]), 1)
+        self.assertIn("undocumented destination module 'elsewhere'",
+                      index["defects"][0])
+        # And the address it named is in nobody's list, which is exactly why the row
+        # cannot simply be skipped.
+        self.assertEqual(
+            VM._incoming_relocations(index["dests"], "arm9", 0x02071694, 0x02071698), 0)
+
+    def test_the_evidence_over_two_revisions_unions_addresses_and_defects(self):
+        base = commit(self.repo, "base", "tester")
+        self.write("relocs.txt", self.ARM9_ROWS + "garbage\n")
+        head = commit(self.repo, "head", "tester")
+        VM._RELOC_CACHE.clear()
+        evidence = VM._reloc_evidence(base, head)
+        self.assertFalse(evidence["valid"])
+        self.assertEqual(len(evidence["defects"]), 1)
+        # A destination present in either revision counts: a PR cannot earn "nothing
+        # points here" by deleting the row that says something does.
+        self.assertEqual(
+            VM._incoming_relocations(evidence["dests"], "arm9",
+                                     0x020049f0, 0x020049f4), 2)
