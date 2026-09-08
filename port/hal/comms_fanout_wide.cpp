@@ -1,29 +1,67 @@
-// THE WIDE FAN-OUT. 0.3.2, the sixteen-player release.
+// THE WIDE FAN-OUT. 0.3.2, the sixteen-player release; reshaped by run link100
+// (lane R3C's ruling 2) from REPLACE to ALWAYS-THEN-EXTEND.
 //
 // src/func_0203bb60.c and src/func_0203bc7c.c are steps 0x16 and 0x17 of the
 // ROM's main loop: every frame they copy the per-slot comms records into the
 // per-player TouchInfo and PadData arrays that the rest of the game reads its
-// input from. Both loop `i < 4`, hard. With the conductor hosted wide
-// (hal/comms_conductor_wide.cpp) the records for slots 4..15 arrive every
-// round -- and then never left them: sixteen bodies in lockstep, twelve of
-// them standing on their spawn with a pad that read zero on every peer. The
-// independent review of the sixteen-player merge caught it by reading the
-// per-slot pad words in the ladder logs.
+// input from. Both loop `i < 4`, hard -- the 4 is a bare immediate in the loop
+// test (cmp r4,#4 at 0x0203bb84; cmp r8,#4 at 0x0203bcfc), not a table size
+// and not a count global, so there is no ROM constant to widen. With the
+// conductor hosted wide (hal/comms_conductor_wide.cpp) the records for slots
+// 4..15 arrive every round -- and then never left them: sixteen bodies in
+// lockstep, twelve of them standing on their spawn with a pad that read zero
+// on every peer. The independent review of the sixteen-player merge caught it
+// by reading the per-slot pad words in the ladder logs.
 //
-// Same hosting shape as the conductor, because it is the same wall. The two
-// ROM TUs stay in the link, byte for byte, under the per-source renames
-// func_0203bb60_narrow / func_0203bc7c_narrow (port/CMakeLists.txt), and are
-// what every session of four or fewer runs. The wide copies below are the
-// same two functions with the bound at kPortMaxPlayers, chosen by the one
-// number the carrier picks the wire from (port::comms_session_players()).
-// No transport installed answers 0, which is narrow, which is solo:
-// unchanged.
+// WHAT THE TWO SYMBOLS BELOW DO NOW. They run the ROM's own body first, on
+// every frame of every session, and then append slots 4..15 when the session
+// is wider than four. The ROM TUs stay in the link byte for byte under the
+// per-source renames func_0203bb60_narrow / func_0203bc7c_narrow
+// (port/CMakeLists.txt), and they are no longer merely what a narrow session
+// runs: they are what EVERY session runs, and the host only extends them.
+//
+// WHY THE SPLIT IS EXACT AND NOT AN APPROXIMATION. func_0203bb60 is purely
+// per-slot: it writes data_020a0de8 + 4*i and reads func_0203dabc(i), and
+// nothing crosses slots at all. func_0203bc7c writes data_020a0e58[i],
+// data_020a0e48[i] and data_020a0e50[i] -- all indexed -- plus exactly one
+// shared word, data_020a0e44, which it ZEROES at its head and then OR-SETS per
+// slot. So the ROM's body (zero, then accumulate 0..3) followed by a tail that
+// accumulates 4..15 WITHOUT re-zeroing produces bit-for-bit what one wide loop
+// over 0..15 would produce. That is why pad_fanout_tail has no
+// `data_020a0e44 = 0;` line: the ROM body has already done it, and doing it
+// again would throw away slots 0..3's accumulation. Nothing reads TouchInfo or
+// PadData between the two calls either -- the ROM's loop has one store of the
+// phase word between 0x0201984c and 0x02019854 and nothing else.
+//
+// AND WHY IT MATTERS THAT IT IS AN EXTENSION. The previous shape ran a HOST
+// COPY of a matched ROM body above four players and left the ROM's own body
+// uncalled. To the linker that reads as a face either way, and the linkage
+// tool says so in as many words ("a map cannot prove forwarding [...] equally
+// consistent with a host body that duplicates it"). To the port it was a
+// duplicate of matched code with a different bound, and the day the ROM's own
+// loop drives the frame -- rung R3d, func_020197b8 at phases 0x16 and 0x17 --
+// that duplicate is what the cartridge's code would be calling. It forwards
+// now, so the caveat stops applying: these are true faces.
+//
+// THIS IS A MOD, NOT A HOST-ABI EXCEPTION, and it carries no PORT_HOST_ABI
+// tag. That tag is a ruling about what MSVC cannot express -- a register
+// ride-through, mwcc's pointer-to-member, hand asm, unmodelled hardware -- and
+// none of those is in play here. Sixteen players is a deliberate feature
+// deviation whose ruling is written in port/hal/vs_width.h ("The cartridge did
+// four. This port hosts sixteen, and that is a MOD"). Tagging a mod as a
+// host-ABI exception would put a feature decision into the one bucket that
+// has to stay honest about what could not be done otherwise.
 //
 // STORAGE: TouchInfo (data_020a0de8, a placed band, sixteen entries since
 // vs16), PadData (data_020a0e58, sixteen pairs since vs16), and the two
 // previous-keys arrays data_020a0e48 / data_020a0e50 (sixteen halfwords each,
 // widened with this file). The accessors func_0203dabc / func_0203dae4 index
-// the record run, which is sixteen records since the conductor was hosted.
+// the record run, which is sixteen records since the conductor was hosted, and
+// neither accessor bounds-checks -- they are plain stride-0x24 indexing -- so
+// the tails write into storage that exists and is zeroed at session open.
+
+#include <cstdio>
+#include <cstdlib>
 
 #include "comms_loopback.h"
 #include "vs_width.h"
@@ -53,6 +91,10 @@ extern u16 data_020a0e50[kPortMaxPlayers];
 extern InputPair data_020a0e58[kPortMaxPlayers];
 extern u16 func_0203dae4(int idx);
 
+// The per-slot comms record run, sixteen 0x24-byte records since the wide
+// conductor (hal/camera_bridges.cpp). Read here only by the dump below.
+extern unsigned char data_020a1154[];
+
 // The narrow arms: the ROM TUs themselves, under the build's rename.
 void func_0203bb60_narrow(void);
 void func_0203bc7c_narrow(void);
@@ -61,12 +103,14 @@ void func_0203bc7c_narrow(void);
 
 namespace {
 
-// src/func_0203bb60.c with `i < 4` at kPortMaxPlayers. Nothing else differs.
-void touch_fanout_wide(void)
+// THE TAIL of src/func_0203bb60.c: its loop body verbatim, over slots
+// kPortNarrowPlayers..kPortMaxPlayers-1. The ROM's own body has already run
+// slots 0..3 and left p where the DS left it, so this picks up at record 4.
+void touch_fanout_tail(void)
 {
-    u8 *p = data_020a0de8;
+    u8 *p = data_020a0de8 + 4 * kPortNarrowPlayers;
     int i;
-    for (i = 0; i < kPortMaxPlayers; i++) {
+    for (i = kPortNarrowPlayers; i < kPortMaxPlayers; i++) {
         struct R *r = func_0203dabc(i);
         p[1] = (u8)(r->field_4 ^ p[0]);
         p[0] = (u8)r->field_4;
@@ -76,13 +120,18 @@ void touch_fanout_wide(void)
     }
 }
 
-// src/func_0203bc7c.c with `i < 4` at kPortMaxPlayers. Nothing else differs.
-void pad_fanout_wide(void)
+// THE TAIL of src/func_0203bc7c.c: its loop body verbatim, over slots
+// kPortNarrowPlayers..kPortMaxPlayers-1, and WITHOUT the `data_020a0e44 = 0;`
+// that stands at the head of the ROM's body. That one line is the whole reason
+// this is a tail and not a second wide loop: the ROM zeroes the word once and
+// then OR-sets it per slot, so re-zeroing here would discard what slots 0..3
+// accumulated. Zero-once-then-accumulate over 0..3 and then over 4..15 is the
+// same function as zero-once-then-accumulate over 0..15.
+void pad_fanout_tail(void)
 {
-    InputPair *p = data_020a0e58;
+    InputPair *p = data_020a0e58 + kPortNarrowPlayers;
     int i;
-    data_020a0e44 = 0;
-    for (i = 0; i < kPortMaxPlayers; i++)
+    for (i = kPortNarrowPlayers; i < kPortMaxPlayers; i++)
     {
         u16 keys = func_0203dae4(i);
         u16 old;
@@ -108,16 +157,75 @@ inline bool wide(void)
     return port::comms_session_players() > kPortNarrowPlayers;
 }
 
-}  // namespace
-
-extern "C" void func_0203bb60(void)
+// ===========================================================================
+// THE BIT-IDENTITY INSTRUMENT. SM64DS_FANOUT_DUMP=1, off and silent unless
+// set.
+//
+// The fan-out's whole output is five regions of hosted storage plus one byte,
+// and this prints a hash of each of them once per frame, at the tail of step
+// 0x17 -- after BOTH dispatchers have run, because the ROM's loop runs 0x16
+// (func_0203bb60) and then 0x17 (func_0203bc7c) with nothing between them
+// that reads either array. So one line per frame is the complete state the
+// rest of the game reads its stylus and buttons out of.
+//
+// It exists to answer one question by measurement rather than by argument:
+// does moving the fan-out from REPLACE to ALWAYS-THEN-EXTEND change any byte
+// the game can see? Two builds, the same scripted runs, and `diff` on these
+// lines is the answer. Everything in the line is a pure function of that
+// state -- no pointer, no clock, no address -- so two runs that fan out the
+// same records print the same file.
+// ===========================================================================
+unsigned fnv1a(const void *mem, unsigned n)
 {
-    if (!wide()) { func_0203bb60_narrow(); return; }
-    touch_fanout_wide();
+    const unsigned char *b = (const unsigned char *)mem;
+    unsigned h = 2166136261u;
+    unsigned k;
+    for (k = 0; k < n; k++) {
+        h ^= b[k];
+        h *= 16777619u;
+    }
+    return h;
 }
 
+void fanout_dump(void)
+{
+    static int on = -1;
+    static unsigned long long seq = 0;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_FANOUT_DUMP");
+        on = (s && std::atoi(s) != 0) ? 1 : 0;
+    }
+    if (!on) return;
+    std::fprintf(stderr,
+        "[fanout] n=%llu wide=%d players=%d e44=%02x touch=%08x pad=%08x "
+        "prev48=%08x prev50=%08x recs=%08x\n",
+        (unsigned long long)seq++,
+        wide() ? 1 : 0,
+        port::comms_session_players(),
+        (unsigned)data_020a0e44,
+        fnv1a(data_020a0de8, 4u * (unsigned)kPortMaxPlayers),
+        fnv1a(data_020a0e58, (unsigned)sizeof(InputPair) * (unsigned)kPortMaxPlayers),
+        fnv1a(data_020a0e48, 2u * (unsigned)kPortMaxPlayers),
+        fnv1a(data_020a0e50, 2u * (unsigned)kPortMaxPlayers),
+        fnv1a(data_020a1154, 0x24u * (unsigned)kPortMaxPlayers));
+    std::fflush(stderr);
+}
+
+}  // namespace
+
+// Step 0x16 of the ROM's loop. The cartridge's body, then the extension.
+extern "C" void func_0203bb60(void)
+{
+    func_0203bb60_narrow();               /* the ROM's own body, every frame */
+    if (wide()) touch_fanout_tail();      /* slots 4..15, and only those */
+}
+
+// Step 0x17. Same shape, and the dump hangs off the end of it because the two
+// steps run back to back with nothing between them: one line per frame is the
+// whole fan-out's output.
 extern "C" void func_0203bc7c(void)
 {
-    if (!wide()) { func_0203bc7c_narrow(); return; }
-    pad_fanout_wide();
+    func_0203bc7c_narrow();               /* the ROM's own body, every frame */
+    if (wide()) pad_fanout_tail();        /* slots 4..15, and only those */
+    fanout_dump();
 }
