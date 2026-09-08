@@ -39,19 +39,23 @@ WHAT COUNTS AS A LINKER INPUT. An /alternatename reaches link.exe two ways,
 and only the first one exists in this tree:
 
   (a) #pragma comment(linker, "/alternatename:...") in a .c/.cpp/.h under
-      port/. The compiler copies the string into the object's .drectve
-      section and the linker reads it from there. A backslash-continued
+      port/, OR IN A FILE ONE OF THOSE #includes. The compiler copies the
+      string into the object's .drectve section and the linker reads it from
+      there, and it does that for an included file exactly as it does for the
+      including one -- the preprocessor has already pasted the text in by the
+      time the pragma is seen. That is why the reader does not classify a file
+      by its extension alone: see THE .inc HOLE below. A backslash-continued
       pragma counts: the reader carries "this line is inside a pragma" across
       the continuation and matches each directive on the physical line its
       text sits on. It does NOT splice the lines into one string, so this is
       not the preprocessor and does not claim to be; the shapes that
-      distinction loses are recorded in THE COMMENT GAP below. Until run
-      link60 the pragma test ran a line at a time and never saw four
-      continued directives at all -- two were firing, two had been defeated
-      since the day they landed and are now carried in the baseline with that
-      history. Only pragma lines are parsed; a mention that is not a pragma
-      is not a linker input, and is counted with the doc prose rather than
-      dropped.
+      distinction loses are recorded in WHAT THE COMMENT PASS STILL DOES NOT
+      DO below. Until run link60 the pragma test ran a line at a time and
+      never saw four continued directives at all -- two were firing, two had
+      been defeated since the day they landed and are now carried in the
+      baseline with that history. Only pragma lines are parsed; a mention that
+      is not a pragma is not a linker input, and is counted with the doc prose
+      rather than dropped.
   (b) a DIRECTIVE FILE handed to the linker directly: a response file
       (@file), a /DEF: module-definition file, or an /alternatename written
       straight into the link options. THE PORT HAS NONE OF THESE.
@@ -85,10 +89,10 @@ side used to be dropped without a count, which is the same missing number in a
 different file. A count nobody prints is how the next lane plants the next
 landmine.
 
-That rule covers a mention with no #pragma on the line. It does NOT cover a
-whole pragma that has been commented out: PRAGMA_RE matches anywhere in the
-line, so a commented-out pragma is still read as a directive. See THE COMMENT
-GAP.
+That rule covers a mention with no #pragma on the line. It now also covers a
+whole pragma that has been COMMENTED OUT, which it did not for the whole of
+this file's life before run link100 (six commits from 2026-08-13). See THE
+COMMENT GAP, CLOSED.
 
 Loudness moved to where it belongs. If CMake hands the linker a directive
 file that is NOT in REGISTERED_DIRECTIVE_FILES, the guard FAILS and names
@@ -123,39 +127,163 @@ dodge the guard" would still be a bigger claim than the code earns. Treat this
 as a checked fact about the literal spellings and a promise about nothing
 else.
 
-THE COMMENT GAP, RECORDED AND NOT CLOSED. This reader is a line scanner, not
-a C tokenizer, so it cannot tell code from a comment. PRAGMA_RE matches
-anywhere in a line, which means a pragma that has been COMMENTED OUT is
-scanned as a live directive. One exists today:
+THE COMMENT GAP, CLOSED. This reader used to be a pure line scanner, so it
+could not tell code from a comment: PRAGMA_RE matched anywhere in a line, and
+a pragma that had been COMMENTED OUT was scanned as a live directive. Two
+existed in the tree when this was fixed, and neither is in the build:
 
-    hal/actor_classes_koopa_chuckya.cpp:203
+    hal/actor_classes_koopa_chuckya.cpp:221
     /* #pragma comment(linker,
        "/alternatename:?data_0209e650@@3PAHA=_data_0209e650") */
 
-and the prose above it says that alias should stay dead. It is inside the
-scanned count right now, and it is inert only by luck: its LHS is absent from
-the map, so evaluate() takes the "unused alias" exit. Its RHS is present.
+    hal/actor_classes_ov010.cpp:7
+    //     #pragma comment(linker,
+    //         "/alternatename:__ZTV14daObjC1_Trap_c=__ZTV4Trap")
 
-THE FAILURE DIRECTION IS THE SAFE ONE, which is why this is recorded rather
-than blocking. A phantom directive can inflate the scanned count, and it can
-raise a LOUD false FAIL over an alias no object carries. It can never produce
-silently wrong bytes, because this guard only ever refuses; it emits nothing
-into the link. The latent shape is the LK4 prose class reborn one file over:
-the day ?data_0209e650@@3PAHA becomes a defined symbol, the build fails over a
-directive that is not in the build, and the fix will again be to edit a
-comment.
+The first is a directive the prose above it says should stay dead. The second
+is worse: it is a QUOTE, inside a header comment, of a directive that has since
+been CORRECTED -- the alias now binds _data_ov010_02112ae4 (the live pragma is
+hal/actor_classes.cpp:2438), and the comment preserves the wrong old answer for
+the record. Both were inside the scanned count, and they were inert for two
+DIFFERENT reasons, which is worth writing down because the first one was got
+wrong here once and the arithmetic below only balances with it right:
 
-Two smaller shapes ride along, both measured, both zero-occurrence today.
-A directive whose text straddles a continuation boundary is not recovered:
-"/alternatename:_a= \\ _b" yields the garbage pair _a=\\ rather than _a=_b, so
-the real directive is missed AND a junk one is recorded. A backslash inside
-the directive string lands in the RHS token the same way. Neither is
-hypothetical-safe by argument, just absent: no scanned pair in the tree
-contains a backslash.
+  * ov010's LHS __ZTV14daObjC1_Trap_c is absent from the map, so evaluate()
+    took the "unused alias" exit. Inert by luck, as recorded.
+  * koopa_chuckya's LHS ?data_0209e650@@3PAHA IS in the map, at 0004:0000c868,
+    the same address as its RHS -- so the phantom read as FIRED. Not luck: the
+    SAME pair is declared for real at hal/actor_classes_ov035.cpp:191, and
+    evaluate() returns one row per DECLARATION, so the commented-out copy rode
+    the live one's verdict. It was inflating the fired count by one.
 
-All three want the same fix, which is why none of them is patched here. This
-reader has to stop being a line scanner before it can tell code from prose,
-and comment-aware tokenization is queued for that.
+That is why closing this gap moves the live count by -2 and the fired count by
+only -1 (measured on three trees below).
+
+THE FAILURE DIRECTION WAS THE SAFE ONE, which is why this was recorded for a
+while rather than blocking: a phantom directive inflates the scanned count and
+can raise a LOUD false FAIL over an alias no object carries, but it can never
+produce silently wrong bytes, because this guard only refuses and emits nothing
+into the link. What made it worth closing is that a false FAIL is still a build
+break nobody can fix in the right place: the day ?data_0209e650@@3PAHA becomes
+a defined symbol, the build fails over a directive that is not in the build,
+and the fix is to edit a comment. That is the LK4 prose class reborn one file
+over, and it is the shape this guard exists to abolish.
+
+HOW IT IS CLOSED. strip_comments() blanks comment text before the pragma and
+directive patterns run, carrying block-comment state across lines, honouring a
+backslash that continues a // comment onto the next line, and stepping over
+string and char literals so a "/*" written inside one does not open a comment.
+Literals themselves are left in place, because a real directive lives inside
+one. On top of that PRAGMA_RE is ANCHORED: a #pragma is a preprocessor
+directive and must be the first token on its logical line, so a "#pragma
+comment(linker," that appears mid-line is inside something -- a comment the
+stripper has already blanked, or a string literal quoting a directive at a
+reader. Seven mid-line spellings exist in the tree and all seven are prose; two
+of them carry a complete directive (the two above) and the other five quote
+/DELAYLOAD, /INCLUDE or an elided "/alternatename:...", so only two were ever
+counted as live. The anchor is BELT AND BRACES, not the fix: with comments
+stripped, anchored and unanchored produce the identical 2399 directives on this
+tree today. It earns its place against the one shape the stripper cannot see,
+a whole pragma inside a string LITERAL, which the fixture pins.
+A commented-out directive is counted with the rest of the prose, by file and
+line, exactly as a bare quote is.
+
+WHAT THE COMMENT PASS STILL DOES NOT DO. It is a comment stripper, not a
+preprocessor: it does not evaluate #if, so a directive inside an #if 0 block
+is still read as live, and it does not splice continuation lines into one
+logical line. Both smaller continuation shapes stay as they were, measured and
+zero-occurrence: a directive whose text straddles a continuation boundary is
+not recovered ("/alternatename:_a= \\ _b" yields the garbage pair _a=\\ rather
+than _a=_b, so the real directive is missed AND a junk one is recorded), and a
+backslash inside the directive string lands in the RHS token the same way.
+Neither is hypothetical-safe by argument, just absent: no scanned pair in the
+tree contains a backslash.
+
+THE .inc HOLE, CLOSED. DOC_EXTS used to list '.inc' beside '.txt' and '.md',
+so every .inc under port/ was prose: counted, named, and never measured against
+the map. For a lane note that is right. For an .inc the preprocessor pastes
+into a compiled TU it is exactly wrong, and the tree has one:
+
+    hal/scene_vs_menu.cpp:857   #include "vs_aliases.inc"
+
+hal/vs_aliases.inc carries 76 /alternatename pragmas and every one of them
+lands in scene_vs_menu.cpp.obj's .drectve -- route (a) above, no different from
+a pragma typed into the .cpp. They were live directives the defeat check never
+saw. Nothing was broken when this was found (all 76 fire: LHS and RHS present
+at one address, 0 unused, 0 defeated, on all three of the maps this fix was
+proved against) but they are the one set in the tree where the R1/R2 flip would
+have left the guard green, and several are arm9 method bridges of exactly the
+shape a slice defines: ?LookAt_@G3i@@..., ?PerspectiveW_@G3i@@...,
+?Func_020156DC@Clipper@@... .
+
+Five .inc files exist under port/ and the include closure reaches all five --
+hal/actor_classes.inc, hal/camera_states.inc, hal/player_states.inc,
+hal/vs_aliases.inc, hal/vs_data_patch.inc. Only vs_aliases.inc carries
+directives; actor_classes.inc mentions /alternatename twice in block comments
+with no pair on the line, so it is not even prose by this reader's count, and
+the other three do not mention it at all. So the hole was exactly 76 wide, and
+the other four are checked rather than assumed.
+
+So a file is no longer classified by its extension alone. included_inputs()
+walks every .c/.cpp/.h under port/ for quoted #includes, resolves them against
+the including file's directory and then port/, and iterates to a fixed point so
+an .inc that includes another .inc is reached too. Anything that walk reaches is
+a linker input and is scanned like source; an .inc nothing includes stays prose
+under DOC_EXTS, which is why '.inc' is still listed there. The include scan
+reads comment-stripped lines, so a commented-out #include does not pull a file
+into the build that the compiler never sees.
+
+THE THUMB BIT, when a check compares the addresses INSIDE names. data_ and
+func_ spellings carry a ROM address, and comparing the two sides of an alias by
+that address is the cheapest test there is for the class lane ALIASCHK spent a
+night on: an alias whose two sides name different ROM objects. It has exactly
+one trap, and the tree contains it:
+
+    hal/method_faces.cpp:803
+    /alternatename:_func_020527e9=_func_020527e8
+
+That reads as an address disagreement and is not one. config/arm9/symbols.txt
+:2188 has `func_020527e8 kind:function(thumb,size=0x16) addr:0x020527e8`, and
+0x020527e9 is the same function with the THUMB flag set -- the low bit of the
+veneer's own literal at arm9 0x0203c178 (`func_0203c178 kind:function(arm,
+size=0xc)`, the `ldr ip,[pc]; bx ip; .word 0x020527e9` shape), which is how ARM
+encodes "branch here in thumb state", not part of the address. So rom_address()
+masks bit 0, and address_disagreements() compares masked values. Without the
+mask this check FAILS the build on that one line, which is the whole reason it
+is written down here rather than left for the next reader to rediscover.
+
+NOTHING TRIPPED ON IT BEFORE, and the reason is the reason this check is new.
+No check in this tree compared name-embedded addresses on both sides of an
+alias: evaluate() compares MAP addresses ('0001:000edd30' strings), not the
+numbers inside names, so the thumb pair was never in front of a comparison.
+Nor was any sibling. Of the seventeen tools under port/tools that read
+/alternatename, exactly one -- alias_audit.py -- also converts an embedded ROM
+address (FUNC_ADDR/FUNC_OV/DATA_NAME at its lines 117-119, unmasked), and it
+reads bindings ONLY out of hal/cxx_aliases.cpp and only for placeholder names
+(the G0/G1/VT family), so func_020527e9, which lives in hal/method_faces.cpp
+and is not a placeholder, never enters it. That tool is outside this lane's
+owned files; its exposure is latent and is reported rather than patched here.
+So the mask is not a repair of a live failure. It is what lets the comparison
+exist at all: add the check without it and the build breaks on a correct line.
+
+HOW BIG THE CHECK ACTUALLY IS, measured rather than assumed. 1666 of the 2399
+directives this guard now scans carry a ROM address on BOTH sides, and all 1666
+agree once bit 0 is masked -- on lane EXCEPT's tree, on ALIASCHK's and on
+FOLD2's alike. It is not a one-row curiosity guarding one line; it is a
+name-level identity test over two thirds of the directive set that happens to
+have exactly one masked row in it today.
+
+WHAT IT DELIBERATELY DOES NOT JUDGE: the module qualifier. 103 of those 1666
+rows bind spellings whose qualifiers differ -- 'arm9' against an overlay
+(_func_020b6584 = _func_ov002_020b6584), or one overlay against another
+(_data_ov075_0211c800 = _data_ov064_0211c800) -- and every one of them names
+the same address and passes. Most are the port's ordinary idiom, one ROM word
+two lanes spelled differently. A few are real overlay crossings, the class
+lane ALIASCHK catalogued, and this check is BLIND to them by construction: two
+overlays can occupy the same address and still be different objects. Address
+agreement here means "the ROM did not already say these are different", never
+"these are the same object". Claiming more than that would be the fake-green
+this guard exists to refuse.
 
 The map is required: this guard needs the LINKED symbol table, so it runs
 POST-LINK (build-port.cmd wires it after ninja; the pre-configure guards
@@ -195,11 +323,11 @@ dead rows accumulate quietly, so the note is worth reading rather than
 scrolling past.
 
 Exit 0: no defeated alias outside the baseline. Exit 1: at least one new
-defeated alias, an unregistered directive source, or an unreadable map; each
-listed with its source file and the fix wave 5 used: delete the dead
-alternatename and, if the old routing is still needed, compile the
-referencing TUs with a per-source -DLHS=RHS rename (see the R1/R2 blocks in
-port/CMakeLists.txt).
+defeated alias, an alias whose two sides name different ROM addresses, an
+unregistered directive source, or an unreadable map; each listed with its
+source file and the fix wave 5 used: delete the dead alternatename and, if the
+old routing is still needed, compile the referencing TUs with a per-source
+-DLHS=RHS rename (see the R1/R2 blocks in port/CMakeLists.txt).
 """
 
 import argparse
@@ -214,7 +342,21 @@ PORT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # (leading-underscore cdecl, ?...@@ MSVC C++) are matched as-is against the
 # map, which lists decorated names too.
 ALT_RE = re.compile(r'/alternatename:([^\s"=]+)=([^\s")]+)')
-PRAGMA_RE = re.compile(r'#\s*pragma\s+comment\s*\(\s*linker\s*,')
+# ANCHORED on purpose. A #pragma is a preprocessor directive and has to be the
+# first token on its logical line, so a "#pragma comment(linker," found
+# mid-line is inside something: a comment (strip_comments has already blanked
+# those) or a string literal quoting a directive at a reader. Seven mid-line
+# occurrences exist in the tree and all seven are prose; with comments stripped
+# the anchor changes NOTHING on this tree today (2399 directives either way),
+# so it is here for the one shape the stripper cannot see -- a whole pragma
+# inside a string literal. See THE COMMENT GAP, CLOSED.
+PRAGMA_RE = re.compile(r'^\s*#\s*pragma\s+comment\s*\(\s*linker\s*,')
+INCLUDE_RE = re.compile(r'^\s*#\s*include\s+"([^"]+)"')
+
+# The ROM address a config-style spelling carries. Both decorations reach it:
+# _data_02082214 and ?data_02082214@@3PAUS4@@A name one object.
+ROM_ADDR_RE = re.compile(r'(?:^|[^0-9A-Za-z])(?:data|func)_(?:ov\d{3}_)?'
+                         r'(0[12][0-9a-fA-F]{6})(?![0-9a-fA-F])')
 
 SRC_EXTS = ('.c', '.cpp', '.h')
 
@@ -228,6 +370,14 @@ REGISTERED_DIRECTIVE_FILES = ()
 # (.txt) plus the two other doc formats under port/, so the lines the sweep
 # used to turn into build input still get counted and named. They are not
 # linker inputs and are never measured against the map.
+#
+# '.inc' is here as a FALLBACK ONLY, and it is the one extension in this tuple
+# that does not settle the question by itself. An .inc a compiled TU #includes
+# is a linker input -- the preprocessor pastes its pragmas into that TU's
+# .drectve exactly as if they had been typed there -- and hal/vs_aliases.inc's
+# 76 live directives went unmeasured for as long as this tuple was the whole
+# rule. included_inputs() decides first; DOC_EXTS only catches the .inc nothing
+# includes. See THE .inc HOLE, CLOSED.
 DOC_EXTS = ('.txt', '.md', '.inc')
 
 # CMake constructs that hand link.exe something whose CONTENTS it reads as
@@ -255,6 +405,229 @@ RAW_DIRECTIVE_FILE_RE = re.compile(
 # generated .cmake files, which port/ does not hand anybody.
 CMAKE_SKIP_DIRS = ('__pycache__', 'CMakeFiles')
 
+# included_inputs() reads every source file under port/ and main() wants the
+# answer twice. Keyed by the port tree, so the selftest's temp trees never see
+# each other's answer. A caller that EDITS a tree between calls has to clear
+# it; nothing in this file does, and a guard run is one shot over a tree the
+# link has already finished with.
+_INCLUDED_CACHE = {}
+
+
+def strip_comments(lines):
+    """Yield each line with its COMMENT text blanked, columns preserved.
+
+    The smallest thing that can tell code from prose. It carries block-comment
+    state across lines, honours a backslash that continues a // comment onto
+    the next line, and steps OVER string and char literals so a "/*" written
+    inside one does not open a comment. The literals are left in place: a real
+    directive lives inside one, and blanking them would delete the very text
+    this guard reads.
+
+    Comment characters become spaces rather than disappearing, so a column and
+    a line number still mean what they meant in the file on disk.
+
+    Not a preprocessor. #if 0 is not evaluated and continuation lines are not
+    spliced; both limits are written down in the module docstring.
+    """
+    in_block = False
+    in_line = False              # a // comment a backslash carried down here
+    for raw in lines:
+        out = []
+        i, n = 0, len(raw)
+        line_comment = in_line
+        in_line = False
+        while i < n:
+            ch = raw[i]
+            if in_block:
+                if ch == '*' and i + 1 < n and raw[i + 1] == '/':
+                    in_block = False
+                    out.append('  ')
+                    i += 2
+                    continue
+                out.append(ch if ch in '\r\n' else ' ')
+                i += 1
+                continue
+            if line_comment:
+                out.append(ch if ch in '\r\n' else ' ')
+                i += 1
+                continue
+            if ch == '/' and i + 1 < n and raw[i + 1] == '*':
+                in_block = True
+                out.append('  ')
+                i += 2
+                continue
+            if ch == '/' and i + 1 < n and raw[i + 1] == '/':
+                line_comment = True
+                out.append('  ')
+                i += 2
+                continue
+            if ch == '"' or ch == "'":
+                quote = ch
+                out.append(ch)
+                i += 1
+                while i < n:
+                    c = raw[i]
+                    out.append(c)
+                    i += 1
+                    if c == '\\' and i < n:
+                        out.append(raw[i])
+                        i += 1
+                        continue
+                    if c == quote or c in '\r\n':
+                        break
+                continue
+            out.append(ch)
+            i += 1
+        # A // comment ending in a backslash swallows the next line too. The
+        # backslash is inside the comment and has already been blanked, so the
+        # test has to be on the line as it was written.
+        if line_comment and raw.rstrip('\r\n').rstrip().endswith('\\'):
+            in_line = True
+        yield ''.join(out)
+
+
+def resolve_include(includer_abs, target, port_dir):
+    """Port-relative path a quoted #include names, or None.
+
+    Quoted includes resolve against the including file's own directory first,
+    then against port/ (the port compiles with port/ on the include path). A
+    target that lands outside port/ is not this guard's to read: the walk only
+    covers port/, and pretending otherwise is how a registration that escapes
+    the tree reads clean.
+    """
+    target = target.replace('\\', '/')
+    for base in (os.path.dirname(includer_abs), port_dir):
+        cand = os.path.normpath(os.path.join(base, target))
+        try:
+            rel = os.path.relpath(cand, port_dir)
+        except ValueError:                # different drive on Windows
+            continue
+        rel = rel.replace('\\', '/')
+        if rel.startswith('../') or rel == '..':
+            continue
+        if os.path.isfile(cand):
+            return rel
+    return None
+
+
+def included_inputs(port_dir):
+    """Port-relative paths that reach the link through an #include.
+
+    A file is a linker input if a compiled TU can see it, and the preprocessor
+    is how it gets seen: hal/scene_vs_menu.cpp:857 includes hal/vs_aliases.inc,
+    so that file's 76 pragmas are in scene_vs_menu.cpp.obj's .drectve and are
+    every bit as live as a pragma typed into the .cpp. Extension is not the
+    question; reachability is.
+
+    Seeded from every .c/.cpp/.h under port/ (the same population SRC_EXTS
+    already scans) and iterated to a fixed point, so an .inc that includes
+    another .inc is reached. Only files that are NOT already SRC_EXTS are
+    returned, because those are scanned anyway. Include lines are read
+    comment-stripped: a commented-out #include pulls nothing into the build.
+
+    MEMOISED per port tree, and a file with no 'include' text at all is not
+    stripped. Both are speed, not scope: this walk reads every source file in
+    port/ and main() wants the answer twice (once through collect_directives,
+    once for the summary line), which turned a one-second post-link guard into
+    a fifteen-second one on the tree it was written against.
+    """
+    cache_key = os.path.normcase(os.path.abspath(port_dir))
+    hit = _INCLUDED_CACHE.get(cache_key)
+    if hit is not None:
+        return hit
+    seeds = []
+    for root, dirs, files in os.walk(port_dir):
+        dirs[:] = sorted(d for d in dirs if d not in ('__pycache__',))
+        for name in sorted(files):
+            if name.lower().endswith(SRC_EXTS):
+                seeds.append(os.path.join(root, name))
+
+    def includes_of(abspath):
+        found = []
+        lines = None
+        try:
+            with open(abspath, 'r', encoding='utf-8', errors='replace') as f:
+                # INCLUDE_RE cannot match text with no 'include' in it, and
+                # stripping comments is the expensive half of this walk.
+                # Blanking a comment never CREATES the word, so the skip is
+                # exact. The re-read is a seek for the same reason as above.
+                if 'include' in f.read():
+                    f.seek(0)
+                    lines = f.readlines()
+        except OSError:
+            return found
+        if lines is None:
+            return found
+        for code in strip_comments(lines):
+            m = INCLUDE_RE.match(code)
+            if m:
+                rel = resolve_include(abspath, m.group(1), port_dir)
+                if rel:
+                    found.append(rel)
+        return found
+
+    reached = set()
+    queue = list(seeds)
+    seen_abs = set(os.path.normcase(p) for p in seeds)
+    while queue:
+        abspath = queue.pop()
+        for rel in includes_of(abspath):
+            if rel.lower().endswith(SRC_EXTS):
+                continue                  # already in the scanned population
+            if rel in reached:
+                continue
+            reached.add(rel)
+            nxt = os.path.join(port_dir, rel)
+            nxt_key = os.path.normcase(nxt)
+            if nxt_key not in seen_abs:
+                seen_abs.add(nxt_key)
+                queue.append(nxt)
+    _INCLUDED_CACHE[cache_key] = reached
+    return reached
+
+
+def rom_address(name):
+    """The ROM address a data_/func_ spelling carries, bit 0 MASKED, or None.
+
+    Bit 0 is the THUMB flag, not part of the address. config/arm9/symbols.txt
+    has `func_020527e8 kind:function(thumb,size=0x16)`, and the veneer at arm9
+    0x0203c178 stores 0x020527e9 -- one function, one address, one bit saying
+    which instruction set to enter. hal/method_faces.cpp:803 aliases the two
+    spellings together, so any check that compares these numerically and does
+    not mask fails the build on a line that is correct.
+    """
+    m = ROM_ADDR_RE.search(name)
+    if m is None:
+        return None
+    return int(m.group(1), 16) & ~1
+
+
+def address_disagreements(directives):
+    """Rows whose two sides each name a ROM address, and a DIFFERENT one.
+
+    A name-level test, so it needs no map and no build. It is the cheap half of
+    what lane ALIASCHK did by hand: an alias binds one spelling onto another,
+    and when both spellings carry their own address, the ROM has already said
+    whether they are the same object. 1666 of the tree's 2399 directives have
+    both sides addressed and all 1666 agree once bit 0 is masked -- exactly one
+    of them, the thumb pair, NEEDS the mask, which is why rom_address() masks.
+
+    It compares the ADDRESS and not the module qualifier, so 103 rows that
+    bind an arm9 spelling onto an overlay one, or one overlay onto another, at
+    the same address pass here by construction. Two overlays can share an
+    address and be different objects; agreement means "the ROM has not already
+    said these are different", never "these are the same object".
+
+    Returns [(lhs, rhs, relpath, lineno, lhs_addr, rhs_addr)].
+    """
+    out = []
+    for lhs, rhs, rel, ln in directives:
+        la, ra = rom_address(lhs), rom_address(rhs)
+        if la is None or ra is None or la == ra:
+            continue
+        out.append((lhs, rhs, rel, ln, la, ra))
+    return out
+
 
 def collect_directives(port_dir, registered=None):
     """Sort every /alternatename under port_dir into two buckets.
@@ -268,14 +641,20 @@ def collect_directives(port_dir, registered=None):
                   and each directive is reported at the physical line its text
                   sits on rather than at the #pragma that opened it.
       quoted      [(relpath, lineno)], a complete directive written out
-                  somewhere nothing hands the linker: a DOC file, or a comment
-                  in a source file. Prose either way. Named rather than
-                  dropped, because a count nobody prints is how the next
-                  landmine gets planted.
+                  somewhere nothing hands the linker: a DOC file, a comment in
+                  a source file, or a whole pragma that has been commented out.
+                  Prose either way. Named rather than dropped, because a count
+                  nobody prints is how the next landmine gets planted.
+
+    A file counts as source if its extension says so OR if a compiled TU
+    #includes it -- hal/vs_aliases.inc is 76 live directives inside an .inc.
+    Every line is read comment-stripped, so a commented-out pragma is prose and
+    a "/*" inside a string literal is not a comment.
     """
     if registered is None:
         registered = REGISTERED_DIRECTIVE_FILES
     registered = set(registered)
+    included = included_inputs(port_dir)
     out = []
     quoted = []
     for root, dirs, files in os.walk(port_dir):
@@ -285,40 +664,62 @@ def collect_directives(port_dir, registered=None):
             rel = os.path.relpath(path, port_dir).replace('\\', '/')
             lower = name.lower()
             is_registered = rel in registered
-            is_src = lower.endswith(SRC_EXTS)
-            is_doc = lower.endswith(DOC_EXTS)
+            is_src = lower.endswith(SRC_EXTS) or rel in included
+            is_doc = (not is_src) and lower.endswith(DOC_EXTS)
             if not (is_registered or is_src or is_doc):
                 continue
+            # Every branch below is behind `'/alternatename:' not in line`, so
+            # a file without the string anywhere produces nothing either way.
+            # Skipping it whole is what keeps the comment pass off the four
+            # thousand files that have no directive in them. The re-read is a
+            # seek rather than a splitlines() because readlines() splits on
+            # newlines ALONE, and splitlines() would also break a line at a
+            # form feed and shift every line number after it.
+            raw_lines = None
             try:
                 with open(path, 'r', encoding='utf-8', errors='replace') as f:
-                    continued = False
-                    for lineno, line in enumerate(f, 1):
-                        was_continued = continued
-                        continued = (is_src and line.rstrip().endswith('\\')
-                                     and (PRAGMA_RE.search(line)
-                                          or was_continued))
-                        if '/alternatename:' not in line:
-                            continue
-                        if is_registered:
-                            pass          # a real directive file: every line
-                        elif is_src and (PRAGMA_RE.search(line)
-                                         or was_continued):
-                            # Mechanism (a): a real pragma, or a line the
-                            # backslash above spliced onto one. Both are the
-                            # same logical directive by the time cl.exe reads
-                            # it, so both are the same input here.
-                            pass
-                        else:
-                            # Prose: a doc file, or a comment in a source
-                            # file. Not an input. Counted, never measured.
-                            if ALT_RE.search(line):
-                                quoted.append((rel, lineno))
-                            continue
-                        for m in ALT_RE.finditer(line):
-                            out.append((m.group(1), m.group(2), rel, lineno))
+                    if '/alternatename:' in f.read():
+                        f.seek(0)
+                        raw_lines = f.readlines()
             except OSError as e:
                 print('alternatename_guard: cannot read %s: %s' % (rel, e))
                 sys.exit(1)
+            if raw_lines is None:
+                continue
+            # Two views of the same line. The RAW one is what names a quoted
+            # directive; the comment-stripped one is what the compiler sees.
+            # A registered directive file is not C and has no C comments.
+            codes = (list(strip_comments(raw_lines)) if is_src else raw_lines)
+            continued = False
+            for lineno, (line, code) in enumerate(zip(raw_lines, codes), 1):
+                was_continued = continued
+                continued = (is_src and code.rstrip().endswith('\\')
+                             and (PRAGMA_RE.search(code) or was_continued))
+                if '/alternatename:' not in line:
+                    continue
+                if is_registered:
+                    live = line               # a real directive file
+                elif (is_src and '/alternatename:' in code
+                      and (PRAGMA_RE.search(code) or was_continued)):
+                    # Mechanism (a): a real pragma, or a line the backslash
+                    # above spliced onto one. Both are the same logical
+                    # directive by the time cl.exe reads it, so both are the
+                    # same input here. `code` and not `line`, so a pragma
+                    # inside a comment is not one of them.
+                    live = code
+                else:
+                    # Prose: a doc file, a mention in a source comment, or a
+                    # whole pragma that has been commented out. Not an input.
+                    # Counted, never measured.
+                    if ALT_RE.search(line):
+                        quoted.append((rel, lineno))
+                    continue
+                for m in ALT_RE.finditer(live):
+                    out.append((m.group(1), m.group(2), rel, lineno))
+                # One line can carry a live directive AND a quoted one:
+                #     #pragma comment(...)   // was /alternatename:_c=_d
+                if len(ALT_RE.findall(line)) > len(ALT_RE.findall(live)):
+                    quoted.append((rel, lineno))
     return out, quoted
 
 
@@ -838,6 +1239,201 @@ def selftest():
                'the @ and /DEF: spellings are not double-reported as raw '
                'items', mechs)
 
+    # ----------------------------------------------------------------- 16
+    # THE .inc HOLE. An .inc a compiled TU #includes is a linker input; an
+    # .inc nothing includes is prose. The tree's real shape is
+    # hal/scene_vs_menu.cpp:857 including hal/vs_aliases.inc, whose 76
+    # directives were never measured while DOC_EXTS decided the question.
+    with tempfile.TemporaryDirectory() as td:
+        port = os.path.join(td, 'port')
+        os.makedirs(os.path.join(port, 'hal'))
+        with open(os.path.join(port, 'hal', 'scene.cpp'), 'w') as f:
+            f.write('#include "vs_aliases.inc"\n')
+            f.write('// a commented include pulls nothing in:\n')
+            f.write('// #include "orphan.inc"\n')
+        with open(os.path.join(port, 'hal', 'vs_aliases.inc'), 'w') as f:
+            f.write('#include "deeper.inc"\n')
+            f.write('#pragma comment(linker, '
+                    '"/alternatename:_inc_lhs=_inc_rhs")\n')
+        # An .inc that only another .inc includes is still reached: the
+        # closure iterates rather than looking one hop deep.
+        with open(os.path.join(port, 'hal', 'deeper.inc'), 'w') as f:
+            f.write('#pragma comment(linker, '
+                    '"/alternatename:_deep_lhs=_deep_rhs")\n')
+        # Nothing includes this one. It stays prose under DOC_EXTS.
+        with open(os.path.join(port, 'hal', 'orphan.inc'), 'w') as f:
+            f.write('#pragma comment(linker, '
+                    '"/alternatename:_orphan_lhs=_orphan_rhs")\n')
+
+        d, q = collect_directives(port)
+        pairs = [(a, b, r, n) for a, b, r, n in d]
+        expect(('_inc_lhs', '_inc_rhs', 'hal/vs_aliases.inc', 2) in pairs,
+               'a pragma in an #included .inc is a linker input', pairs)
+        expect(('_deep_lhs', '_deep_rhs', 'hal/deeper.inc', 1) in pairs,
+               'the include closure iterates: an .inc reached only through '
+               'another .inc is scanned', pairs)
+        expect(not any(a == '_orphan_lhs' for a, _, _, _ in pairs),
+               'an .inc nothing includes is not a linker input', pairs)
+        expect(('hal/orphan.inc', 1) in q,
+               'the orphan .inc is still counted as prose, not dropped', q)
+        expect(sorted(included_inputs(port))
+               == ['hal/deeper.inc', 'hal/vs_aliases.inc'],
+               'a commented-out #include does not reach a file',
+               sorted(included_inputs(port)))
+
+    # ----------------------------------------------------------------- 17
+    # THE COMMENT GAP. A commented-out pragma is prose; a real one beside it
+    # is not. Both live shapes are here (// and /* */), plus the two the
+    # anchor is for: a whole pragma quoted inside a string literal, and a
+    # "/*" inside a string literal that must not open a comment.
+    with tempfile.TemporaryDirectory() as td:
+        port = os.path.join(td, 'port')
+        os.makedirs(os.path.join(port, 'hal'))
+        with open(os.path.join(port, 'hal', 'comments.cpp'), 'w') as f:
+            # 1  the ov010 shape: a QUOTE of a directive that has since been
+            #    corrected, sitting in a header comment.
+            f.write('//     #pragma comment(linker, '
+                    '"/alternatename:_cmt_lhs=_cmt_rhs")\n')
+            # 2-3  the koopa_chuckya shape: /* opens on the line with the
+            #      #pragma, the directive text is on the NEXT line, and the
+            #      block has to still be open when that line is read.
+            f.write('/* #pragma comment(linker,\n')
+            f.write('   "/alternatename:_blk_lhs=_blk_rhs") */\n')
+            # 4  a whole pragma quoted inside a string literal. PRAGMA_RE
+            #    unanchored matches this; anchored it does not.
+            f.write('static const char *note = "#pragma comment(linker, '
+                    '\\"/alternatename:_str_lhs=_str_rhs\\")";\n')
+            # 5  a "/*" INSIDE a string literal must not open a comment. If
+            #    it did, every directive below would vanish.
+            f.write('static const char *not_a_comment = "/* still code */";\n')
+            # 6  the real one, and it must survive all of the above.
+            f.write('#pragma comment(linker, '
+                    '"/alternatename:_live_lhs=_live_rhs")\n')
+            # 7  a // comment a backslash carries onto line 8.
+            f.write('// carried down by the backslash: \\\n')
+            f.write('#pragma comment(linker, '
+                    '"/alternatename:_swallowed_lhs=_swallowed_rhs")\n')
+            # 9  a live directive and a quoted one on ONE line.
+            f.write('#pragma comment(linker, '
+                    '"/alternatename:_both_lhs=_both_rhs")  '
+                    '// was /alternatename:_old_lhs=_old_rhs\n')
+
+        d, q = collect_directives(port)
+        got = [(a, b, n) for a, b, _, n in d]
+        expect(got == [('_live_lhs', '_live_rhs', 6),
+                       ('_both_lhs', '_both_rhs', 9)],
+               'only the pragmas that are actually code are scanned', got)
+        expect(sorted(q) == [('hal/comments.cpp', 1), ('hal/comments.cpp', 3),
+                             ('hal/comments.cpp', 4), ('hal/comments.cpp', 8),
+                             ('hal/comments.cpp', 9)],
+               'every commented-out or quoted directive is counted as prose, '
+               'by line', sorted(q))
+        # The same claims, one at a time, so a partial regression cannot hide
+        # inside a list comparison.
+        expect(not any(a == '_cmt_lhs' for a, _, _ in got),
+               'a // commented-out pragma is prose', got)
+        expect(not any(a == '_blk_lhs' for a, _, _ in got),
+               'a /* */ block comment carries across lines and its directive '
+               'is prose', got)
+        expect(not any(a == '_str_lhs' for a, _, _ in got),
+               'a whole pragma quoted inside a string literal is prose', got)
+        expect(not any(a == '_swallowed_lhs' for a, _, _ in got),
+               'a // comment continued by a backslash swallows the next line',
+               got)
+        expect(any(a == '_live_lhs' for a, _, _ in got),
+               'a "/*" inside a string literal does not open a comment', got)
+        expect(('hal/comments.cpp', 9) in q
+               and any(a == '_both_lhs' for a, _, _ in got),
+               'one line can carry a live directive and a quoted one, and '
+               'both are reported', (got, q))
+
+    # ----------------------------------------------------------------- 18
+    # THE THUMB BIT. hal/method_faces.cpp:803 aliases _func_020527e9 onto
+    # _func_020527e8: one function, thumb, size 0x16 in config/arm9. The low
+    # bit says which instruction set to enter and is not part of the address,
+    # so an unmasked comparison fails the build on a correct line.
+    expect(rom_address('_func_020527e9') == rom_address('_func_020527e8')
+           == 0x020527e8,
+           'bit 0 is masked out of an address read from a name',
+           (rom_address('_func_020527e9'), rom_address('_func_020527e8')))
+    expect(rom_address('?data_02082214@@3PAUS4@@A')
+           == rom_address('_data_02082214') == 0x02082214,
+           'both decorations of one data name give one address',
+           rom_address('?data_02082214@@3PAUS4@@A'))
+    expect(rom_address('_data_ov075_0211c968') == 0x0211c968,
+           'an overlay-qualified name gives its address',
+           rom_address('_data_ov075_0211c968'))
+    expect(rom_address('__ZTV14daObjC1_Trap_c') is None
+           and rom_address('?SetDefault@Heap@@QAEHXZ') is None,
+           'a name with no embedded address gives None, and is never '
+           'compared', rom_address('__ZTV14daObjC1_Trap_c'))
+    thumb_row = [('_func_020527e9', '_func_020527e8', 'hal/method_faces.cpp',
+                  803)]
+    expect(address_disagreements(thumb_row) == [],
+           'the thumb pair is NOT an address disagreement',
+           address_disagreements(thumb_row))
+    real_row = [('_func_020527e8', '_func_02052800', 'hal/x.cpp', 1)]
+    expect(len(address_disagreements(real_row)) == 1,
+           'two different addresses ARE a disagreement, so the mask has not '
+           'blinded the check', address_disagreements(real_row))
+    # A whole-address difference in the low nibble, not just bit 0: the mask
+    # clears exactly one bit and nothing else.
+    near_row = [('_func_020527e8', '_func_020527ea', 'hal/x.cpp', 1)]
+    expect(len(address_disagreements(near_row)) == 1,
+           'the mask clears bit 0 only, not the low nibble',
+           address_disagreements(near_row))
+    mixed_row = [('_data_ov075_0211c968', '_data_0211c968', 'hal/x.cpp', 1)]
+    expect(address_disagreements(mixed_row) == [],
+           'an overlay-qualified spelling and a flat one at the same address '
+           'agree', address_disagreements(mixed_row))
+    # 18b. And the limit of that, pinned so nobody reads a pass here as an
+    #      identity claim. TWO OVERLAYS at one address are different objects
+    #      and this check cannot tell: 103 rows in the tree cross a module
+    #      qualifier that way, hal/actor_classes_bowserpuzzle.cpp:204 among
+    #      them, and every one of them passes BY CONSTRUCTION. The day this
+    #      check is asked to judge overlay identity it needs the overlay
+    #      layout, not a regex.
+    cross_row = [('_data_ov075_0211c800', '_data_ov064_0211c800',
+                  'hal/actor_classes_bowserpuzzle.cpp', 204)]
+    expect(address_disagreements(cross_row) == [],
+           'two DIFFERENT overlays at one address pass: this check reads the '
+           'address, never the module', address_disagreements(cross_row))
+
+    # ----------------------------------------------------------------- 19
+    # A COMMENTED-OUT PRAGMA THAT DUPLICATES A LIVE ONE. The koopa_chuckya
+    # shape, and the reason closing the comment gap moved the tree's live
+    # count by -2 while the FIRED count moved by only -1. evaluate() returns
+    # one row per DECLARATION, so the phantom rode the real declaration's
+    # verdict and read as fired rather than as the harmless "unused" the file
+    # used to claim. A phantom that inflates a green number is worse than one
+    # that inflates a scanned total, so this arm exists on its own.
+    dup_publics = {'_dup_lhs': '0001:00000700', '_dup_rhs': '0001:00000700'}
+    real_only = [('_dup_lhs', '_dup_rhs', 'hal/real.cpp', 3)]
+    with_phantom = real_only + [('_dup_lhs', '_dup_rhs', 'hal/prose.cpp', 9)]
+    expect(evaluate(real_only, dup_publics)[1] == 1,
+           'the real declaration fires once', evaluate(real_only, dup_publics))
+    expect(evaluate(with_phantom, dup_publics)[1] == 2,
+           'a duplicate declaration of a firing pair fires AGAIN, which is '
+           'how a commented-out pragma inflated the fired count',
+           evaluate(with_phantom, dup_publics))
+    with tempfile.TemporaryDirectory() as td:
+        port = os.path.join(td, 'port')
+        os.makedirs(os.path.join(port, 'hal'))
+        with open(os.path.join(port, 'hal', 'real.cpp'), 'w') as f:
+            f.write('#pragma comment(linker, '
+                    '"/alternatename:_dup_lhs=_dup_rhs")\n')
+        with open(os.path.join(port, 'hal', 'prose.cpp'), 'w') as f:
+            f.write('/* if the link ever needs it, uncomment: */\n')
+            f.write('/* #pragma comment(linker, '
+                    '"/alternatename:_dup_lhs=_dup_rhs") */\n')
+        d, q = collect_directives(port)
+        expect(d == [('_dup_lhs', '_dup_rhs', 'hal/real.cpp', 1)],
+               'only the live declaration of a duplicated pair is scanned', d)
+        expect(q == [('hal/prose.cpp', 2)],
+               'the commented-out duplicate is prose, and is named', q)
+        expect(evaluate(d, dup_publics)[1] == 1,
+               'so the pair fires exactly once', evaluate(d, dup_publics))
+
     print("selftest %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -882,6 +1478,25 @@ def main():
         return 1
 
     directives, quoted = collect_directives(args.port)
+
+    # Name-level, so it needs no map: when both sides carry a ROM address, the
+    # ROM has already said whether they are the same object. Bit 0 is masked
+    # (thumb) inside rom_address, without which this fails on the one correct
+    # row in the tree, hal/method_faces.cpp:803.
+    crossed = address_disagreements(directives)
+    if crossed:
+        print('alternatename_guard: FAIL -- %d alias(es) whose two sides name '
+              'DIFFERENT ROM addresses.' % len(crossed))
+        print('An /alternatename renames a symbol; it cannot make two ROM '
+              'objects into one. Bit 0 is')
+        print('already masked, so a thumb spelling (_func_020527e9 for '
+              '_func_020527e8) is not this.')
+        for lhs, rhs, rel, ln, la, ra in crossed:
+            print('  port/%s:%d' % (rel, ln))
+            print('    /alternatename:%s=%s' % (lhs, rhs))
+            print('    LHS names 0x%08x, RHS names 0x%08x' % (la, ra))
+        return 1
+
     publics = parse_map_publics(args.map)
     if not publics:
         print('alternatename_guard: FAIL -- no publics parsed from %s'
@@ -944,10 +1559,12 @@ def main():
           '%d baseline-known, 0 new defeats (%d publics)'
           % (len(directives), fired, len(live), len(publics)))
     print('  sources: %d registered directive file(s) plus every pragma in '
-          '%s under port/, continuation lines included'
-          % (len(REGISTERED_DIRECTIVE_FILES), '/'.join(SRC_EXTS)))
-    print('  (line scanner, not a tokenizer: a commented-out pragma is '
-          'scanned too. See THE COMMENT GAP.)')
+          '%s under port/ and in the %d file(s) those #include, continuation '
+          'lines included'
+          % (len(REGISTERED_DIRECTIVE_FILES), '/'.join(SRC_EXTS),
+             len(included_inputs(args.port))))
+    print('  (comments stripped and #pragma anchored, so a commented-out '
+          'pragma is prose; #if is still not evaluated)')
     if quoted:
         print('  %d directive(s) quoted in prose (doc files and source '
               'comments), NOT linker inputs, not measured:' % len(quoted))
