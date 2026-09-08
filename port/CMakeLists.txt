@@ -8349,7 +8349,7 @@ endforeach()
 # and a target that gets one but not the other has an unregistered archive
 # while the others do not.
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_nfs.txt" SLICE_NFS_LINES)
-set(NFS_NAMES_SOURCES hal/fs_names.cpp)
+set(NFS_NAMES_SOURCES hal/fs_names.cpp hal/nitrofs_boot.cpp)
 foreach(line IN LISTS SLICE_NFS_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -8357,6 +8357,70 @@ foreach(line IN LISTS SLICE_NFS_LINES)
     endif()
     list(APPEND NFS_NAMES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# ---------------------------------------------------------------------------
+# Run link100, lane NITROFS: the cartridge-header mirror, and the ROM's own
+# FS_Init on top of it.
+#
+# hal/nitrofs_boot.cpp rides NFS_NAMES_SOURCES above -- all three targets --
+# because the mirror seed and the read-back belong wherever hal/fs_names.cpp's
+# static initialiser runs. THE SLICE DOES NOT. src/func_0205d96c.c takes the
+# address of the matched archive proc src/func_0205da94.c, whose two live
+# commands reach the cartridge lock, whose six OS-lock TUs bottom out on four
+# primitives hal/boot_hw.cpp transcribes (func_02057198, func_0205a74c,
+# func_02059d8c, IRQ::DisableAll / IRQ::RestoreAll). hal/boot_hw.cpp is
+# SLICE214_SOURCES: walk_window and walk_window_hires only. So the seat goes to
+# those two, and smoke_player keeps the face alone in hal/nitrofs_face.cpp --
+# which is not merely an omission but a duplicate-symbol requirement, since a
+# target carrying the matched TU cannot also define func_0205d96c by hand.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_nitrofs.txt" SLICE_NITROFS_LINES)
+set(SLICE_NITROFS_SOURCES "")
+foreach(line IN LISTS SLICE_NITROFS_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_NITROFS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# THREE PER-SOURCE RENAMES, the shape lane R2ABC used for func_02060890 and
+# lane BOOTR1 for main. Each names an edge that is not ROM code yet, in one
+# place, without making a host body under a ROM name -- which would be a new
+# SHADOW row in port/tools/linkage.py's queue, work invented by this change.
+# The three faces and the evidence behind each are in hal/nitrofs_boot.cpp.
+#
+#   func_02060890  the card driver bring-up. NOT hardware: ORDERING. The work
+#                  object data_020a8180 is seeded by ntr/backup.cpp's static
+#                  initialiser and FS_Init runs from hal/fs_names.cpp's, so a
+#                  bring-up called from here could run the whole ROM body --
+#                  card thread included -- before the seeder. func_02042f68's
+#                  arm 1 already brings the driver up inside main (R2ABC), and
+#                  func_02060890's own last two statements are the unhosted
+#                  FLASH path and a hand-asm `b self`.
+#   func_0205db2c  the archive READ function: one call to the card ROM DMA.
+#                  hal/fs_names.cpp's port_nitrofs_read serves the same bytes
+#                  off the ROM's own FAT and extracted/dsd/files.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205d96c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_02060890=port_nitrofs_card_bringup;func_0205db2c=port_nitrofs_read")
+
+#   func_020570c0  EXMEMCNT |= 0x0800 and &= ~0x0800, the NDS slot's ARM7/ARM9
+#   func_020570d8  access-right bit. The decomp spells the address as the
+#                  placeholder `G`, which resolves in this binary to
+#                  hal/heap_vtable.cpp's default-heap word, so the matched
+#                  bodies would OR and AND bit 11 of a heap pointer four times
+#                  per boot. The register the ROM's own literal pools name is
+#                  in hal/boot_os.cpp's table (pools 0x020570d4 and 0x020570ec,
+#                  both 0x04000204); the faces write that.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_020570f0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_020570c0=port_rom_exmemcnt_card_grant")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205710c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_020570d8=port_rom_exmemcnt_card_release")
 
 # Gate 35: the course loop -- damage, death, respawn, coins, the star and the
 # course's own sound. Small, because almost all of it was already linked; see
@@ -16529,6 +16593,18 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02042f68.c"
     PROPERTIES COMPILE_DEFINITIONS
     "func_02060890=port_rom_card_bringup")
+
+# Run link100, lane NITROFS: the NitroFS seat's target lists, in the shape the
+# rename above uses, and for the reason spelled out beside SLICE_NITROFS_SOURCES
+# -- the seat needs hal/boot_hw.cpp's four OS primitives and smoke_player does
+# not carry that file, so the two window targets get the cartridge's own
+# func_0205d96c and smoke_player keeps the face. The two are exclusive: a
+# target with both would have func_0205d96c defined twice.
+foreach(_tnitrofs walk_window walk_window_hires)
+    target_sources(${_tnitrofs} PRIVATE ${SLICE_NITROFS_SOURCES})
+endforeach()
+target_sources(smoke_player PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/nitrofs_face.cpp")
 
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
