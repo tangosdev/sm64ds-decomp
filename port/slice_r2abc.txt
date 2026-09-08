@@ -1,0 +1,218 @@
+# slice_r2abc.txt -- THE REFUSED ARMS OF func_0201a054.
+# run link100, lane R2ABC, rungs R2a / R2b / R2c of lane BOOTSCOUT's boot plan.
+#
+# Read port/hal/boot_arms.cpp first: it carries the derivation for every line
+# below and it is what calls them, from hal/rom_main.cpp's a054 seam, in the
+# ROM's own order. hal/boot_os.cpp's transcription of func_0201a054 is not
+# moved and not duplicated -- these are the calls it refused.
+#
+# ===========================================================================
+# R2a -- src/func_02013e64.c, the save block clear
+# ===========================================================================
+#
+# THE REFUSAL, quoted from the two places that carry it. hal/boot_os.cpp:
+#
+#     "memsets 0x32c bytes of data_0209caa0, the save block ... the harder
+#      half was missing: hal/level_boot.cpp hosts data_0209caa0 as a 0x14
+#      object -- the dsd symbol's own span, next name data_0209cab4 -- while
+#      the ROM object is the full 0x32c ... Seating the body today writes 796
+#      bytes into a 20-byte object. It wants one grouped run in
+#      hal/level_boot.cpp."
+#
+# and port/slice_gate222.txt: "The fix is one grouped run in
+# hal/level_boot.cpp, which is not this lane's file."
+#
+# THE GROUPED RUN IS ALREADY THERE, and it was put there by another run for a
+# different write. hal/level_boot.cpp's SAVEBLK block has FIVE rows, not the
+# four the refusal counted: run link60 Stage 5 lane SV1 added
+# .dsstate$savblk0004 (data_0209caf4, 728 bytes) because
+# SaveData::SetDefaultValuesMg clears 0x2e4 bytes through data_0209cae4 and
+# needed caa0+0x44 .. caa0+0x328 to be real storage. Its own comment states
+# the whole object: "the whole save object is one 0x32c run of five symbols".
+#
+# 0x14 + 0x1e + 0x12 + 0x10 + 728 = 0x32c, and 0x0209caa0 + 0x32c = 0x0209cdcc
+# is the next symbol in config/arm9/symbols.txt after the four names inside
+# the run. Measured in this tree's map before the seat: caa0 at 0004:0010667c,
+# cab4 +0x14, cad2 +0x1e, cae4 +0x12, caf4 +0x10, the run ending 0x1332 bytes
+# below _dsstate_hi, so all 796 bytes are inside the captured span.
+#
+# WHAT THIS LANE ADDS is the check, because a grouped-section run is a layout
+# and a 796-byte memset onto a reordered layout is silent corruption rather
+# than a fault. port_r2a_saveblock_layout() asserts the five offsets on every
+# boot and the arm REFUSES rather than memsetting if one has moved.
+#
+# WHAT THE WRITE DOES ON THIS PATH: nothing observable, and that is stated
+# rather than hidden. All five sections are zero-initialised and every host
+# writer of the save block in tests/walk_window.cpp is below this seam (the
+# pending character at :7743, the opening-seen bit at :8134). The ROM's memset
+# writes zeros over zeros. The seat is that the ROM's own body does it, on the
+# ROM's own object, at the ROM's own point in its own boot.
+src/func_02013e64.c
+
+# ===========================================================================
+# R2b -- src/func_0201fec8.c: REFUSED. NOTHING BELOW SEATS IT.
+# ===========================================================================
+#
+# THE REFUSAL ON RECORD, hal/boot_os.cpp: "func_0203db64's eight-name run,
+# three of which are hosted nowhere at all ... Every one of those is a dsd-split
+# run whose host grouping would have to be proved contiguous for the FULL memset
+# length before the call is safe". Re-measured in this tree, that census counts
+# each dsd name's OWN span instead of the grouped band it already belongs to,
+# and the real picture is both better and worse.
+#
+# BETTER: FIVE OF THE EIGHT WRITES ALREADY LAND ON THE ROM'S OWN BYTES.
+#
+#   data_020a1040 + 0x24   hal/camera_bridges.cpp .dsstate$camcomm0000..0007
+#                          = 4+2+2+4+2+2+2+0x12 = 0x24 exactly
+#   data_020a0fb8 + 0x18   hal/comms_conductor.cpp band C, ymp3c0001 + ymp3c0002
+#                          = 6 + 18 = 0x18 exactly
+#   data_020a10a4 + 0x58   band B, ymp3b0000..0004 = 2+20+22+22+22 = 0x58
+#   data_020a10fc + 0x58   band B, ymp3b0005..0007 = 2+20+66 = 0x58
+#   data_020a1154 + 0x90   camera_bridges' camrec run, whose first 0x90 is the
+#                          cartridge's own four 0x24 records
+#
+# and two of the three that do not are trivial: data_020a0fec (ROM span 0x34,
+# the copy is 0x1c) and data_020a1064 (ROM span 0x40, the copy is 0x40) are
+# whole objects on their own and need no adjacency to anything.
+#
+# WORSE, AND THIS IS WHAT REFUSES IT. Two blockers, both outside this lane.
+#
+# 1. ONE ADJACENCY THAT CANNOT BE WRITTEN FROM HERE. func_0203db64 memsets 0x18
+#    bytes from data_020a0fa0, whose own ROM span is 6; the other 18 bytes are
+#    data_020a0fa6, which is hal/comms_conductor.cpp's band C HEAD
+#    (.dsstate$ymp3c0000, the six-byte player ids). data_020a0fa0 has to become
+#    a new first member of that band, in that file. Reaching into another
+#    file's grouped-section names from outside it is exactly the coupling this
+#    port writes layout guards for, so it is proposed rather than done:
+#
+#        MP3_BSS(".dsstate$ymp3b9990", data_020a0fa0, 6);
+#        /* the id band's head on the DS: src/func_0203db64.c memsets 0x18 from
+#           here and the other 18 bytes are ymp3c0000. Named to sort between
+#           band B's tail and band C's head. */
+#
+#    AND THE "ONE OBJECT OF THE ROM'S SPAN" THE PLAN ASKED FOR IS REFUSED ON
+#    ITS OWN TERMS. That span is 0x020a0fa0..0x020a11e4, 0x244 bytes over 43
+#    dsd names, and the port has two deliberate, shipped reasons not to have
+#    it. hal/camera_bridges.cpp grew the per-player record run at 0x020a1154
+#    from the cartridge's FOUR records to SIXTEEN, at the tail, for run vs16's
+#    wide conductor -- and hal_camera_check_layout() fails the build by name if
+#    anyone shrinks it back ("COMMS RECORD RUN IS NOT SIXTEEN WIDE"). A host
+#    object that ended at 0x020a11e4 would end 0x1b0 bytes short of where the
+#    wide conductor and the ROM's own slot-indexed readers walk. And
+#    hal/comms_conductor.cpp states the split as a decision: "That adjacency is
+#    a ROM fact and NOT a host one -- the four records are camera_bridges' and
+#    sit elsewhere in this image -- and it is not needed".
+#
+# 2. THE BODY'S OWN ARGUMENTS, WHICH WERE NOT ON RECORD AT ALL. func_0201fec8
+#    passes six arm9 .rodata blobs and NONE is hosted anywhere in this port:
+#
+#        data_020752cc 0x1c  data_020752e8 0x1c  data_02075304 0x1c
+#        data_02075320 0x1c  data_0207533c 0x1c  data_02075358 0x40
+#
+#    The port takes the default arm -- the halfword at 0x027ffc40 is 0, so
+#    buf[0] off the zeroed shared block selects it -- which is
+#    func_0203db64(data_02075358, data_02075304), and those two are what the two
+#    CpuCopy8 calls read (0x40 into data_020a1064, 0x1c into data_020a0fec; both
+#    lengths equal the source's own ROM span exactly). FIVE OF THE SIX CARRY
+#    FOUR RELOCATED WORDS EACH -- config/arm9/relocs.txt, from:0x020752d0/d4/d8/
+#    dc and the same four offsets in each of the other four blobs -- i.e. DS
+#    ADDRESSES, and hal/boot_globals.cpp refuses those by name: "NO
+#    POINTER-BEARING GLOBAL IS HOSTED WITH ITS RAW ROM WORD ... a relocated word
+#    is a DS ADDRESS that means nothing in this process."
+#
+#    Binding them instead needs the eight objects the relocs name, none of which
+#    is hosted either, and the island closes there (none of the eight carries a
+#    reloc of its own):
+#
+#        data_0208f278  36   data_02075398  96   data_0208f29c  52
+#        data_0208f2d0  52   data_020753f8 100   data_02075530 112
+#        data_020754c4 108   data_0207545c 104
+#
+#    Fourteen symbols, 864 bytes of arm9 .rodata, twenty pointer words to bind:
+#    a wireless-config data mount, which is port/tools/romdata.py's job and not
+#    a boot step, and that file is not this lane's either.
+#
+# ALSO MISSING, minor: data_0209e64c (ROM span 4), func_0201fec8's own
+# once-guard, is hosted nowhere.
+#
+# WHAT WOULD LAND IT, in order: (1) the MP3_BSS line above in
+# hal/comms_conductor.cpp; (2) data_020a0fec, data_020a1064 and data_0209e64c
+# hosted at their ROM spans, which a boot lane can do in its own file; (3) the
+# fourteen-symbol .rodata island mounted with the twenty pointer words bound to
+# the host objects. Then FOUR TUs link, not the three the plan counted:
+# src/func_0201fec8.c, src/func_0203db64.c, src/func_02059f2c.c and
+# src/func_0203daac.c -- the last is the one-line body that returns
+# data_02099e18, the fourth TU behind the same call, and it is already fully
+# hosted.
+
+# ===========================================================================
+# R2c -- src/func_02042f68.c and the device identify
+# ===========================================================================
+#
+# THE REFUSALS, and what actually retired each. hal/boot_os.cpp calls
+# func_0206002c() directly at this line today and names two things it skips:
+#
+#   "func_020603c8(0xd01)  the device identify, blocked on ntr/backup.cpp's own
+#    ROMDATA PROPOSAL -- it reaches func_02060398, a lookup in the device table
+#    at arm9 .rodata 0x020867bc, and mounting that span through
+#    port/tools/romdata.py makes a ROM-CLEAN kit emit a ZEROED row, i.e. a save
+#    chip of size 0 and a kit that silently cannot save."
+#   "the tag copy  same file, same reason: it reads data_0208ee50, the other
+#    unmounted .rodata span".
+#
+# NEITHER SPAN NEEDS MOUNTING AND NEITHER IS UNMOUNTED. hal/boot_globals.cpp
+# hosts BOTH as ordinary arm9 .data globals with their ROM bytes --
+# data_020867bc[160] and data_0208ee50[12] -- and both are in this build's map
+# from boot_globals.cpp.obj. The proposal in ntr/backup.cpp was written against
+# a state of the tree lane BOOT had already changed. The ROM-CLEAN objection
+# also has the answer the proposal itself offers as its alternative, "a
+# boot-order guarantee that the blob is loaded before the first save":
+# port_romdata_load() runs at tests/walk_window.cpp:7365 and this seam is
+# reached at :7429.
+#
+# The identify's answer agrees with ntr/backup.cpp's static one word for word.
+# func_02060398 finds 0xd01 at data_020867bc + 0x28: 0x00000d01, 0x00002000,
+# 0x00002000, 0x00020020, 0x0000004f -- the same five words that file typed
+# into data_port_backup_device by hand. So func_0206045c still returns 8192 and
+# save_proof still measures the same medium; the ROM is just the one deciding.
+#
+# ARM 3 IS INLINE IN func_02042f68 AND CAME FOR FREE: clear data_020a4b40 and
+# copy data_0208ee50 into it eight bytes at a time, stopping at the first zero.
+# There are no zeros in the eight, so the ROM writes exactly the tag
+# ntr/backup.cpp had to define statically, and that definition becomes the
+# pre-boot default rather than the only writer.
+#
+# THE SIX THAT LINK. func_02042f68 itself, its second arm, and the four bodies
+# behind that arm.
+src/func_02042f68.c
+src/func_020603c8.cpp
+src/func_020607e8.c
+src/func_02060364.c
+src/func_02060398.c
+src/func_02060470.c
+#
+# WHAT IS STILL NOT HERE, and it is arm 1. src/func_02060890.c cannot link:
+#   data_020a8780 = func_02060a64   the FLASH read path; ntr/backup.cpp says no
+#                                   call site in this game reaches it, and
+#                                   data_020a8780 is hosted nowhere (ROM span
+#                                   0x220).
+#   func_02061138()                 IRQ::SetIRQHandler(0x100000,
+#                                   IRQ::GameCardIREQMCHandler) reaches
+#                                   func_020610fc, hand-asm with a deliberate
+#                                   b-self loop MSVC cannot assemble -- family
+#                                   A, permanently. ntr/runtime.cpp's
+#                                   SetIRQHandler drops mask 0x100000 anyway.
+# Six matched TUs stay behind those two lines: func_02060890, func_02060a64,
+# func_02060d98, func_02060ebc, func_02061138 and IRQ::GameCardIREQMCHandler.
+#
+# THE FORM IS A RENAME, NOT A SHADOW ROW. port/CMakeLists.txt compiles
+# src/func_02042f68.c with func_02060890=port_rom_card_bringup, the mechanism
+# hal/rom_main.cpp already uses for main's own two unrun edges: the matched TU
+# stays in the link byte for byte, src/func_02060890.c stays unenrolled and
+# unclaimed instead of becoming a SHADOW in linkage.py's replacement queue, and
+# hal/boot_arms.cpp is the single place that says this edge is not ROM code
+# yet. The body there is func_02060890's ROM body minus those two statements,
+# guard included -- and the guard is what keeps the card thread from being
+# created twice: ntr/backup.cpp seeds the work object's state word to 1 at
+# static-init, so the ROM's own early return trips and hal/boot_os.cpp's direct
+# func_0206002c() stays the only call.

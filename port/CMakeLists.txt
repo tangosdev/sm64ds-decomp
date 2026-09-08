@@ -16333,6 +16333,49 @@ foreach(_tromframe walk_window walk_window_hires)
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/rom_frame.cpp")
 endforeach()
 
+# ===========================================================================
+# THE REFUSED ARMS OF func_0201a054 (run link100, lane R2ABC, rungs R2a-R2c)
+# ===========================================================================
+#
+# hal/rom_main.cpp left main's fifth call -- func_0201a054 -- as a seam that
+# only counted its hits, because hal/boot_os.cpp's transcription of that body
+# refuses four of its arms. port/slice_r2abc.txt carries the arms this lane
+# retired, each with the refusal it answers quoted beside it, and
+# port/hal/boot_arms.cpp is what the seam calls: one entry point that runs them
+# in the ROM's own order, with the storage checks each one needs.
+#
+# walk_window and walk_window_hires only, for hal/rom_main.cpp's own reason:
+# smoke_player carries no hal/boot_os.cpp and does not run the boot spine, so
+# nothing in that target reaches the seam.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_r2abc.txt" SLICE_R2ABC_LINES)
+set(SLICE_R2ABC_SOURCES "")
+foreach(line IN LISTS SLICE_R2ABC_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_R2ABC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tr2abc walk_window walk_window_hires)
+    target_sources(${_tr2abc} PRIVATE ${SLICE_R2ABC_SOURCES}
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/boot_arms.cpp")
+endforeach()
+# ONE PER-SOURCE RENAME, the same mechanism as src/main.c above and for the same
+# reason. func_02042f68's FIRST arm is src/func_02060890.c, and two of that
+# body's statements cannot link: `data_020a8780 = func_02060a64` (the FLASH read
+# path, hosted nowhere and reached by nothing in this game) and func_02061138 ->
+# func_020610fc, hand-asm with a deliberate b-self loop MSVC cannot assemble.
+# Defining func_02060890 as a host body would make it a new SHADOW row in
+# linkage.py's replacement queue -- work invented by this change. The rename
+# leaves src/func_02060890.c exactly where it was, unenrolled and unclaimed, and
+# says in one place (hal/boot_arms.cpp's port_rom_card_bringup) that this edge is
+# not ROM code yet. The other two arms ARE the ROM's: func_020603c8 is on the
+# slice above and the eight-byte tag copy is inline in func_02042f68 itself.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02042f68.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_02060890=port_rom_card_bringup")
+
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
 # reconfigure and the build will look clean while compiling the old set of
