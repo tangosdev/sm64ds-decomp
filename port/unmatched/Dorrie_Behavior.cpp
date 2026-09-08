@@ -155,87 +155,11 @@ extern "C" void func_ov065_02118838(char *r6)
 
 /* PORT_HOST_ABI: mwcc pointer-to-member ARRAY stride (16-byte general
    form over the ROM's 8-byte records) -- the gate-173 class. */
-extern "C" int _ZN6Dorrie8BehaviorEv(void *self)
-{
-    char *c = (char *)self;
-    int d;
-    int a2;
-    int thr;
-
-    if (*(unsigned char *)(c + 0x11b5) != 0)
-        _Z14ApproachLinearRiii((int *)(c + 0x11ac), 0xa000, 0x1000);
-    else
-        _Z14ApproachLinearRiii((int *)(c + 0x11ac), 0, 0x1000);
-
-    {
-        /* the ROM's dispatch: data_ov065_0211d7fc[state], 8-byte records */
-        unsigned fn =
-            data_ov065_0211d7fc[*(unsigned char *)(c + 0x11b4) * 2];
-        ((int (*)(char *))fn)(c);
-    }
-
-    *(int *)(c + 0x11a0) = Vec3_HorzDist(c + 0x5c, c + 0x1194);
-    *(short *)(c + 0x11a4) = Vec3_HorzAngle(c + 0x5c, c + 0x1194);
-
-    d = (short)AngleDiff(*(short *)(c + 0x11a4), *(short *)(c + 0x8e));
-
-    {
-        short sv = data_02082214[((unsigned short)d >> 4) * 2 + 1];
-        short cv = data_02082214[(*(unsigned short *)(c + 0x548) >> 4) * 2];
-        int sm = sv * 0x190;
-        int t = (int)(((long long)sm * cv + 0x800) >> 12);
-        if (d < 0x4000) {
-            thr = t + 0x5f8000;
-            a2 = 0x97c000;
-        } else {
-            thr = 0x5f8000;
-            a2 = t + 0x97c000;
-        }
-    }
-
-    if (*(int *)(c + 0x11a0) >= a2) {
-        *(int *)(c + 0x5c) =
-            *(int *)(c + 0x1194) -
-            (int)(((long long)a2 *
-                       data_02082214[(*(unsigned short *)(c + 0x11a4) >> 4) *
-                                     2] +
-                   0x800) >>
-                  12);
-        *(int *)(c + 0x64) =
-            *(int *)(c + 0x119c) -
-            (int)(((long long)a2 *
-                       data_02082214[(*(unsigned short *)(c + 0x11a4) >> 4) *
-                                         2 +
-                                     1] +
-                   0x800) >>
-                  12);
-    } else if (*(int *)(c + 0x11a0) <= thr) {
-        *(int *)(c + 0x5c) =
-            *(int *)(c + 0x1194) -
-            (int)(((long long)thr *
-                       data_02082214[(*(unsigned short *)(c + 0x11a4) >> 4) *
-                                     2] +
-                   0x800) >>
-                  12);
-        *(int *)(c + 0x64) =
-            *(int *)(c + 0x119c) -
-            (int)(((long long)thr *
-                       data_02082214[(*(unsigned short *)(c + 0x11a4) >> 4) *
-                                         2 +
-                                     1] +
-                   0x800) >>
-                  12);
-    }
-
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0xf50);
-    *(int *)(c + 0x60) =
-        *(int *)(c + 0x1198) - *(int *)(c + 0x11ac) - *(int *)(c + 0x11a8);
-    _ZN9Animation7AdvanceEv(c + 0x13c);
-    func_ov065_02118cc4(c);
-    func_ov065_02118838(c);
-    func_ov065_02118248(c);
-    *(unsigned char *)(c + 0x11b5) = 0;
-    *(int *)(c + 0x118c) = 0;
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane FWD. Dorrie::Behavior dispatches
+ * data_ov065_0211d7fc from src/_ZN6Dorrie8BehaviorEv.cpp now; the flat C name
+ * hal/actor_classes_ov065.cpp's face calls is defined by the forwarder in
+ * port/hal/fwd_forwarders.cpp, and the table's three cells hold __fastcall
+ * faces in port/unmatched/Ov065_StateDispatch.cpp. The host copy of
+ * func_ov065_02118838 ABOVE STAYS: it is a different body with its own
+ * reason, and Dorrie's matched TU calls it.
+ */

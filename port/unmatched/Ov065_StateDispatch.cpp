@@ -75,6 +75,29 @@ extern unsigned data_ov065_0211cd1c[], data_ov065_0211cd24[],
     data_ov065_0211cd2c[];
 }
 
+/* RUN link100, LANE FWD: DORRIE'S THREE CELLS HOLD __fastcall FACES NOW.
+ * src/_ZN6Dorrie8BehaviorEv.cpp dispatches data_ov065_0211d7fc itself since
+ * the host copy in port/unmatched/Dorrie_Behavior.cpp was retired, and a
+ * matched TU dispatches a pointer to member as
+ *     mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] / add ecx, this / call eax
+ * -- receiver in ecx, nothing pushed. The OTHER SIXTEEN ROWS DO NOT CHANGE:
+ * they feed the two tables func_ov065_0211691c and func_ov065_02117944
+ * dispatch, and those two TAIL JUMP (`jmp eax`), which leaves the caller's own
+ * first argument in place at [esp+4] -- so a plain cdecl body is right there
+ * and a face would be wrong. Dorrie's site is a CALL, not a jump, because the
+ * method has work to do after it.
+ */
+#define DORRIE_FACE(cell, sym)                                            \
+    static void __fastcall dorrie_c##cell(void *self, void *dead_edx)     \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self);                                                \
+    }
+
+DORRIE_FACE(0, func_ov065_021183c8)
+DORRIE_FACE(1, func_ov065_021182e4)
+DORRIE_FACE(2, func_ov065_02118634)
+
 namespace {
 struct SeatRow {
     unsigned *rec;        /* the mounted {fn, 0} source record */
@@ -102,9 +125,12 @@ const SeatRow g_ov065_states[] = {
     { data_ov065_0211cc48, 0x02117404, func_ov065_02117404 },
     { data_ov065_0211cc50, 0x02117888, func_ov065_02117888 },
     { data_ov065_0211cc58, 0x021175b0, func_ov065_021175b0 },
-    { data_ov065_0211cd1c, 0x021183c8, func_ov065_021183c8 },
-    { data_ov065_0211cd24, 0x021182e4, func_ov065_021182e4 },
-    { data_ov065_0211cd2c, 0x02118634, func_ov065_02118634 },
+    /* DORRIE's three: __fastcall faces, run link100 lane FWD. The cast goes
+       through void* because the column's type is the table's, not the face's;
+       what the seat stores is an ADDRESS. */
+    { data_ov065_0211cd1c, 0x021183c8, (StateFn)(void *)dorrie_c0 },
+    { data_ov065_0211cd24, 0x021182e4, (StateFn)(void *)dorrie_c1 },
+    { data_ov065_0211cd2c, 0x02118634, (StateFn)(void *)dorrie_c2 },
 };
 }  // namespace
 

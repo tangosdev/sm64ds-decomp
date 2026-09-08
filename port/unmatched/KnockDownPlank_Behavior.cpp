@@ -94,24 +94,57 @@ struct Actor { void UpdatePosWithOnlySpeed(void *); };
 void Actor::UpdatePosWithOnlySpeed(void *)
 { _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(this, 0); }
 
-static const struct { PortPmf *slot; unsigned rom; void (*host)(void *); }
+/* RUN link100, LANE FWD: THIS TABLE'S CELLS HOLD __fastcall FACES NOW.
+ * The host copy below is retired and the matched TU dispatches the table
+ * itself. A matched TU dispatches a pointer to member as
+ *     mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] / add ecx, this / call eax
+ * -- receiver in ecx, NOTHING pushed and no `add esp` after, read off the TU's
+ * own /FAsc listing (runs/link100/out/FWD/emit_gate1_out.txt) -- where this
+ * seat used to install a plain cdecl body that takes its self off the stack.
+ * A zero-argument __fastcall face has exactly the convention the matched TU
+ * calls with, and hands the receiver on as the cdecl argument the ROM's own
+ * state bodies take. One face per CELL, not per body: two cells that carry the
+ * same code word stay distinguishable (lane PMFB5's rule).
+ */
+ /* ONLY THE FIRST SEVEN ROWS CHANGE. They feed data_ov015_021149ec, which
+  * KnockDownPlank::Behavior dispatches. The last seven feed
+  * data_ov015_02114a24, whose dispatcher is src/func_ov015_02111fb8.c -- a .c
+  * file with no pointer to member in it, calling the cell as a plain cdecl
+  * function pointer -- so those seven keep their plain cdecl bodies.
+  */
+#define KDP_FACE(cell, sym)                                               \
+    static void __fastcall kdp_c##cell(void *self, void *dead_edx)        \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym(self);                                                        \
+    }
+
+KDP_FACE(0, func_ov015_02111f6c)
+KDP_FACE(1, func_ov015_02111eec)
+KDP_FACE(2, func_ov015_02111e80)
+KDP_FACE(3, func_ov015_02111df4)
+KDP_FACE(4, func_ov015_02111d98)
+KDP_FACE(5, func_ov015_02111d4c)
+KDP_FACE(6, func_ov015_02111ce0)
+
+static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_knock_down_plank_states[] = {
-    /* data_ov015_021149ec[0..6] -- the Behavior dispatch */
-    {data_ov015_02114500, 0x02111f6c, func_ov015_02111f6c},
-    {data_ov015_021144f0, 0x02111eec, func_ov015_02111eec},
-    {data_ov015_021144e0, 0x02111e80, func_ov015_02111e80},
-    {data_ov015_021144d0, 0x02111df4, func_ov015_02111df4},
-    {data_ov015_02114508, 0x02111d98, func_ov015_02111d98},
-    {data_ov015_021144d8, 0x02111d4c, func_ov015_02111d4c},
-    {data_ov015_021144e8, 0x02111ce0, func_ov015_02111ce0},
-    /* data_ov015_02114a24[0..6] -- func_ov015_02111fb8's table */
-    {data_ov015_021144b0, 0x02111fac, func_ov015_02111fac},
-    {data_ov015_021144f8, 0x02111f4c, func_ov015_02111f4c},
-    {data_ov015_021144c8, 0x02111ee0, func_ov015_02111ee0},
-    {data_ov015_021144c0, 0x02111e60, func_ov015_02111e60},
-    {data_ov015_021144a8, 0x02111dd4, func_ov015_02111dd4},
-    {data_ov015_021144b8, 0x02111d8c, func_ov015_02111d8c},
-    {data_ov015_021144a0, 0x02111d28, func_ov015_02111d28},
+    /* data_ov015_021149ec[0..6] -- the Behavior dispatch, __fastcall faces */
+    {data_ov015_02114500, 0x02111f6c, (void *)kdp_c0},
+    {data_ov015_021144f0, 0x02111eec, (void *)kdp_c1},
+    {data_ov015_021144e0, 0x02111e80, (void *)kdp_c2},
+    {data_ov015_021144d0, 0x02111df4, (void *)kdp_c3},
+    {data_ov015_02114508, 0x02111d98, (void *)kdp_c4},
+    {data_ov015_021144d8, 0x02111d4c, (void *)kdp_c5},
+    {data_ov015_021144e8, 0x02111ce0, (void *)kdp_c6},
+    /* data_ov015_02114a24[0..6] -- func_ov015_02111fb8's table, cdecl */
+    {data_ov015_021144b0, 0x02111fac, (void *)func_ov015_02111fac},
+    {data_ov015_021144f8, 0x02111f4c, (void *)func_ov015_02111f4c},
+    {data_ov015_021144c8, 0x02111ee0, (void *)func_ov015_02111ee0},
+    {data_ov015_021144c0, 0x02111e60, (void *)func_ov015_02111e60},
+    {data_ov015_021144a8, 0x02111dd4, (void *)func_ov015_02111dd4},
+    {data_ov015_021144b8, 0x02111d8c, (void *)func_ov015_02111d8c},
+    {data_ov015_021144a0, 0x02111d28, (void *)func_ov015_02111d28},
 };
 
 extern "C" void port_knock_down_plank_states_seat(void)
@@ -134,20 +167,12 @@ extern "C" void port_knock_down_plank_states_seat(void)
     }
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN14KnockDownPlank8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    unsigned idx = (unsigned)*(int *)(c + 0x330);
-    if (idx >= 7) {
-        std::fprintf(stderr, "FATAL: KnockDownPlank state %u out of range\n",
-                     idx);
-        std::abort();
-    }
-    ((void (*)(void *))(size_t)data_ov015_021149ec[idx].fn)(c);
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane FWD. KnockDownPlank::Behavior
+ * dispatches this table from src/_ZN14KnockDownPlank8BehaviorEv.cpp now. The flat C name the port's
+ * actor-class face calls is defined by the forwarder in
+ * port/hal/fwd_forwarders.cpp, which receives `this` on the stack and calls
+ * the member through the real class type; the member and the flat name are two
+ * different symbols with two different conventions, so no /alternatename could
+ * have bridged them. The cells this seat installs are __fastcall faces for the
+ * same reason.
+ */

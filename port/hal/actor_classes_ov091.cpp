@@ -277,11 +277,24 @@ struct Ov091Seat {
 template <typename F> inline void (*as_state(F f))(void *)
 { return (void (*)(void *))(void *)f; }
 
+/* RUN link100, LANE FWD: THE THREE LIFT CELLS HOLD __fastcall FACES NOW.
+   src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp dispatches
+   data_ov091_021354e0 itself since the host copy in
+   port/unmatched/Ov091_HostSites.cpp was retired, and a matched TU dispatches
+   a pointer to member as `mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] /
+   add ecx, this / call eax` -- receiver in ecx, nothing pushed. THE SIX FWOOSH
+   ROWS DO NOT CHANGE: func_ov091_02134044 and Stump::Behavior TAIL JUMP into
+   their cell, which leaves the caller's own first argument at [esp+4], so a
+   plain cdecl body is right there. */
+void __fastcall ov91_lift_c0(void *self, void *) { func_ov091_02132000(self); }
+void __fastcall ov91_lift_c1(void *self, void *) { func_ov091_02131f9c(self); }
+void __fastcall ov91_lift_c2(void *self, void *) { func_ov091_02131ef0(self); }
+
 const Ov091Seat g_ov091_seats[] = {
     /* the lifts, into data_ov091_021354e0 by __sinit_ov091_021345dc */
-    {data_ov091_02134e54, 0x02132000, func_ov091_02132000, "lift/state0"},
-    {data_ov091_02134e44, 0x02131f9c, func_ov091_02131f9c, "lift/state1"},
-    {data_ov091_02134e4c, 0x02131ef0, func_ov091_02131ef0, "lift/state2"},
+    {data_ov091_02134e54, 0x02132000, as_state(ov91_lift_c0), "lift/state0"},
+    {data_ov091_02134e44, 0x02131f9c, as_state(ov91_lift_c1), "lift/state1"},
+    {data_ov091_02134e4c, 0x02131ef0, as_state(ov91_lift_c2), "lift/state2"},
     /* FWOOSH, into 021356d0 / 021356b0 / 021356c0 by __sinit_ov091_02134a30 */
     {data_ov091_02135364, 0x0213400c, as_state(func_ov091_0213400c), "fwoosh/d0-enter"},
     {data_ov091_0213535c, 0x02133f60, as_state(func_ov091_02133f60), "fwoosh/d0-tick"},

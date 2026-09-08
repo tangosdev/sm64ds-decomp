@@ -158,40 +158,17 @@ extern unsigned int data_ov091_021354e0[];   /* three records, 157/144 */
  * src TU declares -- that shadow mangles to `?UpdateModelPosAndRotY@Platform@@`
  * against a class this file does not define.
  * ========================================================================== */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC has no 8-byte {fn,delta} PMF representation, so the record's fn word is called with explicit self
-extern "C" int _ZN22RotatingUpDownPlatform8BehaviorEv(void *self)
-{
-    char *s = (char *)self;
-    int old = *(int *)(s + 0x320);
-
-    {
-        Ov091PmfRec *rec = (Ov091PmfRec *)data_ov091_021354e0;
-        ((void (*)(void *))(size_t)rec[old].fn)(s);
-    }
-
-    *(unsigned short *)(s + 0x354) += 1;
-    if (old != *(int *)(s + 0x320)) {
-        *(short *)(s + 0x354) = 0;
-        func_020393d4(s + 0x124, 0);
-    } else {
-        func_020393d4(s + 0x124,
-            (void *)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
-    }
-    if (*(unsigned char *)(s + 0x352) == 0) {
-        int rate = 0x5000;
-        int saved = *(int *)(s + 0x60);
-        _Z14ApproachLinearRiii((int *)(s + 0x34c),
-                               (*(unsigned char *)(s + 0x356) != 0) ? 0x1e000 : 0,
-                               rate);
-        *(int *)(s + 0x60) -= *(int *)(s + 0x34c);
-        *(int *)(s + 0x60) = saved;
-    }
-    _ZN8Platform21UpdateModelPosAndRotYEv(s);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(s, 0, 0) != 0)
-        _ZN8Platform19UpdateClsnPosAndRotEv(s);
-    *(unsigned char *)(s + 0x356) = 0;
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane FWD.
+ * src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp dispatches
+ * data_ov091_021354e0 now; hal/actor_classes_ov091.cpp's seat gives its three
+ * cells __fastcall faces and port/hal/fwd_forwarders.cpp defines the flat C
+ * name the actor-class face calls. The TWO PLACEHOLDER NAMES this body spelled
+ * out in full -- _Z14ApproachLinearRiii for the src TU's ApproachLinearI and
+ * MeshColliderBase::UpdatePosWithVelocity for its UpdatePosWithVelocitySym --
+ * are now two /alternatename directives in fwd_forwarders.cpp, pointing the
+ * decomp's placeholder spelling at the symbol the ROM's own relocations name
+ * (0x0203ae58 and 0x0203923c). The derivation above is what they rest on.
+ */
 
 /* ==========================================================================
  * (1b) func_ov091_02134044 -- FWOOSH's state ENTER setter.

@@ -45,12 +45,36 @@ void func_ov098_0213ade8(void *);   /* state 1, the lid opening (matched src) */
 
 }  /* extern "C" */
 
-static const struct { PortPmf *slot; unsigned rom; void (*host)(void *); }
+/* RUN link100, LANE FWD: THIS TABLE'S CELLS HOLD __fastcall FACES NOW.
+ * The host copy below is retired and the matched TU dispatches the table
+ * itself. A matched TU dispatches a pointer to member as
+ *     mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] / add ecx, this / call eax
+ * -- receiver in ecx, NOTHING pushed and no `add esp` after, read off the TU's
+ * own /FAsc listing (runs/link100/out/FWD/emit_gate1_out.txt) -- where this
+ * seat used to install a plain cdecl body that takes its self off the stack.
+ * A zero-argument __fastcall face has exactly the convention the matched TU
+ * calls with, and hands the receiver on as the cdecl argument the ROM's own
+ * state bodies take. One face per CELL, not per body: two cells that carry the
+ * same code word stay distinguishable (lane PMFB5's rule).
+ */
+#define CANNON_FACE(cell, sym)                                            \
+    static void __fastcall cannon_c##cell(void *self, void *dead_edx)     \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym(self);                                                        \
+    }
+
+CANNON_FACE(0, func_ov098_0213aa28)
+CANNON_FACE(1, func_ov098_0213b0a4)
+CANNON_FACE(2, func_ov098_0213ad08)
+CANNON_FACE(3, func_ov098_0213ade8)
+
+static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_cannon_states[] = {
-    {data_ov098_0213c644, 0x0213aa28, func_ov098_0213aa28},
-    {data_ov098_0213c64c, 0x0213b0a4, func_ov098_0213b0a4},
-    {data_ov098_0213c654, 0x0213ad08, func_ov098_0213ad08},
-    {data_ov098_0213c65c, 0x0213ade8, func_ov098_0213ade8},
+    {data_ov098_0213c644, 0x0213aa28, (void *)cannon_c0},
+    {data_ov098_0213c64c, 0x0213b0a4, (void *)cannon_c1},
+    {data_ov098_0213c654, 0x0213ad08, (void *)cannon_c2},
+    {data_ov098_0213c65c, 0x0213ade8, (void *)cannon_c3},
 };
 
 extern "C" void port_cannon_states_seat(void)
@@ -72,21 +96,12 @@ extern "C" void port_cannon_states_seat(void)
     }
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN6Cannon8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    if (*(unsigned char *)(c + 0x184) != 1) {
-        unsigned idx = *(unsigned *)(c + 0x180);
-        if (idx >= 4) {
-            std::fprintf(stderr, "FATAL: Cannon state %u out of range\n", idx);
-            std::abort();
-        }
-        ((void (*)(void *))(size_t)data_ov098_0213c8fc[idx].fn)(c);
-    }
-    func_ov098_0213a984(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x124);
-    _ZN12CylinderClsn6UpdateEv(c + 0x124);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane FWD. Cannon::Behavior
+ * dispatches this table from src/_ZN6Cannon8BehaviorEv.cpp now. The flat C name the port's
+ * actor-class face calls is defined by the forwarder in
+ * port/hal/fwd_forwarders.cpp, which receives `this` on the stack and calls
+ * the member through the real class type; the member and the flat name are two
+ * different symbols with two different conventions, so no /alternatename could
+ * have bridged them. The cells this seat installs are __fastcall faces for the
+ * same reason.
+ */

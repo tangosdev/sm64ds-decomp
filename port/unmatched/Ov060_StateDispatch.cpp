@@ -581,20 +581,27 @@ extern "C" void func_ov060_02112434(unsigned char *thiz)
  * and pushes nothing, where these host copies called the code word cdecl with
  * `c + (adj >> 1)`.
  *
- * HOST COPY 5 STAYS, AND THE LINK IS WHY. src/_ZN10BowserFire8BehaviorEv.cpp
- * defines a REAL C++ MEMBER -- `int BowserFire::Behavior()` -- which mangles
- * __thiscall, while hal/actor_classes_ov060.cpp's bfire_behavior face calls the
- * FLAT C name _ZN10BowserFire8BehaviorEv. Retiring this copy therefore leaves
- * that flat name undefined, and the link says so:
+ * HOST COPY 5 IS GONE TOO, run link100 lane FWD, and the paragraph that used
+ * to stand here said it had to stay. What it got right is the diagnosis:
+ * src/_ZN10BowserFire8BehaviorEv.cpp defines a REAL C++ MEMBER -- `int
+ * BowserFire::Behavior()`, which MSVC decorates ?Behavior@BowserFire@@QAEHXZ
+ * and calls __thiscall -- while hal/actor_classes_ov060.cpp's bfire_behavior
+ * face calls the FLAT C name, so retiring the copy on its own left that name
+ * undefined and the link said so:
  *   actor_classes_ov060.cpp.obj : error LNK2019: unresolved external symbol
  *   __ZN10BowserFire8BehaviorEv referenced in function
  *   "int __fastcall bfire_behavior(void *,void *)"
- * Its table data_ov060_0211afb4 is measured and seatable -- eight whole-pair
- * {code,0} sources, a 64-byte span, stride 8 both sides -- and nothing about
- * the TABLE stops it. What stops it is the CALLING CONVENTION at the class's
- * own entry point, and bridging that needs a forwarder that redeclares
- * BowserFire's exact class shape, which is a different piece of work from a
- * table seat. Its eight seat rows keep their plain cdecl bodies. The sibling
+ * What it got wrong is that this needs BowserFire's exact class SHAPE. It does
+ * not: MSVC's decoration of a member function carries the method name, the
+ * class name, the access specifier, the convention and the signature, and
+ * nothing about the class's members or its size. port/hal/fwd_forwarders.cpp
+ * declares the class the way include/BowserFire.h does and forwards the
+ * receiver, and the nine decorations it emits were checked against the nine
+ * matched objects with dumpbin before the link rather than assumed. Its table
+ * data_ov060_0211afb4 measured clean all along -- eight whole-pair {code,0}
+ * sources, a 64-byte span, ROM `add r3,r1,r0,lsl #3` at 021176e4 against
+ * emitted [eax*8], /Zp4 a no-op -- so its eight seat rows are faces now like
+ * the other three tables'. The sibling
  * _ZN10BowserFire13InitResourcesEv is taken because its src defines the FLAT
  * `extern "C" int _ZN10BowserFire13InitResourcesEv(char*)`, so the two halves
  * of one class split for a reason that is about the definition form and not
@@ -642,34 +649,13 @@ extern "C" void func_ov060_02112434(unsigned char *thiz)
 #pragma comment(linker, "/alternatename:?data_ov060_0211af74@@3PAP8Actor@@AEXXZA=_data_ov060_0211af74")
 #pragma comment(linker, "/alternatename:?data_ov060_0211b1ac@@3PAUEntry@@A=_data_ov060_0211b1ac")
 
-/* ============ HOST COPY 5: _ZN10BowserFire8BehaviorEv =====================
- * Line for line with src/_ZN10BowserFire8BehaviorEv.cpp.
- * PORT_HOST_ABI: mwcc pointer-to-member stride/receiver, the Crate case. */
-extern "C" int _ZN10BowserFire8BehaviorEv(char *c)
-{
-    ov60_note("BOWSERFIRE", c, *(int *)(c + 0x35c));   /* w7a trace, stderr */
-    *(int *)(c + 0x370) += 1;
-    {
-        PortPmf *e = &data_ov060_0211afb4[*(int *)(c + 0x35c)];
-        ((void (*)(char *))(size_t)e->fn)(c + (e->adj >> 1));
-    }
-    *(unsigned short *)(c + 0x374) = (unsigned short)
-        (*(unsigned short *)(c + 0x374) + 1);
-    if (*(int *)(c + 0x9c) != 0) {
-        WithMeshClsn_UpdateDiscreteNoLava_veneer(c + 0x110);
-        if (*(int *)(c + 0x35c) != 4) {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) != 0) {
-                *(int *)(c + 0xa8) = 0;
-                *(int *)(c + 0x9c) = 0;
-            }
-        }
-    }
-    func_ov060_02116740(c);
-    func_ov060_02117624(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x2d0);
-    _ZN12CylinderClsn6UpdateEv(c + 0x2d0);
-    return 1;
-}
+/* ============ HOST COPY 5 IS RETIRED =====================================
+ * Run link100 lane FWD. src/_ZN10BowserFire8BehaviorEv.cpp dispatches
+ * data_ov060_0211afb4 now and port/hal/fwd_forwarders.cpp defines the flat C
+ * name the actor-class face calls. The w7a ov60_note("BOWSERFIRE", ...) trace
+ * line went with the body; BOWSER's own trace in HOST COPY 6 is untouched, and
+ * the matched TU is not the place to put a trace back.
+ */
 
 /* ============ HOST COPY 6: _ZN6Bowser8BehaviorEv ==========================
  * NOT a pointer-to-member fault -- src/_ZN6Bowser8BehaviorEv.cpp does not
@@ -775,6 +761,20 @@ OV60_FACE(b1ac, 0, func_ov060_021181b4)
 OV60_FACE(b1ac, 1, func_ov060_021180e0)
 OV60_FACE(b1ac, 2, func_ov060_02117db8)
 
+/* data_ov060_0211afb4 -- BOWSER FIRE behaviour, eight. Run link100 lane FWD:
+   HOST COPY 5 is gone and src/_ZN10BowserFire8BehaviorEv.cpp dispatches this
+   table itself, so its eight cells take faces like the other three tables.
+   ONE FACE PER CELL: cells 6 and 7 carry the SAME code word (0x02116f90) and
+   stay distinguishable that way. */
+OV60_FACE(afb4, 0, func_ov060_0211747c)
+OV60_FACE(afb4, 1, func_ov060_021169f8)
+OV60_FACE(afb4, 2, func_ov060_02116b68)
+OV60_FACE(afb4, 3, func_ov060_021167ec)
+OV60_FACE(afb4, 4, func_ov060_021168c4)
+OV60_FACE(afb4, 5, func_ov060_02116d78)
+OV60_FACE(afb4, 6, func_ov060_02116f90)
+OV60_FACE(afb4, 7, func_ov060_02116f90)
+
 namespace {
 /* the host column holds BOTH plain cdecl bodies (for the tables whose
    dispatcher is still a host copy in this file, including BOWSER FIRE's
@@ -812,17 +812,17 @@ const Seat g_ov060_states[] = {
     {data_ov060_0211a558, 0x02115d68, (void *)ov60_ae9c_s0, "ae9c[0]"},
     {data_ov060_0211a550, 0x02115d50, (void *)ov60_ae9c_s1, "ae9c[1]"},
     {data_ov060_0211a548, 0x02115c1c, (void *)ov60_ae9c_s2, "ae9c[2]"},
-    /* 0x0211afb4 -- BOWSER FIRE behaviour, eight */
-    {data_ov060_0211a794, 0x0211747c, (void *)func_ov060_0211747c, "afb4[0]"},
-    {data_ov060_0211a78c, 0x021169f8, (void *)func_ov060_021169f8, "afb4[1]"},
-    {data_ov060_0211a76c, 0x02116b68, (void *)func_ov060_02116b68, "afb4[2]"},
-    {data_ov060_0211a77c, 0x021167ec, (void *)func_ov060_021167ec, "afb4[3]"},
-    {data_ov060_0211a764, 0x021168c4, (void *)func_ov060_021168c4, "afb4[4]"},
+    /* 0x0211afb4 -- BOWSER FIRE behaviour, eight (faces, run link100 FWD) */
+    {data_ov060_0211a794, 0x0211747c, (void *)ov60_afb4_s0, "afb4[0]"},
+    {data_ov060_0211a78c, 0x021169f8, (void *)ov60_afb4_s1, "afb4[1]"},
+    {data_ov060_0211a76c, 0x02116b68, (void *)ov60_afb4_s2, "afb4[2]"},
+    {data_ov060_0211a77c, 0x021167ec, (void *)ov60_afb4_s3, "afb4[3]"},
+    {data_ov060_0211a764, 0x021168c4, (void *)ov60_afb4_s4, "afb4[4]"},
     /* not a HOLE any more -- w9-harvest seated main's byte-matched
        src/func_ov060_02116d78.c here in place of w7a's host copy. */
-    {data_ov060_0211a774, 0x02116d78, (void *)func_ov060_02116d78, "afb4[5]"},
-    {data_ov060_0211a744, 0x02116f90, (void *)func_ov060_02116f90, "afb4[6]"},
-    {data_ov060_0211a784, 0x02116f90, (void *)func_ov060_02116f90, "afb4[7]"},
+    {data_ov060_0211a774, 0x02116d78, (void *)ov60_afb4_s5, "afb4[5]"},
+    {data_ov060_0211a744, 0x02116f90, (void *)ov60_afb4_s6, "afb4[6]"},
+    {data_ov060_0211a784, 0x02116f90, (void *)ov60_afb4_s7, "afb4[7]"},
     /* 0x0211af74 -- BOWSER FIRE init, eight */
     {data_ov060_0211a75c, 0x021167c8, (void *)ov60_af74_s0, "af74[0]"},
     {data_ov060_0211a754, 0x02116b18, (void *)ov60_af74_s1, "af74[1]"},

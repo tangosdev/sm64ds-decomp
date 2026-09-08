@@ -15847,6 +15847,43 @@ foreach(_tpmfb5 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# R10e, run link100 lane FWD: THE MEMBER-DEFINING Behavior ROWS
+# ===========================================================================
+#
+# Blocks R10a through R10d took rows whose matched TU defines the FLAT C symbol
+# the port's face calls. This block takes the nine that do not: their matched
+# TU defines a real C++ MEMBER (`int BowserFire::Behavior()`), which MSVC
+# decorates ?Behavior@BowserFire@@QAEHXZ and calls __thiscall, while the port's
+# actor-class face calls the flat name with the receiver on the stack. Two
+# symbols, two conventions; an /alternatename cannot bridge them and lane PMFB5
+# paid a link to establish it. The bridge is port/hal/fwd_forwarders.cpp, one
+# forwarder per class in the flat name's own convention, and it rides this
+# block's slice file so the forwarders and the TUs they reach land together.
+# Nothing here changes a ROM reference, a linker option or a call the ROM does
+# not make. The per-row ROM stride, emitted stride, arity, source pairs, config
+# span and alias spelling are in port/slice_fwd.txt and the raw measurements in
+# runs/link100/out/FWD/.
+#
+# NO /Zp4 ON THIS BLOCK, measured per TU rather than inherited, for the reason
+# R10a, R10c and R10d all give. Every one of these nine TUs was compiled under
+# the port's own flags with and without the option for this lane and each pair
+# of /FAsc listings came back identical outside the TITLE line naming the .obj.
+# R10a's rule for that case is to leave the option off rather than make a claim
+# nothing measured.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_fwd.txt" SLICE_FWD_LINES)
+set(SLICE_FWD_SOURCES "")
+foreach(line IN LISTS SLICE_FWD_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_FWD_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tfwd walk_window walk_window_hires smoke_player)
+    target_sources(${_tfwd} PRIVATE ${SLICE_FWD_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

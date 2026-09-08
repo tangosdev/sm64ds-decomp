@@ -64,20 +64,52 @@ void func_ov079_021258fc(void *); void func_ov079_02125b44(void *);
 
 /* Seated over the SOURCE side, one row per static, checked against the ROM
    address the host body was compiled from. All twelve deltas are 0. */
-static const struct { PortPmf *slot; unsigned rom; void (*host)(void *); }
+/* RUN link100, LANE FWD: THIS TABLE'S CELLS HOLD __fastcall FACES NOW.
+ * The host copy below is retired and the matched TU dispatches the table
+ * itself. A matched TU dispatches a pointer to member as
+ *     mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] / add ecx, this / call eax
+ * -- receiver in ecx, NOTHING pushed and no `add esp` after, read off the TU's
+ * own /FAsc listing (runs/link100/out/FWD/emit_gate1_out.txt) -- where this
+ * seat used to install a plain cdecl body that takes its self off the stack.
+ * A zero-argument __fastcall face has exactly the convention the matched TU
+ * calls with, and hands the receiver on as the cdecl argument the ROM's own
+ * state bodies take. One face per CELL, not per body: two cells that carry the
+ * same code word stay distinguishable (lane PMFB5's rule).
+ */
+#define WHOMP_FACE(cell, sym)                                             \
+    static void __fastcall whomp_c##cell(void *self, void *dead_edx)      \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym(self);                                                        \
+    }
+
+WHOMP_FACE(0, func_ov079_0212538c)
+WHOMP_FACE(1, func_ov079_02125240)
+WHOMP_FACE(2, func_ov079_021258fc)
+WHOMP_FACE(3, func_ov079_021254b4)
+WHOMP_FACE(4, func_ov079_02124638)
+WHOMP_FACE(5, func_ov079_021246dc)
+WHOMP_FACE(6, func_ov079_021246d8)
+WHOMP_FACE(7, func_ov079_02125b44)
+WHOMP_FACE(8, func_ov079_02124530)
+WHOMP_FACE(9, func_ov079_021256d4)
+WHOMP_FACE(10, func_ov079_02124b08)
+WHOMP_FACE(11, func_ov079_021249f0)
+
+static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_whomp_states[] = {
-    {data_ov079_02127bc0, 0x0212538c, func_ov079_0212538c},
-    {data_ov079_02127bc8, 0x02125240, func_ov079_02125240},
-    {data_ov079_02127bd0, 0x021258fc, func_ov079_021258fc},
-    {data_ov079_02127bd8, 0x021254b4, func_ov079_021254b4},
-    {data_ov079_02127be0, 0x02124638, func_ov079_02124638},
-    {data_ov079_02127be8, 0x021246dc, func_ov079_021246dc},
-    {data_ov079_02127bf8, 0x021246d8, func_ov079_021246d8},
-    {data_ov079_02127c00, 0x02125b44, func_ov079_02125b44},
-    {data_ov079_02127c08, 0x02124530, func_ov079_02124530},
-    {data_ov079_02127c10, 0x021256d4, func_ov079_021256d4},
-    {data_ov079_02127c18, 0x02124b08, func_ov079_02124b08},
-    {data_ov079_02127c20, 0x021249f0, func_ov079_021249f0},
+    {data_ov079_02127bc0, 0x0212538c, (void *)whomp_c0},
+    {data_ov079_02127bc8, 0x02125240, (void *)whomp_c1},
+    {data_ov079_02127bd0, 0x021258fc, (void *)whomp_c2},
+    {data_ov079_02127bd8, 0x021254b4, (void *)whomp_c3},
+    {data_ov079_02127be0, 0x02124638, (void *)whomp_c4},
+    {data_ov079_02127be8, 0x021246dc, (void *)whomp_c5},
+    {data_ov079_02127bf8, 0x021246d8, (void *)whomp_c6},
+    {data_ov079_02127c00, 0x02125b44, (void *)whomp_c7},
+    {data_ov079_02127c08, 0x02124530, (void *)whomp_c8},
+    {data_ov079_02127c10, 0x021256d4, (void *)whomp_c9},
+    {data_ov079_02127c18, 0x02124b08, (void *)whomp_c10},
+    {data_ov079_02127c20, 0x021249f0, (void *)whomp_c11},
 };
 
 extern "C" void port_whomp_states_seat(void)
@@ -99,61 +131,12 @@ extern "C" void port_whomp_states_seat(void)
     }
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN5Whomp8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-
-    if (*(unsigned char *)(c + 0x414) != 0 && *(int *)(c + 0x3b0) != 9) {
-        if (_ZN5Actor13DistToCPlayerEv(selfv) < 0x1770000) {
-            *(int *)(*(int *)&data_0209f318 + 0x114) = (int)(size_t)selfv;
-        }
-    }
-
-    func_ov079_02123f34(selfv);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(selfv, 0);
-
-    if (*(int *)(c + 0x98) != 0) {
-        if (_ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
-                selfv, c + 0x110, 0x3c000, (short)0x2888, 0, 0,
-                (void *)0x32000)) {
-            *(int *)(c + 0x5c) = *(int *)(c + 0x3d4);
-            *(int *)(c + 0x60) = *(int *)(c + 0x3d8);
-            *(int *)(c + 0x64) = *(int *)(c + 0x3dc);
-        } else {
-            *(int *)(c + 0x3d4) = *(int *)(c + 0x5c);
-            *(int *)(c + 0x3d8) = *(int *)(c + 0x60);
-            *(int *)(c + 0x3dc) = *(int *)(c + 0x64);
-        }
-    } else {
-        *(int *)(c + 0x3d4) = *(int *)(c + 0x5c);
-        *(int *)(c + 0x3d8) = *(int *)(c + 0x60);
-        *(int *)(c + 0x3dc) = *(int *)(c + 0x64);
-    }
-
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(selfv, c + 0x110, 0);
-
-    {
-        int idx = *(int *)(c + 0x3b0);
-        ((void (*)(void *))(size_t)data_ov079_02128280[idx].fn)(selfv);
-
-        {
-            unsigned short *ctr = (unsigned short *)(c + 0x100);
-            *ctr = *ctr + 1;
-            if (idx != *(int *)(c + 0x3b0)) {
-                *ctr = 0;
-                *(unsigned char *)(c + 0x40c) = 0;
-            }
-        }
-    }
-
-    func_ov079_02124188(selfv);
-
-    if (func_ov079_021243e0(c, 0) == 0 || func_ov079_02123a8c(selfv) != 0) {
-        func_ov079_02124008(selfv);
-    }
-
-    *(unsigned char *)(c + 0x403) = 0;
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane FWD. Whomp::Behavior
+ * dispatches this table from src/_ZN5Whomp8BehaviorEv.cpp now. The flat C name the port's
+ * actor-class face calls is defined by the forwarder in
+ * port/hal/fwd_forwarders.cpp, which receives `this` on the stack and calls
+ * the member through the real class type; the member and the flat name are two
+ * different symbols with two different conventions, so no /alternatename could
+ * have bridged them. The cells this seat installs are __fastcall faces for the
+ * same reason.
+ */

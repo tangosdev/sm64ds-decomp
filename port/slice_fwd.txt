@@ -1,0 +1,231 @@
+# ===========================================================================
+# SLICE fwd -- run link100, lane FWD, gate 1
+# ONE FORWARDER PER CLASS FOR THE MEMBER-DEFINING Behavior ROWS
+# ===========================================================================
+#
+# Lane PMFB5 closed with a finding rather than a row: the actor half of the
+# pointer-to-member family is NOT a table problem. Nine of its remaining rows
+# have a matched TU that defines a real C++ MEMBER -- `int BowserFire::
+# Behavior()` -- while the port's actor-class table and its __fastcall face
+# call the FLAT C name the decomp's file is named after. Those are two
+# different symbols with two different conventions (the flat name takes the
+# receiver on the stack, the member reads it in ecx), so no /alternatename can
+# bridge them, and PMFB5 paid an exe to learn it:
+#
+#   actor_classes_ov060.cpp.obj : error LNK2019: unresolved external symbol
+#   __ZN10BowserFire8BehaviorEv referenced in function
+#   "int __fastcall bfire_behavior(void *,void *)"
+#
+# This block writes the bridge: port/hal/fwd_forwarders.cpp, one forwarder per
+# class in the flat name's own convention, receiving `this` as its argument and
+# calling the member through the real class type. It is the shape
+# hal/cxxname_bridge.cpp's gate-9 method bridges already use for Platform and
+# ShadowModel. Nothing here changes a ROM reference, a linker option or a call
+# the ROM does not make: the ROM calls each class's Behavior through the actor
+# class table's slot 6, the port's face IS that slot, and the body it reaches is
+# the decomp's own matched TU instead of a transcribed host copy.
+#
+# ---- THE NINE ROWS, AND THE FOUR-AXIS MEASUREMENT FOR EACH ----------------
+#
+# Every number below was re-derived on THIS tree for THIS lane out of
+# extracted/overlays/ and off each matched TU's own /FAsc listing under the
+# port's own flags. Nothing is carried from PMFB5's prose.
+#
+# class / matched TU                     table                cells  ROM stride
+# ---------------------------------------------------------------------------
+# KnockDownPlank::Behavior  ov015 02112090  data_ov015_021149ec   7   lsl #3
+# BowserFire::Behavior      ov060 021176d4  data_ov060_0211afb4   8   lsl #3
+# BowserPuzzleManager::B.   ov064 021190b0  data_ov064_0211c904   6   lsl #3
+# Dorrie::Behavior          ov065 02118df0  data_ov065_0211d7fc   3   lsl #3
+# Whomp::Behavior           ov079 02125fcc  data_ov079_02128280  12   lsl #3
+# MontyMole::Behavior       ov080 02124530  data_ov080_02128438   6   lsl #3
+# RotatingUpDownPlatform::B ov091 02132108  data_ov091_021354e0   3   lsl #3
+# Cannon::Behavior          ov098 0213b26c  data_ov098_0213c8fc   4   lsl #3
+# Fish::Behavior            ov100 02146b38  data_ov100_02148a1c   7   lsl #3
+#
+# (1) THE STRIDE, ROM SIDE, read by disassembling each body at its OWN address
+#     out of extracted/overlays/overlay_00NN.bin and following the literal-pool
+#     load that produces the table base
+#     (runs/link100/out/FWD/rom_gate1.txt):
+#       02112090  pool 021120f8 -> 021149ec   STRIDE 8   OK
+#       021176d4  pool 0211778c -> 0211afb4   STRIDE 8   OK
+#       021190b0  pool 02119158 -> 0211c904   STRIDE 8   OK
+#       02118df0  pool 02119094 -> 0211d7fc   STRIDE 8   OK
+#       02125fcc  pool 02126160 -> 02128280   STRIDE 8   OK
+#       02124530  pool 02124598 -> 02128438   STRIDE 8   OK
+#       02132108  pool 02132204 -> 021354e0   STRIDE 8   OK
+#       0213b26c  pool 0213b2d0 -> 0213c8fc   STRIDE 8   OK
+#       02146b38  pool 02146c60 -> 02148a1c   STRIDE 8   OK
+#     Nine for nine: the shift-scaled add is `lsl #3` and the pool word IS the
+#     table, so the row is measured at the body, not attributed by a census.
+#
+# (2) THE STRIDE, EMITTED SIDE, off each matched TU's own /FAsc listing under
+#     the port's own flags (runs/link100/out/FWD/emit_gate1_out.txt): every one
+#     reads [reg*8] and [reg*8+4], the two words of one ROM record. That is
+#     block R8's /vmg /vmm doing the work -- MSVC's pointer to member is the
+#     eight-byte multiple-inheritance representation on this target, which IS
+#     the ROM's {code, adjust} pair. /Zp4 was compiled on every one of the nine
+#     and the listings are identical: 0 diff lines outside the TITLE line that
+#     names the .obj. It is not claimed on this block.
+#
+# (3) THE ARITY IS ZERO ON ALL NINE, read per row rather than assumed. Every
+#     dispatch is
+#         mov ecx, TAB[i*8+4] / mov eax, TAB[i*8] / add ecx, this / call eax
+#     with nothing pushed between the index load and the call and no `add esp`
+#     after it. THREE listings carry an `add esp, N` a few instructions EARLIER
+#     -- BowserPuzzleManager `add esp,4`, Dorrie and Whomp `add esp,12`,
+#     MontyMole `add esp,8` -- and every one is the cleanup of the PRECEDING
+#     cdecl call, checked in the listing rather than counted as an argument.
+#     That is PMFC2's note column being wrong about arity for the fourth lane
+#     running.
+#     FISH HAS TWO DISPATCH SITES on one table (the guarded arm and the else
+#     arm of the same `if`), both this shape, both arity zero. A reader that
+#     stops at the first indirect call sees one; both were read.
+#
+# (4) THE SOURCE PAIRS: 56 whole-pair copies, ALL {code, 0}, slots contiguous
+#     from 0 on every table, read out of the overlay images at the addresses
+#     each constructor copies them from with PMFB5's width-based reader
+#     (runs/link100/out/FWD/pairs_gate1.txt). No genuine field-form fill
+#     anywhere. Two of the six spellings appear here: `TAB[N] = SRC` on seven
+#     tables and `TAB.<m> = SRC` over a record of two-word pair members on
+#     ov060 and ov080.
+#
+# (5) THE CONFIG SPAN, so a seat cannot leave a cell unfilled for the matched
+#     TU to CALL (runs/link100/out/FWD/span_gate1.txt). Every one of the nine
+#     is COMPLETE: filled cells == span cells. TWO NEEDED THE CORRECTED READING
+#     -- data_ov015_021149ec and data_ov079_02128280 have INTERIOR symbols (a
+#     cell's second word carries its own name in this repo), so the naive next
+#     symbol reads 0 and 2 cells; the next symbol AT OR AFTER the end of the
+#     filled range is 02114a24 and 021282e0, exactly 7*8 and 12*8 on.
+#
+# ---- THE OTHER HALF OF EVERY ROW: THE CELLS BECOME __fastcall FACES --------
+#
+# With the host copy retired the MATCHED TU dispatches the table, and it calls
+# with the receiver in ecx and nothing on the stack. The seats used to install
+# plain cdecl bodies that take their self off the stack, so every cell of every
+# table above now holds a zero-argument __fastcall FACE that forwards the
+# receiver as the cdecl argument the ROM's own state bodies take. ONE FACE PER
+# CELL, not per body: data_ov060_0211afb4 cells 6 and 7 carry the same code
+# word 0x02116f90 and stay distinguishable that way.
+#
+# THREE SEATS ARE MIXED AND ONLY PART OF EACH CHANGES, which is the distinction
+# worth writing down:
+#   port/unmatched/KnockDownPlank_Behavior.cpp  7 of 14 rows. The other seven
+#     feed data_ov015_02114a24, dispatched by src/func_ov015_02111fb8.c -- a .c
+#     file with no pointer to member in it, calling the cell as a plain cdecl
+#     function pointer.
+#   port/unmatched/Ov065_StateDispatch.cpp      3 of 19 rows. The other sixteen
+#     feed the tables func_ov065_0211691c and func_ov065_02117944 dispatch, and
+#     those two TAIL JUMP (`jmp eax`), which leaves the caller's own first
+#     argument in place at [esp+4] -- so a plain cdecl body is RIGHT there and a
+#     face would be wrong. Lane PMF2 measured that; this lane did not disturb it.
+#   port/hal/actor_classes_ov091.cpp            3 of 9 rows, same split: the six
+#     FWOOSH rows are reached by tail jumps from func_ov091_02134044 and
+#     Stump::Behavior.
+# port/unmatched/BowserPuzzle_StateDispatch.cpp changes the manager's six and
+#   leaves the Piece's two, whose dispatcher is still a host copy in that file.
+#
+# ---- THE ALIASES, EVERY SPELLING READ OFF THE OBJECT ----------------------
+#
+# A dumpbin /symbols UNDEF sweep of all ten objects was run BEFORE the link and
+# every undefined name was checked against the symbols walk_window.map already
+# carries (runs/link100/out/FWD/undef_gate1.txt, resolve_gate1.txt). It found
+# eight names that would not have resolved, which is the check that keeps a
+# failed link from deleting the exe and truncating the map:
+#
+#   ?data_ov015_021149ec@@3PAUTabEnt@@A        -> _data_ov015_021149ec
+#   ?data_ov064_0211c904@@3PAUEntry@@A         -> _data_ov064_0211c904
+#   ?data_ov079_02128280@@3PAP8Actor@@AEHXZA   -> _data_ov079_02128280
+#   ?data_ov080_02128438@@3PAUEntry@@A         -> _data_ov080_02128438
+#     Four TUs declare their table OUTSIDE their own extern "C" block, so MSVC
+#     decorates the reference. The other five come in as the plain _data_ name
+#     and need nothing.
+#   ?data_0209f318@@3HA                        -> _data_0209f318
+#     Whomp's TU also declares the arm9 global data_0209f318 as a plain int at
+#     C++ linkage. hal/cxx_aliases.cpp:929/932/947 already carry THREE other
+#     spellings of the same storage (@@3PAUCamera@@A, @@3PAHA, @@3PAXA); this
+#     is a fourth view of one address.
+#   _ApproachLinearI          -> __Z14ApproachLinearRiii
+#   _UpdatePosWithVelocitySym -> __ZN16MeshColliderBase21UpdatePosWithVelocity...
+#     TWO PLACEHOLDER NAMES. include/decl_common.h:1896 and :1967 declare them
+#     and NOTHING in this link defines them; they are what
+#     src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp calls. They are not
+#     undecompiled code: the ROM's own relocations at those two call sites read
+#     0x0203ae58 and 0x0203923c, which config/arm9/symbols.txt names
+#     ApproachLinear(int&, int, int) and MeshColliderBase::UpdatePosWithVelocity
+#     -- both in this link -- and the host copy this row retires
+#     (port/unmatched/Ov091_HostSites.cpp) spelled both of them out in full for
+#     exactly that reason. The directives point the decomp's placeholder
+#     spelling at the ROM's own target.
+#
+#   ?data_ov098_0213c8fc@@3PAUEntry@@A is NOT added: Cannon's spelling is
+#   already carried by hal/cxx_aliases.cpp:1686 and a second directive for the
+#   same LHS would be a duplicate, not a fix.
+#
+# ---- THE FORWARDER'S OWN PROOF, BEFORE THE LINK ---------------------------
+#
+# The nine PUBLIC symbols the matched TUs define, read off their objects:
+#   ?Behavior@KnockDownPlank@@QAEHXZ         ?Behavior@BowserFire@@QAEHXZ
+#   ?Behavior@BowserPuzzleManager@@QAEHXZ    ?Behavior@Dorrie@@QAEHXZ
+#   ?Behavior@Whomp@@QAEHXZ                  ?Behavior@MontyMole@@QAEHXZ
+#   ?Behavior@RotatingUpDownPlatform@@QAEHXZ ?Behavior@Cannon@@QAEHXZ
+#   ?Behavior@Fish@@QAEHXZ
+# and the nine UNDEF externals of fwd_forwarders.cpp's own object are that same
+# set, name for name. The bridge is proven before the link, not after it.
+#
+# MANGLING, AND WHY TWO CLASSES CARRY A ONE-LINE DECLARATION. MSVC's decoration
+# of a member function carries the method name, the class name, the ACCESS
+# specifier, the calling convention and the signature -- and nothing about the
+# class's members or its size. Seven of the nine declare `int Behavior();` in
+# the tree's own include/<Class>.h and the forwarder includes it.
+# include/BowserPuzzleManager.h and include/Dorrie.h do NOT declare Behavior
+# (their matched TUs declare the class themselves), so those two carry the
+# matched TU's own declaration instead of an invented one. All nine are a
+# `struct` (public) with `int Behavior()`, so all nine decorate ...@@QAEHXZ,
+# and that was checked object against object rather than reasoned about.
+#
+# ---- SEAT CALL SITES, one per class, all of them already in place ---------
+#
+#   port_knock_down_plank_states_seat        hal/actor_overlays.cpp:1355
+#   port_ov060_states_seat                   hal/actor_classes_ov060.cpp:440
+#   port_bowser_puzzle_manager_states_seat   hal/actor_overlays.cpp:1485
+#   port_ov065_states_seat                   hal/actor_classes_ov065.cpp:339
+#   port_whomp_states_seat                   hal/actor_overlays.cpp:1376
+#                                            hal/actor_classes_wf_enemy.cpp:256
+#   port_monty_mole_states_seat              hal/actor_overlays.cpp:1390
+#   port_ov091_states_seat                   hal/actor_classes_ov091.cpp:462
+#                                            hal/actor_classes_ov091.cpp:505
+#   port_cannon_states_seat                  hal/actor_overlays.cpp:1304
+#   port_fish_states_seat                    hal/actor_overlays.cpp:1324
+# Every one already ran before its overlay's sinits, because every one of these
+# tables was already seated for the host copy. This lane adds NO call site.
+#
+# ---- NOT TAKEN, WITH THE MEASUREMENT THAT STOPS EACH ---------------------
+#
+#   _ZN3Key8BehaviorEv (ov089 data_ov089_02132cec, 8 cells filled) and
+#   _ZN13UpDownLiftBbh8BehaviorEv (ov095 data_ov095_02137910, 5 filled) are
+#     member-defining rows like the nine above and measure clean on stride,
+#     pairs and dispatch shape -- but each table is the LAST symbol in its
+#     overlay's config symbol table, so there is no next symbol at or after the
+#     end of the filled range and THE EXTENT CANNOT BE CLOSED. Re-measured for
+#     this lane, not carried: runs/link100/out/FWD/span_gate1.txt reads
+#     "EXTENT OPEN" for both. A seat over an unclosed extent can leave a cell
+#     the matched TU would CALL, so both stay host copies.
+#   _ZN6ToxBox8BehaviorEv (ov092) is the same extent refusal and is not a
+#     definition-form row at all: its src defines the flat extern "C" symbol.
+#   _ZN12MansionSteps8BehaviorEv (ov063 data_ov063_0211ef38, 4 cells, span
+#     COMPLETE) is a member-defining row that measures clean on every axis. It
+#     is not in THIS gate because its source-pair seat is ov63_bringup in
+#     hal/actor_classes_ov063.cpp; it is taken in this lane's gate 2.
+#
+# ===========================================================================
+port/hal/fwd_forwarders.cpp
+src/_ZN14KnockDownPlank8BehaviorEv.cpp
+src/_ZN10BowserFire8BehaviorEv.cpp
+src/_ZN19BowserPuzzleManager8BehaviorEv.cpp
+src/_ZN6Dorrie8BehaviorEv.cpp
+src/_ZN5Whomp8BehaviorEv.cpp
+src/_ZN9MontyMole8BehaviorEv.cpp
+src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp
+src/_ZN6Cannon8BehaviorEv.cpp
+src/_ZN4Fish8BehaviorEv.cpp
