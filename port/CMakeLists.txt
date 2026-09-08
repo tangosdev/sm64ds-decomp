@@ -15730,6 +15730,42 @@ foreach(_tpmfb3 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# R10c, run link100 lane PMFB4: THE CALL-SHAPE ROWS OVER UNSEATED TABLES
+# ===========================================================================
+#
+# Blocks R10a and R10b took the family-C rows whose table already had an
+# installing seat, and then the rest of one class's tables one level down. This
+# block takes rows whose table had NO seat at all: each one needs the boot
+# installer written first, in the file that owns the table, and then the host
+# copy comes off. Nothing here changes a ROM reference, a linker option or a
+# call the ROM does not make; the per-row ROM stride, emitted stride, source
+# pairs, dispatch shape and alias spelling are in port/slice_pmfb4.txt and the
+# raw measurements in runs/link100/out/PMFB4/.
+#
+# NO /Zp4 ON THIS BLOCK, and it is measured per TU rather than inherited. R10a
+# carries lane PMFB1's lever because MSVC gives any struct CONTAINING a pointer
+# to member eight-byte alignment, which silently strides twenty-four where the
+# ROM strides twenty. Every TU in this block was compiled under the port's own
+# flags with and without the option for this lane, and each pair of /FAsc
+# listings came back identical except for the TITLE line naming the .obj -- the
+# tables are arrays of the bare pointer to member or of a one-member Entry
+# wrapping one, eight bytes either way, against the ROM's own
+# `add r3, rTable, rIndex, lsl #3`. R10a's rule for that case is to leave the
+# option off rather than make a claim nothing measured.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb4.txt" SLICE_PMFB4_LINES)
+set(SLICE_PMFB4_SOURCES "")
+foreach(line IN LISTS SLICE_PMFB4_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFB4_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tpmfb4 walk_window walk_window_hires smoke_player)
+    target_sources(${_tpmfb4} PRIVATE ${SLICE_PMFB4_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

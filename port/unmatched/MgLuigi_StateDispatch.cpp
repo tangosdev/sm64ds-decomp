@@ -85,6 +85,7 @@
 // declares and passes.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the boot installer below (lane PMFB4) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -161,9 +162,16 @@ static unsigned g_luigi_floor_hits;
 static unsigned g_luigi_state_hits;
 static unsigned g_luigi_state_floor;
 
-/* the two host-copied dispatchers that are also states; defined below */
+/* The two dispatchers that are also states. func_ov006_020f0ba0 is still the
+   host copy defined below; run link100 lane PMFB4 retired func_ov006_020f300c,
+   so this declaration now names src/func_ov006_020f300c.cpp, at the same C
+   linkage and the same one-pointer signature. */
 extern "C" void func_ov006_020f0ba0(void *c, int i);
 extern "C" void func_ov006_020f300c(char *o);
+
+/* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
+   the ov006 constructors have filled the tables. */
+extern "C" void port_mg_luigi_states_seat(void);
 
 /* Run mg5, lane INTEG: slot 7 of data_ov006_02142254 (func_ov006_020f15ac) was
    recovered on branch decomp/wanted-layout and is now sliced and dispatched
@@ -243,16 +251,17 @@ extern "C" void port_mg_luigi_counts(unsigned *hits, unsigned *floor,
     if (nosrc) *nosrc = g_luigi_floor_hits;
 }
 
-// ---- the six host copies ---------------------------------------------------
+// ---- the two host copies that are left --------------------------------------
 //
-// Each is its src TU with the pointer-to-member declaration replaced by MgPmf
-// and the dispatch replaced by port_mg_luigi_call0/1. Everything else is
+// SIX at run mg5, TWO after run link100 lane PMFB4 seated three of the five
+// tables. Each is its src TU with the pointer-to-member declaration replaced by
+// MgPmf and the dispatch replaced by port_mg_luigi_call0/1. Everything else is
 // verbatim. EVERY FIELD OFFSET BELOW IS THE ROM'S, read off the disassembly of
 // the body rather than off the src struct, because a src struct that contains
-// a member pointer lays out differently on MSVC. None of these six holds one
+// a member pointer lays out differently on MSVC. Neither of these two holds one
 // -- all five tables are external -- so the src offsets and the ROM's agree,
 // and each is stated next to its body so the check is visible rather than
-// assumed.
+// assumed. The four that went are named after them.
 
 /* src/func_ov006_020f0044.cpp, table data_ov006_021421ec, one argument.
    ROM 0x020f0044: add r1,r0,#0x4000; ldrb r2,[r1,#0x7f4] guard; ldrb
@@ -283,135 +292,182 @@ extern "C" void func_ov006_020f0ba0(void *p, int i)
     port_mg_luigi_call1(c, e->code, e->adj, i);
 }
 
-/* src/func_ov006_020f0d58.cpp, table data_ov006_02142204, one argument.
-   ROM 0x020f0d58: two iterations, stride 0x18, guard at +0x47b4, index at
-   +0x47b6, r1 = the loop counter, pool 0x020f0dd4 = 02142204; returns
-   (count == 0). */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" int func_ov006_020f0d58(void *p)
-{
-    char *base = (char *)p;
-    int count = 0;
-    char *e = base;
-    for (int i = 0; i < 2; ++i, e += 0x18) {
-        if (*(unsigned char *)(e + 0x47b4) == 0)
-            continue;
-        unsigned k = *(unsigned char *)(e + 0x47b6);
-        const MgPmf *q = &data_ov006_02142204[k];
-        port_mg_luigi_call1(base, q->code, q->adj, i);
-        ++count;
+// ---- FOUR HOST COPIES ARE RETIRED, TWO ARE LEFT ----------------------------
+//
+// Run link100 lane PMFB4 seated THREE of this class's five tables, so the four
+// dispatchers that read them compile from their own matched TUs
+// (port/slice_pmfb4.txt) and the host copies of them are gone:
+//
+//   func_ov006_020f0d58  data_ov006_02142204   src/func_ov006_020f0d58.cpp
+//   func_ov006_020f3414  data_ov006_02142234   src/func_ov006_020f3414.cpp
+//   func_ov006_020f1e90  data_ov006_02142254   src/func_ov006_020f1e90.cpp
+//   func_ov006_020f300c  data_ov006_02142254   src/func_ov006_020f300c.cpp
+//
+// TWO TABLES ARE NOT SEATED, so their two dispatchers keep their host copies
+// above: data_ov006_021421ec (func_ov006_020f0044) and data_ov006_0214221c
+// (func_ov006_020f0ba0). luigi_try_1 therefore stays live for those two tables'
+// six addresses. luigi_try_0 is now unreachable -- data_ov006_02142234 was the
+// only arity-0 table and it is seated -- and is kept rather than deleted for
+// the same reason MgBomroom keeps its dead cases: the switch is the written
+// record of which address belongs to which table.
+//
+// TWO OF THE FOUR ARE THEMSELVES STATE BODIES, and both keep working:
+//   func_ov006_020f300c is slot 3 of data_ov006_02142234, so the seat installs
+//     a face that calls it -- and it is the matched TU now, which dispatches
+//     data_ov006_02142254 straight through the seated cells.
+//   func_ov006_020f0ba0 is slot 1 of data_ov006_02142204 and is still a host
+//     copy, so the seat installs a face that calls THAT copy.
+
+// ---- THE SEVENTEEN FACES AND THE BOOT INSTALLER ----------------------------
+//
+// THE STRIDE, BOTH SIDES, PER ROW -- measured on this tree
+// (runs/link100/out/PMFB4/rom_gate1.txt and emit_gate1.txt):
+//
+//   dispatcher            table                ROM                     emitted
+//   --------------------  -------------------  ----------------------  --------
+//   func_ov006_020f0d58   data_ov006_02142204  add r3,r4,r0,lsl #3     [eax*8]
+//                           pool 020f0dd4 = 02142204                   [eax*8+4]
+//   func_ov006_020f3414   data_ov006_02142234  add r3,r2,r1,lsl #3     [edx*8]
+//                           pool 020f345c = 02142234                   [edx*8+4]
+//   func_ov006_020f1e90   data_ov006_02142254  add r3,r4,r0,lsl #3     [eax*8]
+//                           pool 020f1ef4 = 02142254                   [eax*8+4]
+//   func_ov006_020f300c   data_ov006_02142254  add r3,r4,r0,lsl #3     [eax*8]
+//                           pool 020f3190 = 02142254                   [eax*8+4]
+//
+// so ROM 8 == emitted 8 on all four. /Zp4 IS A MEASURED NO-OP on every one:
+// each was compiled under the port's own flags both ways for this lane and the
+// two /FAsc listings came back identical except for the TITLE line naming the
+// .obj, so the option is not claimed.
+//
+// THE SEVENTEEN SOURCE PAIRS ALL READ {code, 0} in overlay_0006.bin at the
+// addresses src/__sinit_ov006_02130f64.c copies each slot from, every one a
+// WHOLE-PAIR copy (`data_ov006_TAB.pN = data_ov006_SRC;`) with no field-form
+// fill anywhere:
+//
+//   02142204[0] <- 0213ce3c 020f0bf0/0    02142254[0] <- 0213cdcc 020f1e58/0
+//   02142204[1] <- 0213cdbc 020f0ba0/0    02142254[1] <- 0213cddc 020f1e40/0
+//   02142204[2] <- 0213ce14 020f05d8/0    02142254[2] <- 0213cd94 020f1cb4/0
+//   02142234[0] <- 0213cdd4 020f3260/0    02142254[3] <- 0213cde4 020f1b98/0
+//   02142234[1] <- 0213ce24 020f31dc/0    02142254[4] <- 0213cda4 020f1a70/0
+//   02142234[2] <- 0213ce44 020f319c/0    02142254[5] <- 0213cd9c 020f192c/0
+//   02142234[3] <- 0213ce4c 020f300c/0    02142254[6] <- 0213cdb4 020f17fc/0
+//                                         02142254[7] <- 0213cd8c 020f15ac/0
+//                                         02142254[8] <- 0213ce1c 020f13cc/0
+//                                         02142254[9] <- 0213cdc4 020f1318/0
+//
+// THE DISPATCH SHAPE, read off each row's own listing and not off the census:
+// all four emit `mov ecx, tab[i*8+4] / mov eax, tab[i*8] / add ecx, <this> /
+// call eax` with NO `add esp,N` afterwards -- receiver in ecx, callee cleanup.
+// 020f0d58, 020f1e90 and 020f300c push ONE argument before the call
+// (`push edi`, `push esi`, `push esi`); 020f3414 pushes NOTHING. So:
+//
+//   arity 1: data_ov006_02142204, data_ov006_02142254
+//   arity 0: data_ov006_02142234
+//
+// THREE /alternatename DIRECTIVES. src/func_ov006_020f0d58.cpp,
+// src/func_ov006_020f3414.cpp and src/func_ov006_020f1e90.cpp declare their
+// tables at namespace scope, so MSVC spells the references
+// ?data_ov006_02142204@@3PAUEntry@@A, ?data_ov006_02142234@@3PAUEntry@@A and
+// ?data_ov006_02142254@@3PAUEntry@@A -- all three read off the objects with
+// dumpbin /symbols. src/func_ov006_020f300c.cpp declares the SAME table
+// data_ov006_02142254 inside its own extern "C" block and comes in as the plain
+// _data_ov006_02142254, which is the pair its own header calls "the silent one":
+// the two spellings of one table, one aliased and one not, both resolving to the
+// mount's storage.
+//
+// SAFE UNDER port/tools/alternatename_guard.py for hal/pmfc_aliases.cpp's
+// reason: each LHS is a C++ decoration only these matched TUs ever spell.
+#pragma comment(linker, "/alternatename:?data_ov006_02142204@@3PAUEntry@@A=_data_ov006_02142204")
+#pragma comment(linker, "/alternatename:?data_ov006_02142234@@3PAUEntry@@A=_data_ov006_02142234")
+#pragma comment(linker, "/alternatename:?data_ov006_02142254@@3PAUEntry@@A=_data_ov006_02142254")
+
+/* EVERY FACE COUNTS. A face is reachable only from a table word this file's own
+   seat wrote, so g_luigi_state_hits keeps counting exactly the dispatches that
+   happened -- the number port_mg_luigi_callN counted while the host copies
+   routed through the switch, and the number port_mg_luigi_counts reports. */
+#define LG_FACE1(sym, cast)                                                   \
+    static void __fastcall lg_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_luigi_state_hits;                                                 \
+        sym(cast self, i);                                                    \
     }
-    return count == 0;
-}
 
-/* src/func_ov006_020f1e90.cpp, table data_ov006_02142254, one argument.
-   ROM 0x020f1e90: 0x78 iterations at stride 1, guard at +0x52ed + i, index at
-   +0x51fd + i, r1 = i, pool 0x020f1ef4 = 02142254. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020f1e90(void *p)
-{
-    char *base = (char *)p;
-    for (int i = 0; i < 0x78; ++i) {
-        char *b = base + i;
-        if (*(unsigned char *)(b + 0x52ed) == 0)
-            continue;
-        unsigned k = *(unsigned char *)(b + 0x51fd);
-        const MgPmf *q = &data_ov006_02142254[k];
-        port_mg_luigi_call1(base, q->code, q->adj, i);
+/* data_ov006_02142234 pushes nothing: receiver in ecx, callee cleans zero. */
+#define LG_FACE0(sym, cast)                                                   \
+    static void __fastcall lg_##sym(void *self, void *dead_edx)               \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_luigi_state_hits;                                                 \
+        sym(cast self);                                                       \
     }
-}
 
-/* src/func_ov006_020f300c.cpp. THE SILENT ONE: its src declares
-   `extern "C" PMF data_ov006_02142254[];`, so the global mangles as the plain
-   C name the mount already defines and no link this port has ever run named
-   it, while the body strides the eight-byte table by four. Found by sweeping
-   the slice for `::*`.
-   ALSO state slot 3 of data_ov006_02142234, which is why luigi_try_0 calls it.
-   ROM 0x020f300c, 0x190 bytes, verified statement for statement: the three
-   leading calls, the 0x78 loop with the x == 9 guard, the second 0x78 loop
-   clearing +0x53dd (pool 0x020f3194 = 000053DD), the +0x516a countdown (pool
-   0x020f3198 = 0000516A), and the virtual call.
-   THE VIRTUAL CALL IS SLOT 18. ROM: ldr r2,[r0]; ldr r2,[r2,#0x48]; mvn
-   r1,#0; blx r2 -- 0x48/4 = 18, which is this class's own state-reset slot,
-   func_ov006_020f3294, and the fill has already put a host thunk there. It is
-   made here through a struct of nineteen virtuals so MSVC emits its
-   __thiscall shape, which is what hal/scene_mg.cpp's __fastcall thunks
-   answer; unmatched/MgBase_Slot1.cpp uses the same device for the same
-   reason. */
-namespace {
-struct LuigiVt {
-    virtual void v00(); virtual void v01(); virtual void v02();
-    virtual void v03(); virtual void v04(); virtual void v05();
-    virtual void v06(); virtual void v07(); virtual void v08();
-    virtual void v09(); virtual void v10(); virtual void v11();
-    virtual void v12(); virtual void v13(); virtual void v14();
-    virtual void v15(); virtual void v16(); virtual void v17();
-    virtual void v18(int);
-};
-}
+/* data_ov006_02142204, arity 1. Slot 1 is the host copy above. */
+LG_FACE1(func_ov006_020f0bf0, (char *))
+LG_FACE1(func_ov006_020f0ba0, (char *))
+LG_FACE1(func_ov006_020f05d8, (char *))
+/* data_ov006_02142234, arity 0. Slot 1's src takes `int this`, not a pointer;
+   slot 3 is func_ov006_020f300c, which is the matched TU now. */
+LG_FACE0(func_ov006_020f3260, (char *))
+LG_FACE0(func_ov006_020f31dc, (int)(size_t))
+LG_FACE0(func_ov006_020f319c, (char *))
+LG_FACE0(func_ov006_020f300c, (char *))
+/* data_ov006_02142254, arity 1 */
+LG_FACE1(func_ov006_020f1e58, (char *))
+LG_FACE1(func_ov006_020f1e40, (char *))
+LG_FACE1(func_ov006_020f1cb4, (char *))
+LG_FACE1(func_ov006_020f1b98, (char *))
+LG_FACE1(func_ov006_020f1a70, (char *))
+LG_FACE1(func_ov006_020f192c, (char *))
+LG_FACE1(func_ov006_020f17fc, (char *))
+LG_FACE1(func_ov006_020f15ac, (char *))
+LG_FACE1(func_ov006_020f13cc, (char *))
+LG_FACE1(func_ov006_020f1318, (char *))
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020f300c(char *o)
+extern "C" void port_mg_luigi_states_seat(void)
 {
-    func_ov006_020f0044(o);
-    func_ov006_020f10ec(o);
-    func_ov006_020f0274(o);
-
-    int matches = 0;
-    for (int i = 0; i < 0x78; ++i) {
-        if (*(unsigned char *)(o + i + 0x52ed) == 0)
-            continue;
-        int x = *(unsigned char *)(o + i + 0x51fd);
-        if (x != 9)
-            continue;
-        ++matches;
-        const MgPmf *q = &data_ov006_02142254[x];
-        port_mg_luigi_call1(o, q->code, q->adj, i);
-    }
-    if (matches != 0)
+    static int done;
+    if (done)
         return;
+    done = 1;
 
-    for (int i = 0; i < 0x78; ++i) {
-        unsigned char *p = (unsigned char *)(o + i + 0x53dd);
-        if (*p == 1)
-            *p = 0;
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {data_ov006_02142204, "02142204", 0, 0x020f0bf0u, (void *)lg_func_ov006_020f0bf0},
+        {data_ov006_02142204, "02142204", 1, 0x020f0ba0u, (void *)lg_func_ov006_020f0ba0},
+        {data_ov006_02142204, "02142204", 2, 0x020f05d8u, (void *)lg_func_ov006_020f05d8},
+
+        {data_ov006_02142234, "02142234", 0, 0x020f3260u, (void *)lg_func_ov006_020f3260},
+        {data_ov006_02142234, "02142234", 1, 0x020f31dcu, (void *)lg_func_ov006_020f31dc},
+        {data_ov006_02142234, "02142234", 2, 0x020f319cu, (void *)lg_func_ov006_020f319c},
+        {data_ov006_02142234, "02142234", 3, 0x020f300cu, (void *)lg_func_ov006_020f300c},
+
+        {data_ov006_02142254, "02142254", 0, 0x020f1e58u, (void *)lg_func_ov006_020f1e58},
+        {data_ov006_02142254, "02142254", 1, 0x020f1e40u, (void *)lg_func_ov006_020f1e40},
+        {data_ov006_02142254, "02142254", 2, 0x020f1cb4u, (void *)lg_func_ov006_020f1cb4},
+        {data_ov006_02142254, "02142254", 3, 0x020f1b98u, (void *)lg_func_ov006_020f1b98},
+        {data_ov006_02142254, "02142254", 4, 0x020f1a70u, (void *)lg_func_ov006_020f1a70},
+        {data_ov006_02142254, "02142254", 5, 0x020f192cu, (void *)lg_func_ov006_020f192c},
+        {data_ov006_02142254, "02142254", 6, 0x020f17fcu, (void *)lg_func_ov006_020f17fc},
+        {data_ov006_02142254, "02142254", 7, 0x020f15acu, (void *)lg_func_ov006_020f15ac},
+        {data_ov006_02142254, "02142254", 8, 0x020f13ccu, (void *)lg_func_ov006_020f13cc},
+        {data_ov006_02142254, "02142254", 9, 0x020f1318u, (void *)lg_func_ov006_020f1318},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgLuigi_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].face;
     }
-
-    if (*(unsigned short *)(o + 0x516a) == 0)
-        return;
-    *(unsigned short *)(o + 0x5164) = 1;
-    *(unsigned short *)(o + 0x516a) = (unsigned short)(*(unsigned short *)(o + 0x516a) - 1);
-    if (*(short *)(o + 0x516a) > 0)
-        return;
-    *(unsigned short *)(o + 0x516a) = 0;
-    *(unsigned short *)(o + 0x5164) = 0;
-
-    if (*(unsigned char *)(o + 0x5459) != 0) {
-        int v = *(int *)(o + 0xbc);
-        while (v >= 5)
-            v -= 5;
-        if (v != 4)
-            ((LuigiVt *)o)->v18(-1);
-        else
-            func_ov004_020b0a54(1);
-    } else {
-        func_ov004_020b0a54(0x12);
-    }
-    *(unsigned char *)(o + 0xc3) = 0;
-}
-
-/* src/func_ov006_020f3414.cpp -- dScMgLuigi_c::Behavior, vtable slot 6, and
-   the class's arity-0 dispatch. ROM 0x020f3414: add r1,r0,#0x4000; ldr
-   r1,[r1,#0xf78] -- the state index at +0x4f78, which slot 18
-   (func_ov006_020f3294) zeroes at the same offset, so the two cross-confirm
-   each other -- then the five-instruction ARM Itanium sequence, pool
-   0x020f345c = 02142234. Returns 1. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" int func_ov006_020f3414(void *p)
-{
-    char *c = (char *)p;
-    int j = *(int *)(c + 0x4f78);
-    const MgPmf *e = &data_ov006_02142234[j];
-    port_mg_luigi_call0(c, e->code, e->adj);
-    return 1;
 }

@@ -1,0 +1,188 @@
+# ===========================================================================
+# SLICE pmfb4 -- run link100, lane PMFB4
+# ===========================================================================
+#
+# The family-C CALL SHAPE rows whose TABLE had no installing seat. Every number
+# below was re-derived at its own ROM address on this tree for this lane out of
+# extracted/overlays/, and every emitted stride and dispatch shape was read off
+# a /FAsc listing of that row's own matched TU under the port's own flags.
+# Nothing here is carried from a prose file or from a census column. The CMake
+# gate block is R10c in port/CMakeLists.txt.
+#
+# WHAT THE POPULATION ACTUALLY IS, measured on this tree first
+# (runs/link100/out/PMFB4/seatcover4.txt, PMFB2's seatcover2.py method re-run
+# because PMFB2 and PMFB3 landed since it was written):
+#   120 CALL SHAPE rows in family C
+#     6 no longer have a host definition at all (retired by earlier lanes)
+#     5 sit over a table that already has an installing seat
+#   109 are still hosted over a table with no seat -- AND THIRTY-NINE OF THOSE
+#       READ AN OBJECT FIELD, not a table. There is no storage a boot installer
+#       can verify and rewrite for those; what has to change is the WRITER, which
+#       is the lane PMFB3 named at the end of port/slice_pmfb3.txt.
+# That leaves SEVENTY table rows over sixty-nine tables. Ranking "by rows per
+# table" is therefore nearly flat -- one table carries two rows
+# (data_ov006_02142254) and every other carries exactly one -- so the practical
+# grouping is BY THE FILE THAT OWNS THE TABLES, because one seat file installs
+# several tables and needs one call site rather than several.
+#
+# ---- BATCH 1: dScMgBomroom_c, FIVE TABLES -----------------------------------
+#
+# port/unmatched/MgBomroom_StateDispatch.cpp owned seven host copies over seven
+# tables. Five of the seven tables are seated here and their dispatchers come off
+# their host copies:
+#
+#   func_ov006_020d5fec  data_ov006_02141660  4 slots  arity 1
+#   func_ov006_020d65c8  data_ov006_02141680  4 slots  arity 1
+#   func_ov006_020d6278  data_ov006_021416c0  4 slots  arity 1
+#   func_ov006_020d91b0  data_ov006_021416e0  5 slots  arity 0   (vtable slot 6)
+#   func_ov006_020d836c  data_ov006_02141730  7 slots  arity 1
+#
+# THE TWO TABLES NOT SEATED, and the two host copies that stay with them:
+#   data_ov006_021416a0 is read by func_ov006_020d8f98, the OPEN-CODED
+#     dispatcher: its src spells no member-pointer type at all, so it compiles
+#     from src already with hostgen's MG_PMF_CALL swap, and there is no matched
+#     TU to gain. Seating its table would only move where the swap happens.
+#   data_ov006_02141708 is read by func_ov006_020d7c00, which is not a family-C
+#     CALL SHAPE row on this tree's census and is left for a later lane.
+#   Both addresses are ALSO state slots of tables that ARE seated (020d8f98 is
+#   slot 3 of 021416e0, 020d7c00 is slot 6 of 02141730), so the installer writes
+#   faces that call them and they keep working from both directions.
+#
+# THE RECORD STRIDE, ROM SIDE, read at each body's OWN address out of
+# extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
+# (runs/link100/out/PMFB4/rom_gate1.txt):
+#   020d5fec  add r3, r4, r0, lsl #3   on the pool word at 020d6048 = 02141660
+#   020d65c8  add r3, r4, r0, lsl #3   on the pool word at 020d662c = 02141680
+#   020d6278  add r3, r4, r0, lsl #3   on the pool word at 020d62dc = 021416c0
+#   020d91b0  add r3, r1, r0, lsl #3   on the pool word at 020d9240 = 021416e0
+#   020d836c  add r3, r4, r0, lsl #3   on the pool word at 020d8404 = 02141730
+# -> EIGHT on all five. THE OTHER SHIFTS IN THOSE BODIES ARE NOT THE TABLE:
+# 020d65c8 and 020d6278 also carry `add r0, r6, r5, lsl #4` and 020d836c carries
+# `add r0, r6, r5, lsl #6`, which stride the ENTITY array off `this`. The record
+# stride is the add whose base register is the one the literal pool loaded with
+# the table address, and that is the add quoted above in each case.
+#
+# THE RECORD STRIDE, EMITTED SIDE, off each matched TU's own /FAsc listing under
+# the port's own flags (runs/link100/out/PMFB4/emit_gate1.txt and listings/):
+# _data_ov006_XXXXXXXX[eax*8] and [eax*8+4] on all five. ROM 8 == emitted 8.
+#
+# NO /Zp4 ON THIS BATCH, measured and not omitted. Lane PMFB1's lever is that
+# MSVC aligns any struct CONTAINING a pointer to member to eight, which rounds a
+# twenty-byte record to twenty-four and makes every state after state 0 read the
+# wrong record silently. Each of these five TUs was compiled both ways for this
+# lane and the two listings are IDENTICAL except for the TITLE line naming the
+# .obj -- zero real diff lines -- so R10a's own rule applies and the option is
+# left off rather than claimed.
+#
+# THE TWENTY-FOUR SOURCE PAIRS ALL READ {code, 0} at the addresses
+# src/__sinit_ov006_0212fd48.c copies each slot from, read out of the overlay
+# image rather than taken from a seat's runtime assertion, and every one is a
+# WHOLE-PAIR copy. THE SPELLING MATTERS AND IS NOT THE ONE PMFB3 SAW: this sinit
+# writes `data_ov006_TAB.pN = data_ov006_SRC;`, a struct assignment of the whole
+# eight-byte Pair into the Nth member of a DstN struct, which is the same
+# whole-pair copy as `TAB[N] = SRC` in a different spelling. A field-form fill
+# would be `.pN.a =`, and there is not one anywhere in this batch. The pairs are
+# tabulated in port/unmatched/MgBomroom_StateDispatch.cpp beside the installer.
+#
+# THE DISPATCH SHAPE, and the arity comes from each row's OWN listing. All five
+# emit `mov ecx, tab[i*8+4] / mov eax, tab[i*8] / add ecx, <this> / call eax`
+# with NO `add esp, N` after it -- a __thiscall indirect, receiver in ecx,
+# callee cleanup -- so a plain cdecl body cannot go in the code word. Four of the
+# five push one argument before the call (020d5fec pushes a literal 0, which is
+# its src's own `(0)`; 020d65c8 and 020d6278 push edi; 020d836c pushes esi) and
+# 020d91b0 pushes nothing. So 02141660, 02141680, 021416c0 and 02141730 take
+# one-argument __fastcall faces and 021416e0 takes zero-argument ones, TWENTY-FOUR
+# faces in all, in the file that owns the tables.
+#
+# PMFC2's `note` COLUMN SAYS "0 stack argument(s)" FOR ROWS THIS LANE MEASURED
+# PUSHING ONE. It is the same class of error lane PMFB1 recorded against the
+# width_ev column: the census sampled a shape, and the shape is per row. Every
+# arity in this slice is read off that row's own listing.
+#
+# ONE /alternatename, in the seat file. src/func_ov006_020d836c.cpp declares its
+# table at namespace scope, so MSVC spells the reference
+# ?data_ov006_02141730@@3PAP8C@@AEXH@ZA -- read off the object with
+# dumpbin /symbols -- while the ov006 mount defines the plain C name. The other
+# four TUs declare their tables inside their own extern "C" blocks.
+#
+# TWO GUESS MARKERS, BOTH ALREADY ADJUDICATED. src/func_ov006_020d91b0.cpp
+# carries "recovered from vtable slot identity"; port/tools/
+# inferred_stub_adjudicated.txt:604 rules it REAL_DECOMP against the ROM (0x94,
+# 35 instructions plus a two-word pool, both pool words and both call targets
+# matching). The Luigi row below is the same case at line 373. The guard reports
+# them, it does not refuse them.
+#
+# THE WITNESS MOVES WITH THE STATE. hal/scene_mg_bomroom.cpp prints
+# port_mg_bomroom_flight_calls(), which counted slot 5 of 02141730 (the bomb's
+# free-flight state) from inside the address switch. That switch no longer sees
+# it, so the count is incremented in slot 5's face instead. Every other face
+# increments g_bomroom_state_hits for the same reason. This is the trap lane
+# PMFB3 hit with the tapped-pad witness: a counter left behind a seat reads zero
+# forever and nothing is wrong.
+#
+# STALE COMMENT DISCLOSED, NOT EDITED. hal/scene_mg_bomroom.cpp:244-248 calls
+# func_ov006_020d91b0 "the HOST COPY in port/unmatched/MgBomroom_StateDispatch.
+# cpp" and hal/scene_mg.cpp:1715-1720 says the same of func_ov006_020f3414.
+# Both are the matched TU now. The declarations themselves are correct -- same C
+# linkage, same one-pointer signature, same int return -- and neither file is
+# this lane's to edit, so the prose is left alone and named here.
+src/func_ov006_020d5fec.cpp
+src/func_ov006_020d65c8.cpp
+src/func_ov006_020d6278.cpp
+src/func_ov006_020d91b0.cpp
+src/func_ov006_020d836c.cpp
+#
+# ---- BATCH 1 CONTINUED: dScMgLuigi_c, THREE TABLES --------------------------
+#
+# port/unmatched/MgLuigi_StateDispatch.cpp owned six host copies over five
+# tables. Three tables are seated here and four dispatchers come off their host
+# copies -- four and not three, because data_ov006_02142254 is the one table in
+# the whole remaining population that TWO rows read:
+#
+#   func_ov006_020f0d58  data_ov006_02142204   3 slots  arity 1
+#   func_ov006_020f3414  data_ov006_02142234   4 slots  arity 0  (vtable slot 6)
+#   func_ov006_020f1e90  data_ov006_02142254  10 slots  arity 1
+#   func_ov006_020f300c  data_ov006_02142254   the second reader, arity 1
+#
+# THE TWO TABLES NOT SEATED are data_ov006_021421ec and data_ov006_0214221c,
+# whose dispatchers (func_ov006_020f0044 and func_ov006_020f0ba0) are not
+# family-C CALL SHAPE rows on this census; their host copies stay and
+# luigi_try_1 stays live for their six addresses.
+#
+# THE RECORD STRIDE, ROM SIDE (runs/link100/out/PMFB4/rom_gate1.txt):
+#   020f0d58  add r3, r4, r0, lsl #3   pool 020f0dd4 = 02142204
+#   020f3414  add r3, r2, r1, lsl #3   pool 020f345c = 02142234
+#   020f1e90  add r3, r4, r0, lsl #3   pool 020f1ef4 = 02142254
+#   020f300c  add r3, r4, r0, lsl #3   pool 020f3190 = 02142254
+# EMITTED SIDE: [eax*8]/[eax*8+4] on three and [edx*8]/[edx*8+4] on 020f3414.
+# ROM 8 == emitted 8 on all four; /Zp4 identical-but-the-TITLE-line on all four,
+# so it is not claimed.
+#
+# THE SEVENTEEN SOURCE PAIRS all read {code, 0} at src/__sinit_ov006_02130f64.c's
+# own addresses, all whole-pair copies in the same `.pN =` spelling, no
+# field-form fill. Tabulated beside the installer in the seat file.
+#
+# THE DISPATCH SHAPE: all four `call eax` with the receiver in ecx and no
+# caller cleanup. 020f0d58 pushes edi, 020f1e90 pushes esi, 020f300c pushes esi;
+# 020f3414 pushes nothing. So 02142204 and 02142254 take one-argument faces and
+# 02142234 takes zero-argument ones, SEVENTEEN faces in all.
+#
+# THREE /alternatename DIRECTIVES, and a fourth spelling that needs none.
+# 020f0d58, 020f3414 and 020f1e90 declare their tables at namespace scope, so
+# MSVC spells ?data_ov006_02142204@@3PAUEntry@@A,
+# ?data_ov006_02142234@@3PAUEntry@@A and ?data_ov006_02142254@@3PAUEntry@@A --
+# all three read off the objects with dumpbin /symbols. src/func_ov006_020f300c
+# .cpp declares the SAME data_ov006_02142254 inside its own extern "C" block and
+# comes in as the plain _data_ov006_02142254. One table, two spellings, both
+# resolving through the mount's single definition.
+#
+# TWO OF THE FOUR ARE THEMSELVES STATE BODIES: func_ov006_020f300c is slot 3 of
+# data_ov006_02142234 and func_ov006_020f0ba0 (still a host copy) is slot 1 of
+# data_ov006_02142204. The installer writes faces that call both, so seating
+# 02142234 does not orphan the retired dispatcher: it is reached as a state
+# through its own seated cell and dispatches 02142254 through the seated cells
+# in turn.
+src/func_ov006_020f0d58.cpp
+src/func_ov006_020f3414.cpp
+src/func_ov006_020f1e90.cpp
+src/func_ov006_020f300c.cpp
