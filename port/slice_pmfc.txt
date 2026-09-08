@@ -1,0 +1,325 @@
+# run link100 lane PMFC (resumed as PMFC2): THE WHOLE POINTER-TO-MEMBER FAMILY
+# MEASURED ROW BY ROW, AND THE THIRTEEN THAT ARE ALREADY FREE.
+#
+# This file is a READY SLICE, not a gated one. Lane PMFC2 never built the port
+# and never launched the game; it compiled every matched TU in the family
+# standalone under the flags read out of build/port/build.ninja with /FAs, read
+# the ROM's own {code, adjust} pairs out of extracted/overlays/ against
+# config/arm9/overlays/*/relocs.txt, and read the port's own seats. The full
+# per-row measurement is runs/link100/out/PMFC/family_c.tsv and the reading is
+# runs/link100/out/PMFC/report.md. Whoever builds this owns the gate.
+#
+# ---- THE FAMILY IS 153, NOT 151, AND HERE ARE THE TWO ---------------------
+#
+# linkage.py reads the mechanism out of the PORT_HOST_ABI tag by its TEXT. Two
+# tags state the pointer-to-member ruling by reference instead of repeating the
+# words, so a keyword filter cannot see them and every re-derivation since has
+# reported 151:
+#
+#   func_ov071_02122414   unmatched/Bbh_PmfDispatch.c
+#       "same ruling -- the matched func_ov071_02122414.cpp calls the entry's
+#        SECOND pair (+8)"; the ruling is the pointer-to-member block three
+#        comments above it, and the row reads data_ov071_02122ecc.
+#   func_ov002_020b9750   unmatched/PushBlock_StateDispatch.cpp
+#       "same dispatch shape, the per-frame tick half read back through the
+#        stored index"; same data_ov002_021097bc table as func_ov002_020b9704,
+#        which IS in the 151.
+#
+# Both are on THE THIRTEEN below. The census's other stale number, 414
+# documented exceptions against today's 395, is not a family-C question: the
+# merge 8da7c02a7 retired nineteen family-E slot-5 host copies after the census
+# was written and its diff removes no pointer-to-member tag at all.
+#
+# ---- THE STATED REASON IS DEAD ON EVERY ROW THAT COMPILES -----------------
+#
+# The census called the rows over a deliberately incomplete class "the
+# genuinely hard half, because MSVC's unknown-inheritance form is four words".
+# Measured on 148 objects that is false, and there is no split at all:
+#
+#   INCOMPLETE at the point of the ::* declaration   126 rows   8 bytes
+#   COMPLETE                                          18 rows   8 bytes
+#   open-coded as two ints, no ::* in the TU           9 rows   n/a
+#
+# Every compiled row reads the code word at +0 and the adjust word at +4 off
+# one base and adds the adjust word into the receiver: [eax*8], [eax*8+4],
+# `shl edx, 4` for a two-pointer Entry, `add ecx, <this>` at every site. The
+# reason is the tree's global /vmg /vmm on the FLAGS line of every C++ edge in
+# build/port/build.ninja. /vmg picks the general form for a class whose
+# definition is not available; /vmm caps that form at multiple inheritance,
+# which is exactly the ROM's eight bytes.
+#
+# Two host files still carry the pre-/vmg reading in their headers and are
+# wrong about their own objects: unmatched/MgBase_StateDispatch.cpp ("MSVC's
+# single inheritance member pointer is FOUR bytes") and
+# unmatched/Bbh_PmfDispatch.c ("widens it to the 16-byte general form", which
+# its own later note already corrects). Neither is load-bearing for anything on
+# this slice, but a prose pass should fix both.
+#
+# ---- WHY "DELTA ZERO" IS THE WHOLE GATE, AND NOT A FORMALITY --------------
+#
+# The ROM's call through a member pointer, disassembled in three separate host
+# files and re-confirmed here:
+#
+#     add   r3, r0, #8          ; &self->pmf
+#     ldr   r1, [r3, #4]        ; the adjustment
+#     add   r0, r0, r1, asr #1  ; this += adj >> 1   (ARITHMETIC SHIFT)
+#     ands  r1, r1, #1          ; bit 0 of the adjustment is the VIRTUAL flag
+#     ldrne r2, [r0]            ;   virtual: r2 = *this, the vtable
+#     ldrne r1, [r2, r1]        ;            fn = vtable[code], a BYTE OFFSET
+#     ldreq r1, [r3]            ;   direct:  fn = code, an address
+#     blx   r1
+#
+# MSVC's eight-byte form adds the adjust word to `this` DIRECTLY: no asr #1, no
+# virtual bit. The two agree on exactly one value, zero. So the delta-zero
+# proof does two jobs and neither is optional: it makes MSVC's `add ecx, delta`
+# equal to the ROM's `this += adj >> 1`, and it rules out the virtual path that
+# no MSVC flag can express. A nonzero EVEN adjustment would be off by a factor
+# of two; an ODD one is a virtual dispatch MSVC cannot spell.
+#
+# Sixteen source pairs were re-read out of the raw images for this slice
+# (runs/link100/out/PMFC/deltas_static_pmfc.txt). A pair passes only when the
+# image word at +0 is the target of a kind:load relocation in that module, the
+# image word at +4 is exactly zero, no relocation is recorded from +4, and bit
+# 0 of the code word is clear. All sixteen pass. Across the whole family this
+# lane found NO adjust word with bit 0 set, so the VIRTUAL PMF class is empty.
+#
+# ---- A .data STATE TABLE IS USUALLY EMPTY IN THE IMAGE --------------------
+#
+# Worth writing down because it wastes an hour otherwise. Reading
+# data_ov034_02114538 or data_ov014_0211476c straight out of the overlay shows
+# zeros in every pair and a relocation only on the +0x10 name pointer. The
+# pairs are not there: the ROM's own __sinit_* copies them in from SOURCE pairs
+# elsewhere in .data. So a static proof has to follow the sinit back to its
+# sources, and a static read of the table address itself proves nothing.
+#
+# ---- THE THIRTEEN, AND WHAT EACH ONE RESTS ON ----------------------------
+#
+# All thirteen are TAIL JUMPS under the port's own flags, so the caller's cdecl
+# frame survives the jmp and the seated `void (*)(void *)` body finds its
+# receiver at [esp+4]. The adjust word is zero, so ecx and [esp+4] are the same
+# pointer and the callee's convention does not matter. Each row's table already
+# has a seat that puts a HOST address in the code word.
+#
+#   data_ov002_021097bc   port_pushblock_states_seat (unmatched/
+#                         PushBlock_StateDispatch.cpp) aborts unless every
+#                         record reads {the ROM's own address, 0}, then writes
+#                         p->fn = host.
+#       func_ov002_020b9704   4 ROM referrers, all in linked TUs
+#       func_ov002_020b9750   1 ROM referrer, linked
+#
+#   data_ov002_0210af2c   port_pathlift_states_seat, same abort and same fill.
+#       func_ov002_020efa54   6 ROM referrers, all linked
+#
+#   data_ov014_0211476c   port_chain_chomp_states_seat (unmatched/
+#                         ChainChomp_States.cpp) aborts on a wrong fn or a
+#                         nonzero delta over all twelve source pairs.
+#       func_ov014_02111ebc   11 ROM referrers, all linked
+#       func_ov014_02111f08    4 ROM referrers, all linked
+#
+#   data_ov034_02114538   port_wiggler_states_seat (hal/actor_classes_ov034.cpp)
+#                         aborts unless enter and tick both read {rom, 0}.
+#       func_ov034_021125b8   15 ROM referrers, 14 linked (the 15th is an ov052
+#                             word at the shared load address, see the caveat)
+#       func_ov034_02112604    1 ROM referrer, linked
+#
+#   data_ov063_0211efbc   bss. STATIC proof: ov063 0211ecd8 / 0211ece0 /
+#                         0211ece8 / 0211ecf0, each {reloc'd code, 0x00000000}
+#                         with no relocation on +4. ov63_bringup in
+#                         hal/actor_classes_ov063.cpp writes the host address
+#                         into those four SOURCE pairs before the sinit copies
+#                         them, so the bss table carries host pointers.
+#       func_ov063_0211ddac   3 ROM referrers, all linked
+#       func_ov063_0211ddf4   1 ROM referrer, linked
+#
+#   data_ov071_02122ecc   STATIC proof: ov071 02122e74 / 02122e7c / 02122e84 /
+#                         02122e8c, each {reloc'd code, 0x00000000}.
+#                         hal_fill_coffin_vtable re-seats the four fn words
+#                         after the sinit has run.
+#       func_ov071_021223c8   2 ROM referrers, one linked (Coffin::Behavior)
+#       func_ov071_02122414   2 ROM referrers, one linked (Coffin::Behavior)
+#
+#   data_ov085_0212fe88   port_toad_states_seat (hal/actor_overlays.cpp) aborts
+#                         unless each record reads {rom, 0}, then fills host.
+#       func_ov085_02129524   3 ROM referrers, all linked
+#       func_ov085_02129570   1 ROM referrer, Toad::Behavior, which has no
+#                             matched TU in src/, so the reference reaches this
+#                             row through a host body
+#
+# ---- WHAT COMES OUT OF WHICH HOST FILE, AND WHAT MUST STAY ---------------
+#
+# Four of the seven host files also carry something that must survive. This is
+# a per-function retire, not a per-file delete. Re-grep each file before
+# cutting; the line numbers below are from 8da7c02a7.
+#
+#   unmatched/Bbh_PmfDispatch.c            KEEP THE FILE.
+#       remove func_ov063_0211ddac, func_ov063_0211ddf4, func_ov071_021223c8,
+#       func_ov071_02122414 and the now-unused static bbh_pmf_call.
+#       KEEPS _ZN12MansionSteps8BehaviorEv, which is CALL-shaped and stays.
+#   unmatched/ChainChomp_States.cpp        KEEP THE FILE.
+#       remove func_ov014_02111ebc, func_ov014_02111f08 and the now-unused
+#       static port_chomp_call. KEEPS port_chain_chomp_states_seat, which is
+#       the delta proof itself and is called from
+#       hal/actor_classes_bob_enemy.cpp.
+#   unmatched/PathLift_StateDispatch.cpp   KEEP THE FILE.
+#       remove func_ov002_020efa54. KEEPS port_pathlift_states_seat and
+#       _ZN8PathLift12BaseBehaviorEv (CALL-shaped, stays).
+#   unmatched/PushBlock_StateDispatch.cpp  KEEP THE FILE.
+#       remove func_ov002_020b9704 and func_ov002_020b9750. KEEPS
+#       port_pushblock_states_seat.
+#   unmatched/Ov085_Toad_StateSeat.cpp     DELETE THE WHOLE FILE.
+#       it holds only the two dispatchers and their static helper; the seat is
+#       port_toad_states_seat in hal/actor_overlays.cpp.
+#   unmatched/Wiggler_StateEnter.cpp       DELETE THE WHOLE FILE.
+#   unmatched/Wiggler_StateTick.cpp        DELETE THE WHOLE FILE.
+#       both hold one dispatcher each; the seat is port_wiggler_states_seat in
+#       hal/actor_classes_ov034.cpp.
+#
+# Deleting a whole file also means removing it from port/CMakeLists.txt's
+# source list in the same commit, the standing rule for this tree.
+#
+# ---- THE REFERRER CAVEAT, WHICH IS REAL -----------------------------------
+#
+# Referrers above were found by ROM ADDRESS: relocs.txt plus an intra-module
+# scan of the owning overlay for BL/B targets and for data words equal to the
+# address. Overlays that share a load window therefore produce FALSE referrers,
+# and two rows show one (.p__sinit_ov072_02122414 at the ov071 address,
+# data_ov052_021125ac at the ov034 address). Neither changes a verdict, because
+# both rows have a real linked caller in their own overlay, but anyone
+# automating this must filter by module.
+#
+# ---- THE FIFTEEN THAT NEED A SEAT, NAMED SO NOBODY RE-MEASURES THEM -------
+#
+# Each of these dispatches correctly the moment the table's code word holds a
+# HOST address. What is missing is a boot-time seat that puts one there. Today
+# the port resolves at call time, INSIDE the host copy, through a DS-address
+# switch, so retiring the host copy takes the switch with it.
+#
+#   dScMgBase_c framework, 9 rows: func_ov004_020add88, func_ov004_020adf2c,
+#   func_ov004_020b31b4, func_ov004_020b321c, func_ov004_020b52fc,
+#   func_ov004_020b8714, func_ov004_020b8778, func_ov006_020cf758,
+#   func_ov006_021050bc. Tables data_ov004_020beb88 and data_ov004_020beb98
+#   (both bss), filled by __sinit_ov004_020b948c from the four framework pairs
+#   at ov004 020bbf4c / 020bbf54 / 020bbf5c / 020bbf64, all re-read here as
+#   {reloc'd code, 0}. Six of the nine dispatch through a pointer held in the
+#   OBJECT rather than the table, but the state setter copies that pointer out
+#   of the same table, so one seat fixes both. The mapping the seat needs is
+#   already written: port_mg_call0 in unmatched/MgBase_StateDispatch.cpp
+#   reaches it through mg_try_ov004_0, port_mg_try_base_state and
+#   port_mg_try_ov006_0. Turning that switch inside out into an installer is
+#   the single highest-value piece of work left in this family.
+#
+#   the cutscene table, 1 row: func_ov002_020f5dd8 over data_ov002_02110f34,
+#   13 cells. hal/cutscene_states_link100.cpp already carries the strongest
+#   check in the family (st_resolve aborts on a wrong fn, on a nonzero delta,
+#   and on an unhosted cell) and g_st_02110f34 already names all thirteen host
+#   bodies. But the check runs per call INSIDE the host copy and never rewrites
+#   the table, so retiring the copy removes the check and the host pointer
+#   together. Converting st_resolve into a boot seat over the same rows is
+#   mechanical.
+#
+#   open-coded, 5 rows: func_ov006_020c3d18, func_ov006_020e683c,
+#   func_ov006_0211b5e0, func_ov006_0211b954, _ZN4Bird8BehaviorEv. These
+#   matched TUs use no member pointer at all: they read the pair as two ints,
+#   test bit 0 themselves, and call the code word as a raw void (*)(void *) or
+#   void (*)(void *, int) with self PUSHED. They need no receiver face of any
+#   kind, only a host address in the code word. Cheapest rows in the family
+#   after the thirteen.
+#
+# ---- THE 120 CALL-SHAPED ROWS, AND THE ONE FACE THEY ALL WANT ------------
+#
+# The dispatch is identical to the thirteen in every respect except position.
+# Because it is not the last thing the function does, MSVC keeps the frame and
+# emits `call <reg>` with ecx = this + adjust and NOTHING PUSHED. A tail jump
+# hands the callee the caller's whole cdecl frame, so a seated
+# void (*)(void *) body finds self at [esp+4]; a call hands it ecx and an empty
+# argument area, so the same body reads whatever is on the stack. That is the
+# entire difference between free and blocked for 120 rows.
+#
+# Measured over all 139 call sites in the family: 115 rows push zero stack
+# arguments and clean nothing, 2 push one, 1 pushes two, 1 pushes three, and 1
+# is the TAILJUMP+CALL row (_ZN6Player11ChangeStateERNS_5StateE, whose onExit
+# half is a call and whose onEnter half is a tail jump).
+#
+# The face is a thunk the SEAT writes into the code word, not a rewrite of
+# anything the ROM owns:
+#
+#     void __fastcall pmf_face_func_ovNNN_AAAAAAAA(void *self, void */*edx*/)
+#     {
+#         func_ovNNN_AAAAAAAA(self);      /* the matched cdecl body */
+#     }
+#
+# __fastcall puts the first argument in ecx, exactly where a member-pointer
+# `call <reg>` leaves the receiver; the second parameter absorbs edx, which the
+# dispatch does not set. The thunk cleans no stack, matching the call site's
+# absence of an `add esp`. Two properties make it a face rather than a metric
+# trick: it changes no ROM data, and the TAIL-JUMP dispatchers reading the same
+# table keep working through it, because a tail jump also leaves this + adjust
+# in ecx. So one face can serve a table shared by a free row and a call-shaped
+# row. The exact signature per row, extra parameters included, is the `face`
+# column of runs/link100/out/PMFC/family_c.tsv.
+#
+# STANDING TRAP: a wrong-arity raw cast smashes the stack on first exercise.
+# Every face's parameter count must come from that row's own listing in
+# runs/link100/out/PMFC/listings/ and from nowhere else.
+#
+# The 120 rows sit in 79 host files and only 11 of them read a table that
+# already has an installing seat, so for most of them the seat work above comes
+# first and the face second. The largest single group is
+# hal/cutscene_states_link100.cpp with 9.
+#
+# ---- THE dScMg SUBFAMILY, WHICH HAS ONE SHARED ANSWER --------------------
+#
+# 48 rows name a dScMg or dMg class in their tag (the census said 37):
+#   dScMgBase_c 8   dScMgBomroom_c 5   dScMgLuigi_c 4   dScMgTeresa_c 4
+#   dScMgCoin_c 3   dScMg3DEsp_c 3    dScMgPachinko2_c 3
+#   dScMgCurling_c 2  dScMgMemory2_c 2  dScMgPachinko_c 2  dScMgPanel_c 2
+#   dScMgCup_c 1  dScMgHanachan_c 1  dScMgJump_c 1  dScMgJump2_c 1
+#   dScMgSlot3_c 1  dScMgTrampoline_c 1  dScMgTrampoline2_c 1  dScMgBSC_c 1
+#   dScMgTrmpln2Mario_c 1  dMgTrmpln3DMario_c 1
+# By form: 39 CALL, 7 TAILJUMP, 2 ERROR.
+#
+# The shared answer exists and it is two pieces, in this order. FIRST one
+# installer over the framework tables: MgBase_StateDispatch.cpp's own header
+# already establishes both facts an installer needs, that every adjustment word
+# in the closure reads zero (its four framework pairs re-verified here, its
+# twenty-five dScMgCurling_c pairs recorded there) and that the ROM's own
+# constructors already copy the pairs into the mount AT THE RIGHT STRIDE,
+# because every one of those constructors is a plain .c file that spells the
+# pair as two ints. Nothing in the data is broken. SECOND one __fastcall face
+# per seated body for the 39 CALL rows. Neither piece is per-minigame; both are
+# per framework.
+#
+# ---- FIVE ROWS THAT ARE NOT A MEMBER-POINTER PROBLEM AT ALL --------------
+#
+#   func_ov006_020c8f20, func_ov006_020cb030   MSVC C2761 on the matched TU's
+#       own text: `System *System::New(...)` and `void Animation::Advance()`
+#       redeclared out of class at namespace scope, lines 14 and 15 of each
+#       file. Deleting those two lines fixes it. That is a src/ edit, family G.
+#   _ZN6Klepto8BehaviorEv                      MSVC C2733: func_ov062_0211b51c
+#       declared twice with extern "C" linkage. Family G.
+#   func_0204322c, func_020432e4               no indirect dispatch in the
+#       object at all. Both stage three eight-byte pairs BY VALUE into
+#       ActorBase::Process(void*, PMF, PMF, PMF), so the wall is the argument
+#       ABI, not a dispatch, and both already open-code the pair as two ints.
+#       Their own banners call them a mwccarm codegen floor on the DECOMP side.
+#
+# Two rows the salvaged FORM pass called ERROR are not defects at all:
+# src/func_ov002_020aea30.c and src/func_ov064_02117d24.c both carry the //cpp
+# marker on line 1, which the port's own build compiles /TP
+# (port/tools/closure.py). Recompiled /TP both build clean and both are
+# CALL-shaped. The salvaged harness had picked C flags off the .c extension.
+#
+# ---- THE THIRTEEN ---------------------------------------------------------
+src/func_ov002_020b9704.cpp
+src/func_ov002_020b9750.cpp
+src/func_ov002_020efa54.cpp
+src/func_ov014_02111ebc.cpp
+src/func_ov014_02111f08.cpp
+src/func_ov034_021125b8.cpp
+src/func_ov034_02112604.cpp
+src/unnamed/ov063/func_ov063_0211ddac.cpp
+src/unnamed/ov063/func_ov063_0211ddf4.cpp
+src/func_ov071_021223c8.cpp
+src/func_ov071_02122414.cpp
+src/func_ov085_02129524.cpp
+src/func_ov085_02129570.cpp
