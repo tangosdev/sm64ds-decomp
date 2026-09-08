@@ -12284,6 +12284,9 @@
   "data_ov045_021125b0": {
    "src/_ZN17ExtendingPlatform13InitResourcesEv.cpp": ["return:CLPS_Block"]
   },
+  "data_ov045_02112fdc": {
+   "include/decl_common.h": ["return:int []"]
+  },
   "data_ov045_021131d0": {
    "src/__sinit_ov045_02112280.c": ["return:int []"]
   },
@@ -14003,6 +14006,9 @@
   "data_ov100_02148204": {
    "src/_ZN4Door16CleanupResourcesEv.cpp": ["return:Elem []"],
    "src/func_ov100_02144cf8.c": ["return:signed char []"]
+  },
+  "data_ov100_02148390": {
+   "include/decl_common.h": ["return:signed char []"]
   },
   "data_ov100_0214857c": {
    "src/d_a_obj_path_lift.cpp": ["return:void *"]
