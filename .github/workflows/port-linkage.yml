@@ -1,0 +1,273 @@
+# What is the PC port's LINKAGE NUMBER, measured on a runner with no cartridge?
+#
+# THE PROBLEM. The port branch's full build is a machine-wide mutex in
+# everything but name -- port/tools/build_lock.py has the measurement: 5m22s
+# alone, 72 to 85 minutes when four to six lanes race on six cores, and under
+# that pressure the OS starts killing cl.exe, so the lane that loses reads
+# contention as a broken source file. The fix in place is to serialise, which
+# turns interference into a queue, and lanes now spend more time waiting than
+# working.
+#
+# Each lane's cycle has two halves. BEHAVIOUR -- port/tools/battery.py, the
+# proofs, the opening gate -- needs a window and the real cartridge data, and
+# genuinely needs that one desktop. LINK COVERAGE -- does it build, does it
+# link, what does port/tools/linkage.py say -- does not, and this file is that
+# half moved off the queue.
+#
+# WHY IT CAN MOVE. linkage.py counts which matched src/ TUs survive /OPT:REF,
+# and /OPT:REF keeps a function when something REFERENCES it. In the generated
+# ROM mounts the words that create references are the RELOCATED ones, and those
+# are recorded in config/arm9/**/relocs.txt, which is committed -- it is the
+# delinking config, not ROM content. Every other word is a value, and no
+# reference depends on a value. So port/tools/link_only.py stands a synthetic
+# image in for the extracted one: config's length, the real address in every
+# reloc site, zero everywhere else. Measured on the tree this was written from,
+# the image word at a kind:load site equals the reloc's stated target for
+# 40,469 of 40,469 file-backed sites across all 103 overlays -- zero
+# disagreements -- so the graph comes back exact and ovdata.py's own
+# image/config desync refusal passes because it is TRUE, not because this mode
+# skipped it.
+#
+# NOT ci/port-build-proto. That branch asked whether a free runner could absorb
+# the compile and answered it by replacing the two cartridge-reading generators
+# with an EMPTY emitter, which deliberately cannot link. The difference here is
+# the whole point: an empty emitter deletes the reference graph, a synthesised
+# image preserves it, so this one links and produces a number.
+#
+# NOT validator/port-ci-gate's port-build.yml either, and the two should both
+# exist. That gate builds MAIN's port/ -- the fourteen smoke gates, five of
+# which are ROM-free -- and asks "does main still compile the port". This asks
+# "what is the port branch's linkage number", over walk_window, which is a
+# different target, a different branch and a different question. The `smoke`
+# job below is the same five ROM-free targets and is here so this workflow can
+# stand alone on the port branch, where that gate does not run; if the two ever
+# land on one branch, delete this job and keep theirs.
+#
+# NO NINTENDO BYTES REACH GITHUB. Nothing here fetches, generates, or uploads
+# ROM-derived data. That is not a promise about intent, it is a property of the
+# mode: link_only.py's only inputs are config/**/{symbols,delinks,relocs}.txt.
+#
+# THE EXE THIS PRODUCES IS DEAD, and must never be published or run. Every
+# table is zero, the thirteen archive mounts carry the string
+# LINK-ONLY-BUILD-NOT-A-GAME instead of their narc paths so it cannot open one
+# file, and build/port/LINK_ONLY.stamp sits beside it. The `linkage` job
+# uploads the MAP and the report, never the binary.
+#
+# TRIGGER. Deliberately manual plus push-to-lane, not pull_request: this is a
+# measurement lanes ask for, not a gate that blocks a merge. Making it required
+# would put a 30+ minute build in front of every PR to buy a number nobody is
+# waiting on at that moment. Wire it to pull_request only once the timing below
+# is confirmed on a real runner.
+
+name: port-linkage
+
+on:
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branch or SHA to measure"
+        required: false
+        default: ""
+  push:
+    branches:
+      - "port/**"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: port-linkage-${{ github.event.inputs.ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # The linkage number itself. This is the job the lanes want.
+  linkage:
+    runs-on: windows-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # port/CMakeLists.txt shells out to tools/srcpath.py at configure time, so
+      # Python is on PATH before cmake runs. ninja from pip rather than from the
+      # VS install so this does not depend on which workload the image ships.
+      - name: Ninja
+        run: python -m pip install --disable-pip-version-check ninja
+
+      # A cartridge-free tree must LOOK cartridge-free to the build, so fail
+      # here rather than let a stray extracted/ turn this into a real build that
+      # silently reports a real number under a link-only banner.
+      - name: There is no cartridge here
+        shell: bash
+        run: |
+          if [ -e extracted ]; then
+            echo "extracted/ exists on the runner -- this workflow must not"
+            echo "run against a tree that has ROM data." >&2
+            exit 1
+          fi
+
+      # 32-bit MSVC is not a preference: port/host_abi.h rejects a 64-bit host
+      # at compile time. vswhere discovery rather than -G "Visual Studio 17
+      # 2022" so no VS version is pinned; port/build-port.cmd discovers the same
+      # way. build-port.cmd itself cannot run here -- it opens with the guard
+      # wave, and vtablerows.py --reconstruct and stategen.py --reconstruct both
+      # read extracted/overlays. Those guard the GENERATORS, not the link, and
+      # they belong on the desktop that has the cartridge.
+      - name: Configure (PORT_LINK_ONLY=ON)
+        shell: cmd
+        env:
+          SM64DS_LINK_ONLY: "1"
+        run: |
+          set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+          if not exist "%VSWHERE%" (echo ERROR: vswhere.exe not found 1>&2 & exit /b 1)
+          set "VSINSTALL="
+          for /f "usebackq delims=" %%I in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSINSTALL=%%I"
+          if not defined VSINSTALL (echo ERROR: no VS install with the x86 C++ tools 1>&2 & exit /b 1)
+          rem Redirection first: `echo VAR=%X%>>file` can bind a trailing char to the >.
+          >>"%GITHUB_ENV%" echo VSINSTALL=%VSINSTALL%
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          cmake -S port -B build\port -G Ninja -DCMAKE_BUILD_TYPE=Release -DPORT_LINK_ONLY=ON -DBUILD_TESTING=OFF
+
+      # Each `shell: cmd` step is its own process, so vcvars32 is re-applied;
+      # only the discovery carries over, through GITHUB_ENV. The environment
+      # variable is the SECOND gate -- without it every emitter refuses, which
+      # is the behaviour that keeps a stray --link-only out of a real build.
+      - name: Build and link walk_window
+        shell: cmd
+        env:
+          SM64DS_LINK_ONLY: "1"
+        run: |
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          cmake --build build\port --target walk_window
+
+      # Belt and braces on the marker: if this exe ever escapes, it says so.
+      - name: The artefact is a dead build
+        shell: bash
+        run: |
+          test -f build/port/LINK_ONLY.stamp || {
+            echo "no LINK_ONLY.stamp -- this was not a link-only build" >&2
+            exit 1; }
+          grep -q "LINK-ONLY-BUILD-NOT-A-GAME" build/port/walk_window.exe || {
+            echo "marker string absent from the exe -- refusing to report a"
+            echo "number for a build whose provenance cannot be read back." >&2
+            exit 1; }
+
+      - name: Linkage
+        shell: bash
+        run: |
+          python port/tools/linkage.py . | tee build/port/linkage.txt
+          {
+            echo '## Port linkage (cartridge-free)'
+            echo '```'
+            head -40 build/port/linkage.txt
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      # The MAP and the report, never the binary: the exe is dead but it is
+      # still a 30 MB thing shaped like a game, and nothing good comes of it
+      # being downloadable.
+      - name: Upload map and report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: port-linkage
+          path: |
+            build/port/walk_window.map
+            build/port/linkage.txt
+            build/port/LINK_ONLY.stamp
+          if-no-files-found: warn
+
+  # The ROM-free smoke targets. validator/port-ci-gate's port-build.yml builds
+  # FIVE of these on main -- smoke, smoke_gx, smoke_heap, smoke_roots, smoke_fs
+  # -- and this job is here so the port branch has the same check.
+  #
+  # FOUR, NOT FIVE, AND THAT IS A BRANCH FACT. The five-target list is true of
+  # main and false here. On main, smoke_fs's source list ends at
+  # ${SLICE3B_SOURCES}; on this branch d82e7e354 ("Gate 10 GREEN: Player spawns
+  # and stands on host") appended "${ROMDATA_C}" to it, and ROMDATA_C is the
+  # add_custom_command that runs tools/romdata.py, which exits 1 with "missing
+  # extracted/arm9_dec.bin -- extract the ROM first" on a runner. Run
+  # 34082310548 is the measurement: smoke, smoke_heap, smoke_roots and smoke_gx
+  # all LINKED with no cartridge anywhere on the machine, the single FAILED
+  # ninja edge was host-src/romdata.c, and -k 0 could not save the job because
+  # smoke_fs had nothing else left to make progress on. So the honest list on
+  # this branch is the four, and smoke_fs comes back the moment its ROMDATA_C
+  # dependency does not exist or is satisfied another way (the note in
+  # out/CILINKF/github_run_34082310548.md proposes linking it inside the
+  # linkage job, where PORT_LINK_ONLY has already synthesised romdata.c; that
+  # is a real option and it is deliberately NOT taken here, because it has
+  # never been run and this job's value is that it is the PLAIN configure).
+  #
+  # No PORT_LINK_ONLY on this job, and that is the point: these four never
+  # reach a cartridge-reading generator at all, so they prove the port's
+  # ordinary CMake still configures and links on a bare checkout. Turning the
+  # link-only mode on here would buy back smoke_fs and lose exactly that.
+  smoke:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Ninja
+        run: python -m pip install --disable-pip-version-check ninja
+
+      - name: Configure
+        shell: cmd
+        run: |
+          set "VSWHERE=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\vswhere.exe"
+          if not exist "%VSWHERE%" (echo ERROR: vswhere.exe not found 1>&2 & exit /b 1)
+          set "VSINSTALL="
+          for /f "usebackq delims=" %%I in (`"%VSWHERE%" -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath`) do set "VSINSTALL=%%I"
+          if not defined VSINSTALL (echo ERROR: no VS install with the x86 C++ tools 1>&2 & exit /b 1)
+          >>"%GITHUB_ENV%" echo VSINSTALL=%VSINSTALL%
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          cmake -S port -B build\portsmoke -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=OFF
+
+      # smoke_fs is not in this list. See the note on the job above: on this
+      # branch it pulls ${ROMDATA_C}, which needs the cartridge.
+      #
+      # -k 0 so ninja reports every target's link instead of stopping at the
+      # first, which otherwise makes which failures you see depend on
+      # scheduling.
+      - name: Link the ROM-free targets
+        shell: cmd
+        run: |
+          call "%VSINSTALL%\VC\Auxiliary\Build\vcvars32.bat" >nul || exit /b 1
+          cmake --build build\portsmoke --target smoke smoke_gx smoke_heap smoke_roots -- -k 0
+
+      # The list above is a claim about the source tree, and the source tree
+      # moves. This is the claim as a check: no target this job builds may
+      # carry ROMDATA_C in its add_executable. It is what would have caught
+      # d82e7e354 the day it landed instead of two runner-minutes later.
+      - name: No target here reads the cartridge
+        shell: bash
+        run: |
+          python - <<'PY'
+          import re, sys
+          text = open("port/CMakeLists.txt", encoding="utf-8", errors="replace").read()
+          bad = []
+          for target in ("smoke", "smoke_gx", "smoke_heap", "smoke_roots"):
+              m = re.search(r"add_executable\(" + target + r"\b(.*?)\)", text, re.S)
+              if not m:
+                  bad.append(target + ": no add_executable found")
+              elif "ROMDATA_C" in m.group(1):
+                  bad.append(target + ": source list carries ROMDATA_C, which "
+                             "runs tools/romdata.py against extracted/")
+          if bad:
+              print("this job builds targets that need the cartridge:")
+              for line in bad:
+                  print("  " + line)
+              sys.exit(1)
+          print("four targets, none of them reads extracted/")
+          PY

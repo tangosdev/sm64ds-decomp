@@ -542,15 +542,47 @@ if(PORT_ROM_CLEAN)
 else()
     set(ROMCLEAN_FLAG "")
 endif()
+
+# LINK-ONLY (2026-09-06): build the REFERENCE GRAPH with no cartridge present.
+# When ON, romdata.py / ovdata.py stand a config-length SYNTHETIC image in for
+# the extracted images -- the real address in every reloc site, zero everywhere
+# else -- so a machine that has never seen the ROM can still link walk_window
+# and answer tools/linkage.py. Measured on this tree: the image word at a
+# kind:load reloc site equals the reloc's stated target for 40,469 of 40,469
+# file-backed sites across all 103 overlays, so every word the reference graph
+# is built out of comes back exactly, and the emitters' own desync refusals
+# pass because they are true rather than because they were bypassed.
+#
+# The resulting exe is DEAD ON PURPOSE: every table is zero, the 13 archive
+# mounts carry the string LINK-ONLY-BUILD-NOT-A-GAME instead of their narc
+# paths (so it cannot open one file), and build/port/LINK_ONLY.stamp sits
+# beside it. Default OFF, and OFF is byte-identical to before -- the flag below
+# is the empty string and no emitter command line changes.
+#
+# TWO GATES. This option supplies the argv flag; SM64DS_LINK_ONLY=1 must ALSO
+# be in the environment at build time or every emitter refuses. A stray
+# argument cannot reach the mode and neither can a stray shell export. See
+# port/tools/link_only.py.
+option(PORT_LINK_ONLY "Emit ROM mounts from config alone (no cartridge; DEAD exe)" OFF)
+if(PORT_LINK_ONLY)
+    set(LINKONLY_FLAG --link-only)
+    message(WARNING
+        "PORT_LINK_ONLY=ON: every ROM table will be ZERO and the executable "
+        "will not run. This build measures link coverage only.")
+else()
+    set(LINKONLY_FLAG "")
+endif()
+
 # Every emitter that ships ROM bytes appends its .blobmap here; ROMBLOB reads them.
 set(ROMCLEAN_PARTS "")
 
 set(ROMDATA_C "${CMAKE_BINARY_DIR}/host-src/romdata.c")
 add_custom_command(OUTPUT "${ROMDATA_C}"
     COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/romdata.py" "${ROMDATA_C}"
-            ${ROMCLEAN_FLAG}
+            ${ROMCLEAN_FLAG} ${LINKONLY_FLAG}
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/romdata.py"
             "${CMAKE_CURRENT_SOURCE_DIR}/tools/romblob_common.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tools/link_only.py"
     COMMENT "romdata from extracted/arm9_dec.bin")
 if(PORT_ROM_CLEAN)
     list(APPEND ROMCLEAN_PARTS "${ROMDATA_C}.blobmap")
@@ -1490,9 +1522,10 @@ set(OV002DATA_C "${CMAKE_BINARY_DIR}/host-src/ov002_data.c")
 add_custom_command(OUTPUT "${OV002DATA_C}" "${OV002DATA_C}.map"
     COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py" ov002
             "${OV002DATA_C}" --from-list "${CMAKE_CURRENT_SOURCE_DIR}/ov002_syms.txt"
-            ${ROMCLEAN_FLAG}
+            ${ROMCLEAN_FLAG} ${LINKONLY_FLAG}
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py"
             "${CMAKE_CURRENT_SOURCE_DIR}/tools/romblob_common.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tools/link_only.py"
             "${CMAKE_CURRENT_SOURCE_DIR}/ov002_syms.txt"
     COMMENT "ovdata ov002")
 list(APPEND OV_DATA_MAPS "${OV002DATA_C}.map")
@@ -1884,9 +1917,10 @@ foreach(ovn IN LISTS PORT_LEVEL_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_data.c")
     add_custom_command(OUTPUT "${ovn_out}" "${ovn_out}.map"
         COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py" ${ovn}
-                "${ovn_out}" --whole ${ROMCLEAN_FLAG}
+                "${ovn_out}" --whole ${ROMCLEAN_FLAG} ${LINKONLY_FLAG}
         DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py"
                 "${CMAKE_CURRENT_SOURCE_DIR}/tools/romblob_common.py"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tools/link_only.py"
         COMMENT "ovdata ${ovn} (whole image)")
     list(APPEND LEVEL_OV_DATA "${ovn_out}")
     list(APPEND OV_DATA_MAPS "${ovn_out}.map")
@@ -1906,8 +1940,10 @@ add_custom_command(OUTPUT "${OV009SYMS_C}" "${OV009SYMS_C}.map"
     COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py" ov009
             "${OV009SYMS_C}" --from-list
             "${CMAKE_CURRENT_SOURCE_DIR}/ov009_syms.txt" --pack ${ROMCLEAN_FLAG}
+            ${LINKONLY_FLAG}
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py"
             "${CMAKE_CURRENT_SOURCE_DIR}/tools/romblob_common.py"
+            "${CMAKE_CURRENT_SOURCE_DIR}/tools/link_only.py"
             "${CMAKE_CURRENT_SOURCE_DIR}/ov009_syms.txt"
     COMMENT "ovdata ov009 (per symbol, packed)")
 list(APPEND OV_DATA_MAPS "${OV009SYMS_C}.map")
@@ -2802,8 +2838,10 @@ foreach(ovn IN LISTS PORT_ACTOR_OVERLAYS)
         COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py" ${ovn}
                 "${ovn_out}" --from-list
                 "${CMAKE_CURRENT_SOURCE_DIR}/${ovn}_syms.txt" --pack ${ROMCLEAN_FLAG}
+                ${LINKONLY_FLAG}
         DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py"
                 "${CMAKE_CURRENT_SOURCE_DIR}/tools/romblob_common.py"
+                "${CMAKE_CURRENT_SOURCE_DIR}/tools/link_only.py"
                 "${CMAKE_CURRENT_SOURCE_DIR}/${ovn}_syms.txt"
         COMMENT "ovdata ${ovn} (per symbol, packed)")
     list(APPEND ACTOR_OV_SYMS "${ovn_out}")
@@ -2846,8 +2884,9 @@ set(OVCROSS_LOADER_SRC
     "${PORT_REPO_ROOT_ABS}/src/func_0201a614.c")
 add_custom_command(OUTPUT "${OVCROSS_C}"
     COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py" --cross
-            "${OVCROSS_C}" ${OV_DATA_MAPS}
+            "${OVCROSS_C}" ${OV_DATA_MAPS} ${LINKONLY_FLAG}
     DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py" ${OV_DATA_MAPS}
+            "${CMAKE_CURRENT_SOURCE_DIR}/tools/link_only.py"
             ${OVCROSS_LOADER_SRC}
     COMMENT "ovdata --cross (pointers between mounted overlays)")
 
