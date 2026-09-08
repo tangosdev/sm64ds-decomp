@@ -83,20 +83,63 @@ void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
 
 typedef void (*PortPirFn)(void *);
 
+/* ---- THE NINE FACES, AND THE ALIAS (run link100, lane PMFB2) ------------
+   src/_ZN12PiranhaPlant8BehaviorEv.cpp is a real pointer-to-member dispatch
+   and MSVC emits it as `mov ecx, <table>[esi*8+4] / mov eax, <table>[esi*8] /
+   add ecx, <this> / call eax`.
+   -- `call <reg>` with the receiver in ECX and nothing pushed. The state
+   bodies are plain cdecl and read the receiver off the stack, so the code word
+   holds a __fastcall FACE and the face calls the body.
+
+   BOTH THE STATICS AND THE TABLE take the face, because the seat below writes
+   both: the nine ROM source pairs and the bss copy the sinit fills from them.
+   Leaving the statics on the raw body would make a second run of the sinit
+   quietly reinstate the wrong convention.
+
+   THE TAG ON THE RETIRED BODY WAS WRONG IN ITS SECOND HALF, and the
+   measurement is why this row is takeable. It said MSVC "narrows PMF over a
+   complete class to a 4-byte stride against the ROM's 8-byte table"; under
+   /vmg /vmm (block R8) the complete class emits the same eight-byte pair as
+   an incomplete one, and the listing shows [esi*8] against the ROM's
+   `add r3, r0, r4, lsl #3` at 0x0212fde0. All nine source pairs
+   (0x02130ba4..0x02130be4) read {code, 0} in
+   extracted/overlays/overlay_0084.bin.
+
+   THE ALIAS. The matched TU's table comes in as
+   ?data_ov084_02130e80@@3PAP8Cls@@AEXXZA; the mount defines the plain C name.
+   alternatename_guard's rule holds: the LHS is never DEFINED, only referenced. */
+#pragma comment(linker, "/alternatename:?data_ov084_02130e80@@3PAP8Cls@@AEXXZA=_data_ov084_02130e80")
+
+#define PIR_FACE(sym)                                                         \
+    static void __fastcall pmf_face_##sym(void *self, void *dead_edx)         \
+    { sym(self); }
+PIR_FACE(func_ov084_0212fc10)
+PIR_FACE(func_ov084_0212fa7c)
+PIR_FACE(func_ov084_0212f6d8)
+PIR_FACE(func_ov084_0212f630)
+PIR_FACE(func_ov084_0212f588)
+PIR_FACE(func_ov084_0212f460)
+PIR_FACE(func_ov084_0212f33c)
+PIR_FACE(func_ov084_0212f2dc)
+PIR_FACE(func_ov084_0212f298)
+#undef PIR_FACE
+
 /* the nine states in the sinit's store order (== the data_ov084_02130e80
    index order) */
+#define PF(sym) (PortPirFn)pmf_face_##sym
 static const struct { PortPirPmf *slot; unsigned rom; PortPirFn host; }
 g_piranha_states[] = {
-    {data_ov084_02130bb4, 0x0212fc10, func_ov084_0212fc10},
-    {data_ov084_02130ba4, 0x0212fa7c, func_ov084_0212fa7c},
-    {data_ov084_02130bbc, 0x0212f6d8, func_ov084_0212f6d8},
-    {data_ov084_02130bac, 0x0212f630, func_ov084_0212f630},
-    {data_ov084_02130bc4, 0x0212f588, func_ov084_0212f588},
-    {data_ov084_02130bcc, 0x0212f460, func_ov084_0212f460},
-    {data_ov084_02130bdc, 0x0212f33c, func_ov084_0212f33c},
-    {data_ov084_02130bd4, 0x0212f2dc, func_ov084_0212f2dc},
-    {data_ov084_02130be4, 0x0212f298, func_ov084_0212f298},
+    {data_ov084_02130bb4, 0x0212fc10, PF(func_ov084_0212fc10)},
+    {data_ov084_02130ba4, 0x0212fa7c, PF(func_ov084_0212fa7c)},
+    {data_ov084_02130bbc, 0x0212f6d8, PF(func_ov084_0212f6d8)},
+    {data_ov084_02130bac, 0x0212f630, PF(func_ov084_0212f630)},
+    {data_ov084_02130bc4, 0x0212f588, PF(func_ov084_0212f588)},
+    {data_ov084_02130bcc, 0x0212f460, PF(func_ov084_0212f460)},
+    {data_ov084_02130bdc, 0x0212f33c, PF(func_ov084_0212f33c)},
+    {data_ov084_02130bd4, 0x0212f2dc, PF(func_ov084_0212f2dc)},
+    {data_ov084_02130be4, 0x0212f298, PF(func_ov084_0212f298)},
 };
+#undef PF
 
 static void pir_seat_one(PortPirPmf *p, unsigned rom, PortPirFn host,
                          const char *where, unsigned i)
@@ -126,65 +169,13 @@ extern "C" void port_piranha_plant_states_seat(void)
     }
 }
 
-/* HOST COPY of PiranhaPlant::Behavior (ov084 0x0212fd4c), line for line, with
-   the pointer-to-member dispatch read as two plain ints. mState is at +0x458. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC narrows PMF over a complete class to a 4-byte stride against the ROM's 8-byte table).
-extern "C" int _ZN12PiranhaPlant8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    int r = _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
-        c, c + 0x1c4, c + 0x110, 1);
-    if (r != 0) {
-        if (r == 2) {
-            *(unsigned char *)(c + 0x108) = 0;
-            *(int *)(c + 0x458) = 7;               /* mState = 7 */
-            *(int *)(c + 0x80) = 0;                /* mScaleX = 0 */
-            *(int *)(c + 0x84) = 0;                /* mScaleY = 0 */
-            *(int *)(c + 0x88) = 0;                /* mScaleZ = 0 */
-            *(int *)(c + 0x5c) = *(int *)(c + 0x44c); /* mPosX = unk_44c */
-            *(int *)(c + 0x60) = *(int *)(c + 0x450);
-            *(int *)(c + 0x64) = *(int *)(c + 0x454);
-        }
-        return 1;
-    }
-    _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x380);
-    _ZN9Animation7AdvanceEv(c + 0x160);
-    func_ov084_0212f204(c);
-    int old = *(int *)(c + 0x458);                 /* old = mState */
-    {
-        PortPirPmf *m = &data_ov084_02130e80[old];
-        if (m->fn & 1) {
-            std::fprintf(stderr, "FATAL: PiranhaPlant state %d is a VIRTUAL "
-                         "member pointer (%08x/%d); the ROM stores none there\n",
-                         old, m->fn, m->delta);
-            std::abort();
-        }
-        ((PortPirFn)(size_t)m->fn)(c + m->delta);
-    }
-    *(unsigned short *)(c + 0x100) = (unsigned short)(*(unsigned short *)(c + 0x100) + 1);
-    int cur = *(int *)(c + 0x458);                 /* cur = mState */
-    if (old != cur) {
-        if (cur == 5)
-            *(int *)(c + 0xb0) &= ~0x10000000;     /* unk_0b0 word */
-        *(unsigned short *)(c + 0x100) = 0;
-        *(int *)(c + 0x478) = 0;
-    }
-    func_ov084_0212ec60(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x380);
-    _ZN12CylinderClsn5ClearEv(c + 0x3b4);
-    _ZN12CylinderClsn5ClearEv(c + 0x3e8);
-    if (*(unsigned char *)(c + 0x45c) != 0) {
-        _ZN12CylinderClsn6UpdateEv(c + 0x380);
-        _ZN12CylinderClsn6UpdateEv(c + 0x3b4);
-        if (*(int *)(c + 0x458) == 2) {
-            _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-                c + 0x3e8, c + 0x440);
-            _ZN12CylinderClsn6UpdateEv(c + 0x3e8);
-        }
-    }
-    return 1;
-}
-
+/* _ZN12PiranhaPlant8BehaviorEv RETIRED (run link100, lane PMFB2). It is on
+   port/slice_pmfb2.txt and compiles from
+   src/_ZN12PiranhaPlant8BehaviorEv.cpp, which recovered as a real C++ method
+   (?Behavior@PiranhaPlant@@QAEHXZ); the Itanium C name its fill site calls is
+   one cdecl line in hal/except_faces.cpp and no fill site changes. The
+   derivation, including why the retired tag's "4-byte stride" reading no
+   longer holds, is in the face block above. */
 /* _ZN12PiranhaPlant6RenderEv RETIRED (run link100, lane EXCEPT). Its stated reason -- the
    ROM-order model slot-5 dispatch -- died with lane SLOT5F's
    respelling of include/ModelBase.h: hal/cxxname_bridge.cpp:522/578

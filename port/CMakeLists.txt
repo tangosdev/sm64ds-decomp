@@ -15655,9 +15655,20 @@ endforeach()
 # stride read off a /FAsc listing for THIS lane, and the option is on the set
 # whether or not it moves that TU today, so that a later header edit cannot
 # reintroduce the defect without the measurement being redone.
+#
+# WHICH TUs IN THIS BLOCK THE OPTION ACTUALLY MOVES, measured one at a time:
+#   src/_ZN8PathLift12BaseBehaviorEv.cpp   24 -> 20, and the ROM strides 20.
+#       Its record is {char pad[8]; PLFn fn; char tail[4]} -- a struct that
+#       CONTAINS a pointer-to-member, which is PMFB1's exact case.
+#   the two ov006 rows                     8 either way; their record is two
+#       plain ints, so the listings are identical but for the TITLE line.
+# The other three batch-3 rows are NOT on this list at all: their tables are
+# arrays of the bare pointer-to-member, which is eight bytes with or without
+# the option, and adding it would be a claim nothing measured.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211b954.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211b5e0.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8PathLift12BaseBehaviorEv.cpp"
     PROPERTIES COMPILE_OPTIONS "/Zp4")
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb2.txt" SLICE_PMFB2_LINES)
 set(SLICE_PMFB2_SOURCES "")

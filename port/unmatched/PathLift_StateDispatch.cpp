@@ -68,20 +68,51 @@ void port_pathlift_states_seat(void);
 void _ZN8PathLift12BaseBehaviorEv(void *c);
 }
 
+/* ---- THE THREE TICK FACES (run link100, lane PMFB2) ---------------------
+   src/_ZN8PathLift12BaseBehaviorEv.cpp is a real pointer-to-member dispatch
+   and MSVC emits it as
+
+       mov ecx, _data_ov002_0210af2c[eax*4+12]     the adjust word
+       mov eax, _data_ov002_0210af2c[eax*4+8]      the code word
+       add ecx, <this>
+       call eax
+
+   -- `call <reg>` with the receiver in ECX and NOTHING pushed. The six state
+   bodies are plain cdecl `void(void *)` and read the receiver off the stack,
+   so the code word cannot hold one of them for THIS caller. Each of the three
+   TICK bodies therefore gets a __fastcall face and the seat writes the FACE's
+   address into the tick code word.
+
+   ONLY THE TICK HALVES. The ENTER halves at record+0 are dispatched by
+   src/func_ov002_020efa54.cpp, which lane PMFB1 seated as a FREE row because
+   MSVC compiles it as a TAIL JUMP: the callee inherits the forwarder's own
+   cdecl frame, so a plain cdecl body is still correct there. Nothing about
+   that row changes and this lane does not touch the three words it reads. */
+static void __fastcall pmf_face_func_ov002_020ef3ec(void *self, void *dead_edx)
+{ func_ov002_020ef3ec(self); }
+static void __fastcall pmf_face_func_ov002_020ef670(void *self, void *dead_edx)
+{ func_ov002_020ef670(self); }
+static void __fastcall pmf_face_func_ov002_020ef408(void *self, void *dead_edx)
+{ func_ov002_020ef408(self); }
+
 void port_pathlift_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+    /* half 0 (ENTER) keeps the plain cdecl body, because its reader tail
+       jumps; half 1 (TICK) takes the __fastcall face, because its reader is a
+       `call <reg>` with the receiver in ecx. One field type carries both: the
+       field is only ever taken as an ADDRESS. */
     static const struct { unsigned rec, half, rom; void (*host)(void *); }
     seats[] = {
         {0, 0, 0x020ef3f0u, func_ov002_020ef3f0},
-        {0, 1, 0x020ef3ecu, func_ov002_020ef3ec},
+        {0, 1, 0x020ef3ecu, (void (*)(void *))pmf_face_func_ov002_020ef3ec},
         {1, 0, 0x020efa44u, func_ov002_020efa44},
-        {1, 1, 0x020ef670u, func_ov002_020ef670},
+        {1, 1, 0x020ef670u, (void (*)(void *))pmf_face_func_ov002_020ef670},
         {2, 0, 0x020ef57cu, func_ov002_020ef57c},
-        {2, 1, 0x020ef408u, func_ov002_020ef408},
+        {2, 1, 0x020ef408u, (void (*)(void *))pmf_face_func_ov002_020ef408},
     };
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
         PortPathLiftPair *p = seats[i].half
@@ -98,58 +129,50 @@ void port_pathlift_states_seat(void)
     }
 }
 
-/* The two-case dispatch both bodies share, spelled once. `pair` is the mwcc
-   PMF: delta>>1 adjusts `this`, delta&1 selects the virtual path, and in the
-   virtual path word0 is a BYTE OFFSET into the adjusted object's vtable.
-
-   A NULL fn IS FATAL, not skippable. The ROM does an unconditional blx here,
-   so a zero would be a jump to zero on the DS; a host `if (fn)` would turn
-   that into a silently skipped state tick, which is the one failure this file
-   promises never to produce. Loud, named, and stopped -- the ov60_hole shape
-   in port/unmatched/Ov060_StateDispatch.cpp. The seat above verifies every
-   record against the ROM before any dispatch can run, so reaching this abort
-   means something rewrote the table after the seat. */
-static void pl_pmf_call(char *c, const PortPathLiftPair *pair)
-{
-    char *self = c + (pair->delta >> 1);
-    unsigned fn = pair->fn;
-    if (pair->delta & 1) {
-        char *vt = *(char **)self;
-        fn = *(unsigned *)(vt + fn);
-    }
-    if (!fn) {
-        std::fprintf(stderr, "FATAL: PathLift state dispatch: null function "
-                     "for record {fn=%08x, delta=%d}%s -- the ROM does an "
-                     "unconditional blx here, so this is a wrong table, not a "
-                     "no-op\n", pair->fn, pair->delta,
-                     (pair->delta & 1) ? " (virtual path)" : "");
-        std::abort();
-    }
-    ((void (*)(void *))(size_t)fn)(self);
-}
+/* pl_pmf_call IS GONE with the body that was its only caller (run link100,
+   lane PMFB2). It open-coded the two-case mwcc decode -- delta>>1 adjusts
+   `this`, delta&1 selects the virtual path, and in the virtual path word0 is a
+   byte offset into the adjusted object's vtable -- for a host copy that no
+   longer exists. src/_ZN8PathLift12BaseBehaviorEv.cpp does that decode itself,
+   because /vmg /vmm (block R8) makes MSVC's pointer-to-member exactly the
+   ROM's pair, and its unconditional call is the ROM's own unconditional blx.
+   Lane PMFB1's closing note said this helper was still needed; that was true
+   of the tree it left, and this is the change that makes it not. */
 
 /* func_ov002_020efa54 RETIRED (run link100, lane PMFB1).
    src/func_ov002_020efa54.cpp carries it on port/slice_pmfc.txt. Both halves
-   of this file's reading were half right: /vmg /vmm target-wide (block R8)
-   already made the pointer-to-member the ROM's eight-byte {fn, delta} pair,
-   so the "16-byte incomplete-class PMF" is dead -- but the 20-BYTE RECORD
-   STRIDE the header names was still wrong, because MSVC gives a struct that
-   contains a pointer-to-member eight-byte alignment and rounds twenty up to
-   twenty-four. A per-TU /Zp4 (block R9d in port/CMakeLists.txt) makes the
-   matched TU stride the ROM's 0x14 exactly.
-   port_pathlift_states_seat above STAYS, and so does the static pl_pmf_call
-   below it: _ZN8PathLift12BaseBehaviorEv, the per-frame half, is CALL-shaped
-   under MSVC and is still hosted here. */
+   of this file's original reading were half right: /vmg /vmm target-wide
+   (block R8) already made the pointer-to-member the ROM's eight-byte
+   {fn, delta} pair, so the "16-byte incomplete-class PMF" is dead -- but the
+   20-BYTE RECORD STRIDE the header names was still wrong, because MSVC gives a
+   struct that contains a pointer-to-member eight-byte alignment and rounds
+   twenty up to twenty-four. A per-TU /Zp4 (block R9d) makes the matched TU
+   stride the ROM's 0x14 exactly.
 
-/* PORT_HOST_ABI: same PMF ruling, the per-frame half. Reads the current
-   state index back, dispatches that record's "tick", then clears the
-   collision flag at +0x42a -- the ROM's order (blx, then strb 0). */
-void _ZN8PathLift12BaseBehaviorEv(void *c)
-{
-    char *p = (char *)c;
-    pl_pmf_call(p, &data_ov002_0210af2c[*(int *)(p + 0x44c)].tick);
-    *(unsigned char *)(p + 0x42a) = 0;
-}
+   _ZN8PathLift12BaseBehaviorEv RETIRED TOO (run link100, lane PMFB2). It is on
+   port/slice_pmfb2.txt and compiles from
+   src/_ZN8PathLift12BaseBehaviorEv.cpp, which defines the Itanium C name
+   itself -- so it needs no face for its own symbol, and the
+   PathLift::BaseBehavior forwarder below is unchanged and is still the only
+   bridge src/func_ov100_021470f4.cpp's mangle needs.
+
+   WHAT MADE IT POSSIBLE, measured for that lane rather than argued:
+     RECORD STRIDE. The ROM strides 20 (`mov r0,#0x14 / mla r0,r1,r0,r2` at
+     0x020efab4) and takes the pair at record+8. The matched TU's Entry is
+     {char pad[8]; PLFn fn; char tail[4]}, which MSVC rounds to 24 for the
+     alignment reason above. Under the per-source /Zp4 in CMake block R10a the
+     listing emits `lea eax,[eax+eax*4]` and then
+     _data_ov002_0210af2c[eax*4+8], which is 20*index + 8: the ROM's stride and
+     the ROM's half, exactly. Without /Zp4 the same listing emits
+     [eax*8] off `lea eax,[eax+eax*2]`, which is 24.
+     ADJUST WORDS. All six source pairs (0x02109740..0x02109768) read
+     {code, 0} in extracted/overlays/overlay_0002.bin, so `this` is never
+     adjusted and the ROM takes its ldreq arm.
+     CALL SHAPE. `call eax` with ecx = this + adjust and nothing pushed, which
+     is why the three tick words now hold __fastcall faces.
+
+   port_pathlift_states_seat above STAYS, still asserting {the ROM's own
+   address, 0} on all six words before it writes a host one. */
 
 /* THE FACE. src/func_ov100_021470f4.cpp calls the tick half as a real C++
    method on its own local `struct PathLift { void BaseBehavior(); };`, so

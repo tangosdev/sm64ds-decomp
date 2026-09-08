@@ -87,23 +87,59 @@ extern int data_ov002_0210aa0c[3];
        [12]<-0210a9b0(020e9804) [13]<-0210a9c0(020e96a0)
    The seat rewrites each entry to its host body after checking the pair the
    sinit copied is {ROM addr, 0} exactly. */
+/* ---- THE FOURTEEN FACES, AND THE ALIAS (run link100, lane PMFB2) --------
+   src/_ZN9PowerStar8BehaviorEv.cpp is a real pointer-to-member dispatch and
+   MSVC emits it as `mov ecx, <table>[eax*8+4] / mov eax, <table>[eax*8] /
+   add ecx, <this> / call eax`.
+   -- `call <reg>` with the receiver in ECX and nothing pushed. The state
+   bodies are plain cdecl and read the receiver off the stack, so the code word
+   holds a __fastcall FACE and the face calls the body. TWO OF THE FOURTEEN ARE NOT src BODIES: states 5
+   and 13 are the King-of-the-Star dupe guards, which are host functions of
+   exactly the same cdecl shape, so they take exactly the same face.
+
+   THE ALIAS. The matched TU declares its table outside extern "C" and comes in
+   as ?data_ov002_021109d8@@3PAP8C@@AEXXZA; the mount defines the plain C name.
+   alternatename_guard's rule holds: the LHS is never DEFINED, only referenced. */
+#pragma comment(linker, "/alternatename:?data_ov002_021109d8@@3PAP8C@@AEXXZA=_data_ov002_021109d8")
+
+#define STAR_FACE(sym)                                                        \
+    static void __fastcall pmf_face_##sym(void *self, void *dead_edx)         \
+    { sym(self); }
+STAR_FACE(func_ov002_020ea9d0)
+STAR_FACE(func_ov002_020ea90c)
+STAR_FACE(func_ov002_020ea824)
+STAR_FACE(func_ov002_020ea7ac)
+STAR_FACE(func_ov002_020ea420)
+STAR_FACE(port_king_power_star_state5)
+STAR_FACE(func_ov002_020ea06c)
+STAR_FACE(func_ov002_020e9d18)
+STAR_FACE(func_ov002_020e99e8)
+STAR_FACE(func_ov002_020e9840)
+STAR_FACE(func_ov002_020ea410)
+STAR_FACE(func_ov002_020e9af4)
+STAR_FACE(func_ov002_020e9804)
+STAR_FACE(port_king_power_star_state13)
+#undef STAR_FACE
+
+#define SF(sym) (void (*)(void *))pmf_face_##sym
 static const struct { unsigned rom; void (*host)(void *); }
 g_power_star_states[14] = {
-    {0x020ea9d0, func_ov002_020ea9d0},   /* [0]  */
-    {0x020ea90c, func_ov002_020ea90c},   /* [1]  */
-    {0x020ea824, func_ov002_020ea824},   /* [2]  */
-    {0x020ea7ac, func_ov002_020ea7ac},   /* [3]  */
-    {0x020ea420, func_ov002_020ea420},   /* [4]  */
-    {0x020ea100, port_king_power_star_state5},   /* [5]  king guard wraps src */
-    {0x020ea06c, func_ov002_020ea06c},   /* [6]  */
-    {0x020e9d18, func_ov002_020e9d18},   /* [7]  */
-    {0x020e99e8, func_ov002_020e99e8},   /* [8]  */
-    {0x020e9840, func_ov002_020e9840},   /* [9]  */
-    {0x020ea410, func_ov002_020ea410},   /* [10] */
-    {0x020e9af4, func_ov002_020e9af4},   /* [11] */
-    {0x020e9804, func_ov002_020e9804},   /* [12] */
-    {0x020e96a0, port_king_power_star_state13},   /* [13] king guard (host copy) */
+    {0x020ea9d0, SF(func_ov002_020ea9d0)},   /* [0]  */
+    {0x020ea90c, SF(func_ov002_020ea90c)},   /* [1]  */
+    {0x020ea824, SF(func_ov002_020ea824)},   /* [2]  */
+    {0x020ea7ac, SF(func_ov002_020ea7ac)},   /* [3]  */
+    {0x020ea420, SF(func_ov002_020ea420)},   /* [4]  */
+    {0x020ea100, SF(port_king_power_star_state5)},   /* [5]  king guard wraps src */
+    {0x020ea06c, SF(func_ov002_020ea06c)},   /* [6]  */
+    {0x020e9d18, SF(func_ov002_020e9d18)},   /* [7]  */
+    {0x020e99e8, SF(func_ov002_020e99e8)},   /* [8]  */
+    {0x020e9840, SF(func_ov002_020e9840)},   /* [9]  */
+    {0x020ea410, SF(func_ov002_020ea410)},   /* [10] */
+    {0x020e9af4, SF(func_ov002_020e9af4)},   /* [11] */
+    {0x020e9804, SF(func_ov002_020e9804)},   /* [12] */
+    {0x020e96a0, SF(port_king_power_star_state13)},   /* [13] king guard (host copy) */
 };
+#undef SF
 
 extern "C" void port_power_star_states_seat(void)
 {
@@ -124,63 +160,17 @@ extern "C" void port_power_star_states_seat(void)
     }
 }
 
-/* HOST COPY of PowerStar::Behavior. The body is the matched source
-   (src/_ZN9PowerStar8BehaviorEv.cpp) line for line; only the pointer-to-member
-   dispatch is spelled as a plain call through data_ov002_021109d8[idx].fn. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN9PowerStar8BehaviorEv(void *selfv)
-{
-    char *self = (char *)selfv;
+/* _ZN9PowerStar8BehaviorEv RETIRED (run link100, lane PMFB2). It is on
+   port/slice_pmfb2.txt and compiles from src/_ZN9PowerStar8BehaviorEv.cpp,
+   which recovered as a real C++ method (?Behavior@PowerStar@@QAEHXZ); the
+   Itanium C name its fill site calls is one cdecl line in
+   hal/except_faces.cpp and no fill site changes.
 
-    func_ov002_020e700c(self);
-    *(int *)(self + 0x4a8) = 0;
-    *(int *)(self + 0x4ac) = 0;
-    *(int *)(self + 0x4b0) = 0;
-
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(self, self + 0x150) != 0) {
-        int state = *(int *)(self + 0x440);
-        char *eating = *(char **)(self + 0xd0);    /* mEatingPlayer @ 0xd0 */
-        if (state >= 5 && state <= 7 && eating != 0) {
-            func_ov002_020d718c(eating);
-            *(void **)(self + 0xd0) = 0;
-            *(int *)(self + 0xb0) &= ~0xe0000;
-            func_ov002_020e84ec(self);
-            _ZN12CylinderClsn5ClearEv(self + 0x110);   /* &mCylinderClsn */
-            return 1;
-        }
-        if ((data_0209b454 & 0x4000000) != 0) {
-            if ((*(int *)(self + 0xb0) & 0x4000000) != 0) {
-                char *p = *(char **)(self + 0xd0);
-                if (p != 0)
-                    *(int *)(p + 0xb0) |= 0x4000000;
-            }
-        }
-        func_ov002_020e84ec(self);
-        _ZN12CylinderClsn5ClearEv(self + 0x110);        /* &mCylinderClsn */
-        return 1;
-    }
-
-    *(void **)(self + 0xd0) = 0;                   /* mEatingPlayer = 0 */
-    func_ov002_020e763c(self);
-
-    {
-        unsigned idx = (unsigned)*(int *)(self + 0x440);
-        ((void (*)(void *))(size_t)data_ov002_021109d8[idx].fn)(self);
-    }
-
-    _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
-    func_ov002_020e84ec(self);
-    _ZN12CylinderClsn5ClearEv(self + 0x110);            /* &mCylinderClsn */
-    {
-        int v[3];
-        v[0] = data_ov002_0210aa0c[0];
-        v[1] = data_ov002_0210aa0c[1];
-        v[2] = data_ov002_0210aa0c[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(self + 0x110, v);
-    }
-    if (*(unsigned char *)(self + 0x49f) == 0)
-        _ZN12CylinderClsn6UpdateEv(self + 0x110);        /* &mCylinderClsn */
-    func_ov002_020e7eb8(self);
-    return 1;
-}
+   MEASURED FOR THAT LANE. The ROM strides the table by eight
+   (`add r3, r1, r0, lsl #3` at 0x020eb164) and the matched TU emits [eax*8].
+   All fourteen source pairs (0x0210a990..0x0210a9f8) read {code, 0} in
+   extracted/overlays/overlay_0002.bin, so `this` is never adjusted and the ROM
+   takes its ldreq arm. What was left was the calling convention, and the
+   fourteen faces above are that repair -- INCLUDING the two king-guard states,
+   which keep their guard and only gain a face. port_power_star_states_seat is
+   unchanged in what it checks. */

@@ -87,3 +87,122 @@ src/func_ov006_0211b5e0.cpp
 # EXCEPT measured and lane FACEF re-measured.
 src/_ZN4Bird6RenderEv.cpp
 src/_ZN4Flag6RenderEv.cpp
+#
+# ---- BATCH 3: family-C CALL SHAPE rows over a table that already has an ----
+# ---- installing seat                                                    ----
+#
+# Lane PMFC2 measured 120 CALL SHAPE rows in family C and found that only
+# ELEVEN of them read a table that already has a seat writing host addresses
+# into it. That set was RE-DERIVED on this tree for this lane
+# (runs/link100/out/PMFB2/seatcover2.py, because lanes FACEF and PMFB1 landed
+# after PMFC2 measured) and came back as the same eleven. Five of them are
+# below; the other six are named at the end of this section with the reason.
+#
+# WHY THESE ROWS WERE HOSTED, and it is one thing, not eleven. Each matched TU
+# dispatches a real pointer-to-member, and MSVC emits that as
+#
+#     mov ecx, <table>[i*8+4]      the adjust word
+#     mov eax, <table>[i*8]        the code word
+#     add ecx, <this>
+#     call eax
+#
+# -- `call <reg>` with the receiver in ECX and NOTHING pushed. The state bodies
+# the seats install are plain cdecl and read the receiver off the STACK, so the
+# code word could not hold one of them and the dispatcher had to be host-copied
+# instead. The repair is a __fastcall face per state body, written into the code
+# word by the seat that owns the table: __fastcall takes its first argument in
+# ecx, ignores edx, and cleans the same stack the __thiscall dispatch cleans.
+# NO ROM DATA CHANGES SHAPE and no fill site moves.
+#
+# EVERY ROW'S STRIDE WAS RE-DERIVED BOTH WAYS, because lane PMFB1 found that
+# PMFC2's width_ev column records the operand SCALE and not the product with
+# the LEA that feeds it, and that MSVC gives any struct CONTAINING a
+# pointer-to-member eight-byte alignment. ROM strides come from the overlay
+# image at each row's own address; emitted strides come from a /FAsc listing of
+# the matched TU under the port's own flags
+# (runs/link100/out/PMFB2/listings/, emit_familyc.py):
+#
+#   row                            ROM stride                     emitted
+#   _ZN8PathLift12BaseBehaviorEv   20  mla r0,r1,#0x14 @020efab4  lea [eax+eax*4] then [eax*4+8]  = 20*i+8   /Zp4
+#   _ZN13OneUpMushroom8BehaviorEv   8  add r3,r1,r0,lsl#3 @020b0138  [eax*8]                       = 8*i
+#   _ZN4Coin8BehaviorEv             8  add r3,r1,r0,lsl#3 @020b2410  [eax*8]                       = 8*i
+#   _ZN9PowerStar8BehaviorEv        8  add r3,r1,r0,lsl#3 @020eb164  [eax*8]                       = 8*i
+#   _ZN12PiranhaPlant8BehaviorEv    8  add r3,r0,r4,lsl#3 @0212fde0  [esi*8]                       = 8*i
+#
+# PathLift is the only one of the five whose record is a STRUCT CONTAINING a
+# pointer-to-member ({char pad[8]; PLFn fn; char tail[4]}), so it is the only
+# one that needs the /Zp4: without it the same listing emits
+# lea [eax+eax*2] then [eax*8], which is 24 against the ROM's 20 -- exactly
+# PMFB1's defect, and it would have been silent, because every one of these
+# machines starts in state 0.
+#
+# EVERY ROW'S ADJUST WORDS WERE READ OUT OF THE OVERLAY IMAGE at the addresses
+# each table's own MATCHED sinit assigns from, not off a seat's runtime
+# assertion (runs/link100/out/PMFB2/rom_pairs_familyc.txt and rom_pairs2.txt):
+#   0210af2c  6 pairs  0x02109740..0x02109768   all {code, 0}
+#   0210dc00 14 pairs  0x02108300..0x02108368   all {code, 0}
+#   0210dc70  9 pairs  0x02108730..0x02108770   all {code, 0}
+#   021109d8 14 pairs  0x0210a990..0x0210a9f8   all {code, 0}
+#   02130e80  9 pairs  0x02130ba4..0x02130be4   all {code, 0}
+# so `this` is never adjusted and every ROM dispatch takes its ldreq arm.
+#
+# ONE ROW OF THIS BATCH DEFINES ITS OWN C NAME and needs no face for its own
+# symbol (PathLift; so do the two ov006 rows of batch 1). FOUR recovered as
+# real C++ methods and take one cdecl line each in port/hal/except_faces.cpp:
+# ?Behavior@Coin@@QAEHXZ, ?Behavior@OneUpMushroom@@QAEHXZ,
+# ?Behavior@PowerStar@@QAEHXZ, ?Behavior@PiranhaPlant@@QAEHXZ.
+#
+# THREE NEED AN /alternatename, because the matched TU declares its table
+# OUTSIDE its extern "C" block and so names it at C++ linkage while the mount
+# defines the plain C name. Each directive lives in the seat file that owns
+# that table (the hal/bob_enemy_bridges.cpp precedent), and in each the LHS is
+# never DEFINED anywhere, which is alternatename_guard's rule:
+#   ?data_ov002_0210dc70@@3PAP8C@@AEXXZA    = _data_ov002_0210dc70
+#   ?data_ov002_021109d8@@3PAP8C@@AEXXZA    = _data_ov002_021109d8
+#   ?data_ov084_02130e80@@3PAP8Cls@@AEXXZA  = _data_ov084_02130e80
+# PathLift's and OneUpMushroom's TUs declare theirs INSIDE extern "C" and come
+# in as the plain C name, so they need nothing.
+#
+# ONE ROW ONLY GETS A FACE ON HALF ITS TABLE. data_ov002_0210af2c is read by
+# TWO dispatchers: src/func_ov002_020efa54.cpp takes the ENTER pair at
+# record+0 and _ZN8PathLift12BaseBehaviorEv takes the TICK pair at record+8.
+# PMFB1 seated the first as a FREE row because MSVC compiles it as a TAIL JUMP,
+# and a tail jump hands the callee the forwarder's own cdecl frame, so a plain
+# cdecl body is correct there. Only the three TICK words change.
+#
+# THE SIX NOT TAKEN, each with its own reason and not with "no time":
+#   _ZN11SoundObject8BehaviorEv (data_ov002_0211110c). The host copy carries a
+#     PORT-ONLY out-of-range refusal the matched TU does not have: actor param
+#     7 passes InitResources' own `> 7` gate and has no cell in a seven-cell
+#     table, and the host copy names it, destroys the emitter and returns
+#     rather than dispatching off the end of the mount. Retiring the copy
+#     turns that into an out-of-bounds read of ov002's storage. The row is
+#     otherwise ready (stride 8 both sides, seven pairs all {code, 0}, the
+#     alias spelled) and it wants the guard moved into the seat first.
+#   _ZN5Enemy11UpdateDeathER12WithMeshClsn and func_ov002_020aea30
+#     (data_ov002_0210dbc0 and data_ov002_0210db80). Both dispatches PUSH
+#     arguments -- one WithMeshClsn& for the first, two ints for the second --
+#     so their faces are not the zero-argument shape and each must come from
+#     that row's OWN listing. The first's listing is measured here (`push
+#     DWORD PTR _clsn$[ebp]` before the `call eax`, stride 8 against the ROM's
+#     `add r3,r1,r0,lsl #3` at 0x020ae6e0, eight source pairs all {code, 0});
+#     the SECOND's is not, because src/func_ov002_020aea30.c is a //cpp-marked
+#     .c that this lane's listing harness compiled as C and could not read.
+#     The pair also shares one seat that writes BOTH the eight ROM statics and
+#     both bss tables, so they are one change and not two. Ready for a lane
+#     that measures the second listing first.
+#   func_ov002_020f2dd4, func_ov002_020f37a0, func_ov002_020f5990
+#     (data_ov002_02110ebc, 02110e4c, 02110e7c). Their host copies are in
+#     hal/cutscene_states_link100.cpp while the seat that installs their tables
+#     is in hal/intro_kuppa_dispatch.cpp, and their tables are filled FIELD BY
+#     FIELD by __sinit_ov002_02107370 (`[i].x =`, `[i].y =`) rather than by the
+#     whole-pair copy every other row uses, so the adjust evidence is a
+#     different read. They are also NESTED: cell 2 of 02110e4c is
+#     func_ov002_020f3310, itself a dispatcher over 02110e24, and cell 3 of
+#     02110e7c is func_ov002_020f3d98 over 02110e34. Three tables, two files
+#     and a nest is a lane, not a row.
+src/_ZN8PathLift12BaseBehaviorEv.cpp
+src/_ZN13OneUpMushroom8BehaviorEv.cpp
+src/_ZN4Coin8BehaviorEv.cpp
+src/_ZN9PowerStar8BehaviorEv.cpp
+src/_ZN12PiranhaPlant8BehaviorEv.cpp

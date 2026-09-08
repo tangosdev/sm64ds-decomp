@@ -204,3 +204,38 @@ int _ZN4Bird6RenderEv(void *s)                { return ((Bird *)s)->Bird::Render
 int _ZN4Flag6RenderEv(void *s)                { return ((Flag *)s)->Flag::Render(); }
 
 }  /* extern "C" */
+
+/* ---- RUN link100 LANE PMFB2, THE FAMILY-C CALL-SHAPE ROWS ---------------
+   Four of the five pointer-to-member rows this lane took recovered as real
+   C++ methods rather than as the Itanium C name, so each needs the same one
+   cdecl line the rows above need, and for the same reason: the fill site
+   declares the C name at C linkage because what it used to reach was an
+   extern "C" host copy in port/unmatched. The fifth,
+   _ZN8PathLift12BaseBehaviorEv, defines its C name itself and is not here, and
+   neither are batch 1's two ov006 sound dispatchers, for the same reason.
+
+   THESE ROWS' OWN REPAIR IS NOT THIS FILE. What made them takeable is a
+   __fastcall face on each STATE BODY, written into the code word by the seat
+   that owns the table, because MSVC dispatches a pointer-to-member as
+   `call <reg>` with the receiver in ecx and nothing pushed while the state
+   bodies are plain cdecl. Those faces live in the seat files
+   (port/unmatched/Coin_Behavior.cpp, PowerStar_States.cpp,
+   PiranhaPlant_States.cpp) with the per-table ROM evidence. */
+#include "Coin.h"
+#include "OneUpMushroom.h"
+#include "PowerStar.h"
+#include "PiranhaPlant.h"
+
+extern "C" {
+
+/* Coin::Behavior, ROM 0x020b2324 (ov002); the fill site is
+   hal/actor_classes.cpp. */
+int _ZN4Coin8BehaviorEv(void *s)              { return ((Coin *)s)->Coin::Behavior(); }
+/* OneUpMushroom::Behavior, ROM 0x020b00e8 (ov002). */
+int _ZN13OneUpMushroom8BehaviorEv(void *s)    { return ((OneUpMushroom *)s)->OneUpMushroom::Behavior(); }
+/* PowerStar::Behavior, ROM 0x020eb05c (ov002). */
+int _ZN9PowerStar8BehaviorEv(void *s)         { return ((PowerStar *)s)->PowerStar::Behavior(); }
+/* PiranhaPlant::Behavior, ROM 0x0212fd4c (ov084). */
+int _ZN12PiranhaPlant8BehaviorEv(void *s)     { return ((PiranhaPlant *)s)->PiranhaPlant::Behavior(); }
+
+}  /* extern "C" */

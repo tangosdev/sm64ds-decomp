@@ -62,17 +62,55 @@ extern PortPmf data_ov002_0210dc70[];
 
 enum { PORT_COIN_STATES = 9 };
 
+/* ---- THE SEVEN FACES, AND THE ALIAS (run link100, lane PMFB2) -----------
+   src/_ZN4Coin8BehaviorEv.cpp is a real pointer-to-member dispatch and MSVC
+   emits it as
+
+       mov ecx, <table>[eax*8+4]     the adjust word
+       mov eax, <table>[eax*8]       the code word
+       add ecx, <this>
+       call eax
+   -- `call <reg>` with the receiver in ECX and nothing pushed. The state
+   bodies are plain cdecl and read the receiver off the stack, so the code word
+   holds a __fastcall FACE and the face calls the body. Nine slots, seven distinct bodies (the
+   ROM's own table repeats two of them); each distinct body gets one face.
+   Nothing else in the port reads data_ov002_0210dc70.
+
+   THE ALIAS. The matched TU declares `extern PMF data_ov002_0210dc70[];`
+   OUTSIDE its extern "C" block, so it comes in as
+   ?data_ov002_0210dc70@@3PAP8C@@AEXXZA -- the name a listing of the TU under
+   the port's own flags shows. The ov002 mount defines the storage as the plain
+   C name, so the slice needs this one directive to link, and the directive
+   lives here because this file is the seat that owns the table
+   (the hal/bob_enemy_bridges.cpp precedent). alternatename_guard's rule holds:
+   the LHS is never DEFINED anywhere, only referenced. */
+#pragma comment(linker, "/alternatename:?data_ov002_0210dc70@@3PAP8C@@AEXXZA=_data_ov002_0210dc70")
+
+#define COIN_FACE(sym)                                                        \
+    static void __fastcall pmf_face_##sym(void *self, void *dead_edx)         \
+    { sym(self); }
+COIN_FACE(func_ov002_020b2150)
+COIN_FACE(func_ov002_020b20b4)
+COIN_FACE(func_ov002_020b1cc0)
+COIN_FACE(func_ov002_020b1bfc)
+COIN_FACE(func_ov002_020b2070)
+COIN_FACE(func_ov002_020b1ad4)
+COIN_FACE(func_ov002_020b1a60)
+#undef COIN_FACE
+
+#define CF(sym) (void (*)(void *))pmf_face_##sym
 static const struct { unsigned rom; void (*host)(void *); } g_states[] = {
-    {0x020b2150, func_ov002_020b2150},   /* 0 <- 0x02108730 */
-    {0x020b20b4, func_ov002_020b20b4},   /* 1 <- 0x02108770 */
-    {0x020b1cc0, func_ov002_020b1cc0},   /* 2 <- 0x02108748 */
-    {0x020b1bfc, func_ov002_020b1bfc},   /* 3 <- 0x02108760 */
-    {0x020b2070, func_ov002_020b2070},   /* 4 <- 0x02108740 */
-    {0x020b1ad4, func_ov002_020b1ad4},   /* 5 <- 0x02108758 */
-    {0x020b1cc0, func_ov002_020b1cc0},   /* 6 <- 0x02108750 (same as 2) */
-    {0x020b20b4, func_ov002_020b20b4},   /* 7 <- 0x02108768 (same as 1) */
-    {0x020b1a60, func_ov002_020b1a60},   /* 8 <- 0x02108738 */
+    {0x020b2150, CF(func_ov002_020b2150)},   /* 0 <- 0x02108730 */
+    {0x020b20b4, CF(func_ov002_020b20b4)},   /* 1 <- 0x02108770 */
+    {0x020b1cc0, CF(func_ov002_020b1cc0)},   /* 2 <- 0x02108748 */
+    {0x020b1bfc, CF(func_ov002_020b1bfc)},   /* 3 <- 0x02108760 */
+    {0x020b2070, CF(func_ov002_020b2070)},   /* 4 <- 0x02108740 */
+    {0x020b1ad4, CF(func_ov002_020b1ad4)},   /* 5 <- 0x02108758 */
+    {0x020b1cc0, CF(func_ov002_020b1cc0)},   /* 6 <- 0x02108750 (same as 2) */
+    {0x020b20b4, CF(func_ov002_020b20b4)},   /* 7 <- 0x02108768 (same as 1) */
+    {0x020b1a60, CF(func_ov002_020b1a60)},   /* 8 <- 0x02108738 */
 };
+#undef CF
 
 extern "C" void port_coin_states_seat(void)
 {
@@ -92,59 +130,19 @@ extern "C" void port_coin_states_seat(void)
     }
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN4Coin8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    unsigned char *f3ae = (unsigned char *)(c + 0x3ae);
+/* _ZN4Coin8BehaviorEv RETIRED (run link100, lane PMFB2). It is on
+   port/slice_pmfb2.txt and compiles from src/_ZN4Coin8BehaviorEv.cpp, which
+   recovered as a real C++ method (?Behavior@Coin@@QAEHXZ); the Itanium C name
+   its fill site calls is one cdecl line in hal/except_faces.cpp and no fill
+   site changes.
 
-    if (*f3ae & 2) {                       /* the pickup sound is pending */
-        *f3ae &= (unsigned char)~2;
-        _ZN5Sound9PlayBank3EjRK7Vector3(0x30, c + 0x74);
-    }
-    /* A collected BLUE coin retires by leaving its area rather than by being
-       destroyed: mAreaId = -1 makes Actor::BeforeBehavior refuse it. */
-    if (*(unsigned short *)(c + 0xc) == 0x122 && (*f3ae & 1))
-        *(signed char *)(c + 0xcc) = -1;
-
-    if (func_ov002_020b10a0(c) != 0)
-        return 1;
-    *(short *)(c + 0x8e) += 0xc00;         /* the spin */
-    if (func_ov002_020b12ec(c) != 0) {
-        func_ov002_020b14d8(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x178);
-        return 1;
-    }
-    func_ov002_020b10e4(c);
-    *(int *)(c + 0xd0) = 0;                /* mEatingPlayer */
-    if (func_ov002_020b19dc(c) != 0)
-        return 1;
-
-    {
-        unsigned st = (unsigned)*(int *)(c + 0x3a4);   /* mBehaviorType */
-        if (st >= PORT_COIN_STATES) {
-            std::fprintf(stderr, "FATAL: coin behaviour state %u out of "
-                         "range\n", st);
-            std::abort();
-        }
-        ((void (*)(void *))(size_t)data_ov002_0210dc70[st].fn)(c);
-    }
-
-    if (data_0209f2d8 != 1 && (*(int *)(c + 0xb0) & 8) != 0) {
-        _ZN12CylinderClsn5ClearEv(c + 0x178);
-        if (*(unsigned char *)(c + 0x3aa) == 0 &&
-            LenVec3(c + 0x74) < 0x64000) {
-            if (*(int *)(c + 0x3a0) != 1 || *(unsigned char *)(c + 0x3b0) == 0)
-                _ZN12CylinderClsn6UpdateEv(c + 0x178);
-        }
-    } else {
-        func_ov002_020b14d8(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x178);
-        if (*(unsigned char *)(c + 0x3aa) == 0) {
-            if (*(int *)(c + 0x3a0) != 1 || *(unsigned char *)(c + 0x3b0) == 0)
-                _ZN12CylinderClsn6UpdateEv(c + 0x178);
-        }
-    }
-    return 1;
-}
+   MEASURED FOR THAT LANE. The ROM strides the table by eight
+   (`add r3, r1, r0, lsl #3` at 0x020b2410) and the matched TU emits
+   [eax*8] -- with and without /Zp4, because its record is the bare
+   pointer-to-member and not a struct containing one. All nine source pairs
+   (0x02108730..0x02108770) read {code, 0} in
+   extracted/overlays/overlay_0002.bin, so `this` is never adjusted and the ROM
+   takes its ldreq arm. What was left was the calling convention, and the seven
+   faces above are that repair. The header's OTHER reason -- the sinit leaves a
+   DS code address in each word -- is unchanged and is still what
+   port_coin_states_seat is for. */
