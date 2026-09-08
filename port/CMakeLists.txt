@@ -15691,6 +15691,45 @@ foreach(_tpmfb2 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# R10b, run link100 lane PMFB3: dScMgSound_c's THIRTEEN LEVEL-2 DISPATCHERS
+# ===========================================================================
+#
+# The rows block R10a's own text left for the next lane: "the thirteen level-2
+# tables the sub-dispatchers read. Their code words are still DS addresses and
+# their host copies still route through port_mg_sound_call1." Lane PMFB3
+# extended port_mg_sound_states_seat (port/unmatched/MgSound_StateDispatch.cpp)
+# to the thirty-nine level-2 slots, so all fifteen of this class's tables now
+# hold host addresses installed at boot, every one of them compared against the
+# ROM's own code word and a zero adjustment word before it is written, and no
+# host copy of a dScMgSound_c dispatcher is left. Nothing here changes a ROM
+# reference, a linker option or a call the ROM does not make; the per-row
+# derivation, the ROM stride and the emitted stride are in
+# port/slice_pmfb3.txt.
+#
+# NO /Zp4 ON THIS BLOCK, and that is the measurement and not an omission. Block
+# R10a carries lane PMFB1's lever because a record that is a struct CONTAINING a
+# pointer to member gets eight-byte alignment from MSVC and silently strides
+# twenty-four where the ROM strides twenty. Each of these thirteen tables is an
+# array of the BARE pointer to member, which is eight bytes either way: every one
+# of the thirteen TUs was compiled both ways for this lane and the two /FAsc
+# listings came back byte-identical, zero diff lines, with the operand
+# _data_ov006_XXXXXXXX[eax*8] against the ROM's own `add ip, r3, r2, lsl #3`.
+# R10a's own rule for exactly that case is to leave the option off rather than
+# make a claim nothing measured, and this block follows it.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb3.txt" SLICE_PMFB3_LINES)
+set(SLICE_PMFB3_SOURCES "")
+foreach(line IN LISTS SLICE_PMFB3_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFB3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tpmfb3 walk_window walk_window_hires smoke_player)
+    target_sources(${_tpmfb3} PRIVATE ${SLICE_PMFB3_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

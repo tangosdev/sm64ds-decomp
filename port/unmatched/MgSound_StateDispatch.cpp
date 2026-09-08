@@ -177,6 +177,23 @@
 #include <cstdlib>
 
 
+/* ---- THE ONE ALIAS THE THIRTEEN MATCHED TUs ASK FOR (lane PMFB3) --------
+   Twelve of the thirteen sub-dispatchers declare their table INSIDE their own
+   extern "C" block, so MSVC spells the reference _data_ov006_XXXXXXXX and the
+   ov006 mount's own definition satisfies it. src/func_ov006_0211a2c4.cpp is the
+   thirteenth and declares `extern PMF data_ov006_02142cc0[];` at namespace
+   scope, which mangles as the name below -- read off that TU's own /FAsc
+   listing (runs/link100/out/PMFB3/listings/func_ov006_0211a2c4_zp4.asm), not
+   guessed. Same address, same bytes, only the decoration differs, and src/ is
+   byte-locked so the source cannot be given the extern "C" instead.
+
+   SAFE UNDER port/tools/alternatename_guard.py for hal/pmfc_aliases.cpp's
+   reason: the LHS is a C++ mangling that only this one matched TU ever spells
+   and nothing in the tree defines, so it cannot acquire a real definition and
+   be silently defeated; the RHS is the mount's C-linkage symbol, and both land
+   in the map at one address. */
+#pragma comment(linker, "/alternatename:?data_ov006_02142cc0@@3PAP8C@@AEXH@ZA=_data_ov006_02142cc0")
+
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
 struct MgPmf { unsigned code; int adj; };
@@ -305,136 +322,169 @@ void port_mg_sound_counts(unsigned *hits, unsigned *floor, unsigned *unknown,
 
 }  /* extern "C" */
 
-/* THE WITNESS. A hit is a state this class ROUTED TO A REAL BODY; unknown is a
-   code word this switch does not know, which is the number that convicts a
-   missed dispatcher.
+/* THE WITNESS. A hit is a state this class ROUTED TO A REAL BODY, counted in
+   the level-2 faces below.
 
-   THE SECOND COUNTER IS NO LONGER A FLOOR COUNT AND IS NOT SUBTRACTED FROM THE
-   HITS. Run mg9 kept it because 0x0211bc8c had no body and an ask for it went
-   nowhere; MgPanel_StateDispatch.cpp records reading "2508 routed" when 951 of
-   those had gone nowhere, and that mistake was not repeated. Since run mg10
-   lane F367 the address has a matched body, so it is counted BOTH as an
-   ordinary hit and here, and this counter's only job is to say how many of the
-   hits were the tapped-pad state. No case returns a negative any more. */
+   WHAT RUN link100 LANE PMFB3 CHANGED IS THE MECHANISM, NOT THE MEANING. Until
+   this lane the count came from a call-time switch over the code word
+   (sound_try_1), which the thirteen host-copied sub-dispatchers called through
+   port_mg_sound_call1. Both are gone: all FIFTEEN tables now hold host
+   addresses that port_mg_sound_states_seat installed at boot, and the thirteen
+   sub-dispatchers are the ROM's own matched TUs. The number this counter
+   carries is exactly the number it has carried since lane PMFB2 -- the LEVEL-2
+   dispatches, thirty-nine of the fifty-seven reachable states -- because the two
+   level-1 tables have gone direct since that lane and never reached the switch
+   either.
+
+   THE SECOND COUNTER SAYS WHAT IT CLAIMS AGAIN. PMFB2's installer put
+   func_ov006_0211bc8c straight into level-1 slot 1, so from that lane until this
+   one the tapped-pad number could only read zero however hard the pads were
+   driven, while hal/scene_mg_boombox.cpp went on printing it as the witness that
+   a tap produced an execution. snd1_state1_0211bc8c below is a plain cdecl
+   counting wrapper -- same convention, same two arguments, the same body called
+   -- installed in that one slot instead of the bare body.
+
+   THE THIRD COUNTER IS NOW STRUCTURALLY ZERO, said out loud rather than quietly
+   enjoyed. An unknown code word was the number that convicted a missed
+   dispatcher while a run-time switch decided what a word meant. Nothing decides
+   at run time any more: port_mg_sound_states_seat compares all fifty-seven words
+   against the ROM's own before it writes one of them and ABORTS on a mismatch,
+   so that defect is now caught at boot, loudly, instead of being counted at
+   frame time. */
 static unsigned g_snd_hits;
 static unsigned g_snd_state1_0211bc8c;
 static unsigned g_snd_unknown;
 
-static int sound_try_1(void *self, unsigned code, int a)
-{
-    char *c = (char *)self;
-    switch (code) {
-    /* data_ov006_02142df8, 5 slots, dispatched by func_ov006_0211b954 */
-    case 0x0211bf44u: func_ov006_0211bf44(c, a);   return 1;
-    /* p1, run mg9's one hard floor, decompiled and routed by run mg10 lane
-       F367. The separate counter stays: it is the number that says a tap
-       produced an EXECUTION and not just an ask. */
-    case 0x0211bc8cu: ++g_snd_state1_0211bc8c;
-                      func_ov006_0211bc8c(c, a);   return 1;
-    case 0x0211bc68u: func_ov006_0211bc68(c, a);   return 1;
-    case 0x0211bbe0u: func_ov006_0211bbe0(c, a);   return 1;
-    case 0x0211ba88u: func_ov006_0211ba88(c, a);   return 1;
-    /* data_ov006_02142e20, 13 slots, dispatched by func_ov006_0211b5e0.
-       Every one of the thirteen is itself a dispatcher, host-copied below. */
-    case 0x0211b590u: func_ov006_0211b590(c, a);   return 1;
-    case 0x0211b398u: func_ov006_0211b398(c, a);   return 1;
-    case 0x0211b17cu: func_ov006_0211b17c(c, a);   return 1;
-    case 0x0211af60u: func_ov006_0211af60(c, a);   return 1;
-    case 0x0211ad44u: func_ov006_0211ad44(c, a);   return 1;
-    case 0x0211abdcu: func_ov006_0211abdc(c, a);   return 1;
-    case 0x0211aa44u: func_ov006_0211aa44(c, a);   return 1;
-    case 0x0211a7acu: func_ov006_0211a7ac(c, a);   return 1;
-    case 0x0211a648u: func_ov006_0211a648(c, a);   return 1;
-    case 0x0211a4b0u: func_ov006_0211a4b0(c, a);   return 1;
-    case 0x0211a2c4u: func_ov006_0211a2c4(c, a);   return 1;
-    case 0x0211a0d8u: func_ov006_0211a0d8(c, a);   return 1;
-    case 0x02119eecu: func_ov006_02119eec(c, a);   return 1;
-    /* data_ov006_02142d38 */
-    case 0x0211b4fcu: func_ov006_0211b4fc(c, a);   return 1;
-    case 0x0211b3ecu: func_ov006_0211b3ec(c, a);   return 1;
-    case 0x0211b3e8u: func_ov006_0211b3e8();       return 1;
-    /* data_ov006_02142d50 */
-    case 0x0211b308u: func_ov006_0211b308(c, a);   return 1;
-    case 0x0211b278u: func_ov006_0211b278(c, a);   return 1;
-    case 0x0211b1ccu: func_ov006_0211b1cc(c, a);   return 1;
-    /* data_ov006_02142d80 */
-    case 0x0211b0ecu: func_ov006_0211b0ec(c, a);   return 1;
-    case 0x0211b05cu: func_ov006_0211b05c(c, a);   return 1;
-    case 0x0211afb0u: func_ov006_0211afb0(c, a);   return 1;
-    /* data_ov006_02142dc8 */
-    case 0x0211aed0u: func_ov006_0211aed0(c, a);   return 1;
-    case 0x0211ae40u: func_ov006_0211ae40(c, a);   return 1;
-    case 0x0211ad94u: func_ov006_0211ad94(c, a);   return 1;
-    /* data_ov006_02142de0 */
-    case 0x0211ad00u: func_ov006_0211ad00(c, a);   return 1;
-    case 0x0211ac30u: func_ov006_0211ac30(c, a);   return 1;
-    case 0x0211ac2cu: func_ov006_0211ac2c();       return 1;
-    /* data_ov006_02142cd8 */
-    case 0x0211ab80u: func_ov006_0211ab80(c, a);   return 1;
-    case 0x0211ab0cu: func_ov006_0211ab0c(c, a);   return 1;
-    case 0x0211aa94u: func_ov006_0211aa94(c, a);   return 1;
-    /* data_ov006_02142cf0 */
-    case 0x0211a9fcu: func_ov006_0211a9fc(c, a);   return 1;
-    case 0x0211a910u: func_ov006_0211a910(c, a);   return 1;
-    case 0x0211a7fcu: func_ov006_0211a7fc(c, a);   return 1;
-    /* data_ov006_02142d20 */
-    case 0x0211a714u: func_ov006_0211a714(c, a);   return 1;
-    case 0x0211a69cu: func_ov006_0211a69c(c, a);   return 1;
-    case 0x0211a698u: func_ov006_0211a698();       return 1;
-    /* data_ov006_02142d68 */
-    case 0x0211a5ecu: func_ov006_0211a5ec(c, a);   return 1;
-    case 0x0211a578u: func_ov006_0211a578(c, a);   return 1;
-    case 0x0211a500u: func_ov006_0211a500(c, a);   return 1;
-    /* data_ov006_02142d98 */
-    case 0x0211a420u: func_ov006_0211a420(c, a);   return 1;
-    case 0x0211a388u: func_ov006_0211a388(c, a);   return 1;
-    case 0x0211a314u: func_ov006_0211a314(c, a);   return 1;
-    /* data_ov006_02142cc0 */
-    case 0x0211a234u: func_ov006_0211a234(c, a);   return 1;
-    case 0x0211a19cu: func_ov006_0211a19c(c, a);   return 1;
-    case 0x0211a128u: func_ov006_0211a128(c, a);   return 1;
-    /* data_ov006_02142d08 */
-    case 0x0211a048u: func_ov006_0211a048(c, a);   return 1;
-    case 0x02119fb0u: func_ov006_02119fb0(c, a);   return 1;
-    case 0x02119f3cu: func_ov006_02119f3c(c, a);   return 1;
-    /* data_ov006_02142db0 */
-    case 0x02119e5cu: func_ov006_02119e5c(c, a);   return 1;
-    case 0x02119dc4u: func_ov006_02119dc4(c, a);   return 1;
-    case 0x02119d50u: func_ov006_02119d50(c, a);   return 1;
+/* ---- THE THIRTY-NINE LEVEL-2 FACES, run link100 lane PMFB3 ---------------
+   WHY A FACE HERE AND NONE ON LEVEL 1. The two level-1 TUs open-code the mwcc
+   member pointer as two plain ints and call it through
+   `((void(*)(void*,int))fn)(obj,i)`, which MSVC emits as a cdecl call with the
+   receiver PUSHED -- the shape the host bodies already have, so lane PMFB2
+   installed them raw. The thirteen level-2 TUs spell a REAL pointer to member,
+   `(((C *)o)->*data_ov006_XXXXXXXX[idx])(i)`, and MSVC emits that as
 
-    default:
-        return 0;
+       push  ecx                                  the one argument, i
+       mov   ecx, _data_ov006_XXXXXXXX[eax*8+4]   the adjustment word
+       mov   eax, _data_ov006_XXXXXXXX[eax*8]     the code word
+       add   ecx, edx                             this
+       call  eax
+       pop   ebp / ret 0                      NO add esp,4: the CALLEE cleans
+
+   -- a __thiscall indirect: receiver in ecx, one argument on the stack, callee
+   cleanup. A plain cdecl body reads its receiver off the stack and cleans
+   nothing, so the code word could not hold one. __fastcall takes its first
+   argument in ecx, ignores edx (which at the call still holds the same object,
+   because the adjustment word is zero), and cleans the same four bytes.
+
+   READ OFF EACH TU's OWN LISTING, not off one sample: all thirteen were
+   compiled under the port's own flags with and without /Zp4
+   (runs/link100/out/PMFB3/emit_subdisp.txt) and all thirteen emit an operand
+   scale of EIGHT against the ROM's `add ip, r3, r2, lsl #3`, with the listings
+   byte-identical either way -- these records are bare pointer-to-member arrays,
+   not the struct CONTAINING a pointer to member that forced lane PMFB1's /Zp4,
+   so the option is not claimed on any of them.
+
+   EVERY FACE COUNTS. A face is reachable only from a table word this file's own
+   seat wrote, so the count is exactly the dispatches that happened. */
+#define SND2_FACE(sym)                                                        \
+    static void __fastcall snd2_##sym(void *self, void *dead_edx, int i)      \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_snd_hits;                                                         \
+        sym((char *)self, i);                                                 \
     }
+
+/* the three states whose ROM body takes nothing and whose src file is an empty
+   body; declared and called with no argument, which is the shape
+   port/tools/aritycheck.py checks. */
+#define SND2_FACE0(sym)                                                       \
+    static void __fastcall snd2_##sym(void *self, void *dead_edx, int i)      \
+    {                                                                         \
+        (void)self; (void)dead_edx; (void)i;                                  \
+        ++g_snd_hits;                                                         \
+        sym();                                                                \
+    }
+
+/* data_ov006_02142d38 */
+SND2_FACE(func_ov006_0211b4fc)
+SND2_FACE(func_ov006_0211b3ec)
+SND2_FACE0(func_ov006_0211b3e8)
+/* data_ov006_02142d50 */
+SND2_FACE(func_ov006_0211b308)
+SND2_FACE(func_ov006_0211b278)
+SND2_FACE(func_ov006_0211b1cc)
+/* data_ov006_02142d80 */
+SND2_FACE(func_ov006_0211b0ec)
+SND2_FACE(func_ov006_0211b05c)
+SND2_FACE(func_ov006_0211afb0)
+/* data_ov006_02142dc8 */
+SND2_FACE(func_ov006_0211aed0)
+SND2_FACE(func_ov006_0211ae40)
+SND2_FACE(func_ov006_0211ad94)
+/* data_ov006_02142de0 */
+SND2_FACE(func_ov006_0211ad00)
+SND2_FACE(func_ov006_0211ac30)
+SND2_FACE0(func_ov006_0211ac2c)
+/* data_ov006_02142cd8 */
+SND2_FACE(func_ov006_0211ab80)
+SND2_FACE(func_ov006_0211ab0c)
+SND2_FACE(func_ov006_0211aa94)
+/* data_ov006_02142cf0 */
+SND2_FACE(func_ov006_0211a9fc)
+SND2_FACE(func_ov006_0211a910)
+SND2_FACE(func_ov006_0211a7fc)
+/* data_ov006_02142d20 */
+SND2_FACE(func_ov006_0211a714)
+SND2_FACE(func_ov006_0211a69c)
+SND2_FACE0(func_ov006_0211a698)
+/* data_ov006_02142d68 */
+SND2_FACE(func_ov006_0211a5ec)
+SND2_FACE(func_ov006_0211a578)
+SND2_FACE(func_ov006_0211a500)
+/* data_ov006_02142d98 */
+SND2_FACE(func_ov006_0211a420)
+SND2_FACE(func_ov006_0211a388)
+SND2_FACE(func_ov006_0211a314)
+/* data_ov006_02142cc0 */
+SND2_FACE(func_ov006_0211a234)
+SND2_FACE(func_ov006_0211a19c)
+SND2_FACE(func_ov006_0211a128)
+/* data_ov006_02142d08 */
+SND2_FACE(func_ov006_0211a048)
+SND2_FACE(func_ov006_02119fb0)
+SND2_FACE(func_ov006_02119f3c)
+/* data_ov006_02142db0 */
+SND2_FACE(func_ov006_02119e5c)
+SND2_FACE(func_ov006_02119dc4)
+SND2_FACE(func_ov006_02119d50)
+
+#undef SND2_FACE
+#undef SND2_FACE0
+
+/* The one level-1 wrapper, and the only reason it exists is the counter above.
+   cdecl in and cdecl out, both arguments forwarded, the same body called. */
+static void snd1_state1_0211bc8c(char *c, int i)
+{
+    ++g_snd_state1_0211bc8c;
+    func_ov006_0211bc8c(c, i);
 }
 
-/* THE ENTRY POINT the fifteen table host copies call. A hit is this class's; a
-   miss falls through to the framework, which owns the guards and the report,
-   and is counted here as well because a nonzero unknown count is the number
-   that says a dispatcher was missed. */
-extern "C" void port_mg_sound_call1(void *self, unsigned code, int adj, int a)
-{
-    if (code != 0 && adj == 0) {
-        if (sound_try_1(self, code, a) > 0) { ++g_snd_hits; return; }
-    }
-    if (code != 0)
-        ++g_snd_unknown;
-    port_mg_call1(self, code, adj, a);
-}
+/* ---- THE BOOT INSTALLER, lanes PMFB2 (level 1) and PMFB3 (level 2) -------
+   WHAT THIS REPLACES. Until lane PMFB2 the two LEVEL-1 tables were reached only
+   through a call-time address switch: the host copies of func_ov006_0211b954
+   and func_ov006_0211b5e0 read the DS code word the sinit left in place and a
+   switch turned it into a host body by name. That shape cannot retire, because
+   retiring the host copy takes the switch with it and the matched TU would call
+   a DS address. Turning the switch inside out fixes it once: install HOST
+   addresses into the eighteen level-1 slots at boot, and the ROM's own two
+   dispatchers -- which read the pair, decode it and call it with a plain cdecl
+   `call eax` -- reach the same host bodies with no switch at all.
 
-
-/* ---- THE BOOT INSTALLER, run link100 lane PMFB2 --------------------------
-   WHAT THIS REPLACES. Until this lane the two LEVEL-1 tables were reached only
-   through the call-time address switch above: the host copies of
-   func_ov006_0211b954 and func_ov006_0211b5e0 read the DS code word the sinit
-   left in place and sound_try_1 turned it into a host body by name. That shape
-   cannot retire, because retiring the host copy takes the switch with it and
-   the matched TU would call a DS address. Turning the switch inside out fixes
-   it once: install HOST addresses into the eighteen level-1 slots at boot, and
-   the ROM's own two dispatchers -- which read the pair, decode it and call it
-   with a plain cdecl `call eax` -- reach the same host bodies with no switch at
-   all. The other THIRTEEN tables (the level-2 sets each sub-dispatcher reads)
-   still hold DS words and still go through sound_try_1; they are the next
-   lane's, and every one of their host copies is unchanged.
+   LANE PMFB3 DID THE SAME ONE LEVEL DOWN, and the switch is now gone entirely.
+   The THIRTEEN level-2 tables each sub-dispatcher reads held DS words and still
+   went through it; their thirty-nine slots are installed below, their thirteen
+   host copies are retired onto the ROM's own matched TUs, and nothing in this
+   class decides at run time what a code word means any more.
 
    WHY THIS IS THE ov085 SHAPE AND NOT THE ONE THE HEADER REFUSES. The header
    above rules out writing host addresses over the .data SOURCE pairs, because
@@ -485,7 +535,7 @@ extern "C" void port_mg_sound_states_seat(void)
     } seats[] = {
         /* data_ov006_02142df8, 5 slots, read by func_ov006_0211b954 */
         {data_ov006_02142df8, "02142df8",  0, 0x0211bf44u, func_ov006_0211bf44},
-        {data_ov006_02142df8, "02142df8",  1, 0x0211bc8cu, func_ov006_0211bc8c},
+        {data_ov006_02142df8, "02142df8",  1, 0x0211bc8cu, snd1_state1_0211bc8c},
         {data_ov006_02142df8, "02142df8",  2, 0x0211bc68u, func_ov006_0211bc68},
         {data_ov006_02142df8, "02142df8",  3, 0x0211bbe0u, func_ov006_0211bbe0},
         /* the one state that returns a value; cdecl leaves eax to the caller,
@@ -521,6 +571,100 @@ extern "C" void port_mg_sound_states_seat(void)
         }
         p->code = (unsigned)(size_t)seats[i].host;
     }
+
+    /* ---- THE THIRTEEN LEVEL-2 TABLES, run link100 lane PMFB3 -------------
+       The thirty-nine slots the thirteen sub-dispatchers read. Every row below
+       carries the code word this lane read out of
+       extracted/overlays/overlay_0006.bin at the address
+       src/__sinit_ov006_02132970.c assigns that slot from -- not out of prose,
+       and not out of the call-time switch this block replaced. All thirty-nine
+       adjustment words read ZERO, all thirty-nine code words are DISTINCT, and
+       every one lands inside this class's own code block
+       0x02119904..0x0211cb70, which is the check that says these tables are
+       this class's (runs/link100/out/PMFB3/romstride_pmfb3.txt).
+
+       THE SLOT NUMBERS COME FROM THE SINIT'S OWN ASSIGNMENTS, one at a time,
+       for the reason the head of this file gives: an overlay constructor does
+       not copy its pairs in address order and this one interleaves fifteen
+       destinations. All thirty-nine are WHOLE-PAIR copies
+       (`data_ov006_TAB[i] = data_ov006_SRC;`); there is not one field-form fill
+       among them, which is what lets this installer prove what it writes.
+
+       THE VALUE INSTALLED IS A FACE, not the body: the thirteen matched TUs
+       dispatch with the receiver in ecx and the argument on the stack under
+       callee cleanup. */
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void (__fastcall *face)(void *, void *, int);
+    } seats2[] = {
+        /* data_ov006_02142d38 */
+        {data_ov006_02142d38, "02142d38", 0, 0x0211b4fcu, snd2_func_ov006_0211b4fc},
+        {data_ov006_02142d38, "02142d38", 1, 0x0211b3ecu, snd2_func_ov006_0211b3ec},
+        {data_ov006_02142d38, "02142d38", 2, 0x0211b3e8u, snd2_func_ov006_0211b3e8},
+        /* data_ov006_02142d50 */
+        {data_ov006_02142d50, "02142d50", 0, 0x0211b308u, snd2_func_ov006_0211b308},
+        {data_ov006_02142d50, "02142d50", 1, 0x0211b278u, snd2_func_ov006_0211b278},
+        {data_ov006_02142d50, "02142d50", 2, 0x0211b1ccu, snd2_func_ov006_0211b1cc},
+        /* data_ov006_02142d80 */
+        {data_ov006_02142d80, "02142d80", 0, 0x0211b0ecu, snd2_func_ov006_0211b0ec},
+        {data_ov006_02142d80, "02142d80", 1, 0x0211b05cu, snd2_func_ov006_0211b05c},
+        {data_ov006_02142d80, "02142d80", 2, 0x0211afb0u, snd2_func_ov006_0211afb0},
+        /* data_ov006_02142dc8 */
+        {data_ov006_02142dc8, "02142dc8", 0, 0x0211aed0u, snd2_func_ov006_0211aed0},
+        {data_ov006_02142dc8, "02142dc8", 1, 0x0211ae40u, snd2_func_ov006_0211ae40},
+        {data_ov006_02142dc8, "02142dc8", 2, 0x0211ad94u, snd2_func_ov006_0211ad94},
+        /* data_ov006_02142de0 */
+        {data_ov006_02142de0, "02142de0", 0, 0x0211ad00u, snd2_func_ov006_0211ad00},
+        {data_ov006_02142de0, "02142de0", 1, 0x0211ac30u, snd2_func_ov006_0211ac30},
+        {data_ov006_02142de0, "02142de0", 2, 0x0211ac2cu, snd2_func_ov006_0211ac2c},
+        /* data_ov006_02142cd8 */
+        {data_ov006_02142cd8, "02142cd8", 0, 0x0211ab80u, snd2_func_ov006_0211ab80},
+        {data_ov006_02142cd8, "02142cd8", 1, 0x0211ab0cu, snd2_func_ov006_0211ab0c},
+        {data_ov006_02142cd8, "02142cd8", 2, 0x0211aa94u, snd2_func_ov006_0211aa94},
+        /* data_ov006_02142cf0 */
+        {data_ov006_02142cf0, "02142cf0", 0, 0x0211a9fcu, snd2_func_ov006_0211a9fc},
+        {data_ov006_02142cf0, "02142cf0", 1, 0x0211a910u, snd2_func_ov006_0211a910},
+        {data_ov006_02142cf0, "02142cf0", 2, 0x0211a7fcu, snd2_func_ov006_0211a7fc},
+        /* data_ov006_02142d20 */
+        {data_ov006_02142d20, "02142d20", 0, 0x0211a714u, snd2_func_ov006_0211a714},
+        {data_ov006_02142d20, "02142d20", 1, 0x0211a69cu, snd2_func_ov006_0211a69c},
+        {data_ov006_02142d20, "02142d20", 2, 0x0211a698u, snd2_func_ov006_0211a698},
+        /* data_ov006_02142d68 */
+        {data_ov006_02142d68, "02142d68", 0, 0x0211a5ecu, snd2_func_ov006_0211a5ec},
+        {data_ov006_02142d68, "02142d68", 1, 0x0211a578u, snd2_func_ov006_0211a578},
+        {data_ov006_02142d68, "02142d68", 2, 0x0211a500u, snd2_func_ov006_0211a500},
+        /* data_ov006_02142d98 */
+        {data_ov006_02142d98, "02142d98", 0, 0x0211a420u, snd2_func_ov006_0211a420},
+        {data_ov006_02142d98, "02142d98", 1, 0x0211a388u, snd2_func_ov006_0211a388},
+        {data_ov006_02142d98, "02142d98", 2, 0x0211a314u, snd2_func_ov006_0211a314},
+        /* data_ov006_02142cc0 */
+        {data_ov006_02142cc0, "02142cc0", 0, 0x0211a234u, snd2_func_ov006_0211a234},
+        {data_ov006_02142cc0, "02142cc0", 1, 0x0211a19cu, snd2_func_ov006_0211a19c},
+        {data_ov006_02142cc0, "02142cc0", 2, 0x0211a128u, snd2_func_ov006_0211a128},
+        /* data_ov006_02142d08 */
+        {data_ov006_02142d08, "02142d08", 0, 0x0211a048u, snd2_func_ov006_0211a048},
+        {data_ov006_02142d08, "02142d08", 1, 0x02119fb0u, snd2_func_ov006_02119fb0},
+        {data_ov006_02142d08, "02142d08", 2, 0x02119f3cu, snd2_func_ov006_02119f3c},
+        /* data_ov006_02142db0 */
+        {data_ov006_02142db0, "02142db0", 0, 0x02119e5cu, snd2_func_ov006_02119e5c},
+        {data_ov006_02142db0, "02142db0", 1, 0x02119dc4u, snd2_func_ov006_02119dc4},
+        {data_ov006_02142db0, "02142db0", 2, 0x02119d50u, snd2_func_ov006_02119d50},
+    };
+
+    for (unsigned i = 0; i < sizeof seats2 / sizeof seats2[0]; ++i) {
+        MgPmf *p = &seats2[i].table[seats2[i].slot];
+        if (p->code != seats2[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgSound_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats2[i].name,
+                         seats2[i].slot, p->code, p->adj, seats2[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats2[i].face;
+    }
 }
 
 
@@ -547,68 +691,41 @@ extern "C" void port_mg_sound_counts(unsigned *hits, unsigned *floor,
     if (field_unknown) *field_unknown = port_mg_sub4f38_unknown();
 }
 
-// ---- the thirteen host copies left --------------------------------------
+// ---- NO HOST COPY OF A dScMgSound_c DISPATCHER IS LEFT --------------------
 //
-// SIXTEEN UNTIL run link100 lane PMFB2. The two level-1 dispatchers are gone;
-// what remains is the thirteen sub-dispatchers, each still reading a level-2
-// table whose code words are still DS addresses, so each still routes through
-// port_mg_sound_call1. Each is its src TU with the pair declaration replaced
-// by MgPmf and the dispatch replaced by port_mg_sound_call1. Everything else
-// is verbatim, and every offset below was read off the ROM disassembly rather
-// than off the src struct.
-
-/* func_ov006_0211b954 AND func_ov006_0211b5e0 ARE RETIRED (run link100, lane
-   PMFB2). Both are on port/slice_pmfb2.txt now and compile from
-   src/func_ov006_0211b954.cpp and src/func_ov006_0211b5e0.cpp, which are the
-   ROM's own sources for them: they open-code the pair as two ints, decode
-   `adj >> 1` / `adj & 1` themselves and call the code word with a plain cdecl
-   `call eax`. What used to make that impossible was the DS address in the code
-   word; port_mg_sound_states_seat above puts the host body there at boot, so
-   the matched TUs run the ROM's own dispatch against host code.
-
-   THEIR TWO ROM READINGS ARE KEPT, because the sub-dispatchers below and
-   hal/scene_mg_boombox.cpp's entity printouts are derived from them:
-     0x0211b954, 0x74: TEN records at stride 0x14 off `this`, the in-play gate
-     at +0x50f5 and the state index at +0x50f4, `add r3,r4,r0,lsl #3` on the
-     pool word 0x0211b9c4 = 02142df8, `mov r1,r6` (the loop counter) into the
-     argument register, and `this` taken from r7 -- the ORIGINAL object, not
-     the walking entity.
-     0x0211b5e0, 0x74: THIRTY records at stride 0x24, gate at +0x51cc, index at
-     +0x51d0, pool word 0x0211b650 = 02142e20, same `mov r1,r6`, same r7. */
-
-/* THE THIRTEEN SUB-DISPATCHERS. One shape, thirteen tables. Every one of the
-   thirteen ROM bodies is byte identical to 0x0211b590 over its first nineteen
-   words and differs only in the pool word that names its table, so the macro
-   below is the measurement rather than a convenience: writing thirteen bodies
-   by hand would let a typo say something the ROM does not.
-   ROM 0x0211b590: `mov r2,#0x24 / mla r2,r1,r2,r0 / add r2,r2,#0x5000 /
-   ldrb r2,[r2,#0x1d1]` is the SUB-state index at entity +5, `add ip,r3,r2,lsl
-   #3` is the eight-byte stride, and r1 is untouched across the mla so the
-   incoming index is still in the argument register at the blx. */
-#define SOUND_SUB(sym, table)                                                 \
-    extern "C" void sym(char *c, int i)                                       \
-    {                                                                         \
-        const unsigned char idx =                                             \
-            *(unsigned char *)(c + i * 0x24 + 0x51d1);                        \
-        const MgPmf *p = &table[idx];                                         \
-        port_mg_sound_call1(c, p->code, p->adj, i);                           \
-    }
-
-SOUND_SUB(func_ov006_0211b590, data_ov006_02142d38)
-SOUND_SUB(func_ov006_0211b398, data_ov006_02142d50)
-SOUND_SUB(func_ov006_0211b17c, data_ov006_02142d80)
-SOUND_SUB(func_ov006_0211af60, data_ov006_02142dc8)
-SOUND_SUB(func_ov006_0211ad44, data_ov006_02142de0)
-SOUND_SUB(func_ov006_0211abdc, data_ov006_02142cd8)
-SOUND_SUB(func_ov006_0211aa44, data_ov006_02142cf0)
-SOUND_SUB(func_ov006_0211a7ac, data_ov006_02142d20)
-SOUND_SUB(func_ov006_0211a648, data_ov006_02142d68)
-SOUND_SUB(func_ov006_0211a4b0, data_ov006_02142d98)
-SOUND_SUB(func_ov006_0211a2c4, data_ov006_02142cc0)
-SOUND_SUB(func_ov006_0211a0d8, data_ov006_02142d08)
-SOUND_SUB(func_ov006_02119eec, data_ov006_02142db0)
-
-#undef SOUND_SUB
+// SIXTEEN at run mg9, THIRTEEN after run link100 lane PMFB2 retired the two
+// level-1 dispatchers, and NONE after lane PMFB3. The thirteen level-2
+// sub-dispatchers are now src/func_ov006_0211b590.cpp and its twelve siblings,
+// on port/slice_pmfb3.txt, and the boot installer above puts a host face in
+// each of their thirty-nine table words, so the ROM's own code runs the ROM's
+// own dispatch.
+//
+// THE THIRTEEN ROM BODIES ARE ONE SHAPE, and that is a measurement rather than
+// a convenience: read word for word out of extracted/overlays/overlay_0006.bin
+// for this lane, 0x0211b590, 0x0211b398, 0x0211b17c, 0x0211af60, 0x0211ad44,
+// 0x0211abdc, 0x0211aa44, 0x0211a7ac, 0x0211a648, 0x0211a4b0, 0x0211a2c4,
+// 0x0211a0d8 and 0x02119eec are BYTE IDENTICAL over their first nineteen words
+// and differ only in the twentieth, the literal-pool word that names their
+// table -- and all thirteen of those pool words agree with the destination
+// __sinit_ov006_02132970 fills (runs/link100/out/PMFB3/pool_words.txt).
+//
+//     mov   r2,#0x24 / mla r2,r1,r2,r0   the entity, stride 0x24
+//     add   r2,r2,#0x5000
+//     ldrb  r2,[r2,#0x1d1]               the SUB-state index, at entity +5
+//     add   ip,r3,r2,lsl #3              an EIGHT-byte record stride
+//     ldr   r2,[ip,#4] / add r0,r0,r2,asr #1 / ands r2,r2,#1
+//     ldrne r3,[r0] / ldrne r2,[ip] / ldrne r2,[r3,r2] / ldreq r2,[ip]
+//     blx   r2                           with r1 still holding the index
+//
+// The two level-1 readings are kept because hal/scene_mg_boombox.cpp's entity
+// printouts are derived from them:
+//   0x0211b954, 0x74: TEN records at stride 0x14 off `this`, the in-play gate
+//   at +0x50f5 and the state index at +0x50f4, `add r3,r4,r0,lsl #3` on the
+//   pool word 0x0211b9c4 = 02142df8, `mov r1,r6` (the loop counter) into the
+//   argument register, and `this` taken from r7 -- the ORIGINAL object, not the
+//   walking entity.
+//   0x0211b5e0, 0x74: THIRTY records at stride 0x24, gate at +0x51cc, index at
+//   +0x51d0, pool word 0x0211b650 = 02142e20, same `mov r1,r6`, same r7.
 
 /* func_ov006_020c2b8c is NOT defined here any more -- see the note above the
    declarations at the head of this file. */

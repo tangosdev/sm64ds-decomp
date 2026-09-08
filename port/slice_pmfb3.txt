@@ -1,0 +1,122 @@
+# ===========================================================================
+# SLICE pmfb3 -- run link100, lane PMFB3
+# ===========================================================================
+#
+# Matched translation units this lane took OFF a host copy. Every row was
+# re-derived at its own ROM address on this tree for this lane; nothing here is
+# carried over from a prose file. The CMake gate block is R10b in
+# port/CMakeLists.txt.
+#
+# ---- BATCH 1: dScMgSound_c's THIRTEEN LEVEL-2 SUB-DISPATCHERS -------------
+#
+# WHAT LANE PMFB2 LEFT. Its gate 1 installed host addresses into the two
+# LEVEL-1 tables (data_ov006_02142df8, 5 slots; data_ov006_02142e20, 13 slots)
+# and retired the two level-1 dispatchers onto their own matched TUs. It said
+# in port/slice_pmfb2.txt: "NOT TAKEN HERE: the thirteen level-2 tables the
+# sub-dispatchers read. Their code words are still DS addresses and their host
+# copies still route through port_mg_sound_call1. Installing them is the same
+# shape one level down and is the next lane's work." This is that work, and it
+# closes the class: NO HOST COPY OF A dScMgSound_c DISPATCHER IS LEFT.
+#
+# THE THIRTEEN ROM BODIES ARE ONE SHAPE, and that is a measurement, not a
+# convenience. Read word for word out of extracted/overlays/overlay_0006.bin at
+# ov006 base 0x020bfec0 for this lane (runs/link100/out/PMFB3/
+# romstride_pmfb3.txt): 0x0211b590, 0x0211b398, 0x0211b17c, 0x0211af60,
+# 0x0211ad44, 0x0211abdc, 0x0211aa44, 0x0211a7ac, 0x0211a648, 0x0211a4b0,
+# 0x0211a2c4, 0x0211a0d8 and 0x02119eec are BYTE IDENTICAL over their first
+# nineteen words and differ only in the TWENTIETH, the literal-pool word that
+# names their table. All thirteen pool words agree with the destination
+# __sinit_ov006_02132970 fills (runs/link100/out/PMFB3/pool_words.txt), which
+# is what says which table belongs to which body without reading a name:
+#     0211b590 word20 @ 0211b5dc = 02142d38     0211a648 word20 @ 0211a694 = 02142d68
+#     0211b398 word20 @ 0211b3e4 = 02142d50     0211a4b0 word20 @ 0211a4fc = 02142d98
+#     0211b17c word20 @ 0211b1c8 = 02142d80     0211a2c4 word20 @ 0211a310 = 02142cc0
+#     0211af60 word20 @ 0211afac = 02142dc8     0211a0d8 word20 @ 0211a124 = 02142d08
+#     0211ad44 word20 @ 0211ad90 = 02142de0     02119eec word20 @ 02119f38 = 02142db0
+#     0211abdc word20 @ 0211ac28 = 02142cd8
+#     0211aa44 word20 @ 0211aa90 = 02142cf0
+#     0211a7ac word20 @ 0211a7f8 = 02142d20
+#
+# THE STRIDE, BOTH SIDES.
+#   ROM      `add ip, r3, r2, lsl #3` in every one of the thirteen  -> 8 bytes
+#   EMITTED  each matched TU compiled under the port's own flags with a /FAsc
+#            listing (runs/link100/out/PMFB3/emit_subdisp.txt and listings/):
+#            _data_ov006_XXXXXXXX[eax*8] and [eax*8+4]               -> 8 bytes
+# so ROM 8 == emitted 8 on all thirteen.
+#
+# NO /Zp4 ON ANY OF THE THIRTEEN, and that is measured rather than assumed.
+# Lane PMFB1's finding is that MSVC gives any struct CONTAINING a
+# pointer-to-member an alignment of eight, which rounds a twenty-byte record up
+# to twenty-four and makes every state after state 0 read the wrong record,
+# silently. These thirteen records are NOT that shape: each table is an array of
+# the BARE pointer to member, which is eight bytes with the option and eight
+# without. Every one of the thirteen was compiled both ways for this lane and
+# the two listings are IDENTICAL, zero diff lines, not merely equal in the
+# operand. Block R10a's own rule for that case is to leave the option off, and
+# this block follows it.
+#
+# THE THIRTY-NINE SOURCE PAIRS ALL READ {code, 0} in the overlay image at the
+# addresses src/__sinit_ov006_02132970.c assigns each slot from -- read out of
+# the cartridge, not off a seat's runtime assertion. All thirty-nine are
+# WHOLE-PAIR copies (`data_ov006_TAB[i] = data_ov006_SRC;`); there is not one
+# field-form fill among them, which is the condition that lets the installer
+# prove what it writes. The thirty-nine code words are DISTINCT and every one
+# lands inside dScMgSound_c's own code block 0x02119904..0x0211cb70, which is
+# the check that says these tables are this class's and not the neighbouring
+# dScMgTeresa_c's (the trap the head of MgSound_StateDispatch.cpp records).
+#
+# A FACE IS NEEDED HERE AND WAS NOT NEEDED AT LEVEL 1, and the difference is in
+# the SOURCE, not in the data. The two level-1 TUs open-code the mwcc member
+# pointer as two plain ints and call `((void(*)(void*,int))fn)(obj,i)`, which
+# MSVC emits as `push esi / push edx / call eax / add esp,8` -- a cdecl call
+# with the receiver PUSHED, which is what the host bodies already are. The
+# thirteen level-2 TUs spell a REAL pointer to member,
+# `(((C *)o)->*data_ov006_XXXXXXXX[idx])(i)`, and MSVC emits
+#     push  ecx                                  the one argument, i
+#     mov   ecx, _data_ov006_XXXXXXXX[eax*8+4]   the adjustment word
+#     mov   eax, _data_ov006_XXXXXXXX[eax*8]     the code word
+#     add   ecx, edx                             this
+#     call  eax
+#     pop   ebp / ret 0                      NO add esp,4: the CALLEE cleans
+# -- a __thiscall indirect. So the thirty-nine installed words are
+# `void __fastcall snd2_func_ov006_XXXXXXXX(void *self, void *dead_edx, int i)`
+# faces, in port/unmatched/MgSound_StateDispatch.cpp, the file that owns the
+# tables. Three of them forward to a body the ROM gives no argument
+# (func_ov006_0211b3e8, _0211ac2c, _0211a698: empty bodies in src, declared and
+# called with no argument, which is the shape port/tools/aritycheck.py checks).
+#
+# ONE /alternatename, in that same seat file. Twelve of the thirteen matched TUs
+# declare their table INSIDE their own extern "C" block and come in as the plain
+# C name the ov006 mount defines. src/func_ov006_0211a2c4.cpp declares
+# `extern PMF data_ov006_02142cc0[];` at namespace scope, so MSVC spells the
+# reference ?data_ov006_02142cc0@@3PAP8C@@AEXH@ZA -- read off that TU's own
+# /FAsc listing, not guessed -- and without the directive the slice does not
+# link. hal/pmfc_aliases.cpp's guard argument applies unchanged: the LHS is a
+# C++ mangling nothing in the tree defines, so it cannot be silently defeated.
+#
+# WHAT ELSE THE SEAT CHANGED, both inside this lane's own file:
+#   port_mg_sound_call1 and its switch sound_try_1 are DELETED. Nothing calls
+#     them once the thirteen host copies are gone, and the fifteen tables now
+#     hold host addresses that the installer verified against the ROM's own
+#     words before writing. The "unknown code word" counter that switch fed is
+#     now structurally zero, which is said out loud in the file: the defect it
+#     used to convict at frame time is convicted at boot instead, by an abort.
+#   snd1_state1_0211bc8c, a plain cdecl counting wrapper, goes into LEVEL-1
+#     slot 1 in place of the bare body. That counter has read zero since lane
+#     PMFB2 put func_ov006_0211bc8c straight into the table, while
+#     hal/scene_mg_boombox.cpp went on printing it as the witness that a tap
+#     produced an execution. Same convention in and out, same two arguments,
+#     same body called.
+src/func_ov006_0211b590.cpp
+src/func_ov006_0211b398.cpp
+src/func_ov006_0211b17c.cpp
+src/func_ov006_0211af60.cpp
+src/func_ov006_0211ad44.cpp
+src/func_ov006_0211abdc.cpp
+src/func_ov006_0211aa44.cpp
+src/func_ov006_0211a7ac.cpp
+src/func_ov006_0211a648.cpp
+src/func_ov006_0211a4b0.cpp
+src/func_ov006_0211a2c4.cpp
+src/func_ov006_0211a0d8.cpp
+src/func_ov006_02119eec.cpp
