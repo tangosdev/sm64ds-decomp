@@ -26,42 +26,40 @@
  * registry profile.
  */
 struct daSanbo_c : dActor_c {
+    /* Dispatch ignores results; void is a reconstructed interface. The state
+       handlers retain their existing external identities until methodization. */
+    typedef void (daSanbo_c::*StateFunc)();
+
     u8  pad_0d0[0x4];
     Model mModel;                            /* 0x0d4 */
     ShadowModel mShadowModel;                /* 0x124 */
     dCcAc_c mdCcAc_c;  /* 0x14c */
     dBgCh_Actr mWithMeshClsn;              /* 0x180 */
-    /* 0x33c..0x36b is exactly 0x30 bytes and InitResources assigns
-       IDENTITY_MATRIX4X3 straight into it, so this slot plus its pad is one
-       Matrix4x3. Still spelt u8 + pad because giving it the real type would
-       drag math/Matrix.h into every includer of this header.
-       [InitResources, in src/actors/daSanbo_c.cpp] */
-    u8  mMatrix;            /* 0x33c */
-    u8  pad_33d[0x2f];
+    Matrix4x3 mMatrix;      /* 0x33c -- initialized from IDENTITY_MATRIX4X3 */
     /* A daSanbo_c is two actors: the head (actorID 0xf0) and its body segments
        (actorID 0xf1). The head seeds mRootPos from its OWN mPosX/Y/Z; a segment
-       finds the head with dActor_c::FindWithID(param1), keeps it in mHead, and
-       copies the head's mRootPos triple word for word out of the head object at
-       this same 0x36c offset. So every actor in one daSanbo_c carries the same root
-       position. [InitResources, in src/actors/daSanbo_c.cpp] */
+       finds its previous segment with dActor_c::FindWithID(param1), and copies
+       that segment's mRootPos triple at this same 0x36c offset. Each segment
+       therefore inherits the head's root position through the chain.
+       [InitResources, in src/actors/daSanbo_c.cpp] */
     s32 mRootPosX;            /* 0x36c */
     s32 mRootPosY;            /* 0x370 */
     s32 mRootPosZ;            /* 0x374 */
-    u8  pad_378[0x14];
+    u8  pad_378[0xc];
+    StateFunc *mStateFunctions; /* 0x384 -- current entry/update pair */
+    dActor_c *mHitActor;        /* 0x388 */
     /* Behavior early-outs on distance from the player UNLESS mState is 2 or 5,
        which keep running however far away the player is.
        [Behavior, in src/actors/daSanbo_c.cpp] */
     s32 mState;            /* 0x38c */
-    /* mHead is a dActor_c* to the 0xf0 head, spelt s32 and cast at every use;
-       0 on the head itself. mNextSegment chains the segments: OnPendingDestroy
-       (head only) walks p = mNextSegment, then p->mNextSegment at the same
-       0x394 offset, tearing each one down.
-       [InitResources and OnPendingDestroy, in src/actors/daSanbo_c.cpp] */
-    s32 mHead;            /* 0x390 */
-    s32 mNextSegment;            /* 0x394 */
+    /* The head has no previous segment. Unlinking a body segment updates both
+       neighbors; finding the head requires following mPrevSegment. */
+    daSanbo_c *mPrevSegment;    /* 0x390 */
+    daSanbo_c *mNextSegment;    /* 0x394 */
     u8  pad_398[0x10];
-    /* Set to 1 by the head only, after it loads the blue-coin model; no
-       enrolled body reads it back. [InitResources, in src/actors/daSanbo_c.cpp] */
+    /* Set by the head after loading the blue-coin model. func_ov096_0213670c
+       reads it through the head to choose a zero or 90-frame regrowth delay;
+       func_ov096_021365d4 clears it after the segment count reaches three. */
     u8  unk_3a8;            /* 0x3a8 */
     u8  pad_3a9[0x7];
 

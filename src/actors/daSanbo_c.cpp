@@ -1,8 +1,8 @@
 //cpp
 /* Production translation unit for ov096/daSanbo_c -- the Pokey.
  *
- * SM64DS RTTI names this class daSanbo_c. ov096 0x02137980 holds the eleven
- * bytes '9daSanbo_c' plus its terminator; _ZTI9daSanbo_c at 0x0213798c
+ * SM64DS RTTI names this class daSanbo_c. ov096 0x02137980 holds the
+ * null-terminated string '9daSanbo_c'; _ZTI9daSanbo_c at 0x0213798c
  * points its name word back at that string and its base word at
  * _ZTI8dActor_c in arm9; the vtable object
  * at 0x021379d0 points its typeinfo word at the _ZTI. The tree used to carry
@@ -43,7 +43,7 @@
  *
  * A daSanbo_c is not a container of segments. SANBO and SANBO_BODY construct
  * the SAME class and the head/segment split is a runtime test on the fBase_c
- * actor id; mHead and mNextSegment link the separate instances. There is no
+ * actor id; mPrevSegment and mNextSegment link the separate instances. There is no
  * out-of-line constructor anywhere in the image -- both factories inline it.
  *
  * common.h is included FIRST on purpose. daSanbo_c.h reaches math/Matrix.h,
@@ -79,13 +79,9 @@
 #include "decl_common.h"
 #include "Player.h"
 
-/* Shadow declarations for surfaces include/ does not model at this revision.
- * Each one was reconciled down to a single spelling: where a real header
- * already declared a name, this file conforms to that header rather than
- * restating it, and the layouts below are the cartridge's own offsets. */
-/* shadow struct 'N' */
-struct N { char p0[0xc]; unsigned short h; char p1[0x390-0xe]; struct N *next; };
-
+/* Declarations retained from the individually matched fragments. These ABI
+ * bridges and raw helper layouts remain reconstruction work; their presence
+ * does not imply that the corresponding class interfaces are unavailable. */
 /* shadow namespace 'cstd' */
 namespace cstd { int fdiv(int,int); }
 
@@ -95,29 +91,6 @@ struct Mtx43 { Fix12i a[12]; };
 /* shadow enum 'Bool' */
 enum Bool { FALSE, TRUE };
 
-/* shadow struct 'Vector3' */
-struct Vector3;
-
-/* shadow struct 'Vector3_16' */
-struct Vector3_16;
-
-/* shadow struct 'Block3' */
-struct Block3 { int w[3]; };
-
-/* The state table at ov096:0x02137920 holds 12 pointer-to-member records; the
- * two dispatchers below load one out of [this+0x384] and call it. The record
- * layout is the ROM's, the receiver type is this shadow. */
-struct C; typedef void (C::*PMF)();
-struct C { char pad[0x384]; PMF *pp; };
-
-/* daSanbo_c::Render reads the fBase_c render flags at 0x0b0 and calls the sixth
- * virtual of the Model at 0x0d4. Spelt as a shadow because neither surface is
- * modelled in include/ at this revision. */
-struct RenderArg;
-struct RenderModel { virtual void v0(); virtual void v1(); virtual void v2();
-                     virtual void v3(); virtual void v4(); virtual void m(RenderArg *); };
-struct RenderView { char pad[0xb0]; unsigned int flags; char pad2[0xd4 - 0xb4]; RenderModel sub; };
-
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned size);
 extern void _ZN8dActor_cC2Ev(void *self);
@@ -125,8 +98,6 @@ extern void _ZN5ModelC1Ev(void *self);
 extern void _ZN11ShadowModelC1Ev(void *self);
 extern void _ZN7dCcAc_cC1Ev(void *self);
 extern void _ZN10dBgCh_ActrC1Ev(void *self);
-extern void _ZN8dActor_c8PoofDustEv(void *);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *);
 extern "C" void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern "C" void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, Fix12i z);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
@@ -159,11 +130,9 @@ void UnloadBlueCoinModel(void *);
 extern int data_ov096_02137b20[];
 extern int data_ov096_02137b28[];
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *c, int d);
-extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void *c, void *cyl);
 void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 void LoadBlueCoinModel(void* actor);
-int _ZN11ShadowModel12InitCylinderEv(void* self);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int r, int h, unsigned int d, unsigned int e);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int b, int c, void* v, int e);
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
@@ -177,7 +146,7 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
  *
  * A daSanbo_c is not a container of segments: SANBO (spawn-table index 0xf0)
  * and SANBO_BODY (index 0xf1) construct the SAME class, and the head/segment
- * split is a runtime test on the fBase_c actor id at [this+0x0c]. mHead and
+ * split is a runtime test on the fBase_c actor id at [this+0x0c]. mPrevSegment and
  * mNextSegment link the separate instances.
  *
  * Reconstructed source-style names: SM64DS proves the RTTI class daSanbo_c, the
@@ -194,9 +163,9 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
  * the offset-to-top and typeinfo words lower. `[2]` on an int[] is exactly that
  * eight-byte bias, so the compiler computes it and no addend is hand-edited; it
  * also makes these stores agree with the addend-8 vptr store the compiler emits
- * in the destructor itself. A relocated word is a wildcard to every byte gate,
- * so `verify` prints 36/36 either way -- tools/objisolate.py's addend check is
- * what refuses the bare form.
+ * in the destructor itself. Raw match.compare wildcards relocated words;
+ * whole-TU verification also checks relocation types, addends and destinations.
+ * Linked-byte verification is required in addition to a masked byte match.
  *
  * The declaration is include/decl_common.h's, which this file already includes.
  * It is deliberately not restated here: an `extern _ZTV` array in a source file
@@ -280,7 +249,7 @@ int daSanbo_c::InitResources()
         }
     }
 
-    if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
 
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x3c000, 0x78000, 0x200004, 0x6eff0);
@@ -298,7 +267,7 @@ int daSanbo_c::InitResources()
         mScaleX = 0x1000;
         mScaleY = 0x1000;
         mScaleZ = 0x1000;
-        mHead = 0;
+        mPrevSegment = 0;
         mNextSegment = 0;
     } else {
         t = (actorID == 0xf1);
@@ -306,10 +275,10 @@ int daSanbo_c::InitResources()
             mScaleX = 0;
             mScaleY = 0;
             mScaleZ = 0;
-            *(void**)((char*)&mHead) = _ZN8dActor_c10FindWithIDEj(param1);
+            mPrevSegment = (daSanbo_c *)dActor_c::FindWithID(param1);
             mNextSegment = 0;
             {
-                int* p = (int*)(((int)*(char**)((char*)&mHead) + 0x36c));
+                int *p = &mPrevSegment->mRootPosX;
                 mRootPosX = p[0];
                 mRootPosY = p[1];
                 mRootPosZ = p[2];
@@ -318,7 +287,7 @@ int daSanbo_c::InitResources()
     }
 
     func_ov096_02136928(((char*)this), 1);
-    *(Matrix4x3*)((char*)&mMatrix) = IDENTITY_MATRIX4X3;
+    mMatrix = IDENTITY_MATRIX4X3;
     func_ov096_02135efc(((char*)this));
     return 1;
 }
@@ -336,7 +305,7 @@ int daSanbo_c::Behavior()
         if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char *)this), 0x5dc000)) return 1;
     }
     func_ov096_021368b4(((char *)this));
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char *)this), ((char *)this) + 0x14c);
+    MakeVanishLuigiWork(mdCcAc_c);
     func_ov096_02135efc(((char *)this));
     return 1;
 }
@@ -348,10 +317,11 @@ int daSanbo_c::Behavior()
 /* recovered: named members + shared header, real C++ method */
 int daSanbo_c::Render()
 {
-    unsigned int f = ((RenderView *)this)->flags;
+    unsigned int f = mFlags;
     int b = ((f & 0x40000) != 0);
     if(b) return 1;
-    ((RenderView *)this)->sub.m((RenderArg *)((char*)&mScaleX));
+    Model *model = &mModel;
+    model->Render((const Vector3 *)&mScaleX);
     return 1;
 }
 
@@ -366,11 +336,11 @@ void daSanbo_c::OnPendingDestroy()
     int r1 = *(unsigned short *)((char *)&actorID);
     r1 = (r1 == 0xf1);
     if (r1) return;
-    void *p = *(void **)((char *)&mNextSegment);
+    daSanbo_c *p = mNextSegment;
     if (!p) return;
     do {
         func_ov096_0213585c(p);
-        p = *(void **)((char *)p + 0x394);
+        p = p->mNextSegment;
     } while (p);
 }
 
@@ -402,9 +372,9 @@ int daSanbo_c::CleanupResources()
 // @symbol func_ov096_02136928
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov096_02136928(void *cc, int a) {
-    char *c = (char *)cc;
-    *(int *)(c + 0x384) = (int)&data_ov096_02137b48 + (a << 4);
-    func_ov096_021368f0(c);
+    daSanbo_c *c = (daSanbo_c *)cc;
+    c->mStateFunctions = (daSanbo_c::StateFunc *)(&data_ov096_02137b48 + (a << 4));
+    func_ov096_021368f0((char *)c);
 }
 }
 
@@ -412,13 +382,23 @@ void func_ov096_02136928(void *cc, int a) {
 /* ROM ordinal 26 -- func_ov096_021368f0, 0x021368f0, size 0x38 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021368f0
-extern "C" void func_ov096_021368f0(char *cc) { C *c = (C *)cc; PMF *p = c->pp; (c->**p)(); }
+extern "C" void func_ov096_021368f0(char *cc)
+{
+    daSanbo_c *c = (daSanbo_c *)cc;
+    daSanbo_c::StateFunc *p = c->mStateFunctions;
+    (c->**p)();
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- func_ov096_021368b4, 0x021368b4, size 0x3c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021368b4
-extern "C" void func_ov096_021368b4(void *cc) { C *c = (C *)cc; PMF *p = c->pp + 1; (c->**p)(); }
+extern "C" void func_ov096_021368b4(void *cc)
+{
+    daSanbo_c *c = (daSanbo_c *)cc;
+    daSanbo_c::StateFunc *p = c->mStateFunctions + 1;
+    (c->**p)();
+}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 24 -- func_ov096_021368a4, 0x021368a4, size 0x10 */
@@ -523,7 +503,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 void _Z14ApproachLinearRiii(int* dst, int target, int step);
 void func_ov096_021358c8(char* c);
 int func_ov096_02135838(char* c);
-int func_ov096_02135e2c(int* self, void* clsn);
+void func_ov096_02135e2c(int* self, void* clsn);
 void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
 
 int func_ov096_021365d4(char* c) {
@@ -836,7 +816,7 @@ int _ZN4cstd4fdivEii(int a, int b);
 int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
 void* _ZNK10dBgCh_Actr13GetWallResultEv(void* c);
 
-int func_ov096_02135e2c(int* self, void* clsn)
+void func_ov096_02135e2c(int* self, void* clsn)
 {
     int n0[3];
     int n1[3];
@@ -1071,8 +1051,9 @@ extern "C" int func_ov096_02135878(void* unused, int x){
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov096_0213585c(void *t)
 {
-    _ZN8dActor_c8PoofDustEv(t);
-    _ZN7fBase_c18MarkForDestructionEv(t);
+    daSanbo_c *segment = (daSanbo_c *)t;
+    segment->PoofDust();
+    segment->MarkForDestruction();
 }
 }
 
@@ -1082,11 +1063,11 @@ void func_ov096_0213585c(void *t)
 // @symbol func_ov096_02135838
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov096_02135838(char *c) {
-    int *r1 = *(int **)(c + 0x390);
+    daSanbo_c *r1 = ((daSanbo_c *)c)->mPrevSegment;
     int r0 = 0;
     if (r1 == 0) return r0;
     do {
-        r1 = *(int **)((char *)r1 + 0x390);
+        r1 = r1->mPrevSegment;
         r0 = r0 + 1;
     } while (r1 != 0);
     return r0;
@@ -1098,13 +1079,14 @@ int func_ov096_02135838(char *c) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135800
 extern "C" void func_ov096_02135800(char* c){
-  int b = (*(unsigned short*)(c+0xc) == 0xf0);
+  daSanbo_c *segment = (daSanbo_c *)c;
+  int b = (segment->actorID == 0xf0);
   if(b) return;
-  char* next = *(char**)(c+0x394);
-  char* prev = *(char**)(c+0x390);
-  *(char**)(prev+0x394) = next;
-  next = *(char**)(c+0x394);
-  if(next) *(char**)(next+0x390) = *(char**)(c+0x390);
+  daSanbo_c *next = segment->mNextSegment;
+  daSanbo_c *prev = segment->mPrevSegment;
+  prev->mNextSegment = next;
+  next = segment->mNextSegment;
+  if(next) next->mPrevSegment = segment->mPrevSegment;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1113,13 +1095,13 @@ extern "C" void func_ov096_02135800(char* c){
 // @symbol func_ov096_021357b4
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 char *func_ov096_021357b4(char *cc){
-    struct N *c = (struct N *)cc;
-    struct N *p = c->next;
+    daSanbo_c *c = (daSanbo_c *)cc;
+    daSanbo_c *p = c->mPrevSegment;
     if(p==0) return (char *)c;
     while(p){
-        unsigned r2 = (p->h != 0xf0) ? 1u : 0u;
+        unsigned r2 = (p->actorID != 0xf0) ? 1u : 0u;
         if(!r2) return (char *)p;
-        p = p->next;
+        p = p->mPrevSegment;
     }
     return 0;
 }
