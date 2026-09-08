@@ -237,7 +237,7 @@ figure below is from that re-run, not carried over from the produce stage.
 | `tubuild verify` | **5/5 MATCH**, objisolate clean, reloc-destinations clean, TEXT-VERIFIED | — |
 | `rombuild -j16` | **PASS**, 106/106 exact, sha256 matches | — |
 | `romdata_check` | **pass** | pass on clean base |
-| `validate_merge --base 442dc178b` | **pass**, +0 byte-verified, credit 0 added/0 changed/**0 lost**, 106/106 exact | — |
+| `validate_merge --base 442dc178b` | **pass**, +0 byte-verified, credit 0 added/0 changed/**0 lost**, 106/106 exact, 700 data symbols exact | — |
 | `premerge_check --base 442dc178b` | **pass**, 8/8 gates ok, `-4` entries read as consolidation | — |
 | `check_tubuild_conflicts` | **pass** | pass |
 | `check_src_tu` | **pass** | pass |
@@ -258,11 +258,26 @@ figure below is from that re-run, not carried over from the produce stage.
 | `linkcheck.py --name` (×5) | could not run | **same failure on the clean base** |
 | `prepush_attribution` | red, 2 lost | **red on the landed `daBmb_c` commit, 13 lost** |
 
+Two gates emit an expected *warning* while still passing, and both are the fold
+speaking, not a defect:
+
+- `validate_merge` warns that **5 address ranges left the byte-verified set
+  while enrolled totals held steady** — `0x021113fc-0x0211144c`,
+  `0x0211144c-0x021114b0`, `0x021114b0-0x021114c4`, `0x021114c4-0x021114dc`,
+  `0x021114dc-0x02111518`. Those are the five per-shard `complete` entries,
+  replaced by the single entry `0x021113fc-0x02111518` covering the identical
+  `0x11c` bytes. The range *keys* changed; the coverage did not, which is what
+  the `+0` on byte-verified functions and code bytes says.
+- `premerge_check` reports `entries: 9011 -> 9007 (-4)` and labels it
+  "consolidation, not a loss -- bytes are flat" itself.
+
 ### Each non-green, paired with the control I ran
 
 - **`queue_audit --check`** — red on my branch and red on the clean base with
   identical output: `already_promoted 4, compiler-only 3, shard_count 4,
-  total_lines 4, unmatched 1`. Foreign rows, unchanged by me. This class's own
+  total_lines 4, unmatched 1`. Re-run after the revise stage and `diff`ed
+  against a fresh control run in the clean worktree at `442dc178b`: **byte-for-byte
+  identical**, and no line mentions this class. Foreign rows, unchanged by me. This class's own
   row **was** refreshed: `RickshawBdw 4 79 … no` became
   `daObjKm1_Kurumajiku_c 1 157 … yes` with the blocker re-derived. I did not run
   `--write` broadly — a bare `--write` rewrites 49 foreign rows and renames 8
