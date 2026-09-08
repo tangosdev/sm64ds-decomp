@@ -65,50 +65,30 @@ int func_ov002_020fec94(void *c);   /* main : per-frame fly/collide/expire     *
    pair, the matched TU compiles to the same tail jump this body was, and
    the seat in this file aborts the binary on a nonzero delta so the two
    agree word for word. The reading above is kept as the derivation. */
-/* PORT_HOST_ABI: mwcc pointer-to-member (the MAIN half, descriptor+8). The
-   matched Bullet::Behavior's control flow line for line. */
-extern "C" int _ZN6Bullet8BehaviorEv(void *self)
-{
-    char *c = (char *)self;
-
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-
-    {
-        /* (((Actor*)c)->*(h->pmf))() -- h = descriptor at +0x350, pmf = the
-           record at h+8; read as a plain { fn, 0 } and fn called with `this`. */
-        PortPmf *m = *(PortPmf **)(c + 0x350);
-        if (m[1].fn != 0)
-            ((void (*)(void *))(size_t)m[1].fn)(c);
-    }
-
-    {
-        int spd = *(int *)(c + 0xa8);
-        int pos = *(int *)(c + 0x9c);
-        int lim = *(int *)(c + 0xa0);
-        int ac  = *(int *)(c + 0xac);
-        int np  = spd + pos;
-        if (np >= lim)
-            lim = np;
-        *(int *)(c + 0xa8) = lim;
-        *(int *)(c + 0xac) = ac;
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0x110);
-    }
-
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x144, 0);
-
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    func_ov002_020fed7c(c);
-
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
-
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN6Bullet8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 /* ---- THE SEAT -------------------------------------------------------------
    The two dest fn words __sinit_ov002_02108094 filled with DS addresses, each
    matched against its own ROM address before the overwrite. Called from
    hal_fill_bullet_vtable (registration runs after the ov002 sinit chain). */
+/* run link100 lane PMFB7 gate 1: THE MAIN HALF IS A FACE.
+   src/_ZN6Bullet8BehaviorEv.cpp dispatches the descriptor's +8 half as a real
+   pointer to member -- mov eax,[m+8] / test / je / mov ecx,[m+12] /
+   add ecx,this / call eax, ARITY ZERO, /Zp4 diff 0 lines -- so the receiver
+   arrives in ecx with nothing pushed. The ENTER half does not change:
+   func_ov002_020fed2c dispatches it and compiles to a tail jump. */
+static void __fastcall bullet_main_face(void *self, void *dead_edx)
+{
+    (void)dead_edx;
+    func_ov002_020fec94(self);
+}
+
 extern "C" void port_bullet_states_seat(void)
 {
     static int done;
@@ -118,7 +98,7 @@ extern "C" void port_bullet_states_seat(void)
     static const struct { unsigned half; unsigned rom; void *host; }
     seats[] = {
         {0, 0x020fed18, (void *)func_ov002_020fed18},   /* enter */
-        {1, 0x020fec94, (void *)func_ov002_020fec94},   /* main  */
+        {1, 0x020fec94, (void *)bullet_main_face},      /* main  */
     };
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
         PortPmf *p = &data_ov002_02111190[seats[i].half];

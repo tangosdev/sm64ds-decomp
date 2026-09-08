@@ -15940,6 +15940,27 @@ foreach(_tpmfb6 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# SLICE pmfb7 -- run link100 lane PMFB7: the object-field rows whose class-block
+# range sweep closes. Twelve matched Behaviors that dispatch a pointer to member
+# held in a per-instance field, one per state cell at +8. No /Zp4 on this block:
+# the member sits at offset 8 of its holder and the two listings are identical
+# outside the TITLE line on all twelve. The per-row universe, ROM read, emitted
+# shape and the enter/per-frame split are in port/slice_pmfb7.txt and the raw
+# measurements in runs/link100/out/PMFB7/.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb7.txt" SLICE_PMFB7_LINES)
+set(SLICE_PMFB7_SOURCES "")
+foreach(line IN LISTS SLICE_PMFB7_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFB7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tpmfb7 walk_window walk_window_hires smoke_player)
+    target_sources(${_tpmfb7} PRIVATE ${SLICE_PMFB7_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

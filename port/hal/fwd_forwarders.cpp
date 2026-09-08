@@ -198,3 +198,55 @@ int _ZN13UpDownLiftBbh8BehaviorEv(void *self)
 #pragma comment(linker, "/alternatename:_ApproachLinearI=__Z14ApproachLinearRiii")
 /* include/decl_common.h:1967, the same shape: the TU's own literal pool at 0x02132208 reads 0x0203923c, which config/arm9/symbols.txt names MeshColliderBase::UpdatePosWithVelocity */
 #pragma comment(linker, "/alternatename:_UpdatePosWithVelocitySym=__ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_")
+
+/* ---- RUN link100 LANE PMFB7 GATE 1 ---------------------------------------
+ * Nine of this gate's twelve object-field rows define a real C++ MEMBER
+ * (?Behavior@<Class>@@QAEHXZ, read off each TU's own object) while the port's
+ * actor class table calls the flat name the decomp's file is named after. The
+ * bridge is the same one FWD wrote for the table rows: a forwarder in the flat
+ * name's own convention that takes `this` as its argument and calls the member
+ * through the real class type. Three of the twelve -- MantaRay, Shark and
+ * Skeeter -- define the flat extern "C" name themselves and need nothing here.
+ * Every one of the nine declares `int Behavior();` in the tree's own
+ * include/<Class>.h, so all nine decorate ...@@QAEHXZ, and that was checked
+ * object against object in runs/link100/out/PMFB7/undef_gate1.txt.
+ */
+#include "Bullet.h"
+#include "WaterSuction.h"
+#include "Submarine.h"
+#include "BowserPuzzlePiece.h"
+#include "LavaBubble.h"
+#include "WaterRing.h"
+#include "Snufit.h"
+#include "Swoop.h"
+#include "CheepCheep.h"
+
+extern "C" {
+/* ov002 0x020fee44 -- descriptor data_ov002_02111190, main half at +8 */
+int _ZN6Bullet8BehaviorEv(void *self)
+{ return ((Bullet *)self)->Bullet::Behavior(); }
+/* ov026 0x0211233c -- cell data_ov036_02113f58, tick half at +8 */
+int _ZN12WaterSuction8BehaviorEv(void *self)
+{ return ((WaterSuction *)self)->WaterSuction::Behavior(); }
+/* ov026 0x0211200c -- cells data_ov026_02113f2c / _02113f3c */
+int _ZN9Submarine8BehaviorEv(void *self)
+{ return ((Submarine *)self)->Submarine::Behavior(); }
+/* ov064 0x021198bc -- cell data_ov064_0211c934, .b half at +8 */
+int _ZN17BowserPuzzlePiece8BehaviorEv(void *self)
+{ return ((BowserPuzzlePiece *)self)->BowserPuzzlePiece::Behavior(); }
+/* ov064 0x02118850 -- cells data_ov064_0211c7b8 / _0211c7c8 */
+int _ZN10LavaBubble8BehaviorEv(void *self)
+{ return ((LavaBubble *)self)->LavaBubble::Behavior(); }
+/* ov064 0x02119ffc -- cells data_ov064_0211c954 / _0211c944 */
+int _ZN9WaterRing8BehaviorEv(void *self)
+{ return ((WaterRing *)self)->WaterRing::Behavior(); }
+/* ov065 0x02116b84 -- cells data_ov065_0211d650/60/70/80 */
+int _ZN6Snufit8BehaviorEv(void *self)
+{ return ((Snufit *)self)->Snufit::Behavior(); }
+/* ov065 0x02117b64 -- cells data_ov065_0211d6e0/f0/700/710 */
+int _ZN5Swoop8BehaviorEv(void *self)
+{ return ((Swoop *)self)->Swoop::Behavior(); }
+/* ov090 0x02133430 -- cells data_ov090_02134584 / _02134594 */
+int _ZN10CheepCheep8BehaviorEv(void *self)
+{ return ((CheepCheep *)self)->CheepCheep::Behavior(); }
+}  /* extern "C" */

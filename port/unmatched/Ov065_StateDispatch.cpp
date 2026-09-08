@@ -94,6 +94,36 @@ extern unsigned data_ov065_0211cd1c[], data_ov065_0211cd24[],
         sym((char *)self);                                                \
     }
 
+
+/* RUN link100 LANE PMFB7 GATE 1: SNUFIT'S AND SWOOP'S PER-FRAME RECORDS ARE
+   FACES. The paragraph above says the sixteen non-Dorrie rows "DO NOT CHANGE"
+   because the two helpers tail jump -- that is still true of the EIGHT ENTER
+   records, and no longer true of the eight PER-FRAME ones. With the two host
+   Behaviors retired, src/_ZN6Snufit8BehaviorEv.cpp and
+   src/_ZN5Swoop8BehaviorEv.cpp read the cell's +8 half as a real pointer to
+   member and CALL it with the receiver in ecx and nothing pushed (mov
+   eax,[cell+8] / test / je / mov ecx,[cell+12] / add ecx,this / call eax,
+   ARITY ZERO, /Zp4 diff 0 lines) -- the method has work to do afterwards, so
+   it cannot be a tail jump. Which record is which is read out of
+   __sinit_ov065_0211c110 (d670={cb30,cb58} d680={cb20,cb40} d650={cb28,cb50}
+   d660={cb38,cb48}) and __sinit_ov065_0211c2a8 (d700={cc30,cc50}
+   d710={cc20,cc40} d6e0={cc28,cc38} d6f0={cc58,cc48}). */
+#define OV065_FACE(tag, sym)                                              \
+    static void __fastcall ov065_f##tag(void *self, void *dead_edx)       \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self);                                                \
+    }
+
+OV065_FACE(021165d8, func_ov065_021165d8)   /* snufit 0211cb40 */
+OV065_FACE(021162c0, func_ov065_021162c0)   /* snufit 0211cb48 */
+OV065_FACE(02116364, func_ov065_02116364)   /* snufit 0211cb50 */
+OV065_FACE(02116744, func_ov065_02116744)   /* snufit 0211cb58 */
+OV065_FACE(02117624, func_ov065_02117624)   /* swoop  0211cc38 */
+OV065_FACE(02117780, func_ov065_02117780)   /* swoop  0211cc40 */
+OV065_FACE(02117404, func_ov065_02117404)   /* swoop  0211cc48 */
+OV065_FACE(02117888, func_ov065_02117888)   /* swoop  0211cc50 */
+
 DORRIE_FACE(0, func_ov065_021183c8)
 DORRIE_FACE(1, func_ov065_021182e4)
 DORRIE_FACE(2, func_ov065_02118634)
@@ -113,17 +143,17 @@ const SeatRow g_ov065_states[] = {
     { data_ov065_0211cb28, 0x02116588, (StateFn)func_ov065_02116588 },
     { data_ov065_0211cb30, 0x021168a8, func_ov065_021168a8 },
     { data_ov065_0211cb38, 0x02116328, func_ov065_02116328 },
-    { data_ov065_0211cb40, 0x021165d8, func_ov065_021165d8 },
-    { data_ov065_0211cb48, 0x021162c0, func_ov065_021162c0 },
-    { data_ov065_0211cb50, 0x02116364, func_ov065_02116364 },
-    { data_ov065_0211cb58, 0x02116744, func_ov065_02116744 },
+    { data_ov065_0211cb40, 0x021165d8, (StateFn)(void *)ov065_f021165d8 },
+    { data_ov065_0211cb48, 0x021162c0, (StateFn)(void *)ov065_f021162c0 },
+    { data_ov065_0211cb50, 0x02116364, (StateFn)(void *)ov065_f02116364 },
+    { data_ov065_0211cb58, 0x02116744, (StateFn)(void *)ov065_f02116744 },
     { data_ov065_0211cc20, 0x021177e4, func_ov065_021177e4 },
     { data_ov065_0211cc28, 0x021176fc, func_ov065_021176fc },
     { data_ov065_0211cc30, 0x021178fc, func_ov065_021178fc },
-    { data_ov065_0211cc38, 0x02117624, func_ov065_02117624 },
-    { data_ov065_0211cc40, 0x02117780, func_ov065_02117780 },
-    { data_ov065_0211cc48, 0x02117404, func_ov065_02117404 },
-    { data_ov065_0211cc50, 0x02117888, func_ov065_02117888 },
+    { data_ov065_0211cc38, 0x02117624, (StateFn)(void *)ov065_f02117624 },
+    { data_ov065_0211cc40, 0x02117780, (StateFn)(void *)ov065_f02117780 },
+    { data_ov065_0211cc48, 0x02117404, (StateFn)(void *)ov065_f02117404 },
+    { data_ov065_0211cc50, 0x02117888, (StateFn)(void *)ov065_f02117888 },
     { data_ov065_0211cc58, 0x021175b0, func_ov065_021175b0 },
     /* DORRIE's three: __fastcall faces, run link100 lane FWD. The cast goes
        through void* because the column's type is the table's, not the face's;
