@@ -17,6 +17,7 @@ from unittest.mock import patch
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 import classqueue_v2 as cq
+from test_source_review import evidence as review_evidence, finding
 
 
 TOOLS = pathlib.Path(__file__).resolve().parent
@@ -81,11 +82,24 @@ class GitProtocolTest(unittest.TestCase):
         return cq.Queue(path)
 
     def make_commit(self, queue, files, parent=None):
-        entries = []
+        tree_files = {}
         for path, body in sorted(files.items()):
             blob = queue.git("hash-object", "-w", "--stdin", input=body).stdout.strip()
-            entries.append(f"100644 blob {blob}\t{path}\n")
-        tree = queue.git("mktree", input="".join(entries)).stdout.strip()
+            node = tree_files
+            parts = path.split("/")
+            for part in parts[:-1]:
+                node = node.setdefault(part, {})
+            node[parts[-1]] = blob
+
+        def make_tree(node):
+            entries = []
+            for name, value in sorted(node.items()):
+                if isinstance(value, dict):
+                    entries.append(f"040000 tree {make_tree(value)}\t{name}\n")
+                else:
+                    entries.append(f"100644 blob {value}\t{name}\n")
+            return queue.git("mktree", input="".join(entries)).stdout.strip()
+        tree = make_tree(tree_files)
         args = ["commit-tree", tree]
         if parent:
             args += ["-p", parent]
@@ -521,6 +535,147 @@ class GitProtocolTest(unittest.TestCase):
         verifier = self.claim(role="verifier", stage="verify", session="verifier", input_commit=promoted)
         self.a.rework(verifier, {"verdict": "fail", "tested_commit": promoted}, "Fix TU", "rework")
         self.assertEqual(self.a.next("producer")[0]["input_commit"], promoted)
+
+    def review_workflow(self):
+        return self.make_commit(self.a, {"tools/source_review.py": "# reviewed tool",
+                                        "tools/check_pr_source_review.py": "# reviewed check"}, self.base)
+
+    def enable_reviews(self):
+        self.policy = self.review_workflow()
+        before = self.a.read()[0]
+        self.a.enable_source_review("coordinator", self.policy, before, "activate-review")
+
+    def source_candidate(self):
+        stages = [{"id": "write", "role": "producer", "mode": "write", "requires": [],
+                   "produces": ["source.cpp"]},
+                  {"id": "verify", "role": "verifier", "mode": "verify", "requires": ["source.cpp"],
+                   "produces": []},
+                  {"id": "integrate", "role": "integrator", "mode": "verify", "requires": ["source.cpp"],
+                   "produces": []}]
+        self.enqueue(stages=stages)
+        writer = self.claim(role="producer", stage="write", session="producer")
+        source = self.make_commit(self.a, {"source.cpp": "// candidate"}, self.base)
+        self.a.publish(writer, source, {}, "Review source", "write-source")
+        return source
+
+    def evidence(self, head, reviewer="verifier"):
+        result = review_evidence(head, self.base, reviewer, self.policy)
+        result["source_review"]["files"] = ["source.cpp"]
+        return result
+
+    def test_review_activation_preserves_receipts_tasks_pins_and_history(self):
+        self.enqueue()
+        receipt = self.coordinator()
+        before_sha, before = self.a.read()
+        policy = self.review_workflow()
+        result = self.a.enable_source_review("coordinator", policy, before_sha, "activate")
+        after = self.a.read()[1]
+        self.assertEqual(after["tasks"], before["tasks"])
+        self.assertEqual(after["schema"], 3)
+        self.assertEqual(receipt["schema"], 2)
+        self.assertEqual(cq.receipt_owner(receipt), before["tasks"]["task-a"]["coordinator_owner"])
+        self.assertEqual(self.a.enable_source_review("coordinator", policy, before_sha, "activate"), result)
+        self.a.coordinate(receipt, "cancel-after-upgrade", "cancel", "Checkpoint retained")
+        self.assertEqual(self.a.read()[1]["tasks"]["task-a"]["phase"], "cancelled")
+
+    def test_review_activation_refuses_running_workers_foreign_coordinator_and_stale_inventory(self):
+        self.enqueue()
+        policy = self.review_workflow()
+        sha = self.a.read()[0]
+        with self.assertRaisesRegex(cq.QueueError, "coordinator"):
+            self.a.enable_source_review("other", policy, sha, "foreign-upgrade")
+        receipt = self.claim()
+        with self.assertRaisesRegex(cq.QueueError, "queue changed"):
+            self.a.enable_source_review("coordinator", policy, sha, "stale-upgrade")
+        with self.assertRaisesRegex(cq.QueueError, "running leases"):
+            self.a.enable_source_review("coordinator", policy, self.a.read()[0], "running-upgrade")
+        self.assertEqual(self.a.read()[1]["schema"], 2)
+        self.a.owned(self.a.read()[1]["tasks"]["task-a"], receipt)
+
+    def test_required_review_rejects_invalid_evidence_without_losing_lease(self):
+        self.enable_reviews()
+        source = self.source_candidate()
+        verifier = self.claim(role="verifier", stage="verify", session="verifier", input_commit=source)
+        good = self.evidence(source)
+        invalid = [{"verdict": "pass", "tested_commit": source}]
+        for key, value in (("reviewed_commit", self.base), ("reviewer_session", "invented"),
+                           ("findings", [finding("open")])):
+            item = copy.deepcopy(good)
+            item["source_review"][key] = value
+            invalid.append(item)
+        before = self.a.read()[0]
+        for i, item in enumerate(invalid):
+            with self.subTest(i=i), self.assertRaises(cq.QueueError):
+                self.a.publish(verifier, source, item, "Integrate", "bad-review-" + str(i))
+            self.assertEqual(self.a.read()[0], before)
+        self.a.publish(verifier, source, good, "Integrate reviewed source", "good-review")
+        integrator = self.claim(role="integrator", stage="integrate", session="integrator", input_commit=source)
+        self.a.publish(integrator, source, self.evidence(source, "integrator"), "Done", "integrate")
+
+    def test_existing_unreviewed_offer_cannot_be_integrated_after_activation(self):
+        source = self.source_candidate()
+        verifier = self.claim(role="verifier", stage="verify", session="verifier", input_commit=source)
+        self.a.publish(verifier, source, {"verdict": "pass", "tested_commit": source}, "Integrate", "old-pass")
+        self.enable_reviews()
+        with self.assertRaisesRegex(cq.QueueError, "reviewer"):
+            self.claim(role="integrator", stage="integrate", session="integrator", input_commit=source)
+        self.assertEqual(self.a.read()[1]["tasks"]["task-a"]["phase"], "offered")
+
+    def test_rework_requires_new_review_and_preserves_findings(self):
+        self.enable_reviews()
+        source = self.source_candidate()
+        verifier = self.claim(role="verifier", stage="verify", session="verifier", input_commit=source)
+        failure = self.evidence(source)
+        failure["verdict"] = "fail"
+        failure["source_review"].update(result="changes_requested", findings=[finding("open", "correctness")])
+        self.a.rework(verifier, failure, "Fix finding", "reject-source")
+        producer = self.claim(role="producer", stage="write", session="producer", input_commit=source)
+        fixed = self.make_commit(self.a, {"source.cpp": "// corrected"}, source)
+        self.a.publish(producer, fixed, {}, "Review correction", "publish-correction")
+        verifier = self.claim(role="verifier", stage="verify", session="verifier", input_commit=fixed)
+        with self.assertRaises(cq.QueueError):
+            self.a.publish(verifier, fixed, self.evidence(source), "Integrate", "stale-review")
+        with self.assertRaisesRegex(cq.QueueError, "disappeared"):
+            self.a.publish(verifier, fixed, self.evidence(fixed), "Integrate", "dropped-finding")
+        accepted = self.evidence(fixed)
+        accepted["source_review"]["findings"] = [finding("fixed", "correctness")]
+        self.a.publish(verifier, fixed, accepted, "Integrate", "fixed-review")
+
+    def test_composition_requires_a_separately_published_review(self):
+        self.enable_reviews()
+        source = self.source_candidate()
+        verifier = self.claim(role="verifier", stage="verify", session="verifier", input_commit=source)
+        self.a.publish(verifier, source, self.evidence(source), "Integrate", "source-review")
+        integrator = self.claim(role="integrator", stage="integrate", session="integrator", input_commit=source)
+        composed = self.make_commit(self.a, {"source.cpp": "// composition"}, source)
+        final = self.evidence(source, "integrator")
+        final.update(composition_commit=composed, composition_base=self.base,
+                     composition_independent_verification=self.evidence(composed, "invented-reviewer"))
+        with self.assertRaises(cq.QueueError):
+            self.a.publish(integrator, source, final, "Done", "invented-composition-review")
+        spec = self.spec("composition-review", "file:notes/review.json", stages=[{
+            "id": "verify", "role": "humanizer", "mode": "verify", "requires": ["source.cpp"], "produces": []}])
+        spec.update(input_commit=composed, input_session="integrator", predecessor_tasks=["task-a"])
+        self.a.enqueue(spec, "enqueue-composition-review", self.coordinator(spec))
+        reviewer = self.claim(task_id="composition-review", role="humanizer", stage="verify",
+                              session="independent-composition-reviewer", input_commit=composed)
+        self.a.publish(reviewer, composed, self.evidence(composed, "independent-composition-reviewer"),
+                       "Finish integration", "publish-composition-review")
+        final["composition_review_task"] = "composition-review"
+        self.a.publish(integrator, source, final, "Done", "accept-composition")
+        self.assertEqual(self.a.read()[1]["tasks"]["task-a"]["phase"], "done")
+
+    def test_source_graph_and_earlier_author_cannot_bypass_review(self):
+        self.enable_reviews()
+        with self.assertRaisesRegex(cq.QueueError, "independent verification"):
+            self.enqueue(stages=[{"id": "write", "role": "other", "mode": "write", "requires": [], "produces": []}])
+        source = self.source_candidate()
+        spec = self.spec("adopt-review", "file:notes/adopt-review.json", stages=[{
+            "id": "verify", "role": "verifier", "mode": "verify", "requires": ["source.cpp"], "produces": []}])
+        spec.update(input_commit=source, input_session="later-writer", predecessor_tasks=["task-a"])
+        self.a.enqueue(spec, "adopt-review", self.coordinator(spec))
+        with self.assertRaisesRegex(cq.QueueError, "different session"):
+            self.claim(task_id="adopt-review", role="verifier", stage="verify", session="producer", input_commit=source)
 
 
 class ResourceTest(unittest.TestCase):

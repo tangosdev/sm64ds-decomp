@@ -15,15 +15,21 @@
     }
   ],
   "source_review": {
+    "schema": 1,
     "result": "not_run",
-    "remaining_work": [],
-    "attribution": "not_reviewed"
+    "reviewed_commit": "REPLACE_WITH_EXACT_ACCEPTED_INPUT_SHA",
+    "reviewed_base": "REPLACE_WITH_ACTUAL_TESTED_BASE_SHA",
+    "reviewer_session": "REPLACE_WITH_INDEPENDENT_SESSION",
+    "summary": "REPLACE_WITH_ACTUAL_SOURCE_JUDGMENT_INCLUDING_ATTRIBUTION",
+    "completion": "partial",
+    "files": ["REPLACE_WITH_EVERY_REVIEWED_SOURCE_HEADER_AND_CONFIG_PATH"],
+    "findings": []
   },
   "pr_url": null,
   "composition_commit": null,
   "composition_base": null,
   "composition_checks": [],
-  "composition_independent_verification": null,
+  "composition_review_task": null,
   "merged_main_sha": null,
   "next_action": "Replace placeholders and run required proof; this template is not pass evidence."
 }

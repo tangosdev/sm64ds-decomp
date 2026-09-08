@@ -13,6 +13,12 @@ unclaimed shared-header changes, raw-offset leftovers, unsupported identity/layo
 claims, ABI bridges without a measured reason, and attribution lost in renames.
 A count of promoted TUs is not a count of reconstructed classes.
 
+Publish a structured source judgment for this exact candidate and tested base.
+Carry forward prior findings and verify their dispositions; a generic pass or a
+reference to the producer's review is insufficient. The active review-policy pin
+is separate from an older task's historical workflow pin. See
+[review enforcement and adoption](../SOURCE-REVIEW-CUTOVER.md).
+
 Run the relevant checks described in repository AGENTS.md and the promotion
 conventions. Typical proof includes:
 
