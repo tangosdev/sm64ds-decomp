@@ -13459,7 +13459,35 @@ int main(void)
                         port_rom_frame(), (unsigned)data_0209d4f0[0]);
                 port::thread_sched_report("r3b-b1");
             }
-            return 0;
+            /* THE RUN ENDS HERE, AND IT ENDS WITH exit() (rung R3b, step B8).
+
+               It was `return 0` out of main, which is a shape only a HOST loop
+               can offer: func_020197b8 is `do { ... } while (1)` and CANNOT
+               return, so under rung R3d there is no frame loop left to return
+               out of and no main left below it to return to. The exit has to be
+               something the ROM's own loop can reach from the middle of a
+               frame, and that is exit().
+
+               IT IS THE SAME PROGRAM TODAY, and that is checkable rather than
+               asserted: main declares no automatic object with a destructor
+               (this file is C-shaped throughout), the loop is the last
+               statement in main so nothing follows the old `return`, and exit()
+               runs the atexit handlers and the static destructors that a return
+               from main runs -- SM64DS_MTX_BALANCE's report is registered that
+               way and still prints. The two flushes are the ones the old path
+               got from the CRT and are made explicit here because an exit from
+               inside a frame is a place a reader will ask about.
+
+               The selftest's exit CODE is unchanged at 0, which is what every
+               battery row and every proof reads. */
+            fprintf(stderr, "[r3b] B8: the run ends with exit(0) from inside "
+                    "the frame, not a return out of main -- func_020197b8 is a "
+                    "do-while(1) and cannot return, so this is the only exit "
+                    "shape rung R3d can reach; %d frames ran\n",
+                    port_rom_frame());
+            fflush(stdout);
+            fflush(stderr);
+            exit(0);
         }
         /* THE PACE. Stage::InitResources writes data_0208ee44 = 2 for a 3D
            level, so frame_pace's budget here is the same 33.3ms this block
