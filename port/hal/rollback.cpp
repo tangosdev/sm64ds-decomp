@@ -93,6 +93,14 @@ void port_dh_frame_set(int f);
 // the slot carries it the way it carries the counters above.
 void port_luigi_state_get(int *team, int *seeded);
 void port_luigi_state_set(const int *team, int seeded);
+// The MATCH FLOW's latched state (hal/star_flow.cpp, the block above
+// port_vs_end_state_get there): the end latch and its scoreline, and King of
+// the Star's points, gate and arm latch. Same class as the two above -- host
+// statics that decide what the simulation does on the next frame -- and the
+// same carriage. Every target that links this file links hal/star_flow.cpp.
+int  port_vs_end_state_words(void);
+void port_vs_end_state_get(int *w);
+void port_vs_end_state_set(const int *w);
 // The replay flag the mode's own files read. DEFINED in hal/luigi_infection.cpp
 // (which is linked into targets this file is not), mirrored from g_replaying at
 // the two places it moves, so a target without this boundary reads a truthful 0.
@@ -121,6 +129,10 @@ extern unsigned char data_020a4d54[], data_020a4d60[], data_020a4d6c[];
 namespace {
 
 enum { kSlots = 12 };
+// The match flow's block, sized from the same constant hal/star_flow.cpp fills
+// it from. ring_init asks that file for its own count and refuses to carry the
+// block if the two ever disagree, rather than writing past the slot.
+enum { kVsEndWords = 9 + 2 * kPortMaxPlayers };
 enum { kPage = 4096 };
 enum { kUndoPages = 640 };           // 2.5 MB of previous page contents per slot
 enum { kHwRegions = 3 };
@@ -143,6 +155,7 @@ struct Slot {
     int       dh_frame;                     // the divergence detector's clock
     int       li_team[kPortMaxPlayers];     // Luigi Infection's team array
     int       li_seeded;                    // ...and its seed latch
+    int       vs_end[kVsEndWords];          // the match flow's latched state
     char     *arena;
     char     *ds;
     void     *cursor;
@@ -162,6 +175,7 @@ void   **g_ww_buf = 0;
 unsigned g_ww_pages = 0;              // entries in g_ww_buf
 size_t   g_arena_size = 0, g_ds_size = 0;
 
+bool     g_vs_end_ok = true;         // hal/star_flow's block fits this slot
 bool     g_replaying = false;        // host side: a rewind is being re-run
 unsigned g_replay_from = 0, g_replay_to = 0;
 double   g_replay_t0 = 0;
@@ -171,7 +185,7 @@ int      g_env_read = 0;
 int      g_pause_frame = -1, g_pause_ms = 0, g_pause_done = 0;
 int      g_det_frame = -1, g_det_n = 8, g_det_phase = 0;
 unsigned g_det_tag = 0;
-uint64_t g_det_straight[3];
+uint64_t g_det_straight[4];   // arena, dsstate, hw, and the carried host words
 char    *g_det_arena = 0, *g_det_ds = 0, *g_det_hw = 0;
 int      g_force_every = 0, g_force_depth = 0;   // SM64DS_ROLLBACK_FORCE=<every>:<depth>
 int      g_force_last = -1;          // the frame the last forced rewind fired at
@@ -394,6 +408,16 @@ bool ring_init()
     for (int r = 0; r < g_hw_n; ++r) total += g_hw[r].size;
     hw_shadow_refresh_all();
     hw_watch_reset_all();
+    // Ask hal/star_flow.cpp how wide its match-flow block is. Both sides derive
+    // the number from kPortMaxPlayers, so they can only disagree if one of them
+    // is edited alone -- and then the honest answer is to say so and not carry
+    // the block, never to copy more words than the slot has room for.
+    g_vs_end_ok = port_vs_end_state_words() == (int)kVsEndWords;
+    if (!g_vs_end_ok)
+        fprintf(stderr, "[rollback] hal/star_flow's match-end block is %d words "
+                "and a slot carries %d: the match flow is NOT carried in this "
+                "process and a rewind over a match end will desync\n",
+                port_vs_end_state_words(), (int)kVsEndWords);
     g_ring_ready = true;
     fprintf(stderr, "[rollback] ring: %d slots x (arena %zu + dsstate %zu) + "
             "hw stores %u bytes in %d regions (%s), %.1f MB preallocated\n",
@@ -497,6 +521,7 @@ int snapshot(unsigned tag, int frame)
     port_comms_counters_get(&s.exchanges, &s.rounds);
     s.dh_frame = port_dh_frame_get();
     port_luigi_state_get(s.li_team, &s.li_seeded);
+    if (g_vs_end_ok) port_vs_end_state_get(s.vs_end);
     memcpy(s.arena, port_arena_base(), g_arena_size);
     memcpy(s.ds, &dsstate_lo, g_ds_size);
     s.cursor = port_arena_cursor();
@@ -519,6 +544,7 @@ bool restore(unsigned tag)
     port_comms_counters_set(s->exchanges, s->rounds);
     port_dh_frame_set(s->dh_frame);
     port_luigi_state_set(s->li_team, s->li_seeded);
+    if (g_vs_end_ok) port_vs_end_state_set(s->vs_end);
     hw_restore_to(tag, *s);
     sd_consumer_reset();
     sd_sdat_reseat();
@@ -528,12 +554,38 @@ bool restore(unsigned tag)
     return true;
 }
 
-void hash_world(uint64_t out[3])
+// out[3] IS THE HOST WORDS THE SLOT CARRIES, and it is here because the DET
+// rung could not see them. The three regions are the whole world as far as the
+// game's own memory goes, so a match-end latch left standing across a rewind --
+// the defect this lane fixes -- came back IDENTICAL on every one of them while
+// two consoles were in fact in different matches. Hashing the carried words
+// makes that class VISIBLE to the rung instead of invisible to it.
+//
+// The seam's counters and the divergence detector's clock are NOT in this hash
+// even though the slot carries them: they follow packet timing rather than the
+// simulation, they are the evidence a rewind is acting on rather than a product
+// of it, and a straight run and its re-run are not owed the same value. Only
+// the words that decide what the next frame DOES are hashed.
+uint64_t hash_host_words()
+{
+    int w[kVsEndWords] = {0};
+    int team[kPortMaxPlayers] = {0}, seeded = 0;
+    port_luigi_state_get(team, &seeded);
+    uint64_t h = hash_bytes(team, sizeof team) ^ (hash_bytes(&seeded, sizeof seeded) * 3);
+    if (g_vs_end_ok) {
+        port_vs_end_state_get(w);
+        h ^= hash_bytes(w, sizeof w) * 5;
+    }
+    return h;
+}
+
+void hash_world(uint64_t out[4])
 {
     out[0] = hash_bytes(port_arena_base(), g_arena_size);
     out[1] = hash_bytes(&dsstate_lo, g_ds_size);
     out[2] = 0;
     for (int r = 0; r < g_hw_n; ++r) out[2] ^= hash_bytes(g_hw[r].base, g_hw[r].size) * (r + 1);
+    out[3] = hash_host_words();
 }
 
 void keep_world(char **a, char **d, char **h)
@@ -966,13 +1018,15 @@ static void rb_frame_end_body(int *frame, int selftest)
     if (g_replaying && !port::comms_rb_replaying()) {
         end_replay();
         if (g_det_phase == 2 && *frame == g_det_frame + g_det_n) {
-            uint64_t h[3];
+            uint64_t h[4];
             hash_world(h);
+            const bool host_same = h[3] == g_det_straight[3];
             const bool same = h[0] == g_det_straight[0] && h[1] == g_det_straight[1] &&
-                              h[2] == g_det_straight[2];
+                              h[2] == g_det_straight[2] && host_same;
             fprintf(stderr, "[rb-det] f%d re-run: arena %016llx dsstate %016llx hw "
-                    "%016llx -> %s\n", *frame, (unsigned long long)h[0],
+                    "%016llx host %016llx -> %s\n", *frame, (unsigned long long)h[0],
                     (unsigned long long)h[1], (unsigned long long)h[2],
+                    (unsigned long long)h[3],
                     same ? "BYTE-IDENTICAL to the straight run" : "DIVERGED");
             if (!same) {
                 char *hw = g_hw_n ? big_alloc(port_hw_regions_size()) : 0;
@@ -985,17 +1039,26 @@ static void rb_frame_end_body(int *frame, int selftest)
                 if (h[2] != g_det_straight[2] && hw)
                     dh = diff_region("hw", g_det_hw, hw, port_hw_regions_size());
                 fprintf(stderr, "[rb-det] arena %zu bytes, dsstate %zu bytes (%zu outside the "
-                        "sound command queue), hw %zu bytes differ\n", da, dd, dx, dh);
+                        "sound command queue), hw %zu bytes differ; the carried "
+                        "host words %s\n", da, dd, dx, dh,
+                        host_same ? "came back identical" : "DID NOT COME BACK");
                 // The verdict the rig reads. IDENTICAL-EXCEPT-SOUNDQUEUE is
                 // the pass: the game's world came back byte-for-byte and only
                 // the re-seeded audio queue moved (see in_sound_queue).
-                printf("rb-det: %s arena=%zu dsstate=%zu hw=%zu soundqueue=%zu\n",
-                       (da == 0 && dh == 0 && dx == 0) ? "IDENTICAL-EXCEPT-SOUNDQUEUE"
+                // HOST-STATICS-DIFFER is its own verdict rather than a flavour
+                // of DIVERGED, because the three regions coming back clean while
+                // a carried host word did not is EXACTLY the defect lane RBFIX
+                // fixed, and a future one should be told apart from an arena
+                // divergence on sight.
+                printf("rb-det: %s arena=%zu dsstate=%zu hw=%zu soundqueue=%zu host=%d\n",
+                       !host_same ? "HOST-STATICS-DIFFER"
+                       : (da == 0 && dh == 0 && dx == 0) ? "IDENTICAL-EXCEPT-SOUNDQUEUE"
                        : (da == 0 && dh == 0) ? "DSSTATE-DIFFERS" : "DIVERGED",
-                       da, dd, dh, dd - dx);
+                       da, dd, dh, dd - dx, host_same ? 0 : 1);
             } else {
-                fprintf(stderr, "[rb-det] arena 0 bytes, dsstate 0 bytes, hw 0 bytes differ\n");
-                printf("rb-det: IDENTICAL arena=0 dsstate=0 hw=0\n");
+                fprintf(stderr, "[rb-det] arena 0 bytes, dsstate 0 bytes, hw 0 bytes "
+                        "differ, and the carried host words came back identical\n");
+                printf("rb-det: IDENTICAL arena=0 dsstate=0 hw=0 host=0\n");
             }
             g_det_phase = 3;
         }
