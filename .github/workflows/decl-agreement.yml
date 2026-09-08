@@ -1,11 +1,11 @@
 # Do this tree's `extern` declarations agree with the definitions they name?
 #
-# `mwccarm` never compares one translation unit's declaration against another's, and
-# the ROM records no types. The link resolves by NAME. So a symbol can be declared
-# `int f(void*, int, int, void*, void*)` in one file, `void* f(...)` in a second and
-# DEFINED `void f(void*, unsigned, unsigned, ctor_t, dtor_t)` in a third, and every
-# gate this repo owns stays green: the bytes are right in all three objects, and
-# `check_references.py` only asks whether the name exists at all.
+# `mwccarm` does not compare one translation unit's declaration against another's.
+# A symbol can be declared `int f(void*, int, int, void*, void*)` in one file,
+# `void* f(...)` in a second and defined
+# `void f(void*, unsigned, unsigned, ctor_t, dtor_t)` in a third. Per-TU compilation
+# and relocated byte checks can still pass: they use the local declarations and the
+# link resolves by name. `check_references.py` only checks whether the name exists.
 #
 # THIS IS NOT HYPOTHETICAL AND IT IS NOT SMALL. The first whole-tree run found 23,149
 # disagreements across 4,730 symbols, among them the five wrong declarations of
@@ -15,11 +15,12 @@
 # highest-value unbuilt gate". Finding it by hand took a reviewer an afternoon and one
 # symbol. This job is the reason that stops being a hand search.
 #
-# A DECLARATION IS EVIDENCE, WHICH IS WHY IT MATTERS THAT IT IS RIGHT. It is the only
-# surviving statement about what the original C++ said -- the mangled name states the
-# rest, the body states nothing. And the host port compiles these same files with a
-# compiler that DOES check declarations, where `signature-mismatch` is the largest
-# non-trivial failure bucket.
+# Declarations and definitions are both reconstructed interfaces; either can be
+# wrong. ROM instructions, call-site behavior and RTTI constrain their reconstruction,
+# while project symbol spellings record further hypotheses. This gate checks their
+# consistency, not original-source identity. A mismatch can affect code generation or
+# the calling convention, including in the host port; each correction needs source
+# review and byte proof.
 #
 # RATCHET, NOT A SWEEP, AND EMPHATICALLY NOT A CLEANUP. `config/decl-agreement-baseline.json`
 # banks every disagreement present when the gate was built. Those are NOT text edits

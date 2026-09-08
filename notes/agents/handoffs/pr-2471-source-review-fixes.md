@@ -81,3 +81,43 @@ and rerun the full and changed gates before offering the final immutable candida
 for independent verification. The producer must not verify its own correction.
 No normal source push, PR edit, merge, queue activation or repository setting
 change is part of this checkpoint.
+
+## Provenance rework after independent review
+
+This stage continues input `591ecfe1a056b8782fbc322bc6b8c66e6373f91c` under
+producer `codex-declgate-provenance-producer-20260908`, preserving the original
+input and source/workflow identities above. The independent review reproduced
+all four fixes, 62 tests, and the five original full-size controls. It returned
+the checkpoint for inaccurate source-provenance prose and the still-pending
+baseline decision.
+
+The tool docstring, failure explanation and workflow comments now describe
+consistency among reconstructed interfaces. Declarations and definitions can both
+be wrong; ROM instructions, call sites and RTTI provide evidence. Byte validation
+uses local declarations but does not compare contracts across translation units.
+Calling-convention or code-generation damage is a possible consequence of a
+mismatch, not an inevitable stack failure. The diagnostic also says "selected
+reference" because comparisons can use a plurality declaration when no definition
+exists. No parser, comparison, scope, baseline, test or executable workflow rule
+changes in this stage.
+
+The baseline remains unchanged and the exact seven-addition/three-removal proposal
+above is still pending direct user authorization. This checkpoint is blocked, not
+a gate pass. Its new ignored evidence records the prose-only checks and preserves
+the prior independent semantic/control evidence. Publish it only as an immutable
+checkpoint for independent review, without a normal source push or PR change.
+
+Fresh checks for this provenance revision:
+
+- AST comparison against the accepted input: only the module docstring and six
+  diagnostic string constants differ. Parser, comparison, filtering and exit
+  logic are identical. Workflow content excluding comments is identical.
+- 62 existing unit tests pass. Python-name and dead-reference checks pass.
+- Full and changed scans both exit 1 and report exactly the same seven unbanked
+  historical keys. The baseline, tests, AGENTS.md, src/ and include/ are unchanged.
+- The five full-size controls were not repeated: their independently tested
+  implementation is unchanged, and the earlier exact-SHA evidence is preserved.
+
+Commands, exits, log hashes and the structural comparison are recorded in the
+ignored `build/declgate-provenance-evidence.json`. No fresh ROM build is claimed
+or needed for diagnostic/comment changes.
