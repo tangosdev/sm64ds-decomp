@@ -37,8 +37,11 @@
 #include "math/Fix12.h"
 
 struct dActor_c;
+struct dCcAc_c;
 
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+    dCcAc_c *self, dActor_c *actor, int radius, int height, u32 flags, u32 vulnFlags);
 
 struct dCcAc_c : dCc_c {
     dActor_c *owner;           /* 0x30 - nulled by C2 */
@@ -54,7 +57,12 @@ struct dCcAc_c : dCc_c {
     dCcAc_c();
 
     /* --- non-virtual --- */
-    void Init(dActor_c *actor, Fix12<int> radius, Fix12<int> height, u32 flags, u32 vulnFlags);
+    /* Fix12i, not Fix12<int>: by-value class params home the caller to the
+     * stack (notes/mwccarm-codegen.md 6az). This inlines to the register-passing bl. */
+    void Init(dActor_c *actor, Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags) {
+        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+            this, actor, radius, height, flags, vulnFlags);
+    }
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator
