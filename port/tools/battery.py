@@ -1187,11 +1187,28 @@ def shipcfg_script(root, build):
             "@echo off\r\n"
             'call "%s" >nul || exit /b 1\r\n'
             'set "PATH=%s\\CMake\\bin;%s\\Ninja;%%PATH%%"\r\n'
-            'cmake -S "%s" -B "%s" -G Ninja -DCMAKE_BUILD_TYPE=Release'
+            # CONFIGURE ONLY WHEN THERE IS SOMETHING TO CONFIGURE, the same
+            # rule port/build-port-j4.cmd uses for the developer build (see
+            # its own "CONFIGURE ONLY WHEN..." comment). Skipping this call on
+            # an already-configured build/port-kit is safe for the identical
+            # reason it is safe there: build.ninja carries its own
+            # RERUN_CMAKE edge, and port/CMakeLists.txt's "THE CONFIGURE-TIME
+            # INPUTS, REGISTERED" block (run link100, lane CMAKEDEPS) puts
+            # every configure-time input this build has -- 253 of them as of
+            # this writing, 5 by raw file(STRINGS) reads outside the macro --
+            # onto CMAKE_CONFIGURE_DEPENDS, so that edge fires and reconfigures
+            # completely the moment any one of them changes. A fresh
+            # build/port-kit (no build.ninja yet) still configures here; a
+            # later battery run in the same tree does not pay the ~110-160s
+            # configure a second time.
+            'if not exist "%s\\build.ninja" (\r\n'
+            '  cmake -S "%s" -B "%s" -G Ninja -DCMAKE_BUILD_TYPE=Release'
             ' -DPORT_ROM_CLEAN=ON -DCMAKE_MAKE_PROGRAM="%s\\Ninja\\ninja.exe"'
             ' -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded || exit /b 1\r\n'
+            ')\r\n'
             'ninja -C "%s" walk_window\r\n'
-            % (vcvars, cm, cm, os.path.join(root, "port"), build, cm, build))
+            % (vcvars, cm, cm, build, os.path.join(root, "port"), build, cm,
+               build))
     return path, None
 
 

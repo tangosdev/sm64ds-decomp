@@ -16296,11 +16296,27 @@ if(_share_n GREATER 1)
             set(_common_srcs ${_abs})
             set(_first FALSE)
         else()
+            # Hash the membership test instead of a per-item IN_LIST scan.
+            # IN_LIST here cost 46.1s over 23,216 evaluations, a linear scan
+            # of _abs (~10,700 elements) for every _common_srcs element --
+            # CFGTIME run100, out/CFGTIME/top20.txt. Index _abs once (O(n))
+            # with a set() per element, then test membership with
+            # if(DEFINED ...); the full absolute path is the variable-name
+            # key itself (not a hash or sanitised form of it), so two
+            # different paths can never collide onto the same _seen_
+            # variable. Cleared right after use so it cannot leak into the
+            # next target's test.
+            foreach(_one IN LISTS _abs)
+                set("_seen_abs_${_one}" 1)
+            endforeach()
             set(_keep "")
             foreach(_one IN LISTS _common_srcs)
-                if("${_one}" IN_LIST _abs)
+                if(DEFINED "_seen_abs_${_one}")
                     list(APPEND _keep "${_one}")
                 endif()
+            endforeach()
+            foreach(_one IN LISTS _abs)
+                unset("_seen_abs_${_one}")
             endforeach()
             set(_common_srcs ${_keep})
         endif()
@@ -16368,15 +16384,31 @@ if(_share_n GREATER 1)
 
         # Swap each target's copy of the shared sources for the one build of
         # them. Nothing else about the target is touched.
+        #
+        # Hash the membership test instead of a per-item IN_LIST scan. The
+        # IN_LIST below cost 61.4s over 34,500 evaluations, a linear scan of
+        # PORT_TIER_SHARED (~10,700 elements) for every source of every
+        # target -- the single largest cost in Configuring, CFGTIME run100,
+        # out/CFGTIME/top20.txt. PORT_TIER_SHARED does not change across the
+        # foreach(_t) loop below, so it is indexed ONCE (O(n)), not once per
+        # target. As above the full absolute path is the variable-name key
+        # itself, so two different paths can never collide onto the same
+        # _seen_ variable; the index is cleared after the loop.
+        foreach(_one IN LISTS PORT_TIER_SHARED)
+            set("_seen_shared_${_one}" 1)
+        endforeach()
         foreach(_t IN LISTS _share_targets)
             set(_keep ${_genex_${_t}})
             foreach(_one IN LISTS _srcs_${_t})
-                if(NOT "${_one}" IN_LIST PORT_TIER_SHARED)
+                if(NOT DEFINED "_seen_shared_${_one}")
                     list(APPEND _keep "${_one}")
                 endif()
             endforeach()
             set_property(TARGET ${_t} PROPERTY SOURCES ${_keep})
             target_sources(${_t} PRIVATE $<TARGET_OBJECTS:port_slice_shared>)
+        endforeach()
+        foreach(_one IN LISTS PORT_TIER_SHARED)
+            unset("_seen_shared_${_one}")
         endforeach()
     endif()
 endif()
