@@ -148,13 +148,13 @@ cheapest possible probe of post-regeneration [ov006](../config/arm9/overlays/ov0
 |----|---------|-------|-------|-------------|--------|
 |[ov009](../config/arm9/overlays/ov009/symbols.txt)| 0x2112078|  n=7|  L=116|  `daMcFlag_c`|               pcov=2|
 |[ov012](../config/arm9/overlays/ov012/symbols.txt)| 0x21111a0|  n=8|  L=175|  `daObjC0_Switch_c`| |
-|[ov013](../config/arm9/overlays/ov013/symbols.txt)| 0x21113bc|  n=8|  L=153|  `ClockPaintingHandShort`|   uncorrob|
+|[ov013](../config/arm9/overlays/ov013/symbols.txt)| 0x21113bc|  n=8|  L=153|  `daObjClock_c`|   uncorrob|
 |[ov014](../config/arm9/overlays/ov014/symbols.txt)| 0x2112e0c|  n=8|  L=197|  `daObjWanwanShutter_c`| |
 |[ov015](../config/arm9/overlays/ov015/symbols.txt)| 0x21111a0|  n=7|  L=106|  `daObjBkBillboard_c`|            uncorrob|
 |[ov018](../config/arm9/overlays/ov018/symbols.txt)| 0x21126d4|  n=4|  L=60|  `daSCre_c`|                 uncorrob|
 |[ov019](../config/arm9/overlays/ov019/symbols.txt)| 0x211261c|  n=5|  L=93|  `daSldMng_c`| |
 |[ov021](../config/arm9/overlays/ov021/symbols.txt)| 0x2112db4|  n=6|  L=105|  `daObjCvShutter_c`| |
-|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2111980|  n=8|  L=181|  `LavaBridge`|               uncorrob|
+|[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2111980|  n=8|  L=181|  `daObjFl_London_c`|               uncorrob|
 |[ov022](../config/arm9/overlays/ov022/symbols.txt)| 0x2111cac|  n=8|  L=170|  `LavaSeesaw`|               uncorrob|
 
 

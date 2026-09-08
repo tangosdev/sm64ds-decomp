@@ -33,10 +33,9 @@ Files\Microsoft\jdk-11.0.16.101-hotspot`); Ghidra 11.x needs JDK 21. Whatever pr
 the historical `ghidra_out` drafts ran elsewhere or has been removed.
 
 **G1.5 — The historical verdict on raw Ghidra drafts is mixed, and recorded.** [high]
-`CLAIMS.md` cites them by name both ways: a win (`ov102 func_ov102_0214b53c` — "Ghidra
-dest + ROM-order angle" → byte-identical) and repeated losses (`ov006 func_ov006_020dbe9c`
-— "Ghidra missed s64 matrix"; `arm9 OAM::Render` — "Ghidra dump div=999 (frame 0x44)";
-`ov006 func_ov006_0211e72c` — "Ghidra-shaped 30w attractor" that *stalls* at 26 words).
+`CLAIMS.md` cites them by name both ways: a win ([ov102](../config/arm9/overlays/ov102/symbols.txt) [func_ov102_0214b53c](../src/actors/daBmb_c.cpp) — "Ghidra
+dest + ROM-order angle" → byte-identical) and repeated losses ([ov006](../config/arm9/overlays/ov006/symbols.txt) [func_ov006_020dbe9c](../src/func_ov006_020dbe9c.c) — "Ghidra missed s64 matrix"; [arm9](../config/arm9/symbols.txt) `OAM::Render` — "Ghidra dump div=999 (frame 0x44)";
+[ov006](../config/arm9/overlays/ov006/symbols.txt) [func_ov006_0211e72c](../src/actors/dScMgTeresa_c.cpp) — "Ghidra-shaped 30w attractor" that*stalls* at 26 words).
 `README.md:102` states the house position: useful for reading a function, "its output
 never matches on its own."
 
@@ -172,7 +171,7 @@ so these are precisely the functions we'd expect to be present.
 **G4.4 — MEASURED: 39 signatures, 4 match, 5 symbols renamed, 3 genuinely new names.**
 [high] No Rust build was needed — `sig apply -s <path>` takes a YAML path, so the PR's
 files were fetched from `Yanis002/ds-decomp@signatures` (bb810e3) and dry-run one by one
-against `config/arm9/config.yaml`. (The PR holds **39** `.yaml` files, not the 43 a
+against [config/arm9/config.yaml](../config/arm9/config.yaml). (The PR holds **39** `.yaml` files, not the 43 a
 summary suggested.) `git status config` stayed clean throughout — `--dry` writes nothing.
 
 | outcome | count |
@@ -185,11 +184,11 @@ The five renames, against what our config calls those addresses today:
 
 | addr | module | our name now | signature says | verdict |
 |---|---|---|---|---|
-| `0x020731dc` | ARM9 | `func_020731dc` | `__register_global_object` | **new name** |
-| `0x020aa3f0` | ARM9 | `data_020aa3f0` (bss) | `__global_destructor_chain` | **new name** |
-| `0x02054430` | ARM9 | `func_02054430` | `GX_SetBankForLCDC` | **new name** |
-| `0x01ffa9dc` | ITCM | `__aeabi_uldiv` | `_ll_udiv` | **conflict** |
-| `0x02053abc` | ARM9 | `_ZN3GXS15SetGraphicsModeEi` | `GXS_SetGraphicsMode` | **conflict** |
+| `0x020731dc` | [ARM9](../config/arm9/symbols.txt) | [func_020731dc](../config/arm9/symbols.txt) | `__register_global_object` | **new name** |
+| `0x020aa3f0` | [ARM9](../config/arm9/symbols.txt) | [data_020aa3f0](../config/arm9/symbols.txt) (bss) | `__global_destructor_chain` | **new name** |
+| `0x02054430` | [ARM9](../config/arm9/symbols.txt) | [func_02054430](../config/arm9/symbols.txt) | `GX_SetBankForLCDC` | **new name** |
+| `0x01ffa9dc` | [ITCM](../config/arm9/itcm/symbols.txt) | [__aeabi_uldiv](../config/arm9/itcm/symbols.txt) | `_ll_udiv` | **conflict** |
+| `0x02053abc` | [ARM9](../config/arm9/symbols.txt) | [_ZN3GXS15SetGraphicsModeEi](../config/arm9/symbols.txt) | `GXS_SetGraphicsMode` | **conflict** |
 
 **G4.5 — The transitive-rename multiplier is ~1.25x, not the hoped-for fan-out.** [high]
 Only one signature (`__register_global_object`) renamed anything beyond its own function,
@@ -226,7 +225,7 @@ and keep the two conflicts out of the same commit as the three additions.
 
 ## 5. `dsd dump ambig-relocs` — MEASURED
 
-Run against `config/arm9/config.yaml`, read-only, ~seconds. **1,560 ambiguous
+Run against [config/arm9/config.yaml](../config/arm9/config.yaml), read-only, ~seconds. **1,560 ambiguous
 relocations** across 483 distinct containing symbols.
 
 By module — this is not evenly spread:
@@ -289,38 +288,38 @@ the good news — it is not 135 problems:
 
 | target | candidates | sites | matched fns |
 |---|---|---|---|
-| `0x020aed98` | overlays(2,7) | **57** | 57 |
-| `0x020aea30` | overlays(2,4) | 32 | 10 |
-| `0x020adc74` | overlays(3,4) | 22 | 3 |
-| `0x020ada40` | overlays(2,4) | 15 | 13 |
-| `0x020ad660` | overlays(2,3,4,7) | 3 | 3 |
-| `0x020efaf0` | overlays(2,6) | 2 | 2 |
+| `0x020aed98` | overlays([2](../config/arm9/overlays/ov002/symbols.txt),[7](../config/arm9/overlays/ov007/symbols.txt)) | **57** | 57 |
+| `0x020aea30` | overlays([2](../config/arm9/overlays/ov002/symbols.txt),[4](../config/arm9/overlays/ov004/symbols.txt)) | 32 | 10 |
+| `0x020adc74` | overlays([3](../config/arm9/overlays/ov003/symbols.txt),[4](../config/arm9/overlays/ov004/symbols.txt)) | 22 | 3 |
+| `0x020ada40` | overlays([2](../config/arm9/overlays/ov002/symbols.txt),[4](../config/arm9/overlays/ov004/symbols.txt)) | 15 | 13 |
+| `0x020ad660` | overlays([2](../config/arm9/overlays/ov002/symbols.txt),[3](../config/arm9/overlays/ov003/symbols.txt),[4](../config/arm9/overlays/ov004/symbols.txt),[7](../config/arm9/overlays/ov007/symbols.txt)) | 3 | 3 |
+| `0x020efaf0` | overlays([2](../config/arm9/overlays/ov002/symbols.txt),[6](../config/arm9/overlays/ov006/symbols.txt)) | 2 | 2 |
 | `0x020effb8`, `0x020aa420`, `0x02123804`, `0x020ca78c` | various | 1 each | 1 each |
 
 **Resolving `0x020aed98` alone settles 57 of the 135.** Its callers are the enemy
 `*_Spawn` family — `Wiggler_Spawn`, `Koopa_Spawn`, `ChainChomp_Spawn`, `Whomp_Spawn`,
 `PiranhaPlant_Spawn`, … — one call each, spread over ~30 overlays, every one of them
 already matched and named. It is one shared spawn helper, called the same way everywhere,
-that dsd cannot attribute to overlay 2 or overlay 7.
+that dsd cannot attribute to [overlay 2](../config/arm9/overlays/ov002/symbols.txt) or [overlay 7](../config/arm9/overlays/ov007/symbols.txt).
 
 The next three (`0x020aea30`, `0x020adc74`, `0x020ada40`) account for another 69. Four
 addresses cover 126 of 135.
 
-**G5.4 — The data side is dominated by two tables.** [high] `data_02090864` alone
-accounts for **244** entries and `data_02092208` for 51; the rest of the top-12 are ten
+**G5.4 — The data side is dominated by two tables.** [high] [data_02090864](../config/arm9/symbols.txt) alone
+accounts for **244** entries and [data_02092208](../config/arm9/symbols.txt) for 51; the rest of the top-12 are ten
 `data_ov006_*` blocks at 21-23 each. A 244-entry ambiguous run at one address is a
 function-pointer table, not 244 independent problems.
 
-**G5.5 — Overlay 6 holds 706 of the 1,560, and `overlays(0,4)` alone is 626.** [high]
-ov006 is the minigame overlay and the most-worked module in the tree. Its share is one
+**G5.5 — [Overlay 6](../config/arm9/overlays/ov006/symbols.txt) holds 706 of the 1,560, and overlays([0](../config/arm9/overlays/ov000/symbols.txt),[4](../config/arm9/overlays/ov004/symbols.txt)) alone is 626.** [high]
+[ov006](../config/arm9/overlays/ov006/symbols.txt) is the minigame overlay and the most-worked module in the tree. Its share is one
 structural cause, not 706 scattered defects.
 
 **G5.6 — CORRECTION: these are NOT 135 latent fakematches. 60 are provably safe.**
 [high] I initially framed every ambiguous call site in a matched function as a possible
 fakematch. Checking what the callers actually reference refutes that for 60 of the 135.
 `src/Wiggler_Spawn.c` declares `extern void _ZN5EnemyC2Ev(void);` and calls it **by
-name**. Only ov002 defines that symbol, so mwldarm pins the callee at link time
-regardless of what `relocs.txt` says. The ambiguity is dsd's own bookkeeping — it
+name**. Only [ov002](../config/arm9/overlays/ov002/symbols.txt) defines that symbol, so mwldarm pins the callee at link time
+regardless of what [relocs.txt](../config/arm9/overlays/ov002/relocs.txt) says. The ambiguity is dsd's own bookkeeping — it
 governs the gap objects dsd supplies for undecompiled code, not a name-resolved call.
 
 Breaking the 135 down by how the caller pins its callee:
@@ -331,22 +330,21 @@ Breaking the 135 down by how the caller pins its callee:
 | **no candidate name appears in the source at all** | **75** |
 | raw address literal | 0 |
 
-Of the 60 safe ones, 57 are `0x020aed98 → ov002 _ZN5EnemyC2Ev` (`Enemy::Enemy()`,
-size 0x24). The rival at that address is `func_ov007_020aed98`, size 0x1e0 — a
+Of the 60 safe ones, 57 are `0x020aed98 →` [ov002](../config/arm9/overlays/ov002/symbols.txt) `_ZN5EnemyC2Ev` (`Enemy::Enemy()`,
+size 0x24). The rival at that address is [func_ov007_020aed98](../src/func_ov007_020aed98.cpp), size 0x1e0 — a
 480-byte function, obviously not a base constructor. **The top ambiguity is settled:
-overlay 2, for all 57.** That is consistent with the bounded enemy-subclass family in
+[overlay 2](../config/arm9/overlays/ov002/symbols.txt), for all 57.** That is consistent with the bounded enemy-subclass family in
 `[[enemy-subclass-census]]`.
 
 **G5.7 — The other 75 ARE the phantom-reference worklist, and this explains its cause.**
-[high] `src/func_ov006_02115b0c.c:59` declares:
+[high] [func_ov006_02115b0c](../src/func_ov006_02115b0c.c):59 declares:
 
 ```c
 extern void *func_020adc74(void *p);
 ```
 
 There is no `func_020adc74` in any `symbols.txt`. The real symbols at that address are
-`func_ov003_020adc74` and `func_ov004_020adc74`. The author could not tell which overlay
-owned the target, so they wrote a **module-less placeholder** — which resolves to
+[func_ov003_020adc74](../src/func_ov003_020adc74.cpp) and [func_ov004_020adc74](../src/func_ov004_020adc74.c). The author could not tell which overlay owned the target, so they wrote a **module-less placeholder** — which resolves to
 nothing. Checking the ten ambiguous call targets against
 `config/unresolved-baseline.json`: **nine of ten are present as module-less phantom
 names** (all but `func_020aed98`, which is the one already correctly named).
@@ -368,13 +366,13 @@ and much smaller issue than the 1,560 above — "no candidate at all" rather tha
 candidates" — but it is being hidden rather than triaged. 11 lines is cheap to just fix
 or explicitly bless.
 
-**G5.2 — The data side is dominated by two tables.** [high] `data_02090864` alone
-accounts for **244** entries and `data_02092208` for 51; the rest of the top-12 are ten
+**G5.2 — The data side is dominated by two tables.** [high] [data_02090864](../config/arm9/symbols.txt) alone
+accounts for **244** entries and [data_02092208](../config/arm9/symbols.txt) for 51; the rest of the top-12 are ten
 `data_ov006_*` blocks at 21-23 each. A 244-entry ambiguous run at one address is a
 function-pointer table (overlay dispatch, most likely), not 244 independent problems.
 Fixing the table's type would collapse a sixth of the whole list.
 
-**G5.3 — Overlay 6's 706 is a concentration, not a diffusion.** [medium] ov006 is the
+**G5.3 — [Overlay 6](../config/arm9/overlays/ov006/symbols.txt)'s 706 is a concentration, not a diffusion.** [medium] ov006 is the
 minigame overlay and is already the most-worked module in the tree. Its ambiguity share
 being 45% suggests one structural cause (the `data_ov006_*` table family above) rather
 than 706 scattered defects.
@@ -394,7 +392,7 @@ Output preserved at `scratchpad/ambig-relocs.txt` (1,560 lines,
    confirmed working, but the extension is GUI-only, so the decompiler A/B is blocked
    on a GUI session rather than on the install.
 4. **Resolve the ten ambiguous call targets** (G5.6-G5.7). Highest-value item now, and
-   it needs no Ghidra: `0x020aed98` is already settled (ov002 `Enemy::Enemy()`, 57
+   it needs no Ghidra: `0x020aed98` is already settled ([ov002](../config/arm9/overlays/ov002/symbols.txt) `Enemy::Enemy()`, 57
    sites), and the other nine are the same question. Each resolution turns a
    module-less phantom extern into a real symbol across 6-12 files at once.
 5. Only if (3) unblocks: re-point `tools/ghidra/DecompDump.java` at a SyncDsd'd project
@@ -474,49 +472,40 @@ evidence is already in the tree.
 
 | target | candidates | unambiguous calls from the callers | verdict |
 |---|---|---|---|
-| `0x020aed98` | 2, 7 | ov002 **1289** / ov007 6 | **ov002** |
-| `0x020aea30` | 2, 4 | ov002 **387** / ov004 0 | **ov002** |
-| `0x020adc74` | 3, 4 | ov003 0 / ov004 **993** | **ov004** |
-| `0x020ada40` | 2, 4 | ov002 **545** / ov004 0 | **ov002** |
-| `0x020ad660` | 2,3,4,7 | ov002 **139** / others 0 | **ov002** |
-| `0x020efaf0` | 2, 6 | ov002 **104** / ov006 0 | **ov002** |
-| `0x020effb8` | 2, 6 | ov002 **148** / ov006 5 | **ov002** |
-| `0x020aa420` | 0, 1 | ov000 1 / ov001 **7** | **ov001** (weak) |
-| `0x020ca78c` | 2, 6 | ov002 **53** / ov006 0 | **ov002** |
+| `0x020aed98` | 2, 7 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **1289** / [ov007](../config/arm9/overlays/ov007/symbols.txt) 6** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020aea30` | 2, 4 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **387** / [ov004](../config/arm9/overlays/ov004/symbols.txt) 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020adc74` | 3, 4 | **[ov003](../config/arm9/overlays/ov003/symbols.txt) 0** / [ov004](../config/arm9/overlays/ov004/symbols.txt) **993** | **[ov004](../config/arm9/overlays/ov004/symbols.txt)** |
+| `0x020ada40` | 2, 4 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **545** / [ov004](../config/arm9/overlays/ov004/symbols.txt) 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020ad660` | 2,3,4,7 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) 139 / others 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020efaf0` | 2, 6 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **104** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020effb8` | 2, 6 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **148** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 5** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
+| `0x020aa420` | 0, 1 | **[ov000](../config/arm9/overlays/ov000/symbols.txt) 1** / [ov001](../config/arm9/overlays/ov001/symbols.txt) **7** | **[ov001](../config/arm9/overlays/ov001/symbols.txt) (weak)** |
+| `0x020ca78c` | 2, 6 | **[ov002](../config/arm9/overlays/ov002/symbols.txt) **53** / [ov006](../config/arm9/overlays/ov006/symbols.txt) 0** | **[ov002](../config/arm9/overlays/ov002/symbols.txt)** |
 | `0x02123804` | 77,78,79,80 | all zero | **inconclusive** |
 
-**G8.1 — `0x020aed98` is confirmed twice over.** [high] Co-residency gives ov002 1289-to-6,
-with 30 of 31 calling modules calling ov002 and nothing else. Independently, the ov002
-symbol is `_ZN5EnemyC2Ev` (`Enemy::Enemy()`, size 0x24) and 57 `*_Spawn` callers name it
-explicitly, while the ov007 rival is a 0x1e0-byte function. Two independent lines agree.
+**G8.1 — `0x020aed98` is confirmed twice over.** [high] Co-residency gives [ov002](../config/arm9/overlays/ov002/symbols.txt) 1289-to-6,
+with 30 of 31 calling modules calling [ov002](../config/arm9/overlays/ov002/symbols.txt) and nothing else. Independently, the [ov002](../config/arm9/overlays/ov002/symbols.txt) symbol is `_ZN5EnemyC2Ev` (`Enemy::Enemy()`, size 0x24) and 57 `*_Spawn` callers name it
+explicitly, while the [ov007](../config/arm9/overlays/ov007/symbols.txt) rival is a 0x1e0-byte function. Two independent lines agree.
 
 **G8.2 — `0x020ada40` exposes one wrong reference in a byte-matching file.** [medium-high]
 All fifteen call sites live in overlays whose unambiguous calls go **exclusively** to
-ov002 — ov062 66/0, ov063 42/0, ov064 69/0, ov065 93/0, ov081 42/0, ov084 65/0, ov090
-29/0, ov100 53/0, ov102 86/0. Twelve callers write the phantom `func_020ada40`. One does
-not: **`func_ov081_02123910` names `_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player`,
-which is the ov004 symbol** — while ov081's own evidence is 42 calls to ov002 and zero to
-ov004. The file byte-matches, because both candidates sit at the same address.
+[ov002](../config/arm9/overlays/ov002/symbols.txt) — [ov062](../config/arm9/overlays/ov062/symbols.txt) 66/0, [ov063](../config/arm9/overlays/ov063/symbols.txt) 42/0, [ov064](../config/arm9/overlays/ov064/symbols.txt) 69/0, [ov065](../config/arm9/overlays/ov065/symbols.txt) 93/0, [ov081](../config/arm9/overlays/ov081/symbols.txt) 42/0, [ov084](../config/arm9/overlays/ov084/symbols.txt) 65/0, [ov090](../config/arm9/overlays/ov090/symbols.txt) 29/0, [ov100](../config/arm9/overlays/ov100/symbols.txt) 53/0, [ov102](../config/arm9/overlays/ov102/symbols.txt) 86/0. Twelve callers write the phantom `func_020ada40`. One does not: **[func_ov081_02123910](../config/arm9/overlays/ov081/symbols.txt)** names `_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player`, which is the **[ov004](../config/arm9/overlays/ov004/symbols.txt) symbol** — while [ov081](../config/arm9/overlays/ov081/symbols.txt)'s own evidence is 42 calls to [ov002](../config/arm9/overlays/ov002/symbols.txt) and zero to [ov004](../config/arm9/overlays/ov004/symbols.txt). The file byte-matches, because both candidates sit at the same address.
 
 Two readings, and choosing between them is a human call:
-- the *reference* is wrong and should point at ov002's `func_ov002_020ada40` (size 0x100); or
-- ov002 and ov004 are two variants of the same enemy-base code, the *name* is right but
-  attached to the ov004 copy, and ov002's copy should carry the name too.
+- the *reference* is wrong and should point at [ov002](../config/arm9/overlays/ov002/symbols.txt)'s [func_ov002_020ada40](../config/arm9/overlays/ov002/symbols.txt) (size 0x100, part of [Enemy](../src_tu/actors/Enemy.cpp)); or
+- [ov002](../config/arm9/overlays/ov002/symbols.txt) and [ov004](../config/arm9/overlays/ov004/symbols.txt) are two variants of the same enemy-base code, the *name* is right but
+  attached to the [ov004](../config/arm9/overlays/ov004/symbols.txt) copy, and [ov002](../config/arm9/overlays/ov002/symbols.txt)'s copy should carry the name too.
 
-Note the sizes differ — 0x100 (ov002) vs 0xbc (ov004) — which argues against a
-straight duplicate and so favours the first reading. Either way, a matched file currently
+Note the sizes differ — 0x100 ([ov002](../config/arm9/overlays/ov002/symbols.txt)) vs 0xbc ([ov004](../config/arm9/overlays/ov004/symbols.txt)) — which argues against a straight duplicate and so favours the first reading. Either way, a matched file currently
 references a symbol its own module never otherwise calls.
 
-**G8.3 — `0x02123804` stays open.** [high] Its single caller `func_ov002_020ec670` makes
-no unambiguous call to any of ov077/078/079/080, so co-residency says nothing. The ov080
-candidate is named (`_ZN13MontyMoleRockD0Ev`, size 0x54) and the others are placeholders
+**G8.3 — `0x02123804` stays open.** [high] Its single caller [func_ov002_020ec670](../src/func_ov002_020ec670.c) makes
+no unambiguous call to any of [ov077](../config/arm9/overlays/ov077/symbols.txt)/[ov078](../config/arm9/overlays/ov078/symbols.txt)/[ov079](../config/arm9/overlays/ov079/symbols.txt)/[ov080](../config/arm9/overlays/ov080/symbols.txt), so co-residency says nothing. The [ov080](../config/arm9/overlays/ov080/symbols.txt) candidate is named (`_ZN13MontyMoleRockD0Ev`, size 0x54) and the others are placeholders
 of size 0x8 / 0x60 / 0x288. Needs different evidence — a call-shape or runtime check.
 
-**G8.4 — Ghidra independently corroborates the ov006 → ov004 verdict.** [high] See §9:
-the SyncDsd'd decompilation of `func_ov006_020dbe9c` names its callee
-`func_ov004_020b023c`. That is a third, independent line of evidence for ov006
-co-residing with ov004 rather than ov003 — arrived at through the imported relocation
-table rather than through the `relocs.txt` histogram.
+**G8.4 — Ghidra independently corroborates the [ov006](../config/arm9/overlays/ov006/symbols.txt) → [ov004](../config/arm9/overlays/ov004/symbols.txt) verdict.** [high] See §9:
+the SyncDsd'd decompilation of [func_ov006_020dbe9c](../src/func_ov006_020dbe9c.c) names its callee
+[func_ov004_020b023c](../src/func_ov004_020b023c.cpp). That is a third, independent line of evidence for [ov006](../config/arm9/overlays/ov006/symbols.txt) co-residing with [ov004](../config/arm9/overlays/ov004/symbols.txt) rather than [ov003](../config/arm9/overlays/ov003/symbols.txt) — arrived at through the imported relocation table rather than through the `relocs.txt` histogram.
 
 **G8.5 — Applying these is a symbol-rename change, with the usual hazards.** [high]
 Nine resolutions convert module-less phantom externs into real symbols across 6-12 files
@@ -542,8 +531,8 @@ analyzeHeadless C:\tools\ghidra_proj sm64ds -process sm64.nds -noanalysis `
 **G9.1 — The sync is essentially complete.** [high] `ListBlocks` reports **486 memory
 blocks** and **11,382 functions** against the 11,394 `kind:function` symbols in the dsd
 config — a 99.9% import. Overlays land in their own address spaces, and the ambiguity of
-§5 is directly visible in the memory map: `arm9_ov002::020ad660` and
-`arm9_ov003::020ad660` both exist.
+§5 is directly visible in the memory map: `arm9_ov002::`[020ad660](../src/func_ov002_020ad660.cpp) and
+`arm9_ov003::`[020ad660](../config/arm9/overlays/ov003/symbols.txt) both exist.
 
 **G9.2 — Names: transformed. Zero `FUN_xxxxxxxx` in any of the three drafts.** [high]
 Every callee carries its real dsd name, and C++ symbols come back demangled (the
@@ -551,23 +540,23 @@ extension links `cpp_demangle`):
 
 | function | callees in the draft |
 |---|---|
-| `func_ov102_0214b53c` | `Matrix4x3_FromRotationY`, `MulMat4x3Mat4x3`, `Vec3_Lsl`, `Vec3_LslInPlace`, `IsFrontSliding`, `LostGrabbedObject`, `UpdateCarry`, `func_ov002_020e496c` |
+| [func_ov102_0214b53c](../src/actors/daBmb_c.cpp) | `Matrix4x3_FromRotationY`, `MulMat4x3Mat4x3`, `Vec3_Lsl`, `Vec3_LslInPlace`, `IsFrontSliding`, `LostGrabbedObject`, `UpdateCarry`, [func_ov002_020e496c](../src/func_ov002_020e496c.c) |
 | `OAM::Render` | `GetObjWidth`, `GetObjHeight`, `LoadAffineParams`, `fdiv` — and the function itself comes back as `OAM::Render(...)` with 10 parameters, not `FUN_02020994` |
-| `func_ov006_020dbe9c` | `func_ov004_020b023c` — **correctly attributed to ov004** |
+| [func_ov006_020dbe9c](../src/func_ov006_020dbe9c.c) | [func_ov004_020b023c](../src/func_ov004_020b023c.cpp) — **correctly attributed to [ov004](../config/arm9/overlays/ov004/symbols.txt)** |
 
 This is the whole delta over the old raw-binary path, and it is a real one: a draft that
 says `MulMat4x3Mat4x3(...)` tells the LLM tier what the function *is*, where
 `FUN_020b1234(...)` tells it nothing.
 
 **G9.3 — Types: unchanged. SyncDsd carries no layout information.** [high]
-`func_ov102_0214b53c` still decompiles to 64 `undefined*` types and 67 raw
+[func_ov102_0214b53c](../src/actors/daBmb_c.cpp) still decompiles to 64 `undefined*` types and 67 raw
 `*(int *)(param_1 + 0xNN)` field accesses, with the signature `void f(int param_1)`.
 That is expected — dsd's config has symbols and relocations, not struct definitions, so
 there is nothing for SyncDsd to import. Class layouts would have to come from our own
 headers via Ghidra's data-type manager, which nothing currently does.
 
-**G9.4 — The specific historical miss is still missed.** [high] `CLAIMS.md` records
-`ov006 func_ov006_020dbe9c` as "Ghidra missed s64 matrix". The SyncDsd'd draft is:
+**G9.4 — The specific historical miss is still missed.** [high] [CLAIMS.md](../CLAIMS.md) records
+[ov006](../config/arm9/overlays/ov006/symbols.txt) [func_ov006_020dbe9c](../src/func_ov006_020dbe9c.c) as "Ghidra missed s64 matrix". The SyncDsd'd draft is:
 
 ```c
 void func_ov006_020dbe9c(int param_1) {
@@ -612,21 +601,15 @@ against `origin/chaos-data:langmode-baseline.json` reports
 change and re-running on the clean tree gives the **identical** numbers, so the ratchet
 is stuck on main. This is the `[[stale-baseline-gates]]` case; reproduce before owning.
 
-**G10.2 — CORRECTION to G8.2: `func_ov081_02123910` is not a landed fakematch.** [high]
+**G10.2 — CORRECTION to G8.2: [func_ov081_02123910](../src/func_ov081_02123910.cpp) is not a landed fakematch.** [high]
 It is `reason: "compile failed"` in the eligibility report —
-`func_ov081_02123910.cpp:31: illegal function overloading` under 2004/b56. It is not
-eligible, not enrolled, and not in the build, so its reference to the ov004 symbol has
-never affected a byte. It is a latent problem in an unbuildable file, which is exactly
+`func_ov081_02123910.cpp:31: illegal function overloading` under 2004/b56. 
+It is not eligible, not enrolled, and not in the build, so its reference to the [ov004](../config/arm9/overlays/ov004/symbols.txt) symbol has never affected a byte. It is a latent problem in an unbuildable file, which is exactly
 the `[[unbuildable-files-invisible]]` class. The finding is still worth keeping — when
 that file is made to compile, the reference needs deciding first.
 
-**G10.3 — ov002 is itself an Enemy-base overlay, which explains the whole pattern.**
-[high] `_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj` is defined in
-**ov002** at `0x020ad838` (size 0x208). So the enemy behaviour overlays calling into
-ov002 is semantically expected, not just statistically supported — the co-residency
-verdict and the class structure agree. ov004 holds a parallel, mutually exclusive copy;
-only three ov004-resident files plus the unbuildable ov081 one name its
-`_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player` at `0x020ada40`.
+**G10.3 — [ov002](../config/arm9/overlays/ov002/symbols.txt) is itself an Enemy-base overlay, which explains the whole pattern.**
+[high] `_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj` is defined in **[ov002](../config/arm9/overlays/ov002/symbols.txt)** at `0x020ad838` (size 0x208). So the enemy behaviour overlays calling into [ov002](../config/arm9/overlays/ov002/symbols.txt) is semantically expected, not just statistically supported — the co-residency verdict and the class structure agree. [ov004](../config/arm9/overlays/ov004/symbols.txt) holds a parallel, mutually exclusive copy; only three [ov004](../config/arm9/overlays/ov004/symbols.txt)-resident files plus the unbuildable [ov081](../config/arm9/overlays/ov081/symbols.txt) one name its `_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player` at `0x020ada40`.
 
 **G10.4 — What is left of this worklist.** [high] Repo-wide, **213 files are rejected
 with missing symbols across 254 distinct names**. This change cleared 30 of those files.
