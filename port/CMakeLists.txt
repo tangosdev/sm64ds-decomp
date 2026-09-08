@@ -16263,3 +16263,25 @@ get_property(_PORT_CONFIGURE_DEPS DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
 list(LENGTH _PORT_CONFIGURE_DEPS _PORT_CONFIGURE_DEPS_N)
 message(STATUS "CONFIGURE DEPS: ${_PORT_CONFIGURE_DEPS_N} configure-time inputs "
                "registered, ${_PORT_RAW_READ_N} raw reads")
+
+# ===========================================================================
+# LANE BOOTSCOUT (run link100) -- MEASUREMENT, NOT A LANDING
+# ===========================================================================
+#
+# The ROM's own main as the port's boot spine, behind SM64DS_ROM_MAIN (default
+# off). The whole derivation is in port/hal/rom_main_scout.cpp's header. The
+# per-source rename is the same mechanism as func_0203bb60_narrow above: the
+# matched TU stays in the link byte for byte and only the names it emits and
+# calls move, so the CRT's main and the ROM's main can both exist and main's
+# two not-yet-ROM edges are visible in one place instead of becoming two new
+# shadow rows.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/main.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "main=rom_main;func_0201a054=port_rom_a054_seam;func_020197b8=port_rom_loop_seam")
+foreach(_tscoutboot walk_window walk_window_hires smoke_player)
+    target_sources(${_tscoutboot} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/main.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN4Heap9SetNodeIDEj.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/rom_main_scout.cpp")
+endforeach()
