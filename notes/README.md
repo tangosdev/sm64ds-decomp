@@ -12,11 +12,11 @@ runbooks, role prompts. **Evidence** is what you look up one fact in and never
 read whole -- provenance, censuses, pilot reports. `data` is machine-read/
 written; `archive` is frozen history. See `notes/CONVENTIONS.md` §1.
 
-Doctrine budget: **370,228 bytes (361.6KB)** across 19 files, against a stated 150KB cap.
+Doctrine budget: **221,712 bytes (216.5KB)** across 19 files, against a stated 150KB cap.
 Over cap today -- reported here, not enforced (see `tools/notes_index.py`'s
 docstring). Condensing doctrine is separate, not-yet-run work.
 
-Tier counts: 19 doctrine, 86 evidence, 42 data, 8 archive (155 files total).
+Tier counts: 19 doctrine, 86 evidence, 46 data, 8 archive (159 files total).
 
 ## process
 
@@ -43,11 +43,11 @@ Tier counts: 19 doctrine, 86 evidence, 42 data, 8 archive (155 files total).
 - [`data/class-facts/Eyerok.json`](data/class-facts/Eyerok.json) _data_ — Writer-stage ROM facts for the class symbols.txt calls Eyerok: the cartridge's own RTTI spells it 10daIwante_c, so vtable/typeinfo queries must use the ROM name and a key-function TU licenses _ZTI6Eyerok/_ZTS6Eyerok as plain deadstrip.
 - [`data/class-facts/Goomboss.json`](data/class-facts/Goomboss.json) _data_ — Class-stage ROM facts for Goomboss (ov074): ROM RTTI name 12daKuriKing_c, auto-registered from the file itself.
 - [`data/class-facts/Klepto.json`](data/class-facts/Klepto.json) _data_ — Class-stage ROM facts for Klepto (ov062): ROM RTTI name 9daJango_c, auto-registered from the file itself.
-- [`data/class-facts/MovingBar.json`](data/class-facts/MovingBar.json) _data_ — Class-stage ROM facts for MovingBar (ov015): ROM RTTI name 19daObjBk_Dossunbar_c, auto-registered from the file itself.
 - [`data/class-facts/PiranhaPlant.json`](data/class-facts/PiranhaPlant.json) _data_ — Class-stage ROM facts for PiranhaPlant (ov084): ROM RTTI name 7daPkn_c, auto-registered from the file itself.
 - [`data/class-facts/Player.json`](data/class-facts/Player.json) _data_ — Class-stage ROM facts for Player (ov002): ROM RTTI name 7daPly_c, auto-registered from the file itself.
 - [`data/class-facts/Pokey.json`](data/class-facts/Pokey.json) _data_ — Class-stage ROM facts for Pokey (ov096): ROM RTTI name 9daSanbo_c, auto-registered from the file itself.
 - [`data/class-facts/README.md`](data/class-facts/README.md) _data_ — One-line pointer: scout-stage output lands here as <Class>.json, consumed by the writer stage.
+- [`data/class-facts/Rabbit.json`](data/class-facts/Rabbit.json) _data_ — Class-stage ROM facts for Rabbit (ov085): ROM RTTI name 7daMip_c, auto-registered from the file itself.
 - [`data/class-facts/Scuttlebug.json`](data/class-facts/Scuttlebug.json) _data_ — Class-stage ROM facts for Scuttlebug (ov071): ROM RTTI name 7daSpd_c, auto-registered from the file itself.
 - [`data/class-facts/Snufit.json`](data/class-facts/Snufit.json) _data_ — Class-stage ROM facts for Snufit (ov065): ROM RTTI name 15daYurei_Mucho_c, auto-registered from the file itself.
 - [`data/class-facts/dBgActor_c.json`](data/class-facts/dBgActor_c.json) _data_ — Scout-stage ROM facts for dBgActor_c: RTTI/typeinfo/vtable addresses, overlay, module base.
@@ -65,9 +65,13 @@ Tier counts: 19 doctrine, 86 evidence, 42 data, 8 archive (155 files total).
 - [`data/class-facts/dScMgRoulette_c.json`](data/class-facts/dScMgRoulette_c.json) _data_ — Writer-stage ROM facts for dScMgRoulette_c (ov006): symbols.txt/relocs.txt-derived, no scout facts existed.
 - [`data/class-facts/dScMgSound_c.json`](data/class-facts/dScMgSound_c.json) _data_ — Writer-stage ROM facts for dScMgSound_c (ov006): text 0x02119904-0x0211cbd0, 82 functions all with legacy source -- refutes the promotion queue's no-legacy-source:1 for this class.
 - [`data/class-facts/dScMgTeresa_c.json`](data/class-facts/dScMgTeresa_c.json) _data_ — Writer-stage RTTI facts for dScMgTeresa_c (ov006): typeinfo 0x0213f9b4, __si_class_type_info, name bytes '13dScMgTeresa_c' read from the linked overlay words.
+- [`data/class-facts/daBmb_c.json`](data/class-facts/daBmb_c.json) _data_ — Class-stage ROM facts for daBmb_c (ov102): ROM RTTI name 7daBmb_c, auto-registered from the file itself.
 - [`data/class-facts/daDgr_c.json`](data/class-facts/daDgr_c.json) _data_ — Scout-stage ROM facts for daDgr_c: RTTI/typeinfo addresses, base class dBgActor_c.
 - [`data/class-facts/daDkk_c.json`](data/class-facts/daDkk_c.json) _data_ — Scout-stage ROM facts for daDkk_c: RTTI/typeinfo addresses, base class daDsnBase_c.
 - [`data/class-facts/daDsnBase_c.json`](data/class-facts/daDsnBase_c.json) _data_ — Scout-stage ROM facts for daDsnBase_c (ov025): RTTI record lives outside its own overlay; base dBgActor_c.
+- [`data/class-facts/daGmch_c.json`](data/class-facts/daGmch_c.json) _data_ — Class-stage ROM facts for daGmch_c (ov081): ROM RTTI name 8daGmch_c, auto-registered from the file itself.
+- [`data/class-facts/daMky_c.json`](data/class-facts/daMky_c.json) _data_ — Class-stage ROM facts for daMky_c (ov030): auto-registered from the file itself.
+- [`data/class-facts/daObjBk_Dossunbar_c.json`](data/class-facts/daObjBk_Dossunbar_c.json) _data_ — Class-stage ROM facts for daObjBk_Dossunbar_c (ov015): ROM RTTI name 19daObjBk_Dossunbar_c, auto-registered from the file itself.
 - [`data/class-facts/daObjCtMecha03_c.json`](data/class-facts/daObjCtMecha03_c.json) _data_ — Scout-stage ROM facts for daObjCtMecha03_c: RTTI/typeinfo addresses, dBgActor_c-family base.
 - [`data/class-facts/daObjCtMecha04_c.json`](data/class-facts/daObjCtMecha04_c.json) _data_ — Scout-stage ROM facts for daObjCtMecha04_c: RTTI/typeinfo addresses, dBgActor_c-family base.
 - [`data/class-facts/daObjFloatBoard_c.json`](data/class-facts/daObjFloatBoard_c.json) _data_ — Scout-stage ROM facts for daObjFloatBoard_c: RTTI/typeinfo words and base class dBgActor_c.
