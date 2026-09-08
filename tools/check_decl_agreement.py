@@ -10,23 +10,23 @@
 
 WHY THIS EXISTS
 ---------------
-`mwccarm` never compares one translation unit's `extern` against another's, and the ROM
-does not record types. So a symbol can be declared `int f(void*, int, int, void*, void*)`
-in one file, `void* f(void*, int, int, void*, void*)` in a second, and DEFINED
-`void f(void*, unsigned, unsigned, ctor_t, dtor_t)` in a third, and every gate this repo
-owns stays green: the bytes are right in all three objects, the link resolves by NAME, and
-`check_references.py` only asks whether the name exists at all.
+`mwccarm` does not compare one translation unit's `extern` against another's.
+A symbol can be declared `int f(void*, int, int, void*, void*)` in one file,
+`void* f(void*, int, int, void*, void*)` in a second, and defined
+`void f(void*, unsigned, unsigned, ctor_t, dtor_t)` in a third. Per-TU compilation
+and relocated byte checks can still pass: the compiler uses each local declaration,
+the link resolves by name, and `check_references.py` checks that the name exists.
+Those checks do not establish agreement between the reconstructed interfaces.
 
 Measured on this tree the day the gate was written, `__cxa_vec_ctor` carried 52 extern
 declarations: 47 returning `void`, 3 returning `int` and 2 returning `void *`, against a
-definition that returns `void`. That is not a curiosity. A declaration is the only
-surviving statement about what the original C++ said, the host port compiles these same
-files with a compiler that DOES check them, and a wrong return type is the shape that
-silently smashes a caller's stack the first time someone reuses the declaration for real
-work.
-
-`.claude/skills/decomp-match-review` names this "the highest-value unbuilt item, and the
-one the byte gate can never do". This is that gate.
+definition that returns `void`. Both declarations and definitions are reconstructed
+source, and either can be wrong. ROM instructions, call-site behavior and RTTI constrain
+the reconstruction; project symbol spellings record additional hypotheses. None makes
+every original C++ type uniquely recoverable. This gate checks cross-TU consistency,
+not original-source identity. A mismatch can affect code generation or the calling
+convention, including when these sources are reused in the host port; the effect depends
+on the particular types and ABI. Byte proof and source review remain necessary.
 
 WHAT IT COMPARES
 ----------------
@@ -50,8 +50,9 @@ against the reference spelling:
 
 The reference is the DEFINITION when the tree contains one, and the PLURALITY declaration
 when it does not (many of these symbols live in a dsd gap object and have no source). Every
-finding says which basis it used, because they are not worth the same: a definition-backed
-disagreement is a fact, a plurality-backed one is a vote.
+finding says which basis it used: a definition-backed disagreement compares against a
+concrete implementation spelling, while a plurality-backed one uses the most common
+declaration. Neither basis proves which spelling correctly reconstructs the ROM.
 
 AN OUT-OF-LINE MEMBER IS COMPARED FLAT. `int daBmb_c::Behavior(void)` is one parameter to
 the linker, not none: the `this` pointer is the first. This tree declares such symbols flat
@@ -1394,14 +1395,14 @@ def main(argv=None):
         print("  no new declaration disagreements")
         return 0
 
-    print("\nFAIL: %d declaration(s) contradict the symbol's definition:\n" % len(new))
+    print("\nFAIL: %d declaration(s) disagree with the selected reference:\n" % len(new))
     for f in sorted(new, key=lambda x: (x["symbol"], x["file"], x["line"])):
         print_finding(f)
-    print("\nA declaration is the only surviving statement about what the original C++")
-    print("said, and nothing in the byte gate reads it: the link resolves by NAME. Fix")
-    print("the declaration to agree with the definition -- and REBUILD, because a")
-    print("declaration change can change instruction selection at the call site.")
-    print("If the disagreement is deliberate and byte-proved, bank it with --update.")
+    print("\nDeclarations and definitions are reconstructed interfaces; either can be wrong.")
+    print("Compare the ROM, implementation and callers before reconciling them, then")
+    print("REBUILD: signature changes can affect code generation or the calling convention.")
+    print("Byte gates compile local declarations but do not compare cross-TU contracts.")
+    print("Record deliberate byte-proved exceptions through the reviewed baseline process.")
     return 1
 
 
