@@ -869,6 +869,19 @@ class ConfigInputScopeTests(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("src/cfg_user.cpp", out)
 
+    def test_an_edited_row_counts_as_much_as_a_new_one(self):
+        """A row whose kind changed is a changed input, not an unchanged file."""
+        repo = BigRepo.shared()
+        repo.reset()
+        path = repo.root / "config" / "arm9" / "symbols.txt"
+        repo.write("config/arm9/symbols.txt",
+                   path.read_text().replace("cfg_other_0 kind:function",
+                                            "cfg_other_0 kind:data"))
+        names, paths = CDA.changed_config_symbols(
+            "HEAD", ["config/arm9/symbols.txt"], repo.root)
+        self.assertEqual(names, {"cfg_other_0"})
+        self.assertEqual(paths, ["config/arm9/symbols.txt"])
+
     def test_an_untouched_config_still_ends_the_scan_early(self):
         """The early exit is right when nothing the gate reads changed."""
         repo = BigRepo.shared()

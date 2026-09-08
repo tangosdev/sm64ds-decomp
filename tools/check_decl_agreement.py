@@ -1293,9 +1293,50 @@ def file_text(rel, base, root=REPO):
     path = root / rel
     if path.exists():
         return path.read_text(encoding="utf-8", errors="replace")
-    proc = subprocess.run(["git", "show", "%s:%s" % (base, rel)], cwd=str(root),
+    return blob_text(rel, base, root)
+
+
+def blob_text(rel, ref, root=REPO):
+    """One path's content at a git ref, or None when the ref does not carry it."""
+    proc = subprocess.run(["git", "show", "%s:%s" % (ref, rel)], cwd=str(root),
                           capture_output=True, text=True)
     return proc.stdout if proc.returncode == 0 else None
+
+
+def symbol_rows(text):
+    """{name: the whole row} for a `config/**/symbols.txt` blob."""
+    rows = {}
+    for line in (text or "").splitlines():
+        m = SYMBOLS_ROW.match(line)
+        if m:
+            rows[m.group(1)] = " ".join(line.split())
+    return rows
+
+
+def changed_config_symbols(base, total, root=REPO):
+    """(symbols, paths) named by `config/**/symbols.txt` rows this branch changed.
+
+    `config/**/symbols.txt` is an INPUT to this gate, not an output: the linkage check
+    asks whether the link resolves a symbol by its plain spelling, and that file is
+    where the answer lives. Adding, removing or editing a row can therefore create a
+    disagreement in a C++ translation unit the diff never touched -- and the changed
+    scan used to exit 0 the moment no src/ or include/ path had changed, config or no
+    config. Both sides of each row are compared, so an edited row counts as much as a
+    new one.
+    """
+    paths = sorted(p for p in total
+                   if p.startswith("config/")
+                   and pathlib.PurePosixPath(p).name == "symbols.txt")
+    names = set()
+    for rel in paths:
+        path = root / rel
+        now = symbol_rows(path.read_text(encoding="utf-8", errors="replace")
+                          if path.exists() else "")
+        was = symbol_rows(blob_text(rel, base, root))
+        for name in set(now) | set(was):
+            if now.get(name) != was.get(name):
+                names.add(name)
+    return names, paths
 
 
 # ------------------------------------------------------------------- reporting
@@ -1348,6 +1389,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
 
     touched = defined = scope = None
+    config_symbols = set()
     if args.changed:
         if args.update:
             print("check_decl_agreement: --update re-banks the WHOLE tree; it cannot "
@@ -1366,10 +1408,16 @@ def main(argv=None):
                   "fetched (a shallow clone has no merge base)." % args.changed,
                   file=sys.stderr)
             return 1
-        if not touched:
+        config_symbols, config_files = changed_config_symbols(args.changed, total,
+                                                              REPO)
+        if not touched and not config_symbols:
+            # NOT "no source changed, therefore nothing can be wrong". The gate reads
+            # `config/**/symbols.txt` too, so the early exit has to say that neither
+            # kind of input moved.
             print("check_decl_agreement: %d file(s) added or modified vs %s, 0 of them "
-                  "a src/ or include/ source -- nothing for this gate to check."
-                  % (len(total), args.changed))
+                  "a src/ or include/ source and no changed row in %d config "
+                  "symbols.txt file(s) -- nothing for this gate to check."
+                  % (len(total), args.changed, len(config_files)))
             return 0
 
     files, decls, defs, unparsed = collect(REPO)
@@ -1432,14 +1480,16 @@ def main(argv=None):
 
     if touched is not None:
         scope = set(touched)
-        if defined:
-            scope.update(d.file for d in decls if d.symbol in defined)
+        widened = set(defined) | set(config_symbols)
+        if widened:
+            scope.update(d.file for d in decls if d.symbol in widened)
         findings = [f for f in findings if f["file"] in scope]
-        print("  --changed %s: %d source file(s) changed, defining %d symbol(s); "
+        print("  --changed %s: %d source file(s) changed defining %d symbol(s), "
+              "%d symbol(s) named by a changed config row; "
               "%d file(s) in scope once every declaration of those is folded in; "
               "%d disagreement(s) among them"
-              % (args.changed, len(touched), len(defined), len(scope),
-                 len(findings)))
+              % (args.changed, len(touched), len(defined), len(config_symbols),
+                 len(scope), len(findings)))
 
     if args.list:
         for f in sorted(findings, key=lambda x: (x["symbol"], x["file"], x["line"])):
