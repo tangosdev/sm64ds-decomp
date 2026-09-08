@@ -52,6 +52,14 @@ when it does not (many of these symbols live in a dsd gap object and have no sou
 finding says which basis it used, because they are not worth the same: a definition-backed
 disagreement is a fact, a plurality-backed one is a vote.
 
+AN OUT-OF-LINE MEMBER IS COMPARED FLAT. `int daBmb_c::Behavior(void)` is one parameter to
+the linker, not none: the `this` pointer is the first. This tree declares such symbols flat
+and writes that `this` out by hand, in roughly equal thirds as `void *`, `char *` and
+`<Class> *`, so the implicit parameter is compared as a wildcard that any pointer satisfies
+and nothing else does. Without that, every correct flat extern of a member would be billed
+for an arity disagreement -- 1,451 of them, measured. It still catches the case that matters,
+a `this` declared `int`.
+
 TYPEDEF ALIASES ARE NOT DISAGREEMENTS. `include/types.h` is parsed for its scalar typedefs
 and they are resolved transitively before comparison, so `u32` and `unsigned int` and
 `unsigned` are one type, `Fix12i` and `s32` and `signed int` and `int` are one type, and a
@@ -69,9 +77,11 @@ instruction selection at every call site, so nothing here may be "fixed" without
 The gate fails only on a disagreement that is NOT banked, which is exactly the shape a new
 `extern` copied from the wrong sibling makes.
 
-Baseline entries are keyed on (symbol, kind, file, the declared spelling) and carry no line
-number, so ordinary edits above a declaration do not churn the file and a genuinely new
-spelling in an already-banked file is still caught.
+Baseline entries are keyed on (symbol, declaring file, "<kind>:<what differs>") and carry
+no line number and no full declared spelling. A line churns on every edit above the
+declaration; the full spelling would re-report a banked return-type disagreement the moment
+an unrelated parameter in the same declaration changed. A genuinely new disagreement in an
+already-banked file is still caught, because the thing that differs is part of the key.
 
 IT CANNOT PASS BY DOING NOTHING
 -------------------------------
@@ -467,7 +477,7 @@ def parse_declarator(text, aliases, cxx=True):
         typ = "%s (%s%s)(%s)" % (
             normalise_type(fp.group("pre"), aliases, decay_arrays=False),
             fp.group("stars"), fp.group("arr"), shown)
-        return fp.group("name"), " ".join(typ.split()), None, False
+        return fp.group("name"), " ".join(typ.split()), None, False, False
     # Trailing cv-qualifiers, exception specifications and attributes.
     text = re.sub(r"\)\s*(const|volatile|throw\s*\([^)]*\)|noexcept)\s*$", ")", text)
     text = text.strip()
@@ -498,13 +508,20 @@ def parse_declarator(text, aliases, cxx=True):
         name = m.group(1)
         if name in TYPE_KEYWORDS:
             return None
-        ret = normalise_type(head[:m.start()], aliases, decay_arrays=False)
+        # `int daBmb_c::Behavior(void)`. The class qualifier belongs to the NAME, not
+        # to the return type; leaving it in makes every such definition read as
+        # returning `int daBmb_c::` and disagree with every flat declaration of it.
+        lead = head[:m.start()].rstrip()
+        member = lead.endswith("::")
+        if member:
+            lead = re.sub(r"[A-Za-z_][A-Za-z0-9_]*\s*::\s*$", "", lead)
+        ret = normalise_type(lead, aliases, decay_arrays=False)
         if not ret:
             return None
         params, ok = parse_params(params_text, aliases, cxx)
         if not ok:
             return None
-        return name, ret, params, True
+        return name, ret, params, True, member
 
     # Data. Strip an array bound before hunting for the identifier.
     stripped = re.sub(r"(\[[^\[\]]*\])+\s*$", "", text).strip()
@@ -521,7 +538,7 @@ def parse_declarator(text, aliases, cxx=True):
     typ = normalise_type(before + suffix, aliases, decay_arrays=False)
     if not typ:
         return None
-    return name, typ, None, False
+    return name, typ, None, False, False
 
 
 # ------------------------------------------------------------------- unit walk
@@ -546,7 +563,10 @@ def _brace_kind(head):
 
 
 def top_level_units(code, default_linkage):
-    """Yield (start, text, terminator, linkage) for every top-level statement.
+    """Yield (start, text, terminator, linkage, in_block) per top-level statement.
+
+    `in_block` says the statement sits inside an explicit `extern "C" { ... }`, where
+    a declaration does not have to repeat the `extern` keyword to be one.
 
     Function bodies, aggregates and initialisers are skipped whole: their contents are
     not `extern` declarations of anything, and walking into them is how a naive scanner
@@ -559,13 +579,14 @@ def top_level_units(code, default_linkage):
     linkage = [default_linkage]
     kinds = []
     while i < n:
+        block = "linkage" in kinds
         ch = code[i]
         if ch in "([":
             paren += 1
         elif ch in ")]":
             paren -= 1
         elif paren <= 0 and ch == ";":
-            yield start, code[start:i], ";", linkage[-1]
+            yield start, code[start:i], ";", linkage[-1], block
             start = i + 1
         elif paren <= 0 and ch == "{":
             head = code[start:i]
@@ -581,7 +602,7 @@ def top_level_units(code, default_linkage):
                 start = i + 1
             else:
                 if kind != "aggregate":
-                    yield start, head, "{", linkage[-1]
+                    yield start, head, "{", linkage[-1], block
                 depth = 0
                 while i < n:
                     if code[i] == "{":
@@ -644,11 +665,20 @@ def _strip_specifiers(text):
 # ------------------------------------------------------------------- collection
 
 class Record(object):
+    """One declaration or definition, reduced to what the linker would see.
+
+    `is_member` marks an out-of-line member definition (`int daBmb_c::Behavior()`).
+    The tree declares those flat, with the `this` pointer written out as an explicit
+    first parameter, so a member's declared arity is one MORE than its definition's.
+    Recording the fact instead of guessing is what keeps 3,000 correct flat externs
+    out of the report.
+    """
+
     __slots__ = ("symbol", "file", "line", "ret", "params", "is_function",
-                 "linkage", "is_definition")
+                 "linkage", "is_definition", "is_member")
 
     def __init__(self, symbol, file, line, ret, params, is_function, linkage,
-                 is_definition):
+                 is_definition, is_member=False):
         self.symbol = symbol
         self.file = file
         self.line = line
@@ -657,13 +687,28 @@ class Record(object):
         self.is_function = is_function
         self.linkage = linkage
         self.is_definition = is_definition
+        self.is_member = is_member
+
+    def flat_params(self):
+        """The parameter list a FLAT declaration of this symbol would carry.
+
+        `None` when unspecified. A member gets its implicit `this` back, spelled as
+        a wildcard: the tree writes it `void *`, `char *` and `<Class> *` in roughly
+        equal thirds, and none of those three is more right than the others.
+        """
+        if self.params is UNSPECIFIED:
+            return UNSPECIFIED
+        if self.is_member:
+            return ("<this>",) + tuple(self.params)
+        return tuple(self.params)
 
     def spelling(self):
         if not self.is_function:
             return self.ret
-        if self.params is UNSPECIFIED:
+        params = self.flat_params()
+        if params is UNSPECIFIED:
             return "%s (unspecified)" % self.ret
-        return "%s (%s)" % (self.ret, ", ".join(self.params) if self.params else "void")
+        return "%s (%s)" % (self.ret, ", ".join(params) if params else "void")
 
 
 def scan_targets(root=REPO):
@@ -744,7 +789,8 @@ def parse_file(rel, text, aliases):
         aliases = merged
     decls, defs = [], []
     unparsed = 0
-    for start, chunk, term, linkage in top_level_units(code, default_linkage):
+    for start, chunk, term, linkage, in_block in top_level_units(code,
+                                                                default_linkage):
         body = " ".join(chunk.split())
         if not body:
             continue
@@ -757,44 +803,55 @@ def parse_file(rel, text, aliases):
             continue
         if re.match(r"^(namespace|enum|class|struct|union)\b", rest) and "(" not in rest:
             continue
-        line = line_of(newlines, start + (len(chunk) - len(chunk.lstrip())))
+        # Where the declarator itself begins, not where the buffer does. The gap
+        # between them is the blanked comment block, and the `@symbol` line lives
+        # in it.
+        decl_start = start + (len(chunk) - len(chunk.lstrip()))
+        line = line_of(newlines, decl_start)
 
         if term == "{":
             # A definition. Its identity is the `@symbol` line above it when the file
-            # carries one, and otherwise the flat identifier it declares.
+            # carries one, and otherwise the flat identifier it declares. Only marks
+            # between the PREVIOUS statement and this declarator count, so one
+            # marked function in a file does not lend its name to the next.
             parsed = parse_declarator(rest, aliases, cxx)
             if parsed is None:
                 continue
-            name, ret, params, is_fn = parsed
+            name, ret, params, is_fn, member = parsed
             if not is_fn:
                 continue
-            marked = [s for idx, s in marks if idx < start]
+            marked = [s for idx, s in marks if start <= idx < decl_start]
             symbol = marked[-1] if marked else name
             if "::" in rest and not marked:
                 # An out-of-line member with no `@symbol` line: the linker name is not
                 # recoverable from the text, so claim nothing.
                 continue
             defs.append(Record(symbol, rel, line, ret, params, True,
-                               "C" if linkage == "C" else linkage, True))
+                               "C" if linkage == "C" else linkage, True, member))
             continue
 
-        if not saw_extern and linkage != "C":
-            # Not an `extern` declaration. A definition of data at file scope is
-            # covered by the `{`/initialiser path or is a local matter.
-            if saw_static or "=" in rest:
-                continue
-            if rel.endswith(SOURCE_SUFFIXES):
-                continue
-        if "=" in rest:
+        has_init = "=" in rest
+        if has_init:
             rest = split_top(rest, seps=("=",))[0].strip()
+        if not saw_extern:
+            # An initialised or `static` file-scope object is a DEFINITION, not a
+            # declaration of somebody else's symbol -- including `const char *s =
+            # "...";`, whose blanked string literal used to leave `const char *s`
+            # looking exactly like an extern.
+            if saw_static or has_init:
+                continue
+            # Inside `extern "C" { ... }` a declaration need not repeat `extern`.
+            if not in_block and rel.endswith(SOURCE_SUFFIXES):
+                continue
         for piece in _declarator_pieces(rest):
             parsed = parse_declarator(piece, aliases, cxx)
             if parsed is None:
                 if not IDENT.fullmatch(piece.strip()):
                     unparsed += 1
                 continue
-            name, ret, params, is_fn = parsed
-            decls.append(Record(name, rel, line, ret, params, is_fn, linkage, False))
+            name, ret, params, is_fn, _member = parsed
+            decls.append(Record(name, rel, line, ret, params, is_fn, linkage,
+                                False, False))
     return decls, defs, unparsed
 
 
@@ -925,15 +982,27 @@ def disagreements(decls, defs, unmangled, root=REPO):
                 if d.ret != ref.ret:
                     out.append(_finding(symbol, "return", d, ref, basis,
                                         d.ret, ref.ret))
+                mine, theirs = d.flat_params(), ref.flat_params()
                 # An unspecified list on either side claims nothing about arity, so
                 # there is nothing to contradict.
-                if d.params is UNSPECIFIED or ref.params is UNSPECIFIED:
+                if mine is UNSPECIFIED or theirs is UNSPECIFIED:
                     pass
-                elif len(d.params) != len(ref.params):
+                elif len(mine) != len(theirs):
                     out.append(_finding(symbol, "arity", d, ref, basis,
-                                        str(len(d.params)), str(len(ref.params))))
+                                        str(len(mine)), str(len(theirs))))
                 else:
-                    for i, (a, b) in enumerate(zip(d.params, ref.params)):
+                    for i, (a, b) in enumerate(zip(mine, theirs)):
+                        # `<this>` is the member's implicit first parameter. Any
+                        # pointer spelling of it is right; a non-pointer is not.
+                        if b == "<this>" or a == "<this>":
+                            other = a if b == "<this>" else b
+                            if other.endswith(("*", "&")):
+                                continue
+                            out.append(_finding(symbol, "param", d, ref, basis,
+                                                "#%d %s" % (i + 1, a),
+                                                "#%d a pointer (the implicit this)"
+                                                % (i + 1,)))
+                            continue
                         if a != b:
                             out.append(_finding(symbol, "param", d, ref, basis,
                                                 "#%d %s" % (i + 1, a),
@@ -951,10 +1020,10 @@ def disagreements(decls, defs, unmangled, root=REPO):
                 out.append(_finding(symbol, "linkage", d, ref, basis,
                                     "bare extern in a C++ TU", 'extern "C"'))
             if (want_arity is not None and d.is_function
-                    and d.params is not UNSPECIFIED):
-                if len(d.params) not in (want_arity, want_arity + 1):
+                    and d.flat_params() is not UNSPECIFIED):
+                if len(d.flat_params()) not in (want_arity, want_arity + 1):
                     out.append(_finding(symbol, "mangled", d, ref, basis,
-                                        "%d parameter(s)" % len(d.params),
+                                        "%d parameter(s)" % len(d.flat_params()),
                                         "%d or %d (the name states %d)"
                                         % (want_arity, want_arity + 1, want_arity)))
     return out
@@ -1171,7 +1240,7 @@ def main(argv=None):
             print("check_decl_agreement: --update re-banks the WHOLE tree; it cannot "
                   "be combined with --changed.", file=sys.stderr)
             return 2
-        touched, defined, total, err = changed_scope(args.changed)
+        touched, defined, total, err = changed_scope(args.changed, REPO)
         if err:
             print("check_decl_agreement: %s" % err, file=sys.stderr)
             return 1
@@ -1190,7 +1259,7 @@ def main(argv=None):
                   % (len(total), args.changed))
             return 0
 
-    files, decls, defs, unparsed = collect()
+    files, decls, defs, unparsed = collect(REPO)
 
     if (len(files) < MIN_FILES or len(decls) < MIN_DECLS
             or len({d.symbol for d in decls}) < MIN_SYMBOLS):
@@ -1202,8 +1271,8 @@ def main(argv=None):
         print("  Refusing to report a pass on a scan this size.")
         return 2
 
-    unmangled = unmangled_symbols()
-    findings = disagreements(decls, defs, unmangled)
+    unmangled = unmangled_symbols(REPO)
+    findings = disagreements(decls, defs, unmangled, REPO)
 
     if args.symbol:
         name = args.symbol
@@ -1243,7 +1312,7 @@ def main(argv=None):
             print("    %5d  %s" % (count, symbol))
 
     if args.update:
-        n = write_baseline(findings)
+        n = write_baseline(findings, BASELINE)
         print("  wrote %s (%d banked disagreement(s))"
               % (BASELINE.relative_to(REPO).as_posix(), n))
         return 0
@@ -1263,7 +1332,7 @@ def main(argv=None):
         for f in sorted(findings, key=lambda x: (x["symbol"], x["file"], x["line"])):
             print_finding(f)
 
-    known = load_baseline()
+    known = load_baseline(BASELINE)
     new = [f for f in findings if key_of(f) not in known]
     if touched is None:
         healed = known - {key_of(f) for f in findings}
