@@ -676,14 +676,14 @@
     {
       "symbol": "_ZTV12daBombking_c",
       "disposition": "deadstrip-data",
-      "reason": "This TU owns every virtual member, so it is the class's key-function TU and mwcc emits the vtable. The cartridge keeps it at ov078:0x02126e4c -- the ADDRESS POINT, not the storage start; storage begins at 0x02126e44 with the offset-to-top and typeinfo words. Extent corroborated by three independent tools: the relocated run is 0x02126e48..0x02126ec4 with a real gap before the next data symbol at 0x02126ee0; rtti_vtables.py --own daBombking_c reports 31 slots (base dEnemyBase_c also 31); romdata_check.check_object reports bytes 124, emitted 124, blindWords 0. 124/4 = 31 slots; storage size is 0x84 (8-byte preamble + 31 slots). Note romdata_check's romExtent field reads 148 here and is WRONG -- the truthful fields are bytes/emitted.",
+      "reason": "The out-of-line destructor owns the emitted vtable. ROM storage begins at ov078:0x02126e44 with two ABI preamble words; the address point is 0x02126e4c. Its 31 slots occupy 0x7c bytes and end at 0x02126ec8, for 0x84 bytes of complete storage. The raw checker compares the address-point payload: 124 emitted/equal bytes against a 148-byte symbol extent, retaining PARTIAL coverage because of 24 trailing bytes. Text-only production discards the emitted copy and retains cartridge data.",
       "canonical_module": "ov078",
       "canonical_address": "0x02126e4c"
     },
     {
       "symbol": "_ZTI12daBombking_c",
       "disposition": "deadstrip-data",
-      "reason": "HOMELESS, and the reason is the class name. The cartridge's own RTTI string at ov078:0x02126e18 is `12daBombking_c`, so the ROM's typeinfo record is configured as _ZTI12daBombking_c -- there is no _ZTI12daBombking_c row in any module's symbols.txt. The class is still spelled daBombking_c here because all 51 of its method symbols are, and a text-only promotion does not touch symbols.txt. Until a separate rename lands, this emitted copy has no ROM home and is plain deadstrip.",
+      "reason": "The emitted typeinfo record has a canonical ROM home at ov078:0x02126e0c and refers to the cartridge-attested class name. It is compared with that record, then discarded by text-only production because this TU claims no data. This is retained ROM data, not an unhomed class identity.",
       "canonical_module": "ov078",
       "canonical_address": "0x02126e0c",
       "note": "homed RTTI record; cartridge spelling confirmed by the RTTI string at ov078:0x02126e18 (\"12daBombking_c\")"
@@ -691,7 +691,7 @@
     {
       "symbol": "_ZTS12daBombking_c",
       "disposition": "deadstrip-data",
-      "reason": "HOMELESS, and the reason is the class name. The cartridge's own RTTI string at ov078:0x02126e18 is `12daBombking_c`, so the ROM's typeinfo name is configured as _ZTS12daBombking_c -- there is no _ZTS12daBombking_c row in any module's symbols.txt. The class is still spelled daBombking_c here because all 51 of its method symbols are, and a text-only promotion does not touch symbols.txt. Until a separate rename lands, this emitted copy has no ROM home and is plain deadstrip.",
+      "reason": "The emitted class-name string is compared with the cartridge bytes at ov078:0x02126e18. Its spelling is attested by RTTI. Text-only production retains cartridge data; the raw checker retains PARTIAL coverage when its symbol extent includes bytes beyond the emitted string.",
       "canonical_module": "ov078",
       "canonical_address": "0x02126e18",
       "note": "homed RTTI record; cartridge spelling confirmed by the RTTI string at ov078:0x02126e18 (\"12daBombking_c\")"
@@ -755,5 +755,11 @@
   ],
   "externalized_output": [],
   "promotion_route": "text-only",
-  "promotion_note": "Text-only. This is a KEY-FUNCTION TU: the out-of-line destructor is the key function, so the object emits _ZTV/_ZTI/_ZTS for the whole inherited chain as vague linkage and the scratch link must deadstrip 13 compiler-only symbols before linking (tubuild.py:5091). That rewrite is what caps the linkcheck result at scratch-link-verified rather than link-verified -- tubuild's own ladder comment says a key-function TU cannot reach link-verified until phase F. The evidence is nonetheless stronger than text-only requires: module fidelity 106/106 exact and the built ROM sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 is byte-identical to the stock control."
+  "promotion_note": "Text-only. This is a KEY-FUNCTION TU: the out-of-line destructor is the key function, so the object emits _ZTV/_ZTI/_ZTS for the whole inherited chain as vague linkage and the scratch link must deadstrip 13 compiler-only symbols before linking (tubuild.py:5091). That rewrite is what caps the linkcheck result at scratch-link-verified rather than link-verified -- tubuild's own ladder comment says a key-function TU cannot reach link-verified until phase F. The evidence is nonetheless stronger than text-only requires: module fidelity 106/106 exact and the built ROM sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 is byte-identical to the stock control.",
+  "source_review_checkpoint": {
+    "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2479",
+    "status": "partial-awaiting-independent-review",
+    "scope": "Coherent void shadow helper, real model calls and class PMF receiver, and current source/provenance corrections. Remaining raw fields, helper contracts and manual factory are tracked separately from text-only promotion.",
+    "historical_evidence": "Existing verification/linkcheck and promotion-note records predate this correction. Fresh proof and its exact candidate identity are recorded in the continuation handoff and queue evidence."
+  }
 }
