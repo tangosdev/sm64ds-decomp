@@ -10,6 +10,13 @@ This document describes this commit. The queue records its immutable output SHA.
   `C:/tmp/fleet-receipts/prod-kuruma-0907.json`. Queue ref
   `refs/heads/agents/coordination`; workflow pin
   `f327f7b6460e157153eb7fc0749dbbe60dd854f1`.
+- Then task `kurumajiku-ov043-0907b`, stage `revise`, same session, receipt
+  `C:/tmp/fleet-receipts/rev-kuruma-0907.json`, input commit `ddd3d8900`. The
+  original task was cancelled. The revise stage repaired two coordinator errors
+  and changed **nothing** about the class work: the TU moved to the layout the
+  landed policy requires, and this rename's five rows were added to the rename
+  ledger. The match, the fold, the route and the ROM hash are unchanged, and
+  were re-measured rather than assumed — see Proof.
 - Branch `cpp/daObjKm1_Kurumajiku_c-tu`, worktree `C:/tmp/sm64ds-kuruma-0907`.
   A second worktree `C:/tmp/sm64ds-kuruma-0907-ctl` on branch
   `ctl/kuruma-0907-baseline` holds the clean base and exists only to run
@@ -222,6 +229,9 @@ the run tiles with no gap and asserts the resulting bounds are
 
 ## Gate table
 
+Re-run in full after the revise stage's path move and ledger append. Every
+figure below is from that re-run, not carried over from the produce stage.
+
 | gate | verdict | control |
 |---|---|---|
 | `tubuild verify` | **5/5 MATCH**, objisolate clean, reloc-destinations clean, TEXT-VERIFIED | — |
@@ -233,8 +243,9 @@ the run tiles with no gap and asserts the resulting bounds are
 | `check_src_tu` | **pass** | pass |
 | `check_src_tu_compiles` | **pass**, 162/162 TUs compile | — |
 | `check_dead_references` | **pass** | pass |
-| `check_rename_ledger` | **pass** | pass |
-| `check_duplicate_sources` | **pass** | — |
+| `check_rename_ledger` | **pass**, `checked 2010` (was 2005 — the 5 new rows), 0 findings | pass |
+| `check_profile_campaign` | **pass**, 786 live coined claims, 0 diverging | — |
+| `check_duplicate_sources` | **pass**, 9144 stems, none doubled | — |
 | `check_header_offsets include/daObjKm1_Kurumajiku_c.h` | **pass**, struct spans `0x330`, 0 mismatched | — |
 | `layout_check` | **pass** | pass |
 | `langmode_audit` | **pass** | pass |
@@ -283,23 +294,52 @@ the run tiles with no gap and asserts the resulting bounds are
   basename, so any shard whose basename does not survive as a symbol name reads
   as lost. Note that `validate_merge` — the gate that actually decides the merge
   — computes `0 added, 0 changed, 0 lost` for this branch. I added the five
-  `src/actors/daObjKm1_Kurumajiku_c.cpp#<symbol>` override entries so per-member
+  `src/game/actors/d_a_obj_km1_kurumajiku.cpp#<symbol>` override entries so per-member
   credit survives the fold in the durable record, including `lunavyqo`'s
   `CleanupResources`. I did **not** add override keys under the dead
   `_ZN11RickshawBdw*` symbol names, which would have silenced the gate by
   asserting a symbol lives in a file that does not define it.
 
+  **The two lost entries cannot be recovered by rename detection, and that is
+  now measured rather than assumed.** The revise stage's own move is recorded by
+  git as a clean `R100` onto
+  `src/game/actors/d_a_obj_km1_kurumajiku.cpp`, so that lineage is intact.
+  But `git diff -M` from the base finds **zero**
+  rename pairs among the five absorbed shards, and lowering the threshold to
+  `-M50%`, `-M30%`, `-M20%` and even `-M10%` still finds zero. A 5-into-1 fold
+  leaves no single shard similar enough to the TU for git to pair, so no commit
+  split and no `git mv` ordering can attach those two. The `attribution.json`
+  overrides are the only mechanism that carries this credit, and they are in
+  place.
+
 ## Judgement calls the briefing did not cover
 
 1. **The base was three commits stale.** Used the queue's `442dc178b`.
-2. **Output path.** The briefing's oracle discussion implies `src/actors/`, and
-   the ov043 family convention is snake-case `d_a_obj_km1_<name>.cpp` stems in
-   the `src/game/actors/` directory. I used
-   `src/actors/daObjKm1_Kurumajiku_c.cpp` because `classqueue_v2.publish`
-   validates that every path in the stage's `produces` exists in the output
-   commit, so the queue's declared path is binding. The family inconsistency is
-   real and is flagged here for the coordinator; it is cosmetic and `layout_check`
-   passes either way once the `d_a_obj_km1_kurumajiku` stem is freed by the fold.
+2. **Output path — REPAIRED in the revise stage, and I was wrong to call it
+   cosmetic.** The produce stage shipped the TU as
+   `daObjKm1_Kurumajiku_c.cpp` under `src/actors/`, because the task's
+   `produces` declared that path and `classqueue_v2.publish` validates against it
+   (`classqueue_v2.py:477`), so the queue's path was binding. I flagged the
+   family inconsistency but judged it cosmetic. It is not: #1055 decided the
+   layout and #2270 executed it, moving 132 files to `src/game/actors/` with
+   stems renamed to `d_a_<snake>`, so the old path contradicted landed policy.
+
+   The revise stage moved it to `src/game/actors/d_a_obj_km1_kurumajiku.cpp`
+   with `git mv`, so lineage reads as a rename rather than a delete plus an add.
+   The strongest argument is in `delinks.txt`, which now lists the family as
+   three consecutive entries tiling one address range:
+
+   ```
+   src/game/actors/d_a_obj_km1_ukishima.cpp    .text 0x021111a0..0x021113fc
+   src/game/actors/d_a_obj_km1_kurumajiku.cpp  .text 0x021113fc..0x02111518
+   src/game/actors/d_a_obj_km1_kuruma.cpp      .text 0x02111518..0x02111630
+   ```
+
+   The two classes that bound this run are its neighbours in the file as well as
+   in the ROM. The old path filed it away from the family it was cut out of.
+   Note `src/actors/` still holds 39 other classes, so the migration is partial
+   and the wrong path looked plausible — but every ov043 `km1` sibling was
+   already in `src/game/actors/`, which settles it for this class.
 3. **`daObjKurumajiku_c` is the base, not merely a trap.** Recorded above.
 4. **The rename ledger already records a one-class shift on this exact stem, and
    it is not this run.** `symbols/actor_renames.tsv` carries nine rows mentioning
@@ -325,18 +365,55 @@ the run tiles with no gap and asserts the resulting bounds are
    coined rows do **not** carry the shift that checker's docstring warns about
    for ov009.
 
-   **No rows were added.** After the repair, no ledger row is anchored on any of
-   my five renamed addresses, so nothing went stale and `check_rename_ledger`
-   passes: `checked 2005 mangled/vtable row(s); 1532 coined row(s) are out of
-   scope and unchecked`. Appending rows would have been defensible
-   — the checker is stateless per row and reads only column 4 against
-   `symbols.txt`, so correctly-anchored rows pass, and the landed ov085
-   `_ZTV6Rabbit -> _ZTV7daMip_c` row is the precedent shape — but the briefing
-   directed that no append-only shape be attempted here, and the landed
-   `daBmb_c` promotion added none either. Flagged as a deliberate omission a
-   follow-up may want to reverse: `cpp_index.py` and `cpp_rename.py` read this
-   file as a live address->symbol map, and these five addresses are absent from
-   it.
+   **Five rows for this rename were added in the revise stage** — one per
+   renamed address, in the five-column `module / addr / old / new / why` shape
+   `actor_names.py` emits, column 3 the name the base commit actually carried
+   and column 4 the name `symbols.txt` carries now:
+
+   | addr | old | new |
+   |---|---|---|
+   | `0x021113fc` | `_ZN11RickshawBdwD1Ev` | `_ZN21daObjKm1_Kurumajiku_cD1Ev` |
+   | `0x0211144c` | `_ZN11RickshawBdwD0Ev` | `_ZN21daObjKm1_Kurumajiku_cD0Ev` |
+   | `0x021114b0` | `_ZN11RickshawBdw16CleanupResourcesEv` | `_ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv` |
+   | `0x021114c4` | `_ZN11RickshawBdw13InitResourcesEv` | `_ZN21daObjKm1_Kurumajiku_c13InitResourcesEv` |
+   | `0x0211238c` | `_ZTV11RickshawBdw` | `_ZTV21daObjKm1_Kurumajiku_c` |
+
+   The `why` column keeps the tool's `vtable slot N` / `vtable alloc=` shape and
+   the `(was …)` suffix, and adds the ROM evidence for the rename. The vtable
+   row carries `alloc=0x330`, which is a true claim about the class that
+   actually lives at `0x0211238c` — the factory loads `0x330` at `0x021114e0`
+   and `include/daObjKm1_Kurumajiku_c.h` asserts that size — rather than the
+   `alloc=?` the checker substitutes when a figure has come loose from its
+   class. `check_rename_ledger` goes from `checked 2005` to `checked 2010`, 0
+   findings; `check_profile_campaign` stays green (786 live coined claims, 0
+   diverging).
+
+   **No tool in this tree appends a ledger row, and I checked all four before
+   editing by hand.** This matters, because the instruction was to add them
+   *through* the rename tooling:
+   - `tools/actor_names.py` is the file's original generator but opens it
+     `"w"` and rewrites it wholesale from its own proposals. Per
+     `check_rename_ledger`'s own docstring, `propose()` now refuses any address
+     that already carries a real name, so a fresh run emits **1 row instead of
+     2,573**. Running it would destroy the ledger.
+   - `tools/class_rename.py` is the right tool for a class rename and does
+     rewrite `.tsv` under `symbols/` with length-aware mangled substitution.
+     But dry-run against `symbols/` shows it would edit **5 lines and add
+     none**, and those 5 lines are the `(was _ZN11RickshawBdw…)` notes on
+     **`daObjKm1_Kuruma_c`'s** rows at `0x02111518`–`0x0211245c`. It would
+     rewrite them to `(was _ZN21daObjKm1_Kurumajiku_c…)` — asserting those
+     symbols once carried a name they never carried, destroying the off-by-one
+     record described above, and touching addresses outside this run. **Do not
+     run it for this class.**
+   - `check_rename_ledger.py --fix` only corrects column 4 on rows that already
+     exist; it cannot add an address the file does not mention.
+   - `cpp_rename.py` and `cpp_index.py` are readers.
+
+   That is what the checker's docstring means by "the file has stopped being a
+   reproducible artifact and is now maintained in place": the ledger's
+   maintenance path is a hand edit in the generator's shape, with
+   `check_rename_ledger` as the guard. The rows above were written that way and
+   verified with the guard.
 5. **Two tooling behaviours worth knowing.** `check_dead_references` reads the
    **git index**, not the working tree: a fix is invisible to it until staged.
    And `git add` renormalizes CRLF, which re-stamps `config/**/delinks.txt` and
@@ -353,6 +430,8 @@ the run tiles with no gap and asserts the resulting bounds are
 - `.data` not claimed; no intact-object attempt.
 - No `tiers_ratchet --update`.
 - No broad `queue_audit --write`.
-- No rows appended to `symbols/actor_renames.tsv`, and no alias or bounding row
-  added to any `symbols.txt` — the five rows were rewritten in place.
+- No alias or bounding row added to any `symbols.txt` — the five rows were
+  rewritten in place.
+- `tools/actor_names.py` and `tools/class_rename.py --apply` were **not** run.
+  Reasons under judgement call 4; both would have damaged the ledger.
 - Neither worktree removed. `git worktree remove` was never run.
