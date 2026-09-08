@@ -102,26 +102,16 @@ void port_pushblock_states_seat(void)
     }
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately
-   incomplete class (the SoundObject/Cap/MrBlizzard/BabyPenguin/Unagi/
-   HootTheOwl-state treatment); MSVC's PMF representation there does not
-   reproduce the ROM's {function,delta} pair. Stores the state index and
-   dispatches entry i's own "enter" half once, on transition. */
-void func_ov002_020b9704(char *c, int i)
-{
-    *(int *)(c + 0x3c0) = i;
-    unsigned fn = data_ov002_021097bc[i].enter.fn;
-    if (fn != 0)
-        ((void (*)(void *))(size_t)fn)(c);
-}
-
-/* PORT_HOST_ABI: same dispatch shape, the per-frame "tick" half read back
-   through the stored index. */
-void func_ov002_020b9750(char *c)
-{
-    int i = *(int *)(c + 0x3c0);
-    unsigned fn = data_ov002_021097bc[i].tick.fn;
-    if (fn != 0)
-        ((void (*)(void *))(size_t)fn)(c);
-}
+/* func_ov002_020b9704 and func_ov002_020b9750 RETIRED (run link100, lane
+   PMFB1). src/func_ov002_020b9704.cpp and src/func_ov002_020b9750.cpp carry
+   both on port/slice_pmfc.txt. The header's note that "MSVC's PMF
+   representation for an INCOMPLETE class does not reproduce the ROM's own
+   {function,delta} dispatch" is dead: /vmg /vmm target-wide (block R8) makes
+   it exactly that pair. What was still wrong was the twenty-byte RECORD the
+   header derives above -- MSVC gives a struct containing a pointer-to-member
+   eight-byte alignment, so PortPushBlockEntry's C++ twin came out twenty-four
+   and the matched TUs strode 24 where the ROM strides 0x14. A per-TU /Zp4
+   (block R9d in port/CMakeLists.txt) makes it twenty. port_pushblock_states_seat
+   above STAYS, still asserting {the ROM's own address, 0} on all six dest
+   words before it writes a host one. */
 }  /* extern "C" */

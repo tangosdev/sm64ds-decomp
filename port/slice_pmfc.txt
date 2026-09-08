@@ -1,0 +1,299 @@
+# run link100 lane PMFB1: THE THIRTEEN FREE POINTER-TO-MEMBER DISPATCHERS,
+# BUILT -- AND THE RECORD-STRIDE DEFECT THAT HAD TO BE FIXED FIRST.
+#
+# Lane PMFC2 measured the whole family (153 rows) and left a READY SLICE naming
+# these thirteen as FREE: every one a tail jump, every one over a table whose
+# adjustment words are proven zero and whose function words are rewritten with
+# HOST addresses by a seat before the class can spawn. That reading is right
+# about the dispatch and right about the seats. The full measurement is
+# runs/link100/out/PMFC/family_c.tsv and runs/link100/out/PMFC/report.md.
+#
+# ---- WHAT PMFC2's MEASUREMENT MISSED, AND HOW IT WAS CAUGHT ----------------
+#
+# PMFC2's width detector read the SCALE of the indexed operand
+# (?data...@@3PAUEntry@@A[eax*8+4]) and recorded "index stride 8". It never read
+# the LEA that feeds that operand, and it never compared the product with the
+# stride the ROM itself uses. The product is what matters:
+#
+#     lea  eax, DWORD PTR [eax+eax*2]                       ; eax = 3 * index
+#     mov  ecx, DWORD PTR ?data_ov002_021097bc@@3PAUEntry@@A[eax*8+4]
+#     mov  eax, DWORD PTR ?data_ov002_021097bc@@3PAUEntry@@A[eax*8]
+#
+# which is 24 * index, not 8. All thirteen ROM bodies were disassembled at their
+# own addresses out of extracted/overlays/ for this lane
+# (runs/link100/out/PMFB1/rom_strides.txt); eleven of them stride TWENTY:
+#
+#     mov  r1, #0x14
+#     mla  r3, r2, r1, r3          ; &table[index], stride 0x14
+#
+# and only the two ov063 rows stride sixteen (add r3, r2, r1, lsl #4). So on
+# eleven rows MSVC was walking the table 24 bytes at a time where the ROM walks
+# it 20. Index 0 is correct either way; every other state reads the wrong
+# record. Seating those eleven as they stood would have shipped a wrong
+# dispatch, not a linkage win -- and it would have shipped quietly, because
+# every one of these state machines starts in state 0.
+#
+# ---- WHY MSVC SIZES A 20-BYTE RECORD AT 24 --------------------------------
+#
+# Probed under the port's own flags (runs/link100/out/PMFB1/sizeof_probe.cpp):
+#
+#     sizeof(PMF)                   8       __alignof(PMF)                4
+#     sizeof(struct { PMF p; })     8       __alignof(struct { PMF p; })  8
+#     sizeof({PMF pmf; int x[3];}) 24       __alignof(same)               8
+#
+# The pointer-to-member ITSELF is the ROM's 8-byte {function, delta} pair with
+# four-byte alignment, which is what /vmg /vmm bought (block R8) and what PMFC2
+# reported correctly. But MSVC gives any CLASS THAT CONTAINS a pointer-to-member
+# an alignment of eight, and that rounds a 20-byte record up to 24. The ROM's
+# record is 20 and is not aligned to 8 at all.
+#
+# ---- THE FIX IS A COMPILE OPTION ON THE THIRTEEN, AND NOTHING ELSE --------
+#
+# /Zp4 caps the default structure packing of the TU at four, which is the
+# alignment every field in these records actually has. It is the same lever, one
+# step further, that block R8 already uses on this exact family: a per-source
+# COMPILE_OPTIONS, no source edit, no ROM data touched, no reference the ROM
+# does not make. It is applied to the thirteen TUs and to nothing else, in block
+# R9d of port/CMakeLists.txt.
+#
+# Each TU has exactly two structures in it: the record, and
+# struct C { char pad[N]; int idx; }, whose fields are all four-byte, so /Zp4 is
+# a no-op on C and on the two ov063 rows (16 either way, kept on the option so
+# the set reads as one).
+#
+# MEASURED, all thirteen, before and after
+# (runs/link100/out/PMFB1/zp4_stride_table.txt and zp4_listings/):
+#
+#   row                    ROM stride   plain   /Zp4   form     EXTRN
+#   func_ov002_020b9704        20         24      20   TAILJUMP unchanged
+#   func_ov002_020b9750        20         24      20   TAILJUMP unchanged
+#   func_ov002_020efa54        20         24      20   TAILJUMP unchanged
+#   func_ov014_02111ebc        20         24      20   TAILJUMP unchanged
+#   func_ov014_02111f08        20         24      20   TAILJUMP unchanged
+#   func_ov034_021125b8        20         24      20   TAILJUMP unchanged
+#   func_ov034_02112604        20         24      20   TAILJUMP unchanged
+#   func_ov063_0211ddac        16         16      16   TAILJUMP unchanged
+#   func_ov063_0211ddf4        16         16      16   TAILJUMP unchanged
+#   func_ov071_021223c8        20         24      20   TAILJUMP unchanged
+#   func_ov071_02122414        20         24      20   TAILJUMP unchanged
+#   func_ov085_02129524        20         24      20   TAILJUMP unchanged
+#   func_ov085_02129570        20         24      20   TAILJUMP unchanged
+#
+# and the object the option produces is the ROM's arithmetic instruction for
+# instruction. The tick half of the Toad, for one:
+#
+#     lea  eax, DWORD PTR [eax+eax*4]                                   ; 5 * i
+#     mov  ecx, DWORD PTR ?data_ov085_0212fe88@@3PAUEntry@@A[eax*4+12]  ; +12 adj
+#     mov  eax, DWORD PTR ?data_ov085_0212fe88@@3PAUEntry@@A[eax*4+8]   ; +8  fn
+#     add  ecx, edx                                                     ; +delta
+#     pop  ebp
+#     jmp  eax
+#
+# 20 * index + 8, the receiver adjusted, and a tail jump so the caller's own
+# cdecl frame reaches the seated void (*)(void *) body at [esp+4].
+#
+# ---- WHY "DELTA ZERO" IS THE WHOLE GATE (PMFC2's reading, kept) -----------
+#
+# The ROM's call through a member pointer, at every one of the thirteen
+# addresses above:
+#
+#     ldr   r1, [r3, #4]        ; the adjustment
+#     add   r0, r0, r1, asr #1  ; this += adj >> 1   (ARITHMETIC SHIFT)
+#     ands  r1, r1, #1          ; bit 0 is the VIRTUAL flag
+#     ldrne r2, [r0] / ldrne r1, [r3] / ldrne r1, [r2, r1]
+#     ldreq r1, [r3]
+#     blx   r1
+#
+# MSVC's eight-byte form adds the adjustment to this DIRECTLY: no asr #1, no
+# virtual bit. The two agree at exactly one value, zero. So the delta-zero proof
+# does two jobs and neither is optional: it makes MSVC's add ecx, delta equal
+# the ROM's this += adj >> 1, and it rules out the virtual path that no MSVC
+# flag can express. Sixteen source pairs were re-read out of the raw images with
+# their relocations by PMFC2 (runs/link100/out/PMFC/deltas_static_pmfc.txt); all
+# sixteen carry a kind:load relocation on the function word, exactly zero in the
+# adjustment word, no relocation from the adjustment word, and bit 0 clear.
+#
+# ---- WHAT EACH ROW RESTS ON ----------------------------------------------
+#
+#   data_ov002_021097bc   port_pushblock_states_seat aborts unless every record
+#                         reads {the ROM's own address, 0}, then writes host.
+#       func_ov002_020b9704   4 ROM referrers, all in linked TUs
+#       func_ov002_020b9750   1 ROM referrer, linked
+#
+#   data_ov002_0210af2c   port_pathlift_states_seat, same abort, same fill.
+#       func_ov002_020efa54   6 ROM referrers, all linked
+#
+#   data_ov014_0211476c   port_chain_chomp_states_seat aborts on a wrong
+#                         function word or a nonzero adjustment over all twelve
+#                         source pairs.
+#       func_ov014_02111ebc   11 ROM referrers, all linked
+#       func_ov014_02111f08    4 ROM referrers, all linked
+#
+#   data_ov034_02114538   port_wiggler_states_seat aborts unless enter and tick
+#                         both read {rom, 0}.
+#       func_ov034_021125b8   15 ROM referrers, 14 linked (the 15th is an ov052
+#                             word at the shared load address; see the caveat)
+#       func_ov034_02112604    1 ROM referrer, linked
+#
+#   data_ov063_0211efbc   bss. STATIC proof: ov063 0211ecd8 / 0211ece0 /
+#                         0211ece8 / 0211ecf0, each {reloc'd code, 0x00000000}
+#                         with no relocation on +4. ov63_bringup writes the host
+#                         address into those four SOURCE pairs before the sinit
+#                         copies them.
+#       func_ov063_0211ddac   3 ROM referrers, all linked
+#       func_ov063_0211ddf4   1 ROM referrer, linked
+#
+#   data_ov071_02122ecc   STATIC proof: ov071 02122e74 / 02122e7c / 02122e84 /
+#                         02122e8c, each {reloc'd code, 0x00000000}.
+#                         hal_fill_coffin_vtable re-seats the four function
+#                         words after the sinit.
+#       func_ov071_021223c8   2 ROM referrers, one linked (Coffin::Behavior)
+#       func_ov071_02122414   2 ROM referrers, one linked (Coffin::Behavior)
+#
+#   data_ov085_0212fe88   port_toad_states_seat aborts unless each record reads
+#                         {rom, 0}, then fills host.
+#       func_ov085_02129524   3 ROM referrers, all linked
+#       func_ov085_02129570   1 ROM referrer, Toad::Behavior, which has no
+#                             matched TU; the reference reaches this row through
+#                             the host body in unmatched/Ov085_Behaviors.cpp.
+#
+# THE REFERRER CAVEAT IS REAL. Referrers were found by ROM ADDRESS: relocs.txt
+# plus an intra-module scan of the owning overlay for BL/B targets and for data
+# words equal to the address. Overlays that share a load window therefore
+# produce FALSE referrers, and two rows show one (.p__sinit_ov072_02122414 at
+# the ov071 address, data_ov052_021125ac at the ov034 address). Neither changes
+# a verdict, because both rows have a real linked caller in their own overlay.
+#
+# ---- THE SEVEN NAMES, AND WHERE THEY LIVE --------------------------------
+#
+# Every one of the thirteen declares its table at namespace scope in C++ and NOT
+# inside extern "C", so MSVC mangles the reference while the mount publishes the
+# table under C linkage. Read out of each TU's own /FAs listing: all thirteen
+# emit a mangled EXTRN, all seven tables are published as _data_ovNNN_XXXXXXXX
+# (each exactly once in walk_window.map, in an ovNNN_syms.c.obj), and not one of
+# the seven aliases existed in the tree before this lane. They are in
+# port/hal/pmfc_aliases.cpp, which carries the reading and the per-table seat.
+#
+# ---- WHAT COMES OUT OF WHICH HOST FILE -----------------------------------
+#
+# PMFC2's retire plan was right about six of seven files and wrong about two
+# statics; both were caught by re-grepping the files rather than trusting the
+# plan, which is what it asked for.
+#
+#   unmatched/Bbh_PmfDispatch.c            KEEP THE FILE.
+#       removed func_ov063_0211ddac, func_ov063_0211ddf4, func_ov071_021223c8,
+#       func_ov071_02122414 and the two externs that went dead with them.
+#       KEPT _ZN12MansionSteps8BehaviorEv, which is CALL-shaped, and KEPT the
+#       static bbh_pmf_call -- PMFC2's plan called it "now-unused", but
+#       MansionSteps::Behavior dispatches the furniture table through it.
+#   unmatched/ChainChomp_States.cpp        KEEP THE FILE.
+#       removed func_ov014_02111ebc, func_ov014_02111f08 and the static
+#       port_chomp_call, which really did go dead with them. KEPT
+#       port_chain_chomp_states_seat, which is the delta proof itself and is
+#       called from hal/actor_classes_bob_enemy.cpp.
+#   unmatched/PathLift_StateDispatch.cpp   KEEP THE FILE.
+#       removed func_ov002_020efa54 and its now-dead forward declaration. KEPT
+#       port_pathlift_states_seat, KEPT _ZN8PathLift12BaseBehaviorEv and its
+#       PathLift::BaseBehavior face (both CALL-shaped), and KEPT the static
+#       pl_pmf_call -- PMFC2's plan did not list it, and BaseBehavior needs it.
+#   unmatched/PushBlock_StateDispatch.cpp  KEEP THE FILE.
+#       removed func_ov002_020b9704 and func_ov002_020b9750. KEPT
+#       port_pushblock_states_seat.
+#   unmatched/Ov085_Toad_StateSeat.cpp     DELETED.
+#       it held only the two dispatchers and their static helper; the seat is
+#       port_toad_states_seat in hal/actor_overlays.cpp.
+#   unmatched/Wiggler_StateEnter.cpp       DELETED.
+#   unmatched/Wiggler_StateTick.cpp        DELETED.
+#       one dispatcher each; the seat is port_wiggler_states_seat in
+#       hal/actor_classes_ov034.cpp.
+#
+# NO SEAT NEEDED CHANGING. None of the seven seats installs the address of a
+# body this slice retires: every one of them installs the STATE bodies, and the
+# thirteen are the DISPATCHERS that read them. The two live references to a
+# retired body from outside the seven files both keep working unchanged, because
+# the matched TU publishes the same C name with the same cdecl signature:
+# hal/actor_classes_ov100pl.cpp:185 declares func_ov002_020efa54(void *, int),
+# and unmatched/Ov085_Behaviors.cpp:134 and :297 declare and call
+# func_ov085_02129570(void *). The PUBLIC name in every one of the thirteen
+# listings is the plain _func_ovNNN_XXXXXXXX.
+#
+# ---- THE THIRTEEN ---------------------------------------------------------
+src/func_ov002_020b9704.cpp
+src/func_ov002_020b9750.cpp
+src/func_ov002_020efa54.cpp
+src/func_ov014_02111ebc.cpp
+src/func_ov014_02111f08.cpp
+src/func_ov034_021125b8.cpp
+src/func_ov034_02112604.cpp
+src/unnamed/ov063/func_ov063_0211ddac.cpp
+src/unnamed/ov063/func_ov063_0211ddf4.cpp
+src/func_ov071_021223c8.cpp
+src/func_ov071_02122414.cpp
+src/func_ov085_02129524.cpp
+src/func_ov085_02129570.cpp
+#
+# ---- GATE 2: ONE OF THE FIVE OPEN-CODED ROWS ------------------------------
+#
+# PMFC2 called five rows "the cheapest in the family that are not already free":
+# they use no member pointer at all, they read the pair as two ints and test bit
+# 0 by hand, and they call the code word as a raw cdecl void (*)(void *) or
+# void (*)(void *, int) with the receiver PUSHED. So none of them wants a
+# receiver face and none of them reads a table RECORD, which means the stride
+# correction above does not touch them either. What every one of them needs is a
+# HOST ADDRESS IN THE CODE WORD, and that is where four of the five stop.
+#
+# TAKEN, one row:
+#
+#   _ZN4Bird8BehaviorEv   src/_ZN4Bird8BehaviorEv.cpp, table data_ov009_02113c48,
+#       four slots. Its seat ALREADY EXISTS and is already correct:
+#       port_ov009_sinits in hal/ov009_boot.cpp runs the four ov009 sinits, then
+#       checks each slot's function word against the ROM address the reloc table
+#       promises and each slot's delta against zero, aborts loudly on either, and
+#       writes the host body's address in. Slot 2 is a NONMATCHING asm hatch with
+#       no C body at all and is seated with a named abort, which is honest and is
+#       unchanged. All this row needed was a NAME: the matched TU defines the real
+#       C++ method Bird::Behavior(), publishing ?Behavior@Bird@@QAEHXZ, while every
+#       caller spells the C name _ZN4Bird8BehaviorEv the host copy used to define.
+#       One cdecl face in hal/ov009_boot.cpp, the hal/fold2_faces.cpp shape.
+#
+# NOT TAKEN, four rows, each blocked for a reason that is structural:
+#
+#   func_ov006_0211b5e0   table data_ov006_02142e20, 13 slots
+#   func_ov006_0211b954   table data_ov006_02142df8,  5 slots
+#       family_c.tsv records "<object field>" for both and that is wrong: each
+#       names a real table, and unmatched/MgSound_StateDispatch.cpp's own line 186
+#       says the ov006 mount defines the storage and __sinit_ov006_02132970 fills
+#       it, so after the sinit both hold DS CODE ADDRESSES. What stands in for a
+#       seat today is port_mg_sound_call1 -> sound_try_1, a CALL-TIME ADDRESS
+#       SWITCH inside the host copy: it takes the DS word the table holds and calls
+#       the matching host body by name. Retiring the host copy takes the switch
+#       with it. The fix is to turn that switch inside out into a boot installer
+#       over the two tables -- all eighteen ROM-to-host pairs are already written
+#       down in sound_try_1 and every target is a real host body in the same file.
+#       IT IS BLOCKED ON A CALL SITE, not on the installer: the only place in the
+#       tree that runs the ov006 sinits is hal/scene_mg.cpp:991, which is outside
+#       this lane's files, and there is no honest self-triggering alternative (a
+#       static constructor would read the table before the sinit fills it, and
+#       nothing else in MgSound_StateDispatch.cpp runs before the first dispatch,
+#       because the thirteen sub-dispatchers ARE what the table points at).
+#       One line in hal/scene_mg.cpp is worth +2 here and would also unblock the
+#       thirteen sub-dispatcher rows that read the same tables.
+#
+#   func_ov006_020e683c   src/func_ov006_020e683c.cpp line 7 is
+#       "dScMgCurling2_c::Behavior - recovered from vtable slot identity". That is
+#       the guess marker: a guessed body is not matched code and
+#       inferred_stub_guard.py refuses a new seat for one. Not taken, and it
+#       should not be until it is adjudicated against ROM bytes and recorded the
+#       way inferred_stub_adjudicated.txt records the others. Its table
+#       data_ov006_02141a18 has the same call-time-switch problem anyway
+#       (unmatched/MgCurling2_StateDispatch.cpp:328).
+#
+#   func_ov006_020c3d18   the one row where "<object field>" is right: the matched
+#       TU reads the pair out of the OBJECT, at *(int*)c and *(int*)(c+4), not out
+#       of any table. There is no boot-time storage to install a host address
+#       into; the address would have to be written by whatever SETS that
+#       per-instance field, which is in no file this lane owns. Its host copy,
+#       unmatched/MgFlower_SubDispatch.cpp, is a four-case address switch with a
+#       loud unhandled path, which is the right shape for what it is.
+#
+src/_ZN4Bird8BehaviorEv.cpp

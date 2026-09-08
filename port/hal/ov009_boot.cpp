@@ -18,6 +18,7 @@
 #include <cstdlib>
 
 #include "dsstate_seg.h"
+#include "Bird.h"      /* for the cdecl face at the end of this file */
 
 /* THE GUARD IS CAPTURED, and it is the same defect the level mount cache had.
  *
@@ -124,11 +125,30 @@ extern "C" void port_ov009_sinits(void)
     }
 }
 
-/* HOST COPY of the Bird's Behavior dispatch. The matched source reads the
-   pair as an mwcc pointer-to-member -- `obj = this + (ptr >> 1)`, and bit 0
-   of ptr says "the function word is a vtable OFFSET, not an address". All
-   four of this level's are the nonvirtual form with a zero delta, which the
-   seat above asserts, so the dispatch is a plain call. */
+/* THE FACE, and why this row needed nothing else (run link100, lane PMFB1).
+
+   src/_ZN4Bird8BehaviorEv.cpp is on port/slice_pmfc.txt now and the host copy
+   that used to stand here is gone. Everything that row needed was already in
+   this file: port_ov009_sinits above runs the four ov009 sinits, then checks
+   each of data_ov009_02113c48's four slots against the ROM address the reloc
+   table promises AND against a zero delta, aborting loudly on either, and
+   only then writes the HOST body address into the code word. So by the time
+   anything can dispatch, the word the matched TU reads is a host address.
+
+   The matched TU does not use a pointer-to-member at all. It reads the pair
+   as two ints, tests bit 0 itself, and calls the code word as a raw cdecl
+   void (*)(void *) with the receiver PUSHED -- so unlike the CALL-shaped rows
+   of this family it needs no __fastcall receiver face, and unlike the thirteen
+   tail-jump rows it reads no table record, so the /Zp4 stride correction in
+   block R9d does not apply to it either. Its `obj = this + (ptr >> 1)` arm is
+   the ROM's own arithmetic and the seat has already proven every ptr zero.
+
+   What it DOES need is a name. The matched TU defines the real C++ method
+   Bird::Behavior(), so its object publishes ?Behavior@Bird@@QAEHXZ, while every
+   caller in the port spells the C name _ZN4Bird8BehaviorEv that the host copy
+   used to define. That is a one-line cdecl face, the shape hal/fold2_faces.cpp
+   uses for thirty of these. The call is qualified so it cannot become a
+   virtual dispatch. */
 extern "C" {
 void Vec3_Asr(void *dst, const void *src, int n);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -139,30 +159,5 @@ int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
 int _ZN9Animation7AdvanceEv(void *a);
 extern int data_020a0e68[12];
 
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (obj = this + (ptr >>
-//   1), bit 0 selects a vtable offset). See the note above.
-int _ZN4Bird8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    int idx = *(int *)(c + 0x17c);
-    if ((unsigned)idx >= 4) {
-        std::fprintf(stderr, "FATAL: Bird state %d out of range\n", idx);
-        std::abort();
-    }
-    ((void (*)(void *))(size_t)data_ov009_02113c48[idx].fn)(c);
-    {
-        int tmp[3];
-        Vec3_Asr(tmp, c + 0x5c, 3);
-        Matrix4x3_FromTranslation(data_020a0e68, tmp[0], tmp[1], tmp[2]);
-        *(short *)(c + 0x8e) = *(short *)(c + 0x94);   /* angleY = prev */
-        Matrix4x3_ApplyInPlaceToRotationZ(data_020a0e68, *(short *)(c + 0x90));
-        Matrix4x3_ApplyInPlaceToRotationY(data_020a0e68, *(short *)(c + 0x8e));
-        for (int i = 0; i < 12; ++i)
-            ((int *)(c + 0xf0))[i] = data_020a0e68[i];
-    }
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        c, c + 0x138, c + 0xf0, 0x1e000, 0x7d0000, 0xf);
-    _ZN9Animation7AdvanceEv(c + 0x124);   /* the ModelAnim's own Animation */
-    return 1;
-}
+int _ZN4Bird8BehaviorEv(void *s)   { return ((Bird *)s)->Bird::Behavior(); }
 }  /* extern "C" */
