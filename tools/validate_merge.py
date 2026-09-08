@@ -1394,7 +1394,19 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     # when both totals hold.
     if he["stats"]["sourceFunctions"] < be["stats"]["sourceFunctions"]:
         reasons.append("source-built function coverage decreased")
-    dropped_enrollment = sorted(set(be["source"]) - set(he["source"]))
+    # A key changes whenever an entry's `end` moves, so a range that GREW to swallow
+    # its neighbour reads as dropped even though every one of its bytes is still
+    # compiled and byte-compared -- and the warning below would then say those bytes
+    # left the verified set, which is the opposite of what happened. Only report a base
+    # range no head range still covers.
+    _head_spans = collections.defaultdict(list)
+    for _entry in he["source"].values():
+        _head_spans[_entry["module"]].append((_entry["addr"], _entry["end"]))
+    dropped_enrollment = sorted(
+        key for key, entry in be["source"].items()
+        if key not in he["source"]
+        and not any(start <= entry["addr"] and entry["end"] <= stop
+                    for start, stop in _head_spans.get(entry["module"], [])))
     # Reassignment alone (a name moving from one contributor to another, credit_changes)
     # is never a blocker: a rebase, a rename, or resolving someone else's merge conflict
     # all relabel a function's "last touched by" without losing anything, and this
