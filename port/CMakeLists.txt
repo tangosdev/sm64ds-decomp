@@ -15670,6 +15670,13 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211b5e0.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8PathLift12BaseBehaviorEv.cpp"
     PROPERTIES COMPILE_OPTIONS "/Zp4")
+# src/func_ov002_020aea30.c is a //cpp-marked .c: its own text spells
+# `typedef void (C::*PMF)(int, int);`, which is not C. The tree's standing
+# treatment for that is LANGUAGE CXX on the source, and this is one more of
+# them.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020aea30.c"
+    PROPERTIES LANGUAGE CXX)
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb2.txt" SLICE_PMFB2_LINES)
 set(SLICE_PMFB2_SOURCES "")
 foreach(line IN LISTS SLICE_PMFB2_LINES)

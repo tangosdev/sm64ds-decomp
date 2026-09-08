@@ -88,17 +88,86 @@ int func_ov002_020aea24(void *self, void *clsn);
 
 typedef int (*PortEnemyDeathFn)(void *, void *);
 
+/* ---- THE FACES (run link100, lane PMFB2) --------------------------------
+   Both dispatchers over these two tables are retired onto their matched TUs,
+   and both dispatch a real pointer-to-member, which MSVC emits as
+   `call <reg>` with the receiver in ECX and the arguments PUSHED:
+
+     src/_ZN5Enemy11UpdateDeathER12WithMeshClsn.cpp
+         push DWORD PTR _clsn$[ebp]
+         mov  ecx, <table 0210dbc0>[eax*8-4]     the adjust word
+         mov  eax, <table 0210dbc0>[eax*8-8]     the code word (index-1 folded
+                                                  into the displacement)
+         add  ecx, ebx  /  call eax
+     src/func_ov002_020aea30.c   (a //cpp-marked .c, compiled as C++)
+         push DWORD PTR _b$[ebp]  /  push DWORD PTR _a$[ebp]
+         mov  ecx, <table 0210db80>[edx*8-4]
+         mov  eax, <table 0210db80>[edx*8-8]
+         add  ecx, esi  /  call eax
+
+   THE ARITY IS NOT THE ZERO-ARGUMENT SHAPE and is taken from each row's OWN
+   listing, which is the standing trap: a wrong-arity raw cast smashes the
+   stack on first exercise. One face takes the WithMeshClsn& the death states
+   read, the other takes the two ints the enter states read; __fastcall lands
+   the receiver in ecx, ignores edx and leaves those arguments exactly where a
+   cdecl body reads them.
+
+   BOTH THE ROM STATICS AND THE BSS TABLES take the face, because the seat
+   below writes both -- leaving the statics on the raw body would let a second
+   run of the sinit quietly reinstate the wrong convention.
+
+   WHAT THE RETIRED COPIES CHECKED THAT NOTHING CHECKS NOW: each tested
+   `m->fn & 1` and aborted, calling it a virtual member pointer. That test
+   reads the CODE word; the mwcc virtual flag lives in bit 0 of the ADJUST
+   word, and all sixteen source pairs read {code, 0} in
+   extracted/overlays/overlay_0002.bin, so the flag is never set and the test
+   could never have fired. It is not being replaced because it was inert. */
+static int __fastcall pmf_face_func_ov002_020ae64c(void *self, void *dead_edx, void *clsn)
+{ return func_ov002_020ae64c(self, clsn); }
+static int __fastcall pmf_face_func_ov002_020ae608(void *self, void *dead_edx, void *clsn)
+{ return func_ov002_020ae608(self, clsn); }
+static int __fastcall pmf_face_func_ov002_020ae4cc(void *self, void *dead_edx, void *clsn)
+{ return func_ov002_020ae4cc(self, clsn); }
+static int __fastcall pmf_face_func_ov002_020ae454(void *self, void *dead_edx, void *clsn)
+{ return func_ov002_020ae454(self, clsn); }
+static int __fastcall pmf_face_func_ov002_020aea24(void *self, void *dead_edx, void *clsn)
+{ return func_ov002_020aea24(self, clsn); }
+
+#define ENTER_FACE(sym)                                                       \
+    static void __fastcall pmf_face_##sym(void *self, void *dead_edx,         \
+                                          int a, int b)                       \
+    { sym(self, a, b); }
+ENTER_FACE(func_ov002_020ae9f8)
+ENTER_FACE(func_ov002_020ae954)
+ENTER_FACE(func_ov002_020ae890)
+ENTER_FACE(func_ov002_020ae87c)
+ENTER_FACE(func_ov002_020ae844)
+ENTER_FACE(func_ov002_020ae80c)
+ENTER_FACE(func_ov002_020ae73c)
+ENTER_FACE(func_ov002_020aea2c)
+#undef ENTER_FACE
+
+/* THE TWO ALIASES. Each matched TU declares its table outside its extern "C"
+   block, so each names it at C++ linkage while the ov002 mount defines the
+   plain C name. The death table's directive already exists in
+   hal/bob_enemy_bridges.cpp:66 and is not repeated here; the enter table's is
+   this lane's and lives with the seat that owns it. alternatename_guard's rule
+   holds: the LHS is never DEFINED anywhere, only referenced. */
+#pragma comment(linker, "/alternatename:?data_ov002_0210db80@@3PAP8C@@AEXHH@ZA=_data_ov002_0210db80")
+
+#define DF(sym) (PortEnemyDeathFn)pmf_face_##sym
 static const struct { PortEnemyPmf *slot; unsigned rom; PortEnemyDeathFn host; }
 g_enemy_death[] = {
-    {data_ov002_021081b0, 0x020ae64c, func_ov002_020ae64c},
-    {data_ov002_021081a8, 0x020ae608, func_ov002_020ae608},
-    {data_ov002_02108148, 0x020ae608, func_ov002_020ae608},
-    {data_ov002_02108198, 0x020ae4cc, func_ov002_020ae4cc},
-    {data_ov002_02108190, 0x020ae608, func_ov002_020ae608},
-    {data_ov002_02108188, 0x020ae608, func_ov002_020ae608},
-    {data_ov002_02108180, 0x020ae454, func_ov002_020ae454},
-    {data_ov002_02108178, 0x020aea24, func_ov002_020aea24},
+    {data_ov002_021081b0, 0x020ae64c, DF(func_ov002_020ae64c)},
+    {data_ov002_021081a8, 0x020ae608, DF(func_ov002_020ae608)},
+    {data_ov002_02108148, 0x020ae608, DF(func_ov002_020ae608)},
+    {data_ov002_02108198, 0x020ae4cc, DF(func_ov002_020ae4cc)},
+    {data_ov002_02108190, 0x020ae608, DF(func_ov002_020ae608)},
+    {data_ov002_02108188, 0x020ae608, DF(func_ov002_020ae608)},
+    {data_ov002_02108180, 0x020ae454, DF(func_ov002_020ae454)},
+    {data_ov002_02108178, 0x020aea24, DF(func_ov002_020aea24)},
 };
+#undef DF
 
 /* Both sides are seated, and that is deliberate. The sinit runs from the
    window's own boot and the registry runs later, so by the time the first
@@ -124,17 +193,19 @@ static void port_enemy_death_seat_one(PortEnemyPmf *p, unsigned rom,
 
 typedef void (*PortEnemyEnterFn)(void *, int, int);
 
+#define EF(sym) (PortEnemyEnterFn)pmf_face_##sym
 static const struct { PortEnemyPmf *slot; unsigned rom; PortEnemyEnterFn host; }
 g_enemy_enter[] = {
-    {data_ov002_021081b8, 0x020ae9f8, func_ov002_020ae9f8},
-    {data_ov002_02108150, 0x020ae954, func_ov002_020ae954},
-    {data_ov002_02108168, 0x020ae890, func_ov002_020ae890},
-    {data_ov002_02108160, 0x020ae87c, func_ov002_020ae87c},
-    {data_ov002_02108158, 0x020ae844, func_ov002_020ae844},
-    {data_ov002_02108170, 0x020ae80c, func_ov002_020ae80c},
-    {data_ov002_02108140, 0x020ae73c, func_ov002_020ae73c},
-    {data_ov002_021081a0, 0x020aea2c, func_ov002_020aea2c},
+    {data_ov002_021081b8, 0x020ae9f8, EF(func_ov002_020ae9f8)},
+    {data_ov002_02108150, 0x020ae954, EF(func_ov002_020ae954)},
+    {data_ov002_02108168, 0x020ae890, EF(func_ov002_020ae890)},
+    {data_ov002_02108160, 0x020ae87c, EF(func_ov002_020ae87c)},
+    {data_ov002_02108158, 0x020ae844, EF(func_ov002_020ae844)},
+    {data_ov002_02108170, 0x020ae80c, EF(func_ov002_020ae80c)},
+    {data_ov002_02108140, 0x020ae73c, EF(func_ov002_020ae73c)},
+    {data_ov002_021081a0, 0x020aea2c, EF(func_ov002_020aea2c)},
 };
+#undef EF
 
 extern "C" void port_enemy_death_states_seat(void)
 {
@@ -157,53 +228,27 @@ extern "C" void port_enemy_death_states_seat(void)
     }
 }
 
-/* HOST COPY of src/func_ov002_020aea30.c -- the enter-death dispatch. Its own
-   TU spells the table `void (C::*)(int, int)` with C incomplete, the same
-   quadrupled stride. Its callers spell it without the overlay tag. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov002_020aea30(void *thiz, int a, int b)
-{
-    char *c = (char *)thiz;
-    int type = *(int *)(c + 0x10c);
-    if (type == 0)
-        return;
-    *(unsigned *)(c + 0xb0) &= ~0x10000000u;
-    *(short *)(c + 0x102) = 0;
-    {
-        const PortEnemyPmf *m = &data_ov002_0210db80[type - 1];
-        if (m->fn & 1) {
-            std::fprintf(stderr, "FATAL: Enemy enter-death type %d is a "
-                         "VIRTUAL member pointer (%08x/%d)\n", type, m->fn,
-                         m->delta);
-            std::abort();
-        }
-        ((PortEnemyEnterFn)(size_t)m->fn)(c + m->delta, a, b);
-    }
-    *(int *)(c + 0x9c) = -0x2000;
-    *(unsigned *)(c + 0xb0) &= ~0x10000000u;
-}
+/* BOTH HOST COPIES RETIRED (run link100, lane PMFB2).
+   func_ov002_020aea30 and _ZN5Enemy11UpdateDeathER12WithMeshClsn are on
+   port/slice_pmfb2.txt and compile from src/func_ov002_020aea30.c (a
+   //cpp-marked .c, given LANGUAGE CXX in CMake block R10a) and
+   src/_ZN5Enemy11UpdateDeathER12WithMeshClsn.cpp. Both define the Itanium C
+   name themselves, so neither needs a face for its own symbol.
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN5Enemy11UpdateDeathER12WithMeshClsn(void *thiz, void *clsn)
-{
-    char *c = (char *)thiz;
-    int ret;
-    int type = *(int *)(c + 0x10c);
-    if (type == 0)
-        return 0;
-    DecIfAbove0_Short((short *)(c + 0x102));
-    {
-        const PortEnemyPmf *m = &data_ov002_0210dbc0[type - 1];
-        if (m->fn & 1) {
-            std::fprintf(stderr, "FATAL: Enemy death type %d is a VIRTUAL "
-                         "member pointer (%08x/%d); no class in this port "
-                         "stores one there\n", type, m->fn, m->delta);
-            std::abort();
-        }
-        ret = ((PortEnemyDeathFn)(size_t)m->fn)(c + m->delta, clsn);
-    }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(thiz, 0);
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(thiz, clsn, 0);
-    return ret;
-}
+   MEASURED FOR THAT LANE, both ways round:
+     RECORD STRIDE. The ROM strides both tables by eight --
+     `add r3, r1, r0, lsl #3` at 0x020ae6e0 and `add lr, r3, r0, lsl #3` at
+     0x020aea70 -- and both matched TUs emit [reg*8] off the raw index, with
+     the index-1 folded into the displacement (-8 and -4). Neither record is a
+     struct containing a pointer-to-member, so /Zp4 does not move either and
+     neither is on the option list.
+     ADJUST WORDS. All sixteen source pairs -- 0x02108140..0x021081b8, the
+     eight the seat above names per table -- read {code, 0} in
+     extracted/overlays/overlay_0002.bin, so `this` is never adjusted and the
+     ROM takes its non-virtual arm.
+     CALL SHAPE AND ARITY. `call <reg>` with the receiver in ecx and the
+     arguments PUSHED: one WithMeshClsn& for the death half, two ints for the
+     enter half. The faces above carry exactly those arities, each from its own
+     listing.
+   The seat is unchanged in what it CHECKS; only the address it writes is now
+   the face's rather than the body's. */

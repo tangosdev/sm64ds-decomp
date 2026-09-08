@@ -179,18 +179,7 @@ src/_ZN4Flag6RenderEv.cpp
 #     turns that into an out-of-bounds read of ov002's storage. The row is
 #     otherwise ready (stride 8 both sides, seven pairs all {code, 0}, the
 #     alias spelled) and it wants the guard moved into the seat first.
-#   _ZN5Enemy11UpdateDeathER12WithMeshClsn and func_ov002_020aea30
-#     (data_ov002_0210dbc0 and data_ov002_0210db80). Both dispatches PUSH
-#     arguments -- one WithMeshClsn& for the first, two ints for the second --
-#     so their faces are not the zero-argument shape and each must come from
-#     that row's OWN listing. The first's listing is measured here (`push
-#     DWORD PTR _clsn$[ebp]` before the `call eax`, stride 8 against the ROM's
-#     `add r3,r1,r0,lsl #3` at 0x020ae6e0, eight source pairs all {code, 0});
-#     the SECOND's is not, because src/func_ov002_020aea30.c is a //cpp-marked
-#     .c that this lane's listing harness compiled as C and could not read.
-#     The pair also shares one seat that writes BOTH the eight ROM statics and
-#     both bss tables, so they are one change and not two. Ready for a lane
-#     that measures the second listing first.
+#   (the Enemy pair moved to batch 4 below once its second listing was read)
 #   func_ov002_020f2dd4, func_ov002_020f37a0, func_ov002_020f5990
 #     (data_ov002_02110ebc, 02110e4c, 02110e7c). Their host copies are in
 #     hal/cutscene_states_link100.cpp while the seat that installs their tables
@@ -206,3 +195,44 @@ src/_ZN13OneUpMushroom8BehaviorEv.cpp
 src/_ZN4Coin8BehaviorEv.cpp
 src/_ZN9PowerStar8BehaviorEv.cpp
 src/_ZN12PiranhaPlant8BehaviorEv.cpp
+#
+# ---- BATCH 4: the Enemy death / enter-death pair ---------------------------
+#
+# The two rows batch 3 deferred, taken once the second listing was read. Both
+# dispatches PUSH arguments, so their faces are not the zero-argument shape;
+# each face's arity comes from that row's OWN listing and from nowhere else,
+# which is the standing wrong-arity trap.
+#
+#   _ZN5Enemy11UpdateDeathER12WithMeshClsn  table data_ov002_0210dbc0
+#       ROM  0x020ae6e0  add r3, r1, r0, lsl #3           stride 8
+#       emit ?data_ov002_0210dbc0@@3PAP8Enemy@@AEHAAUWithMeshClsn@@@ZA[eax*8-8]
+#            with `push DWORD PTR _clsn$[ebp]` before the call: ONE argument
+#       face int __fastcall (void *self, void *dead_edx, void *clsn)
+#   func_ov002_020aea30                     table data_ov002_0210db80
+#       ROM  0x020aea70  add lr, r3, r0, lsl #3           stride 8
+#       emit ?data_ov002_0210db80@@3PAP8C@@AEXHH@ZA[edx*8-8]
+#            with `push _b$` and `push _a$` before the call: TWO arguments
+#       face void __fastcall (void *self, void *dead_edx, int a, int b)
+#
+# The -8 / -4 displacements are the ROM's own index-1 folded into the operand.
+# Neither record is a struct containing a pointer-to-member, so neither is on
+# the /Zp4 list; both emit 8 with and without it.
+#
+# ALL SIXTEEN SOURCE PAIRS (0x02108140..0x021081b8) read {code, 0} in
+# extracted/overlays/overlay_0002.bin, so `this` is never adjusted.
+#
+# ONE SEAT COVERS BOTH ROWS and writes FOUR places per index: the eight ROM
+# statics of each table plus each bss copy. All four take the face, because
+# leaving the statics on the raw body would let a second run of the sinit
+# reinstate the wrong convention.
+#
+# ALIASES: the death table's directive already exists in
+# hal/bob_enemy_bridges.cpp:66; the enter table's is new and lives in the seat
+# file. Both TUs define their own Itanium C name, so neither needs a method
+# face.
+#
+# src/func_ov002_020aea30.c is a //cpp-marked .c -- `typedef void (C::*PMF)
+# (int, int);` is not C -- and is given LANGUAGE CXX in CMake block R10a, the
+# same treatment the tree gives every other //cpp-marked .c it compiles.
+src/_ZN5Enemy11UpdateDeathER12WithMeshClsn.cpp
+src/func_ov002_020aea30.c
