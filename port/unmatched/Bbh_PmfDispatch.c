@@ -30,8 +30,6 @@
  */
 
 extern unsigned char data_ov063_0211ef38[];
-extern unsigned char data_ov071_02122ecc[];
-extern unsigned char data_ov063_0211efbc[];
 extern int func_ov063_0211c684(char *c);
 extern int func_ov063_0211c6f8(char *c);
 
@@ -61,23 +59,19 @@ int _ZN12MansionSteps8BehaviorEv(char *c)
     return 1;
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch, same ruling -- the matched
-   func_ov063_0211ddac.cpp reads Entry[idx].pmf[0] over the piano table. */
-void func_ov063_0211ddac(char *c, int i)
-{
-    unsigned char *e;
-    *(int *)(c + 0x6c8) = i;
-    e = data_ov063_0211efbc + (*(int *)(c + 0x6c8)) * 16;
-    bbh_pmf_call(e, c);
-}
-
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch, same ruling -- the matched
-   func_ov063_0211ddf4.cpp reads Entry[idx].pmf[1]. */
-void func_ov063_0211ddf4(char *c)
-{
-    unsigned char *e = data_ov063_0211efbc + (*(int *)(c + 0x6c8)) * 16;
-    bbh_pmf_call(e + 8, c);
-}
+/* func_ov063_0211ddac and func_ov063_0211ddf4 RETIRED (run link100, lane
+   PMFB1). src/unnamed/ov063/func_ov063_0211ddac.cpp and
+   src/unnamed/ov063/func_ov063_0211ddf4.cpp carry both on
+   port/slice_pmfc.txt. The piano table is the one record in this file that
+   MSVC already sized right without help: its Entry is two PMFs, sixteen
+   bytes, and the ROM strides it with `add r3, r2, r1, lsl #4` -- sixteen. The
+   eleven twenty-byte rows in the same slice needed a per-TU /Zp4 (block R9d
+   in port/CMakeLists.txt), because MSVC gives a struct containing a
+   pointer-to-member eight-byte alignment and rounds twenty up to twenty-four.
+   ov63_bringup in hal/actor_classes_ov063.cpp still writes the host addresses
+   into the four SOURCE pairs before the sinit copies them, unchanged.
+   bbh_pmf_call below STAYS: MansionSteps::Behavior dispatches the furniture
+   table through it. */
 
 /* ---- run linkw wave 5 addendum: CRAZED_CRATE's two dispatchers (ov080) ----
  *
@@ -137,20 +131,14 @@ void func_ov063_0211ddf4(char *c)
  * calls pmf@8 of the current entry.
  */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch over 20-byte entries; the
-   matched func_ov071_021223c8.cpp mis-strides under MSVC's 16-byte PMF. */
-void func_ov071_021223c8(char *c, int i)
-{
-    unsigned char *e;
-    *(int *)(c + 0x320) = i;
-    e = data_ov071_02122ecc + (*(int *)(c + 0x320)) * 20;
-    bbh_pmf_call(e, c);
-}
-
-/* PORT_HOST_ABI: same ruling -- the matched func_ov071_02122414.cpp calls
-   the entry's SECOND pair (+8). */
-void func_ov071_02122414(char *c)
-{
-    unsigned char *e = data_ov071_02122ecc + (*(int *)(c + 0x320)) * 20;
-    bbh_pmf_call(e + 8, c);
-}
+/* func_ov071_021223c8 and func_ov071_02122414 RETIRED (run link100, lane
+   PMFB1). src/func_ov071_021223c8.cpp and src/func_ov071_02122414.cpp carry
+   both on port/slice_pmfc.txt. The header above blamed "MSVC's 16-byte PMF"
+   and that reading is dead: with /vmg /vmm target-wide (block R8) the
+   pointer-to-member IS the ROM's eight-byte {function, delta} pair. What was
+   still wrong was the RECORD, not the pointer -- MSVC gives a struct that
+   contains a pointer-to-member eight-byte alignment, so the coffin's twenty-
+   byte entry came out twenty-four and the matched TUs strode 24 where the ROM
+   strides 0x14. A per-TU /Zp4 (block R9d in port/CMakeLists.txt) makes it
+   twenty. hal_fill_coffin_vtable in hal/actor_classes_scuttlebug.cpp still
+   re-seats the four function words after the sinit, unchanged. */

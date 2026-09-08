@@ -3649,6 +3649,68 @@ foreach(line IN LISTS SLICE_PMF3_LINES)
     list(APPEND SLICE_PMF3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# R9d, run link100 lane PMFB1: THE THIRTEEN FREE ROWS OF THE POINTER-TO-MEMBER
+# FAMILY, AND THE RECORD-STRIDE DEFECT THAT HAD TO BE FIXED FIRST.
+# Lane PMFC2 measured all 153 rows of the family and named these thirteen FREE:
+# each is a tail jump, each reads a table whose adjustment words are proven zero
+# and whose function words a seat rewrites with HOST addresses before the class
+# can spawn. That reading is right. What it did not read is the record STRIDE.
+# Its width pass recorded the SCALE of the indexed operand and never the LEA
+# that feeds it, so it reported "index stride 8" for an object that strides
+#     lea eax, DWORD PTR [eax+eax*2]   /   ...@@3PAUEntry@@A[eax*8]
+# which is 24 bytes per entry. All thirteen ROM bodies were disassembled at
+# their own addresses out of extracted/overlays/ for this lane: ELEVEN of them
+# stride TWENTY (mov r1, #0x14 / mla r3, r2, r1, r3) and only the two ov063 rows
+# stride sixteen. Index 0 is right either way and every other state would have
+# read the wrong record -- quietly, because every one of these state machines
+# starts in state 0.
+# WHY MSVC SIZES A 20-BYTE RECORD AT 24, probed under the port own flags:
+# sizeof(PMF) is 8 and __alignof(PMF) is 4 -- the ROM {function, delta} pair,
+# which is what /vmg /vmm bought in block R8 -- but MSVC gives any CLASS THAT
+# CONTAINS a pointer-to-member an alignment of EIGHT, and that rounds the
+# 20-byte record up to 24. The ROM record is 20 and is not 8-aligned at all.
+# THE FIX IS A COMPILE OPTION ON THE THIRTEEN AND NOTHING ELSE. /Zp4 caps the
+# default structure packing at four, which is the alignment every field in
+# these records actually has. It is the same lever block R8 already uses on
+# this exact family, one step further: no source edit, no ROM data touched, no
+# reference the ROM does not make. Measured before and after on all thirteen
+# (runs/link100/out/PMFB1/zp4_stride_table.txt): every emitted stride becomes
+# exactly the stride the ROM uses, every row stays a TAIL JUMP, every mangled
+# EXTRN is unchanged and the receiver still gets this + delta. Each TU holds
+# only the record and struct C { char pad[N]; int idx; }, whose fields are all
+# four-byte, so /Zp4 touches nothing else; the two ov063 rows are 16 either way
+# and are kept on the option so the set reads as one.
+# The reading, the per-row evidence and the retire plan are in
+# port/slice_pmfc.txt; the seven table-name aliases the slice needs to link at
+# all are port/hal/pmfc_aliases.cpp. The thirteen host bodies they replace come
+# out in the same commit, three of them as whole files
+# (unmatched/Ov085_Toad_StateSeat.cpp, unmatched/Wiggler_StateEnter.cpp and
+# unmatched/Wiggler_StateTick.cpp).
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020b9704.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020b9750.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020efa54.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov014_02111ebc.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov014_02111f08.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov034_021125b8.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov034_02112604.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/unnamed/ov063/func_ov063_0211ddac.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/unnamed/ov063/func_ov063_0211ddf4.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov071_021223c8.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov071_02122414.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov085_02129524.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov085_02129570.cpp"
+    PROPERTIES COMPILE_OPTIONS "/Zp4")
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfc.txt" SLICE_PMFC_LINES)
+set(SLICE_PMFC_SOURCES "")
+foreach(line IN LISTS SLICE_PMFC_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w15c.txt" SLICE_W15C_LINES)
 set(SLICE_W15C_SOURCES "")
 foreach(line IN LISTS SLICE_W15C_LINES)
@@ -11958,8 +12020,13 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN14KnockDownPlank13InitResourcesEv.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "data_ov034_02114538=port_ov015_kdp_clsn_files")
-list(APPEND SWEEP2_SOURCES hal/actor_classes_ov034.cpp ${SLICE_SWEEP2_OV034_SOURCES}
-    unmatched/Wiggler_StateEnter.cpp unmatched/Wiggler_StateTick.cpp)
+list(APPEND SWEEP2_SOURCES hal/actor_classes_ov034.cpp ${SLICE_SWEEP2_OV034_SOURCES})
+# unmatched/Wiggler_StateEnter.cpp and unmatched/Wiggler_StateTick.cpp RETIRED
+# (run link100, lane PMFB1): one state dispatcher each, and
+# src/func_ov034_021125b8.cpp and src/func_ov034_02112604.cpp carry both on
+# port/slice_pmfc.txt (block R9d). port_wiggler_states_seat in
+# hal/actor_classes_ov034.cpp still fills all eleven entries and still aborts
+# on a wrong function word or a nonzero adjustment; it is untouched.
 # unmatched/Wiggler_Render.cpp RETIRED (run link100, lane FOLD2): five
 # ModelAnims drawn through a six-virtual shadow's index 5, which
 # _ZTV9ModelAnim holds Render at again. src/_ZN7Wiggler6RenderEv.cpp carries it
@@ -13367,6 +13434,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
+    ${SLICE_PMFC_SOURCES} hal/pmfc_aliases.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${SLICE_TAGFIX_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES} ${SLICEINTRO_SOURCES} ${SLICE219_SOURCES}
@@ -13414,7 +13482,12 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
-    unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
+    unmatched/Ov085_Behaviors.cpp
+    # unmatched/Ov085_Toad_StateSeat.cpp RETIRED (run link100, lane PMFB1):
+    # it held only Toad's two state dispatchers and their static helper, and
+    # src/func_ov085_02129524.cpp and src/func_ov085_02129570.cpp carry both on
+    # port/slice_pmfc.txt (block R9d). The seat that fills their table is
+    # port_toad_states_seat in hal/actor_overlays.cpp and is untouched.
     # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
     # and last class. ONE host copy rides beside the slice now, the two PMF
     # dispatchers; unmatched/Ov085_PrincessPeach_Behavior.cpp RETIRED (run
@@ -13619,6 +13692,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
+    ${SLICE_PMFC_SOURCES} hal/pmfc_aliases.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -13668,7 +13742,12 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
-    unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
+    unmatched/Ov085_Behaviors.cpp
+    # unmatched/Ov085_Toad_StateSeat.cpp RETIRED (run link100, lane PMFB1):
+    # it held only Toad's two state dispatchers and their static helper, and
+    # src/func_ov085_02129524.cpp and src/func_ov085_02129570.cpp carry both on
+    # port/slice_pmfc.txt (block R9d). The seat that fills their table is
+    # port_toad_states_seat in hal/actor_overlays.cpp and is untouched.
     # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
     # and last class. ONE host copy rides beside the slice now, the two PMF
     # dispatchers; unmatched/Ov085_PrincessPeach_Behavior.cpp RETIRED (run
@@ -13930,6 +14009,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_ov022_w16.cpp ${SLICE_W16A_SOURCES}
     hal/actor_classes_ov002_w17.cpp ${SLICE_W17A_SOURCES}
     ${SLICE_W18A_SOURCES} ${SLICE_PMF2_SOURCES} ${SLICE_PMF3_SOURCES} hal/pmf3_aliases.cpp hal/ttc_level_data_seat.cpp
+    ${SLICE_PMFC_SOURCES} hal/pmfc_aliases.cpp
     unmatched/Ov070_PmfDispatch.cpp
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
@@ -13979,7 +14059,12 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp ${SLICEKLEPTO_SOURCES} unmatched/Klepto_StateDispatch.cpp unmatched/Klepto_PathPtrFaces.cpp
     ${SLICE180_SOURCES} ${SLICE203_SOURCES} ${SLICE204_SOURCES}
     hal/actor_classes_ov085.cpp ${SLICE205_SOURCES}
-    unmatched/Ov085_Behaviors.cpp unmatched/Ov085_Toad_StateSeat.cpp
+    unmatched/Ov085_Behaviors.cpp
+    # unmatched/Ov085_Toad_StateSeat.cpp RETIRED (run link100, lane PMFB1):
+    # it held only Toad's two state dispatchers and their static helper, and
+    # src/func_ov085_02129524.cpp and src/func_ov085_02129570.cpp carry both on
+    # port/slice_pmfc.txt (block R9d). The seat that fills their table is
+    # port_toad_states_seat in hal/actor_overlays.cpp and is untouched.
     # run rel0215 wave 3 (lane w3-f): ov085's PRINCESS_PEACH, the sixth
     # and last class. ONE host copy rides beside the slice now, the two PMF
     # dispatchers; unmatched/Ov085_PrincessPeach_Behavior.cpp RETIRED (run

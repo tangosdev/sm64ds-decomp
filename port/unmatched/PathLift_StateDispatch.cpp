@@ -65,7 +65,6 @@ void func_ov002_020ef57c(void *c);   /* FALL enter */
 void func_ov002_020ef408(void *c);   /* FALL tick  */
 
 void port_pathlift_states_seat(void);
-void func_ov002_020efa54(void *c, int i);
 void _ZN8PathLift12BaseBehaviorEv(void *c);
 }
 
@@ -129,17 +128,18 @@ static void pl_pmf_call(char *c, const PortPathLiftPair *pair)
     ((void (*)(void *))(size_t)fn)(self);
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately
-   incomplete class (the PushBlock/Unagi/MrBlizzard/BabyPenguin/HootTheOwl
-   treatment); MSVC's 16-byte incomplete-class PMF does not reproduce the
-   ROM's 8-byte {fn, delta} pair or its 20-byte record stride. Stores the
-   state index at +0x44c and dispatches that record's "enter" half once. */
-void func_ov002_020efa54(void *c, int i)
-{
-    char *p = (char *)c;
-    *(int *)(p + 0x44c) = i;
-    pl_pmf_call(p, &data_ov002_0210af2c[*(int *)(p + 0x44c)].enter);
-}
+/* func_ov002_020efa54 RETIRED (run link100, lane PMFB1).
+   src/func_ov002_020efa54.cpp carries it on port/slice_pmfc.txt. Both halves
+   of this file's reading were half right: /vmg /vmm target-wide (block R8)
+   already made the pointer-to-member the ROM's eight-byte {fn, delta} pair,
+   so the "16-byte incomplete-class PMF" is dead -- but the 20-BYTE RECORD
+   STRIDE the header names was still wrong, because MSVC gives a struct that
+   contains a pointer-to-member eight-byte alignment and rounds twenty up to
+   twenty-four. A per-TU /Zp4 (block R9d in port/CMakeLists.txt) makes the
+   matched TU stride the ROM's 0x14 exactly.
+   port_pathlift_states_seat above STAYS, and so does the static pl_pmf_call
+   below it: _ZN8PathLift12BaseBehaviorEv, the per-frame half, is CALL-shaped
+   under MSVC and is still hosted here. */
 
 /* PORT_HOST_ABI: same PMF ruling, the per-frame half. Reads the current
    state index back, dispatches that record's "tick", then clears the

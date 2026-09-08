@@ -100,29 +100,16 @@ extern "C" void port_chain_chomp_states_seat(void)
     }
 }
 
-static void port_chomp_call(const PortChompPmf *m, void *self, const char *half)
-{
-    if (m->fn & 1) {
-        std::fprintf(stderr, "FATAL: ChainChomp %s half is a VIRTUAL member "
-                     "pointer (%08x/%d); the ROM stores none there\n", half,
-                     m->fn, m->delta);
-        std::abort();
-    }
-    ((PortChompFn)(size_t)m->fn)((char *)self + m->delta);
-}
-
-/* +0x610 is the state index both halves read; the change one writes it. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov014_02111ebc(void *self, int i)
-{
-    *(int *)((char *)self + 0x610) = i;
-    port_chomp_call(&data_ov014_0211476c[*(int *)((char *)self + 0x610)].init,
-                    self, "init");
-}
-
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov014_02111f08(void *self)
-{
-    port_chomp_call(&data_ov014_0211476c[*(int *)((char *)self + 0x610)].main,
-                    self, "main");
-}
+/* func_ov014_02111ebc and func_ov014_02111f08 RETIRED (run link100, lane
+   PMFB1), and the static port_chomp_call with them -- nothing else called it.
+   src/func_ov014_02111ebc.cpp and src/func_ov014_02111f08.cpp carry both on
+   port/slice_pmfc.txt. The header above says MSVC "widens the PMF to its four-
+   word general representation"; that is dead, because /vmg /vmm target-wide
+   (block R8) makes the pointer-to-member the ROM's own eight-byte {function,
+   delta} pair. What was still wrong was the twenty-byte RECORD: MSVC gives a
+   struct containing a pointer-to-member eight-byte alignment and rounds twenty
+   up to twenty-four, so the matched TUs strode 24 where the ROM strides 0x14.
+   A per-TU /Zp4 (block R9d in port/CMakeLists.txt) makes it twenty.
+   port_chain_chomp_states_seat above STAYS: it is the delta proof itself, it
+   still aborts on a wrong function word or a nonzero adjustment over all
+   twelve source pairs, and hal/actor_classes_bob_enemy.cpp still calls it. */
