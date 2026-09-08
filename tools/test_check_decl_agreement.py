@@ -19,8 +19,11 @@ The five fixtures the gate was commissioned for, one test each:
 Self-running: `python tools/test_check_decl_agreement.py`, or via unittest/pytest.
 Needs no ROM and no compiler.
 """
+import io
 import json
 import pathlib
+import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -620,6 +623,351 @@ class RealTreeTests(unittest.TestCase):
             found = [d for d in decls if d.symbol == "__cxa_vec_ctor"]
             self.assertEqual(len(found), 1, rel)
             self.assertEqual(found[0].ret, want, rel)
+
+
+# ------------------------------------- the four false-pass paths reported on #2471
+
+BIG_FILES = 2100
+
+
+class BigRepo(object):
+    """A git repo past the tool's scan floors: 2,100 sources, 6,300 declarations.
+
+    The four cases below are `--changed` cases, and `--changed` means nothing on a
+    two-file toy: the tool exits 2 with SCAN TOO SMALL below MIN_FILES/MIN_DECLS/
+    MIN_SYMBOLS on purpose, so a small fixture would prove only that the floor works.
+    This tree clears 2,000 files and 6,000 declarations, which is what the review that
+    found these four paths held its own fixtures to.
+
+    The filler sources disagree about nothing, so every finding a test sees is one that
+    test wrote. Built once for the module and `reset()` between tests, because building
+    it is the expensive part.
+    """
+
+    _shared = None
+
+    @classmethod
+    def shared(cls):
+        if cls._shared is None:
+            cls._shared = cls()
+        return cls._shared
+
+    @classmethod
+    def dispose(cls):
+        if cls._shared is not None:
+            shutil.rmtree(str(cls._shared.root), ignore_errors=True)
+            cls._shared = None
+
+    def __init__(self):
+        self.root = pathlib.Path(tempfile.mkdtemp(prefix="decl-agreement-big-"))
+        self._build()
+
+    # ------------------------------------------------------------------ plumbing
+
+    def git(self, *args):
+        return subprocess.run(["git", *args], cwd=str(self.root),
+                              capture_output=True, text=True)
+
+    def write(self, rel, text):
+        p = self.root / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text, encoding="utf-8", newline="\n")
+        return p
+
+    def reset(self):
+        self.git("reset", "-q", "--hard", self.base)
+        self.git("clean", "-qfd")
+
+    def run_main(self, argv):
+        """(exit code, stdout) for one `check_decl_agreement.py` run over this tree."""
+        old_repo, old_baseline = CDA.REPO, CDA.BASELINE
+        CDA.REPO = self.root
+        CDA.BASELINE = self.root / "config" / "decl-agreement-baseline.json"
+        buf = io.StringIO()
+        old_stdout = sys.stdout
+        sys.stdout = buf
+        try:
+            rc = CDA.main(argv)
+        finally:
+            sys.stdout = old_stdout
+            CDA.REPO, CDA.BASELINE = old_repo, old_baseline
+        return rc, buf.getvalue()
+
+    def scope_size(self, out):
+        """The `N file(s) in scope` number the --changed line prints."""
+        m = re.search(r"(\d+) file\(s\) in scope", out)
+        return int(m.group(1)) if m else None
+
+    # ---------------------------------------------------------------- the tree
+
+    def _build(self):
+        self.git("init", "-q", "-b", "main")
+        self.git("config", "user.email", "t@example.invalid")
+        self.git("config", "user.name", "t")
+        self.write("include/types.h", TYPES_H + "typedef u32 tdef_handle;\n")
+        for i in range(BIG_FILES):
+            self.write("src/filler_%04d.c" % i,
+                       "".join("extern void filler_%04d_%s(int n);\n" % (i, s)
+                               for s in ("a", "b", "c"))
+                       + "void filler_%04d_body(int n) { (void)n; }\n" % i)
+        # Path 1 (:1340), the shared typedef: an unchanged consumer spelling the alias
+        # against an unchanged definition spelling what the alias means today.
+        self.write("src/tdef_def.c", "void tdef_target(unsigned int h) { (void)h; }\n")
+        self.write("src/tdef_user.c", "extern void tdef_target(tdef_handle h);\n")
+        # Path 2 (:1276), the linkage input: a bare extern in a C++ TU of a name
+        # `symbols.txt` does not record yet.
+        self.write("src/cfg_user.cpp", "//cpp\nextern void cfg_target(void);\n")
+        # Path 3 (:1162), the rename: a definition big enough for git to match it
+        # across a rename, and an unchanged consumer of it.
+        self.write("src/ren_old.c", _ren("void"))
+        self.write("src/ren_user.c", "extern void ren_target(int a);\n")
+        # Path 4 (:854), the initialised data definition.
+        self.write("src/data_def.c", "int data_target = 0;\n")
+        # The positive control: a definition whose declaration a test will contradict.
+        self.write("src/ctl_def.c", "void ctl_target(void) { }\n")
+        rows = "".join("cfg_other_%d kind:function(arm,size=0x4) addr:0x0200%04x\n"
+                       % (i, i) for i in range(4))
+        self.write("config/arm9/symbols.txt", rows)
+        self.git("add", "-A")
+        self.git("commit", "-qm", "base")
+        self.base = self.git("rev-parse", "HEAD").stdout.strip()
+
+
+REN_BODY = """\
+%s ren_target(int a)
+{
+    int i;
+    int total;
+
+    total = 0;
+    for (i = 0; i < a; i++) {
+        total += i;
+        if (total > 100) {
+            total -= 50;
+        }
+    }
+    if (a < 0) {
+        total = 0;
+    }
+    RETURN
+}
+"""
+
+
+def _ren(ret):
+    return (REN_BODY % ret).replace(
+        "RETURN", "return total;" if ret != "void" else "(void)total;")
+
+
+def tearDownModule():
+    BigRepo.dispose()
+
+
+class BigTreeHarnessTests(unittest.TestCase):
+    """The fixture the four cases run on has to be a real scan, and quiet."""
+
+    def test_the_fixture_tree_clears_the_scan_floors(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        files, decls, _defs, _u = CDA.collect(repo.root)
+        self.assertGreaterEqual(len(files), 2000)
+        self.assertGreaterEqual(len(decls), 6000)
+        self.assertGreaterEqual(len({d.symbol for d in decls}), CDA.MIN_SYMBOLS)
+
+    def test_the_unmutated_tree_is_clean_in_both_modes(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        rc_full, out_full = repo.run_main([])
+        self.assertEqual(rc_full, 0, out_full)
+        repo.write("src/filler_0000.c",
+                   (repo.root / "src" / "filler_0000.c").read_text() + "\n")
+        rc_changed, out_changed = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc_changed, 0, out_changed)
+
+    def test_a_wrong_return_type_fails_both_modes(self):
+        """The control. It fails before these four fixes and after them."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("src/ctl_user.c", "extern int ctl_target(void);\n")
+        rc_full, out_full = repo.run_main([])
+        self.assertEqual(rc_full, 1, out_full)
+        self.assertIn("src/ctl_user.c", out_full)
+        rc_changed, out_changed = repo.run_main(["--changed", "HEAD", "--list"])
+        self.assertEqual(rc_changed, 1, out_changed)
+        self.assertIn("src/ctl_user.c", out_changed)
+
+
+class SharedTypeScopeTests(unittest.TestCase):
+    """Path 1, `:1340`: changing a shared typedef invalidates unchanged consumers.
+
+    `src/tdef_user.c` declares `void tdef_target(tdef_handle)` and `src/tdef_def.c`
+    defines `void tdef_target(unsigned int)`. They agree while `tdef_handle` is
+    `u32`. Retyping the alias in `include/types.h` -- and touching nothing else --
+    makes the consumer wrong, and the consumer is not in the diff.
+    """
+
+    def _mutate(self, repo):
+        text = (repo.root / "include" / "types.h").read_text()
+        repo.write("include/types.h",
+                   text.replace("typedef u32 tdef_handle;",
+                                "typedef u16 tdef_handle;"))
+
+    def test_the_full_scan_sees_the_invalidated_consumer(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/tdef_user.c", out)
+
+    def test_the_changed_scan_folds_in_the_consumer_of_the_typedef(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        rc, out = repo.run_main(["--changed", "HEAD", "--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/tdef_user.c", out)
+
+    def test_the_typedef_fold_does_not_drag_in_the_whole_tree(self):
+        """Wide enough to catch the consumer, narrow enough to still be a PR scope."""
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        _rc, out = repo.run_main(["--changed", "HEAD"])
+        size = repo.scope_size(out)
+        self.assertIsNotNone(size, out)
+        self.assertLess(size, 50, out)
+
+
+class ConfigInputScopeTests(unittest.TestCase):
+    """Path 2, `:1276`: a `config/**/symbols.txt` row is an input to the gate.
+
+    Recording `cfg_target` unmangled makes the bare `extern` in the C++ TU
+    `src/cfg_user.cpp` a linkage disagreement. No src/ or include/ path changed, and
+    the PR scan used to exit 0 on that alone.
+    """
+
+    def _mutate(self, repo):
+        path = repo.root / "config" / "arm9" / "symbols.txt"
+        repo.write("config/arm9/symbols.txt",
+                   path.read_text()
+                   + "cfg_target kind:function(arm,size=0x4) addr:0x02001234\n")
+
+    def test_the_full_scan_sees_the_new_linkage_disagreement(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/cfg_user.cpp", out)
+
+    def test_the_changed_scan_does_not_exit_clean_on_a_config_only_diff(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        rc, out = repo.run_main(["--changed", "HEAD", "--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/cfg_user.cpp", out)
+
+    def test_an_untouched_config_still_ends_the_scan_early(self):
+        """The early exit is right when nothing the gate reads changed."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("notes/unrelated.md", "text\n")
+        rc, out = repo.run_main(["--changed", "HEAD"])
+        self.assertEqual(rc, 0, out)
+        self.assertIn("nothing for this gate to check", out)
+
+
+class RenamedDefinitionScopeTests(unittest.TestCase):
+    """Path 3, `:1162`: `--diff-filter=AM` drops a Git-detected rename.
+
+    `src/ren_old.c` becomes `src/ren_new.c` and its return type changes in the same
+    commit. Git reports one `R` row, which is neither `A` nor `M`, so the renamed
+    definition never reached the scope and `src/ren_user.c` was never re-checked.
+    """
+
+    def _mutate(self, repo):
+        repo.git("mv", "src/ren_old.c", "src/ren_new.c")
+        repo.write("src/ren_new.c", _ren("int"))
+        # A real pull request touches more than the renamed file; without this the
+        # diff would be empty and the tool would fail for that reason instead.
+        repo.write("src/filler_0000.c",
+                   (repo.root / "src" / "filler_0000.c").read_text()
+                   + "/* touched */\n")
+        repo.git("add", "-A")
+        repo.git("commit", "-qm", "rename with a changed signature")
+
+    def test_git_really_reports_this_as_a_rename(self):
+        """If git stopped detecting it, the case below would pass for a wrong reason."""
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        out = repo.git("diff", "--name-status", "-M", "HEAD~1", "HEAD").stdout
+        self.assertRegex(out, r"R\d*\tsrc/ren_old\.c\tsrc/ren_new\.c")
+
+    def test_the_full_scan_rejects_the_renamed_signature(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/ren_user.c", out)
+
+    def test_the_changed_scan_takes_both_sides_of_the_rename(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        rc, out = repo.run_main(["--changed", "HEAD~1", "--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/ren_user.c", out)
+
+
+class DataDefinitionTests(unittest.TestCase):
+    """Path 4, `:854`: an initialised data definition is a definition.
+
+    `src/data_def.c` defines `int data_target = 0`. A file declaring
+    `extern int data_target(void)` is claiming the linker's symbol is a function. It
+    is not, and both modes used to pass because the definition was thrown away before
+    the comparison ran.
+    """
+
+    def _mutate(self, repo):
+        repo.write("src/data_user.c", "extern int data_target(void);\n")
+
+    def test_the_full_scan_reports_the_kind_disagreement(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        rc, out = repo.run_main(["--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/data_user.c", out)
+        self.assertIn("kind", out)
+
+    def test_the_changed_scan_reports_it_too(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        self._mutate(repo)
+        rc, out = repo.run_main(["--changed", "HEAD", "--list"])
+        self.assertEqual(rc, 1, out)
+        self.assertIn("src/data_user.c", out)
+
+    def test_the_definition_carries_the_declared_type_not_a_function_shape(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        _files, _decls, defs, _u = CDA.collect(repo.root)
+        found = [d for d in defs if d.symbol == "data_target"]
+        self.assertEqual(len(found), 1)
+        self.assertFalse(found[0].is_function)
+        self.assertEqual(found[0].ret, "int")
+
+    def test_a_static_initialised_object_is_still_not_a_definition(self):
+        """`static` is internal linkage: it is not the symbol anyone declares."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("src/data_static.c", "static int data_static_target = 0;\n")
+        _files, _decls, defs, _u = CDA.collect(repo.root)
+        self.assertEqual([d for d in defs if d.symbol == "data_static_target"], [])
 
 
 if __name__ == "__main__":

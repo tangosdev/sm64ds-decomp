@@ -561,11 +561,16 @@ def parse_declarator(text, aliases, cxx=True):
 # ------------------------------------------------------------------- unit walk
 
 def _brace_kind(head):
-    """linkage | scope | aggregate | body.
+    """linkage | scope | initialiser | aggregate | body.
 
     The `aggregate` verdict is what stops `typedef struct Vector3 { ... } Vector3;`
     from being read as a declaration of a symbol called `Vector3`: the block AND the
     declarator list after it belong to the type, not to any extern.
+
+    `initialiser` is `int table[] = { ... };`. The block belongs to the initialiser and
+    is skipped the same way, but the head in front of it DEFINES a data symbol, so it
+    is handed back rather than dropped: a file declaring `extern int table(void)` is
+    contradicting that definition and nothing else in this tool would see it.
     """
     tail = " ".join(head.split())
     if re.search(r'extern\s+"C(\+\+)?"\s*$', tail):
@@ -573,8 +578,10 @@ def _brace_kind(head):
     if (re.match(r"^(inline\s+)?namespace\b", tail)
             or re.search(r"\bnamespace\b[^;]*$", tail)):
         return "scope"
-    if tail.endswith("=") or tail.endswith(","):
-        return "aggregate"          # an initialiser list
+    if tail.endswith("="):
+        return "initialiser"
+    if tail.endswith(","):
+        return "aggregate"          # a continued initialiser list
     if re.search(r"\b(struct|union|enum|class)\b", tail) and not tail.endswith(")"):
         return "aggregate"
     return "body"
@@ -619,8 +626,10 @@ def top_level_units(code, default_linkage):
                 kinds.append(kind)
                 start = i + 1
             else:
-                if kind != "aggregate":
+                if kind == "body":
                     yield start, head, "{", linkage[-1], block
+                elif kind == "initialiser":
+                    yield start, head, "=", linkage[-1], block
                 depth = 0
                 while i < n:
                     if code[i] == "{":
@@ -631,7 +640,7 @@ def top_level_units(code, default_linkage):
                             i += 1
                             break
                     i += 1
-                if kind == "aggregate":
+                if kind in ("aggregate", "initialiser"):
                     # `} Vector3;` -- the trailing declarator list names the TYPE,
                     # not an extern. Consume it with the block.
                     tail_paren = 0
@@ -848,16 +857,43 @@ def parse_file(rel, text, aliases):
                                "C" if linkage == "C" else linkage, True, member))
             continue
 
-        has_init = "=" in rest
-        if has_init:
+        has_init = term == "=" or "=" in rest
+        if "=" in rest:
             rest = split_top(rest, seps=("=",))[0].strip()
-        if not saw_extern:
-            # An initialised or `static` file-scope object is a DEFINITION, not a
-            # declaration of somebody else's symbol -- including `const char *s =
-            # "...";`, whose blanked string literal used to leave `const char *s`
-            # looking exactly like an extern.
-            if saw_static or has_init:
+        if saw_static and not saw_extern:
+            # `static` is internal linkage. Whatever it defines is not the symbol any
+            # other file's `extern` names, so it stays out of both lists.
+            continue
+        if has_init:
+            # An initialised file-scope object is a DEFINITION of a DATA symbol --
+            # `int target = 0;` defines `target`, and a file declaring
+            # `extern int target(void);` contradicts it. Throwing these away (which is
+            # what this branch used to do) let that contradiction pass both the full
+            # scan and `--changed`. An `extern` keyword does not change it: a
+            # declaration WITH an initialiser is a definition, which is how this tree
+            # writes `extern "C" DaBarSpawnInfo g_profile_BAR = { ... };`.
+            marked = [s for idx, s in marks if start <= idx < decl_start]
+            if "::" in rest and not marked:
+                # An out-of-line member with no `@symbol` line -- `daStarGate_c::State
+                # daStarGate_c::ST_WAIT = {...}`. The linker name is mangled and not
+                # recoverable from the text, so claim nothing, exactly as the function
+                # branch above does.
                 continue
+            pieces = _declarator_pieces(rest)
+            for piece in pieces:
+                parsed = parse_declarator(piece, aliases, cxx)
+                if parsed is None:
+                    continue
+                name, ret, params, is_fn, _member = parsed
+                if is_fn:
+                    # A parenthesised head with an initialiser is a constructor call
+                    # or a parse this tool should not guess at. Claim nothing.
+                    continue
+                symbol = marked[-1] if (marked and len(pieces) == 1) else name
+                defs.append(Record(symbol, rel, line, ret, params, False,
+                                   linkage, True, False))
+            continue
+        if not saw_extern:
             # Inside `extern "C" { ... }` a declaration need not repeat `extern`.
             if not in_block and rel.endswith(SOURCE_SUFFIXES):
                 continue
