@@ -79,3 +79,42 @@ src/func_ov002_020f5f0c.cpp
 src/_ZN3Key8BehaviorEv.cpp
 src/_ZN13UpDownLiftBbh8BehaviorEv.cpp
 src/_ZN6ToxBox8BehaviorEv.cpp
+
+# ---- gate 3: THE OBJECT-FIELD ROWS THE ov006 RANGE SWEEP CLOSES ------------
+#
+# MGWRITER's remaining_object_field_rows.txt marks 37 of its 38 rows "NO
+# universe statement": a pointer to member held in a per-instance FIELD can only
+# be seated when the set of source pairs that can reach that field is bounded.
+# This gate runs MGWRITER's range sweep per class code block over ov006 and
+# takes the three rows whose universe closes.
+#
+#   func_ov006_020c2b8c  field +0x00 of the shared +0x4f38 sub-object
+#     block 020c2290..020c2a00 -> 7 {code,0} pairs at 0213adb8..0213adf8, SIX
+#     distinct code words; every reference into the run is from inside the block
+#     (the sixteen from outside point at the two bone-name strings interleaved
+#     in it). ROM: ldr r2,[r4] / cmp r2,#0 / beq / ldr r1,[r4,#4] / blx r1.
+#     Emitted: mov eax,[esi] / test / je / mov ecx,[esi+4] / add ecx,esi /
+#     call eax -- ARITY 0, /Zp4 diff 0 lines.
+#
+#   func_ov006_020c4cd8  field +0x30   and   func_ov006_020c7860  field +0x3c
+#     block 020c4000..020c9000 -> 38 {code,0} pairs in two runs,
+#     0213af18..0213afc8 (23) and 0213b020..0213b090 (15), 16 + 9 = 25 distinct
+#     code words, DISJOINT by field; every reference into either run is from
+#     inside the block. ROM: add r3,r4,#0x30 at 020c4ce0 and add r3,r4,#0x3c at
+#     020c7890, each ldr [r3,#4] / add r0,r4,r1,asr#1 / ldr [r3] / blx.
+#     Emitted: [esi+48]/[esi+52] on the first, ARITY 0, /Zp4 diff 0; the second
+#     reads [edi+64]/[edi+68] WITHOUT /Zp4 (MSVC aligns the eight-byte member to
+#     eight) and [edi+60]/[edi+64] WITH it, which is the ROM's own +0x3c/+0x40
+#     and the only diff between the two listings. /Zp4 is on that one source in
+#     the block above.
+#
+# ONE FACE PER CODE WORD, not per record, and here it is load-bearing rather
+# than tidy: both retired files refuse a seat in writing because a stored pair
+# is also a BY-VALUE COMPARISON SENTINEL. src/func_ov006_020c2994.c compares an
+# object's pair against data_ov006_0213adb8, which holds the same code word
+# 0x020c27c4 as the installed record 0213adc8; a face per record would give them
+# different addresses and the comparison would go permanently false while the
+# dispatch still looked right. A face per code word gives them the same address.
+src/func_ov006_020c2b8c.cpp
+src/func_ov006_020c4cd8.cpp
+src/func_ov006_020c7860.cpp

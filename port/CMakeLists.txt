@@ -15922,6 +15922,19 @@ foreach(line IN LISTS SLICE_PMFB6_LINES)
     endif()
     list(APPEND SLICE_PMFB6_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# GATE 3. /Zp4 ON ONE SOURCE, MEASURED AND NOT INHERITED.
+# src/func_ov006_020c7860.cpp spells `struct C { char pad[0x3c]; PMF m; };` and
+# the ROM's field is at +0x3c. MSVC aligns an eight-byte member to eight, so
+# without /Zp4 the TU reads [edi+64] and [edi+68] -- FOUR BYTES LATE -- and with
+# it the same listing reads [edi+60] and [edi+64], the ROM's own offsets. Those
+# two instructions are the ONLY difference between the two /FAsc listings
+# (runs/link100/out/PMFB6/emit_gate3_out.txt). The other two gate-3 rows were
+# compiled both ways and their listings are identical outside the TITLE, so the
+# option is claimed on this ONE source and on nothing else -- the treatment lane
+# MGWRITER named for func_ov006_020c07e8, measured here rather than inherited.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020c7860.cpp"
+    PROPERTIES COMPILE_OPTIONS "/Zp4")
 foreach(_tpmfb6 walk_window walk_window_hires smoke_player)
     target_sources(${_tpmfb6} PRIVATE ${SLICE_PMFB6_SOURCES})
 endforeach()
