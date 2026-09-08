@@ -36,6 +36,13 @@ merged translation unit) or the flat identifier the definition itself declares. 
 a hand-spelled `_ZN9ModelAnim7AdvanceEv` extern and the file that defines it line up here
 even though neither side is C++ the compiler would recognise as the same entity.
 
+A DEFINITION IS A FUNCTION BODY OR AN INITIALISED OBJECT. `int target = 0;` defines the
+linker symbol `target`, of kind data, and a file declaring `extern int target(void);` is
+contradicting it -- which is a `kind` finding and not a small one, since the caller will
+branch to a number. `static` is not: internal linkage is not the symbol anybody else
+declares. Nor is an out-of-line member with no `@symbol` line, whose mangled name is not
+recoverable from the text.
+
 For every symbol with at least one `extern` declaration, this compares each declaration
 against the reference spelling:
 
@@ -83,6 +90,26 @@ no line number and no full declared spelling. A line churns on every edit above 
 declaration; the full spelling would re-report a banked return-type disagreement the moment
 an unrelated parameter in the same declaration changed. A genuinely new disagreement in an
 already-banked file is still caught, because the thing that differs is part of the key.
+
+WHAT `--changed` SCOPES TO
+--------------------------
+Not the diff. A gate that only re-read the files a branch touched would pass every change
+that breaks a file it did not touch, which is most of the ways this can break. The scope is
+the changed sources plus, folded in:
+
+  * every file DECLARING a symbol the changed files define -- retyping or renaming a
+    definition invalidates declarations elsewhere;
+  * every file declaring a symbol whose `config/**/symbols.txt` row changed. That file is
+    an INPUT here: the linkage check asks whether the link resolves a name by its plain
+    spelling, and a new row can make a bare `extern` in an untouched C++ TU wrong;
+  * every file whose declarations RESOLVE THROUGH a type the branch changed -- a typedef,
+    a struct/union/enum tag or a macro -- followed transitively down the typedef chain,
+    because retyping a shared alias invalidates consumers the diff never touched;
+  * BOTH SIDES of a rename or a copy. Git reports `old -> new` as one `R` row, which is
+    neither `A` nor `M`, and a definition can move and change signature in the same commit.
+
+And `--changed` does not exit clean merely because no `src/` or `include/` path changed: a
+`config/**/symbols.txt` row on its own is enough to re-scan.
 
 IT CANNOT PASS BY DOING NOTHING
 -------------------------------

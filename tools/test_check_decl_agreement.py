@@ -16,6 +16,21 @@ The five fixtures the gate was commissioned for, one test each:
   * a rename where the definition moved, leaving declarations naming a symbol that is
     no longer defined anywhere
 
+The four false-pass paths reported on PR #2471 get one class each at the bottom of this
+file. They are `--changed` cases, so they run on a git repo past the tool's scan floors
+(2,100 sources, 6,303 declarations) rather than a two-file toy, which the tool refuses to
+report a pass on at all -- and each one is written so it FAILS on the code as it was
+before its fix:
+
+  * a shared typedef changed, invalidating a consumer the diff never touched
+  * a `config/**/symbols.txt` row changed with no source path in the diff
+  * a rename whose definition changed signature in the same commit
+  * an `extern int target(void)` against an actual `int target = 0` definition
+
+`BigTreeHarnessTests.test_a_wrong_return_type_fails_both_modes` is their control: it
+fails both modes before those four fixes and after them, so a green run of the four is
+not a harness that stopped looking.
+
 Self-running: `python tools/test_check_decl_agreement.py`, or via unittest/pytest.
 Needs no ROM and no compiler.
 """

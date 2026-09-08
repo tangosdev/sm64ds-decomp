@@ -7,8 +7,8 @@
 # gate this repo owns stays green: the bytes are right in all three objects, and
 # `check_references.py` only asks whether the name exists at all.
 #
-# THIS IS NOT HYPOTHETICAL AND IT IS NOT SMALL. The first whole-tree run found 23,149
-# disagreements across 4,730 symbols, among them the five wrong declarations of
+# THIS IS NOT HYPOTHETICAL AND IT IS NOT SMALL. The whole-tree run finds 23,151
+# disagreements across 4,732 symbols, among them the five wrong declarations of
 # `__cxa_vec_ctor` that the review of #2455 found by hand -- three files declaring an
 # `int` return and two a `void *`, against a definition that returns `void`. That
 # review's own words: this is "the declaration-agreement gap the skill names as the
@@ -83,9 +83,13 @@ jobs:
         run: python -m unittest tools.test_check_decl_agreement -v
 
       # Whole tree on a push to main, changed scope on a pull request. The scope is
-      # not just the diff: it folds in every file DECLARING a symbol the changed files
+      # not just the diff. It folds in every file DECLARING a symbol the changed files
       # DEFINE, because retyping a definition is exactly the change that invalidates
-      # declarations elsewhere.
+      # declarations elsewhere -- and, for the same reason, every declaration of a
+      # symbol whose `config/**/symbols.txt` row changed, and every file whose
+      # declarations resolve through a type the branch changed, transitively down the
+      # typedef chain. Both sides of a rename count: Git reports `old -> new` as one
+      # `R` row, and a definition can move and change signature in the same commit.
       - name: Declarations agree with the definitions they name
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
