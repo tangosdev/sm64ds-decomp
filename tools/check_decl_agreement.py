@@ -478,8 +478,16 @@ def parse_declarator(text, aliases, cxx=True):
             normalise_type(fp.group("pre"), aliases, decay_arrays=False),
             fp.group("stars"), fp.group("arr"), shown)
         return fp.group("name"), " ".join(typ.split()), None, False, False
-    # Trailing cv-qualifiers, exception specifications and attributes.
-    text = re.sub(r"\)\s*(const|volatile|throw\s*\([^)]*\)|noexcept)\s*$", ")", text)
+    # Trailing cv-qualifiers, exception specifications and attributes. `__attribute__`
+    # is stripped repeatedly because the tree writes `((long_call, target(...)))` and
+    # the inner parentheses survive the string blanking as `target( )`.
+    for _ in range(4):
+        stripped = re.sub(r"\s*__attribute__\s*\(\(.*\)\)\s*$", "", text)
+        stripped = re.sub(r"\)\s*(const|volatile|throw\s*\([^)]*\)|noexcept)\s*$",
+                          ")", stripped).strip()
+        if stripped == text:
+            break
+        text = stripped
     text = text.strip()
 
     if text.endswith(")"):
@@ -498,8 +506,16 @@ def parse_declarator(text, aliases, cxx=True):
             return None
         head = text[:open_at].strip()
         params_text = text[open_at + 1:-1]
-        # `void (*f)(int)` and friends: the name sits inside parentheses. Out of
-        # scope, and reported as unparsed rather than guessed at.
+        # `char *(func_ov007_020b78d0)(int)` -- a redundantly parenthesised name,
+        # which is the same declaration as without the parentheses.
+        paren_name = re.match(r"^(?P<pre>.*?)\(\s*(?P<name>[A-Za-z_][A-Za-z0-9_]*)"
+                              r"\s*\)$", head)
+        if paren_name and "(" not in paren_name.group("pre"):
+            head = "%s %s" % (paren_name.group("pre").strip(),
+                              paren_name.group("name"))
+        # Anything else with parentheses left in the head declares a pointer to a
+        # function or to a member. Out of scope, and reported as unparsed rather
+        # than guessed at.
         if head.endswith(")") or "(" in head:
             return None
         m = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*$", head)

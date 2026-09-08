@@ -415,6 +415,34 @@ class ParserTests(unittest.TestCase):
         self.assertEqual([d.ret for d in defs if d.symbol == "prim"], ["void"])
         self.assertEqual(kinds(findings, "prim"), [])
 
+    def test_a_trailing_gnu_attribute_is_not_part_of_the_declaration(self):
+        def tree(t):
+            t.write("src/f.c", "void f(int a)\n{\n    (void)a;\n}\n")
+            t.write("src/caller.c",
+                    "extern void f(int a) __attribute__((long_call, target(\"arm\")));\n")
+        findings, decls, _f, _files = build(tree)
+        self.assertEqual([d.spelling() for d in decls if d.symbol == "f"],
+                         ["void (int)"])
+        self.assertEqual(kinds(findings, "f"), [])
+
+    def test_a_redundantly_parenthesised_name_is_the_same_declaration(self):
+        def tree(t):
+            t.write("src/g.c", "char *g(int a)\n{\n    (void)a; return 0;\n}\n")
+            t.write("src/caller.c", "extern char* (g)(int);\n")
+        findings, decls, _f, _files = build(tree)
+        self.assertEqual([d.spelling() for d in decls if d.symbol == "g"],
+                         ["char * (int)"])
+        self.assertEqual(kinds(findings, "g"), [])
+
+    def test_a_pointer_to_member_array_is_counted_unparsed_not_guessed_at(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Tree(tmp)
+            t.write("src/x.cpp",
+                    "extern int (Cls::*table[])(int);\n")
+            _files, decls, _defs, unparsed = CDA.collect(t.root)
+        self.assertEqual([d.symbol for d in decls], [])
+        self.assertEqual(unparsed, 1)
+
     def test_a_function_pointer_parameter_name_is_not_part_of_its_type(self):
         def tree(t):
             t.write("src/vec.c",
