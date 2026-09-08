@@ -181,3 +181,73 @@ src/func_ov006_020e4800.cpp
 src/func_ov006_02104ac4.cpp
 src/func_ov006_0210bcb0.cpp
 src/func_ov006_021254c0.cpp
+#
+# ---- BATCH 2: dScMgCurling_c's COHERENT PAIR, THREE TABLES ------------------
+#
+#   func_ov006_020e3078  data_ov006_021418b0   2 slots  arity 0
+#                        data_ov006_02141910   4 slots  arity 1
+#   func_ov006_020e3528  data_ov006_02141950   5 slots  arity 0
+#
+# THE TWO ROWS MOVE TOGETHER OR NOT AT ALL, which is what lane PMFB4 measured
+# when it left them. func_ov006_020e3078 READS TWO TABLES, not the one the
+# census names: 021418b0 at its first dispatch site and 02141910 at its second.
+# And slot 1 of func_ov006_020e3528's table 02141950 IS func_ov006_020e3078
+# itself. Seating one table alone would leave the other dispatch reading a
+# cartridge code word and calling it; retiring one copy alone would install a
+# face pointing at a host copy about to be retired. So all three tables are
+# installed by ONE installer, port_mg_curling_states_seat, and both host copies
+# come off in the same gate.
+#
+# THE STRIDE, ROM SIDE (runs/link100/out/PMFB5/rom_gate2.txt, and
+# dis_020e3078.txt which disassembles PAST the first indirect call -- the
+# first reader stopped there and could not see the second site at all):
+#   020e3078  add r3, r1, r0, lsl #3 at 020e30fc  pool 020e3204 = 021418b0
+#             add r3, r5, r0, lsl #3 at 020e3178  pool 020e3208 = 02141910
+#   020e3528  add r3, r1, r0, lsl #3 at 020e353c  pool 020e3574 = 02141950
+# EIGHT at all three sites. EMITTED SIDE: [eax*8] and [eax*8+4] at all three
+# (runs/link100/out/PMFB5/emit_gate2_out.txt). /Zp4 a no-op on both TUs.
+#
+# THE ELEVEN SOURCE PAIRS all read {code, 0} at src/__sinit_ov006_021304ac.c's
+# own addresses -- one constructor for all three tables -- all whole-pair
+# copies, no field-form fill.
+#
+# THE ARITIES DIFFER INSIDE ONE TU AND ARE READ PER SITE. 020e3078's first site
+# sets no r1 and pushes nothing (the `push ebx` and `push esi` at listing
+# offsets 0x52 and 0x53 are DEFERRED REGISTER SAVES, matched by the `pop esi` /
+# `pop ebx` at 0xbf and 0xc0 after the loop -- reading them as arguments would
+# have given 021418b0 two-argument faces); its second site emits `mov r1, r7`
+# in the ROM and pushes ebx in the listing, the shell counter. 020e3528 sets no
+# r1 and pushes nothing. So 021418b0 and 02141950 take ZERO-argument faces and
+# 02141910 takes ONE-argument faces: eleven faces.
+#
+# ONE /alternatename: ?data_ov006_02141950@@3PAUEntry@@A, read off the object
+# with dumpbin /symbols. src/func_ov006_020e3078.cpp declares BOTH its tables
+# inside its own extern "C" block and needs none, which the UNDEF sweep of that
+# object confirms (_data_ov006_021418b0, _data_ov006_02141910,
+# _func_ov006_020e1680, nothing decorated).
+#
+# TWO CELLS ARE SPECIAL AND BOTH ARE CARRIED, NOT REPAIRED.
+#   021418b0 slot 1 is 0x020e1854, which the decomp still has no body and no
+#     delink block for. Its face names port_mg_curling_st_020e1854 -- the host
+#     transcription in unmatched/MgCurling_State_020e1854.cpp -- and not a
+#     `func_` symbol, which is the ruling the switch already carried and which
+#     stategen.py's reconstruct check enforces. Seating the table does not
+#     change the refusal.
+#   02141910 slot 2 is 0x020e285c, the collision RIDE-THROUGH. Its face calls
+#     it as (c, a) at C linkage exactly as the switch did; src/
+#     func_ov006_020e285c.c declares itself (void) and tail-jumps to
+#     func_ov006_020e20bc, so the two pushed words ride the reused frame into
+#     the transcribed collision body. tools/tailjump_guard.py's CLASS C row
+#     asserts that 020e285c's OWN frame is a jmp and is unaffected; its note
+#     saying MgCurling_StateDispatch.cpp "dispatches this address from a
+#     one-argument slot and passes (c, a)" stays true of this file, through a
+#     cell rather than a case. That file is not this lane's and is left alone.
+#   02141950 slot 4 is 0x020e2eb8, a (void) body in a ZERO-argument cell, so
+#     nothing rides anywhere and its face calls it with nothing.
+#
+# THE WITNESS MOVES. g_curling_state_hits is what hal/scene_mg.cpp prints
+# through port_mg_curling_state_hits and it was incremented by the two
+# switches; eleven of this class's twenty-five addresses no longer reach a
+# switch, so each face takes the same increment.
+src/func_ov006_020e3078.cpp
+src/func_ov006_020e3528.cpp
