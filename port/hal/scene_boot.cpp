@@ -779,15 +779,37 @@ extern "C" { int overlay_60, overlay_98; }
    Taking them meant taking the DS card overlay/archive loader under them --
    FS_LoadOverlay, func_02018c00, func_0203d7b8, func_0205e088, func_02017fd0,
    func_02018908, func_0205dc0c -- plus hosting data_0208ecf4, the 13-entry
-   archive-mount table whose entries are DS STRING POINTERS, and data_02075998
-   / data_02075804, the object-overlay id tables. Eleven TUs and three
-   pointer-bearing arm9 tables, to drive a load that resolves to nothing:
-   the host has no overlay loader at all, because every overlay it hosts is a
-   static host array mounted at build time (section 2 of this file), and
-   hal/fs.cpp resolves archive-interior file ids lazily so an archive is never
-   mounted and never not mounted. That is the same trade the LoadArchive face
-   above already makes, in the same direction, and it is recorded as a cost:
-   ELEVEN MATCHED TUs THIS SLICE COULD HAVE COUNTED AND DID NOT.
+   archive-mount table, and data_02075998 / data_02075804, the object-overlay
+   id tables. Eleven TUs and three pointer-bearing arm9 tables, to drive a load
+   that resolves to nothing: the host has no overlay loader at all, because
+   every overlay it hosts is a static host array mounted at build time
+   (section 2 of this file).
+
+   HALF OF THAT PARAGRAPH IS NO LONGER TRUE, and the half that is left is the
+   real reason. It used to end "that is the same trade the LoadArchive face
+   above already makes", and it used to count data_0208ecf4 as an unhosted
+   table "whose entries are DS STRING POINTERS". Neither survives:
+
+     * The LoadArchive face is GONE. Run link100 lane CARDFS retired it and
+       linked the ROM's own src/LoadArchive.c on hal/card_mount.cpp, which hosts
+       data_0208ecf4 at its ROM span and fills each entry's residency word with
+       the archive image hal/fs.cpp already holds.
+     * The two DS string pointers are hosted too. Run link100 lane CARDFS2 added
+       the twenty-six ROM strings to port/tools/romdata.py's NAMED list, and
+       card_mount.cpp writes them into +0x0c and +0x10 as it publishes.
+
+   SO UnloadArchives IS NOW FACED FOR A DIFFERENT AND STRONGER REASON. Its
+   matched TU (src/UnloadArchives.c) walks all thirteen entries and calls
+   func_02018908(entry->f0, entry->f4) for every one whose f0 is non-zero. On
+   this host EVERY f0 is non-zero -- that is what the residency publish is --
+   and every f4 is zero, because nothing here ever writes the heap word (that is
+   what card_mount.cpp's audit measures). The ROM's body would therefore hand
+   thirteen blocks of STATIC HOST STORAGE to a null heap, on a mount that never
+   came off a heap at all. It is not a load that resolves to nothing any more;
+   it is a free of memory the allocator does not own. It stays faced until the
+   mount is heap-shaped, and hal/card_mount.cpp's "THE MOUNT BRANCH" section is
+   where the three things standing in the way of that are written down.
+
    The observable each face has to reproduce is nothing: three return void and
    the fourth is void, none has an out-parameter, and the ROM's own answer when
    the overlay is not resident is to do nothing. */
