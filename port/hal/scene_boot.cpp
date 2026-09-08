@@ -563,32 +563,36 @@ unsigned char data_02092660;
 }
 DSSTATE_END
 
-/* ---- the one PORT_HOST_ABI face this lane needs ---------------------------
-   PORT_HOST_ABI: LoadArchive mounts a NARC through the DS card loader, and the
-   host has no mount step to make.
-   src/LoadArchive.c walks data_0208ecf4, the ROM's 13-entry archive-mount
-   table of {ptr, heap, idBase, idEnd, shortName, narcPath}, and calls
-   func_02018934 to pull the whole NARC into the game heap. The port resolves
-   archive-interior file IDs (>= 0x8000) LAZILY instead: hal/fs.cpp's
-   port_fs_archive_fill walks port_archive_map -- the host-shaped copy
-   port/tools/romdata.py generates from that same ROM table -- finds the
-   archive whose id range covers the request, loads its image off disk on first
-   use and decodes the member. So on the host an archive is never "mounted" and
-   never "not mounted"; the id resolves either way.
-   That makes the ROM's mount call a no-op whose only observable is its return
-   value, which is "is archive N available". On the host every archive in the
-   table is available, so the answer is 1. Returning it is what lets
-   LoadTextNarcs (matched, in the slice) run its real language switch and what
-   lets dScStarSel_c::InitResources proceed to the LoadFile calls the fs seam
-   really does serve.
-   The alternative -- linking the matched TU -- would need data_0208ecf4 hosted
-   as raw ROM bytes with its DS string pointers, plus func_02018934 and the
-   four-TU card-loader chain under it, to produce a mount the fs seam then
-   ignores. That is a fake, not a fix, so the seam is here in the open. */
-extern "C" int LoadArchive(int idx)
-{
-    return (unsigned)idx < 13u;
-}
+/* ---- THE LoadArchive FACE IS GONE (run link100, lane CARDFS) --------------
+   This file used to answer the ROM's mount call itself, with
+   `return (unsigned)idx < 13u;` under a banner that ended:
+
+       The alternative -- linking the matched TU -- would need data_0208ecf4
+       hosted as raw ROM bytes with its DS string pointers, plus func_02018934
+       and the four-TU card-loader chain under it, to produce a mount the fs
+       seam then ignores. That is a fake, not a fix.
+
+   The refusal was right about the fake and wrong about the alternative, and
+   its own middle paragraph is what turned it: the ROM's call asks "is archive
+   N resident", and on the host every archive IS resident, because hal/fs.cpp
+   loads each NARC whole on first use and never releases it. So the answer did
+   not have to be manufactured here. hal/card_mount.cpp hosts data_0208ecf4 at
+   its ROM span with the ROM's own id ranges (through port_archive_map, which
+   port/tools/romdata.py reads out of that very table), hal/fs.cpp fills each
+   entry's residency word with the archive image it is already holding, and
+   src/LoadArchive.c -- the matched TU, byte for byte -- reads the word and
+   returns. Four more matched TUs came with it (func_02018934, func_02018d98,
+   Heap::_Allocate's veneer, and the four card TUs on slice_scene1 that had
+   been /OPT:REF-dropped for want of a caller).
+
+   ONE THING THE MOVE DID NOT SETTLE, recorded where the face used to be: the
+   entry's two DS string pointers (+0x0c the three-character short name, +0x10
+   the NARC path) are still not hosted, so the ROM's mount BRANCH must not run.
+   hal/card_mount.cpp's banner says why, what it would take (twenty-six rows in
+   port/tools/romdata.py's NAMED list) and how the port proves the branch is
+   never taken. The note about UnloadArchives below this one is older than that
+   work and is now partly stale -- data_0208ecf4 IS hosted; it is left as
+   written because this lane owned only these lines. */
 
 /* ---- C-name faces for three namespaced arm9 functions ---------------------
    The cxxname_bridge pattern in reverse: these three matched TUs define their

@@ -64,6 +64,26 @@ static const char *asset_root(void)
     return env ? env : PORT_REPO_ROOT;
 }
 
+/* ---- the card mount (hal/card_mount.cpp) ---------------------------------
+   The ROM's LoadArchive reads data_0208ecf4[i].f0 and calls the DS card loader
+   when it is null. hal/card_mount.cpp hosts that table and fills the word with
+   the archive image THIS FILE already holds, so the ROM's own body answers
+   from the ROM's own table for the honest reason -- on the host the archive
+   really is resident.
+
+   THE PUBLISH HANGS OFF THE CATALOG LOAD, NOT OFF AN ARCHIVE READ, and that
+   is not tidiness. Stage::InitResources calls LoadArchive for a level's
+   archive BEFORE it reads a file out of it, so a publish driven by the first
+   read would leave the residency word null at exactly the moment the ROM looks
+   at it. All thirteen images are 1,035,956 bytes together and this file never
+   released one anyway.
+
+   IT IS A POINTER FOR THE SAME REASON port_fs_mod_map BELOW IS. A dozen smoke
+   targets link this file without hal/card_mount.cpp, and a direct call would
+   drag the mount table -- and romdata's port_archive_map, and the .dsstate
+   bracket -- onto every one of their link lines. Null there, installed here. */
+extern "C" { void (*port_card_mount_publish_all)(void) = 0; }
+
 static void catalog_load(void)
 {
     char line[512], path[PATH_MAX_];
@@ -101,6 +121,10 @@ static void catalog_load(void)
             g_handle_to_id[h] = (u16)id;
     }
     fclose(f);
+
+    /* Null in every target that does not link hal/card_mount.cpp. */
+    if (port_card_mount_publish_all)
+        port_card_mount_publish_all();
 }
 
 /* ---- the mod hooks (hal/fs_mods.cpp) -------------------------------------
@@ -231,6 +255,20 @@ static u8 *port_fs_archive_image(int i, const struct port_arc_entry *e)
         fclose(f);
     }
     return g_arc_buf[i];
+}
+
+/* hal/card_mount.cpp: hand back archive i's whole image, loading it if this is
+   the first ask. One accessor rather than a second copy of the loader -- the
+   mount table publishes THE image this file serves from, not another one, so
+   the two seams cannot drift apart or hold the NARC twice. */
+extern "C" int port_fs_archive_get(int i, unsigned char **img, long *len)
+{
+    if (i < 0 || i >= 13)
+        return 0;
+    catalog_load();
+    *img = port_fs_archive_image(i, &port_archive_map[i]);
+    *len = g_arc_len[i];
+    return *img != 0;
 }
 
 /* fill e with the decompressed bytes of an archive-interior file. 1 on
