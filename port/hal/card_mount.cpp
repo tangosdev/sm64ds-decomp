@@ -48,32 +48,36 @@
 // initial values, which are zero: the table ships zeroed in .data and the card
 // loader is what fills it.
 //
-// ---- THE TWO STRING POINTERS ARE NOT HOSTED, AND THAT IS THE HONEST GAP -----
+// ---- THE TWO STRING POINTERS ARE HOSTED (run link100, lane CARDFS2) --------
 //
-// +0x0c and +0x10 hold DS addresses in arm9 rodata (0x0208eb58..0x0208ecc4;
-// entry 0 is 'ar0' at 0x0208eb5c and '/ARCHIVE/arc0.narc' at 0x0208ecb0). They
-// are the "relocated words carry DS addresses" class, and the port's rule for
-// that class is absolute: a mounted word holding a DS address must never be
-// followed. They are left NULL here rather than mounted raw, so a follow is a
-// null dereference and not a jump into host memory that happens to be mapped.
+// They were left NULL when this file was written, and the paragraph that stood
+// here said why: they hold DS addresses in arm9 rodata, a mounted word holding
+// a DS address must never be followed, and a null at least faults instead of
+// jumping into whatever host memory happens to be mapped. It also named the
+// mechanism that would fix it -- port/tools/romdata.py's NAMED list, which
+// already carried two of their immediate neighbours (data_0208eb8c and
+// data_0208eb9c, the "myFS_OpenFile"/"myFS_ReadFile" crash strings).
 //
-// THE PORT COULD HOST THEM AND THIS LANE COULD NOT. The strings are twenty-six
-// arm9 .data symbols with dsd names of their own (data_0208eb58, data_0208eb5c,
-// ... data_0208eb88 for the short names; data_0208ebac .. data_0208ecb0 for the
-// paths), and port/tools/romdata.py's NAMED list is exactly the mechanism that
-// hosts symbols like them -- two of their immediate neighbours, data_0208eb8c
-// and data_0208eb9c, are already rows in it. Adding twenty-six more rows is a
-// romdata.py change and romdata.py is not this lane's file, so the words stay
-// null and the consequence is written down instead of being found later:
+// That is what this lane did. Twenty-six NAMED rows now host the thirteen
+// three-character short names (the contiguous four-byte run
+// 0x0208eb58..0x0208eb8c) and the thirteen NitroFS paths (thirteen of the
+// fourteen 0x14-byte rows from 0x0208ebac; 0x0208ec74 is the crash string
+// src/func_02018dc4.c uses and is NOT one of them). All twenty-six are ROM
+// bytes read out of extracted/arm9_dec.bin, and all twenty-six are
+// relocation-free over their whole span.
 //
-//     WHILE +0x0c AND +0x10 ARE NULL, THE ROM'S MOUNT BRANCH MUST NOT RUN.
-//     If LoadArchive is ever called for an entry whose +0x00 is still zero it
-//     will call func_02018934(NULL, NULL, heap), whose first act is to open a
-//     null path through the NitroFS name walker. That is a fault, not a quiet
-//     wrong answer, and port_card_mount_audit below is what proves it never
-//     happens: the ROM writes +0x04 on its way into that branch and this file
-//     never writes +0x04, so a non-zero heap word anywhere in the table is a
-//     mechanical witness that the branch was taken.
+// WHICH STRING BELONGS TO WHICH ENTRY IS NOT WRITTEN DOWN ANYWHERE HERE, and
+// that matters, because the two orders disagree: entry 0's short name is the
+// SECOND symbol in the name run ("ar0" at 0x0208eb5c, while 0x0208eb58 is
+// "vs2"), and the paths are not in entry order either. romdata.py resolves
+// each entry's +0x0c and +0x10 word BY ADDRESS out of the same table it
+// already reads the id ranges from, and emits port_archive_name[13] and
+// port_archive_path[13] pointing at the hosted rows. A pointer with no NAMED
+// row is a hard error in the generator, not a quiet null.
+//
+// SO THE SENTENCE THIS FILE USED TO CARRY IN CAPITALS IS RETIRED: the mount
+// branch no longer opens a null path. It is still not taken, and the reason is
+// no longer these two words -- see THE MOUNT BRANCH below.
 //
 // ---- WHAT GOES INTO THE RESIDENCY WORD -------------------------------------
 //
@@ -93,16 +97,67 @@
 // which is what keeps this from being a landmine for the lane that eventually
 // links func_020185c0 and func_020186c0.
 //
-// ONE HALF OF func_0204ee40 IS NOT RUN AND IT IS THE HALF THAT NEEDS THE NAME.
-// After writing those three words the ROM registers the archive with NitroSDK
-// (func_0205cc80, FS_RegisterArchiveName, three characters from +0x0c) and
-// loads its FAT/FNT spans (func_0205cb68). That makes paths of the form
-// "ar0:/dir/file" resolvable. Nothing on this link line opens such a path --
-// hal/fs_names.cpp's seam serves the cartridge's own "rom" archive and every
-// archive-interior read on the host goes through the id range, not the name --
-// and the registration cannot be run without the short name that is not hosted.
-// So it is not run, and it is not faked either: the object simply is not in
-// NitroSDK's archive list, and this paragraph is where that is recorded.
+// ONE HALF OF func_0204ee40 IS STILL NOT RUN, AND IT IS NO LONGER THE NAME
+// THAT STOPS IT. After writing those three words the ROM registers the archive
+// with NitroSDK (func_0205cc80, FS_RegisterArchiveName, the three characters at
+// +0x0c) and loads its FAT/FNT spans as a MEMORY archive (func_0205cb68 with
+// both proc arguments zero, which src/func_0205cb68.c resolves to the default
+// pair func_0205d2dc / func_0205d2b0). That makes paths of the form
+// "ar0:/dir/file" resolvable. The short name is hosted now, so the sentence
+// that used to end this paragraph -- "the registration cannot be run without
+// the short name that is not hosted" -- is retired. Two other things stand in
+// its place and both are recorded rather than worked around:
+//
+//   NOTHING ON THIS LINK LINE OPENS SUCH A PATH. hal/fs_names.cpp's seam serves
+//   the cartridge's own "rom" archive, and every archive-interior read on the
+//   host resolves through the id range (port_fs_archive_fill), not through a
+//   name. Registering thirteen archives to satisfy no caller is work with no
+//   observable, which is the same trade this file already refuses elsewhere.
+//
+//   AND THE ORDER WOULD MATTER. src/func_0205cc80.c registers into
+//   data_020a8048, and when that list head is EMPTY it also makes the new
+//   archive the current directory (data_020a804c). This file publishes from
+//   hal/fs.cpp's catalog load, which is the first file access in the process;
+//   hal/fs_names.cpp registers "rom" from func_0205d89c's once-guard. If the
+//   publish went first, archive 0 ("ar0") would become NitroSDK's current
+//   directory and every relative open-by-name in the ROM's own walker would
+//   resolve against the wrong FNT. A lane that takes the registration owes that
+//   ordering an argument and a proof, not an assumption.
+//
+// ---- THE MOUNT BRANCH, AND WHY IT STILL DOES NOT RUN -----------------------
+//
+// src/LoadArchive.c takes its mount branch when +0x00 is zero, and this file
+// keeps +0x00 non-zero so it never does. With the strings hosted, the reason is
+// no longer a null path. It is three, and none of them is a missing string:
+//
+//   1. THE ARITIES. src/func_02018934.c calls func_02018d98(FSFile *, path),
+//      and src/func_02018d98.c defines that function taking NO parameters and
+//      passing none to func_0205d518 -- the ARM original rides r0 and r1
+//      through. It calls _ZN4Heap9_AllocateEji(heap, size, -0x10) and uses the
+//      result, while src/_ZN4Heap9_AllocateEji.cpp is the two-instruction
+//      tail-call veneer at 0x0203c29c decompiled as a void() calling a void().
+//      On the host both are cdecl: the callee reads the veneer own frame, not
+//      the caller's, and the return value rides a register nothing promises.
+//      These are the two ride-throughs port/slice_cardfs.txt named when it
+//      seated them, and they are host-ABI faults, not wrong answers.
+//
+//   2. THE MEMORY MODEL. The ROM's mount is DEMAND driven and short-lived:
+//      func_02018934 allocates the whole NARC plus 0x60 off data_020a0ea0, and
+//      src/func_02018770.c unloads it again right after the read (that is what
+//      data_0208eb54, the "which archive did I just mount" byte, is for). This
+//      file's publish is eager and permanent, which is right for a host that
+//      already holds all thirteen images for the life of the process -- and
+//      exactly wrong to run the ROM's branch under, because thirteen mounts
+//      that are never unloaded would put 1,035,956 bytes plus thirteen headers
+//      into the game heap and leave them there.
+//
+//   3. What is NOT a reason, said so the next lane does not re-derive it: the
+//      READS have a host source. "/ARCHIVE/arc0.narc" is a real row in the
+//      cartridge's own name table and file id 105 in build/assets/files.tsv, so
+//      func_02018d98's open-by-name would walk the ROM's FNT through
+//      hal/fs_names.cpp and the bytes would come off disk like every other
+//      file. The branch is blocked on the two arities and on the lifetime, not
+//      on anything this port cannot see.
 //
 // ---- WHY THE PUBLISH IS EAGER ----------------------------------------------
 //
@@ -129,6 +184,11 @@ typedef unsigned char u8;
    range and the NARC path, read out of the image at 0x0208ecf4. */
 struct port_arc_entry { u16 base, end; const char *narc; };
 extern "C" struct port_arc_entry port_archive_map[13];
+
+/* The same generator's answer for each entry's two DS string pointers: the
+   hosted ROM bytes at the address that entry's +0x0c and +0x10 word holds. */
+extern "C" const char *port_archive_name[13];
+extern "C" const char *port_archive_path[13];
 
 /* hal/fs.cpp: load archive i's whole image (cached, never freed) and hand back
    the bytes it already holds. Zero on a miss. */
@@ -214,17 +274,27 @@ static int narc_chunks(u8 *a, long len, u8 **fatb_out, u8 **fimg_out)
    pointers are null, would have faulted. Printed once at exit. */
 extern "C" void port_card_mount_audit(void)
 {
-    int i, mounted = 0, romwrote = 0;
+    int i, mounted = 0, romwrote = 0, named = 0;
     for (i = 0; i < 13; ++i) {
         if (data_0208ecf4[i].f0)
             mounted++;
         if (data_0208ecf4[i].f4)
             romwrote++;
+        /* Both strings, and the short name really is three characters
+           and the path really starts at the root: a row that lost its
+           NAMED backing shows up as a short count here rather than as a
+           fault the first time the mount branch reads it. */
+        if (data_0208ecf4[i].fc && data_0208ecf4[i].f10 &&
+            data_0208ecf4[i].fc[3] == 0 && data_0208ecf4[i].f10[0] == '/')
+            named++;
     }
     fprintf(stderr,
             "[cardfs] table 0x0208ecf4: %d/13 resident (%ld bytes), "
-            "%d/13 carry a ROM-written heap word\n",
-            mounted, g_published_bytes, romwrote);
+            "%d/13 carry a ROM-written heap word, %d/13 carry both ROM "
+            "strings (entry 0: %s %s)\n",
+            mounted, g_published_bytes, romwrote, named,
+            data_0208ecf4[0].fc ? data_0208ecf4[0].fc : "(null)",
+            data_0208ecf4[0].f10 ? data_0208ecf4[0].f10 : "(null)");
     fflush(stderr);
 }
 
@@ -246,9 +316,13 @@ extern "C" void port_card_mount_publish_impl(void)
         u8 *img = 0, *fatb = 0, *fimg = 0;
         long len = 0;
 
-        /* The ids are the ROM's, on romdata.py's path out of the image. */
+        /* The ids are the ROM's, on romdata.py's path out of the image, and
+           so are the two strings: same table, same generator, resolved by the
+           address the entry itself holds. */
         data_0208ecf4[i].f8 = port_archive_map[i].base;
         data_0208ecf4[i].fa = port_archive_map[i].end;
+        data_0208ecf4[i].fc = port_archive_name[i];
+        data_0208ecf4[i].f10 = port_archive_path[i];
 
         if (!port_fs_archive_get(i, &img, &len) || !img) {
             fprintf(stderr,

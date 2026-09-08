@@ -84,7 +84,34 @@
 
 extern "C" {
 
-// PORT_HOST_ABI: releases a NARC the DS card loader mounted back to the DS heap; the host's mount is static storage in hal/card_mount.cpp and never came off that heap (the note at the head of this file has the whole of it).
+/* PORT_HOST_ABI: releases a NARC the DS card loader mounted back to the DS
+   heap; the host's mount is static storage in hal/card_mount.cpp and never came
+   off that heap (the note at the head of this file has the whole of it).
+
+   RULED AGAIN, run link100 lane CARDFS2, because the reason it used to rest on
+   has moved. The mount table is hosted now (lane CARDFS) and so are its two DS
+   strings (this lane), so "the table is not hosted" is no longer available as
+   an answer. Two things are, and both are about running, not about linking:
+
+     THE FREE IS WRONG. src/UnloadArchive.c is
+     `if (e->f0) { func_02018908(e->f0, e->f4); e->f0 = 0; e->f4 = 0; }`. On
+     this host e->f0 is hal/card_mount.cpp's static g_mount_obj[i] and e->f4 is
+     zero -- the residency publish never writes a heap word, which is exactly
+     what that file's audit line proves. So the ROM's body would hand static
+     host storage to a null heap, and then zero the residency word that keeps
+     src/LoadArchive.c out of its mount branch. The next LoadArchive would take
+     that branch, which hal/card_mount.cpp's "THE MOUNT BRANCH" section says
+     cannot run.
+
+     AND ITS ONE ARM9 CALLER RIDES A REGISTER. src/func_02018770.c -- linked,
+     and called by src/func_0201834c.c on every card read -- declares
+     `extern void UnloadArchive(void)` and calls it with no argument at all; the
+     ARM original leaves the archive index from data_0208eb54 in r0. Seating the
+     one-argument body would give that call site whatever cdecl left, and index
+     a thirteen-entry table with it.
+
+   Takeable when the mount is heap-shaped AND that arity is fixed, not before.
+   Neither is a decomp gap: both are host-ABI. */
 void UnloadArchive(int)             {}
 
 }  /* extern "C" */
