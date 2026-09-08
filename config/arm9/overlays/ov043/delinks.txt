@@ -7,7 +7,7 @@ src/game/actors/d_a_obj_km1_ukishima.cpp:
     complete
     .text start:0x021111a0 end:0x021113fc
 
-src/actors/daObjKm1_Kurumajiku_c.cpp:
+src/game/actors/d_a_obj_km1_kurumajiku.cpp:
     complete
     .text start:0x021113fc end:0x02111518
 
