@@ -1012,6 +1012,10 @@ def parse_file(rel, text, aliases):
             continue
         if re.match(r"^(namespace|enum|class|struct|union)\b", rest) and "(" not in rest:
             continue
+        if re.match(r"^(static_assert|_Static_assert)\b", rest):
+            # A size or offset assertion, not a declaration of anything. This tree
+            # writes hundreds of them and every one carries a `==`.
+            continue
         # Where the declarator itself begins, not where the buffer does. The gap
         # between them is the blanked comment block, and the `@symbol` line lives
         # in it.
@@ -1040,9 +1044,13 @@ def parse_file(rel, text, aliases):
                                _raw_types(rest, name) | file_types))
             continue
 
-        has_init = term == "=" or "=" in rest
-        if "=" in rest:
-            rest = split_top(rest, seps=("=",))[0].strip()
+        # An `=` at DEPTH ZERO is an initialiser. One inside the parentheses is a
+        # default argument -- `extern void f(int a = 0);` is still a declaration, and
+        # reading it as a definition would drop it from the comparison entirely.
+        halves = split_top(rest, seps=("=",))
+        has_init = term == "=" or len(halves) > 1
+        if len(halves) > 1:
+            rest = halves[0].strip()
         if saw_static and not saw_extern:
             # `static` is internal linkage. Whatever it defines is not the symbol any
             # other file's `extern` names, so it stays out of both lists.

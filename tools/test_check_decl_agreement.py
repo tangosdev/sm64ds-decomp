@@ -469,6 +469,30 @@ class ParserTests(unittest.TestCase):
         findings, _d, _f, _files = build(tree)
         self.assertEqual(kinds(findings, "vec"), [])
 
+    def test_a_default_argument_is_not_an_initialiser(self):
+        """Only an `=` at depth zero defines anything; one in a parameter list does not."""
+        def tree(t):
+            t.write("src/darg.cpp",
+                    "//cpp\nvoid darg(int a, int b) { (void)a; (void)b; }\n")
+            t.write("src/darg_caller.cpp",
+                    "//cpp\nextern void darg(int a, int b = 0);\n")
+        findings, decls, _f, _files = build(tree)
+        self.assertEqual([d.symbol for d in decls
+                          if d.file == "src/darg_caller.cpp"], ["darg"])
+        self.assertEqual(kinds(findings, "darg"), [])
+
+    def test_a_static_assertion_is_not_a_declaration(self):
+        """It carries a `==`, and this tree writes hundreds of them."""
+        with tempfile.TemporaryDirectory() as tmp:
+            t = Tree(tmp)
+            t.write("include/sizes.h",
+                    "struct Thing { int a; };\n"
+                    'static_assert(sizeof(struct Thing) == 4, "Thing");\n')
+            _files, decls, defs, unparsed = CDA.collect(t.root)
+        self.assertEqual([d.symbol for d in decls], [])
+        self.assertEqual([d.symbol for d in defs], [])
+        self.assertEqual(unparsed, 0)
+
 
 class BaselineTests(unittest.TestCase):
     def _round_trip(self, findings):
@@ -815,10 +839,11 @@ class BigTreeHarnessTests(unittest.TestCase):
 class SharedTypeScopeTests(unittest.TestCase):
     """Path 1, `:1340`: changing a shared typedef invalidates unchanged consumers.
 
-    `src/tdef_user.c` declares `void tdef_target(tdef_handle)` and `src/tdef_def.c`
-    defines `void tdef_target(unsigned int)`. They agree while `tdef_handle` is
-    `u32`. Retyping the alias in `include/types.h` -- and touching nothing else --
-    makes the consumer wrong, and the consumer is not in the diff.
+    The consumer `tdef_user.c` declares `void tdef_target(tdef_handle)` and the
+    definition file `tdef_def.c` defines `void tdef_target(unsigned int)`. They agree
+    while `tdef_handle` is `u32`. Retyping the alias in the fixture's own types header
+    -- and touching nothing else -- makes the consumer wrong, and the consumer is not
+    in the diff.
     """
 
     def _mutate(self, repo):
@@ -906,9 +931,9 @@ class SharedTypeScopeTests(unittest.TestCase):
 class ConfigInputScopeTests(unittest.TestCase):
     """Path 2, `:1276`: a `config/**/symbols.txt` row is an input to the gate.
 
-    Recording `cfg_target` unmangled makes the bare `extern` in the C++ TU
-    `src/cfg_user.cpp` a linkage disagreement. No src/ or include/ path changed, and
-    the PR scan used to exit 0 on that alone.
+    Recording `cfg_target` unmangled makes the bare `extern` in the fixture's C++ TU
+    `cfg_user.cpp` a linkage disagreement. No source path changed at all, and the PR
+    scan used to exit 0 on that alone.
     """
 
     def _mutate(self, repo):
@@ -959,9 +984,9 @@ class ConfigInputScopeTests(unittest.TestCase):
 class RenamedDefinitionScopeTests(unittest.TestCase):
     """Path 3, `:1162`: `--diff-filter=AM` drops a Git-detected rename.
 
-    `src/ren_old.c` becomes `src/ren_new.c` and its return type changes in the same
-    commit. Git reports one `R` row, which is neither `A` nor `M`, so the renamed
-    definition never reached the scope and `src/ren_user.c` was never re-checked.
+    The fixture's `ren_old.c` becomes `ren_new.c` and its return type changes in the
+    same commit. Git reports one `R` row, which is neither `A` nor `M`, so the renamed
+    definition never reached the scope and its consumer was never re-checked.
     """
 
     def _mutate(self, repo):
@@ -1018,7 +1043,7 @@ class RenamedDefinitionScopeTests(unittest.TestCase):
 class DataDefinitionTests(unittest.TestCase):
     """Path 4, `:854`: an initialised data definition is a definition.
 
-    `src/data_def.c` defines `int data_target = 0`. A file declaring
+    The fixture's `data_def.c` defines `int data_target = 0`. A file declaring
     `extern int data_target(void)` is claiming the linker's symbol is a function. It
     is not, and both modes used to pass because the definition was thrown away before
     the comparison ran.
