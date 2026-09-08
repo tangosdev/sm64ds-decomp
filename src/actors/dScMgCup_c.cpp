@@ -15,23 +15,21 @@
  * five member-local optimiser brackets scoped, and it puts D1 ahead of D0 the
  * way the cartridge has them.  Do not reorder and do not drop that pragma.
  *
- * NOT ONE FIELD IN THIS CLASS'S OWN TAIL HAS A PROVEN NAME.  Eleven offsets in
- * 0x5400..0x5470 are proven -- each from a load/store displacement or from a
- * constructor call site -- and zero names are.  That is why the bodies below
- * address state as `*(T *)(c + 0x54xx)` rather than through members: the raw
- * offset is the honest spelling here, not a leftover the next pass should
- * tidy away.  include/dScMgCup_c.h does spell a few of them (mState,
- * mShuffleAngle, mShuffleSpeed, mOnes, mIds, mFlags); those are that header's
- * inferences, not ROM facts, and only mState is used from here.
+ * The own-tail offsets have load/store and constructor evidence, but their
+ * original field names are unproved. The header's mState, mShuffleAngle,
+ * mShuffleSpeed, mOnes, mIds and mFlags are disclosed inferences; only mState
+ * is used as a member here. Raw offsets and Obj6e remain reconstruction work,
+ * not a naming requirement. Issue #2492 tracks individually proved typed-field
+ * replacements, including the live words at 0x5400, 0x5404 and 0x5408.
  *
  * THE EIGHT State* SPELLINGS ARE INFERENCES TOO.  __sinit_ov006_021303d0 fixes
  * the pointer-to-member table's ORDER and each body's behaviour fixes its role,
  * but the original names are not in the cartridge.  The same holds for
  * Virtual50 and for dScMgCup_c_classInit.
  *
- * FIVE SPELLINGS IN THIS FILE WERE MEASURED AND MUST NOT BE TIDIED.  Each
+ * FIVE RETAINED SOURCE FORMS HAVE RECORDED CODE-GENERATION MEASUREMENTS.  Each
  * carries its own comment where it sits: func_ov006_020ded00's two spellings of
- * +0x12; func_ov006_020def80's late `cup = i;`, which the two goto paths skip;
+ * +0x12; func_ov006_020def80's per-arm `cup = i;` assignments;
  * StateShuffle's read-modify-write on +0x545c/+0x545e; Behavior's `(int)`
  * launders over the three parallel per-cup arrays; and Render's two
  * pointer-arithmetic towers.  Every other cast of that shape in this file was
@@ -64,32 +62,6 @@
 typedef struct { u8 pad; u8 lo:4; u8 hi:4; } Entry094;
 
 typedef struct { int a, b; } Pair6;
-
-/* Stand-in for an unrelated polymorphic object reached by slot, not by name.
-   Only slot 18 is ever called through it; the other nineteen exist to place
-   that slot at the right index. */
-struct Obj {
-    virtual void v00();
-    virtual void v01();
-    virtual void v02();
-    virtual void v03();
-    virtual void v04();
-    virtual void v05();
-    virtual void v06();
-    virtual void v07();
-    virtual void v08();
-    virtual void v09();
-    virtual void v10();
-    virtual void v11();
-    virtual void v12();
-    virtual void v13();
-    virtual void v14();
-    virtual void v15();
-    virtual void v16();
-    virtual void v17();
-    virtual void v18(int a);
-    virtual void v19();
-};
 
 /* The initializer at 0x021303d0 proves an eight-entry member-function table. */
 typedef void (dScMgCup_c::*PMF)();
@@ -420,6 +392,7 @@ extern "C" void func_ov006_020def80(char *c, int i)
             out += 0x5000;
             *((int *) (out + 0x434)) = 1;
         }
+        cup = i;
         goto epilogue;
     }
     flag = *((unsigned char *) (row + 0x462));
@@ -432,6 +405,7 @@ extern "C" void func_ov006_020def80(char *c, int i)
                 *((unsigned char *) ((c + 0x5000) + 0x46d)) = (unsigned char) i;
             }
         }
+        cup = i;
         goto epilogue;
     }
     {
@@ -441,21 +415,10 @@ extern "C" void func_ov006_020def80(char *c, int i)
     }
     cup = i;
 
-    /* All three arms clear the same two per-cup counters, but only this last
-       one assigns `cup` -- the two `goto epilogue` paths reach the label with
-       it still unset.  Reading it there is UNDEFINED BEHAVIOUR in C++, and it
-       is deliberate: hoisting the assignment to the declaration
-       (`int cup = i;`) and deleting this line was measured and takes this
-       function from MATCH to DIFF.  Do not tidy it here.
-
-       THE HAZARD IS CLOSED, THOUGH, AND THE PORT'S REPAIR IS KNOWN.  The
-       cartridge's own epilogue at 0x020df00c is `add r0, r0, r1, lsl #2`, and
-       r1 -- the incoming `i` -- is never written on any path through this
-       function (r1 is first assigned at 0x020df014, after that use, as the zero
-       for the two stores).  So the ROM's behaviour is `cup == i`
-       unconditionally, and `int cup = i;` is not a guess at the undefined value
-       but a provably behaviour-preserving rewrite.  A host port should make
-       exactly that edit; only the byte-matching build needs the split. */
+    /* Every incoming path assigns cup before the shared epilogue. Under
+       2004/b56 this keeps the retail 0xa4-byte body; hoisting the assignment
+       to the declaration or replacing cup with i instead emits 0xa0 bytes.
+       The earlier uninitialized-local form is superseded (issue #2492). */
 epilogue:
     {
         char *out = c + (cup << 2);
@@ -542,7 +505,7 @@ void dScMgCup_c::StateFinish()
         *(int*)(c + 0x5000 + 0x418) = 7;
     } else {
         if (*(int*)(c + 0xa8) > 0) {
-            ((Obj*)c)->v18(-1);
+            OnYoshiTryEat(-1);
         } else {
             func_ov004_020b0a54(0x12);
             *(int*)(c + 0x5000 + 0x418) = 7;
@@ -934,9 +897,11 @@ void dScMgCup_c::StateSetup()
 
 /* [25] 0x020dfed4  _ZN10dScMgCup_c9Virtual50Ev  size 0x18 */
 /* Vtable slot 20. The original name is not in the ROM; `Virtual50` is the
-   tree's placeholder spelling for this slot. Body is a single forward to the
-   0x4f38 table's own entry point, and it falls off the end -- the ROM does
-   the same, so the declared `int` return is never actually produced. */
+   tree's placeholder spelling for this slot. The current int-declared body
+   forwards to the 0x4f38 table's entry point without a return statement.
+   The minigame slot-20 return contract remains unresolved (CUP-05, issue
+   #2492); the forwarding instructions alone do not establish its return type.
+   A correction needs the base, callers and overrides audited together. */
 // @symbol _ZN10dScMgCup_c9Virtual50Ev
 int dScMgCup_c::Virtual50()
 {
@@ -1009,9 +974,9 @@ void dScMgCup_c::OnYoshiTryEat(int msg)
 // @symbol _ZN10dScMgCup_c6RenderEv
 /* dScMgCup_c::Render -- vtable slot 9.
  *
- * Attributed by the ROM's vtable at ov006 0x0213c154, the second of the two slots
- * where the table differs from dScMgSingle3DBase_c's. The old file carried no
- * `recovered name:` comment at all, only the func_ov006_ address.
+ * The ROM's vtable at ov006 0x0213c154 owns this function at slot 9, one of
+ * seven Cup overrides (0, 6, 9, 16, 17, 18 and 20). Render is the inherited
+ * interface spelling; the vtable identifies the owner and slot, not the name.
  *
  * Draws the three cups back to front: the bubble sort orders the indices by the
  * per-cup depth at 0x53ec, and the render loop then walks them in that order.
@@ -1080,16 +1045,13 @@ s32 dScMgCup_c::Render()
 // @symbol _ZN10dScMgCup_c8BehaviorEv
 /* dScMgCup_c::Behavior -- vtable slot 6.
  *
- * Attributed by the ROM's vtable at ov006 0x0213c154, which holds 0x020e0204 in
- * the one slot where the table differs from dScMgSingle3DBase_c's. The old file's
- * `recovered name: dScMgCup_c_Behavior` agrees for once -- unlike the four the
- * reference commit had to correct, this address really is Cup's own.
+ * The ROM's vtable at ov006 0x0213c154 holds 0x020e0204 in slot 6, one of the
+ * seven Cup overrides. Behavior is the inherited interface spelling.
  *
- * The dispatch through data_ov006_02141870 is a pointer-to-member table indexed by
- * mState. `C` stays a bare non-polymorphic stand-in rather than dScMgCup_c: a PMF
- * on a polymorphic class is a different representation, so the shape here is
- * codegen and not decoration -- the same reason
- * src/_ZN15daObjMarioCap_c8BehaviorEv.cpp keeps its own stand-in.
+ * data_ov006_02141870 contains the real dScMgCup_c member-function pointers
+ * declared by PMF above. mState selects an entry and this->* invokes it on this
+ * scene. The eight State* names are inferred from their order and behavior;
+ * this dispatch does not require a stand-in receiver class.
  *
  * The three parallel per-cup arrays keep their `(int)` launders; those steer the
  * address arithmetic and are not spellings that can be tidied.  Re-measured:
@@ -1193,7 +1155,7 @@ s32 dScMgCup_c::InitResources()
         }
     }
 
-    ((Obj *)c)->v18(3);
+    OnYoshiTryEat(3);
     func_ov006_020dec3c(c + 0x50e8);
     return 1;
 }

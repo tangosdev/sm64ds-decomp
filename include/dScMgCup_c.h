@@ -53,8 +53,9 @@
  * FACTS. notes/data/class-facts/dScMgCup_c.json proves eleven offsets in
  * 0x5400..0x5470 and names none of them: mOnes, mIds and mFlags come from a
  * local struct in InitResources, and mState, mShuffleSound, mShuffleAngle and
- * mShuffleSpeed from behaviour. src/actors/dScMgCup_c.cpp deliberately
- * addresses this tail by raw offset rather than through these members. */
+ * mShuffleSpeed from behaviour. Much of the TU still uses raw offsets and
+ * an Obj6e view. Typed or offset-named members need fresh byte proof, not
+ * recovered English names; that remaining work belongs to issue #2492. */
 #ifndef DSCMGCUP_C_H
 #define DSCMGCUP_C_H
 #include "dScMgSingle3DBase_c.h"
@@ -67,15 +68,14 @@ extern "C" void NullDestructor_0203d47c(void);
 struct dScMgCup_c : dScMgSingle3DBase_c {
     virtual ~dScMgCup_c();
 
-    /* This class's own overrides, read off the ROM's vtable at ov006 0x0213c154:
-       the two slots where the table differs from dScMgSingle3DBase_c's. Spelled
-       WITHOUT the `virtual` keyword, the way include/daObjMarioCap_c.h and
-       include/daObjRc_Dorifu_c.h spell theirs -- an override of a virtual an
-       ancestor already declares is implicitly virtual either way, so each reuses
-       an existing slot and adds no field, and the 0x5470 assert below still
-       holds. The destructor remains the key function; the reconstructed whole TU
-       emits its vtable/RTTI as compiler passengers and the TU manifest externalizes
-       them to the canonical cartridge copies. */
+    /* The ROM vtable at ov006 0x0213c154 differs from the direct base in seven
+       slots: 0, 6, 9, 16, 17, 18 and 20 (16/17 are the destructor pair).
+       Overrides remain virtual whether the keyword is repeated or omitted;
+       they reuse existing slots and add no field. The inherited slot names,
+       including OnYoshiTryEat and Virtual50, are reconstructed interface names,
+       not strings read from this vtable. The destructor remains the key
+       function; compiler vtable/RTTI passengers are externalized to the
+       canonical cartridge copies by the manifest. */
     /* Inferred class-anchored aliases: __sinit_ov006_021303d0 fixes this
        eight-entry PMF order; behavior fixes the roles, but the original
        source spellings are not present in the ROM. */
@@ -102,7 +102,7 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     u8  mArray2[0x18];    /* 0x53e8 -- 3 * 8, elem dtor NullDestructor_0203d47c.
                              InitResources already recovers the element
                              as a pair of s32; left raw here, own change. */
-    u8  pad_5400[0xc];    /* 0x5400 -- no matched access */
+    u8  pad_5400[0xc];    /* 0x5400 -- live words at +0, +4, +8; typing pending */
     s32 mOnes[3];         /* 0x540c -- named `ones[3]` by InitResources' own struct */
     s32 mState;           /* 0x5418 -- Behavior's pointer-to-member dispatch index */
     u8  pad_541c[0x4];    /* 0x541c */
