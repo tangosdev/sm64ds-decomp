@@ -256,44 +256,24 @@ void func_0206a928(void *state, int first, void *ap, void *end) {
 }
 
 // ---------------------------------------------------------------------------
-// THIS ONE IS NOT AN ABI EXCEPTION, and deliberately carries no
-// PORT_HOST_ABI: tag, so port/tools/linkage.py keeps counting it as a SHADOW --
-// work the port still owes rather than a ruling it has made.
+// func_02057198 IS RETIRED FROM THIS FILE (run link100, lane LOADOV). It stood
+// here as a transcription because src/func_02057198.c forward-declared
+// func_0205a74c `static` with no definition in the TU, which MSVC rejects with
+// C2129. The decomp corrected that word to `extern` in commit 861328718, so
+// the matched TU compiles, and port/slice_nitrofs.txt now seats it: the map
+// carries func_02057198 out of func_02057198.c.obj and the host copy is gone.
+// The two prototypes that stood with it (IRQ::Disable and IRQ::Restore) went
+// with it -- nothing else in this file names them, and the /alternatename
+// pragmas below spell both symbols as strings.
 //
-// src/func_02057198.c is ordinary C with no assembly in it, and it does not
-// compile under MSVC for one reason:
-//
-//     static u32 func_0205a74c(u32 val, LockObj *addr);
-//
-// func_0205a74c is a GLOBAL ROM symbol (arm9 0x0205a74c, the `swp` primitive
-// standing in above), and declaring it `static` in this TU promises a
-// definition in this TU that never comes -- C2129, "static function declared
-// but not defined". mwccarm accepted it, MSVC does not, and the whole rest of
-// the lock family compiles clean. THE FIX IS ONE WORD IN THE DECOMP: `static`
-// -> `extern`, which is what every other caller of that symbol already says.
-// src/ is not this lane's to edit, so the body is transcribed here from the
-// matched TU (verbatim, including the useAll branch) and the TU stays out of
-// port/slice_gate214.txt until the declaration is corrected.
-//
-// It is link-only in this build: the callers are func_02057158 and
-// func_020572c8, and the only seated path into them is the debug/fatal chain
-// under func_0201a5cc, which nothing the port runs enters.
+// This block also had the tree's one instance of a linkage.py mis-binding: it
+// spelled the host-ABI tag inside its own prose, and port/tools/linkage.py's
+// binder read that as a real ruling and filed func_02057198 under EXCEPTIONS
+// instead of SHADOWS -- which is exactly the opposite of what the prose asked
+// for. The binder's existing guard (a blank line ends a tag's binding run) does
+// not fire inside a definition's own header comment. Nothing in the tree spells
+// the tag in prose above a definition any more.
 // ---------------------------------------------------------------------------
-unsigned int _ZN3IRQ7DisableEv(void);
-unsigned int _ZN3IRQ7RestoreEj(unsigned int);
-unsigned int func_02057198(unsigned int val, void *addr, void (*cleanupFn)(void),
-                           unsigned int useAll)
-{
-    unsigned int state = useAll ? _ZN3IRQ10DisableAllEv() : _ZN3IRQ7DisableEv();
-    unsigned int old = func_0205a74c(val, addr);
-    if (old == 0) {
-        if (cleanupFn) cleanupFn();
-        *(unsigned short *)((char *)addr + 4) = (unsigned short)val;
-    }
-    if (useAll) _ZN3IRQ10RestoreAllEj(state);
-    else _ZN3IRQ7RestoreEj(state);
-    return old;
-}
 
 }  // extern "C"
 

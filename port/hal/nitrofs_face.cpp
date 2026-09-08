@@ -1,4 +1,4 @@
-// The FS_Init face, for the ONE target that cannot carry the ROM's own body.
+// The faces for the ONE target that cannot carry the ROM's own bodies.
 //
 // hal/fs_names.cpp used to define func_0205d96c itself. Run link100 lane
 // NITROFS seated the matched TU src/func_0205d96c.c instead (port/
@@ -29,3 +29,33 @@
 extern "C" void port_nitrofs_fs_init(void *dma);
 
 extern "C" void func_0205d96c(void *dma) { port_nitrofs_fs_init(dma); }
+
+
+// ---------------------------------------------------------------------------
+// THE OVERLAY-UNLOAD FACE, same target and the same kind of reason (run
+// link100, lane LOADOV).
+//
+// src/func_02017e94.c is the ROM's own overlay unload: it scans
+// data_0209d3c4[12] for an entry whose first word is the id, returns when
+// there is none, and otherwise drops the record and invalidates the code
+// region. On this host the id is a host address (hal/scene_boot.cpp's
+// overlay_NN block says why) and nothing ever fills that table, so the ROM's
+// own early return is the arm every call takes. port/slice_loadov.txt links
+// the matched TU for that reason -- but only on walk_window and
+// walk_window_hires, because the TU still REFERENCES the rest of the chain
+// (func_0205dc0c, func_02018c00, func_0203d7b8, func_02017fd0 and the
+// twenty-odd TUs under them), that chain is port/slice_gate214.txt's, and it
+// bottoms out on hal/boot_hw.cpp's ARM primitives. smoke_player carries
+// neither slice_gate214 nor hal/boot_hw.cpp, so on that target the whole chain
+// is undefined and the face below is what it links.
+//
+// A ROM name defined on a target that also links the matched TU is a duplicate
+// symbol, which is why this face lives here and not in hal/scene_boot.cpp: that
+// file goes to all three targets.
+//
+// PORT_HOST_ABI: the chain under the ROM's own body (func_0205dc0c,
+// func_02018c00 and the OS-lock and assert TUs below them) is
+// port/slice_gate214.txt's and rides hal/boot_hw.cpp, and this target carries
+// neither. The observable is nothing: with no overlay resident the ROM's body
+// returns without writing.
+extern "C" void func_02017e94(int) {}

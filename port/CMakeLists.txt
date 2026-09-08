@@ -430,6 +430,13 @@ set(PORT_REPO_ROOT_READERS
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs_mods.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs_names.cpp"
+    # The eleventh reader (run link100, lane LOADOV). hal/nitrofs_boot.cpp
+    # reads build/assets/nitrofs.tsv for the cartridge header's overlay-table
+    # words (+0x50..+0x5c) the way hal/fs_names.cpp reads it for the FNT and
+    # FAT words, and it carries the same #ifndef PORT_REPO_ROOT / "." fallback,
+    # so a build that forgets this line looks in the working directory and says
+    # so at run time rather than failing to compile.
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/nitrofs_boot.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/stage_geom.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/romdata_loader.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/asset_root_refuse.cpp"
@@ -8381,6 +8388,33 @@ foreach(line IN LISTS SLICE_NITROFS_LINES)
         continue()
     endif()
     list(APPEND SLICE_NITROFS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# ---------------------------------------------------------------------------
+# Run link100, lane LOADOV: the honest subset of the LoadOverlay /
+# UnloadOverlay chains. One entry point, src/func_02017e94.c, and the whole
+# chain behind it comes with it -- every TU of that chain is already enrolled
+# in slice_gate214.txt and already compiles here; /OPT:REF drops all of it
+# today because the only thing that named it was hal/scene_boot.cpp's empty
+# face. port/slice_loadov.txt carries the per-row rulings, including the two
+# rows this lane REFUSED (LoadOverlay reads uninitialised stack on a lookup
+# that fails and its tail would copy an overlay image over host code;
+# UnloadOverlay's body is this one's with `return` replaced by `Crash()`, on a
+# lookup that always fails here).
+#
+# SAME TARGET SPLIT AS SLICE_NITROFS_SOURCES ABOVE, and for the same reason:
+# the chain bottoms out on hal/boot_hw.cpp's ARM primitives, hal/boot_hw.cpp is
+# SLICE214_SOURCES, and smoke_player carries neither. smoke_player keeps a face
+# in hal/nitrofs_face.cpp. The two are exclusive -- a target with both would
+# have func_02017e94 defined twice.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_loadov.txt" SLICE_LOADOV_LINES)
+set(SLICE_LOADOV_SOURCES "")
+foreach(line IN LISTS SLICE_LOADOV_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_LOADOV_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
 # THREE PER-SOURCE RENAMES, the shape lane R2ABC used for func_02060890 and
@@ -16680,6 +16714,14 @@ foreach(_tnitrofs walk_window walk_window_hires)
 endforeach()
 target_sources(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/nitrofs_face.cpp")
+
+# Run link100, lane LOADOV: the overlay-unload seat, on the same split and for
+# the same reason (see beside SLICE_LOADOV_SOURCES). hal/nitrofs_face.cpp is
+# already on smoke_player from the line above and now carries the second face,
+# so there is nothing to add on that side.
+foreach(_tloadov walk_window walk_window_hires)
+    target_sources(${_tloadov} PRIVATE ${SLICE_LOADOV_SOURCES})
+endforeach()
 
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
