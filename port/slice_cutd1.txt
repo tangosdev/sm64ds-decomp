@@ -1,0 +1,125 @@
+# LANE CUTD1 (run link100, wave 5): the two cutscene models' COMPLETE-OBJECT
+# destructors, the last two rows lane EXCEPT left behind when it gave
+# _ZTV15TextureSequence[1] its thunk.
+#
+# THIS FILE ENROLLS NOTHING, AND THAT IS THE FINDING. Both matched TUs are
+# already compiled -- port/slice_intro.txt lines 234 and 242 have carried them
+# since run lvled -- and both objects sit in the port_slice_shared library
+# today. What they were missing was a REFERENCE EDGE. The release link runs
+# with /OPT:REF, so a compiled object nothing names is discarded before it
+# reaches the map, which is exactly what happened to src/func_ov002_020f6870.cpp
+# and what hal/model_dtor_seat.cpp's own header block already spells out for
+# this family: "a matched TU added to a slice and referenced by nothing is
+# discarded before it reaches the map ... the reference edge IS the work".
+#
+# A SECOND SLICE ROW WOULD HAVE BEEN A DEFECT, not a no-op: the same .cpp in
+# two slices is the same symbol in two objects and the link fails on it. So
+# this file is a RECORD in the shape of port/slice_except.txt's rows, and the
+# edit that earns the count is four words in hal/actor_classes_intro.cpp.
+#
+# Both rows are verified BY ROM ADDRESS: the referrer is the ROM's own vtable
+# word, read out of the raw overlay image at that overlay's own base and cross
+# read against the relocation table, never out of a dsd copy.
+#
+# ---------------------------------------------------------------------------
+# ROW 1 (record only, already enrolled in slice_intro.txt:234):
+#        src/func_ov002_020f6a00.cpp
+# ---------------------------------------------------------------------------
+# The cutscene MODEL's complete-object destructor.
+#
+#   record    func_ov002_020f6a00 kind:function(arm,size=0x50) addr:0x020f6a00
+#             (config/arm9/overlays/ov002/symbols.txt:1397)
+#   delinks   src/func_ov002_020f6a00.cpp complete
+#             .text start:0x020f6a00 end:0x020f6a50
+#             (config/arm9/overlays/ov002/delinks.txt:5422)
+#   prologue  020f6a00 e92d4010 / 020f6a04 e59f103c / 020f6a08 e1a04000
+#   referrer  data_ov002_0210bae4[0], the CUTSCENE_OBJECT Model vtable's ROM
+#             slot 0. Two independent readings:
+#               relocs.txt:15568  from:0x0210bae4 kind:load to:0x020f6a00
+#               overlay_0002.bin at base 0x020ad660, file offset 0x5e484:
+#                   0210bae4 = 020f6a00   slot 0, the D1  <- this row
+#                   0210bae8 = 020f69a8   slot 1, the D0
+#             The fill in hal/actor_classes_intro.cpp installs co_model_d1, a
+#             one-line __fastcall face that calls &func_ov002_020f6a00.
+#
+#   NOTE ON THE COUNT. This TU was ALREADY in the map before this lane, and not
+#   through the ROM's reference graph: g_co_vt[0] in the same file carries a
+#   `host` field holding (void *)&func_ov002_020f6a00, and that field is never
+#   read -- the boot check compares only .rom against the mount and prints
+#   .what. It is a keep-alive, and it is what made this row count. The seat
+#   below replaces it with a real edge, so the headline does not move for this
+#   row; the honest delta for this lane is ONE, not two. The dead `host` field
+#   is reported to the coordinator rather than removed here: it spans all six
+#   g_co_vt rows and this lane owns only the destructor slots.
+#
+# ---------------------------------------------------------------------------
+# ROW 2 (record only, already enrolled in slice_intro.txt:242):
+#        src/func_ov002_020f6870.cpp
+# ---------------------------------------------------------------------------
+# The cutscene MODELANIM's complete-object destructor. This is the row that
+# earns the +1: nothing named it, so /OPT:REF dropped it.
+#
+#   record    func_ov002_020f6870 kind:function(arm,size=0xf0) addr:0x020f6870
+#             (config/arm9/overlays/ov002/symbols.txt:1394)
+#   delinks   src/func_ov002_020f6870.cpp complete
+#             .text start:0x020f6870 end:0x020f6960
+#             (config/arm9/overlays/ov002/delinks.txt:5410)
+#   prologue  020f6870 e92d4030 / 020f6874 e24dd004 / 020f6878 e59f10d4
+#   referrer  data_ov002_0210bcc4[0], the CUTSCENE_OBJECT ModelAnim vtable's
+#             ROM slot 0. Two independent readings:
+#               relocs.txt:15589  from:0x0210bcc4 kind:load to:0x020f6870
+#               overlay_0002.bin at base 0x020ad660, file offset 0x5e664:
+#                   0210bcc4 = 020f6870   slot 0, the D1  <- this row
+#                   0210bcc8 = 020f6778   slot 1, the D0
+#             The fill installs co_modelanim_d1, a one-line __fastcall face
+#             that calls &func_ov002_020f6870. That address IS the edge.
+#
+# CORRECTION TO THIS LANE'S OWN BRIEF, recorded because a wrong address here
+# would seat the deleting half in the complete half's slot. The brief said
+# "EXCEPT says 020f69a8 for the first table's slot 0 and 020f6870 for the
+# second". 020f69a8 is the Model's DELETING half and belongs at slot 1; the
+# first table's slot 0 is 020f6a00, which is also what the brief's own opening
+# sentence and the worklist's EXCEPT entry say. Both readings above agree with
+# the opening sentence, and the two words were re-read before anything moved.
+#
+# WHAT UNBLOCKED BOTH ROWS. src/func_ov002_020f6870.cpp destroys the
+# TextureSequence it owns through a hand-indexed vtable word,
+#
+#     p = *(void **)(c + 0x7c);
+#     if (p != 0) (*(VFN)((*(int **)p)[1]))(p);        // ROM slot 1
+#
+# and _ZTV15TextureSequence[1] was a plain null here, so the body called
+# address 0 (c0000005 on the opening cutscene, measured by lane SLOT5F).
+# hal/model_dtor_seat.cpp seats that slot as of lane EXCEPT with the ROM's own
+# body for it, _ZN15TextureSequenceD0Ev, behind a CDECL thunk. The convention
+# is checked, not assumed: the VFN typedef above is a plain
+# `void (*)(void *)`, which is cdecl under this compiler, and the thunk is
+# `static void texseq_d0_cdecl(void *)`. Index 0 keeps its separate __fastcall
+# thunk, which is the slot MSVC's own `delete p` reaches.
+#
+# AND THE FACES INTO THESE TWO SLOTS ARE __fastcall, NOT cdecl, which is the
+# opposite convention and for a different reason: the reader decides. The one
+# host caller into either table is
+# src/_ZN14CutsceneObject16CleanupResourcesEv.cpp, which declares
+# `struct Obj { virtual void v00(); virtual void m04(); }` and calls a->m04().
+# That is an ordinary MSVC virtual call, so every code slot in these arrays is
+# entered thiscall, matching the five neighbours already filled from
+# _ZTV5Model / _ZTV9ModelAnim.
+#
+# WHAT RUNS DIFFERENTLY: NOTHING, and that is the point. The ROM calls slot 1
+# here (CutsceneObject::CleanupResources throws the model away) and so does the
+# host. Slot 0 is a slot the ROM fills and no live path dispatches, which is
+# the house rule's "a vtable slot the ROM fills" and not a keep-alive. The
+# risk that the D1 opens a new fault path is nil for a further reason: the
+# ModelAnim's DELETING half, src/func_ov002_020f6778.cpp, carries the SAME
+# hand-indexed TextureSequence call and has been seated at slot 1 and green
+# since lane EXCEPT, so the D1 takes no path the D0 was not already taking.
+#
+# NO -D ROWS. Neither TU carries a placeholder macro; both are plain literal
+# offsets with no compile-time configuration, so there is nothing to read out
+# of their literal pools and nothing to define.
+#
+# NO CMAKE BLOCK either, for the same reason there is no source row: nothing
+# new compiles.
+#
+# (no source lines by design -- see the header)

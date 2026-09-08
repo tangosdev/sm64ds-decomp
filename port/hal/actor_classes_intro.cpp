@@ -449,8 +449,7 @@ extern void *_ZTV9ModelAnim[10];
 void hal_fill_model_vtable(void);
 void hal_fill_modelanim2_vtable(void);  /* fills _ZTV9ModelAnim too */
 void func_ov002_020f6778(void);           /* the ModelAnim class's own D0 */
-/* Its D1, ov002 0x020f6870, is deliberately NOT declared or seated here; the
-   note beside co_model_d0 below has the measurement that rules it out. */
+void func_ov002_020f6870(void);           /* and its D1, the ROM's slot 0 */
 extern unsigned data_ov002_0210bcc4[];
 void port_intro_seat_ov002_ptrs(void);    /* hal/intro_ov002_seat.cpp */
 }
@@ -488,37 +487,75 @@ static void *__fastcall co_model_d0(void *s, void *)
 { return ((CoRomD0)(void *)&func_ov002_020f69a8)((char *)s); }
 static void *__fastcall co_modelanim_d0(void *s, void *)
 { return ((CoRomD0)(void *)&func_ov002_020f6778)((char *)s); }
-/* THE COMPLETE-OBJECT HALVES ARE NOT SEATED, and this is the one place in the
-   Model-family unfold where the ROM's own arrangement cannot be taken.
+/* THE COMPLETE-OBJECT HALVES, SEATED (run link100, lane CUTD1).
 
-   With the destructor respelling the ROM's slots 0 (D1) and 1 (D0) both exist
-   on the host, so seating src/func_ov002_020f6a00.cpp and
-   src/func_ov002_020f6870.cpp at slot 0 looks free. It is not. Both D1 bodies
-   destroy the TextureSequence they own through a HAND-INDEXED vtable word --
+   THE ROM'S OWN WORDS for the two slots this lane fills, read twice. Out of
+   config/arm9/overlays/ov002/relocs.txt:
+
+       15568  from:0x0210bae4 kind:load to:0x020f6a00 module:overlay(2)
+       15569  from:0x0210bae8 kind:load to:0x020f69a8 module:overlay(2)
+       15589  from:0x0210bcc4 kind:load to:0x020f6870 module:overlay(2)
+       15590  from:0x0210bcc8 kind:load to:0x020f6778 module:overlay(2)
+
+   and straight out of extracted/overlays/overlay_0002.bin at that image's own
+   base 0x020ad660 (file offsets 0x5e484 and 0x5e664), which is the same pair
+   of checks g_co_vt and g_co_vt2 above run at boot:
+
+       0210bae4 = 020f6a00   the Model's D1        0210bae8 = 020f69a8  its D0
+       0210bcc4 = 020f6870   the ModelAnim's D1    0210bcc8 = 020f6778  its D0
+
+   So slot 0 is the complete-object half on both tables. Note the FIRST table's
+   slot 0 is 020f6a00, not 020f69a8: 020f69a8 is the Model's deleting half and
+   belongs at slot 1. A brief for this lane had the two transposed.
+
+   WHY THIS NOTE USED TO SAY THE HALVES COULD NOT BE SEATED, and what changed.
+   src/func_ov002_020f6870.cpp destroys the TextureSequence it owns through a
+   HAND-INDEXED vtable word,
 
        p = *(void **)(c + 0x7c);
        if (p != 0) (*(VFN)((*(int **)p)[1]))(p);        // ROM slot 1
 
-   -- and on the host _ZTV15TextureSequence[1] is a plain null, because
-   TextureSequence is NOT one of the seven classes this lane respelled: MSVC
-   still folds its destructor pair into slot 0, which is where
-   hal/model_dtor_seat.cpp seats texseq_d0. Seating the D1 therefore calls a
-   null pointer, MEASURED: the opening cutscene faulted c0000005 at address 0
-   (RVA 0xffc00000 against the 0x400000 base) through
-   CutsceneObject::CleanupResources+0x42 -> co_modelanim_d1 ->
-   func_ov002_020f6870+0x8a. That is the same fault
-   port/unmatched/Ov002_ModelAnimD0_020f6778.cpp was written to close for the
-   DELETING half, and its header spells out why the index alone is not enough:
-   the seated slot is `static void __fastcall texseq_d0(void *, void *)` while
-   the matched source's `typedef void (*VFN)(void *)` is the ARM shape, so even
-   at the right index the call would enter a thiscall thunk cdecl.
+   and _ZTV15TextureSequence[1] was a plain null on this host, so seating the
+   D1 called address 0. That was measured: c0000005 at address 0 on the opening
+   cutscene. hal/model_dtor_seat.cpp now fills that slot (run link100, lane
+   EXCEPT) with texseq_d0_cdecl, and it is CDECL rather than __fastcall for a
+   read reason: the only readers of ROM slot 1 are ROM bodies spelling the
+   VFN typedef above, a plain `void (*)(void *)`, and MSVC's own vtable for
+   TextureSequence has one slot, so nothing MSVC generates ever indexes 1. The
+   call shape in both matched bodies and the thunk's convention were re-read
+   against each other before this seat was written, and they agree.
 
-   So both ROM destructor slots take the DELETING half here, the way they did
-   before this lane. Nothing needs the complete half: the only caller is
-   CutsceneObject::CleanupResources, which is throwing the model away.
-   Making this ROM-faithful needs a host copy of each D1 with the same two
-   corrections Ov002_ModelAnimD0_020f6778.cpp already carries, which belongs
-   to whoever owns port/unmatched. */
+   TWO CORRECTIONS TO THE OLD NOTE, both checked against the sources.
+   First, only ONE of the two D1 bodies has a TextureSequence at all. The old
+   note said "both": src/func_ov002_020f6870.cpp (the ModelAnim) carries the
+   hand-indexed call, src/func_ov002_020f6a00.cpp (the Model) does not -- it
+   Releases one SharedFilePtr, calls Model's D2 and runs __destroy_arr.
+   Second, the remedy it asked for (a host copy of each D1) is neither what
+   happened nor needed. src/func_ov002_020f6778.cpp, the ModelAnim's DELETING
+   half, carries the SAME hand-indexed TextureSequence call, and it has been
+   seated at slot 1 and green since lane EXCEPT retired its host copy. The D1
+   therefore opens no path the D0 was not already taking.
+
+   THE FACES ARE __fastcall, NOT cdecl, and the reader is what decides that.
+   The one host caller into either table is
+   src/_ZN14CutsceneObject16CleanupResourcesEv.cpp, which declares a local
+   `struct Obj { virtual void v00(); virtual void m04(); }` and calls
+   `a->m04()`. That is an ordinary MSVC virtual call, so every code slot in
+   these two arrays is entered thiscall, which is what the five neighbouring
+   slots already hold and what the co_model_d0 note above calls a trap to
+   break. CleanupResources reaches slot 1, exactly as the ROM does; slot 0 is
+   a slot the ROM fills and neither side dispatches here, so seating the
+   complete halves changes no behaviour and gives each of the two matched TUs
+   the reference edge it was missing.
+
+   The cast reuses the CoRomD0 typedef above rather than adding a second one:
+   all four ROM bodies here are `void *f(char *)`, the D1s included, so the
+   typedef's name is one letter narrower than what it describes and the shape
+   is exactly right. */
+static void *__fastcall co_model_d1(void *s, void *)
+{ return ((CoRomD0)(void *)&func_ov002_020f6a00)((char *)s); }
+static void *__fastcall co_modelanim_d1(void *s, void *)
+{ return ((CoRomD0)(void *)&func_ov002_020f6870)((char *)s); }
 
 static void co_seat_model_vtable(void)
 {
@@ -580,20 +617,20 @@ static void co_seat_model_vtable(void)
        shadow TUs counting in ROM numbering; every TU counts in ROM numbering
        now. No DS address is left in any code slot of either table.
 
-       THE DESTRUCTOR PAIR IS THE EXCEPTION, and the long note beside
-       co_model_d0 above says why: the ROM's complete-object halves cannot be
-       entered on this host, because both of them destroy their TextureSequence
-       through _ZTV15TextureSequence[1], which is null here (TextureSequence is
-       not one of the seven classes this lane respelled) and would want a
-       __fastcall entry even if it were not. So both destructor slots take the
-       DELETING half, exactly as they did before this lane. The only caller is
-       CutsceneObject::CleanupResources, which is throwing the model away. */
-    data_ov002_0210bae4[0] = (unsigned)(size_t)&co_model_d0;
+       THE DESTRUCTOR PAIR IS NO LONGER THE EXCEPTION. It was one for as long
+       as _ZTV15TextureSequence[1] was a live null, because the ModelAnim's D1
+       dispatches that slot by hand; both destructor slots therefore took the
+       DELETING half. Lane EXCEPT filled the slot with a cdecl thunk, so slot 0
+       now takes the COMPLETE half the ROM puts there and slot 1 keeps the
+       deleting one -- the ROM's own arrangement, word for word. The note
+       beside co_model_d1 above carries the four relocs.txt lines, the raw
+       overlay words, and why the faces are __fastcall. */
+    data_ov002_0210bae4[0] = (unsigned)(size_t)&co_model_d1;
     data_ov002_0210bae4[1] = (unsigned)(size_t)&co_model_d0;
     for (unsigned i = 2; i <= 5; ++i)
         data_ov002_0210bae4[i] = (unsigned)(size_t)_ZTV5Model[i];
 
-    data_ov002_0210bcc4[0] = (unsigned)(size_t)&co_modelanim_d0;
+    data_ov002_0210bcc4[0] = (unsigned)(size_t)&co_modelanim_d1;
     data_ov002_0210bcc4[1] = (unsigned)(size_t)&co_modelanim_d0;
     for (unsigned i = 2; i <= 6; ++i)
         data_ov002_0210bcc4[i] = (unsigned)(size_t)_ZTV9ModelAnim[i];
