@@ -107,6 +107,9 @@ struct daBgSnmBdy_c : dActor_c {
     void UpdateModel();
     void CallStateBehavior();
     void CallStateInit();
+    /* The Ei suffix chooses int for the state index. The table access and
+       call sites do not establish the original parameter type; an enum
+       spelling is not ruled out. This is an inferred declaration. */
     void SetState(int state);
 
     static void *operator new(unsigned long size) {

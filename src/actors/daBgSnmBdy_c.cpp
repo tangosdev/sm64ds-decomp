@@ -218,6 +218,8 @@ int daBgSnmBdy_c::CleanupResources()
     return 1;
 }
 
+/* SetState and its int parameter are inferred spellings. The ROM proves
+ * the table indexing, not the original identifier or int-versus-enum type. */
 // @symbol _ZN12daBgSnmBdy_c8SetStateEi
 void daBgSnmBdy_c::SetState(int state)
 {
