@@ -16316,6 +16316,23 @@ foreach(_tbootmain walk_window walk_window_hires)
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/rom_main.cpp")
 endforeach()
 
+# THE ROM'S FRAME STATE (run link100, boot plan rung R3a, lane R3A).
+#
+# hal/rom_frame.cpp hosts data_0209d50c -- the ROM game loop's PHASE ID, which
+# nothing in this port defined and nothing read, because its only ROM writer is
+# func_020197b8 and the block above renames that TU to port_rom_loop_seam. It
+# also carries the phase-6 step count the test harness now reads its frame
+# number from, and the cross-check that refuses to return a number the host
+# loop's own counter disagrees with.
+#
+# The same two targets as rom_main.cpp above, and for the same reason: they are
+# the only ones that compile tests/walk_window.cpp, which is the caller. This
+# rung enrols no matched TU and moves the linkage count by zero, by design.
+foreach(_tromframe walk_window walk_window_hires)
+    target_sources(${_tromframe} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/rom_frame.cpp")
+endforeach()
+
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
 # reconfigure and the build will look clean while compiling the old set of
