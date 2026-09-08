@@ -53,3 +53,34 @@ The first expanded attempt incorrectly invoked text-only isolation for the two a
 Proof and command hashes are in ignored `build/cup-expanded-final/`, including `plan.json`, `consumers.json`, `consumer-summary.json`, complete TU logs, `caller-helper-controls.json`, `metadata-cli.json`, `port.json`, `packed-rom.json`, `rom-command.local.json` and `final-prose-binding.v2.json`. The old `build/cup-proof-final/` and initial expanded attempt remain preserved. Receipts, compiler/ROM inputs, object files and local machine paths are excluded from tracked/public evidence.
 
 Next: `inventory_worktrees` must freshly claim the exact offered verify stage, inspect the complete changed source/interfaces and every finding above, and independently prove the final candidate. Partial reconstruction must retain its owner and limits. Queue publication precedes independent verification; PR publication, current-base composition, terminal private validation, Source review activation and integration are separate coordinator/integrator responsibilities. No source branch push, PR or merge occurs in this producer stage.
+
+## BASE-PROV02 continuation after independent rework
+
+The independent verifier returned exact `63638f45e0ecb31c938219d7c3bb4590000eb565`
+for current base-header prose. The same task resumed at that checkpoint with a
+fresh producer lease; the original base remains
+`51e74d3ea9b8f1a2342e944be6d7fa9d3c57e5ea`.
+
+**BASE-PROV02 is corrected in this candidate:** slots 22–26 no longer call actor
+parameter lists wrong based on unrelated minigame bodies. Slots 24–29 no longer
+refer to the removed slot-21 comparison table or use cross-hierarchy agreement
+as signature evidence. The recorded scene body/caller observations and the
+historical int/void experiment remain, with their limits. Two stale OnKicked
+caller references now correctly identify slot 24. Every declaration, field,
+layout and executable token is unchanged; no signature or name was revised.
+All earlier findings and the partial reconstruction ownership above remain.
+
+Fresh `2004/b56` production compilation of **all 171 affected source files** gives
+complete raw objects identical to the preserved `63638` producer proof input.
+`build/cup-prov02/token-object-binding.json` records each source/object hash,
+the unchanged executable tokens and the hash of the preceding binding. Thus the
+927 strict source-qualified checks, 924 production slots, all 20 complete TUs,
+620 owned data bytes / 112 relocations and packed stock-equal ROM result above
+remain bound through identical objects. This comments-only step does not claim
+a fresh ROM repack or replace independent verification. The original checkpoint,
+both prior bindings and all proof logs remain preserved.
+
+Next: offer this exact child through the existing task; a different verifier
+must freshly claim it, inspect BASE-PROV02 and all prior dispositions, bind its
+own independent proof and finish the remaining gates. PR/integration and source
+review activation remain separate from producer publication.
