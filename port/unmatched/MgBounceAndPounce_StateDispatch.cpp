@@ -193,21 +193,110 @@ static void bnp_note(unsigned code)
         if (kBnpStates[i] == code) { ++g_bnp_state_hits[i]; return; }
 }
 
-static int bnp_try(void *self, unsigned code)
+
+/* ---- RUN link100 LANE PMFB7 GATE 3: THE SEVEN PAIRS ARE SEATED ------------
+ *
+ * THE UNIVERSE IS CLOSED over a block derived from the class: dScMgJump_c's own
+ * vtable (0x0213cbe4) names its bodies, the first-to-last span of them snapped
+ * to symbol boundaries is 0x020edec0..0x020eeafc, and every `load` relocation
+ * in ov006 landing there whose word reads the target and whose FOLLOWING word
+ * is zero gives exactly SEVEN pairs at 0x0213cb4c..0x0213cb8c holding SIX
+ * distinct code words. EVERY reference into the run comes from INSIDE the
+ * block and each is one writer's literal pool, so nothing outside this class
+ * can hand the field an address and nothing compares a stored pair by value.
+ * (runs/link100/out/PMFB7/sweep_jump.txt)
+ *
+ * ONE FACE PER CODE WORD, NOT PER RECORD: 0x0213cb74 and 0x0213cb7c both hold
+ * 0x020ee2c0 (the four-byte `bx lr` idle body), and giving two records that
+ * hold one code word two different host addresses is exactly the hazard lane
+ * FWD's gate-3 rule exists for. Six faces, seven records.
+ *
+ * THE EMITTED SIDE, WITH /Zp4: mov eax,[eax+20484] / mov ecx,[eax+20488] /
+ * add ecx,this / call eax -- 0x5004 and 0x5008, the ROM's own offsets, ARITY
+ * ZERO. WITHOUT the option the same listing reads [eax+20488]/[eax+20492],
+ * FOUR BYTES LATE, and those are the only four lines that differ. 0x5004 mod 8
+ * is 4, which is PMFB6's rule, and /Zp4 is claimed on this ONE source in the
+ * gate's CMake block.
+ *
+ * THE BODY IS NOT A GUESS. It carries "recovered from vtable slot identity" and
+ * port/tools/inferred_stub_adjudicated.txt already rules it REAL_DECOMP on lane
+ * BNP's instruction-for-instruction ROM comparison (port/slice_bnp.txt). The
+ * guard admits a symbol with that ruling.
+ *
+ * WHAT THE CENSUS CAN STILL SEE: calls, hits, last and the per-state rows are
+ * bumped by every face and stay exact. nullpmf is NO LONGER OBSERVABLE and this
+ * is why -- after the seat the field can only hold one of the six faces, so a
+ * zero code cannot reach a dispatch. It reads 0 and the reason is here rather
+ * than left as a counter that reads zero forever.
+ */
+#define BNP_FACE(tag, call)                                               \
+    static void __fastcall bnp_f##tag(void *self, void *dead_edx)         \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        ++g_bnp_calls;                                                    \
+        ++g_bnp_hits;                                                     \
+        g_bnp_last = 0x##tag##u;                                          \
+        bnp_note(0x##tag##u);                                             \
+        call;                                                             \
+    }
+
+BNP_FACE(020ee2c0, func_ov006_020ee2c0())
+BNP_FACE(020ee2c4, func_ov006_020ee2c4((char *)self))
+BNP_FACE(020ee3ec, func_ov006_020ee3ec((char *)self))
+BNP_FACE(020ee44c, func_ov006_020ee44c((char *)self))
+BNP_FACE(020ee508, func_ov006_020ee508((char *)self))
+BNP_FACE(020ee5b8, func_ov006_020ee5b8((char *)self))
+
+extern "C" {
+extern MgPmf data_ov006_0213cb4c, data_ov006_0213cb54, data_ov006_0213cb5c,
+    data_ov006_0213cb6c, data_ov006_0213cb74, data_ov006_0213cb7c,
+    data_ov006_0213cb84;
+}
+
+namespace {
+struct BnpSeat { MgPmf *rec; unsigned rom; void *face; const char *what; };
+const BnpSeat g_bnp_seats[] = {
+    {&data_ov006_0213cb4c, 0x020ee3ecu, (void *)bnp_f020ee3ec, "0213cb4c"},
+    {&data_ov006_0213cb54, 0x020ee5b8u, (void *)bnp_f020ee5b8, "0213cb54"},
+    {&data_ov006_0213cb5c, 0x020ee44cu, (void *)bnp_f020ee44c, "0213cb5c"},
+    {&data_ov006_0213cb6c, 0x020ee2c4u, (void *)bnp_f020ee2c4, "0213cb6c"},
+    {&data_ov006_0213cb74, 0x020ee2c0u, (void *)bnp_f020ee2c0, "0213cb74"},
+    {&data_ov006_0213cb7c, 0x020ee2c0u, (void *)bnp_f020ee2c0, "0213cb7c"},
+    {&data_ov006_0213cb84, 0x020ee508u, (void *)bnp_f020ee508, "0213cb84"},
+};
+}  /* namespace */
+
+extern "C" void port_mg_jump_field_seat(void)
 {
-    char *c = (char *)self;
-    bnp_note(code);
-    switch (code) {
-    case 0x020ee2c0u: func_ov006_020ee2c0();  return 1;
-    case 0x020ee2c4u: func_ov006_020ee2c4(c); return 1;
-    case 0x020ee3ecu: func_ov006_020ee3ec(c); return 1;
-    case 0x020ee44cu: func_ov006_020ee44c(c); return 1;
-    case 0x020ee508u: func_ov006_020ee508(c); return 1;
-    case 0x020ee5b8u: func_ov006_020ee5b8(c); return 1;
-    default:                                  return 0;
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    for (unsigned i = 0; i < sizeof g_bnp_seats / sizeof g_bnp_seats[0]; ++i) {
+        MgPmf *p = g_bnp_seats[i].rec;
+        if (p->code != g_bnp_seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgJump_c pair %s: the mount holds "
+                         "%08x/%d, the cartridge's own record says %08x/0 -- "
+                         "WRONG BYTES\n", g_bnp_seats[i].what, p->code, p->adj,
+                         g_bnp_seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)g_bnp_seats[i].face;
+        p->adj = 0;
     }
 }
 
+/* THE CALL-TIME SWITCH IS DEAD AND SAYS SO -- the abort below is what a route
+   by DS code word would hit, and reaching it means the seat did not run. */
+static int bnp_try(void *self, unsigned code)
+{
+    std::fprintf(stderr, "FATAL: dScMgJump_c field dispatch reached the call-time "
+                 "switch with code %08x -- the seat did not run, or the pair "
+                 "universe is not the one the sweep closed\n", code);
+    (void)self;
+    std::abort();
+    return 0;
+}
 extern "C" unsigned port_mg_jump_state_count(void)
 { return (unsigned)kBnpStateCount; }
 
@@ -252,10 +341,8 @@ extern "C" void port_mg_jump_counts(unsigned *calls, unsigned *hits,
    in the copy is a raw char* offset at the same displacement the ROM uses. The
    ROM returns a literal 1 (mov r0,#1 at 0x020ee2ac, single exit), so the copy
    does too. */
-// PORT_HOST_ABI: dScMgJump_c vtable slot 6 Behavior; src dispatches a member pointer held in the field at self+0x5004 via (c->*c->m)() that is eight bytes on the ROM and four on MSVC, so the host reads the {code, adj} pair and routes it.
-extern "C" int func_ov006_020ee27c(void *c)
-{
-    const MgPmf *p = (const MgPmf *)((char *)c + 0x5004);
-    port_mg_jump_call0(c, p->code, p->adj);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 3.
+   src/func_ov006_020ee27c.cpp dispatches its own field now, compiled with /Zp4
+   so the member lands at the ROM's own 0x5004. The seven records the class's
+   own writers copy from hold six zero-argument __fastcall faces, one per code
+   word. */

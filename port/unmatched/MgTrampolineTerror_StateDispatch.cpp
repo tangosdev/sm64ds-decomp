@@ -144,6 +144,7 @@
 // mg12 cost those four slice lines and no others.
 
 #include <cstdio>
+#include <cstdlib>
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on both
    machines.  Each host-copy TU declares its own; neither is a header. */
@@ -233,19 +234,104 @@ static void tte_note(int ord)
     }
 }
 
-static int tte_try(void *self, unsigned code)
+
+/* ---- RUN link100 LANE PMFB7 GATE 3: THE FIVE PAIRS ARE SEATED -------------
+ *
+ * Section 3 above says the seat "routes at the DISPATCH SITE and never rewrites
+ * a stored pair". That was the right ruling for the reason it gave -- a pair a
+ * second reader compares BY VALUE must not be rewritten -- and the measurement
+ * that supersedes it is that THIS class has no such reader.
+ * dScMgTrampoline2_c's own vtable (0x0213fc7c) names its bodies, the
+ * first-to-last span of them snapped to symbol boundaries is
+ * 0x021225ac..0x021245a8, and every `load` relocation in ov006 landing there
+ * whose word reads the target and whose FOLLOWING word is zero gives exactly
+ * the FIVE pairs section 3 lists. Every reference into that run comes from
+ * INSIDE the block and each is one writer's literal pool -- 0x02123bf0 in
+ * func_ov006_02123b24, 0x02123c74 in _02123bf4, 0x02123cb0 in _02123c78,
+ * 0x02124084 in _02124040, 0x02124294 in _02124228 -- five writers, five
+ * records, no comparison anywhere.
+ * (runs/link100/out/PMFB7/sweep_tramp2.txt)
+ *
+ * THE EMITTED SIDE, WITH /Zp4: mov eax,[esi+20484] / mov ecx,[esi+20488] /
+ * add ecx,esi / call eax -- 0x5004 and 0x5008, the ROM's own offsets, ARITY
+ * ZERO. WITHOUT it the same listing reads [esi+20488]/[esi+20492], four bytes
+ * late, and those are the only four lines that differ. 0x5004 mod 8 is 4, which
+ * is PMFB6's rule; the option is claimed on this ONE source.
+ *
+ * THE FIVE WRITERS DO NOT CHANGE. Section 3 measured that all five copy the
+ * pair as two plain words and none names a member-pointer type, so all five are
+ * eight bytes on MSVC too and land at +0x5004/+0x5008 exactly as the ROM does.
+ * What they copy is now a host address instead of a DS one, which is the whole
+ * change.
+ *
+ * WHAT THE CENSUS CAN STILL SEE: calls, routed and the five per-ordinal rows
+ * are bumped by every face and stay exact, and the ordinal is still ROM pair
+ * order 0x0213fbd0 first. The framework-routed arm is STRUCTURALLY ZERO after
+ * the seat, because the field can only hold one of the five faces.
+ */
+#define TTE_FACE(tag, ord, call)                                          \
+    static void __fastcall tte_f##tag(void *self, void *dead_edx)         \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        ++g_tte_calls;                                                    \
+        ++g_tte_routed;                                                   \
+        tte_note(ord);                                                    \
+        call;                                                             \
+    }
+
+TTE_FACE(02123b20, 0, func_ov006_02123b20())
+TTE_FACE(02124088, 1, func_ov006_02124088((char *)self))
+TTE_FACE(02123b24, 2, func_ov006_02123b24((char *)self))
+TTE_FACE(02123cb4, 3, func_ov006_02123cb4((char *)self))
+TTE_FACE(02123bf4, 4, func_ov006_02123bf4((char *)self))
+
+extern "C" {
+extern MgPmf data_ov006_0213fbd0, data_ov006_0213fbd8, data_ov006_0213fbe0,
+    data_ov006_0213fbe8, data_ov006_0213fbf0;
+}
+
+namespace {
+struct TteSeat { MgPmf *rec; unsigned rom; void *face; const char *what; };
+const TteSeat g_tte_seats[] = {
+    {&data_ov006_0213fbd0, 0x02123b20u, (void *)tte_f02123b20, "0213fbd0"},
+    {&data_ov006_0213fbd8, 0x02124088u, (void *)tte_f02124088, "0213fbd8"},
+    {&data_ov006_0213fbe0, 0x02123b24u, (void *)tte_f02123b24, "0213fbe0"},
+    {&data_ov006_0213fbe8, 0x02123cb4u, (void *)tte_f02123cb4, "0213fbe8"},
+    {&data_ov006_0213fbf0, 0x02123bf4u, (void *)tte_f02123bf4, "0213fbf0"},
+};
+}  /* namespace */
+
+extern "C" void port_mg_tte2_field_seat(void)
 {
-    char *c = (char *)self;
-    switch (code) {
-    case 0x02123b20u: tte_note(0); func_ov006_02123b20();  return 1;
-    case 0x02124088u: tte_note(1); func_ov006_02124088(c); return 1;
-    case 0x02123b24u: tte_note(2); func_ov006_02123b24(c); return 1;
-    case 0x02123cb4u: tte_note(3); func_ov006_02123cb4(c); return 1;
-    case 0x02123bf4u: tte_note(4); func_ov006_02123bf4(c); return 1;
-    default:                                               return 0;
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    for (unsigned i = 0; i < sizeof g_tte_seats / sizeof g_tte_seats[0]; ++i) {
+        MgPmf *p = g_tte_seats[i].rec;
+        if (p->code != g_tte_seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgTrampoline2_c pair %s: the mount holds "
+                         "%08x/%d, the cartridge's own record says %08x/0 -- "
+                         "WRONG BYTES\n", g_tte_seats[i].what, p->code, p->adj,
+                         g_tte_seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)g_tte_seats[i].face;
+        p->adj = 0;
     }
 }
 
+/* THE CALL-TIME SWITCH IS DEAD AND SAYS SO -- the abort below is what a route
+   by DS code word would hit, and reaching it means the seat did not run. */
+static int tte_try(void *self, unsigned code)
+{
+    std::fprintf(stderr, "FATAL: dScMgTrampoline2_c field dispatch reached the call-time "
+                 "switch with code %08x -- the seat did not run, or the pair "
+                 "universe is not the one the sweep closed\n", code);
+    (void)self;
+    std::abort();
+    return 0;
+}
 /* The entry point the host copy uses.  It tries this class's five addresses and
    hands everything else to the framework, so the null-code guard, the
    nonzero-adjustment refusal and the UNHANDLED report stay in exactly one
@@ -297,28 +383,7 @@ struct TteObj {
     MgPmf cb;                 /* 0x5004, two words -- DELTA: was PMF */
 };
 
-// PORT_HOST_ABI: dScMgTrampoline2_c vtable slot 6 field-pmf dispatcher; the member pointer at this+0x5004 is eight bytes in the ROM where MSVC's single-inheritance pmf is four, so the host reads the {code, adj} pair and routes it.
-extern "C" int func_ov006_02123340(TteObj *self)
-{
-    const int saved = data_ov006_02140830;
-    func_ov006_02120c40();
-    func_ov006_020eef90();
-    func_ov006_02122ab8();
-
-    char *c = (char *)self;
-    *(void **)(c + 0x7ac4) =
-        _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            *(unsigned *)(c + 0x7ac4), 0xf0, 0x280000, 0x700000, -0x580000, 0);
-    void *p = _ZN8Particle6System12FromUniqueIDEj(*(unsigned *)(c + 0x7ac4));
-    if (p != 0) {
-        *(char *)((char *)p + 0x58) = (char)(*(int *)(c + 0x7ac8) >> 12);
-        _Z14ApproachLinearRiii(*(int *)(c + 0x7ac8), 0x14000, 0x200);
-    }
-
-    port_mg_tte_call0(self, self->cb.code, self->cb.adj);
-
-    func_ov006_02123938(self);
-    if (saved != data_ov006_02140830)
-        func_ov004_020adb1c(data_ov006_02140830);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 3.
+   src/func_ov006_02123340.cpp dispatches its own field now, compiled with /Zp4
+   so the member lands at the ROM's own 0x5004. The five records the class's own
+   writers copy from hold zero-argument __fastcall faces. */

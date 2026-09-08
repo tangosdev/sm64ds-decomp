@@ -427,21 +427,47 @@ static void ov26_fill_shared(void *volatile *vt)
 //
 // WRONG BYTES ABORTS. A mount pointing at the wrong storage would otherwise
 // hand the state machine garbage silently.
+
+/* RUN link100 LANE PMFB7 GATE 1: THE THREE TICK RECORDS ARE FACES.
+ * src/_ZN9Submarine8BehaviorEv.cpp and src/_ZN12WaterSuction8BehaviorEv.cpp
+ * are matched TUs now and each dispatches its cell's +8 half as a real pointer
+ * to member: mov eax,[cell+8] / test / je / mov ecx,[cell+12] / add ecx,this /
+ * call eax -- ARITY ZERO, receiver in ecx, /Zp4 diff 0 lines. The three ENTER
+ * records keep their plain cdecl bodies.
+ * The enter/tick labelling below was already in this file and the sweep agrees
+ * with it: __sinit_ov026_02112c94 fills 02113f2c={d04,cec} and 02113f3c={cf4,
+ * cfc}, __sinit_ov026_02112d68 fills data_ov036_02113f58={dd8,dd0}.
+ */
+#define OV026_FACE(tag, sym)                                              \
+    static void __fastcall ov026_f##tag(void *self, void *dead_edx)       \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self);                                                \
+    }
+OV026_FACE(02111d4c, func_ov026_02111d4c)   /* whirlpool  02113cec */
+OV026_FACE(02111b24, func_ov026_02111b24)   /* whirlpool  02113cfc */
+
+static void __fastcall ov026_f021122b0(void *self, void *dead_edx)
+{
+    (void)dead_edx;
+    func_ov026_021122b0(self);              /* watersuction 02113dd0 */
+}
+
 typedef int (*PortOv026Fn)(void *);
 static const struct {
     PortOv026Pmf *cell; unsigned rom; PortOv026Fn host; const char *what;
 } g_ov026_pmf[6] = {
     {&data_ov026_02113d04, 0x02111ed8, (PortOv026Fn)func_ov026_02111ed8,
      "whirlpool state 0 enter"},
-    {&data_ov026_02113cec, 0x02111d4c, (PortOv026Fn)func_ov026_02111d4c,
+    {&data_ov026_02113cec, 0x02111d4c, (PortOv026Fn)(void *)ov026_f02111d4c,
      "whirlpool state 0 tick"},
     {&data_ov026_02113cf4, 0x02111cb4, (PortOv026Fn)func_ov026_02111cb4,
      "whirlpool state 1 enter"},
-    {&data_ov026_02113cfc, 0x02111b24, (PortOv026Fn)func_ov026_02111b24,
+    {&data_ov026_02113cfc, 0x02111b24, (PortOv026Fn)(void *)ov026_f02111b24,
      "whirlpool state 1 tick"},
     {&data_ov026_02113dd8, 0x021122cc, (PortOv026Fn)func_ov026_021122cc,
      "watersuction state 0 enter"},
-    {&data_ov026_02113dd0, 0x021122b0, (PortOv026Fn)func_ov026_021122b0,
+    {&data_ov026_02113dd0, 0x021122b0, (PortOv026Fn)(void *)ov026_f021122b0,
      "watersuction state 0 tick"},
 };
 

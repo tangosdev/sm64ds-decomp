@@ -1,0 +1,224 @@
+# ===========================================================================
+# SLICE pmfb7 -- run link100, lane PMFB7, gate 1
+# TWELVE OBJECT-FIELD ROWS FROM THE FIVE LARGEST OVERLAY GROUPS
+# ===========================================================================
+#
+# MGWRITER's remaining_object_field_rows.txt left 29 one-per-overlay rows across
+# seventeen overlays, each marked "NO universe statement": a pointer to member
+# held in a per-instance FIELD can only be seated when the set of source pairs
+# that can reach that field is bounded. This gate closes twelve of them.
+#
+# THE UNIVERSE, per row, from the CLASS and not from a hand-chosen span. The
+# code block is the first-to-last address range of every function symbol in
+# config/arm9/overlays/ovNNN/symbols.txt whose mangled name names the class --
+# the constructor, the destructors and every method -- which is the span one
+# translation unit emits. Every `load` relocation in the overlay whose
+# destination lands in that block, kept when the word at the FROM address reads
+# the destination and the FOLLOWING word is zero, is the whole set of storage
+# that can hand this class's field an address in this class:
+#
+#  row                            ov   class block            pairs run                 words
+#  _ZN7Skeeter8BehaviorEv        090  02130f00..02132618   8  021340e0..02134120   8
+#  _ZN10CheepCheep8BehaviorEv    090  02133034..02133634   4  021342b8..021342d8   4
+#  _ZN8MantaRay8BehaviorEv       090  0213269c..02132fe8   2  021341e4..021341f4   2
+#  _ZN5Shark8BehaviorEv          090  0213367c..02133ca0   2  021343a0..021343b0   2
+#  _ZN17BowserPuzzlePiece8B..    064  02119330..02119a18   2  0211c2dc..0211c2ec   2
+#  _ZN10LavaBubble8BehaviorEv    064  021185c0..02118b08   4  0211be90..0211beb0   4
+#  _ZN9WaterRing8BehaviorEv      064  02119a58..0211a1b0   4  0211c3b0..0211c3d0   4
+#  _ZN6Snufit8BehaviorEv         065  02115ee0..02116f0c   8  0211cb20..0211cb60   8
+#  _ZN5Swoop8BehaviorEv          065  02116f98..02117eac   8  0211cc20..0211cc60   8
+#  _ZN12WaterSuction8Behavi..    026  021121fc..02112450   2  02113dd0..02113de0   2
+#  _ZN9Submarine8BehaviorEv      026  02111aa0..021121bc   4  02113cec..02113d0c   4
+#  _ZN6Bullet8BehaviorEv         002  020feabc..020fefcc   2  0210d5f8..0210d608   2
+#
+# Twelve for twelve the run is SOLID (stride 8, no gap) and carries as many
+# distinct code words as holders, and twelve for twelve it is exactly the run
+# the overlay's own seat file already names. The other load relocations into
+# each block are the class's seven vtable slots, which are consecutive code
+# words rather than {code,0} pairs and the sweep reports as not-pairs.
+# (runs/link100/out/PMFB7/recon_all.txt, sweep_gate1.txt)
+#
+# NO SENTINEL IN THIS GATE, and that is measured, not assumed. Every reference
+# INTO any of the twelve runs that comes from outside the class's own code block
+# is the class's OWN __sinit copying the records -- the owning symbol of each is
+# named in runs/link100/out/PMFB7/sweep_gate1_owners.txt. Nothing compares a
+# stored pair by value, so a face per RECORD is exact here and lane FWD's
+# one-face-per-code-word rule is not needed and is not claimed.
+#
+# THE ROM SIDE, read at each body's OWN address out of extracted/overlays/
+# (runs/link100/out/PMFB7/rom_gate1_out.txt), e.g. Bullet at 0x020fee44:
+#     ldr r1,[r4,#0x350]   the state cell pointer out of the object field
+#     ldr r0,[r1,#8]       the CODE word of the pair at cell+8
+#     cmp r0,#0            the ROM's own null guard
+#     add r3,r1,#8         the pair's address
+#     ldr r1,[r3,#4]       the ADJUST word at cell+0xc
+#     add r0,r4,r1,asr #1  this + adjust>>1
+#     blx r1               a CALL, not a tail jump
+# All 48 source pairs of the twelve rows read {code, 0} in the overlay image.
+#
+# THE EMITTED SIDE, off each TU's own /FAsc listing under the port's own flags
+# (runs/link100/out/PMFB7/emit_all21_out.txt): every one of the twelve is
+#     mov eax,[cell+8] / test eax,eax / je / mov ecx,[cell+12] /
+#     add ecx,this / call eax
+# -- +8 and +0xc are the ROM's own offsets, the receiver is in ecx and NOTHING
+# is pushed, so ARITY ZERO. Three listings carry an `add esp,4` a few
+# instructions earlier and every one is the cleanup of the PRECEDING cdecl call,
+# read in the listing rather than counted as an argument.
+#
+# NO /Zp4 ON THIS BLOCK, measured both ways on all twelve: 0 listing lines
+# differ outside the TITLE line naming the .obj. That is what PMFB6's rule
+# predicts -- the member sits at offset 8 of its holder struct and 8 mod 8 is 0 --
+# and block R10a's treatment for that case is to leave the option off rather
+# than make a claim nothing measured.
+#
+# WHY TWELVE HOST BANNERS WERE WRONG. Each of the twelve host copies refused the
+# matched TU because the PMF type is formed over a class that is still
+# incomplete, which MSVC widens to the general SIXTEEN-byte representation and
+# then reads garbage adjustment fields past an eight-byte record. That was true
+# when it was written and is dead now: block R8 turns on /vmg AND /vmm for every
+# C++ source in this build, and /vmm chooses the multiple-inheritance worst case,
+# which is EIGHT bytes -- the ROM's own {code, adjust} pair. This is PMFB6's
+# finding 1 applied to the actor half of the family; the Snowball row in the R10
+# block is the same shape already taken and its measurement is in CMakeLists.
+#
+# WHICH CELLS TAKE A FACE, AND WHICH MUST NOT. Each class's records are copied
+# in PAIRS into a 16-byte bss cell: slot 0 the ENTER half, slot 1 the per-frame
+# half. These twelve Behaviors dispatch slot 1 and they CALL it, so slot 1
+# becomes a zero-argument __fastcall face. Slot 0 is dispatched by the class's
+# state-change helper -- func_ov090_02131e00, _021332e8, _021338b4, _02132ac4,
+# func_ov065_0211691c, _02117944, func_ov002_020fed2c -- and every one of those
+# compiles to `jmp edx`, a tail jump that reuses the caller's own cdecl frame and
+# leaves the receiver at [esp+4], so a plain cdecl body is right there and a face
+# would be wrong. Slot 0 is not touched. The split is read out of each class's
+# own __sinit, and every seat file's existing enter/tick labels agree with it.
+#
+# NINE OF THE TWELVE NEED A FORWARDER (their matched TU defines
+# ?Behavior@<Class>@@QAEHXZ, a real C++ member, while the actor class table
+# calls the flat name): they join lane FWD's in port/hal/fwd_forwarders.cpp.
+# MantaRay, Shark and Skeeter define the flat extern "C" name themselves.
+# ===========================================================================
+src/_ZN7Skeeter8BehaviorEv.cpp
+src/_ZN10CheepCheep8BehaviorEv.cpp
+src/_ZN8MantaRay8BehaviorEv.cpp
+src/_ZN5Shark8BehaviorEv.cpp
+src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp
+src/_ZN10LavaBubble8BehaviorEv.cpp
+src/_ZN9WaterRing8BehaviorEv.cpp
+src/_ZN6Snufit8BehaviorEv.cpp
+src/_ZN5Swoop8BehaviorEv.cpp
+src/_ZN12WaterSuction8BehaviorEv.cpp
+src/_ZN9Submarine8BehaviorEv.cpp
+src/_ZN6Bullet8BehaviorEv.cpp
+
+# ---- gate 2: THE REMAINING NINE OBJECT-FIELD ROWS, ONE PER OVERLAY --------
+#
+#  row                          ov   class code block       pairs  run
+#  _ZN7Chuckya8BehaviorEv      062  02115ee0..02117470    20   0211d900..0211d9a0
+#  _ZN6Eyerok8BehaviorEv       066  02115ee0..0211a2dc    38   0211abe8..0211ad18
+#  _ZN11ChiefChilly8Behavi..   073  0211f000..02121ec0    32   02122f40..02123040
+#  _ZN7HeaveHo8BehaviorEv      077  0212624c..021271d4    10   02127a00..02127a50
+#  _ZN10KingBobOmb8Behavio..   078  02123740..021265f4    36   02126ce0..02126e00
+#  _ZN9LakituBro8BehaviorEv    085  0212d528..0212ed54    22   02130254..02130304
+#  _ZN5Stump8BehaviorEv        091  02133968..02134484     6   0213533c..0213536c
+#  _ZN10HootTheOwl8Behavio..   094  02135700..02136798    10   021369c0..02136a10
+#                                                       ^ NOT TAKEN, see below
+#  _ZN14UnchainedChomp8Beh..   100  021431c4..021442d4     2   02147ff8..02148008
+#
+# The block is derived from the class the same way gate 1's twelve are: the
+# first-to-last address range of every function symbol in that overlay's
+# symbols.txt whose mangled name names the class. Nine for nine the sweep gives
+# ONE SOLID run of {code,0} pairs, stride 8, no gap, with as many distinct code
+# words as holders, and nine for nine every reference into the run from outside
+# the block is the class's OWN __sinit -- the owning symbol of each is named in
+# runs/link100/out/PMFB7/sweep_gate2_owners.txt. No by-value sentinel, so a face
+# per record is exact.
+#
+# Nine for nine the emitted dispatch is `mov eax,[cell+8] / test eax,eax / je /
+# mov ecx,[cell+12] / add ecx,this / call eax` -- ARITY ZERO, receiver in ecx --
+# and /Zp4 changes 0 listing lines outside the TITLE. Chuckya's second indirect
+# site is an ordinary virtual call through the model's vptr+0xc, not a pointer to
+# member, and it is untouched.
+#
+# Only the PER-FRAME half of each cell takes a face. The enter half is reached by
+# the class's state-change helper, which compiles as a one-call forwarder ending
+# in `jmp`, so the caller's own cdecl frame is reused and a plain cdecl body is
+# right there. The split is read out of each class's own __sinit
+# (runs/link100/out/PMFB7/slots_gate2.txt); where a seat file already carried
+# enter/tick labels -- ov091's FWOOSH rows, ov094's cells, ov066's cells -- they
+# agree with it row for row.
+#
+# HootTheOwl IS NOT TAKEN, and what stops it is not the sweep. Its universe
+# closes like the other eight -- ten pairs, five cells, no sentinel -- but the
+# matched TU carries a WRONG-OVERLAY CROSSING: the ROM's own Behavior at
+# 0x02136478 calls 0x021357a4 at 0x021365fc, ov094 and ov096 share the base
+# 0x02135700, and src/_ZN10HootTheOwl8BehaviorEv.cpp spells that call
+# func_ov096_021357a4 -- an EIGHT-byte ov096 stub -- where the ROM reaches
+# ov094's own 0x110-byte body. The host copy this row would have retired
+# spelled it func_ov094_021357a4 and was right. Seating the row therefore
+# RAISES the linkage count and makes the port call the wrong body, and it is
+# visible in the count: func_ov094_021357a4 loses its last referrer and
+# /OPT:REF strips it, and src/func_ov002_020df840.c goes with it because
+# 021357a4 was ITS last referrer. Two matched TUs leave the binary to gain one.
+# The unblock is decomp-side -- the crossing has to be corrected in
+# src/_ZN10HootTheOwl8BehaviorEv.cpp -- and it is not this lane's file.
+# The other TWENTY rows of this slice were checked the same way, EXTRN list
+# against the row's own overlay, and none carries a foreign-overlay call.
+#
+# Five of the eight need a forwarder; Chuckya, Eyerok and ChiefChilly define the
+# flat extern "C" name themselves.
+src/_ZN7Chuckya8BehaviorEv.cpp
+src/_ZN6Eyerok8BehaviorEv.cpp
+src/_ZN11ChiefChilly8BehaviorEv.cpp
+src/_ZN7HeaveHo8BehaviorEv.cpp
+src/_ZN10KingBobOmb8BehaviorEv.cpp
+src/_ZN9LakituBro8BehaviorEv.cpp
+src/_ZN5Stump8BehaviorEv.cpp
+src/_ZN14UnchainedChomp8BehaviorEv.cpp
+
+# ---- gate 3: THE FOUR ov006 FIELD-HELD ROWS -------------------------------
+#
+# ov006's symbols.txt carries no mangled class names, so a class's method set
+# cannot be read off a name the way gates 1 and 2 read theirs. The class's own
+# VTABLE is the method set: every slot word that lands in ov006 and is not the
+# shared base's is a body this class defines, and the block is the first-to-last
+# span of those bodies snapped out to the enclosing symbol boundaries.
+#
+#  row                    vtable      class code block        pairs  run
+#  func_ov006_02123340   0213fc7c   021225ac..021245a8       5   0213fbd0..0213fbf8
+#  func_ov006_020ee27c   0213cbe4   020edec0..020eeafc       7   0213cb4c..0213cb8c
+#  func_ov006_020ef3e0   0213ccfc   020eebe8..020efaf0       5   0213cc74..0213cca4
+#  func_ov006_020e7be8   0213c8c4   020e7660..020ea1f0      28   0213c6c4..0213c7bc
+#
+# The first three CLOSE: every reference into the run comes from inside the
+# class's own block and each is one writer's literal pool, so nothing outside
+# can hand the field an address and nothing compares a stored pair by value.
+#
+# THE FOURTH SEPARATES rather than closes, and the separation is the
+# measurement. Its block also holds the source statics of the seven .bss STATE
+# TABLES the class's own __sinit copies, so the sweep returns 28. Every
+# reference into the run says which is which: SIX are loaded by the class's OWN
+# CODE and are exactly this field's records, the other 22 by
+# __sinit_ov006_02130a08 alone. THREE of the six hold code word 0x020e7fac and
+# two of those three are BY-VALUE SENTINELS (src/func_ov006_020e7be8.cpp reads
+# 0x0213c704, src/func_ov006_020e7b44.cpp reads 0x0213c744, and that TU is in
+# the link through port/slice_fold2.txt), so this row is ONE FACE PER CODE WORD:
+# four faces, six records, and every comparison keeps comparing one host address
+# against itself.
+#
+# /Zp4 IS MEASURED PER SOURCE, and these four rows are why the rule is about the
+# EMITTED offset and not the ROM offset alone: 02123340 and 020ee27c are at
+# 0x5004 and need it (four diff lines each, [reg+20488] -> [reg+20484]),
+# 020ef3e0 is at the SAME 0x5004 and does NOT (0 diff lines: its struct comes
+# from the tree's own dScMgJump2_c.h and MSVC already lays the member there),
+# 020e7be8 is at 0x210 and does not. ARITY ZERO on all four, receiver in ecx.
+# All 23 source pairs read {code, 0} in the overlay image.
+#
+# THE TWO GUESS-MARKED BODIES ARE ALREADY ADJUDICATED, which is what PMFB6 could
+# not see: port/tools/inferred_stub_adjudicated.txt carries func_ov006_020ee27c
+# REAL_DECOMP (lane BNP) and func_ov006_020ef3e0 REAL_DECOMP (lane BNT), each
+# with instruction-for-instruction ROM evidence, and inferred_stub_guard admits
+# a symbol with that ruling. Nothing new is excused by this gate.
+src/func_ov006_020ef3e0.cpp
+src/func_ov006_020ee27c.cpp
+src/func_ov006_02123340.cpp
+src/func_ov006_020e7be8.cpp
