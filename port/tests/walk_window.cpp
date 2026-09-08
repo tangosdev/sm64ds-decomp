@@ -739,6 +739,7 @@ void __sinit_ov002_021019d0(void); void __sinit_ov002_02106e40(void);
 void __sinit_ov002_02107118(void); void __sinit_ov002_021071f4(void);
 void __sinit_ov002_02107298(void); void __sinit_ov002_02107304(void);
 void __sinit_ov002_02107370(void); void __sinit_ov002_02107f88(void);
+void port_cutscene_states_seat(void);  /* link100 PMFB6: the ten state tables */
 void __sinit_ov002_0210804c(void); void __sinit_ov002_02108094(void);
 void *_ZN13SharedFilePtr9ConstructEj(void *, unsigned);
 void _ZN12MeshColliderC1Ev(void *);
@@ -7449,6 +7450,7 @@ int main(void)
     __sinit_ov002_021019d0(); __sinit_ov002_02106e40();
     __sinit_ov002_02107118(); __sinit_ov002_021071f4();
     __sinit_ov002_02107298(); __sinit_ov002_02107304();
+    port_cutscene_states_seat();
     __sinit_ov002_02107370(); __sinit_ov002_02107f88();
     __sinit_ov002_0210804c(); __sinit_ov002_02108094();
 

@@ -1,112 +1,103 @@
-/* HOST COPY of the UP_DOWN_LIFT_HMC's (UpDownLiftBbh / daUdlift_c, actor 33
- * and its Bbh/Rr siblings, ov095) Behavior, and the seat of the state table it
- * reads.
+/* THE UP_DOWN_LIFT's STATE TABLE, SEATED -- and the method that reads it is
+ * the decomp's own TU now (UpDownLiftBbh / daUdlift_c, actor 33 and its
+ * Bbh/Hmc/Rr siblings, ov095).
  *
  * UpDownLiftBbh::Behavior drives a five-state machine through
  * data_ov095_02137910, five {function, delta} records that
  * __sinit_ov095_0213722c copies out of five SOURCE statics at ov095
- * 0x0213757c..0x0213759c. Unlike the Crate, the records DO NOT pair up: the
- * ROM indexes data_ov095_02137910[mState] directly, one 8-byte record per
- * state, and calls that state's function every frame. The class has ONE
- * dispatcher, Behavior itself, and it must be a host copy for the two reasons:
+ * 0x0213757c..0x0213759c in the `TAB.<m> = SRC` spelling (members a..e = states
+ * 0..4). The records do not pair up: the ROM indexes
+ * data_ov095_02137910[mState] directly, one 8-byte record per state, and calls
+ * that state's function every frame. All five .delta halves are 0 and all five
+ * targets are matched src (slice_gate173.txt), so there are no state traps.
  *
- *   1. MSVC forms a pointer-to-member of the INCOMPLETE `struct Plat;` the
- *      source declares (`typedef void (Plat::*PMF)();`) as the four-word
- *      general representation, which strides the table at 0x10 instead of 0x08
- *      and dispatches a neighbour's body. Reading the record as a plain
- *      { function, 0 } and calling the function with `this` is the fix.
+ * ==== WHY IT IS NOT A HOST COPY ANY MORE ====================================
  *
- *   2. The words the sinit copies are the overlay image's own -- DS CODE
- *      ADDRESSES, the ovdata contract, matched against ov095's relocs
- *      (0213757c..0213759c load to 02136090/104/178/298/368). The seat below
- *      rewrites each SOURCE static's first word with its host body BEFORE the
- *      sinit copies it into the runtime table (the WaterBomb / Crate reading:
- *      one less mapping to get wrong), each checked against the ROM address the
- *      body was compiled from, so a mount pointing at the wrong bytes says so
- *      instead of calling into the overlay image.
+ * The old note here said MSVC forms the pointer-to-member of the INCOMPLETE
+ * `struct Plat;` as the four-word general representation, striding the table at
+ * 0x10 instead of 0x08. That was measured before port/CMakeLists.txt block R8
+ * turned /vmg /vmm on for every C++ source in the target. Re-measured for this
+ * gate off the matched TU's own /FAsc listing under the port's own flags
+ * (runs/link100/out/PMFB6/emit_gate2_out.txt):
  *
- * The table is the lift's OWN -- only UpDownLiftBbh::Behavior references
- * data_ov095_02137910 -- and all five targets are matched src
- * (slice_gate173.txt), so there are no state traps. All five .delta halves are
- * 0 (non-virtual complete-class form, per the overlay bytes). The state table
- * is indexed by mState, whose values 0..4 are the five records copied in
- * order: state 0 = record .a (0x02137594 -> 02136368), state 1 = .b
- * (0x0213757c -> 02136298), state 2 = .c (0x02137584 -> 02136178), state 3 = .d
- * (0x0213758c -> 02136090), state 4 = .e (0x0213759c -> 02136104).
+ *     mov ecx, _data_ov095_02137910[esi*8+4]
+ *     mov eax, _data_ov095_02137910[esi*8]
+ *     add ecx, edi
+ *     call eax
  *
- * The host copy is transcribed line for line from
- * src/_ZN13UpDownLiftBbh8BehaviorEv.cpp; only the PMF dispatch is changed. It
- * is C-named (extern "C" _ZN13UpDownLiftBbh8BehaviorEv) rather than the mangled
- * MSVC method so it does not collide with the qualified `UpDownLiftBbh::Behavior`
- * call the vtable fill makes for the class's OTHER methods -- the Coin/WaterBomb
- * reading. Member accesses are kept exactly as the source spells them, over a
- * char* self, so no header is needed and it compiles standalone.
+ * [esi*8] and [esi*8+4], the two words of ONE ROM record. ARITY ZERO -- nothing
+ * pushed between the index load and the call and no `add esp` after it (the
+ * `add esp, 4` earlier is the cleanup of the preceding cdecl
+ * Actor::ClosestPlayer call). /Zp4 changes 0 listing lines outside the TITLE.
+ * The TU declares its table INSIDE its own extern "C" block, so it comes in as
+ * the plain _data_ name and needs no /alternatename.
+ *
+ * The dispatch is __thiscall and the state bodies are cdecl
+ * func_ov095_xxxxxxxx(char *), so each cell holds a zero-argument __fastcall
+ * FACE that forwards the receiver as the cdecl argument. ONE FACE PER CELL.
+ * UpDownLiftBbh::Behavior is a real C++ MEMBER (?Behavior@UpDownLiftBbh@@QAEHXZ),
+ * so the flat C name the port's vtable fill calls is defined by the forwarder
+ * in port/hal/fwd_forwarders.cpp.
+ *
+ * ==== THE EXTENT, AND THE ONE CELL THIS LANE COULD NOT SEAT =================
+ *
+ * Lane FWD refused this row because data_ov095_02137910 is the LAST symbol in
+ * ov095's symbols.txt. delinks.txt bounds it: .bss runs
+ * 0x02137780..0x02137940, the filled run ends at 0x02137938, so the slack is
+ * 0x8 = ONE more 8-byte cell and the maximum table length is SIX, not
+ * unbounded (runs/link100/out/PMFB6/rom_gate2.txt).
+ *
+ * That sixth cell is NOT SEATED and the reason is worth writing down rather
+ * than leaving quiet: port/ov095_syms.txt pins this mount to `:0x28`, forty
+ * bytes, exactly the five filled cells, and it is the last object in ov095's
+ * pack -- so there is no mounted storage at 0x02137938 to write an aborting
+ * face into, and port/ov095_syms.txt is not this lane's file. A dispatch at
+ * index 5 therefore reads eight bytes past the mount, which is exactly what it
+ * did through the host copy this file retires: unchanged by this gate, not
+ * introduced by it. The one-line fix is a written proposal in this lane's
+ * report (`data_ov095_02137910:0x28` -> `:0x30`, plus the tail face here).
  */
 #include <cstdio>
 #include <cstdlib>
 
 extern "C" {
 /* the five state bodies, table order = mState order; all matched src */
-void func_ov095_02136368(char *c);   /* state 0 (0x02137594) */
-void func_ov095_02136298(char *c);   /* state 1 (0x0213757c) */
-void func_ov095_02136178(char *c);   /* state 2 (0x02137584) */
-void func_ov095_02136090(char *c);   /* state 3 (0x0213758c) */
-void func_ov095_02136104(char *c);   /* state 4 (0x0213759c) */
-
-/* the Platform helpers Behavior calls, all matched src / linked base */
-void *_ZN5Actor13ClosestPlayerEv(void *c);
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
-int _ZN6Player7IsInAirEv(void *c);
+void func_ov095_02136368(char *c);   /* state 0 (source 0x02137594) */
+void func_ov095_02136298(char *c);   /* state 1 (source 0x0213757c) */
+void func_ov095_02136178(char *c);   /* state 2 (source 0x02137584) */
+void func_ov095_02136090(char *c);   /* state 3 (source 0x0213758c) */
+void func_ov095_02136104(char *c);   /* state 4 (source 0x0213759c) */
 
 struct PortPmf { unsigned fn; int delta; };
-/* the RUNTIME table the dispatcher reads (bss, filled by the sinit) */
-extern PortPmf data_ov095_02137910[5];
 /* the five SOURCE statics __sinit_ov095_0213722c copies from, in the sinit's
    copy order = state order 0..4 */
 extern PortPmf data_ov095_02137594[], data_ov095_0213757c[],
     data_ov095_02137584[], data_ov095_0213758c[], data_ov095_0213759c[];
 }  /* extern "C" */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member stride on the incomplete class. */
-extern "C" int _ZN13UpDownLiftBbh8BehaviorEv(void *this_)
-{
-    char *self = (char *)this_;
-    int old;
-    *(void **)(self + 0x324) = _ZN5Actor13ClosestPlayerEv(self);
-    old = *(int *)(self + 0x32c);
-    ((void (*)(char *))(size_t)data_ov095_02137910[old].fn)(self);
-    *(unsigned short *)(self + 0x344) += 1;
-    if (old != *(int *)(self + 0x32c)) *(unsigned short *)(self + 0x344) = 0;
-    _ZN8Platform21UpdateModelPosAndRotYEv(self);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) != 0)
-        _ZN8Platform19UpdateClsnPosAndRotEv(self);
-    if (*(int *)(self + 0x32c) == 0 ||
-        (unsigned)(*(int *)(self + 0x32c) - 3) <= 1) {
-        void *pl = *(void **)(self + 0x320);
-        if (pl != 0) {
-            if (_ZN6Player7IsInAirEv(pl) == 0) {
-                if (*(unsigned char *)(self + 0x348) == 0) {
-                    *(int *)(self + 0x320) = 0;
-                    *(unsigned char *)(self + 0x347) = 1;
-                }
-            }
-        }
-    }
-    *(unsigned char *)(self + 0x348) = 0;
-    if (*(void **)(self + 0x324) != 0)
-        *(int *)(self + 0x330) = *(int *)(*(char **)(self + 0x324) + 0x60);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB6.
+   src/_ZN13UpDownLiftBbh8BehaviorEv.cpp dispatches this table itself now. */
 
-static const struct { PortPmf *slot; unsigned rom; void (*host)(char *); }
+#define UDL_FACE(cell, sym)                                               \
+    static void __fastcall udl_c##cell(void *self, void *dead_edx)        \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self);                                                \
+    }
+
+UDL_FACE(0, func_ov095_02136368)
+UDL_FACE(1, func_ov095_02136298)
+UDL_FACE(2, func_ov095_02136178)
+UDL_FACE(3, func_ov095_02136090)
+UDL_FACE(4, func_ov095_02136104)
+
+static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_updownlift_states[] = {
-    {data_ov095_02137594, 0x02136368, func_ov095_02136368},   /* state 0 */
-    {data_ov095_0213757c, 0x02136298, func_ov095_02136298},   /* state 1 */
-    {data_ov095_02137584, 0x02136178, func_ov095_02136178},   /* state 2 */
-    {data_ov095_0213758c, 0x02136090, func_ov095_02136090},   /* state 3 */
-    {data_ov095_0213759c, 0x02136104, func_ov095_02136104},   /* state 4 */
+    {data_ov095_02137594, 0x02136368, (void *)udl_c0},   /* state 0 */
+    {data_ov095_0213757c, 0x02136298, (void *)udl_c1},   /* state 1 */
+    {data_ov095_02137584, 0x02136178, (void *)udl_c2},   /* state 2 */
+    {data_ov095_0213758c, 0x02136090, (void *)udl_c3},   /* state 3 */
+    {data_ov095_0213759c, 0x02136104, (void *)udl_c4},   /* state 4 */
 };
 
 extern "C" void port_updownlift_states_seat(void)

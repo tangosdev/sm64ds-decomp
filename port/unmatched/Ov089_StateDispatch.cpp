@@ -1,13 +1,10 @@
 /* THE BOSS REWARD'S STATE MACHINE -- ov089's one pointer-to-member dispatch
- * table, seated with host bodies, and a host copy of the method that reads it.
- *
- * run linkw wave 6, lane w6-A. The long version of the reading is in
- * port/unmatched/Ov060_StateDispatch.cpp and port/unmatched/Crate_StateDispatch
- * .cpp; this is the same shape one overlay over.
+ * table, seated over the MAXIMUM SPAN its .bss section allows, and the method
+ * that reads it is the decomp's own TU now.
  *
  * ==== THE TABLE =============================================================
  *
- * data_ov089_02132cec, bss, EIGHT 8-byte {code, adj} records, filled by
+ * data_ov089_02132cec, bss, EIGHT filled 8-byte {code, adj} records, filled by
  * __sinit_ov089_021328d4 out of eight .data source statics at 0x02132b00..
  * 0x02132b38, and read by Key::Behavior with `PMFTABLE[mState].pmf`. Read from
  * extracted/overlays/overlay_0089.bin (base 0x02130f00) and cross-checked
@@ -20,21 +17,58 @@
  *
  * -- all three matched src, all three in port/slice_w6a.txt.
  *
- * ==== WHY Key::Behavior IS A HOST COPY ======================================
+ * ==== THE EXTENT IS BOUNDED, WHICH IS WHY THIS ROW MOVED --------------------
  *
- * src/_ZN3Key8BehaviorEv.cpp forms its pointer-to-member over
- * `struct C { virtual void dummy(); };` -- a COMPLETE single-inheritance class
- * with a vtable, for which MSVC's representation is FOUR bytes against the ROM
- * record's eight. Measured, the same way the ov060 five were: state 0 reads
- * correctly and every other state calls through an adj word (zero). On top of
- * the stride, a pointer-to-member call is thiscall and every state body here
- * is a cdecl func_ov089_xxxxxxxx(char *).
+ * Lane FWD refused this row because data_ov089_02132cec is the LAST symbol in
+ * config/arm9/overlays/ov089/symbols.txt, so the next-symbol rule cannot say
+ * where the table ends, and "a seat over an unclosed extent can leave a cell
+ * the matched TU would CALL". delinks.txt bounds it instead: ov089's .bss runs
+ * 0x02132c40..0x02132d40, the filled run ends at 0x02132d2c, and the slack is
+ * 0x14 bytes = TWO more 8-byte cells. The maximum table length is TEN cells,
+ * not unbounded (runs/link100/out/PMFB6/rom_gate2.txt).
  *
- * The body below is the matched source's control flow line for line, offsets
- * from include/Key.h; only the one dispatch at its line 114 is respelled.
+ * So this seat covers ten cells. Cells 0..7 are seated through the source
+ * statics before the sinit copies them, each checked against the ROM address
+ * its host body was compiled from. Cells 8 and 9 have no source static -- the
+ * sinit never writes them and the mount holds zero there -- so they are
+ * written DIRECTLY with an aborting face, after asserting that the mounted
+ * bytes really are zero. A zero cell would have been CALLED as address 0; an
+ * aborting face names itself instead. Nothing else can reach those two cells:
+ * they are inside the mounted 84-byte object (0x54 = the whole span to the
+ * .bss end, pinned in port/ov089_syms.txt).
+ *
+ * ==== WHY THE CELLS ARE __fastcall FACES NOW ================================
+ *
+ * The old note here said MSVC forms this pointer-to-member as FOUR bytes
+ * because src/_ZN3Key8BehaviorEv.cpp declares `struct C { virtual void
+ * dummy(); };` -- a complete single-inheritance class. That was measured
+ * before port/CMakeLists.txt block R8 turned /vmg /vmm on for every C++ source
+ * in the target. Re-measured for this gate off the matched TU's own /FAsc
+ * listing under the port's own flags (runs/link100/out/PMFB6/emit_gate2_out.txt):
+ *
+ *     mov ecx, ?data_ov089_02132cec@@3PAUPmfEntry@@A[eax*8+4]
+ *     mov eax, ?data_ov089_02132cec@@3PAUPmfEntry@@A[eax*8]
+ *     add ecx, edi
+ *     call eax
+ *
+ * [eax*8] and [eax*8+4] -- the two words of ONE ROM record, receiver in ecx,
+ * NOTHING pushed and no `add esp` after (the `add esp, 8` three instructions
+ * earlier is the cleanup of the preceding cdecl Actor::UpdatePos call, read in
+ * the listing rather than counted as an argument). ARITY ZERO. /Zp4 changes 0
+ * listing lines outside the TITLE, so it is not claimed on the gate block.
+ *
+ * That is __thiscall, and the state bodies are cdecl func_ov089_xxxxxxxx(char
+ * *), so every cell holds a zero-argument __fastcall FACE that forwards the
+ * receiver as the cdecl argument. ONE FACE PER CELL, not per body: six of the
+ * eight carry the same code word and stay distinguishable that way.
+ *
+ * Key::Behavior is a real C++ MEMBER (?Behavior@Key@@QAEHXZ, read off the
+ * matched TU's own object), so the flat C name the port's actor-class face
+ * calls is defined by the forwarder in port/hal/fwd_forwarders.cpp.
+ *
  * BOTH KEY (282) and LAST_STAR (283) run it -- they share _ZTV3Key, the only
- * vtable ov089 defines, and the mActorID == 0x11a test at the end is how the
- * body itself tells the two apart.
+ * vtable ov089 defines, and the mActorID == 0x11a test in the body itself is
+ * how it tells the two apart.
  */
 #include <cstdio>
 #include <cstdlib>
@@ -47,7 +81,9 @@ struct PortPmf { unsigned fn; int adj; };
 extern PortPmf data_ov089_02132b28[], data_ov089_02132b38[],
     data_ov089_02132b00[], data_ov089_02132b30[], data_ov089_02132b20[],
     data_ov089_02132b10[], data_ov089_02132b08[], data_ov089_02132b18[];
-/* the runtime table (bss, filled by the sinit) */
+/* the runtime table (bss, filled by the sinit); the mount is the whole
+   0x54-byte span to the end of ov089's .bss, so cells 8 and 9 are real
+   storage this file can write */
 extern PortPmf data_ov089_02132cec[];
 
 /* the three state bodies, all matched src */
@@ -55,147 +91,65 @@ void func_ov089_02131b18(char *c);
 void func_ov089_0213162c(char *c);
 void func_ov089_021311c0(char *c);
 
-/* what the host copy calls */
-int _ZN9Animation8FinishedEv(void *a);
-void _ZN9Animation7AdvanceEv(void *a);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
-void MulMat4x3Mat4x3(void *d, void *a, void *b);
-void SubVec3(void *d, void *a, void *b);
-void Vec3_LslInPlace(void *v, int sh);
-void AddVec3(void *d, void *a, void *b);
-void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    unsigned a, unsigned b, int x, int y, int z, const void *v, void *cb);
-void _ZN9ActorBase18MarkForDestructionEv(void *c);
-int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *c, void *w);
-void _ZN12CylinderClsn5ClearEv(void *c);
-void _ZN12CylinderClsn6UpdateEv(void *c);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *cyl);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-    void *c, void *v);
-void func_ov089_02131f54(char *c);
-extern char data_020a0e68;
-extern int data_ov089_02132c40[];
-extern int data_ov089_02132b40[];
-extern int data_ov089_02132ca4[];
-
-/* PORT_HOST_ABI: mwcc pointer-to-member stride/receiver, the Crate case. */
-int _ZN3Key8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    int vec[3];
-    int p7[3];
-    int pe[3];
-    int v = *(int *)(c + 0x448);
-
-    if (v != 0) {
-        if (v == 3) {
-            char *o = *(char **)(c + 0x110);
-            if (o != 0) {
-                int *s = (int *)(o + 0x5c);
-                *(int *)(c + 0x5c) = s[0];
-                *(int *)(c + 0x60) = s[1];
-                *(int *)(c + 0x64) = s[2];
-                *(short *)(c + 0x8e) =
-                    *(short *)(*(char **)(c + 0x110) + 0x8e);
-            }
-            if (_ZN9Animation8FinishedEv(c + 0x164) == 0) {
-                Matrix4x3_FromTranslation(&data_020a0e68, *(int *)(c + 0x5c),
-                                          *(int *)(c + 0x60),
-                                          *(int *)(c + 0x64));
-                Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68,
-                                                  *(short *)(c + 0x8e));
-                MulMat4x3Mat4x3(*(void **)(c + 0x128), &data_020a0e68,
-                                &data_020a0e68);
-                {
-                    char *m = &data_020a0e68;
-                    vec[2] = *(int *)(m + 0x2c);
-                    vec[0] = *(int *)(m + 0x24);
-                    vec[1] = *(int *)(m + 0x28);
-                }
-                SubVec3(vec, c + 0x5c, vec);
-                Vec3_LslInPlace(vec, 3);
-                AddVec3(vec, c + 0x5c, vec);
-                vec[1] = *(int *)(*(char **)(c + 0x124) + 0xc) * 0x23 + vec[1];
-                vec[1] = vec[1] - 0x48000;
-                *(void **)(c + 0x464) =
-                    _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                        *(unsigned *)(c + 0x464), 0x82, vec[0], vec[1], vec[2],
-                        0, 0);
-                *(void **)(c + 0x468) =
-                    _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-                        *(unsigned *)(c + 0x468), 0x83, vec[0], vec[1], vec[2],
-                        0, 0);
-            }
-        }
-
-        _ZN9Animation7AdvanceEv(c + 0x164);
-        func_ov089_02131f54(c);
-        if (_ZN9Animation8FinishedEv(c + 0x164)) {
-            if (*(unsigned short *)(c + 0xc) == 0x11a) {
-                if (*(int *)(c + 0x174) != data_ov089_02132c40[1])
-                    _ZN9ActorBase18MarkForDestructionEv(c);
-            }
-        }
-        return 1;
-    }
-
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, c + 0x260)) {
-        func_ov089_02131f54(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x220);
-        return 1;
-    }
-    *(int *)(c + 0xd0) = 0;
-    if (*(short *)(c + 0x440) > 0x400)
-        *(short *)(c + 0x440) = (short)(*(short *)(c + 0x440) - 0x100);
-    else if (*(short *)(c + 0x440) == 0)
-        *(short *)(c + 0x440) = 0x400;
-    *(short *)(c + 0x8e) = (short)(*(short *)(c + 0x8e) +
-                                   *(short *)(c + 0x440));
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-    {
-        PortPmf *e = &data_ov089_02132cec[*(int *)(c + 0x444)];
-        ((void (*)(char *))(size_t)e->fn)(c + (e->adj >> 1));
-    }
-    func_ov089_02131f54(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x220);
-    if (*(int *)(c + 0x444) == 7) {
-        p7[0] = data_ov089_02132b40[0];
-        p7[1] = data_ov089_02132b40[1];
-        p7[2] = data_ov089_02132b40[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-            c + 0x220, p7);
-    } else {
-        pe[0] = data_ov089_02132ca4[0];
-        pe[1] = data_ov089_02132ca4[1];
-        pe[2] = data_ov089_02132ca4[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-            c + 0x220, pe);
-    }
-    _ZN12CylinderClsn6UpdateEv(c + 0x220);
-    return 1;
-}
-
 }  /* extern "C" */
 
+/* HOST COPY RETIRED, run link100 lane PMFB6. src/_ZN3Key8BehaviorEv.cpp
+   dispatches this table itself now; the flat C name the port's actor-class
+   face calls is defined by the forwarder in port/hal/fwd_forwarders.cpp. */
+
+static void ov089_unhosted(unsigned idx)
+{
+    std::fprintf(stderr, "UNHOSTED: data_ov089_02132cec[%u] is past the eight "
+                 "cells __sinit_ov089_021328d4 fills. ov089's .bss allows ten, "
+                 "so this cell exists and the ROM never writes it -- see the "
+                 "header of port/unmatched/Ov089_StateDispatch.cpp\n", idx);
+    std::abort();
+}
+
+#define OV089_FACE(cell, sym)                                             \
+    static void __fastcall ov089_c##cell(void *self, void *dead_edx)      \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self);                                                \
+    }
+#define OV089_ABORT(cell)                                                 \
+    static void __fastcall ov089_c##cell(void *self, void *dead_edx)      \
+    {                                                                     \
+        (void)self;                                                       \
+        (void)dead_edx;                                                   \
+        ov089_unhosted(cell);                                             \
+    }
+
+OV089_FACE(0, func_ov089_02131b18)
+OV089_FACE(1, func_ov089_02131b18)
+OV089_FACE(2, func_ov089_02131b18)
+OV089_FACE(3, func_ov089_0213162c)
+OV089_FACE(4, func_ov089_02131b18)
+OV089_FACE(5, func_ov089_02131b18)
+OV089_FACE(6, func_ov089_02131b18)
+OV089_FACE(7, func_ov089_021311c0)
+OV089_ABORT(8)
+OV089_ABORT(9)
+
 namespace {
-struct Seat { PortPmf *slot; unsigned rom; void (*host)(char *); const char *tab; };
+struct Seat { PortPmf *slot; unsigned rom; void *host; const char *tab; };
 const Seat g_ov089_states[] = {
-    {data_ov089_02132b28, 0x02131b18, func_ov089_02131b18, "cec[0]"},
-    {data_ov089_02132b38, 0x02131b18, func_ov089_02131b18, "cec[1]"},
-    {data_ov089_02132b00, 0x02131b18, func_ov089_02131b18, "cec[2]"},
-    {data_ov089_02132b30, 0x0213162c, func_ov089_0213162c, "cec[3]"},
-    {data_ov089_02132b20, 0x02131b18, func_ov089_02131b18, "cec[4]"},
-    {data_ov089_02132b10, 0x02131b18, func_ov089_02131b18, "cec[5]"},
-    {data_ov089_02132b08, 0x02131b18, func_ov089_02131b18, "cec[6]"},
-    {data_ov089_02132b18, 0x021311c0, func_ov089_021311c0, "cec[7]"},
+    {data_ov089_02132b28, 0x02131b18, (void *)ov089_c0, "cec[0]"},
+    {data_ov089_02132b38, 0x02131b18, (void *)ov089_c1, "cec[1]"},
+    {data_ov089_02132b00, 0x02131b18, (void *)ov089_c2, "cec[2]"},
+    {data_ov089_02132b30, 0x0213162c, (void *)ov089_c3, "cec[3]"},
+    {data_ov089_02132b20, 0x02131b18, (void *)ov089_c4, "cec[4]"},
+    {data_ov089_02132b10, 0x02131b18, (void *)ov089_c5, "cec[5]"},
+    {data_ov089_02132b08, 0x02131b18, (void *)ov089_c6, "cec[6]"},
+    {data_ov089_02132b18, 0x021311c0, (void *)ov089_c7, "cec[7]"},
 };
+/* the slack the .bss end allows past the filled run */
+void *const g_ov089_tail[] = { (void *)ov089_c8, (void *)ov089_c9 };
 }  /* namespace */
 
-/* Seats the SOURCE statics before __sinit_ov089_021328d4 copies them. That
-   sinit runs from hal/actor_overlays.cpp's ov089 block, which is where the
-   call goes -- ov089 is the one overlay in this lane that was already brought
-   up, for the castle doors' key models (port/ov089_syms.txt's header). */
+/* Seats the SOURCE statics before __sinit_ov089_021328d4 copies them, and the
+   two TAIL cells directly (the sinit never touches them). That sinit runs from
+   hal/actor_overlays.cpp's ov089 block, which is where the call is. */
 extern "C" void port_ov089_states_seat(void)
 {
     static int done;
@@ -213,5 +167,21 @@ extern "C" void port_ov089_states_seat(void)
             std::abort();
         }
         p->fn = (unsigned)(size_t)g_ov089_states[i].host;
+    }
+    /* THE TAIL. The extent bound says ten cells; the sinit fills eight. The
+       two past the filled run must read {0,0} in the mount -- a non-zero word
+       there would mean the table is longer than delinks.txt says and this seat
+       has the extent wrong, which is worth stopping for. */
+    for (unsigned k = 0; k < sizeof g_ov089_tail / sizeof g_ov089_tail[0]; ++k) {
+        PortPmf *p = &data_ov089_02132cec[8 + k];
+        if (p->fn != 0 || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: ov089 tail cell cec[%u] reads %08x/%d "
+                         "and the ROM never writes it -- the table is longer "
+                         "than ov089's .bss extent says\n", 8 + k, p->fn,
+                         p->adj);
+            std::abort();
+        }
+        p->fn = (unsigned)(size_t)g_ov089_tail[k];
+        p->adj = 0;
     }
 }

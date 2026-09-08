@@ -235,6 +235,7 @@
 // mis-route -- it keys on a code word.
 
 #include <cstdio>
+#include <cstdlib>
 
 struct MgPmf { unsigned code; int adj; };
 
@@ -286,11 +287,6 @@ void func_ov006_020c85bc(char *c);
 void func_ov006_020c864c(int *c);
 void func_ov006_020c8680(char *c);
 
-/* the two host copies, defined below. func_ov006_020c7860 must be char* to
-   agree with include/decl_common.h:2432 or MSVC raises C2733 on the extern "C"
-   overload. */
-void func_ov006_020c4cd8(char *c);
-void func_ov006_020c7860(char *c);
 
 /* the witness lane BNP's seat reads (hal/scene_mg_jump.cpp) */
 void     port_mg_objstate_call0(void *self, unsigned code, int adj);
@@ -307,6 +303,8 @@ void     port_mg_jump2_sub_counts(int which, unsigned *calls, unsigned *routed,
 unsigned port_mg_jump2_sub_row(int which, unsigned i, unsigned *code);
 unsigned port_mg_jump2_sub_dropped(int which);
 unsigned port_mg_jump2_sub_capacity(void);
+/* run link100 lane PMFB6 gate 3: the seat over the thirty-eight pairs */
+void     port_mg_objstate_seat(void);
 
 }  /* extern "C" */
 
@@ -473,41 +471,201 @@ extern "C" unsigned port_mg_objstate_hit(unsigned i)
 
 // ---- the two host copies ---------------------------------------------------
 
-/* src/func_ov006_020c4cd8.cpp. Its `struct Foo` carried nothing but the padding
-   and the member pointer, so replacing the dispatch removes the struct and no
-   layout moves: the two remaining calls keep src's offsets exactly. The
-   receiver is `c + (p->adj >> 1)`, the ROM's own `add r0, r4, r1, asr#1` at
-   0x020c4ce8 -- provably the bare `c` on every path this tree takes (routing is
-   gated on adj == 0 and port_mg_call0 refuses a nonzero adjustment), and the
-   faithful spelling is kept for the day one is measured. Site 0. */
-// PORT_HOST_ABI: mwcc field pointer-to-member dispatch on the 8-byte pair at +0x30 MSVC's 4-byte pmf cannot reproduce
-extern "C" void func_ov006_020c4cd8(char *c)
+
+// ---- run link100 LANE PMFB6, GATE 3: THE THIRTY-EIGHT PAIRS ARE SEATED -----
+//
+// SECTION 3 ABOVE IS SUPERSEDED. It refused to rewrite the mounted pairs
+// because "the pair run these two read from is shared with classes this port
+// has not seated, and rewriting it would decide their behaviour from inside one
+// lane". Re-measured for this gate (runs/link100/out/PMFB6/sweep_d3dbase.txt):
+// every `load` relocation in ov006 whose destination lands in this family's
+// code block 0x020c4000..0x020c9000, kept when the word reads the target and
+// the following word is zero, gives exactly THIRTY-EIGHT pairs, and they are
+// exactly the two runs section 2b names -- 0x0213af18..0x0213afc8 (23, field
+// +0x30) and 0x0213b020..0x0213b090 (15, field +0x3c), 16 + 9 = 25 distinct
+// code words. EVERY reference into either run comes from inside that same code
+// block: there is no unseated class reading them, because the block IS the
+// family. The other 28 relocation rows into the block are vtables and
+// function-pointer tables (consecutive code words), not {code,0} pairs, and are
+// listed in the sweep.
+//
+// ONE FACE PER CODE WORD, not per record, so any by-value comparison between
+// two records that hold the same code word still answers what it answered: the
+// two get the same host address. That is lane FWD's gate-3 rule and it is why
+// the seat is safe on a run this file was right to refuse a per-record seat on.
+//
+// THE EMITTED SIDE, off each TU's own /FAsc listing under the port's own flags
+// (runs/link100/out/PMFB6/emit_gate3_out.txt):
+//   func_ov006_020c4cd8  mov ecx,[esi+52] / mov eax,[esi+48] / add ecx,esi /
+//                        call eax   -- +0x30 and +0x34, ARITY 0, /Zp4 diff 0
+//   func_ov006_020c7860  mov ecx,[edi+68] / mov eax,[edi+64] / ...
+//                        -- +0x40 and +0x44, FOUR BYTES LATE, because MSVC
+//                        aligns an eight-byte member to eight and the ROM's
+//                        field is at +0x3c. WITH /Zp4 the same listing reads
+//                        [edi+60] and [edi+64] = +0x3c and +0x40, the ROM's own
+//                        offsets, and those two instructions are the ONLY diff
+//                        between the two listings. So /Zp4 is claimed on that
+//                        ONE source in this gate's CMake block and on nothing
+//                        else: it is the treatment lane MGWRITER named for
+//                        func_ov006_020c07e8, measured here rather than
+//                        inherited.
+// The ROM's own offsets are read at the bodies: `add r3,r4,#0x30` at 0x020c4ce0
+// and `add r3,r4,#0x3c` at 0x020c7890, each followed by ldr [r3,#4] / ldr [r3].
+//
+// WHAT THE CENSUS CAN STILL SEE, said rather than left to read zero forever:
+//   calls / routed / distinct / per-state hits are bumped by every face and
+//     stay exact, per SITE -- a face knows its site because the two fields' code
+//     word sets are DISJOINT (16 and 9, measured above), so each code word
+//     belongs to exactly one field.
+//   nullpmf NO LONGER OBSERVABLE. Neither ROM body guards a null pair (there is
+//     no `cmp` before the `blx` at 0x020c4d00 or 0x020c78b0) and neither matched
+//     TU does either, so a null field calls address 0 exactly as the cartridge
+//     does. The counter reads 0 and this is why.
+//   unknown STRUCTURALLY ZERO, which was this file's own acceptance criterion:
+//     "the acceptance is a run whose framework-routed count is ZERO on both
+//     machines". After the seat a field can only hold one of the 25 faces.
+
+static void d3d_face(int which, unsigned code)
 {
-    {
-        const MgPmf *p = (const MgPmf *)(c + 0x30);
-        shared_call0(0, c + (p->adj >> 1), p->code, p->adj);
-    }
-    _ZN9Animation7AdvanceEv(c + 0x88);
-    func_ov006_020c4c00(c);
+    ++g_obj_calls;
+    ++g_obj_hits;
+    ++g_sub_calls[which];
+    ++g_sub_routed[which];
+    obj_note(code);
+    sub_note(which, code);
 }
 
-/* src/func_ov006_020c7860.cpp. Same shape: `struct C { char pad[0x3c]; PMF m; }`
-   is only there to hold the member pointer, and the dispatch sits between an
-   unchanged prologue and an unchanged tail. Every other access in the TU is a
-   raw char* offset and is copied verbatim. Same receiver reasoning as above,
-   the ROM's sequence at 0x020c789c. Site 1. */
-// PORT_HOST_ABI: mwcc field pointer-to-member dispatch on the 8-byte pair at +0x3c MSVC's 4-byte pmf cannot reproduce
-extern "C" void func_ov006_020c7860(char *c)
-{
-    _Z14ApproachLinearRiii((int *)(c + 0x24), data_ov006_0213b010,
-                           data_ov006_0213b018);
-    AddVec3(c + 0x14, c + 0x20, c + 0x14);
-    {
-        const MgPmf *p = (const MgPmf *)(c + 0x3c);
-        shared_call0(1, c + (p->adj >> 1), p->code, p->adj);
+#define D3D_FACE(tag, which, sym, cast)                                   \
+    static void __fastcall d3d_##tag(void *self, void *dead_edx)          \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        d3d_face(which, 0x##tag##u);                                      \
+        sym((cast)self);                                                  \
     }
-    func_ov006_020bfec0(*(void **)&data_ov006_02141a40, c + 0x14,
-                        (short *)(c + 0x36));
-    func_ov006_020c76e0(c);
-    _ZN9Animation7AdvanceEv(c + 0x9c);
+#define D3D_FACEI(tag, which, sym)                                        \
+    static void __fastcall d3d_##tag(void *self, void *dead_edx)          \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        d3d_face(which, 0x##tag##u);                                      \
+        sym((int)(size_t)self);                                           \
+    }
+#define D3D_FACE0(tag, which, sym)                                        \
+    static void __fastcall d3d_##tag(void *self, void *dead_edx)          \
+    {                                                                     \
+        (void)self;                                                       \
+        (void)dead_edx;                                                   \
+        d3d_face(which, 0x##tag##u);                                      \
+        sym();                                                            \
+    }
+
+/* field +0x30, site 0: sixteen code words */
+D3D_FACE0(020c4d1c, 0, func_ov006_020c4d1c)
+D3D_FACE (020c4e8c, 0, func_ov006_020c4e8c, char *)
+D3D_FACE (020c4fa4, 0, func_ov006_020c4fa4, char *)
+D3D_FACE (020c53f8, 0, func_ov006_020c53f8, char *)
+D3D_FACE (020c5530, 0, func_ov006_020c5530, char *)
+D3D_FACE (020c5658, 0, func_ov006_020c5658, char *)
+D3D_FACE (020c5928, 0, func_ov006_020c5928, char *)
+D3D_FACE (020c5bf8, 0, func_ov006_020c5bf8, char *)
+D3D_FACE (020c5d28, 0, func_ov006_020c5d28, char *)
+D3D_FACE (020c6088, 0, func_ov006_020c6088, char *)
+D3D_FACEI(020c61c4, 0, func_ov006_020c61c4)
+D3D_FACE (020c627c, 0, func_ov006_020c627c, char *)
+D3D_FACEI(020c6378, 0, func_ov006_020c6378)
+D3D_FACE (020c6400, 0, func_ov006_020c6400, char *)
+D3D_FACE (020c66bc, 0, func_ov006_020c66bc, char *)
+D3D_FACE (020c6a9c, 0, func_ov006_020c6a9c, char *)
+/* field +0x3c, site 1: nine code words */
+D3D_FACE (020c78ec, 1, func_ov006_020c78ec, char *)
+D3D_FACE (020c7a30, 1, func_ov006_020c7a30, char *)
+D3D_FACE (020c7c68, 1, func_ov006_020c7c68, char *)
+D3D_FACE (020c8048, 1, func_ov006_020c8048, void *)
+D3D_FACE (020c814c, 1, func_ov006_020c814c, char *)
+D3D_FACE (020c833c, 1, func_ov006_020c833c, char *)
+D3D_FACE (020c85bc, 1, func_ov006_020c85bc, char *)
+D3D_FACE (020c864c, 1, func_ov006_020c864c, int *)
+D3D_FACE (020c8680, 1, func_ov006_020c8680, char *)
+
+extern "C" {
+extern unsigned data_ov006_0213af18[], data_ov006_0213af20[],
+    data_ov006_0213af28[], data_ov006_0213af30[], data_ov006_0213af38[],
+    data_ov006_0213af40[], data_ov006_0213af48[], data_ov006_0213af50[],
+    data_ov006_0213af58[], data_ov006_0213af60[], data_ov006_0213af68[],
+    data_ov006_0213af70[], data_ov006_0213af78[], data_ov006_0213af80[],
+    data_ov006_0213af88[], data_ov006_0213af90[], data_ov006_0213af98[],
+    data_ov006_0213afa0[], data_ov006_0213afa8[], data_ov006_0213afb0[],
+    data_ov006_0213afb8[], data_ov006_0213afc0[], data_ov006_0213afc8[],
+    data_ov006_0213b020[], data_ov006_0213b028[], data_ov006_0213b030[],
+    data_ov006_0213b038[], data_ov006_0213b040[], data_ov006_0213b048[],
+    data_ov006_0213b050[], data_ov006_0213b058[], data_ov006_0213b060[],
+    data_ov006_0213b068[], data_ov006_0213b070[], data_ov006_0213b078[],
+    data_ov006_0213b080[], data_ov006_0213b088[], data_ov006_0213b090[];
 }
+
+namespace {
+struct D3DSeat { unsigned *rec; unsigned rom; void *face; unsigned at; };
+}
+
+extern "C" void port_mg_objstate_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    const D3DSeat seats[] = {
+        {data_ov006_0213af18, 0x020c627cu, (void *)d3d_020c627c, 0x0213af18},
+        {data_ov006_0213af20, 0x020c6088u, (void *)d3d_020c6088, 0x0213af20},
+        {data_ov006_0213af28, 0x020c4fa4u, (void *)d3d_020c4fa4, 0x0213af28},
+        {data_ov006_0213af30, 0x020c5530u, (void *)d3d_020c5530, 0x0213af30},
+        {data_ov006_0213af38, 0x020c6a9cu, (void *)d3d_020c6a9c, 0x0213af38},
+        {data_ov006_0213af40, 0x020c5928u, (void *)d3d_020c5928, 0x0213af40},
+        {data_ov006_0213af48, 0x020c53f8u, (void *)d3d_020c53f8, 0x0213af48},
+        {data_ov006_0213af50, 0x020c5658u, (void *)d3d_020c5658, 0x0213af50},
+        {data_ov006_0213af58, 0x020c5bf8u, (void *)d3d_020c5bf8, 0x0213af58},
+        {data_ov006_0213af60, 0x020c66bcu, (void *)d3d_020c66bc, 0x0213af60},
+        {data_ov006_0213af68, 0x020c5d28u, (void *)d3d_020c5d28, 0x0213af68},
+        {data_ov006_0213af70, 0x020c4d1cu, (void *)d3d_020c4d1c, 0x0213af70},
+        {data_ov006_0213af78, 0x020c61c4u, (void *)d3d_020c61c4, 0x0213af78},
+        {data_ov006_0213af80, 0x020c4e8cu, (void *)d3d_020c4e8c, 0x0213af80},
+        {data_ov006_0213af88, 0x020c6378u, (void *)d3d_020c6378, 0x0213af88},
+        {data_ov006_0213af90, 0x020c4d1cu, (void *)d3d_020c4d1c, 0x0213af90},
+        {data_ov006_0213af98, 0x020c4d1cu, (void *)d3d_020c4d1c, 0x0213af98},
+        {data_ov006_0213afa0, 0x020c6400u, (void *)d3d_020c6400, 0x0213afa0},
+        {data_ov006_0213afa8, 0x020c4d1cu, (void *)d3d_020c4d1c, 0x0213afa8},
+        {data_ov006_0213afb0, 0x020c4fa4u, (void *)d3d_020c4fa4, 0x0213afb0},
+        {data_ov006_0213afb8, 0x020c6400u, (void *)d3d_020c6400, 0x0213afb8},
+        {data_ov006_0213afc0, 0x020c4e8cu, (void *)d3d_020c4e8c, 0x0213afc0},
+        {data_ov006_0213afc8, 0x020c4d1cu, (void *)d3d_020c4d1c, 0x0213afc8},
+        {data_ov006_0213b020, 0x020c7c68u, (void *)d3d_020c7c68, 0x0213b020},
+        {data_ov006_0213b028, 0x020c7a30u, (void *)d3d_020c7a30, 0x0213b028},
+        {data_ov006_0213b030, 0x020c78ecu, (void *)d3d_020c78ec, 0x0213b030},
+        {data_ov006_0213b038, 0x020c8680u, (void *)d3d_020c8680, 0x0213b038},
+        {data_ov006_0213b040, 0x020c864cu, (void *)d3d_020c864c, 0x0213b040},
+        {data_ov006_0213b048, 0x020c864cu, (void *)d3d_020c864c, 0x0213b048},
+        {data_ov006_0213b050, 0x020c85bcu, (void *)d3d_020c85bc, 0x0213b050},
+        {data_ov006_0213b058, 0x020c864cu, (void *)d3d_020c864c, 0x0213b058},
+        {data_ov006_0213b060, 0x020c833cu, (void *)d3d_020c833c, 0x0213b060},
+        {data_ov006_0213b068, 0x020c85bcu, (void *)d3d_020c85bc, 0x0213b068},
+        {data_ov006_0213b070, 0x020c85bcu, (void *)d3d_020c85bc, 0x0213b070},
+        {data_ov006_0213b078, 0x020c833cu, (void *)d3d_020c833c, 0x0213b078},
+        {data_ov006_0213b080, 0x020c814cu, (void *)d3d_020c814c, 0x0213b080},
+        {data_ov006_0213b088, 0x020c8680u, (void *)d3d_020c8680, 0x0213b088},
+        {data_ov006_0213b090, 0x020c8048u, (void *)d3d_020c8048, 0x0213b090},
+    };
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        unsigned *p = seats[i].rec;
+        if (p[0] != seats[i].rom || p[1] != 0) {
+            std::fprintf(stderr, "FATAL: data_ov006_%08x holds %08x/%08x, the "
+                         "cartridge's own record says %08x/0 -- WRONG BYTES\n",
+                         seats[i].at, p[0], p[1], seats[i].rom);
+            std::abort();
+        }
+        p[0] = (unsigned)(size_t)seats[i].face;
+        p[1] = 0;
+    }
+}
+
+/* HOST COPIES RETIRED, run link100 lane PMFB6 gate 3.
+   src/func_ov006_020c4cd8.cpp and src/func_ov006_020c7860.cpp dispatch their
+   own fields now; the second is compiled with /Zp4 for the reason above. */
+
