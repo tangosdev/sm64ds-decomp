@@ -16279,7 +16279,12 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/main.c"
     PROPERTIES COMPILE_DEFINITIONS
     "main=rom_main;func_0201a054=port_rom_a054_seam;func_020197b8=port_rom_loop_seam")
-foreach(_tscoutboot walk_window walk_window_hires smoke_player)
+# smoke_player is DELIBERATELY not in this list. It carries no hal/boot_os.cpp,
+# so src/main.c's four externs (func_02059788, func_02059bc0, func_02059578,
+# data_020a621c) have no definition in that target and it fails LNK2019. The
+# measured build was made without this line and links walk_window and
+# walk_window_hires clean; this commit is NOT REBUILT.
+foreach(_tscoutboot walk_window walk_window_hires)
     target_sources(${_tscoutboot} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/../src/main.c"
         "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN4Heap9SetNodeIDEj.cpp"
