@@ -1,6 +1,11 @@
 # Handoff: prod-snmbdy-0907
 
-This document describes this commit. The queue records its immutable output SHA.
+This is the historical `prod-snmbdy-0907` producer handoff. Its gate results
+describe the original stage and pinned inputs below, not a later PR head.
+The continuation and its fresh proof are recorded in
+[pr-2445-source-review-fixes.md](pr-2445-source-review-fixes.md).
+The original measurements are retained below with the census corrections
+identified at adopted input `19921838ecf6acaf689a4dbc3bb4fd05e4d0effc`.
 
 ## Identity and resumption
 
@@ -182,16 +187,21 @@ Recorded separately, not combined into one score.
   direction: the TU still reaches ~30 other-module seams by writing their mangled
   names in one `extern "C"` block instead of calling declared C++ methods.
 - Recovered layout/fields; remaining shadow structs/raw offsets:
-  `include/daBgSnmBdy_c.h` is 122 lines and declares the five constructed
+  `include/daBgSnmBdy_c.h` declares the five constructed
   subobjects typed (`Model` at 0xd4, `ShadowModel` at 0x124, `dCcAc_c` at 0x14c,
   `dBgCh_Actr` at 0x180, `PathPtr` at 0x380) plus the scalar tail, with a
   `sizeof == 0x3a8` assert. One `unk_` field remains (`unk_3a4`) and three
   explicit pad runs. `check_header_offsets` reads 15 commented fields, 0
-  mismatched and **0 unparsed**, spanning 0x38c.
-  The source has not caught up with the header. Measured with `tools/tiers.py`'s
-  own `RAW_OFFSET` regex: **18 of the 27 out-of-line members still reach the
-  object through raw byte offsets on a char\* handle, 154 occurrences across 117
-  of the file's 639 lines.** The worst are `State2` (26), `State3` and `State5`
+  mismatched and **0 unparsed**, spanning 0x38c. This is partial coverage:
+  the checker stops at the `StateFunc` typedef and does not establish offsets
+  for the remaining PMF/scalar tail. The reported 122 header lines were an
+  earlier snapshot; adopted input `19921838` has 126.
+  The source has not caught up with the header. Recounted at that input with
+  `tools/tiers.py`'s `RAW_OFFSET` regex: **18 of 26 out-of-line member
+  definitions contain the pattern, 154 occurrences across 117 source lines.**
+  The separate factory makes 27 out-of-line definitions total. The original
+  report counted 639 source lines; the adopted input has 642. The worst
+  methods are `State2` (26), `State3` and `State5`
   (20 each), `UpdateModel` (19) and `InitState0` (18). Plan the remaining scope
   from 117, not from the header's tidy appearance.
 - Lifecycle, vtable/RTTI, initializer and data ownership:
