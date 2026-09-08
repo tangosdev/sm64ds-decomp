@@ -16316,6 +16316,34 @@ foreach(_tbootmain walk_window walk_window_hires)
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/rom_main.cpp")
 endforeach()
 
+# ===========================================================================
+# THE REFUSED ARMS OF func_0201a054 (run link100, lane R2ABC, rungs R2a-R2c)
+# ===========================================================================
+#
+# hal/rom_main.cpp left main's fifth call -- func_0201a054 -- as a seam that
+# only counted its hits, because hal/boot_os.cpp's transcription of that body
+# refuses four of its arms. port/slice_r2abc.txt carries the arms this lane
+# retired, each with the refusal it answers quoted beside it, and
+# port/hal/boot_arms.cpp is what the seam calls: one entry point that runs them
+# in the ROM's own order, with the storage checks each one needs.
+#
+# walk_window and walk_window_hires only, for hal/rom_main.cpp's own reason:
+# smoke_player carries no hal/boot_os.cpp and does not run the boot spine, so
+# nothing in that target reaches the seam.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_r2abc.txt" SLICE_R2ABC_LINES)
+set(SLICE_R2ABC_SOURCES "")
+foreach(line IN LISTS SLICE_R2ABC_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_R2ABC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tr2abc walk_window walk_window_hires)
+    target_sources(${_tr2abc} PRIVATE ${SLICE_R2ABC_SOURCES}
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/boot_arms.cpp")
+endforeach()
+
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
 # reconfigure and the build will look clean while compiling the old set of

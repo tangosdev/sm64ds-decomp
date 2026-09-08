@@ -117,14 +117,26 @@ void rom_main(void);              /* src/main.c, renamed at compile time */
 static int g_a054_hits;
 static int g_loop_hits;
 
-/* main's fifth call. The ROM body is src/func_0201a054.c and it is not run as
-   ROM code by this rung: tests/walk_window.cpp still runs its two transcribed
-   spans at their own point, for the four reasons in the header block. */
+/* main's fifth call. The ROM body is src/func_0201a054.c and it is still not
+   run WHOLE as ROM code: tests/walk_window.cpp runs its two transcribed spans
+   at their own point, for the four reasons in the header block, and rung R2f
+   of lane BOOTSCOUT's staged plan is where the real body goes.
+
+   WHAT THE SEAM DOES RUN, from run link100 lane R2ABC, is the arms of that
+   body hal/boot_os.cpp's transcription REFUSED. port_rom_a054_arms() lives in
+   hal/boot_arms.cpp and calls them in the ROM's own order, each behind the
+   storage check its own refusal asked for. Nothing the transcription already
+   runs is repeated there: the seam and the transcription are disjoint by
+   construction, and boot_arms.cpp names which call belongs to which. */
+void port_rom_a054_arms(void);
+
 void port_rom_a054_seam(void)
 {
     ++g_a054_hits;
     std::fprintf(stderr, "[rom-main] reached main's func_0201a054 call "
-                         "(host seam; the ROM body is not run by this rung)\n");
+                         "(host seam; the ROM body is not run whole by this "
+                         "rung -- its refused arms are)\n");
+    port_rom_a054_arms();
 }
 
 /* main's last call, src/func_020197b8.c: the ROM's own game loop, a

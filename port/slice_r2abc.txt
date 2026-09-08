@@ -1,0 +1,50 @@
+# slice_r2abc.txt -- THE REFUSED ARMS OF func_0201a054.
+# run link100, lane R2ABC, rungs R2a / R2b / R2c of lane BOOTSCOUT's boot plan.
+#
+# Read port/hal/boot_arms.cpp first: it carries the derivation for every line
+# below and it is what calls them, from hal/rom_main.cpp's a054 seam, in the
+# ROM's own order. hal/boot_os.cpp's transcription of func_0201a054 is not
+# moved and not duplicated -- these are the calls it refused.
+#
+# ===========================================================================
+# R2a -- src/func_02013e64.c, the save block clear
+# ===========================================================================
+#
+# THE REFUSAL, quoted from the two places that carry it. hal/boot_os.cpp:
+#
+#     "memsets 0x32c bytes of data_0209caa0, the save block ... the harder
+#      half was missing: hal/level_boot.cpp hosts data_0209caa0 as a 0x14
+#      object -- the dsd symbol's own span, next name data_0209cab4 -- while
+#      the ROM object is the full 0x32c ... Seating the body today writes 796
+#      bytes into a 20-byte object. It wants one grouped run in
+#      hal/level_boot.cpp."
+#
+# and port/slice_gate222.txt: "The fix is one grouped run in
+# hal/level_boot.cpp, which is not this lane's file."
+#
+# THE GROUPED RUN IS ALREADY THERE, and it was put there by another run for a
+# different write. hal/level_boot.cpp's SAVEBLK block has FIVE rows, not the
+# four the refusal counted: run link60 Stage 5 lane SV1 added
+# .dsstate$savblk0004 (data_0209caf4, 728 bytes) because
+# SaveData::SetDefaultValuesMg clears 0x2e4 bytes through data_0209cae4 and
+# needed caa0+0x44 .. caa0+0x328 to be real storage. Its own comment states
+# the whole object: "the whole save object is one 0x32c run of five symbols".
+#
+# 0x14 + 0x1e + 0x12 + 0x10 + 728 = 0x32c, and 0x0209caa0 + 0x32c = 0x0209cdcc
+# is the next symbol in config/arm9/symbols.txt after the four names inside
+# the run. Measured in this tree's map before the seat: caa0 at 0004:0010667c,
+# cab4 +0x14, cad2 +0x1e, cae4 +0x12, caf4 +0x10, the run ending 0x1332 bytes
+# below _dsstate_hi, so all 796 bytes are inside the captured span.
+#
+# WHAT THIS LANE ADDS is the check, because a grouped-section run is a layout
+# and a 796-byte memset onto a reordered layout is silent corruption rather
+# than a fault. port_r2a_saveblock_layout() asserts the five offsets on every
+# boot and the arm REFUSES rather than memsetting if one has moved.
+#
+# WHAT THE WRITE DOES ON THIS PATH: nothing observable, and that is stated
+# rather than hidden. All five sections are zero-initialised and every host
+# writer of the save block in tests/walk_window.cpp is below this seam (the
+# pending character at :7743, the opening-seen bit at :8134). The ROM's memset
+# writes zeros over zeros. The seat is that the ROM's own body does it, on the
+# ROM's own object, at the ROM's own point in its own boot.
+src/func_02013e64.c
