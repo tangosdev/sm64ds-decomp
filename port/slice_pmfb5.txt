@@ -1,0 +1,183 @@
+# ===========================================================================
+# SLICE pmfb5 -- run link100, lane PMFB5
+# ===========================================================================
+#
+# The remaining pointer-to-member TABLE rows: the rows lane PMFB4 left when it
+# closed. Every number below was re-derived at its own ROM address on this tree
+# for this lane out of extracted/overlays/, and every emitted stride, dispatch
+# shape and alias spelling was read off a /FAsc listing or a dumpbin /symbols
+# dump of that row's own matched TU under the port's own flags. Nothing here is
+# carried from a prose file or from a census column. The CMake gate block is
+# R10d in port/CMakeLists.txt.
+#
+# THE POPULATION, RE-MEASURED ON THIS TREE FIRST
+# (runs/link100/out/PMFB5/seatcover5.txt, PMFB2's seatcover2.py method re-run
+# because PMFB4 landed since):
+#   120 CALL SHAPE rows in family C
+#    19 no longer have a host definition at all (retired by earlier lanes)
+#    20 sit over a table that already has an installing seat
+#    81 are still hosted over a table with no seat -- 39 of them read an OBJECT
+#       FIELD rather than a table (the writer lane PMFB3 named), leaving the
+#       FORTY-TWO table rows this lane was given.
+#
+# THE FORTY-TWO, AND WHAT THIS LANE DOES WITH THEM:
+#   2  live in unmatched/MgBase_StateDispatch.cpp and MgBase_StateSetter.cpp,
+#      which lane MGWRITER owns at the same time as this lane. NOT TAKEN here.
+#   6  are the cutscene rows in hal/cutscene_states_link100.cpp, which lane
+#      PMFB3 measured field-by-field. EXCLUDED by the brief.
+#   2  are dScMgCurling_c's coherent pair, which must move together.
+#  32  are the single-row tables: nine ov006 and the rest actor overlays.
+#
+# ---- BATCH 1: SIX ov006 SINGLE-ROW TABLES ---------------------------------
+#
+#   func_ov006_020e0204  data_ov006_02141870   8 slots  arity 0  MgCup
+#   func_ov006_020e4800  data_ov006_02141988   3 slots  arity 1  MgCurling2
+#   func_ov006_02104ac4  data_ov006_021427bc   3 slots  arity 1  MgPanel
+#   func_ov006_0210bcb0  data_ov006_02142bdc   8 slots  arity 0  MgSlot3
+#   func_ov006_021254c0  data_ov006_02142f94  14 slots  arity 0  MgBSC
+#
+# THREE OF THE NINE ov006 CANDIDATES REFUSE ON ROM EVIDENCE, and the refusals
+# are the useful part of this batch. The census gives each of them a `table`
+# column, and at the row's own address none of the three indexes that table:
+#
+#   func_ov006_020ed18c (dScMgHanachan_c, "table" data_ov006_02141fcc).
+#     The pool word at 020ed25c IS 02141fcc, so a reader that only checks for
+#     the constant would pass it. The body then does `ldrh r5,[r2]` /
+#     `add r0,r5,#0x800` / `strh r0,[r2]` -- it uses that address as a
+#     SIXTEEN-BIT COUNTER, not as a table of pairs -- and takes its member
+#     pointer from `r3 = r4 + 0x4660`, an OBJECT FIELD. There is no shift-scaled
+#     add anywhere in the body. It is an object-field row and belongs to the
+#     writer lane.
+#
+#   func_ov006_021214f8 (dScMgTrampoline_c, "table" data_ov006_02140588).
+#     Same shape. The pool word at 02121570 is 02140588 and the body does
+#     `ldr r4,[r1]` on it once -- a plain global pointer read -- then takes the
+#     member pointer from `r3 = r5 + 0x5004`, an OBJECT FIELD. No shift-scaled
+#     add. The census's own reason column says as much ("a member pointer held
+#     in the field at c+0x5004"); the table column contradicts it and the ROM
+#     settles it.
+#
+#   func_ov006_02107db8 (dScMgRoulette_c, "table" data_020a0e68).
+#     NO POOL WORD IN THE BODY MATCHES 020a0e68 AT ALL. The dispatch is
+#     `ldr r1,[r4,#0x20]`... `ldr r1,[r0]` / `ldr r1,[r1,#0xc]` / `blx r1` off
+#     `r0 = r4 + 0x10` -- a VIRTUAL call on slot 3 of a vtable held at
+#     this+0x10, which is what the census's own reason column calls "a
+#     virtual-shadow dispatch". There is no member-pointer table here to seat.
+#
+# A FOURTH IS MEASURED AND STILL NOT TAKEN, for a witness reason rather than a
+# ROM one. func_ov006_0212a2e0 (dScMgSnowball_c, data_ov006_02143038, 3 slots,
+# arity 1) passes every ROM test: `add r3,r4,r0,lsl #3` at 0212a308 on the pool
+# word 0212a3b4 = 02143038, emitted [eax*8]/[eax*8+4], three source pairs all
+# {code,0} whole-pair at src/__sinit_ov006_021333e0.c's own addresses. What
+# stops it is that its host copy is the ONLY place that can compute
+# g_snw_live_last -- "%u live element(s) on the last Behavior pass" in
+# hal/scene_mg_snowball.cpp's exit census -- because that is a PER-PASS
+# aggregate over the fifty-element array and every face runs per DISPATCH. A
+# face cannot see a pass boundary, so retiring the copy would silently zero a
+# census field with nothing wrong. Every other witness in this batch moved into
+# the faces exactly (see below); this one cannot, and inventing a pass boundary
+# from the loop index is a guess that is wrong whenever two consecutive passes
+# each dispatch exactly one element at an increasing index. LEFT FOR A LANE
+# THAT OWNS hal/scene_mg_snowball.cpp: change that one printf to read a total
+# rather than a per-pass count, and the row costs nothing.
+#
+# THE RECORD STRIDE, ROM SIDE, read at each body's OWN address out of
+# extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
+# (runs/link100/out/PMFB5/rom_gate1.txt):
+#   020e0204  add r3, r4, r0, lsl #3 at 020e0230  pool 020e02ec = 02141870
+#   020e4800  add r3, r4, r0, lsl #3 at 020e4860  pool 020e48c8 = 02141988
+#   02104ac4  add r3, r1, r0, lsl #3 at 02104ae8  pool 02104b20 = 021427bc
+#   0210bcb0  add r3, r4, r0, lsl #3 at 0210bcd0  pool 0210bd94 = 02142bdc
+#   021254c0  add r3, r4, r0, lsl #3 at 021254e0  pool 02125514 = 02142f94
+# -> EIGHT on all five. THE OTHER SHIFTED ADDS IN THOSE BODIES ARE NOT THE
+# TABLE: 020e4800 carries the fifty-element `add r6,r6,#0x24` walk and 020e0204
+# the three-frame animation walk off data_ov006_0213c0d8. The record stride is
+# the add whose base register is the one the literal pool loaded with the table
+# address, and that is the add quoted above in each case.
+#
+# THE RECORD STRIDE, EMITTED SIDE, off each matched TU's own /FAsc listing under
+# the port's own flags (runs/link100/out/PMFB5/emit_gate1_out.txt and
+# listings/): [eax*8] and [eax*8+4] on all five. ROM 8 == emitted 8.
+#
+# NO /Zp4 ON THIS BATCH, measured and not omitted. Lane PMFB1's lever is that
+# MSVC aligns any struct CONTAINING a pointer to member to eight, which rounds a
+# twenty-byte record to twenty-four and makes every state after state 0 read the
+# wrong record silently. Each of these five TUs was compiled both ways for this
+# lane and the two listings are IDENTICAL except for the TITLE line naming the
+# .obj -- zero real diff lines -- so R10a's own rule applies and the option is
+# left off rather than claimed.
+#
+# THE THIRTY-SIX SOURCE PAIRS ALL READ {code, 0} at the addresses each owning
+# __sinit copies them from, read out of the overlay image rather than taken from
+# a seat's runtime assertion, and every one is a WHOLE-PAIR copy. All three of
+# the spellings lane PMFB4 found are present across the five constructors
+# (`TAB.pN = SRC`, `TAB[N] = SRC`, `TAB.p[N] = SRC`) and the reader reads all
+# three; a field-form fill would be `.pN.a =` / `.p[N].a =` and there is not one
+# anywhere in this batch. The per-slot tables are beside each installer.
+#
+# THE DISPATCH SHAPE, and the arity comes from each row's OWN listing. All five
+# emit `mov ecx, tab[i*8+4] / mov eax, tab[i*8] / add ecx, <this> / call eax`
+# with NO `add esp, N` after it -- a __thiscall indirect, receiver in ecx,
+# callee cleanup -- so a plain cdecl body cannot go in the code word. Two of the
+# five push one argument before the call (020e4800 pushes edi, its own loop
+# counter; 02104ac4 pushes a literal 0, which is its src's own `(0)`) and three
+# push nothing. PMFC2's `note` column says "0 stack argument(s)" for all nine
+# candidates including the two that push one; it is the same class of error lane
+# PMFB4 recorded against it, so every arity here is read off that row's own
+# listing. THIRTY-SIX FACES in all, one per CELL and not one per body.
+#
+# TWO /alternatename DIRECTIVES, each mangling read off the object with
+# dumpbin /symbols:
+#   ?data_ov006_02141988@@3PAP8C@@AEXH@ZA     (unmatched/MgCurling2_StateDispatch.cpp)
+#   ?data_ov006_02142bdc@@3PAP8Obj@@AEXXZA    (unmatched/MgSlot3_StateDispatch.cpp)
+# The other three TUs declare their tables inside their own extern "C" blocks
+# and come in as the plain C name the ov006 mount already defines.
+#
+# THE UNDEF SWEEP RAN BEFORE THE LINK, not after it. Lane PMFB4's gate 2 lost an
+# exe to a C++-decorated external nobody had predicted, so every object in this
+# batch was dumped with dumpbin /symbols and every UNDEF read before the tree
+# build. Three more decorated names came up and all three already have a
+# directive in the tree: ?data_0209d4b8@@3HA (hal/scene_mg_faces_gen.cpp:11),
+# ?data_0209d45c@@3EA (unmatched/MgMemory2_Faces.cpp:196) and
+# ?data_0209e650@@3HA (hal/cxx_aliases.cpp:1656). That is why this batch adds
+# two directives and not five.
+#
+# EVERY ROW READS EXACTLY ONE TABLE, checked the way PMFB4's gate-3 finding says
+# to check it: the listing of each matched TU was scanned for ALL data-table
+# EXTRNs, not only the one the census names. None of the five reads a second
+# table.
+#
+# THE WITNESSES MOVE INTO THE FACES, AND TWO OF THEM GET SHARPER.
+#   g_cup_state_slot[8] and g_slot3_state_slot[8] were charged by the switch
+#     from the CODE WORD, so two cells holding the same body could not be told
+#     apart -- MgSlot3's own comment says the census "charges slot 3" for both
+#     of slots 3 and 4. The faces are installed PER CELL, so each charges its
+#     own slot and the census now says which CELL ran.
+#   g_bsc_idx_lo / g_bsc_idx_hi are the state index range
+#     hal/scene_mg_luckystars.cpp prints. The index the ROM dispatches on IS the
+#     table slot, so each face records its own slot number and the two water
+#     marks come out identical to what the host copy produced.
+#   g_calls (dScMgCurling2_c) is incremented by c2_call1 on every routed
+#     dispatch and printed through port_mg_curling2_state_calls; the three
+#     seated cells no longer reach c2_call1, so each face takes the increment.
+#   g_cup_state_hits, g_slot3_state_hits and g_bsc_state_hits likewise.
+# This is the trap lane PMFB3 hit with the tapped-pad witness: a counter left
+# behind a seat reads zero forever and nothing looks wrong.
+#
+# THREE GUESS MARKERS, ALL ALREADY ADJUDICATED. src/func_ov006_020e0204.cpp,
+# src/func_ov006_0210bcb0.cpp and src/func_ov006_021254c0.cpp carry "recovered
+# from vtable slot identity" headers; inferred_stub_guard.py reports them and
+# does not refuse them, and each is ruled REAL_DECOMP against the ROM in
+# port/tools/inferred_stub_adjudicated.txt.
+#
+# THE FIVE CLASS SWITCHES ALL STAY LIVE. port_mg_cup_call0, port_mg_slot3_call0
+# and port_mg_bsc_call0 keep their C linkage and their bodies; they are simply
+# no longer reached from inside their own files. port_mg_panel_call1 and
+# port_mg_panel_call0 still route the other five dScMgPanel_c tables, including
+# hostgen's MG_PMF_CALL swap. c2_call1 still routes dScMgCurling2_c's other six
+# tables for the four dispatchers that stay host copies.
+src/func_ov006_020e0204.cpp
+src/func_ov006_020e4800.cpp
+src/func_ov006_02104ac4.cpp
+src/func_ov006_0210bcb0.cpp
+src/func_ov006_021254c0.cpp

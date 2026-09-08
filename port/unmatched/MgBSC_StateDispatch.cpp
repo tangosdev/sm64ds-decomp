@@ -223,6 +223,10 @@ void func_ov006_021250e4(char *base);
    minigame scene load. */
 extern MgPmf data_ov006_02142f94[];
 
+/* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
+   the ov006 constructors have filled the tables (run link100 lane PMFB5). */
+void port_mg_bsc_states_seat(void);
+
 /* the ordinary callees the host copy below keeps, each spelled as its own src
    TU spells it.  func_ov006_020c19d0 is itself a host copy, in
    unmatched/MgMemory2_FieldPmf.cpp. */
@@ -283,33 +287,148 @@ extern "C" void port_mg_bsc_index_range(int *lo, int *hi)
     *hi = g_bsc_idx_hi;
 }
 
-// ---- the one host copy -----------------------------------------------------
+// ---- THE TABLE IS SEATED AND THE HOST COPY IS GONE -------------------------
 //
-// src/func_ov006_021254c0.cpp verbatim except for the table declaration (MgPmf
-// rather than a member-pointer type) and the dispatch site (port_mg_bsc_call0
-// rather than `(c->*table[idx].pmf)()`).  Nothing else moved.
+// Run link100 lane PMFB5. data_ov006_02142f94's fourteen cells hold HOST
+// addresses after boot, written by port_mg_bsc_states_seat below once every
+// cell has been compared against the ROM's own code word and a zero adjustment
+// word, so src/func_ov006_021254c0.cpp (dScMgBSC_c's vtable slot 6) compiles
+// from src and this file no longer defines it.
 //
-// NOTE THE `extern "C"` ON THE TABLE IN src: this dispatcher is SILENT to a
-// link.  `extern "C" Entry data_ov006_02142f94[];` mangles as the plain C name
-// the ov006 mount already defines, so the linker is satisfied while MSVC
-// strides the eight-byte table by four and reads half of one record and half of
-// the next from slot 1 on.  It is one of the two silent shapes
-// port/mg_fanout_costs.txt section 4 names.  IT IS ALSO VTABLE SLOT 6 -- the
-// slot every seat wires by name -- which is section 14's practical rule:
-// before wiring slot 6 by name, read the src.
+//   func_ov006_021254c0   data_ov006_02142f94   14 slots   arity 0
+//
+// THE STRIDE, ROM SIDE, read at the body's OWN address out of
+// extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
+// (runs/link100/out/PMFB5/rom_gate1.txt):
+//   021254c0  add r3, r4, r0, lsl #3 at 021254e0, pool 02125514 = 02142f94
+// -> EIGHT. EMITTED SIDE, off the matched TU's own /FAsc listing under the
+// port's own flags: _data_ov006_02142f94[eax*8] and [eax*8+4]. ROM 8 ==
+// emitted 8. /Zp4 is a MEASURED NO-OP -- the TU was compiled both ways and the
+// two listings differ only in the TITLE line naming the .obj.
+//
+// THE FOURTEEN SOURCE PAIRS ALL READ {code, 0} in overlay_0006.bin at the
+// addresses src/__sinit_ov006_0213326c.c copies each slot from, all whole-pair
+// copies, no field-form fill:
+//   [0]  <- 0213fd7c  021250e4/0     [7]  <- 0213fd54  02124b58/0
+//   [1]  <- 0213fd5c  02124fd8/0     [8]  <- 0213fd84  02124b58/0
+//   [2]  <- 0213fd4c  02124ec4/0     [9]  <- 0213fd14  02124ae4/0
+//   [3]  <- 0213fd24  02124e1c/0     [10] <- 0213fd0c  02124ae4/0
+//   [4]  <- 0213fd3c  02124dc0/0     [11] <- 0213fd74  02124a08/0
+//   [5]  <- 0213fd34  02124cb4/0     [12] <- 0213fd1c  02124a04/0
+//   [6]  <- 0213fd64  02124bb4/0     [13] <- 0213fd2c  02124a04/0
+// FOURTEEN CELLS OVER ELEVEN DISTINCT BODIES: 02124b58 fills slots 7 and 8,
+// 02124ae4 fills 9 and 10, 02124a04 fills 12 and 13. That is the ROM's own
+// arrangement and it is installed as such, one face per CELL.
+//
+// THE DISPATCH SHAPE AND THE ARITY, off this row's OWN listing:
+// `mov ecx, tab[eax*8+4] / mov eax, tab[eax*8] / add ecx, esi / call eax` with
+// no `add esp, N` afterwards and nothing pushed before it -- src's own dispatch
+// is `(c->*(data_ov006_02142f94[c->idx].pmf))()` with an empty argument list.
+// So all fourteen faces are ZERO-ARGUMENT __fastcall.
+//
+// NO /alternatename, and the reason is the one this file's own note above
+// records: the TU spells `extern "C" Entry data_ov006_02142f94[];`, so the
+// reference comes in as the plain _data_ov006_02142f94 the ov006 mount already
+// defines. The dumpbin UNDEF sweep of the object before the link confirms it --
+// _data_ov006_02142f94, _func_ov004_020b65e4, _func_ov006_020c19d0 and nothing
+// decorated. What that silence used to hide is the stride, and the stride is
+// now measured on both sides above rather than argued about.
+//
+// THE INDEX-RANGE WITNESS MOVES INTO THE FACES, EXACTLY. g_bsc_idx_lo and
+// g_bsc_idx_hi were maintained by the host copy from the index it had just
+// read, and hal/scene_mg_luckystars.cpp prints them as "state index range
+// entered". The index the ROM dispatches on IS the table slot, so each face
+// records its own slot number and the two water marks come out identical to
+// what the host copy produced. Without this the census would read -1..-1
+// forever with nothing wrong, which is the witness trap lane PMFB3 recorded.
+//
+// THE SWITCH STAYS. port_mg_bsc_call0 is this class's C-linkage entry point and
+// nothing about it moves; it is simply no longer reached from inside this file.
 
-// PORT_HOST_ABI: dScMgBSC_c vtable slot 6 table dispatcher; the mwcc eight-byte member-pointer table MSVC's four-byte pmf cannot stride, so the host strides the {code, adj} pairs directly.
-extern "C" int func_ov006_021254c0(void *self)
+#include <cstdio>
+#include <cstdlib>   /* std::fprintf and std::abort, for the boot installer */
+
+static void bsc_note_index(int idx)
 {
-    char *c = (char *)self;
-    const int idx = *(const int *)(c + 0x51b8);
-
     if (g_bsc_idx_lo < 0 || idx < g_bsc_idx_lo) g_bsc_idx_lo = idx;
     if (idx > g_bsc_idx_hi)                     g_bsc_idx_hi = idx;
+}
 
-    const MgPmf *e = &data_ov006_02142f94[idx];
-    port_mg_bsc_call0(c, e->code, e->adj);
-    func_ov004_020b65e4();
-    func_ov006_020c19d0(c + 0x4f38);
-    return 1;
+#define BSC_FACE(slot, sym)                                                   \
+    static void __fastcall bsc_s##slot##_##sym(void *self, void *dead_edx)    \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        bsc_note_index(slot);                                                 \
+        ++g_bsc_state_hits;                                                   \
+        sym((char *)self);                                                    \
+    }
+
+/* slots 12 and 13 are the four-byte `bx lr` body, whose src takes (void).
+   There is nothing for a missing argument to be wrong about and the ROM body
+   is one instruction long, so it cannot read r0 -- the same ruling
+   MgCoin_StateDispatch.cpp and MgMemory2_StateDispatch.cpp made for this
+   shape, and the reason the switch above called it with no argument too. */
+#define BSC_FACE_VOID(slot, sym)                                              \
+    static void __fastcall bsc_s##slot##_##sym(void *self, void *dead_edx)    \
+    {                                                                         \
+        (void)self; (void)dead_edx;                                           \
+        bsc_note_index(slot);                                                 \
+        ++g_bsc_state_hits;                                                   \
+        sym();                                                                \
+    }
+
+BSC_FACE(0,  func_ov006_021250e4)
+BSC_FACE(1,  func_ov006_02124fd8)
+BSC_FACE(2,  func_ov006_02124ec4)
+BSC_FACE(3,  func_ov006_02124e1c)
+BSC_FACE(4,  func_ov006_02124dc0)
+BSC_FACE(5,  func_ov006_02124cb4)
+BSC_FACE(6,  func_ov006_02124bb4)
+BSC_FACE(7,  func_ov006_02124b58)
+BSC_FACE(8,  func_ov006_02124b58)
+BSC_FACE(9,  func_ov006_02124ae4)
+BSC_FACE(10, func_ov006_02124ae4)
+BSC_FACE(11, func_ov006_02124a08)
+BSC_FACE_VOID(12, func_ov006_02124a04)
+BSC_FACE_VOID(13, func_ov006_02124a04)
+
+extern "C" void port_mg_bsc_states_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {0,  0x021250e4u, (void *)bsc_s0_func_ov006_021250e4},
+        {1,  0x02124fd8u, (void *)bsc_s1_func_ov006_02124fd8},
+        {2,  0x02124ec4u, (void *)bsc_s2_func_ov006_02124ec4},
+        {3,  0x02124e1cu, (void *)bsc_s3_func_ov006_02124e1c},
+        {4,  0x02124dc0u, (void *)bsc_s4_func_ov006_02124dc0},
+        {5,  0x02124cb4u, (void *)bsc_s5_func_ov006_02124cb4},
+        {6,  0x02124bb4u, (void *)bsc_s6_func_ov006_02124bb4},
+        {7,  0x02124b58u, (void *)bsc_s7_func_ov006_02124b58},
+        {8,  0x02124b58u, (void *)bsc_s8_func_ov006_02124b58},
+        {9,  0x02124ae4u, (void *)bsc_s9_func_ov006_02124ae4},
+        {10, 0x02124ae4u, (void *)bsc_s10_func_ov006_02124ae4},
+        {11, 0x02124a08u, (void *)bsc_s11_func_ov006_02124a08},
+        {12, 0x02124a04u, (void *)bsc_s12_func_ov006_02124a04},
+        {13, 0x02124a04u, (void *)bsc_s13_func_ov006_02124a04},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &data_ov006_02142f94[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgBSC_c state table 02142f94 slot "
+                         "%u: the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].slot,
+                         p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].face;
+    }
 }

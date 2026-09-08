@@ -127,6 +127,7 @@
  */
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the boot installer below (lane PMFB5) */
 
 extern "C" {
 
@@ -190,6 +191,9 @@ unsigned port_mg_curling2_state_unknown(void);
 unsigned port_mg_curling2_state_floor(void);
 unsigned port_mg_curling2_state_4bd4(void);
 unsigned port_mg_curling2_d8_hits(int slot);
+/* the boot installer in this file's 02141988 section; hal/scene_mg.cpp calls it
+   after the ov006 constructors have filled the tables (lane PMFB5). */
+void port_mg_curling2_states_seat(void);
 
 }  /* extern "C" */
 
@@ -387,27 +391,103 @@ extern "C" void func_ov006_020e6354(char *c)
     *(unsigned short *)(c + 0x55b6) = 0x40;
 }
 
-/* ---- src/func_ov006_020e4800.cpp, table 02141988 (arity 1) ---------------- */
-// PORT_HOST_ABI: mwcc arity-1 table pointer-to-member dispatch, the 8-byte pair MSVC's 4-byte pmf strides wrong
-extern "C" void func_ov006_020e4800(char *o)
+/* ---- 02141988 IS SEATED AND func_ov006_020e4800 IS GONE -------------------
+ *
+ * Run link100 lane PMFB5. data_ov006_02141988's three cells hold HOST addresses
+ * after boot, written by port_mg_curling2_states_seat below once every cell has
+ * been compared against the ROM's own code word and a zero adjustment word, so
+ * src/func_ov006_020e4800.cpp compiles from src and this file no longer defines
+ * it.
+ *
+ *   func_ov006_020e4800   data_ov006_02141988   3 slots   arity 1
+ *
+ * THE STRIDE, ROM SIDE, read at the body's OWN address out of
+ * extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
+ * (runs/link100/out/PMFB5/rom_gate1.txt):
+ *   020e4800  add r3, r4, r0, lsl #3 at 020e4860, pool 020e48c8 = 02141988
+ * -> EIGHT. The `add r6, r6, #0x24` in the same body walks the FIFTY-ELEMENT
+ * array off the cursor, not the table; the record stride is the add whose base
+ * register is the one the literal pool loaded with 02141988.
+ *
+ * THE STRIDE, EMITTED SIDE, off the matched TU's own /FAsc listing under the
+ * port's own flags: [eax*8] and [eax*8+4]. ROM 8 == emitted 8. /Zp4 is a
+ * MEASURED NO-OP -- the TU was compiled both ways and the listings differ only
+ * in the TITLE line naming the .obj.
+ *
+ * THE THREE SOURCE PAIRS ALL READ {code, 0} in overlay_0006.bin at the
+ * addresses src/__sinit_ov006_02130758.c copies each slot from, all whole-pair
+ * copies, no field-form fill:
+ *   [0] <- 0213c42c  020e4794/0
+ *   [1] <- 0213c494  020e4744/0
+ *   [2] <- 0213c48c  020e42b4/0
+ *
+ * THE ARITY IS ONE AND IT IS READ OFF THIS ROW'S OWN LISTING: `push edi /
+ * mov ecx, tab[eax*8+4] / mov eax, tab[eax*8] / add ecx, ebx / call eax` with
+ * no caller cleanup, the pushed word being src's own loop counter `i`. So the
+ * three faces are one-argument __fastcall. PMFC2's note column says "0 stack
+ * argument(s)" for this row and the listing says otherwise, which is the census
+ * error lane PMFB4 recorded.
+ *
+ * ONE /alternatename. src/func_ov006_020e4800.cpp names the member-pointer type
+ * at C++ linkage, so MSVC spells the reference
+ * ?data_ov006_02141988@@3PAP8C@@AEXH@ZA -- read off the object with
+ * dumpbin /symbols, not guessed -- while the ov006 mount defines the plain C
+ * name this file declares. The same object's UNDEF sweep also names
+ * ?data_0209d4b8@@3HA, which hal/scene_mg_faces_gen.cpp:11 already aliases,
+ * which is why this row adds one directive and not two.
+ *
+ * TWO OF THE THREE CELLS ARE THIS FILE'S OWN HOST COPIES, which is why the seat
+ * does not orphan them: slots 1 and 2 are func_ov006_020e4744 and
+ * func_ov006_020e42b4, both defined below, and both keep dispatching their own
+ * unseated tables through c2_call1. Slot 0 is the matched src body.
+ *
+ * THE WITNESS MOVES INTO THE FACES. c2_call1 increments g_calls on every routed
+ * dispatch and hal/scene_mg_curling2.cpp prints it through
+ * port_mg_curling2_state_calls; the three cells no longer reach c2_call1, so
+ * each face takes the same increment. */
+
+#pragma comment(linker, "/alternatename:?data_ov006_02141988@@3PAP8C@@AEXH@ZA=_data_ov006_02141988")
+
+#define C2_FACE(slot, sym)                                                \
+    static void __fastcall c2_s##slot##_##sym(void *self, void *dead_edx, \
+                                              int i)                      \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        ++g_calls;                                                        \
+        sym((char *)self, i);                                             \
+    }
+
+C2_FACE(0, func_ov006_020e4794)
+C2_FACE(1, func_ov006_020e4744)
+C2_FACE(2, func_ov006_020e42b4)
+
+extern "C" void port_mg_curling2_states_seat(void)
 {
-    int i;
-    char *e = o;
-    for (i = 0; i < 0x32; i++) {
-        if (*(unsigned char *)(e + 0x48dc) != 0) {
-            const unsigned char idx = *(unsigned char *)(e + 0x48dd);
-            c2_call1(o, data_ov006_02141988[idx], i);
-            if ((*(int *)(e + 0x48c4) >> 0xc) >= 0xc8) {
-                *(int *)(e + 0x48c0) =
-                    (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16)
-                     & 0x7fff) << 5 >> 0xf << 0xf;
-                *(int *)(e + 0x48c4) = -0x8000;
-                *(unsigned char *)(e + 0x48de) = 0;
-                *(unsigned char *)(e + 0x48dd) = 0;
-                *(unsigned char *)(e + 0x48df) = 0;
-            }
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {0, 0x020e4794u, (void *)c2_s0_func_ov006_020e4794},
+        {1, 0x020e4744u, (void *)c2_s1_func_ov006_020e4744},
+        {2, 0x020e42b4u, (void *)c2_s2_func_ov006_020e42b4},
+    };
+
+    for (unsigned k = 0; k < sizeof seats / sizeof seats[0]; ++k) {
+        MgC2Pair *q = &data_ov006_02141988[seats[k].slot];
+        if ((unsigned)q->code != seats[k].rom || q->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgCurling2_c state table 02141988 "
+                         "slot %u: the sinit left %08x/%d, the ROM's own pairs "
+                         "say %08x/0 -- WRONG BYTES\n", seats[k].slot,
+                         (unsigned)q->code, q->adj, seats[k].rom);
+            std::abort();
         }
-        e += 0x24;
+        q->code = (int)(size_t)seats[k].face;
     }
 }
 
