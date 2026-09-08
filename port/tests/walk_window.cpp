@@ -1442,6 +1442,21 @@ void hal_sub_camera_input(void);
    than the matched TU: MSVC's one-slot destructor shifts GetPos onto D0 and
    the first pass frees a cylinder. See that file's header. */
 extern "C" void port_cylinder_clsn_process(void);
+/* THE ROM'S OWN END-OF-FRAME SWAP (run link100, boot plan rung R3b, step
+   BSWAP). src/func_020190b8.c is two statements -- SWAP_BUFFERS and the
+   "geometry engine armed" latch data_0209d464 -- and func_020197b8.c:52
+   calls it once a frame, after phase 6 and before the phase-7 wait. It has
+   been LINKED and CALLED BY NOTHING since the port existed. The call at
+   this file's frame foot is where the ROM makes it; under R3d it becomes
+   func_020197b8's own line and this one goes.
+   ntr::gx_swap_apply is the boundary that consumes what it asked for; read
+   THE PENDING SWAP in ntr/gx.cpp before moving either. */
+extern "C" void func_020190b8(void);
+namespace ntr {
+void gx_swap_apply();
+void gx_swap_counts(unsigned &requested, unsigned &applied,
+                    unsigned &retired, unsigned &pending, unsigned &param);
+}
 /* ov001, slice_cap.txt: Stage::Render's cap-visibility manager. */
 extern "C" void func_ov001_020aaf40(void);
 
@@ -13242,6 +13257,19 @@ int main(void)
            hal/fader_wipes.cpp at its own point under its own tick gate; this
            file does not move it. Under R3d this call is func_020197b8's line. */
         port_rom_frame_phase6();
+        /* THE ROM'S OWN SWAP, at the ROM's own point: func_020197b8.c runs
+           phase 6's two statements, then IRQ::DisableIRQs(1), then
+           func_020190b8(), then the phase-7 wait. The IRQ bracket is rung
+           B1's, not this one's; the call is this one's. Nothing on the level
+           path reads data_0209d464 (the only readers in the tree are the
+           ov006 minigame body func_ov006_020e6e78 and its D3D twin), so what
+           this adds to a level frame is exactly one geometry command that
+           the engine now sees -- and before this rung did not: src/
+           func_020190b8.c built PLAIN put its store in the mapped I/O window
+           and SM64DS_MTX_BALANCE printed 'SWAP_BUFFERS ... STORED, NEVER
+           EXECUTED' (lane R3CFIX2, status/R3CFIX2.md 18:22). */
+        func_020190b8();
+        ntr::gx_swap_apply();
         ++frame;   /* counts in live mode too -- the [cam-in]-style live
                       diagnostics carry a real frame number */
         /* SM64DS_MENU_AT: arm the freeze once the named frame is reached. It
@@ -13373,6 +13401,22 @@ int main(void)
                phase-6 step count and the blink clock's. One line per run so a
                battery row's log can be grepped for it. */
             port_rom_frame_report();
+            {   /* THE RUNG'S OWN LINE (R3b, step BSWAP). The duty is the
+                   ROM's end-of-frame swap, it now runs from src/
+                   func_020190b8.c at this loop's frame foot, and the count
+                   is what the geometry engine actually EXECUTED -- not what
+                   a plain store latched in the mapped window. */
+                unsigned req = 0, app = 0, ret = 0, pend = 0, par = 0;
+                ntr::gx_swap_counts(req, app, ret, pend, par);
+                fprintf(stderr, "[r3b] BSWAP: the ROM's end-of-frame swap "
+                        "runs from src/func_020190b8.c at the level loop's "
+                        "frame foot (func_020197b8.c:52) -- %u SWAP_BUFFERS "
+                        "executed, %u applied at the boundary, %u retired by "
+                        "a gx_reset, %u still pending, param %08x, over %d "
+                        "frames\n", req, app, ret, pend, par,
+                        port_rom_frame());
+                fflush(stderr);
+            }
             return 0;
         }
         /* THE PACE. Stage::InitResources writes data_0208ee44 = 2 for a 3D

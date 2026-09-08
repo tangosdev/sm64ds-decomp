@@ -5238,6 +5238,90 @@ if(NOT TIDEP_RESET_CUT EQUAL TIDEP_RESET_WANT)
                    "will say that too")
 endif()
 
+# ---- run link100 boot plan rung R3b, step BSWAP: THE ROM'S OWN FRAME SWAP ---
+#
+# src/func_020190b8.c is the ROM's end-of-frame SWAP_BUFFERS, called once per
+# frame by func_020197b8 at phase 6 (func_020197b8.c:52). slice_scene1.txt has
+# listed it since scene 1 came up, so it has been LINKED all along -- and built
+# PLAIN, which means its one store
+#
+#     *(volatile int *)0x4000540 = 3;
+#
+# landed in the mapped I/O window and the geometry engine was never told. Lane
+# R3CFIX2 measured exactly that on a 300-frame level run:
+# "SWAP_BUFFERS 04000540 exec 0 latch 00000003 <-- STORED, NEVER EXECUTED"
+# (status/R3CFIX2.md, 18:22), while func_020190b8 itself was called 301 times.
+# port/ntr/io.cpp states the rule this is an instance of: a store only reaches
+# ntr::io_write if its TU was rewritten by tools/hostgen.py, and only the
+# TITEX/TIDEP blocks above do that -- which is why the ov007 SWAP_BUFFERS
+# (func_ov007_020b6c54, the VS menu) DOES arrive and this one did not.
+#
+# Same shape as those two blocks, one symbol, and the same kill switch
+# discipline: the arm is PRINTED ON EVERY CONFIGURE in both directions, because
+# a CMake option() caches and a switch that announces only one arm silently
+# keeps the wrong one.
+option(R3B_SWAP_PLAIN
+       "run link100 R3b/BSWAP: build the ROM's frame swap PLAIN (pre-fix arm)"
+       OFF)
+set(R3B_SWAP_SYMS
+    func_020190b8)         # SWAP_BUFFERS
+list(LENGTH R3B_SWAP_SYMS R3B_SWAP_WANT)
+if(R3B_SWAP_PLAIN)
+    message(STATUS "R3B: R3B_SWAP_PLAIN=ON -- the ROM's frame swap builds "
+                   "PLAIN. This is the PRE-FIX arm: SWAP_BUFFERS latches in "
+                   "mapped memory and the geometry engine is never told.")
+else()
+    message(STATUS "R3B: R3B_SWAP_PLAIN=OFF -- the ROM's frame swap routes "
+                   "through hostgen (shipped arm).")
+endif()
+set(R3B_SWAP_GEN "")
+if(NOT R3B_SWAP_PLAIN)
+    foreach(sym IN LISTS R3B_SWAP_SYMS)
+        set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        if(NOT EXISTS "${sym_in}")
+            set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        endif()
+        set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+        add_custom_command(OUTPUT "${sym_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${sym_in}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${sym}")
+        list(APPEND R3B_SWAP_GEN "${sym_out}")
+    endforeach()
+endif()
+# Cut the plain slice entry in the SAME block that adds the generated one. This
+# one comes out of slice_scene1, not slice_ov007.
+set(R3B_SWAP_CUT 0)
+set(SLICE_SCENE1_SRC_R3B "")
+foreach(src IN LISTS SLICE_SCENE1_SOURCES)
+    set(_cut OFF)
+    if(NOT R3B_SWAP_PLAIN)
+        foreach(sym IN LISTS R3B_SWAP_SYMS)
+            if(src MATCHES "/${sym}\\.(c|cpp)$")
+                set(_cut ON)
+            endif()
+        endforeach()
+    endif()
+    if(_cut)
+        math(EXPR R3B_SWAP_CUT "${R3B_SWAP_CUT}+1")
+    else()
+        list(APPEND SLICE_SCENE1_SRC_R3B "${src}")
+    endif()
+endforeach()
+set(SLICE_SCENE1_SOURCES ${SLICE_SCENE1_SRC_R3B})
+if(R3B_SWAP_PLAIN)
+    set(R3B_SWAP_CUT ${R3B_SWAP_WANT})
+endif()
+if(NOT R3B_SWAP_CUT EQUAL R3B_SWAP_WANT)
+    message(STATUS "R3B: expected to cut ${R3B_SWAP_WANT} plain frame-swap "
+                   "entries and cut ${R3B_SWAP_CUT}. If slice_scene1.txt "
+                   "stopped listing it the hostgen copy is still added and the "
+                   "link will say so; if a SECOND slice started listing it, "
+                   "this cut missed it and the link will say that too")
+endif()
+
 # run link60 lane SC1: THE SCENE 1 INTERIM, AND ITS OWN RETIREMENT SWITCH.
 #
 # func_ov007_020c9688 is scene 1's blocker and it is a hole in the DECOMP:
@@ -13724,7 +13808,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -14004,7 +14088,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -14341,7 +14425,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
