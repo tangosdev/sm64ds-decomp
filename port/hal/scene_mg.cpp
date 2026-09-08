@@ -366,6 +366,8 @@ void port_mg_bsc_states_seat(void);         /* unmatched/MgBSC_StateDispatch.cpp
 void port_mg_curling_states_seat(void);     /* unmatched/MgCurling_StateDispatch.cpp */
 /* run link100 lane FWD gate 2: dScMgSnowball_c's first-level table */
 void port_mg_snowball_states_seat(void);    /* unmatched/MgSnowball_StateDispatch.cpp */
+/* run link100 lane FWD gate 3: dScMgTrampoline2_c's seventeen field pairs */
+void port_mg_tte_pairs_seat(void);          /* unmatched/MgTrampolineTerror_MarioDispatch.cpp */
 
 /* THE BLOCKER'S SUBJECT. arm9 bss, hosted by hal/auto_bss.cpp as
    `int data_0209f61c[0x2c / 4]`. Its first word is the vptr; see the
@@ -1053,6 +1055,7 @@ extern "C" void port_scene_mg_overlay_load(void)
     port_mg_bsc_states_seat();
     port_mg_curling_states_seat();
     port_mg_snowball_states_seat();
+    port_mg_tte_pairs_seat();
 
     std::printf("[scene] ov004+ov006 mounted and all 35 overlay "
                 "constructors run (ov004 4/4, ov006 31/31)\n");

@@ -272,6 +272,63 @@
 #     func_ov006_02129d94) STAY host copies in that file, so the eleven cells of
 #     the other three tables keep their address-switch route.
 #
+# GATE 3 -- THE TRAMPOLINE PAIR
+# ===========================================================================
+#
+#   func_ov006_020cf758  ov006  and  func_ov006_020cea2c  ov006
+#     dScMgTrampoline2_c's two FIELD-HELD pointer-to-member dispatch sites (the
+#     pair sits at offset 0 of each record, not in a table). Lane MGWRITER
+#     measured the seventeen source pairs and stopped on one open question: the
+#     second record class's field universe was not bounded.
+#
+#     THE UNIVERSE IS BOUNDED NOW, with MGWRITER's own gate-2 method. The
+#     class's own code block is 020cd744..020d1008: it contains all fourteen
+#     code words the seventeen pairs hold, both dispatch sites, and both record
+#     walkers (src/func_ov006_020cedf0.c over data_ov006_0214082c at stride
+#     0x1d0, src/func_ov006_020d0ac0.c over data_ov006_02140990 at stride
+#     0x32c). Every `load` relocation in ov006 whose destination lands in that
+#     block, kept when the word reads the target and the FOLLOWING word is
+#     zero, gives exactly SEVENTEEN pairs -- and all seventeen are the known run
+#     0213b31c..0213b39c. ZERO outside it. Nothing else in ov006 can hand
+#     either field an address in this class.
+#     (runs/link100/out/FWD/sweep_tramp_narrow.txt. The wider sweep from
+#     020cc198, sweep_tramp.txt, is kept as the control: it picks up fourteen
+#     more pairs, every one in the SIBLING class's own run below 0213b31c or
+#     just after it, holding code words below 020cd744 -- which is what a block
+#     boundary chosen loosely costs.)
+#
+#     BOTH SITES: `mov ecx, [obj+4] / mov eax, [obj] / add ecx, obj /
+#     jmp-or-call eax`, ARITY ZERO, nothing pushed -- 020cf758 tail-JUMPS and
+#     020cea2c CALLS, and one set of zero-argument __fastcall faces is right for
+#     both (a tail jump leaves ecx set exactly as the call does).
+#     /Zp4: 0 diff lines outside the TITLE line on both.
+#     All seventeen pairs read {code, 0} in the overlay image.
+#
+#     ONE FACE PER CODE WORD, NOT PER PAIR -- the reverse of the rule lane
+#     PMFB5 wrote for tables, and the reason is measured. THREE of the
+#     seventeen are BY-VALUE COMPARISON SENTINELS:
+#       src/func_ov006_020ce674.c compares the object's stored pair against
+#         data_ov006_0213b324 and data_ov006_0213b334, word 0 and word 1;
+#       src/func_ov006_020ce108.cpp compares it against data_ov006_0213b33c.
+#     Each sentinel holds the SAME code word as a written pair -- b324 and b344
+#     both hold 020cdf3c, and b334, b33c and b32c all hold 020cd744 -- so a face
+#     per pair would make those comparisons permanently false while the dispatch
+#     itself still looked fine. That is exactly the failure
+#     port/unmatched/MgTrampolineTerror_MarioDispatch.cpp section 3 warned about
+#     when it decided NOT to rewrite the pairs at all. Fourteen faces, one per
+#     code word, move both sides of every comparison together.
+#
+#     THE NULL-RECORD HAZARD DOES NOT APPLY: both walkers gate their loop on an
+#     active flag (+0x84 and +0x328), which lane MGWRITER measured and this lane
+#     did not have to re-open.
+#
+#     THE CENSUS MOVES WITH THE DISPATCH. g_tte_mario_calls and
+#     g_tte_mario_routed are what hal/scene_mg_trampoline2.cpp:721 prints; the
+#     address switch they lived behind is no longer reached from inside that
+#     file, so each face bumps both. The switch itself stays as the class's
+#     C-linkage entry point and the framework's UNHANDLED report still stands
+#     behind it.
+#
 # ===========================================================================
 port/hal/fwd_forwarders.cpp
 src/_ZN14KnockDownPlank8BehaviorEv.cpp
@@ -287,3 +344,6 @@ src/_ZN4Fish8BehaviorEv.cpp
 src/func_ov064_02117d24.c
 src/actors/MansionSteps/_ZN12MansionSteps8BehaviorEv.cpp
 src/func_ov006_0212a2e0.cpp
+# ---- gate 3: the trampoline pair ----
+src/func_ov006_020cf758.cpp
+src/func_ov006_020cea2c.cpp
