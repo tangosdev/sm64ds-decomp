@@ -145,13 +145,117 @@ if(PORT_TEST_HOOKS)
         "fault-injection hook and are TEST ONLY. Do not ship them.")
 endif()
 
+# THE CONFIGURE-TIME INPUTS, REGISTERED (run link100, lane CMAKEDEPS).
+#
+# WHY THIS BLOCK EXISTS.  build-port.cmd used to run `cmake -S ... -B ...`
+# unconditionally in front of ninja.  On an already-configured tree with nothing
+# changed that was measured at 2m23s in this worktree and 4m53s on the
+# integration tree: single-threaded, one core out of twelve, before a single
+# file compiled.  build.ninja has always carried its own RERUN_CMAKE edge that
+# would do that reconfigure on demand, so the explicit call looks like pure
+# waste.  It was not.  That edge only knew the inputs CMake knew about, which
+# were this file, CMakeCache.txt, the four compiler files, CMake's own modules
+# and the generated tierscan_split.cmake -- thirty-two paths, exactly one of
+# them in this repository.  THE SLICE LISTS WERE NOT AMONG THEM.  This file
+# reads 233 of them and registered none, so dropping the explicit cmake call
+# without this block would hand a lane that edits a slice file no reconfigure at
+# all: its newly seated sources would silently never compile and the build would
+# look clean.  This registration is the thing that makes the build-port.cmd
+# change safe, which is why it lands first and on its own.
+#
+# HOW.  Each list is registered AT THE POINT IT IS READ, by port_read_lines
+# below, which is file(STRINGS) plus the registration.  The 229 plain reads in
+# this file all go through it, so a gate block copied from any of them inherits
+# the registration instead of having to remember a second list somewhere else.
+# The four remaining raw file(STRINGS) calls are the REGEX predicate reads at
+# SC1, RT1, IR1 and AE1: those regexes end in a literal semicolon, which a macro
+# cannot forward through ${ARGN} without CMake splitting it into two arguments,
+# so they keep the raw call and carry their own port_configure_input line.  The
+# self-check at the bottom of this file counts the raw calls and says so if a
+# new one appears.
+#
+# MEASURED on this CMake (3.31.6) and this ninja, not assumed:
+#   - a registered file that is touched re-runs cmake through RERUN_CMAKE;
+#   - a registered path that does NOT exist is silently dropped by CMake, so the
+#     EXISTS guard below keeps the configure log honest, it does not protect the
+#     build;
+#   - a registered file that is DELETED does not wedge ninja: the generator
+#     emits a "missing CMake input file is not an error" phony for every one of
+#     these deps, so the deletion reconfigures instead;
+#   - file(GLOB ... CONFIGURE_DEPENDS) was tried and REJECTED.  Its verification
+#     step is correct on a real build, but it makes every `ninja -n` dry run
+#     report a reconfigure that a real run would not do, because the dry run
+#     never updates the verification stamp.  That costs the cheapest check there
+#     is of what a build is about to do;
+#   - a plain file(GLOB) of slice_*.txt was tried and REJECTED too.  It
+#     registers what is on disk rather than what is read.  Three lists here are
+#     read by nothing today (slice_gate30.txt, slice_gate181.txt,
+#     slice_mga361.txt), so editing one of those would have bought a full
+#     reconfigure and no compile; and it assumes every configure input is named
+#     slice_*.txt, which tools/tierscan.py and the four predicate sources are
+#     not;
+#   - registering the port DIRECTORY itself was tried and REJECTED.  It works (a
+#     directory's timestamp moves when a file inside it is created or deleted)
+#     and it would catch a list APPEARING for the EXISTS-guarded gates 70-74
+#     loop.  But port/ is where the lanes keep their notes: a hundred-odd .txt
+#     documents sit beside these lists, and the untracked build wrapper is
+#     written here too, so every new file would have cost a full reconfigure
+#     that changes nothing compiled.  The benefit is empty today -- all five
+#     gate 70-74 lists exist and are registered by name -- so the residual hole
+#     is stated instead of paid for: a list that is REFERENCED but ABSENT today,
+#     appearing later without an edit to this file, is not seen until the next
+#     reconfigure.  Adding a gate normally edits this file, which is registered.
+function(port_configure_input)
+    foreach(_pci_path IN LISTS ARGN)
+        if(EXISTS "${_pci_path}")
+            set_property(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}" APPEND
+                         PROPERTY CMAKE_CONFIGURE_DEPENDS "${_pci_path}")
+        else()
+            message(STATUS "CONFIGURE INPUT absent, not registered: ${_pci_path}")
+        endif()
+    endforeach()
+endfunction()
+
+# Read a list AND register it, in that order, so the two cannot drift apart.  A
+# macro rather than a function: the caller wants the variable in its own scope,
+# which is what all 229 call sites already assume.
+macro(port_read_lines _prl_path _prl_var)
+    port_configure_input("${_prl_path}")
+    file(STRINGS "${_prl_path}" ${_prl_var})
+endmacro()
+
+# tools/tierscan.py, which execute_process() runs at configure time to split the
+# shared and the per-target compile tiers.  Its OUTPUT, tierscan_split.cmake, is
+# include()d and CMake has always tracked that; the script that writes it was
+# tracked by nothing at all, so a fix to the tier rule did not reach a
+# configured tree.
+port_configure_input("${CMAKE_CURRENT_SOURCE_DIR}/tools/tierscan.py")
+
+# WHAT IS STILL NOT REGISTERED, stated rather than left to be discovered:
+#   - the ~10600 sources tierscan.py READS to decide which TU is tier-shared and
+#     which is per-target.  Registering them would reconfigure on every source
+#     edit, which is every build, and would give back the whole saving.  The
+#     residual is narrow and named: a source that references NONE of the four
+#     divergent defines today (SM64DS_STAGE_SLOT6_ROM, SM64DS_STAGE_SLOT9_ROM,
+#     NTR_WIDE_RT, NTR_HIRES) and starts referencing one, with no other
+#     configure input moving, keeps its old shared classification until the next
+#     reconfigure.  Five files in the whole tree mention any of the four today
+#     (port/hal/stage_bridges.cpp, port/ntr/include/ntr/ppu.h, port/ntr/ppu.cpp,
+#     port/ntr/ppu_sub.cpp, port/tests/walk_window.cpp), and introducing a NEW
+#     divergent define means editing this file, which IS registered.
+#   - the git tip embedded in port_gittip.c by the file(WRITE) below.  It now
+#     reflects the commit at the last CONFIGURE rather than the last build.  It
+#     is a diagnostic string in fault dumps, and registering .git would
+#     reconfigure on every commit, which the house laws ask lanes to do often.
+#     Touch this file, or pass any argument to build-port.cmd, to refresh it.
+
 # Gate 1: compile the manifest slice out of ../src plus the HAL, link the
 # smoke runner. 32-bit host only -- platform.h enforces it at compile time.
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate1.txt" SLICE_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate1.txt" SLICE_LINES)
 set(SLICE_SOURCES "")
 foreach(line IN LISTS SLICE_LINES)
     string(STRIP "${line}" line)
@@ -181,7 +285,7 @@ endif()
 
 # Gate 2: the allocator family + torture smoke, its own binary so gate 1
 # stays a stable baseline.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2.txt" SLICE2_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2.txt" SLICE2_LINES)
 set(SLICE2_SOURCES "")
 foreach(line IN LISTS SLICE2_LINES)
     string(STRIP "${line}" line)
@@ -201,7 +305,7 @@ if(MSVC)
 endif()
 
 # Gate 3a: root heap + Memory:: layer over the gate-2 allocator.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate3a.txt" SLICE3A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate3a.txt" SLICE3A_LINES)
 set(SLICE3A_SOURCES "")
 foreach(line IN LISTS SLICE3A_LINES)
     string(STRIP "${line}" line)
@@ -279,7 +383,7 @@ endif()
 
 # Gate 3b: SharedFilePtr over the host card seam; assets come from the
 # repo's extracted/ tree + asset catalog, root baked in (env-overridable).
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate3b.txt" SLICE3B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate3b.txt" SLICE3B_LINES)
 set(SLICE3B_SOURCES "")
 foreach(line IN LISTS SLICE3B_LINES)
     string(STRIP "${line}" line)
@@ -414,7 +518,7 @@ foreach(sym IN LISTS GATE4B_SYMS)
     list(APPEND GATE4B_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate4b.txt" SLICE4B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate4b.txt" SLICE4B_LINES)
 set(SLICE4B_SOURCES "")
 foreach(line IN LISTS SLICE4B_LINES)
     string(STRIP "${line}" line)
@@ -519,7 +623,7 @@ foreach(sym IN LISTS GATE8_SYMS)
     list(APPEND GATE8_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate8.txt" SLICE8_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate8.txt" SLICE8_LINES)
 set(SLICE8_SOURCES "")
 foreach(line IN LISTS SLICE8_LINES)
     string(STRIP "${line}" line)
@@ -572,7 +676,7 @@ add_custom_command(OUTPUT "${ANIM_ADVANCE_GEN}"
     DEPENDS "${PORT_REPO_ROOT_ABS}/src/${ANIM_ADVANCE_SYM}.cpp"
             "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
     COMMENT "hostgen ${ANIM_ADVANCE_SYM}")
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate7.txt" SLICE7_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate7.txt" SLICE7_LINES)
 set(SLICE7_SOURCES "")
 foreach(line IN LISTS SLICE7_LINES)
     string(STRIP "${line}" line)
@@ -591,7 +695,7 @@ list(APPEND SLICE7_SOURCES "${ANIM_ADVANCE_GEN}")
 
 # Gate 24: BlendModelAnim -- the cross-fading ModelAnim. Rides on gate 7's
 # stack and is proven by the same smoke; see slice_gate24.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate24.txt" SLICE24_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate24.txt" SLICE24_LINES)
 set(SLICE24_SOURCES "")
 foreach(line IN LISTS SLICE24_LINES)
     string(STRIP "${line}" line)
@@ -641,7 +745,7 @@ foreach(sym IN LISTS GATE6_SYMS)
     list(APPEND GATE6_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate6.txt" SLICE6_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate6.txt" SLICE6_LINES)
 set(SLICE6_SOURCES "")
 foreach(line IN LISTS SLICE6_LINES)
     string(STRIP "${line}" line)
@@ -750,7 +854,7 @@ foreach(sym IN LISTS GATE9_SYMS)
     list(APPEND GATE9_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate9.txt" SLICE9_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate9.txt" SLICE9_LINES)
 set(SLICE9_SOURCES "")
 foreach(line IN LISTS SLICE9_LINES)
     string(STRIP "${line}" line)
@@ -892,7 +996,7 @@ if(MSVC)
 endif()
 
 # Gate 10: Player spawns and stands (the walking campaign).
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate10.txt" SLICE10_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate10.txt" SLICE10_LINES)
 set(SLICE10_SOURCES "")
 foreach(line IN LISTS SLICE10_LINES)
     string(STRIP "${line}" line)
@@ -1811,7 +1915,7 @@ if(PORT_ROM_CLEAN)
     list(APPEND ROMCLEAN_PARTS "${OV009SYMS_C}.blobmap")
 endif()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate17.txt" SLICE17_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate17.txt" SLICE17_LINES)
 set(SLICE17_SOURCES "")
 foreach(line IN LISTS SLICE17_LINES)
     string(STRIP "${line}" line)
@@ -2802,7 +2906,7 @@ if(PORT_ROM_CLEAN)
         COMMENT "romblob recipe: manifest -> kit extraction recipe")
 endif()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate18.txt" SLICE18_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate18.txt" SLICE18_LINES)
 set(SLICE18_SOURCES "")
 foreach(line IN LISTS SLICE18_LINES)
     string(STRIP "${line}" line)
@@ -2837,7 +2941,7 @@ list(APPEND SLICE18_SOURCES
 list(APPEND SLICE18_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov085_LakituBro_ClosestPlayer.cpp")
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate19.txt" SLICE19_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate19.txt" SLICE19_LINES)
 set(SLICE19_SOURCES "")
 foreach(line IN LISTS SLICE19_LINES)
     string(STRIP "${line}" line)
@@ -2847,7 +2951,7 @@ foreach(line IN LISTS SLICE19_LINES)
     list(APPEND SLICE19_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate20.txt" SLICE20_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate20.txt" SLICE20_LINES)
 set(SLICE20_SOURCES "")
 foreach(line IN LISTS SLICE20_LINES)
     string(STRIP "${line}" line)
@@ -2860,7 +2964,7 @@ endforeach()
 # Linkage-campaign lane slices (run linkw): five files, one OWNER each, so
 # five parallel seat lanes add matched TUs without ever editing this file or
 # each other's lists. Same reader shape as the gate slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l1.txt" SLICE_W1L1_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l1.txt" SLICE_W1L1_LINES)
 set(SLICE_W1L1_SOURCES "")
 foreach(line IN LISTS SLICE_W1L1_LINES)
     string(STRIP "${line}" line)
@@ -2880,7 +2984,7 @@ add_custom_command(OUTPUT "${SCN3D_HOSTGEN_GEN}"
             "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
     COMMENT "hostgen _ZN5Scene20Initialise3dGraphicsEv")
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l2.txt" SLICE_W1L2_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l2.txt" SLICE_W1L2_LINES)
 set(SLICE_W1L2_SOURCES ${SCN3D_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_W1L2_LINES)
     string(STRIP "${line}" line)
@@ -2892,7 +2996,7 @@ foreach(line IN LISTS SLICE_W1L2_LINES)
     endif()
     list(APPEND SLICE_W1L2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l3.txt" SLICE_W1L3_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l3.txt" SLICE_W1L3_LINES)
 set(SLICE_W1L3_SOURCES "")
 foreach(line IN LISTS SLICE_W1L3_LINES)
     string(STRIP "${line}" line)
@@ -2901,7 +3005,7 @@ foreach(line IN LISTS SLICE_W1L3_LINES)
     endif()
     list(APPEND SLICE_W1L3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l4.txt" SLICE_W1L4_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l4.txt" SLICE_W1L4_LINES)
 set(SLICE_W1L4_SOURCES "")
 foreach(line IN LISTS SLICE_W1L4_LINES)
     string(STRIP "${line}" line)
@@ -2953,7 +3057,7 @@ foreach(sym IN LISTS OV70GEN_SYMS)
         COMMENT "hostgen ${sym}")
     list(APPEND OV70GEN "${sym_out}")
 endforeach()
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w5c.txt" SLICE_W5C_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w5c.txt" SLICE_W5C_LINES)
 set(SLICE_W5C_SOURCES "")
 foreach(line IN LISTS SLICE_W5C_LINES)
     string(STRIP "${line}" line)
@@ -2963,7 +3067,7 @@ foreach(line IN LISTS SLICE_W5C_LINES)
     list(APPEND SLICE_W5C_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l5.txt" SLICE_W1L5_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w1l5.txt" SLICE_W1L5_LINES)
 set(SLICE_W1L5_SOURCES "")
 foreach(line IN LISTS SLICE_W1L5_LINES)
     string(STRIP "${line}" line)
@@ -2973,7 +3077,7 @@ foreach(line IN LISTS SLICE_W1L5_LINES)
     list(APPEND SLICE_W1L5_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 # Wave-5 lane slice (run linkw), same one-owner contract as the five above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w5d.txt" SLICE_W5D_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w5d.txt" SLICE_W5D_LINES)
 set(SLICE_W5D_SOURCES "")
 foreach(line IN LISTS SLICE_W5D_LINES)
     string(STRIP "${line}" line)
@@ -2983,7 +3087,7 @@ foreach(line IN LISTS SLICE_W5D_LINES)
     list(APPEND SLICE_W5D_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 # run linkw wave 5, lane w5-e: the Bowser arena pack (ov060 + the arena class)
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w5e.txt" SLICE_W5E_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w5e.txt" SLICE_W5E_LINES)
 set(SLICE_W5E_SOURCES "")
 foreach(line IN LISTS SLICE_W5E_LINES)
     string(STRIP "${line}" line)
@@ -2997,7 +3101,7 @@ endforeach()
 # 167) and ov089's boss reward (Key 282, LastStar 283). Same one-owner
 # contract; the coupling between 279/278/280/282 is measured, see that file's
 # header and hal/actor_classes.inc's wave-6 row block.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w6a.txt" SLICE_W6A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w6a.txt" SLICE_W6A_LINES)
 set(SLICE_W6A_SOURCES "")
 foreach(line IN LISTS SLICE_W6A_LINES)
     string(STRIP "${line}" line)
@@ -3008,7 +3112,7 @@ foreach(line IN LISTS SLICE_W6A_LINES)
 endforeach()
 # run linkw wave 5, lane w5-B (Hazy Maze Cave's cast); same reader shape,
 # one owner.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w5b.txt" SLICE_W5B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w5b.txt" SLICE_W5B_LINES)
 set(SLICE_W5B_SOURCES "")
 foreach(line IN LISTS SLICE_W5B_LINES)
     string(STRIP "${line}" line)
@@ -3050,7 +3154,7 @@ foreach(sym IN LISTS SLICE_W3A_HOSTGEN_SYMS)
     list(APPEND SLICE_W3A_HOSTGEN_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3a.txt" SLICE_W3A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w3a.txt" SLICE_W3A_LINES)
 set(SLICE_W3A_SOURCES "")
 foreach(line IN LISTS SLICE_W3A_LINES)
     string(STRIP "${line}" line)
@@ -3125,7 +3229,7 @@ set_source_files_properties(
 # run linkw wave 5, lane w5-A: Big Boo's Haunt's cast (ov063 + host copies).
 # See the header of port/slice_w5a.txt for the six exclusions and the four
 # byte-verified host copies.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w5a.txt" SLICE_W5A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w5a.txt" SLICE_W5A_LINES)
 set(SLICE_W5A_SOURCES "")
 foreach(line IN LISTS SLICE_W5A_LINES)
     string(STRIP "${line}" line)
@@ -3138,7 +3242,7 @@ endforeach()
 # methods plus the four particle emitters the Behavior fires; the Behavior
 # itself is the host copy unmatched/Flamethrower_Behavior.c, listed on the
 # targets beside the fill. Same one-owner contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w6f.txt" SLICE_W6F_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w6f.txt" SLICE_W6F_LINES)
 set(SLICE_W6F_SOURCES "")
 foreach(line IN LISTS SLICE_W6F_LINES)
     string(STRIP "${line}" line)
@@ -3154,7 +3258,7 @@ endforeach()
 # wave 6. One TU is held out (the shadow-class MSVC destructor); the header of
 # port/slice_w7c.txt carries the reason and the closure walk. Same one-owner
 # contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w7c.txt" SLICE_W7C_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w7c.txt" SLICE_W7C_LINES)
 set(SLICE_W7C_SOURCES "")
 foreach(line IN LISTS SLICE_W7C_LINES)
     string(STRIP "${line}" line)
@@ -3170,7 +3274,7 @@ endforeach()
 # (TextureTransformer::Prepare -- the header of port/slice_w8faces.txt has the
 # reading, including the parked note it refutes). Same one-owner contract as
 # the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w8faces.txt" SLICE_W8FACES_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w8faces.txt" SLICE_W8FACES_LINES)
 set(SLICE_W8FACES_SOURCES "")
 foreach(line IN LISTS SLICE_W8FACES_LINES)
     string(STRIP "${line}" line)
@@ -3188,7 +3292,7 @@ endforeach()
 # measured pool (543 main-only TUs: 496 rename-duplicates, 7 host retirements,
 # 40 unreferenced) and the per-file evidence. Same one-owner contract as the
 # lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w9harvest.txt" SLICE_W9HARVEST_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w9harvest.txt" SLICE_W9HARVEST_LINES)
 set(SLICE_W9HARVEST_SOURCES "")
 foreach(line IN LISTS SLICE_W9HARVEST_LINES)
     string(STRIP "${line}" line)
@@ -3205,7 +3309,7 @@ endforeach()
 # reloc-derived closure, the two PMF host copies and the ov006 naming trap;
 # the hierarchy map and both 33-slot widths are in
 # hal/actor_classes_ov100pl.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w6d.txt" SLICE_W6D_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w6d.txt" SLICE_W6D_LINES)
 set(SLICE_W6D_SOURCES "")
 foreach(line IN LISTS SLICE_W6D_LINES)
     string(STRIP "${line}" line)
@@ -3241,7 +3345,7 @@ endforeach()
 # independent routes), the two shifted name blocks, both width routes and the
 # four classes held back on the inferred-stub ratchet are in
 # hal/actor_classes_ov022.cpp; the mount is port/ov022_syms.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w8packs.txt" SLICE_W8PACKS_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w8packs.txt" SLICE_W8PACKS_LINES)
 set(SLICE_W8PACKS_SOURCES "")
 foreach(line IN LISTS SLICE_W8PACKS_LINES)
     string(STRIP "${line}" line)
@@ -3260,7 +3364,7 @@ endforeach()
 # the header of port/slice_w10a.txt carries the reason, both attribution routes
 # for each id, the width derivation and the Render slot-5 ruling. Same one-owner
 # contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w10a.txt" SLICE_W10A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w10a.txt" SLICE_W10A_LINES)
 set(SLICE_W10A_SOURCES "")
 foreach(line IN LISTS SLICE_W10A_LINES)
     string(STRIP "${line}" line)
@@ -3276,7 +3380,7 @@ endforeach()
 # vtable and no new mount: one record in port/ov002_syms.txt and this one line.
 # The header of port/slice_w10b.txt carries both attribution routes, the width
 # agreement and the record pin. Same one-owner contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w10b.txt" SLICE_W10B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w10b.txt" SLICE_W10B_LINES)
 set(SLICE_W10B_SOURCES "")
 foreach(line IN LISTS SLICE_W10B_LINES)
     string(STRIP "${line}" line)
@@ -3296,7 +3400,7 @@ endforeach()
 # all nineteen, the ten shared tables with the registered sibling that fills
 # each, and the done-guard evidence for every fill reused. Same one-owner
 # contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w11.txt" SLICE_W11_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w11.txt" SLICE_W11_LINES)
 set(SLICE_W11_SOURCES "")
 foreach(line IN LISTS SLICE_W11_LINES)
     string(STRIP "${line}" line)
@@ -3318,7 +3422,7 @@ endforeach()
 # pointer-to-member dispatchers, one inline copy of the same, and one
 # BlendModelAnim slot-5 collision -- with the derivation for each in the header
 # of port/slice_w12.txt. Same one-owner contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w12.txt" SLICE_W12_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w12.txt" SLICE_W12_LINES)
 set(SLICE_W12_SOURCES "")
 foreach(line IN LISTS SLICE_W12_LINES)
     string(STRIP "${line}" line)
@@ -3333,7 +3437,7 @@ endforeach()
 # ov052 for nothing that was not already linked. The header of
 # port/slice_w12b.txt carries both attribution routes, the 38-reads-as-32 width
 # derivation and the shared-window misspelling this lane renames per source.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w12b.txt" SLICE_W12B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w12b.txt" SLICE_W12B_LINES)
 set(SLICE_W12B_SOURCES "")
 foreach(line IN LISTS SLICE_W12B_LINES)
     string(STRIP "${line}" line)
@@ -3349,7 +3453,7 @@ endforeach()
 # slot-5 Render and a real MSVC destructor with no C name). The header of
 # port/slice_w12c.txt carries both, and the measured reason its sibling
 # TREASURE_CHEST (13) is not here.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w12c.txt" SLICE_W12C_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w12c.txt" SLICE_W12C_LINES)
 set(SLICE_W12C_SOURCES "")
 foreach(line IN LISTS SLICE_W12C_LINES)
     string(STRIP "${line}" line)
@@ -3368,7 +3472,7 @@ endforeach()
 # port/slice_w15.txt carries both attribution routes, the Render slot-5 ruling
 # and the two destructors' placeholder-store reading; the width derivation is
 # in port/ov056_syms.txt. Same one-owner contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w15.txt" SLICE_W15_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w15.txt" SLICE_W15_LINES)
 set(SLICE_W15_SOURCES "")
 foreach(line IN LISTS SLICE_W15_LINES)
     string(STRIP "${line}" line)
@@ -3388,7 +3492,7 @@ endforeach()
 # shadow-class MSVC destructor shape); the ROM disassembly it was transcribed
 # from is in hal/actor_classes_ov002_w15.cpp. None of the eight carries the
 # inferred-stub guess marker. Same one-owner contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w15b.txt" SLICE_W15B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w15b.txt" SLICE_W15B_LINES)
 set(SLICE_W15B_SOURCES "")
 foreach(line IN LISTS SLICE_W15B_LINES)
     string(STRIP "${line}" line)
@@ -3423,7 +3527,7 @@ endforeach()
 # under-reads to 30 because dsd split the table at slot 30, and slot 31 is a
 # real 32nd virtual (func_ov098_0213a17c, NOT Platform::Kill). Same one-owner
 # contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w16a.txt" SLICE_W16A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w16a.txt" SLICE_W16A_LINES)
 set(SLICE_W16A_SOURCES "")
 foreach(line IN LISTS SLICE_W16A_LINES)
     string(STRIP "${line}" line)
@@ -3445,7 +3549,7 @@ endforeach()
 # collision and is a host copy in hal/actor_classes_ov002_w17.cpp, so
 # src/func_ov002_020bc4f8.cpp is deliberately NOT in this slice. Same one-owner
 # contract as the lane slices above.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w17a.txt" SLICE_W17A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w17a.txt" SLICE_W17A_LINES)
 set(SLICE_W17A_SOURCES "")
 foreach(line IN LISTS SLICE_W17A_LINES)
     string(STRIP "${line}" line)
@@ -3599,7 +3703,7 @@ set_source_files_properties(
 # seats are untouched and still needed. Same one-owner contract as the lane
 # slices above: a symbol is defined by the matched TU or by a host copy, never
 # both.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w18a.txt" SLICE_W18A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w18a.txt" SLICE_W18A_LINES)
 set(SLICE_W18A_SOURCES "")
 foreach(line IN LISTS SLICE_W18A_LINES)
     string(STRIP "${line}" line)
@@ -3618,7 +3722,7 @@ endforeach()
 # that fills them. The reading, the listings and the per-row evidence are in
 # port/slice_pmf2.txt; the twenty-eight host bodies they replace come out in
 # the same commit, eight of them as whole files.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_pmf2.txt" SLICE_PMF2_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmf2.txt" SLICE_PMF2_LINES)
 set(SLICE_PMF2_SOURCES "")
 foreach(line IN LISTS SLICE_PMF2_LINES)
     string(STRIP "${line}" line)
@@ -3639,7 +3743,7 @@ endforeach()
 # The host bodies these replace come out in the same commit, two as whole
 # files (unmatched/Ov085_PrincessPeach_States.cpp and
 # unmatched/RabbitKey_StateSeat.cpp).
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_pmf3.txt" SLICE_PMF3_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmf3.txt" SLICE_PMF3_LINES)
 set(SLICE_PMF3_SOURCES "")
 foreach(line IN LISTS SLICE_PMF3_LINES)
     string(STRIP "${line}" line)
@@ -3649,7 +3753,7 @@ foreach(line IN LISTS SLICE_PMF3_LINES)
     list(APPEND SLICE_PMF3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w15c.txt" SLICE_W15C_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w15c.txt" SLICE_W15C_LINES)
 set(SLICE_W15C_SOURCES "")
 foreach(line IN LISTS SLICE_W15C_LINES)
     string(STRIP "${line}" line)
@@ -3659,7 +3763,7 @@ foreach(line IN LISTS SLICE_W15C_LINES)
     list(APPEND SLICE_W15C_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate21.txt" SLICE21_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate21.txt" SLICE21_LINES)
 set(SLICE21_SOURCES "")
 foreach(line IN LISTS SLICE21_LINES)
     string(STRIP "${line}" line)
@@ -3669,7 +3773,7 @@ foreach(line IN LISTS SLICE21_LINES)
     list(APPEND SLICE21_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate22.txt" SLICE22_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate22.txt" SLICE22_LINES)
 set(SLICE22_SOURCES "")
 foreach(line IN LISTS SLICE22_LINES)
     string(STRIP "${line}" line)
@@ -3679,7 +3783,7 @@ foreach(line IN LISTS SLICE22_LINES)
     list(APPEND SLICE22_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate23.txt" SLICE23_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate23.txt" SLICE23_LINES)
 set(SLICE23_SOURCES "")
 foreach(line IN LISTS SLICE23_LINES)
     string(STRIP "${line}" line)
@@ -3694,7 +3798,7 @@ endforeach()
 # here -- it reads POWCNT textually and comes from GATE6_GEN, which this
 # target picks up alongside the slice. (Renumbered from 24 at merge: the
 # animation stream took 24 for BlendModelAnim the same night.)
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate25.txt" SLICE25_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate25.txt" SLICE25_LINES)
 set(SLICE25_SOURCES "")
 foreach(line IN LISTS SLICE25_LINES)
     string(STRIP "${line}" line)
@@ -3707,7 +3811,7 @@ endforeach()
 # Gate 26: the boot spine -- the real Stage actor. See the header of
 # slice_gate26.txt; the HAL seam is hal/stage_bridges.cpp. (Renumbered from
 # 24 at merge: three streams picked 24 the same night.)
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate26.txt" SLICE26_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate26.txt" SLICE26_LINES)
 set(SLICE26_SOURCES "")
 foreach(line IN LISTS SLICE26_LINES)
     string(STRIP "${line}" line)
@@ -3721,7 +3825,7 @@ endforeach()
 # was gate 25's sub-OAM path, a registry row, and the ov001 sprite templates.
 # InitResources is the matched TU through hostgen (GATE27_GEN below) -- see the
 # head of slice_gate27.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate27.txt" SLICE27_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate27.txt" SLICE27_LINES)
 set(SLICE27_SOURCES "")
 foreach(line IN LISTS SLICE27_LINES)
     string(STRIP "${line}" line)
@@ -3759,7 +3863,7 @@ list(APPEND SLICE27_SOURCES ${GATE27_GEN}
 # Gate 28: the MINIMAP actor (id 335). Same shape as the HUD -- eighteen-slot
 # vtable, constructor as factory -- plus the BG3-sub tilemap and the extended
 # palette. See the head of slice_gate28.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate28.txt" SLICE28_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate28.txt" SLICE28_LINES)
 set(SLICE28_SOURCES "")
 foreach(line IN LISTS SLICE28_LINES)
     string(STRIP "${line}" line)
@@ -3794,7 +3898,7 @@ list(APPEND SLICE28_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Minimap_Rende
 # HEADER_SHADOW entry the tracker's Initialise needs -- decl_Particle.h
 # declares it (void*) with C++ linkage and the TU defines it extern "C" over
 # a struct, which MSVC rejects as an overload on C linkage (C2733).
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate29.txt" SLICE29_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate29.txt" SLICE29_LINES)
 set(GATE29_GEN "")
 foreach(line IN LISTS SLICE29_LINES)
     string(STRIP "${line}" line)
@@ -3816,7 +3920,7 @@ endforeach()
 # the classes of level 6 (ov014) that are not living creatures. The roster and
 # the evidence behind every actor id are in the head of slice_gate33.txt; the
 # vtable fills and the debug spawn hook are hal/actor_classes_bob_world.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate33.txt" SLICE33_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate33.txt" SLICE33_LINES)
 set(SLICE33_SOURCES "")
 foreach(line IN LISTS SLICE33_LINES)
     string(STRIP "${line}" line)
@@ -3850,7 +3954,7 @@ list(APPEND SLICE33_SOURCES
 # of slice_gate32.txt; the HAL seam is hal/actor_classes_bob_enemy.cpp and the
 # direct-spawn probe that brings them up before their own level exists is
 # hal/actor_spawn_probe_bob.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate32.txt" SLICE32_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate32.txt" SLICE32_LINES)
 set(SLICE32_SOURCES "")
 foreach(line IN LISTS SLICE32_LINES)
     string(STRIP "${line}" line)
@@ -3869,7 +3973,7 @@ list(APPEND SLICE32_SOURCES
 # linked by gate 10 (see the head of slice_gate31.txt); what is here is
 # StartFile's own closure, the Player's destroy slots and the collider
 # registry reset. The driver is hal/level_change.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate31.txt" SLICE31_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate31.txt" SLICE31_LINES)
 set(SLICE31_SOURCES "")
 foreach(line IN LISTS SLICE31_LINES)
     string(STRIP "${line}" line)
@@ -3893,7 +3997,7 @@ list(APPEND SLICE31_SOURCES
 # it was already MATCHED and simply never offered, because with the intro bit
 # force-set in hal/level_boot.cpp none of it was reachable. See slice_intro.txt
 # for what each group is and the fault that named it.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_intro.txt" SLICEINTRO_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_intro.txt" SLICEINTRO_LINES)
 set(SLICEINTRO_SOURCES "")
 foreach(line IN LISTS SLICEINTRO_LINES)
     string(STRIP "${line}" line)
@@ -4029,7 +4133,7 @@ list(APPEND SLICEINTRO_SOURCES
 # out of scope for this finisher pass. hal/scene_boot.cpp is back to its
 # pre-TAIL2 state (full trap on all three tables); config/arm9/relocs.txt's
 # six words were real and still are, they are just not seated.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate219.txt" SLICE219_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate219.txt" SLICE219_LINES)
 set(SLICE219_SOURCES "")
 foreach(line IN LISTS SLICE219_LINES)
     string(STRIP "${line}" line)
@@ -4053,7 +4157,7 @@ list(APPEND SLICE219_SOURCES
 # lists are /OPT:REF-dropped on purpose; see slice_scene1.txt for why every TU
 # here links off the ROM's own edges rather than a link root, and
 # scene_boot_map.txt section 8 for which eighteen do not link at all.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_scene1.txt" SLICE_SCENE1_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_scene1.txt" SLICE_SCENE1_LINES)
 set(SLICE_SCENE1_SOURCES "")
 foreach(line IN LISTS SLICE_SCENE1_LINES)
     string(STRIP "${line}" line)
@@ -4075,7 +4179,7 @@ endforeach()
 # functions, so the title screen is what ov007 is for. See slice_ov007.txt for
 # the derivation and the one exclusion, and port/ov007_seat.txt for the vtable
 # table, the two spine-caveat audits and what actually links.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov007.txt" SLICE_OV007_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov007.txt" SLICE_OV007_LINES)
 set(SLICE_OV007_SOURCES "")
 # TWO FLAGS AND NOT ONE, because the review caught them being conflated. A
 # single "displaced" flag answers "did the cut run", and the marker block below
@@ -5131,6 +5235,7 @@ endif()
 # later lane puts the TU back without fixing the seam, which is the property
 # that makes this a guard and not a comment.
 set(PC2_RIDETHROUGH_DEFS "")
+port_configure_input("${PORT_REPO_ROOT_ABS}/src/func_ov007_020be980.c")
 file(STRINGS "${PORT_REPO_ROOT_ABS}/src/func_ov007_020be980.c"
      PC2_RIDETHROUGH_DECL
      REGEX "^[ \t]*extern[ \t]+int[ \t]+func_ov007_020bc3dc[ \t]*\\([ \t]*int[ \t]*\\)[ \t]*;")
@@ -5188,6 +5293,7 @@ endif()
 # SAME PREDICATE SHAPE, for the same reason: the source fact that IS the
 # blocker, plus whether the TU carrying it is actually in this binary.
 set(RT1_AE558_DEFS "")
+port_configure_input("${PORT_REPO_ROOT_ABS}/src/func_ov007_020add3c.c")
 file(STRINGS "${PORT_REPO_ROOT_ABS}/src/func_ov007_020add3c.c"
      RT1_AE558_DECL
      REGEX "^[ \t]*extern[ \t]+int[ \t]+func_ov007_020ae558[ \t]*\\([ \t]*void[ \t]*\\)[ \t]*;")
@@ -5235,6 +5341,7 @@ endif()
 # whether the cut ran. It is a STATUS line and not a battery define on purpose:
 # there is no SCENE_BLOCKED row for this seam to retire, and a define nothing
 # consumes is a marker that cannot fire.
+port_configure_input("${PORT_REPO_ROOT_ABS}/src/func_ov007_020c2b9c.c")
 file(STRINGS "${PORT_REPO_ROOT_ABS}/src/func_ov007_020c2b9c.c"
      IR1_C2B9C_VOID_DEF
      REGEX "^[ \t]*void[ \t]+func_ov007_020c2b9c[ \t]*\\(")
@@ -5331,6 +5438,7 @@ endif()
 # now have the same blind spot instead of two different ones. Closing it needs
 # a C tokenizer and neither tool has one.
 set(AE1_MCRENDER_DEFS "")
+port_configure_input("${CMAKE_CURRENT_SOURCE_DIR}/hal/scene_boot.cpp")
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/hal/scene_boot.cpp"
      AE1_MCRENDER_ALIAS
      REGEX "^[ \t]*#[ \t]*pragma[ \t]+comment[ \t]*\\([ \t]*linker[ \t]*,[ \t]*\"/alternatename:__ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3=\\?Render@ModelComponents@@QAE")
@@ -5380,7 +5488,7 @@ set_source_files_properties(
 #
 # port/mg_fanout_costs.txt is the derivation and the cost model for the other
 # twenty-nine; its section 4 carries this lane's measured wall accounting.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mg1.txt" SLICE_MG1_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mg1.txt" SLICE_MG1_LINES)
 set(SLICE_MG1_SOURCES "")
 foreach(line IN LISTS SLICE_MG1_LINES)
     string(STRIP "${line}" line)
@@ -5600,7 +5708,7 @@ set_source_files_properties(
 # width checks that keep this table at 36 slots, the `::*` sweep that found
 # exactly two pointer-to-member TUs in the class's 623-TU closure, and the
 # eight ov006 addresses with no source at all.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_pch.txt" SLICE_PCH_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pch.txt" SLICE_PCH_LINES)
 set(SLICE_PCH_SOURCES "")
 foreach(line IN LISTS SLICE_PCH_LINES)
     string(STRIP "${line}" line)
@@ -5623,7 +5731,7 @@ endforeach()
 # relocation count inside the span), the ::* sweep that found exactly three
 # pointer-to-member TUs in this class's closure and seven more that the
 # framework already owns, and the five ov006 addresses with no source at all.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_lkt.txt" SLICE_LKT_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_lkt.txt" SLICE_LKT_LINES)
 set(SLICE_LKT_SOURCES "")
 foreach(line IN LISTS SLICE_LKT_LINES)
     string(STRIP "${line}" line)
@@ -5642,7 +5750,7 @@ endforeach()
 # that file's address switch, and hal/scene_boot.cpp's port_scene_classes row
 # names port_mg_luigi_spawn and port_scene_fill_luigi, so every target that
 # compiles scene_boot.cpp needs the whole set or the link fails.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_lui.txt" SLICE_LUI_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_lui.txt" SLICE_LUI_LINES)
 set(SLICE_LUI_SOURCES unmatched/MgLuigi_StateDispatch.cpp
                       unmatched/MgLuigi_Faces.cpp)
 foreach(line IN LISTS SLICE_LUI_LINES)
@@ -5686,7 +5794,7 @@ set_source_files_properties(
 # excluded from every slice; run mg5 lane BASESET replaced the MG1 block's trap
 # with the host copy unmatched/MgBase_StateSetter.cpp, which this slice
 # inherits along with the rest of the framework.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_smb.txt" SLICE_SMB_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_smb.txt" SLICE_SMB_LINES)
 set(SLICE_SMB_SOURCES "")
 foreach(line IN LISTS SLICE_SMB_LINES)
     string(STRIP "${line}" line)
@@ -5767,7 +5875,7 @@ set_source_files_properties(
 # them; CMake appends both lists to the same target and dedupes identical
 # absolute paths, so nothing is compiled twice. port/slice_ccn.txt says what it
 # reaches and why, and records the class's two hard floors.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ccn.txt" SLICE_CCN_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ccn.txt" SLICE_CCN_LINES)
 set(SLICE_CCN_SOURCES unmatched/MgCoin_StateDispatch.cpp
                       unmatched/MgCoin_Faces.cpp)
 foreach(line IN LISTS SLICE_CCN_LINES)
@@ -5834,7 +5942,7 @@ set_source_files_properties(
 # same file and hal/scene_mg_bomroom.cpp counts its dispatches separately, so a
 # run can say the seat is working rather than the absence of a link error
 # implying it.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sos.txt" SLICE_SOS_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sos.txt" SLICE_SOS_LINES)
 set(SLICE_SOS_SOURCES hal/scene_mg_bomroom.cpp
                       unmatched/MgBomroom_StateDispatch.cpp)
 
@@ -5889,7 +5997,7 @@ endforeach()
 # therefore OUT of slice_s75.txt -- listing both copies would be a duplicate
 # symbol, and listing neither would drop the dispatch silently. The slice file
 # names the five in its header so the trade is readable from either end.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s75.txt" SLICE_S75_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_s75.txt" SLICE_S75_LINES)
 # unmatched/MgCurling2_Traps.cpp IS GONE, run mg7 lane L375. It stood in for
 # func_ov006_020e513c and func_ov006_020e5450 while both were decomp gaps, and
 # both now have src bodies that slice_s75.txt lists, so keeping the file would
@@ -6020,7 +6128,7 @@ set(SCENE_MG_CURLING2_SOURCES hal/scene_mg_curling2.cpp)
 # the same target and dedupes identical absolute paths, so nothing is compiled
 # twice. port/slice_ppp.txt says what it reaches and records the class's ONE
 # remaining hard floor (func_ov006_021053a8) and two stategen join misses.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ppp.txt" SLICE_PPP_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ppp.txt" SLICE_PPP_LINES)
 set(SLICE_PPP_SOURCES unmatched/MgPanel_StateDispatch.cpp
                       unmatched/MgPanel_Faces.cpp)
 foreach(line IN LISTS SLICE_PPP_LINES)
@@ -6105,7 +6213,7 @@ foreach(sym IN LISTS FLW_HOSTGEN_SYMS)
     list(APPEND FLW_HOSTGEN_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_flw.txt" SLICE_FLW_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_flw.txt" SLICE_FLW_LINES)
 set(SLICE_FLW_SOURCES ${FLW_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_FLW_LINES)
     string(STRIP "${line}" line)
@@ -6185,7 +6293,7 @@ set(SCENE_MG_FLOWER_SOURCES
 # framework, the thirty-five overlay constructors and the arm9 waves under them;
 # CMake appends every list to the same targets and dedupes identical absolute
 # paths, so nothing is compiled twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mem.txt" SLICE_MEM_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mem.txt" SLICE_MEM_LINES)
 set(SLICE_MEM_SOURCES hal/scene_mg_memory2.cpp
                       unmatched/MgMemory2_StateDispatch.cpp
                       unmatched/MgMemory2_FieldPmf.cpp
@@ -6249,7 +6357,7 @@ endforeach()
 # THE SLICE IS THE DELTA ONLY, and this one is a smaller delta than its
 # predecessor artifact implies: eighteen of port/slice_mga361.txt's sixty-eight
 # lines are already compiled in by the flower, memory2 and gate slices.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_cup.txt" SLICE_CUP_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_cup.txt" SLICE_CUP_LINES)
 set(SLICE_CUP_SOURCES hal/scene_mg_cup.cpp
                       # The class's TABLE dispatcher: vtable slot 6 and the
                       # eight states of data_ov006_02141870. REPLACES
@@ -6357,7 +6465,7 @@ endforeach()
 # through slice_mg1.txt; the Single3D sub-object family through slice_mem.txt;
 # func_ov006_020c1164 and func_ov006_020c16b4 through slice_s381.txt. CMake
 # appends every list to the same targets and dedupes identical absolute paths.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_pgo.txt" SLICE_PGO_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pgo.txt" SLICE_PGO_LINES)
 set(SLICE_PGO_SOURCES hal/scene_mg_mcarlo2.cpp)
 foreach(line IN LISTS SLICE_PGO_LINES)
     string(STRIP "${line}" line)
@@ -6393,7 +6501,7 @@ endforeach()
 # because the model sub-object at +0x4f38 is the same one run mg6 lane MEM
 # already seated for the sibling. CMake appends every list to the same targets
 # and dedupes identical absolute paths, so nothing is compiled twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mmt.txt" SLICE_MMT_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mmt.txt" SLICE_MMT_LINES)
 set(SLICE_MMT_SOURCES hal/scene_mg_memory1.cpp
                       unmatched/MgMemory1_StateDispatch.cpp
                       # The aliases the link asked for. Its named trap for
@@ -6475,7 +6583,7 @@ endforeach()
 # GONE: func_ov006_0211bc8c was a STATE and not a vtable slot, which is why
 # section 3's nosrc column read 0 and never saw it, and run mg10 lane F367
 # decompiled it -- it is src/func_ov006_0211bc8c.cpp in the slice now.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_box.txt" SLICE_BOX_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_box.txt" SLICE_BOX_LINES)
 set(SLICE_BOX_SOURCES hal/scene_mg_boombox.cpp
                       unmatched/MgSound_StateDispatch.cpp
                       # REPLACES src/func_ov006_0211ba88.c, which is out of the
@@ -6574,7 +6682,7 @@ set_source_files_properties(
 # override, which is the check that finds a callee-shaped floor when the nosrc
 # column reads zero -- is the reusable part, and deleting the file would delete
 # it.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s371.txt" SLICE_S371_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_s371.txt" SLICE_S371_LINES)
 set(SLICE_S371_SOURCES hal/scene_mg_amida.cpp
                        unmatched/MgAmida_Faces.cpp
                        # REPLACES src/func_ov006_020d3ba0.c, which is out of
@@ -6678,7 +6786,7 @@ set_source_files_properties(
 # family owes (MgMemory2_ModelRender_020c1804.cpp among them, which this
 # class's Render reaches). CMake appends every list to the same targets and
 # dedupes identical absolute paths, so nothing is compiled twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s381.txt" SLICE_S381_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_s381.txt" SLICE_S381_LINES)
 set(SLICE_S381_SOURCES hal/scene_mg_mcarlo.cpp)
 foreach(line IN LISTS SLICE_S381_LINES)
     string(STRIP "${line}" line)
@@ -6737,7 +6845,7 @@ endforeach()
 # class's destructors spell data_ov006_0213cab8 by its config name, and a COFF
 # short-name scan for _VT and _HEAP over all 180 of this seat's built objects
 # finds nothing.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_wig.txt" SLICE_WIG_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wig.txt" SLICE_WIG_LINES)
 set(SLICE_WIG_SOURCES hal/scene_mg_wiggler.cpp
                       unmatched/MgWiggler_StateDispatch.cpp
                       unmatched/MgWiggler_Faces.cpp)
@@ -6781,7 +6889,7 @@ endforeach()
 # delta is measured ZERO and so is its arm9 delta. CMake appends both lists to
 # the same target and dedupes identical absolute paths, so nothing is compiled
 # twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_boo.txt" SLICE_BOO_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_boo.txt" SLICE_BOO_LINES)
 set(SLICE_BOO_SOURCES hal/scene_mg_booseek.cpp
                       unmatched/MgTeresa_StateDispatch.cpp
                       # REPLACES src/func_ov006_021203fc.c, which is OUT of
@@ -6887,7 +6995,7 @@ set_source_files_properties(
 # the arm9 waves under them; slice_flw.txt and slice_mem.txt already carry all
 # six of the middle base's bodies. CMake appends every list to the same targets
 # and dedupes identical absolute paths, so nothing is compiled twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_psy.txt" SLICE_PSY_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_psy.txt" SLICE_PSY_LINES)
 set(SLICE_PSY_SOURCES hal/scene_mg_psycheout.cpp
                       unmatched/Mg3DEsp_StateDispatch.cpp
                       # REPLACES src/func_ov006_020e9cec.c, which is out of
@@ -6985,7 +7093,7 @@ set_source_files_properties(
 # framework, the thirty-five overlay constructors (both of this class's among
 # them) and the arm9 waves under them; CMake appends every list to the same
 # targets and dedupes identical absolute paths, so nothing is compiled twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_lky.txt" SLICE_LKY_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_lky.txt" SLICE_LKY_LINES)
 set(SLICE_LKY_SOURCES hal/scene_mg_luckystars.cpp
                       # The one pointer-to-member host copy: vtable SLOT 6.
                       # Its src declares the pair table inside extern "C", so
@@ -7109,7 +7217,7 @@ foreach(sym IN LISTS BNP_HOSTGEN_SYMS)
     list(APPEND BNP_HOSTGEN_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_bnp.txt" SLICE_BNP_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_bnp.txt" SLICE_BNP_LINES)
 set(SLICE_BNP_SOURCES hal/scene_mg_jump.cpp
                       # This class's own pointer-to-member wall: vtable SLOT 6.
                       # src/func_ov006_020ee27c.cpp is OUT of slice_bnp.txt.
@@ -7260,7 +7368,7 @@ foreach(sym IN LISTS BNT_HOSTGEN_SYMS)
     list(APPEND BNT_HOSTGEN_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_bnt.txt" SLICE_BNT_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_bnt.txt" SLICE_BNT_LINES)
 set(SLICE_BNT_SOURCES hal/scene_mg_jump2.cpp
                       # The class's own pointer-to-member wall: vtable SLOT 6,
                       # dispatching a member pointer held in an OBJECT FIELD at
@@ -7369,7 +7477,7 @@ endforeach()
 # framework, the thirty-five overlay constructors (this class's among them) and
 # the arm9 waves under them; CMake appends every list to the same targets and
 # dedupes identical absolute paths, so nothing is compiled twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_snw.txt" SLICE_SNW_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_snw.txt" SLICE_SNW_LINES)
 set(SLICE_SNW_SOURCES hal/scene_mg_snowball.cpp
                       # The pointer-to-member host copies: the first-level
                       # dispatcher slot 6 calls, and the two second-level
@@ -7442,7 +7550,7 @@ endforeach()
 # framework, the thirty-five overlay constructors and the arm9 waves under them;
 # CMake appends every list to the same targets and dedupes identical absolute
 # paths, so nothing is compiled twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_pkr.txt" SLICE_PKR_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pkr.txt" SLICE_PKR_LINES)
 set(SLICE_PKR_SOURCES hal/scene_mg_card.cpp
                       # The two /alternatename rows the first link asked for.
                       # No trap and no stand-in body: both are DATA declared at
@@ -7583,7 +7691,7 @@ foreach(sym IN LISTS TTI_HOSTGEN_SYMS)
     list(APPEND TTI_HOSTGEN_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_tti.txt" SLICE_TTI_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_tti.txt" SLICE_TTI_LINES)
 set(SLICE_TTI_SOURCES hal/scene_mg_trampoline.cpp
                       # The one pointer-to-member host copy: vtable SLOT 6.
                       # This class's member pointer is a FIELD at this+0x5004,
@@ -7754,7 +7862,7 @@ set_source_files_properties(
 # already in port/slice_gate29.txt, and every target that takes SLICE_MGM
 # takes that one too. Listing it twice gave MSVC two object rules for one file
 # (gate 29 compiles it as C++) and the link refused with LNK2005.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mgm.txt" SLICE_MGM_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mgm.txt" SLICE_MGM_LINES)
 set(SLICE_MGM_SOURCES hal/scene_mg_menu.cpp)
 foreach(line IN LISTS SLICE_MGM_LINES)
     string(STRIP "${line}" line)
@@ -7791,7 +7899,7 @@ set_source_files_properties(
 # untouched -- the rename exists only in this build's compile of them.
 # (the PORT_ACTOR_OVERLAYS append lives beside ov005's, BEFORE the ovdata
 # generation loop reads the list)
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_vs.txt" SLICE_VS_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_vs.txt" SLICE_VS_LINES)
 set(SLICE_VS_SOURCES hal/scene_vs_menu.cpp
                      # the three PMF dispatch sites, host copies; their
                      # matched src TUs are out of the slice (see the
@@ -7891,7 +7999,7 @@ foreach(sym IN LISTS TTE_HOSTGEN_SYMS)
     list(APPEND TTE_HOSTGEN_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_tte.txt" SLICE_TTE_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_tte.txt" SLICE_TTE_LINES)
 set(SLICE_TTE_SOURCES hal/scene_mg_trampoline2.cpp
                       # The one pointer-to-member host copy: vtable SLOT 6.
                       # This class holds its member pointer in a FIELD at
@@ -8050,7 +8158,7 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS "VT0=data_ov006_0213b2e0")
 
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_fdr.txt" SLICE_FDR_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_fdr.txt" SLICE_FDR_LINES)
 set(FDR_FADER_SOURCES hal/fdr_arm9_fader_seat.cpp)
 foreach(line IN LISTS SLICE_FDR_LINES)
     string(STRIP "${line}" line)
@@ -8073,7 +8181,7 @@ endforeach()
 # only reachable through this file, and this file cannot link without them),
 # and a target that gets one but not the other has an unregistered archive
 # while the others do not.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_nfs.txt" SLICE_NFS_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_nfs.txt" SLICE_NFS_LINES)
 set(NFS_NAMES_SOURCES hal/fs_names.cpp)
 foreach(line IN LISTS SLICE_NFS_LINES)
     string(STRIP "${line}" line)
@@ -8179,7 +8287,7 @@ foreach(sym IN LISTS GATE32_SYMS)
     list(APPEND GATE32_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate35.txt" SLICE35_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate35.txt" SLICE35_LINES)
 set(SLICE35_SOURCES "")
 foreach(line IN LISTS SLICE35_LINES)
     string(STRIP "${line}" line)
@@ -8198,7 +8306,7 @@ endforeach()
 # relies on the ARM r0 ride-through, and func_0200cae4 / func_0200ca50
 # dispatch through mwcc member-function pointers. smoke_player keeps the
 # matched files -- it never arms data_0209f318, so nothing there dispatches.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate13.txt" SLICE13_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate13.txt" SLICE13_LINES)
 set(SLICE13_SOURCES "")
 foreach(line IN LISTS SLICE13_LINES)
     string(STRIP "${line}" line)
@@ -8219,7 +8327,7 @@ endforeach()
 # that were in no slice at all, because the only thing naming them was a table
 # of bytes. unmatched/func_02008550_hostcopy.cpp is the second table's
 # consumer, host-copied for the same mwcc-PMF reason func_0200cae4 is.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ptrsweep.txt" SLICE_PTR_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ptrsweep.txt" SLICE_PTR_LINES)
 # func_02008550_hostcopy.cpp RETIRED (lane shadow-A): the matched TU goes
 # through hostgen's MG_PMF_CALL table (GATE13_SYMS), the 39 seeding lines
 # kept and the one PMF call read back as the host handler it seeded.
@@ -8379,7 +8487,7 @@ list(APPEND SLICE10_CAM_SOURCES
 # WITHOUT SM64DS_COMMS_ROLE: nothing installs, and the seam answers solo.
 set(SLICE_COMMS_SOURCES hal/comms_seam.cpp hal/os_thread.cpp
                         hal/comms_loopback.cpp)
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_comms.txt" SLICE_COMMS_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_comms.txt" SLICE_COMMS_LINES)
 foreach(line IN LISTS SLICE_COMMS_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -8415,7 +8523,7 @@ list(APPEND SLICE_COMMS_SOURCES hal/comms_sync.cpp)
 # the three that take that one -- the FINDING 5 shape again: a fourth variable
 # each of them has to remember is how a lane's TUs silently leave a link.
 list(APPEND SLICE_COMMS_SOURCES hal/voice_chat.cpp hal/voice_capture_win.cpp)
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mp3.txt" SLICE_MP3_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mp3.txt" SLICE_MP3_LINES)
 foreach(line IN LISTS SLICE_MP3_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -8471,7 +8579,7 @@ list(APPEND SLICE_COMMS_SOURCES hal/comms_fanout_wide.cpp)
 # above (`if(src MATCHES "/OS_SleepThread\\.c$" ...)`) still drops them. That
 # filter is left alone deliberately: it is the only thing keeping these three
 # from arriving on two lists at once.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2thr.txt" SLICE2THR_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2thr.txt" SLICE2THR_LINES)
 set(SLICE2THR_SOURCES "")
 foreach(line IN LISTS SLICE2THR_LINES)
     string(STRIP "${line}" line)
@@ -8639,7 +8747,7 @@ endforeach()
 
 # Gate 14: the real level boot. Stage::LoadClsnAndObjects over ov009's own
 # LVL_Overlay, the fifteen sub-loaders, and the setters they store through.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate14.txt" SLICE14_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate14.txt" SLICE14_LINES)
 set(SLICE14_SOURCES "")
 foreach(line IN LISTS SLICE14_LINES)
     string(STRIP "${line}" line)
@@ -8701,7 +8809,7 @@ list(APPEND SLICE14_SOURCES
 #
 # ShadowModel::CleanAll is the one line here that IS doing work today, and it
 # does it from slice_w1l3.txt instead -- see the block in that file.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate36.txt" SLICE36_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate36.txt" SLICE36_LINES)
 set(SLICE36_SOURCES "")
 foreach(line IN LISTS SLICE36_LINES)
     string(STRIP "${line}" line)
@@ -8735,7 +8843,7 @@ endforeach()
 #       and _Z17LoadLevelOverlaysi is a host body.
 # The block above is kept as written because the measurement in it is the
 # reason this one could be short.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s4_slot0.txt" SLICE_S4_SLOT0_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_s4_slot0.txt" SLICE_S4_SLOT0_LINES)
 set(SLICE_S4_SLOT0_SOURCES ${SCN3D_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_S4_SLOT0_LINES)
     if(line IN_LIST SCN3D_HOSTGEN_SKIP)
@@ -8755,7 +8863,7 @@ endforeach()
 #   Gate 40: STAR_DOOR (354, ov100) -- the config's mislabeled _ZN4Door family.
 #   Gate 41: TRAP (36) + LIGHT_BEAM (37), ov010, level 2's own overlay.
 #   Gate 42: PEACH_PAINTING (38), ov010.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate40.txt" SLICE40_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate40.txt" SLICE40_LINES)
 set(SLICE40_SOURCES "")
 foreach(line IN LISTS SLICE40_LINES)
     string(STRIP "${line}" line)
@@ -8765,7 +8873,7 @@ foreach(line IN LISTS SLICE40_LINES)
     list(APPEND SLICE40_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate41.txt" SLICE41_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate41.txt" SLICE41_LINES)
 set(SLICE41_SOURCES "")
 foreach(line IN LISTS SLICE41_LINES)
     string(STRIP "${line}" line)
@@ -8781,7 +8889,7 @@ endforeach()
 # shared address. The relocs say module:overlay(10) both times. No overlay is
 # mounted for this gate; the two mislabeled names are closed by /alternatename
 # in hal/actor_classes.cpp. See the head of slice_gate42.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate42.txt" SLICE42_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate42.txt" SLICE42_LINES)
 set(SLICE42_SOURCES "")
 foreach(line IN LISTS SLICE42_LINES)
     string(STRIP "${line}" line)
@@ -8795,7 +8903,7 @@ endforeach()
 # gate. A different class from PEACH_PAINTING, in a different overlay, with no
 # cross-overlay spawn -- its closure is 28 matched ov080 TUs plus three sinits.
 # See the head of slice_gate50.txt and hal/actor_classes_painting.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate50.txt" SLICE50_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate50.txt" SLICE50_LINES)
 set(SLICE50_SOURCES "")
 foreach(line IN LISTS SLICE50_LINES)
     string(STRIP "${line}" line)
@@ -8808,7 +8916,7 @@ endforeach()
 # Gate 51: the CAP (WaterfallMist, 269), ov002. Built at gate 33, registered
 # here now that its nine-state PMF table is seated. See slice_gate51.txt and
 # unmatched/Cap_StateDispatch.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate51.txt" SLICE51_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate51.txt" SLICE51_LINES)
 set(SLICE51_SOURCES "")
 foreach(line IN LISTS SLICE51_LINES)
     string(STRIP "${line}" line)
@@ -8821,7 +8929,7 @@ endforeach()
 # Gate 59: ov015's seven static initialisers (Whomp's Fortress platforms), plus
 # the platform classes' matched lifecycle closures (gates 60-63 append their own
 # TUs here). See slice_gate59.txt and hal/actor_classes_wf.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate59.txt" SLICE59_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate59.txt" SLICE59_LINES)
 set(SLICE59_SOURCES "")
 foreach(line IN LISTS SLICE59_LINES)
     string(STRIP "${line}" line)
@@ -8842,7 +8950,7 @@ foreach(gate 70 71 72 73 74)
     if(NOT EXISTS "${_gf}")
         continue()
     endif()
-    file(STRINGS "${_gf}" _glines)
+    port_read_lines("${_gf}" _glines)
     foreach(line IN LISTS _glines)
         string(STRIP "${line}" line)
         if(line MATCHES "^#" OR line STREQUAL "")
@@ -8875,7 +8983,7 @@ endforeach()
 
 # Gate 78: BLUE_COIN_SWITCH (10), ov002. See slice_gate78.txt and the section in
 # hal/actor_classes.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate78.txt" SLICE78_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate78.txt" SLICE78_LINES)
 set(SLICE78_SOURCES "")
 foreach(line IN LISTS SLICE78_LINES)
     string(STRIP "${line}" line)
@@ -8887,7 +8995,7 @@ endforeach()
 
 # Gate 79: STAR_MARKER (180), ov002. See slice_gate79.txt and the section in
 # hal/actor_classes.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate79.txt" SLICE79_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate79.txt" SLICE79_LINES)
 set(SLICE79_SOURCES "")
 foreach(line IN LISTS SLICE79_LINES)
     string(STRIP "${line}" line)
@@ -8902,7 +9010,7 @@ endforeach()
 # is HAL-only closure -- the five class methods plus the four ov002 helpers
 # they reach. See slice_gate82.txt and the SHUTTER_BOB section in
 # hal/actor_classes_bob_world.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate82.txt" SLICE82_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate82.txt" SLICE82_LINES)
 set(SLICE82_SOURCES "")
 foreach(line IN LISTS SLICE82_LINES)
     string(STRIP "${line}" line)
@@ -8924,7 +9032,7 @@ list(APPEND SLICE82_SOURCES
 # is the six class methods, the five ov095 helpers they reach and the two ov095
 # sinits. See slice_gate83.txt and the SEESAW_BOB section in
 # hal/actor_classes_bob_world.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate83.txt" SLICE83_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate83.txt" SLICE83_LINES)
 set(SLICE83_SOURCES "")
 foreach(line IN LISTS SLICE83_LINES)
     string(STRIP "${line}" line)
@@ -8940,7 +9048,7 @@ endforeach()
 # table); this slice is the one new symbol, the factory FortressTower_Spawn.
 # The registry row reuses hal_fill_warp_pipe_vtable (fill 0). See
 # slice_gate102.txt and the WARP_PIPE section in hal/actor_classes_bob_world.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate102.txt" SLICE102_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate102.txt" SLICE102_LINES)
 set(SLICE102_SOURCES "")
 foreach(line IN LISTS SLICE102_LINES)
     string(STRIP "${line}" line)
@@ -8957,7 +9065,7 @@ endforeach()
 # the SpawnInfo mount is in ov002_syms.txt and the registry row reuses
 # hal_fill_exclamation_switch_vtable (fill 0). See slice_gate103.txt and the
 # EXCLAMATION_SWITCH section in hal/actor_classes_bob_world.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate103.txt" SLICE103_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate103.txt" SLICE103_LINES)
 set(SLICE103_SOURCES "")
 foreach(line IN LISTS SLICE103_LINES)
     string(STRIP "${line}" line)
@@ -8975,7 +9083,7 @@ endforeach()
 # is already in ov102_syms.txt and the registry row reuses
 # hal_fill_question_block_vtable (fill 0). See slice_gate128.txt and the
 # QUESTION_BLOCK section in hal/actor_classes.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate128.txt" SLICE128_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate128.txt" SLICE128_LINES)
 set(SLICE128_SOURCES "")
 foreach(line IN LISTS SLICE128_LINES)
     string(STRIP "${line}" line)
@@ -8993,7 +9101,7 @@ endforeach()
 # statics are already mounted/seated (ov102_syms.txt + __sinit_ov102_0214dfac).
 # Spawned dynamically by GREEN_SHELL_BLOCK_TAG (323) and a stomped Koopa (203).
 # See slice_gate209.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate209.txt" SLICE209_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate209.txt" SLICE209_LINES)
 set(SLICE209_SOURCES "")
 foreach(line IN LISTS SLICE209_LINES)
     string(STRIP "${line}" line)
@@ -9011,7 +9119,7 @@ endforeach()
 # the two host render copies are appended to unmatched/ModelAnim_Renders.cpp
 # and unmatched/Ov060_Renders.cpp; YoshiEgg's PMF state seat is
 # unmatched/YoshiEgg_StateDispatch.cpp. See slice_gate210.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate210.txt" SLICE210_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate210.txt" SLICE210_LINES)
 set(SLICE210_SOURCES "")
 foreach(line IN LISTS SLICE210_LINES)
     string(STRIP "${line}" line)
@@ -9024,7 +9132,7 @@ endforeach()
 # Gate 121: STATIC_ROCK (61), Jolly Roger Bay (ov102). Shares _ZTV13FortressTower
 # (WARP_PIPE gate 33, FORTRESS_TOWER gate 102 install it); the one new symbol is
 # the factory StaticRock_Spawn. Registry row reuses hal_fill_warp_pipe_vtable.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate121.txt" SLICE121_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate121.txt" SLICE121_LINES)
 set(SLICE121_SOURCES "")
 foreach(line IN LISTS SLICE121_LINES)
     string(STRIP "${line}" line)
@@ -9037,7 +9145,7 @@ endforeach()
 # Gate 122: BRICK_BLOCK_SWITCH_ACTIVATED (19), Jolly Roger Bay (ov002). Same body
 # as BIG_BRICK_BLOCK (_ZTV13BigBrickBlock, gate 16); the one new symbol is the
 # factory BrickBlockSwitchActivated_Spawn. SpawnInfo in ov002_syms.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate122.txt" SLICE122_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate122.txt" SLICE122_LINES)
 set(SLICE122_SOURCES "")
 foreach(line IN LISTS SLICE122_LINES)
     string(STRIP "${line}" line)
@@ -9050,7 +9158,7 @@ endforeach()
 # Gate 123: GREEN_SHELL_BLOCK_TAG (323), Jolly Roger Bay (ov002). A tag body
 # sharing _ZTV10BrickBlock (gate 49); the one new symbol is the factory
 # GreenShellBlockTag_Spawn. SpawnInfo in ov002_syms.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate123.txt" SLICE123_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate123.txt" SLICE123_LINES)
 set(SLICE123_SOURCES "")
 foreach(line IN LISTS SLICE123_LINES)
     string(STRIP "${line}" line)
@@ -9067,7 +9175,7 @@ endforeach()
 # The per-symbol ov019 mount (ov019_syms.txt) and this class's sinit
 # (__sinit_ov019_02112b14, run from hal/actor_overlays.cpp) seat its SpawnInfo
 # and construction data.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate142.txt" SLICE142_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate142.txt" SLICE142_LINES)
 set(SLICE142_SOURCES "")
 foreach(line IN LISTS SLICE142_LINES)
     string(STRIP "${line}" line)
@@ -9081,7 +9189,7 @@ endforeach()
 # HAUNTED_CHAIR (326) hosted, the bookend/bookshot cast deferred. ov020 is joined
 # to the per-symbol mounts so the classes reach their SpawnInfo/statics by name;
 # the vtable fills and faces are in hal/actor_classes_bbh.cpp. See slice_gate149.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate149.txt" SLICE149_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate149.txt" SLICE149_LINES)
 set(SLICE149_SOURCES "")
 foreach(line IN LISTS SLICE149_LINES)
     string(STRIP "${line}" line)
@@ -9097,7 +9205,7 @@ endforeach()
 # fourteen state halves and their ov098 helpers. The two state dispatchers are
 # host copies (unmatched/Crate_StateDispatch.cpp, with the table seat); the
 # vtable fill is hal/actor_classes_hmc.cpp. See slice_gate172.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate172.txt" SLICE172_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate172.txt" SLICE172_LINES)
 set(SLICE172_SOURCES "")
 foreach(line IN LISTS SLICE172_LINES)
     string(STRIP "${line}" line)
@@ -9114,7 +9222,7 @@ endforeach()
 # (unmatched/UpDownLiftBbh_Behavior.cpp, with the state seat) because it
 # dispatches the state table through an incomplete-class pointer-to-member. The
 # fill is hal/actor_classes_updownlift.cpp. See slice_gate173.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate173.txt" SLICE173_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate173.txt" SLICE173_LINES)
 set(SLICE173_SOURCES "")
 foreach(line IN LISTS SLICE173_LINES)
     string(STRIP "${line}" line)
@@ -9130,7 +9238,7 @@ endforeach()
 # six-record state seat); D1 is a host thunk in the fill (the matched .cpp is
 # the auto-emitted-member-dtor form). The fill is
 # hal/actor_classes_montymole.cpp. See slice_gate174.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate174.txt" SLICE174_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate174.txt" SLICE174_LINES)
 set(SLICE174_SOURCES "")
 foreach(line IN LISTS SLICE174_LINES)
     string(STRIP "${line}" line)
@@ -9144,7 +9252,7 @@ endforeach()
 # class, two factories, one host vtable (hal/actor_classes_flame.cpp, which
 # also carries the Player::Burn face); no state table, no seat, no host
 # copies. Level 13 names RED_FLAME x17. See slice_gate175.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate175.txt" SLICE175_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate175.txt" SLICE175_LINES)
 set(SLICE175_SOURCES "")
 foreach(line IN LISTS SLICE175_LINES)
     string(STRIP "${line}" line)
@@ -9160,7 +9268,7 @@ endforeach()
 # helpers. The two state dispatchers are host copies with the source-side seat
 # (unmatched/Scuttlebug_StateDispatch.cpp); the fill is
 # hal/actor_classes_scuttlebug.cpp. See slice_gate176.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate176.txt" SLICE176_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate176.txt" SLICE176_LINES)
 set(SLICE176_SOURCES "")
 foreach(line IN LISTS SLICE176_LINES)
     string(STRIP "${line}" line)
@@ -9177,7 +9285,7 @@ endforeach()
 # state seat, and four host copies (the two unmatched per-frame state MAINs,
 # the two PMF dispatchers, plus the slot-5 Render and two D1 thunks).
 # See slice_w7b.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w7b.txt" SLICE_W7B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w7b.txt" SLICE_W7B_LINES)
 set(SLICE_W7B_SOURCES "")
 foreach(line IN LISTS SLICE_W7B_LINES)
     string(STRIP "${line}" line)
@@ -9217,7 +9325,7 @@ endforeach()
 # first mount. No PMF tables; the bullies' D1/D0 and all three Renders are
 # host thunks/copies (the fill and unmatched/ModelAnim_Renders.cpp); the
 # fills are hal/actor_classes_ov064.cpp. See slice_gate177.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate177.txt" SLICE177_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate177.txt" SLICE177_LINES)
 set(SLICE177_SOURCES "")
 foreach(line IN LISTS SLICE177_LINES)
     string(STRIP "${line}" line)
@@ -9227,7 +9335,7 @@ foreach(line IN LISTS SLICE177_LINES)
     list(APPEND SLICE177_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate178.txt" SLICE178_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate178.txt" SLICE178_LINES)
 set(SLICE178_SOURCES "")
 foreach(line IN LISTS SLICE178_LINES)
     string(STRIP "${line}" line)
@@ -9246,7 +9354,7 @@ endforeach()
 # Behavior/Render pair and the base Init/Cleanup pair the two veneers tail-call)
 # were all confirmed present in walk_window.map BEFORE the slice was written.
 # See port/slice_w9a.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w9a.txt" SLICEW9A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w9a.txt" SLICEW9A_LINES)
 set(SLICEW9A_SOURCES "")
 foreach(line IN LISTS SLICEW9A_LINES)
     string(STRIP "${line}" line)
@@ -9262,7 +9370,7 @@ endforeach()
 # tables they use are already host arrays filled by an already-registered id, and
 # all three SpawnInfo records are already in port/ov084_syms.txt, so this adds no
 # mount and no fill. See port/slice_w9b.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w9b.txt" SLICEW9B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w9b.txt" SLICEW9B_LINES)
 set(SLICEW9B_SOURCES "")
 foreach(line IN LISTS SLICEW9B_LINES)
     string(STRIP "${line}" line)
@@ -9275,7 +9383,7 @@ endforeach()
 # ---- run linkw wave 9, lane w9-reg, slice C: three ov091 sliding-platform
 # siblings sharing the table the registered id 55 already fills. Four instances
 # for three TUs; no mount and no fill added. See port/slice_w9c.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w9c.txt" SLICEW9C_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w9c.txt" SLICEW9C_LINES)
 set(SLICEW9C_SOURCES "")
 foreach(line IN LISTS SLICEW9C_LINES)
     string(STRIP "${line}" line)
@@ -9289,7 +9397,7 @@ endforeach()
 # sharing the table the registered id 39 already fills. Four instances for three
 # TUs; three records join port/ov095_syms.txt at the 0x1c stride that file
 # already measured, and no fill or vtable is added. See port/slice_w9d.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w9d.txt" SLICEW9D_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w9d.txt" SLICEW9D_LINES)
 set(SLICEW9D_SOURCES "")
 foreach(line IN LISTS SLICEW9D_LINES)
     string(STRIP "${line}" line)
@@ -9299,7 +9407,7 @@ foreach(line IN LISTS SLICEW9D_LINES)
     list(APPEND SLICEW9D_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate179.txt" SLICE179_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate179.txt" SLICE179_LINES)
 set(SLICE179_SOURCES "")
 foreach(line IN LISTS SLICE179_LINES)
     string(STRIP "${line}" line)
@@ -9309,7 +9417,7 @@ foreach(line IN LISTS SLICE179_LINES)
     list(APPEND SLICE179_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate182.txt" SLICE182_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate182.txt" SLICE182_LINES)
 set(SLICE182_SOURCES "")
 foreach(line IN LISTS SLICE182_LINES)
     string(STRIP "${line}" line)
@@ -9322,7 +9430,7 @@ endforeach()
 # Gate KLEPTO: ov062's cap-stealing bird (actor 239). ov062 already mounted
 # (gate 32); the seat is HAL (actor_classes_koopa_chuckya.cpp) plus the two-PMF
 # host copy unmatched/Klepto_StateDispatch.cpp. See slice_klepto.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_klepto.txt" SLICEKLEPTO_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_klepto.txt" SLICEKLEPTO_LINES)
 set(SLICEKLEPTO_SOURCES "")
 foreach(line IN LISTS SLICEKLEPTO_LINES)
     string(STRIP "${line}" line)
@@ -9332,7 +9440,7 @@ foreach(line IN LISTS SLICEKLEPTO_LINES)
     list(APPEND SLICEKLEPTO_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate180.txt" SLICE180_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate180.txt" SLICE180_LINES)
 set(SLICE180_SOURCES "")
 foreach(line IN LISTS SLICE180_LINES)
     string(STRIP "${line}" line)
@@ -9349,7 +9457,7 @@ endforeach()
 # actor froze instead of opening. Slot 28 (0x021496a4) is OnHitFromUnderneath,
 # the jump-into-it-from-below hit that is how the box is meant to be opened.
 # See slice_gate203.txt and the QUESTION_BLOCK section in hal/actor_classes.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate203.txt" SLICE203_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate203.txt" SLICE203_LINES)
 set(SLICE203_SOURCES "")
 foreach(line IN LISTS SLICE203_LINES)
     string(STRIP "${line}" line)
@@ -9367,7 +9475,7 @@ endforeach()
 # derivation, the RTTI-name aliases and why this is not a behaviour change are
 # in slice_gate204.txt. Coin's D0 needed no line: it has been on
 # slice_gate33.txt all along and only wanted the reference edge.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate204.txt" SLICE204_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate204.txt" SLICE204_LINES)
 set(SLICE204_SOURCES "")
 foreach(line IN LISTS SLICE204_LINES)
     string(STRIP "${line}" line)
@@ -9387,7 +9495,7 @@ endforeach()
 # (unmatched/Ov085_Toad_StateSeat.cpp). Toad's D1 is held out and spelled in
 # the fill, the SlideDecorationSilverStar shape. See slice_gate205.txt and
 # hal/actor_classes_ov085.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate205.txt" SLICE205_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate205.txt" SLICE205_LINES)
 set(SLICE205_SOURCES "")
 foreach(line IN LISTS SLICE205_LINES)
     string(STRIP "${line}" line)
@@ -9414,7 +9522,7 @@ endforeach()
 #     __sinit_ov085_0212f3a0 copies them.
 # Her Render LINKS: the ROM calls Model::Render non-virtually, so no vtable
 # numbering comes into it -- the other half of the same ruling.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3f.txt" SLICEW3F_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w3f.txt" SLICEW3F_LINES)
 set(SLICEW3F_SOURCES "")
 foreach(line IN LISTS SLICEW3F_LINES)
     string(STRIP "${line}" line)
@@ -9438,7 +9546,7 @@ endforeach()
 # the vtspan routes and the seven friendly-name renames are in
 # slice_gate208.txt.
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate208.txt" SLICE208_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate208.txt" SLICE208_LINES)
 set(SLICE208_SOURCES "")
 foreach(line IN LISTS SLICE208_LINES)
     string(STRIP "${line}" line)
@@ -9484,7 +9592,7 @@ set_source_files_properties(
 # and one sinit runs rather than four. The fill and the mount bring-up are
 # hal/actor_classes_ov043.cpp; the derivation and the four re-verified traps
 # are in slice_gate206.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate206.txt" SLICE206_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate206.txt" SLICE206_LINES)
 set(SLICE206_SOURCES "")
 foreach(line IN LISTS SLICE206_LINES)
     string(STRIP "${line}" line)
@@ -9545,7 +9653,7 @@ set_source_files_properties(
 # (Bowser in the Sky's identical siblings) applied to ov043, so every -D bind
 # below is the ov047 bind at the matching address. Ids by Spawn-store, not name
 # (the naming shift). See port/slice_bdw.txt and hal/actor_classes_ov043.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_bdw.txt" SLICEBDW_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_bdw.txt" SLICEBDW_LINES)
 set(SLICEBDW_SOURCES "")
 foreach(line IN LISTS SLICEBDW_LINES)
     string(STRIP "${line}" line)
@@ -9612,7 +9720,7 @@ set_source_files_properties(
 # mount (port/ov026_syms.txt), fill hal/actor_classes_ov026.cpp. The five TUs
 # NOT in this slice are host-copied and named at the bottom of
 # port/slice_ov026cast.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov026cast.txt" SLICE_OV026_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov026cast.txt" SLICE_OV026_LINES)
 set(SLICE_OV026_SOURCES "")
 foreach(line IN LISTS SLICE_OV026_LINES)
     string(STRIP "${line}" line)
@@ -9754,7 +9862,7 @@ set_source_files_properties(
     PROPERTIES COMPILE_DEFINITIONS
     "data_ov032_02113a9c=port_ov026_polelift_clsn;func_ov053_021112a4=func_ov026_021112a4")
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate207.txt" SLICE207_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate207.txt" SLICE207_LINES)
 set(SLICE207_SOURCES "")
 foreach(line IN LISTS SLICE207_LINES)
     string(STRIP "${line}" line)
@@ -9793,7 +9901,7 @@ set_source_files_properties(
 # globally to _data_ov002_021081e4 (the Enemy base table); rename it per-source
 # to its own array. HEAP is left alone -- already the game heap. EnemySwitchTag's
 # D0 spells the RTTI dual name _ZTV11daESwitch_c, aliased in the fill.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate211.txt" SLICE211_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate211.txt" SLICE211_LINES)
 set(SLICE211_SOURCES "")
 foreach(line IN LISTS SLICE211_LINES)
     string(STRIP "${line}" line)
@@ -9814,7 +9922,7 @@ set_source_files_properties(
 # hal/actor_classes_question_switch.cpp, which also carries the fill, the
 # faces and the SM64DS_QS_PROBE tick probe. Both destructors are matched
 # extern-C bodies and are enrolled. See port/slice_gate212.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate212.txt" SLICE212_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate212.txt" SLICE212_LINES)
 set(SLICE212_SOURCES "")
 foreach(line IN LISTS SLICE212_LINES)
     string(STRIP "${line}" line)
@@ -9833,7 +9941,7 @@ endforeach()
 # (func_02060f60, func_02057020, func_02057078 and the driver's bss), and the
 # small smoke targets that link ntr have no business pulling those in.
 # See port/slice_gate215.txt and the header of port/ntr/backup.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate215.txt" SLICE215_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate215.txt" SLICE215_LINES)
 set(SLICE215_SOURCES "")
 foreach(line IN LISTS SLICE215_LINES)
     string(STRIP "${line}" line)
@@ -9854,7 +9962,7 @@ endforeach()
 # into the base and now holds the body config/<module>/relocs.txt names at that
 # offset. The per-slot reads are reproducible with port/tools/tail_slots.py and
 # quoted in port/slice_gate216.txt and at each seat.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate216.txt" SLICE216_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate216.txt" SLICE216_LINES)
 set(SLICE216_SOURCES "")
 foreach(line IN LISTS SLICE216_LINES)
     string(STRIP "${line}" line)
@@ -9975,7 +10083,7 @@ set_source_files_properties(
 # targets only -- putting the four on smoke_player as well would add object
 # files whose externs (data_0208ee3c, data_0209d4b8) that target does not host.
 # See port/slice_ipcsend.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ipcsend.txt" SLICE_IPCSEND_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ipcsend.txt" SLICE_IPCSEND_LINES)
 set(SLICE_IPCSEND_SOURCES "")
 foreach(line IN LISTS SLICE_IPCSEND_LINES)
     string(STRIP "${line}" line)
@@ -9985,7 +10093,7 @@ foreach(line IN LISTS SLICE_IPCSEND_LINES)
     list(APPEND SLICE_IPCSEND_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate214.txt" SLICE214_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate214.txt" SLICE214_LINES)
 # hal/globals_link100.cpp: the card driver's control block, hosted as the one
 # ROM object dsd split into three names. It is on this list because that block
 # is the storage the func_02042f68 refusal in hal/boot_os.cpp is about, and the
@@ -10051,7 +10159,7 @@ foreach(sym IN LISTS GATE2IPC_SYMS)
         COMMENT "hostgen ${sym}")
     list(APPEND GATE2IPC_GEN "${sym_out}")
 endforeach()
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2ipc.txt" SLICE2IPC_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate2ipc.txt" SLICE2IPC_LINES)
 set(SLICE2IPC_SOURCES "")
 foreach(line IN LISTS SLICE2IPC_LINES)
     string(STRIP "${line}" line)
@@ -10072,7 +10180,7 @@ endforeach()
 # D2 and D0 are also on slice_w8a, which only walk_window carries; listing them
 # here is what gives smoke_player and walk_window_hires the same TUs, and CMake
 # de-duplicates the identical path on walk_window.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate213.txt" SLICE213_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate213.txt" SLICE213_LINES)
 set(SLICE213_SOURCES "")
 foreach(line IN LISTS SLICE213_LINES)
     string(STRIP "${line}" line)
@@ -10096,7 +10204,7 @@ endforeach()
 # to a fixpoint rather than taken from the ROM's own call graph -- the two
 # differ by a factor of several, because the port's host bodies already own
 # most of the ROM's edges. port/slice_gate218.txt carries the derivation.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate218.txt" SLICE218_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate218.txt" SLICE218_LINES)
 set(SLICE218_SOURCES "")
 foreach(line IN LISTS SLICE218_LINES)
     string(STRIP "${line}" line)
@@ -10174,7 +10282,7 @@ set_source_files_properties(
 # in slice_gate16.txt and only wanted a reference edge. See slice_w8shadows.txt
 # for the full triage of all twelve shadows and the derivation of the one that
 # is deliberately still open.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w8shadows.txt" SLICE_W8SHADOWS_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w8shadows.txt" SLICE_W8SHADOWS_LINES)
 set(SLICE_W8SHADOWS_SOURCES "")
 foreach(line IN LISTS SLICE_W8SHADOWS_LINES)
     string(STRIP "${line}" line)
@@ -10188,7 +10296,7 @@ endforeach()
 # host copies (the three slot-5 renders + Unagi's PMF dispatch/Behavior + the
 # body-segment near-miss) are unmatched/{Jrb_Renders,Unagi_StateDispatch,
 # Unagi_BodyChain}.cpp, added beside the slice at each target.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate188.txt" SLICE188_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate188.txt" SLICE188_LINES)
 set(SLICE188_SOURCES "")
 foreach(line IN LISTS SLICE188_LINES)
     string(STRIP "${line}" line)
@@ -10202,7 +10310,7 @@ endforeach()
 # POWER_STAR_CREATE (355), ov018's own overlay, plus ONE_UP_LOGO (331) on the
 # already-mounted ov002. The fill is appended to hal/actor_classes_ccm.cpp
 # (already carries gate 142's IceSlideManager).
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate190.txt" SLICE190_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate190.txt" SLICE190_LINES)
 set(SLICE190_SOURCES "")
 foreach(line IN LISTS SLICE190_LINES)
     string(STRIP "${line}" line)
@@ -10215,7 +10323,7 @@ endforeach()
 # Gate 191: SKI_LIFT (63) + MOTHER_PENGUIN (257), ov018, extending the
 # gate-190 ov018 per-symbol mount (port/ov018_syms.txt). The fill is
 # appended to hal/actor_classes_ccm.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate191.txt" SLICE191_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate191.txt" SLICE191_LINES)
 set(SLICE191_SOURCES "")
 foreach(line IN LISTS SLICE191_LINES)
     string(STRIP "${line}" line)
@@ -10228,7 +10336,7 @@ endforeach()
 # Gate 192: the ov081 trio -- ICE_BLOCK (18), MR_BLIZZARD (223), SPINDRIFT
 # (312). Fresh per-symbol ov081 mount (port/ov081_syms.txt). The fill is
 # hal/actor_classes_ov081.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate192.txt" SLICE192_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate192.txt" SLICE192_LINES)
 set(SLICE192_SOURCES "")
 foreach(line IN LISTS SLICE192_LINES)
     string(STRIP "${line}" line)
@@ -10255,7 +10363,7 @@ endforeach()
 # The guard below is the slice_ov096 shape: a later slice edit that adds
 # either line fails at CONFIGURE with the reason rather than at link with a
 # mangled symbol name.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3b.txt" SLICE_W3B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w3b.txt" SLICE_W3B_LINES)
 set(SLICE_W3B_SOURCES "")
 foreach(line IN LISTS SLICE_W3B_LINES)
     string(STRIP "${line}" line)
@@ -10437,7 +10545,7 @@ set_source_files_properties(
 # four call. Full derivation, the dup screen and the match gate are in the
 # head of slice_tagfix.txt. data_ov002_020ff090 joins port/ov002_syms.txt in
 # the same commit because func_ov002_020b41b8 indexes it.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_tagfix.txt" SLICE_TAGFIX_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_tagfix.txt" SLICE_TAGFIX_LINES)
 set(SLICE_TAGFIX_SOURCES "")
 foreach(line IN LISTS SLICE_TAGFIX_LINES)
     string(STRIP "${line}" line)
@@ -10480,7 +10588,7 @@ endforeach()
 # Gate 193: BABY_PENGUIN (256) + the actual SNOWMAN (272, the unnamed
 # daBgSnwmn_c block), ov072. Fresh per-symbol ov072 mount
 # (port/ov072_syms.txt). The fill is hal/actor_classes_ov072.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate193.txt" SLICE193_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate193.txt" SLICE193_LINES)
 set(SLICE193_SOURCES "")
 foreach(line IN LISTS SLICE193_LINES)
     string(STRIP "${line}" line)
@@ -10495,7 +10603,7 @@ endforeach()
 # whose whole vtable is matched src with no guessed body -- id 348 (ov002
 # 0x021085f8, RTTI 10daChRoom_c) and id 314 (ov039 0x02111858, RTTI
 # 11daObjKumo_c). The fill is hal/actor_classes_ov_link100.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate217.txt" SLICE217_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate217.txt" SLICE217_LINES)
 set(SLICE217_SOURCES "")
 foreach(line IN LISTS SLICE217_LINES)
     string(STRIP "${line}" line)
@@ -10513,7 +10621,7 @@ endforeach()
 # pause tree could not be seamed and which single body could not be enrolled,
 # is in port/slice_gate220.txt's own header; section 13 of
 # port/stage_lifecycle_map.txt is the accounting.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate220.txt" SLICE220_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate220.txt" SLICE220_LINES)
 set(SLICE220_SOURCES "")
 foreach(line IN LISTS SLICE220_LINES)
     string(STRIP "${line}" line)
@@ -10532,7 +10640,7 @@ endforeach()
 # seam wants and which already-linked TUs the seat brings back off /OPT:REF,
 # is in port/slice_slot9.txt's own header; section 18 of
 # port/stage_lifecycle_map.txt is the accounting.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_slot9.txt" SLICE_SLOT9_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_slot9.txt" SLICE_SLOT9_LINES)
 set(SLICE_SLOT9_SOURCES "")
 foreach(line IN LISTS SLICE_SLOT9_LINES)
     string(STRIP "${line}" line)
@@ -10579,7 +10687,7 @@ set_source_files_properties(
 
 # Gate 194: HOOT_THE_OWL (234), ov094. Fresh per-symbol ov094 mount
 # (port/ov094_syms.txt). The fill is hal/actor_classes_ov094.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate194.txt" SLICE194_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate194.txt" SLICE194_LINES)
 set(SLICE194_SOURCES "")
 foreach(line IN LISTS SLICE194_LINES)
     string(STRIP "${line}" line)
@@ -10592,7 +10700,7 @@ endforeach()
 # Gate 199: SWITCH_PILLAR (34) + BASEMENT_WATER (35), ov012 (level 4). Per-
 # symbol ov012 mount (port/ov012_syms.txt). The fill is
 # hal/actor_classes_ov012.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate199.txt" SLICE199_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate199.txt" SLICE199_LINES)
 set(SLICE199_SOURCES "")
 foreach(line IN LISTS SLICE199_LINES)
     string(STRIP "${line}" line)
@@ -10605,7 +10713,7 @@ endforeach()
 # Gate 200: PUSH_BLOCK (306, the "PowerFlower" id-decoy) + MUGEN_BGM (351),
 # both ov002. The fill is hal/actor_classes_ov002g200.cpp; the state
 # dispatch + dest seat is unmatched/PushBlock_StateDispatch.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate200.txt" SLICE200_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate200.txt" SLICE200_LINES)
 set(SLICE200_SOURCES "")
 foreach(line IN LISTS SLICE200_LINES)
     string(STRIP "${line}" line)
@@ -10618,7 +10726,7 @@ endforeach()
 # Gate BULLET: actor 233, ov002's Snufit-fired projectile. ov002 already mounted;
 # the fill is hal/actor_classes_bullet.cpp, the one-PMF state dispatch + dest seat
 # is unmatched/Bullet_StateDispatch.cpp. See slice_bullet.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_bullet.txt" SLICEBULLET_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_bullet.txt" SLICEBULLET_LINES)
 set(SLICEBULLET_SOURCES "")
 foreach(line IN LISTS SLICEBULLET_LINES)
     string(STRIP "${line}" line)
@@ -10632,7 +10740,7 @@ endforeach()
 # (294), ov013 (level 5, the 2F clock-painting furniture). Per-symbol ov013
 # mount (port/ov013_syms.txt). The fill is hal/actor_classes_ov013.cpp; the
 # four D1/D0 TUs are host thunks there, everything else rides from src.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate202.txt" SLICE202_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate202.txt" SLICE202_LINES)
 set(SLICE202_SOURCES "")
 foreach(line IN LISTS SLICE202_LINES)
     string(STRIP "${line}" line)
@@ -10650,7 +10758,7 @@ endforeach()
 # unmatched/*_HostSites.cpp files, each refusal itemised in
 # port/slice_ov077.txt; unmatched/Lakitu_ShadowFaces.cpp carries the slice's
 # measured closure gap, which was eight naming mismatches and no missing body.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov077.txt" SLICE_OV077_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov077.txt" SLICE_OV077_LINES)
 set(SLICE_OV077_SOURCES "")
 foreach(line IN LISTS SLICE_OV077_LINES)
     string(STRIP "${line}" line)
@@ -10669,7 +10777,7 @@ endforeach()
 # pointer-to-member dispatch sites and the ModelAnim slot-3 shadow. The gate-64
 # shape: the hal file and the host copies ride in the slice's own SOURCES list,
 # so the target lists take one token.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov030cast.txt" SLICE_OV030CAST_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov030cast.txt" SLICE_OV030CAST_LINES)
 set(SLICE_OV030CAST_SOURCES "")
 foreach(line IN LISTS SLICE_OV030CAST_LINES)
     string(STRIP "${line}" line)
@@ -10804,7 +10912,7 @@ set(SWEEP1_SOURCES "")
 # cross-overlay reads) and this lane adds the cast's own symbols to that list
 # and, for the first time, a caller for port_ov035_syms_patch(). See
 # port/ov035_syms.txt's second header and port/slice_sweep1_ov035.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov035.txt" SLICE_SWEEP1_OV035_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov035.txt" SLICE_SWEEP1_OV035_LINES)
 set(SLICE_SWEEP1_OV035_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP1_OV035_LINES)
     string(STRIP "${line}" line)
@@ -10865,7 +10973,7 @@ list(APPEND SWEEP1_SOURCES hal/actor_classes_ov035.cpp ${SLICE_SWEEP1_OV035_SOUR
 # hal/actor_classes_ov024.cpp -- the gate-199/200 treatment ov013 used on
 # ClockPaintingHandShort's D1. Two host vtables of DIFFERENT lengths, 31 and
 # 32. See port/ov024_syms.txt and port/slice_sweep1_ov024.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov024.txt" SLICE_SWEEP1_OV024_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov024.txt" SLICE_SWEEP1_OV024_LINES)
 set(SLICE_SWEEP1_OV024_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP1_OV024_LINES)
     string(STRIP "${line}" line)
@@ -10887,7 +10995,7 @@ list(APPEND SWEEP1_SOURCES hal/actor_classes_ov024.cpp ${SLICE_SWEEP1_OV024_SOUR
 # skipped instances. All seventeen of the overlay's TUs, no host copy and no
 # refusal. Two 32-slot Platform tables, and dsd's one vtable label is on the
 # wrong one. See port/ov033_syms.txt and port/slice_sweep1_ov033.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov033.txt" SLICE_SWEEP1_OV033_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov033.txt" SLICE_SWEEP1_OV033_LINES)
 set(SLICE_SWEEP1_OV033_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP1_OV033_LINES)
     string(STRIP "${line}" line)
@@ -10938,7 +11046,7 @@ list(APPEND SWEEP1_SOURCES hal/actor_classes_ov033.cpp ${SLICE_SWEEP1_OV033_SOUR
 # host copy and no refusal. One 32-slot Platform table; the dsd landing
 # OVER-reads it by seven slots. See port/ov023_syms.txt and
 # port/slice_sweep1_ov023.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov023.txt" SLICE_SWEEP1_OV023_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov023.txt" SLICE_SWEEP1_OV023_LINES)
 set(SLICE_SWEEP1_OV023_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP1_OV023_LINES)
     string(STRIP "${line}" line)
@@ -10989,7 +11097,7 @@ list(APPEND SWEEP1_SOURCES hal/actor_classes_ov023.cpp ${SLICE_SWEEP1_OV023_SOUR
 # hal/level_boot.cpp's own level-9 block named and deferred. All eight of the
 # overlay's TUs, no host copy and no refusal. One 32-slot Platform table; dsd's
 # landing reads TEN. See port/ov017_syms.txt and port/slice_sweep1_ov017.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov017.txt" SLICE_SWEEP1_OV017_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov017.txt" SLICE_SWEEP1_OV017_LINES)
 set(SLICE_SWEEP1_OV017_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP1_OV017_LINES)
     string(STRIP "${line}" line)
@@ -11039,7 +11147,7 @@ list(APPEND SWEEP1_SOURCES hal/actor_classes_ov017.cpp ${SLICE_SWEEP1_OV017_SOUR
 # and dsd's vtable label is on the table its own factory installs. One 31-slot
 # ACTOR table (the ov024 PYRAMID_TAG shape, not a Platform one); dsd's landing
 # reads TWO. See port/ov058_syms.txt and port/slice_sweep1_ov058.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov058.txt" SLICE_SWEEP1_OV058_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep1_ov058.txt" SLICE_SWEEP1_OV058_LINES)
 set(SLICE_SWEEP1_OV058_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP1_OV058_LINES)
     string(STRIP "${line}" line)
@@ -11066,7 +11174,7 @@ list(APPEND SWEEP1_SOURCES hal/actor_classes_ov058.cpp ${SLICE_SWEEP1_OV058_SOUR
 # unmatched/FlyingCarpet_Render.cpp). The last four lines of the slice are the
 # MEASURED external closure: four ov002 bodies TRICKY_TRIANGLES needs, taken
 # off the map rather than guessed.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov036cast.txt" SLICE_OV036CAST_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov036cast.txt" SLICE_OV036CAST_LINES)
 set(SLICE_OV036CAST_SOURCES "")
 foreach(line IN LISTS SLICE_OV036CAST_LINES)
     string(STRIP "${line}" line)
@@ -11085,7 +11193,7 @@ endforeach()
 # itemised in port/slice_ov066.txt. The gate-64 / cast-ov030 shape: the hal file
 # and the four host copies ride in the slice's own SOURCES list, so the three
 # target lists take ONE token.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov066.txt" SLICE_OV066_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov066.txt" SLICE_OV066_LINES)
 set(SLICE_OV066_SOURCES "")
 foreach(line IN LISTS SLICE_OV066_LINES)
     string(STRIP "${line}" line)
@@ -11368,7 +11476,7 @@ set_source_files_properties(
 # host copies ride in the slice's own SOURCES list, so the target lists take
 # one token. ov090 has NO missing and NO NONMATCHING body -- 70 of 70 present
 # -- so there is no loud L2 face in this pack.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov090.txt" SLICE_OV090_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov090.txt" SLICE_OV090_LINES)
 set(SLICE_OV090_SOURCES "")
 foreach(line IN LISTS SLICE_OV090_LINES)
     string(STRIP "${line}" line)
@@ -11493,7 +11601,7 @@ set_source_files_properties(
 # /alternatename anywhere in port/ has an LHS this slice defines, and the two
 # aliases below have LHS names that are declared in include/decl_common.h
 # (446, 531) and defined nowhere.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3f2.txt" SLICE_W3F2_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w3f2.txt" SLICE_W3F2_LINES)
 set(SLICE_W3F2_SOURCES "")
 foreach(line IN LISTS SLICE_W3F2_LINES)
     string(STRIP "${line}" line)
@@ -11526,7 +11634,7 @@ set_source_files_properties(
 # reaches was already linked on the base tip, checked against walk_window.map
 # before the first configure and confirmed by the first link's own unresolved
 # list.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov027cast.txt" SLICE_OV027CAST_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov027cast.txt" SLICE_OV027CAST_LINES)
 set(SLICE_OV027CAST_SOURCES "")
 foreach(line IN LISTS SLICE_OV027CAST_LINES)
     string(STRIP "${line}" line)
@@ -11742,7 +11850,7 @@ set_source_files_properties(
 # unmatched/Goomboss_StateDispatch.cpp, each refusal itemised in
 # port/slice_ov074.txt. The gate-64 shape: the hal file and the host copies
 # ride in the slice's own SOURCES list, so the target lists take one token.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov074.txt" SLICE_OV074_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov074.txt" SLICE_OV074_LINES)
 set(SLICE_OV074_SOURCES "")
 foreach(line IN LISTS SLICE_OV074_LINES)
     string(STRIP "${line}" line)
@@ -11839,7 +11947,7 @@ set(SWEEP2_SOURCES "")
 # ModelAnim slot-5 Render, all three host-copied below. Two 32-slot Platform
 # tables and one 31-slot Enemy table, and dsd's only vtable label sits twice on
 # the wrong one. See port/ov032_syms.txt and port/slice_sweep2_ov032.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov032.txt" SLICE_SWEEP2_OV032_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov032.txt" SLICE_SWEEP2_OV032_LINES)
 set(SLICE_SWEEP2_OV032_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP2_OV032_LINES)
     string(STRIP "${line}" line)
@@ -11906,7 +12014,7 @@ list(APPEND SWEEP2_SOURCES hal/actor_classes_ov032.cpp ${SLICE_SWEEP2_OV032_SOUR
 # TUs are host copies: the two pointer-to-member state dispatch sites and the
 # five-ModelAnim slot-5 Render. One 31-slot Enemy table, and no identity shift.
 # See port/ov034_syms.txt and port/slice_sweep2_ov034.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov034.txt" SLICE_SWEEP2_OV034_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov034.txt" SLICE_SWEEP2_OV034_LINES)
 set(SLICE_SWEEP2_OV034_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP2_OV034_LINES)
     string(STRIP "${line}" line)
@@ -11974,7 +12082,7 @@ list(APPEND SWEEP2_SOURCES hal/actor_classes_ov034.cpp ${SLICE_SWEEP2_OV034_SOUR
 # closure. Four 32-slot Platform tables, and dsd's two vtable names are each
 # attached ONE TABLE LATE. See port/ov047_syms.txt and
 # port/slice_sweep2_ov047.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov047.txt" SLICE_SWEEP2_OV047_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov047.txt" SLICE_SWEEP2_OV047_LINES)
 set(SLICE_SWEEP2_OV047_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP2_OV047_LINES)
     string(STRIP "${line}" line)
@@ -12067,7 +12175,7 @@ list(APPEND SWEEP2_SOURCES hal/actor_classes_ov047.cpp ${SLICE_SWEEP2_OV047_SOUR
 # hand-spelled in the seat. One 31-slot ACTOR table (not Platform), no identity
 # shift, and the ONLY overlay in this lane that needs no per-source -D at all.
 # See port/ov055_syms.txt and port/slice_sweep2_ov055.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov055.txt" SLICE_SWEEP2_OV055_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_sweep2_ov055.txt" SLICE_SWEEP2_OV055_LINES)
 set(SLICE_SWEEP2_OV055_SOURCES "")
 foreach(line IN LISTS SLICE_SWEEP2_OV055_LINES)
     string(STRIP "${line}" line)
@@ -12107,7 +12215,7 @@ set(W3E_SOURCES "")
 # measured on cons cc10acd4e). The cast map, the widths, the naming shift, the
 # fourteen inferred-stub rulings and the one held-out TU are in
 # port/slice_w3e_ov022.txt and hal/actor_classes_ov022_w3e.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov022.txt" SLICE_W3E_OV022_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov022.txt" SLICE_W3E_OV022_LINES)
 set(SLICE_W3E_OV022_SOURCES "")
 foreach(line IN LISTS SLICE_W3E_OV022_LINES)
     string(STRIP "${line}" line)
@@ -12251,7 +12359,7 @@ set_source_files_properties(
 # ov025's four-id cast. The both-route derivation, the widths, the nine
 # inferred-stub rulings and the reclaimed host thunk are in
 # port/slice_w3e_ov025.txt and hal/actor_classes_ov025_w3e.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov025.txt" SLICE_W3E_OV025_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov025.txt" SLICE_W3E_OV025_LINES)
 set(SLICE_W3E_OV025_SOURCES "")
 foreach(line IN LISTS SLICE_W3E_OV025_LINES)
     string(STRIP "${line}" line)
@@ -12319,7 +12427,7 @@ set_source_files_properties(
 # reviewer reading the battery alone would see nothing move.
 # Also here: ICE_SLIDE_MANAGER's deleting destructor, whose slot 17 gate 143
 # trap-filled, so that class had no hosted D0 at all.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov019.txt" SLICE_W3E_OV019_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w3e_ov019.txt" SLICE_W3E_OV019_LINES)
 set(SLICE_W3E_OV019_SOURCES "")
 foreach(line IN LISTS SLICE_W3E_OV019_LINES)
     string(STRIP "${line}" line)
@@ -12419,7 +12527,7 @@ set_source_files_properties(
 # Behaviors that are host copies (WHOMP's and BULLET_BILL's PMF dispatch) are the
 # unmatched/ files appended below, not in the slice. See slice_gate64.txt and
 # hal/actor_classes_wf_enemy.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate64.txt" SLICE64_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate64.txt" SLICE64_LINES)
 set(SLICE64_SOURCES "")
 foreach(line IN LISTS SLICE64_LINES)
     string(STRIP "${line}" line)
@@ -12441,7 +12549,7 @@ list(APPEND SLICE64_SOURCES
 # STAR_CAMERA needs no slice of its own: it is a bare Actor whose base vtable
 # (_ZTV5Actor / data_0208e3a4) is filled by hal_fill_actor_base_vtable in the
 # same star file; every base method is already linked.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate89.txt" SLICE89_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate89.txt" SLICE89_LINES)
 set(SLICE89_SOURCES "")
 foreach(line IN LISTS SLICE89_LINES)
     string(STRIP "${line}" line)
@@ -12550,7 +12658,7 @@ foreach(sym IN LISTS HOSTABI_RETIRE_SYMS)
     list(APPEND HOSTABI_RETIRE_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate15.txt" SLICE15_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate15.txt" SLICE15_LINES)
 set(SLICE15_SOURCES "")
 foreach(line IN LISTS SLICE15_LINES)
     string(STRIP "${line}" line)
@@ -12591,7 +12699,7 @@ foreach(sym IN LISTS GATE16_SYMS)
     list(APPEND GATE16_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate16.txt" SLICE16_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate16.txt" SLICE16_LINES)
 set(SLICE16_SOURCES "")
 foreach(line IN LISTS SLICE16_LINES)
     string(STRIP "${line}" line)
@@ -12627,7 +12735,7 @@ list(APPEND SLICE16_SOURCES
 # (run link60 lane s2-m46). The slice still ships on exactly the three targets
 # that link hal/sub_screen.cpp, and all three carry the mount. Why the slice is
 # one line and not 276: port/ov004_ov007_2d_map.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_2d1.txt" SLICE_2D1_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_2d1.txt" SLICE_2D1_LINES)
 set(SLICE_2D1_SOURCES "")
 foreach(line IN LISTS SLICE_2D1_LINES)
     string(STRIP "${line}" line)
@@ -12690,7 +12798,7 @@ foreach(sym IN LISTS S364_HOSTGEN_SYMS)
     list(APPEND S364_HOSTGEN_GEN "${sym_out}")
 endforeach()
 
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s364.txt" SLICE_S364_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_s364.txt" SLICE_S364_LINES)
 set(SLICE_S364_SOURCES ${S364_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_S364_LINES)
     string(STRIP "${line}" line)
@@ -12828,7 +12936,7 @@ set(SCENE_MG_SLOT1_SOURCES hal/scene_mg_slot1.cpp)
 # the .cpp are not separable. hal/scene_boot.cpp's port_scene_classes table
 # carries the scene-365 row, so every target that compiles scene_boot.cpp
 # references port_mg_slot3_spawn and port_scene_fill_slot3 by name.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mug.txt" SLICE_MUG_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mug.txt" SLICE_MUG_LINES)
 set(SLICE_MUG_SOURCES hal/scene_mg_slot3.cpp
                       unmatched/MgSlot3_StateDispatch.cpp
                       unmatched/MgSlot3_SubObjCtor.cpp)
@@ -12929,7 +13037,7 @@ set_source_files_properties(
 # slice_mga361.txt carry the eight dScMgSingle3DBase_c bodies. CMake appends
 # every list to the same targets and dedupes identical absolute paths, so
 # nothing is compiled twice.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_rlt.txt" SLICE_RLT_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_rlt.txt" SLICE_RLT_LINES)
 set(SLICE_RLT_SOURCES hal/scene_mg_roulette.cpp
                       unmatched/MgRoulette_Factory.cpp
                       unmatched/MgRoulette_WheelDispatch.cpp)
@@ -12967,7 +13075,7 @@ endforeach()
 # taken off the first link's own unresolved list rather than guessed: ONE
 # symbol, ?GetNode@PathPtr@@QBEHAAUVector3@@I@Z, a naming mismatch against the
 # already-linked flat _ZNK7PathPtr7GetNodeER7Vector3j, not a missing body.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov092.txt" SLICE_OV092_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov092.txt" SLICE_OV092_LINES)
 set(SLICE_OV092_SOURCES "")
 foreach(line IN LISTS SLICE_OV092_LINES)
     string(STRIP "${line}" line)
@@ -12995,7 +13103,7 @@ endif()
 # six-virtual shadow shape: it dispatches on a plain Model at +0xd4, which
 # cxxname_bridge.cpp:511 dual-fills, while TORNADO's is on a ModelAnim at
 # +0x2c4, which cannot be. Two Renders in one overlay, one refused and one not.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov096.txt" SLICE_OV096_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov096.txt" SLICE_OV096_LINES)
 set(SLICE_OV096_SOURCES "")
 foreach(line IN LISTS SLICE_OV096_LINES)
     string(STRIP "${line}" line)
@@ -13038,7 +13146,7 @@ set_source_files_properties(
 # transcribed, each refusal itemised in port/slice_w3c.txt. The cast-ov066 /
 # gate-64 shape: the hal file and the two new host copies ride in the slice's
 # own SOURCES list, so the three target lists take ONE token.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w3c.txt" SLICE_W3C_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w3c.txt" SLICE_W3C_LINES)
 set(SLICE_W3C_SOURCES "")
 foreach(line IN LISTS SLICE_W3C_LINES)
     string(STRIP "${line}" line)
@@ -13075,7 +13183,7 @@ endforeach()
 # so the seat moves no boot census -- it only changes what a played frame can
 # build. The fill is hal/actor_classes_vspopup.cpp (appended to the slice
 # below); the mount is two SpawnInfo lines in port/ov002_syms.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_vspopup.txt" SLICE_VSPOPUP_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_vspopup.txt" SLICE_VSPOPUP_LINES)
 set(SLICE_VSPOPUP_SOURCES "")
 foreach(line IN LISTS SLICE_VSPOPUP_LINES)
     string(STRIP "${line}" line)
@@ -13111,7 +13219,7 @@ endforeach()
 # ROM addresses are in the head of slice_cap.txt. The call site is one line in
 # tests/walk_window.cpp, in Stage::Render's own order (after
 # CylinderClsn::Process).
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_cap.txt" SLICE_CAP_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_cap.txt" SLICE_CAP_LINES)
 set(SLICE_CAP_SOURCES "")
 foreach(line IN LISTS SLICE_CAP_LINES)
     string(STRIP "${line}" line)
@@ -13139,7 +13247,7 @@ endforeach()
 # port/slice_ov029.txt; the SpawnInfo/resource/bss mount is port/ov029_syms.txt
 # (ov029 is on PORT_ACTOR_OVERLAYS). Every consumer target gets ${OV029_SOURCES}.
 # ============================================================================
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ov029.txt" SLICE_OV029_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ov029.txt" SLICE_OV029_LINES)
 set(SLICE_OV029_SOURCES "")
 foreach(line IN LISTS SLICE_OV029_LINES)
     string(STRIP "${line}" line)
@@ -13280,7 +13388,7 @@ set(OV029_SOURCES hal/actor_classes_ov029.cpp unmatched/Ov029_MethodFaces.cpp ${
 # classes, seated in slot 16 through hal/dtor_faces_cpp.cpp. The slice rides
 # the same four targets as the fills it serves (smoke_player, walk_window and
 # the two derived windows), next to hal/dtor_seats_base.cpp.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_dtorfaces.txt" SLICE_DTORFACES_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_dtorfaces.txt" SLICE_DTORFACES_LINES)
 set(SLICE_DTORFACES_SOURCES "")
 foreach(line IN LISTS SLICE_DTORFACES_LINES)
     string(STRIP "${line}" line)
@@ -13472,7 +13580,7 @@ endif()
 # twenty-one out; the faces file records that the reach does not exist, because
 # the ROM reaches all of these through _ZTV5Stage, which hal/stage_bridges.cpp
 # still trap-fills. Seating that table is what turns this groundwork live.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w8a.txt" SLICE_W8A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_w8a.txt" SLICE_W8A_LINES)
 set(SLICE_W8A_SOURCES "")
 foreach(line IN LISTS SLICE_W8A_LINES)
     string(STRIP "${line}" line)
@@ -14301,7 +14409,7 @@ target_compile_definitions(mp_comms_seam PRIVATE PORT_OS_THREAD_HOST_PAIR)
 # rows. It does not need them: nothing that probe links references
 # func_02040a5c or func_02040a84 (only src/func_0203ea5c.c and the wide copy do,
 # and neither is in it), so the two names are simply never referenced there.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate221.txt" SLICE221_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate221.txt" SLICE221_LINES)
 set(SLICE221_SOURCES "")
 foreach(line IN LISTS SLICE221_LINES)
     string(STRIP "${line}" line)
@@ -14325,7 +14433,7 @@ endforeach()
 #
 # walk_window and walk_window_hires only: smoke_player does not run the boot
 # spine. Appended ABOVE the sharing block below.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate222.txt" SLICE222_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate222.txt" SLICE222_LINES)
 set(SLICE222_SOURCES "")
 foreach(line IN LISTS SLICE222_LINES)
     string(STRIP "${line}" line)
@@ -14359,7 +14467,7 @@ target_sources(walk_window_hires PRIVATE ${SLICE222_SOURCES})
 # together. Appended as target_sources ABOVE the sharing block below, which
 # reads the three targets' SOURCES back off them: a source on all three joins
 # the single shared compile by itself.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate223.txt" SLICE223_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate223.txt" SLICE223_LINES)
 set(SLICE223_SOURCES "")
 foreach(line IN LISTS SLICE223_LINES)
     string(STRIP "${line}" line)
@@ -14399,7 +14507,7 @@ target_sources(walk_window_hires PRIVATE hal/thread_create.cpp)
 # walk_window_hires and smoke_player all compile; a target that got the arrays
 # without the faces would fail at link, so the three move together. Appended as
 # target_sources ABOVE the sharing block below.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate224.txt" SLICE224_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate224.txt" SLICE224_LINES)
 set(SLICE224_SOURCES "")
 foreach(line IN LISTS SLICE224_LINES)
     string(STRIP "${line}" line)
@@ -14529,7 +14637,7 @@ set_source_files_properties(
 # and smoke_player compile scene_boot.cpp, so a target that got the file
 # without the slice would fail at link. Appended as target_sources ABOVE the
 # sharing block below.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate225.txt" SLICE225_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate225.txt" SLICE225_LINES)
 set(SLICE225_SOURCES "")
 foreach(line IN LISTS SLICE225_LINES)
     string(STRIP "${line}" line)
@@ -14615,7 +14723,7 @@ endforeach()
 # ON ALL THREE BIG TARGETS, for gate 224's reason unchanged: these seven are
 # reached only through the table hal/actor_base_tables_ov002.cpp fills, and
 # that file is already on all three.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate226.txt" SLICE226_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate226.txt" SLICE226_LINES)
 set(SLICE226_SOURCES "")
 foreach(line IN LISTS SLICE226_LINES)
     string(STRIP "${line}" line)
@@ -14675,7 +14783,7 @@ set_source_files_properties(
 # ON ALL THREE BIG TARGETS, gate 226's reason unchanged: every one of these is
 # reached only through a table its own hal file already fills, and all four of
 # those hal files are already on all three targets.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate227.txt" SLICE227_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate227.txt" SLICE227_LINES)
 set(SLICE227_SOURCES "")
 foreach(line IN LISTS SLICE227_LINES)
     string(STRIP "${line}" line)
@@ -14739,7 +14847,7 @@ set_source_files_properties(
 # hal/actor_classes.cpp dual-fills, and data_ov002_02108fdc is hosted in
 # hal/actor_base_tables_ov002.cpp -- and the store happens inside a destructor
 # whose next act is Memory::Deallocate, so nothing dispatches through it.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate228.txt" SLICE228_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate228.txt" SLICE228_LINES)
 set(SLICE228_SOURCES "")
 foreach(line IN LISTS SLICE228_LINES)
     string(STRIP "${line}" line)
@@ -14811,7 +14919,7 @@ set_source_files_properties(
 # second vptr store elided (the ov064 Amilift). Every one of the three hal
 # sites says in prose that the inferred-stub marker is the only reason the real
 # body was not used, which is exactly what gate 228 was about.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate229.txt" SLICE229_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate229.txt" SLICE229_LINES)
 set(SLICE229_SOURCES "")
 foreach(line IN LISTS SLICE229_LINES)
     string(STRIP "${line}" line)
@@ -14848,7 +14956,7 @@ set_source_files_properties(
 # SPAWNPREP's dossier said id 192 was missing -- the other two are the
 # SpawnInfo row in port/ov002_syms.txt and the registry row in
 # hal/actor_classes.inc. Seven placed instances across levels 0, 21 and 39.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate230.txt" SLICE230_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_gate230.txt" SLICE230_LINES)
 set(SLICE230_SOURCES "")
 foreach(line IN LISTS SLICE230_LINES)
     string(STRIP "${line}" line)
@@ -14891,7 +14999,7 @@ set_source_files_properties(
 # an extern "C" definition; the matched sources define __thiscall methods, and
 # no linker alias bridges ecx against the stack. hal/cxxname_bridge.cpp carries
 # the thirty one-line faces, so no fill site changes.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_slot5.txt" SLICE_SLOT5_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_slot5.txt" SLICE_SLOT5_LINES)
 set(SLICE_SLOT5_SOURCES "")
 foreach(line IN LISTS SLICE_SLOT5_LINES)
     string(STRIP "${line}" line)
@@ -14922,8 +15030,8 @@ endforeach()
 #   id 99  CAGE_LIFT      ov029  data_ov029_02113e74  6 own slots  level 21 x2
 #   id 137 RICKSHAW_BDW   ov043  data_ov043_0211238c  4 own slots  level 35 x1
 #
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_cagelift.txt" SLICE231A_LINES)
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_rickshaw.txt" SLICE231B_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_cagelift.txt" SLICE231A_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_rickshaw.txt" SLICE231B_LINES)
 set(SLICE231_SOURCES "")
 foreach(line IN LISTS SLICE231A_LINES SLICE231B_LINES)
     string(STRIP "${line}" line)
@@ -14993,7 +15101,7 @@ set_source_files_properties(
 # per-source rows below rename the only two spellings of it, no TU asks for the
 # bare name and the directive simply stops firing, which keeps this gate out of
 # a file it does not own.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_trap36.txt" SLICE232_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_spawn2_trap36.txt" SLICE232_LINES)
 set(SLICE232_SOURCES "")
 foreach(line IN LISTS SLICE232_LINES)
     string(STRIP "${line}" line)
@@ -15082,7 +15190,7 @@ set_source_files_properties(
 # hal/actor_classes_intro.cpp:655. The per-row referrer and the reloc line are
 # in port/slice_unmatch.txt, together with the four rows of SEAT3's census that
 # STAY host copies and the measured reason for each.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_unmatch.txt" SLICE_UNMATCH_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_unmatch.txt" SLICE_UNMATCH_LINES)
 set(SLICE_UNMATCH_SOURCES "")
 foreach(line IN LISTS SLICE_UNMATCH_LINES)
     string(STRIP "${line}" line)
@@ -15125,7 +15233,7 @@ endforeach()
 # anything else and are idempotent, so a .dsstate rollback is repaired rather
 # than fatal. The per-row evidence, the listings and the referrers are in
 # port/slice_unmatch2.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_unmatch2.txt" SLICE_UNMATCH2_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_unmatch2.txt" SLICE_UNMATCH2_LINES)
 set(SLICE_UNMATCH2_SOURCES "")
 foreach(line IN LISTS SLICE_UNMATCH2_LINES)
     string(STRIP "${line}" line)
@@ -15173,7 +15281,7 @@ endforeach()
 # hand and calls it CDECL against a __fastcall face. That is a receiver
 # convention, not the fold, and its repair is a VIRTUAL_CALL row in
 # port/tools/hostgen.py, which this lane does not own.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_fold2.txt" SLICE_FOLD2_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_fold2.txt" SLICE_FOLD2_LINES)
 set(SLICE_FOLD2_SOURCES "")
 foreach(line IN LISTS SLICE_FOLD2_LINES)
     string(STRIP "${line}" line)
@@ -15225,7 +15333,7 @@ endforeach()
 # NO FILL SITE CHANGES AND NO FACE. Both ROM bodies are address-named C
 # functions the matched sources define under the exact name their callers
 # already use.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_except.txt" SLICE_EXCEPT_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_except.txt" SLICE_EXCEPT_LINES)
 set(SLICE_EXCEPT_SOURCES "")
 foreach(line IN LISTS SLICE_EXCEPT_LINES)
     string(STRIP "${line}" line)
@@ -15266,7 +15374,7 @@ endforeach()
 # RAW overlay image at that overlay's .text base, and every destination has a
 # kind:function(arm,size=..) record: seventeen of seventeen agreed, and the
 # generator refuses a mismatch. The table is port/slice_except2.txt.
-file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_except2.txt" SLICE_EXCEPT2_LINES)
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_except2.txt" SLICE_EXCEPT2_LINES)
 set(SLICE_EXCEPT2_SOURCES "")
 foreach(line IN LISTS SLICE_EXCEPT2_LINES)
     string(STRIP "${line}" line)
@@ -15625,3 +15733,32 @@ endforeach()
 foreach(_texceptg walk_window walk_window_hires smoke_player)
     target_sources(${_texceptg} PRIVATE ${EXCEPT_HOSTGEN_GEN})
 endforeach()
+
+# THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
+# read at configure time has to be registered, or an edit to it will not
+# reconfigure and the build will look clean while compiling the old set of
+# sources.  port_read_lines makes that automatic; this counts the reads that did
+# NOT go through it.  Five are expected and correct: the four REGEX predicate
+# reads (SC1, RT1, IR1, AE1), each of which carries its own
+# port_configure_input line, and the file(STRINGS) inside port_read_lines
+# itself.  A sixth means somebody wrote a raw read and its input is invisible to
+# RERUN_CMAKE.  This warns rather than fails, so that it can never be the thing
+# that stops another lane's build.
+file(READ "${CMAKE_CURRENT_LIST_FILE}" _PORT_SELF_TEXT)
+string(REGEX MATCHALL "\n[ \t]*file\\(STRINGS" _PORT_RAW_READS "${_PORT_SELF_TEXT}")
+list(LENGTH _PORT_RAW_READS _PORT_RAW_READ_N)
+unset(_PORT_SELF_TEXT)
+if(NOT _PORT_RAW_READ_N EQUAL 5)
+    message(WARNING
+        "CONFIGURE DEPS: ${_PORT_RAW_READ_N} raw file(STRINGS) reads in "
+        "port/CMakeLists.txt, expected 5. A read written as file(STRINGS ...) "
+        "is NOT registered in CMAKE_CONFIGURE_DEPENDS, so editing the list it "
+        "reads will not re-run cmake and the new sources will never compile. "
+        "Write it as port_read_lines(<path> <var>) instead, or put a "
+        "port_configure_input(<path>) line beside it and raise the 5 here.")
+endif()
+get_property(_PORT_CONFIGURE_DEPS DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+             PROPERTY CMAKE_CONFIGURE_DEPENDS)
+list(LENGTH _PORT_CONFIGURE_DEPS _PORT_CONFIGURE_DEPS_N)
+message(STATUS "CONFIGURE DEPS: ${_PORT_CONFIGURE_DEPS_N} configure-time inputs "
+               "registered, ${_PORT_RAW_READ_N} raw reads")
