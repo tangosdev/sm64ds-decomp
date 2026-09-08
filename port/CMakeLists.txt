@@ -16019,6 +16019,46 @@ endforeach()
 target_sources(mp_comms_seam PRIVATE ${SLICE_WM1_SOURCES})
 
 # ===========================================================================
+# THE WIRELESS PLAN, RUNG W1 (run link100, lane WM2)
+# ===========================================================================
+#
+# src/func_020408b0.c and the eleven TUs its closure reaches: the ROM's own WM
+# bring-up, up to and including WM_Init registering the ARM9's channel-0xa
+# reply handler. The ARM7 answers nothing on this rung and nothing asks it to;
+# the whole argument, the measured closure and the two things that had to move
+# in the port are in port/slice_wm2.txt's own header.
+#
+# Plain C, no per-source properties: no struct layout option, no
+# pointer-to-member and no packed field in any of the twelve.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm2.txt" SLICE_WM2_LINES)
+set(SLICE_WM2_SOURCES "")
+foreach(line IN LISTS SLICE_WM2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_twm2 walk_window walk_window_hires smoke_player)
+    target_sources(${_twm2} PRIVATE ${SLICE_WM2_SOURCES})
+endforeach()
+# AND NOT THE SEAM PROBE, which is the opposite of what rung W0 needed and for
+# the same reason stated the other way round. tests/mp_comms_seam.cpp calls
+# func_020408b0(2) at :147 to check the seam's SOLO answers, and the ROM body of
+# that name allocates eight buffers off the game heap through Memory::Allocate.
+# The probe links neither a heap nor Memory::Allocate nor anything else in the
+# twelve TUs' closure, so giving it the bodies is a wall of unresolved externals
+# and, if they were supplied, a null dereference in a probe whose whole point is
+# that it needs no world. It keeps the retired host face instead, under a define
+# of its own -- exactly the way mp_sleepwake and this probe keep the retired
+# OS_SleepThread/OS_WakeupThread pair alive under PORT_OS_THREAD_HOST_PAIR: a
+# retired stand-in stays reachable WHERE IT IS MEASURED and nowhere else. The
+# same define also compiles out hal/comms_seam.cpp's call into the host ARM7,
+# which the probe does not link either.
+target_compile_definitions(mp_comms_seam PRIVATE
+    PORT_COMMS_SEAM_PROBE_FACE_020408B0)
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

@@ -49,6 +49,7 @@
 // ROM's own order, and the block is marked so it can be deleted in one piece.
 
 #include "ntr/ipc.h"
+#include "comms_seam.h"
 #include "dsstate_seg.h"
 
 #include <cstdio>
@@ -109,6 +110,12 @@ unsigned char data_020a813c[0x20];
 
 DSSTATE_END
 
+// Rung W1's mode word, hosted at the foot of hal/comms_seam.cpp. Declared as
+// its ROM span; src/func_020408b0.c writes its low halfword.
+extern unsigned char data_020a0f14[];
+// hal/comms_seam.cpp's read-back of the data_020a89ec/data_020a8a00 pair.
+int port_wm_message_layout_check(void);
+
 // The matched bodies this file brings up. Declared, never defined here.
 void func_0205b858(void);            // tail veneer to func_0205bad8, PXI init
 void func_02059e48(void);            // channel 0xc bring-up
@@ -135,6 +142,9 @@ const Channel kChannels[] = {
            "hal/sdat/consumer.cpp)",                                 false },
     { 0x8, "channel 8      (src/func_0205fde8.c -> func_0205fcfc)",  true  },
     { 0xa, "wireless       (src/func_020616e8.c, WM_SendCommand)",   false },
+    // Rung W1 (run link100, lane WM2) linked src/func_020616e8.c, so WM_Init
+    // really runs now -- but it SENDS NOTHING, so this row is still answer=false
+    // and honestly so. See THE WIRELESS ARM below.
     { 0xc, "channel 0xc    (src/func_02059e48.c -> func_02059e04)",  true  },
     { 0xd, "GBA slot       (src/func_0206a88c.c -> func_0206a694)",  false },
     { 0xb, "cart backup    (src/func_02060f60.cpp; ntr/backup.cpp faces the "
@@ -234,6 +244,93 @@ void arm7_recv(uint32_t word) {
                  "0x%07x). No host ARM7 driver holds it.\n",
                  tag, word, ntr::ipc_data(word));
     ntr::ipc_arm7_send(word | 0x20u);
+}
+
+// ---------------------------------------------------------------------------
+// THE WIRELESS ARM: where the transport is opened.  Run link100, lane WM2,
+// rung W1.
+//
+// WHAT CHANGED ON THE ARM9 SIDE. src/func_020408b0.c and eleven TUs behind it
+// are LINKED (port/slice_wm2.txt), so the ROM's own WM bring-up runs: it takes
+// eight buffers off the game heap and calls src/func_020616e8.c (WM_Init),
+// which checks that the ARM7 holds channel 0xa, DMA-clears the 0x1300 work
+// buffer, lays out the command area, the 0xa00 status block and the reply
+// message, and finishes by registering the ARM9's own channel-0xa callback --
+// `func_0205ba64(0xa, func_02061188)`.
+//
+// WHAT DID NOT CHANGE. THIS ARM7 STILL ANSWERS NOTHING. WM_Init sends no
+// command: nothing in its call tree reaches WM_SendCommand, so no word ever
+// arrives on tag 10 on this rung and the per-tag census must read zero for it
+// in a solo run. That is a measurement this lane owes, not a hope.
+//
+// SO WHY OPEN ANYTHING AT ALL. Because the port's CommsTransport is not the
+// ARM7's WM driver; it is the stand-in for the whole radio, including the
+// bring-up command sequence that rungs W3 and W4 have not brought back yet
+// (WM_Initialize, SET_P_PARAM, START_PARENT, START_CONNECT...). The earliest
+// moment at which the ROM has COMMITTED to the radio, and the last thing its
+// own bring-up does, is the channel-0xa registration above. That is the event
+// this arm opens on, and it is the honest one: before it there is no radio
+// request in flight, and after it the ROM proceeds straight to asking for a
+// role.
+//
+// THE MODE WORD IS THE ROM'S OWN. src/func_020408b0.c:25 is
+// `data_020a0f14 = arg` -- the FIRST statement of the body, before a single
+// allocation and long before WM_Init -- so by the time the registration is
+// visible the word already holds exactly what the ROM was opened with. The
+// statement order was read off the source and is quoted in the lane report, so
+// the brief's "if the mode word is written after the claim, pick a later
+// trigger" branch does not arise. The seam used to pass its face's argument
+// through; this reads the same value out of the ROM's own storage instead.
+//
+// HOW THE CLAIM IS SEEN. src/func_0205ba64.c sets bit N of the word at
+// 0x027FFC00+0x388 when the ARM9 installs a receive callback for channel N --
+// ntr/ipc.h calls that word PXI_FLAGS_ARM9 and ntr::ipc_arm9_flags() reads it.
+// It is a plain store into the shared block, not an I/O access, so nothing
+// traps it and this arm cannot be event-driven. It is POLLED, once per turn the
+// ARM9 gives the ARM7, and hal/comms_seam.cpp's comms_arm7_turn is where those
+// turns are handed over -- at the top of each remaining seam face, so the
+// ARM7's look always precedes the ARM9's next radio request. The ordering
+// matters: the frozen contract refuses a become_parent()/become_child() that
+// arrives before open() and leaves the state idle permanently.
+//
+// NO TRANSPORT INSTALLED = NO OPEN = SOLO, exactly as before this rung. The
+// arm still notes the claim (once, under SM64DS_IPC_LOG) so a solo log says the
+// ROM's WM_Init ran and the ARM7 had nothing to open.
+// ---------------------------------------------------------------------------
+
+bool g_wm_claim_seen = false;
+bool g_wm_opened = false;
+
+void wireless_tick()
+{
+    if (g_wm_claim_seen) return;
+    if ((ntr::ipc_arm9_flags() & (1u << 0xa)) == 0) return;
+    g_wm_claim_seen = true;
+
+    // The pair layout src/func_02061188.c's synthesised message depends on.
+    // Checked here because this is the first host code that runs after WM_Init
+    // laid the buffer out, and because a layout trick that stops working has to
+    // fail loudly rather than quietly write past an object.
+    if (!port_wm_message_layout_check())
+        std::fprintf(stderr, "[arm7] WM message layout BROKEN: data_020a8a00 is "
+                     "not at data_020a89ec + 0x14. src/func_02061188.c's "
+                     "synthesised port-recv would write past its object.\n");
+
+    const unsigned mode = *(const unsigned short *)data_020a0f14;
+    const port::CommsTransport *t = port::comms_transport();
+    if (!t) {
+        if (ntr::ipc_log_on())
+            std::fprintf(stderr, "[arm7] the ROM registered channel 0xa "
+                         "(WM_Init ran, mode %u). No transport installed, so "
+                         "there is nothing to open: solo.\n", mode);
+        return;
+    }
+    g_wm_opened = true;
+    std::fprintf(stderr, "[arm7] the ROM claimed channel 0xa (WM_Init ran); "
+                 "opening the installed transport with the ROM's own mode word "
+                 "data_020a0f14 = %u.\n", mode);
+    t->open(mode);
+    port::comms_publish_link_words();
 }
 
 // ---------------------------------------------------------------------------
@@ -425,6 +522,9 @@ struct Attach {
 Attach g_attach;
 
 }  // namespace
+
+// hal/comms_seam.cpp's comms_arm7_turn calls this. See THE WIRELESS ARM above.
+extern "C" void port_arm7_wireless_tick(void) { wireless_tick(); }
 
 // Called by hal/boot_os.cpp at the end of port_boot_rom_pre_main(), i.e. after
 // the ROM's own PXI arms have run against the model: the report and the
