@@ -1,30 +1,58 @@
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-// HAND-ASM: backward digit-carry increment; ROM uses ip/r12 for base and a
-// backward branch epilogue that mwccarm does not reproduce from C (floor_skip
-// regperm). Byte-faithful asm block per func_02059468 policy.
-asm void func_02071644(void *obj, int len) {
-    add ip, r0, #5
-    add r1, ip, r1
-    sub r3, r1, #1
-    mov r1, #0
-lbl_top:
-    ldrb r2, [r3]
-    cmp r2, #9
-    addlo r0, r2, #1
-    strlob r0, [r3]
-    bxlo lr
-    cmp r3, ip
-    bne lbl_carry
-    mov r1, #1
-    strb r1, [r3]
-    add r1, r0, #2
-    ldrsh r0, [r1]
-    add r0, r0, #1
-    strh r0, [r1]
-    bx lr
-lbl_carry:
-    strb r1, [r3], #-1
-    b lbl_top
+// MSL decimal-conversion round-up: increment the last digit of a decimal
+// significand and propagate the carry down the digit string. Sibling of
+// func_02071510 (which builds the Decimal) and func_020715e0 (which calls this
+// one after func_02071698 decides the value rounds up).
+//
+// ONE FUNCTION, NOT TWO. mwccarm always appends a `bx lr` after a `for (;;)`
+// whose exits are all early returns, and here that dead epilogue is the four
+// bytes at 0x02071694 that config had carved off as its own function
+// "func_02071694", matched as an empty `void f(void) {}` body. Nothing in the
+// tree references 0x02071694: config/**/relocs.txt records zero destinations at
+// that address, while 0x02071698 (the real next function) has one. The
+// compiler's own output settles the extent -- this source emits 0x54 bytes that
+// reproduce 0x02071644..0x02071698 exactly -- so the symbol is grown to 0x54
+// and the phantom row is deleted. See notes/mwccarm-codegen.md 9a(3), which
+// records this pair and func_02072168 / func_020729e8 as the same shape.
+//
+// recovered: real C, no asm hatch. This file used to carry a HAND-ASM banner
+// claiming a "regperm floor"; the floor was the truncated symbol, not the
+// register allocator. The draft in notes 9a(3) reached the same bytes through
+// a void* with a hand-written +5 and a 6g launder cast on the exponent; neither
+// is needed once the Decimal struct is spelled out, so this version carries no
+// magic offsets and no launder.
+#include "types.h"
+
+typedef struct Decimal
+{
+  unsigned char sign;
+  char unused;
+  short exp;
+  struct
+  {
+    unsigned char length;
+    unsigned char text[32];
+    unsigned char unused;
+  } sig;
+} Decimal;
+
+void func_02071644(Decimal *d, int len)
+{
+  unsigned char *base = d->sig.text;
+  unsigned char *p = base + len - 1;
+  for (;;)
+  {
+    unsigned char c = *p;
+    if (c < 9)
+    {
+      *p = c + 1;
+      return;
+    }
+    if (p == base)
+    {
+      *p = 1;
+      d->exp++;
+      return;
+    }
+    *p-- = 0;
+  }
 }
