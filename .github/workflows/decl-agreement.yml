@@ -1,0 +1,105 @@
+# Do this tree's `extern` declarations agree with the definitions they name?
+#
+# `mwccarm` never compares one translation unit's declaration against another's, and
+# the ROM records no types. The link resolves by NAME. So a symbol can be declared
+# `int f(void*, int, int, void*, void*)` in one file, `void* f(...)` in a second and
+# DEFINED `void f(void*, unsigned, unsigned, ctor_t, dtor_t)` in a third, and every
+# gate this repo owns stays green: the bytes are right in all three objects, and
+# `check_references.py` only asks whether the name exists at all.
+#
+# THIS IS NOT HYPOTHETICAL AND IT IS NOT SMALL. The first whole-tree run found 23,147
+# disagreements across 4,729 symbols, among them the five wrong declarations of
+# `__cxa_vec_ctor` that the review of #2455 found by hand -- three files declaring an
+# `int` return and two a `void *`, against a definition that returns `void`. That
+# review's own words: this is "the declaration-agreement gap the skill names as the
+# highest-value unbuilt gate". Finding it by hand took a reviewer an afternoon and one
+# symbol. This job is the reason that stops being a hand search.
+#
+# A DECLARATION IS EVIDENCE, WHICH IS WHY IT MATTERS THAT IT IS RIGHT. It is the only
+# surviving statement about what the original C++ said -- the mangled name states the
+# rest, the body states nothing. And the host port compiles these same files with a
+# compiler that DOES check declarations, where `signature-mismatch` is the largest
+# non-trivial failure bucket.
+#
+# RATCHET, NOT A SWEEP, AND EMPHATICALLY NOT A CLEANUP. `config/decl-agreement-baseline.json`
+# banks every disagreement present when the gate was built. Those are NOT text edits
+# waiting to happen: changing a declaration can change instruction selection at the
+# call site, so each one is matching work that needs a rebuild and byte proof
+# (`tools/match.py`) before it moves. The job fails only on a disagreement that is
+# NOT banked, which is the shape a fresh `extern` copied from the wrong sibling makes.
+#
+# IT CANNOT PASS BY DOING NOTHING. The tool counts the files it opened, the
+# declarations it parsed and the symbols it resolved, and exits non-zero with SCAN TOO
+# SMALL below a floor rather than announcing a clean tree. That guard exists because
+# this repo has already shipped a gate that reported a pass after a reformat took its
+# match count to zero (`check_header_offsets`; see `dead-references.yml`).
+#
+# NO `paths:` FILTER, for the reason `dead-references.yml` gives at more length. The
+# tool reads `src/` and `include/`, but what it RESOLVES is the relationship between
+# them: a pull request that only edits a DEFINITION invalidates declarations in files
+# it never touched, and a filter listing the files the tool reads would still have run
+# -- while a filter narrow enough to be useful would miss the `config/**/symbols.txt`
+# rows the linkage check reads. This is static analysis over the working tree with no
+# compiler and no ROM; running it on every change costs about twelve seconds.
+name: declaration agreement
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: decl-agreement-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  declarations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # `--changed` diffs `<base>...HEAD`, so the merge base has to be present.
+          # Without this the tool fails loudly on an unresolvable base rather than
+          # passing vacuously -- but failing loudly on every pull request is not the
+          # point of the job.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # unittest, not pytest: pytest is not installed on this runner, and the point of
+      # this step is that the gate's own FAILURE branches still work -- so it must not
+      # be the step that needs a dependency. Same reasoning as header-offsets.yml.
+      #
+      # It runs BEFORE the gate, and always. The positive controls are what say the
+      # step below looked at anything at all: a wrong return type MUST be reported, an
+      # arity mismatch MUST be reported, `u32` and `unsigned int` MUST NOT be, and a
+      # two-file scan MUST exit non-zero instead of reporting a clean tree.
+      - name: The gate's own tests
+        run: python -m unittest tools.test_check_decl_agreement -v
+
+      # Whole tree on a push to main, changed scope on a pull request. The scope is
+      # not just the diff: it folds in every file DECLARING a symbol the changed files
+      # DEFINE, because retyping a definition is exactly the change that invalidates
+      # declarations elsewhere.
+      - name: Declarations agree with the definitions they name
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -z "$BASE" ]; then
+            python tools/check_decl_agreement.py
+          else
+            python tools/check_decl_agreement.py --changed "$BASE"
+          fi
+
+      # Not a gate: a standing count in the log, so the size of the debt is visible
+      # on every run rather than only when someone thinks to ask. The step cannot
+      # fail the job.
+      - name: Inventory (informational)
+        if: always()
+        continue-on-error: true
+        run: python tools/check_decl_agreement.py --inventory || true
