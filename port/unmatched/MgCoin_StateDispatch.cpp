@@ -137,6 +137,7 @@
 // wrappers and add one more `try` line.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the boot installer below (lane PMFB4) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -204,15 +205,23 @@ void func_ov004_020adb1c(int arg);
    TUs declare it so the host copy below keeps their reference. */
 extern char *func_020beb68;
 
-/* host-copied further down this file, and called from above their own
-   definitions -- by the address switch (020de26c and 020de440 are STATE
-   BODIES as well as dispatchers) and by the Behavior host copy. */
+/* Host-copied further down this file, and called from above their own
+   definitions -- by the address switch (020de26c and 020de440 are STATE BODIES
+   as well as dispatchers) and by each other.
+   Run link100 lane PMFB4: 020dd2cc and 020de26c are their own matched TUs now
+   and their host copies are gone. The declarations stay, at the same C linkage
+   and the same signatures, because the seat's faces name both -- 020de26c is
+   slot 3 of the seated data_ov006_02141810. */
 void func_ov006_020dd2cc(void *c);
 void func_ov006_020ddd6c(char *thiz);
 void func_ov006_020dc298(void *self);
 void func_ov006_020dc754(void *self);
 void func_ov006_020de26c(char *self);
 void func_ov006_020de440(char *c);
+
+/* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
+   the ov006 constructors have filled the tables. */
+void port_mg_coin_states_seat(void);
 
 }  /* extern "C" */
 
@@ -316,34 +325,11 @@ extern "C" unsigned port_mg_coin_touch_calls(void)
     return g_coin_touch_calls;
 }
 
-// ---- the seven host copies -------------------------------------------------
+// ---- the four host copies that are left ------------------------------------------------
 //
 // Each is its src TU verbatim except for the table declaration (MgPmf rather
 // than a member-pointer type) and the dispatch site (port_mg_coin_callN rather
 // than `(c->*table[i].pmf)()`). Nothing else moves.
-
-/* src/func_ov006_020de69c.cpp -- dScMgCoin_c::Behavior, vtable SLOT 6, and the
-   one this class's half of the wall is about. Its src reads
-       struct C; typedef void (C::*PMF)();
-       struct Entry { PMF pmf; };  extern Entry data_ov006_02141810[];
-       int idx = self->unk_51c8;
-       (c->*data_ov006_02141810[idx].pmf)();
-   The state index is at +0x51c8, which the ROM reads as
-   `add r0,r4,#0x5000 / ldr r0,[r0,#0x1c8]` and which slot 18
-   (func_ov006_020de5b0) zeroes at the same offset. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" int func_ov006_020de69c(void *self)
-{
-    char *c = (char *)self;
-    int idx = *(int *)(c + 0x51c8);
-    const MgPmf *e = &data_ov006_02141810[idx];
-    port_mg_coin_call0(c, e->code, e->adj);
-    func_ov006_020dc754(c);
-    func_ov006_020dc298(c);
-    func_ov006_020dc900(c);
-    func_ov006_020dce3c(c);
-    return 1;
-}
 
 /* src/func_ov006_020dc298.cpp. SILENT: its Entry table was declared inside
    extern "C", so the link never named it. The guard byte is +0x51bc and the
@@ -371,20 +357,6 @@ extern "C" void func_ov006_020dc754(void *self)
     int j = *(unsigned char *)(c + 0x51a1);
     const MgPmf *p = &data_ov006_021417e8[j];
     port_mg_coin_call1(c, p->code, p->adj, 0);
-}
-
-/* src/func_ov006_020dd2cc.cpp. Twenty-four elements of stride 0x18, the state
-   byte at +0x4ad0 of each. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020dd2cc(void *self)
-{
-    char *c = (char *)self;
-    for (int i = 0; i < 0x18; i++) {
-        char *base = c + i * 0x18;
-        unsigned char k = *(unsigned char *)(base + 0x4ad0);
-        const MgPmf *p = &data_ov006_021417b0[k];
-        port_mg_coin_call1(c, p->code, p->adj, i);
-    }
 }
 
 /* src/func_ov006_020ddd6c.cpp. SILENT: `extern "C" Entry data_ov006_02141840[]`.
@@ -423,54 +395,6 @@ extern "C" void func_ov006_020ddd6c(char *thiz)
 extern "C" void func_020ddd6c(void *c)
 {
     func_ov006_020ddd6c((char *)c);
-}
-
-/* src/func_ov006_020de26c.cpp. ALSO a state body: slot 3 of
-   data_ov006_02141810. Its src declares `extern PMF data_ov006_02141840[];`
-   with PMF a pointer-to-member-of-Obj, which is one of the two link-visible
-   spellings of that one table. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020de26c(char *self)
-{
-    int count = 0;
-    char *r5 = self;
-    for (int i = 0; i < 0x28; i++) {
-        if (*(unsigned char *)(r5 + 0x4677)) {
-            int idx = *(unsigned char *)(r5 + 0x4675);
-            const MgPmf *p = &data_ov006_02141840[idx];
-            port_mg_coin_call1(self, p->code, p->adj, i);
-            if (*(unsigned char *)(r5 + 0x4675) != 4) count++;
-            if (*(unsigned char *)(r5 + 0x4676) != 0) func_ov006_020dde28(self, i);
-        }
-        r5 += 0x1c;
-    }
-    char *r2 = self;
-    for (int j = 0; j < 0x18; j++) {
-        if (*(unsigned char *)(r2 + 0x4ad0) == 1 && *(unsigned char *)(r2 + 0x4ad1) != 0)
-            count++;
-        r2 += 0x18;
-    }
-    func_ov006_020dd2cc(self);
-    func_ov006_020dca04(self);
-    if (count != 0) return;
-
-    if (((int *)(self + 0x5000))[0x73] != 0) {
-        *(int *)(self + 0x51cc) -= 1;
-        if (((int *)(self + 0x5000))[0x73] == 0x20 && ((unsigned char *)(self + 0x5000))[0x1df] == 0)
-            func_ov006_020dc348(self);
-        if (((int *)(self + 0x5000))[0x73] == 0x20 && ((unsigned char *)(self + 0x5000))[0x1df] != 0) {
-            func_ov004_020b0cac(6, 0x80, -0x80, -1, -1, 0xd);
-            func_ov004_020ae274(0);
-        }
-        if (((int *)(self + 0x5000))[0x73] <= 0) ((int *)(self + 0x5000))[0x73] = 0;
-        return;
-    }
-    {
-        char *g = func_020beb68;
-        func_ov004_020adb1c(g != 0 ? *(int *)(g + 0xa8) : 0);
-    }
-    ((int *)(self + 0x5000))[0x73] = 0x70;
-    ((int *)(self + 0x5000))[0x72] = 4;
 }
 
 /* src/func_ov006_020de440.cpp. ALSO a state body: slot 2 of
@@ -523,5 +447,195 @@ extern "C" void func_ov006_020de440(char *c)
             *(unsigned char *)(c + 0x51db) = 1;
         else
             *(unsigned char *)(c + 0x51db) = 0;
+    }
+}
+
+// ---- THREE TABLES SEATED, AND FIFTEEN FACES --------------------------------
+//
+// Run link100 lane PMFB4. Three of dScMgCoin_c's five state tables now hold
+// HOST addresses, written at boot by port_mg_coin_states_seat below after every
+// cell has been compared against the ROM's own code word and a zero adjustment
+// word, so three of the seven host copies are gone:
+//
+//   func_ov006_020de69c  data_ov006_02141810   6 slots  arity 0  (vtable slot 6)
+//   func_ov006_020dd2cc  data_ov006_021417b0   3 slots  arity 1
+//   func_ov006_020de26c  data_ov006_02141840   6 slots  arity 1
+//
+// THE TWO TABLES NOT SEATED are data_ov006_021417c8 and data_ov006_021417e8,
+// read by func_ov006_020dc298 and func_ov006_020dc754, which are not family-C
+// CALL SHAPE rows on this tree's census. Their host copies stay above and both
+// switches stay live for them.
+//
+// TWO OF THE THREE RETIRED ARE ALSO STATE BODIES OF A SEATED TABLE:
+// func_ov006_020de26c is slot 3 of data_ov006_02141810 and
+// func_ov006_020de440 (still a host copy) is slot 2. The installer writes faces
+// for both, so 020de26c is reached as a state through its own seated cell and
+// dispatches data_ov006_02141840 through the seated cells in turn.
+//
+// THE STRIDE, BOTH SIDES (runs/link100/out/PMFB4/rom_gate2.txt, emit_gate2.txt):
+//   020dd2cc  ROM add r3,r4,r0,lsl #3  pool 020dd330 = 021417b0  emitted [eax*8]
+//   020de26c  ROM add r3,r4,r0,lsl #3  pool 020de434 = 02141840  emitted [eax*8]
+//   020de69c  ROM add r3,r4,r0,lsl #3  pool 020de700 = 02141810  emitted [eax*8]
+// ROM 8 == emitted 8 on all three, [eax*8+4] for the adjustment word, and /Zp4
+// changes nothing but the TITLE line of the listing on any of them.
+//
+// THE FIFTEEN SOURCE PAIRS ALL READ {code, 0} in overlay_0006.bin at the
+// addresses src/__sinit_ov006_0213014c.c copies each slot from, all whole-pair
+// copies, no field-form fill:
+//
+//   021417b0[0] <- 0213befc 020dd0e0/0   02141840[0] <- 0213beec 020ddca0/0
+//   021417b0[1] <- 0213bf04 020dd000/0   02141840[1] <- 0213be74 020dda94/0
+//   021417b0[2] <- 0213be94 020dcffc/0   02141840[2] <- 0213be64 020dd880/0
+//   02141810[0] <- 0213bee4 020de5ac/0   02141840[3] <- 0213be84 020dd7c0/0
+//   02141810[1] <- 0213be6c 020de584/0   02141840[4] <- 0213beb4 020dd7bc/0
+//   02141810[2] <- 0213be7c 020de440/0   02141840[5] <- 0213be9c 020dd658/0
+//   02141810[3] <- 0213bea4 020de26c/0
+//   02141810[4] <- 0213be54 020de1d4/0
+//   02141810[5] <- 0213be5c 020de0e0/0
+//
+// THE DISPATCH SHAPE, off each row's own listing: `mov ecx, tab[i*8+4] /
+// mov eax, tab[i*8] / add ecx, <this> / call eax`, no `add esp,N` after it.
+// 020dd2cc pushes esi and 020de26c pushes edi (both the loop counter);
+// 020de69c pushes nothing. So 021417b0 and 02141840 take one-argument faces and
+// 02141810 takes zero-argument ones.
+//
+// THREE /alternatename DIRECTIVES, all three read off the objects with dumpbin
+// /symbols: 021417b0 and 02141810 come in through the Entry-wrapper spelling
+// ?data_ov006_021417b0@@3PAUEntry@@A and ?data_ov006_02141810@@3PAUEntry@@A,
+// and 02141840 through the bare pointer-to-member spelling
+// ?data_ov006_02141840@@3PAP8Obj@@AEXH@ZA -- the `Obj` there is the class name
+// src/func_ov006_020de26c.cpp gives its own shadow struct, which is part of the
+// decoration and not a typo. Safe under port/tools/alternatename_guard.py for
+// hal/pmfc_aliases.cpp's reason.
+#pragma comment(linker, "/alternatename:?data_ov006_021417b0@@3PAUEntry@@A=_data_ov006_021417b0")
+#pragma comment(linker, "/alternatename:?data_ov006_02141810@@3PAUEntry@@A=_data_ov006_02141810")
+#pragma comment(linker, "/alternatename:?data_ov006_02141840@@3PAP8Obj@@AEXH@ZA=_data_ov006_02141840")
+
+/* AND ONE MORE, WHICH THE LINK FOUND AND THIS LANE DID NOT PREDICT.
+   src/func_ov006_020de26c.cpp reaches ov004's data_ov004_020beb68 under the
+   name `func_020beb68` -- the spelling defect this file's own header records --
+   and it declares it at NAMESPACE scope as `char *`, so MSVC spells the
+   reference ?func_020beb68@@3PADA. The host copy declared the same global
+   inside extern "C" and resolved through unmatched/MgCoin_Faces.cpp's
+   `/alternatename:_func_020beb68=_data_ov004_020beb68`, so retiring the copy
+   left the C++ spelling with nothing to resolve to and the link said so by
+   name. This is the THIRD spelling of one global: the plain C name and
+   ?func_020beb68@@3PAUV@@A already have directives (MgCoin_Faces.cpp:77 and
+   MgMemory2_Faces.cpp:222) and both point at the same storage. Read off the
+   object with dumpbin /symbols. Safe under port/tools/alternatename_guard.py
+   for the same reason as the table rows: the LHS is a C++ decoration only this
+   matched TU spells and nothing in the tree defines it. */
+#pragma comment(linker, "/alternatename:?func_020beb68@@3PADA=_data_ov004_020beb68")
+
+/* EVERY FACE COUNTS, AND ONE OF THEM CARRIES THE TOUCH WITNESS.
+   g_coin_state_hits keeps counting exactly the dispatches that happen.
+   g_coin_touch_calls is the one that had to move: it counted entries to
+   0x020dd0e0, slot 0 of data_ov006_021417b0 and the state the header calls THE
+   TOUCH STATE, from inside coin_try_1 -- and that switch no longer sees it.
+   hal/scene_mg.cpp prints it, so it is incremented in slot 0's face instead. */
+#define CN_FACE1(sym, cast)                                                   \
+    static void __fastcall cn_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_coin_state_hits;                                                  \
+        sym(cast self, i);                                                    \
+    }
+
+/* the two one-argument slots whose ROM body is `bx lr` and whose src TU takes
+   (void), called with no argument as port/tools/aritycheck.py checks. */
+#define CN_FACE1_VOID(sym)                                                    \
+    static void __fastcall cn_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)self; (void)dead_edx; (void)i;                                  \
+        ++g_coin_state_hits;                                                  \
+        sym();                                                                \
+    }
+
+#define CN_FACE0(sym, cast)                                                   \
+    static void __fastcall cn_##sym(void *self, void *dead_edx)               \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_coin_state_hits;                                                  \
+        sym(cast self);                                                       \
+    }
+
+/* the zero-argument slot whose src TU also takes (void) */
+#define CN_FACE0_VOID(sym)                                                    \
+    static void __fastcall cn_##sym(void *self, void *dead_edx)               \
+    {                                                                         \
+        (void)self; (void)dead_edx;                                           \
+        ++g_coin_state_hits;                                                  \
+        sym();                                                                \
+    }
+
+/* data_ov006_021417b0, arity 1. Slot 0 is the touch state and carries the
+   count hal/scene_mg.cpp prints, so it is written out rather than generated. */
+static void __fastcall cn_func_ov006_020dd0e0(void *self, void *dead_edx, int i)
+{
+    (void)dead_edx;
+    ++g_coin_state_hits;
+    ++g_coin_touch_calls;
+    func_ov006_020dd0e0((char *)self, i);
+}
+CN_FACE1(func_ov006_020dd000, (char *))
+CN_FACE1_VOID(func_ov006_020dcffc)
+/* data_ov006_02141810, arity 0 */
+CN_FACE0_VOID(func_ov006_020de5ac)
+CN_FACE0(func_ov006_020de584, (char *))
+CN_FACE0(func_ov006_020de440, (char *))
+CN_FACE0(func_ov006_020de26c, (char *))
+CN_FACE0(func_ov006_020de1d4, (char *))
+CN_FACE0(func_ov006_020de0e0, (char *))
+/* data_ov006_02141840, arity 1 */
+CN_FACE1(func_ov006_020ddca0, (char *))
+CN_FACE1(func_ov006_020dda94, (char *))
+CN_FACE1(func_ov006_020dd880, (char *))
+CN_FACE1(func_ov006_020dd7c0, (char *))
+CN_FACE1_VOID(func_ov006_020dd7bc)
+CN_FACE1(func_ov006_020dd658, (char *))
+
+extern "C" void port_mg_coin_states_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {data_ov006_021417b0, "021417b0", 0, 0x020dd0e0u, (void *)cn_func_ov006_020dd0e0},
+        {data_ov006_021417b0, "021417b0", 1, 0x020dd000u, (void *)cn_func_ov006_020dd000},
+        {data_ov006_021417b0, "021417b0", 2, 0x020dcffcu, (void *)cn_func_ov006_020dcffc},
+
+        {data_ov006_02141810, "02141810", 0, 0x020de5acu, (void *)cn_func_ov006_020de5ac},
+        {data_ov006_02141810, "02141810", 1, 0x020de584u, (void *)cn_func_ov006_020de584},
+        {data_ov006_02141810, "02141810", 2, 0x020de440u, (void *)cn_func_ov006_020de440},
+        {data_ov006_02141810, "02141810", 3, 0x020de26cu, (void *)cn_func_ov006_020de26c},
+        {data_ov006_02141810, "02141810", 4, 0x020de1d4u, (void *)cn_func_ov006_020de1d4},
+        {data_ov006_02141810, "02141810", 5, 0x020de0e0u, (void *)cn_func_ov006_020de0e0},
+
+        {data_ov006_02141840, "02141840", 0, 0x020ddca0u, (void *)cn_func_ov006_020ddca0},
+        {data_ov006_02141840, "02141840", 1, 0x020dda94u, (void *)cn_func_ov006_020dda94},
+        {data_ov006_02141840, "02141840", 2, 0x020dd880u, (void *)cn_func_ov006_020dd880},
+        {data_ov006_02141840, "02141840", 3, 0x020dd7c0u, (void *)cn_func_ov006_020dd7c0},
+        {data_ov006_02141840, "02141840", 4, 0x020dd7bcu, (void *)cn_func_ov006_020dd7bc},
+        {data_ov006_02141840, "02141840", 5, 0x020dd658u, (void *)cn_func_ov006_020dd658},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgCoin_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].face;
     }
 }

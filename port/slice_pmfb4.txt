@@ -186,3 +186,176 @@ src/func_ov006_020f0d58.cpp
 src/func_ov006_020f3414.cpp
 src/func_ov006_020f1e90.cpp
 src/func_ov006_020f300c.cpp
+#
+# ---- BATCH 2: dScMgTeresa_c, FOUR TABLES (the class closes) -----------------
+#
+# port/unmatched/MgTeresa_StateDispatch.cpp owned four host copies over four
+# tables, which is the whole class. All four tables are seated here, so NO HOST
+# COPY OF A dScMgTeresa_c DISPATCHER IS LEFT:
+#
+#   func_ov006_021203ac  data_ov006_02142eb0   5 slots  arity 0  (vtable slot 6)
+#   func_ov006_0211dd0c  data_ov006_02142e88   5 slots  arity 1
+#   func_ov006_0211d5a8  data_ov006_02142f18   9 slots  arity 1
+#   func_ov006_0211f6fc  data_ov006_02142ed8   8 slots  arity 1
+#
+# 5+5+9+8 = 27, the whole census that file's header counts.
+#
+# THE STRIDE, ROM SIDE, read at each body's own address out of
+# extracted/overlays/overlay_0006.bin (runs/link100/out/PMFB4/rom_gate2.txt):
+#   021203ac  add r3,r1,r0,lsl #3  pool 021203f8 = 02142eb0
+#   0211dd0c  add r3,r4,r0,lsl #3  pool 0211dd68 = 02142e88
+#   0211d5a8  add r3,r4,r0,lsl #3  pool 0211d604 = 02142f18
+#   0211f6fc  add r3,r4,r0,lsl #3  pool 0211f778 = 02142ed8
+# EMITTED SIDE: [eax*8] and [eax*8+4] in all four listings. ROM 8 == emitted 8.
+# /Zp4 identical-but-the-TITLE-line on all four, so it is not claimed.
+#
+# THE TWENTY-SEVEN SOURCE PAIRS all read {code, 0} at src/__sinit_ov006_02132f68
+# .c's own addresses, all whole-pair copies, no field-form fill. Tabulated beside
+# the installer in the seat file.
+#
+# THE DISPATCH SHAPE, off each row's own listing: `call eax` with the receiver in
+# ecx and no caller cleanup. 0211d5a8 and 0211dd0c push a literal 0 (their src's
+# own `(0)`), 0211f6fc pushes esi, 021203ac pushes nothing.
+#
+# FOUR /alternatename DIRECTIVES, each mangling read off the object with dumpbin
+# /symbols: three P8 pointer-to-member spellings and one @@3PAUEntry@@A.
+#
+# THE CENSUS RECEIVER MOVES WITH THE BEHAVIOR. hal/scene_mg_booseek.cpp reads the
+# top-level state index through port_mg_teresa_state_index, and the only place
+# that ever recorded the receiver was func_ov006_021203ac just before its
+# dispatch. That is the matched TU now, so data_ov006_02142eb0's five faces
+# record it -- same object, same instant in the frame, because the face runs from
+# inside that same dispatch. Without this the census would read -1 forever with
+# nothing wrong, which is the witness trap PMFB3 recorded.
+#
+# ONE GUESS MARKER, ADJUDICATED. src/func_ov006_021203ac.cpp carries "recovered
+# from vtable slot identity"; port/tools/inferred_stub_adjudicated.txt:2316 rules
+# it REAL_DECOMP against the ROM.
+#
+# STALE COMMENT DISCLOSED, NOT EDITED. hal/scene_mg_booseek.cpp:66 says "vtable
+# slot 6 is NOT wired to src/func_ov006_021203ac.cpp ... it would stride an
+# eight-byte table by four", and its face points at the host copy. The stride
+# half of that is superseded by measurement: this port compiles with /vmg /vmm,
+# under which an incomplete class's pointer to member is the general eight-byte
+# representation, and the TU's own listing reads [eax*8] against the ROM's
+# lsl #3. The file is not this lane's to edit, so the prose is left and named.
+src/func_ov006_021203ac.cpp
+src/func_ov006_0211dd0c.cpp
+src/func_ov006_0211d5a8.cpp
+src/func_ov006_0211f6fc.cpp
+#
+# ---- BATCH 2 CONTINUED: dScMgCoin_c, THREE TABLES OF FIVE -------------------
+#
+#   func_ov006_020de69c  data_ov006_02141810   6 slots  arity 0  (vtable slot 6)
+#   func_ov006_020dd2cc  data_ov006_021417b0   3 slots  arity 1
+#   func_ov006_020de26c  data_ov006_02141840   6 slots  arity 1
+#
+# NOT SEATED: data_ov006_021417c8 and data_ov006_021417e8, read by
+# func_ov006_020dc298 and func_ov006_020dc754, which are not family-C CALL SHAPE
+# rows on this census. Their host copies stay and both switches stay live.
+#
+# THE STRIDE, ROM SIDE:
+#   020dd2cc  add r3,r4,r0,lsl #3  pool 020dd330 = 021417b0
+#   020de26c  add r3,r4,r0,lsl #3  pool 020de434 = 02141840
+#   020de69c  add r3,r4,r0,lsl #3  pool 020de700 = 02141810
+# EMITTED: [eax*8]/[eax*8+4] on all three; /Zp4 a no-op on all three.
+#
+# THE FIFTEEN SOURCE PAIRS all read {code, 0} at src/__sinit_ov006_0213014c.c's
+# own addresses, all whole-pair copies.
+#
+# ARITY: 020dd2cc pushes esi and 020de26c pushes edi (the loop counter);
+# 020de69c pushes nothing.
+#
+# THREE /alternatename DIRECTIVES: ?data_ov006_021417b0@@3PAUEntry@@A,
+# ?data_ov006_02141810@@3PAUEntry@@A and ?data_ov006_02141840@@3PAP8Obj@@AEXH@ZA.
+# The `Obj` in the third is the shadow class name src/func_ov006_020de26c.cpp
+# gives its receiver; it is part of the decoration and was read off the object,
+# not guessed.
+#
+# ONE RETIRED DISPATCHER IS ALSO A SEATED STATE: func_ov006_020de26c is slot 3 of
+# data_ov006_02141810, so its face calls the matched TU, which then dispatches
+# data_ov006_02141840 through the seated cells. func_ov006_020de440 is slot 2 of
+# the same table and is still a host copy; its face calls that copy.
+#
+# THE TOUCH WITNESS MOVES. g_coin_touch_calls counted entries to 0x020dd0e0, slot
+# 0 of data_ov006_021417b0, from inside coin_try_1; hal/scene_mg.cpp prints it,
+# and the switch no longer sees that address, so the count is taken in slot 0's
+# face.
+#
+# ONE GUESS MARKER, ADJUDICATED: src/func_ov006_020de69c.cpp, ruled REAL_DECOMP
+# at port/tools/inferred_stub_adjudicated.txt:487.
+#
+# STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg.cpp:3002-3006 still calls
+# func_ov006_020de69c "the HOST COPY". The declaration beside it is correct.
+#
+# A FOURTH DIRECTIVE THE LINK FOUND AND THIS LANE DID NOT PREDICT.
+# src/func_ov006_020de26c.cpp reaches ov004's data_ov004_020beb68 under the name
+# `func_020beb68` -- the spelling defect MgCoin_StateDispatch.cpp's header
+# records -- declared at NAMESPACE scope as `char *`, so the reference mangles
+# ?func_020beb68@@3PADA. The host copy declared the same global inside extern "C"
+# and resolved through unmatched/MgCoin_Faces.cpp:77's
+# `/alternatename:_func_020beb68=_data_ov004_020beb68`, so retiring the copy left
+# the C++ spelling unresolved and the LINK NAMED IT: "unresolved external symbol
+# char * func_020beb68 referenced in function _func_ov006_020de26c". It is the
+# third spelling of one global -- the plain C name and ?func_020beb68@@3PAUV@@A
+# already have directives -- and the fix is one more row pointing at the same
+# storage, in this lane's own seat file, read off the object with dumpbin. The
+# failed link deleted walk_window.exe and truncated the map, which is the shape
+# the house law warns about; the gate was re-built from clean after the fix.
+src/func_ov006_020de69c.cpp
+src/func_ov006_020dd2cc.cpp
+src/func_ov006_020de26c.cpp
+#
+# ---- BATCH 2 CONTINUED: dScMg3DEsp_c, THREE TABLES OF SEVEN -----------------
+#
+#   func_ov006_020e9e00  data_ov006_02141f2c   3 slots  arity 0  (vtable slot 6)
+#   func_ov006_020e9374  data_ov006_02141f5c   3 slots  arity 1
+#   func_ov006_020e8d08  data_ov006_02141f74   3 slots  arity 1
+#
+# NOT SEATED: data_ov006_02141fac, _02141f1c, _02141f8c and _02141f44, whose
+# dispatchers are not family-C CALL SHAPE rows here. Their host copies stay,
+# including the one that counts the NONMATCHING body, which is untouched.
+#
+# THE STRIDE, ROM SIDE:
+#   020e9e00  add r3,r4,r0,lsl #3  pool 020e9e64 = 02141f2c
+#   020e9374  add r3,r4,r0,lsl #3  pool 020e93e4 = 02141f5c
+#   020e8d08  add r3,r4,r0,lsl #3  pool 020e8d78 = 02141f74
+# EMITTED: [eax*8]/[eax*8+4] on all three; /Zp4 a no-op on all three.
+#
+# A WARNING IN THE SEAT FILE IS SUPERSEDED BY THIS MEASUREMENT, and the seat file
+# now says so. Its section on func_ov006_020e9e00 said the src's `extern "C" PMF
+# data_ov006_02141f2c[];` is "SILENT to a link ... the linker is satisfied while
+# MSVC strides the eight-byte table by four". The silence to the LINK is still
+# real -- the plain C name resolves, and this is the one row in the batch that
+# needs no /alternatename -- but the stride half is not: the port compiles with
+# /vmg /vmm, which is PMFC2's finding in one line (an incomplete class's pointer
+# to member is the general eight-byte representation whether the class is
+# complete at the declaration or not), and the TU's own listing reads [eax*8]
+# against the ROM's lsl #3. Both halves are re-measured here rather than
+# inherited from either direction.
+#
+# THE NINE SOURCE PAIRS all read {code, 0} at src/__sinit_ov006_02130a08.c's own
+# addresses, all whole-pair copies.
+#
+# ARITY: 020e9374 and 020e8d08 push edi at BOTH of their two indirect call sites
+# -- each compiles its loop with a peeled first iteration, and both sites were
+# read; 020e9e00 pushes nothing.
+#
+# TWO /alternatename DIRECTIVES: ?data_ov006_02141f5c@@3PAP8C71@@AEXH@ZA and
+# ?data_ov006_02141f74@@3PAP8C70@@AEXH@ZA. The C70 and C71 are the shadow class
+# names those two TUs give their receiver; both read off the objects.
+#
+# THE PER-TABLE CENSUS MOVES. g_esp_table_hits[T_F2C], [T_F5C] and [T_F74] were
+# incremented only inside the three retired host copies, and
+# hal/scene_mg_psycheout.cpp reads all seven through port_mg_esp3d_table_counts
+# to say WHICH of the seven tables ran. The faces take the counts instead, one
+# per dispatch through their own table.
+#
+# ONE GUESS MARKER, ADJUDICATED: src/func_ov006_020e9e00.cpp, ruled REAL_DECOMP
+# at port/tools/inferred_stub_adjudicated.txt:1111.
+#
+# STALE COMMENT DISCLOSED, NOT EDITED: hal/scene_mg_psycheout.cpp:203-208 still
+# calls func_ov006_020e9e00 "the HOST COPY".
+src/func_ov006_020e9e00.cpp
+src/func_ov006_020e9374.cpp
+src/func_ov006_020e8d08.cpp

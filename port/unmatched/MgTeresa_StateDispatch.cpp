@@ -120,7 +120,11 @@
 // this run. hal/scene_mg_faces.cpp carries no ov004 trap any more.
 
 /* <cstdio> was included here for the floor's one-shot report; with the floor
-   retired this file prints nothing at all and the seat owns the whole report. */
+   retired this file printed nothing at all for a while. Run link100 lane PMFB4
+   brings both back for the boot installer's abort, which is the only thing in
+   this file that reports anything now. */
+#include <cstdio>
+#include <cstdlib>
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -192,13 +196,20 @@ void func_ov006_0211cd24(char *c, int i);
 void func_ov006_0211e4e0(char *c);
 void func_ov006_0211f664(char *c, int i);
 
-/* the four host copies this file DEFINES, so the seat can name them */
+/* Run link100 lane PMFB4 retired all four host copies. These four declarations
+   named them; they name the matched TUs now, at the same C linkage and the same
+   signatures, and nothing in this file calls any of them. They are kept because
+   hal/scene_mg_booseek.cpp's vtable thunk for slot 6 declares
+   func_ov006_021203ac the same way and the two must agree. */
 int  func_ov006_021203ac(char *c);
 void func_ov006_0211dd0c(char *c);
 void func_ov006_0211f6fc(char *c);
 void func_ov006_0211d5a8(char *c);
 
 void port_mg_teresa_counts(unsigned *hits, unsigned *unknown);
+/* the boot installer at the end of this file; hal/scene_mg.cpp calls it
+   after the ov006 constructors have filled the tables. */
+void port_mg_teresa_states_seat(void);
 void port_mg_teresa_state_index(int *l1);
 
 }  /* extern "C" */
@@ -317,108 +328,208 @@ extern "C" void port_mg_teresa_state_index(int *l1)
     if (l1)
         *l1 = g_teresa_self ? *(int *)(g_teresa_self + 0x4be8) : -1;
 }
-
-// ---- the four host copies --------------------------------------------------
+// ---- NO HOST COPY OF A dScMgTeresa_c DISPATCHER IS LEFT --------------------
 //
-// Each is its src TU with the member-pointer declaration replaced by MgPmf and
-// the dispatch replaced by port_mg_teresa_call0/1. Everything else is
-// verbatim, and every offset below was read off the ROM disassembly rather
-// than off the src struct.
+// FOUR at run mg10, NONE after run link100 lane PMFB4. All four of this class's
+// state tables now hold HOST addresses, written at boot by
+// port_mg_teresa_states_seat below after every cell has been compared against
+// the ROM's own code word and a zero adjustment word, so the four matched TUs
+// dispatch through the tables directly:
+//
+//   func_ov006_021203ac  data_ov006_02142eb0   5 slots  arity 0  (vtable slot 6)
+//   func_ov006_0211dd0c  data_ov006_02142e88   5 slots  arity 1
+//   func_ov006_0211d5a8  data_ov006_02142f18   9 slots  arity 1
+//   func_ov006_0211f6fc  data_ov006_02142ed8   8 slots  arity 1
+//
+// 5+5+9+8 = 27, which is the whole census this file's header counts.
+//
+// THE TWO SWITCHES ARE KEPT AND ARE NOW UNREACHABLE. Nothing calls
+// port_mg_teresa_call0/1 any more: the four host copies were their only
+// callers. They are left rather than deleted because they are the written
+// record of which state address belongs to which table, and because
+// g_teresa_unknown reading zero is now a STRUCTURAL fact rather than a
+// measurement -- the defect that counter used to convict at frame time is
+// convicted at boot instead, by the installer's abort.
+//
+// THE STRIDE, BOTH SIDES, PER ROW -- measured on this tree
+// (runs/link100/out/PMFB4/rom_gate2.txt and emit_gate2.txt):
+//
+//   021203ac  ROM add r3,r1,r0,lsl #3  pool 021203f8 = 02142eb0  emitted [eax*8]
+//   0211dd0c  ROM add r3,r4,r0,lsl #3  pool 0211dd68 = 02142e88  emitted [eax*8]
+//   0211d5a8  ROM add r3,r4,r0,lsl #3  pool 0211d604 = 02142f18  emitted [eax*8]
+//   0211f6fc  ROM add r3,r4,r0,lsl #3  pool 0211f778 = 02142ed8  emitted [eax*8]
+//
+// ROM 8 == emitted 8 on all four, with [eax*8+4] for the adjustment word.
+// /Zp4 IS A MEASURED NO-OP on every one: each was compiled under the port's own
+// flags both ways for this lane and the two /FAsc listings came back identical
+// except for the TITLE line naming the .obj.
+//
+// THE TWENTY-SEVEN SOURCE PAIRS ALL READ {code, 0} in overlay_0006.bin at the
+// addresses src/__sinit_ov006_02132f68.c copies each slot from, and every one is
+// a WHOLE-PAIR copy with no field-form fill anywhere:
+//
+//   02142e88[0] <- 0213f99c 0211dce0/0   02142f18[0] <- 0213f90c 0211d4e8/0
+//   02142e88[1] <- 0213f994 0211db7c/0   02142f18[1] <- 0213f95c 0211d368/0
+//   02142e88[2] <- 0213f98c 0211dad0/0   02142f18[2] <- 0213f91c 0211d224/0
+//   02142e88[3] <- 0213f984 0211d924/0   02142f18[3] <- 0213f8fc 0211d0f8/0
+//   02142e88[4] <- 0213f97c 0211d86c/0   02142f18[4] <- 0213f944 0211d018/0
+//   02142eb0[0] <- 0213f904 021200cc/0   02142f18[5] <- 0213f8f4 0211cef4/0
+//   02142eb0[1] <- 0213f92c 021200a8/0   02142f18[6] <- 0213f9ac 0211ce94/0
+//   02142eb0[2] <- 0213f954 02120008/0   02142f18[7] <- 0213f9a4 0211ce90/0
+//   02142eb0[3] <- 0213f964 0211fe78/0   02142f18[8] <- 0213f924 0211cd24/0
+//   02142eb0[4] <- 0213f914 0211fd44/0
+//   02142ed8[0] <- 0213f934 0211f5d4/0   02142ed8[4] <- 0213f8e4 0211f0d0/0
+//   02142ed8[1] <- 0213f8dc 0211f554/0   02142ed8[5] <- 0213f8d4 0211f040/0
+//   02142ed8[2] <- 0213f94c 0211f224/0   02142ed8[6] <- 0213f93c 0211ee34/0
+//   02142ed8[3] <- 0213f8ec 0211f1a4/0   02142ed8[7] <- 0213f96c 0211ebdc/0
+//
+// THE DISPATCH SHAPE, off each row's own listing: `mov ecx, tab[i*8+4] /
+// mov eax, tab[i*8] / add ecx, <this> / call eax` with NO `add esp,N` after it,
+// so receiver in ecx and callee cleanup. 0211d5a8 and 0211dd0c push a literal 0
+// (their src's own `(0)`), 0211f6fc pushes esi (the loop counter), and 021203ac
+// pushes nothing. So 02142e88, 02142f18 and 02142ed8 take one-argument
+// __fastcall faces and 02142eb0 takes zero-argument ones.
+//
+// THREE /alternatename DIRECTIVES. 0211d5a8, 0211dd0c and 0211f6fc declare their
+// tables at namespace scope as pointer-to-member arrays and come in as
+// ?data_ov006_02142f18@@3PAP8C@@AEXH@ZA, ?data_ov006_02142e88@@3PAP8C@@AEXH@ZA
+// and ?data_ov006_02142ed8@@3PAP8C@@AEXH@ZA; 021203ac's is the Entry-wrapper
+// spelling ?data_ov006_02142eb0@@3PAUEntry@@A. All four read off the objects
+// with dumpbin /symbols. Safe under port/tools/alternatename_guard.py for
+// hal/pmfc_aliases.cpp's reason: each LHS is a C++ decoration only these matched
+// TUs ever spell.
+#pragma comment(linker, "/alternatename:?data_ov006_02142f18@@3PAP8C@@AEXH@ZA=_data_ov006_02142f18")
+#pragma comment(linker, "/alternatename:?data_ov006_02142e88@@3PAP8C@@AEXH@ZA=_data_ov006_02142e88")
+#pragma comment(linker, "/alternatename:?data_ov006_02142ed8@@3PAP8C@@AEXH@ZA=_data_ov006_02142ed8")
+#pragma comment(linker, "/alternatename:?data_ov006_02142eb0@@3PAUEntry@@A=_data_ov006_02142eb0")
 
-/* src/func_ov006_021203ac.cpp -- VTABLE SLOT 6, the Behavior. Table 02142eb0,
-   arity 0. ROM 0x021203ac, size 0x50:
-       add r0,r4,#0x4000 / ldr r0,[r0,#0xbe8]   the state index, a WORD at
-                                                +0x4be8 (ldr, not ldrb)
-       ldr r1,[pc,#0x34] -> pool 0x021203f8 = 02142eb0
-       add r3,r1,r0,lsl#3                       an EIGHT-byte stride
-       ldr r1,[r3,#4] / add r0,r4,r1,asr#1 / ands r1,r1,#1
-       ldrne r2,[r0] / ldrne r1,[r3] / ldrne r1,[r2,r1] / ldreq r1,[r3] / blx r1
-       mov r0,r4 / bl 0x0211e4e0
-       mov r0,#1
-   r1 holds the CODE WORD at the blx and no argument register is set, which is
-   the arity-0 reading; stategen agrees. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgTeresa_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" int func_ov006_021203ac(char *c)
-{
-    const unsigned j = (unsigned)*(int *)(c + 0x4be8);
-    const MgPmf *e = &data_ov006_02142eb0[j];
-    g_teresa_self = c;
-    port_mg_teresa_call0(c, e->code, e->adj);
-    func_ov006_0211e4e0(c);
-    return 1;
-}
-
-/* src/func_ov006_0211dd0c.cpp -- table 02142e88, arity 1, argument 0.
-   ROM 0x0211dd0c, size 0x60:
-       add r1,r0,#0x4000 / ldrb r2,[r1,#0xbbc] / cmp r2,#0 -> return
-       ldrb r1,[r1,#0xbba]                       the state index, a BYTE
-       ldr r2,[pc,#0x30] -> pool 0x0211dd68 = 02142e88
-       add r3,r2,r1,lsl#3 / the Itanium sequence
-       mov r1,#0                                 the argument is a constant 0
-       blx r2
-   The gate byte is at +0x4bbc and the index byte at +0x4bba, both off
-   this+0x4000, which is what the src's `char pad[0x4bba]; idx; gap; g;`
-   spells and what this copy reads directly. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgTeresa_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_0211dd0c(char *c)
-{
-    if (*(unsigned char *)(c + 0x4bbc) == 0)
-        return;
-    {
-        const MgPmf *e = &data_ov006_02142e88[*(unsigned char *)(c + 0x4bba)];
-        port_mg_teresa_call1(c, e->code, e->adj, 0);
+/* EVERY FACE COUNTS, AND THE BEHAVIOR'S FACES CARRY THE CENSUS RECEIVER.
+   g_teresa_hits keeps counting exactly the dispatches that happen, as
+   port_mg_teresa_callN counted them while the host copies routed through the
+   switch. g_teresa_self is the harder one: hal/scene_mg_booseek.cpp reads the
+   top-level state index through port_mg_teresa_state_index, and the only place
+   that ever recorded the receiver was func_ov006_021203ac -- the Behavior --
+   just before its dispatch. The Behavior is the matched TU now, so its table's
+   five faces record it instead. Same object, same instant in the frame: the
+   face runs from inside that same dispatch. Without this the census would read
+   -1 forever and nothing would be wrong, which is the witness trap lane PMFB3
+   recorded against the tapped-pad counter. */
+#define TR_FACE1(sym)                                                         \
+    static void __fastcall tr_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_teresa_hits;                                                      \
+        sym((char *)self, i);                                                 \
     }
-}
 
-/* src/func_ov006_0211d5a8.cpp -- table 02142f18, arity 1, argument 0.
-   ROM 0x0211d5a8, size 0x60, the same shape as 0211dd0c with different
-   offsets:
-       add r1,r0,#0x4000 / ldrb r2,[r1,#0xbe0] / cmp r2,#0 -> return
-       ldrb r1,[r1,#0xbe1]
-       ldr r2,[pc,#0x30] -> pool 0x0211d604 = 02142f18
-       add r3,r2,r1,lsl#3 / the Itanium sequence / mov r1,#0 / blx r2
-   NOTE THE ORDER: the gate is at +0x4be0 and the index at +0x4be1, which is
-   the opposite way round from 0211dd0c's pair. The src spells it that way too
-   (`char pad[0x4be0]; g; idx;`) and both were re-read off the ROM. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgTeresa_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_0211d5a8(char *c)
-{
-    if (*(unsigned char *)(c + 0x4be0) == 0)
-        return;
-    {
-        const MgPmf *e = &data_ov006_02142f18[*(unsigned char *)(c + 0x4be1)];
-        port_mg_teresa_call1(c, e->code, e->adj, 0);
+/* slot 7 of data_ov006_02142f18: `bx lr`, size 0x4, and its src TU takes no
+   argument, which is the shape port/tools/aritycheck.py checks. */
+#define TR_FACE1_VOID(sym)                                                    \
+    static void __fastcall tr_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)self; (void)dead_edx; (void)i;                                  \
+        ++g_teresa_hits;                                                      \
+        sym();                                                                \
     }
-}
 
-/* src/func_ov006_0211f6fc.cpp -- table 02142ed8, arity 1, argument = the loop
-   counter. ROM 0x0211f6fc, size 0x80:
-       r7 = this; r5 = this; r6 = 0; r4 = pool 0x0211f778 = 02142ed8
-     loop (0x0211f714):
-       add r0,r5,#0x4000 / ldrb r1,[r0,#0x677] / cmp r1,#0 / beq skip
-       ldrb r0,[r0,#0x678]
-       add r3,r4,r0,lsl#3 / ldr r1,[r3,#4]
-       add r0,r7,r1,asr#1                       THE RECEIVER IS r7, THE BASE
-       ands r1,r1,#1 / ldrne... / mov r1,r6 / ldreq r2,[r3] / blx r2
-       mov r0,r7 / mov r1,r6 / bl 0x0211f664
-     skip:
-       add r6,r6,#1 / cmp r6,#0x10 / add r5,r5,#0x24 / blt loop
-   SIXTEEN RECORDS AT STRIDE 0x24, and the two bytes are read off the WALKING
-   pointer r5 while the dispatch receiver stays the base object r7. Getting
-   that backwards would hand every state a pointer 0x24 bytes into the record
-   array. The increments are outside the gate's skip, so a gated-off record
-   still advances the counter. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgTeresa_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_0211f6fc(char *c)
+/* data_ov006_02142eb0, the Behavior's own table: nothing pushed, and the
+   receiver is recorded here for port_mg_teresa_state_index. */
+#define TR_FACE0(sym)                                                         \
+    static void __fastcall tr_##sym(void *self, void *dead_edx)               \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_teresa_hits;                                                      \
+        g_teresa_self = (char *)self;                                         \
+        sym((char *)self);                                                    \
+    }
+
+/* data_ov006_02142f18, arity 1 */
+TR_FACE1(func_ov006_0211d4e8)
+TR_FACE1(func_ov006_0211d368)
+TR_FACE1(func_ov006_0211d224)
+TR_FACE1(func_ov006_0211d0f8)
+TR_FACE1(func_ov006_0211d018)
+TR_FACE1(func_ov006_0211cef4)
+TR_FACE1(func_ov006_0211ce94)
+TR_FACE1_VOID(func_ov006_0211ce90)
+TR_FACE1(func_ov006_0211cd24)
+/* data_ov006_02142e88, arity 1 */
+TR_FACE1(func_ov006_0211dce0)
+TR_FACE1(func_ov006_0211db7c)
+TR_FACE1(func_ov006_0211dad0)
+TR_FACE1(func_ov006_0211d924)
+TR_FACE1(func_ov006_0211d86c)
+/* data_ov006_02142ed8, arity 1 */
+TR_FACE1(func_ov006_0211f5d4)
+TR_FACE1(func_ov006_0211f554)
+TR_FACE1(func_ov006_0211f224)
+TR_FACE1(func_ov006_0211f1a4)
+TR_FACE1(func_ov006_0211f0d0)
+TR_FACE1(func_ov006_0211f040)
+TR_FACE1(func_ov006_0211ee34)
+TR_FACE1(func_ov006_0211ebdc)
+/* data_ov006_02142eb0, arity 0 */
+TR_FACE0(func_ov006_021200cc)
+TR_FACE0(func_ov006_021200a8)
+TR_FACE0(func_ov006_02120008)
+TR_FACE0(func_ov006_0211fe78)
+TR_FACE0(func_ov006_0211fd44)
+
+extern "C" void port_mg_teresa_states_seat(void)
 {
-    int i;
-    char *e = c;
-    for (i = 0; i < 0x10; i++, e += 0x24) {
-        if (*(unsigned char *)(e + 0x4677)) {
-            const MgPmf *p =
-                &data_ov006_02142ed8[*(unsigned char *)(e + 0x4678)];
-            port_mg_teresa_call1(c, p->code, p->adj, i);
-            func_ov006_0211f664(c, i);
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {data_ov006_02142f18, "02142f18", 0, 0x0211d4e8u, (void *)tr_func_ov006_0211d4e8},
+        {data_ov006_02142f18, "02142f18", 1, 0x0211d368u, (void *)tr_func_ov006_0211d368},
+        {data_ov006_02142f18, "02142f18", 2, 0x0211d224u, (void *)tr_func_ov006_0211d224},
+        {data_ov006_02142f18, "02142f18", 3, 0x0211d0f8u, (void *)tr_func_ov006_0211d0f8},
+        {data_ov006_02142f18, "02142f18", 4, 0x0211d018u, (void *)tr_func_ov006_0211d018},
+        {data_ov006_02142f18, "02142f18", 5, 0x0211cef4u, (void *)tr_func_ov006_0211cef4},
+        {data_ov006_02142f18, "02142f18", 6, 0x0211ce94u, (void *)tr_func_ov006_0211ce94},
+        {data_ov006_02142f18, "02142f18", 7, 0x0211ce90u, (void *)tr_func_ov006_0211ce90},
+        {data_ov006_02142f18, "02142f18", 8, 0x0211cd24u, (void *)tr_func_ov006_0211cd24},
+
+        {data_ov006_02142e88, "02142e88", 0, 0x0211dce0u, (void *)tr_func_ov006_0211dce0},
+        {data_ov006_02142e88, "02142e88", 1, 0x0211db7cu, (void *)tr_func_ov006_0211db7c},
+        {data_ov006_02142e88, "02142e88", 2, 0x0211dad0u, (void *)tr_func_ov006_0211dad0},
+        {data_ov006_02142e88, "02142e88", 3, 0x0211d924u, (void *)tr_func_ov006_0211d924},
+        {data_ov006_02142e88, "02142e88", 4, 0x0211d86cu, (void *)tr_func_ov006_0211d86c},
+
+        {data_ov006_02142ed8, "02142ed8", 0, 0x0211f5d4u, (void *)tr_func_ov006_0211f5d4},
+        {data_ov006_02142ed8, "02142ed8", 1, 0x0211f554u, (void *)tr_func_ov006_0211f554},
+        {data_ov006_02142ed8, "02142ed8", 2, 0x0211f224u, (void *)tr_func_ov006_0211f224},
+        {data_ov006_02142ed8, "02142ed8", 3, 0x0211f1a4u, (void *)tr_func_ov006_0211f1a4},
+        {data_ov006_02142ed8, "02142ed8", 4, 0x0211f0d0u, (void *)tr_func_ov006_0211f0d0},
+        {data_ov006_02142ed8, "02142ed8", 5, 0x0211f040u, (void *)tr_func_ov006_0211f040},
+        {data_ov006_02142ed8, "02142ed8", 6, 0x0211ee34u, (void *)tr_func_ov006_0211ee34},
+        {data_ov006_02142ed8, "02142ed8", 7, 0x0211ebdcu, (void *)tr_func_ov006_0211ebdc},
+
+        {data_ov006_02142eb0, "02142eb0", 0, 0x021200ccu, (void *)tr_func_ov006_021200cc},
+        {data_ov006_02142eb0, "02142eb0", 1, 0x021200a8u, (void *)tr_func_ov006_021200a8},
+        {data_ov006_02142eb0, "02142eb0", 2, 0x02120008u, (void *)tr_func_ov006_02120008},
+        {data_ov006_02142eb0, "02142eb0", 3, 0x0211fe78u, (void *)tr_func_ov006_0211fe78},
+        {data_ov006_02142eb0, "02142eb0", 4, 0x0211fd44u, (void *)tr_func_ov006_0211fd44},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgTeresa_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
         }
+        p->code = (unsigned)(size_t)seats[i].face;
     }
 }

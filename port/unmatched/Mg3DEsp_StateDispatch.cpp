@@ -176,6 +176,7 @@
 // address is reported.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the boot installer below (lane PMFB4) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on both
    machines: two words, no member-pointer type anywhere. */
@@ -230,16 +231,21 @@ extern MgPmf data_ov006_02141fac[];
 void _ZN9Animation7AdvanceEv(void *anim);
 void func_ov006_020e7be8(void *p);
 
-/* host-copied further down this file, and called from above their own
+/* Host-copied further down this file, and called from above their own
    definitions: 020e9b70 and 020e8830 are STATE BODIES as well as dispatchers,
    020e82fc is 020e9b70's tail call, and 020e8a44 is called straight out of the
-   Behavior. */
+   Behavior.
+   Run link100 lane PMFB4: 020e9374 and 020e8d08 are their own matched TUs now
+   and their host copies are gone. Their declarations are dropped with them --
+   nothing in this file calls either. */
 void func_ov006_020e9b70(void *c);
-void func_ov006_020e9374(void *c);
-void func_ov006_020e8d08(void *c);
 void func_ov006_020e8a44(void *self);
 void func_ov006_020e8830(char *base, int idx);
 void func_ov006_020e82fc(char *c);
+
+/* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
+   the ov006 constructors have filled the tables. */
+void port_mg_esp3d_states_seat(void);
 
 }  /* extern "C" */
 
@@ -350,40 +356,12 @@ extern "C" void port_mg_esp3d_table_counts(unsigned *out7)
     for (int i = 0; i < 7; ++i) out7[i] = g_esp_table_hits[i];
 }
 
-// ---- the seven host copies -------------------------------------------------
+// ---- the four host copies that are left ------------------------------------------------
 //
 // Each is its src TU verbatim except for the table declaration (MgPmf rather
 // than a member-pointer type or a bare int array) and the dispatch site
 // (port_mg_esp3d_callN rather than the member-pointer call or the open-coded
 // decode).  Where anything else moved it is stated on the line.
-
-/* src/func_ov006_020e9e00.cpp -- dScMg3DEsp_c::Behavior, VTABLE SLOT 6.  Its
-   src reads
-       class C; typedef void (C::*PMF)();
-       extern "C" PMF data_ov006_02141f2c[];
-       int idx = *(int *)(f + 0x553c);
-       (self->*data_ov006_02141f2c[idx])();
-       func_ov006_020e8a44(self);
-       _ZN9Animation7AdvanceEv(f + 0x51f4);
-       func_ov006_020e7be8(f + 0x4fd8);
-       return 1;
-   NOTE THE `extern "C"` ON THE TABLE: this one is SILENT to a link.  It mangles
-   as the plain C name the ov006 mount already defines, so the linker is
-   satisfied while MSVC strides the eight-byte table by four.  port/
-   mg_fanout_costs.txt section 14's practical rule -- read the src before wiring
-   slot 6 by name -- is what caught it here. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" int func_ov006_020e9e00(void *self)
-{
-    char *c = (char *)self;
-    const MgPmf *e = &data_ov006_02141f2c[*(int *)(c + 0x553c)];
-    ++g_esp_table_hits[T_F2C];
-    port_mg_esp3d_call0(c, e->code, e->adj);
-    func_ov006_020e8a44(c);
-    _ZN9Animation7AdvanceEv(c + 0x51f4);
-    func_ov006_020e7be8(c + 0x4fd8);
-    return 1;
-}
 
 /* src/func_ov006_020e9b70.cpp, and it is ALSO slot 1 of the table above.  Its
    src declares `struct Entry { PMF pmf; }; extern Entry data_ov006_02141fac[];`
@@ -407,41 +385,6 @@ extern "C" void func_ov006_020e9b70(void *c)
     ++g_esp_table_hits[T_FAC];
     port_mg_esp3d_call0(p, e->code, e->adj);
     func_ov006_020e82fc(p);
-}
-
-/* src/func_ov006_020e9374.cpp.  C++-linkage `extern PMF data_ov006_02141f5c[];`
-   with a one-argument member pointer, so this one IS link-visible as a P8
-   mangle.  Five records at +0x5218, stride 0x18; the gate is the record's own
-   byte and the index is the byte after it; `this` is the CLASS BASE at every
-   iteration and the argument is the loop counter. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020e9374(void *c)
-{
-    char *base = (char *)c;
-    char *s = base;
-    for (int i = 0; i < 5; ++i, s += 0x18) {
-        if (*(unsigned char *)(s + 0x5218)) {
-            const MgPmf *e = &data_ov006_02141f5c[*(unsigned char *)(s + 0x5219)];
-            ++g_esp_table_hits[T_F5C];
-            port_mg_esp3d_call1(base, e->code, e->adj, i);
-        }
-    }
-}
-
-/* src/func_ov006_020e8d08.cpp.  The same shape one table over: three records at
-   +0x5290, stride 0x14. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020e8d08(void *c)
-{
-    char *base = (char *)c;
-    char *s = base;
-    for (int i = 0; i < 3; ++i, s += 0x14) {
-        if (*(unsigned char *)(s + 0x5290)) {
-            const MgPmf *e = &data_ov006_02141f74[*(unsigned char *)(s + 0x5291)];
-            ++g_esp_table_hits[T_F74];
-            port_mg_esp3d_call1(base, e->code, e->adj, i);
-        }
-    }
 }
 
 /* src/func_ov006_020e8a44.cpp -- `extern "C" PMF data_ov006_02141f1c[];`, the
@@ -511,4 +454,155 @@ extern "C" void func_ov006_020e82fc(char *c)
     const MgPmf *e = &data_ov006_02141f44[idx];
     ++g_esp_table_hits[T_F44];
     port_mg_esp3d_call0(c, e->code, e->adj);
+}
+
+// ---- THREE TABLES SEATED, AND NINE FACES -----------------------------------
+//
+// Run link100 lane PMFB4. Three of dScMg3DEsp_c's seven state tables now hold
+// HOST addresses, written at boot by port_mg_esp3d_states_seat below after every
+// cell has been compared against the ROM's own code word and a zero adjustment
+// word, so three of the seven host copies are gone:
+//
+//   func_ov006_020e9e00  data_ov006_02141f2c   3 slots  arity 0  (vtable slot 6)
+//   func_ov006_020e9374  data_ov006_02141f5c   3 slots  arity 1
+//   func_ov006_020e8d08  data_ov006_02141f74   3 slots  arity 1
+//
+// THE FOUR NOT SEATED are data_ov006_02141fac, _02141f1c, _02141f8c and
+// _02141f44, whose dispatchers (020e9b70, 020e8a44, 020e8830, 020e82fc) are not
+// family-C CALL SHAPE rows on this tree's census. Their host copies stay above
+// and both switches stay live for them -- including the one that counts the
+// NONMATCHING body, which is untouched.
+//
+// SECTION 4's WARNING ABOUT 020e9e00 IS SUPERSEDED, AND BY MEASUREMENT.
+// The comment on that host copy said its src's `extern "C" PMF
+// data_ov006_02141f2c[];` is "SILENT to a link ... the linker is satisfied while
+// MSVC strides the eight-byte table by four". That was true of a build without
+// /vmg /vmm. This port compiles with both, which is lane PMFC2's finding in one
+// line: under /vmg /vmm an incomplete class's pointer to member is the GENERAL
+// representation, eight bytes, whether the class is complete at the declaration
+// or not. src/func_ov006_020e9e00.cpp was compiled for this lane under the
+// port's own flags and its listing reads
+// `_data_ov006_02141f2c[eax*8]` and `[eax*8+4]`
+// (runs/link100/out/PMFB4/listings/func_ov006_020e9e00_nozp.asm), against the
+// ROM's own `add r3,r4,r0,lsl #3` at 0x020e9e40 on the pool word at 020e9e64 =
+// 02141f2c. Eight against eight. The silence to the LINK is still real -- the
+// plain C name resolves and no /alternatename is needed or wanted for this row
+// -- so the rule section 14 states (read the src before wiring slot 6 by name)
+// still holds; what does not hold any more is the stride half of it.
+//
+// THE STRIDE, BOTH SIDES (runs/link100/out/PMFB4/rom_gate2.txt, emit_gate2.txt):
+//   020e9e00  ROM add r3,r4,r0,lsl #3  pool 020e9e64 = 02141f2c  emitted [eax*8]
+//   020e9374  ROM add r3,r4,r0,lsl #3  pool 020e93e4 = 02141f5c  emitted [eax*8]
+//   020e8d08  ROM add r3,r4,r0,lsl #3  pool 020e8d78 = 02141f74  emitted [eax*8]
+// /Zp4 changes nothing but the TITLE line of the listing on all three.
+//
+// THE NINE SOURCE PAIRS ALL READ {code, 0} in overlay_0006.bin at the addresses
+// src/__sinit_ov006_02130a08.c copies each slot from, all whole-pair copies:
+//   02141f2c[0] <- 0213c6cc 020e9bbc/0
+//   02141f2c[1] <- 0213c6fc 020e9b70/0     (the host copy above)
+//   02141f2c[2] <- 0213c7b4 020e989c/0
+//   02141f5c[0] <- 0213c734 020e9318/0
+//   02141f5c[1] <- 0213c77c 020e91a0/0
+//   02141f5c[2] <- 0213c714 020e8f14/0
+//   02141f74[0] <- 0213c6e4 020e8cb0/0
+//   02141f74[1] <- 0213c71c 020e8c74/0
+//   02141f74[2] <- 0213c73c 020e8bd0/0
+//
+// THE DISPATCH SHAPE, off each row's own listing: `mov ecx, tab[i*8+4] /
+// mov eax, tab[i*8] / add ecx, <this> / call eax`, no `add esp,N` after it.
+// 020e9374 and 020e8d08 push edi (the loop counter) at BOTH of their two call
+// sites -- each compiles its loop with a peeled first iteration, so each has two
+// indirect calls and both were checked; 020e9e00 pushes nothing. So 02141f5c
+// and 02141f74 take one-argument faces and 02141f2c takes zero-argument ones.
+//
+// TWO /alternatename DIRECTIVES AND A THIRD SPELLING THAT NEEDS NONE.
+// src/func_ov006_020e9374.cpp and src/func_ov006_020e8d08.cpp declare their
+// tables at namespace scope through their own shadow classes, so MSVC spells
+// ?data_ov006_02141f5c@@3PAP8C71@@AEXH@ZA and
+// ?data_ov006_02141f74@@3PAP8C70@@AEXH@ZA -- the C70 and C71 are the shadow
+// class names those two TUs give their receiver, part of the decoration and not
+// a typo. Both read off the objects with dumpbin /symbols.
+// src/func_ov006_020e9e00.cpp declares its table inside extern "C" and comes in
+// as the plain _data_ov006_02141f2c, which is the silence section 4 records.
+#pragma comment(linker, "/alternatename:?data_ov006_02141f5c@@3PAP8C71@@AEXH@ZA=_data_ov006_02141f5c")
+#pragma comment(linker, "/alternatename:?data_ov006_02141f74@@3PAP8C70@@AEXH@ZA=_data_ov006_02141f74")
+
+/* EVERY FACE COUNTS TWICE OVER. g_esp_state_hits keeps counting exactly the
+   dispatches that happen, as port_mg_esp3d_callN counted them while the host
+   copies routed through the switch. AND SO DOES THE PER-TABLE CENSUS: the three
+   retired host copies were the only place g_esp_table_hits[T_F2C], [T_F5C] and
+   [T_F74] were incremented, and hal/scene_mg_psycheout.cpp reads all seven
+   through port_mg_esp3d_table_counts to say WHICH of the seven ran. A face runs
+   once per dispatch through its own table, so the count is the same number in
+   the same place in the frame. Without this three of the seven fields would
+   read zero forever and nothing would be wrong. */
+#define ES_FACE1(sym, slot)                                                   \
+    static void __fastcall es_##sym(void *self, void *dead_edx, int i)        \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_esp_state_hits;                                                   \
+        ++g_esp_table_hits[slot];                                             \
+        sym((char *)self, i);                                                 \
+    }
+
+#define ES_FACE0(sym, slot)                                                   \
+    static void __fastcall es_##sym(void *self, void *dead_edx)               \
+    {                                                                         \
+        (void)dead_edx;                                                       \
+        ++g_esp_state_hits;                                                   \
+        ++g_esp_table_hits[slot];                                             \
+        sym((char *)self);                                                    \
+    }
+
+/* data_ov006_02141f2c, arity 0. Slot 1 is the host copy above. */
+ES_FACE0(func_ov006_020e9bbc, T_F2C)
+ES_FACE0(func_ov006_020e9b70, T_F2C)
+ES_FACE0(func_ov006_020e989c, T_F2C)
+/* data_ov006_02141f5c, arity 1 */
+ES_FACE1(func_ov006_020e9318, T_F5C)
+ES_FACE1(func_ov006_020e91a0, T_F5C)
+ES_FACE1(func_ov006_020e8f14, T_F5C)
+/* data_ov006_02141f74, arity 1 */
+ES_FACE1(func_ov006_020e8cb0, T_F74)
+ES_FACE1(func_ov006_020e8c74, T_F74)
+ES_FACE1(func_ov006_020e8bd0, T_F74)
+
+extern "C" void port_mg_esp3d_states_seat(void)
+{
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void *face;
+    } seats[] = {
+        {data_ov006_02141f2c, "02141f2c", 0, 0x020e9bbcu, (void *)es_func_ov006_020e9bbc},
+        {data_ov006_02141f2c, "02141f2c", 1, 0x020e9b70u, (void *)es_func_ov006_020e9b70},
+        {data_ov006_02141f2c, "02141f2c", 2, 0x020e989cu, (void *)es_func_ov006_020e989c},
+
+        {data_ov006_02141f5c, "02141f5c", 0, 0x020e9318u, (void *)es_func_ov006_020e9318},
+        {data_ov006_02141f5c, "02141f5c", 1, 0x020e91a0u, (void *)es_func_ov006_020e91a0},
+        {data_ov006_02141f5c, "02141f5c", 2, 0x020e8f14u, (void *)es_func_ov006_020e8f14},
+
+        {data_ov006_02141f74, "02141f74", 0, 0x020e8cb0u, (void *)es_func_ov006_020e8cb0},
+        {data_ov006_02141f74, "02141f74", 1, 0x020e8c74u, (void *)es_func_ov006_020e8c74},
+        {data_ov006_02141f74, "02141f74", 2, 0x020e8bd0u, (void *)es_func_ov006_020e8bd0},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMg3DEsp_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].face;
+    }
 }

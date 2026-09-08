@@ -349,6 +349,9 @@ void port_mg_framework_states_seat(void);   /* unmatched/MgBase_StateDispatch.cp
 void port_mg_panel_states_seat(void);       /* unmatched/MgPanel_StateDispatch.cpp */
 void port_mg_bomroom_states_seat(void);     /* unmatched/MgBomroom_StateDispatch.cpp */
 void port_mg_luigi_states_seat(void);       /* unmatched/MgLuigi_StateDispatch.cpp */
+void port_mg_teresa_states_seat(void);      /* unmatched/MgTeresa_StateDispatch.cpp */
+void port_mg_coin_states_seat(void);        /* unmatched/MgCoin_StateDispatch.cpp */
+void port_mg_esp3d_states_seat(void);       /* unmatched/Mg3DEsp_StateDispatch.cpp */
 
 /* THE BLOCKER'S SUBJECT. arm9 bss, hosted by hal/auto_bss.cpp as
    `int data_0209f61c[0x2c / 4]`. Its first word is the vptr; see the
@@ -1011,6 +1014,9 @@ extern "C" void port_scene_mg_overlay_load(void)
     port_mg_sound_states_seat();
     port_mg_bomroom_states_seat();
     port_mg_luigi_states_seat();
+    port_mg_teresa_states_seat();
+    port_mg_coin_states_seat();
+    port_mg_esp3d_states_seat();
 
     std::printf("[scene] ov004+ov006 mounted and all 35 overlay "
                 "constructors run (ov004 4/4, ov006 31/31)\n");
