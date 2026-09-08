@@ -525,9 +525,11 @@ void port_boot_rom_pre_main(void);
 void port_boot_rom_main_head(void);
 void port_boot_rom_game_init_head(void);
 void port_boot_rom_game_init_tail(void);
-/* run link100, lane BOOTSCOUT (MEASUREMENT, default off): SM64DS_ROM_MAIN=1
-   runs the ROM's own src/main.c in place of the transcription of its head.
-   hal/rom_main_scout.cpp carries the whole derivation and the one deviation. */
+/* run link100, lanes BOOTSCOUT and BOOTR1. THE ROM'S OWN src/main.c runs the
+   boot now, in place of the transcription of its head, and the gate
+   SM64DS_ROM_MAIN DEFAULTS ON; SM64DS_ROM_MAIN=0 keeps the transcription.
+   hal/rom_main.cpp carries the whole derivation, the ROM disassembly its two
+   seams are read off, and the one known deviation. */
 int  port_rom_main_enabled(void);
 void port_rom_main_run(void);
 /* the game heap's allocator, read for the boot report only: how much of the
@@ -7424,9 +7426,9 @@ int main(void)
        returned from func_02019780: the OS tick, the alarm system and the main
        thread record. */
     if (port_rom_main_enabled())
-        port_rom_main_run();   /* lane BOOTSCOUT: the ROM's own main, gated off */
+        port_rom_main_run();      /* the ROM's own main -- the default */
     else
-        port_boot_rom_main_head();
+        port_boot_rom_main_head();   /* SM64DS_ROM_MAIN=0: the transcription */
     memset(data_0209b3ec, 0, 48);
     data_0209b3ec[0] = data_0209b3ec[4] = data_0209b3ec[8] = 0x1000;
     hal_fill_model_vtable();
