@@ -412,6 +412,31 @@ void comms_note_wire_activity();
 uint64_t comms_wire_activity();
 
 // ---------------------------------------------------------------------------
+// PUBLISH THE LINK STATE AND THE SLOT INTO THE ROM'S OWN TWO WORDS.
+//
+// Run link100, lane WM1, rung W0. src/func_02040714.c (`return data_020a0f94`)
+// and src/func_02040704.c (`return data_020a0f24`) are LINKED now and the host
+// faces of those two names are gone, so those two words are what the game reads
+// when it asks what the link is doing. Something has to keep them fresh, and
+// this is that something: it writes t->state() into data_020a0f94 and t->slot()
+// into data_020a0f24, or the seam's own solo answers when no transport is
+// installed.
+//
+// IT IS NOT A CONTRACT CHANGE. Every CommsTransport entry is what it was, the
+// wire format is what it was, and a transport neither knows about this nor can
+// be affected by it. What moved is where the ANSWER IS KEPT: in the ROM's own
+// two words instead of behind two host functions -- which is where the DS keeps
+// it, since on hardware the wireless thread is what writes both.
+//
+// Call it after anything that can have changed the transport's mind. The call
+// sites are in the function's own banner in hal/comms_seam.cpp, along with the
+// reason it also chains a pump onto hal/os_thread.h's hook: the ROM's
+// kCommsConnecting arm (src/func_0203ea5c.c case 2) calls nothing, so nothing
+// but a pump can refresh the words while the game sits in it.
+// ---------------------------------------------------------------------------
+void comms_publish_link_words();
+
+// ---------------------------------------------------------------------------
 // THE BOOT INDICATOR, honestly.
 // ---------------------------------------------------------------------------
 

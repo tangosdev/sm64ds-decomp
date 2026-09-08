@@ -15940,6 +15940,43 @@ foreach(_tpmfb6 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# THE WIRELESS PLAN, RUNG W0 (run link100, lane WM1)
+# ===========================================================================
+#
+# src/func_02040714.c and src/func_02040704.c: the two bodies of the radio seam
+# that touch no radio. Each is one global read, and both globals are hosted --
+# both data_020a0f94 and data_020a0f24 by
+# hal/comms_seam.cpp, which is also where the two host faces of these names are
+# DELETED by the same commit. The reasoning, the ABI ruling and the freshness
+# argument for the two words are in port/slice_wm1.txt and in
+# comms_publish_link_words' banner in hal/comms_seam.cpp.
+#
+# Plain C, no per-source properties: neither TU has a struct, a pointer-to-member
+# or a packed field for an option to argue with.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm1.txt" SLICE_WM1_LINES)
+set(SLICE_WM1_SOURCES "")
+foreach(line IN LISTS SLICE_WM1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_twm1 walk_window walk_window_hires smoke_player)
+    target_sources(${_twm1} PRIVATE ${SLICE_WM1_SOURCES})
+endforeach()
+# AND THE SEAM PROBE, which is where this rung's first link error came from.
+# Unlike the gate-221 rows above, mp_comms_seam DOES reference these two:
+# tests/mp_comms_seam.cpp declares func_02040714 and func_02040704 at :84-85 and
+# asserts their solo answers at :148-149. It links hal/comms_seam.cpp -- the file
+# the two host faces were deleted from -- so a probe that loses the faces without
+# gaining the bodies does not link. That is the same rule gate 221's note states,
+# applied the other way round. (Its OTHER unresolved symbol, data_020a0f94, is
+# why that word moved out of hal/comms_conductor.cpp, which this probe does not
+# link, and into hal/comms_seam.cpp, which it does.)
+target_sources(mp_comms_seam PRIVATE ${SLICE_WM1_SOURCES})
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
