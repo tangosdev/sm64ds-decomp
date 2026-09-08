@@ -9,8 +9,6 @@
  * registry). Retail does not store that spelling.
  *
  * deslop
- * Leftover: *(Vector3 *)&mPosX (dActor stores x/y/z as three s32s, not
- * a Vector3 field).
  */
 
 #include "daSCre_c.h"
@@ -32,7 +30,7 @@ s32 daSCre_c::Behavior()
 {
     if (DistToCPlayer() < kPlayerRangeFix12) {
         Spawn(kStarActorId, (param1 & 0xf) | kStarSpawnStyle,
-            *(Vector3 *)&mPosX, 0, mAreaId, -1);
+            Pos(), 0, mAreaId, -1);
     }
     MarkForDestruction();
     return 1;
