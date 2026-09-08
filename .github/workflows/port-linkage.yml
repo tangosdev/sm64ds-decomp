@@ -71,6 +71,7 @@ on:
   push:
     branches:
       - "port/**"
+      - "port-mount-noseat-cluster"
 
 permissions:
   contents: read
