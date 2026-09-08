@@ -48,6 +48,23 @@ before this lane:
 QUIET AND MUTED, through mp2_proof.env_base, which is also what scrubs an
 inherited SM64DS_* out of the environment so a lane's own knobs cannot leak in.
 
+AND IT TAKES THE MACHINE-WIDE WINDOWED TEST SLOT (port/tools/slot_lock.py) the
+way battery.py and thread_create_proof.py take it, which it did not until run
+link100. Four game windows walking an arena for twenty seconds of wall time are
+exactly what that lock exists to serialise, and without it this proof ran
+alongside whatever battery another lane had in flight. That is not a
+theoretical hazard: lane FANTAIL's first vs4 run FAILED while lane R3CFIX had
+battery windows up and went ALL GREEN 40/0 when re-run isolated, so an
+unlocked red here cannot be told apart from a real desync -- which is the one
+thing this proof is for. The hold is a PHASE hold across all four windows
+(slot_lock.slot_reentrant, the same call battery.py uses for the same reason):
+the four instances ARE one session and must be in flight together, so locking
+per launch would deadlock the proof against itself. It is re-entrant so that a
+caller that already holds the slot -- a battery row, or a lane holding it
+across a whole gate -- pays nothing and keeps its own hold. Nothing changes
+when SM64DS_TEST_LOCK is unset: slot_lock is opt-in and a bare run launches
+exactly as it always did.
+
     python port/tools/vs4_proof.py [--frames N] [--map 0..3] [--keep]
 """
 import argparse
@@ -59,6 +76,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import mp2_proof as M  # noqa: E402
+import slot_lock  # noqa: E402
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                     "..", ".."))
@@ -69,6 +87,12 @@ OUT = os.path.join(ROOT, "build", "vs4_proof")
 # its OWN key on another slot is the shape of a fan-out that never crossed the
 # wire, and identical keys would hide it.
 KEYS = (0x0040, 0x0080, 0x0020, 0x0010)
+
+# What each window is given before it is killed. Named rather than typed into
+# M.finish() twice, because the slot hold below is DERIVED from it: the lock's
+# declared bound and the run's own budget have to move together or the stale
+# backstop breaks a hold that is still legitimately running.
+RUN_TIMEOUT = 900
 
 # THE PORT BASE IS DERIVED FROM THIS PROCESS'S PID, never a constant. The
 # owner's live desk pair is 51765 and the 58434..58733 band is spoken for, so
@@ -116,7 +140,37 @@ BREAK_AT = "120"
 COLLECT_AT = "200,280"
 
 def launch(out, frames, vsmap, base, star_target, stagger):
-    """Four instances, parent first. Returns [(rc, text, logpath), ...]."""
+    """Four instances, parent first, HOLDING THE WINDOWED TEST SLOT.
+
+    The hold spans the whole phase -- all four spawns and all four waits --
+    because the four instances are one session and have to be in flight at the
+    same time; a per-launch lock would make this proof wait on itself forever.
+    slot_reentrant rather than slot so that a caller already holding the slot
+    (a battery row, or a lane holding it across a gate) nests for free instead
+    of deadlocking, exactly as battery.py's phase hold does.
+
+    The bound is DECLARED. slot_lock breaks an undeclared hold older than
+    MAX_HOLD_SECONDS as stale, and the honest worst case here is the stagger
+    plus one full window budget, so it is said out loud rather than left to be
+    broken out from under a run that is still going.
+    """
+    worst = int(3 * max(stagger, 0) + RUN_TIMEOUT + 120)
+    print("[slot_lock] vs4_proof is taking the machine-wide windowed test slot "
+          "for four windows (declared hold %ds). Another lane's battery makes "
+          "this wait; waiting is not being stuck." % worst, flush=True)
+    with slot_lock.slot_reentrant(
+            label="vs4_proof four windows map=%s frames=%s" % (vsmap, frames),
+            max_hold=worst) as held:
+        print("[slot_lock] held (%s); launching four windows" % held,
+              flush=True)
+        try:
+            return _launch(out, frames, vsmap, base, star_target, stagger)
+        finally:
+            print("[slot_lock] releasing the windowed test slot", flush=True)
+
+
+def _launch(out, frames, vsmap, base, star_target, stagger):
+    """The four instances themselves. Only ever called with the slot held."""
     procs, dirs, logs = [], [], []
     for k in range(4):
         d = os.path.join(out, "p%d" % k)
@@ -169,7 +223,7 @@ def launch(out, frames, vsmap, base, star_target, stagger):
 
     res = []
     for k in range(4):
-        rc = M.finish(procs[k], 900)
+        rc = M.finish(procs[k], RUN_TIMEOUT)
         res.append((rc, M.text(logs[k]), logs[k]))
     return res
 
