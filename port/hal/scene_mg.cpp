@@ -358,6 +358,12 @@ void port_mg_pachinko2_states_seat(void);   /* unmatched/MgPachinko2_StateDispat
 void port_mg_memory1_states_seat(void);     /* unmatched/MgMemory1_StateDispatch.cpp */
 void port_mg_memory2_states_seat(void);     /* unmatched/MgMemory2_StateDispatch.cpp */
 void port_mg_pachinko_states_seat(void);    /* unmatched/MgPachinko_StateDispatch.cpp */
+/* run link100 lane PMFB5: the five remaining ov006 single-row tables */
+void port_mg_cup_states_seat(void);         /* unmatched/MgCup_StateDispatch.cpp */
+void port_mg_curling2_states_seat(void);    /* unmatched/MgCurling2_StateDispatch.cpp */
+void port_mg_slot3_states_seat(void);       /* unmatched/MgSlot3_StateDispatch.cpp */
+void port_mg_bsc_states_seat(void);         /* unmatched/MgBSC_StateDispatch.cpp */
+void port_mg_curling_states_seat(void);     /* unmatched/MgCurling_StateDispatch.cpp */
 
 /* THE BLOCKER'S SUBJECT. arm9 bss, hosted by hal/auto_bss.cpp as
    `int data_0209f61c[0x2c / 4]`. Its first word is the vptr; see the
@@ -1039,6 +1045,11 @@ extern "C" void port_scene_mg_overlay_load(void)
        in this list is not load-bearing; it stands beside its class. */
     port_mg_memory2_model_seat();
     port_mg_pachinko_states_seat();
+    port_mg_cup_states_seat();
+    port_mg_curling2_states_seat();
+    port_mg_slot3_states_seat();
+    port_mg_bsc_states_seat();
+    port_mg_curling_states_seat();
 
     std::printf("[scene] ov004+ov006 mounted and all 35 overlay "
                 "constructors run (ov004 4/4, ov006 31/31)\n");

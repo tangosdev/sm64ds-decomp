@@ -459,21 +459,75 @@ extern "C" void func_ov006_0210709c(void *p)
     func_ov006_02105134(c);
 }
 
-/* src/func_ov006_02104ac4.cpp, table 021427bc, arity 1 WITH A CONSTANT.
-   ROM 0x02104ac4: add r1,r0,#0x4000; ldrb r2,[r1,#0x692] the guard; ldrb
-   r1,[r1,#0x693] the index; pool 0x02104b20 = 021427BC; and `mov r1,#0`
-   between the two arms of the Itanium sequence, so the argument is the
-   LITERAL ZERO and not a loop counter. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_02104ac4(void *p)
-{
-    char *c = (char *)p;
-    if (*(unsigned char *)(c + 0x4692) == 0)
-        return;
-    const unsigned j = *(unsigned char *)(c + 0x4693);
-    const MgPmf *e = &data_ov006_021427bc[j];
-    port_mg_panel_call1(c, e->code, e->adj, 0);
-}
+/* ---- 021427bc IS SEATED AND func_ov006_02104ac4 IS GONE -------------------
+ *
+ * Run link100 lane PMFB5. data_ov006_021427bc's three cells hold HOST addresses
+ * after boot, written by port_mg_panel_states_seat further down this file --
+ * the installer lane PMFB3 wrote for data_ov006_02142860, which now installs
+ * both tables -- once every cell has been compared against the ROM's own code
+ * word and a zero adjustment word. src/func_ov006_02104ac4.cpp therefore
+ * compiles from src and this file no longer defines it.
+ *
+ *   func_ov006_02104ac4   data_ov006_021427bc   3 slots   arity 1
+ *
+ * THE STRIDE, ROM SIDE, read at the body's OWN address out of
+ * extracted/overlays/overlay_0006.bin at ov006 base 0x020bfec0
+ * (runs/link100/out/PMFB5/rom_gate1.txt):
+ *   02104ac4  add r3, r1, r0, lsl #3 at 02104ae8, pool 02104b20 = 021427bc
+ * -> EIGHT. EMITTED SIDE, off the matched TU's own /FAsc listing under the
+ * port's own flags: _data_ov006_021427bc[eax*8] and [eax*8+4]. ROM 8 ==
+ * emitted 8. /Zp4 is a MEASURED NO-OP -- both listings differ only in the TITLE
+ * line naming the .obj.
+ *
+ * THE THREE SOURCE PAIRS ALL READ {code, 0} in overlay_0006.bin at the
+ * addresses src/__sinit_ov006_02131fa4.c copies each slot from -- the same
+ * constructor that fills 02142860 below -- all whole-pair copies, no field-form
+ * fill:
+ *   [0] <- 0213dcbc  02104ac0/0
+ *   [1] <- 0213dcf4  02104a10/0
+ *   [2] <- 0213dd24  02104920/0
+ *
+ * THE ARITY IS ONE WITH A CONSTANT, and the listing is where it is read:
+ * `push 0 / mov ecx, tab[eax*8+4] / mov eax, tab[eax*8] / add ecx, edx /
+ * call eax` with no caller cleanup. The pushed word is src's own literal `(0)`,
+ * which is the `mov r1,#0` the ROM emits between the two arms of the Itanium
+ * sequence -- the derivation this file's old host copy already carried -- so
+ * the three faces are one-argument __fastcall and are called with a zero.
+ *
+ * NO /alternatename. The TU declares the table inside its own extern "C" block,
+ * so the reference comes in as the plain _data_ov006_021427bc the ov006 mount
+ * already defines; the dumpbin UNDEF sweep of the object before the link shows
+ * that one data symbol and nothing else.
+ *
+ * THE SWITCH STAYS LIVE. port_mg_panel_call1 still routes 02142840's four
+ * addresses for the five level-1 states and for hostgen's MG_PMF_CALL swap, and
+ * port_mg_panel_call0 still routes 02142888, 02142820 and 021427ec. Nothing on
+ * those paths moves. */
+
+#define PN_FACE(slot, sym)                                                \
+    static void __fastcall pn_s##slot##_##sym(void *self, void *dead_edx, \
+                                              int a)                      \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self, a);                                             \
+    }
+
+/* slot 0 is the empty body: `bx lr` in the ROM and `{}` in src, and its src
+   signature is (void). Its face still takes the pushed zero off the stack,
+   because the CELL is a one-argument cell and the caller pushes either way, and
+   then calls the body with nothing -- which is what the ROM body does with r0
+   and r1 too. */
+#define PN_FACE_VOID(slot, sym)                                           \
+    static void __fastcall pn_s##slot##_##sym(void *self, void *dead_edx, \
+                                              int a)                      \
+    {                                                                     \
+        (void)self; (void)dead_edx; (void)a;                              \
+        sym();                                                            \
+    }
+
+PN_FACE_VOID(0, func_ov006_02104ac0)
+PN_FACE(1, func_ov006_02104a10)
+PN_FACE(2, func_ov006_02104920)
 
 /* src/func_ov006_02104c60.cpp, table 021427ec, arity 0.
    ROM 0x02104c60: guard byte at +0x4684; the pooled literal 0x00004680 added
@@ -536,24 +590,38 @@ extern "C" void port_mg_panel_states_seat(void)
     done = 1;
 
     static const struct {
-        unsigned slot;
-        unsigned rom;
-        void (*host)(void *);
+        MgPmf      *table;
+        const char *name;
+        unsigned    slot;
+        unsigned    rom;
+        void       *host;
     } seats[] = {
-        {0, 0x0210508cu, (void (*)(void *))func_ov006_0210508c},
-        {1, 0x0210500cu, (void (*)(void *))func_ov006_0210500c},
-        {2, 0x02104fb4u, (void (*)(void *))func_ov006_02104fb4},
-        {3, 0x02104eccu, (void (*)(void *))func_ov006_02104ecc},
-        {4, 0x02104ec8u, (void (*)(void *))func_ov006_02104ec8},
+        {data_ov006_02142860, "02142860", 0, 0x0210508cu, (void *)func_ov006_0210508c},
+        {data_ov006_02142860, "02142860", 1, 0x0210500cu, (void *)func_ov006_0210500c},
+        {data_ov006_02142860, "02142860", 2, 0x02104fb4u, (void *)func_ov006_02104fb4},
+        {data_ov006_02142860, "02142860", 3, 0x02104eccu, (void *)func_ov006_02104ecc},
+        {data_ov006_02142860, "02142860", 4, 0x02104ec8u, (void *)func_ov006_02104ec8},
+
+        /* Run link100 lane PMFB5: data_ov006_021427bc, whose dispatcher
+           func_ov006_02104ac4 now compiles from src. THE TWO HALVES OF THIS
+           TABLE ARE WRITTEN DIFFERENTLY ON PURPOSE. 02142860's dispatcher
+           compiles its dispatch to a TAIL JUMP with the frame restored, so its
+           five callees inherit a cdecl frame and go in as plain cdecl bodies;
+           02104ac4 compiles to `push 0 / mov ecx, tab[i*8+4] / mov eax,
+           tab[i*8] / add ecx, edx / call eax` with no caller cleanup, so its
+           three cells take one-argument __fastcall faces. */
+        {data_ov006_021427bc, "021427bc", 0, 0x02104ac0u, (void *)pn_s0_func_ov006_02104ac0},
+        {data_ov006_021427bc, "021427bc", 1, 0x02104a10u, (void *)pn_s1_func_ov006_02104a10},
+        {data_ov006_021427bc, "021427bc", 2, 0x02104920u, (void *)pn_s2_func_ov006_02104920},
     };
 
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
-        MgPmf *p = &data_ov006_02142860[seats[i].slot];
+        MgPmf *p = &seats[i].table[seats[i].slot];
         if (p->code != seats[i].rom || p->adj != 0) {
-            std::fprintf(stderr, "FATAL: dScMgPanel_c state table 02142860 "
-                         "slot %u: the sinit left %08x/%d, the ROM's own pairs "
-                         "say %08x/0 -- WRONG BYTES\n", seats[i].slot,
-                         p->code, p->adj, seats[i].rom);
+            std::fprintf(stderr, "FATAL: dScMgPanel_c state table %s slot %u: "
+                         "the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
             std::abort();
         }
         p->code = (unsigned)(size_t)seats[i].host;
