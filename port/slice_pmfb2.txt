@@ -50,3 +50,40 @@
 # the next lane's work.
 src/func_ov006_0211b954.cpp
 src/func_ov006_0211b5e0.cpp
+#
+# ---- BATCH 2: Bird::Render and Flag::Render (lane FACEF's two proposals) ---
+#
+# FACEF closed with these two NOT TAKEN and a stated precondition: "retiring it
+# needs a ROM-ordered ModelAnim table, which is the opposite of what every MSVC
+# caller of the same object needs". Lane SLOT5F built that table. The fill in
+# hal/cxxname_bridge.cpp is now
+#     _ZTV9ModelAnim[5] = ma2_render   _ZTV9ModelAnim[6] = ma2_virtual18
+# with slots 0 and 1 carrying the ROM's D1/D0 pair separately instead of MSVC's
+# fold, which is the numbering include/ModelAnim.h annotates on the ROM table.
+# So the precondition is met, and nothing had to be dual-filled to meet it.
+#
+# THE ROM, re-read at both addresses for this lane out of
+# extracted/overlays/overlay_0009.bin at ov009 base 0x021111a0
+# (runs/link100/out/PMFB2/rom_renders.txt). Ten instructions, identical in both:
+#     02111870  _ZN4Bird6RenderEv  kind:function(arm,size=0x28)
+#     0211211c  _ZN4Flag6RenderEv  kind:function(arm,size=0x28)
+#         ldr r2,[r0,#0xd4]!    pre-indexed WITH WRITEBACK: the receiver at the
+#                               blx is the ModelAnim sub-object, not the actor
+#         mov r1,#0             the one argument
+#         ldr r2,[r2,#0x14]     vtable slot 5
+#         blx r2  /  mov r0,#1  the return value the caller discards
+# include/Bird.h:25 and include/Flag.h:17 both put mModelAnim at 0x0d4, which is
+# the offset the ROM writes back.
+#
+# THE FACE, in port/hal/except_faces.cpp (this lane's own section). Both matched
+# TUs recovered as real C++ methods, so they define ?Render@Bird@@QAEHXZ while
+# hal/actor_classes.cpp:1334 and :1506 call _ZN4Bird6RenderEv and
+# _ZN4Flag6RenderEv at C linkage. One cdecl line each; no fill site changes.
+#
+# CONVENTION: MSVC compiles the matched TU's `b->m(0)` as a __thiscall indirect
+# call (receiver in ecx, the 0 pushed, callee cleans four) and the host slot
+# holds ma2_render, declared __fastcall(void *self, void *unused, const void *s).
+# Same receiver register, same stack argument, same cleanup -- the rule lane
+# EXCEPT measured and lane FACEF re-measured.
+src/_ZN4Bird6RenderEv.cpp
+src/_ZN4Flag6RenderEv.cpp

@@ -550,12 +550,50 @@ void _ZN9PowerStar13AddStarMarkerEv(void *self)
 extern "C" {
 int _ZN4Bird13InitResourcesEv(void *self)
 { return ((Bird *)self)->Bird::InitResources(); }
-/* Bird::Render and FLAG's are each one line in src, and that line is an
-   INDEXED virtual call, not a named one: each declares a local six-virtual
-   shadow struct over the ModelAnim member at +0xd4 and calls its sixth slot
-   (src/_ZN4Bird6RenderEv.cpp, `Base *b = &((Derived *)this)->base; b->m(0)`).
-   ROM slot 5 is Render; MSVC slot 5 is Virtual18. Call the method the ROM
-   means.
+/* BIRD::RENDER AND FLAG::RENDER ARE RETIRED (run link100, lane PMFB2). Both
+   are on port/slice_pmfb2.txt and compile from src/_ZN4Bird6RenderEv.cpp and
+   src/_ZN4Flag6RenderEv.cpp; each matched TU recovered as a real C++ method
+   (`int Bird::Render()`) while hal/actor_classes.cpp:1334 and :1506 call the
+   Itanium C name, so each takes a cdecl face in hal/except_faces.cpp and NOT
+   ONE FILL SITE CHANGES.
+
+   WHAT CHANGED, because the block below says this could not be done. Both are
+   one line in src, and that line is an INDEXED virtual call, not a named one:
+   each declares a local six-virtual shadow struct over the ModelAnim member at
+   +0xd4 and calls its sixth slot (`Base *b = &((Derived *)this)->base;
+   b->m(0)`). When this block was written the host _ZTV9ModelAnim was filled in
+   MSVC's FOLDED order -- one slot for the D1/D0 pair -- so index 5 landed on
+   Virtual18, and seating the matched TU would have rendered through the wrong
+   slot silently. hal/cxxname_bridge.cpp does not fill it that way any more:
+   slots 0 and 1 carry the ROM's D1/D0 pair, seeded there and overwritten by the
+   model dtor seat, and the fill reads
+
+     _ZTV9ModelAnim[3] = ma2_updateverts   [4] = ma2_virtual10
+     _ZTV9ModelAnim[5] = ma2_render        [6] = ma2_virtual18
+
+   which is the ROM numbering include/ModelAnim.h annotates. Index 5 is Render
+   on both machines now, so the stated precondition -- "retiring it needs a
+   ROM-ordered ModelAnim table" -- is met by the tree as it stands, and the
+   other half of the old objection went with it: the table is not dual-filled,
+   so no genuine Virtual18 dispatch had to be broken to get here.
+
+   RE-READ AT THE ADDRESS FOR THIS LANE out of extracted/overlays/
+   overlay_0009.bin at ov009 base 0x021111a0 (runs/link100/out/PMFB2/
+   rom_renders.txt). Both ROM bodies are the same ten instructions:
+     02111870 _ZN4Bird6RenderEv   ldr r2,[r0,#0xd4]!   mov r1,#0
+     0211211c _ZN4Flag6RenderEv   ldr r2,[r2,#0x14]    blx r2    mov r0,#1
+   `[r0,#0xd4]!` is pre-indexed WITH WRITEBACK, so the receiver at the blx is
+   the ModelAnim sub-object and not the actor; `[r2,#0x14]` is vtable slot 5;
+   `mov r1,#0` is the one argument, which ma2_render lands as
+   ModelAnim::Render((const Vector3 *)0). MSVC compiles the matched TU's
+   `b->m(0)` as a __thiscall indirect call -- receiver in ecx, the 0 pushed,
+   callee cleans four -- and ma2_render is
+   __fastcall(void *self, void *unused, const void *s): same receiver register,
+   same stack argument, same cleanup. The shadow's `void m(int)` and the ROM's
+   own `mov r0,#1` agree that the return value is discarded.
+
+   THE READING THAT WAS OVERTURNED IS KEPT BELOW, because a later lane meeting
+   a still-dual-filled table needs to be able to see the shape that was here.
 
    Two lanes (w8-faces and w8-shadows) re-derived this independently and agree,
    so both are TAGGED rather than left to linkage.py's shadow heuristic, which
@@ -593,12 +631,6 @@ int _ZN4Bird13InitResourcesEv(void *self)
    wiring that makes the matched TU behave here. Retiring it needs a
    ROM-ordered ModelAnim table, which is the opposite of what every MSVC caller
    of the same object needs. */
-/* PORT_HOST_ABI: the matched TU dispatches slot 5 of a local six-virtual
-   shadow over the ModelAnim at +0xd4, and the host _ZTV9ModelAnim numbers
-   slot 5 as Virtual18 (measured fault, port/slice_gate17.txt); this hand-
-   written ModelAnim::Render call is the ROM's behaviour. */
-int _ZN4Bird6RenderEv(void *self)
-{ ((ModelAnim *)((char *)self + 0xd4))->ModelAnim::Render(0); return 1; }
 int _ZN8MetalNet13InitResourcesEv(void *self)
 { return ((MetalNet *)self)->MetalNet::InitResources(); }
 int _ZN8MetalNet8BehaviorEv(void *self)
@@ -611,14 +643,11 @@ int _ZN4Flag13InitResourcesEv(void *self)
 { return ((Flag *)self)->Flag::InitResources(); }
 int _ZN4Flag8BehaviorEv(void *self)
 { return ((Flag *)self)->Flag::Behavior(); }
-/* PORT_HOST_ABI: same as Bird::Render above -- the matched TU dispatches slot
-   5 of a local six-virtual shadow over the ModelAnim at +0xd4 (include/
-   Flag.h:17), which the host _ZTV9ModelAnim numbers as Virtual18.
-   src/_ZN4Flag6RenderEv.cpp is byte-for-byte the same shape as Bird's -- the
-   same local six-virtual shadow, the same `b->m(0)` at index 5. Same reason,
-   same measurement; see the Bird block above. */
-int _ZN4Flag6RenderEv(void *self)
-{ ((ModelAnim *)((char *)self + 0xd4))->ModelAnim::Render(0); return 1; }
+/* _ZN4Flag6RenderEv is retired with Bird's, on the same measurement.
+   include/Flag.h:17 puts its ModelAnim at +0xd4 too and
+   src/_ZN4Flag6RenderEv.cpp is byte-for-byte the same shape -- the same local
+   six-virtual shadow, the same `b->m(0)` at index 5. Its face is in
+   hal/except_faces.cpp with Bird's. */
 }
 
 /* ---- gate 143: level 11's own class, IceSlideManager (ov019) -------------

@@ -175,3 +175,32 @@ int _ZN23FloatOnWaterPlatformJrb6RenderEv(void *s)
 void _ZN6Player8BlowAwayEs(void *s, short v) { ((Player *)s)->Player::BlowAway(v); }
 
 }  /* extern "C" */
+
+/* ---- RUN link100 LANE PMFB2 ---------------------------------------------
+   The two rows lane FACEF proposed and could not take, because their stated
+   precondition was a ROM-ORDERED ModelAnim table and the tree did not have one
+   at the time. It does now: hal/cxxname_bridge.cpp fills _ZTV9ModelAnim[5] =
+   ma2_render and [6] = ma2_virtual18, the numbering include/ModelAnim.h
+   annotates on the ROM table. Both matched TUs therefore dispatch the slot the
+   ROM dispatches. The full derivation, including the ten ROM instructions each
+   body is, is in the retirement block of hal/method_faces.cpp; the ROM read is
+   runs/link100/out/PMFB2/rom_renders.txt.
+
+   Same shape as the rows above: the matched source recovered as a real C++
+   method (`int Bird::Render()`, `int Flag::Render()`), the fill sites in
+   hal/actor_classes.cpp:1334 and :1506 call the Itanium C name at C linkage,
+   so each row is one cdecl definition of that name onto the method and no fill
+   site changes. */
+#include "Bird.h"
+#include "Flag.h"
+
+extern "C" {
+
+/* Bird::Render, ROM 0x02111870 (ov009, kind:function(arm,size=0x28)); the fill
+   site is hal/actor_classes.cpp:1334. */
+int _ZN4Bird6RenderEv(void *s)                { return ((Bird *)s)->Bird::Render(); }
+/* Flag::Render, ROM 0x0211211c (ov009, kind:function(arm,size=0x28)); the fill
+   site is hal/actor_classes.cpp:1506. */
+int _ZN4Flag6RenderEv(void *s)                { return ((Flag *)s)->Flag::Render(); }
+
+}  /* extern "C" */
