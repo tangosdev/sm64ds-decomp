@@ -571,94 +571,76 @@ extern "C" void func_ov060_02112434(unsigned char *thiz)
     }
 }
 
-/* ============ HOST COPY 2: func_ov060_02115b84 ============================
- * BOWSER TAIL's per-frame pass: it dispatches its own three-state table, then
- * reads the OWNER Bowser (its +0x108 actor id, the handle Bowser's init wrote)
- * to learn whether the fight is over.  Line for line with
- * src/func_ov060_02115b84.cpp.
- * PORT_HOST_ABI: mwcc pointer-to-member stride/receiver, the Crate case. */
-extern "C" void func_ov060_02115b84(char *c)
-{
-    char *r5 = _ZN5Actor10FindWithIDEj(*(unsigned *)(c + 0x108));
-    int idx = *(int *)(c + 0x110);
-    {
-        PortPmf *e = &data_ov060_0211ae9c[idx];
-        ((void (*)(char *))(size_t)e->fn)(c + (e->adj >> 1));
-    }
-    if (*(int *)(r5 + 0x40c) == 4)
-        *(int *)(c + 0xec) |= 1;
-    *(unsigned short *)(c + 0x114) = (unsigned short)
-        (*(unsigned short *)(c + 0x114) + 1);
-    if (idx != *(int *)(c + 0x110))
-        *(short *)(c + 0x114) = 0;
-    _ZN12CylinderClsn5ClearEv(c + 0xd4);
-    _ZN12CylinderClsn6UpdateEv(c + 0xd4);
-}
-
-/* ============ HOST COPY 3: func_ov060_02118254 ============================
- * BOWSER SKY PLATFORM's Behavior (vtable slot 6 of data_ov060_0211a9b0).
- * Line for line with src/func_ov060_02118254.cpp.
- * PORT_HOST_ABI: mwcc pointer-to-member stride/receiver, the Crate case. */
-extern "C" int func_ov060_02118254(char *c)
-{
-    {
-        PortPmf *e = &data_ov060_0211b1ac[*(unsigned char *)(c + 0x328)];
-        ((void (*)(char *))(size_t)e->fn)(c + (e->adj >> 1));
-    }
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
-    *(unsigned char *)(c + 0x32b) = 0;
-    return 1;
-}
-
-/* ============ HOST COPY 4: _ZN10BowserFire13InitResourcesEv ===============
- * Line for line with src/_ZN10BowserFire13InitResourcesEv.cpp.
- * PORT_HOST_ABI: mwcc pointer-to-member stride/receiver, the Crate case. */
-extern "C" int _ZN10BowserFire13InitResourcesEv(char *c)
-{
-    unsigned char rc[0x50];
-    int pos[3];
-    if (_ZN11ShadowModel12InitCylinderEv(c + 0x304) == 0)
-        return 0;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
-        c + 0x2d0, c, 0x28000, 0x50000, 0x200002, 0);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
-        c + 0x110, c, 0x32000, 0x32000, 0, 0);
-    *(int *)(c + 0x9c) = -0x4000;
-    *(int *)(c + 0xa0) = -0x1e000;
-    *(int *)(c + 0x35c) = *(int *)(c + 8) & 7;
-    *(short *)(c + 0x374) = 0;
-    if (*(int *)(c + 0x35c) == 0)
-        *(unsigned char *)(c + 0x379) = 0;
-    else
-        *(unsigned char *)(c + 0x379) = 1;
-    *(int *)(c + 0x36c) = 0;
-    *(unsigned char *)(c + 0x378) =
-        (unsigned char)((*(unsigned *)(c + 8) >> 4) & 3);
-    if (*(int *)(c + 0x35c) == 0)
-        *(int *)(c + 0x2e8) |= 1;
-    *(int *)(c + 0x360) = 0x2000;
-    *(int *)(c + 0x380) = 0;
-    *(int *)(c + 0x37c) = *(int *)(c + 0x380);
-    *(int *)(c + 0x2cc) = 0;
-    _ZN13RaycastGroundC1Ev(rc);
-    pos[0] = *(int *)(c + 0x5c);
-    pos[1] = *(int *)(c + 0x60) + 0x32000;
-    pos[2] = *(int *)(c + 0x64);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rc, pos, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(rc))
-        *(int *)(c + 0x364) = *(int *)(rc + 0x14 + 12 * 4);
-    else
-        *(int *)(c + 0x364) = *(int *)(c + 0x60);
-    {
-        PortPmf *e = &data_ov060_0211af74[*(int *)(c + 0x35c)];
-        ((void (*)(char *))(size_t)e->fn)(c + (e->adj >> 1));
-    }
-    *(int *)(c + 0x384) = 0;
-    *(int *)(c + 0x388) = 0;
-    _ZN13RaycastGroundD1Ev(rc);
-    return 1;
-}
+/* ============ HOST COPIES 2, 3 AND 4 ARE GONE ============================
+ * Run link100 lane PMFB5. func_ov060_02115b84 (BOWSER TAIL),
+ * func_ov060_02118254 (SKY PLATFORM) and _ZN10BowserFire13InitResourcesEv
+ * compile from src now and dispatch their own tables. What made that possible
+ * is the seat below: the fourteen rows that feed data_ov060_0211ae9c,
+ * _0211af74 and _0211b1ac hold __fastcall FACES instead of plain cdecl bodies,
+ * because a matched TU emits `mov ecx, tab[i*8+4] / add ecx, this / call eax`
+ * and pushes nothing, where these host copies called the code word cdecl with
+ * `c + (adj >> 1)`.
+ *
+ * HOST COPY 5 STAYS, AND THE LINK IS WHY. src/_ZN10BowserFire8BehaviorEv.cpp
+ * defines a REAL C++ MEMBER -- `int BowserFire::Behavior()` -- which mangles
+ * __thiscall, while hal/actor_classes_ov060.cpp's bfire_behavior face calls the
+ * FLAT C name _ZN10BowserFire8BehaviorEv. Retiring this copy therefore leaves
+ * that flat name undefined, and the link says so:
+ *   actor_classes_ov060.cpp.obj : error LNK2019: unresolved external symbol
+ *   __ZN10BowserFire8BehaviorEv referenced in function
+ *   "int __fastcall bfire_behavior(void *,void *)"
+ * Its table data_ov060_0211afb4 is measured and seatable -- eight whole-pair
+ * {code,0} sources, a 64-byte span, stride 8 both sides -- and nothing about
+ * the TABLE stops it. What stops it is the CALLING CONVENTION at the class's
+ * own entry point, and bridging that needs a forwarder that redeclares
+ * BowserFire's exact class shape, which is a different piece of work from a
+ * table seat. Its eight seat rows keep their plain cdecl bodies. The sibling
+ * _ZN10BowserFire13InitResourcesEv is taken because its src defines the FLAT
+ * `extern "C" int _ZN10BowserFire13InitResourcesEv(char*)`, so the two halves
+ * of one class split for a reason that is about the definition form and not
+ * about the class.
+ *
+ * THE STRIDE, BOTH SIDES, per row, read at each body's OWN address out of
+ * extracted/overlays/overlay_0060.bin (runs/link100/out/PMFB5/rom_gate3.txt)
+ * and off each matched TU's own /FAsc listing (emit_gate3_out.txt):
+ *   02115b84  ROM add r3,r1,r4,lsl #3 at 02115ba0, pool 02115c18 = 0211ae9c
+ *             emitted ?data_ov060_0211ae9c@@3PAP8C@@AEXXZA[ebx*8]
+ *   02117790  ROM add r3,r1,r0,lsl #3 at 021178e8, pool 02117934 = 0211af74
+ *             emitted ?data_ov060_0211af74@@3PAP8Actor@@AEXXZA[eax*8]
+ *   02118254  ROM add r3,r1,r0,lsl #3 at 02118264, pool 021182ac = 0211b1ac
+ *             emitted ?data_ov060_0211b1ac@@3PAUEntry@@A[eax*8]
+ * ROM 8 == emitted 8 on all three, and /Zp4 is a measured no-op on all three
+ * (zero diff lines outside the TITLE line naming the .obj).
+ *
+ * THE ARITY IS ZERO ON ALL THREE and it is read off each listing: nothing is
+ * pushed between the index load and `call eax`, and no `add esp, N` follows.
+ * The `add esp, 4` before 02115b84's sequence is the cleanup of the PREVIOUS
+ * cdecl call, not part of the dispatch.
+ *
+ * THE FOURTEEN SOURCE PAIRS all read {code, 0} in the overlay image at the
+ * addresses their constructors copy them from, all whole-pair copies. ONE OF
+ * THE THREE CONSTRUCTORS USES A SPELLING lane PMFB4's reader called a
+ * FIELD-FORM FILL: src/__sinit_ov060_021195dc.c writes
+ * `data_ov060_0211ae9c[0].lo = SRC;`, and `struct P4 { struct P2 lo, hi; }`
+ * over `struct P2 { int a, b; }` makes `.lo` a whole eight-byte pair whose
+ * ordinal is the slot, not one word of a pair. The flat slot is N * 2 +
+ * ordinal, which is why 0211ae9c's three cells come from [0].lo, [0].hi and
+ * [1].lo. src/__sinit_ov060_0211a000.c uses another one PMFB4's reader did not
+ * know, `TAB[N] = SRC[0]`.
+ *
+ * EVERY ONE OF THE THREE TABLES IS FULLY COVERED, which matters more here than
+ * anywhere else in this lane: an unfilled cell used to be read by a host copy
+ * and handed to a switch, and after a seat it would be CALLED. The spans come
+ * from config/arm9/overlays/ov060/symbols.txt -- 0211ae9c 24 bytes (3 cells),
+ * 0211af74 64 (8), 0211b1ac 24 (3) -- and the constructors fill 3, 8 and 3.
+ * The `[2]` bound the ov060 constructor declares for 0211ae9c is the decomp's
+ * own P4 grouping, not the extent.
+ *
+ * THREE /alternatename DIRECTIVES, each read off the object with
+ * dumpbin /symbols. */
+#pragma comment(linker, "/alternatename:?data_ov060_0211ae9c@@3PAP8C@@AEXXZA=_data_ov060_0211ae9c")
+#pragma comment(linker, "/alternatename:?data_ov060_0211af74@@3PAP8Actor@@AEXXZA=_data_ov060_0211af74")
+#pragma comment(linker, "/alternatename:?data_ov060_0211b1ac@@3PAUEntry@@A=_data_ov060_0211b1ac")
 
 /* ============ HOST COPY 5: _ZN10BowserFire8BehaviorEv =====================
  * Line for line with src/_ZN10BowserFire8BehaviorEv.cpp.
@@ -766,68 +748,99 @@ extern "C" int _ZN6Bowser8BehaviorEv(void *selfv)
  * one less mapping to get wrong), each checked against the ROM address the
  * body was compiled from, so a mount pointing at the wrong bytes says so
  * instead of calling into the overlay image.  All 50 adj halves are 0. */
+#define OV60_FACE(tag, slot, sym)                                         \
+    static void __fastcall ov60_##tag##_s##slot(void *self, void *dead_edx)\
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym((char *)self);                                                \
+    }
+
+/* data_ov060_0211ae9c -- BOWSER TAIL, three */
+OV60_FACE(ae9c, 0, func_ov060_02115d68)
+OV60_FACE(ae9c, 1, func_ov060_02115d50)
+OV60_FACE(ae9c, 2, func_ov060_02115c1c)
+
+/* data_ov060_0211af74 -- BOWSER FIRE init, eight */
+OV60_FACE(af74, 0, func_ov060_021167c8)
+OV60_FACE(af74, 1, func_ov060_02116b18)
+OV60_FACE(af74, 2, func_ov060_02116c68)
+OV60_FACE(af74, 3, func_ov060_021167c8)
+OV60_FACE(af74, 4, func_ov060_021169b0)
+OV60_FACE(af74, 5, func_ov060_02116f74)
+OV60_FACE(af74, 6, func_ov060_0211722c)
+OV60_FACE(af74, 7, func_ov060_021171e8)
+
+/* data_ov060_0211b1ac -- SKY PLATFORM, three */
+OV60_FACE(b1ac, 0, func_ov060_021181b4)
+OV60_FACE(b1ac, 1, func_ov060_021180e0)
+OV60_FACE(b1ac, 2, func_ov060_02117db8)
+
 namespace {
-struct Seat { PortPmf *slot; unsigned rom; void (*host)(char *); const char *tab; };
+/* the host column holds BOTH plain cdecl bodies (for the tables whose
+   dispatcher is still a host copy in this file, including BOWSER FIRE's
+   0211afb4) and the __fastcall faces above (for the three tables run
+   link100 lane PMFB5 seated), so it is a void* and each row casts. */
+struct Seat { PortPmf *slot; unsigned rom; void *host; const char *tab; };
 const Seat g_ov060_states[] = {
     /* 0x0211aeb4 -- BOWSER, four */
-    {data_ov060_0211a578, 0x021128c0, func_ov060_021128c0, "aeb4[0]"},
-    {data_ov060_0211a510, 0x02112724, func_ov060_02112724, "aeb4[1]"},
-    {data_ov060_0211a518, 0x021125f0, func_ov060_021125f0, "aeb4[2]"},
-    {data_ov060_0211a520, 0x021125f0, func_ov060_021125f0, "aeb4[3]"},
+    {data_ov060_0211a578, 0x021128c0, (void *)func_ov060_021128c0, "aeb4[0]"},
+    {data_ov060_0211a510, 0x02112724, (void *)func_ov060_02112724, "aeb4[1]"},
+    {data_ov060_0211a518, 0x021125f0, (void *)func_ov060_021125f0, "aeb4[2]"},
+    {data_ov060_0211a520, 0x021125f0, (void *)func_ov060_021125f0, "aeb4[3]"},
     /* 0x0211aed4 -- BOWSER, twenty */
-    {data_ov060_0211a568, 0x02114f88, func_ov060_02114f88, "aed4[0]"},
-    {data_ov060_0211a560, 0x02113b5c, func_ov060_02113b5c, "aed4[1]"},
-    {data_ov060_0211a538, 0x02113740, func_ov060_02113740, "aed4[2]"},
-    {data_ov060_0211a4e8, 0x02113710, func_ov060_02113710, "aed4[3]"},
-    {data_ov060_0211a4f0, 0x02112ddc, func_ov060_02112ddc, "aed4[4]"},
-    {data_ov060_0211a500, 0x021154e8, func_ov060_021154e8, "aed4[5]"},
-    {data_ov060_0211a540, 0x021153f8, func_ov060_021153f8, "aed4[6]"},
-    {data_ov060_0211a5b8, 0x02113d8c, func_ov060_02113d8c, "aed4[7]"},
-    {data_ov060_0211a5b0, 0x02114858, func_ov060_02114858, "aed4[8]"},
-    {data_ov060_0211a5a0, 0x021140c0, func_ov060_021140c0, "aed4[9] HOLE"},
-    {data_ov060_0211a5a8, 0x021142b4, func_ov060_021142b4, "aed4[10]"},
-    {data_ov060_0211a530, 0x02113fcc, func_ov060_02113fcc, "aed4[11]"},
-    {data_ov060_0211a508, 0x021146d0, func_ov060_021146d0, "aed4[12]"},
-    {data_ov060_0211a528, 0x021143b8, func_ov060_021143b8, "aed4[13]"},
-    {data_ov060_0211a598, 0x02114d08, func_ov060_02114d08, "aed4[14]"},
-    {data_ov060_0211a590, 0x02114e9c, func_ov060_02114e9c, "aed4[15]"},
-    {data_ov060_0211a588, 0x02114b60, func_ov060_02114b60, "aed4[16]"},
-    {data_ov060_0211a580, 0x02114300, func_ov060_02114300, "aed4[17]"},
-    {data_ov060_0211a4f8, 0x02114ff8, func_ov060_02114ff8, "aed4[18]"},
-    {data_ov060_0211a570, 0x02112bfc, func_ov060_02112bfc, "aed4[19]"},
+    {data_ov060_0211a568, 0x02114f88, (void *)func_ov060_02114f88, "aed4[0]"},
+    {data_ov060_0211a560, 0x02113b5c, (void *)func_ov060_02113b5c, "aed4[1]"},
+    {data_ov060_0211a538, 0x02113740, (void *)func_ov060_02113740, "aed4[2]"},
+    {data_ov060_0211a4e8, 0x02113710, (void *)func_ov060_02113710, "aed4[3]"},
+    {data_ov060_0211a4f0, 0x02112ddc, (void *)func_ov060_02112ddc, "aed4[4]"},
+    {data_ov060_0211a500, 0x021154e8, (void *)func_ov060_021154e8, "aed4[5]"},
+    {data_ov060_0211a540, 0x021153f8, (void *)func_ov060_021153f8, "aed4[6]"},
+    {data_ov060_0211a5b8, 0x02113d8c, (void *)func_ov060_02113d8c, "aed4[7]"},
+    {data_ov060_0211a5b0, 0x02114858, (void *)func_ov060_02114858, "aed4[8]"},
+    {data_ov060_0211a5a0, 0x021140c0, (void *)func_ov060_021140c0, "aed4[9] HOLE"},
+    {data_ov060_0211a5a8, 0x021142b4, (void *)func_ov060_021142b4, "aed4[10]"},
+    {data_ov060_0211a530, 0x02113fcc, (void *)func_ov060_02113fcc, "aed4[11]"},
+    {data_ov060_0211a508, 0x021146d0, (void *)func_ov060_021146d0, "aed4[12]"},
+    {data_ov060_0211a528, 0x021143b8, (void *)func_ov060_021143b8, "aed4[13]"},
+    {data_ov060_0211a598, 0x02114d08, (void *)func_ov060_02114d08, "aed4[14]"},
+    {data_ov060_0211a590, 0x02114e9c, (void *)func_ov060_02114e9c, "aed4[15]"},
+    {data_ov060_0211a588, 0x02114b60, (void *)func_ov060_02114b60, "aed4[16]"},
+    {data_ov060_0211a580, 0x02114300, (void *)func_ov060_02114300, "aed4[17]"},
+    {data_ov060_0211a4f8, 0x02114ff8, (void *)func_ov060_02114ff8, "aed4[18]"},
+    {data_ov060_0211a570, 0x02112bfc, (void *)func_ov060_02112bfc, "aed4[19]"},
     /* 0x0211ae9c -- BOWSER TAIL, three */
-    {data_ov060_0211a558, 0x02115d68, func_ov060_02115d68, "ae9c[0]"},
-    {data_ov060_0211a550, 0x02115d50, func_ov060_02115d50, "ae9c[1]"},
-    {data_ov060_0211a548, 0x02115c1c, func_ov060_02115c1c, "ae9c[2]"},
+    {data_ov060_0211a558, 0x02115d68, (void *)ov60_ae9c_s0, "ae9c[0]"},
+    {data_ov060_0211a550, 0x02115d50, (void *)ov60_ae9c_s1, "ae9c[1]"},
+    {data_ov060_0211a548, 0x02115c1c, (void *)ov60_ae9c_s2, "ae9c[2]"},
     /* 0x0211afb4 -- BOWSER FIRE behaviour, eight */
-    {data_ov060_0211a794, 0x0211747c, func_ov060_0211747c, "afb4[0]"},
-    {data_ov060_0211a78c, 0x021169f8, func_ov060_021169f8, "afb4[1]"},
-    {data_ov060_0211a76c, 0x02116b68, func_ov060_02116b68, "afb4[2]"},
-    {data_ov060_0211a77c, 0x021167ec, func_ov060_021167ec, "afb4[3]"},
-    {data_ov060_0211a764, 0x021168c4, func_ov060_021168c4, "afb4[4]"},
+    {data_ov060_0211a794, 0x0211747c, (void *)func_ov060_0211747c, "afb4[0]"},
+    {data_ov060_0211a78c, 0x021169f8, (void *)func_ov060_021169f8, "afb4[1]"},
+    {data_ov060_0211a76c, 0x02116b68, (void *)func_ov060_02116b68, "afb4[2]"},
+    {data_ov060_0211a77c, 0x021167ec, (void *)func_ov060_021167ec, "afb4[3]"},
+    {data_ov060_0211a764, 0x021168c4, (void *)func_ov060_021168c4, "afb4[4]"},
     /* not a HOLE any more -- w9-harvest seated main's byte-matched
        src/func_ov060_02116d78.c here in place of w7a's host copy. */
-    {data_ov060_0211a774, 0x02116d78, func_ov060_02116d78, "afb4[5]"},
-    {data_ov060_0211a744, 0x02116f90, func_ov060_02116f90, "afb4[6]"},
-    {data_ov060_0211a784, 0x02116f90, func_ov060_02116f90, "afb4[7]"},
+    {data_ov060_0211a774, 0x02116d78, (void *)func_ov060_02116d78, "afb4[5]"},
+    {data_ov060_0211a744, 0x02116f90, (void *)func_ov060_02116f90, "afb4[6]"},
+    {data_ov060_0211a784, 0x02116f90, (void *)func_ov060_02116f90, "afb4[7]"},
     /* 0x0211af74 -- BOWSER FIRE init, eight */
-    {data_ov060_0211a75c, 0x021167c8, func_ov060_021167c8, "af74[0]"},
-    {data_ov060_0211a754, 0x02116b18, func_ov060_02116b18, "af74[1]"},
-    {data_ov060_0211a73c, 0x02116c68, func_ov060_02116c68, "af74[2]"},
-    {data_ov060_0211a74c, 0x021167c8, func_ov060_021167c8, "af74[3]"},
-    {data_ov060_0211a734, 0x021169b0, func_ov060_021169b0, "af74[4]"},
-    {data_ov060_0211a7ac, 0x02116f74, func_ov060_02116f74, "af74[5]"},
-    {data_ov060_0211a7a4, 0x0211722c, func_ov060_0211722c, "af74[6]"},
-    {data_ov060_0211a79c, 0x021171e8, func_ov060_021171e8, "af74[7]"},
+    {data_ov060_0211a75c, 0x021167c8, (void *)ov60_af74_s0, "af74[0]"},
+    {data_ov060_0211a754, 0x02116b18, (void *)ov60_af74_s1, "af74[1]"},
+    {data_ov060_0211a73c, 0x02116c68, (void *)ov60_af74_s2, "af74[2]"},
+    {data_ov060_0211a74c, 0x021167c8, (void *)ov60_af74_s3, "af74[3]"},
+    {data_ov060_0211a734, 0x021169b0, (void *)ov60_af74_s4, "af74[4]"},
+    {data_ov060_0211a7ac, 0x02116f74, (void *)ov60_af74_s5, "af74[5]"},
+    {data_ov060_0211a7a4, 0x0211722c, (void *)ov60_af74_s6, "af74[6]"},
+    {data_ov060_0211a79c, 0x021171e8, (void *)ov60_af74_s7, "af74[7]"},
     /* 0x0211b1d8 -- SPIKE BOMB, four */
-    {data_ov060_0211aa30, 0x02118970, func_ov060_02118970, "b1d8[0]"},
-    {data_ov060_0211aa48, 0x021188e8, func_ov060_021188e8, "b1d8[1]"},
-    {data_ov060_0211aa40, 0x02118834, func_ov060_02118834, "b1d8[2]"},
-    {data_ov060_0211aa38, 0x02118728, func_ov060_02118728, "b1d8[3]"},
+    {data_ov060_0211aa30, 0x02118970, (void *)func_ov060_02118970, "b1d8[0]"},
+    {data_ov060_0211aa48, 0x021188e8, (void *)func_ov060_021188e8, "b1d8[1]"},
+    {data_ov060_0211aa40, 0x02118834, (void *)func_ov060_02118834, "b1d8[2]"},
+    {data_ov060_0211aa38, 0x02118728, (void *)func_ov060_02118728, "b1d8[3]"},
     /* 0x0211b1ac -- SKY PLATFORM, three (sinit copy order) */
-    {data_ov060_0211a938, 0x021181b4, func_ov060_021181b4, "b1ac[0]"},
-    {data_ov060_0211a940, 0x021180e0, func_ov060_021180e0, "b1ac[1]"},
-    {data_ov060_0211a930, 0x02117db8, func_ov060_02117db8, "b1ac[2]"},
+    {data_ov060_0211a938, 0x021181b4, (void *)ov60_b1ac_s0, "b1ac[0]"},
+    {data_ov060_0211a940, 0x021180e0, (void *)ov60_b1ac_s1, "b1ac[1]"},
+    {data_ov060_0211a930, 0x02117db8, (void *)ov60_b1ac_s2, "b1ac[2]"},
 };
 }  /* namespace */
 

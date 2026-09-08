@@ -55,10 +55,46 @@ void func_ov079_0212682c(void *);           /* state 0 */
 void func_ov079_02126794(void *);           /* state 1 */
 }
 
-static const struct { PortPmf *slot; unsigned rom; void (*host)(void *); }
+/* ---- data_ov079_021282e0 IS DISPATCHED BY THE MATCHED TU NOW -------------
+ *
+ * Run link100 lane PMFB5. src/_ZN10BulletBill8BehaviorEv.cpp compiles from src
+ * and this file no longer defines the Behavior, so the two cells are reached by
+ * `mov ecx, tab[i*8+4] / mov eax, tab[i*8] / add ecx, esi / call eax` with
+ * nothing pushed and nothing cleaned, and the two plain cdecl bodies become
+ * zero-argument __fastcall faces.
+ *
+ * THE STRIDE, ROM SIDE (runs/link100/out/PMFB5/rom_gate3.txt):
+ * `add r3, r1, r0, lsl #3` at 02126bfc on the pool word 02126c40 = 021282e0.
+ * EMITTED SIDE: [ebx*8] and [ebx*8+4]. ROM 8 == emitted 8; /Zp4 a measured
+ * no-op.
+ *
+ * THE TWO SOURCE PAIRS both read {code, 0} in the overlay image at the
+ * addresses src/__sinit_ov079_021279d4.c copies them from. The spelling is one
+ * lane PMFB4's reader did not know: `data_ov079_021282e0.a = SRC;` where
+ * `struct S4 { struct S2 a, b; }` and `struct S2 { int w[2]; }`, so the member
+ * IS a whole eight-byte pair and its ordinal is the slot. Reading `.a =` as a
+ * field-form fill -- the name looks exactly like one -- would have refused this
+ * row for a reason that is not true. THE TABLE IS FULLY COVERED: the next
+ * symbol is 16 bytes on, which is the two cells.
+ *
+ * NO /alternatename: the matched TU declares the table inside extern "C" and it
+ * comes in as the plain _data_ov079_021282e0, which the object's UNDEF sweep
+ * confirms (no decorated external at all). */
+
+#define BB_FACE(slot, sym)                                                \
+    static void __fastcall bb_s##slot(void *self, void *dead_edx)         \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym(self);                                                        \
+    }
+
+BB_FACE(0, func_ov079_0212682c)
+BB_FACE(1, func_ov079_02126794)
+
+static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_bullet_bill_states[] = {
-    {data_ov079_02127ea4, 0x0212682c, func_ov079_0212682c},
-    {data_ov079_02127e9c, 0x02126794, func_ov079_02126794},
+    {data_ov079_02127ea4, 0x0212682c, (void *)bb_s0},
+    {data_ov079_02127e9c, 0x02126794, (void *)bb_s1},
 };
 
 extern "C" void port_bullet_bill_states_seat(void)
@@ -81,87 +117,5 @@ extern "C" void port_bullet_bill_states_seat(void)
     }
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-extern "C" int _ZN10BulletBill8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    int flags;
-    u32 which;
-    u32 id;
-
-    func_0200f760(c, c + 0x110);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-
-    which = *(u32 *)(c + 0x3d4);
-    ((void (*)(void *))(size_t)data_ov079_021282e0[which].fn)(c);
-
-    id = *(u32 *)(c + 0x134);
-    if (id != 0) {
-        flags = *(int *)(c + 0x130);
-        if (flags & 0x10) {
-            _ZN5Actor10FindWithIDEj(id);
-            _ZN6Player16IncMegaKillCountEv();
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
-                0x8f, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-            _ZN9ActorBase18MarkForDestructionEv(c);
-            {
-                void *p = c + 0x74;
-                int n = 0x78;
-                func_02012694(n, p);
-            }
-        } else if (flags & 0x3c0) {
-            *(int *)(c + 0x3d4) = 1;
-            {
-                PortVec3 *pos = (PortVec3 *)(c + 0x74);
-                _ZN5Sound9PlayBank0EjRK7Vector3(0xb5, pos);
-            }
-        } else {
-            void *o = _ZN5Actor10FindWithIDEj(id);
-            if (o != 0) {
-                int eq = (*(u16 *)((char *)o + 0xc) == 0xbf);
-                if (eq != 0) {
-                    if (*(u8 *)((char *)o + 0x6fb) == 0) {
-                        PortVec3 pos;
-                        pos.x = *(int *)(c + 0x5c);
-                        pos.y = *(int *)(c + 0x60);
-                        pos.z = *(int *)(c + 0x64);
-                        _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
-                            o, &pos, 3, 0xc000, 1, 0, 1);
-                        *(int *)(c + 0x3d4) = 1;
-                        {
-                            PortVec3 *p2 = (PortVec3 *)(c + 0x74);
-                            _ZN5Sound9PlayBank0EjRK7Vector3(0xb5, p2);
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    {
-        u16 *h = (u16 *)(c + 0x100);
-        *h = *h + 1;
-        if (which != *(u32 *)(c + 0x3d4)) {
-            *h = 0;
-        }
-    }
-
-    func_ov079_02126704(c);
-
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    {
-        PortVec3 pos;
-        pos.x = 0;
-        pos.y = -0x50000;
-        pos.z = 0;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-            c + 0x110, &pos);
-    }
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
-
-    *(short *)(c + 0x92) = *(short *)(c + 0x8c);
-    *(short *)(c + 0x94) = *(short *)(c + 0x8e);
-    *(short *)(c + 0x96) = *(short *)(c + 0x90);
-    return 1;
-}
+/* THE HOST COPY IS GONE. src/_ZN10BulletBill8BehaviorEv.cpp is on
+   port/slice_pmfb5.txt and dispatches the seated table itself. */
