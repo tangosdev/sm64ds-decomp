@@ -1894,6 +1894,53 @@ static int port_pace_selftest(void)
     return on;
 }
 
+/* THE HOST FRAME PUMP (run link100, boot plan rung R3b, step B2), and the
+   CORRECTION the measurement forced on the R3b plan.
+
+   THE PLAN SAID: move each host duty into step 1 of
+   hal/boot2_thread.cpp's CP1516WaitForInterrupt, which is the port's model of
+   the hardware halt the ROM's loop sleeps in at phase 7. THE MEASUREMENT SAYS
+   THAT WAIT IS NOT ON THIS PATH. A 300-frame level run reports
+
+       [thr] r3b-b1 ... halts=0 pump=0 vbl_dispatch=0 vbl_wakes=0
+
+   -- CP1516WaitForInterrupt is entered ZERO times, because its only callers
+   are the ROM's idle loops (src/func_02057e34.c, src/func_0201a028.c) and this
+   host loop drives the frame itself instead of sleeping. A duty moved literally
+   into step 1 today would simply stop running.
+
+   SO THE DUTY MOVES INTO A NAMED FUNCTION THAT BOTH SIDES CAN CALL, which is
+   what the plan actually needs. This loop calls it at the exact point the duty
+   ran before, so the frame is unchanged to the statement; step 1 of the wait
+   calls the same function through a pointer that NOTHING INSTALLS YET. Under
+   rung R3d the install is one line and the duty carries on running once per
+   frame without moving again.
+
+   WHAT IS IN IT TODAY IS THE PACER AND NOTHING ELSE. frame_stat and frame_pace
+   were already the last two statements of the loop body, so this step is a pure
+   extraction with no reordering, which is why it can be gated on its own. The
+   message pump, the present and the sound frame (steps B4, B5, B3) sit EARLIER
+   in the body and moving them here reorders the frame -- a real change whose
+   only automatic check is a size-only BMP liveness test, so they are not taken
+   here. See this lane's report.
+
+   `spin` is the wait's own starvation counter, kept in the signature so the
+   R3d install needs no adapter; the host loop passes 0. */
+static int g_selftest_frames;   /* main's `selftest`, at file scope so the pump
+                                   reads the same number from either caller */
+
+static unsigned long long g_frame_pump_turns;   /* what the [r3b] line reports */
+
+extern "C" int port_host_frame_pump(unsigned spin)
+{
+    (void)spin;
+    ++g_frame_pump_turns;
+    frame_stat();
+    if ((!rb_replaying() || rb_presented_frame()) &&
+        (!g_selftest_frames || port_pace_selftest())) frame_pace();
+    return 1;
+}
+
 /* ---- THE DEBUG OVERLAY (port mod) -------------------------------------
    F3. Text drawn INTO THE FRAMEBUFFER, after gx_render and before the blit,
    with the 8x8 font in overlay_font.h. Three consequences worth stating,
@@ -8392,6 +8439,9 @@ int main(void)
        framebuffer next to the exe, exit -- CI-checkable without a user */
     const char *st = getenv("SM64DS_WINDOW_SELFTEST");
     const int selftest = st ? atoi(st) : 0;
+    /* rung R3b step B2: the pump reads this from file scope, because under
+       R3d its caller is hal/boot2_thread.cpp and not this function. */
+    g_selftest_frames = selftest;
     /* The agreed stop round for a lockstep selftest; see the check at the
        end of the frame loop. Selftest only, and 0 means "frame budget". */
     const char *sr = getenv("SM64DS_COMMS_STOP_ROUND");
@@ -13459,6 +13509,12 @@ int main(void)
                         port_rom_frame(), (unsigned)data_0209d4f0[0]);
                 port::thread_sched_report("r3b-b1");
             }
+            fprintf(stderr, "[r3b] B2: the pacer runs from "
+                    "port_host_frame_pump, the one function step 1b of "
+                    "CP15::WaitForInterrupt calls under R3d -- %llu turns over "
+                    "%d frames, all of them from this loop (the [thr] line "
+                    "above says framepump=0, so the wait took none of them)\n",
+                    g_frame_pump_turns, port_rom_frame());
             /* THE RUN ENDS HERE, AND IT ENDS WITH exit() (rung R3b, step B8).
 
                It was `return 0` out of main, which is a shape only a HOST loop
@@ -13502,9 +13558,9 @@ int main(void)
            SM64DS_PACE_SELFTEST=1 puts the pace back on a selftest, which is
            the only way to measure an online session the way a player runs
            one; see port_pace_selftest. */
-        frame_stat();
-        if ((!rb_replaying() || rb_presented_frame()) &&
-            (!selftest || port_pace_selftest())) frame_pace();
+        /* rung R3b step B2: the pacer, at the point it always ran, through the
+           one function step 1 of the ROM's wait will call under R3d. */
+        port_host_frame_pump(0);
         /* func_020197b8.c:56 -- and down the instant the wait returns. The
            pace above IS this loop's wait: it is the sleep that ends the
            frame, which is what phase 7 is. Under R3d the flag's two writes

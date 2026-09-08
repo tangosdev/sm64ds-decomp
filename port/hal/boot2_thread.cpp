@@ -351,9 +351,14 @@ bool g_booted;
 unsigned long g_owner_tid;        // the OS thread the fibers belong to
 unsigned g_starve;                // consecutive halts with nobody woken
 
+// rung R3b step B2: the HOST FRAME pump, distinct from the wireless one in
+// hal/os_thread.cpp. Null until rung R3d installs it; see step 1b below.
+int (*g_host_frame_pump)(unsigned);
+
 struct Stats {
     unsigned long long saves, restores, resumes, refused, unknown_ctx;
     unsigned long long halts, pump_turns, vblank_dispatches, vblank_wakes;
+    unsigned long long frame_pump_turns;   // rung R3b step B2, step 1b
     unsigned long long starved, wrong_thread, idle_sleeps;
     unsigned long long adopted, entered, exited, rejected, nocreate;
 } g_stat;
@@ -772,6 +777,28 @@ void _ZN4CP1516WaitForInterruptEv(void) {
         if (!p(g_starve)) pump_stop = true;
     }
 
+    // 1b. THE HOST FRAME'S OWN DUTIES (run link100, boot plan rung R3b).
+    //
+    //   The pump above is the WIRELESS one: hal/comms_conductor.cpp installs it
+    //   for the duration of a radio wait and nothing else does. This second
+    //   one is the FRAME's -- the pacer today, and whatever else rung R3b's
+    //   later steps move out of tests/walk_window.cpp's loop body -- and it is
+    //   here because a frame's wait IS its pace: func_020197b8 sleeps at phase
+    //   7 and the VBlank is what ends the frame.
+    //
+    //   NOTHING INSTALLS IT TODAY, deliberately, and the measurement says why:
+    //   a 300-frame level run reports halts=0, so this whole function is
+    //   entered zero times while tests/walk_window.cpp drives the frame. That
+    //   file calls port_host_frame_pump itself, at the point the duty always
+    //   ran. Rung R3d hands the frame to func_020197b8, and the install below
+    //   is the one line that keeps the duty running once per frame afterwards.
+    //   Counted separately from pump_turns so the two pumps can never be
+    //   confused for one another in a report.
+    if (g_host_frame_pump) {
+        ++g_stat.frame_pump_turns;
+        g_host_frame_pump(g_starve);
+    }
+
     // 2. the VBlank edge, through the port's own registry.
     if (void *h = _ZN3IRQ13GetIRQHandlerEj(ntr::IRQ_VBLANK)) {
         volatile uint32_t *irq_if = reinterpret_cast<volatile uint32_t *>(0x04000214);
@@ -838,6 +865,16 @@ extern "C" void port_thread_sched_counts(unsigned long long *adopted,
 // thread_proof() below performs after its own control arm, and it exists ONLY
 // for that: on the armed path no caller ever needs it, because the switch
 // happened and the word is right.
+// rung R3b step B2: install the HOST FRAME pump that step 1b of
+// CP1516WaitForInterrupt calls. Nothing calls this yet -- rung R3d is what
+// calls it, once, when func_020197b8 becomes the thing that drives the frame.
+// Until then tests/walk_window.cpp calls port_host_frame_pump itself at the
+// point the duty always ran, so the frame is unchanged to the statement.
+extern "C" void port_install_host_frame_pump(int (*pump)(unsigned))
+{
+    g_host_frame_pump = pump;
+}
+
 extern "C" void port_thread_repair_current(void)
 {
     if (!g_running) return;
@@ -850,11 +887,12 @@ namespace port {
 void thread_sched_report(const char *tag) {
     std::fprintf(stderr,
                  "[thr] %s saves=%llu switches=%llu resumes=%llu refused=%llu "
-                 "halts=%llu pump=%llu vbl_dispatch=%llu vbl_wakes=%llu "
+                 "halts=%llu pump=%llu framepump=%llu vbl_dispatch=%llu vbl_wakes=%llu "
                  "starved=%llu unknown=%llu adopted=%llu entered=%llu "
                  "exited=%llu rejected=%llu nocreate=%llu\n",
                  tag, g_stat.saves, g_stat.restores, g_stat.resumes,
                  g_stat.refused, g_stat.halts, g_stat.pump_turns,
+                 g_stat.frame_pump_turns,
                  g_stat.vblank_dispatches, g_stat.vblank_wakes, g_stat.starved,
                  g_stat.unknown_ctx, g_stat.adopted, g_stat.entered,
                  g_stat.exited, g_stat.rejected, g_stat.nocreate);
