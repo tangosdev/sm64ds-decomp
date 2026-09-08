@@ -31,9 +31,6 @@
 #include "decl_common.h"
 
 /* Declarations shared by the members below. */
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
-struct Derived { char pad[0xd4]; Base base; };
-
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void *v);
@@ -58,10 +55,9 @@ extern void *data_ov064_0211bb2c;
 extern "C" {
 extern void *_ZN7fBase_cnwEj(u32 size);
 extern void _ZN10dBgActor_cC2Ev(void *self);
-/* @symbol daObjFl_London_c_classInit -- the factory the FL_LONDON descriptor
- * names. It keeps its coined spelling: `classInit` alone collides across every
- * actor and the real name is not in the cartridge. Historical alias:
- * daObjFl_London_c_Spawn. */
+/* Reconstructed source-style factory name. RTTI proves daObjFl_London_c,
+ * and the FL_LONDON descriptor identifies this factory; neither preserves
+ * its original function spelling. Historical alias: daObjFl_London_c_Spawn. */
 // @symbol daObjFl_London_c_classInit
 int *daObjFl_London_c_classInit(void)
 {
@@ -154,7 +150,8 @@ s32 daObjFl_London_c::Behavior()
 // @symbol _ZN16daObjFl_London_c6RenderEv
 s32 daObjFl_London_c::Render()
 {
-    Derived *d = (Derived *)this; Base *b = &d->base; b->m(0); return 1;
+    mModel.Render(0);
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -176,15 +173,19 @@ s32 daObjFl_London_c::CleanupResources()
 /* ROM ordinal 2 -- func_ov022_02111a1c, 0x02111a1c, size 0x48                */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov022_02111a1c
-/* This class's own still-unnamed helper: rebuild the model matrix from the
- * actor's three angles, then publish the position at 1/8 scale. Both callers
- * (InitResources and Behavior) are in this TU. */
+/* Rebuild the inherited model matrix from the actor's angles, then write
+ * its translation at 1/8 position scale. Both callers are in this TU. The
+ * local receiver uses the real class layout; the external char* declaration
+ * and address-derived helper name stay unchanged. Original member/free-function
+ * spelling is unproven. Keep the existing common.h Matrix4x3 view (m[12]). */
 extern "C" void func_ov022_02111a1c(char *t)
 {
-    Matrix4x3_FromRotationZXYExt(t + 0xf0, *(short *)(t + 0x8c), *(short *)(t + 0x8e), *(short *)(t + 0x90));
-    *(int *)(t + 0x114) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x118) = *(int *)(t + 0x60) >> 3;
-    *(int *)(t + 0x11c) = *(int *)(t + 0x64) >> 3;
+    daObjFl_London_c *self = (daObjFl_London_c *)t;
+    Matrix4x3_FromRotationZXYExt(&self->mModel.mat4x3,
+        self->mAngleX, self->mAngleY, self->mAngleZ);
+    self->mModel.mat4x3.m[9] = self->mPosX >> 3;
+    self->mModel.mat4x3.m[10] = self->mPosY >> 3;
+    self->mModel.mat4x3.m[11] = self->mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */

@@ -1,0 +1,48 @@
+# Handoff: issue-2480-london-source-review
+
+This document describes this commit. The queue records its immutable output SHA.
+
+## Identity and continuation
+
+- Issue: https://github.com/tangosdev/sm64ds-decomp/issues/2480; task `issue-2480-london-source-review`, stage `fix`, role producer.
+- Session/harness: `codex-london-humanizer-producer-20260908` / Codex; branch `cpp/humanizer-london-0908`.
+- Accepted input and source base: `224e660ea0219d0999c58483eb2dd9b38991f5ef`. This continues the already merged PR #2444 London TU; it does not restart the class.
+- Queue/workflow pin: `6ef1dfb896e6074e83d2aa1a03cc3b701d07dcae`, used from the separate installed workflow checkout. Byte tools are the source input's tools at `224e660ea0219d0999c58483eb2dd9b38991f5ef`; `linkcheck.py` is unchanged between those pins, while `tubuild.py` and `rombuild.py` have advanced on main. Compiler canary: verified `2004/b56`.
+- Status: locally proved correction, offered for independent verification. Next owner: independent verifier, then integrator for the requested correction PR. No PR branch push, merge, or independent acceptance by this producer.
+- Only the London source, its header, manifest notes, and this handoff changed. Existing attribution, ledger, manifests' structural records, historical verification and original author history are preserved.
+
+## What changed and why
+
+The owned TU has eight functions, 812 text bytes at `ov022:0x02111980..0x02111cac`, and 196 data bytes at `ov022:0x02113f2c..0x02113ff0`. The data range covers RTTI, the terminated class name and padding, the actor descriptor, and the vtable object. Its address point is `0x02113f70`, eight bytes after the vtable object's start.
+
+`Render` now calls the inherited `mModel.Render(0)`. The ROM adjusts the actor receiver by `0xd4`, passes zero, and dispatches through Model's slot 5, at vtable byte offset `0x14`. The former local `Base`/`Derived` imitation is removed. The existing real interface emits the same bytes and destinations.
+
+`func_ov022_02111a1c` now creates a typed local `daObjFl_London_c*` receiver and uses the existing angle, position and `mModel.mat4x3` fields. Both callers, its external `char*` ABI, its address-derived name, and include order remain unchanged. The existing `common.h` matrix view stores translation in `m[9..11]`, at actor offsets `0x114/0x118/0x11c`. No new shared declaration is introduced.
+
+Header comments now describe the actual factory/base lifecycle and the field uses in both InitResources and Behavior. The base constructs the inherited Model and collider; the destructor destroys them in reverse order. The two tail-padding bytes do not require destruction. The factory allocates `0x320` bytes, constructs the base and installs the derived vptr; InitResources initializes the bytes. Behavior decrements the cooldown, rotates toward the two angle limits, then reloads the cooldown and flips the flag. The field names describe observed behavior and are inferred identifiers.
+
+ROM RTTI supports the class identity and base relationship. Factory/profile spellings are reconstructed project names, and the helper's address-based label does not prove an original name or member/free-function status. The current header and manifest now distinguish TU promotion from completion of class reconstruction. The earlier PR #2444 rescue handoff and verification block remain historical records.
+
+## Scope and remaining reconstruction
+
+This carries PR2444-01, the London portion of PR2444-02, and PR2444-07. The TU still comprises four ordinary virtual methods, two compiler-emitted destructor variants, a free helper and a manual factory. Existing class fields/layout, lifecycle emission, data ownership and all eight inherited compiler-only metadata dispositions are unchanged.
+
+The two cleaner source forms tested here both succeed; neither needs a compatibility imitation. Partial reconstruction remains under issue #2480: the manual allocation/base-constructor/vptr factory, raw aliases and mangled calls in Behavior/CleanupResources and other external calls, the helper's retained external boundary, and legacy profile field names/types. The profile's `profileIDAndExecuteOrder` spelling is not established as an actor-ID field; descriptor offsets `+4/+6` feed priorities in the current constructor reconstruction. Those broader alternatives were not measured in this bounded correction and are not reported as compiler barriers. The existing coordinator owns that remaining scope. Clock, volcano, shared-header reconstruction and the separate actor callback repair are outside this change.
+
+## Fresh local proof
+
+Ignored evidence is `build/london-proof/proof.json`, with expanded commands, source/header hashes and exit codes; `probes.json` preserves each cleaner-form experiment. No ROM, compiler, object or receipt is committed.
+
+- Render-only and typed-helper probes: explicit `tools/linkcheck.py --name <symbol> --c src/actors/daObjFl_London_c.cpp --module ov022 --addr <address> --size <size>`; each exit 0, `VERIFIED`, `blind: 0`, `diffs: []`. Probe source copies and logs are preserved. The tool's single-symbol mode prints JSON to stdout rather than the supplied `--json` file; captured JSON was saved separately without changing the gate.
+- Final complete function proof: the same command for all eight manifest entries, **8/8 VERIFIED**, zero blind relocations or differences. `strict-0..7.json/.log` contain expanded commands/results. The exact address/size pairs are D1 `0x02111980/0x44`, D0 `0x021119c4/0x58`, helper `0x02111a1c/0x48`, CleanupResources `0x02111a64/0x44`, Render `0x02111aa8/0x28`, Behavior `0x02111ad0/0x10c`, InitResources `0x02111bdc/0xa0`, factory `0x02111c7c/0x30`.
+- `python tools/tubuild.py --manifest build/london-proof/manifest-copy verify ov022/daObjFl_London_c`: exit 0, 8/8 MATCH, isolation and relocation destinations clean, expected order. The ignored manifest copy receives the fresh result, preserving tracked historical evidence. Log: `tu-verify.log`.
+- Fresh raw-object data proof through the existing `tubuild` manifest policy/order/owned-section APIs: all **196 owned bytes exact, all 37 relocations OK**, no errors. The existing compiler-only dispositions and nontext ordering are unchanged; no custom byte patch is used. Full result and raw-object hash: `owned-data.json`.
+- `python tools/romdata_check.py --files src/actors/daObjFl_London_c.cpp --json build/london-proof/romdata.json`: exit 0; 12 emitted records, **7 VERIFIED, 5 PARTIAL, 0 DIFFERS, 0 UNNAMED**. The partial records compare 52 bytes and remain partial; they are not counted as full metadata verification. The complete owned-data gate separately proves London's entire 196-byte range.
+- `python tools/rombuild.py -j 8 --report-json build/london-proof/rombuild.json --data-json build/london-proof/romdata-all.json --rom-out build/london-proof/sm64ds.nds`: exit 0. **106/106 modules exact; 11,199 source-built functions reproduce; 25/25 source-owned data claims reproduce; three BSS claims pass object/symbol gates.** The packed ROM's SHA-256 is `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`, equal to the build's expected ROM. Intact-object link checks pass with zero new symbol errors. Log: `rombuild.log`.
+- Header expansion through `affected_src.affected_sources(['include/daObjFl_London_c.h'], ROOT)` finds only the London TU; all its functions are covered above. Header non-comment tokens and source include order equal the input. `affected-consumers.json` and `scope-invariants.json` preserve these checks.
+- `python tools/port_refcheck.py --json build/london-proof/port-refcheck.json`: exit 0, 423 references and zero stale paths. `python tools/langmode_audit.py --check build/london-proof/langmode-bank.json --json build/london-proof/langmode-current.json`: exit 0 against recorded `chaos-data` commit `b4fab1eb7f1ed58f73955ca84309a6f9a25ffcb1`; no baseline write. An initial invocation omitted the required `--check` argument and exited 2; both usage error and corrected pass remain in `static-checks.json`.
+- `git diff --check`: exit 0. Manifest values apart from notes, header non-comment content, helper external signature/call sites, and attribution/ledger files equal the accepted input. Exact-commit attribution and pre-push results produced after this commit belong in the ignored evidence rather than an amended handoff.
+
+The full metadata audit reports 704 verified symbols, 223 partial, four differing symbols and 389 unnamed symbols; it is not a global metadata pass. The four differing symbols are outside London (`dCcAcPos_c`, two `daDemo_c` nested RTTI records and `daKrb_c`). The scratch control retains nine existing `dsd check symbols --fail` errors while its module and ROM checks pass; the production intact-TU gate admits zero additional symbol errors. These limits are preserved separately from the London proof.
+
+Private PR validation has not run for this candidate. Independent source/byte review and fresh terminal PR gates remain required before integration. There is no uncommitted source work after this checkpoint; ignored build/probe evidence and the private receipt remain local.
