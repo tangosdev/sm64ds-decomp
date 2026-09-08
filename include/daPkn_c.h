@@ -81,8 +81,11 @@ struct daPkn_c : dEnemyBase_c {
 
        With the destructor inline, OnAimedAtWithEgg becomes the first
        out-of-line virtual this class declares -- the key function -- so the
-       vtable and the RTTI group land in the translation unit that defines it,
-       src/actors/daPkn_c.cpp. */
+       compiler emits the vtable and the RTTI group into the translation unit
+       that defines it, src/actors/daPkn_c.cpp. They do not ship from here:
+       ov084 delinks no .data, so text-only isolation discards all three and
+       the ROM copies stand -- see compiler_only_output in
+       config/tu_manifest.d/ov084/daPkn_c.json. */
     virtual ~daPkn_c() {}
 
     virtual s32   OnAimedAtWithEgg();      /* slot 29 -- key function */
