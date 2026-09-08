@@ -41,6 +41,11 @@ void func_0203bc7c(void);
 // declared for the seam probe, which links this file without hal/boot2_ipc.cpp.
 #ifndef PORT_COMMS_SEAM_PROBE_FACE_020408B0
 void port_arm7_wireless_tick(void);
+// RUNG W2. hal/wm_arm7.cpp publishes the round the carrier just completed into
+// the ROM's own MP receive buffer, in the layout src/func_02062778.c unpacks.
+// Same guard and the same reason: the seam probe links this file without the
+// host ARM7.
+void port_wm_publish_mp_recv(void);
 #endif
 }
 
@@ -471,7 +476,19 @@ int func_020406b4(const void *block, unsigned short *status) {
         return 0;               // no partners: the round never completes
     }
     const int done = t->exchange(block, status);
-    if (done) ++port::g_rounds;
+    if (done) {
+        ++port::g_rounds;
+        // RUNG W2. The round is in, so the ROM's own MP receive buffer is
+        // filled from it BEFORE the caller asks for a peer's block: this face
+        // and func_0204068c are called back to back by the ROM's own wait
+        // (src/func_0203ea5c.c:223 then :255/:289), and as of this rung that
+        // second call is the cartridge's own unpacker reading what the line
+        // below wrote. hal/wm_arm7.cpp's own banner carries the layout and the
+        // src lines that fix every field of it.
+#ifndef PORT_COMMS_SEAM_PROBE_FACE_020408B0
+        port_wm_publish_mp_recv();
+#endif
+    }
     // W0. This is the one seam face the ROM calls on EVERY turn of its own wait
     // loop while the link is up (src/func_0203ea5c.c:223 and :236), so it is
     // what keeps data_020a0f94 and data_020a0f24 from going stale during a live
@@ -498,6 +515,31 @@ extern "C" void port_comms_counters_set(unsigned long long exchanges,
     port::g_rounds = rounds;
 }
 
+// ===========================================================================
+// RETIRED BY RUNG W2 (run link100, lane WM4). src/func_0204068c.c is linked by
+// port/slice_wm4.txt and it is the ROM's own two-line body: it hands
+// data_020a0f74 and data_020a0f80 to src/func_02062778.c, which refuses an aid
+// whose bit is clear in the receive buffer's liveness mask and otherwise steps
+// src/func_02062734.c's packed offset into it. hal/wm_arm7.cpp fills that
+// buffer from the carrier's completed round, in exactly that layout, from the
+// call added to func_020406b4 above.
+//
+// WHAT THE HOST BODY DID AND WHERE IT WENT. It asked the transport for the
+// block directly, which is the same bytes by a shorter road: the seam's frozen
+// contract already says the wire IS the ROM's 0x20-byte block, moved and never
+// reinterpreted. The shorter road is what this rung gives back -- the game now
+// reads a peer through the cartridge's own unpacker and the cartridge's own
+// buffer, and the only thing the host supplies is what arm7.bin supplies on
+// hardware, which is the bytes in the buffer.
+//
+// THE PROBE KEEPS IT. tests/mp_comms_seam.cpp:155-156 checks that
+// func_0204068c answers null for aids 0 and 1 with no transport installed, and
+// it links neither the WM unpacker nor the host ARM7 that fills the buffer, so
+// it keeps the retired stand-in under a define of its own -- the same shape as
+// PORT_COMMS_SEAM_PROBE_FACE_020408B0 (rung W1) and
+// PORT_COMMS_SEAM_PROBE_FACES_W4 (rung W4) above it.
+// ===========================================================================
+#ifdef PORT_COMMS_SEAM_PROBE_FACE_0204068C
 // src/func_0204068c.c: player `aid`'s received block, or 0.
 // PORT_HOST_ABI: hosted WM/radio seam face; returns a peer's received block out of the NITRO WM buffers over arm7.bin, which this repo does not decompile.
 const void *func_0204068c(unsigned short aid) {
@@ -506,6 +548,7 @@ const void *func_0204068c(unsigned short aid) {
     if ((int)aid >= port::kCommsMaxPlayers) return nullptr;
     return t->peer_block((int)aid);
 }
+#endif  // PORT_COMMS_SEAM_PROBE_FACE_0204068C
 
 // src/func_02040c34.c: starts the DS's wireless THREAD with two callbacks,
 // which are the ROM's own src/func_0203f644.c and src/func_0203f604.c. A host

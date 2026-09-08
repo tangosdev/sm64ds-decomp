@@ -136,6 +136,11 @@ WM_CENSUS_RE = re.compile(
     r"(\d+), unanswered (\d+)")
 
 # Gate A: the association line the same census prints (run link100, lane WM4).
+# Gate B: the MP receive line, from the same census (run link100, lane WM4).
+WM_MPRECV_RE = re.compile(
+    r"\[wm7:census\] mp receive: (\d+) round\(s\) published, last mask "
+    r"0x([0-9a-f]+), (\d+) slot\(s\) at peak, stride (\d+), wide buffer (ARMED|not needed)")
+
 WM_ASSOC_RE = re.compile(
     r"\[wm7:census\] association 0x([0-9a-f]+) \(peak 0x([0-9a-f]+), (\d+) "
     r"change\(s\)\), status \+0x86 (\d+), \+0x17e (\d+)")
@@ -202,6 +207,18 @@ def rung1(out_dir, frames):
               "a SOLO boot has no association: bitmap 0x%04x (peak 0x%04x, %d "
               "change(s)), status +0x86 %d, +0x17e %d" %
               (assoc, peak, ev, f86, f17e))
+    # AND GATE B's, same shape. A solo run completes no round, so the ROM's own
+    # MP receive buffer is never published into and the port's wider buffer is
+    # never armed. The nonzero half is the loopback capture in the lane report.
+    mm = WM_MPRECV_RE.search(txt)
+    check("R1", mm is not None,
+          "the host ARM7 reported its MP receive census (gate B)")
+    if mm:
+        rounds, lastmask, peak, stride, wide = (mm.group(i) for i in range(1, 6))
+        check("R1", rounds == "0" and peak == "0" and wide == "not needed",
+              "a SOLO boot publishes no MP round: %s round(s), last mask 0x%s, "
+              "%s slot(s) at peak, stride %s, wide buffer %s" %
+              (rounds, lastmask, peak, stride, wide))
     check("R1", "[arm7:census] tag 10" not in txt,
           "and not one word reached tag 10 in a solo run, which is the same "
           "measurement rung W1 was gated on")

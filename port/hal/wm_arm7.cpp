@@ -382,6 +382,26 @@ int func_0206470c(void *self)
 // src/func_020408b0.c allocated and src/func_020616e8.c laid out.
 extern unsigned char data_020a89ac[];
 
+// GATE B's two pointers, hosted by hal/comms_seam.cpp (".dsstate$ywmc09" and
+// ".dsstate$ywmc10") and FILLED by the ROM's own src/func_020408b0.c:41-42.
+// data_020a0f74 is the 0x420 MP work area -- four 0x100 frame slots and the
+// field block at +0x400, whose +0x410 halfword is the per-slot stride
+// src/func_02062734.c walks. data_020a0f80 is the MP receive buffer. Both are
+// four-byte spans holding a pointer, so they are READ the way data_020a89ac is
+// read above and never dereferenced as arrays.
+extern unsigned char data_020a0f74[];
+extern unsigned char data_020a0f80[];
+
+// And the ROM's own unpacker by its own name, for the once-a-session readback
+// at the foot of this file. src/func_0204068c.c is `int func_0204068c(int)`;
+// src/func_0203ea5c.c:29 and hal/comms_conductor_wide.cpp:109 both declare it
+// `void *func_0204068c(u16)` and call it that way, so this file uses the
+// callers' spelling. All three are extern "C" __cdecl on a PE32 target (the
+// map names it _func_0204068c with no @N), so the caller pops and a 16-bit
+// argument reaching a 32-bit parameter is zero-extended into its own stack
+// slot -- the same reading rung W0 wrote down for func_02040704.
+void *func_0204068c(unsigned short aid);
+
 }  // extern "C"
 
 // ===========================================================================
@@ -451,6 +471,18 @@ unsigned long g_timed_out;           // replies posted as a failure, see below
 unsigned      g_kids = 0;            // the bitmap last published
 unsigned long g_kid_events = 0;      // times it changed (joins and leaves)
 unsigned      g_kid_peak = 0;        // every child bit ever set this session
+
+// GATE B's bookkeeping: how many rounds were published into the ROM's own MP
+// receive buffer, what the last one carried, and whether the port's own wider
+// buffer had to be armed for a session the cartridge's allocation cannot
+// describe.
+unsigned long g_mp_fills = 0;
+unsigned      g_mp_last_mask = 0;
+unsigned      g_mp_stride = 0;
+unsigned      g_mp_peak_slots = 0;
+bool          g_mp_wide_armed = false;
+bool          g_mp_said_nostride = false;
+bool          g_mp_said_first = false;
 
 // THE BACKSTOP, AND WHOSE DEADLINE IT IS NOT. Two waits look alike here and
 // only one of them is this file's.
@@ -1073,9 +1105,180 @@ extern "C" void port_wm_arm7_census(void)
         "[wm7:census] association 0x%04x (peak 0x%04x, %lu change(s)), status "
         "+0x86 %u, +0x17e %u\n",
         g_kids, g_kid_peak, g_kid_events, st_get16(0x86), st_get16(0x17e));
+    std::fprintf(stderr,
+        "[wm7:census] mp receive: %lu round(s) published, last mask 0x%04x, "
+        "%u slot(s) at peak, stride %u, wide buffer %s\n",
+        g_mp_fills, g_mp_last_mask, g_mp_peak_slots, g_mp_stride,
+        g_mp_wide_armed ? "ARMED" : "not needed");
     std::fflush(stderr);
 }
 
 // Whether this stub has been asked for anything at all. hal/boot2_ipc.cpp uses
 // it to keep a solo run's log as quiet as it was before this rung.
 extern "C" int port_wm_arm7_saw_traffic(void) { return g_cmd_total != 0; }
+
+// ===========================================================================
+// GATE B: THE ROM'S OWN MP RECEIVE BUFFER, FILLED FROM THE CARRIER'S ROUND
+// ===========================================================================
+//
+// Rung W2 retires hal/comms_seam.cpp's func_0204068c face, so a peer's block
+// for the round comes back through the ROM's own unpacker from here on. That
+// unpacker is two files and eleven lines, and it is the whole specification of
+// what this function has to write:
+//
+//   src/func_02062778.c  (a = data_020a0f74, b = data_020a0f80, c = the aid)
+//       if ((b[1] & (1u << c)) == 0) return 0;
+//       return func_02062734(a, b[0], (unsigned)(b + 2), c);
+//   src/func_02062734.c
+//       for (i = 0; i < count; i++)
+//           if (mask & bit) acc += *(unsigned short *)(base + 0x410);
+//
+// So the buffer is a four-byte header and a packed run of blocks:
+//
+//   +0x00  u16  THE PACKING MASK. func_02062734 counts its set bits BELOW the
+//               requested aid and steps that many strides, so it is the set of
+//               aids that have a block in the run and it fixes every offset.
+//   +0x02  u16  THE LIVENESS MASK. func_02062778 refuses an aid whose bit is
+//               clear here before it computes anything at all.
+//   +0x04       the blocks, one per set bit of the packing mask, in ASCENDING
+//               AID ORDER, each *(u16 *)(data_020a0f74 + 0x410) bytes long.
+//
+// THE STRIDE IS THE ROM'S AND IT IS NOT WRITTEN HERE. src/func_020631dc.c:60
+// sets it from src/func_0203fa50.c:7's elemSize, which is 0x20 -- the same
+// 0x20 hal/comms_seam.h's wire-format section fixes and the same
+// kCommsBlockBytes the carrier moves. This function READS it back and refuses
+// to publish at all if the two disagree, because that disagreement would hand
+// the ROM's unpacker a stride nothing wrote with.
+//
+// THE LIVENESS MASK IS THE CARRIER'S, EXACTLY. The transport contract says
+// peer_block(aid) is "player aid's block for the round exchange() just
+// completed, or null if that slot is not live", so asking it for every aid IS
+// the live set. That is strictly better evidence than gate A's association,
+// which had to infer a shape from a count, and it is why this mask is built
+// from the blocks themselves rather than from player_count().
+//
+// AND THE CARTRIDGE'S OWN BUFFER IS TOO SMALL FOR SIXTEEN, WHICH IS A MEASURED
+// CEILING AND NOT A CHOICE. src/func_020408b0.c:41 allocates data_020a0f80 at
+// 0x100 bytes, src/func_02062df0.c:77 copies exactly 0x100 into it, and
+// src/func_020631dc.c:79 refuses an MP frame longer than 0xfc. Four bytes of
+// header and 0x20 a slot puts the cartridge's own ceiling at SEVEN players and
+// its own session at four (src/func_0203fa50.c:7 passes mask 0xf). This port
+// hosts sixteen. hal/vs_width.h's standing ruling covers exactly this case --
+// "every per-slot array the port HOSTS is this wide ... hosting a ROM global
+// wider than the cartridge's own run is the deviation, and it is the approved
+// one" -- so a session that does not fit the cartridge's allocation is
+// published into the port's own buffer and data_020a0f80 is pointed at it.
+// AT FOUR PLAYERS AND BELOW NOTHING MOVES: the ROM's own allocation is what is
+// written, and the wide buffer is never touched. The census says which
+// happened, on every logged run.
+#pragma section(".dsstate$ywme00", read, write)
+extern "C" __declspec(allocate(".dsstate$ywme00")) __declspec(align(32))
+unsigned char port_wm_mp_recv_wide[4 + port::kCommsMaxPlayers *
+                                   port::kCommsBlockBytes] = { 0 };
+
+extern "C" void port_wm_publish_mp_recv(void)
+{
+    const port::CommsTransport *t = port::comms_transport();
+    if (!t) return;
+
+    unsigned char *buf = *(unsigned char **)(void *)data_020a0f80;
+    if (!buf) return;               // src/func_020408b0.c has not allocated it
+
+    // THE HEADER IS CLEARED FIRST, BEFORE ANY OTHER ANSWER IS POSSIBLE. This
+    // buffer is a plain Memory::Allocate off the game heap
+    // (src/func_020408b0.c:41) and nothing zeroed it; before this rung nothing
+    // read it either. src/func_02062778.c's very first act is to test
+    // `b[1] & (1u << aid)`, so a round this function declines to publish must
+    // leave a liveness mask of ZERO behind rather than whatever the heap
+    // happened to hold, or the ROM's unpacker answers a pointer computed from
+    // stale bytes. Every early return below is therefore an honest "no peers".
+    *(unsigned short *)(buf + 0) = 0;
+    *(unsigned short *)(buf + 2) = 0;
+
+    unsigned char *work = *(unsigned char **)(void *)data_020a0f74;
+    if (!work) return;              // the ROM's MP layer has not been laid out
+
+    const unsigned stride = *(const unsigned short *)(work + 0x410);
+    if (stride == 0) {
+        // src/func_020631dc.c has not run: WM_StartMP's own callback
+        // (src/func_0203fdac.c -> src/func_0203fa50.c) is what sets it, so the
+        // ROM's MP unit is not up yet and there is nothing to publish INTO.
+        if (!g_mp_said_nostride) {
+            g_mp_said_nostride = true;
+            if (ntr::ipc_log_on())
+                std::fprintf(stderr,
+                    "[wm7] mp receive: the ROM's stride at "
+                    "data_020a0f74+0x410 is still 0, so src/func_020631dc.c "
+                    "has not laid the MP unit out yet\n");
+        }
+        return;
+    }
+    if (stride != (unsigned)port::kCommsBlockBytes) {
+        std::fprintf(stderr,
+            "[wm7] HARD FAULT: the ROM's MP stride at data_020a0f74+0x410 is "
+            "%u and the carrier moves %d bytes a slot, so src/func_02062734.c "
+            "would walk the receive buffer with a stride nothing wrote with.\n",
+            stride, (int)port::kCommsBlockBytes);
+        std::fflush(stderr);
+        std::_Exit(24);
+    }
+    g_mp_stride = stride;
+
+    unsigned mask = 0, count = 0;
+    for (int aid = 0; aid < (int)port::kCommsMaxPlayers; ++aid)
+        if (t->peer_block(aid)) { mask |= 1u << aid; ++count; }
+    if (!mask) return;
+
+    const unsigned need = 4 + count * stride;
+    if (need > 0x100) {
+        if (!g_mp_wide_armed) {
+            g_mp_wide_armed = true;
+            std::fprintf(stderr,
+                "[wm7] mp receive: %u live slot(s) need %u bytes and the "
+                "cartridge's own allocation is 0x100 "
+                "(src/func_020408b0.c:41). Publishing into the port's own "
+                "%u-byte buffer instead, per hal/vs_width.h's ruling; the "
+                "ROM's allocation is left where it is.\n",
+                count, need, (unsigned)sizeof port_wm_mp_recv_wide);
+            std::fflush(stderr);
+        }
+        buf = port_wm_mp_recv_wide;
+        *(unsigned char **)(void *)data_020a0f80 = buf;
+    }
+
+    *(unsigned short *)(buf + 0) = (unsigned short)mask;
+    *(unsigned short *)(buf + 2) = (unsigned short)mask;
+    unsigned k = 0;
+    for (int aid = 0; aid < (int)port::kCommsMaxPlayers; ++aid) {
+        if (!(mask & (1u << aid))) continue;
+        const void *b = t->peer_block(aid);
+        std::memcpy(buf + 4 + k * stride, b, stride);
+        ++k;
+    }
+    ++g_mp_fills;
+    g_mp_last_mask = mask;
+    if (count > g_mp_peak_slots) g_mp_peak_slots = count;
+
+    // THE PROOF LINE, once a session and only with the log on: the first round
+    // read back THROUGH THE ROM'S OWN UNPACKER rather than through the
+    // arithmetic this function just performed. func_0204068c is the ROM's own
+    // body as of this rung, so this prints the bytes the game itself will read
+    // and the address this function believed it wrote them to.
+    if (!g_mp_said_first && ntr::ipc_log_on()) {
+        g_mp_said_first = true;
+        for (int aid = 0; aid < (int)port::kCommsMaxPlayers; ++aid) {
+            if (!(mask & (1u << aid))) continue;
+            const unsigned char *got =
+                (const unsigned char *)func_0204068c((unsigned short)aid);
+            std::fprintf(stderr,
+                "[wm7] mp receive: aid %2d -> src/func_02062778.c answers %p "
+                "(expected %p), first word 0x%04x, mask 0x%04x, stride %u\n",
+                aid, (const void *)got,
+                (const void *)(buf + 4 + popcount16(mask & ((1u << aid) - 1u))
+                               * stride),
+                got ? (unsigned)*(const unsigned short *)got : 0u,
+                mask, stride);
+        }
+        std::fflush(stderr);
+    }
+}
