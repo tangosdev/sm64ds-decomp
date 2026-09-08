@@ -28,11 +28,11 @@
     "Actor methods and free functions both count. Enrollment alone does not increase",
     "the count when the release build still dead-strips the unreachable object."
   ],
-  "linkedTus": 10216,
+  "linkedTus": 10227,
   "matchedTus": 11328,
   "measuredAt": "2026-09-08",
   "branch": "port/link100",
-  "commit": "428b68ad5",
+  "commit": "3d8374ff7",
   "stale": false,
-  "basis": "Linkage measurement of integration branch port/link100 at 428b68ad548edaaf11afee326291da7520ebba5c on 2026-09-08: 10,216 of 11,328 matched TUs reach walk_window, 46 above the previous stamp. Hosted port-linkage push run 34276352794 checked that exact commit; PR run 34276368458 checked synthetic merge dfb87a4b4d49675419226182845d506438046089 into shipping tip 31f3160466217cd906516d260dba0ac8f76aee26. Both report the same count. These link-only builds establish build/link coverage, not gameplay or private battery results. This stamps an integration-branch measurement; it does not record a shipping-branch landing or all correctness gates passing. At review, PR #2474 remains open, the repaired reference checker reports 137 unresolved findings on the measured tree, and the author reports separate rollback match-end desynchronization debt."
+  "basis": "Linkage measurement of integration branch port/link100 at 3d8374ff735e285a668e8af30e90e35ba2771050 on 2026-09-08: 10,227 of 11,328 matched TUs reach walk_window, 11 above the previous stamp. Hosted port-linkage push run 34284327226 checked that exact commit; its successful linkage job 102256251572 reports the count and retains the map. This link-only build establishes build/link coverage. It does not validate gameplay, private battery claims, or a shipping-branch landing."
 }
