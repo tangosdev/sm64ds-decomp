@@ -828,6 +828,55 @@ class SharedTypeScopeTests(unittest.TestCase):
         self.assertEqual(rc, 1, out)
         self.assertIn("src/tdef_user.c", out)
 
+    def test_the_chain_is_followed_through_a_second_header(self):
+        """Transitively: an alias OF the changed alias puts its consumers in scope too.
+
+        The comparison only resolves `include/types.h` and a file's own typedefs, so a
+        second header's alias is compared by name. Scope must not depend on that: a
+        declaration spelling `tdef_handle3` resolves through `tdef_handle` whether or
+        not this tool can spell out what it means.
+        """
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/handles.h",
+                   "typedef tdef_handle tdef_handle2;\n"
+                   "typedef tdef_handle2 tdef_handle3;\n")
+        repo.write("src/tchain_user.c", "extern void tchain_target(tdef_handle3 h);\n")
+        _files, decls, defs, _u = CDA.collect(repo.root)
+        closure = CDA.expand_type_seeds({"tdef_handle"},
+                                        CDA.typedef_graph(repo.root))
+        self.assertIn("tdef_handle2", closure)
+        self.assertIn("tdef_handle3", closure)
+        self.assertNotIn("u8", closure)
+        through, _syms = CDA.type_scope({"tdef_handle"}, decls, defs, repo.root)
+        self.assertIn("src/tchain_user.c", through)
+        self.assertNotIn("src/filler_0000.c", through)
+
+    def test_a_changed_macro_used_as_a_type_reaches_its_consumer(self):
+        """A macro is how a C file spells a type it has no typedef for."""
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/macros.h", "#define TDEF_MACRO_T unsigned int\n")
+        repo.write("src/tmac_user.c", "extern void tmac_target(TDEF_MACRO_T h);\n")
+        seeds = CDA.changed_type_names("HEAD", ["include/macros.h"], repo.root)
+        self.assertIn("TDEF_MACRO_T", seeds)
+        _files, decls, defs, _u = CDA.collect(repo.root)
+        through, _syms = CDA.type_scope(seeds, decls, defs, repo.root)
+        self.assertIn("src/tmac_user.c", through)
+        self.assertNotIn("src/filler_0000.c", through)
+
+    def test_a_struct_tag_is_a_seed_and_a_deleted_typedef_still_is(self):
+        repo = BigRepo.shared()
+        repo.reset()
+        repo.write("include/tagged.h",
+                   "struct TdefTag { int a; };\ntypedef struct TdefTag TdefAlias;\n")
+        repo.git("add", "-A")
+        repo.git("commit", "-qm", "add a tagged type")
+        repo.write("include/tagged.h", "struct TdefTag { int a; int b; };\n")
+        seeds = CDA.changed_type_names("HEAD", ["include/tagged.h"], repo.root)
+        self.assertIn("TdefTag", seeds)
+        self.assertIn("TdefAlias", seeds)
+
     def test_the_typedef_fold_does_not_drag_in_the_whole_tree(self):
         """Wide enough to catch the consumer, narrow enough to still be a PR scope."""
         repo = BigRepo.shared()

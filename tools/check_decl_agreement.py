@@ -699,13 +699,21 @@ class Record(object):
     first parameter, so a member's declared arity is one MORE than its definition's.
     Recording the fact instead of guessing is what keeps 3,000 correct flat externs
     out of the report.
+
+    `raw_types` is every identifier the declaration SPELLS, before any alias is
+    resolved, plus the words of its file's own typedefs. It is what answers "does this
+    declaration resolve through the type that just changed?", which the normalised
+    `ret` and `params` cannot: `u32` is already `unsigned int` by the time they exist.
+    It is deliberately wide -- parameter names are in it too -- because it decides
+    scope, and a scope that is too wide costs a few seconds while one that is too
+    narrow reports a pass over a declaration nobody checked.
     """
 
     __slots__ = ("symbol", "file", "line", "ret", "params", "is_function",
-                 "linkage", "is_definition", "is_member")
+                 "linkage", "is_definition", "is_member", "raw_types")
 
     def __init__(self, symbol, file, line, ret, params, is_function, linkage,
-                 is_definition, is_member=False):
+                 is_definition, is_member=False, raw_types=()):
         self.symbol = symbol
         self.file = file
         self.line = line
@@ -715,6 +723,7 @@ class Record(object):
         self.linkage = linkage
         self.is_definition = is_definition
         self.is_member = is_member
+        self.raw_types = frozenset(raw_types)
 
     def flat_params(self):
         """The parameter list a FLAT declaration of this symbol would carry.
@@ -796,6 +805,145 @@ def local_typedefs(code, aliases):
     return out
 
 
+def _strip_groups(text):
+    """`{...}` and `(...)` removed repeatedly, leaving the declarator list."""
+    prev = None
+    while prev != text:
+        prev = text
+        text = re.sub(r"\{[^{}]*\}", " ", text)
+        text = re.sub(r"\([^()]*\)", " ", text)
+    return text
+
+
+def _typedef_statements(code):
+    """Every `typedef ... ;` in a scrubbed file, brace blocks included."""
+    out = []
+    n = len(code)
+    for m in re.finditer(r"\btypedef\b", code):
+        i = m.start()
+        j = i
+        depth = 0
+        while j < n:
+            ch = code[j]
+            if ch in "{([":
+                depth += 1
+            elif ch in "})]":
+                depth -= 1
+            elif ch == ";" and depth <= 0:
+                break
+            j += 1
+        out.append(code[i:j])
+    return out
+
+
+def _typedef_words(stmt):
+    """Every identifier a typedef statement mentions, its own keyword excluded."""
+    return {t for t in IDENT.findall(stmt)
+            if t != "typedef" and t not in TYPE_KEYWORDS}
+
+
+def _typedef_names(stmt):
+    """The names one `typedef` statement declares.
+
+    `typedef struct Vector3 { ... } Vector3;` declares `Vector3`; `typedef void
+    (*ctor_t)(void *);` declares `ctor_t`; `typedef int A, B;` declares both.
+    """
+    names = set()
+    for m in re.finditer(r"\(\s*[*&]+\s*([A-Za-z_][A-Za-z0-9_]*)\s*\)\s*\(", stmt):
+        names.add(m.group(1))
+    for part in split_top(_strip_groups(stmt)):
+        part = re.sub(r"(\[[^\[\]]*\])+\s*$", "", part).strip()
+        m = re.search(r"([A-Za-z_][A-Za-z0-9_]*)\s*$", part)
+        if m and m.group(1) not in TYPE_KEYWORDS and m.group(1) != "typedef":
+            names.add(m.group(1))
+    return names
+
+
+def type_definitions(text):
+    """Type names a file DEFINES: typedef names, aggregate tags and macro names.
+
+    A macro is in the list because a macro is how a C file spells a type it does not
+    have a typedef for, and because the scrubber blanks preprocessor lines: by the time
+    a declaration is parsed, `#define HANDLE u32` has already stopped being visible, so
+    the name has to be collected from the raw text.
+    """
+    code, _marks = scrub(text)
+    names = set()
+    if "typedef" in code:
+        for stmt in _typedef_statements(code):
+            names |= _typedef_names(stmt)
+    for m in re.finditer(r"\b(?:struct|union|enum|class)\s+"
+                         r"([A-Za-z_][A-Za-z0-9_]*)[^;{}()]*\{", code):
+        names.add(m.group(1))
+    for m in re.finditer(r"^[ \t]*#[ \t]*define[ \t]+([A-Za-z_][A-Za-z0-9_]*)",
+                         text, re.M):
+        names.add(m.group(1))
+    return names - TYPE_KEYWORDS
+
+
+def typedef_graph(root=REPO, files=None):
+    """`name -> the identifiers its base spelling mentions`, for typedefs in HEADERS.
+
+    Headers only, and that is not a shortcut: a typedef written in a `.c` cannot be
+    resolved through by any other file, and parse_file folds a file's own typedef words
+    into its own records already. This graph exists for the chain that CROSSES files --
+    `typedef u32 handle_t;` in one header, `handle_t` spelled in a declaration in
+    another -- which is the chain a changed `u32` has to travel down.
+    """
+    graph = {}
+    targets = files if files is not None else scan_targets(root)
+    for rel in targets:
+        if not rel.endswith(HEADER_SUFFIXES):
+            continue
+        path = root / rel
+        if not path.exists():
+            continue
+        code, _marks = scrub(path.read_text(encoding="utf-8", errors="replace"))
+        if "typedef" not in code:
+            continue
+        for stmt in _typedef_statements(code):
+            names = _typedef_names(stmt)
+            if not names:
+                continue
+            words = _typedef_words(stmt) - names
+            for name in names:
+                graph.setdefault(name, set()).update(words)
+    return graph
+
+
+def expand_type_seeds(seeds, graph):
+    """The seed type names plus every typedef that resolves through one, transitively."""
+    out = set(seeds)
+    growing = True
+    while growing:
+        growing = False
+        for name, words in graph.items():
+            if name not in out and words & out:
+                out.add(name)
+                growing = True
+    return out
+
+
+def type_scope(seeds, decls, defs, root=REPO, files=None):
+    """(files reached through a changed type, the symbols those files define).
+
+    A declaration that SPELLS a changed type is invalidated by the change even though
+    the diff never touched its file, which is the whole of review path `:1340`. The
+    second half is the same fold a changed definition gets: if a file reached this way
+    DEFINES a symbol, every file declaring that symbol has to be re-checked too, because
+    the reference it is compared against just changed meaning.
+    """
+    closure = expand_type_seeds(seeds, typedef_graph(root, files))
+    through = {r.file for r in decls if r.raw_types & closure}
+    through |= {r.file for r in defs if r.raw_types & closure}
+    return through, {d.symbol for d in defs if d.file in through}
+
+
+def _raw_types(text, name):
+    """The identifiers one declarator spells, minus the name it declares."""
+    return {t for t in IDENT.findall(text) if t != name and t not in TYPE_KEYWORDS}
+
+
 def parse_file(rel, text, aliases):
     """(declarations, definitions, unparsed_count) found in one file."""
     code, marks = scrub(text)
@@ -814,6 +962,13 @@ def parse_file(rel, text, aliases):
         merged = dict(aliases)
         merged.update({k: v for k, v in local.items() if k not in aliases})
         aliases = merged
+    # Every identifier this file's own typedefs mention, on both sides of each one.
+    # A declaration spelling a file-local alias of a type that just changed has to be
+    # in scope, and the alias resolves away before the record exists.
+    file_types = set()
+    if "typedef" in code:
+        for stmt in _typedef_statements(code):
+            file_types |= _typedef_words(stmt)
     decls, defs = [], []
     unparsed = 0
     for start, chunk, term, linkage, in_block in top_level_units(code,
@@ -854,7 +1009,8 @@ def parse_file(rel, text, aliases):
                 # recoverable from the text, so claim nothing.
                 continue
             defs.append(Record(symbol, rel, line, ret, params, True,
-                               "C" if linkage == "C" else linkage, True, member))
+                               "C" if linkage == "C" else linkage, True, member,
+                               _raw_types(rest, name) | file_types))
             continue
 
         has_init = term == "=" or "=" in rest
@@ -891,7 +1047,8 @@ def parse_file(rel, text, aliases):
                     continue
                 symbol = marked[-1] if (marked and len(pieces) == 1) else name
                 defs.append(Record(symbol, rel, line, ret, params, False,
-                                   linkage, True, False))
+                                   linkage, True, False,
+                                   _raw_types(piece, name) | file_types))
             continue
         if not saw_extern:
             # Inside `extern "C" { ... }` a declaration need not repeat `extern`.
@@ -905,7 +1062,7 @@ def parse_file(rel, text, aliases):
                 continue
             name, ret, params, is_fn, _member = parsed
             decls.append(Record(name, rel, line, ret, params, is_fn, linkage,
-                                False, False))
+                                False, False, _raw_types(piece, name) | file_types))
     return decls, defs, unparsed
 
 
@@ -1313,6 +1470,27 @@ def symbol_rows(text):
     return rows
 
 
+def changed_type_names(base, touched, root=REPO):
+    """Type names the changed sources define now, or defined at the base.
+
+    Both sides, so a typedef that was DELETED or renamed seeds the scope as much as one
+    that was added. The caller expands these through the typedef chain and folds in
+    every file whose declarations resolve through one of them: changing a shared type
+    is exactly the edit that invalidates a consumer the diff never touched, and
+    `--changed` used to filter those findings away.
+    """
+    names = set()
+    for rel in touched:
+        path = root / rel
+        if path.exists():
+            names |= type_definitions(
+                path.read_text(encoding="utf-8", errors="replace"))
+        was = blob_text(rel, base, root)
+        if was is not None:
+            names |= type_definitions(was)
+    return names
+
+
 def changed_config_symbols(base, total, root=REPO):
     """(symbols, paths) named by `config/**/symbols.txt` rows this branch changed.
 
@@ -1389,7 +1567,7 @@ def main(argv=None):
     args = ap.parse_args(argv)
 
     touched = defined = scope = None
-    config_symbols = set()
+    config_symbols = type_seeds = set()
     if args.changed:
         if args.update:
             print("check_decl_agreement: --update re-banks the WHOLE tree; it cannot "
@@ -1410,6 +1588,7 @@ def main(argv=None):
             return 1
         config_symbols, config_files = changed_config_symbols(args.changed, total,
                                                               REPO)
+        type_seeds = changed_type_names(args.changed, touched, REPO)
         if not touched and not config_symbols:
             # NOT "no source changed, therefore nothing can be wrong". The gate reads
             # `config/**/symbols.txt` too, so the early exit has to say that neither
@@ -1481,15 +1660,20 @@ def main(argv=None):
     if touched is not None:
         scope = set(touched)
         widened = set(defined) | set(config_symbols)
+        through = set()
+        if type_seeds:
+            through, through_syms = type_scope(type_seeds, decls, defs, REPO, files)
+            widened |= through_syms
+        scope |= through
         if widened:
             scope.update(d.file for d in decls if d.symbol in widened)
         findings = [f for f in findings if f["file"] in scope]
         print("  --changed %s: %d source file(s) changed defining %d symbol(s), "
-              "%d symbol(s) named by a changed config row; "
-              "%d file(s) in scope once every declaration of those is folded in; "
-              "%d disagreement(s) among them"
+              "%d symbol(s) named by a changed config row, %d file(s) reached through "
+              "%d changed type name(s); %d file(s) in scope once every declaration of "
+              "those is folded in; %d disagreement(s) among them"
               % (args.changed, len(touched), len(defined), len(config_symbols),
-                 len(scope), len(findings)))
+                 len(through), len(type_seeds), len(scope), len(findings)))
 
     if args.list:
         for f in sorted(findings, key=lambda x: (x["symbol"], x["file"], x["line"])):
