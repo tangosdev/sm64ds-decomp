@@ -24,14 +24,7 @@
 #include "common.h"
 #include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
-
-/* An incomplete Player is all dActor_c.h supplies. This TU needs exactly one
- * of its members, so it is completed here rather than by pulling in either of
- * the tree's two disagreeing Player headers. */
-struct fBase_c;
-struct Player {
-    int StartTalk(fBase_c &actor, bool keepCamera);
-};
+#include "Player.h"
 
 /* Shared ABI seams, kept above the first `// @symbol` marker so no member is
  * charged with their mangled spellings (notes/tu-promotion-conventions.md
@@ -102,19 +95,20 @@ extern int           data_0209b3ec[];
 
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 
-/* The typed 0x1c actor profile: factory pointer, signed 16-bit profile ID,
- * signed 16-bit group flags, actor flags, two Fix12 cull radii, execute order
- * and draw order. Its unchanged retail words after the factory pointer are
- * 0x0112, 0x0085, 2, 0x82000, 0x82000, 0x01000000 and 0x01000000. */
+/* The typed 0x1c actor profile: fBase_c reads the halfwords at +4/+6 as
+ * behavior/render priorities. dActor_c reads actor flags at +8 and passes
+ * the words at +0xc/+0x10/+0x14/+0x18 to SetRanges as clip offset Y, clip
+ * radius, clip distance and far distance. These field names follow those
+ * consumers; the existing widths, types and retail values are unchanged. */
 struct SnmBdyProfile {
     daBgSnmBdy_c *(*classInit)();
-    s16 profileID;
-    s16 groupFlags;
+    s16 behaviorPriority;
+    s16 renderPriority;
     u32 actorFlags;
-    Fix12i cullRadiusX;
-    Fix12i cullRadiusY;
-    u32 executeOrder;
-    u32 drawOrder;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    u32 clipDistance;
+    u32 farDistance;
 };
 
 typedef char SnmBdyProfile_size_must_be_0x1c[
@@ -283,10 +277,9 @@ int daBgSnmBdy_c::State0()
 // @symbol _ZN12daBgSnmBdy_c10InitState1Ev
 int daBgSnmBdy_c::InitState1()
 {
-    char *c = (char *)this;
-    c[0x3a2] = 0;
-    *(unsigned short *)(c + 0x3a0) = 0x15;
-    *(int *)(c + 0x394) = 1;
+    mSubstate = 0;
+    mStateTimer = 0x15;
+    mStateValue = 1;
     return 1;
 }
 
@@ -390,9 +383,8 @@ int daBgSnmBdy_c::State2()
 // @symbol _ZN12daBgSnmBdy_c10InitState3Ev
 int daBgSnmBdy_c::InitState3()
 {
-    char *c = (char *)this;
-    *(char *)(c + 0x3a2) = 0;
-    *(int *)(c + 0x394) = 3;
+    mSubstate = 0;
+    mStateValue = 3;
     return 1;
 }
 
