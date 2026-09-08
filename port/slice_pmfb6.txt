@@ -43,3 +43,39 @@ src/func_ov002_020f2dd4.cpp
 src/func_ov002_020f562c.cpp
 src/func_ov002_020f5dd8.cpp
 src/func_ov002_020f5f0c.cpp
+
+# ---- gate 2: THE THREE EXTENT-OPEN TABLES ---------------------------------
+#
+# Lane FWD refused these three because each table is the LAST symbol in its
+# overlay's config/arm9/overlays/ovNNN/symbols.txt, so the next-symbol rule
+# cannot bound the extent, and "a seat over an unclosed extent can leave a cell
+# the matched TU would CALL". delinks.txt bounds it instead: a bss symbol cannot
+# run past the end of .bss. Measured for this gate, read-only
+# (runs/link100/out/PMFB6/rom_gate2.txt):
+#
+#   ov089  data_ov089_02132cec   8 filled  .bss ..0x02132d40  slack 0x14 -> 10 cells
+#   ov095  data_ov095_02137910   5 filled  .bss ..0x02137940  slack 0x08 ->  6 cells
+#   ov092  data_ov092_02132568   9 filled  .bss ..0x021325c0  slack 0x10 -> 11 cells
+#
+# Every cell of the maximum span is seated: the filled run through the source
+# statics the sinit copies from, each checked against the ROM address its body
+# was compiled from, and each slack cell past it with an ABORTING face written
+# into the mounted bss after asserting those bytes are zero. ov095's single
+# slack cell is the exception and its file states it: port/ov095_syms.txt pins
+# that mount to 0x28, the filled run, so there is no storage to seat and that
+# file is not this lane's.
+#
+# ROM stride read at each body (`add r3,rX,rY,lsl #3`, pool word == the table):
+#   ov089 02132194  pool 02132498 -> 02132cec   STRIDE 8   OK
+#   ov095 021364d8  pool 021365d4 -> 02137910   STRIDE 8   OK
+#   ov092 02131c44  pool 02131d90 -> 02132568   STRIDE 8   OK
+# Emitted stride and arity off each TU's own /FAsc listing under the port's own
+# flags: [reg*8] and [reg*8+4] on all three, ARITY ZERO on all three, /Zp4 diff
+# 0 lines outside the TITLE on all three. 22 source pairs, every one {code, 0}.
+#
+# Key and UpDownLiftBbh define real C++ MEMBERS and go through the forwarders in
+# port/hal/fwd_forwarders.cpp; ToxBox defines the flat extern "C" name and needs
+# only its table alias.
+src/_ZN3Key8BehaviorEv.cpp
+src/_ZN13UpDownLiftBbh8BehaviorEv.cpp
+src/_ZN6ToxBox8BehaviorEv.cpp
