@@ -9,7 +9,7 @@
  * the class under the coined English name Pokey, which appears nowhere in the
  * cartridge. This file and include/daSanbo_c.h use the cartridge's spelling,
  * and Pokey survives only as prose. That rename is not cosmetic here: a coined
- * name emits the seven bytes '5Pokey' plus its terminator, which matches no
+ * name emits '5Pokey' and its terminator (seven bytes total), which matches no
  * configured ROM record, so the RTTI group would have been discarded
  * unverified.
  *
