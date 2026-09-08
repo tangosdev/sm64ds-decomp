@@ -110,3 +110,68 @@ int _ZN6Rabbit6RenderEv(void *s)              { return ((Rabbit *)s)->Rabbit::Re
 int _ZN9LakituBro6RenderEv(void *s)           { return ((LakituBro *)s)->LakituBro::Render(); }
 
 }  /* extern "C" */
+/* ==========================================================================
+   LANE FACEF (run link100, wave 7), gate 1: the calling-convention-face rows.
+   ==========================================================================
+
+   SAME MECHANISM, SAME SHAPE, DIFFERENT QUEUE FAMILY. The sixteen faces above
+   are lane EXCEPT's family E (vtable slot / virtual-shadow dispatch). The rows
+   below are the ones out/EXCEPT/census.md ranked as family F -- "calling-
+   convention face" -- plus the family E leftovers whose SECOND stated reason
+   turned out to be this same repair rather than a separate wall. Each was
+   re-derived from the ROM one row at a time; the per-row referrer (the class's
+   own vtable slot 9 word, or the arm_call in relocs.txt for a body the ROM
+   calls directly), the RTTI name string at vtable-4 and the kind:function
+   record at the destination are in port/slice_facef.txt.
+
+   WHY A FACE AND NOT A FILL EDIT, restated for this section because it is the
+   whole reason the file exists: each fill site declares the ITANIUM C NAME at
+   C linkage and calls it, because what it used to reach was an extern "C"
+   host copy in port/unmatched. A matched source that recovered as a real C++
+   method defines ?Render@Class@@QAEHXZ instead, which is a different symbol,
+   and an /alternatename cannot bridge ECX against the stack. So each row below
+   is a cdecl definition of the C name onto the method, and NOT ONE FILL SITE
+   CHANGES. A matched source that defines the plain C name itself is not here
+   at all -- it needs no face, and four of this lane's rows are that shape.
+
+   THE CONVENTION AGREES, measured the same way lane EXCEPT measured it. MSVC
+   compiles the matched TU's `shadow->m(x)` as a __thiscall virtual call --
+   `this` in ecx, the one argument pushed, callee cleans four -- and the host
+   slot holds mv_render / ma2_render / mv_virtual10, all declared
+   `__fastcall(void *self, void *unused, ...)`: ecx = self, edx unread, the
+   argument pushed, callee cleans four. Same receiver register, same stack
+   argument, same cleanup.
+
+   AND THE RETURN-TYPE OBJECTION IS NOT ONE. Three of this lane's rows carried
+   a second stated reason -- "the shadow's methods return int where
+   Model::Render returns void, so MSVC decorates that differently". An
+   INDIRECT call through the object's own vptr decorates nothing: the declared
+   return type only decides whether EAX is read after the call, and every one
+   of these bodies discards it. Lane EXCEPT shipped four seats of exactly that
+   shape and the battery was green. */
+#include "FloatOnWaterPlatformJrb.h"
+#include "Goomboss.h"
+#include "Player.h"
+#include "ShipUp.h"
+
+extern "C" {
+
+/* Goomboss::Render, ROM 0x02121b70, _ZTV8Goomboss[9] @ 0x02122edc ("12daKuriKing_c"). */
+int _ZN8Goomboss6RenderEv(void *s)            { return ((Goomboss *)s)->Goomboss::Render(); }
+/* ShipUp::Render, ROM 0x02112744, _ZTV6ShipUp[9] @ 0x02114a60 ("14daObjKi_Fune_c"). */
+int _ZN6ShipUp6RenderEv(void *s)              { return ((ShipUp *)s)->ShipUp::Render(); }
+/* FloatOnWaterPlatformJrb::Render, ROM 0x02113130. The class name on the table
+   is a decoy the host file recorded and this lane re-read from the ROM: the
+   RTTI name string behind _ZTV23FloatOnWaterPlatformJrb[-1] @ 0x02114c88 says
+   "13daSlide_Box_c", so the table SLIDING_BOX (313) installs is the one that
+   holds this body at slot 9 @ 0x02114cb0. */
+int _ZN23FloatOnWaterPlatformJrb6RenderEv(void *s)
+{ return ((FloatOnWaterPlatformJrb *)s)->FloatOnWaterPlatformJrb::Render(); }
+/* Player::BlowAway, ROM 0x020d4fe4. Not a vtable row: the ROM reaches this body
+   by two arm_calls (ov027 from:0x0211221c, ov091 from:0x02133b84), and every
+   caller in the tree spells the FLAT name include/decl_Player.h:38 declares at
+   C linkage. The matched TU recovered as a real __thiscall method, so the flat
+   name is this one cdecl line and no call site changes. */
+void _ZN6Player8BlowAwayEs(void *s, short v) { ((Player *)s)->Player::BlowAway(v); }
+
+}  /* extern "C" */
