@@ -1,0 +1,87 @@
+# Run link100, lane NITROFS: the ROM's own NitroFS init, and the cartridge
+# lock arm of the registration group behind it.
+#
+# WHAT UNBLOCKED IT. src/func_0205d96c.c reads four cartridge-header words out
+# of the mirror at 0x027FFE40 / 0x027FFE48 and returns early on 0 or -1.
+# hal/fs_names.cpp said those pages were unmapped; they were not, and never
+# had been (ntr/include/ntr/mmio.h:36, ntr/io.cpp kRegions with fatal = true,
+# hal/os_lockid.cpp writing 0x027fffb0 on the same page). The mirror was
+# mapped, zeroed, and never written. hal/nitrofs_boot.cpp writes it, from the
+# four words tools/asset_catalog.py already takes out of the cartridge header,
+# and the ROM's own body runs.
+#
+# THIS SLICE GOES TO walk_window AND walk_window_hires ONLY. The archive
+# command proc reaches hal/boot_hw.cpp's four transcribed OS primitives
+# (func_02057198, func_0205a74c, func_02059d8c, IRQ::DisableAll /
+# IRQ::RestoreAll) and that file rides SLICE214_SOURCES, which smoke_player
+# does not carry. smoke_player keeps the face, alone, in hal/nitrofs_face.cpp.
+#
+# THREE PER-SOURCE RENAMES in port/CMakeLists.txt carry the three edges that
+# are not ROM code yet; hal/nitrofs_boot.cpp holds the three faces and says
+# what each one names. The matched TUs behind them stay unenrolled and
+# unclaimed, so none of them becomes a new SHADOW row.
+
+# FS_Init. Everything in it now runs as the cartridge wrote it except the card
+# bring-up: func_02057020 is hal/os_lockid.cpp's faithful clz search over the
+# lock words on the same mapped page, func_0205cd34 / func_0205cc80 /
+# func_0205c7c4 / func_0205cb68 are the ROM's own registration TUs, the archive
+# name is the ROM's four rodata bytes at 0x0209a048, and the four header words
+# come off the mirror the way the DS reads them.
+#   func_02060890 -> port_nitrofs_card_bringup  (static-init ORDER, not hardware)
+#   func_0205db2c -> port_nitrofs_read          (the card ROM DMA; there is no card)
+src/func_0205d96c.c
+
+# The archive command proc, and it is not a formality: SM64DS_NFS_TRACE on
+# level 1 shows the ROM's own readers send command 9 four times and command 10
+# four times before the first frame. hal/fs_names.cpp's face returned 0 for
+# both and said "nothing in the link sends them", which was measured false.
+# The ROM's body takes and releases the cartridge lock across each read, which
+# is what the two commands mean.
+src/func_0205da94.c
+
+# Command 9, the lock: reference-count the card work object, then take the
+# ARM7/ARM9 cartridge lock at 0x027FFFE0 and clear EXMEMCNT bit 11.
+src/func_0205ffb0.c
+src/func_0205710c.c
+src/func_020572b8.c
+src/func_020572c8.c
+#   func_020570d8 -> port_rom_exmemcnt_card_release
+# The retry arm of the lock. func_02059d8c under it is hal/boot_hw.cpp's
+# cycle-counted busy wait, faced; the loop is never entered here because
+# nothing else on the host holds that word.
+src/func_020570a8.c
+
+# Command 10, the unlock: give the slot back and drop the reference count.
+src/func_0205ff90.c
+src/func_020570f0.c
+src/func_02057218.c
+src/func_02057228.c
+#   func_020570c0 -> port_rom_exmemcnt_card_grant
+
+# NOT HERE, and each one has a reason rather than an omission.
+#
+# src/func_0205db2c.c    the archive READ function. Its whole body is
+#                        func_02060918, the card ROM DMA, which reaches
+#                        func_02060b64: CP15 cache maintenance, a DMA channel,
+#                        the header word at 0x027FFE60, an IRQ 0x80000 handler
+#                        and the unhosted func_01ff8000. hal/fs_names.cpp's
+#                        port_nitrofs_read serves the same bytes off the FAT
+#                        and extracted/dsd/files instead, and the rename in
+#                        CMakeLists is what registers it.
+# src/func_0205db78.c    the DMA completion callback, and src/func_0205cd5c.c
+# src/func_0205cd5c.c    the thread wakeup under it. Both are reached ONLY
+#                        through func_0205db2c's a4 argument, so with the read
+#                        faced nothing references them and /OPT:REF drops them
+#                        again. They are the card driver's, not the archive's.
+# src/func_02057198.c    compiles now -- the `static` on its forward
+#                        declaration of func_0205a74c was corrected on this tip
+#                        -- but hal/boot_hw.cpp:281-296 still defines it, and
+#                        that file is not this lane's. Seating the matched TU
+#                        and deleting the host body is +1 and one small hunk;
+#                        it is written up in this lane's report rather than
+#                        taken here.
+# src/func_020570c0.c    the two EXMEMCNT stores. `G` resolves in this binary
+# src/func_020570d8.c    to hal/heap_vtable.cpp's default-heap word, so the
+#                        matched bodies would OR and AND bit 11 of a heap
+#                        pointer four times a boot. Faced at the register the
+#                        ROM's literal pool names until the decomp spells it.
