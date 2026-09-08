@@ -1,0 +1,45 @@
+# ===========================================================================
+# SLICE pmfb6 -- run link100, lane PMFB6, gate 1
+# THE TEN CUTSCENE_OBJECT STATE DISPATCHERS
+# ===========================================================================
+#
+# The ten readers of CUTSCENE_OBJECT's ten pointer-to-member state tables.
+# port/hal/cutscene_states_link100.cpp hosted all ten as an address switch and
+# now hosts none of them: it is the SEAT over the sixty-nine source records
+# __sinit_ov002_02107370 copies into the tables, one __fastcall face per CELL.
+#
+# The per-row measurement (ROM read, emitted operand, arity, source pairs, the
+# reference sweep) is in that file's header and in runs/link100/out/PMFB6/.
+# Nothing here changes a ROM reference, a linker option or a call the ROM does
+# not make: the ROM's own sinit fills the tables, the ROM's own readers index
+# them, and the body each cell reaches is the decomp's matched TU.
+#
+# NO /Zp4 ON THIS BLOCK. Every one of the ten was compiled under the port's own
+# flags with and without the option and each pair of /FAsc listings came back
+# identical outside the TITLE line naming the .obj: 0 diff lines. Block R10a's
+# rule for that case is to leave the option off rather than make a claim
+# nothing measured.
+#
+# FIVE OF THE TEN ARE REACHED THROUGH THE TABLES THEMSELVES and five from
+# linked ROM code, so all ten have a live referrer after the seat:
+#   func_ov002_020f2dd4  <- func_ov002_020f5fb8 (linked)
+#   func_ov002_020f37a0  <- func_ov002_020f5fb8 (linked)
+#   func_ov002_020f5990  <- func_ov002_020f5fb8 (linked)
+#   func_ov002_020f5dd8  <- func_ov002_020f63f8 (linked)
+#   func_ov002_020f5f0c  <- func_ov002_020f6424 (linked)
+#   func_ov002_020f3310  <- data_ov002_02110e4c[2]  (this gate's face)
+#   func_ov002_020f3740  <- data_ov002_02110e4c[1]  (this gate's face)
+#   func_ov002_020f3d98  <- data_ov002_02110e7c[3]  (this gate's face)
+#   func_ov002_020f562c  <- data_ov002_02110e7c[2]  (this gate's face)
+#   func_ov002_020f5848  <- data_ov002_02110e7c[1]  (this gate's face)
+# ===========================================================================
+src/func_ov002_020f3310.cpp
+src/func_ov002_020f3d98.cpp
+src/func_ov002_020f37a0.cpp
+src/func_ov002_020f5848.cpp
+src/func_ov002_020f5990.cpp
+src/func_ov002_020f3740.cpp
+src/func_ov002_020f2dd4.cpp
+src/func_ov002_020f562c.cpp
+src/func_ov002_020f5dd8.cpp
+src/func_ov002_020f5f0c.cpp

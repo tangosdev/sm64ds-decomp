@@ -15891,6 +15891,42 @@ foreach(_tfwd walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# R10f, run link100 lane PMFB6: THE TEN CUTSCENE_OBJECT STATE DISPATCHERS
+# ===========================================================================
+#
+# port/hal/cutscene_states_link100.cpp hosted all ten readers of
+# CUTSCENE_OBJECT's ten pointer-to-member state tables as an ADDRESS SWITCH,
+# because lane TAIL2 measured in wave 1 that MSVC forms a pointer-to-member
+# over an incomplete class as the four-word GENERAL representation. Block R8
+# above turns /vmg /vmm on for every C++ source in this target and that stopped
+# being true; re-measured for this block on all ten readers' own /FAsc
+# listings, the emitted operand is [reg*8] and [reg*8+4] -- the two words of one
+# ROM record. The file is now the SEAT over the sixty-nine source records
+# __sinit_ov002_02107370 copies into the ten tables, one __fastcall face per
+# CELL, and the ten readers are the decomp's own TUs in the slice below.
+#
+# NO /Zp4 ON THIS BLOCK, measured per TU rather than inherited, for the reason
+# R10a gives. Every one of the ten was compiled under the port's own flags with
+# and without the option and each pair of listings came back identical outside
+# the TITLE line naming the .obj.
+#
+# The per-row ROM read, emitted operand, arity, source records and reference
+# sweep are in port/slice_pmfb6.txt and in that host file's header; the raw
+# measurements are in runs/link100/out/PMFB6/.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb6.txt" SLICE_PMFB6_LINES)
+set(SLICE_PMFB6_SOURCES "")
+foreach(line IN LISTS SLICE_PMFB6_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFB6_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tpmfb6 walk_window walk_window_hires smoke_player)
+    target_sources(${_tpmfb6} PRIVATE ${SLICE_PMFB6_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
