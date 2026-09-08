@@ -398,7 +398,7 @@ daObjFl_Gura_c	DONE	include\daObjFl_Gura_c.h	daObjGuragura_c	0	ov064	4
 daObjKm2_Gura_c	DONE	include\daObjKm2_Gura_c.h	daObjGuragura_c	0	ov045	4
 daObjKm1_Kuruma_c	DONE	include\daObjKm1_Kuruma_c.h	daObjKuruma_c	0	ov043	4
 daObjKm3_Kuruma_c	DONE	include\daObjKm3_Kuruma_c.h	daObjKuruma_c	0	ov047	4
-daObjKm1_Kurumajiku_c	DONE	include\RickshawBdw.h  [alias: header uses pre-rename name]	daObjKurumajiku_c	0	ov043	4
+daObjKm1_Kurumajiku_c	DONE	include\daObjKm1_Kurumajiku_c.h	daObjKurumajiku_c	0	ov043	4
 daObjKm3_Kurumajiku_c	DONE	include\daObjKm3_Kurumajiku_c.h	daObjKurumajiku_c	0	ov047	4
 daObjFlMaruta_c	DONE	include\RollingLogLll.h  [alias: header uses pre-rename name]	daObjMaruta_c	0	ov022	5
 daObjHmMaruta_c	PARTIAL	include\daObjHmMaruta_c.h	daObjMaruta_c	0	ov030	5

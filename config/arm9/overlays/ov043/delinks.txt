@@ -7,25 +7,9 @@ src/game/actors/d_a_obj_km1_ukishima.cpp:
     complete
     .text start:0x021111a0 end:0x021113fc
 
-src/_ZN11RickshawBdwD1Ev.cpp:
+src/actors/daObjKm1_Kurumajiku_c.cpp:
     complete
-    .text start:0x021113fc end:0x0211144c
-
-src/_ZN11RickshawBdwD0Ev.cpp:
-    complete
-    .text start:0x0211144c end:0x021114b0
-
-src/_ZN11RickshawBdw16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x021114b0 end:0x021114c4
-
-src/_ZN11RickshawBdw13InitResourcesEv.cpp:
-    complete
-    .text start:0x021114c4 end:0x021114dc
-
-src/d_a_obj_km1_kurumajiku.c:
-    complete
-    .text start:0x021114dc end:0x02111518
+    .text start:0x021113fc end:0x02111518
 
 src/game/actors/d_a_obj_km1_kuruma.cpp:
     complete
