@@ -412,6 +412,24 @@ void comms_note_wire_activity();
 uint64_t comms_wire_activity();
 
 // ---------------------------------------------------------------------------
+// GIVE THE HOST ARM7 A TURN. Run link100, lane WM2, rung W1.
+//
+// src/func_020408b0.c is the ROM's own body now and the seam's t->open(mode)
+// call went with the face it lived in. hal/boot2_ipc.cpp -- the host ARM7 --
+// makes that call instead, when it sees the ROM claim channel 0xa. The claim is
+// a plain store into the shared block, so nothing traps it and the model has to
+// be given a moment to look. This is that moment, and the seam's remaining
+// lifecycle faces call it before they do anything else, so the ARM7's turn
+// always lands ahead of the ARM9's next request. The reasoning, including why
+// the ordering is load-bearing, is in the function's banner in
+// hal/comms_seam.cpp.
+//
+// Cheap and idempotent: one mask test after the open has happened, and a no-op
+// with no transport installed.
+// ---------------------------------------------------------------------------
+void comms_arm7_turn();
+
+// ---------------------------------------------------------------------------
 // PUBLISH THE LINK STATE AND THE SLOT INTO THE ROM'S OWN TWO WORDS.
 //
 // Run link100, lane WM1, rung W0. src/func_02040714.c (`return data_020a0f94`)

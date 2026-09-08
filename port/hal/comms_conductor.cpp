@@ -340,6 +340,10 @@ extern unsigned char data_020a0f10[];
 // The local comms record. Offset 0 is the frame counter that doubles as the
 // ROM's only non-constant RNG seed; see the session reset above.
 extern unsigned char data_020a1040[];
+// The per-slot comms records, 0x24 apiece, hosted by hal/camera_bridges.cpp --
+// FOUR on the cartridge and SIXTEEN here. comms_seat_session_request clears the
+// twelve that are the port's; see the hunk there (run link100, lane WM2).
+extern unsigned char data_020a1154[];
 // The world RNG seed, hosted by hal/auto_bss.cpp.
 extern int data_0209e650[];
 // The ROLE byte, hosted by hal/stage_slot0.cpp. src/func_0203df40.c switches
@@ -1270,6 +1274,31 @@ bool comms_wait_for_session(int frames) {
 }
 
 void comms_seat_session_request(int role) {
+    // THE WIDE RECORDS' CLEAR, MOVED HERE FROM THE SEAM. Run link100, lane WM2,
+    // rung W1.
+    //
+    // It used to live in hal/comms_seam.cpp's func_020408b0 face, which rung W1
+    // retired in favour of the ROM's own body -- and the ROM's body knows
+    // nothing about records 4..15, which are the port's and not the DS's
+    // (hal/camera_bridges.cpp hosts sixteen where the cartridge has four; the
+    // ROM clears its own four at src/func_0203db64.c:64).
+    //
+    // WHY HERE AND NOT SOMEWHERE ELSE IN THE SEAM. The clear needs exactly one
+    // lifecycle: once per session ARM, before anything reads a slot. This
+    // function IS that arm. It is what seats data_02099e1c, and data_02099e1c
+    // is the one-shot src/func_0203ea5c.c:137-140 tests before it calls
+    // func_020408b0 at all -- so every path that reaches the ROM's bring-up has
+    // come through here first, and no path reaches it twice without coming
+    // through here again. It also covers the case the old placement covered by
+    // accident and the seam could no longer see: the ROM dropping a live
+    // session to solo, which :717 above answers by RE-SEATING through this same
+    // function. A wide session formed after a dead one would otherwise read the
+    // dead session's live bits out of slots 4..15 and wait on ghosts.
+    //
+    // Done for narrow sessions too, for the reason the seam gave: nothing
+    // narrow reads past 0x90, and the seam's own per-slot report prints the full
+    // sixteen, which should never show a stale row.
+    std::memset(data_020a1154 + 4 * 0x24, 0, 12 * 0x24);
     data_020a0f04[0] = (unsigned char)role;   // 1 = parent, 2 = child
     data_02099e1c[0] = 1;                     // ask the radio to open, :137-140
     std::fprintf(stderr,
