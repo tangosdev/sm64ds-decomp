@@ -231,3 +231,69 @@ src/func_ov071_021223c8.cpp
 src/func_ov071_02122414.cpp
 src/func_ov085_02129524.cpp
 src/func_ov085_02129570.cpp
+#
+# ---- GATE 2: ONE OF THE FIVE OPEN-CODED ROWS ------------------------------
+#
+# PMFC2 called five rows "the cheapest in the family that are not already free":
+# they use no member pointer at all, they read the pair as two ints and test bit
+# 0 by hand, and they call the code word as a raw cdecl void (*)(void *) or
+# void (*)(void *, int) with the receiver PUSHED. So none of them wants a
+# receiver face and none of them reads a table RECORD, which means the stride
+# correction above does not touch them either. What every one of them needs is a
+# HOST ADDRESS IN THE CODE WORD, and that is where four of the five stop.
+#
+# TAKEN, one row:
+#
+#   _ZN4Bird8BehaviorEv   src/_ZN4Bird8BehaviorEv.cpp, table data_ov009_02113c48,
+#       four slots. Its seat ALREADY EXISTS and is already correct:
+#       port_ov009_sinits in hal/ov009_boot.cpp runs the four ov009 sinits, then
+#       checks each slot's function word against the ROM address the reloc table
+#       promises and each slot's delta against zero, aborts loudly on either, and
+#       writes the host body's address in. Slot 2 is a NONMATCHING asm hatch with
+#       no C body at all and is seated with a named abort, which is honest and is
+#       unchanged. All this row needed was a NAME: the matched TU defines the real
+#       C++ method Bird::Behavior(), publishing ?Behavior@Bird@@QAEHXZ, while every
+#       caller spells the C name _ZN4Bird8BehaviorEv the host copy used to define.
+#       One cdecl face in hal/ov009_boot.cpp, the hal/fold2_faces.cpp shape.
+#
+# NOT TAKEN, four rows, each blocked for a reason that is structural:
+#
+#   func_ov006_0211b5e0   table data_ov006_02142e20, 13 slots
+#   func_ov006_0211b954   table data_ov006_02142df8,  5 slots
+#       family_c.tsv records "<object field>" for both and that is wrong: each
+#       names a real table, and unmatched/MgSound_StateDispatch.cpp's own line 186
+#       says the ov006 mount defines the storage and __sinit_ov006_02132970 fills
+#       it, so after the sinit both hold DS CODE ADDRESSES. What stands in for a
+#       seat today is port_mg_sound_call1 -> sound_try_1, a CALL-TIME ADDRESS
+#       SWITCH inside the host copy: it takes the DS word the table holds and calls
+#       the matching host body by name. Retiring the host copy takes the switch
+#       with it. The fix is to turn that switch inside out into a boot installer
+#       over the two tables -- all eighteen ROM-to-host pairs are already written
+#       down in sound_try_1 and every target is a real host body in the same file.
+#       IT IS BLOCKED ON A CALL SITE, not on the installer: the only place in the
+#       tree that runs the ov006 sinits is hal/scene_mg.cpp:991, which is outside
+#       this lane's files, and there is no honest self-triggering alternative (a
+#       static constructor would read the table before the sinit fills it, and
+#       nothing else in MgSound_StateDispatch.cpp runs before the first dispatch,
+#       because the thirteen sub-dispatchers ARE what the table points at).
+#       One line in hal/scene_mg.cpp is worth +2 here and would also unblock the
+#       thirteen sub-dispatcher rows that read the same tables.
+#
+#   func_ov006_020e683c   src/func_ov006_020e683c.cpp line 7 is
+#       "dScMgCurling2_c::Behavior - recovered from vtable slot identity". That is
+#       the guess marker: a guessed body is not matched code and
+#       inferred_stub_guard.py refuses a new seat for one. Not taken, and it
+#       should not be until it is adjudicated against ROM bytes and recorded the
+#       way inferred_stub_adjudicated.txt records the others. Its table
+#       data_ov006_02141a18 has the same call-time-switch problem anyway
+#       (unmatched/MgCurling2_StateDispatch.cpp:328).
+#
+#   func_ov006_020c3d18   the one row where "<object field>" is right: the matched
+#       TU reads the pair out of the OBJECT, at *(int*)c and *(int*)(c+4), not out
+#       of any table. There is no boot-time storage to install a host address
+#       into; the address would have to be written by whatever SETS that
+#       per-instance field, which is in no file this lane owns. Its host copy,
+#       unmatched/MgFlower_SubDispatch.cpp, is a four-case address switch with a
+#       loud unhandled path, which is the right shape for what it is.
+#
+src/_ZN4Bird8BehaviorEv.cpp
