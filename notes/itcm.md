@@ -12,7 +12,7 @@ attacked and did not match; its structure is recovered and written up below.
 ## Why it was invisible
 
 **FIXED 2026-08-01.** `tools/modules.py::modules()` enumerated **`main` plus the overlays
-and nothing else.** ITCM and DTCM are autoloads in `config/arm9/config.yaml`, and they were
+and nothing else.** ITCM and DTCM are autoloads in [arm9/config.yaml](../config/arm9/config.yaml), and they were
 absent from that list. Every tool built on `modules()` inherited the blind spot:
 
 - `linkcheck.py` / `pr_linkcheck.py` — `_ranges()` never contained itcm, so a slot at
@@ -29,7 +29,7 @@ The fix was small and additive — ITCM's range `0x01ff8000..0x01ffdf3c` does no
 arm9 (`0x02004000+`) or any overlay, and DTCM's `0x023c0000..0x023c0020` overlaps nothing
 either, so `read_at`'s preference order is unaffected. The one wrinkle was provenance:
 `modules()` reads binaries out of `extracted/`, and there is no `extracted/itcm.bin`; the
-image is `build/build/itcm.bin`, named by `config/arm9/config.yaml`
+image is `build/build/itcm.bin`, named by [arm9/config.yaml](../config/arm9/config.yaml)
 (`hash: ec91a2b334e8151e`). The registry now follows config.yaml for the autoloads and
 skips them when `build/` is absent, so a checkout with no build still gets a usable
 registry.
@@ -54,7 +54,7 @@ deliberately wrong callee still reports MATCH. Verified with a negative control 
 and correctly reported no match under `itcm`. Any ITCM result recorded with the path-style
 name is unverified, not verified.
 
-`config/arm9/itcm/relocs.txt` is real and populated (152 entries), so the check works once
+[itcm/relocs.txt](../config/arm9/itcm/relocs.txt) is real and populated (152 entries), so the check works once
 the module string is right.
 
 ## What is in there
@@ -180,8 +180,7 @@ every source file that writes `/` or `%` on an `int` emits `bl _s32_div_f`. `eli
 rejects a file whose undefined references are not named in `config/**/symbols.txt`, so those
 files could byte-match forever and never enrol — the `bl` is a relocation, so the `.text`
 compares equal whether or not the target has a name. Adding the CodeWarrior spelling as a second
-symbol at the same address (the shape `_ZTV5Actor` / `data_0208e3a4` already uses) unblocked 64
-files at once. Do not *rename* `__aeabi_idiv`: `tools/reloc_audit.py` maps the two spellings onto
+symbol at the same address (the shape `_ZTV5Actor` / [data_0208e3a4](../config/arm9/symbols.txt) already uses) unblocked 64 files at once. Do not *rename* `__aeabi_idiv`: `tools/reloc_audit.py` maps the two spellings onto
 each other and wants both.
 
 **An alias must carry `size=0x0` (2026-08-04).** The aliases originally repeated the real size,
@@ -233,7 +232,7 @@ Four structural facts, each verified on the image:
 * **456 bytes are byte-identical between the two routines** (0x01ffac14..0x01ffaddc vs
   0x01ffae08..0x01ffafd0) — one macro expanded twice with different pre/postambles.
 
-And `__aeabi_uidiv` has a **second entry point**: `config/arm9/itcm/relocs.txt` records
+And `__aeabi_uidiv` has a **second entry point**: [itcm/relocs.txt](../config/arm9/itcm/relocs.txt) records
 `from:0x01ffaa0c kind:arm_call to:0x01ffadf8`, entering +8 to skip the divisor guard. The caller
 is the shared `__aeabi_uldiv`/`__aeabi_ulmod` body, *not* `func_01ffaa34` (whose only interior
 call is `bl 0x01ffabe4`). Census: 141 calls to 0x01ffabe4, 16 to 0x01ffadf0, 1 to 0x01ffadf8. A
@@ -296,13 +295,13 @@ These make their functions unmatchable *by construction*, which is why nothing h
 | `func_01ff8708` | `size=0x2dc` | 18 non-`bl` branches leave the declared body (up to +0x3ec); the 0x42c "gap" after it holds 15 `add sp,#0x10` + 16 `pop {r4-r7,lr}` -- its own teardown | ~`0x6f0` |
 | `func_01ff97d8` | `size=0x9e4` | 56 non-`bl` branches leave the declared body | extends into the 0x188 gap |
 | `func_01ffa344` + `func_01ffa3e0` | two symbols | `a3e0` has **zero** incoming branches or calls anywhere; its only entry is fallthrough from `a344` | one symbol, `size=0xfc` |
-| `func_01ffa440` | `size=0x148` | `0x01ffa4bc` has **4 external callers** (ov002 x2, ov074, arm9, all `module:none`) and no symbol | `0x78` + a new symbol at 0x01ffa4bc |
+| `func_01ffa440` | `size=0x148` | `0x01ffa4bc` has **4 external callers** ([ov002](../config/arm9/overlays/ov002/symbols.txt) x2, [ov074](../config/arm9/overlays/ov074/symbols.txt), [arm9](../config/arm9/symbols.txt), all `module:none`) and no symbol | `0x78` + a new symbol at 0x01ffa4bc |
 
 **Count, settled by coverage rather than arithmetic (2026-08-03).** I got this wrong twice --
 first "42" by summing two agents' findings without redoing the sum, then "41" by correcting the
 arithmetic while still missing entries. The answer is **43**, and the proof is not a sum: after
-the fixes below the ITCM symbol table runs 0x01ff8000..0x01ffdf3c with **zero overlaps between
-functions**, ending exactly on the `.text` end in `config/arm9/itcm/delinks.txt`. That is
+the fixes below the ITCM symbol table runs 0x01ff8000..0x01ffdf3c with **zero overlaps between**
+functions, ending exactly on the `.text` end in [itcm/delinks.txt](../config/arm9/itcm/delinks.txt). That is
 checkable in one pass and cannot be fudged.
 
 Coverage is contiguous *in bytes accounted for*, but two of the entries below are `kind:label`,
@@ -316,7 +315,7 @@ entries:
 * **0x01ff8df8** (0x18) -- xor-swaps both double argument pairs, then falls through into
   func_01ff8e10 (soft-double subtract). The library's reverse-subtract entry.
 * **0x01ffa4bc** (0xcc) -- the signed half of the int-to-float pair. It has **4 external
-  callers** (ov002 x2, ov074, arm9) all recorded `module:none`, which is the resolution
+  callers** ([ov002](../config/arm9/overlays/ov002/symbols.txt) x2, [ov074](../config/arm9/overlays/ov074/symbols.txt), [arm9](../config/arm9/symbols.txt)) all recorded `module:none`, which is the resolution
   breakage this symbol fixes.
 * **0x01ffa588** (0xc) -- xor-swaps the single-precision pair, falls through into func_01ffa594.
 
@@ -452,8 +451,7 @@ aggregates minus the 13 temp slots scalarization was using = +14 = 0x38.
 **The lever: a local vector type with a user-declared destructor** (`struct DVec { s32 x,y,z;
 ~DVec(){} };`) blocks SROA. Dead `&x` statements, references and launders do not.
 
-This is a *variant*, not a discovery: `notes/matching-style.md` (from PR #815, 2026-07-29)
-already documents the `~PVec(){}` dead-store-elimination defeat and the enclosing
+This is a *variant*, not a discovery: [notes/matching-style.md](../notes/matching-style.md) (from PR #815, 2026-07-29) already documents the `~PVec(){}` dead-store-elimination defeat and the enclosing
 address-taken struct that blocks SROA, with a ranked table of four mechanisms. Read that
 first. What is new here is only the application — putting the destructor on the vector type
 itself so that N aggregate locals stay un-SROA'd together, which is what moves a whole frame
@@ -494,7 +492,7 @@ individual divergences before the frame matches is wasted budget.
 
 Note the metrics disagree in direction: caching `this->file` in a local improves the DB
 divergence and *hurts* the size. Trust the DB metric (`nearmiss_db.evaluate`), per the same
-warning in `notes/arm9-endgame.md`.
+warning in [notes/arm9-endgame.md](../notes/arm9-endgame.md).
 
 ### The algorithm
 
