@@ -19,12 +19,15 @@ The five fixtures the gate was commissioned for, one test each:
 Self-running: `python tools/test_check_decl_agreement.py`, or via unittest/pytest.
 Needs no ROM and no compiler.
 """
+import contextlib
+import io
 import json
 import pathlib
 import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 import check_decl_agreement as CDA  # noqa: E402
@@ -582,6 +585,161 @@ class ChangedResolutionTests(unittest.TestCase):
             self.assertIsNone(err)
             self.assertEqual(touched, ["src/moved.c"])
             self.assertEqual(defined, {"moved"})
+
+
+
+class DataDefinitionTests(unittest.TestCase):
+    def test_function_declaration_against_data_definition_is_rejected(self):
+        for definition in ('int target = 0;', 'int target;',
+                           'int target[] = {0, 1};',
+                           'extern int target = 0;'):
+            with self.subTest(definition=definition):
+                def tree(t):
+                    t.write("src/data.c", definition + "\n")
+                    t.write("src/caller.c", "extern int target(void);\n")
+                findings, _decls, defs, _files = build(tree)
+                self.assertIn("target", {d.symbol for d in defs})
+                self.assertEqual(kinds(findings, "target"),
+                                 [("kind", "src/caller.c", "function", "data")])
+
+    def test_data_type_uses_definition_instead_of_unanimous_extern(self):
+        def tree(t):
+            t.write("src/data.c", "short target[] = {0};\n")
+            t.write("src/caller.c", "extern int target[];\n")
+        findings, _decls, _defs, _files = build(tree)
+        self.assertEqual(kinds(findings, "target"),
+                         [("return", "src/caller.c", "int []", "short []")])
+        self.assertEqual(findings[0]["basis"], "definition")
+
+    def test_initialized_declarators_keep_their_shared_type(self):
+        def tree(t):
+            t.write("src/data.c", "int alpha = 1, beta = 2;\n")
+            t.write("src/caller.c", "extern int alpha, beta;\n")
+        findings, _decls, defs, _files = build(tree)
+        self.assertEqual({d.symbol for d in defs}, {"alpha", "beta"})
+        self.assertEqual(findings, [])
+
+    def test_internal_data_does_not_define_an_external_symbol(self):
+        for definition in ('static int target = 0;', 'const int target = 0;',
+                           'char * const target = 0;',
+                           'namespace { int target = 0; }',
+                           'namespace Detail { int target = 0; }'):
+            with self.subTest(definition=definition):
+                def tree(t):
+                    t.write("src/data.cpp", definition + "\n")
+                    t.write("src/caller.c", "extern void target(void);\n")
+                findings, _decls, defs, _files = build(tree)
+                self.assertEqual(defs, [])
+                self.assertEqual(findings, [])
+
+    def test_static_assertions_are_not_unparsed_declarations(self):
+        text = 'static_assert(sizeof(int) == 4, "size");\nextern int value;\n'
+        declarations, definitions, unparsed = CDA.parse_file("include/check.h", text, {})
+        self.assertEqual([d.symbol for d in declarations], ["value"])
+        self.assertEqual(definitions, [])
+        self.assertEqual(unparsed, 0)
+
+    def test_extern_const_and_pointer_to_const_are_external_data(self):
+        for definition in ('extern const int target = 0;',
+                           'const char *target = 0;'):
+            with self.subTest(definition=definition):
+                def tree(t):
+                    t.write("src/data.cpp", definition + "\n")
+                    t.write("src/caller.c", "extern int target(void);\n")
+                findings, _decls, defs, _files = build(tree)
+                self.assertEqual([d.symbol for d in defs], ["target"])
+                self.assertEqual(findings[0]["kind"], "kind")
+
+
+class ChangedGateTests(unittest.TestCase):
+    """Run the real CLI decision over small Git fixtures; floor tests stay separate."""
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory(prefix="declgate-scope-")
+        self.addCleanup(self.tmp.cleanup)
+        self.tree = Tree(self.tmp.name)
+        self.root = self.tree.root
+        self.git("init", "-q")
+        self.git("config", "user.email", "scope-test@example.invalid")
+        self.git("config", "user.name", "Scope Test")
+
+    def git(self, *args):
+        result = subprocess.run(["git", *args], cwd=self.root, capture_output=True,
+                                text=True, encoding="utf-8")
+        self.assertEqual(result.returncode, 0, result.stderr)
+        return result.stdout.strip()
+
+    def commit(self):
+        self.git("add", "-A")
+        self.git("commit", "-qm", "fixture")
+        return self.git("rev-parse", "HEAD")
+
+    def run_gate(self, *args):
+        log = io.StringIO()
+        with patch.multiple(CDA, REPO=self.root,
+                            BASELINE=self.root / "config/baseline.json",
+                            MIN_FILES=1, MIN_DECLS=1, MIN_SYMBOLS=1), \
+                contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
+            code = CDA.main(list(args))
+        return code, log.getvalue()
+
+    def test_shared_typedef_edit_checks_unchanged_consumers(self):
+        self.tree.write("src/definition.c", "void target(unsigned int x) {}\n")
+        self.tree.write("src/caller.c", "extern void target(u32 x);\n")
+        base = self.commit()
+        self.assertEqual(self.run_gate()[0], 0)
+        self.tree.write("include/types.h", TYPES_H.replace("unsigned int   u32", "float          u32"))
+        code, log = self.run_gate("--changed", base)
+        self.assertEqual(code, 1, log)
+        self.assertIn("src/caller.c", log)
+        self.assertIn("expected #1 unsigned int", log)
+
+    def test_symbol_config_edit_checks_unchanged_declarations(self):
+        self.tree.write("src/caller.cpp", "extern void target(void);\n")
+        base = self.commit()
+        self.assertEqual(self.run_gate()[0], 0)
+        self.tree.symbols(["target"])
+        code, log = self.run_gate("--changed", base)
+        self.assertEqual(code, 1, log)
+        self.assertIn("linkage", log)
+        self.assertIn("src/caller.cpp", log)
+
+    def test_detected_rename_checks_old_callers(self):
+        body = "\n".join("    (void)%d;" % i for i in range(100))
+        self.tree.write("src/old.c", "void target(int x) {\n" + body + "\n}\n")
+        self.tree.write("src/caller.c", "extern void target(int x);\n")
+        self.tree.write("README.md", "before\n")
+        base = self.commit()
+        self.assertEqual(self.run_gate()[0], 0)
+        (self.root / "src/old.c").rename(self.root / "src/new.c")
+        self.tree.write("src/new.c", "void target(float x) {\n" + body + "\n}\n")
+        self.tree.write("README.md", "renamed\n")
+        self.commit()
+        self.assertTrue(any(row.startswith("R") for row in
+                            self.git("diff", "--name-status", base, "HEAD").splitlines()))
+        code, log = self.run_gate("--changed", base)
+        self.assertEqual(code, 1, log)
+        self.assertIn("src/caller.c", log)
+        self.assertIn("expected #1 float", log)
+
+    def test_function_declaration_of_data_fails_changed_mode(self):
+        self.tree.write("src/definition.c", "int target = 0;\n")
+        self.tree.write("src/caller.c", "extern int target;\n")
+        base = self.commit()
+        self.assertEqual(self.run_gate()[0], 0)
+        self.tree.write("src/caller.c", "extern int target(void);\n")
+        code, log = self.run_gate("--changed", base)
+        self.assertEqual(code, 1, log)
+        self.assertIn("got function, expected data", log)
+
+    def test_tool_change_runs_the_full_gate(self):
+        self.tree.write("src/definition.c", "void target(void) {}\n")
+        self.tree.write("src/caller.c", "extern int target(void);\n")
+        self.tree.write("tools/check_decl_agreement.py", "# before\n")
+        base = self.commit()
+        self.tree.write("tools/check_decl_agreement.py", "# revised parser\n")
+        code, log = self.run_gate("--changed", base)
+        self.assertEqual(code, 1, log)
+        self.assertIn("src/caller.c", log)
 
 
 class RealTreeTests(unittest.TestCase):

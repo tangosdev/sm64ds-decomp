@@ -85,7 +85,9 @@ jobs:
       # Whole tree on a push to main, changed scope on a pull request. The scope is
       # not just the diff: it folds in every file DECLARING a symbol the changed files
       # DEFINE, because retyping a definition is exactly the change that invalidates
-      # declarations elsewhere.
+      # declarations elsewhere. Shared headers, symbol tables, gate tools and the baseline
+      # and removed source paths trigger a whole-tree verdict. Renames retain both
+      # paths, so a renamed definition cannot disappear behind the diff filter.
       - name: Declarations agree with the definitions they name
         env:
           BASE: ${{ github.event.pull_request.base.sha }}
