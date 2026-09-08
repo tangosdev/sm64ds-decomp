@@ -2,9 +2,11 @@
 /**
  * Invisible climbable pole.
  *
- * No model. Mario grabs a cylinder. Height is the low byte of param1
- * (tenths of a unit, minus 10) in Fix12. Bit 8 of param1 makes the
- * cylinder hurt on contact.
+ * No model. Mario grabs a cylinder. Height is 10 * (param1 low byte - 10)
+ * in Fix12, floored at 1.0. Bit 8 of param1 makes the cylinder hurt.
+ *
+ * daBar_c_classInit / g_profile_BAR are reconstructed (RTTI daBar_c, BAR
+ * registry). Retail does not store those spellings.
  *
  * deslop
  */
@@ -13,7 +15,7 @@
 
 enum {
     kHeightParamBias = 0xa,       /* subtracted from the param byte first */
-    kHeightTenth = 0xa,           /* then ×10, like N64 poles */
+    kHeightMul = 0xa,             /* then ×10 */
     kMinHeightFix12 = 0x1000,     /* 1.0 if that underflowed */
     kClipPadFix12 = 0x640000,     /* extra clip past half-height */
     kCylinderRadiusFix12 = 0x35555,
@@ -32,8 +34,8 @@ extern "C" daBar_c *daBar_c_classInit()
 
 extern "C" DaBarSpawnInfo g_profile_BAR = {
     daBar_c_classInit,
-    0x011f,       /* profile id packed with execute order */
-    0x0099,       /* draw order */
+    0x011f,       /* behavior/execute priority */
+    0x0099,       /* render priority */
     0x00000003,   /* actorFlags */
     0,
     0,
@@ -44,13 +46,13 @@ extern "C" DaBarSpawnInfo g_profile_BAR = {
 // @symbol _ZN7daBar_c13InitResourcesEv
 s32 daBar_c::InitResources()
 {
-    s32 height = (((param1 & 0xff) - kHeightParamBias) * kHeightTenth) << 12;
+    s32 height = (((param1 & 0xff) - kHeightParamBias) * kHeightMul) << 12;
     if (height <= 0)
         height = kMinHeightFix12;
     s32 halfHeight = height >> 1;
 
     SetRanges(halfHeight, halfHeight, halfHeight + kClipPadFix12, 0);
-    mClsn.Init(this, kCylinderRadiusFix12, height,
+    InitClsn(kCylinderRadiusFix12, height,
         (param1 & kParamHurtBit) ? kClsnFlagsHurt : kClsnFlags, 0);
     return 1;
 }

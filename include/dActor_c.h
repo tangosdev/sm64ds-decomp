@@ -51,10 +51,6 @@ struct ShadowModel;
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
 
-struct dActor_c;
-extern "C" void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
-    dActor_c *self, int offsetY, int radius, int clipDistance, int farDistance);
-
 struct dActor_c : dBase_c {
     /* The global actor list (data_0209b468) threads through every actor: the
        constructor appends this node, the destructor unlinks it, and Next() walks
@@ -167,14 +163,6 @@ struct dActor_c : dBase_c {
     virtual Vector3 OnAimedAtWithEggReturnVec();       /* slot 30 */
 
     /* --- non-virtual --- */
-    /* Scalar args: Fix12<int> by value homes the caller to the stack
-       (notes/mwccarm-codegen.md 6az). Retail passes the raw 20.12 bits in
-       registers; this inlines to that bl. */
-    void SetRanges(Fix12i offsetY, Fix12i radius, Fix12i clipDistance, Fix12i farDistance) {
-        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
-            this, offsetY, radius, clipDistance, farDistance);
-    }
-
     /* ClosestPlayer walks the player table measuring from this actor and caches
        both ends in globals; the rest read that cache, which is why each calls
        ClosestPlayer first and then returns a global rather than its result.
