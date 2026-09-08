@@ -294,3 +294,23 @@ int _ZN14UnchainedChomp8BehaviorEv(void *self)
    CELL ADDRESS and not on a pair's contents, so this gate does not disturb it. */
 #pragma comment(linker, "/alternatename:?data_ov085_021307d0@@3UState@@A=_data_ov085_021307d0")
 #pragma comment(linker, "/alternatename:?data_ov085_021307e0@@3UState@@A=_data_ov085_021307e0")
+
+/* ---- RUN link100 LANE PMFB7 GATE 3: THE THREE NAMES THE UNDEF SWEEP FOUND --
+ * src/func_ov006_02123340.cpp declares its two Particle::System statics through
+ * a local wrapper -- `struct PSys { static void *NewUnkCallback818(...);
+ * static void *FromUniqueID(unsigned); };` -- and declares data_ov006_02140830
+ * OUTSIDE its extern "C" block, so MSVC decorates all three references and
+ * nothing in this link defines those spellings. They are not undecompiled code
+ * and not stand-ins: the ROM's own relocations at those call sites reach
+ * Particle::System::NewUnkCallback818 and Particle::System::FromUniqueID, which
+ * this link already carries, and port/unmatched/MgTrampolineTerror_
+ * StateDispatch.cpp -- the host copy this gate retires -- spelled all three out
+ * in full for exactly that reason. Read off the TU's own object with dumpbin
+ * before the link (runs/link100/out/PMFB7/undef_gate3.txt), and every RHS
+ * checked present in walk_window.map. The ABI matches spelling for spelling:
+ * six four-byte arguments on the first (Fix12 is an int wrapper and
+ * Vector3_16f* a pointer) and one on the second.
+ */
+#pragma comment(linker, "/alternatename:?NewUnkCallback818@PSys@@SAPAXIIHHHPAX@Z=__ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f")
+#pragma comment(linker, "/alternatename:?FromUniqueID@PSys@@SAPAXI@Z=__ZN8Particle6System12FromUniqueIDEj")
+#pragma comment(linker, "/alternatename:?data_ov006_02140830@@3HA=_data_ov006_02140830")

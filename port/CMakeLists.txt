@@ -15956,6 +15956,21 @@ foreach(line IN LISTS SLICE_PMFB7_LINES)
     endif()
     list(APPEND SLICE_PMFB7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# GATE 3. /Zp4 ON TWO SOURCES, MEASURED PER SOURCE AND NOT INHERITED.
+# src/func_ov006_02123340.cpp and src/func_ov006_020ee27c.cpp both hold their
+# member pointer at the ROM's 0x5004, which is 4 mod 8, and MSVC aligns the
+# eight-byte member to eight: without the option they read [reg+20488] and
+# [reg+20492], FOUR BYTES LATE, and with it [reg+20484] and [reg+20488], the
+# ROM's own 0x5004/0x5008. Four listing lines differ on each and nothing else
+# (runs/link100/out/PMFB7/emit_gate3_out.txt). src/func_ov006_020ef3e0.cpp is at
+# the SAME ROM offset and does NOT need it -- its struct comes from the tree's
+# own dScMgJump2_c.h and MSVC already lays the member at 0x5004, 0 diff lines --
+# which is why the option is measured per source rather than predicted from the
+# offset alone. src/func_ov006_020e7be8.cpp is at 0x210, 0 mod 8, 0 diff lines.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_02123340.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020ee27c.cpp"
+    PROPERTIES COMPILE_OPTIONS "/Zp4")
 foreach(_tpmfb7 walk_window walk_window_hires smoke_player)
     target_sources(${_tpmfb7} PRIVATE ${SLICE_PMFB7_SOURCES})
 endforeach()

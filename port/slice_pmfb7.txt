@@ -174,3 +174,51 @@ src/_ZN10KingBobOmb8BehaviorEv.cpp
 src/_ZN9LakituBro8BehaviorEv.cpp
 src/_ZN5Stump8BehaviorEv.cpp
 src/_ZN14UnchainedChomp8BehaviorEv.cpp
+
+# ---- gate 3: THE FOUR ov006 FIELD-HELD ROWS -------------------------------
+#
+# ov006's symbols.txt carries no mangled class names, so a class's method set
+# cannot be read off a name the way gates 1 and 2 read theirs. The class's own
+# VTABLE is the method set: every slot word that lands in ov006 and is not the
+# shared base's is a body this class defines, and the block is the first-to-last
+# span of those bodies snapped out to the enclosing symbol boundaries.
+#
+#  row                    vtable      class code block        pairs  run
+#  func_ov006_02123340   0213fc7c   021225ac..021245a8       5   0213fbd0..0213fbf8
+#  func_ov006_020ee27c   0213cbe4   020edec0..020eeafc       7   0213cb4c..0213cb8c
+#  func_ov006_020ef3e0   0213ccfc   020eebe8..020efaf0       5   0213cc74..0213cca4
+#  func_ov006_020e7be8   0213c8c4   020e7660..020ea1f0      28   0213c6c4..0213c7bc
+#
+# The first three CLOSE: every reference into the run comes from inside the
+# class's own block and each is one writer's literal pool, so nothing outside
+# can hand the field an address and nothing compares a stored pair by value.
+#
+# THE FOURTH SEPARATES rather than closes, and the separation is the
+# measurement. Its block also holds the source statics of the seven .bss STATE
+# TABLES the class's own __sinit copies, so the sweep returns 28. Every
+# reference into the run says which is which: SIX are loaded by the class's OWN
+# CODE and are exactly this field's records, the other 22 by
+# __sinit_ov006_02130a08 alone. THREE of the six hold code word 0x020e7fac and
+# two of those three are BY-VALUE SENTINELS (src/func_ov006_020e7be8.cpp reads
+# 0x0213c704, src/func_ov006_020e7b44.cpp reads 0x0213c744, and that TU is in
+# the link through port/slice_fold2.txt), so this row is ONE FACE PER CODE WORD:
+# four faces, six records, and every comparison keeps comparing one host address
+# against itself.
+#
+# /Zp4 IS MEASURED PER SOURCE, and these four rows are why the rule is about the
+# EMITTED offset and not the ROM offset alone: 02123340 and 020ee27c are at
+# 0x5004 and need it (four diff lines each, [reg+20488] -> [reg+20484]),
+# 020ef3e0 is at the SAME 0x5004 and does NOT (0 diff lines: its struct comes
+# from the tree's own dScMgJump2_c.h and MSVC already lays the member there),
+# 020e7be8 is at 0x210 and does not. ARITY ZERO on all four, receiver in ecx.
+# All 23 source pairs read {code, 0} in the overlay image.
+#
+# THE TWO GUESS-MARKED BODIES ARE ALREADY ADJUDICATED, which is what PMFB6 could
+# not see: port/tools/inferred_stub_adjudicated.txt carries func_ov006_020ee27c
+# REAL_DECOMP (lane BNP) and func_ov006_020ef3e0 REAL_DECOMP (lane BNT), each
+# with instruction-for-instruction ROM evidence, and inferred_stub_guard admits
+# a symbol with that ruling. Nothing new is excused by this gate.
+src/func_ov006_020ef3e0.cpp
+src/func_ov006_020ee27c.cpp
+src/func_ov006_02123340.cpp
+src/func_ov006_020e7be8.cpp
