@@ -11,7 +11,6 @@
  * deslop
  * Leftover: func_ov002_020b5e58 and data_ov016_02114b8c (shared
  * float-board setup lives in ov002; this leaf only passes the file table).
- * #pragma long_calls: ov002 call is the wrong instruction without it.
  */
 
 #include "daObjKi_Ita_c.h"
@@ -51,10 +50,8 @@ extern "C" KiItaSpawnInfo g_profile_KI_ITA = {
 };
 
 // @symbol _ZN13daObjKi_Ita_c13InitResourcesEv
-#pragma long_calls on
 int daObjKi_Ita_c::InitResources()
 {
     /* Shared float-board setup: BMD, KCL, bob/sink state. */
     return func_ov002_020b5e58(this, data_ov016_02114b8c);
 }
-#pragma long_calls off
