@@ -200,8 +200,27 @@ def rung_scene(scene, frames):
                     "rung: the fill's own count check passed (no VTABLE SHAPE "
                     "line -- every raw DS word in the 18-slot table was "
                     "accounted for)")
-    ok &= M.verdict("refused subtree entered" not in txt,
-                    "rung: the refused boot-worker face was never entered")
+    # THIS RUNG CHANGED MEANING UNDER IT (run link100, lane THREAD, 2026-09-06):
+    # it used to assert the boot worker thread func_0201a2f8
+    # (hal/scene_link100_boot.cpp:307) was NEVER entered, because the port ran
+    # no DS threads and func_0201a244's thread-creation arm was dead code. It
+    # now runs as the ROM wrote it: OS_CreateThread really creates the boot
+    # worker, and on a scene boot this is the first and only call on that
+    # path, so the thread IS created and DOES enter the stub -- once. The stub
+    # is loud-once by its own "static int said" latch (never entered again
+    # for the rest of the process), so the honest claim available from stdout
+    # is not "never entered" but "entered exactly once, and its own report --
+    # that nothing was done -- is the whole of what printed". A second
+    # occurrence of the line would mean the latch stopped latching (the
+    # thread body ran past the stub, or the thread was created twice); zero
+    # occurrences would mean the thread branch went dead again.
+    n_entered = txt.count("refused subtree entered")
+    m = re.search(r"refused subtree entered:[^\n]*", txt)
+    ok &= M.verdict(
+        n_entered == 1 and m is not None and "nothing was done" in m.group(0),
+        "rung: the refused boot-worker face was entered exactly once, and "
+        "its own report followed -- 'nothing was done' (seen %d time(s))"
+        % n_entered)
     c = counters(txt, scene)
     ok &= M.verdict(c is not None, "rung: the class's own report printed")
     if c:
