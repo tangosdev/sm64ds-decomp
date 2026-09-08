@@ -16,7 +16,9 @@
     "symbol": "_ZTV12daBombking_c",
     "address": "0x02126e4c",
     "slots": 31,
-    "emitted_storage_size": "0x7c",
+    "address_point_payload_size": "0x7c",
+    "emitted_storage_size": "0x84",
+    "storage_address": "0x02126e44",
     "extent_evidence": "Three tools agree on 31 slots / 124 bytes. (1) tools/rtti_vtables.py --own daBombking_c reports 31 slots, base dEnemyBase_c 31 -- this class ADDS NO SLOT, it only overrides. (2) Relocation gap: the symbol IS the address point at 0x02126e4c, storage begins 8 bytes lower at 0x02126e44, the 31st slot word ends at 0x02126ec8, and the next real symbol is data_ov078_02126ee0 (bss) -- 24 bytes of trailing zero padding in between. (3) tools/romdata_check.py check_object on the RAW object: bytes=124, emitted=124, blindWords=0, 0 differing. romExtent reports 148, over-reporting by exactly those 24 trailing zero bytes (the documented dsd _ZTV extent overrun); the verdict is PARTIAL for that reason alone, not because any emitted word disagrees with the cartridge.",
     "note": "the symbol IS the address point; the two ABI preamble words (offset-to-top, RTTI pointer) sit at -8 and -4"
   },

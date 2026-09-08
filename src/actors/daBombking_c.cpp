@@ -6,8 +6,8 @@
  * at 0x02126e18 and _ZTI12daBombking_c at 0x02126e0c, and the vtable's -4
  * header word points back at that _ZTI.  The tree used to carry the class under
  * the coined name KingBobOmb; this file and its header use the cartridge's own
- * spelling.  One coined identifier survives: the free function
- * KingBobOmb_SetState at 0x02125c48, for which the cartridge offers no name.
+ * spelling. Member and helper identifiers remain reconstructed; in particular,
+ * KingBobOmb_SetState at 0x02125c48 retains its coined spelling.
  *
  * The base is dEnemyBase_c.  _ZTV12daBombking_c is 31 slots with its address
  * point at ov078 0x02126e4c, and this class overrides 8 of them -- slots 0, 3,
@@ -32,15 +32,15 @@
  * link; the cartridge's own copies are what the ROM keeps, and
  * tools/romdata_check.py compares this object's emitted RTTI against them.
  *
- * FUNCTION ORDER IS ROM-ASCENDING.  mwccarm 2004/b56 emits one .text section
- * per function in the REVERSE of source order, so the highest-address ROM
- * function is written FIRST here.  Do not reorder.  A destructor's D0/D1/D2
+ * FUNCTION ORDER IS ROM-ASCENDING. With defer_codegen off, mwccarm 2004/b56
+ * emits the functions in source order, with the lowest ROM address first.
+ * Keep that order. A destructor's D0/D1/D2
  * group has a compiler-chosen order of its own; see the destructor comment in
  * the class header for what was measured on this TU.
  *
  * Folded from 52 one-function sources, each of which was its own file in src/
  * before this promotion and none of which is in the tree any more.  Listed by
- * the symbol the cartridge's symbols.txt gives the address, in ROM order:
+ * the symbol assigned in the repository's symbols.txt, in ROM order:
  *   [0] 0x02123740  _ZN12daBombking_cD1Ev
  *   [1] 0x02123798  _ZN12daBombking_cD0Ev
  *   [2] 0x02123804  func_ov078_02123804
@@ -120,11 +120,11 @@
 #include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
 
-/* Local shadow declarations. Reconciled by hand against include/: every type
+/* Remaining reconstruction views. Reconciled by hand against include/: every type
  * the real headers already define (Vector3, Matrix4x3, Fix12<int>, u8/u16/s16,
  * dActor_c, fBase_c, Player, BMD_File, BlendModelAnim) was DROPPED here -- the
- * generated preamble redefined all of them. What remains is genuinely local to
- * this TU: the small anonymous shapes the legacy shards used for raw offsets. */
+ * generated preamble redefined all of them. The shapes below are surviving
+ * views from the legacy shards, not evidence of original local classes. */
 
 /* File-local flat matrix. math/Matrix.h spells Matrix4x3 as {Matrix3x3 r;
  * Vector3 t;} while common.h spells it flat; whole-matrix assignment must stay
@@ -139,17 +139,15 @@ struct Vec3 { int x, y, z; };
  * turn on this one rule. */
 struct M3 { int w[3]; };
 struct BCA_File;
-/* The state pointer-to-member. KingBobOmb_SetState and Behavior share it. */
-struct C;
-typedef int (C::*PMF)();
-struct C { char pad[0x420]; PMF *pp; };
+typedef daBombking_c::StateFunction PMF;
 extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t);
 extern "C" int KingBobOmb_SetState(void *c, void *p);
 typedef struct { int a, b; } P2;
 struct G { int w[2]; };
 
-/* Raw-offset views the .c shards used. Kept verbatim: reconciling these to
- * named fields changes field-address CSE (see dBgActor_c::UpdateKillByMegaChar). */
+/* Raw-offset views retained from the legacy shards. Their remaining fields
+ * still need reconstruction and local compiler measurements; a CSE result
+ * from another class does not establish a constraint here. */
 struct CView {
     char pad0[0x8e];
     short field_8e;
@@ -261,7 +259,6 @@ void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(vo
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern int _ZN5Model6RenderEPK7Vector3(void *m, void *v);
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
@@ -457,10 +454,9 @@ int func_ov078_02123aa0(char* c){
 /* ROM ordinal 7 -- func_ov078_02123bc4, 0x02123bc4, size 0x5c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov078_02123bc4
-/* Signature deliberately copied from the local declaration above: the
-   ROM name carries by-value class parameters (e.g. Fix12<int>), which
-   mwccarm passes differently at the call site, so declaring the true
-   types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
+/* This caller retains the reconstructed SetAnim ABI declaration above.
+   The callee's Fix12 definition experiment in notes/mwccarm-codegen.md 6az
+   does not establish that a typed call here would fail to match. */
 extern "C" int func_ov078_02123bc4(char* c){
   *(int*)(c+0x9c)=-0x2000;
   *(int*)(c+0x4fc)=2;
@@ -1682,10 +1678,10 @@ void func_ov078_02125c24(char* c, int strength) {
 /* -------------------------------------------------------------------------- */
 // @symbol KingBobOmb_SetState
 extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
-    C *c = (C *)cv;
+    daBombking_c *c = (daBombking_c *)cv;
     PMF *p = (PMF *)pv;
-    c->pp = p;
-    PMF *q = c->pp;
+    c->mState = p;
+    PMF *q = c->mState;
     if (*q == 0) return 1;
     return (c->**q)();
 }
@@ -1699,7 +1695,7 @@ extern "C" int KingBobOmb_SetState(void *cv, void *pv) {
  * Matched byte-for-byte with mwccarm 1.2/sp2p3.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
-extern "C" int func_ov078_02125c98(void* cv) {
+extern "C" void func_ov078_02125c98(void* cv) {
   char* c = (char*)cv;
   int h = *(int*)(c+0x60);
   if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x110) == 0) {
@@ -1850,7 +1846,7 @@ int daBombking_c::Render()
             }
         }
     }
-    _ZN5Model6RenderEPK7Vector3((char*)((void *)this) + 0x2cc, (void*)0);
+    mBlendModelAnim.Model::Render(0);
     return 1;
 }
 
@@ -1862,12 +1858,8 @@ int daBombking_c::Render()
 /* recovered: named members + shared header, real C++ method */
 
 
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); };
-struct Derived { char pad[0x2cc]; Base base; };
-
 extern "C" {
 extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
-extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
@@ -1883,25 +1875,22 @@ extern void _ZN5dCc_c6UpdateEv(void *self);
 
 int daBombking_c::Behavior()
 {
-    char *self = (char *)((C *)this);
+    char *self = (char *)this;
 
-    if (_ZN8dActor_c13DistToCPlayerEv(((C *)this)) < 0x1770000) {
-        *(C **)((char *)data_0209f318 + 0x114) = ((C *)this);
+    if (_ZN8dActor_c13DistToCPlayerEv(this) < 0x1770000) {
+        *(daBombking_c **)((char *)data_0209f318 + 0x114) = this;
     }
 
-    if (*(void **)((char *)((C *)this)->pp + 8) != 0) {
-        PMF *p = ((C *)this)->pp + 1;
-        (((C *)this)->**p)();
+    if (*(void **)((char *)mState + 8) != 0) {
+        PMF *p = mState + 1;
+        (this->**p)();
     }
 
-    {
-        Base *b = &((Derived *)self)->base;
-        mBlendModelAnim.speed = mAnimSpeed << 0xc;
-        b->v3();
-    }
-    _ZN14BlendModelAnim7AdvanceEv(self + 0x2cc);
+    mBlendModelAnim.speed = mAnimSpeed << 0xc;
+    mBlendModelAnim.UpdateVerts();
+    mBlendModelAnim.Advance();
 
-    if ((char *)((C *)this)->pp == (char *)data_ov078_0212707c) {
+    if ((char *)mState == (char *)data_ov078_0212707c) {
         void *r1 = *(void **)(self + 0x494);
         int b;
         if (r1 != 0) {
@@ -1920,17 +1909,17 @@ int daBombking_c::Behavior()
     DecIfAbove0_Byte(&mTimer505);
     DecIfAbove0_Byte(&mTimer504);
 
-    if ((char *)((C *)this)->pp != (char *)data_ov078_021270bc) {
+    if ((char *)mState != (char *)data_ov078_021270bc) {
         _ZN8dActor_c9UpdatePosEP5dCc_c(self, self + 0x33c);
     } else {
         _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(self, self + 0x33c);
     }
 
-    if ((char *)((C *)this)->pp != (char *)data_ov078_021270bc || *(unsigned char *)(self + 0x499) == 1) {
+    if ((char *)mState != (char *)data_ov078_021270bc || *(unsigned char *)(self + 0x499) == 1) {
         _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(self, self + 0x110, 0);
     }
 
-    if ((char *)((C *)this)->pp == (char *)data_ov078_0212703c || (char *)((C *)this)->pp == (char *)data_ov078_021270fc) {
+    if ((char *)mState == (char *)data_ov078_0212703c || (char *)mState == (char *)data_ov078_021270fc) {
         if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x110) != 0
             || _ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x110) == 0
             || (mArenaPosY - 0x28000) > mPosY) {
@@ -1970,8 +1959,8 @@ int daBombking_c::Behavior()
 // @symbol _ZN12daBombking_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 /* recovered: named members + shared header, real C++ method */
-/* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
-   deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
+/* SharedFilePtr's complete declaration is included above. The file handles
+   below still use their existing ROM-backed data declarations. */
 int daBombking_c::InitResources()
 {
     BMD_File* f;

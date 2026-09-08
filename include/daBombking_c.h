@@ -42,12 +42,12 @@ struct daBombking_c : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c_37c;/* 0x37c */
     CommonModel mCommonModel;         /* 0x3bc */
     ShadowModel mShadowModel;         /* 0x3f8 */
-    /* The state pointer. KingBobOmb_SetState writes it and immediately calls
-       through it, and Behavior compares it against the ov078 state tables
-       (data_ov078_0212703c / _0212707c / _021270bc / _021270fc). Both members
-       now live in the promoted TU; they were their own one-function sources
-       before the fold. */
-    void *mState;                     /* 0x420 */
+    /* The reconstructed state dispatcher uses two member-pointer records.
+       KingBobOmb_SetState invokes the first; Behavior invokes the second.
+       The int return contract preserves the current dispatcher and does not
+       establish the original signatures of all state handlers. */
+    typedef int (daBombking_c::*StateFunction)();
+    StateFunction *mState;            /* 0x420 */
     u8  pad_424[0x70];
     s32 mHeldActor;                      /* 0x494 */
     u8 unk_498;                       /* 0x498 */
@@ -86,9 +86,8 @@ typedef char daBombking_c_size_must_be_0x50c[sizeof(daBombking_c) == 0x50c ? 1 :
 
 #else
 
-/* The C spelling of the same object, flat. Kept because the D0 file is a C
-   translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/ShadowModel.h. */
+/* Legacy C layout view. No current C source consumes this header; both D1 and
+   D0 now come from the C++ destructor in the promoted translation unit. */
 struct daBombking_c {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
