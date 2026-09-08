@@ -1,16 +1,17 @@
 //cpp
-/* Reconstructed ov016/daObjKi_Ita_c translation unit.
+/**
+ * Jolly Roger Bay floating plank (`ita` = board).
  *
- * tu_map identifies the RTTI-backed three-function class run at
- * 0x02112ef4..0x02112fbc. The registry-backed factory immediately after it
- * allocates sizeof(daObjKi_Ita_c), constructs the direct base, installs the
- * class vptr, and ends at the next class's D1. That evidence supports testing
- * the combined four-function interval 0x02112ef4..0x02112ff8; tu_map alone
- * does not prove the factory join.
+ * No model of its own in this file: InitResources hands the shared
+ * float-board setup this stage's model and collision files.
  *
- * mwccarm emits ordinary function sections in reverse source order. Keep the
- * factory first. The inline destructor declared last in daObjKi_Ita_c emits
- * the retail D1/D0 pair first and emits no leaf D2 body.
+ * daObjKi_Ita_c_classInit / g_profile_KI_ITA are reconstructed (RTTI
+ * daObjKi_Ita_c, KI_ITA registry). Retail does not store those spellings.
+ *
+ * deslop
+ * Leftover: func_ov002_020b5e58 and data_ov016_02114b8c (shared
+ * float-board setup lives in ov002; this leaf only passes the file table).
+ * #pragma long_calls: ov002 call is the wrong instruction without it.
  */
 
 #include "daObjKi_Ita_c.h"
@@ -18,36 +19,34 @@
 extern "C" int func_ov002_020b5e58(void *self, void *data);
 extern "C" void *data_ov016_02114b8c[];
 
-struct KiItaProfile {
+struct KiItaSpawnInfo {
     daObjKi_Ita_c *(*classInit)();
-    s16 profileID;
-    s16 groupFlags;
+    s16 executeOrder;      /* +4 behavior/execute priority */
+    s16 drawOrder;         /* +6 render priority */
     u32 actorFlags;
-    Fix12i cullRadiusX;
-    Fix12i cullRadiusY;
-    u32 executeOrder;
-    u32 drawOrder;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
 
-typedef char KiItaProfile_size_must_be_0x1c[
-    sizeof(KiItaProfile) == 0x1c ? 1 : -1];
+typedef char KiItaSpawnInfo_size_must_be_0x1c[
+    sizeof(KiItaSpawnInfo) == 0x1c ? 1 : -1];
 
-/* Reconstructed source-style names. SM64DS directly preserves the class RTTI,
- * KI_ITA ID, descriptor relationship, and factory behavior. */
 // @symbol daObjKi_Ita_c_classInit
 extern "C" daObjKi_Ita_c *daObjKi_Ita_c_classInit()
 {
     return new daObjKi_Ita_c();
 }
 
-extern "C" KiItaProfile g_profile_KI_ITA = {
+extern "C" KiItaSpawnInfo g_profile_KI_ITA = {
     daObjKi_Ita_c_classInit,
-    0x003c,
-    0x00b8,
-    2,
+    0x003c,       /* behavior/execute priority */
+    0x00b8,       /* render priority */
+    2,            /* actorFlags */
     0,
-    0x00250000,
-    0x02000000,
+    0x00250000,   /* clip radius */
+    0x02000000,   /* clip distance */
     0
 };
 
@@ -55,6 +54,7 @@ extern "C" KiItaProfile g_profile_KI_ITA = {
 #pragma long_calls on
 int daObjKi_Ita_c::InitResources()
 {
+    /* Shared float-board setup: BMD, KCL, bob/sink state. */
     return func_ov002_020b5e58(this, data_ov016_02114b8c);
 }
 #pragma long_calls off
