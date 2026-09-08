@@ -383,5 +383,15 @@
     "rom_inputs": "extracted/overlays/overlay_0084.bin (31904 bytes), extracted/overlays/overlay_0002.bin, extracted/arm9_dec.bin",
     "tools_run": "tools/rtti_extract.py (429 records, 413 edges, 0 unresolved), tools/rtti_vtables.py --own daPkn_c and --out build/rtti_vtables.json, tools/opnew_sizes.py (391 sites, 315 classes, 0 unattributed), tools/tu_map.py (691 TUs / 333 with a class -- the non-degraded figures, because build/rtti_vtables.json existed first), tools/check_rename_ledger.py (exit 0)",
     "tree_derived_fields": "queue_row_corrections, shard_inventory, header_state, ledger_state and the sibling-oracle finding are TREE-derived and rot on every promotion. They were derived at 2ab05bae3. Everything under identity, vtable, base, overrides, destructors, size, construction, state_machine, callers and fields is ROM-derived and merging cannot change it."
+  },
+  "humanizer_continuation_2026_09_08": {
+    "input_commit": "ffd6d8dd436827d06fcb79e1a0cf5171eb7ee231",
+    "task": "pr-2450-source-review-fixes",
+    "handoff": "notes/agents/handoffs/pr-2450-source-review-fixes.md",
+    "scope": "Prior scout observations remain dated to their recorded input; this update records the narrow source-review continuation.",
+    "state_8_contract": "ov084:0x02130be4 is the only configured incoming relocation to 0x0212f298. The initializer installs it as state 8 in the void-dispatched table. The C++ body now returns void, preserving all 0x44 bytes. This does not recover an original identifier.",
+    "state_1_provenance": "The old daFPkn_c::Kill/vtable comment on 0x0212fa7c was false. The existing state_machine.table and record at ov084:0x02130ba4 identify it as daPkn state 1.",
+    "vtable_extent": "The original TU/handoff section-boundary claim was corrected to the existing vtable.end_evidence: the 31 slots end at 0x02130ca4, followed by seven zero words to .data end 0x02130cc0. No data claim or bounding symbol was added.",
+    "remaining_reconstruction": "Fifteen address-named free helpers remain; state 7/8 now use the real actor fields. Raw factory and other helper/copy seams remain explicit follow-up, with tested alternatives documented in the handoff."
   }
 }

@@ -1,5 +1,10 @@
 # Handoff: prod-pkn-0907 — daPkn_c (ov084)
 
+2026-09-08 continuation: this is the original promotion record; its proof stays
+scoped to the commits named below. Current source-review corrections and remaining
+work are recorded in [pr-2450-source-review-fixes.md](pr-2450-source-review-fixes.md).
+The vtable-boundary explanation below is corrected against the existing dossier.
+
 This document describes this commit. The queue records its immutable output SHA.
 
 ## Identity and resumption
@@ -46,11 +51,11 @@ This document describes this commit. The queue records its immutable output SHA.
     vtable, destroys six member subobjects in reverse declaration order and tails
     into `_ZN12dEnemyBase_cD2Ev`. Chain daPkn_c → dEnemyBase_c → dActor_c →
     dBase_c → fBase_c. 31 vtable slots, 8 own overrides, no new virtuals.
-  - **The vtable extent is exact, which is unusual and worth saying.**
-    `_ZTV7daPkn_c` at 0x02130c28 is the LAST datum in ov084 `.data`, so its length
-    is fixed by the section boundary rather than by whatever symbol follows. The
-    tree has a known `_ZTV` extent defect that reads both long and short; this
-    class is immune to it and the 31 slots are measured, not inferred.
+  - **Vtable extent, corrected 2026-09-08.** The 31 slots at ov084:0x02130c28
+    end at 0x02130ca4; seven zero words separate them from the `.data` end at
+    0x02130cc0. The base/peer slot counts and inherited final slot support this
+    extent, as recorded in the dossier. The section boundary alone does not:
+    this last-table case still has the sizing limitation described below.
   - D1 at 0x0212eaf0 sits BELOW D0 at 0x0212eb48 and there is no D2 anywhere.
 - Lineage evidence or structural inference: object size 0x47c is the ROM's own
   literal, loaded at 0x0213016c and handed to `fBase_c::operator new`; the last

@@ -19,12 +19,11 @@
  * virtuals, it only overrides eight of the inherited slots, and all eight sit
  * inside this text run.
  *
- * THE VTABLE EXTENT IS EXACT, WHICH IS UNUSUAL.  _ZTV7daPkn_c at 0x02130c28 is
- * the LAST datum in ov084's .data section, so its length is fixed by the end
- * of the section rather than by whatever symbol happens to follow.  The tree
- * has a known _ZTV extent defect that reads both long and short depending on
- * what follows a vtable; this class is immune to it, and the 31-slot figure
- * above is a section boundary, not an inference.
+ * VTABLE EXTENT.  The 31 slots end at 0x02130ca4; seven zero words follow
+ * before .data ends at 0x02130cc0.  The section boundary alone therefore
+ * does not bound the table.  The dossier records the base-class slot count,
+ * the matching inherited final slot and the neighbouring tables that support
+ * this extent.  Text-only production leaves the canonical table ROM-supplied.
  *
  * ROUTE: TEXT-ONLY.  ov084 delinks no .data at all -- every entry in
  * config/arm9/overlays/ov084/delinks.txt is a .text range -- so this TU
@@ -60,12 +59,11 @@
  * stale name there links every one of those words as 0.  Naming them is the
  * next improvement and is deliberately not attempted here.
  *
- * DECLARATIONS.  There is ONE file-scope extern "C" region, and it carries only
- * what the C++-named members need: a member function may not sit inside a
- * block-scope linkage specification, so those bodies cannot declare anything
- * themselves.  Every free member below is wrapped in its own extern "C" block
- * and declares what it alone needs, which is how two members of this TU can
- * hold different views of one symbol.
+ * DECLARATIONS.  Namespace-scope declarations name the remaining external
+ * entry points.  The extern "C" blocks preserve their reconstructed linker
+ * spellings; they do not create separate scopes or permit conflicting views
+ * of the same function.  Calls use the real class declarations where the
+ * measured form reproduces the ROM.
  *
  * include/decl_common.h is deliberately NOT included.  It declares five of this
  * TU's own members with signatures that contradict the definitions here
@@ -130,11 +128,10 @@ extern SharedFilePtr *data_ov084_021302f4[];
 struct PknVec3 { int x, y, z; };
 struct PknMtx43 { int w[12]; };
 
-/* daPkn_c::Behavior calls the current state through a pointer-to-member held in
-   .bss at 0x02130e80.  Nothing here names a symbol; the class exists only to
-   give the member pointer a type. */
-struct PknStateCls { virtual void dummy(); };
-typedef void (PknStateCls::*PknStatePMF)();
+/* Behavior calls the current state through this actor's member-pointer table
+   in .bss at 0x02130e80.  The free handler identities and the unowned PMF
+   records stay unchanged until their coordinated method conversion. */
+typedef void (daPkn_c::*PknStatePMF)();
 
 #define AT(p, off) ((void *)(int)((char *)(p) + (off)))
 
@@ -167,23 +164,21 @@ void  func_020105cc(void *thiz, u32 flags);
 void *_ZN8dActor_c10FindWithIDEj(u32 id);
 char *_ZN8dActor_c13ClosestPlayerEv(void);
 int   _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *self, void *clsn, void *player);
-void  _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void *self, void *clsn);
 void  _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *c, const void *d, int e, int f);
 
 void  _ZN6Player16IncMegaKillCountEv(void *player);
 void  _ZN6Player6BounceE5Fix12IiE(void *player, int fix);
 int   _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *player, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
 
-int   _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void *self, void *clsn, void *anim, u32 flags);
-void  _ZN5dCc_c5ClearEv(void *thiz);
-void  _ZN5dCc_c6UpdateEv(void *thiz);
-void  _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *thiz, void *pos);
 
 int   _ZN9Animation8FinishedEv(void *a);
 
-/* SetAnim and the three Init calls keep mangled spellings with SCALAR slots:
-   they carry Fix12<int> BY VALUE, which mwccarm passes differently at the call
-   site, so spelling the true types breaks the byte match. */
+/* Measured remaining call seams in InitResources (mwccarm 2004/b56): real
+   SetAnim and dCcAc/dCcAcPos Init calls with local Fix12<int> arguments change
+   the instructions.  dBgCh_Actr's current scalar Init declaration instead names
+   an unresolved symbol.  These results do not establish the original Fix12
+   parameter types or a different caller ABI.  Exact alternatives and results:
+   notes/agents/handoffs/pr-2450-source-review-fixes.md, compiler experiments. */
 void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *anim, int flags, int speed, u32 startFrame);
 void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *a, int r, int h, u32 e, u32 g);
 void  _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *a, const Vector3 *v, int r, int h, u32 e, u32 g);
@@ -266,7 +261,7 @@ int *daPkn_c_classInit(void)
  *
  * This was still `extern "C" int _ZN7daPkn_c13InitResourcesEv(char* c)`
  * working raw offsets -- a file renamed .cpp without ever being migrated. It is
- * a real method now and every offset is a field.
+ * a real method now, with the remaining copy seam measured below.
  *
  * Unlike FirePiranhaPlantBig's, this one DOES check its loads: a failed SetFile
  * on either model returns 0 rather than carrying on.
@@ -275,10 +270,9 @@ int *daPkn_c_classInit(void)
  * angle out of the shared sin/cos table at data_02082214, and 0x37800 above the
  * spawn position.
  *
- * SetAnim and the three Init calls keep extern "C" declarations with scalar
- * slots: they carry Fix12<int> BY VALUE, which mwccarm passes differently at
- * the call site, so spelling the true types breaks the byte match -- see
- * notes/mwccarm-codegen.md 6az.
+ * The remaining SetAnim/Init bridges are described at their declarations.
+ * Their measured alternatives are recorded in the continuation handoff;
+ * the general callee-homing note does not prove a caller ABI restriction.
  */
 int daPkn_c::InitResources()
 {
@@ -352,7 +346,7 @@ int daPkn_c::Behavior()
     int r;
     int old;
     int cur;
-    r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(((char*)this), &mWithMeshClsn, &mModelAnim, 1);
+    r = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 1);
     if (r != 0) {
         if (r == 2) {
             unk_108 = 0;
@@ -366,34 +360,35 @@ int daPkn_c::Behavior()
         }
         return 1;
     }
-    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), &mdCcAc_c1);
+    MakeVanishLuigiWork(mdCcAc_c1);
     mModelAnim.Advance();
     func_ov084_0212f204(((char*)this));
     old = mState;
-    (((PknStateCls *)((char *)this))->*data_ov084_02130e80[old])();
+    (this->*data_ov084_02130e80[old])();
     {
+        /* This counter loads the shared signed field as an unsigned halfword.
+           ++mStateTimer instead emits ldrsh where the ROM uses ldrh. */
         unsigned short* p100 = (unsigned short*)((char*)&mStateTimer);
         *p100 = (unsigned short)(*p100 + 1);
     }
     cur = mState;
     if (old != cur) {
         if (cur == 5) {
-            int* pb0 = (int*)((char*)&mFlags);
-            *pb0 = *pb0 & ~0x10000000;
+            mFlags &= ~0x10000000;
         }
         mStateTimer = 0;
         unk_478 = 0;
     }
     func_ov084_0212ec60(((char*)this));
-    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c1);
-    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c2);
-    _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
+    mdCcAc_c1.Clear();
+    mdCcAc_c2.Clear();
+    mdCcAcPos_c.Clear();
     if (mClsnEnabled != 0) {
-        _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c1);
-        _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c2);
+        mdCcAc_c1.Update();
+        mdCcAc_c2.Update();
         if (mState == 2) {
-            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(&mdCcAcPos_c, &mSpawnPos);
-            _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
+            mdCcAcPos_c.SetPosRelativeToActor(mSpawnPos);
+            mdCcAcPos_c.Update();
         }
     }
     return 1;
@@ -475,10 +470,9 @@ void func_ov084_0212fc10(char *c)
 /* ROM ordinal 16 -- func_ov084_0212fa7c, 0x0212fa7c, size 0x194 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212fa7c
-// recovered name: FirePiranhaPlantBig_Kill
-/* recovered: renamed to Class_Method, declarations from a shared header */
-/* recovered: renamed to Class_Method */
-/* daFPkn_c::Kill - recovered from vtable slot identity */
+/* daPkn state 1: the PMF record at ov084:0x02130ba4 targets this body.
+   The former FirePiranhaPlantBig_Kill / daFPkn_c::Kill comments were a
+   misattribution: this is not a vtable slot.  Its original name is unknown. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void func_ov084_0212fa7c(char *c) {
     *(unsigned char *)(c + 0x45c) = 1;
@@ -784,13 +778,13 @@ void func_ov084_0212f33c(void *self)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f2dc
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-void func_ov084_0212f2dc(char *c){
-    *(unsigned char*)(c + 0x45c) = 0;
-    if(*(int*)(c + 0x464) <= 0x4b0000) return;
-    *(int*)(c + 0x458) = 8;
-    *(int*)(c + 0x474) = 0;
-    *(int*)(c + 0x470) = *(int*)(c + 0x474);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130e0c.file, 0, 0x1000, 0);
+void func_ov084_0212f2dc(daPkn_c *c){
+    c->mClsnEnabled = 0;
+    if (c->unk_464 <= 0x4b0000) return;
+    c->mState = 8;
+    c->unk_474 = 0;
+    c->mParticleHandle = c->unk_474;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e0c.file, 0, 0x1000, 0);
 }
 }
 
@@ -798,13 +792,15 @@ void func_ov084_0212f2dc(char *c){
 /* ROM ordinal 9 -- func_ov084_0212f298, 0x0212f298, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f298
+/* State 8 is reached through the void PMF table and has no result consumer.
+   The previous int declaration fell through when this body became C++. */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int func_ov084_0212f298(char *c)
+void func_ov084_0212f298(daPkn_c *c)
 {
     int v;
-    *(unsigned char *)(c + 0x45c) = 0;
-    v = *(int *)(c + 0x80);
-    if (*(unsigned short *)(c + 0x100) == 0)
+    c->mClsnEnabled = 0;
+    v = c->mScaleX;
+    if ((u16)c->mStateTimer == 0)
         v = 0x4cc;
     if (v < 0x1000)
     {
@@ -812,12 +808,12 @@ int func_ov084_0212f298(char *c)
     }
     else
     {
-        *(int *)(c + 0x458) = 0;
+        c->mState = 0;
         v = 0x1000;
     }
-    *(int *)(c + 0x80) = v;
-    *(int *)(c + 0x84) = v;
-    *(int *)(c + 0x88) = v;
+    c->mScaleX = v;
+    c->mScaleY = v;
+    c->mScaleZ = v;
 }
 }
 
