@@ -135,6 +135,11 @@ WM_CENSUS_RE = re.compile(
     r"\[wm7:census\] commands (\d+), replies posted (\d+), replies dispatched "
     r"(\d+), unanswered (\d+)")
 
+# Gate A: the association line the same census prints (run link100, lane WM4).
+WM_ASSOC_RE = re.compile(
+    r"\[wm7:census\] association 0x([0-9a-f]+) \(peak 0x([0-9a-f]+), (\d+) "
+    r"change\(s\)\), status \+0x86 (\d+), \+0x17e (\d+)")
+
 
 def rung1(out_dir, frames):
     print("R1  model ON: the ROM's PXI bring-up runs and completes")
@@ -183,6 +188,20 @@ def rung1(out_dir, frames):
         check("R1", cmds == 0 and posted == 0 and disp == 0 and unans == 0,
               "a SOLO boot asked the radio nothing: %d command(s), %d reply(ies) "
               "posted, %d dispatched, %d unanswered" % (cmds, posted, disp, unans))
+    # GATE A's HALF OF THE SAME MEASUREMENT (run link100, lane WM4). The
+    # association bitmap is now written by the ARM7 from the transport, so a
+    # solo run owes the zero: no transport, no children, and the two status
+    # fields src/func_02062428.c and src/func_020627e8.c read stay at 0. The
+    # NONZERO half is a loopback pair and lives in the lane report's capture.
+    am = WM_ASSOC_RE.search(txt)
+    check("R1", am is not None,
+          "the host ARM7 reported its association census (gate A)")
+    if am:
+        assoc, peak, ev, f86, f17e = (int(am.group(i)) for i in (1, 2, 3, 4, 5))
+        check("R1", assoc == 0 and peak == 0 and ev == 0 and f86 == 0 and f17e == 0,
+              "a SOLO boot has no association: bitmap 0x%04x (peak 0x%04x, %d "
+              "change(s)), status +0x86 %d, +0x17e %d" %
+              (assoc, peak, ev, f86, f17e))
     check("R1", "[arm7:census] tag 10" not in txt,
           "and not one word reached tag 10 in a solo run, which is the same "
           "measurement rung W1 was gated on")

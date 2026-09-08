@@ -136,19 +136,50 @@
 //    ever, which is the failure ntr/ipc.cpp's bounded-spin guard exists to
 //    turn into an exit code. Same shape here, exit 24.
 //
-// WHAT THIS STUB DOES NOT DO, STATED RATHER THAN LEFT TO BE FOUND. It never
-// posts a CONNECT INDICATION to a parent (apiid 8 with state code 7). On the
-// DS that is how a parent learns a child joined, and src/func_02040014.c's
-// case 7 answers it by looking the child's MAC up in data_020a0f9d /
-// data_020a0fbe -- the lobby's accepted-peer table, which NOTHING in this
-// build fills, so every lookup misses and the ROM answers a joining child with
-// func_02061d30 (DISCONNECT). Fabricating the indication would therefore make
-// the parent hang up on its own peer. The parent reaches MP_PARENT on its own
-// (8 then 0xe) and the child reaches MP_CHILD on its own (0xc then 0xe);
-// neither needs the other's indication, and the session's actual bytes are the
-// transport's, exactly as they were before this rung. The connected-child
-// bitmaps at +0x86 and +0x17e stay ZERO for the same reason and it is the
-// truthful value: no child has completed the ROM's own accept handshake.
+// THE CONNECTED-CHILD BITMAP, AND WHY IT IS THE ARM7'S TO WRITE (run link100,
+// lane WM4, gate A). Rung W4 left +0x86 and +0x17e at zero and called that the
+// truthful value. It was truthful about the ROM's LOBBY handshake and wrong
+// about the RADIO, and the difference is what gate A settles.
+//
+// Two different facts wear the same word on the DS:
+//
+//   THE ASSOCIATION. Which AIDs are associated with this parent right now.
+//   That is 802.11 state and it lives in arm7.bin: the ARM9 never computes it,
+//   it READS it out of the status block the ARM7 writes. Three ROM bodies read
+//   it and each says what it is for:
+//     src/func_02062428.c:31-36  a parent refuses WM_SetMPData with error 7
+//                                while *(u16 *)(status + 0x17e) is zero -- "I
+//                                have nobody to send to".
+//     src/func_020627e8.c:31     takes *(u16 *)(status + 0x86) as `mask` and
+//                                sends with `H(0x40e) & mask` -- the recipient
+//                                set of an MP frame.
+//     src/func_02062df0.c:43-44  and src/func_020631dc.c:50-51 read the same
+//                                +0x86 into f86 and build the frame's own
+//                                participant word from `H(0x40e) & (f86 | 1)`.
+//   In the port the association IS the transport: a peer that has joined the
+//   carrier is a peer the radio is holding a link to. So the bitmap is filled
+//   from the transport, from the ARM7's turn, and it is not a fabrication --
+//   it is the one field on this rung whose value only the radio knows.
+//
+//   THE ACCEPTANCE. Which peers the game's own lobby agreed to play with.
+//   That is ARM9 state, it lives in data_020a0f9d / data_020a0fbe, and it is
+//   NOT what any of the three readers above touch.
+//
+// SO THE CONNECT INDICATION IS STILL NOT POSTED, and now for a narrower reason
+// than W4's. On the DS the ARM7 announces a join with apiid 8 carrying state
+// code 7, and src/func_02040014.c's case 7 answers it by looking the joining
+// child's six MAC bytes up in data_020a0f9d / data_020a0fbe -- the lobby's
+// accepted-peer table, which nothing in this build fills, so every lookup
+// misses and the ROM hangs up on its own peer with func_02061d30. Filling that
+// table would mean the port inventing a lobby decision the player never made,
+// and it would also make src/func_02040014.c:65's
+// `CpuCopy8(buf, data_020a0fa0[idx], 6)` REACHABLE -- a write at
+// data_020a0fa0 + aid*6, into a six-byte host object whose ROM neighbours
+// data_020a0fa6..0fd0 are hosted in a different section run (the residual
+// named at data_020a0fa0's own line below). The whole of that arm's effect on
+// an ACCEPTED child is to record its MAC in that table and return; nothing
+// else in the linked tree reads it. Zero gain, two real hazards: not taken,
+// and named in this lane's report.
 //
 // AND THE SIXTEEN-PLAYER WIDTH IS UNAFFECTED, because it never passes through
 // here. hal/vs_width.h's mod lives BELOW this protocol, in the transport and
@@ -414,6 +445,13 @@ unsigned long g_wait_turns[0x30];    // worst wait per apiid, in turns
 unsigned long g_unanswered;          // apiids this stub has no answer for
 unsigned long g_timed_out;           // replies posted as a failure, see below
 
+// GATE A's own bookkeeping: the association bitmap this ARM7 has published,
+// and how many times it changed. `g_kids` is the last value written to both
+// +0x86 and +0x17e, so a census can say what the radio was holding at exit.
+unsigned      g_kids = 0;            // the bitmap last published
+unsigned long g_kid_events = 0;      // times it changed (joins and leaves)
+unsigned      g_kid_peak = 0;        // every child bit ever set this session
+
 // THE BACKSTOP, AND WHOSE DEADLINE IT IS NOT. Two waits look alike here and
 // only one of them is this file's.
 //
@@ -669,6 +707,75 @@ void post_reply(const Pending &p)
         ++g_dispatched_total;
 }
 
+// ---- gate A: the association, read off the radio ---------------------------
+//
+// THE TRANSPORT CONTRACT EXPOSES A COUNT, NOT A MASK, and that is the one
+// approximation in this function. hal/comms_seam.h gives player_count() (live
+// slots, 1..kCommsMaxPlayers) and peer_block(aid) -- and peer_block is only
+// meaningful after a completed round, which is exactly the thing that cannot
+// have happened yet when a parent is being asked whether it has anybody to
+// send to. So the bitmap is built as the contiguous low run player_count()
+// implies: n players means AIDs 0..n-1, and the children are 1..n-1. The
+// loopback carrier assigns slots that way (hal/comms_loopback.cpp's g_live is
+// filled from slot 0 upward and lb_player_count() is its popcount), so on
+// every session this build can form the derived mask IS the live mask.
+//
+// WHERE IT WOULD DIFFER, AND WHY NO READER CAN SEE IT. A session that lost a
+// MIDDLE slot -- 0, 1 and 3 live -- has popcount 3, so this reports bits 1..2
+// where the radio holds bits 1 and 3. Both of this rung's readers are blind to
+// the difference: src/func_02062428.c tests +0x17e for ZERO and nothing else,
+// and +0x86 reaches the wire only through `H(0x40e) & mask`, where H(0x40e) is
+// the ROM's own hard-coded 0xf (src/func_0203fa50.c:7 passes mask 0xf) -- so a
+// wrong bit inside 1..3 changes which of four already-addressed slots the
+// SDK's own frame names, on a frame the transport, not the SDK, actually
+// delivers. It is an approximation and it is written down rather than dressed
+// up; closing it means the carrier exporting g_live, which is a change to a
+// file this lane does not own for a difference nothing on this rung reads.
+unsigned popcount16(unsigned v)
+{
+    unsigned n = 0;
+    for (unsigned b = 0; b < 16; ++b) if (v & (1u << b)) ++n;
+    return n;
+}
+
+unsigned children_mask()
+{
+    const port::CommsTransport *t = port::comms_transport();
+    if (!t) return 0;
+    if (t->state() != port::kCommsParentConnected) return 0;
+    int n = t->player_count();
+    if (n > (int)port::kCommsMaxPlayers) n = (int)port::kCommsMaxPlayers;
+    unsigned m = 0;
+    for (int aid = 1; aid < n; ++aid) m |= 1u << aid;
+    return m;
+}
+
+// Published from the ARM7's turn, which is where every other status-block
+// field on this rung is published: the ARM9 has yielded, so nothing is reading
+// the block mid-update. Only a PARENT has children -- a child's own aid is at
+// +0x184 and it never reads either bitmap (src/func_02062428.c:29-32 takes the
+// +0x17e branch only when +0x184 is zero).
+void publish_association()
+{
+    const unsigned st = st_get16(0x00);
+    if (st != kStParent && st != kStMpParent) return;
+    if (st_get16(0x184) != 0) return;
+
+    const unsigned m = children_mask();
+    if (m == g_kids) return;
+
+    ++g_kid_events;
+    g_kid_peak |= m;
+    if (ntr::ipc_log_on())
+        std::fprintf(stderr,
+            "[wm7] association 0x%04x -> 0x%04x (the radio is holding %u "
+            "child link(s)); status +0x86 and +0x17e follow it\n",
+            g_kids, m, popcount16(m));
+    g_kids = m;
+    st_set16(0x86,  m);
+    st_set16(0x17e, m);
+}
+
 bool transport_ready(int want)
 {
     if (want == 0) return true;
@@ -773,6 +880,7 @@ extern "C" void port_wm_arm7_command(uint32_t word)
         st_set16(0x184, 0);
         st_set16(0x86, 0);
         st_set16(0x17e, 0);
+        g_kids = 0;                 // gate A: the association is gone with it
         queue(apiid, 0, 0);
         break;
     }
@@ -831,6 +939,7 @@ extern "C" void port_wm_arm7_command(uint32_t word)
         // the one path that sends it, so this reply is dispatched and ignored.
         st_set16(0x17e, st_get16(0x17e) & ~(unsigned)c32[1]);
         st_set16(0x86,  st_get16(0x86)  & ~(unsigned)c32[1]);
+        g_kids &= ~(unsigned)c32[1];   // gate A: and the mirror follows
         queue(apiid, 0, 0);
         break;
 
@@ -879,6 +988,12 @@ extern "C" void port_wm_arm7_turn(void)
                 "data_020a0f9d + 3, so src/func_02040014.c's four-entry walk "
                 "over a three-byte span would read past its object.\n");
     }
+
+    // GATE A. Before a reply, the association: on the DS the ARM7 writes the
+    // status block whether or not the ARM9 asked it anything, and a parent that
+    // has been sitting in MP_PARENT since before its child knocked gets no
+    // further command until it is told it has somebody to send to.
+    publish_association();
 
     if (!g_qn) return;
 
@@ -954,6 +1069,10 @@ extern "C" void port_wm_arm7_census(void)
         "%u\n",
         g_turns, g_held_turns, g_max_wait_turns, g_timed_out, st_get16(0),
         st_get16(0x184), g_qn);
+    std::fprintf(stderr,
+        "[wm7:census] association 0x%04x (peak 0x%04x, %lu change(s)), status "
+        "+0x86 %u, +0x17e %u\n",
+        g_kids, g_kid_peak, g_kid_events, st_get16(0x86), st_get16(0x17e));
     std::fflush(stderr);
 }
 
