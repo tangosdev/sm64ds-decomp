@@ -1,0 +1,60 @@
+# run link100, lane PMFB8 -- THE ROWS PMFB7 MEASURED AND LEFT ON THE CLOCK.
+#
+# ===========================================================================
+# GATE 1 -- func_ov055_021112c4, MirrorLuigi's ENTER DISPATCHER
+# ===========================================================================
+#
+# THE UNIVERSE IS CLOSED, over the same class-derived block gates 1 and 2 of
+# lane PMFB7 used: every function symbol in ov055's symbols.txt whose mangled
+# name names MirrorLuigi, first to last, is 021111a0..02111860, and that is the
+# span one translation unit emits. Every `load` relocation in ov055 landing in
+# that block whose word reads the target and whose FOLLOWING word is zero gives
+# exactly TWO pairs:
+#
+#     02111a94  code=021112bc  (the ENTER half, whose whole body is `return 1`)
+#     02111a9c  code=02111288  (the TICK half, the mirror of the player)
+#
+# run 02111a94..02111aa4, SOLID, two distinct code words, and the only two
+# references into the run are 02111904 and 02111908 -- __sinit_ov055_021118d4's
+# own loads, the class's own sinit, which copies both pairs into the sixteen-
+# byte cell at data_ov055_02111b70. Nothing else in ov055 can hand this field an
+# address. (runs/link100/out/PMFB8/sweep_g1.txt)
+#
+# WHAT MAKES THIS ROW DIFFERENT FROM PMFB7's TWENTY-ONE, and why it was left for
+# its own gate: ITS ARITY IS ONE. The /FAsc listing under the port's own flags
+# (runs/link100/out/PMFB8/emit_g1_out.txt) is
+#
+#     mov  DWORD PTR [eax+472], ecx     c->pp = p, 472 = 0x1d8
+#     mov  edx, DWORD PTR [ecx]         the pair's FIRST word
+#     test edx, edx / jne               the null test the ROM also makes
+#     mov  ecx, DWORD PTR [ecx+4]       the pair's SECOND word, the adjust
+#     push DWORD PTR _a2$[ebp]          ONE stack argument
+#     add  ecx, eax                     receiver = this + adjust
+#     call edx
+#     pop  ebp / ret 0                  the caller does NOT clean up after it
+#
+# A CALL, not a tail jump, with one pushed word the caller never pops, because
+# __thiscall's stack half is callee-popped. So the face is
+# __fastcall(self, dead_edx, int) -- lane FWD's MgCup shape -- which takes ecx
+# as its receiver and pops the same one word. /Zp4 changes 0 listing lines
+# outside the TITLE and is NOT claimed: the member sits at offset 0 of the
+# record. The EXTRN list is EMPTY, so this row needs no /alternatename and no
+# forwarder; its src defines the flat C name the port already calls.
+#
+# THE SECOND READER WAS MEASURED BEFORE THE SEAT, which is what an arity-one row
+# costs that the uniform rows did not. The same cell has TWO halves and TWO
+# readers: this row reads the pair at cell+0 (the enter half) and
+# port/unmatched/MirrorLuigi_Behavior.cpp -- still a host copy -- reads the pair
+# at cell+8 (the tick half) as a plain cdecl (self, arg) call. They are
+# DISJOINT records, so the enter word takes the __fastcall face and the tick
+# word keeps the cdecl body it already has. Nothing compares a stored pair by
+# value, so there is no by-value sentinel and no one-face-per-code-word
+# constraint here.
+#
+# THE SEAT IS ON THE CELL, not on the source pairs, because port_ov55_bringup
+# already runs __sinit_ov055_021118d4 and then port_mirrorluigi_state_seat in
+# that order, and the seat already verifies all four mounted ROM words before it
+# rewrites anything -- the MgCup shape, one file over. Only the ENTER word
+# changes: it stops being the raw cdecl func_ov055_021112bc and becomes the
+# __fastcall face the matched TU's own `call edx` needs.
+src/func_ov055_021112c4.cpp

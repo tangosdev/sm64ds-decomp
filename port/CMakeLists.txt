@@ -16157,6 +16157,28 @@ foreach(_tpmfb7 walk_window walk_window_hires smoke_player)
     target_sources(${_tpmfb7} PRIVATE ${SLICE_PMFB7_SOURCES})
 endforeach()
 
+# SLICE pmfb8 -- run link100 lane PMFB8: the rows lane PMFB7 measured and left
+# on the clock. GATE 1 is src/func_ov055_021112c4.cpp, MirrorLuigi's ENTER
+# dispatcher: an ARITY-ONE field-held pointer-to-member row whose class-derived
+# block sweeps to exactly two {code,0} pairs with no by-value sentinel. NO /Zp4
+# on this block, measured rather than inherited: the member sits at offset 0 of
+# its record and the two /FAsc listings are identical outside the TITLE line.
+# The per-row universe, ROM read, emitted shape, arity and second-reader
+# measurement are in port/slice_pmfb8.txt and the raw measurements in
+# runs/link100/out/PMFB8/.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb8.txt" SLICE_PMFB8_LINES)
+set(SLICE_PMFB8_SOURCES "")
+foreach(line IN LISTS SLICE_PMFB8_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFB8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tpmfb8 walk_window walk_window_hires smoke_player)
+    target_sources(${_tpmfb8} PRIVATE ${SLICE_PMFB8_SOURCES})
+endforeach()
+
 # ===========================================================================
 # THE WIRELESS PLAN, RUNGS W4 AND W5 (run link100, lane WM3)
 # ===========================================================================
