@@ -276,6 +276,30 @@ def dh_rounds(t):
     return out
 
 
+def dh_counts(t):
+    """-> {frame: how many [dh] rows this window logged for it}.
+
+    A frame logged more than once was re-simulated after a rewind -- a
+    rewind only ever revisits a frame to correct it, never for any other
+    reason -- so a count over 1 is this window's own proof that it is done
+    changing its mind about that frame. A count of exactly 1 proves nothing
+    either way from inside one window's log alone: most such frames are
+    genuinely right the first time, but run 5 of RBFIX's five-run vs4 batch
+    (out/RBFIX/vs4_run5_f399_dh_rows.txt) is the counterexample -- window p3
+    logged f399 exactly once (w=67b52037, the predicted value) and then
+    moved straight on to f400, also logged once, before its own process
+    exited on the match's close. p0/p1/p2 each re-simulated f399 (two or
+    three rows apiece) and settled on w=af782037; p3's one-shot row never
+    got the correcting rewind, because that correction needed a network
+    round p3's own session ended before receiving. See settled_frame().
+    """
+    out = {}
+    for m in DH.finditer(t):
+        f = int(m.group(1))
+        out[f] = out.get(f, 0) + 1
+    return out
+
+
 def resim_report(t):
     """-> (distinct frames, frames simulated more than once, worst count)."""
     seen = {}
@@ -287,30 +311,59 @@ def resim_report(t):
     return (len(seen), sum(1 for v in seen.values() if v > 1), max(seen.values()))
 
 
-def settled_frame(all_rounds):
-    """The latest frame every window has FINISHED and agrees the round of.
+def settled_frame(all_rounds, all_counts):
+    """The latest frame every window has PROVEN settled and agrees the round of.
 
-    Two conditions, and both are needed:
+    Three conditions, and all three are needed:
 
       * it is not any window's own last frame. The run ends when the selftest
-        budget expires, and a window can stop part-way through a frame it has
+        budget expires, or the match ends and SM64DS_VS_EXIT_ON_END closes
+        the window, and a window can stop part-way through a frame it has
         already logged, so the last frame's state is whatever that window
         happened to reach -- not a simulated frame's settled result.
-      * all four report the same rounds=. That is dhdiff.py's own alignment
-        criterion, applied here so rungs 3-6 compare the same moment rather
-        than trusting a position tolerance to absorb a whole consumed round.
+      * NEW (RBFIX's run 5 finding): it is at or before the last frame each
+        window has PROOF of having re-simulated -- the last frame number
+        that appears more than once in that window's own [dh] rows (see
+        dh_counts()). "Not a window's raw last frame" is not enough: run 5
+        had all four windows share the identical raw last frame (f400, 401
+        dh rows apiece, so the OLD rule's `f < tails[k]` bound let f399
+        through as a candidate), but window p3's f399 was logged exactly
+        once (out/RBFIX/vs4_run5_f399_dh_rows.txt) -- a predicted value p3
+        never got the chance to correct before its own process exited,
+        even though it went on to log f400 straight afterward. Reaching a
+        LATER frame is not proof an EARLIER one was corrected; only a
+        repeat of that SAME frame is. A window with no re-simulated frame
+        at all anywhere in its log (a clean lockstep run, or a very short
+        one) falls back to one behind its own raw last frame, which is the
+        old bound and remains a safe floor for that case.
+      * all four report the same rounds= at that frame. This is dhdiff.py's
+        own alignment criterion, applied here so rungs 3-6 compare the same
+        moment rather than trusting a position tolerance to absorb a whole
+        consumed round. It is NOT sufficient by itself -- run 5 shows why:
+        rounds= is the exchanged-round counter, which plateaus once no more
+        packets are moving, so p0's corrected f399 (three rows, last one
+        rounds=400) and p3's uncorrected f399 (one row, rounds=400) report
+        the identical rounds= number despite different world hashes. The
+        new per-window re-simulation bound above is what actually screens
+        that pair out; this agreement check stays on top of it as belt and
+        braces, exactly as before.
 
     Returns None when no such frame exists, which is itself a finding: the four
-    windows never agreed on a round, and the caller says so rather than
-    comparing anyway.
+    windows never agreed on a round at or before every window's proven-settled
+    point, and the caller says so rather than comparing anyway.
     """
     if any(not r for r in all_rounds):
         return None
     tails = [max(r) for r in all_rounds]
+    proven = []
+    for k, counts in enumerate(all_counts):
+        resimmed = [f for f, c in counts.items() if c > 1]
+        proven.append(max(resimmed) if resimmed else tails[k] - 1)
+    bound = min(proven)
     cand = set(all_rounds[0])
     for r in all_rounds[1:]:
         cand &= set(r)
-    cand = [f for f in cand if all(f < t for t in tails)]
+    cand = [f for f in cand if f <= bound]
     agree = [f for f in cand
              if len(set(r[f] for r in all_rounds)) == 1]
     return max(agree) if agree else None
@@ -379,22 +432,31 @@ def main():
     # not a warning -- they are how a VS session runs here -- but they are what
     # makes "frame N" ambiguous, so the numbers go in the log.
     all_rounds = [dh_rounds(t) for t in texts]
+    all_counts = [dh_counts(t) for t in texts]
     for k, t in enumerate(texts):
         n, again, worst = resim_report(t)
         print("  [rollback] window %d: %d frames, %d re-simulated after a "
               "rewind (worst %d simulations of one frame)"
               % (k, n, again, worst))
-    settled = settled_frame(all_rounds)
+    settled = settled_frame(all_rounds, all_counts)
     if settled is None:
         print("  [rollback] NO SETTLED FRAME: the four windows never agreed on "
               "a round number for a frame they had all finished. Rungs 3-8 run "
               "on the raw tail, and a red below may be that.")
     else:
         tails = [max(r) for r in all_rounds if r]
-        print("  [rollback] settled frame %d (last frames %s): the latest frame "
-              "every window finished and all four agree the round of. Rungs 3-6 "
-              "compare there and rung 8 compares up to there."
-              % (settled, tails))
+        last_emitted_min = min(tails)
+        proven = []
+        for i, counts in enumerate(all_counts):
+            resimmed = [f for f, c in counts.items() if c > 1]
+            proven.append(max(resimmed) if resimmed else tails[i] - 1)
+        print("  [rollback] settled frame %d (last frames %s, last-emitted "
+              "minimum %d, per-window proven-resimulated bound %s -> %d): "
+              "the latest frame every window finished, PROVED it was done "
+              "re-simulating (or, lacking any re-simulation, backed off one "
+              "from its own raw last frame), and all four agree the round "
+              "of. Rungs 3-6 compare there and rung 8 compares up to there."
+              % (settled, tails, last_emitted_min, proven, min(proven)))
 
     for k, (rc, _, lg) in enumerate(res):
         ok &= M.verdict(rc == 0, "window %d exited clean | rc=%d %s"
@@ -518,7 +580,12 @@ def main():
     # THE TRIMMED COPIES, and the raw logs are untouched beside them. Trimming
     # the unsettled tail is what stops dhdiff's alignment gate refusing the
     # whole run over the one frame each window stopped part-way through; it
-    # removes nothing inside the span being compared.
+    # removes nothing inside the span being compared. `settled` is the SAME
+    # proven-resimulated bound rungs 3-6 just compared at (settled_frame()'s
+    # per-window re-simulation-count bound, not just "not any window's raw
+    # last frame") -- rung 8 must not get a longer, less-trusted tail than
+    # rungs 3-6 did, or it would refuse (or worse, silently pass) on exactly
+    # the unsettled frame those rungs were careful to avoid.
     use = list(logs)
     if settled is not None:
         use = []
