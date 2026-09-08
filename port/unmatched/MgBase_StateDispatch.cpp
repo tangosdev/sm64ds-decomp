@@ -268,6 +268,7 @@
 // somewhere instead of nowhere.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the seat below (lane PMFB3) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -508,28 +509,112 @@ extern "C" {
    __sinit_ov004_020b948c fills it; see section 2. */
 extern MgPmf data_ov004_020beb88[];
 extern MgPmf data_ov004_020beb98[];
+
+/* run link100 lane PMFB3: the boot installer that lets the ROM's own two
+   framework dispatchers read these tables directly. hal/scene_mg.cpp calls it
+   after the four ov004 constructors run. */
+void port_mg_framework_states_seat(void);
 }
 
-/* src/func_ov004_020add88.cpp. The src's struct C { char pad[0x1e]; short idx; }
-   is right and is kept: idx is a short at 0x1e and no member pointer sits
-   inside this object, so nothing shifts. */
-namespace { struct CIdx1e { char pad[0x1e]; short idx; }; }
+/* ---- THE TWO ALIASES THE MATCHED TUs ASK FOR (lane PMFB3) ----------------
+   src/func_ov004_020add88.cpp and src/func_ov004_020adf2c.cpp declare their
+   table at namespace scope rather than inside an extern "C" block, so MSVC
+   spells the reference with the C++ decoration below -- read off each TU's own
+   /FAsc listing (runs/link100/out/PMFB3/listings/), not guessed -- while the
+   ov004 mount defines the same address and the same bytes under C linkage.
+   src/ is byte-locked against mwccarm, so the sources cannot be given the
+   extern "C" instead. Safe under port/tools/alternatename_guard.py for
+   hal/pmfc_aliases.cpp's reason: nothing in the tree DEFINES either LHS, so
+   neither can acquire a real definition and be silently defeated. */
+#pragma comment(linker, "/alternatename:?data_ov004_020beb88@@3PAP8C@@AEXXZA=_data_ov004_020beb88")
+#pragma comment(linker, "/alternatename:?data_ov004_020beb98@@3PAP8C@@AEXXZA=_data_ov004_020beb98")
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
-extern "C" void func_ov004_020add88(void *p)
-{
-    CIdx1e *c = (CIdx1e *)p;
-    const MgPmf *e = &data_ov004_020beb98[c->idx];
-    port_mg_call0(c, e->code, e->adj);
-}
+/* ---- THE FRAMEWORK BOOT INSTALLER, run link100 lane PMFB3 ---------------
+   WHAT THIS REPLACES. func_ov004_020add88 and func_ov004_020adf2c were host
+   copies here, each reading its table's pair and handing the code word to
+   port_mg_call0's address switch. That shape cannot retire: taking the host
+   copy away takes the switch with it and the matched TU would call a DS
+   address. Turning it inside out fixes it once -- install the HOST bodies into
+   the four cells at boot, and the ROM's own two dispatchers reach them with no
+   switch at all. Both are now src/func_ov004_020add88.cpp and
+   src/func_ov004_020adf2c.cpp on port/slice_pmfb3.txt.
 
-/* src/func_ov004_020adf2c.cpp, the same shape on the other table. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBase_c framework); the 8-byte {code,adj} pair and five-instruction blx sequence are host-copied as an address switch, MSVC's 4-byte member pointer cannot express them */
-extern "C" void func_ov004_020adf2c(void *p)
+   NO FACE, AND THAT IS MEASURED. Both matched TUs compile the dispatch to a
+   TAIL JUMP with the frame fully restored:
+
+       mov   eax, DWORD PTR _c$[ebp]
+       movsx edx, WORD PTR [eax+30]                 the index, a short at +0x1e
+       mov   ecx, ?data_ov004_020beb98@@...[edx*8+4]   the adjustment word
+       add   ecx, eax                                  this
+       mov   eax, ?data_ov004_020beb98@@...[edx*8]     the code word
+       pop   ebp
+       jmp   eax
+
+   A tail jump hands the callee the forwarder's OWN cdecl frame, so the callee
+   finds the receiver at [esp+4] where its one declared argument lives, and
+   returns straight to the forwarder's caller, which cleans it. That is exactly
+   why lane PMFB1 could seat its thirteen FREE rows with no face, and it is why
+   the four bodies below go in raw. The receiver in ecx is ignored by a cdecl
+   body, and it is `this` unchanged in any case: all four adjustment words read
+   zero.
+
+   THE STRIDE, BOTH SIDES: the ROM strides eight (`add r3, r2, r1, lsl #3` at
+   0x020add98 and 0x020adf3c, on the pool words 0x020addc8 = 020beb98 and
+   0x020adf6c = 020beb88), and both listings emit [edx*8] and [edx*8+4]. No
+   /Zp4: these tables are arrays of the bare pointer to member.
+
+   THE FOUR SOURCE PAIRS, read out of extracted/overlays/overlay_0004.bin at
+   the addresses src/__sinit_ov004_020b948c.c assigns from -- whole-pair copies,
+   every one, no field-form fill (runs/link100/out/PMFB3/rom_framework.txt):
+       020beb88[0] <- 020bbf4c   code=020adeb0  adjust=0
+       020beb88[1] <- 020bbf5c   code=020addcc  adjust=0
+       020beb98[0] <- 020bbf54   code=020adcc8  adjust=0
+       020beb98[1] <- 020bbf64   code=020adc80  adjust=0
+   which are the same four addresses mg_try_ov004_0 above has always routed:
+   "all thirty minigames dispatch these same four addresses out of the same two
+   tables". Those four cases in the switch are now unreachable -- nothing else
+   in the closure carries these code words -- and are left standing because the
+   switch is still the path for the other twenty-six.
+
+   THE CHECK IS THE POINT, as in every other seat in this tree: each cell is
+   compared with the ROM's own code word and a zero adjustment before anything
+   is written, and either mismatch is a loud abort rather than a silent wrong
+   dispatch. */
+extern "C" void port_mg_framework_states_seat(void)
 {
-    CIdx1e *c = (CIdx1e *)p;
-    const MgPmf *e = &data_ov004_020beb88[c->idx];
-    port_mg_call0(c, e->code, e->adj);
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    static const struct {
+        MgPmf *table;
+        const char *name;
+        unsigned slot;
+        unsigned rom;
+        void (*host)(void *);
+    } seats[] = {
+        {data_ov004_020beb88, "020beb88", 0, 0x020adeb0u,
+                                        (void (*)(void *))func_ov004_020adeb0},
+        {data_ov004_020beb88, "020beb88", 1, 0x020addccu,
+                                        (void (*)(void *))func_ov004_020addcc},
+        {data_ov004_020beb98, "020beb98", 0, 0x020adcc8u,
+                                        (void (*)(void *))func_ov004_020adcc8},
+        {data_ov004_020beb98, "020beb98", 1, 0x020adc80u,
+                                        (void (*)(void *))func_ov004_020adc80},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &seats[i].table[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgBase_c framework table %s slot "
+                         "%u: the sinit left %08x/%d, the ROM's own pairs say "
+                         "%08x/0 -- WRONG BYTES\n", seats[i].name,
+                         seats[i].slot, p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].host;
+    }
 }
 
 // ---- the four self-field dispatchers ---------------------------------------

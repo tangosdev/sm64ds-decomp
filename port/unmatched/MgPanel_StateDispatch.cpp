@@ -123,6 +123,7 @@
 // copies below, because it is a dispatcher as well as a state.
 
 #include <cstdio>
+#include <cstdlib>   /* std::abort, for the seat below (lane PMFB3) */
 
 /* The eight-byte mwcc member pointer, in the only spelling that is true on
    both machines: two words, no member-pointer type anywhere. */
@@ -146,6 +147,11 @@ extern MgPmf data_ov006_02142820[];
 extern MgPmf data_ov006_02142840[];
 extern MgPmf data_ov006_02142860[];
 extern MgPmf data_ov006_02142888[];
+
+/* run link100 lane PMFB3: the boot installer for data_ov006_02142860's five
+   cells, so the ROM's own func_ov006_021050bc can read them directly.
+   hal/scene_mg.cpp calls it after __sinit_ov006_02131fa4 has filled them. */
+void port_mg_panel_states_seat(void);
 
 /* ---- the twenty-five reachable state bodies ------------------------------
    Reached ONLY through the switches below: the pair words are mounted DATA
@@ -492,18 +498,66 @@ extern "C" void func_ov006_02104c60(void *p)
     port_mg_panel_call0(c, e->code, e->adj);
 }
 
-/* src/func_ov006_021050bc.cpp, table 02142860, arity 0.
-   ROM 0x021050bc: add r1,r0,#0x4000; ldrb r2,[r1,#0x674] guard; ldrb
-   r1,[r1,#0x675] index; pool 0x02105114 = 02142860. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgPanel_c two-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_021050bc(void *p)
+/* ---- data_ov006_02142860's BOOT INSTALLER, run link100 lane PMFB3 --------
+   func_ov006_021050bc was a host copy here, reading the pair and handing the
+   code word to port_mg_panel_call0's address switch. It is now the ROM's own
+   src/func_ov006_021050bc.cpp on port/slice_pmfb3.txt, and this installer puts
+   the five host bodies in the five cells at boot so it dispatches them
+   directly. The other five tables in this class are untouched and still route
+   through the switch.
+
+   NO FACE, AND THAT IS MEASURED. The matched TU compiles its dispatch to a
+   TAIL JUMP with the frame restored (`mov ecx, _data_ov006_02142860[eax*8+4] /
+   add ecx, edx / mov eax, _data_ov006_02142860[eax*8] / pop ebp / jmp eax`), so
+   the callee inherits the forwarder's own cdecl frame and finds the receiver at
+   [esp+4]. Five plain cdecl bodies go in raw; the fifth takes no argument at
+   all and ignores what is on the stack, which is what its ROM body does too.
+   The table comes in as the plain C name (the TU declares it inside its own
+   extern "C" block), so this row needs no /alternatename.
+
+   THE STRIDE, BOTH SIDES: ROM `add r3, r2, r1, lsl #3` at 0x021050e4 on the
+   pool word 0x02105114 = 02142860; emitted [eax*8] and [eax*8+4], identical
+   with and without /Zp4 even though this record IS a struct containing a
+   pointer to member -- eight either way, so the option is not claimed.
+
+   THE FIVE SOURCE PAIRS, read out of extracted/overlays/overlay_0006.bin at the
+   addresses src/__sinit_ov006_02131fa4.c assigns from, all whole-pair copies
+   (runs/link100/out/PMFB3/rom_framework.txt):
+       [0] <- 0213dcd4  code=0210508c  adjust=0
+       [1] <- 0213dcc4  code=0210500c  adjust=0
+       [2] <- 0213dc7c  code=02104fb4  adjust=0
+       [3] <- 0213dca4  code=02104ecc  adjust=0
+       [4] <- 0213dcb4  code=02104ec8  adjust=0 */
+extern "C" void port_mg_panel_states_seat(void)
 {
-    char *c = (char *)p;
-    if (*(unsigned char *)(c + 0x4674) == 0)
+    static int done;
+    if (done)
         return;
-    const unsigned j = *(unsigned char *)(c + 0x4675);
-    const MgPmf *e = &data_ov006_02142860[j];
-    port_mg_panel_call0(c, e->code, e->adj);
+    done = 1;
+
+    static const struct {
+        unsigned slot;
+        unsigned rom;
+        void (*host)(void *);
+    } seats[] = {
+        {0, 0x0210508cu, (void (*)(void *))func_ov006_0210508c},
+        {1, 0x0210500cu, (void (*)(void *))func_ov006_0210500c},
+        {2, 0x02104fb4u, (void (*)(void *))func_ov006_02104fb4},
+        {3, 0x02104eccu, (void (*)(void *))func_ov006_02104ecc},
+        {4, 0x02104ec8u, (void (*)(void *))func_ov006_02104ec8},
+    };
+
+    for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
+        MgPmf *p = &data_ov006_02142860[seats[i].slot];
+        if (p->code != seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgPanel_c state table 02142860 "
+                         "slot %u: the sinit left %08x/%d, the ROM's own pairs "
+                         "say %08x/0 -- WRONG BYTES\n", seats[i].slot,
+                         p->code, p->adj, seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)seats[i].host;
+    }
 }
 
 /* src/func_ov006_021057f0.cpp, table 02142820, arity 0.

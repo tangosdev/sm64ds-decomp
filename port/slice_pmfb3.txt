@@ -195,3 +195,102 @@ src/func_ov006_02119eec.cpp
 # 2004/b56 strict-reloc MATCH, every non-relocated word identical. The guard
 # reports the seat, it does not refuse it.
 src/_ZN11SoundObject8BehaviorEv.cpp
+#
+# ---- BATCH 3: the dScMgBase framework set, the THREE TABLE-BASED rows ------
+#
+# LANE PMFC2 CALLED THE NINE-ROW FRAMEWORK SET "the highest-value remaining
+# work in the family". This lane measured all nine and took the three that a
+# BOOT INSTALLER can reach. The other six are named at the end of this section
+# with the measurement that stops them, not with "no time".
+#
+# THE ONE FACT THAT COVERS ALL NINE, and it is the opposite of batch 1's:
+# EVERY ONE OF THE NINE COMPILES ITS DISPATCH TO A TAIL JUMP. Read off each
+# TU's own /FAsc listing under the port's own flags
+# (runs/link100/out/PMFB3/listings/func_ov004_020add88.asm and its eight
+# siblings): `jmp eax` or `jmp edx`, with pop ebp (and pop esi where there is
+# one) executed FIRST, so the stack at the jump is the forwarder's own entry
+# frame -- return address at [esp], the single argument at [esp+4]. A tail jump
+# hands the callee that frame, so the callee finds the receiver exactly where
+# its one declared cdecl argument lives and returns straight to the forwarder's
+# caller. So a PLAIN CDECL BODY is correct in the code word for every row in
+# this batch and NO FACE IS WRITTEN ANYWHERE IN IT. That is lane PMFB1's FREE-row
+# rule (slice_pmfb2.txt records it for src/func_ov002_020efa54.cpp), re-measured
+# per row here rather than carried.
+#
+# THE THREE TAKEN.
+#
+#   func_ov004_020add88  table data_ov004_020beb98, 2 cells
+#   func_ov004_020adf2c  table data_ov004_020beb88, 2 cells
+#     ROM stride 8: `add r3, r2, r1, lsl #3` at 0x020add98 and 0x020adf3c, on
+#       the literal-pool words 0x020addc8 = 020beb98 and 0x020adf6c = 020beb88.
+#       The index is a SHORT at +0x1e (`ldrsh r1, [r0, #0x1e]`), which is what
+#       both src structs spell.
+#     Emitted stride 8: [edx*8] and [edx*8+4] in both listings.
+#     Source pairs, out of extracted/overlays/overlay_0004.bin at the addresses
+#       src/__sinit_ov004_020b948c.c assigns from, all whole-pair copies
+#       (runs/link100/out/PMFB3/rom_framework.txt):
+#         020beb88[0] <- 020bbf4c  code=020adeb0  adjust=0
+#         020beb88[1] <- 020bbf5c  code=020addcc  adjust=0
+#         020beb98[0] <- 020bbf54  code=020adcc8  adjust=0
+#         020beb98[1] <- 020bbf64  code=020adc80  adjust=0
+#       -- the same four addresses port_mg_call0's own mg_try_ov004_0 arm has
+#       always routed, which is the framework half the header of
+#       unmatched/MgBase_StateDispatch.cpp calls "paid once for all thirty".
+#     Two /alternatename directives, in that same file: both TUs declare their
+#       table at namespace scope, so they come in as
+#       ?data_ov004_020beb88@@3PAP8C@@AEXXZA and ...beb98..., read off the
+#       listings. Neither LHS is defined anywhere in the tree.
+#
+#   func_ov006_021050bc  table data_ov006_02142860, 5 cells
+#     ROM stride 8: `add r3, r2, r1, lsl #3` at 0x021050e4 on the pool word
+#       0x02105114 = 02142860; the guard byte is +0x4674 and the index +0x4675,
+#       which is what the src spells.
+#     Emitted stride 8: [eax*8] and [eax*8+4], and the listing is IDENTICAL
+#       with and without /Zp4 even though this record IS a struct containing a
+#       pointer to member (`struct Entry { PMF pmf; }`) -- eight either way, so
+#       the option is not claimed on it. That is the PMFB1 lever checked and
+#       found inert here rather than assumed either way.
+#     Source pairs, out of overlay_0006.bin at __sinit_ov006_02131fa4's own
+#       addresses, all whole-pair copies:
+#         [0] <- 0213dcd4 code=0210508c/0   [3] <- 0213dca4 code=02104ecc/0
+#         [1] <- 0213dcc4 code=0210500c/0   [4] <- 0213dcb4 code=02104ec8/0
+#         [2] <- 0213dc7c code=02104fb4/0
+#     No alias: the TU declares its table INSIDE its extern "C" block.
+#     The other five tables in dScMgPanel_c are untouched and still route
+#       through port_mg_panel_call0.
+#
+# TWO NEW SEATS, and one hunk outside this lane's own files. The installers are
+# port_mg_framework_states_seat (unmatched/MgBase_StateDispatch.cpp, the file
+# that owns port_mg_call0) and port_mg_panel_states_seat
+# (unmatched/MgPanel_StateDispatch.cpp, the file that owned the retired host
+# copy). Both are the port_pushblock_states_seat shape: compare the cell against
+# the ROM's own code word and a zero adjustment, abort loudly on either
+# mismatch, then write the host body. The hunk outside is hal/scene_mg.cpp --
+# two declarations and two calls beside the port_mg_sound_states_seat() lane
+# PMFB2 added, in the one function in the tree that runs the ov004 and ov006
+# constructors, and after them.
+#
+# THE SIX NOT TAKEN, with the measurement that stops each:
+#   func_ov004_020b31b4  reads the pair at self+0x08
+#   func_ov004_020b321c  reads the pair at self+0x00
+#   func_ov004_020b52fc  reads the pair at self+0x00
+#   func_ov004_020b8714  reads the pair at self+0x10
+#   func_ov004_020b8778  reads the pair at self+0x08
+#   func_ov006_020cf758  reads the pair at self+0x00
+# None of the six reads a TABLE. Each reads the eight-byte pair out of an
+# OBJECT FIELD, so there is no storage a boot installer can verify and rewrite:
+# what has to change is the WRITER. The writers are host copies, and they store
+# the ROM's own DS code word today --
+# unmatched/MgBase_StateSetter.cpp's func_ov004_020b87e0 does
+# `self->pmf0 = g_table[self->index]` out of the twenty data_ov004_020bc9xx pair
+# globals and then hands that DS word to port_mg_call0, and func_ov004_020b3278
+# fills self+0x08 the same way, with dScMgMemory2_c and dScMgTrampoline_c
+# filling their own +0x00 elsewhere. Turning those four writers around means
+# each one installs a host address AND stops dispatching through the switch
+# itself, per writer, with its own abort-on-mismatch evidence: four writers in
+# four files is a lane, not a row, and half-doing it would leave a writer
+# handing a host address to a switch that only knows DS ones. Named here so the
+# next lane starts from the measurement rather than from the census.
+src/func_ov004_020add88.cpp
+src/func_ov004_020adf2c.cpp
+src/func_ov006_021050bc.cpp
