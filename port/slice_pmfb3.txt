@@ -120,3 +120,78 @@ src/func_ov006_0211a4b0.cpp
 src/func_ov006_0211a2c4.cpp
 src/func_ov006_0211a0d8.cpp
 src/func_ov006_02119eec.cpp
+#
+# ---- BATCH 2: SoundObject::Behavior ---------------------------------------
+#
+# THE ROW LANE PMFB2 NAMED AND DID NOT TAKE: "the host copy carries a PORT-ONLY
+# out-of-range refusal the matched TU does not have ... The row is otherwise
+# ready (stride 8 both sides, seven pairs all {code, 0}, the alias spelled) and
+# it wants the guard moved into the seat first."
+#
+# WHERE THE REFUSAL LIVES NOW: port_sound_object_behavior, in the seat file
+# port/unmatched/SoundObject_Behavior.cpp, which is the port's slot-6 body. The
+# vtable fill in hal/actor_classes_ccm.cpp already went through a __fastcall
+# face for every method of this class (sob_init, sob_d1, sob_d0 and sob_behavior
+# are all the same shape and always were); the one hunk outside this lane's own
+# files is that face's target, `port_sound_object_behavior` in place of
+# `_ZN11SoundObject8BehaviorEv`, plus its declaration. The refusal is unchanged
+# text: the same param test, the same message, the same MarkForDestruction, the
+# same return 1. It is now AHEAD of the matched TU rather than instead of it.
+#
+# WHY IT MUST STAY SOMEWHERE, and this lane read both sides of the ROM's own
+# off-by-one to say why (runs/link100/out/PMFB3/rom_soundobj.txt):
+#   InitResources (src/_ZN11SoundObject13InitResourcesEv.c) returns 0 on
+#     `param > 7`, so param 7 is ACCEPTED, and it then indexes a 0xc-stride
+#     tuning table at data_ov002_0210c080 with it.
+#   That tuning table has SEVEN rows. Row 7 at 0x0210c0d4 reads
+#     00000000 / 0210c048 / 020f95e0 -- a pointer and a code address, the next
+#     thing in the image, not a tuning row.
+#   The dispatch table has seven cells, 0x0211110c..0x02111143, and the ov002
+#     mount publishes data_ov002_02111144 and data_ov002_02111148 as the next
+#     two symbols, so cell 7 is eight bytes of another symbol's storage.
+# A param-7 emitter runs off the end of both on the cartridge as well. The
+# refusal is the port declining to reproduce a latent ROM defect; it is not a
+# fix for anything the port broke, and it is the only port-only behaviour left
+# in the class.
+#
+# NOT PROVEN BY THIS LANE: which level row, if any, spawns actor 359 with param
+# 7. The battery's 51 level rows and 36 scene rows all pass with the refusal in
+# place and never printed its message, which says the path is not on any of
+# them; it does not say no level data anywhere sets the param. Naming the row
+# needs a sweep of the level object tables, which is a different lane's read.
+#
+# THE STRIDE, BOTH SIDES.
+#   ROM      0x020f9510  add r3, r1, r0, lsl #3                       -> 8
+#            (and the argument is `add r1, r4, #0xdc`, one argument, with
+#            `this` in r0 at the blx: the pool word at 0x020f95d0 is 0211110c)
+#   EMITTED  ?data_ov002_0211110c@@3PAP8C@@AEHPAX@ZA[eax*8] and [eax*8+4]
+#            (runs/link100/out/PMFB3/listings/SoundObject_Behavior_nozp.asm)
+# No /Zp4: the table is an array of the bare pointer to member, not a struct
+# containing one.
+#
+# THE SEVEN SOURCE PAIRS all read {code, 0} in extracted/overlays/
+# overlay_0002.bin at the addresses __sinit_ov002_02107f88 assigns them from
+# (0x0210c010..0x0210c040), all seven are whole-pair copies, and the five
+# distinct code words are the five the seat already installs.
+#
+# THE FACES ARE NEW AND THE SEAT IS NOT. port_sound_object_states_seat has
+# rewritten these seven cells since gate 190, but with plain cdecl bodies,
+# because the dispatcher reading them was this file's own host copy. The matched
+# TU dispatches a real pointer to member -- `push edi / mov ecx, tab[eax*8+4] /
+# mov eax, tab[eax*8] / add ecx, esi / call eax` with NO `add esp, 4` after it,
+# so receiver in ecx, one argument on the stack, callee cleanup. The seven cells
+# now hold five one-argument __fastcall faces (the ROM parks 0x020f9468 in three
+# of them).
+#
+# ONE /alternatename, in the seat file: the matched TU declares its table
+# outside its extern "C" block, so it comes in as
+# ?data_ov002_0211110c@@3PAP8C@@AEHPAX@ZA while the ov002 mount defines the
+# plain C name. Read off the TU's own listing.
+#
+# THE GUESS MARKER IS NOT A BLOCKER HERE, and it was checked rather than
+# assumed. src/_ZN11SoundObject8BehaviorEv.cpp carries "recovered from vtable
+# slot identity", but port/tools/inferred_stub_adjudicated.txt:2313 already
+# rules it REAL_DECOMP against the ROM: addr 0x020f94fc size 0xe4, match.py
+# 2004/b56 strict-reloc MATCH, every non-relocated word identical. The guard
+# reports the seat, it does not refuse it.
+src/_ZN11SoundObject8BehaviorEv.cpp

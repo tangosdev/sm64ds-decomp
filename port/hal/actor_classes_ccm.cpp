@@ -743,7 +743,11 @@ extern "C" void hal_fill_one_up_logo_vtable(void)
 // installed-vtable decoy and no reseat wrapper.
 extern "C" {
 int _ZN11SoundObject13InitResourcesEv(void *self);   /* slot 0, C in src */
-int _ZN11SoundObject8BehaviorEv(char *self);         /* slot 6, HOST COPY */
+int port_sound_object_behavior(char *self);           /* slot 6: the port-only
+                                                        out-of-range refusal,
+                                                        then the matched TU
+                                                        src/_ZN11SoundObject8BehaviorEv.cpp
+                                                        (unmatched/SoundObject_Behavior.cpp) */
 int _ZN11SoundObjectD1Ev(int *self);                 /* slot 16, C in src */
 int *_ZN11SoundObjectD0Ev(int *self);                /* slot 17, C in src (carried) */
 int *SoundObject_Spawn(void);                        /* installs _ZTV11SoundObject */
@@ -754,7 +758,7 @@ void port_sound_object_states_seat(void);            /* unmatched/SoundObject_Be
 static int __fastcall sob_init(void *s, void *)
 { return _ZN11SoundObject13InitResourcesEv(s); }
 static int __fastcall sob_behavior(void *s, void *)
-{ return _ZN11SoundObject8BehaviorEv((char *)s); }
+{ return port_sound_object_behavior((char *)s); }
 static int __fastcall sob_d1(void *s, void *)
 { return _ZN11SoundObjectD1Ev((int *)s); }
 static int __fastcall sob_d0(void *s, void *)
