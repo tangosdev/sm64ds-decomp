@@ -803,5 +803,255 @@ class RomFailureDetailTest(unittest.TestCase):
         self.assertIn("trimmed", out)
 
 
+def _enr(ranges):
+    """An enrollment_snapshot-shaped dict from (addr, end) tuples, all `complete` src."""
+    src = {}
+    for addr, end in ranges:
+        key = f"arm9:0x{addr:08x}-0x{end:08x}"
+        src[key] = {"id": key, "module": "arm9", "addr": addr, "end": end,
+                    "size": end - addr, "path": f"src/r{addr:08x}.c", "kind": "src"}
+    return {"entries": dict(src), "source": src, "mods": {},
+            "stats": {"sourceFunctions": len(src),
+                      "sourceBytes": sum(e["size"] for e in src.values()),
+                      "modFunctions": 0, "modBytes": 0}}
+
+
+def _compiled(enrollment):
+    """`build_report`'s `compiled_src` for an enrollment whose sources are all real C.
+
+    The production set is the merge's own added/modified sources that carry no asm body
+    and no banner excusing one; here it is simply every path `_enr` invented.
+    """
+    return {e["path"] for e in enrollment["source"].values()}
+
+
+class MergeEvidence(unittest.TestCase):
+    """A merge raises the headline, so it lands only on evidence the ROM build supplies.
+
+    The evidence has two halves and both are tested here: a newly `complete` delinks
+    range that covers every removed address, AND a source behind that range which is real
+    compiled code. The second half is not redundant -- a `dcd` transcription reproduces
+    vacuously, so the range alone proves nothing.
+
+    The live case: `__destroy_arr` is declared 0x5c in symbols.txt while the ROM's own
+    `.exceptix` record gives 0x74. The trailing 0x18 is carried as a separate symbol and
+    is not a function at all -- it is the catch handler.
+    """
+
+    DESTROY, CATCH = 0x0207328c, 0x020732e8
+
+    def _junk(self):
+        """A hundred four-byte symbols folded into one 400-byte one. No work at all."""
+        return (_snap([(f"func_{0x02100000 + i * 4:08x}", 0x02100000 + i * 4, 4, False)
+                       for i in range(100)]),
+                _snap([("func_02100000", 0x02100000, 400, False)]))
+
+    def test_the_live_case_lands(self):
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("func_020732e8", self.CATCH, 0x18, False)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
+        he = _enr([(self.DESTROY, self.DESTROY + 0x74)])
+        got = VM.classify_merge(base, head, _enr([]), he, _compiled(he))
+        self.assertIsNotNone(got)
+        self.assertEqual(got["kind"], "merge")
+        self.assertEqual(got["functionDelta"], -1)
+        self.assertEqual(got["sourceByteDelta"], 0x74)
+        self.assertEqual(got["removed"], [f"arm9:0x{self.CATCH:08x}"])
+
+    def test_without_new_delinks_coverage_it_is_refused(self):
+        # The whole rule. Identical symbol-table move, no build behind it.
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("func_020732e8", self.CATCH, 0x18, False)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([]), set()))
+
+    def test_a_hundred_junk_symbols_merged_into_one_is_refused(self):
+        base, head = self._junk()
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([]), set()))
+
+    def test_a_hundred_junk_symbols_cannot_borrow_an_unrelated_new_range(self):
+        # The evidence has to cover the merged addresses, not merely exist.
+        base, head = self._junk()
+        he = _enr([(0x02300000, 0x02300190)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he)))
+
+    def test_a_transcribed_source_is_not_evidence_even_covering_the_merge(self):
+        # THE COVERING-RANGE ATTACK, and the reason the source classification is an
+        # argument at all. Same hundred junk symbols, but now the new `complete` range
+        # covers exactly the addresses the fold removes and sourceBytes rises by exactly
+        # its extent -- every arithmetic condition the rule checks is satisfied. What
+        # backs it is a `dcd` transcription under a HAND-ASM PRIMITIVE banner, so it
+        # byte-compares against retail by construction (the words ARE the ROM's words),
+        # module fidelity passes, and `asm_policy.classify` returns None because the
+        # banner excuses it. Measured before the `compiled` clause: this classified as
+        # `merge`, functionDelta -99, sourceByteDelta 400.
+        base, head = self._junk()
+        he = _enr([(0x02100000, 0x02100000 + 400)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, set()))
+
+    def test_a_covering_range_from_compiled_source_still_lands(self):
+        # The mirror, and the thing the rule must not break: the identical fold, backed
+        # by a range whose source is real compiled C. #2429 exists to let this through.
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("func_020732e8", self.CATCH, 0x18, False)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
+        he = _enr([(self.DESTROY, self.DESTROY + 0x74)])
+        # Named explicitly rather than through _compiled, so the test still reads as a
+        # statement about one file if the helper ever changes.
+        got = VM.classify_merge(base, head, _enr([]), he,
+                                {f"src/r{self.DESTROY:08x}.c"})
+        self.assertIsNotNone(got)
+        self.assertEqual(got["kind"], "merge")
+        self.assertEqual(got["sourceByteDelta"], 0x74)
+
+    def test_absorbing_a_matched_function_is_refused(self):
+        # A merge may swallow an ASM stub or a severed epilogue. Never a match.
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("real_function", self.CATCH, 0x18, True)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
+        he = _enr([(self.DESTROY, self.DESTROY + 0x74)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he)))
+
+    def test_source_bytes_must_rise_by_exactly_the_new_extent(self):
+        # An unrelated range leaving under cover of the merge holds the delta short.
+        he = _enr([(self.DESTROY, self.DESTROY + 0x74)])
+        he["stats"]["sourceBytes"] = 0x40
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("func_020732e8", self.CATCH, 0x18, False)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he)))
+
+    def test_a_range_already_complete_in_base_is_not_evidence(self):
+        # Absorbing into a range the build was already compiling proves nothing new.
+        enr = _enr([(self.DESTROY, self.DESTROY + 0x74)])
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("func_020732e8", self.CATCH, 0x18, False)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
+        self.assertIsNone(VM.classify_merge(base, head, enr, enr, _compiled(enr)))
+
+    def test_total_bytes_must_not_move(self):
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("func_020732e8", self.CATCH, 0x18, False)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x80, True)])
+        he = _enr([(self.DESTROY, self.DESTROY + 0x80)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he)))
+
+    def test_a_split_is_not_a_merge(self):
+        base = _snap([("func_020610fc", 0x020610fc, 0x3c, False)])
+        head = _snap([("func_020610fc", 0x020610fc, 0x2c, False),
+                      ("func_02061128", 0x02061128, 0x10, False)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), _enr([]), set()))
+
+    def test_missing_enrollment_snapshots_refuse_rather_than_crash(self):
+        base = _snap([("__destroy_arr", self.DESTROY, 0x5c, False),
+                      ("func_020732e8", self.CATCH, 0x18, False)])
+        head = _snap([("__destroy_arr", self.DESTROY, 0x74, True)])
+        self.assertIsNone(VM.classify_merge(base, head, None, None, set()))
+
+
+class MergeEvidenceThroughBuildReport(unittest.TestCase):
+    """The same rule driven through `build_report` on a real tree, not hand-built dicts.
+
+    Every test above calls `classify_merge` directly and invents the `compiled` set, so
+    none of them touches the wiring: `compiled_src` is keyed on the paths
+    `diff_snapshot` reports, while the ranges are keyed on the paths written in
+    `delinks.txt`. If those two spellings ever stopped agreeing, the source clause would
+    reject EVERY merge and the carve-out would be dead -- and the suite above would
+    still be green, because it never asks a real tree for either one.
+
+    So both halves are asserted here from one committed base: the transcription is
+    refused, and the compiled source is still allowed. A fix that only refuses is not a
+    fix, and this is the test that can tell the difference.
+    """
+
+    DESTROY, CATCH = 0x0207328c, 0x020732e8
+
+    # Real C++: the shape #2429 exists for -- the catch handler reunited with the body
+    # it belongs to, compiled and byte-compared by the ROM build.
+    COMPILED = (
+        "void __destroy_arr(void *base, int size, int n, void (*dtor)(void *)) {\n"
+        "    char *p = (char *)base + size * n;\n"
+        "    while (n--) { p -= size; dtor(p); }\n"
+        "}\n")
+    # The attack: the ROM's own words re-spelled. It byte-compares against retail by
+    # construction, so module fidelity passes, and `asm_policy.classify` returns None
+    # because the banner excuses the `dcd` body.
+    TRANSCRIBED = ("// HAND-ASM PRIMITIVE\n"
+                   "asm void __destroy_arr(void) {\n"
+                   "    dcd 0xe92d4070\n"
+                   "    dcd 0xe1a04000\n"
+                   "    dcd 0xe8bd8070\n"
+                   "}\n")
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.repo = pathlib.Path(self.tmp.name)
+        git(self.repo, "init", "-q", ".")
+        (self.repo / "src").mkdir()
+        self.config = self.repo / "config" / "arm9"
+        self.config.mkdir(parents=True)
+        # An unrelated `complete` range in both revisions, so the merge's own range is
+        # the only NEW one and `sourceBytes` has something to rise from.
+        (self.config / "symbols.txt").write_text(
+            "Anchor kind:function(arm,size=0x4) addr:0x02000000\n"
+            f"__destroy_arr kind:function(arm,size=0x5c) addr:0x{self.DESTROY:08x}\n"
+            f"func_{self.CATCH:08x} kind:function(arm,size=0x18) "
+            f"addr:0x{self.CATCH:08x}\n",
+            encoding="utf-8")
+        (self.config / "delinks.txt").write_text(
+            "    .text start:0x02000000 end:0x02100000 kind:code\n\n"
+            "src/Anchor.c:\n    complete\n    .text start:0x02000000 end:0x02000004\n",
+            encoding="utf-8")
+        (self.repo / "src" / "Anchor.c").write_text("int Anchor(void) { return 0; }\n")
+        # Both halves unmatched in base -- a merge may absorb an ASM stub, never a match.
+        (self.repo / "src" / "__destroy_arr.c").write_text(
+            "// NONMATCHING\nvoid __destroy_arr(void) {}\n")
+        (self.repo / "src" / f"func_{self.CATCH:08x}.c").write_text(
+            "// NONMATCHING\nvoid stub(void) {}\n")
+        self.base = commit(self.repo, "base", "alice")
+        self.old_repo = VM.REPO
+        VM.REPO = self.repo
+
+    def tearDown(self):
+        VM.REPO = self.old_repo
+        self.tmp.cleanup()
+
+    def _fold(self, source):
+        """Commit the fold: 0x5c + 0x18 become one 0x74 record, enrolled `complete`."""
+        (self.config / "symbols.txt").write_text(
+            "Anchor kind:function(arm,size=0x4) addr:0x02000000\n"
+            f"__destroy_arr kind:function(arm,size=0x74) addr:0x{self.DESTROY:08x}\n",
+            encoding="utf-8")
+        (self.config / "delinks.txt").write_text(
+            "    .text start:0x02000000 end:0x02100000 kind:code\n\n"
+            "src/Anchor.c:\n    complete\n    .text start:0x02000000 end:0x02000004\n\n"
+            "src/__destroy_arr.c:\n    complete\n"
+            f"    .text start:0x{self.DESTROY:08x} "
+            f"end:0x{self.DESTROY + 0x74:08x}\n",
+            encoding="utf-8")
+        (self.repo / "src" / "__destroy_arr.c").write_text(source)
+        os.remove(self.repo / "src" / f"func_{self.CATCH:08x}.c")
+        return VM.build_report(self.base, commit(self.repo, "fold", "bob"))
+
+    def test_a_transcribed_source_cannot_carry_the_merge_through_the_report(self):
+        # Measured on 660900ee3 against this exact tree: reasons [], repartition
+        # {'kind': 'merge', 'functionDelta': -1, 'sourceByteDelta': 116}.
+        report = self._fold(self.TRANSCRIBED)
+        self.assertIsNone(report["repartition"])
+        self.assertIn("function/byte coverage denominator changed", report["reasons"])
+
+    def test_a_compiled_source_still_carries_the_merge_through_the_report(self):
+        # The delinks spelling `src/__destroy_arr.c` and the diff spelling of the same
+        # file have to agree for this to pass at all -- that agreement is the point.
+        report = self._fold(self.COMPILED)
+        self.assertEqual(report["reasons"], [])
+        self.assertIsNotNone(report["repartition"])
+        self.assertEqual(report["repartition"]["kind"], "merge")
+        self.assertEqual(report["repartition"]["functionDelta"], -1)
+        self.assertEqual(report["repartition"]["sourceByteDelta"], 0x74)
+        self.assertEqual(report["repartition"]["removed"],
+                         [f"arm9:0x{self.CATCH:08x}"])
+
+
 if __name__ == "__main__":
     unittest.main()
