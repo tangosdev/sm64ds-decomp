@@ -260,7 +260,14 @@ MP3_BSS(".dsstate$ymp3s0003", data_020a0ef8, 4);   // info-mode countdown
 MP3_BSS(".dsstate$ymp3s0004", data_020a0efc, 4);   // the leave countdown, :449-457
 MP3_BSS(".dsstate$ymp3s0005", data_020a0f28, 4);   // channel, folded into the flag at :149
 MP3_BSS(".dsstate$ymp3s0006", data_020a0f2c, 4);   // the WM command argument, :361 and :381
-MP3_BSS(".dsstate$ymp3s0007", data_020a0f94, 4);   // the ROM's own link-state word
+// data_020a0f94, the ROM's own link-state word, MOVED to hal/comms_seam.cpp
+// (run link100, lane WM1, rung W0). src/func_02040714.c is linked now and the
+// seam is what publishes that word, so the seam hosts it -- and hal/comms_seam.cpp
+// is what the small mp_comms_seam probe links WITHOUT this file, which is what
+// turned the move from tidy into necessary. It keeps this section name
+// (".dsstate$ymp3s0007"), this size and this align(1), and it is still the only
+// contribution to that suffix, so its address is exactly where it was and not
+// one global in the save-state bracket moved.
 MP3_BSS(".dsstate$ymp3s0008", data_020a0f98, 5);   // last role, src/func_0203df40.c:77
 
 // data_020a1fc0 is the WM work buffer. func_02040a94 reads word 3 of it and
@@ -1170,9 +1177,27 @@ bool comms_wait_for_session(int frames) {
             // the session up and then read a variable nothing had written.
             //
             // This is the ROM's own line from :252, run where the menu would
-            // have run it, off the same seam face: func_02040704 is the slot
-            // accessor and its hosted parameter is named `ignored` precisely
-            // because the ROM passes it a masked flag it does not use.
+            // have run it, off the same accessor.
+            //
+            // AND IT IS THE ROM'S OWN ACCESSOR NOW, not a host face. Run
+            // link100 lane WM1, rung W0: src/func_02040704.c is linked and
+            // reads data_020a0f24, so the seam has to have PUBLISHED this
+            // session's slot into that word before this line asks for it. Every
+            // other publish point is a seam face the ROM calls itself; this one
+            // is not reachable from any of them, because the whole point of
+            // this wait is that it runs BEFORE the world boots and therefore
+            // before any lockstep round could have published anything. On the
+            // DS the wireless thread has written the word by now. Here the seam
+            // writes it, and this is where. See comms_publish_link_words'
+            // banner in hal/comms_seam.cpp.
+            //
+            // The call below still passes 0. src/func_02040704.c takes no
+            // argument; this binary is 32-bit x86 __cdecl, so the caller pops
+            // what it pushed and the extra dword is inert. Left as it was
+            // rather than "tidied", because the ROM's own call site at
+            // src/func_0203ea5c.c:252 passes an argument too and this line
+            // exists to be that line.
+            comms_publish_link_words();
             data_020a0f10[0] = func_02040704(0);
 
             // AND ZERO THE SESSION CLOCK, which is what makes the two worlds
