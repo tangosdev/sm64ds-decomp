@@ -1,0 +1,120 @@
+# ===========================================================================
+# SLICE pmfb6 -- run link100, lane PMFB6, gate 1
+# THE TEN CUTSCENE_OBJECT STATE DISPATCHERS
+# ===========================================================================
+#
+# The ten readers of CUTSCENE_OBJECT's ten pointer-to-member state tables.
+# port/hal/cutscene_states_link100.cpp hosted all ten as an address switch and
+# now hosts none of them: it is the SEAT over the sixty-nine source records
+# __sinit_ov002_02107370 copies into the tables, one __fastcall face per CELL.
+#
+# The per-row measurement (ROM read, emitted operand, arity, source pairs, the
+# reference sweep) is in that file's header and in runs/link100/out/PMFB6/.
+# Nothing here changes a ROM reference, a linker option or a call the ROM does
+# not make: the ROM's own sinit fills the tables, the ROM's own readers index
+# them, and the body each cell reaches is the decomp's matched TU.
+#
+# NO /Zp4 ON THIS BLOCK. Every one of the ten was compiled under the port's own
+# flags with and without the option and each pair of /FAsc listings came back
+# identical outside the TITLE line naming the .obj: 0 diff lines. Block R10a's
+# rule for that case is to leave the option off rather than make a claim
+# nothing measured.
+#
+# FIVE OF THE TEN ARE REACHED THROUGH THE TABLES THEMSELVES and five from
+# linked ROM code, so all ten have a live referrer after the seat:
+#   func_ov002_020f2dd4  <- func_ov002_020f5fb8 (linked)
+#   func_ov002_020f37a0  <- func_ov002_020f5fb8 (linked)
+#   func_ov002_020f5990  <- func_ov002_020f5fb8 (linked)
+#   func_ov002_020f5dd8  <- func_ov002_020f63f8 (linked)
+#   func_ov002_020f5f0c  <- func_ov002_020f6424 (linked)
+#   func_ov002_020f3310  <- data_ov002_02110e4c[2]  (this gate's face)
+#   func_ov002_020f3740  <- data_ov002_02110e4c[1]  (this gate's face)
+#   func_ov002_020f3d98  <- data_ov002_02110e7c[3]  (this gate's face)
+#   func_ov002_020f562c  <- data_ov002_02110e7c[2]  (this gate's face)
+#   func_ov002_020f5848  <- data_ov002_02110e7c[1]  (this gate's face)
+# ===========================================================================
+src/func_ov002_020f3310.cpp
+src/func_ov002_020f3d98.cpp
+src/func_ov002_020f37a0.cpp
+src/func_ov002_020f5848.cpp
+src/func_ov002_020f5990.cpp
+src/func_ov002_020f3740.cpp
+src/func_ov002_020f2dd4.cpp
+src/func_ov002_020f562c.cpp
+src/func_ov002_020f5dd8.cpp
+src/func_ov002_020f5f0c.cpp
+
+# ---- gate 2: THE THREE EXTENT-OPEN TABLES ---------------------------------
+#
+# Lane FWD refused these three because each table is the LAST symbol in its
+# overlay's config/arm9/overlays/ovNNN/symbols.txt, so the next-symbol rule
+# cannot bound the extent, and "a seat over an unclosed extent can leave a cell
+# the matched TU would CALL". delinks.txt bounds it instead: a bss symbol cannot
+# run past the end of .bss. Measured for this gate, read-only
+# (runs/link100/out/PMFB6/rom_gate2.txt):
+#
+#   ov089  data_ov089_02132cec   8 filled  .bss ..0x02132d40  slack 0x14 -> 10 cells
+#   ov095  data_ov095_02137910   5 filled  .bss ..0x02137940  slack 0x08 ->  6 cells
+#   ov092  data_ov092_02132568   9 filled  .bss ..0x021325c0  slack 0x10 -> 11 cells
+#
+# Every cell of the maximum span is seated: the filled run through the source
+# statics the sinit copies from, each checked against the ROM address its body
+# was compiled from, and each slack cell past it with an ABORTING face written
+# into the mounted bss after asserting those bytes are zero. ov095's single
+# slack cell is the exception and its file states it: port/ov095_syms.txt pins
+# that mount to 0x28, the filled run, so there is no storage to seat and that
+# file is not this lane's.
+#
+# ROM stride read at each body (`add r3,rX,rY,lsl #3`, pool word == the table):
+#   ov089 02132194  pool 02132498 -> 02132cec   STRIDE 8   OK
+#   ov095 021364d8  pool 021365d4 -> 02137910   STRIDE 8   OK
+#   ov092 02131c44  pool 02131d90 -> 02132568   STRIDE 8   OK
+# Emitted stride and arity off each TU's own /FAsc listing under the port's own
+# flags: [reg*8] and [reg*8+4] on all three, ARITY ZERO on all three, /Zp4 diff
+# 0 lines outside the TITLE on all three. 22 source pairs, every one {code, 0}.
+#
+# Key and UpDownLiftBbh define real C++ MEMBERS and go through the forwarders in
+# port/hal/fwd_forwarders.cpp; ToxBox defines the flat extern "C" name and needs
+# only its table alias.
+src/_ZN3Key8BehaviorEv.cpp
+src/_ZN13UpDownLiftBbh8BehaviorEv.cpp
+src/_ZN6ToxBox8BehaviorEv.cpp
+
+# ---- gate 3: THE OBJECT-FIELD ROWS THE ov006 RANGE SWEEP CLOSES ------------
+#
+# MGWRITER's remaining_object_field_rows.txt marks 37 of its 38 rows "NO
+# universe statement": a pointer to member held in a per-instance FIELD can only
+# be seated when the set of source pairs that can reach that field is bounded.
+# This gate runs MGWRITER's range sweep per class code block over ov006 and
+# takes the three rows whose universe closes.
+#
+#   func_ov006_020c2b8c  field +0x00 of the shared +0x4f38 sub-object
+#     block 020c2290..020c2a00 -> 7 {code,0} pairs at 0213adb8..0213adf8, SIX
+#     distinct code words; every reference into the run is from inside the block
+#     (the sixteen from outside point at the two bone-name strings interleaved
+#     in it). ROM: ldr r2,[r4] / cmp r2,#0 / beq / ldr r1,[r4,#4] / blx r1.
+#     Emitted: mov eax,[esi] / test / je / mov ecx,[esi+4] / add ecx,esi /
+#     call eax -- ARITY 0, /Zp4 diff 0 lines.
+#
+#   func_ov006_020c4cd8  field +0x30   and   func_ov006_020c7860  field +0x3c
+#     block 020c4000..020c9000 -> 38 {code,0} pairs in two runs,
+#     0213af18..0213afc8 (23) and 0213b020..0213b090 (15), 16 + 9 = 25 distinct
+#     code words, DISJOINT by field; every reference into either run is from
+#     inside the block. ROM: add r3,r4,#0x30 at 020c4ce0 and add r3,r4,#0x3c at
+#     020c7890, each ldr [r3,#4] / add r0,r4,r1,asr#1 / ldr [r3] / blx.
+#     Emitted: [esi+48]/[esi+52] on the first, ARITY 0, /Zp4 diff 0; the second
+#     reads [edi+64]/[edi+68] WITHOUT /Zp4 (MSVC aligns the eight-byte member to
+#     eight) and [edi+60]/[edi+64] WITH it, which is the ROM's own +0x3c/+0x40
+#     and the only diff between the two listings. /Zp4 is on that one source in
+#     the block above.
+#
+# ONE FACE PER CODE WORD, not per record, and here it is load-bearing rather
+# than tidy: both retired files refuse a seat in writing because a stored pair
+# is also a BY-VALUE COMPARISON SENTINEL. src/func_ov006_020c2994.c compares an
+# object's pair against data_ov006_0213adb8, which holds the same code word
+# 0x020c27c4 as the installed record 0213adc8; a face per record would give them
+# different addresses and the comparison would go permanently false while the
+# dispatch still looked right. A face per code word gives them the same address.
+src/func_ov006_020c2b8c.cpp
+src/func_ov006_020c4cd8.cpp
+src/func_ov006_020c7860.cpp
