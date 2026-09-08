@@ -4,7 +4,11 @@
 // symbol table carries __rethrow and the source never names it. The ROM's own rethrow
 // calls land here (notes/mwccarm-codegen.md 9a), and src/func_02073300.cpp,
 // src/func_020733a8.c and src/func_02073470.cpp all branch to this address.
-// Was func_020717c0.
+// Was named for the old symbol func_020717c0. The file follows the symbol, the same
+// move __end__catch needed: tools/srcpath.py keys a source to its file stem, so under
+// the old stem config declared a function at 0x020717c0 that no source resolved to,
+// and tools/nearmiss_db.py resync-names would have relabelled the stored row to
+// __rethrow and then lost its link to this source.
 // NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. Nintendo shipped this as an
 // assembly primitive, so there is no original C to recover and no match to chase. Counts as
 // done under the asm-primitive policy - see notes/arm9-endgame.md.
