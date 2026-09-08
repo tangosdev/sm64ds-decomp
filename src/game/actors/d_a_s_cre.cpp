@@ -16,6 +16,7 @@
 enum {
     kPlayerRangeFix12 = 0x64000, /* 100.0 */
     kStarActorId = 0xb2,
+    kStarIndexMask = 0xf,
     kStarSpawnStyle = 0x40
 };
 
@@ -29,8 +30,8 @@ extern "C" daSCre_c *daSCre_c_classInit(void)
 s32 daSCre_c::Behavior()
 {
     if (DistToCPlayer() < kPlayerRangeFix12) {
-        Spawn(kStarActorId, (param1 & 0xf) | kStarSpawnStyle,
-            Pos(), 0, mAreaId, -1);
+        Spawn(kStarActorId, (param1 & kStarIndexMask) | kStarSpawnStyle,
+            Pos(), 0, mAreaId, -1); /* no rot, no death-table id */
     }
     MarkForDestruction();
     return 1;

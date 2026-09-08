@@ -11,7 +11,7 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * and deletes itself.
  */
 struct daSCre_c : dActor_c {
-    u8 pad_0d0[0x4];
+    u8 pad_0d0[0x4];       /* 0x0d0 unused */
 
     virtual ~daSCre_c() {}
     virtual s32 Behavior();
