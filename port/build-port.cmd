@@ -98,8 +98,32 @@ rem the displacement retirement that lets a seated row leave the set without a
 rem hand edit. Its map check runs post-link, below.
 python "%~dp0tools\guardcache.py" --replay tailjump_guard.py --selftest
 if errorlevel 1 exit /b 1
-cmake -S "%~dp0." -B "%~dp0..\build\port" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM="%CMAKEBIN%\Ninja\ninja.exe" %*
-if errorlevel 1 exit /b 1
+rem CONFIGURE ONLY WHEN THERE IS SOMETHING TO CONFIGURE. This cmake call
+rem used to run on every build. On an already-configured tree with nothing
+rem changed it was measured at 2m23s here and 4m53s on the integration tree,
+rem single-threaded, on one core out of twelve, before a single file
+rem compiled -- and it produced a build.ninja identical to the one already
+rem there. build.ninja carries its own RERUN_CMAKE edge which reconfigures
+rem on demand, and as of the commit before this one that edge lists every
+rem configure-time input this build has: all 233 slice lists, the four
+rem predicate sources and tools/tierscan.py, on top of CMakeLists.txt, the
+rem cache, the compiler files and CMake's own modules. Editing a slice list
+rem therefore reconfigures by itself. Read port/CMakeLists.txt's
+rem "THE CONFIGURE-TIME INPUTS, REGISTERED" block before touching this: the
+rem registration is what makes skipping the call safe, and without it a lane
+rem that seats a body would compile the previous configure's source list and
+rem see a clean build.
+rem Two cases still configure. A build directory with no build.ninja has
+rem nothing to re-run, and any argument passed to this script is a -D the
+rem cached configure has never seen, so it must reach cmake (that is also
+rem the documented way to refresh the git tip baked into port_gittip.c).
+set "PORT_NEED_CONFIGURE="
+if not exist "%~dp0..\build\port\build.ninja" set "PORT_NEED_CONFIGURE=1"
+if not "%~1"=="" set "PORT_NEED_CONFIGURE=1"
+if defined PORT_NEED_CONFIGURE (
+    cmake -S "%~dp0." -B "%~dp0..\build\port" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM="%CMAKEBIN%\Ninja\ninja.exe" %*
+    if errorlevel 1 exit /b 1
+)
 ninja -C "%~dp0..\build\port"
 if errorlevel 1 exit /b 1
 rem Fail after link if any /alternatename LHS is also a DEFINED symbol in the
