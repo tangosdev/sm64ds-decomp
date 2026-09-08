@@ -911,7 +911,7 @@ def unmangled_symbols(root=REPO):
     return names
 
 
-def demangled_arity(symbol):
+def demangled_arity(symbol, root=REPO):
     """Argument count the Itanium name itself states, or None when it is not sure.
 
     None, not a guess, whenever `tools/demangle.py` emits its unresolved-type
@@ -925,7 +925,7 @@ def demangled_arity(symbol):
     if not symbol.startswith("_Z"):
         return None
     try:
-        sys.path.insert(0, str(REPO / "tools"))
+        sys.path.insert(0, str(pathlib.Path(root) / "tools"))
         import demangle as _demangle
     except Exception:
         return None
@@ -975,7 +975,11 @@ def _reference(symbol, decls, defs):
 
 
 def disagreements(decls, defs, unmangled, root=REPO):
-    """[(record dict)] for every declaration that contradicts its reference."""
+    """[(record dict)] for every declaration that contradicts its reference.
+
+    `root` is where `tools/demangle.py` is looked up, so a test can point the whole
+    comparison at a throwaway tree without reaching into this one.
+    """
     by_symbol = {}
     for d in decls:
         by_symbol.setdefault(d.symbol, []).append(d)
@@ -987,11 +991,9 @@ def disagreements(decls, defs, unmangled, root=REPO):
     for symbol in sorted(by_symbol):
         group = by_symbol[symbol]
         ref, basis = _reference(symbol, group, defs_by_symbol.get(symbol, []))
-        want_arity = demangled_arity(symbol)
+        want_arity = demangled_arity(symbol, root)
         for d in group:
-            if d is ref:
-                pass
-            elif d.is_function != ref.is_function:
+            if d is not ref and d.is_function != ref.is_function:
                 out.append(_finding(symbol, "kind", d, ref, basis,
                                     "function" if d.is_function else "data",
                                     "function" if ref.is_function else "data"))
