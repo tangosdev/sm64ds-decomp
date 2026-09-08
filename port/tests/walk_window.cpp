@@ -1221,6 +1221,21 @@ void port_actor_tick(void);          /* phases 4/2/3: cleanup, init, behaviour *
    readers were dead -- three of them `& 1` sites that test non-zero and so had
    never executed at all. Read that file's banner before moving this call. */
 void port_frame_clock_tick(void);
+/* THE ROM'S FRAME STATE (hal/rom_frame.cpp), run link100 boot plan rung R3a.
+   The harness's frame number is no longer this file's own `frame` local: it is
+   the ROM game loop's phase-6 step count, kept beside the ROM's phase id
+   data_0209d50c, which that file hosts for the first time. port_rom_frame_phase6
+   runs the ROM's phase-6 body once per frame at each loop's frame boundary;
+   port_rom_frame_checked is the ONE accessor every converted reader goes
+   through, and it refuses to return a number the host counter disagrees with
+   (SM64DS_FRAME_CROSSCHECK, default ON). Read that file's banner before moving
+   any of these calls: their placement is the whole of what R3d inherits. */
+void port_rom_frame_begin(const char *loop);
+void port_rom_frame_phase6(void);
+int  port_rom_frame(void);
+int  port_rom_frame_checked(int host, const char *reader);
+void port_rom_frame_rewind(int to);
+void port_rom_frame_report(void);
 /* func_020197b8 PHASE 2's head (hal/scene_boot.cpp): the current scene's
    graphics block, word 0, which is scene slot 23's only dispatch site in the
    whole ROM. Answers 1 for a block this port has not seated. */
@@ -6735,6 +6750,10 @@ static int scene_window_run(void)
     }
 
     int frame = 0, focus_was = 1, quit = 0;
+    /* R3a: the ROM's frame state is this loop's frame number too, so a run that
+       plays a scene and then falls through into a level reports two frame
+       accounts rather than one blurred one. */
+    port_rom_frame_begin("scene loop");
     MSG msg;
     static XPad pad;
     while (!quit) {
@@ -6914,6 +6933,10 @@ static int scene_window_run(void)
            repeats. So: the game's frames are pumped there, the paused frames
            are pumped here, and no frame is pumped twice. */
         if (menu_on) sdat_host_tick();
+        /* THE ROM'S PHASE 6 on this path, for the level loop's reason: the
+           frame's work is done and nothing of the next has started. The scene
+           path has no rollback boundary, so there is no re-anchor here. */
+        port_rom_frame_phase6();
         ++frame;
         port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */
         fflush(stdout);
@@ -6946,6 +6969,7 @@ static int scene_window_run(void)
     click_test_finish();
 #endif
     fprintf(stderr, "[scene] window closed after %d frame(s)\n", frame);
+    port_rom_frame_report();   /* R3a: this loop's frame account, one line */
     const int scene_rc = port_scene_finish(frame);
     /* AFTER the census, so a run that enters the adventure still leaves the
        title's own slot hits, captures and trap counts behind. Answers 0 and
@@ -8333,6 +8357,10 @@ int main(void)
     g_selftest = selftest;
     int focus_was = 1;   /* launch focused = launch unchanged */
     int frame = 0;
+    /* R3a: the ROM's frame state takes over as the harness's frame number from
+       here. `frame` stays, as the cross-check the accessor is measured against
+       and as the loop's own control variable. */
+    port_rom_frame_begin("level loop");
     float cam_yaw = 0.0f;   /* camera heading around Mario, radians */
     float cam_pitch = 0.13f; /* camera tilt above level, radians (R/F) */
     const int trace_cam = getenv("SM64DS_TRACE_CAM") != 0;
@@ -13176,11 +13204,23 @@ int main(void)
         /* ROLLBACK NETCODE (hal/rollback.cpp): snapshot this frame's world,
            and if the wire has contradicted a round already played, restore
            that round's world, rewind `frame` and re-run to the present. */
+        const int rb_frame_was = frame;
         rb_frame_end(&frame, selftest);
         /* the rollback feasibility probe: snapshot timing and the restore-and-
            re-run determinism check, at the same boundary. It may rewind
            `frame` for the re-run. Inert without its env knobs. */
         rb_probe_frame_end(&frame, selftest);
+        /* the one place the host counter legitimately moves on its own; the
+           ROM's frame number is re-anchored with it rather than tripping the
+           cross-check. Inert unless rollback mode is on. */
+        if (frame != rb_frame_was) port_rom_frame_rewind(frame);
+        /* THE ROM'S PHASE 6, func_020197b8.c:49-50: `data_0209d50c = 6` and the
+           frame step. Here because this is the frame boundary -- the frame's
+           work is done and nothing of the next has started -- which is where
+           the ROM's loop runs it. The second statement's blink half stays in
+           hal/fader_wipes.cpp at its own point under its own tick gate; this
+           file does not move it. Under R3d this call is func_020197b8's line. */
+        port_rom_frame_phase6();
         ++frame;   /* counts in live mode too -- the [cam-in]-style live
                       diagnostics carry a real frame number */
         /* SM64DS_MENU_AT: arm the freeze once the named frame is reached. It
@@ -13298,6 +13338,11 @@ int main(void)
                         frame);
             printf("selftest: %d frames, pos=(%d, %d, %d)\n", frame,
                    *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
+            /* R3a: the frame account this run ends on -- how many reads went
+               through the ROM's frame state, and the measured gap between its
+               phase-6 step count and the blink clock's. One line per run so a
+               battery row's log can be grepped for it. */
+            port_rom_frame_report();
             return 0;
         }
         /* THE PACE. Stage::InitResources writes data_0208ee44 = 2 for a 3D
