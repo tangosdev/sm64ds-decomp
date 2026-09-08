@@ -323,3 +323,32 @@ src/func_ov071_021223c8.cpp
 src/func_ov071_02122414.cpp
 src/func_ov085_02129524.cpp
 src/func_ov085_02129570.cpp
+#
+# ---- ONE THING THE THIRTEEN STILL NEED, AND IT IS PURELY A NAME ----------
+#
+# Every one of the thirteen declares its table at namespace scope in C++ and
+# NOT inside extern "C", so MSVC mangles the reference while the mount
+# publishes the table under C linkage. Checked in the listings and against
+# C:/tmp/l4seat/build/port/walk_window.map: all thirteen emit a mangled EXTRN,
+# all seven tables are published as _data_ovNNN_XXXXXXXX, and NOT ONE of the
+# seven aliases exists in the tree today. This is exactly the indexed-table
+# family PMF3 answered in hal/pmf3_aliases.cpp, and the answer is the same
+# shape. Without these seven the slice does not link, and the failure looks
+# like an unresolved external rather than anything about member pointers.
+#
+#   #pragma comment(linker, "/alternatename:?data_ov002_021097bc@@3PAUEntry@@A=_data_ov002_021097bc")
+#   #pragma comment(linker, "/alternatename:?data_ov002_0210af2c@@3PAUEntry@@A=_data_ov002_0210af2c")
+#   #pragma comment(linker, "/alternatename:?data_ov014_0211476c@@3PAUEntry@@A=_data_ov014_0211476c")
+#   #pragma comment(linker, "/alternatename:?data_ov034_02114538@@3PAUEntry@@A=_data_ov034_02114538")
+#   #pragma comment(linker, "/alternatename:?data_ov063_0211efbc@@3PAUEntry@@A=_data_ov063_0211efbc")
+#   #pragma comment(linker, "/alternatename:?data_ov071_02122ecc@@3PAUEntry@@A=_data_ov071_02122ecc")
+#   #pragma comment(linker, "/alternatename:?data_ov085_0212fe88@@3PAUEntry@@A=_data_ov085_0212fe88")
+#
+# They pass alternatename_guard for PMF3's reason: the LHS is a C++-mangled
+# name only these matched TUs ever spell, nothing in the tree defines it, and
+# the RHS is the mount's own C-linkage symbol at the same address, so LHS and
+# RHS land in the map at one address, which is the guard's healthy shape. The
+# ov071 table already carries an unrelated directive of its own
+# (_data_ov071_02122ecc_d=_data_ov071_02122ecc, a second dsd spelling of the
+# same storage, in hal/actor_classes_scuttlebug.cpp); that one aliases the C
+# name to the C name and does not collide with this one.
