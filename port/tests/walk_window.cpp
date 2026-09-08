@@ -525,6 +525,13 @@ void port_boot_rom_pre_main(void);
 void port_boot_rom_main_head(void);
 void port_boot_rom_game_init_head(void);
 void port_boot_rom_game_init_tail(void);
+/* run link100, lanes BOOTSCOUT and BOOTR1. THE ROM'S OWN src/main.c runs the
+   boot now, in place of the transcription of its head, and the gate
+   SM64DS_ROM_MAIN DEFAULTS ON; SM64DS_ROM_MAIN=0 keeps the transcription.
+   hal/rom_main.cpp carries the whole derivation, the ROM disassembly its two
+   seams are read off, and the one known deviation. */
+int  port_rom_main_enabled(void);
+void port_rom_main_run(void);
 /* the game heap's allocator, read for the boot report only: how much of the
    ROM's 0x3b000 the port's boot actually spends */
 unsigned _ZN22ExpandingHeapAllocator10MemoryLeftEv(void *self);
@@ -7418,7 +7425,10 @@ int main(void)
     /* and main()'s own first three calls, which the ROM makes after Entry has
        returned from func_02019780: the OS tick, the alarm system and the main
        thread record. */
-    port_boot_rom_main_head();
+    if (port_rom_main_enabled())
+        port_rom_main_run();      /* the ROM's own main -- the default */
+    else
+        port_boot_rom_main_head();   /* SM64DS_ROM_MAIN=0: the transcription */
     memset(data_0209b3ec, 0, 48);
     data_0209b3ec[0] = data_0209b3ec[4] = data_0209b3ec[8] = 0x1000;
     hal_fill_model_vtable();

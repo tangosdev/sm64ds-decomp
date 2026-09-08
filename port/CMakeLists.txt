@@ -16235,6 +16235,38 @@ foreach(_texceptg walk_window walk_window_hires smoke_player)
     target_sources(${_texceptg} PRIVATE ${EXCEPT_HOSTGEN_GEN})
 endforeach()
 
+# ===========================================================================
+# THE ROM'S OWN main() AS THE PORT'S BOOT SPINE (run link100, lanes BOOTSCOUT
+# and BOOTR1).
+# ===========================================================================
+#
+# src/main.c is the ROM's eighteen-line main at arm9 0x02007000. The port's
+# tests/walk_window.cpp defines main() for Windows, so until this block the
+# matched TU was an undocumented SHADOW with 141 further matched TUs behind it.
+# port/hal/rom_main.cpp carries the whole derivation, the ROM disassembly the
+# seams are read off, and the one known deviation.
+#
+# The per-source rename is the same mechanism as func_0203bb60_narrow above:
+# the matched TU stays in the link byte for byte and only the names it emits
+# and calls move, so the CRT's main and the ROM's main can both exist, and
+# main's two not-yet-ROM edges (func_0201a054 and func_020197b8, neither of
+# them enrolled on any slice list) are visible in one place instead of becoming
+# two new shadow rows. The gate SM64DS_ROM_MAIN defaults ON; SM64DS_ROM_MAIN=0
+# keeps the host's transcribed head in hal/boot_os.cpp.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/main.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "main=rom_main;func_0201a054=port_rom_a054_seam;func_020197b8=port_rom_loop_seam")
+# smoke_player is DELIBERATELY not in this list. It carries no hal/boot_os.cpp,
+# so src/main.c's four externs (func_02059788, func_02059bc0, func_02059578,
+# data_020a621c) have no definition in that target and it fails LNK2019.
+foreach(_tbootmain walk_window walk_window_hires)
+    target_sources(${_tbootmain} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/main.c"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN4Heap9SetNodeIDEj.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/rom_main.cpp")
+endforeach()
+
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
 # reconfigure and the build will look clean while compiling the old set of
