@@ -359,10 +359,140 @@ WMBSS(".dsstate$ywmd16", data_020a94c8, 4, 4) = { 0 };
 WMBSS(".dsstate$ywmd17", data_020a94cc, 4, 4) = { 0 };
 WMBSS(".dsstate$ywmd18", data_020a94d0, 4, 4) = { 0 };
 
-// 0x020a9570, 1976. src/func_02065af0.c copies 0x9c bytes into it.
+// 0x020a94d4, 0x9c. ADDED BY RUNG W7 (run link100, lane WM8), AND IT IS THE
+// HEAD OF THE SAME ROM OBJECT data_020a9570 IS THE TAIL OF.
+//
+// src/func_02065b94.c returns this address and src/func_02065b88.c returns
+// data_020a9570's, both as a decimal literal that hides which symbol it is:
+//
+//     src/func_02065b94.c   return 34247892;   = 0x020A94D4
+//     src/func_02065b88.c   return 34248048;   = 0x020A9570
+//
+// Lane WM5's note read those two decimals as 0x020A9594 and 0x020A9630 and
+// refused the whole 0x02063E-0x020655 band on the strength of it. The
+// cartridge says otherwise twice: the literal pools at 0x02065B9C and
+// 0x02065B90 hold d4940a02 and 70950a02, and config/arm9/relocs.txt carries a
+// named relocation for each --
+//
+//     from:0x02065b9c kind:load to:0x020a94d4 module:main
+//     from:0x02065b90 kind:load to:0x020a9570 module:main
+//
+// -- so neither accessor points outside the port's own hosted storage.
+//
+// ONE OBJECT, 0x854 BYTES, AND THE ROM'S OWN LOOP MEASURES IT. Taking
+// p = 0x020A94D4, src/func_020652fc.c runs the cartridge's own sixteen
+// iterations (0x020652FC + 0x80: strb r1,[r0,#0x1d7]; cmp r2,#0x10;
+// add r0,r0,#0x68), so the table is sixteen 0x68-byte entries at p + 0x1d4 and
+// it ends at 0x020A94D4 + 0x1d4 + 0x680 = 0x020A9D28 -- the next symbol in
+// config/arm9/symbols.txt after data_020a9570, exactly. The furthest byte the
+// loop writes is 0x020A94D4 + 0x618 + 0x1d7 = 0x020A9CC3, inside
+// data_020a9570. So this section and the one below it are ONE 0x854-byte host
+// object and must stay contiguous; ".dsstate$ywmd18a" sorts after "$ywmd18"
+// (a longer string with the same prefix) and before "$ywmd19" ('8' < '9' at
+// the sixth character), so the linker lays it down between data_020a94d0 and
+// data_020a9570 in the ROM's own order. hal/wm_thread.cpp's band check reads
+// both offsets back at startup rather than trusting this paragraph.
+//
+// kind:bss, so there is nothing to read out of the image: config/arm9/
+// symbols.txt gives it bss, and arm9 .data ends at 0x0209b000
+// (config/arm9/delinks.txt), well below this address. No port/tools/romdata.py
+// NAMED row is needed or allowed for it -- that list is initialised .data.
+//
+// WHAT MOVES. 0x9c bytes are inserted here, so data_020a9570 (".dsstate
+// $ywmd19"), this file's own ".dsstate$ywme00" and hal/wm_thread.cpp's four
+// ".dsstate$ywmf00..03" tail names each move up by 0x9c and nothing else in
+// the captured span moves at all. All five are lanes WM1-WM5's wireless state;
+// none is geometry and none reaches a display list as a pointer value. The
+// battery's BMP rows are what checks that claim rather than this paragraph.
+WMBSS(".dsstate$ywmd18a", data_020a94d4, 0x9c, 4) = { 0 };
+
+// 0x020a9570, 1976. src/func_02065af0.c copies 0x9c bytes OUT of it with
+// MultiCopy_Int, into the int[0x27] its callers keep on the stack -- the same
+// 0x9c the header above is long, one block further on. It is the tail of
+// data_020a94d4's object: see that note.
 WMBSS(".dsstate$ywmd19", data_020a9570, 1976, 4) = { 0 };
 
 #undef WMBSS
+
+// ---------------------------------------------------------------------------
+// THE TWO ACCESSOR FACES FOR THE 0x02063E-0x020655 BAND (rung W7, lane WM8).
+//
+// src/func_02065b94.c and src/func_02065b88.c are matched ROM bodies and they
+// stay in the link exactly as they are; what they cannot do is answer with an
+// address this process can use, because the port hosts data_020a94d4 and
+// data_020a9570 wherever the linker put the .dsstate section while the ROM's
+// answer is the cartridge's own 0x020A94D4 and 0x020A9570.
+//
+// So the nine TUs that CALL them are compiled with the call renamed to one of
+// these two (port/CMakeLists.txt, the rung W7 block), which hand back the same
+// two objects at their host addresses. Nothing else changes: the two ROM
+// bodies keep their names, their bytes and their place in the link.
+//
+// THEY LIVE HERE AND NOT IN hal/wm_thread.cpp BECAUSE OF WHERE THE CALLERS DO.
+// Five of the nine (src/func_02065170.c, src/func_020653cc.c,
+// src/func_02065538.c, src/func_020659a0.c and src/func_02065af0.c) came in
+// with rung W4 on port/slice_wm3.txt, which goes to smoke_player as well as to
+// walk_window and walk_window_hires; hal/wm_thread.cpp goes to the first two
+// only. This file goes exactly where slice_wm3 goes, which is what the rename
+// needs. The return type is void * and the nine callers spell their own extern
+// as int, int *, char * or void * -- all four are one C symbol and one machine
+// word, and the port's own "verify by ROM ADDRESS" rule is what says they are
+// the same thing.
+//
+// AND THEY CALL THE ROM BODY RATHER THAN REPLACING IT, WHICH IS MEASURED AND
+// NOT A FLOURISH. The first build of this rung returned the host address
+// straight out of these two functions, and linkage.py came back +9 instead of
+// +11: with all nine call sites renamed, NOTHING in the image referenced
+// func_02065b94 or func_02065b88 any more and the linker discarded both. That
+// is the honest consequence of a plain rename and it is a loss, so the shape
+// changed. Each face now ASKS the ROM body for its answer and TRANSLATES it:
+// the cartridge's own DS address is what the offset is computed from, so the
+// ROM body is genuinely called, at the ROM's own call site, with its return
+// value genuinely used. This is not a keep-alive reference -- delete the ROM's
+// answer from the expression and the face stops working -- and it is the
+// romdata pointer-table contract in its smallest form: a DS address the port
+// cannot use is mapped onto the host object before anything dereferences it.
+//
+// The translation is offset-preserving rather than a constant, so an accessor
+// that ever answered with an interior address would still land in the right
+// place, and anything outside the object's own 0x854 bytes is reported once by
+// name and clamped to the base rather than silently turned into a wild
+// pointer.
+// ---------------------------------------------------------------------------
+extern "C" int func_02065b94(void);   /* the ROM body: returns 0x020A94D4 */
+extern "C" int func_02065b88(void);   /* the ROM body: returns 0x020A9570 */
+
+static const unsigned kWmqDsBase = 0x020A94D4u;  /* config/arm9/relocs.txt:10761 */
+static const unsigned kWmqDsSize = 0x854u;       /* to data_020a9d28, the next symbol */
+
+static void *wm8_translate(unsigned ds, const char *who)
+{
+    const unsigned off = ds - kWmqDsBase;
+    if (off >= kWmqDsSize) {
+        static int said;
+        if (!said) {
+            said = 1;
+            std::fprintf(stderr,
+                         "  [wm8] %s answered %08x, which is outside the "
+                         "0x854-byte object at %08x that config/arm9/"
+                         "relocs.txt says it names; using the object's base\n",
+                         who, ds, kWmqDsBase);
+            std::fflush(stderr);
+        }
+        return data_020a94d4;
+    }
+    return data_020a94d4 + off;
+}
+
+extern "C" void *port_wm8_wmq_base(void)
+{
+    return wm8_translate((unsigned)func_02065b94(), "func_02065b94");
+}
+
+extern "C" void *port_wm8_wmq_head(void)
+{
+    return wm8_translate((unsigned)func_02065b88(), "func_02065b88");
+}
 
 // ---------------------------------------------------------------------------
 // TWO NAMES, ONE ADDRESS. src/func_0205cd5c.c declares func_02059d1c and

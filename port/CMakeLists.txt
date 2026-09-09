@@ -16754,6 +16754,74 @@ foreach(_twm5f mp_comms_seam smoke_player)
 endforeach()
 
 # ===========================================================================
+# THE WIRELESS PLAN, RUNG W7 (run link100, lane WM8)
+# ===========================================================================
+#
+# The eleven TUs of the 0x02063E-0x020655 message-layer band that rung W6 left
+# behind four faces in hal/wm_thread.cpp. Why they were refused, why the
+# refusal rested on a decimal misread, and what the band actually is are all in
+# port/slice_wm8.txt's own header and at the top of hal/wm_thread.cpp.
+#
+# THE ACCESSOR RENAME, WHICH IS THE HALF THAT MAKES THE SLICE SAFE.
+# src/func_02065b94.c and src/func_02065b88.c are matched ROM bodies that
+# return DS addresses -- 0x020A94D4 and 0x020A9570, both named by a relocation
+# in config/arm9/relocs.txt -- and the port hosts those two objects at the host
+# addresses hal/wm_arm7.cpp's ".dsstate$ywmd18a" and "$ywmd19" land at. Left
+# alone, the band would WRITE the cartridge's address (which is mapped DS main
+# RAM in this process, so not a fault, just the wrong bytes) while
+# src/func_02065af0.c READS the host object: one ROM object, two host objects.
+#
+# So every TU that CALLS one of the two accessors is compiled with that call
+# renamed onto the host answer in hal/wm_arm7.cpp. The two ROM bodies keep
+# their own names, their bytes and their place in the link; only the call sites
+# move. This is the port's romdata pointer-table contract in its smallest form:
+# a DS address the port cannot use is bound to the host object before anything
+# dereferences it.
+#
+# NINE TUs, NOT FOUR, AND THAT IS THE POINT. Five of the nine came in with rung
+# W4 on port/slice_wm3.txt and have been loading the literal ever since --
+# src/func_02065170.c, src/func_020653cc.c, src/func_02065538.c and
+# src/func_020659a0.c call func_02065b94, src/func_02065af0.c calls
+# func_02065b88. None of them was ever ENTERED, because data_020a94c0 stays 0
+# until one of the two initialisers rung W6 faced sets it. Renaming only the
+# four TUs this slice adds would have left exactly the split object the rename
+# exists to close, so all nine are renamed.
+#
+# THE RENAME IS A SOURCE PROPERTY, hence one define per file rather than a
+# target_compile_definitions: these TUs ride the shared compile below (one
+# object for walk_window, walk_window_hires and smoke_player), so a per-target
+# define could not reach them. hal/wm_arm7.cpp, which defines the two answers,
+# goes to exactly the three targets port/slice_wm3.txt goes to.
+foreach(_wm8ren
+        src/func_02065170.c src/func_020653cc.c src/func_02065538.c
+        src/func_020659a0.c src/func_020652fc.c src/func_02065234.c
+        src/func_020654d0.c src/func_02065500.c)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../${_wm8ren}"
+        PROPERTIES COMPILE_DEFINITIONS "func_02065b94=port_wm8_wmq_base")
+endforeach()
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02065af0.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_02065b88=port_wm8_wmq_head")
+
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm8.txt" SLICE_WM8_LINES)
+set(SLICE_WM8_SOURCES "")
+foreach(line IN LISTS SLICE_WM8_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# TWO TARGETS, NOT THREE, for the same forced reason rung W6 gave: the four
+# bodies this slice takes back were faced in hal/wm_thread.cpp, which
+# walk_window and walk_window_hires carry and the other two do not. Adding them
+# to smoke_player would collide with hal/wm_thread_face.cpp's own stand-ins.
+foreach(_twm8 walk_window walk_window_hires)
+    target_sources(${_twm8} PRIVATE ${SLICE_WM8_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
