@@ -550,22 +550,49 @@ const void *func_0204068c(unsigned short aid) {
 }
 #endif  // PORT_COMMS_SEAM_PROBE_FACE_0204068C
 
-// src/func_02040c34.c: starts the DS's wireless THREAD with two callbacks,
-// which are the ROM's own src/func_0203f644.c and src/func_0203f604.c. A host
-// transport has no thread to start -- it is polled from the seam's own pump,
-// which EXISTS as of run mg16 lane MP3: hal/comms_conductor.cpp installs it on
-// hal/os_thread.h's hook and the ROM's own wait sleeps through it, so poll()
-// runs once per turn of src/func_0203ea5c.c's real wait loop. HOLE 1 is CLOSED
-// in the frozen contract at the top of comms_seam.h. The annotation that stood
-// here said no such pump existed; that was true when it was written and is not
-// now. So this records the request and returns. The callbacks are deliberately NOT
-// invoked: on the DS they run in the wireless thread's context and mutate the
-// same state the poll path does, so calling them from here would double-apply
-// it. A transport that wants them driven does it from poll().
-// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body starts the DS wireless thread in the NITRO WM SDK over arm7.bin, which this repo does not decompile; the host is polled from the seam pump instead.
-void func_02040c34(int role, int b, void *cb_recv, void *cb_send, int e) {
-    (void)role; (void)b; (void)cb_recv; (void)cb_send; (void)e;
-}
+// ===========================================================================
+// RUNG W6 RETIRES src/func_02040c34.c: THE CARTRIDGE STARTS ITS OWN THREAD.
+// Run link100, lane WM5.
+//
+// The stand-in below said "a host transport has no thread to start". That was
+// true when it was written and it is not now. hal/boot2_thread.cpp adopts any
+// record src/func_02058200.c creates onto a Windows fiber (gate 223, run
+// link100, lane THREAD), and lanes NITROFS and LOADOV wrote the eight
+// cartridge-header words at 0x027FFE40..0x027FFE5C that src/func_020424c0.c
+// reads. So the ROM's own body runs: it fills the 0x440 control block at
+// data_020a1fc0, registers the WM port callback through func_02061c88, calls
+// func_0205d89c for the header mirror, carves three 0xcc0-byte work nodes with
+// FS_InitFile on each, and on the parent arm hands src/func_02042254.c to
+// src/func_02058200.c as the SECOND created thread, which enters and parks in
+// the ROM's own OS_SleepThread. hal/wm_thread.cpp carries the storage, the
+// four faces into the band that rung refuses, and the census that measures it.
+//
+// THE CALLBACKS ARE STILL NOT INVOKED FROM HERE, and now they are not invoked
+// from here BY THE CARTRIDGE: src/func_02040c34.c stores them at
+// data_020a1fc0 + 0x10 and + 0x14 and the wireless thread is what would run
+// them. The old note's reasoning ("calling them from here would double-apply
+// it") is therefore retired rather than contradicted.
+//
+// TWO TARGETS KEEP THE STAND-IN, and they get it from a file of their own
+// rather than from a define here. tests/mp_comms_seam.cpp links this file
+// without the WM command layer, without a heap and without the host ARM7. AND
+// SO DOES smoke_player, for a reason that is not a choice: src/func_02042254.c
+// and src/func_020424c0.c both call func_0205d5e8, which is on
+// port/slice_gate214.txt, and that slice goes to walk_window and
+// walk_window_hires only -- smoke_player has never carried the boot spine. So
+// rung W6 goes to those two targets and the other two link
+// hal/wm_thread_face.cpp, which carries the retired body and the storage.
+// A DEFINE COULD NOT HAVE DONE IT: this file is compiled ONCE for all three big
+// targets (SLICE_COMMS_SOURCES rides the sharing block), so a per-target define
+// on smoke_player would have changed walk_window's object too. That is the one
+// way rung W6's retirement differs in shape from W1's, W2's and W4's, all three
+// of which retired a body the probe alone had to keep.
+// ===========================================================================
+// (The retired body itself is in hal/wm_thread_face.cpp, which is what the
+// two targets that do not link this rung compile instead. It is not kept here
+// behind a define because hal/comms_seam.cpp is compiled ONCE for all three big
+// targets -- SLICE_COMMS_SOURCES rides the sharing block -- so a per-target
+// define cannot keep the body in smoke_player and drop it from walk_window.)
 
 // THE STATUS-WORD PAIR IS RETIRED (run link100, lane DF40).
 //
@@ -610,9 +637,26 @@ void func_02040c34(int role, int b, void *cb_recv, void *cb_send, int e) {
 // the tree uses ($ymp3* included: "ymp3" < "ywm" at the second character) and
 // before the $zzz high sentinel, so the captured span grows at its tail and
 // NOT ONE existing hosted global moves.
-#pragma section(".dsstate$ywm", read, write)
-__declspec(allocate(".dsstate$ywm")) __declspec(align(4))
-unsigned char data_020a3fc0[0xB80] = {0};
+//
+// AND THE STORAGE MOVED IN RUNG W6 (run link100, lane WM5), because the sweep
+// above is correct and its conclusion was not. A relocation sweep cannot see
+// POINTER ARITHMETIC, and src/func_02040c34.c reaches these bytes with it:
+// 0x02040CF8 is `add fp, sl, #0x440` off data_020a1fc0, and the third of the
+// three 0xcc0-byte work nodes it carves runs from data_020a1fc0 + 0x1e80 to
+// + 0x2b40 -- straight through this object. So data_020a3fc0 is the tail of a
+// contiguous 0x2b80-byte band that starts at data_020a1fc0, and it is defined
+// in hal/wm_thread.cpp with the four names between them. Nothing the two
+// accessors do can observe the move: they read and write one word of it and
+// reach it by relocation.
+//
+// The two targets that do not link rung W6 keep the standalone definition for
+// the same reason they keep the face: neither links hal/wm_thread.cpp, where
+// the band is, and mp_comms_seam does not link hal/comms_conductor.cpp either,
+// so the band's head is not there to sit behind. src/func_02040a5c.c and
+// src/func_02040a84.c are on port/slice_gate221.txt, which all three real
+// targets carry, so the definition has to exist in both shapes.
+// (The standalone definition moved to hal/wm_thread_face.cpp with the face
+// above, for the same one-shared-object reason.)
 
 // THE LINK STATE, rung W0's first global. Run link100, lane WM1.
 //
