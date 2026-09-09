@@ -1,13 +1,4 @@
 // @symbol _ZN4Door13InitResourcesEv
-// NONMATCHING: candidate is 4 bytes (one instruction) larger than the ROM under the
-// pinned 2004/b56 (0x300 vs 0x2fc). Diverges at +0x0c: the compiler splits the ROM's
-// single `ldr r1, [r5, #8]` into `add r2, r5, #8` followed by `ldr r1, [r2]`, and every
-// instruction after that point is shifted 4 bytes for the rest of the function. Never
-// enrolled (config/arm9/overlays/ov100/delinks.txt carries no `complete` marker for this
-// range) -- counted as matched only because the count rule never read delinks.txt. The
-// comment below already documented this gap in prose ("STILL DOES NOT BYTE-MATCH")
-// while deliberately not spelling this word, to avoid dropping out of the worklist
-// eligibility gate; this banner corrects the published count instead.
 #include "Door.h"
 // recovered name: Door::InitResources
 /* recovered: renamed to Class_Method, vtable slot 0 */
@@ -29,20 +20,16 @@
  * models; and 0x008 is fBase_c's param1, the spawn parameter this door's
  * whole variant table is indexed by.
  *
- * STILL DOES NOT BYTE-MATCH, and this change does not pretend otherwise.
- * The word for that state is deliberately not spelt here: tools/asm_policy.py
- * matches DRAFT_BANNER as a bare substring anywhere in a file's header
- * region, so writing it in a comment makes enroll.candidates() drop the file
- * from the eligibility gate's job list altogether -- not "fails the gate",
- * but "the gate stops looking". Measured while writing this file: the draft
- * of this comment cost exactly this function its candidacy, 11189 jobs down
- * to 11188, while every other number stayed green.
- * config/arm9/overlays/ov100/delinks.txt carries no `complete` marker for
- * this range, so dsd supplies it from the cartridge and the ROM build never
- * compiles this file. Measured under the pinned 2004/b56 before and after
- * the fold: candidate 0x300 against the ROM's 0x2fc, one instruction long,
- * unchanged either way. Closing that gap is a matching problem, not a layout
- * one, and is deliberately not attempted here.
+ * BYTE-MATCHES under the pinned 2004/b56, 0x2fc for 0x2fc, with relocation
+ * destinations checked. It did not until the param1 shift below was respelt;
+ * the one-instruction gap this file used to carry (0x300 against the ROM's
+ * 0x2fc, diverging at +0x0c) is described at that line together with the
+ * lever that closed it.
+ *
+ * config/arm9/overlays/ov100/delinks.txt still carries no `complete` marker
+ * for this range, so dsd keeps supplying it from the cartridge and the ROM
+ * build does not yet compile this file. That is a layout question, separate
+ * from the byte question this file now answers, and is left where it was.
  *
  * NOT RENAMED BUT WORTH RECORDING: the block near the end writes mPosX,
  * mPosY + 0xb4000 and mPosZ into 0x0a4/0x0a8/0x0ac. dActor_c.h names the
@@ -111,7 +98,26 @@ int _ZN4Door13InitResourcesEv(struct Door *self)
     int y;
     int z;
 
-    self->base.param1 = self->base.param1 >> 0x10;
+    /* The spawn word arrives packed: this door's variant index is param1's
+       high halfword, and every later read of param1 in this function is that
+       index. Shifted down in place, once, before anything else.
+
+       The volatile round-trip on the read is a matching crutch, not
+       semantics: casting a prvalue to a cv-qualified scalar discards the
+       qualifier, so `(u32)(volatile u32)x` and `x` are the same value and it
+       emits no code of its own. tools/delaunder.py knows this idiom as
+       CVCAST and re-tests every site of it automatically. What it buys is
+       the addressing mode. Spelt plainly, both sides of this assignment are
+       the same expression, 2004/b56 value-numbers them together and
+       materialises the address once -- `add r2, r5, #8` / `ldr r1, [r2]` /
+       `lsr` / `str r1, [r2]` -- one instruction longer than the ROM, which
+       shifts every literal-pool load in the rest of the function. The ROM
+       keeps the offset folded into both accesses: `ldr r1, [r5, #8]` /
+       `lsr` / `str r1, [r5, #8]`. Any spelling that makes the two sides
+       textually different reaches the folded form; this is the one the tree
+       already has a name and a gate for. Measured: with the cast 0 of 191
+       words differ, without it 9. */
+    self->base.param1 = (u32)(volatile u32)self->base.param1 >> 0x10;
 
     if (!(data_ov100_02148710 & 1)) {
         data_ov100_021487c0.x = 0x4b000;
