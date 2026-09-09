@@ -1601,14 +1601,32 @@ extern "C" int port_rom_loop_enabled(void);
    belongs to -- and the answer was NEITHER: scene 6 goes down on the SLEEP,
    with this gate unset and no VBlank handler registered at all. The block at
    the scene handover carries the whole measurement. Read only where
-   SM64DS_ROM_LOOP is already on, so with the main knob unset this rung has no
-   reader either. */
+   SM64DS_ROM_LOOP is already on, so with the main knob off this rung has no
+   reader either.
+
+   RUNG H2 FLIPS IT WITH THE MAIN KNOB (lane R3H), and the two belong together:
+   the ROM's own sleep and the ROM's own wake are one circuit, and a default
+   that sleeps the cartridge's way but is woken by the port's starvation timer
+   is half a handover, not a safer one. SM64DS_R3G_ROM_WAKE=0 turns it off on
+   its own, so the two halves stay separable on one binary the way rung G2
+   wanted them.
+
+   WHAT CHANGED SINCE "scene 6 goes down on the SLEEP". That sentence is now
+   history: rung H1 seated the member-pointer site that was smashing
+   func_ov075_0211b418's frame, registered scene 6's and scene 360's graphics
+   blocks, and faced the one virtual slot the registered block then reached
+   (0x0211c94c slot 1, from src/func_ov075_021160dc.cpp). Measured with this
+   gate ARMED, 300 frames each: scene 6 rc=0, scene 360 rc=0, scene 1 rc=0 with
+   the counted 0/1/2/3 = 300/0/450/150 and the wrong block 0 times, scene 8
+   rc=0. The [thr] line on a scene under the flipped default reads
+   vbl_enter/vbl_dispatch nonzero and starved=0 where it used to read
+   vbl_enter=0 and starved=300: the wakes are the ROM's own. */
 static int port_r3g_rom_wake(void)
 {
     static int v = -1;
     if (v < 0) {
         const char *e = getenv("SM64DS_R3G_ROM_WAKE");
-        v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
     }
     return v;
 }

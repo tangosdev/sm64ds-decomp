@@ -118,22 +118,54 @@ static int crosscheck_on(void)
    moving the accessor here changes no count.
 
    NOTHING ABOUT THE KNOB CHANGES WITH THE FILE IT LIVES IN. The spelling is
-   still the BOOTR1 pattern (any value but "0" is on), the banner is still
-   printed once on the first read -- which is what makes a run's log say whether
-   the knob reached the loop that is running -- and tests/walk_window.cpp's five
-   readers still read exactly this function. */
+   still the BOOTR1 pattern, the banner is still printed once on the first read
+   -- which is what makes a run's log say which loop is running -- and
+   tests/walk_window.cpp's five readers still read exactly this function.
+
+   RUNG H2, THE FLIP (run link100, lane R3H). The default is now ON, and
+   SM64DS_ROM_LOOP=0 selects the host loop. Nothing else about this function
+   moves: same name, same spelling of the variable, same single read, same
+   banner point. The condition is inverted and that is the whole change, which
+   is what makes the flip revertable on its own.
+
+   WHAT EARNED IT. Every level row has run on the ROM's phase 7 since rung E1
+   went green (lane R3F: levels 1, 5, 9 and 13 at 300 frames, the shipped path's
+   own end position to the unit), all 37 scene rows since rung G1 (lane R3G),
+   and the last scene that faulted -- scene 6, the VS menu -- since rung H1
+   above. A whole battery with the knob exported came back ALL GREEN on all 51
+   level rows and all 37 scene rows before this line changed.
+
+   THE HOST LOOP IS KEPT WHOLE FOR ONE RELEASE. It is not deleted, not
+   #ifdef'd out and not left to rot untested: SM64DS_ROM_LOOP=0 runs it, and
+   the lane that made this change ran a second whole battery with exactly that
+   exported. If the release finds nothing wrong with the ROM's loop, the lane
+   after this one is the one that removes the host loop; until then the
+   fallback is one environment variable away.
+
+   THE CROSS-CHECK IS WHAT MAKES THE CLAIM CHECKABLE. It stays ON: every
+   converted reader still passes the host loop's own counter in beside its
+   request and this file still refuses to answer with a number that disagrees.
+   A battery row that goes green under the flipped default has proved the two
+   frame accounts agreed on every frame of it. */
 int port_rom_loop_enabled(void)
 {
     static int v = -1;
     if (v < 0) {
         const char *e = std::getenv("SM64DS_ROM_LOOP");
-        v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
         if (v)
-            std::fprintf(stderr, "[r3e] SM64DS_ROM_LOOP=1: phase 7 is the ROM's own "
+            std::fprintf(stderr, "[r3e] the ROM's own frame loop is the default "
+                    "(SM64DS_ROM_LOOP=0 selects the host loop, kept whole for "
+                    "one release): phase 7 is the ROM's own "
                     "sleep on every frame (func_0201a4bc -> OS_SleepThread"
                     "(data_0209d500) -> the idle thread -> the wait), so "
                     "IRQ::VBlankHandler's wake branch is what ends the frame "
                     "and func_02019144 is what commits the display\n");
+        else
+            std::fprintf(stderr, "[r3e] SM64DS_ROM_LOOP=0: the HOST frame loop, "
+                    "which is the fallback rung H2 kept whole for one release. "
+                    "The ROM's own loop is the default and this run is not "
+                    "using it\n");
     }
     return v;
 }
