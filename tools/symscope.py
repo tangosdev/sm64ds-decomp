@@ -34,14 +34,15 @@ symbols of the modules that can be resident when this module is: the module
 itself, plus arm9, itcm and dtcm, which are always loaded. The index is built
 per module from `config/arm9/**/symbols.txt`, never flattened.
 
-  WRONG-MODULE   every definition of the name lives in an overlay whose address
-                 span overlaps this module's, so the named function can never be
-                 in memory alongside the caller. This is a wrong symbol, full
-                 stop. Where config records a relocation for the site, the report
-                 prints the symbol config actually targets, which is the fix.
+  WRONG-MODULE   `overlay_residency.possible()` rules out every module that
+                 defines the name, so the named function can never be in memory
+                 alongside the caller. This is a wrong symbol, full stop. Where
+                 config records a relocation for the site, the report prints the
+                 symbol config actually targets, which is the fix.
 
-  CROSS-OVERLAY  the name resolves only in overlays whose spans do not overlap
-                 this module's. Disjoint overlays can be co-resident, so the
+  CROSS-OVERLAY  `overlay_residency.possible()` does not rule out at least one
+                 module that defines the name (and it is not this module or an
+                 always-resident one). Co-residency is possible, so the
                  reference may be legitimate; reported for eyes, not failed.
                  Each site is cross-checked against config's recorded destination
                  (including the plural `overlays(2,7)` spelling dsd uses for an
@@ -50,12 +51,48 @@ per module from `config/arm9/**/symbols.txt`, never flattened.
                  as a count, and only the disagreeing remainder is listed. A
                  disagreeing site is usually an addend (symbol+offset resolves
                  away from the symbol's own address), which is reloc_audit.py's
-                 domain, but it is where a wrong name hides when the span test
-                 alone cannot condemn it.
+                 domain, but it is where a wrong name hides when residency alone
+                 cannot condemn it.
+
+  THE GROUND TRUTH. A raw address-span overlap is a real, provable exclusion --
+  `overlay_residency.py`'s E2 cites `LoadOverlay` (src/LoadOverlay.c), which
+  walks a 12-entry resident table and calls `Crash()` when an incoming
+  overlay's [start, start+code+bss) intersects one already there: the game
+  enforces this itself. But span overlap is not the only fact the ROM gives up,
+  and it is not always the right one -- `dScStarSel_c::Render`'s 11
+  `data_ov000_*` references span-overlap ov003 (ov000 is 0x020aa420..0x020bf4e0,
+  ov003's family starts at 0x020ad660, inside it), yet ov000 is a BOOT-ONLY
+  overlay (E1): the ROM's only `LoadOverlay(0)`/`UnloadOverlay(0)` sites are
+  three consecutive lines in `func_0201a2f8` (src/func_0201a2f8.c:41-43), which
+  unloads it again before any scene runs, so span overlap alone would have
+  passed a caller that could not possibly still see it. `overlay_residency.py`
+  encodes exactly these ROM-proven facts (E1-E6, its own module docstring) and
+  is validated by `python tools/overlay_residency.py --check` against every
+  relocation dsd resolved unambiguously: 0 of 2322 proven calls contradicted.
+  Calling `possible(candidate_module, this_module, this_function)` per owner is
+  therefore the verdict, never a bare span test.
 
 Names no symbols.txt defines at all are eligible.py rule 5's problem and are not
 repeated here. mwccarm's division helpers resolve through the same runtime alias
 table `reloc_audit.py` uses, so `/` and `%` do not read as crossings.
+
+  NO-OBJECT      the file would not compile down to the object this audit reads,
+                 so nothing above ran for its candidates at all -- a coverage gap,
+                 not a verdict. The overwhelmingly common cause is a promoted
+                 consolidated TU: `rombuild.compile_one`'s production path passes
+                 it `compiler_only_policies()` (the manifest's per-symbol
+                 deadstrip/deadstrip-duplicate/deadstrip-data allow-list, keyed by
+                 `config/tu_manifest.d/**/*.json`'s `compiler_only_output`) and
+                 `intact_tu_policies()` (promoted `production_mode: intact-object`
+                 entries) so `_isolate` can strip or admit exactly the RTTI/vtable
+                 content the byte gate itself licenses before the text-only
+                 multi-symbol check (`objisolate.isolate_many`) runs. Build these
+                 same two policy dicts once here and pass them through, or every
+                 multi-function TU whose compiled object still carries an
+                 unlicensed `.data` section (a `_ZTI`/`_ZTS`/`_ZTV` record the
+                 byte gate discards or admits by manifest) fails isolation and
+                 every candidate in that file goes unaudited -- the exact gap
+                 that hid crossing 21 (`d_a_pg_mthr.cpp`) from this tool.
 
 Usage:
     python tools/symscope.py                    # audit every enrolled source
@@ -75,6 +112,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 
 import objisolate as OI                     # noqa: E402
+import overlay_residency as OR              # noqa: E402
 import reloc_audit as RA                    # noqa: E402
 import relocs as R                          # noqa: E402
 import rombuild as RB                       # noqa: E402
@@ -168,7 +206,6 @@ def audit_one(rel, name, addr, size, module, raw, ctx):
                                     "detail": type(e).__name__}]
     dests, _ = RA.object_reloc_dests(raw, name, ctx["name_index"])
     cfgmap = ctx["config_relocs"].get(module, {})
-    spans = ctx["spans"]
     findings = []
     for n in sorted(live):
         dd = ctx["name_defs"].get(n)
@@ -180,9 +217,10 @@ def audit_one(rel, name, addr, size, module, raw, ctx):
         owners = {m for m, _a in dd}
         if module in owners or owners & ALWAYS:
             continue                    # visible where this file links
-        span = spans.get(module)
-        exclusive = {m for m in owners
-                     if span and m in spans and _overlap(span, spans[m])}
+        # Ground-truthed, not numeric: an owner is excluded only when
+        # overlay_residency.possible() -- the ROM's own loader facts (E1-E6),
+        # not a bare address-span overlap -- rules it out for THIS caller.
+        exclusive = {m for m in owners if not OR.possible(m, module, name)}
         sites = []
         if isinstance(dests, list):
             for (off, symname, _m, _a) in dests:
@@ -231,7 +269,9 @@ def audit_file(rel, group, ctx):
     """
     module = group[0][3]
     _r, err, _outcome = RB.compile_one(rel, ctx["vers"], ctx["cache"],
-                                       ctx["init_srcs"], ctx["syms"])
+                                       ctx["init_srcs"], ctx["syms"],
+                                       compiler_only=ctx["compiler_only"],
+                                       intact_tus=ctx["intact_tus"])
     obj = RB.BUILD / pathlib.Path(rel).with_suffix(".o")
     if err or not obj.is_file():
         detail = (err or "object not produced")[:200]
@@ -262,6 +302,12 @@ def main():
     if args.families:
         return 0
 
+    # The same two manifest-derived policy dicts the production build computes
+    # once and threads through every `compile_one` call (rombuild.py main()),
+    # so this audit's compile matches what the byte gate actually licenses
+    # instead of always taking compile_one's bare text-only isolation path --
+    # see the NO-OBJECT section of this module's docstring.
+    enrolled_srcs = RB.enrolled()
     ctx = {
         "spans": spans,
         "name_defs": name_definitions(),
@@ -272,6 +318,8 @@ def main():
         "cache": RBK.ObjectCache(RB.BUILD / "objcache", REPO),
         "init_srcs": RB.init_section_sources(),
         "syms": RB.enrolled_symbols(),
+        "compiler_only": RB.compiler_only_policies(enrolled_srcs),
+        "intact_tus": RB.intact_tu_policies(enrolled_srcs),
     }
     want = ({pathlib.PurePath(f).as_posix() for f in args.files}
             if args.files else None)
