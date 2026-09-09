@@ -218,9 +218,9 @@ int daObjMarioCap_c::InitResources()
     }
 
     /* The second materialised param1 read-modify-write, at +0x448; see the
-       first one in case 14 for the mechanism. Measured: with both casts 0 of
-       306 words differ, with neither the function is 8 bytes longer than the
-       ROM. */
+       first one in case 14 for the mechanism. Measured: with both casts the
+       candidate is 0x4c8 and 0 of 306 words differ; with neither it is 0x4d0,
+       and over the shared prefix 98 of 308 differ. */
     param1 = (u32)(volatile u32)param1 & 0xfff;
     return 1;
 }

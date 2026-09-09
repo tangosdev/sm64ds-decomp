@@ -56,8 +56,9 @@ int RollingIronBall::InitResources()
        offset folded into both accesses: `ldr r0, [r4, #8]` / `lsr r0, r0, #4`
        / `str r0, [r4, #8]`. Any spelling that makes the two sides textually
        different reaches the folded form. Same residue, same lever, as
-       src/_ZN4Door13InitResourcesEv.c. Measured: with the cast 0 of 227 words
-       differ, without it 3 plus the shifted tail. */
+       src/_ZN4Door13InitResourcesEv.c. Measured: with the cast the candidate is
+       0x38c and 0 of 227 words differ; without it 0x390, and over the shared
+       prefix 186 of 228 differ. */
     param1 = (u32)(volatile u32)param1 >> 4;
     kind = mVariant;
 

@@ -5312,3 +5312,77 @@ HOW TO SEE IT BEFORE THE LINK DOES: `tools/tubuild.py undefinable_alias_names()`
 every name whose only symbols.txt homes are size-0 rows inside a carved-out range. It was
 `{__end__catch, __cxa_vec_cleanup, _deq}` when the trap fired; after both renames only
 `_deq` (arm9 itcm 0x01ff9d40) is left, and no object in a full stock build imports it.
+
+## 6ca. Under 2004/b56 the member RMW materialises by DEFAULT, and the fold is what you have to reach for; two identical lvalue spellings are the trigger (2026-09-09, run link100 lane MATCH3)
+
+Section 6ag measured the first-access-fold family on the 24 builds we had at the time and
+concluded the opposite of what 2004/b56 does: "every mwccarm we have re-folds that temp
+unconditionally at O1+", so the launder family existed to FORCE materialisation. That
+sentence is still true of those builds. It is false of `2004/b56`, which is the recovered
+CW-for-NITRO-era build the tree now pins, and the sign flip matters because the residue it
+produces looks like a size bug rather than an addressing one.
+
+MEASURED. Minimal probe, `-O4,p -enum int -lang c99 -char signed -interworking
+-proc arm946e -gccext,on`, `struct Obj { struct Base base; ... }` with `u32 param1` at
+offset 8:
+
+```c
+self->base.param1 = self->base.param1 >> 0x10;   /* add r2,r0,#8 / ldr r1,[r2] / lsr / str r1,[r2] */
+```
+
+2004/b56 value-numbers the two occurrences of the lvalue together, materialises the
+address once and uses it for both halves. That is 4 bytes longer than the folded
+`ldr r1,[r0,#8] / lsr / str r1,[r0,#8]` the ROM emits at these three sites, and the extra
+instruction pushes every later `ldr [pc,#N]` 4 bytes further from its pool word, so the
+whole tail of the function reads as mismatched and the growth reads as pool growth. It is
+not pool growth. Count the pool words on both sides before believing that: on
+daObjMarioCap_c::InitResources both pools are 25 words and the 8 bytes were two extra
+instructions, 0x2b4 apart.
+
+THE TRIGGER IS TEXTUAL IDENTITY, NOT THE READ-MODIFY-WRITE. Everything that keeps the two
+sides spelled the same still materialises; anything that makes them different folds.
+Measured, same probe, 2004/b56:
+
+| spelling | result |
+|---|---|
+| `x.f = x.f >> n` | materialised |
+| `x.f >>= n` | materialised |
+| `t = x.f; x.f = t >> n` (temp either way round) | materialised |
+| `T *p = &x.f; *p = *p >> n` | materialised |
+| `T *b = &x.base; x.base.f = b->f >> n` | materialised |
+| `((Base *)&x)->f = ((Base *)&x)->f >> n` (both sides cast) | materialised |
+| `x.f = (u32)(volatile u32)x.f >> n` (CVCAST on the read) | **folded** |
+| `x.f = (u32)(unsigned long long)x.f >> n` (WIDEN on the read) | **folded** |
+| `x.f = ((Base *)&x)->f >> n` (one side cast) | **folded** |
+| `((Base *)&x)->f = x.f >> n` (the other side cast) | **folded** |
+| `*(T *)&x.f = x.f >> n` | **folded** |
+| `x.f = ((volatile Obj *)&x)->base.f >> n` | **folded** |
+
+C++ inheritance does not help: `param1 = param1 >> n` inside a method of a derived class,
+with the field inherited, materialises exactly like the C nested-member spelling, so a
+`.c` to `.cpp` conversion is not the lever here.
+
+THE u64 MASK IS NOT INTERCHANGEABLE WITH THE OTHER LAUNDERS AT THIS SITE. On the probe
+`(EXPR & 0xFFFFFFFFFFFFFFFFULL)` folds like the rest, but on the real function it left 8
+of 191 words differing: the 64-bit promotion perturbs the surrounding schedule. CVCAST is
+the one to reach for first, and it is also the one `tools/delaunder.py` re-tests
+automatically (idiom name CVCAST), so a future compiler that folds without help will show
+these sites as removable rather than leaving them as unexplained casts.
+
+WHERE IT LANDED. Three `InitResources` bodies carried this residue and nothing else, all
+three matched by respelling the read and nothing else:
+
+  * `Door::InitResources`, ov100 0x021455a0 0x2fc -- one site (`param1 >> 0x10`). Before:
+    0x300, 156 of 192 words differing over the shared prefix. After: 0 of 191.
+  * `RollingIronBall::InitResources`, ov100 0x02142de0 0x38c -- one site (`param1 >> 4`).
+    Before: 0x390, 186 of 228. After: 0 of 227.
+  * `daObjMarioCap_c::InitResources`, ov002 0x020b86d0 0x4c8 -- two sites
+    (`param1 -= 0xa` at +0x37c and `param1 &= 0xfff` at +0x448). Before: 0x4d0, 98 of 308.
+    After: 0 of 306.
+
+All three are `fBase_c::param1` at offset 8, unpacked into fields and then shifted or
+masked down in place, which is why one spawn-parameter idiom produced the same residue in
+three unrelated classes. 6ag's closing advice ("do not spend model time hunting
+formulations for materialized-RMW residues") applies to the pre-2004 builds it was
+measured on; on 2004/b56 the inverse residue is cheap, and the table above is the whole
+search.

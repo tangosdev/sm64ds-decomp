@@ -115,8 +115,9 @@ int _ZN4Door13InitResourcesEv(struct Door *self)
        keeps the offset folded into both accesses: `ldr r1, [r5, #8]` /
        `lsr` / `str r1, [r5, #8]`. Any spelling that makes the two sides
        textually different reaches the folded form; this is the one the tree
-       already has a name and a gate for. Measured: with the cast 0 of 191
-       words differ, without it 9. */
+       already has a name and a gate for. Measured: with the cast the candidate
+       is 0x2fc and 0 of 191 words differ; without it 0x300, and over the
+       shared prefix 156 of 192 differ. */
     self->base.param1 = (u32)(volatile u32)self->base.param1 >> 0x10;
 
     if (!(data_ov100_02148710 & 1)) {
