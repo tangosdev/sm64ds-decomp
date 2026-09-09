@@ -939,11 +939,30 @@ extern "C" int func_ov004_020ae0a4(char *c);
 extern "C" int func_ov004_020ae06c(char *c);
 extern "C" int func_ov004_020ae03c(char *c);
 
+/* CDECL SINCE RUNG G2(a) (run link100, lane R3G), and the paragraph above --
+ * "The port dispatches a graphics-block word as __fastcall (this in ecx),
+ * which is what scene_boot.cpp's ti_gc0..ti_gc3 are and what its Slot2 typedef
+ * says, while the four src TUs are ordinary cdecl functions taking the block
+ * as their argument. That is the whole of the difference and the whole of what
+ * these bridge." -- describes the world before the ROM's own frame loop ran.
+ *
+ * IT IS NOT THE PORT THAT DISPATCHES THIS TABLE ANY MORE. Under
+ * SM64DS_ROM_LOOP the frame ends in IRQ::VBlankHandler, and the ROM's own
+ * src/func_02019144.c and src/func_02019100.c are what call slots 2 and 3 --
+ * as `p->vt->func8(p)` and `o->vt[3](o)`, both ordinary cdecl function
+ * pointers. A __fastcall face in those slots is entered by a cdecl call, which
+ * worked only because MSVC happened to leave the receiver in ecx across the
+ * call setup (the disassembly is quoted above scene_boot.cpp's ti_gc0). So
+ * these four lose the adapter rather than gain a second one: they are the
+ * convention the callers declare, and hal/scene_boot.cpp's graph_block_word --
+ * the port's own beat -- calls them the same way. Nothing else reads these
+ * four words. */
+extern "C" void port_r3g_gc_enter(unsigned slot, void *self);
 namespace {
-int __fastcall mg_gc0(void *c, void *) { return func_ov004_020ae0d4((char *)c); }
-int __fastcall mg_gc1(void *c, void *) { return func_ov004_020ae0a4((char *)c); }
-int __fastcall mg_gc2(void *c, void *) { return func_ov004_020ae06c((char *)c); }
-int __fastcall mg_gc3(void *c, void *) { return func_ov004_020ae03c((char *)c); }
+int mg_gc0(void *c) { port_r3g_gc_enter(0, c); return func_ov004_020ae0d4((char *)c); }
+int mg_gc1(void *c) { port_r3g_gc_enter(1, c); return func_ov004_020ae0a4((char *)c); }
+int mg_gc2(void *c) { port_r3g_gc_enter(2, c); return func_ov004_020ae06c((char *)c); }
+int mg_gc3(void *c) { port_r3g_gc_enter(3, c); return func_ov004_020ae03c((char *)c); }
 }  // namespace
 
 static void port_scene_mg_gc_seat(void)

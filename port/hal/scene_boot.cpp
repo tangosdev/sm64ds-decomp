@@ -3272,11 +3272,59 @@ static int  __fastcall ti_init_noop(void *, void *)
 { ++g_ti_init_skipped; return 1; }
 static void *__fastcall ti_d2(void *s, void *) { return func_ov007_020cc028((int *)s); }
 static void *__fastcall ti_d0(void *s, void *) { return func_ov007_020cc070((int *)s); }
-/* graphCallback_c */
-static int __fastcall ti_gc0(void *, void *)  { return func_ov007_020cc110(); }
-static int __fastcall ti_gc1(void *s, void *) { return _ZN5Scene14GraphCallback1Ev(s); }
-static int __fastcall ti_gc2(void *s, void *) { return func_ov007_020cc0f4(s); }
-static int __fastcall ti_gc3(void *s, void *) { return _ZN5Scene14GraphCallback3Ev(s); }
+/* graphCallback_c, AND THE ONE CONVENTION IN THIS FILE THAT IS CDECL (run
+   link100, rung G2(a), lane R3G).
+ *
+ * EVERY OTHER FACE ABOVE IS __fastcall, because every other table in this file
+ * is dispatched by THIS PORT -- hal/actor_vtables.cpp's convention, this in
+ * ecx and a dummy for ARM's r1. These four are different, and the difference
+ * is not a preference: the graphics-block table has FOUR DISPATCH SITES IN THE
+ * ROM'S OWN C, and under SM64DS_ROM_LOOP the ROM's are the ones that run.
+ *
+ *     src/func_02019144.c   UnkVt::func8   `p->vt->func8(p)`     slot 2
+ *     src/func_02019100.c   VFN vt[3]      `o->vt[3](o)`         slot 3
+ *     src/func_02019390.c / src/func_02019404.c   slots 0 and 1
+ *
+ * All four declare the word as an ORDINARY FUNCTION POINTER taking the block --
+ * `int (*)(UnkObj *)`, `void (*)(struct Obj *)` -- which on this host is cdecl.
+ * So a __fastcall face in these slots is entered by a cdecl call, and until
+ * this rung it worked BY ACCIDENT. Disassembled out of the linked binary
+ * (dumpbin /disasm, walk_window.exe built at this lane's G2 gate):
+ *
+ *     006887A0  mov   ecx, ds:[01792BD8h]   ; ecx = data_0209d4a8
+ *     006887A6  test  ecx, ecx
+ *     006887A8  je    006887BD
+ *     006887AA  mov   eax, [ecx]            ; the vptr
+ *     006887AC  push  ecx                   ; the cdecl argument
+ *     006887AD  mov   eax, [eax+8]          ; slot 2
+ *     006887B0  call  eax
+ *     006887B2  add   esp, 4                ; the CALLER cleans up
+ *
+ * MSVC happened to leave the receiver in ecx across the call setup, so the
+ * __fastcall callee read the right pointer out of the register the caller
+ * never meant to pass -- a REGISTER RIDE-THROUGH, the class the house rules
+ * name, and one that survives only until a register allocator disagrees: /Od,
+ * one added statement in func_02019144, or a different MSVC. func_02019100's
+ * dispatch at 00688780 is the identical shape. The stack stayed balanced
+ * either way (a __fastcall callee taking both arguments in registers pops
+ * nothing, and the cdecl caller cleans its own push), which is exactly why
+ * nothing ever went red.
+ *
+ * SO THE FACES ARE SPELLED THE WAY THE CALLERS DECLARE THEM. One argument,
+ * cdecl, and graph_block_word below calls them the same way, so the port's own
+ * beat and the ROM's four dispatchers now agree by construction instead of by
+ * luck. hal/scene_mg.cpp's mg_gc0..3 -- the same table for every minigame --
+ * are respelled in the same commit and for the same reason.
+ *
+ * r3g_gc_enter is the COUNTED PROOF the rung owes: every entry records its
+ * slot and checks the receiver it was handed against data_0209d4a8, so a run's
+ * census says how many times each slot was entered and how many of those
+ * arrived with the wrong block. */
+extern "C" void port_r3g_gc_enter(unsigned slot, void *self);
+static int ti_gc0(void *s)  { port_r3g_gc_enter(0, s); return func_ov007_020cc110(); }
+static int ti_gc1(void *s)  { port_r3g_gc_enter(1, s); return _ZN5Scene14GraphCallback1Ev(s); }
+static int ti_gc2(void *s)  { port_r3g_gc_enter(2, s); return func_ov007_020cc0f4(s); }
+static int ti_gc3(void *s)  { port_r3g_gc_enter(3, s); return _ZN5Scene14GraphCallback3Ev(s); }
 
 /* The registry named in the block comment above. One entry today; an array
    because the next seated scene class adds a row rather than a special case,
@@ -3313,6 +3361,27 @@ void port_graph_block_register(void *vt)
    line was written. */
 extern "C" unsigned char data_0209d4a8[4];
 
+/* RUNG G2(a)'s COUNTER. Every graphics-block face entry, by slot, with the
+   receiver it was handed checked against the block pointer the ROM's own
+   dispatchers load. `wrong` is the number that arrived holding something else,
+   which is what a convention mismatch looks like from inside the callee: a
+   nonzero there is the finding, and a zero over a counted run is the proof
+   that the four slots are entered with the block. Read by the scene loop's
+   census at the bottom of this file.
+
+   C LINKAGE because BOTH seat files feed it: the title's four faces below and
+   hal/scene_mg.cpp's mg_gc0..3, which are the same table for all thirty
+   minigame scenes. A counter that only one of the two fed would report 0/0/0/0
+   on a minigame row and read as "the ROM never dispatched it" when what it
+   measured was its own coverage. */
+static unsigned g_r3g_gc_hits[4];
+static unsigned g_r3g_gc_wrong;
+extern "C" void port_r3g_gc_enter(unsigned slot, void *self)
+{
+    if (slot < 4) ++g_r3g_gc_hits[slot];
+    if (self != *(void **)data_0209d4a8) ++g_r3g_gc_wrong;
+}
+
 /* THE ONE DISPATCH, shared by every beat that has one. `word` is the block
    vtable's own index, which is also the ROM's: func_02019100 takes vt[3],
    func_02019144 takes vt[2], func_02019390 takes vt[0] and func_02019404 takes
@@ -3332,8 +3401,12 @@ static int graph_block_word(unsigned word)
     void **vt = *(void ***)p;
     for (unsigned i = 0; i < g_gc_seated_n; ++i) {
         if (g_gc_seated[i] != (void *)vt) continue;
-        typedef int(__fastcall * Word)(void *, void *);
-        return ((Word)vt[word])(p, 0);
+        /* CDECL, ONE ARGUMENT, since rung G2(a): the ROM's own four dispatch
+           sites declare this word `int (*)(UnkObj *)` and under SM64DS_ROM_LOOP
+           they are what calls it. This port's beat calls it the same way rather
+           than a second way. Read the block above ti_gc0. */
+        typedef int(*Word)(void *);
+        return ((Word)vt[word])(p);
     }
     return 1;
 }
@@ -7157,17 +7230,147 @@ void port_rom_frame_begin(const char *loop);
 void port_rom_frame_phase6(void);
 int  port_rom_frame_checked(int host, const char *reader);
 void port_rom_frame_report(void);
+/* the unchecked read, for rung G1's census and watcher lines below: they run
+   at the frame FOOT, after port_rom_frame_phase6() has already stepped the ROM
+   counter past the loop's own `frame`, so the checked accessor would refuse
+   the read on its own cross-check. */
+int  port_rom_frame(void);
 }
 
 /* THE HEADLESS RUN, which is the composition of the three above and nothing
    else. Every statement a scene run made before the split still runs, in the
    same order, with hwnd null, zoom 1 and the game ticking on every frame. */
+/* ---- RUNG G1: THE SCENE LOOP'S PHASE 7 (run link100, lane R3G) ------------
+
+   WHAT THIS CLOSES. Lane R3E put the ROM's own phase 7 behind SM64DS_ROM_LOOP
+   and lane R3F made it green on the level path; a whole battery then ran with
+   the knob exported and came back ALL GREEN, and R3F proved how much of that
+   green was a measurement: battery.py's scene_env inherits the knob, so all 37
+   scene rows CARRIED it, but the only readers of port_rom_loop_enabled() were
+   in tests/walk_window.cpp on the LEVEL loop. This loop had none, so those 37
+   rows ran the same program they run with the knob off and their green said
+   nothing about the handover. That is what these lines fix: with the knob on,
+   a scene frame now ends the way the cartridge ends it.
+
+   THE SHAPE IS THE LEVEL LOOP'S, statement for statement (tests/walk_window
+   .cpp, "RUNG E1"): the flag func_020197b8.c:53 raises between the swap and the
+   wait goes up, the frame foot census and the heap watcher read what the frame
+   ended holding, phase 7 is func_0201a4bc's whole body -- OS_SleepThread(
+   data_0209d500), the reschedule onto the ROM's idle thread, its
+   CP15::WaitForInterrupt, the VBlank edge, IRQ::VBlankHandler's own wake -- and
+   the flag comes down the instant the sleep returns (func_020197b8.c:56).
+
+   TWO DIFFERENCES FROM THE LEVEL LOOP, both stated rather than silent:
+
+     - THE SWAP IS NOT ADDED HERE. The level loop calls func_020190b8() and
+       ntr::gx_swap_apply() at its foot (rung R3b step BSWAP); this loop never
+       has, and adding it is a change to what a scene frame DOES rather than to
+       when it ends. Out of this rung's scope: G1 is the handover, not the
+       reconciliation of the two loops' bodies.
+
+     - THE SOUND FRAME STAYS WHERE IT IS, inside port_scene_tick, gated on
+       tick_game. Rung E2 duty 1 moved the LEVEL loop's sound to phase 9's
+       position under its own knob; this loop's sound tick is the scene's, it
+       has a pause gate the level's has not, and moving it is a second rung's
+       measurement, not this one's.
+
+   EVERYTHING IS GATED ON THE KNOB, so with SM64DS_ROM_LOOP unset -- and with
+   SM64DS_ROM_LOOP=0 after the default flips -- this loop is byte for byte the
+   loop it was: the flag is not written, nothing sleeps and the census does not
+   run. That is what makes the fallback an exact fallback. */
+extern "C" int port_rom_loop_enabled(void);
+/* func_0201a4bc's whole body is one statement, OS_SleepThread(data_0209d500),
+   and src/func_02057e34.c -- the idle thread it reschedules onto -- is
+   `IRQ::Enable(); for(;;) CP15::WaitForInterrupt();`. The declarations are
+   tests/walk_window.cpp's own, verbatim, so the two loops cannot drift on a
+   spelling. */
+extern "C" void OS_SleepThread(unsigned short *q);
+extern "C" unsigned char data_0209d500[4];
+/* THE "THE LOOP IS WAITING" FLAG, func_020197b8.c:53-56. IRQ::VBlankHandler's
+   wake is gated on it AND on data_0209d514 >= data_0208ee44
+   (src/_ZN3IRQ13VBlankHandlerEv.c:15), so both words are in the census below:
+   a run whose divider is higher than the VBlank count it accumulates would
+   never be woken and would report its sleeps as starvation wakes instead. */
+extern "C" unsigned char data_0209d4f0[4];
+extern "C" unsigned char data_0209d514[4];
+extern "C" int data_0208ee44;
+/* Memory::defaultHeapPtr (hal/heap_vtable.cpp:80). R3E's watcher: it was a
+   30000000 -> 00000000 transition inside the ROM's VBlank handler that made
+   rung E1 red on levels, and the same bracket is what says whether anything
+   under the knob does it again on a scene. */
+extern "C" void *data_020a0ea0;
+
+static int   r3g_sleeps;
+static void *r3g_heap_last = (void *)(size_t)-1;
+static void *r3g_blk_last  = (void *)(size_t)-1;
+
+static void r3g_heap_watch(const char *where, int frame)
+{
+    if (data_020a0ea0 == r3g_heap_last) return;
+    std::fprintf(stderr, "[r3g] Memory::defaultHeapPtr %p -> %p at %s, frame %d\n",
+                 r3g_heap_last == (void *)(size_t)-1 ? 0 : r3g_heap_last,
+                 data_020a0ea0, where, frame);
+    std::fflush(stderr);
+    r3g_heap_last = data_020a0ea0;
+}
+
+/* THE CENSUS RUNG G2(a) READS. R3E's four reads, plus the one question the
+   level path could not answer because its block pointer is null: is the vtable
+   behind this scene's block one this port has SEATED with host thunks (in which
+   case the ROM's own func_02019144 and func_02019100 will now enter them), or
+   is it still holding the raw DS code words the mount wrote? graph_block_word
+   above answers 1 and dispatches nothing for an unseated table; the ROM's two
+   dispatchers have no such test, so the answer is the whole hazard. Printed on
+   every TRANSITION of the block pointer rather than once, because
+   dScDSMT_c::InitResources seats it during the bring-up and a scene that
+   re-seats or clears it mid-run is exactly what a once-only census would
+   miss. */
+static void r3g_census(const char *when, int frame)
+{
+    void *blk = *(void **)data_0209d4a8;
+    if (blk == r3g_blk_last) return;
+    r3g_blk_last = blk;
+    void **vt = 0;
+    unsigned w[4] = {0, 0, 0, 0};
+    int seated = 0;
+    if ((size_t)blk > 0x1000u) {
+        vt = *(void ***)blk;
+        if ((size_t)vt > 0x1000u)
+            for (int i = 0; i < 4; ++i)
+                w[i] = (unsigned)(size_t)vt[i];
+        for (unsigned i = 0; i < g_gc_seated_n; ++i)
+            if (g_gc_seated[i] == (void *)vt) seated = 1;
+    }
+    std::fprintf(stderr,
+                 "[r3g] census at %s, frame %d: data_0209d4a8=%p vptr=%p "
+                 "vt[0..3]=%08x %08x %08x %08x  data_0209d514=%d "
+                 "data_0208ee44=%d  seated-by-this-port=%s\n",
+                 when, frame, blk, (void *)vt, w[0], w[1], w[2], w[3],
+                 *(const int *)data_0209d514, data_0208ee44,
+                 seated ? "YES" : "no");
+    std::fflush(stderr);
+}
+
 extern "C" int port_scene_run(void)
 {
     const int rc = port_scene_begin(nullptr, 1);
     if (rc)
         return rc;
     port_rom_frame_begin("scene loop (headless)");
+    /* THE BANNER IS THE REACH PROOF. port_rom_loop_enabled() prints its one
+       line on its FIRST read, so a scene row's log carrying it is that row
+       saying the knob got here -- which is precisely what the 37 rows of R3F's
+       knob-on battery could not say. Read once, before the loop, so the line
+       lands ahead of the frames rather than inside them. */
+    const int rom_loop = port_rom_loop_enabled();
+    if (rom_loop) {
+        std::fprintf(stderr, "[r3g] the scene loop honours SM64DS_ROM_LOOP: "
+                             "phase 7 of every frame below is the ROM's own "
+                             "sleep, and IRQ::VBlankHandler's wake is what ends "
+                             "the frame\n");
+        std::fflush(stderr);
+        r3g_census("the scene loop's first frame foot", 0);
+    }
     for (int frame = 0; frame < scn_frames; ++frame) {
         /* the frame number the scene's own work reads is the ROM's, checked
            against this loop's counter -- the windowed loop's :6889 line. */
@@ -7177,6 +7380,38 @@ extern "C" int port_scene_run(void)
            phase-6 body runs -- after the frame's work, before the frame ends,
            exactly as the windowed loop runs it at :6943. */
         port_rom_frame_phase6();
+        if (rom_loop) {
+            /* func_020197b8.c:53, the flag up between the swap and the wait.
+               The ROM raises it inside IRQ::DisableIRQs(1)/EnableIRQs; this
+               host has no interrupt to race with here, so the bracket is left
+               out rather than faked -- tests/walk_window.cpp says the same
+               thing about the same write at its own frame foot. */
+            data_0209d4f0[0] = 1;
+            r3g_census("the scene frame foot", port_rom_frame());
+            r3g_heap_watch("the scene frame foot", port_rom_frame());
+            ++r3g_sleeps;
+            OS_SleepThread((unsigned short *)data_0209d500);
+            r3g_heap_watch("the scene frame foot, after the ROM's sleep",
+                           port_rom_frame());
+            /* func_020197b8.c:56 -- and down the instant the wait returns. */
+            data_0209d4f0[0] = 0;
+        }
+    }
+    if (rom_loop) {
+        r3g_census("the scene loop's last frame foot", port_rom_frame());
+        std::fprintf(stderr, "[r3g] G1: phase 7 was the ROM's own sleep on %d "
+                             "of %d scene frames (SM64DS_ROM_LOOP)\n",
+                     r3g_sleeps, scn_frames);
+        std::fprintf(stderr, "[r3g] G2(a): graphics-block face entries by slot "
+                             "0/1/2/3 = %u/%u/%u/%u, entered with the WRONG "
+                             "block %u time(s). Slots 2 and 3 are what the "
+                             "ROM's own func_02019144 and func_02019100 "
+                             "dispatch from inside IRQ::VBlankHandler; slot 0 "
+                             "is func_02019390's, which this port calls at "
+                             "phase 2 itself.\n",
+                     g_r3g_gc_hits[0], g_r3g_gc_hits[1], g_r3g_gc_hits[2],
+                     g_r3g_gc_hits[3], g_r3g_gc_wrong);
+        std::fflush(stderr);
     }
     port_rom_frame_report();
     return port_scene_finish(scn_frames);

@@ -101,6 +101,43 @@ static int crosscheck_on(void)
     return g_on;
 }
 
+/* ---- THE ROM-LOOP KNOB, AND WHY IT LIVES HERE (run link100, lane R3G) -----
+
+   SM64DS_ROM_LOOP is rung E1's knob: with it on, phase 7 of the frame is the
+   ROM's own sleep and IRQ::VBlankHandler's wake is what ends the frame. Lane
+   R3E wrote the reader into tests/walk_window.cpp, beside the level loop's
+   phase-7 point, because that loop was the only reader there could be.
+
+   RUNG G1 GIVES hal/scene_boot.cpp's port_scene_run THE SAME PHASE 7, and that
+   file is compiled into smoke_player, which does not compile
+   tests/walk_window.cpp at all -- so a reader over there would have answered
+   with an unresolved external at link time. This is the same move rung R3b step
+   B0 made with the frame state itself, for the identical reason and at the
+   identical cost: rom_frame.cpp is host code with no matched TU behind it and
+   it is already enrolled in all three targets that compile its callers, so
+   moving the accessor here changes no count.
+
+   NOTHING ABOUT THE KNOB CHANGES WITH THE FILE IT LIVES IN. The spelling is
+   still the BOOTR1 pattern (any value but "0" is on), the banner is still
+   printed once on the first read -- which is what makes a run's log say whether
+   the knob reached the loop that is running -- and tests/walk_window.cpp's five
+   readers still read exactly this function. */
+int port_rom_loop_enabled(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_ROM_LOOP");
+        v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
+        if (v)
+            std::fprintf(stderr, "[r3e] SM64DS_ROM_LOOP=1: phase 7 is the ROM's own "
+                    "sleep on every frame (func_0201a4bc -> OS_SleepThread"
+                    "(data_0209d500) -> the idle thread -> the wait), so "
+                    "IRQ::VBlankHandler's wake branch is what ends the frame "
+                    "and func_02019144 is what commits the display\n");
+    }
+    return v;
+}
+
 /* A FRAME LOOP IS STARTING. Both of tests/walk_window.cpp's loops call this
    with their own name, so a run that plays a scene and then falls through into
    a level reports two frame accounts rather than one blurred one. */
