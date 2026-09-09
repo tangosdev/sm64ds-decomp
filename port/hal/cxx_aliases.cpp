@@ -1594,7 +1594,17 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:_base_dtor_MovingCylinderClsnWithPos=__ZN18MovingCylinderClsnD2Ev")
 #pragma comment(linker, "/alternatename:_vtbl_MovingCylinderClsnWithPos=__ZTV25MovingCylinderClsnWithPos")
 /* ov002's Enemy constructor is func_ov002_020aed98 -- see the header of that
-   entry in slice_gate16.txt for why the file named _ZN5EnemyC2Ev is ov007's. */
+   entry in slice_gate16.txt for why the file named _ZN5EnemyC2Ev is ov007's.
+
+   AND THIS FALLBACK IS DEAD, recorded from Andrew's second review of PR #2474.
+   src/_ZN5EnemyC2Ev.cpp defines _ZN5EnemyC2Ev, so the alias is never applied;
+   and nothing defines func_ov002_020aed98 -- the name is this port's own and
+   appears in no config symbols.txt, which is the same fact slice_gate16.txt
+   states in prose. If that src TU ever left the slice, the fallback would name
+   a symbol that does not exist and the link would fail instead of falling back.
+   main's tools/port_refcheck.py reports this line for exactly that reason.
+   Repairing it means changing an identifier (seat ov002's constructor under a
+   name something defines, or drop the pragma), so it is recorded here. */
 #pragma comment(linker, "/alternatename:__ZN5EnemyC2Ev=_func_ov002_020aed98")
 #pragma comment(linker, "/alternatename:?data_ov002_0211025c@@3PAHA=_data_ov002_0211025c")
 /* the same per-mangling faces, one round further into the 1-up's chain */
