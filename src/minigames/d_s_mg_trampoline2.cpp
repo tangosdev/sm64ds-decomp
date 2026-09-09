@@ -829,7 +829,8 @@ void func_ov006_02123c78(char *c) {
 // @symbol func_ov006_02123bf4
 extern "C" void func_ov006_02123bf4(char *c)
 {
-    func_ov006_020cedf0(c)->St_Null_Init();
+    func_ov006_020cedf0(c);
+    func_ov006_020cac30();
     if (_Z14ApproachLinearRiii((int *)(c + 0x7b84), 0, 1) == 0)
         return;
     if (func_ov006_020ca7b8() == 0)
