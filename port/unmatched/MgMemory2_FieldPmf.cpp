@@ -203,13 +203,16 @@ int  _Z15ApproachLinear2Rsss(short &v, short a, short b);
 short Vec3_HorzAngle(const void *a, const void *b);
 void _Z11UpdateAngleRssis(short *p, short d, int n, short lim);
 extern short data_ov006_0212b89c[];
-extern int   data_ov006_0213ac78[2];
-/* src/func_ov006_020c07e8.cpp declares this one OUTSIDE its extern "C" block,
-   so it mangles as a C++ global and the ov006 mount's plain C definition does
-   not satisfy it -- the ordinary name-spelling defect this port carries
-   /alternatename rows for. The host copy declares it at C linkage instead,
-   which is the same fix without an alias. */
-extern struct MemVector3 data_ov006_0212b890;
+/* data_ov006_0213ac78 WAS DECLARED HERE as `extern int [2]`, for the by-value
+   idle test in the host copy of func_ov006_020c07e8. Run link100 lane PMFB8
+   gate 3 seats that row and the host copy is gone, so the record is declared
+   ONCE, below, as the MgPmf the seat writes -- two spellings of one symbol in
+   one TU do not compile and the seat's is the one that is still read. */
+/* src/func_ov006_020c07e8.cpp declares data_ov006_0212b890 OUTSIDE its
+   extern "C" block, so it mangles as a C++ global and the ov006 mount's plain C
+   definition does not satisfy it. With the host copy retired the reference that
+   needed the C-linkage declaration is gone too, and what remains is the matched
+   TU's own decorated spelling, bound by the /alternatename row below. */
 
 /* host-copied below and called from above its own definition */
 void func_ov006_020c07e8(void *x);
@@ -315,11 +318,25 @@ void func_ov006_020c07e8(void *x);
 
 #pragma comment(linker, "/alternatename:?data_ov006_0212b89c@@3PAFA=_data_ov006_0212b89c")
 
+/* AND ONE MORE, run link100 lane PMFB8 gate 3, for the same reason one symbol
+   over. src/func_ov006_020c07e8.cpp declares `extern Vector3
+   data_ov006_0212b890;` outside its extern "C" block, so MSVC spells the
+   reference ?data_ov006_0212b890@@3UVector3@@A while the ov006 mount defines
+   the plain C name. Read off that TU's own /FAsc EXTRN list before the link
+   (runs/link100/out/PMFB8/emit_g3_out.txt) and the RHS checked present in
+   walk_window.map. Nothing in the tree defines the LHS. */
+#pragma comment(linker, "/alternatename:?data_ov006_0212b890@@3UVector3@@A=_data_ov006_0212b890")
+
 extern "C" {
 extern MgPmf data_ov006_0213ac48;
 extern MgPmf data_ov006_0213ac50;
 extern MgPmf data_ov006_0213ac58;
 extern MgPmf data_ov006_0213ac60;
+/* run link100 lane PMFB8 gate 3: the +0xb4 field's four, seated below */
+extern MgPmf data_ov006_0213ac68;
+extern MgPmf data_ov006_0213ac70;
+extern MgPmf data_ov006_0213ac78;
+extern MgPmf data_ov006_0213ac88;
 extern MgPmf data_ov006_0213ac80;
 extern MgPmf data_ov006_0213ac90;
 extern MgPmf data_ov006_0213ac98;
@@ -339,6 +356,19 @@ static void __fastcall m4f38_020c0f9c(void *self, void *) { ++g_m4f38_hits; func
 static void __fastcall m4f38_020c11c0(void *self, void *) { ++g_m4f38_hits; func_ov006_020c11c0((char *)self); }
 static void __fastcall m4f38_020c14bc(void *self, void *) { ++g_m4f38_hits; func_ov006_020c14bc((char *)self); }
 static void __fastcall m4f38_020c1760(void *self, void *) { ++g_m4f38_hits; func_ov006_020c1760(); }
+
+/* ---- RUN link100 LANE PMFB8 GATE 3: THE +0xb4 HALF'S TWO FACES -----------
+ * src/func_ov006_020c07e8.cpp is in the link now (port/slice_pmfb8.txt, with
+ * /Zp4 on that one source) and dispatches this field itself. Its emitted side
+ * is `mov eax,[esi] / test eax,eax / mov ecx,[esi+4] / add ecx,esi / call eax`
+ * -- receiver in ecx, ARITY ZERO -- the same shape the eleven above answer, so
+ * the faces are the same shape.
+ * ONE FACE PER CODE WORD, and here that is load-bearing rather than tidy:
+ * 0213ac78 is a BY-VALUE SENTINEL the row reads itself (`if (p[0] == g[0])`),
+ * so both sides of that comparison have to move together, and they do exactly
+ * when a code word maps to one face. Two faces, four records. */
+static void __fastcall mb4_020c0264(void *self, void *) { ++g_m4f38_hits; func_ov006_020c0264((char *)self); }
+static void __fastcall mb4_020c0364(void *self, void *) { ++g_m4f38_hits; func_ov006_020c0364((char *)self); }
 
 typedef void (*SeatFn)(void *);
 
@@ -368,6 +398,12 @@ extern "C" void port_mg_memory2_model_seat(void)
     { &data_ov006_0213aca8, "0213aca8", 0x020c0f9cu, (SeatFn)m4f38_020c0f9c },
     { &data_ov006_0213acb0, "0213acb0", 0x020c11c0u, (SeatFn)m4f38_020c11c0 },
     { &data_ov006_0213acb8, "0213acb8", 0x020c0f9cu, (SeatFn)m4f38_020c0f9c },
+    /* run link100 lane PMFB8 gate 3: the +0xb4 field's four records, two code
+       words, one face each. 0213ac78 is the by-value sentinel. */
+    { &data_ov006_0213ac68, "0213ac68", 0x020c0364u, (SeatFn)mb4_020c0364 },
+    { &data_ov006_0213ac70, "0213ac70", 0x020c0264u, (SeatFn)mb4_020c0264 },
+    { &data_ov006_0213ac78, "0213ac78", 0x020c0364u, (SeatFn)mb4_020c0364 },
+    { &data_ov006_0213ac88, "0213ac88", 0x020c0364u, (SeatFn)mb4_020c0364 },
     };
 
     for (unsigned i = 0; i < sizeof seats / sizeof seats[0]; ++i) {
@@ -407,16 +443,12 @@ static int mem2_field_try(void *self, unsigned code)
     case 0x020b4ff0u: func_ov004_020b4ff0(c); return 1;
     case 0x020b51f0u: func_ov004_020b51f0(c); return 1;
     case 0x020b5288u: func_ov004_020b5288(c); return 1;
-    /* ov006, the model sub-object's +0xb4 field, the only half left. Run
-       link100 lane MGWRITER took the other seven arms out: the +0x00 field's
-       eleven pairs hold host bodies now and func_ov006_020c19d0 dispatches
-       them itself, so no path can present 0x020c0b74, _0ce8, _0df0, _0f9c,
-       _11c0, _14bc or _1760 here again. These two stay because
-       func_ov006_020c07e8 is still a host copy: the seat block above says why
-       (its src TU needs /Zp4 and neither the ROM nor the src guards a null
-       pair at 0x020c07e8, so the guard this file adds is load-bearing). */
-    case 0x020c0264u: func_ov006_020c0264(c); return 1;
-    case 0x020c0364u: func_ov006_020c0364(c); return 1;
+    /* THE OV006 ARMS ARE GONE, run link100 lane PMFB8 gate 3. Lane MGWRITER
+       took the +0x00 field's seven; this gate takes the +0xb4 field's two.
+       src/func_ov006_020c07e8.cpp dispatches that field itself now and its four
+       records hold host faces, so no path can present 0x020c0264 or 0x020c0364
+       here again. What is left is ov004's ten records, whose eight code words
+       are disjoint from both ov006 sets. */
     default:                                  return 0;
     }
 }
@@ -482,44 +514,15 @@ struct MemModelC {
     int   a0f4;                       /* 0xf4 */
 };
 
-/* PORT_HOST_ABI: mwcc pointer-to-member wall, the field-embedded form (an
-   8-byte {code,adj} pair stored INSIDE the object, MSVC's PMF is 4 bytes and
-   strides the layout wrong); section 3 above. Host-copied with MgPmf in the
-   pmf field's place so the rest of the struct's offsets stay true. */
-extern "C" void func_ov006_020c07e8(void *x)
-{
-    MemModelC *c = (MemModelC *)x;
-
-    port_mg_memory2_field_call(c, c->pmf.code, c->pmf.adj);
-
-    _ZN14BlendModelAnim7AdvanceEv((char *)c + 0x18);
-
-    if (c->a0f4 != 0) {
-        MemVector3 t;
-        t.x = data_ov006_0212b890.x;
-        t.y = data_ov006_0212b890.y;
-        t.z = data_ov006_0212b890.z;
-        short d;
-        int ang;
-        ang = Vec3_HorzAngle(&c->v0c8, &t);
-        d = (short)(ang - c->a0ea);
-        if (d < -0x3000) d = -0x3000;
-        else if (d > 0x3000) d = 0x3000;
-        _Z11UpdateAngleRssis(&c->a0f0, d, 8, 0x200);
-
-        {
-            int *p = (int *)(((char *)c) + 0xb4);
-            int *g = data_ov006_0213ac78;
-            if (p[0] == g[0]) {
-                if (p[1] == g[1])
-                    return;
-                if (*(int *)((char *)c + 0xb4) == 0)
-                    return;
-            }
-        }
-        d = (short)(ang - d);
-        _Z11UpdateAngleRssis(&c->a0ea, d, 8, 0x200);
-    } else {
-        _Z11UpdateAngleRssis(&c->a0f0, 0, 8, 0x200);
-    }
-}
+/* HOST COPY RETIRED, run link100 lane PMFB8 gate 3, and the counted-run
+   instrument that made it admissible went with it.
+   src/func_ov006_020c07e8.cpp is in the link (port/slice_pmfb8.txt, /Zp4 on
+   that one source) and reads its own +0xb4 pair. The four records hold the two
+   faces seated above, including the by-value sentinel 0213ac78, so the idle
+   test at the end of that body keeps comparing one host address against
+   itself.
+   THE NULL-PAIR QUESTION IS SETTLED BY MEASUREMENT, not by the guard that goes
+   away with this file's body: gate 3 step A counted every dispatch and every
+   dispatch whose stored pair read {0, ...} across the whole battery, and the
+   result is in runs/link100/out/PMFB8/c07e8_counted.txt. The field is installed
+   before the first dispatch on every row that reaches this body. */

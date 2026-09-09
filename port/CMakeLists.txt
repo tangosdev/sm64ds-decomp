@@ -16175,6 +16175,18 @@ foreach(line IN LISTS SLICE_PMFB8_LINES)
     endif()
     list(APPEND SLICE_PMFB8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# GATE 3. /Zp4 ON ONE SOURCE, MEASURED ON THAT SOURCE AND NOT INHERITED.
+# src/func_ov006_020c07e8.cpp holds its member pointer at the ROM's 0xb4, which
+# is 4 mod 8, and MSVC aligns the eight-byte member to eight: without the option
+# it emits mov ecx,[esi+188] / mov eax,[esi+184] -- 0xbc and 0xb8, FOUR BYTES
+# LATE -- and with it mov ecx,[esi+184] / mov eax,[esi+180], the ROM's own
+# 0xb8/0xb4. Sixteen listing lines differ and nothing else
+# (runs/link100/out/PMFB8/emit_g3_out.txt). The gate-1 and gate-2 sources are
+# all 0 mod 8 at their holders and are measured to need nothing, which is why
+# this is one file and not the block.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020c07e8.cpp"
+    PROPERTIES COMPILE_OPTIONS "/Zp4")
 foreach(_tpmfb8 walk_window walk_window_hires smoke_player)
     target_sources(${_tpmfb8} PRIVATE ${SLICE_PMFB8_SOURCES})
 endforeach()

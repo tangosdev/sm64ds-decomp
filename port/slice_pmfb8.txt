@@ -228,3 +228,84 @@ src/func_ov055_021112c4.cpp
 src/func_ov032_021121b4.cpp
 src/func_ov100_021453d8.cpp
 src/func_ov100_02145550.cpp
+
+# ===========================================================================
+# GATE 3 -- func_ov006_020c07e8, THE MODEL SUB-OBJECT'S +0xb4 FIELD
+# ===========================================================================
+#
+# THE UNIVERSE WAS CLOSED BY LANE MGWRITER AND RE-READ HERE. The model
+# sub-object's pairs are one contiguous run of ov006 .data, 0213ac48..0213acb8,
+# fifteen {code, 0} records serving TWO disjoint fields, and this row's field is
+# the +0xb4 half: FOUR records -- 0213ac68, 0213ac70, 0213ac78, 0213ac88 --
+# holding TWO code words, 0x020c0264 and 0x020c0364. The other eleven serve
+# func_ov006_020c19d0's +0x00 field and lane MGWRITER already seated them; the
+# two code-word sets are disjoint, so neither half can hand the other a host
+# word.
+#
+# 0213ac78 IS A BY-VALUE SENTINEL that this row reads itself: its last statement
+# is `int *g = data_ov006_0213ac78; if (p[0] == g[0]) { if (p[1] == g[1])
+# return; ... }`, an idle test comparing the stored pair against that record's
+# contents. So this row is ONE FACE PER CODE WORD -- two faces over four
+# records -- and both sides of the comparison move together, which is what keeps
+# the idle test answering what it answered on the cartridge.
+#
+# /Zp4 IS REQUIRED, and this is the sixth confirmation of PMFB6's rule. The ROM
+# reads the pair at `add r3, r6, #0xb4` (0x020c07f4); 0xb4 mod 8 = 4, MSVC
+# aligns the eight-byte member to eight, and without the option the TU emits
+# `mov ecx,[esi+188] / mov eax,[esi+184]` -- 0xbc and 0xb8, four bytes late,
+# a silent wrong read rather than a link error. With it: `mov ecx,[esi+184] /
+# mov eax,[esi+180]` -- 0xb8 and 0xb4, the ROM's own. SIXTEEN listing lines
+# differ and nothing else. Measured for this lane in
+# runs/link100/out/PMFB8/emit_g3_out.txt, the same number lane PMFB7 measured.
+#
+# THE DISPATCH IS ARITY ZERO: `mov eax,[esi] / test eax,eax / mov ecx,[esi+4] /
+# add ecx,esi / call eax`, receiver in ecx, nothing pushed, nothing cleaned. So
+# the two faces are zero-argument __fastcall, the shape MGWRITER's eleven use.
+#
+# WHAT ACTUALLY STOPPED THIS ROW UNTIL NOW IS THE NULL PAIR, and it is settled
+# by a COUNTED RUN rather than by an argument. Neither the ROM (fourteen
+# instructions, no `cmp` before the `blx`) nor the matched src tests word 0
+# before dispatching, so retiring the host copy takes away the
+# `if (code == 0) return` that port_mg_memory2_field_call adds. Gate 3 step A
+# put a counter in the host copy -- which stayed a host copy for exactly that
+# gate -- counting every entry, every entry whose stored pair read {0, ...}, and
+# the first pair seen, written out per process at exit.
+#
+# THE RESULT, over all 36 scene rows port/hal/scene_boot.cpp declares, each run
+# with the battery's own environment (imported from port/tools/battery.py rather
+# than re-spelled, so the two cannot drift), rc 0 on all 36:
+#
+#   c07e8 scene=362  dispatches=253  nullpairs=0  first={020c0364,0}
+#   c07e8 scene=363  dispatches=253  nullpairs=0  first={020c0364,0}
+#   c07e8 scene=379  dispatches=253  nullpairs=0  first={020c0364,0}
+#   c07e8 scene=381  dispatches=253  nullpairs=0  first={020c0364,0}
+#   c07e8 scene=382  dispatches=253  nullpairs=0  first={020c0364,0}
+#   c07e8 scene=383  dispatches=253  nullpairs=0  first={020c0364,0}
+#   c07e8 scene=388  dispatches=253  nullpairs=0  first={020c0364,0}
+#
+# SEVEN rows of the 36 reach the body, 1771 dispatches between them, ZERO with a
+# null pair, and the FIRST pair each row sees is already {020c0364, 0}. The
+# other 29 rows never reach it and write no line, which is that row's answer.
+# The field is installed before anything dispatches it, on every path the
+# battery exercises, so the guard this seat removes was never the thing standing
+# between the port and a branch to zero.
+# (runs/link100/out/PMFB8/c07e8_counted.txt)
+#
+# THE SEAT NEEDS NO NEW CALL SITE. The four records join
+# port_mg_memory2_model_seat, which hal/scene_mg.cpp already calls at overlay
+# load, before any scene of this family ticks; the seat verifies all four
+# mounted ROM words and ABORTS on a disagreement before it writes a face.
+#
+# ONE /alternatename, read off the TU's own /FAsc EXTRN list before the link.
+# src/func_ov006_020c07e8.cpp declares `extern Vector3 data_ov006_0212b890;`
+# OUTSIDE its extern "C" block, so MSVC spells the reference
+# ?data_ov006_0212b890@@3UVector3@@A while the ov006 mount defines the plain C
+# name -- the same shape as this file's existing ?data_ov006_0212b89c@@3PAFA
+# row, one symbol over. Nothing in the tree DEFINES that LHS, so the alias
+# cannot be silently defeated. Every other name on that EXTRN list resolves
+# already: _Vec3_HorzAngle, __Z11UpdateAngleRssis,
+# __ZN14BlendModelAnim7AdvanceEv and _data_ov006_0213ac78 were each checked
+# present in walk_window.map before the link, and ___security_cookie /
+# @__security_check_cookie@4 are the CRT's /GS pair, which this TU needs because
+# it has a local array.
+src/func_ov006_020c07e8.cpp
