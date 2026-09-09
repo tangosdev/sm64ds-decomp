@@ -93,6 +93,56 @@ SND1_RUN(".dsstate$yzsnd04", data_020a64e0, 0x0280, 32);
 SND1_RUN(".dsstate$yzsnd05", data_020a4d44, 4, 4);
 SND1_RUN(".dsstate$yzsnd06", data_020a6480, 4, 4);
 
+/* ---------------------------------------------------------------------------
+ * RUNGS R8 / R9 / R10: the four bss objects the ROM's own sound FRAME names,
+ * and the seven MSVC spellings the decomp's C++ TUs ask for.
+ *
+ * Each is its own object at its own ROM span -- their neighbours are hosted
+ * elsewhere and no body addresses across a boundary, which was checked rather
+ * than assumed. Deltas from config/arm9/symbols.txt, all kind:bss.
+ *
+ *   data_020a552c  0x0c  the STRM voice list. func_0204fda4 hands it to
+ *                        NestedHeapIterator::Remove, which is the 0xc-byte
+ *                        iterator shape (next, prev, count) the whole sound
+ *                        stack uses; span to data_020a5538 agrees.
+ *   data_020a5600  0x14  the ARM9 sound thread's message queue. func_020502b8
+ *                        waits on it through func_020587e4 when a stream stops.
+ *                        Nothing in this build ever posts to it (rung R5 is the
+ *                        thread), so the wait is never entered; the object is
+ *                        here because the reference is.
+ *   data_020a5bbc  0x0c  the free STRM-buffer list func_020520a4 appends to.
+ *   data_020a5bc8  0x0c  the in-use STRM-buffer list func_0205212c walks.
+ *
+ * SEVEN NAMES THE DECOMP SPELLS IN C++, and why an alias rather than a second
+ * definition. src/func_0204fda4.cpp, src/func_0205212c.cpp and
+ * src/func_020132d8.cpp carry the //cpp marker, and each declares some of its
+ * externs OUTSIDE its own extern "C" block -- so MSVC mangles those references
+ * (?data_0209b480@@3EA and friends) while the storage is published under the C
+ * spelling by hal/player_bridges.cpp, hal/cxx_aliases.cpp, hal/auto_bss.cpp,
+ * hal/actor_vtables.cpp and this file. One object, two spellings, which is
+ * exactly what /alternatename is for and what hal/actor_classes_bbh.cpp's
+ * data_02082128 row and hal/actor_base_tables_ov002.cpp's two SharedFilePtr
+ * rows already do. port/tools/alternatename_guard.py checks every one of them
+ * fired (LHS and RHS at the same address) on every build.
+ *
+ * NestedHeapIterator::Next is the same fact about a METHOD:
+ * src/func_0205212c.cpp declares it returning HeapAllocator*, the matched TU
+ * _ZN18NestedHeapIterator4NextEP13HeapAllocator.cpp publishes it returning int,
+ * and MSVC mangles the return type into the name. Same body, same address.
+ * --------------------------------------------------------------------------- */
+SND1_RUN(".dsstate$yzsnd07", data_020a552c, 0x0c, 4);
+SND1_RUN(".dsstate$yzsnd08", data_020a5600, 0x14, 4);
+SND1_RUN(".dsstate$yzsnd09", data_020a5bbc, 0x0c, 4);
+SND1_RUN(".dsstate$yzsnd10", data_020a5bc8, 0x0c, 4);
+
+#pragma comment(linker, "/alternatename:?data_020a552c@@3PAHA=_data_020a552c")
+#pragma comment(linker, "/alternatename:?data_020a5bc8@@3UNestedHeapIterator@@A=_data_020a5bc8")
+#pragma comment(linker, "/alternatename:?data_0209b480@@3EA=_data_0209b480")
+#pragma comment(linker, "/alternatename:?data_0209b4a0@@3HA=_data_0209b4a0")
+#pragma comment(linker, "/alternatename:?data_0209b4b0@@3HA=_data_0209b4b0")
+#pragma comment(linker, "/alternatename:?data_0209b53c@@3HA=_data_0209b53c")
+#pragma comment(linker, "/alternatename:?Next@NestedHeapIterator@@QAEPAUHeapAllocator@@PAU2@@Z=?Next@NestedHeapIterator@@QAEHPAUHeapAllocator@@@Z")
+
 /* The layout the ROM's body depends on, read back rather than assumed. Returns
    non-zero if anything moved, and says which name and by how much. */
 extern "C" int port_snd_pool_check(void)

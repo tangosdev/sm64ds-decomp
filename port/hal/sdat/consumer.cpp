@@ -13,8 +13,8 @@
 //   func_0205b5d4     reads the ARM7's progress word (data_020a7fc0[0]).
 //   func_0205b608     reads the ARM7's PLAYER BITMASK (data_020a7fc0[1]).
 //                     That word is how the ARM9 learns a sound has FINISHED,
-//                     and it is the only way it can: see
-//                     publish_player_status and sd_sound_frame_host below.
+//                     and it is the only way it can: see publish_player_status
+//                     and sdat_host_tick below.
 //
 // THE DEADLOCK, AND HOW IT IS CLOSED. func_0205b1d8 ends with
 //     do { func_0205b274(1); p = func_0205adf8(); } while (p == 0);
@@ -107,31 +107,21 @@ extern int data_020a4bf8[];
 extern int data_020a4c18[];
 extern int data_02099fb0;            /* the type-9 pool's live count */
 
-/* The ARM9's per-frame sound maintenance. See sd_sound_frame_host. */
-void func_0204fafc(void);
-int func_0205b274(int blocking);
-void func_020119c8(void *table);     /* the per-frame looping-handle reaper */
+/* THE ROM'S OWN SOUND FRAME (run link100, lane SND1, rungs R8/R9/R10).
+ * func_020132d8 is phase 9 of the game's main loop -- the last thing in the
+ * frame after the VBlank wait -- and sdat_host_tick calls it at the point two
+ * hand-written transcriptions used to stand. See the block above
+ * sd_sound_init_host for what those were and why all five of their SKIPs are
+ * spent. Everything they used to call by hand (func_02012d64, func_0204fafc,
+ * func_0205b274, func_020119c8, the jingle ramp) is inside it. */
+void func_020132d8(void);
 void func_02011974(void *table);     /* the level-change looping-handle reaper */
 
-/* The game's music/jingle crossfade, the half of func_020132d8 that runs in
- * sd_sound_fade_host below.
- *
- * data_0209b490 is the MAIN music player's (data_0209b4a0) volume and
- * data_0209b49c is the SUB-music, i.e. jingle, player's (data_0209b4b0)
- * volume. Sound::PlaySub stamps their TARGETS -- data_0208e42c for the main
- * duck, data_0209b470 for the jingle -- and a shared step data_0209b494, then
- * reports back "have both arrived yet". func_02012d64 walks the first pair and
- * the ApproachLinear here walks the second. data_0208e430 is the latched
- * jingle id; the ROM releases it to -1 exactly when the jingle volume has
- * ramped all the way down. */
-void func_02012d64(void);            /* the main-music volume ramp */
-void func_02013524(void *player, int vol, int mode);  /* push a volume */
-void func_0204fa2c(int *player, int fade);            /* stop a player */
-void _Z14ApproachLinearRiii(int *ref, int target, int step);
-extern int data_0208e430;            /* the latched jingle id, -1 when free */
-extern signed char data_0209b470;    /* the jingle volume TARGET */
-extern int data_0209b494[];          /* the shared ramp step */
-extern int data_0209b49c[];          /* the jingle volume, ramped here */
+/* The music/jingle crossfade used to be written out here as
+ * sd_sound_fade_host, with eight declarations behind it (func_02012d64,
+ * func_02013524, func_0204fa2c, ApproachLinear, data_0208e430, data_0209b470,
+ * data_0209b494, data_0209b49c). It is the first half of func_020132d8 and
+ * comes from the cartridge now, so the declarations went with the copy. */
 }
 
 // The ARM9 half of the voice trace. The switch and the printer live in
@@ -246,6 +236,7 @@ unsigned g_consumed;                    // batches this consumer has executed
 int g_readIdx;                          // our own cursor into the ring
 int g_trace;                            // SM64DS_SND_TRACE=1
 sd_u8 g_sawOp[256];
+unsigned g_strm[4];                     // 0x11, 0x15, 0x16, 0x17: seen, not sounded
 
 const char *op_name(int op)
 {
@@ -369,9 +360,16 @@ void exec(const Node *n)
         // are the reason a rolling or moving sound effect changes as it moves
         // -- func_02048af4 and func_02012860 re-send both every frame beside
         // the pan -- and both used to reach note_param and be dropped. The
-        // full derivation is on the definitions in sseq.cpp. THEY ARE NOT A
-        // MUSIC PATH: no matched TU sends either one for a BGM layer, and the
-        // sequence a layer plays is started by op 0x00 and nothing else.
+        // full derivation is on the definitions in sseq.cpp.
+        //
+        // 0x0a IS A MUSIC PATH AS OF RUNG R10, and this comment used to say
+        // the opposite -- "no matched TU sends either one for a BGM layer".
+        // That was true when it was written, and the underwater filter is what
+        // makes it false: func_020490b0 pushes the filter's ramp at the MAIN
+        // MUSIC player through func_0204f82c -> func_0205acfc, which is
+        // exactly command 0x04 parameter 0x0a on data_0209b4a0's own tracks.
+        // 0x0c is still not a music path, and the sequence a layer plays is
+        // still started by op 0x00 and nothing else.
         int slot = (n->a & 0xffffff) & 31;
         unsigned mask = (unsigned)n->b;
         if (n->c == 9) sd_seq_set_pan(slot, 64 + (int)(signed char)n->d);
@@ -398,6 +396,37 @@ void exec(const Node *n)
         if (g_trace)
             fprintf(stderr, "[snd] status block published at %p by the ROM's "
                     "own SND_Init\n", (void *)g_block);
+        break;
+    case 0x11: case 0x15: case 0x16: case 0x17:
+        // THE STREAM COMMANDS: RECORDED, NAMED, AND NOT SOUNDED (run link100,
+        // lane SND1, rung R8).
+        //
+        // 0x15/0x16/0x17 stand a STRM player up and re-parameterise it, and
+        // 0x11 is the shared-work write func_0205aa68 makes for one. This
+        // consumer has nothing honest to do with them: hal/sdat/mixer.cpp
+        // plays SEQUENCED voices out of an SBNK's wave archives, and a stream
+        // is a different source entirely -- a file the other core reads in
+        // blocks while it plays -- and there is no such reader here.
+        // Answering them with sequencer calls would be fabricating audio, so
+        // they are counted and said out loud instead.
+        //
+        // NOTHING SENDS THEM TODAY, and that is measured rather than assumed:
+        // both objects the ROM's stream frame walks are zero (data_020a5634's
+        // head word, and the +0xf0 flag in each of data_020a5bd4's four
+        // records), because standing a stream up needs the 1MB sound heap, the
+        // SDAT opened off the card and the ARM9 sound thread -- rungs R2, R4
+        // and R5, all held. The counter is here so that the day one of those
+        // lands, the first stream announces itself instead of going quietly
+        // missing.
+        g_strm[op == 0x11 ? 0 : op - 0x14]++;
+        if (!g_sawOp[op & 0xff]) {
+            g_sawOp[op & 0xff] = 1;
+            fprintf(stderr, "[snd] STRM command 0x%02x %s RECORDED, not "
+                    "sounded: this consumer has no streamed-sound player "
+                    "(a=%08x b=%08x c=%08x d=%08x)\n", op, op_name(op),
+                    (unsigned)n->a, (unsigned)n->b, (unsigned)n->c,
+                    (unsigned)n->d);
+        }
         break;
     case 0x1b: case 0x1c: case 0x1d:
         // Load commands. Never expected: sdat_init pre-seats every FAT
@@ -452,122 +481,50 @@ void publish_player_status(void)
     if (g_block) g_block[1] = sd_seq_player_mask();
 }
 
-// The ARM9's own per-frame sound work, the same shape as sd_sound_init_host
-// above: func_0204f03c is the ROM's sound frame, called from func_020132d8,
-// and the port's frame loop has never reached either. Three of its five calls
-// run here; the two that do not say why.
+// THE ROM'S OWN SOUND FRAME RUNS WHOLE NOW, AND THE TWO TRANSCRIPTIONS THAT
+// STOOD HERE ARE GONE (run link100, lane SND1, rungs R8 / R9 / R10).
 //
-//   RUN  func_0205b274(0) loop   reclaim every command batch the consumer has
-//                                finished, back onto the free list
-//   RUN  func_0204fafc           the voice maintenance: for each active voice,
-//                                confirm its START was consumed, then either
-//                                recycle it (its player has gone quiet) or
-//                                re-apply its distance volume and finish its
-//                                fade
-//   RUN  func_0205b070(0)        flush whatever the above queued
+// What was here was sd_sound_frame_host and sd_sound_fade_host: between them a
+// hand-written copy of src/func_0204f03c.c and src/func_020132d8.cpp with five
+// calls SKIPped, each skip carrying its own written reason. All five reasons
+// are spent, and two of them were already stale when this lane read them.
 //
-//   SKIP func_020508a0   the streamed-sound frame. It reads data_020a5634,
-//                        which sd_sound_init_host leaves zeroed, and returns
-//                        on its first line for that reason -- but it would
-//                        also be driving a stream this port does not have:
-//                        exec() has no handler for STRM_SETUP/STRM_PARAM and
-//                        would print if one ever arrived.
-//   SKIP func_020522c4   the four streamed-sound players, same reason, and
-//                        their data_020a5bd4 record array is defined nowhere
-//                        in the port because nothing has ever reached it.
+//   func_020508a0, func_020522c4   the streamed-sound frame and its four
+//       players. The reasons given were that they "would be driving a stream
+//       this port does not have" and that "their data_020a5bd4 record array is
+//       defined nowhere in the port". THE SECOND WAS FALSE: hal/stage_globals.cpp
+//       has hosted that array (1200 bytes = 4 x 0x12c) since its own lane
+//       landed. The first is true and is not a reason to skip them: the ROM's
+//       bodies do not need a stream to be safe to run. func_020508a0 returns on
+//       its first line while data_020a5634's head word is zero, and
+//       func_020522c4's four records are each gated on a +0xf0 flag word that
+//       nothing in this build sets. They run, they find no stream, and that is
+//       exactly what they do on hardware with no stream playing. What the port
+//       gains is not behaviour, it is that func_0204f03c can be CALLED instead
+//       of copied with two holes in it. (port/slice_snd8.txt, rung R8.)
 //
-// If the port grows streamed sound, those two come back here, not somewhere
-// new.
+//   func_02013078, func_020494cc, func_020490b0   THE UNDERWATER MUSIC FILTER,
+//       and this port has never had it. Skipped as a unit, correctly, because
+//       "func_020494cc reads data_02082200, _02082204, _02082208, _0208220c and
+//       _02082210, and not one of those five is defined anywhere in the port,
+//       so it would not link". Five words, four bytes each, arm9 .data, zero
+//       relocations in any of the five spans -- port/tools/romdata.py reads
+//       them out of the cartridge now, so the mechanism links and runs as a
+//       unit the way that note said it had to. (rung R10.)
 //
-// AND ONE CALL FROM ONE LEVEL UP. func_020132d8 is the game's sound frame and
-// func_0204f03c is only its second-to-last line; the last is
-// func_020119c8(data_0209b53c), the looping-handle reaper, and it belongs
-// here for the same reason func_0204fafc does. func_0201226c hands a caller a
-// handle and keeps the sound alive only while the caller keeps presenting it
-// back; func_020119c8 is the half that notices when a caller stopped asking
-// and stops the sound. Left out, no looping sound in the game is ever stopped
-// on purpose. Every stop in an 1800-frame trace was a voice STEAL.
+// So src/func_020132d8.cpp -- the ROM's phase 9, the last thing in the frame
+// after the VBlank wait -- is called from sdat_host_tick at the point the
+// transcription occupied, and it calls func_0204f03c itself. The order inside
+// is the ROM's, which is the order the transcription was copying: the master
+// SFX gate, the music ramp, the jingle ramp, the filter, the frame, the
+// looping-handle reaper.
 //
-// Its position is the ROM's, after the flush rather than before: on hardware
-// the reaper's stop commands go into the queue behind everything
-// func_0204f03c already flushed, and the ARM7 picks them up on its own. Here
-// sd_consumer_tick drains immediately after, which is the same order.
-// AND THE HALF OF func_020132d8 THAT COMES BEFORE ALL OF THAT.
-//
-// func_0204f03c is only func_020132d8's second-to-last line. Everything above
-// it in that function is the game's music/jingle crossfade, and the port has
-// never run any of it. src/func_020132d8.cpp:22-39, in order:
-//
-//   RUN  the data_0209b480 gate       the master SFX flag. sd_sound_init_host
-//                                     sets it, so this is not a no-op; it is
-//                                     the ROM's own early-out and it is kept.
-//   RUN  func_02012d64                ramp data_0209b490 toward
-//                                     data_0208e42c<<12 and push it at the
-//                                     main music player. Linked from src now
-//                                     (slice_gate10.txt).
-//   RUN  the data_0208e430 >= 0 arm   ramp data_0209b49c toward
-//                                     data_0209b470<<12, push it at the jingle
-//                                     player, and when it reaches 0 release
-//                                     the latch (data_0208e430 = -1) and stop
-//                                     the player. Written out here rather than
-//                                     linked because func_020132d8.cpp cannot
-//                                     be linked whole -- see the three SKIPs.
-//
-//   SKIP func_02013078   |            the underwater music filter, and it is
-//   SKIP func_020494cc   |- one unit  one mechanism in three parts: 02013078
-//   SKIP func_020490b0   |            reports a change in the player's swim
-//                        state, 020494cc programs a two-channel ramp table
-//                        (data_020a4c48/4c/54) from it, and 020490b0 advances
-//                        that table and pushes it at the player. It is skipped
-//                        as a UNIT and for one reason: func_020494cc reads
-//                        data_02082200, _02082204, _02082208, _0208220c and
-//                        _02082210, and not one of those five is defined
-//                        anywhere in the port, so it would not link.
-//                        Running only func_02013078 -- which does link --
-//                        would be worse than skipping all three: it latches
-//                        its answer in data_0208e438 and returns -1 on every
-//                        later frame that agrees, so it would consume the
-//                        state changes that the filter, once seated, needs to
-//                        see. If the port grows the underwater filter, the
-//                        three come back here together.
-//
-// This is why func_020132d8 is written out instead of linked: two of its seven
-// calls have no port-side home, and its body calls them unconditionally.
-//
-// Its position is the ROM's. On hardware func_020132d8 is phase 9 of the main
-// game loop (src/func_020197b8.c:60-63), the last thing in the frame after the
-// VBlank wait, and these ramps are the FIRST thing in it -- so the volume
-// commands they queue are flushed by the func_0205b070 below in the same
-// frame, exactly as func_0204f03c flushes them on hardware.
-void sd_sound_fade_host(void)
-{
-    if (data_0209b480 == 0)
-        return;
-
-    func_02012d64();
-
-    if (data_0208e430 >= 0) {
-        _Z14ApproachLinearRiii(&data_0209b49c[0],
-                               (int)data_0209b470 << 12,
-                               data_0209b494[0]);
-        func_02013524(data_0209b4b0, data_0209b49c[0] >> 12, 0);
-        if (data_0209b49c[0] == 0) {
-            data_0208e430 = -1;
-            func_0204fa2c(data_0209b4b0, 0);
-        }
-    }
-}
-
-void sd_sound_frame_host(void)
-{
-    sd_sound_fade_host();
-    publish_player_status();
-    while (func_0205b274(0) != 0)
-        ;
-    func_0204fafc();
-    func_0205b070(0);
-    func_020119c8(data_0209b53c);
-}
+// ONE THING THE HOST STILL DOES ITSELF, AND IT HAS TO HAPPEN FIRST: word 1 of
+// SNDSharedWork. publish_player_status is the ARM7's job, not the ARM9's, and
+// func_0204fafc -- inside func_0204f03c -- reads that word back through
+// func_0205b608 to decide which voices have gone quiet. So sdat_host_tick
+// publishes it and then calls the frame, which puts the write at the same
+// instant the DS's ARM7 would last have made it.
 
 // The game's own sound init, minus the three things that are hardware.
 //
@@ -623,7 +580,7 @@ void sd_sound_init_host(void)
 }  // namespace
 
 // THE LEVEL-CHANGE LOOPING-SOUND REAP, and it is a different function from the
-// per-frame one above. func_020119c8 (sd_sound_frame_host) only reaps a handle
+// per-frame one above. func_020119c8 (the last line of func_020132d8) only reaps a handle
 // that was NOT refreshed this frame, so a looping sound whose owner is torn down
 // mid-frame -- the wall it was sliding on, the enemy it was chasing -- keeps its
 // +6 refreshed flag and survives the frame it should have died on. func_02011974
@@ -946,7 +903,10 @@ extern "C" void sdat_host_tick(void)
     static double slow_ms = -1;
     if (slow_ms < 0) { const char *e = getenv("SM64DS_SND_SLOW_MS"); slow_ms = e ? atof(e) : 0; }
     const clock_t q0 = slow_ms > 0 ? clock() : 0;
-    sd_sound_frame_host();
+    // Word 1 of SNDSharedWork before the ROM's frame reads it back through
+    // func_0205b608: see the block above sd_sound_init_host. Then phase 9.
+    publish_player_status();
+    func_020132d8();
     const clock_t q1 = slow_ms > 0 ? clock() : 0;
     sd_consumer_tick();
     const clock_t q2 = slow_ms > 0 ? clock() : 0;

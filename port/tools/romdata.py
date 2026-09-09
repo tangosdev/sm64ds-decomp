@@ -219,6 +219,39 @@ NAMED = [
     # host pointers to byte-copied script blobs in port/hal/ptr_tables.cpp
     # (table 3); putting the name back here would define the symbol twice and,
     # if the byte copy won, restore the crash.
+    # ---- run link100, lane SND1, rung R10: THE UNDERWATER MUSIC FILTER'S
+    # FIVE RAMP CONSTANTS, and the dB table rung R8 reaches beside them.
+    #
+    # src/func_020494cc.c programs a two-channel ramp table from these five
+    # words -- the per-frame step func_020490b0 adds to the filter's current
+    # value, sign-flipped for the falling arms -- and hal/sdat/consumer.cpp
+    # skipped the whole three-part mechanism for exactly one reason: "not one
+    # of those five is defined anywhere in the port, so it would not link".
+    #
+    # ALL FIVE ARE arm9 .data, four bytes each by the delta rule (the next
+    # symbol is four bytes on in every case), and RELOC-FREE: config/arm9/
+    # relocs.txt has no `from:` row anywhere in 0x020821f0..0x02082214, so a
+    # byte copy carries no DS address. The five `to:` rows that DO name these
+    # addresses are the loads in func_020494cc itself, which is the reference
+    # into them, not a relocation inside them.
+    #
+    # AND THEY ARE NOT ZERO, which is why they are read rather than written
+    # down: 0x1451, 0x0a28, 0x1451, 0x1451, 0xcb33 out of extracted/arm9_dec.bin.
+    # A zeroed stand-in would make func_020490b0's `a > 0 / a < 0` test take its
+    # `continue` arm on every frame and the filter would be a subsystem that
+    # runs and does nothing -- the exact shape a seat is supposed to avoid.
+    "data_02082200", "data_02082204", "data_02082208", "data_0208220c",
+    "data_02082210",
+    # data_02086484, 0x2d4 = 724 bytes by the delta rule (the next symbol is
+    # data_02086758), and the span is likewise reloc-free. It is the ROM's own
+    # attenuation-to-volume curve and src/func_0205b63c.c indexes it as
+    # data_02086484[x + 0x2d3] over x in [-0x2d3, 0] -- 724 entries exactly, so
+    # the ROM's own code states the length. The bytes run 0x00 at the bottom to
+    # 0x7f at the top, monotone, which is what a -72.3 dB .. 0 dB curve looks
+    # like. Its sibling data_02086384 (the 128-entry s16 table) has been in this
+    # list for as long as the sequencer has; this is the byte-wide one the
+    # streamed-sound path uses.
+    "data_02086484",
     "data_0208e42c",
 # ---- run lvled, lane intro-cutscene: the NEW-FILE OPENING's script data ----
 #

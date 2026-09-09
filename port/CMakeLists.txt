@@ -8523,6 +8523,26 @@ foreach(line IN LISTS SLICE_SND1_LINES)
     list(APPEND SLICE_SND1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ---------------------------------------------------------------------------
+# Run link100, lane SND1, rungs R8 + R9 + R10: the ROM's own sound FRAME.
+#
+# Same three targets and the same reason as the block above: hal/sdat/consumer.cpp
+# CALLS func_020132d8 now, so a target with the sound stack and without this
+# slice would not link. The storage the slice needs (four bss objects and seven
+# /alternatename rows for the MSVC spellings the decomp's C++ TUs ask for) is in
+# hal/snd_globals.cpp, which already rides SOUND_HOST_SOURCES, and the five
+# underwater-filter words plus the byte-wide dB table come out of the cartridge
+# through port/tools/romdata.py's NAMED list.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_snd8.txt" SLICE_SND8_LINES)
+set(SLICE_SND8_SOURCES "")
+foreach(line IN LISTS SLICE_SND8_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SND8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # THREE PER-SOURCE RENAMES, the shape lane R2ABC used for func_02060890 and
 # lane BOOTR1 for main. Each names an edge that is not ROM code yet, in one
 # place, without making a host body under a ROM name -- which would be a new
@@ -16927,6 +16947,18 @@ foreach(_tsnd1 smoke_player walk_window walk_window_hires)
 endforeach()
 target_sources(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/sdat/snd_smoke_face.cpp")
+
+# Run link100, lane SND1, rungs R8/R9/R10: the sound frame, same three targets.
+# ONE SOURCE GOES TO smoke_player ALONE. src/func_0205ac28.c is the command-9
+# sender src/func_0204ffcc.c calls, and it is already on port/slice_gate220.txt
+# for the two window targets -- listing it in slice_snd8.txt would put a second
+# object with the same definition into those two links. smoke_player is the only
+# target that lacks it, so it is added here rather than to the slice.
+foreach(_tsnd8 smoke_player walk_window walk_window_hires)
+    target_sources(${_tsnd8} PRIVATE ${SLICE_SND8_SOURCES})
+endforeach()
+target_sources(smoke_player PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205ac28.c")
 
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
