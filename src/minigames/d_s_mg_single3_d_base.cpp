@@ -109,7 +109,7 @@ extern int data_ov004_020beb6c;
 extern u8 data_0209d45c;
 extern int data_ov006_0213e42c[];
 extern int data_0208ee44;
-extern int data_ov000_020beb74[];
+extern int data_ov004_020beb74[];
 extern void **data_0209d4a8;
 }
 
@@ -144,7 +144,7 @@ extern void **data_0209d4a8;
  * both BG-enable shadows initialised to 0x10, a language-indexed character file
  * decompressed into both engines' BG char VRAM, OBJ palette file 0xc3 loaded
  * into both, and the scene object published into the global registry at
- * data_ov000_020beb74 -- which is what fixes `this` as the incoming argument.
+ * data_ov004_020beb74 -- which is what fixes `this` as the incoming argument.
  * It is dScMgBase_c's own 2D sequence (ov004:0x020b265c) with the 3D texture
  * banks and G3X fog setup folded in. */
 void dScMgSingle3DBase_c::Virtual84()
@@ -187,8 +187,8 @@ void dScMgSingle3DBase_c::Virtual84()
     _ZN3G3X6SetFogEbiii(0, 0, 2, 0x1000);
     InitialiseVramGlobals();
     FreeGfxSlotsById(0x1d);
-    data_ov000_020beb74[1] = (int)this;
-    data_0209d4a8 = (void **)data_ov000_020beb74;
+    data_ov004_020beb74[1] = (int)this;
+    data_0209d4a8 = (void **)data_ov004_020beb74;
     *(vu32 *)0x40004ccu = 0x7fff;
     *(vu32 *)0x40004ccu = 0x40007fff;
 }
