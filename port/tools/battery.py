@@ -45,8 +45,14 @@ Everything the merge gate runs, in order, stopping at the first failure:
                       older romdata blob, which is a stale directory rather
                       than a broken change and used to arrive as a runtime
                       refusal an hour in (shipcfg_stale_kit). --no-shipcfg opts
-                      out, loudly. The long form is at THE SHIPPING
-                      CONFIGURATION below
+                      out, loudly. The configure step itself is skipped only
+                      when build/port-kit/CMakeCache.txt PROVES it is still
+                      configured PORT_ROM_CLEAN, Release and the static CRT
+                      under Ninja (shipcfg_configure_decision); any
+                      disagreement, missing key or missing cache runs the full
+                      configure instead of trusting a present build.ninja
+                      alone. The long form is at THE SHIPPING CONFIGURATION
+                      below
 
     python port/tools/battery.py [repo-root] [--linked-floor N] [--skip-build]
                                  [--no-shipcfg]
@@ -397,6 +403,38 @@ SHIPCFG_BMP = "walk_window_selftest.bmp"
 SHIPCFG_KIT_DISPATCH = os.path.join("build", "port-kit", "host-src",
                                     "romdata_dispatch.c")
 ROMDATA_MANIFEST = os.path.join("build", "assets", "romdata.manifest")
+
+# THE SHIPPING CONFIGURATION'S ENFORCED CACHE SETTINGS -- ONE TABLE FOR BOTH
+# THE CONFIGURE COMMAND AND THE FAST-PATH CHECK (run link100, lane SHIPCACHE,
+# closing Andrew's #2474 round-3 P2). Before CFGFIX (run link100, lane
+# CFGFIX) this arm always ran cmake -S -B; CFGFIX made it skip that call
+# whenever build/port-kit/build.ninja already existed, on the same "configure
+# only when there is something to configure" rule build-port-j4.cmd uses for
+# the developer build. Andrew's finding: that guard tests only for A
+# configure, not for THIS ONE -- a build/port-kit left over from any other
+# invocation (hand-testing, an aborted run, a copied directory) reads
+# "already configured" and the fast path then builds it with whatever
+# PORT_ROM_CLEAN/CMAKE_BUILD_TYPE/CRT it already had, silently skipping every
+# one of the settings this arm exists to assert. shipcfg_configure_decision()
+# below closes that: the fast path is available only when
+# build/CMakeCache.txt PROVES it still holds every one of these values, not
+# merely when build.ninja happens to be present. shipcfg_cache_defines()
+# builds the configure command's -D flags from this SAME table, so the two
+# can never again say different things about what "the shipping
+# configuration" means.
+#
+# CMAKE_MSVC_RUNTIME_LIBRARY is the static-CRT switch; it reads
+# "MultiThreaded" for the Release/static combination this arm builds
+# (MultiThreadedDLL is the dynamic-CRT opposite Andrew's report found
+# surviving the old guard). The generator is checked separately, off
+# CMAKE_GENERATOR, because "-G Ninja" is not a -D flag on the command line at
+# all.
+SHIPCFG_CACHE_TABLE = (
+    ("PORT_ROM_CLEAN", "ON"),
+    ("CMAKE_BUILD_TYPE", "Release"),
+    ("CMAKE_MSVC_RUNTIME_LIBRARY", "MultiThreaded"),
+)
+SHIPCFG_GENERATOR = "Ninja"
 
 TABLE_OPEN = "static const PortLevelDesc port_level_table[] = {"
 SCENE_TABLE_OPEN = "static const PortSceneClass port_scene_classes[] = {"
@@ -1399,8 +1437,113 @@ def scene_retire_probe(build, scene):
     return False, "bare rc=0"
 
 
+def shipcfg_cache_defines():
+    """The configure command's -D flags, built from SHIPCFG_CACHE_TABLE.
+
+    shipcfg_configure_decision() below reads the SAME table's keys back off
+    an existing CMakeCache.txt before it will agree to skip this command, so
+    the command line and the fast-path check are one table read two ways and
+    cannot say different things about what "the shipping configuration" is.
+    """
+    return " ".join('-D%s=%s' % (k, v) for k, v in SHIPCFG_CACHE_TABLE)
+
+
+def _cmake_cache_entries(cachefile):
+    """{key: value} out of a CMakeCache.txt, or {} if it cannot be read.
+
+    A cache line is NAME:TYPE=VALUE. The type is dropped rather than checked
+    -- port/tools/gate.py's cache_value() reads a cache the same way, for the
+    same reason: CMake does not keep the type spelling stable across entries
+    or versions (CMAKE_MSVC_RUNTIME_LIBRARY reads UNINITIALIZED here, not
+    STRING, though it is set the same -D way as CMAKE_BUILD_TYPE), and the
+    value is the only part either caller needs.
+    """
+    entries = {}
+    try:
+        with open(cachefile, encoding="utf-8", errors="replace") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or line.startswith("//"):
+                    continue
+                name, sep, rest = line.partition(":")
+                if not sep or "=" not in rest:
+                    continue
+                entries[name] = rest.split("=", 1)[1]
+    except OSError:
+        return {}
+    return entries
+
+
+def shipcfg_configure_decision(build):
+    """May the shipcfg configure step be skipped for this build directory?
+
+    Returns (status, detail). status is the literal string "fast path" when
+    build.ninja already exists AND build/CMakeCache.txt carries every
+    SHIPCFG_CACHE_TABLE key at its enforced value AND CMAKE_GENERATOR reads
+    SHIPCFG_GENERATOR; otherwise status is the literal string "refused" and
+    detail names the missing file, the missing cache, or the one offending
+    key and the value found in place of the enforced one. detail is always a
+    complete sentence fragment fit to print after "shipcfg configure: ok, ".
+
+    A PURE FILE READ, the same shape as shipcfg_stale_kit above: no cmake is
+    invoked and nothing is launched, so calling this before every configure
+    costs nothing and it is what test_battery_shipcfg.py exercises directly,
+    never through a real configure.
+
+    WHY THIS EXISTS (Andrew's #2474 round-3 P2). CFGFIX's fast path skipped
+    the configure call whenever build/port-kit/build.ninja was already on
+    disk, on the same "configure only when there is something to configure"
+    rule build-port-j4.cmd uses for the developer build. That rule is safe
+    for the DEVELOPER build because CMAKE_CONFIGURE_DEPENDS (port/CMakeLists
+    .txt, run link100 lane CMAKEDEPS) makes ninja itself reconfigure the
+    moment any registered input changes -- but nothing registers "was this
+    cache ever configured with PORT_ROM_CLEAN=ON, Release and the static CRT
+    in the first place" as an input, because those are values CHOSEN on the
+    configure command line, not files CMake reads. A build/port-kit left
+    behind by any other invocation -- a hand test of the Debug/DLL developer
+    settings pointed at this same directory, an aborted run, a copied
+    directory -- carries a build.ninja that is completely current for
+    whatever it WAS configured with, so ninja's own freshness edge has
+    nothing to fire on and the old fast path shipped a binary built from
+    wrong settings while printing green. Measured on exactly that fixture in
+    test_battery_shipcfg.py: PORT_ROM_CLEAN=OFF, CMAKE_MSVC_RUNTIME_LIBRARY=
+    MultiThreadedDLL, CMAKE_BUILD_TYPE=Debug, a real build.ninja alongside
+    it, and the tree's own tooling returning success throughout.
+    """
+    ninja_file = os.path.join(build, "build.ninja")
+    if not os.path.isfile(ninja_file):
+        return "refused", ("no build.ninja in %s -- nothing configured yet"
+                           % build)
+
+    cachefile = os.path.join(build, "CMakeCache.txt")
+    if not os.path.isfile(cachefile):
+        return "refused", ("build.ninja exists but %s does not, so the cache "
+                           "cannot be validated" % cachefile)
+
+    cache = _cmake_cache_entries(cachefile)
+
+    got_gen = cache.get("CMAKE_GENERATOR")
+    if got_gen != SHIPCFG_GENERATOR:
+        return "refused", ("CMAKE_GENERATOR is %r in %s, not the enforced %r"
+                           % (got_gen, cachefile, SHIPCFG_GENERATOR))
+
+    for key, want in SHIPCFG_CACHE_TABLE:
+        got = cache.get(key)
+        if got != want:
+            return "refused", ("%s is %r in %s, not the enforced %r"
+                               % (key, got, cachefile, want))
+
+    return "fast path", ("%s carries every enforced setting (%s, generator "
+                         "%s)"
+                         % (cachefile,
+                            ", ".join("%s=%s" % kv
+                                      for kv in SHIPCFG_CACHE_TABLE),
+                            SHIPCFG_GENERATOR))
+
+
 def shipcfg_script(root, build):
-    """Write the cmd that configures and builds the shipping configuration.
+    """Write the cmd that configures (if the cache proves it may skip that)
+    and builds the shipping configuration.
 
     Toolchain located the way port/build-port.cmd locates it, switched the way
     tools/portable_kit/package_kit.ps1 switches it, and the target is
@@ -1409,7 +1552,16 @@ def shipcfg_script(root, build):
     behind for cmake in the same shell, which a single subprocess call cannot
     arrange.
 
-    Returns (script path, None), or (None, the vcvars path that is not there).
+    Returns (script path, no_vcvars, decision, detail). On a missing
+    vcvars32.bat, script is None, no_vcvars names the path that is not there,
+    and decision/detail are both None. Otherwise no_vcvars is None and
+    decision/detail are shipcfg_configure_decision(build)'s verdict, already
+    BAKED into the generated script: "fast path" writes a configure step
+    guarded by the same build.ninja test CFGFIX added; "refused" writes an
+    UNCONDITIONAL configure, so a stale, missing or wrong-valued cache can
+    never again ride a present build.ninja to a skipped configure. See
+    shipcfg_configure_decision's docstring for why the guard alone is not
+    enough here the way it is for the developer build.
     """
     pf = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
     vs = os.path.join(pf, "Microsoft Visual Studio", "2022", "BuildTools")
@@ -1417,41 +1569,45 @@ def shipcfg_script(root, build):
     cm = os.path.join(vs, "Common7", "IDE", "CommonExtensions", "Microsoft",
                       "CMake")
     if not os.path.isfile(vcvars):
-        return None, vcvars
+        return None, vcvars, None, None
+
+    decision, detail = shipcfg_configure_decision(build)
+    configure_cmd = ('cmake -S "%s" -B "%s" -G %s %s '
+                     '-DCMAKE_MAKE_PROGRAM="%s\\Ninja\\ninja.exe" || exit /b 1'
+                     % (os.path.join(root, "port"), build, SHIPCFG_GENERATOR,
+                        shipcfg_cache_defines(), cm))
+    if decision == "fast path":
+        # CONFIGURE ONLY WHEN THERE IS SOMETHING TO CONFIGURE, the same rule
+        # port/build-port-j4.cmd uses for the developer build -- safe HERE
+        # only because shipcfg_configure_decision just proved the existing
+        # cache still reads every SHIPCFG_CACHE_TABLE value and the Ninja
+        # generator, not merely that a build.ninja is present.
+        configure_block = ('if not exist "%s\\build.ninja" (\r\n'
+                           '  %s\r\n'
+                           ')\r\n' % (build, configure_cmd))
+    else:
+        # REFUSED: shipcfg_configure_decision found the cache missing, stale
+        # or wrong-valued, so this configure is unconditional. Ninja's own
+        # RERUN_CMAKE / CMAKE_CONFIGURE_DEPENDS edge is not trusted to fix a
+        # wrong-VALUED cache -- it only fires on a changed INPUT file, and a
+        # wrong PORT_ROM_CLEAN, CRT or build type is neither a changed file
+        # nor something that edge was ever told to watch.
+        configure_block = '%s\r\n' % configure_cmd
+
     # Under build/, which is gitignored, so the arm leaves nothing in the tree.
     # A FIXED name rather than a temporary one: it is overwritten every run,
     # and it is the honest answer to "what exactly did the arm build" for
     # anyone reading a red.
     path = os.path.join(root, "build", "shipcfg_build.cmd")
     os.makedirs(os.path.dirname(path), exist_ok=True)
+    header = ("@echo off\r\n"
+             'call "%s" >nul || exit /b 1\r\n'
+             'set "PATH=%s\\CMake\\bin;%s\\Ninja;%%PATH%%"\r\n'
+             % (vcvars, cm, cm))
+    footer = 'ninja -C "%s" walk_window\r\n' % build
     with open(path, "w", encoding="ascii", newline="") as f:
-        f.write(
-            "@echo off\r\n"
-            'call "%s" >nul || exit /b 1\r\n'
-            'set "PATH=%s\\CMake\\bin;%s\\Ninja;%%PATH%%"\r\n'
-            # CONFIGURE ONLY WHEN THERE IS SOMETHING TO CONFIGURE, the same
-            # rule port/build-port-j4.cmd uses for the developer build (see
-            # its own "CONFIGURE ONLY WHEN..." comment). Skipping this call on
-            # an already-configured build/port-kit is safe for the identical
-            # reason it is safe there: build.ninja carries its own
-            # RERUN_CMAKE edge, and port/CMakeLists.txt's "THE CONFIGURE-TIME
-            # INPUTS, REGISTERED" block (run link100, lane CMAKEDEPS) puts
-            # every configure-time input this build has -- 253 of them as of
-            # this writing, 5 by raw file(STRINGS) reads outside the macro --
-            # onto CMAKE_CONFIGURE_DEPENDS, so that edge fires and reconfigures
-            # completely the moment any one of them changes. A fresh
-            # build/port-kit (no build.ninja yet) still configures here; a
-            # later battery run in the same tree does not pay the ~110-160s
-            # configure a second time.
-            'if not exist "%s\\build.ninja" (\r\n'
-            '  cmake -S "%s" -B "%s" -G Ninja -DCMAKE_BUILD_TYPE=Release'
-            ' -DPORT_ROM_CLEAN=ON -DCMAKE_MAKE_PROGRAM="%s\\Ninja\\ninja.exe"'
-            ' -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded || exit /b 1\r\n'
-            ')\r\n'
-            'ninja -C "%s" walk_window\r\n'
-            % (vcvars, cm, cm, build, os.path.join(root, "port"), build, cm,
-               build))
-    return path, None
+        f.write(header + configure_block + footer)
+    return path, None, decision, detail
 
 
 def shipcfg_missing_inputs(root):
@@ -1796,10 +1952,11 @@ def shipcfg_arm(root):
         return False, None
 
     build = os.path.join(root, SHIPCFG_BUILD)
-    script, no_vcvars = shipcfg_script(root, build)
+    script, no_vcvars, decision, detail = shipcfg_script(root, build)
     if script is None:
         print(f"shipcfg build: FAIL, no vcvars32.bat at {no_vcvars}")
         return False, None
+    print(f"shipcfg configure: {decision} -- {detail}")
 
     t0 = time.time()
     try:
