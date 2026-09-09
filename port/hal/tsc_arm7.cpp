@@ -144,8 +144,11 @@
 // because the default would be a broken stylus.
 //
 // ---------------------------------------------------------------------------
-// 4. THE AUTO-SAMPLE RING, AND WHY IT IS OFF BY DEFAULT
+// 4. THE AUTO-SAMPLE RING, THE ROM'S OWN CADENCE, AND WHY IT IS ON BY DEFAULT
 // ---------------------------------------------------------------------------
+//
+// (Run link100, lane R2D3, continuing rung R2d. SM64DS_TP_RING was OFF by
+// default when R2D2 left it -- the finding below is what this lane changed.)
 //
 // The third completion is the auto-sample indication: once per ARM7 sampling
 // period, a word with (a1 & 0x7f00) >> 8 == 0x10 and a2 == 0. On it
@@ -155,17 +158,55 @@
 // range 2 -- and writes one eight-byte entry into the ring func_0203bbc0 handed
 // it, &data_020a0df8 with a count of 9.
 //
-// THE PORT ALREADY WRITES THAT RING. hal/sub_screen.cpp's poll_touch writes one
-// entry per frame at the bottom of its store and advances the same cursor,
-// explicitly as a stand-in for "the driver that would advance it is ARM7's".
-// So this ARM7 posting the indication as well would put TWO entries per frame
-// into a nine-entry ring on one cursor, and src/func_0203b9bc.c's three-
-// consecutive-samples debounce -- the ROM's own -- would settle in two frames
-// instead of three. That is a behaviour change on the live stylus path, and the
-// file that has to stop writing the ring is hal/sub_screen.cpp, which is not
-// this lane's. So the indication is implemented, measured under
-// SM64DS_TP_RING=1, and OFF by default; the one-hunk continuation is named in
-// the lane report.
+// THE CADENCE. src/func_0203bbc0.c's third call is
+// src/func_0205edd8.cpp(3, 0x1e), which IPCSends 0x02000303 then 0x0101001e --
+// "the sampling setup" by the ROM's own naming (section 1's table). That
+// 0x1e is the ONE number the ROM hands the ARM7 for how often to sample, and
+// arm7.bin is not decompiled anywhere in this project (section header above),
+// so what the ARM7 does with it is not a fact this repo can read off a body.
+// What IS measurable is the shape every reader downstream already assumes:
+// src/func_0203b9bc.c's three-consecutive-samples debounce (section header,
+// "left alone" note) is written against ONE ring entry per displayed frame --
+// three entries is three frames of holding a tap, not three deliveries inside
+// one -- and hal/sub_screen.cpp's poll_touch was already the port's stand-in
+// at exactly that cadence, one store per call, and poll_touch is called
+// exactly once per frame (hal/scene_boot.cpp's frame loop, both the level path
+// and the scene path -- see its "THE BOTTOM SCREEN" note). So the cadence this
+// lane implements and measures is the DS's own displayed-frame rate, ~59.8 Hz,
+// sourced from where poll_touch already ran rather than from guessing at what
+// 0x1e counts on the ARM7 side.
+//
+// PORT_TSC_ARM7_FRAME_TOUCH is the new entry point that cadence rides on.
+// hal/sub_screen.cpp's poll_touch calls it once per frame, in the same place
+// its own ring store used to be (see the note over that call there); it arms
+// a one-shot latch and immediately gives the ARM7 the turn that finds it. A
+// second turn landing in the SAME frame -- port_arm7_wireless_tick calls
+// port_tsc_arm7_tick on every turn the wireless conductor takes, including
+// several inside one multiplayer wait -- finds the latch already spent and
+// posts nothing, so the multiplayer path cannot double the ROM's own cadence
+// even though it asks for more turns than the touch panel needs. See
+// port_tsc_arm7_tick and port_tsc_arm7_frame_touch below for the mechanism;
+// hal/boot2_ipc.cpp's call site and comment are unchanged by this lane except
+// for the census wording.
+//
+// THE HOST'S OWN INPUTS STILL REACH THE ROM'S WRITER, THROUGH THE SAMPLE, NOT
+// THE RING. poll_touch resolves the mouse-to-stylus mapping, the drag latch,
+// SM64DS_SKIP_MENU's forced tap and SM64DS_COMMS_INJECT's injected tap exactly
+// as before, and stores the result into TouchInfo slot 0 (data_020a0de8) the
+// way it always has (see the store two paragraphs above this ring note in the
+// function body). port_tsc_arm7_frame_touch runs AFTER that store, and the
+// ARM7's own sample -- the packed word this file writes to 0x027fffaa/ac --
+// is read straight out of data_020a0de8[0]/[2]/[3]. So a mouse click, a
+// SKIP_MENU tap or an injected comms tap all cross into the ROM exactly the
+// way a real stylus press would: through the ARM7's shared sample words and
+// src/func_0205f300.c's own read of them, never by this port reaching into
+// the ring directly. hal/sub_screen.cpp's store is retired ONLY when
+// port_tsc_ring_armed() is true; SM64DS_TP_RING=0 puts the pre-rung direct
+// write back, unchanged, for measurement.
+//
+// ON BY DEFAULT as of this lane. SM64DS_TP_RING=0 is still read, and is what a
+// run measuring the pre-rung shape (or isolating a regression to this rung)
+// sets.
 //
 // Everything else on this channel is on by default, because everything else is
 // the boot the port did not have.
@@ -333,6 +374,12 @@ void put16(unsigned char *p, unsigned v) {
 
 bool g_calib_published;
 
+// THE ONE-SHOT LATCH port_tsc_arm7_frame_touch arms and port_tsc_arm7_tick
+// consumes. See section 4: it is what keeps the ring to one write per frame
+// even though the wireless conductor can hand this ARM7 several turns inside
+// one host frame.
+bool g_sample_due;
+
 }  // namespace
 
 extern "C" {
@@ -464,7 +511,7 @@ void port_tsc_wait(int mask)
 int port_tsc_ring_armed(void)
 {
     static int armed = -1;
-    if (armed < 0) armed = env_on("SM64DS_TP_RING", false) ? 1 : 0;
+    if (armed < 0) armed = env_on("SM64DS_TP_RING", true) ? 1 : 0;
     return armed;
 }
 
@@ -474,7 +521,10 @@ void port_tsc_arm7_tick(void)
     // that never leaves the queue is a swallowed word by another name.
     if (g_qn) { port_tsc_arm7_turn(); return; }
     if (!port_tsc_ring_armed()) return;
+    if (!g_sample_due) return;         // this frame's one indication already
+                                        // went out -- see section 4
     if (*tp16(0x14) == 0) return;      // func_0205eeac has not run yet
+    g_sample_due = false;
 
     // The packed record src/func_0205f300.c:56-61 reads: x 12 bits, y 12 bits,
     // then valid 1 and range 2, low half at 0x027fffaa and high half at
@@ -492,6 +542,32 @@ void port_tsc_arm7_tick(void)
     ++g_samples;
     ntr::ipc_arm7_send(ntr::ipc_word(6, kSampleWord, 0));
 }
+
+// ---------------------------------------------------------------------------
+// ONE PER FRAME. hal/sub_screen.cpp's poll_touch calls this once per frame,
+// immediately after it has written TouchInfo (data_020a0de8) -- see section 4.
+// Arming the latch and taking the turn in the same call means the common case
+// (no other turn lands this frame) posts the indication right here, at
+// exactly poll_touch's old cadence; if the wireless conductor also turns this
+// ARM7 later in the same frame (comms_arm7_turn, which a multiplayer wait can
+// call several times), port_tsc_arm7_tick above finds the latch already spent
+// and does nothing, so the ring still gets one write.
+// ---------------------------------------------------------------------------
+void port_tsc_arm7_frame_touch(void)
+{
+    if (!port_tsc_ring_armed()) return;
+    g_sample_due = true;
+    port_tsc_arm7_tick();
+}
+
+// THE WATCHER'S ROM-SIDE COUNT. g_samples is incremented exactly where this
+// file hands the ARM9 the auto-sample indication, and that send is synchronous
+// (ntr::ipc_arm7_send -> raise_rx_irq -> the ARM9's registered rx handler ->
+// src/func_0205f300.c, all inside the one call), so this count IS the number
+// of times the ROM's own writer has stored into the ring -- not an estimate of
+// it. hal/sub_screen.cpp's poll_touch reads it, under SM64DS_TP_RING_WATCH, to
+// print the two writers' counts side by side (run link100, lane R2D3).
+unsigned long port_tsc_arm7_sample_count(void) { return g_samples; }
 
 // ---------------------------------------------------------------------------
 // THE REPORT the R2d arm prints straight after func_0203bbc0 returns, and the
@@ -537,10 +613,12 @@ void port_tsc_arm7_census(void)
     std::fprintf(stderr,
         "[tsc:census] ring %s; +0x30 %u, +0x32 %u, +0x34 %u, +0x36 %u, cursor "
         "%u of %u\n",
-        port_tsc_ring_armed() ? "ARMED (SM64DS_TP_RING=1): this ARM7 is the "
-                                "ring's writer" : "not armed: "
-                                "hal/sub_screen.cpp's poll_touch is the ring's "
-                                "writer, as it was",
+        port_tsc_ring_armed() ? "ARMED (SM64DS_TP_RING default-on): this ARM7 "
+                                "is the ring's writer, once per frame off "
+                                "hal/sub_screen.cpp's poll_touch" : "not armed "
+                                "(SM64DS_TP_RING=0): hal/sub_screen.cpp's "
+                                "poll_touch writes the ring directly, as it "
+                                "did before this rung",
         (unsigned)*tp16(0x30), (unsigned)*tp16(0x32), (unsigned)*tp16(0x34),
         (unsigned)*tp16(0x36), (unsigned)*tp16(0x0c), (unsigned)*tp16(0x14));
     std::fflush(stderr);
