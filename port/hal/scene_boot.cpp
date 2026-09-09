@@ -3329,7 +3329,12 @@ static int ti_gc3(void *s)  { port_r3g_gc_enter(3, s); return _ZN5Scene14GraphCa
 /* The registry named in the block comment above. One entry today; an array
    because the next seated scene class adds a row rather than a special case,
    and a linear walk over four pointers is not worth a smarter shape. */
-static void *g_gc_seated[4];
+/* EIGHT SINCE RUNG H1 (run link100, lane R3H), not four. The title, the
+   thirty minigames' shared table, scene 6's and scene 360's fill all four
+   slots exactly, and the register call above drops anything past the end in
+   silence -- a fifth block would then be refused by the beat with no
+   diagnostic anywhere. Four pointers wider; nothing else moves. */
+static void *g_gc_seated[8];
 static unsigned g_gc_seated_n;
 static int g_gc_verdict = 1;
 
@@ -6259,8 +6264,49 @@ extern "C" void port_sqrt_selftest(void)
    one: hal_sub_screen_init_hw keys g_headless off exactly that, so passing a
    real window is the whole of what turns the stylus, the focus gate and the
    TAB latch on. See the block below it. */
+/* ---- RUNG H1: SCENE 360'S GRAPHICS BLOCK, REGISTERED (lane R3H) ----------
+ *
+ * The other block this port hosts and never registered. R3G's census printed
+ * `vptr=01798B68` for scene 360 and walk_window.map puts _data_02094390
+ * (hal/arm9_tables_link100.cpp) at 01798b68 -- the same word, so the table is
+ * identified by ADDRESS and not by name. Its four words are the arm9
+ * originals {func_02034d2c, Scene::GraphCallback1, func_02034d24,
+ * func_02034b40}; slots 0 and 2 are `mov r0,#0 / bx lr`, so the port's beat
+ * now answers 0 on this block and SKIPS the display tail -- which is exactly
+ * what src/func_02019144.c does with the same answer (`if (p->vt->func8(p) ==
+ * 0) return;`). Before this the port refused the block, answered 1 and
+ * published over the top of it while the ROM's own dispatcher, under
+ * SM64DS_ROM_LOOP with the VBlank handler registered, did not.
+ *
+ * REGISTERED HERE rather than in hal/scene_link100_mb.cpp because that file is
+ * not this lane's and because registration is inert until the block is LIVE:
+ * graph_block_word only dispatches when data_0209d4a8's vptr equals a
+ * registered table, and no level ever puts this one there. SM64DS_R3H_GB360=0
+ * leaves it unregistered. */
+extern "C" unsigned char data_02094390[];
+static void port_scene_gb_register_mb(void)
+{
+    static int done;
+    if (done) return;
+    done = 1;
+    const char *e = std::getenv("SM64DS_R3H_GB360");
+    if (e && e[0] == '0' && e[1] == '\0') return;
+    void **vt = (void **)data_02094390;
+    std::fprintf(stderr,
+                 "  [r3h] scene 360's graphics block registered with the "
+                 "port's beat: data_02094390 at %p, vt[0..3]={%08X,%08X,"
+                 "%08X,%08X} (slots 0 and 2 are the ROM's own `return 0`, so "
+                 "the beat now skips the display tail the way "
+                 "src/func_02019144.c does)\n",
+                 (void *)vt, (unsigned)(size_t)vt[0], (unsigned)(size_t)vt[1],
+                 (unsigned)(size_t)vt[2], (unsigned)(size_t)vt[3]);
+    std::fflush(stderr);
+    port_graph_block_register(vt);
+}
+
 extern "C" int port_scene_begin(void *hwnd, int zoom)
 {
+    port_scene_gb_register_mb();
     const int scene = port_scene_env_want();
     const int frames = port_scene_frames_wanted();
     const int no_render = std::getenv("SM64DS_SCENE_NO_RENDER") != 0;
