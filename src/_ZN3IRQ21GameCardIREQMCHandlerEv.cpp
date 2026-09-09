@@ -6,7 +6,7 @@
 // (layout-free SDK namespaces -- no this, no vtable, no header).
 typedef int (*fp)(void);
 extern "C" fp data_020a89a4;
-extern "C" volatile int data_020a89a0;
+extern "C" int data_020a89a0;
 extern "C" int func_020610fc(void);
 
 namespace IRQ {
