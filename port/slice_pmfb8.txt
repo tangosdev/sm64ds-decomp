@@ -58,3 +58,173 @@
 # changes: it stops being the raw cdecl func_ov055_021112bc and becomes the
 # __fastcall face the matched TU's own `call edx` needs.
 src/func_ov055_021112c4.cpp
+
+# ===========================================================================
+# GATE 2 -- THE func_-NAMED ROWS, BY THE CLASS'S OWN VTABLE
+# ===========================================================================
+#
+# Six rows whose own symbol is func_ovNNN_xxxxxxxx, so no mangled name names
+# their class and lane PMFB7's name-derived block cannot be read off
+# symbols.txt. Gate 3 of that lane derived an ov006 class's block from its
+# VTABLE instead -- every slot word that lands in the overlay and is not the
+# shared base's is a body this class defines, and the block is the first-to-last
+# span of those bodies snapped out to the enclosing symbol boundaries -- and
+# that derivation generalises to any overlay
+# (runs/link100/out/PMFB8/ovblock.py, PMFB7's clsblock.py with the ov006
+# hard-coding removed). THREE OF THE SIX CLOSE AND ARE TAKEN. THREE DO NOT AND
+# ARE REFUSED BELOW, each with the measurement that stops it.
+#
+#   row                    vtable      class code block        pairs  run
+#   func_ov032_021121b4   02113824   021111a0..0211244c      10   0211377c..021137cc
+#   func_ov100_02145550   02148188   021443f4..0214589c      15   021480d4..0214814c
+#   func_ov100_021453d8   02148188   the same block, the same fifteen records
+#
+# ---- func_ov032_021121b4, BUBBA'S TICK DISPATCHER -------------------------
+#
+# ov032 holds three classes and dsd named only two of them; id 228 BUBBA is the
+# unnamed one, so every symbol it owns is func_ov032_*. Its vtable is 0x02113824
+# (hal/actor_classes_ov055.cpp's sibling file states the three-route
+# attribution: the factory, the RTTI string 12daBakubaku_c, and the SpawnInfo
+# record), 31 slots, EIGHT of which are its own ov032 bodies, and the
+# first-to-last span of those snapped to symbol boundaries is
+# 021111a0..0211244c. The sweep over it returns exactly TEN {code,0} pairs at
+# 0211377c..021137c4, ONE SOLID RUN, ten distinct code words, and every
+# reference into the run is one of __sinit_ov032_02112c10's own ten loads.
+# Those ten are the five {enter, tick} pairs the sinit copies into the five
+# sixteen-byte cells hal/actor_classes_ov032.cpp already seats and verifies.
+# The universe CLOSES. (runs/link100/out/PMFB8/sweep_g2_ov032.txt)
+#
+# THE EMITTED SIDE, off the TU's own /FAsc listing under the port's own flags:
+#     mov eax,[ecx+8] / test eax,eax / mov ecx,[ecx+12] / add ecx,esi /
+#     call eax
+# -- the member at offset 8 of the record, which is the tick half, receiver in
+# ecx, ARITY ZERO, no push and no cleanup. So the five TICK words take zero-arg
+# __fastcall faces. /Zp4 changes 0 listing lines outside the TITLE and is not
+# claimed: the member sits at offset 8 of its holder, 0 mod 8.
+#
+# THE FIVE ENTER WORDS ARE NOT TOUCHED, and the reason is measured rather than
+# assumed. Their dispatcher, src/func_ov032_02111ff4.cpp, is ALREADY in the link
+# (port/slice_pmf2.txt) and its emitted transfer is `jmp edx`, a TAIL JUMP: the
+# caller's own frame survives, so the cdecl body reads the caller's first stack
+# word, which is `c` -- exactly self. That is lane PMFB7's reading of why the
+# enter halves of its twenty-one rows stayed raw, reproduced here on this
+# overlay (runs/link100/out/PMFB8/ctl_emit.json). It is also why MirrorLuigi's
+# gate-1 row needs a face and this overlay's enter half does not: an extra
+# argument stops MSVC tail-jumping, and a CALL does not carry the caller's
+# frame.
+#
+# NOTHING COMPARES A STORED PAIR BY VALUE in this class. The three other readers
+# of the field -- src/func_ov032_02111254.c, _02111350.c and _021113fc.cpp, and
+# the row's own `!= data_ov032_02113aac` test -- all compare the CELL POINTER,
+# not a function word, so there is no by-value sentinel and no
+# one-face-per-code-word constraint.
+#
+# ---- func_ov100_021453d8 AND func_ov100_02145550, THE DOOR'S TWO HALVES ---
+#
+# daDoor_c's vtable is 0x02148188 (dsd's own, and inferred_stub_adjudicated.txt
+# names it for slot 6), 34 slots, SEVEN of which are its own ov100 bodies, and
+# the block is 021443f4..0214589c. The sweep returns exactly FIFTEEN {code,0}
+# pairs at 021480d4..02148144, ONE SOLID RUN, fourteen distinct code words
+# (0x02144730 is held twice), and every reference into the run is one of
+# __sinit_ov100_02147698's own fifteen loads. That is precisely the set
+# port/unmatched/Door_Behavior.cpp already enumerated by hand, derived this time
+# from the class rather than read off a host file.
+# (runs/link100/out/PMFB8/sweep_g2_ov100.txt)
+#
+# THE TWO ROWS ARE THE TWO HALVES OF ONE NODE. The sinit builds nine 0x10-byte
+# nodes out of those fifteen statics plus arm9's data_02086b58, the NULL pair;
+# 021453d8 seats the node at c+0x140 and dispatches the pair at node+0,
+# 02145550 dispatches the pair at node+8 every frame. Both test word 0 against
+# zero first, so the null node stays safe.
+#
+# BOTH ARE ARITY ONE and their emitted sides agree word for word:
+#     021453d8   mov edx,[ecx] / test / mov ecx,[ecx+4] / push a2 /
+#                add ecx,eax / call edx
+#     02145550   mov edx,[ecx+8] / test / mov ecx,[ecx+12] / push eax /
+#                add ecx,esi / call edx
+# one pushed word neither caller pops, receiver in ecx. So ONE face shape serves
+# both halves: __fastcall(self, dead_edx, void *arg), fourteen faces for
+# fourteen code words. /Zp4 changes 0 listing lines on either TU. EXTRN is empty
+# on 021453d8 and _func_ov100_02145370 on 02145550, which is already in the link
+# through port/slice_gate22.txt, so neither row needs an /alternatename.
+#
+# THE ARGUMENT COUNT OF THE BODIES IS THE ARM RIDE-THROUGH ALREADY RULED ON.
+# Nine of the fifteen bodies take two words and six take one; Door_Behavior.cpp
+# declares all fifteen as (void *, void *) because the caller cleans under
+# __cdecl and r1 is set whether or not the callee reads it. The faces keep that
+# ruling exactly: each face pops its own one stack word (that is what __fastcall
+# does) and then calls its body cdecl with (self, arg).
+#
+# THE .text-BOUNDS REFUSAL THAT GOES AWAY WITH THE HOST COPY IS A STALE GUARD,
+# and this is the one thing in this gate that had to be read out of history
+# rather than measured. Door_Behavior.cpp says a non-code callback appeared in
+# real play on 2026-08-07 and that the refusal stands "until that write is
+# found". It was found in the SAME commit that added the refusal: 34285a74f
+# ("port: the door ring's thiscall aliases were stack corruption - real faces")
+# names the cause -- gate-22 aliases bound cdecl callers onto __thiscall bodies,
+# so GoBehindPlayer's `ret 4` inside func_ov100_02144730 shifted the frame and
+# its epilogue returned onto the door argument -- and fixed it with nine cdecl
+# faces. The diagnostics were kept as diagnostics, not as a live shield. What
+# survives the seat is stronger than what goes: port_door_callbacks_seat still
+# verifies all fifteen mounted ROM words before it writes a single face, and
+# both matched TUs keep the ROM's own null test.
+#
+# ---- WHAT IS NOT TAKEN, AND THE MEASUREMENT THAT STOPS EACH ---------------
+#
+# func_ov002_020bd664 -- ITS UNIVERSE CLOSES; THE SEAT NEEDS A CALL SITE THIS
+#   LANE DOES NOT OWN. This row is not a field row at all: it is a fourteen-slot
+#   TABLE the src NAMES, `static PMF table[14] = { data_ov002_0210a14c, ... }`,
+#   indexed by the kuppa script byte p[6]. So the universe is explicit rather
+#   than swept, and it is closed: all fourteen read {code, 0} in the ov002
+#   image, fourteen distinct code words, and the ONLY references to any of the
+#   fourteen anywhere in ov002 are the row's own fourteen literal-pool loads at
+#   020bd7ec..020bd824. Nothing else -- no sinit, no second dispatcher -- can
+#   see them. The fourteen sit INSIDE the much larger .data run that also holds
+#   Player's state records, which is exactly why an address-range sweep would
+#   have been wrong here and the source's own names are right.
+#   (runs/link100/out/PMFB8/sweep_g2_ov002.txt)
+#   THE EMITTED SIDE is `mov ecx,[table+edx*8+4] / add ecx,self /
+#   mov eax,[table+edx*8] / push a3 / push a2 / push p+7 / call eax` -- stride
+#   eight, receiver in ecx, ARITY THREE, /Zp4 0 diff lines.
+#   WHAT STOPS IT: hal/intro_kuppa_dispatch.cpp deliberately does NOT rewrite
+#   the mounted words -- it resolves at the dispatch site, and its own header
+#   says that is what buys it "no seat ordering to get wrong". Seating the
+#   matched TU inverts that: MSVC copies the fourteen pairs into a function
+#   static on the FIRST call, so the records must already hold faces by then,
+#   which needs a seat call in ov002's bring-up. That file is not this lane's,
+#   and a static initialiser cannot substitute because the overlay mount is
+#   filled at overlay-load time and would overwrite it. The row also needs
+#   fourteen /alternatename rows (MSVC decorates every one of the fourteen
+#   `extern PMF` names, e.g. ?data_ov002_0210a14c@@3P8C@@AEXPAEHH@ZQ1@) and
+#   drags in MSVC's magic-static guard (__Init_thread_header/footer/epoch,
+#   __tls_index, __tls_array). Both are ordinary work; the call site is the
+#   blocker.
+#
+# func_ov075_0211a194 and func_ov075_0211a26c -- THE RECORD SET IS NOT A
+#   UNIVERSE. Both read a pair out of the OBJECT itself: 0211a194 copies six
+#   words from a source record into self+0x54..0x68 and dispatches the pair at
+#   +0x54, and 0211a26c dispatches the pair at +0x64. So the universe is the set
+#   of six-word source records the setter is ever handed, and it does not close:
+#   thirteen ROM call sites reach 0211a194, nine pass a NAMED record and TWO
+#   pass `*(void **)(self + 0x6c)` -- a FIELD -- so the set cannot be read off
+#   the call sites at all. Worse, every named record is PAST THE END OF THE
+#   ov075 IMAGE (it ends at 0211d380): they are .bss, built at run time by the
+#   overlay's sinits out of a source run that sweeps to SIXTY-SEVEN {code,0}
+#   pairs with EIGHTEEN GAPS. That is a count, not a universe -- lane PMFB7's
+#   Player::ChangeState refusal, one overlay over.
+#   (runs/link100/out/PMFB8/sweep_g2_ov075.txt)
+#   TWO THINGS ARE BANKED ANYWAY. /Zp4 IS REQUIRED on
+#   src/func_ov075_0211a26c.cpp and this is the fifth confirmation of PMFB6's
+#   rule: its struct spells `char pad[0x64]; PMF pp[1];` and 0x64 mod 8 = 4, so
+#   without the option MSVC reads [eax+104]/[eax+108] -- 0x68 and 0x6c, four
+#   bytes late -- and with it [eax+100]/[eax+104], the ROM's own 0x64/0x68. Two
+#   listing lines differ and nothing else. And the seat is not this lane's file
+#   either way: those words are written by hal/scene_vs_menu.cpp's GENERATED
+#   vs_data_patch.inc, whose own header says regenerate rather than hand-edit,
+#   and one of the three record pairs points at src/func_ov075_0211b1cc.c, a
+#   body that still carries the "recovered from vtable slot identity" marker
+#   with no REAL_DECOMP ruling -- which port/tools/inferred_stub_guard.py
+#   forbids seating, and is right to.
+src/func_ov032_021121b4.cpp
+src/func_ov100_021453d8.cpp
+src/func_ov100_02145550.cpp
