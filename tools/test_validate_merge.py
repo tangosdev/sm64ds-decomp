@@ -1460,7 +1460,8 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         self.old_repo = VM.REPO
         VM.REPO = self.repo
         self.addCleanup(setattr, VM, "REPO", self.old_repo)
-        for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE):
+        for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
+                      VM._SYMBOL_BASE_CACHE):
             cache.clear()
             self.addCleanup(cache.clear)
 
@@ -1542,6 +1543,7 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         head = commit(self.repo, "absorb", "bob")
         VM._RELOC_CACHE.clear()
         VM._ENROLMENT_CACHE.clear()
+        VM._SYMBOL_BASE_CACHE.clear()
         return VM.build_report(base, head)
 
     def assertRefused(self, report, defect=None):
@@ -1637,3 +1639,154 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         self.assertRefused(report)
         self.assertIn("ROM image unavailable, so nothing matched may leave: arm9",
                       report["reasons"])
+
+
+class DataLeadingOverlayImageBase(unittest.TestCase):
+    """The overlay word reader, on an overlay whose first symbol is DATA.
+
+    `modules._overlay_base` -- the derivation this reader claims to follow -- takes the
+    lowest address of ANY symbol the module declares. Reading the base off the first
+    FUNCTION address instead shifts every read by the distance between them, so a
+    module with four bytes of data in front of its first function answers each query
+    with the PREVIOUS word. Put a `bx lr` in front of a record whose own word is
+    `mov r0, #0` and the guard reads a return that is not there.
+
+    The fixture is the same absorption shape as `AbsorbedEpilogueThroughBuildReport`,
+    moved into `ov001` and given a leading data symbol.
+    """
+
+    DATA, BODY, EPILOGUE, NEXT = 0x020ab100, 0x020ab104, 0x020ab154, 0x020ab158
+    END = 0x020ab1c8
+    ANCHOR = 0x02004000
+
+    RELOCS_MAIN = "from:0x02004000 kind:arm_call to:0x02004000 module:main\n"
+    # Two calls into the overlay body, none into the four bytes at its tail.
+    RELOCS_OV = ("from:0x020ab160 kind:arm_call to:0x020ab104 module:overlay(1)\n"
+                 "from:0x020ab164 kind:arm_call to:0x020ab158 module:overlay(1)\n")
+
+    RECOVERED = "\n".join([
+        "void func_020ab104(unsigned char *p, int len) {",
+        "    for (;;) { if (*p < 9) { (*p)++; return; } *p-- = 0; }",
+        "}",
+        ""])
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.repo = pathlib.Path(self.tmp.name)
+        git(self.repo, "init", "-q", ".")
+        (self.repo / "src").mkdir()
+        (self.repo / ".gitignore").write_text("extracted/\n", encoding="utf-8")
+        self.old_repo = VM.REPO
+        VM.REPO = self.repo
+        self.addCleanup(setattr, VM, "REPO", self.old_repo)
+        for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
+                      VM._SYMBOL_BASE_CACHE):
+            cache.clear()
+            self.addCleanup(cache.clear)
+
+    def write(self, rel, text):
+        path = self.repo / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8", newline="\n")
+
+    def write_image(self, record_word):
+        """The overlay's image, based at its LOWEST SYMBOL -- the data one.
+
+        `bx lr` sits at 0x020ab150, one word in front of the record, which is where a
+        reader based on the first function lands when asked for 0x020ab154.
+        """
+        image = bytearray(self.END - self.DATA)
+        image[0x50:0x54] = (0xE12FFF1E).to_bytes(4, "little")
+        image[self.EPILOGUE - self.DATA:self.EPILOGUE - self.DATA + 4] = \
+            record_word.to_bytes(4, "little")
+        d = self.repo / "extracted" / "overlays"
+        d.mkdir(parents=True, exist_ok=True)
+        (d / "overlay_0001.bin").write_bytes(bytes(image))
+
+    def ov_delinks(self, entry, start, end):
+        return "\n".join([
+            "    .text       start:0x020ab100 end:0x020ab1c8 kind:code align:4",
+            "",
+            f"{entry}:",
+            "    complete",
+            f"    .text start:0x{start:08x} end:0x{end:08x}",
+            ""])
+
+    def absorb(self, record_word=0xE3A00000):
+        self.write("config/arm9/symbols.txt",
+                   f"Anchor kind:function(arm,size=0x4) addr:0x{self.ANCHOR:08x}\n")
+        self.write("config/arm9/delinks.txt", "\n".join([
+            "    .text start:0x02004000 end:0x02004004 kind:code",
+            "",
+            "src/Anchor.c:",
+            "    complete",
+            f"    .text start:0x{self.ANCHOR:08x} end:0x{self.ANCHOR + 4:08x}",
+            ""]))
+        self.write("config/arm9/relocs.txt", self.RELOCS_MAIN)
+        self.write("src/Anchor.c", "int Anchor(void) { return 0; }\n")
+
+        self.write("config/arm9/overlays/ov001/symbols.txt", "\n".join([
+            f"data_{self.DATA:08x} kind:data(any) addr:0x{self.DATA:08x}",
+            f"func_{self.BODY:08x} kind:function(arm,size=0x50) "
+            f"addr:0x{self.BODY:08x}",
+            f"func_{self.EPILOGUE:08x} kind:function(arm,size=0x4) "
+            f"addr:0x{self.EPILOGUE:08x}",
+            f"func_{self.NEXT:08x} kind:function(arm,size=0x70) "
+            f"addr:0x{self.NEXT:08x}",
+            ""]))
+        self.write("config/arm9/overlays/ov001/delinks.txt",
+                   self.ov_delinks(f"src/func_{self.EPILOGUE:08x}.c",
+                                   self.EPILOGUE, self.NEXT))
+        self.write("config/arm9/overlays/ov001/relocs.txt", self.RELOCS_OV)
+        self.write(f"src/func_{self.BODY:08x}.c",
+                   "// NONMATCHING: hand-written asm, does NOT count as matched.\n"
+                   f"void func_{self.BODY:08x}(void) {{}}\n")
+        self.write(f"src/func_{self.EPILOGUE:08x}.c",
+                   f"void func_{self.EPILOGUE:08x}(void)\n{{\n}}\n")
+        self.write(f"src/func_{self.NEXT:08x}.c",
+                   f"int func_{self.NEXT:08x}(void) {{ return 1; }}\n")
+        base = commit(self.repo, "base", "alice")
+
+        self.write("config/arm9/overlays/ov001/symbols.txt", "\n".join([
+            f"data_{self.DATA:08x} kind:data(any) addr:0x{self.DATA:08x}",
+            f"func_{self.BODY:08x} kind:function(arm,size=0x54) "
+            f"addr:0x{self.BODY:08x}",
+            f"func_{self.NEXT:08x} kind:function(arm,size=0x70) "
+            f"addr:0x{self.NEXT:08x}",
+            ""]))
+        self.write("config/arm9/overlays/ov001/delinks.txt",
+                   self.ov_delinks(f"src/func_{self.BODY:08x}.c",
+                                   self.BODY, self.NEXT))
+        self.write(f"src/func_{self.BODY:08x}.c", self.RECOVERED)
+        os.remove(self.repo / "src" / f"func_{self.EPILOGUE:08x}.c")
+        self.write_image(record_word)
+        head = commit(self.repo, "absorb", "bob")
+        VM._RELOC_CACHE.clear()
+        VM._ENROLMENT_CACHE.clear()
+        VM._SYMBOL_BASE_CACHE.clear()
+        self.base, self.head = base, head
+        return VM.build_report(base, head)
+
+    def test_the_reader_answers_from_the_lowest_symbol_not_the_first_function(self):
+        self.absorb()
+        read = VM._rom_word_reader(self.head)
+        self.assertEqual(read("ov001", self.EPILOGUE), 0xE3A00000)
+        self.assertEqual(read("ov001", self.EPILOGUE - 4), 0xE12FFF1E)
+
+    def test_a_non_return_tail_in_a_data_leading_overlay_is_refused(self):
+        report = self.absorb()
+        self.assertIsNone(report["repartition"])
+        self.assertIn("lost 1 matched function(s)", report["reasons"])
+        self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 0)
+        self.assertTrue(report["relocationEvidence"]["valid"])
+
+    def test_the_same_overlay_fixture_with_a_real_tail_return_still_lands(self):
+        # The positive control for the two above: identical tree, and the record's own
+        # word IS the return. Without it, the refusal above could come from anything in
+        # the fixture rather than from the word the reader now reads.
+        report = self.absorb(record_word=0xE12FFF1E)
+        self.assertEqual(report["reasons"], [])
+        self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 1)
+        self.assertEqual([a["name"] for a in report["matchedAbsorbed"]],
+                         [f"func_{self.EPILOGUE:08x}"])

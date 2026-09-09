@@ -335,24 +335,83 @@ def _is_return_word(word):
     return (word >> 28) == 0xE and (word & _LDM_PC_MASK) == _LDM_PC_VALUE
 
 
+_SYMBOL_ROW = re.compile(r"^(\S+)\s+kind:\S.*?\baddr:0x([0-9a-fA-F]+)")
+_SYMBOL_BASE_CACHE = {}
+
+
+def _module_symbols_path(module):
+    """Where a module's ``symbols.txt`` lives, for every module this report names."""
+    if module == "arm9":
+        return "config/arm9/symbols.txt"
+    if module in ("itcm", "dtcm"):
+        return f"config/arm9/{module}/symbols.txt"
+    return (f"config/arm9/overlays/{module}/symbols.txt"
+            if re.fullmatch(r"ov\d+", module or "") else None)
+
+
+def _module_symbol_base(rev, module):
+    """A module's image base at ``rev``: the LOWEST address of ANY symbol it declares.
+
+    The revision-pinned equivalent of `modules._overlay_base`, which is the derivation
+    the rest of the repo already uses -- the byte gate, `match.py --module ovNNN` and
+    `evidence_rom` all read an overlay this way. dsd relocates each overlay to a unique
+    address in the delinked config space, and the module's lowest symbol IS that base.
+
+    ANY SYMBOL, NOT THE FIRST FUNCTION. `_rev_enrolment` collects function rows only,
+    because the question it answers is which file owns a symbol. A module whose lowest
+    symbol is DATA -- config declares `data_...` rows in the same table -- then has a
+    base below its first function, and an image read based on the first function is
+    displaced by exactly that distance: every query answers with an earlier word. On a
+    guard whose whole job is to ask "is the cartridge's word at this address a return",
+    reading the word in FRONT of the address is the difference between refusing a
+    `mov r0, #0` and absorbing it as a `bx lr`.
+    """
+    path = _module_symbols_path(module)
+    if path is None:
+        return None
+    key = (str(REPO), rev, module)
+    if key not in _SYMBOL_BASE_CACHE:
+        lo = None
+        try:
+            text = git_text(rev, path)
+        except RuntimeError:
+            text = ""
+        for line in text.splitlines():
+            m = _SYMBOL_ROW.match(line)
+            if m:
+                addr = int(m.group(2), 16)
+                lo = addr if lo is None else min(lo, addr)
+        _SYMBOL_BASE_CACHE[key] = lo
+    return _SYMBOL_BASE_CACHE[key]
+
+
 def _module_image(rev, module):
     """``(bytes, base address)`` of a module's cartridge image, or None if absent.
 
     The images are gitignored extraction output, so a checkout that has never run
     `tools/unpack.py` has none. Absent is answered as None and every caller treats
     that as "no evidence", never as "the evidence says yes".
+
+    ARM9 is the one module with a fixed base: `arm9_dec.bin` loads at 0x02004000
+    whatever its lowest symbol is. Every other module is based at its lowest symbol --
+    see `_module_symbol_base` -- and itcm and dtcm are read from the same two places
+    `modules.py` looks, so a checkout that has only run `tools/unpack.py` still has them.
     """
     if module == "arm9":
         path, base = REPO / ARM9_IMAGE, ARM9_IMAGE_BASE
     else:
-        m = re.fullmatch(r"ov(\d+)", module or "")
-        if m is None:
+        if module in ("itcm", "dtcm"):
+            candidates = [REPO / "build" / "build" / f"{module}.bin",
+                          REPO / "extracted" / "dsd" / "arm9" / f"{module}.bin"]
+            path = next((c for c in candidates if c.is_file()), candidates[-1])
+        elif re.fullmatch(r"ov\d+", module or ""):
+            path = (REPO / "extracted" / "overlays"
+                    / f"overlay_{int(module[2:]):04d}.bin")
+        else:
             return None
-        path = REPO / "extracted" / "overlays" / f"overlay_{int(m.group(1)):04d}.bin"
-        addrs = _rev_enrolment(rev)[0].get(module) or []
-        if not addrs:
+        base = _module_symbol_base(rev, module)
+        if base is None:
             return None
-        base = addrs[0]
     try:
         return path.read_bytes(), base
     except OSError:
