@@ -311,42 +311,75 @@ def resim_report(t):
     return (len(seen), sum(1 for v in seen.values() if v > 1), max(seen.values()))
 
 
+def proven_bounds(all_rounds, all_counts):
+    """-> (tails, raw_excluded, proven, bound): the ceiling on a settled frame.
+
+    TWO INDEPENDENT EXCLUSIONS, applied per window, and the ceiling is the
+    TIGHTER of the two. They were both here once; run link100's VS4TAIL added
+    the second and, in doing so, dropped the first. Andrew's third review of PR
+    #2474 caught that: four logs that all end at f400 with that final frame
+    repeated made the function return 400, because a repeat of the raw last
+    frame satisfied the re-simulation rule on its own. Both rules are needed,
+    and this is the reconciliation.
+
+      * THE RAW LAST FRAME IS NEVER COMPARED -- `tails[k] - 1`, unconditional.
+        A run ends when the selftest budget expires, or when the match ends and
+        SM64DS_VS_EXIT_ON_END closes the window, and a window can stop
+        part-way through a frame it has already logged. Its last frame's state
+        is whatever that window happened to reach when it was closed. A REPEAT
+        of that frame does not rescue it: a repeat records that the window
+        re-simulated the frame, which is a statement about the inputs it had
+        when it re-ran, not proof that no further correction was owed. The
+        frame is still the one the process died on. So the raw tail is dropped
+        whether or not it repeats.
+      * THE LAST PROVEN RE-SIMULATED FRAME (VS4TAIL, RBFIX's run 5 finding) --
+        the last frame number appearing more than once in that window's own
+        [dh] rows (see dh_counts()). A rewind only ever revisits a frame to
+        correct it, so a count over 1 is that window's own proof it is done
+        changing its mind. Run 5 is why this is needed on top of the raw-tail
+        rule: all four windows shared the identical raw last frame f400, so
+        "not the raw last frame" let f399 through, but p3's f399 was logged
+        exactly once (out/RBFIX/vs4_run5_f399_dh_rows.txt) -- a predicted value
+        p3 never got the chance to correct before its own process exited, even
+        though it went on to log f400 straight afterward. Reaching a LATER
+        frame is not proof an EARLIER one was corrected; only a repeat of that
+        SAME frame is. A window with no re-simulated frame anywhere in its log
+        (a clean lockstep run, or a very short one) has no such proof to offer
+        and is bounded by the raw-tail rule alone.
+
+    So: `min(last re-simulated, raw last - 1)`, and with no re-simulation at
+    all, `raw last - 1`. On Andrew's case -- four logs ending at 400 with the
+    final frame repeated -- that is 399, and on the no-repeat control it is
+    399 as well, because the raw last frame is excluded either way.
+    """
+    tails = [max(r) for r in all_rounds]
+    raw_excluded = [t - 1 for t in tails]
+    proven = []
+    for k, counts in enumerate(all_counts):
+        resimmed = [f for f, c in counts.items() if c > 1]
+        proven.append(min(max(resimmed), raw_excluded[k]) if resimmed
+                      else raw_excluded[k])
+    return tails, raw_excluded, proven, min(proven)
+
+
 def settled_frame(all_rounds, all_counts):
     """The latest frame every window has PROVEN settled and agrees the round of.
 
-    Three conditions, and all three are needed:
+    Three conditions, and all three are needed. The first two are per window
+    and are proven_bounds()' business -- the raw last frame is excluded
+    unconditionally, and the candidate is at or before the last frame the
+    window has PROOF of having re-simulated. The third is across windows:
 
-      * it is not any window's own last frame. The run ends when the selftest
-        budget expires, or the match ends and SM64DS_VS_EXIT_ON_END closes
-        the window, and a window can stop part-way through a frame it has
-        already logged, so the last frame's state is whatever that window
-        happened to reach -- not a simulated frame's settled result.
-      * NEW (RBFIX's run 5 finding): it is at or before the last frame each
-        window has PROOF of having re-simulated -- the last frame number
-        that appears more than once in that window's own [dh] rows (see
-        dh_counts()). "Not a window's raw last frame" is not enough: run 5
-        had all four windows share the identical raw last frame (f400, 401
-        dh rows apiece, so the OLD rule's `f < tails[k]` bound let f399
-        through as a candidate), but window p3's f399 was logged exactly
-        once (out/RBFIX/vs4_run5_f399_dh_rows.txt) -- a predicted value p3
-        never got the chance to correct before its own process exited,
-        even though it went on to log f400 straight afterward. Reaching a
-        LATER frame is not proof an EARLIER one was corrected; only a
-        repeat of that SAME frame is. A window with no re-simulated frame
-        at all anywhere in its log (a clean lockstep run, or a very short
-        one) falls back to one behind its own raw last frame, which is the
-        old bound and remains a safe floor for that case.
       * all four report the same rounds= at that frame. This is dhdiff.py's
         own alignment criterion, applied here so rungs 3-6 compare the same
         moment rather than trusting a position tolerance to absorb a whole
-        consumed round. It is NOT sufficient by itself -- run 5 shows why:
-        rounds= is the exchanged-round counter, which plateaus once no more
-        packets are moving, so p0's corrected f399 (three rows, last one
+        consumed round. It is NOT sufficient by itself -- RBFIX's run 5 shows
+        why: rounds= is the exchanged-round counter, which plateaus once no
+        more packets are moving, so p0's corrected f399 (three rows, last one
         rounds=400) and p3's uncorrected f399 (one row, rounds=400) report
         the identical rounds= number despite different world hashes. The
-        new per-window re-simulation bound above is what actually screens
-        that pair out; this agreement check stays on top of it as belt and
-        braces, exactly as before.
+        per-window bounds above are what actually screen that pair out; this
+        agreement check stays on top of them as belt and braces.
 
     Returns None when no such frame exists, which is itself a finding: the four
     windows never agreed on a round at or before every window's proven-settled
@@ -354,12 +387,7 @@ def settled_frame(all_rounds, all_counts):
     """
     if any(not r for r in all_rounds):
         return None
-    tails = [max(r) for r in all_rounds]
-    proven = []
-    for k, counts in enumerate(all_counts):
-        resimmed = [f for f, c in counts.items() if c > 1]
-        proven.append(max(resimmed) if resimmed else tails[k] - 1)
-    bound = min(proven)
+    _, _, _, bound = proven_bounds(all_rounds, all_counts)
     cand = set(all_rounds[0])
     for r in all_rounds[1:]:
         cand &= set(r)
@@ -376,18 +404,35 @@ def trim_log(src, dst, last_frame):
     frame: the unsettled tail is removed, nothing inside the compared span is
     touched, and every other line is copied through so the trimmed file is
     still a readable log. dhdiff then compares a span both windows finished.
+
+    THE EXCLUDED TAIL IS KEPT, not just dropped. Every [dh] row past
+    `last_frame` is written to `<dst>.tail` beside the trimmed copy and
+    returned, so the rows this proof declined to compare can be read next to
+    the ones it did. The raw log is untouched either way; this file is the
+    short answer to "what exactly was left out".
+
+    -> (kept rows, list of (frame, line) excluded, path of the tail file)
     """
     kept = 0
+    excluded = []
+    tail_path = dst + ".tail"
     with open(src, "r", encoding="utf-8", errors="replace") as fi, \
             open(dst, "w", encoding="utf-8", errors="replace") as fo:
         for line in fi:
             m = DHLINE.match(line)
             if m and int(m.group(1)) > last_frame:
+                excluded.append((int(m.group(1)), line.rstrip("\n")))
                 continue
             if m:
                 kept += 1
             fo.write(line)
-    return kept
+    with open(tail_path, "w", encoding="utf-8", errors="replace") as ft:
+        ft.write("# rows EXCLUDED from the comparison of %s\n" % src)
+        ft.write("# every [dh] row after frame %d, which is the settled "
+                 "frame every window proved\n" % last_frame)
+        for _, line in excluded:
+            ft.write(line + "\n")
+    return kept, excluded, tail_path
 
 
 def common_frame(all_rows, want_slots=4, at_most=None):
@@ -444,19 +489,25 @@ def main():
               "a round number for a frame they had all finished. Rungs 3-8 run "
               "on the raw tail, and a red below may be that.")
     else:
-        tails = [max(r) for r in all_rounds if r]
-        last_emitted_min = min(tails)
-        proven = []
-        for i, counts in enumerate(all_counts):
-            resimmed = [f for f, c in counts.items() if c > 1]
-            proven.append(max(resimmed) if resimmed else tails[i] - 1)
-        print("  [rollback] settled frame %d (last frames %s, last-emitted "
-              "minimum %d, per-window proven-resimulated bound %s -> %d): "
-              "the latest frame every window finished, PROVED it was done "
-              "re-simulating (or, lacking any re-simulation, backed off one "
-              "from its own raw last frame), and all four agree the round "
-              "of. Rungs 3-6 compare there and rung 8 compares up to there."
-              % (settled, tails, last_emitted_min, proven, min(proven)))
+        tails, raw_excluded, proven, bound = proven_bounds(all_rounds,
+                                                           all_counts)
+        resim_last = []
+        for counts in all_counts:
+            r = [f for f, c in counts.items() if c > 1]
+            resim_last.append(max(r) if r else None)
+        print("  [rollback] settled frame %d. THE COMPARED PREFIX IS FRAMES "
+              "0..%d INCLUSIVE (%d frames); every [dh] row after f%d is "
+              "excluded from every rung."
+              % (settled, settled, settled + 1, settled))
+        print("  [rollback] how that ceiling was reached, per window: raw "
+              "last frames %s, so the raw-tail exclusion alone allows %s "
+              "(each window's own last frame is dropped whether or not it "
+              "repeats); last PROVEN re-simulated frames %s; per-window "
+              "ceiling min(the two) %s -> %d. The settled frame is the "
+              "latest frame at or below that ceiling whose rounds= all four "
+              "windows agree on. Rungs 3-6 compare at it, rung 8 compares up "
+              "to it."
+              % (tails, raw_excluded, resim_last, proven, bound))
 
     for k, (rc, _, lg) in enumerate(res):
         ok &= M.verdict(rc == 0, "window %d exited clean | rc=%d %s"
@@ -591,8 +642,20 @@ def main():
         use = []
         for k, lg in enumerate(logs):
             dst = os.path.join(os.path.dirname(lg), "run.settled.log")
-            trim_log(lg, dst, settled)
+            kept, excluded, tail_path = trim_log(lg, dst, settled)
             use.append(dst)
+            if excluded:
+                fr = sorted(set(f for f, _ in excluded))
+                print("  [rollback] window %d: %d row(s) compared up to f%d, "
+                      "%d row(s) EXCLUDED for frames f%d..f%d, kept in %s"
+                      % (k, kept, settled, len(excluded), fr[0], fr[-1],
+                         tail_path))
+                for _, line in excluded[-4:]:
+                    print("      excluded: %s" % line.strip()[:150])
+            else:
+                print("  [rollback] window %d: %d row(s) compared up to f%d, "
+                      "nothing excluded (this window logged no row past the "
+                      "settled frame)" % (k, kept, settled))
     for a in range(4):
         for b in range(a + 1, 4):
             r = subprocess.run([sys.executable, dh, use[a], use[b]],
