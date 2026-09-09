@@ -1,6 +1,13 @@
 //cpp
 #include "types.h"
 // @symbol _ZN15daObjMarioCap_c13InitResourcesEv
+// NONMATCHING: candidate's literal pool is 8 bytes (two words) larger than the ROM's
+// under the pinned 2004/b56 (0x4d0 vs 0x4c8). The code body, including the whole
+// switch/jump-table prologue, is identical through +0xc8; at +0xcc the first
+// `ldr r0, [pc, #N]` literal-pool load goes from ROM offset 0x390 to candidate offset
+// 0x398, and every later `ldr [pc, #N]` inherits the same constant 8-byte shift. Never
+// enrolled (config/arm9/overlays/ov002/delinks.txt carries no `complete` marker for this
+// range) -- counted as matched only because the count rule never read delinks.txt.
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
