@@ -22,8 +22,17 @@ FILE exactly once regardless of how many candidates it enrolls -- correctness
 here, not just speed. ``AuditFileCompilesOnce`` pins that a group of N
 candidate rows for one file triggers exactly one ``compile_one`` call and one
 ``Path.read_bytes``, and that every row's finding reaches the caller.
+``ThreadPoolDispatchIsRaceFree`` pins the same invariant one layer up, through
+a real ``ThreadPoolExecutor`` running ``main()``'s actual group-then-``ex.map``
+dispatch (Windows surfaces the identical race as ``PermissionError`` or
+``FileNotFoundError`` rather than ``elftools``' ``ELFError``, since two
+threads opening the same path for read and write at once is a sharing
+violation there rather than a torn read) -- a future edit that reintroduces
+per-candidate dispatch fails it immediately, without needing mwccarm.
 """
 
+import collections
+import concurrent.futures
 import pathlib
 import sys
 import tempfile
@@ -294,6 +303,104 @@ class AuditFileCompilesOnce(unittest.TestCase):
         for rel, name, module, findings in results:
             self.assertEqual(findings[0]["verdict"], "NO-OBJECT")
             self.assertIn("syntax error", findings[0]["detail"])
+
+
+class ThreadPoolDispatchIsRaceFree(unittest.TestCase):
+    """``main()``'s own dispatch shape, through a REAL ``ThreadPoolExecutor``:
+    group candidate rows by ``rel`` (as ``main()`` does with
+    ``groups.setdefault(rel, []).append(...)``), then ``ex.map`` one
+    ``audit_file`` task per group. This is the SYMRACE regression pin --
+    TUBASE's -j8 crash (``FileNotFoundError`` / ``PermissionError`` on
+    Windows, ``ELFError: Magic number does not match`` reproduced directly
+    against this tree's pre-XSCOPE symscope.py) was two threads independently
+    calling ``rombuild.compile_one`` for the SAME ``rel``, each doing its own
+    fetch-or-compile-then-isolate write to the identical ``build/<rel>.o``
+    path. If ``main()`` (or a future edit to it) ever again dispatches one
+    executor task per CANDIDATE ROW instead of per FILE, a two-function
+    fixture compiled through real ``compile_one``/isolate calls under several
+    concurrent worker threads reproduces exactly that: two threads racing
+    ``obj.write_bytes()``/``obj.read_bytes()`` on one path. Routed through a
+    real thread pool with real file I/O (not a single direct call, and not a
+    mocked ``compile_one``) so the assertion is about actual concurrent
+    filesystem access, not call-count bookkeeping alone.
+    """
+
+    def setUp(self):
+        self._tmpdir = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmpdir.cleanup)
+        self.build = pathlib.Path(self._tmpdir.name)
+        self._build_patch = mock.patch.object(S.RB, "BUILD", self.build)
+        self._build_patch.start()
+        self.addCleanup(self._build_patch.stop)
+
+    def test_two_function_file_compiles_once_under_concurrent_workers(self):
+        import threading
+        import time
+
+        compile_calls = []
+        compile_lock = threading.Lock()
+        barrier = threading.Barrier(2)  # the two distinct files (groups), not candidate rows
+
+        def fake_compile_one(rel, vers, cache, init_srcs, syms,
+                             compiler_only=None, intact_tus=None):
+            # Every worker arrives here before any of them proceeds, so a
+            # dispatch bug (one task per candidate row instead of per file)
+            # has every candidate's compile racing the identical obj path at
+            # the same instant, not merely "close in time".
+            barrier.wait(timeout=5)
+            with compile_lock:
+                compile_calls.append((rel, threading.get_ident()))
+            obj = self.build / pathlib.Path(rel).with_suffix(".o")
+            obj.parent.mkdir(parents=True, exist_ok=True)
+            # Simulate compile_one's real sequence for a hit: fetch (write),
+            # a scheduling gap, then _isolate's read-modify-write -- the
+            # exact two-step window the original race landed in.
+            obj.write_bytes(f"RAW:{rel}".encode())
+            time.sleep(0.02)
+            raw = obj.read_bytes()
+            obj.write_bytes(raw + b":ISOLATED")
+            return rel, None, "hit"
+
+        seen = []
+
+        def fake_audit_one(rel, name, addr, size, module, raw, ctx):
+            seen.append((rel, name, raw))
+            return rel, name, module, []
+
+        # The exact shape candidates() gives main() for a two-function
+        # consolidated TU: two rows, same rel, different names/addrs.
+        rows = [
+            ("src/two_func.cpp", "func_A", 0x100, 0x10, "ov018"),
+            ("src/two_func.cpp", "func_B", 0x110, 0x10, "ov018"),
+            ("src/other.cpp", "func_C", 0x200, 0x10, "ov018"),
+        ]
+        groups = collections.OrderedDict()
+        for rel, name, addr, size, module in rows:
+            groups.setdefault(rel, []).append((name, addr, size, module))
+        ctx = {"vers": {}, "cache": None, "init_srcs": {}, "syms": {},
+              "compiler_only": {}, "intact_tus": {}}
+
+        with mock.patch.object(S.RB, "compile_one", side_effect=fake_compile_one), \
+             mock.patch.object(S, "audit_one", side_effect=fake_audit_one):
+            with concurrent.futures.ThreadPoolExecutor(max_workers=4) as ex:
+                all_results = list(ex.map(
+                    lambda kv: S.audit_file(kv[0], kv[1], ctx), groups.items()))
+
+        # One compile_one call per FILE (2 groups), never per candidate row (3).
+        rels_compiled = [c[0] for c in compile_calls]
+        self.assertEqual(sorted(rels_compiled), ["src/other.cpp", "src/two_func.cpp"])
+        self.assertEqual(len(rels_compiled), 2,
+                         "compile_one must run once per file even with two "
+                         "candidate rows sharing one rel")
+
+        # Every candidate saw its OWN file's fully-isolated bytes, never a
+        # neighbour's or a half-written one -- the exact corruption shape a
+        # per-candidate dispatch produces under concurrency.
+        by_name = {name: raw for _rel, name, raw in seen}
+        self.assertEqual(by_name["func_A"], b"RAW:src/two_func.cpp:ISOLATED")
+        self.assertEqual(by_name["func_B"], b"RAW:src/two_func.cpp:ISOLATED")
+        self.assertEqual(by_name["func_C"], b"RAW:src/other.cpp:ISOLATED")
+        self.assertEqual(len(seen), 3, "every candidate row's finding must reach the caller")
 
 
 if __name__ == "__main__":
