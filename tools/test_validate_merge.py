@@ -1140,7 +1140,7 @@ class RelocIndex(unittest.TestCase):
         self.old_repo = VM.REPO
         VM.REPO = self.repo
         for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
-                      VM._SYMBOL_BASE_CACHE):
+                      VM._SYMBOL_BASE_CACHE, VM._SYMBOL_NAME_CACHE):
             cache.clear()
             self.addCleanup(cache.clear)
         self.addCleanup(setattr, VM, "REPO", self.old_repo)
@@ -1321,35 +1321,74 @@ BX_LR = 0xE12FFF1E
 MOV_PC_LR = 0xE1A0F00E
 POP_R4_PC = 0xE8BD8010
 LDMIA_SP_PC = 0xE8BD9FFF
+LDMFD_SP_PC = 0xE8BD8000
+LDM_R0_PC = 0xE8908000
+LDMDB_R0_PC = 0xE9108000
+LDMIB_R0_PC = 0xE9B08000
 
 
 class ReturnEncodings(unittest.TestCase):
-    """The accepted set, spelled out. The three shapes evidence_rom recognises."""
+    """The accepted set, spelled out: `bx lr` and a stack pop to pc, and nothing else.
+
+    Classified through `evidence_rom.is_unconditional_return` and then narrowed -- see
+    the block above `_is_return_word` for each narrowing and why it is there.
+    """
 
     def test_the_accepted_encodings(self):
-        for word in (BX_LR, MOV_PC_LR, POP_R4_PC, LDMIA_SP_PC):
+        for word in (BX_LR, POP_R4_PC, LDMIA_SP_PC, LDMFD_SP_PC):
             self.assertTrue(VM._is_return_word(word), hex(word))
+
+    def test_a_block_load_to_pc_through_any_other_base_is_refused(self):
+        # The mask this replaced tested the transfer bits and the pc bit and nothing
+        # else, so all three of these read as returns. What the loaded destination is,
+        # these four bytes do not say.
+        for word, why in ((LDM_R0_PC, "ldm r0, {pc}"),
+                          (LDMDB_R0_PC, "ldmdb r0, {pc}"),
+                          (LDMIB_R0_PC, "ldmib r0!, {pc}")):
+            self.assertFalse(VM._is_return_word(word), why)
 
     def test_everything_else_is_refused(self):
         for word, why in ((0x012FFF1E, "bxeq lr, a conditional return"),
                           (0xE12FFF13, "bx r3, not lr"),
+                          (MOV_PC_LR, "mov pc, lr, a register move; narrowed out"),
                           (0xE8BD0010, "pop {r4}, no pc in the list"),
                           (0xE8FD8010, "ldmia sp!, {r4, pc}^, restores CPSR"),
                           (0xE92D4010, "stmdb sp!, {r4, lr}, a store"),
                           (0xEAFFFFFE, "b self, an infinite loop"),
                           (0xE3A00000, "mov r0, #0"),
-                          (0xE49DF004, "ldr pc, [sp], #4, deliberately outside the set"),
+                          (0xE49DF004, "ldr pc, [sp], #4, not a block transfer"),
                           (0x00000000, "padding")):
             self.assertFalse(VM._is_return_word(word), why)
+
+
+def _code(word, instruction=True):
+    """A `code_owned` reader: the merged object covers the address as an INSTRUCTION
+    (or, with instruction=False, as a `$d` literal pool) and emits `word` there."""
+    def read(path, symbol, symbol_addr, addr):
+        return {"instruction": instruction, "word": word}
+    read.missing = set()
+    return read
+
+
+def _unnamed(module, addr):
+    """A `named` reader for a tree whose only symbol there is the address placeholder."""
+    return None
+
+
+def _names(name):
+    """A `named` reader for a tree that has a real name for every address."""
+    return lambda module, addr: name
 
 
 class AbsorbedEpilogue(unittest.TestCase):
     """The matched-loss exception, in `classify_merge` itself.
 
-    A record may leave `matched` only when all four hold: it is the exact TAIL of a new
-    `complete` range, it is one four-byte instruction whose ROM word is an accepted
-    return, that range is backed by compiled source, and a VALID relocation index names
-    nothing in its bytes. Each test below removes exactly one of them.
+    A record may leave `matched` only when all six hold: it is the exact TAIL of a new
+    `complete` range (a), four bytes whose ROM word is `bx lr` or a stack pop to pc (b),
+    that range is backed by compiled source (c), a VALID relocation index names nothing
+    in its bytes (d), no symbol in either revision NAMES the address (e), and the merged
+    function's own compiled object covers it as an instruction emitting that same word
+    (f). Each test below removes exactly one of them.
     """
 
     BODY, EPILOGUE, NEXT = 0x02071644, 0x02071694, 0x02071698
@@ -1367,18 +1406,20 @@ class AbsorbedEpilogue(unittest.TestCase):
     def test_a_ranges_own_tail_return_may_be_absorbed(self):
         base, head, be, he = self._merge()
         got = VM.classify_merge(base, head, be, he, _compiled(he), _relocs(self.BODY),
-                                _rom({("arm9", self.EPILOGUE): BX_LR}))
+                                _rom({("arm9", self.EPILOGUE): BX_LR}),
+                                _code(BX_LR), _unnamed)
         self.assertIsNotNone(got)
         self.assertEqual(got["absorbed"], [f"arm9:0x{self.EPILOGUE:08x}"])
         self.assertEqual(got["functionDelta"], -1)
         self.assertEqual(got["sourceByteDelta"], 0x50)
 
     def test_every_accepted_return_encoding_lands(self):
-        for word in (BX_LR, MOV_PC_LR, POP_R4_PC, LDMIA_SP_PC):
+        for word in (BX_LR, POP_R4_PC, LDMIA_SP_PC, LDMFD_SP_PC):
             base, head, be, he = self._merge()
             got = VM.classify_merge(base, head, be, he, _compiled(he),
                                     _relocs(self.BODY),
-                                    _rom({("arm9", self.EPILOGUE): word}))
+                                    _rom({("arm9", self.EPILOGUE): word}),
+                                    _code(word), _unnamed)
             self.assertIsNotNone(got, hex(word))
 
     def test_a_record_the_rom_calls_is_still_refused(self):
@@ -1386,42 +1427,96 @@ class AbsorbedEpilogue(unittest.TestCase):
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY, self.EPILOGUE),
-            _rom({("arm9", self.EPILOGUE): BX_LR})))
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed))
 
     def test_a_load_of_the_address_counts_as_a_caller(self):
         # A `kind:load` destination is a reference like any other.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.EPILOGUE),
-            _rom({("arm9", self.EPILOGUE): BX_LR})))
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed))
 
     def test_without_a_validated_relocation_index_nothing_matched_may_leave(self):
         # (d) again: None is what build_report passes when the index has a defect.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he), None,
-                                            _rom({("arm9", self.EPILOGUE): BX_LR})))
+                                            _rom({("arm9", self.EPILOGUE): BX_LR}),
+                                            _code(BX_LR), _unnamed))
 
     def test_without_the_rom_image_nothing_matched_may_leave(self):
         # (b) cannot be checked, so it is not assumed.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he),
-                                            _relocs(self.BODY), None))
+                                            _relocs(self.BODY), None,
+                                            _code(BX_LR), _unnamed))
         self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he),
-                                            _relocs(self.BODY), _rom()))
+                                            _relocs(self.BODY), _rom(),
+                                            _code(BX_LR), _unnamed))
+
+    def test_without_code_ownership_nothing_matched_may_leave(self):
+        # (f) cannot be checked -- no compiler on this box -- so it is not assumed.
+        base, head, be, he = self._merge()
+        for code in (None, _code(None)):
+            self.assertIsNone(VM.classify_merge(
+                base, head, be, he, _compiled(he), _relocs(self.BODY),
+                _rom({("arm9", self.EPILOGUE): BX_LR}), code, _unnamed))
+
+    def test_a_literal_pool_at_the_tail_is_refused(self):
+        # (f). `unsigned int f(void) { return 0xe12fff1e; }` compiles under the pinned
+        # b56 to `e59f0000 e12fff1e e12fff1e`, and the object's mapping symbols put `$d`
+        # at offset 8. Same bits as a return, at the exact tail, with a clean index.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY),
+            _rom({("arm9", self.EPILOGUE): BX_LR}),
+            _code(BX_LR, instruction=False), _unnamed))
+
+    def test_an_object_that_emits_a_different_word_is_refused(self):
+        # (f). The object covers the address with an instruction and it is not the
+        # cartridge's. Then the merged source does not reproduce that return.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY),
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(POP_R4_PC), _unnamed))
+
+    def test_a_named_callback_at_the_tail_is_refused(self):
+        # (e). Everything else holds -- exact tail, `bx lr` in the ROM, compiled range,
+        # clean index, an instruction in the object -- and config has a NAME for those
+        # bytes. Position is not identity.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY),
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR),
+            _names("AutoloadCallback")))
+        # And with no `named` reader at all, which is a missing answer, not a "no".
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY),
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), None))
 
     def test_a_four_byte_record_that_is_not_a_return_is_refused(self):
         # (b). Byte coverage plus an empty index says nothing about what the bytes ARE.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
-            _rom({("arm9", self.EPILOGUE): 0xE3A00000})))
+            _rom({("arm9", self.EPILOGUE): 0xE3A00000}),
+            _code(0xE3A00000), _unnamed))
 
     def test_a_conditional_return_is_refused(self):
         # (b). bxeq lr leaves a live fall-through, so the bytes after it are reached.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
-            _rom({("arm9", self.EPILOGUE): 0x012FFF1E})))
+            _rom({("arm9", self.EPILOGUE): 0x012FFF1E}),
+            _code(0x012FFF1E), _unnamed))
+
+    def test_a_block_load_through_a_register_other_than_sp_is_refused(self):
+        # (b). `ldm r0, {pc}` transfers through whatever r0 holds. The bytes do not say.
+        for word in (LDM_R0_PC, LDMDB_R0_PC, LDMIB_R0_PC):
+            base, head, be, he = self._merge()
+            self.assertIsNone(VM.classify_merge(
+                base, head, be, he, _compiled(he), _relocs(self.BODY),
+                _rom({("arm9", self.EPILOGUE): word}), _code(word), _unnamed),
+                hex(word))
 
     def test_an_arbitrary_sized_matched_record_at_the_tail_is_refused(self):
         # (b). The 0x100-byte record: at the exact tail of a new compiled range with a
@@ -1429,29 +1524,30 @@ class AbsorbedEpilogue(unittest.TestCase):
         base, head, be, he = self._merge(epilogue_size=0x100)
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
-            _rom({("arm9", self.EPILOGUE): BX_LR})))
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed))
 
     def test_a_record_inside_the_range_but_not_at_its_tail_is_refused(self):
-        # (a). A named callback the merge happens to cover is not an epilogue. Placed
-        # mid-range: a record at the exact HEAD of a range cannot reach this clause at
-        # all, because head still carries a record at that address -- see the
-        # survives-but-loses-matched test below.
+        # (a), POSITION alone: the record carries the address placeholder, so (e) has
+        # nothing to say about it, and it is refused for sitting mid-range. A record at
+        # the exact HEAD of a range cannot reach this clause at all, because head still
+        # carries a record at that address -- see the survives-but-loses-matched test.
         base = _snap([("func_02071644", self.BODY, 0x20, False),
-                      ("AutoloadCallback", self.BODY + 0x20, 0x4, True),
+                      ("func_02071664", self.BODY + 0x20, 0x4, True),
                       ("func_02071668", self.BODY + 0x24, 0x30, False)])
         head = _snap([("func_02071644", self.BODY, 0x54, True)])
         be = _enr([(self.BODY + 0x20, self.BODY + 0x24)])
         he = _enr([(self.BODY, self.BODY + 0x54)])
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
-            _rom({("arm9", self.BODY + 0x20): BX_LR})))
+            _rom({("arm9", self.BODY + 0x20): BX_LR}), _code(BX_LR), _unnamed))
 
     def test_absorption_still_needs_a_new_compiled_range_over_the_bytes(self):
         # (c) and the merge rule's own evidence: no new range at all.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(base, head, be, be, _compiled(be),
                                             _relocs(self.BODY),
-                                            _rom({("arm9", self.EPILOGUE): BX_LR})))
+                                            _rom({("arm9", self.EPILOGUE): BX_LR}),
+                                            _code(BX_LR), _unnamed))
 
     def test_a_transcription_cannot_absorb_a_matched_record_either(self):
         # (c). The covering range reproduces vacuously, so it proves nothing about the
@@ -1459,7 +1555,8 @@ class AbsorbedEpilogue(unittest.TestCase):
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(base, head, be, he, set(),
                                             _relocs(self.BODY),
-                                            _rom({("arm9", self.EPILOGUE): BX_LR})))
+                                            _rom({("arm9", self.EPILOGUE): BX_LR}),
+                                            _code(BX_LR), _unnamed))
 
     def test_a_record_that_survives_but_loses_matched_is_not_absorption(self):
         # Still present in head, so a banner went on or its source left. That is a
@@ -1471,7 +1568,8 @@ class AbsorbedEpilogue(unittest.TestCase):
                       ("func_02071698", self.NEXT, 0x4, False)])
         he = _enr([(self.BODY, self.BODY + 0x50)])
         self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he),
-                                            _relocs(), _rom({}, BX_LR)))
+                                            _relocs(), _rom({}, BX_LR),
+                                            _code(BX_LR), _unnamed))
 
 
 class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
@@ -1517,7 +1615,7 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         VM.REPO = self.repo
         self.addCleanup(setattr, VM, "REPO", self.old_repo)
         for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
-                      VM._SYMBOL_BASE_CACHE):
+                      VM._SYMBOL_BASE_CACHE, VM._SYMBOL_NAME_CACHE):
             cache.clear()
             self.addCleanup(cache.clear)
 
@@ -1567,7 +1665,8 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         self.write_overlay_image(1, [word])
 
     def absorb(self, relocs=VALID_RELOCS, extra_reloc=None, epilogue_word=0xE12FFF1E,
-               epilogue_size=0x4, rom=True, orphan_module=False, data_only=None):
+               epilogue_size=0x4, rom=True, orphan_module=False, data_only=None,
+               code=None, record_name=None):
         """Commit a base and the fold on top of it, and report on the pair.
 
         `relocs` is the content of `config/arm9/relocs.txt` in BOTH revisions; None
@@ -1575,13 +1674,17 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         head only. `orphan_module` adds an overlay that declares a function and has no
         `relocs.txt` at all -- an incomplete module inventory. `data_only`, when given,
         adds a data-only ov001 whose single data word is that value and whose
-        `relocs.txt` is empty in both snapshots.
+        `relocs.txt` is empty in both snapshots. `code` replaces the compiled-code
+        evidence, which by default agrees with the cartridge: the merged object
+        covers the record as an instruction emitting `epilogue_word`. `record_name`
+        gives the retired symbol a real name instead of the address placeholder.
         """
         nxt = self.EPILOGUE + epilogue_size
         self.write("config/arm9/symbols.txt", "\n".join([
             f"Anchor kind:function(arm,size=0x4) addr:0x{self.ANCHOR:08x}",
             f"func_02071644 kind:function(arm,size=0x50) addr:0x{self.BODY:08x}",
-            f"func_02071694 kind:function(arm,size=0x{epilogue_size:x}) "
+            f"{record_name or 'func_02071694'} "
+            f"kind:function(arm,size=0x{epilogue_size:x}) "
             f"addr:0x{self.EPILOGUE:08x}",
             f"func_{nxt:08x} kind:function(arm,size=0x70) addr:0x{nxt:08x}",
             ""]))
@@ -1624,7 +1727,10 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         VM._RELOC_CACHE.clear()
         VM._ENROLMENT_CACHE.clear()
         VM._SYMBOL_BASE_CACHE.clear()
-        return VM.build_report(base, head)
+        VM._SYMBOL_NAME_CACHE.clear()
+        return VM.build_report(
+            base, head,
+            code_evidence=_code(epilogue_word) if code is None else code)
 
     def assertRefused(self, report, defect=None):
         self.assertIsNone(report["repartition"])
@@ -1729,6 +1835,46 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         # word and nothing pointing at it. One instruction is the whole claim.
         self.assertRefused(self.absorb(epilogue_size=0x100))
 
+    def test_a_named_callback_at_the_tail_fails_the_report(self):
+        # Everything else holds: exact tail, `bx lr` in the cartridge, a compiled
+        # covering range, a clean index, an instruction in the merged object. Config
+        # has a NAME for those four bytes, so they are not the placeholder this rule
+        # exists to retire. The existing mid-range control tests position; this one
+        # tests identity.
+        report = self.absorb(record_name="AutoloadCallback")
+        self.assertRefused(report)
+        self.assertTrue(report["relocationEvidence"]["valid"])
+
+    def test_a_literal_pool_at_the_tail_fails_the_report(self):
+        # The merged object covers the address, and covers it with DATA -- the `$d`
+        # region a compiler-generated literal pool sits in. Its bits are 0xe12fff1e
+        # either way. CompiledCodeOwnership below builds the real object.
+        report = self.absorb(code=_code(BX_LR, instruction=False))
+        self.assertRefused(report)
+        self.assertTrue(report["relocationEvidence"]["valid"])
+
+    def test_a_block_load_through_r0_fails_the_report(self):
+        # `ldm r0, {pc}` at the record. A block load to pc through a register these
+        # four bytes say nothing about is not a return this rule accepts.
+        report = self.absorb(epilogue_word=LDM_R0_PC)
+        self.assertRefused(report)
+        self.assertTrue(report["relocationEvidence"]["valid"])
+
+    def test_without_code_ownership_the_report_fails_closed(self):
+        # No compiler on the box: the exception is unavailable and the report says
+        # so, the same way it does without the ROM image.
+        missing = _code(BX_LR)
+        missing.missing.add("the pinned compiler 2004/b56 is not installed")
+
+        def read(path, symbol, symbol_addr, addr):
+            return None
+        read.missing = missing.missing
+        report = self.absorb(code=read)
+        self.assertRefused(report)
+        self.assertIn("compiled code ownership unavailable, so nothing matched may "
+                      "leave: the pinned compiler 2004/b56 is not installed",
+                      report["reasons"])
+
     def test_without_the_rom_image_the_report_fails_closed(self):
         report = self.absorb(rom=False)
         self.assertRefused(report)
@@ -1776,7 +1922,7 @@ class DataLeadingOverlayImageBase(unittest.TestCase):
         VM.REPO = self.repo
         self.addCleanup(setattr, VM, "REPO", self.old_repo)
         for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
-                      VM._SYMBOL_BASE_CACHE):
+                      VM._SYMBOL_BASE_CACHE, VM._SYMBOL_NAME_CACHE):
             cache.clear()
             self.addCleanup(cache.clear)
 
@@ -1860,8 +2006,9 @@ class DataLeadingOverlayImageBase(unittest.TestCase):
         VM._RELOC_CACHE.clear()
         VM._ENROLMENT_CACHE.clear()
         VM._SYMBOL_BASE_CACHE.clear()
+        VM._SYMBOL_NAME_CACHE.clear()
         self.base, self.head = base, head
-        return VM.build_report(base, head)
+        return VM.build_report(base, head, code_evidence=_code(record_word))
 
     def test_the_reader_answers_from_the_lowest_symbol_not_the_first_function(self):
         self.absorb()
@@ -1885,3 +2032,188 @@ class DataLeadingOverlayImageBase(unittest.TestCase):
         self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 1)
         self.assertEqual([a["name"] for a in report["matchedAbsorbed"]],
                          [f"func_{self.EPILOGUE:08x}"])
+
+
+def _pinned_compiler_present():
+    try:
+        import build_pin as BP
+    except Exception:                                          # noqa: BLE001
+        return False
+    return (BP.MW / BP.DEFAULT_VERSION / "mwccarm.exe").is_file()
+
+
+@unittest.skipUnless(_pinned_compiler_present(), "mwccarm not present")
+class CompiledCodeOwnership(unittest.TestCase):
+    """`_compiled_code_reader` against the real pinned compiler and a real object.
+
+    The report fixtures above hand `build_report` a stub, because the runner that
+    runs this suite has no toolchain and a stub is how the WIRING gets tested there.
+    These test the reader itself, which is where the claim actually lives: that the
+    ARM EABI mapping symbols in the object mwccarm produces separate an instruction
+    from a literal pool, and that a pool with a return's exact bits really occurs.
+    """
+
+    LITERAL = "unsigned int func_02071644(void) { return 0xe12fff1e; }\n"
+    BODY = "\n".join([
+        "void func_02071644(unsigned char *p, int len) {",
+        "    for (;;) { if (*p < 9) { (*p)++; return; } *p-- = 0; }",
+        "}",
+        ""])
+
+    def read_for(self, source):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        repo = pathlib.Path(self.tmp.name)
+        git(repo, "init", "-q", ".")
+        (repo / "src").mkdir()
+        (repo / "src" / "func_02071644.c").write_text(source, encoding="utf-8",
+                                                      newline="\n")
+        old_repo = VM.REPO
+        VM.REPO = repo
+        self.addCleanup(setattr, VM, "REPO", old_repo)
+        head = commit(repo, "source", "alice")
+        return VM._compiled_code_reader(head)
+
+    def test_a_literal_pools_bits_are_data_not_an_epilogue(self):
+        # b56 emits `e59f0000 e12fff1e e12fff1e`: ldr, the real return, then the
+        # constant. Offset 8 is `$d`, and offset 4 -- the same bits -- is `$a`.
+        read = self.read_for(self.LITERAL)
+        pool = read("src/func_02071644.c", "func_02071644", 0x02071644, 0x0207164C)
+        self.assertEqual(pool, {"instruction": False, "word": BX_LR})
+        real = read("src/func_02071644.c", "func_02071644", 0x02071644, 0x02071648)
+        self.assertEqual(real, {"instruction": True, "word": BX_LR})
+        self.assertEqual(read.missing, set())
+
+    def test_a_recovered_body_owns_its_own_final_return(self):
+        # The body the report fixtures compile: 0x24 bytes, one `$a` region, `bx lr`
+        # at 0x20. The live case has this shape and must keep landing.
+        read = self.read_for(self.BODY)
+        end = read("src/func_02071644.c", "func_02071644", 0x02071644, 0x02071664)
+        self.assertEqual(end, {"instruction": True, "word": BX_LR})
+        self.assertEqual(read.missing, set())
+
+    def test_an_address_outside_the_symbol_is_not_owned(self):
+        read = self.read_for(self.BODY)
+        self.assertEqual(
+            read("src/func_02071644.c", "func_02071644", 0x02071644, 0x02071668),
+            {"instruction": False, "word": None})
+
+    def test_a_source_that_does_not_compile_answers_nothing(self):
+        read = self.read_for("void func_02071644(void) { not C at all; }\n")
+        self.assertIsNone(
+            read("src/func_02071644.c", "func_02071644", 0x02071644, 0x02071644))
+        self.assertTrue(any("does not compile" in m for m in read.missing),
+                        read.missing)
+
+
+@unittest.skipUnless(_pinned_compiler_present(), "mwccarm not present")
+class LiteralPoolThroughBuildReport(unittest.TestCase):
+    """The literal-pool fixture end to end, against the REAL compiled object.
+
+    `unsigned int func_02071644(void) { return 0xe12fff1e; }` compiles under the
+    pinned b56 to `e59f0000 e12fff1e e12fff1e`. The last word is the function's own
+    literal pool: at the exact tail of the range this merge newly compiles, four
+    bytes long, with a return's exact bits, backed by compiled source, named by no
+    symbol and pointed at by no relocation. Every clause but code ownership holds,
+    and before code ownership the report Passed with one absorbed record.
+
+    No stub anywhere in this class: `build_report` builds its own reader, compiles
+    the committed head blob with the pinned compiler and reads that object's ARM
+    EABI mapping symbols.
+    """
+
+    ANCHOR, BODY, EPILOGUE, NEXT = 0x02004000, 0x02071644, 0x0207164C, 0x02071650
+    RELOCS = ("from:0x02071354 kind:arm_call to:0x02071644 module:main\n"
+              "from:0x02071614 kind:arm_call to:0x02004000 module:main\n")
+    RECOVERED = "unsigned int func_02071644(void) { return 0xe12fff1e; }\n"
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.repo = pathlib.Path(self.tmp.name)
+        git(self.repo, "init", "-q", ".")
+        (self.repo / ".gitignore").write_text("extracted/\n", encoding="utf-8")
+        self.old_repo = VM.REPO
+        VM.REPO = self.repo
+        self.addCleanup(setattr, VM, "REPO", self.old_repo)
+        for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
+                      VM._SYMBOL_BASE_CACHE, VM._SYMBOL_NAME_CACHE):
+            cache.clear()
+            self.addCleanup(cache.clear)
+
+    def write(self, rel, text):
+        path = self.repo / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8", newline="\n")
+
+    def delinks(self, entry, start, end):
+        return "\n".join([
+            "    .text start:0x02000000 end:0x02100000 kind:code",
+            "",
+            "src/Anchor.c:",
+            "    complete",
+            f"    .text start:0x{self.ANCHOR:08x} end:0x{self.ANCHOR + 4:08x}",
+            "",
+            f"{entry}:",
+            "    complete",
+            f"    .text start:0x{start:08x} end:0x{end:08x}",
+            ""])
+
+    def absorb(self, source=None):
+        self.write("config/arm9/symbols.txt", "\n".join([
+            f"Anchor kind:function(arm,size=0x4) addr:0x{self.ANCHOR:08x}",
+            f"func_02071644 kind:function(arm,size=0x8) addr:0x{self.BODY:08x}",
+            f"func_0207164c kind:function(arm,size=0x4) addr:0x{self.EPILOGUE:08x}",
+            f"func_02071650 kind:function(arm,size=0x70) addr:0x{self.NEXT:08x}",
+            ""]))
+        self.write("config/arm9/delinks.txt",
+                   self.delinks("src/func_0207164c.c", self.EPILOGUE, self.NEXT))
+        self.write("config/arm9/relocs.txt", self.RELOCS)
+        self.write("src/Anchor.c", "int Anchor(void) { return 0; }\n")
+        self.write("src/func_02071644.c",
+                   "// NONMATCHING: hand-written asm, does NOT count as matched.\n"
+                   "void func_02071644(void) {}\n")
+        self.write("src/func_0207164c.c", "void func_0207164c(void)\n{\n}\n")
+        self.write("src/func_02071650.c", "int func_02071650(void) { return 1; }\n")
+        base = commit(self.repo, "base", "alice")
+
+        self.write("config/arm9/symbols.txt", "\n".join([
+            f"Anchor kind:function(arm,size=0x4) addr:0x{self.ANCHOR:08x}",
+            f"func_02071644 kind:function(arm,size=0xc) addr:0x{self.BODY:08x}",
+            f"func_02071650 kind:function(arm,size=0x70) addr:0x{self.NEXT:08x}",
+            ""]))
+        self.write("config/arm9/delinks.txt",
+                   self.delinks("src/func_02071644.c", self.BODY, self.NEXT))
+        self.write("src/func_02071644.c", self.RECOVERED if source is None else source)
+        os.remove(self.repo / "src" / "func_0207164c.c")
+        offset = self.EPILOGUE - VM.ARM9_IMAGE_BASE
+        image = bytearray(offset + 4)
+        image[offset:offset + 4] = BX_LR.to_bytes(4, "little")
+        (self.repo / "extracted").mkdir(exist_ok=True)
+        (self.repo / "extracted" / "arm9_dec.bin").write_bytes(bytes(image))
+        head = commit(self.repo, "absorb", "bob")
+        for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
+                      VM._SYMBOL_BASE_CACHE, VM._SYMBOL_NAME_CACHE):
+            cache.clear()
+        return VM.build_report(base, head)
+
+    def test_the_pools_bits_do_not_make_it_an_epilogue(self):
+        report = self.absorb()
+        self.assertIsNone(report["repartition"])
+        self.assertIn("lost 1 matched function(s)", report["reasons"])
+        self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 0)
+        self.assertEqual(report["matchedAbsorbed"], [])
+        # Refused on code ownership alone: the index is clean and the word is a
+        # return, so neither of the other two guards is doing the work here.
+        self.assertTrue(report["relocationEvidence"]["valid"])
+        self.assertTrue(VM._is_return_word(BX_LR))
+
+    def test_a_body_that_really_ends_in_that_instruction_still_lands(self):
+        # The positive control, same tree and same compiler: three instructions
+        # ending in the `bx lr` the cartridge has, one `$a` region, no pool.
+        report = self.absorb(
+            source="int func_02071644(int a, int b) { return a + b + 1; }\n")
+        self.assertEqual(report["reasons"], [])
+        self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 1)
+        self.assertEqual([a["name"] for a in report["matchedAbsorbed"]],
+                         ["func_0207164c"])

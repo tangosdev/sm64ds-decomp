@@ -19,11 +19,13 @@ import argparse
 import bisect
 import collections
 import hashlib
+import io
 import json
 import pathlib
 import re
 import subprocess
 import sys
+import tempfile
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
@@ -438,33 +440,87 @@ def _reloc_evidence(base, head):
 ARM9_IMAGE = "extracted/arm9_dec.bin"
 ARM9_IMAGE_BASE = 0x02004000
 
-# THE ACCEPTED RETURN ENCODINGS, and nothing else. These are the three shapes
-# `tools/evidence_rom.py:is_unconditional_return` recognises, spelled at the encoding
-# level so this tool needs no disassembler on the validator box:
+# THE ACCEPTED RETURN ENCODINGS, and nothing else:
 #
 #   bx lr                  0xE12FFF1E
-#   mov pc, lr             0xE1A0F00E
-#   ldm/pop writing pc     condition AL, block data transfer, L=1, S=0, and r15 in the
-#                          register list -- e.g. `pop {r4, pc}` 0xE8BD8010
+#   a stack pop to pc      unconditional block data transfer, L=1, S=0, r13 as the base
+#                          register and r15 in the list -- `pop {r4, pc}` 0xE8BD8010,
+#                          `ldmfd sp!, {pc}` 0xE8BD8000
 #
-# CONDITION AL ONLY, matching evidence_rom: a conditional return (`bxeq lr`,
+# CLASSIFIED BY `evidence_rom.is_unconditional_return`, NOT BY A MASK OF OUR OWN. The
+# mask this replaced tested the transfer bits and the pc bit and nothing else, so it
+# read `ldm r0, {pc}` (0xE8908000) as a return -- an indirect transfer through whatever
+# r0 held, about which the four bytes say nothing -- and `ldmdb r0, {pc}` and
+# `ldmib r0!, {pc}` with it, neither of which the helper it cited classifies that way.
+# One classifier, imported, is the only way those stay in step.
+#
+# THEN NARROWED, deliberately, in three places the helper does not reach. A rule that
+# lets a matched record leave should accept the smallest set that covers the real case:
+#
+#   * the base register must be r13. `ldm r0, {pc}` is a return only if r0 happens to
+#     hold a return address, which is a fact about the code before it, not about the
+#     word. A stack pop is self-evidencing.
+#   * `mov pc, lr` is dropped. It is a plain register move whose return-ness is a fact
+#     about lr, and no epilogue in this cartridge's severed-tail shape uses it. Nothing
+#     is lost by refusing it and re-examining if a real case appears.
+#   * `ldr pc, [sp], #4` (0xE49DF004) stays refused. capstone renders it `pop {pc}` and
+#     the helper accepts it; the block-transfer bits do not, and they are the test. (An
+#     earlier comment here claimed capstone decodes it as LDR. It does not.)
+#
+# CONDITION AL ONLY, which is the helper's own rule: a conditional return (`bxeq lr`,
 # `popne {.., pc}`) leaves a live fall-through path, so the bytes after it are still
-# reached and the record is not a severed tail. The S bit (`ldm ... ^`) restores CPSR
-# -- an exception return, not a function return, and on the never-in-C list in
-# notes/asm-policy.md. `ldr pc, [sp], #4` (0xE49DF004) is a return in practice and is
-# deliberately NOT accepted: capstone decodes it as LDR, so evidence_rom does not
-# recognise it either, and a narrower set is the safe direction for a rule that
-# permits a matched record to leave.
-RETURN_WORDS = (0xE12FFF1E, 0xE1A0F00E)
-_LDM_PC_MASK = 0x0E508000
-_LDM_PC_VALUE = 0x08108000
+# reached and the record is not a severed tail. The S bit (`ldm ... ^`) restores CPSR --
+# an exception return, not a function return, and on the never-in-C list in
+# notes/asm-policy.md.
+_BLOCK_TRANSFER_MASK = 0x0E000000
+_BLOCK_TRANSFER_VALUE = 0x08000000
+_S_BIT = 1 << 22
+_SP = 13
+_DECODER = None
+
+
+def _arm_decoder():
+    """``(capstone handle, evidence_rom, (BX, POP, LDM))``, or None when unavailable.
+
+    Lazy and guarded on purpose. Everything else in this report reads git text, so the
+    tool still runs on a box with no ARM tooling; only the matched-loss exception needs
+    a decoder, and that exception already needs the cartridge image and the pinned
+    compiler beside it. Unavailable is answered as None and refuses the exception --
+    never as "the word is not a return", and never as "it is".
+    """
+    global _DECODER
+    if _DECODER is None:
+        try:
+            from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
+            from capstone.arm import ARM_INS_BX, ARM_INS_LDM, ARM_INS_POP
+            import evidence_rom as EV
+        except (ImportError, SystemExit):
+            _DECODER = False
+        else:
+            handle = Cs(CS_ARCH_ARM, CS_MODE_ARM)
+            handle.detail = True
+            _DECODER = (handle, EV, (ARM_INS_BX, ARM_INS_POP, ARM_INS_LDM))
+    return _DECODER or None
 
 
 def _is_return_word(word):
-    """Is this 32-bit ARM word one of the accepted unconditional return encodings?"""
-    if word in RETURN_WORDS:
-        return True
-    return (word >> 28) == 0xE and (word & _LDM_PC_MASK) == _LDM_PC_VALUE
+    """Is this 32-bit ARM word `bx lr` or a stack pop to pc? See the block above."""
+    decoder = _arm_decoder()
+    if decoder is None:
+        return False
+    handle, EV, (BX, POP, LDM) = decoder
+    insn = next(handle.disasm(word.to_bytes(4, "little"), 0), None)
+    if insn is None or not EV.is_unconditional_return(insn):
+        return False
+    if insn.id == BX:
+        return True                     # the helper already checked the register is lr
+    if insn.id not in (POP, LDM):
+        return False                    # `mov pc, lr`
+    if (word & _BLOCK_TRANSFER_MASK) != _BLOCK_TRANSFER_VALUE:
+        return False                    # `ldr pc, [sp], #4`, rendered `pop {pc}`
+    if word & _S_BIT:
+        return False                    # `ldm sp!, {.., pc}^` restores CPSR
+    return ((word >> 16) & 0xF) == _SP  # `ldm r0, {pc}` and its db/ib spellings
 
 
 _SYMBOL_ROW = re.compile(r"^(\S+)\s+kind:\S.*?\baddr:0x([0-9a-fA-F]+)")
@@ -571,6 +627,183 @@ def _rom_word_reader(rev):
         if offset < 0 or offset + 4 > len(data):
             return None
         return int.from_bytes(data[offset:offset + 4], "little")
+
+    read.missing = set()
+    return read
+
+
+# The placeholder config derives from an address when it has no recovered name for it.
+# `func_02071694` and `func_ov006_020cb030` are this; `AutoloadCallback` is not.
+_ADDRESS_NAME = re.compile(r"^func_(?:ov\d+_)?([0-9a-fA-F]{8})$")
+_SYMBOL_NAME_CACHE = {}
+
+
+def _symbol_names(rev):
+    """``{(module, addr) -> [name]}`` over EVERY ``symbols.txt`` row at ``rev``.
+
+    Every row, not the function rows, and not `function_snapshot`'s `records`: that
+    dict is keyed by module:addr and keeps only the largest symbol at an address, so a
+    zero-size named alias sharing an address with a placeholder is invisible in it --
+    and an alias is exactly the shape this has to see.
+    """
+    key = (str(REPO), rev)
+    if key not in _SYMBOL_NAME_CACHE:
+        names = collections.defaultdict(list)
+        for path in tree_paths(rev, "config/arm9"):
+            if not _is_symbols_file(path):
+                continue
+            module = _module_from_config_path(path)
+            if module is None:
+                continue
+            for line in git_text(rev, path).splitlines():
+                m = _SYMBOL_ROW.match(line)
+                if m:
+                    names[(module, int(m.group(2), 16))].append(m.group(1))
+        _SYMBOL_NAME_CACHE[key] = {k: sorted(v) for k, v in names.items()}
+    return _SYMBOL_NAME_CACHE[key]
+
+
+def _named_symbol(revs, module, addr):
+    """The name of a symbol at ``addr`` that is not the address's own placeholder.
+
+    IDENTITY, NOT POSITION. A record sitting at the tail of a merged range is in the
+    right place to be that range's epilogue; it is not thereby the same thing. Config
+    that has a NAME for those bytes -- `AutoloadCallback`, a recovered symbol, an alias
+    -- is recording an identity the cartridge gave them, independent of whatever range
+    now covers them, and no merge gets to retire that on the strength of its position.
+    Read over BOTH revisions, so a PR cannot earn the exception by deleting the row
+    that names the address.
+    """
+    for names in revs:
+        for name in names.get((module, addr), ()):
+            m = _ADDRESS_NAME.fullmatch(name)
+            if m is None or int(m.group(1), 16) != addr:
+                return name
+    return None
+
+
+def _pinned_version(rev, path):
+    """The mwccarm version the ROM build compiles ``path`` with, read from ``rev``.
+
+    Revision-pinned like every other snapshot here: `build_pin.version_for` reads the
+    worktree's `config/rombuild-versions.txt`, which is not the table the revision under
+    judgement carries. Keyed on the file STEM because `rombuild.compile_one` is.
+    """
+    import build_pin as BP
+    stem = pathlib.PurePosixPath(path).stem
+    try:
+        text = git_text(rev, "config/rombuild-versions.txt")
+    except RuntimeError:
+        return BP.DEFAULT_VERSION
+    for line in text.splitlines():
+        row = line.split("#", 1)[0].split()
+        if len(row) >= 2 and row[0] == stem:
+            return row[1]
+    return BP.DEFAULT_VERSION
+
+
+def _mapping_evidence(obj, symbol, offset):
+    """``{"instruction": bool, "word": int}`` for ``offset`` bytes into ``symbol``.
+
+    None when the object cannot answer: it does not define the symbol, or it carries no
+    ARM EABI mapping symbols in the symbol's section, so nothing separates code from
+    data in it.
+
+    THE MAPPING SYMBOLS ARE THE ANSWER, and the compiler emits them for exactly this.
+    `$a` opens an ARM instruction region, `$t` a Thumb one and `$d` a data region, and
+    a compiler-generated literal pool sits in a `$d` region INSIDE the function's own
+    byte range. Measured with the pinned 2004/b56 on
+    `unsigned int f(void) { return 0xe12fff1e; }`: three words, `e59f0000 e12fff1e
+    e12fff1e`, `$a` at 0 and `$d` at 8. The third word has a return's bits and is a
+    constant. Only the mapping symbols tell them apart.
+    """
+    try:
+        from elftools.elf.elffile import ELFFile
+    except ImportError:
+        return None
+    elf = ELFFile(io.BytesIO(obj))
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None
+    sym = next((s for s in symtab.iter_symbols()
+                if s.name == symbol and s["st_info"]["type"] == "STT_FUNC"
+                and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")), None)
+    if sym is None:
+        return None
+    shndx = sym["st_shndx"]
+    marks = sorted((m["st_value"], m.name) for m in symtab.iter_symbols()
+                   if m.name in ("$a", "$t", "$d") and m["st_shndx"] == shndx)
+    if not marks:
+        return None
+    if not (0 <= offset and offset + 4 <= sym["st_size"]):
+        return {"instruction": False, "word": None}
+    where = sym["st_value"] + offset
+    kind = None
+    for value, name in marks:
+        if value > where:
+            break
+        kind = name
+    data = elf.get_section(shndx).data()
+    return {"instruction": kind == "$a",
+            "word": int.from_bytes(data[where:where + 4], "little")}
+
+
+def _compiled_code_reader(rev):
+    """``read(path, symbol, symbol_addr, addr)`` -> the code-ownership evidence, or None.
+
+    THE OBJECT, BECAUSE THIS TOOL DOES NOT HAVE ONE. The private worker runs
+    `rombuild.py` and hands this report the JSON it produced; that report says whether a
+    module reproduced, not where inside a function's bytes the instructions stop. So the
+    one source this file compiles is the merged source itself, with the pinned compiler
+    the ROM build uses, read from the revision under judgement -- the same compile
+    `build_pin.verify` runs, minus the byte comparison the ROM build already did.
+
+    None from any step, and every caller must refuse: a missing compiler, a source that
+    does not compile, an object without the symbol or without mapping symbols. `.missing`
+    carries the reasons so the report can name what it wanted.
+    """
+    cache = {}
+
+    def _object(path):
+        if path in cache:
+            return cache[path]
+        obj = None
+        try:
+            import build_pin as BP
+            import match as M
+        except (ImportError, SystemExit):
+            read.missing.add("the pinned compiler tooling is not importable")
+            cache[path] = None
+            return None
+        try:
+            text = git_text(rev, path)
+        except RuntimeError:
+            read.missing.add(f"{path} is unreadable at {rev[:12]}")
+            cache[path] = None
+            return None
+        version = _pinned_version(rev, path)
+        if not (BP.MW / version / "mwccarm.exe").is_file():
+            read.missing.add(f"the pinned compiler {version} is not installed")
+            cache[path] = None
+            return None
+        with tempfile.TemporaryDirectory() as td:
+            src = pathlib.Path(td) / pathlib.PurePosixPath(path).name
+            src.write_text(text, encoding="utf-8", newline="\n")
+            obj = M.compile_c(src, version, BP.flags_for(src, text))
+        if obj is None:
+            read.missing.add(f"{path} does not compile under {version} at {rev[:12]}")
+        cache[path] = obj
+        return obj
+
+    def read(path, symbol, symbol_addr, addr):
+        obj = _object(path)
+        if obj is None:
+            return None
+        evidence = _mapping_evidence(obj, symbol, addr - symbol_addr)
+        if evidence is None:
+            read.missing.add(f"the object {path} produced carries no mapping evidence "
+                             f"for {symbol}")
+        return evidence
 
     read.missing = set()
     return read
@@ -710,7 +943,8 @@ def _covered_spans(snapshot):
     return out
 
 
-def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None):
+def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None,
+                   code_owned=None, named=None):
     """Is a denominator DROP a merge the ROM build has already paid for?
 
     A merge lowers `totalFunctions` and so RAISES the headline, which is the direction an
@@ -758,29 +992,47 @@ def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None):
     The narrow exception exists because config can carve a function's trailing return
     instruction off as its own symbol, and an empty body then "matches" it. Recovering
     the real function retires that record, and the absolute rule made the correction the
-    one edit that cannot land. WHAT IS AND IS NOT CLAIMED HERE. This does not claim that
-    ROM execution can never enter the address -- an index cannot establish that, and the
-    earlier version of this rule said so and was wrong to. The claim is narrower and each
-    half is checkable:
+    one edit that cannot land.
+
+    WHAT IS AND IS NOT CLAIMED HERE. This does not claim that ROM execution can never
+    enter the address -- an index cannot establish that, and an earlier version of this
+    rule said so and was wrong to. Nor does it claim that four bytes whose bits read as a
+    return ARE one: a compiler-generated literal pool inside a function's own range can
+    hold 0xE12FFF1E as a CONSTANT, and its bits are identical. The claim is that a
+    specific compiled function OWNS these bytes and emits an instruction at them, and
+    every half of it is checkable:
 
       (a) the record ends exactly where the new `complete` range ends, so it is that
           range's TAIL and not something in the middle of it;
-      (b) it is one instruction, four bytes, and the cartridge's own word at that address
-          is one of the accepted unconditional return encodings (see RETURN_WORDS) -- so
-          the bytes being retired are a return, not a body;
+      (b) it is four bytes, and the cartridge's own word at that address is `bx lr` or a
+          stack pop to pc -- the two encodings `_is_return_word` accepts;
       (c) the range is backed by compiled source, which the ROM build then links and
-          byte-compares against retail, so the merged function REPRODUCES that same
-          return instruction rather than merely covering its address;
+          byte-compares against retail;
       (d) no relocation destination in a VALIDATED index over both revisions lands in
           those bytes -- with the emphasis on validated: missing, empty or malformed
           relocation input is not an absence of callers, it is an absence of evidence,
           and `_reloc_index` reports it as a defect that makes this exception
-          unavailable.
+          unavailable;
+      (e) NO SYMBOL IN EITHER REVISION NAMES THE ADDRESS. Config's placeholder for
+          bytes it has no name for is derived from the address itself; a real name --
+          `AutoloadCallback`, a recovered symbol, an alias -- records an identity the
+          cartridge gave those bytes, independent of which range now covers them. (a)
+          tests POSITION and a named callback can sit at a tail too; this tests
+          identity. See `_named_symbol`;
+      (f) CODE OWNERSHIP: the merged function's own object, compiled here from the
+          revision under judgement with the pinned compiler, covers that address as an
+          INSTRUCTION -- an ARM EABI `$a` region, not a `$d` literal pool -- and the
+          word it emits there is the cartridge's word. See `_compiled_code_reader`.
+          Without it, (a)+(b) accept the last word of
+          `unsigned int f(void) { return 0xe12fff1e; }`, which under the pinned 2004/b56
+          is `e59f0000 e12fff1e e12fff1e` with `$d` at offset 8: a constant, at the tail,
+          with a return's bits. Preserving its bits does not make it an epilogue.
 
-    Together those say: this record is the return instruction of the function whose
-    source now compiles to it, and nothing in the tree's relocation index names it. They
-    do not say the address is unreachable. A record that fails any one of them stays
-    matched and the merge is refused.
+    Together those say: a function this merge compiles owns these four bytes and emits
+    the cartridge's own return instruction at them, config has no independent name for
+    them, and no relocation destination in the tree's index points at them. They do not
+    say the address is unreachable. A record that fails any one of them stays matched and
+    the merge is refused.
 
     THE EXCEPTION IS NARROW, MEASURED RATHER THAN ASSERTED. Over src/ at 8525428a2 there
     are 79 sources whose whole body is `void f(void) {}`; 77 have at least one incoming
@@ -846,7 +1098,7 @@ def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None):
                            record["addr"] + record["size"]):
             return None
 
-    # NOTHING MATCHED MAY LEAVE, except a range's own return instruction -- the four
+    # NOTHING MATCHED MAY LEAVE, except a range's own return instruction -- the six
     # conditions the docstring sets out, in order. Each one refuses outright: a merge
     # carrying a matched loss it cannot justify is not classified at all.
     absorbed = []
@@ -869,16 +1121,36 @@ def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None):
         word = rom_word(record["module"], addr)
         if word is None or not _is_return_word(word):
             return None
-        # (c) the covering range is compiled evidence, so the merged source reproduces
-        # that instruction rather than merely covering its address. Every new range is
-        # already required to be, above; asserted again here because this is the clause
-        # that makes (b) mean something and it must not depend on a distant loop.
+        # (c) the covering range is compiled evidence. Every new range is already
+        # required to be, above; asserted again here because this is the clause that
+        # makes (f) possible and it must not depend on a distant loop.
         if span[2] not in compiled:
             return None
         # (d) a VALIDATED index, and nothing in it names those bytes.
         if reloc_dests is None:
             return None
         if _incoming_relocations(reloc_dests, record["module"], addr, end):
+            return None
+        # (e) identity: config has no name of its own for these bytes, in either
+        # revision. A record whose name config derived from the address is a
+        # placeholder; anything else is an identity this merge does not get to retire.
+        if named is None or named(record["module"], addr):
+            return None
+        # (f) code ownership: the merged function's own compiled output covers the
+        # address as an instruction, and emits the cartridge's word there. `owner` is
+        # the head record whose bytes contain it -- the function that claims to have
+        # absorbed these four bytes. Its symbol has to be DEFINED in the object the
+        # covering range's source produces, so a record whose owner lives in some other
+        # file gets no answer and the exception stays unavailable.
+        if code_owned is None:
+            return None
+        owner = next((r for r in hf["functions"].values()
+                      if r["module"] == record["module"]
+                      and r["addr"] <= addr and end <= r["addr"] + r["size"]), None)
+        if owner is None:
+            return None
+        evidence = code_owned(span[2], owner["name"], owner["addr"], addr)
+        if not evidence or not evidence["instruction"] or evidence["word"] != word:
             return None
         absorbed.append(key)
 
@@ -1424,7 +1696,7 @@ def _credit_detail(changed, lost):
 
 def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                  require_merge_commit=False, expected_pr_head=None,
-                 port_report=None):
+                 port_report=None, code_evidence=None):
     base_sha, head_sha = resolve_commit(base), resolve_commit(head)
     parents = _git("rev-list", "--parents", "-n", "1", head_sha).split()
     is_merge = len(parents) >= 3
@@ -1538,10 +1810,20 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     # A denominator move is a blocker UNLESS it is a re-partition of the same bytes --
     # see classify_repartition, which carries the full argument and the two tests.
     rom_word = _rom_word_reader(head_sha)
+    # `code_evidence` is a seam, not a policy knob: the default reader compiles the
+    # merged source with the pinned compiler, which a runner with no toolchain does not
+    # have, and a test that needs the wiring rather than the compiler supplies its own.
+    # Absent either way the exception is unavailable -- there is no value of this
+    # argument that grants it.
+    code_owned = (_compiled_code_reader(head_sha) if code_evidence is None
+                  else code_evidence)
+    revs = (_symbol_names(base_sha), _symbol_names(head_sha))
     repartition = (classify_repartition(bf, hf)
                    or classify_merge(bf, hf, be, he, compiled_src,
                                      reloc["dests"] if reloc["valid"] else None,
-                                     rom_word))
+                                     rom_word, code_owned,
+                                     lambda module, addr: _named_symbol(revs, module,
+                                                                        addr)))
     absorbed_keys = set((repartition or {}).get("absorbed") or ())
 
     base_enrolled = {key.split("-", 1)[0] for key in be["source"]}
@@ -1570,6 +1852,9 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         elif rom_word.missing:
             reasons.append("ROM image unavailable, so nothing matched may leave: "
                            + ", ".join(sorted(rom_word.missing)))
+        elif getattr(code_owned, "missing", None):
+            reasons.append("compiled code ownership unavailable, so nothing matched "
+                           "may leave: " + "; ".join(sorted(code_owned.missing)))
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
         if repartition is None:
@@ -1661,9 +1946,11 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     if absorbed:
         warnings.append(
             f"{len(absorbed)} claimed match(es) absorbed by the merge rather than lost: "
-            "each is the four-byte return instruction at the tail of a range this merge "
-            "newly compiles and byte-compares, and no relocation in a validated index "
-            "over both revisions names it -- "
+            "for each, the merged source's own object covers the address as an "
+            "instruction emitting the cartridge's own `bx lr` or stack pop, the record "
+            "is that range's exact four-byte tail, no symbol in either revision names "
+            "the address, and no relocation destination in a validated index over both "
+            "revisions lands in it. That is what is established; reachability is not -- "
             + ", ".join(f"{a['name'] or a['id']} ({a['path'] or 'no source'})"
                         for a in absorbed[:3])
             + (f", +{len(absorbed) - 3} more" if len(absorbed) > 3 else ""))
@@ -1838,8 +2125,9 @@ def render_markdown(r):
     if r.get("matchedAbsorbed"):
         lines.append(
             f"| Claims absorbed by the merge | {len(r['matchedAbsorbed'])} "
-            f"function(s), each a range's own tail return instruction, "
-            f"no relocation names it |")
+            f"function(s); for each: the merged object emits an instruction there, the "
+            f"ROM word is a return, config names the address only after itself, and no "
+            f"indexed relocation lands in it. Not a reachability claim |")
     if r.get("repartition"):
         rp = r["repartition"]
         lines.append(
