@@ -729,6 +729,69 @@ void comms_retry_dropped_session() {
     // the value this function just tested.
     comms_seat_session_request(st == kCommsParentConnected ? kCommsRoleParent
                                                            : kCommsRoleChild);
+
+    // AND THE RADIO IS ALREADY OPEN, SO THE ONE-SHOT IS SPENT HERE TOO.
+    // Run link100, lane VS7. This line is the whole of the fix for the crash
+    // the seven-window ladder rows found, and it is a refusal rather than an
+    // addition: the port must not run the cartridge's wireless bring-up a
+    // second time inside one scene, because the cartridge never does and
+    // nothing in the image would clean up after it.
+    //
+    // WHAT WENT WRONG. comms_seat_session_request seats data_02099e1c, which
+    // is the "open the radio" request src/func_0203ea5c.c:152-155 answers by
+    // calling func_020408b0(2). Reached from HERE that answer runs once per
+    // frame for as long as the ROM keeps dropping -- 861 times in the
+    // vs7_rtt160 row -- and src/func_020408b0.c:29-47 is EIGHT
+    // Memory::Allocate calls (0x1300 + 0x40 + 0x20 + 0xc0 + 0x420 + 0x100 +
+    // 0x220 + 0x480 = 8160 bytes, each aligned to 0x20). The 0x3b000-byte
+    // game heap is gone in about eight hundred frames, and Heap::Allocate
+    // turns the failed allocation into Crash(), which is the 0xC0000409 every
+    // window of that row exited with.
+    //
+    // AND THERE IS NO ROM TEARDOWN TO RUN INSTEAD. That was the first thing
+    // checked, because "free the way the DS's menu does, then re-init" would
+    // have been the better fix if such a body existed. It does not. ARM has no
+    // absolute addressing, so a body that touched one of those eight globals
+    // would have to carry its address in a literal pool; a scan of the whole
+    // decompressed arm9 for the words 0x020a0f4c, 0f44, 0f48, 0f54, 0f74,
+    // 0f80, 0f60, 0f64 and 0f68 finds func_020408b0's own pool at
+    // 0x02040a28..0x02040a54 and, apart from the READERS (func_0203fa50,
+    // func_0203faa8, func_0203fb5c, func_0203fbc4, func_02040638,
+    // func_0204068c, func_020406b4), nothing else at all. The only
+    // Memory::Deallocate(void*) call sites anywhere near the wireless module
+    // are 0x0203e70c and 0x0203e718, both inside func_0203e20c, and they free
+    // data_020a0f3c and data_020a0f7c -- which that same function allocated.
+    // func_020408b0 has exactly ONE caller in the image (func_0203ea5c:153,
+    // behind this one-shot), so on the cartridge the bring-up runs once per
+    // session, its buffers are never freed by anybody, and they go away with
+    // the scene's heap. A DS player who drops back to the multiplayer menu
+    // LEAVES THE SCENE; this port re-asks inside a live level, where leaving
+    // is not on offer.
+    //
+    // SO THE RE-SEAT RE-ASKS FOR THE SESSION, NOT FOR THE RADIO. The gate
+    // above already proved the radio is up: st is kCommsParentConnected or
+    // kCommsChildConnected, which is the transport reporting a live link, and
+    // the ARM7 has had the session since the level booted. Re-opening it would
+    // not merely leak -- :1244 below records the other half, measured by rung
+    // W4: func_020408b0 begins `data_020a0f94 = 0`, which wipes the link state
+    // the bring-up earned, after which src/func_02062380.c refuses WM_Enable
+    // and the session is dead for good. The boot wait answers the one-shot
+    // itself and clears it at :1267 for exactly that reason; this is the same
+    // answer for the same reason, minus a bring-up that has already happened.
+    data_02099e1c[0] = 0;
+
+    // A DROP EVERY FRAME IS A FINDING, NOT A HEARTBEAT, so it is said again at
+    // intervals rather than once. The message above prints once by design (it
+    // was written for a session that drops once), and a row where the ROM's
+    // bound expires on every frame read exactly like a row where it expired
+    // once until this line existed.
+    if (n % 1000 == 0)
+        std::fprintf(stderr,
+                     "[comms:conductor] the ROM has now dropped the session to "
+                     "solo %llu times, about once per frame: the wait bound in "
+                     "src/func_0203ea5c.c is expiring every frame and the "
+                     "re-seat is only papering over it\n",
+                     (unsigned long long)n);
 }
 
 void comms_publish_pad(unsigned held) {
@@ -1541,10 +1604,40 @@ ThreadPump g_prev_pump = nullptr;
 // A PREVIOUSLY INSTALLED PUMP KEEPS ITS VOTE. Nothing in the shipped binaries
 // installs one today (only tests/mp_sleepwake.cpp does), but if something ever
 // does it knows how many turns it needs and this must not overrule it.
+// AND THE VOTE WAS NOT ENOUGH: THE TURN HAS TO BE SPENT HERE. Run link100,
+// lane VS7, and this is the cause of the vs7_rtt160 / relay7_rtt160 drop.
+//
+// The paragraph above returns TRUE to mean "the VBlank has not come yet, keep
+// pumping". That vote is read in exactly one place -- hal/boot2_thread.cpp's
+// CP15::WaitForInterrupt, step 1, where a false sets `pump_stop` -- and
+// pump_stop is not consulted until STEP 4. Steps 2 and 3 run first and
+// unconditionally: step 2 raises the VBlank edge and dispatches the ROM's
+// handler, step 3 sees the sleeper on data_0209d4fc and calls OS_WakeupThread,
+// which returns before step 4 is ever reached. So the sleeper wakes on the
+// FIRST halt turn no matter what this function votes, and one ROM wait turn
+// costs one ::Sleep(1) rather than one VBlank.
+//
+// MEASURED, on the vs7_rtt160 row at 0fd400210, by the bound-expiry instrument
+// in hal/comms_conductor_wide.cpp: "turns=300 with_data=0 wall=219 ms". The
+// ROM's own bound on this path is 300 turns (src/func_0203ea5c.c:157-161 picks
+// 0x12C because src/func_0203db64.c:149 sets data_020a0ef0), and on the DS a
+// turn is one OS_SleepThread on the per-VBlank queue -- so the cartridge's
+// number is 300 VBlanks, FIVE SECONDS of silence before it drops to solo. The
+// port was spending it in 0.22 s, twenty-three times too fast, and a
+// seven-window session at 160 ms RTT does not have its first round in 0.22 s.
+// Four windows at 160 ms and seven at 80 ms fitted inside the compressed
+// window and so never showed it; the width was the trigger, not the defect.
+// The thread census on the same run says the same thing from the other side:
+// halts=2965, pump=2965, vbl_wakes=2964 -- one wake per pump call, every time.
+//
+// SO THE SILENT CONNECTED TURN NOW BLOCKS HERE until the VBlank boundary,
+// polling the transport as it waits, and returns once. Nothing about the
+// intent changes -- the paragraph above is still exactly what this does -- it
+// is just done by spending the time instead of by asking the caller to. The
+// datagram wake is unchanged and still the DS's radio IRQ: the loop breaks the
+// moment comms_wire_activity() moves, so a round still completes within a
+// millisecond of the peer's block landing.
 enum : unsigned { kVBlankMs = 16 };   // the DS frame, floor(1000 / 59.83)
-unsigned      g_turn_start_ms = 0;
-uint64_t      g_turn_act      = 0;
-bool          g_turn_open     = false;
 
 bool conductor_pump(unsigned spin) {
     const CommsTransport *t = comms_transport();
@@ -1563,22 +1656,19 @@ bool conductor_pump(unsigned spin) {
 
     const int st = t ? t->state() : kCommsIdle;
     if (st == kCommsParentConnected || st == kCommsChildConnected) {
-        const unsigned now = (unsigned)GetTickCount();
-        if (!g_turn_open) {
-            g_turn_open     = true;
-            g_turn_start_ms = now;
-            g_turn_act      = comms_wire_activity();
-        }
-        if (comms_wire_activity() != g_turn_act) {
-            g_turn_open = false;         // the radio IRQ: a datagram landed
-            return false;
-        }
-        if ((unsigned)(now - g_turn_start_ms) < kVBlankMs) {
+        const unsigned start = (unsigned)GetTickCount();
+        const uint64_t act = comms_wire_activity();
+        for (;;) {
+            if (comms_wire_activity() != act)
+                break;                   // the radio IRQ: a datagram landed
+            if ((unsigned)((unsigned)GetTickCount() - start) >= kVBlankMs)
+                break;                   // one silent VBlank; the bound ticks
             ::Sleep(1);                  // wall time, so the peer can answer
-            return true;                 // the VBlank has not come yet
+            if (t)
+                t->poll();               // and so it can be HEARD while we wait
+            comms_arm7_turn();
         }
-        g_turn_open = false;
-        return false;                    // one silent VBlank; the bound ticks
+        return false;
     }
     ::Sleep(1);                          // unconnected: the old pace, see above
     return false;

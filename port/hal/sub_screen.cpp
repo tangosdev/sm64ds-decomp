@@ -425,6 +425,18 @@ unsigned char tp_rd(const unsigned char *p, int i)
  *     the BOTTOM screen's range in both layouts; there is no branch here that
  *     can reach the other band.
  */
+/* hal/tsc_arm7.cpp, run link100 lane R2D3: the ROM's own ring writer and the
+   query that says whether it is live. MSVC refuses a linkage specification
+   inside a function body (C2598), so these two declarations sit here, right
+   above poll_touch's store, rather than inside it. */
+extern "C" int  port_tsc_ring_armed(void);
+extern "C" void port_tsc_arm7_frame_touch(void);
+extern "C" unsigned long port_tsc_arm7_sample_count(void);
+/* hal/comms_conductor.cpp's MP3_BSS row: the ROM's OWN reader's settled
+   answer, {a,b,c,d} = {x,y,touched,valid} (struct Col, src/func_0203b9bc.c).
+   Read-only here, for the watcher two paragraphs below. */
+extern "C" unsigned short data_020a0dd8[4];
+
 void poll_touch(void)
 {
     unsigned char down = 0, sx = 0, sy = 0;
@@ -674,20 +686,68 @@ void poll_touch(void)
      * than a limitation of this store.
      *
      * The write index is data_020a80cc[6], which func_0205edc8 returns and
-     * func_0203b9bc reads backwards from. It is advanced here because the
-     * driver that would advance it is ARM7's. */
+     * func_0203b9bc reads backwards from. It was advanced here because the
+     * driver that would advance it is ARM7's -- and now hal/tsc_arm7.cpp IS
+     * that driver (run link100, lane R2D3, continuing rung R2d).
+     *
+     * ---- RETIRED WHEN THE ROM'S OWN WRITER IS LIVE ------------------------
+     *
+     * hal/tsc_arm7.cpp section 4 has the full derivation; this is the summary
+     * the store itself needs. The ring has exactly one writer: when
+     * port_tsc_ring_armed() is true (SM64DS_TP_RING, default ON), the direct
+     * memcpy below is skipped and port_tsc_arm7_frame_touch() runs instead --
+     * once per frame, right here, which is this call's own cadence. That
+     * function does not touch the ring itself; it gives the ARM7 the turn
+     * that posts the auto-sample indication on channel 6, and the ROM's own
+     * src/func_0205f300.c is what writes data_020a0df8 and advances the
+     * cursor, off the shared sample words the ARM7 fills from TouchInfo.
+     *
+     * THE HOST'S INPUT IS NOT LOST -- it is what TouchInfo (data_020a0de8,
+     * written four paragraphs above this one) IS. The mouse-to-stylus
+     * mapping, the drag latch, SM64DS_SKIP_MENU's forced tap and
+     * SM64DS_COMMS_INJECT's injected tap all already resolve into `down`,
+     * `sx`, `sy` before this point and are stored into TouchInfo unchanged;
+     * port_tsc_arm7_frame_touch reads that same slot to build the ARM7's
+     * sample. So every one of those sources still reaches the ROM's writer,
+     * through the sample rather than through this store.
+     *
+     * SM64DS_TP_RING=0 puts the direct write back exactly as it was, for a
+     * run measuring the pre-rung shape. */
     {
-        const int wi = port::touch_ring_index();
-        unsigned char *e = data_020a0df8 + wi * 8;
-        const unsigned short rx = down ? sx : 0;
-        const unsigned short ry = down ? sy : 0;
-        const unsigned short rc = down ? 1u : 0u;   /* +4: touched   */
-        const unsigned short rd = 0;                /* +6: in range  */
-        std::memcpy(e + 0, &rx, 2);
-        std::memcpy(e + 2, &ry, 2);
-        std::memcpy(e + 4, &rc, 2);
-        std::memcpy(e + 6, &rd, 2);
-        port::touch_ring_advance();
+        /* THE WATCHER (run link100, lane R2D3). SM64DS_TP_RING_WATCH=1 prints
+           both writers' cumulative store counts every frame -- host_stores is
+           this store's own counter, incremented ONLY on the branch below that
+           still writes the ring directly, and port_tsc_arm7_sample_count()
+           reads hal/tsc_arm7.cpp's count of ROM-side writes (see its banner:
+           the send that count is kept beside is synchronous with
+           src/func_0205f300.c's own store, so the count is not an estimate).
+           Off by default: it is a proof aid, not a shipped line. */
+        static unsigned long host_stores;
+        if (port_tsc_ring_armed()) {
+            port_tsc_arm7_frame_touch();
+        } else {
+            const int wi = port::touch_ring_index();
+            unsigned char *e = data_020a0df8 + wi * 8;
+            const unsigned short rx = down ? sx : 0;
+            const unsigned short ry = down ? sy : 0;
+            const unsigned short rc = down ? 1u : 0u;   /* +4: touched   */
+            const unsigned short rd = 0;                /* +6: in range  */
+            std::memcpy(e + 0, &rx, 2);
+            std::memcpy(e + 2, &ry, 2);
+            std::memcpy(e + 4, &rc, 2);
+            std::memcpy(e + 6, &rd, 2);
+            port::touch_ring_advance();
+            ++host_stores;
+        }
+        {
+            const char *watch = std::getenv("SM64DS_TP_RING_WATCH");
+            if (watch && watch[0] != '0')
+                std::fprintf(stderr, "[tp-ring-watch] f%d rom=%lu host=%lu "
+                             "reader(a=%u b=%u c=%u d=%u)\n",
+                             f, port_tsc_arm7_sample_count(), host_stores,
+                             data_020a0dd8[0], data_020a0dd8[1],
+                             data_020a0dd8[2], data_020a0dd8[3]);
+        }
     }
 
     /* ---- THE STYLUS IN THE FLIGHT RECORDER (run link60, lane TCH2) ---------

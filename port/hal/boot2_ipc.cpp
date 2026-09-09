@@ -686,12 +686,17 @@ extern "C" void port_arm7_wireless_tick(void)
     wireless_tick();
     port_wm_arm7_turn();
     port_wm5_worker_census();
-    // AND THE TOUCH PANEL'S TURN (run link100, lane R2D2). Two jobs: drain a
+    // AND THE TOUCH PANEL'S TURN (run link100, lane R2D2, rung R2d; the
+    // indication wording below updated by lane R2D3). Two jobs: drain a
     // completion no wait collected -- a queued word that never leaves is a
-    // swallowed one by another name -- and, only under SM64DS_TP_RING, post the
-    // auto-sample indication that makes the ROM's own func_0205f300 the ring's
-    // writer. Off by default because hal/sub_screen.cpp still writes that ring;
-    // hal/tsc_arm7.cpp section 4 is the whole of it.
+    // swallowed one by another name -- and, only under SM64DS_TP_RING (default
+    // ON as of R2D3), post the auto-sample indication that makes the ROM's own
+    // func_0205f300 the ring's writer. The indication itself is armed once per
+    // frame from hal/sub_screen.cpp's poll_touch, not from this turn, so a
+    // wireless wait calling this several times in one frame posts at most the
+    // one indication the DS's own cadence allows; a turn landing here with
+    // nothing queued and nothing armed is the ordinary no-op. hal/tsc_arm7.cpp
+    // section 4 is the whole of it.
     port_tsc_arm7_tick();
 }
 
