@@ -70,9 +70,9 @@
  * own body and its fourth call. So the port's order is now Entry's order:
  * func_02019780, then func_02072f94, then main. Nothing was moved to make room.
  *
- * WHAT RUNS AND WHAT DOES NOT. Ten of the 23 words are bound to the ROM's own
- * initialiser; thirteen are bound to a FACE that names the initialiser it
- * stands for and returns. The faces do not abort: __sinit_02073a24 is word 0
+ * WHAT RUNS AND WHAT DOES NOT. After rungs C1a and C1b, SIXTEEN of the 23 words
+ * are bound to the ROM's own initialiser and SEVEN are bound to a FACE that
+ * names the initialiser it stands for and returns. The faces do not abort: __sinit_02073a24 is word 0
  * and is the last rung of this campaign, so an aborting face there would kill
  * every boot before the first frame. They report once each, by name, and the
  * summary line counts them, which is what makes the walk complete AND honest:
@@ -90,8 +90,8 @@
  * through counting shims and the [ctor] line prints both counters. One each is
  * the pass; anything else is a defect this file will say out loud.
  *
- * ORDER, stated because it is the whole risk of this rung:
- *   * The eight initialisers this rung adds allocate nothing. Five have empty
+ * ORDER, stated because it is the whole risk of these rungs:
+ *   * The eight initialisers rung C1a adds allocate nothing. Five have empty
  *     bodies; __sinit_02074d90 zeroes two words of data_0209b468;
  *     __sinit_02074da8 calls func_02011a5c, which zeroes data_0209b53c;
  *     __sinit_02074fb8 stores two pointers into data_020a0c68. No call to
@@ -114,6 +114,29 @@
  *     time. __sinit_02073e6c writes bytes 0x22..0x25, 0x3e..0x41 and
  *     0x30d..0x310 of that blob and the seat writes the word at 0x180, so the
  *     two are disjoint and the order between them cannot change a byte.
+ *
+ * RUNG C1b ADDS SIX MORE, and they allocate nothing either: five of the six are
+ * a handful of field stores plus one func_020731dc push, and the sixth
+ * (__sinit_02074dc4) additionally calls func_0203b9b4 on data_0209d4b8 and
+ * Timer's constructor func_0201964c on data_0209d4c8, both of which are field
+ * stores into storage hal/auto_bss.cpp already hosts. The same grep over the
+ * six and over func_0201964c returns nothing for Heap, Memory, operator new or
+ * malloc.
+ *
+ * TWO OF C1b's NINE ARE DELIBERATELY LEFT FACED and the reasons are in their
+ * face messages:
+ *   __sinit_02074e0c calls func_0201aa18, whose chain is
+ *   func_0201aa18 -> func_0201aad4 -> func_0201aac8 -> func_02059ba0, and
+ *   src/func_0201aac8.c is a tail-call veneer decompiled as `void(void)` that
+ *   its caller invokes WITH an argument. On ARM the value rides r0 through the
+ *   veneer; on the host it does not. Linking that at Entry would hand
+ *   func_02059ba0 whatever the host left in a register. That is a PORT_HOST_ABI
+ *   question, not a linkage one.
+ *   __sinit_0207501c CONSTRUCTS a RaycastLine into data_020a0d0c, and
+ *   hal/clsn_vtable.cpp hosts that as a 0x10 grouped-section block whose
+ *   neighbours hal/mmc_vtable.cpp:148 asserts at ROM spacing. The constructor
+ *   writes past +0x64. Whether that stays inside the band is a layout question
+ *   owned by those two files.
  *
  * ONE ROM DATA OBJECT IS HOSTED HERE, because __sinit_02074fb8 names it and
  * nothing else in the port does: data_0208ee14, 16 bytes at arm9 .data, the
@@ -146,10 +169,16 @@ void __sinit_02074d90(void);
 void __sinit_02074da8(void);
 void __sinit_02074dbc(void);
 void __sinit_02074dc0(void);
+void __sinit_02074dc4(void);   /* C1b */
+void __sinit_02074e44(void);   /* C1b */
 void __sinit_02074e80(void);
+void __sinit_02074fe4(void);   /* C1b */
 void __sinit_02074f80(void);   /* was hand-called from hal/fdr_arm9_fader_seat.cpp */
 void __sinit_02074fb8(void);
 void __sinit_020750b4(void);
+void __sinit_020750b8(void);   /* C1b */
+void __sinit_020750ec(void);   /* C1b */
+void __sinit_0207511c(void);   /* C1b */
 void __sinit_02075150(void);
 
 /* The MSL global-destructor chain head, hosted in hal/cxx_aliases.cpp. Every
@@ -192,6 +221,48 @@ extern "C" void *data_0208ee14[4] = {
     (void *)&_ZN5Scene14GraphCallback2Ev,
     (void *)&_ZN5Scene14GraphCallback3Ev,
 };
+DSSTATE_END
+
+/* ---- rung C1b: the seven destruct-node cells --------------------------
+ *
+ * Every one of them is the third argument of a func_020731dc call in the
+ * initialiser that names it -- the three-word node src/func_020731dc.c pushes
+ * onto data_020aa3f0 (node[0] = previous head, node[1] = the destructor,
+ * node[2] = the object). Nothing in this port hosted any of them, and nothing
+ * in this port reads one back: the ROM's only reader of the chain is
+ * func_02072f3c, the exit-time walker behind MSL's exit(), which is not in the
+ * link.
+ *
+ * SIZED BY ROM SPAN, not by the three words the writer uses, per the port's
+ * undersized-globals rule: each is the delta to the next symbol in
+ * config/arm9/symbols.txt.
+ *
+ *     data_0209d4bc  0x0209d4bc..0x0209d4c8   12   __sinit_02074dc4
+ *     data_0209e654  0x0209e654..0x0209e660   12   __sinit_02074e44
+ *     data_020a0ce0  0x020a0ce0..0x020a0cec   12   __sinit_02074fe4
+ *     data_020a0eb0  0x020a0eb0..0x020a0ebc   12   __sinit_020750b8
+ *     data_020a0ec8  0x020a0ec8..0x020a0ed0    8   __sinit_020750ec (the object)
+ *     data_020a0ed0  0x020a0ed0..0x020a0edc   12   __sinit_020750ec (the node)
+ *     data_020a0ee4  0x020a0ee4..0x020a0ef0   12   __sinit_0207511c
+ *
+ * FOUR OF THE SEVEN ARE NOT COVERED BY ANY OTHER HOST OBJECT AT ALL. The other
+ * three (data_0209d4bc, data_0209e654, data_020a0ed0) fall inside the nominal
+ * span of one of hal/auto_bss.cpp's generic `int[8]` neighbours -- that file's
+ * generous default, which it itself narrows to the ROM span wherever a ROM
+ * reader cross-reads a block (see its data_020a0dbc note). Nothing cross-reads
+ * these: the writer is func_020731dc and the reader is not in the link, so the
+ * generosity is slack rather than aliasing and a byte-exact host beside it is
+ * the honest shape rather than a second name for live storage. */
+DSSTATE_BEGIN
+extern "C" {
+unsigned char data_0209d4bc[12];
+unsigned char data_0209e654[12];
+unsigned char data_020a0ce0[12];
+unsigned char data_020a0eb0[12];
+unsigned char data_020a0ec8[8];
+unsigned char data_020a0ed0[12];
+unsigned char data_020a0ee4[12];
+}
 DSSTATE_END
 
 namespace {
@@ -240,17 +311,11 @@ void ctor_face(const char *name, const char *why)
     }
 
 CTOR_FACE(02073a24, "38 rodata constants (data_02086bc8..data_02086e40) are hosted nowhere; rung C1e")
-CTOR_FACE(02074dc4, "data_0209d4bc and func_0201964c are hosted nowhere; rung C1b")
-CTOR_FACE(02074e0c, "data_0209d528, func_0201aa18 and func_0201aaec are hosted nowhere; rung C1b")
-CTOR_FACE(02074e44, "data_0209e654 is hosted nowhere; rung C1b")
+CTOR_FACE(02074e0c, "func_0201aa18 -> func_0201aad4 -> func_0201aac8 is an argument-dropping tail-call veneer chain into func_02059ba0; a PORT_HOST_ABI question, not a linkage one")
 CTOR_FACE(02074e84, "Clipper's ctor/dtor, data_0208ee14's MSVC name and data_0209f388 are hosted nowhere; rung C1d")
 CTOR_FACE(02074edc, "data_0209f5c4 and data_0209f5dc are hosted nowhere; rung C1c, and hal/method_faces.cpp writes the same vptr")
-CTOR_FACE(02074fe4, "data_020a0ce0 is hosted nowhere; rung C1b")
-CTOR_FACE(0207501c, "data_020a0d00 is hosted nowhere; rung C1b, and this is the one initialiser that constructs an object")
+CTOR_FACE(0207501c, "it constructs a RaycastLine into data_020a0d0c, whose host block is 0x10 in a grouped section hal/mmc_vtable.cpp:148 asserts at ROM spacing, and the ctor writes past +0x64")
 CTOR_FACE(02075054, "data_020a0db8, data_020a0dc0 and data_020a0dcc are hosted nowhere; rung C1c, and hal/auto_bss.cpp hand-seeds the same block")
-CTOR_FACE(020750b8, "data_020a0eb0 is hosted nowhere; rung C1b")
-CTOR_FACE(020750ec, "data_020a0ec8 and data_020a0ed0 are hosted nowhere; rung C1c")
-CTOR_FACE(0207511c, "data_020a0ee4 is hosted nowhere; rung C1b")
 CTOR_FACE(02075154, "data_02099f48..data_02099f70 are hosted nowhere; rung C1c, and hal/actor_registry.cpp seats the same five callbacks")
 
 #undef CTOR_FACE
@@ -277,21 +342,21 @@ const CtorWord kCtorTable[] = {
     { 0x02074da8, __sinit_02074da8,   "__sinit_02074da8", 1 },
     { 0x02074dbc, __sinit_02074dbc,   "__sinit_02074dbc", 1 },
     { 0x02074dc0, __sinit_02074dc0,   "__sinit_02074dc0", 1 },
-    { 0x02074dc4, ctor_face_02074dc4, "__sinit_02074dc4", 0 },
+    { 0x02074dc4, __sinit_02074dc4, "__sinit_02074dc4", 1 },
     { 0x02074e0c, ctor_face_02074e0c, "__sinit_02074e0c", 0 },
-    { 0x02074e44, ctor_face_02074e44, "__sinit_02074e44", 0 },
+    { 0x02074e44, __sinit_02074e44, "__sinit_02074e44", 1 },
     { 0x02074e80, __sinit_02074e80,   "__sinit_02074e80", 1 },
     { 0x02074e84, ctor_face_02074e84, "__sinit_02074e84", 0 },
     { 0x02074edc, ctor_face_02074edc, "__sinit_02074edc", 0 },
     { 0x02074f80, ctor_02074f80,      "__sinit_02074f80", 1 },
     { 0x02074fb8, __sinit_02074fb8,   "__sinit_02074fb8", 1 },
-    { 0x02074fe4, ctor_face_02074fe4, "__sinit_02074fe4", 0 },
+    { 0x02074fe4, __sinit_02074fe4, "__sinit_02074fe4", 1 },
     { 0x0207501c, ctor_face_0207501c, "__sinit_0207501c", 0 },
     { 0x02075054, ctor_face_02075054, "__sinit_02075054", 0 },
     { 0x020750b4, __sinit_020750b4,   "__sinit_020750b4", 1 },
-    { 0x020750b8, ctor_face_020750b8, "__sinit_020750b8", 0 },
-    { 0x020750ec, ctor_face_020750ec, "__sinit_020750ec", 0 },
-    { 0x0207511c, ctor_face_0207511c, "__sinit_0207511c", 0 },
+    { 0x020750b8, __sinit_020750b8, "__sinit_020750b8", 1 },
+    { 0x020750ec, __sinit_020750ec, "__sinit_020750ec", 1 },
+    { 0x0207511c, __sinit_0207511c, "__sinit_0207511c", 1 },
     { 0x02075150, __sinit_02075150,   "__sinit_02075150", 1 },
     { 0x02075154, ctor_face_02075154, "__sinit_02075154", 0 },
 };

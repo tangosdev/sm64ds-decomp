@@ -42,16 +42,53 @@
 #                              the link; this one had no reference until the
 #                              table that names it was hosted.
 #
-# NOT HERE, and each has its own rung in lane CWSCOUT's rungs.tsv. Thirteen of
-# the 23 words are bound to a face in hal/ctor_runner.cpp that names the
-# initialiser and the names it still wants:
+# ---- RUNG C1b: SIX MORE INITIALISERS AND ONE CALLEE -----------------------
 #
-#   C1b  __sinit_02074dc4, 02074e0c, 02074e44, 02074fe4, 0207501c, 020750b8,
-#        0207511c -- one bss word each, every one a func_020731dc destruct node.
-#   C1c  __sinit_02074edc, 02075054, 020750ec, 02075154 -- two to five names,
-#        and each of them has a host seat writing the same words today
-#        (hal/method_faces.cpp, hal/auto_bss.cpp, hal/actor_registry.cpp), so
-#        the conflict audit comes before the link.
+# Each of the six wanted exactly one thing the port did not host: the 12-byte
+# destruct-node cell func_020731dc pushes for it. hal/ctor_runner.cpp hosts all
+# seven cells at their ROM spans (data_020a0ec8 is 8 bytes, the object, and
+# data_020a0ed0 the node beside it -- __sinit_020750ec names both).
+#
+#   src/__sinit_02074dc4.c     func_0203b9b4(&data_0209d4b8, 1), a node at
+#                              data_0209d4bc, then Timer's constructor on
+#                              data_0209d4c8. Every other name it uses is
+#                              already hosted (hal/auto_bss.cpp) or linked
+#                              (func_0203b9b4, func_0201973c).
+#   src/__sinit_02074e44.c     the same shape, a node at data_0209e654.
+#   src/__sinit_02074fe4.c     func_02037eec(data_020a0cec) -- both linked and
+#                              hosted -- and a node at data_020a0ce0.
+#   src/__sinit_020750b8.c     zeroes data_020a0ebc (hal/auto_bss.cpp:413, an
+#                              exact 12-byte host) and a node at data_020a0eb0.
+#   src/__sinit_020750ec.c     zeroes data_020a0ec8 and a node at data_020a0ed0.
+#                              CWSCOUT filed it under C1c because it names two
+#                              symbols; the audit found no host writer of
+#                              either, so it is a C1b row.
+#   src/__sinit_0207511c.c     zeroes data_020a0edc (hal/auto_bss.cpp:417, an
+#                              exact 8-byte host) and a node at data_020a0ee4.
+#   src/func_0201964c.c        Timer's constructor, __sinit_02074dc4's callee.
+#                              Its own callee Timer::ResetTimer is already in
+#                              the link.
+#
+# NOT HERE, and each has its own rung in lane CWSCOUT's rungs.tsv. Seven of the
+# 23 words are bound to a face in hal/ctor_runner.cpp that names the
+# initialiser and what stopped it:
+#
+#   C1b, REFUSED  __sinit_02074e0c: its callee chain func_0201aa18 ->
+#        func_0201aad4 -> func_0201aac8 -> func_02059ba0 passes an argument
+#        through src/func_0201aac8.c, a tail-call veneer whose decompiled C
+#        takes none. That value rides ARM r0 and does not ride a host call, so
+#        linking it would call func_02059ba0 at Entry with whatever the host
+#        left behind. A PORT_HOST_ABI ruling, not a linkage row.
+#   C1b, REFUSED  __sinit_0207501c: it constructs a RaycastLine into
+#        data_020a0d0c, which hal/clsn_vtable.cpp hosts as a 0x10 block in a
+#        grouped section whose neighbours hal/mmc_vtable.cpp:148 asserts at ROM
+#        spacing; the constructor writes past +0x64. That is a layout question
+#        owned by those two files.
+#   C1c  __sinit_02074edc, 02075054, 02075154 -- see out/CTOR/c1c_audit.txt:
+#        two have a live host second writer (hal/actor_registry.cpp:412 seats
+#        the same five callbacks; hal/auto_bss.cpp already hosts the same ROM
+#        bytes twice) and the third would wake a branch hal/method_faces.cpp
+#        says must not be woken from outside that file.
 #   C1d  __sinit_02074e84 -- Clipper's constructor and destructor and four
 #        MSVC-mangled data names.
 #   C1e  __sinit_02073a24 -- 38 rodata constants, data_02086bc8..data_02086e40.
@@ -72,3 +109,10 @@ src/__sinit_02074e80.c
 src/__sinit_02074fb8.c
 src/__sinit_020750b4.c
 src/__sinit_02075150.c
+src/func_0201964c.c
+src/__sinit_02074dc4.c
+src/__sinit_02074e44.c
+src/__sinit_02074fe4.c
+src/__sinit_020750b8.c
+src/__sinit_020750ec.c
+src/__sinit_0207511c.c
