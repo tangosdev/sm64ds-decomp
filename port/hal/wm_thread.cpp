@@ -670,6 +670,10 @@ extern "C" void port_wm9_fanout_writers(unsigned long long *frames,
                                         unsigned long long *pad,
                                         unsigned long long *foreign);
 
+// RUNG W9, LANE WM10: the third line of the same question. Defined in
+// hal/wm_arm7.cpp, which goes wherever this file goes.
+extern "C" void port_wm10_indication_report(void);
+
 extern "C" void port_wm8_band_report(void)
 {
     const unsigned char *base = data_020a94d4;
@@ -720,4 +724,7 @@ extern "C" void port_wm8_band_report(void)
                             : "the fan-out is the only writer of the game "
                               "words, once a frame");
     std::fflush(stderr);
+    // LANE WM10: and whether the port-0x0c port-receive indication reached the
+    // ROM's own MP receive callbacks, read out of the cartridge's own words.
+    port_wm10_indication_report();
 }
