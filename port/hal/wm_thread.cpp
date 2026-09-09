@@ -202,6 +202,13 @@ extern unsigned char data_020a15e4[];
 // The ROM's sixteen-slot thread table (hal/cxx_aliases.cpp) and the ROM bodies
 // this file's census reads back through. Every one is already linked.
 extern int data_020a6148[16];
+
+// The session's role byte, hosted by hal/comms_conductor.cpp: 1 parent, 2 child,
+// 0 no session. The census reads it so that a zero worker count is reported as
+// the reading it is rather than as a miss -- src/func_02040c34.c only reaches
+// func_02042200 on the role-1 arm, so a child and a solo run are RIGHT to have
+// no worker, and only a parent with no worker is a failure.
+extern unsigned char data_020a0f04[];
 void func_02042254(void);
 void func_020581a8(void);
 void func_02058048(void *record);
@@ -528,13 +535,29 @@ extern "C" void port_wm5_worker_census(void)
 // silent about it. hal/wm_arm7.cpp calls this from its own exit report.
 extern "C" void port_wm5_report(void)
 {
+    const unsigned role = data_020a0f04[0];
+    const int created = (int)(rec32(0x40) != 0);
+    // What the number MEANS on this window, spelled out next to it. Only the
+    // parent's arm of src/func_02040c34.c reaches func_02042200; the child's
+    // arm ends at func_02065234, and a solo run never enters func_02040c34 at
+    // all. So worker_created=0 is the CORRECT reading on a child and on a solo
+    // run, and a miss only on a parent.
+    const char *arm =
+        role == 1 ? (created ? "parent: the ROM's role-1 arm created it, as it must"
+                             : "parent: MISS, the role-1 arm should have created one")
+      : role == 2 ? (created ? "child: UNEXPECTED, the ROM's role-0 arm creates no worker"
+                             : "child: correct, the ROM's role-0 arm creates no worker")
+      :             (created ? "solo: UNEXPECTED, no session, so func_02040c34 is never called"
+                             : "solo: correct, no session, so func_02040c34 is never called");
     std::fprintf(stderr,
                  "[wm5] census: worker_created=%d record_pc4=%08x "
-                 "faces=%lu/%lu/%lu/%lu band_base=%p band_len=0x%lx\n",
-                 (int)(rec32(0x40) != 0), rec32(0x40),
+                 "faces=%lu/%lu/%lu/%lu band_base=%p band_len=0x%lx "
+                 "role=%u (%s)\n",
+                 created, rec32(0x40),
                  g_wm5_face_hits[0], g_wm5_face_hits[1],
                  g_wm5_face_hits[2], g_wm5_face_hits[3],
                  (const void *)data_020a1fc0,
-                 (unsigned long)((data_020a3fc0 + 0xb80) - data_020a1fc0));
+                 (unsigned long)((data_020a3fc0 + 0xb80) - data_020a1fc0),
+                 role, arm);
     std::fflush(stderr);
 }
