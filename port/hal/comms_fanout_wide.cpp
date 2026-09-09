@@ -211,11 +211,112 @@ void fanout_dump(void)
     std::fflush(stderr);
 }
 
+
+// ===========================================================================
+// THE WRITER WATCH. Run link100, lane WM9.
+//
+// THE QUESTION IT ANSWERS. This lane was sent to open the ROM's own WM
+// port-receive path, and the risk the brief named is that the game's input
+// words would then be written TWICE a frame: once by the host carrier's
+// per-frame fan-out (this file) and once by whatever the ROM's own receive
+// path did with the same datagram. Which path owns which bytes is settled by
+// reading, in hal/wm_arm7.cpp's WM9 block, and the two are disjoint. This is
+// the instrument that CHECKS that reading instead of resting on it.
+//
+// WHAT IT COUNTS, AND WHY THE LAST NUMBER IS THE REAL ONE. The first two are
+// plain call counts on the two dispatchers: on a correct frame each runs
+// exactly once, so frames, touch and pad climb together, and a second writer
+// that came through either dispatcher would show as a count running ahead of
+// the frame number.
+//
+// The last one catches a writer that does not come through here at all, which
+// is exactly the shape a second receive path would have. All five regions the
+// fan-out owns are hashed at the END of step 0x17 and re-hashed at the START
+// of the next step 0x16. Those two steps run back to back in the ROM's loop
+// with nothing between them that writes either array -- one store of the phase
+// word between 0x0201984c and 0x02019854 and nothing else -- so a byte that
+// changes across that boundary changed under a writer outside the fan-out.
+// Every such frame is counted and the first one is named, region by region.
+//
+// ALWAYS ON, for the cost of five FNV-1a passes over 0x2f0 bytes a frame --
+// the same arithmetic SM64DS_FANOUT_DUMP already does when it is set. A
+// counter that has to be switched on is a counter nobody has on the run that
+// mattered; hal/wm_thread.cpp's [wm8] line carries these four numbers on every
+// logged run, beside the receive-path census they qualify.
+// ===========================================================================
+
+unsigned long long g_wf_frames  = 0;
+unsigned long long g_wf_touch   = 0;
+unsigned long long g_wf_pad     = 0;
+unsigned long long g_wf_foreign = 0;
+unsigned g_wf_h[5] = { 0, 0, 0, 0, 0 };
+bool     g_wf_armed = false;
+bool     g_wf_said  = false;
+
+void wf_hash(unsigned out[5])
+{
+    out[0] = fnv1a(data_020a0de8, 4u * (unsigned)kPortMaxPlayers);
+    out[1] = fnv1a(data_020a0e58,
+                   (unsigned)sizeof(InputPair) * (unsigned)kPortMaxPlayers);
+    out[2] = fnv1a(data_020a0e48, 2u * (unsigned)kPortMaxPlayers);
+    out[3] = fnv1a(data_020a0e50, 2u * (unsigned)kPortMaxPlayers);
+    out[4] = fnv1a(&data_020a0e44, 1u);
+}
+
+// At the head of step 0x16, before the ROM's own body writes anything.
+void wf_check_before(void)
+{
+    if (!g_wf_armed) return;
+    unsigned now[5];
+    wf_hash(now);
+    int bad = 0;
+    for (int i = 0; i < 5; ++i) if (now[i] != g_wf_h[i]) bad = 1;
+    if (!bad) return;
+    ++g_wf_foreign;
+    if (g_wf_said) return;
+    g_wf_said = true;
+    static const char *kNames[5] = {
+        "data_020a0de8 TouchInfo", "data_020a0e58 PadData",
+        "data_020a0e48 prev-down", "data_020a0e50 prev-keys",
+        "data_020a0e44 the shared flag" };
+    for (int i = 0; i < 5; ++i)
+        if (now[i] != g_wf_h[i])
+            std::fprintf(stderr,
+                "[wm9] SECOND WRITER on frame %llu: %s changed between the end "
+                "of step 0x17 and the head of step 0x16 (%08x -> %08x). The "
+                "fan-out is no longer the only writer of the game's input "
+                "words.\n",
+                (unsigned long long)g_wf_frames, kNames[i],
+                g_wf_h[i], now[i]);
+    std::fflush(stderr);
+}
+
+// At the tail of step 0x17, after both ROM bodies and both tails.
+void wf_settle(void)
+{
+    wf_hash(g_wf_h);
+    g_wf_armed = true;
+    ++g_wf_frames;
+}
+
 }  // namespace
+
+extern "C" void port_wm9_fanout_writers(unsigned long long *frames,
+                                        unsigned long long *touch,
+                                        unsigned long long *pad,
+                                        unsigned long long *foreign)
+{
+    if (frames)  *frames  = g_wf_frames;
+    if (touch)   *touch   = g_wf_touch;
+    if (pad)     *pad     = g_wf_pad;
+    if (foreign) *foreign = g_wf_foreign;
+}
 
 // Step 0x16 of the ROM's loop. The cartridge's body, then the extension.
 extern "C" void func_0203bb60(void)
 {
+    wf_check_before();                    /* WM9: did anything else write? */
+    ++g_wf_touch;
     func_0203bb60_narrow();               /* the ROM's own body, every frame */
     if (wide()) touch_fanout_tail();      /* slots 4..15, and only those */
 }
@@ -225,7 +326,9 @@ extern "C" void func_0203bb60(void)
 // whole fan-out's output.
 extern "C" void func_0203bc7c(void)
 {
+    ++g_wf_pad;
     func_0203bc7c_narrow();               /* the ROM's own body, every frame */
     if (wide()) pad_fanout_tail();        /* slots 4..15, and only those */
     fanout_dump();
+    wf_settle();                          /* WM9: the frame's settled words */
 }

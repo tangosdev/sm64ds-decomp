@@ -188,6 +188,110 @@
 // answers for exactly those parameters and claims no limit the SDK would not.
 // The ROM-visible session is four; the wide session the transport carries is
 // still sixteen, and both are measured in this lane's report.
+//
+// ===========================================================================
+// THE PORT SPLIT, AND WHY THE 0x82 PORT-RECEIVE INDICATION IS STILL UNPOSTED
+// Run link100, lane WM9, rung W8.
+// ===========================================================================
+//
+// Rung W7 (lane WM8) closed with one sentence: everything under
+// src/func_020417d0.c is linked, correctly addressed, and waiting on an 0x82
+// port-receive indication the host ARM7 never posts. This rung went to post
+// it. It did not, and the reason is a fact about the cartridge that no lane
+// had read yet: THE HOST'S DATAGRAMS AND src/func_020417d0.c ARE ON DIFFERENT
+// WM PORTS.
+//
+// THE 0x82 RECORD, FIELD BY FIELD, off the two bodies that read one. Whoever
+// takes this next needs no SDK header for it; both readings agree to the byte.
+// src/func_02061188.c's own BufT and its 0x82 arm fix six of the fields and
+// src/func_020417d0.c and src/func_02062bdc.cpp read the rest:
+//
+//   +0x00  u16  0x82, the apiid src/func_02061188.c dispatches on
+//   +0x02  u16  the errcode. Both readers refuse everything but zero
+//               (src/func_02062bdc.cpp `if (m->f2 == 0)`, else state = 3)
+//   +0x04  u16  THE STATE CODE. 7 connected, 9 disconnected, 0x15 port
+//               receive -- src/func_020417d0.c cases 7/9/0x15 and
+//               src/func_02062bdc.cpp's three arms, independently
+//   +0x06  u16  THE PORT. src/func_02061188.c indexes work[0x2b + msg[3]] for
+//               the callback and work[0x3b + msg[3]] for its argument, which
+//               is src/func_02061c88.c's `WM_GetSystemWork() + idx*4 + 0xac`
+//               and `+ 0xec` exactly
+//   +0x08  u32  the whole receive buffer. src/func_02061188.c invalidates it
+//               for *(u16 *)(status + 0x46) bytes before dispatching
+//   +0x0c  u32  THE DATA. src/func_020417d0.c reads it as r0 on case 0x15;
+//               src/func_02062bdc.cpp passes it to func_02062990
+//   +0x10  u16  THE LENGTH (src/func_020417d0.c's arg2;
+//               src/func_02062aa4.cpp compares it with self+0x414)
+//   +0x12  u16  THE SENDER'S AID (the shift count in both readers)
+//   +0x14  6    the sender's MAC, copied by src/func_02061188.c's own
+//               synthesised connect/disconnect record
+//   +0x1a  u16  the sequence number (src/func_02062aa4.cpp stores it >> 1)
+//   +0x1c  u32  the port's registered argument. THE ARM7 DOES NOT WRITE THIS:
+//               src/func_02061188.c overwrites it from work[0x3b + port]
+//               before every dispatch
+//
+// AND THE CONNECT AND DISCONNECT RECORDS ARE NOT THE ARM7'S AT ALL. States 7
+// and 9 are SYNTHESISED BY THE ARM9: src/func_02061188.c's apiid-8 and
+// apiid-0xc arms build data_020a89ec themselves when the reply's state code is
+// 7 or 9 and hand it to all sixteen port callbacks in a loop. So a hosted ARM7
+// that wants those two posts an ordinary apiid 8 or 0xc reply and the ROM does
+// the rest; only 0x15 is a message the ARM7 composes.
+//
+// WHICH PORT IS WHOSE. Exactly two ports are registered in this image, by two
+// different bodies, for two different protocols:
+//
+//   PORT 1  -- src/func_02040c34.c:58 `func_02061c88((u16)a1, func_020417d0, 0)`
+//              with a1 = 1 from src/func_0203ea5c.c:209/212. That is the WFS,
+//              the wireless file system: its datagrams are built by
+//              src/func_02065538.c (parent) or src/func_020653cc.c (child)
+//              into data_020a1fc0 + 0x40 and sent by src/func_02041930.c with
+//              `func_020623ec(func_020418f0, sub, r, 0xffff, *(u16 *)(g+0x30),
+//              3)`, where g+0x30 is the same 1. Its receive parser is
+//              src/func_02063ea8.c and its wake is func_020412f0.
+//
+//   PORT 0xc -- src/func_020631dc.c:96/:123 register src/func_02062bdc.cpp
+//              (parent) and src/func_02062aa4.cpp (child), and
+//              src/func_0203fa50.c:7 passes unitIdx 0xc with mask 0xf and
+//              elemSize 0x20. THAT is the game's own MP unit -- the 0x20-byte
+//              comms block, four slots -- and it is what the host carrier
+//              moves. func_020406b4 -> func_02062df0 sends it and
+//              func_0204068c -> func_02062778 reads it back.
+//
+// SO THE BRIEF'S CHANGE SPLITS IN TWO, and neither half is available on this
+// rung:
+//
+//   (1) AN 0x82 BUILT FROM THE CARRIER'S DATAGRAMS BELONGS ON PORT 0xc, not on
+//       port 1. It would reach src/func_02062bdc.cpp / src/func_02062aa4.cpp
+//       and never src/func_020417d0.c. That is a real rung and it is the "one
+//       path, not two" the port wants -- the ROM's own func_02062990 banks the
+//       peer's block into the MP unit's four-deep ring at the offset
+//       src/func_02062734.c computes, func_020627e8 advances the ring and
+//       re-sends, and src/func_02062df0.c's own MultiCopyHalf then fills
+//       data_020a0f80, retiring port_wm_publish_mp_recv below. It is also a
+//       rung that rewrites the live VS timing (func_020627e8 SENDS from inside
+//       the receive), so it wants its own lane, its own pair and its own
+//       ladder, not a corner of this one.
+//
+//   (2) AN 0x82 ON PORT 1 NEEDS WFS BYTES, AND THERE IS NO CARRIER FOR THEM.
+//       The ROM's WFS sender already runs on this host -- the census below
+//       counts its commands -- and this rung is what made that visible: the
+//       ARM7 was answering WM_SetMPData with the 0x81 completion and dropping
+//       the payload unread. Delivering it to the other window needs a channel,
+//       and the only one the seam has is contract v2's send_aux/recv_aux, which
+//       is classified by a four-byte kind tag in hal/comms_loopback.cpp
+//       (kAuxKinds = 4, and lb_recv_aux SKIPS the voice kind so two consumers
+//       can share one socket). A WFS kind is one more entry in that enum and a
+//       reader beside lb_recv_voice -- in hal/comms_loopback.cpp, which this
+//       lane does not own. Reported as a hunk rather than made.
+//
+// WHAT WOULD BE A FABRICATION, so that it is refused in writing rather than
+// discovered later: posting the carrier's 0x20-byte game block on port 1.
+// src/func_02063ea8.c would then parse the game's flag word as a WFS message
+// type and its stylus bytes as a recipient mask, and on a parent
+// (data_0209a074 == 0 after src/func_020652fc.c) a set bit 0 takes it into the
+// arms that call func_02041ce0 / func_02041c64 and dereference what comes
+// back. That is not the ROM's receive path running; it is the ROM's receive
+// path fed another protocol's bytes.
 
 #include "ntr/ipc.h"
 #include "comms_seam.h"
@@ -663,6 +767,20 @@ bool          g_mp_wide_armed = false;
 bool          g_mp_said_nostride = false;
 bool          g_mp_said_first = false;
 
+// ---- RUNG W8'S LEDGER: THE PORT DATAGRAMS THE ARM9 HANDS DOWN --------------
+// See THE PORT SPLIT in the header. Indexed by the WM port number the ROM's
+// own WM_SetMPData carries at word 4 of the command; sixteen ports, which is
+// the range src/func_020616e8.c:59 clears and src/func_02061c88.c indexes.
+enum : unsigned { kWmPorts = 0x10 };
+unsigned long      g_pd_cmds[kWmPorts]      = { 0 };
+unsigned long long g_pd_bytes[kWmPorts]     = { 0 };
+unsigned           g_pd_last_len[kWmPorts]  = { 0 };
+unsigned           g_pd_last_dest[kWmPorts] = { 0 };
+unsigned           g_pd_first[kWmPorts]     = { 0 };  // first payload halfword
+unsigned long      g_pd_empty[kWmPorts]     = { 0 };  // len 0: nothing to send
+unsigned           g_pd_seen = 0;                     // bitmap of ports used
+unsigned long      g_pd_out_of_range = 0;
+
 // THE BACKSTOP, AND WHOSE DEADLINE IT IS NOT. Two waits look alike here and
 // only one of them is this file's.
 //
@@ -814,6 +932,22 @@ const char *api_name(unsigned a)
     case kApiStartMP:     return "start mp     (src/func_020625fc.c)";
     case kApiSetMPData:   return "set mp data  (src/func_02062428.c)";
     default:              return "UNKNOWN";
+    }
+}
+
+// RUNG W8: WHO OWNS A WM PORT IN THIS CARTRIDGE, read off the two registration
+// sites and nowhere else. src/func_02040c34.c:58 registers src/func_020417d0.c
+// on the port its second argument names, and src/func_0203ea5c.c:209/212 pass
+// 1. src/func_020631dc.c:96 and :123 register src/func_02062bdc.cpp (parent)
+// and src/func_02062aa4.cpp (child) on its `unitIdx`, and src/func_0203fa50.c:7
+// passes 0xc. Every other port is unregistered: src/func_020616e8.c:59 clears
+// all sixteen at WM_Init and nothing else in the image calls func_02061c88.
+const char *wm_port_owner(unsigned prt)
+{
+    switch (prt) {
+    case 0x01: return "the WFS      (src/func_020417d0.c)";
+    case 0x0c: return "the MP unit  (func_02062bdc/02062aa4)";
+    default:   return "no registered callback";
     }
 }
 
@@ -1170,8 +1304,40 @@ extern "C" void port_wm_arm7_command(uint32_t word)
 
     case kApiSetMPData:
         // src/func_02062428.c's WM_SendCommand(0xf, 7, buf, len, ...) puts the
-        // buffer at word 1, the length at word 2, the port index at word 4 and
-        // the completion handler at word 6. The reply is the 0x81 indication.
+        // buffer at word 1, the length at word 2, the destination mask at word
+        // 3, the port index at word 4 and the completion handler at word 6.
+        // The reply is the 0x81 indication.
+        //
+        // RUNG W8 READS WORDS 1, 3 AND 4 TOO, and stops dropping the datagram
+        // without a record of it. Those three are exactly what an 0x82
+        // port-receive indication has to carry -- WHICH bytes, TO WHOM, and ON
+        // WHICH PORT -- and until this rung nothing in the port had looked at
+        // any of them, so "what traffic is actually on the ROM's ports" had no
+        // answer from a run, only from reading. This is a read and a count:
+        // not one byte of behaviour changes with it.
+        {
+            const unsigned prt = c32[4];
+            const unsigned len = c32[2];
+            if (prt < kWmPorts) {
+                ++g_pd_cmds[prt];
+                g_pd_seen |= 1u << prt;
+                g_pd_last_len[prt]  = len;
+                g_pd_last_dest[prt] = c32[3];
+                if (len == 0) {
+                    // src/func_02062428.c:33 answers a zero length with error
+                    // 6 and sends nothing, so this is the ROM asking with an
+                    // empty hand rather than a datagram this stub lost.
+                    ++g_pd_empty[prt];
+                } else {
+                    g_pd_bytes[prt] += len;
+                    if (c32[1])
+                        g_pd_first[prt] =
+                            *(const unsigned short *)(uintptr_t)c32[1];
+                }
+            } else {
+                ++g_pd_out_of_range;
+            }
+        }
         queue(apiid, 0, 0, 0, c32[6], c32[2], c32[4]);
         break;
 
@@ -1311,6 +1477,22 @@ extern "C" void port_wm_arm7_census(void)
         "%u slot(s) at peak, stride %u, wide buffer %s\n",
         g_mp_fills, g_mp_last_mask, g_mp_peak_slots, g_mp_stride,
         g_mp_wide_armed ? "ARMED" : "not needed");
+    // RUNG W8: WHAT WENT DOWN EACH WM PORT. The ROM registers exactly two port
+    // callbacks in this image and they are on DIFFERENT ports; this says which
+    // of them the run used, how much each carried, and where an 0x82 would
+    // have had to go.
+    std::fprintf(stderr,
+        "[wm7:census] port datagrams: ports used 0x%04x, %lu out of range\n",
+        g_pd_seen, g_pd_out_of_range);
+    for (unsigned prt = 0; prt < kWmPorts; ++prt) {
+        if (!g_pd_cmds[prt]) continue;
+        std::fprintf(stderr,
+            "[wm7:census]   port 0x%02x %-38s %lu command(s), %llu byte(s), "
+            "%lu empty, last len %u dest 0x%04x, first halfword 0x%04x\n",
+            prt, wm_port_owner(prt), g_pd_cmds[prt],
+            (unsigned long long)g_pd_bytes[prt], g_pd_empty[prt],
+            g_pd_last_len[prt], g_pd_last_dest[prt], g_pd_first[prt]);
+    }
     std::fflush(stderr);
 }
 

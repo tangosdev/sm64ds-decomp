@@ -660,6 +660,16 @@ extern "C" void port_wm5_report(void)
 //   received      the sum of the sixteen +0x24+0x10 words, which only
 //                 src/func_020647a4.c increments.
 // ---------------------------------------------------------------------------
+// RUNG W8, EXTENDED BY LANE WM9: the fan-out's own writer counts, so the
+// receive census and the ownership claim are read on ONE line. Defined in
+// hal/comms_fanout_wide.cpp, which goes to every target this file goes to and
+// two more (SLICE_COMMS_SOURCES plus mp_comms_seam), so this reference cannot
+// strand a probe the way a reference the other way round would.
+extern "C" void port_wm9_fanout_writers(unsigned long long *frames,
+                                        unsigned long long *touch,
+                                        unsigned long long *pad,
+                                        unsigned long long *foreign);
+
 extern "C" void port_wm8_band_report(void)
 {
     const unsigned char *base = data_020a94d4;
@@ -684,6 +694,9 @@ extern "C" void port_wm8_band_report(void)
            : "the layer was never brought up: no session on this window, so "
              "src/func_02040c34.c never reached either initialiser";
 
+    unsigned long long wf_frames = 0, wf_touch = 0, wf_pad = 0, wf_foreign = 0;
+    port_wm9_fanout_writers(&wf_frames, &wf_touch, &wf_pad, &wf_foreign);
+
     std::fprintf(stderr,
                  "[wm8] band: base=%p span=0x%lx (ROM 0x854) up=%d "
                  "arg148=%08x entries_started=%d entries_banked=%d "
@@ -691,5 +704,20 @@ extern "C" void port_wm8_band_report(void)
                  (const void *)base, span, up,
                  *reinterpret_cast<const uint32_t *>(base + 0x148),
                  started, banked, received, why);
+    // LANE WM9: THE OTHER HALF OF THE SAME QUESTION. The line above says
+    // whether the ROM's own receive path ran; this one says whether anything
+    // but the fan-out wrote the game's input words while it did. touch and pad
+    // are the two dispatchers' call counts and equal `frames` on a correct
+    // run; `foreign` counts frames where one of the five fanned-out regions
+    // changed between the end of step 0x17 and the head of the next step 0x16,
+    // which is the only window in the ROM's loop where a SECOND writer could
+    // do it unseen. Anything but zero there is a datagram landing twice.
+    std::fprintf(stderr,
+                 "[wm9] fan-out writers: frames=%llu touch=%llu pad=%llu "
+                 "foreign=%llu (%s)\n",
+                 wf_frames, wf_touch, wf_pad, wf_foreign,
+                 wf_foreign ? "A SECOND WRITER TOUCHED THE GAME WORDS"
+                            : "the fan-out is the only writer of the game "
+                              "words, once a frame");
     std::fflush(stderr);
 }
