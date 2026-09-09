@@ -62,6 +62,7 @@
  */
 
 #include <cstdio>
+#include <intrin.h>   /* lane R3H: _AddressOfReturnAddress, the seam probe */
 #include "vs_width.h"   /* run vs16: the port's player width */
 #include <cstdlib>
 #include <cstring>
@@ -533,9 +534,287 @@ static void vs_install_remaining_pmf_thunks(void)
                  "0x0211d354 member-pointer site now gets its receiver "
                  "(-> func_ov075_0211b260). This is a DRAWING change nobody "
                  "has looked at; the default leaves the record alone. The "
-                 "third site, 0x0211d34c, is NOT touched -- its body is "
-                 "marked as recovered from vtable slot identity and the "
-                 "inferred-stub guard forbids seating a guess.\n");
+                 "third site, 0x0211d34c, is seated by rung H1 below (lane "
+                 "R3H) after its body was ruled against the ROM.\n");
+}
+
+/* ---- RUNG H1: THE THIRD SITE, SEATED, AND THE FAULT IT WAS CAUSING --------
+ *
+ * Run link100, lane R3H. The block above left 0x0211d34c alone for two stated
+ * reasons -- scope, and the inferred-stub guard's refusal to seat a guessed
+ * body -- and lane R3G then found it is the one row between this port and the
+ * ROM's own frame loop. Under SM64DS_ROM_LOOP=1 a scene 6 run dies with
+ * c0000005 accessing 00000000 at UnknownVsEntry::Behavior+0x178. Both reasons
+ * are answered here, and the failure is not a mystery: it is fully readable in
+ * the emitted code.
+ *
+ * WHAT THE SITE SELECTS. The record word is the ROM's own: vs_data_patch.inc
+ * row 233, `data_ov075_0211d34c + 0 -> func_ov075_0211b1cc`, the host address
+ * of the ov075 body the cartridge parks there. Nothing about WHICH function
+ * runs is wrong. What is wrong is HOW it is entered.
+ *
+ * THE CONVENTION SEAM, the same one this file crosses at 0x0211d35c.
+ * src/func_ov075_0211b418.cpp is `(c->*c->ep->pmf)()` over a complete
+ * single-inheritance class, so MSVC emits the two-word member-pointer call --
+ * disassembled out of walk_window.exe at 0x004a1430:
+ *
+ *     mov eax,[ebp+8]       ; c
+ *     mov edx,[eax+0x84]    ; c->ep
+ *     mov ecx,[edx+0xc]     ; the pair's SECOND word, the adjustment (zero)
+ *     add ecx,eax           ; ecx = this
+ *     mov eax,[edx+8]       ; the pair's FIRST word, the function
+ *     call eax              ; this in ecx, NOTHING on the stack
+ *
+ * and src/func_ov075_0211b1cc.c is a plain cdecl C body taking `char *c`,
+ * which reads its receiver off the stack. The receiver never arrives. That is
+ * the identical defect the 0x0211d35c thunk was written for.
+ *
+ * AND WHY IT IS LETHAL HERE RATHER THAN MERELY WRONG. MSVC gave that body's
+ * loop counter the INCOMING ARGUMENT SLOT. From the same binary, 0x004a1220:
+ *
+ *     mov  esi,[ebp+8]          ; c, read from the argument slot
+ *     ...
+ *     mov  dword ptr [ebp+8],0  ; i = 0, WRITTEN BACK OVER THE SAME SLOT
+ *     ...
+ *     mov  dword ptr [ebp+8],ecx    ; i = i + 1, every iteration
+ *
+ * Entered with nothing pushed, that slot is not an argument at all: it is
+ * func_ov075_0211b418's own SAVED EBP. So the body reads a stack address as
+ * its `this`, and then writes the loop counter over the caller's saved frame
+ * pointer. 0211b418's `pop ebp` then restores the COUNTER, the return lands in
+ * UnknownVsEntry::Behavior with ebp = the final count, and Behavior's /GS
+ * epilogue at 0x0049b098 does `mov ecx,[ebp-4]`. The observed access is
+ * 00000000, so the count was 4. Nothing about the graphics block, the pacer or
+ * the ROM's VBlank handler is involved, which is exactly what R3G's three-arm
+ * bisect said.
+ *
+ * IT IS NOT A GUESS ANY MORE, AND THAT WAS CHECKED BEFORE IT WAS SEATED.
+ * src/func_ov075_0211b1cc.c carries the "recovered from vtable slot identity"
+ * marker, so port/tools/inferred_stub_guard.py refuses it a new hal reference
+ * until a lane rules the BODY against the ROM. This lane disassembled ov075
+ * 0x0211b1cc out of extracted/overlays/overlay_0075.bin at the overlays.yaml
+ * base 0x02113ee0 and compared it instruction for instruction: 36 ARM
+ * instructions, every offset (0xa2, 0xa4, 0x80, 0x18, 0xc, 8, 0xa0), every
+ * call (DecIfAbove0_Short 0x0203adbc, func_ov075_0211addc, func_ov075_0211abb0,
+ * func_ov075_0211ad60) and the pool literal 0x1111 present and identical, the
+ * ldrh/ldrsh widths matching include/dScEntry_c.h's u16/s16 fields. RULED REAL
+ * DECOMP and recorded in port/tools/inferred_stub_adjudicated.txt with the
+ * evidence; only then seated. The NAME the marker records
+ * (dScEntry_c::OnYoshiTryEat) is still unverified and is not what runs.
+ *
+ * THE A/B IS ON ONE BINARY. SM64DS_R3H_PMF3=0 leaves the generated table's raw
+ * word in place, which is the tree before this rung and reproduces the fault at
+ * the same address; unset or 1 installs the thunk. */
+extern "C" {
+extern unsigned char data_ov075_0211d34c[];
+}
+static unsigned g_r3h_pmf3_hits;
+static void    *g_r3h_pmf3_recv;
+static void    *g_r3h_pmf3_stale;
+static unsigned g_r3h_pmf3_stale_count;
+
+static int r3h_pmf3_on(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_R3H_PMF3");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v;
+}
+
+/* THE COUNTED PROOF THE RUNG OWES, taken from inside the seam rather than
+   reasoned about. `self` is the receiver the ROM's dispatch put in ecx.
+   _AddressOfReturnAddress() is the stack slot holding this thunk's return
+   address, and because the thunk is entered by exactly the `call eax` above --
+   two register arguments, nothing pushed -- the word ONE ABOVE it is the word a
+   bare cdecl body would have read as its first argument. Logging both, on the
+   same frame, is the whole finding in two numbers. */
+static void __fastcall vs_pmf_entry_walk(void *self, void *)
+{
+    if (!g_r3h_pmf3_hits) {
+        void **ra = (void **)_AddressOfReturnAddress();
+        g_r3h_pmf3_recv = self;
+        g_r3h_pmf3_stale = ra[1];
+        if ((size_t)g_r3h_pmf3_stale > 0x10000u)
+            g_r3h_pmf3_stale_count =
+                *(unsigned short *)((char *)g_r3h_pmf3_stale + 0xa4);
+    }
+    ++g_r3h_pmf3_hits;
+    /* src/func_ov075_0211b1cc.c, cdecl, one pointer -- the cast is the one the
+       block above vs_pmf_grid_init explains: vs_data_patch.inc is generated and
+       already declares the name void(void). */
+    ((VsPmfBody)(void *)&func_ov075_0211b1cc)(self);
+}
+
+static unsigned g_r3h_vt2_count(unsigned slot);
+
+static void r3h_report(void)
+{
+    std::fprintf(stderr, "[r3h] H1: the 0x0211c94c virtual table's slot-1 face "
+                 "was entered %u time(s) (slot 0 is not faced: its dispatcher "
+                 "pushes the receiver).\n", g_r3h_vt2_count(1));
+    if (!g_r3h_pmf3_hits) {
+        std::fprintf(stderr, "[r3h] H1: the entry record's third site "
+                     "0x0211d34c was never entered on this run.\n");
+        std::fflush(stderr);
+        return;
+    }
+    std::fprintf(stderr,
+                 "[r3h] H1: third site 0x0211d34c entered %u time(s); receiver "
+                 "in ecx = %p; the ROM's own word there is func_ov075_0211b1cc "
+                 "(host %p). A receiver-less cdecl entry would have read %p off "
+                 "the stack (func_ov075_0211b418's saved EBP) and MSVC parks "
+                 "that body's loop counter in the SAME [ebp+8] slot, so it "
+                 "writes %u back over the saved EBP and "
+                 "UnknownVsEntry::Behavior's /GS epilogue then reads "
+                 "[0x%08x].\n",
+                 g_r3h_pmf3_hits, g_r3h_pmf3_recv,
+                 (void *)&func_ov075_0211b1cc, g_r3h_pmf3_stale,
+                 g_r3h_pmf3_stale_count,
+                 (unsigned)(g_r3h_pmf3_stale_count - 4u));
+    std::fflush(stderr);
+}
+
+/* ---- RUNG H1: SCENE 6'S GRAPHICS BLOCK, REGISTERED ------------------------
+ *
+ * hal/scene_boot.cpp's registry is what says which graphics-block vtables this
+ * port's own beat may dispatch; an unregistered table makes
+ * port_graph_block_beat answer 1 and dispatch nothing. The ROM's func_02019144
+ * has no such test, so under SM64DS_ROM_LOOP with the VBlank handler
+ * registered the two disagree: the ROM dispatches scene 6's block and the port
+ * refuses it.
+ *
+ * IDENTIFIED BY ADDRESS, not by name. R3G's census printed `vptr=0187DB34` for
+ * scene 6 and walk_window.map puts _data_ov075_0211ca3c at 0187db34 -- the same
+ * word, and vs_data_patch.inc row 231 is what wrote func_ov075_02116040 into
+ * its slot 2. src/func_ov075_02116040.c returns 1, so the port's display tail
+ * still runs after it, exactly as func_02019144's own `if (... == 0) return;`
+ * decides; what it adds is the ROM's once-per-frame display sync (BG2CNT_B from
+ * c[0xc], and the queued LZ16 screen payload at c[4] decompressed into
+ * G2S::GetBG2ScrPtr, freed and nulled). Nothing else in this seat touches c[4],
+ * so there is no second owner of that payload.
+ *
+ * INERT OFF THE VS PATH: graph_block_word only dispatches when the LIVE block's
+ * vptr equals a registered one, and data_0209d4a8 never holds this table on a
+ * level. SM64DS_R3H_GB6=0 leaves it unregistered. */
+extern "C" {
+extern unsigned char data_ov075_0211ca3c[];
+}
+extern "C" void port_graph_block_register(void *vt);
+
+static void vs_register_graph_block(void)
+{
+    const char *e = std::getenv("SM64DS_R3H_GB6");
+    if (e && e[0] == '0' && e[1] == '\0')
+        return;
+    void **vt = (void **)data_ov075_0211ca3c;
+    std::fprintf(stderr,
+                 "  [r3h] scene 6's graphics block registered with the port's "
+                 "beat: data_ov075_0211ca3c at %p, vt[0..3]={%08X,%08X,%08X,"
+                 "%08X} (slot 2 is func_ov075_02116040, the VS menu's own "
+                 "display sync)\n",
+                 (void *)vt, (unsigned)(size_t)vt[0], (unsigned)(size_t)vt[1],
+                 (unsigned)(size_t)vt[2], (unsigned)(size_t)vt[3]);
+    std::fflush(stderr);
+    port_graph_block_register(vt);
+}
+
+/* ---- RUNG H1: THE SECOND SEAM THE REGISTERED BLOCK OPENS ------------------
+ *
+ * Run link100, lane R3H, and it was MEASURED rather than predicted: with the
+ * third site seated and the block above registered, scene 6 under
+ * SM64DS_ROM_LOOP=1 is clean at 300 frames, but with SM64DS_R3G_ROM_WAKE=1 as
+ * well -- the arm where the ROM's own IRQ::VBlankHandler runs -- it faults
+ * again, somewhere else:
+ *
+ *     FAULT code c0000005 accessing 00000005, func_ov075_02115bcc+0xa
+ *       0049d2fa  movzx eax, word ptr [edi+4]     ; edi = 1, not a receiver
+ *
+ * THE PATH IS THE ONE THE REGISTRATION OPENED, and it is a chain of ROM C:
+ * IRQ::VBlankHandler -> src/func_02019144.c -> the block's slot 2
+ * (src/func_ov075_02116040.c) -> `if (c[8]) func_ov075_021160dc(c[8])` ->
+ * src/func_ov075_021160dc.cpp, which is
+ *
+ *     Base *elem = (Base *)(c + 0x70);
+ *     do { elem->method1(); ... elem = (Base *)((char *)elem + 0x24); } ...
+ *
+ * -- an MSVC VIRTUAL call, so `this` rides in ecx and nothing goes on the
+ * stack, over a two-slot vtable whose words vs_data_patch.inc rows 222-223
+ * point at two plain cdecl C bodies. It is the identical defect the block above
+ * r3h_pmf3_on describes at the member-pointer site, one table along, and it was
+ * simply unreachable until this rung registered the block that leads to it.
+ *
+ * SLOT 1 ONLY, AND THE REASON IS MEASURED. The first draft of this block faced
+ * BOTH words on the argument that a vtable is entered one way. It is not: this
+ * table has TWO dispatchers with TWO conventions, and the run said so.
+ *
+ *   slot 1  src/func_ov075_021160dc.cpp, `elem->method1()`, a real MSVC
+ *           virtual call -- 0049d7f0+0x1e reads `mov eax,[esi] / mov ecx,esi /
+ *           call [eax+4]`: this in ecx, nothing pushed. NEEDS the face.
+ *   slot 0  port/unmatched/VS_EntryDispatch.cpp, the port's OWN host copy of
+ *           func_ov075_0211a2b8, whose banner says in as many words that it
+ *           spells this element walk as "an explicit cdecl call through the
+ *           record word with self as the first argument". 0049aca0+0xb3 reads
+ *           `mov eax,[edi] / push edi / mov eax,[eax] / call eax / add esp,4`:
+ *           the argument IS pushed and ecx is never set. A face there is the
+ *           defect rather than the fix, and measuring it cost one build --
+ *           scene 6 moved its fault to func_ov075_02115e1c+0x7 reading
+ *           [1+0x1c], and the first-entry log named the caller.
+ *
+ * So slot 0 keeps the generated table's raw cdecl word, which is what its one
+ * dispatcher wants, and slot 1 gets the face. relocs.txt confirms there is no
+ * third way in: two references INTO data_ov075_0211c94c (0x02115bc0 and
+ * 0x0211a850, the constructors that install it as a vptr) and two out of it,
+ * its own words.
+ *
+ * NEITHER BODY IS A GUESS: src/func_ov075_02115bcc.c and
+ * src/func_ov075_02115e1c.cpp carry no "recovered from vtable slot identity"
+ * marker, and 02115bcc already has its real declaration above.
+ * SM64DS_R3H_VT2=0 leaves the generated table's raw words in place. */
+extern "C" {
+extern unsigned char data_ov075_0211c94c[];
+}
+static unsigned g_r3h_vt2_hits[2];
+
+/* first-entry evidence per slot: the receiver ecx carried, and the call site
+   that carried it, so a slot entered by a caller that does NOT set ecx names
+   itself in the log instead of being guessed at. */
+static void *g_r3h_vt2_self[2];
+static void *g_r3h_vt2_from[2];
+static void __fastcall vs_vt2_method1(void *self, void *)
+{
+    if (!g_r3h_vt2_hits[1]) {
+        g_r3h_vt2_self[1] = self;
+        g_r3h_vt2_from[1] = _ReturnAddress();
+        std::fprintf(stderr, "[r3h] 0x0211c94c slot 1 first entry: receiver "
+                     "in ecx = %p, called from %p\n", self,
+                     g_r3h_vt2_from[1]);
+        std::fflush(stderr);
+    }
+    ++g_r3h_vt2_hits[1];
+    func_ov075_02115bcc((char *)self);
+}
+static unsigned g_r3h_vt2_count(unsigned slot)
+{
+    return slot < 2 ? g_r3h_vt2_hits[slot] : 0u;
+}
+static void vs_install_vt2_faces(void)
+{
+    const char *e = std::getenv("SM64DS_R3H_VT2");
+    if (e && e[0] == '0' && e[1] == '\0')
+        return;
+    void **vt = (void **)data_ov075_0211c94c;
+    std::fprintf(stderr,
+                 "  [r3h] the 0x0211c94c virtual table's SLOT 1 now gets its "
+                 "receiver (-> func_ov075_02115bcc): "
+                 "src/func_ov075_021160dc.cpp's `elem->method1()` is an MSVC "
+                 "virtual call with `this` in ecx and nothing on the stack. "
+                 "Slot 0 keeps its raw cdecl word -- its one dispatcher is "
+                 "port/unmatched/VS_EntryDispatch.cpp, which pushes the "
+                 "receiver\n");
+    std::fflush(stderr);
+    vt[1] = (void *)vs_vt2_method1;
 }
 
 static void vs_apply_data_patch(void)
@@ -668,6 +947,30 @@ extern "C" void port_scene_fill_vs(void)
            pairs and everything downstream reads the copies. A no-op without the
            variable, which is every run but a lane's own. */
         vs_install_remaining_pmf_thunks();
+        /* RUNG H1 (lane R3H): and the THIRD record, at the same position in
+           the order and for the same reason -- the sinit below copies all
+           three pairs and everything downstream reads the copies. This one is
+           not behind a variable: it is the fix for scene 6's fault under
+           SM64DS_ROM_LOOP, and SM64DS_R3H_PMF3=0 is the way back to the
+           faulting shape on the same binary. The block above r3h_pmf3_on
+           carries the derivation and the ROM ruling. */
+        if (r3h_pmf3_on()) {
+            *(void **)data_ov075_0211d34c = (void *)vs_pmf_entry_walk;
+            std::fprintf(stderr, "  [r3h] the entry record's 0x0211d34c "
+                         "member-pointer site now gets its receiver "
+                         "(-> func_ov075_0211b1cc, host %p); "
+                         "src/func_ov075_0211b418.cpp's dispatch puts `this` in "
+                         "ecx and pushes nothing, and the body is cdecl\n",
+                         (void *)&func_ov075_0211b1cc);
+        } else {
+            std::fprintf(stderr, "  [r3h] SM64DS_R3H_PMF3=0: 0x0211d34c keeps "
+                         "the generated table's raw cdecl word, which is the "
+                         "shape that faults at UnknownVsEntry::Behavior+0x178 "
+                         "under SM64DS_ROM_LOOP\n");
+        }
+        std::atexit(r3h_report);
+        vs_install_vt2_faces();
+        vs_register_graph_block();
         /* the excluded c800 record, rebuilt from the pinned mount extent --
            one code pointer (patched above) and a zero */
         std::memcpy(&port_vs_data_0211c800, data_ov075_0211c7f8 + 8, 8);

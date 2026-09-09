@@ -1542,6 +1542,14 @@ extern "C" void _ZN4CP1516WaitForInterruptEv(void);
    circuit itself proven rather than the whole thing merely suspect. */
 extern "C" void OS_SleepThread(unsigned short *q);
 extern "C" unsigned char data_0209d500[4];
+/* hal/boot2_thread.cpp. Raised around the sleep below while a frame is being
+   re-simulated, so the halt inside it takes no radio turn: run link100, lane
+   DET, and the whole reason is at the call site. */
+extern "C" void port_thread_pump_suspend(int on);
+/* hal/boot2_thread.cpp. The frame's own wait begins with a fresh halt bound, so
+   a radio wait earlier in the same frame cannot cut the sleep off before the
+   ROM's own wake fires: run link100, lane DET. */
+extern "C" void port_thread_frame_wait_begin(void);
 static int r3d_sleep_probe_left;
 static int r3d_sleep_probe_taken;
 /* ---- RUNG E1, THE KNOB (run link100, boot plan rung D5, lane R3E) ---------
@@ -1601,14 +1609,32 @@ extern "C" int port_rom_loop_enabled(void);
    belongs to -- and the answer was NEITHER: scene 6 goes down on the SLEEP,
    with this gate unset and no VBlank handler registered at all. The block at
    the scene handover carries the whole measurement. Read only where
-   SM64DS_ROM_LOOP is already on, so with the main knob unset this rung has no
-   reader either. */
+   SM64DS_ROM_LOOP is already on, so with the main knob off this rung has no
+   reader either.
+
+   RUNG H2 FLIPS IT WITH THE MAIN KNOB (lane R3H), and the two belong together:
+   the ROM's own sleep and the ROM's own wake are one circuit, and a default
+   that sleeps the cartridge's way but is woken by the port's starvation timer
+   is half a handover, not a safer one. SM64DS_R3G_ROM_WAKE=0 turns it off on
+   its own, so the two halves stay separable on one binary the way rung G2
+   wanted them.
+
+   WHAT CHANGED SINCE "scene 6 goes down on the SLEEP". That sentence is now
+   history: rung H1 seated the member-pointer site that was smashing
+   func_ov075_0211b418's frame, registered scene 6's and scene 360's graphics
+   blocks, and faced the one virtual slot the registered block then reached
+   (0x0211c94c slot 1, from src/func_ov075_021160dc.cpp). Measured with this
+   gate ARMED, 300 frames each: scene 6 rc=0, scene 360 rc=0, scene 1 rc=0 with
+   the counted 0/1/2/3 = 300/0/450/150 and the wrong block 0 times, scene 8
+   rc=0. The [thr] line on a scene under the flipped default reads
+   vbl_enter/vbl_dispatch nonzero and starved=0 where it used to read
+   vbl_enter=0 and starved=300: the wakes are the ROM's own. */
 static int port_r3g_rom_wake(void)
 {
     static int v = -1;
     if (v < 0) {
         const char *e = getenv("SM64DS_R3G_ROM_WAKE");
-        v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
     }
     return v;
 }
@@ -14131,7 +14157,26 @@ int main(void)
                step B1 -- so this is the ROM's own condition and not a fixture. */
             ++r3e_rom_loop_sleeps;
             r3e_heap_watch("the frame foot, before the ROM's sleep");
+            /* AND THE RADIO STANDS DOWN FOR A RE-SIMULATED FRAME (run link100,
+               lane DET). This sleep is the ONE place a replayed frame reaches
+               the host halt, and the halt's step 1 is hal/comms_conductor.cpp's
+               pump: a transport poll, an ARM7 turn that posts a queued WM reply
+               (which the ROM answers with the next WM command, walking
+               data_020a89b0's ten-slot queue) and, on a connected session, up
+               to a VBlank of wall time. None of that is the frame's simulation
+               -- it is the outside world, and this frame's share of it already
+               happened when the frame was first played. hal/rollback.cpp
+               already stands the rasteriser and the present down for the same
+               reason; this is the radio's half of that rule, and without it the
+               DET rung's restore+retick reads DSSTATE-DIFFERS on
+               data_020a89b0+0xc in every window. Suspended around the sleep and
+               not around the whole frame, because the frame body's own comms
+               work is served from the rollback record and never reaches here. */
+            const int det_resim = rb_replaying();
+            if (det_resim) port_thread_pump_suspend(1);
+            port_thread_frame_wait_begin();
             OS_SleepThread((unsigned short *)data_0209d500);
+            if (det_resim) port_thread_pump_suspend(0);
             r3e_heap_watch("the frame foot, after the ROM's sleep");
         } else {
             port_host_frame_pump(0);

@@ -105,6 +105,21 @@ void port_vs_end_state_set(const int *w);
 // (which is linked into targets this file is not), mirrored from g_replaying at
 // the two places it moves, so a target without this boundary reads a truthful 0.
 extern "C" int g_port_rb_replaying;
+// THE ROM'S FRAME-LOOP BOOKKEEPING, named on the DET rung's own lines (run
+// link100, lane DET). These are the words a restore+retick came back differing
+// on once rung H2 made phase 7 the ROM's own sleep, and resolving a .dsstate
+// offset against walk_window.map is not something the next lane should have to
+// do again: the sleep queue func_0201a4bc sleeps on, the VBlank count
+// IRQ::VBlankHandler gates its wake on, the wait flag that gate also tests, the
+// frame divider that says how many edges a frame is, and the read cursor of the
+// ROM's WM command queue (src/func_02058940's struct at data_020a89b0 + 0xc,
+// one step per WM_SendCommand).
+extern unsigned char data_0209d500[4];
+extern int data_0209d514;
+extern unsigned char data_0209d4f0[4];
+extern int data_0208ee44;
+extern unsigned char data_020a89b0[20];
+extern unsigned char data_020a89c4[40];
 extern unsigned char data_020a1154[];     // the ROM's per-slot comms records
 extern int data_020a4b98[];               // the actor walker's list-5 view
 // THE HOSTED ARM7 SOUND COMMAND QUEUE (hal/player_bridges.cpp, hal/sdat).
@@ -706,10 +721,62 @@ bool in_sound_queue(const char *p)
     return false;
 }
 
+// THE RADIO'S COMMAND QUEUE, AND WHY IT IS EXCLUDED (run link100, lane DET).
+//
+// data_020a89b0 is src/func_02058940's twenty-byte queue struct and
+// data_020a89c4 is its ten-slot ring; src/func_020616e8.c:76-84 builds them and
+// hands the ring the ten 0x100 command buffers at data_020a8a40. WM_SendCommand
+// takes one buffer off the ring, fills it, sends it down PXI channel 0xa and
+// puts it back, so the struct's read cursor at +0xc steps once per command the
+// ARM7 is asked to run.
+//
+// WHY A RE-SIMULATED FRAME CANNOT REPRODUCE IT. Commands are not all sent by
+// the game: the WM protocol sends the NEXT command from inside the REPLY to the
+// last one (hal/wm_arm7.cpp's first law says so, and it is why the host ARM7
+// queues replies instead of posting them on the store), so the count of
+// commands over a span of frames is a count of RADIO ROUND TRIPS. Those happen
+// once, in real time, when the frame is first played. A frame the window
+// re-runs to fold in a corrected input serves its comms out of this file's own
+// record and takes no round trip at all -- and it must not take one: re-driving
+// the radio inside a replay is host I/O inside the simulation, which is exactly
+// what the pump suspension at tests/walk_window.cpp's phase 7 stops.
+//
+// WHY EXCLUDING IT IS SAFE RATHER THAN CONVENIENT. The ten slots are
+// interchangeable scratch: every buffer is written in full before it is sent
+// and nothing in the game ever reads one back as state. The measurement agrees
+// -- the 2560 bytes of command buffers at data_020a8a40 are inside .dsstate,
+// were NOT excluded, and came back byte-identical on every window of every DET
+// repetition; the only byte that moved was the cursor saying which slot is
+// next. So a rotated ring is the same ring, and the world the game computes
+// from does not depend on which one of ten equal buffers the next command lands
+// in.
+//
+// This is the same class hash_host_words already excludes in writing -- the
+// seam's counters and the divergence detector's clock, which follow packet
+// timing rather than the simulation -- and the same class in_sound_queue
+// excludes for the ARM7's audio. It is deliberately NARROW: the struct's queue
+// bookkeeping and its slot ring, nothing else. The two thread-queue halfwords
+// at +0 and +2 are NOT excluded, because a thread left blocked on this queue
+// across a rewind would be a real defect and this rung should still say so.
+bool in_radio_queue(const char *p)
+{
+    struct Span { const void *base; size_t n; };
+    static const Span spans[] = {
+        { data_020a89b0 + 0xc, 8 },       // firstIndex and usedCount
+        { data_020a89c4, 40 },            // the ten slots the ring rotates
+    };
+    for (size_t i = 0; i < sizeof spans / sizeof spans[0]; ++i) {
+        const char *b = (const char *)spans[i].base;
+        if (p >= b && p < b + spans[i].n) return true;
+    }
+    return false;
+}
+
 // `unexplained`, when given, counts the differing bytes that are NOT in the
-// sound command queue (used for the .dsstate region only).
+// sound command queue and NOT in the radio's command queue (used for the
+// .dsstate region only). `radio`, when given, counts the radio queue's own.
 size_t diff_region(const char *name, const char *want, const char *got, size_t n,
-                   size_t *unexplained = 0)
+                   size_t *unexplained = 0, size_t *radio = 0)
 {
     size_t differing = 0, ranges = 0, i = 0, first = (size_t)-1;
     while (i < n) {
@@ -717,27 +784,48 @@ size_t diff_region(const char *name, const char *want, const char *got, size_t n
         size_t j = i;
         while (j < n && want[j] != got[j]) ++j;
         differing += j - i;
-        size_t outside = 0;
+        size_t outside = 0, inradio = 0;
         if (unexplained)
-            for (size_t q = i; q < j; ++q)
-                if (!in_sound_queue(got + q)) { ++*unexplained; ++outside; }
+            for (size_t q = i; q < j; ++q) {
+                if (in_sound_queue(got + q)) continue;
+                if (in_radio_queue(got + q)) { ++inradio; if (radio) ++*radio; continue; }
+                ++*unexplained; ++outside;
+            }
         if (first == (size_t)-1) first = i;
-        // the first 8 ranges, and EVERY range with a byte outside the sound
-        // queue (those are the verdict; the queue's own are the noise)
-        if (ranges < 8 || outside)
+        // the first 8 ranges, and EVERY range with a byte outside both device
+        // queues (those are the verdict; the queues' own are the noise)
+        if (ranges < 8 || outside || inradio)
             fprintf(stderr, "[rb-det]     %s diff at +0x%zx len %zu: was %02x %02x %02x %02x"
                     " now %02x %02x %02x %02x%s\n", name, i, j - i,
                     (unsigned char)want[i], (unsigned char)want[i + 1],
                     (unsigned char)want[i + 2], (unsigned char)want[i + 3],
                     (unsigned char)got[i], (unsigned char)got[i + 1],
                     (unsigned char)got[i + 2], (unsigned char)got[i + 3],
-                    outside ? "  <-- OUTSIDE the sound command queue" : "");
+                    outside ? "  <-- OUTSIDE the sound command queue"
+                            : inradio ? "  <-- the radio's command queue (excluded, see in_radio_queue)"
+                                      : "");
         if (ranges < 8 && name[0] == 'a') { name_arena_addr(i); name_word(want, got, i, n); }
         ++ranges;
         i = j;
     }
     fprintf(stderr, "[rb-det]   %s: %zu differing bytes in %zu ranges\n", name, differing, ranges);
     return differing;
+}
+
+// THE ROM'S FRAME-LOOP WORDS, SAID OUT LOUD AT BOTH DET HASH POINTS (run
+// link100, lane DET). The rung used to report a .dsstate byte offset and leave
+// the reader to resolve it against walk_window.map; these are the four words
+// that actually moved, printed by name on both sides of the rollback so a run's
+// own log says whether the frame ended on the ROM's wake (queue 0, count 0) or
+// on this port's starvation bound (queue still holding the sleeper's bit).
+void det_frame_words(const char *when)
+{
+    fprintf(stderr, "[rb-det] %s frame-loop words: data_0209d500(sleep queue)="
+            "%u data_0209d514(vblank count)=%d data_0209d4f0(wait flag)=%u "
+            "data_0208ee44(divider)=%d data_020a89b0+0xc(WM queue cursor)=%d\n",
+            when, (unsigned)data_0209d500[0], data_0209d514,
+            (unsigned)data_0209d4f0[0], data_0208ee44,
+            *(const int *)(data_020a89b0 + 0xc));
 }
 
 void report()
@@ -1039,37 +1127,47 @@ static void rb_frame_end_body(int *frame, int selftest)
                     (unsigned long long)h[1], (unsigned long long)h[2],
                     (unsigned long long)h[3],
                     same ? "BYTE-IDENTICAL to the straight run" : "DIVERGED");
+            det_frame_words("re-run");
             if (!same) {
                 char *hw = g_hw_n ? big_alloc(port_hw_regions_size()) : 0;
                 if (hw) port_hw_regions_copy_out(hw);
-                size_t da = 0, dd = 0, dh = 0, dx = 0;
+                size_t da = 0, dd = 0, dh = 0, dx = 0, dr = 0;
                 if (h[0] != g_det_straight[0])
                     da = diff_region("arena", g_det_arena, (const char *)port_arena_base(), g_arena_size);
                 if (h[1] != g_det_straight[1])
-                    dd = diff_region("dsstate", g_det_ds, &dsstate_lo, g_ds_size, &dx);
+                    dd = diff_region("dsstate", g_det_ds, &dsstate_lo, g_ds_size, &dx, &dr);
                 if (h[2] != g_det_straight[2] && hw)
                     dh = diff_region("hw", g_det_hw, hw, port_hw_regions_size());
                 fprintf(stderr, "[rb-det] arena %zu bytes, dsstate %zu bytes (%zu outside the "
-                        "sound command queue), hw %zu bytes differ; the carried "
-                        "host words %s\n", da, dd, dx, dh,
+                        "sound command queue and the radio's, %zu in the radio's), hw %zu "
+                        "bytes differ; the carried host words %s\n", da, dd, dx, dr, dh,
                         host_same ? "came back identical" : "DID NOT COME BACK");
                 // The verdict the rig reads. IDENTICAL-EXCEPT-SOUNDQUEUE is
                 // the pass: the game's world came back byte-for-byte and only
                 // the re-seeded audio queue moved (see in_sound_queue).
+                // IDENTICAL-EXCEPT-DEVICE-QUEUES is the same pass with the
+                // RADIO's command queue moving as well (in_radio_queue, run
+                // link100 lane DET): it is spelled apart from the sound-only
+                // verdict so a log still says which device moved, and it starts
+                // with IDENTICAL because it is a pass, which is what
+                // port/tools/rollback_proof.py's DET rung reads.
                 // HOST-STATICS-DIFFER is its own verdict rather than a flavour
                 // of DIVERGED, because the three regions coming back clean while
                 // a carried host word did not is EXACTLY the defect lane RBFIX
                 // fixed, and a future one should be told apart from an arena
                 // divergence on sight.
-                printf("rb-det: %s arena=%zu dsstate=%zu hw=%zu soundqueue=%zu host=%d\n",
+                printf("rb-det: %s arena=%zu dsstate=%zu hw=%zu soundqueue=%zu "
+                       "radioqueue=%zu host=%d\n",
                        !host_same ? "HOST-STATICS-DIFFER"
-                       : (da == 0 && dh == 0 && dx == 0) ? "IDENTICAL-EXCEPT-SOUNDQUEUE"
-                       : (da == 0 && dh == 0) ? "DSSTATE-DIFFERS" : "DIVERGED",
-                       da, dd, dh, dd - dx, host_same ? 0 : 1);
+                       : (da || dh || dx) ? ((da == 0 && dh == 0) ? "DSSTATE-DIFFERS" : "DIVERGED")
+                       : dr ? "IDENTICAL-EXCEPT-DEVICE-QUEUES"
+                            : "IDENTICAL-EXCEPT-SOUNDQUEUE",
+                       da, dd, dh, dd - dx - dr, dr, host_same ? 0 : 1);
             } else {
                 fprintf(stderr, "[rb-det] arena 0 bytes, dsstate 0 bytes, hw 0 bytes "
                         "differ, and the carried host words came back identical\n");
-                printf("rb-det: IDENTICAL arena=0 dsstate=0 hw=0 host=0\n");
+                printf("rb-det: IDENTICAL arena=0 dsstate=0 hw=0 soundqueue=0 "
+                       "radioqueue=0 host=0\n");
             }
             g_det_phase = 3;
         }
@@ -1092,6 +1190,7 @@ static void rb_frame_end_body(int *frame, int selftest)
                     (unsigned long long)g_det_straight[0],
                     (unsigned long long)g_det_straight[1],
                     (unsigned long long)g_det_straight[2], g_det_tag, tag - g_det_tag);
+            det_frame_words("straight run");
             if (rollback_to(g_det_tag, frame, tag, true)) g_det_phase = 2;
             else { fprintf(stderr, "[rb-det] rollback refused; check off\n"); g_det_phase = 3; }
             return;
