@@ -16383,6 +16383,62 @@ target_compile_definitions(mp_comms_seam PRIVATE
     PORT_COMMS_SEAM_PROBE_FACE_0204068C)
 
 # ===========================================================================
+# THE WIRELESS PLAN, RUNG W6 (run link100, lane WM5)
+# ===========================================================================
+#
+# src/func_02040c34.c -- the ROM's own wireless worker-thread bring-up -- and
+# nineteen more from its call closure. The list, the eleven TUs it refuses and
+# why, and the two rows that look like hardware and are not, are all in
+# port/slice_wm5.txt's own header.
+#
+# THE STORAGE HALF IS hal/wm_thread.cpp, added to the same three targets below.
+# It goes exactly where hal/wm_arm7.cpp goes and nowhere else: it carries the
+# 0x2b80-byte work-area band, the four faces into the table band this rung
+# refuses, and the worker-thread census, and mp_comms_seam links none of them.
+#
+# Plain C, twenty files, no struct layout option and no pointer-to-member.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm5.txt" SLICE_WM5_LINES)
+set(SLICE_WM5_SOURCES "")
+foreach(line IN LISTS SLICE_WM5_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM5_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+#
+# TWO TARGETS, NOT THREE, AND THAT IS FORCED RATHER THAN CHOSEN. Rungs W1, W2
+# and W4 went to all three; this one cannot. src/func_02042254.c (the worker
+# body) and src/func_020424c0.c (the header-region reads) both call
+# func_0205d5e8, which is on port/slice_gate214.txt, and SLICE214_SOURCES goes
+# to walk_window and walk_window_hires only -- smoke_player has never carried
+# the boot spine (see the SLICE214 note above). Measured, not assumed: the
+# first build of this rung linked walk_window and walk_window_hires clean and
+# failed smoke_player on exactly that one unresolved external.
+foreach(_twm5 walk_window walk_window_hires)
+    target_sources(${_twm5} PRIVATE ${SLICE_WM5_SOURCES}
+                   "${CMAKE_CURRENT_SOURCE_DIR}/hal/wm_thread.cpp")
+endforeach()
+# AND THE OTHER TWO LINK hal/wm_thread_face.cpp INSTEAD. smoke_player for the
+# reason just given, mp_comms_seam because it links hal/comms_seam.cpp without
+# the WM command layer, without a heap and without the host ARM7. That file
+# carries the retired func_02040c34 body, the standalone data_020a3fc0 those
+# two still need (src/func_02040a5c.c and src/func_02040a84.c are on
+# port/slice_gate221.txt, which does go to smoke_player), and no-op versions of
+# the two census entry points hal/boot2_ipc.cpp calls on all three big targets.
+#
+# A PER-TARGET DEFINE ON hal/comms_seam.cpp COULD NOT HAVE DONE THIS, which is
+# the one way this retirement differs in shape from rungs W1, W2 and W4: that
+# file is compiled ONCE for all three big targets (SLICE_COMMS_SOURCES rides
+# the sharing block below), so a define on smoke_player would have changed
+# walk_window's object too. Rungs W1/W2/W4 only ever had to keep a body for
+# mp_comms_seam, which compiles hal/comms_seam.cpp separately.
+foreach(_twm5f mp_comms_seam smoke_player)
+    target_sources(${_twm5f} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/wm_thread_face.cpp")
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #

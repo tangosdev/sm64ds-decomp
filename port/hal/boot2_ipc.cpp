@@ -128,6 +128,16 @@ void port_wm_arm7_turn(void);
 void port_wm_arm7_census(void);
 int  port_wm_arm7_saw_traffic(void);
 
+// THE WIRELESS WORKER THREAD, hal/wm_thread.cpp. Run link100, lane WM5, rung
+// W6: src/func_02040c34.c is linked now, so a session creates the cartridge's
+// SECOND OS thread through the ROM's own func_02058200 and parks it in the
+// ROM's own sleep. The census is a one-shot -- it returns immediately until
+// src/func_02042200.c has written the entry pc into the record -- and the host
+// ARM7's turn is where it is driven from, because that is the first owned code
+// that runs after the ROM's reschedule has entered the thread.
+void port_wm5_worker_census(void);
+void port_wm5_report(void);
+
 // The matched bodies this file brings up. Declared, never defined here.
 void func_0205b858(void);            // tail veneer to func_0205bad8, PXI init
 void func_02059e48(void);            // channel 0xc bring-up
@@ -507,6 +517,9 @@ void exit_report()
     // zero -- "the ARM7 was never asked" is the measurement a solo run owes,
     // not an absence of output.
     port_wm_arm7_census();
+    // AND THE WORKER THREAD'S OWN LINE (run link100, lane WM5). Same reason:
+    // a solo run owes "no wireless thread was created", stated, not absent.
+    port_wm5_report();
     std::fflush(stderr);
 }
 
@@ -577,6 +590,7 @@ extern "C" void port_arm7_wireless_tick(void)
 {
     wireless_tick();
     port_wm_arm7_turn();
+    port_wm5_worker_census();
 }
 
 // Called by hal/boot_os.cpp at the end of port_boot_rom_pre_main(), i.e. after

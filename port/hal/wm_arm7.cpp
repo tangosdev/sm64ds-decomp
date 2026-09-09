@@ -292,16 +292,41 @@ WMBSS(".dsstate$ywmd11", data_020a0fa0, 6, 1) = { 0 };
 // 0x020a11e4. ROM span to data_020a15e4 is 0x400, and src/func_020421b4.c
 // addresses base + 0x400 and hands it to the OS thread-queue calls -- so the
 // object really runs to the end of data_020a15e4's own 156-byte span. Hosted at
-// 0x400 + 156 = 1180 for that reason, and nothing names data_020a15e4.
-WMBSS(".dsstate$ywmd12", data_020a11e4, 1180, 4) = { 0 };
+// 0x400 + 156 = 1180 for that reason.
+//
+// SPLIT IN TWO BY RUNG W6 (run link100, lane WM5), ADDRESS-NEUTRALLY. The note
+// that stood here ended "and nothing names data_020a15e4"; rung W6 names it.
+// src/func_02042200.c is
+//     func_02058200(base + 0x400, func_02042254, base, base + 0x400, 0x400, 0xf)
+// with base = data_020a11e4, so the first 0x400 bytes are the wireless worker
+// thread's STACK and data_020a15e4's own 0x9c span is its OSThread RECORD --
+// the record src/func_020423c8.c wakes by name. Two sections, $ywmd12a and
+// $ywmd12b: MSVC merges same-prefix sections in the lexical order of the text
+// after the '$', "ywmd12a" sorts after "ywmd11" and before "ywmd13", the two
+// together are the same 0x400 + 0x9c = 1180 bytes at the same first byte, so
+// nothing in the bracket moves. hal/wm_thread.cpp's band check reads the 0x400
+// offset back at startup rather than trusting this paragraph.
+WMBSS(".dsstate$ywmd12a", data_020a11e4, 0x400, 4) = { 0 };
+WMBSS(".dsstate$ywmd12b", data_020a15e4, 0x9c, 4) = { 0 };
 
-// 0x020a2400. ROM span to data_020a2404 is 4, and src/func_02040bb0.c:20-22
-// takes its ADDRESS as a base and reaches +0x340 and +0x4c4. The next symbol
-// after this block's four names is data_020a3fc0, so the block is 0x1bc0 bytes
-// and that is what is hosted. data_020a2404/2408/2409 are names INSIDE it; no
-// TU on this rung uses them, so they are not defined here -- a later lane that
-// needs one must carve it out of this object rather than allocate beside it.
-WMBSS(".dsstate$ywmd13", data_020a2400, 0x1bc0, 4) = { 0 };
+// 0x020a2400 IS NOT HOSTED HERE ANY MORE (run link100, lane WM5, rung W6).
+//
+// The note that stood here was right about the span -- 0x1bc0 to data_020a3fc0,
+// with data_020a2404/2408/2409 as names inside it -- and it ended "a later lane
+// that needs one must carve it out of this object rather than allocate beside
+// it". Rung W6 needs all three, and it needs one thing this section could not
+// give: src/func_02040c34.c derives the same base as `data_020a1fc0 + 0x440`
+// (0x02040CF8: add fp, sl, #0x440) while src/func_020412f0.c and
+// src/func_02042254.c spell it `data_020a2400`, and the third of its three
+// 0xcc0-byte work nodes runs from +0x1e80 straight through data_020a3fc0. So
+// the four names and data_020a3fc0 are ONE contiguous 0x2b80-byte band whose
+// head is data_020a1fc0, and a band cannot start in the middle of this run.
+// All five are in hal/wm_thread.cpp's ".dsstate$ymp3s0010..0014", which sort
+// immediately behind data_020a1fc0's own ".dsstate$ymp3s0009" in
+// hal/comms_conductor.cpp. The 0x1bc0 that left here and the 0xb80 that left
+// hal/comms_seam.cpp's "$ywm" are exactly the 0x2740 that arrived there, so
+// every hosted global from ".dsstate$ywmd14" onward is at the byte it was at
+// before this lane.
 
 // 0x020a94c0..0x020a94d4, five ints: the 0x02065xxx layer's own state.
 WMBSS(".dsstate$ywmd14", data_020a94c0, 4, 4) = { 0 };

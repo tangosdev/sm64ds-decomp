@@ -1,0 +1,98 @@
+# RUNG W6 OF THE WIRELESS PLAN: THE ROM'S OWN WIRELESS WORKER THREAD.
+# Run link100, lane WM5, on top of lanes WM3 (rung W4), WM4 (rung W2),
+# NITROFS and LOADOV (the cartridge-header mirror).
+#
+# THE ROOT IS src/func_02040c34.c, the last body on the VS path the port still
+# answered with a stand-in (hal/comms_seam.cpp). Lane WMSCOUT scored this rung
+# at +32 conservative and +66 by its src graph and RECOMMENDED AGAINST IT, on
+# two grounds that were true when it wrote them and are not now: "costs a
+# second host thread" (gate 223 made src/func_02058200.c, the ROM's own
+# OS_CreateThread, a linked body, and hal/boot2_thread.cpp adopts what it
+# creates) and "drags in the cartridge-header mirror" (lanes NITROFS and LOADOV
+# wrote all eight words at 0x027FFE40..0x027FFE5C and read them back through
+# the ROM's own FS_Init). Its third ground -- "its own body is not radio code"
+# -- is correct and is the reason this rung needs no new WM command reply.
+#
+# THE CLOSURE, MEASURED ON THIS TREE'S 10397 MAP. Lane WMSCOUT's ROM-relocation
+# closure of func_02040c34 is 112 TUs; 82 of them are already linked (WM2's
+# rung W1 and WM3's rung W4 brought them in), so 30 remain, and the root makes
+# 31. Twenty are here. Eleven are refused, and the refusal is written at the
+# faces in hal/wm_thread.cpp rather than only here:
+#
+#   func_020652fc  func_02065234  func_02065050  func_020650d8   (the 4 faces)
+#   func_020654d0  func_02065500  func_02063ea8  func_02064470
+#   func_02064674  func_020647a4  func_020647d8                  (behind them)
+#
+# WHY. The whole band is addressed through two ROM accessors that return
+# LITERAL DS ADDRESSES -- src/func_02065b94.c returns 0x020A9594 and
+# src/func_02065b88.c returns 0x020A9630 -- while hal/wm_arm7.cpp hosts that
+# ROM span (data_020a9570) at its own host address. Both accessors are already
+# linked and, until this rung, unreached; linking the band makes the literals
+# LIVE, and then one ROM object is two host objects. src/func_020652fc.c's own
+# walk (p += 0x68 sixteen times, storing p + 0x1d7) reaches 0x020A9D83, past
+# data_020a9570's span and across three further ROM symbols, so hosting it
+# correctly is a second grouped DS run plus a per-source-rename face for the
+# two literals. That is a lane, not a line, and it is this lane's named
+# follow-up.
+#
+# WHAT RUNS, AND WHAT DOES NOT.
+#   RUNS: the control block at data_020a1fc0, func_02061c88's WM port-callback
+#   registration (WM_Init has run since rung W1), func_0205d89c's header
+#   mirror, the three 0xcc0-byte work nodes with FS_InitFile on each,
+#   func_020424c0's four header-region reads over the fs seam, func_02058200's
+#   creation of the worker and func_02058048's start of it. The worker
+#   src/func_02042254.c is entered, finds its +0x2708 list empty, and parks in
+#   the ROM's own OS_SleepThread(0).
+#   DOES NOT: the worker's FS arm. Nothing pushes a node onto +0x2708, because
+#   the only pusher is src/func_020412f0.c and it is installed as a callback by
+#   func_020652fc, which is faced. func_020412f0 is linked and address-taken by
+#   the ROM (src/func_02040c34.c:0x02040DE0 loads it into r2 for func_020652fc)
+#   and is never entered on this rung. src/func_020417d0.c is the same: it is
+#   registered with func_02061c88 and the host ARM7 posts no 0x82 port-receive
+#   indication for it.
+#
+# TWO ROWS THAT LOOK LIKE HARDWARE AND ARE NOT, both read before seating.
+#   src/func_0204175c.c reads REG_IE and REG_IF and calls the game-card handler
+#   at data_0209a03c. Its whole body is inside
+#   `if ((REG_IF & IRQ_GAME_CARD) && !(REG_IE & IRQ_GAME_CARD))`, so on a host
+#   with no card interrupt source it is a branch that does not fire -- the ROM's
+#   own body taking the arm the host's hardware state dictates. It is NitroSDK's
+#   WFSi_ForceWakeupCard: the string it passes, read out of arm9_dec.bin at
+#   data_02099e24, is "WFSi_ForceWakeupCard() called! (unknown bug has been
+#   force-recovered)\n", which names the whole subsystem -- this is WFS, the
+#   Wireless File System, which streams the cartridge's own files to a child.
+#   src/func_020424c0.c reads the four (offset, size) pairs out of the mirror
+#   and pulls each region over the fs seam. Two of the four are served by
+#   hal/fs_names.cpp's port_nitrofs_read table spans (FNT and FAT); the ARM9
+#   overlay table at 0x61510 is NOT, and lane LOADOV already named that gap and
+#   its one-hunk fix (a third span served from build/assets/nitrofs_ovt9.bin,
+#   in a file this lane does not own). An unserved read there prints one line
+#   and returns 1, which every caller on this path treats as done, and nothing
+#   on this rung parses the region. It happens only inside a session, so the
+#   solo fs trace is unchanged.
+#
+# STORAGE. Eight new DS names, and five of them are one contiguous 0x2b80-byte
+# band whose head is data_020a1fc0 -- see hal/wm_thread.cpp's header for why it
+# has to be one object and what moved to make it one.
+#
+# Plain C, twenty files, no struct layout option and no pointer-to-member.
+src/func_02040c34.c
+src/func_020412f0.c
+src/func_0204175c.c
+src/func_020417d0.c
+src/func_02041a94.c
+src/func_02041ae8.c
+src/func_02041b24.c
+src/func_02041b60.c
+src/func_02041bbc.c
+src/func_02041c2c.c
+src/func_02041c64.c
+src/func_02041ce0.c
+src/func_02041d28.c
+src/func_02042200.c
+src/func_02042254.c
+src/func_020423c8.c
+src/func_020424c0.c
+src/func_0205d3e4.c
+src/func_020657fc.c
+src/func_020658c0.c
