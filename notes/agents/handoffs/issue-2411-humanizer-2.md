@@ -51,8 +51,31 @@ in [the preceding handoff](issue-2411.md).
 ## Contract correction
 
 The actor `OnTurnIntoEgg(Player&)` base and 24 named overrides now return void,
-with matching headers, the host shim, and the three remaining Player `Obj::v19`
-caller views. OneUp's `func_ov002_020af684` no longer has an int definition that
+across the headers, the host shim, and the three remaining Player `Obj::v19`
+caller views.
+
+An earlier revision of this section claimed those overrides returned void "with
+matching headers". That was wrong, and a whole-tree compile falsified it. The
+header change moved a shared contract in `include/dActor_c.h` and its sibling
+actor headers but touched no file under `src_tu/`, so four byte-verified
+promoted translation units still defined the method as `int` and the compiler
+rejected them as redeclarations. Measured: at candidate `848da2bb8`,
+`tools/check_src_tu_compiles.py` exited 1 with 156/160; at base `26f54f8fc` it
+exited 0 with 159/159 (the denominator moves because the candidate enrolls
+`ov002/da1up_c`). The four definitions — `src_tu/actors/Actor.cpp:1140`,
+`src_tu/actors/Koopa+KoopaSmall.cpp:347`, `src_tu/actors/Lakitu.cpp:88` and
+`src_tu/actors/Spiny.cpp:88` — are now void, and the evidence bullet below
+records the re-run.
+
+That repair is a source-consistency fix; it is not new evidence about the
+original return type, and the caveats stated later in this section still apply
+unchanged. It rests on the same reasoning as the rest of the contract: all four
+bodies already fell off the end with no return statement, and the only slot-19
+dispatch site, `Player::St_YoshiPower_Main`, models the callee as
+`virtual void v19(char *)` and invokes it as a bare statement, so no caller
+consumes a value from them.
+
+OneUp's `func_ov002_020af684` no longer has an int definition that
 falls through after a void call. Its two PMF forwarding helpers also return void,
 retaining the player lookup result, null test and actual argument. Key's helper
 and destruction prototype now agree with the existing void destruction method;
@@ -77,10 +100,14 @@ preserved as historical evidence, not new acceptance of Goomba.
 ## Source and host proof
 
 The ROM source/header checkpoint is `b9339491fc6c4153715f6e26b596cd5478be5ffa`.
-Subsequent edits only remove the obsolete HAL constructor wrapper, mark its
-abort-only trap `[[noreturn]]`, and update this handoff/manifest prose. The ROM
-source/header trees and production ownership declarations are unchanged from the
-proved checkpoint. Independent verification must still pin the final candidate.
+Subsequent edits remove the obsolete HAL constructor wrapper, mark its
+abort-only trap `[[noreturn]]`, update this handoff/manifest prose, and — added
+in the repair described above — change the return type of four
+`OnTurnIntoEgg(Player&)` definitions under `src_tu/` from `int` to `void`. That
+last edit is the only change to the ROM source tree since the checkpoint; the
+header tree and the production ownership declarations are unchanged from it, and
+each of the four affected TUs was re-verified byte-for-byte (see below).
+Independent verification must still pin the final candidate.
 
 - `build/humanizer-contract-targeted.json`: **34 VERIFIED**, empty diffs, blind 0.
   This passes each source explicitly to normal linkcheck: 25 hooks, three OneUp
@@ -91,6 +118,27 @@ proved checkpoint. Independent verification must still pin the final candidate.
   eight unlicensed inherited-chain RTTI records despite 27/27 clean text. The
   exact wired pre-contract control produces the same eight records and exit 1;
   this audit remains a documented baseline limit, not a green promotion gate.
+- `tools/check_src_tu_compiles.py`: **exit 0, 160/160 translation units compile**
+  after the four `src_tu/` definitions were changed to void. The same command
+  exits **1 at 156/160** on candidate `848da2bb8` and **0 at 159/159** on base
+  `26f54f8fc`, so the four failures were introduced by the header change and are
+  now cleared. This gate proves compilation only; it says nothing about bytes.
+- `tubuild verify` on the four repaired TUs, each run separately, after the edit:
+  `arm9/Actor` **97/97 MATCH**, `ov062/Koopa+KoopaSmall` **39/39 MATCH**,
+  `ov077/Lakitu` **32/32 MATCH**, `ov077/Spiny` **34/34 MATCH** — all four
+  objisolate clean and reloc-destinations clean, all four TEXT-VERIFIED. The
+  return type is therefore not load-bearing in the emitted code for any of them.
+  All four also exit 1 on the same unlicensed compiler-only records (`_ZTV`/
+  `_ZTI`/`_ZTS`, a `D2` variant, `_ZN7Vector3D1Ev`) that make the promotion
+  audit refuse. Run at base `26f54f8fc` as a control, the same four produce
+  byte-for-byte the same counts, the same unlicensed records and the same
+  exit 1, so that refusal is a pre-existing baseline limit, not a regression
+  from this change.
+- Whole-ROM check after the edit, with `build/sm64ds.nds` deleted first so a
+  failed run could not leave a stale artifact behind: `tools/rombuild.py -j 16`
+  exit 0, ROM rewritten (fresh mtime), **106/106 modules exact**,
+  100.000000% of compared bytes, ROM-build analysis PASS, sha256
+  `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`.
 - `build/humanizer-contract-header-proof/summary.json`: immutable checkpoint,
   **3,052/3,052 source-qualified slots visited**, no missing or unexpected slots, plus one
   VERIFIED emitted passenger. **3,046 source-qualified slots VERIFIED**, five BLIND verdicts and
