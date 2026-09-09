@@ -1605,6 +1605,24 @@ static int r3e_sound_at_phase9(void)
     }
     return v;
 }
+/* RUNG E1's WATCHER (lane R3E). Memory::defaultHeapPtr is data_020a0ea0
+   (hal/heap_vtable.cpp:80). Memory::Deallocate(void*) falls back to it, so a
+   null there is the fault gate 1 measured. This reports every TRANSITION of
+   that word, with the place it was noticed, and it is read only while the knob
+   or a probe is on -- with SM64DS_ROM_LOOP unset it never runs. */
+extern "C" void *data_020a0ea0;
+static void *r3e_heap_last = (void *)(size_t)-1;
+static void r3e_heap_watch(const char *where)
+{
+    if (!port_rom_loop_enabled() && r3d_sleep_probe_left <= 0)
+        return;
+    if (data_020a0ea0 == r3e_heap_last) return;
+    fprintf(stderr, "[r3e] Memory::defaultHeapPtr %p -> %p at %s, frame %d\n",
+            r3e_heap_last == (void *)(size_t)-1 ? 0 : r3e_heap_last,
+            data_020a0ea0, where, port_rom_frame());
+    fflush(stderr);
+    r3e_heap_last = data_020a0ea0;
+}
 static void r3e_census(const char *when)
 {
     if (r3e_census_done) return;
@@ -2117,6 +2135,7 @@ extern "C" int port_host_frame_pump(unsigned spin)
     frame_stat();
     /* RUNG E1: see frame_pace. One VBlank per turn while the ROM's sleep is
        what ends the frame, one whole game frame per call while this loop is. */
+    r3e_heap_watch("inside the frame pump (an idle turn)");
     g_pace_div_override = port_rom_loop_enabled() ? 1 : 0;
     if ((!rb_replaying() || rb_presented_frame()) &&
         (!g_selftest_frames || port_pace_selftest())) frame_pace();
@@ -13889,6 +13908,7 @@ int main(void)
         if (r3d_sleep_probe_left > 0 || r3d_wait_probe_left > 0 ||
             port_rom_loop_enabled())
             r3e_census("the first probed or ROM-loop frame foot");
+        r3e_heap_watch("the frame foot");
         if (r3d_sleep_probe_left > 0) {
             /* func_0201a4bc's whole body, at func_020197b8's phase-7 point.
                The flag data_0209d4f0 is already up (it was raised at the frame
@@ -13907,7 +13927,9 @@ int main(void)
                tests is already up -- raised at the frame foot above, rung R3b
                step B1 -- so this is the ROM's own condition and not a fixture. */
             ++r3e_rom_loop_sleeps;
+            r3e_heap_watch("the frame foot, before the ROM's sleep");
             OS_SleepThread((unsigned short *)data_0209d500);
+            r3e_heap_watch("the frame foot, after the ROM's sleep");
         } else {
             port_host_frame_pump(0);
         }

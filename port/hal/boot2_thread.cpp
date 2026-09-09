@@ -620,13 +620,37 @@ void thread_boot() {
 // word is deliberately left alone: this file does not know which word the
 // sleeper is on, and inventing one would be a lie the caller's own re-test
 // would then act on.
+// RUNG E1 (run link100, lane R3E). Default: narrow. SM64DS_R3E_WIDE_STARVE=1
+// restores the sweep on the same binary; see this file's starve_wake note.
+static bool wide_starve() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_R3E_WIDE_STARVE");
+        v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
+    }
+    return v != 0;
+}
+
 void starve_wake() {
     ++g_stat.starved;
     bool any = false;
-    for (RomThread *t = mgr_head(); t; t = t->next) {
-        if (t->state == 0) {
-            t->state = 1;
-            any = true;
+    // THE SWEEP IS THE WIRELESS WAIT'S, NOT THE FRAME'S (rung E1, lane R3E).
+    // Marking EVERY sleeping thread runnable wakes threads the cartridge
+    // leaves asleep. On the frame path that is thread 2, func_020602bc -- the
+    // ROM's file-request thread, adopted at boot and asleep ever since -- and
+    // once phase 7 is the ROM's own sleep it is resumed once per frame.
+    // Measured (lane R3E gate 1, SM64DS_ROM_LOOP=1): the run faults at frame
+    // 31 with Memory::defaultHeapPtr null, inside Player::SetAnim's
+    // SharedFilePtr::Release. Forward progress needs only the line below this
+    // block, which is what this function's own banner says; the sweep stays
+    // for a session that installed a wireless pump, because that wait is what
+    // it was written for.
+    if (wide_starve() || port::thread_pump()) {
+        for (RomThread *t = mgr_head(); t; t = t->next) {
+            if (t->state == 0) {
+                t->state = 1;
+                any = true;
+            }
         }
     }
     // FORWARD PROGRESS IS NOT OPTIONAL. The idle thread's body is a for(;;),
