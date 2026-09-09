@@ -70,9 +70,9 @@
  * own body and its fourth call. So the port's order is now Entry's order:
  * func_02019780, then func_02072f94, then main. Nothing was moved to make room.
  *
- * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b, C1d and C1e, EIGHTEEN of
- * the 23 words are bound to the ROM's own initialiser and FIVE are bound to a
- * FACE that names the initialiser it stands for and returns. The faces do not
+ * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b, C1d, C1e and C1c,
+ * NINETEEN of the 23 words are bound to the ROM's own initialiser and FOUR are
+ * bound to a FACE that names the initialiser it stands for and returns. The faces do not
  * abort. Word 0 was a face until rung C1e and an abort there would have killed
  * every boot before the first frame, which is where the rule came from; it
  * still holds for the five that are left, because a face that aborts turns a
@@ -236,6 +236,43 @@
  * so the code half is a relocation and the this-delta half is a literal zero,
  * in all 38.
  *
+ * RUNG C1c ADDS __sinit_02074edc, AND IT IS THE ONE RUNG OF THIS CAMPAIGN
+ * THAT CHANGES WHAT A LIVE OBJECT DISPATCHES. It constructs the two arm9 fader
+ * statics -- a FaderColor into data_0209f5e8 and a FaderBrightness into
+ * data_0209f5d0, three vptr stores each in base-to-derived order (data_0208eafc
+ * = Fader, data_0208eacc = FaderBrightness, and for the first one data_0208eb2c
+ * = FaderColor), two field stores each, and one func_020731dc push each. All
+ * three tables are hosted by hal/scene_boot.cpp. The only names it wanted are
+ * the two 12-byte destruct-node cells, which nothing hosted; they are below.
+ *
+ * WHAT IT RETIRES. hal/method_faces.cpp's FaderBrightness block said in as many
+ * words that data_0209f5d0's vptr is null "because the port does not link the
+ * ROM's static initialiser for it (src/__sinit_02074edc.c)", that the matched
+ * SetForwardTime ends in an unqualified virtual IsAtEnd() that would fault
+ * reading [vptr+0x14] on a null table, and "Do not wake the branch without
+ * giving data_0209f5d0 a real vptr first." This rung is that. The vptr is now
+ * data_0208eacc, whose MSVC slot 5 is hal/scene_boot.cpp's named l2_vt_trap
+ * rather than address zero, so the worst case moved from an access violation to
+ * a line of output. The branch itself is still unreachable for its own separate
+ * reason -- every call site is behind `data_0209f1e0 != 0` and that byte's only
+ * writer, src/func_02023498.c, is not in the link -- and that half of the
+ * paragraph is kept where it stands.
+ *
+ * WHAT IT CHANGES, STATED PLAINLY BECAUSE IT IS THE RISK OF THIS RUNG.
+ * hal/fader_wipes.cpp's gate-31 block placement-news a host HalFaderWipe over
+ * data_0209f5e8 from a C++ static object, which runs before main and therefore
+ * BEFORE Entry. So after this rung the ROM's own initialiser is the last writer
+ * of that vptr and the installed colour fader dispatches hal/scene_boot.cpp's
+ * ten seated data_0208eb2c slots instead of the host class's table. That is the
+ * north star's direction -- the ROM's object, the ROM's table, the ROM's
+ * initialiser -- and it is also the one thing here that a byte gate cannot
+ * check, so the run says it out loud: the [ctor] block below prints both
+ * objects' vptr words after the walk and names the table each one landed on.
+ * hal/fader_wipes.cpp is NOT this lane's file. Its placement-new is now the
+ * pre-Entry value rather than the final one, and whether that construction
+ * should go is that file's call and this lane's written proposal, not an edit
+ * here.
+ *
  * ONE ROM DATA OBJECT IS HOSTED HERE, because __sinit_02074fb8 names it and
  * nothing else in the port does: data_0208ee14, 16 bytes at arm9 .data, the
  * four-slot Scene graph-callback table. Its words are code addresses and
@@ -272,6 +309,7 @@ void __sinit_02074dc4(void);   /* C1b */
 void __sinit_02074e44(void);   /* C1b */
 void __sinit_02074e80(void);
 void __sinit_02074e84(void);   /* C1d */
+void __sinit_02074edc(void);   /* C1c */
 void __sinit_02074fe4(void);   /* C1b */
 void __sinit_02074f80(void);   /* was hand-called from hal/fdr_arm9_fader_seat.cpp */
 void __sinit_02074fb8(void);
@@ -280,6 +318,18 @@ void __sinit_020750b8(void);   /* C1b */
 void __sinit_020750ec(void);   /* C1b */
 void __sinit_0207511c(void);   /* C1b */
 void __sinit_02075150(void);
+
+/* The two arm9 fader statics rung C1c's initialiser constructs, hosted by
+   hal/auto_bss.cpp (data_0209f5d0, 12 bytes at the ROM span) and by
+   hal/fader_wipes.cpp (data_0209f5e8, the gate-31 placement-new). Read here
+   only, to report which vtable each one's vptr word ended up naming. */
+extern int data_0209f5d0[3];
+extern unsigned char data_0209f5e8[];
+
+/* The three fader vtables hal/scene_boot.cpp hosts, for the same report. */
+extern void *data_0208eafc[12];
+extern void *data_0208eacc[12];
+extern void *data_0208eb2c[10];
 
 /* The nineteen camera State objects rung C1e's initialiser fills, hosted by
    hal/camera_states.cpp. Read here and never written: port_rom_entry_ctors
@@ -379,6 +429,28 @@ unsigned char data_020a0eb0[12];
 unsigned char data_020a0ec8[8];
 unsigned char data_020a0ed0[12];
 unsigned char data_020a0ee4[12];
+}
+DSSTATE_END
+
+/* ---- rung C1c: the two fader destruct-node cells -------------------------
+ *
+ *     data_0209f5c4  0x0209f5c4..0x0209f5d0  12  the FaderBrightness node
+ *     data_0209f5dc  0x0209f5dc..0x0209f5e8  12  the FaderColor node
+ *
+ * Both sized by the delta to the next symbol in config/arm9/symbols.txt, and
+ * hosted nowhere before this. data_0209f5c4 falls inside the nominal span of
+ * hal/auto_bss.cpp's generic `int data_0209f5b8[8]`, which is the same slack
+ * the C1b and C1d cells sit beside: data_0209f5b8's own ROM extent is 4 bytes
+ * and both of its readers (Scene::SetSceneToSpawn writes it, and
+ * Scene::SpawnIfNecessary passes it to func_02013edc) touch exactly that one
+ * word, so nothing crosses +4 and the generosity is slack rather than
+ * aliasing. data_0209f5dc sits between hal/auto_bss.cpp's byte-exact
+ * data_0209f5d0[0xc] and hal/fader_wipes.cpp's data_0209f5e8 and overlaps
+ * neither. */
+DSSTATE_BEGIN
+extern "C" {
+unsigned char data_0209f5c4[12];
+unsigned char data_0209f5dc[12];
 }
 DSSTATE_END
 
@@ -513,10 +585,9 @@ void ctor_face(const char *name, const char *why)
     }
 
 CTOR_FACE(02074e0c, "func_0201aa18 -> func_0201aad4 -> func_0201aac8 is an argument-dropping tail-call veneer chain into func_02059ba0; a PORT_HOST_ABI question, not a linkage one")
-CTOR_FACE(02074edc, "data_0209f5c4 and data_0209f5dc are hosted nowhere; rung C1c, and hal/method_faces.cpp writes the same vptr")
 CTOR_FACE(0207501c, "it constructs a RaycastLine into data_020a0d0c, whose host block is 0x10 in a grouped section hal/mmc_vtable.cpp:148 asserts at ROM spacing, and the ctor writes past +0x64")
-CTOR_FACE(02075054, "data_020a0db8, data_020a0dc0 and data_020a0dcc are hosted nowhere; rung C1c, and hal/auto_bss.cpp hand-seeds the same block")
-CTOR_FACE(02075154, "data_02099f48..data_02099f70 are hosted nowhere; rung C1c, and hal/actor_registry.cpp seats the same five callbacks")
+CTOR_FACE(02075054, "data_020a0db8, data_020a0dc0 and data_020a0dcc are hosted nowhere, and hal/auto_bss.cpp already hosts those ROM bytes twice: its generic int data_020a0db0[8] spans all three at a different host address from the byte-exact short data_020a0dbc[2] beside it. A hosting-overlap defect in that file, to fix before this can link honestly")
+CTOR_FACE(02075154, "data_02099f48..data_02099f70 are hosted nowhere -- five mwcc pointer-to-member pairs -- and hal/actor_registry.cpp:412 already seats the same five list callbacks with host wrappers, LATER in the boot, so linking this would write the heads at Entry and have every word overwritten")
 
 #undef CTOR_FACE
 
@@ -547,7 +618,7 @@ const CtorWord kCtorTable[] = {
     { 0x02074e44, __sinit_02074e44, "__sinit_02074e44", 1 },
     { 0x02074e80, __sinit_02074e80,   "__sinit_02074e80", 1 },
     { 0x02074e84, __sinit_02074e84, "__sinit_02074e84", 1 },
-    { 0x02074edc, ctor_face_02074edc, "__sinit_02074edc", 0 },
+    { 0x02074edc, __sinit_02074edc, "__sinit_02074edc", 1 },
     { 0x02074f80, ctor_02074f80,      "__sinit_02074f80", 1 },
     { 0x02074fb8, __sinit_02074fb8,   "__sinit_02074fb8", 1 },
     { 0x02074fe4, __sinit_02074fe4, "__sinit_02074fe4", 1 },
@@ -695,6 +766,33 @@ extern "C" void port_rom_entry_ctors(void)
                                  "words: the ROM's constants and "
                                  "hal/camera_states.cpp's bake-in disagree\n",
                          changed);
+    }
+
+    /* RUNG C1c, THE ONE THING A BYTE GATE CANNOT SEE. __sinit_02074edc is the
+       last writer of both fader vptrs, after hal/fader_wipes.cpp's gate-31
+       placement-new has already run. Naming the table each one landed on is
+       what makes that visible in every captured run instead of only in this
+       file's prose. */
+    {
+        const void *cv = *(void *const *)(const void *)data_0209f5e8;
+        const void *bv = *(void *const *)(const void *)data_0209f5d0;
+        std::fprintf(stderr,
+                     "  [ctor] fader vptrs after the walk: data_0209f5e8 -> %s, "
+                     "data_0209f5d0 -> %s\n",
+                     cv == (const void *)data_0208eb2c ? "data_0208eb2c "
+                         "(_ZTV10FaderColor, ten slots seated in "
+                         "hal/scene_boot.cpp)"
+                     : cv == (const void *)data_0208eacc ? "data_0208eacc"
+                     : cv == (const void *)data_0208eafc ? "data_0208eafc"
+                     : cv == 0 ? "NULL"
+                     : "a table this file does not name (the host "
+                       "HalFaderWipe's, or something else)",
+                     bv == (const void *)data_0208eacc ? "data_0208eacc "
+                         "(_ZTV15FaderBrightness, dtor pair seated and every "
+                         "slot from +0x08 up a named trap)"
+                     : bv == (const void *)data_0208eafc ? "data_0208eafc"
+                     : bv == 0 ? "NULL"
+                     : "a table this file does not name");
     }
 
     if (g_hits_02073e6c != 1 || g_hits_02074f80 != 1)

@@ -84,11 +84,11 @@
 #        grouped section whose neighbours hal/mmc_vtable.cpp:148 asserts at ROM
 #        spacing; the constructor writes past +0x64. That is a layout question
 #        owned by those two files.
-#   C1c  __sinit_02074edc, 02075054, 02075154 -- see out/CTOR/c1c_audit.txt:
-#        two have a live host second writer (hal/actor_registry.cpp:412 seats
-#        the same five callbacks; hal/auto_bss.cpp already hosts the same ROM
-#        bytes twice) and the third would wake a branch hal/method_faces.cpp
-#        says must not be woken from outside that file.
+#   C1c  __sinit_02075054 and __sinit_02075154 stay faced -- see
+#        out/CTOR/c1c_audit.txt: both have a live host second writer
+#        (hal/actor_registry.cpp:412 seats the same five callbacks;
+#        hal/auto_bss.cpp already hosts the same ROM bytes twice).
+#        __sinit_02074edc, the third of that group, is TAKEN below.
 #   C1d  TAKEN, below.
 #   C1e  TAKEN, below.
 #
@@ -129,6 +129,27 @@
 # identical, out/CTOR2/c1e_equality.txt), so the ROM's own initialiser writes
 # exactly the bytes that are already there.
 #
+# ---- RUNG C1c: THE TWO arm9 FADER STATICS --------------------------------
+#
+#   src/__sinit_02074edc.c     constructs a FaderColor into data_0209f5e8 and a
+#                              FaderBrightness into data_0209f5d0, and pushes a
+#                              destruct node for each. Both destructors
+#                              (_ZN10FaderColorD1Ev, _ZN15FaderBrightnessD1Ev)
+#                              and all three vtables (data_0208eafc,
+#                              data_0208eacc, data_0208eb2c) were already in
+#                              the link, so this row is one TU.
+#
+# hal/ctor_runner.cpp hosts the two 12-byte node cells, which nothing hosted.
+# It retires hal/method_faces.cpp's "do not wake the branch without giving
+# data_0209f5d0 a real vptr first": the vptr is now data_0208eacc.
+#
+# AND IT MOVES ONE LIVE VPTR. hal/fader_wipes.cpp placement-news a host
+# HalFaderWipe over data_0209f5e8 from a C++ static object, which runs before
+# main; the ROM's initialiser runs at Entry and is therefore the last writer,
+# so the installed colour fader dispatches hal/scene_boot.cpp's ten seated
+# data_0208eb2c slots. The [ctor] line names the table each vptr landed on in
+# every captured run.
+#
 src/func_02072f94.c
 src/func_02011a5c.c
 src/_ZN5Scene14GraphCallback2Ev.c
@@ -151,3 +172,4 @@ src/__sinit_02074e84.cpp
 src/_ZN7ClipperC1Ev.c
 src/_ZN7ClipperD1Ev.c
 src/__sinit_02073a24.c
+src/__sinit_02074edc.c
