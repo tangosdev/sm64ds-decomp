@@ -1994,8 +1994,43 @@ static void *__fastcall l2_eb2c_s00(void *s, void *)
 static void *__fastcall l2_eb2c_s04(void *s, void *)
 { l2_sib_note(2, 1); return _ZN10FaderColorD0Ev(s); }
 
-static void l2_fill_0208ea6c(void)
+/* ---- THE FOUR FADER VTABLES ARE SEATED BEFORE main -----------------------
+   run link100 lane CTOR3, rung 1, and it is a FIX rather than a preference.
+
+   THIS FILL USED TO RUN FROM scene_fill_title(), one row of
+   port_scene_registry_install()'s walk, and that is late: the registry install
+   happens well after the ROM's own .ctor walk at Entry. Between those two
+   points data_0208eb2c is ten words of zeroed host storage, and lane CTOR2's
+   rung C1c made the ROM's own __sinit_02074edc the last writer of
+   data_0209f5e8's vptr -- which points HERE. Run link100 lane WM9's loopback
+   pair then died in both windows, rc=0xC0000005, at func_ov075_02116c8c ->
+   LoadLevelNoReturn -> LoadLevel -> Scene::SetAndStopColorFader ->
+   Scene::SetFaders+0x27: EIP 0, eax = data_0208eb2c, ecx = data_0209f5e8, both
+   named out of that build's own walk_window.map. Scene::SetFaders asks the
+   INSTALLED fader `vt->f14` -- ROM byte +0x14, FaderBrightness::IsAtStart --
+   before it replaces it, and the word was still zero.
+
+   ON THE CARTRIDGE THESE FOUR TABLES ARE CONSTANTS IN THE IMAGE. They are
+   readable at the first instruction the ARM9 executes, long before any
+   initialiser installs a vptr into them, and no code fills them at run time
+   because there is nothing to fill. The host cannot spell them as constant
+   data -- every word is a veneer this file compiles, with the call site's
+   calling convention rather than the ROM body's -- so the nearest honest thing
+   is a fill that has run before anything can dispatch. A C++ static
+   initialiser is that: it runs before main, and therefore before
+   port_rom_main_run() walks the ROM's .ctor table. It is the same mechanism
+   hal/fader_wipes.cpp's gate-31 block already uses one symbol over.
+
+   IT IS IDEMPOTENT AND scene_fill_title STILL CALLS IT, so the title path is
+   byte-identical to what it was and a successor who deletes the static
+   initialiser gets the old behaviour back rather than a silent hole. */
+static int l2_fader_vt_seated;
+static int l2_fader_vt_zero_words;
+
+static void l2_seat_fader_vtables(void)
 {
+    if (l2_fader_vt_seated) return;
+    l2_fader_vt_seated = 1;
     data_0208ea6c[0]  = (void *)l2_ea6c_s00;
     data_0208ea6c[1]  = (void *)l2_ea6c_s04;
     data_0208ea6c[2]  = (void *)l2_ea6c_s08;
@@ -2043,6 +2078,53 @@ static void l2_fill_0208ea6c(void)
     data_0208eb2c[7] = (void *)l2_eb2c_s1c;
     data_0208eb2c[8] = (void *)l2_eb2c_s20;
     data_0208eb2c[9] = (void *)l2_eb2c_s24;
+
+    /* NEVER ADDRESS 0, CHECKED RATHER THAN CLAIMED. Every word of the three
+       tables this fill owns has to be a callable host address when this
+       returns: a body where the ROM has a body, and this file's named trap
+       where it does not. A zero would be the defect above coming back, so the
+       sweep counts them and the count is reported by the [ctor] census in
+       hal/ctor_runner.cpp, at the moment the ROM's initialiser installs the
+       vptr.
+
+       data_0208eafc is NOT swept and that is deliberate. Its ten slots are
+       0x0201786c, 0x02017848 and then EIGHT LITERAL ZEROS in the cartridge --
+       Fader is abstract and those eight are pure virtual, which is what mwcc
+       writes for a pure slot. Two words are seated here because the ROM
+       relocates them; the eight zeros are the ROM's own bytes and nothing in
+       the image dispatches them (the two ctors that write this vptr overwrite
+       it with a derived table before they return, with no call in between).
+       Filling them would be a divergence from the cartridge bought with
+       nothing. */
+    l2_fader_vt_zero_words = 0;
+    for (int i = 0; i < 12; ++i) if (data_0208ea6c[i] == 0) ++l2_fader_vt_zero_words;
+    for (int i = 0; i < 10; ++i) if (data_0208eb2c[i] == 0) ++l2_fader_vt_zero_words;
+    for (int i = 0; i < 12; ++i) if (data_0208eacc[i] == 0) ++l2_fader_vt_zero_words;
+    if (l2_fader_vt_zero_words != 0)
+        std::fprintf(stderr, "  [eb2c] FADER VTABLE SEAT INCOMPLETE: %d of the "
+                     "34 words of data_0208ea6c, data_0208eb2c and "
+                     "data_0208eacc are still zero after the seat, so a "
+                     "dispatch through one of them is a call to address 0\n",
+                     l2_fader_vt_zero_words);
+}
+
+/* The static initialiser itself. Anonymous namespace so the object has no
+   external name and nothing outside this file can reach it; the constructor is
+   the whole of it. */
+namespace {
+struct L2FaderVtableSeat { L2FaderVtableSeat() { l2_seat_fader_vtables(); } };
+L2FaderVtableSeat l2_fader_vtable_seat;
+}  /* anonymous namespace */
+
+/* How the [ctor] census in hal/ctor_runner.cpp reads this file's answer. Two
+   numbers and no prose: the words that are live, and the words that are still
+   zero. */
+extern "C" int port_fader_vtable_seated(void) { return l2_fader_vt_seated; }
+extern "C" int port_fader_vtable_zero_words(void) { return l2_fader_vt_zero_words; }
+
+static void l2_fill_0208ea6c(void)
+{
+    l2_seat_fader_vtables();
     l2_ea6c_selftest();
 }
 

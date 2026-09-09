@@ -955,24 +955,39 @@ int _ZN13QuestionBlock16CleanupResourcesEv(void *self)
                                             (MSVC folds the two dtor slots;
                                             ROM numbering puts IsAtEnd at 6)
 
-   so on a null vptr it faults reading [0x14]. The only
-   receiver that reaches it here is &data_0209f5d0, whose host storage is
-   zeroed BSS because the port does not link the ROM's static initialiser for
-   it (src/__sinit_02074edc.c) -- so that dispatch would fault on a null vptr.
-   It cannot run: every call site is behind `data_0209f1e0 != 0`, and the only
+   so on a null vptr it would fault reading [0x14].
+
+   THE NULL IS GONE, run link100 lane CTOR2 rung C1c, re-landed by lane CTOR3
+   rung 1. This paragraph used to end "Do not wake the branch without giving
+   data_0209f5d0 a real vptr first", because the only receiver that reaches
+   SetForwardTime here is &data_0209f5d0 and its host storage was zeroed BSS --
+   the port did not link the ROM's static initialiser for it. It links it now:
+   src/__sinit_02074edc.c is on port/slice_ctor.txt and the ROM's own .ctor
+   walk runs it at Entry, so the object is constructed the way the DS
+   constructs it and its vptr is data_0208eacc, _ZTV15FaderBrightness. That
+   table's dtor pair is seated in hal/scene_boot.cpp and every slot from +0x08
+   up is that file's named l2_vt_trap, so the worst case at [vptr+0x14] moved
+   from an access violation to a line of output that says which table and which
+   slot. The [ctor] line of every captured run names the table this object's
+   vptr landed on.
+
+   THE FIRST LANDING OF C1c WAS BACKED OUT AND THE REASON MATTERS HERE. The
+   same initialiser also moves data_0209f5e8's live vptr onto data_0208eb2c,
+   and hal/scene_boot.cpp used to fill that table from scene_fill_title, far
+   later in the boot -- so a loopback pair called address 0 through byte +0x14
+   of it on the VS menu to level transition. hal/scene_boot.cpp now seats all
+   four fader vtables from a C++ static initialiser, before main and therefore
+   before the .ctor walk, which is what makes the sentence above true rather
+   than hopeful: the table this object's vptr names is live when the vptr is
+   written.
+
+   THE BRANCH IS STILL UNREACHABLE, and for its own separate reason rather than
+   for the null: every call site is behind `data_0209f1e0 != 0`, and the only
    TU that ever writes that byte non-zero (src/func_02023498.c) is not in the
    link. The sizing note in hal/auto_bss.cpp carries the same constraint at the
    storage, and slice_w1l2.txt's blocked list names the job that would lift it
-   (the ROM-class swap slice_w1l3.txt already scoped). Do not wake the branch
-   without giving data_0209f5d0 a real vptr first.
-
-   RESTORED, run link100 lane CTOR3 rung 0. Lane CTOR2's rung C1c retired the
-   sentence above by linking src/__sinit_02074edc.c, which does give this
-   object a real vptr (data_0208eacc). That rung is out again -- it also moved
-   data_0209f5e8's live vptr onto data_0208eb2c, which hal/scene_boot.cpp does
-   not fill until scene_fill_title, and a loopback pair died calling address 0
-   through it on the VS menu -> level transition. The paragraph stands as it
-   was written until that seat is unconditional. */
+   (the ROM-class swap slice_w1l3.txt already scoped). What waking it now costs
+   is a trap report rather than a crash. */
 #include "FaderBrightness.h"
 extern "C" {
 int _ZN15FaderBrightness7IsAtEndEv(void *self)
