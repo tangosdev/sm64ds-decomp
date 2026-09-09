@@ -408,14 +408,9 @@ src/func_02060470.c
 # func_0206002c() stays the only call.
 
 # ===========================================================================
-# R2d -- src/func_0203bbc0.c and the touch/SPI chain: REFUSED, and the refusal
-# is a HOST BUG IN A FILE THIS LANE DOES NOT OWN. Nothing below seats it.
+# R2d -- src/func_0203bbc0.c and the touch/SPI chain: SEATED (run link100, lane
+# R2D2). Nine TUs, and the two blockers lane R2BD wrote down are both answered.
 # ===========================================================================
-#
-# Run link100, lane R2BD, rung R2d of lane BOOTSCOUT's boot plan (+9: the body
-# and the eight behind it). The chain was re-derived here rather than inherited,
-# and BOOTSCOUT's "it hangs on an ARM7 channel-6 completion" is right about the
-# symptom and one blocker short of the cause.
 #
 # THE ROM BODY, src/func_0203bbc0.c, nine calls:
 #
@@ -423,102 +418,97 @@ src/func_02060470.c
 #     func_0205f1e4(&data_020a0de0)            read the TSC calibration
 #     func_0205f0e0(&data_020a0de0)            compute the calibration params
 #     func_0205edd8(3, 0x1e)                   the sampling setup, two IPC words
-#     func_0205ea10(8) / func_0205e9fc(8)      spin on bit 3, then Crash on error
+#     func_0205ea10(8) / func_0205e9fc(8)      wait on bit 3, then Crash on error
 #     func_0205eeac(0, 4, &data_020a0df8, 9)   start auto-sampling into the ring
-#     func_0205ea10(2) / func_0205e9fc(2)      spin on bit 1, then Crash on error
+#     func_0205ea10(2) / func_0205e9fc(2)      wait on bit 1, then Crash on error
 #
-# THE BLOCKER THAT FIRES FIRST IS NOT THE ARM7. It is the very first call.
-# hal/scene_boot.cpp:1193 hosts data_020a80cc as `int data_020a80cc[6]` -- 24
-# bytes -- and the ROM object is 0x38: config/arm9/symbols.txt puts the next
-# hosted name at 0x020a8104, and dsd split the run at data_020a80e4 (+0x18),
-# which hal/scene_boot.cpp:1169 hosts as a SEPARATE `int[8]` several hundred
-# lines away in the same file. src/func_0205f270.c stores at +0x30, +0x32, +0x34
-# and +0x36 before it ever reaches the channel claim, so seating the body writes
-# 22 bytes past the end of a host object on the first line of the arm.
+# BLOCKER 1, THE HOST BUG, IS FIXED AND IT WAS WORSE THAN RECORDED.
+# hal/scene_boot.cpp hosted data_020a80cc as `int[6]` -- 24 bytes -- and
+# data_020a80e4 as a separate `int[8]` several hundred lines away, while
+# config/arm9/symbols.txt runs 0x020a80cc -> 0x020a80e4 (+0x18) -> 0x020a8104
+# (+0x38) and the whole 0x38 is ONE object. The refusal note said seating the
+# body would write 22 bytes past the end of a host object, which is true; what
+# it did not say is that src/func_0205ea28.c ALREADY READS data_020a80cc[0x18]
+# -- byte +0x30 -- and is LINKED and on the per-frame stylus path, so the
+# out-of-bounds read was in the shipped binary before this rung touched
+# anything. Gate 1 makes the two names one ordered .dsstate$tp0001/$tp0002 run
+# in ROM order (the hal/comms_seam.cpp data_020a89ec/data_020a8a00 shape), and
+# hal/boot2_ipc.cpp's port_tp_layout_check reads the 0x18 boundary back before
+# it claims the channel and hard-faults if the linker moved it. data_020a80c8,
+# the four-byte "already brought up" halfword src/func_0205f270.c guards on, was
+# hosted nowhere and is hosted by hal/tsc_arm7.cpp at .dsstate$tp0000.
 #
-# hal/boot2_ipc.cpp:531-537 ALREADY SAYS THIS, in as many words, and left
-# channel 6 claimed and quiet for exactly this reason: "blocked on a HOST BUG,
-# not on scope ... running the body against the short object would be worse than
-# leaving the channel claimed and quiet". port/touch_map.txt's section on
-# data_020a80cc records the same undersize a run earlier.
+# BLOCKER 2, THE ARM7, IS hal/tsc_arm7.cpp. Channel 6 carries two commands out
+# and three completions back, and every field is read off the ROM's own bodies:
 #
-# AND IT CANNOT BE ANSWERED FROM OUTSIDE THAT FILE, which is the difference
-# between this and R2b. R2b's data_020a0fa0 sits in hal/wm_arm7.cpp's NUMBERED
-# grouped sections (".dsstate$ywmd11"), so a name that sorts between it and the
-# next one puts the missing bytes behind it from any file. data_020a80cc is a
-# PLAIN global inside hal/scene_boot.cpp's DSSTATE_BEGIN/END block, so it lands
-# in ".dsstate$mmm" together with every other plain hosted global in the image
-# and no section name sorts reliably after it. The fix has to be in
-# hal/scene_boot.cpp and it is two lines:
+#   OUT  src/func_0205edd8.cpp:13  IPCSend(6, a | 0x02000300)  a = 3    -> 0x02000303
+#        src/func_0205edd8.cpp:15  IPCSend(6, b | 0x01010000)  b = 0x1e -> 0x0101001e
+#        :26 then sets data_020a80cc+0x36 bit 3 and clears +0x34 bit 3.
+#   IN   0x01000300, which is the only word src/func_0205f300.c turns into a
+#        clear of that bit: a2 == 0 (:40, a nonzero flag is the no-handler arm
+#        that SETS +0x34), (a1 & 0x7f00) >> 8 == 3 (:38), a1 & 0x01000000 != 0
+#        (:67), a1 & 0xff == 0 (:72, case 0). Low bytes 2, 3 and 4 are ERROR
+#        completions (:97-108) and any other low byte Crash()es at :116.
 #
-#     - int data_020a80e4[8];        (delete, line 1169)
-#     - int data_020a80cc[6];        (delete, line 1193)
-#     + #pragma section(".dsstate$tp0000", read, write)
-#     + __declspec(allocate(".dsstate$tp0000")) __declspec(align(4))
-#     +     unsigned char data_020a80cc[0x18];
-#     + #pragma section(".dsstate$tp0001", read, write)
-#     + __declspec(allocate(".dsstate$tp0001")) __declspec(align(4))
-#     +     unsigned char data_020a80e4[0x20];
+#   OUT  src/func_0205eeac.cpp:36  IPCSend(6, (b & 0xff) | 0x02000100) b = 4 -> 0x02000104
+#        src/func_0205eeac.cpp:38  IPCSend(6, a | 0x01010000)          a = 0 -> 0x01010000
+#        :49 then sets +0x36 bit 1 and clears +0x34 bit 1.
+#   IN   0x01000100 by the same five rules; :87 also sets +0x32 = 2.
 #
-# i.e. the two names as ONE 0x38 run in ROM order, which is the shape
-# hal/comms_seam.cpp's data_020a89ec/data_020a8a00 pair and
-# hal/camera_bridges.cpp's camcomm run already use. src/func_0205ea28.c reads
-# data_020a80e4 by name and keeps working; hal/comms_conductor.cpp reads
-# data_020a80cc+12 as a halfword through its own byte accessor and keeps working.
+#   IN   the auto-sample indication, (a1 & 0x7f00) >> 8 == 0x10 with a2 == 0
+#        (:47). It needs the packed sample already in the shared words --
+#        0x027fffaa low half, 0x027fffac high half, x 12 bits, y 12 bits, then
+#        valid 1 and range 2 -- and the callback then advances the cursor at
+#        +0xc modulo the count at +0x14 and writes one eight-byte entry into the
+#        ring at +0x10, which func_0203bbc0 set to &data_020a0df8 with 9.
+#        IMPLEMENTED AND OFF BY DEFAULT (SM64DS_TP_RING=1 arms it), because
+#        hal/sub_screen.cpp's poll_touch already writes that ring on the same
+#        cursor as the ARM7's stand-in, and two writers per frame would settle
+#        src/func_0203b9bc.c's three-sample debounce in two frames instead of
+#        three. The file that has to stop writing it is not this lane's.
 #
-# WHAT THE ARM7 SIDE WOULD THEN NEED, derived in full so the lane that owns
-# hal/scene_boot.cpp does not have to re-derive it. Channel 6 carries two
-# commands out and three completions back, and every field below is read off the
-# ROM's own bodies:
+#   Anything else on channel 6 is a HARD FAULT that names the word.
 #
-#   OUT  src/func_0205edd8.cpp:12   IPCSend(6, a | 0x02000300)  a = 3    -> 0x02000303
-#        src/func_0205edd8.cpp:13   IPCSend(6, b | 0x01010000)  b = 0x1e -> 0x0101001e
-#        :24 then sets data_020a80cc+0x36 bit 3 and clears +0x34 bit 3.
-#   IN   the completion src/func_0205f300.c:96 needs to clear that bit:
-#          a2 == 0                        (a2 != 0 is the no-handler arm, :39-44,
-#                                          which SETS +0x34 and never clears +0x36)
-#          a1 & 0x01000000 != 0           :65-66
-#          (a1 & 0x7f00) >> 8 == 3        :36, the bit
-#          a1 & 0xff == 0                 :70 case 0, the success arm
-#        so the word is 0x01000300. Any of 2, 3 or 4 in the low byte is an ERROR
-#        completion (:70-79): it clears +0x36 as well but sets +0x34, and
-#        func_0203bbc0's own `if (func_0205e9fc(8)) Crash()` then fires. Any
-#        other low byte reaches :112 and Crash()es inside the callback.
+# WHY THE COMPLETION IS NOT POSTED FROM arm7_recv, AND WHAT REPLACES THE SPIN.
+# hal/boot2_ipc.cpp's arm7_recv runs inside the ARM9's store into IPCFIFOSEND
+# and ntr's ipc_arm7_send dispatches the ROM's handler on the spot, so a
+# completion posted there would run func_0205f300 BEFORE func_0205edd8 reaches
+# its `+0x36 |= 8` two lines later: the clear would hit a bit that is not set
+# yet, the ROM would set it, and func_0205ea10(8) would spin forever. On the DS
+# the completion is an interrupt that arrives at func_0205edd8's closing
+# IRQ::Restore, i.e. after the bit is set and before the wait. A single-threaded
+# host has no such moment, so port/CMakeLists.txt compiles src/func_0203bbc0.c
+# with func_0205ea10=port_tsc_wait and hal/tsc_arm7.cpp's port_tsc_wait is the
+# ROM's own exit test with the ARM7's turn inside the loop -- the same move
+# ntr/ipc.cpp makes for src/func_0205bad8.c's IPCSYNC handshake. It is bounded
+# and names the wait rather than hanging. src/func_0205ea10.c is NOT displaced:
+# it stays in the link for src/func_0205efc0.c, so no SHADOW row is created.
 #
-#   OUT  src/func_0205eeac.cpp:35   IPCSend(6, (b & 0xff) | 0x02000100) b = 4 -> 0x02000104
-#        src/func_0205eeac.cpp:36   IPCSend(6, a | 0x01010000)          a = 0 -> 0x01010000
-#        :45 then sets +0x36 bit 1 and clears +0x34 bit 1.
-#   IN   0x01000100 by the same five rules; :86 also sets +0x32 = 2 because the
-#        bit is 1.
+# THE CALIBRATION IS NOT OPTIONAL, WHICH CORRECTS THE REFUSAL NOTE. That note
+# read "calibration is NOT a blocker" because src/func_0205f1e4.c returns 0
+# without calling func_0205eb58 when the four raw words at 0x027ffc80+0x58 are
+# zero, so the chain does not fail. It is right about linkage and wrong about
+# behaviour: func_0203bbc0's NEXT call runs whatever f1e4 decided, and
+# src/func_0205f0e0.c's last line sets data_020a80cc+0x30 = 1 -- the halfword
+# src/func_0205ea28.c reads to decide the transform is LIVE. On a zero
+# calibration its two divides are 0x10000000 / 0, ntr/io.cpp models the DS
+# unit's quotient of -1, and func_0205ea28 then computes (-1 * (x << 2)) >> 22,
+# which clamps to 0 for every x. Seating this rung on an uncalibrated panel puts
+# EVERY TAP AT (0,0). So hal/tsc_arm7.cpp publishes the console's own firmware
+# user settings at power-on, which is where they come from on hardware, with the
+# DS's crosshair points and raw == dot: that makes func_0205eb58 compute
+# xDotSize = yDotSize = 256 and x0 = y0 = 0, and func_0205ea28 an exact identity
+# on this port's DS-pixel samples. It is a console model, not ROM code, it
+# raises no count, and SM64DS_TP_CALIB=0 reproduces the zero path on purpose.
 #
-#   IN   the auto-sample indication, once per ARM7 sampling period: bit 0x10,
-#        i.e. any word with (a1 & 0x7f00) >> 8 == 0x10 and a2 == 0
-#        (src/func_0205f300.c:46). It needs the packed sample already in the
-#        shared block: 0x027fffaa low half, 0x027fffac high half, x 12 bits,
-#        y 12 bits, then valid 1 and range 2 (:56-57). The callback advances
-#        data_020a80cc+0xc modulo data_020a80cc+0x14 and writes one eight-byte
-#        entry into the ring at data_020a80cc+0x10, which func_0203bbc0 set to
-#        &data_020a0df8 with a count of 9.
-#
-# THE CALIBRATION IS NOT A BLOCKER, and this is the one BOOTSCOUT's plan raised
-# as a possible stop. src/func_0205f1e4.c reads the TSC calibration out of the
-# firmware user settings at 0x027ffc80 + 0x58..+0x63 (raw x1/y1, dot x1/y1, raw
-# x2/y2, dot x2/y2) and RETURNS 0 WITHOUT CALLING func_0205eb58 when all four
-# raw words are zero (:8), which is what the port's zeroed shared block gives.
-# So the ROM's own body declines to calibrate rather than failing, and nothing
-# in the chain needs a word the port does not carry. func_0205f0e0 then divides
-# by zero on the hardware divider twice; port/ntr/io.cpp:212-218 models the DS's
-# own divide-by-zero result rather than trapping, so that is defined too. What
-# the port would NOT have is a real calibration -- func_0205ea28's transform
-# would run on zero scale factors -- and a lane that seats this should decide
-# whether to publish the DS's default calibration into the shared block, which
-# is a separate question from the linkage.
-#
-# NOT SEATED HERE, AND THE COUNT IS EXACTLY THE PLAN'S +9, checked against
-# this tree's own map rather than inherited: func_0203bbc0, func_0205f270,
-# func_0205f300, func_0205f1e4, func_0205f0e0, func_0205edd8, func_0205eeac,
-# func_0205e9fc and func_0205eb58 are all unlinked; func_0205ea10, func_0205ba3c
-# (the channel claim), func_0205ba64 (the callback registration), func_0205edc8
-# and func_0205ea28 already link. So the rung is ONE two-line change in
-# hal/scene_boot.cpp plus a host-ARM7 arm in the shape hal/wm_arm7.cpp already
-# ships, and nothing else.
+# THE COUNT. func_0205f0e0 and func_0205eb58 are NOT rows below: they drive the
+# hardware divider through literal MMIO and are built through hostgen from
+# port/CMakeLists.txt's R2D_SYMS, which is where their reason is written down.
+# The nine TUs of the rung are those two plus the seven rows here.
+src/func_0203bbc0.c
+src/func_0205f270.c
+src/func_0205f300.c
+src/func_0205f1e4.c
+src/func_0205edd8.cpp
+src/func_0205eeac.cpp
+src/func_0205e9fc.c

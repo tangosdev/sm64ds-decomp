@@ -16841,10 +16841,64 @@ foreach(line IN LISTS SLICE_R2ABC_LINES)
     endif()
     list(APPEND SLICE_R2ABC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# RUNG R2d's TWO HOSTGEN'd TUs (run link100, lane R2D2). src/func_0205f0e0.c
+# and src/func_0205eb58.c are the touch calibration's arithmetic and both drive
+# the DS's HARDWARE DIVIDER through literal MMIO -- DIVCNT 0x4000280, NUMER
+# 0x4000290, DENOM 0x4000298, RESULT 0x40002a0. Built plain, those stores latch
+# in the window ntr/io.cpp maps and never reach io_write's
+# `if (addr == DIV_DENOM || addr == DIV_NUMER || addr == DIVCNT) run_divide()`,
+# so every result would read back as whatever was latched there. That is not a
+# cosmetic difference: src/func_0205f0e0.c's results ARE the scale factors
+# src/func_0205ea28.c multiplies every stylus sample by, and a zero scale is a
+# stylus that always reads (0,0). The rest of the rung touches no register and
+# is plain.
+set(R2D_SYMS func_0205f0e0 func_0205eb58)
+set(R2D_GEN "")
+foreach(sym IN LISTS R2D_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND R2D_GEN "${sym_out}")
+endforeach()
 foreach(_tr2abc walk_window walk_window_hires)
-    target_sources(${_tr2abc} PRIVATE ${SLICE_R2ABC_SOURCES}
+    target_sources(${_tr2abc} PRIVATE ${SLICE_R2ABC_SOURCES} ${R2D_GEN}
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/boot_arms.cpp")
 endforeach()
+# AND THE DRIVER ON smoke_player TOO, which is not the same list and not an
+# oversight. hal/boot2_ipc.cpp is in all three of these targets and it is the
+# file that claims channel 6 and hands a word on it over, so the driver has to
+# be wherever the channel is. smoke_player carries no hal/boot_arms.cpp and
+# never reaches the a054 seam, so nothing ever sends on the channel there and
+# its census reads zero -- which is the measurement that harness owes, the same
+# way a solo boot owes a zero on tag 10.
+foreach(_ttsc smoke_player walk_window walk_window_hires)
+    target_sources(${_ttsc} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/tsc_arm7.cpp")
+endforeach()
+# RUNG R2d's PER-SOURCE RENAME, the same mechanism as func_02060890 below and
+# for a reason of the same kind. src/func_0205ea10.c is
+# `while (*(volatile u16 *)(data_020a80cc + 0x36) & mask);` -- a spin waiting
+# for the OTHER PROCESSOR's interrupt, which on the DS arrives the moment
+# src/func_0205edd8.cpp's closing IRQ::Restore re-enables interrupts, i.e. after
+# the bit is set and before the wait. A single-threaded host has no
+# "meanwhile", so func_0203bbc0's two waits go through hal/tsc_arm7.cpp's
+# port_tsc_wait: the ROM's own exit test with the ARM7's turn inside the loop,
+# which is the same move ntr/ipc.cpp makes for src/func_0205bad8.c's IPCSYNC
+# handshake. src/func_0205ea10.c itself is NOT displaced -- it stays in the link
+# under its own name for its other caller src/func_0205efc0.c -- so this creates
+# no SHADOW row in port/tools/linkage.py's queue and invents no count.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bbc0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_0205ea10=port_tsc_wait")
 # ONE PER-SOURCE RENAME, the same mechanism as src/main.c above and for the same
 # reason. func_02042f68's FIRST arm is src/func_02060890.c, and two of that
 # body's statements cannot link: `data_020a8780 = func_02060a64` (the FLASH read
