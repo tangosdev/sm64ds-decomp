@@ -1,0 +1,97 @@
+# Gate mpg (run link100, lane MPG): MOTHER_PENGUIN's own state machine, the
+# nine ov018 TUs behind the table gate 191 seated one record of. The seat,
+# the face derivation and the three defects this gate had to fix first are in
+# port/unmatched/MotherPenguin_AfterClsnSeat.cpp; the fill and the class are
+# gate 191's (port/slice_gate191.txt, hal/actor_classes_ccm.cpp).
+#
+# ==== THE TABLE IS THREE ENTRIES, NOT SIX CELLS ============================
+# func_ov018_021123d0(self, i) is `add r1, r2, r1, lsl #4` -- a SIXTEEN-byte
+# stride over data_ov018_02113c4c, whose six 8-byte records
+# __sinit_ov018_02112c80 copies at offsets 0, 8, 0x10, 0x18, 0x20, 0x28. So
+# the table is three 16-byte entries of two pointer-to-member records:
+#
+#   state 0   enter func_ov018_021122ec (sets +0x37c = 0)   LINKED at gate 191
+#             tick  func_ov018_02112234
+#   state 1   enter func_ov018_021121dc (sets +0x37c = 1)
+#             tick  func_ov018_02111fac
+#   state 2   enter func_ov018_02111f1c (sets +0x37c = 2)
+#             tick  func_ov018_02111e28
+#
+# THE UNIVERSE IS CLOSED BY THE ROM. All eight arm_call relocations into
+# func_ov018_021123d0 set r1 in the instruction before the branch:
+#   0x0211258c=0 (InitResources)  0x02112170=0  0x02112010=0 (both 02111fac)
+#   0x02111f44=0 (02111f1c)       0x02111f04=0 (02111e28)
+#   0x021119b4=1  0x02111a38=1 (both 02111968)  0x02111bdc=2 (02111b3c)
+# i is never 3 or more, so nothing indexes past the 48-byte table and there
+# is no fourth state to find.
+#
+# ==== WHAT REACHES WHAT (the ROM's own graph, not a keep-alive) ============
+# MotherPenguin::Behavior 0x02112480 -> bl 0x0211235c (module overlay(18),
+# by relocation) -> the TICK record of the current entry.
+# func_ov018_021123d0 -> bx 0x02112398 -> the ENTER record of entry i.
+# The tick of state 0 (func_ov018_02112234) then reaches the other five:
+#   func_ov018_02111b3c  (the 0x386 branch; sets state 2)
+#   func_ov018_021118fc  (Actor::FindWithID on +0x198, kind 0xbf)
+#   func_ov018_02111968  (sets state 1; kind 0x100 / talk state)
+#   func_ov018_02111a48  (the head/neck tracking, +0x380/+0x382)
+#   func_ov018_02111bf0  (the WithMeshClsn floor/wall pass at +0x1a8)
+# Every one of those five is named by func_ov018_02112234's own matched
+# source, so /OPT:REF keeps them through the seat, not around it.
+#
+# ==== THE NINE ===========================================================
+# The tick dispatcher. Already on CMakeLists.txt's /vmg /vmm property list
+# (the R9 wave-18 block, "ov018 +0x370"), where it sat INERT because nothing
+# referenced it; MotherPenguin_Behavior.cpp now does, as the ROM does.
+src/func_ov018_0211235c.cpp
+# The six state records.
+src/func_ov018_02112234.c
+src/func_ov018_021121dc.cpp
+src/func_ov018_02111fac.c
+src/func_ov018_02111f1c.cpp
+src/func_ov018_02111e28.cpp
+# The five func_ov018_02112234 calls.
+src/func_ov018_021118fc.c
+src/func_ov018_02111968.c
+src/func_ov018_02111a48.c
+# src/func_ov018_02111b3c.c -- NOT SLICED. It calls Actor::ClosestPlayer()
+#   with NO argument and rides ARM r0, which is the r0-passthrough seam
+#   port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp's latent registry
+#   names this exact TU in. closestplayer_guard.py failed this gate's first
+#   build on it. Host copy: port/unmatched/MotherPenguin_ChaseGate.cpp,
+#   matched line for line with the receiver passed. The byte proof stays in
+#   src/. That is why this gate is ten TUs and not eleven.
+# src/func_ov018_02111bf0.c -- NOT SLICED. Its symbol is already spoken for:
+#   port/unmatched/Jrb_Aliases.cpp:34's gate-188 alias routes
+#   _func_ov018_02111bf0 to _func_ov016_02111bf0 for three UNAGI bodies in
+#   ov016 that spell their own module's 0x02111bf0 with the ov018 prefix
+#   (all three linked today). Defining the LHS defeats that alias and
+#   reroutes Unagi into the mother penguin's collision pass;
+#   alternatename_guard.py failed this gate's build on exactly that. Host
+#   copy under a port name: port/unmatched/MotherPenguin_ClsnPass.cpp, with
+#   the two ov018 callers renamed onto it in the CMake gate block. The byte
+#   proof stays in src/. That is why this gate is nine TUs and not ten; the
+#   tenth needs the guard's own R1/R2 recipe applied to Jrb_Aliases.cpp,
+#   which is outside this lane's owned files.
+#
+# NOT in this slice: src/_ZN7SkiLift8BehaviorEv.cpp stays dropped (gate 191's
+# host copy, now carrying the tick-dispatcher fix as well) and
+# src/func_ov018_021122ec.c / 02112398.c / 021123d0.c stay on
+# slice_gate191.txt where gate 191 put them.
+#
+# ==== PER-FILE NOTES THE CMAKE BLOCK IMPLEMENTS ===========================
+# func_ov018_021121dc.cpp names its animation record data_ov027_02113bf0.
+#   The literal at 0x02112230 is 0x02113bf0 and carries NO relocation row --
+#   a module-internal reference, so it is ov018's own bss, the Animation
+#   SharedFilePtr __sinit_ov018_02112c80 constructs with file id 0x406 and
+#   that func_ov018_021122ec already reads as data_ov018_02113bf0[1]. The
+#   port defines data_ov027_02113bf0 as well (ov027's own mount), so the link
+#   would have SUCCEEDED against the wrong storage; the block renames it with
+#   COMPILE_DEFINITIONS, the CleanupResources/func_021270dc precedent.
+# func_ov018_02111e28.cpp declares func_ov018_021123d0 with ONE parameter and
+#   calls it with one, where the ROM sets r1 = 0 at 0x02111ef8. On x86 the
+#   callee then reads an uninitialised [ebp+0Ch], shifts it left by four and
+#   parks a wild pointer in self+0x370. The block renames that one call to
+#   port_mpg_set_state_zero (in the seat file), which supplies the ROM's 0.
+# func_ov018_02111f1c.cpp declares its two file records outside its own
+#   `extern "C"` block, so MSVC mangles them; two /alternatename directives
+#   in the seat file route them to the mount's C-linkage symbols.
