@@ -70,11 +70,14 @@
  * own body and its fourth call. So the port's order is now Entry's order:
  * func_02019780, then func_02072f94, then main. Nothing was moved to make room.
  *
- * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b and C1d, SEVENTEEN of the
- * 23 words are bound to the ROM's own initialiser and SIX are bound to a FACE that
- * names the initialiser it stands for and returns. The faces do not abort: __sinit_02073a24 is word 0
- * and is the last rung of this campaign, so an aborting face there would kill
- * every boot before the first frame. They report once each, by name, and the
+ * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b, C1d and C1e, EIGHTEEN of
+ * the 23 words are bound to the ROM's own initialiser and FIVE are bound to a
+ * FACE that names the initialiser it stands for and returns. The faces do not
+ * abort. Word 0 was a face until rung C1e and an abort there would have killed
+ * every boot before the first frame, which is where the rule came from; it
+ * still holds for the five that are left, because a face that aborts turns a
+ * named gap into a dead build and tells nobody anything the message did not
+ * already say. They report once each, by name, and the
  * summary line counts them, which is what makes the walk complete AND honest:
  * the runner really visits all 23 words, and the run says exactly which ones
  * the port cannot answer for yet.
@@ -191,6 +194,48 @@
  * frame anyway -- so the seed is the ROM's own value at the ROM's own point,
  * not a new one.
  *
+ * RUNG C1e ADDS __sinit_02073a24, WORD 0 of the table and the last of the
+ * campaign's clean rungs. It is 38 struct copies: the ROM's 19 camera State
+ * objects at 0x0209b008..0x0209b138, step 0x10, each {onEnter PMF, main PMF},
+ * filled from 38 relocated eight-byte pairs in arm9 .rodata at
+ * 0x02086bc8..0x02086e48. It calls nothing and allocates nothing.
+ *
+ * THE DESTINATIONS ARE hal/camera_states.cpp's AND THEY STAY ITS. That file
+ * hosts all nineteen at their ROM names and BAKES THE SAME VALUES IN, and says
+ * so in its own header: "That sinit is not run on host (its 38 source pairs are
+ * ROM pointer data that would each need its own symbol); the objects are
+ * synthesized here with the same addresses, read out of the arm9 image once and
+ * baked in below." This rung supplies exactly the thing that sentence says was
+ * missing -- the 38 symbols -- and runs the ROM's own copy instead.
+ *
+ * SO THE WRITE IS PROVED REDUNDANT BEFORE IT IS ADDED, not assumed to be. All
+ * 19 x 4 words were read out of extracted/arm9_dec.bin through the sinit's own
+ * source-to-destination mapping and compared against camera_states.cpp's
+ * nineteen CAMSTATE lines: 19 of 19 identical, both function words and both
+ * zero this-deltas. The full table is out/CTOR2/c1e_equality.txt. The bake-in
+ * is compile-time initialised data, so the values are already right before
+ * Entry and the ROM's initialiser then writes the same bytes over them -- an
+ * idempotent second write, not a second address for the same bytes and not a
+ * host seat that decides the outcome. hal/camera_states.cpp is NOT this lane's
+ * file: its bake-in and the two sentences above it are now redundant rather
+ * than wrong, and retiring them is a proposal in this lane's report, not an
+ * edit here.
+ *
+ * THE 38 KEEP THEIR DS ADDRESSES, and that is required rather than tolerated.
+ * They are mwcc pointers to member -- {code address, this-delta} -- and nothing
+ * calls through them: func_0200cae4 and func_0200ca50 read the word and hand it
+ * to hal/camera_states.cpp's hal_call_camera_state_fn, which translates the DS
+ * address to a host call through camera_states.inc. Binding these words to host
+ * bodies the way data_0208ee14 below is bound would break that translation.
+ * That is the port's standing mwcc pointer-to-member exception, at the storage
+ * this time rather than at a call.
+ *
+ * Every word below was read twice and the two had to agree: the raw image at
+ * extracted/arm9_dec.bin base 0x02004000, and config/arm9/relocs.txt, which
+ * carries a `kind:load` row at each pair's FIRST word and none at its second --
+ * so the code half is a relocation and the this-delta half is a literal zero,
+ * in all 38.
+ *
  * ONE ROM DATA OBJECT IS HOSTED HERE, because __sinit_02074fb8 names it and
  * nothing else in the port does: data_0208ee14, 16 bytes at arm9 .data, the
  * four-slot Scene graph-callback table. Its words are code addresses and
@@ -218,6 +263,7 @@ void func_02072f94(void);
 
 /* The ten initialisers this build answers for. */
 void __sinit_02073e6c(void);   /* was hand-called from hal/level_boot.cpp */
+void __sinit_02073a24(void);   /* C1e */
 void __sinit_02074d90(void);
 void __sinit_02074da8(void);
 void __sinit_02074dbc(void);
@@ -234,6 +280,19 @@ void __sinit_020750b8(void);   /* C1b */
 void __sinit_020750ec(void);   /* C1b */
 void __sinit_0207511c(void);   /* C1b */
 void __sinit_02075150(void);
+
+/* The nineteen camera State objects rung C1e's initialiser fills, hosted by
+   hal/camera_states.cpp. Read here and never written: port_rom_entry_ctors
+   snapshots their 76 words before the walk and compares them after, so the
+   claim that __sinit_02073a24's fill is byte-for-byte redundant against that
+   file's compile-time bake-in is CHECKED on every boot instead of trusted. */
+extern unsigned int data_0209b008[4], data_0209b018[4], data_0209b028[4],
+                    data_0209b038[4], data_0209b048[4], data_0209b058[4],
+                    data_0209b068[4], data_0209b078[4], data_0209b088[4],
+                    data_0209b098[4], data_0209b0a8[4], data_0209b0b8[4],
+                    data_0209b0c8[4], data_0209b0d8[4], data_0209b0e8[4],
+                    data_0209b0f8[4], data_0209b108[4], data_0209b118[4],
+                    data_0209b128[4];
 
 /* The MSL global-destructor chain head, hosted in hal/cxx_aliases.cpp. Every
    initialiser that constructs a static pushes a three-word node onto it
@@ -351,6 +410,55 @@ unsigned char data_0209f388[12];
 }
 DSSTATE_END
 
+/* ---- rung C1e: the 38 camera-state pairs ---------------------------------
+ *
+ * arm9 .rodata 0x02086bc8..0x02086e48, eight bytes each, sorted by address.
+ * The comment on each line names the State object and the half it fills. The
+ * derivation, the equality proof against hal/camera_states.cpp and the reason
+ * these words stay DS addresses are all in the header. */
+DSSTATE_BEGIN
+extern "C" {
+unsigned int data_02086bc8[2] = { 0x02009e70u, 0u };   /* data_0209b0b8 main */
+unsigned int data_02086bd0[2] = { 0x02005324u, 0u };   /* data_0209b0d8 onEnter */
+unsigned int data_02086be0[2] = { 0x02009aa8u, 0u };   /* data_0209b098 main */
+unsigned int data_02086be8[2] = { 0x02009d30u, 0u };   /* data_0209b098 onEnter */
+unsigned int data_02086bf0[2] = { 0x02009e70u, 0u };   /* data_0209b068 main */
+unsigned int data_02086bf8[2] = { 0x02009e70u, 0u };   /* data_0209b048 main */
+unsigned int data_02086c00[2] = { 0x0200987cu, 0u };   /* data_0209b0a8 main */
+unsigned int data_02086c08[2] = { 0x0200985cu, 0u };   /* data_0209b0b8 onEnter */
+unsigned int data_02086c10[2] = { 0x02009d70u, 0u };   /* data_0209b088 onEnter */
+unsigned int data_02086c18[2] = { 0x020097ecu, 0u };   /* data_0209b0c8 onEnter */
+unsigned int data_02086c28[2] = { 0x02009e70u, 0u };   /* data_0209b008 main */
+unsigned int data_02086c30[2] = { 0x02009e70u, 0u };   /* data_0209b018 main */
+unsigned int data_02086c40[2] = { 0x02009e70u, 0u };   /* data_0209b028 main */
+unsigned int data_02086c48[2] = { 0x02009e30u, 0u };   /* data_0209b028 onEnter */
+unsigned int data_02086c58[2] = { 0x02009e70u, 0u };   /* data_0209b038 main */
+unsigned int data_02086c68[2] = { 0x02009df0u, 0u };   /* data_0209b048 onEnter */
+unsigned int data_02086c70[2] = { 0x02009db0u, 0u };   /* data_0209b068 onEnter */
+unsigned int data_02086c98[2] = { 0x02009e10u, 0u };   /* data_0209b038 onEnter */
+unsigned int data_02086ce0[2] = { 0x020050dcu, 0u };   /* data_0209b0e8 onEnter */
+unsigned int data_02086d10[2] = { 0x020098b8u, 0u };   /* data_0209b0a8 onEnter */
+unsigned int data_02086d28[2] = { 0x0200af0cu, 0u };   /* data_0209b008 onEnter */
+unsigned int data_02086d30[2] = { 0x02009e70u, 0u };   /* data_0209b078 main */
+unsigned int data_02086d48[2] = { 0x02009e70u, 0u };   /* data_0209b058 main */
+unsigned int data_02086d58[2] = { 0x02009dd0u, 0u };   /* data_0209b058 onEnter */
+unsigned int data_02086d90[2] = { 0x02009e70u, 0u };   /* data_0209b088 main */
+unsigned int data_02086da8[2] = { 0x02009e50u, 0u };   /* data_0209b018 onEnter */
+unsigned int data_02086db0[2] = { 0x020095e4u, 0u };   /* data_0209b0c8 main */
+unsigned int data_02086db8[2] = { 0x02009d90u, 0u };   /* data_0209b078 onEnter */
+unsigned int data_02086dc8[2] = { 0x02005000u, 0u };   /* data_0209b128 main */
+unsigned int data_02086dd0[2] = { 0x02005060u, 0u };   /* data_0209b128 onEnter */
+unsigned int data_02086de0[2] = { 0x020094c0u, 0u };   /* data_0209b118 main */
+unsigned int data_02086de8[2] = { 0x020094e4u, 0u };   /* data_0209b118 onEnter */
+unsigned int data_02086df8[2] = { 0x020098e0u, 0u };   /* data_0209b108 main */
+unsigned int data_02086e00[2] = { 0x02009a8cu, 0u };   /* data_0209b108 onEnter */
+unsigned int data_02086e10[2] = { 0x02009540u, 0u };   /* data_0209b0f8 main */
+unsigned int data_02086e18[2] = { 0x020095c4u, 0u };   /* data_0209b0f8 onEnter */
+unsigned int data_02086e28[2] = { 0x02005098u, 0u };   /* data_0209b0e8 main */
+unsigned int data_02086e40[2] = { 0x02005110u, 0u };   /* data_0209b0d8 main */
+}
+DSSTATE_END
+
 /* The five MSVC spellings src/__sinit_02074e84.cpp emits, transcribed from
    dumpbin /symbols on this tree's own compile of it. */
 #pragma comment(linker, "/alternatename:?data_0208ee14@@3DA=_data_0208ee14")
@@ -404,7 +512,6 @@ void ctor_face(const char *name, const char *why)
         ctor_face("__sinit_" #sym, why);                                       \
     }
 
-CTOR_FACE(02073a24, "38 rodata constants (data_02086bc8..data_02086e40) are hosted nowhere; rung C1e")
 CTOR_FACE(02074e0c, "func_0201aa18 -> func_0201aad4 -> func_0201aac8 is an argument-dropping tail-call veneer chain into func_02059ba0; a PORT_HOST_ABI question, not a linkage one")
 CTOR_FACE(02074edc, "data_0209f5c4 and data_0209f5dc are hosted nowhere; rung C1c, and hal/method_faces.cpp writes the same vptr")
 CTOR_FACE(0207501c, "it constructs a RaycastLine into data_020a0d0c, whose host block is 0x10 in a grouped section hal/mmc_vtable.cpp:148 asserts at ROM spacing, and the ctor writes past +0x64")
@@ -429,7 +536,7 @@ struct CtorWord {
 };
 
 const CtorWord kCtorTable[] = {
-    { 0x02073a24, ctor_face_02073a24, "__sinit_02073a24", 0 },
+    { 0x02073a24, __sinit_02073a24, "__sinit_02073a24", 1 },
     { 0x02073e6c, ctor_02073e6c,      "__sinit_02073e6c", 1 },
     { 0x02074d90, __sinit_02074d90,   "__sinit_02074d90", 1 },
     { 0x02074da8, __sinit_02074da8,   "__sinit_02074da8", 1 },
@@ -470,6 +577,33 @@ int dtor_chain_len(void)
     return n;
 }
 
+/* The nineteen camera State objects, in ROM order, for the C1e redundancy
+   check. Nineteen named symbols rather than one array walk: those are nineteen
+   separate definitions in hal/camera_states.cpp and only the linker decides
+   they are adjacent. */
+unsigned int *const kCamStates[19] = {
+    data_0209b008, data_0209b018, data_0209b028, data_0209b038, data_0209b048,
+    data_0209b058, data_0209b068, data_0209b078, data_0209b088, data_0209b098,
+    data_0209b0a8, data_0209b0b8, data_0209b0c8, data_0209b0d8, data_0209b0e8,
+    data_0209b0f8, data_0209b108, data_0209b118, data_0209b128,
+};
+
+void cam_states_snapshot(unsigned int *out)
+{
+    for (int i = 0; i < 19; ++i)
+        for (int j = 0; j < 4; ++j)
+            out[i * 4 + j] = kCamStates[i][j];
+}
+
+int cam_states_changed(const unsigned int *before)
+{
+    int n = 0;
+    for (int i = 0; i < 19; ++i)
+        for (int j = 0; j < 4; ++j)
+            if (kCamStates[i][j] != before[i * 4 + j]) ++n;
+    return n;
+}
+
 /* Is the ROM's table address a committed, writable page in this process? */
 bool ctor_page_ok(void)
 {
@@ -507,6 +641,8 @@ extern "C" void port_rom_entry_ctors(void)
     done = 1;
 
     const int dtors_before = dtor_chain_len();
+    unsigned int cam_before[19 * 4];
+    cam_states_snapshot(cam_before);
     const bool page = ctor_page_ok();
 
     if (page) {
@@ -540,6 +676,26 @@ extern "C" void port_rom_entry_ctors(void)
                  g_rom_bodies_run, (int)kCtorWords - g_rom_bodies_run,
                  g_hits_02073e6c, g_hits_02074f80,
                  dtors_before, dtors_after);
+
+    /* RUNG C1e, CHECKED RATHER THAN CLAIMED. __sinit_02073a24 copies 38 ROM
+       constants into hal/camera_states.cpp's nineteen State objects, which
+       that file already bakes the same values into at compile time. Zero
+       changed words is the pass: it says the ROM's own initialiser wrote
+       exactly what was already there, so this rung moved the WRITER and not
+       the bytes. */
+    {
+        const int changed = cam_states_changed(cam_before);
+        if (changed == 0)
+            std::fprintf(stderr, "  [ctor] camera-state fill check PASS: "
+                                 "__sinit_02073a24 wrote 76 words over "
+                                 "hal/camera_states.cpp's bake-in and changed "
+                                 "0 of them\n");
+        else
+            std::fprintf(stderr, "  [ctor] CAMERA-STATE FILL CHANGED %d of 76 "
+                                 "words: the ROM's constants and "
+                                 "hal/camera_states.cpp's bake-in disagree\n",
+                         changed);
+    }
 
     if (g_hits_02073e6c != 1 || g_hits_02074f80 != 1)
         std::fprintf(stderr, "  [ctor] ONCE-ONLY CHECK FAILED: the two "

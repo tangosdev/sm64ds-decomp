@@ -90,7 +90,7 @@
 #        bytes twice) and the third would wake a branch hal/method_faces.cpp
 #        says must not be woken from outside that file.
 #   C1d  TAKEN, below.
-#   C1e  __sinit_02073a24 -- 38 rodata constants, data_02086bc8..data_02086e40.
+#   C1e  TAKEN, below.
 #
 # TWO INITIALISERS ARE ALREADY IN THE LINK AND ARE NOT LISTED AGAIN.
 # src/__sinit_02073e6c.c is on slice_intro.txt and src/__sinit_02074f80.c is on
@@ -114,6 +114,21 @@
 # tree defines) and the 12-byte cell data_0209f388. It also carries the five
 # MSVC spellings the //cpp initialiser emits, transcribed from dumpbin.
 #
+# ---- RUNG C1e: THE 19 CAMERA STATE OBJECTS, FILLED BY THE ROM ------------
+#
+#   src/__sinit_02073a24.c     38 struct copies out of arm9 .rodata into the
+#                              nineteen State objects at 0x0209b008..0x0209b138.
+#                              It calls nothing.
+#
+# hal/ctor_runner.cpp hosts the 38 eight-byte source pairs, which nothing in
+# the port hosted. They keep their DS addresses: they are mwcc pointers to
+# member and hal/camera_states.cpp's hal_call_camera_state_fn is what turns one
+# into a host call. The nineteen DESTINATIONS are hal/camera_states.cpp's and
+# stay its; that file bakes the same values in at compile time, and all 19 x 4
+# words were compared against the image before this rung was taken (19 of 19
+# identical, out/CTOR2/c1e_equality.txt), so the ROM's own initialiser writes
+# exactly the bytes that are already there.
+#
 src/func_02072f94.c
 src/func_02011a5c.c
 src/_ZN5Scene14GraphCallback2Ev.c
@@ -135,3 +150,4 @@ src/__sinit_0207511c.c
 src/__sinit_02074e84.cpp
 src/_ZN7ClipperC1Ev.c
 src/_ZN7ClipperD1Ev.c
+src/__sinit_02073a24.c
