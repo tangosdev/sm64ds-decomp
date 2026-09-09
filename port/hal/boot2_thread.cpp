@@ -192,10 +192,14 @@
 // backstop for a record with no thunk in it.
 //
 // * THE IRQ-EXIT RESCHEDULE. On hardware a wake taken in IRQ mode sets the
-//   manager's pending flag and the exception return does the switch;
-//   ARMProcessorMode is hosted at 0x1f (system mode) in cxx_aliases.cpp
-//   because the host runs every handler as a plain call, so the switch happens
-//   inline instead. Same order of events, one frame of the same thread.
+//   manager's pending flag and the exception return does the switch. That is
+//   what happens here now (run link100, lane DET3): step 2 of the halt raises
+//   port_irq_mode_depth for the length of IRQ::VBlankHandler, cxx_aliases.cpp's
+//   ARMProcessorMode host answers 0x12 while it is up, and src/func_02057f54.c
+//   takes its own early return -- so the switch is performed by the handler's
+//   return, which is this port's IRQ return. Before that lane the host answered
+//   0x1f (system mode) unconditionally, every handler ran as a plain call and
+//   the switch was taken inline from inside the wake.
 //
 // ============================ KNOBS ========================================
 //
@@ -211,6 +215,16 @@
 //                             refused, so a thread func_02058200 really made
 //                             is never entered. port/tools/
 //                             thread_create_proof.py reads both arms.
+//   SM64DS_DET3=0             the host's ARMProcessorMode answers 0x1f for the
+//                             whole run instead of 0x12 inside the handler, so
+//                             func_02057f54 runs past its own guard and lane
+//                             DET2's host-side deferral in ARMRestoreContext
+//                             catches the switch again. The way back on one
+//                             binary; measured, it costs 299 context saves
+//                             that are taken and thrown away over 300 frames.
+//   SM64DS_DET2_IRQDEFER=0    with SM64DS_DET3=0 as well, no deferral at all:
+//                             the switch is taken from inside the handler, the
+//                             reading this port had before lane DET2.
 
 #include <stdint.h>
 
@@ -282,6 +296,31 @@ int ARMSaveContext(void *ctx);
 void ARMRestoreContext(void *ctx);
 void _ZN4CP1516WaitForInterruptEv(void);
 }
+
+// THE HOST'S IRQ MODE (run link100, lane DET3).
+//
+// An ARM is in IRQ mode -- CPSR bits 0..4 read 0x12 -- from the moment the
+// exception vector is taken to the moment the handler returns. src/
+// ARMProcessorMode.c is one instruction and a mask over exactly those bits:
+//     asm void ARMProcessorMode(void) { mrs r0, cpsr; and r0, r0, #0x1f; bx lr }
+// and the whole linked set has ONE caller of it, src/func_02057f54.c:25:
+//     if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
+//     s->m0 = 1; return;
+// -- the ROM's own statement that a thread switch asked for from inside an
+// interrupt handler is not taken there: the manager's pending flag goes up and
+// the IRQ return is what performs it.
+//
+// This word is that mode bit. Step 2 of the halt raises it for exactly the span
+// an ARM would be in IRQ mode -- the dispatch of IRQ::VBlankHandler to its
+// return -- and hal/cxx_aliases.cpp's ARMProcessorMode host answers 0x12 while
+// it is up and 0x1f (system mode) while it is down. Nothing else reads it,
+// because nothing else in the linked set calls ARMProcessorMode: the only other
+// definition of that name in the tree is port/tests/mp_sleepwake.cpp's, and that
+// is a separate executable.
+//
+// SM64DS_DET3=0 leaves it at zero for the whole run, which is the answer the
+// host gave before this lane, and puts lane DET2's host-side deferral back.
+extern "C" { unsigned port_irq_mode_depth = 0; }
 
 namespace {
 
@@ -406,10 +445,18 @@ struct Stats {
     unsigned long long frame_pump_turns;   // rung R3b step B2, step 1b
     unsigned long long starved, wrong_thread, idle_sleeps;
     unsigned long long adopted, entered, exited, rejected, nocreate;
-    // Switches ARMRestoreContext handed to the IRQ return instead of taking
-    // from inside the handler (run link100, lane DET2, rung 2). Printed LAST
-    // on the [thr] line so every existing reader of that line keeps working.
+    // Switches handed to the IRQ return instead of taken from inside the
+    // handler. Counted by lane DET2's host-side deferral below when that is the
+    // thing doing it (SM64DS_DET3=0), and by the IRQ return itself when the
+    // ROM's own func_02057f54.c:27 is (the default, run link100 lane DET3).
+    // Printed second-to-last on the [thr] line so every existing reader of that
+    // line keeps working.
     unsigned long long deferred;
+    // Arrivals in ARMRestoreContext from inside IRQ::VBlankHandler that the
+    // 0x12 mode answer did not stop (run link100, lane DET3). It is the direct
+    // check that the answer covers every route into a switch from inside the
+    // handler, and it reads 0.
+    unsigned long long irqswitch;
 } g_stat;
 
 constexpr size_t kFiberStack = 256 * 1024;
@@ -708,6 +755,21 @@ static bool det2_owed1() {
     return v != 0;
 }
 
+// Run link100, lane DET3. ON by default: hal/cxx_aliases.cpp's ARMProcessorMode
+// answers 0x12 for the length of IRQ::VBlankHandler, so src/func_02057f54.c's
+// own lines 24-28 raise the manager's pending flag and return, and nothing
+// switches a thread from inside the handler. SM64DS_DET3=0 leaves the mode
+// answer at 0x1f and puts lane DET2's host-side deferral in ARMRestoreContext
+// back on the same binary.
+static bool det3_on() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_DET3");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v != 0;
+}
+
 void starve_wake() {
     ++g_stat.starved;
     bool any = false;
@@ -862,26 +924,45 @@ void ARMRestoreContext(void *ctx) {
     // data_0208ee44=2, straight run and re-run alike) and func_02019144's
     // display commit ran at the head of the following frame.
     //
-    // The deferral is taken here instead, one call later than the ROM takes
-    // it, and it puts the manager into exactly the state the ROM's own early
-    // return leaves it in: func_02057f54.c:37 has already written the
-    // current-thread word, which the ROM never reaches in IRQ mode, so put it
-    // back; and raise m0, which the ROM raises instead. Step 2 of the halt
-    // clears m0 and calls func_02057f54 again when the handler returns, which
-    // is the IRQ return. Nothing in src/ reads or writes m0 -- every other
-    // data_020a6134 access in the linked set is at +2, +8, +0xc, +0x10, +0x14
-    // or the slot array -- so the reader this stands in for is the ROM's IRQ
-    // return path, exactly as step 2 already stands in for the dispatcher.
+    // AND THE ROM'S OWN THREE LINES DO IT NOW (run link100, lane DET3). The
+    // paragraph above is the state this file was in when lane DET2 closed: the
+    // host answered system mode, so func_02057f54 ran past its own guard and
+    // the deferral had to be caught here, one call later than the ROM takes it,
+    // with the current-thread word put back by hand and a save taken and thrown
+    // away on every deferral (measured: saves 899 against 600 switches).
     //
-    // SM64DS_DET2_IRQDEFER=0 puts the switch-from-inside back on the same
-    // binary.
-    if (g_in_vblank_handler && det2_irqdefer()) {
-        ++g_stat.deferred;
-        mgr_current() = from;
-        mgr_u16(0) = 1;
-        trace("defer %u -> %u to the IRQ return",
-              from ? from->id : 0u, to->id);
-        return;
+    // hal/cxx_aliases.cpp's ARMProcessorMode now answers 0x12 for the length of
+    // the handler (see port_irq_mode_depth at the top of this file), so
+    // func_02057f54 returns at ITS line 27 -- before ARMSaveContext, before the
+    // two callbacks, before the current-thread write at line 37. There is
+    // nothing left here to undo, nothing to put back, and no thrown-away save:
+    // the ROM's decision point is the ROM's again. Step 2 of the halt still
+    // clears m0 and calls func_02057f54 when the handler returns, because that
+    // is the IRQ return and the port has no exception vector to stand in for it.
+    //
+    // Nothing in src/ reads or writes m0 -- every other data_020a6134 access in
+    // the linked set is at +2, +8, +0xc, +0x10, +0x14 or the slot array -- so
+    // the reader step 2 stands in for is the ROM's IRQ return path, exactly as
+    // step 2 already stands in for the dispatcher.
+    //
+    // SM64DS_DET3=0 puts the mode answer back to 0x1f and this block back in
+    // charge; SM64DS_DET2_IRQDEFER=0 on top of that puts the raw
+    // switch-from-inside back. Both on the same binary.
+    if (g_in_vblank_handler) {
+        if (det3_on()) {
+            // The mode answer should have stopped this one call earlier. Count
+            // it, name it, and let it through: an unswitched wake would be a
+            // hang, and a counter that reads 0 is the proof that the answer
+            // covers every route.
+            ++g_stat.irqswitch;
+        } else if (det2_irqdefer()) {
+            ++g_stat.deferred;
+            mgr_current() = from;
+            mgr_u16(0) = 1;
+            trace("defer %u -> %u to the IRQ return",
+                  from ? from->id : 0u, to->id);
+            return;
+        }
     }
 #if defined(_WIN32)
     if (GetCurrentThreadId() != g_owner_tid) {
@@ -1037,7 +1118,15 @@ void _ZN4CP1516WaitForInterruptEv(void) {
         // is the carried-count defect step 4 below exists to end.
         if (data_0209d4f0[0] != 0) ++g_frame_wait_edges;
         ++g_in_vblank_handler;
+        // AND THE CORE IS IN IRQ MODE FOR THE WHOLE OF IT (run link100, lane
+        // DET3). ARMProcessorMode answers 0x12 while this is up, which is what
+        // makes src/func_02057f54.c:24-28 -- the ROM's own lines, not this
+        // file's -- raise the manager's pending flag and return instead of
+        // switching a thread from inside an interrupt handler. It comes down
+        // BEFORE the IRQ return below, because that return is out of IRQ mode.
+        if (det3_on()) ++port_irq_mode_depth;
         reinterpret_cast<void (*)()>(h)();
+        if (det3_on()) --port_irq_mode_depth;
         --g_in_vblank_handler;
         *irq_if &= ~ntr::IRQ_VBLANK;
         ++g_stat.vblank_dispatches;
@@ -1048,7 +1137,12 @@ void _ZN4CP1516WaitForInterruptEv(void) {
         // own reschedule is what performs it, so the pick, the save, the
         // callbacks and the current-thread word are all func_02057f54's, exactly
         // as they are on every other switch this port takes.
-        if (det2_irqdefer() && mgr_u16(0) != 0) {
+        if ((det3_on() || det2_irqdefer()) && mgr_u16(0) != 0) {
+            // m0 up at a handler's return is one switch the ROM asked for from
+            // inside the handler and did not take. Under DET3 that flag was
+            // raised by func_02057f54 itself, so this is where the count of
+            // them belongs.
+            if (det3_on()) ++g_stat.deferred;
             mgr_u16(0) = 0;
             func_02057f54();
         }
@@ -1265,14 +1359,15 @@ void thread_sched_report(const char *tag) {
                  "halts=%llu pump=%llu framepump=%llu vbl_enter=%llu "
                  "vbl_dispatch=%llu vbl_wakes=%llu "
                  "starved=%llu unknown=%llu adopted=%llu entered=%llu "
-                 "exited=%llu rejected=%llu nocreate=%llu deferred=%llu\n",
+                 "exited=%llu rejected=%llu nocreate=%llu deferred=%llu "
+                 "irqswitch=%llu\n",
                  tag, g_stat.saves, g_stat.restores, g_stat.resumes,
                  g_stat.refused, g_stat.halts, g_stat.pump_turns,
                  g_stat.frame_pump_turns, g_stat.vblank_enters,
                  g_stat.vblank_dispatches, g_stat.vblank_wakes, g_stat.starved,
                  g_stat.unknown_ctx, g_stat.adopted, g_stat.entered,
                  g_stat.exited, g_stat.rejected, g_stat.nocreate,
-                 g_stat.deferred);
+                 g_stat.deferred, g_stat.irqswitch);
     std::fflush(stderr);
 }
 
