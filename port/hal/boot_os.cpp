@@ -780,11 +780,24 @@ void port_boot_rom_game_init_tail(void)
        is the one that stands. The 0x06800000 span is sub-engine BG VRAM, which
        no scene has loaded into by this line. */
     func_02019440();
-    /* func_020134c8() -- the ROM's sound bring-up. STILL REFUSED, and lane THR
-       did not open it: besides the two-players-over-one-SDAT reason BOOT gave,
-       its closure reaches func_02058200, and hal/boot2_thread.cpp states that
-       thread CREATION is not modelled -- the fiber seam has exactly two
-       threads and refuses a context it has never seen. */
+    /* func_020134c8() -- the ROM's sound bring-up. STILL REFUSED, and ON ONE
+       REASON RATHER THAN TWO. The thread half is GONE: this line used to say
+       "its closure reaches func_02058200, and hal/boot2_thread.cpp states that
+       thread CREATION is not modelled", and that has not been true since lane
+       THR -- func_02058200 is linked (port/slice_gate223.txt) and this file's
+       own header at the func_020134c8 entry, ~line 215, has said so for as
+       long. The call-site comment was the stale copy; corrected by run link100
+       lane SND1, which had to read both to know which one to believe.
+
+       WHAT STILL REFUSES IT is what BOOT gave first, narrowed by that lane's
+       measurement: func_020133bc takes 1MB out of Memory::Allocate and stands
+       the ROM's OWN SDAT player up over it (rung R2), and it opens the archive
+       off the card, which inverts hal/sdat/sdat.cpp's residency pre-seat and
+       root seat (rung R4). Those two are a subsystem decision, held for Tango's
+       word. The pieces below them that are NOT that decision have been taken:
+       the pool, the status block and the channel-7 registration are the ROM's
+       own now (port/slice_snd1.txt, rung R1), driven from
+       hal/sdat/consumer.cpp's sd_sound_init_host rather than from here. */
     func_0203b684();
     /* data_020a4bb8 = data_02090864 -- already seated by the host boot */
     func_020233f0();

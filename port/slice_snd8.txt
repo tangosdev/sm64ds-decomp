@@ -1,0 +1,110 @@
+# Run link100, lane SND1, rungs R8 + R9 + R10: the ROM's own sound FRAME.
+#
+# WHAT IT REPLACES. hal/sdat/consumer.cpp carried two hand-written functions,
+# sd_sound_frame_host and sd_sound_fade_host, that between them transcribed
+# src/func_0204f03c.cpp and src/func_020132d8.cpp with five calls SKIPped. Each
+# skip had a written reason and all five reasons are now spent:
+#
+#   func_020508a0   the streamed-sound frame       R8
+#   func_020522c4   the four streamed-sound players R8
+#   func_02013078   the swim-state reporter        R10 (already linked)
+#   func_020494cc   the underwater filter's table  R10
+#   func_020490b0   the filter's per-frame ramp    R10
+#
+# so the two transcriptions retire and the host loop calls func_020132d8 -- the
+# ROM's own phase 9 -- at the point sdat_host_tick already occupies.
+#
+# ---------------------------------------------------------------------------
+# R8, THE STREAMED-SOUND FRAME, AND WHAT IT ACTUALLY DOES TODAY: NOTHING, AND
+# THAT IS THE HONEST STATE RATHER THAN A DEFECT.
+#
+# func_020508a0's first line is `if (*(s32 *)(data_020a5634 + 0) == 0) return;`
+# and func_020522c4 walks four 0x12c-byte records at data_020a5bd4 whose +0xf0
+# flag word gates every branch. Both objects are zero, because standing a stream
+# up needs the 1MB sound heap (rung R2), the SDAT opened off the card (R4) and
+# the ARM9 sound thread (R5) -- the three held for Tango's word. So the ROM's
+# frame runs and finds no stream, which is exactly what it does on hardware with
+# no stream playing. The seat is worth taking anyway: it is the ROM's own
+# reference graph reaching these TUs, and it is what lets func_0204f03c (R9) be
+# called whole instead of transcribed with two holes in it.
+#
+# FOUR TUs BELOW ARE ON THE SCOUT'S R6 LIST AND COME IN HERE. rungs.tsv put
+# func_0205abb8, func_0204f0b8, func_0204f15c and func_020502b8 (and behind them
+# func_0204f11c, func_0205a958, func_0205aa9c, func_0205b504) under R6, the 3D
+# voice pool and capture layer. They are not capture: they are the STOP path a
+# stream frame reaches (func_020508a0 -> func_020502b8 when a stream's own stop
+# flag is set, func_020522c4 -> func_02052208 -> func_0204ff9c -> func_0204fde8),
+# and R8 does not link without them. Measured with port/tools/closure.py over
+# the whole set before a line was written. R6's real content -- DS sound CAPTURE
+# and the 24-tap echo DSP, which the host mixer models nowhere -- is untouched.
+src/func_020508a0.c
+src/func_020522c4.c
+src/func_0204fda4.cpp
+src/func_0204fde8.c
+src/func_0204fe5c.c
+src/func_0204ff9c.c
+src/func_0204ffcc.c
+src/func_02050008.c
+src/func_020520a4.c
+src/func_020520dc.c
+src/func_0205212c.cpp
+src/func_02052208.c
+src/func_0205aa68.c
+src/func_0205b63c.c
+# The stop path the two frame bodies reach, listed apart because of where the
+# scout put it (see above).
+src/func_0205abb8.c
+src/func_0204f0b8.c
+src/func_0204f11c.c
+src/func_0204f15c.c
+src/func_020502b8.c
+src/func_0205a958.c
+src/func_0205aa9c.c
+src/func_0205b504.c
+
+# ---------------------------------------------------------------------------
+# R9: the ROM's own sound frame, whole. Four transcribed lines in
+# hal/sdat/consumer.cpp become this call, and the two SKIPs inside it become
+# the two TUs above.
+src/func_0204f03c.c
+
+# ---------------------------------------------------------------------------
+# R10: THE UNDERWATER MUSIC FILTER, which this port has never had.
+#
+# One mechanism in three parts, and consumer.cpp was right that it had to be
+# taken as a unit: func_02013078 (already linked) reports a CHANGE in the
+# player's swim state and latches its answer in data_0208e438, so running it
+# alone consumes the state changes the other two need to see; func_020494cc
+# programs a two-channel ramp table (data_020a4c48/4c/54) from that state; and
+# func_020490b0 advances the table each frame and pushes it at the music player
+# through func_0204f82c -- command 0x04 parameter 0x0a, the per-track
+# attenuation the consumer already honours.
+#
+# WHAT UNBLOCKED IT: five words. func_020494cc reads data_02082200, _02082204,
+# _02082208, _0208220c and _02082210 and not one was defined anywhere in the
+# port. They are arm9 .data, four bytes each by the delta rule, with ZERO
+# relocations in any of the five spans (checked against config/arm9/relocs.txt:
+# no `from:` row exists anywhere in 0x020821f0..0x02082214), so they are read
+# out of the cartridge by port/tools/romdata.py's NAMED list rather than
+# written down.
+src/func_020494cc.c
+src/func_020490b0.cpp
+src/func_020132d8.cpp
+
+# NOT HERE, and each one has a reason rather than an omission.
+#
+# src/func_02013078.c   already linked (port/slice_gate10.txt). R10 is what
+#                       finally CALLS it: consumer.cpp skipped it on purpose,
+#                       because its answer is latched and a caller that throws
+#                       the answer away starves the filter.
+# src/func_020506fc.c   the ARM9 sound thread, and src/func_02052008.c the
+# src/func_02052008.c   player/group table: rungs R5 and R3. They are what
+#                       would put a stream INTO the records func_020522c4
+#                       walks. Held with R2/R4.
+# src/func_0205ac28.c   the command-9 sender func_0204ffcc calls. It is ALREADY
+#                       on port/slice_gate220.txt for walk_window and
+#                       walk_window_hires, and listing it here as well would put
+#                       a second object with the same definition into those two
+#                       links. smoke_player is the only target that lacks it, so
+#                       port/CMakeLists.txt adds that one source to that one
+#                       target beside hal/sdat/snd_smoke_face.cpp.
