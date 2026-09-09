@@ -1605,6 +1605,46 @@ static int r3e_sound_at_phase9(void)
     }
     return v;
 }
+/* WHAT THE WATCHER BELOW MEASURED, AND RUNG E1 IS GREEN (lane R3F).
+   R3E left this rung red: under SM64DS_ROM_LOOP=1 the watcher bracketed
+   Memory::defaultHeapPtr going 30000000 -> 00000000 inside the ROM's own
+   VBlank handler on frame 2, and the next free faulted at Heap::Deallocate+0x3
+   on frame 31. The write was func_02019144's else arm calling
+   func_02055454(BG0 scroll), and src/func_02055454.c spelled its register as
+   `G`, the decomp's generic placeholder, which hal/lk4_solidheap_seat.cpp's
+   /alternatename bound to that very word. R3F spelled the register in src
+   (0x04000010, and 0x04000204 for func_02057128 and func_02057140),
+   byte-verified all three against the ROM, and routed the three TUs through
+   hostgen. Read the comment above that alternatename for the derivation.
+
+   MEASURED AFTER THE FIX, 300 frames per arm, this binary:
+     level  1  rc=0   pos=(-4915200, 2929633, 11141348)   -- the shipped path's
+                      own end position, to the unit
+     level  5  rc=0   pos=(-4721373, 2969618, -11217790)
+     level  9  rc=0   pos=(3686400, 1179648, -5734400)
+     level 13  rc=0   pos=(-24206229, 8192012, 24214420)
+   On every one of the four the watcher prints ONE transition, 00000000 ->
+   30000000 at the frame foot of frame 1, and never prints another; E1 reports
+   phase 7 was the ROM's own sleep on 299 of 300 frames. The shipped path (knob
+   unset) is unchanged: [thr] halts=0 pump=0 framepump=0 vbl_enter=0
+   vbl_dispatch=0 vbl_wakes=0, the frame cross-check 300 frames / 2402 reads /
+   0 disagreements, the same end position.
+
+   A WHOLE BATTERY RAN WITH SM64DS_ROM_LOOP=1 EXPORTED AND CAME BACK ALL GREEN,
+   and the next lane needs to know exactly how much of that is a measurement.
+   battery.py's selftest_env and scene_env both start from os.environ and pop
+   only the knobs they name, so the knob IS inherited by all 51 level rows and
+   all 37 scene rows -- but the ONLY readers of port_rom_loop_enabled() are in
+   this file, on the LEVEL loop. hal/scene_boot.cpp's port_scene_run has none,
+   so the 37 scene rows ran the same program they run with the knob off and
+   their green says nothing about the handover. The default-boot and the
+   shipping-configuration rows build their environment from an allowlist that
+   drops every SM64DS_ name, so they are knob-off by construction, and the smoke
+   executables do not compile this file at all. THE MEASUREMENT IS THE 51 LEVEL
+   ROWS. R3E's two live hazards for the SCENE path -- the graphics block that
+   func_ov007_020cc4c0 actually seats, and the __fastcall/cdecl mismatch at
+   func_02019144's dispatch -- are therefore still unmeasured, and putting a
+   reader on the scene loop is the next rung's first job. */
 /* RUNG E1's WATCHER (lane R3E). Memory::defaultHeapPtr is data_020a0ea0
    (hal/heap_vtable.cpp:80). Memory::Deallocate(void*) falls back to it, so a
    null there is the fault gate 1 measured. This reports every TRANSITION of
