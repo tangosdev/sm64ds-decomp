@@ -102,9 +102,22 @@ preserved as historical evidence, not new acceptance of Goomba.
 ## Repairs after independent integration review
 
 An independent integrator failed candidate `6bf546d78` and reworked the task.
-Three repairs landed on branch `cpp/humanizer-oneup-0908-repair` in worktree
+The repairs landed on branch `cpp/humanizer-oneup-0908-repair` in worktree
 `C:/tmp/sm64ds-oneup-prod-0908`.
 
+An earlier revision of this section narrated three repairs followed by a merge
+of `main`. That ordering is inverted. The merge is `587f156e3`, its parents are
+`6bf546d78` and `c52f63ca5`, and it is the oldest of this branch's commits, so
+the merge came first and every repair below was made on the merged tree. The
+bullets are in that order. This is immaterial to the tree, which is the same
+either way; only the narration was wrong.
+
+- **The merge.** Merged `origin/main` at `c52f63ca5`, 94 commits ahead of the
+  task base. The only conflict was `notes/cpp-tu-current-state.md`, which is
+  machine-generated. Regenerated it with `tools/cpp_tu_state.py --write-note`
+  rather than hand-resolving, and `--check-note` exits **0**. The live counts
+  (170 manifest entries, 9,097 physical production source files) match neither
+  side of the conflict, so a hand-merge would have shipped a wrong number.
 - **The `dead-references` gate** was exit 1 on this branch while exit 0 on
   `origin/main` and at base `26f54f8fc`. `PATH_RE` in
   `tools/check_dead_references.py` excludes `+`, so the Koopa translation unit
@@ -116,19 +129,35 @@ Three repairs landed on branch `cpp/humanizer-oneup-0908-repair` in worktree
   names, with direct precedent one entry above for the identical truncation of
   the `EnemySpawner` translation unit. The prose was not reworded and the tool
   was not changed. `python tools/check_dead_references.py` now exits **0**.
-- **The queue row.** This branch's `da1up_c` row in
+- **The queue rows.** This branch's `da1up_c` row in
   `notes/data/tu-promotion-queue.tsv` wrote `total_lines 1295`;
   `tools/queue_audit.py` derives **1284** from the three source files covering
-  ov002 `0x20aee40`-`0x20b05d0`. Corrected to the derived value, after which
-  `queue_audit` reports five disagreeing rows instead of six. The five that
-  remain (ChiefChilly, Crate, Coin, Player, daGmch_c) carry the same values on
-  `origin/main`, so they are not this branch's to move and were left alone.
-- **The merge.** Merged `origin/main` at `c52f63ca5`, 94 commits ahead of the
-  task base. The only conflict was `notes/cpp-tu-current-state.md`, which is
-  machine-generated. Regenerated it with `tools/cpp_tu_state.py --write-note`
-  rather than hand-resolving, and `--check-note` exits **0**. The live counts
-  (170 manifest entries, 9,097 physical production source files) match neither
-  side of the conflict, so a hand-merge would have shipped a wrong number.
+  ov002 `0x20aee40`-`0x20b05d0`. Correcting that cell left five rows still
+  disagreeing, and an earlier revision of this bullet called all five
+  pre-existing on `origin/main` and left them alone. That was wrong for three of
+  them. The sentence it rested on was true as far as it went — those cells are
+  unchanged from `main` — but the conclusion drawn from it was not, because
+  three of the rows are stale precisely as a result of this branch's own edits
+  to the files they measure. Measured directly at `c52f63ca5`, base has **2**
+  disagreeing rows; this candidate had **5**. The three extra:
+
+  | row | old cell | refreshed | source file | lines base → here |
+  |---|---|---|---|---|
+  | `Crate` | 1431 | **1427** | `src/_ZN5Crate13OnTurnIntoEggER6Player.cpp` | 42 → 38 |
+  | `Coin` | 1148 | **1147** | `src/_ZN4Coin13OnTurnIntoEggER6Player.cpp` | 24 → 23 |
+  | `daGmch_c` | 1119 | **1120** | `src/actors/daGmch_c.cpp` | 1119 → 1120 |
+
+  Each row delta matches its file delta exactly, so these three are this
+  branch's to move. `ChiefChilly` (1992 → **1993**) and `Player`
+  (26798 → **26799**) genuinely are pre-existing: `main`'s own `9b8cb8add`
+  edited `include/ChiefChilly.h` and `include/Player.h` without refreshing the
+  queue file, and they are the two rows base already disagrees on. All five
+  were refreshed by one `python tools/queue_audit.py --write` pass, which
+  rewrote only the derived columns of `notes/data/tu-promotion-queue.tsv` and
+  no other file. After it, `python tools/queue_audit.py` reports "queue agrees
+  with the tree" — **0 rows disagreeing** — and `--check` exits **0**. Take
+  those two readings, not the bare exit status: the plain invocation exits 0
+  whether or not rows disagree, and it exited 0 while five rows were stale.
 
 ### Re-measured after the merge
 
