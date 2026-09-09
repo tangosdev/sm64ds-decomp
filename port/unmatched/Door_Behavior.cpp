@@ -88,23 +88,62 @@ int func_ov100_0214491c(void *, void *);
 
 typedef int (*PortDoorFn)(void *, void *);
 
+/* RUN link100 LANE PMFB8 GATE 2: THE FIFTEEN STATICS TAKE __fastcall FACES.
+   src/func_ov100_021453d8.cpp and src/func_ov100_02145550.cpp are in the link
+   (port/slice_pmfb8.txt) and dispatch these records themselves. Their emitted
+   sides agree word for word --
+       021453d8   mov edx,[ecx] / test / mov ecx,[ecx+4] / push a2 /
+                  add ecx,eax / call edx
+       02145550   mov edx,[ecx+8] / test / mov ecx,[ecx+12] / push eax /
+                  add ecx,esi / call edx
+   -- receiver in ecx, ONE pushed word neither caller pops because __thiscall's
+   stack half is callee-popped. So ONE face shape serves both halves of the
+   node: __fastcall(self, dead_edx, void *arg), which pops that word itself.
+   FOURTEEN faces for the fourteen distinct code words (0x02144730 is held by
+   two of the fifteen statics), one face per code word.
+   The bodies keep the (void *, void *) declaration this file has always used:
+   nine of them take two words and six take one, the caller cleans under
+   __cdecl, and r1 is set on ARM whether or not the callee reads it -- the ride
+   -through this file's header already rules on. */
+#define DOOR_FACE(sym)                                                     \
+    static int __fastcall door_f_##sym(void *self, void *dead_edx, void *arg) \
+    {                                                                      \
+        (void)dead_edx;                                                    \
+        return sym(self, arg);                                             \
+    }
+
+DOOR_FACE(func_ov100_02144730)
+DOOR_FACE(func_ov100_02144ccc)
+DOOR_FACE(func_ov100_02144c6c)
+DOOR_FACE(func_ov100_02144bf4)
+DOOR_FACE(func_ov100_02144c64)
+DOOR_FACE(func_ov100_021449c8)
+DOOR_FACE(func_ov100_02144a38)
+DOOR_FACE(func_ov100_02144468)
+DOOR_FACE(func_ov100_02144950)
+DOOR_FACE(func_ov100_021446f8)
+DOOR_FACE(func_ov100_02144528)
+DOOR_FACE(func_ov100_021444e8)
+DOOR_FACE(func_ov100_02144cf8)
+DOOR_FACE(func_ov100_0214491c)
+
 static const struct { PortPmf *slot; unsigned rom; PortDoorFn host; }
 g_door_callbacks[] = {
-    {data_ov100_021480d4, 0x02144730, func_ov100_02144730},
-    {data_ov100_021480dc, 0x02144ccc, func_ov100_02144ccc},
-    {data_ov100_021480e4, 0x02144c6c, func_ov100_02144c6c},
-    {data_ov100_021480ec, 0x02144bf4, func_ov100_02144bf4},
-    {data_ov100_021480f4, 0x02144c64, func_ov100_02144c64},
-    {data_ov100_021480fc, 0x021449c8, func_ov100_021449c8},
-    {data_ov100_02148104, 0x02144730, func_ov100_02144730},
-    {data_ov100_0214810c, 0x02144a38, func_ov100_02144a38},
-    {data_ov100_02148114, 0x02144468, func_ov100_02144468},
-    {data_ov100_0214811c, 0x02144950, func_ov100_02144950},
-    {data_ov100_02148124, 0x021446f8, func_ov100_021446f8},
-    {data_ov100_0214812c, 0x02144528, func_ov100_02144528},
-    {data_ov100_02148134, 0x021444e8, func_ov100_021444e8},
-    {data_ov100_0214813c, 0x02144cf8, func_ov100_02144cf8},
-    {data_ov100_02148144, 0x0214491c, func_ov100_0214491c},
+    {data_ov100_021480d4, 0x02144730, (PortDoorFn)door_f_func_ov100_02144730},
+    {data_ov100_021480dc, 0x02144ccc, (PortDoorFn)door_f_func_ov100_02144ccc},
+    {data_ov100_021480e4, 0x02144c6c, (PortDoorFn)door_f_func_ov100_02144c6c},
+    {data_ov100_021480ec, 0x02144bf4, (PortDoorFn)door_f_func_ov100_02144bf4},
+    {data_ov100_021480f4, 0x02144c64, (PortDoorFn)door_f_func_ov100_02144c64},
+    {data_ov100_021480fc, 0x021449c8, (PortDoorFn)door_f_func_ov100_021449c8},
+    {data_ov100_02148104, 0x02144730, (PortDoorFn)door_f_func_ov100_02144730},
+    {data_ov100_0214810c, 0x02144a38, (PortDoorFn)door_f_func_ov100_02144a38},
+    {data_ov100_02148114, 0x02144468, (PortDoorFn)door_f_func_ov100_02144468},
+    {data_ov100_0214811c, 0x02144950, (PortDoorFn)door_f_func_ov100_02144950},
+    {data_ov100_02148124, 0x021446f8, (PortDoorFn)door_f_func_ov100_021446f8},
+    {data_ov100_0214812c, 0x02144528, (PortDoorFn)door_f_func_ov100_02144528},
+    {data_ov100_02148134, 0x021444e8, (PortDoorFn)door_f_func_ov100_021444e8},
+    {data_ov100_0214813c, 0x02144cf8, (PortDoorFn)door_f_func_ov100_02144cf8},
+    {data_ov100_02148144, 0x0214491c, (PortDoorFn)door_f_func_ov100_0214491c},
 };
 
 extern "C" void port_door_callbacks_seat(void)
@@ -127,116 +166,32 @@ extern "C" void port_door_callbacks_seat(void)
     }
 }
 
-/* The dispatch itself, ROM encoding, shared by both call sites below.
-   HARDENED 2026-08-07: real play reached the open flow for the first time and
-   something dispatched a non-code pointer (arena address, playlog
-   play_20260807_232848). Until that write is found, refuse to call anything
-   outside the image and name the node instead of wild-calling. */
-extern "C" IMAGE_DOS_HEADER __ImageBase;
-static int port_door_fn_in_image(unsigned fn)
-{
-    /* .text-only: the first check (whole image) passed arena/bss pointers,
-       which is exactly what the stomped node held. Executable sections only. */
-    static char *lo, *hi;
-    char *base = (char *)&__ImageBase;
-    if (!lo) {
-        IMAGE_NT_HEADERS32 *nt = (IMAGE_NT_HEADERS32 *)(base +
-            ((IMAGE_DOS_HEADER *)base)->e_lfanew);
-        IMAGE_SECTION_HEADER *s = IMAGE_FIRST_SECTION(nt);
-        for (unsigned i = 0; i < nt->FileHeader.NumberOfSections; ++i, ++s) {
-            if (!(s->Characteristics & IMAGE_SCN_MEM_EXECUTE))
-                continue;
-            char *a = base + s->VirtualAddress;
-            char *b = a + s->Misc.VirtualSize;
-            if (!lo || a < lo) lo = a;
-            if (b > hi) hi = b;
-        }
-    }
-    return (char *)(size_t)fn >= lo && (char *)(size_t)fn < hi;
-}
+/* HOST COPIES RETIRED, run link100 lane PMFB8 gate 2. src/func_ov100_021453d8.cpp
+   (the node installer) and src/func_ov100_02145550.cpp (daDoor_c::Behavior)
+   dispatch the node themselves now, and the three helpers that only they used
+   -- port_door_call, port_door_watch and port_door_fn_in_image -- went with
+   them.
 
-/* Per-door snapshot of the seated node and its two pairs, so the frame the
-   contents change is named instead of inferred. Four doors is plenty. */
-struct DoorNodeSnap { void *door, *node; PortPmf pairs[2]; };
-static DoorNodeSnap g_door_snaps[4];
+   WHAT WENT, AND WHY THAT IS SAFE. The .text-bounds refusal was added on
+   2026-08-07 after real play dispatched an arena address through a door node,
+   with the note "until that write is found". It was found in the SAME commit
+   that added it: 34285a74f names gate-22's thiscall aliases as the cause --
+   cdecl callers bound straight onto __thiscall bodies, so GoBehindPlayer's
+   `ret 4` inside func_ov100_02144730 shifted the frame and its epilogue
+   returned onto the door argument -- and replaced them with nine cdecl faces in
+   hal/method_faces.cpp and hal/door_ring_faces.cpp. The refusal was kept as a
+   diagnostic, not as a live shield, and the write it was watching for has not
+   been seen since.
 
-static void port_door_watch(void *door, void *node)
-{
-    DoorNodeSnap *s = 0;
-    for (unsigned i = 0; i < 4; ++i)
-        if (g_door_snaps[i].door == door || (!s && !g_door_snaps[i].door))
-            { s = &g_door_snaps[i]; if (g_door_snaps[i].door == door) break; }
-    if (!s)
-        return;
-    const PortPmf *p = (const PortPmf *)node;
-    if (s->door == door && s->node == node &&
-        s->pairs[0].fn == p[0].fn && s->pairs[0].delta == p[0].delta &&
-        s->pairs[1].fn == p[1].fn && s->pairs[1].delta == p[1].delta)
-        return;
-    if (s->door == door)
-        std::fprintf(stderr, "[door] node CHANGED under door=%p: node %p->%p "
-                     "lo %08x/%d -> %08x/%d  hi %08x/%d -> %08x/%d\n", door,
-                     s->node, node, s->pairs[0].fn, s->pairs[0].delta,
-                     p[0].fn, p[0].delta, s->pairs[1].fn, s->pairs[1].delta,
-                     p[1].fn, p[1].delta);
-    s->door = door; s->node = node; s->pairs[0] = p[0]; s->pairs[1] = p[1];
-    std::fflush(stderr);
-}
+   WHAT STAYS IS STRONGER THAN WHAT WENT. port_door_callbacks_seat below still
+   reads all fifteen mounted records and ABORTS unless every one holds the ROM's
+   own {address, 0} before it writes a single face, so a wrong mount still stops
+   the binary instead of dispatching into it; and both matched TUs keep the
+   ROM's own `if (word 0 == 0) skip`, which is what makes the null pair at
+   arm9's data_02086b58 safe in the nine nodes that carry it.
 
-static int port_door_call(const PortPmf *p, char *self, void *arg,
-                          const char *site)
-{
-    char *adj = self + (p->delta >> 1);
-    PortDoorFn f;
-    if (p->delta & 1)
-        f = *(PortDoorFn *)(*(char **)adj + p->fn);   /* virtual: fn is an offset */
-    else
-        f = (PortDoorFn)(size_t)p->fn;
-    if (!port_door_fn_in_image((unsigned)(size_t)f)) {
-        std::fprintf(stderr, "[door] %s: REFUSED non-code callback: door=%p "
-                     "node=%p fn=%08x delta=%d resolved=%p\n", site, self,
-                     (const void *)p, p->fn, p->delta, (void *)f);
-        std::fflush(stderr);
-        return 1;
-    }
-    return f(adj, arg);
-}
-
-/* src/func_ov100_021453d8.cpp: seat the node at +0x140 and run its word-0
-   pointer-to-member immediately. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" int func_ov100_021453d8(void *selfv, void *node, void *arg)
-{
-    char *c = (char *)selfv;
-    PortPmf *pairs = (PortPmf *)node;
-    std::fprintf(stderr, "[door] node install: door=%p node=%p lo=%08x/%d "
-                 "hi=%08x/%d\n", selfv, node, pairs[0].fn, pairs[0].delta,
-                 pairs[1].fn, pairs[1].delta);
-    std::fflush(stderr);
-    *(void **)(c + 0x140) = node;
-    {
-        const PortPmf *p = (const PortPmf *)*(void **)(c + 0x140);
-        if (p->fn == 0)
-            return 1;
-        return port_door_call(p, c, arg, "install");
-    }
-}
-
-/* src/func_ov100_02145550.cpp: the per-frame half. func_ov100_02145370
-   returns the closest player, which is the argument the callback is handed. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" int func_ov100_02145550(void *selfv)
-{
-    char *c = (char *)selfv;
-    void *res = func_ov100_02145370(c);
-    port_door_watch(selfv, *(void **)(c + 0x140));
-    {
-        const PortPmf *p = (const PortPmf *)(*(char **)(c + 0x140) + 8);
-        if (p->fn != 0)
-            port_door_call(p, c, res, "frame");
-    }
-    return 1;
-}
+   The vtable-derived block sweep, the two /FAsc listings and the arity reading
+   are in port/slice_pmfb8.txt and runs/link100/out/PMFB8/. */
 
 /* The hole that used to be here (Player::CanEnterDoor trapped by name while
  * its src body was NONMATCHING) closed 2026-08-07: the div=1 residue fell to
