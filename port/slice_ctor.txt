@@ -89,8 +89,7 @@
 #        the same five callbacks; hal/auto_bss.cpp already hosts the same ROM
 #        bytes twice) and the third would wake a branch hal/method_faces.cpp
 #        says must not be woken from outside that file.
-#   C1d  __sinit_02074e84 -- Clipper's constructor and destructor and four
-#        MSVC-mangled data names.
+#   C1d  TAKEN, below.
 #   C1e  __sinit_02073a24 -- 38 rodata constants, data_02086bc8..data_02086e40.
 #
 # TWO INITIALISERS ARE ALREADY IN THE LINK AND ARE NOT LISTED AGAIN.
@@ -98,6 +97,23 @@
 # slice_fdr.txt. Both were HAND-CALLED until this commit and both are now words
 # in the table; the two hand calls are deleted in the same commit and the two
 # words go through counting shims so the run can say each ran exactly once.
+# ---- RUNG C1d: THE arm9 CLIPPER'S OWN INITIALISER -------------------------
+#
+#   src/__sinit_02074e84.cpp   two pointer stores into data_0209f3c4 (the
+#                              second wins, the first is dead in the ROM),
+#                              Clipper's constructor on data_0209f43c, and one
+#                              func_020731dc push at data_0209f388.
+#   src/_ZN7ClipperC1Ev.c      writes the vptr and calls Clipper::Func_020156DC
+#                              with the ROM's own 4:3 seed. Its callee is
+#                              already in the link (port/slice_gate10.txt).
+#   src/_ZN7ClipperD1Ev.c      the first word of _ZTV7Clipper.
+#
+# hal/ctor_runner.cpp hosts what none of the three had: _ZTV7Clipper (two
+# words; word 0 is D1 and word 1 is a NAMED TRAP, because src/_ZN7ClipperD0Ev.c
+# calls base_dtor_Clipper, an invented name for 0x0203cbcc that nothing in this
+# tree defines) and the 12-byte cell data_0209f388. It also carries the five
+# MSVC spellings the //cpp initialiser emits, transcribed from dumpbin.
+#
 src/func_02072f94.c
 src/func_02011a5c.c
 src/_ZN5Scene14GraphCallback2Ev.c
@@ -116,3 +132,6 @@ src/__sinit_02074fe4.c
 src/__sinit_020750b8.c
 src/__sinit_020750ec.c
 src/__sinit_0207511c.c
+src/__sinit_02074e84.cpp
+src/_ZN7ClipperC1Ev.c
+src/_ZN7ClipperD1Ev.c

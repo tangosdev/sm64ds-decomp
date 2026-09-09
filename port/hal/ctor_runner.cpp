@@ -70,8 +70,8 @@
  * own body and its fourth call. So the port's order is now Entry's order:
  * func_02019780, then func_02072f94, then main. Nothing was moved to make room.
  *
- * WHAT RUNS AND WHAT DOES NOT. After rungs C1a and C1b, SIXTEEN of the 23 words
- * are bound to the ROM's own initialiser and SEVEN are bound to a FACE that
+ * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b and C1d, SEVENTEEN of the
+ * 23 words are bound to the ROM's own initialiser and SIX are bound to a FACE that
  * names the initialiser it stands for and returns. The faces do not abort: __sinit_02073a24 is word 0
  * and is the last rung of this campaign, so an aborting face there would kill
  * every boot before the first frame. They report once each, by name, and the
@@ -138,6 +138,59 @@
  *   writes past +0x64. Whether that stays inside the band is a layout question
  *   owned by those two files.
  *
+ * RUNG C1d ADDS __sinit_02074e84, the arm9 Clipper's own initialiser. It is
+ * four statements: two pointer stores into data_0209f3c4 (the second wins; the
+ * first is dead in the ROM itself), Clipper's constructor on data_0209f43c, and
+ * one func_020731dc push. It allocates nothing -- _ZN7ClipperC1Ev writes its
+ * vptr and calls Clipper::Func_020156DC, which is four field stores and a call
+ * to Func_0201559C, and that one is fixed-point arithmetic over the object's
+ * own words. The same grep for Heap, Memory, operator new and malloc over the
+ * three bodies returns nothing.
+ *
+ * WHAT C1d HAD TO HOST, and why each one was safe to host here:
+ *   _ZTV7Clipper   0x0208e730..0x0208e738, TWO words, both relocated
+ *                  (config/arm9/relocs.txt 0x0208e730 -> 0x02015720 = D1,
+ *                  0x0208e734 -> 0x020156fc = D0). Nothing in the port hosted
+ *                  it and both readers -- src/_ZN7ClipperC1Ev.c and
+ *                  src/_ZN7ClipperD1Ev.c -- are this rung's own TUs. Word 0 is
+ *                  bound to the ROM's D1 body. WORD 1 IS A NAMED TRAP, not a
+ *                  body: src/_ZN7ClipperD0Ev.c calls `base_dtor_Clipper`, an
+ *                  INVENTED name for 0x0203cbcc that nothing in this tree
+ *                  defines, so the deleting destructor is not linkable today.
+ *                  It cannot fire either -- the only Clipper in this image is
+ *                  the static data_0209f43c and nothing deletes it -- and it
+ *                  says so out loud if it ever does, the shape
+ *                  hal/arm9_tables_link100.cpp's a9t_trap rows take.
+ *   data_0209f388  0x0209f388..0x0209f394, 12 bytes, the destruct-node cell of
+ *                  this initialiser's func_020731dc push. Hosted nowhere. It
+ *                  falls inside the nominal span of hal/auto_bss.cpp's generic
+ *                  `int data_0209f37c[8]`, the same slack the C1b cells sit
+ *                  beside: data_0209f37c's own ROM extent is 12 bytes and its
+ *                  three readers (SetStarMarker, Minimap::Render,
+ *                  Minimap::Behavior) index it as a byte array [0..7], so no
+ *                  reader crosses +12 and the generosity is slack rather than
+ *                  aliasing.
+ *
+ * AND FIVE MSVC NAMES, because src/__sinit_02074e84.cpp is a //cpp TU that
+ * declares its five data names WITHOUT extern "C". Every one of the five LHS
+ * strings below was transcribed from `dumpbin /symbols` on this tree's own
+ * compile of that TU (tmp/probe), the rule hal/w8a_stage_storage.cpp's alias
+ * block sets out: a hand-built mangling that is one letter off is a directive
+ * that never fires and never says so.
+ *
+ * NOTHING IN THIS BUILD DISPATCHES WHAT C1d WRITES. data_0209f3c4's first word
+ * becomes &data_02092188 (the Stage's graph-callback table,
+ * hal/arm9_tables_link100.cpp section 3, all four slots seated). The only
+ * reader of that vptr is func_02019144, through data_0209d4a8 -- and
+ * data_0209d4a8 is null in this port: hal/w8a_stage_storage.cpp hosts it and
+ * says nothing seats it, src/func_02019144.c guards the dispatch with
+ * `if (p != 0)`, and the two TUs that do write it (func_0203506c,
+ * func_ov004_020b265c) write a DIFFERENT object. data_0209f43c gets the ROM's
+ * own 4:3 seed (0x1555, 0xe38, 0x1000, 0x01388000) at Entry, which
+ * Camera::Render re-seeds through the same Clipper::Func_020156DC on every
+ * frame anyway -- so the seed is the ROM's own value at the ROM's own point,
+ * not a new one.
+ *
  * ONE ROM DATA OBJECT IS HOSTED HERE, because __sinit_02074fb8 names it and
  * nothing else in the port does: data_0208ee14, 16 bytes at arm9 .data, the
  * four-slot Scene graph-callback table. Its words are code addresses and
@@ -172,6 +225,7 @@ void __sinit_02074dc0(void);
 void __sinit_02074dc4(void);   /* C1b */
 void __sinit_02074e44(void);   /* C1b */
 void __sinit_02074e80(void);
+void __sinit_02074e84(void);   /* C1d */
 void __sinit_02074fe4(void);   /* C1b */
 void __sinit_02074f80(void);   /* was hand-called from hal/fdr_arm9_fader_seat.cpp */
 void __sinit_02074fb8(void);
@@ -187,6 +241,10 @@ void __sinit_02075150(void);
    [ctor] line because it is the one shape this rung changes that outlives the
    call. */
 extern void *data_020aa3f0;
+
+/* Clipper's destructor, the first word of _ZTV7Clipper below (rung C1d).
+   src/_ZN7ClipperD1Ev.c, arm9 0x02015720. */
+void _ZN7ClipperD1Ev(void *self);
 
 /* Scene's four graph callbacks, the words of data_0208ee14 below. */
 int _ZN5Scene14GraphCallback0Ev(void);
@@ -265,6 +323,42 @@ unsigned char data_020a0ee4[12];
 }
 DSSTATE_END
 
+/* ---- rung C1d: _ZTV7Clipper and one more destruct-node cell ---------------
+ *
+ * The header carries the derivation. The trap is defined before the table
+ * because the table takes its address. */
+
+namespace {
+void ctor_trap_clipper_d0(void)
+{
+    std::fprintf(stderr, "  UNHOSTED: _ZTV7Clipper slot 1, _ZN7ClipperD0Ev at "
+                         "0x020156fc -- src/_ZN7ClipperD0Ev.c calls "
+                         "base_dtor_Clipper, an invented name for 0x0203cbcc "
+                         "that nothing in this tree defines. The only Clipper "
+                         "in this image is the static data_0209f43c and "
+                         "nothing deletes it, so this slot is unreachable.\n");
+    std::fflush(stderr);
+}
+}  /* anonymous namespace */
+
+DSSTATE_BEGIN
+extern "C" {
+void *_ZTV7Clipper[2] = {
+    (void *)&_ZN7ClipperD1Ev,
+    (void *)&ctor_trap_clipper_d0,
+};
+unsigned char data_0209f388[12];
+}
+DSSTATE_END
+
+/* The five MSVC spellings src/__sinit_02074e84.cpp emits, transcribed from
+   dumpbin /symbols on this tree's own compile of it. */
+#pragma comment(linker, "/alternatename:?data_0208ee14@@3DA=_data_0208ee14")
+#pragma comment(linker, "/alternatename:?data_02092188@@3DA=_data_02092188")
+#pragma comment(linker, "/alternatename:?data_0209f388@@3DA=_data_0209f388")
+#pragma comment(linker, "/alternatename:?data_0209f3c4@@3RAXA=_data_0209f3c4")
+#pragma comment(linker, "/alternatename:?data_0209f43c@@3DA=_data_0209f43c")
+
 namespace {
 
 /* ---- the counters -------------------------------------------------------- */
@@ -312,7 +406,6 @@ void ctor_face(const char *name, const char *why)
 
 CTOR_FACE(02073a24, "38 rodata constants (data_02086bc8..data_02086e40) are hosted nowhere; rung C1e")
 CTOR_FACE(02074e0c, "func_0201aa18 -> func_0201aad4 -> func_0201aac8 is an argument-dropping tail-call veneer chain into func_02059ba0; a PORT_HOST_ABI question, not a linkage one")
-CTOR_FACE(02074e84, "Clipper's ctor/dtor, data_0208ee14's MSVC name and data_0209f388 are hosted nowhere; rung C1d")
 CTOR_FACE(02074edc, "data_0209f5c4 and data_0209f5dc are hosted nowhere; rung C1c, and hal/method_faces.cpp writes the same vptr")
 CTOR_FACE(0207501c, "it constructs a RaycastLine into data_020a0d0c, whose host block is 0x10 in a grouped section hal/mmc_vtable.cpp:148 asserts at ROM spacing, and the ctor writes past +0x64")
 CTOR_FACE(02075054, "data_020a0db8, data_020a0dc0 and data_020a0dcc are hosted nowhere; rung C1c, and hal/auto_bss.cpp hand-seeds the same block")
@@ -346,7 +439,7 @@ const CtorWord kCtorTable[] = {
     { 0x02074e0c, ctor_face_02074e0c, "__sinit_02074e0c", 0 },
     { 0x02074e44, __sinit_02074e44, "__sinit_02074e44", 1 },
     { 0x02074e80, __sinit_02074e80,   "__sinit_02074e80", 1 },
-    { 0x02074e84, ctor_face_02074e84, "__sinit_02074e84", 0 },
+    { 0x02074e84, __sinit_02074e84, "__sinit_02074e84", 1 },
     { 0x02074edc, ctor_face_02074edc, "__sinit_02074edc", 0 },
     { 0x02074f80, ctor_02074f80,      "__sinit_02074f80", 1 },
     { 0x02074fb8, __sinit_02074fb8,   "__sinit_02074fb8", 1 },
