@@ -163,12 +163,32 @@
 // the bug that killed data_020876e4. port_r2b_bind_mbinfo() below rebinds them
 // to the host addresses of the eight objects they name, after checking each
 // word still holds the DS address config/arm9/relocs.txt says it should.
+//
+// AND ONE REGRESSION THIS ARM CAUSED, FOUND BY net_proof RUNG N1 AND FIXED.
+// src/func_0203db64.c:70 clears the session ROLE BYTE data_020a0f04, because on
+// the cartridge this body runs at boot and the multiplayer menu seats that byte
+// long afterwards. This port has no such menu on the loopback path:
+// hal/comms_loopback.cpp:4533 seats it when a transport is installed, and that
+// install happens BEFORE the ROM's own main reaches this seam -- so the ROM's
+// boot clear landed on top of the host's stand-in and every net session went
+// solo (both ends opened their sockets, live masks 0x0/0x0, "the session did
+// not come up within 600 turns"). The arm re-applies the stand-in AFTER the
+// ROM's own clear, through the conductor's own comms_seat_session_request, so
+// the order on this port is the DS's: the ROM clears at boot, the menu seats
+// after it. The comment at the call site carries the full reading.
 // ---------------------------------------------------------------------------
 
 #include <cstdio>
 #include <cstring>
 
 #include "dsstate_seg.h"
+
+/* hal/comms_conductor.cpp's stand-in for the DS's multiplayer menu, declared
+   rather than included because this file needs exactly one function of it and
+   hal/comms_seam.h is a large header. The signature is comms_seam.h:578 and the
+   role values are its kCommsRoleSolo / Parent / Child, 0 / 1 / 2. Why the R2b
+   arm calls it is THE ONE ORDERING REPAIR below. */
+namespace port { void comms_seat_session_request(int role); }
 
 extern "C" {
 
@@ -300,6 +320,11 @@ extern unsigned char data_020a1052[];    // camcomm, last member            0x12
 extern unsigned char data_020a1154[];    // camera_bridges camrec           0xc
 extern unsigned char data_020a11c4[];    // camrec, +0x70 into the run
 extern unsigned char data_020a1064[];    // hal/comms_seam.cpp ywmc11      64
+
+// THE ROLE BYTE src/func_0203db64.c:70 CLEARS. Read before the call and put
+// back after it; the block beside the arm says why that is the DS's order and
+// not a workaround.
+extern unsigned char data_020a0f04[];
 
 // The .rodata island, mounted by port/tools/romdata.py from
 // extracted/arm9_dec.bin. Six records the ROM's own code names, and the eight
@@ -532,7 +557,49 @@ void port_rom_a054_arms(void)
                 for (int i = 0; i < 18; ++i)
                     if (data_020a0fa6[i]) ++fa6_nonzero;
 
+                /* THE ONE ORDERING REPAIR, and it is a real regression this
+                   arm caused before it was written down.
+
+                   src/func_0203db64.c:70 sets data_020a0f04 -- the session
+                   ROLE BYTE -- to 0, because on the cartridge this body runs
+                   at boot and the multiplayer menu seats that byte much later.
+                   This port has no such menu on this path:
+                   hal/comms_loopback.cpp:4533 calls
+                   port::comms_seat_session_request() when a transport is
+                   installed, and that install happens BEFORE the ROM's own
+                   main reaches this seam. So the ROM's boot-time clear landed
+                   on top of the host's menu stand-in, the role read 0 for the
+                   rest of the run, and src/func_0203df40.c took its solo arm
+                   forever: net_proof rung N1 measured it as "LOOPBACK SESSION
+                   STILL FORMS | live masks 0x0/0x0", both ends opening their
+                   sockets and neither ever joining.
+
+                   THE REPAIR IS THE DS'S OWN ORDER, not a save-and-restore
+                   around the ROM's write. The role is read here, the ROM's
+                   body runs and clears it exactly as the cartridge does, and
+                   then the menu stand-in is re-applied THROUGH THE CONDUCTOR'S
+                   OWN FUNCTION -- so the wide-record clear and the
+                   data_02099e1c one-shot it also seats stay consistent with
+                   each other, which a hand-written byte restore would not.
+                   Nothing has read the byte in between: the conductor's own
+                   open and its session wait are both below this seam
+                   (hal/comms_conductor.cpp, "holding the world seat until the
+                   session joins", which the captured run prints after these
+                   lines). A solo run seats nothing and re-seats nothing. */
+                const unsigned char role_before = data_020a0f04[0];
+
                 func_0201fec8();
+
+                if (role_before != 0 && data_020a0f04[0] == 0) {
+                    std::fprintf(stderr,
+                                 "  [rom-a054] R2b re-seating the session "
+                                 "request: src/func_0203db64.c:70 cleared "
+                                 "data_020a0f04 as it does on the cartridge, "
+                                 "and this port's menu stand-in had already run "
+                                 "(role %u). Re-applying it in the DS's own "
+                                 "order.\n", (unsigned)role_before);
+                    port::comms_seat_session_request((int)role_before);
+                }
 
                 std::fprintf(stderr,
                              "  [rom-a054] R2b func_0201fec8: the ROM published "

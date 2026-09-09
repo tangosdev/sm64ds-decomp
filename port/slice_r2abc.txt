@@ -266,6 +266,30 @@ src/func_02013e64.c
 # zeros. That is the direction of travel this port wants, and it is measured by
 # net_proof N0/N1 and the sixteen-wide ladder rather than assumed.
 #
+# AND ONE REGRESSION THIS RUNG CAUSED, CAUGHT BY net_proof RUNG N1 BEFORE THE
+# GATE AND FIXED IN THE ARM. src/func_0203db64.c:70 clears the session ROLE
+# BYTE data_020a0f04, which is right on the cartridge: this body runs at boot
+# and the DS's multiplayer menu seats that byte long afterwards. This port has
+# no such menu on the loopback path -- hal/comms_loopback.cpp:4533 seats it when
+# a transport is installed, and that install runs BEFORE the ROM's own main
+# reaches the a054 seam. So the ROM's boot clear landed on top of the host's
+# stand-in: both ends opened their sockets, neither joined, live masks 0x0/0x0
+# and "the session did not come up within 600 turns" in both logs.
+#
+# The arm re-applies the stand-in AFTER the ROM's own clear, through the
+# conductor's own port::comms_seat_session_request, so the order on this port
+# becomes the DS's: the ROM clears at boot, the menu seats after it. It goes
+# through that function rather than restoring the byte by hand because the same
+# call also clears the wide records 4..15 and seats the data_02099e1c one-shot,
+# and those three have to stay consistent with each other. A solo run seats
+# nothing and re-seats nothing.
+#
+# THE GENERAL SHAPE, worth carrying: every host stand-in for something the DS
+# does LATER than the ROM's boot is exposed to any boot arm this plan seats
+# next. hal/rom_main.cpp's header records the mirror image of this for
+# data_0209b3ec, where the host's hand seed would overwrite the ROM's value if
+# the seam moved. R2e and R2f will meet more of them.
+#
 # THE FOUR TUs.
 src/func_0201fec8.c
 src/func_0203db64.c
