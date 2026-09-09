@@ -673,6 +673,17 @@ static bool det_vblframe() {
     return v != 0;
 }
 
+// Run link100, lane DET2, rung 1. ON by default; SM64DS_DET2_OWED1=0 puts the
+// exact-divider frame-wait bound back on the same binary. See step 4.
+static bool det2_owed1() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_DET2_OWED1");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v != 0;
+}
+
 void starve_wake() {
     ++g_stat.starved;
     bool any = false;
@@ -1034,9 +1045,34 @@ void _ZN4CP1516WaitForInterruptEv(void) {
     // not fixed here -- but it is DETERMINISTIC, which is what the rung asks.
     //
     // SM64DS_DET_FRAMEWAIT=0 restores the old reading on the same binary.
+    //
+    // AND THE ALLOWANCE IS ONE HALT WIDER THAN THE DIVIDER (run link100, lane
+    // DET2, rung 1). The two counters this bound compares are stepped in the
+    // same statement pair of step 2 above -- the edge is counted immediately
+    // before the handler is called, and the handler's first line is
+    // `data_0209d514 = data_0209d514 + 1` -- so on the wait's Nth halt the
+    // allowance reads N and the ROM's own count reads N as well, and the ROM's
+    // wake fires from INSIDE that call on the halt where both reach the
+    // divider. The bound is therefore reached only on a halt where the ROM's
+    // count says the wake was due and the wake did not happen, and there is
+    // exactly one way for that: OS_WakeupThread(&data_0209d500) with an EMPTY
+    // queue word does not reschedule (src/OS_WakeupThread.c:23 returns without
+    // calling func_02057f54 when *self is 0), so the handler runs to its end,
+    // returns, and this bound ends the frame instead of the ROM's wake.
+    // Giving the wait one halt beyond the divider hands that frame back to the
+    // ROM: the handler's own test is true again on the next halt, and if the
+    // sleeper's bit has arrived by then the ROM's wake is what ends the frame.
+    // Liveness is unchanged in kind -- the wait still cannot spin -- it is one
+    // turn longer. MEASURED on solo level 1, 300 frames, nothing exported: the
+    // census is identical with the slack on and off (halts=598 vbl_enter=598
+    // vbl_dispatch=597 vbl_wakes=0 starved=0 both ways), because on that path
+    // the queue word is never empty when the wake is due and the bound is
+    // never reached at all. SM64DS_DET2_OWED1=0 puts the exact-divider bound
+    // back on the same binary.
     if (data_0209d4f0[0] != 0 && det_framewait()) {
         const int fdiv = data_0208ee44;
-        const unsigned owed = (fdiv > 0 && fdiv <= 8) ? static_cast<unsigned>(fdiv) : 1u;
+        unsigned owed = (fdiv > 0 && fdiv <= 8) ? static_cast<unsigned>(fdiv) : 1u;
+        if (det2_owed1()) owed += 1u;
         if (g_frame_wait_edges >= owed) {
             g_starve = 0;
             g_frame_wait_edges = 0;

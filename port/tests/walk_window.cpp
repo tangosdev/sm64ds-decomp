@@ -1591,6 +1591,7 @@ extern "C" int data_0208ee44;
 static int r3e_rom_loop_sleeps;
 static int r3e_sound_moved;      /* rung E2 duty 1: sound frames run at phase 9 */
 static int r3e_census_done;
+static int det2_boundary_done;    /* run link100, lane DET2: the frame-boundary words, once */
 static int g_pace_div_override;   /* see frame_pace, rung E1 */
 /* THE KNOB ITSELF MOVED TO hal/rom_frame.cpp (rung G1, lane R3G), and the move
    is a LINK fact rather than a tidy-up: rung G1 puts the same phase 7 into
@@ -14186,6 +14187,39 @@ int main(void)
            frame, which is what phase 7 is. Under R3d the flag's two writes
            are func_020197b8's own lines and this pair goes. */
         data_0209d4f0[0] = 0;
+        /* THE FRAME BOUNDARY'S OWN WORDS (run link100, lane DET2). One shot,
+           late enough in the run to be steady state, taken at exactly the point
+           src/func_020197b8.c:58-59 sits -- after phase 7's wait and after the
+           flag's drop -- and reporting the words that line reads:
+
+               if ((*(int*)(data_0209ee90 + 0x108) & 0x10) == 0)
+                   data_0209d514 = 0;
+
+           THIS LOOP DOES NOT TRANSCRIBE THAT LINE and func_020197b8 is not the
+           function running the frame, so the ROM's own zeroing of the VBlank
+           count never happens here: the only thing that puts data_0209d514
+           back is IRQ::VBlankHandler's own reset at
+           src/_ZN3IRQ13VBlankHandlerEv.c:18, one statement after the wake. So
+           this line is the direct reading of whether that reset lands inside
+           the frame it belongs to (d514 = 0 at the boundary, which is what a
+           cartridge shows) or one frame late (d514 = the divider). */
+        if (port_rom_loop_enabled() && !det2_boundary_done &&
+            port_rom_frame() >= 250) {
+            det2_boundary_done = 1;
+            const int gate = data_0209ee90[0x108 / 4];
+            fprintf(stderr,
+                    "[det2] frame-loop words at func_020197b8.c:58, frame %d: "
+                    "data_0209d514=%d data_0208ee44=%d data_0209d500=%04x "
+                    "*(data_0209ee90+0x108)=%08x &0x10=%d -- the ROM's line "
+                    "would %s\n",
+                    port_rom_frame(), *(const int *)data_0209d514,
+                    data_0208ee44,
+                    (unsigned)(data_0209d500[0] | (data_0209d500[1] << 8)),
+                    (unsigned)gate, (gate & 0x10) ? 1 : 0,
+                    (gate & 0x10) ? "leave data_0209d514 alone"
+                                  : "zero data_0209d514");
+            fflush(stderr);
+        }
         /* RUNG E2, DUTY 1: phase 9, at the ROM's own point -- after the wait
            and after the flag's drop, which is func_020197b8.c:66-68. */
         if (port_rom_loop_enabled() && r3e_sound_at_phase9()) {
