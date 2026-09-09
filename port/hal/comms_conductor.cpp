@@ -1541,10 +1541,40 @@ ThreadPump g_prev_pump = nullptr;
 // A PREVIOUSLY INSTALLED PUMP KEEPS ITS VOTE. Nothing in the shipped binaries
 // installs one today (only tests/mp_sleepwake.cpp does), but if something ever
 // does it knows how many turns it needs and this must not overrule it.
+// AND THE VOTE WAS NOT ENOUGH: THE TURN HAS TO BE SPENT HERE. Run link100,
+// lane VS7, and this is the cause of the vs7_rtt160 / relay7_rtt160 drop.
+//
+// The paragraph above returns TRUE to mean "the VBlank has not come yet, keep
+// pumping". That vote is read in exactly one place -- hal/boot2_thread.cpp's
+// CP15::WaitForInterrupt, step 1, where a false sets `pump_stop` -- and
+// pump_stop is not consulted until STEP 4. Steps 2 and 3 run first and
+// unconditionally: step 2 raises the VBlank edge and dispatches the ROM's
+// handler, step 3 sees the sleeper on data_0209d4fc and calls OS_WakeupThread,
+// which returns before step 4 is ever reached. So the sleeper wakes on the
+// FIRST halt turn no matter what this function votes, and one ROM wait turn
+// costs one ::Sleep(1) rather than one VBlank.
+//
+// MEASURED, on the vs7_rtt160 row at 0fd400210, by the bound-expiry instrument
+// in hal/comms_conductor_wide.cpp: "turns=300 with_data=0 wall=219 ms". The
+// ROM's own bound on this path is 300 turns (src/func_0203ea5c.c:157-161 picks
+// 0x12C because src/func_0203db64.c:149 sets data_020a0ef0), and on the DS a
+// turn is one OS_SleepThread on the per-VBlank queue -- so the cartridge's
+// number is 300 VBlanks, FIVE SECONDS of silence before it drops to solo. The
+// port was spending it in 0.22 s, twenty-three times too fast, and a
+// seven-window session at 160 ms RTT does not have its first round in 0.22 s.
+// Four windows at 160 ms and seven at 80 ms fitted inside the compressed
+// window and so never showed it; the width was the trigger, not the defect.
+// The thread census on the same run says the same thing from the other side:
+// halts=2965, pump=2965, vbl_wakes=2964 -- one wake per pump call, every time.
+//
+// SO THE SILENT CONNECTED TURN NOW BLOCKS HERE until the VBlank boundary,
+// polling the transport as it waits, and returns once. Nothing about the
+// intent changes -- the paragraph above is still exactly what this does -- it
+// is just done by spending the time instead of by asking the caller to. The
+// datagram wake is unchanged and still the DS's radio IRQ: the loop breaks the
+// moment comms_wire_activity() moves, so a round still completes within a
+// millisecond of the peer's block landing.
 enum : unsigned { kVBlankMs = 16 };   // the DS frame, floor(1000 / 59.83)
-unsigned      g_turn_start_ms = 0;
-uint64_t      g_turn_act      = 0;
-bool          g_turn_open     = false;
 
 bool conductor_pump(unsigned spin) {
     const CommsTransport *t = comms_transport();
@@ -1563,22 +1593,19 @@ bool conductor_pump(unsigned spin) {
 
     const int st = t ? t->state() : kCommsIdle;
     if (st == kCommsParentConnected || st == kCommsChildConnected) {
-        const unsigned now = (unsigned)GetTickCount();
-        if (!g_turn_open) {
-            g_turn_open     = true;
-            g_turn_start_ms = now;
-            g_turn_act      = comms_wire_activity();
-        }
-        if (comms_wire_activity() != g_turn_act) {
-            g_turn_open = false;         // the radio IRQ: a datagram landed
-            return false;
-        }
-        if ((unsigned)(now - g_turn_start_ms) < kVBlankMs) {
+        const unsigned start = (unsigned)GetTickCount();
+        const uint64_t act = comms_wire_activity();
+        for (;;) {
+            if (comms_wire_activity() != act)
+                break;                   // the radio IRQ: a datagram landed
+            if ((unsigned)((unsigned)GetTickCount() - start) >= kVBlankMs)
+                break;                   // one silent VBlank; the bound ticks
             ::Sleep(1);                  // wall time, so the peer can answer
-            return true;                 // the VBlank has not come yet
+            if (t)
+                t->poll();               // and so it can be HEARD while we wait
+            comms_arm7_turn();
         }
-        g_turn_open = false;
-        return false;                    // one silent VBlank; the bound ticks
+        return false;
     }
     ::Sleep(1);                          // unconnected: the old pace, see above
     return false;
