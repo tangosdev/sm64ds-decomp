@@ -45,8 +45,14 @@ Everything the merge gate runs, in order, stopping at the first failure:
                       older romdata blob, which is a stale directory rather
                       than a broken change and used to arrive as a runtime
                       refusal an hour in (shipcfg_stale_kit). --no-shipcfg opts
-                      out, loudly. The long form is at THE SHIPPING
-                      CONFIGURATION below
+                      out, loudly. The configure step itself is skipped only
+                      when build/port-kit/CMakeCache.txt PROVES it is still
+                      configured PORT_ROM_CLEAN, Release and the static CRT
+                      under Ninja (shipcfg_configure_decision); any
+                      disagreement, missing key or missing cache runs the full
+                      configure instead of trusting a present build.ninja
+                      alone. The long form is at THE SHIPPING CONFIGURATION
+                      below
 
     python port/tools/battery.py [repo-root] [--linked-floor N] [--skip-build]
                                  [--no-shipcfg]
