@@ -11,12 +11,13 @@ extern void func_02012694(int a, void* b);
 extern void ApproachAngle(short* a, short b, short c, short d, int e);
 extern int data_ov078_0212703c[];
 extern int data_ov078_0212710c[];
+extern int func_ov078_02123804(char *c);
 
 
 
 int func_ov078_02123aa0(char* c){
     short ang = Vec3_HorzAngle(c+0x5c, c+0x4e0);
-    if(_ZN13MontyMoleRockD0Ev(c) == 1) return 1;
+    if(func_ov078_02123804(c) == 1) return 1;
     char* p = _ZN8dActor_c13ClosestPlayerEv(c);
     if(p != 0){
         struct Vector3 v = *(struct Vector3*)(p+0x5c);
