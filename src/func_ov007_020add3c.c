@@ -1,4 +1,4 @@
-extern int func_ov007_020ae558(void);
+extern int func_ov007_020ae558(char *self);
 extern void func_ov007_020ae834(void* p);
 extern void func_ov007_020ae2d0(void* c);
 extern void func_ov007_020ae070(void* c);
@@ -9,7 +9,7 @@ extern void func_ov007_020ae454(void* c);
 
 void func_ov007_020add3c(char* c)
 {
-    int r = func_ov007_020ae558();
+    int r = func_ov007_020ae558(c);
     *(short*)(*(char**)(P0+4)+2) = (short)r;
     func_ov007_020ae834(P0);
     switch (*(short*)(*(char**)(P0+4))) {
