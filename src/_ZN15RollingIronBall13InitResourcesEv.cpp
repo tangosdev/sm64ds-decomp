@@ -1,5 +1,11 @@
 //cpp
 // @symbol _ZN15RollingIronBall13InitResourcesEv
+// NONMATCHING: candidate is 4 bytes (one instruction) larger than the ROM under the
+// pinned 2004/b56 (0x390 vs 0x38c). The two streams agree through +0x5c; at +0x60 the
+// candidate emits an extra `add r1, r4, #8` the ROM body does not have, and every
+// instruction after that point is shifted 4 bytes for the rest of the function. Never
+// enrolled (config/arm9/overlays/ov100/delinks.txt carries no `complete` marker for this
+// range) -- counted as matched only because the count rule never read delinks.txt.
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_PathPtr.h"
 #include "decl_dBgCh_Actr.h"
