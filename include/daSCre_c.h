@@ -7,8 +7,9 @@
 extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 /**
- * Star-create trigger. When Mario is close enough it spawns the star
- * and deletes itself.
+ * Star-create trigger. One shot: spawn the star when the closest player
+ * is strictly within 100 units, then mark this trigger for removal
+ * regardless.
  */
 struct daSCre_c : dActor_c {
     u8 pad_0d0[0x4];       /* 0x0d0 unused */
@@ -16,6 +17,9 @@ struct daSCre_c : dActor_c {
     virtual ~daSCre_c() {}
     virtual s32 Behavior();
 
+    /* In-class operator new is unsigned long (C++). The actor-heap
+       allocator is _ZN7fBase_cnwEj (unsigned int). The cast is that
+       bridge; the factory stays `return new daSCre_c`. */
     static void *operator new(unsigned long size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

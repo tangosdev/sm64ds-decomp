@@ -2,13 +2,17 @@
 /**
  * Star-create trigger.
  *
- * When Mario is close enough it spawns the star at this position and
- * deletes itself.
+ * One shot: if the closest player is strictly within 100 units, spawn
+ * the star at this position. Then mark this trigger for removal either
+ * way.
  *
  * daSCre_c_classInit is reconstructed (RTTI daSCre_c, STAR_CREATE
  * registry). Retail does not store that spelling.
  *
  * deslop
+ * Leftover: Pos() overlays mPosX/Y/Z (a stack Vector3 DIFF'd).
+ * Leftover: in-class operator new takes unsigned long and forwards to
+ *   _ZN7fBase_cnwEj (unsigned int). Keep `return new daSCre_c`.
  */
 
 #include "daSCre_c.h"
