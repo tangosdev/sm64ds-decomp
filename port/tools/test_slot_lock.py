@@ -4,8 +4,18 @@
 These test the LOCK MECHANISM directly and need no ROM, no compiler and no
 walk_window.exe: acquire blocks a second acquire, release frees it, the timeout
 fires, and a stale lock (dead holder pid, or a lockfile older than the max-hold
-bound) is detected and broken. Run with: pytest port/tools/test_slot_lock.py
+bound) is detected and broken, and the wait is FAIR -- waiters are served in
+arrival order, a dead waiter's ticket does not block a live one behind it, and
+an old (pre-ticket) client can still barge the plain lock the moment it is
+free, which is the accepted compatibility shape (run link100, lane SLOTQ; see
+FAIRNESS in slot_lock.py's module docstring). Run with:
+pytest port/tools/test_slot_lock.py
+
+The sibling of port/tools/test_build_lock.py, which does the same for the one
+full-build lock; both locks share their ticket-queue engine through
+port/tools/lock_tickets.py.
 """
+import io
 import json
 import os
 import subprocess
@@ -15,6 +25,7 @@ import time
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import slot_lock
+import lock_tickets
 
 # Runnable with pytest (the repo convention for tools/test_*.py) OR, where
 # pytest is not installed, as a plain script -- `python port/tools/test_slot_lock.py`
@@ -64,6 +75,25 @@ def lockfile(tmp_path, monkeypatch):
     # release() only removes a file this pid owns; clean up any test-written one.
     if os.path.exists(path):
         os.remove(path)
+    # and any queue ticket a test planted, so nothing leaks into the next test.
+    tdir = slot_lock.tickets_dir(str(path))
+    if os.path.isdir(tdir):
+        for name in os.listdir(tdir):
+            try:
+                os.remove(os.path.join(tdir, name))
+            except OSError:
+                pass
+
+
+def _plant_ticket(lockfile, arrival_ns, pid, label="planted"):
+    """Plant a queue ticket somebody else is supposed to own."""
+    tdir = slot_lock.tickets_dir(lockfile)
+    os.makedirs(tdir, exist_ok=True)
+    full = os.path.join(tdir, lock_tickets.ticket_name(arrival_ns, pid))
+    with open(full, "w", encoding="utf-8") as f:
+        json.dump({"pid": pid, "host": "test", "label": label,
+                   "arrived": arrival_ns / 1e9}, f)
+    return full
 
 
 def _write_lock(path, pid, acquired=None, label="planted"):
@@ -370,6 +400,238 @@ def test_a_declaration_cannot_shorten_the_leash(lockfile):
     slot_lock.release(lockfile)
 
 
+# --- FAIRNESS: the ticket queue (run link100, lane SLOTQ) -----------------
+# A lane running a proof that took the slot once per rung (ipc_proof) lost the
+# poll race against other lanes' batteries for 100+ minutes and never
+# completed a rung: a release went to whichever process happened to poll next,
+# not to the one that had waited longest. slot_lock.py ports build_lock.py's
+# arrival-ticket fix onto the windowed slot via the shared
+# port/tools/lock_tickets.py engine -- these tests are the slot-specific half
+# of test_build_lock.py's fairness coverage, plus the compatibility case that
+# is unique to this lock: other lanes are running the OLD (pre-ticket)
+# slot_lock.py against this exact lockfile tonight.
+
+def test_tickets_dir_sits_beside_the_lockfile(lockfile):
+    tdir = slot_lock.tickets_dir(lockfile)
+    assert os.path.dirname(tdir) == os.path.dirname(lockfile)
+    assert os.path.basename(tdir) == "windowed_test.tickets"
+
+
+def test_uncontended_acquire_writes_no_ticket(lockfile):
+    # The no-ticket path must be exactly what it was before the queue existed:
+    # nobody waiting, so the slot is taken on the first attempt and the ticket
+    # directory is not even created.
+    path = slot_lock.acquire(label="alone", timeout=2)
+    assert os.path.exists(path)
+    assert slot_lock.queue(lockfile) == []
+    assert not os.path.isdir(slot_lock.tickets_dir(lockfile))
+    slot_lock.release(path)
+
+
+def test_three_waiters_acquire_the_slot_in_arrival_order(lockfile):
+    # THE GATE CASE. Three real processes queue behind a holder (this process)
+    # and are released together. The FIRST arrival deliberately polls SLOWEST
+    # (0.5s) and the two behind it poll fastest (0.02s), so under the old
+    # re-poll rule the first arrival would essentially never win the create;
+    # under the ticket rule it goes first every time -- this is the exact
+    # shape of the starvation lane WM6 measured against ipc_proof.py.
+    here = os.path.dirname(os.path.abspath(__file__))
+    worker = os.path.join(os.path.dirname(lockfile), "slot_fair_worker.py")
+    with open(worker, "w", encoding="utf-8") as f:
+        f.write(
+            "import os, sys, time\n"
+            "sys.path.insert(0, sys.argv[5])\n"
+            "import slot_lock\n"
+            "label, delay, out = sys.argv[1], float(sys.argv[2]), sys.argv[4]\n"
+            "poll = float(sys.argv[3])\n"
+            "time.sleep(delay)\n"
+            "p = slot_lock.acquire(label=label, timeout=90, poll=poll)\n"
+            "with open(out, 'a', encoding='utf-8') as fh:\n"
+            "    fh.write(repr(time.time()) + ' ' + label + chr(10))\n"
+            "    fh.flush()\n"
+            "    os.fsync(fh.fileno())\n"
+            "time.sleep(0.2)\n"
+            "slot_lock.release(p)\n")
+    order_file = os.path.join(os.path.dirname(lockfile), "slot_fair_order.txt")
+    env = dict(os.environ)
+    env["SM64DS_TEST_LOCK_PATH"] = lockfile
+    path = slot_lock.acquire(label="fair-holder", timeout=5)
+    waiters = []
+    try:
+        for i, (label, poll) in enumerate((("fair-w1", "0.5"), ("fair-w2", "0.02"),
+                                           ("fair-w3", "0.02")), start=1):
+            waiters.append(subprocess.Popen(
+                [sys.executable, worker, label, "0", poll, order_file, here],
+                env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
+            spent = 0.0
+            while len(slot_lock.queue(lockfile)) < i and spent < 30:
+                time.sleep(0.05)
+                spent += 0.05
+            assert len(slot_lock.queue(lockfile)) == i, f"{label} never queued"
+        assert [t["label"] for t in slot_lock.queue(lockfile)] == \
+            ["fair-w1", "fair-w2", "fair-w3"]
+        slot_lock.release(path)          # the holder lets go; the queue drains
+        for w in waiters:
+            assert w.wait(timeout=90) == 0
+        rows = [ln.split() for ln in
+                open(order_file, encoding="utf-8").read().splitlines() if ln.strip()]
+        assert [r[1] for r in rows] == ["fair-w1", "fair-w2", "fair-w3"]
+        stamps = [float(r[0]) for r in rows]
+        assert stamps == sorted(stamps)
+        assert slot_lock.queue(lockfile) == []    # each removed its own ticket
+        assert not os.path.exists(lockfile)       # and the last one released
+    finally:
+        for w in waiters:
+            if w.poll() is None:
+                w.terminate()
+                w.wait()
+        slot_lock.release(lockfile)
+
+
+def test_a_fresh_arrival_does_not_barge_past_an_older_ticket(lockfile):
+    # THE DEFECT (mirrors test_build_lock.py). The slot is FREE, but a live
+    # waiter arrived first and holds a ticket. A fresh NEW-STYLE arrival must
+    # wait its turn and time out rather than take the free slot from under it.
+    sleeper = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        _plant_ticket(lockfile, time.time_ns() - 5 * 10**9, sleeper.pid,
+                      label="arrived-first")
+        assert not os.path.exists(lockfile)
+        t0 = time.time()
+        with pytest.raises(slot_lock.SlotLockTimeout):
+            slot_lock.acquire(label="barger", timeout=0.6, poll=0.05)
+        assert time.time() - t0 >= 0.5
+        assert not os.path.exists(lockfile)       # left free for the waiter
+        assert [t["label"] for t in slot_lock.queue(lockfile)] == ["arrived-first"]
+    finally:
+        sleeper.terminate()
+        sleeper.wait()
+
+
+def test_stale_ticket_dead_pid_does_not_block_a_live_waiter(lockfile):
+    # A killed waiter must not wedge the queue behind it: its ticket is stale
+    # by the dead-pid rule and is broken with a loud line naming it, so a
+    # younger LIVE waiter gets the slot instead of waiting on a dead one.
+    _plant_ticket(lockfile, time.time_ns() - 5 * 10**9, 0x7FFFFFFF,
+                 label="killed-waiter")
+    assert len(slot_lock.queue(lockfile)) == 1
+    err = io.StringIO()
+    import contextlib
+    with contextlib.redirect_stderr(err):
+        path = slot_lock.acquire(label="younger", timeout=2, poll=0.05)
+    assert slot_lock._read_holder(path)[0] == os.getpid()
+    assert "BROKE STALE TICKET" in err.getvalue()
+    assert "killed-waiter" in err.getvalue()
+    assert slot_lock.queue(lockfile) == []
+    slot_lock.release(path)
+
+
+def test_timed_out_waiter_removes_its_ticket(lockfile):
+    sleeper = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        with open(lockfile, "w", encoding="utf-8") as f:
+            json.dump({"pid": sleeper.pid, "host": "test", "acquired": time.time(),
+                       "label": "foreign-holder"}, f)
+        with pytest.raises(slot_lock.SlotLockTimeout):
+            slot_lock.acquire(label="gives-up", timeout=0.6, poll=0.05)
+        assert slot_lock.queue(lockfile) == []
+    finally:
+        sleeper.terminate()
+        sleeper.wait()
+
+
+def test_status_lists_the_queue_after_the_holder(lockfile):
+    # `status` is how a lane sees WHY it is waiting and how far down it is.
+    import contextlib
+    sleeper = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        with open(lockfile, "w", encoding="utf-8") as f:
+            json.dump({"pid": sleeper.pid, "host": "test", "acquired": time.time(),
+                       "label": "the-holder"}, f)
+        _plant_ticket(lockfile, time.time_ns() - 2 * 10**9, sleeper.pid,
+                      label="waiter-one")
+        _plant_ticket(lockfile, time.time_ns(), sleeper.pid, label="waiter-two")
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            assert slot_lock.main(["status"]) == 0
+        text = out.getvalue()
+        assert "the-holder" in text
+        assert text.index("the-holder") < text.index("waiter-one") < \
+            text.index("waiter-two")
+        assert "2 waiting" in text
+        assert len(slot_lock.queue(lockfile)) == 2   # reading did not change it
+    finally:
+        sleeper.terminate()
+        sleeper.wait()
+
+
+def test_a_waiting_ticket_holder_prints_its_queue_position(lockfile, monkeypatch):
+    # THE GATE CASE: "a ticket holder's wait line prints its position."
+    # WAIT_NOTICE_SECONDS is normally 60s; shrink it so the periodic notice
+    # fires inside a short test.
+    monkeypatch.setattr(slot_lock, "WAIT_NOTICE_SECONDS", 0.05)
+    sleeper = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        with open(lockfile, "w", encoding="utf-8") as f:
+            json.dump({"pid": sleeper.pid, "host": "test", "acquired": time.time(),
+                       "label": "the-holder"}, f)
+        # An older ticket ahead of us, so our own queue position is 2.
+        _plant_ticket(lockfile, time.time_ns() - 5 * 10**9, sleeper.pid,
+                      label="ahead-of-us")
+        err = io.StringIO()
+        import contextlib
+        with contextlib.redirect_stderr(err):
+            with pytest.raises(slot_lock.SlotLockTimeout):
+                slot_lock.acquire(label="behind", timeout=0.5, poll=0.05)
+        out = err.getvalue()
+        assert "waiting" in out and "windowed test slot" in out
+        assert "queue position 2 of 2" in out
+    finally:
+        sleeper.terminate()
+        sleeper.wait()
+
+
+def test_old_style_client_barges_a_free_lock_past_ticket_holders(lockfile):
+    # THE GATE CASE: "an old-style client holding the plain lock is honoured
+    # by ticket holders." An old (pre-ticket) slot_lock.py never reads or
+    # writes the ticket queue -- its acquire loop is exactly slot_lock.py's
+    # own _try_create(), the primitive that both old and new clients share and
+    # that this refactor left byte-for-byte unchanged. So an old client acting
+    # while a new client's ticket is queued is simulated here by calling
+    # _try_create directly (bypassing the fairness gate entirely, as old code
+    # does): it still takes a free lock even though a ticket is ahead of it in
+    # line -- the accepted compatibility shape documented in slot_lock.py's
+    # FAIRNESS section, not a bug.
+    _plant_ticket(lockfile, time.time_ns() - 5 * 10**9, os.getpid() + 1,
+                  label="new-style-waiter")
+    assert not os.path.exists(lockfile)
+    ok = slot_lock._try_create(lockfile, "old-style-client", None)
+    assert ok is True
+    pid, _, _ = slot_lock._read_holder(lockfile)
+    assert pid == os.getpid()
+    # The ticket holder's place in line is untouched by the old client barging.
+    assert [t["label"] for t in slot_lock.queue(lockfile)] == ["new-style-waiter"]
+    slot_lock.release(lockfile)
+
+
+def test_a_queue_that_cannot_be_written_fails_open(lockfile, monkeypatch):
+    # Fairness must never fail CLOSED: if the ticket directory cannot be
+    # written, a waiter that could not take a place in line goes back to
+    # first-to-poll-wins rather than waiting out a turn it can never get.
+    sleeper = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        _plant_ticket(lockfile, time.time_ns() - 5 * 10**9, sleeper.pid,
+                      label="arrived-first")
+        monkeypatch.setattr(lock_tickets, "write_ticket",
+                            lambda *a, **k: (None, OSError("nope")))
+        path = slot_lock.acquire(label="ticketless", timeout=2, poll=0.05)
+        assert os.path.exists(path)                 # it acquired, unfairly
+        slot_lock.release(path)
+    finally:
+        sleeper.terminate()
+        sleeper.wait()
+
+
 # --- no-pytest standalone runner -----------------------------------------
 # When pytest is not installed this drives the same test bodies with a minimal
 # tmp_path + monkeypatch, so the lock logic can be proven anywhere Python runs.
@@ -379,9 +641,12 @@ def _standalone():
     import tempfile
     import traceback
 
+    import builtins
+
     class _Monkeypatch:
         def __init__(self):
             self._env = []
+            self._attrs = []
 
         def setenv(self, k, v):
             self._env.append((k, os.environ.get(k)))
@@ -391,7 +656,13 @@ def _standalone():
             self._env.append((k, os.environ.get(k)))
             os.environ.pop(k, None)
 
+        def setattr(self, obj, name, value):
+            self._attrs.append((obj, name, getattr(obj, name)))
+            builtins.setattr(obj, name, value)
+
         def undo(self):
+            for obj, name, old in reversed(self._attrs):
+                builtins.setattr(obj, name, old)
             for k, old in reversed(self._env):
                 if old is None:
                     os.environ.pop(k, None)
