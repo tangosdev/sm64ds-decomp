@@ -11,8 +11,10 @@ replacement writers for these classes or release its resources.
   issue https://github.com/tangosdev/sm64ds-decomp/issues/2411.
 - Producer `codex-humanizer-oneup-20260907-01`; scoped coordinator
   `codex-humanizer-fixes-20260907-01`; `fleet-0907` retains global coordination.
-- Branch `cpp/humanizer-oneup-0907`, wired worktree
-  `C:/tmp/sm64ds-humanizer-oneup-0907`.
+- Originating branch `cpp/humanizer-oneup-0907`, wired worktree
+  `C:/tmp/sm64ds-humanizer-oneup-0907`. The reworked candidate continues on
+  branch `cpp/humanizer-oneup-0908-repair` in worktree
+  `C:/tmp/sm64ds-oneup-prod-0908`.
 - Adopted input `19df96cc21d5e2a87a97a22d4de67191319505bd`, task source base
   `26f54f8fc8faaf00568e86d33f37860a46470906`, workflow/tools
   `f327f7b6460e157153eb7fc0749dbbe60dd854f1`.
@@ -97,7 +99,75 @@ ov004 calls consume its result. Goomba remains an unmigrated free hook; only its
 header explanation changed. Its earlier int-versus-void 4-byte experiment is
 preserved as historical evidence, not new acceptance of Goomba.
 
+## Repairs after independent integration review
+
+An independent integrator failed candidate `6bf546d78` and reworked the task.
+Three repairs landed on branch `cpp/humanizer-oneup-0908-repair` in worktree
+`C:/tmp/sm64ds-oneup-prod-0908`.
+
+- **The `dead-references` gate** was exit 1 on this branch while exit 0 on
+  `origin/main` and at base `26f54f8fc`. `PATH_RE` in
+  `tools/check_dead_references.py` excludes `+`, so the Koopa translation unit
+  cited in the section above is truncated at the plus and the truncation is
+  reported as a path that is not in the tree. Eight tracked files carry `+` in
+  the name and that regex can express none of them, so the citation is right.
+  Banked the exact (citing file, referenced path) pair in
+  `config/dead-reference-baseline.json`, the remedy that tool's own docstring
+  names, with direct precedent one entry above for the identical truncation of
+  the `EnemySpawner` translation unit. The prose was not reworded and the tool
+  was not changed. `python tools/check_dead_references.py` now exits **0**.
+- **The queue row.** This branch's `da1up_c` row in
+  `notes/data/tu-promotion-queue.tsv` wrote `total_lines 1295`;
+  `tools/queue_audit.py` derives **1284** from the three source files covering
+  ov002 `0x20aee40`-`0x20b05d0`. Corrected to the derived value, after which
+  `queue_audit` reports five disagreeing rows instead of six. The five that
+  remain (ChiefChilly, Crate, Coin, Player, daGmch_c) carry the same values on
+  `origin/main`, so they are not this branch's to move and were left alone.
+- **The merge.** Merged `origin/main` at `c52f63ca5`, 94 commits ahead of the
+  task base. The only conflict was `notes/cpp-tu-current-state.md`, which is
+  machine-generated. Regenerated it with `tools/cpp_tu_state.py --write-note`
+  rather than hand-resolving, and `--check-note` exits **0**. The live counts
+  (170 manifest entries, 9,097 physical production source files) match neither
+  side of the conflict, so a hand-merge would have shipped a wrong number.
+
+### Re-measured after the merge
+
+The build readings recorded in the next section were taken before that merge.
+They do not transfer across 94 commits of `main`, so they were taken again on
+the merged tree. Where a figure below supersedes one in the next section, the
+figure below is the one measured on this tree.
+
+- `tools/check_src_tu_compiles.py`: exit **0**, **170/170** translation units
+  compile. Set-differencing the compiled-unit lists against the base control
+  (exit 0, 159/159) shows **no unit dropped**: the eleven added are the ten
+  `main` enrolled between `26f54f8fc` and `c52f63ca5`, plus this branch's own
+  `ov002/da1up_c`. Comparing totals alone could not have shown that, because a
+  rising total can hide a dropped unit.
+- `tubuild verify` on the four repaired translation units, re-run separately
+  after the merge: `arm9/Actor` **97/97 MATCH**, `ov062/Koopa+KoopaSmall`
+  **39/39 MATCH**, `ov077/Lakitu` **32/32 MATCH**, `ov077/Spiny` **34/34
+  MATCH**, all four objisolate clean, reloc-destinations clean and
+  TEXT-VERIFIED, and all four exit 1 on the same unlicensed compiler-only
+  records. The base control at `26f54f8fc` reproduces every one of those
+  counts, the same unlicensed records and the same exit 1, so the promotion
+  refusal is inherited and not a regression from this branch. `tubuild verify`
+  rewrites the manifests it checks; both worktrees were restored afterwards and
+  `git status --porcelain` confirmed empty before committing.
+- `tools/rombuild.py`: exit **0**, **106/106 modules exact**, 100.000000% of
+  compared bytes, ROM-build analysis PASS, sha256
+  `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`. The ROM
+  was deleted first and confirmed gone before the run, and the rebuilt file's
+  mtime falls inside the build window, so the hash is not read off a failed run
+  that left the previous ROM in place. As `main`'s work landed, source-built
+  functions rose to **11,199** with zero mismatching, source-owned data claims
+  to **25** reproducing with zero mismatching, and whole-tree ROM data to
+  **705** verified, 224 partial, four differing and 387 unnamed by config.
+
 ## Source and host proof
+
+Unless a figure is restated under "Re-measured after the merge" above,
+every reading in this section was measured at pre-merge candidate
+`6bf546d78` on task base `26f54f8fc`, and describes that tree.
 
 The ROM source/header checkpoint is `b9339491fc6c4153715f6e26b596cd5478be5ffa`.
 Subsequent edits remove the obsolete HAL constructor wrapper, mark its
@@ -119,7 +189,8 @@ Independent verification must still pin the final candidate.
   exact wired pre-contract control produces the same eight records and exit 1;
   this audit remains a documented baseline limit, not a green promotion gate.
 - `tools/check_src_tu_compiles.py`: **exit 0, 160/160 translation units compile**
-  after the four `src_tu/` definitions were changed to void. The same command
+  after the four `src_tu/` definitions were changed to void — superseded by the
+  170/170 reading above, which is the same gate on the merged tree. The same command
   exits **1 at 156/160** on candidate `848da2bb8` and **0 at 159/159** on base
   `26f54f8fc`, so the four failures were introduced by the header change and are
   now cleared. This gate proves compilation only; it says nothing about bytes.
@@ -184,7 +255,9 @@ The full command `python tools/rombuild.py -j16 --report-json
 build/humanizer-contract-rombuild.json --data-json
 build/humanizer-contract-romdata-all.json` exits **0** with all standard gates:
 **11,192 source-built functions reproduce, zero mismatch; 23/23 source-owned data
-claims reproduce; three BSS claims; 106/106 modules exact**. It actually packages
+claims reproduce; three BSS claims; 106/106 modules exact**. The first two of
+those counts moved with `main` and read 11,199 and 25 on the merged tree; the
+106/106 and the sha256 below are unchanged there. It actually packages
 `build/sm64ds.nds`, SHA-256
 `d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`, identical to
 the independently regenerated ROM-gap stock control. No `--no-rom` or check
@@ -200,7 +273,8 @@ lost or gained verified identities and identical differing identities. Raw
 records and `ratchet.json` are in `build/humanizer-contract-metadata/`; the control
 has a sibling `metadata/` directory. Partial extent coverage is not exact-data
 proof. Whole-tree build data separately reports 696 VERIFIED, 220 PARTIAL,
-four DIFFERS and 397 UNNAMED; it is not an all-tree metadata clearance.
+four DIFFERS and 397 UNNAMED — 705, 224, four and 387 on the merged tree; it
+is not an all-tree metadata clearance on either.
 
 The host `port/slice_gate9.txt` already includes the native dActor constructor.
 The obsolete HAL constructor wrapper duplicated that owner and called a raw C2
