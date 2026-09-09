@@ -570,6 +570,10 @@
    "ref": "src/unnamed/ov006"
   },
   {
+   "file": "tools/test_validate_merge.py",
+   "ref": "src/__destroy_arr.c"
+  },
+  {
    "file": "tools/trace/actors.py",
    "ref": "include/Actor/ActorBase.h"
   },

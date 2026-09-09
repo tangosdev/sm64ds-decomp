@@ -6,7 +6,7 @@
  * it reverse declaration order out of Unagi.h.
  *
  * The array at 0x448 is Vector3[7] -- the ROM destroys it with
- * __destroy_arr(ptr, 7, 0xc, _ZN7Vector3D1Ev), and 0xc is sizeof(Vector3).
+ * __cxa_vec_cleanup(ptr, 7, 0xc, _ZN7Vector3D1Ev), and 0xc is sizeof(Vector3).
  */
 #include "Unagi.h"
 

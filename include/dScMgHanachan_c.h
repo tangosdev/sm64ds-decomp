@@ -2,7 +2,7 @@
 #define DSCMGHANACHAN_C_H
 #include "dScMgBase_c.h"
 
-/* __destroy_arr / func_ov006_020ea324: the same __destroy_arr(p, count,
+/* __cxa_vec_cleanup / func_ov006_020ea324: the same __cxa_vec_cleanup(p, count,
    elem_size, dtor) idiom dScMgBase_c's own D1/D0 use for touchIcon_0f4 (see
    dScMgBase_c.h's file banner and src/_ZN11dScMgBase_cD1Ev.cpp) -- declared
    here, not per-destructor-file, matching dScMgBase_c.h's own placement of
@@ -12,7 +12,7 @@
  * dScMgHanachan_c_classInit (historical alias MgWhichWiggler_Spawn) installs this class's
  * cartridge vtable for the MG_HANACHAN registry profile.
  */
-extern "C" void __destroy_arr(void *arr, int count, int elemSize, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *arr, int count, int elemSize, void *dtor);
 extern "C" void func_ov006_020ea324(void);
 
 /* dScMgHanachan_c : dScMgBase_c, confirmed leaf via tools/rtti_extract.py
@@ -25,7 +25,7 @@ extern "C" void func_ov006_020ea324(void);
 
    THE DESTRUCTOR IS NON-TRIVIAL, unlike most siblings: this class owns an
    array of 15 elements * 0x98 bytes at its own 0x4678, explicitly destroyed
-   via __destroy_arr in BOTH D1 and D0 (src/_ZN15dScMgHanachan_cD1Ev.cpp and
+   via __cxa_vec_cleanup in BOTH D1 and D0 (src/_ZN15dScMgHanachan_cD1Ev.cpp and
    .../_D0Ev.cpp carry an identical body, same shape dScMgBase_c's own D1/D0
    pair uses) -- the base-D2 call and own-vtable-write are compiler
    generated, and D0's extra Memory::Deallocate comes for free from
@@ -59,7 +59,7 @@ struct dScMgHanachan_c : dScMgBase_c {
     s32 unk_4670;            /* 0x4670 */
     u8  pad_4674[0x4];
     u8  unk_4678[0xf][0x98]; /* 0x4678 -- 15x own-type array, destroyed via
-                                 __destroy_arr in D1/D0; see the class
+                                 __cxa_vec_cleanup in D1/D0; see the class
                                  banner above. */
     void *unk_4f60;          /* 0x4f60 */
     u8  unk_4f64;            /* 0x4f64 */

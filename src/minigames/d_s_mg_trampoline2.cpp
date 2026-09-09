@@ -335,7 +335,7 @@ extern int data_ov006_02137454[];
 extern void *_ZN7fBase_cnwEj(unsigned int size);
 extern void _ZN11dScMgBase_cC2Ev(void *scene);
 extern void _ZN8Particle10SysTrackerC1Ev(void *tracker);
-extern void func_020733a8(void *base, int count, int stride, void *ctor, void *dtor);
+extern void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
 extern int _ZTV14dScMgD3DBase_c[];
 extern void _ZN6Player29TryExitCharacterDoorWithIntroEv(void);
 extern void func_ov006_020d100c(void);
@@ -428,7 +428,7 @@ extern "C" void *func_ov006_021248a8(char *object)
     _ZN5ModelC1Ev(object + 0xf0);
     _ZN5ModelC1Ev(object + 0x140);
     _ZN18TextureTransformerC1Ev(object + 0x194);
-    func_020733a8(object + 0x1a8, 5, 8,
+    __cxa_vec_ctor(object + 0x1a8, 5, 8,
                   (void *)func_0203d738, (void *)NullDestructor_0203d47c);
     return object;
 }
@@ -455,22 +455,22 @@ extern "C" void *dScMgTrampoline2_c_classInit(void)
         }
         _ZN8Particle10SysTrackerC1Ev(scene + 0x47e4);
         *(int *)scene = (int)&_ZTV18dScMgTrampoline2_c[2];
-        func_020733a8(scene + 0x500c, 5, 0xdc,
+        __cxa_vec_ctor(scene + 0x500c, 5, 0xdc,
                       (void *)_ZN6Player29TryExitCharacterDoorWithIntroEv,
                       (void *)func_ov006_020ca604);
-        func_020733a8(scene + 0x5458, 3, 0x32c,
+        __cxa_vec_ctor(scene + 0x5458, 3, 0x32c,
                       (void *)func_ov006_020d100c,
                       (void *)func_ov006_020d1008);
-        func_020733a8(scene + 0x5ddc, 0xa, 0x1d0,
+        __cxa_vec_ctor(scene + 0x5ddc, 0xa, 0x1d0,
                       (void *)func_ov006_021248a8,
                       (void *)func_ov006_021227c8);
-        func_020733a8(scene + 0x6ffc, 0xa, 0x24,
+        __cxa_vec_ctor(scene + 0x6ffc, 0xa, 0x24,
                       (void *)func_ov006_020efc08,
                       (void *)func_ov006_020eed64);
-        func_020733a8(scene + 0x7164, 0x14, 0x78,
+        __cxa_vec_ctor(scene + 0x7164, 0x14, 0x78,
                       (void *)func_ov006_02122c90,
                       (void *)func_ov006_02122c68);
-        func_020733a8(scene + 0x7ad0, 5, 0x24,
+        __cxa_vec_ctor(scene + 0x7ad0, 5, 0x24,
                       (void *)func_ov006_021225a8,
                       (void *)func_ov006_02120938);
     }
@@ -1735,13 +1735,13 @@ extern "C" void func_ov006_02122814(char *c) {
 /* ROM ordinal 2 -- func_ov006_021227c8, 0x021227c8, size 0x4c */
 /* -------------------------------------------------------------------------- */
 extern "C" {
-extern void __destroy_arr(void* a, int b, int c, void* d);
+extern void __cxa_vec_cleanup(void* a, int b, int c, void* d);
 extern void NullDestructor_0203d47c(void);
 extern void _ZN18TextureTransformerD1Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
 // @symbol func_ov006_021227c8
 int func_ov006_021227c8(char* c){
-  __destroy_arr(c+0x1a8, 5, 8, (void*)NullDestructor_0203d47c);
+  __cxa_vec_cleanup(c+0x1a8, 5, 8, (void*)NullDestructor_0203d47c);
   _ZN18TextureTransformerD1Ev(c+0x194);
   _ZN5ModelD1Ev(c+0x140);
   _ZN5ModelD1Ev(c+0xf0);

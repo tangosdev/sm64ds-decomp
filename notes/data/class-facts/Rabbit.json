@@ -1,0 +1,292 @@
+{
+  "class": "Rabbit",
+  "class_name_is_coined": true,
+  "rtti_name": "7daMip_c",
+  "rtti_name_address": "0x021300bc",
+  "scouted_at_base": "Cut at origin/main 2ab05bae3, then origin/main advanced 7 commits to b266ff471 (a tooling and gate PR) while this run was in flight and b266ff471 was MERGED into cpp/Rabbit-tu -- not rebased onto, since the branch was already pushed. Re-derived after the merge: `git diff --stat 2ab05bae3..b266ff471 -- notes/data/tu-promotion-queue.tsv config/tu_manifest.d config/arm9/overlays/ov085 include/Rabbit.h src/ notes/data/class-facts/` is EMPTY, so every tree-derived field below still holds at b266ff471. The seven commits touched only tools/ and one note.",
+  "scout_worktree": "C:/tmp/sm64ds-rabbit-scout on branch cpp/Rabbit-tu",
+
+  "identity_evidence": {
+    "verdict": "`Rabbit` is COINED. The cartridge's class name is daMip_c. Coined names are allowed under PIPELINE.md's disclosure rule; this field is the disclosure. KEEP the `Rabbit` spelling in the source anyway -- see keep_the_coined_spelling below -- and never present it as ROM-proven.",
+    "rom_string": "extracted/overlays/overlay_0085.bin file offset 0x0709c -> address 0x021300bc, bytes 37 64 61 4d 69 70 5f 63 00 = \"7daMip_c\\0\". That is the Itanium length-prefixed _ZTS form: length 7, then the seven characters d a M i p _ c. config/arm9/overlays/ov085/symbols.txt names that address `_ZTS7daMip_c`.",
+    "negative_search": "Scanned 2,179 images: extracted/arm9.bin, extracted/arm9_dec.bin, extracted/arm7.bin, all 103 extracted/overlays/*.bin, and all 2,073 files under extracted/dsd/files. Byte patterns and results -- b'Rabbit' (case-sensitive): 0 hits. b'rabbit' with re.IGNORECASE (so Rabbit/RABBIT/rabbit all match): 0 hits. b'6Rabbit\\x00' (the length-prefixed _ZTS form a class named Rabbit would emit): 0 hits. b'9RabbitKey\\x00': 0 hits. So the word `rabbit` does not occur in this cartridge in ANY case, in code, in data or in the filesystem. By contrast b'daMip_c' (case-sensitive): exactly 1 hit, overlay_0085.bin 0x0709d, inside the b'7daMip_c\\x00' hit at 0x0709c. b'mip' case-folded: 38 hits, of which the load-bearing ones are the asset paths in overlay_0000.bin -- 'data/enemy/mip/mip.bmd' (0x006df), 'mip_run.bca' (0x018c3), 'mip_wait.bca' (0x021d7), 'mip_hold.bca' (0x02637), 'mip_run_ed.bca' (0x03d17) -- and the profile-name strings 'MIP' and 'OBJ_MIP_KEY' in arm9_dec.bin. `mip` is the cartridge's own word for this actor; `rabbit` is ours.",
+    "profile_name_is_rom_attested": "The arm9 profile-name table at 0x02090e80 (an array of char* into arm9 rodata; found by locating the string 'MIP' at 0x0208f678 and the single pointer to it at 0x0209116c) has index (0x0209116c-0x02090e80)/4 = 187 = 0xbb. g_profile_MIP at 0x021300d4 carries 0x005300bb at +0x04, low half 0x00bb = 187. Neighbouring indices read KINOPIO(185), PEACH_PRINCESS(186), MIP(187), RACE_NOKO(188) -- the same order ov085 lays its classes out in. Cross-check: 'OBJ_MIP_KEY' is at table index 229 = 0xe5 and g_profile_OBJ_MIP_KEY+0x04 low half is 0x00e5. So `g_profile_MIP` is a ROM-attested name, not a coined one.",
+    "tooling_corroboration": "tools/rtti_extract.py at this revision writes build/rtti.json with 429 records, 413 edges, 0 unresolved, 19 components. Its record for this class is {module: ov085, addr: 0x021300c8, kind: si, mangled: 7daMip_c, name: daMip_c, name_addr: 0x021300bc, vtable: 0x021300f8, vtable_module: ov085}. `python tools/rtti_vtables.py --own daMip_c` prints the override set below and exits 0; `--own Rabbit` prints 'no vtable for Rabbit' and exits 1 -- the ROM-derived database has never heard the name.",
+    "symbols_txt_asymmetry": "config/arm9/overlays/ov085/symbols.txt aliases the VTABLE under both spellings at one address (`_ZTV6Rabbit` and `_ZTV7daMip_c`, both addr:0x021300f8) but names _ZTS and _ZTI under the daMip_c spelling ONLY. A TU compiled as `struct Rabbit` therefore emits _ZTS6Rabbit and _ZTI6Rabbit, neither of which has a home in the cartridge. That is survivable on the queue's declared text-only route (RTTI is externalized/deadstripped) and FATAL on an intact-object route. Do not attempt intact-object under the coined spelling. Independently, `_ZTV6Rabbit`/`_ZTV7daMip_c` is a multi-name data object at one address, which blocks the intact-object route on its own.",
+    "keep_the_coined_spelling": "All eight already-mangled member symbols in symbols.txt use the 6-character length prefix -- _ZN6RabbitD1Ev, _ZN6RabbitD0Ev, _ZN6Rabbit16CleanupResourcesEv, _ZN6Rabbit16OnPendingDestroyEv, _ZN6Rabbit6RenderEv, _ZN6Rabbit8BehaviorEv, _ZN6Rabbit13InitResourcesEv, _ZN6Rabbit13OnYoshiTryEatEv. There is NO _ZN7daMip_c* member alias anywhere in the tree (measured: grep -i mip over config/arm9/symbols.txt plus every config/arm9/overlays/*/symbols.txt returns exactly 10 rows, all listed in this file, none of them a member function). Renaming the class to daMip_c would therefore invalidate all eight enrolled symbol rows at once. include/Rabbit.h already exists and already records the daMip_c identity in its header comment.",
+    "sibling_naming_pattern": "Every one of ov085's six classes carries a coined tree name aliased onto the ROM name in symbols.txt: Toad=daKinopio_c, PrincessPeach=daPeach_c, Rabbit=daMip_c, RabbitKey=daObj_Mip_Key_c, LakituBro=daC_Jugem_c, WallSign=daObjKanban_c. None of the six is promoted."
+  },
+
+  "overlay": "ov085",
+  "module_base": "0x02129020",
+  "module_base_derivation": "extracted/dsd/arm9_overlays/overlays.yaml entry `id: 85` -> base_address 34770976 = 0x02129020, code_size 29792 = 0x7460, bss_size 1024 = 0x400. Two independent checks: (a) extracted/overlays/overlay_0085.bin is exactly 29792 bytes, equal to code_size, so file offset 0 IS address 0x02129020 with no adjustment; (b) config/arm9/overlays/ov085/delinks.txt opens with `.text start:0x02129020` and closes with `.bss start:0x02130480 end:0x02130880`, and 0x02130880-0x02130480 = 0x400 = bss_size. Every ROM read in this file used address = 0x02129020 + file_offset.",
+  "module_section_map": {
+    ".text":   "0x02129020 - 0x0212f27c",
+    ".rodata": "0x0212f27c - 0x0212f2a8",
+    ".init":   "0x0212f2a8 - 0x0212fdf0",
+    ".ctor":   "0x0212fdf0 - 0x0212fe08",
+    ".data":   "0x0212fe20 - 0x02130480",
+    ".bss":    "0x02130480 - 0x02130880"
+  },
+
+  "text_run": {
+    "start": "0x0212a6d4",
+    "end": "0x0212cc88",
+    "bytes": 9652,
+    "shard_count_measured": 32,
+    "shard_count_in_queue_row": 31,
+    "total_lines_measured": 1723,
+    "total_lines_in_queue_row": 1694,
+    "total_lines_note": "1,723 is `wc -l` summed over the 32 shard files at 2ab05bae3; the queue's 1,694 is 29 lines short, consistent with its 31-shard count omitting src/d_a_mip.c (29 lines).",
+    "shard_count_discrepancy": "The queue row notes/data/tu-promotion-queue.tsv says 31; I measured 32 by parsing config/arm9/overlays/ov085/delinks.txt for every `.text start:` inside [0x0212a6d4,0x0212cc88) and collecting distinct filenames. The 32nd is src/d_a_mip.c (daMip_c_classInit, 0x0212cc2c-0x0212cc88), which is neither `func_ov085_*` nor `_ZN6Rabbit*` and is the likely omission. Trust 32.",
+    "boundaries_are_clean": "Below: _ZN13PrincessPeach13InitResourcesEv ends at exactly 0x0212a6d4. Above: daMip_c_classInit is size 0x5c and 0x0212cc2c+0x5c = 0x0212cc88 = _ZN9RabbitKeyD1Ev. No gap, no straddle."
+  },
+
+  "one_class_not_two": {
+    "verdict": "The run is ONE class. Checked explicitly because 32 shards over ~1,694 lines is the densest row in the batch.",
+    "second_ZTI_search": "The only _ZTI records anywhere in ov085 are the six in build/rtti.json (daKinopio_c 0x0212fe50, daPeach_c 0x0212ff90, daMip_c 0x021300c8, daObj_Mip_Key_c 0x02130194, daC_Jugem_c 0x02130304, daObjKanban_c 0x021303c0), one per class, all in .data. There is no .data at all inside [0x0212a6d4,0x0212cc88) -- the run is pure .text -- so a second _ZTI cannot be inside the span. The neighbouring class daObj_Mip_Key_c has its own _ZTI at 0x02130194 and its own vtable at 0x021301d8.",
+    "no_cross_traffic": "daObj_Mip_Key_c's 31 vtable slots point at 0x0212d46c/0x0212d374/0x0212d3ec/0x0212d39c/0x0212d398/0x0212cc88/0x0212ccc0 for its seven overrides, every one at or above 0x0212cc88. Its four pointer-to-member records at 0x02130174-0x02130194 target 0x0212cd80/0x0212d038/0x0212d24c/0x0212d108, all above 0x0212cc88. Nothing in the daMip_c run is reached from it.",
+    "no_external_callers": "Full-tree relocation scan (config/arm9/relocs.txt plus all 103 config/arm9/overlays/*/relocs.txt, plus itcm/dtcm where present) for rows whose `to:` lands in [0x0212a6d4,0x0212cc88): 144 rows land in the range, of which 52 carry `module:overlay(85)` and 92 were REJECTED because their destination module is a different overlay overlapping the same addresses. The filter was written against the literal string `overlay(85)` -- the spelling relocs.txt actually uses, not `ov085` -- and it accepted 52 rows, so it is not silently rejecting everything. All 52 accepted rows originate inside ov085 itself. There is NO caller of this class from any other module.",
+    "intra_overlay_check": "A relocation scan alone is not enough, so I also decoded every ARM BL in ov085 .text (0x02129020-0x0212f27c): 169 distinct call targets. Exactly seven of them land inside the run (0x0212a788, 0x0212a828, 0x0212bc78, 0x0212bcc8, 0x0212bdbc, 0x0212bedc, 0x0212c150) and every single caller of those seven is itself inside the run. The other 25 functions in the run are never BL'd at all -- they are reached only through the vtable, the pointer-to-member records, or g_profile_MIP.",
+    "source_order_corroboration": "The eight two-member state records that __sinit_ov085_0212f5ec builds (below) reference their sixteen member functions in this order: 0x0212bc14, 0x0212b8dc, 0x0212b8a0, 0x0212b86c, 0x0212b75c, 0x0212b4b4, 0x0212b478, 0x0212b444, 0x0212b3fc, 0x0212ae08, 0x0212ad8c, 0x0212ac4c, 0x0212ac3c, 0x0212aaec, 0x0212aaa4, 0x0212a904 -- strictly DESCENDING with no exceptions. Static objects initialise in declaration order and mwcc emits .text in reverse source order, so that single monotone sequence is an independent witness that these sixteen are one file's members in one source order."
+  },
+
+  "vtable": {
+    "symbol": "_ZTV7daMip_c",
+    "alias_symbol": "_ZTV6Rabbit",
+    "address": "0x021300f8",
+    "module": "ov085",
+    "slots": 31,
+    "storage_bytes": 124,
+    "address_point_note": "The symbol IS the address point: slot 0 sits at 0x021300f8. The two header words are at -8 and -4 and read 0x00000000 (offset-to-top) and 0x021300c8 (= _ZTI7daMip_c). The vptr store in both destructors and in the factory is `str r1,[r4]` with r1 = 0x021300f8 loaded from a literal pool -- the symbol address itself, not &_ZTV[2].",
+    "extent_proof": "0x021300f8 + 31*4 = 0x02130174, and 0x02130174 is exactly where the next datum begins: `data_ov085_02130174`, the first of daObj_Mip_Key_c's four pointer-to-member records. Zero slack.",
+    "no_truncation": "31 is the full length, not a linker-truncated tail. Measured at this revision: _ZTV7fBase_c (arm9 0x02099edc) = 18 slots, _ZTV7dBase_c (arm9 0x0208e4b8) = 18, _ZTV8dActor_c (arm9 0x0208e3a4) = 31, _ZTV12dEnemyBase_c (ov002 0x021081e4) = 31. dEnemyBase_c adds no virtual of its own. Slot 30 holds a real function pointer (0x020100dc) in every one of those tables, so there is no trailing null to truncate.",
+    "own_override_count": 8,
+    "slot_table": [
+      {"slot": 0,  "target": "0x0212c7fc", "own": true,  "name": "InitResources",          "declared_in": "fBase_c",  "impl": "_ZN6Rabbit13InitResourcesEv"},
+      {"slot": 1,  "target": "0x02011268", "own": false, "name": "BeforeInitResources",    "declared_in": "fBase_c",  "impl": "_ZN8dActor_c19BeforeInitResourcesEv (arm9)"},
+      {"slot": 2,  "target": "0x02011244", "own": false, "name": "AfterInitResources",     "declared_in": "fBase_c",  "impl": "_ZN8dActor_c18AfterInitResourcesEj (arm9)"},
+      {"slot": 3,  "target": "0x0212c004", "own": true,  "name": "CleanupResources",       "declared_in": "fBase_c",  "impl": "_ZN6Rabbit16CleanupResourcesEv"},
+      {"slot": 4,  "target": "0x02011220", "own": false, "name": "BeforeCleanupResources", "declared_in": "fBase_c",  "impl": "_ZN8dActor_c22BeforeCleanupResourcesEv (arm9)"},
+      {"slot": 5,  "target": "0x02011214", "own": false, "name": "AfterCleanupResources",  "declared_in": "fBase_c",  "impl": "_ZN8dActor_c21AfterCleanupResourcesEj (arm9)"},
+      {"slot": 6,  "target": "0x0212c230", "own": true,  "name": "Behavior",               "declared_in": "fBase_c",  "impl": "_ZN6Rabbit8BehaviorEv"},
+      {"slot": 7,  "target": "0x02010fd4", "own": false, "name": "BeforeBehavior",         "declared_in": "fBase_c",  "impl": "_ZN8dActor_c14BeforeBehaviorEv (arm9)"},
+      {"slot": 8,  "target": "0x02010fc8", "own": false, "name": "AfterBehavior",          "declared_in": "fBase_c",  "impl": "_ZN8dActor_c13AfterBehaviorEj (arm9)"},
+      {"slot": 9,  "target": "0x0212c074", "own": true,  "name": "Render",                 "declared_in": "fBase_c",  "impl": "_ZN6Rabbit6RenderEv"},
+      {"slot": 10, "target": "0x02010f78", "own": false, "name": "BeforeRender",           "declared_in": "fBase_c",  "impl": "_ZN8dActor_c12BeforeRenderEv (arm9)"},
+      {"slot": 11, "target": "0x02010f6c", "own": false, "name": "AfterRender",            "declared_in": "fBase_c",  "impl": "_ZN8dActor_c11AfterRenderEj (arm9)"},
+      {"slot": 12, "target": "0x0212c070", "own": true,  "name": "OnPendingDestroy",       "declared_in": "fBase_c",  "impl": "_ZN6Rabbit16OnPendingDestroyEv"},
+      {"slot": 13, "target": "0x0204357c", "own": false, "name": "Virtual34",              "declared_in": "fBase_c",  "impl": "_ZN7fBase_c9Virtual34Ejj (arm9)"},
+      {"slot": 14, "target": "0x0204349c", "own": false, "name": "Virtual38",              "declared_in": "fBase_c",  "impl": "_ZN7fBase_c9Virtual38Ejj (arm9)"},
+      {"slot": 15, "target": "0x02043494", "own": false, "name": "OnHeapCreated",          "declared_in": "fBase_c",  "impl": "_ZN7fBase_c13OnHeapCreatedEv (arm9)"},
+      {"slot": 16, "target": "0x0212a6d4", "own": true,  "name": "~ (D1, complete)",       "declared_in": "fBase_c",  "impl": "_ZN6RabbitD1Ev"},
+      {"slot": 17, "target": "0x0212a724", "own": true,  "name": "~ (D0, deleting)",       "declared_in": "fBase_c",  "impl": "_ZN6RabbitD0Ev"},
+      {"slot": 18, "target": "0x0212cc18", "own": true,  "name": "OnYoshiTryEat",          "declared_in": "dActor_c", "impl": "_ZN6Rabbit13OnYoshiTryEatEv"},
+      {"slot": 19, "target": "0x02010154", "own": false, "name": "OnTurnIntoEgg",          "declared_in": "dActor_c", "impl": "_ZN8dActor_c13OnTurnIntoEggER6Player (arm9)"},
+      {"slot": 20, "target": "0x0201014c", "own": false, "name": "Virtual50",              "declared_in": "dActor_c", "impl": "_ZN8dActor_c9Virtual50Ev (arm9)"},
+      {"slot": 21, "target": "0x02010148", "own": false, "name": "OnGroundPounded",        "declared_in": "dActor_c", "impl": "_ZN8dActor_c15OnGroundPoundedERS_ (arm9)"},
+      {"slot": 22, "target": "0x02010144", "own": false, "name": "OnAttacked1",            "declared_in": "dActor_c", "impl": "_ZN8dActor_c11OnAttacked1ERS_ (arm9)"},
+      {"slot": 23, "target": "0x02010140", "own": false, "name": "OnAttacked2",            "declared_in": "dActor_c", "impl": "_ZN8dActor_c11OnAttacked2ERS_ (arm9)"},
+      {"slot": 24, "target": "0x0201013c", "own": false, "name": "OnKicked",               "declared_in": "dActor_c", "impl": "_ZN8dActor_c8OnKickedERS_ (arm9)"},
+      {"slot": 25, "target": "0x02010138", "own": false, "name": "OnPushed",               "declared_in": "dActor_c", "impl": "_ZN8dActor_c8OnPushedERS_ (arm9)"},
+      {"slot": 26, "target": "0x02010134", "own": false, "name": "OnHitByCannonBlastedChar","declared_in": "dActor_c","impl": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_ (arm9)"},
+      {"slot": 27, "target": "0x02010130", "own": false, "name": "OnHitByMegaChar",        "declared_in": "dActor_c", "impl": "_ZN8dActor_c15OnHitByMegaCharER6Player (arm9)"},
+      {"slot": 28, "target": "0x0201012c", "own": false, "name": "OnHitFromUnderneath",    "declared_in": "dActor_c", "impl": "_ZN8dActor_c19OnHitFromUnderneathERS_ (arm9)"},
+      {"slot": 29, "target": "0x02010124", "own": false, "name": "OnAimedAtWithEgg",       "declared_in": "dActor_c", "impl": "_ZN8dActor_c16OnAimedAtWithEggEv (arm9)"},
+      {"slot": 30, "target": "0x020100dc", "own": false, "name": "OnAimedAtWithEggReturnVec","declared_in": "dActor_c","impl": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv (arm9)"}
+    ]
+  },
+
+  "base_class": "dEnemyBase_c",
+  "base_evidence": "_ZTI7daMip_c at ov085 0x021300c8 is a three-word __si_class_type_info record read straight out of overlay_0085.bin: +0x00 = 0x0209a764 (arm9, the __si_class_type_info vtable), +0x04 = 0x021300bc (-> the _ZTS7daMip_c string), +0x08 = 0x021081c0. That +8 word names the direct base outright. Reading ov002's own bytes at 0x021081c0 gives {0x0209a764, 0x021081cc, 0x0208e390} and the string at 0x021081cc is literally \"12dEnemyBase_c\". So daMip_c derives directly from dEnemyBase_c. Vtable LENGTH is only corroboration and is not the reason.",
+  "ancestor_chain": [
+    {"class": "daMip_c",      "ZTI": "0x021300c8", "ZTI_module": "ov085"},
+    {"class": "dEnemyBase_c", "ZTI": "0x021081c0", "ZTI_module": "ov002", "offset": 0},
+    {"class": "dActor_c",     "ZTI": "0x0208e390", "ZTI_module": "arm9",  "offset": 0},
+    {"class": "dBase_c",      "ZTI": "0x02086e78", "ZTI_module": "arm9",  "offset": 0},
+    {"class": "fBase_c",      "ZTI": "0x02086d70", "ZTI_module": "arm9",  "offset": 0}
+  ],
+  "ancestor_chain_note": "Five classes including self, which is exactly what the queue row's compiler-only estimate was derived from. Every base offset is 0, so there is no non-trivial base subobject adjustment anywhere.",
+
+  "typeinfo": {
+    "ZTI": "0x021300c8", "ZTI_module": "ov085",
+    "ZTS": "0x021300bc", "ZTS_module": "ov085",
+    "ZTV": "0x021300f8", "ZTV_module": "ov085",
+    "note": "All three live in ov085, the same overlay as the methods -- there is no daOts_c-style split across overlays here. Checked per symbol against config/arm9/overlays/ov085/symbols.txt, which names all three addresses."
+  },
+
+  "modules_touched": ["ov085", "arm9", "ov002"],
+  "modules_touched_evidence": "Relocations originating inside [0x0212a6d4,0x0212cc88): 205 to module:main (arm9), 75 to module:overlay(85) (itself), 18 to module:overlay(2), and 1 to module:overlays(2,7). The single ambiguous row targets 0x020aed98; ov002's symbols.txt names that address `_ZN12dEnemyBase_cC2Ev` and ov007's does not, so it resolves to ov002. 98 distinct non-ov085 targets in all.",
+
+  "size": "0x474",
+  "size_decimal": 1140,
+  "size_evidence": "Read from the ROM, not from src/. daMip_c_classInit at 0x0212cc2c does `ldr r0,[pc,#0x48]` at 0x0212cc30 -- literal pool word at 0x0212cc80 = 0x00000474 = 1140 -- then `bl 0x02043444` = arm9:_ZN7fBase_cnwEj (fBase_c::operator new(unsigned int)) at 0x0212cc34. The same function then loads the literal at 0x0212cc84 = 0x021300f8 -- this class's vtable address point -- and stores it into [this] with `str r1,[r4]` at 0x0212cc4c. One function allocates 1140 bytes and stamps this class's vptr on them, so 1140 IS sizeof(daMip_c). include/Rabbit.h already carries a static assert on 0x474 and it is correct.",
+
+  "fields": {
+    "subobjects_proven_twice": [
+      {"offset": "0x000", "type": "vptr",         "evidence": "str r1,[r4] with r1=0x021300f8 in D1 (0x0212a6e4), D0 (0x0212a738) and classInit (0x0212cc4c)"},
+      {"offset": "0x000", "type": "dEnemyBase_c", "evidence": "base subobject at offset 0; classInit calls _ZN12dEnemyBase_cC2Ev on `this`, D1/D0 call _ZN12dEnemyBase_cD2Ev on `this` last"},
+      {"offset": "0x110", "type": "dCcAc_c",      "evidence": "classInit `add r0,r4,#0x110` -> _ZN7dCcAc_cC1Ev; D1 `add r0,r4,#0x110` -> _ZN7dCcAc_cD1Ev"},
+      {"offset": "0x144", "type": "dBgCh_Actr",   "evidence": "classInit -> _ZN10dBgCh_ActrC1Ev; D1 -> _ZN10dBgCh_ActrD1Ev"},
+      {"offset": "0x300", "type": "ModelAnim",    "evidence": "classInit -> _ZN9ModelAnimC1Ev; D1 -> _ZN9ModelAnimD1Ev"},
+      {"offset": "0x368", "type": "ShadowModel",  "evidence": "classInit -> _ZN11ShadowModelC1Ev; D1 -> _ZN11ShadowModelD1Ev"},
+      {"offset": "0x3c0", "type": "ShadowModel",  "evidence": "classInit -> _ZN11ShadowModelC1Ev; D1 -> _ZN11ShadowModelD1Ev"}
+    ],
+    "subobject_note": "The constructor builds them in ascending order (0x110, 0x144, 0x300, 0x368, 0x3c0) and the destructor tears them down in exactly the reverse (0x3c0, 0x368, 0x300, 0x144, 0x110) before calling the base D2. Two independent witnesses, same five offsets, so the member list and its declaration order are ROM-proven.",
+
+    "this_relative_census": {
+      "method": "Disassembled all 32 functions of the run with capstone. Within each function r0 at entry is `this`; registers that receive a `mov rX,<this-holding reg>` join the set and any other definition of a register removes it. Then recorded every ldr/str/ldrb/strb/ldrh/strh/add whose base register was in that set and whose immediate offset was < 0x474. This is a linear scan with no branch merging, so it UNDER-reports (a `this` copy made on one path and used on another is missed). It does not over-report. 47 distinct offsets found.",
+      "offsets_measured": ["0x000","0x008","0x05c","0x060","0x064","0x080","0x08c","0x08e","0x090","0x094","0x098","0x09c","0x0b0","0x100","0x107","0x110","0x114","0x128","0x12c","0x134","0x144","0x300","0x314","0x31c","0x340","0x350","0x364","0x368","0x390","0x3c0","0x3e8","0x400","0x41c","0x426","0x428","0x42c","0x430","0x434","0x438","0x43c","0x440","0x444","0x448","0x44c","0x45c","0x460","0x464"],
+      "inherited": "Offsets below 0x110 belong to dEnemyBase_c/dActor_c and are NOT this class's fields: 0x008, 0x05c/0x060/0x064 (the position Vector3), 0x080, 0x08c/0x08e/0x090, 0x094, 0x098, 0x09c, 0x0b0, 0x100, 0x107. 0x107 is the byte OnYoshiTryEat reads. 0x114/0x128/0x12c are inside dCcAc_c, 0x134 inside dBgCh_Actr, 0x314/0x31c/0x340/0x350 inside ModelAnim, 0x390 immediately after the first ShadowModel, 0x3e8 immediately after the second.",
+      "live_fields_the_existing_header_calls_padding": "These offsets are read or written by real code but sit inside a pad_* array in include/Rabbit.h as it stands at 2ab05bae3, so the header understates the field list: 0x400 (add, in func_ov085_0212a904 -- inside pad_3e8), 0x41c (ldr and str, in six functions: 0212a904, 0212aaa4, 0212ac3c, 0212b3fc, 0212b75c, 0212bc14 -- inside pad_3e8), 0x42c / 0x430 / 0x434 (str, all three in func_ov085_0212bc14 -- inside pad_42b), 0x44c (str, in func_ov085_0212b75c -- inside pad_44c), 0x460 (ldr, in func_ov085_0212a904 and func_ov085_0212aaec -- inside pad_460), 0x464 (str, in func_ov085_0212a788 -- inside pad_460). The writer must NOT invent names for these; they are listed so the header's pads are not mistaken for dead space.",
+      "header_fields_this_census_confirms": "0x364 (ldr+str in func_ov085_0212bc78, the state setter), 0x426 (strb in func_ov085_0212ad8c), 0x428 (ldrb in Render and Behavior), 0x438 (InitResources, func_ov085_0212b75c), 0x43c (InitResources, func_ov085_0212aaec), 0x440 (InitResources), 0x444 and 0x448 (func_ov085_0212b75c), 0x45c (func_ov085_0212ac4c, 0212ae08, 0212bdbc).",
+      "header_fields_this_census_did_not_reach": "0x420, 0x427, 0x429, 0x42a, 0x468, 0x470. Their absence is the under-reporting described above, NOT evidence against them. They stay on the unproven list for this scout run."
+    }
+  },
+
+  "destructors": {
+    "variants_present": ["D1", "D0"],
+    "D2_present": false,
+    "D2_evidence": "No _ZN6RabbitD2Ev and no _ZN7daMip_cD2Ev exists anywhere in the tree. Measured by grepping the literal string `D2Ev` across config/arm9/symbols.txt and all 103 config/arm9/overlays/*/symbols.txt: 25 occurrences in total, every one of them a base-library class (dActor_c, dCcAc_c, dCc_c, Animation, ModelAnim, Model, ModelBase, FaderColor, FaderBrightness, Fader, dBgCh, dBgPc, dBgPi, dBgW, dBgW_Kc, dBgW_KcMbg, dM3dGSph, Heap, fBase_c, abi::__class_type_info, ...). None names this class.",
+    "D1": {"address": "0x0212a6d4", "size": "0x50", "slot": 16, "body": "push {r4,lr}; store vptr 0x021300f8; ~ShadowModel(+0x3c0); ~ShadowModel(+0x368); ~ModelAnim(+0x300); ~dBgCh_Actr(+0x144); ~dCcAc_c(+0x110); dEnemyBase_c::~dEnemyBase_c[D2](this); return this"},
+    "D0": {"address": "0x0212a724", "size": "0x64", "slot": 17, "body": "identical to D1, then `ldr r1,[0x0212a784 -> 0x020a0eac]; ldr r1,[r1]` (GAME_HEAP_PTR) and `bl _ZN6Memory10DeallocateEPvP4Heap`, i.e. an INLINE operator delete inherited from dEnemyBase_c; return this"},
+    "writer_note": "Both shards already compile as real C++ `Rabbit::~Rabbit()` bodies (src/_ZN6RabbitD1Ev.cpp, src/_ZN6RabbitD0Ev.cpp, each carrying `//cpp` on line 1). The base call is dEnemyBase_c's D2 at ov002 0x020aed18, not its D1 at 0x020aed74 -- which is what a real derived destructor emits. In the ROM D1 sits BELOW D0, so the merged TU must emit D1 then D0 and no D2 at all. That order is not free: run tools/tu_order_check.py on the merged manifest before assuming it, and see notes/agents on `defer_codegen off` if the default emits D2,D0,D1."
+  },
+
+  "non_virtual": {
+    "count": 24,
+    "pointer_to_member_targets": {
+      "count": 16,
+      "why_this_proves_member_ness": "A pointer-to-member-function record can only point at a member function. Sixteen 8-byte {u32 fnptr, u32 delta} records occupy 0x0213003c-0x021300bc, and their fnptr words carry `module:overlay(85)` relocations to these sixteen addresses. Alignment was checked: the word at 0x02130038 is 0x020100dc, the last slot of PrincessPeach's vtable, so the band genuinely begins at 0x0213003c and not four bytes either side. Every delta is 0.",
+      "records": [
+        {"record": "0x0213003c", "target": "0x0212b4b4", "shard": "src/func_ov085_0212b4b4.c"},
+        {"record": "0x02130044", "target": "0x0212b8dc", "shard": "src/func_ov085_0212b8dc.cpp"},
+        {"record": "0x0213004c", "target": "0x0212aaec", "shard": "src/func_ov085_0212aaec.c"},
+        {"record": "0x02130054", "target": "0x0212ad8c", "shard": "src/func_ov085_0212ad8c.c"},
+        {"record": "0x0213005c", "target": "0x0212b478", "shard": "src/func_ov085_0212b478.c"},
+        {"record": "0x02130064", "target": "0x0212b444", "shard": "src/func_ov085_0212b444.c"},
+        {"record": "0x0213006c", "target": "0x0212ac3c", "shard": "src/func_ov085_0212ac3c.c"},
+        {"record": "0x02130074", "target": "0x0212bc14", "shard": "src/func_ov085_0212bc14.c"},
+        {"record": "0x0213007c", "target": "0x0212b3fc", "shard": "src/func_ov085_0212b3fc.c"},
+        {"record": "0x02130084", "target": "0x0212b8a0", "shard": "src/func_ov085_0212b8a0.c"},
+        {"record": "0x0213008c", "target": "0x0212ae08", "shard": "src/func_ov085_0212ae08.c"},
+        {"record": "0x02130094", "target": "0x0212b86c", "shard": "src/func_ov085_0212b86c.c"},
+        {"record": "0x0213009c", "target": "0x0212ac4c", "shard": "src/func_ov085_0212ac4c.c"},
+        {"record": "0x021300a4", "target": "0x0212a904", "shard": "src/func_ov085_0212a904.c"},
+        {"record": "0x021300ac", "target": "0x0212aaa4", "shard": "src/func_ov085_0212aaa4.c"},
+        {"record": "0x021300b4", "target": "0x0212b75c", "shard": "src/func_ov085_0212b75c.cpp"}
+      ]
+    },
+    "called_helpers": [
+      {"address": "0x0212a788", "shard": "src/func_ov085_0212a788.c",   "callers": ["func_ov085_0212b4b4 (x2)", "func_ov085_0212b8dc"], "this_offsets": ["0x05c","0x060","0x064","0x464"], "note": "builds a dBgCh_Gnd on the stack, water-detects below this+0x60+0xc8000, writes this+0x464"},
+      {"address": "0x0212a828", "shard": "src/func_ov085_0212a828.cpp", "callers": ["_ZN6Rabbit8BehaviorEv"], "this_offsets": ["0x134"]},
+      {"address": "0x0212bc78", "shard": "src/func_ov085_0212bc78.cpp", "callers": ["17 call sites across the run"], "this_offsets": ["0x364"], "note": "the state setter -- stores the chosen state-record address into this+0x364"},
+      {"address": "0x0212bcc8", "shard": "src/func_ov085_0212bcc8.c",   "callers": ["_ZN6Rabbit8BehaviorEv (x2)", "_ZN6Rabbit13InitResourcesEv"], "this_offsets": ["0x08c","0x08e","0x090","0x314","0x31c","0x368","0x390"]},
+      {"address": "0x0212bdbc", "shard": "src/func_ov085_0212bdbc.cpp", "callers": ["_ZN6Rabbit8BehaviorEv"], "this_offsets": ["0x45c"]},
+      {"address": "0x0212bedc", "shard": "src/func_ov085_0212bedc.cpp", "callers": ["_ZN6Rabbit8BehaviorEv"], "this_offsets": ["0x060","0x064","0x3c0","0x3e8"]},
+      {"address": "0x0212c150", "shard": "src/func_ov085_0212c150.cpp", "callers": ["_ZN6Rabbit6RenderEv"], "this_offsets": ["0x080","0x31c","0x340"]}
+    ],
+    "free_function": {
+      "symbol": "daMip_c_classInit",
+      "address": "0x0212cc2c",
+      "size": "0x5c",
+      "shard": "src/d_a_mip.c",
+      "note": "NOT a member. It is the registry factory: allocates 1140 bytes with fBase_c::operator new, runs the base constructor and the five member constructors, stamps the vptr and returns the object. Its only reference in the whole cartridge is the +0x00 word of g_profile_MIP. It must stay a free function in the merged TU. `_classInit` is a factory spelling tu_map.py does not handle, which is a known segmentation defect -- do not be surprised if tu_map slices this run oddly."
+    },
+    "callers_summary": "Zero external callers. The class is reached only through (a) g_profile_MIP -> daMip_c_classInit, (b) the vtable's eight own slots, and (c) the sixteen pointer-to-member records via the eight state objects."
+  },
+
+  "data_band": {
+    "range": "0x0213003c - 0x02130174",
+    "bytes": 312,
+    "layout": [
+      {"range": "0x0213003c - 0x021300bc", "what": "16 pointer-to-member records, 8 bytes each {fnptr, 0}"},
+      {"range": "0x021300bc - 0x021300c8", "what": "_ZTS7daMip_c, the 9 bytes \"7daMip_c\\0\" plus 3 bytes of padding"},
+      {"range": "0x021300c8 - 0x021300d4", "what": "_ZTI7daMip_c, __si_class_type_info: {0x0209a764, 0x021300bc, 0x021081c0}"},
+      {"range": "0x021300d4 - 0x021300f0", "what": "g_profile_MIP, 7 words: {0x0212cc2c classInit, 0x005300bb, 0x00008282, 0x00064000, 0x000c8000, 0x01000000, 0x01000000}. Profile id 0xbb = 187 = 'MIP' in the arm9 name table."},
+      {"range": "0x021300f0 - 0x021300f8", "what": "_ZTV7daMip_c header: offset-to-top 0x00000000, RTTI pointer 0x021300c8"},
+      {"range": "0x021300f8 - 0x02130174", "what": "_ZTV7daMip_c, 31 slots"}
+    ],
+    "neighbours": "Below: 0x0213003c is the first byte after PrincessPeach's 31-slot vtable, which ends there. Above: 0x02130174 is daObj_Mip_Key_c's first pointer-to-member record. The band is exactly closed on both sides."
+  },
+
+  "bss_band": {
+    "range": "0x021305ac - 0x0213071c",
+    "bytes": 368,
+    "how_bounded": "Every ov085-local relocation whose source is inside __sinit_ov085_0212f5ec (0x0212f5ec-0x0212f9bc, the third of the six .ctor entries) targets .bss addresses in [0x021305ac, 0x02130710+0xc). The previous sinit (__sinit_ov085_0212f3a0, daPeach_c) tops out at 0x0213055c and the next (__sinit_ov085_0212f9bc, daObj_Mip_Key_c) starts at 0x0213071c. So this class's .bss is exactly 0x021305ac..0x0213071c.",
+    "objects": [
+      {"address": "0x021305ac", "what": "int, set by the sinit to _ZN8SaveData22NumGlowingRabbitsFoundEv(); read by _ZN6Rabbit13InitResourcesEv"},
+      {"address": "0x021305b0", "what": "SharedFilePtr, file id 0x3a7"},
+      {"address": "0x021305b8", "what": "SharedFilePtr, file id 0x3a5"},
+      {"address": "0x021305c0", "what": "SharedFilePtr, file id 0x3a9"},
+      {"address": "0x021305c8", "what": "SharedFilePtr, file id 0x3a8"},
+      {"address": "0x021305d0", "what": "SharedFilePtr, file id 0x3a6"},
+      {"address": "0x021305d8", "what": "file object, id 0x452, built with func_02017acc"},
+      {"address": "0x021305e0", "what": "file object, id 0x3a4, built with func_02017acc"},
+      {"address": "0x021305e8 .. 0x02130660", "what": "eleven atexit/destructor-registration slots handed to func_020731dc"},
+      {"address": "0x0213066c", "what": "state record {PMF 0x02130084 -> 0x0212b8a0, PMF 0x02130094 -> 0x0212b86c}"},
+      {"address": "0x0213067c", "what": "state record {PMF 0x021300b4 -> 0x0212b75c, PMF 0x0213003c -> 0x0212b4b4}"},
+      {"address": "0x0213068c", "what": "state record {PMF 0x021300ac -> 0x0212aaa4, PMF 0x021300a4 -> 0x0212a904}"},
+      {"address": "0x0213069c", "what": "state record {PMF 0x0213005c -> 0x0212b478, PMF 0x02130064 -> 0x0212b444}"},
+      {"address": "0x021306ac", "what": "state record {PMF 0x0213007c -> 0x0212b3fc, PMF 0x0213008c -> 0x0212ae08}"},
+      {"address": "0x021306bc", "what": "state record {PMF 0x02130054 -> 0x0212ad8c, PMF 0x0213009c -> 0x0212ac4c}"},
+      {"address": "0x021306cc", "what": "state record {PMF 0x02130074 -> 0x0212bc14, PMF 0x02130044 -> 0x0212b8dc}"},
+      {"address": "0x021306dc", "what": "state record {PMF 0x0213006c -> 0x0212ac3c, PMF 0x0213004c -> 0x0212aaec}"},
+      {"address": "0x021306ec", "what": "Vector3 {0x1c000, -0x2a000, 0x18000}; referenced from func_ov085_0212bdbc"},
+      {"address": "0x021306f8", "what": "Vector3 {0x1c000, -0x14000, 0x32000}"},
+      {"address": "0x02130704", "what": "Vector3 {0x2b000, -0x2a000, 0x18000}"},
+      {"address": "0x02130710", "what": "Vector3 {0x30000, -0xa000, 0x32000}"}
+    ],
+    "state_record_shape": "Each of the eight is 16 bytes = two 8-byte pointer-to-member records: a state Init and a state Main. Behavior and the state functions compare this+0x364 by ADDRESS against these objects. src/__sinit_ov085_0212f5ec.c already models the pair as `struct { struct {int a,b;} a, b; }`.",
+    "declaration_order": "Static objects initialise in declaration order, and the sinit assigns the state records in the order 0x021306cc, 0x0213066c, 0x0213067c, 0x0213069c, 0x021306ac, 0x021306bc, 0x021306dc, 0x0213068c. That is the source declaration order; the .bss addresses are NOT in source order, so do not reorder the declarations to make the addresses ascend."
+  },
+
+  "static_initializer": {
+    "shard": "src/__sinit_ov085_0212f5ec.c",
+    "symbol": "__sinit_ov085_0212f5ec",
+    "range": "0x0212f5ec - 0x0212f9bc",
+    "section": ".init",
+    "belongs_to_this_class": true,
+    "evidence": "The .ctor table at 0x0212fdf0 holds six words -- 0x0212f2a8, 0x0212f3a0, 0x0212f5ec, 0x0212f9bc, 0x0212fa40, 0x0212fdb0 -- one per class in ov085's link order, plus a seventh null word at 0x0212fe08 (overlays.yaml gives ctor_end 0x0212fe0c, delinks stops the section at 0x0212fe08). The third entry is this one. Every ov085-local relocation out of it lands in [0x0213003c, 0x02130710], which is exactly this class's .data pointer-to-member band plus its .bss band and nothing else.",
+    "writer_note": "This shard is a 33rd file the queue row does not count, and it sits OUTSIDE the .text run in a DIFFERENT section. Whether it joins the merged TU is a stage-2/stage-4 decision, but the writer must know it exists: it is the only thing that gives the eight state objects their values, and it references all sixteen pointer-to-member records BY NAME."
+  },
+
+  "shards": {
+    "count": 32,
+    "all_marked_complete_in_delinks": true,
+    "already_mangled": ["_ZN6RabbitD1Ev", "_ZN6RabbitD0Ev", "_ZN6Rabbit16CleanupResourcesEv", "_ZN6Rabbit16OnPendingDestroyEv", "_ZN6Rabbit6RenderEv", "_ZN6Rabbit8BehaviorEv", "_ZN6Rabbit13InitResourcesEv", "_ZN6Rabbit13OnYoshiTryEatEv"],
+    "auto_named": 24,
+    "language_mode": "15 shards are .cpp and carry `//cpp` as their first bytes; 17 are .c. The .cpp set is the eight _ZN6Rabbit* plus func_ov085_0212a828, 0212b75c, 0212b8dc, 0212bc78, 0212bdbc, 0212bedc, 0212c150.",
+    "at_symbol_markers": "18 of the 32 shards contain a `// @symbol` line; 14 do not. The fourteen without are func_ov085_0212a788.c, func_ov085_0212a828.cpp, func_ov085_0212aaa4.c, func_ov085_0212ac3c.c, func_ov085_0212ac4c.c, func_ov085_0212ad8c.c, func_ov085_0212ae08.c, func_ov085_0212b3fc.c, func_ov085_0212b444.c, func_ov085_0212b478.c, func_ov085_0212b86c.c, func_ov085_0212b8a0.c, func_ov085_0212bc14.c and func_ov085_0212bc78.cpp. The merged TU must mark every member with `// @symbol` or tiers scoring undercounts it.",
+    "emission_order_required": "ROM address order ascending is D1(0x0212a6d4), D0, 0x0212a788, 0x0212a828, 0x0212a904, 0x0212aaa4, 0x0212aaec, 0x0212ac3c, 0x0212ac4c, 0x0212ad8c, 0x0212ae08, 0x0212b3fc, 0x0212b444, 0x0212b478, 0x0212b4b4, 0x0212b75c, 0x0212b86c, 0x0212b8a0, 0x0212b8dc, 0x0212bc14, 0x0212bc78, 0x0212bcc8, 0x0212bdbc, 0x0212bedc, CleanupResources(0x0212c004), OnPendingDestroy, Render, 0x0212c150, Behavior(0x0212c230), InitResources(0x0212c7fc), OnYoshiTryEat(0x0212cc18), daMip_c_classInit(0x0212cc2c). mwcc emits .text in reverse source order, so source order is that list REVERSED -- classInit first, the two destructors last. The state-table ordering described under one_class_not_two independently corroborates the reversal for the sixteen pointer-to-member members. Emission order is a hard gate (linkcheck refuses on it), so run tools/tu_order_check.py rather than trusting this."
+  },
+
+  "tree_state_at_2ab05bae3": {
+    "queue_row": "notes/data/tu-promotion-queue.tsv: Rabbit | 31 shards | 1694 lines | ov085 | has_header yes | already_promoted no | blockers compiler-only:>=11 | sibling_oracle - | promotion_route text-only",
+    "header_exists": "include/Rabbit.h, 113 lines, already declares `struct Rabbit : dEnemyBase_c`, a static assert on 0x474, the five member subobjects at the ROM's offsets, the destructor and OnYoshiTryEat as virtuals, and the five non-virtual method names. Its header comment already states the daMip_c identity. The promotion should need NO header change beyond, optionally, naming the live fields listed above.",
+    "sibling_oracle": "There is none, and the queue row is right. config/tu_manifest.d holds 44 entries at this revision -- _meta.json, arm9, and 42 overlay directories -- and none of the 42 is ov085 -- no class in this overlay has ever been promoted. src_tu/ contains only actors/, scene/, stage/ and nothing ov085-related. The nearest oracle is a dEnemyBase_c descendant in another overlay.",
+    "delinks": "All 32 shards are enrolled in config/arm9/overlays/ov085/delinks.txt and every one is marked `complete`.",
+    "prose_references": "grep for `func_ov085_0212`, `_ZN6Rabbit` and `d_a_mip` across notes/, port/, docs/ and config/ hits notes/data/c-cpp-classification.tsv, notes/data/tu-merge-candidates.json, notes/mwccarm-codegen.md:637, notes/rom-build.md:524, the two ov085 config files and config/converted-baseline.json + config/unresolved-baseline.json. Neither prose file names a LIVE shard of this run -- mwccarm-codegen.md:637 says `func_ov085_0212c230`, which is today src/_ZN6Rabbit8BehaviorEv.cpp, and rom-build.md:524 says `func_ov085_0212e778`, which is outside the run. No port/ slice manifest names any of them. The dead-reference gate should not fire on this promotion, but re-check it against the base you actually ship."
+  },
+
+  "blockers_for_the_writer": [
+    "RENAME TRAP, the big one. 16 of the 24 auto-named members are the targets of pointer-to-member records in UNOWNED .data (0x0213003c-0x021300bc), and on the declared text-only route the TU will not own that .data. dsd resolves those records BY SYMBOL NAME. If stage 3b renames any of those sixteen func_ov085_* to a daMip_c/Rabbit member spelling without moving its config/arm9/overlays/ov085/symbols.txt row in the SAME commit, the corresponding .data word links as 0x00000000 and no byte gate at stage 2 or 3 catches it. The same applies to the seven directly-called helpers if they are renamed, plus daMip_c_classInit, whose only reference is g_profile_MIP+0x00.",
+    "A class member function cannot live inside an `extern \"C\" { }` region, so the single file-scope extern \"C\" block must go after the last surviving func_* member.",
+    "Do NOT attempt the intact-object route. Two independent reasons: (a) _ZTV6Rabbit and _ZTV7daMip_c are two names on one address, which blocks intact-object on its own; (b) a TU compiled as `struct Rabbit` emits _ZTS6Rabbit and _ZTI6Rabbit, and the cartridge has neither -- only the daMip_c spellings exist, at 0x021300bc and 0x021300c8.",
+    "Destructor emission order. The ROM has D1 at 0x0212a6d4 then D0 at 0x0212a724 and no D2 at all. Default deferred codegen on an out-of-line destructor emits D2,D0,D1. Measure with tools/tu_order_check.py before assuming; `#pragma defer_codegen off` and the inline-destructor form are the two known levers.",
+    "__sinit_ov085_0212f5ec is a 33rd shard for this class, in .init, outside the text run, and the queue does not count it. It names all sixteen pointer-to-member records and all eight state objects.",
+    "tu_map.py does not handle the `_classInit` factory spelling, so its segmentation of this run may be wrong. The run boundaries in this file were derived from delinks.txt and the RTTI/vtable/PMF evidence, not from tu_map."
+  ],
+
+  "unproven": [
+    "The class NAME `Rabbit`. It is coined. Nothing in this cartridge spells it in any case. The ROM's name is daMip_c and only that is proven.",
+    "Every member function name spelled with a word rather than a slot: `Behavior`, `Render`, `InitResources`, `CleanupResources`, `OnPendingDestroy`, `OnYoshiTryEat`. Their SLOT indices (6, 9, 0, 3, 12, 18) and their addresses are ROM-proven; the words come from the base-class headers already in include/, not from this cartridge.",
+    "All 24 auto-named members have no recovered name at all. 16 of them are proven to BE members (a pointer-to-member record can point at nothing else) and their state-table pairing is proven; which state each pair implements is not.",
+    "The seven directly-called helpers (0x0212a788, 0x0212a828, 0x0212bc78, 0x0212bcc8, 0x0212bdbc, 0x0212bedc, 0x0212c150) are proven to take a daMip_c* first argument, by their this-relative accesses. Whether the original source declared them as members or as file-local functions taking a daMip_c* is NOT proven -- no pointer-to-member record names them.",
+    "Field NAMES. include/Rabbit.h's mColorVariant / mTalkState / mIsDisabled / mIsGlowing / mEatenTimer / mPathId / mRabbitId / mCharacterId / mNumPathNodes / mPathNodeIndex / mTalkingPlayer / mMaterialColor / mGlowParticle / mState / unk_426 are all coined. The OFFSETS 0x364, 0x426, 0x428, 0x438, 0x43c, 0x440, 0x444, 0x448, 0x45c are confirmed live by this scout's census; the offsets 0x420, 0x427, 0x429, 0x42a, 0x468, 0x470 were NOT reached by it and are neither confirmed nor refuted.",
+    "The live-but-unnamed field offsets 0x400, 0x41c, 0x42c, 0x430, 0x434, 0x44c, 0x460, 0x464 have no names and must not be given one without further evidence. They currently sit inside pad_* arrays in include/Rabbit.h.",
+    "The types of the four .bss Vector3 constants at 0x021306ec/0x021306f8/0x02130704/0x02130710 are proven (the sinit calls _ZN7Vector3D1Ev on each) but their meaning is not. Only 0x021306ec is referenced from the run's code, by func_ov085_0212bdbc.",
+    "The meaning of g_profile_MIP's fields beyond +0x00 (the factory) and the low half of +0x04 (profile id 0xbb, proven to be 'MIP' in the arm9 name table at 0x02090e80 index 187). The words 0x00008282, 0x00064000, 0x000c8000, 0x01000000, 0x01000000 are unread.",
+    "Whether the merged TU's emission order comes out as the ROM's without a codegen lever. Not measured -- that needs a compile, which is stage 2/4 work."
+  ]
+}

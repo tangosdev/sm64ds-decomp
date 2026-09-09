@@ -37,7 +37,7 @@
 #define DSCMGTRAMPOLINE2_C_H
 #include "dScMgD3DBase_c.h"
 
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_020ca604(void);
 extern "C" void func_ov006_020d1008(void);
 extern "C" void func_ov006_020eed64(void);
@@ -48,12 +48,12 @@ extern "C" void func_ov006_02120938(void);
 
 struct dScMgTrampoline2_c : dScMgD3DBase_c {
     virtual ~dScMgTrampoline2_c() {
-        __destroy_arr(mArray6, 5, 0x24, (void *)func_ov006_02120938);
-        __destroy_arr(mArray5, 0x14, 0x78, (void *)func_ov006_02122c68);
-        __destroy_arr(mArray4, 0xa, 0x24, (void *)func_ov006_020eed64);
-        __destroy_arr(mArray3, 0xa, 0x1d0, (void *)func_ov006_021227c8);
-        __destroy_arr(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
-        __destroy_arr(mArray1, 5, 0xdc, (void *)func_ov006_020ca604);
+        __cxa_vec_cleanup(mArray6, 5, 0x24, (void *)func_ov006_02120938);
+        __cxa_vec_cleanup(mArray5, 0x14, 0x78, (void *)func_ov006_02122c68);
+        __cxa_vec_cleanup(mArray4, 0xa, 0x24, (void *)func_ov006_020eed64);
+        __cxa_vec_cleanup(mArray3, 0xa, 0x1d0, (void *)func_ov006_021227c8);
+        __cxa_vec_cleanup(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
+        __cxa_vec_cleanup(mArray1, 5, 0xdc, (void *)func_ov006_020ca604);
     }
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */

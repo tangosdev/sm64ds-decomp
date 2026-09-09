@@ -56,7 +56,7 @@ extern void _ZN5ModelC1Ev(Model *model);
 extern void _ZN5ModelD1Ev(Model *model);
 extern void _ZN7PathPtrC1Ev(PathPtr *path);
 extern void _ZN9ModelAnimC1Ev(ModelAnim *model);
-extern void func_020733a8(
+extern void __cxa_vec_ctor(
     Model *models, int count, int size, void *ctor, void *dtor);
 extern int _ZTV15daObjRcCarpet_c[];
 extern int data_ov002_0210af70[];
@@ -94,7 +94,7 @@ extern "C" daObjRcCarpet_c *daObjRcCarpet_c_classInit()
     if (actor) {
         _ZN10dBgActor_cC2Ev(actor);
         *(int *)actor = (int)data_ov002_0210af70;
-        func_020733a8(
+        __cxa_vec_ctor(
             actor->mModels, 3, sizeof(Model),
             (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
         _ZN7PathPtrC1Ev(&actor->mPath);

@@ -18,7 +18,7 @@
  * Eight boundaries, each from a size another header asserts independently.
  *
  * THE THREE ARRAYS ARE Vector3, and that is what named func_020072c0. The ROM
- * destroys them with __destroy_arr(ptr, N, 0xc, ...), which a POD array would
+ * destroys them with __cxa_vec_cleanup(ptr, N, 0xc, ...), which a POD array would
  * never need, and InitResources fills each element as x/y/z from the actor's
  * position. See the note on Vector3 in include/types.h.
  *

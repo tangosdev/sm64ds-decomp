@@ -28,7 +28,11 @@ workers; installing the files alone does not switch the live fleet.
 
 A PR is mergeable only when the **`validate`** CI check is green. It compiles each
 changed `src/*.c|*.cpp` on a private build box and compares the *relocated* bytes to
-the ROM. Green = byte-verified = mergeable. Red means at least one file either:
+the ROM. Source reconstruction also requires the independent **Source review**
+check described in [the review cutover](notes/agents/SOURCE-REVIEW-CUTOVER.md).
+A byte pass establishes byte correctness; source review establishes acceptance
+of the reconstructed C++ and its explicitly recorded remaining work.
+Red byte validation means at least one file either:
 
 - doesn't reproduce the ROM bytes, or
 - **WRONG-DEST** — a relocation links to the wrong symbol (right bytes, wrong callee/global).
@@ -135,6 +139,7 @@ into `tools/hooks/pre-push`.
 ## How your PR is handled
 
 See [`MERGE.md`](MERGE.md). In short: a maintainer (human or AI) merges once
-`validate` is green. If some files pass and some fail, only the verified subset is
+both required checks are green for the proposed candidate and base. If some files
+pass and some fail, only the verified subset is
 landed and the failing files are dropped — verify locally first so that's
 unnecessary.

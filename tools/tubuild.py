@@ -1479,7 +1479,14 @@ def cmd_verify(args):
 # ========================================================== `linkcheck` -- scratch delinks
 
 _SEC_LINE_RE = re.compile(r'^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)')
-_TU_SECTION_NAMES = (".text", ".rodata", ".init", ".ctor", ".data", ".bss")
+# `.exception` and `.exceptix` are the CodeWarrior unwind pair. A translation unit
+# compiled with exceptions on emits one `.exception` frame record per function that
+# has a try, plus one 12-byte `.exceptix` index entry naming that function and its
+# frame. Both are ordinary content sections the linker concatenates like any other,
+# so they claim retail ranges through the same schema; the ROM keeps them in
+# separate module sections from `.text`.
+_TU_SECTION_NAMES = (".text", ".rodata", ".init", ".ctor", ".data", ".bss",
+                     ".exception", ".exceptix")
 
 
 def parse_delinks_file(path):
@@ -2083,6 +2090,7 @@ def object_audit_refusals(rows, extra_secs, order_ok):
 _SECTION_SYMBOL_FIELDS = {
     ".rodata": "rodata", ".init": "init", ".ctor": "ctor",
     ".data": "data", ".bss": "bss",
+    ".exception": "exception", ".exceptix": "exceptix",
 }
 
 
@@ -4105,17 +4113,75 @@ def compare_contribution(prod_raw, derived_raw, symbol):
     }
 
 
+_FUNC_ROW_RE = re.compile(
+    r"^(\S+)\s+kind:function\([^)]*,size=0x([0-9a-fA-F]+)\).*?addr:0x([0-9a-fA-F]+)")
+
+
+def symbol_function_rows():
+    """``[(module, name, addr, size)]`` for every function row in every symbols.txt."""
+    rows = []
+    for module, path in RL.iter_symbol_files(include_itcm_dtcm=True):
+        for line in path.read_text(errors="ignore").splitlines():
+            m = _FUNC_ROW_RE.match(line)
+            if m:
+                rows.append((module, m.group(1),
+                             int(m.group(3), 16), int(m.group(2), 16)))
+    return rows
+
+
+def undefinable_alias_names(config_root=None, rows=None, ranges=None):
+    """Names whose every symbols.txt home is a size-0 alias nothing can define.
+
+    A size-0 second name becomes a linker DEFINITION only inside a dsd gap object,
+    because the gap object defines every symbols.txt row in its range STB_GLOBAL. The
+    moment the enclosing range is carved out by a `complete` delinks entry the link is
+    handed a compiled object instead, and mwcc emits only the name the source declares
+    -- so the alias quietly stops existing while its config row stays put. Nothing
+    notices until some object imports that spelling: mwccarm emits `bl __end__catch`
+    for every catch block and `bl __rethrow` for a bare `throw;`, neither of which the
+    source names, and the real link then aborts Undefined while every per-function gate
+    passes.
+
+    ``all_symbol_homes`` answers "is this name in some symbols.txt", which is not the
+    same question as "will the link have a definition for it", so this is the set that
+    answer has to exclude. A name with a second, gap-resident home is definable and is
+    not returned.
+    """
+    rows = symbol_function_rows() if rows is None else list(rows)
+    ranges = (complete_ranges(config_root or (REPO / "config" / "arm9"))
+              if ranges is None else ranges)
+    sized = {(module, addr) for module, _name, addr, size in rows if size}
+    by_name = collections.defaultdict(list)
+    for module, name, addr, size in rows:
+        by_name[name].append((module, addr, size))
+
+    def undefinable(module, addr, size):
+        if size or (module, addr) not in sized:
+            return False           # a sized row is its own definition
+        return any(lo <= addr < hi for lo, hi in ranges.get(module, ()))
+
+    return {name for name, homes in by_name.items()
+            if homes and all(undefinable(*h) for h in homes)}
+
+
 def unresolvable_imports(names, known=()):
-    """Which of `names` no symbols.txt anywhere defines and no sibling already imports.
+    """Which of `names` nothing in the link defines and no sibling already imports.
 
     An import a relocation does not name cannot change a byte, but it can still make
     mwldarm refuse the link if nothing defines it -- so the ones with no home are worth
     naming before the link rather than after. `known` is the set of imports the objects
     being REPLACED already carry: an unresolvable name that the current build already
     ships is not a new risk (`_ZN8PoleLiftD2Ev` is exactly that -- every isolated
-    PoleLift destructor object imports it today and the tree links)."""
+    PoleLift destructor object imports it today and the tree links).
+
+    A symbols.txt row is not by itself a definition: see `undefinable_alias_names` for
+    the size-0 alias rows that stop reaching the link the moment their range is carved
+    out, which is the shape that took the real link down with Undefined "__end__catch"
+    while `all_symbol_homes` still reported a home."""
     homes = all_symbol_homes()
-    return sorted(n for n in names if n not in homes and n not in set(known))
+    undefinable = undefinable_alias_names()
+    return sorted(n for n in names
+                  if (n not in homes or n in undefinable) and n not in set(known))
 
 
 def production_objects(entry, build_root, jobs=1, cache=None):

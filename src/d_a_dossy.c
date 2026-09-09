@@ -9,7 +9,7 @@ extern void _ZN9ModelAnimC1Ev(void*);
 extern void _ZN10dBgCh_ActrC1Ev(void*);
 extern void _ZN7dCcAc_cC1Ev(void*);
 extern void _ZN10dCcAcPos_cC1Ev(void*);
-extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
+extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void _ZN14DorriePlatformD1Ev(void*);
 extern void _ZN14DorriePlatformC1Ev(void*);
 extern void* _ZTV6Dorrie[];
@@ -25,7 +25,7 @@ int* daDossy_c_classInit(void)
         _ZN8dActor_cC2Ev(p);
         *(void***)p = (void**)_ZTV6Dorrie;
         _ZN9ModelAnimC1Ev((char*)p + 0xec);
-        func_020733a8((char*)p + 0x150, 7, 0x200,
+        __cxa_vec_ctor((char*)p + 0x150, 7, 0x200,
                       _ZN14DorriePlatformC1Ev, _ZN14DorriePlatformD1Ev);
         _ZN10dBgCh_ActrC1Ev((char*)p + 0xf50);
         _ZN7dCcAc_cC1Ev((char*)p + 0x110c);

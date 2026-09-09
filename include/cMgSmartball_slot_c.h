@@ -10,8 +10,8 @@
  * (unlike wing_c/ana_c/board_c).
  *
  * FIELD EVIDENCE. The constructor (func_ov006_021101bc) placement-constructs
- * two 3-element, 8-byte-stride arrays via func_020733a8(this+0x34,3,8,...)
- * and func_020733a8(this+0x4c,3,8,...) -- that call is the source of the
+ * two 3-element, 8-byte-stride arrays via __cxa_vec_ctor(this+0x34,3,8,...)
+ * and __cxa_vec_ctor(this+0x4c,3,8,...) -- that call is the source of the
  * two arrays' bounds and 8-byte stride. RestoreInitial is exhaustive over
  * everything from there to the end of the class and is the strongest single
  * source for the rest of the layout: every loop bound and store width below

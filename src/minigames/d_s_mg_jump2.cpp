@@ -187,7 +187,7 @@ typedef struct { int e[12]; } Mtx43T;
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 void *_ZN7fBase_cnwEj(u32 sz);
 void _ZN11dScMgBase_cC2Ev(void *p);
-void func_020733a8(void *o, int a, int b, void *f1, void *f2);
+void __cxa_vec_ctor(void *o, int a, int b, void *f1, void *f2);
 void _ZN8Particle10SysTrackerC1Ev(void *p);
 void _ZN5ModelC1Ev(void *p);
 extern char _ZTV14dScMgD3DBase_c[];
@@ -230,9 +230,9 @@ void *dScMgJump2_c_classInit()
         } while (e != end);
         _ZN8Particle10SysTrackerC1Ev(p + 0x47e4);
         *(char **)p = (char *)&_ZTV12dScMgJump2_c[2];
-        func_020733a8(p + 0x500c, 3, 0xb8, (void *)_ZN16dMgJump3DMario_cC1Ev, (void *)_ZN16dMgJump3DMario_cD1Ev);
-        func_020733a8(p + 0x5234, 6, 0xf0, (void *)func_ov006_020c6f70, (void *)func_ov006_020c6f3c);
-        func_020733a8(p + 0x57d4, 0x10, 0x24, (void *)func_ov006_020efc08, (void *)func_ov006_020eed64);
+        __cxa_vec_ctor(p + 0x500c, 3, 0xb8, (void *)_ZN16dMgJump3DMario_cC1Ev, (void *)_ZN16dMgJump3DMario_cD1Ev);
+        __cxa_vec_ctor(p + 0x5234, 6, 0xf0, (void *)func_ov006_020c6f70, (void *)func_ov006_020c6f3c);
+        __cxa_vec_ctor(p + 0x57d4, 0x10, 0x24, (void *)func_ov006_020efc08, (void *)func_ov006_020eed64);
         _ZN5ModelC1Ev(p + 0x5a14);
     }
     return p;

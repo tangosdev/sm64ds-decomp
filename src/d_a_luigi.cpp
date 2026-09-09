@@ -6,7 +6,7 @@ extern void _ZN8dActor_cC2Ev(void* c);
 extern void _ZN9ModelAnimC1Ev(void* c);
 extern void _ZN5ModelC1Ev(void* c);
 extern void _ZN11ShadowModelC1Ev(void* c);
-extern void* func_020733a8(void* a, int b, int n, void* ctor, void* dtor);
+extern void* __cxa_vec_ctor(void* a, int b, int n, void* ctor, void* dtor);
 extern int _ZTV11MirrorLuigi[];
 extern void _ZN15TextureSequenceD1Ev(void*);
 extern void _ZN15TextureSequenceC1Ev(void*);
@@ -22,7 +22,7 @@ MirrorLuigi* daLuigi_c_classInit(void){
     _ZN9ModelAnimC1Ev(&c->mModelAnim);
     _ZN5ModelC1Ev(&c->mModel);
     _ZN11ShadowModelC1Ev(&c->mShadowModel);
-    func_020733a8(&c->mTextureSequences[0], 2, sizeof(TextureSequence),
+    __cxa_vec_ctor(&c->mTextureSequences[0], 2, sizeof(TextureSequence),
                   (void*)_ZN15TextureSequenceC1Ev,
                   (void*)_ZN15TextureSequenceD1Ev);
   }

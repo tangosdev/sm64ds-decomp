@@ -16,7 +16,7 @@
  * the table stays pad.
  *
  * ONE ARRAY at 0x51a8, 40 elements of 0x30 bytes each. The compiler lowers
- * its construction/destruction to the ROM's func_020733a8/__destroy_arr calls.
+ * its construction/destruction to the ROM's __cxa_vec_ctor/__cxa_vec_cleanup calls.
  * The element type is ROM-proven by _ZTI19dMgMCarlo2CardObj_c and its
  * two-slot vtable at 0x0213d728. The matched bodies below recover every
  * field and the intrusive list threaded through mPrev/mNext.

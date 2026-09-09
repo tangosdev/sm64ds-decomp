@@ -34,7 +34,7 @@ typedef struct Vector3 {
 #ifdef __cplusplus
     /* DECLARED, AND EMPTY, BECAUSE THE ROM DESTROYS ARRAYS OF IT. A POD array
        needs no cleanup, so ChiefChilly's
-       `__destroy_arr(this + 0x3e8, 8, 0xc, func_020072c0)` can only exist if
+       `__cxa_vec_cleanup(this + 0x3e8, 8, 0xc, func_020072c0)` can only exist if
        the element type declares a destructor -- and 0x020072c0 is four bytes,
        `bx lr`, an empty one. config/arm9/symbols.txt names it
        _ZN7Vector3D1Ev.
@@ -49,7 +49,7 @@ typedef struct Vector3 {
 
 #ifdef __cplusplus
 /* 0xc, and the ROM agrees twice over: ChiefChilly's arrays stride by 0xc and
-   its __destroy_arr calls pass 0xc as the element size. */
+   its __cxa_vec_cleanup calls pass 0xc as the element size. */
 typedef char Vector3_size_must_be_0xc[sizeof(Vector3) == 0xc ? 1 : -1];
 #endif
 
@@ -58,7 +58,7 @@ typedef struct Vector3s {
 #ifdef __cplusplus
     /* Declared and empty, for the same reason Vector3's is: Wiggler destroys an
        array of a 6-byte type through
-       __destroy_arr(this + 0x444, 5, 6, func_02011508), a POD array needs no
+       __cxa_vec_cleanup(this + 0x444, 5, 6, func_02011508), a POD array needs no
        cleanup, and 0x02011508 is four bytes of `bx lr`. 6 is sizeof(Vector3s). */
     ~Vector3s() {}
 #endif

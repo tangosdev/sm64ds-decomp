@@ -4,7 +4,7 @@ extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern int _ZN11dScMgBase_cC2Ev(void *p);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void _ZN5ModelC1Ev(void *);
-extern void func_020733a8(void *p, int a, int b, void *f1, void *f2);
+extern void __cxa_vec_ctor(void *p, int a, int b, void *f1, void *f2);
 extern int _ZTV14dScMgD3DBase_c[];
 extern int _ZTV11dScMgJump_c[];
 extern void _ZN16dMgJump3DMario_cD1Ev();
@@ -36,10 +36,10 @@ extern "C" void *dScMgJump_c_classInit(void)
         _ZN8Particle10SysTrackerC1Ev(p + 0x47e4);
         *(int *)p = (int)_ZTV11dScMgJump_c;
         _ZN5ModelC1Ev(p + 0x501c);
-        func_020733a8(p + 0x506c, 3, 0xb8,
+        __cxa_vec_ctor(p + 0x506c, 3, 0xb8,
                       (void *)_ZN16dMgJump3DMario_cC1Ev,
                       (void *)_ZN16dMgJump3DMario_cD1Ev);
-        func_020733a8(p + 0x5294, 6, 0xf0,
+        __cxa_vec_ctor(p + 0x5294, 6, 0xf0,
                       (void *)func_ov006_020c6f70,
                       (void *)func_ov006_020c6f3c);
     }

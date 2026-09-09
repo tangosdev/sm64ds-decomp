@@ -10659,6 +10659,10 @@ src/_ZN3IRQ21GameCardIREQMCHandlerEv.cpp:
     complete
     .text start:0x020610ac end:0x020610fc
 
+src/func_02061128.c:
+    complete
+    .text start:0x02061128 end:0x02061138
+
 src/func_02061138.c:
     complete
     .text start:0x02061138 end:0x0206116c
@@ -11795,7 +11799,7 @@ src/ReadSignedVarInt.c:
     complete
     .text start:0x02071af8 end:0x02071ba0
 
-src/func_02071ba0.c:
+src/__end__catch.c:
     complete
     .text start:0x02071ba0 end:0x02071be8
 
@@ -11878,6 +11882,26 @@ src/func_02073238.c:
 src/func_02073244.c:
     complete
     .text start:0x02073244 end:0x0207328c
+
+src/__cxa_vec_cleanup.cpp:
+    complete
+    .text start:0x0207328c end:0x02073300
+
+src/func_02073300.cpp:
+    complete
+    .text start:0x02073300 end:0x020733a8
+
+src/__cxa_vec_ctor.cpp:
+    complete
+    .text start:0x020733a8 end:0x02073470
+
+src/func_02073470.cpp:
+    complete
+    .text start:0x02073470 end:0x02073534
+
+src/func_02073534.cpp:
+    complete
+    .text start:0x02073534 end:0x0207359c
 
 src/_ZN3abi21__vmi_class_type_infoD0Ev.cpp:
     complete

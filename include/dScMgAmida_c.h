@@ -2,9 +2,9 @@
 #define DSCMGAMIDA_C_H
 #include "dScMgBase_c.h"
 
-/* The destructor tears down four arrays with __destroy_arr; both
+/* The destructor tears down four arrays with __cxa_vec_cleanup; both
    per-element destructors are no-ops. */
-extern "C" void __destroy_arr(void *arr, int count, int elemSize, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *arr, int count, int elemSize, void *dtor);
 extern "C" void func_ov006_020d116c(void);
 extern "C" void NullDestructor_0203d47c(void);
 

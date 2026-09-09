@@ -6,7 +6,7 @@ extern "C" void _ZN14BlendModelAnimC1Ev(void *thiz);
 extern "C" void _ZN5ModelC1Ev(void *thiz);
 extern "C" void _ZN11ShadowModelC1Ev(void *thiz);
 extern "C" void _ZN15TextureSequenceC1Ev(void *thiz);
-extern "C" void func_020733a8(void *p, int a, int b, void *f1, void *f2);
+extern "C" void __cxa_vec_ctor(void *p, int a, int b, void *f1, void *f2);
 extern "C" void _ZN10dBgW_KcMbgC1Ev(void *thiz);
 extern "C" void _ZN7Vector3D1Ev(void);
 extern "C" void func_0203d384(void);
@@ -27,7 +27,7 @@ extern "C" void *daIwante_c_classInit(void)
         _ZN5ModelC1Ev(c + 0x3d0);
         _ZN11ShadowModelC1Ev(c + 0x420);
         _ZN15TextureSequenceC1Ev(c + 0x448);
-        func_020733a8(c + 0x4dc, 0x14, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(c + 0x4dc, 0x14, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
         _ZN10dBgW_KcMbgC1Ev(c + 0x674);
     }
     return c;

@@ -321,7 +321,7 @@ extern void func_ov006_020d09e0(void);
 extern void *_ZN7fBase_cnwEj(unsigned int size);
 extern void _ZN11dScMgBase_cC2Ev(void *self);
 extern void _ZN8Particle10SysTrackerC1Ev(void *self);
-extern void func_020733a8(void *base, int count, int stride, void *ctor, void *dtor);
+extern void __cxa_vec_ctor(void *base, int count, int stride, void *ctor, void *dtor);
 extern int _ZTV14dScMgD3DBase_c[];
 extern int _ZTV17dScMgTrampoline_c[];
 extern void func_ov006_020cd12c(void);
@@ -441,13 +441,13 @@ extern "C" void *dScMgTrampoline_c_classInit(void)
         _ZN8Particle10SysTrackerC1Ev(scene + 0x47e4);
         // This TU owns the vtable object; +2 selects its ABI address point.
         *(int *)scene = (int)(_ZTV17dScMgTrampoline_c + 2);
-        func_020733a8(scene + 0x500c, 4, 0xd0,
+        __cxa_vec_ctor(scene + 0x500c, 4, 0xd0,
                       (void *)func_ov006_020cd12c,
                       (void *)func_ov006_020ccfc8);
-        func_020733a8(scene + 0x534c, 3, 0x32c,
+        __cxa_vec_ctor(scene + 0x534c, 3, 0x32c,
                       (void *)func_ov006_020d100c,
                       (void *)func_ov006_020d1008);
-        func_020733a8(scene + 0x5cd0, 5, 0x24,
+        __cxa_vec_ctor(scene + 0x5cd0, 5, 0x24,
                       (void *)func_ov006_021225a8,
                       (void *)func_ov006_02120938);
         func_ov006_02120a54(scene + 0x5d84);

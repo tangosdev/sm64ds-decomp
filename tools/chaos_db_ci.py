@@ -78,17 +78,18 @@ def alias_collision_addresses():
     once as a zero-size alias at the identical address (_dmul beside func_01ff8708,
     _ll_sdiv beside func_01ffaa34, _s32_div_f beside __aeabi_idiv, _u32_div_f beside
     __aeabi_uidiv, and _dadd, _deq, _ll_udiv, _ull_mod likewise); config/arm9/symbols.txt
-    declares two more (__cxa_vec_cleanup beside __destroy_arr, __cxa_vec_ctor beside
-    func_020733a8). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
+    declared two more until the two MSL array helpers took the compiler's own spelling as
+    their primary name and the zero-size halves went away (__cxa_vec_cleanup at 0x0207328c,
+    __cxa_vec_ctor at 0x020733a8). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
     onto the ZERO-SIZE record, so the same 1,776-byte body read as matched at 0 bytes
     under the alias and unmatched at full size under the primary. linkcheck reports those
     NO-SYM (len-mismatch), which is the byte gate declining to compare a real function
     against a zero-length range.
 
-    Those ten records leave the universe here, numerator and denominator both. A second
+    Those alias records leave the universe here, numerator and denominator both. A second
     name for a function already in the list is not a second function, and the zero-size
     half can never be byte-compared, so leaving it in the denominator (which is what
-    happened until 2026-09-06) parks ten records that no amount of decompilation can
+    happened until 2026-09-06) parks records that no amount of decompilation can
     clear. Deriving the set rather than listing it means the drop self-heals: repoint the
     alias at a real size in config and the record returns to the count with no edit here.
     Every zero-size record in the universe today has a sized twin, and a zero-size symbol

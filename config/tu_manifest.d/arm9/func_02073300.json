@@ -1,0 +1,123 @@
+{
+  "id": "arm9/func_02073300",
+  "module": "arm9",
+  "source": "src/func_02073300.cpp",
+  "promoted_source": "src/func_02073300.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "ONE FUNCTION, THREE SECTIONS. 0x02073300..0x020733a8 is a single MSL C++ runtime array-destroy helper, the rethrowing sibling of __cxa_vec_cleanup, whose out-of-line catch landing pad the symbol table had split off as func_0207335c. The cartridge's own .exceptix record at 0x02073994 declares the function length as 0xa8 = 0x5c + 0x4c, which is the direct evidence that the two ranges are one function and one translation unit.",
+    "THE UNWIND RECORDS ARE THIS TU'S OUTPUT. Compiled with tools/rombuild.py's exact command (2004/b56, CFLAGS carrying -Cpp_exceptions off, -lang c++ because of the //cpp marker), the in-file `#pragma exceptions on` wins and the object carries .text 168, .exception 38 and .exceptix 12. All three reproduce the cartridge byte for byte outside relocation slots, and every slot resolves to the symbol config/arm9/relocs.txt records.",
+    "THE .exception CLAIM STOPS SHORT OF THE NEXT RECORD, ON PURPOSE. @ET@func_02073300 is 0x26 bytes in the object and the cartridge's next .exception record begins at 0x02073768, so the two bytes at 0x02073766 are zero alignment fill the linker inserted, not this TU's output. The claim ends at 0x02073766 because that is where the compiler output ends; claiming the fill too is what tools/tu_production.py prepare_intact_object refuses, and it is right to. The 0x26 bytes are identical to the cartridge and the two fill bytes are verified zero.",
+    "NOT FROM tools/tu_map.py. The arm9 main module is reported under-segmented and emits one unit for 0x20049f0..0x20707a4; this entry was assembled by hand from the .exceptix length field."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02073300",
+      "end": "0x020733a8"
+    },
+    {
+      "name": ".exception",
+      "start": "0x02073740",
+      "end": "0x02073766"
+    },
+    {
+      "name": ".exceptix",
+      "start": "0x02073994",
+      "end": "0x020739a0"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "func_02073300",
+      "address": "0x02073300",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_02073300.c",
+      "ordinal": 0
+    }
+  ],
+  "data": [],
+  "rodata": [],
+  "bss": [],
+  "exception": [
+    {
+      "symbol": "@ET@func_02073300",
+      "address": "0x02073740",
+      "size": "0x26",
+      "evidence": "compiler-emitted exception frame record for this function's two nested try blocks; STB_LOCAL STT_OBJECT at offset 0 of the object's only .exception section, and the 38 bytes are identical to the cartridge with no relocation slots at all"
+    }
+  ],
+  "exceptix": [
+    {
+      "symbol": "@EX@func_02073300",
+      "address": "0x02073994",
+      "size": "0xc",
+      "evidence": "compiler-emitted unwind index entry: function pointer, length 0xa8, frame pointer. The middle word is the literal 0x000000a8 on both sides, which is the cartridge declaring this function's length; the two pointer words are relocation slots and both resolve"
+    }
+  ],
+  "compiler_only_output": [],
+  "notes": [
+    "PRODUCTION MODE IS DELIBERATELY ABSENT, and that is the honest state of this entry. tools/rombuild.py intact_tu_policies admits an intact-object TU only on a scratch-data-verified ordinary link that proves every claimed range, all modules and the full ROM. That proof cannot be produced anywhere the dsd delink step aborts, which is every worktree tried so far ('function Div could not be analyzed: IllegalIns { address: 200407e, ins: Thumb(Ins { code: ede6, op: BlxI }) }'). Requesting the intact-object path without it is a hard BuildError, so this entry records the measured shape and does not request the path. config/arm9/delinks.txt therefore claims only the .text range, which is exactly what the build produces.",
+    "WHAT THE BUILD DOES TODAY. src/func_02073300.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0. The cartridge's copies of those bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
+    "THE SECOND CALL THE COMPILER GENERATES. The rethrow at the end of the outer catch compiles to a call to __rethrow, which is the primary name of 0x020717c0 in config/arm9/symbols.txt: the sized 0x4c row carries that spelling and there is no alias row at the address. Every recorded caller of 0x020717c0 in config/arm9/relocs.txt is a rethrow site, so the compiler-generated call resolves against the destination the tree already records.",
+    "This is the second entry in the manifest to claim any of arm9's 636 bytes of retail .exceptix, after arm9/__cxa_vec_cleanup."
+  ],
+  "relocations": [
+    {
+      "section": ".exceptix",
+      "source": "0x02073994",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "func_02073300",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02073300"
+    },
+    {
+      "section": ".exceptix",
+      "source": "0x0207399c",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@ET@func_02073300",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x02073740"
+    }
+  ],
+  "externalized_output": [],
+  "verification": {
+    "round": "hand-run of tools/rombuild.py's compile command plus tools/objisolate.py and tools/tu_production.py prepare_intact_object, run link100 lane DARRFAM",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "comparison": "tools/match.py --strict-relocs for .text; raw byte compare against extracted/arm9_dec.bin for .exception and .exceptix, relocation slots wildcarded from the object's own .rela records",
+    "functions_matched": 1,
+    "functions_declared": 1,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS",
+      "every_declared_section_bytes_match": "PASS"
+    },
+    "linkcheck": {
+      "round": "NOT RUN",
+      "result": null,
+      "phases": {
+        "delink": false,
+        "lcf": false,
+        "compile": false,
+        "link": false,
+        "checkModules": false,
+        "checkSymbols": false,
+        "rom": false
+      },
+      "tuRanges": [],
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "rom": {}
+    }
+  }
+}

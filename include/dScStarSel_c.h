@@ -17,11 +17,11 @@
  * CONSTRUCTION. dScStarSel_c_classInit is the factory: it opens with
  * `_ZN7fBase_cnwEj(0x13c)`, i.e. fBase_c::operator new(0x13c). SIZE 0x13c
  * is read directly off the allocator call. The same factory then calls the
- * shared "construct N elements of size S" helper, func_020733a8(p+0x64, 2,
+ * shared "construct N elements of size S" helper, __cxa_vec_ctor(p+0x64, 2,
  * 0x50, Model::Model, Model::~Model) -- two Model objects (include/Model.h,
  * itself confirmed sizeof(Model) == 0x50) back to back at 0x064..0x104.
  * The matching destructor (func_ov003_020addfc / _020ade54) tears the same
- * range down with __destroy_arr(p+0x64, 2, 0x50, Model::~Model) before
+ * range down with __cxa_vec_cleanup(p+0x64, 2, 0x50, Model::~Model) before
  * calling fBase_c's D2 -- two independent witnesses agreeing on both count
  * and stride. InitResources (func_ov003_020af8a0) confirms the same two
  * offsets from the other side: it calls Model::LoadAndSetFile at arg0+0x64

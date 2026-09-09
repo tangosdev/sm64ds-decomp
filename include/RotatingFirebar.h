@@ -11,7 +11,7 @@
  *     dCcPos_c[8]   0x360 + 8 * 0x3c = 0x540
  *
  * The ROM destroys it with
- * __destroy_arr(this + 0x360, 8, 0x3c, _ZN8dCcPos_cD1Ev): 0x3c is
+ * __cxa_vec_cleanup(this + 0x360, 8, 0x3c, _ZN8dCcPos_cD1Ev): 0x3c is
  * sizeof(dCcPos_c) and the element destructor is a name the tree
  * already had, so this class needed no new type.
  */

@@ -23,7 +23,7 @@
  * generated bodies spell out daObjDorifu_c's and dBgActor_c's work instead of
  * calling _ZN13daObjDorifu_cD1Ev: three vptr stores (own, daObjDorifu_c's,
  * dBgActor_c's), daObjDorifu_c's dBgW_KcMbg[5] at 0x4b0 and Model[5] at 0x320
- * through __destroy_arr, then dBgActor_c's own dBgW_KcMbg at 0x124 and Model
+ * through __cxa_vec_cleanup, then dBgActor_c's own dBgW_KcMbg at 0x124 and Model
  * at 0xd4, then dActor_c.
  *
  * Absorbed from these legacy one-function sources (ROM address order):
@@ -106,7 +106,7 @@ extern "C" {
 // @symbol daObjRc_Dorifu_c_classInit
 extern void *_ZN7fBase_cnwEj(unsigned);
 extern void _ZN10dBgActor_cC2Ev(void *);
-extern void func_020733a8(void *, int, int, void *, void *);
+extern void __cxa_vec_ctor(void *, int, int, void *, void *);
 extern int _ZTV13daObjDorifu_c[];
 extern int _ZTV16daObjRc_Dorifu_c[];
 extern void _ZN5ModelD1Ev(void *);
@@ -125,8 +125,8 @@ void *daObjRc_Dorifu_c_classInit(void)
     if (c) {
         _ZN10dBgActor_cC2Ev(c);
         *(int *)c = (int)_ZTV13daObjDorifu_c;
-        func_020733a8(c + 0x320, 5, 0x50, (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
-        func_020733a8(c + 0x4b0, 5, 0x1c8, (void *)_ZN10dBgW_KcMbgC1Ev, (void *)_ZN10dBgW_KcMbgD1Ev);
+        __cxa_vec_ctor(c + 0x320, 5, 0x50, (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
+        __cxa_vec_ctor(c + 0x4b0, 5, 0x1c8, (void *)_ZN10dBgW_KcMbgC1Ev, (void *)_ZN10dBgW_KcMbgD1Ev);
         *(int *)c = (int)&_ZTV16daObjRc_Dorifu_c[2]; /* +8: this TU defines the vtable */
     }
     return c;
@@ -189,7 +189,7 @@ int daObjRc_Dorifu_c::CleanupResources()
  * `struct daObjRc_Dorifu_c : daObjDorifu_c`: its own vptr, then
  * daObjDorifu_c's, then dBgActor_c's -- inlined, because both bases'
  * destructors are themselves inline -- then daObjDorifu_c's dBgW_KcMbg[5]
- * and Model[5] through __destroy_arr, then dBgActor_c's own dBgW_KcMbg and
+ * and Model[5] through __cxa_vec_cleanup, then dBgActor_c's own dBgW_KcMbg and
  * Model, then dActor_c. This class adds no member with a destructor of its
  * own.
  */
