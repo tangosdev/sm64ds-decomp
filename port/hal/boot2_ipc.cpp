@@ -121,6 +121,21 @@ extern unsigned char data_020a0f14[];
 // measurement rather than a hope, and channel 6 is not claimed without it.
 extern unsigned char data_020a80cc[];
 extern unsigned char data_020a80e4[];
+// THE HOSTED TOUCH/SPI DRIVER, hal/tsc_arm7.cpp. Run link100, lane R2D2, rung
+// R2d: src/func_0203bbc0.c and the eight TUs behind it are linked now, and two
+// of them SEND on channel 6, so the channel stops being observed-only. The
+// command is handed over from arm7_recv and the completion is posted from a
+// TURN, never from there -- the same law hal/wm_arm7.cpp opens with, and on
+// this channel it is fatal rather than survivable: src/func_0205edd8.cpp sets
+// its +0x36 bit AFTER its two sends, so a completion delivered inline would
+// clear a bit that is not set yet and src/func_0205ea10.c would spin on it
+// forever. hal/tsc_arm7.cpp's section 2 is that derivation in full.
+void port_tsc_arm7_power_on(void);
+void port_tsc_arm7_command(unsigned int word);
+int  port_tsc_arm7_turn(void);
+void port_tsc_arm7_tick(void);
+void port_tsc_arm7_census(void);
+int  port_tsc_ring_armed(void);
 // hal/comms_seam.cpp's read-back of the data_020a89ec/data_020a8a00 pair.
 int port_wm_message_layout_check(void);
 // THE HOSTED WM DRIVER, hal/wm_arm7.cpp. Run link100, lane WM3, rung W4: the
@@ -165,7 +180,15 @@ struct Channel {
 };
 
 const Channel kChannels[] = {
-    { 0x6, "touch/SPI      (src/func_0205f270.c -> func_0205f300)",  false },
+    // Rung R2d (run link100, lane R2D2) linked src/func_0203bbc0.c and the
+    // eight TUs behind it, and two of them SEND: src/func_0205edd8.cpp's pair
+    // 0x02000303 / 0x0101001e and src/func_0205eeac.cpp's 0x02000104 /
+    // 0x01010000. So this row is answer=true now and hal/tsc_arm7.cpp is what
+    // makes it true. It answers on EVERY boot, solo or not, because the touch
+    // panel is not a multiplayer device: the per-tag census must read four
+    // words on tag 6 in any run that reaches the a054 seam.
+    { 0x6, "touch/SPI      (src/func_0205f270.c -> func_0205f300; answered "
+           "by hal/tsc_arm7.cpp)",                                   true  },
     // Run link100, lane SND1, rung R1: src/func_0205ae64.c is LINKED now
     // (port/slice_snd1.txt), so the ROM's own body registers this channel --
     // and it registers it by TESTING THIS CLAIM. func_0205ae64 does
@@ -249,6 +272,12 @@ void arm7_power_on() {
         std::fprintf(stderr, "[arm7] touch-panel work struct: data_020a80e4 at "
                      "data_020a80cc + 0x%x, one 0x38 run as the ROM has it\n",
                      (unsigned)(data_020a80e4 - data_020a80cc));
+    // THE ARM7'S OWN BOOT, which on hardware has already happened before the
+    // ARM9's code runs: the console's user settings, including the touch
+    // calibration src/func_0205f1e4.c reads at 0x027ffc80+0x58, are in the
+    // shared block by now. hal/tsc_arm7.cpp section 3 is why that matters and
+    // why a zeroed block is not a neutral default here.
+    port_tsc_arm7_power_on();
     for (unsigned i = 0; i < kChannelCount; ++i)
         ntr::ipc_arm7_claim(kChannels[i].id);
     // The ROM registers this same function with
@@ -310,6 +339,18 @@ void arm7_recv(uint32_t word) {
     if (tag == 0xa) {
         ++g_answered;
         port_wm_arm7_command(word);
+        return;
+    }
+
+    // THE TOUCH PANEL. Run link100, lane R2D2, rung R2d. Same law, and here it
+    // is load-bearing rather than merely correct: each command is a PAIR of
+    // words and the ARM9 sets the bit it then waits on AFTER the second one, so
+    // a completion posted from this call would clear a bit that is not set yet.
+    // hal/tsc_arm7.cpp queues it and posts it from the turn taken inside the
+    // ROM's own wait.
+    if (tag == 0x6) {
+        ++g_answered;
+        port_tsc_arm7_command(word);
         return;
     }
 
@@ -570,6 +611,10 @@ void exit_report()
     // AND THE WORKER THREAD'S OWN LINE (run link100, lane WM5). Same reason:
     // a solo run owes "no wireless thread was created", stated, not absent.
     port_wm5_report();
+    // AND THE TOUCH PANEL'S, on the same terms (run link100, lane R2D2). A run
+    // that never reached the a054 seam reports zeros, which is the measurement
+    // that run owes rather than an absence of output.
+    port_tsc_arm7_census();
     std::fflush(stderr);
 }
 
@@ -641,6 +686,13 @@ extern "C" void port_arm7_wireless_tick(void)
     wireless_tick();
     port_wm_arm7_turn();
     port_wm5_worker_census();
+    // AND THE TOUCH PANEL'S TURN (run link100, lane R2D2). Two jobs: drain a
+    // completion no wait collected -- a queued word that never leaves is a
+    // swallowed one by another name -- and, only under SM64DS_TP_RING, post the
+    // auto-sample indication that makes the ROM's own func_0205f300 the ring's
+    // writer. Off by default because hal/sub_screen.cpp still writes that ring;
+    // hal/tsc_arm7.cpp section 4 is the whole of it.
+    port_tsc_arm7_tick();
 }
 
 // Called by hal/boot_os.cpp at the end of port_boot_rom_pre_main(), i.e. after

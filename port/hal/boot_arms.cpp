@@ -205,6 +205,13 @@ extern unsigned char data_0209caf4[];
 // src/func_02013e64.c -- the ROM's own clear of the save block.
 void func_02013e64(void);
 
+// ---- R2d: the ROM's own touch-panel bring-up ------------------------------
+// src/func_0203bbc0.c, nine calls, two of which wait on PXI channel 6.
+// hal/tsc_arm7.cpp is the ARM7 behind that channel and prints this arm's own
+// report; all this file supplies is the moment, in the ROM's order.
+void func_0203bbc0(void);
+void port_tsc_report(void);
+
 // The layout gate. Returns 0 when the five names are the ROM's own run.
 //
 // THE OFFSETS ARE COMPUTED FROM INTEGER ADDRESSES, not by subtracting the
@@ -522,6 +529,35 @@ void port_rom_a054_arms(void)
         std::fprintf(stderr, "  [rom-a054] R2a func_02013e64: the ROM cleared "
                              "its own 0x32c save block at 0x0209caa0\n");
     }
+
+    /* ARM R2d. func_0203bbc0() -- the ROM's own touch-panel bring-up.
+
+       THE ROM'S ORDER PUTS IT HERE, between R2a and R2b. src/func_0201a054.c
+       runs func_02053be0(1); func_0203bbc0(); func_0203bb5c(); if (!r4)
+       func_0201fec8(); func_02042f68(0xd01, data_0208ee50), so the touch
+       bring-up is two calls ahead of the download-play advertisement and this
+       arm goes ahead of that one.
+
+       WHAT IT NEEDED AND WHO ANSWERS IT. Nine calls; two of them send a PAIR of
+       words on PXI channel 6 and then spin on a status bit until the other
+       processor answers. hal/tsc_arm7.cpp is that processor's half: it queues
+       each completion and posts it from a turn taken INSIDE the ROM's own wait
+       (port/CMakeLists.txt compiles src/func_0203bbc0.c with
+       func_0205ea10=port_tsc_wait, and why a completion cannot be posted from
+       arm7_recv is section 2 of that file). hal/scene_boot.cpp's 0x38
+       .dsstate$tp run and hal/boot2_ipc.cpp's read-back of it are gate 1 of the
+       same rung and the reason the body may run at all -- src/func_0205f270.c
+       stores at +0x30..+0x36 on its first line.
+
+       NO GUARD OF ITS OWN, and that is deliberate rather than an omission. The
+       two things this arm could refuse on are checked where they belong and are
+       fatal there: hal/boot2_ipc.cpp hard-faults at power-on if the work struct
+       is not the ROM's 0x38 run, and hal/tsc_arm7.cpp hard-faults on any
+       channel-6 word it does not know rather than swallowing it. A second call
+       is harmless by the ROM's own hand: src/func_0205f270.c returns early
+       unless data_020a80c8 reads zero. */
+    func_0203bbc0();
+    port_tsc_report();
 
     /* ARM R2b. func_0201fec8() -- the download-play advertisement.
 
