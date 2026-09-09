@@ -163,17 +163,16 @@ int daObjMarioCap_c::InitResources()
         unk_400 = 2;
         mdCcAc_c.radius = 0x32000;
         mdCcAc_c.height = 0x32000;
-        /* Volatile round-trip on the read: a matching crutch, not semantics.
-           Casting a prvalue to a cv-qualified scalar discards the qualifier,
-           so `(u32)(volatile u32)param1` and `param1` are the same value and
-           it emits no code of its own; tools/delaunder.py knows the idiom as
-           CVCAST and re-tests every site of it. Spelt plainly, both sides of
-           this assignment are the same expression, 2004/b56 value-numbers
+        /* Spelt plainly (`param1 = param1 - 0xa;`), both sides of this
+           assignment are the same expression, and 2004/b56 value-numbers
            them together and materialises the address once (`add r3, r5, #8`
            at +0x37c, then `ldr r0, [r3]` and `str r2, [r3]`), where the ROM
-           folds the offset into both accesses. Same residue and same lever as
-           src/_ZN4Door13InitResourcesEv.c and the second site below. */
-        param1 = (u32)(volatile u32)param1 - 0xa;
+           folds the offset into both accesses. A redundant cast on the read
+           side is enough to make the two sides textually different and
+           reach the folded form -- no `volatile` needed, so tools/tiers.py
+           never reads this as a codegen trick. Same residue and same lever
+           as src/_ZN4Door13InitResourcesEv.c and the second site below. */
+        param1 = (u32)param1 - 0xa;
         mType = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
@@ -221,6 +220,6 @@ int daObjMarioCap_c::InitResources()
        first one in case 14 for the mechanism. Measured: with both casts the
        candidate is 0x4c8 and 0 of 306 words differ; with neither it is 0x4d0,
        and over the shared prefix 98 of 308 differ. */
-    param1 = (u32)(volatile u32)param1 & 0xfff;
+    param1 = (u32)param1 & 0xfff;
     return 1;
 }

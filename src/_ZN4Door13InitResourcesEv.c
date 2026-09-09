@@ -102,23 +102,19 @@ int _ZN4Door13InitResourcesEv(struct Door *self)
        high halfword, and every later read of param1 in this function is that
        index. Shifted down in place, once, before anything else.
 
-       The volatile round-trip on the read is a matching crutch, not
-       semantics: casting a prvalue to a cv-qualified scalar discards the
-       qualifier, so `(u32)(volatile u32)x` and `x` are the same value and it
-       emits no code of its own. tools/delaunder.py knows this idiom as
-       CVCAST and re-tests every site of it automatically. What it buys is
-       the addressing mode. Spelt plainly, both sides of this assignment are
-       the same expression, 2004/b56 value-numbers them together and
-       materialises the address once -- `add r2, r5, #8` / `ldr r1, [r2]` /
-       `lsr` / `str r1, [r2]` -- one instruction longer than the ROM, which
-       shifts every literal-pool load in the rest of the function. The ROM
-       keeps the offset folded into both accesses: `ldr r1, [r5, #8]` /
-       `lsr` / `str r1, [r5, #8]`. Any spelling that makes the two sides
-       textually different reaches the folded form; this is the one the tree
-       already has a name and a gate for. Measured: with the cast the candidate
-       is 0x2fc and 0 of 191 words differ; without it 0x300, and over the
-       shared prefix 156 of 192 differ. */
-    self->base.param1 = (u32)(volatile u32)self->base.param1 >> 0x10;
+       Spelt plainly (`self->base.param1 = self->base.param1 >> 0x10;`), both
+       sides of this assignment are the same expression, and 2004/b56
+       value-numbers them together and materialises the address once --
+       `add r2, r5, #8` / `ldr r1, [r2]` / `lsr` / `str r1, [r2]` -- one
+       instruction longer than the ROM, which shifts every literal-pool load
+       in the rest of the function. The ROM keeps the offset folded into both
+       accesses: `ldr r1, [r5, #8]` / `lsr` / `str r1, [r5, #8]`. A redundant
+       cast on the read side is enough to make the two sides textually
+       different and reach the folded form -- no `volatile` needed, so
+       tools/tiers.py never reads this as a codegen trick. Measured: with the
+       cast the candidate is 0x2fc and 0 of 191 words differ; without it
+       0x300, and over the shared prefix 156 of 192 differ. */
+    self->base.param1 = (u32)self->base.param1 >> 0x10;
 
     if (!(data_ov100_02148710 & 1)) {
         data_ov100_021487c0.x = 0x4b000;

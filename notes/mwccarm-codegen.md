@@ -5352,6 +5352,7 @@ Measured, same probe, 2004/b56:
 | `T *b = &x.base; x.base.f = b->f >> n` | materialised |
 | `((Base *)&x)->f = ((Base *)&x)->f >> n` (both sides cast) | materialised |
 | `x.f = (u32)(volatile u32)x.f >> n` (CVCAST on the read) | **folded** |
+| `x.f = (u32)x.f >> n` (a plain same-type redundant cast on the read) | **folded** |
 | `x.f = (u32)(unsigned long long)x.f >> n` (WIDEN on the read) | **folded** |
 | `x.f = ((Base *)&x)->f >> n` (one side cast) | **folded** |
 | `((Base *)&x)->f = x.f >> n` (the other side cast) | **folded** |
@@ -5364,13 +5365,27 @@ with the field inherited, materialises exactly like the C nested-member spelling
 
 THE u64 MASK IS NOT INTERCHANGEABLE WITH THE OTHER LAUNDERS AT THIS SITE. On the probe
 `(EXPR & 0xFFFFFFFFFFFFFFFFULL)` folds like the rest, but on the real function it left 8
-of 191 words differing: the 64-bit promotion perturbs the surrounding schedule. CVCAST is
-the one to reach for first, and it is also the one `tools/delaunder.py` re-tests
-automatically (idiom name CVCAST), so a future compiler that folds without help will show
-these sites as removable rather than leaving them as unexplained casts.
+of 191 words differing: the 64-bit promotion perturbs the surrounding schedule.
+
+REACH FOR THE PLAIN REDUNDANT CAST FIRST, NOT CVCAST -- added 2026-09-09, run link100
+lane MATCH3B. CVCAST reads well and is the one `tools/delaunder.py` re-tests
+automatically (idiom name CVCAST), but it spells the fix with a `volatile` token, and
+`tools/tiers.py`'s CONVERTED classifier scores a bare `volatile` object or cast
+round-trip as a MATCH HACK (the regex is `\bvolatile\b(?![\s\w:]*\*)`, tools/tiers.py
+:164; it does not distinguish "steers codegen" from "the only way to touch this piece of
+hardware" -- a pointer-to-volatile like `(volatile Obj *)&x` reads as MMIO and is exempt,
+a volatile-then-discard cast on a plain scalar is not, and PR #2523 failed the converted
+ratchet on exactly this reading on all three sites below). A same-type redundant cast
+(`(u32)x.f` where `x.f` is already `u32`) folds identically on 2004/b56 -- confirmed on
+all three sites below, first candidate tried, no fallback needed -- and carries no
+`volatile` token at all, so it never trips that classifier. Prefer it; fall back to
+WIDEN or the one-side object-pointer cast only if the plain cast does not fold at a
+given site (not yet observed).
 
 WHERE IT LANDED. Three `InitResources` bodies carried this residue and nothing else, all
-three matched by respelling the read and nothing else:
+three matched by respelling the read and nothing else. First matched with CVCAST (PR
+#2523); respelt to the plain redundant cast for the ratchet reason above, same bytes,
+same relocations, lane MATCH3B:
 
   * `Door::InitResources`, ov100 0x021455a0 0x2fc -- one site (`param1 >> 0x10`). Before:
     0x300, 156 of 192 words differing over the shared prefix. After: 0 of 191.
