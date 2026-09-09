@@ -5,6 +5,18 @@
 // sumB onto the just-freed one; every owned build reuses the dying operand register.
 // 17-probe pass, flags, versions, value/address launders all closed (notes 6ay, DB row).
 // Register-choice-only delta: functionally identical. Supersedes the older 13-div draft.
+//
+// RE-MEASURED 2026-09-09 (run link100 lane MATCH4): the `volatile` on the last two
+// statements is buying the low number by pinning the WRONG SHAPE. volatile forces
+// load-add-store then load-add-store; the ROM emits load, load, add, str, add, str.
+// Drop it and 2004/b56 emits the ROM's shape exactly, and the residue becomes a pure
+// 8-word register rotation: ROM pool addresses r2,r1 with values r0,r3 and the first
+// sum in a fresh r4, versus pool r1,r0 with values r3,r2 reused in place and both adds
+// before both stores. So div=5 is a launder artefact and div=8 is the honest number for
+// the right shape; the 6bs fresh-register choice is what is actually out of reach.
+// Measured inert on the un-volatiled form, all 8: plain `+=` on both globals; both old
+// values read into locals first; those locals plus a named `size >> 1`; the explicit
+// `x = x + n` form. Keeping the volatile only because 5 is the lower banked number.
 extern "C" {
 extern unsigned int data_020a4be8;
 extern unsigned int data_020a4bc8;

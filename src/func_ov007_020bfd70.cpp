@@ -1,5 +1,7 @@
 //cpp
-// NONMATCHING: different op / idiom (div=13). Logic verified correct vs ROM; not
+// NONMATCHING: different op / idiom (div=13 as measured at 1.2/sp2p3; re-measured
+// 2026-09-09 at the pinned 2004/b56 it is 14, in one band from +0x24 to +0x5c around
+// the sin/cos table reads). Logic verified correct vs ROM; not
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
 extern "C" {

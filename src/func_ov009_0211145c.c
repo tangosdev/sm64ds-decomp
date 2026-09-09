@@ -8,6 +8,22 @@
  * Store/call tail uses mwccarm asm: pure C emits rsb r0 + wrong str/mov
  * interleave for -0x14000 / 0xff06a000 / func_0201267c (same wall as sibling
  * 021116ec avoids by not calling after the stores).
+ *
+ * MEASURED 2026-09-09 (run link100 lane MATCH4). Replacing the asm block with the
+ * plain C it spells -- *(int*)(c+0x160) = -0x14000; *(int*)(c+0x168) = 0xff06a000;
+ * func_0201267c(0x6a, c+0x74); -- is size-exact at div=5 under 2004/b56, all of it in
+ * one 5-instruction window at +0xe0..+0xf4:
+ *   ROM:  rsb r1,r0,#0 / str r1,[sl,#0x160] / ldr r0,[pc,#0x78] / add r1,sl,#0x74 /
+ *         str r0,[sl,#0x168] / mov r0,#0x6a
+ *   here: rsb r0,r0,#0 / ldr r2,[pc,#0x7c] / str r0,[sl,#0x160] / add r1,sl,#0x74 /
+ *         mov r0,#0x6a / str r2,[sl,#0x168]
+ * mwccarm hoists the pool load above the first store and negates in place; the ROM
+ * negates into a second register and keeps the pool load between the two stores.
+ * Byte-identical to that baseline, so all inert: a named int for 0x14000; 0 - 0x14000;
+ * unsigned store types; an explicit (int)0xff06a000; a named char *arg = c + 0x74
+ * before the second store; a two-step w = -v; the arg named at the top of the block;
+ * the arg named in a nested scope. decomp-permuter on 2004/b56, 3425 iterations at -j4,
+ * base score 280, never improved.
  */
 
 extern char* _ZN8dActor_c13ClosestPlayerEv(void* self);

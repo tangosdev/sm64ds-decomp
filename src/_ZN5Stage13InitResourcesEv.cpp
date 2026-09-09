@@ -4,6 +4,25 @@
 // phi coalesce (bank web colored r1 vs ROM r2 at +0x524, one shared merge copy). Identical
 // on every owned build; pragmas, siblings, flags, launders, TU composition, goto-pin CFG
 // all closed (notes 6av/6ay, DB row). Register-rename-only delta: functionally identical.
+//
+// RE-MEASURED 2026-09-09 (run link100 lane MATCH4), and the four words are not four
+// independent renames. They split into two facts, and only the second is the floor:
+//   (1) `and r2,r2,#0xff` at +0x580 is this draft's OWN truncation. `bank` is u8 and
+//       `bank = level2 * 3;` stores an int into it. Type the index int -- either
+//       `bank = data_02075769[level2 * 3];` or a named `int idx` -- and the mask goes.
+//   (2) With the index typed int, EVERY spelling compiles to 0xa80, one instruction
+//       SHORT of the ROM. The ROM spends a merge copy `mov r1,r2` at +0x584 because it
+//       colours the bank web to r2, skipping r1 -- which had just died on `cmp r1,#2`
+//       at +0x520, the notes 6bs "declines to reuse a dying register" signature.
+//       mwccarm coalesces bank straight into the argument register r1, so no copy
+//       exists to colour. The residue is one instruction the compiler will not spend,
+//       not a rename, and the u8 draft only reaches 0xa84 by spending a different one.
+// Measured inert, all 0xa80: int bank with an inline index; int bank with a named int
+// idx; u8 bank with a named int idx; s32 bank; a hoisted `int mode = data_0209f220`
+// before the level2 read; bank declared first of all the locals; an explicit
+// `int b2 = bank` copy at the call; a named `u8 *tbl` pointer; an int temp between the
+// load and the assignment; a u8 temp; `level2+level2+level2` for `level2*3`. Declaration
+// order (bank before soundGroup) on the u8 draft leaves the same 4.
 typedef unsigned char u8;
 typedef signed char s8;
 typedef unsigned short u16;
