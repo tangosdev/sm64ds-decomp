@@ -3,23 +3,27 @@
 // func_02071510 (which builds the Decimal) and func_020715e0 (which calls this
 // one after func_02071698 decides the value rounds up).
 //
-// ONE FUNCTION, NOT TWO. mwccarm always appends a `bx lr` after a `for (;;)`
-// whose exits are all early returns, and here that dead epilogue is the four
-// bytes at 0x02071694 that config had carved off as its own function
-// "func_02071694", matched as an empty `void f(void) {}` body. Nothing in the
-// tree references 0x02071694: config/**/relocs.txt records zero destinations at
-// that address, while 0x02071698 (the real next function) has one. The
-// compiler's own output settles the extent -- this source emits 0x54 bytes that
-// reproduce 0x02071644..0x02071698 exactly -- so the symbol is grown to 0x54
-// and the phantom row is deleted. See notes/mwccarm-codegen.md 9a(3), which
-// records this pair and func_02072168 / func_020729e8 as the same shape.
+// ONE FUNCTION, NOT TWO, ON THIS BODY'S OWN OUTPUT. Compiled at 2004/b56 this
+// source emits 0x54 bytes reproducing 0x02071644..0x02071698 exactly, with no
+// relocation slot to wildcard, and its last instruction is the `bx lr` at
+// 0x02071694 -- the four bytes config had carved off as a separate function
+// "func_02071694" and someone matched with an empty `void f(void) {}`. Compiled
+// against the truncated 0x50 the same object is one instruction too long. That
+// is what THIS body emits under THIS compiler; it is not a general rule about
+// what mwccarm does after a `for (;;)`.
+//
+// The relocation index points the same way and claims less: no destination in
+// config/**/relocs.txt names 0x02071694, while 0x02071698 (the real next
+// function) has one. That is an absence of references in that index, not proof
+// that execution can never enter the address.
 //
 // recovered: real C, no asm hatch. This file used to carry a HAND-ASM banner
 // claiming a "regperm floor"; the floor was the truncated symbol, not the
-// register allocator. The draft in notes 9a(3) reached the same bytes through
-// a void* with a hand-written +5 and a 6g launder cast on the exponent; neither
-// is needed once the Decimal struct is spelled out, so this version carries no
-// magic offsets and no launder.
+// register allocator. The earlier investigation, the sibling split-symbol pair
+// func_02072168 / func_020729e8, and the void*-plus-launder draft are in
+// notes/mwccarm-codegen.md 9a(3). Neither a magic offset nor a launder is
+// needed once the Decimal struct is spelled out, so this version carries
+// neither.
 #include "types.h"
 
 typedef struct Decimal
