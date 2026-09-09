@@ -85,7 +85,7 @@ int *daTgz_c_classInit(void)
 #include "Spiny.h"
 #include "Player.h"
 
-int Spiny::OnTurnIntoEgg(Player &player)
+void Spiny::OnTurnIntoEgg(Player &player)
 {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 1, 0);

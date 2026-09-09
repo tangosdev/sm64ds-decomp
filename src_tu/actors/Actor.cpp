@@ -1137,7 +1137,7 @@ int dActor_c::OnYoshiTryEat()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 44 -- _ZN8dActor_c13OnTurnIntoEggER6Player
  * 0x02010154  size 0xc   legacy src/_ZN8dActor_c13OnTurnIntoEggER6Player.cpp */
-int dActor_c::OnTurnIntoEgg(Player &player)
+void dActor_c::OnTurnIntoEgg(Player &player)
 {
     KillAndTrackInDeathTable();
 }

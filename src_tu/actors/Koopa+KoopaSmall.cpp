@@ -344,7 +344,7 @@ s32 Koopa::OnYoshiTryEat() {
  * former address (former name func_ov062_02119628).
  * Matched byte-for-byte with mwccarm 2004/b56 (ov062).
  */
-int Koopa::OnTurnIntoEgg(Player &player)
+void Koopa::OnTurnIntoEgg(Player &player)
 {
     if (unk_108 == 3) {
         if (OnYoshiTryEat() == 6 && !player.IsCollectingCap()) {
