@@ -1,13 +1,15 @@
 //cpp
 #include "types.h"
 // @symbol _ZN15daObjMarioCap_c13InitResourcesEv
-// NONMATCHING: candidate's literal pool is 8 bytes (two words) larger than the ROM's
-// under the pinned 2004/b56 (0x4d0 vs 0x4c8). The code body, including the whole
-// switch/jump-table prologue, is identical through +0xc8; at +0xcc the first
-// `ldr r0, [pc, #N]` literal-pool load goes from ROM offset 0x390 to candidate offset
-// 0x398, and every later `ldr [pc, #N]` inherits the same constant 8-byte shift. Never
-// enrolled (config/arm9/overlays/ov002/delinks.txt carries no `complete` marker for this
-// range) -- counted as matched only because the count rule never read delinks.txt.
+/* Byte-matches under the pinned 2004/b56, 0x4c8 for 0x4c8, relocation
+   destinations checked. It did not until the two param1 read-modify-writes
+   below were respelt, and the 8 bytes were never in the literal pool: both
+   pools are 25 words. Two extra INSTRUCTIONS in the code, at +0x37c and
+   +0x448, pushed the pool 8 bytes further from every `ldr [pc, #N]` that
+   reaches it, which is why the earlier reading of the residue put the growth
+   in the pool. config/arm9/overlays/ov002/delinks.txt still carries no
+   `complete` marker for this range, so the ROM build does not yet compile
+   this file; that is a layout question and is untouched. */
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
@@ -161,7 +163,17 @@ int daObjMarioCap_c::InitResources()
         unk_400 = 2;
         mdCcAc_c.radius = 0x32000;
         mdCcAc_c.height = 0x32000;
-        param1 -= 0xa;
+        /* Volatile round-trip on the read: a matching crutch, not semantics.
+           Casting a prvalue to a cv-qualified scalar discards the qualifier,
+           so `(u32)(volatile u32)param1` and `param1` are the same value and
+           it emits no code of its own; tools/delaunder.py knows the idiom as
+           CVCAST and re-tests every site of it. Spelt plainly, both sides of
+           this assignment are the same expression, 2004/b56 value-numbers
+           them together and materialises the address once (`add r3, r5, #8`
+           at +0x37c, then `ldr r0, [r3]` and `str r2, [r3]`), where the ROM
+           folds the offset into both accesses. Same residue and same lever as
+           src/_ZN4Door13InitResourcesEv.c and the second site below. */
+        param1 = (u32)(volatile u32)param1 - 0xa;
         mType = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
@@ -205,6 +217,10 @@ int daObjMarioCap_c::InitResources()
         func_ov001_020ab228(((char *)this) + 0x3d0, ((char *)this), mModelIndex & 0xff, unk_400, v);
     }
 
-    param1 &= 0xfff;
+    /* The second materialised param1 read-modify-write, at +0x448; see the
+       first one in case 14 for the mechanism. Measured: with both casts 0 of
+       306 words differ, with neither the function is 8 bytes longer than the
+       ROM. */
+    param1 = (u32)(volatile u32)param1 & 0xfff;
     return 1;
 }
