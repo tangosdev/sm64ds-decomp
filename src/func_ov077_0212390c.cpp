@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern char* _ZN8dActor_c22ClosestNonVanishPlayerEv(void);
+extern char* _ZN8dActor_c22ClosestNonVanishPlayerEv(void *thiz);
 extern int Vec3_HorzDist(void* a, void* b);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _Z14ApproachLinearRsss(void* a, short b, short c);
@@ -9,7 +9,7 @@ extern void _Z14ApproachLinearRiii(void* a, int b, int c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, void* b);
 extern int _ZN9Spindrift8BehaviorEv(void* a, void* b);
 void func_ov077_0212390c(char* c){
-  char* p = _ZN8dActor_c22ClosestNonVanishPlayerEv();
+  char* p = _ZN8dActor_c22ClosestNonVanishPlayerEv(c);
   char* tgt;
   int r6;
   if(p != 0){
