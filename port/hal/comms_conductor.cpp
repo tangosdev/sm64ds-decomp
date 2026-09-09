@@ -334,6 +334,15 @@ void func_020408b0(unsigned short mode);
 void func_02040820(void);
 void func_02040790(void);
 int  func_02040704(int ignored);
+// AND THE FOURTH FACE THE SAME ARM DRIVES (run link100, lane WM6): the ROM's
+// own wireless worker bring-up and the two callbacks it is handed. All three
+// are matched bodies already in the binary -- src/func_02040c34.c on rung W6
+// (lane WM5), src/func_0203f644.c and src/func_0203f604.c on port/slice_mp3.txt
+// -- so this declares them rather than adding anything. See the hunk in
+// comms_wait_for_session for why the call belongs there.
+void func_02040c34(int role, int one, void *cb_a, void *cb_b, int zero);
+void func_0203f644(void);
+void *func_0203f604(int unused, unsigned int size, void *ptr);
 // MY COMMS SLOT, hosted by hal/actor_vtables.cpp. src/func_0203da9c.c returns
 // it and hal/level_boot.cpp seats the world's local player index from that.
 extern unsigned char data_020a0f10[];
@@ -1153,6 +1162,80 @@ bool comms_wait_for_session(int frames) {
     comms_arm7_turn();
     if (data_020a0f04[0] == kCommsRoleParent)      func_02040820();
     else if (data_020a0f04[0] == kCommsRoleChild)  func_02040790();
+
+    // AND THE ROM'S OWN CASE-0 ARM DOES NOT END AT THE ROLE CALL. Run link100,
+    // lane WM6, on top of lane WM5's rung W6.
+    //
+    // WHAT WAS WRONG. src/func_02040c34.c -- the cartridge's own wireless
+    // worker-thread bring-up -- became a linked body on rung W6, and lane WM5
+    // then measured it and found the census reading worker_created=0 in solo
+    // AND in a loopback pair. The body links because the ROM's reference graph
+    // reaches it (src/func_0203ea5c.c:209 and :212 are real call sites), but
+    // nothing was ever ENTERING it, and the reason is the three lines above.
+    // This wait answers the data_02099e1c one-shot itself, before the world
+    // boots, because the session has to precede the level. So by the time
+    // src/func_0203ea5c.c's own loop runs, func_02040714 no longer reports
+    // state 0, its case-0 arm is never taken, and the arm is the ONLY thing in
+    // the cartridge that calls func_02040c34. The bring-up that was moved here
+    // was two thirds of the ROM's arm; this is the missing third.
+    //
+    // THE ROM'S OWN ORDER, and it is an adjacency rather than a preference.
+    // src/func_0203ea5c.c:207-214 reads:
+    //
+    //     case 0:
+    //         if (data_020a0f04 == 1) {
+    //             func_02040820();
+    //             func_02040c34(1, 1, &func_0203f644, &func_0203f604, 0);
+    //         } else if (data_020a0f04 == 2) {
+    //             func_02040790();
+    //             func_02040c34(0, 1, &func_0203f644, &func_0203f604, 0);
+    //         }
+    //
+    // -- the worker bring-up follows the role call IMMEDIATELY, with nothing
+    // between them, off the same role byte, and with the role byte itself
+    // deciding the first argument (parent 1, child 0). That is exactly the
+    // shape below: same order, same byte, same arguments, same callbacks.
+    // func_02040820 and func_02040790 cannot disturb the choice either --
+    // src/func_02040820.c switches on data_020a0f94 and writes data_020a0f94
+    // and data_020a0f5c only -- so splitting the arm into two consecutive
+    // if/else chains is the same program as the ROM's one chain, and it leaves
+    // rung W4's two transcribed lines above untouched.
+    //
+    // AND RELATIVE TO THE ONE-SHOT, which is the other order worth stating.
+    // The ROM clears data_02099e1c at :152-155, i.e. BEFORE the loop and so
+    // before this call; here the clear is a few lines below it. That is the
+    // same program to everything that can observe it: the only readers of
+    // data_02099e1c in the whole image are src/func_0203ea5c.c:152 and
+    // hal/comms_conductor_wide.cpp's copy of the same line, and nothing on
+    // func_02040c34's chain reads or writes the word. What the call DOES
+    // depend on is func_020408b0(2) having run first, because that is what
+    // registers PXI channel 0xa and gets the ARM7's transport open, and it is
+    // three lines above.
+    //
+    // WHAT THE PARENT GETS AND WHAT THE CHILD GETS ARE DIFFERENT, and that is
+    // the ROM's shape, not a gap. src/func_02040c34.c branches on its first
+    // argument: role != 0 carves the three 0xcc0-byte work nodes and ends with
+    // func_02042200, which is the OS_CreateThread of the worker; role == 0
+    // takes the sixteen-slot arm, calls func_02041224 twice and ends at the
+    // faced func_02065234, and never reaches func_02042200 at all. So a
+    // loopback pair honestly censuses a worker thread on the PARENT window and
+    // none on the child, and hal/wm_thread.cpp's header says so in the same
+    // words ("No thread on this arm; the ROM does not create one for a child").
+    // A census that read created=1 on both would mean something other than the
+    // cartridge had started a thread.
+    //
+    // THE CALLBACKS ARE THE ROM'S OWN and are already linked: src/func_0203f644.c
+    // (the veneer to func_02040a94) and src/func_0203f604.c (the allocate/free
+    // helper) ride port/slice_mp3.txt, which rides SLICE_COMMS_SOURCES exactly
+    // as this file does, so they resolve on every target this file is compiled
+    // for. func_02040c34 itself resolves the same way on all of them: rung W6's
+    // real body on walk_window and walk_window_hires, and hal/wm_thread_face.cpp's
+    // recording stand-in on smoke_player, which is the target that cannot carry
+    // the worker because src/func_02042254.c needs the boot spine.
+    if (data_020a0f04[0] == kCommsRoleParent)
+        func_02040c34(1, 1, (void *)&func_0203f644, (void *)&func_0203f604, 0);
+    else if (data_020a0f04[0] == kCommsRoleChild)
+        func_02040c34(0, 1, (void *)&func_0203f644, (void *)&func_0203f604, 0);
 
     // AND THE ONE-SHOT IS SPENT, which rung W4 made load-bearing. data_02099e1c
     // is the "open the radio" request the DS's multiplayer menu seats, and
