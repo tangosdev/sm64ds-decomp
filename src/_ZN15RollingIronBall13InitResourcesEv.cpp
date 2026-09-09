@@ -1,11 +1,11 @@
 //cpp
 // @symbol _ZN15RollingIronBall13InitResourcesEv
-// NONMATCHING: candidate is 4 bytes (one instruction) larger than the ROM under the
-// pinned 2004/b56 (0x390 vs 0x38c). The two streams agree through +0x5c; at +0x60 the
-// candidate emits an extra `add r1, r4, #8` the ROM body does not have, and every
-// instruction after that point is shifted 4 bytes for the rest of the function. Never
-// enrolled (config/arm9/overlays/ov100/delinks.txt carries no `complete` marker for this
-// range) -- counted as matched only because the count rule never read delinks.txt.
+/* Byte-matches under the pinned 2004/b56, 0x38c for 0x38c, relocation
+   destinations checked. It did not until the param1 shift below was respelt;
+   the extra `add r1, r4, #8` this file used to emit at +0x60 is described at
+   that line. config/arm9/overlays/ov100/delinks.txt still carries no
+   `complete` marker for this range, so the ROM build does not yet compile
+   this file; that is a layout question and is untouched. */
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_PathPtr.h"
 #include "decl_dBgCh_Actr.h"
@@ -38,7 +38,27 @@ int RollingIronBall::InitResources()
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x46000;
     mVariant = param1 & 0xf;
-    param1 = param1 >> 4;
+    /* The spawn word is packed: the low nibble is the variant, read out just
+       above, and the rest is this ball's own parameters, shifted down in
+       place here.
+
+       The volatile round-trip on the read is a matching crutch, not
+       semantics: casting a prvalue to a cv-qualified scalar discards the
+       qualifier, so `(u32)(volatile u32)param1` and `param1` are the same
+       value and it emits no code of its own. tools/delaunder.py knows the
+       idiom as CVCAST and re-tests every site of it automatically. What it
+       buys is the addressing mode. Spelt plainly, both sides of this
+       assignment are the same expression, 2004/b56 value-numbers them
+       together and materialises the address once -- the extra
+       `add r1, r4, #8` at +0x60, followed by `ldr r0, [r1]` and
+       `str r0, [r1]` -- one instruction longer than the ROM, which shifts
+       every literal-pool load in the rest of the function. The ROM keeps the
+       offset folded into both accesses: `ldr r0, [r4, #8]` / `lsr r0, r0, #4`
+       / `str r0, [r4, #8]`. Any spelling that makes the two sides textually
+       different reaches the folded form. Same residue, same lever, as
+       src/_ZN4Door13InitResourcesEv.c. Measured: with the cast 0 of 227 words
+       differ, without it 3 plus the shifted tail. */
+    param1 = (u32)(volatile u32)param1 >> 4;
     kind = mVariant;
 
     if (kind == 2 || kind == 4) {
