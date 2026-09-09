@@ -41,7 +41,7 @@ dMg3DEspAnimSet_c+dMg3DEspModel_c+dScMg3DEsp_c	68	1845	ov006	yes	no	pragma:8;mul
 dMgJump3DMario_c	1	1077	ov006	yes	yes	classif:no-header:dMgJump3DMario_c;compiler-only:>=5(derived from own chain: 2 classes incl. self via build/rtti.json; floor 2x2+1)	dScMgSingle3DBase_c	text-only
 dScMgD3DBase_c	1	820	ov006	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 daMky_c	3	2380	ov030	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
-da1up_c	3	1295	ov002	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daBar_c	text-only
+da1up_c	3	1284	ov002	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daBar_c	text-only
 daOts_c	1	700	ov064	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daObjFl_Gura_c	text-only
 Scuttlebug	3	1059	ov071	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daEyBm_c	text-only
 MrBlizzard	34	1358	ov081	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
