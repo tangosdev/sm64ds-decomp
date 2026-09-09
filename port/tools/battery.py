@@ -61,6 +61,57 @@ out of build/port with the per-launch lock. See RUNNING THE LEVEL ROWS N-WIDE
 below for what the directories are for and why the slot has to be held across
 the phase for any of it to help.
 
+LOCKING BY PHASE (run link100, lane BATTLOCK). Before this lane, battery.py
+opted into the windowed SLOT lock itself (SM64DS_TEST_LOCK) but never the
+BUILD lock -- a caller that wanted the full build serialised against every
+other lane's build had to wrap the WHOLE invocation in `build_lock.py run`,
+which holds the build lock for the wrapped child's ENTIRE lifetime. That is
+not the ~5 minutes battery.py spends actually building; it is that PLUS the
+ten to fifteen minutes it spends on its 87 windowed rows, which never touch
+the build tree at all. One battery under that wrapper therefore blocked every
+OTHER lane's build for the whole battery, doing no building itself for most
+of it -- the one thing pacing every lane on a night with several builds and
+batteries queued.
+
+battery.py now takes BOTH locks itself, each scoped to only the phases that
+need it, so the two are never held at the same time and neither is held while
+WAITING for the other:
+
+  phase                            lock held    gated by
+  --------------------------------  -----------  -------------------
+  the rebuild (build-port.cmd)      BUILD        SM64DS_BUILD_LOCK
+  smoke suite                       neither (no window opened, nothing built)
+  level rows + scene rows +         SLOT         SM64DS_TEST_LOCK
+    the default boot (one phase,
+    full_windowed_phase)
+  linkage.py / ptr_audit.py         neither
+  shipcfg configure+build           BUILD        SM64DS_BUILD_LOCK
+  shipcfg selftest                  SLOT         SM64DS_TEST_LOCK
+
+Both stay opt-in exactly as before: with the corresponding env var unset,
+battery.py takes neither lock for that phase and runs it byte-for-byte as it
+always has. See build_phase() and full_windowed_phase() below for the code.
+
+RECOMMENDED INVOCATION. Run battery.py directly rather than wrapping it in
+`build_lock.py run` -- the wrapper cannot release the build lock between
+phases (it holds the lock for the CHILD PROCESS'S WHOLE LIFETIME, which is
+exactly the problem LOCKING BY PHASE above closes), so a lane invoked that
+way blocks every other lane's build for its whole battery, not just for the
+few minutes it is actually building. Export both opt-ins and their _PATH
+variables (as COMMON.md already has every lane do) and run the script itself:
+
+    export SM64DS_BUILD_LOCK=1 SM64DS_BUILD_LOCK_PATH=C:/tmp/sm64ds-test-slot/port_build.lock
+    export SM64DS_TEST_LOCK=1 SM64DS_TEST_LOCK_PATH=C:/tmp/sm64ds-test-slot/slot.lock
+    python port/tools/battery.py <root> --linked-floor N
+
+Invoked the OLD way -- as the child of `build_lock.py run` -- battery.py
+detects it (the current holder is this process's own parent or a nearer
+ancestor; see _build_lock_held_by_ancestor) and prints a one-line notice
+naming the recommended invocation instead of trying to acquire a lock that is
+already its own ancestor's, which would deadlock rather than queue. That
+invocation still WORKS and is still CORRECT battery-wise; it is only slower
+for every other lane waiting on the build lock while this one runs its rows.
+
 THE SELFTEST BMP TRACKS THE HOSTED-GLOBAL LAYOUT, NOT ONLY THE .dsstate BASE.
 
 Read this before treating a walk_window_selftest.bmp diff as a rendering
@@ -1833,6 +1884,9 @@ def shipcfg_arm(root):
 
 def main():
     args = [a for a in sys.argv[1:]]
+    if "--help" in args or "-h" in args:
+        print(__doc__)
+        return 0
     floor = 0
     if "--linked-floor" in args:
         i = args.index("--linked-floor")
