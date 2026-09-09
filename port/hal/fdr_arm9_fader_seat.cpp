@@ -626,13 +626,26 @@ void fdr_fill(void)
     data_020926f0[11] = (void *)fdr_s2c;
 }
 
-/* Fill, then run the ROM's initialiser. One object so the order is the
-   compiler's, not the linker's. */
+/* Fill the table. The ROM's initialiser used to be called from here too; run
+   link100 lane CTOR, rung C1a, moved it to where the ROM runs it -- word 12 of
+   the .ctor table at 0x02086b60, walked by func_02072f94 at Entry's own point
+   (0x020048a8). hal/ctor_runner.cpp publishes the table and hal/rom_main.cpp
+   makes Entry's call. The hand call was deleted in the same commit: a word in
+   the table plus a call from here is __sinit_02074f80 running TWICE, and it is
+   not idempotent -- func_020731dc would push a SECOND destructor node for the
+   same object onto data_020aa3f0.
+
+   THE ORDER THE HEADER ABOVE ARGUES FOR IS UNCHANGED AND STILL INTRA-FILE IN
+   EFFECT: this fill runs at C++ static-init time, before walk_window's main,
+   and the .ctor walk runs later still, inside the boot, so data_020926f0 is
+   full before func_0202fc40 installs the vptr. What used to be guaranteed by
+   sharing one initializer is now guaranteed by the CRT running every static
+   initializer before main. The counter in hal/ctor_runner.cpp prints the
+   number of times __sinit_02074f80 ran; one is the pass. */
 struct FdrArm9FaderBoot {
     FdrArm9FaderBoot()
     {
         fdr_fill();
-        __sinit_02074f80();
     }
 };
 FdrArm9FaderBoot fdr_arm9_fader_boot;
