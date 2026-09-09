@@ -16881,6 +16881,35 @@ foreach(_tloadov walk_window walk_window_hires)
     target_sources(${_tloadov} PRIVATE ${SLICE_LOADOV_SOURCES})
 endforeach()
 
+# Run link100, lane CTOR, rung C1a: the ROM's own static-initialiser runner at
+# Entry's own point (arm9 0x020048a8, one instruction before the tail jump to
+# main). port/slice_ctor.txt is the derivation and hal/ctor_runner.cpp carries
+# the table, the binds, the thirteen faces and the two once-only counters.
+#
+# ALL THREE TARGETS, not the two window ones. hal/level_boot.cpp and
+# hal/fdr_arm9_fader_seat.cpp are on smoke_player as well, and this commit
+# DELETES the two hand calls those files made (__sinit_02073e6c and
+# __sinit_02074f80). Leaving smoke_player off this list would take both
+# initialisers out of that binary altogether -- exactly the split the fader
+# block above warns about, arriving from the other direction. smoke_player has
+# no Entry seam to call the runner from, so on that target the two initialisers
+# are linked and not run; it renders a Player into a BMP and touches neither
+# the wipe fader nor the opening's script blobs, and the smoke suite is the
+# check that this stays true.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ctor.txt" SLICE_CTOR_LINES)
+set(SLICE_CTOR_SOURCES "")
+foreach(line IN LISTS SLICE_CTOR_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_CTOR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_CTOR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/hal/ctor_runner.cpp")
+foreach(_tctor walk_window walk_window_hires smoke_player)
+    target_sources(${_tctor} PRIVATE ${SLICE_CTOR_SOURCES})
+endforeach()
+
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
 # reconfigure and the build will look clean while compiling the old set of

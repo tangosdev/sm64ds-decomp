@@ -178,8 +178,27 @@ int port_rom_main_enabled(void)
     return !(e[0] == '0' && e[1] == '\0');
 }
 
+/* ENTRY'S OWN STATIC-INITIALISER CALL, run link100 lane CTOR rung C1a. The
+   ROM's Entry runs func_02019780 at 0x020048a4, func_02072f94 at 0x020048a8
+   and then tail-jumps to main -- the three instructions the header block above
+   quotes. tests/walk_window.cpp already runs func_02019780's body and its
+   fourth call immediately before it calls this function, so the head of this
+   function IS 0x020048a8 and nothing had to move to make room. The table that
+   call walks, the bindings of its 23 words and the two once-only counters are
+   in hal/ctor_runner.cpp.
+
+   IT IS INSIDE THE SM64DS_ROM_MAIN GATE, and Entry's call is not main's, which
+   this rung states rather than hides. The gate DEFAULTS ON and nothing in
+   port/tools sets it to 0 -- it is a hand A/B hatch for comparing the ROM's
+   main against the host transcription -- so every battery, proof and captured
+   run takes this path. SM64DS_ROM_MAIN=0 now also skips the .ctor walk. The
+   call belongs one line above the `if` in tests/walk_window.cpp, and that file
+   belongs to another lane tonight. */
+void port_rom_entry_ctors(void);
+
 void port_rom_main_run(void)
 {
+    port_rom_entry_ctors();
     std::fprintf(stderr, "[rom-main] calling the ROM's own main (src/main.c, "
                          "arm9 0x02007000)\n");
     rom_main();

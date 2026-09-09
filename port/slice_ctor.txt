@@ -1,0 +1,74 @@
+# The ROM's own static-initialiser runner, at Entry's own point.
+#
+# Run link100, lane CTOR, rung C1a. hal/ctor_runner.cpp carries the derivation;
+# this is the list of matched TUs that become reachable because of it, and why
+# each one links.
+#
+#   src/func_02072f94.c        CodeWarrior's .ctor walker. Entry calls it at
+#                              0x020048a8, one instruction before the tail jump
+#                              to main; hal/rom_main.cpp's port_rom_main_run()
+#                              now calls it at exactly that point. It walks the
+#                              table hal/ctor_runner.cpp publishes at the ROM's
+#                              own 0x02086b60.
+#
+# THE EIGHT INITIALISERS THIS RUNG ANSWERS FOR. Every name each of them
+# references was resolved against this tree's own build/port/walk_window.map
+# before the file was written, not guessed:
+#
+#   src/__sinit_02074d90.c     zeroes data_0209b468[0] and [1]. Hosted in
+#                              hal/actor_vtables.cpp:234. No other reference.
+#   src/__sinit_02074da8.c     func_02011a5c(data_0209b53c). The array is
+#                              hal/actor_vtables.cpp:604; the body is below.
+#   src/__sinit_02074dbc.c     empty body.
+#   src/__sinit_02074dc0.c     empty body.
+#   src/__sinit_02074e80.c     empty body.
+#   src/__sinit_02074fb8.c     stores &data_0208ee14 then &data_02094390 into
+#                              data_020a0c68[0], and 0 into [1]. data_02094390
+#                              is hal/arm9_tables_link100.cpp, data_020a0c68 is
+#                              hal/scene_link100_boot.cpp:202, and data_0208ee14
+#                              is hosted by hal/ctor_runner.cpp because nothing
+#                              else in the port hosts it.
+#   src/__sinit_020750b4.c     empty body.
+#   src/__sinit_02075150.c     empty body.
+#
+# TWO MORE TUs RIDE IN AND BOTH ARE REAL EDGES, not keep-alives:
+#
+#   src/func_02011a5c.c        __sinit_02074da8's only callee. Self-contained:
+#                              it zeroes the struct it is handed and names no
+#                              other symbol.
+#   src/_ZN5Scene14GraphCallback2Ev.c
+#                              the third word of data_0208ee14. Its three
+#                              siblings (GraphCallback0/1/3) were already in
+#                              the link; this one had no reference until the
+#                              table that names it was hosted.
+#
+# NOT HERE, and each has its own rung in lane CWSCOUT's rungs.tsv. Thirteen of
+# the 23 words are bound to a face in hal/ctor_runner.cpp that names the
+# initialiser and the names it still wants:
+#
+#   C1b  __sinit_02074dc4, 02074e0c, 02074e44, 02074fe4, 0207501c, 020750b8,
+#        0207511c -- one bss word each, every one a func_020731dc destruct node.
+#   C1c  __sinit_02074edc, 02075054, 020750ec, 02075154 -- two to five names,
+#        and each of them has a host seat writing the same words today
+#        (hal/method_faces.cpp, hal/auto_bss.cpp, hal/actor_registry.cpp), so
+#        the conflict audit comes before the link.
+#   C1d  __sinit_02074e84 -- Clipper's constructor and destructor and four
+#        MSVC-mangled data names.
+#   C1e  __sinit_02073a24 -- 38 rodata constants, data_02086bc8..data_02086e40.
+#
+# TWO INITIALISERS ARE ALREADY IN THE LINK AND ARE NOT LISTED AGAIN.
+# src/__sinit_02073e6c.c is on slice_intro.txt and src/__sinit_02074f80.c is on
+# slice_fdr.txt. Both were HAND-CALLED until this commit and both are now words
+# in the table; the two hand calls are deleted in the same commit and the two
+# words go through counting shims so the run can say each ran exactly once.
+src/func_02072f94.c
+src/func_02011a5c.c
+src/_ZN5Scene14GraphCallback2Ev.c
+src/__sinit_02074d90.c
+src/__sinit_02074da8.c
+src/__sinit_02074dbc.c
+src/__sinit_02074dc0.c
+src/__sinit_02074e80.c
+src/__sinit_02074fb8.c
+src/__sinit_020750b4.c
+src/__sinit_02075150.c
