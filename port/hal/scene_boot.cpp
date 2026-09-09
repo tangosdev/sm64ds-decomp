@@ -272,6 +272,47 @@
 // at 0x020c224c), so the two agree and neither is a guess.
 #pragma comment(linker, "/alternatename:__ZTV11dScMiniGm_c=_data_ov005_020c2490")
 
+// ---- run link100 lane MPG2: the dScGameOver_c PLACEHOLDER SPELLINGS -------
+//
+// src/func_ov003_020b0580.c (D2, slot 16) and src/func_ov003_020b05bc.c (D0,
+// slot 17) are the last pair of the ov003 write-up's blocker 2, and the same
+// shape the two blocks above answer. Read out of each body's OWN literal pool
+// in extracted/overlays/overlay_0003.bin:
+//
+//   func_ov003_020b0580 (D2)  0x020b05b0/b4/b8 = 0x020b179c, 0x02092680,
+//                             0x0208e4b8, spelled _ZTV13dScGameOver_c /
+//                             _ZTV8dScene_c / _ZTV7dBase_c
+//   func_ov003_020b05bc (D0)  0x020b05fc/00/04/08 = the same three plus
+//                             0x020a0eac, spelled VT0 / VT1 / VT2 / G0
+//
+// FOUR OF THE SEVEN NAMES ALREADY RESOLVE, TO STORAGE AT AN ADDRESS THE ROM
+// NEVER STORES, so this gate renames them per TU in port/CMakeLists.txt rather
+// than leaving them where they land: _ZTV7dBase_c is hal/sub_actors.cpp's LIVE
+// trap-filled array, VT0/VT2 are hal/actor_vtables.cpp's shared stand-ins and
+// VT1 is hal/auto_bss.cpp's. Without the renames the link SUCCEEDS and the
+// dtor writes the wrong word. Renamed, the surviving store writes
+// data_0208e4b8, which IS 0x0208e4b8 -- hal/cxx_aliases.cpp binds
+// _ZTV12ActorDerived onto that array. This is the ov007 block's "known
+// divergence" answered rather than repeated.
+//
+// _ZTV8dScene_c NEEDS NOTHING NEW. The run link60 alias above already sends it
+// to _ZTV5Scene, and that block's own note names ov003 x2 as two of the four
+// TUs that spell it. The per-TU renames still route both spellings through a
+// fresh name of this gate's own, so the CMake block reads as one statement per
+// ROM word and neither TU depends on which other gate's alias happens to be
+// live. A DIRECT rename onto _ZTV5Scene is a C2371: include/decl_common.h
+// declares _ZTV5Scene void*[] at :2982 and the placeholders int[] at
+// :412/:790.
+//
+// THE ALIAS IS UNREFERENCED ON THIS BUILD AND THAT IS THE EXPECTED READING,
+// not an oversight. MSVC folds the first two of each dtor's three consecutive
+// stores to t[0] as dead, so only the last (data_0208e4b8) survives in the
+// object -- visible in this gate's own UNDEF sweep, where neither object names
+// the class table or the Scene word at all. alternatename_guard reads an LHS
+// absent from the map as OK (unused). The directive is here so that a compiler
+// which stops folding gets the ROM's word instead of a wrong one.
+#pragma comment(linker, "/alternatename:_port_go_vt_scene=__ZTV5Scene")
+
 extern "C" {
 
 /* the spawn table and the two Scene entry points (matched arm9) */
@@ -325,16 +366,54 @@ void func_ov003_020ae6f0(void);                  /* slot 12 OnPendingDestroy */
 int  func_ov003_020addfc(void *self);            /* slot 16 D2 */
 int *func_ov003_020ade54(void *self);            /* slot 17 D0 */
 
+/* ---- run link100 lane MPG2: dScGameOver_c, scene id 8 --------------------
+   ov003's third and last scene class, the one port/slice_scene1.txt left out.
+   Every record is the ROM's own: the SpawnInfo at 0x020b1750 is inside the
+   mount (port/ov003_syms.txt), the factory is func_ov003_020b1118, and the
+   vtable at 0x020b179c is the host array one block below. */
+extern unsigned char data_ov003_020b1750[];      /* SpawnInfo, +4 reads 8 */
+void *func_ov003_020b1118(void);                 /* the factory */
+
+/* dScGameOver_c's own seven. THE ARITIES ARE THE SRC TUs' OWN, checked one at
+   a time against each file rather than copied from the star select's block: a
+   raw cast at the wrong arity is what smashes the stack on the first dispatch,
+   and it stays invisible until the slot is entered. */
+int  func_ov003_020b0b3c(void *self);            /* slot 0  InitResources    */
+int  func_ov003_020b0b34(void);                  /* slot 3  CleanupResources */
+int  func_ov003_020b0894(void *self);            /* slot 6  Behavior         */
+int  func_ov003_020b0814(void *self);            /* slot 9  Render           */
+void func_ov003_020b0810(void);                  /* slot 12 OnPendingDestroy */
+int *func_ov003_020b0580(void *self);            /* slot 16 D2               */
+int *func_ov003_020b05bc(void *self);            /* slot 17 D0               */
+
+/* THE TABLE-WORD PROOF's three host arrays, declared here only so the census
+   at the end of port_scene_run can print their addresses. _ZTV7dBase_c is
+   hal/sub_actors.cpp's trap array and data_0208e4b8 is hal/actor_vtables.cpp's
+   ActorDerived word: they are DIFFERENT storage, and the whole point of this
+   gate's per-TU renames is that the dtors write the second one. Reading an
+   address links nothing -- all three are defined and referenced by their own
+   files already. */
+extern int   data_0208e4b8[];                    /* 0x0208e4b8, the ROM's */
+extern void *_ZTV7dBase_c[];                     /* the trap array, NOT it */
+extern void *_ZTV5Scene[];                       /* 0x02092680 */
+
 /* THE VTABLE, a host array. The name is the ROM's own data symbol, which is
    what StarSelect_Spawn writes into the object's +0 word and what the D2 and
    D0 bodies write back on the way down, so the spelling has to be exactly this
    and port/ov003_syms.txt has to leave it out of the mount. 18 words.
    The other two classes' tables (data_ov003_020b1650, data_ov003_020b179c) are
    left out of the mount as well -- they are code-pointer tables and nothing
-   rebases a code word -- and are not defined here either, because nothing in
-   the link set names them. */
+   rebases a code word. dScTitle_c's, 0x020b1650, is still not defined here
+   because nothing in the link set names it. dScGameOver_c's IS, one line
+   below: run link100 lane MPG2 seats scene 8, and its factory
+   func_ov003_020b1118 and both dtor bodies name that table by the ROM's own
+   spelling. It is a host array for dScStarSel_c's reason, and it is inside the
+   .dsstate bracket for dScStarSel_c's reason -- a hosted DS data symbol the
+   save state has to capture, which is what port/tools/dsstate_guard.py
+   enforces. */
 DSSTATE_BEGIN
-void *data_ov003_020b1704[18];                   /* dScStarSel_c */
+void *data_ov003_020b1704[18];                   /* dScStarSel_c  */
+void *data_ov003_020b179c[18];                   /* dScGameOver_c */
 DSSTATE_END
 
 /* ---- run link60 lane L2: dScDSMT_c, the TITLE SCREEN, scene id 1 ----------
@@ -2935,6 +3014,86 @@ static void scene_fill_starsel(void)
     vt[17] = (void *)ss_d0;
 }
 
+// ---- dScGameOver_c, id 8, the GAME OVER screen (ov003) --------------------
+//
+// The dScStarSel_c seat above, applied to ov003's third scene class. Its
+// eighteen ROM words, read with relocations applied out of
+// extracted/overlays/overlay_0003.bin at the config .text base 0x020ad660:
+//
+//    0  020b0b3c own      9  020b0814 own
+//    1  0202e638         10  0202e3a4
+//    2  0202e62c         11  0202e398
+//    3  020b0b34 own     12  020b0810 own
+//    4  0202e5f0         13  0204357c
+//    5  0202e5d0         14  0204349c
+//    6  020b0894 own     15  02043494
+//    7  0202e3d4         16  020b0580 own
+//    8  0202e3c8         17  020b05bc own
+//
+// THE ELEVEN INHERITED WORDS ARE THE SAME ELEVEN dScStarSel_c AND dScDSMT_c
+// HOLD, word for word, so scene_fill_shared's index list applies unchanged and
+// this seat makes no width claim of its own. The SpawnInfo at 0x020b1750 reads
+// 0x020b1118 in its factory word and 8 in its +4 halfword, and the ARM9 spawn
+// table relocates from:0x02090884 to it, which is index 8. All four readings
+// agree and not one of them is inherited from the star select's block.
+//
+// BOTH BLOCKERS port/slice_scene1.txt RECORDED ARE CLEARED, and neither by
+// this gate deciding it was fine:
+//
+//   1. the five marker-carrying bodies -- 020b0b3c, 020b0b34, 020b0814,
+//      020b0810, 020b05bc -- are ALREADY ruled REAL_DECOMP in
+//      port/tools/inferred_stub_adjudicated.txt:2211-2215, each with a
+//      tools/match.py 2004/b56 strict-relocation byte gate behind it. 020b0894
+//      and 020b0580 never carried the marker at all. NO NEW RULING IS ADDED
+//      HERE and inferred_stub_guard is not asked for one.
+//
+//   2. the placeholder spellings are renamed per TU in port/CMakeLists.txt
+//      onto the ROM's own literal-pool words. The block at the top of this
+//      file carries that derivation in full.
+//
+// THE WITNESS is dScStarSel_c's, one counter per dispatched slot. A scene that
+// boots is not a scene that RUNS, and from outside the two look identical.
+static unsigned g_go_hits[18];
+/* What the ROM's own D2 leaves in the object's +0 word, read back AFTER the
+   body returns. THE RUNTIME HALF OF THE TABLE-WORD PROOF: the ROM stores
+   0x0208e4b8 there, the host has to store data_0208e4b8 and not _ZTV7dBase_c's
+   array, and the census prints both addresses so the two can be told apart.
+   D2 ONLY -- D0 deallocates the object, so reading it back after that one
+   would be a use-after-free. */
+static void *g_go_vptr_after_d2;
+static int  __fastcall go_init(void *s, void *)
+{ ++g_go_hits[0];  return func_ov003_020b0b3c(s); }
+static int  __fastcall go_clean(void *, void *)
+{ ++g_go_hits[3];  return func_ov003_020b0b34(); }
+static int  __fastcall go_beh(void *s, void *)
+{ ++g_go_hits[6];  return func_ov003_020b0894(s); }
+static int  __fastcall go_render(void *s, void *)
+{ ++g_go_hits[9];  return func_ov003_020b0814(s); }
+static int  __fastcall go_pdes(void *, void *)
+{ ++g_go_hits[12]; func_ov003_020b0810(); return 0; }
+static void *__fastcall go_d2(void *s, void *)
+{
+    ++g_go_hits[16];
+    void *r = (void *)func_ov003_020b0580(s);
+    g_go_vptr_after_d2 = *(void **)s;
+    return r;
+}
+static void *__fastcall go_d0(void *s, void *)
+{ ++g_go_hits[17]; return (void *)func_ov003_020b05bc(s); }
+
+static void scene_fill_gameover(void)
+{
+    void **vt = data_ov003_020b179c;
+    scene_fill_shared(vt);
+    vt[0]  = (void *)go_init;
+    vt[3]  = (void *)go_clean;
+    vt[6]  = (void *)go_beh;
+    vt[9]  = (void *)go_render;
+    vt[12] = (void *)go_pdes;
+    vt[16] = (void *)go_d2;
+    vt[17] = (void *)go_d0;
+}
+
 // ---- dScDSMT_c, id 1, the TITLE SCREEN and FILE SELECT (ov007) -------------
 //
 // THE WIDTH IS 18 AND THE ROM SAYS SO THREE WAYS, so scene_fill_shared's
@@ -3348,15 +3507,23 @@ struct PortSceneClass {
     unsigned char reads_sublevel;
 };
 
-/* TWO ROWS. dScTitle_c (id 2) and dScGameOver_c (id 8) are derived to the same
-   depth -- SpawnInfo, factory and all eighteen vtable slots are recorded in
-   port/ov003_syms.txt -- and are NOT seated, for two reasons that are named in
-   full at the bottom of port/slice_scene1.txt: eleven of their fourteen slot
-   bodies carry the "recovered from vtable slot identity" marker that
-   port/tools/inferred_stub_guard refuses until each is ruled against the ROM,
-   and three of their dtor TUs spell their vptr writes as per-TU placeholders
-   (VT0/VT1/VT2, _ZTV10dScTitle_c, _ZTV8dScene_c, _ZTV7dBase_c, G0) that exist
-   in no config. Adding them is a row here plus a block in the slice.
+/* ONE ROW LEFT, and it used to be two. dScTitle_c (id 2) and dScGameOver_c
+   (id 8) were both derived to the same depth -- SpawnInfo, factory and all
+   eighteen vtable slots recorded in port/ov003_syms.txt -- and both were held
+   out by the same two blockers, named in full at the bottom of
+   port/slice_scene1.txt: their slot bodies carry the "recovered from vtable
+   slot identity" marker that port/tools/inferred_stub_guard refuses until each
+   is ruled against the ROM, and their dtor TUs spell their vptr writes as
+   per-TU placeholders (VT0/VT1/VT2, _ZTV10dScTitle_c, _ZTV8dScene_c,
+   _ZTV7dBase_c, G0) that exist in no config.
+   DSCGAMEOVER_C IS SEATED (run link100 lane MPG2) and cleared both rather than
+   being excused from either: its five marker-carrying bodies are ruled
+   REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt:2211-2215, and its
+   two placeholder spellings are renamed per TU onto the ROM's own literal-pool
+   words in port/CMakeLists.txt. dScTitle_c is what is left, and its six bodies
+   are ruled too, so what remains for it is the placeholder trio in
+   src/func_ov003_020ad660.c and a row here. Adding it is a row plus a block in
+   a slice.
    ov007's dScDSMT_c hit BOTH of those blockers and cleared them rather than
    being excused from them: its six marker-carrying bodies are ruled against
    the ROM in port/tools/inferred_stub_adjudicated.txt, and its two placeholder
@@ -4685,6 +4852,22 @@ static const PortSceneClass port_scene_classes[] = {
     {360, "SCENE_MULTIBOOT", data_0209435c, port_mb_scene_spawn,
      port_scene_fill_mb, 0},
     // ---- end link100 SCENE ----
+    /* dScGameOver_c, ov003's third and last scene class, run link100 lane
+       MPG2. 8 is the ARM9 spawn table's own index and it is read three ways
+       that agree: config/arm9/relocs.txt has from:0x02090884 kind:load
+       to:0x020b1750, (0x02090884 - 0x02090864)/4 = 8, and the record's own +4
+       halfword reads 8 back. Spelled in decimal for the two reasons every row
+       above gives: the others are, and port/tools/battery.py reads its
+       hosted-scene set out of this table.
+       APPENDED AFTER EVERY EXISTING ROW, the fill-order rule every appended
+       row above restates. For this row it costs nothing and is obeyed anyway:
+       the fill writes only its own eighteen-word host array, which no other
+       row shares, so there is no word for an ordering to race over.
+       reads_sublevel is 0 and it is measured the way the rows above are: not
+       one of the twelve TUs in this class's slice names data_02092110,
+       SUBLEVEL_LEVEL_TABLE or SublevelToLevel. */
+    {8, "SCENE_GAMEOVER", data_ov003_020b1750, func_ov003_020b1118,
+     scene_fill_gameover, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
@@ -6859,6 +7042,31 @@ extern "C" int port_scene_finish(int frames_run)
                     t ? "ov007" : "ov003",
                     h[0], h[6], h[9], h[3], h[12],
                     sk ? "  [RENDER SLOT NO-OP'd: SM64DS_SCENE_SLOT9=0]" : "");
+        /* THE GAME OVER CENSUS, run link100 lane MPG2. Printed on EVERY scene
+           run and not only on scene 8, for the reason the scene-request line
+           below is printed unconditionally: "the seat is linked and nothing
+           dispatched it" is exactly as much of a reading as a live count, and
+           a line that only appeared on the id it belongs to would make the
+           silent case unreadable. */
+        std::printf("[gameover] slot hits: init %u, behavior %u, render %u, "
+                    "cleanup %u, pending-destroy %u, d2 %u, d0 %u\n",
+                    g_go_hits[0], g_go_hits[6], g_go_hits[9], g_go_hits[3],
+                    g_go_hits[12], g_go_hits[16], g_go_hits[17]);
+        /* THE TABLE-WORD PROOF, runtime half. The ROM's D2 and D0 restore the
+           object's +0 word to 0x0208e4b8, and on the host that has to be
+           data_0208e4b8 -- NOT _ZTV7dBase_c, which is a live definition of its
+           own at another address (hal/sub_actors.cpp's trap array) and is what
+           both dtor TUs would have bound to without this gate's per-TU
+           renames. Both are printed so the two can be told apart at a glance,
+           next to the class's own table and the Scene word. The last field is
+           what D2 actually left behind, or 0 if no teardown was reached on
+           this run; a run that reports d2 0 reports 0 here and claims
+           nothing. */
+        std::printf("[gameover] host words: table %p  ActorDerived %p  "
+                    "dBase(trap, NOT it) %p  Scene %p  object+0 after D2 %p\n",
+                    (void *)data_ov003_020b179c, (void *)data_0208e4b8,
+                    (void *)_ZTV7dBase_c, (void *)_ZTV5Scene,
+                    g_go_vptr_after_d2);
         /* THE ROUTING WITNESS, run mg16 lane TITLE.
          *
          * "The title stopped ticking" and "the title asked to go somewhere"
