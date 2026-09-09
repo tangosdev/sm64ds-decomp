@@ -1596,13 +1596,13 @@ extern "C" int port_rom_loop_enabled(void);
 /* RUNG G2's SECOND HALF, AND ITS OWN GATE (lane R3G). SM64DS_R3G_ROM_WAKE=1
    makes a scene run register the ROM's VBlank handler, which is what turns the
    scene loop's phase-7 sleep from "sleeps the ROM's way, woken the host's way"
-   into the whole circuit. It is OFF BY DEFAULT and that is a measured decision,
-   not caution: with it on, scene 6 (the VS menu) faults, and the block at the
-   scene handover carries the derivation and names the file the repair belongs
-   in. Off, every scene row still measures rung G1 -- the ROM's own sleep at
-   phase 7, the frame foot census, the block census -- which is what the knob-on
-   battery is for. Read only where SM64DS_ROM_LOOP is already on, so with the
-   main knob unset this rung has no reader either. */
+   into the whole circuit. It is OFF BY DEFAULT so the two halves are separable
+   on ONE binary, which is what let this lane say which half scene 6's fault
+   belongs to -- and the answer was NEITHER: scene 6 goes down on the SLEEP,
+   with this gate unset and no VBlank handler registered at all. The block at
+   the scene handover carries the whole measurement. Read only where
+   SM64DS_ROM_LOOP is already on, so with the main knob unset this rung has no
+   reader either. */
 static int port_r3g_rom_wake(void)
 {
     static int v = -1;
@@ -1663,7 +1663,19 @@ static int r3e_sound_at_phase9(void)
    ROWS. R3E's two live hazards for the SCENE path -- the graphics block that
    func_ov007_020cc4c0 actually seats, and the __fastcall/cdecl mismatch at
    func_02019144's dispatch -- are therefore still unmeasured, and putting a
-   reader on the scene loop is the next rung's first job. */
+   reader on the scene loop is the next rung's first job.
+
+   RUNG G1 PUT THAT READER ON (lane R3G), and the paragraph above is now
+   history rather than the state of the tree: hal/scene_boot.cpp's
+   port_scene_run takes the ROM's own phase 7, the knob itself moved to
+   hal/rom_frame.cpp so smoke_player could link it, and 36 of the 37 scene rows
+   now report "phase 7 was the ROM's own sleep on 300 of 300 scene frames" with
+   the frame cross-check at 300 reads and 0 disagreements. Both of R3E's
+   hazards were measured: the mismatch was real and worked only by a register
+   ride-through (see the block above hal/scene_boot.cpp's ti_gc0), and the
+   graphics block is dispatched 450 times a run on the title with the wrong
+   receiver 0 times. The 37th row is scene 6, which faults on the ROM's sleep
+   alone; the block at the scene handover below carries that bisect. */
 /* RUNG E1's WATCHER (lane R3E). Memory::defaultHeapPtr is data_020a0ea0
    (hal/heap_vtable.cpp:80). Memory::Deallocate(void*) falls back to it, so a
    null there is the fault gate 1 measured. This reports every TRANSITION of
@@ -7920,9 +7932,9 @@ int main(void)
        of that function stays where it is. This is the one line the ROM's own
        main makes and this port defers.
 
-       AND IT IS BEHIND ITS OWN GATE, SM64DS_R3G_ROM_WAKE, OFF BY DEFAULT,
-       because with it on ONE OF THE THIRTY-SEVEN SCENES FAULTS. Measured, all
-       three arms on this binary, 300 frames each:
+       AND IT IS BEHIND ITS OWN GATE, SM64DS_R3G_ROM_WAKE, OFF BY DEFAULT, so
+       that the two halves of the handover are separable on one binary. Measured
+       with it ARMED, 300 frames each:
 
          scene 1  SCENE_TITLE     rc=0  block seated by this port
                   [r3g] G2(a): face entries by slot 0/1/2/3 = 300/0/450/150,
@@ -7934,8 +7946,45 @@ int main(void)
                   UnknownVsEntry::Behavior+0x178, on the frame after the first
                   sleep
 
-       WHY SCENE 6 GOES DOWN, and it is not the convention and not the sleep.
-       Its census reads
+       AND OVER ALL THIRTY-SEVEN HOSTED SCENES with the gate armed: 36 rc=0,
+       scene 6 the one red, and 31 of the 37 report the counted proof
+       0/1/2/3 = 300/0/450/150 with the wrong block 0 times (30 minigames share
+       one block, the title has its own, four scenes have none, and scenes 6 and
+       360 have a block this port never registered).
+
+       WHAT SCENE 6'S FAULT IS NOT, bisected on this binary, three arms, the
+       same address every time:
+
+         SM64DS_ROM_LOOP unset                              rc=0
+         SM64DS_ROM_LOOP=1, this gate UNSET                 rc=0xC0000005
+         SM64DS_ROM_LOOP=1, SM64DS_R3D_NO_PUMP_INSTALL=1    rc=0xC0000005
+
+       -- so it is not the graphics block (arm 2 registers no handler, so
+       func_02019144 and func_02019100 never run), not the calling convention,
+       and not the pacer or anything else step 1b of the wait does. IT IS THE
+       ROM'S OWN PHASE-7 SLEEP, on its own. The fault is at 0x0049B098, which is
+       UnknownVsEntry::Behavior's OWN EPILOGUE -- `mov ecx,[ebp-4]`, the /GS
+       cookie load -- immediately after that method's last call,
+       func_ov075_0211b418. That body is four instructions of member-pointer
+       dispatch:
+
+         mov eax,[ebp+8] / mov edx,[eax+0x84] / mov ecx,[edx+0xC] / add ecx,eax
+         mov eax,[edx+8] / call eax
+
+       -- `this` in ecx, no stack argument, and the frame pointer is gone by the
+       time the caller's epilogue runs, which is a stack imbalance in the
+       callee. hal/scene_vs_menu.cpp is the file that seats that record and it
+       says in as many words which site it deliberately leaves alone: "The
+       third site, 0x0211d34c, is NOT touched -- its body is marked as recovered
+       from vtable slot identity and the inferred-stub guard forbids seating a
+       guess." Neither that file nor src/func_ov075_0211b418.cpp is this lane's,
+       and the second candidate -- the fiber round-trip through the ROM's idle
+       thread in hal/boot2_thread.cpp, which the level path takes 300 times a
+       run without trouble -- needs a control this lane did not have room for.
+       Named, not worked around: this lane's report, blocked item G2(b).
+
+       WHAT THE BLOCK CENSUS SAID ABOUT SCENE 6 ANYWAY, since it is the other
+       unregistered block and the next lane will want it. Its census reads
 
          data_0209d4a8=0187E814 vptr=0187DB34
          vt[0..3]=00431f20 00431f20 0049d440 00431f20
@@ -7954,12 +8003,12 @@ int main(void)
                      c[4] = 0; }
          if (c[8]) func_ov075_021160dc(c[8]);
 
-       so the first VBlank of the run FREES the queued screen payload and NULLS
-       the word, and the actor tick that follows reads it. That is a real
-       reconciliation between the ROM's once-per-VBlank display sync and what
-       hal/scene_vs_menu.cpp does with the same payload, and hal/scene_vs_menu
-       .cpp is not this lane's file. Named, not worked around: see this lane's
-       report, blocked item G2(b).
+       so the first VBlank of the run would FREE the queued screen payload and
+       NULL the word under any lane that arms this gate. That is a second
+       reconciliation waiting behind the first one, between the ROM's
+       once-per-VBlank display sync and what hal/scene_vs_menu.cpp does with the
+       same payload. Scene 360 is the other unregistered block
+       (vt[0..3] = 0041ae30 00431f20 0041ae30 005e2130) and it does not fault.
 
        WITH THE GATE OFF a scene frame still sleeps at the ROM's phase 7 and is
        still woken by the port's starvation wake, which is rung G1 exactly and
