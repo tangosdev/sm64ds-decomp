@@ -267,22 +267,46 @@ WMBSS(".dsstate$ywmd08", data_020a0f5c, 4, 4) = { 0 };
 // it is zero, and only rung W6's wireless thread ever sets it.
 WMBSS(".dsstate$ywmd09", data_020a0f84, 4, 4) = { 0 };
 
-// 0x020a0f9d (3) and 0x020a0fa0 (6) ARE ADJACENT ON THE DS AND HERE, align(1)
-// on both so the linker inserts no padding. src/func_02040014.c:52-64 walks
-// data_020a0f9d as u8[4] -- FOUR bytes over a three-byte span -- so its last
-// entry IS data_020a0fa0[0], exactly the interleaved-table shape
-// hal/boot2_ipc.cpp's data_020a8138/data_020a813c pair describes.
-// port_wm_lobby_layout_check() below reads the adjacency back.
+// 0x020a0f9d (3) and 0x020a0fa0 (6), align(1) on both, AND NOTHING IN THE
+// LINKED TREE REQUIRES THEM TO BE ADJACENT. The note that stood here said
+// src/func_02040014.c walks data_020a0f9d as u8[4] -- four bytes over a
+// three-byte span -- so that its last entry had to be data_020a0fa0[0]. That
+// reading was wrong, and Andrew's third review of PR #2474 is right: the TU
+// spells the array u8[4] in its extern at :4, but the walk at :58-73 sets its
+// counter to 1 and runs `while (cnt < 4)`, so it dereferences flag_p exactly
+// THREE times -- data_020a0f9d[0], [1] and [2]. The pointer is incremented a
+// third time on the way out of the last iteration and never read again.
+// src/func_0203e20c.c agrees three separate ways: its clear loop (:116-129),
+// its accept loop (:133-157, whose `*pIdx` store is gated on `idx < 4` even
+// though the counter runs to 0x10) and its case-4 sweep (:181-190) all start
+// at 1 and stop at 4. Three flags, three bytes, every one of them inside this
+// object -- so the three-byte host span is the span the ROM's own code reads,
+// wherever the linker puts these two sections.
 //
-// AND ONE RESIDUAL, NAMED. On the DS data_020a0fa0 is the first entry of a
-// FOUR-entry six-byte MAC table that runs to 0x020a0fb8, whose other three
-// entries are data_020a0fa6 -- already hosted, eighteen bytes, in
-// hal/comms_conductor.cpp's ".dsstate$ymp3c0000". So `data_020a0fa0[idx]` for
-// idx > 0 addresses that neighbour on hardware and does not here. The ONE
-// writer is src/func_02040014.c:59, and it is gated on some entry of
-// data_020a0f9d being nonzero -- the lobby's accepted-peer flags, which nothing
-// in this build writes, and which are zero in the storage right above. So the
-// out-of-range store is unreachable rather than merely unlikely. Moving
+// AN x86 CONTROL AGREES, and it is the same reading Andrew's own control
+// reported. The case-7 loop transcribed verbatim from src/func_02040014.c with
+// its two calls replaced by counters, built /W4 /O2 by the same 32-bit MSVC
+// this port uses and run with ALL FOUR flags set, prints
+// `flag reads=3, compares=3, final flag_p offset=3`: three dereferences,
+// three comparisons, and the pointer left one past the last byte it read
+// without being read again. Source and output are in this lane's out/ dir.
+//
+// The DS layout does put them three apart, and port_wm_arm7_turn() below
+// records that gap once as an OBSERVATION of this build -- from integer
+// addresses, not by subtracting pointers into two separately declared objects,
+// and without refusing anything. See that check for the reasoning.
+//
+// AND ONE RESIDUAL, NAMED, WHICH IS A DIFFERENT LIMITATION AND STAYS ONE. It
+// is about data_020a0fa0's own object, not about the flags above. On the DS
+// data_020a0fa0 is the first entry of a FOUR-entry six-byte MAC table that
+// runs to 0x020a0fb8, whose other three entries are data_020a0fa6 -- already
+// hosted, eighteen bytes, in hal/comms_conductor.cpp's ".dsstate$ymp3c0000".
+// So `data_020a0fa0[idx]` for idx > 0 addresses that neighbour on hardware and
+// does not here. The ONE writer is src/func_02040014.c:65, and it is reached
+// only when one of the three flags read at :62 is nonzero -- the lobby's
+// accepted-peer flags, which nothing in this build writes, and which are zero
+// in the storage right above. So the out-of-range store is unreachable rather
+// than merely unlikely. Moving
 // data_020a0fa6 out of the conductor's run to sit behind data_020a0fa0 would
 // close it, and it would also shift every later global in that run, which is
 // the one thing this rung's hosting is designed not to do.
@@ -1039,11 +1063,33 @@ extern "C" void port_wm_arm7_turn(void)
 
     if (!g_layout_said) {
         g_layout_said = true;
-        if ((data_020a0fa0 - data_020a0f9d) != 3)
+        // THE LOBBY PAIR'S LAYOUT, AS AN OBSERVATION AND NOT A REQUIREMENT.
+        // No reader depends on it: src/func_02040014.c and src/func_0203e20c.c
+        // read data_020a0f9d[0..2] and stop, which is inside this file's own
+        // three-byte object however the linker orders the sections (the note
+        // at the WMBSS lines works the loops out). The gap is still worth one
+        // line, because the DS has these two globals three apart and a later
+        // change to the section names would move them without anything
+        // saying so.
+        //
+        // MEASURED ON INTEGER ADDRESSES. The two names are separately declared
+        // arrays that the linker happens to place adjacently; adjoining
+        // sections do not make them one object, so `data_020a0fa0 -
+        // data_020a0f9d` was pointer subtraction across distinct array objects
+        // and not defined C++ arithmetic. Each address is reduced to an
+        // address-sized integer first -- (unsigned)(uintptr_t), the port's own
+        // spelling for a host pointer, lossless here because the port builds
+        // 32-bit (port/build-port.cmd calls vcvars32) -- and the difference is
+        // taken as a signed number so a reordering reads as a negative gap
+        // rather than as four billion. Nothing refuses on the result.
+        const long gap = (long)(unsigned)(uintptr_t)data_020a0fa0
+                       - (long)(unsigned)(uintptr_t)data_020a0f9d;
+        if (gap != 3)
             std::fprintf(stderr,
-                "[wm7] LOBBY TABLE LAYOUT BROKEN: data_020a0fa0 is not at "
-                "data_020a0f9d + 3, so src/func_02040014.c's four-entry walk "
-                "over a three-byte span would read past its object.\n");
+                "[wm7] lobby layout note: data_020a0fa0 sits at "
+                "data_020a0f9d %+ld in this build, and +3 on the DS. Nothing "
+                "reads past data_020a0f9d[2], so this is recorded, not "
+                "refused.\n", gap);
     }
 
     // GATE A. Before a reply, the association: on the DS the ARM7 writes the

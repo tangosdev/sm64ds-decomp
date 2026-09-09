@@ -1593,19 +1593,29 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
    hal/actor_vtables.cpp. */
 #pragma comment(linker, "/alternatename:_base_dtor_MovingCylinderClsnWithPos=__ZN18MovingCylinderClsnD2Ev")
 #pragma comment(linker, "/alternatename:_vtbl_MovingCylinderClsnWithPos=__ZTV25MovingCylinderClsnWithPos")
-/* ov002's Enemy constructor is func_ov002_020aed98 -- see the header of that
-   entry in slice_gate16.txt for why the file named _ZN5EnemyC2Ev is ov007's.
+/* ov002's Enemy constructor at 0x020aed98 HAS a definition, and its name is
+   _ZN5EnemyC2Ev -- so the fallback that used to sit here was removed rather
+   than re-pointed (Andrew's third review of PR #2474).
 
-   AND THIS FALLBACK IS DEAD, recorded from Andrew's second review of PR #2474.
-   src/_ZN5EnemyC2Ev.cpp defines _ZN5EnemyC2Ev, so the alias is never applied;
-   and nothing defines func_ov002_020aed98 -- the name is this port's own and
-   appears in no config symbols.txt, which is the same fact slice_gate16.txt
-   states in prose. If that src TU ever left the slice, the fallback would name
-   a symbol that does not exist and the link would fail instead of falling back.
-   main's tools/port_refcheck.py reports this line for exactly that reason.
-   Repairing it means changing an identifier (seat ov002's constructor under a
-   name something defines, or drop the pragma), so it is recorded here. */
-#pragma comment(linker, "/alternatename:__ZN5EnemyC2Ev=_func_ov002_020aed98")
+   The evidence, in the order it settles the question:
+     * src/_ZN5EnemyC2Ev.cpp is in the slice (port/slice_gate16.txt:233) and
+       the link publishes __ZN5EnemyC2Ev from its own object --
+       walk_window.map: `0001:00110a20  __ZN5EnemyC2Ev  _ZN5EnemyC2Ev.cpp.obj`.
+       An /alternatename only fires while its LHS is UNDEFINED, so with that
+       TU linked the directive could never apply.
+     * the RHS had no definition anywhere: `func_ov002_020aed98` was this
+       port's own spelling and appears in no config symbols.txt, so had the
+       src TU ever left the slice the link would have failed on the fallback
+       name instead of falling back.
+     * the port already routes ov002's constructor the other way round, by
+       renaming its CALLERS onto the defined name: port/CMakeLists.txt
+       compiles src/Goomboss_Spawn.cpp and src/ExplosionGoomba_Spawn.cpp with
+       -Dfunc_020aed98=_ZN5EnemyC2Ev (the lane w2-ov074 block). That is the
+       live mechanism; the pragma was inert beside it.
+   port/tools/alternatename_baseline.txt loses the matching row with this
+   commit, so the guard's baseline stays exactly the set of pairs that are
+   still defeated. slice_gate16.txt keeps the prose about why the file named
+   _ZN5EnemyC2Ev is ov007's -- nothing in that note depended on the pragma. */
 #pragma comment(linker, "/alternatename:?data_ov002_0211025c@@3PAHA=_data_ov002_0211025c")
 /* the same per-mangling faces, one round further into the 1-up's chain */
 #pragma comment(linker, "/alternatename:?data_0209f40c@@3PAHA=_data_0209f40c")
