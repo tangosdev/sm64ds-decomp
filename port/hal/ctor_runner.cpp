@@ -70,10 +70,10 @@
  * own body and its fourth call. So the port's order is now Entry's order:
  * func_02019780, then func_02072f94, then main. Nothing was moved to make room.
  *
- * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b, C1d, C1e, C1c, C1f and
- * C1g, TWENTY-ONE of the 23 words are bound to the ROM's own initialiser and
- * TWO are bound to a FACE that names the initialiser it stands for and
- * returns. The faces do not
+ * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b, C1d, C1e, C1f and C1g,
+ * and after run link100 lane CTOR3's rung 0 took C1c back out, TWENTY of the
+ * 23 words are bound to the ROM's own initialiser and THREE are bound to a
+ * FACE that names the initialiser it stands for and returns. The faces do not
  * abort. Word 0 was a face until rung C1e and an abort there would have killed
  * every boot before the first frame, which is where the rule came from; it
  * still holds for the five that are left, because a face that aborts turns a
@@ -237,42 +237,42 @@
  * so the code half is a relocation and the this-delta half is a literal zero,
  * in all 38.
  *
- * RUNG C1c ADDS __sinit_02074edc, AND IT IS THE ONE RUNG OF THIS CAMPAIGN
- * THAT CHANGES WHAT A LIVE OBJECT DISPATCHES. It constructs the two arm9 fader
- * statics -- a FaderColor into data_0209f5e8 and a FaderBrightness into
- * data_0209f5d0, three vptr stores each in base-to-derived order (data_0208eafc
- * = Fader, data_0208eacc = FaderBrightness, and for the first one data_0208eb2c
- * = FaderColor), two field stores each, and one func_020731dc push each. All
- * three tables are hosted by hal/scene_boot.cpp. The only names it wanted are
- * the two 12-byte destruct-node cells, which nothing hosted; they are below.
+ * RUNG C1c IS OUT, AND THIS IS WHY, run link100 lane CTOR3 rung 0.
+ * __sinit_02074edc constructs the two arm9 fader statics -- a FaderColor into
+ * data_0209f5e8 and a FaderBrightness into data_0209f5d0, three vptr stores
+ * each in base-to-derived order (data_0208eafc = Fader, data_0208eacc =
+ * FaderBrightness, and for the first one data_0208eb2c = FaderColor), two
+ * field stores each, and one func_020731dc push each. Lane CTOR2 landed it,
+ * and it is the one rung of this campaign that changes what a LIVE object
+ * dispatches: hal/fader_wipes.cpp placement-news a host HalFaderWipe over
+ * data_0209f5e8 before main, so the ROM's initialiser at Entry becomes the
+ * last writer of that vptr and the installed colour fader dispatches
+ * hal/scene_boot.cpp's data_0208eb2c instead of the host class's table.
  *
- * WHAT IT RETIRES. hal/method_faces.cpp's FaderBrightness block said in as many
- * words that data_0209f5d0's vptr is null "because the port does not link the
- * ROM's static initialiser for it (src/__sinit_02074edc.c)", that the matched
- * SetForwardTime ends in an unqualified virtual IsAtEnd() that would fault
- * reading [vptr+0x14] on a null table, and "Do not wake the branch without
- * giving data_0209f5d0 a real vptr first." This rung is that. The vptr is now
- * data_0208eacc, whose MSVC slot 5 is hal/scene_boot.cpp's named l2_vt_trap
- * rather than address zero, so the worst case moved from an access violation to
- * a line of output. The branch itself is still unreachable for its own separate
- * reason -- every call site is behind `data_0209f1e0 != 0` and that byte's only
- * writer, src/func_02023498.c, is not in the link -- and that half of the
- * paragraph is kept where it stands.
+ * THE TABLE IS NOT LIVE YET WHEN THAT HAPPENS. hal/scene_boot.cpp defines
+ * data_0208eb2c as ten words of zeroed host storage and fills them in
+ * l2_fill_0208ea6c(), which runs from scene_fill_title() -- one row of
+ * port_scene_registry_install()'s walk, late in the boot. Between Entry and
+ * that fill every one of the ten words is 0, so a dispatch through the vptr
+ * this initialiser installs is a call to address 0.
  *
- * WHAT IT CHANGES, STATED PLAINLY BECAUSE IT IS THE RISK OF THIS RUNG.
- * hal/fader_wipes.cpp's gate-31 block placement-news a host HalFaderWipe over
- * data_0209f5e8 from a C++ static object, which runs before main and therefore
- * BEFORE Entry. So after this rung the ROM's own initialiser is the last writer
- * of that vptr and the installed colour fader dispatches hal/scene_boot.cpp's
- * ten seated data_0208eb2c slots instead of the host class's table. That is the
- * north star's direction -- the ROM's object, the ROM's table, the ROM's
- * initialiser -- and it is also the one thing here that a byte gate cannot
- * check, so the run says it out loud: the [ctor] block below prints both
- * objects' vptr words after the walk and names the table each one landed on.
- * hal/fader_wipes.cpp is NOT this lane's file. Its placement-new is now the
- * pre-Entry value rather than the final one, and whether that construction
- * should go is that file's call and this lane's written proposal, not an edit
- * here.
+ * A LOOPBACK PAIR REACHES EXACTLY THAT, and run link100 lane WM9 caught it on
+ * the integration tip: both windows died rc=0xC0000005 in
+ * func_ov075_02116c8c -> LoadLevelNoReturn -> LoadLevel ->
+ * Scene::SetAndStopColorFader -> Scene::SetFaders+0x27, whose faulting frame
+ * is EIP 0 with eax = data_0208eb2c and ecx = data_0209f5e8, both read out of
+ * that build's own walk_window.map. Scene::SetFaders asks the INSTALLED fader
+ * `vt->f14` (ROM byte +0x14, FaderBrightness::IsAtStart) before replacing it,
+ * and that word was still zero. The single-player gates never see it: the
+ * title comes up first there and the fill has run by the time any level
+ * loads.
+ *
+ * SO THE WORD GOES BACK TO ITS FACE HERE and the fix is the seat's, not this
+ * file's: the fader vtables have to be live from before the ROM's own .ctor
+ * walk, the way the cartridge's are. That is rung 1 of lane CTOR3, in
+ * hal/scene_boot.cpp. The [ctor] census below stays either way, because it is
+ * the line that names the table each vptr landed on and it is what makes this
+ * visible in a captured run instead of only in prose.
  *
  * RUNGS C1f AND C1g ARE THE TWO WORDS LANE CTOR REFUSED THAT RE-MEASURED AS
  * RUNGS. Both refusals rested on a reading of another file's hosting, and both
@@ -348,7 +348,6 @@ void __sinit_02074dc4(void);   /* C1b */
 void __sinit_02074e44(void);   /* C1b */
 void __sinit_02074e80(void);
 void __sinit_02074e84(void);   /* C1d */
-void __sinit_02074edc(void);   /* C1c */
 void __sinit_02074fe4(void);   /* C1b */
 void __sinit_0207501c(void);   /* C1f */
 void __sinit_02075054(void);   /* C1g */
@@ -647,6 +646,7 @@ void ctor_face(const char *name, const char *why)
     }
 
 CTOR_FACE(02074e0c, "func_0201aa18 -> func_0201aad4 -> func_0201aac8 is an argument-dropping tail-call veneer chain into func_02059ba0; a PORT_HOST_ABI question, not a linkage one")
+CTOR_FACE(02074edc, "it constructs the two arm9 fader statics and makes data_0208eb2c the live vptr of data_0209f5e8 -- but hal/scene_boot.cpp fills that table from scene_fill_title, late in the boot, so between Entry and the fill its ten words are zero. Run link100 lane WM9's loopback pair died on it: Scene::SetFaders read byte +0x14 as 0 and called address 0 on the VS menu -> level transition. Rung 1 of lane CTOR3 makes the seat unconditional; this word is faced until then")
 CTOR_FACE(02075154, "data_02099f48..data_02099f70 are hosted nowhere -- five mwcc pointer-to-member pairs -- and hal/actor_registry.cpp:412 already seats the same five list callbacks with host wrappers, LATER in the boot, so linking this would write the heads at Entry and have every word overwritten")
 
 #undef CTOR_FACE
@@ -678,7 +678,7 @@ const CtorWord kCtorTable[] = {
     { 0x02074e44, __sinit_02074e44, "__sinit_02074e44", 1 },
     { 0x02074e80, __sinit_02074e80,   "__sinit_02074e80", 1 },
     { 0x02074e84, __sinit_02074e84, "__sinit_02074e84", 1 },
-    { 0x02074edc, __sinit_02074edc, "__sinit_02074edc", 1 },
+    { 0x02074edc, ctor_face_02074edc, "__sinit_02074edc", 0 },
     { 0x02074f80, ctor_02074f80,      "__sinit_02074f80", 1 },
     { 0x02074fb8, __sinit_02074fb8,   "__sinit_02074fb8", 1 },
     { 0x02074fe4, __sinit_02074fe4, "__sinit_02074fe4", 1 },
@@ -828,11 +828,14 @@ extern "C" void port_rom_entry_ctors(void)
                          changed);
     }
 
-    /* RUNG C1c, THE ONE THING A BYTE GATE CANNOT SEE. __sinit_02074edc is the
-       last writer of both fader vptrs, after hal/fader_wipes.cpp's gate-31
-       placement-new has already run. Naming the table each one landed on is
-       what makes that visible in every captured run instead of only in this
-       file's prose. */
+    /* THE ONE THING A BYTE GATE CANNOT SEE, kept after rung C1c came back out.
+       When __sinit_02074edc is bound to the ROM's body it is the last writer
+       of both fader vptrs, after hal/fader_wipes.cpp's gate-31 placement-new
+       has already run; when it is faced, as it is now, the colour fader keeps
+       the host HalFaderWipe's table and data_0209f5d0 keeps a null vptr.
+       Naming the table each one landed on is what makes either state visible
+       in every captured run instead of only in this file's prose, and it is
+       how the regression above was read. */
     {
         const void *cv = *(void *const *)(const void *)data_0209f5e8;
         const void *bv = *(void *const *)(const void *)data_0209f5d0;
