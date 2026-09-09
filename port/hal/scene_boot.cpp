@@ -1166,7 +1166,10 @@ unsigned char data_0208eafc[48] = {
     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,234,8,2
 };
-int data_020a80e4[8];                              /* bss, 32 by ROM span */
+/* data_020a80e4 is NOT defined here any more. It is not an object of its own:
+   it is the name dsd gave byte +0x18 of the touch-panel work struct whose
+   first name is data_020a80cc, and the two are defined together as ONE 0x38
+   run further down this block. See the note there. */
 /* a 256-byte pure-data table func_020538b8 indexes. NO relocation anywhere in
    config/arm9/relocs.txt lands inside 0x02086214 .. 0x02086314, so the ROM
    bytes are the whole truth and they are carried verbatim. */
@@ -1190,7 +1193,49 @@ unsigned char data_02086214[256] = {
 };
 unsigned char data_0209a624[4] = { 1, 0, 0, 0 };   /* arm9 .data, ROM value */
 int data_020a637c[9];                              /* bss, 36 by ROM span */
-int data_020a80cc[6];                              /* bss, 24 by ROM span */
+/* ---- data_020a80cc AND data_020a80e4: ONE 0x38 OBJECT, TWO dsd NAMES ------
+
+   THE TOUCH-PANEL WORK STRUCT. config/arm9/symbols.txt runs data_020a80cc ->
+   data_020a80e4 (+0x18) -> data_020a8104 (+0x38), and the whole 0x38 is one
+   object on the DS. Two of the ROM's own bodies prove it independently, and
+   neither of them takes the distance between the names on trust:
+
+     src/func_0205f0e0.c declares data_020a80cc with a 0x18 pad and then
+       field_18 .. field_2c and a halfword field_30, i.e. it writes SIX words
+       starting at +0x18 -- which is data_020a80e4[0..5] -- and a halfword at
+       +0x30, which is data_020a80e4 + 0x18.
+     src/func_0205ea28.c reads data_020a80cc[0x18] as a halfword (byte +0x30)
+       to decide whether the calibration is live, and then reads p[0..5] off
+       data_020a80e4. The same six words and the same halfword, addressed
+       through the OTHER name. They can only both be right if the two names
+       are 0x18 apart.
+
+   Hosted as two disjoint arrays -- `int data_020a80e4[8]` several hundred
+   lines up and `int data_020a80cc[6]` here -- every one of those accesses
+   landed outside its object, and src/func_0205ea28.c is LINKED and on the
+   live per-frame stylus path, so this was a real out-of-bounds read in the
+   shipped binary and not a latent one. src/func_0205f270.c stores at +0x30,
+   +0x32, +0x34 and +0x36, which is 22 bytes past the end of a 24-byte host
+   object, and that is what kept hal/boot2_ipc.cpp's channel 6 claimed and
+   quiet (its note at the arm9_bring_up seam) and what refused rung R2d.
+
+   THE SHAPE IS THE TREE'S OWN: numbered grouped sections in ROM order, so the
+   linker lays the run out contiguously and +0x18 of the first IS the second.
+   hal/comms_seam.cpp's data_020a89ec/data_020a8a00 pair and
+   hal/camera_bridges.cpp's camcomm run already use it, and the read-back that
+   makes it a measurement rather than a hope is port_tp_layout_check() in
+   hal/boot2_ipc.cpp, called before that file claims channel 6.
+
+   ".dsstate$tp0001"/"$tp0002" sort between the "$aaa" low sentinel and the
+   "$zzz" high sentinel, so both stay inside the save-state capture exactly as
+   the plain globals around them were. Both are bss on the DS, so zero-filled
+   host storage reads what the DS's own cleared bss reads. */
+__pragma(section(".dsstate$tp0001", read, write))
+__declspec(allocate(".dsstate$tp0001")) __declspec(align(4))
+unsigned char data_020a80cc[0x18] = {0};
+__pragma(section(".dsstate$tp0002", read, write))
+__declspec(allocate(".dsstate$tp0002")) __declspec(align(4))
+unsigned char data_020a80e4[0x20] = {0};
 /* data_0209caa0 is NOT defined here: hal/level_boot.cpp already hosts it as
    a 0x14 save block, and its own header records that the ROM object is wider
    than the dsd symbol. Only the mangled spelling below is added. */

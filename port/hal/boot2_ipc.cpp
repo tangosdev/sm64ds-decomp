@@ -115,6 +115,12 @@ DSSTATE_END
 // Rung W1's mode word, hosted at the foot of hal/comms_seam.cpp. Declared as
 // its ROM span; src/func_020408b0.c writes its low halfword.
 extern unsigned char data_020a0f14[];
+// THE TOUCH-PANEL WORK STRUCT, hosted by hal/scene_boot.cpp. ONE 0x38 ROM
+// object under two dsd names, laid out there as an ordered .dsstate$tp run;
+// the read-back in port_tp_layout_check below is what makes that a
+// measurement rather than a hope, and channel 6 is not claimed without it.
+extern unsigned char data_020a80cc[];
+extern unsigned char data_020a80e4[];
 // hal/comms_seam.cpp's read-back of the data_020a89ec/data_020a8a00 pair.
 int port_wm_message_layout_check(void);
 // THE HOSTED WM DRIVER, hal/wm_arm7.cpp. Run link100, lane WM3, rung W4: the
@@ -195,10 +201,46 @@ bool env_on(const char *name, bool dflt) {
 }
 
 // ---------------------------------------------------------------------------
+// THE TOUCH-PANEL OBJECT'S LAYOUT, READ BACK BEFORE CHANNEL 6 IS CLAIMED
+// ---------------------------------------------------------------------------
+//
+// data_020a80cc and data_020a80e4 are ONE 0x38 object with two dsd names, and
+// hal/scene_boot.cpp lays them out as an ordered .dsstate$tp0001/$tp0002 run
+// so that +0x18 of the first IS the second. A grouped-section run is a LAYOUT
+// the linker could reorder, and every access this file's channel-6 driver
+// serves reaches +0x30 .. +0x36, i.e. THROUGH the boundary -- so a reordered
+// run is silent corruption of the ARM9's own status halfwords, not a fault.
+//
+// So it is measured, on every boot, before the channel is claimed, the way
+// hal/comms_seam.cpp's port_wm_message_layout_check and
+// hal/camera_bridges.cpp's hal_camera_check_layout measure theirs. There is no
+// degraded mode: an ARM7 that answers channel 6 into a broken object would
+// write the ROM's completion bits into whatever the linker put there instead,
+// which is worse than not booting.
+int port_tp_layout_check() {
+    return (int)(data_020a80e4 - data_020a80cc) == 0x18;
+}
+
+// ---------------------------------------------------------------------------
 // POWER-ON
 // ---------------------------------------------------------------------------
 
 void arm7_power_on() {
+    if (!port_tp_layout_check()) {
+        std::fprintf(stderr,
+            "[arm7] HARD FAULT: the touch-panel work struct is not the ROM's "
+            "0x38 run. data_020a80e4 came out at data_020a80cc + %d and the "
+            "ROM says +0x18, so src/func_0205f270.c's stores at +0x30..+0x36 "
+            "and src/func_0205ea28.c's read at +0x30 would land outside the "
+            "object. hal/scene_boot.cpp's .dsstate$tp0001/$tp0002 run is what "
+            "holds this.\n", (int)(data_020a80e4 - data_020a80cc));
+        std::fflush(stderr);
+        std::_Exit(24);
+    }
+    if (ntr::ipc_log_on())
+        std::fprintf(stderr, "[arm7] touch-panel work struct: data_020a80e4 at "
+                     "data_020a80cc + 0x%x, one 0x38 run as the ROM has it\n",
+                     (unsigned)(data_020a80e4 - data_020a80cc));
     for (unsigned i = 0; i < kChannelCount; ++i)
         ntr::ipc_arm7_claim(kChannels[i].id);
     // The ROM registers this same function with
@@ -541,14 +583,14 @@ void exit_report()
 //   pulls src/func_0206a6d0.c and with it the GBA-slot chain and the OS lock
 //   family under func_020570b8/func_02057158. A different lane's work.
 //
-//   channel 6, src/func_0205f270.c (func_0203bbc0's first call). This one is
-//   blocked on a HOST BUG, not on scope: hal/scene_boot.cpp hosts
-//   data_020a80cc as `int[6]`, 24 bytes, and func_0205f270's own stores reach
-//   +0x36 -- so enrolling it today would write 22 bytes past the end of a host
-//   object. port/touch_map.txt section 269 already records the undersize. The
-//   one-line fix is in the lane report; hal/scene_boot.cpp is not this lane's
-//   file, and running the body against the short object would be worse than
-//   leaving the channel claimed and quiet.
+//   channel 6, src/func_0205f270.c (func_0203bbc0's first call). THE HOST BUG
+//   THIS PARAGRAPH USED TO NAME IS FIXED (run link100, lane R2D2, gate 1):
+//   hal/scene_boot.cpp hosted data_020a80cc as `int[6]`, 24 bytes, while
+//   func_0205f270's own stores reach +0x36, and it now hosts the ROM's whole
+//   0x38 run -- data_020a80cc and data_020a80e4 as one ordered .dsstate$tp
+//   pair -- with port_tp_layout_check above reading the 0x18 boundary back on
+//   every boot. port/touch_map.txt section 269 recorded the undersize.
+//   Whether the channel is ANSWERED is the row in kChannels, not this note.
 void arm9_bring_up() {
     // Nothing to bring up here any more: the three ROM arms (func_0205b858 at
     // func_02058c84's call 2, func_02059e48 at call 10, func_0205fde8 at call
