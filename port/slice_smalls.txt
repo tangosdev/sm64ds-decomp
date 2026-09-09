@@ -38,3 +38,32 @@
 # under a port name -- comes out of the three target lists and off disk.
 #
 src/func_ov018_02111bf0.c
+
+# ---------------------------------------------------------------------------
+# RUNG 2: THE KUPPA SCRIPT'S FIRST COMMAND DISPATCHER
+# ---------------------------------------------------------------------------
+#
+# src/func_ov002_020bd664.cpp -- the kuppa script's per-command dispatcher, the
+# one func_0200e5ac reaches. Lane PMFB8 measured it and refused it: "ITS
+# UNIVERSE CLOSES; THE SEAT NEEDS A CALL SITE THIS LANE DOES NOT OWN"
+# (port/slice_pmfb8.txt). The universe is not swept, it is named -- the source
+# itself writes `static PMF table[14] = { data_ov002_0210a14c, ... }` -- and it
+# closes: all fourteen records read {code, 0} in the ov002 image, fourteen
+# distinct code words, and the only references to any of them anywhere in ov002
+# are this row's own fourteen literal-pool loads at 020bd7ec..020bd824
+# (runs/link100/out/PMFB8/sweep_g2_ov002.txt).
+#
+# WHAT PMFB8 COULD NOT DO AND THIS GATE DOES: hal/intro_kuppa_dispatch.cpp
+# resolved at the DISPATCH SITE and never wrote the mounted records, which is
+# what bought it no seat ordering to get wrong. The matched TU inverts that --
+# MSVC copies the fourteen pairs into a function static on the first call -- so
+# the records must hold faces before the first script command. The seat
+# (port_kuppa_cmd_seat, in that same file) writes them, and ov002's bring-up in
+# tests/walk_window.cpp and tests/smoke_player.cpp calls it beside
+# port_cutscene_states_seat and the ov002 sinits. Fourteen __fastcall faces with
+# a dead edx, arity three, because the emitted dispatch puts the receiver in ecx
+# and leaves three stack words for the callee to clean; fourteen /alternatename
+# rows because MSVC decorates the fourteen `extern PMF` names. /Zp4 is not
+# needed (PMFB8: 0 diff lines).
+#
+src/func_ov002_020bd664.cpp
