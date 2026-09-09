@@ -1442,6 +1442,46 @@ void hal_sub_camera_input(void);
    than the matched TU: MSVC's one-slot destructor shifts GetPos onto D0 and
    the first pass frees a cylinder. See that file's header. */
 extern "C" void port_cylinder_clsn_process(void);
+/* THE ROM'S OWN END-OF-FRAME SWAP (run link100, boot plan rung R3b, step
+   BSWAP). src/func_020190b8.c is two statements -- SWAP_BUFFERS and the
+   "geometry engine armed" latch data_0209d464 -- and func_020197b8.c:52
+   calls it once a frame, after phase 6 and before the phase-7 wait. It has
+   been LINKED and CALLED BY NOTHING since the port existed. The call at
+   this file's frame foot is where the ROM makes it; under R3d it becomes
+   func_020197b8's own line and this one goes.
+   ntr::gx_swap_apply is the boundary that consumes what it asked for; read
+   THE PENDING SWAP in ntr/gx.cpp before moving either. */
+extern "C" void func_020190b8(void);
+/* THE ROM'S "THE LOOP IS WAITING" FLAG (rung R3b, step B1). 0x0209d4f0,
+   hosted at four bytes in hal/boot_globals.cpp:311. func_020197b8.c:53-56
+   raises it after the swap, under IRQ::DisableIRQs(1), and drops it the
+   instant the phase-7 wait returns; src/_ZN3IRQ13VBlankHandlerEv.c:15 is
+   the only reader, and its whole wake is gated on it:
+       if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0)
+           OS_WakeupThread(&data_0209d500);
+   THIS PORT HAS NEVER WRITTEN IT. Nothing here raised the flag, so the
+   gate was permanently shut and the ROM's own frame wake could not have
+   fired even if the handler ran. Writing it costs nothing today and it is
+   the half of R3d that has to be true before the ROM's loop can sleep on
+   its own VBlank -- so it goes in first, alone, and the [thr] line at the
+   run's end is what says whether anything downstream moved.
+   MEASURED, NOT ASSUMED: it is inert on this binary and here is why.
+   ntr/runtime.cpp:190 _ZN3IRQ13SetIRQHandlerEjPFvvE stores mask 0x200000
+   (GXFIFO) and mask 2 (HBlank) and DROPS every other mask, so
+   _ZN3IRQ13GetIRQHandlerEj(1) answers null and IRQ::VBlankHandler -- which
+   IS linked, walk_window.map 0001:00280510 -- is dispatched by nothing.
+   hal/boot2_thread.cpp's CP15::WaitForInterrupt step 2 is that lookup, and
+   the wait itself is not on this path either: its only callers are the
+   ROM's idle loops func_02057e34 and func_0201a028, and this loop drives
+   the frame instead of sleeping. Both of those are R3d's to close and
+   neither file is this rung's to edit. */
+extern "C" unsigned char data_0209d4f0[4];
+namespace port { void thread_sched_report(const char *tag); }
+namespace ntr {
+void gx_swap_apply();
+void gx_swap_counts(unsigned &requested, unsigned &applied,
+                    unsigned &retired, unsigned &pending, unsigned &param);
+}
 /* ov001, slice_cap.txt: Stage::Render's cap-visibility manager. */
 extern "C" void func_ov001_020aaf40(void);
 
@@ -1852,6 +1892,53 @@ static int port_pace_selftest(void)
         on = e ? atoi(e) : 0;
     }
     return on;
+}
+
+/* THE HOST FRAME PUMP (run link100, boot plan rung R3b, step B2), and the
+   CORRECTION the measurement forced on the R3b plan.
+
+   THE PLAN SAID: move each host duty into step 1 of
+   hal/boot2_thread.cpp's CP1516WaitForInterrupt, which is the port's model of
+   the hardware halt the ROM's loop sleeps in at phase 7. THE MEASUREMENT SAYS
+   THAT WAIT IS NOT ON THIS PATH. A 300-frame level run reports
+
+       [thr] r3b-b1 ... halts=0 pump=0 vbl_dispatch=0 vbl_wakes=0
+
+   -- CP1516WaitForInterrupt is entered ZERO times, because its only callers
+   are the ROM's idle loops (src/func_02057e34.c, src/func_0201a028.c) and this
+   host loop drives the frame itself instead of sleeping. A duty moved literally
+   into step 1 today would simply stop running.
+
+   SO THE DUTY MOVES INTO A NAMED FUNCTION THAT BOTH SIDES CAN CALL, which is
+   what the plan actually needs. This loop calls it at the exact point the duty
+   ran before, so the frame is unchanged to the statement; step 1 of the wait
+   calls the same function through a pointer that NOTHING INSTALLS YET. Under
+   rung R3d the install is one line and the duty carries on running once per
+   frame without moving again.
+
+   WHAT IS IN IT TODAY IS THE PACER AND NOTHING ELSE. frame_stat and frame_pace
+   were already the last two statements of the loop body, so this step is a pure
+   extraction with no reordering, which is why it can be gated on its own. The
+   message pump, the present and the sound frame (steps B4, B5, B3) sit EARLIER
+   in the body and moving them here reorders the frame -- a real change whose
+   only automatic check is a size-only BMP liveness test, so they are not taken
+   here. See this lane's report.
+
+   `spin` is the wait's own starvation counter, kept in the signature so the
+   R3d install needs no adapter; the host loop passes 0. */
+static int g_selftest_frames;   /* main's `selftest`, at file scope so the pump
+                                   reads the same number from either caller */
+
+static unsigned long long g_frame_pump_turns;   /* what the [r3b] line reports */
+
+extern "C" int port_host_frame_pump(unsigned spin)
+{
+    (void)spin;
+    ++g_frame_pump_turns;
+    frame_stat();
+    if ((!rb_replaying() || rb_presented_frame()) &&
+        (!g_selftest_frames || port_pace_selftest())) frame_pace();
+    return 1;
 }
 
 /* ---- THE DEBUG OVERLAY (port mod) -------------------------------------
@@ -8352,6 +8439,9 @@ int main(void)
        framebuffer next to the exe, exit -- CI-checkable without a user */
     const char *st = getenv("SM64DS_WINDOW_SELFTEST");
     const int selftest = st ? atoi(st) : 0;
+    /* rung R3b step B2: the pump reads this from file scope, because under
+       R3d its caller is hal/boot2_thread.cpp and not this function. */
+    g_selftest_frames = selftest;
     /* The agreed stop round for a lockstep selftest; see the check at the
        end of the frame loop. Selftest only, and 0 means "frame budget". */
     const char *sr = getenv("SM64DS_COMMS_STOP_ROUND");
@@ -13242,6 +13332,25 @@ int main(void)
            hal/fader_wipes.cpp at its own point under its own tick gate; this
            file does not move it. Under R3d this call is func_020197b8's line. */
         port_rom_frame_phase6();
+        /* THE ROM'S OWN SWAP, at the ROM's own point: func_020197b8.c runs
+           phase 6's two statements, then IRQ::DisableIRQs(1), then
+           func_020190b8(), then the phase-7 wait. The IRQ bracket is rung
+           B1's, not this one's; the call is this one's. Nothing on the level
+           path reads data_0209d464 (the only readers in the tree are the
+           ov006 minigame body func_ov006_020e6e78 and its D3D twin), so what
+           this adds to a level frame is exactly one geometry command that
+           the engine now sees -- and before this rung did not: src/
+           func_020190b8.c built PLAIN put its store in the mapped I/O window
+           and SM64DS_MTX_BALANCE printed 'SWAP_BUFFERS ... STORED, NEVER
+           EXECUTED' (lane R3CFIX2, status/R3CFIX2.md 18:22). */
+        func_020190b8();
+        ntr::gx_swap_apply();
+        /* func_020197b8.c:53 -- the flag goes up here, between the swap and
+           the wait. The ROM raises it inside IRQ::DisableIRQs(1)/EnableIRQs
+           (:51 and :54); this host has no interrupt to race with at this
+           point -- the VBlank handler is dispatched by nothing (see the
+           banner) -- so the bracket is left out rather than faked. */
+        data_0209d4f0[0] = 1;
         ++frame;   /* counts in live mode too -- the [cam-in]-style live
                       diagnostics carry a real frame number */
         /* SM64DS_MENU_AT: arm the freeze once the named frame is reached. It
@@ -13373,7 +13482,68 @@ int main(void)
                phase-6 step count and the blink clock's. One line per run so a
                battery row's log can be grepped for it. */
             port_rom_frame_report();
-            return 0;
+            {   /* THE RUNG'S OWN LINE (R3b, step BSWAP). The duty is the
+                   ROM's end-of-frame swap, it now runs from src/
+                   func_020190b8.c at this loop's frame foot, and the count
+                   is what the geometry engine actually EXECUTED -- not what
+                   a plain store latched in the mapped window. */
+                unsigned req = 0, app = 0, ret = 0, pend = 0, par = 0;
+                ntr::gx_swap_counts(req, app, ret, pend, par);
+                fprintf(stderr, "[r3b] BSWAP: the ROM's end-of-frame swap "
+                        "runs from src/func_020190b8.c at the level loop's "
+                        "frame foot (func_020197b8.c:52) -- %u SWAP_BUFFERS "
+                        "executed, %u applied at the boundary, %u retired by "
+                        "a gx_reset, %u still pending, param %08x, over %d "
+                        "frames\n", req, app, ret, pend, par,
+                        port_rom_frame());
+                fflush(stderr);
+            }
+            {   /* THE RUNG'S OWN LINE (R3b, step B1), and it is a
+                   MEASUREMENT rather than a claim: the flag is raised and
+                   dropped on every frame of this run, and these counters
+                   say what -- if anything -- downstream of it moved. */
+                fprintf(stderr, "[r3b] B1: the ROM's wait flag "
+                        "data_0209d4f0 is raised at this loop's frame foot "
+                        "and dropped after the pace (func_020197b8.c:53 and "
+                        ":56), %d times over this run; it reads %u at exit\n",
+                        port_rom_frame(), (unsigned)data_0209d4f0[0]);
+                port::thread_sched_report("r3b-b1");
+            }
+            fprintf(stderr, "[r3b] B2: the pacer runs from "
+                    "port_host_frame_pump, the one function step 1b of "
+                    "CP15::WaitForInterrupt calls under R3d -- %llu turns over "
+                    "%d frames, all of them from this loop (the [thr] line "
+                    "above says framepump=0, so the wait took none of them)\n",
+                    g_frame_pump_turns, port_rom_frame());
+            /* THE RUN ENDS HERE, AND IT ENDS WITH exit() (rung R3b, step B8).
+
+               It was `return 0` out of main, which is a shape only a HOST loop
+               can offer: func_020197b8 is `do { ... } while (1)` and CANNOT
+               return, so under rung R3d there is no frame loop left to return
+               out of and no main left below it to return to. The exit has to be
+               something the ROM's own loop can reach from the middle of a
+               frame, and that is exit().
+
+               IT IS THE SAME PROGRAM TODAY, and that is checkable rather than
+               asserted: main declares no automatic object with a destructor
+               (this file is C-shaped throughout), the loop is the last
+               statement in main so nothing follows the old `return`, and exit()
+               runs the atexit handlers and the static destructors that a return
+               from main runs -- SM64DS_MTX_BALANCE's report is registered that
+               way and still prints. The two flushes are the ones the old path
+               got from the CRT and are made explicit here because an exit from
+               inside a frame is a place a reader will ask about.
+
+               The selftest's exit CODE is unchanged at 0, which is what every
+               battery row and every proof reads. */
+            fprintf(stderr, "[r3b] B8: the run ends with exit(0) from inside "
+                    "the frame, not a return out of main -- func_020197b8 is a "
+                    "do-while(1) and cannot return, so this is the only exit "
+                    "shape rung R3d can reach; %d frames ran\n",
+                    port_rom_frame());
+            fflush(stdout);
+            fflush(stderr);
+            exit(0);
         }
         /* THE PACE. Stage::InitResources writes data_0208ee44 = 2 for a 3D
            level, so frame_pace's budget here is the same 33.3ms this block
@@ -13388,8 +13558,13 @@ int main(void)
            SM64DS_PACE_SELFTEST=1 puts the pace back on a selftest, which is
            the only way to measure an online session the way a player runs
            one; see port_pace_selftest. */
-        frame_stat();
-        if ((!rb_replaying() || rb_presented_frame()) &&
-            (!selftest || port_pace_selftest())) frame_pace();
+        /* rung R3b step B2: the pacer, at the point it always ran, through the
+           one function step 1 of the ROM's wait will call under R3d. */
+        port_host_frame_pump(0);
+        /* func_020197b8.c:56 -- and down the instant the wait returns. The
+           pace above IS this loop's wait: it is the sleep that ends the
+           frame, which is what phase 7 is. Under R3d the flag's two writes
+           are func_020197b8's own lines and this pair goes. */
+        data_0209d4f0[0] = 0;
     }
 }
