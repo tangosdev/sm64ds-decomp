@@ -524,6 +524,12 @@ void _ZN4Heap18InitializeGameHeapEjPS_(unsigned size, void *root);
 void port_boot_rom_pre_main(void);
 void port_boot_rom_main_head(void);
 void port_boot_rom_game_init_head(void);
+/* src/func_0201a4e4.c -- IRQ::SetIRQHandler(1, IRQ::VBlankHandler) and
+   the two sleep-queue words. main's own func_0201a054:46 makes this
+   call; this port defers it into port_boot_rom_game_init_head above,
+   which is the LEVEL bring-up. Rung G2 makes it on the scene path too;
+   see the block at the scene handover. */
+void func_0201a4e4(void);
 void port_boot_rom_game_init_tail(void);
 /* run link100, lanes BOOTSCOUT and BOOTR1. THE ROM'S OWN src/main.c runs the
    boot now, in place of the transcription of its head, and the gate
@@ -1578,18 +1584,31 @@ static int r3e_rom_loop_sleeps;
 static int r3e_sound_moved;      /* rung E2 duty 1: sound frames run at phase 9 */
 static int r3e_census_done;
 static int g_pace_div_override;   /* see frame_pace, rung E1 */
-extern "C" int port_rom_loop_enabled(void)
+/* THE KNOB ITSELF MOVED TO hal/rom_frame.cpp (rung G1, lane R3G), and the move
+   is a LINK fact rather than a tidy-up: rung G1 puts the same phase 7 into
+   hal/scene_boot.cpp's port_scene_run, that file is compiled into smoke_player,
+   and smoke_player does not compile THIS file -- so a reader over there would
+   have answered with an unresolved external. rom_frame.cpp is the file all
+   three targets already carry, for exactly the reason rung R3b step B0 enrolled
+   it. The spelling, the banner and every one of this file's readers below are
+   unchanged; that file's block carries the derivation. */
+extern "C" int port_rom_loop_enabled(void);
+/* RUNG G2's SECOND HALF, AND ITS OWN GATE (lane R3G). SM64DS_R3G_ROM_WAKE=1
+   makes a scene run register the ROM's VBlank handler, which is what turns the
+   scene loop's phase-7 sleep from "sleeps the ROM's way, woken the host's way"
+   into the whole circuit. It is OFF BY DEFAULT and that is a measured decision,
+   not caution: with it on, scene 6 (the VS menu) faults, and the block at the
+   scene handover carries the derivation and names the file the repair belongs
+   in. Off, every scene row still measures rung G1 -- the ROM's own sleep at
+   phase 7, the frame foot census, the block census -- which is what the knob-on
+   battery is for. Read only where SM64DS_ROM_LOOP is already on, so with the
+   main knob unset this rung has no reader either. */
+static int port_r3g_rom_wake(void)
 {
     static int v = -1;
     if (v < 0) {
-        const char *e = getenv("SM64DS_ROM_LOOP");
+        const char *e = getenv("SM64DS_R3G_ROM_WAKE");
         v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
-        if (v)
-            fprintf(stderr, "[r3e] SM64DS_ROM_LOOP=1: phase 7 is the ROM's own "
-                    "sleep on every frame (func_0201a4bc -> OS_SleepThread"
-                    "(data_0209d500) -> the idle thread -> the wait), so "
-                    "IRQ::VBlankHandler's wake branch is what ends the frame "
-                    "and func_02019144 is what commits the display\n");
     }
     return v;
 }
@@ -7863,6 +7882,101 @@ int main(void)
        The fall-through is safe here for the reason the block above gives: this
        is the end of the host bring-up, everything below is the level's own,
        and a title run that has torn itself down has no Player to lose. */
+    /* ---- RUNG G2: THE SCENE PATH HAD NO VBLANK HANDLER (lane R3G) --------
+
+       MEASURED FIRST, then repaired. With rung G1's phase 7 in
+       hal/scene_boot.cpp's port_scene_run, a 300-frame scene 1 run under
+       SM64DS_ROM_LOOP=1 came back rc=0 and reported
+
+           [r3g] G1: phase 7 was the ROM's own sleep on 300 of 300 scene frames
+           [thr] EXIT-STATS ... halts=301 framepump=300
+                 vbl_enter=0 vbl_dispatch=0 vbl_wakes=1 starved=300
+
+       -- so the frame SLEPT the ROM's way and was WOKEN THE HOST'S WAY on
+       every one of the three hundred. vbl_enter counts step 2 of
+       hal/boot2_thread.cpp's CP15::WaitForInterrupt, the lookup
+       IRQ::GetIRQHandler(1); zero of them means the lookup answered NULL, so
+       IRQ::VBlankHandler never ran, so neither did func_02019144 (the display
+       commit) or func_02019100. The same run on a LEVEL reports vbl_enter=300
+       vbl_dispatch=299 (lane R3F, out/R3F/gate2_measure.log).
+
+       WHY THE TWO PATHS DIFFER, and it is one call. The ROM registers the
+       handler inside main's fifth call: src/func_0201a054.c:46 is
+       func_0201a4e4(), which is
+       IRQ::SetIRQHandler(1, IRQ::VBlankHandler) plus the two sleep-queue words.
+       This port does not run that body whole -- hal/boot_arms.cpp runs its
+       refused arms through the seam and hal/boot_os.cpp puts func_0201a4e4 in
+       port_boot_rom_game_init_head() instead, which is called at :7975 of this
+       file, BELOW the scene handover. So the registration has always been part
+       of the LEVEL bring-up, and a scene run -- which takes the whole process
+       here and never reaches :7975 -- has never had a VBlank handler at all.
+       On the DS the handler is installed before any scene exists.
+
+       SO THE CALL IS MADE HERE, at the last statement before the scene owns the
+       process. func_0201a4e4 is idempotent (two zero stores, the registration,
+       and data_0209d4dc = 1) and the level path's own call at :7975 is
+       untouched, so a title-entry fall-through re-runs it exactly where it
+       always ran. It is not the whole of port_boot_rom_game_init_head: the rest
+       of that function stays where it is. This is the one line the ROM's own
+       main makes and this port defers.
+
+       AND IT IS BEHIND ITS OWN GATE, SM64DS_R3G_ROM_WAKE, OFF BY DEFAULT,
+       because with it on ONE OF THE THIRTY-SEVEN SCENES FAULTS. Measured, all
+       three arms on this binary, 300 frames each:
+
+         scene 1  SCENE_TITLE     rc=0  block seated by this port
+                  [r3g] G2(a): face entries by slot 0/1/2/3 = 300/0/450/150,
+                        entered with the WRONG block 0 time(s)
+                  [thr] vbl_enter=150 vbl_dispatch=150 -- the ROM's handler ran
+         scene 8  SCENE_GAMEOVER  rc=0  data_0209d4a8 null the whole run, so the
+                  ROM's two dispatchers took their own null arm and did nothing
+         scene 6  SCENE_VS_MENU   rc=0xC0000005 accessing 00000000, inside
+                  UnknownVsEntry::Behavior+0x178, on the frame after the first
+                  sleep
+
+       WHY SCENE 6 GOES DOWN, and it is not the convention and not the sleep.
+       Its census reads
+
+         data_0209d4a8=0187E814 vptr=0187DB34
+         vt[0..3]=00431f20 00431f20 0049d440 00431f20
+         data_0209d514=0 data_0208ee44=2  seated-by-this-port=no
+
+       -- a graphics block whose table already holds HOST addresses (walk_window
+       .map: 00431f20 is func_ov102_0214d1b0, 0049d440 is func_ov075_02116040)
+       but which hal/scene_boot.cpp's port_graph_block_register has never been
+       told about. The port's OWN beat therefore refuses it and answers 1; the
+       ROM's func_02019144 and func_02019100 have no such test, so under the
+       wake they dispatch it for the first time. src/func_ov075_02116040.c --
+       slot 2, the VS menu's own display sync -- is
+
+         *(u16*)0x400100c = (BG2CNT_B & ~0x1f00) | (c[0xc] << 8);
+         if (c[4]) { DecompressLZ16(c[4], G2S::GetBG2ScrPtr()); Deallocate(c[4]);
+                     c[4] = 0; }
+         if (c[8]) func_ov075_021160dc(c[8]);
+
+       so the first VBlank of the run FREES the queued screen payload and NULLS
+       the word, and the actor tick that follows reads it. That is a real
+       reconciliation between the ROM's once-per-VBlank display sync and what
+       hal/scene_vs_menu.cpp does with the same payload, and hal/scene_vs_menu
+       .cpp is not this lane's file. Named, not worked around: see this lane's
+       report, blocked item G2(b).
+
+       WITH THE GATE OFF a scene frame still sleeps at the ROM's phase 7 and is
+       still woken by the port's starvation wake, which is rung G1 exactly and
+       is what all 37 battery rows measure. */
+    if (port_scene_env_want() >= 0 && port_rom_loop_enabled() &&
+        port_r3g_rom_wake()) {
+        func_0201a4e4();
+        fprintf(stderr, "[r3g] SM64DS_R3G_ROM_WAKE=1 on a scene run: "
+                        "IRQ::SetIRQHandler(1, IRQ::VBlankHandler) made here "
+                        "(src/func_0201a4e4.c, main's own func_0201a054:46). "
+                        "This port defers that call into the LEVEL bring-up "
+                        "(hal/boot_os.cpp's port_boot_rom_game_init_head, "
+                        "called below the scene handover), so without this a "
+                        "scene frame sleeps at the ROM's phase 7 and is woken "
+                        "by the port's starvation wake instead of by the ROM's "
+                        "own VBlank\n");
+    }
     if (port_scene_env_want() >= 0) {
         const int scene_rc =
             port_scene_want_window()
