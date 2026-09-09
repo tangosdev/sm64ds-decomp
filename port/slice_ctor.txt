@@ -79,25 +79,98 @@
 #        takes none. That value rides ARM r0 and does not ride a host call, so
 #        linking it would call func_02059ba0 at Entry with whatever the host
 #        left behind. A PORT_HOST_ABI ruling, not a linkage row.
-#   C1b, REFUSED  __sinit_0207501c: it constructs a RaycastLine into
-#        data_020a0d0c, which hal/clsn_vtable.cpp hosts as a 0x10 block in a
-#        grouped section whose neighbours hal/mmc_vtable.cpp:148 asserts at ROM
-#        spacing; the constructor writes past +0x64. That is a layout question
-#        owned by those two files.
-#   C1c  __sinit_02074edc, 02075054, 02075154 -- see out/CTOR/c1c_audit.txt:
-#        two have a live host second writer (hal/actor_registry.cpp:412 seats
-#        the same five callbacks; hal/auto_bss.cpp already hosts the same ROM
-#        bytes twice) and the third would wake a branch hal/method_faces.cpp
-#        says must not be woken from outside that file.
-#   C1d  __sinit_02074e84 -- Clipper's constructor and destructor and four
-#        MSVC-mangled data names.
-#   C1e  __sinit_02073a24 -- 38 rodata constants, data_02086bc8..data_02086e40.
+#   C1b, REFUSED, AND RE-MEASURED AS A RUNG BY LANE CTOR2 (see C1f below).
+#        __sinit_0207501c constructs a RaycastLine into data_020a0d0c, and the
+#        refusal read that symbol's host block as 0x10 wide. The block is 0x78:
+#        hal/clsn_vtable.cpp hosts data_020a0d0c 0x10, data_020a0d1c 0x44 and
+#        data_020a0d60 0x24 contiguously, and hal/mmc_vtable.cpp:148 asserts
+#        the spacing every boot. +0x64 is inside it.
+#   C1c  __sinit_02075154 stays faced -- see out/CTOR/c1c_audit.txt: its five
+#        source records are hosted nowhere and hal/actor_registry.cpp:412 seats
+#        the same five list callbacks LATER in the boot, so linking it today
+#        would write the heads at Entry and have every word overwritten.
+#        __sinit_02074edc is TAKEN below; __sinit_02075054, called a conflict
+#        for hal/auto_bss.cpp's overlapping generic array, re-measured as a
+#        rung and is TAKEN below as C1g.
+#   C1d  TAKEN, below.
+#   C1e  TAKEN, below.
 #
 # TWO INITIALISERS ARE ALREADY IN THE LINK AND ARE NOT LISTED AGAIN.
 # src/__sinit_02073e6c.c is on slice_intro.txt and src/__sinit_02074f80.c is on
 # slice_fdr.txt. Both were HAND-CALLED until this commit and both are now words
 # in the table; the two hand calls are deleted in the same commit and the two
 # words go through counting shims so the run can say each ran exactly once.
+# ---- RUNG C1d: THE arm9 CLIPPER'S OWN INITIALISER -------------------------
+#
+#   src/__sinit_02074e84.cpp   two pointer stores into data_0209f3c4 (the
+#                              second wins, the first is dead in the ROM),
+#                              Clipper's constructor on data_0209f43c, and one
+#                              func_020731dc push at data_0209f388.
+#   src/_ZN7ClipperC1Ev.c      writes the vptr and calls Clipper::Func_020156DC
+#                              with the ROM's own 4:3 seed. Its callee is
+#                              already in the link (port/slice_gate10.txt).
+#   src/_ZN7ClipperD1Ev.c      the first word of _ZTV7Clipper.
+#
+# hal/ctor_runner.cpp hosts what none of the three had: _ZTV7Clipper (two
+# words; word 0 is D1 and word 1 is a NAMED TRAP, because src/_ZN7ClipperD0Ev.c
+# calls base_dtor_Clipper, an invented name for 0x0203cbcc that nothing in this
+# tree defines) and the 12-byte cell data_0209f388. It also carries the five
+# MSVC spellings the //cpp initialiser emits, transcribed from dumpbin.
+#
+# ---- RUNG C1e: THE 19 CAMERA STATE OBJECTS, FILLED BY THE ROM ------------
+#
+#   src/__sinit_02073a24.c     38 struct copies out of arm9 .rodata into the
+#                              nineteen State objects at 0x0209b008..0x0209b138.
+#                              It calls nothing.
+#
+# hal/ctor_runner.cpp hosts the 38 eight-byte source pairs, which nothing in
+# the port hosted. They keep their DS addresses: they are mwcc pointers to
+# member and hal/camera_states.cpp's hal_call_camera_state_fn is what turns one
+# into a host call. The nineteen DESTINATIONS are hal/camera_states.cpp's and
+# stay its; that file bakes the same values in at compile time, and all 19 x 4
+# words were compared against the image before this rung was taken (19 of 19
+# identical, out/CTOR2/c1e_equality.txt), so the ROM's own initialiser writes
+# exactly the bytes that are already there.
+#
+# ---- RUNG C1c: THE TWO arm9 FADER STATICS --------------------------------
+#
+#   src/__sinit_02074edc.c     constructs a FaderColor into data_0209f5e8 and a
+#                              FaderBrightness into data_0209f5d0, and pushes a
+#                              destruct node for each. Both destructors
+#                              (_ZN10FaderColorD1Ev, _ZN15FaderBrightnessD1Ev)
+#                              and all three vtables (data_0208eafc,
+#                              data_0208eacc, data_0208eb2c) were already in
+#                              the link, so this row is one TU.
+#
+# hal/ctor_runner.cpp hosts the two 12-byte node cells, which nothing hosted.
+# It retires hal/method_faces.cpp's "do not wake the branch without giving
+# data_0209f5d0 a real vptr first": the vptr is now data_0208eacc.
+#
+# AND IT MOVES ONE LIVE VPTR. hal/fader_wipes.cpp placement-news a host
+# HalFaderWipe over data_0209f5e8 from a C++ static object, which runs before
+# main; the ROM's initialiser runs at Entry and is therefore the last writer,
+# so the installed colour fader dispatches hal/scene_boot.cpp's ten seated
+# data_0208eb2c slots. The [ctor] line names the table each vptr landed on in
+# every captured run.
+#
+# ---- RUNGS C1f AND C1g: THE TWO REFUSALS THAT RE-MEASURED AS RUNGS --------
+#
+#   src/__sinit_0207501c.c     constructs the moving-collider scratch
+#                              RaycastLine at data_020a0d0c and pushes a node
+#                              at data_020a0d00. Both _ZN11RaycastLineC1Ev and
+#                              _ZN11RaycastLineD1Ev were already in the link.
+#                              The +0x64 write is inside hal/clsn_vtable.cpp's
+#                              0x78 contiguous band, which hal/mmc_vtable.cpp
+#                              asserts at run time.
+#   src/__sinit_02075054.c     zeroes data_020a0dbc[0..1] (hosted byte-exact by
+#                              hal/auto_bss.cpp, and the same storage its three
+#                              ROM readers use), writes 1,1 into data_020a0db8,
+#                              and pushes two NoOpDestructor nodes.
+#                              NoOpDestructor was already in the link.
+#
+# hal/ctor_runner.cpp hosts the four names neither had: data_020a0d00,
+# data_020a0db8, data_020a0dc0 and data_020a0dcc, each at its ROM span.
+#
 src/func_02072f94.c
 src/func_02011a5c.c
 src/_ZN5Scene14GraphCallback2Ev.c
@@ -116,3 +189,10 @@ src/__sinit_02074fe4.c
 src/__sinit_020750b8.c
 src/__sinit_020750ec.c
 src/__sinit_0207511c.c
+src/__sinit_02074e84.cpp
+src/_ZN7ClipperC1Ev.c
+src/_ZN7ClipperD1Ev.c
+src/__sinit_02073a24.c
+src/__sinit_02074edc.c
+src/__sinit_0207501c.c
+src/__sinit_02075054.c
