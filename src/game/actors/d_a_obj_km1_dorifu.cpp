@@ -37,7 +37,7 @@ typedef char StairsBdwSpawnInfo_size_must_be_0x1c[
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned size);
 extern void _ZN10dBgActor_cC2Ev(void *self);
-extern void func_020733a8(void *base, int count, int stride,
+extern void __cxa_vec_ctor(void *base, int count, int stride,
                           void *constructor, void *destructor);
 extern int _ZTV13daObjDorifu_c[];
 extern int _ZTV17daObjKm1_Dorifu_c[];
@@ -76,9 +76,9 @@ extern "C" daObjKm1_Dorifu_c *daObjKm1_Dorifu_c_classInit()
     if (actor) {
         _ZN10dBgActor_cC2Ev(actor);
         *reinterpret_cast<int *>(actor) = (int)_ZTV13daObjDorifu_c;
-        func_020733a8(actor + 0x320, 5, 0x50,
+        __cxa_vec_ctor(actor + 0x320, 5, 0x50,
                       (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
-        func_020733a8(actor + 0x4b0, 5, 0x1c8,
+        __cxa_vec_ctor(actor + 0x4b0, 5, 0x1c8,
                       (void *)_ZN10dBgW_KcMbgC1Ev,
                       (void *)_ZN10dBgW_KcMbgD1Ev);
         *reinterpret_cast<int *>(actor) =

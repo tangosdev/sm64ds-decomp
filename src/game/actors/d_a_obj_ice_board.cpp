@@ -161,7 +161,7 @@ int daObjIceBoard_c::CleanupResources()
  * Real member function: param1 is fBase_c's own field (include/fBase_c.h);
  * the trailing unqualified Kill() call reaches this class's own slot-31
  * override (include/daObjIceBoard_c.h) through the vtable, same idiom as
- * MovingBar/TowerStep::OnHitByMegaChar. kind 2 is the ground-pound actor
+ * daObjBk_Dossunbar_c/TowerStep::OnHitByMegaChar. kind 2 is the ground-pound actor
  * kind that triggers the sheet's own Kill. */
 void daObjIceBoard_c::OnGroundPounded(dActor_c &other)
 {
@@ -217,7 +217,7 @@ void daObjIceBoard_c::Kill()
 // @symbol _ZN15daObjIceBoard_c15OnHitByMegaCharER6Player
 /* daObjIceBoard_c::OnHitByMegaChar -- vtable slot 27, ov018 0x02112858.
  *
- * Same idiom as MovingBar/TowerStep::OnHitByMegaChar: Player::
+ * Same idiom as daObjBk_Dossunbar_c/TowerStep::OnHitByMegaChar: Player::
  * IncMegaKillCount is a real method, and the trailing unqualified Kill()
  * reaches this class's own slot-31 override (include/daObjIceBoard_c.h). */
 void daObjIceBoard_c::OnHitByMegaChar(Player &player)

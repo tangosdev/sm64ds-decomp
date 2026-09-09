@@ -24,15 +24,15 @@
     "lk5 3819. Overlapping but not identical seats, so the merged figure is higher and",
     "the published number stays a floor.",
     "",
-    "This number moves ONE way: seating a new actor class, worth ~8-10 TUs each.",
-    "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
-    "linked closure never references."
+    "LINKED grows when matched TUs become reachable in the port's linked call graph.",
+    "Actor methods and free functions both count. Enrollment alone does not increase",
+    "the count when the release build still dead-strips the unreachable object."
   ],
-  "linkedTus": 9121,
-  "matchedTus": 11324,
-  "measuredAt": "2026-08-30",
-  "branch": "port-mount-noseat-cluster",
-  "commit": "ce1afba51",
+  "linkedTus": 10397,
+  "matchedTus": 11328,
+  "measuredAt": "2026-09-08",
+  "branch": "port/link100",
+  "commit": "f07660f9d",
   "stale": false,
-  "basis": "single lane cons at its pushed tip ce1afba51, measured against the tip's own battery build walk_window.map (tree clean, battery ALL GREEN, the merge that closed cast-campaign wave 3). +346 over the morning's 8775 stamp: eight reviewed merges seating ov064's last three classes, Princess Peach, Snowball and Moneybag, the snowmen and the Fly Guy, three level-overlay tails (ov025 the first overlay at 100%), the ov091 lifts and Fwoosh, and the Tick Tock Clock cluster behind a per-level re-patch mechanism; plus the two Goomboss state bodies and the declared Wiggler Behavior propagated from main by address. The tree crosses 80 percent. Two disclosed holes remain and both matched on main today: func_ov074_02121380 (declared, div 11, execution-audited) and _ZN14TTC_MovingBeam8BehaviorEv (byte-matched, PR #2026) -- seating lanes for both are in flight. Remaining frontier: wave-4 partial-overlay tails, then arm9/ov002/ov006."
+  "basis": "integration branch port/link100 at its pushed tip f07660f9d, measured against that tip's own battery build walk_window.map (C:/tmp/l1-int, gate INT20: tree clean, reconfigure with CONFIGURE DEPS 257/5, battery ALL GREEN at floor 10357 with all 51 level and 36 scene rows, the six proofs, the two stage proofs, the loopback session, the four-player proof three times green, the sixteen-window ladder with every slot at a distinct position, a captured run showing the ROM's own SWAP_BUFFERS executing once per frame and all eight cartridge-header mirror words), and confirmed by the hosted-runner port-linkage workflow on every push of port/** and every pull request into the shipping branch. +35 over the previous stamp of 10357, +359 over the 2026-09-08 morning's 10033, +1276 over the 2026-08-30 stamp of 9121. Since the 10392 stamp, one gated lane: five more object-field pointer-to-member rows (MirrorLuigi, Bubba, the door, an ov006 model sub-object proven by a counted run to have its field installed before every dispatch), +5. Gated rungs since the last stamp: 10392 -> 10397. Running: the ROM's own game loop driving the frame, the last two game-init arms, and the ROM's own sound-init pool identity and sound frame (+26 recommended by the sound scout; the archive and surround-capture rungs held for a ruling)."
 }

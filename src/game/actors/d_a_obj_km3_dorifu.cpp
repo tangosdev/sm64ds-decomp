@@ -71,7 +71,7 @@ extern daObjDorifuResources data_ov047_02112508[5];
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned);
 extern void _ZN10dBgActor_cC2Ev(void*);
-extern void func_020733a8(void*,int,int,void*,void*);
+extern void __cxa_vec_ctor(void*,int,int,void*,void*);
 extern int _ZTV13daObjDorifu_c[];
 extern int _ZTV17daObjKm3_Dorifu_c[];
 extern void _ZN5ModelD1Ev(void*);
@@ -87,8 +87,8 @@ void* daObjKm3_Dorifu_c_classInit(void){
   if(c){
     _ZN10dBgActor_cC2Ev(c);
     *(int*)c = (int)_ZTV13daObjDorifu_c;
-    func_020733a8(c+0x320, 5, 0x50, (void*)_ZN5ModelC1Ev, (void*)_ZN5ModelD1Ev);
-    func_020733a8(c+0x4b0, 5, 0x1c8, (void*)_ZN10dBgW_KcMbgC1Ev, (void*)_ZN10dBgW_KcMbgD1Ev);
+    __cxa_vec_ctor(c+0x320, 5, 0x50, (void*)_ZN5ModelC1Ev, (void*)_ZN5ModelD1Ev);
+    __cxa_vec_ctor(c+0x4b0, 5, 0x1c8, (void*)_ZN10dBgW_KcMbgC1Ev, (void*)_ZN10dBgW_KcMbgD1Ev);
     /* This TU DEFINES _ZTV17daObjKm3_Dorifu_c (it anchors the vtable via the
      * out-of-line destructor above), so the vptr store must skip the two
      * hidden ABI slots with +2 -- see notes/key-function-tu-vptr-store-blocker.md.
@@ -134,7 +134,7 @@ s32 daObjKm3_Dorifu_c::CleanupResources()
  * Three vtable stores and five destructor calls, every one a consequence of
  * `struct daObjKm3_Dorifu_c : daObjDorifu_c : dBgActor_c`: its own vptr, then
  * daObjDorifu_c's, then that class's dBgW_KcMbg[5] at 0x4b0 and Model[5]
- * at 0x320 through __destroy_arr, then dBgActor_c's vptr and dBgActor_c's own
+ * at 0x320 through __cxa_vec_cleanup, then dBgActor_c's vptr and dBgActor_c's own
  * dBgW_KcMbg and Model, then dActor_c. The two arrays are declared in
  * include/daObjDorifu_c.h, so the empty body reproduces them. D0 additionally
  * returns the object to its heap through the inline operator delete it

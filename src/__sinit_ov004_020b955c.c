@@ -1,4 +1,4 @@
-extern void func_020733a8(void* obj, int a, int b, void* cb1, void* cb2);
+extern void __cxa_vec_ctor(void* obj, int a, int b, void* cb1, void* cb2);
 extern void func_020731dc(void* obj, void* cb, void* node);
 
 extern void* func_ov004_020b4aa0;
@@ -89,7 +89,7 @@ void __sinit_ov004_020b955c(void)
 {
     int w[2];
     struct Pair tmp;
-    func_020733a8(&data_ov004_020bf648, 3, 0x134, &func_ov004_020b4a70, &func_ov004_020b4aa0);
+    __cxa_vec_ctor(&data_ov004_020bf648, 3, 0x134, &func_ov004_020b4a70, &func_ov004_020b4aa0);
     func_020731dc(0, &func_ov004_020b4a7c, &data_ov004_020bf41c);
     data_ov004_020bf5d4.unk0 = data_ov004_020b9e98;
     data_ov004_020bf5d4.unk4 = data_ov004_020b9f54;

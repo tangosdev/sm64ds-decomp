@@ -50,7 +50,7 @@
 #define DSCMGSMARTBALL_C_H
 #include "dScMgBase_c.h"
 
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void NullDestructor_0203d47c(void);
 extern "C" void func_ov006_0210d894(void);
 

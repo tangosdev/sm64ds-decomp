@@ -2501,3 +2501,63 @@ def test_forward_decl_folds_into_the_definition_either_order():
         "a later forward decl must fold into the kept definition silently"
     live, dead, w = run(rider, full)
     assert dead and w, "a forward decl with piggybacked text must still flag"
+
+
+def test_size_zero_alias_rows_stop_being_definitions_once_their_range_is_carved_out():
+    """A size-0 second name is a definition only while dsd owns its range.
+
+    The gap object defines every symbols.txt row inside its range STB_GLOBAL, so a
+    size-0 alias in a gap resolves imports (that is how the ITCM `_s32_div_f` family
+    resolves the division helpers mwcc emits). Enrol the same range as a `complete`
+    delinks entry and the link is handed a compiled object instead, which defines only
+    what the source declares -- the alias is gone, and mwldarm aborts Undefined on the
+    first object that imports it. `all_symbol_homes` cannot see that, which is why the
+    real link failed on `__end__catch` with every per-function gate green.
+    """
+    rows = [("arm9", "func_1000", 0x1000, 0x40),
+            ("arm9", "__gap_alias", 0x1000, 0x0),
+            ("arm9", "func_2000", 0x2000, 0x40),
+            ("arm9", "__carved_alias", 0x2000, 0x0)]
+    ranges = {"arm9": [(0x2000, 0x2040)]}          # only func_2000 is enrolled complete
+    assert tubuild.undefinable_alias_names(rows=rows, ranges=ranges) == {"__carved_alias"}
+
+    # A second, gap-resident home makes the same spelling definable again.
+    rows_two_homes = rows + [("ov999", "__carved_alias", 0x3000, 0x0),
+                             ("ov999", "func_3000", 0x3000, 0x40)]
+    assert tubuild.undefinable_alias_names(
+        rows=rows_two_homes, ranges=ranges) == set()
+
+    # And the sized row itself is never called undefinable.
+    assert "func_2000" not in tubuild.undefinable_alias_names(rows=rows, ranges=ranges)
+
+
+def test_unresolvable_imports_rejects_a_home_that_is_an_undefinable_alias():
+    original_homes, original_alias = (tubuild.all_symbol_homes,
+                                      tubuild.undefinable_alias_names)
+    try:
+        tubuild.all_symbol_homes = lambda: {"__end__catch": [("arm9", 0x2071ba0)],
+                                            "_s32_div_f": [("itcm", 0x1ffabe4)]}
+        tubuild.undefinable_alias_names = lambda: {"__end__catch"}
+        # `_s32_div_f` lives in a dsd gap, so its gap object defines it; `__end__catch`
+        # sat inside a carved-out range and nothing in the link defined it.
+        assert tubuild.unresolvable_imports(["__end__catch", "_s32_div_f"]) \
+            == ["__end__catch"]
+        assert tubuild.unresolvable_imports(["__end__catch"],
+                                            known=["__end__catch"]) == []
+    finally:
+        tubuild.all_symbol_homes = original_homes
+        tubuild.undefinable_alias_names = original_alias
+
+
+def test_live_config_defines_the_runtime_entries_the_compiler_emits():
+    """mwccarm names these itself; the source never writes them.
+
+    `bl __end__catch` closes every catch block, `bl __rethrow` is a bare `throw;`, and
+    `bl __cxa_vec_cleanup` destroys an array member. All three must therefore be real
+    definitions in the link, not size-0 alias rows sitting inside a carved-out range.
+    Pins the two regressions that took the full-ROM link down, one name at a time.
+    """
+    undefinable = tubuild.undefinable_alias_names()
+    assert "__end__catch" not in undefinable
+    assert "__rethrow" not in undefinable
+    assert "__cxa_vec_cleanup" not in undefinable

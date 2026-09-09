@@ -217,6 +217,7 @@ jobs:
             tools.test_tu_production \
             tools.test_tu_promote \
             tools.test_tubuild_owned_relocs \
+            tools.test_tubuild_unwind_sections \
             tools.test_tubuild_vtable_partitions \
             tools.test_validate_merge
 
@@ -361,6 +362,35 @@ jobs:
 #                                      `cand_addr != expected["target_address"]` is
 #                                      likewise caught here alone; `>=` -> `>` and
 #                                      disabling the normalized bias are caught by both.
+#   test_tubuild_unwind_sections
+#                                (4)   the CodeWarrior unwind pair in the TU manifest
+#                                      schema. A TU compiled with exceptions on emits an
+#                                      `.exception` frame record and a 12-byte
+#                                      `.exceptix` index entry beside `.text`; arm9 holds
+#                                      636 bytes of `.exceptix` in retail. Until this the
+#                                      schema had no name for either, and `__destroy_arr`
+#                                      (.text 116 + .exception 20 + .exceptix 12) was
+#                                      refused three layers deep. Two tables have to move
+#                                      together: `_TU_SECTION_NAMES` admits the names and
+#                                      `_SECTION_SYMBOL_FIELDS` gives `@ET@`/`@EX@` a
+#                                      field to be licensed in. Widening the first
+#                                      alone makes `prepare_owned_nontext_section_order`
+#                                      call them unlicensed and refuse the entry with a
+#                                      worse message than before, so both halves are
+#                                      asserted, plus that the widening did not loosen
+#                                      the one-claim-per-name rule or admit an invented
+#                                      name. Dict-driven: no compiler, no ROM, no config/
+#                                      and no build/. 4 of 4 run in CI, none skips. Its
+#                                      own module rather than more of test_tubuild.py for
+#                                      the reason in group 3 of the header: the existing
+#                                      schema test it sits beside there,
+#                                      test_manifest_section_claims_are_explicit_and_
+#                                      unambiguous, contributes zero tests to
+#                                      `python -m unittest`. The third copy of the name
+#                                      list is inline in rombuild.intact_tu_policies
+#                                      (tubuild imports rombuild, so the dependency
+#                                      cannot run the other way) and is pinned in
+#                                      test_rombuild instead.
 #   test_tubuild_vtable_partitions
 #                                (4)   tubuild's vtable-partition licensing boundary --
 #                                      the fail-closed path #2091 added, which refuses a
@@ -387,7 +417,8 @@ jobs:
 #                                      linked ELF names a vtable's output section after
 #                                      its overlay (OV036/OV047/OV070 measured on the
 #                                      baseline link) while a manifest section is one of
-#                                      .rodata/.init/.ctor/.data/.bss. Comparing them
+#                                      .rodata/.init/.ctor/.data/.bss/.exception/
+#                                      .exceptix. Comparing them
 #                                      refuses every real input, which is what made the
 #                                      whole path unreachable; 0b0e319 removed exactly
 #                                      that comparison. Mutation-checked both ways:

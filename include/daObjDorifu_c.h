@@ -36,7 +36,7 @@
  * dBgActor_c's and destroying dBgActor_c's own two. Both arrays close exactly on the
  * next thing: 0x320 + 5 * sizeof(Model) = 0x320 + 5 * 0x50 = 0x4b0, and
  * 0x4b0 + 5 * sizeof(dBgW_KcMbg) = 0x4b0 + 5 * 0x1c8 = 0xd98. The strides
- * come from the ROM's __destroy_arr arguments and the sizes from Model.h and
+ * come from the ROM's __cxa_vec_cleanup arguments and the sizes from Model.h and
  * dBgW_KcMbg.h; they agree without being told to.
  *
  * THE FOUR BYTES AT 0xdc8 ARE THIS CLASS'S TOO, for the same reason:
