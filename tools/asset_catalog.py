@@ -198,6 +198,15 @@ def catalogs_from_rom(path: pathlib.Path) -> tuple[list[Asset], list[AssetHandle
 # *(int*)0x027FFE40 / *(int*)0x027FFE48.
 ROM_HEADER_FNT = 0x40
 ROM_HEADER_FAT = 0x48
+# And the overlay half of the same header, at 0x50 arm9_ovt_offset, 0x54
+# arm9_ovt_size, 0x58 arm7_ovt_offset, 0x5c arm7_ovt_size.  The ROM mirrors
+# these two pairs at 0x027FFE50 and 0x027FFE58, which is where
+# src/func_02018c00.c, src/func_0205df40.c and src/func_020424c0.c read them
+# when the overlay table has not been cached in RAM.  Unlike the FNT and FAT
+# pair a ZERO PAIR IS LEGAL and means "this processor has no overlays": SM64DS
+# has 103 ARM9 overlays and no ARM7 overlay at all, so 0x58 really does read
+# 0 + 0 on the cartridge and the ROM's own reader returns 0 for proc 1.
+ROM_HEADER_OVT = 0x50
 
 
 def write_nitrofs_tables(directory: pathlib.Path, rom: pathlib.Path) -> dict:
@@ -218,23 +227,63 @@ def write_nitrofs_tables(directory: pathlib.Path, rom: pathlib.Path) -> dict:
     extracted/dsd/files via files.tsv.  Same table the ROM indexes, so the two
     directions cannot disagree.
 
+    THE OVERLAY HALF is here for the mirror rather than for the walker.  The
+    DS copies the whole cartridge header to 0x027FFE00, and the ROM's overlay
+    reader (src/func_02018c00.c, src/func_0205df40.c) reads the ARM9 pair at
+    0x027FFE50 and the ARM7 pair at 0x027FFE58 whenever the overlay table has
+    not been cached into RAM by src/func_020423dc.c -- which, in single-cart
+    play, it never is.  port/hal/nitrofs_boot.cpp writes those two pairs into
+    the mirror from these four values, exactly the way it already writes the
+    FNT and FAT pairs, so the ROM's own reader reads the cartridge's own words.
+
     Output is gitignored build/ like every other catalog product, and like
     them it needs a regenerate when the ROM changes.
     """
     blob = rom.read_bytes()
     fnt_off, fnt_size, fat_off, fat_size = struct.unpack_from(
         "<IIII", blob, ROM_HEADER_FNT)
+    ovt9_off, ovt9_size, ovt7_off, ovt7_size = struct.unpack_from(
+        "<IIII", blob, ROM_HEADER_OVT)
     for name, off, size in (("fnt", fnt_off, fnt_size),
                             ("fat", fat_off, fat_size)):
         if size == 0 or off == 0 or off + size > len(blob):
             raise ValueError(
                 f"ROM header's {name} span ({off:#x}+{size:#x}) is outside the "
                 f"{len(blob):#x}-byte image; this is not a NitroFS cartridge")
+    # The overlay tables take the same bounds check with one difference: an
+    # EMPTY pair is legal and is not a truncated ROM.  A non-empty pair that
+    # runs off the end is, and reading it short would hand the ROM's own
+    # overlay reader a record it would then copy code from.
+    for name, off, size in (("arm9 overlay table", ovt9_off, ovt9_size),
+                            ("arm7 overlay table", ovt7_off, ovt7_size)):
+        if size == 0 and off == 0:
+            continue
+        if size == 0 or off == 0 or off + size > len(blob):
+            raise ValueError(
+                f"ROM header's {name} span ({off:#x}+{size:#x}) is outside the "
+                f"{len(blob):#x}-byte image; this is not a NitroFS cartridge")
+        if size % 32:
+            raise ValueError(
+                f"ROM header's {name} size {size:#x} is not a whole number of "
+                "32-byte OverlayInfo records")
     directory.mkdir(parents=True, exist_ok=True)
     (directory / "nitrofs_fnt.bin").write_bytes(blob[fnt_off:fnt_off + fnt_size])
     (directory / "nitrofs_fat.bin").write_bytes(blob[fat_off:fat_off + fat_size])
+    # The two overlay tables go out beside them, verbatim and for the same
+    # reason: the day hal/fs_names.cpp's port_nitrofs_read serves the overlay
+    # spans the way it already serves the FNT and the FAT, the ROM's own
+    # src/func_02018c00.c reads its 32-byte OverlayInfo out of the cartridge's
+    # own bytes rather than out of anything this port reconstructed.  An empty
+    # pair writes no file: there is nothing to copy.
+    for name, off, size in (("ovt9", ovt9_off, ovt9_size),
+                            ("ovt7", ovt7_off, ovt7_size)):
+        if size:
+            (directory / f"nitrofs_{name}.bin").write_bytes(
+                blob[off:off + size])
     meta = {"fnt_offset": fnt_off, "fnt_size": fnt_size,
-            "fat_offset": fat_off, "fat_size": fat_size}
+            "fat_offset": fat_off, "fat_size": fat_size,
+            "ovt9_offset": ovt9_off, "ovt9_size": ovt9_size,
+            "ovt7_offset": ovt7_off, "ovt7_size": ovt7_size}
     with (directory / "nitrofs.tsv").open("w", encoding="utf-8",
                                           newline="") as f:
         writer = csv.writer(f, delimiter="\t", lineterminator="\n")

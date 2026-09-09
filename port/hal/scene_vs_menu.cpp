@@ -968,8 +968,24 @@ extern "C" void func_02058568(unsigned *ctx, unsigned pc, unsigned sp)
                      wireless manager (func_020618b8); its eleven siblings
                      turned out to be leaf accessors over comms bss and are
                      COMPILED, not faced -- see the slice's correction note
-     UnloadOverlay   nothing to unload: every hosted overlay is a static
-                     build-time mount
+     UnloadOverlay   MEASURED, and the reason changed (run link100, lane
+                     LOADOV). "Nothing to unload" was true and was not the
+                     blocker. src/UnloadOverlay.c is src/func_02017e94.c with
+                     one word different: both scan data_0209d3c4[12] for an
+                     entry whose first word is the id, and where
+                     func_02017e94 says `if (found == 0) return;` this one
+                     says `if (found == 0) Crash();`. On this host found is
+                     always 0 -- the id is a host address (hal/scene_boot.cpp's
+                     overlay_NN block) and nothing ever fills that table
+                     because LoadOverlay is faced -- so the ROM's own body
+                     would take the crash arm on its first call. That is why
+                     this row is faced and its twin src/func_02017e94.c is
+                     LINKED on port/slice_loadov.txt.
+                     Also recorded: port/tools/linkage.py used to report this
+                     row with func_0203d9f4's reason. The tag binder ended a
+                     run on `{`, `}` or `;` and a VS_SEAM(...) line has none of
+                     them, so one tag bound three rows. Fixed in the same lane
+                     (linkage.py --selftest pins all three).
      func_02058048 / func_02058200 / func_02057f38
                      the carousel worker's queue-op, thread-create and
                      reschedule -- 0. The port runs no DS threads (see the
@@ -1042,7 +1058,7 @@ static void vs_seam(const char *name)
     extern "C" int sym(void) { vs_seam(#sym); return 0; }
 // PORT_HOST_ABI: refused DS wireless-status wrapper; the one that really calls the wireless manager (func_020618b8), which the port does not host.
 VS_SEAM(func_0203d9f4)
-// PORT_HOST_ABI: nothing to unload; every hosted overlay is a static build-time mount.
+// PORT_HOST_ABI: the ROM's own body calls Crash() when the id is not in data_0209d3c4, and on this host it never is -- the id is a host address and nothing fills that table.
 VS_SEAM(UnloadOverlay)
 // PORT_HOST_ABI: the port runs no DS threads; the carousel worker's reschedule answers idle 0.
 VS_SEAM(func_02057f38)

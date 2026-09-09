@@ -751,7 +751,11 @@ extern "C" void MultiStore32Bytes(unsigned val, int *dst, int len)
 //                      on the first frame -- so this one really does run, and
 //                      with a host-address key it finds nothing and returns,
 //                      which is also what the ROM does when the overlay is not
-//                      resident.
+//                      resident. THAT PARAGRAPH IS NOW THE ARGUMENT FOR THE
+//                      SEAT rather than for the face: run link100's lane LOADOV
+//                      linked src/func_02017e94.c on port/slice_loadov.txt, so
+//                      the early return is the ROM's own line and not a host
+//                      body agreeing with it.
 //   LoadOverlay(id)    load, reached only from Behavior's result == 6 branch,
 //                      which is a menu confirm. No idle run reaches it.
 // Neither could do the real thing anyway: the port has no overlay loader,
@@ -814,7 +818,17 @@ extern "C" { int overlay_60, overlay_98; }
    the fourth is void, none has an out-parameter, and the ROM's own answer when
    the overlay is not resident is to do nothing. */
 extern "C" void LoadOverlay(int)                       {}
-extern "C" void func_02017e94(int)                     {}
+/* func_02017e94's face MOVED (run link100, lane LOADOV) and did not retire: it
+   is hal/nitrofs_face.cpp's now, on smoke_player alone, and the two window
+   targets link the ROM's own src/func_02017e94.c through
+   port/slice_loadov.txt. The row above kept its trade and this one did not,
+   and the difference is one word in two otherwise identical bodies: where
+   src/UnloadOverlay.c and src/LoadOverlay.c crash or read on a lookup that
+   fails, src/func_02017e94.c returns. That early return is the arm this host
+   takes on every call, because the id is a host address (the block above) and
+   data_0209d3c4 is never filled, so the ROM's own body does exactly what this
+   empty face did -- for the ROM's own reason instead of by assertion. The
+   split of targets is hal/nitrofs_face.cpp's, for its reason. */
 extern "C" void UnloadArchives(void)                   {}
 /* AND THE FOURTH IS RETIRED (run link100, lane STAGEFIX). It stood here as
        extern "C" void LoadOrUnloadObjectOverlays(void (*)(int), int) {}

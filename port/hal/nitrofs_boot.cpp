@@ -32,7 +32,7 @@
 //
 // ---- WHERE THE FOUR WORDS COME FROM, AND WHY NOT FROM A CONSTANT -----------
 //
-// tools/asset_catalog.py:194-244 unpacks them out of the cartridge header at
+// tools/asset_catalog.py unpacks them out of the cartridge header at
 // ROM_HEADER_FNT (0x40) and ROM_HEADER_FAT (0x48) with one struct.unpack_from,
 // writes the two tables they point at to build/assets/nitrofs_{fnt,fat}.bin
 // and the four values to build/assets/nitrofs.tsv. hal/fs_names.cpp already
@@ -41,6 +41,45 @@
 // reader the port already has (port_nitrofs_header_words), not re-parsed here
 // and not typed into a source file: change the cartridge, regenerate the
 // catalog, and the mirror follows without an edit anywhere.
+//
+// ---- THE OVERLAY HALF OF THE SAME MIRROR (run link100, lane LOADOV) --------
+//
+// The cartridge header carries four more words the DS mirrors onto the same
+// page, and the ROM reads them at fixed addresses exactly like the first four:
+//
+//     *(int *)0x027FFE50   ARM9 overlay table offset   cartridge header +0x50
+//     *(int *)0x027FFE54   ARM9 overlay table size     cartridge header +0x54
+//     *(int *)0x027FFE58   ARM7 overlay table offset   cartridge header +0x58
+//     *(int *)0x027FFE5C   ARM7 overlay table size     cartridge header +0x5c
+//
+// Five matched TUs read that pair of pairs: src/func_02018c00.c and
+// src/func_0205df40.c (the game's and the SDK's FS_LoadOverlayInfo, which fall
+// back to the mirror when the overlay table has not been cached into RAM by
+// src/func_020423dc.c -- which, outside Download Play, it never is), their two
+// tails src/func_02018cbc.c and src/func_0205dffc.c, and src/func_020424c0.c
+// (the Download Play path's "read all four tables into one buffer", whose
+// caller func_02040c34 is WM1's gate). Until this file wrote them the mirror
+// read 0 + 0, so every one of those readers took its `off >= hi` arm and
+// answered "no such overlay" -- the ZERO ARM.
+//
+// On this cartridge the ARM9 pair is 0x61510 + 0xce0, which is 103 OverlayInfo
+// records of 32 bytes, and the ARM7 pair really is 0 + 0: SM64DS has no ARM7
+// overlay at all, so a reader answering 0 for proc 1 is giving the ROM's own
+// answer rather than covering a gap.
+//
+// WHAT STILL DOES NOT RUN, MEASURED RATHER THAN ASSUMED. Seeding the words is
+// necessary and it is not sufficient. The fallback arm opens the table THROUGH
+// THE ARCHIVE, at absolute ROM offset 0x61510 + id * 32, and hal/fs_names.cpp's
+// port_nitrofs_read resolves an absolute offset three ways only: the FNT span,
+// the FAT span, and a FAT entry (a file). The overlay table is none of those --
+// it sits ahead of the FNT and no FAT entry covers it, checked against the
+// cartridge itself -- so the read prints "in no FAT entry and in neither table
+// span" and returns 1, which src/func_02018cbc.c does not test. The honest
+// close is one more span test in port_nitrofs_read beside the two it already
+// has, served out of build/assets/nitrofs_ovt9.bin, which tools/
+// asset_catalog.py now copies out of the cartridge for exactly that.
+// hal/fs_names.cpp is not this lane's file; the words and the blob are here so
+// that change is one hunk when its owner takes it.
 //
 // ---- THE THREE FACES, AND WHAT EACH ONE NAMES ------------------------------
 //
@@ -59,6 +98,7 @@
 // ---------------------------------------------------------------------------
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 extern "C" {
 
@@ -66,9 +106,89 @@ void port_nitrofs_header_words(unsigned *fnt_off, unsigned *fnt_size,
                                unsigned *fat_off, unsigned *fat_size);
 extern int data_020a8074[];
 
+}  // extern "C"
+
+// ---- THE OVERLAY WORDS, READ THE WAY THE FNT/FAT WORDS ARE -----------------
+// hal/fs_names.cpp publishes the first four words through
+// port_nitrofs_header_words and nothing else, so the overlay four are read
+// here, out of the same build/assets/nitrofs.tsv, resolved under the same
+// SM64DS_ASSET_ROOT / PORT_REPO_ROOT rule every other asset reader in this
+// port uses (hal/fs_names.cpp, hal/fs.cpp, hal/fs_mods.cpp all carry the same
+// three lines). Both readers ignore keys they do not know, so a catalog from
+// either side of this change is readable by both.
+//
+// A CATALOG WITH NO OVERLAY ROWS IS NOT FATAL, deliberately. 0 + 0 is what the
+// mirror held before this file wrote it, and it is what the ARM7 pair holds on
+// this cartridge anyway, so refusing would turn "your build/assets is one
+// commit old" into a process that will not start. It says so once, loudly, and
+// seeds what it has.
+#ifndef PORT_REPO_ROOT
+#define PORT_REPO_ROOT "."
+#endif
+
+namespace {
+
+const char *nitrofs_asset_root(void)
+{
+    const char *env = std::getenv("SM64DS_ASSET_ROOT");
+    return (env && env[0]) ? env : PORT_REPO_ROOT;
+}
+
+struct OverlayWords {
+    unsigned ovt9_off, ovt9_size, ovt7_off, ovt7_size;
+    int found;
+};
+
+OverlayWords read_overlay_words(void)
+{
+    OverlayWords w = {0, 0, 0, 0, 0};
+    char path[520];
+    char line[256];
+    std::FILE *f;
+
+    std::snprintf(path, sizeof path, "%s/build/assets/nitrofs.tsv",
+                  nitrofs_asset_root());
+    f = std::fopen(path, "r");
+    if (!f) {
+        std::fprintf(stderr,
+            "[nitrofs] the overlay half of the mirror stays 0: %s could not be "
+            "opened (run tools/asset_catalog.py generate <rom>)\n", path);
+        return w;
+    }
+    if (std::fgets(line, sizeof line, f) == 0) {   /* the header row */
+        std::fclose(f);
+        return w;
+    }
+    while (std::fgets(line, sizeof line, f)) {
+        char key[64];
+        unsigned value;
+        if (std::sscanf(line, "%63[^\t]\t%u", key, &value) != 2)
+            continue;
+        if (!std::strcmp(key, "ovt9_offset")) { w.ovt9_off = value;  w.found |= 1; }
+        else if (!std::strcmp(key, "ovt9_size")) { w.ovt9_size = value; w.found |= 2; }
+        else if (!std::strcmp(key, "ovt7_offset")) { w.ovt7_off = value; w.found |= 4; }
+        else if (!std::strcmp(key, "ovt7_size")) { w.ovt7_size = value; w.found |= 8; }
+    }
+    std::fclose(f);
+    if (w.found != 0xf) {
+        std::fprintf(stderr,
+            "[nitrofs] %s carries no overlay-table spans (header +0x50..+0x5c); "
+            "the mirror's overlay half stays 0 and the ROM's overlay readers "
+            "keep their zero arm. Regenerate the catalog with a "
+            "tools/asset_catalog.py that writes them.\n", path);
+        w.ovt9_off = w.ovt9_size = w.ovt7_off = w.ovt7_size = 0;
+    }
+    return w;
+}
+
+}  // namespace
+
+extern "C" {
+
 // ---- THE SEED --------------------------------------------------------------
-// Four stores, at the four addresses src/func_0205d96c.c reads, from the four
-// values tools/asset_catalog.py took out of the cartridge header. Called from
+// EIGHT stores now: the four addresses src/func_0205d96c.c reads and the four
+// the overlay readers read, from the eight values tools/asset_catalog.py took
+// out of the cartridge header. Called from
 // hal/fs_names.cpp's static initialiser immediately before the ROM's own
 // once-guard func_0205d89c, so the ordering is inside one translation unit and
 // does not depend on static-initialiser order between files.
@@ -83,17 +203,40 @@ void port_nitrofs_header_mirror_seed(void)
         return;
     done = 1;
 
+    volatile unsigned *ov9 = (volatile unsigned *)0x027ffe50u;
+    volatile unsigned *ov7 = (volatile unsigned *)0x027ffe58u;
+    OverlayWords w;
+
     port_nitrofs_header_words(&fo, &fs, &ao, &as);
     fnt[0] = fo;
     fnt[1] = fs;
     fat[0] = ao;
     fat[1] = as;
 
+    w = read_overlay_words();
+    ov9[0] = w.ovt9_off;
+    ov9[1] = w.ovt9_size;
+    ov7[0] = w.ovt7_off;
+    ov7[1] = w.ovt7_size;
+
     std::fprintf(stderr,
         "[nitrofs] cartridge-header mirror seeded: 0x027ffe40 fnt %#010x+%#010x, "
         "0x027ffe48 fat %#010x+%#010x (header +0x40..+0x4c, out of "
         "build/assets/nitrofs.tsv via tools/asset_catalog.py)\n",
         fnt[0], fnt[1], fat[0], fat[1]);
+
+    /* One line per mirrored word, read back OFF THE MIRROR rather than out of
+       the locals, so what is printed is what the ROM's own readers see. */
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe40 = %#010x   header +0x40  FNT offset\n", fnt[0]);
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe44 = %#010x   header +0x44  FNT size\n", fnt[1]);
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe48 = %#010x   header +0x48  FAT offset\n", fat[0]);
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe4c = %#010x   header +0x4c  FAT size\n", fat[1]);
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe50 = %#010x   header +0x50  ARM9 overlay table offset\n", ov9[0]);
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe54 = %#010x   header +0x54  ARM9 overlay table size, %u records\n",
+                 ov9[1], (unsigned)(ov9[1] / 32u));
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe58 = %#010x   header +0x58  ARM7 overlay table offset\n", ov7[0]);
+    std::fprintf(stderr, "[nitrofs] mirror word 0x027ffe5c = %#010x   header +0x5c  ARM7 overlay table size, %u records\n",
+                 ov7[1], (unsigned)(ov7[1] / 32u));
 }
 
 // ---- THE READ-BACK ---------------------------------------------------------

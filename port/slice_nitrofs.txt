@@ -58,6 +58,17 @@ src/func_02057218.c
 src/func_02057228.c
 #   func_020570c0 -> port_rom_exmemcnt_card_grant
 
+# The lock primitive both commands bottom out on (run link100, lane LOADOV).
+# func_02057198 masks interrupts, does the `swp` through func_0205a74c and
+# records the owner. It used to be a transcription in hal/boot_hw.cpp because
+# its forward declaration of func_0205a74c said `static` with no definition in
+# the TU -- C2129 under MSVC, accepted by mwccarm. The decomp corrected that
+# one word to `extern` (commit 861328718), so the matched TU compiles and the
+# host copy is deleted. Same two targets as the rest of this slice: the swp
+# primitive func_0205a74c and the IRQ::DisableAll / RestoreAll pair it calls
+# are hal/boot_hw.cpp's, and that file rides SLICE214_SOURCES.
+src/func_02057198.c
+
 # NOT HERE, and each one has a reason rather than an omission.
 #
 # src/func_0205db2c.c    the archive READ function. Its whole body is
@@ -73,13 +84,6 @@ src/func_02057228.c
 #                        through func_0205db2c's a4 argument, so with the read
 #                        faced nothing references them and /OPT:REF drops them
 #                        again. They are the card driver's, not the archive's.
-# src/func_02057198.c    compiles now -- the `static` on its forward
-#                        declaration of func_0205a74c was corrected on this tip
-#                        -- but hal/boot_hw.cpp:281-296 still defines it, and
-#                        that file is not this lane's. Seating the matched TU
-#                        and deleting the host body is +1 and one small hunk;
-#                        it is written up in this lane's report rather than
-#                        taken here.
 # src/func_020570c0.c    the two EXMEMCNT stores. `G` resolves in this binary
 # src/func_020570d8.c    to hal/heap_vtable.cpp's default-heap word, so the
 #                        matched bodies would OR and AND bit 11 of a heap
