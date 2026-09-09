@@ -16285,6 +16285,36 @@ target_compile_definitions(mp_comms_seam PRIVATE
     PORT_COMMS_SEAM_PROBE_FACES_W4)
 
 # ===========================================================================
+# THE WIRELESS PLAN, RUNG W2 (run link100, lane WM4)
+# ===========================================================================
+#
+# src/func_0204068c.c and src/func_02062778.c: the ROM's own MP receive
+# unpacker. The list and the argument are in port/slice_wm4.txt's own header;
+# the buffer they read is filled by hal/wm_arm7.cpp, which rung W4 already
+# added to these same three targets right above.
+#
+# Plain C, two files, no struct layout option and no pointer-to-member.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm4.txt" SLICE_WM4_LINES)
+set(SLICE_WM4_SOURCES "")
+foreach(line IN LISTS SLICE_WM4_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM4_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_twm4 walk_window walk_window_hires smoke_player)
+    target_sources(${_twm4} PRIVATE ${SLICE_WM4_SOURCES})
+endforeach()
+# AND NOT THE SEAM PROBE. tests/mp_comms_seam.cpp:155-156 checks that
+# func_0204068c answers null for aids 0 and 1 with no transport installed, and
+# it links neither this unpacker nor the host ARM7 that fills the buffer it
+# reads, so it keeps the retired stand-in under a define of its own -- the same
+# shape as the two above it.
+target_compile_definitions(mp_comms_seam PRIVATE
+    PORT_COMMS_SEAM_PROBE_FACE_0204068C)
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
