@@ -565,6 +565,36 @@ def test_status_lists_the_queue_after_the_holder(lockfile):
         sleeper.wait()
 
 
+def test_ticket_holders_honour_an_old_style_lock_holder(lockfile):
+    # THE GATE CASE: "an old-style client holding the plain lock is honoured
+    # by ticket holders." An OLD (pre-ticket) slot_lock.py never writes a
+    # ticket for the lock it holds -- it just owns the plain lockfile. A NEW,
+    # ticket-aware waiter must still treat that as an ordinary live holder: it
+    # queues behind it (writes its OWN ticket), waits, and times out naming
+    # the holder correctly -- it must not treat the holder's missing ticket as
+    # licence to ignore it, break it, or otherwise misbehave.
+    sleeper = subprocess.Popen([sys.executable, "-c", "import time; time.sleep(30)"])
+    try:
+        with open(lockfile, "w", encoding="utf-8") as f:
+            json.dump({"pid": sleeper.pid, "host": "test", "acquired": time.time(),
+                       "label": "old-style-holder"}, f)
+        assert slot_lock._is_stale(lockfile) is False   # a normal live hold
+        t0 = time.time()
+        with pytest.raises(slot_lock.SlotLockTimeout) as ei:
+            slot_lock.acquire(label="new-style-waiter", timeout=0.6, poll=0.05)
+        assert time.time() - t0 >= 0.5                  # it waited, not barged
+        msg = str(ei.value)
+        assert str(sleeper.pid) in msg                  # names the real holder
+        # our own ticket was the only one ever in the queue, and is gone now
+        assert slot_lock.queue(lockfile) == []
+        # the old-style holder's lockfile is exactly as we left it
+        pid, _, _ = slot_lock._read_holder(lockfile)
+        assert pid == sleeper.pid
+    finally:
+        sleeper.terminate()
+        sleeper.wait()
+
+
 def test_a_waiting_ticket_holder_prints_its_queue_position(lockfile, monkeypatch):
     # THE GATE CASE: "a ticket holder's wait line prints its position."
     # WAIT_NOTICE_SECONDS is normally 60s; shrink it so the periodic notice
