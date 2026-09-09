@@ -685,6 +685,15 @@ extern unsigned char data_020a0f80[];
 // slot -- the same reading rung W0 wrote down for func_02040704.
 void *func_0204068c(unsigned short aid);
 
+// THE SEAM'S ROUND COUNTER, which rung W9 uses as the WM sequence number. It is
+// declared here rather than reached for through comms_seam.h because the same
+// two words are what hal/rollback.cpp:546 snapshots and puts back on a rewind
+// ("a rewind puts them back with the world so a replayed frame prints the same
+// stamp it printed the first time"), and that property is the whole reason this
+// rung carries it: see the sequence-number note at ind_post.
+extern "C" void port_comms_counters_get(unsigned long long *exchanges,
+                                        unsigned long long *rounds);
+
 }  // extern "C"
 
 // ===========================================================================
@@ -1197,9 +1206,12 @@ void pop_front()
 // is in, which is once per game frame. That is the DS's MP frame -- one
 // datagram per peer per frame -- and it is why the latch is armed from
 // port_wm_publish_mp_recv (the round is in, the ARM7 is holding the bytes) and
-// spent from the ARM7's own turn, never from arm7_recv. Law 1 at the top of
-// this file is why; hal/tsc_arm7.cpp's auto-sample indication is the same shape
-// and the precedent for it.
+// spent in the same call, with port_wm_arm7_turn keeping a backstop turn for a
+// round that somehow completes without one. Never from arm7_recv: law 1 at the
+// top of this file is why. hal/tsc_arm7.cpp's auto-sample indication is the
+// same shape down to the arm-and-spend, and the note at the arming site
+// carries the rollback measurement that made one-per-FRAME rather than
+// one-per-TURN a requirement rather than a preference.
 //
 // THE SIXTEENTH SEAT DOES NOT GO DOWN THIS PATH. The ROM's MP unit is four
 // slots of 0x100 (src/func_020631dc.c's MultiStore32Bytes of 0x420) and
@@ -1363,7 +1375,20 @@ void mp_indication_tick()
     }
 
     ++g_ind_rounds;
-    const unsigned seq = (unsigned)(g_ind_rounds << 1);   // see the note below
+    // THE SEQUENCE NUMBER IS THE SEAM'S ROUND, AND IT HAD TO BE, MEASURED.
+    // src/func_02062aa4.cpp stores `*(u16 *)(c + 0x1a) >> 1` into the child's
+    // per-slot sequence array at +0x400, so whatever is posted here ends up in
+    // the ROM's own state and has to survive a rewind. The first draft posted
+    // this file's own g_ind_rounds, a free-running host counter nothing
+    // restores, and rollback_proof's det4/det8 p1 rows read the difference
+    // exactly: four ascending halfwords at the MP unit's +0x400, was f2 f5 f6
+    // f7 and now fd fe ff 0100 -- NINE apart, on a rewind of NINE frames.
+    // port_comms_counters_get's `rounds` is the same number one layer up and
+    // hal/rollback.cpp:546 carries it in the snapshot, so a replayed frame
+    // posts the sequence it posted the first time.
+    unsigned long long ex = 0, rd = 0;
+    port_comms_counters_get(&ex, &rd);
+    const unsigned seq = (unsigned)((rd << 1) & 0xffffu);
 
     if (g_ind_parent) {
         // ONE 0x82 PER CHILD, each carrying that child's own 0x20-byte block.
@@ -1424,11 +1449,10 @@ void mp_indication_tick()
 // THE ROUND'S HALF. Called from port_wm_publish_mp_recv below, which is the
 // point the carrier's round is in and the ARM7 is holding the bytes.
 //
-// THE SEQUENCE NUMBER IS THE ROUND NUMBER. src/func_02062aa4.cpp stores
-// `*(u16 *)(c + 0x1a) >> 1` into the child's per-slot sequence array, so the
-// value posted is the round shifted up by one and what the ROM records is the
-// round itself. Nothing in either callback compares two of them; it is a
-// number the game carries, and the carrier's round is the honest one to carry.
+// THE SEQUENCE NUMBER IS THE SEAM'S ROUND, shifted up by one so that what
+// src/func_02062aa4.cpp records is the round itself. Nothing in either callback
+// compares two of them; it is a number the game carries. The note at the post
+// says why it is the seam's counter and not this file's.
 void mp_indication_arm(unsigned mask, unsigned stride,
                        const port::CommsTransport *t)
 {
@@ -1695,10 +1719,13 @@ extern "C" void port_wm_arm7_turn(void)
     // further command until it is told it has somebody to send to.
     publish_association();
 
-    // RUNG W9. The port-0x0c port-receive indication for the round the
-    // carrier has already completed, before the reply queue's one pop: on
-    // the DS a receive is an interrupt and a command's answer is a reply,
-    // and the two do not queue behind one another.
+    // RUNG W9, THE BACKSTOP. The port-0x0c port-receive indication is
+    // normally armed and spent in one call from port_wm_publish_mp_recv
+    // below, so this finds the latch already spent; it is here so a round
+    // that completes with no turn behind it is still not swallowed. It runs
+    // before the reply queue's one pop because on the DS a receive is an
+    // interrupt and a command's answer is a reply, and the two do not queue
+    // behind one another.
     mp_indication_tick();
 
     if (!g_qn) return;
@@ -1947,11 +1974,28 @@ extern "C" void port_wm_publish_mp_recv(void)
     }
     ++g_mp_fills;
     g_mp_last_mask = mask;
-    // RUNG W9. The same round, staged for the ROM'S OWN receive path: the
-    // latch is armed here because this is the point the carrier says the
-    // round is in and the ARM7 is holding the bytes, and it is spent from
-    // port_wm_arm7_turn above.
+    // RUNG W9. The same round, staged for the ROM'S OWN receive path, and
+    // SPENT IN THE SAME CALL. The latch is armed here because this is the
+    // point the carrier says the round is in and the ARM7 is holding the
+    // bytes; the turn is taken here too, for the reason
+    // hal/tsc_arm7.cpp's port_tsc_arm7_frame_touch takes its own -- one
+    // indication per frame, at the cadence the frame itself sets, instead of
+    // one per ARM7 turn. THAT IS A DETERMINISM REQUIREMENT AND IT WAS
+    // MEASURED, not a tidiness: deferring the post to the next turn made the
+    // number of posts over a span of frames a count of ARM7 TURNS, and a
+    // frame re-simulated under hal/rollback.cpp takes no radio turn at the
+    // pump (lane DET's fix (a)), so a child's ring cursor at +0x408 ended a
+    // rewind four bytes away from where the straight run left it --
+    // rollback_proof's det4/det8 p1 rows, DIVERGED arena=4, with the four
+    // 0x100 receive slots themselves byte-identical. Armed and spent here it
+    // is exactly one post per COMPLETED ROUND, and the rollback record serves
+    // the same rounds to a replayed frame that the live frame had
+    // ([rb-local] served == in the record, mismatches 0), so the cursor lands
+    // where it landed. port_wm_arm7_turn still calls the tick, and finds the
+    // latch already spent; a round that somehow completes with no turn behind
+    // it is still owed one, and that is what the call up there is for now.
     mp_indication_arm(mask, stride, t);
+    mp_indication_tick();
     if (count > g_mp_peak_slots) g_mp_peak_slots = count;
 
     // THE PROOF LINE, once a session and only with the log on: the first round
