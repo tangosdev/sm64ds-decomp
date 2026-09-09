@@ -1246,3 +1246,394 @@ class RelocIndex(unittest.TestCase):
         self.assertEqual(
             VM._incoming_relocations(evidence["dests"], "arm9",
                                      0x020049f0, 0x020049f4), 2)
+
+
+def _relocs(*addrs, module="arm9"):
+    """A `reloc_dests` index holding exactly these destinations, all valid."""
+    return {module: sorted(addrs)}
+
+
+def _rom(words=None, default=None):
+    """A `rom_word` reader over a dict of {(module, addr): word}."""
+    def read(module, addr):
+        return (words or {}).get((module, addr), default)
+    read.missing = set()
+    return read
+
+
+BX_LR = 0xE12FFF1E
+MOV_PC_LR = 0xE1A0F00E
+POP_R4_PC = 0xE8BD8010
+LDMIA_SP_PC = 0xE8BD9FFF
+
+
+class ReturnEncodings(unittest.TestCase):
+    """The accepted set, spelled out. The three shapes evidence_rom recognises."""
+
+    def test_the_accepted_encodings(self):
+        for word in (BX_LR, MOV_PC_LR, POP_R4_PC, LDMIA_SP_PC):
+            self.assertTrue(VM._is_return_word(word), hex(word))
+
+    def test_everything_else_is_refused(self):
+        for word, why in ((0x012FFF1E, "bxeq lr, a conditional return"),
+                          (0xE12FFF13, "bx r3, not lr"),
+                          (0xE8BD0010, "pop {r4}, no pc in the list"),
+                          (0xE8FD8010, "ldmia sp!, {r4, pc}^, restores CPSR"),
+                          (0xE92D4010, "stmdb sp!, {r4, lr}, a store"),
+                          (0xEAFFFFFE, "b self, an infinite loop"),
+                          (0xE3A00000, "mov r0, #0"),
+                          (0xE49DF004, "ldr pc, [sp], #4, deliberately outside the set"),
+                          (0x00000000, "padding")):
+            self.assertFalse(VM._is_return_word(word), why)
+
+
+class AbsorbedEpilogue(unittest.TestCase):
+    """The matched-loss exception, in `classify_merge` itself.
+
+    A record may leave `matched` only when all four hold: it is the exact TAIL of a new
+    `complete` range, it is one four-byte instruction whose ROM word is an accepted
+    return, that range is backed by compiled source, and a VALID relocation index names
+    nothing in its bytes. Each test below removes exactly one of them.
+    """
+
+    BODY, EPILOGUE, NEXT = 0x02071644, 0x02071694, 0x02071698
+
+    def _merge(self, epilogue_size=0x4):
+        addr = self.EPILOGUE
+        base = _snap([("func_02071644", self.BODY, addr - self.BODY, False),
+                      ("func_02071694", addr, epilogue_size, True)])
+        head = _snap([("func_02071644", self.BODY,
+                       addr + epilogue_size - self.BODY, True)])
+        be = _enr([(addr, addr + epilogue_size)])
+        he = _enr([(self.BODY, addr + epilogue_size)])
+        return base, head, be, he
+
+    def test_a_ranges_own_tail_return_may_be_absorbed(self):
+        base, head, be, he = self._merge()
+        got = VM.classify_merge(base, head, be, he, _compiled(he), _relocs(self.BODY),
+                                _rom({("arm9", self.EPILOGUE): BX_LR}))
+        self.assertIsNotNone(got)
+        self.assertEqual(got["absorbed"], [f"arm9:0x{self.EPILOGUE:08x}"])
+        self.assertEqual(got["functionDelta"], -1)
+        self.assertEqual(got["sourceByteDelta"], 0x50)
+
+    def test_every_accepted_return_encoding_lands(self):
+        for word in (BX_LR, MOV_PC_LR, POP_R4_PC, LDMIA_SP_PC):
+            base, head, be, he = self._merge()
+            got = VM.classify_merge(base, head, be, he, _compiled(he),
+                                    _relocs(self.BODY),
+                                    _rom({("arm9", self.EPILOGUE): word}))
+            self.assertIsNotNone(got, hex(word))
+
+    def test_a_record_the_rom_calls_is_still_refused(self):
+        # (d). The same diff with one relocation naming those four bytes.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY, self.EPILOGUE),
+            _rom({("arm9", self.EPILOGUE): BX_LR})))
+
+    def test_a_load_of_the_address_counts_as_a_caller(self):
+        # A `kind:load` destination is a reference like any other.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.EPILOGUE),
+            _rom({("arm9", self.EPILOGUE): BX_LR})))
+
+    def test_without_a_validated_relocation_index_nothing_matched_may_leave(self):
+        # (d) again: None is what build_report passes when the index has a defect.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he), None,
+                                            _rom({("arm9", self.EPILOGUE): BX_LR})))
+
+    def test_without_the_rom_image_nothing_matched_may_leave(self):
+        # (b) cannot be checked, so it is not assumed.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he),
+                                            _relocs(self.BODY), None))
+        self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he),
+                                            _relocs(self.BODY), _rom()))
+
+    def test_a_four_byte_record_that_is_not_a_return_is_refused(self):
+        # (b). Byte coverage plus an empty index says nothing about what the bytes ARE.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY),
+            _rom({("arm9", self.EPILOGUE): 0xE3A00000})))
+
+    def test_a_conditional_return_is_refused(self):
+        # (b). bxeq lr leaves a live fall-through, so the bytes after it are reached.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY),
+            _rom({("arm9", self.EPILOGUE): 0x012FFF1E})))
+
+    def test_an_arbitrary_sized_matched_record_at_the_tail_is_refused(self):
+        # (b). The 0x100-byte record: at the exact tail of a new compiled range with a
+        # clean index, and still refused, because one instruction is the whole claim.
+        base, head, be, he = self._merge(epilogue_size=0x100)
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY),
+            _rom({("arm9", self.EPILOGUE): BX_LR})))
+
+    def test_a_record_inside_the_range_but_not_at_its_tail_is_refused(self):
+        # (a). A named callback the merge happens to cover is not an epilogue. Placed
+        # mid-range: a record at the exact HEAD of a range cannot reach this clause at
+        # all, because head still carries a record at that address -- see the
+        # survives-but-loses-matched test below.
+        base = _snap([("func_02071644", self.BODY, 0x20, False),
+                      ("AutoloadCallback", self.BODY + 0x20, 0x4, True),
+                      ("func_02071668", self.BODY + 0x24, 0x30, False)])
+        head = _snap([("func_02071644", self.BODY, 0x54, True)])
+        be = _enr([(self.BODY + 0x20, self.BODY + 0x24)])
+        he = _enr([(self.BODY, self.BODY + 0x54)])
+        self.assertIsNone(VM.classify_merge(
+            base, head, be, he, _compiled(he), _relocs(self.BODY),
+            _rom({("arm9", self.BODY + 0x20): BX_LR})))
+
+    def test_absorption_still_needs_a_new_compiled_range_over_the_bytes(self):
+        # (c) and the merge rule's own evidence: no new range at all.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(base, head, be, be, _compiled(be),
+                                            _relocs(self.BODY),
+                                            _rom({("arm9", self.EPILOGUE): BX_LR})))
+
+    def test_a_transcription_cannot_absorb_a_matched_record_either(self):
+        # (c). The covering range reproduces vacuously, so it proves nothing about the
+        # instruction it claims to have recovered.
+        base, head, be, he = self._merge()
+        self.assertIsNone(VM.classify_merge(base, head, be, he, set(),
+                                            _relocs(self.BODY),
+                                            _rom({("arm9", self.EPILOGUE): BX_LR})))
+
+    def test_a_record_that_survives_but_loses_matched_is_not_absorption(self):
+        # Still present in head, so a banner went on or its source left. That is a
+        # withdrawal or a loss and this rule must not decide it.
+        base = _snap([("func_02071644", self.BODY, 0x50, True),
+                      ("func_02071694", self.EPILOGUE, 0x4, True)])
+        head = _snap([("func_02071644", self.BODY, 0x50, False),
+                      ("func_02071694", self.EPILOGUE, 0x4, False),
+                      ("func_02071698", self.NEXT, 0x4, False)])
+        he = _enr([(self.BODY, self.BODY + 0x50)])
+        self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he),
+                                            _relocs(), _rom({}, BX_LR)))
+
+
+class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
+    """The matched-loss exception driven through `build_report`, on a real tree.
+
+    Wiring only a real tree can check. `lost N matched function(s)` is raised OUTSIDE
+    `classify_merge`, from a loop that had two buckets, so a classification the merge
+    rule allowed would still have failed the report. The relocation index is read from
+    every `relocs.txt` at both revisions. The ROM word is read from the extracted image
+    on disk, the way the byte gate reads it. None of that is exercised by a hand-built
+    dict, and every one of the fail-open paths below returned `Passed`, `reasons: []`
+    and one absorbed record before this rule validated its own evidence.
+
+    The live shape: `func_02071644` declared 0x50, its trailing `bx lr` carried as
+    `func_02071694` and matched with `void f(void) {}`. Recovering the real 0x54 C
+    means that four-byte record leaves.
+    """
+
+    ANCHOR, BODY, EPILOGUE = 0x02004000, 0x02071644, 0x02071694
+
+    # Two calls into the body and one into Anchor. NOTHING into the four bytes at the
+    # body's tail -- that absence is one of the four things the exception needs.
+    VALID_RELOCS = ("from:0x02071354 kind:arm_call to:0x02071644 module:main\n"
+                    "from:0x020714f8 kind:arm_call to:0x02071644 module:main\n"
+                    "from:0x02071614 kind:arm_call to:0x02004000 module:main\n")
+
+    RECOVERED = "\n".join([
+        "void func_02071644(unsigned char *p, int len) {",
+        "    for (;;) { if (*p < 9) { (*p)++; return; } *p-- = 0; }",
+        "}",
+        ""])
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.repo = pathlib.Path(self.tmp.name)
+        git(self.repo, "init", "-q", ".")
+        (self.repo / "src").mkdir()
+        (self.repo / ".gitignore").write_text("extracted/\n", encoding="utf-8")
+        self.config = self.repo / "config" / "arm9"
+        self.config.mkdir(parents=True)
+        self.old_repo = VM.REPO
+        VM.REPO = self.repo
+        self.addCleanup(setattr, VM, "REPO", self.old_repo)
+        for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE):
+            cache.clear()
+            self.addCleanup(cache.clear)
+
+    def write(self, rel, text):
+        path = self.repo / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8", newline="\n")
+
+    def write_rom(self, word):
+        offset = self.EPILOGUE - VM.ARM9_IMAGE_BASE
+        image = bytearray(offset + 4)
+        image[offset:offset + 4] = word.to_bytes(4, "little")
+        (self.repo / "extracted").mkdir(exist_ok=True)
+        (self.repo / "extracted" / "arm9_dec.bin").write_bytes(bytes(image))
+
+    def delinks(self, entry, start, end):
+        return "\n".join([
+            "    .text start:0x02000000 end:0x02100000 kind:code",
+            "",
+            "src/Anchor.c:",
+            "    complete",
+            f"    .text start:0x{self.ANCHOR:08x} end:0x{self.ANCHOR + 4:08x}",
+            "",
+            f"{entry}:",
+            "    complete",
+            f"    .text start:0x{start:08x} end:0x{end:08x}",
+            ""])
+
+    def absorb(self, relocs=VALID_RELOCS, extra_reloc=None, epilogue_word=0xE12FFF1E,
+               epilogue_size=0x4, rom=True, orphan_module=False):
+        """Commit a base and the fold on top of it, and report on the pair.
+
+        `relocs` is the content of `config/arm9/relocs.txt` in BOTH revisions; None
+        leaves the file out of both. `extra_reloc` appends one row naming an address,
+        head only. `orphan_module` adds an overlay that declares a function and has no
+        `relocs.txt` at all -- an incomplete module inventory.
+        """
+        nxt = self.EPILOGUE + epilogue_size
+        self.write("config/arm9/symbols.txt", "\n".join([
+            f"Anchor kind:function(arm,size=0x4) addr:0x{self.ANCHOR:08x}",
+            f"func_02071644 kind:function(arm,size=0x50) addr:0x{self.BODY:08x}",
+            f"func_02071694 kind:function(arm,size=0x{epilogue_size:x}) "
+            f"addr:0x{self.EPILOGUE:08x}",
+            f"func_{nxt:08x} kind:function(arm,size=0x70) addr:0x{nxt:08x}",
+            ""]))
+        self.write("config/arm9/delinks.txt",
+                   self.delinks("src/func_02071694.c", self.EPILOGUE, nxt))
+        if relocs is not None:
+            self.write("config/arm9/relocs.txt", relocs)
+        if orphan_module:
+            self.write("config/arm9/overlays/ov001/symbols.txt",
+                       "OvOne kind:function(arm,size=0x4) addr:0x020ab110\n")
+        self.write("src/Anchor.c", "int Anchor(void) { return 0; }\n")
+        self.write("src/func_02071644.c",
+                   "// NONMATCHING: hand-written asm, does NOT count as matched.\n"
+                   "void func_02071644(void) {}\n")
+        # The vacuous match: an empty body over a severed tail. Counts today.
+        self.write("src/func_02071694.c", "void func_02071694(void)\n{\n}\n")
+        self.write(f"src/func_{nxt:08x}.c", f"int func_{nxt:08x}(void) {{ return 1; }}\n")
+        base = commit(self.repo, "base", "alice")
+
+        self.write("config/arm9/symbols.txt", "\n".join([
+            f"Anchor kind:function(arm,size=0x4) addr:0x{self.ANCHOR:08x}",
+            f"func_02071644 kind:function(arm,size=0x{nxt - self.BODY:x}) "
+            f"addr:0x{self.BODY:08x}",
+            f"func_{nxt:08x} kind:function(arm,size=0x70) addr:0x{nxt:08x}",
+            ""]))
+        self.write("config/arm9/delinks.txt",
+                   self.delinks("src/func_02071644.c", self.BODY, nxt))
+        if extra_reloc is not None:
+            with open(self.config / "relocs.txt", "a", encoding="utf-8",
+                      newline="\n") as fh:
+                fh.write(f"from:0x02071620 kind:arm_call to:0x{extra_reloc:08x} "
+                         f"module:main\n")
+        self.write("src/func_02071644.c", self.RECOVERED)
+        os.remove(self.repo / "src" / "func_02071694.c")
+        if rom:
+            self.write_rom(epilogue_word)
+        head = commit(self.repo, "absorb", "bob")
+        VM._RELOC_CACHE.clear()
+        VM._ENROLMENT_CACHE.clear()
+        return VM.build_report(base, head)
+
+    def assertRefused(self, report, defect=None):
+        self.assertIsNone(report["repartition"])
+        self.assertIn("lost 1 matched function(s)", report["reasons"])
+        self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 0)
+        self.assertEqual(report["matchedAbsorbed"], [])
+        if defect is not None:
+            named = [r for r in report["reasons"]
+                     if r.startswith("relocation evidence invalid")]
+            self.assertEqual(len(named), 1, report["reasons"])
+            self.assertIn(defect, named[0])
+            self.assertFalse(report["relocationEvidence"]["valid"])
+
+    def test_the_report_allows_the_absorption_and_says_so(self):
+        report = self.absorb()
+        self.assertEqual(report["reasons"], [])
+        self.assertTrue(report["relocationEvidence"]["valid"])
+        self.assertEqual(report["coverage"]["delta"]["lostMatchedFunctions"], 0)
+        self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 1)
+        self.assertEqual([a["name"] for a in report["matchedAbsorbed"]],
+                         ["func_02071694"])
+        rp = report["repartition"]
+        self.assertEqual(rp["kind"], "merge")
+        self.assertEqual(rp["functionDelta"], -1)
+        # 84 newly compiled bytes, 4 of which the base already compiled.
+        self.assertEqual(rp["newExtent"], 0x54)
+        self.assertEqual(rp["absorbedBytes"], 0x4)
+        self.assertEqual(rp["sourceByteDelta"], 0x50)
+        self.assertTrue(any("absorbed by the merge" in w for w in report["warnings"]))
+        self.assertIn("| Claims absorbed by the merge |", VM.render_markdown(report))
+
+    def test_one_call_into_the_absorbed_bytes_fails_the_report(self):
+        # The same diff, byte for byte, with a single relocation pointing into the four
+        # bytes. Now it is an ordinary function someone matched and it may not leave.
+        report = self.absorb(extra_reloc=self.EPILOGUE)
+        self.assertRefused(report)
+        self.assertTrue(report["relocationEvidence"]["valid"])
+
+    def test_relocation_files_missing_from_both_snapshots_fail_closed(self):
+        self.assertRefused(self.absorb(relocs=None),
+                           "config/arm9/relocs.txt is missing")
+
+    def test_an_empty_relocation_file_fails_closed(self):
+        self.assertRefused(self.absorb(relocs=""),
+                           "config/arm9/relocs.txt is empty")
+
+    def test_a_malformed_relocation_row_fails_closed(self):
+        self.assertRefused(self.absorb(relocs=self.VALID_RELOCS + "not a row\n"),
+                           "config/arm9/relocs.txt:4 is not a relocation row")
+
+    def test_a_truncated_relocation_row_fails_closed(self):
+        self.assertRefused(
+            self.absorb(relocs=self.VALID_RELOCS
+                        + "from:0x02071620 kind:arm_call to:0x0207\n"),
+            "config/arm9/relocs.txt:4 is not a relocation row")
+
+    def test_a_leading_byte_order_mark_fails_closed(self):
+        self.assertRefused(self.absorb(relocs="﻿" + self.VALID_RELOCS),
+                           "config/arm9/relocs.txt:1 is not a relocation row")
+
+    def test_leading_whitespace_fails_closed(self):
+        self.assertRefused(self.absorb(relocs=" " + self.VALID_RELOCS),
+                           "config/arm9/relocs.txt:1 is not a relocation row")
+
+    def test_an_undocumented_destination_module_fails_closed(self):
+        self.assertRefused(
+            self.absorb(relocs=self.VALID_RELOCS
+                        + "from:0x02071620 kind:arm_call to:0x02071694 module:elsewhere\n"),
+            "undocumented destination module 'elsewhere'")
+
+    def test_an_incomplete_module_inventory_fails_closed(self):
+        # A module that declares a function and has no relocation file at all. Every
+        # reference it holds is invisible, including references into arm9.
+        self.assertRefused(self.absorb(orphan_module=True),
+                           "config/arm9/overlays/ov001/relocs.txt is missing")
+
+    def test_a_four_byte_record_that_is_not_a_return_fails_the_report(self):
+        # Valid evidence, clean index, exact tail -- and the ROM word is `mov r0, #0`.
+        report = self.absorb(epilogue_word=0xE3A00000)
+        self.assertRefused(report)
+        self.assertTrue(report["relocationEvidence"]["valid"])
+        self.assertEqual([r for r in report["reasons"]
+                          if r.startswith("relocation evidence invalid")], [])
+
+    def test_an_arbitrary_sized_record_at_the_tail_fails_the_report(self):
+        # 0x100 bytes at the exact tail of the new range, with a `bx lr` at its first
+        # word and nothing pointing at it. One instruction is the whole claim.
+        self.assertRefused(self.absorb(epilogue_size=0x100))
+
+    def test_without_the_rom_image_the_report_fails_closed(self):
+        report = self.absorb(rom=False)
+        self.assertRefused(report)
+        self.assertIn("ROM image unavailable, so nothing matched may leave: arm9",
+                      report["reasons"])

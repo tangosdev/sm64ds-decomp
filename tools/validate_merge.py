@@ -296,6 +296,95 @@ def _reloc_evidence(base, head):
             "valid": not defects}
 
 
+# WHERE THE CARTRIDGE'S OWN BYTES LIVE. `extracted/arm9_dec.bin` is the DECOMPRESSED
+# main binary and it loads at 0x02004000, not at the 0x02000000 RAM base -- the same
+# constant `tools/modules.py`, `tools/match.py` and `tools/evidence_rom.py` use, and
+# the byte gate reads a function's bytes exactly this way. An overlay's image is
+# `extracted/overlays/overlay_NNNN.bin`, based at its lowest symbol address in the
+# config's relocated space (`modules.py:_overlay_base`), read here from the revision
+# under judgement rather than from the worktree.
+ARM9_IMAGE = "extracted/arm9_dec.bin"
+ARM9_IMAGE_BASE = 0x02004000
+
+# THE ACCEPTED RETURN ENCODINGS, and nothing else. These are the three shapes
+# `tools/evidence_rom.py:is_unconditional_return` recognises, spelled at the encoding
+# level so this tool needs no disassembler on the validator box:
+#
+#   bx lr                  0xE12FFF1E
+#   mov pc, lr             0xE1A0F00E
+#   ldm/pop writing pc     condition AL, block data transfer, L=1, S=0, and r15 in the
+#                          register list -- e.g. `pop {r4, pc}` 0xE8BD8010
+#
+# CONDITION AL ONLY, matching evidence_rom: a conditional return (`bxeq lr`,
+# `popne {.., pc}`) leaves a live fall-through path, so the bytes after it are still
+# reached and the record is not a severed tail. The S bit (`ldm ... ^`) restores CPSR
+# -- an exception return, not a function return, and on the never-in-C list in
+# notes/asm-policy.md. `ldr pc, [sp], #4` (0xE49DF004) is a return in practice and is
+# deliberately NOT accepted: capstone decodes it as LDR, so evidence_rom does not
+# recognise it either, and a narrower set is the safe direction for a rule that
+# permits a matched record to leave.
+RETURN_WORDS = (0xE12FFF1E, 0xE1A0F00E)
+_LDM_PC_MASK = 0x0E508000
+_LDM_PC_VALUE = 0x08108000
+
+
+def _is_return_word(word):
+    """Is this 32-bit ARM word one of the accepted unconditional return encodings?"""
+    if word in RETURN_WORDS:
+        return True
+    return (word >> 28) == 0xE and (word & _LDM_PC_MASK) == _LDM_PC_VALUE
+
+
+def _module_image(rev, module):
+    """``(bytes, base address)`` of a module's cartridge image, or None if absent.
+
+    The images are gitignored extraction output, so a checkout that has never run
+    `tools/unpack.py` has none. Absent is answered as None and every caller treats
+    that as "no evidence", never as "the evidence says yes".
+    """
+    if module == "arm9":
+        path, base = REPO / ARM9_IMAGE, ARM9_IMAGE_BASE
+    else:
+        m = re.fullmatch(r"ov(\d+)", module or "")
+        if m is None:
+            return None
+        path = REPO / "extracted" / "overlays" / f"overlay_{int(m.group(1)):04d}.bin"
+        addrs = _rev_enrolment(rev)[0].get(module) or []
+        if not addrs:
+            return None
+        base = addrs[0]
+    try:
+        return path.read_bytes(), base
+    except OSError:
+        return None
+
+
+def _rom_word_reader(rev):
+    """``read(module, addr)`` -> the cartridge's own word there, or None.
+
+    Also carries `.missing`, the set of modules whose image could not be read, so a
+    caller that had to refuse for want of the ROM can say which file it wanted.
+    """
+    cache = {}
+
+    def read(module, addr):
+        if module not in cache:
+            cache[module] = _module_image(rev, module)
+            if cache[module] is None:
+                read.missing.add(module)
+        image = cache[module]
+        if image is None:
+            return None
+        data, base = image
+        offset = addr - base
+        if offset < 0 or offset + 4 > len(data):
+            return None
+        return int.from_bytes(data[offset:offset + 4], "little")
+
+    read.missing = set()
+    return read
+
+
 def _incoming_relocations(dests, module, addr, end):
     """How many relocation destinations land inside ``[addr, end)`` of ``module``."""
     total = 0
@@ -430,7 +519,7 @@ def _covered_spans(snapshot):
     return out
 
 
-def classify_merge(bf, hf, be, he, compiled):
+def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None):
     """Is a denominator DROP a merge the ROM build has already paid for?
 
     A merge lowers `totalFunctions` and so RAISES the headline, which is the direction an
@@ -469,15 +558,54 @@ def classify_merge(bf, hf, be, he, compiled):
     modifies, so enrolling a file the merge does not touch is refused as well -- a fold
     that never edits the source absorbing it is not a shape this carve-out is for.
 
-    NOTHING MATCHED MAY LEAVE. The removed records must all be unmatched in base -- a
-    merge is licensed to absorb ASM stubs and severed epilogues, never to swallow a
-    function someone had already matched. Matched records that survive keep their sizes,
-    with one exception: a survivor of the merge may grow, and only into the new
-    `complete` range, at exactly its head size.
+    NOTHING MATCHED MAY LEAVE, EXCEPT A RANGE'S OWN RETURN INSTRUCTION. The removed
+    records are normally all unmatched in base -- a merge is licensed to absorb ASM stubs
+    and severed epilogues, never to swallow a function someone had already matched.
+    Matched records that survive keep their sizes, with one exception: a survivor of the
+    merge may grow, and only into the new `complete` range, at exactly its head size.
 
-    The live case is a hand-asm pair reunited as one C++ body: `__destroy_arr` declared
-    0x5c in `symbols.txt` while the ROM's own `.exceptix` record gives 0x74, the trailing
-    0x18 carried as a separate symbol that is not a function at all but the catch handler.
+    The narrow exception exists because config can carve a function's trailing return
+    instruction off as its own symbol, and an empty body then "matches" it. Recovering
+    the real function retires that record, and the absolute rule made the correction the
+    one edit that cannot land. WHAT IS AND IS NOT CLAIMED HERE. This does not claim that
+    ROM execution can never enter the address -- an index cannot establish that, and the
+    earlier version of this rule said so and was wrong to. The claim is narrower and each
+    half is checkable:
+
+      (a) the record ends exactly where the new `complete` range ends, so it is that
+          range's TAIL and not something in the middle of it;
+      (b) it is one instruction, four bytes, and the cartridge's own word at that address
+          is one of the accepted unconditional return encodings (see RETURN_WORDS) -- so
+          the bytes being retired are a return, not a body;
+      (c) the range is backed by compiled source, which the ROM build then links and
+          byte-compares against retail, so the merged function REPRODUCES that same
+          return instruction rather than merely covering its address;
+      (d) no relocation destination in a VALIDATED index over both revisions lands in
+          those bytes -- with the emphasis on validated: missing, empty or malformed
+          relocation input is not an absence of callers, it is an absence of evidence,
+          and `_reloc_index` reports it as a defect that makes this exception
+          unavailable.
+
+    Together those say: this record is the return instruction of the function whose
+    source now compiles to it, and nothing in the tree's relocation index names it. They
+    do not say the address is unreachable. A record that fails any one of them stays
+    matched and the merge is refused.
+
+    THE EXCEPTION IS NARROW, MEASURED RATHER THAN ASSERTED. Over src/ at 8525428a2 there
+    are 79 sources whose whole body is `void f(void) {}`; 77 have at least one incoming
+    relocation and are ordinary no-op functions the ROM really calls. Two have zero:
+    `AutoloadCallback` (0x020049ec) and `func_02071694`. `AutoloadCallback` is refused
+    anyway -- it is a named callback, not a range tail, and no merge compiles a range
+    over it. This is NOT a general "a vacuous match does not count" mechanism: such a
+    record keeps counting exactly as before until some merge proves, with a build, that
+    its bytes are the return of the function next door.
+
+    The exception has exactly one live case: `func_02071644`, whose trailing `bx lr`
+    config carried as `func_02071694` and someone matched with an empty body. The merge
+    rule's other live case, `__destroy_arr` (declared 0x5c in `symbols.txt` while the
+    ROM's own `.exceptix` record gives 0x74, the trailing 0x18 the catch handler rather
+    than a function), needs no exception at all: both of its removed records are unmatched
+    in base. It could not use this door anyway -- 0x18 is not one instruction.
 
     Returns a dict describing the merge, or None.
     """
@@ -491,16 +619,9 @@ def classify_merge(bf, hf, be, he, compiled):
         return None
 
     base_matched, head_matched = bf["matched"], hf["matched"]
-    # Nothing matched leaves. (`lost N matched function(s)` above would also fire, but
-    # this rule must not be the thing that decides a loss is acceptable.)
-    if set(base_matched) - set(head_matched):
-        return None
 
     removed = sorted(set(bf["functions"]) - set(hf["functions"]))
     if not removed:
-        return None
-    # Every removed record was unmatched in base.
-    if any(k in base_matched for k in removed):
         return None
 
     # The evidence: ranges that are `complete` in head and were not in base, each one
@@ -514,13 +635,18 @@ def classify_merge(bf, hf, be, he, compiled):
             continue
         if entry["path"] not in compiled:
             return None
-        new_ranges[entry["module"]].append((entry["addr"], entry["end"]))
+        new_ranges[entry["module"]].append((entry["addr"], entry["end"], entry["path"]))
     if not new_ranges:
         return None
 
+    def _containing_new(module, addr, end):
+        for start, stop, path in new_ranges.get(module, []):
+            if start <= addr and end <= stop:
+                return start, stop, path
+        return None
+
     def _inside_new(module, addr, end):
-        return any(start <= addr and end <= stop
-                   for start, stop in new_ranges.get(module, []))
+        return _containing_new(module, addr, end) is not None
 
     # Every removed address is absorbed into one of them.
     for key in removed:
@@ -528,6 +654,42 @@ def classify_merge(bf, hf, be, he, compiled):
         if not _inside_new(record["module"], record["addr"],
                            record["addr"] + record["size"]):
             return None
+
+    # NOTHING MATCHED MAY LEAVE, except a range's own return instruction -- the four
+    # conditions the docstring sets out, in order. Each one refuses outright: a merge
+    # carrying a matched loss it cannot justify is not classified at all.
+    absorbed = []
+    for key in sorted(set(base_matched) - set(head_matched)):
+        record = base_matched[key]
+        addr, end = record["addr"], record["addr"] + record["size"]
+        # A record still PRESENT in head that lost `matched` some other way (a banner
+        # went on, its source was deleted) is a withdrawal or a loss, never this.
+        if key in hf["functions"]:
+            return None
+        span = _containing_new(record["module"], addr, end)
+        if span is None:
+            return None
+        # (a) the exact tail of the covering range, not a record inside it.
+        if end != span[1]:
+            return None
+        # (b) one instruction, and the cartridge's own word there is a return.
+        if record["size"] != 4 or rom_word is None:
+            return None
+        word = rom_word(record["module"], addr)
+        if word is None or not _is_return_word(word):
+            return None
+        # (c) the covering range is compiled evidence, so the merged source reproduces
+        # that instruction rather than merely covering its address. Every new range is
+        # already required to be, above; asserted again here because this is the clause
+        # that makes (b) mean something and it must not depend on a distant loop.
+        if span[2] not in compiled:
+            return None
+        # (d) a VALIDATED index, and nothing in it names those bytes.
+        if reloc_dests is None:
+            return None
+        if _incoming_relocations(reloc_dests, record["module"], addr, end):
+            return None
+        absorbed.append(key)
 
     # sourceBytes rises by exactly the newly-complete extent, less whatever of it the
     # base was ALREADY compiling. A base entry lying wholly inside one of the new ranges
@@ -537,7 +699,7 @@ def classify_merge(bf, hf, be, he, compiled):
     # the comparison below still refuses it. That is the clause that stops an unrelated
     # range leaving under cover of the merge, and it is untouched.
     new_bytes = sum(stop - start
-                    for spans in new_ranges.values() for start, stop in spans)
+                    for spans in new_ranges.values() for start, stop, _ in spans)
     absorbed_bytes = sum(entry["size"] for key, entry in be["source"].items()
                          if key not in he["source"]
                          and _inside_new(entry["module"], entry["addr"], entry["end"]))
@@ -560,6 +722,7 @@ def classify_merge(bf, hf, be, he, compiled):
             "functionDelta": hf["stats"]["totalFunctions"] - bf["stats"]["totalFunctions"],
             "added": sorted(set(hf["functions"]) - set(bf["functions"])),
             "removed": removed,
+            "absorbed": absorbed,
             "newExtent": new_bytes,
             "absorbedBytes": absorbed_bytes,
             "sourceByteDelta": new_bytes - absorbed_bytes}
@@ -1171,12 +1334,33 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     # retracting its claim is a real coverage loss and stays a hard reason (it would
     # also trip `source-built function coverage decreased`, but relying on that
     # interaction would leave the rule true only by accident).
+    # ABSORBED is the third way, and it is classify_merge's to decide, not this loop's:
+    # the record is the return instruction at the tail of a range this merge newly
+    # compiles and byte-compares, and no relocation in a VALIDATED index names it. So
+    # the classification runs first and this loop reads its answer -- see classify_merge
+    # for the whole argument, including what is not claimed.
+    #
+    # THE EVIDENCE GATES THE EXCEPTION, NOT THE OTHER WAY ROUND. `reloc["valid"]` is
+    # false as soon as a relocation file is missing, empty where its module declares
+    # functions, or carries a line that is not one of the documented row shapes. Passing
+    # None then is what keeps missing evidence from reading as "nothing points here".
+    # A denominator move is a blocker UNLESS it is a re-partition of the same bytes --
+    # see classify_repartition, which carries the full argument and the two tests.
+    rom_word = _rom_word_reader(head_sha)
+    repartition = (classify_repartition(bf, hf)
+                   or classify_merge(bf, hf, be, he, compiled_src,
+                                     reloc["dests"] if reloc["valid"] else None,
+                                     rom_word))
+    absorbed_keys = set((repartition or {}).get("absorbed") or ())
+
     base_enrolled = {key.split("-", 1)[0] for key in be["source"]}
     transcribed_now = set(new_transcribed)
-    withdrawn, removed = [], []
+    withdrawn, removed, absorbed = [], [], []
     for k in sorted(base_keys - head_keys):
         hr, br = hf["functions"].get(k) or {}, bf["functions"].get(k) or {}
-        if (k not in base_enrolled and hr.get("srcPath")
+        if k in absorbed_keys:
+            absorbed.append({"id": k, "path": br.get("srcPath"), "name": br.get("name")})
+        elif (k not in base_enrolled and hr.get("srcPath")
                 and hr["srcPath"] == br.get("srcPath")
                 and hr["srcPath"] not in transcribed_now):
             withdrawn.append({"id": k, "path": hr["srcPath"], "name": hr.get("name")})
@@ -1184,10 +1368,17 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
             removed.append(k)
     if removed:
         reasons.append(f"lost {len(removed)} matched function(s)")
-    # A denominator move is a blocker UNLESS it is a re-partition of the same bytes --
-    # see classify_repartition, which carries the full argument and the two tests.
-    repartition = (classify_repartition(bf, hf)
-                   or classify_merge(bf, hf, be, he, compiled_src))
+        # Say WHY the exception was unavailable when it was, naming the defective file:
+        # a PR author reading "lost 1 matched function(s)" on a tree whose relocation
+        # config is broken has no way to find the broken file otherwise.
+        if not reloc["valid"]:
+            extra = (f"; +{len(reloc['defects']) - 1} more"
+                     if len(reloc["defects"]) > 1 else "")
+            reasons.append("relocation evidence invalid, so nothing matched may leave: "
+                           f"{reloc['defects'][0]}{extra}")
+        elif rom_word.missing:
+            reasons.append("ROM image unavailable, so nothing matched may leave: "
+                           + ", ".join(sorted(rom_word.missing)))
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
         if repartition is None:
@@ -1264,6 +1455,15 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
             f"{basis}. Added: "
             + ", ".join(repartition["added"][:3] or ["none"])
             + "; removed: " + ", ".join(repartition["removed"][:3] or ["none"]))
+    if absorbed:
+        warnings.append(
+            f"{len(absorbed)} claimed match(es) absorbed by the merge rather than lost: "
+            "each is the four-byte return instruction at the tail of a range this merge "
+            "newly compiles and byte-compares, and no relocation in a validated index "
+            "over both revisions names it -- "
+            + ", ".join(f"{a['name'] or a['id']} ({a['path'] or 'no source'})"
+                        for a in absorbed[:3])
+            + (f", +{len(absorbed) - 3} more" if len(absorbed) > 3 else ""))
     if withdrawn:
         warnings.append(
             f"{len(withdrawn)} claimed match(es) withdrawn by a NONMATCHING banner "
@@ -1331,6 +1531,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         # a smaller number than the tree actually shed. The split is beside it.
         "removedMatchedFunctions": len(base_keys - head_keys),
         "withdrawnMatchedFunctions": len(withdrawn),
+        "absorbedMatchedFunctions": len(absorbed),
         "lostMatchedFunctions": len(removed),
     }
     base_source_stats = dict(be["stats"])
@@ -1380,6 +1581,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered,
                       "strandedMarkers": stranded_markers},
         "matchedWithdrawn": withdrawn,
+        "matchedAbsorbed": absorbed,
         "relocationEvidence": {
             "valid": reloc["valid"],
             "modules": len(reloc["dests"]),
@@ -1430,6 +1632,11 @@ def render_markdown(r):
         lines.append(
             f"| Claims withdrawn (banner added) | {len(r['matchedWithdrawn'])} "
             f"function(s), none byte-verified |")
+    if r.get("matchedAbsorbed"):
+        lines.append(
+            f"| Claims absorbed by the merge | {len(r['matchedAbsorbed'])} "
+            f"function(s), each a range's own tail return instruction, "
+            f"no relocation names it |")
     if r.get("repartition"):
         rp = r["repartition"]
         lines.append(
