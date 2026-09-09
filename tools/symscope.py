@@ -159,16 +159,8 @@ def name_definitions():
     return defs
 
 
-def audit_one(row, ctx):
-    """One file's findings. Compiles (or cache-fetches) the object the build links."""
-    rel, name, addr, size, module = row
-    _r, err, _outcome = RB.compile_one(rel, ctx["vers"], ctx["cache"],
-                                       ctx["init_srcs"], ctx["syms"])
-    obj = RB.BUILD / pathlib.Path(rel).with_suffix(".o")
-    if err or not obj.is_file():
-        return rel, name, module, [{"verdict": "NO-OBJECT",
-                                    "detail": (err or "object not produced")[:200]}]
-    raw = obj.read_bytes()
+def audit_one(rel, name, addr, size, module, raw, ctx):
+    """One candidate's findings, given the already-compiled bytes of its file."""
     try:
         live = OI.referenced_undefined(raw, name)
     except Exception as e:                                  # noqa: BLE001
@@ -222,6 +214,34 @@ def audit_one(row, ctx):
     return rel, name, module, findings
 
 
+def audit_file(rel, group, ctx):
+    """Every candidate in one enrolled source, sharing ONE compile.
+
+    `group` is every row (name, addr, size, module) that `candidates()` reports for
+    `rel`. A consolidated TU enrolls many functions under the same source, all
+    resolving to the same `rombuild.compile_one` output path; compiling and reading
+    it once per file (not once per candidate) is not just an optimization here, it
+    is required for correctness under `ThreadPoolExecutor`. Two candidate rows for
+    the same file used to become two independent `compile_one` calls that raced on
+    the identical `build/<rel>.o` path -- one thread's cache-fetch or `_isolate`
+    write landing mid-read of another thread's read of the same bytes, surfacing
+    as `elftools...ELFError: Magic number does not match` (observed at -j8 and -j12,
+    the tool's own default, on an unrelated ThreadPoolExecutor race, not a corrupt
+    cache entry: the identical audit is race-free at -j1 over the same objcache).
+    """
+    module = group[0][3]
+    _r, err, _outcome = RB.compile_one(rel, ctx["vers"], ctx["cache"],
+                                       ctx["init_srcs"], ctx["syms"])
+    obj = RB.BUILD / pathlib.Path(rel).with_suffix(".o")
+    if err or not obj.is_file():
+        detail = (err or "object not produced")[:200]
+        return [(rel, name, module, [{"verdict": "NO-OBJECT", "detail": detail}])
+                for name, _addr, _size, _module in group]
+    raw = obj.read_bytes()
+    return [audit_one(rel, name, addr, size, module, raw, ctx)
+            for name, addr, size, _module in group]
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -264,21 +284,29 @@ def main():
     rows.sort()
     print(f"auditing {len(rows)} enrolled source file(s) with -j{args.jobs} ...")
 
+    # One compile per FILE, not per candidate: a consolidated TU enrolls many
+    # functions under the same rel, and dispatching each as its own executor task
+    # raced two threads over the identical build/<rel>.o path (see audit_file).
+    groups = collections.OrderedDict()
+    for rel, name, addr, size, module in rows:
+        groups.setdefault(rel, []).append((name, addr, size, module))
+
     report, counts = [], collections.Counter()
     done = 0
     with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
-        for rel, name, module, findings in ex.map(
-                lambda r: audit_one(r, ctx), rows):
-            done += 1
-            if done % 1000 == 0:
-                print(f"  {done}/{len(rows)}", flush=True)
-            if not findings:
-                counts["clean"] += 1
-                continue
-            for f in findings:
-                counts[f["verdict"]] += 1
-            report.append({"file": rel, "name": name, "module": module,
-                           "findings": findings})
+        for results in ex.map(
+                lambda kv: audit_file(kv[0], kv[1], ctx), groups.items()):
+            for rel, name, module, findings in results:
+                done += 1
+                if done % 1000 == 0:
+                    print(f"  {done}/{len(rows)}", flush=True)
+                if not findings:
+                    counts["clean"] += 1
+                    continue
+                for f in findings:
+                    counts[f["verdict"]] += 1
+                report.append({"file": rel, "name": name, "module": module,
+                               "findings": findings})
 
     print()
     for k in ("clean", "WRONG-MODULE", "CROSS-OVERLAY", "NO-OBJECT", "ELF-ERROR"):
