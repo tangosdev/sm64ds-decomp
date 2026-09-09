@@ -368,6 +368,14 @@ int (*g_host_frame_pump)(unsigned);
 struct Stats {
     unsigned long long saves, restores, resumes, refused, unknown_ctx;
     unsigned long long halts, pump_turns, vblank_dispatches, vblank_wakes;
+    // ENTERED vs DISPATCHED (run link100, lane R3E). vblank_dispatches is
+    // incremented after the handler returns and the handler does not always
+    // return: its wake branch reschedules from inside OS_WakeupThread, which
+    // leaves the idle fiber parked one statement above func_02019144. This
+    // counter is taken before the call, so entries-minus-dispatches is exactly
+    // the number of parked handlers, and dispatches is exactly the number of
+    // times the ROM's VBlank display commit ran to the end.
+    unsigned long long vblank_enters;
     unsigned long long frame_pump_turns;   // rung R3b step B2, step 1b
     unsigned long long starved, wrong_thread, idle_sleeps;
     unsigned long long adopted, entered, exited, rejected, nocreate;
@@ -612,13 +620,37 @@ void thread_boot() {
 // word is deliberately left alone: this file does not know which word the
 // sleeper is on, and inventing one would be a lie the caller's own re-test
 // would then act on.
+// RUNG E1 (run link100, lane R3E). Default: narrow. SM64DS_R3E_WIDE_STARVE=1
+// restores the sweep on the same binary; see this file's starve_wake note.
+static bool wide_starve() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_R3E_WIDE_STARVE");
+        v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
+    }
+    return v != 0;
+}
+
 void starve_wake() {
     ++g_stat.starved;
     bool any = false;
-    for (RomThread *t = mgr_head(); t; t = t->next) {
-        if (t->state == 0) {
-            t->state = 1;
-            any = true;
+    // THE SWEEP IS THE WIRELESS WAIT'S, NOT THE FRAME'S (rung E1, lane R3E).
+    // Marking EVERY sleeping thread runnable wakes threads the cartridge
+    // leaves asleep. On the frame path that is thread 2, func_020602bc -- the
+    // ROM's file-request thread, adopted at boot and asleep ever since -- and
+    // once phase 7 is the ROM's own sleep it is resumed once per frame.
+    // Measured (lane R3E gate 1, SM64DS_ROM_LOOP=1): the run faults at frame
+    // 31 with Memory::defaultHeapPtr null, inside Player::SetAnim's
+    // SharedFilePtr::Release. Forward progress needs only the line below this
+    // block, which is what this function's own banner says; the sweep stays
+    // for a session that installed a wireless pump, because that wait is what
+    // it was written for.
+    if (wide_starve() || port::thread_pump()) {
+        for (RomThread *t = mgr_head(); t; t = t->next) {
+            if (t->state == 0) {
+                t->state = 1;
+                any = true;
+            }
         }
     }
     // FORWARD PROGRESS IS NOT OPTIONAL. The idle thread's body is a for(;;),
@@ -813,6 +845,7 @@ void _ZN4CP1516WaitForInterruptEv(void) {
     if (void *h = _ZN3IRQ13GetIRQHandlerEj(ntr::IRQ_VBLANK)) {
         volatile uint32_t *irq_if = reinterpret_cast<volatile uint32_t *>(0x04000214);
         *irq_if |= ntr::IRQ_VBLANK;
+        ++g_stat.vblank_enters;   // before the call: see the counter's note
         reinterpret_cast<void (*)()>(h)();
         *irq_if &= ~ntr::IRQ_VBLANK;
         ++g_stat.vblank_dispatches;
@@ -917,12 +950,13 @@ namespace port {
 void thread_sched_report(const char *tag) {
     std::fprintf(stderr,
                  "[thr] %s saves=%llu switches=%llu resumes=%llu refused=%llu "
-                 "halts=%llu pump=%llu framepump=%llu vbl_dispatch=%llu vbl_wakes=%llu "
+                 "halts=%llu pump=%llu framepump=%llu vbl_enter=%llu "
+                 "vbl_dispatch=%llu vbl_wakes=%llu "
                  "starved=%llu unknown=%llu adopted=%llu entered=%llu "
                  "exited=%llu rejected=%llu nocreate=%llu\n",
                  tag, g_stat.saves, g_stat.restores, g_stat.resumes,
                  g_stat.refused, g_stat.halts, g_stat.pump_turns,
-                 g_stat.frame_pump_turns,
+                 g_stat.frame_pump_turns, g_stat.vblank_enters,
                  g_stat.vblank_dispatches, g_stat.vblank_wakes, g_stat.starved,
                  g_stat.unknown_ctx, g_stat.adopted, g_stat.entered,
                  g_stat.exited, g_stat.rejected, g_stat.nocreate);
