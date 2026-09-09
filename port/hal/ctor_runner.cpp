@@ -70,9 +70,10 @@
  * own body and its fourth call. So the port's order is now Entry's order:
  * func_02019780, then func_02072f94, then main. Nothing was moved to make room.
  *
- * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b, C1d, C1e and C1c,
- * NINETEEN of the 23 words are bound to the ROM's own initialiser and FOUR are
- * bound to a FACE that names the initialiser it stands for and returns. The faces do not
+ * WHAT RUNS AND WHAT DOES NOT. After rungs C1a, C1b, C1d, C1e, C1c, C1f and
+ * C1g, TWENTY-ONE of the 23 words are bound to the ROM's own initialiser and
+ * TWO are bound to a FACE that names the initialiser it stands for and
+ * returns. The faces do not
  * abort. Word 0 was a face until rung C1e and an abort there would have killed
  * every boot before the first frame, which is where the rule came from; it
  * still holds for the five that are left, because a face that aborts turns a
@@ -273,6 +274,44 @@
  * should go is that file's call and this lane's written proposal, not an edit
  * here.
  *
+ * RUNGS C1f AND C1g ARE THE TWO WORDS LANE CTOR REFUSED THAT RE-MEASURED AS
+ * RUNGS. Both refusals rested on a reading of another file's hosting, and both
+ * readings were checked again against this tree's own map and source.
+ *
+ * C1f, __sinit_0207501c. CTOR refused it because RaycastLine's constructor
+ * writes past +0x64 of data_020a0d0c and that symbol's host block is 0x10.
+ * THE BLOCK IS 0x78. hal/clsn_vtable.cpp hosts the whole run contiguously in
+ * ordered sections at ROM spacing -- data_020a0d0c 0x10, data_020a0d1c 0x44,
+ * data_020a0d60 0x24, ending at 0x020a0d84 which is the next dsd symbol -- and
+ * hal/mmc_vtable.cpp:148 asserts both deltas at run time on every boot,
+ * precisely so a linker that stopped packing them would say so. +0x64 is 0x14
+ * bytes inside that band. The three moving-collider DetectClsn bodies already
+ * fill the same object every time they run, so a construction at Entry is the
+ * ROM's own first fill and not a new writer. Both bodies it names were already
+ * in the link; the only name it wanted is the destruct-node cell
+ * data_020a0d00, below. Nothing in the constructor's chain (func_02035514,
+ * func_0203819c, func_0203ac60) names Heap, Memory, operator new or malloc.
+ *
+ * C1g, __sinit_02075054. CTOR called it a CONFLICT because hal/auto_bss.cpp's
+ * generic `int data_020a0db0[8]` is 32 bytes and covers data_020a0db8,
+ * data_020a0dc0 and data_020a0dcc. IT IS SLACK, and that is measured rather
+ * than argued: data_020a0db0's own ROM extent is 4 bytes and every reader in
+ * the tree treats it as ONE WORD -- a bitmask tested with &1, &8, &0x10 and
+ * &0x18 in MgBounceAndPounce::BeforeBehavior, HUD::RenderStarCount,
+ * Stage::RenderBouncingArrows and Message::Update -- so nothing crosses +4 and
+ * a byte-exact host beside it is the same shape as every other cell in this
+ * file. The fourth name, data_020a0dbc, is ALREADY hosted byte-exact by
+ * hal/auto_bss.cpp at its 4-byte ROM span, and that is the one the three ROM
+ * readers use, so the initialiser writes the same storage they read.
+ *
+ * ONE DEFECT IS NAMED AND NOT FIXED HERE, because it is older than this rung
+ * and it is another file's: the ROM bytes at 0x020a0dbc already have TWO host
+ * addresses today, hal/auto_bss.cpp's byte-exact short data_020a0dbc[2] and
+ * the interior of its own int data_020a0db0[8]. Linking this initialiser does
+ * not add to that and does not depend on it -- it writes the byte-exact
+ * symbol -- but narrowing data_020a0db0 to its ROM span is a one-line fix that
+ * file should take whether or not this word is ever linked.
+ *
  * ONE ROM DATA OBJECT IS HOSTED HERE, because __sinit_02074fb8 names it and
  * nothing else in the port does: data_0208ee14, 16 bytes at arm9 .data, the
  * four-slot Scene graph-callback table. Its words are code addresses and
@@ -311,6 +350,8 @@ void __sinit_02074e80(void);
 void __sinit_02074e84(void);   /* C1d */
 void __sinit_02074edc(void);   /* C1c */
 void __sinit_02074fe4(void);   /* C1b */
+void __sinit_0207501c(void);   /* C1f */
+void __sinit_02075054(void);   /* C1g */
 void __sinit_02074f80(void);   /* was hand-called from hal/fdr_arm9_fader_seat.cpp */
 void __sinit_02074fb8(void);
 void __sinit_020750b4(void);
@@ -429,6 +470,27 @@ unsigned char data_020a0eb0[12];
 unsigned char data_020a0ec8[8];
 unsigned char data_020a0ed0[12];
 unsigned char data_020a0ee4[12];
+}
+DSSTATE_END
+
+/* ---- rungs C1f and C1g: three more cells and one four-byte word ----------
+ *
+ *     data_020a0d00  0x020a0d00..0x020a0d0c  12  C1f, the RaycastLine node
+ *     data_020a0db8  0x020a0db8..0x020a0dbc   4  C1g, the two flag halfwords
+ *     data_020a0dc0  0x020a0dc0..0x020a0dcc  12  C1g, the first node
+ *     data_020a0dcc  0x020a0dcc..0x020a0dd8  12  C1g, the second node
+ *
+ * All four sized by the delta to the next symbol in config/arm9/symbols.txt
+ * and hosted nowhere before this. The header carries why the three that fall
+ * inside hal/auto_bss.cpp's int data_020a0db0[8] are slack rather than
+ * aliasing. data_020a0db8 is a short pair because that is how
+ * src/__sinit_02075054.c writes it. */
+DSSTATE_BEGIN
+extern "C" {
+unsigned char data_020a0d00[12];
+short data_020a0db8[2];
+unsigned char data_020a0dc0[12];
+unsigned char data_020a0dcc[12];
 }
 DSSTATE_END
 
@@ -585,8 +647,6 @@ void ctor_face(const char *name, const char *why)
     }
 
 CTOR_FACE(02074e0c, "func_0201aa18 -> func_0201aad4 -> func_0201aac8 is an argument-dropping tail-call veneer chain into func_02059ba0; a PORT_HOST_ABI question, not a linkage one")
-CTOR_FACE(0207501c, "it constructs a RaycastLine into data_020a0d0c, whose host block is 0x10 in a grouped section hal/mmc_vtable.cpp:148 asserts at ROM spacing, and the ctor writes past +0x64")
-CTOR_FACE(02075054, "data_020a0db8, data_020a0dc0 and data_020a0dcc are hosted nowhere, and hal/auto_bss.cpp already hosts those ROM bytes twice: its generic int data_020a0db0[8] spans all three at a different host address from the byte-exact short data_020a0dbc[2] beside it. A hosting-overlap defect in that file, to fix before this can link honestly")
 CTOR_FACE(02075154, "data_02099f48..data_02099f70 are hosted nowhere -- five mwcc pointer-to-member pairs -- and hal/actor_registry.cpp:412 already seats the same five list callbacks with host wrappers, LATER in the boot, so linking this would write the heads at Entry and have every word overwritten")
 
 #undef CTOR_FACE
@@ -622,8 +682,8 @@ const CtorWord kCtorTable[] = {
     { 0x02074f80, ctor_02074f80,      "__sinit_02074f80", 1 },
     { 0x02074fb8, __sinit_02074fb8,   "__sinit_02074fb8", 1 },
     { 0x02074fe4, __sinit_02074fe4, "__sinit_02074fe4", 1 },
-    { 0x0207501c, ctor_face_0207501c, "__sinit_0207501c", 0 },
-    { 0x02075054, ctor_face_02075054, "__sinit_02075054", 0 },
+    { 0x0207501c, __sinit_0207501c, "__sinit_0207501c", 1 },
+    { 0x02075054, __sinit_02075054, "__sinit_02075054", 1 },
     { 0x020750b4, __sinit_020750b4,   "__sinit_020750b4", 1 },
     { 0x020750b8, __sinit_020750b8, "__sinit_020750b8", 1 },
     { 0x020750ec, __sinit_020750ec, "__sinit_020750ec", 1 },

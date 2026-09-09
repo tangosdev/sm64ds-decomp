@@ -79,16 +79,19 @@
 #        takes none. That value rides ARM r0 and does not ride a host call, so
 #        linking it would call func_02059ba0 at Entry with whatever the host
 #        left behind. A PORT_HOST_ABI ruling, not a linkage row.
-#   C1b, REFUSED  __sinit_0207501c: it constructs a RaycastLine into
-#        data_020a0d0c, which hal/clsn_vtable.cpp hosts as a 0x10 block in a
-#        grouped section whose neighbours hal/mmc_vtable.cpp:148 asserts at ROM
-#        spacing; the constructor writes past +0x64. That is a layout question
-#        owned by those two files.
-#   C1c  __sinit_02075054 and __sinit_02075154 stay faced -- see
-#        out/CTOR/c1c_audit.txt: both have a live host second writer
-#        (hal/actor_registry.cpp:412 seats the same five callbacks;
-#        hal/auto_bss.cpp already hosts the same ROM bytes twice).
-#        __sinit_02074edc, the third of that group, is TAKEN below.
+#   C1b, REFUSED, AND RE-MEASURED AS A RUNG BY LANE CTOR2 (see C1f below).
+#        __sinit_0207501c constructs a RaycastLine into data_020a0d0c, and the
+#        refusal read that symbol's host block as 0x10 wide. The block is 0x78:
+#        hal/clsn_vtable.cpp hosts data_020a0d0c 0x10, data_020a0d1c 0x44 and
+#        data_020a0d60 0x24 contiguously, and hal/mmc_vtable.cpp:148 asserts
+#        the spacing every boot. +0x64 is inside it.
+#   C1c  __sinit_02075154 stays faced -- see out/CTOR/c1c_audit.txt: its five
+#        source records are hosted nowhere and hal/actor_registry.cpp:412 seats
+#        the same five list callbacks LATER in the boot, so linking it today
+#        would write the heads at Entry and have every word overwritten.
+#        __sinit_02074edc is TAKEN below; __sinit_02075054, called a conflict
+#        for hal/auto_bss.cpp's overlapping generic array, re-measured as a
+#        rung and is TAKEN below as C1g.
 #   C1d  TAKEN, below.
 #   C1e  TAKEN, below.
 #
@@ -150,6 +153,24 @@
 # data_0208eb2c slots. The [ctor] line names the table each vptr landed on in
 # every captured run.
 #
+# ---- RUNGS C1f AND C1g: THE TWO REFUSALS THAT RE-MEASURED AS RUNGS --------
+#
+#   src/__sinit_0207501c.c     constructs the moving-collider scratch
+#                              RaycastLine at data_020a0d0c and pushes a node
+#                              at data_020a0d00. Both _ZN11RaycastLineC1Ev and
+#                              _ZN11RaycastLineD1Ev were already in the link.
+#                              The +0x64 write is inside hal/clsn_vtable.cpp's
+#                              0x78 contiguous band, which hal/mmc_vtable.cpp
+#                              asserts at run time.
+#   src/__sinit_02075054.c     zeroes data_020a0dbc[0..1] (hosted byte-exact by
+#                              hal/auto_bss.cpp, and the same storage its three
+#                              ROM readers use), writes 1,1 into data_020a0db8,
+#                              and pushes two NoOpDestructor nodes.
+#                              NoOpDestructor was already in the link.
+#
+# hal/ctor_runner.cpp hosts the four names neither had: data_020a0d00,
+# data_020a0db8, data_020a0dc0 and data_020a0dcc, each at its ROM span.
+#
 src/func_02072f94.c
 src/func_02011a5c.c
 src/_ZN5Scene14GraphCallback2Ev.c
@@ -173,3 +194,5 @@ src/_ZN7ClipperC1Ev.c
 src/_ZN7ClipperD1Ev.c
 src/__sinit_02073a24.c
 src/__sinit_02074edc.c
+src/__sinit_0207501c.c
+src/__sinit_02075054.c
