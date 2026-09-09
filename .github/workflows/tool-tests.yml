@@ -196,6 +196,7 @@ jobs:
             tools.test_bytegate \
             tools.test_check_call_arity \
             tools.test_check_data_definitions \
+            tools.test_check_literal_load \
             tools.test_classqueue \
             tools.test_classqueue_v2 \
             tools.test_cpp_rename_verify \
@@ -257,6 +258,12 @@ jobs:
 #   test_check_data_definitions  (3)   check_data_definitions.py -- WHICH objects the
 #                                      gate scans. It globbed only build/src/, which
 #                                      eligible.py never writes, so it skipped silently.
+#   test_check_literal_load     (20)   check_literal_load.py -- the census of matched
+#                                      functions that spell a kind:load relocation's
+#                                      destination address as a bare integer literal
+#                                      instead of naming the symbol: byte-exact and
+#                                      invisible to --strict-relocs, because a hardcoded
+#                                      literal has no relocation slot for it to check.
 #   test_cpp_rename_verify      (16)   cpp_rename.py -- func_ADDR -> demangled _ZN name
 #                                      renames. A wrong substitution here is silent.
 #   test_delaunder              (25)   delaunder.py -- removing launder idioms one site
