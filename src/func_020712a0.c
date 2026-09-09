@@ -1,11 +1,11 @@
-extern int func_02071644(void *out, int n);
+extern void func_02071644(void *out, int n);
 
 struct S {
     unsigned char b0;       /* [0] */
     unsigned char pad1;     /* [1] */
     short s2;               /* [2] */
     unsigned char b4;       /* [4] */
-    unsigned char data[1];  /* [5] */
+    unsigned char data[32]; /* [5] */
 };
 
 void func_020712a0(struct S *out, unsigned char *str, short val)
