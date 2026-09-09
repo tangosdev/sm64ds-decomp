@@ -3,11 +3,11 @@
 typedef signed short s16;
 typedef signed int s32;
 
-extern s32 ObjectMessageIDToActualMessageID(void);
+extern s32 ObjectMessageIDToActualMessageID(s32 objectMsgID);
 extern void func_0201f32c(s16 msgID);
 
-void func_0201fc88(void)
+void func_0201fc88(s16 objectMsgID)
 {
-    s16 id = (s16)ObjectMessageIDToActualMessageID();
+    s16 id = (s16)ObjectMessageIDToActualMessageID(objectMsgID);
     func_0201f32c(id);
 }

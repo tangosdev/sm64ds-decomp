@@ -1,15 +1,15 @@
 #include "types.h"
-void func_02070c68(void* x);
+void func_02070c68(void* out, double x);
 void func_020715e0(void* thiz, int val);
 
 #pragma opt_strength_reduction off
-void func_02070b98(void* a0, int a1, int a2, void* d)
+void func_02070b98(void* a0, double x, void* d)
 {
     int n;
     char* c = (char*)d;
     int i;
     n = *(s16*)((char*)a0 + 2);
-    func_02070c68(c);
+    func_02070c68(c, x);
     if (*(u8*)(c + 5) > 9) return;
     if (n > 0x20) n = 0x20;
     func_020715e0(c, n);

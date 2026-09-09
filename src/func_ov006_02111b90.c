@@ -1,10 +1,10 @@
-extern void Vec2_Sub(int* o, int* a);
+extern void Vec2_Sub(int* o, int* a, int* b);
 extern int Vec2_Len(int* v);
 extern int func_020126e8(int a);
 extern void func_020126ac(int a0, int a1, int a2, int a3, int s0);
 extern void func_ov006_02115248(int a, int* p);
 
-void func_ov006_02111b90(char* self, int a1) {
+void func_ov006_02111b90(char* self, int a1, int* vel) {
     int spd;
 
     if (*(int*)(self + 0x124) > 0) {
@@ -13,7 +13,7 @@ void func_ov006_02111b90(char* self, int a1) {
     }
     {
         int v[2];
-        Vec2_Sub(v, (int*)(self + 0x20));
+        Vec2_Sub(v, (int*)(self + 0x20), vel);
         spd = Vec2_Len(v);
     }
     if (spd < 0x1000)
