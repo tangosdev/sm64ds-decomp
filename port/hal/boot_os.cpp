@@ -447,17 +447,28 @@ void port_boot_rom_pre_main(void)
        at the ROM's own point in the order, so OS_GetLockID hands out ids
        the way the ROM does instead of -3. */
     port_os_lock_words_seed();
-    /* func_02058ec8() -- REFUSED. Run link100 lane BOOT2 re-derived it: the
-       unmapped GBA slot at 0x08000000 is real but it is the SECOND blocker.
-       func_02058764 -> func_02058690 takes the ARM7 lock through func_02057158
-       first, whose cleanup callback func_02057140 writes `G` -- the decomp's
-       generic placeholder, which links to hal/heap_vtable.cpp's default-heap
-       word here and MEANS 0x04000204 (EXMEMCNT) per the ROM's own literal pool
-       at 0x02057154. Running this arm writes the default heap pointer. The
-       header block carries the whole table. */
+    /* func_02058ec8() -- STILL REFUSED, AND THE FIRST REASON HAS MOVED. Run
+       link100 lane BOOT2 derived two blockers here, in this order: (1)
+       func_02058764 -> func_02058690 takes the ARM7 lock through
+       func_02057158, whose cleanup callback func_02057140 wrote `G` -- the
+       decomp's generic placeholder, which linked to hal/heap_vtable.cpp's
+       default-heap word while the ROM's own literal pool at 0x02057154 says
+       0x04000204 (EXMEMCNT) -- so running this arm wrote the default heap
+       pointer; and (2) the unmapped GBA slot at 0x08000000.
+       BLOCKER (1) IS GONE. Run link100 rung R3F spelled the register in
+       src/func_02057140.c (and in func_02057128 and func_02055454), all three
+       still byte-verify against the ROM, and the three TUs are hostgen-ROUTED
+       so the store reaches EXMEMCNT instead. Taking the lock no longer touches
+       the heap pointer. What is left is blocker (2) ALONE: no ntr::kRegions
+       entry covers 0x08000000, so func_02058764 still reads the Slot-2 magic
+       out of nothing. Un-refusing this arm is a rung of its own and wants its
+       own proof; R3F did not take it. The header block carries the whole
+       table. */
     func_02057000();
-    /* func_02059594() -- REFUSED for the same reason: same func_02058764 path,
-       same lock, same `G`. Everything else about it is host-safe -- it stores
+    /* func_02059594() -- STILL REFUSED, and its reason moved the same way:
+       same func_02058764 path, same lock, same `G`, so R3F's spelling and
+       route retired the heap-pointer half of it and the empty Slot-2 region is
+       what remains. Everything else about it is host-safe -- it stores
        func_020593f4 into 0x027ffd9c (mapped, shared block) and 0x023c3fdc
        (mapped, inside ntr's main-RAM reservation). */
     /* func_02059f48(3) -- REFUSED ON THE SAME NAME, and the byte is now known.

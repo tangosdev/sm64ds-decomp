@@ -10513,6 +10513,119 @@ foreach(line IN LISTS SLICE214_LINES)
     endif()
     list(APPEND SLICE214_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# ---- run link100 rung R3F: THE THREE `G` PLACEHOLDERS THAT ARE REGISTERS ----
+#
+# Read blocker B4 in hal/boot_os.cpp's placeholder table first, and lane R3E's
+# derivation (runs/link100/out/R3E/e1_blocker.txt) second. The short of it:
+# `G` is the decomp's GENERIC placeholder for an absolute address a function
+# pools, so several unrelated TUs spell completely different things with the
+# same identifier. One of them means it: _ZN4Heap10SetDefaultEv's pool word at
+# 0x0203c338 carries a RELOC (config/arm9/relocs.txt: from:0x0203c338
+# kind:load to:0x020a0ea0), so THERE `G` really is Memory::defaultHeapPtr and
+# the /alternatename in hal/lk4_solidheap_seat.cpp is right. Three others pool
+# an I/O address with NO reloc, because an absolute register needs none:
+#
+#     func_02055454  pool 0x02055460  0x04000010  BG0HOFS/BG0VOFS, str (word)
+#     func_02057128  pool 0x0205713c  0x04000204  EXMEMCNT, ldrh/orr 0x80/strh
+#     func_02057140  pool 0x02057154  0x04000204  EXMEMCNT, ldrh/bic 0x80/strh
+#
+# and those three, resolving `G` through the alias, were reading and writing
+# the DEFAULT HEAP POINTER. func_02019144's else arm calls func_02055454 with
+# the BG0 scroll on every VBlank of every 3D level, which is 0, so under
+# SM64DS_ROM_LOOP=1 the allocator's default heap went NULL once per frame and
+# the next free faulted at Heap::Deallocate+0x3 (R3E, frame 31, levels
+# 1/5/9/13). The other two are the same landmine on the card-lock path: they
+# OR and AND bit 7 of that pointer through func_02057158/func_02057178.
+#
+# THE FIX IS IN THE DECOMP AND IT COSTS NOTHING. src/ now spells each register
+# the way src/func_0205583c.c and src/func_02057320.cpp already spell theirs,
+# and all three still byte-verify against the ROM -- BETTER than before, since
+# the placeholder made the pool word a reloc slot the byte gate WILDCARDED and
+# a literal address is compared for real:
+#
+#     tools/match.py func_02055454 0x02055454 0x10  4/4 words OK  2004/b56
+#     tools/match.py func_02057128 0x02057128 0x18  6/6 words OK  2004/b56
+#     tools/match.py func_02057140 0x02057140 0x18  6/6 words OK  2004/b56
+#
+# Spelling it is only half. port/ntr/io.cpp's rule is that a store reaches
+# ntr::io_write only if its TU was rewritten by tools/hostgen.py; built plain
+# it latches in the mapped window and triggers nothing. So the three go through
+# hostgen exactly the way rung BSWAP took the ROM's frame swap
+# (func_020190b8, the R3B_SWAP block above), with the same kill switch
+# discipline: the arm is PRINTED ON EVERY CONFIGURE in both directions,
+# because a CMake option() caches and a switch that announces only one arm
+# silently keeps the wrong one.
+#
+# The three come off port/slice_gate214.txt, so the cut below is against
+# SLICE214_SOURCES and has to sit after that list is built. SLICE214_SOURCES
+# goes to walk_window and walk_window_hires only, and R3F_GREG_GEN is appended
+# to exactly those two targets: the LINK SET does not change, only the route.
+option(R3F_GREG_PLAIN
+       "run link100 R3F: build the three register TUs PLAIN (pre-fix arm)"
+       OFF)
+set(R3F_GREG_SYMS
+    func_02055454          # BG0HOFS/BG0VOFS, the VBlank display commit
+    func_02057128          # EXMEMCNT |= 0x80
+    func_02057140)         # EXMEMCNT &= ~0x80
+list(LENGTH R3F_GREG_SYMS R3F_GREG_WANT)
+if(R3F_GREG_PLAIN)
+    message(STATUS "R3F: R3F_GREG_PLAIN=ON -- the three register TUs build "
+                   "PLAIN. This is the PRE-FIX arm: the stores latch in the "
+                   "mapped I/O window and no register is told.")
+else()
+    message(STATUS "R3F: R3F_GREG_PLAIN=OFF -- the three register TUs route "
+                   "through hostgen (shipped arm).")
+endif()
+set(R3F_GREG_GEN "")
+if(NOT R3F_GREG_PLAIN)
+    foreach(sym IN LISTS R3F_GREG_SYMS)
+        set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        if(NOT EXISTS "${sym_in}")
+            set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        endif()
+        set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+        add_custom_command(OUTPUT "${sym_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${sym_in}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${sym}")
+        list(APPEND R3F_GREG_GEN "${sym_out}")
+    endforeach()
+endif()
+# Cut the plain slice entries in the SAME block that adds the generated ones,
+# for the BSWAP block's reason: the real net is the LINKER either way, and the
+# count guard below is only a signpost for a reader looking at a failed link.
+set(R3F_GREG_CUT 0)
+set(SLICE214_SRC_R3F "")
+foreach(src IN LISTS SLICE214_SOURCES)
+    set(_cut OFF)
+    if(NOT R3F_GREG_PLAIN)
+        foreach(sym IN LISTS R3F_GREG_SYMS)
+            if(src MATCHES "/${sym}\.(c|cpp)$")
+                set(_cut ON)
+            endif()
+        endforeach()
+    endif()
+    if(_cut)
+        math(EXPR R3F_GREG_CUT "${R3F_GREG_CUT}+1")
+    else()
+        list(APPEND SLICE214_SRC_R3F "${src}")
+    endif()
+endforeach()
+set(SLICE214_SOURCES ${SLICE214_SRC_R3F})
+if(R3F_GREG_PLAIN)
+    set(R3F_GREG_CUT ${R3F_GREG_WANT})
+endif()
+if(NOT R3F_GREG_CUT EQUAL R3F_GREG_WANT)
+    message(STATUS "R3F: expected to cut ${R3F_GREG_WANT} plain register-TU "
+                   "entries and cut ${R3F_GREG_CUT}. If slice_gate214.txt "
+                   "stopped listing one of them the hostgen copy is still "
+                   "added and the link will say so; if a SECOND slice started "
+                   "listing one, this cut missed it and the link will say that "
+                   "too")
+endif()
 # ---- gate 2ipc: the PXI layer (the ARM9<->ARM7 link) -----------------------
 #
 # port/docs/mmio-inventory.md counted eight IPC registers and zero modelled,
@@ -14275,7 +14388,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN} ${R3F_GREG_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
@@ -14612,7 +14725,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN} ${R3F_GREG_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp

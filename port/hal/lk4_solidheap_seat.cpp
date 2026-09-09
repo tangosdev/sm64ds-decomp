@@ -105,9 +105,46 @@
 // ResizeToFit USED TO BE THE NEXT LINE AND IT WAS WRONG THE SAME WAY
 // SetDefault was. A receiver-bridging face near the bottom of this file
 // replaces it and the evidence is in the header there.
-// G is the ROM's shorthand for the default-heap pointer (decl_common.h
-// `extern int G`), the same 0x020a0ea0 word heap_vtable.cpp hosts as
-// data_020a0ea0 / Memory::defaultHeapPtr. One storage, one more name.
+// G IS NOT ONE THING, and this alias is right for exactly one of them.
+// decl_common.h's `extern int G` is the decomp's GENERIC PLACEHOLDER for an
+// absolute address a function pools, so unrelated TUs spell unrelated things
+// with the same identifier and the linker hands all of them this one word.
+//
+// THE ONE THAT MEANS IT is src/_ZN4Heap10SetDefaultEv.cpp, and the ROM says so:
+// its pool word at 0x0203c338 carries a RELOCATION -- config/arm9/relocs.txt
+// `from:0x0203c338 kind:load to:0x020a0ea0 module:main` -- so there G really is
+// the 0x020a0ea0 word heap_vtable.cpp hosts as data_020a0ea0 /
+// Memory::defaultHeapPtr. One storage, one more name. That is what the line
+// below serves, and it is why the line STAYS.
+//
+// THE ONES THAT DID NOT were three I/O bodies whose pool words carry NO reloc,
+// because an absolute register needs none, and which this alias therefore
+// pointed straight at the allocator's default heap pointer:
+//
+//     func_02055454  pool 0x02055460  0x04000010  BG0HOFS/BG0VOFS, word store
+//     func_02057128  pool 0x0205713c  0x04000204  EXMEMCNT |= 0x80
+//     func_02057140  pool 0x02057154  0x04000204  EXMEMCNT &= ~0x80
+//
+// Run link100 lane R3E measured what that cost: under SM64DS_ROM_LOOP=1 the
+// ROM's own VBlank handler reaches func_02019144's else arm on every 3D level,
+// which calls func_02055454(BG0 scroll) with 0, so Memory::defaultHeapPtr went
+// 30000000 -> 00000000 once per frame and the next free faulted at
+// Heap::Deallocate+0x3. Rung R3F fixed that in the DECOMP: src/ spells each
+// register now, all three still byte-verify against the ROM (better than
+// before -- the placeholder made the pool word a reloc slot the byte gate
+// WILDCARDED, and a literal address is compared for real), and the three TUs
+// are hostgen-ROUTED so the stores reach ntr::io_write. See the R3F_GREG block
+// in port/CMakeLists.txt, which is BSWAP's shape. None of the three references
+// G any more.
+//
+// ONE I/O READER IS STILL ON IT, recorded here rather than fixed:
+// src/func_0205f650.c pools 0x04000304 (POWCNT1) and returns bit 0, so today it
+// answers with bit 0 of the heap pointer instead. It cannot corrupt anything --
+// it only reads -- but it is wrong, and its caller src/func_02019a58.c is a
+// wait loop that branches on the answer. The one-line spelling
+// `(*(volatile unsigned short *)0x4000304 & 1) != 0` byte-verifies 7 words of 7
+// under 2004/b56 (R3F measured it); it is left for a lane that owns that file
+// and can measure the loop it changes.
 #pragma comment(linker, "/alternatename:_G=_data_020a0ea0")
 // The remaining cross-namespace edges, spellings verbatim from the link
 // errors: Virtual38 and the SolidHeap V-methods reference these as MSVC
