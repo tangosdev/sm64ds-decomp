@@ -384,6 +384,14 @@ int g_pump_suspended;
 // step 4's bound. Per-wait, which is the whole point: g_starve is not.
 unsigned g_frame_wait_edges;
 
+// NONZERO WHILE STEP 2 OF THE HALT IS INSIDE IRQ::VBlankHandler (run link100,
+// lane DET2, rung 2). A DS is in IRQ mode for the whole of that handler, and
+// src/func_02057f54.c:24-28 is the ROM's own statement of what that means: the
+// reschedule sees ARMProcessorMode() == 0x12, raises the manager's pending
+// flag, and RETURNS -- the thread switch happens when the IRQ returns, not
+// from inside the handler. See ARMRestoreContext and step 2's IRQ return.
+unsigned g_in_vblank_handler;
+
 struct Stats {
     unsigned long long saves, restores, resumes, refused, unknown_ctx;
     unsigned long long halts, pump_turns, vblank_dispatches, vblank_wakes;
@@ -398,6 +406,10 @@ struct Stats {
     unsigned long long frame_pump_turns;   // rung R3b step B2, step 1b
     unsigned long long starved, wrong_thread, idle_sleeps;
     unsigned long long adopted, entered, exited, rejected, nocreate;
+    // Switches ARMRestoreContext handed to the IRQ return instead of taking
+    // from inside the handler (run link100, lane DET2, rung 2). Printed LAST
+    // on the [thr] line so every existing reader of that line keeps working.
+    unsigned long long deferred;
 } g_stat;
 
 constexpr size_t kFiberStack = 256 * 1024;
@@ -673,6 +685,18 @@ static bool det_vblframe() {
     return v != 0;
 }
 
+// Run link100, lane DET2, rung 2. ON by default; SM64DS_DET2_IRQDEFER=0 puts
+// the switch-from-inside-the-wake back on the same binary. See ARMRestoreContext
+// and the IRQ return at the end of step 2 of the halt.
+static bool det2_irqdefer() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_DET2_IRQDEFER");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v != 0;
+}
+
 // Run link100, lane DET2, rung 1. ON by default; SM64DS_DET2_OWED1=0 puts the
 // exact-divider frame-wait bound back on the same binary. See step 4.
 static bool det2_owed1() {
@@ -805,6 +829,57 @@ void ARMRestoreContext(void *ctx) {
         // its caller re-tests, which is the port's behaviour before this lane.
         ++g_stat.refused;
         trace("SM64DS_THREAD_NOFIBER=1: refusing %u -> %u",
+              from ? from->id : 0u, to->id);
+        return;
+    }
+    // A DS SWITCHES THREADS ON IRQ RETURN, NOT FROM INSIDE THE HANDLER (run
+    // link100, lane DET2, rung 2).
+    //
+    // src/_ZN3IRQ13VBlankHandlerEv.c is five statements and the wake is the
+    // second of them:
+    //     data_0209d514 = data_0209d514 + 1;
+    //     if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0) {
+    //         OS_WakeupThread(&data_0209d500);
+    //         data_0209d514 = 0;          <- the frame boundary's own zero
+    //         func_02019144();            <- the display commit
+    //     }
+    //     OS_WakeupThread(&data_0209d4fc);
+    //     ... |= 1; func_02019100();
+    // On the cartridge all five run, in one go, before the interrupt returns:
+    // OS_WakeupThread reaches src/func_02057f54.c and its FIRST test is
+    //     if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
+    //     s->m0 = 1; return;
+    // -- in IRQ mode (0x12) the reschedule raises the manager's pending flag
+    // and returns, and the IRQ return path is what performs the switch.
+    //
+    // This port's ARMProcessorMode is hosted at 0x1f (system mode) in
+    // hal/cxx_aliases.cpp, which this lane does not own, so func_02057f54 runs
+    // all the way through and its ARMRestoreContext -- this function -- took
+    // the switch from inside the wake. The handler was then left parked one
+    // statement short of `data_0209d514 = 0` and finished on the next halt, so
+    // the ROM's VBlank count read the DIVIDER at every frame boundary instead
+    // of zero (measured, lane DET's [rb-det] words line: data_0209d514=2 with
+    // data_0208ee44=2, straight run and re-run alike) and func_02019144's
+    // display commit ran at the head of the following frame.
+    //
+    // The deferral is taken here instead, one call later than the ROM takes
+    // it, and it puts the manager into exactly the state the ROM's own early
+    // return leaves it in: func_02057f54.c:37 has already written the
+    // current-thread word, which the ROM never reaches in IRQ mode, so put it
+    // back; and raise m0, which the ROM raises instead. Step 2 of the halt
+    // clears m0 and calls func_02057f54 again when the handler returns, which
+    // is the IRQ return. Nothing in src/ reads or writes m0 -- every other
+    // data_020a6134 access in the linked set is at +2, +8, +0xc, +0x10, +0x14
+    // or the slot array -- so the reader this stands in for is the ROM's IRQ
+    // return path, exactly as step 2 already stands in for the dispatcher.
+    //
+    // SM64DS_DET2_IRQDEFER=0 puts the switch-from-inside back on the same
+    // binary.
+    if (g_in_vblank_handler && det2_irqdefer()) {
+        ++g_stat.deferred;
+        mgr_current() = from;
+        mgr_u16(0) = 1;
+        trace("defer %u -> %u to the IRQ return",
               from ? from->id : 0u, to->id);
         return;
     }
@@ -961,9 +1036,22 @@ void _ZN4CP1516WaitForInterruptEv(void) {
         // is the next frame's wait, and charging this frame's edge to that one
         // is the carried-count defect step 4 below exists to end.
         if (data_0209d4f0[0] != 0) ++g_frame_wait_edges;
+        ++g_in_vblank_handler;
         reinterpret_cast<void (*)()>(h)();
+        --g_in_vblank_handler;
         *irq_if &= ~ntr::IRQ_VBLANK;
         ++g_stat.vblank_dispatches;
+        // AND THIS IS THE IRQ RETURN (run link100, lane DET2, rung 2). On the
+        // cartridge the switch a wake inside the handler asked for happens
+        // here, out of IRQ mode, once the handler has run to its end; see
+        // ARMRestoreContext for the whole reason and for what m0 is. The ROM's
+        // own reschedule is what performs it, so the pick, the save, the
+        // callbacks and the current-thread word are all func_02057f54's, exactly
+        // as they are on every other switch this port takes.
+        if (det2_irqdefer() && mgr_u16(0) != 0) {
+            mgr_u16(0) = 0;
+            func_02057f54();
+        }
     }
 
     // 3. the wake that handler performs, in ROM code. OS_WakeupThread clears
@@ -1036,13 +1124,15 @@ void _ZN4CP1516WaitForInterruptEv(void) {
     // reached only if the wake did not: it is liveness, not pacing. It cannot
     // hang, and it cannot end the wait early.
     //
-    // Why data_0209d514 then reads the divider rather than zero at a frame
-    // boundary, and why that is stable: the ROM's handler resets it in the
-    // statement AFTER OS_WakeupThread, and this port's OS_WakeupThread switches
-    // away from inside, so the handler is left parked one statement short and
-    // finishes on the next halt. That is a real difference from the cartridge,
-    // where the switch happens on IRQ return -- written up in the lane report,
-    // not fixed here -- but it is DETERMINISTIC, which is what the rung asks.
+    // data_0209d514 used to read the DIVIDER rather than zero at a frame
+    // boundary, and the reason was that the ROM's handler resets it in the
+    // statement after OS_WakeupThread while this port's OS_WakeupThread
+    // switched away from inside, leaving the handler parked one statement
+    // short until the next halt. That was deterministic but it was not the
+    // cartridge. The IRQ-return deferral in ARMRestoreContext ends it (run
+    // link100, lane DET2, rung 2): the handler now runs to its end in one go,
+    // so the boundary reads zero and the reset is inside the frame it belongs
+    // to. SM64DS_DET2_IRQDEFER=0 puts the old reading back.
     //
     // SM64DS_DET_FRAMEWAIT=0 restores the old reading on the same binary.
     //
@@ -1175,13 +1265,14 @@ void thread_sched_report(const char *tag) {
                  "halts=%llu pump=%llu framepump=%llu vbl_enter=%llu "
                  "vbl_dispatch=%llu vbl_wakes=%llu "
                  "starved=%llu unknown=%llu adopted=%llu entered=%llu "
-                 "exited=%llu rejected=%llu nocreate=%llu\n",
+                 "exited=%llu rejected=%llu nocreate=%llu deferred=%llu\n",
                  tag, g_stat.saves, g_stat.restores, g_stat.resumes,
                  g_stat.refused, g_stat.halts, g_stat.pump_turns,
                  g_stat.frame_pump_turns, g_stat.vblank_enters,
                  g_stat.vblank_dispatches, g_stat.vblank_wakes, g_stat.starved,
                  g_stat.unknown_ctx, g_stat.adopted, g_stat.entered,
-                 g_stat.exited, g_stat.rejected, g_stat.nocreate);
+                 g_stat.exited, g_stat.rejected, g_stat.nocreate,
+                 g_stat.deferred);
     std::fflush(stderr);
 }
 
