@@ -118,7 +118,17 @@ extern int data_020a6484[], data_020a6488[], data_020a648c[], data_020a6490[],
            data_020a6494[], data_020a6498[], data_020a649c[], data_020a64a0[],
            data_020a64a4[];
 extern void *data_020a64a8[];             // the 16-slot batch ring
-extern int data_020a6760[];               // the 256 x 0x18 node pool
+extern unsigned char data_020a6760[];     // the 256 x 0x18 node pool
+// SNDSharedWork, the 0x280 block the ARM9 hands the ARM7 in command 0x19. It
+// belongs in this list as of run link100 lane SND1 (rung R1) and it did not
+// exist here before: the two words this list is about -- the batch progress
+// counter and the player bitmask -- used to be published into a host array
+// outside .dsstate, which the snapshot never captured and the DET rung
+// therefore never compared. The ROM's own SND_Init seats the real object now
+// (hal/snd_globals.cpp), so those same two words ARE captured, and they drift
+// on a restore for exactly the reason the whole queue does: the restore
+// re-seeds it and the replay re-triggers sounds into the reset queue.
+extern unsigned char data_020a64e0[];     // SNDSharedWork, 0x280
 extern unsigned char data_020a50ec[];     // sdat sound bss, 0x440
 // the ARM9's own voice bookkeeping, which follows the ARM7 state the restore
 // re-seeds: the FREE and ACTIVE voice lists (0xc-byte NestedHeapIterators)
@@ -679,6 +689,7 @@ bool in_sound_queue(const char *p)
         { data_020a6490, 16 }, { data_020a6494, 16 }, { data_020a6498, 16 },
         { data_020a649c, 16 }, { data_020a64a0, 16 }, { data_020a64a4, 16 },
         { data_020a64a8, 16 * sizeof(void *) }, { data_020a6760, 256 * 0x18 },
+        { data_020a64e0, 0x280 },
         { data_020a50ec, 0x440 },
         // The ARM9's voice lists and nodes (DET on VS map 3, the arena with
         // an ambient voice sounding through the window): a voice the ARM7

@@ -63,15 +63,29 @@ extern int   data_020a649c;         // ring write index
 extern int   data_020a64a0;         // batches in flight
 extern int   data_020a64a4;         // next batch tick (starts at 1)
 extern void *data_020a64a8[];       // 9-slot ring of batch heads
-extern int   data_020a6760[];       // the 256 x 0x18 node pool
 extern unsigned int *data_020a7fc0; // -> the ARM7 status block
 
 int func_0205b070(int blocking);
 
-/* The game's own sound init, in pieces. See sd_sound_init_host below. */
-void func_0204f1e8(void);            /* three counters */
-void func_02050950(void);            /* two more */
-void func_0204fc40(void);            /* voice free list + 32 player records */
+/* The game's own sound init, and it is the ROM's own bodies now (run link100,
+ * lane SND1, rung R1; port/slice_snd1.txt).
+ *
+ *   func_0204f070   the once-only guard and its four calls. The first,
+ *                   func_0205a82c, is SND_Init: the 256-node command pool, the
+ *                   0x280 status block, the channel-7 registration. The other
+ *                   three are the counter resets and the voice/player records
+ *                   sd_sound_init_host used to call by hand.
+ *   func_0205b358   SND_Init on its own, for the save-state restore path in
+ *                   sd_consumer_reset: the guard above it has already fired by
+ *                   then, so func_0204f070 would no-op.
+ *
+ * What made these runnable is hal/snd_globals.cpp, which hosts the pool, the
+ * callback table and the status block in the ROM's own layout. See the header
+ * on sd_consumer_reset for what that retired. */
+void func_0204f070(void);
+void func_0205b358(void);
+
+/* The rest of the init, still called by hand. See sd_sound_init_host. */
 void func_0204f94c(void *p);         /* clear one player's voice pointer */
 void func_02011a28(void *table);     /* PlayLong's 0x40-slot handle table */
 void func_02048f34(void *owner);     /* 3D voice pools */
@@ -214,9 +228,18 @@ struct Node {
     int op, a, b, c, d;
 };
 
-enum { NODES = 256, RING = 9, STATUS_WORDS = 0x280 / 4 };
+enum { NODES = 256, RING = 9 };
 
-unsigned int g_status[STATUS_WORDS];   // the ARM7 status block we publish
+// THE STATUS BLOCK, AND WHO NAMES IT. This used to be a host array beside the
+// queue, published into unconditionally, with a note saying the 0x19 handshake
+// "is a no-op rather than a fake" because the consumer owned the block. Rung R1
+// inverts that: src/func_0205b358.c runs, and its last act is to send command
+// 0x19 carrying the address of the block IT allocated (data_020a64e0, hosted at
+// its ROM span in hal/snd_globals.cpp). This pointer is what that command hands
+// over, and it stays null until the command is executed -- which is the DS's
+// own state of affairs, since on hardware the ARM7 does not know where
+// SNDSharedWork is until the ARM9 tells it either.
+unsigned int *g_block;
 int g_seeded;
 int g_pumping;                          // reentrancy guard for the hook
 unsigned g_consumed;                    // batches this consumer has executed
@@ -357,6 +380,25 @@ void exec(const Node *n)
         else note_param(4, n->c);
         break;
     }
+    case 0x19:
+        // SET_STATUS_BLOCK, and it is the ONE command in this switch the ARM9
+        // sends before it sends anything else. src/func_0205b358.c takes a node
+        // off the free list it has just built, writes 0x19 into the opcode word
+        // and data_020a7fc0 -- its own SNDSharedWork -- into the first
+        // argument, and flushes. Everything this consumer publishes goes there
+        // from now on: word 0 is the batch progress counter func_0205b5d4
+        // returns, word 1 the player bitmask func_0205b608 returns.
+        //
+        // Honouring it rather than owning the block is what makes the two
+        // halves the same object: the ARM9 reads through data_020a7fc0, this
+        // file writes through the pointer the ARM9 sent, and if they ever
+        // disagreed the queue would stall on the first spin instead of quietly
+        // reading a stale host word.
+        g_block = (unsigned int *)(size_t)(unsigned)n->a;
+        if (g_trace)
+            fprintf(stderr, "[snd] status block published at %p by the ROM's "
+                    "own SND_Init\n", (void *)g_block);
+        break;
     case 0x1b: case 0x1c: case 0x1d:
         // Load commands. Never expected: sdat_init pre-seats every FAT
         // residency slot with the resident address, so the game correctly
@@ -383,7 +425,10 @@ void drain(void)
         if (++g_readIdx > 8) g_readIdx = 0;
         for (Node *n = head; n; n = n->next) exec(n);
         g_consumed++;
-        g_status[0] = g_consumed;       // the word func_0205b5d4 reads
+        // The word func_0205b5d4 reads, in the block the ARM9 named. The very
+        // first batch a boot consumes is the one carrying command 0x19, so
+        // g_block is already set by the time this line runs for it.
+        if (g_block) g_block[0] = g_consumed;
     }
 }
 
@@ -404,7 +449,7 @@ void drain(void)
 // session in their steal-or-refuse paths.
 void publish_player_status(void)
 {
-    g_status[1] = sd_seq_player_mask();
+    if (g_block) g_block[1] = sd_seq_player_mask();
 }
 
 // The ARM9's own per-frame sound work, the same shape as sd_sound_init_host
@@ -524,18 +569,27 @@ void sd_sound_frame_host(void)
     func_020119c8(data_0209b53c);
 }
 
-// The game's own sound init, minus the four things that are hardware.
+// The game's own sound init, minus the three things that are hardware.
 //
 // func_020133bc is Sound::Init on the DS. It is not in any slice, and it
-// cannot be called wholesale here, so this runs the six matched sub-inits
-// that carry real state and skips the rest deliberately:
+// cannot be called wholesale here, so this runs the matched sub-inits that
+// carry real state and skips the rest deliberately:
 //
-//   RUN  func_0204f1e8, func_02050950   counter resets
-//   RUN  func_0204fc40                  builds the 16 voice records (the
-//                                       +0x3c byte it stores is the voice id
-//                                       every command carries) and the 32
-//                                       player records with their default
-//                                       playable-sequence limit of 1
+//   RUN  func_0204f070   THE ROM'S OWN ONCE-ONLY SOUND INIT (run link100, lane
+//                        SND1, rung R1). Three transcribed lines used to stand
+//                        here -- func_0204f1e8, func_02050950, func_0204fc40 --
+//                        and they are calls two and three and four of this
+//                        body. Call ONE is func_0205a82c, which is the command
+//                        pool: it was skipped because src/func_0205b358.c
+//                        needs three DS symbols to be one object, and
+//                        hal/snd_globals.cpp now makes them one. So the guard,
+//                        the pool, the status block, the channel-7
+//                        registration and the three counter/record resets all
+//                        come from the cartridge, in the cartridge's order.
+//                        (func_0204fc40 is the one that builds the 16 voice
+//                        records -- the +0x3c byte it stores is the voice id
+//                        every command carries -- and the 32 player records
+//                        with their default playable-sequence limit of 1.)
 //   RUN  func_0204f94c x3               clears the music, sub-music and SFX
 //                                       player objects
 //   RUN  func_02011a28                  Sound::PlayLong's handle table
@@ -544,9 +598,6 @@ void sd_sound_frame_host(void)
 //                                       Player_PlaySoundEffect returns at its
 //                                       first line and NOTHING makes a sound.
 //
-//   SKIP func_0205a82c   seeds the command pool via func_0205b358, which
-//                        depends on three DS symbol adjacencies (see
-//                        sd_consumer_init); this file seeds it instead.
 //   SKIP func_02050f34   opens the SDAT off the card into a 1MB sound heap;
 //                        hal/sdat/sdat.cpp seats an equivalent root already.
 //   SKIP func_020134d8   loads group 1 into that heap; residency is
@@ -559,9 +610,7 @@ void sd_sound_frame_host(void)
 // that pretends to be working.
 void sd_sound_init_host(void)
 {
-    func_0204f1e8();
-    func_02050950();
-    func_0204fc40();
+    func_0204f070();
     func_0204f94c(&data_0209b4a0);
     func_0204f94c(&data_0209b4b0);
     func_0204f94c(&data_0209b4a4);
@@ -599,40 +648,43 @@ extern "C" void sd_sound_level_reap(void)
     func_02011974(data_0209b53c);
 }
 
-/* Put the command queue back in its just-booted shape: free list relinked, ring
-   empty, every cursor at zero.
+/* Put the command queue back in its just-booted shape, and it is the ROM that
+ * puts it there now.
  *
- * Called from sd_consumer_init at boot and from lk6_savestate_load on a restore.
- * The restore needs it because this queue is described TWICE -- by the DS-named
- * globals (data_020a6484 head, data_020a6494 tail, data_020a6498 read index,
+ * Called from lk6_savestate_load and hal/rollback.cpp on a restore. The restore
+ * needs it because this queue is described TWICE -- by the DS-named globals
+ * (data_020a6484 head, data_020a6494 tail, data_020a6498 read index,
  * data_020a64a0 in flight, ...) and by the host statics beside them (g_readIdx,
- * g_consumed) -- and the save state captures the first set but not the second.
- * Rolling back half of a cursor pair leaves the two disagreeing: the restored
- * read index walks a ring slot the host side has already reclaimed, and
- * func_0205b274's `while (*node)` chases a stale link into a null. Resetting
+ * g_consumed, g_block) -- and the save state captures the first set but not the
+ * second. Rolling back half of a cursor pair leaves the two disagreeing: the
+ * restored read index walks a ring slot the host side has already reclaimed,
+ * and func_0205b274's `while (*node)` chases a stale link into a null. Resetting
  * both sides together is the same treatment the sequencer and mixer already get
  * (sd_seq_reset / sd_mix_reset) and for the same reason: this is live plumbing,
- * not game state, and the game re-fills it on the next tick. */
+ * not game state, and the game re-fills it on the next tick.
+ *
+ * THE HAND-SEEDED POOL IS RETIRED (run link100, lane SND1, rung R1). What used
+ * to be here was twenty lines chaining 256 nodes, seating head and tail, zeroing
+ * seven cursors and pointing data_020a7fc0 at a host array -- with a note saying
+ * src/func_0205b358.c "is unusable on the host because it depends on three
+ * symbols being ADJACENT in DS memory ... Host symbols are separate objects, so
+ * running it would write past two of them." The three symbols are now ONE object
+ * with the three names at their ROM offsets (hal/snd_globals.cpp), so the ROM's
+ * own body does all of it, including the parts the transcription could only
+ * approximate: it clears the whole 0x280 status block through func_0205b554,
+ * and it re-sends command 0x19 so the consumer re-learns where that block is
+ * rather than assuming.
+ *
+ * func_0205b358 AND NOT func_0204f070: the once-only guard data_020a4d44 is
+ * itself in .dsstate and has already fired by the time anything restores, so
+ * the outer body would return on its first line. SND_Init is the piece that
+ * needs re-running. */
 void sd_consumer_reset(void)
 {
-    Node *pool = (Node *)data_020a6760;
-    for (int i = 0; i < NODES - 1; i++) pool[i].next = &pool[i + 1];
-    pool[NODES - 1].next = 0;
-    data_020a6484 = &pool[0];
-    data_020a6494 = &pool[NODES - 1];
-
-    data_020a648c = 0;
-    data_020a6490 = 0;
-    data_020a64a0 = 0;
-    data_020a6498 = 0;
-    data_020a649c = 0;
-    data_020a64a4 = 1;
-    data_020a6488 = 0;
-
-    memset(g_status, 0, sizeof g_status);
-    data_020a7fc0 = g_status;
     g_consumed = 0;
     g_readIdx = 0;
+    g_block = 0;
+    func_0205b358();
 }
 
 void sd_consumer_init(void)
@@ -644,21 +696,20 @@ void sd_consumer_init(void)
     /* the same switch arms Sound::Play's two cull reports (sound_abi.cpp) */
     g_snd_trace_play = g_trace;
 
-    // Seed the free list. This is func_0205b358's data effect, written out
-    // by hand on purpose: that function is unusable on the host because it
-    // depends on three symbols being ADJACENT in DS memory --
-    //   data_020a6760 (pool) + 0x1800 == data_020a7f60 (callback table),
-    //   data_020a7760 + 0x7e8      == the pool's LAST node, and
-    //   data_020a7f48              == that same last node,
-    // which it uses to zero pool[255].next and to seat the tail pointer.
-    // Host symbols are separate objects, so running it would write past two
-    // of them. The three lines below are what it means, not where it wrote.
-    sd_consumer_reset();
-
-    // func_0205b358 would now send command 0x19 to tell the ARM7 where the
-    // status block is. There is no message to send: this consumer owns the
-    // block, so the handshake is a no-op rather than a fake.
-
+    // THE POOL IS SEEDED BY THE ROM NOW, from inside sd_sound_init_host below
+    // (func_0204f070 -> func_0205a82c -> func_0205b358). What used to stand
+    // here was a call to sd_consumer_reset, whose body was func_0205b358's data
+    // effect written out by hand because the three DS symbols it needs to be
+    // adjacent were three separate host objects. hal/snd_globals.cpp makes them
+    // one 0x1800 run with the three names at their ROM offsets, so the
+    // cartridge's own SND_Init runs: it chains the 256 nodes, seats the free
+    // list, clears the 0x280 status block through func_0205b554, points
+    // data_020a7fc0 at it and sends command 0x19 to say where it is.
+    //
+    // ORDER. The sequencer, the mixer and the SDAT root come up FIRST, because
+    // SND_Init's 0x19 command goes into the ring and is not executed until the
+    // first drain -- but nothing guarantees which tick that is, and a command
+    // must never reach exec() before the subsystems it drives exist.
     sdat_init();
     sd_mix_reset();
     sd_seq_reset();
@@ -667,8 +718,13 @@ void sd_consumer_init(void)
     const char *wav = getenv("SM64DS_WAV_DUMP");
     if (wav) sd_wav_open(wav);
 
-    fprintf(stderr, "[snd] hosted ARM7: %d-node command pool seeded, "
-            "status block at %p\n", NODES, (void *)g_status);
+    // g_block is still null here on purpose: it is set when the 0x19 command is
+    // EXECUTED, which is the first drain, not when it is queued. The address
+    // printed is the ARM9's own -- what it wrote into data_020a7fc0 -- and the
+    // drain confirming the same one is what makes the two halves one object.
+    fprintf(stderr, "[snd] hosted ARM7: %d-node command pool seeded by the "
+            "ROM's own SND_Init, status block at %p\n",
+            NODES, (void *)data_020a7fc0);
 }
 
 void sd_consumer_tick(void)
@@ -685,6 +741,12 @@ void sd_consumer_tick(void)
 // The seam. See the header comment for why this, and not a bigger pool.
 // PORT_HOST_ABI: src reads the ARM7's cross-core progress word (data_020a7fc0);
 //                the host has no second core, so this file pumps it instead.
+//
+// IT RETURNS THE ROM'S OWN WORD (run link100, lane SND1, rung R1). It used to
+// return g_status[0], a host array this file owned; src/func_0205b5d4.c returns
+// data_020a7fc0[0], and after rung R1 that pointer is seated by the cartridge's
+// own SND_Init and points at data_020a64e0. So the only difference between this
+// body and the matched one is the pump, which is the ruling.
 extern "C" unsigned int func_0205b5d4(void)
 {
     sd_consumer_init();
@@ -693,7 +755,7 @@ extern "C" unsigned int func_0205b5d4(void)
         drain();
         g_pumping = 0;
     }
-    return g_status[0];
+    return data_020a7fc0 ? data_020a7fc0[0] : 0;
 }
 
 extern "C" void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int seqId);

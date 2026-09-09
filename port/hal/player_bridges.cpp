@@ -2329,15 +2329,22 @@ DSSTATE_BEGIN
 int data_0208e428[8], data_0209b480[4];
 int data_020a4d60[8], data_020a6438[8], data_020a6488[4], data_020a648c[4];
 int data_020a6490[4], data_020a649c[4], data_020a64a0[4], data_020a64a4[4];
-/* The sound command queue's two SIZED objects. Placeholders while sound was
-   stubbed; the hosted ARM7 in hal/sdat/ needs their real extents.
-   data_020a6760 is the node pool func_0205b070 cache-flushes as 0x1800
-   bytes = 256 nodes x 0x18, and the seeding chains all 256 of them.
+/* The sound command queue's SIZED object. A placeholder while sound was
+   stubbed; the hosted ARM7 in hal/sdat/ needs its real extent.
    data_020a64a8 is the batch ring that func_0205b070 and func_0205b274 index
    with "idx++; if (idx > 8) idx = 0", so it needs nine slots. At the old
-   sizes, seeding the pool walked off the end of a 32-byte object. */
+   size, the ring walked off the end of a 32-byte object.
+
+   data_020a6760 IS NOT HERE ANY MORE (run link100, lane SND1, rung R1). It was
+   `int data_020a6760[256 * 0x18 / sizeof(int)]` -- the right 0x1800 extent, but
+   as a lone object. src/func_0205b358.c, the ROM's own SND_Init, addresses the
+   same 0x1800 bytes under THREE dsd names (data_020a6760, data_020a7760 + 0x7e8
+   for the last node's link, and data_020a7f48 for the tail pointer), so hosting
+   only the first of them left the other two nowhere and the body unrunnable.
+   hal/snd_globals.cpp hosts all three as one run with the names at their ROM
+   offsets, which is what let the transcription in hal/sdat/consumer.cpp retire.
+   Defining it here as well would be a duplicate symbol. */
 void *data_020a64a8[16];
-int data_020a6760[256 * 0x18 / sizeof(int)];
 int data_020a0f1c[4], data_020a4d54[4], data_020a6440[4], data_020a6444[4];
 int data_020a6484[4], data_020a6494[4], data_020a6498[4];
 int data_0209cdd0, data_0209cdd4, data_0209cdd8, data_0209cddc, data_0209cde0;

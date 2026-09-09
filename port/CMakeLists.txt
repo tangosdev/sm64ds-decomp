@@ -8501,6 +8501,28 @@ foreach(line IN LISTS SLICE_LOADOV_LINES)
     list(APPEND SLICE_LOADOV_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ---------------------------------------------------------------------------
+# Run link100, lane SND1, rung R1: the ROM's own sound-init pool identity.
+#
+# hal/snd_globals.cpp hosts the command pool, its callback table and
+# SNDSharedWork in the ROM's own layout, and rides SOUND_HOST_SOURCES so the
+# storage is on every target that has the sound stack. The slice goes to the
+# same three targets (see the target_sources block near the end of this file):
+# hal/sdat/consumer.cpp CALLS these bodies, so a sound target without them
+# would not link. The one symbol under the seat that smoke_player lacks is
+# func_02059d8c, the ARM busy-wait hal/boot_hw.cpp transcribes for the
+# SLICE214_SOURCES targets; hal/sdat/snd_smoke_face.cpp supplies it there and
+# is exclusive with hal/boot_hw.cpp for that reason.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_snd1.txt" SLICE_SND1_LINES)
+set(SLICE_SND1_SOURCES "")
+foreach(line IN LISTS SLICE_SND1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SND1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # THREE PER-SOURCE RENAMES, the shape lane R2ABC used for func_02060890 and
 # lane BOOTR1 for main. Each names an edge that is not ROM code yet, in one
 # place, without making a host body under a ROM name -- which would be a new
@@ -8947,7 +8969,15 @@ set(SOUND_HOST_SOURCES
     hal/sdat/out_win.cpp
     hal/sdat/consumer.cpp
     hal/sdat/sound_abi.cpp
-    hal/sdat/sound_bss.cpp)
+    hal/sdat/sound_bss.cpp
+    # Run link100, lane SND1, rung R1: the command pool, its callback table and
+    # SNDSharedWork in the ROM's own layout, so src/func_0205b358.c can run.
+    # STORAGE ONLY, and it rides this list rather than the slice because
+    # hal/sdat/consumer.cpp's queue lives on all three of these targets and the
+    # object it walks has to be the same shape on each. hal/player_bridges.cpp
+    # no longer defines data_020a6760; this file does, as the head of a
+    # three-name run.
+    hal/snd_globals.cpp)
 
 set(LEVELBOOT_HOST_SOURCES
     unmatched/ActorDerived_Spawn.cpp
@@ -16880,6 +16910,23 @@ target_sources(smoke_player PRIVATE
 foreach(_tloadov walk_window walk_window_hires)
     target_sources(${_tloadov} PRIVATE ${SLICE_LOADOV_SOURCES})
 endforeach()
+
+# Run link100, lane SND1, rung R1: the sound-init seat, and it goes to ALL
+# THREE sound targets rather than the two-plus-a-face split NITROFS and LOADOV
+# use above. The reason is the direction of the call: hal/sdat/consumer.cpp
+# calls func_0204f070 and func_0205b358 now, and that file is on all three, so
+# a target without the slice would not link at all. Only ONE symbol under the
+# seat is missing from smoke_player -- func_02059d8c, the ARM busy-wait
+# hal/boot_hw.cpp transcribes and that target does not carry -- and it comes
+# from its own file below. Everything else src/func_0205ae64.c and
+# src/func_0205b358.c reach (func_0205ba3c, func_0205ba64, func_020587dc,
+# CP15::FlushAndInvalidateDataCache, IRQ::Disable/Restore, data_020a7fc8) is
+# already on all three.
+foreach(_tsnd1 smoke_player walk_window walk_window_hires)
+    target_sources(${_tsnd1} PRIVATE ${SLICE_SND1_SOURCES})
+endforeach()
+target_sources(smoke_player PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/sdat/snd_smoke_face.cpp")
 
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not

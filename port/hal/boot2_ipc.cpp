@@ -150,6 +150,14 @@ struct Channel {
 
 const Channel kChannels[] = {
     { 0x6, "touch/SPI      (src/func_0205f270.c -> func_0205f300)",  false },
+    // Run link100, lane SND1, rung R1: src/func_0205ae64.c is LINKED now
+    // (port/slice_snd1.txt), so the ROM's own body registers this channel --
+    // and it registers it by TESTING THIS CLAIM. func_0205ae64 does
+    // `if (func_0205ba3c(7, 1)) return;` and the claim below is what makes that
+    // true on its first turn, so the retry loop under it is never entered. The
+    // row stays answer=false, and its reason is unchanged: hal/sdat/consumer.cpp
+    // is the driver behind channel 7 and is driven from func_0205b5d4, so
+    // consuming the batch here as well would run it twice.
     { 0x7, "sound command  (src/func_0205ae64.c; driven by "
            "hal/sdat/consumer.cpp)",                                 false },
     { 0x8, "channel 8      (src/func_0205fde8.c -> func_0205fcfc)",  true  },
