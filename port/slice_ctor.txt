@@ -89,8 +89,9 @@
 #        source records are hosted nowhere and hal/actor_registry.cpp:412 seats
 #        the same five list callbacks LATER in the boot, so linking it today
 #        would write the heads at Entry and have every word overwritten.
-#        __sinit_02074edc was TAKEN by lane CTOR2 and TAKEN BACK OUT by lane
-#        CTOR3 rung 0; the block below says why. __sinit_02075054, called a conflict
+#        __sinit_02074edc is TAKEN below -- by lane CTOR2, backed out by lane
+#        CTOR3 rung 0, re-landed by lane CTOR3 rung 1 on a seat that holds; the
+#        block below is the account. __sinit_02075054, called a conflict
 #        for hal/auto_bss.cpp's overlapping generic array, re-measured as a
 #        rung and is TAKEN below as C1g.
 #   C1d  TAKEN, below.
@@ -133,27 +134,37 @@
 # identical, out/CTOR2/c1e_equality.txt), so the ROM's own initialiser writes
 # exactly the bytes that are already there.
 #
-# ---- RUNG C1c: THE TWO arm9 FADER STATICS, AND WHY THE ROW IS GONE --------
+# ---- RUNG C1c: THE TWO arm9 FADER STATICS, TWICE ---------------------------
 #
 #   src/__sinit_02074edc.c     constructs a FaderColor into data_0209f5e8 and a
 #                              FaderBrightness into data_0209f5d0, and pushes a
-#                              destruct node for each. Lane CTOR2 put it on
-#                              this slice; lane CTOR3 rung 0 took it off again.
+#                              destruct node for each. Both destructors
+#                              (_ZN10FaderColorD1Ev, _ZN15FaderBrightnessD1Ev)
+#                              and all three vtables (data_0208eafc,
+#                              data_0208eacc, data_0208eb2c) were already in
+#                              the link, so this row is one TU.
 #
-# IT MOVES ONE LIVE VPTR, and that is what broke. hal/fader_wipes.cpp
+# hal/ctor_runner.cpp hosts the two 12-byte node cells, which nothing hosted.
+# It retires hal/method_faces.cpp's "do not wake the branch without giving
+# data_0209f5d0 a real vptr first": the vptr is now data_0208eacc.
+#
+# IT MOVES ONE LIVE VPTR, and the first landing broke on it. hal/fader_wipes.cpp
 # placement-news a host HalFaderWipe over data_0209f5e8 before main; the ROM's
 # initialiser runs at Entry and is therefore the last writer, so the installed
 # colour fader dispatches hal/scene_boot.cpp's data_0208eb2c instead of the
-# host class's table. That table is ten words of zeroed host storage until
-# l2_fill_0208ea6c() runs, and l2_fill_0208ea6c() runs from scene_fill_title(),
+# host class's table. That table was ten words of zeroed host storage until
+# l2_fill_0208ea6c() ran, and l2_fill_0208ea6c() ran from scene_fill_title(),
 # late in the boot. Run link100 lane WM9's loopback pair reached
 # Scene::SetFaders on the VS menu -> level transition before the fill and
-# called address 0 through byte +0x14 of it; both windows died c0000005.
+# called address 0 through byte +0x14 of it; both windows died c0000005. Lane
+# CTOR3's rung 0 took this row off the slice on that evidence.
 #
-# THE ROW COMES BACK when the fader vtables are live from before the ROM's own
-# .ctor walk -- rung 1 of lane CTOR3, in hal/scene_boot.cpp. The two 12-byte
-# destruct-node cells hal/ctor_runner.cpp hosts for this initialiser stay where
-# they are; nothing else hosts them and rung 1 needs them again.
+# THE ROW IS BACK because the seat moved, not because the risk was re-argued.
+# hal/scene_boot.cpp now seats all four fader vtables from a C++ static
+# initialiser, so their thirty-four words are live before main and therefore
+# before the ROM's .ctor walk -- the cartridge's own order, where those tables
+# are constants in the image. The [ctor] census prints that file's two counters
+# beside the vptrs, so every captured run measures it.
 #
 # ---- RUNGS C1f AND C1g: THE TWO REFUSALS THAT RE-MEASURED AS RUNGS --------
 #
@@ -195,5 +206,6 @@ src/__sinit_02074e84.cpp
 src/_ZN7ClipperC1Ev.c
 src/_ZN7ClipperD1Ev.c
 src/__sinit_02073a24.c
+src/__sinit_02074edc.c
 src/__sinit_0207501c.c
 src/__sinit_02075054.c
