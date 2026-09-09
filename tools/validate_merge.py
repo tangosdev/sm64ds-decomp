@@ -173,6 +173,123 @@ def _is_symbols_file(path):
         or path == "config/arm9/symbols.txt"
 
 
+_SECTION_ROW = re.compile(
+    r"^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)\s+kind:(\S+)")
+
+
+def _module_from_config_path(path):
+    """The module a ``config/arm9/**`` file belongs to, INCLUDING itcm and dtcm.
+
+    `_module_from_symbols` and `_module_from_delinks` answer only for the modules this
+    report COUNTS, which is the right scope for the coverage arithmetic and the wrong
+    one for evidence: `config/arm9/itcm` and `config/arm9/dtcm` hold real cartridge
+    bytes and real relocation files.
+    """
+    rel = pathlib.PurePosixPath(path)
+    parts = rel.parts
+    if len(parts) < 3 or parts[0] != "config" or parts[1] != "arm9":
+        return None
+    if len(parts) == 3:
+        return "arm9"
+    if len(parts) == 4 and parts[2] in ("itcm", "dtcm"):
+        return parts[2]
+    if len(parts) == 5 and parts[2] == "overlays" and re.fullmatch(r"ov\d+", parts[3]):
+        return parts[3]
+    return None
+
+
+def _module_sections(rev, module):
+    """A module's OWN section inventory at ``rev``: ``[(name, start, end, kind)]``.
+
+    dsd writes it as the indented block at the top of the module's ``delinks.txt``,
+    ahead of the first entry -- the same block `_rev_enrolment` skips because an entry
+    would otherwise inherit it. None when the file is absent or carries no such block,
+    which callers must read as "no evidence" and never as "the module is empty".
+    """
+    path = _module_symbols_path(module)
+    if path is None:
+        return None
+    path = path[:-len("symbols.txt")] + "delinks.txt"
+    try:
+        text = git_text(rev, path)
+    except RuntimeError:
+        return None
+    rows = []
+    for line in text.splitlines():
+        if not line.strip():
+            continue
+        if not line[0].isspace():
+            break                       # the first entry; the module header is over
+        m = _SECTION_ROW.match(line)
+        if m:
+            rows.append((m.group(1), int(m.group(2), 16), int(m.group(3), 16),
+                         m.group(4)))
+    return rows or None
+
+
+def _empty_relocs_defect(rev, symbols_path, reloc_path, declared):
+    """Why an EMPTY ``relocs.txt`` is not complete evidence, or None when it is.
+
+    A count of functions cannot answer this. dsd writes one relocation row per word it
+    resolved to a symbol, wherever that word lives -- and a module with no code at all
+    can still hold a table of callback pointers in its `.data`, each of which is an
+    incoming reference to some other module. Fourteen modules in this tree do carry a
+    legitimately empty file, so refusing all of them is not the answer either.
+
+    THE EVIDENCE IS WHAT dsd WROTE, in this order:
+
+      * a module that declares a FUNCTION has code, and code holds references. An empty
+        file beside it is incomplete, full stop.
+      * otherwise the module's own section inventory decides. `.bss` is uninitialised --
+        it occupies no cartridge bytes and can hold no pointer in the image -- so a
+        module whose every other section is zero-length really does reference nothing.
+        That is the fourteen: `config/arm9/dtcm` aside, every overlay with an empty file
+        has a zero-length `.ctor` and a `.bss`.
+      * a module WITH initialised bytes has to be read. Its words are either all zero,
+        in which case they name no address and the empty file is complete, or they are
+        not, in which case an empty relocation file cannot be shown to account for them.
+
+    FAIL CLOSED WHEN THE EVIDENCE IS UNAVAILABLE: no section inventory, or an image this
+    checkout does not have, is a defect naming the file it wanted -- never a pass.
+    """
+    module = _module_from_config_path(symbols_path)
+    where = f"is empty at {rev[:12]}"
+    if declared:
+        return (f"{reloc_path} {where} while {symbols_path} declares "
+                f"{declared} function(s)")
+    if module is None:
+        return f"{reloc_path} {where} and names no module this report can read"
+    sections = _module_sections(rev, module)
+    if sections is None:
+        return (f"{reloc_path} {where} and {module} has no section inventory, so "
+                f"nothing establishes that it holds no references")
+    initialised = [(name, start, end) for name, start, end, kind in sections
+                   if kind != "bss" and end > start]
+    if not initialised:
+        return None
+    image = _module_image(rev, module)
+    if image is None:
+        return (f"{reloc_path} {where} while {module} carries "
+                f"{sum(e - s for _n, s, e in initialised)} byte(s) of initialised data, "
+                f"and the module image is unavailable, so the evidence cannot be "
+                f"completed")
+    data, base = image
+    for name, start, end in initialised:
+        lo, hi = start - base, end - base
+        if lo < 0 or hi > len(data):
+            return (f"{reloc_path} {where} and {module}{name} "
+                    f"(0x{start:08x}..0x{end:08x}) lies outside the module image, so "
+                    f"its words cannot be read")
+        chunk = data[lo:hi]
+        for off in range(0, len(chunk), 4):
+            word = int.from_bytes(chunk[off:off + 4].ljust(4, b"\x00"), "little")
+            if word:
+                return (f"{reloc_path} {where} while {module}{name} holds a nonzero "
+                        f"word 0x{word:08x} at 0x{start + off:08x}, which an empty "
+                        f"relocation file does not account for")
+    return None
+
+
 def _reloc_index(rev):
     """The relocation destination index at ``rev``, WITH the defects that invalidate it.
 
@@ -196,14 +313,26 @@ def _reloc_index(rev):
 
       * every module whose ``symbols.txt`` declares at least one function must have a
         ``relocs.txt`` beside it, present and non-empty, at this revision;
-      * a module that declares no function may have an empty file (15 of them at
-        cd3a7eb59: `config/arm9/dtcm` and fourteen overlays whose sections are all
-        zero-length, e.g. ov061's `.text start:0x02115ec0 end:0x02115ec0`);
+      * a module that declares no function may have an empty file, but only when its
+        own section inventory or its own bytes say it can hold no reference -- a count
+        of functions does not establish that, and `_empty_relocs_defect` carries the
+        rule (15 modules qualify at cd3a7eb59: fourteen overlays whose non-`bss`
+        sections are all zero-length, e.g. ov061's `.ctor start:0x02115ec0
+        end:0x02115ec0`, and `config/arm9/dtcm`, whose 0x20 of `.data` is all zeroes);
       * every line of every file must be one of the two documented row shapes, and
         every destination token one of the documented set;
       * an unreadable blob is a defect rather than an exception, so the caller fails
         closed with a reason naming the file instead of the worker failing with a
         traceback.
+
+    WHAT THIS COSTS A CHECKOUT WITHOUT `extracted/`. One module in this tree,
+    `config/arm9/dtcm`, has an empty relocation file beside 0x20 of real `.data`, and
+    the only way to tell that data from a table of callback pointers is to read it (it
+    is all zeroes). A checkout that has never run `tools/unpack.py` cannot, so the index
+    there carries exactly one defect and the matched-loss exception is unavailable --
+    which is the same position the exception is already in without the ROM image, and
+    it changes no other number the report prints. Measured at 5b49059f6: 92 destination
+    buckets and 96,395 destinations either way, 0 defects with the images and 1 without.
 
     A defect does not make this function raise and does not empty the index. It makes
     the EVIDENCE invalid, and callers that need valid evidence to permit something must
@@ -242,9 +371,12 @@ def _reloc_index(rev):
             if sibling not in texts:
                 defects.append(f"{sibling} is missing at {rev[:12]} while {path} "
                                f"declares {declared} function(s)")
-            elif declared and not texts[sibling].strip():
-                defects.append(f"{sibling} is empty at {rev[:12]} while {path} "
-                               f"declares {declared} function(s)")
+            elif not texts[sibling].strip():
+                # NOT "declared and ...". Zero functions does not make an empty
+                # relocation file complete -- see `_empty_relocs_defect`.
+                defect = _empty_relocs_defect(rev, path, sibling, declared)
+                if defect:
+                    defects.append(defect)
         dests = collections.defaultdict(list)
         for path in reloc_paths:
             for number, line in enumerate(texts.get(path, "").splitlines(), 1):

@@ -1139,15 +1139,29 @@ class RelocIndex(unittest.TestCase):
                    "from:0x01ff8100 kind:arm_call to:0x0201b000 module:main\n")
         self.old_repo = VM.REPO
         VM.REPO = self.repo
-        VM._RELOC_CACHE.clear()
-        self.addCleanup(VM._RELOC_CACHE.clear)
+        for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
+                      VM._SYMBOL_BASE_CACHE):
+            cache.clear()
+            self.addCleanup(cache.clear)
         self.addCleanup(setattr, VM, "REPO", self.old_repo)
 
     def write(self, rel, text):
         (self.cfg / rel).write_text(text, encoding="utf-8", newline="\n")
 
+    def image(self, module, words):
+        """The module's cartridge image, based at its lowest declared symbol."""
+        self.write(f"overlays/{module}/symbols.txt",
+                   "data_020ab100 kind:data(any) addr:0x020ab100\n")
+        d = self.repo / "extracted" / "overlays"
+        d.mkdir(parents=True, exist_ok=True)
+        image = bytearray()
+        for word in words:
+            image += word.to_bytes(4, "little")
+        (d / f"overlay_{int(module[2:]):04d}.bin").write_bytes(bytes(image))
+
     def index(self):
         VM._RELOC_CACHE.clear()
+        VM._SYMBOL_BASE_CACHE.clear()
         return VM._reloc_index(commit(self.repo, "relocs", "tester"))
 
     def test_every_module_file_supplies_destinations_and_the_index_is_valid(self):
@@ -1189,11 +1203,53 @@ class RelocIndex(unittest.TestCase):
         self.assertEqual(len(defects), 1)
         self.assertIn("config/arm9/relocs.txt is empty", defects[0])
 
-    def test_an_empty_file_for_a_module_that_declares_nothing_is_fine(self):
-        # 15 of these at cd3a7eb59: dtcm and fourteen zero-length overlays.
+    def empty_module(self, sections, name="ov061"):
+        """A module with no functions, an empty `relocs.txt`, and that inventory."""
+        (self.cfg / "overlays" / name).mkdir(parents=True, exist_ok=True)
+        self.write(f"overlays/{name}/symbols.txt", "")
+        self.write(f"overlays/{name}/relocs.txt", "")
+        self.write(f"overlays/{name}/delinks.txt", sections)
+
+    def test_an_empty_file_for_a_module_with_nothing_but_bss_is_fine(self):
+        # 15 of these at cd3a7eb59. ov061 verbatim: a zero-length `.ctor` and a
+        # `.bss`, which occupies no cartridge bytes and can hold no pointer.
+        self.empty_module(
+            "    .ctor       start:0x02115ec0 end:0x02115ec0 kind:rodata align:4\n"
+            "    .bss        start:0x02115ee0 end:0x02115ee0 kind:bss align:32\n")
+        self.assertEqual(self.index()["defects"], [])
+
+    def test_an_empty_file_beside_a_module_with_no_inventory_fails_closed(self):
+        # No `delinks.txt` at all: nothing says whether the module holds data.
         (self.cfg / "overlays" / "ov061").mkdir(parents=True)
         self.write("overlays/ov061/symbols.txt", "")
         self.write("overlays/ov061/relocs.txt", "")
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("ov061 has no section inventory", defects[0])
+
+    def test_an_empty_file_beside_unreadable_initialised_data_fails_closed(self):
+        # Four bytes of real `.data` and no image in this checkout to read them
+        # from. Unavailable evidence is a defect, never a pass.
+        self.empty_module(
+            "    .data       start:0x020ab100 end:0x020ab104 kind:data align:4\n")
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("the module image is unavailable", defects[0])
+
+    def test_an_empty_file_beside_a_word_naming_an_address_is_a_defect(self):
+        self.empty_module(
+            "    .data       start:0x020ab100 end:0x020ab104 kind:data align:4\n")
+        self.image("ov061", [0x02071694])
+        defects = self.index()["defects"]
+        self.assertEqual(len(defects), 1)
+        self.assertIn("holds a nonzero word 0x02071694 at 0x020ab100", defects[0])
+
+    def test_an_empty_file_beside_zeroed_initialised_data_is_fine(self):
+        # `config/arm9/dtcm` is this case on the real tree: 0x20 of `.data`, all
+        # zeroes, and an empty relocation file that is complete evidence.
+        self.empty_module(
+            "    .data       start:0x020ab100 end:0x020ab108 kind:data align:4\n")
+        self.image("ov061", [0, 0])
         self.assertEqual(self.index()["defects"], [])
 
     def test_a_malformed_row_is_a_defect(self):
@@ -1490,14 +1546,36 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
             f"    .text start:0x{start:08x} end:0x{end:08x}",
             ""])
 
+    def write_overlay_image(self, number, words):
+        d = self.repo / "extracted" / "overlays"
+        d.mkdir(parents=True, exist_ok=True)
+        image = bytearray()
+        for word in words:
+            image += word.to_bytes(4, "little")
+        (d / f"overlay_{number:04d}.bin").write_bytes(bytes(image))
+
+    def data_only_overlay(self, word):
+        """A module declaring NO function, holding four bytes of real .data, with an
+        empty `relocs.txt`. Its one data word is the retired ARM9 address."""
+        self.write("config/arm9/overlays/ov001/symbols.txt",
+                   "data_020ab100 kind:data(any) addr:0x020ab100\n")
+        self.write("config/arm9/overlays/ov001/delinks.txt", "\n".join([
+            "    .data       start:0x020ab100 end:0x020ab104 kind:data align:4",
+            "    .bss        start:0x020ab104 end:0x020ab104 kind:bss align:32",
+            ""]))
+        self.write("config/arm9/overlays/ov001/relocs.txt", "")
+        self.write_overlay_image(1, [word])
+
     def absorb(self, relocs=VALID_RELOCS, extra_reloc=None, epilogue_word=0xE12FFF1E,
-               epilogue_size=0x4, rom=True, orphan_module=False):
+               epilogue_size=0x4, rom=True, orphan_module=False, data_only=None):
         """Commit a base and the fold on top of it, and report on the pair.
 
         `relocs` is the content of `config/arm9/relocs.txt` in BOTH revisions; None
         leaves the file out of both. `extra_reloc` appends one row naming an address,
         head only. `orphan_module` adds an overlay that declares a function and has no
-        `relocs.txt` at all -- an incomplete module inventory.
+        `relocs.txt` at all -- an incomplete module inventory. `data_only`, when given,
+        adds a data-only ov001 whose single data word is that value and whose
+        `relocs.txt` is empty in both snapshots.
         """
         nxt = self.EPILOGUE + epilogue_size
         self.write("config/arm9/symbols.txt", "\n".join([
@@ -1514,6 +1592,8 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         if orphan_module:
             self.write("config/arm9/overlays/ov001/symbols.txt",
                        "OvOne kind:function(arm,size=0x4) addr:0x020ab110\n")
+        if data_only is not None:
+            self.data_only_overlay(data_only)
         self.write("src/Anchor.c", "int Anchor(void) { return 0; }\n")
         self.write("src/func_02071644.c",
                    "// NONMATCHING: hand-written asm, does NOT count as matched.\n"
@@ -1614,6 +1694,21 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
             self.absorb(relocs=self.VALID_RELOCS
                         + "from:0x02071620 kind:arm_call to:0x02071694 module:elsewhere\n"),
             "undocumented destination module 'elsewhere'")
+
+    def test_a_data_only_module_with_an_empty_relocation_file_fails_closed(self):
+        # No function anywhere in ov001, so the old inventory rule exempted its empty
+        # `relocs.txt` outright -- and the four bytes of .data it does hold are the
+        # retired ARM9 address. A count of functions cannot see that.
+        self.assertRefused(self.absorb(data_only=self.EPILOGUE),
+                           "config/arm9/overlays/ov001/relocs.txt is empty")
+
+    def test_a_data_only_module_whose_data_is_zeroed_is_still_legitimate(self):
+        # The other half of the same rule: an empty relocation file beside data that
+        # holds no address at all is complete evidence, and must stay supported.
+        report = self.absorb(data_only=0)
+        self.assertEqual(report["reasons"], [])
+        self.assertTrue(report["relocationEvidence"]["valid"])
+        self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 1)
 
     def test_an_incomplete_module_inventory_fails_closed(self):
         # A module that declares a function and has no relocation file at all. Every
