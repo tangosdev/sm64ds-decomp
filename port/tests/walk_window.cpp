@@ -1538,6 +1538,94 @@ extern "C" void OS_SleepThread(unsigned short *q);
 extern "C" unsigned char data_0209d500[4];
 static int r3d_sleep_probe_left;
 static int r3d_sleep_probe_taken;
+/* ---- RUNG E1, THE KNOB (run link100, boot plan rung D5, lane R3E) ---------
+
+   SM64DS_ROM_LOOP makes phase 7 the ROM'S OWN SLEEP on EVERY frame instead of
+   on the first N of a probe: the frame ends the way the cartridge ends it --
+   func_0201a4bc's OS_SleepThread(data_0209d500), the idle thread, the wait, the
+   VBlank edge, IRQ::VBlankHandler's own wake -- and the handler's wake branch
+   is therefore what runs func_02019144, the ROM's VBlank DISPLAY COMMIT.
+
+   DEFAULT OFF, and it stays off until the last rung of this lane is green on
+   the full battery. The spelling is the BOOTR1 pattern (any value but "0" is
+   on), so flipping the default later needs no reader change and
+   SM64DS_ROM_LOOP=0 is the escape hatch.
+
+   WHY EVERY FRAME AND NOT TEN OF THEM. Lane R3D's probe took the sleep on the
+   first N frames only, and that is not the handover's program: the ROM's wake
+   switches fibers from inside IRQ::VBlankHandler's own OS_WakeupThread, so the
+   handler is left SUSPENDED one statement above func_02019144 and its tail
+   runs at the START OF THE NEXT SLEEP. With ten sleeps out of three hundred
+   the tail therefore runs nine times and then the idle fiber is parked
+   mid-handler for two hundred and ninety frames; with every frame sleeping the
+   circuit is uniform and each frame's commit lands on the frame it belongs to.
+   Both are measured here rather than argued: the probe stays, and the knob is
+   the other arm.
+
+   WHAT THE CENSUS BELOW IS FOR. R3D named func_02019144 and func_02019100 --
+   the two dispatches of the current graphics block this port has never made on
+   a level -- as the reason the ten-sleep run diverged and once faulted.
+   Whether that block pointer is even non-null on a level, and whether the
+   vtable behind it carries HOST addresses or the DS addresses a mounted ROM
+   table carries, is the difference between a reconciliation and an access
+   violation, and neither had been read out of a running level. These four
+   reads say which, and they print from the frame foot rather than at exit
+   because a faulting run leaves no end-of-run line at all. */
+extern "C" unsigned char data_0209d4a8[4];
+extern "C" unsigned char data_0209d514[4];
+extern "C" int data_0208ee44;
+static int r3e_rom_loop_sleeps;
+static int r3e_sound_moved;      /* rung E2 duty 1: sound frames run at phase 9 */
+static int r3e_census_done;
+static int g_pace_div_override;   /* see frame_pace, rung E1 */
+extern "C" int port_rom_loop_enabled(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = getenv("SM64DS_ROM_LOOP");
+        v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
+        if (v)
+            fprintf(stderr, "[r3e] SM64DS_ROM_LOOP=1: phase 7 is the ROM's own "
+                    "sleep on every frame (func_0201a4bc -> OS_SleepThread"
+                    "(data_0209d500) -> the idle thread -> the wait), so "
+                    "IRQ::VBlankHandler's wake branch is what ends the frame "
+                    "and func_02019144 is what commits the display\n");
+    }
+    return v;
+}
+/* RUNG E2, DUTY 1's escape hatch. On unless SM64DS_R3E_SOUND_PHASE9=0, and
+   read only where the knob above is already on, so with SM64DS_ROM_LOOP unset
+   neither rung has a reader. */
+static int r3e_sound_at_phase9(void)
+{
+    static int v = -1;
+    if (v < 0) {
+        const char *e = getenv("SM64DS_R3E_SOUND_PHASE9");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v;
+}
+static void r3e_census(const char *when)
+{
+    if (r3e_census_done) return;
+    r3e_census_done = 1;
+    const unsigned char *blk = *(const unsigned char *const *)data_0209d4a8;
+    const void *vt = 0;
+    unsigned w[4] = {0, 0, 0, 0};
+    if ((size_t)blk > 0x1000u) {
+        vt = *(const void *const *)blk;
+        if ((size_t)vt > 0x1000u)
+            for (int i = 0; i < 4; ++i)
+                w[i] = ((const unsigned *)vt)[i];
+    }
+    fprintf(stderr, "[r3e] census at %s, frame %d: data_0209d4a8=%p vptr=%p "
+            "vt[0..3]=%08x %08x %08x %08x  data_0209d514=%d "
+            "data_0208ee44=%d\n",
+            when, port_rom_frame(), (const void *)blk, vt,
+            w[0], w[1], w[2], w[3],
+            *(const int *)data_0209d514, data_0208ee44);
+    fflush(stderr);
+}
 /* THE INSTALL (rung D2, lane R3D). hal/boot2_thread.cpp:874 has held this seam
    open since rung R3b step B2 with nothing calling it: step 1b of the wait runs
    whatever is installed here, and until this rung nothing was. It is ZERO
@@ -1842,7 +1930,17 @@ static void frame_pace(void)
     if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
     QueryPerformanceCounter(&now);
 
-    const int div = port_frame_divider();
+    /* RUNG E1 (lane R3E). port_frame_divider() is VBLANKS PER GAME TICK, so
+       this budget is a whole game frame -- right while this loop calls the pump
+       once per frame, and wrong the moment phase 7 becomes the ROM's sleep:
+       step 1b of hal/boot2_thread.cpp's wait runs the pump ONCE PER IDLE TURN
+       and the ROM's wake needs data_0208ee44 turns, so a live run under
+       SM64DS_ROM_LOOP would pace a whole frame per VBlank and play at half
+       speed. Under the knob the pump paces ONE VBLANK per turn, which
+       multiplies out to the same frame period. A selftest is unpaced either
+       way, so nothing in the battery reads this. */
+    const int div = g_pace_div_override ? g_pace_div_override
+                                        : port_frame_divider();
     const double budget = PORT_VBLANK_MS * div;
     const LONGLONG step =
         (LONGLONG)(budget * (double)qpf.QuadPart / 1000.0 + 0.5);
@@ -2017,8 +2115,12 @@ extern "C" int port_host_frame_pump(unsigned spin)
     (void)spin;
     ++g_frame_pump_turns;
     frame_stat();
+    /* RUNG E1: see frame_pace. One VBlank per turn while the ROM's sleep is
+       what ends the frame, one whole game frame per call while this loop is. */
+    g_pace_div_override = port_rom_loop_enabled() ? 1 : 0;
     if ((!rb_replaying() || rb_presented_frame()) &&
         (!g_selftest_frames || port_pace_selftest())) frame_pace();
+    g_pace_div_override = 0;
     return 1;
 }
 
@@ -13444,6 +13546,20 @@ int main(void)
                 }
             }
         }
+        /* RUNG E2, DUTY 1 (lane R3E): THE SOUND FRAME IS PHASE 9's POSITION.
+           func_020197b8 runs its sound phase AFTER phase 7's wait --
+           func_020197b8.c:57-65 is the wait, the flag's drop, phase 0x15, the
+           data_0209d514 gate, and only then `data_0209d50c = 9` and its two
+           calls. The hosted ARM7 tick is this port's stand-in for that phase
+           (out/R3D/d5_reconciliation.txt lists it among the host duties with no
+           ROM phase of their own, to be carried by the pump at phase 7), and
+           here, one statement above the frame boundary, it ran BEFORE the swap
+           and before the wait. Under SM64DS_ROM_LOOP it runs at the ROM's
+           point, at the foot of this body below the wait. With the knob off --
+           or with SM64DS_R3E_SOUND_PHASE9=0, which is what separates this rung
+           from E1 on one binary -- it stays exactly here and nothing on the
+           shipped path moves. */
+        if (!(port_rom_loop_enabled() && r3e_sound_at_phase9()))
         { const double t_snd = ovl_now_ms();
         sdat_host_tick();   /* hosted ARM7: drain the sound queue, feed the mixer */
         rb_frame_sound_ms(ovl_now_ms() - t_snd); }
@@ -13670,6 +13786,19 @@ int main(void)
                     "pacing running for the first time on this path\n",
                     r3d_sleep_probe_taken, port_rom_frame(),
                     r3d_sleep_probe_taken);
+            {   /* RUNG E1's own line (lane R3E). With the knob off it reads
+                   zero sleeps, which is what makes a green battery row with the
+                   knob off a statement that this rung changed nothing on the
+                   shipped path. */
+                r3e_census("exit");
+                fprintf(stderr, "[r3e] E1: phase 7 was the ROM's own sleep on "
+                        "%d of %d frames (SM64DS_ROM_LOOP)\n",
+                        r3e_rom_loop_sleeps, port_rom_frame());
+                fprintf(stderr, "[r3e] E2 duty 1: the sound frame ran at phase "
+                        "9's position (after the wait) on %d of %d frames "
+                        "(SM64DS_R3E_SOUND_PHASE9)\n",
+                        r3e_sound_moved, port_rom_frame());
+            }
             /* THE RUN ENDS HERE, AND IT ENDS WITH exit() (rung R3b, step B8).
 
                It was `return 0` out of main, which is a shape only a HOST loop
@@ -13757,6 +13886,9 @@ int main(void)
                 }
             }
         }
+        if (r3d_sleep_probe_left > 0 || r3d_wait_probe_left > 0 ||
+            port_rom_loop_enabled())
+            r3e_census("the first probed or ROM-loop frame foot");
         if (r3d_sleep_probe_left > 0) {
             /* func_0201a4bc's whole body, at func_020197b8's phase-7 point.
                The flag data_0209d4f0 is already up (it was raised at the frame
@@ -13769,6 +13901,13 @@ int main(void)
             --r3d_wait_probe_left;
             ++r3d_wait_probe_taken;
             _ZN4CP1516WaitForInterruptEv();
+        } else if (port_rom_loop_enabled()) {
+            /* RUNG E1. func_0201a4bc's whole body at func_020197b8's phase-7
+               point, on every frame. The flag data_0209d4f0 the handler's wake
+               tests is already up -- raised at the frame foot above, rung R3b
+               step B1 -- so this is the ROM's own condition and not a fixture. */
+            ++r3e_rom_loop_sleeps;
+            OS_SleepThread((unsigned short *)data_0209d500);
         } else {
             port_host_frame_pump(0);
         }
@@ -13777,5 +13916,13 @@ int main(void)
            frame, which is what phase 7 is. Under R3d the flag's two writes
            are func_020197b8's own lines and this pair goes. */
         data_0209d4f0[0] = 0;
+        /* RUNG E2, DUTY 1: phase 9, at the ROM's own point -- after the wait
+           and after the flag's drop, which is func_020197b8.c:66-68. */
+        if (port_rom_loop_enabled() && r3e_sound_at_phase9()) {
+            const double t_snd = ovl_now_ms();
+            sdat_host_tick();
+            rb_frame_sound_ms(ovl_now_ms() - t_snd);
+            ++r3e_sound_moved;
+        }
     }
 }

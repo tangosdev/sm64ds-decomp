@@ -368,6 +368,14 @@ int (*g_host_frame_pump)(unsigned);
 struct Stats {
     unsigned long long saves, restores, resumes, refused, unknown_ctx;
     unsigned long long halts, pump_turns, vblank_dispatches, vblank_wakes;
+    // ENTERED vs DISPATCHED (run link100, lane R3E). vblank_dispatches is
+    // incremented after the handler returns and the handler does not always
+    // return: its wake branch reschedules from inside OS_WakeupThread, which
+    // leaves the idle fiber parked one statement above func_02019144. This
+    // counter is taken before the call, so entries-minus-dispatches is exactly
+    // the number of parked handlers, and dispatches is exactly the number of
+    // times the ROM's VBlank display commit ran to the end.
+    unsigned long long vblank_enters;
     unsigned long long frame_pump_turns;   // rung R3b step B2, step 1b
     unsigned long long starved, wrong_thread, idle_sleeps;
     unsigned long long adopted, entered, exited, rejected, nocreate;
@@ -813,6 +821,7 @@ void _ZN4CP1516WaitForInterruptEv(void) {
     if (void *h = _ZN3IRQ13GetIRQHandlerEj(ntr::IRQ_VBLANK)) {
         volatile uint32_t *irq_if = reinterpret_cast<volatile uint32_t *>(0x04000214);
         *irq_if |= ntr::IRQ_VBLANK;
+        ++g_stat.vblank_enters;   // before the call: see the counter's note
         reinterpret_cast<void (*)()>(h)();
         *irq_if &= ~ntr::IRQ_VBLANK;
         ++g_stat.vblank_dispatches;
@@ -917,12 +926,13 @@ namespace port {
 void thread_sched_report(const char *tag) {
     std::fprintf(stderr,
                  "[thr] %s saves=%llu switches=%llu resumes=%llu refused=%llu "
-                 "halts=%llu pump=%llu framepump=%llu vbl_dispatch=%llu vbl_wakes=%llu "
+                 "halts=%llu pump=%llu framepump=%llu vbl_enter=%llu "
+                 "vbl_dispatch=%llu vbl_wakes=%llu "
                  "starved=%llu unknown=%llu adopted=%llu entered=%llu "
                  "exited=%llu rejected=%llu nocreate=%llu\n",
                  tag, g_stat.saves, g_stat.restores, g_stat.resumes,
                  g_stat.refused, g_stat.halts, g_stat.pump_turns,
-                 g_stat.frame_pump_turns,
+                 g_stat.frame_pump_turns, g_stat.vblank_enters,
                  g_stat.vblank_dispatches, g_stat.vblank_wakes, g_stat.starved,
                  g_stat.unknown_ctx, g_stat.adopted, g_stat.entered,
                  g_stat.exited, g_stat.rejected, g_stat.nocreate);
