@@ -10569,17 +10569,33 @@ set(R3F_GREG_SYMS
     func_02057128          # EXMEMCNT |= 0x80
     func_02057140)         # EXMEMCNT &= ~0x80
 list(LENGTH R3F_GREG_SYMS R3F_GREG_WANT)
+# GREG2 (run link100 lane GREG2, 09-09): a fourth `G` I/O reader, found by R3F
+# but left unowned -- src/func_0205f650.c pools 0x04000304 (POWCNT1) with NO
+# reloc and reads bit 0, so through the SetDefault alias it was reading bit 0
+# of Memory::defaultHeapPtr instead. Its caller src/func_02019a58.c is the
+# wait loop `while (func_0205f66c(1) != 1)` that polls this bit for the LCDs
+# to come back on. It ships off port/slice_gate220.txt, not slice_gate214.txt
+# (Stage::Behavior's gate, not this one's), so it cannot be cut out of
+# SLICE214_SOURCES above -- the cut against SLICE220_SOURCES is further down
+# this file, right after that list is built, and kept in its OWN counter so
+# this addition cannot silently perturb R3F's already-verified 3/3 SLICE214
+# accounting. It rides the SAME R3F_GREG_PLAIN switch and the SAME hostgen
+# discipline as the three above.
+set(R3F_GREG2_SYMS func_0205f650)   # POWCNT1 & 1 -- the LCD-power wait read
+set(R3F_GREG_ALL_SYMS ${R3F_GREG_SYMS} ${R3F_GREG2_SYMS})
 if(R3F_GREG_PLAIN)
-    message(STATUS "R3F: R3F_GREG_PLAIN=ON -- the three register TUs build "
+    message(STATUS "R3F: R3F_GREG_PLAIN=ON -- the four register TUs build "
                    "PLAIN. This is the PRE-FIX arm: the stores latch in the "
-                   "mapped I/O window and no register is told.")
+                   "mapped I/O window and no register is told, and the "
+                   "POWCNT1 read (GREG2) sees whatever that window has "
+                   "instead of the seeded value.")
 else()
-    message(STATUS "R3F: R3F_GREG_PLAIN=OFF -- the three register TUs route "
+    message(STATUS "R3F: R3F_GREG_PLAIN=OFF -- the four register TUs route "
                    "through hostgen (shipped arm).")
 endif()
 set(R3F_GREG_GEN "")
 if(NOT R3F_GREG_PLAIN)
-    foreach(sym IN LISTS R3F_GREG_SYMS)
+    foreach(sym IN LISTS R3F_GREG_ALL_SYMS)
         set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
         if(NOT EXISTS "${sym_in}")
             set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
@@ -11251,6 +11267,39 @@ foreach(line IN LISTS SLICE220_LINES)
     endif()
     list(APPEND SLICE220_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# GREG2 cut: src/func_0205f650.c comes off THIS slice (see the R3F_GREG block
+# far above, where R3F_GREG2_SYMS and the R3F_GREG_PLAIN switch are defined).
+# Same discipline as the SLICE214 cut above, own counter on purpose.
+set(R3F_GREG2_CUT 0)
+set(SLICE220_SRC_GREG2 "")
+foreach(src IN LISTS SLICE220_SOURCES)
+    set(_cut OFF)
+    if(NOT R3F_GREG_PLAIN)
+        foreach(sym IN LISTS R3F_GREG2_SYMS)
+            if(src MATCHES "/${sym}\.(c|cpp)$")
+                set(_cut ON)
+            endif()
+        endforeach()
+    endif()
+    if(_cut)
+        math(EXPR R3F_GREG2_CUT "${R3F_GREG2_CUT}+1")
+    else()
+        list(APPEND SLICE220_SRC_GREG2 "${src}")
+    endif()
+endforeach()
+set(SLICE220_SOURCES ${SLICE220_SRC_GREG2})
+list(LENGTH R3F_GREG2_SYMS R3F_GREG2_WANT)
+if(R3F_GREG_PLAIN)
+    set(R3F_GREG2_CUT ${R3F_GREG2_WANT})
+endif()
+if(NOT R3F_GREG2_CUT EQUAL R3F_GREG2_WANT)
+    message(STATUS "R3F/GREG2: expected to cut ${R3F_GREG2_WANT} plain "
+                   "POWCNT1-read entry from slice_gate220.txt and cut "
+                   "${R3F_GREG2_CUT}. If slice_gate220.txt stopped listing it "
+                   "the hostgen copy is still added and the link will say so; "
+                   "if a SECOND slice started listing it, this cut missed it "
+                   "and the link will say that too")
+endif()
 
 # GATE SLOT9 (run link100, lane RENDER9): _ZTV5Stage slot 9 takes the ROM's own
 # Stage::Render, and port/tests/walk_window.cpp stops being the port's copy of

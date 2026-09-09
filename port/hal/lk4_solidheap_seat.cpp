@@ -137,14 +137,39 @@
 // in port/CMakeLists.txt, which is BSWAP's shape. None of the three references
 // G any more.
 //
-// ONE I/O READER IS STILL ON IT, recorded here rather than fixed:
-// src/func_0205f650.c pools 0x04000304 (POWCNT1) and returns bit 0, so today it
-// answers with bit 0 of the heap pointer instead. It cannot corrupt anything --
-// it only reads -- but it is wrong, and its caller src/func_02019a58.c is a
-// wait loop that branches on the answer. The one-line spelling
-// `(*(volatile unsigned short *)0x4000304 & 1) != 0` byte-verifies 7 words of 7
-// under 2004/b56 (R3F measured it); it is left for a lane that owns that file
-// and can measure the loop it changes.
+// THE FOURTH I/O READER R3F LEFT ON IT IS FIXED, run link100 lane GREG2:
+// src/func_0205f650.c pooled 0x04000304 (POWCNT1) and returned bit 0, so it
+// used to answer with bit 0 of the heap pointer instead. It never corrupted
+// anything -- it only read -- but it was wrong, and its caller
+// src/func_02019a58.c is a wait loop, `while (func_0205f66c(1) != 1)` guarded
+// by `if (func_0205f650() == 1) break;`, that branches on the answer. GREG2
+// spelled it `(*(volatile unsigned short *)0x4000304 & 1) != 0`, byte-verified
+// 7 words of 7 under 2004/b56 with the pool word compared for real (R3F
+// measured the same spelling; GREG2 took it), and routed the TU through
+// hostgen the same way as the three above (R3F_GREG2_SYMS in the R3F_GREG
+// block). None of the four references G any more.
+//
+// THE LOOP WAS A LATENT HANG, not just a wrong read, and the fix removes that
+// too. Two facts, both checked rather than assumed: (1) Memory::defaultHeapPtr
+// is a `void*` (hal/heap_vtable.cpp:80) that is either null or a live Heap*
+// from a host allocator, so its low bit is 0 by construction in every state
+// it can hold -- the old shortcut read NEVER could have returned true. (2) the
+// elapsed-time fallback the loop otherwise relies on, func_0205f66c(1) ->
+// func_0205f68c's `(*(int*)0x27ffc3c - data_020a8110) <= 7` gate, reads a
+// shared-block tick (0x027FFC3C) that has NO WRITER anywhere in src/ or
+// port/ (checked by grep across both trees) -- on hardware it is kept by the
+// ARM7/firmware side the port does not model, so on the host it is frozen at
+// whatever the zeroed shared-block page holds, and the gate never trips
+// either. So before this fix, func_02019a58 could not terminate by ANY path
+// once entered; it just never has been entered by the automated battery or
+// selftest (both call sites are gameplay-triggered -- the VS-exit pause menu
+// and src/func_02030790.c's data_02092778-gated reset). Seeding POWCNT1 to
+// 0x820F at boot (ntr/io.cpp's io_init(), see the comment there for the ROM
+// derivation) means the fixed read now answers the shortcut truthfully, and
+// since nothing in either call site clears bit 0 first, it answers TRUE on
+// the loop's very first check -- zero iterations, zero calls to
+// func_0201a4d0/OS_SleepThread -- which is also what the ROM's own boot
+// sequence guarantees on real hardware for these two sites.
 #pragma comment(linker, "/alternatename:_G=_data_020a0ea0")
 // The remaining cross-namespace edges, spellings verbatim from the link
 // errors: Virtual38 and the SolidHeap V-methods reference these as MSVC
