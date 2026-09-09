@@ -187,7 +187,8 @@ DSSTATE_END
 
 // The card driver's work object and the device table, both hosted elsewhere:
 // hal/globals_link100.cpp's grouped card span and hal/boot_globals.cpp's
-// arm9 .data bytes. Read here only to report what the identify decided.
+// arm9 .data bytes. Read here only to report what the retained pointer
+// names after the call, never to say which lookup ran.
 // data_020867bc carries its extent because the diagnostic below has to test
 // whether the retained row is inside the ROM's table at all; 160 bytes is the
 // span hal/boot_globals.cpp defines and config/arm9/symbols.txt states.
@@ -280,17 +281,30 @@ void port_rom_a054_arms(void)
            words, parked in data_020a8760 at static-init time. So the span is
            tested first, on integer addresses in the port's own width, and the
            line names the object it found rather than printing a difference
-           between two unrelated ones. */
+           between two unrelated ones.
+
+           AND IT NAMES THE OBJECT ONLY, NEVER THE LOOKUP. Every branch below
+           reports what data_020a8760 holds after the call and stops there,
+           because no reading of that pointer tells you which lookup ran.
+           src/func_02042f68.c:11-12 returns before everything else when
+           func_0203da3c() reads 2, so on that path the card bring-up does not
+           run, func_020603c8 is never called, the device search in
+           src/func_02060398.c never walks data_020867bc and the tag loop never
+           writes data_020a4b40: the pointer simply keeps whatever static init
+           left in it. A null reading is therefore consistent with the early
+           return and with a search that found no 0xd01, and a table row is
+           consistent with a search that ran now and with a row an earlier call
+           left behind. The same rule the NOTE line below is written under. */
         const unsigned table = (unsigned)(size_t)data_020867bc;
         const unsigned row   = (unsigned)(size_t)row_after;
         if (!row_after) {
-            std::fprintf(stderr, "  [rom-a054] R2c func_02042f68: NO DEVICE ROW "
-                                 "-- func_02060398 found no 0xd01 in "
-                                 "data_020867bc\n");
+            std::fprintf(stderr, "  [rom-a054] R2c func_02042f68: after the "
+                                 "call data_020a8760 holds NO DEVICE ROW "
+                                 "(null)\n");
         } else if (row - table < (unsigned)sizeof data_020867bc) {
             std::fprintf(stderr,
-                         "  [rom-a054] R2c func_02042f68: the ROM identified "
-                         "its own backup device -- row +0x%x of data_020867bc, "
+                         "  [rom-a054] R2c func_02042f68: after the call "
+                         "data_020a8760 holds row +0x%x of data_020867bc -- "
                          "type 0x%x, size %d bytes, kind %d; tag \"%.8s\"\n",
                          row - table,
                          *(unsigned *)row_after,
@@ -299,10 +313,10 @@ void port_rom_a054_arms(void)
                          (const char *)data_020a4b40);
         } else if (row == (unsigned)(size_t)data_port_backup_device) {
             std::fprintf(stderr,
-                         "  [rom-a054] R2c func_02042f68: the retained device "
-                         "row is ntr/backup.cpp's separately hosted default "
-                         "row (data_port_backup_device), not a row of "
-                         "data_020867bc -- type 0x%x, size %d bytes; "
+                         "  [rom-a054] R2c func_02042f68: after the call "
+                         "data_020a8760 holds ntr/backup.cpp's separately "
+                         "hosted default row (data_port_backup_device), not a "
+                         "row of data_020867bc -- type 0x%x, size %d bytes; "
                          "data_020a8764 reads %d; tag \"%.8s\"\n",
                          *(unsigned *)row_after,
                          *(int *)(row_after + 4),
@@ -310,9 +324,9 @@ void port_rom_a054_arms(void)
                          (const char *)data_020a4b40);
         } else {
             std::fprintf(stderr,
-                         "  [rom-a054] R2c func_02042f68: the retained device "
-                         "row at %08x is neither inside data_020867bc nor the "
-                         "hosted default row\n", row);
+                         "  [rom-a054] R2c func_02042f68: after the call "
+                         "data_020a8760 holds %08x, which is neither inside "
+                         "data_020867bc nor the hosted default row\n", row);
         }
 
         /* OBSERVED, AND NO MORE THAN OBSERVED. An unchanged pointer does not
