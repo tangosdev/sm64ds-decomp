@@ -51,7 +51,7 @@
 namespace Sound {
 
 extern "C" {
-    int   func_02048a1c(const Vector3& pos);        /* audible from here? */
+    int   func_02048a1c(const Vector3& pos, int kind, int id);  /* audible from here? */
     void* func_02011934(int* table, u32 handle);    /* find an existing slot */
     void  func_020123c8(char* params, u32 a, u32 b, const Vector3& pos);
     int   func_0201179c(int* table, u32 a, u32 b, const Vector3& pos, short e);
@@ -60,7 +60,7 @@ extern "C" {
 
 int PlayLong(u32 handle, u32 a, u32 b, const Vector3& pos, s16 e)
 {
-    if (func_02048a1c(pos) == 0)
+    if (func_02048a1c(pos, a, b) == 0)
         return 0;
 
     char* slot = (char*)func_02011934(data_0209b53c, handle);

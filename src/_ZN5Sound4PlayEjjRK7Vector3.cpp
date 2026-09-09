@@ -10,7 +10,7 @@
 struct Vector3 { int x, y, z; };
 
 extern "C" {
-extern char* func_02050cdc(void);
+extern char* func_02050cdc(int a, int idx);
 extern int func_02048720(const Vector3* v, unsigned int a, unsigned int b);
 extern void Player_PlaySoundEffect(int x, unsigned int a, unsigned int b);
 extern void func_02048908(int x, const Vector3* v);
@@ -23,7 +23,7 @@ namespace Sound {
 
 void Play(unsigned int j1, unsigned int j2, const Vector3& v)
 {
-    char* s = func_02050cdc();
+    char* s = func_02050cdc(j1, j2);
     int t = *(unsigned char*)(s + 5);
     if (t == 9 || t == 2) {
         int r = func_02048720(&v, j1, j2);

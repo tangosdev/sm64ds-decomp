@@ -11,21 +11,18 @@
  *                                     not an error)
  *   1  read genuinely failed       -> write defaults, return 0
  *
- * HONEST LEFTOVER: SetDefaultValuesMg is still called by its raw mangled name.
- * SaveData.h declares it NON-static and its body uses `this` while ignoring its
- * declared parameter -- so the ROM's single r0 argument is modelled as `this` and
- * the explicit parameter is a fiction that exists to spell the mangled name. A
- * static context cannot call that, and correcting the declaration would change
- * that function's own codegen. Migration is per-reference; this reference waits
- * on SetDefaultValues/SetDefaultValuesMg being settled.
+ * SetDefaultValuesMg is a real static call now. SaveData.h used to declare it
+ * non-static, and its body modelled the ROM's single r0 argument as `this` while
+ * ignoring the declared parameter; the mangled name, the ROM body and every
+ * caller all say it is a static taking MinigameSaveData*, and spelling it that
+ * way reproduces both bodies byte for byte.
  */
-extern "C" void _ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData(MinigameSaveData* mg);
 
 int SaveData::ReadMinigameData(MinigameSaveData* dest)
 {
     s32 result = SaveData::ReadDataFromCart((char*)dest, 0x2e4, 3);
     if (result) {
-        _ZN8SaveData18SetDefaultValuesMgEP16MinigameSaveData(dest);
+        SaveData::SetDefaultValuesMg(dest);
         if (result == 2)
             return 1;
         return 0;
