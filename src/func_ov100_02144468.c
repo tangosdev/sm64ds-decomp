@@ -1,11 +1,11 @@
-extern int func_ov100_02145080(void*);
+extern int func_ov100_02145080(void*, void*);
 extern void _ZN8SaveData17SetCharacterIntroEi(int);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int, int);
 extern int func_ov100_021453d8(void* c, void* p, int a2);
 extern char data_ov100_02148704;
 extern char data_ov100_021488b4[];
 int func_ov100_02144468(char *c, int p){
-  if(!func_ov100_02145080(c)){
+  if(!func_ov100_02145080(c, (void *)p)){
     data_ov100_02148704=0;
     if(*(int*)(c+8)!=0xd){
       _ZN8SaveData17SetCharacterIntroEi(*(signed char*)(c+0x100+0x44)-1);

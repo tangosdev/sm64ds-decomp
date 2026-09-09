@@ -194,6 +194,7 @@ jobs:
             tools.test_asset_catalog \
             tools.test_attribution \
             tools.test_bytegate \
+            tools.test_check_call_arity \
             tools.test_check_data_definitions \
             tools.test_classqueue \
             tools.test_classqueue_v2 \
@@ -245,6 +246,14 @@ jobs:
 #                                      alias_names, which decides whether a source filed
 #                                      under a second name is found. Also drives the real
 #                                      chaos_db_ci over a fake repo for the counting rule.
+#   test_check_call_arity       (19)   check_call_arity.py -- the census of calls that
+#                                      pass fewer arguments than the callee declares:
+#                                      the matched-but-wrong signature, invisible to
+#                                      every byte and link gate. Most of the cases
+#                                      assert SILENCE on shapes that only look like
+#                                      one (macros, static members, member calls,
+#                                      K&R prototypes written inside a body), because
+#                                      the first run over src/ was 2,623 rows of noise.
 #   test_check_data_definitions  (3)   check_data_definitions.py -- WHICH objects the
 #                                      gate scans. It globbed only build/src/, which
 #                                      eligible.py never writes, so it skipped silently.

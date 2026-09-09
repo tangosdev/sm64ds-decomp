@@ -1,7 +1,7 @@
 #include "types.h"
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f264;
-extern void _ZN9PowerStar13AddStarMarkerEv(void);
+extern void _ZN9PowerStar13AddStarMarkerEv(void *thiz);
 int func_ov002_020e8dd8(unsigned char *self)
 {
   signed char g1 = data_0209f2f8;
@@ -21,7 +21,7 @@ int func_ov002_020e8dd8(unsigned char *self)
       {
         return;
       }
-      _ZN9PowerStar13AddStarMarkerEv();
+      _ZN9PowerStar13AddStarMarkerEv(self);
       return;
     }
   }
@@ -33,5 +33,5 @@ int func_ov002_020e8dd8(unsigned char *self)
       return;
     }
   }
-  _ZN9PowerStar13AddStarMarkerEv();
+  _ZN9PowerStar13AddStarMarkerEv(self);
 }
