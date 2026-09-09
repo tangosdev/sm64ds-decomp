@@ -431,6 +431,11 @@ unsigned char tp_rd(const unsigned char *p, int i)
    above poll_touch's store, rather than inside it. */
 extern "C" int  port_tsc_ring_armed(void);
 extern "C" void port_tsc_arm7_frame_touch(void);
+extern "C" unsigned long port_tsc_arm7_sample_count(void);
+/* hal/comms_conductor.cpp's MP3_BSS row: the ROM's OWN reader's settled
+   answer, {a,b,c,d} = {x,y,touched,valid} (struct Col, src/func_0203b9bc.c).
+   Read-only here, for the watcher two paragraphs below. */
+extern "C" unsigned short data_020a0dd8[4];
 
 void poll_touch(void)
 {
@@ -709,6 +714,15 @@ void poll_touch(void)
      * SM64DS_TP_RING=0 puts the direct write back exactly as it was, for a
      * run measuring the pre-rung shape. */
     {
+        /* THE WATCHER (run link100, lane R2D3). SM64DS_TP_RING_WATCH=1 prints
+           both writers' cumulative store counts every frame -- host_stores is
+           this store's own counter, incremented ONLY on the branch below that
+           still writes the ring directly, and port_tsc_arm7_sample_count()
+           reads hal/tsc_arm7.cpp's count of ROM-side writes (see its banner:
+           the send that count is kept beside is synchronous with
+           src/func_0205f300.c's own store, so the count is not an estimate).
+           Off by default: it is a proof aid, not a shipped line. */
+        static unsigned long host_stores;
         if (port_tsc_ring_armed()) {
             port_tsc_arm7_frame_touch();
         } else {
@@ -723,6 +737,16 @@ void poll_touch(void)
             std::memcpy(e + 4, &rc, 2);
             std::memcpy(e + 6, &rd, 2);
             port::touch_ring_advance();
+            ++host_stores;
+        }
+        {
+            const char *watch = std::getenv("SM64DS_TP_RING_WATCH");
+            if (watch && watch[0] != '0')
+                std::fprintf(stderr, "[tp-ring-watch] f%d rom=%lu host=%lu "
+                             "reader(a=%u b=%u c=%u d=%u)\n",
+                             f, port_tsc_arm7_sample_count(), host_stores,
+                             data_020a0dd8[0], data_020a0dd8[1],
+                             data_020a0dd8[2], data_020a0dd8[3]);
         }
     }
 

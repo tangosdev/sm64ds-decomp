@@ -560,6 +560,15 @@ void port_tsc_arm7_frame_touch(void)
     port_tsc_arm7_tick();
 }
 
+// THE WATCHER'S ROM-SIDE COUNT. g_samples is incremented exactly where this
+// file hands the ARM9 the auto-sample indication, and that send is synchronous
+// (ntr::ipc_arm7_send -> raise_rx_irq -> the ARM9's registered rx handler ->
+// src/func_0205f300.c, all inside the one call), so this count IS the number
+// of times the ROM's own writer has stored into the ring -- not an estimate of
+// it. hal/sub_screen.cpp's poll_touch reads it, under SM64DS_TP_RING_WATCH, to
+// print the two writers' counts side by side (run link100, lane R2D3).
+unsigned long port_tsc_arm7_sample_count(void) { return g_samples; }
+
 // ---------------------------------------------------------------------------
 // THE REPORT the R2d arm prints straight after func_0203bbc0 returns, and the
 // census hal/boot2_ipc.cpp's exit report takes beside its per-tag tally.
