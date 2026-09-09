@@ -248,6 +248,16 @@ extern int data_020a6148[16];
 // The per-VBlank wake queue, hosted by hal/comms_conductor.cpp as four bytes.
 // src/func_0201a4d0.c sleeps on it; src/_ZN3IRQ13VBlankHandlerEv.c:22 wakes it.
 extern unsigned char data_0209d4fc[4];
+/* THE ROM'S FRAME DIVIDER, read by step 4's bound below and by nothing else in
+   this file. 0x0208ee44, hosted in hal/auto_bss.cpp and written by
+   Stage::InitResources (hal/level_boot.cpp:5174 records the value: 2 for a 3D
+   level, which is how a 60 Hz VBlank becomes a 30 Hz game tick).
+   src/_ZN3IRQ13VBlankHandlerEv.c:15 is the reader that matters:
+       if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0)
+           OS_WakeupThread(&data_0209d500);
+   so the sleeper at phase 7 needs THAT MANY VBlank edges before the ROM's own
+   wake fires, and one edge is delivered per turn of the idle loop. */
+extern int data_0208ee44;
 
 // ROM code this file calls. Every one of these is a matched TU on
 // port/slice_gate2thr.txt or already on port/slice_gate10.txt.
@@ -820,9 +830,29 @@ void _ZN4CP1516WaitForInterruptEv(void) {
     }
 
     // 4. the bound. With a pump installed this is the pump's own limit, which
-    //    is what hal/os_thread.h documented for the wireless wait; with none
-    //    it is one turn, which is the liveness the retired host body had.
-    const unsigned limit = port::thread_pump() ? port::thread_pump_limit() : 1u;
+    //    is what hal/os_thread.h documented for the wireless wait.
+    //
+    //    WITH NONE IT USED TO BE ONE TURN, and run link100 lane R3D measured
+    //    what that costs: a phase-7 sleep reports vbl_wakes=0 starved=1. The
+    //    idle loop delivers ONE VBlank edge per turn and the ROM's own wake
+    //    needs data_0208ee44 of them, which is 2 on a 3D level, so a one-turn
+    //    bound returned control before the wake could ever fire and THIS
+    //    port's starvation wake paced the frame instead of the VBlank. That is
+    //    exactly the thing rung D5 hands the frame to.
+    //
+    //    So with no pump the bound is the ROM's own divider. It is still a
+    //    HOST bound and not ROM behaviour -- the ROM has no such counter -- and
+    //    it is still what stops this function spinning: the ceiling keeps a
+    //    zero or unhosted divider on the old one-turn liveness and refuses an
+    //    absurd one outright, so the worst case is a handful of turns rather
+    //    than a number read out of uninitialised memory.
+    unsigned limit;
+    if (port::thread_pump()) {
+        limit = port::thread_pump_limit();
+    } else {
+        const int div = data_0208ee44;
+        limit = (div > 0 && div <= 8) ? static_cast<unsigned>(div) : 1u;
+    }
     if (pump_stop || ++g_starve >= limit) {
         g_starve = 0;
         starve_wake();

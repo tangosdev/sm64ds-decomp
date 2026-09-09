@@ -161,6 +161,7 @@ namespace {
 unsigned g_ie;                      // IE word stand-in
 void (*g_gxfifo_handler)(void);     // handler for mask 0x200000
 void (*g_hblank_handler)(void);     // handler for mask 0x2, the HBlank edge
+void (*g_vblank_handler)(void);     // handler for mask 0x1, the VBlank edge
 
 // The two DS registers the HBlank gate reads. Both are ordinary latches in the
 // mapped I/O window (ntr/mmio.h mechanism 1), written by the ROM's own arming
@@ -176,20 +177,42 @@ constexpr unsigned DISPSTAT_HBLANK_IRQ_ENABLE = 0x10u;
 extern "C" void *_ZN3IRQ13GetIRQHandlerEj(unsigned mask) {
     if (mask == 0x200000u) return reinterpret_cast<void *>(g_gxfifo_handler);
     if (mask == ntr::IRQ_HBLANK) return reinterpret_cast<void *>(g_hblank_handler);
+    if (mask == ntr::IRQ_VBLANK) return reinterpret_cast<void *>(g_vblank_handler);
     return nullptr;
 }
 // PORT_HOST_ABI: src walks the DS IRQ vector tables (data_02099fe4,
 //   data_020a60c4); the host models the handlers it dispatches.
 //
-// TWO MASKS ARE MODELLED, and the second one is why the fade can move. Mask
-// 0x200000 is the geometry FIFO, delivered synthetically from DMAStartTransfer
-// below. Mask 2 is HBlank: the dWipe_c setters install func_0202f2c4 on it and
-// the scanline sweep in rt.cpp delivers it. Every other mask is still dropped
-// on the floor, deliberately -- a handler this layer never raises is better
-// stored nowhere than stored and silently never run.
+// THREE MASKS ARE MODELLED. Mask 0x200000 is the geometry FIFO, delivered
+// synthetically from DMAStartTransfer below. Mask 2 is HBlank: the dWipe_c
+// setters install func_0202f2c4 on it and the scanline sweep in rt.cpp
+// delivers it. Every other mask is still dropped on the floor, deliberately --
+// a handler this layer never raises is better stored nowhere than stored and
+// silently never run.
+//
+// MASK 1 IS THE THIRD, AND IT IS RUN link100 BOOT-PLAN RUNG D1 (lane R3D).
+// src/func_0201a4e4.c:14 -- which hal/boot_os.cpp:627 already calls at boot --
+// registers src/_ZN3IRQ13VBlankHandlerEv.c on mask 1, and until this line that
+// registration went on the floor: the handler was LINKED (walk_window.map
+// 0001:00280570) and dispatched by nobody, so the ROM's own end-of-frame wake
+//     if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0)
+//         OS_WakeupThread(&data_0209d500);
+// could not fire even after rung R3b (lane R3B) started raising that flag.
+// hal/boot2_thread.cpp's CP15::WaitForInterrupt step 2 is the LOOKUP; this is
+// the STORE. Together they make the VBlank edge real, which is the half of the
+// handover (rung D5) that has to be true before func_020197b8 can sleep at its
+// own phase 7 and be woken by its own interrupt.
+//
+// IT IS ZERO GAIN AND, ON TODAY'S BINARY, ZERO CHANGE: lane R3B measured
+// halts=0 over a 300-frame level run, so nothing enters the wait on the level
+// path and nothing looks the mask up. port::pump_vblank (hal/os_thread.cpp:66)
+// is the one other reader and no shipped target installs it -- comms_conductor
+// installs conductor_pump instead. The probe under SM64DS_R3D_WAIT_PROBE in
+// tests/walk_window.cpp is what makes the edge OBSERVABLE rather than assumed.
 extern "C" void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned mask, void (*h)(void)) {
     if (mask == 0x200000u) g_gxfifo_handler = h;
     else if (mask == ntr::IRQ_HBLANK) g_hblank_handler = h;
+    else if (mask == ntr::IRQ_VBLANK) g_vblank_handler = h;
 }
 
 namespace ntr {
