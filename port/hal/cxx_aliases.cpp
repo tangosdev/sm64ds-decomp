@@ -317,8 +317,23 @@ int func_01ff9e2c(unsigned a, unsigned b, unsigned c, unsigned d)
 }
 
 /* PORT_HOST_ABI: reads the ARM CPSR mode bits, no host equivalent.
-   ARMProcessorMode reads CPSR & 0x1f; host always reports system mode */
-int ARMProcessorMode(void) { return 0x1f; }
+   src/ARMProcessorMode.c is one instruction and a mask:
+       asm void ARMProcessorMode(void) { mrs r0, cpsr; and r0, r0, #0x1f; bx lr }
+   The host has no CPSR. It has the one thing the ROM's single caller asks this
+   function about, though: whether the core is in IRQ mode. There is exactly one
+   caller in the linked set, src/func_02057f54.c:25 --
+       if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
+       s->m0 = 1; return;
+   -- and hal/boot2_thread.cpp raises port_irq_mode_depth for exactly the span an
+   ARM would be in IRQ mode, from the dispatch of IRQ::VBlankHandler to its
+   return. So 0x12 there and system mode everywhere else, which is what makes
+   func_02057f54's own line 27 raise the manager's pending flag and return
+   instead of switching a thread from inside an interrupt handler; the IRQ
+   return performs the switch, as it does on the cartridge (run link100, lane
+   DET3, which replaces lane DET2's host-side deferral in ARMRestoreContext).
+   SM64DS_DET3=0 leaves the depth at zero and this answers 0x1f all run. */
+extern unsigned port_irq_mode_depth;
+int ARMProcessorMode(void) { return port_irq_mode_depth ? 0x12 : 0x1f; }
 
 /* DS thread scheduler context ops -- MOVED, run link2 lane THR.
    ARMSaveContext and ARMRestoreContext used to be stubbed here: a save that
@@ -329,8 +344,10 @@ int ARMProcessorMode(void) { return 0x1f; }
    hal/boot2_thread.cpp, backed by the fiber seam ntr/include/ntr/rt.h:11-14
    describes. They are still PORT_HOST_ABI and for the same reason (hand-asm
    ARM register-file primitives); the tag and its evidence moved with them.
-   Nothing else changed here: ARMProcessorMode above still answers 0x1f, which
-   is what makes func_02057f54 take the switching arm of its own branch. */
+   ARMProcessorMode above used to answer 0x1f unconditionally, which is what
+   made func_02057f54 take the switching arm of its own branch even inside an
+   interrupt handler; run link100 lane DET3 gave it the IRQ-mode answer the ROM
+   reads there. */
 
 /* PORT_HOST_ABI: ARM asm primitive (hand-asm digit-carry), MSVC cannot assemble.
    func_02071644 (hand-asm): backward digit-carry increment over the decimal
