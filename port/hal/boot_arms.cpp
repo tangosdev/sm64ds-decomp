@@ -337,6 +337,17 @@ void func_0201fec8(void);
 // the bind has to happen after port_romdata_load() (tests/walk_window.cpp:7365)
 // and before this seam (:7429) -- which is precisely the window this arm runs
 // in. Keeping the two together is what makes the ordering checkable.
+//
+// AND WHY THE WRITE DOES NOT MAKE romdata's OUTPUT MUTABLE DS STATE, since
+// port/tools/dsstate_guard.py's CONST_OBJS exempts romdata.c.obj from the
+// captured span on the grounds that it holds constants that need not roll
+// back. THE BIND IS THE LOADER'S RELOCATION STEP, not a game write. On the DS
+// the cartridge loader had already applied these twenty relocations before
+// main ran; on the host romdata.py cannot, because it has no host addresses
+// at generate time, so the same fixup happens at the first moment those
+// addresses exist. It runs once, it is idempotent, and the values it writes
+// are fixed for the life of the process -- so a save state that does not roll
+// them back restores exactly what it saved. No ROM code writes these records.
 static int port_r2b_bind_mbinfo(void)
 {
     struct Row {
