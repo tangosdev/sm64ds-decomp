@@ -28,11 +28,11 @@
     "Actor methods and free functions both count. Enrollment alone does not increase",
     "the count when the release build still dead-strips the unreachable object."
   ],
-  "linkedTus": 10227,
+  "linkedTus": 10357,
   "matchedTus": 11328,
   "measuredAt": "2026-09-08",
   "branch": "port/link100",
-  "commit": "3d8374ff7",
+  "commit": "3131ddaa9",
   "stale": false,
-  "basis": "Linkage measurement of integration branch port/link100 at 3d8374ff735e285a668e8af30e90e35ba2771050 on 2026-09-08: 10,227 of 11,328 matched TUs reach walk_window, 11 above the previous stamp. Hosted port-linkage push run 34284327226 checked that exact commit; its successful linkage job 102256251572 reports the count and retains the map. This link-only build establishes build/link coverage. It does not validate gameplay, private battery claims, or a shipping-branch landing."
+  "basis": "integration branch port/link100 at its pushed tip 3131ddaa9, measured against that tip's own battery build walk_window.map (C:/tmp/l1-int, gate INT18: tree clean, reconfigure with CONFIGURE DEPS 254/5, battery ALL GREEN at floor 10227 with all 51 level and 36 scene rows, the six proofs, the stage seat proof, the loopback session, the four-player proof three times green, the sixteen-window ladder with every slot moving and the parent at wireless state 9 with a child at 10, the rollback ladder with the host words carried), and confirmed by the hosted-runner port-linkage workflow on every push of port/** and every pull request into the shipping branch (a GitHub Windows machine with no cartridge; the shipping branch takes landings only through such pull requests, with the count required by a branch rule). +130 over the previous stamp of 10227, +324 over the 2026-09-08 morning's 10033, +1236 over the 2026-08-30 stamp of 9121. Since the 10227 stamp, one gated lane: the ROM's own become-parent and become-child bodies and 128 TUs behind them (+130) run over a hosted ARM7 wireless stub that answers the ROM's commands the way hardware would, with the reply fields read out of the ROM's own callbacks, the state ladder derived from the ROM's own preconditions, replies queued and posted from the ARM7's turn, and the port's transport as the radio below the ROM's four-wide protocol; a solo boot asks the radio nothing. Gated rungs since the last stamp: 10227 -> 10357. Staged behind the next gate: the overlay-bookkeeping chain through the one entry point whose ROM behaviour on the host is an honest early return (+33), the wireless peer-block reader over the ROM's own receive layout (+2), the frame-loop duties into the ROM's VBlank wait (0), and the reviewer's requested wording (0). Running: the ROM's own game loop driving the frame."
 }
