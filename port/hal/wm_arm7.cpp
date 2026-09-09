@@ -1157,6 +1157,307 @@ void pop_front()
     if (g_qn) --g_qn;
 }
 
+
+// ===========================================================================
+// RUNG W9: THE PORT-0xc PORT-RECEIVE INDICATION.  Run link100, lane WM10.
+// ===========================================================================
+//
+// Rung W8 (lane WM9) closed with the port split: the carrier moves the GAME'S
+// MP unit, which src/func_0203fa50.c:7 registers on WM PORT 0xc, and the 0x82
+// port-receive indication built from those datagrams therefore reaches
+// src/func_02062bdc.cpp (parent) and src/func_02062aa4.cpp (child). This rung
+// posts it. THE RECORD IS THE ONE WRITTEN OUT FIELD BY FIELD IN THE HEADER --
+// nothing here is guessed, every offset is a line of src/func_02061188.c or of
+// one of the two receive callbacks.
+//
+// WHAT EACH SIDE RECEIVES, off the two SENDERS rather than off the readers,
+// because a datagram's shape is fixed by whoever built it:
+//
+//   THE PARENT RECEIVES A CHILD'S OWN BLOCK, 0x20 BYTES. src/func_02062df0.c's
+//   child arm copies the game's staged block to `self + (H(0x40a) << 8) + 0x20`
+//   and sends exactly H(0x410) of it -- the elemSize src/func_0203fa50.c:7
+//   passes, 0x20. src/func_02062990.c then copies *(u16 *)(c + 0x410) bytes out
+//   of the pointer at +0x0c, so the length agrees on both ends by construction.
+//
+//   THE CHILD RECEIVES THE PARENT'S PACKED SLOT, H(0x414) BYTES.
+//   src/func_020627e8.c sends `self + (prevSlot << 8)` for H(0x414), which
+//   src/func_020631dc.c:79-84 fixes at elemSize * cnt + 4 = 0x84 for this
+//   cartridge's four seats: a four-byte header and then one block per set bit
+//   of H(0x40e), ASCENDING. So the child's datagram is built here with the
+//   ROM'S OWN TWO NUMBERS read back out of the child's own MP unit -- H(0x40e)
+//   at +0x40e for the packing and H(0x414) at +0x414 for the length -- and not
+//   with the carrier's live mask. That is the one place this file's shape
+//   differs from port_wm_publish_mp_recv below, which packs by the live mask;
+//   both round-trip through src/func_02062778.c because both write the mask
+//   they packed with, and the ROM's own is the more faithful of the two.
+//
+// THE CADENCE IS ONE PER COMPLETED ROUND, and the source is the ROM's own
+// frame: src/func_0203ea5c.c:223 calls func_020406b4 once per turn of its wait
+// and hal/comms_seam.cpp's face publishes only when the carrier says the round
+// is in, which is once per game frame. That is the DS's MP frame -- one
+// datagram per peer per frame -- and it is why the latch is armed from
+// port_wm_publish_mp_recv (the round is in, the ARM7 is holding the bytes) and
+// spent from the ARM7's own turn, never from arm7_recv. Law 1 at the top of
+// this file is why; hal/tsc_arm7.cpp's auto-sample indication is the same shape
+// and the precedent for it.
+//
+// THE SIXTEENTH SEAT DOES NOT GO DOWN THIS PATH. The ROM's MP unit is four
+// slots of 0x100 (src/func_020631dc.c's MultiStore32Bytes of 0x420) and
+// src/func_02062990.c indexes them with `1 << bit`, so aids 4..15 have no
+// storage in it at all. Slots 0..3 are posted; 4..15 stay exactly where
+// hal/comms_fanout_wide.cpp's host tail already carries them, and the count of
+// skipped seats is in the census so the split is measured and not asserted.
+//
+// AND WHAT IT CANNOT DO YET, MEASURED ON THE FIRST RUN AND NOT SMOOTHED OVER.
+// The parent's ring cannot advance from here. src/func_020627e8.c returns at
+// its first test unless the current slot's pending word is ZERO, and that word
+// is `H(0x40e) & (f86 | 1)` -- 0x0003 on a pair, as the rung-W8 census line
+// reads it on the wire ("first halfword 0x0003") -- so BIT 0, the parent's own
+// seat, has to be cleared before any advance. The only body that clears it is
+// src/func_02062990.c called with bit 0, and its only caller with 0 is
+// src/func_02062df0.c:106, which this build does not link: its own only caller
+// is src/func_020406b4.c, and that one is a host face in hal/comms_seam.cpp.
+// So this rung ENTERS the ROM's receive path and BANKS the peer's block with
+// the cartridge's own arithmetic, and the ring stands still afterwards. The
+// census says so in as many words on every logged run, and the report names
+// the four files the closing rung needs.
+// ---------------------------------------------------------------------------
+
+enum : unsigned { kMpPort = 0x0c, kMpRecvState = 0x15 };
+
+// The record and the datagram are staged in the image for the same 26-bit
+// reason g_reply is: src/IPCSend.c packs the payload address into 26 bits.
+__declspec(align(32)) unsigned char g_ind_msg[0x40];
+__declspec(align(32)) unsigned char g_ind_buf[4 + port::kCommsMaxPlayers *
+                                             port::kCommsBlockBytes];
+// The round's blocks as the carrier handed them over, in ASCENDING AID order
+// of the live mask. Kept apart from the datagram above because the child's
+// arm re-packs the same bytes under the ROM's own H(0x40e) rather than under
+// the live mask, and a re-pack in place would read what it had just written.
+__declspec(align(32)) unsigned char g_ind_snap[port::kCommsMaxPlayers *
+                                              port::kCommsBlockBytes];
+
+bool     g_ind_due     = false;   // a round is in and its bytes are staged
+unsigned g_ind_mask    = 0;       // the carrier's live mask for that round
+unsigned g_ind_stride  = 0;
+unsigned g_ind_self    = 0;
+bool     g_ind_parent  = false;
+
+unsigned long g_ind_rounds   = 0;   // rounds the latch was armed for
+unsigned long g_ind_posts    = 0;   // 0x82 records handed to the ARM9
+unsigned long g_ind_banked   = 0;   // parent: banks src/func_02062990.c took
+unsigned long g_ind_advanced = 0;   // child: ring steps src/func_02062aa4.cpp took
+unsigned long g_ind_refused  = 0;   // posts the ROM's own path declined
+unsigned long g_ind_tailskip = 0;   // seats 4..15, which the ROM cannot hold
+unsigned long g_ind_nounit   = 0;   // rounds with no port-0xc callback yet
+unsigned      g_ind_slot     = 0;   // the ring cursor at the last post
+unsigned      g_ind_pending  = 0;   // that slot's pending word
+unsigned      g_ind_done     = 0;   // that slot's done word
+unsigned      g_ind_pack     = 0;   // H(0x40e), the ROM's participant mask
+unsigned      g_ind_len      = 0;   // the last datagram's length
+bool          g_ind_said     = false;
+
+bool ind_enabled()
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_WM_PORT_IND");
+        on = (s && std::atoi(s) == 0) ? 0 : 1;   // default ON, =0 the way back
+    }
+    return on != 0;
+}
+
+unsigned char *wm_work_bytes()
+{
+    const unsigned w = work_base();
+    return w ? (unsigned char *)(uintptr_t)w : nullptr;
+}
+
+// src/func_02061188.c's own arithmetic: the callback for port p lives at
+// work + p*4 + 0xac (its `(data_020a89ac + msg[3])[0x2b]`) and the argument it
+// is handed at work + p*4 + 0xec (`[0x3b]`), which is what src/func_02061c88.c
+// wrote there.
+unsigned mp_port_word(unsigned off)
+{
+    unsigned char *w = wm_work_bytes();
+    if (!w) return 0;
+    return *(const unsigned *)(w + kMpPort * 4 + off);
+}
+
+// THE ONE POST. Everything above the send is the record; the send itself is
+// the same synchronous hand-off post_reply uses, so by the time this returns
+// the ROM's own callback has run.
+void ind_post(const void *data, unsigned len, unsigned sender, unsigned seq)
+{
+    std::memset(g_ind_msg, 0, sizeof g_ind_msg);
+    unsigned short *m = (unsigned short *)g_ind_msg;
+    m[0] = 0x82;                                        // +0x00 the apiid
+    m[1] = 0;                                           // +0x02 errcode: it worked
+    m[2] = (unsigned short)kMpRecvState;                // +0x04 state 0x15
+    m[3] = (unsigned short)kMpPort;                     // +0x06 the port
+    // +0x08 the receive buffer src/func_02061188.c invalidates before it
+    // dispatches. On this host that primitive is a no-op (see the alternatename
+    // note above), and the honest value is the buffer the bytes are in.
+    *(unsigned int *)(g_ind_msg + 0x08) = (unsigned)(uintptr_t)data;
+    *(unsigned int *)(g_ind_msg + 0x0c) = (unsigned)(uintptr_t)data;  // +0x0c
+    *(unsigned short *)(g_ind_msg + 0x10) = (unsigned short)len;      // +0x10
+    *(unsigned short *)(g_ind_msg + 0x12) = (unsigned short)sender;   // +0x12
+    // +0x14..0x19 the sender's MAC. Left zero, and that is a reading rather
+    // than a shortcut: only src/func_02061188.c's SYNTHESISED connect and
+    // disconnect records (states 7 and 9) carry a MAC, and neither receive
+    // callback reads one on state 0x15.
+    *(unsigned short *)(g_ind_msg + 0x1a) = (unsigned short)seq;      // +0x1a
+    // +0x1c the port's registered argument: NOT written here.
+    // src/func_02061188.c overwrites it from work[0x3b + port] before it
+    // dispatches, and both callbacks read the base out of it.
+
+    const uintptr_t addr = (uintptr_t)(void *)g_ind_msg;
+    if (addr >> 26) {
+        std::fprintf(stderr,
+            "[wm10] HARD FAULT: the staged 0x82 record is at 0x%p and "
+            "src/IPCSend.c's payload is 26 bits, so the ARM9 cannot be told "
+            "where it is.\n", (void *)g_ind_msg);
+        std::fflush(stderr);
+        std::_Exit(24);
+    }
+    ++g_ind_posts;
+    ntr::ipc_arm7_send(ntr::ipc_word(0xa, (uint32_t)addr, 0));
+}
+
+// THE TURN'S HALF. One round's datagrams, from the ARM7's own turn.
+void mp_indication_tick()
+{
+    if (!g_ind_due) return;
+    g_ind_due = false;
+    if (!ind_enabled()) return;
+
+    const unsigned cb  = mp_port_word(0xac);
+    const unsigned arg = mp_port_word(0xec);
+    if (!cb || !arg) {
+        // src/func_020631dc.c has not registered the unit yet, so there is
+        // nothing on this port to hand the datagram to. src/func_02061188.c
+        // would drop it on the same test.
+        ++g_ind_nounit;
+        return;
+    }
+    unsigned char *unit = (unsigned char *)(uintptr_t)arg;
+
+    // THE UNIT IS THE ONE THIS RUNG THINKS IT IS, checked out of its own
+    // fields rather than assumed: src/func_020631dc.c writes the unit index at
+    // +0x416 and the stride at +0x410, and a disagreement on either would mean
+    // posting into a layout nothing wrote.
+    const unsigned uidx   = *(const unsigned short *)(unit + 0x416);
+    const unsigned stride = *(const unsigned short *)(unit + 0x410);
+    if (uidx != kMpPort || stride != g_ind_stride) {
+        ++g_ind_nounit;
+        if (!g_ind_said) {
+            g_ind_said = true;
+            std::fprintf(stderr,
+                "[wm10] the port-0x0c argument at work+0x%x is a unit with "
+                "index %u and stride %u, and the carrier moves %u a slot on "
+                "unit 0x%02x. Not posting into a layout nothing wrote.\n",
+                kMpPort * 4 + 0xec, uidx, stride, g_ind_stride, kMpPort);
+            std::fflush(stderr);
+        }
+        return;
+    }
+
+    ++g_ind_rounds;
+    const unsigned seq = (unsigned)(g_ind_rounds << 1);   // see the note below
+
+    if (g_ind_parent) {
+        // ONE 0x82 PER CHILD, each carrying that child's own 0x20-byte block.
+        for (int aid = 0; aid < (int)port::kCommsMaxPlayers; ++aid) {
+            if (aid == (int)g_ind_self) continue;
+            if (!(g_ind_mask & (1u << aid))) continue;
+            if (aid >= 4) { ++g_ind_tailskip; continue; }
+            const unsigned rank = popcount16(g_ind_mask & ((1u << aid) - 1u));
+            const unsigned char *blk = g_ind_buf + 4 + rank * stride;
+
+            const unsigned i0 = *(const unsigned short *)(unit + 0x408) & 3u;
+            const unsigned d0 = *(const unsigned short *)(unit + (i0 << 8) + 2);
+            ind_post(blk, stride, (unsigned)aid, seq);
+            const unsigned i1 = *(const unsigned short *)(unit + 0x408) & 3u;
+            const unsigned d1 = *(const unsigned short *)(unit + (i1 << 8) + 2);
+            // src/func_02062990.c sets the aid's bit in the slot's DONE word
+            // as its last act, so this reads whether the cartridge's own
+            // banking ran -- not whether this file thinks it should have.
+            if (i1 == i0 && ((d1 & ~d0) & (1u << aid))) ++g_ind_banked;
+            else ++g_ind_refused;
+            g_ind_slot    = i1;
+            g_ind_pending = *(const unsigned short *)(unit + (i1 << 8));
+            g_ind_done    = d1;
+        }
+    } else {
+        // ONE 0x82, THE PARENT'S PACKED SLOT, built with the ROM's own two
+        // numbers out of this child's own unit.
+        const unsigned pack = *(const unsigned short *)(unit + 0x40e);
+        unsigned len = *(const unsigned short *)(unit + 0x414);
+        if (len < 4 || len > sizeof g_ind_buf) { ++g_ind_nounit; return; }
+        std::memset(g_ind_buf, 0, len);
+        *(unsigned short *)(g_ind_buf + 0) = (unsigned short)pack;
+        *(unsigned short *)(g_ind_buf + 2) = (unsigned short)g_ind_mask;
+        for (int aid = 0; aid < (int)port::kCommsMaxPlayers; ++aid) {
+            if (!(g_ind_mask & (1u << aid))) continue;
+            if (!(pack & (1u << aid))) { ++g_ind_tailskip; continue; }
+            const unsigned rank = popcount16(pack & ((1u << aid) - 1u));
+            const unsigned off = 4 + rank * stride;
+            if (off + stride > len) { ++g_ind_tailskip; continue; }
+            const unsigned srank = popcount16(g_ind_mask & ((1u << aid) - 1u));
+            std::memcpy(g_ind_buf + off, g_ind_snap + srank * stride, stride);
+        }
+        g_ind_pack = pack;
+        g_ind_len  = len;
+
+        const unsigned c0 = *(const unsigned short *)(unit + 0x408);
+        ind_post(g_ind_buf, len, 0u, seq);
+        const unsigned c1 = *(const unsigned short *)(unit + 0x408);
+        // src/func_02062aa4.cpp's last act is `+0x408 = (+0x408 + 1) % 4`, so
+        // a moved cursor is the cartridge's own copy having run.
+        if (c1 != c0) ++g_ind_advanced; else ++g_ind_refused;
+        g_ind_slot    = c1 & 3u;
+        g_ind_pending = *(const unsigned short *)(unit + ((c1 & 3u) << 8));
+        g_ind_done    = *(const unsigned short *)(unit + ((c1 & 3u) << 8) + 2);
+    }
+}
+
+// THE ROUND'S HALF. Called from port_wm_publish_mp_recv below, which is the
+// point the carrier's round is in and the ARM7 is holding the bytes.
+//
+// THE SEQUENCE NUMBER IS THE ROUND NUMBER. src/func_02062aa4.cpp stores
+// `*(u16 *)(c + 0x1a) >> 1` into the child's per-slot sequence array, so the
+// value posted is the round shifted up by one and what the ROM records is the
+// round itself. Nothing in either callback compares two of them; it is a
+// number the game carries, and the carrier's round is the honest one to carry.
+void mp_indication_arm(unsigned mask, unsigned stride,
+                       const port::CommsTransport *t)
+{
+    if (!ind_enabled()) return;
+    if (!t || !mask || !stride) return;
+    if (stride > (unsigned)port::kCommsBlockBytes) return;
+
+    unsigned k = 0;
+    for (int aid = 0; aid < (int)port::kCommsMaxPlayers; ++aid) {
+        if (!(mask & (1u << aid))) continue;
+        const void *b = t->peer_block(aid);
+        if (!b) return;                       // the mask and the blocks disagree
+        std::memcpy(g_ind_snap + k * stride, b, stride);
+        ++k;
+    }
+    // The parent's arm posts straight out of g_ind_buf's packed run, so the
+    // snapshot is copied into it in the same ascending order the live mask
+    // fixes; the child's arm re-packs it under the ROM's own mask above.
+    *(unsigned short *)(g_ind_buf + 0) = (unsigned short)mask;
+    *(unsigned short *)(g_ind_buf + 2) = (unsigned short)mask;
+    std::memcpy(g_ind_buf + 4, g_ind_snap, k * stride);
+
+    g_ind_mask   = mask;
+    g_ind_stride = stride;
+    g_ind_self   = (unsigned)t->slot();
+    g_ind_parent = (st_get16(0x184) == 0);
+    g_ind_due    = true;
+}
+
 }  // namespace
 
 // ===========================================================================
@@ -1393,6 +1694,12 @@ extern "C" void port_wm_arm7_turn(void)
     // has been sitting in MP_PARENT since before its child knocked gets no
     // further command until it is told it has somebody to send to.
     publish_association();
+
+    // RUNG W9. The port-0x0c port-receive indication for the round the
+    // carrier has already completed, before the reply queue's one pop: on
+    // the DS a receive is an interrupt and a command's answer is a reply,
+    // and the two do not queue behind one another.
+    mp_indication_tick();
 
     if (!g_qn) return;
 
@@ -1640,6 +1947,11 @@ extern "C" void port_wm_publish_mp_recv(void)
     }
     ++g_mp_fills;
     g_mp_last_mask = mask;
+    // RUNG W9. The same round, staged for the ROM'S OWN receive path: the
+    // latch is armed here because this is the point the carrier says the
+    // round is in and the ARM7 is holding the bytes, and it is spent from
+    // port_wm_arm7_turn above.
+    mp_indication_arm(mask, stride, t);
     if (count > g_mp_peak_slots) g_mp_peak_slots = count;
 
     // THE PROOF LINE, once a session and only with the log on: the first round
@@ -1664,4 +1976,58 @@ extern "C" void port_wm_publish_mp_recv(void)
         }
         std::fflush(stderr);
     }
+}
+
+// ===========================================================================
+// RUNG W9'S CENSUS. hal/wm_thread.cpp's report prints it beside the [wm8]
+// band line and the [wm9] writer line, because the three answer one question
+// between them: did the ROM's own receive path run, did its own arithmetic
+// take the bytes, and did anything but the fan-out write the game's words
+// while it did.
+//
+// `banked` and `advanced` are NOT counts of what this file posted. Each is
+// read out of the cartridge's own state across the synchronous post -- the
+// slot's done word for src/func_02062990.c, the ring cursor for
+// src/func_02062aa4.cpp -- so a number above zero is the ROM's body having
+// run, not this file's belief that it should have.
+// ===========================================================================
+extern "C" void port_wm10_indication_report(void)
+{
+    if (!ind_enabled()) {
+        std::fprintf(stderr,
+            "[wm10] port-0x0c indication: OFF (SM64DS_WM_PORT_IND=0). The "
+            "ROM's own receive callbacks are linked and unentered, and "
+            "port_wm_publish_mp_recv is the only writer of data_020a0f80.\n");
+        std::fflush(stderr);
+        return;
+    }
+    std::fprintf(stderr,
+        "[wm10] port-0x0c indication: rounds=%lu posts=%lu banked=%lu "
+        "advanced=%lu refused=%lu tailskip=%lu nounit=%lu role=%s self=%u "
+        "mask=0x%04x pack=0x%04x len=%u slot=%u pending=0x%04x done=0x%04x\n",
+        g_ind_rounds, g_ind_posts, g_ind_banked, g_ind_advanced,
+        g_ind_refused, g_ind_tailskip, g_ind_nounit,
+        g_ind_parent ? "parent" : "child", g_ind_self,
+        g_ind_mask, g_ind_pack, g_ind_len,
+        g_ind_slot, g_ind_pending, g_ind_done);
+    // THE STALL, NAMED FROM THE ROM'S OWN WORD. src/func_020627e8.c advances
+    // and re-sends only when the current slot's pending word is zero; bit 0 is
+    // the parent's own seat and only src/func_02062990.c called with bit 0
+    // clears it, which is src/func_02062df0.c:106 -- unlinked in this build,
+    // because its only caller src/func_020406b4.c is a host face in
+    // hal/comms_seam.cpp.
+    if (g_ind_parent && g_ind_posts) {
+        std::fprintf(stderr,
+            "[wm10] the ring %s: slot %u's pending word is 0x%04x. %s\n",
+            g_ind_pending ? "STANDS STILL" : "is clear to advance",
+            g_ind_slot, g_ind_pending,
+            (g_ind_pending & 1u)
+                ? "Bit 0 is the parent's own seat, cleared only by "
+                  "src/func_02062990.c(unit, 0, block) from "
+                  "src/func_02062df0.c:106, which this build does not link: "
+                  "seat src/func_020406b4.c over hal/comms_seam.cpp's face and "
+                  "the ROM's own engine re-sends from inside the receive."
+                : "Every seat is banked.");
+    }
+    std::fflush(stderr);
 }
