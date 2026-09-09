@@ -1407,7 +1407,7 @@ extern int func_ov002_020df300(char*);
 extern int func_ov002_020e10a8(void*);
 extern int func_ov002_020e2664(void*);
 extern int func_ov002_020e2c84(char*);
-extern int func_ov002_020e3f90(void);
+extern int func_ov002_020e3f90(char*);
 extern int func_ov002_020efe68(char*);
 extern int func_ov002_020efe7c(int*);
 extern int func_ov002_020efe9c(int*);

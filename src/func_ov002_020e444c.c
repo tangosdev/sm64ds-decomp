@@ -27,7 +27,7 @@ void func_ov002_020e444c(char *c)
     int sp8, spC;
     int b;
 
-    if (func_ov002_020e3f90() == 0) {
+    if (func_ov002_020e3f90(c) == 0) {
         int y = *(int *)(c + 0x690) + (*(int *)(c + 0x60) - *(int *)(c + 0x68c)) + 0xf000;
         if (*(u8 *)(c + 0x6fd) != 0)
             y -= 0x70000;
