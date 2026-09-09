@@ -192,10 +192,14 @@
 // backstop for a record with no thunk in it.
 //
 // * THE IRQ-EXIT RESCHEDULE. On hardware a wake taken in IRQ mode sets the
-//   manager's pending flag and the exception return does the switch;
-//   ARMProcessorMode is hosted at 0x1f (system mode) in cxx_aliases.cpp
-//   because the host runs every handler as a plain call, so the switch happens
-//   inline instead. Same order of events, one frame of the same thread.
+//   manager's pending flag and the exception return does the switch. That is
+//   what happens here now (run link100, lane DET3): step 2 of the halt raises
+//   port_irq_mode_depth for the length of IRQ::VBlankHandler, cxx_aliases.cpp's
+//   ARMProcessorMode host answers 0x12 while it is up, and src/func_02057f54.c
+//   takes its own early return -- so the switch is performed by the handler's
+//   return, which is this port's IRQ return. Before that lane the host answered
+//   0x1f (system mode) unconditionally, every handler ran as a plain call and
+//   the switch was taken inline from inside the wake.
 //
 // ============================ KNOBS ========================================
 //
@@ -211,6 +215,16 @@
 //                             refused, so a thread func_02058200 really made
 //                             is never entered. port/tools/
 //                             thread_create_proof.py reads both arms.
+//   SM64DS_DET3=0             the host's ARMProcessorMode answers 0x1f for the
+//                             whole run instead of 0x12 inside the handler, so
+//                             func_02057f54 runs past its own guard and lane
+//                             DET2's host-side deferral in ARMRestoreContext
+//                             catches the switch again. The way back on one
+//                             binary; measured, it costs 299 context saves
+//                             that are taken and thrown away over 300 frames.
+//   SM64DS_DET2_IRQDEFER=0    with SM64DS_DET3=0 as well, no deferral at all:
+//                             the switch is taken from inside the handler, the
+//                             reading this port had before lane DET2.
 
 #include <stdint.h>
 
