@@ -11257,6 +11257,50 @@ int main(void)
            cutscene tick because that is the thing whose end sets it. Inert
            unless SM64DS_INTRO_WATCH (hal/level_boot.cpp). */
         port_intro_bit_edge();
+        /* THE F5 MENU-PAUSE ADJUDICATION (run link100, boot plan rung D4, lane
+           R3D). Lane R3CFIX called this seam a DESIGN BLOCKER for running
+           func_02044120 whole: the F5 debug menu pauses the game tick and keeps
+           rendering, and one whole call to the ROM's actor frame has no seam
+           for that. The ruling, and its measurement, are here because this line
+           and the render below it ARE the shape being ruled on.
+
+           WHAT DEPENDS ON "TICK PAUSED, RENDER CONTINUES", measured rather than
+           supposed: NOTHING IN THE GATE. port/tools/battery.py sets neither
+           SM64DS_MENU nor SM64DS_MENU_AT on any of its 87 rows, and none of the
+           eight proofs opens this menu -- port/tools/stage_pause_proof.py is
+           about the ROM'S OWN pause (START, data_0209f2c4, Stage::Behavior's
+           PS_Init/PS_Update) and reaches this file only through
+           SM64DS_PAUSE_WATCH and SM64DS_TRACE_LISTS, which do not touch
+           menu_on. The only readers of SM64DS_MENU_AT in the tree are four rows
+           of port/tools/wide_sweep.py (coursehud, one HUD row, vshud,
+           vstimeup), a screenshot sweep that is not in the gate, and
+           port/tools/star_repro.py, which SCRUBS SM64DS_MENU from the child's
+           environment. So both candidate shapes keep every proof green and the
+           measurement does not decide it. Faithfulness does.
+
+           THE RULING: UNDER RUNG D5's SM64DS_ROM_LOOP THE MENU FREEZES THE
+           WHOLE FRAME -- the ROM's loop simply does not turn while it is up.
+           The other candidate was to ride the ROM's own freeze mask
+           data_0209b454/data_0209b464, and it is refused for a reason that is
+           not taste: lane R3CFIX measured that mask gating SLOT 6 ONLY, so
+           under it the Stage would stop and every other actor would carry on
+           ticking. That is not what this menu does today and it is not a pause;
+           it would turn a debug freeze into a partial simulation, which is a
+           worse thing to hand a person reading the world through it.
+
+           WHAT CHANGES FOR THE USER OF F5, said plainly: with SM64DS_ROM_LOOP
+           on, opening the menu freezes the picture as well as the world. The
+           last rendered frame stays on screen, the menu is drawn over it, and
+           the host side of the phase-7 wait keeps pumping messages and
+           presenting, so the menu still takes input and still closes. Today the
+           world freezes and the picture keeps being redrawn. Losing the redraw
+           is acceptable for a developer tool on a cartridge that has no such
+           menu at all; if a row ever needs the live redraw back it needs the
+           host loop, which SM64DS_ROM_LOOP=0 is.
+
+           NOTHING BELOW MOVES IN THIS RUNG. The line under this comment is the
+           host loop's, unchanged, and it stays the host loop's behaviour on
+           both sides of rung D5's knob. */
         if (menu_on) {
             game_ticked = 0;
         } else if (boot_spawns) {
