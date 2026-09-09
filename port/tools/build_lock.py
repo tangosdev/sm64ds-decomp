@@ -790,6 +790,26 @@ def release(path=None):
             pass
 
 
+def holder(path=None):
+    """(pid, acquired_epoch, label, root) of the current lock holder.
+
+    A public wrapper around the lockfile read, added for run link100 lane
+    BATTLOCK: a caller that wants to know WHO holds the build lock right now
+    -- without reaching into the private _read_holder or shelling out to
+    `status` -- has had no way to ask that from Python. battery.py uses this
+    to tell whether it is running as the CHILD of an outer `build_lock.py
+    run` (an ancestor process already holds the lock, read back here), in
+    which case it must not try to acquire the lock itself: a process waiting
+    on its own ancestor's lock is a guaranteed deadlock, not a queue. Returns
+    (None, None, "", "") for a free or unreadable lock -- the same "nobody"
+    shape _stale_reason treats as dead-held.
+    """
+    if path is None:
+        path = lock_path()
+    pid, acquired, label, root, _ = _read_holder(path)
+    return pid, acquired, label, root
+
+
 @contextlib.contextmanager
 def build(label="", root=None, timeout=None, poll=POLL_SECONDS):
     """Context manager: hold the full-build lock for the block, release on exit.
