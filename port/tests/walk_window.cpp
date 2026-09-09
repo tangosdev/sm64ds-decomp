@@ -1542,6 +1542,14 @@ extern "C" void _ZN4CP1516WaitForInterruptEv(void);
    circuit itself proven rather than the whole thing merely suspect. */
 extern "C" void OS_SleepThread(unsigned short *q);
 extern "C" unsigned char data_0209d500[4];
+/* hal/boot2_thread.cpp. Raised around the sleep below while a frame is being
+   re-simulated, so the halt inside it takes no radio turn: run link100, lane
+   DET, and the whole reason is at the call site. */
+extern "C" void port_thread_pump_suspend(int on);
+/* hal/boot2_thread.cpp. The frame's own wait begins with a fresh halt bound, so
+   a radio wait earlier in the same frame cannot cut the sleep off before the
+   ROM's own wake fires: run link100, lane DET. */
+extern "C" void port_thread_frame_wait_begin(void);
 static int r3d_sleep_probe_left;
 static int r3d_sleep_probe_taken;
 /* ---- RUNG E1, THE KNOB (run link100, boot plan rung D5, lane R3E) ---------
@@ -14149,7 +14157,26 @@ int main(void)
                step B1 -- so this is the ROM's own condition and not a fixture. */
             ++r3e_rom_loop_sleeps;
             r3e_heap_watch("the frame foot, before the ROM's sleep");
+            /* AND THE RADIO STANDS DOWN FOR A RE-SIMULATED FRAME (run link100,
+               lane DET). This sleep is the ONE place a replayed frame reaches
+               the host halt, and the halt's step 1 is hal/comms_conductor.cpp's
+               pump: a transport poll, an ARM7 turn that posts a queued WM reply
+               (which the ROM answers with the next WM command, walking
+               data_020a89b0's ten-slot queue) and, on a connected session, up
+               to a VBlank of wall time. None of that is the frame's simulation
+               -- it is the outside world, and this frame's share of it already
+               happened when the frame was first played. hal/rollback.cpp
+               already stands the rasteriser and the present down for the same
+               reason; this is the radio's half of that rule, and without it the
+               DET rung's restore+retick reads DSSTATE-DIFFERS on
+               data_020a89b0+0xc in every window. Suspended around the sleep and
+               not around the whole frame, because the frame body's own comms
+               work is served from the rollback record and never reaches here. */
+            const int det_resim = rb_replaying();
+            if (det_resim) port_thread_pump_suspend(1);
+            port_thread_frame_wait_begin();
             OS_SleepThread((unsigned short *)data_0209d500);
+            if (det_resim) port_thread_pump_suspend(0);
             r3e_heap_watch("the frame foot, after the ROM's sleep");
         } else {
             port_host_frame_pump(0);
