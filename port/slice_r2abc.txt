@@ -86,7 +86,9 @@
 src/func_02013e64.c
 
 # ===========================================================================
-# R2b -- src/func_0201fec8.c: REFUSED. NOTHING BELOW SEATS IT.
+# R2b -- src/func_0201fec8.c: TAKEN (run link100, lane R2BD). The refusal
+# below is R2ABC's and is kept verbatim, because ONE HALF OF IT WENT STALE
+# BETWEEN THE TWO LANES and the reader has to be able to see which.
 # ===========================================================================
 #
 # THE REFUSAL ON RECORD, hal/boot_os.cpp: "func_0203db64's eight-name run,
@@ -180,6 +182,95 @@ src/func_02013e64.c
 # src/func_0203daac.c -- the last is the one-line body that returns
 # data_02099e18, the fourth TU behind the same call, and it is already fully
 # hosted.
+#
+# ---------------------------------------------------------------------------
+# WHAT ACTUALLY LANDED IT (run link100, lane R2BD), point by point against the
+# list above. Three of the four are as written; the first is not.
+#
+# (1) THE MP3_BSS LINE IS WRONG NOW AND WOULD NOT COMPILE. Between R2ABC and
+#     this lane, WM3 hosted data_020a0fa0 itself -- hal/wm_arm7.cpp:290,
+#     `WMBSS(".dsstate$ywmd11", data_020a0fa0, 6, 1)` -- so adding it to
+#     hal/comms_conductor.cpp's band C would define the symbol twice.
+#     hal/comms_conductor.cpp IS NOT TOUCHED by this lane; zero hunks.
+#
+#     The blocker survived the move, in a worse place. data_020a0fa0's host
+#     object is six bytes and the section that sorts next after it is
+#     ".dsstate$ywmd12" -- data_020a11e4, 1180 bytes of live thread-queue
+#     storage -- so eighteen bytes of func_0203db64's 0x18 memset would land in
+#     it. hal/boot_arms.cpp answers that with EIGHTEEN BYTES OF ITS OWN in
+#     ".dsstate$ywmd11a", the one name MSVC sorts between "ywmd11" and
+#     "ywmd12", and a layout gate that refuses the arm if the linker put them
+#     anywhere else. hal/wm_arm7.cpp:277-288 already describes this same gap
+#     from the WM side (an out-of-range STORE through data_020a0fa0[idx]); the
+#     tail closes that too.
+#
+#     THE DEVIATION, STATED. On the DS those eighteen bytes are data_020a0fa6,
+#     which hal/comms_conductor.cpp hosts in band C, so the ROM's memset clears
+#     the right count at the right base and its last eighteen bytes reach a
+#     host tail instead of the DS object. The arm MEASURES the cost rather than
+#     arguing it: it reads data_020a0fa6's eighteen bytes before the call and
+#     reports whether they are zero. On this path they are -- band C is BSS and
+#     every writer of it runs far below this seam -- so the undelivered write
+#     is zeros over zeros. The only way to make it the same object is to move
+#     data_020a0fa6 behind data_020a0fa0, which is hal/wm_arm7.cpp's and
+#     hal/comms_conductor.cpp's decision and not this lane's.
+#
+# (2) data_020a1064 WAS ALREADY DONE, by lane WM2: hal/comms_seam.cpp:752,
+#     `WMBSS(".dsstate$ywmc11", data_020a1064, 64, 4)` -- the ROM span exactly,
+#     which is the whole 0x40 the CpuCopy8 writes. data_0209e64c (span 4, to
+#     data_0209e650) and data_020a0fec (span 0x34, to data_020a1020) are hosted
+#     in hal/boot_arms.cpp, both inside the .dsstate bracket.
+#
+# (3) THE ISLAND IS MOUNTED AND IT CLOSES. port/tools/romdata.py carries all
+#     fourteen as NAMED rows, sized by the delta-to-next-symbol default, and
+#     every size is exact: 0x1c x5, 0x40, 0x60, 0x64, 0x68, 0x6c, 0x70, 0x24,
+#     0x34, 0x34 = 864 bytes. The relocation audit re-run over
+#     config/arm9/relocs.txt for all fourteen spans found the twenty words in
+#     the five 0x1c records at +0x04/+0x08/+0x0c/+0x10 and ZERO relocations in
+#     any of the eight targets, so the island terminates at level two.
+#
+#     WHAT THE ISLAND IS. The five 0x1c records are the DS DOWNLOAD PLAY
+#     game-info blocks, one per firmware language, each
+#         +0x00 0   +0x04 name   +0x08 description   +0x0c icon graphics
+#         +0x10 icon palette     +0x14 0x00800000    +0x18 4
+#     with data_0208f278 = UTF-16 "Super Mario 64 DS", data_02075530 = the
+#     English "Scramble to get the Stars! ..." (data_02075398/f8/545c/54c4 the
+#     Italian, Spanish, German and French), and data_0208f29c / data_0208f2d0 =
+#     "/data/2D_cad/d_2d_MARIO64DS_IPL_download_ncg.bin" and "..._ncl.bin".
+#     The sixth record, data_02075358, is the WM PARENT PARAMETER block, and it
+#     corroborates hal/wm_arm7.cpp:98-106 to the halfword: +0x32 is 0x200 and
+#     +0x34 is 0x20, the two numbers that file derives the SDK's own minimum
+#     receive size from.
+#
+#     THE TWENTY WORDS ARE NOT BYTE-COPIED. romdata.py's own rule -- a
+#     byte-copied relocated word is a DS address in a host process, the bug
+#     that killed data_020876e4 -- applies here, so hal/boot_arms.cpp's
+#     port_r2b_bind_mbinfo() rewrites each of the twenty to the host address of
+#     the object the relocation names, after checking the word still holds the
+#     DS address relocs.txt says it should. A third value refuses instead of
+#     binding. The bind lives beside the arm, not in hal/ptr_tables.cpp, for
+#     two reasons: that file is not this lane's, and the bind has to happen
+#     after port_romdata_load() (tests/walk_window.cpp:7365) and before this
+#     seam (:7429), which is exactly the window the arm runs in.
+#
+# (4) THE ROM'S OWN GUARD IS REPRODUCED. src/func_0201a054.c calls this body
+#     only when r4 is clear, and r4 is `*(u16 *)0x027ffc40 == 2`. The arm reads
+#     that word rather than assuming it, so a build that ever puts a 2 there
+#     skips the call exactly as the cartridge does.
+#
+# WHAT SEATING IT CHANGES, AND IT IS NOT NOTHING. data_020a1064 has been all
+# zeros in this port; it now carries the cartridge's real parent parameters,
+# which src/func_02040638.c copies into data_020a0f44 and the ROM sends to the
+# WM stub with apiid 7. hal/wm_arm7.cpp reads parentMaxSize and childMaxSize
+# out of exactly those fields, so the wireless path stops negotiating from
+# zeros. That is the direction of travel this port wants, and it is measured by
+# net_proof N0/N1 and the sixteen-wide ladder rather than assumed.
+#
+# THE FOUR TUs.
+src/func_0201fec8.c
+src/func_0203db64.c
+src/func_02059f2c.c
+src/func_0203daac.c
 
 # ===========================================================================
 # R2c -- src/func_02042f68.c and the device identify

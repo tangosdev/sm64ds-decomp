@@ -113,12 +113,56 @@
 // own point in port_boot_rom_game_init_head stays the only one, and
 // port/tools/thread_create_proof.py measures exactly the thread it always did.
 //
-// R2b -- func_0201fec8 -- IS REFUSED, AND NOTHING BELOW RUNS IT. Nothing is
-// faked in its place either; the port simply does not make that call, exactly
-// as hal/boot_os.cpp's transcription does not. The two blockers (one adjacency
-// that belongs in hal/comms_conductor.cpp, and a fourteen-symbol arm9 .rodata
-// island behind the body's own arguments) are measured in
-// port/slice_r2abc.txt.
+// R2b -- func_0201fec8 -- IS RUN NOW (run link100, lane R2BD), and both of the
+// blockers lane R2ABC measured are answered. WHAT THAT ARM IS: the DS DOWNLOAD
+// PLAY ADVERTISEMENT, published once at boot. func_0201fec8 reads the
+// firmware's language field out of the shared block, picks the matching
+// game-info record and hands it plus the WM parent parameters to
+// func_0203db64, which clears the comms bands and copies both records into DS
+// state. FOUR matched TUs come with it: src/func_0201fec8.c, src/func_0203db64.c,
+// src/func_02059f2c.c and src/func_0203daac.c.
+//
+// BLOCKER 1 MOVED WHILE R2ABC WAS WRITING IT DOWN, and its proposed remedy is
+// wrong today. R2ABC asked for `MP3_BSS(".dsstate$ymp3b9990", data_020a0fa0, 6)`
+// in hal/comms_conductor.cpp because data_020a0fa0 was hosted nowhere. Lane WM3
+// has since hosted it -- hal/wm_arm7.cpp:290, `WMBSS(".dsstate$ywmd11",
+// data_020a0fa0, 6, 1)` -- so that line would be a DUPLICATE DEFINITION now,
+// and hal/comms_conductor.cpp is not touched by this lane at all. The blocker
+// itself is the same one in a new place: func_0203db64 memsets 0x18 bytes from
+// data_020a0fa0, whose host object is SIX bytes, and the next section in that
+// run is ".dsstate$ywmd12" -- data_020a11e4, 1180 bytes of live thread-queue
+// storage. Eighteen bytes of the ROM's memset would land in it.
+//
+// THE REMEDY IS EIGHTEEN BYTES OF THIS FILE'S OWN, IN THE ONE SECTION NAME
+// THAT SORTS BETWEEN THEM. port_r2b_fa0_tail below is allocated to
+// ".dsstate$ywmd11a", which MSVC sorts after "ywmd11" and before "ywmd12", so
+// data_020a0fa0's six bytes and these eighteen are one contiguous 24-byte run
+// and the ROM's memset stays inside storage. hal/wm_arm7.cpp:277-288 names the
+// same gap from the other side ("data_020a0fa0[idx] for idx > 0 addresses that
+// neighbour on hardware and does not here"), so this closes the out-of-range
+// STORE it describes as well as the memset.
+//
+// WHAT THOSE EIGHTEEN BYTES ARE NOT, said plainly: on the DS they are
+// data_020a0fa6, the other three ids of that MAC table, and this port hosts
+// that symbol in hal/comms_conductor.cpp's band C instead. So the ROM's memset
+// clears the right COUNT of bytes at the right base and the last eighteen of
+// them are a host tail rather than data_020a0fa6. The arm measures what that
+// costs before it makes the call: it reads data_020a0fa6's eighteen bytes and
+// reports whether they are zero. They are on this path -- the band is BSS and
+// the lobby that fills it runs far below this seam -- so the write the port
+// does not deliver to data_020a0fa6 is zeros over zeros, the same reading R2a's
+// own arm records for the save block.
+//
+// BLOCKER 2, THE .RODATA ISLAND, IS MOUNTED. Fourteen symbols, 864 bytes,
+// twenty relocated words: five 0x1c game-info records (one per firmware
+// language), the 0x40 WM parent parameter block, five UTF-16 description
+// strings, the UTF-16 game name and the two icon paths. port/tools/romdata.py
+// carries them as NAMED rows with the relocation audit; the twenty relocated
+// words are NOT byte-copied into the game, because a byte-copied relocated word
+// is a DS address in a host process -- the rule that file writes for itself and
+// the bug that killed data_020876e4. port_r2b_bind_mbinfo() below rebinds them
+// to the host addresses of the eight objects they name, after checking each
+// word still holds the DS address config/arm9/relocs.txt says it should.
 // ---------------------------------------------------------------------------
 
 #include <cstdio>
@@ -208,6 +252,189 @@ extern int data_port_backup_device[10];
 void func_0206002c(void);          // src/func_0206002c.c, the card thread
 void func_02042f68(int a0, unsigned char *src);   // the ROM's own arm
 
+// ===========================================================================
+// R2b: THE DOWNLOAD-PLAY ADVERTISEMENT -- STORAGE, THE POINTER BIND, THE GATE
+// ===========================================================================
+
+// The two DS globals func_0201fec8's closure reads that nothing hosted, both
+// at their ROM SPANS from config/arm9/symbols.txt rather than at the width
+// their own declarations write:
+//
+//   data_0209e64c  4      the body's own once-guard. src/func_0201fec8.c
+//                         declares it `unsigned char`; the span to
+//                         data_0209e650 is four.
+//   data_020a0fec  0x34   func_0203db64:58 copies 0x1c of the chosen game-info
+//                         record into it; the span to data_020a1020 (band A's
+//                         head, hal/comms_conductor.cpp) is 0x34. Nothing walks
+//                         from band C's tail into it -- that file's own guard
+//                         block says every walk it makes is internal to a band
+//                         -- so it is hosted standalone rather than grouped.
+DSSTATE_BEGIN
+unsigned char data_0209e64c[4];
+unsigned char data_020a0fec[0x34];
+DSSTATE_END
+
+// THE EIGHTEEN BYTES BEHIND data_020a0fa0, in the one section name that sorts
+// between hal/wm_arm7.cpp's ".dsstate$ywmd11" (data_020a0fa0, six bytes) and
+// its ".dsstate$ywmd12" (data_020a11e4, 1180 bytes). align(1), like both of
+// its neighbours, so the linker inserts no padding and the 24 bytes the ROM's
+// memset writes are one run. The header block says what these bytes are and
+// are not; port_r2b_storage_layout() below refuses the arm if the linker did
+// not lay them where the name says.
+#pragma section(".dsstate$ywmd11a", read, write)
+__declspec(allocate(".dsstate$ywmd11a")) __declspec(align(1))
+unsigned char port_r2b_fa0_tail[18] = {0};
+
+// The memset targets that belong to other files, declared with the extents
+// this file needs to CHECK rather than to use. Each pair below is the
+// adjacency the ROM's own memset length depends on.
+extern unsigned char data_020a0fa0[];    // hal/wm_arm7.cpp   6
+extern unsigned char data_020a0fa6[];    // hal/comms_conductor.cpp band C  18
+extern unsigned char data_020a0fb8[];    // band C            6
+extern unsigned char data_020a0fd0[];    // band C            28
+extern unsigned char data_020a10a4[];    // band B            2
+extern unsigned char data_020a10fc[];    // band B            2
+extern unsigned char data_020a1112[];    // band B            66
+extern unsigned char data_020a1040[];    // hal/camera_bridges.cpp camcomm  4
+extern unsigned char data_020a1052[];    // camcomm, last member            0x12
+extern unsigned char data_020a1154[];    // camera_bridges camrec           0xc
+extern unsigned char data_020a11c4[];    // camrec, +0x70 into the run
+extern unsigned char data_020a1064[];    // hal/comms_seam.cpp ywmc11      64
+
+// The .rodata island, mounted by port/tools/romdata.py from
+// extracted/arm9_dec.bin. Six records the ROM's own code names, and the eight
+// objects the twenty relocated words point at.
+extern unsigned char data_020752cc[];    // game info, one per language
+extern unsigned char data_020752e8[];
+extern unsigned char data_02075304[];
+extern unsigned char data_02075320[];
+extern unsigned char data_0207533c[];
+extern unsigned char data_02075358[];    // the WM parent parameter block
+extern unsigned char data_02075398[];    // the five UTF-16 descriptions
+extern unsigned char data_020753f8[];
+extern unsigned char data_0207545c[];
+extern unsigned char data_020754c4[];
+extern unsigned char data_02075530[];
+extern unsigned char data_0208f278[];    // UTF-16 "Super Mario 64 DS"
+extern unsigned char data_0208f29c[];    // the icon graphics path
+extern unsigned char data_0208f2d0[];    // the icon palette path
+
+// src/func_0201fec8.c -- the ROM's own body.
+void func_0201fec8(void);
+
+// THE POINTER BIND. config/arm9/relocs.txt says exactly which word of which
+// record is an address and what it points at; this is that table, transcribed,
+// with the host object beside each row. The bind is one-way and idempotent: a
+// word already holding its host address is left alone, a word holding the DS
+// address the relocation names is rewritten, and anything else REFUSES rather
+// than binding, because a third value means the image or the mount changed
+// under this table and the port would be writing a pointer into a record it no
+// longer understands.
+//
+// WHY IT IS HERE AND NOT IN hal/ptr_tables.cpp. That file is the port's home
+// for pointer tables the ROM CALLS THROUGH, and it is not this lane's. This
+// island is read at exactly one point in the boot, by exactly one body, and
+// the bind has to happen after port_romdata_load() (tests/walk_window.cpp:7365)
+// and before this seam (:7429) -- which is precisely the window this arm runs
+// in. Keeping the two together is what makes the ordering checkable.
+static int port_r2b_bind_mbinfo(void)
+{
+    struct Row {
+        unsigned char *rec;      // the game-info record
+        const char *rn;          // its name, for the message
+        unsigned off;            // the relocated word's offset in it
+        unsigned ds;             // the DS address relocs.txt says is there
+        unsigned char *host;     // the host object that address means
+        const char *hn;
+    };
+    static const Row rows[] = {
+        { data_020752cc, "data_020752cc", 0x04, 0x0208f278, data_0208f278, "data_0208f278" },
+        { data_020752cc, "data_020752cc", 0x08, 0x02075398, data_02075398, "data_02075398" },
+        { data_020752cc, "data_020752cc", 0x0c, 0x0208f29c, data_0208f29c, "data_0208f29c" },
+        { data_020752cc, "data_020752cc", 0x10, 0x0208f2d0, data_0208f2d0, "data_0208f2d0" },
+        { data_020752e8, "data_020752e8", 0x04, 0x0208f278, data_0208f278, "data_0208f278" },
+        { data_020752e8, "data_020752e8", 0x08, 0x020753f8, data_020753f8, "data_020753f8" },
+        { data_020752e8, "data_020752e8", 0x0c, 0x0208f29c, data_0208f29c, "data_0208f29c" },
+        { data_020752e8, "data_020752e8", 0x10, 0x0208f2d0, data_0208f2d0, "data_0208f2d0" },
+        { data_02075304, "data_02075304", 0x04, 0x0208f278, data_0208f278, "data_0208f278" },
+        { data_02075304, "data_02075304", 0x08, 0x02075530, data_02075530, "data_02075530" },
+        { data_02075304, "data_02075304", 0x0c, 0x0208f29c, data_0208f29c, "data_0208f29c" },
+        { data_02075304, "data_02075304", 0x10, 0x0208f2d0, data_0208f2d0, "data_0208f2d0" },
+        { data_02075320, "data_02075320", 0x04, 0x0208f278, data_0208f278, "data_0208f278" },
+        { data_02075320, "data_02075320", 0x08, 0x020754c4, data_020754c4, "data_020754c4" },
+        { data_02075320, "data_02075320", 0x0c, 0x0208f29c, data_0208f29c, "data_0208f29c" },
+        { data_02075320, "data_02075320", 0x10, 0x0208f2d0, data_0208f2d0, "data_0208f2d0" },
+        { data_0207533c, "data_0207533c", 0x04, 0x0208f278, data_0208f278, "data_0208f278" },
+        { data_0207533c, "data_0207533c", 0x08, 0x0207545c, data_0207545c, "data_0207545c" },
+        { data_0207533c, "data_0207533c", 0x0c, 0x0208f29c, data_0208f29c, "data_0208f29c" },
+        { data_0207533c, "data_0207533c", 0x10, 0x0208f2d0, data_0208f2d0, "data_0208f2d0" },
+    };
+    const int n = (int)(sizeof rows / sizeof rows[0]);
+    int bound = 0, already = 0, bad = 0;
+    for (int i = 0; i < n; ++i) {
+        unsigned cur = 0;
+        std::memcpy(&cur, rows[i].rec + rows[i].off, sizeof cur);
+        const unsigned want = (unsigned)(size_t)rows[i].host;
+        if (cur == want) { ++already; continue; }
+        if (cur != rows[i].ds) {
+            std::fprintf(stderr,
+                         "  [r2b] MBINFO WORD NOT THE ROM'S: %s+0x%02x reads "
+                         "%08x, config/arm9/relocs.txt says %08x (-> %s)\n",
+                         rows[i].rn, rows[i].off, cur, rows[i].ds, rows[i].hn);
+            ++bad;
+            continue;
+        }
+        std::memcpy(rows[i].rec + rows[i].off, &want, sizeof want);
+        ++bound;
+    }
+    std::fprintf(stderr, "  [r2b] download-play records: %d of %d pointer "
+                         "words bound to host objects (%d already bound, %d "
+                         "refused)\n", bound, n, already, bad);
+    return bad;
+}
+
+// THE LAYOUT GATE. Six memset lengths and two copy lengths in
+// src/func_0203db64.c, each one an adjacency in the host image. The rows below
+// are the ones this port has to prove; where a run belongs to another file,
+// the row checks the LANDMARK that file's own guard also checks, so a break
+// shows up here as well as there.
+//
+// Offsets are differences of ADDRESS-SIZED INTEGERS, not pointer subtraction:
+// these are separately declared globals the linker places adjacently because
+// their grouped sections sort that way, and adjoining sections do not make two
+// symbols one array. Same spelling and the same reason as
+// port_r2a_saveblock_layout() above.
+static int port_r2b_storage_layout(void)
+{
+    static const struct { const char *what; unsigned char *a, *b; unsigned want; } k[] = {
+        // The one this lane adds: data_020a0fa0's six bytes plus this file's
+        // eighteen, so the 0x18 memset has 24 bytes of run.
+        {"data_020a0fa0 -> port_r2b_fa0_tail", data_020a0fa0, port_r2b_fa0_tail, 6},
+        // Band C: 0fb8's six then 0fbe's eighteen reach 0fd0, so the second
+        // 0x18 memset is inside the conductor's own band.
+        {"data_020a0fb8 -> data_020a0fd0",     data_020a0fb8, data_020a0fd0, 0x18},
+        // Band B: 10a4 + 0x58 lands on 10fc, and 10fc + 0x16 lands on 1112,
+        // whose own 66 bytes carry that memset's remaining 0x42.
+        {"data_020a10a4 -> data_020a10fc",     data_020a10a4, data_020a10fc, 0x58},
+        {"data_020a10fc -> data_020a1112",     data_020a10fc, data_020a1112, 0x16},
+        // camera_bridges' camcomm run: 1040 + 0x12 is its last member, whose
+        // own 0x12 completes the 0x24 the memset writes.
+        {"data_020a1040 -> data_020a1052",     data_020a1040, data_020a1052, 0x12},
+        // camera_bridges' camrec run: 1154 + 0x70 is 11c4, whose own storage
+        // runs far past the 0x90 this memset needs (sixteen 0x24 records).
+        {"data_020a1154 -> data_020a11c4",     data_020a1154, data_020a11c4, 0x70},
+    };
+    int bad = 0;
+    for (int i = 0; i < (int)(sizeof k / sizeof k[0]); ++i) {
+        const unsigned at = (unsigned)(size_t)k[i].b - (unsigned)(size_t)k[i].a;
+        if (at == k[i].want) continue;
+        std::fprintf(stderr, "  [r2b] COMMS RUN BROKEN: %s is +0x%x, the ROM "
+                             "says +0x%x\n", k[i].what, at, k[i].want);
+        bad = 1;
+    }
+    return bad;
+}
+
 // ---- ARM 1 of func_02042f68, as a host body ------------------------------
 //
 // src/func_02060890.c minus its last two statements, which cannot link. The
@@ -260,11 +487,72 @@ void port_rom_a054_arms(void)
                              "its own 0x32c save block at 0x0209caa0\n");
     }
 
-    /* ARM R2b. func_0201fec8() -- NOT RUN. See the header block and
-       port/slice_r2abc.txt: the storage half is two files away and the body's
-       own .rodata arguments are a fourteen-symbol relocated island nothing
-       hosts. Nothing is faked in its place; the port simply does not make this
-       call, exactly as hal/boot_os.cpp's transcription does not. */
+    /* ARM R2b. func_0201fec8() -- the download-play advertisement.
+
+       THE GUARD IS THE ROM'S OWN. src/func_0201a054.c reads r4 as
+       `*(u16 *)0x027ffc40 == 2` and calls this body only when r4 is clear;
+       hal/boot_os.cpp:578 records the same derivation and records that
+       ntr/io.cpp writes 0 to that word at io_init, so the port takes the arm.
+       The word is read here rather than assumed, so a build that ever puts a 2
+       there skips this call exactly as the cartridge would. */
+    {
+        const unsigned short r4w = *(volatile unsigned short *)0x027ffc40u;
+        if (r4w == 2) {
+            std::fprintf(stderr, "  [rom-a054] R2b SKIPPED as the ROM skips "
+                                 "it: 0x027ffc40 reads 2\n");
+        } else {
+            int refuse = port_r2b_storage_layout();
+            refuse |= port_r2b_bind_mbinfo() ? 1 : 0;
+            if (refuse) {
+                std::fprintf(stderr, "  [rom-a054] R2b REFUSED: the comms runs "
+                                     "or the download-play records are not what "
+                                     "the ROM's own lengths need, so "
+                                     "func_0201fec8 is not called\n");
+            } else {
+                /* WHAT THE SPLIT COSTS, MEASURED BEFORE THE CALL RATHER THAN
+                   ARGUED. The 0x18 memset at data_020a0fa0 reaches this file's
+                   own eighteen-byte tail and not data_020a0fa6, which
+                   hal/comms_conductor.cpp hosts elsewhere. If those eighteen
+                   bytes are already zero the write the port does not deliver
+                   is a write of zeros over zeros and nothing observable is
+                   lost; if they are not, this line says so and the reading
+                   stops being free. */
+                int fa6_nonzero = 0;
+                for (int i = 0; i < 18; ++i)
+                    if (data_020a0fa6[i]) ++fa6_nonzero;
+
+                func_0201fec8();
+
+                std::fprintf(stderr,
+                             "  [rom-a054] R2b func_0201fec8: the ROM published "
+                             "its own download-play record -- firmware language "
+                             "%u (0x027ffce4 bits 0..2, what src/func_02059eb0.c "
+                             "reads), guard data_0209e64c now %u; "
+                             "data_020a0fec[0..4] %02x%02x%02x%02x, name "
+                             "pointer %08x\n",
+                             (unsigned)(*(volatile unsigned short *)0x027ffce4u & 7u),
+                             (unsigned)data_0209e64c[0],
+                             data_020a0fec[0], data_020a0fec[1],
+                             data_020a0fec[2], data_020a0fec[3],
+                             *(unsigned *)(data_020a0fec + 4));
+                std::fprintf(stderr,
+                             "  [rom-a054] R2b parent parameters into "
+                             "data_020a1064: +0x30 %04x, +0x32 %04x (parent max "
+                             "send), +0x34 %04x (child max send) -- "
+                             "hal/wm_arm7.cpp:98-106 predicts 0x200 and 0x20\n",
+                             *(unsigned short *)(data_020a1064 + 0x30),
+                             *(unsigned short *)(data_020a1064 + 0x32),
+                             *(unsigned short *)(data_020a1064 + 0x34));
+                std::fprintf(stderr,
+                             "  [rom-a054] R2b NOTE: data_020a0fa6's eighteen "
+                             "bytes read %s before the call, so the memset this "
+                             "port delivers to port_r2b_fa0_tail instead is %s\n",
+                             fa6_nonzero ? "NON-ZERO" : "all zero",
+                             fa6_nonzero ? "a write the DS object does not get"
+                                         : "zeros over zeros");
+            }
+        }
+    }
 
     /* ARM R2c. func_02042f68(0xd01, data_0208ee50) -- the card bring-up, the
        device identify and the record tag, all three as the ROM's own body. */

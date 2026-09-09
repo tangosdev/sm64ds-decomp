@@ -220,6 +220,62 @@ NAMED = [
     # (table 3); putting the name back here would define the symbol twice and,
     # if the byte copy won, restore the crash.
     "data_0208e42c",
+    # ---- run link100, lane R2BD: THE DOWNLOAD-PLAY ADVERTISEMENT ISLAND ----
+    #
+    # rung R2b of lane BOOTSCOUT's boot plan. func_0201fec8 -- main's own
+    # func_0201a054 calls it -- hands func_0203db64 two arm9 .rodata blobs, and
+    # port/slice_r2abc.txt refused the rung because none of them was hosted.
+    # This is that island, and it CLOSES: fourteen symbols, 864 bytes, twenty
+    # relocated words, and not one relocation anywhere below the first level.
+    #
+    # WHAT IT IS, read out of extracted/arm9_dec.bin rather than guessed. The
+    # five 0x1c blobs are the DS Download Play game-info records, one per
+    # firmware language, and each is
+    #
+    #     +0x00  0                  +0x04  the UTF-16 game NAME
+    #     +0x08  the UTF-16 game DESCRIPTION, this record's language
+    #     +0x0c  the icon GRAPHICS path     +0x10  the icon PALETTE path
+    #     +0x14  0x00800000                 +0x18  4
+    #
+    # data_0208f278 is "Super Mario 64 DS"; data_02075530 is "Scramble to get
+    # the Stars!\nThe caps will help you out."; data_0208f29c and data_0208f2d0
+    # are "/data/2D_cad/d_2d_MARIO64DS_IPL_download_ncg.bin" and "..._ncl.bin".
+    # The sixth blob, data_02075358, is the WM PARENT PARAMETER block, and it
+    # corroborates hal/wm_arm7.cpp:98-106 exactly: +0x32 is 0x200 and +0x34 is
+    # 0x20, which is where that file's parentMaxSize/childMaxSize come from.
+    #
+    # THE RELOCATION AUDIT, run over config/arm9/relocs.txt for all fourteen
+    # spans (out/R2BD/reloc_audit.txt):
+    #
+    #     data_020752cc +0x04 -> 0x0208f278   +0x08 -> 0x02075398
+    #                   +0x0c -> 0x0208f29c   +0x10 -> 0x0208f2d0
+    #     data_020752e8 the same four, +0x08 -> 0x020753f8
+    #     data_02075304 the same four, +0x08 -> 0x02075530
+    #     data_02075320 the same four, +0x08 -> 0x020754c4
+    #     data_0207533c the same four, +0x08 -> 0x0207545c
+    #     data_02075358, data_02075398, data_020753f8, data_0207545c,
+    #     data_020754c4, data_02075530, data_0208f278, data_0208f29c,
+    #     data_0208f2d0                       ZERO relocations each
+    #
+    # SO THE TWENTY WORDS ARE NOT BYTE-COPIED INTO THE GAME. This file's own
+    # rule -- a byte-copied relocated word carries a DS address into the host,
+    # which is what killed data_020876e4 -- holds here too, and the remedy is
+    # the tree's: the bytes come from the image, and the twenty words are
+    # REBOUND to the host addresses of the eight objects above before any ROM
+    # code reads them. The binder is port_r2b_bind_mbinfo() in
+    # hal/boot_arms.cpp; it checks each word still holds the DS address the
+    # relocation names before it overwrites it, so a drifted image refuses
+    # rather than binds. The binder lives beside the arm that needs it instead
+    # of in hal/ptr_tables.cpp because this island has ONE reader, at one point
+    # in the boot, and that file is not this lane's.
+    #
+    # Sizes are the delta-to-next-symbol default and every one is exact:
+    # 0x1c x5, then 0x40, 0x60, 0x64, 0x68, 0x6c, 0x70, and 0x24, 0x34, 0x34.
+    "data_020752cc", "data_020752e8", "data_02075304", "data_02075320",
+    "data_0207533c", "data_02075358",
+    "data_02075398", "data_020753f8", "data_0207545c", "data_020754c4",
+    "data_02075530",
+    "data_0208f278", "data_0208f29c", "data_0208f2d0",
 # ---- run lvled, lane intro-cutscene: the NEW-FILE OPENING's script data ----
 #
 # src/__sinit_02073e6c.c is what makes the opening's FOUR-script chain work:
