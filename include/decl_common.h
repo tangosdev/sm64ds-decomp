@@ -2105,7 +2105,7 @@ extern void func_02056314(void*, u32, u32);
 extern void func_02056374(const void*, u32, u32);
 extern void func_020563d4(const void*, u32, u32);
 extern void func_020564f4(const void*, int, int);
-extern void func_0206e2f8(void*, int, unsigned int);
+extern void* func_0206e2f8(void*, int, unsigned int);
 extern void func_02073244(void*, int, int, void (*)(void*));
 extern void data_ov001_020ad494(void);
 extern void func_021115bc(void);
