@@ -375,7 +375,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov084",
       "canonical_address": "0x02130c28",
-      "reason": "This class's OWN vtable, emitted here because the key function is defined here. The compiler's symbol addresses the vtable OBJECT and so spans 0x84; config/arm9/overlays/ov084/symbols.txt binds the name to the public ADDRESS POINT two words higher, where the ROM's 31 slots span 0x7c and run to the end of ov084 .data. ov084 delinks no .data, so the ROM copy stays ROM-supplied and this one is discarded by text-only isolation."
+      "reason": "This class's OWN vtable, emitted here because the key function is defined here. The compiler's symbol addresses the vtable OBJECT and so spans 0x84; config/arm9/overlays/ov084/symbols.txt binds the name to the public ADDRESS POINT two words higher, where the ROM's 31 slots span 0x7c and end at 0x02130ca4. Seven zero words follow before ov084 .data ends at 0x02130cc0; the section boundary does not establish the vtable's slot count. ov084 delinks no .data, so the ROM copy stays ROM-supplied and this one is discarded by text-only isolation."
     }
   ]
 }
