@@ -131,8 +131,6 @@ void UnloadBlueCoinModel(void *);
 extern int data_ov096_02137b20[];
 extern int data_ov096_02137b28[];
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *c, int d);
-void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
-int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 void LoadBlueCoinModel(void* actor);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int r, int h, unsigned int d, unsigned int e);
 void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int b, int c, void* v, int e);
