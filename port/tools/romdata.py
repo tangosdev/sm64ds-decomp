@@ -219,7 +219,96 @@ NAMED = [
     # host pointers to byte-copied script blobs in port/hal/ptr_tables.cpp
     # (table 3); putting the name back here would define the symbol twice and,
     # if the byte copy won, restore the crash.
+    # ---- run link100, lane SND1, rung R10: THE UNDERWATER MUSIC FILTER'S
+    # FIVE RAMP CONSTANTS, and the dB table rung R8 reaches beside them.
+    #
+    # src/func_020494cc.c programs a two-channel ramp table from these five
+    # words -- the per-frame step func_020490b0 adds to the filter's current
+    # value, sign-flipped for the falling arms -- and hal/sdat/consumer.cpp
+    # skipped the whole three-part mechanism for exactly one reason: "not one
+    # of those five is defined anywhere in the port, so it would not link".
+    #
+    # ALL FIVE ARE arm9 .data, four bytes each by the delta rule (the next
+    # symbol is four bytes on in every case), and RELOC-FREE: config/arm9/
+    # relocs.txt has no `from:` row anywhere in 0x020821f0..0x02082214, so a
+    # byte copy carries no DS address. The five `to:` rows that DO name these
+    # addresses are the loads in func_020494cc itself, which is the reference
+    # into them, not a relocation inside them.
+    #
+    # AND THEY ARE NOT ZERO, which is why they are read rather than written
+    # down: 0x1451, 0x0a28, 0x1451, 0x1451, 0xcb33 out of extracted/arm9_dec.bin.
+    # A zeroed stand-in would make func_020490b0's `a > 0 / a < 0` test take its
+    # `continue` arm on every frame and the filter would be a subsystem that
+    # runs and does nothing -- the exact shape a seat is supposed to avoid.
+    "data_02082200", "data_02082204", "data_02082208", "data_0208220c",
+    "data_02082210",
+    # data_02086484, 0x2d4 = 724 bytes by the delta rule (the next symbol is
+    # data_02086758), and the span is likewise reloc-free. It is the ROM's own
+    # attenuation-to-volume curve and src/func_0205b63c.c indexes it as
+    # data_02086484[x + 0x2d3] over x in [-0x2d3, 0] -- 724 entries exactly, so
+    # the ROM's own code states the length. The bytes run 0x00 at the bottom to
+    # 0x7f at the top, monotone, which is what a -72.3 dB .. 0 dB curve looks
+    # like. Its sibling data_02086384 (the 128-entry s16 table) has been in this
+    # list for as long as the sequencer has; this is the byte-wide one the
+    # streamed-sound path uses.
+    "data_02086484",
     "data_0208e42c",
+    # ---- run link100, lane R2BD: THE DOWNLOAD-PLAY ADVERTISEMENT ISLAND ----
+    #
+    # rung R2b of lane BOOTSCOUT's boot plan. func_0201fec8 -- main's own
+    # func_0201a054 calls it -- hands func_0203db64 two arm9 .rodata blobs, and
+    # port/slice_r2abc.txt refused the rung because none of them was hosted.
+    # This is that island, and it CLOSES: fourteen symbols, 864 bytes, twenty
+    # relocated words, and not one relocation anywhere below the first level.
+    #
+    # WHAT IT IS, read out of extracted/arm9_dec.bin rather than guessed. The
+    # five 0x1c blobs are the DS Download Play game-info records, one per
+    # firmware language, and each is
+    #
+    #     +0x00  0                  +0x04  the UTF-16 game NAME
+    #     +0x08  the UTF-16 game DESCRIPTION, this record's language
+    #     +0x0c  the icon GRAPHICS path     +0x10  the icon PALETTE path
+    #     +0x14  0x00800000                 +0x18  4
+    #
+    # data_0208f278 is "Super Mario 64 DS"; data_02075530 is "Scramble to get
+    # the Stars!\nThe caps will help you out."; data_0208f29c and data_0208f2d0
+    # are "/data/2D_cad/d_2d_MARIO64DS_IPL_download_ncg.bin" and "..._ncl.bin".
+    # The sixth blob, data_02075358, is the WM PARENT PARAMETER block, and it
+    # corroborates hal/wm_arm7.cpp:98-106 exactly: +0x32 is 0x200 and +0x34 is
+    # 0x20, which is where that file's parentMaxSize/childMaxSize come from.
+    #
+    # THE RELOCATION AUDIT, run over config/arm9/relocs.txt for all fourteen
+    # spans (out/R2BD/reloc_audit.txt):
+    #
+    #     data_020752cc +0x04 -> 0x0208f278   +0x08 -> 0x02075398
+    #                   +0x0c -> 0x0208f29c   +0x10 -> 0x0208f2d0
+    #     data_020752e8 the same four, +0x08 -> 0x020753f8
+    #     data_02075304 the same four, +0x08 -> 0x02075530
+    #     data_02075320 the same four, +0x08 -> 0x020754c4
+    #     data_0207533c the same four, +0x08 -> 0x0207545c
+    #     data_02075358, data_02075398, data_020753f8, data_0207545c,
+    #     data_020754c4, data_02075530, data_0208f278, data_0208f29c,
+    #     data_0208f2d0                       ZERO relocations each
+    #
+    # SO THE TWENTY WORDS ARE NOT BYTE-COPIED INTO THE GAME. This file's own
+    # rule -- a byte-copied relocated word carries a DS address into the host,
+    # which is what killed data_020876e4 -- holds here too, and the remedy is
+    # the tree's: the bytes come from the image, and the twenty words are
+    # REBOUND to the host addresses of the eight objects above before any ROM
+    # code reads them. The binder is port_r2b_bind_mbinfo() in
+    # hal/boot_arms.cpp; it checks each word still holds the DS address the
+    # relocation names before it overwrites it, so a drifted image refuses
+    # rather than binds. The binder lives beside the arm that needs it instead
+    # of in hal/ptr_tables.cpp because this island has ONE reader, at one point
+    # in the boot, and that file is not this lane's.
+    #
+    # Sizes are the delta-to-next-symbol default and every one is exact:
+    # 0x1c x5, then 0x40, 0x60, 0x64, 0x68, 0x6c, 0x70, and 0x24, 0x34, 0x34.
+    "data_020752cc", "data_020752e8", "data_02075304", "data_02075320",
+    "data_0207533c", "data_02075358",
+    "data_02075398", "data_020753f8", "data_0207545c", "data_020754c4",
+    "data_02075530",
+    "data_0208f278", "data_0208f29c", "data_0208f2d0",
 # ---- run lvled, lane intro-cutscene: the NEW-FILE OPENING's script data ----
 #
 # src/__sinit_02073e6c.c is what makes the opening's FOUR-script chain work:
@@ -497,6 +586,41 @@ NAMED = [
     "data_0208ee00",
     "data_0208eb8c",
     "data_0208eb9c",
+    # Run link100 lane CARDFS2: the archive-mount table's TWENTY-SIX string
+    # symbols -- the thirteen three-character short names each data_0208ecf4
+    # entry carries at +0x0c, and the thirteen NitroFS paths it carries at
+    # +0x10. Lane CARDFS hosted that table with both words NULL and wrote down
+    # the consequence in hal/card_mount.cpp: while they are null the ROM's own
+    # mount branch must never run, because its first act is to open a null path.
+    # These rows are what retire that sentence, and they arrive exactly the way
+    # their two immediate neighbours above (data_0208eb8c, data_0208eb9c) do --
+    # as ROM bytes this generator reads out of the image.
+    #
+    # THE TWENTY-SIX ARE NOT A LIST ANYONE WROTE DOWN. They are the addresses
+    # the mount table's own +0x0c and +0x10 words hold, read out of
+    # extracted/arm9_dec.bin at 0x0208ecf4: entry 0 names 0x0208eb5c ("ar0")
+    # and 0x0208ecb0 ("/ARCHIVE/arc0.narc"), and the emitter below resolves
+    # each entry's two pointers back to these symbols BY ADDRESS rather than by
+    # a hand-kept order (the two orders disagree -- entry 0's short name is the
+    # SECOND name in the run, and the paths are not in entry order either).
+    #
+    # The short names are the contiguous four-byte run 0x0208eb58..0x0208eb8c.
+    # The paths are thirteen of the fourteen 0x14-byte rows from 0x0208ebac up:
+    # data_0208ec74 is NOT one of them and stays out -- it is the crash string
+    # src/func_02018dc4.c hands func_02018e68 when an open fails, and no entry
+    # points at it.
+    #
+    # All twenty-six are relocation-free over their whole span, the check every
+    # row in this list passes: zero `from:` rows in config/arm9/relocs.txt land
+    # inside any of the 26 spans.
+    "data_0208eb58", "data_0208eb5c", "data_0208eb60", "data_0208eb64",
+    "data_0208eb68", "data_0208eb6c", "data_0208eb70", "data_0208eb74",
+    "data_0208eb78", "data_0208eb7c", "data_0208eb80", "data_0208eb84",
+    "data_0208eb88",
+    "data_0208ebac", "data_0208ebc0", "data_0208ebd4", "data_0208ebe8",
+    "data_0208ebfc", "data_0208ec10", "data_0208ec24", "data_0208ec38",
+    "data_0208ec4c", "data_0208ec60", "data_0208ec88", "data_0208ec9c",
+    "data_0208ecb0",
     # gate 31, the level handoff. Two 0xd0-byte tables, 52 entries each --
     # the ROM's whole level count. data_02092208 is the LVL_Overlay address
     # per level (Stage::InitResources indexes it); data_020758c8 the overlay
@@ -948,10 +1072,12 @@ def _emit(root, data):
         lines.append(f"{ctype} {name}[{length // width}] = {{ {body} }};")
         lines.append("")
     syms = symbol_table(root)
+    named_emitted = set()
     for name, addr, size in named_entries(root, syms):
         if addr + size > BSS_START:
             size = BSS_START - addr
         blob = data[addr - BASE:addr - BASE + size]
+        named_emitted.add(name)
         lines.append(f"__declspec(align(8)) unsigned char {name}[{size}] = "
                      f"{collect(name, blob)};")
     lines.append("")
@@ -997,20 +1123,49 @@ def _emit(root, data):
     # The table's SHAPE (13 entries of {u16, u16, const char *}) is a constant
     # here and does not move, so nothing about the link changes.
     ents = []
+    name_ptrs = []
+    path_ptrs = []
     off = 0x0208ECF4 - BASE
     for i in range(13):
         if link_only.LINK_ONLY:
             ents.append('    { 0, 0, "%s" },' % link_only.MARKER)
+            name_ptrs.append("0")
+            path_ptrs.append("0")
             continue
         blob = data[off + i*0x14: off + (i+1)*0x14]
         base_id, end_id = struct.unpack_from("<HH", blob, 8)
+        name_ptr = struct.unpack_from("<I", blob, 0x0c)[0]
         path_ptr = struct.unpack_from("<I", blob, 0x10)[0]
         p = data[path_ptr - BASE:path_ptr - BASE + 64].split(b"\0")[0]
         ents.append('    { %d, %d, "%s" },' % (base_id, end_id,
                                                p.decode("ascii").lstrip("/")))
+        # The entry's OWN two words name the symbols that hold those strings, so
+        # nothing here is typed and nothing is kept in a hand-written order --
+        # the two orders genuinely disagree (entry 0's short name is the second
+        # symbol in the name run, and the paths are not in entry order either).
+        # A pointer with no NAMED row is a hard error rather than a quiet null:
+        # a null is exactly what the ROM's mount branch would then open.
+        for ptr, dest in ((name_ptr, name_ptrs), (path_ptr, path_ptrs)):
+            sym = "data_%08x" % ptr
+            if sym not in named_emitted:
+                sys.exit("romdata: mount entry %d points at %#010x and %s is "
+                         "not in NAMED -- add it" % (i, ptr, sym))
+            dest.append("(const char *)%s" % sym)
     lines.append("struct port_arc_entry port_archive_map[13] = {")
     lines.extend(ents)
     lines.append("};")
+    lines.append("")
+
+    # The two DS string pointers each mount entry carries, resolved to the
+    # hosted ROM bytes above. hal/card_mount.cpp writes these into
+    # data_0208ecf4's +0x0c and +0x10 as it publishes, so the ROM's own mount
+    # branch reads a real three-character archive name and a real NitroFS path
+    # where lane CARDFS had to leave a null.
+    for arr, vals in (("port_archive_name", name_ptrs),
+                      ("port_archive_path", path_ptrs)):
+        lines.append("const char *%s[13] = {" % arr)
+        lines.extend("    %s," % v for v in vals)
+        lines.append("};")
     lines.append("")
 
     # The boot-time loader face (--rom-clean only). romblob.py's

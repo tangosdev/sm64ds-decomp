@@ -192,10 +192,14 @@
 // backstop for a record with no thunk in it.
 //
 // * THE IRQ-EXIT RESCHEDULE. On hardware a wake taken in IRQ mode sets the
-//   manager's pending flag and the exception return does the switch;
-//   ARMProcessorMode is hosted at 0x1f (system mode) in cxx_aliases.cpp
-//   because the host runs every handler as a plain call, so the switch happens
-//   inline instead. Same order of events, one frame of the same thread.
+//   manager's pending flag and the exception return does the switch. That is
+//   what happens here now (run link100, lane DET3): step 2 of the halt raises
+//   port_irq_mode_depth for the length of IRQ::VBlankHandler, cxx_aliases.cpp's
+//   ARMProcessorMode host answers 0x12 while it is up, and src/func_02057f54.c
+//   takes its own early return -- so the switch is performed by the handler's
+//   return, which is this port's IRQ return. Before that lane the host answered
+//   0x1f (system mode) unconditionally, every handler ran as a plain call and
+//   the switch was taken inline from inside the wake.
 //
 // ============================ KNOBS ========================================
 //
@@ -211,6 +215,16 @@
 //                             refused, so a thread func_02058200 really made
 //                             is never entered. port/tools/
 //                             thread_create_proof.py reads both arms.
+//   SM64DS_DET3=0             the host's ARMProcessorMode answers 0x1f for the
+//                             whole run instead of 0x12 inside the handler, so
+//                             func_02057f54 runs past its own guard and lane
+//                             DET2's host-side deferral in ARMRestoreContext
+//                             catches the switch again. The way back on one
+//                             binary; measured, it costs 299 context saves
+//                             that are taken and thrown away over 300 frames.
+//   SM64DS_DET2_IRQDEFER=0    with SM64DS_DET3=0 as well, no deferral at all:
+//                             the switch is taken from inside the handler, the
+//                             reading this port had before lane DET2.
 
 #include <stdint.h>
 
@@ -248,6 +262,24 @@ extern int data_020a6148[16];
 // The per-VBlank wake queue, hosted by hal/comms_conductor.cpp as four bytes.
 // src/func_0201a4d0.c sleeps on it; src/_ZN3IRQ13VBlankHandlerEv.c:22 wakes it.
 extern unsigned char data_0209d4fc[4];
+/* THE ROM'S WAIT FLAG, 0x0209d4f0, hosted in hal/boot_globals.cpp. It is up for
+   exactly the length of func_020197b8's phase-7 wait -- :53 raises it, :56
+   drops it -- which makes it the one word this file can read to tell THE
+   FRAME'S OWN WAIT apart from any other wait that reaches this halt.
+   src/_ZN3IRQ13VBlankHandlerEv.c:15 reads it for the same reason: the ROM's own
+   wake fires only while it is up. Step 4's bound reads it (run link100, lane
+   DET). */
+extern unsigned char data_0209d4f0[4];
+/* THE ROM'S FRAME DIVIDER, read by step 4's bound below and by nothing else in
+   this file. 0x0208ee44, hosted in hal/auto_bss.cpp and written by
+   Stage::InitResources (hal/level_boot.cpp:5174 records the value: 2 for a 3D
+   level, which is how a 60 Hz VBlank becomes a 30 Hz game tick).
+   src/_ZN3IRQ13VBlankHandlerEv.c:15 is the reader that matters:
+       if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0)
+           OS_WakeupThread(&data_0209d500);
+   so the sleeper at phase 7 needs THAT MANY VBlank edges before the ROM's own
+   wake fires, and one edge is delivered per turn of the idle loop. */
+extern int data_0208ee44;
 
 // ROM code this file calls. Every one of these is a matched TU on
 // port/slice_gate2thr.txt or already on port/slice_gate10.txt.
@@ -264,6 +296,31 @@ int ARMSaveContext(void *ctx);
 void ARMRestoreContext(void *ctx);
 void _ZN4CP1516WaitForInterruptEv(void);
 }
+
+// THE HOST'S IRQ MODE (run link100, lane DET3).
+//
+// An ARM is in IRQ mode -- CPSR bits 0..4 read 0x12 -- from the moment the
+// exception vector is taken to the moment the handler returns. src/
+// ARMProcessorMode.c is one instruction and a mask over exactly those bits:
+//     asm void ARMProcessorMode(void) { mrs r0, cpsr; and r0, r0, #0x1f; bx lr }
+// and the whole linked set has ONE caller of it, src/func_02057f54.c:25:
+//     if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
+//     s->m0 = 1; return;
+// -- the ROM's own statement that a thread switch asked for from inside an
+// interrupt handler is not taken there: the manager's pending flag goes up and
+// the IRQ return is what performs it.
+//
+// This word is that mode bit. Step 2 of the halt raises it for exactly the span
+// an ARM would be in IRQ mode -- the dispatch of IRQ::VBlankHandler to its
+// return -- and hal/cxx_aliases.cpp's ARMProcessorMode host answers 0x12 while
+// it is up and 0x1f (system mode) while it is down. Nothing else reads it,
+// because nothing else in the linked set calls ARMProcessorMode: the only other
+// definition of that name in the tree is port/tests/mp_sleepwake.cpp's, and that
+// is a separate executable.
+//
+// SM64DS_DET3=0 leaves it at zero for the whole run, which is the answer the
+// host gave before this lane, and puts lane DET2's host-side deferral back.
+extern "C" { unsigned port_irq_mode_depth = 0; }
 
 namespace {
 
@@ -351,11 +408,55 @@ bool g_booted;
 unsigned long g_owner_tid;        // the OS thread the fibers belong to
 unsigned g_starve;                // consecutive halts with nobody woken
 
+// rung R3b step B2: the HOST FRAME pump, distinct from the wireless one in
+// hal/os_thread.cpp. Null until rung R3d installs it; see step 1b below.
+int (*g_host_frame_pump)(unsigned);
+
+// THE RADIO DOES NOT TAKE A TURN INSIDE A RE-SIMULATED FRAME (run link100, lane
+// DET). Nonzero while hal/rollback.cpp is replaying a frame the window has
+// already played; tests/walk_window.cpp raises it around the ROM's phase-7
+// sleep and drops it after. See step 1 of the halt below for the whole reason.
+int g_pump_suspended;
+
+// The VBlank edges THIS frame's wait has been given (run link100, lane DET).
+// Reset by port_thread_frame_wait_begin, stepped by step 2 of the halt, read by
+// step 4's bound. Per-wait, which is the whole point: g_starve is not.
+unsigned g_frame_wait_edges;
+
+// NONZERO WHILE STEP 2 OF THE HALT IS INSIDE IRQ::VBlankHandler (run link100,
+// lane DET2, rung 2). A DS is in IRQ mode for the whole of that handler, and
+// src/func_02057f54.c:24-28 is the ROM's own statement of what that means: the
+// reschedule sees ARMProcessorMode() == 0x12, raises the manager's pending
+// flag, and RETURNS -- the thread switch happens when the IRQ returns, not
+// from inside the handler. See ARMRestoreContext and step 2's IRQ return.
+unsigned g_in_vblank_handler;
+
 struct Stats {
     unsigned long long saves, restores, resumes, refused, unknown_ctx;
     unsigned long long halts, pump_turns, vblank_dispatches, vblank_wakes;
+    // ENTERED vs DISPATCHED (run link100, lane R3E). vblank_dispatches is
+    // incremented after the handler returns and the handler does not always
+    // return: its wake branch reschedules from inside OS_WakeupThread, which
+    // leaves the idle fiber parked one statement above func_02019144. This
+    // counter is taken before the call, so entries-minus-dispatches is exactly
+    // the number of parked handlers, and dispatches is exactly the number of
+    // times the ROM's VBlank display commit ran to the end.
+    unsigned long long vblank_enters;
+    unsigned long long frame_pump_turns;   // rung R3b step B2, step 1b
     unsigned long long starved, wrong_thread, idle_sleeps;
     unsigned long long adopted, entered, exited, rejected, nocreate;
+    // Switches handed to the IRQ return instead of taken from inside the
+    // handler. Counted by lane DET2's host-side deferral below when that is the
+    // thing doing it (SM64DS_DET3=0), and by the IRQ return itself when the
+    // ROM's own func_02057f54.c:27 is (the default, run link100 lane DET3).
+    // Printed second-to-last on the [thr] line so every existing reader of that
+    // line keeps working.
+    unsigned long long deferred;
+    // Arrivals in ARMRestoreContext from inside IRQ::VBlankHandler that the
+    // 0x12 mode answer did not stop (run link100, lane DET3). It is the direct
+    // check that the answer covers every route into a switch from inside the
+    // handler, and it reads 0.
+    unsigned long long irqswitch;
 } g_stat;
 
 constexpr size_t kFiberStack = 256 * 1024;
@@ -597,13 +698,98 @@ void thread_boot() {
 // word is deliberately left alone: this file does not know which word the
 // sleeper is on, and inventing one would be a lie the caller's own re-test
 // would then act on.
+// RUNG E1 (run link100, lane R3E). Default: narrow. SM64DS_R3E_WIDE_STARVE=1
+// restores the sweep on the same binary; see this file's starve_wake note.
+static bool wide_starve() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_R3E_WIDE_STARVE");
+        v = (e && *e && !(e[0] == '0' && e[1] == '\0')) ? 1 : 0;
+    }
+    return v != 0;
+}
+
+// Run link100, lane DET. ON by default; SM64DS_DET_FRAMEWAIT=0 puts the old
+// reading back on the same binary, which is what makes the A/B one run.
+// See step 4 of the halt for what it gates and why.
+static bool det_framewait() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_DET_FRAMEWAIT");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v != 0;
+}
+
+// Run link100, lane DET. ON by default; SM64DS_DET_VBLFRAME=0 puts the
+// once-per-halt edge back on the same binary. See step 2 of the halt.
+static bool det_vblframe() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_DET_VBLFRAME");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v != 0;
+}
+
+// Run link100, lane DET2, rung 2. ON by default; SM64DS_DET2_IRQDEFER=0 puts
+// the switch-from-inside-the-wake back on the same binary. See ARMRestoreContext
+// and the IRQ return at the end of step 2 of the halt.
+static bool det2_irqdefer() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_DET2_IRQDEFER");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v != 0;
+}
+
+// Run link100, lane DET2, rung 1. ON by default; SM64DS_DET2_OWED1=0 puts the
+// exact-divider frame-wait bound back on the same binary. See step 4.
+static bool det2_owed1() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_DET2_OWED1");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v != 0;
+}
+
+// Run link100, lane DET3. ON by default: hal/cxx_aliases.cpp's ARMProcessorMode
+// answers 0x12 for the length of IRQ::VBlankHandler, so src/func_02057f54.c's
+// own lines 24-28 raise the manager's pending flag and return, and nothing
+// switches a thread from inside the handler. SM64DS_DET3=0 leaves the mode
+// answer at 0x1f and puts lane DET2's host-side deferral in ARMRestoreContext
+// back on the same binary.
+static bool det3_on() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_DET3");
+        v = (e && e[0] == '0' && e[1] == '\0') ? 0 : 1;
+    }
+    return v != 0;
+}
+
 void starve_wake() {
     ++g_stat.starved;
     bool any = false;
-    for (RomThread *t = mgr_head(); t; t = t->next) {
-        if (t->state == 0) {
-            t->state = 1;
-            any = true;
+    // THE SWEEP IS THE WIRELESS WAIT'S, NOT THE FRAME'S (rung E1, lane R3E).
+    // Marking EVERY sleeping thread runnable wakes threads the cartridge
+    // leaves asleep. On the frame path that is thread 2, func_020602bc -- the
+    // ROM's file-request thread, adopted at boot and asleep ever since -- and
+    // once phase 7 is the ROM's own sleep it is resumed once per frame.
+    // Measured (lane R3E gate 1, SM64DS_ROM_LOOP=1): the run faults at frame
+    // 31 with Memory::defaultHeapPtr null, inside Player::SetAnim's
+    // SharedFilePtr::Release. Forward progress needs only the line below this
+    // block, which is what this function's own banner says; the sweep stays
+    // for a session that installed a wireless pump, because that wait is what
+    // it was written for.
+    if (wide_starve() || port::thread_pump()) {
+        for (RomThread *t = mgr_head(); t; t = t->next) {
+            if (t->state == 0) {
+                t->state = 1;
+                any = true;
+            }
         }
     }
     // FORWARD PROGRESS IS NOT OPTIONAL. The idle thread's body is a for(;;),
@@ -708,6 +894,76 @@ void ARMRestoreContext(void *ctx) {
               from ? from->id : 0u, to->id);
         return;
     }
+    // A DS SWITCHES THREADS ON IRQ RETURN, NOT FROM INSIDE THE HANDLER (run
+    // link100, lane DET2, rung 2).
+    //
+    // src/_ZN3IRQ13VBlankHandlerEv.c is five statements and the wake is the
+    // second of them:
+    //     data_0209d514 = data_0209d514 + 1;
+    //     if (data_0209d514 >= data_0208ee44 && data_0209d4f0 != 0) {
+    //         OS_WakeupThread(&data_0209d500);
+    //         data_0209d514 = 0;          <- the frame boundary's own zero
+    //         func_02019144();            <- the display commit
+    //     }
+    //     OS_WakeupThread(&data_0209d4fc);
+    //     ... |= 1; func_02019100();
+    // On the cartridge all five run, in one go, before the interrupt returns:
+    // OS_WakeupThread reaches src/func_02057f54.c and its FIRST test is
+    //     if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
+    //     s->m0 = 1; return;
+    // -- in IRQ mode (0x12) the reschedule raises the manager's pending flag
+    // and returns, and the IRQ return path is what performs the switch.
+    //
+    // This port's ARMProcessorMode is hosted at 0x1f (system mode) in
+    // hal/cxx_aliases.cpp, which this lane does not own, so func_02057f54 runs
+    // all the way through and its ARMRestoreContext -- this function -- took
+    // the switch from inside the wake. The handler was then left parked one
+    // statement short of `data_0209d514 = 0` and finished on the next halt, so
+    // the ROM's VBlank count read the DIVIDER at every frame boundary instead
+    // of zero (measured, lane DET's [rb-det] words line: data_0209d514=2 with
+    // data_0208ee44=2, straight run and re-run alike) and func_02019144's
+    // display commit ran at the head of the following frame.
+    //
+    // AND THE ROM'S OWN THREE LINES DO IT NOW (run link100, lane DET3). The
+    // paragraph above is the state this file was in when lane DET2 closed: the
+    // host answered system mode, so func_02057f54 ran past its own guard and
+    // the deferral had to be caught here, one call later than the ROM takes it,
+    // with the current-thread word put back by hand and a save taken and thrown
+    // away on every deferral (measured: saves 899 against 600 switches).
+    //
+    // hal/cxx_aliases.cpp's ARMProcessorMode now answers 0x12 for the length of
+    // the handler (see port_irq_mode_depth at the top of this file), so
+    // func_02057f54 returns at ITS line 27 -- before ARMSaveContext, before the
+    // two callbacks, before the current-thread write at line 37. There is
+    // nothing left here to undo, nothing to put back, and no thrown-away save:
+    // the ROM's decision point is the ROM's again. Step 2 of the halt still
+    // clears m0 and calls func_02057f54 when the handler returns, because that
+    // is the IRQ return and the port has no exception vector to stand in for it.
+    //
+    // Nothing in src/ reads or writes m0 -- every other data_020a6134 access in
+    // the linked set is at +2, +8, +0xc, +0x10, +0x14 or the slot array -- so
+    // the reader step 2 stands in for is the ROM's IRQ return path, exactly as
+    // step 2 already stands in for the dispatcher.
+    //
+    // SM64DS_DET3=0 puts the mode answer back to 0x1f and this block back in
+    // charge; SM64DS_DET2_IRQDEFER=0 on top of that puts the raw
+    // switch-from-inside back. Both on the same binary.
+    if (g_in_vblank_handler) {
+        if (det3_on()) {
+            // The mode answer should have stopped this one call earlier. Count
+            // it, name it, and let it through: an unswitched wake would be a
+            // hang, and a counter that reads 0 is the proof that the answer
+            // covers every route.
+            ++g_stat.irqswitch;
+        } else if (det2_irqdefer()) {
+            ++g_stat.deferred;
+            mgr_current() = from;
+            mgr_u16(0) = 1;
+            trace("defer %u -> %u to the IRQ return",
+                  from ? from->id : 0u, to->id);
+            return;
+        }
+    }
 #if defined(_WIN32)
     if (GetCurrentThreadId() != g_owner_tid) {
         ++g_stat.wrong_thread;
@@ -766,19 +1022,130 @@ void _ZN4CP1516WaitForInterruptEv(void) {
     ++g_stat.halts;
 
     // 1. the host frame pump, where the retired host sleep's pump loop went.
+    //
+    //    AND IT DOES NOT RUN INSIDE A RE-SIMULATED FRAME (run link100, lane
+    //    DET). hal/comms_conductor.cpp's conductor_pump is the RADIO: every
+    //    turn of it polls the transport and gives the host ARM7 a turn
+    //    (comms_arm7_turn), and an ARM7 turn POSTS A QUEUED WM REPLY, which the
+    //    ROM answers by sending the next WM command -- so the ROM's own command
+    //    queue at data_020a89b0 walks its ten slots once per turn. On a
+    //    connected session that same pump then spends up to one VBlank of WALL
+    //    TIME polling for a datagram (lane VS7's fix, which is right for a real
+    //    frame). Neither belongs in a frame the window has ALREADY PLAYED and
+    //    is only re-running to fold in a corrected input: the radio turns of
+    //    that frame happened once, in real time, and re-running them is host
+    //    I/O inside the simulation. That is the same class as the rasteriser
+    //    and the present, which hal/rollback.cpp already stands down for a
+    //    replayed frame, and it is what made the DET rung's restore+retick read
+    //    DSSTATE-DIFFERS on data_020a89b0+0xc once rung H2 made phase 7 the
+    //    ROM's own sleep: measured, 6 of 6 windows, every repetition.
+    //
+    //    With the pump suspended step 4's bound below falls back to the ROM's
+    //    own divider, so a replayed frame's phase-7 sleep ends on
+    //    IRQ::VBlankHandler's own wake -- the DS's own frame end -- rather than
+    //    on this port's starvation wake at a wall-clock boundary.
     bool pump_stop = false;
-    if (port::ThreadPump p = port::thread_pump()) {
-        ++g_stat.pump_turns;
-        if (!p(g_starve)) pump_stop = true;
+    if (!g_pump_suspended) {
+        if (port::ThreadPump p = port::thread_pump()) {
+            ++g_stat.pump_turns;
+            if (!p(g_starve)) pump_stop = true;
+        }
+    }
+
+    // 1b. THE HOST FRAME'S OWN DUTIES (run link100, boot plan rung R3b).
+    //
+    //   The pump above is the WIRELESS one: hal/comms_conductor.cpp installs it
+    //   for the duration of a radio wait and nothing else does. This second
+    //   one is the FRAME's -- the pacer today, and whatever else rung R3b's
+    //   later steps move out of tests/walk_window.cpp's loop body -- and it is
+    //   here because a frame's wait IS its pace: func_020197b8 sleeps at phase
+    //   7 and the VBlank is what ends the frame.
+    //
+    //   NOTHING INSTALLS IT TODAY, deliberately, and the measurement says why:
+    //   a 300-frame level run reports halts=0, so this whole function is
+    //   entered zero times while tests/walk_window.cpp drives the frame. That
+    //   file calls port_host_frame_pump itself, at the point the duty always
+    //   ran. Rung R3d hands the frame to func_020197b8, and the install below
+    //   is the one line that keeps the duty running once per frame afterwards.
+    //   Counted separately from pump_turns so the two pumps can never be
+    //   confused for one another in a report.
+    if (g_host_frame_pump) {
+        ++g_stat.frame_pump_turns;
+        g_host_frame_pump(g_starve);
     }
 
     // 2. the VBlank edge, through the port's own registry.
-    if (void *h = _ZN3IRQ13GetIRQHandlerEj(ntr::IRQ_VBLANK)) {
+    //
+    //    ONE EDGE PER FRAME'S WAIT, NOT ONE PER HALT (run link100, lane DET).
+    //    This host has no 60 Hz interrupt source. The halt is its whole model of
+    //    "a VBlank arrived", and a halt is not a clock: it happens as often as
+    //    some piece of host code decides to sleep, which on a wireless wait is
+    //    as often as a datagram is late. Delivered on every halt, the edge made
+    //    data_0209d514 -- whose ONE ROM reader is the handler's own wake test at
+    //    src/_ZN3IRQ13VBlankHandlerEv.c:15 -- a count of RADIO WAITS rather than
+    //    a count of frames, and a count of radio waits is not something a
+    //    re-simulated frame can reproduce: a replayed frame's comms are served
+    //    from hal/rollback.cpp's record and take no wait at all. That is what
+    //    the DET rung read as DSSTATE-DIFFERS on data_0209d500 and
+    //    data_0209d514.
+    //
+    //    On a DS the count is per frame: func_020197b8 raises data_0209d4f0,
+    //    sleeps, and data_0208ee44 VBlanks later the handler's own branch wakes
+    //    it and puts the count back to zero -- and func_020197b8.c:63 zeroes it
+    //    again after the wait, which is the cartridge saying out loud that a
+    //    frame boundary reads zero. So the edge is delivered while THE FRAME'S
+    //    OWN WAIT is what is asleep, and a halt that is a radio wait
+    //    (data_0209d4f0 down) does not manufacture one.
+    //
+    //    NOTHING IS STRANDED BY THAT. Step 3 below is the wake for the per-
+    //    VBlank queue data_0209d4fc and it runs whether or not the handler was
+    //    dispatched -- it exists for exactly the case where the handler is not
+    //    there -- so a thread sleeping on that queue during a radio wait is
+    //    still woken. What stops happening in a radio wait is the ROM's own
+    //    display commit (func_02019144), which is a per-frame duty and now runs
+    //    once per frame instead of once per wait.
+    //
+    //    SM64DS_DET_VBLFRAME=0 restores the old reading on the same binary.
+    const bool vbl_owed = !det_vblframe() || data_0209d4f0[0] != 0;
+    if (void *h = vbl_owed ? _ZN3IRQ13GetIRQHandlerEj(ntr::IRQ_VBLANK) : 0) {
         volatile uint32_t *irq_if = reinterpret_cast<volatile uint32_t *>(0x04000214);
         *irq_if |= ntr::IRQ_VBLANK;
+        ++g_stat.vblank_enters;   // before the call: see the counter's note
+        // and the wait's own edge count, BEFORE the call for the same reason:
+        // the handler's wake branch reschedules from inside, so a statement
+        // after the call does not run until the idle fiber is resumed -- which
+        // is the next frame's wait, and charging this frame's edge to that one
+        // is the carried-count defect step 4 below exists to end.
+        if (data_0209d4f0[0] != 0) ++g_frame_wait_edges;
+        ++g_in_vblank_handler;
+        // AND THE CORE IS IN IRQ MODE FOR THE WHOLE OF IT (run link100, lane
+        // DET3). ARMProcessorMode answers 0x12 while this is up, which is what
+        // makes src/func_02057f54.c:24-28 -- the ROM's own lines, not this
+        // file's -- raise the manager's pending flag and return instead of
+        // switching a thread from inside an interrupt handler. It comes down
+        // BEFORE the IRQ return below, because that return is out of IRQ mode.
+        if (det3_on()) ++port_irq_mode_depth;
         reinterpret_cast<void (*)()>(h)();
+        if (det3_on()) --port_irq_mode_depth;
+        --g_in_vblank_handler;
         *irq_if &= ~ntr::IRQ_VBLANK;
         ++g_stat.vblank_dispatches;
+        // AND THIS IS THE IRQ RETURN (run link100, lane DET2, rung 2). On the
+        // cartridge the switch a wake inside the handler asked for happens
+        // here, out of IRQ mode, once the handler has run to its end; see
+        // ARMRestoreContext for the whole reason and for what m0 is. The ROM's
+        // own reschedule is what performs it, so the pick, the save, the
+        // callbacks and the current-thread word are all func_02057f54's, exactly
+        // as they are on every other switch this port takes.
+        if ((det3_on() || det2_irqdefer()) && mgr_u16(0) != 0) {
+            // m0 up at a handler's return is one switch the ROM asked for from
+            // inside the handler and did not take. Under DET3 that flag was
+            // raised by func_02057f54 itself, so this is where the count of
+            // them belongs.
+            if (det3_on()) ++g_stat.deferred;
+            mgr_u16(0) = 0;
+            func_02057f54();
+        }
     }
 
     // 3. the wake that handler performs, in ROM code. OS_WakeupThread clears
@@ -793,13 +1160,142 @@ void _ZN4CP1516WaitForInterruptEv(void) {
     }
 
     // 4. the bound. With a pump installed this is the pump's own limit, which
-    //    is what hal/os_thread.h documented for the wireless wait; with none
-    //    it is one turn, which is the liveness the retired host body had.
-    const unsigned limit = port::thread_pump() ? port::thread_pump_limit() : 1u;
+    //    is what hal/os_thread.h documented for the wireless wait.
+    //
+    //    WITH NONE IT USED TO BE ONE TURN, and run link100 lane R3D measured
+    //    what that costs: a phase-7 sleep reports vbl_wakes=0 starved=1. The
+    //    idle loop delivers ONE VBlank edge per turn and the ROM's own wake
+    //    needs data_0208ee44 of them, which is 2 on a 3D level, so a one-turn
+    //    bound returned control before the wake could ever fire and THIS
+    //    port's starvation wake paced the frame instead of the VBlank. That is
+    //    exactly the thing rung D5 hands the frame to.
+    //
+    //    So with no pump the bound is the ROM's own divider. It is still a
+    //    HOST bound and not ROM behaviour -- the ROM has no such counter -- and
+    //    it is still what stops this function spinning: the ceiling keeps a
+    //    zero or unhosted divider on the old one-turn liveness and refuses an
+    //    absurd one outright, so the worst case is a handful of turns rather
+    //    than a number read out of uninitialised memory.
+    unsigned limit;
+    if (port::thread_pump() && !g_pump_suspended) {
+        limit = port::thread_pump_limit();
+    } else {
+        const int div = data_0208ee44;
+        limit = (div > 0 && div <= 8) ? static_cast<unsigned>(div) : 1u;
+    }
+    // AND THE ROM'S OWN FRAME WAIT IS BOUNDED BY ITS OWN VBLANK EDGES, NOT BY
+    // THE PUMP'S VOTE OR BY A CARRIED-OVER HALT COUNT (run link100, lane DET;
+    // the follow-up lane VS7 left this file's owner).
+    //
+    // data_0209d4f0 is up for exactly the length of func_020197b8's phase-7
+    // wait and down everywhere else, so `up` here means "the thing asleep is
+    // THE FRAME". While it is up the DS ends the wait one way and one way only:
+    // data_0208ee44 VBlank edges arrive and IRQ::VBlankHandler's own branch
+    // wakes data_0209d500. Two host accidents used to end it sooner, and both
+    // are measured:
+    //
+    //   THE PUMP'S STOP VOTE. hal/comms_conductor.cpp's pump returns false on a
+    //   connected session -- it means "I have nothing more to poll for", a
+    //   statement about the radio and not about the frame -- and step 4 read it
+    //   as "end the wait". A 300-frame level run on the ROM's loop then read
+    //   starved=149: one frame in two ending on the port's own bound rather
+    //   than the ROM's edge, with data_0209d514 left holding a PARTIAL count
+    //   that alternated 1, 0, 1, 0 with the frame number.
+    //
+    //   THE CARRIED HALT COUNT. g_starve is not per-wait, and the halt that
+    //   RESUMES the previous frame's parked handler is charged to this frame's
+    //   wait: with a divider of 2 that is one of the two turns spent before a
+    //   single edge of this frame has been delivered, so the wait ended after
+    //   one edge with data_0209d500 still holding the sleeper's bit (starve_wake
+    //   deliberately does not clear a queue word it cannot identify). Measured
+    //   on the DET rung: straight run data_0209d500=0 data_0209d514=2, re-run
+    //   data_0209d500=1 data_0209d514=1, every window, every repetition.
+    //
+    // So while the frame's wait is what is asleep, the bound counts THE EDGES
+    // THIS WAIT HAS BEEN GIVEN -- reset by port_thread_frame_wait_begin below,
+    // stepped by step 2 -- and allows it the divider's worth of them. The ROM's
+    // own wake fires on the last of those, from inside step 2, so this bound is
+    // reached only if the wake did not: it is liveness, not pacing. It cannot
+    // hang, and it cannot end the wait early.
+    //
+    // data_0209d514 used to read the DIVIDER rather than zero at a frame
+    // boundary, and the reason was that the ROM's handler resets it in the
+    // statement after OS_WakeupThread while this port's OS_WakeupThread
+    // switched away from inside, leaving the handler parked one statement
+    // short until the next halt. That was deterministic but it was not the
+    // cartridge. The IRQ-return deferral in ARMRestoreContext ends it (run
+    // link100, lane DET2, rung 2): the handler now runs to its end in one go,
+    // so the boundary reads zero and the reset is inside the frame it belongs
+    // to. SM64DS_DET2_IRQDEFER=0 puts the old reading back.
+    //
+    // SM64DS_DET_FRAMEWAIT=0 restores the old reading on the same binary.
+    //
+    // AND THE ALLOWANCE IS ONE HALT WIDER THAN THE DIVIDER (run link100, lane
+    // DET2, rung 1). The two counters this bound compares are stepped in the
+    // same statement pair of step 2 above -- the edge is counted immediately
+    // before the handler is called, and the handler's first line is
+    // `data_0209d514 = data_0209d514 + 1` -- so on the wait's Nth halt the
+    // allowance reads N and the ROM's own count reads N as well, and the ROM's
+    // wake fires from INSIDE that call on the halt where both reach the
+    // divider. The bound is therefore reached only on a halt where the ROM's
+    // count says the wake was due and the wake did not happen, and there is
+    // exactly one way for that: OS_WakeupThread(&data_0209d500) with an EMPTY
+    // queue word does not reschedule (src/OS_WakeupThread.c:23 returns without
+    // calling func_02057f54 when *self is 0), so the handler runs to its end,
+    // returns, and this bound ends the frame instead of the ROM's wake.
+    // Giving the wait one halt beyond the divider hands that frame back to the
+    // ROM: the handler's own test is true again on the next halt, and if the
+    // sleeper's bit has arrived by then the ROM's wake is what ends the frame.
+    // Liveness is unchanged in kind -- the wait still cannot spin -- it is one
+    // turn longer. MEASURED on solo level 1, 300 frames, nothing exported: the
+    // census is identical with the slack on and off (halts=598 vbl_enter=598
+    // vbl_dispatch=597 vbl_wakes=0 starved=0 both ways), because on that path
+    // the queue word is never empty when the wake is due and the bound is
+    // never reached at all. SM64DS_DET2_OWED1=0 puts the exact-divider bound
+    // back on the same binary.
+    if (data_0209d4f0[0] != 0 && det_framewait()) {
+        const int fdiv = data_0208ee44;
+        unsigned owed = (fdiv > 0 && fdiv <= 8) ? static_cast<unsigned>(fdiv) : 1u;
+        if (det2_owed1()) owed += 1u;
+        if (g_frame_wait_edges >= owed) {
+            g_starve = 0;
+            g_frame_wait_edges = 0;
+            starve_wake();
+        }
+        return;
+    }
     if (pump_stop || ++g_starve >= limit) {
         g_starve = 0;
         starve_wake();
     }
+}
+
+// THE RE-SIMULATION GATE (run link100, lane DET). tests/walk_window.cpp raises
+// this around the ROM's phase-7 sleep on a frame hal/rollback.cpp is replaying
+// and drops it after; step 1 of the halt above is what reads it. Kept as a
+// setter rather than a direct rb_replaying() call because hal/rollback.cpp is
+// not in every target that compiles this file (smoke_player has no rollback),
+// which is the same reason hal/star_flow.cpp and hal/luigi_infection.cpp go
+// through a plain int rather than calling rb_replaying() themselves.
+void port_thread_pump_suspend(int on)
+{
+    g_pump_suspended = on ? 1 : 0;
+}
+
+// THE FRAME'S OWN WAIT STARTS WITH A FRESH BOUND (run link100, lane DET).
+// g_starve is the halt bound's counter and it is not per-wait: a radio wait
+// earlier in the same frame could leave it one short of the limit, and the
+// frame's phase-7 sleep would then be cut off by step 4 on its FIRST halt --
+// before the ROM's own wake could fire. A sleep that ends that way leaves
+// data_0209d500 holding the sleeper's bit, because starve_wake deliberately
+// does not clear a queue word it cannot identify, and the next frame boundary
+// then reads a word the ROM's own wake would have zeroed. Called from
+// tests/walk_window.cpp immediately before func_0201a4bc's sleep, which is the
+// only place the frame's own wait begins.
+void port_thread_frame_wait_begin(void)
+{
+    g_starve = 0;
+    g_frame_wait_edges = 0;
 }
 
 }  // extern "C"
@@ -838,6 +1334,16 @@ extern "C" void port_thread_sched_counts(unsigned long long *adopted,
 // thread_proof() below performs after its own control arm, and it exists ONLY
 // for that: on the armed path no caller ever needs it, because the switch
 // happened and the word is right.
+// rung R3b step B2: install the HOST FRAME pump that step 1b of
+// CP1516WaitForInterrupt calls. Nothing calls this yet -- rung R3d is what
+// calls it, once, when func_020197b8 becomes the thing that drives the frame.
+// Until then tests/walk_window.cpp calls port_host_frame_pump itself at the
+// point the duty always ran, so the frame is unchanged to the statement.
+extern "C" void port_install_host_frame_pump(int (*pump)(unsigned))
+{
+    g_host_frame_pump = pump;
+}
+
 extern "C" void port_thread_repair_current(void)
 {
     if (!g_running) return;
@@ -850,14 +1356,18 @@ namespace port {
 void thread_sched_report(const char *tag) {
     std::fprintf(stderr,
                  "[thr] %s saves=%llu switches=%llu resumes=%llu refused=%llu "
-                 "halts=%llu pump=%llu vbl_dispatch=%llu vbl_wakes=%llu "
+                 "halts=%llu pump=%llu framepump=%llu vbl_enter=%llu "
+                 "vbl_dispatch=%llu vbl_wakes=%llu "
                  "starved=%llu unknown=%llu adopted=%llu entered=%llu "
-                 "exited=%llu rejected=%llu nocreate=%llu\n",
+                 "exited=%llu rejected=%llu nocreate=%llu deferred=%llu "
+                 "irqswitch=%llu\n",
                  tag, g_stat.saves, g_stat.restores, g_stat.resumes,
                  g_stat.refused, g_stat.halts, g_stat.pump_turns,
+                 g_stat.frame_pump_turns, g_stat.vblank_enters,
                  g_stat.vblank_dispatches, g_stat.vblank_wakes, g_stat.starved,
                  g_stat.unknown_ctx, g_stat.adopted, g_stat.entered,
-                 g_stat.exited, g_stat.rejected, g_stat.nocreate);
+                 g_stat.exited, g_stat.rejected, g_stat.nocreate,
+                 g_stat.deferred, g_stat.irqswitch);
     std::fflush(stderr);
 }
 

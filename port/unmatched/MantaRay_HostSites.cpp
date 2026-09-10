@@ -89,61 +89,13 @@ void _ZN7PathPtr6FromIDEj(void *self, unsigned id);
 void _ZNK7PathPtr7GetNodeER7Vector3j(const void *self, MrVec3 *out, unsigned idx);
 extern char data_020a0e68[];
 
-/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class, plus
- * three PathPtr __thiscall member calls MSVC cannot name. */
-int _ZN8MantaRay8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    {
-        PortOv090Pmf *o = *(PortOv090Pmf **)(c + 0x370);
-        if (o[1].fn != 0)
-            ((PortOv090StateFn)(size_t)o[1].fn)(c);
-    }
-    {
-        char p[8];
-        MrVec3 node;
-        MrVec3 diff;
-        MrVec3 v;
-        int len;
-
-        _ZN7PathPtrC1Ev(p);
-        _ZN7PathPtr6FromIDEj(p, *(unsigned int *)(c + 0x37c));
-        _ZNK7PathPtr7GetNodeER7Vector3j(p, &node, *(unsigned int *)(c + 0x384));
-        Vec3_Sub(&diff, (MrVec3 *)(c + 0x5c), &node);
-        len = LenVec3(&diff);
-        if (len == 0 || len <= 0x258000) {
-            (*(int *)(((int)c + 0x384)))++;
-            if (*(int *)(c + 0x384) >= *(int *)(c + 0x380))
-                *(int *)(c + 0x384) = 0;
-        }
-        _Z14ApproachLinearRsss((short *)(c + 0x94),
-                               Vec3_HorzAngle((MrVec3 *)(c + 0x5c), &node), 0x60);
-        _Z14ApproachLinearRsss((short *)(c + 0x92),
-                               Vec3_VertAngle((MrVec3 *)(c + 0x5c), &node), 0x40);
-        *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-        *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-        *(short *)(c + 0x90) = *(short *)(c + 0x96);
-        v.y = v.x = v.z = 0;
-        v.z = 0xa000;
-        Matrix4x3_FromRotationY(data_020a0e68, *(short *)(c + 0x94));
-        Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, *(short *)(c + 0x92));
-        MulVec3Mat4x3(&v, data_020a0e68, (MrVec3 *)(c + 0xa4));
-    }
-    {
-        int s = *(int *)(c + 0xa8) + *(int *)(c + 0x9c);
-        int m2 = *(int *)(c + 0xa0);
-        int ac = *(int *)(c + 0xac);
-        if (s >= m2) m2 = s;
-        *(int *)(c + 0xa8) = m2;
-        *(int *)(c + 0xac) = ac;
-    }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0x110);
-    func_ov090_02132b14(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN8MantaRay8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 /* ---- (4) InitResources, the same PathPtr refusal ----------------------- */
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *p);

@@ -91,26 +91,13 @@ extern PortPmf data_ov064_0211c2e4[];     /* {fn=021197fc, 0} -> c934[0] (.a) */
    pair, the matched TU compiles to the same tail jump this body was, and
    the seat in this file aborts the binary on a nonzero delta so the two
    agree word for word. The reading above is kept as the derivation. */
-/* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct C. The
-   matched Piece::Behavior reads Obj.pmf (Obj at this+0x300, .pmf at +8 = record
-   [1], the .b half) and, if non-null, calls it with `this`. Read as a plain
-   { fn, 0 }. The three unk copies and the trailing helper are the matched
-   Behavior's own. */
-extern "C" int _ZN17BowserPuzzlePiece8BehaviorEv(void *self)
-{
-    char *c = (char *)self;
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    {
-        PortPmf *obj = *(PortPmf **)(c + 0x300);   /* ((C*)this)->obj */
-        if (obj[1].fn)                             /* obj->pmf (record[1], .b) */
-            ((int (*)(void *))(size_t)obj[1].fn)(c);
-    }
-    *(short *)(c + 0x08c) = *(short *)(c + 0x092);
-    *(short *)(c + 0x08e) = *(short *)(c + 0x094);
-    *(short *)(c + 0x090) = *(short *)(c + 0x096);
-    func_ov064_0211987c(c);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 /* ---- the two seats -------------------------------------------------------- */
 
@@ -154,6 +141,13 @@ g_manager_states[] = {
     {data_ov064_0211bf78, 0x02118cd4, (void *)bpm_c5},  /* state 5 */
 };
 
+/* run link100 lane PMFB7 gate 1: the per-frame half's face. */
+static void __fastcall bpp_perframe_face(void *self, void *dead_edx)
+{
+    (void)dead_edx;
+    func_ov064_021193b4(self);
+}
+
 extern "C" void port_bowser_puzzle_manager_states_seat(void)
 {
     static int done;
@@ -179,7 +173,12 @@ extern "C" void port_bowser_puzzle_manager_states_seat(void)
 static const struct { PortPmf *slot; unsigned rom; int (*host)(void *); }
 g_piece_states[] = {
     {data_ov064_0211c2e4, 0x021197fc, func_ov064_021197fc},  /* .a, the reset */
-    {data_ov064_0211c2dc, 0x021193b4, func_ov064_021193b4},  /* .b, the per-frame */
+    /* run link100 lane PMFB7 gate 1: the .b half is a FACE now --
+       src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp dispatches it as a real
+       pointer to member (mov eax,[cell+8] / mov ecx,[cell+12] / add ecx,this /
+       call eax, arity 0). The .a half keeps its plain cdecl body. */
+    {data_ov064_0211c2dc, 0x021193b4,
+     (int (*)(void *))(void *)bpp_perframe_face},  /* .b, the per-frame */
 };
 
 extern "C" void port_bowser_puzzle_piece_states_seat(void)

@@ -97,6 +97,7 @@ matched TU already surfaced through its Itanium name somewhere else in the
 queue is reported as already-surfaced rather than counted twice.
 
     python port/tools/linkage.py [repo-root] [--queue] [--exceptions] [--faces]
+  python port/tools/linkage.py --selftest        # the tag binder's fixtures
                                              [--by-module] [--msvc-names]
 
   --queue        list every SHADOW symbol with its matched source
@@ -156,6 +157,18 @@ def host_source_for(root, obj):
 
 
 IDENT = re.compile(r"[A-Za-z_]\w*")
+# A whole line that is one macro invocation and nothing else --
+# `VS_SEAM(UnloadOverlay)`, `PORT_SEAM(func_0203d9f4)`. It DEFINES the symbol
+# named inside it (the macro expands to a definition), so a tag's binding run
+# ends there, the way it ends on a `{`. Without this the run walks straight
+# through into the NEXT tagged row and binds that row's symbol to this row's
+# reason: three rows in hal/scene_vs_menu.cpp's VS_SEAM block, two of them
+# wrong, with UnloadOverlay reported as a "refused DS wireless-status wrapper".
+# A definition head does not match: `void foo(int a)` has a type token before
+# the identifier, and this pattern wants the identifier first. A prototype
+# (`FOO(x);`) does not match either, and it should not -- a `;` line keeps the
+# run open by design, because several tags sit above a prototype.
+MACRO_CALL = re.compile(r"^[A-Za-z_]\w*\s*\(.*\)$")
 # Type/keyword tokens that share a definition line with the real symbol name.
 _SKIP_IDENT = {"extern", "static", "void", "int", "unsigned", "char", "short",
                "long", "const", "signed", "struct", "return", "if", "for",
@@ -236,8 +249,10 @@ def _reasons_in(source_path):
                     out.setdefault(undecorate(name), reason)
             # A `{` opens the definition body -- stop here. A line ending in `;`
             # is a forward-declaration/prototype the definition sits below;
-            # keep going. `}` closes a one-line body -- stop.
-            if "{" in st or st.endswith("}"):
+            # keep going. `}` closes a one-line body -- stop. And a bare macro
+            # invocation IS the definition on the rows that use one, so it
+            # stops the run too (MACRO_CALL above says why).
+            if "{" in st or st.endswith("}") or MACRO_CALL.match(st):
                 break
             j += 1
             run += 1
@@ -574,6 +589,103 @@ def by_module(root, matched, linked_stems):
     print()
 
 
+SELFTEST_MACRO_BLOCK = """\
+static void seam(const char *n);
+#define VS_SEAM(sym)                                                           \\
+    extern "C" int sym(void);                                                  \\
+    extern "C" int sym(void) { seam(#sym); return 0; }
+// PORT_HOST_ABI: refused DS wireless-status wrapper.
+VS_SEAM(func_0203d9f4)
+// PORT_HOST_ABI: nothing to unload; every hosted overlay is a static mount.
+VS_SEAM(UnloadOverlay)
+// PORT_HOST_ABI: the port runs no DS threads.
+VS_SEAM(func_02057f38)
+#undef VS_SEAM
+"""
+
+SELFTEST_PROTOTYPE_BLOCK = """\
+// PORT_HOST_ABI: ARM `swp` atomic exchange, no host equivalent.
+unsigned int helper_decl(unsigned int, void *);
+unsigned int func_02059824(unsigned int val, void *addr,
+                           void (*fn)(void))
+{
+    return helper_decl(val, addr);
+}
+"""
+
+SELFTEST_PROSE_BLOCK = """\
+// THIS ONE IS NOT AN ABI EXCEPTION, and deliberately carries no
+// PORT_HOST_ABI: tag, so this tool keeps counting it as a SHADOW.
+unsigned int func_02057198(unsigned int val, void *addr)
+{
+    return 0;
+}
+"""
+
+
+def selftest():
+    """Fixtures for the tag binder. Run as `linkage.py --selftest`.
+
+    Every case here is a shape the tree actually contains, and the first one is
+    a bug this tool shipped: hal/scene_vs_menu.cpp's three VS_SEAM rows each
+    carry their own tag, and the binder used to run past a macro invocation
+    into the next row, so UnloadOverlay and func_02057f38 were both reported
+    with func_0203d9f4's wireless reason.
+    """
+    import tempfile
+
+    failures = []
+
+    def reasons_of(text):
+        with tempfile.NamedTemporaryFile("w", suffix=".cpp", delete=False,
+                                         encoding="utf-8") as f:
+            f.write(text)
+            path = f.name
+        try:
+            return _reasons_in(path)
+        finally:
+            os.unlink(path)
+
+    def check(what, got, want):
+        if got != want:
+            failures.append("%s: got %r, want %r" % (what, got, want))
+
+    r = reasons_of(SELFTEST_MACRO_BLOCK)
+    check("VS_SEAM row 1", r.get("func_0203d9f4"),
+          "refused DS wireless-status wrapper.")
+    check("VS_SEAM row 2", r.get("UnloadOverlay"),
+          "nothing to unload; every hosted overlay is a static mount.")
+    check("VS_SEAM row 3", r.get("func_02057f38"),
+          "the port runs no DS threads.")
+
+    # A tag above a prototype still reaches the definition below it: the run
+    # keeps going through a `;` line and through the wrapped argument list.
+    r = reasons_of(SELFTEST_PROTOTYPE_BLOCK)
+    check("prototype then definition", r.get("func_02059824"),
+          "ARM `swp` atomic exchange, no host equivalent.")
+    check("the prototype's own name binds too", r.get("helper_decl"),
+          "ARM `swp` atomic exchange, no host equivalent.")
+
+    # KNOWN AND NOT FIXED HERE: a definition's own header comment that spells
+    # the tag in prose is read as a tag. The binder's guard against prose is a
+    # blank line, and a header comment has none between itself and the body it
+    # documents. hal/boot_hw.cpp had the tree's one instance and lane LOADOV
+    # deleted it at the source. This case is pinned so the day someone teaches
+    # the binder to tell prose from a ruling, the fixture says what changed.
+    r = reasons_of(SELFTEST_PROSE_BLOCK)
+    check("prose mention is still read as a tag (known)",
+          r.get("func_02057198"),
+          "tag, so this tool keeps counting it as a SHADOW.")
+
+    for line in failures:
+        print("linkage selftest FAIL: " + line)
+    if failures:
+        print("linkage selftest: %d failure(s)" % len(failures))
+        return 1
+    print("linkage selftest: 6 checks, 0 failed -- tag binder OK")
+    return 0
+
+
 def default_root():
     """The checkout this script lives in: <root>/port/tools/linkage.py."""
     here = os.path.dirname(os.path.abspath(__file__))
@@ -581,6 +693,9 @@ def default_root():
 
 
 def main():
+    if "--selftest" in sys.argv:
+        return selftest()
+
     positional = [a for a in sys.argv[1:] if not a.startswith("--")]
     root = positional[0] if positional else default_root()
     show_queue = "--queue" in sys.argv

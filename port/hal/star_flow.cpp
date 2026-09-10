@@ -1180,6 +1180,94 @@ static int g_king_tick;             /* 0..59, the deterministic per-second gate 
 static int g_king_armed;            /* zeroed on disarm; arms the match reset   */
 static int g_king_holder = -1;      /* current holder slot, for the live HUD    */
 
+/* ---- THE ROLLBACK SNAPSHOT'S COPY OF THE MATCH FLOW -----------------------
+ *
+ * Everything latched above is SIMULATION STATE that lives in host statics, so
+ * it sits outside all three regions the rollback snapshot copies (the DS arena,
+ * .dsstate and the hardware content stores) and until run link100 a rewind left
+ * it exactly where the frame it rewound over had put it. hal/luigi_infection.cpp
+ * names this class and carries its own two words through the slot; this is the
+ * same carriage for the match flow. .dsstate is no more the place for these
+ * than it was for those: hal/dsstate_seg.h reserves that bracket for hosted DS
+ * globals and tools/dsstate_guard.py says host-only symbols must NOT be in it.
+ *
+ * WHAT GOES WRONG WITHOUT THIS, precisely, and it is player-facing.
+ * g_end_fired latches the frame the match was won and never unlatches:
+ * port_vs_match_end_frozen reads it to hold every pad from the frame after, the
+ * trigger block below is skipped for the rest of the session once it is set,
+ * and g_end_scores is the scoreline the marker reports. A console that rewinds
+ * over the winning frame comes back with the arena restored -- the star is
+ * uncollected again, the match is live again -- but with the match still over
+ * in its own head: its pads still held, its old scoreline still latched, its
+ * trigger permanently skipped. A console that did NOT rewind over that frame is
+ * playing a live match. The two worlds are different from that frame on and
+ * nothing brings them back, because the disagreement is not in any byte either
+ * side snapshots. Measured at run link100 (lane VS4BISECT): across twelve runs
+ * the diverging window is always the one that simulated the match-end frame
+ * exactly once while the others re-simulated it, and with the win condition
+ * moved out of reach (--star-target 3, no match end) the same six pairings are
+ * green every time.
+ *
+ * THE KING WORDS RIDE ALONG for the same reason: g_king_points is the score a
+ * king match is decided on, g_king_tick is the deterministic per-second gate,
+ * and g_king_armed is a latch whose arming zeroes both, so a rewind that loses
+ * them credits a second twice or not at all and two consoles disagree about the
+ * score. g_king_holder is the holder the live HUD and the next tick read.
+ *
+ * NOT CARRIED, deliberately, and this is luigi_infection.cpp's seed reasoning:
+ * the ENV-DERIVED CONFIGURATION -- g_vs_players_cache, g_king_target, and the
+ * on/want_scene/want_exit/grace/star_target caches inside the poll -- is parsed
+ * once out of an environment every peer shares and never moves after, so
+ * restoring it would copy bytes that cannot have changed. Neither are this
+ * file's PRINT THROTTLES (last_shown in the countdown trace, last_stars /
+ * last_holder / last_pts in the king probe, last_pending in the grace report):
+ * they gate a line of the flight recorder, nothing reads them back, and the
+ * worst a rewind can do to one is repeat or drop a diagnostic line. The
+ * countdown trace already says so itself and checks g_port_rb_replaying.
+ *
+ * The block crosses as a flat word array with the layout in the getter rather
+ * than as eleven arguments, because the slot carries it as bytes and
+ * hal/rollback.cpp should not have to learn eleven names to do that.
+ * port_vs_end_state_words is the size the two sides agree on, so a change to
+ * kPortMaxPlayers is loud in the ring rather than silent past the end of a
+ * slot. */
+extern "C" int port_vs_end_state_words(void)
+{
+    return 9 + 2 * kPortMaxPlayers;
+}
+
+extern "C" void port_vs_end_state_get(int *w)
+{
+    int n = 0;
+    w[n++] = g_end_fired;
+    w[n++] = g_end_announced;
+    w[n++] = g_end_by_target;
+    w[n++] = g_end_by_king;
+    w[n++] = g_end_by_luigi;
+    w[n++] = g_end_total;
+    for (int i = 0; i < kPortMaxPlayers; ++i) w[n++] = g_end_scores[i];
+    w[n++] = g_king_tick;
+    w[n++] = g_king_armed;
+    w[n++] = g_king_holder;
+    for (int i = 0; i < kPortMaxPlayers; ++i) w[n++] = g_king_points[i];
+}
+
+extern "C" void port_vs_end_state_set(const int *w)
+{
+    int n = 0;
+    g_end_fired = w[n++];
+    g_end_announced = w[n++];
+    g_end_by_target = w[n++];
+    g_end_by_king = w[n++];
+    g_end_by_luigi = w[n++];
+    g_end_total = w[n++];
+    for (int i = 0; i < kPortMaxPlayers; ++i) g_end_scores[i] = w[n++];
+    g_king_tick = w[n++];
+    g_king_armed = w[n++];
+    g_king_holder = w[n++];
+    for (int i = 0; i < kPortMaxPlayers; ++i) g_king_points[i] = w[n++];
+}
+
 /* The king target, read once from the launcher-exported env and cached. This
    is the single source of truth every king-mode path (this file, level_boot's
    star-order seat, the CylinderClsn tiebreak and the PowerStar dupe guards)

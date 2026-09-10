@@ -91,6 +91,7 @@
 // none of them.
 
 #include <cstdio>
+#include <cstdlib>
 
 struct MgPmf { unsigned code; int adj; };
 
@@ -152,19 +153,108 @@ static void jump2_note(unsigned code)
 extern "C" unsigned port_mg_jump2_field_dropped(void) { return g_jump2_dropped; }
 extern "C" unsigned port_mg_jump2_field_capacity(void) { return FIELD_SEEN_MAX; }
 
-static int jump2_field_try(void *self, unsigned code)
+
+/* ---- RUN link100 LANE PMFB7 GATE 3: THE FIVE PAIRS ARE SEATED -------------
+ *
+ * THE UNIVERSE IS CLOSED, and the block it is closed over is derived from the
+ * class rather than chosen: dScMgJump2_c's own vtable (0x0213ccfc) names its
+ * bodies, the first-to-last span of them snapped to symbol boundaries is
+ * 0x020eebe8..0x020efaf0, and every `load` relocation in ov006 landing in that
+ * span whose word reads the target and whose FOLLOWING word is zero gives
+ * exactly FIVE pairs -- 0x0213cc74, cc84, cc8c, cc94, cc9c, five distinct code
+ * words. EVERY reference into that run comes from INSIDE the block and each is
+ * one writer's literal pool (0x020ef4e8 in func_ov006_020ef480, 0x020ef57c in
+ * _020ef4ec, 0x020ef5a8 in _020ef580, 0x020ef790 in _020ef768, 0x020ef830 in
+ * _020ef7f8), so nothing outside this class can hand the field an address and
+ * no reader compares a stored pair by value.
+ * (runs/link100/out/PMFB7/sweep_jump2.txt)
+ *
+ * THE EMITTED SIDE, off the TU's own /FAsc listing under the port's own flags:
+ * mov eax,[esi+20484] / mov ecx,[esi+20488] / add ecx,esi / call eax -- that is
+ * 0x5004 and 0x5008, the ROM's own offsets, ARITY ZERO, receiver in ecx.
+ * /Zp4 changes 0 listing lines outside the TITLE here and IS NOT CLAIMED: the
+ * struct comes from the tree's own dScMgJump2_c.h and MSVC already lays the
+ * member at 0x5004. The two siblings in this gate sit at the SAME ROM offset
+ * and DO need it, which is why the option is measured per source and never
+ * inherited from the offset alone.
+ *
+ * THE BODY IS NOT A GUESS. It carries "recovered from vtable slot identity",
+ * and port/tools/inferred_stub_adjudicated.txt already rules it REAL_DECOMP on
+ * lane BNT's instruction-for-instruction ROM comparison (port/slice_bnt.txt).
+ * The guard admits a symbol with that ruling; nothing new is excused here.
+ *
+ * WHAT THE CENSUS CAN STILL SEE: calls, routed, distinct and the per-code hit
+ * rows are bumped by every face and stay exact. The framework-routed arm is
+ * STRUCTURALLY ZERO after the seat, because the field can only hold one of the
+ * five faces -- that is what the closed universe means, and it is said here
+ * rather than left as a counter that reads zero forever.
+ */
+#define JUMP2_FACE(tag, call)                                             \
+    static void __fastcall jump2_f##tag(void *self, void *dead_edx)       \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        ++g_jump2_field_calls;                                            \
+        ++g_jump2_field_routed;                                           \
+        jump2_note(0x##tag##u);                                           \
+        call;                                                             \
+    }
+
+JUMP2_FACE(020ef47c, func_ov006_020ef47c())
+JUMP2_FACE(020ef480, func_ov006_020ef480((char *)self))
+JUMP2_FACE(020ef4ec, func_ov006_020ef4ec((char *)self))
+JUMP2_FACE(020ef5ac, func_ov006_020ef5ac((char *)self))
+JUMP2_FACE(020ef794, func_ov006_020ef794((char *)self))
+
+extern "C" {
+extern MgPmf data_ov006_0213cc74, data_ov006_0213cc84, data_ov006_0213cc8c,
+    data_ov006_0213cc94, data_ov006_0213cc9c;
+}
+
+namespace {
+struct Jump2Seat { MgPmf *rec; unsigned rom; void *face; const char *what; };
+const Jump2Seat g_jump2_seats[] = {
+    {&data_ov006_0213cc74, 0x020ef47cu, (void *)jump2_f020ef47c, "0213cc74"},
+    {&data_ov006_0213cc84, 0x020ef5acu, (void *)jump2_f020ef5ac, "0213cc84"},
+    {&data_ov006_0213cc8c, 0x020ef480u, (void *)jump2_f020ef480, "0213cc8c"},
+    {&data_ov006_0213cc94, 0x020ef794u, (void *)jump2_f020ef794, "0213cc94"},
+    {&data_ov006_0213cc9c, 0x020ef4ecu, (void *)jump2_f020ef4ec, "0213cc9c"},
+};
+}  /* namespace */
+
+extern "C" void port_mg_jump2_field_seat(void)
 {
-    char *c = (char *)self;
-    switch (code) {
-    case 0x020ef47cu: func_ov006_020ef47c();  return 1;  /* the idle body */
-    case 0x020ef480u: func_ov006_020ef480(c); return 1;
-    case 0x020ef4ecu: func_ov006_020ef4ec(c); return 1;
-    case 0x020ef5acu: func_ov006_020ef5ac(c); return 1;
-    case 0x020ef794u: func_ov006_020ef794(c); return 1;
-    default:                                  return 0;
+    static int done;
+    if (done)
+        return;
+    done = 1;
+    for (unsigned i = 0; i < sizeof g_jump2_seats / sizeof g_jump2_seats[0]; ++i) {
+        MgPmf *p = g_jump2_seats[i].rec;
+        if (p->code != g_jump2_seats[i].rom || p->adj != 0) {
+            std::fprintf(stderr, "FATAL: dScMgJump2_c pair %s: the mount holds "
+                         "%08x/%d, the cartridge's own record says %08x/0 -- "
+                         "WRONG BYTES\n", g_jump2_seats[i].what, p->code, p->adj,
+                         g_jump2_seats[i].rom);
+            std::abort();
+        }
+        p->code = (unsigned)(size_t)g_jump2_seats[i].face;
+        p->adj = 0;
     }
 }
 
+/* THE CALL-TIME SWITCH IS DEAD AND SAYS SO. Nothing reaches it after the seat:
+   the field can only hold one of the five faces above. It is kept as an
+   ABORTING witness rather than deleted, so a route by DS code word -- which
+   would mean the seat did not run, or a sixth pair exists that the sweep did
+   not see -- stops the binary instead of limping. */
+static int jump2_field_try(void *self, unsigned code)
+{
+    std::fprintf(stderr, "FATAL: dScMgJump2_c field dispatch reached the call-time "
+                 "switch with code %08x -- the seat did not run, or the pair "
+                 "universe is not the one the sweep closed\n", code);
+    (void)self;
+    std::abort();
+    return 0;
+}
 /* Everything this switch does not own goes to the framework unchanged, so the
    null-code guard, the nonzero-adjustment refusal and the UNHANDLED report all
    still live in exactly one place. */
@@ -202,26 +292,8 @@ extern "C" unsigned port_mg_jump2_field_row(unsigned i, unsigned *code)
    every one is confirmed against the disassembly in section 2.  The field the
    ROM reads is at +0x5004 and the unique id it feeds Particle::System is at
    +0x5a6c -- `add r0,r4,#0x5000 / ldr r0,[r0,#0xa6c]` at 0x020ef400. */
-// PORT_HOST_ABI: dScMgJump2_c vtable slot 6 Behavior; src dispatches a member pointer held in the object field at c+0x5004 that is four bytes on MSVC where the ROM's field is eight, so the host reads the {code, adj} pair and routes it.
-extern "C" int func_ov006_020ef3e0(char *c)
-{
-    *(unsigned *)(c + 0x5a6c) =
-        _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
-            *(unsigned *)(c + 0x5a6c), 0xf0, 0x400000, 0x800000, -0x480000, 0);
-
-    {
-        void *o = _ZN8Particle6System12FromUniqueIDEj(*(unsigned *)(c + 0x5a6c));
-        if (o != 0) {
-            *(int *)((char *)o + 0x50) = 0x4000;
-            *(unsigned char *)((char *)o + 0x58) = 0x2c;
-        }
-    }
-
-    func_ov006_020eef90();
-
-    {
-        const MgPmf *p = (const MgPmf *)(c + 0x5004);
-        jump2_field_call(c + (p->adj >> 1), p->code, p->adj);
-    }
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 3.
+   src/func_ov006_020ef3e0.cpp dispatches its own field now: with /vmg /vmm
+   (block R8) MSVC's pointer to member IS the ROM's eight-byte {code, adjust}
+   pair, and the five records the class's own writers copy from hold
+   zero-argument __fastcall faces. */

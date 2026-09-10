@@ -176,6 +176,9 @@ import sys
 import tempfile
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import lock_tickets
+
 # The longest a full build should ever hold the lock is a handful of minutes
 # (5m22s measured, serialised). MAX_HOLD is far above that so the age backstop
 # never breaks a live build; the pid-dead check is what recovers a killed lane
@@ -280,47 +283,9 @@ def default_root():
     return os.path.abspath(os.path.join(here, os.pardir, os.pardir))
 
 
-def _pid_alive(pid):
-    """True if a process with this pid currently exists.
-
-    Windows os.kill(pid, 0) does NOT probe -- for a non-CTRL signal it calls
-    TerminateProcess, which would kill the holder -- so query the process
-    object directly through the Win32 API. POSIX uses signal 0.
-    """
-    if pid is None or pid <= 0:
-        return False
-    if os.name == "nt":
-        import ctypes
-        from ctypes import wintypes
-        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
-        STILL_ACTIVE = 259
-        ERROR_INVALID_PARAMETER = 87
-        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-        kernel32.OpenProcess.restype = wintypes.HANDLE
-        kernel32.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL,
-                                         wintypes.DWORD)
-        handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,
-                                      False, int(pid))
-        if not handle:
-            err = ctypes.get_last_error()
-            # Invalid parameter == no such pid == dead. Access denied and the
-            # like mean the process exists but we may not open it == alive.
-            return err != ERROR_INVALID_PARAMETER
-        try:
-            code = wintypes.DWORD()
-            if kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):
-                return code.value == STILL_ACTIVE
-            return True
-        finally:
-            kernel32.CloseHandle(handle)
-    else:
-        try:
-            os.kill(pid, 0)
-        except ProcessLookupError:
-            return False
-        except PermissionError:
-            return True
-        return True
+# Shared with slot_lock.py via lock_tickets.py (run link100, lane SLOTQ): the
+# two had byte-identical copies of the Windows/POSIX liveness probe.
+_pid_alive = lock_tickets.pid_alive
 
 
 def _read_holder(path):
@@ -457,6 +422,16 @@ def _break_stale(path):
 # a dead waiter recognised without opening a single file; the body only carries
 # what the messages print (label, root, host, arrival as seconds). See FAIRNESS.
 
+# Everything below is a thin wrapper around port/tools/lock_tickets.py (run
+# link100, lane SLOTQ): slot_lock.py needed the identical fairness queue, so
+# the read/stale/write/describe logic that used to live here moved to a module
+# both locks import, rather than being forked a second time with the labels
+# changed. Names, signatures and printed text are unchanged -- verified by
+# test_build_lock.py, which is untouched by that move. build_lock's own extra
+# ticket field is `root` (which worktree is waiting); slot_lock's tickets carry
+# none. The stale-age cap stays build_lock's own choice, read fresh from
+# max_hold_seconds() (env-overridable) exactly as before.
+
 def tickets_dir(path=None):
     """The queue directory beside the lockfile.
 
@@ -468,40 +443,16 @@ def tickets_dir(path=None):
     """
     if path is None:
         path = lock_path()
-    base = os.path.basename(path)
-    stem = os.path.splitext(base)[0] or base
-    return os.path.join(os.path.dirname(path), stem + TICKETS_SUFFIX)
+    return lock_tickets.tickets_dir(path)
 
 
 def _ticket_name(arrival_ns, pid):
-    return f"{int(arrival_ns)}-{int(pid)}.json"
+    return lock_tickets.ticket_name(arrival_ns, pid)
 
 
 def _parse_ticket_name(name):
     """(arrival_ns, pid) from '<ns>-<pid>.json', or None if it is not one."""
-    if not name.endswith(".json"):
-        return None
-    arrival, sep, pid = name[:-len(".json")].partition("-")
-    if not sep:
-        return None
-    try:
-        return int(arrival), int(pid)
-    except ValueError:
-        return None
-
-
-def _ticket_body(full):
-    """The ticket's JSON fields, or {} for one that is missing or half-written.
-
-    A body we cannot read is not a broken ticket: the pid and the arrival come
-    from the filename, so an empty body costs the messages a label, nothing more.
-    """
-    try:
-        with open(full, "r", encoding="utf-8") as f:
-            data = json.load(f)
-    except (OSError, ValueError):
-        return {}
-    return data if isinstance(data, dict) else {}
+    return lock_tickets.parse_ticket_name(name)
 
 
 def _ticket_stale_reason(t):
@@ -513,20 +464,7 @@ def _ticket_stale_reason(t):
     than killed). Our OWN ticket is never stale: this process is demonstrably
     alive and polling, and self-breaking would only print noise.
     """
-    if t["pid"] == os.getpid():
-        return None
-    if t["pid"] is None:
-        return "the ticket names no waiter (bad filename)"
-    if not _pid_alive(t["pid"]):
-        return f"waiter pid {t['pid']} is gone"
-    try:
-        age = time.time() - os.path.getmtime(t["path"])
-    except OSError:
-        return None  # it was released while we looked; nothing to break
-    cap = max_hold_seconds()
-    if age > cap:
-        return f"queued {age:.0f}s, past the {cap:.0f}s cap"
-    return None
+    return lock_tickets.ticket_stale_reason(t, max_hold_seconds())
 
 
 def _read_tickets(path=None):
@@ -536,26 +474,10 @@ def _read_tickets(path=None):
     a stale entry included, marked as such -- without changing who gets the
     build next. acquire() uses _live_queue(), which breaks the stale ones.
     """
-    tdir = tickets_dir(path)
-    try:
-        names = os.listdir(tdir)
-    except OSError:
-        return []
-    out = []
-    for name in names:
-        if not name.endswith(".json"):
-            continue  # not a ticket (a scratch file); not ours to judge
-        full = os.path.join(tdir, name)
-        parsed = _parse_ticket_name(name)
-        arrival_ns, pid = parsed if parsed else (-1, None)
-        body = _ticket_body(full)
-        t = {"name": name, "path": full, "arrival_ns": arrival_ns, "pid": pid,
-             "label": body.get("label", ""), "root": body.get("root", ""),
-             "arrived": body.get("arrived")}
-        t["stale"] = _ticket_stale_reason(t)
-        out.append(t)
-    out.sort(key=lambda t: (t["arrival_ns"], t["pid"] or 0, t["name"]))
-    return out
+    if path is None:
+        path = lock_path()
+    return lock_tickets.read_tickets(path, extra_fields=("root",),
+                                     cap_seconds=max_hold_seconds())
 
 
 def queue(path=None):
@@ -569,36 +491,16 @@ def queue(path=None):
 
 def _describe_ticket(t):
     """A one-line 'pid N (label L, root R), queued Ns' for messages."""
-    bits = f"pid {t['pid']}"
-    if t["label"]:
-        bits += f" (label {t['label']!r}"
-        bits += f", root {t['root']!r})" if t["root"] else ")"
-    elif t["root"]:
-        bits += f" (root {t['root']!r})"
-    waited = _held_for(t.get("arrived"))
-    if waited is not None:
-        bits += f", queued {waited:.0f}s"
-    return bits
+    return lock_tickets.describe_ticket(t, extra_fields=("root",))
 
 
 def _live_queue(path=None):
     """The queue with every stale ticket broken (loudly), oldest first."""
-    live = []
-    for t in _read_tickets(path):
-        if not t["stale"]:
-            live.append(t)
-            continue
-        try:
-            os.remove(t["path"])
-        except OSError:
-            # Another waiter broke it first, or it was released between the read
-            # and here. Either way it is not a place in line any more, and the
-            # one thing we must not do is leave a dead ticket at the head.
-            continue
-        print(f"[build_lock] BROKE STALE TICKET ({t['stale']}): was "
-              f"{_describe_ticket(t)} -- ticket {t['path']}. A killed waiter "
-              f"must not wedge the queue behind it.", file=sys.stderr)
-    return live
+    if path is None:
+        path = lock_path()
+    return lock_tickets.break_stale_tickets(path, extra_fields=("root",),
+                                            cap_seconds=max_hold_seconds(),
+                                            tag="build_lock")
 
 
 def _write_ticket(path, label, root, arrival_ns=None):
@@ -612,31 +514,16 @@ def _write_ticket(path, label, root, arrival_ns=None):
     an improvement on that behaviour, not something to fail a build over.
     """
     global _ticket_warned
-    tdir = tickets_dir(path)
-    if arrival_ns is None:
-        arrival_ns = time.time_ns()
-    name = _ticket_name(arrival_ns, os.getpid())
-    full = os.path.join(tdir, name)
-    payload = json.dumps({
-        "pid": os.getpid(),
-        "host": socket.gethostname(),
-        "label": label or "",
-        "root": root or "",
-        "arrived": arrival_ns / 1e9,
-    })
-    try:
-        os.makedirs(tdir, exist_ok=True)
-        with open(full, "w", encoding="utf-8") as f:
-            f.write(payload)
-    except OSError as e:
+    ticket, err = lock_tickets.write_ticket(path, label, extra={"root": root},
+                                            arrival_ns=arrival_ns)
+    if err is not None:
         if not _ticket_warned:
-            print(f"[build_lock] could not take a queue ticket in {tdir} ({e}); "
-                  f"waiting UNFAIRLY (first to poll wins) rather than not at "
-                  f"all", file=sys.stderr)
+            print(f"[build_lock] could not take a queue ticket in "
+                  f"{tickets_dir(path)} ({err}); waiting UNFAIRLY (first to "
+                  f"poll wins) rather than not at all", file=sys.stderr)
             _ticket_warned = True
         return None
-    return {"name": name, "path": full, "arrival_ns": arrival_ns,
-            "pid": os.getpid()}
+    return ticket
 
 
 def _ensure_ticket(ticket, path, label, root):
@@ -652,22 +539,12 @@ def _ensure_ticket(ticket, path, label, root):
 
 def _remove_ticket(ticket):
     """Leave the queue. Idempotent, and safe on a ticket already broken."""
-    if not ticket:
-        return
-    try:
-        os.remove(ticket["path"])
-    except OSError:
-        pass
+    lock_tickets.remove_ticket(ticket)
 
 
 def _queue_position(live, ticket):
     """Our 1-based place in the queue, or None if we are not in it."""
-    if ticket is None:
-        return None
-    for i, t in enumerate(live, 1):
-        if t["name"] == ticket["name"]:
-            return i
-    return None
+    return lock_tickets.queue_position(live, ticket)
 
 
 def acquire(label="", root=None, timeout=None, poll=POLL_SECONDS):
@@ -788,6 +665,26 @@ def release(path=None):
             os.remove(path)
         except OSError:
             pass
+
+
+def holder(path=None):
+    """(pid, acquired_epoch, label, root) of the current lock holder.
+
+    A public wrapper around the lockfile read, added for run link100 lane
+    BATTLOCK: a caller that wants to know WHO holds the build lock right now
+    -- without reaching into the private _read_holder or shelling out to
+    `status` -- has had no way to ask that from Python. battery.py uses this
+    to tell whether it is running as the CHILD of an outer `build_lock.py
+    run` (an ancestor process already holds the lock, read back here), in
+    which case it must not try to acquire the lock itself: a process waiting
+    on its own ancestor's lock is a guaranteed deadlock, not a queue. Returns
+    (None, None, "", "") for a free or unreadable lock -- the same "nobody"
+    shape _stale_reason treats as dead-held.
+    """
+    if path is None:
+        path = lock_path()
+    pid, acquired, label, root, _ = _read_holder(path)
+    return pid, acquired, label, root
 
 
 @contextlib.contextmanager

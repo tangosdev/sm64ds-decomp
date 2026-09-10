@@ -49,28 +49,21 @@
  * class; MSVC's PMF representation there does not reproduce the ROM's
  * {function, delta} pair.
  */
-extern "C" {
+/* HOST COPY RETIRED, run link100 lane PMFB8 gate 1. src/func_ov055_021112c4.cpp
+   dispatches the cell itself now. The banner above was written before block R8's
+   /vmg /vmm landed: MSVC's pointer to member over the incomplete class IS the
+   ROM's eight-byte {function, delta} pair today, and the emitted dispatch reads
+   word 0 and word 1 at exactly the offsets the ROM reads them at.
 
-struct PortMirrorLuigiPmf { unsigned fn, delta; };
-typedef int (*PortMirrorLuigiFn)(void *, void *);
+   WHAT CHANGED WITH IT. The ENTER word of the cell at data_ov055_02111b70 now
+   holds a __fastcall(self, dead_edx, int) face rather than the raw cdecl
+   func_ov055_021112bc, because the matched TU's `call edx` puts the receiver in
+   ecx and pushes its one argument for the callee to pop. The face lives beside
+   the seat in hal/actor_classes_ov055.cpp. The TICK word is UNCHANGED and still
+   the plain cdecl body, because its reader -- unmatched/MirrorLuigi_Behavior.cpp
+   -- is still a host copy that calls it (self, arg) on the stack. The two halves
+   are disjoint records, which is why they can differ.
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately incomplete
- * class. */
-int func_ov055_021112c4(void *selfv, void *cellv, void *a2)
-{
-    char *c = (char *)selfv;
-    *(void **)(c + 0x1d8) = cellv;
-
-    PortMirrorLuigiPmf *q = (PortMirrorLuigiPmf *)*(void **)(c + 0x1d8);
-    if (q->fn == 0)
-        return 1;
-
-    char *recv = c + ((int)q->delta >> 1);
-    PortMirrorLuigiFn fn;
-    if (q->delta & 1)
-        fn = (PortMirrorLuigiFn)(size_t)(*(unsigned **)recv)[q->fn / 4];
-    else
-        fn = (PortMirrorLuigiFn)(size_t)q->fn;
-    return fn(recv, a2);
-}
-}
+   The class-derived block sweep, the /FAsc listing, the arity reading and the
+   second-reader measurement are in port/slice_pmfb8.txt and
+   runs/link100/out/PMFB8/. */

@@ -1,0 +1,69 @@
+# GATE SMALLS (run link100, lane SMALLS) -- two leftovers earlier lanes
+# measured, wrote down and did not take. One line each; the derivation each
+# one needed is below it.
+#
+# ---------------------------------------------------------------------------
+# RUNG 1: MOTHER_PENGUIN'S TENTH ov018 TU
+# ---------------------------------------------------------------------------
+#
+# src/func_ov018_02111bf0.c -- the floor/wall collision pass at Actor+0x1a8,
+# called by func_ov018_02112234 and func_ov018_02111e28 (both linked, both with
+# an overlay(18) relocation at the call site). Lane MPG linked nine of the
+# mother penguin's ten ov018 TUs and left this one host-copied, because its
+# symbol was spoken for: gate 188's port/unmatched/Jrb_Aliases.cpp aliased
+#     _func_ov018_02111bf0 -> _func_ov016_02111bf0
+# for three UNAGI bodies in ov016 that spell their own module's 0x02111bf0 with
+# the ov018 prefix (ov016 and ov018 share load base 0x021111a0). Defining the
+# LHS defeats the alias and reroutes Unagi into the penguin's collision pass --
+# alternatename_guard.py failed MPG's first link on exactly that, LHS
+# 0001:00188350 against RHS 0001:00148d00 -- so MPG host-copied the body under
+# port_mpg_clsn_pass and named the honest fix in its own banner.
+#
+# THE HONEST FIX IS THE GUARD'S OWN R1/R2 RECIPE, out of the wave-5 review that
+# alternatename_guard.py's header records: when a newly sliced TU would define
+# an alias LHS, DELETE THE DEAD ALTERNATENAME and recompile the TUs that
+# referenced the LHS with a per-source -DLHS=RHS. Applied here that is
+#   * the alternatename removed from unmatched/Jrb_Aliases.cpp (its banner now
+#     carries the history), and
+#   * -Dfunc_ov018_02111bf0=func_ov016_02111bf0 on the three ov016 callers,
+#     src/func_ov016_02111534.c, src/func_ov016_02111758.cpp and
+#     src/func_ov016_021118b4.cpp (all three linked through slice_gate188.txt).
+# Every reference is accounted for: those three are the only spellings of the
+# ov018 name outside ov018 itself, and hal/../unmatched/Unagi_StateDispatch.cpp
+# carries a declaration of it that nothing in that file calls.
+#
+# With the LHS free, MPG's two callers stop being renamed onto the host copy in
+# the gate-mpg block and reach the ROM's own body, and
+# unmatched/MotherPenguin_ClsnPass.cpp -- a line-for-line copy of this file
+# under a port name -- comes out of the three target lists and off disk.
+#
+src/func_ov018_02111bf0.c
+
+# ---------------------------------------------------------------------------
+# RUNG 2: THE KUPPA SCRIPT'S FIRST COMMAND DISPATCHER
+# ---------------------------------------------------------------------------
+#
+# src/func_ov002_020bd664.cpp -- the kuppa script's per-command dispatcher, the
+# one func_0200e5ac reaches. Lane PMFB8 measured it and refused it: "ITS
+# UNIVERSE CLOSES; THE SEAT NEEDS A CALL SITE THIS LANE DOES NOT OWN"
+# (port/slice_pmfb8.txt). The universe is not swept, it is named -- the source
+# itself writes `static PMF table[14] = { data_ov002_0210a14c, ... }` -- and it
+# closes: all fourteen records read {code, 0} in the ov002 image, fourteen
+# distinct code words, and the only references to any of them anywhere in ov002
+# are this row's own fourteen literal-pool loads at 020bd7ec..020bd824
+# (runs/link100/out/PMFB8/sweep_g2_ov002.txt).
+#
+# WHAT PMFB8 COULD NOT DO AND THIS GATE DOES: hal/intro_kuppa_dispatch.cpp
+# resolved at the DISPATCH SITE and never wrote the mounted records, which is
+# what bought it no seat ordering to get wrong. The matched TU inverts that --
+# MSVC copies the fourteen pairs into a function static on the first call -- so
+# the records must hold faces before the first script command. The seat
+# (port_kuppa_cmd_seat, in that same file) writes them, and ov002's bring-up in
+# tests/walk_window.cpp and tests/smoke_player.cpp calls it beside
+# port_cutscene_states_seat and the ov002 sinits. Fourteen __fastcall faces with
+# a dead edx, arity three, because the emitted dispatch puts the receiver in ecx
+# and leaves three stack words for the callee to clean; fourteen /alternatename
+# rows because MSVC decorates the fourteen `extern PMF` names. /Zp4 is not
+# needed (PMFB8: 0 diff lines).
+#
+src/func_ov002_020bd664.cpp

@@ -82,6 +82,58 @@ several of its OWN windowed children at once takes slot_reentrant() around the
 whole phase and lets the inner per-launch locks nest for free; see the phase
 banner further down and port/tools/battery.py's SM64DS_BATTERY_WORKERS.
 
+FAIRNESS -- FIRST IN, FIRST SERVED (run link100, lane SLOTQ). Waiters used to
+re-poll the same O_CREAT|O_EXCL create, so a release went to whichever process
+happened to poll next rather than to the one that had waited longest. Measured
+in production: a lane running ipc_proof.py (one slot acquisition per rung) lost
+that poll race against other lanes' batteries -- each battery takes and drops
+this lock roughly ninety times over its run -- for 100+ minutes and never
+completed a single rung (lane WM6 measured it; lane BATTLOCK confirmed the
+shape). port/tools/build_lock.py already had the fix for the identical problem
+on the full-build lock: a waiter takes an arrival ticket, and the lockfile is
+only created by the oldest live ticket. This module ports that fix onto the
+windowed slot, unchanged in shape (see port/tools/lock_tickets.py, which both
+locks now share) and unchanged in every part of THIS lock that other lanes
+depend on tonight:
+
+  * THE LOCKFILE PATH, FORMAT, STALE RULES, PID-LIVENESS RULE AND MAX_HOLD ARE
+    IDENTICAL to before this change -- byte for byte. A ticket is a SEPARATE
+    file in a sibling directory (<lockfile>.tickets/, exactly where
+    build_lock.py's queue sits beside its lockfile); nothing about the lockfile
+    itself changed.
+
+  * COMPATIBILITY WITH AN OLD CLIENT ON THE SAME LOCKFILE. Other lanes are
+    running TONIGHT with the OLD slot_lock.py (pre-tickets) against this exact
+    lockfile (C:/tmp/sm64ds-test-slot/slot.lock). An old client never reads or
+    writes a ticket -- it does not know the ticket directory exists -- so it
+    still does exactly what it always did: try the O_CREAT|O_EXCL create, and
+    if that succeeds, it holds the slot. The consequence, stated plainly, is
+    that AN OLD CLIENT CAN BARGE AHEAD OF TICKET HOLDERS: if the lock is free
+    and an old client happens to poll it first, it takes the slot even though a
+    new client's ticket has been waiting longer. This is accepted as the status
+    quo -- a mixed fleet cannot enforce fairness onto a participant that does
+    not know the protocol exists, and old clients are not adding new load (they
+    already ran this way before tonight) -- and it does not regress anything: a
+    lane on the OLD client sees precisely the behaviour it always saw, whether
+    or not any tickets exist. What tickets fix is fairness AMONG NEW clients,
+    which is where the 100+ minute starvation actually happened.
+
+  * A NEW CLIENT NEVER WAITS FOREVER ON A TICKET AN OLD CLIENT NEVER TOUCHES.
+    Only new (ticket-aware) clients ever create a ticket, so every ticket ahead
+    of a waiter in the queue is demonstrably owned by another new client, which
+    will resolve its own ticket by acquiring (and removing it), by dying (the
+    dead-pid rule breaks it), or by timing out (it removes its own ticket on
+    the way out, exactly as build_lock.py's waiters do). An old client can only
+    ever block a new client by literally holding the plain lockfile -- which
+    the ordinary is_stale()/wait loop already handles regardless of whether any
+    tickets exist -- never by being "ahead in the queue", because it is never
+    IN the queue.
+
+  * slot_reentrant() KEEPS ITS SEMANTICS. The fairness gate lives inside
+    acquire(); a nested reentrant hold never calls acquire() at all (see
+    `nested` below), so the ticket queue is invisible to a phase that already
+    holds the slot, exactly as before.
+
 ADOPTING IT.
 
   battery.py     -- already wired. Set SM64DS_TEST_LOCK=1 in the environment
@@ -115,6 +167,9 @@ import tempfile
 import threading
 import time
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import lock_tickets
+
 # The longest a single windowed run should ever hold the slot is battery's
 # STEP_TIMEOUT (600s). MAX_HOLD is comfortably above that so the mtime backstop
 # never breaks a live long run; the pid-dead check is what recovers a crash
@@ -128,6 +183,17 @@ DEFAULT_ACQUIRE_TIMEOUT = 900
 
 # Poll cadence while waiting for the slot.
 POLL_SECONDS = 0.5
+
+# While waiting, say so this often, so a queued lane's log shows a queue rather
+# than looking hung for fifteen minutes. Mirrors build_lock.py.
+WAIT_NOTICE_SECONDS = 60
+
+# The fairness queue lives beside the lockfile, in a directory named after it:
+# windowed_test.lock -> windowed_test.tickets/. See FAIRNESS in the module
+# docstring. Slot tickets carry no extra fields beyond pid/host/label/arrived
+# (build_lock's tickets additionally carry `root`; a slot waiter has no
+# separate worktree concept worth naming).
+TICKET_EXTRA_FIELDS = ()
 
 
 class SlotLockTimeout(TimeoutError):
@@ -183,47 +249,9 @@ def acquire_timeout():
     return DEFAULT_ACQUIRE_TIMEOUT
 
 
-def _pid_alive(pid):
-    """True if a process with this pid currently exists.
-
-    Windows os.kill(pid, 0) does NOT probe -- for a non-CTRL signal it calls
-    TerminateProcess, which would kill the holder -- so query the process
-    object directly through the Win32 API. POSIX uses signal 0.
-    """
-    if pid is None or pid <= 0:
-        return False
-    if os.name == "nt":
-        import ctypes
-        from ctypes import wintypes
-        PROCESS_QUERY_LIMITED_INFORMATION = 0x1000
-        STILL_ACTIVE = 259
-        ERROR_INVALID_PARAMETER = 87
-        kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
-        kernel32.OpenProcess.restype = wintypes.HANDLE
-        kernel32.OpenProcess.argtypes = (wintypes.DWORD, wintypes.BOOL,
-                                         wintypes.DWORD)
-        handle = kernel32.OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION,
-                                      False, int(pid))
-        if not handle:
-            err = ctypes.get_last_error()
-            # Invalid parameter == no such pid == dead. Access denied and the
-            # like mean the process exists but we may not open it == alive.
-            return err != ERROR_INVALID_PARAMETER
-        try:
-            code = wintypes.DWORD()
-            if kernel32.GetExitCodeProcess(handle, ctypes.byref(code)):
-                return code.value == STILL_ACTIVE
-            return True
-        finally:
-            kernel32.CloseHandle(handle)
-    else:
-        try:
-            os.kill(pid, 0)
-        except ProcessLookupError:
-            return False
-        except PermissionError:
-            return True
-        return True
+# Shared with build_lock.py via lock_tickets.py (run link100, lane SLOTQ): the
+# two had byte-identical copies of the Windows/POSIX liveness probe.
+_pid_alive = lock_tickets.pid_alive
 
 
 def _read_holder(path):
@@ -318,6 +346,86 @@ def _try_create(path, label, max_hold=None):
     return True
 
 
+# --- the fairness queue (run link100, lane SLOTQ) -------------------------
+# Thin wrappers around port/tools/lock_tickets.py, the module build_lock.py's
+# identical queue logic was factored into so it is not forked a second time.
+# See FAIRNESS in the module docstring for the compatibility argument.
+
+# Say once, not once a second, that this process could not take a queue ticket.
+_ticket_warned = False
+
+
+def tickets_dir(path=None):
+    """The queue directory beside the lockfile: windowed_test.lock ->
+    windowed_test.tickets/. Derived from the lock's own name, like
+    build_lock.py's, so a test lockfile beside the real one never shares a
+    queue with it."""
+    if path is None:
+        path = lock_path()
+    return lock_tickets.tickets_dir(path)
+
+
+def queue(path=None):
+    """The wait queue, oldest arrival first: who gets the slot next, in order.
+
+    Read-only, and stale entries are included with their reason in ["stale"]
+    so a reader sees what is actually on disk. This is what `status` prints.
+    """
+    if path is None:
+        path = lock_path()
+    return lock_tickets.read_tickets(path, extra_fields=TICKET_EXTRA_FIELDS,
+                                     cap_seconds=MAX_HOLD_SECONDS)
+
+
+def _live_queue(path=None):
+    """The queue with every stale ticket broken (loudly), oldest first."""
+    if path is None:
+        path = lock_path()
+    return lock_tickets.break_stale_tickets(path, extra_fields=TICKET_EXTRA_FIELDS,
+                                            cap_seconds=MAX_HOLD_SECONDS,
+                                            tag="slot_lock")
+
+
+def _write_ticket(path, label, arrival_ns=None):
+    """Join the queue. Returns our ticket, or None if it could not be written.
+
+    A queue we cannot write to must never wedge a windowed test, so this
+    returns None and acquire() falls back to the old free-for-all rather than
+    waiting out a place in line it can never take.
+    """
+    global _ticket_warned
+    ticket, err = lock_tickets.write_ticket(path, label, arrival_ns=arrival_ns)
+    if err is not None:
+        if not _ticket_warned:
+            print(f"[slot_lock] could not take a queue ticket in "
+                  f"{tickets_dir(path)} ({err}); waiting UNFAIRLY (first to "
+                  f"poll wins) rather than not at all", file=sys.stderr)
+            _ticket_warned = True
+        return None
+    return ticket
+
+
+def _ensure_ticket(ticket, path, label):
+    """Our ticket, written on the first wait and re-created if it goes missing."""
+    if ticket is None:
+        return _write_ticket(path, label)
+    if not os.path.exists(ticket["path"]):
+        # Somebody broke it (the age backstop, or a race with a break). Keep
+        # our arrival stamp so the break does not cost us our place in line.
+        return _write_ticket(path, label, arrival_ns=ticket["arrival_ns"])
+    return ticket
+
+
+def _remove_ticket(ticket):
+    """Leave the queue. Idempotent, and safe on a ticket already broken."""
+    lock_tickets.remove_ticket(ticket)
+
+
+def _queue_position(live, ticket):
+    """Our 1-based place in the queue, or None if we are not in it."""
+    return lock_tickets.queue_position(live, ticket)
+
+
 def acquire(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
     """Block until this process holds the windowed slot, or time out.
 
@@ -325,6 +433,17 @@ def acquire(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
     could not be had within `timeout` seconds (default from acquire_timeout()).
     A stale lock -- dead holder pid or older than MAX_HOLD_SECONDS -- is broken
     and re-acquired; the break is O_EXCL-raced so only one waiter wins it.
+
+    Waiting is FIRST IN, FIRST SERVED (see FAIRNESS in the module docstring):
+    a waiter takes an arrival ticket and the lockfile is only created by the
+    oldest live ticket, so a process that arrives while others are queued
+    cannot take the slot from under them. With nobody waiting this is the old
+    path exactly -- one create attempt, no ticket written, not even a ticket
+    directory. An OLD (pre-ticket) client never checks the queue, so it can
+    still take the lockfile the moment it is free even with tickets
+    outstanding -- accepted, and explained in the module docstring. The ticket
+    is removed on the way out of this function however it ends: acquired,
+    timed out, or raised through.
     """
     global _path_announced
     # HARD REFUSAL: if a caller opted into locking (SM64DS_TEST_LOCK) but did not
@@ -343,38 +462,91 @@ def acquire(label="", timeout=None, poll=POLL_SECONDS, max_hold=None):
         _path_announced = True
     if timeout is None:
         timeout = acquire_timeout()
-    deadline = time.time() + timeout
-    while True:
-        if _try_create(path, label, max_hold):
-            return path
-        # Somebody holds it. Break it if it is stale, otherwise wait.
-        if _is_stale(path):
-            # Re-check under the same read the unlink relies on: only remove a
-            # file that still looks stale, and tolerate another breaker having
-            # already removed it. The subsequent _try_create is the real race
-            # arbiter -- exactly one O_EXCL create can win.
-            try:
-                if _is_stale(path):
-                    os.remove(path)
-            except OSError:
-                pass
-            if _try_create(path, label, max_hold):
+    started = time.time()
+    deadline = started + timeout
+    next_notice = started + WAIT_NOTICE_SECONDS
+    ticket = None
+    # A queue we cannot write to is a queue we ignore: fairness must never be
+    # able to fail CLOSED and leave a lane waiting for a turn it can never get.
+    ticketless = False
+    try:
+        while True:
+            # THE FAIRNESS GATE. An empty queue is today's path exactly: try the
+            # create straight away, touching nothing. Otherwise only the oldest
+            # live ticket may create the lockfile, so a fresh arrival queues
+            # behind the waiters instead of taking the slot from under them. An
+            # OLD client never reaches this gate at all -- it has no concept of
+            # it -- which is exactly how it keeps barging when the lock is free;
+            # see FAIRNESS in the module docstring.
+            live = _live_queue(path)
+            head = live[0] if live else None
+            our_turn = (head is None or ticketless
+                        or (ticket is not None
+                            and head["name"] == ticket["name"]))
+            if our_turn and _try_create(path, label, max_hold):
                 return path
-        if time.time() >= deadline:
-            pid, acquired, _ = _read_holder(path)
-            held = ""
-            if acquired:
+            # Somebody holds it (or it was not our turn to try). Break it if it
+            # is stale, otherwise wait -- a dead holder is everyone's problem,
+            # so break it even when it is not our turn, so the head of the
+            # queue finds a free lock on its next poll.
+            if _is_stale(path):
+                # Re-check under the same read the unlink relies on: only
+                # remove a file that still looks stale, and tolerate another
+                # breaker having already removed it. The subsequent
+                # _try_create is the real race arbiter -- exactly one O_EXCL
+                # create can win.
                 try:
-                    held = f", held {time.time() - float(acquired):.0f}s"
-                except (TypeError, ValueError):
-                    held = ""
-            raise SlotLockTimeout(
-                f"could not acquire the windowed test slot within "
-                f"{timeout:.0f}s: it is held by pid {pid}{held} "
-                f"(lockfile {path}). This is an infra wait, not a game fault; "
-                f"another lane is running a windowed test. Re-run when the box "
-                f"is idle, or raise SM64DS_TEST_LOCK_TIMEOUT.")
-        time.sleep(poll)
+                    if _is_stale(path):
+                        os.remove(path)
+                except OSError:
+                    pass
+                if our_turn and _try_create(path, label, max_hold):
+                    return path
+            now = time.time()
+            if now >= deadline:
+                pid, acquired, _ = _read_holder(path)
+                held = ""
+                if acquired:
+                    try:
+                        held = f", held {time.time() - float(acquired):.0f}s"
+                    except (TypeError, ValueError):
+                        held = ""
+                pos = _queue_position(live, ticket)
+                place = ""
+                if pos is not None:
+                    place = (f" You were {pos} of {len(live)} in the queue, "
+                             f"which is served in arrival order, so {pos - 1} "
+                             f"lane(s) were ahead of you the whole time.")
+                raise SlotLockTimeout(
+                    f"could not acquire the windowed test slot within "
+                    f"{timeout:.0f}s: it is held by pid {pid}{held} "
+                    f"(lockfile {path}).{place} This is an infra wait, not a "
+                    f"game fault; another lane is running a windowed test. "
+                    f"Re-run when the box is idle, or raise "
+                    f"SM64DS_TEST_LOCK_TIMEOUT.")
+            # Entering (or still in) the wait: hold a place in line.
+            ticket = _ensure_ticket(ticket, path, label)
+            ticketless = ticket is None
+            if now >= next_notice:
+                waited = now - started
+                pid, acquired, _ = _read_holder(path)
+                held = ""
+                if acquired:
+                    try:
+                        held = f", held {time.time() - float(acquired):.0f}s"
+                    except (TypeError, ValueError):
+                        held = ""
+                pos = _queue_position(live, ticket)
+                place = f", queue position {pos} of {len(live)}" if pos else ""
+                print(f"[slot_lock] waiting {waited:.0f}s for the windowed "
+                      f"test slot; held by pid {pid}{held}{place}",
+                      file=sys.stderr)
+                next_notice = now + WAIT_NOTICE_SECONDS
+            time.sleep(poll)
+    finally:
+        # Every exit path: acquired, timed out, or raised through. A ticket
+        # left behind would hold up the queue until its pid was noticed dead.
+        _remove_ticket(ticket)
 
 
 def release(path=None):
@@ -482,6 +654,7 @@ def _cli_status():
     path = lock_path()
     if not os.path.exists(path):
         print(f"slot: FREE ({path} does not exist)")
+        _print_queue(path)
         return 0
     pid, acquired, text = _read_holder(path)
     alive = _pid_alive(pid)
@@ -495,7 +668,28 @@ def _cli_status():
     print(f"slot: HELD by pid {pid} (alive={alive}, stale={stale}{held})")
     print(f"  lockfile: {path}")
     print(f"  contents: {text.strip()}")
+    _print_queue(path)
     return 0
+
+
+def _print_queue(path):
+    """The wait queue after the holder, oldest arrival first: who is next.
+
+    Read-only on purpose -- `status` marks a stale ticket rather than breaking
+    it, so looking at the queue never changes who gets the slot next. Mirrors
+    build_lock.py's `_print_queue`.
+    """
+    q = queue(path)
+    if not q:
+        print("  queue: empty (nobody waiting)")
+        return
+    print(f"  queue: {len(q)} waiting, oldest arrival first "
+          f"(first in, first served)")
+    for i, t in enumerate(q, 1):
+        stale = f"  STALE: {t['stale']}" if t["stale"] else ""
+        desc = lock_tickets.describe_ticket(t, extra_fields=TICKET_EXTRA_FIELDS)
+        print(f"    {i}. {desc}{stale}")
+    print(f"  tickets: {tickets_dir(path)}")
 
 
 def main(argv=None):

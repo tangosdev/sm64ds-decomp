@@ -105,9 +105,71 @@
 // ResizeToFit USED TO BE THE NEXT LINE AND IT WAS WRONG THE SAME WAY
 // SetDefault was. A receiver-bridging face near the bottom of this file
 // replaces it and the evidence is in the header there.
-// G is the ROM's shorthand for the default-heap pointer (decl_common.h
-// `extern int G`), the same 0x020a0ea0 word heap_vtable.cpp hosts as
-// data_020a0ea0 / Memory::defaultHeapPtr. One storage, one more name.
+// G IS NOT ONE THING, and this alias is right for exactly one of them.
+// decl_common.h's `extern int G` is the decomp's GENERIC PLACEHOLDER for an
+// absolute address a function pools, so unrelated TUs spell unrelated things
+// with the same identifier and the linker hands all of them this one word.
+//
+// THE ONE THAT MEANS IT is src/_ZN4Heap10SetDefaultEv.cpp, and the ROM says so:
+// its pool word at 0x0203c338 carries a RELOCATION -- config/arm9/relocs.txt
+// `from:0x0203c338 kind:load to:0x020a0ea0 module:main` -- so there G really is
+// the 0x020a0ea0 word heap_vtable.cpp hosts as data_020a0ea0 /
+// Memory::defaultHeapPtr. One storage, one more name. That is what the line
+// below serves, and it is why the line STAYS.
+//
+// THE ONES THAT DID NOT were three I/O bodies whose pool words carry NO reloc,
+// because an absolute register needs none, and which this alias therefore
+// pointed straight at the allocator's default heap pointer:
+//
+//     func_02055454  pool 0x02055460  0x04000010  BG0HOFS/BG0VOFS, word store
+//     func_02057128  pool 0x0205713c  0x04000204  EXMEMCNT |= 0x80
+//     func_02057140  pool 0x02057154  0x04000204  EXMEMCNT &= ~0x80
+//
+// Run link100 lane R3E measured what that cost: under SM64DS_ROM_LOOP=1 the
+// ROM's own VBlank handler reaches func_02019144's else arm on every 3D level,
+// which calls func_02055454(BG0 scroll) with 0, so Memory::defaultHeapPtr went
+// 30000000 -> 00000000 once per frame and the next free faulted at
+// Heap::Deallocate+0x3. Rung R3F fixed that in the DECOMP: src/ spells each
+// register now, all three still byte-verify against the ROM (better than
+// before -- the placeholder made the pool word a reloc slot the byte gate
+// WILDCARDED, and a literal address is compared for real), and the three TUs
+// are hostgen-ROUTED so the stores reach ntr::io_write. See the R3F_GREG block
+// in port/CMakeLists.txt, which is BSWAP's shape. None of the three references
+// G any more.
+//
+// THE FOURTH I/O READER R3F LEFT ON IT IS FIXED, run link100 lane GREG2:
+// src/func_0205f650.c pooled 0x04000304 (POWCNT1) and returned bit 0, so it
+// used to answer with bit 0 of the heap pointer instead. It never corrupted
+// anything -- it only read -- but it was wrong, and its caller
+// src/func_02019a58.c is a wait loop, `while (func_0205f66c(1) != 1)` guarded
+// by `if (func_0205f650() == 1) break;`, that branches on the answer. GREG2
+// spelled it `(*(volatile unsigned short *)0x4000304 & 1) != 0`, byte-verified
+// 7 words of 7 under 2004/b56 with the pool word compared for real (R3F
+// measured the same spelling; GREG2 took it), and routed the TU through
+// hostgen the same way as the three above (R3F_GREG2_SYMS in the R3F_GREG
+// block). None of the four references G any more.
+//
+// THE LOOP WAS A LATENT HANG, not just a wrong read, and the fix removes that
+// too. Two facts, both checked rather than assumed: (1) Memory::defaultHeapPtr
+// is a `void*` (hal/heap_vtable.cpp:80) that is either null or a live Heap*
+// from a host allocator, so its low bit is 0 by construction in every state
+// it can hold -- the old shortcut read NEVER could have returned true. (2) the
+// elapsed-time fallback the loop otherwise relies on, func_0205f66c(1) ->
+// func_0205f68c's `(*(int*)0x27ffc3c - data_020a8110) <= 7` gate, reads a
+// shared-block tick (0x027FFC3C) that has NO WRITER anywhere in src/ or
+// port/ (checked by grep across both trees) -- on hardware it is kept by the
+// ARM7/firmware side the port does not model, so on the host it is frozen at
+// whatever the zeroed shared-block page holds, and the gate never trips
+// either. So before this fix, func_02019a58 could not terminate by ANY path
+// once entered; it just never has been entered by the automated battery or
+// selftest (both call sites are gameplay-triggered -- the VS-exit pause menu
+// and src/func_02030790.c's data_02092778-gated reset). Seeding POWCNT1 to
+// 0x820F at boot (ntr/io.cpp's io_init(), see the comment there for the ROM
+// derivation) means the fixed read now answers the shortcut truthfully, and
+// since nothing in either call site clears bit 0 first, it answers TRUE on
+// the loop's very first check -- zero iterations, zero calls to
+// func_0201a4d0/OS_SleepThread -- which is also what the ROM's own boot
+// sequence guarantees on real hardware for these two sites.
 #pragma comment(linker, "/alternatename:_G=_data_020a0ea0")
 // The remaining cross-namespace edges, spellings verbatim from the link
 // errors: Virtual38 and the SolidHeap V-methods reference these as MSVC

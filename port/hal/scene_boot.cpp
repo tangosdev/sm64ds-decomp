@@ -272,6 +272,47 @@
 // at 0x020c224c), so the two agree and neither is a guess.
 #pragma comment(linker, "/alternatename:__ZTV11dScMiniGm_c=_data_ov005_020c2490")
 
+// ---- run link100 lane MPG2: the dScGameOver_c PLACEHOLDER SPELLINGS -------
+//
+// src/func_ov003_020b0580.c (D2, slot 16) and src/func_ov003_020b05bc.c (D0,
+// slot 17) are the last pair of the ov003 write-up's blocker 2, and the same
+// shape the two blocks above answer. Read out of each body's OWN literal pool
+// in extracted/overlays/overlay_0003.bin:
+//
+//   func_ov003_020b0580 (D2)  0x020b05b0/b4/b8 = 0x020b179c, 0x02092680,
+//                             0x0208e4b8, spelled _ZTV13dScGameOver_c /
+//                             _ZTV8dScene_c / _ZTV7dBase_c
+//   func_ov003_020b05bc (D0)  0x020b05fc/00/04/08 = the same three plus
+//                             0x020a0eac, spelled VT0 / VT1 / VT2 / G0
+//
+// FOUR OF THE SEVEN NAMES ALREADY RESOLVE, TO STORAGE AT AN ADDRESS THE ROM
+// NEVER STORES, so this gate renames them per TU in port/CMakeLists.txt rather
+// than leaving them where they land: _ZTV7dBase_c is hal/sub_actors.cpp's LIVE
+// trap-filled array, VT0/VT2 are hal/actor_vtables.cpp's shared stand-ins and
+// VT1 is hal/auto_bss.cpp's. Without the renames the link SUCCEEDS and the
+// dtor writes the wrong word. Renamed, the surviving store writes
+// data_0208e4b8, which IS 0x0208e4b8 -- hal/cxx_aliases.cpp binds
+// _ZTV12ActorDerived onto that array. This is the ov007 block's "known
+// divergence" answered rather than repeated.
+//
+// _ZTV8dScene_c NEEDS NOTHING NEW. The run link60 alias above already sends it
+// to _ZTV5Scene, and that block's own note names ov003 x2 as two of the four
+// TUs that spell it. The per-TU renames still route both spellings through a
+// fresh name of this gate's own, so the CMake block reads as one statement per
+// ROM word and neither TU depends on which other gate's alias happens to be
+// live. A DIRECT rename onto _ZTV5Scene is a C2371: include/decl_common.h
+// declares _ZTV5Scene void*[] at :2982 and the placeholders int[] at
+// :412/:790.
+//
+// THE ALIAS IS UNREFERENCED ON THIS BUILD AND THAT IS THE EXPECTED READING,
+// not an oversight. MSVC folds the first two of each dtor's three consecutive
+// stores to t[0] as dead, so only the last (data_0208e4b8) survives in the
+// object -- visible in this gate's own UNDEF sweep, where neither object names
+// the class table or the Scene word at all. alternatename_guard reads an LHS
+// absent from the map as OK (unused). The directive is here so that a compiler
+// which stops folding gets the ROM's word instead of a wrong one.
+#pragma comment(linker, "/alternatename:_port_go_vt_scene=__ZTV5Scene")
+
 extern "C" {
 
 /* the spawn table and the two Scene entry points (matched arm9) */
@@ -325,16 +366,54 @@ void func_ov003_020ae6f0(void);                  /* slot 12 OnPendingDestroy */
 int  func_ov003_020addfc(void *self);            /* slot 16 D2 */
 int *func_ov003_020ade54(void *self);            /* slot 17 D0 */
 
+/* ---- run link100 lane MPG2: dScGameOver_c, scene id 8 --------------------
+   ov003's third and last scene class, the one port/slice_scene1.txt left out.
+   Every record is the ROM's own: the SpawnInfo at 0x020b1750 is inside the
+   mount (port/ov003_syms.txt), the factory is func_ov003_020b1118, and the
+   vtable at 0x020b179c is the host array one block below. */
+extern unsigned char data_ov003_020b1750[];      /* SpawnInfo, +4 reads 8 */
+void *func_ov003_020b1118(void);                 /* the factory */
+
+/* dScGameOver_c's own seven. THE ARITIES ARE THE SRC TUs' OWN, checked one at
+   a time against each file rather than copied from the star select's block: a
+   raw cast at the wrong arity is what smashes the stack on the first dispatch,
+   and it stays invisible until the slot is entered. */
+int  func_ov003_020b0b3c(void *self);            /* slot 0  InitResources    */
+int  func_ov003_020b0b34(void);                  /* slot 3  CleanupResources */
+int  func_ov003_020b0894(void *self);            /* slot 6  Behavior         */
+int  func_ov003_020b0814(void *self);            /* slot 9  Render           */
+void func_ov003_020b0810(void);                  /* slot 12 OnPendingDestroy */
+int *func_ov003_020b0580(void *self);            /* slot 16 D2               */
+int *func_ov003_020b05bc(void *self);            /* slot 17 D0               */
+
+/* THE TABLE-WORD PROOF's three host arrays, declared here only so the census
+   at the end of port_scene_run can print their addresses. _ZTV7dBase_c is
+   hal/sub_actors.cpp's trap array and data_0208e4b8 is hal/actor_vtables.cpp's
+   ActorDerived word: they are DIFFERENT storage, and the whole point of this
+   gate's per-TU renames is that the dtors write the second one. Reading an
+   address links nothing -- all three are defined and referenced by their own
+   files already. */
+extern int   data_0208e4b8[];                    /* 0x0208e4b8, the ROM's */
+extern void *_ZTV7dBase_c[];                     /* the trap array, NOT it */
+extern void *_ZTV5Scene[];                       /* 0x02092680 */
+
 /* THE VTABLE, a host array. The name is the ROM's own data symbol, which is
    what StarSelect_Spawn writes into the object's +0 word and what the D2 and
    D0 bodies write back on the way down, so the spelling has to be exactly this
    and port/ov003_syms.txt has to leave it out of the mount. 18 words.
    The other two classes' tables (data_ov003_020b1650, data_ov003_020b179c) are
    left out of the mount as well -- they are code-pointer tables and nothing
-   rebases a code word -- and are not defined here either, because nothing in
-   the link set names them. */
+   rebases a code word. dScTitle_c's, 0x020b1650, is still not defined here
+   because nothing in the link set names it. dScGameOver_c's IS, one line
+   below: run link100 lane MPG2 seats scene 8, and its factory
+   func_ov003_020b1118 and both dtor bodies name that table by the ROM's own
+   spelling. It is a host array for dScStarSel_c's reason, and it is inside the
+   .dsstate bracket for dScStarSel_c's reason -- a hosted DS data symbol the
+   save state has to capture, which is what port/tools/dsstate_guard.py
+   enforces. */
 DSSTATE_BEGIN
-void *data_ov003_020b1704[18];                   /* dScStarSel_c */
+void *data_ov003_020b1704[18];                   /* dScStarSel_c  */
+void *data_ov003_020b179c[18];                   /* dScGameOver_c */
 DSSTATE_END
 
 /* ---- run link60 lane L2: dScDSMT_c, the TITLE SCREEN, scene id 1 ----------
@@ -563,32 +642,36 @@ unsigned char data_02092660;
 }
 DSSTATE_END
 
-/* ---- the one PORT_HOST_ABI face this lane needs ---------------------------
-   PORT_HOST_ABI: LoadArchive mounts a NARC through the DS card loader, and the
-   host has no mount step to make.
-   src/LoadArchive.c walks data_0208ecf4, the ROM's 13-entry archive-mount
-   table of {ptr, heap, idBase, idEnd, shortName, narcPath}, and calls
-   func_02018934 to pull the whole NARC into the game heap. The port resolves
-   archive-interior file IDs (>= 0x8000) LAZILY instead: hal/fs.cpp's
-   port_fs_archive_fill walks port_archive_map -- the host-shaped copy
-   port/tools/romdata.py generates from that same ROM table -- finds the
-   archive whose id range covers the request, loads its image off disk on first
-   use and decodes the member. So on the host an archive is never "mounted" and
-   never "not mounted"; the id resolves either way.
-   That makes the ROM's mount call a no-op whose only observable is its return
-   value, which is "is archive N available". On the host every archive in the
-   table is available, so the answer is 1. Returning it is what lets
-   LoadTextNarcs (matched, in the slice) run its real language switch and what
-   lets dScStarSel_c::InitResources proceed to the LoadFile calls the fs seam
-   really does serve.
-   The alternative -- linking the matched TU -- would need data_0208ecf4 hosted
-   as raw ROM bytes with its DS string pointers, plus func_02018934 and the
-   four-TU card-loader chain under it, to produce a mount the fs seam then
-   ignores. That is a fake, not a fix, so the seam is here in the open. */
-extern "C" int LoadArchive(int idx)
-{
-    return (unsigned)idx < 13u;
-}
+/* ---- THE LoadArchive FACE IS GONE (run link100, lane CARDFS) --------------
+   This file used to answer the ROM's mount call itself, with
+   `return (unsigned)idx < 13u;` under a banner that ended:
+
+       The alternative -- linking the matched TU -- would need data_0208ecf4
+       hosted as raw ROM bytes with its DS string pointers, plus func_02018934
+       and the four-TU card-loader chain under it, to produce a mount the fs
+       seam then ignores. That is a fake, not a fix.
+
+   The refusal was right about the fake and wrong about the alternative, and
+   its own middle paragraph is what turned it: the ROM's call asks "is archive
+   N resident", and on the host every archive IS resident, because hal/fs.cpp
+   loads each NARC whole on first use and never releases it. So the answer did
+   not have to be manufactured here. hal/card_mount.cpp hosts data_0208ecf4 at
+   its ROM span with the ROM's own id ranges (through port_archive_map, which
+   port/tools/romdata.py reads out of that very table), hal/fs.cpp fills each
+   entry's residency word with the archive image it is already holding, and
+   src/LoadArchive.c -- the matched TU, byte for byte -- reads the word and
+   returns. Four more matched TUs came with it (func_02018934, func_02018d98,
+   Heap::_Allocate's veneer, and the four card TUs on slice_scene1 that had
+   been /OPT:REF-dropped for want of a caller).
+
+   ONE THING THE MOVE DID NOT SETTLE, recorded where the face used to be: the
+   entry's two DS string pointers (+0x0c the three-character short name, +0x10
+   the NARC path) are still not hosted, so the ROM's mount BRANCH must not run.
+   hal/card_mount.cpp's banner says why, what it would take (twenty-six rows in
+   port/tools/romdata.py's NAMED list) and how the port proves the branch is
+   never taken. The note about UnloadArchives below this one is older than that
+   work and is now partly stale -- data_0208ecf4 IS hosted; it is left as
+   written because this lane owned only these lines. */
 
 /* ---- C-name faces for three namespaced arm9 functions ---------------------
    The cxxname_bridge pattern in reverse: these three matched TUs define their
@@ -747,7 +830,11 @@ extern "C" void MultiStore32Bytes(unsigned val, int *dst, int len)
 //                      on the first frame -- so this one really does run, and
 //                      with a host-address key it finds nothing and returns,
 //                      which is also what the ROM does when the overlay is not
-//                      resident.
+//                      resident. THAT PARAGRAPH IS NOW THE ARGUMENT FOR THE
+//                      SEAT rather than for the face: run link100's lane LOADOV
+//                      linked src/func_02017e94.c on port/slice_loadov.txt, so
+//                      the early return is the ROM's own line and not a host
+//                      body agreeing with it.
 //   LoadOverlay(id)    load, reached only from Behavior's result == 6 branch,
 //                      which is a menu confirm. No idle run reaches it.
 // Neither could do the real thing anyway: the port has no overlay loader,
@@ -775,20 +862,52 @@ extern "C" { int overlay_60, overlay_98; }
    Taking them meant taking the DS card overlay/archive loader under them --
    FS_LoadOverlay, func_02018c00, func_0203d7b8, func_0205e088, func_02017fd0,
    func_02018908, func_0205dc0c -- plus hosting data_0208ecf4, the 13-entry
-   archive-mount table whose entries are DS STRING POINTERS, and data_02075998
-   / data_02075804, the object-overlay id tables. Eleven TUs and three
-   pointer-bearing arm9 tables, to drive a load that resolves to nothing:
-   the host has no overlay loader at all, because every overlay it hosts is a
-   static host array mounted at build time (section 2 of this file), and
-   hal/fs.cpp resolves archive-interior file ids lazily so an archive is never
-   mounted and never not mounted. That is the same trade the LoadArchive face
-   above already makes, in the same direction, and it is recorded as a cost:
-   ELEVEN MATCHED TUs THIS SLICE COULD HAVE COUNTED AND DID NOT.
+   archive-mount table, and data_02075998 / data_02075804, the object-overlay
+   id tables. Eleven TUs and three pointer-bearing arm9 tables, to drive a load
+   that resolves to nothing: the host has no overlay loader at all, because
+   every overlay it hosts is a static host array mounted at build time
+   (section 2 of this file).
+
+   HALF OF THAT PARAGRAPH IS NO LONGER TRUE, and the half that is left is the
+   real reason. It used to end "that is the same trade the LoadArchive face
+   above already makes", and it used to count data_0208ecf4 as an unhosted
+   table "whose entries are DS STRING POINTERS". Neither survives:
+
+     * The LoadArchive face is GONE. Run link100 lane CARDFS retired it and
+       linked the ROM's own src/LoadArchive.c on hal/card_mount.cpp, which hosts
+       data_0208ecf4 at its ROM span and fills each entry's residency word with
+       the archive image hal/fs.cpp already holds.
+     * The two DS string pointers are hosted too. Run link100 lane CARDFS2 added
+       the twenty-six ROM strings to port/tools/romdata.py's NAMED list, and
+       card_mount.cpp writes them into +0x0c and +0x10 as it publishes.
+
+   SO UnloadArchives IS NOW FACED FOR A DIFFERENT AND STRONGER REASON. Its
+   matched TU (src/UnloadArchives.c) walks all thirteen entries and calls
+   func_02018908(entry->f0, entry->f4) for every one whose f0 is non-zero. On
+   this host EVERY f0 is non-zero -- that is what the residency publish is --
+   and every f4 is zero, because nothing here ever writes the heap word (that is
+   what card_mount.cpp's audit measures). The ROM's body would therefore hand
+   thirteen blocks of STATIC HOST STORAGE to a null heap, on a mount that never
+   came off a heap at all. It is not a load that resolves to nothing any more;
+   it is a free of memory the allocator does not own. It stays faced until the
+   mount is heap-shaped, and hal/card_mount.cpp's "THE MOUNT BRANCH" section is
+   where the three things standing in the way of that are written down.
+
    The observable each face has to reproduce is nothing: three return void and
    the fourth is void, none has an out-parameter, and the ROM's own answer when
    the overlay is not resident is to do nothing. */
 extern "C" void LoadOverlay(int)                       {}
-extern "C" void func_02017e94(int)                     {}
+/* func_02017e94's face MOVED (run link100, lane LOADOV) and did not retire: it
+   is hal/nitrofs_face.cpp's now, on smoke_player alone, and the two window
+   targets link the ROM's own src/func_02017e94.c through
+   port/slice_loadov.txt. The row above kept its trade and this one did not,
+   and the difference is one word in two otherwise identical bodies: where
+   src/UnloadOverlay.c and src/LoadOverlay.c crash or read on a lookup that
+   fails, src/func_02017e94.c returns. That early return is the arm this host
+   takes on every call, because the id is a host address (the block above) and
+   data_0209d3c4 is never filled, so the ROM's own body does exactly what this
+   empty face did -- for the ROM's own reason instead of by assertion. The
+   split of targets is hal/nitrofs_face.cpp's, for its reason. */
 extern "C" void UnloadArchives(void)                   {}
 /* AND THE FOURTH IS RETIRED (run link100, lane STAGEFIX). It stood here as
        extern "C" void LoadOrUnloadObjectOverlays(void (*)(int), int) {}
@@ -1126,7 +1245,10 @@ unsigned char data_0208eafc[48] = {
     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,234,8,2
 };
-int data_020a80e4[8];                              /* bss, 32 by ROM span */
+/* data_020a80e4 is NOT defined here any more. It is not an object of its own:
+   it is the name dsd gave byte +0x18 of the touch-panel work struct whose
+   first name is data_020a80cc, and the two are defined together as ONE 0x38
+   run further down this block. See the note there. */
 /* a 256-byte pure-data table func_020538b8 indexes. NO relocation anywhere in
    config/arm9/relocs.txt lands inside 0x02086214 .. 0x02086314, so the ROM
    bytes are the whole truth and they are carried verbatim. */
@@ -1150,7 +1272,49 @@ unsigned char data_02086214[256] = {
 };
 unsigned char data_0209a624[4] = { 1, 0, 0, 0 };   /* arm9 .data, ROM value */
 int data_020a637c[9];                              /* bss, 36 by ROM span */
-int data_020a80cc[6];                              /* bss, 24 by ROM span */
+/* ---- data_020a80cc AND data_020a80e4: ONE 0x38 OBJECT, TWO dsd NAMES ------
+
+   THE TOUCH-PANEL WORK STRUCT. config/arm9/symbols.txt runs data_020a80cc ->
+   data_020a80e4 (+0x18) -> data_020a8104 (+0x38), and the whole 0x38 is one
+   object on the DS. Two of the ROM's own bodies prove it independently, and
+   neither of them takes the distance between the names on trust:
+
+     src/func_0205f0e0.c declares data_020a80cc with a 0x18 pad and then
+       field_18 .. field_2c and a halfword field_30, i.e. it writes SIX words
+       starting at +0x18 -- which is data_020a80e4[0..5] -- and a halfword at
+       +0x30, which is data_020a80e4 + 0x18.
+     src/func_0205ea28.c reads data_020a80cc[0x18] as a halfword (byte +0x30)
+       to decide whether the calibration is live, and then reads p[0..5] off
+       data_020a80e4. The same six words and the same halfword, addressed
+       through the OTHER name. They can only both be right if the two names
+       are 0x18 apart.
+
+   Hosted as two disjoint arrays -- `int data_020a80e4[8]` several hundred
+   lines up and `int data_020a80cc[6]` here -- every one of those accesses
+   landed outside its object, and src/func_0205ea28.c is LINKED and on the
+   live per-frame stylus path, so this was a real out-of-bounds read in the
+   shipped binary and not a latent one. src/func_0205f270.c stores at +0x30,
+   +0x32, +0x34 and +0x36, which is 22 bytes past the end of a 24-byte host
+   object, and that is what kept hal/boot2_ipc.cpp's channel 6 claimed and
+   quiet (its note at the arm9_bring_up seam) and what refused rung R2d.
+
+   THE SHAPE IS THE TREE'S OWN: numbered grouped sections in ROM order, so the
+   linker lays the run out contiguously and +0x18 of the first IS the second.
+   hal/comms_seam.cpp's data_020a89ec/data_020a8a00 pair and
+   hal/camera_bridges.cpp's camcomm run already use it, and the read-back that
+   makes it a measurement rather than a hope is port_tp_layout_check() in
+   hal/boot2_ipc.cpp, called before that file claims channel 6.
+
+   ".dsstate$tp0001"/"$tp0002" sort between the "$aaa" low sentinel and the
+   "$zzz" high sentinel, so both stay inside the save-state capture exactly as
+   the plain globals around them were. Both are bss on the DS, so zero-filled
+   host storage reads what the DS's own cleared bss reads. */
+__pragma(section(".dsstate$tp0001", read, write))
+__declspec(allocate(".dsstate$tp0001")) __declspec(align(4))
+unsigned char data_020a80cc[0x18] = {0};
+__pragma(section(".dsstate$tp0002", read, write))
+__declspec(allocate(".dsstate$tp0002")) __declspec(align(4))
+unsigned char data_020a80e4[0x20] = {0};
 /* data_0209caa0 is NOT defined here: hal/level_boot.cpp already hosts it as
    a 0x14 save block, and its own header records that the ROM object is wider
    than the dsd symbol. Only the mangled spelling below is added. */
@@ -1830,8 +1994,43 @@ static void *__fastcall l2_eb2c_s00(void *s, void *)
 static void *__fastcall l2_eb2c_s04(void *s, void *)
 { l2_sib_note(2, 1); return _ZN10FaderColorD0Ev(s); }
 
-static void l2_fill_0208ea6c(void)
+/* ---- THE FOUR FADER VTABLES ARE SEATED BEFORE main -----------------------
+   run link100 lane CTOR3, rung 1, and it is a FIX rather than a preference.
+
+   THIS FILL USED TO RUN FROM scene_fill_title(), one row of
+   port_scene_registry_install()'s walk, and that is late: the registry install
+   happens well after the ROM's own .ctor walk at Entry. Between those two
+   points data_0208eb2c is ten words of zeroed host storage, and lane CTOR2's
+   rung C1c made the ROM's own __sinit_02074edc the last writer of
+   data_0209f5e8's vptr -- which points HERE. Run link100 lane WM9's loopback
+   pair then died in both windows, rc=0xC0000005, at func_ov075_02116c8c ->
+   LoadLevelNoReturn -> LoadLevel -> Scene::SetAndStopColorFader ->
+   Scene::SetFaders+0x27: EIP 0, eax = data_0208eb2c, ecx = data_0209f5e8, both
+   named out of that build's own walk_window.map. Scene::SetFaders asks the
+   INSTALLED fader `vt->f14` -- ROM byte +0x14, FaderBrightness::IsAtStart --
+   before it replaces it, and the word was still zero.
+
+   ON THE CARTRIDGE THESE FOUR TABLES ARE CONSTANTS IN THE IMAGE. They are
+   readable at the first instruction the ARM9 executes, long before any
+   initialiser installs a vptr into them, and no code fills them at run time
+   because there is nothing to fill. The host cannot spell them as constant
+   data -- every word is a veneer this file compiles, with the call site's
+   calling convention rather than the ROM body's -- so the nearest honest thing
+   is a fill that has run before anything can dispatch. A C++ static
+   initialiser is that: it runs before main, and therefore before
+   port_rom_main_run() walks the ROM's .ctor table. It is the same mechanism
+   hal/fader_wipes.cpp's gate-31 block already uses one symbol over.
+
+   IT IS IDEMPOTENT AND scene_fill_title STILL CALLS IT, so the title path is
+   byte-identical to what it was and a successor who deletes the static
+   initialiser gets the old behaviour back rather than a silent hole. */
+static int l2_fader_vt_seated;
+static int l2_fader_vt_zero_words;
+
+static void l2_seat_fader_vtables(void)
 {
+    if (l2_fader_vt_seated) return;
+    l2_fader_vt_seated = 1;
     data_0208ea6c[0]  = (void *)l2_ea6c_s00;
     data_0208ea6c[1]  = (void *)l2_ea6c_s04;
     data_0208ea6c[2]  = (void *)l2_ea6c_s08;
@@ -1879,6 +2078,53 @@ static void l2_fill_0208ea6c(void)
     data_0208eb2c[7] = (void *)l2_eb2c_s1c;
     data_0208eb2c[8] = (void *)l2_eb2c_s20;
     data_0208eb2c[9] = (void *)l2_eb2c_s24;
+
+    /* NEVER ADDRESS 0, CHECKED RATHER THAN CLAIMED. Every word of the three
+       tables this fill owns has to be a callable host address when this
+       returns: a body where the ROM has a body, and this file's named trap
+       where it does not. A zero would be the defect above coming back, so the
+       sweep counts them and the count is reported by the [ctor] census in
+       hal/ctor_runner.cpp, at the moment the ROM's initialiser installs the
+       vptr.
+
+       data_0208eafc is NOT swept and that is deliberate. Its ten slots are
+       0x0201786c, 0x02017848 and then EIGHT LITERAL ZEROS in the cartridge --
+       Fader is abstract and those eight are pure virtual, which is what mwcc
+       writes for a pure slot. Two words are seated here because the ROM
+       relocates them; the eight zeros are the ROM's own bytes and nothing in
+       the image dispatches them (the two ctors that write this vptr overwrite
+       it with a derived table before they return, with no call in between).
+       Filling them would be a divergence from the cartridge bought with
+       nothing. */
+    l2_fader_vt_zero_words = 0;
+    for (int i = 0; i < 12; ++i) if (data_0208ea6c[i] == 0) ++l2_fader_vt_zero_words;
+    for (int i = 0; i < 10; ++i) if (data_0208eb2c[i] == 0) ++l2_fader_vt_zero_words;
+    for (int i = 0; i < 12; ++i) if (data_0208eacc[i] == 0) ++l2_fader_vt_zero_words;
+    if (l2_fader_vt_zero_words != 0)
+        std::fprintf(stderr, "  [eb2c] FADER VTABLE SEAT INCOMPLETE: %d of the "
+                     "34 words of data_0208ea6c, data_0208eb2c and "
+                     "data_0208eacc are still zero after the seat, so a "
+                     "dispatch through one of them is a call to address 0\n",
+                     l2_fader_vt_zero_words);
+}
+
+/* The static initialiser itself. Anonymous namespace so the object has no
+   external name and nothing outside this file can reach it; the constructor is
+   the whole of it. */
+namespace {
+struct L2FaderVtableSeat { L2FaderVtableSeat() { l2_seat_fader_vtables(); } };
+L2FaderVtableSeat l2_fader_vtable_seat;
+}  /* anonymous namespace */
+
+/* How the [ctor] census in hal/ctor_runner.cpp reads this file's answer. Two
+   numbers and no prose: the words that are live, and the words that are still
+   zero. */
+extern "C" int port_fader_vtable_seated(void) { return l2_fader_vt_seated; }
+extern "C" int port_fader_vtable_zero_words(void) { return l2_fader_vt_zero_words; }
+
+static void l2_fill_0208ea6c(void)
+{
+    l2_seat_fader_vtables();
     l2_ea6c_selftest();
 }
 
@@ -2850,6 +3096,86 @@ static void scene_fill_starsel(void)
     vt[17] = (void *)ss_d0;
 }
 
+// ---- dScGameOver_c, id 8, the GAME OVER screen (ov003) --------------------
+//
+// The dScStarSel_c seat above, applied to ov003's third scene class. Its
+// eighteen ROM words, read with relocations applied out of
+// extracted/overlays/overlay_0003.bin at the config .text base 0x020ad660:
+//
+//    0  020b0b3c own      9  020b0814 own
+//    1  0202e638         10  0202e3a4
+//    2  0202e62c         11  0202e398
+//    3  020b0b34 own     12  020b0810 own
+//    4  0202e5f0         13  0204357c
+//    5  0202e5d0         14  0204349c
+//    6  020b0894 own     15  02043494
+//    7  0202e3d4         16  020b0580 own
+//    8  0202e3c8         17  020b05bc own
+//
+// THE ELEVEN INHERITED WORDS ARE THE SAME ELEVEN dScStarSel_c AND dScDSMT_c
+// HOLD, word for word, so scene_fill_shared's index list applies unchanged and
+// this seat makes no width claim of its own. The SpawnInfo at 0x020b1750 reads
+// 0x020b1118 in its factory word and 8 in its +4 halfword, and the ARM9 spawn
+// table relocates from:0x02090884 to it, which is index 8. All four readings
+// agree and not one of them is inherited from the star select's block.
+//
+// BOTH BLOCKERS port/slice_scene1.txt RECORDED ARE CLEARED, and neither by
+// this gate deciding it was fine:
+//
+//   1. the five marker-carrying bodies -- 020b0b3c, 020b0b34, 020b0814,
+//      020b0810, 020b05bc -- are ALREADY ruled REAL_DECOMP in
+//      port/tools/inferred_stub_adjudicated.txt:2211-2215, each with a
+//      tools/match.py 2004/b56 strict-relocation byte gate behind it. 020b0894
+//      and 020b0580 never carried the marker at all. NO NEW RULING IS ADDED
+//      HERE and inferred_stub_guard is not asked for one.
+//
+//   2. the placeholder spellings are renamed per TU in port/CMakeLists.txt
+//      onto the ROM's own literal-pool words. The block at the top of this
+//      file carries that derivation in full.
+//
+// THE WITNESS is dScStarSel_c's, one counter per dispatched slot. A scene that
+// boots is not a scene that RUNS, and from outside the two look identical.
+static unsigned g_go_hits[18];
+/* What the ROM's own D2 leaves in the object's +0 word, read back AFTER the
+   body returns. THE RUNTIME HALF OF THE TABLE-WORD PROOF: the ROM stores
+   0x0208e4b8 there, the host has to store data_0208e4b8 and not _ZTV7dBase_c's
+   array, and the census prints both addresses so the two can be told apart.
+   D2 ONLY -- D0 deallocates the object, so reading it back after that one
+   would be a use-after-free. */
+static void *g_go_vptr_after_d2;
+static int  __fastcall go_init(void *s, void *)
+{ ++g_go_hits[0];  return func_ov003_020b0b3c(s); }
+static int  __fastcall go_clean(void *, void *)
+{ ++g_go_hits[3];  return func_ov003_020b0b34(); }
+static int  __fastcall go_beh(void *s, void *)
+{ ++g_go_hits[6];  return func_ov003_020b0894(s); }
+static int  __fastcall go_render(void *s, void *)
+{ ++g_go_hits[9];  return func_ov003_020b0814(s); }
+static int  __fastcall go_pdes(void *, void *)
+{ ++g_go_hits[12]; func_ov003_020b0810(); return 0; }
+static void *__fastcall go_d2(void *s, void *)
+{
+    ++g_go_hits[16];
+    void *r = (void *)func_ov003_020b0580(s);
+    g_go_vptr_after_d2 = *(void **)s;
+    return r;
+}
+static void *__fastcall go_d0(void *s, void *)
+{ ++g_go_hits[17]; return (void *)func_ov003_020b05bc(s); }
+
+static void scene_fill_gameover(void)
+{
+    void **vt = data_ov003_020b179c;
+    scene_fill_shared(vt);
+    vt[0]  = (void *)go_init;
+    vt[3]  = (void *)go_clean;
+    vt[6]  = (void *)go_beh;
+    vt[9]  = (void *)go_render;
+    vt[12] = (void *)go_pdes;
+    vt[16] = (void *)go_d2;
+    vt[17] = (void *)go_d0;
+}
+
 // ---- dScDSMT_c, id 1, the TITLE SCREEN and FILE SELECT (ov007) -------------
 //
 // THE WIDTH IS 18 AND THE ROM SAYS SO THREE WAYS, so scene_fill_shared's
@@ -3028,16 +3354,69 @@ static int  __fastcall ti_init_noop(void *, void *)
 { ++g_ti_init_skipped; return 1; }
 static void *__fastcall ti_d2(void *s, void *) { return func_ov007_020cc028((int *)s); }
 static void *__fastcall ti_d0(void *s, void *) { return func_ov007_020cc070((int *)s); }
-/* graphCallback_c */
-static int __fastcall ti_gc0(void *, void *)  { return func_ov007_020cc110(); }
-static int __fastcall ti_gc1(void *s, void *) { return _ZN5Scene14GraphCallback1Ev(s); }
-static int __fastcall ti_gc2(void *s, void *) { return func_ov007_020cc0f4(s); }
-static int __fastcall ti_gc3(void *s, void *) { return _ZN5Scene14GraphCallback3Ev(s); }
+/* graphCallback_c, AND THE ONE CONVENTION IN THIS FILE THAT IS CDECL (run
+   link100, rung G2(a), lane R3G).
+ *
+ * EVERY OTHER FACE ABOVE IS __fastcall, because every other table in this file
+ * is dispatched by THIS PORT -- hal/actor_vtables.cpp's convention, this in
+ * ecx and a dummy for ARM's r1. These four are different, and the difference
+ * is not a preference: the graphics-block table has FOUR DISPATCH SITES IN THE
+ * ROM'S OWN C, and under SM64DS_ROM_LOOP the ROM's are the ones that run.
+ *
+ *     src/func_02019144.c   UnkVt::func8   `p->vt->func8(p)`     slot 2
+ *     src/func_02019100.c   VFN vt[3]      `o->vt[3](o)`         slot 3
+ *     src/func_02019390.c / src/func_02019404.c   slots 0 and 1
+ *
+ * All four declare the word as an ORDINARY FUNCTION POINTER taking the block --
+ * `int (*)(UnkObj *)`, `void (*)(struct Obj *)` -- which on this host is cdecl.
+ * So a __fastcall face in these slots is entered by a cdecl call, and until
+ * this rung it worked BY ACCIDENT. Disassembled out of the linked binary
+ * (dumpbin /disasm, walk_window.exe built at this lane's G2 gate):
+ *
+ *     006887A0  mov   ecx, ds:[01792BD8h]   ; ecx = data_0209d4a8
+ *     006887A6  test  ecx, ecx
+ *     006887A8  je    006887BD
+ *     006887AA  mov   eax, [ecx]            ; the vptr
+ *     006887AC  push  ecx                   ; the cdecl argument
+ *     006887AD  mov   eax, [eax+8]          ; slot 2
+ *     006887B0  call  eax
+ *     006887B2  add   esp, 4                ; the CALLER cleans up
+ *
+ * MSVC happened to leave the receiver in ecx across the call setup, so the
+ * __fastcall callee read the right pointer out of the register the caller
+ * never meant to pass -- a REGISTER RIDE-THROUGH, the class the house rules
+ * name, and one that survives only until a register allocator disagrees: /Od,
+ * one added statement in func_02019144, or a different MSVC. func_02019100's
+ * dispatch at 00688780 is the identical shape. The stack stayed balanced
+ * either way (a __fastcall callee taking both arguments in registers pops
+ * nothing, and the cdecl caller cleans its own push), which is exactly why
+ * nothing ever went red.
+ *
+ * SO THE FACES ARE SPELLED THE WAY THE CALLERS DECLARE THEM. One argument,
+ * cdecl, and graph_block_word below calls them the same way, so the port's own
+ * beat and the ROM's four dispatchers now agree by construction instead of by
+ * luck. hal/scene_mg.cpp's mg_gc0..3 -- the same table for every minigame --
+ * are respelled in the same commit and for the same reason.
+ *
+ * r3g_gc_enter is the COUNTED PROOF the rung owes: every entry records its
+ * slot and checks the receiver it was handed against data_0209d4a8, so a run's
+ * census says how many times each slot was entered and how many of those
+ * arrived with the wrong block. */
+extern "C" void port_r3g_gc_enter(unsigned slot, void *self);
+static int ti_gc0(void *s)  { port_r3g_gc_enter(0, s); return func_ov007_020cc110(); }
+static int ti_gc1(void *s)  { port_r3g_gc_enter(1, s); return _ZN5Scene14GraphCallback1Ev(s); }
+static int ti_gc2(void *s)  { port_r3g_gc_enter(2, s); return func_ov007_020cc0f4(s); }
+static int ti_gc3(void *s)  { port_r3g_gc_enter(3, s); return _ZN5Scene14GraphCallback3Ev(s); }
 
 /* The registry named in the block comment above. One entry today; an array
    because the next seated scene class adds a row rather than a special case,
    and a linear walk over four pointers is not worth a smarter shape. */
-static void *g_gc_seated[4];
+/* EIGHT SINCE RUNG H1 (run link100, lane R3H), not four. The title, the
+   thirty minigames' shared table, scene 6's and scene 360's fill all four
+   slots exactly, and the register call above drops anything past the end in
+   silence -- a fifth block would then be refused by the beat with no
+   diagnostic anywhere. Four pointers wider; nothing else moves. */
+static void *g_gc_seated[8];
 static unsigned g_gc_seated_n;
 static int g_gc_verdict = 1;
 
@@ -3069,6 +3448,27 @@ void port_graph_block_register(void *vt)
    line was written. */
 extern "C" unsigned char data_0209d4a8[4];
 
+/* RUNG G2(a)'s COUNTER. Every graphics-block face entry, by slot, with the
+   receiver it was handed checked against the block pointer the ROM's own
+   dispatchers load. `wrong` is the number that arrived holding something else,
+   which is what a convention mismatch looks like from inside the callee: a
+   nonzero there is the finding, and a zero over a counted run is the proof
+   that the four slots are entered with the block. Read by the scene loop's
+   census at the bottom of this file.
+
+   C LINKAGE because BOTH seat files feed it: the title's four faces below and
+   hal/scene_mg.cpp's mg_gc0..3, which are the same table for all thirty
+   minigame scenes. A counter that only one of the two fed would report 0/0/0/0
+   on a minigame row and read as "the ROM never dispatched it" when what it
+   measured was its own coverage. */
+static unsigned g_r3g_gc_hits[4];
+static unsigned g_r3g_gc_wrong;
+extern "C" void port_r3g_gc_enter(unsigned slot, void *self)
+{
+    if (slot < 4) ++g_r3g_gc_hits[slot];
+    if (self != *(void **)data_0209d4a8) ++g_r3g_gc_wrong;
+}
+
 /* THE ONE DISPATCH, shared by every beat that has one. `word` is the block
    vtable's own index, which is also the ROM's: func_02019100 takes vt[3],
    func_02019144 takes vt[2], func_02019390 takes vt[0] and func_02019404 takes
@@ -3088,8 +3488,12 @@ static int graph_block_word(unsigned word)
     void **vt = *(void ***)p;
     for (unsigned i = 0; i < g_gc_seated_n; ++i) {
         if (g_gc_seated[i] != (void *)vt) continue;
-        typedef int(__fastcall * Word)(void *, void *);
-        return ((Word)vt[word])(p, 0);
+        /* CDECL, ONE ARGUMENT, since rung G2(a): the ROM's own four dispatch
+           sites declare this word `int (*)(UnkObj *)` and under SM64DS_ROM_LOOP
+           they are what calls it. This port's beat calls it the same way rather
+           than a second way. Read the block above ti_gc0. */
+        typedef int(*Word)(void *);
+        return ((Word)vt[word])(p);
     }
     return 1;
 }
@@ -3263,15 +3667,23 @@ struct PortSceneClass {
     unsigned char reads_sublevel;
 };
 
-/* TWO ROWS. dScTitle_c (id 2) and dScGameOver_c (id 8) are derived to the same
-   depth -- SpawnInfo, factory and all eighteen vtable slots are recorded in
-   port/ov003_syms.txt -- and are NOT seated, for two reasons that are named in
-   full at the bottom of port/slice_scene1.txt: eleven of their fourteen slot
-   bodies carry the "recovered from vtable slot identity" marker that
-   port/tools/inferred_stub_guard refuses until each is ruled against the ROM,
-   and three of their dtor TUs spell their vptr writes as per-TU placeholders
-   (VT0/VT1/VT2, _ZTV10dScTitle_c, _ZTV8dScene_c, _ZTV7dBase_c, G0) that exist
-   in no config. Adding them is a row here plus a block in the slice.
+/* ONE ROW LEFT, and it used to be two. dScTitle_c (id 2) and dScGameOver_c
+   (id 8) were both derived to the same depth -- SpawnInfo, factory and all
+   eighteen vtable slots recorded in port/ov003_syms.txt -- and both were held
+   out by the same two blockers, named in full at the bottom of
+   port/slice_scene1.txt: their slot bodies carry the "recovered from vtable
+   slot identity" marker that port/tools/inferred_stub_guard refuses until each
+   is ruled against the ROM, and their dtor TUs spell their vptr writes as
+   per-TU placeholders (VT0/VT1/VT2, _ZTV10dScTitle_c, _ZTV8dScene_c,
+   _ZTV7dBase_c, G0) that exist in no config.
+   DSCGAMEOVER_C IS SEATED (run link100 lane MPG2) and cleared both rather than
+   being excused from either: its five marker-carrying bodies are ruled
+   REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt:2211-2215, and its
+   two placeholder spellings are renamed per TU onto the ROM's own literal-pool
+   words in port/CMakeLists.txt. dScTitle_c is what is left, and its six bodies
+   are ruled too, so what remains for it is the placeholder trio in
+   src/func_ov003_020ad660.c and a row here. Adding it is a row plus a block in
+   a slice.
    ov007's dScDSMT_c hit BOTH of those blockers and cleared them rather than
    being excused from them: its six marker-carrying bodies are ruled against
    the ROM in port/tools/inferred_stub_adjudicated.txt, and its two placeholder
@@ -4600,6 +5012,22 @@ static const PortSceneClass port_scene_classes[] = {
     {360, "SCENE_MULTIBOOT", data_0209435c, port_mb_scene_spawn,
      port_scene_fill_mb, 0},
     // ---- end link100 SCENE ----
+    /* dScGameOver_c, ov003's third and last scene class, run link100 lane
+       MPG2. 8 is the ARM9 spawn table's own index and it is read three ways
+       that agree: config/arm9/relocs.txt has from:0x02090884 kind:load
+       to:0x020b1750, (0x02090884 - 0x02090864)/4 = 8, and the record's own +4
+       halfword reads 8 back. Spelled in decimal for the two reasons every row
+       above gives: the others are, and port/tools/battery.py reads its
+       hosted-scene set out of this table.
+       APPENDED AFTER EVERY EXISTING ROW, the fill-order rule every appended
+       row above restates. For this row it costs nothing and is obeyed anyway:
+       the fill writes only its own eighteen-word host array, which no other
+       row shares, so there is no word for an ordering to race over.
+       reads_sublevel is 0 and it is measured the way the rows above are: not
+       one of the twelve TUs in this class's slice names data_02092110,
+       SUBLEVEL_LEVEL_TABLE or SublevelToLevel. */
+    {8, "SCENE_GAMEOVER", data_ov003_020b1750, func_ov003_020b1118,
+     scene_fill_gameover, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
@@ -5918,8 +6346,49 @@ extern "C" void port_sqrt_selftest(void)
    one: hal_sub_screen_init_hw keys g_headless off exactly that, so passing a
    real window is the whole of what turns the stylus, the focus gate and the
    TAB latch on. See the block below it. */
+/* ---- RUNG H1: SCENE 360'S GRAPHICS BLOCK, REGISTERED (lane R3H) ----------
+ *
+ * The other block this port hosts and never registered. R3G's census printed
+ * `vptr=01798B68` for scene 360 and walk_window.map puts _data_02094390
+ * (hal/arm9_tables_link100.cpp) at 01798b68 -- the same word, so the table is
+ * identified by ADDRESS and not by name. Its four words are the arm9
+ * originals {func_02034d2c, Scene::GraphCallback1, func_02034d24,
+ * func_02034b40}; slots 0 and 2 are `mov r0,#0 / bx lr`, so the port's beat
+ * now answers 0 on this block and SKIPS the display tail -- which is exactly
+ * what src/func_02019144.c does with the same answer (`if (p->vt->func8(p) ==
+ * 0) return;`). Before this the port refused the block, answered 1 and
+ * published over the top of it while the ROM's own dispatcher, under
+ * SM64DS_ROM_LOOP with the VBlank handler registered, did not.
+ *
+ * REGISTERED HERE rather than in hal/scene_link100_mb.cpp because that file is
+ * not this lane's and because registration is inert until the block is LIVE:
+ * graph_block_word only dispatches when data_0209d4a8's vptr equals a
+ * registered table, and no level ever puts this one there. SM64DS_R3H_GB360=0
+ * leaves it unregistered. */
+extern "C" unsigned char data_02094390[];
+static void port_scene_gb_register_mb(void)
+{
+    static int done;
+    if (done) return;
+    done = 1;
+    const char *e = std::getenv("SM64DS_R3H_GB360");
+    if (e && e[0] == '0' && e[1] == '\0') return;
+    void **vt = (void **)data_02094390;
+    std::fprintf(stderr,
+                 "  [r3h] scene 360's graphics block registered with the "
+                 "port's beat: data_02094390 at %p, vt[0..3]={%08X,%08X,"
+                 "%08X,%08X} (slots 0 and 2 are the ROM's own `return 0`, so "
+                 "the beat now skips the display tail the way "
+                 "src/func_02019144.c does)\n",
+                 (void *)vt, (unsigned)(size_t)vt[0], (unsigned)(size_t)vt[1],
+                 (unsigned)(size_t)vt[2], (unsigned)(size_t)vt[3]);
+    std::fflush(stderr);
+    port_graph_block_register(vt);
+}
+
 extern "C" int port_scene_begin(void *hwnd, int zoom)
 {
+    port_scene_gb_register_mb();
     const int scene = port_scene_env_want();
     const int frames = port_scene_frames_wanted();
     const int no_render = std::getenv("SM64DS_SCENE_NO_RENDER") != 0;
@@ -6774,6 +7243,31 @@ extern "C" int port_scene_finish(int frames_run)
                     t ? "ov007" : "ov003",
                     h[0], h[6], h[9], h[3], h[12],
                     sk ? "  [RENDER SLOT NO-OP'd: SM64DS_SCENE_SLOT9=0]" : "");
+        /* THE GAME OVER CENSUS, run link100 lane MPG2. Printed on EVERY scene
+           run and not only on scene 8, for the reason the scene-request line
+           below is printed unconditionally: "the seat is linked and nothing
+           dispatched it" is exactly as much of a reading as a live count, and
+           a line that only appeared on the id it belongs to would make the
+           silent case unreadable. */
+        std::printf("[gameover] slot hits: init %u, behavior %u, render %u, "
+                    "cleanup %u, pending-destroy %u, d2 %u, d0 %u\n",
+                    g_go_hits[0], g_go_hits[6], g_go_hits[9], g_go_hits[3],
+                    g_go_hits[12], g_go_hits[16], g_go_hits[17]);
+        /* THE TABLE-WORD PROOF, runtime half. The ROM's D2 and D0 restore the
+           object's +0 word to 0x0208e4b8, and on the host that has to be
+           data_0208e4b8 -- NOT _ZTV7dBase_c, which is a live definition of its
+           own at another address (hal/sub_actors.cpp's trap array) and is what
+           both dtor TUs would have bound to without this gate's per-TU
+           renames. Both are printed so the two can be told apart at a glance,
+           next to the class's own table and the Scene word. The last field is
+           what D2 actually left behind, or 0 if no teardown was reached on
+           this run; a run that reports d2 0 reports 0 here and claims
+           nothing. */
+        std::printf("[gameover] host words: table %p  ActorDerived %p  "
+                    "dBase(trap, NOT it) %p  Scene %p  object+0 after D2 %p\n",
+                    (void *)data_ov003_020b179c, (void *)data_0208e4b8,
+                    (void *)_ZTV7dBase_c, (void *)_ZTV5Scene,
+                    g_go_vptr_after_d2);
         /* THE ROUTING WITNESS, run mg16 lane TITLE.
          *
          * "The title stopped ticking" and "the title asked to go somewhere"
@@ -6848,15 +7342,205 @@ extern "C" int port_scene_finish(int frames_run)
     return 0;
 }
 
+/* THE ROM'S FRAME STATE (hal/rom_frame.cpp), run link100 boot plan rung R3a,
+   brought to THIS loop by rung R3b step B0. The windowed scene loop in
+   tests/walk_window.cpp has called these three since R3a; the headless one
+   below did not, and the headless one is the loop the battery's 36 scene rows
+   and tail2's title actually take (walk_window.cpp:6626 says the harness scrubs
+   SM64DS_SCENE_WINDOW). So the scene half of R3a's harness conversion was
+   exercised by NOTHING in the gate: a green battery said only that the scene
+   did not crash, never that the ROM's phase-6 step count agreed with the loop's
+   own counter on every frame of it. These calls are the same three, in the same
+   order and at the same points as the windowed loop's (:6756, :6889, :6943,
+   :6981), so the two scene paths now report the same account. */
+extern "C" {
+void port_rom_frame_begin(const char *loop);
+void port_rom_frame_phase6(void);
+int  port_rom_frame_checked(int host, const char *reader);
+void port_rom_frame_report(void);
+/* the unchecked read, for rung G1's census and watcher lines below: they run
+   at the frame FOOT, after port_rom_frame_phase6() has already stepped the ROM
+   counter past the loop's own `frame`, so the checked accessor would refuse
+   the read on its own cross-check. */
+int  port_rom_frame(void);
+}
+
 /* THE HEADLESS RUN, which is the composition of the three above and nothing
    else. Every statement a scene run made before the split still runs, in the
    same order, with hwnd null, zoom 1 and the game ticking on every frame. */
+/* ---- RUNG G1: THE SCENE LOOP'S PHASE 7 (run link100, lane R3G) ------------
+
+   WHAT THIS CLOSES. Lane R3E put the ROM's own phase 7 behind SM64DS_ROM_LOOP
+   and lane R3F made it green on the level path; a whole battery then ran with
+   the knob exported and came back ALL GREEN, and R3F proved how much of that
+   green was a measurement: battery.py's scene_env inherits the knob, so all 37
+   scene rows CARRIED it, but the only readers of port_rom_loop_enabled() were
+   in tests/walk_window.cpp on the LEVEL loop. This loop had none, so those 37
+   rows ran the same program they run with the knob off and their green said
+   nothing about the handover. That is what these lines fix: with the knob on,
+   a scene frame now ends the way the cartridge ends it.
+
+   THE SHAPE IS THE LEVEL LOOP'S, statement for statement (tests/walk_window
+   .cpp, "RUNG E1"): the flag func_020197b8.c:53 raises between the swap and the
+   wait goes up, the frame foot census and the heap watcher read what the frame
+   ended holding, phase 7 is func_0201a4bc's whole body -- OS_SleepThread(
+   data_0209d500), the reschedule onto the ROM's idle thread, its
+   CP15::WaitForInterrupt, the VBlank edge, IRQ::VBlankHandler's own wake -- and
+   the flag comes down the instant the sleep returns (func_020197b8.c:56).
+
+   TWO DIFFERENCES FROM THE LEVEL LOOP, both stated rather than silent:
+
+     - THE SWAP IS NOT ADDED HERE. The level loop calls func_020190b8() and
+       ntr::gx_swap_apply() at its foot (rung R3b step BSWAP); this loop never
+       has, and adding it is a change to what a scene frame DOES rather than to
+       when it ends. Out of this rung's scope: G1 is the handover, not the
+       reconciliation of the two loops' bodies.
+
+     - THE SOUND FRAME STAYS WHERE IT IS, inside port_scene_tick, gated on
+       tick_game. Rung E2 duty 1 moved the LEVEL loop's sound to phase 9's
+       position under its own knob; this loop's sound tick is the scene's, it
+       has a pause gate the level's has not, and moving it is a second rung's
+       measurement, not this one's.
+
+   EVERYTHING IS GATED ON THE KNOB, so with SM64DS_ROM_LOOP unset -- and with
+   SM64DS_ROM_LOOP=0 after the default flips -- this loop is byte for byte the
+   loop it was: the flag is not written, nothing sleeps and the census does not
+   run. That is what makes the fallback an exact fallback. */
+extern "C" int port_rom_loop_enabled(void);
+/* func_0201a4bc's whole body is one statement, OS_SleepThread(data_0209d500),
+   and src/func_02057e34.c -- the idle thread it reschedules onto -- is
+   `IRQ::Enable(); for(;;) CP15::WaitForInterrupt();`. The declarations are
+   tests/walk_window.cpp's own, verbatim, so the two loops cannot drift on a
+   spelling. */
+extern "C" void OS_SleepThread(unsigned short *q);
+extern "C" unsigned char data_0209d500[4];
+/* THE "THE LOOP IS WAITING" FLAG, func_020197b8.c:53-56. IRQ::VBlankHandler's
+   wake is gated on it AND on data_0209d514 >= data_0208ee44
+   (src/_ZN3IRQ13VBlankHandlerEv.c:15), so both words are in the census below:
+   a run whose divider is higher than the VBlank count it accumulates would
+   never be woken and would report its sleeps as starvation wakes instead. */
+extern "C" unsigned char data_0209d4f0[4];
+extern "C" unsigned char data_0209d514[4];
+extern "C" int data_0208ee44;
+/* Memory::defaultHeapPtr (hal/heap_vtable.cpp:80). R3E's watcher: it was a
+   30000000 -> 00000000 transition inside the ROM's VBlank handler that made
+   rung E1 red on levels, and the same bracket is what says whether anything
+   under the knob does it again on a scene. */
+extern "C" void *data_020a0ea0;
+
+static int   r3g_sleeps;
+static void *r3g_heap_last = (void *)(size_t)-1;
+static void *r3g_blk_last  = (void *)(size_t)-1;
+
+static void r3g_heap_watch(const char *where, int frame)
+{
+    if (data_020a0ea0 == r3g_heap_last) return;
+    std::fprintf(stderr, "[r3g] Memory::defaultHeapPtr %p -> %p at %s, frame %d\n",
+                 r3g_heap_last == (void *)(size_t)-1 ? 0 : r3g_heap_last,
+                 data_020a0ea0, where, frame);
+    std::fflush(stderr);
+    r3g_heap_last = data_020a0ea0;
+}
+
+/* THE CENSUS RUNG G2(a) READS. R3E's four reads, plus the one question the
+   level path could not answer because its block pointer is null: is the vtable
+   behind this scene's block one this port has SEATED with host thunks (in which
+   case the ROM's own func_02019144 and func_02019100 will now enter them), or
+   is it still holding the raw DS code words the mount wrote? graph_block_word
+   above answers 1 and dispatches nothing for an unseated table; the ROM's two
+   dispatchers have no such test, so the answer is the whole hazard. Printed on
+   every TRANSITION of the block pointer rather than once, because
+   dScDSMT_c::InitResources seats it during the bring-up and a scene that
+   re-seats or clears it mid-run is exactly what a once-only census would
+   miss. */
+static void r3g_census(const char *when, int frame)
+{
+    void *blk = *(void **)data_0209d4a8;
+    if (blk == r3g_blk_last) return;
+    r3g_blk_last = blk;
+    void **vt = 0;
+    unsigned w[4] = {0, 0, 0, 0};
+    int seated = 0;
+    if ((size_t)blk > 0x1000u) {
+        vt = *(void ***)blk;
+        if ((size_t)vt > 0x1000u)
+            for (int i = 0; i < 4; ++i)
+                w[i] = (unsigned)(size_t)vt[i];
+        for (unsigned i = 0; i < g_gc_seated_n; ++i)
+            if (g_gc_seated[i] == (void *)vt) seated = 1;
+    }
+    std::fprintf(stderr,
+                 "[r3g] census at %s, frame %d: data_0209d4a8=%p vptr=%p "
+                 "vt[0..3]=%08x %08x %08x %08x  data_0209d514=%d "
+                 "data_0208ee44=%d  seated-by-this-port=%s\n",
+                 when, frame, blk, (void *)vt, w[0], w[1], w[2], w[3],
+                 *(const int *)data_0209d514, data_0208ee44,
+                 seated ? "YES" : "no");
+    std::fflush(stderr);
+}
+
 extern "C" int port_scene_run(void)
 {
     const int rc = port_scene_begin(nullptr, 1);
     if (rc)
         return rc;
-    for (int frame = 0; frame < scn_frames; ++frame)
-        port_scene_tick(frame, 1);
+    port_rom_frame_begin("scene loop (headless)");
+    /* THE BANNER IS THE REACH PROOF. port_rom_loop_enabled() prints its one
+       line on its FIRST read, so a scene row's log carrying it is that row
+       saying the knob got here -- which is precisely what the 37 rows of R3F's
+       knob-on battery could not say. Read once, before the loop, so the line
+       lands ahead of the frames rather than inside them. */
+    const int rom_loop = port_rom_loop_enabled();
+    if (rom_loop) {
+        std::fprintf(stderr, "[r3g] the scene loop honours SM64DS_ROM_LOOP: "
+                             "phase 7 of every frame below is the ROM's own "
+                             "sleep, and IRQ::VBlankHandler's wake is what ends "
+                             "the frame\n");
+        std::fflush(stderr);
+        r3g_census("the scene loop's first frame foot", 0);
+    }
+    for (int frame = 0; frame < scn_frames; ++frame) {
+        /* the frame number the scene's own work reads is the ROM's, checked
+           against this loop's counter -- the windowed loop's :6889 line. */
+        port_scene_tick(port_rom_frame_checked(frame, "scene-headless-tick"), 1);
+        /* THE FRAME BOUNDARY. func_020197b8.c:49 is `data_0209d50c = 6;` and
+           this is where this loop's frame ends, so this is where the ROM's
+           phase-6 body runs -- after the frame's work, before the frame ends,
+           exactly as the windowed loop runs it at :6943. */
+        port_rom_frame_phase6();
+        if (rom_loop) {
+            /* func_020197b8.c:53, the flag up between the swap and the wait.
+               The ROM raises it inside IRQ::DisableIRQs(1)/EnableIRQs; this
+               host has no interrupt to race with here, so the bracket is left
+               out rather than faked -- tests/walk_window.cpp says the same
+               thing about the same write at its own frame foot. */
+            data_0209d4f0[0] = 1;
+            r3g_census("the scene frame foot", port_rom_frame());
+            r3g_heap_watch("the scene frame foot", port_rom_frame());
+            ++r3g_sleeps;
+            OS_SleepThread((unsigned short *)data_0209d500);
+            r3g_heap_watch("the scene frame foot, after the ROM's sleep",
+                           port_rom_frame());
+            /* func_020197b8.c:56 -- and down the instant the wait returns. */
+            data_0209d4f0[0] = 0;
+        }
+    }
+    if (rom_loop) {
+        r3g_census("the scene loop's last frame foot", port_rom_frame());
+        std::fprintf(stderr, "[r3g] G1: phase 7 was the ROM's own sleep on %d "
+                             "of %d scene frames (SM64DS_ROM_LOOP)\n",
+                     r3g_sleeps, scn_frames);
+        std::fprintf(stderr, "[r3g] G2(a): graphics-block face entries by slot "
+                             "0/1/2/3 = %u/%u/%u/%u, entered with the WRONG "
+                             "block %u time(s). Slots 2 and 3 are what the "
+                             "ROM's own func_02019144 and func_02019100 "
+                             "dispatch from inside IRQ::VBlankHandler; slot 0 "
+                             "is func_02019390's, which this port calls at "
+                             "phase 2 itself.\n",
+                     g_r3g_gc_hits[0], g_r3g_gc_hits[1], g_r3g_gc_hits[2],
+                     g_r3g_gc_hits[3], g_r3g_gc_wrong);
+        std::fflush(stderr);
+    }
+    port_rom_frame_report();
     return port_scene_finish(scn_frames);
 }

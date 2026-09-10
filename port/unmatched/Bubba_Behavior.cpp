@@ -63,58 +63,24 @@ void *_ZN5Actor13ClosestPlayerEv(void *self);
 void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
 extern char data_ov032_02113aac[];
 
-struct PortBubbaPmf { unsigned fn, delta; };
-typedef void (*PortBubbaTickFn)(void *);
+/* HOST COPY RETIRED, run link100 lane PMFB8 gate 2. src/func_ov032_021121b4.cpp
+   dispatches BUBBA's tick half itself now: with block R8's /vmg /vmm the
+   emitted member pointer IS the ROM's eight-byte {function, delta} pair, read
+   at offset 8 of the cell exactly where `struct M { char pad[8]; PMF pmf; }`
+   puts it, and the whole banner above about MSVC's representation expired with
+   R8.
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately incomplete
- * class. */
-int func_ov032_021121b4(char *c)
-{
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
-            c, (WithMeshClsn *)(c + 0x190), (ModelAnim *)(c + 0x34c), 3) != 0)
-        return 1;
+   WHAT CHANGED WITH IT. The FIVE TICK words of the five cells now hold zero-arg
+   __fastcall faces rather than the raw cdecl bodies, because the matched TU's
+   `call eax` puts the receiver in ecx and pushes nothing. The faces live beside
+   the seat in hal/actor_classes_ov032.cpp. The five ENTER words are UNCHANGED:
+   their dispatcher, src/func_ov032_02111ff4.cpp, is already in the link and
+   emits a TAIL JUMP, so the cdecl body it reaches reads the caller's own first
+   stack word, which is self.
 
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    DecIfAbove0_Short((unsigned short *)(c + 0x42a));
+   The cell-pointer comparison this file's banner discusses is untouched by any
+   of it -- it compares the mounted cell ADDRESS, not a function word.
 
-    {
-        PortBubbaPmf *tick = (PortBubbaPmf *)(*(char **)(c + 0x3b0) + 8);
-        if (tick->fn != 0) {
-            char *recv = c + ((int)tick->delta >> 1);
-            PortBubbaTickFn fn;
-            if (tick->delta & 1)
-                fn = (PortBubbaTickFn)(size_t)(*(unsigned **)recv)[tick->fn / 4];
-            else
-                fn = (PortBubbaTickFn)(size_t)tick->fn;
-            fn(recv);
-        }
-    }
-
-    *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    *(short *)(c + 0x90) = *(short *)(c + 0x96);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, (CylinderClsn *)(c + 0x110));
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn *)(c + 0x190), 0);
-    func_ov032_02112044(c);
-
-    if (*(void **)(c + 0x3b0) != (void *)data_ov032_02113aac)
-        *(int *)(c + 0x3a8) = 0x1000;
-    else
-        *(int *)(c + 0x3a8) = 0x2000;
-
-    _ZN9Animation7AdvanceEv(c + 0x39c);
-    func_ov032_021113fc(c);
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)(c + 0x110));
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)(c + 0x150));
-
-    {
-        void *p = _ZN5Actor13ClosestPlayerEv(c);
-        if (p != 0 && *(unsigned char *)((char *)p + 0x6fb) == 0) {
-            _ZN12CylinderClsn6UpdateEv((CylinderClsn *)(c + 0x110));
-            _ZN12CylinderClsn6UpdateEv((CylinderClsn *)(c + 0x150));
-        }
-    }
-
-    return 1;
-}
+   The vtable-derived block sweep, the /FAsc listing and the tail-jump control
+   are in port/slice_pmfb8.txt and runs/link100/out/PMFB8/. */
 }

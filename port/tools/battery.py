@@ -45,8 +45,14 @@ Everything the merge gate runs, in order, stopping at the first failure:
                       older romdata blob, which is a stale directory rather
                       than a broken change and used to arrive as a runtime
                       refusal an hour in (shipcfg_stale_kit). --no-shipcfg opts
-                      out, loudly. The long form is at THE SHIPPING
-                      CONFIGURATION below
+                      out, loudly. The configure step itself is skipped only
+                      when build/port-kit/CMakeCache.txt PROVES it is still
+                      configured PORT_ROM_CLEAN, Release and the static CRT
+                      under Ninja (shipcfg_configure_decision); any
+                      disagreement, missing key or missing cache runs the full
+                      configure instead of trusting a present build.ninja
+                      alone. The long form is at THE SHIPPING CONFIGURATION
+                      below
 
     python port/tools/battery.py [repo-root] [--linked-floor N] [--skip-build]
                                  [--no-shipcfg]
@@ -60,6 +66,57 @@ launch. Unset or 1 is exactly the run this file has always made, in level order
 out of build/port with the per-launch lock. See RUNNING THE LEVEL ROWS N-WIDE
 below for what the directories are for and why the slot has to be held across
 the phase for any of it to help.
+
+LOCKING BY PHASE (run link100, lane BATTLOCK). Before this lane, battery.py
+opted into the windowed SLOT lock itself (SM64DS_TEST_LOCK) but never the
+BUILD lock -- a caller that wanted the full build serialised against every
+other lane's build had to wrap the WHOLE invocation in `build_lock.py run`,
+which holds the build lock for the wrapped child's ENTIRE lifetime. That is
+not the ~5 minutes battery.py spends actually building; it is that PLUS the
+ten to fifteen minutes it spends on its 87 windowed rows, which never touch
+the build tree at all. One battery under that wrapper therefore blocked every
+OTHER lane's build for the whole battery, doing no building itself for most
+of it -- the one thing pacing every lane on a night with several builds and
+batteries queued.
+
+battery.py now takes BOTH locks itself, each scoped to only the phases that
+need it, so the two are never held at the same time and neither is held while
+WAITING for the other:
+
+  phase                            lock held    gated by
+  --------------------------------  -----------  -------------------
+  the rebuild (build-port.cmd)      BUILD        SM64DS_BUILD_LOCK
+  smoke suite                       neither (no window opened, nothing built)
+  level rows + scene rows +         SLOT         SM64DS_TEST_LOCK
+    the default boot (one phase,
+    full_windowed_phase)
+  linkage.py / ptr_audit.py         neither
+  shipcfg configure+build           BUILD        SM64DS_BUILD_LOCK
+  shipcfg selftest                  SLOT         SM64DS_TEST_LOCK
+
+Both stay opt-in exactly as before: with the corresponding env var unset,
+battery.py takes neither lock for that phase and runs it byte-for-byte as it
+always has. See build_phase() and full_windowed_phase() below for the code.
+
+RECOMMENDED INVOCATION. Run battery.py directly rather than wrapping it in
+`build_lock.py run` -- the wrapper cannot release the build lock between
+phases (it holds the lock for the CHILD PROCESS'S WHOLE LIFETIME, which is
+exactly the problem LOCKING BY PHASE above closes), so a lane invoked that
+way blocks every other lane's build for its whole battery, not just for the
+few minutes it is actually building. Export both opt-ins and their _PATH
+variables (as COMMON.md already has every lane do) and run the script itself:
+
+    export SM64DS_BUILD_LOCK=1 SM64DS_BUILD_LOCK_PATH=C:/tmp/sm64ds-test-slot/port_build.lock
+    export SM64DS_TEST_LOCK=1 SM64DS_TEST_LOCK_PATH=C:/tmp/sm64ds-test-slot/slot.lock
+    python port/tools/battery.py <root> --linked-floor N
+
+Invoked the OLD way -- as the child of `build_lock.py run` -- battery.py
+detects it (the current holder is this process's own parent or a nearer
+ancestor; see _build_lock_held_by_ancestor) and prints a one-line notice
+naming the recommended invocation instead of trying to acquire a lock that is
+already its own ancestor's, which would deadlock rather than queue. That
+invocation still WORKS and is still CORRECT battery-wise; it is only slower
+for every other lane waiting on the build lock while this one runs its rows.
 
 THE SELFTEST BMP TRACKS THE HOSTED-GLOBAL LAYOUT, NOT ONLY THE .dsstate BASE.
 
@@ -313,6 +370,7 @@ from concurrent.futures import ThreadPoolExecutor
 # environment launches walk_window exactly as it always did. See slot_lock.py.
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import slot_lock
+import build_lock
 
 SELFTEST_FRAMES = "300"
 STEP_TIMEOUT = 600
@@ -345,6 +403,38 @@ SHIPCFG_BMP = "walk_window_selftest.bmp"
 SHIPCFG_KIT_DISPATCH = os.path.join("build", "port-kit", "host-src",
                                     "romdata_dispatch.c")
 ROMDATA_MANIFEST = os.path.join("build", "assets", "romdata.manifest")
+
+# THE SHIPPING CONFIGURATION'S ENFORCED CACHE SETTINGS -- ONE TABLE FOR BOTH
+# THE CONFIGURE COMMAND AND THE FAST-PATH CHECK (run link100, lane SHIPCACHE,
+# closing Andrew's #2474 round-3 P2). Before CFGFIX (run link100, lane
+# CFGFIX) this arm always ran cmake -S -B; CFGFIX made it skip that call
+# whenever build/port-kit/build.ninja already existed, on the same "configure
+# only when there is something to configure" rule build-port-j4.cmd uses for
+# the developer build. Andrew's finding: that guard tests only for A
+# configure, not for THIS ONE -- a build/port-kit left over from any other
+# invocation (hand-testing, an aborted run, a copied directory) reads
+# "already configured" and the fast path then builds it with whatever
+# PORT_ROM_CLEAN/CMAKE_BUILD_TYPE/CRT it already had, silently skipping every
+# one of the settings this arm exists to assert. shipcfg_configure_decision()
+# below closes that: the fast path is available only when
+# build/CMakeCache.txt PROVES it still holds every one of these values, not
+# merely when build.ninja happens to be present. shipcfg_cache_defines()
+# builds the configure command's -D flags from this SAME table, so the two
+# can never again say different things about what "the shipping
+# configuration" means.
+#
+# CMAKE_MSVC_RUNTIME_LIBRARY is the static-CRT switch; it reads
+# "MultiThreaded" for the Release/static combination this arm builds
+# (MultiThreadedDLL is the dynamic-CRT opposite Andrew's report found
+# surviving the old guard). The generator is checked separately, off
+# CMAKE_GENERATOR, because "-G Ninja" is not a -D flag on the command line at
+# all.
+SHIPCFG_CACHE_TABLE = (
+    ("PORT_ROM_CLEAN", "ON"),
+    ("CMAKE_BUILD_TYPE", "Release"),
+    ("CMAKE_MSVC_RUNTIME_LIBRARY", "MultiThreaded"),
+)
+SHIPCFG_GENERATOR = "Ninja"
 
 TABLE_OPEN = "static const PortLevelDesc port_level_table[] = {"
 SCENE_TABLE_OPEN = "static const PortSceneClass port_scene_classes[] = {"
@@ -958,6 +1048,196 @@ def windowed_phase(workers, rows, label):
         yield
 
 
+@contextlib.contextmanager
+def full_windowed_phase(total_rows, label):
+    """Hold the windowed SLOT across level rows + scene rows + the default
+    boot as ONE phase (run link100, lane BATTLOCK), the sibling of
+    windowed_phase above at a wider scope.
+
+    windowed_phase takes the slot for one sub-phase, and only when that
+    sub-phase runs several rows wide; at the default of one worker every
+    launch still takes and drops the per-launch lock in run() on its own, so
+    across levels, scenes and the default boot the lockfile is created and
+    removed roughly ninety times regardless of width. That is harmless by
+    itself -- the property THIS function exists for is not fewer lock file
+    operations, it is that the slot is demonstrably free BEFORE the shipcfg
+    BUILD phase that follows asks build_phase() for the build lock, so a
+    battery invoked directly (not under an outer `build_lock.py run`) never
+    holds one lock while waiting for the other. Taking one continuous hold
+    here, sized to the WORST case of every row in the phase (levels + scenes
+    + the one default-boot row) at STEP_TIMEOUT each, guarantees that even if
+    every inner windowed_phase() and per-launch lock were somehow skipped the
+    outer hold alone would still cover the whole span; slot_reentrant makes
+    the inner ones free once this one holds the lockfile, per its own nesting
+    contract (see slot_lock.py's HOLDING IT ACROSS A PHASE).
+    """
+    if slot_lock.enabled():
+        worst = STEP_TIMEOUT * total_rows
+        with slot_lock.slot_reentrant(label=label, max_hold=worst):
+            yield
+    else:
+        yield
+
+
+# ---- THE BUILD LOCK, PER PHASE (run link100, lane BATTLOCK) ---------------
+#
+# THE PROBLEM THIS SECTION CLOSES. Before this lane, battery.py opted into
+# neither lock itself -- it always took the SLOT lock (above), but never the
+# BUILD lock. A caller that wanted the full build serialised against every
+# other lane's build had exactly one way to get that: wrap the WHOLE
+# invocation in `build_lock.py run --label <lane> --root <root> -- python
+# port/tools/battery.py <root> ...`. That wrapper holds the build lock for
+# the CHILD PROCESS'S ENTIRE LIFETIME, which is not the ~5 minutes battery.py
+# spends actually building -- it is that PLUS the ten to fifteen minutes it
+# spends on its 87 windowed rows, which never touch the build tree at all.
+# One battery run under that wrapper therefore blocked every OTHER lane's
+# build for the whole battery, doing no building itself for most of it: the
+# one thing pacing every lane on a night with three builds and two batteries
+# queued.
+#
+# THE FIX. battery.py now takes the BUILD lock itself, scoped to only the two
+# phases that build -- the rebuild (build-port.cmd) and the shipcfg
+# configure+build -- and releases it before every windowed phase, exactly
+# symmetrically with how it has always taken the SLOT lock only around
+# windowed launches (full_windowed_phase and windowed_phase, above). Opt-in
+# exactly as before: with SM64DS_BUILD_LOCK unset, build_phase() is a no-op
+# and the battery runs byte-for-byte as it always has. See the module
+# docstring's LOCKING BY PHASE section for the resulting phase table.
+#
+# THE ONE CASE THIS CANNOT FIX: an outer `build_lock.py run` wrapper.
+# build_lock.acquire() is deliberately NOT re-entrant (build_lock.py mirrors
+# slot_lock.py's own contract here on purpose), so if battery.py is invoked
+# as ITS child, an ANCESTOR process already holds the lock for the child's
+# whole lifetime -- battery.py cannot release what it does not hold, and
+# trying to acquire it anyway would not queue, it would DEADLOCK: a child
+# waiting on its own ancestor to release a lock the ancestor will not release
+# until the child exits is not a wait, it is a wedge that only times out.
+# _build_lock_held_by_ancestor detects that shape -- the current holder's pid,
+# read back through build_lock.holder(), is this process's parent or a nearer
+# ancestor -- and build_phase() prints a one-line notice instead of trying to
+# acquire: the wrapper holds the lock for the whole run, so nothing below can
+# release it between phases. The fix is not code, it is the invocation: run
+# battery.py directly (see RECOMMENDED INVOCATION in the module docstring).
+
+_wrapper_notice_shown = False
+
+
+def _parent_pid(pid):
+    """The parent pid of a Windows process, or None if it cannot be read.
+
+    CreateToolhelp32Snapshot + Process32First/Next is the standard win32 way
+    to answer "who is PID N's parent" -- there is no simpler call, and this
+    file's own NO_CONSOLE/SI_MIN and build_lock.py/slot_lock.py's _pid_alive
+    already assume Windows throughout, so a Windows-only implementation here
+    matches the rest of the tree rather than adding a new assumption.
+    """
+    import ctypes
+    from ctypes import wintypes
+
+    TH32CS_SNAPPROCESS = 0x00000002
+
+    class PROCESSENTRY32(ctypes.Structure):
+        _fields_ = [
+            ("dwSize", wintypes.DWORD),
+            ("cntUsage", wintypes.DWORD),
+            ("th32ProcessID", wintypes.DWORD),
+            ("th32DefaultHeapID", ctypes.POINTER(ctypes.c_ulong)),
+            ("th32ModuleID", wintypes.DWORD),
+            ("cntThreads", wintypes.DWORD),
+            ("th32ParentProcessID", wintypes.DWORD),
+            ("pcPriClassBase", ctypes.c_long),
+            ("dwFlags", wintypes.DWORD),
+            ("szExeFile", ctypes.c_char * 260),
+        ]
+
+    kernel32 = ctypes.WinDLL("kernel32", use_last_error=True)
+    snap = kernel32.CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0)
+    if snap in (0, -1):
+        return None
+    try:
+        entry = PROCESSENTRY32()
+        entry.dwSize = ctypes.sizeof(PROCESSENTRY32)
+        if not kernel32.Process32First(snap, ctypes.byref(entry)):
+            return None
+        while True:
+            if entry.th32ProcessID == pid:
+                return entry.th32ParentProcessID
+            if not kernel32.Process32Next(snap, ctypes.byref(entry)):
+                return None
+    finally:
+        kernel32.CloseHandle(snap)
+
+
+def _build_lock_held_by_ancestor(max_hops=16):
+    """Does an ANCESTOR of this process hold the build lock right now?
+
+    True only when SM64DS_BUILD_LOCK is set, the lock is actually held, and
+    walking th32ParentProcessID from our own pid reaches the holder's pid
+    within max_hops steps -- the shape `build_lock.py run -- python
+    battery.py ...` makes (build_lock.py is our direct parent under
+    subprocess.Popen; a shell layer in between costs one more hop, which is
+    why this walks rather than checking os.getppid() alone). A holder that is
+    NOT our own ancestor is another lane entirely, running concurrently, and
+    must be queued behind normally by build_phase() below -- this function
+    answers a narrower question than "is the lock held": specifically,
+    "would OUR acquiring it deadlock against our own parent".
+    """
+    if not build_lock.enabled():
+        return False
+    pid, _, _, _ = build_lock.holder()
+    if not pid:
+        return False
+    walk = os.getpid()
+    for _ in range(max_hops):
+        if walk == pid:
+            return True
+        parent = _parent_pid(walk)
+        if not parent or parent == walk:
+            return False
+        walk = parent
+    return False
+
+
+@contextlib.contextmanager
+def build_phase(label, root):
+    """Hold the BUILD lock for one build phase (the rebuild, or the shipcfg
+    configure+build), or do nothing. See THE BUILD LOCK, PER PHASE above.
+
+    Opt-in on SM64DS_BUILD_LOCK, exactly like slot_lock's SM64DS_TEST_LOCK:
+    unset, this is a plain yield and battery.py builds exactly as it always
+    has. Set, and NOT nested under an outer `build_lock.py run` wrapper, this
+    acquires and releases build_lock.py's one machine-wide build lock for the
+    block. Set and nested under that wrapper, an ancestor already holds the
+    lock for the whole run -- acquiring here would deadlock rather than queue
+    -- so this prints one notice (not once per phase; a module-level flag
+    keeps it to once per process) and proceeds without touching the lock,
+    which is exactly correct: the ancestor already holds it for this whole
+    call.
+    """
+    global _wrapper_notice_shown
+    if not build_lock.enabled():
+        yield
+        return
+    if _build_lock_held_by_ancestor():
+        if not _wrapper_notice_shown:
+            print(
+                "[battery] running under an outer `build_lock.py run` "
+                "wrapper: it holds the build lock for this process's WHOLE "
+                "lifetime, so battery.py cannot release it between phases -- "
+                "every windowed row below waits behind it too, blocking "
+                "every other lane's build for no reason. Recommended: run "
+                "battery.py directly instead (it takes the build lock itself, "
+                "per phase) -- `python port/tools/battery.py <root> "
+                "--linked-floor N` with SM64DS_BUILD_LOCK=1 and "
+                "SM64DS_TEST_LOCK=1 exported (and their _PATH variables set "
+                "as usual).", file=sys.stderr)
+            _wrapper_notice_shown = True
+        yield
+        return
+    with build_lock.build(label=label, root=root):
+        yield
+
+
 def selftest_env(lvl, skip=None):
     env = dict(os.environ,
                SM64DS_LEVEL=str(lvl),
@@ -1157,8 +1437,113 @@ def scene_retire_probe(build, scene):
     return False, "bare rc=0"
 
 
+def shipcfg_cache_defines():
+    """The configure command's -D flags, built from SHIPCFG_CACHE_TABLE.
+
+    shipcfg_configure_decision() below reads the SAME table's keys back off
+    an existing CMakeCache.txt before it will agree to skip this command, so
+    the command line and the fast-path check are one table read two ways and
+    cannot say different things about what "the shipping configuration" is.
+    """
+    return " ".join('-D%s=%s' % (k, v) for k, v in SHIPCFG_CACHE_TABLE)
+
+
+def _cmake_cache_entries(cachefile):
+    """{key: value} out of a CMakeCache.txt, or {} if it cannot be read.
+
+    A cache line is NAME:TYPE=VALUE. The type is dropped rather than checked
+    -- port/tools/gate.py's cache_value() reads a cache the same way, for the
+    same reason: CMake does not keep the type spelling stable across entries
+    or versions (CMAKE_MSVC_RUNTIME_LIBRARY reads UNINITIALIZED here, not
+    STRING, though it is set the same -D way as CMAKE_BUILD_TYPE), and the
+    value is the only part either caller needs.
+    """
+    entries = {}
+    try:
+        with open(cachefile, encoding="utf-8", errors="replace") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or line.startswith("//"):
+                    continue
+                name, sep, rest = line.partition(":")
+                if not sep or "=" not in rest:
+                    continue
+                entries[name] = rest.split("=", 1)[1]
+    except OSError:
+        return {}
+    return entries
+
+
+def shipcfg_configure_decision(build):
+    """May the shipcfg configure step be skipped for this build directory?
+
+    Returns (status, detail). status is the literal string "fast path" when
+    build.ninja already exists AND build/CMakeCache.txt carries every
+    SHIPCFG_CACHE_TABLE key at its enforced value AND CMAKE_GENERATOR reads
+    SHIPCFG_GENERATOR; otherwise status is the literal string "refused" and
+    detail names the missing file, the missing cache, or the one offending
+    key and the value found in place of the enforced one. detail is always a
+    complete sentence fragment fit to print after "shipcfg configure: ok, ".
+
+    A PURE FILE READ, the same shape as shipcfg_stale_kit above: no cmake is
+    invoked and nothing is launched, so calling this before every configure
+    costs nothing and it is what test_battery_shipcfg.py exercises directly,
+    never through a real configure.
+
+    WHY THIS EXISTS (Andrew's #2474 round-3 P2). CFGFIX's fast path skipped
+    the configure call whenever build/port-kit/build.ninja was already on
+    disk, on the same "configure only when there is something to configure"
+    rule build-port-j4.cmd uses for the developer build. That rule is safe
+    for the DEVELOPER build because CMAKE_CONFIGURE_DEPENDS (port/CMakeLists
+    .txt, run link100 lane CMAKEDEPS) makes ninja itself reconfigure the
+    moment any registered input changes -- but nothing registers "was this
+    cache ever configured with PORT_ROM_CLEAN=ON, Release and the static CRT
+    in the first place" as an input, because those are values CHOSEN on the
+    configure command line, not files CMake reads. A build/port-kit left
+    behind by any other invocation -- a hand test of the Debug/DLL developer
+    settings pointed at this same directory, an aborted run, a copied
+    directory -- carries a build.ninja that is completely current for
+    whatever it WAS configured with, so ninja's own freshness edge has
+    nothing to fire on and the old fast path shipped a binary built from
+    wrong settings while printing green. Measured on exactly that fixture in
+    test_battery_shipcfg.py: PORT_ROM_CLEAN=OFF, CMAKE_MSVC_RUNTIME_LIBRARY=
+    MultiThreadedDLL, CMAKE_BUILD_TYPE=Debug, a real build.ninja alongside
+    it, and the tree's own tooling returning success throughout.
+    """
+    ninja_file = os.path.join(build, "build.ninja")
+    if not os.path.isfile(ninja_file):
+        return "refused", ("no build.ninja in %s -- nothing configured yet"
+                           % build)
+
+    cachefile = os.path.join(build, "CMakeCache.txt")
+    if not os.path.isfile(cachefile):
+        return "refused", ("build.ninja exists but %s does not, so the cache "
+                           "cannot be validated" % cachefile)
+
+    cache = _cmake_cache_entries(cachefile)
+
+    got_gen = cache.get("CMAKE_GENERATOR")
+    if got_gen != SHIPCFG_GENERATOR:
+        return "refused", ("CMAKE_GENERATOR is %r in %s, not the enforced %r"
+                           % (got_gen, cachefile, SHIPCFG_GENERATOR))
+
+    for key, want in SHIPCFG_CACHE_TABLE:
+        got = cache.get(key)
+        if got != want:
+            return "refused", ("%s is %r in %s, not the enforced %r"
+                               % (key, got, cachefile, want))
+
+    return "fast path", ("%s carries every enforced setting (%s, generator "
+                         "%s)"
+                         % (cachefile,
+                            ", ".join("%s=%s" % kv
+                                      for kv in SHIPCFG_CACHE_TABLE),
+                            SHIPCFG_GENERATOR))
+
+
 def shipcfg_script(root, build):
-    """Write the cmd that configures and builds the shipping configuration.
+    """Write the cmd that configures (if the cache proves it may skip that)
+    and builds the shipping configuration.
 
     Toolchain located the way port/build-port.cmd locates it, switched the way
     tools/portable_kit/package_kit.ps1 switches it, and the target is
@@ -1167,7 +1552,16 @@ def shipcfg_script(root, build):
     behind for cmake in the same shell, which a single subprocess call cannot
     arrange.
 
-    Returns (script path, None), or (None, the vcvars path that is not there).
+    Returns (script path, no_vcvars, decision, detail). On a missing
+    vcvars32.bat, script is None, no_vcvars names the path that is not there,
+    and decision/detail are both None. Otherwise no_vcvars is None and
+    decision/detail are shipcfg_configure_decision(build)'s verdict, already
+    BAKED into the generated script: "fast path" writes a configure step
+    guarded by the same build.ninja test CFGFIX added; "refused" writes an
+    UNCONDITIONAL configure, so a stale, missing or wrong-valued cache can
+    never again ride a present build.ninja to a skipped configure. See
+    shipcfg_configure_decision's docstring for why the guard alone is not
+    enough here the way it is for the developer build.
     """
     pf = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
     vs = os.path.join(pf, "Microsoft Visual Studio", "2022", "BuildTools")
@@ -1175,24 +1569,45 @@ def shipcfg_script(root, build):
     cm = os.path.join(vs, "Common7", "IDE", "CommonExtensions", "Microsoft",
                       "CMake")
     if not os.path.isfile(vcvars):
-        return None, vcvars
+        return None, vcvars, None, None
+
+    decision, detail = shipcfg_configure_decision(build)
+    configure_cmd = ('cmake -S "%s" -B "%s" -G %s %s '
+                     '-DCMAKE_MAKE_PROGRAM="%s\\Ninja\\ninja.exe" || exit /b 1'
+                     % (os.path.join(root, "port"), build, SHIPCFG_GENERATOR,
+                        shipcfg_cache_defines(), cm))
+    if decision == "fast path":
+        # CONFIGURE ONLY WHEN THERE IS SOMETHING TO CONFIGURE, the same rule
+        # port/build-port-j4.cmd uses for the developer build -- safe HERE
+        # only because shipcfg_configure_decision just proved the existing
+        # cache still reads every SHIPCFG_CACHE_TABLE value and the Ninja
+        # generator, not merely that a build.ninja is present.
+        configure_block = ('if not exist "%s\\build.ninja" (\r\n'
+                           '  %s\r\n'
+                           ')\r\n' % (build, configure_cmd))
+    else:
+        # REFUSED: shipcfg_configure_decision found the cache missing, stale
+        # or wrong-valued, so this configure is unconditional. Ninja's own
+        # RERUN_CMAKE / CMAKE_CONFIGURE_DEPENDS edge is not trusted to fix a
+        # wrong-VALUED cache -- it only fires on a changed INPUT file, and a
+        # wrong PORT_ROM_CLEAN, CRT or build type is neither a changed file
+        # nor something that edge was ever told to watch.
+        configure_block = '%s\r\n' % configure_cmd
+
     # Under build/, which is gitignored, so the arm leaves nothing in the tree.
     # A FIXED name rather than a temporary one: it is overwritten every run,
     # and it is the honest answer to "what exactly did the arm build" for
     # anyone reading a red.
     path = os.path.join(root, "build", "shipcfg_build.cmd")
     os.makedirs(os.path.dirname(path), exist_ok=True)
+    header = ("@echo off\r\n"
+             'call "%s" >nul || exit /b 1\r\n'
+             'set "PATH=%s\\CMake\\bin;%s\\Ninja;%%PATH%%"\r\n'
+             % (vcvars, cm, cm))
+    footer = 'ninja -C "%s" walk_window\r\n' % build
     with open(path, "w", encoding="ascii", newline="") as f:
-        f.write(
-            "@echo off\r\n"
-            'call "%s" >nul || exit /b 1\r\n'
-            'set "PATH=%s\\CMake\\bin;%s\\Ninja;%%PATH%%"\r\n'
-            'cmake -S "%s" -B "%s" -G Ninja -DCMAKE_BUILD_TYPE=Release'
-            ' -DPORT_ROM_CLEAN=ON -DCMAKE_MAKE_PROGRAM="%s\\Ninja\\ninja.exe"'
-            ' -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded || exit /b 1\r\n'
-            'ninja -C "%s" walk_window\r\n'
-            % (vcvars, cm, cm, os.path.join(root, "port"), build, cm, build))
-    return path, None
+        f.write(header + configure_block + footer)
+    return path, None, decision, detail
 
 
 def shipcfg_missing_inputs(root):
@@ -1537,17 +1952,25 @@ def shipcfg_arm(root):
         return False, None
 
     build = os.path.join(root, SHIPCFG_BUILD)
-    script, no_vcvars = shipcfg_script(root, build)
+    script, no_vcvars, decision, detail = shipcfg_script(root, build)
     if script is None:
         print(f"shipcfg build: FAIL, no vcvars32.bat at {no_vcvars}")
         return False, None
+    print(f"shipcfg configure: {decision} -- {detail}")
 
     t0 = time.time()
     try:
-        r = run(["cmd", "/c", script], root, timeout=SHIPCFG_BUILD_TIMEOUT)
+        with build_phase("battery shipcfg build", root):
+            r = run(["cmd", "/c", script], root, timeout=SHIPCFG_BUILD_TIMEOUT)
     except subprocess.TimeoutExpired:
         print(f"shipcfg build: FAIL, configure and build did not finish "
               f"inside {SHIPCFG_BUILD_TIMEOUT}s")
+        return False, None
+    except build_lock.BuildLockTimeout as e:
+        print(f"shipcfg build: FAIL, could not acquire the build lock -- {e}")
+        return False, None
+    except build_lock.BuildLockMisconfigured as e:
+        print(f"shipcfg build: FAIL, build lock misconfigured -- {e}")
         return False, None
     secs = time.time() - t0
     if r.returncode:
@@ -1618,6 +2041,9 @@ def shipcfg_arm(root):
 
 def main():
     args = [a for a in sys.argv[1:]]
+    if "--help" in args or "-h" in args:
+        print(__doc__)
+        return 0
     floor = 0
     if "--linked-floor" in args:
         i = args.index("--linked-floor")
@@ -1637,8 +2063,16 @@ def main():
     build = os.path.join(root, "build", "port")
 
     if not skip_build:
-        r = run(["cmd", "/c", os.path.join(root, "port", "build-port.cmd")],
-                root)
+        try:
+            with build_phase("battery rebuild", root):
+                r = run(["cmd", "/c",
+                        os.path.join(root, "port", "build-port.cmd")], root)
+        except build_lock.BuildLockTimeout as e:
+            print(f"build: FAIL, could not acquire the build lock -- {e}")
+            return 1
+        except build_lock.BuildLockMisconfigured as e:
+            print(f"build: FAIL, build lock misconfigured -- {e}")
+            return 1
         if r.returncode:
             print("build: FAIL")
             print(r.stdout[-2000:])
@@ -1670,6 +2104,38 @@ def main():
     orphans = sorted(set(LEVEL_SKIPS) - set(levels))
     if orphans:
         print(f"levels: FAIL, LEVEL_SKIPS names unmounted level(s) {orphans}")
+        return 1
+
+    # THE SCENE TABLE IS READ AND VALIDATED HERE NOW, MOVED UP FROM JUST
+    # BEFORE THE SCENE ROWS (run link100, lane BATTLOCK). The combined
+    # windowed SLOT phase below (full_windowed_phase) holds the slot across
+    # level rows + scene rows + the default boot as ONE span and needs both
+    # row counts to size its max_hold before it opens, so both tables are now
+    # read and checked before either phase starts. See THE SCENE SELFTESTS
+    # below for what the table means; this is only the validation half moved
+    # earlier, nothing about the checks themselves changed.
+    scenes = hosted_scenes(root)
+    print(f"scenes: {len(scenes)} hosted, from hal/scene_boot.cpp")
+    # A skip for a scene that is not hosted reads as covered and tests nothing,
+    # the same staleness bug the level orphan check refuses. It also makes the
+    # final "skips:" line load-bearing: a non-empty SCENE_SKIPS can only reach
+    # that print if every one of its ids was hosted AND its selftest passed, so
+    # an ALL GREEN carrying a scene skip is proof the scene step really ran.
+    scene_orphans = sorted(set(SCENE_SKIPS) - set(scenes))
+    if scene_orphans:
+        print(f"scenes: FAIL, SCENE_SKIPS names unhosted scene(s) "
+              f"{scene_orphans}")
+        return 1
+    scene_block_orphans = sorted(set(SCENE_BLOCKED) - set(scenes))
+    if scene_block_orphans:
+        print(f"scenes: FAIL, SCENE_BLOCKED names unhosted scene(s) "
+              f"{scene_block_orphans}")
+        return 1
+    both = sorted(set(SCENE_BLOCKED) & set(SCENE_SKIPS))
+    if both:
+        print(f"scenes: FAIL, scene(s) {both} are in BOTH SCENE_SKIPS and "
+              f"SCENE_BLOCKED -- a scene cannot both pass with an env and be "
+              f"unable to run.")
         return 1
 
     # ONE LEVEL'S WHOLE ROW, in one place, so the sequential and the N-wide
@@ -1718,182 +2184,175 @@ def main():
             retired.append(lvl)
         return True
 
-    retired = []
-    workers = level_workers()
-    wdirs = worker_dirs(root, build, workers)
-    if workers > 1:
-        print(f"levels: {workers} rows at a time, each in its own directory "
-              f"({os.path.join('build', 'battery-workers')}); the windowed slot "
-              f"is held once for the phase rather than per launch")
-    # THE PHASE HOLD, and it is taken for BOTH the sequential and the parallel
-    # arm of the branch below so the two differ only in width. With one worker
-    # it is a no-op and each launch takes the per-launch lock as before.
-    level_phase_t0 = time.time()
-    with windowed_phase(workers, len(levels), "battery level phase"):
-        if workers == 1:
-            for lvl in levels:
-                if not report_row(*level_row(lvl, build)):
-                    return 1
-        else:
-            # Submitted in level order and REPORTED in level order, because a
-            # battery log that reads as a checklist is the point of this file;
-            # only the running is out of order. The first failure in LEVEL order
-            # is the one that stops the run, which keeps the verdict independent
-            # of how the box happened to schedule the rows -- a battery that
-            # blamed whichever red finished first would not be reproducible.
-            free_dirs = queue.Queue()
-            for d in wdirs:
-                free_dirs.put(d)
-            with ThreadPoolExecutor(max_workers=workers) as pool:
-                futs = [pool.submit(level_row, lvl) for lvl in levels]
-                for f in futs:
-                    if not report_row(*f.result()):
-                        for g in futs:
-                            g.cancel()
+    # THE COMBINED WINDOWED PHASE (run link100, lane BATTLOCK). Level
+    # rows, scene rows and the default boot are held under ONE SLOT
+    # phase now, rather than each sub-phase (or, at one worker, each
+    # launch) taking and dropping the lock on its own -- and, the
+    # property the BUILD lock split in build_phase() needs on the other
+    # side, the slot is fully released before the shipcfg BUILD phase
+    # that follows asks for the build lock. windowed_phase() below still
+    # runs inside it for the level and scene sub-phases; slot_reentrant
+    # nests for free, so those inner holds just see the slot already
+    # theirs and neither re-acquire nor re-release it. See the module
+    # docstring's LOCKING BY PHASE section for the phase table this is
+    # half of.
+    total_windowed_rows = len(levels) + len(scenes) + 1  # +1 default boot
+    with full_windowed_phase(total_windowed_rows, "battery windowed phase"):
+        retired = []
+        workers = level_workers()
+        wdirs = worker_dirs(root, build, workers)
+        if workers > 1:
+            print(f"levels: {workers} rows at a time, each in its own directory "
+                  f"({os.path.join('build', 'battery-workers')}); the windowed slot "
+                  f"is held once for the phase rather than per launch")
+        # THE PHASE HOLD, and it is taken for BOTH the sequential and the parallel
+        # arm of the branch below so the two differ only in width. With one worker
+        # it is a no-op and each launch takes the per-launch lock as before.
+        level_phase_t0 = time.time()
+        with windowed_phase(workers, len(levels), "battery level phase"):
+            if workers == 1:
+                for lvl in levels:
+                    if not report_row(*level_row(lvl, build)):
                         return 1
+            else:
+                # Submitted in level order and REPORTED in level order, because a
+                # battery log that reads as a checklist is the point of this file;
+                # only the running is out of order. The first failure in LEVEL order
+                # is the one that stops the run, which keeps the verdict independent
+                # of how the box happened to schedule the rows -- a battery that
+                # blamed whichever red finished first would not be reproducible.
+                free_dirs = queue.Queue()
+                for d in wdirs:
+                    free_dirs.put(d)
+                with ThreadPoolExecutor(max_workers=workers) as pool:
+                    futs = [pool.submit(level_row, lvl) for lvl in levels]
+                    for f in futs:
+                        if not report_row(*f.result()):
+                            for g in futs:
+                                g.cancel()
+                            return 1
 
-    # The one number that says whether the width is worth anything, printed
-    # whatever the width is so the two are comparable from two logs.
-    print(f"levels: {len(levels)} rows in {time.time() - level_phase_t0:.0f}s "
-          f"at {workers} wide")
+        # The one number that says whether the width is worth anything, printed
+        # whatever the width is so the two are comparable from two logs.
+        print(f"levels: {len(levels)} rows in {time.time() - level_phase_t0:.0f}s "
+              f"at {workers} wide")
 
-    for lvl in retired:
-        skip = LEVEL_SKIPS[lvl]
-        print(f"SKIP RETIRED: level {lvl} now runs 300 frames clean BARE. "
-              f"{skip[0]} is fixed, so delete level {lvl} from LEVEL_SKIPS in "
-              f"port/tools/battery.py -- the level is being tested with a "
-              f"class switched off for no reason.")
+        for lvl in retired:
+            skip = LEVEL_SKIPS[lvl]
+            print(f"SKIP RETIRED: level {lvl} now runs 300 frames clean BARE. "
+                  f"{skip[0]} is fixed, so delete level {lvl} from LEVEL_SKIPS in "
+                  f"port/tools/battery.py -- the level is being tested with a "
+                  f"class switched off for no reason.")
 
-    # THE SCENE SELFTESTS. Same shape as the level ones a few lines up, over a
-    # different mode of the game: SM64DS_SCENE=<id> hands walk_window's whole
-    # run to hal/scene_boot.cpp's port_scene_run, which boots the scene through
-    # the ROM's own Scene::SetSceneToSpawn -> Scene::SpawnIfNecessary chain and
-    # runs the same five actor phases for the same 300 frames. FAULTS_FATAL for
-    # the same reason: without it a quarantined fault reads as a pass.
-    scenes = hosted_scenes(root)
-    print(f"scenes: {len(scenes)} hosted, from hal/scene_boot.cpp")
-    # A skip for a scene that is not hosted reads as covered and tests nothing,
-    # the same staleness bug the level orphan check refuses. It also makes the
-    # final "skips:" line load-bearing: a non-empty SCENE_SKIPS can only reach
-    # that print if every one of its ids was hosted AND its selftest passed, so
-    # an ALL GREEN carrying a scene skip is proof the scene step really ran.
-    scene_orphans = sorted(set(SCENE_SKIPS) - set(scenes))
-    if scene_orphans:
-        print(f"scenes: FAIL, SCENE_SKIPS names unhosted scene(s) "
-              f"{scene_orphans}")
-        return 1
-    scene_block_orphans = sorted(set(SCENE_BLOCKED) - set(scenes))
-    if scene_block_orphans:
-        print(f"scenes: FAIL, SCENE_BLOCKED names unhosted scene(s) "
-              f"{scene_block_orphans}")
-        return 1
-    both = sorted(set(SCENE_BLOCKED) & set(SCENE_SKIPS))
-    if both:
-        print(f"scenes: FAIL, scene(s) {both} are in BOTH SCENE_SKIPS and "
-              f"SCENE_BLOCKED -- a scene cannot both pass with an env and be "
-              f"unable to run.")
-        return 1
-
-    # THE SCENE ROWS RUN N-WIDE TOO, on the same shape as the level rows above:
-    # one function does a whole row, the rows are reported in scene order
-    # whatever order they ran in, and each worker keeps its own directory for
-    # its whole row. The scene rows are the cheaper half -- measured on this box
-    # at 1.8s against a level row's 3.5s -- and they are also the half that
-    # opens NO WINDOW AT ALL: port_scene_want_window refuses a window to a scene
-    # run that names a frame budget, which every row here does, and run link100
-    # lane SLOT confirmed it from the logs (twenty concurrent scene runs, not
-    # one "[win]" line between them).
-    def scene_row(sc, wdir=None):
-        if wdir is None:
-            wdir = free_dirs.get()
-            try:
-                return scene_row(sc, wdir)
-            finally:
-                free_dirs.put(wdir)
-        exe = os.path.join(wdir, "walk_window.exe")
-        block = SCENE_BLOCKED.get(sc)
-        if block:
-            env = scene_env(sc)
+        # THE SCENE SELFTESTS. Same shape as the level ones a few lines up, over a
+        # different mode of the game: SM64DS_SCENE=<id> hands walk_window's whole
+        # run to hal/scene_boot.cpp's port_scene_run, which boots the scene through
+        # the ROM's own Scene::SetSceneToSpawn -> Scene::SpawnIfNecessary chain and
+        # runs the same five actor phases for the same 300 frames. FAULTS_FATAL for
+        # the same reason: without it a quarantined fault reads as a pass. `scenes`
+        # itself and its SCENE_SKIPS/SCENE_BLOCKED validation already happened
+        # above, before this phase opened (see THE SCENE TABLE IS READ AND
+        # VALIDATED HERE NOW) -- this phase only runs the rows.
+        # THE SCENE ROWS RUN N-WIDE TOO, on the same shape as the level rows above:
+        # one function does a whole row, the rows are reported in scene order
+        # whatever order they ran in, and each worker keeps its own directory for
+        # its whole row. The scene rows are the cheaper half -- measured on this box
+        # at 1.8s against a level row's 3.5s -- and they are also the half that
+        # opens NO WINDOW AT ALL: port_scene_want_window refuses a window to a scene
+        # run that names a frame budget, which every row here does, and run link100
+        # lane SLOT confirmed it from the logs (twenty concurrent scene runs, not
+        # one "[win]" line between them).
+        def scene_row(sc, wdir=None):
+            if wdir is None:
+                wdir = free_dirs.get()
+                try:
+                    return scene_row(sc, wdir)
+                finally:
+                    free_dirs.put(wdir)
+            exe = os.path.join(wdir, "walk_window.exe")
+            block = SCENE_BLOCKED.get(sc)
+            if block:
+                env = scene_env(sc)
+                if wdir != build:
+                    env["SM64DS_INSTANCE"] = os.path.basename(wdir)
+                r = run([exe], wdir, env=env)
+                # BOTH streams: the unmatched-body trap that names the blocker
+                # writes to stderr (unbuffered, so a fault cannot swallow it) and
+                # the scene's own progress lines go to stdout.
+                return sc, r.returncode, r.stdout, (r.stdout or "") + (r.stderr or ""), \
+                    block, None, None, None
+            skip = SCENE_SKIPS.get(sc)
+            env = scene_env(sc, skip[0] if skip else None)
             if wdir != build:
                 env["SM64DS_INSTANCE"] = os.path.basename(wdir)
             r = run([exe], wdir, env=env)
-            # BOTH streams: the unmatched-body trap that names the blocker
-            # writes to stderr (unbuffered, so a fault cannot swallow it) and
-            # the scene's own progress lines go to stdout.
-            return sc, r.returncode, r.stdout, (r.stdout or "") + (r.stderr or ""), \
-                block, None, None, None
-        skip = SCENE_SKIPS.get(sc)
-        env = scene_env(sc, skip[0] if skip else None)
-        if wdir != build:
-            env["SM64DS_INSTANCE"] = os.path.basename(wdir)
-        r = run([exe], wdir, env=env)
-        if r.returncode or not skip:
-            return sc, r.returncode, r.stdout, "", None, skip, None, None
-        still, how = scene_retire_probe(wdir, sc)
-        return sc, 0, r.stdout, "", None, skip, still, how
+            if r.returncode or not skip:
+                return sc, r.returncode, r.stdout, "", None, skip, None, None
+            still, how = scene_retire_probe(wdir, sc)
+            return sc, 0, r.stdout, "", None, skip, still, how
 
-    def report_scene(sc, rc, out, both, block, skip, still, how):
-        if block:
-            if not rc:
-                print(f"selftest scene {sc}: BLOCK RETIRED -- the bare run "
-                      f"now completes. Delete scene {sc} from SCENE_BLOCKED "
-                      f"in port/tools/battery.py.")
-                scene_unblocked.append(sc)
+        def report_scene(sc, rc, out, both, block, skip, still, how):
+            if block:
+                if not rc:
+                    print(f"selftest scene {sc}: BLOCK RETIRED -- the bare run "
+                          f"now completes. Delete scene {sc} from SCENE_BLOCKED "
+                          f"in port/tools/battery.py.")
+                    scene_unblocked.append(sc)
+                    return True
+                if block[1] not in both:
+                    print(f"selftest scene {sc}: FAIL rc={rc} -- it "
+                          f"failed, but NOT with its recorded blocker. "
+                          f"SCENE_BLOCKED expects {block[1]!r} in the output and "
+                          f"it is not there, so this is a different failure.")
+                    print(both[-1500:])
+                    return False
+                print(f"selftest scene {sc}: BLOCKED as recorded, owned by "
+                      f"{block[0]} (rc={rc}, blocker reproduced)")
                 return True
-            if block[1] not in both:
-                print(f"selftest scene {sc}: FAIL rc={rc} -- it "
-                      f"failed, but NOT with its recorded blocker. "
-                      f"SCENE_BLOCKED expects {block[1]!r} in the output and "
-                      f"it is not there, so this is a different failure.")
-                print(both[-1500:])
+            if rc:
+                print(f"selftest scene {sc}: FAIL rc={rc}"
+                      + (f" ({skip[0]})" if skip else ""))
+                print((out or "")[-1500:])
                 return False
-            print(f"selftest scene {sc}: BLOCKED as recorded, owned by "
-                  f"{block[0]} (rc={rc}, blocker reproduced)")
+            if not skip:
+                print(f"selftest scene {sc}: ok")
+                return True
+            print(f"selftest scene {sc}: ok with {skip[0]}, owned by {skip[1]}"
+                  f" ({how})")
+            if not still:
+                scene_retired.append(sc)
             return True
-        if rc:
-            print(f"selftest scene {sc}: FAIL rc={rc}"
-                  + (f" ({skip[0]})" if skip else ""))
-            print((out or "")[-1500:])
-            return False
-        if not skip:
-            print(f"selftest scene {sc}: ok")
-            return True
-        print(f"selftest scene {sc}: ok with {skip[0]}, owned by {skip[1]}"
-              f" ({how})")
-        if not still:
-            scene_retired.append(sc)
-        return True
 
-    scene_retired = []
-    scene_unblocked = []
-    scene_phase_t0 = time.time()
-    with windowed_phase(workers, len(scenes), "battery scene phase"):
-        if workers == 1:
-            for sc in scenes:
-                if not report_scene(*scene_row(sc, build)):
-                    return 1
-        else:
-            free_dirs = queue.Queue()
-            for d in wdirs:
-                free_dirs.put(d)
-            with ThreadPoolExecutor(max_workers=workers) as pool:
-                futs = [pool.submit(scene_row, sc) for sc in scenes]
-                for f in futs:
-                    if not report_scene(*f.result()):
-                        for g in futs:
-                            g.cancel()
+        scene_retired = []
+        scene_unblocked = []
+        scene_phase_t0 = time.time()
+        with windowed_phase(workers, len(scenes), "battery scene phase"):
+            if workers == 1:
+                for sc in scenes:
+                    if not report_scene(*scene_row(sc, build)):
                         return 1
-    print(f"scenes: {len(scenes)} rows in {time.time() - scene_phase_t0:.0f}s "
-          f"at {workers} wide")
+            else:
+                free_dirs = queue.Queue()
+                for d in wdirs:
+                    free_dirs.put(d)
+                with ThreadPoolExecutor(max_workers=workers) as pool:
+                    futs = [pool.submit(scene_row, sc) for sc in scenes]
+                    for f in futs:
+                        if not report_scene(*f.result()):
+                            for g in futs:
+                                g.cancel()
+                            return 1
+        print(f"scenes: {len(scenes)} rows in {time.time() - scene_phase_t0:.0f}s "
+              f"at {workers} wide")
 
-    for sc in scene_retired:
-        skip = SCENE_SKIPS[sc]
-        print(f"SKIP RETIRED: scene {sc} now runs {SELFTEST_FRAMES} frames "
-              f"clean BARE. {skip[0]} is no longer needed, so delete scene "
-              f"{sc} from SCENE_SKIPS in port/tools/battery.py.")
+        for sc in scene_retired:
+            skip = SCENE_SKIPS[sc]
+            print(f"SKIP RETIRED: scene {sc} now runs {SELFTEST_FRAMES} frames "
+                  f"clean BARE. {skip[0]} is no longer needed, so delete scene "
+                  f"{sc} from SCENE_SKIPS in port/tools/battery.py.")
 
-    if not default_boot_arm(build):
-        return 1
+        if not default_boot_arm(build):
+            return 1
 
     r = run([sys.executable, os.path.join(root, "port", "tools", "linkage.py"),
              root], root)

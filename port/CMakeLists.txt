@@ -430,6 +430,13 @@ set(PORT_REPO_ROOT_READERS
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs_mods.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/fs_names.cpp"
+    # The eleventh reader (run link100, lane LOADOV). hal/nitrofs_boot.cpp
+    # reads build/assets/nitrofs.tsv for the cartridge header's overlay-table
+    # words (+0x50..+0x5c) the way hal/fs_names.cpp reads it for the FNT and
+    # FAT words, and it carries the same #ifndef PORT_REPO_ROOT / "." fallback,
+    # so a build that forgets this line looks in the working directory and says
+    # so at run time rather than failing to compile.
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/nitrofs_boot.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/stage_geom.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/romdata_loader.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/hal/asset_root_refuse.cpp"
@@ -4258,6 +4265,48 @@ list(APPEND SLICE219_SOURCES
 # lists are /OPT:REF-dropped on purpose; see slice_scene1.txt for why every TU
 # here links off the ROM's own edges rather than a link root, and
 # scene_boot_map.txt section 8 for which eighteen do not link at all.
+# Run link100, lane CARDFS: the card mount. The ROM's own LoadArchive, on the
+# ROM's own mount table, answering for the honest reason.
+#
+# hal/scene_boot.cpp carried a face for LoadArchive from run link60 until now,
+# under a banner that called the alternative "a fake, not a fix". The banner's
+# own middle paragraph is what retired it: the ROM's call asks whether archive
+# N is resident, and on the host every archive is, because hal/fs.cpp reads
+# each NARC whole on first use and never releases it (1,035,956 bytes for all
+# thirteen, measured). hal/card_mount.cpp hosts data_0208ecf4 at its ROM span
+# inside .dsstate, hal/fs.cpp publishes the image it is already holding into
+# each entry, and the matched TU reads the word.
+#
+# WHY THESE FOUR AND ONLY THESE FOUR. src/LoadArchive.c is reached by nine
+# live callers (LoadTextNarcs, Stage::InitResources, func_02034fbc,
+# func_ov003_020af8a0, func_ov005_020c1a20, func_ov007_020cc2cc and three
+# ov075 minigame bodies), all of which called the face yesterday. It calls
+# func_02018934, which calls func_02018d98 and Heap::_Allocate's tail-call
+# veneer. Four more matched TUs -- func_0204ee40, func_0204ef9c, func_0205cbe4
+# and func_0205d518 -- are already on slice_scene1.txt and were /OPT:REF-
+# dropped because nothing on the link line called them; func_02018934 does, so
+# they stop being dropped without being listed twice.
+#
+# WHAT IS NOT HERE. LoadFile and func_0201818c are the other half of the seam
+# GATES measured and they are NOT takeable from this lane: hal/level_boot.cpp
+# defines LoadFile as a PORT_HOST_ABI face and that file belongs to another
+# lane. func_020185c0, func_020186c0, func_02018598, func_0204eda4 and
+# func_0204ede8 hang off func_0201818c and would be dropped again if listed,
+# so they are not. The mount table they read is already the right shape for
+# them (hal/card_mount.cpp publishes the +0x50/+0x54/+0x58 words
+# src/func_0204ee40.c writes), which is the whole of what this lane can do for
+# that half.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_cardfs.txt" SLICE_CARDFS_LINES)
+set(SLICE_CARDFS_SOURCES "")
+foreach(line IN LISTS SLICE_CARDFS_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_CARDFS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_CARDFS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/hal/card_mount.cpp")
+
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_scene1.txt" SLICE_SCENE1_LINES)
 set(SLICE_SCENE1_SOURCES "")
 foreach(line IN LISTS SLICE_SCENE1_LINES)
@@ -5194,6 +5243,90 @@ if(NOT TIDEP_RESET_CUT EQUAL TIDEP_RESET_WANT)
                    "copy is still added and the link will say so; if a SECOND "
                    "slice started listing one, this cut missed it and the link "
                    "will say that too")
+endif()
+
+# ---- run link100 boot plan rung R3b, step BSWAP: THE ROM'S OWN FRAME SWAP ---
+#
+# src/func_020190b8.c is the ROM's end-of-frame SWAP_BUFFERS, called once per
+# frame by func_020197b8 at phase 6 (func_020197b8.c:52). slice_scene1.txt has
+# listed it since scene 1 came up, so it has been LINKED all along -- and built
+# PLAIN, which means its one store
+#
+#     *(volatile int *)0x4000540 = 3;
+#
+# landed in the mapped I/O window and the geometry engine was never told. Lane
+# R3CFIX2 measured exactly that on a 300-frame level run:
+# "SWAP_BUFFERS 04000540 exec 0 latch 00000003 <-- STORED, NEVER EXECUTED"
+# (status/R3CFIX2.md, 18:22), while func_020190b8 itself was called 301 times.
+# port/ntr/io.cpp states the rule this is an instance of: a store only reaches
+# ntr::io_write if its TU was rewritten by tools/hostgen.py, and only the
+# TITEX/TIDEP blocks above do that -- which is why the ov007 SWAP_BUFFERS
+# (func_ov007_020b6c54, the VS menu) DOES arrive and this one did not.
+#
+# Same shape as those two blocks, one symbol, and the same kill switch
+# discipline: the arm is PRINTED ON EVERY CONFIGURE in both directions, because
+# a CMake option() caches and a switch that announces only one arm silently
+# keeps the wrong one.
+option(R3B_SWAP_PLAIN
+       "run link100 R3b/BSWAP: build the ROM's frame swap PLAIN (pre-fix arm)"
+       OFF)
+set(R3B_SWAP_SYMS
+    func_020190b8)         # SWAP_BUFFERS
+list(LENGTH R3B_SWAP_SYMS R3B_SWAP_WANT)
+if(R3B_SWAP_PLAIN)
+    message(STATUS "R3B: R3B_SWAP_PLAIN=ON -- the ROM's frame swap builds "
+                   "PLAIN. This is the PRE-FIX arm: SWAP_BUFFERS latches in "
+                   "mapped memory and the geometry engine is never told.")
+else()
+    message(STATUS "R3B: R3B_SWAP_PLAIN=OFF -- the ROM's frame swap routes "
+                   "through hostgen (shipped arm).")
+endif()
+set(R3B_SWAP_GEN "")
+if(NOT R3B_SWAP_PLAIN)
+    foreach(sym IN LISTS R3B_SWAP_SYMS)
+        set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        if(NOT EXISTS "${sym_in}")
+            set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        endif()
+        set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+        add_custom_command(OUTPUT "${sym_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${sym_in}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${sym}")
+        list(APPEND R3B_SWAP_GEN "${sym_out}")
+    endforeach()
+endif()
+# Cut the plain slice entry in the SAME block that adds the generated one. This
+# one comes out of slice_scene1, not slice_ov007.
+set(R3B_SWAP_CUT 0)
+set(SLICE_SCENE1_SRC_R3B "")
+foreach(src IN LISTS SLICE_SCENE1_SOURCES)
+    set(_cut OFF)
+    if(NOT R3B_SWAP_PLAIN)
+        foreach(sym IN LISTS R3B_SWAP_SYMS)
+            if(src MATCHES "/${sym}\\.(c|cpp)$")
+                set(_cut ON)
+            endif()
+        endforeach()
+    endif()
+    if(_cut)
+        math(EXPR R3B_SWAP_CUT "${R3B_SWAP_CUT}+1")
+    else()
+        list(APPEND SLICE_SCENE1_SRC_R3B "${src}")
+    endif()
+endforeach()
+set(SLICE_SCENE1_SOURCES ${SLICE_SCENE1_SRC_R3B})
+if(R3B_SWAP_PLAIN)
+    set(R3B_SWAP_CUT ${R3B_SWAP_WANT})
+endif()
+if(NOT R3B_SWAP_CUT EQUAL R3B_SWAP_WANT)
+    message(STATUS "R3B: expected to cut ${R3B_SWAP_WANT} plain frame-swap "
+                   "entries and cut ${R3B_SWAP_CUT}. If slice_scene1.txt "
+                   "stopped listing it the hostgen copy is still added and the "
+                   "link will say so; if a SECOND slice started listing it, "
+                   "this cut missed it and the link will say that too")
 endif()
 
 # run link60 lane SC1: THE SCENE 1 INTERIM, AND ITS OWN RETIREMENT SWITCH.
@@ -8307,7 +8440,7 @@ endforeach()
 # and a target that gets one but not the other has an unregistered archive
 # while the others do not.
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_nfs.txt" SLICE_NFS_LINES)
-set(NFS_NAMES_SOURCES hal/fs_names.cpp)
+set(NFS_NAMES_SOURCES hal/fs_names.cpp hal/nitrofs_boot.cpp)
 foreach(line IN LISTS SLICE_NFS_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -8315,6 +8448,139 @@ foreach(line IN LISTS SLICE_NFS_LINES)
     endif()
     list(APPEND NFS_NAMES_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# ---------------------------------------------------------------------------
+# Run link100, lane NITROFS: the cartridge-header mirror, and the ROM's own
+# FS_Init on top of it.
+#
+# hal/nitrofs_boot.cpp rides NFS_NAMES_SOURCES above -- all three targets --
+# because the mirror seed and the read-back belong wherever hal/fs_names.cpp's
+# static initialiser runs. THE SLICE DOES NOT. src/func_0205d96c.c takes the
+# address of the matched archive proc src/func_0205da94.c, whose two live
+# commands reach the cartridge lock, whose six OS-lock TUs bottom out on four
+# primitives hal/boot_hw.cpp transcribes (func_02057198, func_0205a74c,
+# func_02059d8c, IRQ::DisableAll / IRQ::RestoreAll). hal/boot_hw.cpp is
+# SLICE214_SOURCES: walk_window and walk_window_hires only. So the seat goes to
+# those two, and smoke_player keeps the face alone in hal/nitrofs_face.cpp --
+# which is not merely an omission but a duplicate-symbol requirement, since a
+# target carrying the matched TU cannot also define func_0205d96c by hand.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_nitrofs.txt" SLICE_NITROFS_LINES)
+set(SLICE_NITROFS_SOURCES "")
+foreach(line IN LISTS SLICE_NITROFS_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_NITROFS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# ---------------------------------------------------------------------------
+# Run link100, lane LOADOV: the honest subset of the LoadOverlay /
+# UnloadOverlay chains. One entry point, src/func_02017e94.c, and the whole
+# chain behind it comes with it -- every TU of that chain is already enrolled
+# in slice_gate214.txt and already compiles here; /OPT:REF drops all of it
+# today because the only thing that named it was hal/scene_boot.cpp's empty
+# face. port/slice_loadov.txt carries the per-row rulings, including the two
+# rows this lane REFUSED (LoadOverlay reads uninitialised stack on a lookup
+# that fails and its tail would copy an overlay image over host code;
+# UnloadOverlay's body is this one's with `return` replaced by `Crash()`, on a
+# lookup that always fails here).
+#
+# SAME TARGET SPLIT AS SLICE_NITROFS_SOURCES ABOVE, and for the same reason:
+# the chain bottoms out on hal/boot_hw.cpp's ARM primitives, hal/boot_hw.cpp is
+# SLICE214_SOURCES, and smoke_player carries neither. smoke_player keeps a face
+# in hal/nitrofs_face.cpp. The two are exclusive -- a target with both would
+# have func_02017e94 defined twice.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_loadov.txt" SLICE_LOADOV_LINES)
+set(SLICE_LOADOV_SOURCES "")
+foreach(line IN LISTS SLICE_LOADOV_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_LOADOV_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# ---------------------------------------------------------------------------
+# Run link100, lane SND1, rung R1: the ROM's own sound-init pool identity.
+#
+# hal/snd_globals.cpp hosts the command pool, its callback table and
+# SNDSharedWork in the ROM's own layout, and rides SOUND_HOST_SOURCES so the
+# storage is on every target that has the sound stack. The slice goes to the
+# same three targets (see the target_sources block near the end of this file):
+# hal/sdat/consumer.cpp CALLS these bodies, so a sound target without them
+# would not link. The one symbol under the seat that smoke_player lacks is
+# func_02059d8c, the ARM busy-wait hal/boot_hw.cpp transcribes for the
+# SLICE214_SOURCES targets; hal/sdat/snd_smoke_face.cpp supplies it there and
+# is exclusive with hal/boot_hw.cpp for that reason.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_snd1.txt" SLICE_SND1_LINES)
+set(SLICE_SND1_SOURCES "")
+foreach(line IN LISTS SLICE_SND1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SND1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# ---------------------------------------------------------------------------
+# Run link100, lane SND1, rungs R8 + R9 + R10: the ROM's own sound FRAME.
+#
+# Same three targets and the same reason as the block above: hal/sdat/consumer.cpp
+# CALLS func_020132d8 now, so a target with the sound stack and without this
+# slice would not link. The storage the slice needs (four bss objects and seven
+# /alternatename rows for the MSVC spellings the decomp's C++ TUs ask for) is in
+# hal/snd_globals.cpp, which already rides SOUND_HOST_SOURCES, and the five
+# underwater-filter words plus the byte-wide dB table come out of the cartridge
+# through port/tools/romdata.py's NAMED list.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_snd8.txt" SLICE_SND8_LINES)
+set(SLICE_SND8_SOURCES "")
+foreach(line IN LISTS SLICE_SND8_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SND8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# THREE PER-SOURCE RENAMES, the shape lane R2ABC used for func_02060890 and
+# lane BOOTR1 for main. Each names an edge that is not ROM code yet, in one
+# place, without making a host body under a ROM name -- which would be a new
+# SHADOW row in port/tools/linkage.py's queue, work invented by this change.
+# The three faces and the evidence behind each are in hal/nitrofs_boot.cpp.
+#
+#   func_02060890  the card driver bring-up. NOT hardware: ORDERING. The work
+#                  object data_020a8180 is seeded by ntr/backup.cpp's static
+#                  initialiser and FS_Init runs from hal/fs_names.cpp's, so a
+#                  bring-up called from here could run the whole ROM body --
+#                  card thread included -- before the seeder. func_02042f68's
+#                  arm 1 already brings the driver up inside main (R2ABC), and
+#                  func_02060890's own last two statements are the unhosted
+#                  FLASH path and a hand-asm `b self`.
+#   func_0205db2c  the archive READ function: one call to the card ROM DMA.
+#                  hal/fs_names.cpp's port_nitrofs_read serves the same bytes
+#                  off the ROM's own FAT and extracted/dsd/files.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205d96c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_02060890=port_nitrofs_card_bringup;func_0205db2c=port_nitrofs_read")
+
+#   func_020570c0  EXMEMCNT |= 0x0800 and &= ~0x0800, the NDS slot's ARM7/ARM9
+#   func_020570d8  access-right bit. The decomp spells the address as the
+#                  placeholder `G`, which resolves in this binary to
+#                  hal/heap_vtable.cpp's default-heap word, so the matched
+#                  bodies would OR and AND bit 11 of a heap pointer four times
+#                  per boot. The register the ROM's own literal pools name is
+#                  in hal/boot_os.cpp's table (pools 0x020570d4 and 0x020570ec,
+#                  both 0x04000204); the faces write that.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_020570f0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_020570c0=port_rom_exmemcnt_card_grant")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205710c.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_020570d8=port_rom_exmemcnt_card_release")
 
 # Gate 35: the course loop -- damage, death, respawn, coins, the star and the
 # course's own sound. Small, because almost all of it was already linked; see
@@ -8723,7 +8989,15 @@ set(SOUND_HOST_SOURCES
     hal/sdat/out_win.cpp
     hal/sdat/consumer.cpp
     hal/sdat/sound_abi.cpp
-    hal/sdat/sound_bss.cpp)
+    hal/sdat/sound_bss.cpp
+    # Run link100, lane SND1, rung R1: the command pool, its callback table and
+    # SNDSharedWork in the ROM's own layout, so src/func_0205b358.c can run.
+    # STORAGE ONLY, and it rides this list rather than the slice because
+    # hal/sdat/consumer.cpp's queue lives on all three of these targets and the
+    # object it walks has to be the same shape on each. hal/player_bridges.cpp
+    # no longer defines data_020a6760; this file does, as the head of a
+    # three-name run.
+    hal/snd_globals.cpp)
 
 set(LEVELBOOT_HOST_SOURCES
     unmatched/ActorDerived_Spawn.cpp
@@ -10239,6 +10513,135 @@ foreach(line IN LISTS SLICE214_LINES)
     endif()
     list(APPEND SLICE214_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# ---- run link100 rung R3F: THE THREE `G` PLACEHOLDERS THAT ARE REGISTERS ----
+#
+# Read blocker B4 in hal/boot_os.cpp's placeholder table first, and lane R3E's
+# derivation (runs/link100/out/R3E/e1_blocker.txt) second. The short of it:
+# `G` is the decomp's GENERIC placeholder for an absolute address a function
+# pools, so several unrelated TUs spell completely different things with the
+# same identifier. One of them means it: _ZN4Heap10SetDefaultEv's pool word at
+# 0x0203c338 carries a RELOC (config/arm9/relocs.txt: from:0x0203c338
+# kind:load to:0x020a0ea0), so THERE `G` really is Memory::defaultHeapPtr and
+# the /alternatename in hal/lk4_solidheap_seat.cpp is right. Three others pool
+# an I/O address with NO reloc, because an absolute register needs none:
+#
+#     func_02055454  pool 0x02055460  0x04000010  BG0HOFS/BG0VOFS, str (word)
+#     func_02057128  pool 0x0205713c  0x04000204  EXMEMCNT, ldrh/orr 0x80/strh
+#     func_02057140  pool 0x02057154  0x04000204  EXMEMCNT, ldrh/bic 0x80/strh
+#
+# and those three, resolving `G` through the alias, were reading and writing
+# the DEFAULT HEAP POINTER. func_02019144's else arm calls func_02055454 with
+# the BG0 scroll on every VBlank of every 3D level, which is 0, so under
+# SM64DS_ROM_LOOP=1 the allocator's default heap went NULL once per frame and
+# the next free faulted at Heap::Deallocate+0x3 (R3E, frame 31, levels
+# 1/5/9/13). The other two are the same landmine on the card-lock path: they
+# OR and AND bit 7 of that pointer through func_02057158/func_02057178.
+#
+# THE FIX IS IN THE DECOMP AND IT COSTS NOTHING. src/ now spells each register
+# the way src/func_0205583c.c and src/func_02057320.cpp already spell theirs,
+# and all three still byte-verify against the ROM -- BETTER than before, since
+# the placeholder made the pool word a reloc slot the byte gate WILDCARDED and
+# a literal address is compared for real:
+#
+#     tools/match.py func_02055454 0x02055454 0x10  4/4 words OK  2004/b56
+#     tools/match.py func_02057128 0x02057128 0x18  6/6 words OK  2004/b56
+#     tools/match.py func_02057140 0x02057140 0x18  6/6 words OK  2004/b56
+#
+# Spelling it is only half. port/ntr/io.cpp's rule is that a store reaches
+# ntr::io_write only if its TU was rewritten by tools/hostgen.py; built plain
+# it latches in the mapped window and triggers nothing. So the three go through
+# hostgen exactly the way rung BSWAP took the ROM's frame swap
+# (func_020190b8, the R3B_SWAP block above), with the same kill switch
+# discipline: the arm is PRINTED ON EVERY CONFIGURE in both directions,
+# because a CMake option() caches and a switch that announces only one arm
+# silently keeps the wrong one.
+#
+# The three come off port/slice_gate214.txt, so the cut below is against
+# SLICE214_SOURCES and has to sit after that list is built. SLICE214_SOURCES
+# goes to walk_window and walk_window_hires only, and R3F_GREG_GEN is appended
+# to exactly those two targets: the LINK SET does not change, only the route.
+option(R3F_GREG_PLAIN
+       "run link100 R3F: build the three register TUs PLAIN (pre-fix arm)"
+       OFF)
+set(R3F_GREG_SYMS
+    func_02055454          # BG0HOFS/BG0VOFS, the VBlank display commit
+    func_02057128          # EXMEMCNT |= 0x80
+    func_02057140)         # EXMEMCNT &= ~0x80
+list(LENGTH R3F_GREG_SYMS R3F_GREG_WANT)
+# GREG2 (run link100 lane GREG2, 09-09): a fourth `G` I/O reader, found by R3F
+# but left unowned -- src/func_0205f650.c pools 0x04000304 (POWCNT1) with NO
+# reloc and reads bit 0, so through the SetDefault alias it was reading bit 0
+# of Memory::defaultHeapPtr instead. Its caller src/func_02019a58.c is the
+# wait loop `while (func_0205f66c(1) != 1)` that polls this bit for the LCDs
+# to come back on. It ships off port/slice_gate220.txt, not slice_gate214.txt
+# (Stage::Behavior's gate, not this one's), so it cannot be cut out of
+# SLICE214_SOURCES above -- the cut against SLICE220_SOURCES is further down
+# this file, right after that list is built, and kept in its OWN counter so
+# this addition cannot silently perturb R3F's already-verified 3/3 SLICE214
+# accounting. It rides the SAME R3F_GREG_PLAIN switch and the SAME hostgen
+# discipline as the three above.
+set(R3F_GREG2_SYMS func_0205f650)   # POWCNT1 & 1 -- the LCD-power wait read
+set(R3F_GREG_ALL_SYMS ${R3F_GREG_SYMS} ${R3F_GREG2_SYMS})
+if(R3F_GREG_PLAIN)
+    message(STATUS "R3F: R3F_GREG_PLAIN=ON -- the four register TUs build "
+                   "PLAIN. This is the PRE-FIX arm: the stores latch in the "
+                   "mapped I/O window and no register is told, and the "
+                   "POWCNT1 read (GREG2) sees whatever that window has "
+                   "instead of the seeded value.")
+else()
+    message(STATUS "R3F: R3F_GREG_PLAIN=OFF -- the four register TUs route "
+                   "through hostgen (shipped arm).")
+endif()
+set(R3F_GREG_GEN "")
+if(NOT R3F_GREG_PLAIN)
+    foreach(sym IN LISTS R3F_GREG_ALL_SYMS)
+        set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        if(NOT EXISTS "${sym_in}")
+            set(sym_in "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        endif()
+        set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+        add_custom_command(OUTPUT "${sym_out}"
+            COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                    --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+            DEPENDS "${sym_in}"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            COMMENT "hostgen ${sym}")
+        list(APPEND R3F_GREG_GEN "${sym_out}")
+    endforeach()
+endif()
+# Cut the plain slice entries in the SAME block that adds the generated ones,
+# for the BSWAP block's reason: the real net is the LINKER either way, and the
+# count guard below is only a signpost for a reader looking at a failed link.
+set(R3F_GREG_CUT 0)
+set(SLICE214_SRC_R3F "")
+foreach(src IN LISTS SLICE214_SOURCES)
+    set(_cut OFF)
+    if(NOT R3F_GREG_PLAIN)
+        foreach(sym IN LISTS R3F_GREG_SYMS)
+            if(src MATCHES "/${sym}\.(c|cpp)$")
+                set(_cut ON)
+            endif()
+        endforeach()
+    endif()
+    if(_cut)
+        math(EXPR R3F_GREG_CUT "${R3F_GREG_CUT}+1")
+    else()
+        list(APPEND SLICE214_SRC_R3F "${src}")
+    endif()
+endforeach()
+set(SLICE214_SOURCES ${SLICE214_SRC_R3F})
+if(R3F_GREG_PLAIN)
+    set(R3F_GREG_CUT ${R3F_GREG_WANT})
+endif()
+if(NOT R3F_GREG_CUT EQUAL R3F_GREG_WANT)
+    message(STATUS "R3F: expected to cut ${R3F_GREG_WANT} plain register-TU "
+                   "entries and cut ${R3F_GREG_CUT}. If slice_gate214.txt "
+                   "stopped listing one of them the hostgen copy is still "
+                   "added and the link will say so; if a SECOND slice started "
+                   "listing one, this cut missed it and the link will say that "
+                   "too")
+endif()
 # ---- gate 2ipc: the PXI layer (the ARM9<->ARM7 link) -----------------------
 #
 # port/docs/mmio-inventory.md counted eight IPC registers and zero modelled,
@@ -10463,6 +10866,150 @@ foreach(line IN LISTS SLICE191_LINES)
     endif()
     list(APPEND SLICE191_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# Gate mpg (run link100 lane MPG): MOTHER_PENGUIN's own state machine -- the
+# eleven ov018 TUs behind the pointer-to-member table gate 191 seated ONE
+# record of. The table is three 16-byte {enter, tick} entries, not six cells,
+# and the universe is closed by the eight r1 values the ROM sets before its
+# eight calls to func_ov018_021123d0. port/slice_mpg.txt carries the
+# derivation and the per-file notes; the seat, the raw-__cdecl face ruling
+# (both dispatchers tail-jump under MSVC) and the three port-side defects
+# this gate had to fix are in port/unmatched/MotherPenguin_AfterClsnSeat.cpp.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mpg.txt" SLICE_MPG_LINES)
+set(SLICE_MPG_SOURCES "")
+foreach(line IN LISTS SLICE_MPG_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_MPG_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# src/func_ov018_02111bf0.c IS SLICED NOW, on port/slice_smalls.txt (gate
+# smalls, below). It was not when this gate landed: its symbol was spoken for by
+# gate 188's alias in unmatched/Jrb_Aliases.cpp
+# (_func_ov018_02111bf0 -> _func_ov016_02111bf0), which three LINKED ov016
+# UNAGI bodies depend on -- they spell their own module's 0x02111bf0 with the
+# ov018 prefix, and ov016/ov018 share load base 0x021111a0. Defining the LHS
+# DEFEATED that alias and rerouted Unagi into the mother penguin's collision
+# pass; alternatename_guard.py failed this gate's first link on exactly that
+# (LHS 0001:00188350 vs RHS 0001:00148d00), so the body was host copied under a
+# port name in unmatched/MotherPenguin_ClsnPass.cpp and this gate's two callers
+# were renamed onto it. Gate smalls applied the guard's own R1/R2 recipe
+# instead -- the dead alternatename deleted, the three ov016 callers renamed
+# per source onto func_ov016_02111bf0 -- so the ov018 name is free, both
+# callers below reach the ROM's own body under its own name, and the host copy
+# is retired. The rename that stood on func_ov018_02112234.c is gone with it.
+# The literal at 0x02112230 is 0x02113bf0 and carries NO relocation row, so
+# it is ov018's OWN bss -- the Animation SharedFilePtr __sinit_ov018_02112c80
+# constructs with file id 0x406, which func_ov018_021122ec already reads as
+# data_ov018_02113bf0[1]. The source's data_ov027 spelling is the
+# #1308-#1310 cross-overlay family (ov018/ov022/ov027/ov036/ov056 share load
+# base 0x021111a0 and are never co-resident) and the port DEFINES
+# data_ov027_02113bf0 in ov027's own mount, so without this rename the link
+# succeeds against the wrong storage. Renamed, not edited, the way
+# _ZN12FallBlockLll16CleanupResourcesEv's func_021270dc is: the declaration
+# is local to this TU and no header here declares either name, so the
+# rewrite cannot collide.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov018_021121dc.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "data_ov027_02113bf0=data_ov018_02113bf0")
+# This TU declares func_ov018_021123d0 with ONE parameter and calls it with
+# one; the ROM sets r1 = 0 at 0x02111ef8 (a `mov r1,#0` the source spells as
+# the neighbouring `*(int*)(s+0x374) = 0`, which is why the file still
+# byte-matches on ARM). On x86 the second argument is a stack slot the caller
+# never writes: the callee reads [ebp+0Ch], shifts it left by four and parks
+# a wild pointer in self+0x370. port_mpg_set_state_zero (the seat file)
+# supplies the ROM's own 0. This rename applies to THIS TU only -- every
+# other caller in src/ spells both arguments.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov018_02111e28.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov018_021123d0=port_mpg_set_state_zero")
+
+# Gate mpg2 (run link100 lane MPG2): dScGameOver_c, scene id 8 -- ov003's
+# third and last scene class. port/slice_mpg2.txt carries the derivation and
+# the per-file notes; the seat, the eighteen-word transcription and the
+# table-word proof are in port/hal/scene_boot.cpp beside dScStarSel_c's.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_mpg2.txt" SLICE_MPG2_LINES)
+set(SLICE_MPG2_SOURCES "")
+foreach(line IN LISTS SLICE_MPG2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_MPG2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# THE TWO dtor TUs SPELL THEIR VPTR WRITES AS PER-TU PLACEHOLDERS, and four of
+# the seven names already resolve to host storage at an address the ROM never
+# stores. Renamed rather than edited, the way every gate above does it: the
+# declarations are local to each TU (include/decl_common.h declares them, and
+# nothing else in either TU names the targets), so the rewrite cannot collide.
+#
+# The values are read out of each body's OWN literal pool in
+# extracted/overlays/overlay_0003.bin, not inferred from the sibling class:
+#   func_ov003_020b0580 (D2)  0x020b05b0/b4/b8 = 020b179c, 02092680, 0208e4b8
+#   func_ov003_020b05bc (D0)  0x020b05fc/00/04/08 = the same three, then
+#                             020a0eac (the game heap, Memory::Deallocate)
+#
+# WHY THIS MATTERS AND IS NOT BELT AND BRACES: _ZTV7dBase_c is a LIVE
+# definition in hal/sub_actors.cpp (the trap-filled array) and VT0/VT1/VT2 are
+# live shared stand-ins in hal/actor_vtables.cpp and hal/auto_bss.cpp. Without
+# the renames the link SUCCEEDS and both dtors write the wrong word.
+# _ZTV8dScene_c and VT1 go through a fresh name of this gate's own,
+# port_go_vt_scene, which hal/scene_boot.cpp /alternatename's onto _ZTV5Scene;
+# a direct rename onto _ZTV5Scene is a C2371, because include/decl_common.h
+# declares it void*[] at :2982 and the placeholders int[] at :412/:790.
+# G0 is renamed too even though hal/cxx_aliases.cpp already binds bare _G0 to
+# _data_020a0eac: one statement per ROM word reads better here than a rule
+# that depends on which other gate's alias happens to be live.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov003_020b0580.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZTV13dScGameOver_c=data_ov003_020b179c;_ZTV7dBase_c=data_0208e4b8;_ZTV8dScene_c=port_go_vt_scene")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov003_020b05bc.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov003_020b179c;VT1=port_go_vt_scene;VT2=data_0208e4b8;G0=data_020a0eac")
+
+# Gate smalls (run link100 lane SMALLS): two leftovers earlier lanes measured,
+# wrote down and did not take. port/slice_smalls.txt carries the derivation of
+# each and the per-file notes.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_smalls.txt" SLICE_SMALLS_LINES)
+set(SLICE_SMALLS_SOURCES "")
+foreach(line IN LISTS SLICE_SMALLS_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SMALLS_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# RUNG 1, the guard's own R1/R2 recipe (port/tools/alternatename_guard.py's
+# header, the wave-5 review): src/func_ov018_02111bf0.c defines the LHS of gate
+# 188's /alternatename:_func_ov018_02111bf0=_func_ov016_02111bf0, so the alias
+# is DELETED from unmatched/Jrb_Aliases.cpp and the three TUs that referenced
+# the LHS are recompiled with a per-source -DLHS=RHS. All three are ov016 UNAGI
+# state bodies that spell their own module's 0x02111bf0 with the ov018 prefix
+# (ov016 and ov018 share load base 0x021111a0), all three are linked through
+# slice_gate188.txt, and each names the function exactly once:
+#   src/func_ov016_02111534.c:14, its own local `extern void (void*, void*)`
+#   src/func_ov016_02111758.cpp:39 and src/func_ov016_021118b4.cpp:33, both
+#   through include/decl_common.h:1551, which is inside its extern "C" block --
+#   so the renamed declaration keeps C linkage and resolves to the ov016 body.
+# Nothing else in the tree references the ov018 spelling: the declaration in
+# unmatched/Unagi_StateDispatch.cpp:103 is never called, and ov018's own two
+# callers (func_ov018_02112234, func_ov018_02111e28) now reach the real body
+# under its own name, which is what the ROM's relocs say at both sites.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov016_02111534.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov016_02111758.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov016_021118b4.cpp"
+    PROPERTIES COMPILE_DEFINITIONS "func_ov018_02111bf0=func_ov016_02111bf0")
+# src/func_ov018_02111bf0.c is a //cpp-marked .c: it opens a top-level
+# `extern "C" {` block, which is not C. Same LANGUAGE CXX row every other
+# //cpp-marked .c on a slice gets.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov018_02111bf0.c"
+    PROPERTIES LANGUAGE CXX)
 
 # Gate 192: the ov081 trio -- ICE_BLOCK (18), MR_BLIZZARD (223), SPINDRIFT
 # (312). Fresh per-symbol ov081 mount (port/ov081_syms.txt). The fill is
@@ -10761,6 +11308,39 @@ foreach(line IN LISTS SLICE220_LINES)
     endif()
     list(APPEND SLICE220_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# GREG2 cut: src/func_0205f650.c comes off THIS slice (see the R3F_GREG block
+# far above, where R3F_GREG2_SYMS and the R3F_GREG_PLAIN switch are defined).
+# Same discipline as the SLICE214 cut above, own counter on purpose.
+set(R3F_GREG2_CUT 0)
+set(SLICE220_SRC_GREG2 "")
+foreach(src IN LISTS SLICE220_SOURCES)
+    set(_cut OFF)
+    if(NOT R3F_GREG_PLAIN)
+        foreach(sym IN LISTS R3F_GREG2_SYMS)
+            if(src MATCHES "/${sym}\.(c|cpp)$")
+                set(_cut ON)
+            endif()
+        endforeach()
+    endif()
+    if(_cut)
+        math(EXPR R3F_GREG2_CUT "${R3F_GREG2_CUT}+1")
+    else()
+        list(APPEND SLICE220_SRC_GREG2 "${src}")
+    endif()
+endforeach()
+set(SLICE220_SOURCES ${SLICE220_SRC_GREG2})
+list(LENGTH R3F_GREG2_SYMS R3F_GREG2_WANT)
+if(R3F_GREG_PLAIN)
+    set(R3F_GREG2_CUT ${R3F_GREG2_WANT})
+endif()
+if(NOT R3F_GREG2_CUT EQUAL R3F_GREG2_WANT)
+    message(STATUS "R3F/GREG2: expected to cut ${R3F_GREG2_WANT} plain "
+                   "POWCNT1-read entry from slice_gate220.txt and cut "
+                   "${R3F_GREG2_CUT}. If slice_gate220.txt stopped listing it "
+                   "the hostgen copy is still added and the link will say so; "
+                   "if a SECOND slice started listing it, this cut missed it "
+                   "and the link will say that too")
+endif()
 
 # GATE SLOT9 (run link100, lane RENDER9): _ZTV5Stage slot 9 takes the ROM's own
 # Stage::Render, and port/tests/walk_window.cpp stops being the port's copy of
@@ -13559,7 +14139,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/luigi_infection.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/luigi_infection.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_CARDFS_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -13618,12 +14198,12 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
     ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} ${SLICE_MPG_SOURCES} ${SLICE_MPG2_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_ChaseGate.cpp ${SLICE_SMALLS_SOURCES} unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES}
@@ -13818,7 +14398,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/luigi_infection.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/luigi_infection.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_CARDFS_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -13898,12 +14478,12 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN} ${R3F_GREG_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} ${SLICE_MPG_SOURCES} ${SLICE_MPG2_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_ChaseGate.cpp ${SLICE_SMALLS_SOURCES} unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES}
@@ -14145,7 +14725,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/luigi_infection.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/luigi_infection.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/stage_mods.cpp hal/scene_boot.cpp hal/title_doodle_probe.cpp hal/scene_actor_faces.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_CARDFS_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${SLICE_SMB_SOURCES} ${SCENE_SMB_SOURCES} ${SLICE_CCN_SOURCES} ${SLICE_PPP_SOURCES} ${SLICE_FLW_SOURCES} ${SCENE_MG_FLOWER_SOURCES} ${SLICE_MEM_SOURCES} ${SLICE_S381_SOURCES} ${SLICE_MMT_SOURCES} ${SLICE_LKT_SOURCES} ${SLICE_SOS_SOURCES} ${SLICE_S75_SOURCES} ${SCENE_MG_CURLING2_SOURCES} ${SLICE_PSY_SOURCES} ${SLICE_LKY_SOURCES} ${SLICE_SNW_SOURCES} ${SLICE_TTE_SOURCES} ${SLICE_BOO_SOURCES} ${SLICE_WIG_SOURCES} ${SLICE_S371_SOURCES} ${SLICE_BOX_SOURCES} ${SLICE_S364_SOURCES} ${SCENE_MG_SLOT1_SOURCES} ${SLICE_CUP_SOURCES} ${SLICE_MUG_SOURCES} ${SLICE_BNP_SOURCES} ${SLICE_BNT_SOURCES} ${SLICE_PKR_SOURCES} ${SLICE_PGO_SOURCES} ${SLICE_RLT_SOURCES} ${SLICE_TTI_SOURCES} ${SLICE_MGM_SOURCES} ${SLICE_VS_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -14235,12 +14815,12 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES} ${SLICE35_SOURCES} ${GATE6_GEN}
     ${SLICE32_SOURCES} ${GATE32_HOST_SOURCES} ${GATE32_GEN} ${GATE6_GEN}
     ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE10_GEN}
-    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN}
+    ${GATE13_GEN} ${GATE14_GEN} ${GATE15_GEN} ${GATE16_GEN} ${GATE35_GEN} ${GATE29_GEN} ${T2_DIV_GEN} ${TI2_MOD_GEN} ${SQ_DIST_GEN} ${TITEX_GX_GEN} ${TIDEP_RESET_GEN} ${R3B_SWAP_GEN} ${R3F_GREG_GEN}
     ${GATE9_GEN} ${HOSTABI_RETIRE_GEN}
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES} ${SLICE209_SOURCES} hal/actor_classes_runtime_spawns.cpp ${SLICE210_SOURCES} unmatched/YoshiEgg_StateDispatch.cpp
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} ${SLICE_MPG_SOURCES} ${SLICE_MPG2_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_ChaseGate.cpp ${SLICE_SMALLS_SOURCES} unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_Behavior.cpp ${SLICE_W3B_SOURCES} ${W3BGEN} hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES} hal/actor_classes_ov077.cpp ${SLICE_OV077_SOURCES} unmatched/Lakitu_HostSites.cpp unmatched/Spiny_HostSites.cpp unmatched/HeaveHo_HostSites.cpp unmatched/Lakitu_ShadowFaces.cpp ${SLICE_OV030CAST_SOURCES} hal/actor_classes_ov092.cpp ${SLICE_OV092_SOURCES} unmatched/ToxBox_HostSites.cpp unmatched/ToxBox_ShadowFaces.cpp hal/actor_classes_ov096.cpp ${SLICE_OV096_SOURCES} unmatched/Pokey_HostSites.cpp unmatched/Tornado_HostSites.cpp unmatched/Ov072_MethodFaces.cpp ${SLICE_VSPOPUP_SOURCES} ${SLICE_CAP_SOURCES} ${SLICEBULLET_SOURCES} unmatched/Bullet_StateDispatch.cpp hal/actor_classes_bullet.cpp
     # run rel0215 wave 1 (lane cast-ov026): ov026's whole cast, level 18.
     hal/actor_classes_ov026.cpp ${SLICE_OV026_SOURCES} unmatched/Whirlpool_Behavior.cpp unmatched/WaterSuction_Behavior.cpp
     hal/actor_classes_ov036.cpp ${SLICE_OV036CAST_SOURCES}
@@ -15940,6 +16520,349 @@ foreach(_tpmfb6 walk_window walk_window_hires smoke_player)
 endforeach()
 
 # ===========================================================================
+# THE WIRELESS PLAN, RUNG W0 (run link100, lane WM1)
+# ===========================================================================
+#
+# src/func_02040714.c and src/func_02040704.c: the two bodies of the radio seam
+# that touch no radio. Each is one global read, and both globals are hosted --
+# both data_020a0f94 and data_020a0f24 by
+# hal/comms_seam.cpp, which is also where the two host faces of these names are
+# DELETED by the same commit. The reasoning, the ABI ruling and the freshness
+# argument for the two words are in port/slice_wm1.txt and in
+# comms_publish_link_words' banner in hal/comms_seam.cpp.
+#
+# Plain C, no per-source properties: neither TU has a struct, a pointer-to-member
+# or a packed field for an option to argue with.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm1.txt" SLICE_WM1_LINES)
+set(SLICE_WM1_SOURCES "")
+foreach(line IN LISTS SLICE_WM1_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_twm1 walk_window walk_window_hires smoke_player)
+    target_sources(${_twm1} PRIVATE ${SLICE_WM1_SOURCES})
+endforeach()
+# AND THE SEAM PROBE, which is where this rung's first link error came from.
+# Unlike the gate-221 rows above, mp_comms_seam DOES reference these two:
+# tests/mp_comms_seam.cpp declares func_02040714 and func_02040704 at :84-85 and
+# asserts their solo answers at :148-149. It links hal/comms_seam.cpp -- the file
+# the two host faces were deleted from -- so a probe that loses the faces without
+# gaining the bodies does not link. That is the same rule gate 221's note states,
+# applied the other way round. (Its OTHER unresolved symbol, data_020a0f94, is
+# why that word moved out of hal/comms_conductor.cpp, which this probe does not
+# link, and into hal/comms_seam.cpp, which it does.)
+target_sources(mp_comms_seam PRIVATE ${SLICE_WM1_SOURCES})
+
+# ===========================================================================
+# THE WIRELESS PLAN, RUNG W1 (run link100, lane WM2)
+# ===========================================================================
+#
+# src/func_020408b0.c and the eleven TUs its closure reaches: the ROM's own WM
+# bring-up, up to and including WM_Init registering the ARM9's channel-0xa
+# reply handler. The ARM7 answers nothing on this rung and nothing asks it to;
+# the whole argument, the measured closure and the two things that had to move
+# in the port are in port/slice_wm2.txt's own header.
+#
+# Plain C, no per-source properties: no struct layout option, no
+# pointer-to-member and no packed field in any of the twelve.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm2.txt" SLICE_WM2_LINES)
+set(SLICE_WM2_SOURCES "")
+foreach(line IN LISTS SLICE_WM2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_twm2 walk_window walk_window_hires smoke_player)
+    target_sources(${_twm2} PRIVATE ${SLICE_WM2_SOURCES})
+endforeach()
+# AND NOT THE SEAM PROBE, which is the opposite of what rung W0 needed and for
+# the same reason stated the other way round. tests/mp_comms_seam.cpp calls
+# func_020408b0(2) at :147 to check the seam's SOLO answers, and the ROM body of
+# that name allocates eight buffers off the game heap through Memory::Allocate.
+# The probe links neither a heap nor Memory::Allocate nor anything else in the
+# twelve TUs' closure, so giving it the bodies is a wall of unresolved externals
+# and, if they were supplied, a null dereference in a probe whose whole point is
+# that it needs no world. It keeps the retired host face instead, under a define
+# of its own -- exactly the way mp_sleepwake and this probe keep the retired
+# OS_SleepThread/OS_WakeupThread pair alive under PORT_OS_THREAD_HOST_PAIR: a
+# retired stand-in stays reachable WHERE IT IS MEASURED and nowhere else. The
+# same define also compiles out hal/comms_seam.cpp's call into the host ARM7,
+# which the probe does not link either.
+target_compile_definitions(mp_comms_seam PRIVATE
+    PORT_COMMS_SEAM_PROBE_FACE_020408B0)
+
+# SLICE pmfb7 -- run link100 lane PMFB7: the object-field rows whose class-block
+# range sweep closes. Twelve matched Behaviors that dispatch a pointer to member
+# held in a per-instance field, one per state cell at +8. No /Zp4 on this block:
+# the member sits at offset 8 of its holder and the two listings are identical
+# outside the TITLE line on all twelve. The per-row universe, ROM read, emitted
+# shape and the enter/per-frame split are in port/slice_pmfb7.txt and the raw
+# measurements in runs/link100/out/PMFB7/.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb7.txt" SLICE_PMFB7_LINES)
+set(SLICE_PMFB7_SOURCES "")
+foreach(line IN LISTS SLICE_PMFB7_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFB7_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# GATE 3. /Zp4 ON TWO SOURCES, MEASURED PER SOURCE AND NOT INHERITED.
+# src/func_ov006_02123340.cpp and src/func_ov006_020ee27c.cpp both hold their
+# member pointer at the ROM's 0x5004, which is 4 mod 8, and MSVC aligns the
+# eight-byte member to eight: without the option they read [reg+20488] and
+# [reg+20492], FOUR BYTES LATE, and with it [reg+20484] and [reg+20488], the
+# ROM's own 0x5004/0x5008. Four listing lines differ on each and nothing else
+# (runs/link100/out/PMFB7/emit_gate3_out.txt). src/func_ov006_020ef3e0.cpp is at
+# the SAME ROM offset and does NOT need it -- its struct comes from the tree's
+# own dScMgJump2_c.h and MSVC already lays the member at 0x5004, 0 diff lines --
+# which is why the option is measured per source rather than predicted from the
+# offset alone. src/func_ov006_020e7be8.cpp is at 0x210, 0 mod 8, 0 diff lines.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_02123340.cpp"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020ee27c.cpp"
+    PROPERTIES COMPILE_OPTIONS "/Zp4")
+foreach(_tpmfb7 walk_window walk_window_hires smoke_player)
+    target_sources(${_tpmfb7} PRIVATE ${SLICE_PMFB7_SOURCES})
+endforeach()
+
+# SLICE pmfb8 -- run link100 lane PMFB8: the rows lane PMFB7 measured and left
+# on the clock. GATE 1 is src/func_ov055_021112c4.cpp, MirrorLuigi's ENTER
+# dispatcher: an ARITY-ONE field-held pointer-to-member row whose class-derived
+# block sweeps to exactly two {code,0} pairs with no by-value sentinel. NO /Zp4
+# on this block, measured rather than inherited: the member sits at offset 0 of
+# its record and the two /FAsc listings are identical outside the TITLE line.
+# The per-row universe, ROM read, emitted shape, arity and second-reader
+# measurement are in port/slice_pmfb8.txt and the raw measurements in
+# runs/link100/out/PMFB8/.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_pmfb8.txt" SLICE_PMFB8_LINES)
+set(SLICE_PMFB8_SOURCES "")
+foreach(line IN LISTS SLICE_PMFB8_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PMFB8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# GATE 3. /Zp4 ON ONE SOURCE, MEASURED ON THAT SOURCE AND NOT INHERITED.
+# src/func_ov006_020c07e8.cpp holds its member pointer at the ROM's 0xb4, which
+# is 4 mod 8, and MSVC aligns the eight-byte member to eight: without the option
+# it emits mov ecx,[esi+188] / mov eax,[esi+184] -- 0xbc and 0xb8, FOUR BYTES
+# LATE -- and with it mov ecx,[esi+184] / mov eax,[esi+180], the ROM's own
+# 0xb8/0xb4. Sixteen listing lines differ and nothing else
+# (runs/link100/out/PMFB8/emit_g3_out.txt). The gate-1 and gate-2 sources are
+# all 0 mod 8 at their holders and are measured to need nothing, which is why
+# this is one file and not the block.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020c07e8.cpp"
+    PROPERTIES COMPILE_OPTIONS "/Zp4")
+foreach(_tpmfb8 walk_window walk_window_hires smoke_player)
+    target_sources(${_tpmfb8} PRIVATE ${SLICE_PMFB8_SOURCES})
+endforeach()
+
+# ===========================================================================
+# THE WIRELESS PLAN, RUNGS W4 AND W5 (run link100, lane WM3)
+# ===========================================================================
+#
+# src/func_02040820.c and src/func_02040790.c -- the ROM's own become-parent and
+# become-child state machines -- src/func_02040724.c (leave), and the 128 TUs
+# their call closure reaches: the NITRO WM command layer, the game's own
+# wireless framework and the 0x02065xxx work-queue band. The list, the measured
+# closure, the three non-matched things it needed and what the host ARM7 does
+# and does not fabricate are all in port/slice_wm3.txt's own header.
+#
+# THE ANSWERING HALF IS hal/wm_arm7.cpp, added to the same three targets right
+# below. It goes exactly where hal/boot2_ipc.cpp goes and nowhere else: it is
+# the other half of the same host ARM7, and mp_comms_seam links neither.
+#
+# Plain C except for four .cpp TUs the tree already carries as C++
+# (func_02062aa4, func_02062bdc, func_02062d10, func_020627e8 and the others
+# with a //cpp marker are picked up by the same LANGUAGE CXX rule every other
+# slice uses); no struct layout option, no pointer-to-member, no packed field in
+# any of the 131.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm3.txt" SLICE_WM3_LINES)
+set(SLICE_WM3_SOURCES "")
+foreach(line IN LISTS SLICE_WM3_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_twm3 walk_window walk_window_hires smoke_player)
+    target_sources(${_twm3} PRIVATE ${SLICE_WM3_SOURCES}
+                   "${CMAKE_CURRENT_SOURCE_DIR}/hal/wm_arm7.cpp")
+endforeach()
+# AND NOT THE SEAM PROBE, for the same reason rung W1 kept it out: tests/
+# mp_comms_seam.cpp calls func_02040820, func_02040790 and func_02040724 at
+# :159-167 to check the seam's SOLO answers, and it links neither the WM command
+# layer, nor a heap, nor the host ARM7 that would have to answer the commands
+# these bodies send. It keeps the three retired stand-ins instead, under a
+# define of its own -- the same shape as PORT_COMMS_SEAM_PROBE_FACE_020408B0
+# above and PORT_OS_THREAD_HOST_PAIR before it.
+target_compile_definitions(mp_comms_seam PRIVATE
+    PORT_COMMS_SEAM_PROBE_FACES_W4)
+
+# ===========================================================================
+# THE WIRELESS PLAN, RUNG W2 (run link100, lane WM4)
+# ===========================================================================
+#
+# src/func_0204068c.c and src/func_02062778.c: the ROM's own MP receive
+# unpacker. The list and the argument are in port/slice_wm4.txt's own header;
+# the buffer they read is filled by hal/wm_arm7.cpp, which rung W4 already
+# added to these same three targets right above.
+#
+# Plain C, two files, no struct layout option and no pointer-to-member.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm4.txt" SLICE_WM4_LINES)
+set(SLICE_WM4_SOURCES "")
+foreach(line IN LISTS SLICE_WM4_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM4_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_twm4 walk_window walk_window_hires smoke_player)
+    target_sources(${_twm4} PRIVATE ${SLICE_WM4_SOURCES})
+endforeach()
+# AND NOT THE SEAM PROBE. tests/mp_comms_seam.cpp:155-156 checks that
+# func_0204068c answers null for aids 0 and 1 with no transport installed, and
+# it links neither this unpacker nor the host ARM7 that fills the buffer it
+# reads, so it keeps the retired stand-in under a define of its own -- the same
+# shape as the two above it.
+target_compile_definitions(mp_comms_seam PRIVATE
+    PORT_COMMS_SEAM_PROBE_FACE_0204068C)
+
+# ===========================================================================
+# THE WIRELESS PLAN, RUNG W6 (run link100, lane WM5)
+# ===========================================================================
+#
+# src/func_02040c34.c -- the ROM's own wireless worker-thread bring-up -- and
+# nineteen more from its call closure. The list, the eleven TUs it refuses and
+# why, and the two rows that look like hardware and are not, are all in
+# port/slice_wm5.txt's own header.
+#
+# THE STORAGE HALF IS hal/wm_thread.cpp, added to the same three targets below.
+# It goes exactly where hal/wm_arm7.cpp goes and nowhere else: it carries the
+# 0x2b80-byte work-area band, the four faces into the table band this rung
+# refuses, and the worker-thread census, and mp_comms_seam links none of them.
+#
+# Plain C, twenty files, no struct layout option and no pointer-to-member.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm5.txt" SLICE_WM5_LINES)
+set(SLICE_WM5_SOURCES "")
+foreach(line IN LISTS SLICE_WM5_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM5_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+#
+# TWO TARGETS, NOT THREE, AND THAT IS FORCED RATHER THAN CHOSEN. Rungs W1, W2
+# and W4 went to all three; this one cannot. src/func_02042254.c (the worker
+# body) and src/func_020424c0.c (the header-region reads) both call
+# func_0205d5e8, which is on port/slice_gate214.txt, and SLICE214_SOURCES goes
+# to walk_window and walk_window_hires only -- smoke_player has never carried
+# the boot spine (see the SLICE214 note above). Measured, not assumed: the
+# first build of this rung linked walk_window and walk_window_hires clean and
+# failed smoke_player on exactly that one unresolved external.
+foreach(_twm5 walk_window walk_window_hires)
+    target_sources(${_twm5} PRIVATE ${SLICE_WM5_SOURCES}
+                   "${CMAKE_CURRENT_SOURCE_DIR}/hal/wm_thread.cpp")
+endforeach()
+# AND THE OTHER TWO LINK hal/wm_thread_face.cpp INSTEAD. smoke_player for the
+# reason just given, mp_comms_seam because it links hal/comms_seam.cpp without
+# the WM command layer, without a heap and without the host ARM7. That file
+# carries the retired func_02040c34 body, the standalone data_020a3fc0 those
+# two still need (src/func_02040a5c.c and src/func_02040a84.c are on
+# port/slice_gate221.txt, which does go to smoke_player), and no-op versions of
+# the two census entry points hal/boot2_ipc.cpp calls on all three big targets.
+#
+# A PER-TARGET DEFINE ON hal/comms_seam.cpp COULD NOT HAVE DONE THIS, which is
+# the one way this retirement differs in shape from rungs W1, W2 and W4: that
+# file is compiled ONCE for all three big targets (SLICE_COMMS_SOURCES rides
+# the sharing block below), so a define on smoke_player would have changed
+# walk_window's object too. Rungs W1/W2/W4 only ever had to keep a body for
+# mp_comms_seam, which compiles hal/comms_seam.cpp separately.
+foreach(_twm5f mp_comms_seam smoke_player)
+    target_sources(${_twm5f} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/wm_thread_face.cpp")
+endforeach()
+
+# ===========================================================================
+# THE WIRELESS PLAN, RUNG W7 (run link100, lane WM8)
+# ===========================================================================
+#
+# The eleven TUs of the 0x02063E-0x020655 message-layer band that rung W6 left
+# behind four faces in hal/wm_thread.cpp. Why they were refused, why the
+# refusal rested on a decimal misread, and what the band actually is are all in
+# port/slice_wm8.txt's own header and at the top of hal/wm_thread.cpp.
+#
+# THE ACCESSOR RENAME, WHICH IS THE HALF THAT MAKES THE SLICE SAFE.
+# src/func_02065b94.c and src/func_02065b88.c are matched ROM bodies that
+# return DS addresses -- 0x020A94D4 and 0x020A9570, both named by a relocation
+# in config/arm9/relocs.txt -- and the port hosts those two objects at the host
+# addresses hal/wm_arm7.cpp's ".dsstate$ywmd18a" and "$ywmd19" land at. Left
+# alone, the band would WRITE the cartridge's address (which is mapped DS main
+# RAM in this process, so not a fault, just the wrong bytes) while
+# src/func_02065af0.c READS the host object: one ROM object, two host objects.
+#
+# So every TU that CALLS one of the two accessors is compiled with that call
+# renamed onto the host answer in hal/wm_arm7.cpp. The two ROM bodies keep
+# their own names, their bytes and their place in the link; only the call sites
+# move. This is the port's romdata pointer-table contract in its smallest form:
+# a DS address the port cannot use is bound to the host object before anything
+# dereferences it.
+#
+# NINE TUs, NOT FOUR, AND THAT IS THE POINT. Five of the nine came in with rung
+# W4 on port/slice_wm3.txt and have been loading the literal ever since --
+# src/func_02065170.c, src/func_020653cc.c, src/func_02065538.c and
+# src/func_020659a0.c call func_02065b94, src/func_02065af0.c calls
+# func_02065b88. None of them was ever ENTERED, because data_020a94c0 stays 0
+# until one of the two initialisers rung W6 faced sets it. Renaming only the
+# four TUs this slice adds would have left exactly the split object the rename
+# exists to close, so all nine are renamed.
+#
+# THE RENAME IS A SOURCE PROPERTY, hence one define per file rather than a
+# target_compile_definitions: these TUs ride the shared compile below (one
+# object for walk_window, walk_window_hires and smoke_player), so a per-target
+# define could not reach them. hal/wm_arm7.cpp, which defines the two answers,
+# goes to exactly the three targets port/slice_wm3.txt goes to.
+foreach(_wm8ren
+        src/func_02065170.c src/func_020653cc.c src/func_02065538.c
+        src/func_020659a0.c src/func_020652fc.c src/func_02065234.c
+        src/func_020654d0.c src/func_02065500.c)
+    set_source_files_properties(
+        "${CMAKE_CURRENT_SOURCE_DIR}/../${_wm8ren}"
+        PROPERTIES COMPILE_DEFINITIONS "func_02065b94=port_wm8_wmq_base")
+endforeach()
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02065af0.c"
+    PROPERTIES COMPILE_DEFINITIONS "func_02065b88=port_wm8_wmq_head")
+
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_wm8.txt" SLICE_WM8_LINES)
+set(SLICE_WM8_SOURCES "")
+foreach(line IN LISTS SLICE_WM8_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_WM8_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# TWO TARGETS, NOT THREE, for the same forced reason rung W6 gave: the four
+# bodies this slice takes back were faced in hal/wm_thread.cpp, which
+# walk_window and walk_window_hires carry and the other two do not. Adding them
+# to smoke_player would collide with hal/wm_thread_face.cpp's own stand-ins.
+foreach(_twm8 walk_window walk_window_hires)
+    target_sources(${_twm8} PRIVATE ${SLICE_WM8_SOURCES})
+endforeach()
+
+# ===========================================================================
 # ONE COMPILE OF THE TIER-INDEPENDENT SLICE
 # ===========================================================================
 #
@@ -16078,11 +17001,27 @@ if(_share_n GREATER 1)
             set(_common_srcs ${_abs})
             set(_first FALSE)
         else()
+            # Hash the membership test instead of a per-item IN_LIST scan.
+            # IN_LIST here cost 46.1s over 23,216 evaluations, a linear scan
+            # of _abs (~10,700 elements) for every _common_srcs element --
+            # CFGTIME run100, out/CFGTIME/top20.txt. Index _abs once (O(n))
+            # with a set() per element, then test membership with
+            # if(DEFINED ...); the full absolute path is the variable-name
+            # key itself (not a hash or sanitised form of it), so two
+            # different paths can never collide onto the same _seen_
+            # variable. Cleared right after use so it cannot leak into the
+            # next target's test.
+            foreach(_one IN LISTS _abs)
+                set("_seen_abs_${_one}" 1)
+            endforeach()
             set(_keep "")
             foreach(_one IN LISTS _common_srcs)
-                if("${_one}" IN_LIST _abs)
+                if(DEFINED "_seen_abs_${_one}")
                     list(APPEND _keep "${_one}")
                 endif()
+            endforeach()
+            foreach(_one IN LISTS _abs)
+                unset("_seen_abs_${_one}")
             endforeach()
             set(_common_srcs ${_keep})
         endif()
@@ -16150,15 +17089,31 @@ if(_share_n GREATER 1)
 
         # Swap each target's copy of the shared sources for the one build of
         # them. Nothing else about the target is touched.
+        #
+        # Hash the membership test instead of a per-item IN_LIST scan. The
+        # IN_LIST below cost 61.4s over 34,500 evaluations, a linear scan of
+        # PORT_TIER_SHARED (~10,700 elements) for every source of every
+        # target -- the single largest cost in Configuring, CFGTIME run100,
+        # out/CFGTIME/top20.txt. PORT_TIER_SHARED does not change across the
+        # foreach(_t) loop below, so it is indexed ONCE (O(n)), not once per
+        # target. As above the full absolute path is the variable-name key
+        # itself, so two different paths can never collide onto the same
+        # _seen_ variable; the index is cleared after the loop.
+        foreach(_one IN LISTS PORT_TIER_SHARED)
+            set("_seen_shared_${_one}" 1)
+        endforeach()
         foreach(_t IN LISTS _share_targets)
             set(_keep ${_genex_${_t}})
             foreach(_one IN LISTS _srcs_${_t})
-                if(NOT "${_one}" IN_LIST PORT_TIER_SHARED)
+                if(NOT DEFINED "_seen_shared_${_one}")
                     list(APPEND _keep "${_one}")
                 endif()
             endforeach()
             set_property(TARGET ${_t} PROPERTY SOURCES ${_keep})
             target_sources(${_t} PRIVATE $<TARGET_OBJECTS:port_slice_shared>)
+        endforeach()
+        foreach(_one IN LISTS PORT_TIER_SHARED)
+            unset("_seen_shared_${_one}")
         endforeach()
     endif()
 endif()
@@ -16325,13 +17280,198 @@ endforeach()
 # number from, and the cross-check that refuses to return a number the host
 # loop's own counter disagrees with.
 #
-# The same two targets as rom_main.cpp above, and for the same reason: they are
-# the only ones that compile tests/walk_window.cpp, which is the caller. This
-# rung enrols no matched TU and moves the linkage count by zero, by design.
-foreach(_tromframe walk_window walk_window_hires)
+# R3a enrolled the same two targets as rom_main.cpp above, on the reason that
+# they are the only ones that compile tests/walk_window.cpp, which was then the
+# only caller. RUNG R3b STEP B0 ADDS smoke_player, and the LINK is what said so:
+# B0 puts the same three calls into hal/scene_boot.cpp's HEADLESS scene loop --
+# the loop the battery's 36 scene rows and tail2's title actually take -- and
+# scene_boot.cpp is compiled into all three of these targets, so smoke_player
+# answered with four unresolved externals (_port_rom_frame_begin, _phase6,
+# _checked, _report, referenced in _port_scene_run). rom_frame.cpp is host code
+# with no matched TU behind it, so enrolling it in the third target that
+# compiles its caller changes no count; it is the same problem the walker's
+# installed filter pointer solved in lane R3CFIX, one step simpler, because
+# there is nothing here for a smoke binary to be unable to pay for. This rung
+# still enrols no matched TU and moves the linkage count by zero, by design.
+foreach(_tromframe walk_window walk_window_hires smoke_player)
     target_sources(${_tromframe} PRIVATE
         "${CMAKE_CURRENT_SOURCE_DIR}/hal/rom_frame.cpp")
 endforeach()
+
+# ===========================================================================
+# THE REFUSED ARMS OF func_0201a054 (run link100, lane R2ABC, rungs R2a-R2c)
+# ===========================================================================
+#
+# hal/rom_main.cpp left main's fifth call -- func_0201a054 -- as a seam that
+# only counted its hits, because hal/boot_os.cpp's transcription of that body
+# refuses four of its arms. port/slice_r2abc.txt carries the arms this lane
+# retired, each with the refusal it answers quoted beside it, and
+# port/hal/boot_arms.cpp is what the seam calls: one entry point that runs them
+# in the ROM's own order, with the storage checks each one needs.
+#
+# walk_window and walk_window_hires only, for hal/rom_main.cpp's own reason:
+# smoke_player carries no hal/boot_os.cpp and does not run the boot spine, so
+# nothing in that target reaches the seam.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_r2abc.txt" SLICE_R2ABC_LINES)
+set(SLICE_R2ABC_SOURCES "")
+foreach(line IN LISTS SLICE_R2ABC_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_R2ABC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# RUNG R2d's TWO HOSTGEN'd TUs (run link100, lane R2D2). src/func_0205f0e0.c
+# and src/func_0205eb58.c are the touch calibration's arithmetic and both drive
+# the DS's HARDWARE DIVIDER through literal MMIO -- DIVCNT 0x4000280, NUMER
+# 0x4000290, DENOM 0x4000298, RESULT 0x40002a0. Built plain, those stores latch
+# in the window ntr/io.cpp maps and never reach io_write's
+# `if (addr == DIV_DENOM || addr == DIV_NUMER || addr == DIVCNT) run_divide()`,
+# so every result would read back as whatever was latched there. That is not a
+# cosmetic difference: src/func_0205f0e0.c's results ARE the scale factors
+# src/func_0205ea28.c multiplies every stylus sample by, and a zero scale is a
+# stylus that always reads (0,0). The rest of the rung touches no register and
+# is plain.
+set(R2D_SYMS func_0205f0e0 func_0205eb58)
+set(R2D_GEN "")
+foreach(sym IN LISTS R2D_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND R2D_GEN "${sym_out}")
+endforeach()
+foreach(_tr2abc walk_window walk_window_hires)
+    target_sources(${_tr2abc} PRIVATE ${SLICE_R2ABC_SOURCES} ${R2D_GEN}
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/boot_arms.cpp")
+endforeach()
+# AND THE DRIVER ON smoke_player TOO, which is not the same list and not an
+# oversight. hal/boot2_ipc.cpp is in all three of these targets and it is the
+# file that claims channel 6 and hands a word on it over, so the driver has to
+# be wherever the channel is. smoke_player carries no hal/boot_arms.cpp and
+# never reaches the a054 seam, so nothing ever sends on the channel there and
+# its census reads zero -- which is the measurement that harness owes, the same
+# way a solo boot owes a zero on tag 10.
+foreach(_ttsc smoke_player walk_window walk_window_hires)
+    target_sources(${_ttsc} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/hal/tsc_arm7.cpp")
+endforeach()
+# RUNG R2d's PER-SOURCE RENAME, the same mechanism as func_02060890 below and
+# for a reason of the same kind. src/func_0205ea10.c is
+# `while (*(volatile u16 *)(data_020a80cc + 0x36) & mask);` -- a spin waiting
+# for the OTHER PROCESSOR's interrupt, which on the DS arrives the moment
+# src/func_0205edd8.cpp's closing IRQ::Restore re-enables interrupts, i.e. after
+# the bit is set and before the wait. A single-threaded host has no
+# "meanwhile", so func_0203bbc0's two waits go through hal/tsc_arm7.cpp's
+# port_tsc_wait: the ROM's own exit test with the ARM7's turn inside the loop,
+# which is the same move ntr/ipc.cpp makes for src/func_0205bad8.c's IPCSYNC
+# handshake. src/func_0205ea10.c itself is NOT displaced -- it stays in the link
+# under its own name for its other caller src/func_0205efc0.c -- so this creates
+# no SHADOW row in port/tools/linkage.py's queue and invents no count.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0203bbc0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_0205ea10=port_tsc_wait")
+# ONE PER-SOURCE RENAME, the same mechanism as src/main.c above and for the same
+# reason. func_02042f68's FIRST arm is src/func_02060890.c, and two of that
+# body's statements cannot link: `data_020a8780 = func_02060a64` (the FLASH read
+# path, hosted nowhere and reached by nothing in this game) and func_02061138 ->
+# func_020610fc, hand-asm with a deliberate b-self loop MSVC cannot assemble.
+# Defining func_02060890 as a host body would make it a new SHADOW row in
+# linkage.py's replacement queue -- work invented by this change. The rename
+# leaves src/func_02060890.c exactly where it was, unenrolled and unclaimed, and
+# says in one place (hal/boot_arms.cpp's port_rom_card_bringup) that this edge is
+# not ROM code yet. The other two arms ARE the ROM's: func_020603c8 is on the
+# slice above and the eight-byte tag copy is inline in func_02042f68 itself.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_02042f68.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_02060890=port_rom_card_bringup")
+
+# Run link100, lane NITROFS: the NitroFS seat's target lists, in the shape the
+# rename above uses, and for the reason spelled out beside SLICE_NITROFS_SOURCES
+# -- the seat needs hal/boot_hw.cpp's four OS primitives and smoke_player does
+# not carry that file, so the two window targets get the cartridge's own
+# func_0205d96c and smoke_player keeps the face. The two are exclusive: a
+# target with both would have func_0205d96c defined twice.
+foreach(_tnitrofs walk_window walk_window_hires)
+    target_sources(${_tnitrofs} PRIVATE ${SLICE_NITROFS_SOURCES})
+endforeach()
+target_sources(smoke_player PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/nitrofs_face.cpp")
+
+# Run link100, lane LOADOV: the overlay-unload seat, on the same split and for
+# the same reason (see beside SLICE_LOADOV_SOURCES). hal/nitrofs_face.cpp is
+# already on smoke_player from the line above and now carries the second face,
+# so there is nothing to add on that side.
+foreach(_tloadov walk_window walk_window_hires)
+    target_sources(${_tloadov} PRIVATE ${SLICE_LOADOV_SOURCES})
+endforeach()
+
+# Run link100, lane CTOR, rung C1a: the ROM's own static-initialiser runner at
+# Entry's own point (arm9 0x020048a8, one instruction before the tail jump to
+# main). port/slice_ctor.txt is the derivation and hal/ctor_runner.cpp carries
+# the table, the binds, the thirteen faces and the two once-only counters.
+#
+# ALL THREE TARGETS, not the two window ones. hal/level_boot.cpp and
+# hal/fdr_arm9_fader_seat.cpp are on smoke_player as well, and this commit
+# DELETES the two hand calls those files made (__sinit_02073e6c and
+# __sinit_02074f80). Leaving smoke_player off this list would take both
+# initialisers out of that binary altogether -- exactly the split the fader
+# block above warns about, arriving from the other direction. smoke_player has
+# no Entry seam to call the runner from, so on that target the two initialisers
+# are linked and not run; it renders a Player into a BMP and touches neither
+# the wipe fader nor the opening's script blobs, and the smoke suite is the
+# check that this stays true.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_ctor.txt" SLICE_CTOR_LINES)
+set(SLICE_CTOR_SOURCES "")
+foreach(line IN LISTS SLICE_CTOR_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_CTOR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_CTOR_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/hal/ctor_runner.cpp")
+foreach(_tctor walk_window walk_window_hires smoke_player)
+    target_sources(${_tctor} PRIVATE ${SLICE_CTOR_SOURCES})
+endforeach()
+
+# Run link100, lane SND1, rung R1: the sound-init seat, and it goes to ALL
+# THREE sound targets rather than the two-plus-a-face split NITROFS and LOADOV
+# use above. The reason is the direction of the call: hal/sdat/consumer.cpp
+# calls func_0204f070 and func_0205b358 now, and that file is on all three, so
+# a target without the slice would not link at all. Only ONE symbol under the
+# seat is missing from smoke_player -- func_02059d8c, the ARM busy-wait
+# hal/boot_hw.cpp transcribes and that target does not carry -- and it comes
+# from its own file below. Everything else src/func_0205ae64.c and
+# src/func_0205b358.c reach (func_0205ba3c, func_0205ba64, func_020587dc,
+# CP15::FlushAndInvalidateDataCache, IRQ::Disable/Restore, data_020a7fc8) is
+# already on all three.
+foreach(_tsnd1 smoke_player walk_window walk_window_hires)
+    target_sources(${_tsnd1} PRIVATE ${SLICE_SND1_SOURCES})
+endforeach()
+target_sources(smoke_player PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/hal/sdat/snd_smoke_face.cpp")
+
+# Run link100, lane SND1, rungs R8/R9/R10: the sound frame, same three targets.
+# ONE SOURCE GOES TO smoke_player ALONE. src/func_0205ac28.c is the command-9
+# sender src/func_0204ffcc.c calls, and it is already on port/slice_gate220.txt
+# for the two window targets -- listing it in slice_snd8.txt would put a second
+# object with the same definition into those two links. smoke_player is the only
+# target that lacks it, so it is added here rather than to the slice.
+foreach(_tsnd8 smoke_player walk_window walk_window_hires)
+    target_sources(${_tsnd8} PRIVATE ${SLICE_SND8_SOURCES})
+endforeach()
+target_sources(smoke_player PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205ac28.c")
 
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not

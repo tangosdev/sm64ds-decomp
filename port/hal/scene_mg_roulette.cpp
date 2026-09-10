@@ -238,7 +238,17 @@ int      port_scene_env_want(void);
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
 extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
 extern unsigned char data_ov006_0213e39c[];   /* dScMgRoulette_c,     36 */
-extern unsigned char data_ov006_0213e2f0[];   /* the SpawnInfo record     */
+
+/* THE SPAWNINFO RECORD IS NOT DECLARED HERE, and the declaration that used to
+   sit above was removed rather than renamed (Andrew's third review of PR
+   #2474): this file never read it. The object at 0x0213e2f0 exists and is
+   named MgMushroomRoulette_SpawnInfo -- config/arm9/overlays/ov006/symbols.txt
+   row 4004, defined by the generated overlay TU (port/ov006_syms.txt:428, and
+   the map publishes _MgMushroomRoulette_SpawnInfo from ov006_syms.c.obj) and
+   consumed under that name by hal/scene_boot.cpp:3986/4725, which is where
+   scene 383's table row points at it. The address form was a second spelling
+   with no definition and no reader, so it went; nothing needs a declaration
+   added back here unless this file starts reading the record. */
 
 /* dScMgSingle3DBase_c's eight overrides. Slot 2 is NOT src's body and slot 33
    is the hostgen'd copy: see section 4. */

@@ -23,9 +23,30 @@ extern unsigned char data_020a1154[];   // the four records, ditto (0x24 stride)
 extern unsigned char data_020a0de8[];   // TouchInfo[4], hal/auto_bss.cpp
 extern int data_020a0e58[];             // PadData[4], hal/auto_bss.cpp
 
+// THE TWO WORDS RUNG W0 GAVE BACK TO THE ROM (run link100, lane WM1).
+// src/func_02040714.c reads the first and src/func_02040704.c reads the second,
+// and both are LINKED now. data_020a0f94 is hosted by hal/comms_conductor.cpp
+// (".dsstate$ymp3s0007"); data_020a0f24 is hosted at the foot of THIS file,
+// which is why it is declared here and defined there.
+extern unsigned char data_020a0f94[];   // the link state, comms_conductor.cpp
+extern unsigned char data_020a0f24[];   // my slot (aid), the $ywmb block below
+
 // The ROM's fan-out, steps 0x16 and 0x17 of src/func_020197b8.c.
 void func_0203bb60(void);
 void func_0203bc7c(void);
+
+// THE HOST ARM7'S WIRELESS ARM, in hal/boot2_ipc.cpp. Run link100, lane WM2,
+// rung W1: it is what opens the installed transport when the ROM claims channel
+// 0xa, and port::comms_arm7_turn below is what gives it the moment to look. Not
+// declared for the seam probe, which links this file without hal/boot2_ipc.cpp.
+#ifndef PORT_COMMS_SEAM_PROBE_FACE_020408B0
+void port_arm7_wireless_tick(void);
+// RUNG W2. hal/wm_arm7.cpp publishes the round the carrier just completed into
+// the ROM's own MP receive buffer, in the layout src/func_02062778.c unpacks.
+// Same guard and the same reason: the seam probe links this file without the
+// host ARM7.
+void port_wm_publish_mp_recv(void);
+#endif
 }
 
 namespace port {
@@ -70,6 +91,110 @@ const CommsTransport *comms_transport() { return g_transport; }
 
 void comms_note_wire_activity() { ++g_wire_activity; }
 uint64_t comms_wire_activity() { return g_wire_activity; }
+
+// ===========================================================================
+// THE TWO WORDS. Run link100, lane WM1 rung W0, NARROWED BY LANE WM3 RUNG W4.
+//
+// WHAT RUNG W0 BUILT. src/func_02040714.c (`return data_020a0f94`) and
+// src/func_02040704.c (`return data_020a0f24`) became linked bodies, so the
+// game reads those two words instead of asking the transport, and something
+// had to keep them fresh. This function was that something: it wrote
+// t->state() into data_020a0f94 and t->slot() into data_020a0f24 from every
+// seam face, from the exchange face once per wait turn, and from a pump chained
+// onto hal/os_thread.h's hook to cover src/func_0203ea5c.c's case 2, which
+// calls nothing at all.
+//
+// WHAT RUNG W4 TOOK BACK, AND WHY THE MIRROR HAD TO GO. The ROM's own WM
+// callbacks are linked now, and THEY WRITE BOTH WORDS. data_020a0f94 is written
+// by src/func_0203fdac.c (`data_020a0f94 = data_020a0f5c`, the 3 or 4 that a
+// formed session means), by src/func_02040820.c and src/func_02040790.c
+// themselves (`= 2`, connecting), by src/func_02040504.c (`= 0`) and by five
+// callbacks on their failure arms (`= 1`). A mirror that kept writing
+// t->state() into that word would FIGHT every one of them -- and worse than
+// fight: the ROM's own state machine SWITCHES on it, so a mirror write of 4
+// while the ROM sits at 2 sends func_02040820 down its `case 4: Wireless_Reset`
+// arm and tears the session down. So data_020a0f94 IS NOT WRITTEN HERE. The
+// case-2 pump goes with it: the ROM's own callbacks are the path out of
+// connecting now, which is what case 2 was always waiting for on hardware.
+//
+// AND ONE WRITE STAYS, NARROWED TO THE ONE PLACE THE ROM CANNOT HAVE REACHED
+// YET. data_020a0f24, the aid. The ROM writes it too -- src/func_0203fec4.c:25
+// takes it out of the connect reply -- but that reply is posted only once the
+// transport reports the child connected, and hal/comms_conductor.cpp's
+// comms_wait_for_session ends its wait on the SAME transport signal and then
+// immediately reads the slot through the ROM's accessor. So there is a window,
+// one turn wide, where the wait has released and the reply has not been
+// dispatched, and reading the word there gives 0 -- which is the exact field
+// failure lane WM1 recorded ("session up after 1 turns: link=4 slot=1" followed
+// by "I am slot 0"). The publish is kept for that ONE read, and the value it
+// writes is the same t->slot() the reply will carry, so the ROM's own write
+// lands on the same number a turn later. The exchange face keeps calling it for
+// the same reason at the same cost: it is idempotent with the ROM's writer.
+//
+// SOLO IS UNTOUCHED, more so than before: with no transport this now writes
+// nothing at all, where it used to write a zero over a zero. In a solo boot the
+// role byte never leaves 0, so src/func_0203df40.c takes its solo arm, no seam
+// face is called and no WM command is ever sent.
+// ===========================================================================
+// ===========================================================================
+// THE HOST ARM7 GETS A TURN WHENEVER THE ARM9 TOUCHES THE RADIO.
+//
+// Run link100, lane WM2, rung W1. src/func_020408b0.c is the ROM's own body
+// now, and the port's only t->open(mode) call went with the face it lived in.
+// Its home is hal/boot2_ipc.cpp, the host ARM7, which opens the transport when
+// it sees the ROM claim channel 0xa. Something has to give that model a moment
+// to look, because the claim is a plain store into the shared block
+// (src/func_0205ba64.c writes 0x027FFC00+0x388) and not an I/O access anything
+// traps.
+//
+// THE RULE, stated rather than implied: the host ARM7 runs at the points the
+// ARM9 yields to it. That is not an invention for this rung -- ntr/ipc.h says
+// it about the IPCSYNC handshake in as many words ("one iteration per ARM9
+// write to IPCSYNC ... the single-threaded host's version of the other core got
+// there"). The radio's yield points are the seam faces themselves, so each of
+// the three that remain calls this first, and the ARM7's turn therefore lands
+// BEFORE the request the ARM9 is about to make. That ordering is load-bearing:
+// the frozen contract refuses a become_parent()/become_child() that arrives
+// before open() and leaves the state idle for good, and the conductor calls
+// func_020408b0(2) and func_02040820() back to back
+// (hal/comms_conductor.cpp:1133-1136).
+//
+// SOLO IS UNTOUCHED. With no transport installed there is nothing to open, the
+// ARM7 arm returns after one mask test, and none of these faces is called at
+// all in a solo boot anyway (the role byte never leaves 0, so
+// src/func_0203df40.c takes its solo arm).
+//
+// NOT IN THE PROBE. tests/mp_comms_seam.cpp links hal/comms_seam.cpp without
+// hal/boot2_ipc.cpp, so the symbol would not resolve there; the probe keeps the
+// pre-W1 seam whole under the same define that keeps its open face.
+// ===========================================================================
+// (We are already inside `namespace port` here; the declaration of the ARM7
+// entry is with the other extern "C" names at the head of this file.)
+void comms_arm7_turn() {
+#ifndef PORT_COMMS_SEAM_PROBE_FACE_020408B0
+    port_arm7_wireless_tick();
+#endif
+}
+
+namespace {
+
+void publish_now() {
+    const CommsTransport *t = g_transport;
+    if (!t) return;              // solo: neither word has a publisher, or needs one
+    // data_020a0f24 is the low halfword of its own 4-byte ROM span (every ROM
+    // writer -- src/func_020408b0.c:27, src/func_02040014.c, src/func_020402a0.c,
+    // src/func_0203fec4.c:23 -- writes it as u16).
+    //
+    // AND data_020a0f94 IS NOT WRITTEN HERE ANY MORE. See the banner.
+    *reinterpret_cast<volatile unsigned short *>(data_020a0f24) =
+        (unsigned short)t->slot();
+}
+
+}  // namespace
+
+void comms_publish_link_words() {
+    publish_now();
+}
 
 void comms_set_boot_indicator(uint16_t value) {
     g_boot_indicator = value;
@@ -156,59 +281,137 @@ void comms_report(const char *tag) {
 
 extern "C" {
 
-// src/func_020408b0.c: allocates the WM work buffers off the game heap, reads
-// the boot indicator to pick an init branch, and starts the SDK. A transport
-// needs none of that; it needs to know it is being opened.
-// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body starts the NITRO WM SDK over arm7.bin, which this repo does not decompile (file header). Behind the transport seam.
+// src/func_020408b0.c IS LINKED NOW. Run link100, lane WM2, rung W1.
+//
+// The face that stood here allocated nothing, read no boot indicator and
+// started no SDK: it called t->open(mode) and published. The ROM's own body
+// does all three, and every one of them now runs -- Memory::Allocate takes the
+// eight buffers off the game heap, the boot indicator picks the branch, and
+// func_020616e8 (WM_Init) lays out the 0x1300 work buffer and registers the
+// ARM9's channel-0xa reply handler. Twelve matched TUs came with it; the list
+// and the argument are in port/slice_wm2.txt.
+//
+// WHERE THE OPEN WENT. Retiring this face deleted the port's ONLY
+// t->open(mode) call, and its honest home is the host ARM7: hal/boot2_ipc.cpp
+// opens the installed transport when it sees the ROM claim channel 0xa, with
+// data_020a0f14 as the mode word. The ROM's own body writes that word FIRST
+// (src/func_020408b0.c:25, `data_020a0f14 = arg`) and registers the channel
+// LAST (func_020616e8's closing func_0205ba64(0xa, func_02061188)), so the mode
+// is already there when the claim becomes visible. port_arm7_wireless_tick()
+// below is where the ARM7 is given its turn to look.
+//
+// WHERE THE RECORD CLEAR WENT. hal/comms_conductor.cpp's
+// comms_seat_session_request, which is the one point every path to this body
+// goes through and has exactly the lifecycle the clear needs. See the hunk
+// there.
+//
+// THE PROBE KEEPS THE FACE, and only the probe. tests/mp_comms_seam.cpp calls
+// func_020408b0(2) at :147 to check the seam's SOLO answers; it links neither a
+// heap nor Memory::Allocate, so handing it the ROM body would be a link error
+// followed by a null dereference. It gets the stand-in under its own define,
+// exactly the way mp_sleepwake keeps the retired OS_SleepThread pair alive
+// under PORT_OS_THREAD_HOST_PAIR: a retired host body stays reachable where it
+// is MEASURED and nowhere else. No shipped target compiles the block below.
+#ifdef PORT_COMMS_SEAM_PROBE_FACE_020408B0
 void func_020408b0(unsigned short mode) {
-    // Run vs16, hosted-conductor follow-up. The ROM clears its four records at
-    // session start (src/func_0203db64.c:64 zeroes 0x90 at data_020a1154); the
-    // host run behind them is sixteen records (hal/camera_bridges.cpp), and
-    // records 4..15 are the port's, so the port clears them at the same moment
-    // in the lifecycle -- this face runs exactly once per session-arm, off the
-    // one-shot at src/func_0203ea5c.c:137-140. Without this, a wide session
-    // formed after an earlier one in the same process would read the dead
-    // session's live bits out of slots 4..15 and wait on ghosts. Done for
-    // narrow sessions too: nothing narrow reads past 0x90, and the seam's own
-    // per-slot report prints the full run, which should not show stale rows.
     std::memset(data_020a1154 + 4 * 0x24, 0, 12 * 0x24);
     const port::CommsTransport *t = port::comms_transport();
-    if (t) { t->open(mode); return; }
+    if (t) {
+        t->open(mode);
+        port::comms_publish_link_words();
+        return;
+    }
     port::g_solo_state = port::kCommsIdle;
     port::g_solo_slot = 0;
+    port::comms_publish_link_words();
 }
+#endif
+
+// ===========================================================================
+// RUNGS W4 AND W5: BECOME PARENT, BECOME CHILD AND LEAVE ARE THE ROM'S AGAIN.
+//
+// Run link100, lane WM3. src/func_02040820.c, src/func_02040790.c and
+// src/func_02040724.c are linked bodies now, and 128 more TUs came with them:
+// the NITRO WM command layer, the game's own wireless framework and the
+// 0x02065xxx work-queue band. port/slice_wm3.txt carries the list, the measured
+// closure and the argument.
+//
+// WHAT MADE IT POSSIBLE was not these three files, it was hal/wm_arm7.cpp -- a
+// host ARM7 that answers the WM commands those bodies send on PXI channel 0xa
+// with the fields the ROM's OWN callbacks read, so the ROM's protocol state
+// machine climbs its own ladder (0 -> 1 -> 2 -> 7 or 8 -> 9 or 0xa) instead of
+// being handed a state by a face. The seam is still the cut it always was; what
+// changed is that the layer immediately above the radio is the cartridge's
+// again, and the transport is reached THROUGH it: become_parent() when the ROM
+// sends apiid 8, become_child() on 0x0c, close() on 0x0d.
+//
+// AND THE TWO WORDS ARE THE ROM'S OWN WRITERS NOW, which is what retires most
+// of rung W0's publish -- see comms_publish_link_words' banner above.
+//
+// THE PROBE KEEPS ALL THREE, and only the probe. tests/mp_comms_seam.cpp calls
+// func_02040820, func_02040790 and func_02040724 at :159-167 to check the
+// seam's SOLO answers, and it links neither the WM command layer nor a heap nor
+// the host ARM7. It gets the stand-ins under a define of its own, exactly the
+// way it keeps the retired func_020408b0 under
+// PORT_COMMS_SEAM_PROBE_FACE_020408B0 and the retired OS_SleepThread pair under
+// PORT_OS_THREAD_HOST_PAIR: a retired host body stays reachable WHERE IT IS
+// MEASURED and nowhere else. No shipped target compiles the three below.
+// ===========================================================================
+#ifdef PORT_COMMS_SEAM_PROBE_FACES_W4
 
 // src/func_02040820.c: the ROM's become-parent state machine over
 // data_020a0f94/data_020a0f5c, with Wireless_Reset on a role flip.
-// PORT_HOST_ABI: hosted WM/radio seam face; ROM body is the become-parent state machine over the NITRO WM SDK / arm7.bin radio, which this repo does not decompile.
 void func_02040820(void) {
+    port::comms_arm7_turn();
     const port::CommsTransport *t = port::comms_transport();
-    if (t) { t->become_parent(); return; }
+    if (t) { t->become_parent(); port::comms_publish_link_words(); return; }
     // No radio: the request is recorded and refused the way an unanswered
     // radio refuses it -- the state never leaves idle, so the ROM's own wait
     // bound expires and src/func_0203ea5c.c:487 drops the session to solo.
     port::g_solo_state = port::kCommsIdle;
+    port::comms_publish_link_words();
 }
 
 // src/func_02040790.c, the child half of the same machine.
-// PORT_HOST_ABI: hosted WM/radio seam face; the become-child half of the same WM SDK / arm7.bin state machine this repo does not decompile.
 void func_02040790(void) {
+    port::comms_arm7_turn();
     const port::CommsTransport *t = port::comms_transport();
-    if (t) { t->become_child(); return; }
+    if (t) { t->become_child(); port::comms_publish_link_words(); return; }
     port::g_solo_state = port::kCommsIdle;
+    port::comms_publish_link_words();
 }
 
 // src/func_02040724.c: leave.
-// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body closes the NITRO WM SDK session over arm7.bin, which this repo does not decompile.
 void func_02040724(void) {
     const port::CommsTransport *t = port::comms_transport();
-    if (t) { t->close(); return; }
+    if (t) { t->close(); port::comms_publish_link_words(); return; }
     port::g_solo_state = port::kCommsIdle;
     port::g_solo_slot = 0;
+    port::comms_publish_link_words();
 }
 
+#endif  // PORT_COMMS_SEAM_PROBE_FACES_W4
+
 // ===========================================================================
-// THE NEXT TWO ARE CLOSABLE, AND THIS LANE DID NOT CLOSE THEM.
+// THE NEXT TWO WERE CLOSABLE, AND RUNG W0 CLOSED THEM.
+//
+// Run link100, lane WM1. The note below is lane DF40's, kept because it is the
+// argument this rung was taken on and because it named the one cost that had to
+// be paid -- and the answer to that cost is in comms_publish_link_words above.
+// Both host bodies are GONE. src/func_02040714.c and src/func_02040704.c are
+// linked by port/slice_wm1.txt, data_020a0f24 is hosted at the foot of this
+// file, and the two words are published by the seam at every point a transport
+// can have changed its mind. DF40's ruling that "the decision belongs to the
+// conductor lane" is what WM1 was spawned to make.
+//
+// DF40 named the exact hazard -- "a mirror that misses an update expires the
+// ROM's wait bound and drops a live session to solo" -- and it is real: the
+// ROM's case-2 arm calls nothing at all. The answer is three-layered and all of
+// it is in comms_publish_link_words' banner: the faces publish, the exchange
+// face publishes once per turn of a live session's wait, and a chained pump
+// publishes once per turn of ANY wait, which is what covers case 2.
+//
+// ---- DF40's note, verbatim ------------------------------------------------
 // (run link100, lane DF40; the census that found them is in
 // port/slice_gate221.txt.)
 //
@@ -243,31 +446,29 @@ void func_02040724(void) {
 // FROZEN, and a mirror that misses an update expires the ROM's wait bound and
 // drops a live session to solo. Two matched TUs, one contract decision, a
 // 2-player and a 4-player proof; the decision belongs to the conductor lane.
+// ---- end of DF40's note ---------------------------------------------------
+//
+// AND THE ARGUMENT MISMATCH IS SAFE, which is the other half of the seat.
+// src/func_02040704.c is `int func_02040704(void)`. Two callers pass it one
+// argument anyway -- src/func_0203ea5c.c:252 (`func_02040704(temp_r0_5)`, a
+// dead r0 write the DS callee overwrites) and hal/comms_conductor.cpp:1176
+// (`func_02040704(0)`, written against the retired host face). This binary is
+// 32-bit x86 (PE32, machine 0x014c) and both are extern "C" __cdecl: the map
+// names the symbol _func_02040704, a leading underscore with NO @N suffix,
+// which is __cdecl and not __stdcall. Under __cdecl the CALLER pops what it
+// pushed, so a zero-parameter callee reached through a one-parameter
+// declaration leaves the stack exactly where it found it. It is not the
+// __fastcall arity hazard this port has been bitten by (that one smashes the
+// frame because the receiver rides in a register); and had this been __stdcall
+// the same mismatch would have been a LOUD link error, @0 against @4, rather
+// than a silent leak. So no call site had to change.
 // ===========================================================================
-
-// src/func_02040714.c is `return data_020a0f94`, the link state.
-// PORT_HOST_ABI: hosted WM/radio seam face; the seam, not the ROM's own word, is where this port keeps the link state -- see the CLOSABLE note directly above, which is the ruling this tag stands on.
-int func_02040714(void) {
-    const port::CommsTransport *t = port::comms_transport();
-    return t ? t->state() : port::g_solo_state;
-}
-
-// src/func_02040704.c is `return data_020a0f24`, my slot index.
-// THE ROM'S CALLER PASSES AN ARGUMENT IT DOES NOT DECLARE:
-// src/func_0203ea5c.c:252 is `data_020a0f10 = func_02040704(temp_r0_5)`, which
-// on ARM is a dead r0 write the callee overwrites. Declared with the argument
-// here so a stack ABI agrees with the ROM's own call sites.
-// PORT_HOST_ABI: hosted WM/radio seam face plus a register ride-through; the ROM caller passes a dead r0 the callee overwrites, declared as an argument so the host stack ABI matches the ROM call sites, and the seam keeps the slot index the ROM keeps in data_020a0f24 -- see the CLOSABLE note above func_02040714.
-int func_02040704(int ignored) {
-    (void)ignored;
-    const port::CommsTransport *t = port::comms_transport();
-    return t ? t->slot() : port::g_solo_slot;
-}
 
 // src/func_020406b4.c: hands the staged block to func_02062df0 (the WM send)
 // and reports back through data_020a0f80. Returns 1 when the round is in.
 // PORT_HOST_ABI: hosted WM/radio seam face; the ROM body hands the staged block to the NITRO WM send over arm7.bin, which this repo does not decompile.
 int func_020406b4(const void *block, unsigned short *status) {
+    port::comms_arm7_turn();
     ++port::g_exchanges;
     const port::CommsTransport *t = port::comms_transport();
     if (!t) {
@@ -275,7 +476,25 @@ int func_020406b4(const void *block, unsigned short *status) {
         return 0;               // no partners: the round never completes
     }
     const int done = t->exchange(block, status);
-    if (done) ++port::g_rounds;
+    if (done) {
+        ++port::g_rounds;
+        // RUNG W2. The round is in, so the ROM's own MP receive buffer is
+        // filled from it BEFORE the caller asks for a peer's block: this face
+        // and func_0204068c are called back to back by the ROM's own wait
+        // (src/func_0203ea5c.c:223 then :255/:289), and as of this rung that
+        // second call is the cartridge's own unpacker reading what the line
+        // below wrote. hal/wm_arm7.cpp's own banner carries the layout and the
+        // src lines that fix every field of it.
+#ifndef PORT_COMMS_SEAM_PROBE_FACE_020408B0
+        port_wm_publish_mp_recv();
+#endif
+    }
+    // W0. This is the one seam face the ROM calls on EVERY turn of its own wait
+    // loop while the link is up (src/func_0203ea5c.c:223 and :236), so it is
+    // what keeps data_020a0f94 and data_020a0f24 from going stale during a live
+    // session -- and :223 runs before :252, so the slot the ROM seats into
+    // data_020a0f10 was published in the same invocation that read it.
+    port::comms_publish_link_words();
     return done;
 }
 
@@ -296,6 +515,31 @@ extern "C" void port_comms_counters_set(unsigned long long exchanges,
     port::g_rounds = rounds;
 }
 
+// ===========================================================================
+// RETIRED BY RUNG W2 (run link100, lane WM4). src/func_0204068c.c is linked by
+// port/slice_wm4.txt and it is the ROM's own two-line body: it hands
+// data_020a0f74 and data_020a0f80 to src/func_02062778.c, which refuses an aid
+// whose bit is clear in the receive buffer's liveness mask and otherwise steps
+// src/func_02062734.c's packed offset into it. hal/wm_arm7.cpp fills that
+// buffer from the carrier's completed round, in exactly that layout, from the
+// call added to func_020406b4 above.
+//
+// WHAT THE HOST BODY DID AND WHERE IT WENT. It asked the transport for the
+// block directly, which is the same bytes by a shorter road: the seam's frozen
+// contract already says the wire IS the ROM's 0x20-byte block, moved and never
+// reinterpreted. The shorter road is what this rung gives back -- the game now
+// reads a peer through the cartridge's own unpacker and the cartridge's own
+// buffer, and the only thing the host supplies is what arm7.bin supplies on
+// hardware, which is the bytes in the buffer.
+//
+// THE PROBE KEEPS IT. tests/mp_comms_seam.cpp:155-156 checks that
+// func_0204068c answers null for aids 0 and 1 with no transport installed, and
+// it links neither the WM unpacker nor the host ARM7 that fills the buffer, so
+// it keeps the retired stand-in under a define of its own -- the same shape as
+// PORT_COMMS_SEAM_PROBE_FACE_020408B0 (rung W1) and
+// PORT_COMMS_SEAM_PROBE_FACES_W4 (rung W4) above it.
+// ===========================================================================
+#ifdef PORT_COMMS_SEAM_PROBE_FACE_0204068C
 // src/func_0204068c.c: player `aid`'s received block, or 0.
 // PORT_HOST_ABI: hosted WM/radio seam face; returns a peer's received block out of the NITRO WM buffers over arm7.bin, which this repo does not decompile.
 const void *func_0204068c(unsigned short aid) {
@@ -304,23 +548,51 @@ const void *func_0204068c(unsigned short aid) {
     if ((int)aid >= port::kCommsMaxPlayers) return nullptr;
     return t->peer_block((int)aid);
 }
+#endif  // PORT_COMMS_SEAM_PROBE_FACE_0204068C
 
-// src/func_02040c34.c: starts the DS's wireless THREAD with two callbacks,
-// which are the ROM's own src/func_0203f644.c and src/func_0203f604.c. A host
-// transport has no thread to start -- it is polled from the seam's own pump,
-// which EXISTS as of run mg16 lane MP3: hal/comms_conductor.cpp installs it on
-// hal/os_thread.h's hook and the ROM's own wait sleeps through it, so poll()
-// runs once per turn of src/func_0203ea5c.c's real wait loop. HOLE 1 is CLOSED
-// in the frozen contract at the top of comms_seam.h. The annotation that stood
-// here said no such pump existed; that was true when it was written and is not
-// now. So this records the request and returns. The callbacks are deliberately NOT
-// invoked: on the DS they run in the wireless thread's context and mutate the
-// same state the poll path does, so calling them from here would double-apply
-// it. A transport that wants them driven does it from poll().
-// PORT_HOST_ABI: hosted WM/radio seam face; the ROM body starts the DS wireless thread in the NITRO WM SDK over arm7.bin, which this repo does not decompile; the host is polled from the seam pump instead.
-void func_02040c34(int role, int b, void *cb_recv, void *cb_send, int e) {
-    (void)role; (void)b; (void)cb_recv; (void)cb_send; (void)e;
-}
+// ===========================================================================
+// RUNG W6 RETIRES src/func_02040c34.c: THE CARTRIDGE STARTS ITS OWN THREAD.
+// Run link100, lane WM5.
+//
+// The stand-in below said "a host transport has no thread to start". That was
+// true when it was written and it is not now. hal/boot2_thread.cpp adopts any
+// record src/func_02058200.c creates onto a Windows fiber (gate 223, run
+// link100, lane THREAD), and lanes NITROFS and LOADOV wrote the eight
+// cartridge-header words at 0x027FFE40..0x027FFE5C that src/func_020424c0.c
+// reads. So the ROM's own body runs: it fills the 0x440 control block at
+// data_020a1fc0, registers the WM port callback through func_02061c88, calls
+// func_0205d89c for the header mirror, carves three 0xcc0-byte work nodes with
+// FS_InitFile on each, and on the parent arm hands src/func_02042254.c to
+// src/func_02058200.c as the SECOND created thread, which enters and parks in
+// the ROM's own OS_SleepThread. hal/wm_thread.cpp carries the storage, the
+// four faces into the band that rung refuses, and the census that measures it.
+//
+// THE CALLBACKS ARE STILL NOT INVOKED FROM HERE, and now they are not invoked
+// from here BY THE CARTRIDGE: src/func_02040c34.c stores them at
+// data_020a1fc0 + 0x10 and + 0x14 and the wireless thread is what would run
+// them. The old note's reasoning ("calling them from here would double-apply
+// it") is therefore retired rather than contradicted.
+//
+// TWO TARGETS KEEP THE STAND-IN, and they get it from a file of their own
+// rather than from a define here. tests/mp_comms_seam.cpp links this file
+// without the WM command layer, without a heap and without the host ARM7. AND
+// SO DOES smoke_player, for a reason that is not a choice: src/func_02042254.c
+// and src/func_020424c0.c both call func_0205d5e8, which is on
+// port/slice_gate214.txt, and that slice goes to walk_window and
+// walk_window_hires only -- smoke_player has never carried the boot spine. So
+// rung W6 goes to those two targets and the other two link
+// hal/wm_thread_face.cpp, which carries the retired body and the storage.
+// A DEFINE COULD NOT HAVE DONE IT: this file is compiled ONCE for all three big
+// targets (SLICE_COMMS_SOURCES rides the sharing block), so a per-target define
+// on smoke_player would have changed walk_window's object too. That is the one
+// way rung W6's retirement differs in shape from W1's, W2's and W4's, all three
+// of which retired a body the probe alone had to keep.
+// ===========================================================================
+// (The retired body itself is in hal/wm_thread_face.cpp, which is what the
+// two targets that do not link this rung compile instead. It is not kept here
+// behind a define because hal/comms_seam.cpp is compiled ONCE for all three big
+// targets -- SLICE_COMMS_SOURCES rides the sharing block -- so a per-target
+// define cannot keep the body in smoke_player and drop it from walk_window.)
 
 // THE STATUS-WORD PAIR IS RETIRED (run link100, lane DF40).
 //
@@ -365,9 +637,184 @@ void func_02040c34(int role, int b, void *cb_recv, void *cb_send, int e) {
 // the tree uses ($ymp3* included: "ymp3" < "ywm" at the second character) and
 // before the $zzz high sentinel, so the captured span grows at its tail and
 // NOT ONE existing hosted global moves.
-#pragma section(".dsstate$ywm", read, write)
-__declspec(allocate(".dsstate$ywm")) __declspec(align(4))
-unsigned char data_020a3fc0[0xB80] = {0};
+//
+// AND THE STORAGE MOVED IN RUNG W6 (run link100, lane WM5), because the sweep
+// above is correct and its conclusion was not. A relocation sweep cannot see
+// POINTER ARITHMETIC, and src/func_02040c34.c reaches these bytes with it:
+// 0x02040CF8 is `add fp, sl, #0x440` off data_020a1fc0, and the third of the
+// three 0xcc0-byte work nodes it carves runs from data_020a1fc0 + 0x1e80 to
+// + 0x2b40 -- straight through this object. So data_020a3fc0 is the tail of a
+// contiguous 0x2b80-byte band that starts at data_020a1fc0, and it is defined
+// in hal/wm_thread.cpp with the four names between them. Nothing the two
+// accessors do can observe the move: they read and write one word of it and
+// reach it by relocation.
+//
+// The two targets that do not link rung W6 keep the standalone definition for
+// the same reason they keep the face: neither links hal/wm_thread.cpp, where
+// the band is, and mp_comms_seam does not link hal/comms_conductor.cpp either,
+// so the band's head is not there to sit behind. src/func_02040a5c.c and
+// src/func_02040a84.c are on port/slice_gate221.txt, which all three real
+// targets carry, so the definition has to exist in both shapes.
+// (The standalone definition moved to hal/wm_thread_face.cpp with the face
+// above, for the same one-shared-object reason.)
+
+// THE LINK STATE, rung W0's first global. Run link100, lane WM1.
+//
+// src/func_02040714.c is `return data_020a0f94` and it is LINKED now. The word
+// lived in hal/comms_conductor.cpp's MP3_BSS run until this rung. It moved here
+// because this file is what publishes it, and because the mp_comms_seam probe
+// links this file WITHOUT linking the conductor -- a word the seam now
+// references unconditionally has to live where the seam lives, and that is what
+// turned the move from tidy into necessary.
+//
+// THE MOVE IS ADDRESS-NEUTRAL BY CONSTRUCTION: same section name, same size,
+// same align(1), and ".dsstate$ymp3s0007" has exactly one contribution either
+// way, so the linker puts it at the byte it put it at before. That matters more
+// here than it usually would -- hosted DS globals reach the geometry stream as
+// pointer VALUES, so a shifted global is a changed pixel, and the battery's 51
+// level and 36 scene BMP rows are what checks it.
+#pragma section(".dsstate$ymp3s0007", read, write)
+__declspec(allocate(".dsstate$ymp3s0007")) __declspec(align(1))
+unsigned char data_020a0f94[4] = {0};
+
+// MY SLOT (the aid), rung W0's other global. Run link100, lane WM1.
+//
+// src/func_02040704.c is `return data_020a0f24` and it is LINKED now, so the
+// word needs a home. It is DS BSS like everything else in this bracket, and it
+// gets its OWN suffix for the same reason data_020a3fc0 above got one: ".dsstate$ywmb"
+// sorts after "$ywm" (fourth character, "" < "b") and before the "$zzz" high
+// sentinel, so the captured span grows AT ITS TAIL and neither data_020a3fc0
+// nor one single global that came before it moves one byte. That is what keeps
+// every BMP baseline in this tree comparable across this commit -- some hosted
+// DS data reaches the geometry stream as a POINTER VALUE, so a shifted global
+// is a changed pixel (port/tools/battery.py's own header measures it).
+//
+// SIZED BY ROM SPAN, four bytes: config/arm9/symbols.txt puts data_020a0f24 at
+// 0x020a0f24 and the next symbol, data_020a0f28, at 0x020a0f28. Every ROM
+// writer touches only the low halfword (src/func_020408b0.c:27,
+// src/func_02040014.c, src/func_020402a0.c, src/func_0203fec4.c:23) and
+// src/func_02040704.c reads it as one -- but the span is what gets hosted, not
+// the width of the first field that reads it. That is the undersized-global
+// trap this file's data_020a3fc0 note and hal/auto_bss.cpp's data_0209d3c4 note
+// both name.
+#pragma section(".dsstate$ywmb", read, write)
+__declspec(allocate(".dsstate$ywmb")) __declspec(align(4))
+unsigned char data_020a0f24[4] = {0};
+
+// ===========================================================================
+// RUNG W1'S STORAGE: NINETEEN DS GLOBALS THE WM CHAIN NAMES AND NOTHING HOSTED.
+//
+// Run link100, lane WM2. src/func_020408b0.c, src/func_020616e8.c (WM_Init),
+// src/func_02061188.c (the channel-0xa reply dispatcher) and the nine TUs behind
+// them are LINKED now, and between them they name twenty-three DS bss symbols.
+// Four were already hosted -- data_020a0f28 and data_020a0f2c in
+// hal/comms_conductor.cpp's MP3_BSS run, data_020a0f94 and data_020a0f24 at the
+// foot of this file from rung W0 -- and they stay exactly where they are. The
+// other nineteen are here.
+//
+// NINETEEN, NOT SIXTEEN. The rung's brief named sixteen. The closure names
+// three more, and they are not optional: src/func_02061188.c reaches
+// data_020a89c4 (the ten-entry command-buffer ring func_02058894 indexes),
+// data_020a89ec (the synthesised 0x82 port-recv message) and data_020a8a00
+// (that message's own +0x14 field, see the pair note below). Measured with
+// port/tools/closure.py over the twelve TUs before anything was written:
+// nineteen unresolved externals, exactly this list.
+//
+// EVERY SPAN IS THE ROM'S. Sizes are the distance to the next symbol in
+// config/arm9/symbols.txt, never the width of the first field that reads one --
+// that is the undersized-hosted-global trap this file's data_020a3fc0 note and
+// hal/auto_bss.cpp's data_0209d3c4 note both name, and hal/boot2_ipc.cpp's
+// data_020a8138 note names the interior-address half of it.
+//
+//   data_020a0f14  4     the wireless MODE the ROM was opened with; :25 of
+//                        src/func_020408b0.c writes it FIRST, which is what
+//                        lets hal/boot2_ipc.cpp read it at the claim
+//   data_020a0f44  4     0x40 scratch, Memory::Allocate
+//   data_020a0f48  4     0x20 scratch
+//   data_020a0f4c  4     THE 0x1300 WM WORK BUFFER, handed to WM_Init
+//   data_020a0f54  4     0xc0 multiboot parameter block (func_020672d0's thiz)
+//   data_020a0f58  4     0x220, the size beside data_020a0f60
+//   data_020a0f60  4     0x220 buffer
+//   data_020a0f64  4     0x480, the size beside data_020a0f68
+//   data_020a0f68  4     0x480 buffer
+//   data_020a0f74  4     0x420 buffer (the send side W2 wants)
+//   data_020a0f80  4     0x100 MP RECEIVE buffer (the one W2/W3 fill)
+//   data_020a1064  64    0x020a1064..0x020a10a4; :47 writes the halfword at +0x30
+//   data_020a89a8  4     WM_Init's "already initialised" guard, func_0206152c
+//   data_020a89ac  4     the work-buffer POINTER; WM_GetSystemWork returns it
+//   data_020a89b0  20    the command-buffer queue head (func_02058940's struct)
+//   data_020a89c4  40    that queue's ten int slots; count 0xa x 4 = 0x28 exactly
+//   data_020a89ec  20    the synthesised port-recv message
+//   data_020a8a00  64    its +0x14 field, and 0x40 of ROM span
+//   data_020a8a40  2560  the ten 0x100 command buffers WM_Init enqueues
+//
+// THE ONE PAIR THAT MUST COME OUT IN ROM ORDER: data_020a89ec and
+// data_020a8a00. src/func_02061188.c declares the message as a 0x20-byte struct
+// at data_020a89ec and writes its +0x1a and +0x1c fields, while the SAME
+// function copies six halfwords to &data_020a8a00 -- and 0x020a8a00 is
+// 0x020a89ec + 0x14. So on the DS these are ONE object with two names, exactly
+// the shape hal/cxx_aliases.cpp's GX bank band and hal/boot2_ipc.cpp's
+// data_020a8138/data_020a813c pair describe. Hosted apart at arbitrary
+// addresses, the struct's +0x1a and +0x1c stores would land past the end of a
+// 20-byte object and the MultiCopyHalf would land somewhere else again.
+// The remedy is the tree's own: numbered grouped sections in ROM order, so the
+// linker lays the run out contiguously and +0x14 of the first IS the second.
+// port/tools/gxband_guard.py is the guard that exists for this class; the pair
+// is not a declared band there because it is not one of that tool's two, and
+// adding one is a change to a file this lane does not own.
+//
+// AND THE WHOLE RUN SORTS PAST EVERY EXISTING SUFFIX. ".dsstate$ywmc00" and up
+// sort after ".dsstate$ywmb" (fifth character, "" < "c") and before the "$zzz"
+// high sentinel, so the captured save-state span grows AT ITS TAIL and NOT ONE
+// existing hosted global moves one byte. That is what keeps every BMP baseline
+// in this tree comparable across this commit -- some hosted DS data reaches the
+// geometry stream as a POINTER VALUE, so a shifted global is a changed pixel
+// (port/tools/battery.py's own header measures it). port/tools/dsstate_guard.py
+// reads the low bound back: it must be the number it was, with the count
+// nineteen higher.
+//
+// ALL OF IT IS REAL DS STATE, so all of it is inside the save-state bracket.
+// The work-buffer pointer decides where every WM reply is read from; a restore
+// that rolled the world back and left these holding the pre-save heap addresses
+// is precisely the bug hal/dsstate_seg.h exists for.
+#define WMBSS(sec, name, size, algn)                              \
+    __pragma(section(sec, read, write))                           \
+    extern "C" __declspec(allocate(sec)) __declspec(align(algn))  \
+    unsigned char name[size] = {0}
+
+WMBSS(".dsstate$ywmc00", data_020a0f14, 4, 4);
+WMBSS(".dsstate$ywmc01", data_020a0f44, 4, 4);
+WMBSS(".dsstate$ywmc02", data_020a0f48, 4, 4);
+WMBSS(".dsstate$ywmc03", data_020a0f4c, 4, 4);
+WMBSS(".dsstate$ywmc04", data_020a0f54, 4, 4);
+WMBSS(".dsstate$ywmc05", data_020a0f58, 4, 4);
+WMBSS(".dsstate$ywmc06", data_020a0f60, 4, 4);
+WMBSS(".dsstate$ywmc07", data_020a0f64, 4, 4);
+WMBSS(".dsstate$ywmc08", data_020a0f68, 4, 4);
+WMBSS(".dsstate$ywmc09", data_020a0f74, 4, 4);
+WMBSS(".dsstate$ywmc10", data_020a0f80, 4, 4);
+WMBSS(".dsstate$ywmc11", data_020a1064, 64, 4);
+WMBSS(".dsstate$ywmc12", data_020a89a8, 4, 4);
+WMBSS(".dsstate$ywmc13", data_020a89ac, 4, 4);
+WMBSS(".dsstate$ywmc14", data_020a89b0, 20, 4);
+WMBSS(".dsstate$ywmc15", data_020a89c4, 40, 4);
+// The pair. align(4) on both and the sizes are the ROM's, so data_020a8a00
+// lands at data_020a89ec + 0x14 and the 0x20-byte message struct at the first
+// name reaches its last field inside the second's storage, as it does on the DS.
+WMBSS(".dsstate$ywmc16", data_020a89ec, 20, 4);
+WMBSS(".dsstate$ywmc17", data_020a8a00, 64, 4);
+WMBSS(".dsstate$ywmc18", data_020a8a40, 2560, 4);
+
+#undef WMBSS
+
+// Reads the pair's layout back, the way port_gxbank_layout_check does for the
+// GX band. Nonzero when data_020a8a00 came out at data_020a89ec + 0x14, which
+// is the precondition for src/func_02061188.c's synthesised message being one
+// object rather than two. Called from comms_arm7_turn's first turn.
+extern "C" int port_wm_message_layout_check(void)
+{
+    return (int)(data_020a8a00 - data_020a89ec) == 0x14;
+}
 
 // src/func_0203e20c.c: DS DOWNLOAD PLAY, an eight-state multiboot server that
 // feeds the game to three other consoles over the radio. A PC port with a

@@ -99,109 +99,12 @@ void _ZN9Animation7AdvanceEv(void *self);
 void func_ov090_021310b4(void *c);
 extern signed char data_0209f2f8;
 
-/* PORT_HOST_ABI: mwcc pointer-to-member through an incomplete class (the
- * record-1 tick dispatch); everything else is the matched source verbatim. */
-int _ZN7Skeeter8BehaviorEv(void *self)
-{
-    char *c = (char *)self;
-
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, c + 0x150)) {
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        if (*(u8 *)(c + 0x107) != 0 && *(u16 *)(c + 0x104) == 0)
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
-        func_ov090_02131e50(c);
-        return 1;
-    }
-
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, c + 0x150, c + 0x30c, 3))
-        return 1;
-
-    if (*(s32 *)(c + 0x10c) != 0) {
-        func_02035684((int *)(c + 0x150), 0xd2000);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 0);
-        if (_ZN5Enemy11UpdateDeathER12WithMeshClsn(c, c + 0x150))
-            return 1;
-        func_ov090_02131378(c);
-        func_ov090_02131e50(c);
-        if (*(s32 *)(c + 0x10c) == 0)
-            _ZN5Actor8PoofDustEv(c);
-        if (*(u8 *)(c + 0x3a1) == 3) {
-            _Z14ApproachLinearRsss((s16 *)(c + 0x8c), -32767, 0x500);
-            if (AngleDiff(*(s16 *)(c + 0x8c), -32767) < 0x1000) {
-                s16 *p8e = (s16 *)(((int)c + 0x8e));
-                *p8e += 0x1000;
-            }
-        }
-        if (*(s32 *)(c + 0x10c) != 1 && *(s32 *)(c + 0x60) <= *(s32 *)(c + 0x3ac)) {
-            SkVec3 v;
-            v.x = *(s32 *)(c + 0x5c);
-            v.y = *(s32 *)(c + 0x60);
-            v.z = *(s32 *)(c + 0x64);
-            _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, *(u8 *)(c + 0x10a) + 1, 0xa000, 0);
-            _ZN5Actor8PoofDustEv(c);
-            _ZN5Actor24KillAndTrackInDeathTableEv(c);
-        }
-        return 1;
-    }
-
-    {
-    int flag = (*(s32 *)(c + 0xb0) & 8) != 0;
-    if (flag) {
-        *(s32 *)(c + 0x98) = 0;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-        func_ov090_02131378(c);
-        if (data_0209f2f8 == 0x15 && *(signed char *)(c + 0xcc) == 1) {
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 2);
-            if (func_02035638((u8 *)(c + 0x150))) {
-                *(s32 *)(c + 0x9c) = 0;
-                *(s32 *)(c + 0xa4) = 0;
-                *(s32 *)(c + 0xa8) = 0;
-                *(s32 *)(c + 0xac) = 0;
-                *(s32 *)(c + 0x10c) = 1;
-                func_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
-                return 1;
-            }
-        }
-        return 1;
-    }
-    }
-
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-    func_ov090_02131378(c);
-    DecIfAbove0_Short((u16 *)(c + 0x100));
-    DecIfAbove0_Short((u16 *)(c + 0x394));
-    DecIfAbove0_Short((u16 *)(c + 0x396));
-    DecIfAbove0_Short((u16 *)(c + 0x398));
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 2);
-    if (*(s32 *)(c + 0x60) <= *(s32 *)(c + 0x3ac))
-        *(s32 *)(c + 0x60) = *(s32 *)(c + 0x3ac);
-    if (data_0209f2f8 == 0x15 && *(signed char *)(c + 0xcc) == 1 && func_02035638((u8 *)(c + 0x150))) {
-        *(s32 *)(c + 0x9c) = 0;
-        *(s32 *)(c + 0xa4) = 0;
-        *(s32 *)(c + 0xa8) = 0;
-        *(s32 *)(c + 0xac) = 0;
-        *(s32 *)(c + 0x10c) = 1;
-        func_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
-        return 1;
-    }
-
-    {
-        PortOv090Pmf *n = *(PortOv090Pmf **)(c + 0x370);
-        if (n[1].fn)
-            ((PortOv090StateFn)(size_t)n[1].fn)(c);
-    }
-    *(s16 *)(c + 0x8e) = *(s16 *)(c + 0x94);
-    *(s32 *)(c + 0x368) = *(s32 *)(c + 0x3a4);
-    _ZN9Animation7AdvanceEv(c + 0x35c);
-    func_ov090_02131e50(c);
-    func_ov090_021310b4(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    {
-        void *p = _ZN5Actor13ClosestPlayerEv(c);
-        if (p != 0 && *(u8 *)((char *)p + 0x6fb) == 0)
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    }
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN7Skeeter8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 }  /* extern "C" */

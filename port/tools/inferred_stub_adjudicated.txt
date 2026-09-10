@@ -2395,3 +2395,22 @@ func_ov100_02145550  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered
 # ov102 -- 1 bodies
 func_ov102_0214d6a0  REAL_DECOMP  runs/link100/out/STUBADJ/verify.txt  recovered name KoopaShell_OnYoshiTryEat; _ZTV7daShl_c slot 18. addr 0x0214d6a0 size 0x14, module ov102. match.py 2004/b56 strict-reloc MATCH: every non-relocated word identical, the body relocates nothing, 0 WRONG-DEST, 0 EXTRA, 0 config reloc missing
 #
+#
+# run link100 lane R3H, 2026-09-09. ONE body, and it was ruled because a seat
+# depended on it: the third member-pointer site in ov075's entry record
+# (0x0211d34c) is dispatched receiver-less by src/func_ov075_0211b418.cpp and
+# that is what makes scene 6 fault under SM64DS_ROM_LOOP. Seating the
+# __fastcall face means naming the body in port/hal, which this guard refuses
+# for a marker file, so the body was ruled first. Disassembled out of
+# extracted/overlays/overlay_0075.bin at the overlays.yaml base 0x02113ee0 --
+# the shipped image, not a dsd export -- and compared instruction for
+# instruction against src/. Evidence, both halves of it, in
+# runs/link100/out/R3H/b1cc_rom_vs_src.txt.
+#
+# NOT CLAIMED AS A BYTE MATCH, and said so rather than left out: a 2004/b56
+# recompile of the src body comes out 0x98 against the ROM's 0x94, one
+# instruction longer, so tools/match.py reports no match. The ruling is the
+# w16 standard -- no constant, offset, branch target or control-flow decision
+# differs -- and the residue is codegen.
+func_ov075_0211b1cc  REAL_DECOMP  runs/link100/out/R3H/b1cc_rom_vs_src.txt  recovered name dScEntry_c_OnYoshiTryEat (the NAME is still unverified; the BODY is what was ruled). 36 ARM instructions 0x0211b1cc..0x0211b258 plus the pool word 0x1111 at 0x0211b25c, mapping 1:1 onto the twelve C statements: DecIfAbove0_Short(c+0xa2) at 0x0203adbc with the early return; the ldrh count at +0xa4 driving a blt loop with stride 0x18 over [c+0x80]; func_ov075_0211addc(c, e[+0xc]) stored to e[+8]; func_ov075_0211abb0(c); func_ov075_0211ad60(c); ldrsh/strh at +0xa0 with the literal 0x1111. Every offset, call target and literal present and identical; ldrh/ldrsh widths agree with include/dScEntry_c.h u16 unk_0a4 / s16 unk_0a0. Recompile is one instruction longer (0x98 vs 0x94): codegen, not semantics
+#
