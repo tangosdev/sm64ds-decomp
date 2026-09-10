@@ -35,18 +35,18 @@ extern s32 data_020a0db0;
 extern u8 data_0209caa0[];
 extern Matrix4x3 data_020a0e68;
 extern void *_ZN3OAM7NUMBERSE[];
-extern u8 data_ov000_020ab938;
-extern u8 data_ov000_020ab940;
-extern void *data_ov000_020abb18[];
-extern u8 data_ov000_020abd78;
-extern u8 data_ov000_020abd80;
-extern u8 data_ov000_020abb34;
-extern u8 data_ov000_020abb54;
-extern u8 data_ov000_020abb74;
-extern u8 data_ov000_020abb94;
-extern void *data_ov000_020abcb4[];
-extern u8 data_ov000_020abbb4;
-extern u8 data_ov000_020abbf4;
+extern u8 data_ov001_020ab938;
+extern u8 data_ov001_020ab940;
+extern void *data_ov001_020abb18[];
+extern u8 data_ov001_020abd78;
+extern u8 data_ov001_020abd80;
+extern u8 data_ov001_020abb34;
+extern u8 data_ov001_020abb54;
+extern u8 data_ov001_020abb74;
+extern u8 data_ov001_020abb94;
+extern void *data_ov001_020abcb4[];
+extern u8 data_ov001_020abbb4;
+extern u8 data_ov001_020abbf4;
 }
 
 #define FB(p, o) (*(u8 *)((u8 *)(p) + (o)))
@@ -104,22 +104,22 @@ s32 dScStarSel_c::Render()
         for (i = 0; i < FB(this, 0x114); i++) {
             if ((FB(this, 0x131) >> i) & 1) {
                 if (i == FB(this, 0x115)) {
-                    _ZN3OAM9RenderSubEP7OamAttrii(&data_ov000_020ab938, FB((u8 *)this + i, 0x11a), 0x18);
+                    _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020ab938, FB((u8 *)this + i, 0x11a), 0x18);
                 } else {
-                    _ZN3OAM9RenderSubEP7OamAttrii(&data_ov000_020ab940, FB((u8 *)this + i, 0x11a), 0x18);
+                    _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020ab940, FB((u8 *)this + i, 0x11a), 0x18);
                 }
             }
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, data_ov000_020abb18[i], FB((u8 *)this + i, 0x11a), 8, -1, -1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, data_ov001_020abb18[i], FB((u8 *)this + i, 0x11a), 8, -1, -1, 0);
         }
 
         if (FB(this, 0x135) != 0) {
             if (FB(this, 0x133) == 0) {
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov000_020abd78, FB((u8 *)this + FB(this, 0x115), 0x11a), 6);
+                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abd78, FB((u8 *)this + FB(this, 0x115), 0x11a), 6);
             } else if (FB(this, 0x133) == 1) {
                 u8 *sel = (u8 *)this + func_ov003_020adf50((char *)this);
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov000_020abd80, FB(sel, 0x124) - 0x24, FB(sel, 0x128) - 8);
+                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abd80, FB(sel, 0x124) - 0x24, FB(sel, 0x128) - 8);
             } else {
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov000_020abd80, 0x50, FB(this, 0x12b) + 8);
+                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abd80, 0x50, FB(this, 0x12b) + 8);
             }
         }
 
@@ -170,16 +170,16 @@ s32 dScStarSel_c::Render()
 
         switch (data_0209caa0[0x41]) {
         case 0:
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov000_020abb34, 0x80, FB(this, 0x12b), -1, -1, FW(this, 0x50), FW(this, 0x54), (u16)FH(this, 0x110), -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov001_020abb34, 0x80, FB(this, 0x12b), -1, -1, FW(this, 0x50), FW(this, 0x54), (u16)FH(this, 0x110), -1);
             break;
         case 1:
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov000_020abb54, 0x80, FB(this, 0x12b), -1, -1, FW(this, 0x50), FW(this, 0x54), (u16)FH(this, 0x110), -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov001_020abb54, 0x80, FB(this, 0x12b), -1, -1, FW(this, 0x50), FW(this, 0x54), (u16)FH(this, 0x110), -1);
             break;
         case 2:
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov000_020abb74, 0x80, FB(this, 0x12b), -1, -1, FW(this, 0x50), FW(this, 0x54), (u16)FH(this, 0x110), -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov001_020abb74, 0x80, FB(this, 0x12b), -1, -1, FW(this, 0x50), FW(this, 0x54), (u16)FH(this, 0x110), -1);
             break;
         case 3:
-            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov000_020abb94, 0x80, FB(this, 0x12b), -1, -1, FW(this, 0x50), FW(this, 0x54), (u16)FH(this, 0x110), -1);
+            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, &data_ov001_020abb94, 0x80, FB(this, 0x12b), -1, -1, FW(this, 0x50), FW(this, 0x54), (u16)FH(this, 0x110), -1);
             for (i = 0; i < 3; i++) {
                 yoff = 0;
                 if (FB(this, 0x132) == i && FB(this, 0x118) != 0) {
@@ -189,18 +189,18 @@ s32 dScStarSel_c::Render()
                     if (FB(this, 0x139) == 2) {
                         if (i == func_ov003_020adf50((char *)this)) {
                             if (FB(this, 0x13a) == 0) {
-                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov000_020abcb4[i + 3], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x58), FW(this, 0x5c), 0, -1);
-                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov000_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x58), FW(this, 0x5c), 0, -1);
+                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov001_020abcb4[i + 3], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x58), FW(this, 0x5c), 0, -1);
+                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov001_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x58), FW(this, 0x5c), 0, -1);
                             } else {
-                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov000_020abcb4[FB((u8 *)this + (i ^ ((i != 0) ? 3 : 0)), 0x12c)], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x58), FW(this, 0x5c), 0, -1);
+                                _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov001_020abcb4[FB((u8 *)this + (i ^ ((i != 0) ? 3 : 0)), 0x12c)], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x58), FW(this, 0x5c), 0, -1);
                             }
                         } else if (FW(this, 0x60) != 0) {
-                            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov000_020abcb4[i + 3], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x60), FW(this, 0x60), 0, -1);
-                            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov000_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x60), FW(this, 0x60), 0, -1);
+                            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov001_020abcb4[i + 3], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x60), FW(this, 0x60), 0, -1);
+                            _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(1, data_ov001_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), FB((u8 *)this + i, 0x128), -1, -1, FW(this, 0x60), FW(this, 0x60), 0, -1);
                         }
                     } else {
-                        _ZN3OAM9RenderSubEP7OamAttrii(data_ov000_020abcb4[i + 3], FB((u8 *)this + i, 0x124), yoff + FB((u8 *)this + i, 0x128));
-                        _ZN3OAM9RenderSubEP7OamAttrii(data_ov000_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), yoff + FB((u8 *)this + i, 0x128));
+                        _ZN3OAM9RenderSubEP7OamAttrii(data_ov001_020abcb4[i + 3], FB((u8 *)this + i, 0x124), yoff + FB((u8 *)this + i, 0x128));
+                        _ZN3OAM9RenderSubEP7OamAttrii(data_ov001_020abcb4[FB((u8 *)this + i, 0x12c)], FB((u8 *)this + i, 0x124), yoff + FB((u8 *)this + i, 0x128));
                     }
                 }
             }
@@ -209,9 +209,9 @@ s32 dScStarSel_c::Render()
 
         if (FB(this, 0x130) <= 1 || data_0209caa0[0x41] != 3) {
             if (SublevelToLevel(data_02092110) <= 0xe) {
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov000_020abbb4, 0x80, (FH(this, 0x10a) >> 8) + 0xa0);
+                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abbb4, 0x80, (FH(this, 0x10a) >> 8) + 0xa0);
             } else {
-                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov000_020abbf4, 0x80, (FH(this, 0x10a) >> 8) + 0xa0);
+                _ZN3OAM9RenderSubEP7OamAttrii(&data_ov001_020abbf4, 0x80, (FH(this, 0x10a) >> 8) + 0xa0);
             }
         }
     }
