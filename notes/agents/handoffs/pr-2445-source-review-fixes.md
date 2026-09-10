@@ -1,3 +1,84 @@
+# Handoff: pr-2445-source-review-fixes, September 10 continuation
+
+This commit resumes `938dd60b7a10e8c88cf5abb4ff9db11f2448895c` in the existing
+`pr-2445-source-review-fixes` task. Session `codex-r2445-0910` read the offered
+verification, preserved SNM-01 as open through rework, and claimed the returned
+`fix` producer stage before editing. Worktree: `C:/tmp/sm64ds-r2445-0910`.
+The same session also claimed `pr2445-ledger-repair-0910` at the same input,
+which separately reserves `symbols/actor_renames.tsv`. Current queue operations
+use the tools in `C:/tmp/sm64ds-review-coord-0910`.
+The queue retains the historical workflow pin and active review-policy pin.
+
+The four changes use interfaces and fields already declared by the real class
+hierarchy:
+
+- `Behavior` calls `mCylinder.Clear()` and `mCylinder.Update()` directly.
+- `InitState2` uses `mVertAccel`, `mTerminalVelocity`, `mFlags`, `mPathNode`,
+  `mHorzSpeed` and `mStateValue`.
+- `InitState4` and `InitState5` use `mFlags` and `mStateValue`.
+
+The constants, operations and return values are preserved. There is no header,
+symbol, manifest policy or ownership change. The source has 630 lines. The
+`tiers.py` RAW_OFFSET expression finds 143 matches, versus 150 in the accepted
+input; this limited regex census is not a completion assessment.
+
+## Findings and remaining ownership
+
+SNM-01 is now fixed: under the separately claimed ledger reservation, both
+`symbols/actor_renames.tsv` rows at ov072 `0x0211fcb0` received the exact
+SetState/Ei/int-versus-enum disclosure specified in the preserved handoff below.
+Only those two why cells changed; all other columns, rows and ordering were
+preserved. The existing declaration, definition and manifest disclosures remain.
+SNM-02 through SNM-05 remain fixed in their original bounded scopes.
+
+This is partial reconstruction under
+https://github.com/tangosdev/sm64ds-decomp/issues/2476. Larger state bodies still
+use raw offsets and external mangled calls; the matrix-copy adapter also remains.
+They are unfinished reconstruction, not established compiler constraints. The
+class retains its compiler-built lifecycle and owned text/data. The issue stays
+open, and this source producer cannot provide independent source acceptance.
+
+## Fresh proof for this source
+
+Every isolated alternative and their combination passed all 29 manifest symbols
+under `2004/b56`, using `build_pin.flags_for` including `-Cpp_exceptions off`.
+There was no failed alternative in this bounded set. Exact sources, patches,
+objects and individual results are retained under `build/typed-probes/`.
+
+The final source was compiled separately. `build/final-proof.py` uses the existing
+production object-isolation and TU policy functions without modifying them:
+
+| Check | Result |
+| --- | --- |
+| Exact per-symbol linkcheck | 29/29 VERIFIED, 3,892 bytes, exact sizes, zero blind bytes and empty diffs |
+| Complete owned data | 188 bytes exact at ov072 `0x02122780..0x0212283c`; all 36 relocations resolve correctly |
+| Complete emitted-object audit | 33 LICENSED outputs, no unlicensed sections or refusals; ROM function order preserved |
+| Raw emitted metadata | 6 VERIFIED, 4 PARTIAL, zero DIFFERS or UNNAMED; partial string extents remain partial |
+| Port references | 423 checked, zero stale |
+| Header-offset helper | 15 fields through `0x38c`, zero mismatches; it does not cover the PMF/scalar tail |
+| Rename-ledger checker | 2,055 mangled/vtable rows agree; 1,532 coined rows outside coverage; SNM-01 is closed by direct inspection of the two added disclosures |
+| Production ROM | exit 0; 11,192/11,192 functions and 26/26 data claims reproduce; 106/106 modules exact; 3 BSS claims cover 172 NOBITS bytes |
+
+The packed 16,777,216-byte ROM has the retail SHA256
+`d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8`.
+The strict scratch baseline still reports nine pre-existing symbol-check errors;
+production reports zero new symbol errors. That nested baseline check remains
+red. The global emitted-data census has 706 verified, 224 partial, four differing
+and 387 unnamed records; this is separate from the exact owned-data/ROM gates.
+
+Final tested source git blob: `4535ffc43944a30161246ec2ba2477fdc97ed830`.
+Final tested source SHA256: `5ed6a6cac15e2e7612f2b55d3d0cbac79971ad64059fab0610111bcb32e5b02e`.
+Reports are retained in `build/final-proof/`, `build/production-rom.json` and
+`build/production-data.json`. Build outputs and private receipts remain ignored.
+Current-main composition needs fresh independent source acceptance and final
+private validation; these producer results do not authorize merging.
+
+## Preserved September 8 handoff
+
+Everything below describes the historical `938dd60` checkpoint, including its
+then-current source counts, prior ownership and previously measured proof.
+The continuation above supersedes its current-work claims without erasing them.
+
 # Handoff: pr-2445-source-review-fixes
 
 This continuation resumes the existing Snowman promotion. The queue records its
