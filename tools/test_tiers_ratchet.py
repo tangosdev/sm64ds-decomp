@@ -246,7 +246,13 @@ class OrphanDestinationSplit(unittest.TestCase):
                 self.SIBLING: self._score(*sibling_fails)}
 
     def _report(self, orphans, moves, tracked=None, scores=None, ownership=None,
-                symbols=None):
+                symbols=None, banked=None):
+        """`banked` defaults to the orphans themselves, which is what a real run holds.
+
+        An orphan is by definition a banked identity, so a baseline that holds exactly
+        the orphans is the smallest honest fixture. Tests that care what a rewrite does
+        to `count` pass a larger one.
+        """
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             TR.report_orphans(orphans, moves,
@@ -254,7 +260,8 @@ class OrphanDestinationSplit(unittest.TestCase):
                               set() if tracked is None else tracked,
                               {} if scores is None else scores,
                               {} if ownership is None else ownership,
-                              self.SYMBOLS if symbols is None else symbols)
+                              self.SYMBOLS if symbols is None else symbols,
+                              set(orphans) if banked is None else banked)
         return out.getvalue()
 
     def _clean_report(self, orphans=None):
@@ -565,6 +572,133 @@ class OrphanDestinationSplit(unittest.TestCase):
         self.assertIn("ORPHANED", reason)
         self.assertIn("src/Legacy.cpp", reason)
         self.assertIn("no promoted TU manifest claims it", reason)
+
+    # ------------------------------------------------------------------ polish round
+
+    @staticmethod
+    def _flat(text):
+        """One line, single-spaced, so an assertion survives a re-wrap.
+
+        Every sentence below is wrapped by hand around interpolated numbers whose
+        width depends on the data. Asserting on the wrapped form would make these
+        tests fail when a figure gains a digit, which is the opposite of what they
+        are for.
+        """
+        return " ".join(text.split())
+
+    def _census_fixture(self):
+        """Three pairs at one failing destination: two pass, one fails.
+
+        Deliberately unlike the real tree, so a figure typed back into the report
+        cannot pass. The report's own population is one orphan per failing class;
+        the CENSUS is over `moves`, which is every promoted pair, orphan or not.
+        """
+        second, third = "src/Second.cpp", "src/Third.cpp"
+        moves = dict(self.KNOWN, **{second: ("ov001/TU", self.DEST),
+                                    third: ("ov001/TU", self.DEST)})
+        symbols = dict(self.SYMBOLS, **{second: "Other", third: "Sym"})
+        scores = self._scores(sibling_fails=(TR.tiers.CRITERIA[0],))
+        return second, moves, symbols, scores
+
+    def test_promotion_census_counts_the_pairs_and_the_destinations(self):
+        """VFY-2543-20: the figures the report quotes have to come from somewhere."""
+        _second, moves, symbols, scores = self._census_fixture()
+
+        census = TR.promotion_census(moves, {self.DEST}, scores, self.OWN, symbols)
+
+        self.assertEqual((census.pairs, census.destinations), (3, 1))
+        self.assertEqual((census.dest_converted, census.dest_failing), (0, 1))
+        self.assertEqual(census.at_failing, 3)
+        self.assertEqual((census.target_passes, census.target_fails), (2, 1))
+        self.assertEqual(census.failing_with_a_passing_target, 1)
+
+        # A destination that passes is not in the pool the report divides up: the two
+        # failing classes exist only under a failing destination.
+        passing = TR.promotion_census(moves, {self.DEST}, self._scores(), self.OWN,
+                                      symbols)
+        self.assertEqual((passing.dest_converted, passing.at_failing), (1, 0))
+
+    def test_the_printed_population_is_computed_from_this_run(self):
+        """VFY-2543-20: 620 / 2,329 / 1,709 / 122 / 129 used to be typed in.
+
+        Three mutants that falsified them left all 69 tests green, because nothing in
+        the tool or the suite compared a printed figure to any data. A number a reader
+        weighs a decision against has to be derived from the same scan the rest of the
+        block is derived from, or it is a claim about a tree that no longer exists.
+        """
+        second, moves, symbols, scores = self._census_fixture()
+
+        flat = self._flat(self._report([self.LEGACY, second], moves, {self.DEST},
+                                       scores, self.OWN, symbols))
+
+        self.assertIn("not quoted from a note: 2 of the 3 banked paths whose "
+                      "destination fails are in this class, over 1 of the 1 failing "
+                      "destinations", flat)
+        self.assertIn("rather than quoted: 1 of the 3 banked paths whose destination "
+                      "fails", flat)
+        for stale in ("620", "2,329", "1,709", "122", "129"):
+            self.assertNotIn(stale, flat)
+
+    def test_the_count_claim_is_keyed_on_whether_the_target_is_already_banked(self):
+        """VFY-2543-21: "leaving `count` unchanged" is wrong by one, and often.
+
+        A rewrite onto a target that is not banked renames one element of the set.
+        A rewrite onto one that IS banked drops the legacy key and inserts nothing --
+        `tu_promote.py:converted_baseline_update` is literally `if target not in
+        converted` -- so the set loses one and `count` falls. Measured on the real
+        tree: 645 of the 2,359 promoted pairs name a target that is banked already,
+        and for one of them the move is 2702 -> 2701. The block claimed one answer
+        for both cases.
+        """
+        fresh = self._flat(self._clean_report())
+        self.assertIn("0 of the 1 target(s) above are banked already", fresh)
+        self.assertIn("moves count 1 -> 1", fresh)
+
+        already = self._flat(self._report([self.LEGACY], self.KNOWN, {self.DEST},
+                                          self._scores(), self.OWN,
+                                          banked={self.LEGACY, self.TARGET}))
+        self.assertIn("1 of the 1 target(s) above are banked already", already)
+        self.assertIn("moves count 2 -> 1", already)
+
+        # The retired sentence must not come back in either arm.
+        for text in (fresh, already):
+            self.assertNotIn("leaving `count` unchanged", text)
+
+    def test_a_carried_symbol_the_manifest_disagrees_with_is_named(self):
+        """VFY-2543-19: two sources answer "which symbol", and one won in silence.
+
+        `rewrite_target()` prefers the symbol CARRIED on the banked identity;
+        `promoted_symbols()` holds the manifest's answer for the same legacy path.
+        Looking the result up in the scan cannot tell them apart -- it proves only
+        that the destination defines the symbol it was handed -- so a rewrite onto the
+        wrong member of the right file passed every check this tool had. Measured on
+        the real tree: 0 of the 651 banked identities carrying a `#symbol` disagree
+        with the manifest, so this is a state a hand rewrite introduces rather than one
+        the tree is in, which is exactly why nothing here can be left to notice it by
+        accident.
+        """
+        carried = f"{self.LEGACY}#Other"          # manifest says Sym, identity says Other
+
+        state, detail, target = TR.target_state(
+            carried, self.DEST, {self.DEST}, self._scores(), self.OWN, self.SYMBOLS)
+
+        self.assertEqual((state, target), ("converted", self.SIBLING))
+        self.assertIn(f"the manifest enrols {self.LEGACY} under Sym, not Other", detail)
+        self.assertIn("cannot say which is right", detail)
+
+        # Agreement is silent: a note on every row would be noise, not a signal.
+        agreed = TR.target_state(f"{self.LEGACY}#Sym", self.DEST, {self.DEST},
+                                 self._scores(), self.OWN, self.SYMBOLS)
+        self.assertNotIn("the manifest enrols", agreed[1])
+
+        # And it reaches the reader, not just the return value.
+        printed = self._report([carried], self.KNOWN, {self.DEST}, self._scores(),
+                               self.OWN)
+        self.assertIn(f"the manifest enrols {self.LEGACY} under Sym, not Other",
+                      printed)
+
+        # The claim that made the silence look deliberate is retired for good.
+        self.assertNotIn("only check that means anything", TR.rewrite_target.__doc__)
 
 
 class SyntheticTree:
