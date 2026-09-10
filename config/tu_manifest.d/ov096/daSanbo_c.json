@@ -460,7 +460,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov096",
       "canonical_address": "0x021379d8",
-      "reason": "This TU defines every virtual daSanbo_c declares -- the ten overrides plus the D1/D0 pair from the inline destructor in include/daSanbo_c.h -- so mwcc anchors the complete 0x84-byte vtable storage here whatever the declaration order. The cartridge keeps it in ov096 .data: the object begins at 0x021379d0 with the offset-to-top and typeinfo words, and symbols.txt names the address point eight bytes later at 0x021379d8, which is the spelling this row must carry and the spelling romdata_check corrects for. ov096 delinks no .data at all, so nothing this entry claims (.text 0x02135700-0x02136db0) reaches those bytes; dsd supplies them from the cartridge and production isolation discards the emitted duplicate. 31 slots."
+      "reason": "This TU defines every virtual daSanbo_c declares -- eight ordinary overrides plus the D1/D0 pair from the inline destructor in include/daSanbo_c.h -- so mwcc anchors the complete 0x84-byte vtable storage here whatever the declaration order. The cartridge keeps it in ov096 .data: the object begins at 0x021379d0 with the offset-to-top and typeinfo words, and symbols.txt names the address point eight bytes later at 0x021379d8, which is the spelling this row must carry and the spelling romdata_check corrects for. ov096 delinks no .data at all, so nothing this entry claims (.text 0x02135700-0x02136db0) reaches those bytes; dsd supplies them from the cartridge and production isolation discards the emitted duplicate. 31 slots."
     },
     {
       "symbol": "_ZTI9daSanbo_c",
