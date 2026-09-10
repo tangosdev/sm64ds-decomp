@@ -1375,6 +1375,42 @@ def _unnamed(module, addr):
     return None
 
 
+_ROM_REPORT_DEFAULT = object()
+
+
+def _rom_report(exact=("arm9",), inexact=(), passed=True):
+    """A head full-ROM report carrying what clause (g) and the summary row read.
+
+    Clause (g) asks the covering module's OWN row, not the headline verdict, so a
+    fixture can hand back a passing build in which one module still differs."""
+    results = ([{"module": m, "exact": True} for m in exact]
+               + [{"module": m, "exact": False} for m in inexact])
+    return {"status": "passed" if passed else "failed",
+            "analysis": {
+                "passed": passed,
+                "moduleFidelity": {
+                    "modulesChecked": len(results),
+                    "modulesExact": sum(1 for r in results if r["exact"]),
+                    "percent": 100.0 if not inexact else 99.0,
+                    "results": results,
+                },
+                "sourceBuild": {"sourceFunctions": 0, "sourceBytes": 0,
+                                "sourceBytesPercent": 0.0},
+            }}
+
+
+def _built(*modules):
+    """A `module_built` oracle: the head ROM build compared these modules and matched.
+
+    Defaults to arm9 because that is the module every fixture here uses. Omit it from a
+    `classify_merge` call and the exception is unavailable -- that is the point of
+    clause (g). The end-to-end negative controls for it are
+    `LiteralPoolThroughBuildReport.test_a_withheld_rom_report_refuses_the_absorption`
+    and `..._a_module_the_rom_build_did_not_reproduce_refuses`."""
+    exact = set(modules) or {"arm9"}
+    return lambda module: module in exact
+
+
 def _names(name):
     """A `named` reader for a tree that has a real name for every address."""
     return lambda module, addr: name
@@ -1407,7 +1443,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         base, head, be, he = self._merge()
         got = VM.classify_merge(base, head, be, he, _compiled(he), _relocs(self.BODY),
                                 _rom({("arm9", self.EPILOGUE): BX_LR}),
-                                _code(BX_LR), _unnamed)
+                                _code(BX_LR), _unnamed, _built())
         self.assertIsNotNone(got)
         self.assertEqual(got["absorbed"], [f"arm9:0x{self.EPILOGUE:08x}"])
         self.assertEqual(got["functionDelta"], -1)
@@ -1419,7 +1455,7 @@ class AbsorbedEpilogue(unittest.TestCase):
             got = VM.classify_merge(base, head, be, he, _compiled(he),
                                     _relocs(self.BODY),
                                     _rom({("arm9", self.EPILOGUE): word}),
-                                    _code(word), _unnamed)
+                                    _code(word), _unnamed, _built())
             self.assertIsNotNone(got, hex(word))
 
     def test_a_record_the_rom_calls_is_still_refused(self):
@@ -1427,31 +1463,31 @@ class AbsorbedEpilogue(unittest.TestCase):
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY, self.EPILOGUE),
-            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed))
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed, _built()))
 
     def test_a_load_of_the_address_counts_as_a_caller(self):
         # A `kind:load` destination is a reference like any other.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.EPILOGUE),
-            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed))
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed, _built()))
 
     def test_without_a_validated_relocation_index_nothing_matched_may_leave(self):
         # (d) again: None is what build_report passes when the index has a defect.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he), None,
                                             _rom({("arm9", self.EPILOGUE): BX_LR}),
-                                            _code(BX_LR), _unnamed))
+                                            _code(BX_LR), _unnamed, _built()))
 
     def test_without_the_rom_image_nothing_matched_may_leave(self):
         # (b) cannot be checked, so it is not assumed.
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he),
                                             _relocs(self.BODY), None,
-                                            _code(BX_LR), _unnamed))
+                                            _code(BX_LR), _unnamed, _built()))
         self.assertIsNone(VM.classify_merge(base, head, be, he, _compiled(he),
                                             _relocs(self.BODY), _rom(),
-                                            _code(BX_LR), _unnamed))
+                                            _code(BX_LR), _unnamed, _built()))
 
     def test_without_code_ownership_nothing_matched_may_leave(self):
         # (f) cannot be checked -- no compiler on this box -- so it is not assumed.
@@ -1459,7 +1495,17 @@ class AbsorbedEpilogue(unittest.TestCase):
         for code in (None, _code(None)):
             self.assertIsNone(VM.classify_merge(
                 base, head, be, he, _compiled(he), _relocs(self.BODY),
-                _rom({("arm9", self.EPILOGUE): BX_LR}), code, _unnamed))
+                _rom({("arm9", self.EPILOGUE): BX_LR}), code, _unnamed, _built()))
+
+    def test_without_a_reproduced_module_nothing_matched_may_leave(self):
+        # (g). No head ROM report at all, and a report that reproduced some OTHER
+        # module: in neither case has anything compared THESE bytes to the cartridge,
+        # so the clause that claims they were byte-compared is not assumed.
+        base, head, be, he = self._merge()
+        for built in (None, _built("ov001")):
+            self.assertIsNone(VM.classify_merge(
+                base, head, be, he, _compiled(he), _relocs(self.BODY),
+                _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed, built))
 
     def test_a_literal_pool_at_the_tail_is_refused(self):
         # (f). `unsigned int f(void) { return 0xe12fff1e; }` compiles under the pinned
@@ -1469,7 +1515,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
             _rom({("arm9", self.EPILOGUE): BX_LR}),
-            _code(BX_LR, instruction=False), _unnamed))
+            _code(BX_LR, instruction=False), _unnamed, _built()))
 
     def test_an_object_that_emits_a_different_word_is_refused(self):
         # (f). The object covers the address with an instruction and it is not the
@@ -1477,7 +1523,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         base, head, be, he = self._merge()
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
-            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(POP_R4_PC), _unnamed))
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(POP_R4_PC), _unnamed, _built()))
 
     def test_a_named_callback_at_the_tail_is_refused(self):
         # (e). Everything else holds -- exact tail, `bx lr` in the ROM, compiled range,
@@ -1499,7 +1545,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
             _rom({("arm9", self.EPILOGUE): 0xE3A00000}),
-            _code(0xE3A00000), _unnamed))
+            _code(0xE3A00000), _unnamed, _built()))
 
     def test_a_conditional_return_is_refused(self):
         # (b). bxeq lr leaves a live fall-through, so the bytes after it are reached.
@@ -1507,7 +1553,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
             _rom({("arm9", self.EPILOGUE): 0x012FFF1E}),
-            _code(0x012FFF1E), _unnamed))
+            _code(0x012FFF1E), _unnamed, _built()))
 
     def test_a_block_load_through_a_register_other_than_sp_is_refused(self):
         # (b). `ldm r0, {pc}` transfers through whatever r0 holds. The bytes do not say.
@@ -1515,7 +1561,7 @@ class AbsorbedEpilogue(unittest.TestCase):
             base, head, be, he = self._merge()
             self.assertIsNone(VM.classify_merge(
                 base, head, be, he, _compiled(he), _relocs(self.BODY),
-                _rom({("arm9", self.EPILOGUE): word}), _code(word), _unnamed),
+                _rom({("arm9", self.EPILOGUE): word}), _code(word), _unnamed, _built()),
                 hex(word))
 
     def test_an_arbitrary_sized_matched_record_at_the_tail_is_refused(self):
@@ -1524,7 +1570,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         base, head, be, he = self._merge(epilogue_size=0x100)
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
-            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed))
+            _rom({("arm9", self.EPILOGUE): BX_LR}), _code(BX_LR), _unnamed, _built()))
 
     def test_a_record_inside_the_range_but_not_at_its_tail_is_refused(self):
         # (a), POSITION alone: the record carries the address placeholder, so (e) has
@@ -1539,7 +1585,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         he = _enr([(self.BODY, self.BODY + 0x54)])
         self.assertIsNone(VM.classify_merge(
             base, head, be, he, _compiled(he), _relocs(self.BODY),
-            _rom({("arm9", self.BODY + 0x20): BX_LR}), _code(BX_LR), _unnamed))
+            _rom({("arm9", self.BODY + 0x20): BX_LR}), _code(BX_LR), _unnamed, _built()))
 
     def test_absorption_still_needs_a_new_compiled_range_over_the_bytes(self):
         # (c) and the merge rule's own evidence: no new range at all.
@@ -1547,7 +1593,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         self.assertIsNone(VM.classify_merge(base, head, be, be, _compiled(be),
                                             _relocs(self.BODY),
                                             _rom({("arm9", self.EPILOGUE): BX_LR}),
-                                            _code(BX_LR), _unnamed))
+                                            _code(BX_LR), _unnamed, _built()))
 
     def test_a_transcription_cannot_absorb_a_matched_record_either(self):
         # (c). The covering range reproduces vacuously, so it proves nothing about the
@@ -1556,7 +1602,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         self.assertIsNone(VM.classify_merge(base, head, be, he, set(),
                                             _relocs(self.BODY),
                                             _rom({("arm9", self.EPILOGUE): BX_LR}),
-                                            _code(BX_LR), _unnamed))
+                                            _code(BX_LR), _unnamed, _built()))
 
     def test_a_record_that_survives_but_loses_matched_is_not_absorption(self):
         # Still present in head, so a banner went on or its source left. That is a
@@ -1569,7 +1615,7 @@ class AbsorbedEpilogue(unittest.TestCase):
         he = _enr([(self.BODY, self.BODY + 0x50)])
         self.assertIsNone(VM.classify_merge(base, head, _enr([]), he, _compiled(he),
                                             _relocs(), _rom({}, BX_LR),
-                                            _code(BX_LR), _unnamed))
+                                            _code(BX_LR), _unnamed, _built()))
 
 
 class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
@@ -1666,7 +1712,7 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
 
     def absorb(self, relocs=VALID_RELOCS, extra_reloc=None, epilogue_word=0xE12FFF1E,
                epilogue_size=0x4, rom=True, orphan_module=False, data_only=None,
-               code=None, record_name=None):
+               code=None, record_name=None, rom_report=_ROM_REPORT_DEFAULT):
         """Commit a base and the fold on top of it, and report on the pair.
 
         `relocs` is the content of `config/arm9/relocs.txt` in BOTH revisions; None
@@ -1679,6 +1725,8 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         covers the record as an instruction emitting `epilogue_word`. `record_name`
         gives the retired symbol a real name instead of the address placeholder.
         """
+        if rom_report is _ROM_REPORT_DEFAULT:
+            rom_report = _rom_report()
         nxt = self.EPILOGUE + epilogue_size
         self.write("config/arm9/symbols.txt", "\n".join([
             f"Anchor kind:function(arm,size=0x4) addr:0x{self.ANCHOR:08x}",
@@ -1729,7 +1777,7 @@ class AbsorbedEpilogueThroughBuildReport(unittest.TestCase):
         VM._SYMBOL_BASE_CACHE.clear()
         VM._SYMBOL_NAME_CACHE.clear()
         return VM.build_report(
-            base, head,
+            base, head, head_rom=rom_report,
             code_evidence=_code(epilogue_word) if code is None else code)
 
     def assertRefused(self, report, defect=None):
@@ -2008,7 +2056,8 @@ class DataLeadingOverlayImageBase(unittest.TestCase):
         VM._SYMBOL_BASE_CACHE.clear()
         VM._SYMBOL_NAME_CACHE.clear()
         self.base, self.head = base, head
-        return VM.build_report(base, head, code_evidence=_code(record_word))
+        return VM.build_report(base, head, head_rom=_rom_report(exact=("arm9", "ov001")),
+                               code_evidence=_code(record_word))
 
     def test_the_reader_answers_from_the_lowest_symbol_not_the_first_function(self):
         self.absorb()
@@ -2159,7 +2208,8 @@ class LiteralPoolThroughBuildReport(unittest.TestCase):
             f"    .text start:0x{start:08x} end:0x{end:08x}",
             ""])
 
-    def absorb(self, source=None):
+    def absorb(self, source=None, rom_report=_ROM_REPORT_DEFAULT,
+               headers=(), after_commit=()):
         self.write("config/arm9/symbols.txt", "\n".join([
             f"Anchor kind:function(arm,size=0x4) addr:0x{self.ANCHOR:08x}",
             f"func_02071644 kind:function(arm,size=0x8) addr:0x{self.BODY:08x}",
@@ -2184,7 +2234,10 @@ class LiteralPoolThroughBuildReport(unittest.TestCase):
             ""]))
         self.write("config/arm9/delinks.txt",
                    self.delinks("src/func_02071644.c", self.BODY, self.NEXT))
-        self.write("src/func_02071644.c", self.RECOVERED if source is None else source)
+        self.write("src/func_02071644.c",
+                   self.RECOVERED if source is None else source)
+        for rel, body in headers:
+            self.write(rel, body)
         os.remove(self.repo / "src" / "func_0207164c.c")
         offset = self.EPILOGUE - VM.ARM9_IMAGE_BASE
         image = bytearray(offset + 4)
@@ -2192,10 +2245,16 @@ class LiteralPoolThroughBuildReport(unittest.TestCase):
         (self.repo / "extracted").mkdir(exist_ok=True)
         (self.repo / "extracted" / "arm9_dec.bin").write_bytes(bytes(image))
         head = commit(self.repo, "absorb", "bob")
+        # Written AFTER the commit, so a reader that takes headers from the
+        # checkout instead of the revision picks these up and fails.
+        for rel, body in after_commit:
+            self.write(rel, body)
         for cache in (VM._RELOC_CACHE, VM._ENROLMENT_CACHE,
                       VM._SYMBOL_BASE_CACHE, VM._SYMBOL_NAME_CACHE):
             cache.clear()
-        return VM.build_report(base, head)
+        if rom_report is _ROM_REPORT_DEFAULT:
+            rom_report = _rom_report()
+        return VM.build_report(base, head, head_rom=rom_report)
 
     def test_the_pools_bits_do_not_make_it_an_epilogue(self):
         report = self.absorb()
@@ -2215,5 +2274,91 @@ class LiteralPoolThroughBuildReport(unittest.TestCase):
             source="int func_02071644(int a, int b) { return a + b + 1; }\n")
         self.assertEqual(report["reasons"], [])
         self.assertEqual(report["coverage"]["delta"]["absorbedMatchedFunctions"], 1)
+        self.assertEqual([a["name"] for a in report["matchedAbsorbed"]],
+                         ["func_0207164c"])
+
+    # ---- the guards clauses (f) and (g) add, each with its own negative control ----
+    #
+    # Every one of these compiles the real source with the pinned compiler, and every
+    # one would have been ABSORBED before the guard it exercises existed. The header
+    # case was measured rather than assumed: `asm int func_02071644(int, int) { add;
+    # add; bx lr }` reached through an include produces an object whose `$a` region
+    # covers the range and whose word at the epilogue offset is `e12fff1e` -- clause
+    # (f) satisfied, in full, by a body the compiler did not write.
+
+    HAND_ASM_HEADER = ("asm int func_02071644(int a, int b)\n"
+                       "{\n"
+                       "    add r0, r0, r1\n"
+                       "    add r0, r0, #1\n"
+                       "    bx lr\n"
+                       "}\n")
+
+    ADD_ONE = "int func_02071644(int a, int b) { return a + b + 1; }\n"
+
+    def test_an_asm_body_arriving_through_a_header_is_refused(self):
+        # `function_snapshot` greps `-- src/`, so the ONLY text `asm_policy` is ever
+        # handed is the `.c` blob. Put the body in a header and that blob is ordinary
+        # C: the assertion below is the hole, stated in one line.
+        blob = ('// The body lives in a header, so the blob asm_policy reads is\n'
+                '// ordinary C. That is the whole trick.\n'
+                '#include "hand_epilogue.h"\n')
+        self.assertFalse(VM.AP.is_asm_passthrough(blob))
+        report = self.absorb(
+            source=blob,
+            headers=[("include/hand_epilogue.h", self.HAND_ASM_HEADER)])
+        self.assertIsNone(report["repartition"])
+        self.assertIn("lost 1 matched function(s)", report["reasons"])
+        self.assertEqual(report["matchedAbsorbed"], [])
+        # Refused for the RIGHT reason. Without this the test passes on ANY failure --
+        # including "does not compile", which is what an unpinned include path gives,
+        # and which would let the guard be deleted while the test stayed green.
+        self.assertTrue(any("carries an asm body" in r for r in report["reasons"]),
+                        report["reasons"])
+        # And not because another guard fired: the relocation index is clean.
+        self.assertTrue(report["relocationEvidence"]["valid"])
+        # Nor because the body arrived through an include at all --
+        # `test_the_ownership_compile_reads_the_revisions_headers` is the same
+        # header route carrying real C, and it LANDS. The asm is the only variable.
+
+    def test_a_withheld_rom_report_refuses_the_absorption(self):
+        # Same tree and same source as the positive control, which lands. The only
+        # difference is that nothing has compared these bytes to the cartridge -- and
+        # a missing head report is otherwise only a WARNING.
+        report = self.absorb(source=self.ADD_ONE, rom_report=None)
+        self.assertIsNone(report["repartition"])
+        self.assertIn("lost 1 matched function(s)", report["reasons"])
+        self.assertIn("no head full-ROM report, so nothing matched may leave",
+                      report["reasons"])
+        self.assertEqual(report["matchedAbsorbed"], [])
+
+    def test_a_module_the_rom_build_did_not_reproduce_refuses(self):
+        # A report that PASSES overall while arm9 itself differs. Clause (g) reads the
+        # covering module's own fidelity row, so the headline verdict cannot stand in
+        # for it -- and this fixture is why it must not.
+        report = self.absorb(source=self.ADD_ONE,
+                             rom_report=_rom_report(exact=(), inexact=("arm9",)))
+        self.assertIsNone(report["repartition"])
+        self.assertIn("lost 1 matched function(s)", report["reasons"])
+        self.assertIn("the head ROM build did not reproduce arm9, so nothing "
+                      "matched may leave", report["reasons"])
+        self.assertEqual(report["matchedAbsorbed"], [])
+        # The headline said PASS. Only the row refused it.
+        self.assertTrue(report["rom"]["head"]["passed"])
+
+    def test_the_ownership_compile_reads_the_revisions_headers(self):
+        # The positive control's body, spelled through a header that exists only in
+        # this revision -- and clobbered in the checkout immediately after the commit.
+        # It lands, so the object that decided ownership was built from `include/` AS
+        # OF the revision under judgement, not from whatever the host has on disk.
+        report = self.absorb(
+            source=('#include "pinned_addend.h"\n'
+                    'int func_02071644(int a, int b)\n'
+                    '{\n'
+                    '    return a + b + PINNED_ADDEND;\n'
+                    '}\n'),
+            headers=[("include/pinned_addend.h", "#define PINNED_ADDEND 1\n")],
+            after_commit=[("include/pinned_addend.h",
+                           "#error the checkout header was read, not the revision\n")])
+        self.assertEqual(report["reasons"], [])
         self.assertEqual([a["name"] for a in report["matchedAbsorbed"]],
                          ["func_0207164c"])

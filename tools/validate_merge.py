@@ -21,6 +21,7 @@ import collections
 import hashlib
 import io
 import json
+import os
 import pathlib
 import re
 import subprocess
@@ -748,6 +749,74 @@ def _mapping_evidence(obj, symbol, offset):
             "word": int.from_bytes(data[where:where + 4], "little")}
 
 
+def _revision_include_tree(rev, cache):
+    """A directory holding ``include/`` AS OF ``rev``, exported once and reused.
+
+    REVISION-PINNED, LIKE EVERY OTHER SNAPSHOT IN THIS FILE. `match.compile_c` always
+    searches the LIVE checkout's `include/` (`match.INCLUDE`, resolved from `REPO`), so
+    without this the object that decides code ownership is built from whatever headers
+    the host running the validator happens to have on disk -- while the `.c` beside it
+    is read at the revision under judgement. A check whose every other input is pinned
+    (`_pinned_version`, `_symbol_names`, `git_text`) must not decide ownership on an
+    unpinned one.
+
+    Returned as a `TemporaryDirectory` kept alive by ``cache`` so the export happens
+    once per reader rather than once per source. None if the revision has no `include/`
+    or it cannot be read; the caller then refuses, because an unpinned compile is not
+    evidence.
+    """
+    if "dir" in cache:
+        return cache["dir"]
+    cache["dir"] = None
+    try:
+        paths = tree_paths(rev, "include")
+    except RuntimeError:
+        return None
+    # An EMPTY tree is not a defect: a revision may legitimately carry no `include/`,
+    # and a source that includes nothing needs none. Only an unreadable one refuses --
+    # absence tells us the compile needs no pinned header, a read error tells us we
+    # cannot know which headers it used.
+    holder = tempfile.TemporaryDirectory()
+    root = pathlib.Path(holder.name)
+    try:
+        for path in paths:
+            dest = root / pathlib.PurePosixPath(path)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(git_text(rev, path).encode("utf-8"))
+    except (RuntimeError, OSError):
+        holder.cleanup()
+        return None
+    cache["holder"] = holder
+    inc = root / "include"
+    inc.mkdir(parents=True, exist_ok=True)
+    cache["dir"] = inc
+    return inc
+
+
+def _preprocessed(exe, src, flags, include_dirs):
+    """The TU the compiler actually sees, or None if it will not preprocess.
+
+    WHAT IS COMPILED, NOT WHAT IS COMMITTED AT ``src``. `asm_policy` is applied to the
+    `src/` blob and to nothing else (`function_snapshot` greps `-- src/`), so an asm
+    body reaching the translation unit through a header is invisible to it: the `.c`
+    classifies as ordinary C while the object carries a hand-written body. Preprocessing
+    is what closes that, and it closes it for every include route at once -- nested
+    headers included -- rather than for a list of paths someone has to keep current.
+    """
+    import match as M
+    cmd = [str(exe), *flags.split(), "-E"]
+    for inc in include_dirs:
+        cmd.extend(["-i", str(inc)])
+    cmd.append(str(src))
+    env = dict(os.environ, LM_LICENSE_FILE=str(M.LICENSE))
+    try:
+        r = subprocess.run(cmd, capture_output=True, text=True, env=env,
+                           encoding="utf-8", errors="replace", timeout=90)
+    except (subprocess.TimeoutExpired, OSError):
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
 def _compiled_code_reader(rev):
     """``read(path, symbol, symbol_addr, addr)`` -> the code-ownership evidence, or None.
 
@@ -763,6 +832,7 @@ def _compiled_code_reader(rev):
     carries the reasons so the report can name what it wanted.
     """
     cache = {}
+    includes = {}
 
     def _object(path):
         if path in cache:
@@ -782,14 +852,41 @@ def _compiled_code_reader(rev):
             cache[path] = None
             return None
         version = _pinned_version(rev, path)
-        if not (BP.MW / version / "mwccarm.exe").is_file():
+        exe = BP.MW / version / "mwccarm.exe"
+        if not exe.is_file():
             read.missing.add(f"the pinned compiler {version} is not installed")
+            cache[path] = None
+            return None
+        include = _revision_include_tree(rev, includes)
+        if include is None:
+            read.missing.add(f"include/ is unreadable at {rev[:12]}, so the ownership "
+                             f"compile could not be pinned to the revision")
             cache[path] = None
             return None
         with tempfile.TemporaryDirectory() as td:
             src = pathlib.Path(td) / pathlib.PurePosixPath(path).name
-            src.write_text(text, encoding="utf-8", newline="\n")
-            obj = M.compile_c(src, version, BP.flags_for(src, text))
+            src.write_bytes(text.encode("utf-8"))
+            flags = BP.flags_for(src, text)
+            tu = _preprocessed(exe, src, flags, [include])
+            if tu is None:
+                read.missing.add(f"{path} does not preprocess under {version} "
+                                 f"at {rev[:12]}")
+                cache[path] = None
+                return None
+            # AN ASM BODY IS NOT EVIDENCE OF OWNERSHIP, whatever file it arrives in.
+            # The exception's whole claim is that the COMPILER placed an instruction
+            # at this address from real C. A hand-written body -- `asm` in the source
+            # or, the case `asm_policy` cannot see, `asm` in a header this TU includes
+            # -- re-spells the cartridge's own words, so it reproduces byte-for-byte
+            # while proving nothing about what the compiler owns. Judged on the
+            # PREPROCESSED TU, so no include route escapes it: `function_snapshot`
+            # greps `-- src/` and never sees a header at all.
+            if AP.is_asm_passthrough(tu):
+                read.missing.add(f"{path} carries an asm body at {rev[:12]}, which "
+                                 f"cannot evidence what the compiler owns")
+                cache[path] = None
+                return None
+            obj = M.compile_c(src, version, flags, include_dirs=[include])
         if obj is None:
             read.missing.add(f"{path} does not compile under {version} at {rev[:12]}")
         cache[path] = obj
@@ -943,8 +1040,30 @@ def _covered_spans(snapshot):
     return out
 
 
+def _module_reproduced(rom_state):
+    """``built(module)`` -- did the HEAD ROM build compare this module and match it?
+
+    False whenever the answer is not established: no head report supplied, a report too
+    old to carry `moduleFidelity`, or the module absent from its results. The exception
+    is the one place in this file that needs the byte comparison itself rather than the
+    merge arithmetic around it, and `build_report` only WARNS about a missing head
+    report -- so asking `rom_state["passed"]` would inherit that silence. Read the
+    covering module's own row instead: `rombuild_check` sets `exact` when the built
+    image and the cartridge differ nowhere.
+    """
+    if not rom_state.get("available"):
+        return lambda module: False
+    analysis = rom_state.get("analysis") or {}
+    results = (analysis.get("moduleFidelity") or {}).get("results")
+    if not isinstance(results, list):
+        return lambda module: False
+    exact = {row.get("module") for row in results
+             if isinstance(row, dict) and row.get("exact")}
+    return lambda module: module in exact
+
+
 def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None,
-                   code_owned=None, named=None):
+                   code_owned=None, named=None, module_built=None):
     """Is a denominator DROP a merge the ROM build has already paid for?
 
     A merge lowers `totalFunctions` and so RAISES the headline, which is the direction an
@@ -1027,12 +1146,23 @@ def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None,
           `unsigned int f(void) { return 0xe12fff1e; }`, which under the pinned 2004/b56
           is `e59f0000 e12fff1e e12fff1e` with `$d` at offset 8: a constant, at the tail,
           with a return's bits. Preserving its bits does not make it an epilogue.
+          The object is built against `include/` AS OF that revision, and the
+          PREPROCESSED translation unit must carry no asm body: `asm_policy` is
+          applied to the `src/` blob only, so a hand-written body arriving through
+          a header would otherwise satisfy this clause while proving nothing.
+
+      (g) THE ROM BUILD COMPARED IT. The covering module's own `moduleFidelity`
+          row in the HEAD full-ROM report says `exact`. (c) claims the range is
+          byte-compared to the cartridge, but a missing head report is only a
+          warning and (f) compares a single word; without (g) any source that
+          compiles to a long enough function ending in this instruction passes.
 
     Together those say: a function this merge compiles owns these four bytes and emits
-    the cartridge's own return instruction at them, config has no independent name for
-    them, and no relocation destination in the tree's index points at them. They do not
-    say the address is unreachable. A record that fails any one of them stays matched and
-    the merge is refused.
+    the cartridge's own return instruction at them, the ROM build compared the module
+    they live in and found it exact, config has no independent name for them, and no
+    relocation destination in the tree's index points at them. They do not say the
+    address is unreachable. A record that fails any one of them stays matched and the
+    merge is refused.
 
     THE EXCEPTION IS NARROW, MEASURED RATHER THAN ASSERTED. Over src/ at 8525428a2 there
     are 79 sources whose whole body is `void f(void) {}`; 77 have at least one incoming
@@ -1151,6 +1281,16 @@ def classify_merge(bf, hf, be, he, compiled, reloc_dests=None, rom_word=None,
             return None
         evidence = code_owned(span[2], owner["name"], owner["addr"], addr)
         if not evidence or not evidence["instruction"] or evidence["word"] != word:
+            return None
+        # (g) the ROM build actually compared these bytes to the cartridge.
+        # (c) says the covering range is "backed by byte-compared compiled
+        # output", but nothing above establishes that: a MISSING head ROM report
+        # is only a warning, and (f) compares ONE word out of the body. Without
+        # the module's own fidelity result, any source that compiles to a long
+        # enough function ending in this instruction satisfies the chain. The
+        # report is the only thing that has compared the whole range, so the
+        # exception refuses when it is absent rather than assuming it passed.
+        if module_built is None or not module_built(record["module"]):
             return None
         absorbed.append(key)
 
@@ -1818,12 +1958,14 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     code_owned = (_compiled_code_reader(head_sha) if code_evidence is None
                   else code_evidence)
     revs = (_symbol_names(base_sha), _symbol_names(head_sha))
+    module_built = _module_reproduced(head_rom_state)
     repartition = (classify_repartition(bf, hf)
                    or classify_merge(bf, hf, be, he, compiled_src,
                                      reloc["dests"] if reloc["valid"] else None,
                                      rom_word, code_owned,
                                      lambda module, addr: _named_symbol(revs, module,
-                                                                        addr)))
+                                                                        addr),
+                                     module_built))
     absorbed_keys = set((repartition or {}).get("absorbed") or ())
 
     base_enrolled = {key.split("-", 1)[0] for key in be["source"]}
@@ -1855,6 +1997,21 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         elif getattr(code_owned, "missing", None):
             reasons.append("compiled code ownership unavailable, so nothing matched "
                            "may leave: " + "; ".join(sorted(code_owned.missing)))
+        elif not head_rom_state.get("available"):
+            reasons.append("no head full-ROM report, so nothing matched may leave")
+        elif not all(module_built(k.split(":", 1)[0]) for k in removed):
+            # NAME THE MODULE. Clause (g) refuses on the covering module's own
+            # fidelity row, and a PR author reading "lost 1 matched function(s)"
+            # against a report that exists but does not reproduce that module has
+            # nothing to act on otherwise. The other three guards each say which
+            # file or image failed them; this one must too. (A matched key is
+            # `module:0xaddr`, so the module is the part before the FIRST colon --
+            # not `split("-")`, which is the enrolment key space's shape.)
+            unbuilt = sorted({k.split(":", 1)[0] for k in removed
+                              if not module_built(k.split(":", 1)[0])})
+            reasons.append("the head ROM build did not reproduce "
+                           + ", ".join(unbuilt)
+                           + ", so nothing matched may leave")
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
         if repartition is None:
