@@ -7,7 +7,7 @@ extern void _Z14ApproachLinearRsss(void* a, short b, short c);
 extern int func_ov077_021238bc(int unused, int x);
 extern void _Z14ApproachLinearRiii(void* a, int b, int c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, void* b);
-extern int _ZN9Spindrift8BehaviorEv(void* a, void* b);
+extern void func_ov077_02123c6c(char* a, void* b);
 void func_ov077_0212390c(char* c){
   char* p = _ZN8dActor_c22ClosestNonVanishPlayerEv();
   char* tgt;
@@ -35,7 +35,7 @@ L64:
     }
     _Z14ApproachLinearRiii(c+0x60, *(int*)(tgt+4) + 0x12c000, 0x2000);
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, c+0x1c4);
-    _ZN9Spindrift8BehaviorEv(c, c+0x204);
+    func_ov077_02123c6c(c, c+0x204);
   }
 }
 }
