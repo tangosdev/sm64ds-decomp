@@ -107,15 +107,30 @@ TWO FAILURE MODES OF `langmode_audit.py` THIS IS BUILT NOT TO REPEAT
      and fails on it -- see that function's docstring for why this is not the question
      `classify_missing()` answers, and why the split on `#` has to come first.
 
-     THE REMEDY DEPENDS ENTIRELY ON WHAT IS AT THE OTHER END, and the answers want
+     THE REMEDY DEPENDS ENTIRELY ON WHAT A REWRITE WOULD CREATE, and the answers want
      different commands. `report_orphans()` therefore prints a diagnostic per class,
-     keyed first on whether the TU manifest names a destination and then on what
-     `destination_state()` finds there. Naming a destination is not enough: measured
-     2026-09-10, 7 of the 136 distinct promoted destinations pass all five criteria and
-     129 do not.
+     keyed first on whether the TU manifest names a destination and then on
+     `target_state()` -- the state of the ONE identity the block tells the reader to
+     create, which is `rewrite_target()`'s, not the destination file's.
 
-       - A DESTINATION IS NAMED AND PASSES: a TU promotion absorbed the file and the
-         readable code is demonstrably still there. `tools/tu_promote.py:
+     THOSE TWO ARE NOT THE SAME QUESTION, AND CONFLATING THEM COST TWO ROUNDS. A
+     multi-member destination is scored per member: it can hold a member that passes
+     all five and a sibling that fails, and then "does the file pass" and "does the
+     identity I am about to create pass" have different answers. Measured 2026-09-10:
+     7 of the 136 distinct promoted destinations pass all five and 129 do not, but of
+     the 2,329 banked-path-to-destination pairs at one of those 129, 620 name a rewrite
+     target that passes on its own -- spread over 122 of the 129. Judging those by the
+     file called a clean rewrite a backslide 620 times.
+
+     THE UNIT OF THOSE COUNTS IS THE DISTINCT (banked path, destination) PAIR, which
+     is what `promoted_moves()` yields: 2,359 of them, 2,329 at a failing destination.
+     Counting raw manifest FUNCTION rows instead gives 2,401 / 2,371 / 661, because
+     one TU repeats a single `legacy_source` across 42 of its rows and another repeats
+     one across 2. The destination-level figures -- 7, 129, 122 -- are identical under
+     both. Say which unit before comparing a re-derivation to these.
+
+       - THE TARGET PASSES AND SO DOES ITS FILE: a TU promotion absorbed the file and
+         the readable code is demonstrably still there. `tools/tu_promote.py:
          converted_baseline_update` REWRITES the banked identity onto the destination,
          leaving `count` unchanged -- the same readable code under a new name. A
          promotion carried out by hand that never runs it leaves the identity dangling.
@@ -136,20 +151,41 @@ TWO FAILURE MODES OF `langmode_audit.py` THIS IS BUILT NOT TO REPEAT
          this change does not do and which rule 1 above constrains: the fix cannot work
          by refusing. Until then the gate makes the defect loud, not impossible.
 
-       - A DESTINATION IS NAMED AND FAILS A CRITERION: the ordinary case, 129 of 136.
-         The rewrite is still correct -- the identity belongs on the file that owns the
-         code -- but nothing here licenses "nothing regressed", and an earlier version of
-         this tool printed that sentence over this class too. The rewritten identity is a
-         backslide the moment it exists, which is the true state of the tree rather than
-         an artifact of the rewrite. `--update` does not absorb this class either:
-         `classify_missing()` absorbs a moved path only when the destination passes, so
-         the entry reaches `removed` -- measured exit 2 without a `--reason`, and with
-         one it writes an exception row saying the legacy path was REMOVED, which is
-         false and permanent.
+       - THE TARGET PASSES BUT ITS FILE DOES NOT: 620 of the 2,329 pairs above. The
+         rewrite creates an identity that is in this scan and passes all five, so
+         nothing regresses -- and that is a claim about the identity, checked, not about
+         the file around it. What fails is a different member of the same file, which
+         was already failing before the rewrite.
 
-       - A DESTINATION IS NAMED AND CANNOT BE VOUCHED FOR: the manifest names a path
-         that is not tracked or could not be read. Zero cases today; a manifest can
-         outlive the file it points at. Do not rewrite onto a file nothing scored.
+         `--update` is still wrong here, and this is the one place where the file is the
+         right unit: `classify_missing()` absorbs a moved path only when EVERY enrolled
+         member of the destination is CONVERTED, so these reach `removed` -- exit 2
+         without a `--reason`, and with one a row recording the LEGACY path as REMOVED,
+         which is false and permanent. One paragraph of that report therefore keys its
+         two halves on different units on purpose, and says so; a reader who spots the
+         mismatch without the explanation will assume one half is wrong.
+
+         ORDER IS THE REMEDY. Rewrite the baseline entry onto the target FIRST and the
+         next `--check` exits 0 with no exception row and no `--update` at all;
+         `--update` first writes the false row and drops the identity.
+
+       - THE TARGET ITSELF FAILS A CRITERION: the ordinary case, 1,709 of the 2,329.
+         The rewrite is still correct -- the identity belongs on the file that owns the
+         code -- but nothing here licenses "nothing regressed", and an earlier version
+         of this tool printed that sentence over this class too. The rewritten identity
+         is a backslide the moment it exists, which is the true state of the tree rather
+         than an artifact of the rewrite. `--update` behaves as in the class above, for
+         the same file-level reason. Rewrite first even so: banked as an orphan, the
+         exception row names the LEGACY path and is false; banked after the rewrite it
+         names the REWRITTEN identity, which is a real backslide and true.
+
+       - THE TARGET CANNOT BE VOUCHED FOR: the destination is not tracked, or no
+         manifest row here enrolls the orphan under a symbol, or the `#symbol` carried
+         on the banked identity is not one the destination defines. Zero cases today.
+         The last of the three is the one to watch: a carried symbol is never verified
+         by the manifest, only by looking the resulting identity up in the scan, and
+         rewriting onto a symbol the file does not define recreates the orphan under a
+         new name. Do not rewrite onto an identity nothing scored.
 
        - NO DESTINATION IS NAMED: this tool cannot tell a promotion from a rename from a
          deletion, and must not pretend otherwise. `classify_missing()` has no rename
@@ -192,6 +228,7 @@ Exit codes: 0 ok, 1 backslide or orphaned identity detected, 2 usage/configurati
 source text over git-tracked files, about two seconds on the whole tree.
 """
 import argparse
+import collections
 import json
 import pathlib
 import subprocess
@@ -459,8 +496,11 @@ def why(identity, scores, tracked, moves=None, ownership=None):
     ONLY `--update` STILL REACHES EITHER. `--check` peels orphaned identities off
     before it gets here, and an identity whose file left the tree is exactly the input
     that would take the `rel not in tracked` branch below -- so under `--check` those
-    arms are unreachable and `report_orphans()` answers the same question with a
-    destination state and a remedy instead. `--update`'s refusal is the one caller that
+    arms are unreachable and `report_orphans()` answers the same question with the
+    state of the identity a rewrite would create, plus a remedy keyed on it. Note that
+    the ladder below judges the whole destination FILE, which is the coarser unit and
+    the reason `report_orphans()` does not reuse it.
+    `--update`'s refusal is the one caller that
     still hands this function an untracked path. Do not describe the strings below as
     something a `--check` run prints; that mistake has been made twice.
     """
@@ -554,9 +594,11 @@ def orphan_destination(identity, moves=None):
     mechanical repair, and an orphan without one is an open question that must not be
     answered by guessing.
 
-    It says a destination EXISTS. It says nothing about the state of that destination --
-    see `destination_state()`, and do not assert anything about the code there without
-    calling it.
+    It says a destination EXISTS. It says nothing about the state of that destination
+    (`destination_state()`), and still less about the one identity a rewrite would put
+    there (`target_state()`). Do not assert anything about the code at the other end
+    without calling the second of those: it is the only one that answers the question
+    a reader acts on.
     """
     return (moves or {}).get(identity.split("#", 1)[0])
 
@@ -573,43 +615,52 @@ def orphan_reason(identity, moves=None):
             "manifest claims it (deleted, renamed or moved)")
 
 
-def destination_state(dest, tracked=None, scores=None, ownership=None):
-    """(state, detail) for the file a promotion named as an orphan's destination.
+def destination_state(dest, tracked, scores, ownership):
+    """(state, detail) for the FILE a promotion named as an orphan's destination.
 
-    THE REWRITE IS RIGHT IN ALL THREE STATES. Only one of them licenses the sentence
-    "nothing regressed", and an earlier version of this tool printed that sentence over
-    every destination it could name:
+    THIS ANSWERS ABOUT THE WHOLE FILE, WHICH IS NOT THE QUESTION THE READER ACTS ON.
+    A rewrite creates ONE member identity; whether THAT identity passes is
+    `target_state()`, and the two answers disagree constantly. Measured 2026-09-10:
+    of the 2,329 banked-path-to-destination pairs whose destination FAILS, 620 name a
+    rewrite target that passes all five on its own, spread over 122 of the 129 failing
+    destinations. Two earlier versions of this tool keyed the reader-facing claim on
+    this function and were wrong for exactly that population. Use it for the one claim
+    that really is about the whole file:
 
-      "converted"  tracked, and every identity it is scored under passes all five. The
-                   readable code really is still in the tree, checked rather than
-                   assumed.
-      "failing"    tracked, and at least one criterion fails. The identity still belongs
-                   on the file that owns the code, but the destination does not pass, so
-                   the rewritten identity is a backslide the moment it exists. Saying
-                   "nothing regressed" here contradicts the backslide section of the
-                   same run.
-      "unvouched"  not tracked, or tracked and unscored, so nothing in this scan looked
-                   at it. Say so instead of guessing.
+      `--update` absorbs a moved path only when the whole destination is CONVERTED.
+      `classify_missing()` requires `dest in current` (bare path) or every
+      `dest#symbol` in `current`, which is precisely `state == "converted"` here. So
+      this function, and not `target_state()`, is what predicts what `--update` does.
+
+      "converted"  tracked, and every identity it is scored under passes all five.
+      "failing"    tracked, and at least one of them fails a criterion.
+      "unvouched"  not tracked, or not scored, or only PARTLY scored, so this scan did
+                   not look at all of it. Say so instead of guessing.
 
     Measured 2026-09-10 over the real manifest: of 136 distinct promoted destinations,
-    7 are converted, 129 are failing and 0 are unvouched. The eight identities PR #2530
-    repaired all pointed at 2 of those 7 -- the benign case, generalised to a population
-    where it is wrong 129 times out of 136. A reconstructed TU must spell vague-linkage
-    symbols directly or its range will not link, so `no_mangled_refs` usually cannot
-    pass for one; the module docstring says as much, which is what made the assertion
-    wrong on its own terms.
+    7 are converted, 129 are failing and 0 are unvouched.
 
     The member/path split mirrors `scan()` exactly -- more than one enrolled member
     means the destination is scored as `dest#symbol`, otherwise as the bare path. It is
     not `_failures()` plus `_member_result()` because those two build a sentence for
     `why()` about ONE identity; this needs a summary of a whole file, and a destination
     with eight members produced a 700-character line when it borrowed theirs.
+
+    `tracked`, `scores` and `ownership` are REQUIRED and may not be None. They used to
+    default to None, and the None arm returned "unvouched" -- the safe answer, but an
+    answer nonetheless, reached with no evidence and reached BY DEFAULT. Nothing
+    exercised that arm, so flipping it to "converted" passed the whole suite: a caller
+    who forgot an argument would have been told a file nothing read passes. A verdict
+    with no scan behind it is not a verdict; refuse instead of returning one.
     """
-    if tracked is not None and dest not in tracked:
+    if tracked is None or scores is None or ownership is None:
+        raise ValueError(
+            "destination_state() needs the tracked set, the scan's scores and the "
+            "ownership index. Any answer it returned without them would be a verdict "
+            "about a file nothing looked at.")
+    if dest not in tracked:
         return "unvouched", "it is not a tracked source file"
-    if scores is None:
-        return "unvouched", "this report was given no scan to check it against"
-    members = (ownership or {}).get(dest) or []
+    members = ownership.get(dest) or []
     if len(members) <= 1:
         score = scores.get(dest)
         if score is None:
@@ -619,6 +670,14 @@ def destination_state(dest, tracked=None, scores=None, ownership=None):
             return "failing", "; ".join(tiers.CRITERION_LABEL[k] for k in failed)
         return "converted", "the file passes all five criteria"
     identities = [f"{dest}#{symbol}" for symbol in members]
+    # A PARTLY SCORED FILE IS NOT A PASSING FILE. Without this guard the loop below
+    # would raise on the unscored member -- or, if it skipped it, would answer
+    # "converted" from the members it happened to have, which is the same claim as
+    # "converted" made over a smaller file than the one on disk. Deleting this guard
+    # passed the whole suite before the test named for it existed, and the failure it
+    # allows is silent: `--update` would then be predicted to absorb a destination
+    # `classify_missing()` will not absorb, because an unscored member is not in
+    # `current`.
     if any(scores.get(i) is None for i in identities):
         missing = sum(1 for i in identities if scores.get(i) is None)
         return "unvouched", (f"{missing} of its {len(identities)} enrolled members "
@@ -639,100 +698,226 @@ def destination_state(dest, tracked=None, scores=None, ownership=None):
                        f"fail: {labels}")
 
 
-def rewrite_target(identity, dest, ownership=None, symbols=None):
+def rewrite_target(identity, dest, ownership, symbols):
     """The identity a rewrite must put on `dest`, in the shape `scan()` will score it.
 
-    `tu_promote.py:converted_baseline_update` writes a BARE `dest` when the promoted TU
-    owns exactly one function and `<dest>#<symbol>` otherwise, and `scan()` derives the
-    same shape from the enrolled-member count. So the shape is a fact about the
-    destination, not a constant to print. Measured 2026-09-10: 0 of the 136 promoted
-    destinations own a single enrolled member, so every real case today takes the second
-    branch -- which is exactly why hard-coding it went unnoticed.
+    `scan()` IS THE AUTHORITY ON THE SHAPE, not the manifest. Two derivations exist:
+    `scan()` takes the enrolled-member count from `srcpath.source_definition_index()`
+    (what is defined in the file), while `tu_promote.py:converted_baseline_update`
+    takes it from `len(p["functions"])` (what the manifest enrolls). Measured
+    2026-09-10 they agree for all 136 promoted destinations -- but that is an
+    agreement, not an invariant, and only one of them decides anything: this baseline
+    is compared against `scan()`'s output, so an identity in a shape `scan()` does not
+    produce can never leave the report, no matter what the manifest says. Hence the
+    expression below is copied from `scan()` on purpose, fallback included. If the two
+    ever diverge, `tu_promote` is the one that has to move.
 
-    None when the symbol cannot be established: a bare legacy path whose manifest row
-    was not handed to this report. The caller says so rather than printing a guess.
+    The `or [stem]` fallback matters and is not decoration: an ownership index with NO
+    entry for `dest` means `scan()` scores it under the bare path, so this must return
+    the bare path too. The old `len(members) <= 1` swallowed the empty case into the
+    single-member case and happened to agree; it agreed for a reason it did not state,
+    and only its one caller stopped an empty index reaching it.
+
+    Measured 2026-09-10: 0 of the 136 promoted destinations own a single enrolled
+    member, so every real case today takes the `#symbol` branch -- which is exactly why
+    hard-coding that branch went unnoticed.
+
+    None when the symbol cannot be established: a `dest` scored per member, reached
+    from a bare legacy path whose manifest row was not handed to this report. The
+    caller says so rather than printing a guess. A symbol CARRIED on the identity is
+    preferred over the manifest's, and is not checked here -- `target_state()` checks
+    it by looking the resulting identity up in the scan, which is the only check that
+    means anything: a symbol the destination does not define is scored by nothing.
     """
-    members = (ownership or {}).get(dest) or []
+    members = ownership.get(dest) or [pathlib.PurePosixPath(dest).stem]
     if len(members) <= 1:
         return dest
     rel, _, symbol = identity.partition("#")
-    symbol = symbol or (symbols or {}).get(rel)
+    symbol = symbol or symbols.get(rel)
     return f"{dest}#{symbol}" if symbol else None
 
 
-def orphan_groups(orphans, moves, tracked=None, scores=None, ownership=None):
-    """Orphans partitioned into the four groups both reports need.
+def target_state(identity, dest, tracked, scores, ownership, symbols):
+    """(state, detail, target) for the ONE identity a rewrite of `identity` creates.
 
-    Each value is a list of `(identity, tu_id, dest, detail)`; `unexplained` carries
-    None for the last three. One function so the plain report and `--check` cannot drift
-    into disagreeing about which class an orphan is in.
+    THIS IS THE QUESTION THE READER ACTS ON. `destination_state()` answers about the
+    whole destination file; the reader is not told to create a file, they are told to
+    create `rewrite_target()`'s single identity, and for a multi-member destination
+    those are different questions with different answers. Measured 2026-09-10: 620 of
+    the 2,329 banked-path-to-destination pairs whose destination FAILS name a target
+    that passes all five on its own, over 122 of the 129 failing destinations. Every
+    reader-facing claim about regression must be keyed here.
+
+      "converted"  the scan scored this exact identity and it passes all five.
+                   Creating it costs nothing, whatever the rest of the file does.
+      "failing"    the scan scored it and it fails. The rewrite is still the correct
+                   repair -- the identity belongs on the file that owns the code -- but
+                   the identity is a backslide the moment it exists.
+      "unvouched"  no target could be named, or the scan never scored the one named.
+                   That includes a `#symbol` carried on the banked identity that the
+                   destination does not define: it names nothing, so it can be scored
+                   by nothing, and rewriting onto it would recreate the orphan.
+
+    It does NOT predict `--update`. That keys on the whole file -- see
+    `destination_state()` -- and the two are allowed to disagree.
     """
-    groups = {"converted": [], "failing": [], "unvouched": [], "unexplained": []}
+    if tracked is None or scores is None or ownership is None or symbols is None:
+        raise ValueError(
+            "target_state() needs the tracked set, the scan's scores, the ownership "
+            "index and the manifest symbols. Any answer it returned without them "
+            "would be a verdict about an identity nothing looked at.")
+    if dest not in tracked:
+        return "unvouched", "it is not a tracked source file", None
+    target = rewrite_target(identity, dest, ownership, symbols)
+    if target is None:
+        rel = identity.split("#", 1)[0]
+        return ("unvouched",
+                f"it is scored per member and no manifest row here enrolls {rel} "
+                "under a symbol", None)
+    score = scores.get(target)
+    if score is None:
+        return ("unvouched",
+                f"nothing in this scan scored {target} -- the destination does not "
+                "define that symbol", target)
+    failed = [k for k in tiers.CRITERIA if not score[k]]
+    if failed:
+        return ("failing", "; ".join(tiers.CRITERION_LABEL[k] for k in failed), target)
+    return "converted", "it passes all five criteria", target
+
+
+OrphanRow = collections.namedtuple(
+    "OrphanRow", "identity tu_id dest target target_detail dest_state dest_detail")
+
+ORPHAN_GROUPS = ("clean", "target_only", "backslide", "unvouched", "unexplained")
+
+
+def orphan_groups(orphans, moves, tracked, scores, ownership, symbols):
+    """Orphans partitioned into the five groups both reports need.
+
+    THE SPLIT IS ON THE IDENTITY THE READER IS TOLD TO CREATE, not on the destination
+    file. Every row carries both verdicts because the two paragraphs of the remedy
+    genuinely key on different units, and each names its own:
+
+      `clean`        the rewrite target passes AND the whole destination passes.
+      `target_only`  the rewrite target passes, but the destination as a whole does
+                     not. Creating the identity regresses nothing; `--update` still
+                     will not absorb it, because `classify_missing()` keys absorption
+                     on the file. Measured 2026-09-10: 620 of the 2,329
+                     banked-path-to-destination pairs at a failing destination, over
+                     122 of the 129 failing destinations. This class had no name in
+                     the two previous versions of this report, which is why both of
+                     them told these readers something false.
+      `backslide`    the rewrite target itself fails a criterion. Still rewrite; it is
+                     a backslide the moment it exists, and that is the tree's true
+                     state, not an artifact of the rewrite.
+      `unvouched`    no target could be named, or nothing scored the one named.
+      `unexplained`  no promoted manifest entry names the file at all.
+
+    `unexplained` rows carry None for everything after `tu_id`. One function so the
+    plain report and `--check` cannot drift into disagreeing about which class an
+    orphan is in.
+    """
+    groups = {name: [] for name in ORPHAN_GROUPS}
     for identity in orphans:
         moved = orphan_destination(identity, moves)
         if not moved:
-            groups["unexplained"].append((identity, None, None, None))
+            groups["unexplained"].append(
+                OrphanRow(identity, None, None, None, None, None, None))
             continue
         tu_id, dest = moved
-        state, detail = destination_state(dest, tracked, scores, ownership)
-        groups[state].append((identity, tu_id, dest, detail))
+        tstate, tdetail, target = target_state(
+            identity, dest, tracked, scores, ownership, symbols)
+        dstate, ddetail = destination_state(dest, tracked, scores, ownership)
+        row = OrphanRow(identity, tu_id, dest, target, tdetail, dstate, ddetail)
+        if tstate == "unvouched":
+            groups["unvouched"].append(row)
+        elif dstate == "converted":
+            # dstate "converted" means every identity `dest` is scored under passes,
+            # and `target` is one of them, so tstate cannot be "failing" here.
+            groups["clean"].append(row)
+        elif tstate == "converted":
+            groups["target_only"].append(row)
+        else:
+            groups["backslide"].append(row)
     return groups
 
 
-def report_orphans(orphans, moves, exceptions_path, tracked=None, scores=None,
-                   ownership=None, symbols=None):
-    """Print the orphan diagnostic, split by what is actually at the destination.
+def report_orphans(orphans, moves, exceptions_path, tracked, scores, ownership,
+                   symbols):
+    """Print the orphan diagnostic, split by what a rewrite would actually create.
 
-    FOUR CLASSES, AND THE REMEDY TEXT DIVERGES AT EVERY SPLIT. All four are orphans by
+    FIVE CLASSES, AND THE REMEDY TEXT DIVERGES AT EVERY SPLIT. All five are orphans by
     the same predicate. What differs is what a reader should do, and what `--update`
     does if they ignore that -- every claim below is measured, not reasoned from the
     shape of the code:
 
-      destination passes    `--update` exits 0, writes no exception row, and ABSORBS the
-                            entry. Rewrite onto the destination; nothing regressed.
-      destination fails     `classify_missing()` absorbs a moved path ONLY when the
-                            destination passes, so this class reaches `removed`:
-                            `--update` exits 2 without a `--reason`, and with one it
-                            writes a row saying the legacy path was REMOVED, which is
-                            false. Rewrite, but do not call it a clean move.
-      destination unvouched nothing scored the destination. Do not rewrite onto a file
-                            this tool cannot see.
+      target passes,        `--update` exits 0, writes no exception row, and ABSORBS
+      destination passes    the entry. Rewrite onto the target; nothing regressed.
+
+      target passes,        Rewrite onto the target; nothing regressed FOR THAT
+      destination does not  IDENTITY, which is the claim the reader acts on. A
+                            different member of the same file fails, and that is why
+                            `--update` will not absorb it: exit 2 without a `--reason`,
+                            and with one a row saying the LEGACY path was REMOVED,
+                            which is false.
+
+      target fails          Rewrite, but it is a backslide the moment it exists.
+                            `--update` behaves as in the row above, for the same
+                            file-level reason.
+
+      target unvouched      nothing scored the identity a rewrite would create. Do not
+                            rewrite onto something this tool cannot see.
+
       no destination        `--update` exits 2 without a `--reason`; with one it is the
                             correct command for a file that really was deleted.
+
+    THE FIRST THREE CLASSES ARE KEYED ON THE IDENTITY, THE `--update` SENTENCES ON THE
+    FILE, and that is deliberate rather than sloppy: `classify_missing()` absorbs a
+    moved path only when EVERY enrolled member of the destination is CONVERTED, so
+    what `--update` does is a fact about the whole file, while what the reader creates
+    is one member of it. Two earlier versions of this report keyed the regression claim
+    on the file too, and were wrong for 620 of the 2,329 banked paths whose destination
+    fails.
 
     `UpdateBehaviourPin` in the test file runs the real `--update` for these classes, so
     this prose cannot quietly drift away from the tool it describes.
     """
-    groups = orphan_groups(orphans, moves, tracked, scores, ownership)
+    groups = orphan_groups(orphans, moves, tracked, scores, ownership, symbols)
 
     def rows(group, target=True):
-        """One block per orphan. `target` is off for a destination nothing scored:
-        printing a rewrite target under prose that says not to rewrite onto that file
-        would be the same kind of self-contradiction this split exists to remove."""
-        for identity, _tu_id, dest, detail in group:
-            print(f"  {identity}\n      {orphan_reason(identity, moves)}")
+        """One block per orphan, and every line names the unit it is talking about.
+
+        `target` is off for an identity nothing scored: printing "rewrite onto X" under
+        prose that says not to rewrite onto X would be the same kind of
+        self-contradiction this split exists to remove.
+        """
+        for row in group:
+            print(f"  {row.identity}\n      {orphan_reason(row.identity, moves)}")
             if target:
-                onto = rewrite_target(identity, dest, ownership, symbols)
-                print(f"      rewrite onto {onto}" if onto else
-                      f"      rewrite onto {dest}#<the symbol the manifest enrolls "
-                      "it under>")
-            print(f"      {dest} -- {detail}")
+                print(f"      rewrite onto {row.target} -- {row.target_detail}")
+                print(f"      the file it lands in, {row.dest} -- {row.dest_detail}")
+            else:
+                # Nothing lands anywhere in this class, so do not say it does.
+                print(f"      no rewrite target this tool can vouch for -- "
+                      f"{row.target_detail}")
+                print(f"      the destination named, {row.dest} -- {row.dest_detail}")
 
     print(f"CONVERTED baseline orphan: {len(orphans)} banked identity(ies) name a file "
           "that is\nnot a tracked source any more. An orphan is scored by nothing, so "
           "no\ncriterion can fail for it and every later --check reads it as clean.")
 
-    if groups["converted"]:
-        print(f"\n{len(groups['converted'])} with a destination that PASSES today -- "
-              "REWRITE these:\n")
-        rows(groups["converted"])
-        print("\n  Nothing regressed. The readable code is still in the tree under the\n"
-              "  destination named above, and this report CHECKED that destination\n"
-              "  rather than assuming it; only the baseline was left behind. Rewrite\n"
-              "  each identity onto the target named above, leaving `count` unchanged.\n"
-              "  That is exactly what tools/tu_promote.py:converted_baseline_update\n"
-              "  does during a promotion, out of the promotion's own manifest entry; a\n"
-              "  promotion carried out by hand has to perform the same rewrite by hand.\n"
+    if groups["clean"]:
+        print(f"\n{len(groups['clean'])} whose rewrite target PASSES, in a file that "
+              "passes too -- REWRITE these:\n")
+        rows(groups["clean"])
+        print("\n  Nothing regressed, and this report checked the identity named on\n"
+              "  each row rather than assuming it: that exact identity is in this\n"
+              "  scan and passes all five criteria. Only the baseline was left\n"
+              "  behind. Rewrite each orphan onto its target, leaving `count`\n"
+              "  unchanged. That is exactly what\n"
+              "  tools/tu_promote.py:converted_baseline_update does during a\n"
+              "  promotion, out of the promotion's own manifest entry; a promotion\n"
+              "  carried out by hand has to perform the same rewrite by hand.\n"
               "\n"
               "  Do NOT re-bank these with --update. Measured on the eight identities\n"
               "  PR #2530 had to repair: --update with no --reason exits 0, reports\n"
@@ -741,48 +926,110 @@ def report_orphans(orphans, moves, exceptions_path, tracked=None, scores=None,
               "  of rewriting it and taking the evidence of the defect with it. That\n"
               "  hole is still open; failing here makes it loud, not impossible.")
 
-    if groups["failing"]:
-        print(f"\n{len(groups['failing'])} with a destination that does NOT pass today "
-              "-- REWRITE these too,\nbut not as a clean move:\n")
-        rows(groups["failing"])
-        print("\n  The rewrite is still the correct repair: the identity belongs on the\n"
-              "  file that owns the code. But \"nothing regressed\" is not available\n"
-              "  here. The destination does not pass, so the rewritten identity is a\n"
-              "  backslide the moment it exists -- and that is the true state of the\n"
-              "  tree, not an artifact of the rewrite. Bank it with a reason, or fix\n"
-              "  the criterion named above; either way do not carry the dangling\n"
-              "  identity forward, because it is scored by nothing as it stands.\n"
+    if groups["target_only"]:
+        print(f"\n{len(groups['target_only'])} whose rewrite target PASSES, in a file "
+              "that does NOT -- REWRITE these:\n")
+        rows(groups["target_only"])
+        print("\n  Nothing regressed FOR THESE IDENTITIES. That is a claim about the\n"
+              "  one identity each row tells you to create, not about the file it\n"
+              "  lands in, and this report checked it: the target named above is in\n"
+              "  this scan and passes all five criteria. Creating it takes nothing\n"
+              "  out of the CONVERTED set. What fails is a DIFFERENT member of the\n"
+              "  same file -- the last line of each row names it -- and that member\n"
+              "  was already failing before the rewrite and is no worse after it.\n"
               "\n"
-              "  This is the ORDINARY case. Measured 2026-09-10 over the real manifest,\n"
-              "  7 of 136 promoted destinations pass and 129 fail: a reconstructed TU\n"
-              "  must spell vague-linkage symbols directly (_ZN7fBase_cnwEj,\n"
-              "  _ZN8dActor_cC2Ev, _ZN8dActor_cD2Ev) or its range will not link, so\n"
-              "  no_mangled_refs cannot pass for one.\n"
+              "  Measured 2026-09-10: 620 of the 2,329 banked paths whose destination\n"
+              "  fails are in this class, spread over 122 of the 129 failing\n"
+              "  destinations. It is not a corner case, and the two earlier versions\n"
+              "  of this report that judged these by the file told their readers the\n"
+              "  rewrite was a backslide when it was not.\n"
               "\n"
-              "  --update is wrong for this class too, and differently: it does not\n"
-              "  absorb it. classify_missing() absorbs a moved path only when the\n"
-              "  destination passes, so these reach `removed` -- measured exit 2\n"
+              "  THE NEXT PARAGRAPH KEYS ON THE FILE, NOT THE IDENTITY, AND THAT IS\n"
+              "  NOT A CONTRADICTION. classify_missing() absorbs a moved path only\n"
+              "  when EVERY enrolled member of the destination is CONVERTED, so what\n"
+              "  --update does is a fact about the whole file, while what you create\n"
+              "  is one member of it. A file can hold a passing target and a failing\n"
+              "  sibling at the same time; then the two answers differ, and both are\n"
+              "  right about their own unit.\n"
+              "\n"
+              "  So --update is wrong here for the file's reason, not the identity's.\n"
+              "  It does not absorb these: they reach `removed`, so it exits 2\n"
               "  without a --reason, and with one it appends a row to\n"
               f"    {exceptions_path}\n"
-              "  recording the legacy path as REMOVED. Nothing was removed. That row\n"
+              "  recording the LEGACY path as REMOVED. Nothing was removed. That row\n"
               "  is a permanent false statement in a log whose whole value is that it\n"
-              "  can be trusted.")
+              "  can be trusted.\n"
+              "\n"
+              "  ORDER IS THE WHOLE REMEDY: REWRITE FIRST, THEN RE-RUN. Measured on\n"
+              "  src/_ZN7dBase_cD1Ev.cpp, whose target is\n"
+              "  src/actors/ActorDerived.cpp#_ZN7dBase_cD1Ev on a destination that\n"
+              "  fails. Bank it first and `--update --reason` exits 0 and writes the\n"
+              "  false REMOVED row against the legacy path. Rewrite the baseline\n"
+              "  entry onto the target first and the next --check exits 0 outright:\n"
+              "  no exception row, no --update, nothing left to bank. Do not reach\n"
+              "  for --update to make this section go away.")
+
+    if groups["backslide"]:
+        print(f"\n{len(groups['backslide'])} whose rewrite target does NOT pass -- "
+              "REWRITE these too,\nbut not as a clean move:\n")
+        rows(groups["backslide"])
+        print("\n  The rewrite is still the correct repair: the identity belongs on the\n"
+              "  file that owns the code. But \"nothing regressed\" is not available\n"
+              "  here, and the reason is the identity itself rather than the file\n"
+              "  around it -- the target named on each row is in this scan and fails\n"
+              "  the criteria listed beside it. It is a backslide the moment it\n"
+              "  exists, and that is the true state of the tree, not an artifact of\n"
+              "  the rewrite.\n"
+              "\n"
+              "  This is the ordinary case: 1,709 of the 2,329 banked paths whose\n"
+              "  destination fails. A reconstructed TU must spell vague-linkage\n"
+              "  symbols directly (_ZN7fBase_cnwEj, _ZN8dActor_cC2Ev,\n"
+              "  _ZN8dActor_cD2Ev) or its range will not link, so no_mangled_refs\n"
+              "  cannot pass for one.\n"
+              "\n"
+              "  Fix the criterion named above, or bank it with a reason -- but\n"
+              "  REWRITE FIRST, because the order decides whether the log tells the\n"
+              "  truth. Bank the orphan as it stands and --update records the LEGACY\n"
+              "  path as REMOVED: exit 2 without a --reason, and with one a permanent\n"
+              "  row in\n"
+              f"    {exceptions_path}\n"
+              "  saying a file was removed when it was absorbed. Rewrite onto the\n"
+              "  target first and the next --check fails on the REWRITTEN identity,\n"
+              "  which is a real backslide; --update --reason then logs that\n"
+              "  identity, which is true. Either way do not carry the dangling\n"
+              "  identity forward, because it is scored by nothing as it stands.\n"
+              "\n"
+              "  --update does not absorb this class either, and for the file's\n"
+              "  reason rather than the identity's: classify_missing() keys\n"
+              "  absorption on every enrolled member of the destination, and this\n"
+              "  destination does not pass.")
 
     if groups["unvouched"]:
-        print(f"\n{len(groups['unvouched'])} with a destination this tool cannot vouch "
-              "for:\n")
+        print(f"\n{len(groups['unvouched'])} whose rewrite target this tool cannot "
+              "vouch for:\n")
         rows(groups["unvouched"], target=False)
-        print("\n  A manifest names the destination, but nothing here scored it: the\n"
-              "  path is not a tracked source, or it could not be read. Do not rewrite\n"
-              "  onto a file this tool cannot see. Find out what became of that path\n"
-              "  first -- if it exists under another name, rewrite onto the new one,\n"
-              "  exactly as for a destination that is present.")
+        print("\n  A manifest names the destination, but the identity a rewrite would\n"
+              "  create is not one this scan scored: the destination is not a tracked\n"
+              "  source, or no manifest row here enrolls the orphan under a symbol,\n"
+              "  or the symbol carried on the banked identity is not one the\n"
+              "  destination defines. That last one matters most, because it is the\n"
+              "  one a hand rewrite can create: scan() only ever scores enrolled\n"
+              "  members, so an identity naming a symbol the file does not define is\n"
+              "  scored by nothing, exactly as the orphan was. Measured: the next\n"
+              "  --check reports it as a backslide instead, \"GONE -- <symbol> is no\n"
+              "  longer an enrolled member of <destination>\" -- the same missing code\n"
+              "  under a different heading, and no repair at all.\n"
+              "\n"
+              "  Do not rewrite onto an identity this tool cannot see. Find out what\n"
+              "  became of the code first -- if it is enrolled under another symbol,\n"
+              "  or the file exists under another path, rewrite onto that, exactly as\n"
+              "  for a destination that is present.")
 
     if groups["unexplained"]:
         print(f"\n{len(groups['unexplained'])} with no TU promotion destination -- FIND "
               "OUT WHAT HAPPENED:\n")
-        for identity, _tu_id, _dest, _detail in groups["unexplained"]:
-            print(f"  {identity}\n      {orphan_reason(identity, moves)}")
+        for row in groups["unexplained"]:
+            print(f"  {row.identity}\n      {orphan_reason(row.identity, moves)}")
         print("\n  Deleted, renamed, or absorbed by a promotion this tool cannot see:\n"
               "  nothing here can tell those apart, so do not guess. Find out what\n"
               "  became of the file first, then:\n\n"
@@ -799,7 +1046,6 @@ def report_orphans(orphans, moves, exceptions_path, tracked=None, scores=None,
               f"        {exceptions_path}\n"
               "      That is the only caller of append_exceptions() in this tool, so it\n"
               "      is the only road to that log.")
-
 
 def classify_missing(missing, current, tracked, moves, ownership=None):
     """Split banked identities into clean ownership transitions and backslides.
@@ -1024,19 +1270,23 @@ def main():
     print(f"gained, not banked     {len(current - banked):6d}")
     # Mirror --check's split, through the same function, so the two reports cannot
     # drift into disagreeing about which class an orphan is in. A bare total would hide
-    # the only distinction that tells the reader what to do -- and "a destination
-    # exists" is not that distinction: what is AT the destination is.
-    groups = orphan_groups(orphans, moves, tracked_set, scores, ownership)
+    # the only distinction that tells the reader what to do -- and neither "a
+    # destination exists" nor "the destination passes" is that distinction: whether the
+    # ONE identity a rewrite creates passes is.
+    groups = orphan_groups(orphans, moves, tracked_set, scores, ownership,
+                           promoted_symbols())
     print(f"ORPHANED               {len(orphans):6d}   "
           "(file part is not a tracked source)"
           f"{'   <- --check would fail' if orphans else ''}")
     if orphans:
-        print(f"  dest passes          {len(groups['converted']):6d}   "
-              "(rewrite onto it; nothing regressed)")
-        print(f"  dest fails           {len(groups['failing']):6d}   "
-              "(rewrite onto it, but it is a backslide there)")
-        print(f"  dest unvouched       {len(groups['unvouched']):6d}   "
-              "(named by a manifest, not scored here)")
+        print(f"  target passes        {len(groups['clean']):6d}   "
+              "(so does its file; rewrite, nothing regressed)")
+        print(f"  target passes, file  {len(groups['target_only']):6d}   "
+              "does not (rewrite; --update would log a false removal)")
+        print(f"  target fails         {len(groups['backslide']):6d}   "
+              "(rewrite, but it is a backslide there)")
+        print(f"  target unvouched     {len(groups['unvouched']):6d}   "
+              "(nothing here scored the identity a rewrite makes)")
         print(f"  investigate          {len(groups['unexplained']):6d}   "
               "(deleted, renamed, or a manifest this tool cannot see)")
     for identity in orphans[:20]:
