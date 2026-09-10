@@ -47,11 +47,54 @@ unsigned g_pump_limit = kPortThreadPumpLimitDefault;
 bool g_in_pump = false;
 ThreadStats g_stats;
 
+// THE DEPTH HELPER, THROUGH A HOOK (run link100, lane DET4). hal/
+// boot2_thread.cpp owns port_irq_mode_depth and the manager's pending flag
+// this file wants to bracket pump_vblank's dispatch with (see that file's
+// header, THE OTHER TWO DISPATCHES) -- but this file has to stay linkable
+// into mp_sleepwake and mp_comms_seam, which measure the RETIRED host pair
+// under PORT_OS_THREAD_HOST_PAIR below and, by this file's own header, link
+// NEITHER hal/boot2_thread.cpp NOR hal/cxx_aliases.cpp. A direct extern
+// reference to either symbol is an unresolved external on those two targets
+// (measured: it is exactly what ntr.lib's HBlank site broke on eight smoke_*
+// probes before this file adopted the same pattern -- see ntr/rt.cpp).
+// So: three hooks, null by default (a no-op bracket and an always-false
+// mode-ask, which is today's behaviour on every target that does not install
+// them), that hal/boot2_thread.cpp wires up with a static registration --
+// see that file's IrqModeHookReg -- on every target that DOES link it.
+void (*g_irq_mode_enter)() = nullptr;
+void (*g_irq_mode_exit)() = nullptr;
+uint16_t (*g_irq_pending_flag_read)() = nullptr;
+
+// run link100, lane DET4: pump_vblank's own census. See the report this
+// prints at exit for what these mean and why they are 0 on every run this
+// lane measured.
+unsigned long long g_pump_vblank_dispatches;
+unsigned long long g_pump_vblank_modeask;
+
 bool trace_on() {
     static int v = -1;
     if (v < 0) v = std::getenv("SM64DS_THREAD_TRACE") ? 1 : 0;
     return v != 0;
 }
+
+void pump_vblank_report() {
+    std::fprintf(stderr,
+        "[det4] pump_vblank: %llu dispatch(es), %llu of them saw the "
+        "manager's pending flag (m0) go 0->1 during the call -- "
+        "func_02057f54's own deferral, i.e. a ROM body asked "
+        "ARMProcessorMode() from inside THIS handler and got 0x12 "
+        "(run link100, lane DET4; SM64DS_DET3 gates the depth this counts "
+        "against, same as hal/boot2_thread.cpp's own site). Printed "
+        "unconditionally, including when both are zero: comms_conductor "
+        "installs conductor_pump on every session this port makes today, so "
+        "nothing calls thread_set_pump(pump_vblank) and this dispatch count "
+        "is the direct proof, not an inference.\n",
+        g_pump_vblank_dispatches, g_pump_vblank_modeask);
+    std::fflush(stderr);
+}
+struct PumpVblankReportReg {
+    PumpVblankReportReg() { std::atexit(pump_vblank_report); }
+} g_pump_vblank_report_reg;
 
 }  // namespace
 
@@ -62,12 +105,45 @@ unsigned thread_pump_limit() { return g_pump_limit; }
 ThreadStats thread_stats() { return g_stats; }
 void thread_stats_reset() { g_stats = ThreadStats(); }
 
+// run link100, lane DET4. Read by port/tests/walk_window.cpp's own census
+// line, which ties these counts to a run's frame number; the report above
+// (printed at process exit) is what carries them on the scene and captured-
+// pair paths, which do not go through that file's exit block.
+void pump_vblank_counts(unsigned long long *dispatches,
+                        unsigned long long *modeask) {
+    if (dispatches) *dispatches = g_pump_vblank_dispatches;
+    if (modeask) *modeask = g_pump_vblank_modeask;
+}
+
+// run link100, lane DET4. hal/boot2_thread.cpp calls this once, at static
+// init, on every target that links it -- see that file's IrqModeHookReg. Any
+// argument left null (as all three are on mp_sleepwake/mp_comms_seam, which
+// never call this at all) makes the corresponding bracket/read a no-op below,
+// which is this file's behaviour before this lane.
+void thread_set_irq_mode_hooks(void (*enter)(), void (*exit)(),
+                               uint16_t (*pending_flag_read)()) {
+    g_irq_mode_enter = enter;
+    g_irq_mode_exit = exit;
+    g_irq_pending_flag_read = pending_flag_read;
+}
+
 bool pump_vblank(unsigned) {
     void *h = _ZN3IRQ13GetIRQHandlerEj(ntr::IRQ_VBLANK);
     if (!h) return false;          // no wake source: stop, do not busy-spin
     volatile uint32_t *irq_if = reinterpret_cast<volatile uint32_t *>(0x04000214);
     *irq_if |= ntr::IRQ_VBLANK;
+    // run link100, lane DET4: the depth helper brackets this call the same
+    // way hal/boot2_thread.cpp's own VBlank dispatch does, and the pending-
+    // flag read either side of it is this site's mode-ask census. Both go
+    // through the hooks above; see their own comment for why.
+    const bool m0_before =
+        g_irq_pending_flag_read && g_irq_pending_flag_read() != 0;
+    if (g_irq_mode_enter) g_irq_mode_enter();
     reinterpret_cast<void (*)()>(h)();
+    if (g_irq_mode_exit) g_irq_mode_exit();
+    ++g_pump_vblank_dispatches;
+    if (!m0_before && g_irq_pending_flag_read && g_irq_pending_flag_read() != 0)
+        ++g_pump_vblank_modeask;
     *irq_if &= ~ntr::IRQ_VBLANK;
     return true;
 }
