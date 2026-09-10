@@ -206,10 +206,6 @@ class Composite(GitFixture):
         self.assertEqual(list(after.values()), ["matcher"])
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 class RenameReplay(GitFixture):
     """`prepush_attribution.project` must REPLAY renames in commit order.
 
@@ -320,3 +316,180 @@ class RenameReplay(GitFixture):
                 contextlib.redirect_stdout(out):
             self.assertEqual(self.PA.main(), 0)
         self.assertIn("2 consolidated with credit intact", out.getvalue())
+
+
+    def check_gate(self, base="before_configured"):
+        report = self.repo / "credit-report.json"
+        out = io.StringIO()
+        with mock.patch.object(sys, "argv", [
+                "prepush_attribution.py", "--base", base, "--head", "HEAD",
+                "--json", str(report)]), contextlib.redirect_stdout(out):
+            status = self.PA.main()
+        return status, json.loads(report.read_text(encoding="utf-8"))
+
+    def configure_function(self, module, symbol, path, size=4):
+        config = f"config/arm9/overlays/{module}"
+        self.write(f"{config}/symbols.txt",
+                   f"{symbol} kind:function(arm,size=0x{size:x}) addr:0x021260a8\n")
+        self.write(f"{config}/delinks.txt",
+                   f"    .text start:0x021260a8 end:0x{0x021260a8 + size:08x} kind:code\n\n"
+                   f"{path}:\n    complete\n"
+                   f"    .text start:0x021260a8 end:0x{0x021260a8 + size:08x}\n")
+
+    def configured_base(self, symbol="OldMember", path="src/OldMember.cpp", policy=None):
+        self.write(path, "//cpp\nint original_member() { return 1; }\n")
+        self.configure_function("ov078", symbol, path)
+        self.write("attribution.json", json.dumps(policy or {}))
+        self.commit("alice", "match configured function")
+        self.git("branch", "before_configured")
+        self.old_source = path
+
+    def consolidate(self, symbol="NewMember", author="alice", module="ov078", size=4,
+                    policy=None, source=None):
+        (self.repo / self.old_source).unlink()
+        self.write("src/Actor.cpp", source or
+                   "//cpp\nstruct Actor { void on_event(); };\nvoid Actor::on_event() {}\n")
+        if module != "ov078":
+            self.write("config/arm9/overlays/ov078/symbols.txt", "")
+            self.write("config/arm9/overlays/ov078/delinks.txt", "")
+        self.configure_function(module, symbol, "src/Actor.cpp", size)
+        self.write("attribution.json", json.dumps(policy if policy is not None else {
+            "overrides": {f"src/Actor.cpp#{symbol}": author} if author else {}}))
+        self.commit("promoter", "consolidate and rename member")
+
+    def test_aliases_are_applied_to_each_revision_lineage(self):
+        self.write("src/a.c", CLEAN)
+        self.write("attribution.json", json.dumps({"aliases": {"alice": "canonical"}}))
+        self.commit("alice", "match as historical alias")
+        self.git("branch", "before_configured")
+        self.write("attribution.json", json.dumps({"overrides": {"src/a.c": "canonical"}}))
+        self.commit("promoter", "use canonical handle")
+        self.assertEqual(self.PA.lineage("before_configured")["src/a"], "canonical")
+        self.assertEqual(self.check_gate()[0], 0)
+
+    def test_aliases_apply_to_finishers(self):
+        self.write("src/a.c", DRAFT)
+        self.commit("drafter", "draft")
+        self.write("src/a.c", CLEAN)
+        self.write("attribution.json", json.dumps({"aliases": {"alice": "canonical"}}))
+        self.commit("alice", "match")
+        self.assertEqual(self.PA.lineage("HEAD")["src/a"], "canonical")
+
+    def test_path_override_alias_is_resolved_once(self):
+        self.write("src/a.c", CLEAN)
+        self.write("attribution.json", json.dumps({
+            "aliases": {"alias": "middle", "middle": "other"},
+            "overrides": {"src/a.c": "ALIAS"}}))
+        self.commit("alice", "explicit historical alias")
+        self.assertEqual(self.PA.lineage("HEAD")["src/a"], "middle")
+
+    def test_changed_alias_mapping_does_not_rewrite_base_credit(self):
+        self.write("src/a.c", CLEAN)
+        self.write("attribution.json", json.dumps({"aliases": {"alice": "old_author"}}))
+        self.commit("alice", "match")
+        self.git("branch", "before_configured")
+        self.write("attribution.json", json.dumps({"aliases": {"alice": "new_author"}}))
+        self.commit("promoter", "change alias identity")
+        status, report = self.check_gate()
+        self.assertEqual(status, 1)
+        self.assertEqual(report["changed"][0][-2:], ["old_author", "new_author"])
+
+    def test_renamed_member_retains_credit_by_module_and_address(self):
+        self.configured_base()
+        self.consolidate()
+        status, report = self.check_gate()
+        self.assertEqual(status, 0)
+        self.assertEqual(len(report["consolidated_ok"]), 1)
+        self.assertEqual(report["consolidated_ok"][0][0], "OldMember")
+
+    def test_factory_filename_need_not_equal_its_symbol(self):
+        self.configured_base(symbol="Actor_classInit", path="src/d_a_actor.c")
+        self.consolidate(symbol="Actor_classInit")
+        status, report = self.check_gate()
+        self.assertEqual(status, 0)
+        self.assertEqual(report["consolidated_ok"][0][0], "Actor_classInit")
+
+    def test_member_override_preserves_canonical_author(self):
+        self.configured_base(policy={"aliases": {"alice": "canonical"}})
+        self.consolidate(author="legacy", policy={
+            "aliases": {"legacy": "canonical"},
+            "overrides": {"src/Actor.cpp#NewMember": "legacy"}})
+        self.assertEqual(self.check_gate()[0], 0)
+
+    def test_base_member_override_precedes_file_lineage(self):
+        self.configured_base(policy={"overrides": {"src/OldMember.cpp#OldMember": "bob"}})
+        self.consolidate(author="bob")
+        status, report = self.check_gate()
+        self.assertEqual(status, 0)
+        self.assertEqual(report["consolidated_ok"][0][-1], "bob")
+
+    def test_consolidation_with_changed_author_fails(self):
+        self.configured_base()
+        self.consolidate(author="thief")
+        status, report = self.check_gate()
+        self.assertEqual(status, 1)
+        self.assertEqual(report["changed"][0][-2:], ["alice", "thief"])
+
+    def test_consolidation_without_explicit_member_credit_fails(self):
+        self.configured_base()
+        self.consolidate(policy={"overrides": {"src/Actor.cpp": "alice"}})
+        status, report = self.check_gate()
+        self.assertEqual(status, 1)
+        self.assertEqual(len(report["lost"]), 1)
+
+    def test_retired_member_override_cannot_rescue_new_symbol(self):
+        self.configured_base()
+        self.consolidate(policy={"overrides": {"src/Actor.cpp#OldMember": "alice"}})
+        self.assertEqual(self.check_gate()[0], 1)
+
+    def test_same_address_and_symbol_in_another_overlay_cannot_rescue_credit(self):
+        self.configured_base()
+        self.consolidate(symbol="OldMember", module="ov079")
+        status, report = self.check_gate()
+        self.assertEqual(status, 1)
+        self.assertEqual(len(report["lost"]), 1)
+
+    def test_changed_function_extent_cannot_rescue_credit(self):
+        self.configured_base()
+        self.consolidate(size=8)
+        self.assertEqual(self.check_gate()[0], 1)
+
+    def test_unmatched_destination_cannot_rescue_credit(self):
+        self.configured_base()
+        self.consolidate(source=DRAFT)
+        self.assertEqual(self.check_gate()[0], 1)
+
+    def test_unconfigured_rewrite_and_move_still_fails_the_gate(self):
+        self.write("src/OldMember.cpp", CLEAN)
+        self.commit("alice", "unconfigured match")
+        self.git("branch", "before_configured")
+        (self.repo / "src/OldMember.cpp").unlink()
+        self.write("src/Actor.cpp", "void completely_different() {}\n")
+        self.commit("promoter", "rewrite and move")
+        self.assertEqual(self.check_gate()[0], 1)
+
+    def test_unconfigured_override_must_point_to_existing_source(self):
+        self.write("src/a.c", CLEAN)
+        self.commit("alice", "match")
+        self.git("branch", "before_configured")
+        (self.repo / "src/a.c").unlink()
+        self.write("attribution.json", json.dumps({"overrides": {
+            "src/Absent.cpp": "alice", "src/Absent.cpp#a": "alice"}}))
+        self.commit("promoter", "delete source with stale overrides")
+        self.assertEqual(self.check_gate()[0], 1)
+
+    def test_unconfigured_ambiguous_member_override_cannot_rescue_credit(self):
+        self.write("src/a.c", CLEAN)
+        self.commit("alice", "match")
+        self.git("branch", "before_configured")
+        (self.repo / "src/a.c").unlink()
+        self.write("src/Left.cpp", "void left() {}\n")
+        self.write("src/Right.cpp", "void right() {}\n")
+        self.write("attribution.json", json.dumps({"overrides": {
+            "src/Left.cpp#a": "alice", "src/Right.cpp#a": "alice"}}))
+        self.commit("promoter", "ambiguous consolidation")
+        self.assertEqual(self.check_gate()[0], 1)
+
+
+if __name__ == "__main__":
+    unittest.main()
