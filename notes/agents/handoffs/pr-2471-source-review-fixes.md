@@ -1,6 +1,57 @@
 # PR #2471 declaration-agreement corrections
 
-## September 10 parser continuation
+## September 10 initializer-operator rework
+
+Independent review of `302437407099df4d95872c492b83f8505fd19246` found
+`declgate-initializer-operators`: shift and comparison initializers could hide
+later objects with no unparsed count. Both `int prefix=1<<2,target=0;` and
+`int prefix=(1<2),target=0;` let an incompatible function declaration for `target`
+pass the full and changed gates in a 2,003-file, 6,001-declaration fixture.
+The root review and its exact failed controls remain preserved in
+`C:/tmp/sm64ds-v2471-root-0910/build/independent-review-rework.json` and
+`build/operator-false-pass.json` in that checkout.
+
+The same producer session, `codex-r2398-declgate-fix-0910`, reclaimed the returned
+fix stage with a fresh receipt. Data parsing now tracks actual parentheses,
+brackets and braces independently from template arguments. A shift does not open
+a template list, a comparison cannot change the nesting of a surrounding call,
+and an apparent template list cannot cross a top-level assignment or an unmatched
+closing bracket into the next object's declaration. Complete template arguments,
+nested calls and nested expressions remain together. Type and parameter splitting
+retain their previous behavior.
+
+All 74 tests pass. The existing full-size control now includes shift, comparison
+and template-initializer cases alongside the four prior ownership cases; each
+clean input passes and each incompatible function declaration fails both gate
+modes using the unchanged production scan floors. Parser tests also cover later
+initializers, identifier comparisons, right shifts in calls, nested templates,
+non-type template arguments with parenthesized operators and template types.
+Python-name and whitespace checks pass.
+
+The fresh full-tree inventory is unchanged from `302437407`: 9,635 files,
+39,980 declarations, 69 data definitions, two unparsed declarators and 23,056
+unique findings. It adds or removes no diagnostic key relative to that candidate.
+The exact 12 additions and five removals relative to the unchanged 23,049-key
+baseline therefore remain the table below, with the same two newly exposed
+source inconsistencies and ten existing diagnostic migrations. The full gate
+still exits 1. No baseline, source, header, scan floor or workflow is changed.
+
+All eight finding IDs remain: `declgate-shared-type-scope`,
+`declgate-config-scope`, `declgate-renames`, `declgate-data-definitions`,
+`declgate-baseline`, `declgate-source-provenance`, `declgate-function-ownership`
+and `declgate-initializer-operators`. The operator and prior parser fixes are
+ready for independent verification; the baseline finding remains open while the
+orchestrator handles the two source prerequisites and audits the existing-key
+migration separately. No baseline entries may be added to hide those two new
+source inconsistencies. This producer checkpoint is not merge acceptance.
+
+Proof is in `build/declgate-tests-r2.log`, `build/declgate-r2-inventory.json` and
+`build/declgate-r2-full-tree.log`; the producer evidence records the immutable
+output commit and hashes. Earlier proof remains preserved under its original
+filenames. No ROM build is required or claimed for this tooling-only repair.
+
+
+## Preserved first September 10 parser continuation
 
 This owned producer stage continues the preserved checkpoint
 `f2bf9cea85c7144580566c432a125860a7151d80` under session
