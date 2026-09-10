@@ -113,6 +113,15 @@ def member_overrides_at(rev):
     return {symbol: member for symbol, member in out.items() if symbol not in ambiguous}
 
 
+def source_paths_at(rev):
+    """Only source files present in this revision can own contributor credit."""
+    paths = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", rev, "--", "src/"],
+        cwd=REPO, capture_output=True, text=True, encoding="utf-8",
+        errors="replace", check=True).stdout.splitlines()
+    return {path for path in paths if path.endswith((".c", ".cpp"))}
+
+
 def function_ownership_at(rev):
     """Use the merge validator's revision-scoped symbol and delinks ownership."""
     import validate_merge as VM
@@ -121,7 +130,27 @@ def function_ownership_at(rev):
     VM.REPO = REPO
     try:
         # The enrolment cache is revision keyed; resolve HEAD before consulting it.
-        return VM.function_snapshot(VM.resolve_commit(rev))["matched"]
+        rev = VM.resolve_commit(rev)
+        matched = VM.function_snapshot(rev)["matched"]
+        claims, symbols = {}, set()
+        for path in VM.tree_paths(rev, "config/arm9"):
+            module = VM._module_from_symbols(path)
+            if module is None:
+                continue
+            for line in VM.git_text(rev, path).splitlines():
+                row = VM.FUNC_RE.match(line)
+                if not row:
+                    continue
+                name, size, addr = row.group(1), int(row.group(2), 16), int(row.group(3), 16)
+                symbols.add(name)
+                if size:
+                    key = f"{module}:0x{addr:08x}"
+                    claims.setdefault(key, set()).add((name, size))
+        # The snapshot chooses one record per address. That is sound for a real
+        # function plus zero-size aliases, but competing bodies do not establish
+        # unique ownership. Never let their row order choose whose credit survives.
+        ambiguous = {key for key, rows in claims.items() if len(rows) > 1}
+        return matched, ambiguous, symbols
     finally:
         VM.REPO = old_repo
 
@@ -150,7 +179,8 @@ def lineage(rev):
     overrides = overrides_at(rev)
     data = attribution_at(rev)
     out = {}
-    for path in set(first) | set(finishers) | set(overrides):
+    paths = source_paths_at(rev)
+    for path in (set(first) | set(finishers) | set(overrides)) & paths:
         who = overrides.get(path) or canonical_author(finishers.get(path) or first.get(path), data)
         if who:
             out[path.rsplit(".", 1)[0]] = who
@@ -279,18 +309,16 @@ def main():
             moved_ok.append((name, old_stem, new_stem, old_who))
     missing = {name: old for name, old in projected.items() if name not in after_by_name}
     if missing:
-        base_functions = function_ownership_at(args.base)
-        head_functions = function_ownership_at(args.head)
+        base_functions, base_ambiguous, base_symbols = function_ownership_at(args.base)
+        head_functions, head_ambiguous, _head_symbols = function_ownership_at(args.head)
+        ambiguous = base_ambiguous | head_ambiguous
         by_stem = {}
         for key, rec in base_functions.items():
             by_stem.setdefault(rec["srcPath"].rsplit(".", 1)[0], []).append((key, rec))
         base_overrides = credit_overrides_at(args.base)
         head_overrides = credit_overrides_at(args.head)
         members = member_overrides_at(args.head)
-        head_paths = set(subprocess.run(
-            ["git", "ls-tree", "-r", "--name-only", args.head, "--", "src/"],
-            cwd=REPO, capture_output=True, text=True, encoding="utf-8",
-            errors="replace", check=True).stdout.splitlines())
+        head_paths = source_paths_at(args.head)
         for name, (old_stem, old_who) in missing.items():
             owned = by_stem.get(old_stem)
             if owned:
@@ -300,7 +328,8 @@ def main():
                     old_author = base_overrides.get(f"{rec['srcPath']}#{rec['name']}") or old_who
                     dest = head_functions.get(key)
                     new_author = (head_overrides.get(f"{dest['srcPath']}#{dest['name']}")
-                                  if dest and dest["size"] == rec["size"] else None)
+                                  if dest and dest["size"] == rec["size"]
+                                  and key not in ambiguous else None)
                     if not new_author:
                         lost.append((rec["name"], old_stem, old_author))
                     elif new_author != old_author:
@@ -311,9 +340,10 @@ def main():
                                                 old_author))
                 continue
 
-            # No configured base identity: keep the old exact-symbol fallback, but
-            # reject ambiguous overrides and entries pointing to absent source files.
-            member = members.get(name)
+            # An unresolved configured symbol has no ownership proof. Only genuinely
+            # unconfigured sources can use the legacy exact-symbol fallback.
+            member = (members.get(name)
+                      if basename_key(old_stem) not in base_symbols else None)
             if member and member[0] not in head_paths:
                 member = None
             if member and member[1] == old_who:

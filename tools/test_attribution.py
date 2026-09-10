@@ -490,6 +490,81 @@ class RenameReplay(GitFixture):
         self.commit("promoter", "ambiguous consolidation")
         self.assertEqual(self.check_gate()[0], 1)
 
+    def test_stale_path_override_cannot_hide_missing_member_credit(self):
+        self.configured_base()
+        self.consolidate(policy={"overrides": {"src/OldMember.cpp": "alice"}})
+        self.assertNotIn("src/OldMember", self.PA.lineage("HEAD"))
+        status, report = self.check_gate()
+        self.assertEqual(status, 1)
+        self.assertEqual(len(report["lost"]), 1)
+
+    def test_stale_path_override_cannot_hide_changed_member_credit(self):
+        self.configured_base()
+        self.consolidate(policy={"overrides": {
+            "src/OldMember.cpp": "alice", "src/Actor.cpp#NewMember": "thief"}})
+        status, report = self.check_gate()
+        self.assertEqual(status, 1)
+        self.assertEqual(report["changed"][0][-2:], ["alice", "thief"])
+
+    def test_a_stale_base_override_never_creates_source_lineage(self):
+        self.configured_base(policy={"overrides": {"src/AlreadyAbsent.cpp": "bob"}})
+        self.assertNotIn("src/AlreadyAbsent", self.PA.lineage("before_configured"))
+        self.consolidate()
+        self.assertEqual(self.check_gate()[0], 0)
+
+    def add_function_alias(self, symbol, size, original="NewMember", first=False):
+        row = f"{symbol} kind:function(arm,size=0x{size:x}) addr:0x021260a8\n"
+        body = f"{original} kind:function(arm,size=0x4) addr:0x021260a8\n"
+        self.write("config/arm9/overlays/ov078/symbols.txt",
+                   row + body if first else body + row)
+
+    def test_competing_head_function_identities_cannot_rescue_credit(self):
+        for first in (False, True):
+            with self.subTest(alias_first=first):
+                if not first:
+                    self.configured_base()
+                    self.consolidate()
+                self.add_function_alias("OtherMember", 4, first=first)
+                self.write("attribution.json", json.dumps({"overrides": {
+                    "src/Actor.cpp#NewMember": "alice",
+                    "src/Actor.cpp#OtherMember": "thief"}}))
+                self.commit("promoter", "competing equal-size function identities")
+                status, report = self.check_gate()
+                self.assertEqual(status, 1)
+                self.assertEqual(len(report["lost"]), 1)
+
+    def test_competing_base_function_identities_cannot_rescue_credit(self):
+        self.configured_base(policy={"overrides": {
+            "src/OldMember.cpp#OldMember": "alice",
+            "src/OldMember.cpp#OtherMember": "bob"}})
+        self.add_function_alias("OtherMember", 4, original="OldMember")
+        self.commit("alice", "competing base function identities")
+        self.git("branch", "-f", "before_configured", "HEAD")
+        self.consolidate()
+        self.assertEqual(self.check_gate()[0], 1)
+
+    def test_zero_size_alias_preserves_the_real_function_identity(self):
+        self.configured_base()
+        self.add_function_alias("OldZeroAlias", 0, original="OldMember", first=True)
+        self.commit("alice", "add zero-size alias before the base body")
+        self.git("branch", "-f", "before_configured", "HEAD")
+        self.consolidate()
+        self.add_function_alias("ZeroAlias", 0)
+        self.write("attribution.json", json.dumps({"overrides": {
+            "src/Actor.cpp#NewMember": "alice",
+            "src/Actor.cpp#ZeroAlias": "unrelated_alias_credit"}}))
+        self.commit("promoter", "add zero-size alias after the body")
+        self.assertEqual(self.check_gate()[0], 0)
+
+    def test_unresolved_configured_source_cannot_use_exact_name_fallback(self):
+        self.write("src/OldMember.cpp", DRAFT)
+        self.configure_function("ov078", "OldMember", "src/OldMember.cpp")
+        self.commit("alice", "unmatched configured function")
+        self.git("branch", "before_configured")
+        self.old_source = "src/OldMember.cpp"
+        self.consolidate(symbol="OldMember")
+        self.assertEqual(self.check_gate()[0], 1)
+
 
 if __name__ == "__main__":
     unittest.main()
