@@ -814,9 +814,20 @@ def export_close(args):
 
 def prune_matched(args):
     """Drop entries whose function already has a committed, CI-validated match in
-    src/ (a src file without a NONMATCHING header). The local matched ledger is
-    often stale on multi-contributor checkouts, so ingest's matched_set() drop
-    misses these; they linger as ghosts and pollute stats and export-close.
+    src/. The local matched ledger is often stale on multi-contributor checkouts,
+    so ingest's matched_set() drop misses these; they linger as ghosts and pollute
+    stats and export-close.
+
+    The ghost test is asm_policy.counts_as_matched, the one function every counting
+    tool publishes from, not a second spelling of it. It used to read "no
+    NONMATCHING banner", which was the same answer until the hand-asm ruling of
+    2026-09-09 gave a HAND-ASM PRIMITIVE file that also says NONMATCHING back its
+    place in the count. Eight rows then sat in this DB describing functions the
+    progress bar already counted -- __rethrow, func_02052ec8, func_02057014,
+    func_02057078, func_02058568, func_02059468, func_02059824, func_0205a588 --
+    and every close-first worklist put them at the top of the queue, because a
+    divergence of 1 against an assembly primitive with no C to recover is the
+    lowest number in the file.
 
     The src-file check resolves the CURRENT symbol name at (module, addr) via
     tools/names.py -- an entry named with a stale func_ADDR placeholder is still
@@ -827,7 +838,7 @@ def prune_matched(args):
     db = load_db()
     ghosts = [key for key, r in db.items()
               for text in [WL.read_src_text(NM.name_at(r["module"], r["addr"]) or r["name"])]
-              if text is not None and not asm_policy.has_draft_banner(text)]
+              if text is not None and asm_policy.counts_as_matched(text)]
     if args.dry_run:
         for key in ghosts:
             r = db[key]
