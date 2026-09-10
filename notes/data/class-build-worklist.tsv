@@ -97,7 +97,7 @@ abi::__vmi_class_type_info	MISSING	include/abi.h (outer header, nested class MIS
 dBgActor_c	DONE	include\dBgActor_c.h	dActor_c	101	ov002	10
 dEnemyBase_c	DONE	include\dEnemyBase_c.h	dActor_c	55	ov002	14
 daBar_c	DONE	include\daBar_c.h	dActor_c	0	ov002	7
-daBgSnmBdy_c	DONE	include\SnowmanBody.h  [alias: header uses pre-rename name]	dActor_c	0	ov072	28
+daBgSnmBdy_c	DONE	include\daBgSnmBdy_c.h	dActor_c	0	ov072	28
 daBgSnmHed_c	DONE	include\SnowmanHead.h  [alias: header uses pre-rename name]	dActor_c	0	ov072	19
 daBgSnwmn_c	DONE	include\daBgSnwmn_c.h	dActor_c	0	ov072	7
 daBookGen_c	DONE	include\BookShotSpawner.h  [alias: header uses pre-rename name]	dActor_c	0	ov020	5
