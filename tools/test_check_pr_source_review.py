@@ -1,5 +1,6 @@
 """PR merge-check tests; all API calls are fixtures, with no network or writes."""
 import copy
+import hashlib
 import json
 import pathlib
 import subprocess
@@ -93,30 +94,17 @@ class PRSourceReviewTest(unittest.TestCase):
             return copy.deepcopy(pr)
 
         with patch.object(gate, "api", side_effect=api), patch.object(
-                gate, "queue_state", return_value=("d" * 40, state())):
+                gate, "queue_state", return_value=("d" * 40, state())), patch.object(
+                gate, "changed_paths", return_value=["src/actor.cpp"]):
             result = gate.check_pr("tangosdev/sm64ds-decomp", 2447, publish=True)
         self.assertEqual(result["result"], "fail")
         self.assertEqual(posted[0]["conclusion"], "failure")
 
-    def test_renamed_source_requires_review_of_old_and_new_paths(self):
-        pr = pull_request()
-        with patch.object(gate, "target_branch", return_value=("main", BASE)), patch.object(
-                gate, "api", side_effect=[pr, [[{
-                "filename": "src/actor.cpp", "previous_filename": "src/old_actor.c"}]]]), patch.object(
-                gate, "queue_state", return_value=("d" * 40, state())):
-            self.assertEqual(gate.check_pr("tangosdev/sm64ds-decomp", 2447)["result"], "fail")
-
-    def test_truncated_api_file_list_fails_closed(self):
-        pr = pull_request()
-        pr["changed_files"] = 3001
-        with patch.object(gate, "target_branch", return_value=("main", BASE)), patch.object(
-                gate, "api", side_effect=[pr, [[{"filename": "notes/inert.md"}]]]):
-            self.assertEqual(gate.check_pr("tangosdev/sm64ds-decomp", 2447)["result"], "fail")
 
 
 class TargetBranchReviewTest(unittest.TestCase):
     def run_fixture(self, refs, review_base=BASE, publish=False, source=True,
-                    branch="main", final_branch=None, final_head=None):
+                    branch="main", final_branch=None, final_head=None, final_state=None):
         snapshot = state()
         output = snapshot["tasks"]["actor"]["outputs"][0]["evidence"]
         output["tested_base"] = review_base
@@ -151,11 +139,14 @@ class TargetBranchReviewTest(unittest.TestCase):
                     current["base"]["ref"] = final_branch
                 if reads > 1 and final_head is not None:
                     current["head"]["sha"] = final_head
+                if reads > 1 and final_state is not None:
+                    current["state"] = final_state
                 return current
             raise AssertionError("Unexpected API request: " + path)
 
         with patch.object(gate, "api", side_effect=api), patch.object(
-                gate, "queue_state", return_value=("d" * 40, snapshot)) as queue:
+                gate, "queue_state", return_value=("d" * 40, snapshot)) as queue, patch.object(
+                gate, "changed_paths", return_value=["src/actor.cpp" if source else "tools/inert.py"]):
             result = gate.check_pr("tangosdev/sm64ds-decomp", 2447, publish=publish)
         return result, calls, posts, queue.call_count
 
@@ -188,6 +179,11 @@ class TargetBranchReviewTest(unittest.TestCase):
                 self.assertEqual(result["result"], "fail")
                 self.assertIn("PR changed", result["summary"])
                 self.assertEqual(posts, [])
+
+    def test_closed_pr_cannot_publish_a_verdict_for_its_previous_open_state(self):
+        result, _, posts, _ = self.run_fixture([BASE], publish=True, final_state="closed")
+        self.assertEqual(result["result"], "fail")
+        self.assertEqual(posts, [])
 
     def test_target_advance_before_publication_invalidates_success(self):
         result, calls, posts, _ = self.run_fixture([BASE, "e" * 40], publish=True)
@@ -256,6 +252,307 @@ class TargetBranchReviewTest(unittest.TestCase):
             result = gate.check_pr("tangosdev/sm64ds-decomp", 2447)
         self.assertEqual(result["result"], "fail")
         self.assertEqual(api.call_count, 1)
+
+
+def object_id(value):
+    return hashlib.sha1(value.encode()).hexdigest()
+
+
+def blob(value, mode="100644", kind="blob"):
+    return mode, kind, object_id(value)
+
+
+class TreeAPI:
+    """Git metadata fixtures; tree contents are never fetched or executed."""
+    def __init__(self, before, after, base=BASE, head=HEAD):
+        self.base, self.head = base, head
+        self.objects, self.overrides, self.calls = {}, {}, []
+        self.before_tree, self.after_tree = self.build(before), self.build(after)
+        self.pr = pull_request()
+        self.pr["head"]["sha"] = head
+        self.comparison = {"base_commit": {"sha": base},
+                           "merge_base_commit": {"sha": base}, "status": "ahead"}
+
+    def build(self, leaves):
+        root = {}
+        for path, entry in leaves.items():
+            parts = path.split("/")
+            node = root
+            for part in parts[:-1]:
+                node = node.setdefault(part, {})
+            node[parts[-1]] = entry
+
+        def save(node):
+            entries = []
+            for name, value in sorted(node.items()):
+                mode, kind, sha = ("040000", "tree", save(value)) if isinstance(value, dict) else value
+                entries.append({"path": name, "mode": mode, "type": kind, "sha": sha})
+            sha = object_id(json.dumps(entries, sort_keys=True))
+            self.objects[sha] = entries
+            return sha
+        return save(root)
+
+    def response(self, sha, recursive):
+        entries = []
+        def visit(current, prefix=""):
+            for row in self.objects[current]:
+                entry = dict(row, path=prefix + row["path"])
+                entries.append(entry)
+                if recursive and row["type"] == "tree":
+                    visit(row["sha"], entry["path"] + "/")
+        visit(sha)
+        return {"sha": sha, "tree": entries, "truncated": False}
+
+    def api(self, path, payload=None, paginate=False):
+        self.calls.append(path)
+        if "/files?" in path:
+            raise AssertionError("Cached PR files must not determine exact-base scope")
+        if "/compare/" in path:
+            return copy.deepcopy(self.comparison)
+        if "/git/commits/" in path:
+            sha = path.rsplit("/", 1)[1]
+            tree = {self.base: self.before_tree, self.head: self.after_tree}[sha]
+            return copy.deepcopy(self.overrides.get(sha, {"sha": sha, "tree": {"sha": tree}}))
+        if "/git/trees/" in path:
+            sha = path.rsplit("/", 1)[1].split("?")[0]
+            recursive = "?recursive=1" in path
+            value = self.overrides.get((sha, recursive), self.response(sha, recursive))
+            if isinstance(value, Exception):
+                raise value
+            return copy.deepcopy(value)
+        if path.endswith("/git/ref/heads/agents/coordination"):
+            return {"object": {"sha": "d" * 40}}
+        if "/pulls/" in path:
+            return copy.deepcopy(self.pr)
+        raise AssertionError("Unexpected API request: " + path)
+
+    def paths(self):
+        with patch.object(gate, "api", side_effect=self.api):
+            return gate.changed_paths("tangosdev/sm64ds-decomp", self.base, self.head)
+
+    def check(self, reviewed=("src/actor.cpp", "include/actor.h")):
+        snapshot = state()
+        task = snapshot["tasks"]["actor"]
+        task["resources"] = ["file:" + path for path in reviewed]
+        task["outputs"][0].update(commit=self.head,
+                                  evidence=evidence(head=self.head, base=self.base))
+        task["outputs"][0]["evidence"]["source_review"]["files"] = list(reviewed)
+        with patch.object(gate, "api", side_effect=self.api), patch.object(
+                gate, "target_branch", return_value=("main", self.base)), patch.object(
+                gate, "queue_state", return_value=("d" * 40, snapshot)):
+            return gate.check_pr("tangosdev/sm64ds-decomp", 2445)
+
+
+# Exact --no-renames path inventory of PR 2445, 666df563a..3b71825d7.
+PR2445_PATHS = [('M', 'attribution.json'),
+ ('M', 'config/arm9/overlays/ov072/delinks.txt'),
+ ('M', 'config/arm9/overlays/ov072/symbols.txt'),
+ ('M', 'config/converted-baseline.json'),
+ ('A', 'config/tu_manifest.d/ov072/daBgSnmBdy_c.json'),
+ ('D', 'include/SnowmanBody.h'),
+ ('A', 'include/daBgSnmBdy_c.h'),
+ ('M', 'include/decl_common.h'),
+ ('A', 'notes/agents/handoffs/pr-2445-source-review-fixes.md'),
+ ('A', 'notes/agents/handoffs/pr2445-composition-0910.md'),
+ ('A', 'notes/agents/handoffs/prod-snmbdy-0907.md'),
+ ('M', 'notes/cpp-tu-current-state.md'),
+ ('M', 'notes/data/c-cpp-classification.tsv'),
+ ('M', 'notes/data/class-build-worklist.tsv'),
+ ('M', 'notes/data/tu-merge-candidates.json'),
+ ('M', 'notes/data/tu-promotion-queue.tsv'),
+ ('M', 'notes/ead-debug-name-crossref.md'),
+ ('M', 'notes/handoff-marker-typing.md'),
+ ('D', 'src/_ZN11SnowmanBody10HurtPlayerEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody10InitState0Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody10InitState1Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody10InitState2Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody10InitState3Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody10InitState4Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody10InitState5Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody11AdvancePathEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody11UpdateModelEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody13CallStateInitEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody13InitResourcesEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody15UpdateRollAngleEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody16CleanupResourcesEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody16OnPendingDestroyEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody17CallStateBehaviorEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody18IsPlayerNearCenterEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody21UpdateGroundCollisionEP10dBgCh_Actr.cpp'),
+ ('D', 'src/_ZN11SnowmanBody6RenderEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody6State0Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody6State1Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody6State2Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody6State3Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody6State4Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody6State5Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBody8BehaviorEv.cpp'),
+ ('D', 'src/_ZN11SnowmanBody8SetStateEi.cpp'),
+ ('D', 'src/_ZN11SnowmanBodyD0Ev.cpp'),
+ ('D', 'src/_ZN11SnowmanBodyD1Ev.cpp'),
+ ('A', 'src/actors/daBgSnmBdy_c.cpp'),
+ ('D', 'src/d_a_bg_snm_bdy.c'),
+ ('M', 'symbols/actor_renames.tsv')]
+
+
+class ExactTreeScopeTest(unittest.TestCase):
+    def test_stale_401_cached_files_do_not_override_49_exact_paths(self):
+        before = {path: blob("old " + path) for status, path in PR2445_PATHS if status != "A"}
+        after = {path: blob("new " + path) for status, path in PR2445_PATHS if status != "D"}
+        fixture = TreeAPI(before, after,
+                          base="666df563a2ea5340f41866c3321468b3c2207fd2",
+                          head="3b71825d7da2b969c4d962fd82b189090743757f")
+        fixture.pr["base"]["sha"] = "690637e41a7a302eace631f6065ab1c4fe37326e"
+        fixture.pr["changed_files"] = 401
+        fixture.comparison["files"] = [{"filename": f"src/stale-{n}.cpp"} for n in range(300)]
+        self.assertEqual(fixture.paths(), sorted(path for _, path in PR2445_PATHS))
+        reviewed = [path for _, path in PR2445_PATHS if gate.sr.source_path(path)]
+        self.assertEqual(fixture.check(reviewed)["result"], "pass")
+        self.assertEqual(fixture.check(reviewed[:-1])["result"], "fail")
+
+    def test_unreviewed_added_changed_and_deleted_sources_fail(self):
+        for before, after in (({}, {"src/unreviewed.cpp": blob("new")}),
+                              ({"src/unreviewed.cpp": blob("old")}, {}),
+                              ({"src/unreviewed.cpp": blob("old")},
+                               {"src/unreviewed.cpp": blob("new")})):
+            with self.subTest(before=before, after=after):
+                result = TreeAPI(before, after).check()
+                self.assertEqual(result["result"], "fail")
+                self.assertIn("src/unreviewed.cpp", result["missing_files"])
+
+    def test_renames_retain_source_paths_even_when_destination_is_notes(self):
+        for destination in ("src/actor.cpp", "notes/actor.txt"):
+            with self.subTest(destination=destination):
+                fixture = TreeAPI({"src/old_actor.c": blob("body")},
+                                  {destination: blob("body")})
+                self.assertEqual(set(fixture.paths()), {"src/old_actor.c", destination})
+                self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_mode_type_binary_and_directory_replacements_are_changed(self):
+        before = {"src/actor.cpp": blob("same"), "assets/image.bin": blob("old"),
+                  "src/directory/old.cpp": blob("old"), "vendor/code": blob("one", "160000", "commit")}
+        after = {"src/actor.cpp": blob("same", "100755"), "assets/image.bin": blob("new"),
+                 "src/directory": blob("link", "120000"), "vendor/code": blob("two", "160000", "commit")}
+        self.assertEqual(set(TreeAPI(before, after).paths()), set(before) | set(after))
+        self.assertEqual(TreeAPI(before, after).check()["result"], "fail")
+        self.assertEqual(TreeAPI({"src/link": blob("same", "120000")},
+                                 {"src/link": blob("same")}).paths(), ["src/link"])
+
+    def test_large_diffs_do_not_use_compare_or_pr_file_caps(self):
+        for count in (301, 3001):
+            with self.subTest(count=count):
+                after = {f"notes/item-{n}.md": blob(str(n)) for n in range(count)}
+                after["src/unreviewed.cpp"] = blob("last source")
+                fixture = TreeAPI({}, after)
+                fixture.pr["changed_files"] = 1
+                fixture.comparison["files"] = [{"filename": "notes/inert.md"}]
+                self.assertEqual(len(fixture.paths()), count + 1)
+                self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_truncated_recursive_response_uses_complete_individual_trees(self):
+        fixture = TreeAPI({"src/actor.cpp": blob("old"), "shared/stable.h": blob("same")},
+                          {"src/actor.cpp": blob("new"), "shared/stable.h": blob("same")})
+        for sha in (fixture.before_tree, fixture.after_tree):
+            fixture.overrides[sha, True] = {"sha": sha, "tree": [], "truncated": True}
+        self.assertEqual(fixture.paths(), ["src/actor.cpp"])
+        shared = next(row["sha"] for row in fixture.objects[fixture.before_tree]
+                      if row["path"] == "shared")
+        self.assertEqual(sum(path.endswith("/git/trees/" + shared) for path in fixture.calls), 1)
+
+    def test_identical_trees_need_no_file_enumeration(self):
+        fixture = TreeAPI({"src/actor.cpp": blob("same")}, {"src/actor.cpp": blob("same")})
+        self.assertEqual(fixture.paths(), [])
+        self.assertFalse(any("/git/trees/" in path for path in fixture.calls))
+
+    def test_truncated_or_missing_nonrecursive_response_fails_closed(self):
+        for bad in (None, {}, RuntimeError("missing subtree"),
+                    {"tree": [], "truncated": True}):
+            with self.subTest(bad=bad):
+                fixture = TreeAPI({}, {"src/actor.cpp": blob("new")})
+                sha = fixture.after_tree
+                fixture.overrides[sha, True] = {"sha": sha, "tree": [], "truncated": True}
+                fixture.overrides[sha, False] = dict(bad, sha=sha) if isinstance(bad, dict) else bad
+                self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_malformed_tree_responses_cannot_grant_tooling_exemption(self):
+        def change_row(data, key, value):
+            data["tree"][-1][key] = value
+        mutations = [
+            lambda data: data.update(sha="f" * 40),
+            lambda data: data.pop("truncated"),
+            lambda data: data.update(truncated="false"),
+            lambda data: data.update(tree=None),
+            lambda data: data["tree"].append(dict(data["tree"][-1])),
+            lambda data: change_row(data, "sha", "bad"),
+            lambda data: change_row(data, "mode", "100000"),
+            lambda data: change_row(data, "type", "tree"),
+            lambda data: change_row(data, "path", "../notes/file"),
+            lambda data: change_row(data, "path", "notes//file"),
+            lambda data: change_row(data, "path", "/notes/file"),
+            lambda data: change_row(data, "path", "notes\\file"),
+            lambda data: data["tree"].pop(0),
+        ]
+        for mutation in mutations:
+            with self.subTest(mutation=mutation):
+                fixture = TreeAPI({}, {"notes/file": blob("new")})
+                data = fixture.response(fixture.after_tree, True)
+                mutation(data)
+                fixture.overrides[fixture.after_tree, True] = data
+                self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_wrong_commit_or_tree_identity_fails_closed(self):
+        for data in ({}, {"sha": HEAD, "tree": {"sha": "bad"}},
+                     {"sha": BASE, "tree": {"sha": "e" * 40}}):
+            with self.subTest(data=data):
+                fixture = TreeAPI({}, {"src/actor.cpp": blob("new")})
+                fixture.overrides[HEAD] = data
+                self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_nonancestor_and_unrelated_heads_need_a_new_composition(self):
+        for status in ("behind", "diverged", "unrelated"):
+            with self.subTest(status=status):
+                fixture = TreeAPI({}, {"tools/inert.py": blob("new")})
+                fixture.comparison.update(status=status, merge_base_commit={"sha": "e" * 40})
+                result = fixture.check()
+                self.assertEqual(result["result"], "fail")
+                self.assertIn("restack", result["summary"])
+        fixture = TreeAPI({}, {"tools/inert.py": blob("new")})
+        fixture.comparison = {}
+        self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_missing_subtree_and_tree_cycles_fail_closed(self):
+        for cycle in (False, True):
+            with self.subTest(cycle=cycle):
+                fixture = TreeAPI({}, {"src/actor.cpp": blob("new")})
+                sha = fixture.after_tree
+                fixture.overrides[sha, True] = {"sha": sha, "tree": [], "truncated": True}
+                child = fixture.objects[sha][0]["sha"]
+                if cycle:
+                    fixture.overrides[sha, False] = {"sha": sha, "truncated": False, "tree": [
+                        {"path": "src", "mode": "040000", "type": "tree", "sha": sha}]}
+                else:
+                    fixture.overrides[child, False] = RuntimeError("subtree unavailable")
+                self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_nonrecursive_nested_paths_fail_closed(self):
+        fixture = TreeAPI({}, {"src/actor.cpp": blob("new")})
+        sha = fixture.after_tree
+        fixture.overrides[sha, True] = {"sha": sha, "tree": [], "truncated": True}
+        fixture.overrides[sha, False] = {"sha": sha, "truncated": False, "tree": [
+            {"path": "src/actor.cpp", "mode": "100644", "type": "blob", "sha": "e" * 40}]}
+        self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_changed_source_gitlink_requires_review(self):
+        fixture = TreeAPI({"src/foreign": blob("old", "160000", "commit")},
+                          {"src/foreign": blob("new", "160000", "commit")})
+        self.assertEqual(fixture.paths(), ["src/foreign"])
+        self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_transport_failure_does_not_become_an_empty_diff(self):
+        fixture = TreeAPI({}, {"tools/inert.py": blob("new")})
+        fixture.overrides[fixture.after_tree, True] = RuntimeError("transport failed")
+        self.assertEqual(fixture.check()["result"], "fail")
+
 
 
 if __name__ == "__main__":

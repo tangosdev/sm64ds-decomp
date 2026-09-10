@@ -87,6 +87,103 @@ def target_branch(repo, pr):
     return branch, sr.commit(ref["object"]["sha"], "target branch commit")
 
 
+def commit_tree(repo, commit):
+    """Resolve an immutable commit to its tree without downloading source blobs."""
+    data = api(f"repos/{repo}/git/commits/{commit}")
+    sr.require(data["sha"] == commit, "API returned a different commit")
+    return sr.commit(data["tree"]["sha"], "commit tree")
+
+
+def read_tree(repo, sha, recursive=False):
+    suffix = "?recursive=1" if recursive else ""
+    data = api(f"repos/{repo}/git/trees/{sha}{suffix}")
+    sr.require(data["sha"] == sha, "API returned a different tree")
+    sr.require(type(data["truncated"]) is bool, "Tree completeness flag is missing or invalid")
+    sr.require(isinstance(data["tree"], list), "Tree entries are missing or invalid")
+    modes = {"100644": "blob", "100755": "blob", "120000": "blob",
+             "040000": "tree", "160000": "commit"}
+    entries = {}
+    for item in data["tree"]:
+        path, mode, kind = item["path"], item["mode"], item["type"]
+        sr.require(isinstance(path, str) and bool(path) and
+                   not any(c in path for c in "\\\0\r\n") and
+                   all(part not in ("", ".", "..") for part in path.split("/")),
+                   "Tree contains an invalid relative path")
+        sr.require(recursive or "/" not in path, "Nonrecursive tree contains a nested path")
+        sr.require(path not in entries, "Tree contains a duplicate path: " + path)
+        sr.require(isinstance(mode, str) and modes.get(mode) == kind,
+                   "Tree contains an invalid mode or object type")
+        entries[path] = (mode, kind, sr.commit(item["sha"], "tree entry object"))
+    if recursive and not data["truncated"]:
+        for path in entries:
+            parent = path.rpartition("/")[0]
+            ancestors = {sha}
+            while parent:
+                entry = entries.get(parent)
+                sr.require(entry is not None and entry[1] == "tree",
+                           "Recursive tree is missing a parent directory")
+                sr.require(entry[2] not in ancestors, "Tree contains a cycle")
+                ancestors.add(entry[2])
+                parent = parent.rpartition("/")[0]
+            if entries[path][1] == "tree":
+                sr.require(entries[path][2] not in ancestors, "Tree contains a cycle")
+    return entries, data["truncated"]
+
+
+def complete_tree(repo, sha, cache):
+    """Enumerate every leaf, falling back to individual trees if recursion is capped."""
+    entries, truncated = read_tree(repo, sha, recursive=True)
+    if not truncated:
+        return {path: entry for path, entry in entries.items() if entry[1] != "tree"}
+    # GitHub documents recursive truncation at 100,000 entries or 7 MB. Discard
+    # that partial result; only complete nonrecursive responses establish scope.
+    leaves = {}
+    pending = [("", sha, frozenset())]
+    while pending:
+        prefix, current, ancestors = pending.pop()
+        sr.require(current not in ancestors, "Tree contains a cycle")
+        if current not in cache:
+            children, truncated = read_tree(repo, current)
+            sr.require(not truncated, "Nonrecursive tree is truncated; review coverage unknown")
+            cache[current] = children
+        for name, entry in cache[current].items():
+            path = prefix + name
+            if entry[1] == "tree":
+                pending.append((path + "/", entry[2], ancestors | {current}))
+            else:
+                sr.require(path not in leaves, "Tree contains a duplicate path: " + path)
+                leaves[path] = entry
+    return leaves
+
+
+def changed_paths(repo, base, head):
+    """Compare the exact composition, not PR /files metadata for a cached base.
+
+    The composition must retain its base ancestry (queue-v2.md and
+    SOURCE-REVIEW-CUTOVER.md). A stale branch needs a new composition and review.
+    Compare metadata establishes ancestry only: its files list is capped at 300,
+    even with pagination. Git tree objects supply the complete changed-path set.
+    Leaf comparison retains both rename sides and mode/type changes, including
+    symlinks, submodules, and file/directory replacements.
+    """
+    base = sr.commit(base, "comparison base")
+    head = sr.commit(head, "comparison head")
+    comparison = api(f"repos/{repo}/compare/{base}...{head}?per_page=1")
+    sr.require(comparison["base_commit"]["sha"] == base,
+               "Comparison returned a different base")
+    sr.require(comparison["merge_base_commit"]["sha"] == base and
+               comparison["status"] in ("ahead", "identical"),
+               "PR head does not contain the live target base; restack and review the composition")
+    before_tree, after_tree = commit_tree(repo, base), commit_tree(repo, head)
+    if before_tree == after_tree:
+        return []
+    cache = {}
+    before = complete_tree(repo, before_tree, cache)
+    after = complete_tree(repo, after_tree, cache)
+    return sorted(path for path in before.keys() | after.keys()
+                  if before.get(path) != after.get(path))
+
+
 def check_pr(repo, number, publish=False):
     pr = api(f"repos/{repo}/pulls/{number}")
     if pr["state"] != "open":
@@ -96,11 +193,7 @@ def check_pr(repo, number, publish=False):
     state_sha = None
     try:
         branch, base = target_branch(repo, pr)
-        pages = api(f"repos/{repo}/pulls/{number}/files?per_page=100", paginate=True)
-        files = [f for page in pages for f in page]
-        sr.require(len(files) == pr["changed_files"], "incomplete PR file list; review coverage unknown")
-        paths = [f["filename"] for f in files]
-        paths += [f["previous_filename"] for f in files if f.get("previous_filename")]
+        paths = changed_paths(repo, base, head)
         if any(sr.source_path(p) for p in paths):
             state_sha, state = queue_state(repo)
         else:
