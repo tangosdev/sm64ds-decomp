@@ -3,7 +3,55 @@
 This is a continuation of the existing Pkn promotion, not a new class campaign.
 The queue records this commit's immutable output SHA.
 
-## Identity and resumption
+## PKN-06 correction, 2026-09-10
+
+Producer `codex-pkn-review-fix-0910` resumes the same task and `fix` stage from
+`24260cc326e3124f37772e4c89256e9c40efdc60`, on branch `review/pr2450-0910` in
+`C:/tmp/sm64ds-r2450-0910`. The active source-review policy is pinned to workflow
+`18af52b49b9fb5663d417bdfa86109b7b157aaa3`; queue commands use the current
+coordinator checkout. The original source/base/workflow pins below remain
+historical records. The queue records this correction's output.
+
+The previous independent review rejected PKN-06 because the active manifest
+still said the vtable ran to the end of ov084 `.data`. Its ownership explanation
+now agrees with the source and dossier: the address point is `0x02130c28`, its
+31 four-byte slots occupy `0x7c` bytes and end at `0x02130ca4`, and seven zero
+words follow before the section ends at `0x02130cc0`. Storage including the
+eight-byte header remains `0x84`. No ownership, address, size or isolation policy
+changes.
+
+The endpoint was reread from `extracted/overlays/overlay_0084.bin`, using module
+base `0x02129020`: `0x02130c28 + 31 * 4 == 0x02130ca4`, and unpacking the seven
+32-bit words from that endpoint to `0x02130cc0` returns seven zeros. This confirms
+the padding; it does not derive the slot count from the section boundary.
+
+All prior findings remain recorded:
+
+| Finding | Current disposition |
+| --- | --- |
+| PKN-01 | Fixed in the preserved input: state 8 returns void. |
+| PKN-02 | Fixed in the preserved input: state-1 PMF provenance. |
+| PKN-03 | Fixed in the preserved input: scoped declaration and ABI claims. |
+| PKN-04 | Fixed in the preserved input: real class PMF receiver. |
+| PKN-05 | Previously accepted as deferred, partial reconstruction; continue under [issue #2473](https://github.com/tangosdev/sm64ds-decomp/issues/2473), owned by the humanizer integrator through @andrewboudreau. |
+| PKN-06 | Manifest endpoint explanation corrected here; fresh independent review required. |
+
+Only this handoff and one manifest explanation changed. Source, headers,
+configuration addresses, the parsed manifest policy and contributor attribution
+are identical to the accepted repair input. Earlier compile, relocation and ROM
+measurements below describe that input and are retained as historical evidence;
+no fresh whole-ROM build or source acceptance is claimed for this prose repair.
+The independent verifier must review the correction and retained findings before
+publication. A later composition against current main requires its own review
+and validation.
+
+## Preserved input identity and measurements
+
+The remaining sections describe `24260cc326e3124f37772e4c89256e9c40efdc60` and
+its earlier source input. They preserve the original experiments and handoff;
+the durable continuation issue and current PKN-06 disposition are above.
+
+### Identity and resumption
 
 - Task: `pr-2450-source-review-fixes`, producer stage `fix`.
 - Durable thread: [PR #2450](https://github.com/tangosdev/sm64ds-decomp/pull/2450),
