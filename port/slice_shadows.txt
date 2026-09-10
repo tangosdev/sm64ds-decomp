@@ -65,3 +65,49 @@
 #
 src/_ZN11BabyPenguin13InitResourcesEv.cpp
 src/_ZN11CrazedCrate13InitResourcesEv.cpp
+
+# ---------------------------------------------------------------------------
+# RUNG 2: THE LAKITU BRO'S InitResources, AND THE THIRD ARGUMENT THAT IS THE
+# HOST WRAPPER'S OWN, NOT THE ROM'S
+# ---------------------------------------------------------------------------
+#
+# src/_ZN9LakituBro13InitResourcesEv.cpp -- the third of the three InitResources
+# rows in the shadow queue, and the same remedy read from the other end. Here
+# the matched TU is RIGHT about the ROM and the HOST WRAPPER is the one that
+# wants an argument the ROM never passed.
+#
+# TextureSequence::Prepare's ROM body is a 0xc tail-call veneer into
+# func_02046d50, which takes two arguments. This lane re-read the call site in
+# the overlay image rather than taking the host copy's word for it -- ov085,
+# base 0x02129020, LakituBro::InitResources 0x0212ebec (size 0x168):
+#
+#     0212EC34  fc009fe5  ldr  r0, [pc, #0xfc]
+#     0212EC38  00119fe5  ldr  r1, [pc, #0x100]
+#     0212EC3C  040090e5  ldr  r0, [r0, #4]
+#     0212EC40  041091e5  ldr  r1, [r1, #4]
+#     0212EC44  4c9bfbeb  bl   #0x201597c        <- Prepare, r0 and r1 only
+#     0212EC48  0020a0e3  mov  r2, #0            <- r2 is written AFTER the call
+#
+# so r2 held whatever was left in it and the ROM's call really is two arguments.
+# The port's wrapper (hal/player_bridges.cpp) is a three-parameter thiscall
+# face, so the matched TU's honest two-argument call leaves the wrapper's third
+# parameter unwritten. port/unmatched/TexSeq_Caller_LakituBro.cpp fixed that by
+# repeating the second argument inside a copy of the whole body.
+#
+# THE THIRD ARGUMENT IS A HOST VALUE, so it belongs on the host side of the
+# seam and nowhere else: port_texseq_prepare_r1 (hal/method_faces.cpp) takes the
+# ROM's two arguments and hands the wrapper the second one twice, which is
+# exactly what the host copy did and what func_02046d50 ignores. The src TU is
+# compiled with -D_ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File=
+# port_texseq_prepare_r1, which moves its own local declaration and both of its
+# call sites together; no other Prepare caller in the tree is renamed.
+#
+# WHAT IS LOST WITH THE HOST COPY, said out loud: that file also carried an
+# SM64DS_INTRO_WATCH diagnostic (which of the three LakituBro chains a spawn
+# takes, printed once per spawn, inert unless the variable is set). Retiring the
+# body retires the probe. Six other SM64DS_INTRO_WATCH sites remain, two of them
+# on this same actor and chain -- hal/actor_classes_intro.cpp and
+# port/unmatched/Ov085_LakituBro_IntroEnd.cpp -- so the watch still reports on
+# the opening; this one line of it does not.
+#
+src/_ZN9LakituBro13InitResourcesEv.cpp

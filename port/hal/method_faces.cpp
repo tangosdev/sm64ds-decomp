@@ -1068,3 +1068,24 @@ void func_ov080_0212513c(void *c, int i);
 void port_ov072_bp_state_i0(void *c) { func_ov072_02121d50(c, 0); }
 void port_ov080_cc_state_i0(void *c) { func_ov080_0212513c(c, 0); }
 }  /* extern "C" */
+
+/* The third forwarder of the same gate, and the one that reads the other way
+ * round. LakituBro::InitResources calls TextureSequence::Prepare with the two
+ * arguments the ROM passes -- verified in ov085, where 0x0212ec44's branch is
+ * preceded only by loads of r0 and r1 and r2 is written on the instruction
+ * AFTER it -- while the port's Prepare (hal/player_bridges.cpp) is the three-
+ * parameter thiscall face that reshapes r0/r1 into (self, bmd) and then wants a
+ * btp the ROM never sent. func_02046d50, which the ROM's Prepare tail-calls,
+ * ignores that third value entirely.
+ *
+ * So the third argument is a HOST value and it is supplied on the host side:
+ * the caller's own second argument again, which is a live object, exactly what
+ * the retired port/unmatched/TexSeq_Caller_LakituBro.cpp passed. The parameters
+ * are void* here and references in the calling TU; at this ABI those are the
+ * same word, and both sides are extern "C", so the call is exact. */
+extern "C" {
+void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd,
+                                                       void *btp);
+void port_texseq_prepare_r1(void *self, void *bmd)
+{ _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(self, bmd, bmd); }
+}  /* extern "C" */

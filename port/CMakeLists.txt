@@ -2963,10 +2963,13 @@ foreach(line IN LISTS SLICE18_LINES)
 endforeach()
 # argfix: LakituBro::InitResources calls TextureSequence::Prepare with two
 # arguments; the host wrapper reshapes them into a 3-param thiscall and derefs an
-# unwritten third slot. Host copy passes the real third argument. Src line
-# commented out in slice_gate18.txt.
-list(APPEND SLICE18_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/TexSeq_Caller_LakituBro.cpp")
+# unwritten third slot.
+# RETIRED by run link100 lane SHADOWS: the third argument is the WRAPPER's, not
+# the ROM's, so it moved into a forwarder (port_texseq_prepare_r1,
+# hal/method_faces.cpp) and the ROM's own body took the seat on
+# port/slice_shadows.txt. unmatched/TexSeq_Caller_LakituBro.cpp is deleted and
+# this append goes with it; the src line stays commented out in gate 18's own
+# file, which is not this lane's.
 # rabbit-key: func_ov085_0212d268 (the RABBIT_KEY seat-and-enter) WAS a host
 # copy here for the gate-16 reason -- MSVC's pointer-to-member over an
 # incomplete class. R9c below (run link100 lane PMF3) puts the matched TU back
@@ -11042,6 +11045,15 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN11CrazedCrate13InitResourcesEv.cpp"
     PROPERTIES COMPILE_DEFINITIONS
     "func_ov080_0212513c=port_ov080_cc_state_i0")
+# Rung 2, the other direction: the matched TU is right about the ROM (r0 and r1
+# only at 0x0212ec44, r2 written after the branch) and the port's own three-
+# parameter Prepare wrapper is what wants a third argument. So the rename points
+# at a forwarder that supplies it, and both of this TU's Prepare call sites move
+# with its own local declaration.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN9LakituBro13InitResourcesEv.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "_ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File=port_texseq_prepare_r1")
 
 # Gate 192: the ov081 trio -- ICE_BLOCK (18), MR_BLIZZARD (223), SPINDRIFT
 # (312). Fresh per-symbol ov081 mount (port/ov081_syms.txt). The fill is
