@@ -25,7 +25,7 @@ struct daObjKi_Ita_c : daObjFloatBoard_c {
 
 inline void *daObjKi_Ita_c::operator new(unsigned long size)
 {
-    return _ZN7fBase_cnwEj((unsigned)size);
+    return _ZN7fBase_cnwEj(size);
 }
 
 typedef char daObjKi_Ita_c_size_must_be_0x348[sizeof(daObjKi_Ita_c) == 0x348 ? 1 : -1];
