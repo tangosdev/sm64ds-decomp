@@ -1763,10 +1763,24 @@ extern "C" void port_install_host_frame_pump(int (*pump)(unsigned));
 static int r3d_wait_probe_left;    /* frames of phase 7 still owed to the wait */
 static int r3d_wait_probe_taken;   /* frames of phase 7 the wait actually took */
 namespace port { void thread_sched_report(const char *tag); }
+/* run link100, lane DET4: the census for the two OTHER ROM IRQ handler
+   dispatches in the linked set (hal/os_thread.cpp's pump_vblank, ntr/rt.cpp's
+   HBlank line) -- DET3 bracketed only IRQ::VBlankHandler's, through this
+   loop's own hal/boot2_thread.cpp halt. Each site's own atexit report (in its
+   own file) carries these counts on the scene and captured-pair paths; the
+   line below ties them to this loop's frame count. */
+namespace port {
+void pump_vblank_counts(unsigned long long *dispatches,
+                        unsigned long long *modeask);
+}
 namespace ntr {
 void gx_swap_apply();
 void gx_swap_counts(unsigned &requested, unsigned &applied,
                     unsigned &retired, unsigned &pending, unsigned &param);
+// run link100, lane DET4. rt_hblank_counters (this loop's frame foot already
+// reaches it through ntr/rt.h) carries the dispatch count; this is the
+// mode-ask half, declared here because it is new and rt.h is not this lane's.
+void rt_hblank_modeask(unsigned long long *modeask);
 }
 /* ov001, slice_cap.txt: Stage::Render's cap-visibility manager. */
 extern "C" void func_ov001_020aaf40(void);
@@ -14018,6 +14032,23 @@ int main(void)
                         ":56), %d times over this run; it reads %u at exit\n",
                         port_rom_frame(), (unsigned)data_0209d4f0[0]);
                 port::thread_sched_report("r3b-b1");
+            }
+            {   /* run link100, lane DET4: the [thr] line above only ever
+                   carries IRQ::VBlankHandler's own dispatch, through this
+                   loop's halt. These are the two OTHER ROM IRQ handler
+                   dispatches in the linked set, tied to this run's frame
+                   count -- see hal/os_thread.cpp's and ntr/rt.cpp's own
+                   atexit reports for what "dispatches" and "modeask" mean. */
+                unsigned long long pv_disp = 0, pv_ask = 0;
+                unsigned long long hb_disp = 0, hb_win = 0, hb_ask = 0;
+                port::pump_vblank_counts(&pv_disp, &pv_ask);
+                ntr::rt_hblank_counters(&hb_disp, &hb_win);
+                ntr::rt_hblank_modeask(&hb_ask);
+                fprintf(stderr, "[det4] pump_vblank dispatches=%llu "
+                        "modeask=%llu | hblank dispatches=%llu modeask=%llu "
+                        "-- over %d frames\n",
+                        pv_disp, pv_ask, hb_disp, hb_ask, port_rom_frame());
+                fflush(stderr);
             }
             fprintf(stderr, "[r3b] B2: the pacer runs from "
                     "port_host_frame_pump, the one function step 1b of "

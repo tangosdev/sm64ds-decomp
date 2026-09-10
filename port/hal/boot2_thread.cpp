@@ -201,6 +201,23 @@
 //   0x1f (system mode) unconditionally, every handler ran as a plain call and
 //   the switch was taken inline from inside the wake.
 //
+// * THE OTHER TWO DISPATCHES (run link100, lane DET4). IRQ::VBlankHandler's
+//   dispatch through step 2 above was not the only place in the linked set
+//   that calls a ROM IRQ handler: hal/os_thread.cpp's pump_vblank calls the
+//   same VBlank handler through the same registry, and ntr/rt.cpp's HBlank
+//   line calls whatever is registered for mask 2, once per scanline. Neither
+//   raised port_irq_mode_depth before this lane, so ARMProcessorMode would
+//   have answered system mode inside them even with SM64DS_DET3 on. Both now
+//   bracket their own dispatch with the depth helper below (port_irq_mode_
+//   enter/exit), the same word and the same gate as step 2's. Measured (see
+//   the lane's report): pump_vblank is dispatched by nothing on any path this
+//   lane ran -- comms_conductor installs conductor_pump instead, and nothing
+//   else ever calls thread_set_pump(pump_vblank) -- so the fix is defensive,
+//   not corrective, there. The HBlank line runs every scanline the ROM's own
+//   dWipe_c handler is armed for, far more often than the VBlank edge; the
+//   lane's report has the exact per-site dispatch and mode-ask counts for
+//   solo level 1, SM64DS_ROM_LOOP=0, scene 6 and the captured pair.
+//
 // ============================ KNOBS ========================================
 //
 //   SM64DS_THREAD_TRACE=1     one line per switch, halt, wake and creation
@@ -295,6 +312,19 @@ void *_ZN3IRQ13GetIRQHandlerEj(unsigned mask);
 int ARMSaveContext(void *ctx);
 void ARMRestoreContext(void *ctx);
 void _ZN4CP1516WaitForInterruptEv(void);
+}
+
+// run link100, lane DET4: the two hooks this file wires the depth helper
+// into (ntr/rt.cpp's HBlank line, hal/os_thread.cpp's pump_vblank), declared
+// here rather than pulled from ntr/rt.h or os_thread.h so neither header
+// gains a dependency this lane does not own. See IrqModeHookReg below.
+namespace ntr {
+void rt_install_irq_mode_hook(void (*enter)(), void (*exit)(),
+                              uint16_t (*pending_flag_read)());
+}
+namespace port {
+void thread_set_irq_mode_hooks(void (*enter)(), void (*exit)(),
+                               uint16_t (*pending_flag_read)());
 }
 
 // THE HOST'S IRQ MODE (run link100, lane DET3).
@@ -806,6 +836,60 @@ void starve_wake() {
 
 }  // namespace
 
+// THE DEPTH HELPER, FACTORED (run link100, lane DET4). Step 2 of the halt
+// below used to raise and lower port_irq_mode_depth inline, and that was the
+// ONLY dispatch of a ROM IRQ handler in the linked set -- IRQ::VBlankHandler,
+// through this file's own CP15::WaitForInterrupt. It is not the only one any
+// more: hal/os_thread.cpp's pump_vblank and ntr/rt.cpp's HBlank handler both
+// call a ROM IRQ handler too (src/_ZN3IRQ13VBlankHandlerEv.c and whatever is
+// registered for mask 2), and until this lane neither raised the depth, so
+// ARMProcessorMode answered system mode (0x1f) inside them even with SM64DS_
+// DET3 on everywhere else -- the one caller in the linked set,
+// src/func_02057f54.c:25, would have read the wrong mode if either dispatch
+// ever reached it with a switch to make. These two functions are that one
+// place, used by all three sites now: same word, same gate (det3_on(), i.e.
+// SM64DS_DET3), same span -- raised for exactly the length of the ROM
+// handler's own call, lowered before anything downstream of it runs, so a
+// nested dispatch (there are none in the linked set today, but the depth
+// COUNTS rather than flags for exactly this reason) still leaves the answer
+// right for the outer one.
+extern "C" {
+void port_irq_mode_enter() { if (det3_on()) ++port_irq_mode_depth; }
+void port_irq_mode_exit()  { if (det3_on()) --port_irq_mode_depth; }
+}
+
+// THE WIRING, EAGER (run link100, lane DET4). hal/os_thread.cpp's pump_vblank
+// and ntr/rt.cpp's HBlank line each call the depth helper above through a
+// HOOK rather than by name, because both files have to stay linkable into
+// targets that do not link this one -- os_thread.cpp's own mp_sleepwake and
+// mp_comms_seam (this file's header, PORT_OS_THREAD_HOST_PAIR), and every
+// smoke_* probe ntr.lib serves. A direct extern reference from either file
+// broke exactly those targets first (eight smoke_* link failures on this
+// lane's first pass, all LNK2019 on port_irq_mode_enter/exit and
+// data_020a6134 through ntr.lib(rt.cpp.obj)); the fix is the same
+// null-by-default hook pattern this file's own g_host_frame_pump and
+// hal/comms_conductor.cpp's thread_set_pump already use.
+//
+// Registered here, at STATIC INIT, rather than from thread_boot(): that
+// function is lazy (first ARMSaveContext/ARMRestoreContext/halt), and
+// ntr/rt.cpp's rt_scanout_frame runs from the frame loop's own foot, which a
+// level or scene can reach before any thread primitive is ever called. A
+// global with a constructor runs before main on every target that links this
+// file, which is the guarantee the lazy path does not make.
+namespace {
+uint16_t irq_mode_pending_flag_read() {
+    return *reinterpret_cast<const uint16_t *>(data_020a6134);
+}
+struct IrqModeHookReg {
+    IrqModeHookReg() {
+        ntr::rt_install_irq_mode_hook(port_irq_mode_enter, port_irq_mode_exit,
+                                       irq_mode_pending_flag_read);
+        port::thread_set_irq_mode_hooks(port_irq_mode_enter, port_irq_mode_exit,
+                                         irq_mode_pending_flag_read);
+    }
+} g_irq_mode_hook_reg;
+}  // namespace
+
 // ===========================================================================
 // THE THREE HOST PRIMITIVES
 // ===========================================================================
@@ -1124,9 +1208,15 @@ void _ZN4CP1516WaitForInterruptEv(void) {
         // file's -- raise the manager's pending flag and return instead of
         // switching a thread from inside an interrupt handler. It comes down
         // BEFORE the IRQ return below, because that return is out of IRQ mode.
-        if (det3_on()) ++port_irq_mode_depth;
+        // Run link100, lane DET4: this raise/lower pair used to be inline
+        // here (SM64DS_DET3's det3_on() check, the increment, the call, the
+        // decrement); it is the depth helper below now, factored so
+        // hal/os_thread.cpp's pump_vblank and ntr/rt.cpp's HBlank handler
+        // can bracket their own ROM IRQ handler dispatches the same way.
+        // Behaviour here is unchanged -- same gate, same span.
+        port_irq_mode_enter();
         reinterpret_cast<void (*)()>(h)();
-        if (det3_on()) --port_irq_mode_depth;
+        port_irq_mode_exit();
         --g_in_vblank_handler;
         *irq_if &= ~ntr::IRQ_VBLANK;
         ++g_stat.vblank_dispatches;
