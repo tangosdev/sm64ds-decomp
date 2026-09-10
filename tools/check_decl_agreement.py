@@ -376,12 +376,14 @@ def normalise_type(text, aliases, decay_arrays):
 
 
 def split_top(text, seps=(",",), braces=False):
-    """Split outside (), [] and <>; data initializers also nest braces."""
+    """Split type syntax outside (), [] and <>; data uses expression rules."""
+    if braces:
+        return _split_data(text, seps)
     parts, depth, buf = [], 0, []
     for ch in text:
-        if ch in "([<" or (braces and ch == "{"):
+        if ch in "([<":
             depth += 1
-        elif ch in ")]>" or (braces and ch == "}"):
+        elif ch in ")]>":
             depth -= 1
         if ch in seps and depth <= 0:
             parts.append("".join(buf))
@@ -389,6 +391,75 @@ def split_top(text, seps=(",",), braces=False):
             continue
         buf.append(ch)
     parts.append("".join(buf))
+    return parts
+
+
+def _data_template_end(text, start, in_initializer):
+    """Find a template argument list without borrowing an initializer's comma.
+
+    Shifts are operators, and comparisons inside real brackets cannot alter
+    template nesting. A top-level assignment or unmatched closing bracket ends
+    the candidate: `left < right, target = 0` is not a template-id. In an
+    initializer, a following operand also rules out a template close, as in
+    `left < right && other > limit`.
+    """
+    if (text.startswith(("<<", "<="), start) or
+            not re.search(r"(?:[A-Za-z_]\w*|>)\s*$", text[:start])):
+        return None
+    groups, depth, i = [], 1, start + 1
+    closing = {"(": ")", "[": "]", "{": "}"}
+    while i < len(text):
+        ch = text[i]
+        if ch in closing:
+            groups.append(closing[ch])
+        elif ch in ")]}":
+            if not groups or ch != groups.pop():
+                return None
+        elif not groups:
+            if ch in "=;":
+                return None
+            if text.startswith(("<<", "<="), i):
+                i += 2
+                continue
+            if ch == "<":
+                depth += 1
+            elif ch == ">":
+                depth -= 1
+                if depth == 0:
+                    tail = text[i + 1:].lstrip()
+                    if in_initializer and re.match(r"[A-Za-z_0-9]", tail):
+                        return None
+                    return i + 1
+        i += 1
+    return None
+
+
+def _split_data(text, seps):
+    """Split declarators/initializers, keeping expression and type brackets apart."""
+    parts, groups, start, i = [], [], 0, 0
+    in_initializer = False
+    closing = {"(": ")", "[": "]", "{": "}"}
+    while i < len(text):
+        ch = text[i]
+        if ch in closing:
+            groups.append(closing[ch])
+        elif ch in ")]}" and groups and ch == groups[-1]:
+            groups.pop()
+        elif not groups:
+            if ch == "<":
+                end = _data_template_end(text, i, in_initializer)
+                if end is not None:
+                    i = end
+                    continue
+            if ch == "=":
+                in_initializer = True
+            if ch in seps:
+                parts.append(text[start:i])
+                start = i + 1
+                if ch == ",":
+                    in_initializer = False
+        i += 1
+    parts.append(text[start:])
     return parts
 
 

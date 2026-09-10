@@ -668,6 +668,55 @@ class DefinitionOwnershipTests(unittest.TestCase):
                 self.assertEqual(kinds(findings, "target"),
                                  [("kind", "src/caller.c", "function", "data")])
 
+    def test_initializer_operators_keep_later_objects(self):
+        for expression in ("1<<2", "(1<2)", "left<right", "8>>1",
+                           "left<right && other>limit", "take(1>>2,3)",
+                           "select(left<right,other>limit)", "values[1<<2]",
+                           "make<int,int>()<limit", "(left<right ? 1 : 2)"):
+            with self.subTest(expression=expression):
+                statement = "int prefix=%s,target=0;" % expression
+                def tree(t):
+                    t.write("src/definition.cpp", statement)
+                    t.write("src/caller.c", "extern int target(void);\n")
+                findings, _decls, defs, _files = build(tree)
+                self.assertEqual([d.symbol for d in defs], ["prefix", "target"])
+                self.assertEqual(kinds(findings, "target"),
+                                 [("kind", "src/caller.c", "function", "data")])
+                self.assertEqual(CDA.parse_file("src/definition.cpp", statement, {})[2], 0)
+
+    def test_template_initializers_keep_their_arguments_and_later_objects(self):
+        for expression in ("make<int,int>()", "make<Pair<int,int>,long>()",
+                           "make<Pair<int,int> >()", "&function<int,int>",
+                           "Flags<(1<2),(8>>1)>::value",
+                           "make<int,int>(take(1<2,4>>1),Flags<3,4>::value)"):
+            with self.subTest(expression=expression):
+                statement = "int prefix=%s,target=0;" % expression
+                declarations, definitions, unparsed = CDA.parse_file(
+                    "src/definition.cpp", statement, {})
+                self.assertEqual([d.symbol for d in definitions], ["prefix", "target"])
+                self.assertEqual(declarations, [])
+                self.assertEqual(unparsed, 0)
+
+    def test_later_operator_initializers_keep_the_following_objects(self):
+        for statement in ("int prefix=0,target=(1<<2),after=0;",
+                          "int prefix=left<right,target=other>limit,after=0;",
+                          "int prefix=left<right,target,after;"):
+            with self.subTest(statement=statement):
+                declarations, definitions, unparsed = CDA.parse_file(
+                    "src/definition.c", statement, {})
+                self.assertEqual([d.symbol for d in definitions],
+                                 ["prefix", "target", "after"])
+                self.assertEqual(declarations, [])
+                self.assertEqual(unparsed, 0)
+
+    def test_template_types_keep_their_declarator_list(self):
+        declarations, definitions, unparsed = CDA.parse_file(
+            "include/probe.hpp", "extern Pair<int,int> prefix,target;", {})
+        self.assertEqual([d.symbol for d in declarations], ["prefix", "target"])
+        self.assertEqual(declarations[0].ret, declarations[1].ret)
+        self.assertEqual(definitions, [])
+        self.assertEqual(unparsed, 0)
+
     def test_braced_initializer_does_not_merge_the_next_statement(self):
         declarations, definitions, unparsed = CDA.parse_file(
             "src/data.c", "int first[] = {0, 1}, second = 2;\n"
@@ -832,6 +881,9 @@ class ChangedGateTests(unittest.TestCase):
         cases = (
             ("aggregate", "int prefix[2] = {0, 1}, target = 0;\n", ""),
             ("marked", "// @symbol RealPrefix\nint prefix = 0, target = 0;\n", ""),
+            ("shift", "int prefix=1<<2,target=0;\n", ""),
+            ("comparison", "int prefix=(1<2),target=0;\n", ""),
+            ("template", "int prefix=make<Pair<int,int> >(),target=0;\n", ""),
             ("static", "int target(void) { return 0; }\n",
              "static int target(void) { return 0; }\n"),
             ("namespace", "int target(void) { return 0; }\n",
