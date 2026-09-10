@@ -41,7 +41,7 @@ dMg3DEspAnimSet_c+dMg3DEspModel_c+dScMg3DEsp_c	68	1845	ov006	yes	no	pragma:8;mul
 dMgJump3DMario_c	1	1077	ov006	yes	yes	classif:no-header:dMgJump3DMario_c;compiler-only:>=5(derived from own chain: 2 classes incl. self via build/rtti.json; floor 2x2+1)	dScMgSingle3DBase_c	text-only
 dScMgD3DBase_c	1	820	ov006	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 daMky_c	3	2380	ov030	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
-OneUpMushroom	36	972	ov002	yes	no	compiler-only:unknown(no chain for OneUpMushroom: no RTTI record in build/rtti.json and no include/ base clause; measure with tubuild verify)	daBar_c	text-only
+da1up_c	3	1284	ov002	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daBar_c	text-only
 daOts_c	1	700	ov064	yes	yes	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daObjFl_Gura_c	text-only
 Scuttlebug	3	1059	ov071	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daEyBm_c	text-only
 MrBlizzard	34	1358	ov081	yes	no	compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
@@ -216,7 +216,7 @@ dScMgPachinko2_c+dScMgPachinko_c	75	2819	ov006	yes	no	pragma:35;multi-class-tu:2
 dScMgLuigi_c	1	2501	ov006	yes	yes	pragma:6;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
 Goomboss	17	2201	ov074	yes	yes	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1);not-in-delinks:1	-	text-only
 dEnemyBase_c	31	1093	ov002	yes	no	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	daBar_c	text-only
-daObjMarioCap_c	3	1295	ov002	yes	yes	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daBar_c	text-only
+daObjMarioCap_c	3	1317	ov002	yes	yes	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	daBar_c	text-only
 dScMgMemory2_c	1	1666	ov006	yes	yes	pragma:2;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
 PowerStar+StarMarker	77	3268	ov002	yes	no	unmatched:2;pragma:2;multi-class-tu:2;compiler-only:>=14(derived from own chain: 6 classes incl. self via build/rtti.json + include/ base clause; floor 2x6+2)	daBar_c	text-only
 dScMgCurling2_c	22	2015	ov006	yes	yes	no-legacy-source:1;pragma:3;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json; floor 2x5+1)	dScMgSingle3DBase_c	text-only
@@ -228,7 +228,7 @@ dScMgRoulette_c	2	1984	ov006	yes	yes	pragma:1;compiler-only:>=13(derived from ow
 dScMgTrampoline2_c	1	1757	ov006	yes	yes	pragma:1;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
 daGmch_c	1	1120	ov081	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
 SignPost	27	911	ov002	yes	no	no-legacy-source:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daBar_c	text-only
-Door	31	956	ov100	yes	no	unmatched:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjPathLift_c	text-only
+Door	31	968	ov100	yes	no	unmatched:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daObjPathLift_c	text-only
 KingBobOmb	51	1940	ov078	yes	no	pragma:4;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 daSCoin_c	1	303	ov002	yes	yes	compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	daBar_c	text-only
 daTrsTrap_c	16	543	ov063	yes	no	unmatched:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json; floor 2x4+1)	-	text-only
@@ -246,7 +246,7 @@ Bullet	12	251	ov002	yes	no	unmatched:1;compiler-only:>=11(derived from own chain
 dScMgSnowball_c	22	1892	ov006	yes	no	no-legacy-source:1;pragma:5;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
 Key	18	1009	ov089	yes	no	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 dScMgJump_c	18	550	ov006	yes	no	no-legacy-source:1;pragma:1;compiler-only:>=13(derived from own chain: 6 classes incl. self via build/rtti.json; floor 2x6+1)	dScMgSingle3DBase_c	text-only
-RollingIronBall	15	855	ov100	yes	no	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjPathLift_c	text-only
+RollingIronBall	15	878	ov100	yes	no	unmatched:1;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	daObjPathLift_c	text-only
 MugenBgm	8	178	ov002	yes	no	unmatched:1;compiler-only:>=9(derived from own chain: 4 classes incl. self via build/rtti.json + include/ base clause; floor 2x4+1)	daBar_c	text-only
 Wiggler	34	1371	ov034	yes	no	pragma:6;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
 Whomp	34	1898	ov079	yes	no	unmatched:1;pragma:2;compiler-only:>=11(derived from own chain: 5 classes incl. self via build/rtti.json + include/ base clause; floor 2x5+1)	-	text-only
