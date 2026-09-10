@@ -24,7 +24,8 @@
  *
  * TWO DESCENDANTS: daObjFl_Ukiyuka_c (FloatingFloorLllSmall, which has a second
  * factory daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA building the same class with different
- * parameters) and daObjKm2_Ukishima_c (FloatingFloorBfs).
+ * parameters) and daObjKm2_Ukishima_c, whose coined spelling FloatingFloorBfs is
+ * retired -- see include/daObjKm2_Ukishima_c.h for the cartridge measurement.
  *
  * FOUR FIELDS, all of them read by this class's own Behavior, ov002 0x020b6494
  * -- now `_ZN14daObjUkiyuka_c8BehaviorEv`:
@@ -36,7 +37,7 @@
  *   0x32a  the rest timer, 0x3c frames. While DecIfAbove0_Short is counting it
  *          down Behavior does nothing but the collider range check.
  *
- * SIZE 0x32c. 0x32a + 2 closes the class, and FloatingFloorBfs_Spawn passes
+ * SIZE 0x32c. 0x32a + 2 closes the class, and daObjKm2_Ukishima_c_classInit passes
  * 812 = 0x32c to fBase_c::operator new, which is this class and nothing more:
  * daObjKm2_Ukishima_c adds no field of its own. THE OTHER LEAF IS BIGGER --
  * daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA_L and daObjFl_Ukiyuka_c_classInit_FL_UKIYUKA both pass 816 = 0x330

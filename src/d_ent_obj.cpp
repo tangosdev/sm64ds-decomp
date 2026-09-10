@@ -7,7 +7,7 @@ extern void _ZN7fBase_cC2Ev(void* p);
 extern void _ZN8Particle10SysTrackerC1Ev(void* p);
 extern void _ZN5ModelC1Ev(void* p);
 extern void _ZN9ModelAnimC1Ev(void* p);
-extern void func_020733a8(void* a, int b, int c, void* d, void* e);
+extern void __cxa_vec_ctor(void* a, int b, int c, void* d, void* e);
 extern void* data_0208e4b8;
 extern void* _ZTV14UnknownVsEntry;
 extern void _ZN15UnknownVsPlayerD1Ev(void);
@@ -27,7 +27,7 @@ extern "C" UnknownVsEntry* dEntObj_c_classInit(void){
     _ZN8Particle10SysTrackerC1Ev(&p->mParticles);
     _ZN5ModelC1Ev(&p->mModel);
     _ZN9ModelAnimC1Ev(&p->mModelAnim);
-    func_020733a8(p->mPlayers, 4, sizeof(UnknownVsPlayer),
+    __cxa_vec_ctor(p->mPlayers, 4, sizeof(UnknownVsPlayer),
                   (void*)_ZN15UnknownVsPlayerC1Ev,
                   (void*)_ZN15UnknownVsPlayerD1Ev);
   }

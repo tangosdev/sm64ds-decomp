@@ -12,8 +12,8 @@
  *
  *   daMky_c_classInit_MONKEY_THIEF / daMky_c_classInit_MONKEY_STAR
  *       fBase_c::operator new(972 = 0x3cc), dActor_c::dActor_c(), stores
- *       _ZTV7daMky_c, then the six members below in this order.
- *   _ZN7daMky_cD0Ev  five of the six destroyed in reverse (PathPtr is
+ *       _ZTV7daMky_c, then the five members below in this order.
+ *   _ZN7daMky_cD0Ev  four of the five destroyed in reverse (PathPtr is
  *       trivial, no dtor call), then ~dActor_c.
  *
  * SIZE 0x3cc is the factory's own literal; unk_3cb (1 byte, 0x3cb) closes
@@ -29,7 +29,8 @@
  * mWithMeshClsn was mistyped `u8` at 0x194 in the generated header --
  * daMky_c_classInit_MONKEY_THIEF/_MONKEY_STAR call _ZN10dBgCh_ActrC1Ev at that
  * offset, so it is the real 0x1bc-byte member (0x194..0x350); the 0x30
- * bytes from 0x350..0x380 are genuinely unevidenced padding.
+ * bytes from 0x350..0x380 hold the matrix copied by func_ov030_02112094
+ * in src/actors/daMky_c.cpp. Its original member name is unknown.
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. daMky_c overrides
  * slot 0 (InitResources), slot 3 (CleanupResources), slot 6 (Behavior),
@@ -45,26 +46,31 @@ struct daMky_c : dActor_c {
        checks. */
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* ShadowModel member, named by the class's own destructor calling
-       ShadowModel's D1 at +0x138. [_ZN7daMky_cD0Ev.cpp] */
+       ShadowModel's D1 at +0x138.
+       [src/actors/daMky_c.cpp: daMky_c::~daMky_c] */
     ShadowModel mShadowModel;            /* 0x138 */
     /* dCcAc_c member, named by the class's own destructor calling
-       dCcAc_c's D1 at +0x160. [_ZN7daMky_cD0Ev.cpp] */
+       dCcAc_c's D1 at +0x160.
+       [src/actors/daMky_c.cpp: daMky_c::~daMky_c] */
     dCcAc_c mdCcAc_c;            /* 0x160 */
     /* dBgCh_Actr member, named by daMky_c_classInit_MONKEY_THIEF/_MONKEY_STAR's own
        C1 call and the class's own destructor's D1 call at +0x194.
-       [d_a_mky_monkey_thief.c, _ZN7daMky_cD0Ev.cpp] */
+       [src/d_a_mky_monkey_thief.c,
+        src/actors/daMky_c.cpp: daMky_c::~daMky_c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x194 */
     u8  pad_350[0x30];
     /* Second position triple, also seeded from mPos in InitResources, but with
        0x64000 (100.0) added to Y immediately after -- a point a hundred units
-       above the spawn. Nothing in a matched body reads it back, so what it is
-       FOR is unevidenced and these keep unk_ names.
-       [_ZN7daMky_c13InitResourcesEv.cpp] */
+       above the spawn. func_ov030_02111734 reads it to restore position.
+       The original field names are unknown.
+       [src/actors/daMky_c.cpp: InitResources, func_ov030_02111734] */
     s32 unk_380;            /* 0x380 */
     s32 unk_384;            /* 0x384 */
     s32 unk_388;            /* 0x388 */
-    /* Exact copy of mPosX/Y/Z, taken once in InitResources and never written
-       again. [_ZN7daMky_c13InitResourcesEv.cpp] */
+    /* Copy of mPosX/Y/Z seeded in InitResources. func_ov030_02111dd0 updates
+       it after a ground check; func_ov030_02111734 also resets it.
+       [src/actors/daMky_c.cpp: InitResources, func_ov030_02111dd0,
+        func_ov030_02111734] */
     s32 mSpawnPosX;            /* 0x38c */
     s32 mSpawnPosY;            /* 0x390 */
     s32 mSpawnPosZ;            /* 0x394 */
@@ -80,7 +86,7 @@ struct daMky_c : dActor_c {
        (mCapPlayerNo << 8) | 2 as its spawn parameter, keeps the spawned actor's
        fBase_c::uniqueID in mCapUniqueID, and latches mHasSpawnedCap so it never
        spawns a second one. Behavior runs the same block again from raw offsets.
-       [_ZN7daMky_c13InitResourcesEv.cpp, _ZN7daMky_c8BehaviorEv.cpp] */
+       [src/actors/daMky_c.cpp: InitResources, Behavior] */
     s32 mCapUniqueID;            /* 0x3ac */
     u32 mCapPlayerNo;            /* 0x3b0 */
     s32 mState;            /* 0x3b4 -- the state-machine id.  Proven: the
@@ -118,7 +124,7 @@ struct daMky_c : dActor_c {
     virtual s32  Render();           /* slot  9 */
     virtual void OnPendingDestroy();      /* slot 12 */
     virtual s32  OnYoshiTryEat();         /* slot 18 */
-    virtual int  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
 };
 
 typedef char daMky_c_size_must_be_0x3cc[sizeof(daMky_c) == 0x3cc ? 1 : -1];

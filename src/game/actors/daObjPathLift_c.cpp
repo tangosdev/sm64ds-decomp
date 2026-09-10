@@ -78,7 +78,7 @@ extern "C" {
 extern void* data_ov002_0210af70[];
 extern int _ZTV10dBgActor_c[];
 void _ZN11ShadowModelD1Ev(void*);
-void __destroy_arr(void*,int,int,void(*)(void*));
+void __cxa_vec_cleanup(void*,int,int,void(*)(void*));
 void _ZN10dBgW_KcMbgD1Ev(void*);
 void _ZN5ModelD1Ev(void*);
 void _ZN8dActor_cD2Ev(void*);

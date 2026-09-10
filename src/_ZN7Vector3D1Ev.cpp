@@ -5,13 +5,13 @@
  * This file was _ZN7Vector3D1Ev.c -- four bytes, `bx lr`, an empty function
  * nothing claimed. It is Vector3::~Vector3, and the ROM proves it: six classes
  * destroy arrays of a 0xc type through
- * `__destroy_arr(ptr, N, 0xc, _ZN7Vector3D1Ev)`, a POD array needs no cleanup at
+ * `__cxa_vec_cleanup(ptr, N, 0xc, _ZN7Vector3D1Ev)`, a POD array needs no cleanup at
  * all, and ChiefChilly::InitResources fills those elements as x/y/z from the
  * actor's position. types.h defines Vector3 as exactly `Fix12i x, y, z`.
  *
  * Compiling `Vector3 a[8]` inside a class with a destructor emits
- * __cxa_vec_cleanup -- which IS __destroy_arr (PR #1353) -- against this
- * symbol, which is the ROM's call verbatim.
+ * __cxa_vec_cleanup -- 0x0207328c, which this tree called __destroy_arr until the
+ * rename (PR #1353) -- against this symbol, which is the ROM's call verbatim.
  *
  * The body being empty is not an omission: a declared destructor that does
  * nothing is exactly what makes the compiler emit the array cleanup while

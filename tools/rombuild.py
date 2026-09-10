@@ -814,7 +814,9 @@ def intact_tu_policies(enrolled=None, manifest=None):
         if mapped_sections:
             errors.append(f"{label}: intact-object input-section retargeting is not "
                           f"implemented: {', '.join(mapped_sections)}")
-        owned_fields = ("rodata", "init", "ctor", "data", "bss")
+        # The manifest field names of tubuild._SECTION_SYMBOL_FIELDS, same reason.
+        owned_fields = ("rodata", "init", "ctor", "data", "bss",
+                        "exception", "exceptix")
         if any(isinstance(entry.get(field), list)
                and any(isinstance(row, dict) and row.get("storage_alias")
                        for row in entry[field])
@@ -852,7 +854,10 @@ def intact_tu_policies(enrolled=None, manifest=None):
             except (KeyError, TypeError, ValueError):
                 errors.append(f"{label}: intact-object manifest has an invalid section claim")
                 continue
-            if name not in (".text", ".rodata", ".init", ".ctor", ".data", ".bss") \
+            # Duplicated from tubuild._TU_SECTION_NAMES on purpose: tubuild imports
+            # this module, so the dependency cannot run the other way. Widen both.
+            if name not in (".text", ".rodata", ".init", ".ctor", ".data", ".bss",
+                            ".exception", ".exceptix") \
                     or start >= end:
                 errors.append(f"{label}: intact-object manifest has unsupported/invalid "
                               f"section claim {name!r}")

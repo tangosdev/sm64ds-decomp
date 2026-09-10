@@ -108,25 +108,9 @@ src/d_a_obj_km2_nobiru.c:
     complete
     .text start:0x02111ad4 end:0x02111b14
 
-src/_ZN16FloatingFloorBfsD1Ev.cpp:
+src/game/actors/d_a_obj_km2_ukishima.cpp:
     complete
-    .text start:0x02111b14 end:0x02111b64
-
-src/_ZN16FloatingFloorBfsD0Ev.cpp:
-    complete
-    .text start:0x02111b64 end:0x02111bc8
-
-src/_ZN16FloatingFloorBfs16CleanupResourcesEv.cpp:
-    complete
-    .text start:0x02111bc8 end:0x02111bdc
-
-src/_ZN16FloatingFloorBfs13InitResourcesEv.cpp:
-    complete
-    .text start:0x02111bdc end:0x02111bf4
-
-src/d_a_obj_km2_ukishima.c:
-    complete
-    .text start:0x02111bf4 end:0x02111c30
+    .text start:0x02111b14 end:0x02111c30
 
 src/game/actors/d_a_obj_km2_gura.cpp:
     complete

@@ -161,7 +161,7 @@ s32 daYurei_Mucho_c::OnYoshiTryEat()
  * The `R6Player` reference spelling in the mangled name is a coined guess: a
  * reference and a pointer generate identical ARM for this body, so the bytes
  * cannot distinguish them. */
-int daYurei_Mucho_c::OnTurnIntoEgg(Player &player)
+void daYurei_Mucho_c::OnTurnIntoEgg(Player &player)
 {
     GivePlayerCoins(player, (unsigned char)(unk_10a + 1), 0);
     KillAndTrackInDeathTable();
@@ -323,8 +323,8 @@ void daYurei_Mucho_c::OnPendingDestroy()
 // @symbol _ZN15daYurei_Mucho_c16CleanupResourcesEv
 /* dActor_c vtable slot 3. Releases the four files InitResources claimed.
  *
- * TOUCHES NO FIELD. The ROM body takes no `this`; as a method it now receives
- * one and ignores it, which measured byte-free. */
+ * The body does not read the incoming object pointer or access instance
+ * fields. Spelling it as the class method preserves the ROM bytes. */
 int daYurei_Mucho_c::CleanupResources()
 {
     data_ov065_0211d610.Release();
@@ -335,8 +335,8 @@ int daYurei_Mucho_c::CleanupResources()
 }
 
 /* ========================================================================== */
-/* The twelve free helpers. A class member function cannot sit inside an       */
-/* extern "C" region, so they are gathered here, after the last member.        */
+/* The twelve retained free helpers use C linkage. Class member functions    */
+/* retain C++ linkage, including when defined inside a linkage block.          */
 /* ========================================================================== */
 extern "C" {
 

@@ -20,9 +20,9 @@
  * them back with `>> 12` for the HUD -- 1:4096 fixed-point screen
  * positions, spelled s32 like the camera fields in
  * dScMgSingle3DBase_c.h. The factory still constructs it as raw bytes
- * (`func_020733a8(p+0x51a8, 2, 8, func_0203d738,
+ * (`__cxa_vec_ctor(p+0x51a8, 2, 8, func_0203d738,
  * NullDestructor_0203d47c)`) and the destructor still destroys it through
- * `__destroy_arr(mCardPos, 2, 8, NullDestructor_0203d47c)`; the layout
+ * `__cxa_vec_cleanup(mCardPos, 2, 8, NullDestructor_0203d47c)`; the layout
  * claim is exactly what those byte helpers already encode.
  *
  * OWN TAIL, 0x51b8..0x51d0, all named: mState is the state number that
@@ -57,7 +57,7 @@
 #include "dScMgSingle3DBase_c.h"
 
 extern "C" int  func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void NullDestructor_0203d47c(void);
 
 /* The type name is reconstructed; the 0x270-byte extent and teardown are
@@ -72,7 +72,7 @@ typedef char dMgBSCSharedState_c_size_must_be_0x270[sizeof(dMgBSCSharedState_c) 
 
 struct dScMgBSC_c : dScMgSingle3DBase_c {
     virtual ~dScMgBSC_c() {
-        __destroy_arr(mCardPos, 2, 8, (void *)NullDestructor_0203d47c);
+        __cxa_vec_cleanup(mCardPos, 2, 8, (void *)NullDestructor_0203d47c);
     }
 
     /* --- this class's own vtable slots, named from the table ---
@@ -131,7 +131,7 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
     };
 
     dMgBSCSharedState_c mShared; /* 0x4f38..0x51a8 */
-    CardPos mCardPos[2];  /* 0x51a8 -- ctor func_020733a8 via func_0203d738, dtor NullDestructor_0203d47c */
+    CardPos mCardPos[2];  /* 0x51a8 -- ctor __cxa_vec_ctor via func_0203d738, dtor NullDestructor_0203d47c */
     s32 mState;          /* 0x51b8 -- index into data_ov006_02142f94 */
     s32 mStateTimer;     /* 0x51bc */
     s32 mChosenCard;     /* 0x51c0 */

@@ -307,7 +307,7 @@ daSlide_Box_c	DONE	include\SlidingBox.h  [alias: header uses pre-rename name]	dB
 daUdlift_c	DONE	include\UpDownLiftBbh.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov095	6
 daOts_c	DONE	include\daOts_c.h	dEnemyBase_c	3	ov064	11
 dCapEnemy_c	DONE	include\dCapEnemy_c.h	dEnemyBase_c	2	arm9;ov002	14
-da1up_c	DONE	include\OneUpMushroom.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov002	9
+da1up_c	DONE	include\da1up_c.h	dEnemyBase_c	0	ov002	9
 daBakubaku_c	DONE	include\daBakubaku_c.h	dEnemyBase_c	0	ov032	8
 daBasabasa_c	DONE	include\Swoop.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov065	10
 daBbl_c	DONE	include\LavaBubble.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov064	8
@@ -398,14 +398,14 @@ daObjFl_Gura_c	DONE	include\daObjFl_Gura_c.h	daObjGuragura_c	0	ov064	4
 daObjKm2_Gura_c	DONE	include\daObjKm2_Gura_c.h	daObjGuragura_c	0	ov045	4
 daObjKm1_Kuruma_c	DONE	include\daObjKm1_Kuruma_c.h	daObjKuruma_c	0	ov043	4
 daObjKm3_Kuruma_c	DONE	include\daObjKm3_Kuruma_c.h	daObjKuruma_c	0	ov047	4
-daObjKm1_Kurumajiku_c	DONE	include\RickshawBdw.h  [alias: header uses pre-rename name]	daObjKurumajiku_c	0	ov043	4
+daObjKm1_Kurumajiku_c	DONE	include\daObjKm1_Kurumajiku_c.h	daObjKurumajiku_c	0	ov043	4
 daObjKm3_Kurumajiku_c	DONE	include\daObjKm3_Kurumajiku_c.h	daObjKurumajiku_c	0	ov047	4
 daObjFlMaruta_c	DONE	include\RollingLogLll.h  [alias: header uses pre-rename name]	daObjMaruta_c	0	ov022	5
 daObjHmMaruta_c	PARTIAL	include\daObjHmMaruta_c.h	daObjMaruta_c	0	ov030	5
 daObjBSwdoor_c	DONE	include\daObjBSwdoor_c.h	daObjSwdoor_c	0	ov014	5
 daObjCvShutter_c	DONE	include\daObjCvShutter_c.h	daObjSwdoor_c	0	ov021	5
 daObjFl_Ukiyuka_c	DONE	include\FloatingFloorLllSmall.h  [alias: header uses pre-rename name]	daObjUkiyuka_c	0	ov022	4
-daObjKm2_Ukishima_c	DONE	include\FloatingFloorBfs.h  [alias: header uses pre-rename name]	daObjUkiyuka_c	0	ov045	4
+daObjKm2_Ukishima_c	DONE	include\daObjKm2_Ukishima_c.h	daObjUkiyuka_c	0	ov045	4
 daBDonketu_c	DONE	include\BigBully.h  [alias: header uses pre-rename name]	daOts_c	0	ov064	7
 daDonketu_c	DONE	include\Bully.h  [alias: header uses pre-rename name]	daOts_c	0	ov064	10
 daIDonketu_c	DONE	include\daIDonketu_c.h	daOts_c	0	ov027	6

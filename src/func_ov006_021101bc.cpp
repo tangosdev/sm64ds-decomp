@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void func_ov006_0211474c(char* c, int a1, int a2, int* a3);
-extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
+extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void *_ZTV19cMgSmartball_slot_c[];
 extern void func_0203d738(void*);
 extern void NullDestructor_0203d47c(void*);
@@ -12,8 +12,8 @@ void* func_ov006_021101bc(char* c, int a1, int a2, int* src){
     tmp[1] = src[1];
     func_ov006_0211474c(c, a1, a2, tmp);
     *(void***)c = (void**)_ZTV19cMgSmartball_slot_c;
-    func_020733a8(c + 0x34, 3, 8, func_0203d738, NullDestructor_0203d47c);
-    func_020733a8(c + 0x4c, 3, 8, func_0203d738, NullDestructor_0203d47c);
+    __cxa_vec_ctor(c + 0x34, 3, 8, func_0203d738, NullDestructor_0203d47c);
+    __cxa_vec_ctor(c + 0x4c, 3, 8, func_0203d738, NullDestructor_0203d47c);
     *(int*)(c + 0x28) = 0x28000;
     return c;
 }

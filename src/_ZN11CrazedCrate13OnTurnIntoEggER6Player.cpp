@@ -13,7 +13,7 @@ extern "C" {
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 }
 
-int CrazedCrate::OnTurnIntoEgg(Player &player)
+void CrazedCrate::OnTurnIntoEgg(Player &player)
 {
     if (player.IsCollectingCap()) {
         GivePlayerCoins(player, 5, 0);

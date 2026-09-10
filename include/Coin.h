@@ -105,7 +105,7 @@ struct Coin : dActor_c {
     virtual s32  Behavior();         /* slot  6 */
     virtual s32  Render();           /* slot  9 */
     virtual s32  OnYoshiTryEat();         /* slot 18 */
-    virtual int  OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
 };
 
 typedef char Coin_size_must_be_0x3b4[sizeof(Coin) == 0x3b4 ? 1 : -1];
