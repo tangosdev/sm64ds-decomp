@@ -343,3 +343,71 @@ All commands run in `C:/tmp/sm64ds-sm64ds-yurei` at this tree, on the pinned
 
 Independent verification (verifier), then integration. No PR was opened. The
 branch is `cpp/daYurei_Mucho_c-tu`; its head SHA is recorded by the queue.
+
+## Source review corrections, 2026-09-10
+
+The earlier proof is historical. This review continues PR #2456 at input
+`a6ed71f26e750fadb84aeb4c55a8844d994fc502` under
+`pr2456-source-repair-0910`; final acceptance also requires current-main
+composition and independent review. The class remains a partial reconstruction
+owned by the humanizer/integrator support session through @andrewboudreau in
+[issue #2478](https://github.com/tangosdev/sm64ds-decomp/issues/2478).
+
+YUR-02 corrects the tail layout. `mShotCount` is the signed word at +0x3dc,
+cleared by the attack entry and compared with three/incremented by the attack
+main helper. `mTargetAngle` is the signed halfword at +0x3e0, including the
+old +0x300+0xe0 accesses. Only +0x3e2..+0x3e4 remains unobserved. The names
+are reconstructed; the accesses, widths and 0x3e4 allocation size are measured.
+Both fields replace the earlier padding, and the helpers now use their class
+members. The appended class-facts correction supersedes the incorrect unread-tail
+claim without rewriting the historical scouting snapshot.
+
+YUR-03 corrects the State provenance. The two 8-byte PMF records and their caller
+roles are measured. `mEnter`, `mMain` and their common `int` signatures are
+reconstructed interfaces. The dispatcher forwarding r0 does not establish an
+original C++ return type; the retained attack-entry helper is declared `short`.
+The earlier statement that the `int` types were measured was incorrect.
+
+YUR-04 replaces the exact `UpdateYoshiEat(mWithMeshClsn)` call with the existing
+member interface and removes its redundant mangled declaration. All three methods
+in question were already declared in the included headers. The remaining Init
+calls have these measured constraints under 2004/b56:
+
+| Alternative | Result |
+| --- | --- |
+| Real `dEnemyBase_c::UpdateYoshiEat` | 23/23 functions VERIFIED |
+| Real `dCcAc_c::Init`, aggregate-initialized `Fix12<int>` radius/height | InitResources grows 0xfc to 0x10c; constants are copied from compiler-emitted data |
+| Real `dCcAc_c::Init`, assigning radius.val and height.val | InitResources grows 0xfc to 0x114 |
+| Real `dBgCh_Actr::Init` with its current scalar parameters | Body remains 0xfc, but emits `_ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_`, with no configured destination; BLIND-1 |
+
+The existing ABI calls stay pending a coherent shared-interface repair. No alias
+or shared declaration was invented to disguise the unresolved destination.
+
+YUR-05 corrects the copy and metadata explanations. `Matrix4x3` is available
+through the model headers, and `Vector3` is available in types.h. At this include
+order, Matrix4x3 contains the existing non-POD Vector3. Replacing Mtx43's POD
+copies grows func_ov065_0211696c from 0x17c to 0x1c8; replacing the V3A copy
+with Vector3 grows func_ov065_02116364 from 0x224 to 0x234. The small POD views
+remain documented matching constraints, not evidence that project types are absent.
+The ordinary subobject constructors also exist; the manual factory is unfinished
+reconstruction, not a requirement caused by missing constructors.
+
+The inline destructor spelling reproduces D1/D0. The TU defines the class's
+out-of-line virtual methods and emits its metadata; the inline destructor itself
+is not the key function. The header, source and manifest now distinguish these
+facts. The original long factory/vtable narrative remains available in the
+input commit and the earlier address-point discussion above; the source retains
+only the two-word vtable preamble adjustment it needs.
+
+The combined class-local changes reproduce all 23 functions, 4280 text bytes,
+with zero differing or blind words on the original source base. Raw emitted
+metadata remains 6 VERIFIED / 5 PARTIAL, no DIFFERS. Scratch experiment artifacts
+are `build/probes/*/strict.json`, `build/probes/*/candidate.o`, and
+`build/class-fixes-proof.json` in `C:/tmp/sm64ds-yureifix-0910`.
+These are class-local experiment results, not final current-main acceptance.
+
+The 12 address-named free helpers, manual factory, remaining raw storage and
+copy views continue under #2478. SharedFilePtr still has no recovered fields in
+its header: retain the measured direct +4 file-pointer load rather than calling
+LoadFile or inventing a field. The neighboring func_ov065_021177e4 belongs to
+daBasabasa_c; its previously accepted provenance-only correction is preserved.

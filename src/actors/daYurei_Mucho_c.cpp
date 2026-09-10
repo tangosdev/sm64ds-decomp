@@ -1,58 +1,8 @@
 //cpp
-/* Production translation unit for ov065/daYurei_Mucho_c.
- *
- * The cartridge names this class daYurei_Mucho_c: overlay_0065.bin at file
- * offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds
- * "15daYurei_Mucho_c\0", the length-prefixed _ZTS payload that
- * _ZTI15daYurei_Mucho_c at 0x0211cb60 points at. That record's third word is
- * ov002 0x021081c0 = _ZTI12dEnemyBase_c, which is where the base clause comes
- * from.
- *
- * mwccarm emits ordinary functions in reverse source order, so the twenty-one
- * definitions below run from the highest retail address (the factory at
- * 0x02116f48) back toward the compiler-owned destructor group at 0x02115ee0.
- *
- * The twelve func_ov065_* bodies keep their address-derived names: ov065's
- * symbols.txt spells them that way, and eight of them are reached ONLY through
- * the pointer-to-member records at 0x0211cb20..0x0211cb60, which dsd resolves
- * BY NAME out of that same file. Renaming one is a same-commit symbols.txt
- * edit and no byte gate would catch a miss, so they stay C-linkage free
- * functions here.
- *
- * Superseded one-function sources, by basename -- none of them exists any
- * more, and this file is the one delinks.txt entry that replaced all 23
- * (ROM address order):
- *   [0]  0x02115ee0  _ZN15daYurei_Mucho_cD1Ev.cpp
- *   [1]  0x02115f28  _ZN15daYurei_Mucho_cD0Ev.cpp
- *   [2]  0x02115f84  func_ov065_02115f84.c
- *   [3]  0x02115ff0  func_ov065_02115ff0.c
- *   [4]  0x021162c0  func_ov065_021162c0.c
- *   [5]  0x02116328  func_ov065_02116328.c
- *   [6]  0x02116364  func_ov065_02116364.cpp
- *   [7]  0x02116588  func_ov065_02116588.cpp
- *   [8]  0x021165d8  func_ov065_021165d8.cpp
- *   [9]  0x0211672c  func_ov065_0211672c.c
- *   [10] 0x02116744  func_ov065_02116744.c
- *   [11] 0x021168a8  func_ov065_021168a8.cpp
- *   [12] 0x0211691c  func_ov065_0211691c.cpp
- *   [13] 0x0211696c  func_ov065_0211696c.c
- *   [14] 0x02116ae8  _ZN15daYurei_Mucho_c16CleanupResourcesEv.cpp
- *   [15] 0x02116b30  _ZN15daYurei_Mucho_c16OnPendingDestroyEv.cpp
- *   [16] 0x02116b34  _ZN15daYurei_Mucho_c6RenderEv.cpp
- *   [17] 0x02116b84  _ZN15daYurei_Mucho_c8BehaviorEv.cpp
- *   [18] 0x02116e10  _ZN15daYurei_Mucho_c13InitResourcesEv.cpp
- *   [19] 0x02116f0c  _ZN15daYurei_Mucho_c16OnAimedAtWithEggEv.cpp
- *   [20] 0x02116f14  _ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player.cpp
- *   [21] 0x02116f40  _ZN15daYurei_Mucho_c13OnYoshiTryEatEv.cpp
- *   [22] 0x02116f48  d_a_yurei_mucho.c
- *
- * [22] is the registry factory, folded in rather than left outside. Its body
- * relocates to exactly one vtable in this module, _ZTV15daYurei_Mucho_c (the
- * vptr store at 0x02116f68 off the literal at 0x02116f94), which is the
- * cartridge's own type evidence and the same test tools/tu_map.py already
- * applies to a `<Class>_Spawn` factory. tu_map splits it into its own unit only
- * because srcpath.class_of matches `_Spawn` and not `_classInit`, so the run's
- * label and the factory's ROM-RTTI label never met.
+/* daYurei_Mucho_c, the YUREI_MUCHO enemy (ov065).
+ * Class identity, layout evidence and matching experiments are recorded in
+ * notes/agents/handoffs/daYurei_Mucho_c-ov065.md. The twelve address-named helpers
+ * and manual factory remain a partial reconstruction tracked by issue #2478.
  */
 
 #include "daYurei_Mucho_c.h"
@@ -62,10 +12,9 @@
 #include "SharedFilePtr.h"
 #include "Player.h"
 
-/* Two stand-ins with no project header to take them from. Both are load-bearing
-   for codegen, not conveniences: the twelve-word matrix is copied as one object
-   and the three-word group is copied as one object, and spelling either as
-   three scalar assignments changes what mwccarm emits. */
+/* POD views preserve the retail aggregate copies. Matrix4x3 and Vector3 are
+   available, but their non-POD copies change these two helpers' codegen; see
+   the measured alternatives in the handoff. */
 typedef struct Mtx43 { int w[12]; } Mtx43;
 struct V3A { int w[3]; };
 
@@ -83,15 +32,7 @@ struct V3Quint {
     Vector3 tgt;
 };
 
-/* Reconciled once, here, from the twenty-three legacy files' own views. Each
- * declared only what it needed, so the union below keeps the most complete
- * observation of every name -- a return type that is used over a `void`, a real
- * project type over a stand-in.
- *
- * `extern` inside the block on purpose: the bare block form would DEFINE the
- * data objects and collide at link time. Every ROM symbol is spelled by its
- * already-mangled name; an ordinary C++ declaration would mangle it a SECOND
- * time and emit a reference nothing defines. */
+/* ABI declarations still used by the unreconstructed helpers and factory. */
 extern "C" {
 
 /* arm9 */
@@ -142,24 +83,14 @@ extern int data_020a0e68[];
 extern int data_0209e650[];
 extern short data_02082214[];
 
-/* ov002 -- dEnemyBase_c members not declared in dEnemyBase_c.h yet */
+/* ov002 -- legacy helper calls */
 extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(
     void *self, const void *v, void *p, int a);
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *self, dBgCh_Actr *c);
 extern void func_ov002_020aea30(void *self, void *p, int a, int b);
 
-/* The four subobject entry points the folded factory calls that no header this
-   TU includes declares: fBase_c::operator new, the dEnemyBase_c base-object
-   constructor (C2 is never directly declarable in C++), and the two member
-   constructors whose headers stop short of a default constructor. They are
-   restated here rather than reached by adding include/decl_ActorBase.h,
-   decl_Enemy.h, decl_dCcAc_c.h or decl_dBgCh_Actr.h: those headers also carry
-   declarations this TU deliberately takes from elsewhere, and pulling one in to
-   satisfy a single extern would silently move that choice.
-   ModelAnim.h and ShadowModel.h do declare their constructors, but as C++
-   constructors, which cannot be invoked on the raw allocation the retail
-   factory holds; the mangled spelling names the same two symbols and is what
-   the calls below resolve to. */
+/* Explicit construction entry points for the retained manual factory. The
+   ordinary constructors exist in the headers; reconstructing the complete
+   factory and constructor sequence remains part of issue #2478. */
 extern void *_ZN7fBase_cnwEj(unsigned);
 extern void _ZN12dEnemyBase_cC2Ev(void *);
 extern void _ZN7dCcAc_cC1Ev(void *);
@@ -176,12 +107,8 @@ extern SharedFilePtr data_ov065_0211d600;
 extern SharedFilePtr data_ov065_0211d608;
 extern SharedFilePtr data_ov065_0211d610;
 extern SharedFilePtr data_ov065_0211d618;
-/* Only 0x0211d670 can be spelled with its real type here: include/decl_common.h,
-   which this TU takes _ZTV15daYurei_Mucho_c from, already declares the other
-   three -- 0x0211d650 and 0x0211d660 as char[] and 0x0211d680 as a bare int --
-   and a second, differing declaration is a compile error. They are reached
-   through a cast at each use instead. Only the address ever reaches the code,
-   so the cast is byte-free. */
+/* These State objects remain ROM-supplied storage. Existing declarations in
+   decl_common.h use raw arrays/words, so uses retain their local State casts. */
 extern char data_ov065_0211d670[];
 
 /* ov065 -- this TU's own free helpers, forward-declared because mwccarm emits
@@ -197,52 +124,9 @@ extern void func_ov065_0211696c(char *c);
 /* ROM ordinal 22 -- daYurei_Mucho_c_classInit, 0x02116f48, size 0x50          */
 /* -------------------------------------------------------------------------- */
 // @symbol daYurei_Mucho_c_classInit
-/* The registry factory for profile 236: g_profile_YUREI_MUCHO at 0x0211cb80
- * points its +0 word here, and its own id word 0x005b00ec has low half 0xec =
- * 236, agreeing with ACTOR_SPAWN_TABLE[236] and the ACTOR_DEBUG_NAMES[236]
- * string "YUREI_MUCHO".
- *
- * SIZE IS THE ROM'S OWN LITERAL: `mov r0, #0x3e4` at 0x02116f4c, then
- * bl arm9 0x02043444 = fBase_c::operator new(u32). A field span is only a
- * lower bound; this is the allocation.
- *
- * The vptr store is written out rather than left to a constructor because the
- * retail body is exactly this shape: operator new, dEnemyBase_c::C2, one `str`
- * of the vtable address point, then the four subobject C1 calls in ascending
- * offset order. `_ZTV15daYurei_Mucho_c` is taken from include/decl_common.h,
- * which the tree already carried for this class; restating it locally would
- * raise the langmode extern_vtable metric for no byte benefit.
- *
- * WHY `+ 2` AND NOT THE BARE SYMBOL, and what the fold changed. The legacy
- * shard wrote the bare `(int)_ZTV15daYurei_Mucho_c`, and that was correct there:
- * the symbol was UNDEF and config/arm9/overlays/ov065/symbols.txt binds it to
- * the ADDRESS POINT at 0x0211cba4. Here the same spelling would bind to this
- * TU's own definition instead -- the inline destructor is the key function, so
- * mwcc emits the vtable and addresses the storage OBJECT, two words of Itanium
- * preamble lower at 0x0211cb9c. `+ 2` is int-indexed, so eight bytes, which is
- * exactly the bias measured from the ROM: the literal at 0x02116f94 that
- * `ldr r1,[pc,#0x2c]` (0x02116f60) loads and `str r1,[r4]` (0x02116f68) writes
- * to this+0 is 0x0211cba4, and 0x0211cba4 - 0x0211cb9c = 8. It also agrees with
- * the addend-8 vptr stores mwcc emits in D1/D0 by itself, so all three
- * `_ZTV15daYurei_Mucho_c` relocations in the compiled TU carry one addend.
- *
- * IT IS NOT, HOWEVER, LOAD-BEARING IN THE SHIPPED OBJECT. An earlier draft of
- * this comment claimed it was and a measurement refuted that: compiled both
- * ways, the two spellings isolate to byte-identical objects. A relocated word is
- * a wildcard to every byte gate, so tools/match.py reports MATCH either way; and
- * a multi-function source takes objisolate's whole-TU path, which externalises
- * the vtable and rebases only a NONZERO `_ZTV` addend, so addend 8 and addend 0
- * both leave as UNDEF `_ZTV` addend 0. What refuses the bare form is the
- * SINGULAR per-symbol path, `objisolate.plan`, which requires addend >=
- * VTABLE_PREAMBLE for a `_ZTV` target (`unexpected reloc type=2 addend=0`) --
- * the path `tubuild verify` and `tubuild partial` take per member. So `+ 2` buys
- * per-member isolation rather than bytes, and it is still the spelling to keep,
- * because it is the one the ROM literal and mwcc's own vptr stores both write.
- *
- * Reconstructed source-style name: SM64DS proves daYurei_Mucho_c through RTTI,
- * allocation size, vtable identity and the YUREI_MUCHO registry profile; later
- * EAD lineage supplies `classInit`. Exact original spelling is not preserved.
- * Historical alias: Snufit_Spawn. */
+/* Profile 236 allocates 0x3e4 bytes. This TU emits the vtable storage object;
+   the retail vptr addresses its first function slot, past the two-word preamble.
+   classInit is a reconstructed source-style name, not a preserved identifier. */
 extern "C" int *daYurei_Mucho_c_classInit(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(996);
@@ -297,10 +181,9 @@ s32 daYurei_Mucho_c::OnAimedAtWithEgg()
 /* ROM ordinal 18 -- _ZN15daYurei_Mucho_c13InitResourcesEv, 0x02116e10, size 0xfc */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c13InitResourcesEv
-/* dActor_c vtable slot 0.
- *
- * dCcAc_c::Init and dBgCh_Actr::Init are still reached through their mangled
- * names because neither is declared as a method yet. */
+/* Both Init methods are declared. The current dCcAc_c fixed-point aggregate
+   arguments add 16 bytes here; dBgCh_Actr's scalar declaration emits a name
+   absent from symbols.txt. Retain these ABI calls pending interface repair. */
 int daYurei_Mucho_c::InitResources()
 {
     mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov065_0211d618), 1, -1);
@@ -326,14 +209,10 @@ int daYurei_Mucho_c::InitResources()
 /* ROM ordinal 17 -- _ZN15daYurei_Mucho_c8BehaviorEv, 0x02116b84, size 0x28c   */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN15daYurei_Mucho_c8BehaviorEv
-/* dActor_c vtable slot 6.
- *
- * dEnemyBase_c::UpdateYoshiEat is still reached by its mangled name -- unlike
- * UpdateDeath, UpdateWMClsn and UpdateKillByInvincibleChar, it is not declared
- * in dEnemyBase_c.h yet. */
+/* dActor_c vtable slot 6. */
 int daYurei_Mucho_c::Behavior()
 {
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
+    if (UpdateYoshiEat(mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
         if (mEatenByYoshi != 0) {
             if (unk_104 == 0) {
@@ -537,7 +416,7 @@ int func_ov065_0211691c(void *self, daYurei_Mucho_c::State *s)
    literal at 0x02116918, not a call, so the raw read is what reproduces. */
 int func_ov065_021168a8(char *c)
 {
-    *(short *)(c + 0x3e0) = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
+    ((daYurei_Mucho_c *)c)->mTargetAngle = (short)((RandomIntInternal(data_0209e650) >> 8) << 0xc);
     *(short *)(c + 0x100) = (short)(((RandomIntInternal(data_0209e650) >> 8) & 0x1f) + 0x32);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300,
         ((void **)&data_ov065_0211d600)[1], 0, 0x1000, 0);
@@ -563,14 +442,14 @@ int func_ov065_02116744(char *c)
 
     if (Vec3_Dist(c + 0x5c, c + 0x3cc) > 0x1f4000 ||
         _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0) {
-        *(s16 *)(c + 0x300 + 0xe0) =
+        ((daYurei_Mucho_c *)c)->mTargetAngle =
             Vec3_HorzAngle(c + 0x5c, c + 0x3cc);
         if (*(unsigned short *)(c + 0x100) < 0x14)
             *(unsigned short *)(c + 0x100) = 0x14;
     }
 
     ApproachAngle((s16 *)(c + 0x94),
-                  *(s16 *)(c + 0x300 + 0xe0),
+                  ((daYurei_Mucho_c *)c)->mTargetAngle,
                   0xa, 0x200, 0x100);
     ApproachAngle((s16 *)(c + 0x92), 0, 1, 0x500, 0x500);
 
@@ -632,7 +511,7 @@ int func_ov065_021165d8(char *c)
         a.x = tmp.x;
         a.y = tmp.y;
         a.z = tmp.z;
-        *(short *)(c + 0x3e0) = Vec3_HorzAngle(c + 0x5c, &a);
+        ((daYurei_Mucho_c *)c)->mTargetAngle = Vec3_HorzAngle(c + 0x5c, &a);
         Vector3 b;
         b.x = tmp.x;
         b.y = tmp.y;
@@ -653,7 +532,7 @@ int func_ov065_021165d8(char *c)
     } else {
         *(short *)(c + 0x100) = r4;
     }
-    ApproachAngle(c + 0x94, *(short *)(c + 0x3e0), 1, 0x500, 0x500);
+    ApproachAngle(c + 0x94, ((daYurei_Mucho_c *)c)->mTargetAngle, 1, 0x500, 0x500);
     ApproachAngle(c + 0x92, r4, 1, 0x500, 0x500);
     if (*(unsigned short *)(c + 0x100) == 0)
         func_ov065_0211691c(c, (daYurei_Mucho_c::State *)data_ov065_0211d650);
@@ -669,7 +548,7 @@ int func_ov065_021165d8(char *c)
    (`ldr r1,[r0,#4]` at 0x021165a4 off the literal at 0x021165d4). */
 short func_ov065_02116588(char *c)
 {
-    *(int *)(c + 0x3dc) = 0;
+    ((daYurei_Mucho_c *)c)->mShotCount = 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300,
         ((void **)&data_ov065_0211d608)[1], 0x40000000, 0x1000, 0);
     *(short *)(c + 0x100) = 0;
@@ -690,12 +569,12 @@ int func_ov065_02116364(void *self)
     if (pl != 0) {
         *(V3A *)(int)(&L.pp) = *(V3A *)(int)(pl + 0x5c);
         L.tgt = L.pp;
-        *(s16 *)(c + 0x3e0) = Vec3_HorzAngle((void *)(c + 0x5c), &L.tgt);
-        ApproachAngle((void *)(c + 0x94), *(s16 *)(c + 0x3e0), 1, 0x500, 0x500);
+        ((daYurei_Mucho_c *)c)->mTargetAngle = Vec3_HorzAngle((void *)(c + 0x5c), &L.tgt);
+        ApproachAngle((void *)(c + 0x94), ((daYurei_Mucho_c *)c)->mTargetAngle, 1, 0x500, 0x500);
 
         if (((*(u32 *)(c + 0x358) << 4) >> 16) >= 0xf
             && *(u16 *)(c + 0x100) == 0
-            && *(s32 *)(c + 0x3dc) < 3) {
+            && ((daYurei_Mucho_c *)c)->mShotCount < 3) {
             void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xe9, 1, (void *)(c + 0x3c0), 0, *(signed char *)(c + 0xcc), -1);
             if (spawned != 0) {
@@ -713,7 +592,7 @@ int func_ov065_02116364(void *self)
                 *(s32 *)(sp2 + 0xa4) = L.sout.x;
                 *(s32 *)(sp2 + 0xa8) = L.sout.y;
                 *(s32 *)(sp2 + 0xac) = L.sout.z;
-                *(s32 *)(int)(c + 0x3dc) += 1;
+                ((daYurei_Mucho_c *)c)->mShotCount += 1;
                 *(u16 *)(c + 0x100) = 4;
             }
         }

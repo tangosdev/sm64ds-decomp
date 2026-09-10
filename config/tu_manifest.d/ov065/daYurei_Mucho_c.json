@@ -368,7 +368,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov065",
       "canonical_address": "0x0211cba4",
-      "reason": "Owning every virtual makes this the class's key-function TU -- the inline destructor in include/daYurei_Mucho_c.h is the key function -- so it emits the full 0x84-byte daYurei_Mucho_c vtable storage. romdata_check applies the measured eight-byte ABI address-point bias (storage begins 0x0211cb9c; the symbol at 0x0211cba4 IS the address point, which is the word daYurei_Mucho_c_classInit stores at this+0) and verifies the 31 retail slots plus the storage preamble at the canonical ov065 home before text-only production isolation discards it."
+      "reason": "This TU defines the class's out-of-line virtual methods and includes its inline destructor. The pinned compiler emits the full 0x84-byte daYurei_Mucho_c vtable storage here; this does not make the inline destructor itself the key function. romdata_check applies the measured eight-byte ABI address-point bias (storage begins 0x0211cb9c; the symbol at 0x0211cba4 IS the address point, which is the word daYurei_Mucho_c_classInit stores at this+0) and verifies the 31 retail slots plus the storage preamble at the canonical ov065 home before text-only production isolation discards it."
     }
   ]
 }
