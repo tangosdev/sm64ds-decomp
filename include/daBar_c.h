@@ -28,8 +28,8 @@ struct daBar_c : dActor_c {
         return _ZN7fBase_cnwEj(size);
     }
 
-    /* Wrappers over the existing scalar SetRanges/Init definitions.
-     * The Fix12<int> method form made this TU's InitResources the wrong size. */
+    /* Local adapters preserve the existing scalar call boundaries.
+     * The measured collision-call alternatives are recorded in the handoff. */
     void SetRanges(Fix12i offsetY, Fix12i radius, Fix12i clipDistance, Fix12i farDistance) {
         _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
             this, offsetY, radius, clipDistance, farDistance);
@@ -45,8 +45,8 @@ typedef char daBar_c_size_must_be_0x108[
 
 struct DaBarSpawnInfo {
     daBar_c *(*classInit)();
-    s16 executeOrder;      /* +4: also BAR registry id 0x011f = 287 */
-    s16 drawOrder;         /* +6 render priority */
+    u16 executeOrder;      /* +4 behavior priority */
+    u16 drawOrder;         /* +6 render priority */
     u32 actorFlags;
     Fix12i clipOffsetY;
     Fix12i clipRadius;
