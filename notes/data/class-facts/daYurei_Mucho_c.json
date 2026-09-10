@@ -291,5 +291,70 @@
     "The State struct's field names and its exact size. Two 8-byte pointer-to-member fields at +0x00 and +0x08 are proven, and the four objects are laid out 0x10 apart with the fourth ending exactly where the next class's .bss band begins, which makes 0x10 the size. Anything beyond that -- what the two hooks are called, whether the struct has a name -- is not proven.",
     "The per-unit boundary confidence from tu_map.py. build/tu_map.json does not carry it at this revision; the ov065 module-level split is 17 medium / 1 high and the sinit corroboration (10 sinits / 10 .ctor entries) is module-wide, not narrowed to this TU.",
     "The destructor lever. That an inline in-class virtual destructor reproduces the retail D1-then-D0-without-D2 shape is INFERRED from the daObjCtMecha05_c manifest, not measured here. The ROM shape is identical, but the compile has not been run."
+  ],
+  "source_review_corrections": [
+    {
+      "date": "2026-09-10",
+      "review_task": "pr2456-source-repair-0910",
+      "reviewed_input_commit": "a6ed71f26e750fadb84aeb4c55a8844d994fc502",
+      "scope": "Dated correction to the earlier observations above; tree_derived remains a historical snapshot. The text-only class promotion is still partial under issue #2478.",
+      "layout": {
+        "object_size": "0x3e4",
+        "fields": [
+          {
+            "offset": "0x3dc",
+            "width": 4,
+            "type": "s32",
+            "name": "mShotCount",
+            "naming": "reconstructed from use",
+            "evidence": "func_ov065_02116588 clears the word; func_ov065_02116364 compares it as signed against 3 and increments it after spawning profile 0xe9. Replacing these accesses with the class field reproduces all 23 declared functions."
+          },
+          {
+            "offset": "0x3e0",
+            "width": 2,
+            "type": "s16",
+            "name": "mTargetAngle",
+            "naming": "reconstructed from use",
+            "evidence": "func_ov065_021168a8 writes a random angle. func_ov065_02116744, func_ov065_021165d8 and func_ov065_02116364 store horizontal target angles and feed signed halfword reads to ApproachAngle. The 0x300+0xe0 access is also 0x3e0. Typed replacements reproduce all 23 declared functions."
+          }
+        ],
+        "unobserved_tail": "0x3e2..0x3e4 only (two bytes)",
+        "supersedes": "The prior unproven claim that nothing reads or writes 0x3e0, and the header claim that observed fields stop at 0x3dc, are incorrect. The earlier displacement measurement omitted the live target-angle halfword; it is not a complete field census."
+      },
+      "state_contract": {
+        "measured": "Two 8-byte PMF records per 0x10-byte State; entry hook at +0, per-frame hook at +8; dispatcher forwards the result register.",
+        "inferred": "mEnter/mMain and their common int signatures are reconstructed interfaces. Forwarding r0 does not identify an original C++ return type. func_ov065_02116588 is still a short-returning free helper; PMF helpers remain unreconstructed."
+      },
+      "interface_probes": [
+        {
+          "interface": "dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr&)",
+          "result": "Adopted real member call; all 23 functions VERIFIED with 4280 text bytes."
+        },
+        {
+          "interface": "dCcAc_c::Init(dActor_c*,Fix12<int>,Fix12<int>,u32,u32)",
+          "result": "Declared in the included header. Aggregate-initialized radius/height locals grow InitResources from 0xfc to 0x10c and emit constant copies; assigning their val fields separately grows it to 0x114. Keep the existing scalar ABI declaration/call while this interface is repaired."
+        },
+        {
+          "interface": "dBgCh_Actr::Init(dActor_c*,Fix12i,Fix12i,Vector3_16*,Vector3_16*)",
+          "result": "Declared with scalar Fix12i parameters. A real call preserves the 0xfc body but emits _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, which has no symbols.txt destination. The current linked name still encodes Fix12<int>. Keep the existing ABI call without inventing an alias or changing shared headers."
+        }
+      ],
+      "copy_probes": [
+        {
+          "type": "Matrix4x3",
+          "result": "Available through ModelAnim/Model headers as Matrix3x3 plus non-POD Vector3. Replacing the POD Mtx43 copies grows func_ov065_0211696c from 0x17c to 0x1c8."
+        },
+        {
+          "type": "Vector3",
+          "result": "Available in types.h, with its existing destructor. Replacing V3A copy in func_ov065_02116364 grows it from 0x224 to 0x234."
+        }
+      ],
+      "metadata": "The TU defines the out-of-line virtual methods and includes the inline destructor. The pinned compiler emits D1/D0 and the 0x84-byte vtable storage here. The inline destructor itself is not the key function.",
+      "partial_scope": {
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2478",
+        "owner": "humanizer/integrator support session through @andrewboudreau",
+        "remaining": "Twelve address-named free helpers, manual factory/constructor sequence, remaining raw fields and typed matrix/vector copies. SharedFilePtr still exposes no recovered fields; retain the measured direct +4 file-pointer load. Do not replace it with LoadFile or invent a shared field."
+      }
+    }
   ]
 }
