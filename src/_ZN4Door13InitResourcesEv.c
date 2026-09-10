@@ -1,4 +1,13 @@
 // @symbol _ZN4Door13InitResourcesEv
+// NONMATCHING: candidate is 4 bytes (one instruction) larger than the ROM under the
+// pinned 2004/b56 (0x300 vs 0x2fc). Diverges at +0x0c: the compiler splits the ROM's
+// single `ldr r1, [r5, #8]` into `add r2, r5, #8` followed by `ldr r1, [r2]`, and every
+// instruction after that point is shifted 4 bytes for the rest of the function. Never
+// enrolled (config/arm9/overlays/ov100/delinks.txt carries no `complete` marker for this
+// range) -- counted as matched only because the count rule never read delinks.txt. The
+// comment below already documented this gap in prose ("STILL DOES NOT BYTE-MATCH")
+// while deliberately not spelling this word, to avoid dropping out of the worklist
+// eligibility gate; this banner corrects the published count instead.
 #include "Door.h"
 // recovered name: Door::InitResources
 /* recovered: renamed to Class_Method, vtable slot 0 */
