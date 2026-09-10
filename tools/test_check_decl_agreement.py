@@ -651,6 +651,88 @@ class DataDefinitionTests(unittest.TestCase):
                 self.assertEqual(findings[0]["kind"], "kind")
 
 
+class DefinitionOwnershipTests(unittest.TestCase):
+    def test_braced_initializers_keep_every_later_object(self):
+        for definition in (
+                "int prefix[2] = {0, 1}, target = 0;",
+                "int prefix[2][2] = {{0, 1}, {2, 3}}, target = 0;",
+                "int prefix[1] = {0}, middle[2] = {1, 2}, target = 0;",
+                "int prefix[1] = {0}, *target = 0;",
+                "int prefix[1] = {0}, target = next_value();"):
+            with self.subTest(definition=definition):
+                def tree(t):
+                    t.write("src/definition.c", definition + "\n")
+                    t.write("src/caller.c", "extern int target(void);\n")
+                findings, _decls, defs, _files = build(tree)
+                self.assertIn("target", {d.symbol for d in defs})
+                self.assertEqual(kinds(findings, "target"),
+                                 [("kind", "src/caller.c", "function", "data")])
+
+    def test_braced_initializer_does_not_merge_the_next_statement(self):
+        declarations, definitions, unparsed = CDA.parse_file(
+            "src/data.c", "int first[] = {0, 1}, second = 2;\n"
+            "extern void next(void);\nint final = 3;\n", {})
+        self.assertEqual([d.symbol for d in definitions],
+                         ["first", "second", "final"])
+        self.assertEqual([d.symbol for d in declarations], ["next"])
+        self.assertEqual(unparsed, 0)
+
+    def test_one_marker_names_only_the_first_object(self):
+        for statement in ("int prefix = 0, target = 0;",
+                          "int prefix[2] = {0, 1}, target = 0;"):
+            with self.subTest(statement=statement):
+                def tree(t):
+                    t.write("src/definition.c", "// @symbol RealPrefix\n" +
+                            statement + "\n")
+                    t.write("src/caller.c", "extern int target(void);\n")
+                findings, _decls, defs, _files = build(tree)
+                self.assertEqual([d.symbol for d in defs], ["RealPrefix", "target"])
+                self.assertEqual(kinds(findings, "target"),
+                                 [("kind", "src/caller.c", "function", "data")])
+
+    def test_private_function_cannot_mask_the_real_external_definition(self):
+        for private in ("static void target(void) {}",
+                        "static inline void target(void) {}",
+                        "namespace Detail { void target(void) {} }",
+                        "namespace { void target(void) {} }",
+                        "namespace Outer { namespace Inner { void target(void) {} } }"):
+            with self.subTest(private=private):
+                def tree(t):
+                    t.write("src/aa_private.cpp", private + "\n")
+                    t.write("src/zz_real.c", "int target(void) { return 0; }\n")
+                    t.write("src/caller.c", "extern void target(void);\n")
+                findings, _decls, defs, _files = build(tree)
+                self.assertEqual([(d.symbol, d.file) for d in defs],
+                                 [("target", "src/zz_real.c")])
+                self.assertEqual(kinds(findings, "target"),
+                                 [("return", "src/caller.c", "void", "int")])
+
+    def test_explicit_c_linkage_in_namespace_keeps_global_identity(self):
+        for definition in ('namespace Detail { extern "C" int target(void) { return 0; } }',
+                           'namespace Detail { extern "C" { int target(void) { return 0; } } }'):
+            with self.subTest(definition=definition):
+                def tree(t):
+                    t.write("src/definition.cpp", definition + "\n")
+                    t.write("src/caller.c", "extern void target(void);\n")
+                findings, _decls, defs, _files = build(tree)
+                self.assertEqual([d.symbol for d in defs], ["target"])
+                self.assertEqual(kinds(findings, "target"),
+                                 [("return", "src/caller.c", "void", "int")])
+
+    def test_marked_namespace_function_keeps_its_linker_identity(self):
+        declarations, definitions, unparsed = CDA.parse_file(
+            "src/definition.cpp", "namespace Detail {\n"
+            "// @symbol _ZN6Detail6targetEv\nint target(void) { return 0; }\n}", {})
+        self.assertEqual([d.symbol for d in definitions], ["_ZN6Detail6targetEv"])
+        self.assertEqual(unparsed, 0)
+
+    def test_marker_does_not_turn_a_static_function_into_a_global(self):
+        _declarations, definitions, unparsed = CDA.parse_file(
+            "src/private.cpp", "// @symbol target\nstatic void target(void) {}", {})
+        self.assertEqual(definitions, [])
+        self.assertEqual(unparsed, 0)
+
+
 class ChangedGateTests(unittest.TestCase):
     """Run the real CLI decision over small Git fixtures; floor tests stay separate."""
     def setUp(self):
@@ -730,6 +812,53 @@ class ChangedGateTests(unittest.TestCase):
         code, log = self.run_gate("--changed", base)
         self.assertEqual(code, 1, log)
         self.assertIn("got function, expected data", log)
+
+    def test_ownership_failures_are_rejected_with_real_scan_floors(self):
+        # Exercise the actual acceptance decision with enough independent
+        # declarations to satisfy every production scan floor.
+        for index in range(2000):
+            self.tree.write("src/pad%04d.c" % index, "".join(
+                "extern void pad_%04d_%d(void);\n" % (index, item)
+                for item in range(3)))
+
+        def gate(*args):
+            log = io.StringIO()
+            with patch.multiple(CDA, REPO=self.root,
+                                BASELINE=self.root / "config/baseline.json"), \
+                    contextlib.redirect_stdout(log), contextlib.redirect_stderr(log):
+                result = CDA.main(list(args))
+            return result, log.getvalue()
+
+        cases = (
+            ("aggregate", "int prefix[2] = {0, 1}, target = 0;\n", ""),
+            ("marked", "// @symbol RealPrefix\nint prefix = 0, target = 0;\n", ""),
+            ("static", "int target(void) { return 0; }\n",
+             "static int target(void) { return 0; }\n"),
+            ("namespace", "int target(void) { return 0; }\n",
+             "namespace Private { int target(void) { return 0; } }\n"))
+        for case, definition, private in cases:
+            with self.subTest(case=case):
+                self.tree.write("src/zz_definition.c", definition)
+                self.tree.write("src/aa_private.cpp", private)
+                self.tree.write("src/caller.c", "extern int target(void);\n"
+                                if private else "extern int target;\n")
+                base = self.commit()
+                code, log = gate("--check")
+                self.assertEqual(code, 0, log)
+                if private:
+                    self.tree.write("src/aa_private.cpp",
+                                    private.replace("int target(void) { return 0; }",
+                                                    "void target(void) {}"))
+                    self.tree.write("src/caller.c", "extern void target(void);\n")
+                else:
+                    self.tree.write("src/caller.c", "extern int target(void);\n")
+                self.commit()
+                for args in (("--check",), ("--changed", base)):
+                    code, log = gate(*args)
+                    self.assertEqual(code, 1, log)
+                    self.assertNotIn("SCAN TOO SMALL", log)
+                    self.assertIn("src/caller.c", log)
+                    self.assertIn("target", log)
 
     def test_tool_change_runs_the_full_gate(self):
         self.tree.write("src/definition.c", "void target(void) {}\n")

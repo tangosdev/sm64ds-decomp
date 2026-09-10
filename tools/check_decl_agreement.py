@@ -375,13 +375,13 @@ def normalise_type(text, aliases, decay_arrays):
     return " ".join(out.split())
 
 
-def split_top(text, seps=(",",)):
-    """Split on separators that are not inside (), [] or <>."""
+def split_top(text, seps=(",",), braces=False):
+    """Split outside (), [] and <>; data initializers also nest braces."""
     parts, depth, buf = [], 0, []
     for ch in text:
-        if ch in "([<":
+        if ch in "([<" or (braces and ch == "{"):
             depth += 1
-        elif ch in ")]>":
+        elif ch in ")]>" or (braces and ch == "}"):
             depth -= 1
         if ch in seps and depth <= 0:
             parts.append("".join(buf))
@@ -589,8 +589,9 @@ def top_level_units(code, default_linkage):
     `in_block` says the statement sits inside an explicit `extern "C" { ... }`, where
     a declaration does not have to repeat the `extern` keyword to be one.
 
-    Bodies and aggregate contents are skipped so fields are not mistaken for
-    symbols. An initializer head is retained to identify its object definition.
+    Bodies and aggregate types are skipped so fields are not mistaken for
+    symbols. Braced initializers stay in their statement, including any later
+    declarators; split_top keeps their nested commas out of the declarator list.
     """
     i = 0
     n = len(code)
@@ -622,9 +623,7 @@ def top_level_units(code, default_linkage):
                 kinds.append(kind)
                 start = i + 1
             else:
-                if kind == "initializer":
-                    yield start, head, "initializer", linkage[-1], block, in_namespace
-                elif kind != "aggregate":
+                if kind not in ("initializer", "aggregate"):
                     yield start, head, "{", linkage[-1], block, in_namespace
                 depth = 0
                 while i < n:
@@ -636,9 +635,13 @@ def top_level_units(code, default_linkage):
                             i += 1
                             break
                     i += 1
-                if kind in ("aggregate", "initializer"):
-                    # Consume the aggregate tail or the initializer terminator;
-                    # neither belongs to the following statement.
+                if kind == "initializer":
+                    # Keep the statement start: `int a[] = {0}, b = 1;` owns
+                    # both declarators. The balanced initializer was skipped,
+                    # but its closing brace is not a statement terminator.
+                    continue
+                if kind == "aggregate":
+                    # A type definition's tail is not a separate declaration.
                     tail_paren = 0
                     while i < n:
                         if code[i] in "([":
@@ -832,6 +835,9 @@ def parse_file(rel, text, aliases):
         decl_start = start + (len(chunk) - len(chunk.lstrip()))
         line = line_of(newlines, decl_start)
 
+        if saw_static:
+            continue  # Internal linkage cannot define a global reference.
+
         if term == "{":
             # A definition. Its identity is the `@symbol` line above it when the file
             # carries one, and otherwise the flat identifier it declares. Only marks
@@ -845,18 +851,17 @@ def parse_file(rel, text, aliases):
                 continue
             marked = [s for idx, s in marks if start <= idx < decl_start]
             symbol = marked[-1] if marked else name
-            if "::" in rest and not marked:
-                # An out-of-line member with no `@symbol` line: the linker name is not
-                # recoverable from the text, so claim nothing.
+            if not marked and ("::" in rest or
+                               (in_namespace and linkage != "C")):
+                # A qualified/member or namespace function needs its linker
+                # identity. Explicit C linkage inside a namespace is still flat.
                 continue
             defs.append(Record(symbol, rel, line, ret, params, True,
                                "C" if linkage == "C" else linkage, True, member))
             continue
 
-        if saw_static:
-            continue
-        for piece in _declarator_pieces(rest):
-            parts = split_top(piece, seps=("=",))
+        for piece_index, piece in enumerate(_declarator_pieces(rest)):
+            parts = split_top(piece, seps=("=",), braces=True)
             has_init = len(parts) > 1
             declarator = parts[0].strip()
             parsed = parse_declarator(declarator, aliases, cxx)
@@ -875,7 +880,10 @@ def parse_file(rel, text, aliases):
                 qualifiers = re.split(r"[*&]", lead)[-1]
                 if cxx and not saw_extern and re.search(r"\bconst\b", qualifiers):
                     continue
-                marked = [s for idx, s in marks if start <= idx < decl_start]
+                # A marker preceding a statement identifies its first object,
+                # not every object in a comma-separated declaration.
+                marked = ([s for idx, s in marks if start <= idx < decl_start]
+                          if piece_index == 0 else [])
                 if ("::" in declarator or in_namespace) and not marked:
                     continue  # A qualified object's linker name needs its marker.
                 defs.append(Record(marked[-1] if marked else name, rel, line,
@@ -888,7 +896,7 @@ def parse_file(rel, text, aliases):
 
 def _declarator_pieces(rest):
     """`int a, b` is two declarators sharing a base type; `f(int, int)` is one."""
-    parts = split_top(rest)
+    parts = split_top(rest, braces=True)
     if len(parts) == 1:
         return [rest]
     base = split_top(parts[0], seps=("=",))[0].strip()
@@ -899,7 +907,8 @@ def _declarator_pieces(rest):
     out = [parts[0].strip()]
     for extra in parts[1:]:
         extra = extra.strip()
-        if not extra or "(" in extra:
+        declarator = split_top(extra, seps=("=",))[0]
+        if not extra or "(" in declarator:
             return [rest]
         out.append("%s %s" % (prefix, extra))
     return out
