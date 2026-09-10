@@ -112,7 +112,6 @@
  * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "daBombking_c.h"
 #include "types.h"
-#include "decl_MontyMoleRock.h"
 #include "common.h"
 #include "decl_common.h"
 #include "decl_Animation.h"
@@ -426,7 +425,7 @@ int func_ov078_02123a3c(char* c){
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 int func_ov078_02123aa0(char* c){
     short ang = Vec3_HorzAngle(c+0x5c, c+0x4e0);
-    if(_ZN13MontyMoleRockD0Ev((void*)c) == 1) return 1;
+    if(func_ov078_02123804(c) == 1) return 1;
     char* p = _ZN8dActor_c13ClosestPlayerEv(c);
     if(p != 0){
         struct Vector3 v = *(struct Vector3*)(p+0x5c);
@@ -474,7 +473,7 @@ extern int _ZNK9Animation12WillHitFrameEi(void* self, int f);
 extern int _ZN9Animation8FinishedEv(void* self);
 
 int func_ov078_02123c20(char* c){
-    if((int)_ZN13MontyMoleRockD0Ev((void*)c) == 1){
+    if(func_ov078_02123804(c) == 1){
         func_ov078_02123864((char*)c);
         int v = *(int*)(c+0x494);
         if(v != 0){
