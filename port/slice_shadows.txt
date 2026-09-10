@@ -1,0 +1,67 @@
+# GATE SHADOWS (run link100, lane SHADOWS) -- the two rows out of the 29-row
+# shadow queue that the ROM's own body can take, once the seam each host copy
+# was written for is expressed as a BRIDGE instead of as an edited copy of the
+# matched source.
+#
+# Both rows are the same defect and the same remedy. A matched TU calls a state
+# setter with the setter's SECOND argument dropped. On ARM that rides
+# byte-identical because the caller has already put the value in r1 and the
+# `bl` does not disturb it; on the host, cdecl passes only the declared
+# argument and the callee reads stack garbage, so the setter indexes its state
+# table at garbage*16. Both host copies fixed that by re-typing the call inside
+# a line-for-line copy of the matched body. That is one edited statement and a
+# whole ROM body kept out of the link.
+#
+# THE ARGUMENT IS NOT INFERRED IN EITHER ROW. This lane read both call sites
+# out of extracted/overlays/ (never the dsd copies) at the overlay's own load
+# base, and in both the instruction before the branch is `mov r1, #0`:
+#
+#   ov072, base 0x0211f000, BabyPenguin::InitResources 0x02121e84 (size 0x11c)
+#     02121F68  0010a0e3  mov  r1, #0
+#     02121F6C  d01084e5  str  r1, [r4, #0xd0]
+#     02121F70  0400a0e1  mov  r0, r4
+#     02121F74  601384e5  str  r1, [r4, #0x360]
+#     02121F78  74ffffeb  bl   #0x2121d50        <- func_ov072_02121d50(this, 0)
+#
+#   ov080, base 0x02123740, CrazedCrate::InitResources 0x021251ec (size 0x12c)
+#     021252DC  0010a0e3  mov  r1, #0
+#     021252E0  0400a0e1  mov  r0, r4
+#     021252E4  741384e5  str  r1, [r4, #0x374]
+#     021252E8  93ffffeb  bl   #0x212513c        <- func_ov080_0212513c(this, 0)
+#
+# so the second argument is the ROM's own zero at both sites, and both setters
+# are already in the link with their real two-argument shape
+# (src/func_ov072_02121d50.c and src/func_ov080_0212513c.c both spell
+# `(char* c, int i)` and store data_...[i << 4]).
+#
+# THE BRIDGE. hal/method_faces.cpp defines one zero-index forwarder per row --
+# port_ov072_bp_state_i0 and port_ov080_cc_state_i0 -- and each src TU is
+# compiled with a per-source -D that renames its call of the setter onto the
+# forwarder. The rename is exact and total in both files:
+#   * src/_ZN11BabyPenguin13InitResourcesEv.cpp declares the setter ITSELF
+#     (`extern "C" void func_ov072_02121d50(void *c);`, one argument), so the
+#     -D moves the declaration and the one call together and nothing else in
+#     the tree sees it. decl_common.h has no declaration of that name.
+#   * src/_ZN11CrazedCrate13InitResourcesEv.cpp takes its declaration from
+#     include/decl_common.h:2857 (`extern void func_ov080_0212513c(void*);`,
+#     inside that file's extern "C" block opened at line 20), so the -D moves
+#     that one declaration and the one call in this TU only. The header is
+#     unchanged and every other caller of the setter still spells the ROM name.
+# The forwarder then calls the real two-argument body. That is the C-name
+# bridge shape the port already uses everywhere else, pointed INTO the ROM's
+# body rather than standing in front of it.
+#
+# WHAT IS RETIRED. port/unmatched/BabyPenguin_InitResources.cpp and
+# port/unmatched/CrazedCrate_InitResources.cpp, both of which were the matched
+# body with exactly one statement changed (verified by diff before deleting:
+# one line differs in each, and it is the call above). BabyPenguin's copy came
+# off the three target lists in port/CMakeLists.txt; CrazedCrate's is commented
+# out of port/slice_w5a.txt, which is where that class's other seventeen TUs
+# live. The two SIBLING seams of the same family stay as they are and are NOT
+# part of this gate: port/unmatched/BabyPenguin_LandTransition.cpp
+# (func_ov072_021217ac) and port/unmatched/CrazedCrate_State2Tick.c
+# (func_ov080_02124e60) are not shadow rows -- neither name is in the queue --
+# so retiring them would be a change with no measurement behind it.
+#
+src/_ZN11BabyPenguin13InitResourcesEv.cpp
+src/_ZN11CrazedCrate13InitResourcesEv.cpp

@@ -1026,3 +1026,45 @@ void _ZN6Player16InitBalloonMarioEv(void *self)
 void _ZN6Player13InitFireYoshiEv(void *self)
 { ((Player *)self)->InitFireYoshi(); }
 }  /* extern "C" */
+
+/* ---- run link100, lane SHADOWS: two ZERO-INDEX FORWARDERS ----------------
+ *
+ * These are faces in the sense the header at the top of this file means: a
+ * one-line forwarder that stands between the ROM's calling convention and the
+ * host's. They exist so that two InitResources bodies can be the ROM's own
+ * code instead of a host copy of it.
+ *
+ * THE SEAM. Both classes' InitResources ends by putting the object in state 0
+ * through a two-argument state setter, and both matched TUs spell that call
+ * with the SECOND ARGUMENT DROPPED -- the r1 ride-through family this file's
+ * item 2 describes for a receiver, applied to an ordinary argument. On ARM the
+ * call is byte-identical because the caller has already put the value in r1
+ * and the `bl` does not disturb it; under cdecl the callee reads the caller's
+ * stack instead, so the setter indexes its state table at garbage << 4.
+ *
+ * THE VALUE IS THE ROM'S, read out of extracted/overlays/ at each overlay's
+ * own load base, one instruction before the branch in both:
+ *   ov072 (base 0x0211f000), BabyPenguin::InitResources 0x02121e84:
+ *     02121F68  mov r1, #0 ... 02121F78  bl #0x2121d50
+ *   ov080 (base 0x02123740), CrazedCrate::InitResources 0x021251ec:
+ *     021252DC  mov r1, #0 ... 021252E8  bl #0x212513c
+ *
+ * Each src TU is compiled with a per-source -D that renames its call of the
+ * setter onto the forwarder below (port/CMakeLists.txt, the gate-shadows
+ * block; the derivation and the full instruction quotes are in
+ * port/slice_shadows.txt). Nothing else in the tree is renamed, so every other
+ * caller of either setter still reaches it under the ROM's own name.
+ *
+ * The setters themselves are matched TUs already in the link, and both spell
+ * the two-argument shape (src/func_ov072_02121d50.c, src/func_ov080_0212513c.c:
+ * `*(char**)(c + OFF) = data_...[i << 4]`), which is why the declarations here
+ * are the real ones and not a cast. include/decl_common.h is not reachable
+ * from this file (nothing in include/ includes it), so its one-argument
+ * declaration of func_ov080_0212513c does not collide with this one. */
+extern "C" {
+void func_ov072_02121d50(void *c, int i);
+void func_ov080_0212513c(void *c, int i);
+
+void port_ov072_bp_state_i0(void *c) { func_ov072_02121d50(c, 0); }
+void port_ov080_cc_state_i0(void *c) { func_ov080_0212513c(c, 0); }
+}  /* extern "C" */
