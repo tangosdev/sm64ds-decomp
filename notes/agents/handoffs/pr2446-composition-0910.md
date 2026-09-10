@@ -35,3 +35,9 @@ Before publication, integrate the actual live main after #2445 lands, record
 the final exact candidate and target base, and obtain independent source
 acceptance plus the applicable byte, metadata, consumer, credit, port and static
 checks. The existing PR is retained to preserve its author's attribution.
+
+The staged review also found BKG-08: the current enemy-provenance row still
+called the +0x420 field `void *mState` and omitted the dispatcher's null-entry
+return. That single row now describes the actual `StateFunction *` member, the
+first-entry return flow and discarded second-entry result, and the remaining
+signature inference. This is a documentation correction; source is unchanged.
