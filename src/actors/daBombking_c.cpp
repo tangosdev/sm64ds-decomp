@@ -14,15 +14,10 @@
  * 6, 9, 12, 16, 17 and 29, read back with tools/rtti_vtables.py --own.  All 8
  * override bodies are inside the run below.
  *
- * THE FOLD -- 52 functions, not 51.  This TU covers the contiguous .text run
- * 0x02123740..0x02126660 with no internal gaps.  The promotion queue's
- * shard_count of 51 is a FLOOR, not a count: tools/tu_map.py segments on symbol
- * NAME, and the factory is spelled daBombking_c_classInit rather than
- * _ZN12daBombking_c..., so it falls outside a run it physically abuts.  It sits
- * at 0x021265fc, size 0x64, zero-gap after ordinal 50, and ends exactly on the
- * .init boundary at 0x02126660 -- inside the run by address, and folded here.
- * tools/queue_audit.py would absorb it once the queue row is keyed on the ROM
- * name, because it extends a run over a zero-gap <Class>_classInit neighbour.
+ * The TU covers 52 functions in the contiguous .text run
+ * 0x02123740..0x02126660. The factory at 0x021265fc occupies the final 0x64
+ * bytes before .init. The historical queue counted 51 shards before folding;
+ * the regenerated promoted row now counts this one source file.
  *
  * TEXT-ONLY ROUTE.  ov078's delinks.txt carves out no .data whatsoever, so this
  * TU claims .text and nothing else.  It is nonetheless the class's KEY-FUNCTION
@@ -2037,10 +2032,7 @@ s32 daBombking_c::OnAimedAtWithEgg() {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 51 -- daBombking_c_classInit, 0x021265fc, size 0x64            */
 /* -------------------------------------------------------------------------- */
-/* NOT in build/tu_map.json's function list: tu_map cuts on symbol NAME, and this
- * one is not spelled _ZN12daBombking_c..., so it was never labelled or counted.
- * It is contiguous with ordinal 50 (which ends at 0x021265fc) and is the class's
- * own factory, so it belongs to this TU. The queue's shard_count of 51 is a floor. */
+/* The factory immediately follows ordinal 50 and ends at the .init boundary. */
 // @symbol daBombking_c_classInit
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned int size);
