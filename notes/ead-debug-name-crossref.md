@@ -173,7 +173,7 @@ gloss exists yet.
 | 7 | RESULT | *(not found)* | No RTTI class located in this pass. Presumably a results/scoreboard scene; unconfirmed. |
 | 8 | GAME_OVER | `_ZTS13dScGameOver_c` ([ov003](../config/arm9/overlays/ov003/symbols.txt)) | Game-over scene. |
 | 110 | CT_MECHA03 | `_ZTS16daObjCtMecha03_c` ([ov065](../config/arm9/overlays/ov065/symbols.txt)) | Real, distinct TTC mechanism actor — sits in the gap between "Mecha02" (glossed `TTC_ROTATING_PRISM`, index 109) and "Mecha04" (glossed `TTC_CONVEYOR_BELT_LARGE`, index 111). Nobody has glossed it. |
-| 272 | BIG_SNOWMAN | `_ZTS11daBgSnwmn_c` ([ov072](../config/arm9/overlays/ov072/symbols.txt)) | `Bg` + `Snwmn` = "Big Snowman" — the parent/manager actor over `SnowmanHead` (273) and `SnowmanBody` (274), which *are* glossed. This is the missing third member of that family. |
+| 272 | BIG_SNOWMAN | `_ZTS11daBgSnwmn_c` ([ov072](../config/arm9/overlays/ov072/symbols.txt)) | `Bg` + `Snwmn` = "Big Snowman" — the parent/manager actor over `SnowmanHead` (273) and `daBgSnmBdy_c` (274), which *are* glossed. This is the missing third member of that family. |
 | 334 | METER | `_ZTS8dMeter_c` ([ov002](../config/arm9/overlays/ov002/symbols.txt)) | HUD meter/gauge object — exact match to the debug string. Likely the power-flower or timer meter. |
 | 360 | MULTIBOOT | *(not found)* | Presumably related to DS "multiboot" / download-play; no RTTI class located in this pass. |
 | 361 | MG_CUP | `_ZTS10dScMgCup_c` ([ov006](../config/arm9/overlays/ov006/symbols.txt)) | Minigame "cup" scene — likely the trophy/category screen. |
