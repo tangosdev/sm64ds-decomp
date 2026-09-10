@@ -53,20 +53,26 @@ were dropped in favour of `mStarPos`.
 | 0x507 | `mStarTracked` | `InitResources`: `mStarTracked = dActor_c::TrackStar(this, mStarID, 2);`. |
 | 0x509 | `mStarID` | `InitResources`: `mStarID = param1 & 0xf;` and it is the star id argument of `TrackStar`. |
 
-Left `unk_`:
+Additional observed fields:
 
 - **0x494** — a pointer, null-checked, and one field at `+0xc8` is tested (`Render`,
   `Behavior`). Neither body says what it points at.
-- **0x498** — set to `0x1f` in `InitResources`, never read in a matched body.
-- **0x499** — `Behavior` compares it against 1; nothing writes it in matched code.
-- **0x4a0** — `InitResources` sets it to `((rand >> 0x1e) & 1) + 1`, so 1 or 2, and no
-  matched body reads it.
+- **0x498** — initialized to `0x1f` in `InitResources`; its meaning remains unnamed.
+- **0x499** — `Behavior` compares this byte against 1. State handlers also read it
+  and write 0, 1 and 2, so it is live state rather than an unwritten field.
+- **0x4a0** — `InitResources` sets it to `((rand >> 0x1e) & 1) + 1`, so 1 or 2.
+  `func_ov078_02125350` uses it as the spawning-loop bound;
+  `func_ov078_02125448` toggles it with XOR 3 when both actor slots are empty
+  and reads it when choosing the next state.
 - **0x500** — `mHealth`. Set to 3 in `InitResources`; [func_ov078_021243c0](../src/actors/daBombking_c.cpp) decrements it
   by one in the same body that plays the stagger anim and applies the knockback speeds,
   and then latches `+0xb0` when it reaches 0; [func_ov078_021240a0](../src/actors/daBombking_c.cpp) gates the whole
   chase-the-player branch on `<= 0`. Three throws, exactly as the fight plays.
-- **0x424/0x428/0x42c/0x42d** — zeroed by a two-iteration loop in `InitResources` and
-  otherwise untouched.
+- **0x424/0x428/0x42c/0x42d** — two actor IDs and two associated byte flags,
+  initialized by a two-iteration loop. State helpers store IDs from spawned
+  actors, resolve them with `FindWithID`, read and update the flags, and clear
+  entries when their actors no longer resolve. These fields remain raw accesses
+  in the partial reconstruction.
 
 ---
 

@@ -41,3 +41,10 @@ called the +0x420 field `void *mState` and omitted the dispatcher's null-entry
 return. That single row now describes the actual `StateFunction *` member, the
 first-entry return flow and discarded second-entry result, and the remaining
 signature inference. This is a documentation correction; source is unchanged.
+
+A second independent staging review found BKG-09 and BKG-10. The field note
+now records actual writes to +0x499, reads/toggles of +0x4a0, and the live actor
+ID/flag arrays at +0x424/+0x42c. It does not invent original field names. The TU
+comments now distinguish the historical 51-shard queue from its 52 functions
+and current one-source promoted row. These are comment/provenance corrections;
+executable source tokens and manifest policy remain unchanged.
