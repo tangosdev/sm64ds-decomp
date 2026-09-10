@@ -5,10 +5,10 @@ _ZN19daObjKm1_Ukishima_c6RenderEv kind:function(arm,size=0x28) addr:0x02111280
 _ZN19daObjKm1_Ukishima_c8BehaviorEv kind:function(arm,size=0x78) addr:0x021112a8
 _ZN19daObjKm1_Ukishima_c13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111320
 daObjKm1_Ukishima_c_classInit kind:function(arm,size=0x30) addr:0x021113cc
-_ZN11RickshawBdwD1Ev kind:function(arm,size=0x50) addr:0x021113fc
-_ZN11RickshawBdwD0Ev kind:function(arm,size=0x64) addr:0x0211144c
-_ZN11RickshawBdw16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114b0
-_ZN11RickshawBdw13InitResourcesEv kind:function(arm,size=0x18) addr:0x021114c4
+_ZN21daObjKm1_Kurumajiku_cD1Ev kind:function(arm,size=0x50) addr:0x021113fc
+_ZN21daObjKm1_Kurumajiku_cD0Ev kind:function(arm,size=0x64) addr:0x0211144c
+_ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114b0
+_ZN21daObjKm1_Kurumajiku_c13InitResourcesEv kind:function(arm,size=0x18) addr:0x021114c4
 daObjKm1_Kurumajiku_c_classInit kind:function(arm,size=0x3c) addr:0x021114dc
 _ZN17daObjKm1_Kuruma_cD1Ev kind:function(arm,size=0x50) addr:0x02111518
 _ZN17daObjKm1_Kuruma_cD0Ev kind:function(arm,size=0x64) addr:0x02111568
@@ -88,7 +88,7 @@ data_ov043_02112344 kind:data(any) addr:0x02112344
 _ZTS21daObjKm1_Kurumajiku_c kind:data(any) addr:0x02112350
 data_ov043_02112358 kind:data(any) addr:0x02112358 ambiguous
 g_profile_KM1_KURUMAJIKU kind:data(any) addr:0x02112368 ambiguous
-_ZTV11RickshawBdw kind:data(any) addr:0x0211238c
+_ZTV21daObjKm1_Kurumajiku_c kind:data(any) addr:0x0211238c
 data_ov043_021123e4 kind:data(any) addr:0x021123e4 ambiguous
 data_ov043_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 data_ov043_02112404 kind:data(any) addr:0x02112404 ambiguous

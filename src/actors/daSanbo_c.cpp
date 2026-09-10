@@ -33,12 +33,13 @@
  * (0x02136d60) first and the destructor pair last, at the bottom of the run,
  * which is where the cartridge has them. Do not reorder.
  *
- * THE RUN IS 36 FUNCTIONS, 0x02135700..0x02136db0. tools/tu_map.py reports 34
- * and cuts a boundary at 0x02136d10, because it segments on symbol NAME and
+ * The promoted run is 36 functions, 0x02135700..0x02136db0. Before the fold,
+ * tools/tu_map.py reported 34 and cut a boundary at 0x02136d10, because it
+ * segmented on symbol name and
  * neither classInit spelling looks like a member; the two functions above that
  * cut are the ACTOR_SPAWN_TABLE factories for SANBO and SANBO_BODY, and both
  * allocate this class's 0x3b0 bytes and store this class's vptr, so they are
- * this TU. The delink entries run contiguously with no gap from 0x02135700 to
+ * included in this reconstruction. The delink span runs without a gap from 0x02135700 to
  * 0x02136db0, where daTor_c's own run begins.
  *
  * A daSanbo_c is not a container of segments. SANBO and SANBO_BODY construct
@@ -139,8 +140,8 @@ void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern Matrix4x3 IDENTITY_MATRIX4X3;
 }
 
-/* The two ACTOR_SPAWN_TABLE factories. They are one translation unit with the
- * class: both store this class's vptr, both allocate its 0x3b0 bytes, and both
+/* The two ACTOR_SPAWN_TABLE factories are grouped with this class because
+ * both store its vptr, both allocate its 0x3b0 bytes, and both
  * inline the same constructor body byte for byte apart from their literal
  * pools. There is no out-of-line daSanbo_c constructor anywhere in the image.
  *
@@ -216,7 +217,7 @@ extern "C" int *daSanbo_c_classInit_SANBO_BODY(void)
 /* daSanbo_c::OnTurnIntoEgg -- vtable slot 19, recovered from vtable slot identity.
  * Only the head segment (actorID 0xf0) pays out a coin; every segment marks
  * itself for destruction. */
-int daSanbo_c::OnTurnIntoEgg(Player &player)
+void daSanbo_c::OnTurnIntoEgg(Player &player)
 {
     int flag = (actorID == 0xf0);
     if (flag)
@@ -235,16 +236,16 @@ int daSanbo_c::InitResources()
 
     t = (actorID == 0xf0);
     if (t != false) {
-        void* m = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov096_02137b20);
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, 1);
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov096_02137b28);
+        void* m = Model::LoadFile(*(SharedFilePtr *)data_ov096_02137b20);
+        mModel.SetFile((BMD_File *)m, 1, 1);
+        Model::LoadFile(*(SharedFilePtr *)data_ov096_02137b28);
         LoadBlueCoinModel(((char*)this));
         unk_3a8 = 1;
     } else {
         t = (actorID == 0xf1);
         if (t != false) {
-            void* m = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov096_02137b28);
-            if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, 1) == 0)
+            void* m = Model::LoadFile(*(SharedFilePtr *)data_ov096_02137b28);
+            if (mModel.SetFile((BMD_File *)m, 1, 1) == 0)
                 return 0;
         }
     }
@@ -370,7 +371,7 @@ int daSanbo_c::CleanupResources()
 /* ROM ordinal 27 -- func_ov096_02136928, 0x02136928, size 0x1c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136928
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov096_02136928(void *cc, int a) {
     daSanbo_c *c = (daSanbo_c *)cc;
     c->mStateFunctions = (daSanbo_c::StateFunc *)(&data_ov096_02137b48 + (a << 4));
@@ -404,7 +405,7 @@ extern "C" void func_ov096_021368b4(void *cc)
 /* ROM ordinal 24 -- func_ov096_021368a4, 0x021368a4, size 0x10 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021368a4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov096_021368a4(int *p)
 {
     p[227] = 0; return 1;
@@ -415,7 +416,7 @@ int func_ov096_021368a4(int *p)
 /* ROM ordinal 23 -- func_ov096_02136754, 0x02136754, size 0x150 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136754
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov096_02136754(char* self)
 {
     char *other = *(char**)(self + 0x394);
@@ -477,7 +478,7 @@ int func_ov096_02136754(char* self)
 /* ROM ordinal 22 -- func_ov096_0213670c, 0x0213670c, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_0213670c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov096_0213670c(void *c) {
     s32 r4 = (s32)c;
     void *ret = func_ov096_021357b4((char *)c);
@@ -499,7 +500,7 @@ void func_ov096_0213670c(void *c) {
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021365d4
 /* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void _Z14ApproachLinearRiii(int* dst, int target, int step);
 void func_ov096_021358c8(char* c);
 int func_ov096_02135838(char* c);
@@ -614,7 +615,7 @@ int func_ov096_02136434(void *c)
 /* ROM ordinal 18 -- func_ov096_0213640c, 0x0213640c, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_0213640c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov096_0213640c(char *c)
 {
     func_ov096_02135800(c);
@@ -628,7 +629,7 @@ int func_ov096_0213640c(char *c)
 /* ROM ordinal 17 -- func_ov096_021363c4, 0x021363c4, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021363c4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov096_021363c4(void *c) {
     int r2 = *(int *)((char *)c + 0xb0);
     int r1 = (r2 & 0x20000) ? 1 : 0;
@@ -645,7 +646,7 @@ int func_ov096_021363c4(void *c) {
 /* ROM ordinal 16 -- func_ov096_021363b4, 0x021363b4, size 0x10 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021363b4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov096_021363b4(int *p)
 {
     p[227] = 4; return 1;
@@ -656,7 +657,7 @@ int func_ov096_021363b4(int *p)
 /* ROM ordinal 15 -- func_ov096_02136264, 0x02136264, size 0x150 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02136264
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov096_02136264(char* self)
 {
     char *other = *(char**)(self + 0x394);
@@ -1048,7 +1049,7 @@ extern "C" int func_ov096_02135878(void* unused, int x){
 /* ROM ordinal 7 -- func_ov096_0213585c, 0x0213585c, size 0x1c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_0213585c
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 void func_ov096_0213585c(void *t)
 {
     daSanbo_c *segment = (daSanbo_c *)t;
@@ -1061,7 +1062,7 @@ void func_ov096_0213585c(void *t)
 /* ROM ordinal 6 -- func_ov096_02135838, 0x02135838, size 0x24 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_02135838
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 int func_ov096_02135838(char *c) {
     daSanbo_c *r1 = ((daSanbo_c *)c)->mPrevSegment;
     int r0 = 0;
@@ -1093,7 +1094,7 @@ extern "C" void func_ov096_02135800(char* c){
 /* ROM ordinal 4 -- func_ov096_021357b4, 0x021357b4, size 0x4c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov096_021357b4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {
 char *func_ov096_021357b4(char *cc){
     daSanbo_c *c = (daSanbo_c *)cc;
     daSanbo_c *p = c->mPrevSegment;

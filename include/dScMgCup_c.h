@@ -60,7 +60,7 @@
 #include "dScMgSingle3DBase_c.h"
 
 extern "C" int  func_ov006_020c3288(char *t); /* decl_common.h's own signature */
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_020deac4(void);
 extern "C" void NullDestructor_0203d47c(void);
 

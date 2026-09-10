@@ -43,7 +43,7 @@
 #include "dMgJump3DMario_c.h"
 #include "Model.h"
 
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_020c6f3c(void);
 
 struct dScMgJump_c : dScMgD3DBase_c {

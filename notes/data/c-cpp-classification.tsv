@@ -3235,7 +3235,7 @@ src/func_02073244.c	PURE-C	arm9				1		None		-
 src/func_020732e8.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02073300.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_0207335c.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
-src/func_020733a8.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
+src/__cxa_vec_ctor.cpp	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02073470.c	WEAK-refs-only					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02073534.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks
 src/func_02073584.c	PURE-C					0		None		NONMATCHING-draft;not-in-delinks

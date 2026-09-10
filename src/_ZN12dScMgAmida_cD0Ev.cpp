@@ -15,8 +15,8 @@
 
 dScMgAmida_c::~dScMgAmida_c()
 {
-    __destroy_arr((char *)this + 0x4768, 0x80, 0x18, (void *)func_ov006_020d116c);
-    __destroy_arr((char *)this + 0x4744, 4, 8, (void *)NullDestructor_0203d47c);
-    __destroy_arr((char *)this + 0x4724, 4, 8, (void *)NullDestructor_0203d47c);
-    __destroy_arr((char *)this + 0x4660, 4, 8, (void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup((char *)this + 0x4768, 0x80, 0x18, (void *)func_ov006_020d116c);
+    __cxa_vec_cleanup((char *)this + 0x4744, 4, 8, (void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup((char *)this + 0x4724, 4, 8, (void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup((char *)this + 0x4660, 4, 8, (void *)NullDestructor_0203d47c);
 }

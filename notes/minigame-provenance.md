@@ -372,7 +372,7 @@ true allocation size, 0x53fc, is independently confirmed (not just the
 last-named-field's rounded end) by the untouched constructor's own
 `_ZN7fBase_cnwEj(0x53fc)` call (src/d_s_mg_amida.cpp), which
 also independently corroborates all four destroyed-array offsets/sizes
-via its own construction-side func_020733a8 calls.
+via its own construction-side __cxa_vec_ctor calls.
 
 ### The 0x4768 piece array
 

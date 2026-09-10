@@ -5,7 +5,7 @@
  * This file was _ZN8Vector3sD1Ev.c -- four bytes, `bx lr`, an empty function
  * nothing claimed. It is Vector3s::~Vector3s, on the same evidence that named
  * Vector3's: Wiggler destroys an array of a 6-byte type with
- * __destroy_arr(this + 0x444, 5, 6, ...), a POD array needs no cleanup at all,
+ * __cxa_vec_cleanup(this + 0x444, 5, 6, ...), a POD array needs no cleanup at all,
  * and types.h defines Vector3s as exactly `s16 x, y, z`.
  *
  * The forcing shape below is the one Vector3's file needs too -- an explicit

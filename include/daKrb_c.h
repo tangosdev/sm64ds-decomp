@@ -60,12 +60,12 @@
  * never marked it `complete`. Isolated experiment (see the commit this header ships
  * with): the divergence appears verbatim on the ORIGINAL free function merely
  * recompiled with an `int` return instead of `void` -- nothing about turning it into
- * a method. dActor_c.h's `virtual int OnTurnIntoEgg(Player &player)` may simply have
- * the wrong return type -- a mangled name's parameter and return types are this
- * tree's own reconstruction, not something the ROM's symbol table records, and this
- * is a case where that reconstruction is directly falsifiable by the codegen. Naming
- * this slot needs that signature question settled first (on dActor_c, not here, since
- * every other override shares its declaration), so it stays its own follow-on.
+ * a method. That historical experiment questioned dActor_c.h's former int
+ * declaration. The shared actor hook and named overrides now use void; this is
+ * a consistent reconstruction, not an original signature recovered from a ROM
+ * symbol table. The 4-byte observation above is the earlier isolated experiment,
+ * not new proof for this class. Goomba's free hook remains unmigrated and needs
+ * its own source and byte proof before this slot can become a named method.
  *
  * All other slots hold dCapEnemy_c's (or an ancestor's) word and are inherited.
  *

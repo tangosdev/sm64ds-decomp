@@ -52,7 +52,7 @@ typedef struct V2 { int x, y; } V2;
 
 extern void func_ov004_020adb1c(int a);
 extern void _ZN6Memory16operator_delete2EPv(void *p);
-extern void __destroy_arr(void *p, int a, int b, void *cb);
+extern void __cxa_vec_cleanup(void *p, int a, int b, void *cb);
 extern void func_ov004_020b04d0(int a);
 extern int GetOwnerLanguage(void);
 extern void func_02057d00(void *dst, void *src, int flag);
@@ -63,7 +63,7 @@ extern u16 *_ZN2G212GetBG2ScrPtrEv(void);
 extern u16 *_ZN3G2S12GetBG2ScrPtrEv(void);
 extern void *_ZN2G212GetBG3ScrPtrEv(void);
 extern u16 *_ZN3G2S12GetBG3ScrPtrEv(void);
-extern void func_020733a8(void *p, int a, int b, void *cb1, void *cb2);
+extern void __cxa_vec_ctor(void *p, int a, int b, void *cb1, void *cb2);
 extern void *_Znwj(u32 size);
 extern void *func_ov006_02111b40(void *p, char *c, int i, V2 *pos);
 extern void *func_ov006_02111774(void *p, char *c, int i, V2 *pos);
@@ -206,8 +206,8 @@ void func_ov006_02115b0c(char *c)
         if (p != 0) {
             if (p != 0) {
                 *p = (int)_ZTV19cMgSmartball_slot_c;
-                __destroy_arr((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
-                __destroy_arr((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
+                __cxa_vec_cleanup((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
+                __cxa_vec_cleanup((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
                 *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
@@ -306,7 +306,7 @@ void func_ov006_02115b0c(char *c)
     *(int *)(c + 0x4000 + 0x674) = 0;
     *(int *)(c + 0x4000 + 0x680) = 0;
 
-    func_020733a8(pos, 0x19, 8, func_0203d738, NullDestructor_0203d47c);
+    __cxa_vec_ctor(pos, 0x19, 8, func_0203d738, NullDestructor_0203d47c);
 
     {
         int mask = 0x3ff;
@@ -820,5 +820,5 @@ void func_ov006_02115b0c(char *c)
     *(int *)(c + 0x5000 + 0x998) = 0x100;
     SetSubBg0Offset(*(int *)(c + 0x5000 + 0x998), 0);
     func_ov006_02114dd0(c);
-    __destroy_arr(pos, 0x19, 8, NullDestructor_0203d47c);
+    __cxa_vec_cleanup(pos, 0x19, 8, NullDestructor_0203d47c);
 }

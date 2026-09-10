@@ -290,10 +290,10 @@ field span.
 The same constructor writes the vtable chain, sets two spawn-flag bits at `fBase_c`'s
 own 0x13, copies an 8-byte template struct into three slots 8 bytes apart at
 0x54/0x5c/0x64, then calls a shared "construct N elements of size S" helper
-(`func_020733a8`) twice:
+(`__cxa_vec_ctor`) twice:
 
-- `func_020733a8(p+0x70,  9, 0x24, ...)` — 9 elements of 0x24 bytes, spanning 0x70..0x1b4
-- `func_020733a8(p+0x1b4, 4, 0x2c, ...)` — 4 elements of 0x2c bytes, spanning 0x1b4..0x264
+- `__cxa_vec_ctor(p+0x70,  9, 0x24, ...)` — 9 elements of 0x24 bytes, spanning 0x70..0x1b4
+- `__cxa_vec_ctor(p+0x1b4, 4, 0x2c, ...)` — 4 elements of 0x2c bytes, spanning 0x1b4..0x264
 
 Only the first range is `dScEntry_c::icon_c`: RTTI proves it derives from dThIcon_c,
 and its paired 0x1c-byte ctor/dtor write the base/derived vtables in mirror order.
