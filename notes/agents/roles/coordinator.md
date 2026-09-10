@@ -31,6 +31,18 @@ the producer finishes. Source reviewers normally assist before the producer hand
 off. Additional domain coordinators help only when their ownership and escalation
 boundary are explicit.
 
+Make source review an acceptance decision before integration. Schedule an
+independent reviewer, retain its findings through rework/continuations, and check
+the recorded candidate/base against the PR that will land. Follow
+[SOURCE-REVIEW-CUTOVER.md](../SOURCE-REVIEW-CUTOVER.md) for explicit client and
+GitHub-check activation; installing the tooling alone is not activation.
+
+Inventory existing promoted classes for retrospective source review. Reuse their
+issues, PRs, facts and accepted work. Mark missing review evidence as pending;
+do not infer readability from a promoted manifest, passing byte gate or grep
+count. Record the reviewed SHA and findings on the class issue, and link repair
+PRs without closing the remaining reconstruction scope prematurely.
+
 ## At each checkpoint
 
 - Reconcile claims with actual sessions and published handoffs.

@@ -7,6 +7,12 @@ the asm block is the faithful source and counts as matched. ``NONMATCHING`` says
 the file is a declared draft and does not count. Everything else claiming to be a
 match must be real C.
 
+``counts_as_matched`` at the bottom is the one function that turns those banners
+into the yes/no every counting tool publishes, and the HAND-ASM banner wins when a
+file carries both. A hand-written primitive has no original C, so NONMATCHING on
+one of those files never meant "still a draft"; the twenty files in this tree that
+carry both say so in their own headers.
+
 The failure mode this module exists to catch is the VACUOUS match. mwccarm's
 ``dcd 0x...`` directive emits the literal word you type, so a whole-function dcd
 dump assembles to the ROM bytes by definition: the "match" proves only that the
@@ -59,6 +65,24 @@ def header_region(text):
             break
         out.append(line)
     return "".join(out)
+
+
+def has_hand_banner(text):
+    """Does this file declare itself a hand-written assembly primitive?
+
+    The HEADER REGION, not the whole file, and that asymmetry with
+    ``has_draft_banner`` is deliberate. ``NONMATCHING`` anywhere in the leading
+    comment block is exculpatory -- it can only ever take a file OUT of the count,
+    so a loose search is safe. This banner does the opposite: it puts a file IN,
+    so it has to be a claim the author made at the top of the file about the file,
+    not the words "HAND-ASM PRIMITIVE" appearing in a wall-analysis paragraph
+    thirty lines down inside a function body.
+
+    Measured on this tree when the rule landed: 109 sources carry the phrase
+    somewhere, and all 109 carry it in the header region, so the tightening costs
+    nothing today and closes the hole for later.
+    """
+    return HAND_BANNER in header_region(text)
 
 
 def has_draft_banner(text):
@@ -155,3 +179,55 @@ def classify(text):
     if is_asm_passthrough(text):
         return "unbannered-asm"
     return None
+
+
+def counts_as_matched(text):
+    """THE matched test for a source file, shared by every tool that publishes a count.
+
+    Three tools computed this independently -- ``chaos_db_ci`` (the published
+    chaos-db.json the README bar and the treemap read), ``progress.py``'s
+    ``--from-src`` path, and ``validate_merge``'s per-PR coverage -- and each
+    spelled it as "no NONMATCHING banner and not a dcd transcription". So they
+    agreed on the answer by accident rather than by construction, and a rule change
+    had to be made in three places or the numbers would disagree. It is one
+    function now.
+
+    The rule, in order:
+
+      1. An UNBANNERED dcd transcription never counts. ``dcd 0x...`` emits the
+         literal word you type, so the file byte-matches by definition and proves
+         only that somebody copied the disassembly. This is checked first so no
+         later clause can excuse it.
+      2. No draft banner -> counts. The ordinary case: real C with no NONMATCHING.
+      3. A draft banner AND a HAND-ASM PRIMITIVE banner -> counts (Tango's ruling,
+         2026-09-09). A hand-written assembly primitive has no original C to
+         recover, so "NONMATCHING" on it never meant "still a draft"; it meant
+         "there is no match to chase". Twenty files in this tree say exactly that
+         in their own words -- "byte-exact hand-written asm ... there is no
+         original C to recover and no match to chase. Counts as done under the
+         asm-primitive policy" -- and were then not counted, because the counting
+         tools only read the word NONMATCHING. Those twenty are byte-verified
+         against the ROM under the pinned 2004/b56 compiler (audit/unmatched_census.md).
+         The hand-asm exception additionally refuses any file carrying a raw dcd
+         word. Clause 1 cannot catch that case on its own -- ``classify`` treats
+         ANY banner as exculpatory and returns None -- so without this the new rule
+         would open a laundering route that "NONMATCHING plus HAND-ASM plus a word
+         dump" walks straight through. It makes this path deliberately stricter
+         than the plain HAND-ASM-only path, where a pool word inside an asm block
+         has always been allowed; measured when the ruling landed, none of the
+         twenty files it admits carries a dcd word, so the clause costs nothing.
+      4. Anything else with a draft banner -> does not count. Ordinary ARM that
+         mwccarm cannot yet reproduce stays a draft, which is the whole point of
+         notes/asm-policy.md.
+
+    What this does NOT do is decide whether the asm-primitive claim is TRUE. The
+    acceptance criteria are unchanged and still live in notes/asm-policy.md (the
+    body must carry an instruction C cannot express -- mcr/mrc, swi, msr/mrs, the
+    banked ldm/stm ^ forms, swp), and they are enforced the same way they were
+    before: by review. This function reads the banner a reviewer accepted.
+    """
+    if classify(text) == "transcribed":
+        return False
+    if not has_draft_banner(text):
+        return True
+    return has_hand_banner(text) and not _DCD_RE.search(_strip_comments(text))

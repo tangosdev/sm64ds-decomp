@@ -83,17 +83,23 @@ def _addr_int(v) -> int:
 
 
 def load_symbol(name: str) -> tuple[str, int, int] | None:
-    """Return (module, addr, size) for symbol name, or None."""
-    config = get_repo() / "config"
-    for sym in config.rglob("symbols.txt"):
-        rel = sym.parent.relative_to(config).as_posix()
-        if rel in ("arm9", "arm7"):
-            module = rel
-        else:
-            m = re.fullmatch(r"arm9/overlays/(ov\d+)", rel)
-            if not m:
-                continue
-            module = m.group(1)
+    """Return (module, addr, size) for symbol name, or None.
+
+    Walks every module's symbols.txt via relocs.module_universe -- THE definition of
+    what a module is, not a second copy of it. This used to be its own regex over
+    config/ that only recognized a directory named arm9, arm7, or arm9/overlays/ovNNN,
+    so config/arm9/itcm/symbols.txt (and dtcm's) fell through silently: every
+    ITCM-housed symbol read NO-SYM here, in both prepush_linkcheck.py and pgate.py,
+    which both resolve through this function. relocs.py's own module_universe
+    docstring names this exact bug class ("Four tools each grew their own copy of
+    this ... and all four ... silently dropped anything else") and was fixed once
+    already in modules.py on 2026-08-01 -- this was the fifth, unfixed copy.
+    module_universe's labels are already spelled the way match.py's --module and the
+    byte gate expect them ("itcm", "dtcm", "ov006", ...), so no relabeling is needed
+    here."""
+    import relocs
+
+    for sym, module in relocs.module_universe(repo=get_repo()):
         for line in sym.read_text(errors="ignore").splitlines():
             m = FUNC_RE.match(line)
             if not m or m.group(1) != name:

@@ -45,6 +45,23 @@ class SourcePolicy(unittest.TestCase):
         """The collision the inline comment claims cannot happen -- pinned here."""
         self.assertEqual(PL.source_policy("NO-REPRO", "// NONMATCHING\n" + DCD), "DRAFT")
 
+    def test_a_hand_asm_primitive_that_stops_reproducing_still_fails(self):
+        """The downgrade follows the COUNT, not the word. A file that counts as matched
+        must not be waved through on a NO-REPRO just because the note explaining why it
+        is assembly happens to contain the word NONMATCHING."""
+        primitive = ("// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm.\n"
+                     "// HAND-ASM PRIMITIVE: byte-faithful asm-block match.\n"
+                     "asm void f(void) { mrs r0, cpsr\n bx lr }\n")
+        self.assertEqual(PL.source_policy("NO-REPRO", primitive), "NO-REPRO")
+
+    def test_an_ordinary_draft_is_still_downgraded(self):
+        """The other half, next to it: nothing about the primitive rule reaches a real
+        draft, which is still expected to fail to reproduce and still not a gate
+        failure."""
+        self.assertEqual(
+            PL.source_policy("NO-REPRO", "// NONMATCHING: scheduling wall.\n" + PLAIN),
+            "DRAFT")
+
     def test_empty_text_is_inert(self):
         """check_file passes "" when the path cannot be read; it must not reclassify."""
         self.assertEqual(PL.source_policy("NO-REPRO", ""), "NO-REPRO")

@@ -815,5 +815,22 @@
     "The Matrix4x3 TYPE at 0x33c is corroboration from include/Pokey.h. What the ROM proves is the 0x30-byte extent (`add ip,r4,#0x33c`, stores at 0x360/0x364/0x368, next proven field at 0x36c) -- not that it is a matrix.",
     "Whether daSanbo_c's TU byte-matches at all is unmeasured. I ran no compile, no tubuild.py verify, no linkcheck and no rombuild. `promotion_route: text-only` is the queue's estimate, re-read at this base, not a result of mine.",
     "The coined-name search covered 8-bit ASCII only. A UTF-16 or otherwise wide-encoded 'Pokey' would not have been found."
-  ]
+  ],
+  "review_correction_2026_09_10": {
+    "checkpoint": "35a96691978f0251ca41fc0af87737e74a687cbf",
+    "composition_base": "cb5752cdf6b5d58f2b1f8a94bcbab2ed63749ac2",
+    "status": "partial reconstruction; fresh candidate requires independent review",
+    "remaining_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2558",
+    "historical_scope": "The scout observations, pre-rename paths, blockers and unmeasured status above are retained as dated history. They are not current instructions or acceptance claims.",
+    "current_corrections": [
+      "The live class is daSanbo_c. The text-only promoted TU emits compiler-only metadata; its manifest records canonical homes while production owns no data or BSS. The scout prohibition on emitting the vtable is superseded.",
+      "The string 9daSanbo_c has ten visible bytes and one NUL: eleven total (0xb).",
+      "Ten native method symbols,24 address-named helpers and2 manual factories comprise the36-function promotion. Original helper names, C linkage and unique original source organization remain unproved.",
+      "The real Matrix4x3 member at0x33c and typed previous/next segment pointers are present. Model.h already imports the matrix header.",
+      "The link at0x390 is the previous segment, not a direct head pointer. Root coordinates propagate from the previous segment; head lookup follows the chain.",
+      "The head flag at0x3a8 is read by func_ov096_0213670c and cleared by func_ov096_021365d4.",
+      "The actor-family OnTurnIntoEgg contract on the composed main is void. The TU override follows it, and the retired Pokey shard is not restored.",
+      "Available Model interfaces replace the render shadows and five model loading/setup calls. Raw ABI bridges and remaining helper views are bounded by actual experiments, not blanket missing-interface claims."
+    ]
+  }
 }

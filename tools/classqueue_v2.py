@@ -17,8 +17,11 @@ import subprocess
 import sys
 import uuid
 
+import source_review
+
 REF = "refs/heads/agents/coordination"
 SCHEMA = 2
+REVIEW_STATE_SCHEMA = 3  # Receipt schema stays at 2, including existing credentials.
 
 
 class QueueError(Exception):
@@ -169,7 +172,7 @@ class Queue:
             state = json.loads(self.git("show", f"{sha}:state.json").stdout)
         except (ValueError, TypeError) as exc:
             raise QueueError("invalid remote queue JSON") from exc
-        require(isinstance(state, dict) and state.get("schema") == SCHEMA and
+        require(isinstance(state, dict) and state.get("schema") in (SCHEMA, REVIEW_STATE_SCHEMA) and
                 state.get("cutover") == "legacy-clients-stopped-and-upgraded" and
                 isinstance(state.get("tasks"), dict) and
                 isinstance(state.get("operations"), dict), "invalid remote queue schema")
@@ -204,7 +207,7 @@ class Queue:
                  "tasks": {}, "operations": {}}
         return {"initialized": True, "state_commit": self.save(None, state)}
 
-    def transaction(self, request_id, payload, operation):
+    def transaction(self, request_id, payload, operation, expected_state=None):
         identifier(request_id)
         sha, state = self.read()
         fingerprint = hashlib.sha256(encoded(payload).encode()).hexdigest()
@@ -213,10 +216,54 @@ class Queue:
             require(old["fingerprint"] == fingerprint,
                     "request ID was already used for a different operation")
             return copy.deepcopy(old["result"])
+        require(expected_state is None or sha == expected_state,
+                "queue changed; inspect the current fleet before activation")
         result, parents = operation(state)
         state["operations"][request_id] = {"fingerprint": fingerprint, "result": result}
         self.save(sha, state, parents)
         return result
+
+    def enable_source_review(self, session, workflow_commit, expected_state, request_id):
+        """Deliberate fleet upgrade; old clients reject state 3, receipts survive."""
+        self.commit(workflow_commit)
+        self.paths(workflow_commit, ["tools/source_review.py", "tools/check_pr_source_review.py"])
+
+        def operation(state):
+            require(session == state["initialized_by"], "only the recorded fleet coordinator activates review")
+            require(state["schema"] == SCHEMA, "source review is already enabled")
+            require(not any(t["phase"] == "running" for t in state["tasks"].values()),
+                    "holders must checkpoint and release running leases before upgrading clients")
+            state["schema"] = REVIEW_STATE_SCHEMA
+            state["source_review_policy"] = {"workflow_commit": workflow_commit,
+                                             "activated_by": session, "at": now()}
+            return {"source_review_enabled": True, "workflow_commit": workflow_commit}, [workflow_commit]
+        return self.transaction(request_id, {"enable_source_review": session,
+                                "workflow_commit": workflow_commit, "expected_state": expected_state},
+                                operation, expected_state=expected_state)
+
+    @staticmethod
+    def needs_source_review(state, task):
+        return state["schema"] == REVIEW_STATE_SCHEMA and source_review.source_task(task)
+
+    @staticmethod
+    def check_source_review(state, task, evidence, head, reviewer):
+        try:
+            source_review.validate_evidence(task, evidence, head, reviewer)
+            source_review.require(evidence["workflow_commit"] ==
+                                  state["source_review_policy"]["workflow_commit"],
+                                  "source review must use the activated review workflow")
+        except source_review.ReviewError as exc:
+            raise QueueError(str(exc)) from exc
+
+    def review_artifacts(self, evidence):
+        retained = []
+        for finding in evidence["source_review"]["findings"]:
+            if finding["disposition"] == "compiler_constraint":
+                proof = finding["evidence"]
+                self.commit(proof["tested_commit"])
+                self.paths(proof["artifact_commit"], [proof["artifact_path"]])
+                retained.extend((proof["tested_commit"], proof["artifact_commit"]))
+        return retained
 
     def enqueue(self, spec, request_id, coordinator_receipt):
         spec = copy.deepcopy(spec)
@@ -258,8 +305,25 @@ class Queue:
                     artifact_path(path)
         if stages[0]["mode"] == "verify":
             identifier(spec.get("input_session"))
+        require(isinstance(spec.get("producer_sessions", []), list), "producer_sessions must be a list")
+        for session in spec.get("producer_sessions", []):
+            identifier(session)
+        require(isinstance(spec.get("predecessor_tasks", []), list), "predecessor_tasks must be a list")
 
         def operation(state):
+            inherited = {}
+            contributing = set(spec.get("producer_sessions", []))
+            for predecessor_id in spec.get("predecessor_tasks", []):
+                predecessor = self.task(state, identifier(predecessor_id))
+                inherited.update(source_review.previous_findings(predecessor))
+                contributing.update(source_review.producers(predecessor))
+            spec["inherited_findings"] = inherited
+            spec["producer_sessions"] = sorted(contributing)
+            if self.needs_source_review(state, spec):
+                try:
+                    source_review.review_graph(spec)
+                except source_review.ReviewError as exc:
+                    raise QueueError(str(exc)) from exc
             require(task_id not in state["tasks"], "task ID already exists; use a new follow-up ID")
             for other in state["tasks"].values():
                 if other["phase"] not in ("done", "cancelled") and overlaps(spec["resources"], other["resources"]):
@@ -315,6 +379,7 @@ class Queue:
                 found.append({"task_id": task["task_id"], "stage": task["stages"][index],
                               "input_commit": sha, "base_commit": task["base_commit"],
                               "workflow_commit": task["workflow_commit"],
+                              "source_review_policy": state.get("source_review_policy"),
                               "evidence_inputs": task["evidence_inputs"],
                               "resources": task["resources"], "next_action": task["next_action"]})
         return found
@@ -335,9 +400,16 @@ class Queue:
                     "requested role/stage is not the next stage")
             require(actual_input == input_commit, "input changed; inspect next before claiming")
             if stage["mode"] == "verify":
-                producer = self.producer_session(task, index)
-                require(producer != owner["session"],
+                require(owner["session"] not in source_review.producers(task),
                         "verification requires a different session from the source producer")
+            if self.needs_source_review(state, task) and role == "integrator":
+                require(stage["mode"] == "verify" and index > 0,
+                        "integration requires a preceding independent source verification")
+                predecessor = task["outputs"][index - 1]
+                require(task["stages"][index - 1]["mode"] == "verify",
+                        "integration requires a preceding independent source verification")
+                self.check_source_review(state, task, predecessor["evidence"], actual_input,
+                                         predecessor["session"])
             if task["phase"] == "offered":
                 task["outputs"][-1]["accepted_by"] = owner["session"]
                 task["outputs"][-1]["accepted_at"] = now()
@@ -465,12 +537,47 @@ class Queue:
             index = task["stage_index"]
             stage = task["stages"][index]
             input_commit = self.input_for(task, index)
+            retained = []
             if stage["mode"] == "verify":
                 require(output_commit == input_commit, "verify stages cannot change the input commit")
                 require(evidence.get("verdict") == "pass" and
                         evidence.get("tested_commit") == input_commit,
                         "verify stages must record evidence.verdict=pass and the exact tested_commit")
+                if self.needs_source_review(state, task):
+                    self.check_source_review(state, task, evidence, input_commit, owner["session"])
+                    retained.extend(self.review_artifacts(evidence))
+                    self.commit(evidence["tested_base"])
+                    if evidence.get("composition_commit"):
+                        composition = self.commit(evidence["composition_commit"])
+                        composition_base = self.commit(evidence.get("composition_base"))
+                        for ancestor in (input_commit, composition_base):
+                            require(self.git("merge-base", "--is-ancestor", ancestor, composition,
+                                             check=False).returncode == 0,
+                                    "composition must retain accepted source and declared base ancestry")
+                        review_task = self.task(state, identifier(evidence.get("composition_review_task")))
+                        require(task["task_id"] in review_task.get("predecessor_tasks", []),
+                                "composition review must inherit the original task's findings and authors")
+                        require(review_task["phase"] != "cancelled", "composition review task was cancelled")
+                        accepted = False
+                        for record in review_task["outputs"]:
+                            review_stage = next(s for s in review_task["stages"] if s["id"] == record["stage_id"])
+                            if review_stage["mode"] != "verify" or record["commit"] != composition:
+                                continue
+                            reviewer = record["session"]
+                            if reviewer in source_review.producers(task) | {owner["session"]}:
+                                continue
+                            self.check_source_review(state, review_task, record["evidence"], composition, reviewer)
+                            if record["evidence"]["tested_base"] != composition_base:
+                                continue
+                            reviewed = {p.casefold() for p in record["evidence"]["source_review"]["files"]}
+                            if not set(source_review.task_files(task)) <= reviewed:
+                                continue
+                            accepted = True
+                        require(accepted, "composition needs an independently published exact review task")
             else:
+                require(not self.needs_source_review(state, task) or
+                        (stage["role"] != "integrator" and index + 1 < len(task["stages"])),
+                        "source output requires independent review before integration/completion")
                 result = self.git("merge-base", "--is-ancestor", input_commit, output_commit,
                                   check=False)
                 require(result.returncode == 0, "output does not descend from the accepted input")
@@ -489,7 +596,7 @@ class Queue:
             if last:
                 task["owner"] = None
             return {"task_id": task["task_id"], "phase": task["phase"],
-                    "stage_id": stage["id"], "output_commit": output_commit}, [output_commit]
+                    "stage_id": stage["id"], "output_commit": output_commit}, [output_commit, *retained]
         return self.transaction(request_id, {"publish": receipt["task_id"], "owner": owner,
                                             "output": output_commit, "evidence": evidence,
                                             "next_action": next_action}, operation)
@@ -529,6 +636,10 @@ def main(argv=None, repo=None):
     init = sub.add_parser("init", help="initialize AFTER the documented fleet cutover")
     init.add_argument("--session", required=True)
     init.add_argument("--legacy-clients-stopped-and-upgraded", action="store_true", required=True)
+    upgrade = sub.add_parser("enable-source-review", help="activate after checkpointing and upgrading clients")
+    for arg in ("session", "workflow-commit", "expected-state", "request-id"):
+        upgrade.add_argument("--" + arg, required=True)
+    upgrade.add_argument("--legacy-clients-stopped-and-upgraded", action="store_true", required=True)
     enqueue = sub.add_parser("enqueue", help="reserve resources for an explicit task")
     enqueue.add_argument("spec", help="JSON task specification")
     enqueue.add_argument("--request-id", required=True)
@@ -562,6 +673,9 @@ def main(argv=None, repo=None):
     try:
         if args.command == "init":
             result = queue.init(args.session)
+        elif args.command == "enable-source-review":
+            result = queue.enable_source_review(args.session, args.workflow_commit,
+                                                args.expected_state, args.request_id)
         elif args.command == "enqueue":
             spec = read_json(args.spec)
             receipt = receipt_file(args.receipt, spec["task_id"], spec["coordinator"])

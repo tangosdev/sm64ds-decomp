@@ -140,7 +140,7 @@ struct Player : dActor_c {
     ModelAnim mModelAnim4;            /* 0x174 */
     u8  unk_1d8;            /* 0x1d8 */
     u8  pad_1d9[0x3];
-    /* The three __destroy_arr calls in ~Player, in the order it makes them
+    /* The three __cxa_vec_cleanup calls in ~Player, in the order it makes them
        (last array first). Both element types assert 0x14, which is exactly
        the stride the destructor passes. unk_25c and unk_270 were the
        currFrame of mTexSeqPlayer[0] and [1] -- +0x08 into each element. */

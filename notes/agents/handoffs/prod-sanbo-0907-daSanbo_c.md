@@ -1,6 +1,25 @@
 # Handoff: prod-sanbo-0907
 
-This document describes this commit. The queue records its immutable output SHA.
+This is the historical producer and revise-stage handoff. Its proof figures
+belong to the revisions named below, not to a later composed PR head.
+
+## Current correction, 2026-09-10
+
+The repair resumes checkpoint `35a96691978f0251ca41fc0af87737e74a687cbf` and
+composes main `cb5752cdf6b5d58f2b1f8a94bcbab2ed63749ac2`. The TU remains a
+text-only promotion of 36 functions: ten native method symbols, 24 address-named
+helpers and two manual factories. It is partial reconstruction, with remaining
+field, state-handler and interface work owned under issue #2558. The separate
+`pr2447-source-repair-0910.md` handoff records the new changes and exact proof;
+independent review of the final candidate remains required.
+
+The current header has real matrix and segment-link fields. Render uses the
+existing Model interface; the old render, linked-node and PMF-receiver shadow
+types are removed. Address-derived external names and retained C linkage are
+reconstruction choices, not recovered original function names or proof of the
+original source organization. The RTTI name is ten visible bytes plus NUL, eleven
+bytes total. Historical observations below remain evidence of their stated
+revisions; they do not override these corrections.
 
 ## Identity and resumption
 
@@ -28,9 +47,10 @@ This document describes this commit. The queue records its immutable output SHA.
   artifacts: `src/actors/daSanbo_c.cpp`,
   `config/tu_manifest.d/ov096/daSanbo_c.json`, `include/daSanbo_c.h`.
 - Next action, responsible role and blockers: independent verification of this
-  commit (verifier). No blocker. One tool limitation is described under Coverage
-  limits and is not specific to this class.
-- Status: verified candidate.
+  historical commit (verifier). The original no-blocker assessment was superseded
+  by source review; see the current correction and repair handoff above.
+- Historical status: byte-verified candidate; this did not establish complete
+  source reconstruction or acceptance of later revisions.
 - Remaining uncommitted/local-only material and where it is preserved: none. The
   worktree is clean; every artifact named here is committed.
 
@@ -97,17 +117,17 @@ This document describes this commit. The queue records its immutable output SHA.
 - Exact function/byte and relocation coverage: 36 of 36 functions reproduce byte
   for byte over the whole `0x02135700..0x02136db0` span, with zero blind
   relocation slots. Emission order is ROM-ascending for all 36.
-- Genuine methods; remaining free-function/ABI bridges: the 10 named members are
-  real C++ methods of `daSanbo_c`, and the destructor pair is compiler-emitted from
-  the inline body. The 24 `func_ov096_*` members remain free functions with C
-  linkage, which is what their ROM symbols are; two of them are the state
-  dispatchers. Cross-TU seams are declared in one file-scope block.
+- Genuine methods; remaining free-function/ABI bridges: eight ordinary method
+  definitions and the inline destructor produce ten native method symbols. The
+  24 `func_ov096_*` helpers remain free functions with C
+  linkage to preserve the project's external symbol identities; the ROM does not
+  preserve original C linkage or helper names. Two helpers are state dispatchers.
+  Legacy declarations remain at file scope and in several imported blocks.
 - Recovered layout/fields; remaining shadow structs/raw offsets: the header carries
-  the typed member list and asserts `sizeof == 0x3b0`. Shadow declarations remain
-  for surfaces the tree does not model at this revision -- the render view and its
-  submodel, the pointer-to-member receiver, a small linked-node view and a flat
-  matrix -- each reduced to a single spelling, and each conforming to a real header
-  wherever one already declares the name.
+  the typed member list and asserts `sizeof == 0x3b0`. The later repair removed
+  the render/submodel, PMF-receiver and linked-node shadows using existing real
+  interfaces and types. A flat matrix view and other raw helper accesses remain
+  partial reconstruction; their presence is not proof that a header is unavailable.
 - Lifecycle, vtable/RTTI, initializer and data ownership: the two factories are in
   the TU and store the vptr as `&_ZTV9daSanbo_c[2]`, the eight-byte address-point
   bias computed by the compiler. The one-function sources wrote the bare symbol,
@@ -122,7 +142,8 @@ This document describes this commit. The queue records its immutable output SHA.
   were added, placed beside this class's six existing historical rows rather than
   at the tail of the overrides map. Three of them had to be corrected by hand; see
   finding 3.
-- Remaining agreed issue scope: none for this class.
+- Remaining agreed issue scope: issue #2558 owns the unfinished field, state-handler,
+  interface and manual-factory reconstruction after the bounded current repair.
 
 ## The two named traps
 
@@ -137,7 +158,7 @@ This document describes this commit. The queue records its immutable output SHA.
 - The state table is not defined in the TU, so mwcc emits no second `__sinit`.
   Confirmed by inspecting the compiled object's sections directly, not inferred.
 
-## The fold is 36, not the queue's 34
+## Historical pre-promotion boundary count
 
 Re-derived by address rather than taken from the queue. The 36 delink entries from
 `0x02135700` to `0x02136db0` are contiguous with no gap, and `0x02136db0` is where
@@ -151,7 +172,7 @@ re-derived from 34 shards / 957 lines to 36 / 1013 immediately after the rename 
 before any promotion. That is the whole of issue #2436 in one measurement: the
 extension over zero-gap neighbours keys on a `<class>_classInit` spelling.
 
-## Proof
+## Historical proof
 
 Every figure below was produced on branch `cpp/daSanbo_c-tu` in a dedicated
 worktree, against merge-base `26f54f8fc`, after the rebase.

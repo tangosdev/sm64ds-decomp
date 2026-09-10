@@ -1501,7 +1501,7 @@ void daMip_c::RenderMirrorImage()
 int daMip_c::Behavior()
 {
     /* A LOCAL COORDINATE TRIPLE, NOT A Vector3 OBJECT. Vector3 declares a
-       destructor (see include/types.h -- the ROM's __destroy_arr calls prove the
+       destructor (see include/types.h -- the ROM's __cxa_vec_cleanup calls prove the
        type has one), so a Vector3 local would be destroyed at scope exit and this
        function would come out 8 bytes long. The ROM emits no cleanup for either of
        these, which is itself the evidence that they were never Vector3s: they are

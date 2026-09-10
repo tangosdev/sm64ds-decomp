@@ -18,7 +18,7 @@
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern int _ZN11dScMgBase_cC2Ev(void *p);
-extern void func_020733a8(void *obj, int a, int b, void *cb1, void *cb2);
+extern void __cxa_vec_ctor(void *obj, int a, int b, void *cb1, void *cb2);
 extern int data_ov006_0213cab8[];
 /* TUBUILD RECONCILE -- the Spawn file declared func_ov006_020ede80 as
  * `void(void*)`; this TU defines it, and the definition proves
@@ -29,7 +29,7 @@ void *dScMgHanachan_c_classInit(void);
 extern void NullDestructor_0203d47c(void);
 extern void func_0203d738(void);
 /* TUBUILD RECONCILE -- the legacy file for func_ov006_020ede80 declared
- * func_020733a8 with the pointer asterisks bound to the type rather than to
+ * __cxa_vec_ctor with the pointer asterisks bound to the type rather than to
  * the name: `void* obj` against the `void *obj` kept above, and likewise for
  * cb1 and cb2.  tubuild's _merge_field compares declaration text verbatim, so
  * a difference in where the asterisk sits registers as a conflict.  It is the
@@ -42,7 +42,7 @@ extern void func_0203d738(void);
 /* -------------------------------------------------------------------------- */
 extern "C" void* func_ov006_020ede80(char* self)   /* `this` is a keyword in C++ */
 {
-    func_020733a8(self + 0x18, 5, 8, (void*)func_0203d738, (void*)NullDestructor_0203d47c);
+    __cxa_vec_ctor(self + 0x18, 5, 8, (void*)func_0203d738, (void*)NullDestructor_0203d47c);
     return self;
 }
 
@@ -59,7 +59,7 @@ extern "C" void *dScMgHanachan_c_classInit(void) {
     if (o != 0) {
         _ZN11dScMgBase_cC2Ev(o);
         *(int *)o = (int)data_ov006_0213cab8;
-        func_020733a8(o + 0x4678, 0xf, 0x98, (void *)func_ov006_020ede80, (void *)func_ov006_020ea324);
+        __cxa_vec_ctor(o + 0x4678, 0xf, 0x98, (void *)func_ov006_020ede80, (void *)func_ov006_020ea324);
     }
     return o;
 }

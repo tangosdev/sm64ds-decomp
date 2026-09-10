@@ -73,23 +73,25 @@ Deliberately left `unk_`: 0x10d (`param1 & 0xf`, written and never read);
 
 ## daSanbo_c -- include/daSanbo_c.h
 
-A daSanbo_c (coined English name: Pokey) is two actors: the head (`actorID`
-0xf0) and its body segments (`actorID` 0xf1).
+The same daSanbo_c class (coined English name: Pokey) implements the head
+(`actorID` 0xf0) and each body segment (`actorID` 0xf1).
 `InitResources` in [src/actors/daSanbo_c.cpp](../src/actors/daSanbo_c.cpp)
 branches on that all the way through.
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x33c | `mMatrix` | `*(Matrix4x3*)&unk_33c = IDENTITY_MATRIX4X3` in `InitResources`, and 0x33c..0x36b is exactly the 0x30 bytes a `Matrix4x3` occupies. Kept spelt `u8` + pad so the header need not pull in `math/Matrix.h`. |
-| 0x36c | `mRootPosX` | head seeds it from its own `mPosX`; a segment copies it word for word out of the head object at the same 0x36c offset. |
+| 0x33c | `mMatrix` | The real `Matrix4x3` member receives `IDENTITY_MATRIX4X3` in `InitResources`; 0x33c..0x36b spans its 0x30 bytes. `Model.h` already imports the matrix header. The TU retains the separately measured `common.h`-first include order for the whole-object copy. |
+| 0x36c | `mRootPosX` | The head seeds it from its own `mPosX`; each new segment copies the root-position triple from its previous segment at the same offsets. The chain therefore carries the head's root position. |
 | 0x370 | `mRootPosY` | same. |
 | 0x374 | `mRootPosZ` | same. |
 | 0x38c | `mState` | `Behavior` skips its distance-to-player early-out when this is 2 or 5. |
-| 0x390 | `mHead` | a segment stores `dActor_c::FindWithID(param1)` here; the head stores 0. A `dActor_c*` spelt `s32` and cast at every use. |
+| 0x390 | `mPrevSegment` | A segment stores the previous segment found by `dActor_c::FindWithID(param1)`; the head stores 0. Unlinking updates both neighbors. The head-lookup helper follows this `daSanbo_c *` chain until it finds actor ID 0xf0. |
 | 0x394 | `mNextSegment` | `OnPendingDestroy` (head only) walks `p = mNextSegment` and then `p->mNextSegment` at the same 0x394 offset, tearing down each segment in turn. |
 
-Deliberately left `unk_`: 0x3a8 (set to 1 by the head after it loads the
-blue-coin model, never read by an enrolled body).
+The byte `unk_3a8` remains named by offset. The head sets it after loading the
+blue-coin model; `func_ov096_0213670c` reads it through the head to select a
+zero or 90-frame regrowth delay, and `func_ov096_021365d4` clears it when the
+segment count reaches three. Its complete gameplay meaning is not claimed.
 
 ## BabyPenguin -- include/BabyPenguin.h
 

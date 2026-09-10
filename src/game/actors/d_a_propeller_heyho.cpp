@@ -132,7 +132,7 @@ s32 daPropeller_Heyho_c::OnYoshiTryEat() {
 #include "daPropeller_Heyho_c.h"
 #include "Player.h"
 
-int daPropeller_Heyho_c::OnTurnIntoEgg(Player &player)
+void daPropeller_Heyho_c::OnTurnIntoEgg(Player &player)
 {
     GivePlayerCoins(player, (unsigned char)(unk_10a + 1), 0);
     KillAndTrackInDeathTable();

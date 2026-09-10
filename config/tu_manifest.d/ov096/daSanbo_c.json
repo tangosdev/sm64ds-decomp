@@ -284,26 +284,31 @@
     "tubuild create warning: RAW: src/func_ov096_02136434.cpp (func_ov096_02136434) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov096_02135800' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_0213640c; kept the first, corrected to `extern void func_ov096_02135800(char *c)`. The kept declaration returned `int` and the loser was `extern void func_ov096_02135800(void *)`; the definition in this TU returns void and takes char *, so the live spelling takes the return type from the loser and the parameter type from the winner. One declaration survives, at file scope.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov096_02135800' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_02136534; kept the first, same single file-scope declaration as the record above. This loser was `extern \"C\" void func_ov096_02135800(char *c)`, which differed only in linkage; the whole TU is compiled with the definition under extern \"C\", so nothing was lost.",
-    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_02136534; kept the first, widened to `extern short Vec3_HorzAngle(const void *a, const void *b)`. The kept declaration was `short (void *, void *)` and the loser was `extern \"C\" short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1)`; the live spelling takes const from the loser and keeps void * because Vector3 is not modelled at the seam. One declaration survives.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov096_02136134 and the one that held func_ov096_02136534; kept the first, widened to `extern short Vec3_HorzAngle(const void *a, const void *b)`. The kept declaration was `short (void *, void *)` and the loser was `extern \"C\" short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1)`; the live spelling takes const from the loser and keeps void * as the retained legacy bridge spelling; Vector3 is available and narrowing that bridge remains reconstruction work. One declaration survives.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov096_02136928' differs between the legacy file that used to hold func_ov096_02136264 and the one that held _ZN9daSanbo_c13InitResourcesEv; kept the first, then dropped entirely. func_ov096_02136928 is a MEMBER of this fold, defined at ROM ordinal 27 (0x02136928), so the TU needs no declaration of it at all and the disagreement between the two legacy externs is moot. Its one live signature is the definition, `void func_ov096_02136928(void *cc, int a)`, which conforms to the void * receiver include/decl_common.h already declares.",
-    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differs between the legacy file that used to hold func_ov096_02136134 and the one that held _ZN9daSanbo_c6RenderEv; kept the first, and the loser was NOT discarded: the two bodies describe different objects that the generator collided on a shared name. func_ov096_02136134's struct Obj keeps that name; Render's alternate body -- the render view, with the fBase_c render flags at 0x0b0 and the Model at 0x0d4 -- was given its own name, RenderView, alongside the RenderModel it dispatches through, and Render uses that. Both observations survive under distinct names and neither is a guess."
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'Obj') differed between func_ov096_02136134 and _ZN9daSanbo_c6RenderEv. The initial import separated the two observations as Obj and RenderView/RenderModel. The later source repair removed all of these shadows: the helper uses daSanbo_c::OnAimedAtWithEgg, and Render uses mFlags, mModel and the existing virtual Model::Render interface. This record preserves the historical conflict; none of those local shadow types remains."
   ],
   "source_review_checkpoint": {
-    "status": "partial-not-accepted",
+    "status": "partial-awaiting-independent-review",
     "task": "sanbo-ov096-0908-fakeiface",
     "accepted_input": "4b96941dcecbcf3680ee74ffef13caec21b277e1",
     "corrected": [
       "Render now uses mFlags and virtual Model::Render through a Model pointer; RenderView, RenderModel and RenderArg are removed.",
       "mMatrix is a real Matrix4x3; previous/next segment links and state dispatch use the real daSanbo_c type. N and C shadow layouts are removed.",
       "Previous-link and unk_3a8 reader descriptions now agree with the helpers. Existing ShadowModel and actor methods replace four mangled-call declarations.",
-      "func_ov096_02135e2c and its local declaration return void; the sole source call discards the result and all 36 TU functions remain exact."
+      "func_ov096_02135e2c and its local declaration return void; the sole source call discards the result and all 36 TU functions remain exact.",
+      "OnTurnIntoEgg follows the composed main void contract; the retired Pokey shard remains removed.",
+      "Three Model::LoadFile calls and two mModel.SetFile calls replace the corresponding raw ABI spellings; complete TU proof remains required.",
+      "The current provenance note, dated scout correction and handoffs identify previous-segment links, live flag reads, existing matrix/model interfaces, exact RTTI string length and partial reconstruction."
     ],
     "remaining": [
-      "OnTurnIntoEgg still has the inherited int fallthrough. Apply the coordinated actor-family contract correction from issue 2411 consistently before accepting this class.",
-      "The earlier dossier, handoff and PR completion claims need the recorded provenance corrections; they are retained as historical evidence, not newly approved.",
-      "Address-named helpers, manual factories, raw accesses and reconstructed handler return types remain unfinished source reconstruction."
+      "Twenty-four address-named helpers, raw actor/subobject accesses and two manual factories remain partial reconstruction under issue2558.",
+      "Original handler return types, original C linkage and unique original source organization are not established.",
+      "Typed collider Init and background Init require further interface/codegen work; measured probe details are in the repair handoff."
     ],
-    "local_proof": "tools/tubuild.py verify ov096/daSanbo_c: 36/36 MATCH, object isolation, relocation destinations and emission order clean. Further proof and independent source acceptance are separate."
+    "local_proof": "tools/tubuild.py verify ov096/daSanbo_c: 36/36 MATCH, object isolation, relocation destinations and emission order clean. Further proof and independent source acceptance are separate.",
+    "repair_input": "35a96691978f0251ca41fc0af87737e74a687cbf",
+    "composition_base": "cb5752cdf6b5d58f2b1f8a94bcbab2ed63749ac2"
   },
   "verification": {
     "scope_note": "Historical promotion evidence is retained below. The current text-only manifest is refused by tubuild linkcheck's intact-object precondition; source verification uses explicit relocated-function checks and the production ROM build. This historical record is not a new pass for a changed candidate.",
@@ -469,7 +474,7 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov096",
       "canonical_address": "0x02137980",
-      "reason": "This class's own type-name string. The cartridge holds the eleven bytes '9daSanbo_c' plus its terminator at ov096:0x02137980 and the compiler emits size 0xb here, so the record is the cartridge's own length-prefixed spelling and no band shifts. That equality is the whole reason the class had to be renamed off the coined 'Pokey' first: a coined name emits '5Pokey' plus its terminator, seven bytes, which reaches no configured home and would be dropped unverified. Outside this entry's licensed range (.text 0x02135700-0x02136db0)."
+      "reason": "This class's own type-name string. The cartridge holds ten visible bytes '9daSanbo_c' plus its NUL terminator, eleven bytes total at ov096:0x02137980 and the compiler emits size 0xb here, so the record is the cartridge's own length-prefixed spelling and no band shifts. That equality is the whole reason the class had to be renamed off the coined 'Pokey' first: a coined name emits '5Pokey' plus its terminator, seven bytes, which reaches no configured home and would be dropped unverified. Outside this entry's licensed range (.text 0x02135700-0x02136db0)."
     },
     {
       "symbol": "_ZTI8dActor_c",

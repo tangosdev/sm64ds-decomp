@@ -24,15 +24,15 @@
     "lk5 3819. Overlapping but not identical seats, so the merged figure is higher and",
     "the published number stays a floor.",
     "",
-    "This number moves ONE way: seating a new actor class, worth ~8-10 TUs each.",
-    "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
-    "linked closure never references."
+    "LINKED grows when matched TUs become reachable in the port's linked call graph.",
+    "Actor methods and free functions both count. Enrollment alone does not increase",
+    "the count when the release build still dead-strips the unreachable object."
   ],
-  "linkedTus": 10033,
+  "linkedTus": 10523,
   "matchedTus": 11328,
-  "measuredAt": "2026-09-08",
+  "measuredAt": "2026-09-09",
   "branch": "port/link100",
-  "commit": "d19ed9da6",
+  "commit": "91f525963",
   "stale": false,
-  "basis": "integration branch port/link100 at its pushed tip d19ed9da6, measured against that tip's own battery build walk_window.map (C:/tmp/l4seat, tree clean, battery ALL GREEN at floor 10032, five proofs green including the opening-cutscene gate). +20 over the 2026-09-07 stamp of 10013 on a4504f88d and +912 over the 2026-08-30 stamp of 9121 on cons ce1afba51. The shipping branch port-mount-noseat-cluster is fast-forwarded to the same commit. Since the 10013 stamp: every linker alias whose two sides name different things was checked against the ROM (2391 directives, 461 adjudicated by RTTI name string or referrer set, 3 wrong, 42 justifications written, no number change); the 414-row documented host-ABI exception queue was censused by mechanism (209 rows are not port work; the 153-row pointer-to-member family is being measured row by row for one later batch); MgSnowball came off a generated virtual-call row; the TextureSequence deleting slot got its cdecl thunk instead of a live null; seventeen slot-5 render bodies came back onto their matched TUs once the Model-family vtable numbering they cited stopped existing; and the cutscene models' two complete-object destructors got real faces, one of which had never been linked. Gated rungs since the last stamp: 10013 -> 10032 -> 10033. The run's earlier content (the ROM's save system, thread scheduler and ARM9<->ARM7 link as ROM code; the pre-main boot spans; Stage vtable slots 3/6/9/16/17; the boot and download-play scenes; /vmg /vmm target-wide; the Model-family virtual-destructor unfold; 24 ruled bodies seated by ROM address; CAGE_LIFT, RICKSHAW_BDW and PUSHABLE_BLOCK registered; TRAP moved off LIGHT_BEAM's vtable) is described in the 10013 stamp's history. The linkage number is cartridge-independent (an identical TU set links with no ROM present, locally and on a GitHub runner). Remaining: the documented host-ABI exception queue, the wireless chain behind the ARM7 model (~175), the boot chain's refused arms, and guessed vtable bodies that need real decomp."
+  "basis": "integration branch port/link100 at its pushed tip 91f525963, measured against that tip's own battery build walk_window.map (C:/tmp/l1-int, gate INT30: tree clean, reconfigure with the four hostgen register TUs, battery ALL GREEN at floor 10523 with all 51 level and 37 scene rows including the Game Over scene, the six proofs, the loopback pair with the ROM's own wireless worker created, entered, slept and woken on the parent, the four-player proof, the rollback ladder at eight wide with every session row green including seven windows at 160 ms, and a captured level under the ROM's own frame loop), and confirmed by the hosted-runner port-linkage workflow on every push of port/** and every pull request into the shipping branch. +2 over the previous stamp of 10521, +490 over the 2026-09-08 morning's 10033, +1402 over the 2026-08-30 stamp of 9121. Since the 10521 stamp: two more overlay bodies seated as the ROM's own, the intro Bowser dispatch body func_ov018_02111bf0 and the Jolly Roger Bay alias body func_ov002_020bd664 (+2); the hosted ARM7 posting the port-receive indication once per completed round so the ROM's own receive engine banks the parent's datagram on the child every frame (0); and the thread switch a ROM body asks for from inside the VBlank handler deferred to the interrupt return the cartridge's way, decided by the ROM's own processor-mode check now that the host answers IRQ mode inside a handler (0). Running: the ROM's own send and copy on the wireless path (the last host face on it), the same mode answer on the two remaining handler paths, the decomp-side honesty of the matched count."
 }
