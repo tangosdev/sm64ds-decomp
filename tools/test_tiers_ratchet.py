@@ -198,18 +198,27 @@ class TranslationUnitIdentities(unittest.TestCase):
 class OrphanDestinationSplit(unittest.TestCase):
     """The orphan classes want different commands, so the report must separate them.
 
-    All are orphans by the same predicate. What differs is what a reader should do, and
-    what --update does if they do not -- measured, not inferred:
+    THE SPLIT IS ON THE IDENTITY A REWRITE CREATES, NOT ON THE DESTINATION FILE. Two
+    earlier versions of this report keyed the reader-facing claim on the file, and a
+    test in this class enforced the second of those mistakes. A multi-member
+    destination is scored per member, so it can hold a target that passes and a sibling
+    that fails; judged by the file, a clean rewrite is called a backslide. Measured on
+    the real manifest: 620 of the 2,329 banked-path-to-destination pairs at a failing
+    destination name a target that passes on its own, over 122 of the 129 failing
+    destinations.
 
-      destination passes    --update exits 0, writes no exception row, and ABSORBS the
-                            entry. Rewrite onto it; nothing regressed.
-      destination fails     classify_missing() absorbs a moved path only when the
-                            destination passes, so this class reaches `removed`:
-                            --update exits 2 without a --reason, and with one it records
-                            the legacy path as REMOVED, which is false. Rewrite, but do
-                            not call it a clean move.
-      destination unvouched nothing scored it. Do not rewrite onto a file this tool
-                            cannot see.
+    What differs per class, measured rather than inferred:
+
+      target passes,        --update exits 0, writes no exception row, and ABSORBS the
+      file passes           entry. Rewrite onto the target; nothing regressed.
+      target passes,        Rewrite; nothing regressed FOR THAT IDENTITY. --update
+      file does not         still will not absorb it -- classify_missing() keys
+                            absorption on the whole file -- so it exits 2 without a
+                            --reason and writes a false REMOVED row with one.
+      target fails          Rewrite, but it is a backslide the moment it exists.
+                            --update behaves as in the row above.
+      target unvouched      nothing scored the identity a rewrite would create. Do not
+                            rewrite onto it.
       no destination        --update exits 2 without a --reason; with one it is the
                             correct command for a file that really was deleted.
 
@@ -221,15 +230,20 @@ class OrphanDestinationSplit(unittest.TestCase):
     DEST = "src/actors/TU.cpp"
     KNOWN = {LEGACY: ("ov001/TU", DEST)}
     SYMBOLS = {LEGACY: "Sym"}
+    # Two enrolled members: `Sym` is what a rewrite of LEGACY creates, `Other` is the
+    # sibling that lets the file's verdict differ from the target's. A single-member
+    # fixture cannot express this class at all, which is why neither earlier round
+    # caught it.
+    OWN = {DEST: ["Sym", "Other"]}
+    TARGET = f"{DEST}#Sym"
+    SIBLING = f"{DEST}#Other"
 
     def _score(self, *failing):
         return {k: k not in failing for k in TR.tiers.CRITERIA}
 
-    def _passing_dest(self):
-        return {self.DEST: self._score()}
-
-    def _failing_dest(self):
-        return {self.DEST: self._score(TR.tiers.CRITERIA[0])}
+    def _scores(self, target_fails=(), sibling_fails=()):
+        return {self.TARGET: self._score(*target_fails),
+                self.SIBLING: self._score(*sibling_fails)}
 
     def _report(self, orphans, moves, tracked=None, scores=None, ownership=None,
                 symbols=None):
@@ -237,17 +251,35 @@ class OrphanDestinationSplit(unittest.TestCase):
         with contextlib.redirect_stdout(out):
             TR.report_orphans(orphans, moves,
                               "config/converted-backslide-exceptions.jsonl",
-                              tracked, scores, ownership,
+                              set() if tracked is None else tracked,
+                              {} if scores is None else scores,
+                              {} if ownership is None else ownership,
                               self.SYMBOLS if symbols is None else symbols)
         return out.getvalue()
 
-    def _passing_report(self, orphans=None):
+    def _clean_report(self, orphans=None):
+        """Target passes, and so does every other member of its file."""
         return self._report(orphans or [self.LEGACY], self.KNOWN, {self.DEST},
-                            self._passing_dest())
+                            self._scores(), self.OWN)
 
-    def _failing_report(self, orphans=None):
+    def _target_only_report(self, orphans=None):
+        """Target passes; a DIFFERENT member of the same file fails.
+
+        This is the population VFY-2543-15 is about and the one no fixture covered.
+        """
         return self._report(orphans or [self.LEGACY], self.KNOWN, {self.DEST},
-                            self._failing_dest())
+                            self._scores(sibling_fails=(TR.tiers.CRITERIA[0],)),
+                            self.OWN)
+
+    def _backslide_report(self, orphans=None):
+        """The target itself fails."""
+        return self._report(orphans or [self.LEGACY], self.KNOWN, {self.DEST},
+                            self._scores(target_fails=(TR.tiers.CRITERIA[0],)),
+                            self.OWN)
+
+    def _unvouched_report(self, orphans=None):
+        """The destination is not a tracked source, so nothing scored anything."""
+        return self._report(orphans or [self.LEGACY], self.KNOWN, set(), {}, {})
 
     def test_destination_is_keyed_on_the_file_part_not_the_whole_identity(self):
         """A member identity must resolve through its path, or the split misfires on
@@ -262,111 +294,229 @@ class OrphanDestinationSplit(unittest.TestCase):
         The whole defect was one function's answer being read as the other's.
         """
         self.assertEqual(
-            TR.destination_state(self.DEST, {self.DEST}, self._passing_dest())[0],
+            TR.destination_state(self.DEST, {self.DEST}, self._scores(), self.OWN)[0],
             "converted")
         self.assertEqual(
-            TR.destination_state(self.DEST, {self.DEST}, self._failing_dest())[0],
+            TR.destination_state(self.DEST, {self.DEST},
+                                 self._scores(target_fails=(TR.tiers.CRITERIA[0],)),
+                                 self.OWN)[0],
             "failing")
-        self.assertEqual(TR.destination_state(self.DEST, set(), {})[0], "unvouched")
+        self.assertEqual(
+            TR.destination_state(self.DEST, set(), {}, {})[0], "unvouched")
 
     def test_a_destination_scored_per_member_is_judged_over_every_member(self):
-        ownership = {self.DEST: ["First", "Second"]}
-        both = {f"{self.DEST}#First": self._score(),
-                f"{self.DEST}#Second": self._score()}
-        one_bad = dict(both,
-                       **{f"{self.DEST}#Second": self._score(TR.tiers.CRITERIA[1])})
+        state, detail = TR.destination_state(
+            self.DEST, {self.DEST},
+            self._scores(sibling_fails=(TR.tiers.CRITERIA[1],)), self.OWN)
+
+        self.assertEqual(state, "failing")
+        self.assertIn(self.SIBLING, detail)
+
+    def test_destination_state_refuses_to_answer_without_a_scan(self):
+        """VFY-2543-17 (M-A): `scores=None` used to be this parameter's DEFAULT, and
+        its arm returned a verdict -- "unvouched" -- reached with no evidence at all.
+        Nothing exercised it, so flipping that arm to "converted" passed all 56 tests:
+        the dangerous answer was the default answer. There is no arm now; a caller who
+        omits the scan gets an error rather than an opinion."""
+        for missing in ("tracked", "scores", "ownership"):
+            args = {"tracked": {self.DEST}, "scores": self._scores(),
+                    "ownership": self.OWN}
+            args[missing] = None
+            with self.assertRaises(ValueError):
+                TR.destination_state(self.DEST, **args)
+        with self.assertRaises(TypeError):
+            TR.destination_state(self.DEST)
+
+    def test_a_partly_scored_destination_is_not_called_converted(self):
+        """VFY-2543-17 (M-B): deleting the partially-scored guard passed all 56 tests.
+
+        An unscored member is not in `current`, so classify_missing() will not absorb
+        the file -- calling it "converted" would predict an --update that does not
+        happen, and would claim a file passes on the strength of the members that
+        happened to be scored.
+        """
+        partial = {self.TARGET: self._score()}      # SIBLING never scored
+        state, detail = TR.destination_state(self.DEST, {self.DEST}, partial, self.OWN)
+
+        self.assertEqual(state, "unvouched")
+        self.assertIn("not scored", detail)
+
+    def test_target_state_answers_about_the_identity_not_the_file(self):
+        """VFY-2543-15, at the smallest scale that can express it.
+
+        Same file, same scan, two different questions -- and this is the case the two
+        earlier rounds answered with the file's verdict.
+        """
+        scores = self._scores(sibling_fails=(TR.tiers.CRITERIA[0],))
 
         self.assertEqual(
-            TR.destination_state(self.DEST, {self.DEST}, both, ownership)[0],
-            "converted")
-        state, detail = TR.destination_state(self.DEST, {self.DEST}, one_bad, ownership)
-        self.assertEqual(state, "failing")
-        self.assertIn(f"{self.DEST}#Second", detail)
+            TR.destination_state(self.DEST, {self.DEST}, scores, self.OWN)[0],
+            "failing")
+        state, _detail, target = TR.target_state(
+            self.LEGACY, self.DEST, {self.DEST}, scores, self.OWN, self.SYMBOLS)
+        self.assertEqual(state, "converted")
+        self.assertEqual(target, self.TARGET)
 
-    def test_the_three_destination_states_are_reported_in_separate_sections(self):
-        text = self._report(
-            [self.LEGACY, "src/Other.cpp", "src/Vanished.cpp"],
-            {self.LEGACY: ("ov001/TU", self.DEST),
-             "src/Other.cpp": ("ov002/TU", "src/actors/Failing.cpp")},
-            {self.DEST, "src/actors/Failing.cpp"},
-            dict(self._passing_dest(),
-                 **{"src/actors/Failing.cpp": self._score(TR.tiers.CRITERIA[0])}))
+    def test_target_state_refuses_to_answer_without_a_scan(self):
+        for missing in ("tracked", "scores", "ownership", "symbols"):
+            args = {"tracked": {self.DEST}, "scores": self._scores(),
+                    "ownership": self.OWN, "symbols": self.SYMBOLS}
+            args[missing] = None
+            with self.assertRaises(ValueError):
+                TR.target_state(self.LEGACY, self.DEST, **args)
 
-        self.assertIn("with a destination that PASSES today", text)
-        self.assertIn("with a destination that does NOT pass today", text)
-        self.assertIn("with no TU promotion destination", text)
-        self.assertLess(text.index("PASSES today"), text.index("does NOT pass today"))
-        self.assertLess(text.index("does NOT pass today"),
-                        text.index("no TU promotion destination"))
+    def test_the_five_classes_are_reported_in_separate_sections(self):
+        # LEGACY -> a passing target in a file that passes  (clean)
+        # good   -> a passing target in a file that fails   (target_only)
+        # bad    -> the member the scan fails               (backslide)
+        # away   -> an untracked destination                (unvouched)
+        # gone   -> no manifest row at all                  (unexplained)
+        good, bad, away, gone = ("src/Good.cpp", "src/Bad.cpp", "src/Away.cpp",
+                                 "src/Vanished.cpp")
+        mixed = "src/actors/Mixed.cpp"
+        moves = {self.LEGACY: ("ov001/TU", self.DEST),
+                 good: ("ov002/TU", mixed),
+                 bad: ("ov003/TU", mixed),
+                 away: ("ov004/TU", "src/actors/Untracked.cpp")}
+        ownership = dict(self.OWN, **{mixed: ["A", "B"]})
+        scores = dict(self._scores(),
+                      **{f"{mixed}#A": self._score(TR.tiers.CRITERIA[0]),
+                         f"{mixed}#B": self._score()})
+        symbols = {self.LEGACY: "Sym", good: "B", bad: "A", away: "A"}
+        text = self._report([self.LEGACY, good, bad, away, gone],
+                            moves, {self.DEST, mixed}, scores, ownership, symbols)
 
-    def test_nothing_regressed_is_claimed_only_where_the_destination_passes(self):
-        """VFY-2543-10, the real invariant.
+        heads = ["whose rewrite target PASSES, in a file that passes too",
+                 "whose rewrite target PASSES, in a file that does NOT",
+                 "whose rewrite target does NOT pass",
+                 "whose rewrite target this tool cannot vouch for",
+                 "with no TU promotion destination"]
+        for head in heads:
+            self.assertIn(head, text)
+        positions = [text.index(h) for h in heads]
+        self.assertEqual(positions, sorted(positions))
 
-        The earlier version of this test asserted only that a destination was NAMED,
-        which is the weaker claim the bug lived inside: of the 136 destinations the real
-        manifest names, 7 pass and 129 do not, so "a destination exists" licenses
-        nothing. A run that printed this sentence over a failing destination
-        contradicted its own backslide section twelve lines later.
+    def test_nothing_regressed_is_claimed_where_the_rewrite_target_passes(self):
+        """VFY-2543-15, the invariant this class exists for.
+
+        The version of this test that shipped in the previous round asserted
+        `assertNotIn("Nothing regressed", failing_report)` -- keyed on the DESTINATION,
+        so it enforced the false claim over the 620 pairs whose target passes anyway.
+        It had to go, like the permissive one before it. What is true is keyed on the
+        identity the block tells the reader to create.
         """
-        self.assertIn("Nothing regressed", self._passing_report())
-        self.assertNotIn("Nothing regressed", self._failing_report())
-        self.assertNotIn("Nothing regressed",
-                         self._report([self.LEGACY], self.KNOWN, set(), {}))
+        self.assertIn("Nothing regressed", self._clean_report())
+        self.assertIn("Nothing regressed FOR THESE IDENTITIES",
+                      self._target_only_report())
+        self.assertNotIn("Nothing regressed", self._backslide_report())
+        self.assertNotIn("Nothing regressed", self._unvouched_report())
         self.assertNotIn("Nothing regressed", self._report(["src/Vanished.cpp"], {}))
 
-    def test_a_failing_destination_names_the_criterion_it_fails(self):
-        text = self._failing_report()
+    def test_a_passing_target_in_a_failing_file_is_not_called_a_backslide(self):
+        """The other half of the same finding: the old text said "the rewritten
+        identity is a backslide the moment it exists" over this class, which is false
+        for every one of the 620."""
+        text = self._target_only_report()
+
+        self.assertNotIn("backslide the moment it exists", text)
+        self.assertIn(f"rewrite onto {self.TARGET} -- it passes all five", text)
+
+    def test_the_unit_mismatch_is_explained_where_it_appears(self):
+        """One paragraph of this section keys on the identity and the next on the file,
+        because classify_missing() does. A reader who notices that without an
+        explanation will assume one half is wrong."""
+        text = self._target_only_report()
+
+        self.assertIn("KEYS ON THE FILE, NOT THE IDENTITY", text)
+        self.assertIn("classify_missing() absorbs a moved path only", text)
+
+    def test_both_failing_classes_state_the_rewrite_first_ordering(self):
+        """VFY-2543-16: "bank it with a reason" sat four lines from "a permanent false
+        statement in a log whose whole value is that it can be trusted". Measured: bank
+        first and the row names the legacy path and is false; rewrite first and there
+        is either no row at all (target passes) or a row naming the rewritten identity
+        (target fails), which is true."""
+        for text in (self._target_only_report(), self._backslide_report()):
+            self.assertIn("REWRITE FIRST", text)
+
+    def test_a_failing_target_names_the_criterion_it_fails(self):
+        text = self._backslide_report()
 
         self.assertIn(TR.tiers.CRITERION_LABEL[TR.tiers.CRITERIA[0]], text)
 
-    def test_a_failing_destination_is_still_told_to_rewrite(self):
+    def test_a_failing_target_is_still_told_to_rewrite(self):
         """The rewrite is right in every state; only the reassurance is not."""
-        text = self._failing_report()
+        text = self._backslide_report()
 
         self.assertIn("REWRITE these", text)
-        self.assertIn(f"      rewrite onto {self.DEST}", text)
+        self.assertIn(f"      rewrite onto {self.TARGET}", text)
 
-    def test_a_failing_destination_is_not_handed_the_removal_command(self):
-        """--update does not absorb this class, but re-banking is still not the repair:
-        the row it writes says the legacy path was REMOVED and nothing was."""
-        text = self._failing_report()
-
-        self.assertNotIn('python tools/tiers_ratchet.py --update --reason', text)
-        self.assertIn("recording the legacy path as REMOVED", text)
+    def test_neither_failing_class_is_handed_the_removal_command(self):
+        """--update does not absorb either class, but re-banking is still not the
+        repair: the row it writes says the legacy path was REMOVED and nothing was."""
+        for text in (self._target_only_report(), self._backslide_report()):
+            self.assertNotIn('python tools/tiers_ratchet.py --update --reason', text)
+            self.assertIn("REMOVED", text)
 
     def test_an_unvouched_destination_is_not_rewritten_onto(self):
-        text = self._report([self.LEGACY], self.KNOWN, set(), {})
+        text = self._unvouched_report()
 
         self.assertIn("cannot vouch for", text)
-        self.assertIn("Do not rewrite", text)
-        self.assertNotIn(f"rewrite onto {self.DEST}", text)
+        self.assertIn("Do not rewrite onto an identity this tool cannot see", text)
+        # the ROW must not name one; the prose two paragraphs down says not to
+        self.assertNotIn("      rewrite onto", text)
+
+    def test_a_carried_symbol_the_destination_does_not_define_is_unvouched(self):
+        """VFY-2543-18: a `#symbol` carried on the banked identity is passed through
+        without a manifest check. The only check that means anything is looking the
+        resulting identity up in the scan -- a symbol the destination does not define
+        is scored by nothing, so rewriting onto it would recreate the orphan."""
+        text = self._report([f"{self.LEGACY}#Nowhere"], self.KNOWN, {self.DEST},
+                            self._scores(), self.OWN)
+
+        self.assertIn("cannot vouch for", text)
+        self.assertIn(f"{self.DEST}#Nowhere", text)
+        self.assertIn("does not define that symbol", text)
 
     def test_the_rewrite_target_follows_the_destination_member_count(self):
         """VFY-2543-13: tu_promote.py writes a bare dest for a single-function TU and
         `dest#symbol` otherwise, and scan() scores it the same way. 0 of the 136 real
         destinations take the first branch today, which is why a constant went
         unnoticed."""
+        self.assertEqual(
+            TR.rewrite_target(self.LEGACY, self.DEST, {self.DEST: ["Only"]},
+                              self.SYMBOLS),
+            self.DEST)
+        self.assertEqual(
+            TR.rewrite_target(self.LEGACY, self.DEST, self.OWN, self.SYMBOLS),
+            self.TARGET)
+
+    def test_an_empty_ownership_entry_takes_the_same_branch_scan_does(self):
+        """VFY-2543-18: `len(members) <= 1` swallowed the empty case into the
+        single-member one and happened to agree, guarded only by its one call site.
+        scan() falls back to the path stem, so a destination with no ownership entry is
+        scored under its BARE path and the rewrite target must be the bare path too."""
         self.assertEqual(TR.rewrite_target(self.LEGACY, self.DEST, {}, self.SYMBOLS),
                          self.DEST)
         self.assertEqual(
-            TR.rewrite_target(self.LEGACY, self.DEST,
-                              {self.DEST: ["First", "Second"]}, self.SYMBOLS),
-            f"{self.DEST}#Sym")
+            TR.rewrite_target(self.LEGACY, self.DEST, {self.DEST: []}, self.SYMBOLS),
+            self.DEST)
 
     def test_the_rewrite_target_carries_the_identitys_own_symbol_when_it_has_one(self):
         self.assertEqual(
-            TR.rewrite_target(f"{self.LEGACY}#Other", self.DEST,
-                              {self.DEST: ["First", "Second"]}, self.SYMBOLS),
-            f"{self.DEST}#Other")
+            TR.rewrite_target(f"{self.LEGACY}#Other", self.DEST, self.OWN,
+                              self.SYMBOLS),
+            self.SIBLING)
 
     def test_an_unknown_symbol_is_not_invented(self):
-        self.assertIsNone(TR.rewrite_target(self.LEGACY, self.DEST,
-                                            {self.DEST: ["First", "Second"]}, {}))
-        text = self._report([self.LEGACY], self.KNOWN, {self.DEST},
-                            {f"{self.DEST}#First": self._score(),
-                             f"{self.DEST}#Second": self._score()},
-                            {self.DEST: ["First", "Second"]}, {})
-        self.assertIn("<the symbol the manifest enrolls it under>", text)
+        self.assertIsNone(
+            TR.rewrite_target(self.LEGACY, self.DEST, self.OWN, {}))
+        text = self._report([self.LEGACY], self.KNOWN, {self.DEST}, self._scores(),
+                            self.OWN, {})
+
+        self.assertIn("cannot vouch for", text)
+        self.assertIn("no manifest row here enrolls", text)
+        self.assertNotIn("      rewrite onto", text)
 
     def test_a_destination_unknown_orphan_gets_the_working_removal_command(self):
         """VFY-2543-03: base printed the command that works; forbidding it while
@@ -381,15 +531,15 @@ class OrphanDestinationSplit(unittest.TestCase):
     def test_no_diagnostic_claims_a_falling_count_is_a_regression(self):
         """VFY-2543-02: `count` is metadata. load_baseline reads it back only to catch
         a hand-edit; nothing else in the tree reads it, so no gate can act on it."""
-        for text in (self._passing_report(), self._failing_report(),
-                     self._report([self.LEGACY], self.KNOWN, set(), {}),
+        for text in (self._clean_report(), self._target_only_report(),
+                     self._backslide_report(), self._unvouched_report(),
                      self._report(["src/Vanished.cpp"], {})):
             self.assertNotIn("count` downward", text)
             self.assertNotIn("reports as a regression", text)
 
     def test_a_passing_destination_orphan_is_not_told_update_will_refuse(self):
         """VFY-2543-01: it does not refuse for this class -- it exits 0 and absorbs."""
-        text = self._passing_report()
+        text = self._clean_report()
 
         self.assertNotIn("demand a", text)
         self.assertIn("does not refuse -- it ABSORBS", text)
@@ -400,7 +550,7 @@ class OrphanDestinationSplit(unittest.TestCase):
         """VFY-2543-06 is a real, unclosed hole: one --update launders every orphan of
         the passing-destination class and the result is green. The diagnostic must not
         imply otherwise."""
-        self.assertIn("hole is still open", self._passing_report())
+        self.assertIn("hole is still open", self._clean_report())
 
     def test_the_reason_names_the_destination_when_the_manifest_knows_it(self):
         reason = TR.orphan_reason(self.LEGACY, self.KNOWN)
@@ -427,6 +577,13 @@ class SyntheticTree:
     TWO_FN = "//cpp\nvoid First() {}\nvoid Second() {}\n"
     FAILING_TWO_FN = ("//cpp\nint unk_18;\n"
                       "void First() { unk_18 = 1; }\nvoid Second() {}\n")
+    # One member fails and the other passes -- the shape VFY-2543-15 is about, and
+    # the shape of the real src/actors/ActorDerived.cpp, where 1 of 5 members is still
+    # named func_02013edc. FAILING_TWO_FN cannot express it: a file-scope `unk_18`
+    # fails BOTH members, so every earlier fixture had the file and its members
+    # agreeing, which is exactly the case that hides this defect.
+    MIXED_TWO_FN = "//cpp\nvoid func_02013edc() {}\nvoid Second() {}\n"
+    MIXED_OWN = ["func_02013edc", "Second"]
 
     def _tree(self, tree, banked, extra=None):
         td = tempfile.mkdtemp()
@@ -532,11 +689,11 @@ class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
         code, text = self._run(
             {legacy}, [dest], {dest: ["First", "Second"]}, ["--check"],
             moves={legacy: ("ov043/daObjKm1_Kurumajiku_c", dest)},
-            extra={dest: self.TWO_FN})
+            extra={dest: self.TWO_FN}, symbols={legacy: "First"})
 
         self.assertEqual(code, 1)
         self.assertIn("REWRITE these", text)
-        self.assertIn(dest, text)
+        self.assertIn(f"rewrite onto {dest}#First", text)
         self.assertNotIn("CONVERTED ratchet PASS", text)
 
     def test_the_plain_report_names_orphans_without_an_exit_code(self):
@@ -547,10 +704,11 @@ class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
         self.assertIn("ORPHANED", text)
         self.assertIn("src/Gone.cpp", text)
         self.assertIn("<- --check would fail", text)
-        # the same four-way split --check prints, through the same function
-        self.assertIn("dest passes", text)
-        self.assertIn("dest fails", text)
-        self.assertIn("dest unvouched", text)
+        # the same five-way split --check prints, through the same function
+        self.assertIn("target passes ", text)
+        self.assertIn("target passes, file", text)
+        self.assertIn("target fails", text)
+        self.assertIn("target unvouched", text)
         self.assertIn("investigate               1", text)
 
     def test_an_orphan_is_not_also_counted_as_a_backslide(self):
@@ -588,7 +746,7 @@ class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
         self.assertIn("lossless ownership transition", text)
         self.assertIn("IDENTITY UPGRADE", text)
 
-    def test_an_orphan_whose_destination_fails_is_not_told_nothing_regressed(self):
+    def test_an_orphan_whose_rewrite_target_fails_is_not_told_nothing_regressed(self):
         """VFY-2543-10, as the run that exposed it: one --check contradicting itself.
 
         The report claimed "the readable code is still in the tree under the destination
@@ -603,13 +761,56 @@ class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
             extra={dest: self.FAILING_TWO_FN}, symbols={legacy: "First"})
 
         self.assertEqual(code, 1)
-        self.assertIn("does NOT pass today", text)
+        self.assertIn("whose rewrite target does NOT pass", text)
         self.assertNotIn("Nothing regressed", text)
         # the two halves of the run now agree with each other
         self.assertIn("CONVERTED backslide", text)
         self.assertIn(f"{dest}#First", text)
 
-    def test_a_failing_destination_orphan_is_still_told_where_to_rewrite(self):
+    def test_an_orphan_whose_target_passes_in_a_failing_file_is_told_so(self):
+        """VFY-2543-15 end to end, on the shape that produced the finding.
+
+        The destination fails -- one of its two members is still named func_<addr> --
+        but the identity this orphan's rewrite creates is the OTHER member, and it
+        passes. Two earlier versions of this report told the reader that rewrite was a
+        backslide. On the real tree this is 620 of the 2,329 pairs at a failing
+        destination, over 122 of the 129 such destinations.
+        """
+        legacy = "src/Legacy.cpp"
+        dest = "src/actors/TU.cpp"
+        code, text = self._run(
+            {legacy}, [dest], {dest: self.MIXED_OWN}, ["--check"],
+            moves={legacy: ("ov001/TU", dest)}, extra={dest: self.MIXED_TWO_FN},
+            symbols={legacy: "Second"})
+
+        self.assertEqual(code, 1)
+        self.assertIn("whose rewrite target PASSES, in a file that does NOT", text)
+        self.assertIn(f"rewrite onto {dest}#Second -- it passes all five", text)
+        self.assertIn("Nothing regressed FOR THESE IDENTITIES", text)
+        self.assertNotIn("backslide the moment it exists", text)
+        # and the file's own verdict is still on the row, because --update keys on it
+        self.assertIn(f"{dest}#func_02013edc", text)
+
+    def test_rewriting_that_orphan_onto_its_target_makes_the_gate_pass(self):
+        """The repair the section above prints, run end to end.
+
+        Same tree, same failing destination; the only change is that the baseline
+        names the target instead of the legacy path. Reproduced on the real tree too:
+        src/_ZN7dBase_cD1Ev.cpp rewritten onto
+        src/actors/ActorDerived.cpp#_ZN7dBase_cD1Ev takes --check from 1 to 0 with no
+        exception row written at all.
+        """
+        dest = "src/actors/TU.cpp"
+        code, text = self._run(
+            {f"{dest}#Second"}, [dest], {dest: self.MIXED_OWN}, ["--check"],
+            moves={"src/Legacy.cpp": ("ov001/TU", dest)},
+            extra={dest: self.MIXED_TWO_FN}, symbols={"src/Legacy.cpp": "Second"})
+
+        self.assertEqual(code, 0)
+        self.assertIn("CONVERTED ratchet PASS", text)
+        self.assertNotIn("CONVERTED baseline orphan", text)
+
+    def test_a_failing_target_orphan_is_still_told_where_to_rewrite(self):
         """Naming the defect must not cost the reader the repair."""
         legacy = "src/Legacy.cpp"
         dest = "src/actors/TU.cpp"
@@ -658,6 +859,13 @@ class UpdateBehaviourPin(SyntheticTree, unittest.TestCase):
     code and was got wrong a second time: --update absorbs a moved path only when the
     destination passes. When it fails, the same entry is a removal, so the behaviour
     inverts -- refusal without a --reason, and a false removal row with one.
+
+    THAT SPLIT IS ON THE FILE, WHILE THE REPORT'S REGRESSION CLAIM IS ON THE IDENTITY,
+    and the last two tests here are the case where the two differ: a destination whose
+    rewrite target passes while a sibling member fails. --update treats it exactly like
+    any other failing destination, because classify_missing() requires EVERY enrolled
+    member to be CONVERTED. Those two tests exist so the report's --update sentences
+    cannot drift onto the identity along with the rest of the prose.
     """
 
     def _update(self, banked, tree, ownership, argv, moves=None, extra=None):
@@ -748,6 +956,38 @@ class UpdateBehaviourPin(SyntheticTree, unittest.TestCase):
         self.assertEqual(code, 0)
         row = json.loads(exceptions.read_text(encoding="utf-8").strip())
         self.assertEqual(row["path"], legacy)
+
+    def test_update_still_refuses_when_only_the_rewrite_target_passes(self):
+        """VFY-2543-15's asymmetry, pinned against the real tool.
+
+        The report keys its regression claim on the identity and its --update claim on
+        the FILE, and this is the case where those two differ: the target passes, the
+        file does not, and --update behaves as it does for any failing destination
+        because classify_missing() keys absorption on every enrolled member. If the
+        report ever moved the --update sentence onto the identity as well, this goes
+        red.
+        """
+        legacy = "src/Legacy.cpp"
+        dest = "src/actors/TU.cpp"
+        code, text, exceptions, _ = self._update(
+            {legacy}, [dest], {dest: self.MIXED_OWN}, [],
+            moves={legacy: ("ov001/TU", dest)}, extra={dest: self.MIXED_TWO_FN})
+
+        self.assertEqual(code, 2)
+        self.assertFalse(exceptions.exists())
+        self.assertIn("REFUSING to bank 1 removal(s) without --reason", text)
+
+    def test_update_with_a_reason_writes_the_false_row_for_that_class_too(self):
+        code, _text, exceptions, _ = self._update(
+            {"src/Legacy.cpp"}, ["src/actors/TU.cpp"],
+            {"src/actors/TU.cpp": self.MIXED_OWN}, ["--reason", "probe"],
+            moves={"src/Legacy.cpp": ("ov001/TU", "src/actors/TU.cpp")},
+            extra={"src/actors/TU.cpp": self.MIXED_TWO_FN})
+
+        self.assertEqual(code, 0)
+        row = json.loads(exceptions.read_text(encoding="utf-8").strip())
+        self.assertEqual(row["path"], "src/Legacy.cpp")
+
 
 class BaselineIntegrity(unittest.TestCase):
     """A baseline that contradicts itself must stop the tool, not be absorbed by it."""
