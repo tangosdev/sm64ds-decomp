@@ -19,17 +19,16 @@
 #include "daBar_c.h"
 
 enum {
-    kHeightParamBias = 0xa,       /* subtracted from the param byte first */
-    kHeightMul = 0xa,             /* then ×10 */
+    kHeightParamBias = 10,        /* subtracted from the param byte first */
+    kHeightMul = 10,              /* then ×10 */
     kMinHeightFix12 = 0x1000,     /* 1.0 if that underflowed */
     kClipPadFix12 = 0x640000,     /* extra clip past half-height */
     kCylinderRadiusFix12 = 0x35555,
     kParamHurtBit = 0x100,        /* param1 bit 8: cylinder hurts */
     kClsnFlags = 0x0080000c,
-    kClsnFlagsHurt = 0x0280000c
+    kClsnHurtBit = 0x02000000,    /* the one extra bit on the hurt cylinder */
+    kClsnFlagsHurt = kClsnFlags | kClsnHurtBit
 };
-
-extern "C" daBar_c *daBar_c_classInit();
 
 // @symbol daBar_c_classInit
 extern "C" daBar_c *daBar_c_classInit()
