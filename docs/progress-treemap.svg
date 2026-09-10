@@ -40325,11 +40325,11 @@ matched: yes</title></rect><rect x="1409.24" y="622.07" width="12.36" height="17
 module: ov077
 addr: 0x021275fc
 size: 464 bytes
-matched: yes</title></rect><rect x="1431.60" y="543.66" width="4.68" height="8.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmbD1Ev
+matched: yes</title></rect><rect x="1431.60" y="543.66" width="4.68" height="8.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_cD1Ev
 module: ov078
 addr: 0x02123740
 size: 88 bytes
-matched: yes</title></rect><rect x="1436.28" y="543.66" width="5.75" height="8.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmbD0Ev
+matched: yes</title></rect><rect x="1436.28" y="543.66" width="5.75" height="8.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_cD0Ev
 module: ov078
 addr: 0x02123798
 size: 108 bytes
@@ -40505,27 +40505,27 @@ matched: yes</title></rect><rect x="1492.95" y="593.46" width="5.03" height="9.6
 module: ov078
 addr: 0x02125f8c
 size: 104 bytes
-matched: yes</title></rect><rect x="1456.35" y="603.09" width="3.44" height="24.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb16CleanupResourcesEv
+matched: yes</title></rect><rect x="1456.35" y="603.09" width="3.44" height="24.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c16CleanupResourcesEv
 module: ov078
 addr: 0x02125ff4
 size: 180 bytes
-matched: yes</title></rect><rect x="1456.35" y="627.53" width="3.44" height="0.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb16OnPendingDestroyEv
+matched: yes</title></rect><rect x="1456.35" y="627.53" width="3.44" height="0.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c16OnPendingDestroyEv
 module: ov078
 addr: 0x021260a8
 size: 4 bytes
-matched: yes</title></rect><rect x="1456.35" y="628.08" width="3.44" height="11.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb6RenderEv
+matched: yes</title></rect><rect x="1456.35" y="628.08" width="3.44" height="11.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c6RenderEv
 module: ov078
 addr: 0x021260ac
 size: 88 bytes
-matched: yes</title></rect><rect x="1459.79" y="603.09" width="15.96" height="17.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb8BehaviorEv
+matched: yes</title></rect><rect x="1459.79" y="603.09" width="15.96" height="17.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c8BehaviorEv
 module: ov078
 addr: 0x02126104
 size: 612 bytes
-matched: yes</title></rect><rect x="1459.79" y="620.97" width="15.96" height="19.05" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb13InitResourcesEv
+matched: yes</title></rect><rect x="1459.79" y="620.97" width="15.96" height="19.05" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c13InitResourcesEv
 module: ov078
 addr: 0x02126368
 size: 652 bytes
-matched: yes</title></rect><rect x="1475.75" y="603.09" width="1.65" height="2.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb16OnAimedAtWithEggEv
+matched: yes</title></rect><rect x="1475.75" y="603.09" width="1.65" height="2.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c16OnAimedAtWithEggEv
 module: ov078
 addr: 0x021265f4
 size: 8 bytes

@@ -1,7 +1,8 @@
 # Sanbo integration, 2026-09-10
 
 This composition preserves source acceptance `48e588d0f54bd7402b03163c36e6693b8e4cfd33`
-and incorporates main `c63b53e0ebbc0ef29adcd87ec18130a11a6c3c47` after BombKing landed.
+and incorporates main `f62f261f525396e94efe600fc97ced0849eb7154` after BombKing landed
+and its three-file progress refresh.
 The Sanbo source, class header, manifest and both ov096 enrollment files are
 unchanged from that accepted source. Its 36 functions and 5,808 text bytes remain
 a text-only promotion; emitted class metadata is not newly owned data.
