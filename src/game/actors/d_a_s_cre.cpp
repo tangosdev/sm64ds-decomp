@@ -10,9 +10,9 @@
  * registry). Retail does not store that spelling.
  *
  * deslop
- * Leftover: Pos() overlays mPosX/Y/Z (a stack Vector3 DIFF'd).
- * Leftover: in-class operator new takes unsigned long and forwards to
- *   _ZN7fBase_cnwEj (unsigned int). Keep `return new daSCre_c`.
+ * Leftover: Pos() is a leaf overlay of mPosX/Y/Z. dActor_c::Pos() is
+ *   the shared home (#2513); this branch does not have it. A stack
+ *   Vector3 DIFF'd.
  */
 
 #include "daSCre_c.h"

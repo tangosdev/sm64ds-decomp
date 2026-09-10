@@ -17,11 +17,8 @@ struct daSCre_c : dActor_c {
     virtual ~daSCre_c() {}
     virtual s32 Behavior();
 
-    /* In-class operator new is unsigned long (C++). The actor-heap
-       allocator is _ZN7fBase_cnwEj (unsigned int). The cast is that
-       bridge; the factory stays `return new daSCre_c`. */
     static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
+        return _ZN7fBase_cnwEj(size);
     }
 
     /* x/y/z sit in a row on dActor_c; Spawn wants a Vector3. */
