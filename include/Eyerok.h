@@ -5,7 +5,7 @@
  * vtable stores in the destructor -- own, then dBgActor_c's -- confirming a
  * DIRECT dBgActor_c child, no intermediate. The apparent third store some
  * tooling flagged is `extern int _ZN7Vector3D1Ev[];` passed as a callback
- * pointer to `__destroy_arr` (see the D1 body) -- a literal-pool FUNCTION
+ * pointer to `__cxa_vec_cleanup` (see the D1 body) -- a literal-pool FUNCTION
  * POINTER argument, not a vptr store; it never writes to `this`.
  *
  * dBgActor_c ends at 0x320. Every member below closes exactly on the next
@@ -20,7 +20,7 @@
  *
  * 0x45c..0x4d6 is a run of individually evidenced scalars. At 0x4dc,
  * Vector3[0x14] (0xc == sizeof(Vector3)) -- destroyed with
- * __destroy_arr(ptr, 0x14, 0xc, _ZN7Vector3D1Ev), same evidence shape as
+ * __cxa_vec_cleanup(ptr, 0x14, 0xc, _ZN7Vector3D1Ev), same evidence shape as
  * include/Unagi.h's mStarUniqueID -- ends at 0x5cc.
  *
  * THE CLASS NOW CLOSES ON ITS OWN SIZE. Reading Behavior and InitResources as
@@ -89,7 +89,7 @@ struct Eyerok : dBgActor_c {
     u8  pad_4d6[0x2];
     s8  unk_4d8;                                            /* 0x4d8 */
     u8  pad_4d9[0x3];
-    /* The ROM destroys this with __destroy_arr(this + 0x4dc, 0x14, 0xc,
+    /* The ROM destroys this with __cxa_vec_cleanup(this + 0x4dc, 0x14, 0xc,
        _ZN7Vector3D1Ev) -- 0x14 elements, 0xc == sizeof(Vector3), same
        evidence shape as include/Unagi.h's mStarUniqueID. Only raw
        `this + 0x4dc` / `+ 0x4e0` / `+ 0x4e4` offsets are read elsewhere

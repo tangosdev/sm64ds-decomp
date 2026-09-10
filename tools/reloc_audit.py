@@ -260,18 +260,59 @@ def _as_the_build_links_it(obj, name):
         return obj
 
 
-def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
+def resolve_nested_slice(sym, code, relocs, addr, size, name_index):
+    """If `name`'s ROM range [addr, addr+size) is not `sym`'s own compiled length but
+    lies fully WITHIN it -- a hand-asm block packing several ROM functions into one
+    compiled symbol (see func_01ff97d8.c: 0xb6c bytes, five more ROM addresses
+    inside) -- resolve `sym`'s own ROM address the same way every reloc destination
+    is resolved (func_<addr> name, else symbols.txt via name_index) and slice by
+    address arithmetic against that -- never by scanning the source text for a
+    label, which this source does not reliably carry (func_01ff97d8.c's own labels
+    are offsets from ITS base, spelled `_L<hex>`, not the nested functions' names or
+    addresses).
+
+    Returns (sliced_code, sliced_relocs, offset), or None if `sym` does not contain
+    the range -- including when `size` is 0 (a zero-size alias record; that shape is
+    resolved by bytegate.alias_target_size against the TARGET side, not by searching
+    for a container here).
+
+    Shared by winning_object (compiling every source candidate fresh, per version)
+    and nearmiss_db.evaluate_full (scoring one already-compiled near-miss draft), so
+    the two can never resolve a nested name differently from each other."""
+    res = resolve_candidate(sym, name_index or {})
+    sym_addr = res[1] if res else None
+    if (sym_addr is None or not size
+            or not (sym_addr <= addr and addr + size <= sym_addr + len(code))):
+        return None
+    off = addr - sym_addr
+    return code[off:off + size], {r - off for r in relocs if off <= r < off + size}, off
+
+
+def winning_object(name, addr, size, mod, candidate=None, include_dirs=(), name_index=None):
     """Reproduce the match the way reverify does, but return the object that did it.
 
     Mirrors reverify_corpus.compiles_to so the audit measures exactly what reverify
     blesses -- same sources, same version sweep, same any-symbol acceptance.
     When ``candidate`` is supplied, verify that source file directly instead of
-    looking it up under ``src/``. This is the safe bridge for workbench artifacts."""
+    looking it up under ``src/``. This is the safe bridge for workbench artifacts.
+
+    Returns a 4-tuple ``(obj, sym, err, offset)``. ``offset`` is 0 for every ordinary
+    match (`sym`'s own compiled bytes are what `name` names) and nonzero only for a
+    NESTED entry point: a hand-asm block that packs several ROM functions into ONE
+    compiled symbol, e.g. func_01ff97d8.c, whose object defines only "func_01ff97d8"
+    (0xb6c bytes) though config/**/symbols.txt records five more ROM addresses inside
+    that span. There, `sym` is the CONTAINING symbol and `offset` is where `name`'s own
+    bytes start within it; a caller that re-extracts by symbol alone (tools/linkcheck.py
+    does, to run the reloc-linking check this function does not do) has to slice at
+    `offset` first or it re-derives the whole container's bytes instead of `name`'s own.
+    `name_index` (symbol name -> (module, addr)) is required to resolve that containing
+    symbol's own ROM address for the slice; omit it and only func_<addr>-shaped
+    containers (which carry their address in the name itself) get nested-slice support."""
     import reverify_corpus as RV
     import swarm as S
     target = RV.rom_bytes(mod, addr, size)
     if target is None:
-        return None, None, "no-module-bin"
+        return None, None, "no-module-bin", 0
     # Distinguish the three ways this can fail so callers do not report a missing
     # or wrong-length source as "no-repro" (which reads as a false-match red flag).
     # saw_source: src_texts yielded at least one candidate to try.
@@ -331,7 +372,7 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
                         code, relocs = M.extract_func(obj, sym)
                         if code is None:
                             continue
-                        tgt = target
+                        tgt, off = target, 0
                         if len(code) != len(tgt):
                             # Split-symbol carrier (notes 9a(3)): a function whose compiled
                             # form extends over the following severed fragment(s), e.g.
@@ -340,24 +381,32 @@ def winning_object(name, addr, size, mod, candidate=None, include_dirs=()):
                             # overhang included -- strictly stronger than the plain check, so
                             # a wrong-sized near miss cannot slip through. 0x40 bounds the
                             # overhang to fragment scale.
-                            if not (len(code) > len(tgt) and len(code) - len(tgt) <= 0x40):
-                                continue
-                            ext = RV.rom_bytes(mod, addr, len(code))
-                            if ext is None or len(ext) != len(code):
-                                continue
-                            tgt = ext
+                            if len(code) > len(tgt) and len(code) - len(tgt) <= 0x40:
+                                ext = RV.rom_bytes(mod, addr, len(code))
+                                if ext is None or len(ext) != len(code):
+                                    continue
+                                tgt = ext
+                            else:
+                                # NESTED ENTRY POINT: `sym` may CONTAIN `name`'s ROM range
+                                # rather than equal or merely overhang it -- see
+                                # resolve_nested_slice for the address-anchored resolution.
+                                sliced = resolve_nested_slice(sym, code, relocs, addr, size,
+                                                              name_index)
+                                if sliced is None:
+                                    continue
+                                code, relocs, off = sliced
                         saw_len = True
                         ok, _ = M.compare(tgt, code, relocs, verbose=False)
                         if ok:
-                            return obj, sym, None
+                            return obj, sym, None, off
             finally:
                 if tmp is not None:
                     pathlib.Path(tmp).unlink(missing_ok=True)
     if not saw_source:
-        return None, None, "no-source"      # no src/<name>.c|.cpp on disk to try
+        return None, None, "no-source", 0      # no src/<name>.c|.cpp on disk to try
     if not saw_len:
-        return None, None, "len-mismatch"   # compiled, but never the target's length
-    return None, None, "no-repro"           # right length, but bytes never matched
+        return None, None, "len-mismatch", 0   # compiled, but never the target's length
+    return None, None, "no-repro", 0           # right length, but bytes never matched
 
 
 def classify(cand_name, cand_mod, cand_addr, cfg, sym_index):
@@ -486,7 +535,7 @@ def audit_entry(entry, name_index, config_relocs, sym_index):
     addr = int(entry["addr"], 16) if isinstance(entry["addr"], str) else entry["addr"]
     size = entry["size"]
     mod = entry["module"]
-    obj, sym, err = winning_object(name, addr, size, mod)
+    obj, sym, err, _off = winning_object(name, addr, size, mod, name_index=name_index)
     if obj is None:
         return {"name": name, "module": mod, "addr": f"0x{addr:08x}",
                 "verdict": "NO-REPRO", "reason": err, "relocs": []}

@@ -31,7 +31,8 @@ rather than moved.  ``validated_vtable_partition_symbols`` proves the part/paren
 relationship with ``sectionIndex`` equality and deliberately does NOT compare
 section NAMES.  It cannot: a linked ELF names a vtable's output section after its
 overlay -- ``OV036``, ``OV047``, ``OV070`` measured on the baseline link -- while
-a manifest ``section`` is one of ``.rodata .init .ctor .data .bss``.  The two
+a manifest ``section`` is one of
+``.rodata .init .ctor .data .bss .exception .exceptix``.  The two
 vocabularies never intersect, so an earlier form of this check that compared them
 refused every real input, and the whole path was unreachable.  Commit 0b0e319
 removed that comparison; the #2091 thread carries the A/B.  A future reader who

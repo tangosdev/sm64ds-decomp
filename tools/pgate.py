@@ -14,6 +14,16 @@ It is a speed tool, not a different check: symbol resolution and the verdict com
 the same stamp_provenance/linkcheck path prepush_linkcheck uses. Use prepush_linkcheck.py
 for a normal PR; use this when a sweep makes the serial cost the bottleneck.
 
+RESOLVING A FILE TO THE FUNCTION(S) IT VERIFIES
+------------------------------------------------
+Each file goes through `srcpath.symbols_for`, the same enrolment table (config/**/
+delinks.txt's address range for the file, matched against config/**/symbols.txt)
+prepush_linkcheck.py's own `verify` uses -- not a copy of that lookup, the same
+function, imported. A legacy one-function source still owns exactly its own filename
+stem, since `symbols_for` falls back to that for anything not enrolled; a consolidated
+multi-function TU or a convention-named file gets one job PER owned function instead of
+being reduced to NO-SYM by a stem that names none of them.
+
 Verdicts are the linkcheck ones (VERIFIED / BLIND-n / WRONG / NO-REPRO / NO-SYM / ...);
 see tools/linkcheck.py. WRONG and NO-REPRO are false matches and must block a push.
 
@@ -30,6 +40,8 @@ from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "tools"))
+import srcpath  # noqa: E402
 
 
 def load_symbol_fn():
@@ -65,12 +77,12 @@ def main():
 
     jobs, rows = [], []
     for f in args.files:
-        name = pathlib.Path(f).stem
-        sym = load_symbol(name)
-        if not sym:
-            rows.append({"file": f, "name": name, "verdict": "NO-SYM"})
-        else:
-            jobs.append((f, name, sym))
+        for name in srcpath.symbols_for(f):
+            sym = load_symbol(name)
+            if not sym:
+                rows.append({"file": f, "name": name, "verdict": "NO-SYM"})
+            else:
+                jobs.append((f, name, sym))
 
     def work(job):
         f, name, (module, addr, size) = job

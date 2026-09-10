@@ -27,7 +27,7 @@
 #define DSCMGTRAMPOLINE_C_H
 #include "dScMgD3DBase_c.h"
 
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_020ccfc8(void);
 extern "C" void func_ov006_020d1008(void);
 extern "C" void func_ov006_02120938(void);
@@ -49,9 +49,9 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
        src/minigames/d_s_mg_trampoline.cpp, so _ZTV17dScMgTrampoline_c is still
        emitted by that one translation unit and by no other. */
     virtual ~dScMgTrampoline_c() {
-        __destroy_arr(mArray3, 5, 0x24, (void *)func_ov006_02120938);
-        __destroy_arr(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
-        __destroy_arr(mArray1, 4, 0xd0, (void *)func_ov006_020ccfc8);
+        __cxa_vec_cleanup(mArray3, 5, 0x24, (void *)func_ov006_02120938);
+        __cxa_vec_cleanup(mArray2, 3, 0x32c, (void *)func_ov006_020d1008);
+        __cxa_vec_cleanup(mArray1, 4, 0xd0, (void *)func_ov006_020ccfc8);
     }
 
     /* --- this class's own vtable slots, named from the table ---

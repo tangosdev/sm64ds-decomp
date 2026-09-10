@@ -355,6 +355,12 @@
         "owner": "humanizer/integrator support session through @andrewboudreau",
         "remaining": "Twelve address-named free helpers, manual factory/constructor sequence, remaining raw fields and typed matrix/vector copies. SharedFilePtr still exposes no recovered fields; retain the measured direct +4 file-pointer load. Do not replace it with LoadFile or invent a shared field."
       }
+    },
+    {
+      "date": "2026-09-10",
+      "finding": "YUR-01",
+      "composed_main": "a0cc78fbd18f166ba67fca7c38b63bca348c8edd",
+      "correction": "OnTurnIntoEgg returns void, matching the approved shared dActor_c interface. The retired Snufit header and method shard remain deleted; main's contract correction is carried into the renamed class header and promoted TU. This return type is the current source contract, not inferred from a return register."
     }
   ]
 }

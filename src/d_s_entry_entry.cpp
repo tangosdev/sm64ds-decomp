@@ -4,7 +4,7 @@
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int);
 extern void _ZN7fBase_cC2Ev(void*);
-extern void func_020733a8(void*, int, int, void*, void*);
+extern void __cxa_vec_ctor(void*, int, int, void*, void*);
 
 struct P2 { int a, b; };
 struct P2Copy { int words[2]; };
@@ -43,10 +43,10 @@ void* dScEntry_c_classInit_ENTRY(void)
         *(struct P2Copy *)(p + 0x54) = *(struct P2Copy *)&v;
         *(struct P2Copy *)(p + 0x5c) = *(struct P2Copy *)&v;
         *(struct P2Copy *)(p + 0x64) = *(struct P2Copy *)&v;
-        func_020733a8(p + 0x70, 9, sizeof(dScEntry_c::icon_c),
+        __cxa_vec_ctor(p + 0x70, 9, sizeof(dScEntry_c::icon_c),
                       (void *)_ZN10dScEntry_c6icon_cC1Ev,
                       (void *)_ZN10dScEntry_c6icon_cD1Ev);
-        func_020733a8(p + 0x1b4, 4,
+        __cxa_vec_ctor(p + 0x1b4, 4,
                       sizeof(((dScEntry_c *)p)->mOamAnimations[0]),
                       (void *)_ZN12OamAnimationC1Ev,
                       (void *)_ZN12OamAnimationD1Ev);

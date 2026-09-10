@@ -52,7 +52,7 @@
 struct daTree_c : dActor_c {
     u8  pad_0d0[0x4];
     /* Model[5] array, named by _ZN5ModelD1Ev/_ZN5ModelC1Ev at +0xd4 via
-       __destroy_arr/func_020733a8 (a relocation the ROM build checks) --
+       __cxa_vec_cleanup/__cxa_vec_ctor (a relocation the ROM build checks) --
        five Models, one per compass-ish direction slot indexed by
        InitResources/Render. Fills the class to its exact trailing size,
        0xd0 (dActor_c) + 0x4 (pad) + 5*0x50 (Model) = 0x264. */
@@ -66,7 +66,7 @@ struct daTree_c : dActor_c {
      * src/actors/d_a_tree.cpp still emits the complete _ZTV/_ZTI/_ZTS group,
      * which that entry licenses record by record against the ROM. The body is
      * genuinely empty: mModel[5] is destroyed by the compiler's own
-     * __destroy_arr call, which is exactly what the ROM's D1 does. */
+     * __cxa_vec_cleanup call, which is exactly what the ROM's D1 does. */
     virtual ~daTree_c() {}
     virtual s32 InitResources();       /* slot  0 */
     virtual s32 CleanupResources();    /* slot  3 */

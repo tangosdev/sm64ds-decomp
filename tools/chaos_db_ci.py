@@ -5,8 +5,10 @@ modules and percentages.
 
 Derived the same way as progress.py --write-readme:
   universe   config/**/symbols.txt  (name, addr, size per module)
-  matched    srcpath resolves a source, it is not marked // NONMATCHING, and the record
-             is not in the byte-gate-failure class (policy D -- see tools/bytegate.py)
+  matched    srcpath resolves a source, asm_policy.counts_as_matched accepts it (no
+             // NONMATCHING banner, or one overridden by a HAND-ASM PRIMITIVE banner;
+             never an unbannered dcd transcription), and the record is not in the
+             byte-gate-failure class (policy D -- see tools/bytegate.py)
   near-miss  nearmiss/db.jsonl (committed) -> div badge
   author     git history: the FIRST contributor to land the surviving match for each
              function (see first_matchers) -- credit follows renames and is not stolen by
@@ -78,17 +80,18 @@ def alias_collision_addresses():
     once as a zero-size alias at the identical address (_dmul beside func_01ff8708,
     _ll_sdiv beside func_01ffaa34, _s32_div_f beside __aeabi_idiv, _u32_div_f beside
     __aeabi_uidiv, and _dadd, _deq, _ll_udiv, _ull_mod likewise); config/arm9/symbols.txt
-    declares two more (__cxa_vec_cleanup beside __destroy_arr, __cxa_vec_ctor beside
-    func_020733a8). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
+    declared two more until the two MSL array helpers took the compiler's own spelling as
+    their primary name and the zero-size halves went away (__cxa_vec_cleanup at 0x0207328c,
+    __cxa_vec_ctor at 0x020733a8). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
     onto the ZERO-SIZE record, so the same 1,776-byte body read as matched at 0 bytes
     under the alias and unmatched at full size under the primary. linkcheck reports those
     NO-SYM (len-mismatch), which is the byte gate declining to compare a real function
     against a zero-length range.
 
-    Those ten records leave the universe here, numerator and denominator both. A second
+    Those alias records leave the universe here, numerator and denominator both. A second
     name for a function already in the list is not a second function, and the zero-size
     half can never be byte-compared, so leaving it in the denominator (which is what
-    happened until 2026-09-06) parks ten records that no amount of decompilation can
+    happened until 2026-09-06) parks records that no amount of decompilation can
     clear. Deriving the set rather than listing it means the drop self-heals: repoint the
     alias at a real size in config and the record returns to the count with no edit here.
     Every zero-size record in the universe today has a sized twin, and a zero-size symbol
@@ -239,6 +242,12 @@ def no_match_needed(head: str) -> dict[str, str] | None:
 # is demoted from matched; mnemonic asm without a banner is a policy gray zone
 # (embedded hatches inside real C, e.g. CP15 intrinsics) and is only WARNED about.
 # The detector is asm_policy.classify, shared with validate_merge and pr_linkcheck.
+#
+# When a file carries BOTH banners the HAND-ASM one wins (Tango's ruling, 2026-09-09).
+# Twenty files here say "byte-exact hand-written asm ... no original C to recover and
+# no match to chase" and then also print the word NONMATCHING, and the count read only
+# the second half. asm_policy.counts_as_matched holds that whole rule so this generator,
+# progress.py and validate_merge cannot drift apart on it again.
 
 
 def _handle_from(name: str, email: str) -> str:
@@ -527,6 +536,7 @@ def main():
     functions = []
     total_b = matched_b = matched_n = 0
     verified_b = verified_n = 0
+    handasm_b = handasm_n = 0
     enrolled = enrolled_addresses()
     # Every src path any delinks.txt names, promoted or not. Read once: delinks_paths
     # walks all 106 delinks files, and calling it per function would walk them 11,396
@@ -535,6 +545,10 @@ def main():
     # The byte-gate-failure class, both halves, read once for the same reason. See the
     # `matched` conjunct below and tools/bytegate.py.
     alias_addrs = alias_collision_addresses()
+    # Same eight addresses, keyed to the names the aliases carry, so a sized record
+    # whose source is filed under its alias can find it.  Derived from the same
+    # committed config, in one pass, for the same reason the set above is.
+    alias_srcnames = BG.alias_names(RL.module_universe)
     wont_build = BG.excluded_paths()
     bytegate_n = collections.Counter()
     enrollment_n = collections.Counter()
@@ -559,6 +573,18 @@ def main():
                 alias_dropped += 1
                 continue
             f = SP.path_for(name)
+            if f is None:
+                # An aliased address files its source under whichever name the author
+                # knew the function by, which in this tree is the ALIAS: src/_dmul.c
+                # decompiles the bytes the symbol table calls func_01ff8708. Asked only
+                # about the sized record's own name, the lookup finds nothing and four
+                # byte-exact ITCM primitives read as never attempted. The zero-size
+                # record is still dropped above, so this attaches the source to the one
+                # record that survives rather than counting the pair twice.
+                for alt in alias_srcnames.get((label, addr), ()):
+                    f = SP.path_for(alt)
+                    if f is not None:
+                        break
             src_path = f.relative_to(REPO).as_posix() if f else None
             text = f.read_text(errors="ignore") if f else ""
             # The settled tag lives in the banner, and banners drift downward as the
@@ -582,8 +608,12 @@ def main():
             # The gate is applied only to records the OLD test would have counted, so
             # that it is credited with what it actually removed rather than with every
             # record the class happens to describe.
-            countable = (bool(src_path) and not asm_policy.has_draft_banner(text)
-                         and cls != "transcribed")
+            countable = bool(src_path) and asm_policy.counts_as_matched(text)
+            # Assembly that counts, kept separately visible. It is a real match -- the
+            # original was assembly, so the asm block IS the recovered source -- but it
+            # is not C, and a bar that says "byte-exact C" has to be able to say how
+            # much of itself is not.
+            hand_asm = countable and asm_policy.has_hand_banner(text)
             bytegate_fail = countable and src_path is not None and src_path in wont_build
             matched = countable and not bytegate_fail
             total_b += size
@@ -615,6 +645,13 @@ def main():
             if matched:
                 matched_b += size
                 matched_n += 1
+                if hand_asm:
+                    # Published per record as well as summed, so a reader who wants to
+                    # know WHICH matched functions are assembly rather than C can answer
+                    # it from this file instead of re-grepping src/.
+                    rec["handAsm"] = True
+                    handasm_b += size
+                    handasm_n += 1
                 # Byte-verified is the subset the ROM build proves: enrolled, compiled,
                 # linked into its module and compared to the cartridge. The rest are
                 # matched on the strength of a source claim and are filled at link time by
@@ -667,6 +704,12 @@ def main():
             # so the measured figure travels beside it. See enrolled_addresses.
             "verifiedFunctions": verified_n,
             "verifiedBytes": verified_b,
+            # The assembly subset of `matched`: functions whose source is a bannered
+            # HAND-ASM PRIMITIVE, byte-faithful asm because the original was assembly.
+            # Reported so the README caption and tiers.py can name it rather than
+            # letting "matched C" quietly include work that is not C.
+            "handAsmFunctions": handasm_n,
+            "handAsmBytes": handasm_b,
             "moduleCount": len({f["module"] for f in functions}),
             # The other two tiers ride along here so every consumer reads ONE file.
             # romstats-sync.sh on the VPS fetches this db and nothing else, and the
@@ -692,6 +735,8 @@ def main():
           f"({100.0 * verified_b / total_b:.2f}% vs {100.0 * matched_b / total_b:.2f}% "
           f"matched); {matched_n - verified_n} matched function(s) are compiled by "
           f"nothing")
+    print(f"  of the matched: {handasm_n} function(s), {handasm_b} bytes are byte-exact "
+          f"hand-written assembly (HAND-ASM PRIMITIVE), not C")
     # ...and WHICH KIND of nothing, because the two halves have different remedies. A
     # matched/unenrolled function has a delinks entry waiting for a `complete`; a
     # matched/no_block one is almost always deliberate (thumb, alias, exclude list) and

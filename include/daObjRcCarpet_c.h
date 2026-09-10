@@ -23,7 +23,7 @@
  * constructor/destructor of its own -- matching the ONE call
  * (_ZN9ModelAnimD1Ev) the D1 relocations show, beyond the calls
  * include/daObjPathLift_c.h's own D1 already documents for the base's
- * teardown (__destroy_arr, MovingMeshColliderD1Ev, ModelD1Ev, dActor_cD2Ev).
+ * teardown (__cxa_vec_cleanup, MovingMeshColliderD1Ev, ModelD1Ev, dActor_cD2Ev).
  *
  * dPathLiftActor_c owns the PathPtr at +0x430 and the tail fields at +0x428,
  * +0x42c, +0x43c and +0x440. Both descendants construct the PathPtr at the

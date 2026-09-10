@@ -15,6 +15,12 @@ original filenames. Ask scouts for specific missing evidence. Ask the source
 reviewer to examine the candidate before final proof. Do not share an editing
 worktree or let a helper silently expand your reservation.
 
+Resolve source-review findings before offering a finished candidate. A retained
+bridge needs the cleaner alternative tested under the pinned compiler, with the
+result and durable experiment artifact recorded. Accepted deferred reconstruction
+belongs on the class issue with its next owner. Keep the PR's completion claims
+consistent with that remaining work.
+
 The target is plausible 2004 C++ with exact emitted bytes and destinations:
 real methods and fields where evidenced, compiler-generated lifecycle machinery
 where it matches, and narrow documented ABI bridges at measured compiler walls.

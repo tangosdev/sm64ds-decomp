@@ -1,0 +1,122 @@
+{
+  "id": "arm9/__cxa_vec_cleanup",
+  "module": "arm9",
+  "source": "src/__cxa_vec_cleanup.cpp",
+  "promoted_source": "src/__cxa_vec_cleanup.cpp",
+  "status": "text-verified",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "ONE FUNCTION, THREE SECTIONS. 0x0207328c..0x02073300 is a single MSL C++ runtime array-destroy helper whose out-of-line catch landing pad the symbol table had split off as func_020732e8. The cartridge's own .exceptix record at 0x02073988 declares the function length as 0x74 = 0x5c + 0x18, which is the direct evidence that the two ranges are one function and one translation unit.",
+    "THE UNWIND RECORDS ARE THIS TU'S OUTPUT. Compiled with tools/rombuild.py's exact command (2004/b56, CFLAGS carrying -Cpp_exceptions off, -lang c++ because of the //cpp marker), the in-file `#pragma exceptions on` wins and the object carries .text 116, .exception 20 and .exceptix 12. All three reproduce the cartridge byte for byte outside relocation slots, and every slot resolves to the symbol config/arm9/relocs.txt records.",
+    "NOT FROM tools/tu_map.py. The arm9 main module is reported under-segmented and emits one unit for 0x20049f0..0x20707a4; this entry was assembled by hand from the .exceptix length field."
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x0207328c",
+      "end": "0x02073300"
+    },
+    {
+      "name": ".exception",
+      "start": "0x0207372c",
+      "end": "0x02073740"
+    },
+    {
+      "name": ".exceptix",
+      "start": "0x02073988",
+      "end": "0x02073994"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "__cxa_vec_cleanup",
+      "address": "0x0207328c",
+      "size": "0x00000074",
+      "legacy_source": "src/__destroy_arr.c",
+      "ordinal": 0
+    }
+  ],
+  "data": [],
+  "rodata": [],
+  "bss": [],
+  "exception": [
+    {
+      "symbol": "@ET@__cxa_vec_cleanup",
+      "address": "0x0207372c",
+      "size": "0x14",
+      "evidence": "compiler-emitted exception frame record for this function's single try; STB_LOCAL STT_OBJECT at offset 0 of the object's only .exception section, and the 20 bytes are identical to the cartridge with no relocation slots at all"
+    }
+  ],
+  "exceptix": [
+    {
+      "symbol": "@EX@__cxa_vec_cleanup",
+      "address": "0x02073988",
+      "size": "0xc",
+      "evidence": "compiler-emitted unwind index entry: function pointer, length 0x74, frame pointer. The middle word is the literal 0x00000074 on both sides, which is the cartridge declaring this function's length; the two pointer words are relocation slots and both resolve"
+    }
+  ],
+  "compiler_only_output": [],
+  "notes": [
+    "PRODUCTION MODE IS DELIBERATELY ABSENT, and that is the honest state of this entry. tools/rombuild.py intact_tu_policies admits an intact-object TU only on a scratch-data-verified ordinary link that proves every claimed range, all modules and the full ROM. That proof cannot be produced anywhere the dsd delink step aborts, which is every worktree tried so far ('function Div could not be analyzed: IllegalIns { address: 200407e, ins: Thumb(Ins { code: ede6, op: BlxI }) }'). Requesting the intact-object path without it is a hard BuildError, so this entry records the measured shape and does not request the path. config/arm9/delinks.txt therefore claims only the .text range, which is exactly what the build produces.",
+    "WHAT THE BUILD DOES TODAY. src/__cxa_vec_cleanup.cpp is enrolled as an ordinary single-function source, so tools/objisolate.py takes the one selected symbol and drops the two unwind sections to size 0 (isolate plan drop [5, 6, 7], dead ['@ET@__cxa_vec_cleanup', '@EX@__cxa_vec_cleanup']). The cartridge's copies of those 32 bytes come from the dsd gap objects, as they did before this file existed. Nothing in this entry changes a ROM byte.",
+    "WHY THE ENTRY IS WORTH HAVING ANYWAY. Until the schema widening that lands with it, the shape could not be written down at all: tools/tubuild.py manifest_section_claims refused both section names against _TU_SECTION_NAMES, and with the names admitted _SECTION_SYMBOL_FIELDS had no field in which to license @ET@/@EX@, so tools/tu_production.py prepare_intact_object refused the entry a second time. With both tables widened the same call ACCEPTS this object whole: 1056 bytes, objectAudit extraSections [], .text 116 + .exception 20 + .exceptix 12 surviving intact and all three still matching the cartridge. The machinery is willing; only the link proof is missing.",
+    "arm9 holds 636 bytes of .exceptix in retail. This is the first entry in the manifest to claim any of it."
+  ],
+  "relocations": [
+    {
+      "section": ".exceptix",
+      "source": "0x02073988",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "__cxa_vec_cleanup",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0207328c"
+    },
+    {
+      "section": ".exceptix",
+      "source": "0x02073990",
+      "type": "R_ARM_ABS32",
+      "kind": "load",
+      "symbol": "@ET@__cxa_vec_cleanup",
+      "addend": 0,
+      "target_module": "arm9",
+      "target_address": "0x0207372c"
+    }
+  ],
+  "externalized_output": [],
+  "verification": {
+    "round": "hand-run of tools/rombuild.py's compile command plus tools/objisolate.py and tools/tu_production.py prepare_intact_object, run link100 lane DESTROYARR2",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "comparison": "tools/match.py --strict-relocs for .text; raw byte compare against extracted/arm9_dec.bin for .exception and .exceptix, relocation slots wildcarded from the object's own .rela records",
+    "functions_matched": 1,
+    "functions_declared": 1,
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS",
+      "every_declared_section_bytes_match": "PASS"
+    },
+    "linkcheck": {
+      "round": "NOT RUN",
+      "result": null,
+      "phases": {
+        "delink": false,
+        "lcf": false,
+        "compile": false,
+        "link": false,
+        "checkModules": false,
+        "checkSymbols": false,
+        "rom": false
+      },
+      "tuRanges": [],
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [],
+      "symbolCheckBaselineErrors": [],
+      "rom": {}
+    }
+  }
+}

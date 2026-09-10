@@ -1,13 +1,12 @@
 //cpp
 // @symbol _ZN4Coin13OnTurnIntoEggER6Player
-/* recovered: real C++ method, vtable slot 19. Declared to return int (base's
- * dActor_c::OnTurnIntoEgg signature), but -- like the .c file this replaces --
- * every path is a tail call and none of them sets r0 explicitly; the ROM
- * bytes end right after the last bl. */
+/* Reconstructed C++ method, vtable slot 19. Each path delegates the coin
+ * payout to a helper and returns no value, matching the shared actor hook's
+ * void contract. Calls and epilogues alone do not identify an original type. */
 #include "decl_common.h"
 #include "Coin.h"
 
-int Coin::OnTurnIntoEgg(Player &player)
+void Coin::OnTurnIntoEgg(Player &player)
 {
     char *c = (char *)this;
     char *p = (char *)&player;

@@ -55,14 +55,16 @@
  * were re-measured: Render is byte-exact under the pinned 2004/b56, and
  * InitResources compiles to output IDENTICAL to its pre-fold bytes.
  *
- * Only src/_ZN4Door13InitResourcesEv.c ALREADY FAILED TO BYTE-MATCH before
- * the rename -- config/arm9/overlays/ov100/delinks.txt carries no `complete`
- * marker for it, so dsd supplies that range from the cartridge and the ROM
- * build never compiles the file -- and stays that way. The gap is one
- * instruction: candidate 0x300 against the ROM's 0x2fc, measured before and
- * after the fold and unchanged by it. build_pin reports that as "999 word(s)
- * differ", which is match.py's sentinel for "the sizes differ at all", not a
- * count.
+ * src/_ZN4Door13InitResourcesEv.c ALREADY FAILED TO BYTE-MATCH before the
+ * rename, by one instruction (candidate 0x300 against the ROM's 0x2fc), and
+ * the fold neither caused nor changed that. It byte-matches now: the gap was
+ * an address the compiler materialised for a read-modify-write of param1
+ * that the ROM keeps folded into both accesses, and the file's own comment at
+ * that line records the respelling that closes it.
+ *
+ * config/arm9/overlays/ov100/delinks.txt still carries no `complete` marker
+ * for that range, so dsd supplies it from the cartridge and the ROM build
+ * does not yet compile the file. That is a layout question and is untouched.
  *
  * SIZE. daDoor_c_classInit.c calls `_ZN7fBase_cnwEj(328)` -- 0x148 -- for a fresh Door,
  * then _ZN8dActor_cC2Ev and _ZN9ModelAnimC1Ev at +0xd4. dActor_c is 0xd0

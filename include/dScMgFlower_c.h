@@ -47,7 +47,7 @@
 #include "dScMgSingle3DBase_c.h"
 
 extern "C" void func_ov006_020c3e70(char *t); /* decl_common.h's own signature */
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_0212a650(void);
 
 struct dScMgFlower_c : dScMgSingle3DBase_c {
@@ -95,7 +95,7 @@ struct dScMgFlower_c : dScMgSingle3DBase_c {
                                 +0x03 u8   unk3          +0x14 s32  unk14
                                 +0x1c s16  angle         +0x18 s32  unk18
                               Left as bytes on purpose: ~dScMgFlower_c() destroys
-                              the elements itself through __destroy_arr, and a
+                              the elements itself through __cxa_vec_cleanup, and a
                               typed member with Vec2's destructor inside would
                               make the compiler add a second, implicit pass. */
     u8  pad_51f8[0xdc0];   /* 0x51f8 -- opaque object, see file banner */

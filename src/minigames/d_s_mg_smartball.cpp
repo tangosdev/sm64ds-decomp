@@ -18,7 +18,7 @@
 extern "C" {
 extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern int _ZN11dScMgBase_cC2Ev(void *p);
-extern void func_020733a8(void *obj, int a, int b, void *cb1, void *cb2);
+extern void __cxa_vec_ctor(void *obj, int a, int b, void *cb1, void *cb2);
 extern int _ZTV16dScMgSmartball_c[];
 extern void func_0203d738(void);
 extern void NullDestructor_0203d47c(void);
@@ -47,10 +47,10 @@ extern "C" void *dScMgSmartball_c_classInit(void) {
     if (o != 0) {
         _ZN11dScMgBase_cC2Ev(o);
         *(int *)o = (int)_ZTV16dScMgSmartball_c;
-        func_020733a8(o + 0x47c8, 5, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-        func_020733a8(o + 0x4854, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-        func_020733a8(o + 0x48d4, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
-        func_020733a8(o + 0x599c, 0x40, 0x24, (void *)func_ov006_02119900, (void *)func_ov006_0210d894);
+        __cxa_vec_ctor(o + 0x47c8, 5, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
+        __cxa_vec_ctor(o + 0x4854, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
+        __cxa_vec_ctor(o + 0x48d4, 0x10, 8, (void *)func_0203d738, (void *)NullDestructor_0203d47c);
+        __cxa_vec_ctor(o + 0x599c, 0x40, 0x24, (void *)func_ov006_02119900, (void *)func_ov006_0210d894);
     }
     return o;
 }

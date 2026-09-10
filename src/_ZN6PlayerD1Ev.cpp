@@ -19,11 +19,12 @@
  * pair, differing by exactly what the ABI says separates them.
  *
  * `__destroy_arr` was a bulk rename with no recorded evidence. It described
- * the role correctly and named the function wrongly. config/arm9/symbols.txt
- * now carries `__cxa_vec_cleanup` as a size-0 alias at the same address, the
- * mechanism this tree already uses for five ITCM runtime helpers: a relocation
- * needs a symbol's address, never its size, and the gap object holding this
- * address has exactly zero slack, so 0x0 is the only size that can link.
+ * the role correctly and named the function wrongly, so config/arm9/symbols.txt
+ * now carries `__cxa_vec_cleanup` as the sized name at 0x0207328c and the
+ * invented spelling is gone. It was a size-0 alias for a while, which works only
+ * while dsd owns the range: a gap object defines every symbols.txt row in its
+ * range, and the moment 0x0207328c was carved out to source the alias stopped
+ * being a definition and the real link failed Undefined on it.
  *
  * The reverse-order member destruction below is not written anywhere any more.
  * It is Player.h's declaration order, read backwards by the compiler.

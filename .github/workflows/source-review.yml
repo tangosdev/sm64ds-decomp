@@ -1,0 +1,51 @@
+name: Source review
+
+# Use only default-branch tools and API metadata. Never execute or check out PR
+# code in this privileged workflow, including when the PR changes these tools.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+  push:
+    branches: [main]
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: 'PR number, or empty to refresh all open PRs'
+        required: false
+
+permissions:
+  contents: read
+  pull-requests: read
+  checks: write
+
+# Serialize publication; each run reads current head/base and queue state.
+concurrency:
+  group: source-review-publication
+  cancel-in-progress: false
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check review enforcement
+        run: |
+          python -m unittest discover -s tools -p 'test_*source_review.py' -v
+          python -m unittest discover -s tools -p 'test_classqueue*.py' -v
+      - name: Publish candidate source review
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW_REPO: ${{ github.repository }}
+          REVIEW_PR: ${{ github.event.pull_request.number || inputs.pr }}
+        run: |
+          args=(--repo "$REVIEW_REPO" --publish)
+          if [ -n "$REVIEW_PR" ]; then args+=(--pr "$REVIEW_PR"); fi
+          python tools/check_pr_source_review.py "${args[@]}"

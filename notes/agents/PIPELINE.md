@@ -47,9 +47,19 @@ owns the order and composition of work landing on main.
 
 The default task sequence is `producer -> verifier -> integrator`. A scout-only
 deliverable or a focused follow-up may use fewer stages if its scope says so.
-A source reviewer normally reports to the producer before handoff; if it edits,
-make that an explicitly owned stage and verify the resulting commit afterward.
+A source reviewer reports findings before handoff. Independent source acceptance
+is required at verification and before integration; it is recorded against the
+exact candidate and tested base, not inferred from a byte pass. The verifier may
+perform this review, or a separate humanizer may own an earlier verify stage.
+If a reviewer edits, make that an explicitly owned write stage and have another
+session review and verify the resulting commit afterward.
 Role names describe responsibilities, not preferred models.
+
+The [source-review upgrade](SOURCE-REVIEW-CUTOVER.md) adds executable enforcement
+and a required GitHub check. It preserves this v2 task protocol and receipt format;
+remote state schema 3 rejects old clients after explicit coordinator activation.
+Original task workflow/source pins remain historical facts. The separately recorded
+`source_review_policy.workflow_commit` identifies the active review tools.
 
 ## Before editing
 
@@ -129,6 +139,14 @@ Each handoff records these dimensions without combining them into one score:
 complete. Keep the next concrete improvement on the class issue. Original helper
 functions need not become methods merely to increase a count.
 
+Each source finding has a stable ID, location, kind and disposition. Correctness
+and provenance findings must be fixed. A reconstruction finding may retain a
+measured compiler constraint with pinned experiment artifacts, or be accepted as
+deferred work with an issue, owner and a `partial` completion assessment. Rework
+must carry every previous finding forward; it cannot make a blocker disappear by
+renaming its kind or omitting it. Continuations name `predecessor_tasks` so the queue
+preserves findings and contributing sessions across task boundaries.
+
 Required proof is defined by AGENTS.md, the task's change scope, and current gate
 tools. Source/header edits require exact affected-consumer and full-ROM checks;
 TU/lifecycle work also requires complete emitted-object and metadata evidence.
@@ -142,6 +160,15 @@ bookkeeping, publishes the final PR, and coordinates its landing. Small coherent
 batches may be useful; compatibility follows actual shared resources and dependencies.
 Use the current private validator and relevant static gates on the proposed composition.
 A previous green head/base is not proof for a changed composition.
+
+A different composition commit needs a separately published independent review
+of that commit and base. Use a verify-only review task that reserves its own
+report path, reads the source via `requires`, names the integrator as
+`input_session`, and inherits the original task with `predecessor_tasks`.
+The source reservation stays with its existing owner. The integrator records
+`composition_review_task`; an embedded report with an invented session label is
+not an independently published review. Refresh the GitHub check after review or
+rework and recheck live review state immediately before landing.
 
 A queue's completed stages do not themselves prove a merge. The integrator records
 the PR URL, tested candidate, tested base, and resulting main commit in its evidence.

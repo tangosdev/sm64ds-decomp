@@ -1,7 +1,8 @@
 # Handoff: daYurei_Mucho_c (ov065)
 
-This document describes this branch. Nothing below is a plan; every number was
-measured at this tree.
+The original handoff below is preserved as historical evidence of its named
+revisions. Current corrections and proof identities follow in the dated
+2026-09-10 source-review section.
 
 ## Identity and resumption
 
@@ -411,3 +412,41 @@ copy views continue under #2478. SharedFilePtr still has no recovered fields in
 its header: retain the measured direct +4 file-pointer load rather than calling
 LoadFile or inventing a field. The neighboring func_ov065_021177e4 belongs to
 daBasabasa_c; its previously accepted provenance-only correction is preserved.
+
+### Current-main composition
+
+The repaired class now includes approved main
+`a0cc78fbd18f166ba67fca7c38b63bca348c8edd`. YUR-01 carries main's
+`void OnTurnIntoEgg` contract into both the class declaration and definition.
+The former Snufit header and egg-method shard remain deleted; main's contract
+correction is preserved in `include/daYurei_Mucho_c.h` and the promoted TU. The
+shared Actor header is byte-for-byte main's version.
+
+The rename-ledger conflict was resolved as the exact three-way row multiset
+(3,573 rows), and attribution equals the recursive three-way merge. Both parent
+histories and their contributor records are preserved. The neighboring
+`func_ov065_021177e4` retains the accepted input's provenance-only correction.
+
+Fresh 2004/b56 compilation on this composition verifies all 23 functions and
+4,280 text bytes, with zero blind words or differences. All 156 symbol references
+resolve to permitted modules; eight references use the overlay sets explicitly
+listed in the relocation configuration. Every function's object bytes equal the
+class-local checkpoint. Emitted metadata remains 6 VERIFIED and 5 PARTIAL; this
+text-only TU owns no data or BSS. All 11 commented field offsets match, including
+the repaired tail, and the class spans 0x3e4.
+
+The queue's final immutable candidate and evidence identify the broader build,
+consumer, attribution and static checks separately. These source corrections
+remain partial under #2478: 10 native method symbols, 12 address-named helpers and
+one manual factory. Independent verification and terminal PR validation are still
+required. Any later main advance requires review of the resulting composition.
+
+The independent read-only review also corrected three remaining provenance
+claims before the final offer. YUR-06 replaces the old opening that presented
+historical counts as current. YUR-07 describes CleanupResources as ignoring its
+incoming object pointer; unused r0 does not prove that the ROM lacked `this`.
+YUR-08 corrects the claim that a member definition cannot appear in an `extern
+"C"` block: class members retain C++ linkage there. The verifier wrapped the
+existing OnYoshiTryEat definition in such a block under 2004/b56 and obtained an
+identical complete object. The twelve free helpers retain their existing C
+linkage; no code or symbol identity was changed by these comment corrections.

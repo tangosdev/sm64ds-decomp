@@ -50,6 +50,10 @@
    "ref": "src/_ZN8PlatformD0Ev.cpp"
   },
   {
+   "file": "notes/agents/handoffs/issue-2411-humanizer-2.md",
+   "ref": "src_tu/actors/Koopa"
+  },
+  {
    "file": "notes/archive/crack-loop-runbook.md",
    "ref": "notes/pret-idioms.md"
   },
@@ -568,6 +572,10 @@
   {
    "file": "tools/test_srcpath.py",
    "ref": "src/unnamed/ov006"
+  },
+  {
+   "file": "tools/test_validate_merge.py",
+   "ref": "src/__destroy_arr.c"
   },
   {
    "file": "tools/trace/actors.py",
