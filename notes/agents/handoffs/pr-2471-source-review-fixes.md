@@ -1,5 +1,109 @@
 # PR #2471 declaration-agreement corrections
 
+## September 10 parser continuation
+
+This owned producer stage continues the preserved checkpoint
+`f2bf9cea85c7144580566c432a125860a7151d80` under session
+`codex-r2398-declgate-fix-0910`, in `C:/tmp/sm64ds-r2471-0910`.
+The original source base and prior review history below remain preserved.
+Only the checker, its tests and this handoff change in this stage.
+
+Four independently reproduced false passes are repaired:
+
+- Braced data initializers retain every later comma-separated object, including
+  nested initializers, pointers and call-valued scalar initializers.
+- A leading `@symbol` marker names only the first object in its statement.
+- Static functions cannot supply an external symbol's reference signature.
+- Unmarked namespace C++ functions cannot supply a flat global identity. Explicit
+  C linkage and marked namespace definitions retain their proven identities.
+
+Brace nesting is enabled only for data declarator parsing. Existing typedef,
+parameter and other token normalization keep their previous behavior. No scan
+floor, gate scope, baseline, source, header or executable workflow rule changes.
+The earlier corrected explanation of reconstructed interface consistency remains
+intact; this checker does not establish original-source identity or byte accuracy.
+
+Validation of this parser revision:
+
+- All 70 tests pass, including four new full-size Git controls. Each uses the
+  production scan floors with 2,000 padding files and 6,000 declarations: clean
+  input passes, and each incorrect mutation fails both full and changed gates.
+- Python-name checks pass with no unresolved names, syntax failures or advisories.
+- The actual full-tree gate still exits 1. It scans 9,635 files and 39,980
+  declarations, with 69 data definitions and two unparsed declarators retained.
+- The unchanged baseline has 23,049 unique keys; the corrected parser observes
+  23,056, with 12 added and five removed. Relative to the preserved parser at
+  `f2bf9cea`, five parameter keys replace two incorrect arity keys. Leading symbol
+  markers previously attached to static G3 helpers in `func_ov007_020caeac.c` and
+  `func_ov075_0211a948.c`; excluding those helpers selects the actual external
+  definitions and exposes their callers' parameter disagreements.
+
+The read-only inventory is `build/declgate-final-inventory.json`; the test log is
+`build/declgate-tests-final.log`. The original failing controls remain under
+`build/comparison2471/`. The producer evidence records the immutable output and
+artifact hashes. No ROM build is required or claimed for this tooling change.
+
+### Exact diagnostic delta on the preserved source tree
+
+Each key is `(symbol, file, kind:got)`; line numbers identify the inspected source
+but are not part of the key. **New** means a real mismatch between two existing
+source interfaces that the earlier parser did not report. **Re-keyed** means an
+existing reported inconsistency now uses the corrected definition or identity.
+These are source consistency classifications, not proof that a particular type
+is the correct ROM reconstruction or that the mismatch changes retail bytes.
+
+| Symbol | Declaring source | Added key | Selected reference and expected type | Classification |
+|---|---|---|---|---|
+| `data_020a4b6c` | `include/decl_common.h:855` | `return:int` | `src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp:16`: `char` | Re-keyed |
+| `data_020a4b6c` | `src/func_02044120.c:2` | `return:int` | `src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp:16`: `char` | Re-keyed |
+| `data_020a4ba8` | `src/func_02043880.c:41` | `return:int` | `src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp:18`: `char` | Re-keyed |
+| `data_020a4ba8` | `src/func_02044120.c:2` | `return:int` | `src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp:18`: `char` | Re-keyed |
+| `data_ov045_02112fdc` | `include/decl_common.h:1129` | `return:int []` | `src/game/actors/d_a_obj_km2_gura.cpp:29`: `GuraResourceDescriptor` | New |
+| `data_ov100_02148390` | `include/decl_common.h:1670` | `return:signed char []` | `src/game/actors/d_a_star_gate.cpp:97`: `daStarGateInfo []` | New |
+| `data_ov100_02148948` | `include/decl_common.h:38` | `return:Vector3` | `src/game/actors/d_a_star_gate.cpp:71`: `StarGateVector3` | Re-keyed |
+| `func_ov007_020caeac` | `src/func_ov007_020ca5f0.c:5` | `param:#1 int` | `src/func_ov007_020caeac.c:34`: `#1 Vector3 *` | Re-keyed |
+| `func_ov007_020caeac` | `src/func_ov007_020ca5f0.c:5` | `param:#2 int` | `src/func_ov007_020caeac.c:34`: `#2 Vector3_16 *` | Re-keyed |
+| `func_ov007_020caeac` | `src/func_ov007_020ca5f0.c:5` | `param:#3 int` | `src/func_ov007_020caeac.c:34`: `#3 int *` | Re-keyed |
+| `func_ov007_020caeac` | `src/func_ov007_020ca5f0.c:5` | `param:#4 int` | `src/func_ov007_020caeac.c:34`: `#4 int *` | Re-keyed |
+| `func_ov075_0211a948` | `src/func_ov075_0211afb0.c:24` | `param:#1 void *` | `src/func_ov075_0211a948.c:34`: `#1 char *` | Re-keyed |
+
+All five removed keys are reference/identity corrections; no source was healed:
+
+| Symbol | Source file and line | Removed key | Reason |
+|---|---|---|---|
+| `data_020a4b6c` | `src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp`:14 and 16 | `return:char` | Recognized char definition at line 16 replaces the int declaration plurality; two existing int declarations now receive the keys. |
+| `data_020a4ba8` | `src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp`:18 | `return:char` | Recognized char definition replaces the int declaration plurality; two existing int declarations now receive the keys. |
+| `data_ov100_02148948` | `src/game/actors/d_a_star_gate.cpp`:70; definition 71 | `return:StarGateVector3` | Recognized StarGateVector3 definition replaces the Vector3 declaration plurality; the existing header disagreement receives the key. |
+| `func_ov007_020caeac` | `src/func_ov007_020ca5f0.c`:5 | `arity:13` | Marker previously selected private G3_Vtx at src/func_ov007_020caeac.c:18; actual external definition at line 34 has the same arity as the caller but four parameter mismatches. |
+| `func_ov075_0211a948` | `src/func_ov075_0211afb0.c`:24 | `arity:1` | Marker previously selected private G3_TexImageParam at src/func_ov075_0211a948.c:22; actual external definition at line 34 has the same arity as the caller but one parameter mismatch. |
+
+The two **New** rows are concrete source interface inconsistencies:
+`GuraResourceDescriptor` contains three pointers (`d_a_obj_km2_gura.cpp:17`), while
+its header extern claims an integer array. `daStarGateInfo` contains two signed
+bytes and two signed halfwords (`include/daStarGate_c.h:13`), while its header
+extern claims a signed-byte array. Their corrective source scope and byte/consumer
+proof must be established separately. The other ten additions relocate or refine
+existing diagnostics and require a proven migration or source repair rather than
+an undifferentiated baseline reset.
+
+The gate remains red until this integration issue is resolved. The orchestrator
+will arrange the source repairs or a narrowly proven diagnostic migration after
+independent review; this handoff does not transfer the unresolved work to an
+unspecified future owner. The machine-readable classification is
+`build/declgate-diagnostic-triage.json`, supported by
+`build/declgate-reference-migration.json`. The baseline is unchanged.
+
+Finding IDs remain `declgate-shared-type-scope`, `declgate-config-scope`,
+`declgate-renames`, `declgate-data-definitions`, `declgate-baseline`,
+`declgate-source-provenance` and `declgate-function-ownership`. The parser and
+provenance corrections are offered for independent verification. The baseline
+finding remains open: the baseline was not edited, and this checkpoint is not a
+passing full-tree gate or merge acceptance. The earlier seven-addition,
+three-removal baseline proposal below is historical and is not the current delta.
+Do not apply that patch or narrow acceptance to make this checkpoint pass.
+
+## Preserved September 8 handoff
+
 This continues the existing tooling PR; it does not start class reconstruction.
 The original PR branch and its independent review checkout remain preserved.
 
