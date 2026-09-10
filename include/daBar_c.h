@@ -25,7 +25,7 @@ struct daBar_c : dActor_c {
     virtual void OnPendingDestroy();
 
     static void *operator new(unsigned long size) {
-        return _ZN7fBase_cnwEj((unsigned)size);
+        return _ZN7fBase_cnwEj(size);
     }
 
     /* Wrappers over the existing scalar SetRanges/Init definitions.
@@ -45,7 +45,7 @@ typedef char daBar_c_size_must_be_0x108[
 
 struct DaBarSpawnInfo {
     daBar_c *(*classInit)();
-    s16 executeOrder;      /* +4 behavior/execute priority */
+    s16 executeOrder;      /* +4: also BAR registry id 0x011f = 287 */
     s16 drawOrder;         /* +6 render priority */
     u32 actorFlags;
     Fix12i clipOffsetY;

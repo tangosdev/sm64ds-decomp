@@ -9,6 +9,11 @@
  * registry). Retail does not store those spellings.
  *
  * deslop
+ * Leftover: SetRanges / InitClsn are TU-local wrappers over the
+ *   mangled dActor_c::SetRanges / dCcAc_c::Init symbols. A real
+ *   Fix12<int> method form on those headers changed this TU's
+ *   InitResources size. Wrappers stay here; typed extern "C" of
+ *   those mangled names must not land on the shared headers.
  */
 
 #include "daBar_c.h"
