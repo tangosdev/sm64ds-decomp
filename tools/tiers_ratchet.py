@@ -129,11 +129,32 @@ TWO FAILURE MODES OF `langmode_audit.py` THIS IS BUILT NOT TO REPEAT
      one across 2. The destination-level figures -- 7, 129, 122 -- are identical under
      both. Say which unit before comparing a re-derivation to these.
 
+     EVERY FIGURE IN THIS FILE'S PROSE IS FROZEN; THE ONES THE REPORT PRINTS ARE
+     NOT. That holds for this docstring, every function docstring below and every
+     comment: a docstring is built at import time, so computing a census into one
+     would make every import -- `tu_promote.py`'s included -- pay a
+     `tracked_sources()` and a whole `scan()` of the tree, and would make importing
+     this module fail outside a checkout. That is the one figure this tool cannot
+     derive where it states it. So the numbers in the prose are a measurement dated
+     2026-09-10, kept because the arguments need their magnitude, and they can go
+     stale without anything noticing. Nothing the tool PRINTS is in that position:
+     `promotion_census()` recomputes the population from the run's own scan and
+     manifest, `report_orphans()` prints those figures rather than quoting these, and
+     a test pins each one to a fixture whose population is not the tree's. Where a
+     number in this file's prose and a number in a report disagree, the report is
+     right and the prose is stale.
+
        - THE TARGET PASSES AND SO DOES ITS FILE: a TU promotion absorbed the file and
          the readable code is demonstrably still there. `tools/tu_promote.py:
-         converted_baseline_update` REWRITES the banked identity onto the destination,
-         leaving `count` unchanged -- the same readable code under a new name. A
-         promotion carried out by hand that never runs it leaves the identity dangling.
+         converted_baseline_update` REWRITES the banked identity onto the
+         destination. That leaves `count` unchanged only while the destination
+         identity is not banked already; when it is, the rewrite drops the legacy key
+         and inserts nothing -- literally `if target not in converted` -- so the set
+         loses one and `count` falls by one. Nothing readable left it, the target was
+         already inside, but "unchanged" is wrong by one every time, and measured
+         2026-09-10 it is wrong often: 645 of the 2,359 pairs name a target that is
+         banked already. A promotion carried out by hand that never runs
+         converted_baseline_update leaves the identity dangling.
          Eight did exactly that (four ukishima, four kurumajiku) and no gate saw them
          until PR #2530 rewrote them by hand; `classify_missing()` was forgiving them as
          `absorbed_clean` ownership transitions and `--check` was returning 0.
@@ -724,10 +745,19 @@ def rewrite_target(identity, dest, ownership, symbols):
 
     None when the symbol cannot be established: a `dest` scored per member, reached
     from a bare legacy path whose manifest row was not handed to this report. The
-    caller says so rather than printing a guess. A symbol CARRIED on the identity is
-    preferred over the manifest's, and is not checked here -- `target_state()` checks
-    it by looking the resulting identity up in the scan, which is the only check that
-    means anything: a symbol the destination does not define is scored by nothing.
+    caller says so rather than printing a guess.
+
+    A SYMBOL CARRIED ON THE IDENTITY IS PREFERRED OVER THE MANIFEST'S, and that
+    preference is not checked here. Nor is it fully checked downstream, which is the
+    part an earlier version of this docstring got wrong: looking the resulting
+    identity up in the scan -- what `target_state()` does -- proves exactly one thing,
+    that the destination defines that symbol. It does not prove the symbol is the code
+    this legacy path held, and `promoted_symbols()` holds a second, independent answer
+    to that for the same path. A scan lookup cannot see the two disagree, so
+    `target_state()` compares them itself and reports the disagreement on the row
+    instead of letting one silently win. Measured 2026-09-10: 0 of the 651 banked
+    identities carrying a `#symbol` disagree with the manifest, so this is a state a
+    hand rewrite introduces, not one the tree is in.
     """
     members = ownership.get(dest) or [pathlib.PurePosixPath(dest).stem]
     if len(members) <= 1:
@@ -758,6 +788,13 @@ def target_state(identity, dest, tracked, scores, ownership, symbols):
                    destination does not define: it names nothing, so it can be scored
                    by nothing, and rewriting onto it would recreate the orphan.
 
+    IN EVERY STATE, a `#symbol` carried on the identity that disagrees with the one
+    `promoted_symbols()` enrols the same legacy path under is named in the detail.
+    `rewrite_target()` keeps the banked spelling, and the scan lookup below cannot
+    notice the disagreement -- it only ever proves that the destination defines the
+    symbol it was handed. Two answers, one silently discarded, is how a rewrite onto
+    the wrong member of the right file survives a green run.
+
     It does NOT predict `--update`. That keys on the whole file -- see
     `destination_state()` -- and the two are allowed to disagree.
     """
@@ -774,15 +811,94 @@ def target_state(identity, dest, tracked, scores, ownership, symbols):
         return ("unvouched",
                 f"it is scored per member and no manifest row here enrolls {rel} "
                 "under a symbol", None)
+    # VFY-2543-19. The scan lookup below is not "the only check that means
+    # anything", which is what this file used to claim: it proves the destination
+    # defines the symbol, never that the symbol is the code the legacy path held.
+    # `promoted_symbols()` answers that second question for the same path, and
+    # `rewrite_target()` discards its answer whenever the banked identity carries one
+    # of its own. Compare them here so the row says so rather than one winning in
+    # silence.
+    rel, _, carried = identity.partition("#")
+    enrolled = symbols.get(rel)
+    clash = ""
+    if carried and enrolled and enrolled != carried and target == f"{dest}#{carried}":
+        clash = (f"; the manifest enrols {rel} under {enrolled}, not {carried}, "
+                 "and this tool cannot say which is right")
     score = scores.get(target)
     if score is None:
         return ("unvouched",
                 f"nothing in this scan scored {target} -- the destination does not "
-                "define that symbol", target)
+                f"define that symbol{clash}", target)
     failed = [k for k in tiers.CRITERIA if not score[k]]
     if failed:
-        return ("failing", "; ".join(tiers.CRITERION_LABEL[k] for k in failed), target)
-    return "converted", "it passes all five criteria", target
+        return ("failing",
+                "; ".join(tiers.CRITERION_LABEL[k] for k in failed) + clash, target)
+    return "converted", f"it passes all five criteria{clash}", target
+
+
+PromotionCensus = collections.namedtuple(
+    "PromotionCensus",
+    "pairs destinations dest_converted dest_failing dest_unvouched at_failing "
+    "target_passes target_fails target_unvouched failing_with_a_passing_target")
+
+
+def promotion_census(moves, tracked, scores, ownership, symbols):
+    """The population the orphan diagnostic quotes, computed from THIS run.
+
+    THE FIGURES IN THAT DIAGNOSTIC USED TO BE TYPED IN. Three mutants that falsified
+    them -- 620 for the class size, 2,329 for the pool, 122 of 129 for the spread --
+    left the whole suite green, because nothing in the tool or the tests compared a
+    printed number to any data. A number a reader is asked to weigh a decision against
+    has to be derived from the same scan the rest of the block is derived from, or it
+    is a claim about a tree that no longer exists.
+
+    Everything here comes from arguments `report_orphans()` already holds, so this
+    costs one pass over `promoted_moves()` and nothing else. The destination verdict
+    is memoised because 2,359 pairs share 136 destinations.
+
+    The two units this tool can be counted in are described in the module docstring;
+    this one is the (banked path, destination) PAIR, which is what `moves` holds.
+
+      pairs / destinations               everything a promoted manifest entry names.
+      dest_*                             `destination_state()` over those files.
+      at_failing                         pairs whose destination FAILS -- the pool the
+                                         report's two failing classes divide up.
+      target_passes / _fails / _unvouched  `target_state()` over that pool, which is
+                                         the split the report is keyed on.
+      failing_with_a_passing_target      how many distinct failing destinations hold
+                                         at least one passing target. "620 over 122 of
+                                         the 129" is the sentence that makes the
+                                         file-keyed reading indefensible.
+    """
+    dest_state = {}
+    at_failing = passes = fails = unvouched = 0
+    fruitful = set()
+    for identity, (_tu_id, dest) in (moves or {}).items():
+        if dest not in dest_state:
+            dest_state[dest] = destination_state(dest, tracked, scores, ownership)[0]
+        if dest_state[dest] != "failing":
+            continue
+        at_failing += 1
+        state = target_state(identity, dest, tracked, scores, ownership, symbols)[0]
+        if state == "converted":
+            passes += 1
+            fruitful.add(dest)
+        elif state == "failing":
+            fails += 1
+        else:
+            unvouched += 1
+    states = collections.Counter(dest_state.values())
+    return PromotionCensus(
+        pairs=len(moves or {}),
+        destinations=len(dest_state),
+        dest_converted=states["converted"],
+        dest_failing=states["failing"],
+        dest_unvouched=states["unvouched"],
+        at_failing=at_failing,
+        target_passes=passes,
+        target_fails=fails,
+        target_unvouched=unvouched,
+        failing_with_a_passing_target=len(fruitful))
 
 
 OrphanRow = collections.namedtuple(
@@ -843,7 +959,7 @@ def orphan_groups(orphans, moves, tracked, scores, ownership, symbols):
 
 
 def report_orphans(orphans, moves, exceptions_path, tracked, scores, ownership,
-                   symbols):
+                   symbols, banked):
     """Print the orphan diagnostic, split by what a rewrite would actually create.
 
     FIVE CLASSES, AND THE REMEDY TEXT DIVERGES AT EVERY SPLIT. All five are orphans by
@@ -881,8 +997,16 @@ def report_orphans(orphans, moves, exceptions_path, tracked, scores, ownership,
 
     `UpdateBehaviourPin` in the test file runs the real `--update` for these classes, so
     this prose cannot quietly drift away from the tool it describes.
+
+    `banked` is the set the orphans came out of, and it is here for one sentence: what
+    a rewrite does to `count`. That depends on whether the target is in `banked`
+    already, so it is computed per row rather than asserted -- see the first block.
+    Every population figure printed below comes from `promotion_census()` over this
+    run's own data; none of them is typed in.
     """
     groups = orphan_groups(orphans, moves, tracked, scores, ownership, symbols)
+    census = promotion_census(moves, tracked, scores, ownership, symbols)
+    pool = f"{census.at_failing:,}"
 
     def rows(group, target=True):
         """One block per orphan, and every line names the unit it is talking about.
@@ -910,14 +1034,32 @@ def report_orphans(orphans, moves, exceptions_path, tracked, scores, ownership,
         print(f"\n{len(groups['clean'])} whose rewrite target PASSES, in a file that "
               "passes too -- REWRITE these:\n")
         rows(groups["clean"])
+        # What the rewrite does to `count` is a fact about these particular rows,
+        # so compute the resulting set rather than describe it: `after` is what the
+        # baseline would hold once every row above is rewritten, overlaps included.
+        after = len((banked - {row.identity for row in groups["clean"]})
+                    | {row.target for row in groups["clean"]})
+        already = sum(1 for row in groups["clean"] if row.target in banked)
         print("\n  Nothing regressed, and this report checked the identity named on\n"
               "  each row rather than assuming it: that exact identity is in this\n"
               "  scan and passes all five criteria. Only the baseline was left\n"
-              "  behind. Rewrite each orphan onto its target, leaving `count`\n"
-              "  unchanged. That is exactly what\n"
+              "  behind. Rewrite each orphan onto its target. That is exactly what\n"
               "  tools/tu_promote.py:converted_baseline_update does during a\n"
               "  promotion, out of the promotion's own manifest entry; a promotion\n"
               "  carried out by hand has to perform the same rewrite by hand.\n"
+              "\n"
+              "  WHAT THAT DOES TO `count` DEPENDS ON THE TARGET, so this run checked\n"
+              f"  each row rather than claim one answer: {already} of the "
+              f"{len(groups['clean'])} target(s) above are\n"
+              "  banked already, so rewriting every row moves count "
+              f"{len(banked)} -> {after}. A\n"
+              "  target that is not banked yet is a rename of one set element and\n"
+              "  leaves `count` alone; one that is banked already drops the orphan\n"
+              "  and inserts nothing -- converted_baseline_update does literally\n"
+              "  `if target not in converted` -- so the set loses one. Neither is a\n"
+              "  backslide, nothing readable left the set, but an earlier version of\n"
+              "  this block claimed `count` was unchanged either way and it was wrong\n"
+              "  by one every time the second case applied.\n"
               "\n"
               "  Do NOT re-bank these with --update. Measured on the eight identities\n"
               "  PR #2530 had to repair: --update with no --reason exits 0, reports\n"
@@ -938,11 +1080,14 @@ def report_orphans(orphans, moves, exceptions_path, tracked, scores, ownership,
               "  same file -- the last line of each row names it -- and that member\n"
               "  was already failing before the rewrite and is no worse after it.\n"
               "\n"
-              "  Measured 2026-09-10: 620 of the 2,329 banked paths whose destination\n"
-              "  fails are in this class, spread over 122 of the 129 failing\n"
-              "  destinations. It is not a corner case, and the two earlier versions\n"
-              "  of this report that judged these by the file told their readers the\n"
-              "  rewrite was a backslide when it was not.\n"
+              "  Computed from this run, not quoted from a note: "
+              f"{census.target_passes:,} of the {pool}\n"
+              "  banked paths whose destination fails are in this class, over "
+              f"{census.failing_with_a_passing_target:,} of\n"
+              f"  the {census.dest_failing:,} failing destinations. It is not a corner "
+              "case, and the two\n"
+              "  earlier versions of this report that judged these by the file told\n"
+              "  their readers the rewrite was a backslide when it was not.\n"
               "\n"
               "  THE NEXT PARAGRAPH KEYS ON THE FILE, NOT THE IDENTITY, AND THAT IS\n"
               "  NOT A CONTRADICTION. classify_missing() absorbs a moved path only\n"
@@ -981,7 +1126,9 @@ def report_orphans(orphans, moves, exceptions_path, tracked, scores, ownership,
               "  exists, and that is the true state of the tree, not an artifact of\n"
               "  the rewrite.\n"
               "\n"
-              "  This is the ordinary case: 1,709 of the 2,329 banked paths whose\n"
+              "  This is the ordinary case, and its size is computed from this\n"
+              f"  run rather than quoted: {census.target_fails:,} of the {pool} "
+              "banked paths whose\n"
               "  destination fails. A reconstructed TU must spell vague-linkage\n"
               "  symbols directly (_ZN7fBase_cnwEj, _ZN8dActor_cC2Ev,\n"
               "  _ZN8dActor_cD2Ev) or its range will not link, so no_mangled_refs\n"
@@ -1195,7 +1342,7 @@ def main():
         gained = len(current - banked)
         if orphans:
             report_orphans(orphans, moves, args.exceptions, tracked_set, scores,
-                           ownership, promoted_symbols())
+                           ownership, promoted_symbols(), banked)
             if missing:
                 print()
         if missing:
