@@ -183,8 +183,8 @@ int daBgSnmBdy_c::InitResources()
 int daBgSnmBdy_c::Behavior()
 {
     CallStateBehavior();
-    ((dCc_c *)((char *)&mCylinder))->Clear();
-    ((dCc_c *)((char *)&mCylinder))->Update();
+    mCylinder.Clear();
+    mCylinder.Update();
     UpdateModel();
     return 1;
 }
@@ -319,16 +319,12 @@ int daBgSnmBdy_c::State1()
 // @symbol _ZN12daBgSnmBdy_c10InitState2Ev
 int daBgSnmBdy_c::InitState2()
 {
-    char *c = (char *)this;
-    *(int *)(c + 0x9c) = -0x2000;
-    *(int *)(c + 0xa0) = -0x3c000;
-    {
-        int *p = (int *)(((int)c + 0xb0));
-        *p &= ~1;
-    }
-    *(int *)(c + 0x388) = 0;
-    *(int *)(c + 0x98) = 0;
-    *(int *)(c + 0x394) = 2;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
+    mFlags &= ~1;
+    mPathNode = 0;
+    mHorzSpeed = 0;
+    mStateValue = 2;
     return 1;
 }
 
@@ -452,9 +448,8 @@ int daBgSnmBdy_c::State3()
 // @symbol _ZN12daBgSnmBdy_c10InitState4Ev
 int daBgSnmBdy_c::InitState4()
 {
-    char *c = (char *)this;
-    *(int *)(((int)c + 0xb0)) &= ~1;
-    *(int *)(c + 0x394) = 4;
+    mFlags &= ~1;
+    mStateValue = 4;
     return 1;
 }
 
@@ -480,9 +475,8 @@ int daBgSnmBdy_c::State4()
 // @symbol _ZN12daBgSnmBdy_c10InitState5Ev
 int daBgSnmBdy_c::InitState5()
 {
-    char *c = (char *)this;
-    *(int *)(((int)c + 0xb0)) &= ~1;
-    *(int *)(c + 0x394) = 5;
+    mFlags &= ~1;
+    mStateValue = 5;
     return 1;
 }
 
