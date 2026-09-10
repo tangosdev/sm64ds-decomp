@@ -87,33 +87,53 @@ TWO FAILURE MODES OF `langmode_audit.py` THIS IS BUILT NOT TO REPEAT
      order to pass, so the baseline is not in every PR's diff and does not conflict the
      way a counter did. Re-bank it occasionally, on its own, to bank recent gains.
 
-     STALENESS HAS ONE EXCEPTION, AND IT COST A DAY. A path that LEAVES the tree fails
-     `--check` even when nothing regressed. Two ways that happens legitimately:
+     STALENESS HAS ONE EXCEPTION, AND IT COST A DAY. A banked identity whose FILE part
+     leaves the tree is an ORPHAN: it names nothing, so `scan()` never scores it,
+     `_failures()` returns None for it, and no criterion can fail. It sits in the
+     baseline claiming coverage it does not provide. `--check` computes
+     `orphaned_identities()` FIRST, removes the result from the backslide accounting,
+     and fails on it -- see that function's docstring for why this is not the question
+     `classify_missing()` answers, and why the split on `#` has to come first.
 
-       - TU promotion absorbs a file. `classify_missing()` resolves the gone path
-         through `tools/tu_manifest.py` and reports
-         `MOVED -- absorbed into <file> by TU promotion (<tu_id>)`.
+     THE REMEDY DEPENDS ENTIRELY ON WHY THE FILE LEFT, and the two answers want opposite
+     commands. `report_orphans()` therefore prints two different diagnostics, keyed on
+     whether the TU manifest names a destination:
 
-       - A plain file rename. `classify_missing()` has NO rename detection, so a move
-         reports `GONE -- not a tracked source file any more` and demands a `--reason`,
-         which would write a permanent fake backslide row. Until that is fixed, apply
-         the renames to the parent's banked set FIRST, then regenerate.
+       - A DESTINATION IS NAMED: a TU promotion absorbed the file.
+         `tools/tu_promote.py:converted_baseline_update` REWRITES the banked identity
+         from its old per-symbol path to `<promoted_source>#<symbol>`, leaving `count`
+         unchanged -- the same readable code under a new name. A promotion carried out
+         by hand that never runs it leaves the identity dangling. Eight did exactly that
+         (four ukishima, four kurumajiku) and no gate saw them until PR #2530 rewrote
+         them by hand; `classify_missing()` was forgiving them as `absorbed_clean`
+         ownership transitions and `--check` was returning 0.
 
-     NEITHER IS RESOLVED BY DROPPING THE ENTRY, and this tool used to think one of them
-     was. `tools/tu_promote.py:converted_baseline_update` REWRITES a banked identity
-     from its old per-symbol path to `<promoted_source>#<symbol>` when it promotes a
-     class, leaving `count` unchanged: the same readable code, renamed. A promotion done
-     by hand that never runs that function deletes the file and leaves the identity
-     pointing at a path that is not in the tree.
+         `--update` is the WRONG tool for this class, and not for the reason you might
+         expect. Measured on the pre-#2530 baseline: `--update` with no `--reason` exits
+         0, prints "8 of those left by TU promotion into a CONVERTED file (a move, not a
+         removal)", writes no exception row, and the following `--check` passes. It does
+         not refuse -- it ABSORBS the orphan, erasing the identity instead of rewriting
+         it, and the evidence of the defect with it. Rewrite; do not re-bank.
 
-     Such an entry is watching NOTHING. `scan()` only scores files git tracks, so the
-     identity never enters `scores`, no criterion can fail for it, and every later
-     `--check` reads it as clean. Eight of them (four ukishima, four kurumajiku)
-     accumulated that way and no gate saw them until PR #2530 rewrote them by hand --
-     `classify_missing()` was actively forgiving them as `absorbed_clean` ownership
-     transitions and returning 0. `orphaned_identities()` is now the FIRST thing
-     `--check` computes; see its docstring for why `absorbed_clean` is not the same
-     question and why the split on `#` has to come first.
+         `--check` failing here does NOT prevent that. One `--update` still launders
+         every orphan of this class, and the result is green. Closing it means teaching
+         `--update` to rewrite onto the manifest destination rather than absorb, which
+         this change does not do and which rule 1 above constrains: the fix cannot work
+         by refusing. Until then the gate makes the defect loud, not impossible.
+
+       - NO DESTINATION IS NAMED: this tool cannot tell a promotion from a rename from a
+         deletion, and must not pretend otherwise. `classify_missing()` has no rename
+         detection, so the entry reaches `backslid` and `--update` REFUSES it without a
+         `--reason` (measured: exit 2). If the file was renamed, apply the same rewrite
+         onto the new path. If the code genuinely left the tree, that is a real removal
+         and `--update --reason` is the correct command -- it is also the ONLY caller of
+         `append_exceptions()`, so it is the only road to
+         `config/converted-backslide-exceptions.jsonl`.
+
+     A NOTE ON `count`. It is metadata. `load_baseline()` reads it back solely to catch a
+     hand-edit that contradicts the array; `tu_promote.py` writes it; nothing else in the
+     tree reads it. A falling `count` is therefore not, by itself, a signal any gate acts
+     on -- do not reason about these remedies as if it were.
 
 WIRED INTO CI, NOT INTO THE HOOK. `.github/workflows/converted-ratchet.yml` runs
 `--check` on `pull_request` and on `push: main`, over `src/**`, this file, `tiers.py`,
@@ -169,7 +189,14 @@ def tracked_sources():
     tiers.converted() walks the filesystem instead, which is right for a MEASUREMENT --
     it should describe the tree in front of you. A GATE wants the tree git agrees on, so
     an untracked scratch file cannot enter the baseline and then "backslide" by being
-    deleted. Both enumerations currently return the same 11,287 files.
+    deleted.
+
+    The two enumerations agree today: both return the same set, and their symmetric
+    difference is empty. THAT is the durable claim; the size is not. This docstring
+    carried "the same 11,287 files" long after the number had drifted to 9,089 (measured
+    2026-09-10, when consolidation into promoted TUs had been shrinking it for weeks).
+    Re-measure rather than quote either figure -- `len(tracked_sources())` is one line,
+    and the plain no-flag report prints it.
     """
     out = subprocess.run(["git", "-C", str(REPO), "ls-files", "src"],
                          capture_output=True, text=True, check=True).stdout.split()
@@ -455,15 +482,22 @@ def orphaned_identities(banked, tracked):
     return sorted(e for e in banked if e.split("#", 1)[0] not in tracked)
 
 
-def orphan_reason(identity, moves=None):
-    """Why one banked identity no longer names a tracked file, naming the destination.
+def orphan_destination(identity, moves=None):
+    """The (tu_id, promoted_source) whose promotion absorbed this identity's file.
 
-    A TU promotion is the overwhelmingly likely cause and the manifest usually knows the
-    file that absorbed the code, so say which one. The remedy is a rewrite onto that
-    path; a reviewer should not have to go and find it.
+    None when no PROMOTED manifest entry names the file as a `legacy_source`. This one
+    fact decides everything the reader is told, so it is a function rather than an
+    expression repeated at each site: an orphan with a destination has a known, safe,
+    mechanical repair, and an orphan without one is an open question that must not be
+    answered by guessing.
     """
+    return (moves or {}).get(identity.split("#", 1)[0])
+
+
+def orphan_reason(identity, moves=None):
+    """Why one banked identity no longer names a tracked file, naming the destination."""
     rel = identity.split("#", 1)[0]
-    moved = (moves or {}).get(rel)
+    moved = orphan_destination(identity, moves)
     if moved:
         tu_id, dest = moved
         return (f"ORPHANED -- {rel} was absorbed into {dest} by TU promotion "
@@ -473,41 +507,70 @@ def orphan_reason(identity, moves=None):
 
 
 def report_orphans(orphans, moves, exceptions_path):
-    """Print the orphan diagnostic and the rewrite remedy.
+    """Print the orphan diagnostic, split by whether the manifest names a destination.
 
-    Deliberately does NOT send the reader to `--update`. `--update` would read these as
-    REMOVALS: refuse without a `--reason`, append a permanent row to the exceptions log
-    asserting that readable code was traded away for a byte match, and lower `count` --
-    which the ratchet then reports as a regression. All three are false statements about
-    work that never happened.
+    TWO CLASSES, OPPOSITE REMEDIES. That is why this is not one paragraph. Both classes
+    are orphans by the same predicate, but what a reader should do about them, and what
+    `--update` does to them, diverge completely -- and both facts here are measured, not
+    reasoned from the shape of the code:
+
+      destination known    `--update` exits 0, writes no exception row, and ABSORBS the
+                           entry -- erasing the dangling identity rather than rewriting
+                           it. The repair is a rewrite onto the destination.
+      destination unknown  `--update` exits 2 and refuses without a `--reason`. If the
+                           file was really deleted, `--update --reason` is the CORRECT
+                           command and the only caller of `append_exceptions()`.
+
+    An earlier version of this function printed the second class's consequences over
+    both classes, told the reader a removal belongs in the exceptions log, and then
+    forbade the only command that writes one. Keep the two apart.
     """
+    rewritable = [o for o in orphans if orphan_destination(o, moves)]
+    unexplained = [o for o in orphans if not orphan_destination(o, moves)]
+
     print(f"CONVERTED baseline orphan: {len(orphans)} banked identity(ies) name a file "
-          "that is\nnot a tracked source any more\n")
-    for identity in orphans:
-        print(f"  {identity}\n      {orphan_reason(identity, moves)}")
-    print("\nAn orphaned identity is not a backslide and must not be banked as one.\n"
-          "Nothing regressed: the readable code is still in the tree, under a path this\n"
-          "baseline does not know about. It is also invisible to every other check\n"
-          "here, because a file that is not tracked is never scored -- the entry\n"
-          "cannot fail a criterion, and the gate quietly stops covering that code.\n\n"
-          "The fix is to REWRITE each identity onto the file that owns the code now,\n"
-          "leaving `count` unchanged. This is what\n"
-          "tools/tu_promote.py:converted_baseline_update does during a promotion,\n"
-          "mapping each legacy_source to <promoted_source>#<symbol> out of the\n"
-          "promotion's own manifest entry. A promotion carried out by hand has to\n"
-          "perform the same rewrite by hand; the destinations named above come from\n"
-          "that same manifest.\n\n"
-          "Do NOT reach for --update here. It would read these as removals, demand a\n"
-          "--reason, move `count` downward -- which this ratchet then reports as a\n"
-          "regression -- and write a permanent row claiming a byte match cost us\n"
-          "readable code into\n"
-          f"  {exceptions_path}\n"
-          "Three false statements about work that never happened.\n\n"
-          "A line with no destination named is not necessarily a promotion; find out\n"
-          "what happened to the file before touching the baseline. A rename wants the\n"
-          "same rewrite onto the new path. Only code that genuinely left the tree is a\n"
-          "removal, and a removal is the one case that belongs in the exceptions log\n"
-          "with a reason against it.")
+          "that is\nnot a tracked source any more. An orphan is scored by nothing, so "
+          "no\ncriterion can fail for it and every later --check reads it as clean.")
+
+    if rewritable:
+        print(f"\n{len(rewritable)} with a TU promotion destination -- REWRITE these:\n")
+        for identity in rewritable:
+            print(f"  {identity}\n      {orphan_reason(identity, moves)}")
+        print("\n  Nothing regressed. The readable code is still in the tree under the\n"
+              "  destination named above; only the baseline was left behind. Rewrite\n"
+              "  each identity onto <promoted_source>#<symbol>, leaving `count`\n"
+              "  unchanged. That is exactly what\n"
+              "  tools/tu_promote.py:converted_baseline_update does during a promotion,\n"
+              "  out of the promotion's own manifest entry; a promotion carried out by\n"
+              "  hand has to perform the same rewrite by hand.\n\n"
+              "  Do NOT re-bank these with --update. Measured on the eight identities\n"
+              "  PR #2530 had to repair: --update with no --reason exits 0, reports\n"
+              "  them as a move rather than a removal, and writes no exception row. It\n"
+              "  does not refuse -- it ABSORBS the entry, dropping the identity instead\n"
+              "  of rewriting it and taking the evidence of the defect with it. That\n"
+              "  hole is still open; failing here makes it loud, not impossible.")
+
+    if unexplained:
+        print(f"\n{len(unexplained)} with no TU promotion destination -- FIND OUT WHAT "
+              "HAPPENED:\n")
+        for identity in unexplained:
+            print(f"  {identity}\n      {orphan_reason(identity, moves)}")
+        print("\n  Deleted, renamed, or absorbed by a promotion this tool cannot see:\n"
+              "  nothing here can tell those apart, so do not guess. Find out what\n"
+              "  became of the file first, then:\n\n"
+              "    renamed or moved -- rewrite the identity onto the new path, exactly\n"
+              "      as for a promotion destination. `classify_missing()` has no rename\n"
+              "      detection, so nothing will do this for you.\n\n"
+              "    absorbed by a promotion whose manifest entry is missing or is not\n"
+              "      marked \"promoted\" -- fix the manifest first; the rewrite then\n"
+              "      follows from it, and the next run will name the destination.\n\n"
+              "    genuinely deleted -- then this is a real REMOVAL, not an orphan, and\n"
+              "      re-banking it is right. Run\n"
+              '        python tools/tiers_ratchet.py --update --reason "<why it left>"\n'
+              "      which appends a row to\n"
+              f"        {exceptions_path}\n"
+              "      That is the only caller of append_exceptions() in this tool, so it\n"
+              "      is the only road to that log.")
 
 
 def classify_missing(missing, current, tracked, moves, ownership=None):
@@ -685,6 +748,16 @@ def main():
                       "outranks readability -- bank it with that as the reason.")
             return 1
         if orphans:
+            # The PASS path lists absorbed_clean; so must this one. A run carrying an
+            # orphan AND a genuine lossless transition must not drop the transition
+            # just because something else failed in the same run.
+            if absorbed_clean:
+                print(f"\n{len(absorbed_clean)} banked path(s) made a lossless "
+                      "ownership transition. Not orphans,\nnot backslides, and nothing "
+                      "to do about them:")
+                for rel in absorbed_clean:
+                    print(f"  {rel}\n      "
+                          f"{why(rel, scores, tracked_set, moves, ownership)}")
             print(f"\nbaseline {len(banked)}   current {len(current)}   "
                   f"({len(orphans)} orphaned, {len(live)} still naming a tracked file)")
             return 1
@@ -712,9 +785,18 @@ def main():
     absorbed_clean, missing = classify_missing(left, current, tracked_set, moves)
     print(f"baseline               {len(banked):6d}   {args.baseline}")
     print(f"gained, not banked     {len(current - banked):6d}")
+    # Mirror --check's split: the two orphan classes want opposite remedies, so a
+    # bare total would hide the only distinction that tells the reader what to do.
+    rewritable = [o for o in orphans if orphan_destination(o, moves)]
+    unexplained = [o for o in orphans if not orphan_destination(o, moves)]
     print(f"ORPHANED               {len(orphans):6d}   "
           "(file part is not a tracked source)"
           f"{'   <- --check would fail' if orphans else ''}")
+    if orphans:
+        print(f"  rewrite onto dest    {len(rewritable):6d}   "
+              "(a promoted TU manifest names the destination)")
+        print(f"  investigate          {len(unexplained):6d}   "
+              "(deleted, renamed, or a manifest this tool cannot see)")
     for identity in orphans[:20]:
         print(f"    {identity}\n        {orphan_reason(identity, moves)}")
     if len(orphans) > 20:

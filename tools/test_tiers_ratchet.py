@@ -195,81 +195,97 @@ class TranslationUnitIdentities(unittest.TestCase):
         self.assertIn(TR.tiers.CRITERION_LABEL["no_raw_offset"], reason)
 
 
-class OrphanedIdentities(unittest.TestCase):
-    """A banked identity naming a file the tree no longer has is watching nothing.
+class OrphanDestinationSplit(unittest.TestCase):
+    """The two orphan classes want OPPOSITE commands, so the report must separate them.
 
-    It cannot fail a criterion, because an untracked file is never scored, so the only
-    way to notice it is to ask the question directly.
+    Both are orphans by the same predicate. What differs is what --update does to them,
+    and therefore what the reader should be told -- measured, not inferred:
+
+      destination known    --update exits 0, writes no exception row, and ABSORBS the
+                           entry. The repair is a rewrite onto the destination.
+      destination unknown  --update exits 2 without a --reason; with one it is the
+                           correct command for a file that really was deleted.
+
+    `UpdateBehaviourPin` below pins both of those against the real tool, so a future
+    edit to this prose cannot quietly disagree with the code it describes.
     """
 
-    def test_a_banked_path_whose_file_is_gone_is_orphaned(self):
-        banked = {"src/Kept.cpp", "src/Gone.cpp"}
+    KNOWN = {"src/Legacy.cpp": ("ov001/TU", "src/actors/TU.cpp")}
 
-        self.assertEqual(TR.orphaned_identities(banked, {"src/Kept.cpp"}),
-                         ["src/Gone.cpp"])
+    def _report(self, orphans, moves):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            TR.report_orphans(orphans, moves,
+                              "config/converted-backslide-exceptions.jsonl")
+        return out.getvalue()
 
-    def test_a_member_identity_whose_file_exists_is_not_orphaned(self):
-        """The split on `#` has to happen first.
+    def test_destination_is_keyed_on_the_file_part_not_the_whole_identity(self):
+        """A member identity must resolve through its path, or the split misfires on
+        every promoted-TU entry."""
+        self.assertEqual(TR.orphan_destination("src/Legacy.cpp#Sym", self.KNOWN),
+                         ("ov001/TU", "src/actors/TU.cpp"))
+        self.assertIsNone(TR.orphan_destination("src/Other.cpp#Sym", self.KNOWN))
 
-        Testing the whole identity against the tracked set reports every promoted-TU
-        member as an orphan -- 651 of 2701 banked identities when this was written.
-        """
-        rel = "src/actors/TU.cpp"
-        banked = {f"{rel}#First", f"{rel}#Second"}
+    def test_the_two_classes_are_reported_in_separate_sections(self):
+        text = self._report(["src/Legacy.cpp", "src/Vanished.cpp"], self.KNOWN)
 
-        self.assertEqual(TR.orphaned_identities(banked, {rel}), [])
+        self.assertIn("1 with a TU promotion destination -- REWRITE these:", text)
+        self.assertIn("1 with no TU promotion destination -- FIND OUT WHAT HAPPENED:",
+                      text)
+        self.assertLess(text.index("REWRITE these"), text.index("FIND OUT WHAT"))
 
-    def test_a_member_identity_whose_file_is_gone_is_orphaned(self):
-        rel = "src/actors/TU.cpp"
-        banked = {f"{rel}#First", f"{rel}#Second"}
+    def test_a_destination_known_orphan_is_told_to_rewrite_and_not_to_re_bank(self):
+        text = self._report(["src/Legacy.cpp"], self.KNOWN)
 
-        self.assertEqual(TR.orphaned_identities(banked, {"src/Other.cpp"}),
-                         [f"{rel}#First", f"{rel}#Second"])
+        self.assertIn("src/actors/TU.cpp", text)
+        self.assertIn("converted_baseline_update", text)
+        self.assertIn("Do NOT re-bank these with --update.", text)
+        # and it must not hand this class the removal command
+        self.assertNotIn("--update --reason", text)
 
-    def test_a_bare_path_scored_per_member_is_not_orphaned(self):
-        """`absorbed_clean` branch 1 is NOT an orphan and must not be reported as one.
+    def test_a_destination_unknown_orphan_gets_the_working_removal_command(self):
+        """VFY-2543-03: base printed the command that works; forbidding it while
+        naming the log it writes left the reader with a destination and no road."""
+        text = self._report(["src/Vanished.cpp"], {})
 
-        A multi-function source banked by its physical path before the per-member
-        scorer existed appears in `banked - current`, because `scan()` now emits
-        `path#symbol` for it. The file still exists; nothing is dangling.
-        """
-        rel = "src/actors/TU.cpp"
-        ownership = {rel: ["First", "Second"]}
-        current = {f"{rel}#First", f"{rel}#Second"}
+        self.assertIn('python tools/tiers_ratchet.py --update --reason', text)
+        self.assertIn("converted-backslide-exceptions.jsonl", text)
+        self.assertIn("only caller of append_exceptions()", text)
+        self.assertNotIn("Do NOT re-bank", text)
 
-        self.assertEqual(TR.orphaned_identities({rel}, {rel}), [])
-        # and classify_missing still calls it a lossless ownership transition
-        upgraded, backslid = TR.classify_missing(
-            [rel], current, {rel}, {}, ownership)
-        self.assertEqual((upgraded, backslid), ([rel], []))
+    def test_nothing_regressed_is_claimed_only_where_a_destination_is_named(self):
+        """VFY-2543-04: the tool cannot know a vanished file's code still exists."""
+        self.assertIn("Nothing regressed", self._report(["src/Legacy.cpp"], self.KNOWN))
+        self.assertNotIn("Nothing regressed", self._report(["src/Vanished.cpp"], {}))
 
-    def test_a_promoted_move_left_unrewritten_is_an_orphan_not_a_transition(self):
-        """The exact shape of the eight identities PR #2530 had to rewrite by hand.
+    def test_no_diagnostic_claims_a_falling_count_is_a_regression(self):
+        """VFY-2543-02: `count` is metadata. load_baseline reads it back only to catch
+        a hand-edit; nothing else in the tree reads it, so no gate can act on it."""
+        for orphans, moves in ((["src/Legacy.cpp"], self.KNOWN),
+                               (["src/Vanished.cpp"], {})):
+            text = self._report(orphans, moves)
+            self.assertNotIn("count` downward", text)
+            self.assertNotIn("reports as a regression", text)
 
-        `classify_missing()` blesses this as `absorbed_clean` and lets --check return 0.
-        The orphan question is asked first precisely so it does not.
-        """
-        legacy = "src/_ZN11RickshawBdwD1Ev.cpp"
-        dest = "src/game/actors/d_a_obj_km1_kurumajiku.cpp"
-        moves = {legacy: ("ov043/daObjKm1_Kurumajiku_c", dest)}
-        ownership = {dest: ["First", "Second"]}
-        current = {f"{dest}#First", f"{dest}#Second"}
+    def test_a_destination_known_orphan_is_not_told_update_will_refuse(self):
+        """VFY-2543-01: it does not refuse for this class -- it exits 0 and absorbs."""
+        text = self._report(["src/Legacy.cpp"], self.KNOWN)
 
-        self.assertEqual(TR.orphaned_identities({legacy}, {dest}), [legacy])
-        # classify_missing on its own would forgive it -- that is the defect
-        upgraded, backslid = TR.classify_missing(
-            [legacy], current, {dest}, moves, ownership)
-        self.assertEqual((upgraded, backslid), ([legacy], []))
+        self.assertNotIn("demand a", text)
+        self.assertIn("does not refuse -- it ABSORBS", text)
+
+    def test_the_open_update_hole_is_acknowledged_not_asserted_away(self):
+        """VFY-2543-06 is a real, unclosed hole: one --update launders every orphan of
+        this class and the result is green. The diagnostic must not imply otherwise."""
+        text = self._report(["src/Legacy.cpp"], self.KNOWN)
+
+        self.assertIn("hole is still open", text)
 
     def test_the_reason_names_the_destination_when_the_manifest_knows_it(self):
-        legacy = "src/Legacy.cpp"
-        dest = "src/actors/TU.cpp"
-        moves = {legacy: ("ov001/TU", dest)}
-
-        reason = TR.orphan_reason(legacy, moves)
+        reason = TR.orphan_reason("src/Legacy.cpp", self.KNOWN)
 
         self.assertIn("ORPHANED", reason)
-        self.assertIn(dest, reason)
+        self.assertIn("src/actors/TU.cpp", reason)
         self.assertIn("ov001/TU", reason)
 
     def test_the_reason_says_so_when_no_manifest_row_names_a_destination(self):
@@ -279,57 +295,63 @@ class OrphanedIdentities(unittest.TestCase):
         self.assertIn("src/Legacy.cpp", reason)
         self.assertIn("no promoted TU manifest claims it", reason)
 
-    def test_the_remedy_is_a_rewrite_and_never_points_at_update(self):
-        """--update would bank an orphan as a REMOVAL: a false backslide row and a
-        falling `count`, for work that never happened."""
-        out = io.StringIO()
-        with contextlib.redirect_stdout(out):
-            TR.report_orphans(["src/Legacy.cpp"],
-                              {"src/Legacy.cpp": ("ov001/TU", "src/actors/TU.cpp")},
-                              "config/converted-backslide-exceptions.jsonl")
-        text = out.getvalue()
 
-        self.assertIn("converted_baseline_update", text)
-        self.assertIn("REWRITE", text)
-        self.assertIn("Do NOT reach for --update here.", text)
-        self.assertNotIn("tiers_ratchet.py --update", text)
+class SyntheticTree:
+    """Build a throwaway src/ tree and a baseline, and run main() against them.
 
+    A mixin, not a TestCase: `UpdateBehaviourPin` needs the same fixture but must not
+    inherit and re-run every --check test along with it.
+    """
 
-class OrphanGateEndToEnd(unittest.TestCase):
-    """--check must exit 1 on an orphan, and must not invent one on a clean tree."""
+    TWO_FN = "//cpp\nvoid First() {}\nvoid Second() {}\n"
 
-    def _run(self, banked, tree, ownership, argv):
-        """Run main() over a synthetic tree, returning (exit code, stdout)."""
+    def _tree(self, tree, banked, extra=None):
         td = tempfile.mkdtemp()
         root = pathlib.Path(td)
         for rel in tree:
             p = root / rel
             p.parent.mkdir(parents=True, exist_ok=True)
-            p.write_text("//cpp\nvoid First() {}\nvoid Second() {}\n",
+            p.write_text((extra or {}).get(rel, "//cpp\nvoid First() {}\n"),
                          encoding="utf-8")
         baseline = root / "baseline.json"
         baseline.write_text(
             json.dumps({"count": len(banked), "converted": sorted(banked)}) + "\n",
             encoding="utf-8")
+        return root, baseline
 
-        out = io.StringIO()
-        with mock.patch.object(TR, "REPO", root), \
-                mock.patch.object(TR, "tracked_sources", lambda: sorted(tree)), \
-                mock.patch.object(TR, "promoted_moves", lambda root=None: {}), \
+    def _patches(self, root, tree, ownership, moves, argv):
+        return (mock.patch.object(TR, "REPO", root),
+                mock.patch.object(TR, "tracked_sources", lambda: sorted(tree)),
+                mock.patch.object(TR, "promoted_moves",
+                                  lambda root=None: dict(moves or {})),
                 mock.patch.object(TR.tiers.srcpath, "source_definition_index",
-                                  lambda *a, **k: dict(ownership)), \
-                mock.patch.object(
-                    sys, "argv",
-                    ["tiers_ratchet.py", *argv, "--baseline", str(baseline)]), \
-                contextlib.redirect_stdout(out):
+                                  lambda *a, **k: dict(ownership)),
+                mock.patch.object(sys, "argv", argv))
+
+    def _run(self, banked, tree, ownership, argv, moves=None, extra=None):
+        """Run main() over a synthetic tree, returning (exit code, stdout)."""
+        root, baseline = self._tree(tree, banked, extra)
+        full = ["tiers_ratchet.py", *argv, "--baseline", str(baseline)]
+        out = io.StringIO()
+        with contextlib.ExitStack() as stack:
+            for p in self._patches(root, tree, ownership, moves, full):
+                stack.enter_context(p)
+            stack.enter_context(contextlib.redirect_stdout(out))
             code = TR.main()
         return code, out.getvalue()
 
+
+class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
+    """Drive main() over a synthetic tree and judge it by exit code and output.
+
+    These replace an earlier set that asserted `orphaned_identities()` against literal
+    sets. That restated the one-line predicate and would not have survived a rewrite
+    that kept the same behaviour; what matters is whether the GATE fails.
+    """
+
     def test_check_fails_on_an_orphan(self):
-        tree = ["src/Kept.cpp"]
-        ownership = {"src/Kept.cpp": ["Kept"]}
-        code, text = self._run({"src/Kept.cpp", "src/Gone.cpp"}, tree, ownership,
-                               ["--check"])
+        code, text = self._run({"src/Kept.cpp", "src/Gone.cpp"}, ["src/Kept.cpp"],
+                               {"src/Kept.cpp": ["Kept"]}, ["--check"])
 
         self.assertEqual(code, 1)
         self.assertIn("CONVERTED baseline orphan", text)
@@ -337,35 +359,165 @@ class OrphanGateEndToEnd(unittest.TestCase):
         self.assertNotIn("CONVERTED ratchet PASS", text)
 
     def test_check_passes_when_every_banked_file_is_tracked(self):
-        tree = ["src/Kept.cpp"]
-        ownership = {"src/Kept.cpp": ["Kept"]}
-        code, text = self._run({"src/Kept.cpp"}, tree, ownership, ["--check"])
+        code, text = self._run({"src/Kept.cpp"}, ["src/Kept.cpp"],
+                               {"src/Kept.cpp": ["Kept"]}, ["--check"])
 
         self.assertEqual(code, 0)
         self.assertIn("CONVERTED ratchet PASS", text)
         self.assertNotIn("orphan", text)
 
+    def test_a_member_identity_whose_file_exists_does_not_fail_the_gate(self):
+        """The `#`-split trap, as a gate outcome rather than a set comparison.
+
+        Matching whole identities against the tracked set would report every
+        promoted-TU member as an orphan -- 651 of 2701 entries when this was written.
+        """
+        rel = "src/actors/TU.cpp"
+        code, text = self._run({f"{rel}#First", f"{rel}#Second"}, [rel],
+                               {rel: ["First", "Second"]}, ["--check"],
+                               extra={rel: self.TWO_FN})
+
+        self.assertEqual(code, 0)
+        self.assertIn("CONVERTED ratchet PASS", text)
+        self.assertNotIn("ORPHANED", text)
+
+    def test_a_bare_path_scored_per_member_stays_a_transition_and_passes(self):
+        """`absorbed_clean` branch 1: the file STILL EXISTS, so it is not an orphan."""
+        rel = "src/actors/TU.cpp"
+        code, text = self._run({rel}, [rel], {rel: ["First", "Second"]}, ["--check"],
+                               extra={rel: self.TWO_FN})
+
+        self.assertEqual(code, 0)
+        self.assertIn("CONVERTED ratchet PASS", text)
+        self.assertIn("clean ownership transition", text)
+        self.assertNotIn("ORPHANED", text)
+
+    def test_a_promoted_move_left_unrewritten_fails_instead_of_being_forgiven(self):
+        """The shape of the eight identities PR #2530 repaired by hand.
+
+        classify_missing() sends this to absorbed_clean branch 2 and the gate used to
+        print it under a PASS and return 0.
+        """
+        legacy = "src/_ZN11RickshawBdwD1Ev.cpp"
+        dest = "src/game/actors/d_a_obj_km1_kurumajiku.cpp"
+        code, text = self._run(
+            {legacy}, [dest], {dest: ["First", "Second"]}, ["--check"],
+            moves={legacy: ("ov043/daObjKm1_Kurumajiku_c", dest)},
+            extra={dest: self.TWO_FN})
+
+        self.assertEqual(code, 1)
+        self.assertIn("REWRITE these", text)
+        self.assertIn(dest, text)
+        self.assertNotIn("CONVERTED ratchet PASS", text)
+
     def test_the_plain_report_names_orphans_without_an_exit_code(self):
-        tree = ["src/Kept.cpp"]
-        ownership = {"src/Kept.cpp": ["Kept"]}
-        code, text = self._run({"src/Kept.cpp", "src/Gone.cpp"}, tree, ownership, [])
+        code, text = self._run({"src/Kept.cpp", "src/Gone.cpp"}, ["src/Kept.cpp"],
+                               {"src/Kept.cpp": ["Kept"]}, [])
 
         self.assertEqual(code, 0)
         self.assertIn("ORPHANED", text)
         self.assertIn("src/Gone.cpp", text)
         self.assertIn("<- --check would fail", text)
+        self.assertIn("rewrite onto dest", text)
+        self.assertIn("investigate", text)
 
     def test_an_orphan_is_not_also_counted_as_a_backslide(self):
-        """It is removed from the backslide accounting, so the diagnostic is not
-        two contradictory explanations of one entry."""
-        tree = ["src/Kept.cpp"]
-        ownership = {"src/Kept.cpp": ["Kept"]}
-        code, text = self._run({"src/Kept.cpp", "src/Gone.cpp"}, tree, ownership,
-                               ["--check"])
+        """It is removed from the backslide accounting, so the diagnostic is not two
+        contradictory explanations of one entry."""
+        code, text = self._run({"src/Kept.cpp", "src/Gone.cpp"}, ["src/Kept.cpp"],
+                               {"src/Kept.cpp": ["Kept"]}, ["--check"])
 
         self.assertEqual(code, 1)
         self.assertNotIn("CONVERTED backslide", text)
 
+    def test_an_orphan_and_a_backslide_are_both_reported(self):
+        """VFY-2543-08: the interleaved path. One defect must not mask the other."""
+        code, text = self._run(
+            {"src/Kept.cpp", "src/Bad.cpp", "src/Gone.cpp"},
+            ["src/Bad.cpp", "src/Kept.cpp"],
+            {"src/Kept.cpp": ["Kept"], "src/Bad.cpp": ["Bad"]}, ["--check"],
+            extra={"src/Bad.cpp": "//cpp\nint unk_18;\nvoid Bad() { unk_18 = 1; }\n"})
+
+        self.assertEqual(code, 1)
+        self.assertIn("CONVERTED baseline orphan", text)
+        self.assertIn("src/Gone.cpp", text)
+        self.assertIn("CONVERTED backslide", text)
+        self.assertIn("src/Bad.cpp", text)
+
+    def test_an_orphan_run_still_lists_a_lossless_ownership_transition(self):
+        """VFY-2543-07: the orphan-only exit used to drop what the PASS path lists."""
+        rel = "src/actors/TU.cpp"
+        code, text = self._run(
+            {rel, "src/Gone.cpp"}, [rel], {rel: ["First", "Second"]}, ["--check"],
+            extra={rel: self.TWO_FN})
+
+        self.assertEqual(code, 1)
+        self.assertIn("CONVERTED baseline orphan", text)
+        self.assertIn("lossless ownership transition", text)
+        self.assertIn("IDENTITY UPGRADE", text)
+
+
+class UpdateBehaviourPin(SyntheticTree, unittest.TestCase):
+    """Pin what --update MEASURABLY does to each orphan class.
+
+    The two diagnostics assert things about --update. An earlier version asserted the
+    opposite of the truth for the destination-known class -- that it would refuse,
+    demand a --reason and write an exception row -- and the suite carried the error
+    instead of catching it, because nothing here ever ran --update. These tests do.
+    """
+
+    def _update(self, banked, tree, ownership, argv, moves=None, extra=None):
+        root, baseline = self._tree(tree, banked, extra)
+        exceptions = root / "exceptions.jsonl"
+        full = ["tiers_ratchet.py", "--update", *argv, "--baseline", str(baseline),
+                "--exceptions", str(exceptions)]
+        out = io.StringIO()
+        with contextlib.ExitStack() as stack:
+            for p in self._patches(root, tree, ownership, moves, full):
+                stack.enter_context(p)
+            stack.enter_context(contextlib.redirect_stdout(out))
+            code = TR.main()
+        return code, out.getvalue(), exceptions, baseline
+
+    def test_update_absorbs_a_destination_known_orphan_and_never_refuses(self):
+        """Measured on the real pre-#2530 baseline too: exit 0, no exception row.
+
+        This is why that class is told to rewrite rather than re-bank -- --update drops
+        the dangling identity and the evidence of the defect with it.
+        """
+        legacy = "src/_ZN11RickshawBdwD1Ev.cpp"
+        dest = "src/game/actors/d_a_obj_km1_kurumajiku.cpp"
+        code, text, exceptions, _ = self._update(
+            {legacy}, [dest], {dest: ["First", "Second"]}, [],
+            moves={legacy: ("ov043/daObjKm1_Kurumajiku_c", dest)},
+            extra={dest: self.TWO_FN})
+
+        self.assertEqual(code, 0)
+        self.assertFalse(exceptions.exists())
+        self.assertIn("a move, not a removal", text)
+        self.assertNotIn("REFUSING", text)
+
+    def test_update_refuses_a_destination_unknown_orphan_without_a_reason(self):
+        code, text, exceptions, _ = self._update(
+            {"src/Kept.cpp", "src/Gone.cpp"}, ["src/Kept.cpp"],
+            {"src/Kept.cpp": ["Kept"]}, [])
+
+        self.assertEqual(code, 2)
+        self.assertFalse(exceptions.exists())
+        self.assertIn("REFUSING to bank 1 removal(s) without --reason", text)
+
+    def test_update_with_a_reason_banks_the_removal_and_writes_the_row(self):
+        """The command the destination-unknown diagnostic hands the reader must work."""
+        code, text, exceptions, baseline = self._update(
+            {"src/Kept.cpp", "src/Gone.cpp"}, ["src/Kept.cpp"],
+            {"src/Kept.cpp": ["Kept"]}, ["--reason", "the code really left the tree"])
+
+        self.assertEqual(code, 0)
+        self.assertTrue(exceptions.exists())
+        row = json.loads(exceptions.read_text(encoding="utf-8").strip())
+        self.assertEqual(row["path"], "src/Gone.cpp")
+        self.assertEqual(row["reason"], "the code really left the tree")
+        self.assertNotIn("src/Gone.cpp", TR.load_baseline(str(baseline)))
 
 class BaselineIntegrity(unittest.TestCase):
     """A baseline that contradicts itself must stop the tool, not be absorbed by it."""
