@@ -5575,13 +5575,13 @@
    "start": "0x211f000",
    "end": "0x211ff34",
    "classes": [
-    "SnowmanBody"
+    "daBgSnmBdy_c"
    ],
    "n_functions_map": 29,
    "n_files": 29,
    "files": [
-    "src/_ZN11SnowmanBodyD1Ev.cpp",
-    "src/_ZN11SnowmanBodyD0Ev.c",
+    "src/_ZN12daBgSnmBdy_cD1Ev.cpp",
+    "src/_ZN12daBgSnmBdy_cD0Ev.c",
     "src/func_ov072_0211f0a4.c",
     "src/func_ov072_0211f158.cpp",
     "src/func_ov072_0211f1dc.cpp",
@@ -5603,11 +5603,11 @@
     "src/func_ov072_0211fc3c.cpp",
     "src/func_ov072_0211fc78.cpp",
     "src/func_ov072_0211fcb0.c",
-    "src/_ZN11SnowmanBody16CleanupResourcesEv.c",
-    "src/_ZN11SnowmanBody16OnPendingDestroyEv.c",
-    "src/_ZN11SnowmanBody6RenderEv.cpp",
-    "src/_ZN11SnowmanBody8BehaviorEv.cpp",
-    "src/_ZN11SnowmanBody13InitResourcesEv.cpp",
+    "src/_ZN12daBgSnmBdy_c16CleanupResourcesEv.c",
+    "src/_ZN12daBgSnmBdy_c16OnPendingDestroyEv.c",
+    "src/_ZN12daBgSnmBdy_c6RenderEv.cpp",
+    "src/_ZN12daBgSnmBdy_c8BehaviorEv.cpp",
+    "src/_ZN12daBgSnmBdy_c13InitResourcesEv.cpp",
     "src/daBgSnmBdy_c_classInit.c"
    ],
    "ext_mix": {
