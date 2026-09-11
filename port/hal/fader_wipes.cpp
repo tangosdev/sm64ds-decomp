@@ -96,6 +96,7 @@
 // so a no-argument virtual landing there unbalances the stack. Those three stay
 // host, spelled to match the matched bodies they cannot safely call.
 #include <cstdio>
+#include <cstdint>
 #include <cstdlib>
 #include <new>
 #include "dsstate_seg.h"
@@ -243,7 +244,10 @@ struct HalFaderWipe {
 
     virtual ~HalFaderWipe() {}                       /* 0x00  ROM D1 */
     virtual void DtorDeleting() {}                   /* 0x04  ROM D0 */
-    virtual int AdvanceFade()                        /* 0x08 */
+    /* The installed-fader reader func_02018efc passes this on the stack.
+       Explicit cdecl also gives qualified host calls the same contract;
+       the remaining virtual slots retain their existing thiscall ABI. */
+    virtual int __cdecl AdvanceFade()                /* 0x08 */
     {
         /* Driven advance (the frame loop's port_fader_advance) STEPS the
            interpolator one frame and writes the 2D master-blend register the
@@ -324,8 +328,14 @@ HalFaderWipe hal_wipes[7];
 
 int hal_wipe_index(const void *self)
 {
-    long long d = (const char *)self - (const char *)&hal_wipes[0];
-    return (int)(d / (long long)sizeof(HalFaderWipe));
+    const std::uintptr_t address = reinterpret_cast<std::uintptr_t>(self);
+    const std::uintptr_t first = reinterpret_cast<std::uintptr_t>(&hal_wipes[0]);
+    if (address < first || address >= first + sizeof(hal_wipes))
+        return -1;
+    const std::uintptr_t offset = address - first;
+    if (offset % sizeof(HalFaderWipe) != 0)
+        return -1;
+    return (int)(offset / sizeof(HalFaderWipe));
 }
 
 }  /* anonymous namespace */
