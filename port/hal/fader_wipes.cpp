@@ -516,33 +516,18 @@ void port_fader_advance(void)
     if (!f)
         return;
     g_hal_fader_stepping = 1;
-    /* QUALIFIED, NOT VIRTUAL, run link100 lane CTOR3 rung 2, and it is a
-       calling-convention fix rather than a style choice.
+    /* The qualified call selects this class's int completion-result body.
+       f can also name the separate colour fader, data_0209f5e8. Its last vptr
+       writer is __sinit_02074edc, which installs scene_boot.cpp's data_0208eb2c;
+       that table's slot 2 is the void-returning l2_eb2c_s08.
 
-       f is either one of the seven hal_wipes -- host C++ objects carrying this
-       class's own MSVC vtable -- or data_0209f5e8, the colour fader, which
-       port_fader_start_color installs into data_0209d4b0[0]. Since rung C1c the
-       ROM's own __sinit_02074edc is the last writer of THAT object's vptr, so
-       it points at hal/scene_boot.cpp's data_0208eb2c and not at this class's
-       table any more.
-
-       A virtual call here compiles to __thiscall: `mov ecx,f / mov eax,[ecx] /
-       call [eax+8]`, read out of this lane's own binary at
-       _port_fader_advance+0x22, with NOTHING pushed. Byte +0x08 of
-       data_0208eb2c is hal/scene_boot.cpp's l2_eb2c_s08, which is __cdecl on
-       purpose -- the ROM's one dispatch site for that slot, src/func_02018efc.c,
-       passes the receiver as a STACK argument -- so it would read its receiver
-       off this function's frame, dereference it in its own guard, and hand back
-       a void EAX where the line below wants an int. Nothing in the gates
-       reaches it (port_fader_start_color has one caller in
-       hal/level_change.cpp, the title row that warps to a level, and one in the
-       harness), which is exactly why it had to be read out of the binary rather
-       than waited for.
-
-       A qualified call takes no vtable at all. For the seven wipes it is the
-       same body the virtual call resolved to -- no class derives from this one
-       -- and for the colour fader it is what ran before C1c. So this restores
-       one behaviour and changes none. */
+       Historical observation, link100 lane CTOR3 rung 2, before the 2026-09-10
+       __cdecl repair: a virtual call here compiled as `mov ecx,f / mov eax,[ecx]
+       / call [eax+8]` at _port_fader_advance+0x22, with no stack receiver. That
+       mismatched the colour table's cdecl slot. Current virtual calls to
+       AdvanceFade use __cdecl too, so that receiver mismatch no longer applies.
+       Qualification still matters: it bypasses either installed table and
+       preserves the int result used below, including for the colour object. */
     int at_target = f->HalFaderWipe::AdvanceFade();
     g_hal_fader_stepping = 0;
     /* Settled: drop it out of motion so the next transition's gates open, and
