@@ -1,19 +1,6 @@
 //cpp
-/**
- * Star-create trigger.
- *
- * One shot: if the closest player is strictly within 100 units, spawn
- * the star at this position. Then mark this trigger for removal either
- * way.
- *
- * daSCre_c_classInit is reconstructed (RTTI daSCre_c, STAR_CREATE
- * registry). Retail does not store that spelling.
- *
- * deslop
- * Leftover: Pos() is a leaf overlay of mPosX/Y/Z. dActor_c::Pos() is
- *   the shared home (#2513); this branch does not have it. A stack
- *   Vector3 DIFF'd.
- */
+/* Check once: spawn a star if the closest player is strictly within
+   100 units, then mark this trigger for removal either way. */
 
 #include "daSCre_c.h"
 
