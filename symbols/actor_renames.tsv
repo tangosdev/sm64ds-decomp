@@ -583,34 +583,17 @@ ov006	0x0213fbc8	MgTrampolineTerror_SpawnInfo	g_profile_MG_TRAMPOLINE2	reconstru
 ov007	0x020ccad0	func_ov007_020ccad0	dScDSMT_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov007	0x02103264	data_ov007_02103264	g_profile_DSMT	reconstructed profile global; literal ROM ID DSMT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov006	0x0213cb64	MgBounceAndPounce_SpawnInfo	g_profile_MG_JUMP	reconstructed profile global; literal ROM ID MG_JUMP+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213ce0c	data_ov006_0213ce0c	MgWanted_SpawnInfo	spawninfo
 ov006	0x0213ce0c	MgWanted_SpawnInfo	g_profile_MG_LUIGI	reconstructed profile global; literal ROM ID MG_LUIGI+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213cfd8	data_ov006_0213cfd8	MgMemoryMatch_SpawnInfo	spawninfo
 ov006	0x0213cfd8	MgMemoryMatch_SpawnInfo	g_profile_MG_MEMORY	reconstructed profile global; literal ROM ID MG_MEMORY+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213d288	data_ov006_0213d288	MgMemoryMaster_SpawnInfo	spawninfo
 ov006	0x0213d288	MgMemoryMaster_SpawnInfo	g_profile_MG_MEMORY_J	reconstructed profile global; literal ROM ID MG_MEMORY_J+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213d580	data_ov006_0213d580	g_profile_MG_MCARLO	reconstructed profile global; literal ROM ID MG_MCARLO+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213d910	data_ov006_0213d910	MgBobOmbSquad_SpawnInfo	spawninfo
 ov006	0x0213d910	MgBobOmbSquad_SpawnInfo	g_profile_MG_PACHINKO	reconstructed profile global; literal ROM ID MG_PACHINKO+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213da64	data_ov006_0213da64	MgLakituLaunch_SpawnInfo	spawninfo
 ov006	0x0213da64	MgLakituLaunch_SpawnInfo	g_profile_MG_TAMAIRE	reconstructed profile global; literal ROM ID MG_TAMAIRE+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213dc64	data_ov006_0213dc64	MgPuzzlePanelPuzzlePanic_SpawnInfo	spawninfo
 ov006	0x0213dc64	MgPuzzlePanelPuzzlePanic_SpawnInfo	g_profile_MG_PANEL	reconstructed profile global; literal ROM ID MG_PANEL+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213e508	data_ov006_0213e508	g_profile_MG_SLOT3	reconstructed profile global; literal ROM ID MG_SLOT3+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213e560	data_ov006_0213e560	g_profile_MG_SLOT1	reconstructed profile global; literal ROM ID MG_SLOT1+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213f69c	data_ov006_0213f69c	MgBoomBox_SpawnInfo	spawninfo
 ov006	0x0213f69c	MgBoomBox_SpawnInfo	g_profile_MG_SOUND	reconstructed profile global; literal ROM ID MG_SOUND+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213f974	data_ov006_0213f974	MgHideAndBooSeek_SpawnInfo	spawninfo
 ov006	0x0213f974	MgHideAndBooSeek_SpawnInfo	g_profile_MG_TERESA	reconstructed profile global; literal ROM ID MG_TERESA+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213fab8	data_ov006_0213fab8	MgTrampolineTime_SpawnInfo	spawninfo
 ov006	0x0213fab8	MgTrampolineTime_SpawnInfo	g_profile_MG_TRAMPOLINE	reconstructed profile global; literal ROM ID MG_TRAMPOLINE+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213fd6c	data_ov006_0213fd6c	MgLuckyStars_SpawnInfo	spawninfo
 ov006	0x0213fd6c	MgLuckyStars_SpawnInfo	g_profile_MG_BS_CARD	reconstructed profile global; literal ROM ID MG_BS_CARD+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x0213ffb8	data_ov006_0213ffb8	MgSnowballSlalom_SpawnInfo	spawninfo
 ov006	0x0213ffb8	MgSnowballSlalom_SpawnInfo	g_profile_MG_SNOWBALL	reconstructed profile global; literal ROM ID MG_SNOWBALL+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov006	0x02140114	data_ov006_02140114	g_profile_MG_FLOWER	reconstructed profile global; literal ROM ID MG_FLOWER+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov007	0x020ccad0	func_ov007_020ccad0	dScDSMT_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov007	0x02103264	data_ov007_02103264	g_profile_DSMT	reconstructed profile global; literal ROM ID DSMT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov009	0x021111a0	func_ov009_021111a0	_ZN4BirdD1Ev	vtable slot 16
 ov009	0x021111d8	func_ov009_021111d8	_ZN4BirdD0Ev	vtable slot 17
 ov009	0x0211183c	func_ov009_0211183c	_ZN4Bird16CleanupResourcesEv	vtable slot 3
@@ -1958,13 +1941,6 @@ ov064	0x0211c50c	data_ov064_0211c50c	_ZTV13TreasureChest	vtable alloc=0x178
 ov064	0x0211c5a4	data_ov064_0211c5a4	Clam_SpawnInfo	spawninfo
 ov064	0x0211c5a4	Clam_SpawnInfo	g_profile_OBJ_SHELL	reconstructed profile global; literal ROM ID OBJ_SHELL+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov064	0x0211c5c8	data_ov064_0211c5c8	_ZTV4Clam	vtable alloc=0x174
-ov065	0x02115ee0	func_ov065_02115ee0	_ZN6SnufitD1Ev	vtable slot 16
-ov065	0x02115f28	func_ov065_02115f28	_ZN6SnufitD0Ev	vtable slot 17
-ov065	0x02116ae8	func_ov065_02116ae8	_ZN6Snufit16CleanupResourcesEv	vtable slot 3
-ov065	0x02116b30	func_ov065_02116b30	_ZN6Snufit16OnPendingDestroyEv	vtable slot 12
-ov065	0x02116b34	func_ov065_02116b34	_ZN6Snufit6RenderEv	vtable slot 9
-ov065	0x02116b84	func_ov065_02116b84	_ZN6Snufit8BehaviorEv	vtable slot 6
-ov065	0x02116e10	func_ov065_02116e10	_ZN6Snufit13InitResourcesEv	vtable slot 0
 ov065	0x02116f48	func_ov065_02116f48	Snufit_Spawn	spawnfunc
 ov065	0x02116f48	Snufit_Spawn	daYurei_Mucho_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x02116f98	func_ov065_02116f98	_ZN5SwoopD1Ev	vtable slot 16
@@ -2044,7 +2020,6 @@ ov065	0x0211c040	func_ov065_0211c040	TTC_MovingBeam_Spawn	spawnfunc
 ov065	0x0211c040	TTC_MovingBeam_Spawn	daObjCtMecha09_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211cb80	data_ov065_0211cb80	Snufit_SpawnInfo	spawninfo
 ov065	0x0211cb80	Snufit_SpawnInfo	g_profile_YUREI_MUCHO	reconstructed profile global; literal ROM ID YUREI_MUCHO+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov065	0x0211cba4	data_ov065_0211cba4	_ZTV6Snufit	vtable alloc=0x3e4
 ov065	0x0211cc7c	data_ov065_0211cc7c	Swoop_SpawnInfo	spawninfo
 ov065	0x0211cc7c	Swoop_SpawnInfo	g_profile_BASABASA	reconstructed profile global; literal ROM ID BASABASA+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov065	0x0211cca0	data_ov065_0211cca0	_ZTV5Swoop	vtable alloc=0x440
@@ -3624,3 +3599,22 @@ ov084	0x0212fcdc	_ZN12PiranhaPlant6RenderEv	_ZN7daPkn_c6RenderEv	vtable slot 9; 
 ov084	0x0212fd4c	_ZN12PiranhaPlant8BehaviorEv	_ZN7daPkn_c8BehaviorEv	vtable slot 6; class renamed to the cartridge's own RTTI spelling: ov084 0x02130bec holds the bytes '7daPkn_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI7daPkn_c at 0x02130bf8 points at with its +4 word, and the vtable header word at 0x02130c24 points back at that _ZTI. 'PiranhaPlant' occurs nowhere in the cartridge (106 images, 3,582,144 bytes scanned by the scout, 0 hits case-sensitive and case-folded). The member word is unchanged -- only the class prefix moves, 12PiranhaPlant -> 7daPkn_c
 ov084	0x0212feb4	_ZN12PiranhaPlant13InitResourcesEv	_ZN7daPkn_c13InitResourcesEv	vtable slot 0; class renamed to the cartridge's own RTTI spelling: ov084 0x02130bec holds the bytes '7daPkn_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI7daPkn_c at 0x02130bf8 points at with its +4 word, and the vtable header word at 0x02130c24 points back at that _ZTI. 'PiranhaPlant' occurs nowhere in the cartridge (106 images, 3,582,144 bytes scanned by the scout, 0 hits case-sensitive and case-folded). The member word is unchanged -- only the class prefix moves, 12PiranhaPlant -> 7daPkn_c
 ov084	0x02130c28	_ZTV12PiranhaPlant	_ZTV7daPkn_c	vtable symbol; the coined alias row _ZTV12PiranhaPlant and the cartridge row _ZTV7daPkn_c both sat at 0x02130c28 in config/arm9/overlays/ov084/symbols.txt. The coined one is dropped: the promoted TU owns the key function and emits _ZTV7daPkn_c, and dsd resolves the .data records that point here by NAME, so exactly one spelling may survive. class renamed to the cartridge's own RTTI spelling: ov084 0x02130bec holds the bytes '7daPkn_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI7daPkn_c at 0x02130bf8 points at with its +4 word, and the vtable header word at 0x02130c24 points back at that _ZTI. 'PiranhaPlant' occurs nowhere in the cartridge (106 images, 3,582,144 bytes scanned by the scout, 0 hits case-sensitive and case-folded). The member word is unchanged -- only the class prefix moves, 12PiranhaPlant -> 7daPkn_c
+ov065	0x02115ee0	func_ov065_02115ee0	_ZN15daYurei_Mucho_cD1Ev	vtable slot 16 (was _ZN6SnufitD1Ev)
+ov065	0x02115f28	func_ov065_02115f28	_ZN15daYurei_Mucho_cD0Ev	vtable slot 17 (was _ZN6SnufitD0Ev)
+ov065	0x02116ae8	func_ov065_02116ae8	_ZN15daYurei_Mucho_c16CleanupResourcesEv	vtable slot 3 (was _ZN6Snufit16CleanupResourcesEv)
+ov065	0x02116b30	func_ov065_02116b30	_ZN15daYurei_Mucho_c16OnPendingDestroyEv	vtable slot 12 (was _ZN6Snufit16OnPendingDestroyEv)
+ov065	0x02116b34	func_ov065_02116b34	_ZN15daYurei_Mucho_c6RenderEv	vtable slot 9 (was _ZN6Snufit6RenderEv)
+ov065	0x02116b84	func_ov065_02116b84	_ZN15daYurei_Mucho_c8BehaviorEv	vtable slot 6 (was _ZN6Snufit8BehaviorEv)
+ov065	0x02116e10	func_ov065_02116e10	_ZN15daYurei_Mucho_c13InitResourcesEv	vtable slot 0 (was _ZN6Snufit13InitResourcesEv)
+ov065	0x0211cba4	data_ov065_0211cba4	_ZTV15daYurei_Mucho_c	vtable alloc=0x3e4 (was _ZTV6Snufit)
+ov065	0x02115ee0	_ZN6SnufitD1Ev	_ZN15daYurei_Mucho_cD1Ev	vtable slot 16; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x02115f28	_ZN6SnufitD0Ev	_ZN15daYurei_Mucho_cD0Ev	vtable slot 17; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x02116ae8	_ZN6Snufit16CleanupResourcesEv	_ZN15daYurei_Mucho_c16CleanupResourcesEv	vtable slot 3; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x02116b30	_ZN6Snufit16OnPendingDestroyEv	_ZN15daYurei_Mucho_c16OnPendingDestroyEv	vtable slot 12; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x02116b34	_ZN6Snufit6RenderEv	_ZN15daYurei_Mucho_c6RenderEv	vtable slot 9; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x02116b84	_ZN6Snufit8BehaviorEv	_ZN15daYurei_Mucho_c8BehaviorEv	vtable slot 6; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x02116e10	_ZN6Snufit13InitResourcesEv	_ZN15daYurei_Mucho_c13InitResourcesEv	vtable slot 0; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x02116f0c	_ZN6Snufit16OnAimedAtWithEggEv	_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv	vtable slot 29; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x02116f14	_ZN6Snufit13OnTurnIntoEggER6Player	_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player	vtable slot 19; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge; the R6Player reference spelling is a coined guess the bytes cannot distinguish from a pointer
+ov065	0x02116f40	_ZN6Snufit13OnYoshiTryEatEv	_ZN15daYurei_Mucho_c13OnYoshiTryEatEv	vtable slot 18; class renamed to its ROM RTTI name 15daYurei_Mucho_c: extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0) holds '15daYurei_Mucho_c' NUL-terminated, the length-prefixed _ZTS payload that _ZTI15daYurei_Mucho_c at 0x0211cb60 points at; coined Snufit retired -- it occurs nowhere in the cartridge
+ov065	0x0211cba4	_ZTV6Snufit	_ZTV15daYurei_Mucho_c	coined alias row deleted; the address already carried the ROM RTTI vtable name. Exactly one spelling may survive: the promoted TU owns the key function and emits _ZTV15daYurei_Mucho_c, and dsd resolves the .data records that point here by NAME
