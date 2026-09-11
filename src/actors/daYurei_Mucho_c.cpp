@@ -77,7 +77,7 @@ extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ax);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern void MulVec3Mat4x3(const void *in, const void *m, void *out);
-extern void MulMat4x3Mat4x3(void *dst, const void *a, const void *b);
+extern void MulMat4x3Mat4x3(const int *a, const int *b, int *dst);
 extern int func_02012694(int id, void *v);
 extern int data_020a0e68[];
 extern int data_0209e650[];
@@ -360,7 +360,8 @@ void func_ov065_0211696c(char *c)
     *(int *)(c + 0x3c8) = 0;
     *(Mtx43 *)data_020a0e68 = *(Mtx43 *)(c + 0x31c);
 
-    MulMat4x3Mat4x3(*(char **)(c + 0x314) + 0xc0, data_020a0e68, data_020a0e68);
+    MulMat4x3Mat4x3(reinterpret_cast<const int *>(*(char **)(c + 0x314) + 0xc0),
+                     data_020a0e68, data_020a0e68);
 
     *(int *)(c + 0x3c0) = data_020a0e68[9];
     *(int *)(c + 0x3c4) = data_020a0e68[10];
