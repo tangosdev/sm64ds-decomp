@@ -1,10 +1,10 @@
 //cpp
 /* daPkn_c (PAKUN), ov084 0x0212eaf0..0x02130174.
  *
- * The cartridge RTTI names daPkn_c: the string at 0x02130bec is referenced
- * by typeinfo at 0x02130bf8 and the vtable header at 0x02130c24. The base is
- * dEnemyBase_c. The 31 vtable slots end at 0x02130ca4, followed by seven zero
- * words; the end of .data alone does not establish that extent.
+ * RTTI names daPkn_c. Typeinfo at 0x02130bf8 points to the string at
+ * 0x02130bec; the vtable header at 0x02130c24 points to that typeinfo.
+ * The base is dEnemyBase_c. This vtable's 31 slots end at 0x02130ca4; seven
+ * zero words follow. The section boundary alone does not establish its extent.
  *
  * This TU owns 24 text functions, including the PAKUN factory. Class metadata
  * is compiler-only output; the canonical data remains supplied by the ROM.
