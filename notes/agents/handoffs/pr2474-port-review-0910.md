@@ -1,6 +1,6 @@
 # PR 2474 transcription gate repair, 2026-09-10
 
-This handoff covers PORT-TRANS-01 only. The original port candidate is
+This handoff covers PORT-TRANS-01 through PORT-TRANS-04. The original port candidate is
 `91f525963d101265c3b88ef33ee5c19f996d08ac`; its ancestral source base is
 `b99310a89af9c0e4737f81ebde00d5599dba7e31`. The PR target is separately
 `31f3160466217cd906516d260dba0ac8f76aee26`, which is not an ancestor of
@@ -21,8 +21,8 @@ counters/player count/statistics and updates only its diagnostic rate limit.
 Those three comms accessors were separately read in the current source.
 
 Fresh checks: `python port/tools/test_hostloop_transcription_check.py` passes
-20 tests. The CLI also passes from outside the repository. The actual gate
-reports 406 original body lines, 60 extern symbols and three pinned helpers.
+28 tests. The CLI also passes from outside the repository. The actual gate
+reports 406 original body lines, 60 original extern declarations (including CpuCopy8) and three pinned helpers.
 Negative controls cover altered wait conditions, state writes, callees,
 extern widths, moved/duplicated counters, warning/silencer movement, report
 arguments, logging-side mutations, continued comments and missing/duplicate
@@ -42,3 +42,19 @@ nonzero wireless work or multiplayer/rewind completion. Separate owned work
 is repairing toolchain discovery, generated-owner reference checking and a
 new cross-array pointer subtraction finding in wm_thread.cpp. The full port
 PR and its 134-file target diff are not accepted by this small gate repair.
+
+Independent rework, before acceptance: PORT-TRANS-02 removed the inherited
+blanket `kRecs` replacement. Only the seven exact reviewed record walks can
+normalize; the two fixed four-slot info loops and `sp18 = 4` remain fixed.
+PORT-TRANS-03 pins reviewed code outside the compared bodies as well, covering
+includes, preprocessor context, typedefs, linkage blocks, declarations and the
+dispatch wrapper. An inactive old helper plus a new active definition, a callee
+macro, or a changed record cannot preserve a passing body-only result.
+PORT-TRANS-04 compares every original extern declaration by its actual name,
+including CpuCopy8; the only two extra host declarations are exact outside-code
+pins. The count remains 60, now meaning all 60 original declarations rather
+than the former address-name filter plus its partial narrow-arm name match.
+The 28-test suite includes all six independently reported false-pass fixtures,
+all seven required widening sites, declaration additions/removals and both
+source and wide context changes. These pins are source-review boundaries:
+changing reviewed context requires a new review, not a claim of ROM proof.

@@ -101,6 +101,51 @@ class TranscriptionCheck(unittest.TestCase):
     def test_continued_comment_cannot_hide_a_real_statement(self):
         self.reject('data_020a0f30 = 1;', '// removed by line splicing \\\n        data_020a0f30 = 1;')
 
+    def test_only_seven_reviewed_record_walks_may_be_widened(self):
+        for old, new in (('} while (var_r5_2 < 4);', '} while (var_r5_2 < kRecs);'),
+                         ('} while (spC < 4);', '} while (spC < kRecs);'),
+                         ('sp18 = 4;', 'sp18 = kRecs;')):
+            with self.subTest(old=old):
+                self.reject(old, new)
+
+    def test_each_authorized_widening_is_required(self):
+        for line in ('} while ((s32) var_r7 < kRecs);', 'if (var_r2 < kRecs) {',
+                     'if (var_r5_3 < kRecs) {', 'if (var_r3_2 < kRecs) {',
+                     '} while (var_r0 < kRecs);', 'if (var_r2_3 < kRecs) {',
+                     'if (var_r2_4 < kRecs) {'):
+            with self.subTest(line=line):
+                self.reject(line, line.replace('kRecs', '4'))
+
+    def test_disabled_old_helper_cannot_hide_an_active_changed_definition(self):
+        helper = H.function(self.wide, 'void warn_info_mode_armed_wide(void)')
+        self.reject(helper, '#if 0\n' + helper + '\n#endif\n'
+                    'void warn_info_mode_armed_wide (void) { data_020a0f04 = 1; }')
+
+    def test_new_callee_macro_or_context_directive_is_rejected(self):
+        for directive in ('#define func_02040704(x) ((u8)1)', '#if 0', '#pragma pack(1)'):
+            with self.subTest(directive=directive):
+                self.reject('void conductor_wide(void)', directive + '\nvoid conductor_wide(void)')
+
+    def test_copy_callee_contract_is_compared_by_its_real_name(self):
+        self.assertIn('CpuCopy8', H.decls(self.src))
+        self.assertEqual(len(H.decls(self.src)), 60)
+        self.reject('extern void CpuCopy8(void *dst, void *src, s32 len);',
+                    'extern void CpuCopy8(void *dst, void *src, s16 len);')
+
+    def test_missing_or_extra_named_game_extern_is_rejected(self):
+        self.reject('extern void CpuCopy8(void *dst, void *src, s32 len);', '')
+        self.reject('extern void CpuCopy8(void *dst, void *src, s32 len);',
+                    'extern void CpuCopy8(void *dst, void *src, s32 len);\nextern int NewGameState;')
+
+    def test_dispatch_or_record_definition_changes_are_rejected(self):
+        self.reject('enum { kRecs = kPortMaxPlayers };', 'enum { kRecs = 4 };')
+        self.reject('u8 unk12[0x10];', 'u8 unk12[0x11];')
+
+    def test_original_source_context_also_requires_review(self):
+        candidate = self.src.replace('s32 len);', 's16 len);', 1)
+        with self.assertRaises(ValueError):
+            H.check_sources(candidate, self.wide)
+
     def test_missing_or_repeated_function_fails_closed(self):
         for candidate in (self.wide.replace('void conductor_wide(void)', 'void other(void)', 1),
                           self.wide + '\nvoid conductor_wide(void) {}'):
