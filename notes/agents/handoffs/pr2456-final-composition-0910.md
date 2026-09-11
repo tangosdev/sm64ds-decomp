@@ -15,8 +15,10 @@ shared-file handles and copies eight 8-byte PMF constants into four 16-byte Stat
 records at ov065 `0x0211d650..0x0211d690`. The current SharedFilePtr header has no
 recovered fields or declared constructor, and State only contains two PMFs.
 Declaring storage does not universally imply an additional compiler initializer.
-This TU leaves the storage and initializer with the ROM because its production
-ownership covers text only; no BSS layout or constructor claim is added.
+This class TU leaves the BSS storage ROM-supplied and retains the initializer in
+its separately enrolled source file, `src/__sinit_ov065_0211c110.c`. Its complete
+`.init` entry covers `0x0211c110..0x0211c2a8`. No BSS layout or constructor claim
+is added.
 
 YUR-10 distinguishes the historical 22-function pre-fold census from the current
 23-function manifest. The srcpath factory-spelling limitation still exists, but
