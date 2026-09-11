@@ -199,6 +199,7 @@ jobs:
             tools.test_classqueue_v2 \
             tools.test_cpp_rename_verify \
             tools.test_delaunder \
+            tools.test_demangle \
             tools.test_enroll \
             tools.test_layout \
             tools.test_linkcheck \
