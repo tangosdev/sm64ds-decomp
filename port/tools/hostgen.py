@@ -759,6 +759,13 @@ def falls_off_return_patch(text, sym):
 # vptr[0], cdecl -- rather than to give slot 0 a second calling convention.
 # The local `virtual` declaration stays; only the call changes.
 VIRTUAL_CALL = {
+    # Chuckya's raw slot-3 call passes a stack receiver on x86, while the
+    # hosted ModelAnim entry uses the same fastcall receiver/dummy-EDX pair
+    # as the other model slots. Preserve its slot and all Behavior control flow.
+    "_ZN7Chuckya8BehaviorEv": [
+        ("(*(void(**)(void*))(*(int*)o + 0xc))(o);",
+         "((void (__fastcall *)(void *, void *))(*(void ***)o)[3])(o, 0);"),
+    ],
     "func_02021d1c": [
         ("p6->Run(*(void **)(self + 0xc));",
          "(*(void (***)(void *, void *))p6)[0]"
@@ -1246,7 +1253,13 @@ def ds_div_patch(text, sym):
 
 
 def virtual_call_patch(text, sym):
-    """Make a C++ virtual call on a C vtable dispatch cdecl, like its peers."""
+    """Adapt the explicitly reviewed virtual-call sites to their host ABI."""
+    if sym == "_ZN7Chuckya8BehaviorEv":
+        old = VIRTUAL_CALL[sym][0][0]
+        count = text.count(old)
+        if count != 1:
+            sys.exit("hostgen: %s: VIRTUAL_CALL expected exactly one model "
+                     "slot call, found %d; re-derive the source before emitting" % (sym, count))
     return apply_patches(text, sym, VIRTUAL_CALL, "VIRTUAL_CALL")
 
 
