@@ -252,7 +252,7 @@ def _cmake_helper_writes(commands):
             if name == end:
                 break
             body.append((name, inner))
-        helpers[args[0].value.lower()] = ([a.value for a in args[1:]], body)
+        helpers[args[0].value.lower()] = ([a.value for a in args[1:]], body, command)
     return helpers
 
 
@@ -265,7 +265,7 @@ def _cmake_write_targets(name, args, variables, helpers, active=()):
     if name in helpers:
         if name in active:
             return None
-        formal, body = helpers[name]
+        formal, body, kind = helpers[name]
         local = dict(variables)
         for index, key in enumerate(formal):
             local[key] = _cmake_values(args[index:index + 1], variables)
@@ -379,7 +379,17 @@ def _cmake_symbol_lists(text):
     depth = 0
     commands = list(_cmake_commands(text))
     helpers = _cmake_helper_writes(commands)
-    for command, args in commands:
+    skip_until = 0
+    for index, (command, args) in enumerate(commands):
+        if index < skip_until:
+            continue
+        if command == 'set' and args and args[0].value == 'PORT_SHARE_TARGETS':
+            skip_until = _verified_tier_sharing(commands, index, len(commands))
+            for key in list(variables):
+                if key.startswith('_') or key in ('PORT_SHARE_TARGETS', 'PORT_TIER_SHARED',
+                                                  'PORT_TIER_PERTGT', 'PORT_DIVERGENT_DEFINES'):
+                    variables.pop(key, None)
+            continue
         if command not in ('set', 'unset', 'list'):
             written = _invalidate_cmake_writes(command, args, variables, helpers)
             for key in written or ():
@@ -407,7 +417,10 @@ def _cmake_symbol_lists(text):
         elif command == "unset":
             variables.pop(name, None)
         elif len(args) > 1:
-            name = args[1].value
+            keys = _cmake_values(args[1:2], variables)
+            name = keys[0].value if len(keys) == 1 else ''
+            if not re.fullmatch(r'\w+', name):
+                raise ValueError('unresolved CMake list destination cannot prove symbol references')
             if args[0].value in ("LENGTH", "GET", "JOIN", "FIND", "SUBLIST"):
                 outputs = _cmake_write_targets(command, args, variables, helpers)
                 _invalidate_cmake_writes(command, args, variables, helpers)
@@ -533,16 +546,23 @@ def _verified_tier_sharing(commands, first, last):
     return after
 
 
-def _reject_source_rewrite(name, args, variables, helpers, active=(), targets_exist=False):
+def _reject_source_rewrite(name, args, variables, helpers, active=(), targets_exist=False,
+                           allow_loop_control=False, allow_return=False):
+    if (name == 'return' and not allow_return) or (name in ('break', 'continue') and not allow_loop_control):
+        raise ValueError('unsupported CMake control flow can skip source selection: ' + name)
     if name in helpers:
         if name in active:
             raise ValueError('recursive CMake helper cannot prove source selection')
-        formal, body = helpers[name]
+        formal, body, kind = helpers[name]
         local = dict(variables)
         for index, key in enumerate(formal):
             local[key] = _cmake_values(args[index:index + 1], variables)
         for command, inner in body:
-            _reject_source_rewrite(command, inner, local, helpers, active + (name,), targets_exist)
+            # Function exits stay in the unmodeled helper, whose outputs are
+            # invalidated. A macro return can leave the caller's whole file.
+            _reject_source_rewrite(command, inner, local, helpers, active + (name,),
+                                   targets_exist, allow_loop_control or kind == 'function',
+                                   allow_return or kind == 'function')
         return
     if targets_exist and name in ('include', 'find_package', 'cmake_language'):
         raise ValueError('unevaluated CMake code can rewrite existing target sources: ' + name)
@@ -588,9 +608,12 @@ def _cmake_build_inputs(text, symbol_expansions=None):
             raise ValueError("unterminated CMake block")
         return j
 
-    def invalidate(first, last):
+    def invalidate(first, last, discard_loop=False):
         for name, args in commands[first:last]:
-            _reject_source_rewrite(name, args, env, helpers, targets_exist=bool(targets))
+            # An unknown loop grants no input claims, so its local break or
+            # continue cannot hide a selected body. Return still escapes it.
+            _reject_source_rewrite(name, args, env, helpers, targets_exist=bool(targets),
+                                   allow_loop_control=discard_loop)
             _invalidate_cmake_writes(name, args, env, helpers)
 
     def walk(first, last):
@@ -624,6 +647,12 @@ def _cmake_build_inputs(text, symbol_expansions=None):
                         rows = values[1:]
                     else:
                         rows = None
+                    if any(command in ('break', 'continue')
+                           for command, _ in commands[i + 1:after - 1]):
+                        # No branch evaluator is provided. Discard every
+                        # input claim and variable write from this loop rather
+                        # than executing declarations its control flow may skip.
+                        rows = None
                     if rows is not None and all("$" not in v.value for v in rows):
                         previous = env.get(words[0])
                         for row in rows:
@@ -634,9 +663,9 @@ def _cmake_build_inputs(text, symbol_expansions=None):
                         else:
                             env[words[0]] = previous
                     else:
-                        invalidate(i + 1, after - 1)
+                        invalidate(i + 1, after - 1, discard_loop=True)
                 elif name not in ("function", "macro"):
-                    invalidate(i + 1, after - 1)
+                    invalidate(i + 1, after - 1, discard_loop=(name == 'while'))
                 i = after
                 continue
             if name not in ('set', 'unset', 'list'):
@@ -669,7 +698,7 @@ def _cmake_build_inputs(text, symbol_expansions=None):
                 if not re.fullmatch(r'\w+', key):
                     env.clear()
                 elif args[0].value in ("LENGTH", "GET", "JOIN", "FIND", "SUBLIST"):
-                    env.pop(args[-1].value, None)
+                    _invalidate_cmake_writes(name, args, env, helpers)
                 elif args[0].value == "APPEND":
                     env.setdefault(key, []).extend(_cmake_values(args[2:], env))
                 elif args[0].value == "REMOVE_ITEM" and key in env:

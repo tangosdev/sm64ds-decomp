@@ -324,6 +324,56 @@ target_sources(walk_window PRIVATE unmatched/two.cpp)
                     selected, _ = self.selected(text + '\nadd_executable(host ${S})')
                     self.assertEqual(selected, set())
 
+    def test_indirect_list_outputs_invalidate_the_resolved_destination(self):
+        for operation in ('GET A 0 ${OUT}', 'LENGTH A ${OUT}',
+                          'JOIN A ":" ${OUT}', 'FIND A item ${OUT}',
+                          'SUBLIST A 0 1 ${OUT}'):
+            with self.subTest(operation=operation):
+                text = ('set(S unmatched/ghost.cpp)\nset(A unmatched/other.cpp)\n'
+                        'set(OUT S)\nlist(' + operation + ')\nadd_executable(host ${S})')
+                self.assertEqual(self.selected(text)[0], set())
+
+    def test_indirect_symbol_list_mutations_check_added_references(self):
+        for operation in ('APPEND ${NAME} missing', 'PREPEND ${NAME} missing',
+                          'INSERT ${NAME} 0 missing'):
+            with self.subTest(operation=operation):
+                count, failures = self.cmake('set(X_SYMS real)\nset(NAME X_SYMS)\nlist('
+                                             + operation + ')', ('real',))
+                self.assertEqual(count, 2)
+                self.assertEqual(len(failures), 1)
+                self.assertIn("'missing'", failures[0].message)
+        _, failures = self.cmake('set(X_SYMS real)\nlist(APPEND ${UNKNOWN} missing)', ('real',))
+        self.assertTrue(failures)
+
+    def test_terminating_control_flow_cannot_license_unreached_sources(self):
+        for body in ('return()', 'if(TRUE)\nreturn()\nendif()',
+                     'foreach(x item)\nbreak()\n{}\nendforeach()',
+                     'foreach(x item)\ncontinue()\n{}\nendforeach()',
+                     'foreach(x item)\nif(UNKNOWN)\ncontinue()\nendif()\n{}\nendforeach()',
+                     'macro(stop)\nreturn()\nendmacro()\nstop()'):
+            with self.subTest(body=body):
+                target = 'add_executable(host unmatched/ghost.cpp)'
+                text = body.format(target) if '{}' in body else body + '\n' + target
+                if 'foreach' in body:
+                    self.assertEqual(self.selected(text)[0], set())
+                else:
+                    with self.assertRaisesRegex(ValueError, 'control flow'):
+                        self.selected(text)
+
+    def test_function_local_control_cannot_supply_outputs_or_skip_caller(self):
+        body = ('function(build out)\nforeach(x item)\ncontinue()\n'
+                'set(${out} unmatched/ghost.cpp PARENT_SCOPE)\nendforeach()\n'
+                'return()\nendfunction()\nset(S unmatched/ghost.cpp)\n'
+                'build(S)\nadd_executable(host ${S} unmatched/real.cpp)')
+        self.assertEqual(self.selected(body)[0], {self.port / 'unmatched/real.cpp'})
+
+    def test_discarded_unknown_loop_cannot_hide_an_outer_return(self):
+        body = 'foreach(x IN LISTS UNKNOWN)\n{}\nendforeach()\nadd_executable(host unmatched/real.cpp)'
+        self.assertEqual(self.selected(body.format('continue()'))[0],
+                         {self.port / 'unmatched/real.cpp'})
+        with self.assertRaisesRegex(ValueError, 'control flow'):
+            self.selected(body.format('if(UNKNOWN)\nreturn()\nendif()'))
+
     def test_nested_helper_output_invalidates_the_actual_callers_variable(self):
         text = ( 'macro(clearit out)\nset(${out} "")\nendmacro()\n'
                  'macro(wrapper out)\nclearit(${out})\nendmacro()\n'
