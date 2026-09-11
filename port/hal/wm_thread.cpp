@@ -690,7 +690,7 @@ extern "C" void port_wm8_band_report(void)
     unsigned long received = 0;
 
     for (int i = 0; i < 16; ++i) {
-        const unsigned char *e = base + 0x1d4 + i * 0x68;
+        const unsigned char *e = data_020a9570 + (0x1d4 - 0x9c) + i * 0x68;
         if (e[0] == 1) ++started;
         if (e[0] == 2) ++banked;
         received += *reinterpret_cast<const uint32_t *>(e + 0x24 + 0x10);
@@ -714,7 +714,7 @@ extern "C" void port_wm8_band_report(void)
                  "arg148=%08x entries_started=%d entries_banked=%d "
                  "received=%lu (%s)\n",
                  (const void *)base, span, up,
-                 *reinterpret_cast<const uint32_t *>(base + 0x148),
+                 *reinterpret_cast<const uint32_t *>(data_020a9570 + (0x148 - 0x9c)),
                  started, banked, received, why);
     // LANE WM9: THE OTHER HALF OF THE SAME QUESTION. The line above says
     // whether the ROM's own receive path ran; this one says whether anything
