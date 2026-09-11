@@ -1,65 +1,27 @@
 //cpp
-/* dScMgCup_c -- the cup-shuffle minigame scene, ov006.
+/* Cup-shuffle minigame scene, ov006.
  *
- * One translation unit, ROM ordinals 0..31 of the contiguous linker run
- * 0x020de988..0x020e0638: the destructor pair, fourteen file-local helpers,
- * two empty array-element callbacks, the eight State* members the scene
- * dispatches through, the five non-destructor vtable overrides, and the MG_CUP
- * factory.  dScMgCurling_c begins exactly at the next address.  The factory's
- * allocation size, its vptr transition and its constructed member arrays
- * identify the class independently of the boundary.
+ * RTTI identifies dScMgCup_c. State names and the factory spelling are
+ * reconstructed from the PMF order and behavior, not recovered source text.
+ * Eager code generation preserves the 32-function ROM order and the local
+ * optimizer settings. The compiler emits the destructor variants and class
+ * metadata; production owns text only.
  *
- * FUNCTION ORDER IS THE ROM'S OWN, LOWEST ADDRESS FIRST, and that is one
- * decision with `#pragma defer_codegen off` below: generating at parse time
- * emits .text in source order where deferred codegen reverses it, it keeps the
- * five member-local optimiser brackets scoped, and it puts D1 ahead of D0 the
- * way the cartridge has them.  Do not reorder and do not drop that pragma.
- *
- * The own-tail offsets have load/store and constructor evidence, but their
- * original field names are unproved. The header's mState, mShuffleAngle,
- * mShuffleSpeed, mOnes, mIds and mFlags are disclosed inferences; only mState
- * is used as a member here. Raw offsets and Obj6e remain reconstruction work,
- * not a naming requirement. Issue #2492 tracks individually proved typed-field
- * replacements, including the live words at 0x5400, 0x5404 and 0x5408.
- *
- * THE EIGHT State* SPELLINGS ARE INFERENCES TOO.  __sinit_ov006_021303d0 fixes
- * the pointer-to-member table's ORDER and each body's behaviour fixes its role,
- * but the original names are not in the cartridge.  The same holds for
- * Virtual50 and for dScMgCup_c_classInit.
- *
- * FIVE RETAINED SOURCE FORMS HAVE RECORDED CODE-GENERATION MEASUREMENTS.  Each
- * carries its own comment where it sits: func_ov006_020ded00's two spellings of
- * +0x12; func_ov006_020def80's per-arm `cup = i;` assignments;
- * StateShuffle's read-modify-write on +0x545c/+0x545e; Behavior's `(int)`
- * launders over the three parallel per-cup arrays; and Render's two
- * pointer-arithmetic towers.  Every other cast of that shape in this file was
- * measured one at a time and deleted as byte-neutral -- a cast tower here is
- * either load-bearing and commented, or gone.
- *
- * ONE byte-neutral spelling is kept anyway and is labelled as such: the
- * `speed = -speed;` statement split inside StateShuffle.  An earlier revision
- * claimed it bought bytes; re-measurement says it does not.  If you find any
- * other claim in this file that a spelling is load-bearing, it was produced by
- * deleting that spelling and re-running tools/tubuild.py verify -- keep it that
- * way.
- *
- * Result: 32/32 byte+relocation matches.  Compiler-only D2/RTTI/vtable
- * passengers are externalized in the manifest to the canonical cartridge
- * copies; this TU claims no data and no bss.
+ * The scene uses its real fields and position array where exact compilation
+ * supports them. Remaining component storage, scalar helpers, manual array
+ * lifetime calls and localized address forms are tracked in issue #2492.
+ * Earlier experiments and their input commits remain in the review handoffs.
  */
 /* Shared declarations first; TU-private layouts follow. */
 #include "dScMgCup_c.h"
 #include "types.h"
 #include "decl_common.h"
 
-/* TU-private layouts, kept only where no shared project type exists yet.
-   Three of them are an 8-byte pair of s32 under three names, because they are
-   three unrelated tables: Pair6 is the static cup-position table in .data,
-   Frame is an animation {id,length} row, and P8 is the per-cup live position
-   pair in the object's own tail. */
+/* Local table layouts. Pair6 holds two static-table words; Frame describes
+   animation rows. Render retains its measured P8 address form. */
 
-/* One row of data_ov006_0213c094: a packed left/right nibble pair per round. */
-typedef struct { u8 pad; u8 lo:4; u8 hi:4; } Entry094;
+/* One round: a shuffle count followed by two packed speed-table selectors. */
+typedef struct { u8 count; u8 lo:4; u8 hi:4; } Entry094;
 
 typedef struct { int a, b; } Pair6;
 
@@ -71,18 +33,6 @@ typedef struct Frame {
     int a, b;
 } Frame;
 
-/* InitResources' own window onto the object tail -- the one place in this file
-   where the three parallel per-cup arrays are written as arrays. */
-typedef struct Obj6e {
-    char _p0[0x53e8];
-    Pair6 pairs[3];  /* 0x53e8 */
-    char _p1[0x540c - 0x5400];
-    int ones[3];     /* 0x540c */
-    char _p2[0x5420 - 0x5418];
-    int ids[3];      /* 0x5420 */
-    char _p3[0x5465 - 0x542c];
-    u8 flags[3];     /* 0x5465 */
-} Obj6e;
 
 extern "C" {
 extern void func_ov006_020dec5c(char *p, int a, int b);
@@ -165,15 +115,11 @@ extern void *_ZTV10dScMgCup_c[];
 
 /* [0] 0x020de988  _ZN10dScMgCup_cD1Ev  size 0x94 */
 // @symbol _ZN10dScMgCup_cD1Ev
-/* The three explicit calls are the factory's construction order run backwards:
-   mArray2, then mArray1, then the 0x4f38 table -- that one addressed by raw
-   offset because the header keeps it opaque.  Everything the ROM does after
-   them (own vtable store, the tracker's destruction, the chain up to
-   ~dScMgBase_c) is the compiler inlining dScMgSingle3DBase_c's destructor, so
-   none of it is written here.  This one definition emits ordinal 1, D0, too. */
+/* Destroy the position array, animation array and opaque component in
+   reverse construction order. The compiler emits the base teardown and D0. */
 dScMgCup_c::~dScMgCup_c()
 {
-    __cxa_vec_cleanup(mArray2, 3, 8, (void *)NullDestructor_0203d47c);
+    __cxa_vec_cleanup(mCupPositions, 3, 8, (void *)NullDestructor_0203d47c);
     __cxa_vec_cleanup(mArray1, 0x20, 0x18, (void *)func_ov006_020deac4);
     func_ov006_020c3288((char *)this + 0x4f38);
 }
@@ -499,16 +445,16 @@ void dScMgCup_c::StateFinish()
     *(int*)(c + 0x541c) -= 1;
     if (*(int*)(c + 0x5000 + 0x41c) > 0) return;
     if (*(unsigned char*)(c + 0x5000 + 0x469) != 0) {
-        if (*(int*)(c + 0xb4) < 0x270f) *(int*)(c + 0xb4) += 1;
-        if (*(int*)(c + 0xb4) > *(int*)(c + 0xb8)) *(int*)(c + 0xb8) = *(int*)(c + 0xb4);
+        if (mHudScore < 0x270f) mHudScore += 1;
+        if (mHudScore > unk_0b8) unk_0b8 = mHudScore;
         func_ov004_020b0a54(0);
-        *(int*)(c + 0x5000 + 0x418) = 7;
+        mState = 7;
     } else {
-        if (*(int*)(c + 0xa8) > 0) {
+        if (unk_0a8 > 0) {
             OnYoshiTryEat(-1);
         } else {
             func_ov004_020b0a54(0x12);
-            *(int*)(c + 0x5000 + 0x418) = 7;
+            mState = 7;
         }
     }
 }
@@ -532,14 +478,14 @@ void dScMgCup_c::StateResult()
             func_ov006_020def80(self, i);
         }
     }
-    score = *(int *)(self + 0xb4);
+    score = mHudScore;
     if (*(u8 *)(self + 0x5000 + 0x469) != 0) {
         *(int *)(self + 0x5000 + 0x41c) = 0x3c;
         func_ov006_020c2594(self + 0x4f38);
         score++;
     } else {
         func_ov004_020b1b78(self, 1);
-        if (*(int *)(self + 0xa8) > 0) {
+        if (unk_0a8 > 0) {
             *(int *)(self + 0x5000 + 0x41c) = 0x96;
             func_ov006_020c2664(self + 0x4f38);
         } else {
@@ -549,7 +495,7 @@ void dScMgCup_c::StateResult()
         func_02012790(0x12f);
     }
     func_ov004_020adb1c(score);
-    *(int *)(self + 0x5000 + 0x418) = 6;
+    mState = 6;
     *(u8 *)(self + 0xc3) = 0;
 }
 #pragma pop
@@ -585,14 +531,14 @@ void dScMgCup_c::StateSelect()
         *(unsigned char*)(c + j + 0x5000 + 0x465) = 1;
         func_ov006_020def80(c, j);
 
-        if (*(unsigned char*)(c + 0x5000 + 0x468) == *(unsigned char*)(c + j + 0x5000 + 0x462)) {
+        if (unk_5468 == *(unsigned char*)(c + j + 0x5000 + 0x462)) {
             *(unsigned char*)(c + 0x5000 + 0x469) = 1;
             *(int*)(c + j * 4 + 0x5000 + 0x434) = 6;
         } else {
             *(unsigned char*)(c + 0x5000 + 0x469) = 0;
         }
 
-        *(int*)(c + 0x5000 + 0x418) = 5;
+        mState = 5;
         *(int*)(c + 0x5000 + 0x41c) = 0x3c;
         FreeGfxSlotsById(0x1d);
 
@@ -619,7 +565,7 @@ void dScMgCup_c::StateWaitForInput()
     if (*(int *)(c + 0x541c) > 0)
         return;
     func_ov004_020b0cac(0xf, 0x80, 0x38, 0, -1, 0xd);
-    *(int *)(c + 0x5418) = 4;
+    mState = 4;
 }
 
 /* [22] 0x020df5b8  _ZN10dScMgCup_c12StateShuffleEv  size 0x720 */
@@ -632,27 +578,27 @@ void dScMgCup_c::StateShuffle()
     int ox, oy;
 
     {
-        int v = *(s16*)(c + 0x545e);
+        int v = mShuffleSpeed;
         int amp;
         if (v < 0) v = -v;
         amp = (v * 0x1f4) / 0x1000;
         if (amp >= 0x1f4) amp = 0x1f4;
-        *(int*)(c + 0x5458) = func_02012468(*(int*)(c + 0x5458), 2, 0x1cb, 2, 0, amp, 0, 0);
+        mShuffleSound = func_02012468(mShuffleSound, 2, 0x1cb, 2, 0, amp, 0, 0);
     }
 
-    *(u16*)(c + 0x545c) += *(s16*)(c + 0x545e);
+    mShuffleAngle += mShuffleSpeed;
 
     {
-        s16 speed = *(s16*)(c + 0x545e);
-        if ((speed >= 0 && *(u16*)(c + 0x545c) >= 0x8000u) ||
-            (speed < 0 && *(u16*)(c + 0x545c) <= 0x8000u)) {
-            *(u16*)(c + 0x545c) = 0x8000;
+        s16 speed = mShuffleSpeed;
+        if ((speed >= 0 && mShuffleAngle >= 0x8000u) ||
+            (speed < 0 && mShuffleAngle <= 0x8000u)) {
+            mShuffleAngle = 0x8000;
         }
     }
 
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
-        int sinv = data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2 + 1];
+        int sinv = data_02082214[(mShuffleAngle >> 4) * 2 + 1];
         ox = *(int*)(c + slot * 8 + 0x53e8);
         oy = *(int*)(c + slot * 8 + 0x53ec);
         *(int*)(c + slot * 8 + 0x53e8) = *(int*)(c + 0x5400)
@@ -661,7 +607,7 @@ void dScMgCup_c::StateShuffle()
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
         *(int*)(c + slot * 8 + 0x53ec) = *(int*)(c + 0x5404)
-            - (int)((data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2] * 0x14000LL + 0x800) >> 12);
+            - (int)((data_02082214[(mShuffleAngle >> 4) * 2] * 0x14000LL + 0x800) >> 12);
     }
     {
         int slot = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
@@ -676,7 +622,7 @@ void dScMgCup_c::StateShuffle()
 
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
-        int sinv = data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2 + 1];
+        int sinv = data_02082214[(mShuffleAngle >> 4) * 2 + 1];
         ox = *(int*)(c + slot * 8 + 0x53e8);
         oy = *(int*)(c + slot * 8 + 0x53ec);
         *(int*)(c + slot * 8 + 0x53e8) = *(int*)(c + 0x5400)
@@ -685,7 +631,7 @@ void dScMgCup_c::StateShuffle()
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
         *(int*)(c + slot * 8 + 0x53ec) = *(int*)(c + 0x5404)
-            + (int)((data_02082214[(*(u16*)(c + 0x545c) >> 4) * 2] * 0x14000LL + 0x800) >> 12);
+            + (int)((data_02082214[(mShuffleAngle >> 4) * 2] * 0x14000LL + 0x800) >> 12);
     }
     {
         int slot = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
@@ -706,41 +652,26 @@ void dScMgCup_c::StateShuffle()
             int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
             *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420) = tb;
             *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420) = ta;
-            *(u8*)(c + 0x5460) -= 1;
-            if (*(u8*)(c + 0x5460) == 0) {
+            unk_5460 -= 1;
+            if (unk_5460 == 0) {
                 *(int*)(c + 0x541c) = 0x1e;
-                *(int*)(c + 0x5418) = 3;
+                mState = 3;
             } else {
                 u32 r = RandomIntInternal(&data_0209e650);
                 *(int*)(c + 0x541c) = (r >> 8) % 0x18 + 1;
-                *(int*)(c + 0x5418) = 1;
+                mState = 1;
             }
         } else if (*(u8*)(c + 0x546a) != 0) {
             s16 speed = *(s16*)(state + 0x5e);
             if ((speed >= 0 && angle >= 0x5555u) || (speed < 0 && angle <= 0xaaabu)) {
-                /* TWO of the spellings below are load-bearing, each measured by
-                   removal on this tree:
-
-                   (1) These stores must respell the FULL offset from `c`.  The
-                   two loads above share one base register through `state`, but
-                   the ROM re-materialises `this + 0x5400` here.  Reusing the
-                   cached base gives DIFF *and* a wrong relocation destination
-                   (`data_ov006_0213c085` where the ROM has `0x0213c084`).
-
-                   (2) The increment must be a plain read-modify-write.  Writing
-                   it `*(u16*)(c + 0x545c) += 0x8000;` makes mwcc CSE the field
-                   address into a register and drop the displacement, which
-                   `opt_common_subs off` (in force over this function) does not
-                   undo.  DIFF.
-
-                   The split `speed = -speed;` statement is NOT load-bearing, and
-                   an earlier revision of this comment wrongly said it was.
-                   Fusing it into the store as `*(s16*)(c + 0x545e) = -speed;`
-                   still gives 32/32 MATCH -- measured, not reasoned.  It is kept
-                   split only because it reads better beside the guard above. */
+                /* Keep the earlier loads through state and these explicit member
+                   stores. On the preserved input, caching the store base or
+                   changing the angle assignment to += changed the output.
+                   The current member form is exact; splitting -speed is
+                   byte-neutral. See the handoff for the original probes. */
                 speed = -speed;
-                *(s16*)(c + 0x545e) = speed;
-                *(u16*)(c + 0x545c) = *(u16*)(c + 0x545c) + 0x8000;
+                mShuffleSpeed = speed;
+                mShuffleAngle = mShuffleAngle + 0x8000;
                 {
                     int tb = *(int*)(c + *(int*)(c + 0x5430) * 4 + 0x5420);
                     int ta = *(int*)(c + *(int*)(c + 0x542c) * 4 + 0x5420);
@@ -827,7 +758,7 @@ void dScMgCup_c::StatePrepareShuffle()
         unsigned char *q = (unsigned char *)(o + 0x546b);
         *q = *q - 1;
     }
-    *(int *)(o + 0x5000 + 0x418) = 2;
+    mState = 2;
 }
 
 /* [24] 0x020dfd48  _ZN10dScMgCup_c10StateSetupEv  size 0x18c */
@@ -852,45 +783,45 @@ void dScMgCup_c::StateSetup()
         func_ov006_020def80(c, i);
     }
 
-    score = *(int *)(c + 0xb4);
+    score = mHudScore;
     if (score < 0xa) {
-        *(unsigned char *)(c + 0x5461) = (unsigned char)score;
+        unk_5461 = (unsigned char)score;
     } else {
         rnd = (unsigned int)RandomIntInternal(&data_0209e650);
         hi = rnd >> 16;
         kind = (hi % 5) + 5;
-        *(unsigned char *)(c + 0x5461) = (unsigned char)kind;
+        unk_5461 = (unsigned char)kind;
     }
 
-    *(unsigned char *)(c + 0x5460) =
-        ((unsigned char *)data_ov006_0213c094)[*(unsigned char *)(c + 0x5461) * 2];
+    unk_5460 =
+        ((unsigned char *)data_ov006_0213c094)[unk_5461 * 2];
 
     if (score > 3) {
         rnd = (unsigned int)RandomIntInternal(&data_0209e650);
         if (rnd & 1) {
-            *(unsigned char *)(c + 0x5468) = 1;
+            unk_5468 = 1;
         } else {
-            *(unsigned char *)(c + 0x5468) = 2;
+            unk_5468 = 2;
         }
     } else if (score == 3) {
-        *(unsigned char *)(c + 0x5468) = 2;
+        unk_5468 = 2;
     }
 
     *(unsigned char *)(c + 0x546b) = 0;
     *(unsigned char *)(c + 0x5469) = 0;
-    *(int *)(c + 0x5418) = 1;
+    mState = 1;
     *(int *)(c + 0x541c) = 0x1e;
     *(unsigned char *)(c + 0x546d) = 0xff;
-    *(int *)(c + 0x5458) = 0;
+    mShuffleSound = 0;
     FreeGfxSlotsById(0x1d);
 
     rnd = (unsigned int)RandomIntInternal(&data_0209e650);
     picked = (rnd % 10) + 1;
     *(unsigned char *)(c + 0x546c) = (unsigned char)picked;
 
-    if (*(unsigned char *)(c + 0xc4) == 0) {
-        *(unsigned char *)(c + 0xc3) = 1;
-        *(unsigned char *)(c + 0xc4) = 1;
+    if (mPromptBlinkCount == 0) {
+        mPromptEnabled = 1;
+        mPromptBlinkCount = 1;
         *(short *)(c + 0xc0) = 0;
     }
 }
@@ -919,25 +850,25 @@ void dScMgCup_c::OnYoshiTryEat(int msg)
 
     if (msg == 3 || msg == 0x12) {
         if (msg == 3) {
-            *(int *)(c + 0xb4) = 0;
+            mHudScore = 0;
         } else {
-            *(int *)(c + 0xb4) = 0;
-            func_ov004_020adb1c(*(int *)(c + 0xb4));
+            mHudScore = 0;
+            func_ov004_020adb1c(mHudScore);
         }
-        *(int *)(c + 0xa8) = 2;
-        *(int *)(c + 0xac) = *(int *)(c + 0xa8);
+        unk_0a8 = 2;
+        unk_0ac = unk_0a8;
         *(unsigned char *)(c + 0x5000 + 0x462) = 1;
         *(unsigned char *)(c + 0x5000 + 0x463) = 0;
-        if (*(int *)(c + 0xb4) >= 3) {
+        if (mHudScore >= 3) {
             *(unsigned char *)(c + 0x5000 + 0x464) = 2;
         } else {
             *(unsigned char *)(c + 0x5000 + 0x464) = 0;
         }
-        *(unsigned char *)(c + 0x5000 + 0x468) = 1;
+        unk_5468 = 1;
     } else if (msg == 0) {
-        *(int *)(c + 0xa8) = 2;
-        *(int *)(c + 0xac) = *(int *)(c + 0xa8);
-        if (*(int *)(c + 0xb4) == 3) {
+        unk_0a8 = 2;
+        unk_0ac = unk_0a8;
+        if (mHudScore == 3) {
             *(unsigned char *)(c + 0x5000 + 0x462) = 1;
             *(unsigned char *)(c + 0x5000 + 0x463) = 0;
             *(unsigned char *)(c + 0x5000 + 0x464) = 2;
@@ -955,13 +886,13 @@ void dScMgCup_c::OnYoshiTryEat(int msg)
     }
 
     *(int *)(c + 0x5000 + 0x41c) = 0x3c;
-    *(int *)(c + 0x5000 + 0x418) = 0;
+    mState = 0;
     *(int *)(c + 0x5000 + 0xdc) = 0;
     func_ov006_020c2924(c + 0x4f38);
 
-    *(unsigned int *)(c + 0xbc) = *(int *)(c + 0xb4);
-    if (*(unsigned int *)(c + 0xbc) > 0x270e) {
-        *(unsigned int *)(c + 0xbc) = 0x270e;
+    unk_0bc = mHudScore;
+    if (unk_0bc > 0x270e) {
+        unk_0bc = 0x270e;
     }
     func_ov004_020b0cac(0xd, 0x80, 0xa0, 1, -1, 0xd);
 }
@@ -969,20 +900,8 @@ void dScMgCup_c::OnYoshiTryEat(int msg)
 
 /* [27] 0x020e0068  _ZN10dScMgCup_c6RenderEv  size 0x19c */
 // @symbol _ZN10dScMgCup_c6RenderEv
-/* dScMgCup_c::Render -- vtable slot 9.
- *
- * The ROM's vtable at ov006 0x0213c154 owns this function at slot 9, one of
- * seven Cup overrides (0, 6, 9, 16, 17, 18 and 20). Render is the inherited
- * interface spelling; the vtable identifies the owner and slot, not the name.
- *
- * Draws the three cups back to front: the bubble sort orders the indices by the
- * per-cup depth at 0x53ec, and the render loop then walks them in that order.
- *
- * WAS A C99 FILE, and every declaration below therefore has to move inside
- * `extern "C"` -- in C++ these names would otherwise mangle and the link would
- * come up short. The `extern` on the two arrays is load-bearing for the same
- * reason the tree's notes give: without it, a variable declaration inside
- * `extern "C" {}` is a DEFINITION and collides with the delinked gap object. */
+/* Draw the three cups back to front, ordered by their vertical position.
+ * The vtable identifies Cup's slot 9; Render is a reconstructed interface name. */
 s32 dScMgCup_c::Render()
 {
     char *c = (char *)this;
@@ -1027,12 +946,12 @@ s32 dScMgCup_c::Render()
             *(unsigned char*)(c + cup + 0x5462));
     }
 
-    if (*(int*)(c + 0x5418) == 4 || *(int*)(c + 0x5418) == 5) {
+    if (mState == 4 || mState == 5) {
         Hud_RenderSprite(data_ov006_02139df4, 0x92, 0x20,
-            (*(unsigned char*)(c + 0x5468) == 2) ? 4 : -1, -1);
+            (unk_5468 == 2) ? 4 : -1, -1);
     }
 
-    func_ov004_020b2574(*(int*)(c + 0xa8), 1);
+    func_ov004_020b2574(unk_0a8, 1);
     func_ov004_020b1e34(c, 0xe0, 0x14, 1);
     func_ov006_020c29dc(c + 0x4f38);
     return 1;
@@ -1040,20 +959,9 @@ s32 dScMgCup_c::Render()
 
 /* [28] 0x020e0204  _ZN10dScMgCup_c8BehaviorEv  size 0x104 */
 // @symbol _ZN10dScMgCup_c8BehaviorEv
-/* dScMgCup_c::Behavior -- vtable slot 6.
- *
- * The ROM's vtable at ov006 0x0213c154 holds 0x020e0204 in slot 6, one of the
- * seven Cup overrides. Behavior is the inherited interface spelling.
- *
- * data_ov006_02141870 contains the real dScMgCup_c member-function pointers
- * declared by PMF above. mState selects an entry and this->* invokes it on this
- * scene. The eight State* names are inferred from their order and behavior;
- * this dispatch does not require a stand-in receiver class.
- *
- * The three parallel per-cup arrays keep their `(int)` launders; those steer the
- * address arithmetic and are not spellings that can be tidied.  Re-measured:
- * strip the launders and nothing else and Behavior goes MATCH -> DIFF, nine
- * words. */
+/* Dispatch the current state, then advance the per-cup animations.
+ * The integer address forms below preserve the measured compiler output;
+ * removing them on the earlier input changed nine words. */
 #pragma push
 #pragma opt_strength_reduction off
 s32 dScMgCup_c::Behavior()
@@ -1082,16 +990,8 @@ s32 dScMgCup_c::Behavior()
 
 /* [29] 0x020e0308  _ZN10dScMgCup_c13InitResourcesEv  size 0x26c */
 // @symbol _ZN10dScMgCup_c13InitResourcesEv
-/* dScMgCup_c::InitResources -- vtable slot 0.
- *
- * Attributed by tools/rtti_vtables.py --own dScMgCup_c, this class's own slot 0
- * (fBase_c::InitResources). The old file's `recovered name:
- * dScMgCup_c_InitResources` agreed.
- *
- * Minigame sub-screen setup: configures sub BG1/BG2 control, loads the
- * board tiles/map/palette files, sets the touch UI margins, initializes
- * the three sliders from the table at data_ov006_0213c0a8, then calls
- * virtual +0x48 (this class's own slot 18) with mode 3. */
+/* Set up the sub-screen, load the board graphics, initialize cup positions
+ * and dispatch the scene's virtual setup hook with mode 3. */
 s32 dScMgCup_c::InitResources()
 {
     char *c = (char *)this;
@@ -1144,11 +1044,11 @@ s32 dScMgCup_c::InitResources()
     {
         int i;
         for (i = 0; i < 3; i++) {
-            ((Obj6e *)c)->pairs[i].a = data_ov006_0213c0a8[i].a;
-            ((Obj6e *)c)->pairs[i].b = data_ov006_0213c0a8[i].b;
-            ((Obj6e *)c)->ones[i] = 0x1000;
-            ((Obj6e *)c)->ids[i] = i;
-            *(u8 *)(c + i + 0x5465) = 1;
+            mCupPositions[i].x = data_ov006_0213c0a8[i].a;
+            mCupPositions[i].y = data_ov006_0213c0a8[i].b;
+            mOnes[i] = 0x1000;
+            mIds[i] = i;
+            mFlags[i] = 1;
         }
     }
 
