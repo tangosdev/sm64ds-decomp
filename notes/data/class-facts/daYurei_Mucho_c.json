@@ -1,0 +1,366 @@
+{
+  "class": "daYurei_Mucho_c",
+  "queue_key": "daYurei_Mucho_c",
+  "tree_name": "daYurei_Mucho_c",
+  "former_tree_name": "Snufit",
+  "name_status": "daYurei_Mucho_c is ROM RTTI; Snufit was COINED and is retired. This record was taken while the tree still spelled the class Snufit, and every tree-derived field below (functions, shard paths, symbols_txt_rows, queue_row, header, output_path, manifest_path_to_create) names it that way because that is what was measured at tree_derived.base_commit. Those are dated observations, not live claims: the promotion on branch cpp/daYurei_Mucho_c-tu renamed the class to its ROM RTTI name and folded the 22 shards into src/actors/daYurei_Mucho_c.cpp. The ROM-derived fields -- rtti_name, typeinfo, vtable addresses, text_span, size, layout, data_band, bss_band, registry -- are unaffected by the rename.",
+  "rtti_name": "15daYurei_Mucho_c",
+  "rtti_name_address": "0x0211cb6c",
+  "identity_evidence": "The cartridge names this class daYurei_Mucho_c, not Snufit. Read directly out of extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0): the bytes are 31 35 64 61 59 75 72 65 69 5f 4d 75 63 68 6f 5f 63 00 = \"15daYurei_Mucho_c\\0\", the length-prefixed _ZTS form, 0x12 bytes, zero-padded to 0x0211cb80. The _ZTI record two words earlier points at it. 'Snufit' is a coined English name the tree already carries in every mangled member symbol (_ZN6Snufit...), so it is kept; it is disclosed here as coined. Corroborating ROM evidence for the Japanese name: arm9 ACTOR_DEBUG_NAMES[236] -> the string \"YUREI_MUCHO\" (arm9_dec.bin +0x8c2f0, address 0x020902f0, pointer at 0x02091230), ACTOR_SPAWN_TABLE[236] -> g_profile_YUREI_MUCHO at 0x0211cb80, whose own id word 0x0211cb84 = 0x005b00ec has low half 0x00ec = 236 -- the same index, so the table slot and the profile agree; and the four assets data/enemy/yurei_mucho/{yurei_mucho.bmd, yurei_mucho_ball.bmd, yurei_mucho_wait.bca, yurei_mucho_attack.bca}.",
+  "identity_negative_search": {
+    "needle": "snufit",
+    "case": "case-folded (both the image bytes and the needle lowercased before matching)",
+    "encodings": ["single-byte ASCII", "UTF-16LE"],
+    "scope": "106 code/data images (extracted/arm9_dec.bin, extracted/arm9.bin, extracted/arm7.bin and all 103 extracted/overlays/overlay_*.bin) plus all 2,073 files under extracted/dsd/files (14,299,936 bytes)",
+    "result": "0 hits in every image and every asset file. Nothing in this cartridge attests the spelling 'Snufit' in any case. The control needles in the same sweep did hit: 'yurei' 10 code hits + 8 asset hits, 'mucho' 10 + 8, 'basabasa' 10 + 8 -- so the harness was working. 'swoop' also returned 0, which is the same coined-name situation for this overlay's neighbour."
+  },
+  "overlay": "ov065",
+  "module_base": "0x02115ee0",
+  "module_base_evidence": "config/arm9/overlays/ov065/delinks.txt puts .text at 0x02115ee0 and .bss end at 0x0211da00; 0x0211da00 - 0x02115ee0 - 0x400 (.bss) = 0x7720 = the exact byte length of extracted/overlays/overlay_0065.bin, so file offset 0 is address 0x02115ee0. Independently confirmed: every literal, vtable slot and RTTI word decoded at that base resolves to a symbol config/arm9/overlays/ov065/symbols.txt names at the same address.",
+  "typeinfo": {
+    "symbol": "_ZTI15daYurei_Mucho_c",
+    "address": "0x0211cb60",
+    "module": "ov065",
+    "kind": "__si_class_type_info",
+    "size": "0x0c",
+    "raw_words": ["0x0209a764", "0x0211cb6c", "0x021081c0"],
+    "kind_vtable": "_ZTVN3abi20__si_class_type_infoE (arm9 0x0209a764)",
+    "name_pointer": "0x0211cb6c",
+    "base_typeinfo": "_ZTI12dEnemyBase_c (ov002 0x021081c0)",
+    "ZTS": "0x0211cb6c",
+    "ZTS_module": "ov065",
+    "ZTS_size": "0x12 payload, padded to 0x14 (ends 0x0211cb80)",
+    "note": "Unlike daOts_c, this class's _ZTV, _ZTI and _ZTS all live in the SAME module, ov065. Checked per symbol against config/arm9/overlays/ov065/symbols.txt, which names all three at those addresses."
+  },
+  "base_class": "dEnemyBase_c",
+  "base_evidence": "_ZTI15daYurei_Mucho_c at ov065 0x0211cb60 is a three-word __si_class_type_info (its +0 word 0x0209a764 IS arm9's _ZTVN3abi20__si_class_type_infoE). Its +8 word is 0x021081c0, which config/arm9/overlays/ov002/symbols.txt names _ZTI12dEnemyBase_c. Read out of the ROM image, not inferred. Corroborated twice more, but neither is the reason: daYurei_Mucho_c_classInit calls ov002 0x020aed98 = _ZN12dEnemyBase_cC2Ev right after operator new, and both destructors tail into ov002 0x020aed18 = _ZN12dEnemyBase_cD2Ev.",
+  "ancestor_chain": ["dEnemyBase_c", "dActor_c", "dBase_c", "fBase_c"],
+  "ancestor_chain_evidence": "Each link is a __si_class_type_info +8 word, all at offset 0: daYurei_Mucho_c(ov065 0x0211cb60) -> dEnemyBase_c(ov002 0x021081c0) -> dActor_c(arm9 0x0208e390) -> dBase_c(arm9 0x02086e78) -> fBase_c(arm9 0x02086d70). Walked with tools/rtti_extract.py (429 records, 413 edges, 0 unresolved, this revision); the first link was also read by hand from the raw ROM words above.",
+  "modules_touched": ["ov065", "ov002", "arm9"],
+  "vtable": {
+    "symbol": "_ZTV6Snufit",
+    "alias_symbol": "_ZTV15daYurei_Mucho_c",
+    "address": "0x0211cba4",
+    "module": "ov065",
+    "slots": 31,
+    "emitted_storage_start": "0x0211cb9c",
+    "emitted_storage_end": "0x0211cc20",
+    "emitted_storage_size": "0x84",
+    "preamble": {
+      "offset_to_top_address": "0x0211cb9c",
+      "offset_to_top": "0x00000000",
+      "typeinfo_pointer_address": "0x0211cba0",
+      "typeinfo_pointer": "0x0211cb60"
+    },
+    "extent_evidence": "The address point is proven by code, not assumed: daYurei_Mucho_c_classInit at 0x02116f60 does `ldr r1,[pc,#0x2c]` off literal 0x02116f94 = 0x0211cba4 and `str r1,[r4]` -- the vptr store -- and both destructors do the same from literals 0x02115f24 and 0x02115f7c. Thirty-one consecutive function pointers run from 0x0211cba4 through 0x0211cc1c inclusive. The last slot (30) is 0x020100dc = arm9 _ZN8dActor_c25OnAimedAtWithEggReturnVecEv, a live non-null pointer, so no trailing-null truncation is in play. The next word, 0x0211cc20, is 0x021177e4 followed by 0x00000000 at 0x0211cc24 -- the first record of the {fnptr, 0} pointer-to-member band belonging to the NEXT class (Swoop/daBasabasa_c, whose _ZTI follows at 0x0211cc60). 0x021177e4 is a Swoop-run function, not a dActor_c slot, so the table ends exactly at 0x0211cc20. 31 also equals dEnemyBase_c's own slot count (rtti_vtables.py: 'daYurei_Mucho_c : dEnemyBase_c 31 slots (base 31)'), i.e. this class adds no new virtual.",
+    "extent_caveat": "tools/rtti_vtables.py printed 'trimmed a following-table tail from 62 class(es), 1128 slots' on this run. daYurei_Mucho_c is not one of the over-read cases -- its 31 is confirmed independently by the raw dump above.",
+    "slot_name_note": "Slot names are inherited interface labels taken from the whole base chain (arm9 dActor_c / fBase_c bodies resolved by address in config/arm9/symbols.txt). The ROM proves the slot index and the target address; it does not preserve the English spellings.",
+    "own_slots": [
+      {"slot": 0,  "target": "0x02116e10", "symbol": "_ZN6Snufit13InitResourcesEv",  "inherited_name": "dActor_c::InitResources"},
+      {"slot": 3,  "target": "0x02116ae8", "symbol": "_ZN6Snufit16CleanupResourcesEv", "inherited_name": "dActor_c::CleanupResources"},
+      {"slot": 6,  "target": "0x02116b84", "symbol": "_ZN6Snufit8BehaviorEv",         "inherited_name": "dActor_c::Behavior"},
+      {"slot": 9,  "target": "0x02116b34", "symbol": "_ZN6Snufit6RenderEv",           "inherited_name": "dActor_c::Render"},
+      {"slot": 12, "target": "0x02116b30", "symbol": "_ZN6Snufit16OnPendingDestroyEv", "inherited_name": "dActor_c::OnPendingDestroy"},
+      {"slot": 16, "target": "0x02115ee0", "symbol": "_ZN6SnufitD1Ev",                "inherited_name": "complete-object destructor (D1)"},
+      {"slot": 17, "target": "0x02115f28", "symbol": "_ZN6SnufitD0Ev",                "inherited_name": "deleting destructor (D0)"},
+      {"slot": 18, "target": "0x02116f40", "symbol": "_ZN6Snufit13OnYoshiTryEatEv",   "inherited_name": "dActor_c::OnYoshiTryEat"},
+      {"slot": 19, "target": "0x02116f14", "symbol": "_ZN6Snufit13OnTurnIntoEggER6Player", "inherited_name": "dActor_c::OnTurnIntoEgg"},
+      {"slot": 29, "target": "0x02116f0c", "symbol": "_ZN6Snufit16OnAimedAtWithEggEv", "inherited_name": "dActor_c::OnAimedAtWithEgg"}
+    ],
+    "own_slot_count": 10,
+    "inherited_slots": [
+      {"slot": 1,  "target": "0x02011268", "symbol": "arm9 _ZN8dActor_c19BeforeInitResourcesEv"},
+      {"slot": 2,  "target": "0x02011244", "symbol": "arm9 _ZN8dActor_c18AfterInitResourcesEj"},
+      {"slot": 4,  "target": "0x02011220", "symbol": "arm9 _ZN8dActor_c22BeforeCleanupResourcesEv"},
+      {"slot": 5,  "target": "0x02011214", "symbol": "arm9 _ZN8dActor_c21AfterCleanupResourcesEj"},
+      {"slot": 7,  "target": "0x02010fd4", "symbol": "arm9 _ZN8dActor_c14BeforeBehaviorEv"},
+      {"slot": 8,  "target": "0x02010fc8", "symbol": "arm9 _ZN8dActor_c13AfterBehaviorEj"},
+      {"slot": 10, "target": "0x02010f78", "symbol": "arm9 _ZN8dActor_c12BeforeRenderEv"},
+      {"slot": 11, "target": "0x02010f6c", "symbol": "arm9 _ZN8dActor_c11AfterRenderEj"},
+      {"slot": 13, "target": "0x0204357c", "symbol": "arm9 _ZN7fBase_c9Virtual34Ejj"},
+      {"slot": 14, "target": "0x0204349c", "symbol": "arm9 _ZN7fBase_c9Virtual38Ejj"},
+      {"slot": 15, "target": "0x02043494", "symbol": "arm9 _ZN7fBase_c13OnHeapCreatedEv"},
+      {"slot": 20, "target": "0x0201014c", "symbol": "arm9 _ZN8dActor_c9Virtual50Ev"},
+      {"slot": 21, "target": "0x02010148", "symbol": "arm9 _ZN8dActor_c15OnGroundPoundedERS_"},
+      {"slot": 22, "target": "0x02010144", "symbol": "arm9 _ZN8dActor_c11OnAttacked1ERS_"},
+      {"slot": 23, "target": "0x02010140", "symbol": "arm9 _ZN8dActor_c11OnAttacked2ERS_"},
+      {"slot": 24, "target": "0x0201013c", "symbol": "arm9 _ZN8dActor_c8OnKickedERS_"},
+      {"slot": 25, "target": "0x02010138", "symbol": "arm9 _ZN8dActor_c8OnPushedERS_"},
+      {"slot": 26, "target": "0x02010134", "symbol": "arm9 _ZN8dActor_c24OnHitByCannonBlastedCharERS_"},
+      {"slot": 27, "target": "0x02010130", "symbol": "arm9 _ZN8dActor_c15OnHitByMegaCharER6Player"},
+      {"slot": 28, "target": "0x0201012c", "symbol": "arm9 _ZN8dActor_c19OnHitFromUnderneathERS_"},
+      {"slot": 30, "target": "0x020100dc", "symbol": "arm9 _ZN8dActor_c25OnAimedAtWithEggReturnVecEv"}
+    ],
+    "duplicate_symbol_hazard": "config/arm9/overlays/ov065/symbols.txt declares TWO names at 0x0211cba4: `_ZTV6Snufit` and `_ZTV15daYurei_Mucho_c`. This is the module-wide pattern for coined-name classes in ov065 (_ZTV5Swoop / _ZTV12daBasabasa_c both at 0x0211cca0; _ZTV13TTC_MovingBar / _ZTV18daObjCtKaitendai_c both at 0x0211d3b4; _ZTV15TtcRotatingCube / _ZTV20daObjCtRotateBlock_c both at 0x0211d028; _ZTV14TTC_MovingBeam / _ZTV16daObjCtMecha09_c both at 0x0211d568). The oracle daObjCtMecha05_c has no such alias, so its manifest is NOT a precedent for this. The writer must expect the compiled TU to emit only `_ZTV6Snufit` (the C++ class is spelled Snufit) and should check what objisolate/romdata_check do with the second name before assuming the Mecha05 compiler_only_output block copies over unchanged."
+  },
+  "destructors": {
+    "variants_present": ["D1", "D0"],
+    "D2_present": false,
+    "D1": {"address": "0x02115ee0", "size": "0x48", "vtable_slot": 16},
+    "D0": {"address": "0x02115f28", "size": "0x5c", "vtable_slot": 17},
+    "order_in_rom": "D1 at 0x02115ee0 immediately precedes D0 at 0x02115f28, and D1 is the first byte of ov065's whole .text section.",
+    "evidence": "Read from the cartridge. D1 stores the vptr 0x0211cba4, then destroys +0x364 (arm9 _ZN11ShadowModelD1Ev), +0x300 (_ZN9ModelAnimD1Ev), +0x144 (_ZN10dBgCh_ActrD1Ev), +0x110 (_ZN7dCcAc_cD1Ev) and tails into ov002 _ZN12dEnemyBase_cD2Ev. D0 repeats that same body verbatim (it does NOT call D1) and then loads arm9 GAME_HEAP_PTR (0x020a0eac) and calls arm9 _ZN6Memory10DeallocateEPvP4Heap (0x0203c1e8). No _ZN6SnufitD2Ev or _ZN15daYurei_Mucho_cD2Ev exists in ANY symbols.txt in config/arm9 (searched arm9 + all 103 overlay files, case-sensitive, pattern 'Snufit|Yurei'; the 16 rows returned are listed under `symbols_txt_rows`).",
+    "lever_note_from_oracle": "INFERRED FROM THE ORACLE, not from the ROM: daObjCtMecha05_c's manifest states that one INLINE genuine destructor makes mwccarm 2004/b56 emit the retail D1-then-D0 pair with no D2. The ROM shape here is identical, so the same lever is the starting hypothesis. The nearby TTC_MovingBar TU (same overlay, same shape) is only `text-verified` and its manifest records an unhandled `_ZN13TTC_MovingBarD2Ev` -- i.e. the out-of-line form there produced a homeless D2. Take the inline form."
+  },
+  "text_span": {
+    "start": "0x02115ee0",
+    "end": "0x02116f48",
+    "length": "0x1068",
+    "function_count": 22,
+    "source": "build/tu_map.json via tools/tu_map.py at this revision (74 modules, 11097 functions -> 691 TUs, 333 with a class -- the non-degraded figures)",
+    "boundary_evidence": "tu_map.py puts unit 0 of ov065 at 0x2115ee0..0x2116f48 with class label ['Snufit'] and exactly these 22 functions. Independently: (a) 0x02115ee0 IS the first byte of ov065's .text per delinks.txt, so nothing can precede it; (b) the 22 functions are exactly contiguous -- every start equals the previous start plus its size, no gaps; (c) the run ends where daYurei_Mucho_c_classInit begins at 0x02116f48, which tu_map.py makes its own one-function unit; (d) the next class's run (Swoop/daBasabasa_c) starts at 0x02116f98, after the classInit, so this run does not spill into a neighbour; (e) a full B/BL decode of ov065's .text (944 branch instructions between 0x02115ee0 and 0x0211c078) found 54 branches internal to the run and ZERO inbound branches from outside it.",
+    "boundary_confidence_note": "tu_map.py's per-unit confidence is not exposed in build/tu_map.json at this revision; the ov065 module summary is {'medium': 17, 'high': 1}. Treat the boundary as at least as well-evidenced as daObjCtMecha05_c's, which shipped at 'high' on the same kind of contiguous-run argument."
+  },
+  "functions": [
+    {"ordinal": 0,  "address": "0x02115ee0", "size": "0x48",  "symbol": "_ZN6SnufitD1Ev",                    "legacy_source": "src/_ZN6SnufitD1Ev.cpp",                    "lines": 18,  "role": "vtable slot 16"},
+    {"ordinal": 1,  "address": "0x02115f28", "size": "0x5c",  "symbol": "_ZN6SnufitD0Ev",                    "legacy_source": "src/_ZN6SnufitD0Ev.cpp",                    "lines": 18,  "role": "vtable slot 17"},
+    {"ordinal": 2,  "address": "0x02115f84", "size": "0x6c",  "symbol": "func_ov065_02115f84",               "legacy_source": "src/func_ov065_02115f84.c",                "lines": 15,  "role": "helper; called from func_ov065_02115ff0 (0x02116204) and func_ov065_021162c0 (0x02116314)"},
+    {"ordinal": 3,  "address": "0x02115ff0", "size": "0x2d0", "symbol": "func_ov065_02115ff0",               "legacy_source": "src/func_ov065_02115ff0.c",                "lines": 91,  "role": "helper; called once from Behavior (0x02116db8)"},
+    {"ordinal": 4,  "address": "0x021162c0", "size": "0x68",  "symbol": "func_ov065_021162c0",               "legacy_source": "src/func_ov065_021162c0.c",                "lines": 11,  "role": "state handler; PMF record at 0x0211cb48, installed at State 0x0211d660 +0x08"},
+    {"ordinal": 5,  "address": "0x02116328", "size": "0x3c",  "symbol": "func_ov065_02116328",               "legacy_source": "src/func_ov065_02116328.c",                "lines": 10,  "role": "state handler; PMF record at 0x0211cb38, installed at State 0x0211d660 +0x00"},
+    {"ordinal": 6,  "address": "0x02116364", "size": "0x224", "symbol": "func_ov065_02116364",               "legacy_source": "src/func_ov065_02116364.cpp",              "lines": 85,  "role": "state handler; PMF record at 0x0211cb50, installed at State 0x0211d650 +0x08"},
+    {"ordinal": 7,  "address": "0x02116588", "size": "0x50",  "symbol": "func_ov065_02116588",               "legacy_source": "src/func_ov065_02116588.cpp",              "lines": 13,  "role": "state handler; PMF record at 0x0211cb28, installed at State 0x0211d650 +0x00"},
+    {"ordinal": 8,  "address": "0x021165d8", "size": "0x154", "symbol": "func_ov065_021165d8",               "legacy_source": "src/func_ov065_021165d8.cpp",              "lines": 44,  "role": "state handler; PMF record at 0x0211cb40, installed at State 0x0211d680 +0x08"},
+    {"ordinal": 9,  "address": "0x0211672c", "size": "0x18",  "symbol": "func_ov065_0211672c",               "legacy_source": "src/func_ov065_0211672c.c",                "lines": 7,   "role": "state handler; PMF record at 0x0211cb20, installed at State 0x0211d680 +0x00"},
+    {"ordinal": 10, "address": "0x02116744", "size": "0x164", "symbol": "func_ov065_02116744",               "legacy_source": "src/func_ov065_02116744.c",                "lines": 63,  "role": "state handler; PMF record at 0x0211cb58, installed at State 0x0211d670 +0x08"},
+    {"ordinal": 11, "address": "0x021168a8", "size": "0x74",  "symbol": "func_ov065_021168a8",               "legacy_source": "src/func_ov065_021168a8.cpp",              "lines": 13,  "role": "state handler; PMF record at 0x0211cb30, installed at State 0x0211d670 +0x00"},
+    {"ordinal": 12, "address": "0x0211691c", "size": "0x50",  "symbol": "func_ov065_0211691c",               "legacy_source": "src/func_ov065_0211691c.cpp",              "lines": 4,   "role": "state setter: stores its arg into this+0x3bc, then invokes the PMF at state+0x00 on this. Called 8 times inside the run."},
+    {"ordinal": 13, "address": "0x0211696c", "size": "0x17c", "symbol": "func_ov065_0211696c",               "legacy_source": "src/func_ov065_0211696c.c",                "lines": 47,  "role": "helper; called 3 times from Behavior"},
+    {"ordinal": 14, "address": "0x02116ae8", "size": "0x48",  "symbol": "_ZN6Snufit16CleanupResourcesEv",    "legacy_source": "src/_ZN6Snufit16CleanupResourcesEv.cpp",    "lines": 27,  "role": "vtable slot 3"},
+    {"ordinal": 15, "address": "0x02116b30", "size": "0x4",   "symbol": "_ZN6Snufit16OnPendingDestroyEv",    "legacy_source": "src/_ZN6Snufit16OnPendingDestroyEv.cpp",    "lines": 11,  "role": "vtable slot 12; body is a bare `bx lr`"},
+    {"ordinal": 16, "address": "0x02116b34", "size": "0x50",  "symbol": "_ZN6Snufit6RenderEv",               "legacy_source": "src/_ZN6Snufit6RenderEv.cpp",               "lines": 16,  "role": "vtable slot 9"},
+    {"ordinal": 17, "address": "0x02116b84", "size": "0x28c", "symbol": "_ZN6Snufit8BehaviorEv",             "legacy_source": "src/_ZN6Snufit8BehaviorEv.cpp",             "lines": 110, "role": "vtable slot 6"},
+    {"ordinal": 18, "address": "0x02116e10", "size": "0xfc",  "symbol": "_ZN6Snufit13InitResourcesEv",       "legacy_source": "src/_ZN6Snufit13InitResourcesEv.cpp",       "lines": 47,  "role": "vtable slot 0"},
+    {"ordinal": 19, "address": "0x02116f0c", "size": "0x8",   "symbol": "_ZN6Snufit16OnAimedAtWithEggEv",    "legacy_source": "src/_ZN6Snufit16OnAimedAtWithEggEv.cpp",    "lines": 11,  "role": "vtable slot 29"},
+    {"ordinal": 20, "address": "0x02116f14", "size": "0x2c",  "symbol": "_ZN6Snufit13OnTurnIntoEggER6Player", "legacy_source": "src/_ZN6Snufit13OnTurnIntoEggER6Player.cpp", "lines": 16, "role": "vtable slot 19"},
+    {"ordinal": 21, "address": "0x02116f40", "size": "0x8",   "symbol": "_ZN6Snufit13OnYoshiTryEatEv",       "legacy_source": "src/_ZN6Snufit13OnYoshiTryEatEv.cpp",       "lines": 7,   "role": "vtable slot 18"}
+  ],
+  "shard_totals": {"shards": 22, "total_lines": 684, "cpp_shards": 15, "c_shards": 7},
+  "non_virtual": {
+    "count": 12,
+    "note": "The twelve func_ov065_* members above are the class's non-virtual bodies. Eight of them are reached ONLY through a pointer-to-member stored in unowned .data; four are reached by direct BL from inside the run. None is reachable from outside the run at all (see `callers`). Their original identifiers are not preserved anywhere in the cartridge, so they stay extern \"C\" free functions unless a rename is done as one edit with symbols.txt -- see `blockers`."
+  },
+  "excluded_from_tu": {
+    "symbol": "daYurei_Mucho_c_classInit",
+    "address": "0x02116f48",
+    "size": "0x50",
+    "shard": "src/d_a_yurei_mucho.c",
+    "reason": "tu_map.py makes 0x2116f48..0x2116f98 its own one-function unit. The oracle daObjCtMecha05_c took exactly this decision for daObjCtMecha05_c_classInit ('remains a separately enrolled C ABI factory because there is no independent evidence that it belonged to the class TU') and reached `promoted`. TTC_MovingBar, in the same overlay, folded its two classInits IN and is still only `text-verified` with a FAIL-BY-DESIGN unlicensed-symbol criterion. Follow Mecha05: leave d_a_yurei_mucho.c alone."
+  },
+  "size": {
+    "value": "0x3e4",
+    "decimal": 996,
+    "evidence": "ROM-read from the allocation site. daYurei_Mucho_c_classInit at 0x02116f4c does `mov r0, #0x3e4` then `bl 0x2043444` = arm9 _ZN7fBase_cnwEj (fBase_c::operator new(u32)), tests the result, and on success runs the dEnemyBase_c constructor, the vptr store of 0x0211cba4, and the four subobject constructors. That literal IS sizeof(Snufit); a field span is only a lower bound (the proven fields stop at 0x3e0)."
+  },
+  "layout": {
+    "inherited_through": "dEnemyBase_c, whose own data ends at 0x110 (the first subobject this class constructs sits there)",
+    "subobjects_proven_by_ctor_and_dtor": [
+      {"offset": "0x110", "type": "dCcAc_c",    "size": "0x34",  "evidence": "classInit `add r0,r4,#0x110; bl 0x20149c8` = arm9 _ZN7dCcAc_cC1Ev; D1/D0 `add r0,r4,#0x110; bl 0x20149a4` = _ZN7dCcAc_cD1Ev. 0x110 + 0x34 = 0x144, the next subobject."},
+      {"offset": "0x144", "type": "dBgCh_Actr", "size": "0x1bc", "evidence": "classInit `add r0,r4,#0x144; bl 0x2037430` = arm9 _ZN10dBgCh_ActrC1Ev; destructors call 0x20373f8 = _ZN10dBgCh_ActrD1Ev. 0x144 + 0x1bc = 0x300."},
+      {"offset": "0x300", "type": "ModelAnim",  "size": "0x64",  "evidence": "classInit `add r0,r4,#0x300; bl 0x2016958` = arm9 _ZN9ModelAnimC1Ev; destructors call 0x201691c = _ZN9ModelAnimD1Ev. 0x300 + 0x64 = 0x364."},
+      {"offset": "0x364", "type": "ShadowModel","size": "0x28",  "evidence": "classInit `add r0,r4,#0x364; bl 0x2016068` = arm9 _ZN11ShadowModelC1Ev; destructors call 0x2015ff8 = _ZN11ShadowModelD1Ev. 0x364 + 0x28 = 0x38c."}
+    ],
+    "own_field_offsets_touched": [
+      {"offset": "0x38c", "width": "unproven", "evidence": "`add r6, r4, #0x38c` in func_ov065_0211696c takes its address and passes it on. Only the address is proven; nothing narrows the extent beyond 0x38c..0x3bc (0x30 bytes) being untouched by any other offset."},
+      {"offset": "0x3bc", "width": "4", "evidence": "func_ov065_0211691c does `str r1,[r0,#0x3bc]` then `ldr r3,[r0,#0x3bc]`; Behavior reads it at 0x02116c88, 0x02116ce4 and 0x02116d8c and compares it against three .bss addresses. A pointer to a State object."},
+      {"offset": "0x3c0", "width": "4", "evidence": "func_ov065_0211696c zeroes 0x3c0/0x3c4/0x3c8 together, then refills them from [r0+0x24]/[r0+0x28]/[r0+0x2c] and takes `add r5,r4,#0x3c0`. Three consecutive words used as one vector."},
+      {"offset": "0x3c4", "width": "4", "evidence": "as 0x3c0"},
+      {"offset": "0x3c8", "width": "4", "evidence": "as 0x3c0"},
+      {"offset": "0x3cc", "width": "4", "evidence": "InitResources `ldr r0,[r4,#0x5c]; str r0,[r4,#0x3cc]` and Behavior repeats it -- a copy of the inherited dActor_c position X."},
+      {"offset": "0x3d0", "width": "4", "evidence": "InitResources `ldr r1,[r4,#0x60]; str r1,[r4,#0x3d0]`; Behavior at 0x02116d50 reads it back into the steering arithmetic. Position Y."},
+      {"offset": "0x3d4", "width": "4", "evidence": "InitResources `ldr r3,[r4,#0x64]; str r3,[r4,#0x3d4]`. Position Z."},
+      {"offset": "0x3d8", "width": "4", "evidence": "Behavior `add r2,r4,#0x3d8; ldr r0,[r2]; add r0,r0,#0x200; str r0,[r2]`, then re-reads it, sign-extends the low 16 bits and uses them as an index into arm9 data_02082214. A 32-bit counter read as a 16-bit angle, advanced 0x200 per frame."},
+      {"offset": "0x3dc", "width": "4", "evidence": "func_ov065_02116588 does `str #0,[r4,#0x3dc]`; func_ov065_02116364 does `ldr r0,[r6,#0x3dc]; cmp r0,#3; bge` and later `add r3,r6,#0x3dc; str r2,[r3]`. A small counter. NOTE: include/Snufit.h currently spells 0x3dc as `pad_3dc[0x8]`; the cartridge reads and writes it."}
+    ],
+    "measurement": "Every immediate load/store and ADD-immediate in the 0x1068-byte run was decoded and grouped by displacement (base registers r13/r15 excluded). The complete set of displacements >= 0x100 seen is: 0x100 0x107 0x108 0x10a 0x10c 0x110 0x130 0x134 0x144 0x200 0x300 0x314 0x31c 0x350 0x358 0x35c 0x364 0x38c 0x3bc 0x3c0 0x3c4 0x3c8 0x3cc 0x3d0 0x3d4 0x3d8 0x3dc, plus 0x6f9/0x6fb (on a Player* returned by arm9 0x02010ad8, not on this) and 0xb4000 (a constant addend, not a field). 0x314/0x31c/0x350/0x358/0x35c fall inside the ModelAnim subobject; 0x100..0x10c inside dEnemyBase_c."
+  },
+  "data_band": {
+    "owned_by_this_class": "0x0211cb20..0x0211cc20 (0x100 bytes), the first 0x100 bytes of ov065's .data (which starts at 0x0211cb20). 0x0211cc20 begins the next class's identical block.",
+    "contents": [
+      {"range": "0x0211cb20..0x0211cb60", "what": "eight 8-byte pointer-to-member-function records"},
+      {"range": "0x0211cb60..0x0211cb6c", "what": "_ZTI15daYurei_Mucho_c"},
+      {"range": "0x0211cb6c..0x0211cb80", "what": "_ZTS15daYurei_Mucho_c (0x12 payload + 2 pad)"},
+      {"range": "0x0211cb80..0x0211cb9c", "what": "g_profile_YUREI_MUCHO, the 0x1c actor descriptor; +0 = 0x02116f48 (classInit), +4 = 0x005b00ec whose low half 0xec is the registry id 236"},
+      {"range": "0x0211cb9c..0x0211cba4", "what": "vtable storage preamble (offset-to-top 0, typeinfo 0x0211cb60)"},
+      {"range": "0x0211cba4..0x0211cc20", "what": "_ZTV6Snufit, 31 slots"}
+    ],
+    "delink_ownership": "config/arm9/overlays/ov065/delinks.txt declares .data 0x0211cb20..0x0211d600 and .bss 0x0211d600..0x0211da00 as whole sections with NO per-file entries -- every ov065 datum is unowned today. That is what makes `promotion_route: text-only` correct for this class.",
+    "pointer_to_member_records": {
+      "count": 8,
+      "stride": "0x08",
+      "alignment_check": "The band is read at 0x0211cb20, which is the .data section start and 0x20-aligned. Read there, all eight records are {ov065 text address, 0x00000000}; read four bytes off they would be {0, address} and none would parse. config/arm9/overlays/ov065/relocs.txt independently carries one `kind:load module:overlay(65)` row from each of the eight even words (0x0211cb20, 28, 30, 38, 40, 48, 50, 58), and none from the odd words -- so the phase is fixed by dsd's own table, not by my reading.",
+      "encoding": "Itanium-style {ptr_or_vtable_offset, adj*2|isVirtual}. Proven by func_ov065_0211691c: `ldr r2,[r3]; cmp r2,#0; ldr r1,[r3,#4]; add r0,r0,r1,asr #1; ands r1,r1,#1; ldrne r1,[r0]; ldrne r1,[r1,r2]; ldreq r1,[r3]; blx r1`. All eight records have adj word 0, i.e. non-virtual, no this-adjustment.",
+      "records": [
+        {"address": "0x0211cb20", "target": "0x0211672c", "symbol": "func_ov065_0211672c"},
+        {"address": "0x0211cb28", "target": "0x02116588", "symbol": "func_ov065_02116588"},
+        {"address": "0x0211cb30", "target": "0x021168a8", "symbol": "func_ov065_021168a8"},
+        {"address": "0x0211cb38", "target": "0x02116328", "symbol": "func_ov065_02116328"},
+        {"address": "0x0211cb40", "target": "0x021165d8", "symbol": "func_ov065_021165d8"},
+        {"address": "0x0211cb48", "target": "0x021162c0", "symbol": "func_ov065_021162c0"},
+        {"address": "0x0211cb50", "target": "0x02116364", "symbol": "func_ov065_02116364"},
+        {"address": "0x0211cb58", "target": "0x02116744", "symbol": "func_ov065_02116744"}
+      ]
+    }
+  },
+  "bss_band": {
+    "range": "0x0211d600..0x0211d690 (0x90 bytes), the first 0x90 bytes of ov065's .bss. The next class's band starts at 0x0211d690.",
+    "objects": [
+      {"address": "0x0211d600", "size": "0x08", "what": "SharedFilePtr, Construct(0x430) via arm9 _ZN13SharedFilePtr9ConstructEj; destructor arm9 SharedFilePtr_Destruct_Anim registered with node 0x0211d62c. InitResources passes it to arm9 0x0201794c."},
+      {"address": "0x0211d608", "size": "0x08", "what": "SharedFilePtr, Construct(0x42e), destructor node 0x0211d638. InitResources passes it to arm9 0x0201794c."},
+      {"address": "0x0211d610", "size": "0x08", "what": "file handle, constructed by arm9 func_02017acc(0x42f), destructor arm9 func_02017ab4 with node 0x0211d644. InitResources resolves it via arm9 0x02017a3c and hands the result to ShadowModel at this+0x364."},
+      {"address": "0x0211d618", "size": "0x08", "what": "file handle, constructed by arm9 func_02017acc(0x42d), destructor node 0x0211d620. InitResources resolves it via arm9 0x02017a3c and hands the result to ModelAnim at this+0x300."},
+      {"address": "0x0211d620", "size": "0x0c", "what": "static-destructor registration node for 0x0211d618 (arm9 func_020731dc)"},
+      {"address": "0x0211d62c", "size": "0x0c", "what": "registration node for 0x0211d600"},
+      {"address": "0x0211d638", "size": "0x0c", "what": "registration node for 0x0211d608"},
+      {"address": "0x0211d644", "size": "0x0c", "what": "registration node for 0x0211d610"},
+      {"address": "0x0211d650", "size": "0x10", "what": "State object: +0x00 = PMF(func_ov065_02116588), +0x08 = PMF(func_ov065_02116364). Behavior compares mCurrentState against this address at 0x02116ce8."},
+      {"address": "0x0211d660", "size": "0x10", "what": "State object: +0x00 = PMF(func_ov065_02116328), +0x08 = PMF(func_ov065_021162c0). Behavior compares mCurrentState against this address at 0x02116d94."},
+      {"address": "0x0211d670", "size": "0x10", "what": "State object: +0x00 = PMF(func_ov065_021168a8), +0x08 = PMF(func_ov065_02116744). InitResources installs this one (literal at 0x02116f08); Behavior installs it again on the Yoshi-eat path (literal at 0x02116e00)."},
+      {"address": "0x0211d680", "size": "0x10", "what": "State object: +0x00 = PMF(func_ov065_0211672c), +0x08 = PMF(func_ov065_021165d8)."}
+    ],
+    "sinit": {
+      "address_range": "0x0211c110..0x0211c2a8",
+      "ctor_entry": "0x0211cae0 (the FIRST of ov065's ten .ctor entries; .ctor spans 0x0211cae0..0x0211cb08, ten words, and tu_map reports sinits=10 / ctor_entries=10, sinit_vs_tu=ok for this module)",
+      "what_it_does": "Constructs the four file handles with their literal ids, registers their destructors, then copies each State object into .bss as two 8-byte halves: `ldr r3,[r1]; ldr r1,[r1,#4]; str r3,[r2]; str r1,[r2,#4]; ldr r1,[r0]; ldr r0,[r0,#4]; str r1,[r2,#8]; str r0,[r2,#0xc]` -- four such blocks, r2 = the .bss State, r1 = the .data PMF for +0x00, r0 = the .data PMF for +0x08.",
+      "writer_note": "This sinit is NOT in the text run and NOT in .text at all (it is in ov065's `.init` section). Under the text-only route the promoted TU must not define the State objects or the file handles, or mwccarm will emit its own static initializer that the isolation has to strip. Keep them as extern references, exactly as the current shards do."
+    }
+  },
+  "callers": {
+    "external_calls_into_the_text_run": 0,
+    "relocation_scan": {
+      "scope": "config/arm9/relocs.txt plus all 103 config/arm9/overlays/*/relocs.txt",
+      "rows_scanned": 91808,
+      "rows_rejected_on_address": 91493,
+      "rows_landing_on_a_snufit_address": 315,
+      "rows_rejected_on_the_module_filter": 276,
+      "rows_accepted": 39,
+      "module_spelling": "The filter matched `module:overlay(65)` exactly -- NOT `ov065`, which matches nothing and would have reported zero callers for every function.",
+      "modules_that_produced_phantoms": {"overlay(64)": 56, "overlay(66)": 57, "overlay(75)": 56, "overlay(62)": 47, "overlay(63)": 30, "overlay(60)": 28, "overlays(65,75)": 1, "overlays(62,64,65,66)": 1},
+      "accepted_rows_summary": "All 39 accepted rows originate inside ov065 and break down exactly: 3 vptr-store literal words (0x02115f24 and 0x02115f7c in the two destructors, 0x02116f94 in classInit), 15 arm_call relocations all sourced inside the run, 8 pointer-to-member records, 3 self-links in this class's own data block (_ZTI->_ZTS, profile->classInit, vtable preamble->_ZTI) and 10 vtable slots. Not one comes from another module."
+    },
+    "ambiguous_rows_resolved": [
+      {"row": "arm9 from:0x02090c14 kind:load to:0x0211cb80 module:overlays(65,75)", "verdict": "GENUINE, ov065", "why": "0x02090c14 is ACTOR_SPAWN_TABLE + 0x3b0, i.e. entry 236, and the profile record it points at carries its own id 0xec = 236 at 0x0211cb84. arm9 ACTOR_DEBUG_NAMES + 0x3b0 = 0x02091230 holds the pointer to the string \"YUREI_MUCHO\". Three independent index agreements. This is the ONLY cross-module reference to anything this class owns."},
+      {"row": "ov027 from:0x021139a4 kind:load to:0x02115f84 module:overlays(62,64,65,66)", "verdict": "PHANTOM for ov065", "why": "0x021139a4 is one word of a vtable stored in ov027: the eleven words 0x02113980..0x021139a8 hold arm9 dActor_c slots 20-30 in the exact order this class's own slots 20-30 hold them, so 0x021139a4 is slot 29 (OnAimedAtWithEgg). Its neighbours at 0x021139b4/b8/bc resolve unambiguously to `module:overlay(64)`, so the class is ov064's daOts_c and the target is _ZN7daOts_c16OnAimedAtWithEggEv at ov064 0x02115f84, not ov065's func_ov065_02115f84."}
+    ],
+    "intra_overlay_branch_scan": "Every ARM B/BL in ov065's .text (0x02115ee0..0x0211c078) was decoded: 944 branch instructions. 54 are internal to the run; 104 leave it (all to arm9/ov002 addresses); INBOUND from outside the run: 0. So there is no overlay-local caller either -- the class is entered only through its vtable, through the eight pointer-to-member records, and through g_profile_YUREI_MUCHO -> daYurei_Mucho_c_classInit."
+  },
+  "registry": {
+    "profile_symbol": "g_profile_YUREI_MUCHO",
+    "profile_address": "0x0211cb80",
+    "profile_id": 236,
+    "profile_id_hex": "0xec",
+    "factory": "daYurei_Mucho_c_classInit at 0x02116f48",
+    "debug_name": "YUREI_MUCHO",
+    "assets": ["data/enemy/yurei_mucho/yurei_mucho.bmd (file 639)", "data/enemy/yurei_mucho/yurei_mucho_attack.bca (640)", "data/enemy/yurei_mucho/yurei_mucho_ball.bmd (641)", "data/enemy/yurei_mucho/yurei_mucho_wait.bca (642)"],
+    "asset_caveat": "Four yurei_mucho assets exist and four file handles are constructed, but the sinit's literals are 0x42d/0x42e/0x42f/0x430 (1069-1072) while the filesystem ids are 639-642. That is a different id space; the pairing of a particular handle to a particular .bmd/.bca is NOT proven."
+  },
+  "tree_derived": {
+    "base_commit": "b266ff471 (origin/main, 'Merge pull request #2367 from tangosdev/tools/fix-gate-regressions-0905'). Scouting started at 2ab05bae3; origin/main advanced by 7 commits mid-run and this branch was fast-forwarded onto it before the facts were committed, so every tree-derived field below was re-read at b266ff471. Those 7 commits touch only tools/ and notes/ -- no config/, no src/ -- so none of them moves a fact here. Verified after the fact: `git merge-base HEAD origin/main` == origin/main, `git log --oneline origin/main..HEAD` empty at the moment of the fast-forward.",
+    "base_gate_state": "`python tools/check_dead_references.py` is RED on b266ff471 itself, before any change of mine: src/actors/dScMgSound_c.cpp names `src/_ZN12dScMgLuigi_c13InitResourcesEv.cpp` in a comment and that shard no longer exists. PR #2367 landed the C/C++ comment scan in the same merge, so the new gate fails on pre-existing debt. The scan reports 0 references to anything named Snufit, so this facts file contributes nothing to it -- but the builder should expect that failure and not attribute it to this branch.",
+    "branch": "cpp/Snufit-tu",
+    "worktree": "C:/tmp/sm64ds-snufit-scout",
+    "queue_row": "Snufit  22  684  ov065  has_header=yes  already_promoted=no  blockers=compiler-only:>=11  sibling_oracle=daObjCtMecha05_c  promotion_route=text-only",
+    "header": "include/Snufit.h already exists and is complete enough to compile against; most of its field layout is confirmed above. Two corrections it needs: `pad_3c0[0xc]` is three live words, and `pad_3dc[0x8]` covers a live word at 0x3dc. Its `State` declaration spells +0x00 as `u8 pad_00[0x8]` -- that is a SECOND pointer-to-member, invoked by func_ov065_0211691c the moment a state is installed.",
+    "manifest_path_to_create": "config/tu_manifest.d/ov065/Snufit.json",
+    "output_path": "src/actors/Snufit.cpp -- this is the live convention. The two most recent promotions at this base, ov071/Scuttlebug and ov006/dScMgLuigi_c, both use src/actors/<Class>.cpp for `source` and `promoted_source`. The oracle daObjCtMecha05_c uses the older src/game/actors/ path; do not copy that field from it.",
+    "ov065_siblings_at_this_base": {
+      "promoted": ["daObjCtMecha03_c", "daObjCtMecha04_c", "daObjCtMecha05_c"],
+      "text-verified": ["TTC_MovingBar"],
+      "no_manifest": ["Snufit", "Swoop", "Dorrie", "DorriePlatform", "daDossyCap_c", "TtcRotatingCube", "TtcRotatingGear", "TTC_MovingBeam", "daObjCtRotateBlock_c", "daObjCtKaitendai_c", "daObjCtMecha08_c", "daObjCtMecha09_c"],
+      "measured_from": "config/tu_manifest.d/ov065/ at 2ab05bae3 -- four files only"
+    },
+    "prose_naming_snufit": ["notes/archive/n64-decomp-cross-reference.md", "notes/data/class-build-worklist.tsv", "notes/data/tu-merge-candidates.json", "notes/data/tu-promotion-queue.tsv", "notes/handoff-marker-typing.md", "symbols/overlay_actors.md"],
+    "symbols_txt_rows": "config/arm9/overlays/ov065/symbols.txt carries exactly 16 rows matching 'Snufit|Yurei' (case-sensitive): the 10 mangled members, daYurei_Mucho_c_classInit, _ZTI15daYurei_Mucho_c, _ZTS15daYurei_Mucho_c, g_profile_YUREI_MUCHO (flagged `ambiguous`), _ZTV6Snufit and _ZTV15daYurei_Mucho_c."
+  },
+  "blockers": [
+    "RENAMING ANY func_ov065_* MEMBER IS ONE EDIT, NOT TWO. Eight of the twelve helpers are reached ONLY through the pointer-to-member records in unowned .data at 0x0211cb20..0x0211cb60, and dsd resolves those records BY NAME out of config/arm9/overlays/ov065/symbols.txt. If a stage-3b conversion renames func_ov065_02116588 (or any of the other seven) without moving its symbols.txt row in the SAME commit, that .data word links as 0x00000000 and no byte gate at stage 2 or 3 catches it. This is the highest-value warning in this file.",
+    "A class member function cannot sit inside an `extern \"C\" { }` region. Whatever free functions survive must be gathered after the last member.",
+    "Two names are declared at the vtable address 0x0211cba4 (_ZTV6Snufit and _ZTV15daYurei_Mucho_c). The oracle daObjCtMecha05_c has no alias, so its compiler_only_output entry for _ZTV cannot simply be copied; check what objisolate.plan()/romdata_check make of the second name before assuming a clean deadstrip-data disposition.",
+    "The queue's blocker field says `compiler-only:>=11` -- at least eleven vague-linkage symbols (inherited _ZTI/_ZTS up the four-deep chain, plus this class's own _ZTI/_ZTS/_ZTV and the profile) will be emitted and must be externalized. The Mecha05 manifest's compiler_only_output list is the right shape to start from; its dBgActor_c entries do not apply (this chain goes through dEnemyBase_c in ov002 instead).",
+    "Do NOT fold daYurei_Mucho_c_classInit (src/d_a_yurei_mucho.c) into the TU. Mecha05 kept it out and reached `promoted`; TTC_MovingBar folded its classInits in and is stuck at `text-verified` with an unlicensed-symbol FAIL-BY-DESIGN.",
+    "The four State objects and four file handles in ov065 .bss, and the eight PMF records in ov065 .data, must stay unowned extern references. Defining them would make mwccarm emit a static initializer the text-only isolation then has to strip."
+  ],
+  "unproven": [
+    "The class name `Snufit` was COINED, and is now retired. The cartridge names this class daYurei_Mucho_c and contains no occurrence of the string 'snufit' in any case, in any of the 106 code/data images or 2,073 asset files. At the time this record was taken the coined name was kept because every mangled member symbol in the ROM-linked symbols.txt already spelled it; the promotion replaced those symbols with the ROM RTTI spelling, so nothing depends on it any more. The coined free function `Snufit_Kill` was retired with it -- see src/func_ov065_021177e4.cpp, whose address lies in the daBasabasa_c/Swoop run and in no vtable at all.",
+    "The names of all twelve func_ov065_* members. No identifier for any of them survives in the cartridge. Their bodies, their address, their call sites and their member-ness (the eight PMF ones are called with `this` in r0 through a pointer-to-member, so they ARE non-static members) are proven; the words are not. The four non-PMF ones (0x02115f84, 0x02115ff0, 0x0211691c, 0x0211696c) are not even proven to be members rather than file-local free functions -- only that each takes the object as its first argument.",
+    "Every field NAME in include/Snufit.h (mdCcAc_c, mWithMeshClsn, mModelAnim, mShadowModel, mCurrentState, mHomePosX/Y/Z, unk_3d8) is a reconstruction. The offsets, widths and arithmetic are ROM-proven; the English spellings are not.",
+    "The type and extent of the member at 0x38c. Only `add r4, #0x38c` proves it exists. 0x38c..0x3bc is 0x30 bytes with no other displacement inside it, which bounds it but does not type it.",
+    "The type of the three-word group at 0x3c0/0x3c4/0x3c8. It is zeroed as a unit and refilled from three consecutive words of another object, which is Vec3-shaped, but no Vec3 constructor or Vec3-typed call touches it.",
+    "The last 4 bytes of the object, 0x3e0..0x3e4. The allocator literal is 0x3e4; the highest proven field is the word at 0x3dc. Nothing reads or writes 0x3e0.",
+    "Which of the four .bss file handles corresponds to which yurei_mucho asset. The sinit's ids (0x42d..0x430) live in a different id space from the filesystem ids (639..642).",
+    "The State struct's field names and its exact size. Two 8-byte pointer-to-member fields at +0x00 and +0x08 are proven, and the four objects are laid out 0x10 apart with the fourth ending exactly where the next class's .bss band begins, which makes 0x10 the size. Anything beyond that -- what the two hooks are called, whether the struct has a name -- is not proven.",
+    "The per-unit boundary confidence from tu_map.py. build/tu_map.json does not carry it at this revision; the ov065 module-level split is 17 medium / 1 high and the sinit corroboration (10 sinits / 10 .ctor entries) is module-wide, not narrowed to this TU.",
+    "The destructor lever. That an inline in-class virtual destructor reproduces the retail D1-then-D0-without-D2 shape is INFERRED from the daObjCtMecha05_c manifest, not measured here. The ROM shape is identical, but the compile has not been run."
+  ],
+  "source_review_corrections": [
+    {
+      "date": "2026-09-10",
+      "review_task": "pr2456-source-repair-0910",
+      "reviewed_input_commit": "a6ed71f26e750fadb84aeb4c55a8844d994fc502",
+      "scope": "Dated correction to the earlier observations above; tree_derived remains a historical snapshot. The text-only class promotion is still partial under issue #2478.",
+      "layout": {
+        "object_size": "0x3e4",
+        "fields": [
+          {
+            "offset": "0x3dc",
+            "width": 4,
+            "type": "s32",
+            "name": "mShotCount",
+            "naming": "reconstructed from use",
+            "evidence": "func_ov065_02116588 clears the word; func_ov065_02116364 compares it as signed against 3 and increments it after spawning profile 0xe9. Replacing these accesses with the class field reproduces all 23 declared functions."
+          },
+          {
+            "offset": "0x3e0",
+            "width": 2,
+            "type": "s16",
+            "name": "mTargetAngle",
+            "naming": "reconstructed from use",
+            "evidence": "func_ov065_021168a8 writes a random angle. func_ov065_02116744, func_ov065_021165d8 and func_ov065_02116364 store horizontal target angles and feed signed halfword reads to ApproachAngle. The 0x300+0xe0 access is also 0x3e0. Typed replacements reproduce all 23 declared functions."
+          }
+        ],
+        "unobserved_tail": "0x3e2..0x3e4 only (two bytes)",
+        "supersedes": "The prior unproven claim that nothing reads or writes 0x3e0, and the header claim that observed fields stop at 0x3dc, are incorrect. The earlier displacement measurement omitted the live target-angle halfword; it is not a complete field census."
+      },
+      "state_contract": {
+        "measured": "Two 8-byte PMF records per 0x10-byte State; entry hook at +0, per-frame hook at +8; dispatcher forwards the result register.",
+        "inferred": "mEnter/mMain and their common int signatures are reconstructed interfaces. Forwarding r0 does not identify an original C++ return type. func_ov065_02116588 is still a short-returning free helper; PMF helpers remain unreconstructed."
+      },
+      "interface_probes": [
+        {
+          "interface": "dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr&)",
+          "result": "Adopted real member call; all 23 functions VERIFIED with 4280 text bytes."
+        },
+        {
+          "interface": "dCcAc_c::Init(dActor_c*,Fix12<int>,Fix12<int>,u32,u32)",
+          "result": "Declared in the included header. Aggregate-initialized radius/height locals grow InitResources from 0xfc to 0x10c and emit constant copies; assigning their val fields separately grows it to 0x114. Keep the existing scalar ABI declaration/call while this interface is repaired."
+        },
+        {
+          "interface": "dBgCh_Actr::Init(dActor_c*,Fix12i,Fix12i,Vector3_16*,Vector3_16*)",
+          "result": "Declared with scalar Fix12i parameters. A real call preserves the 0xfc body but emits _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, which has no symbols.txt destination. The current linked name still encodes Fix12<int>. Keep the existing ABI call without inventing an alias or changing shared headers."
+        }
+      ],
+      "copy_probes": [
+        {
+          "type": "Matrix4x3",
+          "result": "Available through ModelAnim/Model headers as Matrix3x3 plus non-POD Vector3. Replacing the POD Mtx43 copies grows func_ov065_0211696c from 0x17c to 0x1c8."
+        },
+        {
+          "type": "Vector3",
+          "result": "Available in types.h, with its existing destructor. Replacing V3A copy in func_ov065_02116364 grows it from 0x224 to 0x234."
+        }
+      ],
+      "metadata": "The TU defines the out-of-line virtual methods and includes the inline destructor. The pinned compiler emits D1/D0 and the 0x84-byte vtable storage here. The inline destructor itself is not the key function.",
+      "partial_scope": {
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2478",
+        "owner": "humanizer/integrator support session through @andrewboudreau",
+        "remaining": "Twelve address-named free helpers, manual factory/constructor sequence, remaining raw fields and typed matrix/vector copies. SharedFilePtr still exposes no recovered fields; retain the measured direct +4 file-pointer load. Do not replace it with LoadFile or invent a shared field."
+      }
+    },
+    {
+      "date": "2026-09-10",
+      "finding": "YUR-01",
+      "composed_main": "a0cc78fbd18f166ba67fca7c38b63bca348c8edd",
+      "correction": "OnTurnIntoEgg returns void, matching the approved shared dActor_c interface. The retired Snufit header and method shard remain deleted; main's contract correction is carried into the renamed class header and promoted TU. This return type is the current source contract, not inferred from a return register."
+    }
+  ]
+}

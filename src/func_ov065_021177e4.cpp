@@ -1,8 +1,27 @@
 //cpp
 // @symbol func_ov065_021177e4
-// recovered name: Snufit_Kill
-/* recovered: renamed to Class_Method */
-/* daYurei_Mucho_c::Kill - recovered from vtable slot identity */
+/* NOT daYurei_Mucho_c's, and not a vtable slot. This file used to carry the
+   coined name `Snufit_Kill` and the attribution "daYurei_Mucho_c::Kill --
+   recovered from vtable slot identity". Three ROM reads refute both halves, so
+   the promotion that retired the coined class name `Snufit` retired this
+   spelling with it rather than transplanting it onto the ROM RTTI name:
+
+     * 0x021177e4 appears in NO vtable in this overlay. Reading the 33 words at
+       0x0211cb9c (_ZTV15daYurei_Mucho_c storage) and at 0x0211cc98
+       (_ZTV5Swoop / _ZTV12daBasabasa_c storage) out of
+       extracted/overlays/overlay_0065.bin, neither contains it.
+     * The address sits inside the NEIGHBOUR's text run, between
+       _ZN5SwoopD0Ev (0x02116fe8) and _ZN5Swoop16CleanupResourcesEv
+       (0x02117aa4), whose factory is daBasabasa_c_classInit at 0x02117ee8.
+       daYurei_Mucho_c's run ends at 0x02116f98.
+     * The body types `t` against a layout daYurei_Mucho_c does not have: it
+       calls ModelAnim::SetAnim on `t + 0x364`, where daYurei_Mucho_c holds a
+       ShadowModel (its ModelAnim is at 0x300), and it reads
+       data_ov065_0211d6a0, outside daYurei_Mucho_c's bss band
+       0x0211d600..0x0211d690.
+
+   Naming this function therefore belongs to the daBasabasa_c/Swoop owner, on
+   that class's evidence. It keeps its address-derived symbol until then. */
 struct Vector3 {
     int x, y, z;
     Vector3(int a, int b, int c) : x(a), y(b), z(c) {}
