@@ -158,6 +158,7 @@ int  func_0205db24(void);                                /* the write stub    */
    ROM's own FS_Init went through it. Both are called from this file's static
    initialiser, in that order, around the once-guard. */
 void port_nitrofs_header_mirror_seed(void);
+void port_os_lock_words_seed(void);
 void port_nitrofs_boot_report(void);
 
 /* ---- hal/fs.cpp's read-only catalog accessor ------------------------------
@@ -676,6 +677,10 @@ struct NitroFsNamesBoot {
            read-back after the guard is the proof that the ROM's own
            func_0205cb68 laid them into the archive record. */
         port_nitrofs_header_mirror_seed();
+        /* FS_Init allocates its CARD lock here, before normal host boot.
+           The shared page is already mapped by ntr's TLS callback. The seed
+           runs once so the later boot span preserves this allocation. */
+        port_os_lock_words_seed();
         func_0205d89c(-1);
         port_nitrofs_boot_report();
         /* SM64DS_NFS_PROBE=1 runs the cross-seam check at boot instead of
