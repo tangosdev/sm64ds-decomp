@@ -1,6 +1,6 @@
 # PR 2474 transcription gate repair, 2026-09-10
 
-This handoff covers PORT-TRANS-01 through PORT-TRANS-04. The original port candidate is
+This handoff covers PORT-TRANS-01 through PORT-TRANS-05. The original port candidate is
 `91f525963d101265c3b88ef33ee5c19f996d08ac`; its ancestral source base is
 `b99310a89af9c0e4737f81ebde00d5599dba7e31`. The PR target is separately
 `31f3160466217cd906516d260dba0ac8f76aee26`, which is not an ancestor of
@@ -14,14 +14,14 @@ six VS7 diagnostic additions. It now normalizes only the exact declarations,
 counter increments, report arguments and surrounding game statements. The
 three existing warning calls and local silencer also require their reviewed
 sites. No variable-name or call-prefix blanket exclusion remains. The three
-diagnostic helper bodies are pinned by non-comment C token digests; changing
+diagnostic helper bodies are pinned by exact source digests; changing
 one requires review of that exception. The clock reads steady time, the
 warning tracks its own printed flag, and the expiry reporter reads comms
 counters/player count/statistics and updates only its diagnostic rate limit.
 Those three comms accessors were separately read in the current source.
 
 Fresh checks: `python port/tools/test_hostloop_transcription_check.py` passes
-28 tests. The CLI also passes from outside the repository. The actual gate
+31 tests. The CLI also passes from outside the repository. The actual gate
 reports 406 original body lines, 60 original extern declarations (including CpuCopy8) and three pinned helpers.
 Negative controls cover altered wait conditions, state writes, callees,
 extern widths, moved/duplicated counters, warning/silencer movement, report
@@ -54,7 +54,15 @@ PORT-TRANS-04 compares every original extern declaration by its actual name,
 including CpuCopy8; the only two extra host declarations are exact outside-code
 pins. The count remains 60, now meaning all 60 original declarations rather
 than the former address-name filter plus its partial narrow-arm name match.
-The 28-test suite includes all six independently reported false-pass fixtures,
+The 31-test suite includes all six independently reported false-pass fixtures,
 all seven required widening sites, declaration additions/removals and both
 source and wide context changes. These pins are source-review boundaries:
 changing reviewed context requires a new review, not a claim of ROM proof.
+
+PORT-TRANS-05: independent native probes showed that character-token hashes
+confused `++n` with two unary plus operators and erased include-directive
+line boundaries. Helper and outside-code pins now compare exact source with
+only line-ending and leading-indentation normalization. Operators, comments,
+logical directive boundaries and trailing whitespace are preserved; even a
+harmless unrecognized helper comment edit requires fresh review. The three
+new full-source negatives and all prior negatives are covered by 31 tests.
