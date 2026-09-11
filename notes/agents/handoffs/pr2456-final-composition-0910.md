@@ -4,7 +4,13 @@ This review continues accepted source `35188d5d3760316b5f9f0a19575dc63badeafcb5`
 from base `a0cc78fbd18f166ba67fca7c38b63bca348c8edd`, preserving all eight YUR
 findings and the partial reconstruction owned in #2478. The staging base is the
 independently accepted Pkn head `180b064aaa8bafaac570224a58206d922d42212c`.
-Final acceptance requires the actual merged main base and terminal private validation.
+The final composition includes actual main
+`a1c21c0b5e8ae237f706d5c31a2de44698568c8a`. Pkn squash
+`d9df353f996875d26c8f00c17eeb07d2fcc632b9` has the exact accepted Pkn tree;
+the subsequent main commit changes only three progress files. The whole composed
+index was checked against reviewed Yurei staging `69a0bbaa9baa6f815cef8ff6b9af89c3a92b3c8e`
+plus those three main blobs before this handoff update. Final independent review
+and terminal private validation remain required.
 
 The class keeps its 23 licensed functions: ten native method symbols, twelve
 address-named helpers and one manual factory. The small neighboring
