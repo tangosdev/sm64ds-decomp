@@ -5732,6 +5732,22 @@ foreach(line IN LISTS SLICE_MG1_LINES)
     list(APPEND SLICE_MG1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# Preserve the graphics block's cdecl entry while adapting its scene-slot calls.
+set(MG_GRAPHICS_FORWARDER_SYMS
+    func_ov004_020ae03c func_ov004_020ae06c
+    func_ov004_020ae0a4 func_ov004_020ae0d4)
+foreach(sym IN LISTS MG_GRAPHICS_FORWARDER_SYMS)
+    set(mg_graphics_src "${CMAKE_CURRENT_SOURCE_DIR}/../src/${sym}.c")
+    set(mg_graphics_gen "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    list(REMOVE_ITEM SLICE_MG1_SOURCES "${mg_graphics_src}")
+    list(APPEND SLICE_MG1_SOURCES "${mg_graphics_gen}")
+    add_custom_command(OUTPUT "${mg_graphics_gen}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" "${sym}"
+        DEPENDS "${mg_graphics_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen minigame graphics scene-slot ABI")
+endforeach()
+
 # ONE .c IN THIS SLICE IS REALLY C++, run mg10 lane F371. Lane CCN's rule was
 # followed rather than waited on: the whole slice was swept for the //cpp
 # marker and for extern "C", virtual, class and namespace before the first
