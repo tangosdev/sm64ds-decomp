@@ -21,6 +21,9 @@ HELPER_DIGESTS = {
 }
 
 
+SOURCE_OUTSIDE_DIGEST = 'a0e64166c4e1e10301d7ea184697ed48bdafedb1cb023827d4cfa59bc690c2f2'
+WIDE_OUTSIDE_DIGEST = 'ce963e1aedc474223bbe5a2f3bcf95405edbb369499701468b68085d62ab43b0'
+
 def without_comments(text):
     return TOKEN.sub(lambda m: ''.join('\n' if c == '\n' else ' ' for c in m.group())
                      if m.group().startswith(('/*', '//')) else m.group(), text)
@@ -97,9 +100,15 @@ def norm(text, wide=False):
          ['if ((var_r6_2 != 0) && (n75 > 1U)) {', 'spC = 1;']),
     ):
         lines = replace_once(lines, before, after)
+    for widened in (
+        '} while ((s32) var_r7 < kRecs);',
+        'if (var_r2 < kRecs) {', 'if (var_r5_3 < kRecs) {',
+        'if (var_r3_2 < kRecs) {', '} while (var_r0 < kRecs);',
+        'if (var_r2_3 < kRecs) {', 'if (var_r2_4 < kRecs) {',
+    ):
+        lines = replace_once(lines, [widened], [widened.replace('kRecs', '4')])
     result = []
     for line in lines:
-        line = re.sub(r'\bkRecs\b', '4', line)
         line = line.replace('(u8 *)func_0204068c', 'func_0204068c')
         line = line.replace('(void *)&func_0203f644, (void *)&func_0203f604',
                             '&func_0203f644, &func_0203f604')
@@ -110,15 +119,31 @@ def norm(text, wide=False):
 
 def decls(text):
     out = {}
-    for match in re.finditer(r'^extern\s+(.+?);\s*$', without_comments(text), re.M):
+    for match in re.finditer(r'\bextern\s+(?:"C"\s+)?([^;{}]+);', without_comments(text), re.S):
         declaration = re.sub(r'\s+', ' ', match.group(1)).strip()
-        name = re.search(r'(func_[0-9a-fA-F]+|data_[0-9a-fA-F]+)', declaration)
-        if name:
-            out.setdefault(name.group(1), []).append(declaration)
+        name = re.search(r'(\w+)\s*\(', declaration) or re.search(r'(\w+)\s*(?:\[|$)', declaration)
+        if name is None:
+            raise ValueError('unsupported extern declaration: ' + declaration)
+        out.setdefault(name.group(1), []).append(declaration)
     return out
 
 
+def outside_digest(text, prefixes):
+    # Freeze reviewed includes, typedefs, linkage blocks, declarations and the
+    # dispatch wrapper as well as function bodies. Otherwise an inactive copy
+    # or a new macro can leave the body comparison unchanged while changing
+    # the compiled program. These pins are review boundaries, not ROM proof.
+    for prefix in prefixes:
+        body = function(text, prefix)
+        text = text.replace(body, prefix + ';', 1)
+    return token_digest(text)
+
+
 def check_sources(src, wide):
+    if outside_digest(src, ['void func_0203ea5c(void)']) != SOURCE_OUTSIDE_DIGEST:
+        raise ValueError('cartridge declarations or preprocessor context changed')
+    if outside_digest(wide, list(HELPER_DIGESTS) + ['void conductor_wide(void)']) != WIDE_OUTSIDE_DIGEST:
+        raise ValueError('wide declarations, dispatch or preprocessor context changed')
     for prefix, expected in HELPER_DIGESTS.items():
         if token_digest(function(wide, prefix)) != expected:
             raise ValueError('diagnostic helper changed: ' + prefix)
@@ -129,12 +154,14 @@ def check_sources(src, wide):
         raise ValueError('DIVERGED:\n' + '\n'.join(diff))
     expected, actual = decls(src), decls(wide)
     for name in sorted(set(expected) | set(actual)):
-        if name == 'func_0203ea5c':  # the wide file's narrow-arm declaration
-            continue
-        values = [value.replace('[kRecs]', '[4]') for value in actual.get(name, [])]
+        if name in ('func_0203ea5c_narrow', 'port_comms_counters_get'):
+            continue  # exact extra declarations are pinned by the outside digest
+        values = actual.get(name, [])
+        if name == 'data_020a1154':
+            values = [value.replace('[kRecs]', '[4]') for value in values]
         if expected.get(name) != values:
             raise ValueError('EXTERN DIFF ' + name)
-    return {'lines': len(original), 'externs': len(set(expected) | set(actual)),
+    return {'lines': len(original), 'externs': len(expected),
             'diagnostic_helpers': len(HELPER_DIGESTS)}
 
 
