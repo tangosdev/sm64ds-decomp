@@ -1,0 +1,374 @@
+{
+  "id": "ov065/daYurei_Mucho_c",
+  "module": "ov065",
+  "source": "src/actors/daYurei_Mucho_c.cpp",
+  "promoted_source": "src/actors/daYurei_Mucho_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x02115ee0..0x02116f98, 23 functions including the factory; the historical pre-fold tu_map census counted 22 because tools/srcpath.py recognises '<Class>_Spawn' but not 'daYurei_Mucho_c_classInit' (github.com/tangosdev/sm64ds-decomp/issues/2436)",
+    "the retired 23rd shard, src/d_a_yurei_mucho.c at 0x02116f48..0x02116f98, abutted the method/helper run and is this class's registry factory: it allocates 0x3e4 through fBase_c::operator new and stores _ZTV15daYurei_Mucho_c",
+    "class label(s): daYurei_Mucho_c",
+    "the next delinks entry, 0x02116f98, opens daBasabasa_c's run and is reserved to another owner",
+    "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x02115ee0",
+      "end": "0x02116f98"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN15daYurei_Mucho_cD1Ev",
+      "address": "0x02115ee0",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN15daYurei_Mucho_cD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_cD0Ev",
+      "address": "0x02115f28",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN15daYurei_Mucho_cD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov065_02115f84",
+      "address": "0x02115f84",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov065_02115f84.c",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov065_02115ff0",
+      "address": "0x02115ff0",
+      "size": "0x000002d0",
+      "legacy_source": "src/func_ov065_02115ff0.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov065_021162c0",
+      "address": "0x021162c0",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov065_021162c0.c",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov065_02116328",
+      "address": "0x02116328",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov065_02116328.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov065_02116364",
+      "address": "0x02116364",
+      "size": "0x00000224",
+      "legacy_source": "src/func_ov065_02116364.cpp",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov065_02116588",
+      "address": "0x02116588",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov065_02116588.cpp",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov065_021165d8",
+      "address": "0x021165d8",
+      "size": "0x00000154",
+      "legacy_source": "src/func_ov065_021165d8.cpp",
+      "ordinal": 8
+    },
+    {
+      "symbol": "func_ov065_0211672c",
+      "address": "0x0211672c",
+      "size": "0x00000018",
+      "legacy_source": "src/func_ov065_0211672c.c",
+      "ordinal": 9
+    },
+    {
+      "symbol": "func_ov065_02116744",
+      "address": "0x02116744",
+      "size": "0x00000164",
+      "legacy_source": "src/func_ov065_02116744.c",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov065_021168a8",
+      "address": "0x021168a8",
+      "size": "0x00000074",
+      "legacy_source": "src/func_ov065_021168a8.cpp",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov065_0211691c",
+      "address": "0x0211691c",
+      "size": "0x00000050",
+      "legacy_source": "src/func_ov065_0211691c.cpp",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov065_0211696c",
+      "address": "0x0211696c",
+      "size": "0x0000017c",
+      "legacy_source": "src/func_ov065_0211696c.c",
+      "ordinal": 13
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_c16CleanupResourcesEv",
+      "address": "0x02116ae8",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN15daYurei_Mucho_c16CleanupResourcesEv.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_c16OnPendingDestroyEv",
+      "address": "0x02116b30",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN15daYurei_Mucho_c16OnPendingDestroyEv.cpp",
+      "ordinal": 15
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_c6RenderEv",
+      "address": "0x02116b34",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN15daYurei_Mucho_c6RenderEv.cpp",
+      "ordinal": 16
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_c8BehaviorEv",
+      "address": "0x02116b84",
+      "size": "0x0000028c",
+      "legacy_source": "src/_ZN15daYurei_Mucho_c8BehaviorEv.cpp",
+      "ordinal": 17
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_c13InitResourcesEv",
+      "address": "0x02116e10",
+      "size": "0x000000fc",
+      "legacy_source": "src/_ZN15daYurei_Mucho_c13InitResourcesEv.cpp",
+      "ordinal": 18
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv",
+      "address": "0x02116f0c",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv.cpp",
+      "ordinal": 19
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player",
+      "address": "0x02116f14",
+      "size": "0x0000002c",
+      "legacy_source": "src/_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 20
+    },
+    {
+      "symbol": "_ZN15daYurei_Mucho_c13OnYoshiTryEatEv",
+      "address": "0x02116f40",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN15daYurei_Mucho_c13OnYoshiTryEatEv.cpp",
+      "ordinal": 21
+    },
+    {
+      "symbol": "daYurei_Mucho_c_classInit",
+      "address": "0x02116f48",
+      "size": "0x00000050",
+      "legacy_source": "src/d_a_yurei_mucho.c",
+      "ordinal": 22
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov065_021165d8.cpp (func_ov065_021165d8) did not split (the definition is inside the extern \"C\" block opened on line 7, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov065_021168a8.cpp (func_ov065_021168a8) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov065_02115f84 and the one that held func_ov065_02115ff0; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov065_021162c0 and the one that held func_ov065_02116364; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_02012694' differs between the legacy file that used to hold func_ov065_02115f84 and the one that held func_ov065_02116364; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov065_0211691c' differs between the legacy file that used to hold func_ov065_02115ff0 and the one that held func_ov065_02116364; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj' differs between the legacy file that used to hold func_ov065_02116364 and the one that held func_ov065_02116588; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_Dist' differs between the legacy file that used to hold func_ov065_02116364 and the one that held func_ov065_02116744; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzAngle' differs between the legacy file that used to hold func_ov065_02116364 and the one that held func_ov065_02116744; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov065_021162c0 and the one that held func_ov065_02116744; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationY' differs between the legacy file that used to hold func_ov065_02116364 and the one that held func_ov065_02116744; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'MulVec3Mat4x3' differs between the legacy file that used to hold func_ov065_02116364 and the one that held func_ov065_02116744; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov065_0211691c' differs between the legacy file that used to hold func_ov065_02115ff0 and the one that held func_ov065_02116744; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c22ClosestNonVanishPlayerEv' differs between the legacy file that used to hold func_ov065_02116364 and the one that held func_ov065_02116744; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'ApproachAngle' differs between the legacy file that used to hold func_ov065_021162c0 and the one that held _ZN15daYurei_Mucho_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov065_0211691c' differs between the legacy file that used to hold func_ov065_02115ff0 and the one that held _ZN15daYurei_Mucho_c8BehaviorEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov065_0211d600' differs between the legacy file that used to hold func_ov065_02116364 and the one that held _ZN15daYurei_Mucho_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov065_0211d608' differs between the legacy file that used to hold func_ov065_02116588 and the one that held _ZN15daYurei_Mucho_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov065_0211d670' differs between the legacy file that used to hold func_ov065_02116364 and the one that held _ZN15daYurei_Mucho_c13InitResourcesEv; kept the first, the other is commented out for review",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov065_0211691c' differs between the legacy file that used to hold func_ov065_02115ff0 and the one that held _ZN15daYurei_Mucho_c13InitResourcesEv; kept the first, the other is commented out for review"
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov065-daYurei_Mucho_c/daYurei_Mucho_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 23,
+    "functions_declared": 23,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN7V3QuintD1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7V3QuintD1Ev",
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        28,
+        36
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI8dActor_c",
+        "_ZTI15daYurei_Mucho_c",
+        "_ZTS15daYurei_Mucho_c",
+        "_ZTV15daYurei_Mucho_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI15daYurei_Mucho_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS15daYurei_Mucho_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV15daYurei_Mucho_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  },
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "Vector3's four-byte inline destructor, emitted as vague linkage because this TU odr-uses Vector3 as a local: func_ov065_02116364 builds five of them on the stack. No member of daYurei_Mucho_c has that type -- the trigger is what the TU touches, not what it stores. The cartridge owns the body at arm9:0x020072c0 (config/arm9/symbols.txt names _ZN7Vector3D1Ev there) and an enrolled source already reaches it, so this object's copy is a duplicate that production isolation discards."
+    },
+    {
+      "symbol": "_ZN7V3QuintD1Ev",
+      "disposition": "deadstrip",
+      "reason": "The implicit destructor of the five-Vector3 aggregate func_ov065_02116364 builds on the stack. The legacy shard spelled it as an unnamed local class, which mwccarm mangles with a file-and-counter tag that moves whenever the file does; it is given a file-scope name here so the symbol this row licenses is stable. The four-byte body exists only in this object and has no ROM home anywhere -- no symbols.txt in config/ names it, the retail link discarded it, and the 23 licensed bodies reproduce the cartridge without it."
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key-function TU emits inherited fBase_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home before text-only production isolation discards it."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "The key-function TU emits inherited fBase_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "The key-function TU emits inherited dBase_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "The key-function TU emits inherited dActor_c's type-name string as vague linkage; romdata_check verifies its bytes at the canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "The key-function TU emits inherited dBase_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "The key-function TU emits its direct base dEnemyBase_c's typeinfo as vague linkage. Its canonical home is NOT this TU's module: config/arm9/overlays/ov002/symbols.txt is the only symbols.txt that names this address, and romdata_check verifies the complete single-inheritance record there."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "The key-function TU emits dEnemyBase_c's type-name string as vague linkage; the linker kept the one copy in ov002, and romdata_check verifies its compiler-sized payload at that canonical home."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "The key-function TU emits inherited dActor_c typeinfo as vague linkage; romdata_check verifies the copy at its canonical arm9 home."
+    },
+    {
+      "symbol": "_ZTI15daYurei_Mucho_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211cb60",
+      "reason": "The genuine class identity naturally emits daYurei_Mucho_c's 12-byte single-inheritance typeinfo record. romdata_check verifies its ABI kind, type-name relocation and dEnemyBase_c base link at the canonical ov065 home."
+    },
+    {
+      "symbol": "_ZTS15daYurei_Mucho_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211cb6c",
+      "reason": "The genuine class identity naturally emits the ROM-named daYurei_Mucho_c type string -- the same 17 bytes plus terminator the cartridge holds, which is the evidence this class is named daYurei_Mucho_c and not the coined Snufit. romdata_check verifies its exact compiler-sized bytes at the canonical ov065 home."
+    },
+    {
+      "symbol": "_ZTV15daYurei_Mucho_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov065",
+      "canonical_address": "0x0211cba4",
+      "reason": "This TU defines the class's out-of-line virtual methods and includes its inline destructor. The pinned compiler emits the full 0x84-byte daYurei_Mucho_c vtable storage here; this does not make the inline destructor itself the key function. romdata_check applies the measured eight-byte ABI address-point bias (storage begins 0x0211cb9c; the symbol at 0x0211cba4 IS the address point, which is the word daYurei_Mucho_c_classInit stores at this+0) and verifies the 31 retail slots plus the storage preamble at the canonical ov065 home before text-only production isolation discards it."
+    }
+  ]
+}

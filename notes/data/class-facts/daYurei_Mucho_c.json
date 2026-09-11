@@ -1,6 +1,9 @@
 {
-  "class": "Snufit",
-  "class_name_status": "COINED",
+  "class": "daYurei_Mucho_c",
+  "queue_key": "daYurei_Mucho_c",
+  "tree_name": "daYurei_Mucho_c",
+  "former_tree_name": "Snufit",
+  "name_status": "daYurei_Mucho_c is ROM RTTI; Snufit was COINED and is retired. This record was taken while the tree still spelled the class Snufit, and every tree-derived field below (functions, shard paths, symbols_txt_rows, queue_row, header, output_path, manifest_path_to_create) names it that way because that is what was measured at tree_derived.base_commit. Those are dated observations, not live claims: the promotion on branch cpp/daYurei_Mucho_c-tu renamed the class to its ROM RTTI name and folded the 22 shards into src/actors/daYurei_Mucho_c.cpp. The ROM-derived fields -- rtti_name, typeinfo, vtable addresses, text_span, size, layout, data_band, bss_band, registry -- are unaffected by the rename.",
   "rtti_name": "15daYurei_Mucho_c",
   "rtti_name_address": "0x0211cb6c",
   "identity_evidence": "The cartridge names this class daYurei_Mucho_c, not Snufit. Read directly out of extracted/overlays/overlay_0065.bin at file offset 0x6c8c (address 0x0211cb6c, module base 0x02115ee0): the bytes are 31 35 64 61 59 75 72 65 69 5f 4d 75 63 68 6f 5f 63 00 = \"15daYurei_Mucho_c\\0\", the length-prefixed _ZTS form, 0x12 bytes, zero-padded to 0x0211cb80. The _ZTI record two words earlier points at it. 'Snufit' is a coined English name the tree already carries in every mangled member symbol (_ZN6Snufit...), so it is kept; it is disclosed here as coined. Corroborating ROM evidence for the Japanese name: arm9 ACTOR_DEBUG_NAMES[236] -> the string \"YUREI_MUCHO\" (arm9_dec.bin +0x8c2f0, address 0x020902f0, pointer at 0x02091230), ACTOR_SPAWN_TABLE[236] -> g_profile_YUREI_MUCHO at 0x0211cb80, whose own id word 0x0211cb84 = 0x005b00ec has low half 0x00ec = 236 -- the same index, so the table slot and the profile agree; and the four assets data/enemy/yurei_mucho/{yurei_mucho.bmd, yurei_mucho_ball.bmd, yurei_mucho_wait.bca, yurei_mucho_attack.bca}.",
@@ -278,7 +281,7 @@
     "The four State objects and four file handles in ov065 .bss, and the eight PMF records in ov065 .data, must stay unowned extern references. Defining them would make mwccarm emit a static initializer the text-only isolation then has to strip."
   ],
   "unproven": [
-    "The class name `Snufit`. It is COINED. The cartridge names this class daYurei_Mucho_c and contains no occurrence of the string 'snufit' in any case, in any of the 106 code/data images or 2,073 asset files. The name is kept because every mangled member symbol in the ROM-linked symbols.txt already spells it, and PIPELINE.md's rule is disclosure, not abstention.",
+    "The class name `Snufit` was COINED, and is now retired. The cartridge names this class daYurei_Mucho_c and contains no occurrence of the string 'snufit' in any case, in any of the 106 code/data images or 2,073 asset files. At the time this record was taken the coined name was kept because every mangled member symbol in the ROM-linked symbols.txt already spelled it; the promotion replaced those symbols with the ROM RTTI spelling, so nothing depends on it any more. The coined free function `Snufit_Kill` was retired with it -- see src/func_ov065_021177e4.cpp, whose address lies in the daBasabasa_c/Swoop run and in no vtable at all.",
     "The names of all twelve func_ov065_* members. No identifier for any of them survives in the cartridge. Their bodies, their address, their call sites and their member-ness (the eight PMF ones are called with `this` in r0 through a pointer-to-member, so they ARE non-static members) are proven; the words are not. The four non-PMF ones (0x02115f84, 0x02115ff0, 0x0211691c, 0x0211696c) are not even proven to be members rather than file-local free functions -- only that each takes the object as its first argument.",
     "Every field NAME in include/Snufit.h (mdCcAc_c, mWithMeshClsn, mModelAnim, mShadowModel, mCurrentState, mHomePosX/Y/Z, unk_3d8) is a reconstruction. The offsets, widths and arithmetic are ROM-proven; the English spellings are not.",
     "The type and extent of the member at 0x38c. Only `add r4, #0x38c` proves it exists. 0x38c..0x3bc is 0x30 bytes with no other displacement inside it, which bounds it but does not type it.",
@@ -288,5 +291,76 @@
     "The State struct's field names and its exact size. Two 8-byte pointer-to-member fields at +0x00 and +0x08 are proven, and the four objects are laid out 0x10 apart with the fourth ending exactly where the next class's .bss band begins, which makes 0x10 the size. Anything beyond that -- what the two hooks are called, whether the struct has a name -- is not proven.",
     "The per-unit boundary confidence from tu_map.py. build/tu_map.json does not carry it at this revision; the ov065 module-level split is 17 medium / 1 high and the sinit corroboration (10 sinits / 10 .ctor entries) is module-wide, not narrowed to this TU.",
     "The destructor lever. That an inline in-class virtual destructor reproduces the retail D1-then-D0-without-D2 shape is INFERRED from the daObjCtMecha05_c manifest, not measured here. The ROM shape is identical, but the compile has not been run."
+  ],
+  "source_review_corrections": [
+    {
+      "date": "2026-09-10",
+      "review_task": "pr2456-source-repair-0910",
+      "reviewed_input_commit": "a6ed71f26e750fadb84aeb4c55a8844d994fc502",
+      "scope": "Dated correction to the earlier observations above; tree_derived remains a historical snapshot. The text-only class promotion is still partial under issue #2478.",
+      "layout": {
+        "object_size": "0x3e4",
+        "fields": [
+          {
+            "offset": "0x3dc",
+            "width": 4,
+            "type": "s32",
+            "name": "mShotCount",
+            "naming": "reconstructed from use",
+            "evidence": "func_ov065_02116588 clears the word; func_ov065_02116364 compares it as signed against 3 and increments it after spawning profile 0xe9. Replacing these accesses with the class field reproduces all 23 declared functions."
+          },
+          {
+            "offset": "0x3e0",
+            "width": 2,
+            "type": "s16",
+            "name": "mTargetAngle",
+            "naming": "reconstructed from use",
+            "evidence": "func_ov065_021168a8 writes a random angle. func_ov065_02116744, func_ov065_021165d8 and func_ov065_02116364 store horizontal target angles and feed signed halfword reads to ApproachAngle. The 0x300+0xe0 access is also 0x3e0. Typed replacements reproduce all 23 declared functions."
+          }
+        ],
+        "unobserved_tail": "0x3e2..0x3e4 only (two bytes)",
+        "supersedes": "The prior unproven claim that nothing reads or writes 0x3e0, and the header claim that observed fields stop at 0x3dc, are incorrect. The earlier displacement measurement omitted the live target-angle halfword; it is not a complete field census."
+      },
+      "state_contract": {
+        "measured": "Two 8-byte PMF records per 0x10-byte State; entry hook at +0, per-frame hook at +8; dispatcher forwards the result register.",
+        "inferred": "mEnter/mMain and their common int signatures are reconstructed interfaces. Forwarding r0 does not identify an original C++ return type. func_ov065_02116588 is still a short-returning free helper; PMF helpers remain unreconstructed."
+      },
+      "interface_probes": [
+        {
+          "interface": "dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr&)",
+          "result": "Adopted real member call; all 23 functions VERIFIED with 4280 text bytes."
+        },
+        {
+          "interface": "dCcAc_c::Init(dActor_c*,Fix12<int>,Fix12<int>,u32,u32)",
+          "result": "Declared in the included header. Aggregate-initialized radius/height locals grow InitResources from 0xfc to 0x10c and emit constant copies; assigning their val fields separately grows it to 0x114. Keep the existing scalar ABI declaration/call while this interface is repaired."
+        },
+        {
+          "interface": "dBgCh_Actr::Init(dActor_c*,Fix12i,Fix12i,Vector3_16*,Vector3_16*)",
+          "result": "Declared with scalar Fix12i parameters. A real call preserves the 0xfc body but emits _ZN10dBgCh_Actr4InitEP8dActor_ciiP10Vector3_16S3_, which has no symbols.txt destination. The current linked name still encodes Fix12<int>. Keep the existing ABI call without inventing an alias or changing shared headers."
+        }
+      ],
+      "copy_probes": [
+        {
+          "type": "Matrix4x3",
+          "result": "Available through ModelAnim/Model headers as Matrix3x3 plus non-POD Vector3. Replacing the POD Mtx43 copies grows func_ov065_0211696c from 0x17c to 0x1c8."
+        },
+        {
+          "type": "Vector3",
+          "result": "Available in types.h, with its existing destructor. Replacing V3A copy in func_ov065_02116364 grows it from 0x224 to 0x234."
+        }
+      ],
+      "metadata": "The TU defines the out-of-line virtual methods and includes the inline destructor. The pinned compiler emits D1/D0 and the 0x84-byte vtable storage here. The inline destructor itself is not the key function.",
+      "partial_scope": {
+        "issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2478",
+        "owner": "humanizer/integrator support session through @andrewboudreau",
+        "remaining": "Twelve address-named free helpers, manual factory/constructor sequence, remaining raw fields and typed matrix/vector copies. SharedFilePtr still exposes no recovered fields; retain the measured direct +4 file-pointer load. Do not replace it with LoadFile or invent a shared field."
+      }
+    },
+    {
+      "date": "2026-09-10",
+      "finding": "YUR-01",
+      "composed_main": "a0cc78fbd18f166ba67fca7c38b63bca348c8edd",
+      "correction": "OnTurnIntoEgg returns void, matching the approved shared dActor_c interface. The retired Snufit header and method shard remain deleted; main's contract correction is carried into the renamed class header and promoted TU. This return type is the current source contract, not inferred from a return register."
+    }
   ]
 }
