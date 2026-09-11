@@ -788,12 +788,37 @@ def target_state(identity, dest, tracked, scores, ownership, symbols):
                    destination does not define: it names nothing, so it can be scored
                    by nothing, and rewriting onto it would recreate the orphan.
 
-    IN EVERY STATE, a `#symbol` carried on the identity that disagrees with the one
-    `promoted_symbols()` enrols the same legacy path under is named in the detail.
-    `rewrite_target()` keeps the banked spelling, and the scan lookup below cannot
-    notice the disagreement -- it only ever proves that the destination defines the
-    symbol it was handed. Two answers, one silently discarded, is how a rewrite onto
-    the wrong member of the right file survives a green run.
+    IN EVERY STATE THAT CAN DEFINE ONE, a `#symbol` carried on the identity that
+    disagrees with the one `promoted_symbols()` enrols the same legacy path under is
+    named in the detail. `rewrite_target()` keeps the banked spelling, and the scan
+    lookup below cannot notice the disagreement -- it only ever proves that the
+    destination defines the symbol it was handed. Two answers, one silently discarded,
+    is how a rewrite onto the wrong member of the right file survives a green run.
+
+    "THAT CAN DEFINE ONE" IS A REAL QUALIFIER, NOT A HEDGE, and it is worth stating
+    what it excludes. A clash exists only where all three of these hold: the identity
+    carries a symbol, the manifest enrols a different one for that path, and the
+    destination is scored per member, so that the identity a rewrite creates is
+    `dest#carried` and the two spellings are actually alternatives. Enumerating
+    carried (none/A/B) x enrolled (nothing/A) x members (0/1/2) x tracked (yes/no),
+    2 of the 36 define one and both name it. The single state that cannot is the
+    `target is None` return below: a None target requires an identity carrying no
+    symbol at all, which is mutually exclusive with a clash, so its silence is a
+    clash being undefined rather than dropped -- 0 of the 36 reach it with one
+    defined.
+
+    THE COMPARISON IS DONE BEFORE THE `tracked` CHECK ON PURPOSE. An earlier version
+    of this file argued the untracked return needed no clash because an untracked
+    destination is not in the ownership index. THAT ARGUMENT WAS FALSE.
+    `srcpath._enrolment()` builds the index by walking `config/arm9/**/delinks.txt`
+    on disk and keeping every entry that starts with `src/`, with no existence check
+    and no git consultation, while `tracked_sources()` is `git ls-files src`. The two
+    enumerations are independent; measured 2026-09-10 all 9,008 indexed paths happen
+    to be tracked, but that is a property of the tree, not of the code. `git ls-files`
+    omits a file that exists but is not staged, so mid-promotion -- delinks row
+    edited, destination written, not yet added -- a destination is enrolled with many
+    members and untracked at the same time, and the clash is defined there. It is now
+    named there.
 
     It does NOT predict `--update`. That keys on the whole file -- see
     `destination_state()` -- and the two are allowed to disagree.
@@ -803,14 +828,7 @@ def target_state(identity, dest, tracked, scores, ownership, symbols):
             "target_state() needs the tracked set, the scan's scores, the ownership "
             "index and the manifest symbols. Any answer it returned without them "
             "would be a verdict about an identity nothing looked at.")
-    if dest not in tracked:
-        return "unvouched", "it is not a tracked source file", None
     target = rewrite_target(identity, dest, ownership, symbols)
-    if target is None:
-        rel = identity.split("#", 1)[0]
-        return ("unvouched",
-                f"it is scored per member and no manifest row here enrolls {rel} "
-                "under a symbol", None)
     # VFY-2543-19. The scan lookup below is not "the only check that means
     # anything", which is what this file used to claim: it proves the destination
     # defines the symbol, never that the symbol is the code the legacy path held.
@@ -818,12 +836,22 @@ def target_state(identity, dest, tracked, scores, ownership, symbols):
     # `rewrite_target()` discards its answer whenever the banked identity carries one
     # of its own. Compare them here so the row says so rather than one winning in
     # silence.
+    # VFY-2543-24. This runs BEFORE the `tracked` check because the ownership index
+    # and the tracked set are independent enumerations -- see the docstring -- so a
+    # destination can be enrolled with many members and untracked at once, which is
+    # exactly the state that defined a clash and used to drop it.
     rel, _, carried = identity.partition("#")
     enrolled = symbols.get(rel)
     clash = ""
     if carried and enrolled and enrolled != carried and target == f"{dest}#{carried}":
         clash = (f"; the manifest enrols {rel} under {enrolled}, not {carried}, "
                  "and this tool cannot say which is right")
+    if dest not in tracked:
+        return "unvouched", f"it is not a tracked source file{clash}", None
+    if target is None:
+        return ("unvouched",
+                f"it is scored per member and no manifest row here enrolls {rel} "
+                "under a symbol", None)
     score = scores.get(target)
     if score is None:
         return ("unvouched",

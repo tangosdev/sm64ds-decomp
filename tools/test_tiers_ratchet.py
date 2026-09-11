@@ -701,7 +701,7 @@ class OrphanDestinationSplit(unittest.TestCase):
         self.assertNotIn("only check that means anything", TR.rewrite_target.__doc__)
 
     def test_the_manifest_clash_is_named_in_every_arm_that_can_carry_one(self):
-        """VFY-2543-22: the docstring promises every state; one arm was pinned.
+        """VFY-2543-22 and -24: the promise, and then the promise made true.
 
         Dropping the clash from the `failing` arm, or from the `unvouched` arm, left
         all 73 tests green. That gap matters more than the usual unpinned branch: 0 of
@@ -709,6 +709,14 @@ class OrphanDestinationSplit(unittest.TestCase):
         today, so no run over the real tree exercises this text and a regression would
         have nothing at all to notice it. Each arm is asserted on the returned detail
         AND on the printed row, because the row is what a reader acts on.
+
+        VFY-2543-24 then found the promise itself false: the untracked-destination
+        return could define a clash and dropped it. The tool now compares before that
+        return and names it there, the docstring says "in every state that can define
+        one" because one state provably cannot, and the last block below pins both
+        halves. The unqualified promise was defended here by an assertion that passed
+        an empty ownership index -- assuming exactly what was in question -- which is
+        why that assertion is gone.
         """
         carried = f"{self.LEGACY}#Other"       # manifest says Sym, identity says Other
         ghost = f"{self.LEGACY}#Ghost"         # a symbol the destination never defines
@@ -716,8 +724,11 @@ class OrphanDestinationSplit(unittest.TestCase):
         fails = self._scores(target_fails=(TR.tiers.CRITERIA[0],),
                              sibling_fails=(TR.tiers.CRITERIA[0],))
 
-        # The promise itself, so weakening the prose alone cannot settle this.
-        self.assertIn("IN EVERY STATE", TR.target_state.__doc__)
+        # The promise itself, so weakening the prose alone cannot settle this. It is
+        # qualified, and the qualifier is load-bearing: see the last block of this
+        # test for the one state that cannot define a clash and the one that can and
+        # used to stay silent about it.
+        self.assertIn("IN EVERY STATE THAT CAN DEFINE ONE", TR.target_state.__doc__)
 
         failing = TR.target_state(carried, self.DEST, {self.DEST}, fails, self.OWN,
                                   self.SYMBOLS)
@@ -754,15 +765,48 @@ class OrphanDestinationSplit(unittest.TestCase):
         self.assertEqual(agreed_unvouched[0], "unvouched")
         self.assertNotIn("the manifest enrols", agreed_unvouched[1])
 
-        # The two earlier `unvouched` returns are silent because a clash is UNDEFINED
-        # there, not because it is dropped, and that is why the promise holds without
-        # them. A None target needs an identity carrying no symbol at all. And an
-        # untracked destination is absent from the ownership index -- the index is
-        # built from the tracked tree -- so its target is the bare path, never
-        # `dest#carried`, which is the shape the comparison is about.
-        self.assertEqual(
-            TR.rewrite_target(carried, "src/Vanished.cpp", {}, self.SYMBOLS),
-            "src/Vanished.cpp")
+        # VFY-2543-24. ONE state cannot define a clash and one could and stayed
+        # silent, and the previous version of this test got the second one wrong by
+        # assuming what it was meant to check.
+        #
+        # Cannot define one: the `target is None` return. A None target needs an
+        # identity carrying no symbol at all, which is what the comparison requires,
+        # so the two are mutually exclusive. Enumerated over carried (none/A/B) x
+        # enrolled (nothing/A) x members (0/1/2) x tracked (yes/no), 0 of the 36 reach
+        # it with a clash defined -- its silence is undefined, not dropped.
+        none_target = TR.target_state(self.LEGACY, self.DEST, {self.DEST},
+                                      self._scores(), self.OWN, {})
+        self.assertEqual((none_target[0], none_target[2]), ("unvouched", None))
+        self.assertNotIn("the manifest enrols", none_target[1])
+
+        # Could and did: the untracked-destination return. This test used to argue it
+        # away by passing an EMPTY ownership index -- which assumes the very thing at
+        # issue. `srcpath._enrolment()` builds that index by walking
+        # `config/arm9/**/delinks.txt` on disk, keeping every entry that starts with
+        # `src/`, with no existence check and no git; `tracked_sources()` is
+        # `git ls-files src`. The two enumerations are independent, and `git ls-files`
+        # omits a file that exists but is not staged, so between writing a promoted
+        # destination and adding it the destination is enrolled with many members AND
+        # untracked. Live shape: src/Cloud_Spawn.c#_ZN11daObjKumo_cD1Ev ->
+        # src/game/actors/d_a_obj_kumo.cpp, 8 enrolled members, manifest enrols
+        # daObjKumo_c_classInit.
+        self.assertEqual(TR.rewrite_target(carried, self.DEST, self.OWN, self.SYMBOLS),
+                         self.SIBLING)
+        untracked = TR.target_state(carried, self.DEST, set(), self._scores(),
+                                    self.OWN, self.SYMBOLS)
+        self.assertEqual((untracked[0], untracked[2]), ("unvouched", None))
+        self.assertIn("it is not a tracked source file", untracked[1])
+        self.assertIn(f"{clash} Other", untracked[1])
+        self.assertIn(f"{clash} Other",
+                      self._report([carried], self.KNOWN, set(), self._scores(),
+                                   self.OWN))
+
+        # And agreement is still silent there, so the untracked row does not grow a
+        # note on every promotion in flight.
+        agreed_untracked = TR.target_state(f"{self.LEGACY}#Sym", self.DEST, set(),
+                                           self._scores(), self.OWN, self.SYMBOLS)
+        self.assertEqual(agreed_untracked[0], "unvouched")
+        self.assertNotIn("the manifest enrols", agreed_untracked[1])
 
 
 class SyntheticTree:
