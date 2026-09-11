@@ -16627,8 +16627,18 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_02123340.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020ee27c.cpp"
     PROPERTIES COMPILE_OPTIONS "/Zp4")
+# Chuckya's raw ModelAnim slot-3 call needs the host's register receiver.
+# Keep the matched source intact and compile the single guarded hostgen rewrite.
+set(CHUCKYA_BEHAVIOR_SRC "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN7Chuckya8BehaviorEv.cpp")
+list(REMOVE_ITEM SLICE_PMFB7_SOURCES "${CHUCKYA_BEHAVIOR_SRC}")
+set(CHUCKYA_BEHAVIOR_GEN "${CMAKE_BINARY_DIR}/host-src/src/_ZN7Chuckya8BehaviorEv.cpp")
+add_custom_command(OUTPUT "${CHUCKYA_BEHAVIOR_GEN}"
+    COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+            --out "${CMAKE_BINARY_DIR}/host-src" _ZN7Chuckya8BehaviorEv
+    DEPENDS "${CHUCKYA_BEHAVIOR_SRC}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+    COMMENT "hostgen Chuckya model slot ABI")
 foreach(_tpmfb7 walk_window walk_window_hires smoke_player)
-    target_sources(${_tpmfb7} PRIVATE ${SLICE_PMFB7_SOURCES})
+    target_sources(${_tpmfb7} PRIVATE ${SLICE_PMFB7_SOURCES} "${CHUCKYA_BEHAVIOR_GEN}")
 endforeach()
 
 # SLICE pmfb8 -- run link100 lane PMFB8: the rows lane PMFB7 measured and left
