@@ -12,16 +12,19 @@ extern "C" void *_ZN7fBase_cnwEj(unsigned size);
  * regardless.
  */
 struct daSCre_c : dActor_c {
-    u8 pad_0d0[0x4];       /* 0x0d0 unused */
+    u8 unk_0d0[0x4];       /* 0x0d0 */
 
     virtual ~daSCre_c() {}
     virtual s32 Behavior();
 
+    /* The compiler requires unsigned long here; the actor allocator uses
+       the configured unsigned-int nwEj entry. */
     static void *operator new(unsigned long size) {
         return _ZN7fBase_cnwEj(size);
     }
 
-    /* x/y/z sit in a row on dActor_c; Spawn wants a Vector3. */
+    /* Local view of the inherited scalar position for Spawn.
+       The shared position layout remains unresolved. */
     const Vector3 &Pos() const {
         return *reinterpret_cast<const Vector3 *>(&mPosX);
     }

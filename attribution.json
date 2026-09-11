@@ -1480,7 +1480,7 @@
     "src/game/actors/d_a_s_cre.cpp#_ZN8daSCre_c8BehaviorEv": "github-actions[bot]",
     "src/game/actors/d_a_s_cre.cpp#_ZN8daSCre_cD0Ev": "github-actions[bot]",
     "src/game/actors/d_a_s_cre.cpp#_ZN8daSCre_cD1Ev": "github-actions[bot]",
-    "src/game/actors/d_a_s_cre.cpp#daSCre_c_Spawn": "andrewboudreau",
+    "src/game/actors/d_a_s_cre.cpp#daSCre_c_classInit": "andrewboudreau",
     "src/game/actors/d_a_set_se.cpp#_ZN9daSetSE_c13InitResourcesEv": "github-actions[bot]",
     "src/game/actors/d_a_set_se.cpp#_ZN9daSetSE_c16CleanupResourcesEv": "andrewboudreau",
     "src/game/actors/d_a_set_se.cpp#_ZN9daSetSE_c16OnPendingDestroyEv": "andrewboudreau",
