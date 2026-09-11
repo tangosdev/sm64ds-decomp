@@ -11,7 +11,7 @@ Handles:
   - Operator overloads (new, delete, +, -, ==, etc.)
   - Templates with primary type extraction (Fix12<int> not just T)
   - Substitution back-references (S_, S0_, S1_, St)
-  - Pointer (P), reference (R), rvalue-ref (O), const (K) qualifiers
+  - Pointer/reference types, grouped const/volatile qualifiers, function pointers
 
 API:
     demangle("_ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_") ->
@@ -85,6 +85,68 @@ def _read_template_args(s, i, subs):
     return args, i
 
 
+
+class _FunctionType(str):
+    """Keep declarator structure while retaining the public string API."""
+
+    def __new__(cls, result, args, declarator="", qualifiers="", linkage=""):
+        value = cls._declare(result, args, declarator, qualifiers, linkage, "")
+        obj = super().__new__(cls, value)
+        obj.result, obj.args = result, tuple(args)
+        obj.declarator, obj.qualifiers, obj.linkage = declarator, qualifiers, linkage
+        return obj
+
+    @staticmethod
+    def _declare(result, args, declarator, qualifiers, linkage, name):
+        name = declarator + name
+        if declarator:
+            name = "(" + name.rstrip() + ")"
+        signature = name + "(" + (", ".join(args) if args else "void") + ")" + qualifiers
+        if isinstance(result, _FunctionType):
+            return result.declare(signature)
+        return (linkage + str(result) + " " + signature).strip()
+
+    def declare(self, name):
+        return self._declare(self.result, self.args, self.declarator,
+                             self.qualifiers, self.linkage, name)
+
+    def indirect(self, token):
+        return _FunctionType(self.result, self.args, self.declarator + token,
+                             self.qualifiers, self.linkage)
+
+    def qualify(self, suffix):
+        if self.declarator:
+            return _FunctionType(self.result, self.args, self.declarator + suffix + " ",
+                                 self.qualifiers, self.linkage)
+        return _FunctionType(self.result, self.args, "", self.qualifiers + suffix,
+                             self.linkage)
+
+
+def _read_function_type(s, i, subs):
+    """Read F [Y] return-type parameter-types E without leaking inner arguments."""
+    j = i + 1
+    linkage = ''
+    if j < len(s) and s[j] == "Y":
+        linkage, j = 'extern "C" ', j + 1
+    types = []
+    while j < len(s) and s[j] != "E":
+        ty, end = _read_type(s, j, subs)
+        if end <= j:
+            return "T", len(s)
+        types.append(ty)
+        j = end
+    if j >= len(s) or len(types) < 2:
+        return "T", min(j + 1, len(s))
+    result, args = types[0], types[1:]
+    if (any(t is None or re.search(r"\bT\b", t) for t in types)
+            or ("void" in args and args != ["void"])
+            or (isinstance(result, _FunctionType) and not result.declarator)):
+        return "T", j + 1
+    ty = _FunctionType(result, [] if args == ["void"] else args, linkage=linkage)
+    subs.append(ty)
+    return ty, j + 1
+
+
 def _read_type(s, i, subs):
     """Return (type_string, next_i). Best-effort; unknown -> 'T'."""
     if i >= len(s):
@@ -94,12 +156,33 @@ def _read_type(s, i, subs):
         ty = BUILTIN[c]
         # Per Itanium ABI: builtin types are NOT substitution candidates
         return ty, i + 1
-    if c in "PROK":                                  # pointer / ref / rvalue-ref / const wrapper
+    if c in "KVr":                                  # one order-insensitive qualifier group
+        j = i
+        while j < len(s) and s[j] in "KVr":
+            j += 1
+        group = s[i:j]
+        inner, end = _read_type(s, j, subs)
+        if not re.fullmatch(r"r?V?K?", group) or inner is None:
+            return "T", end
+        suffix = "".join({"K": " const", "V": " volatile", "r": " restrict"}[q]
+                         for q in reversed(group))
+        if isinstance(inner, _FunctionType):
+            ty = inner.qualify(suffix)
+            # A function's CV qualifiers are indivisible for substitution.
+            if not inner.declarator and subs and subs[-1] is inner:
+                subs.pop()
+        else:
+            ty = inner + suffix
+        subs.append(ty)
+        return ty, end
+    if c in "PRO":                                  # pointer / reference wrappers
         inner, j = _read_type(s, i + 1, subs)
-        suf = {"P": " *", "R": " &", "O": " &&", "K": " const"}[c]
-        ty = (inner or "T") + suf
+        token = {"P": "*", "R": "&", "O": "&&"}[c]
+        ty = inner.indirect(token) if isinstance(inner, _FunctionType) else (inner or "T") + " " + token
         subs.append(ty)
         return ty, j
+    if c == "F":
+        return _read_function_type(s, i, subs)
     if c == "S":                                     # substitution
         return _read_substitution(s, i, subs)
     if c.isdigit():                                  # length-prefixed name (a class type)
@@ -270,7 +353,7 @@ def demangle(sym):
         if t == "void" and not args:                 # f(void) == no args
             i = ni
             break
-        args.append(t)
+        args.append(str(t))
         i = ni
 
     qualified = "::".join(p for p in parts if p not in ("ctor", "dtor")) or method
