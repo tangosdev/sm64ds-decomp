@@ -1,28 +1,9 @@
 //cpp
-/* ov013/daObjClock_c -- reconstructed translation unit (9 functions).
- *
- * ROM run 0x021113bc..0x021116ac, plus the class's .data run at
- * 0x021121a4..0x0211227c (_ZTI, _ZTS, the g_profile_CLOCK_LONG and
- * g_profile_CLOCK_SHORT descriptors, and the _ZTV whose address point is
- * 0x02112200). Its in-overlay sibling daObjClockHuriko_c is the style oracle.
- *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function in the reverse of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder; the
- * destructor pair at the end is the one documented exception, because the
- * compiler picks the order inside a D0/D1 group itself.
- *
- * Members, in ROM address order (each was a one-function shard before this
- * TU took over the run; the shards are gone):
- *   [0] 0x021113bc  daObjClock_c::~daObjClock_c   (D1)
- *   [1] 0x021113ec  daObjClock_c::~daObjClock_c   (D0)
- *   [2] 0x02111430  func_ov013_02111430           (state helper)
- *   [3] 0x02111478  daObjClock_c::CleanupResources
- *   [4] 0x021114a4  daObjClock_c::Render
- *   [5] 0x021114cc  daObjClock_c::Behavior
- *   [6] 0x021115cc  daObjClock_c::InitResources
- *   [7] 0x0211163c  daObjClock_c_classInit_CLOCK_SHORT   (factory, actor 292)
- *   [8] 0x02111674  daObjClock_c_classInit_CLOCK_LONG    (factory, actor 293)
+/* Clock painting hands, sharing one class and separate long/short profiles.
+ * mwccarm 2004/b56 emits functions in reverse source order. Keep the ROM
+ * ordinals below; the inline destructor supplies the final D1/D0 pair.
+ * Layout, data ownership and matching probes are recorded in
+ * notes/agents/handoffs/pr2490-source-review-0910.md.
  */
 
 #include "daObjClock_c.h"
@@ -40,59 +21,28 @@ extern unsigned char data_0209f2c0[];
 /* ROM ordinal 8 -- daObjClock_c_classInit_CLOCK_LONG, 0x02111674, size 0x38        */
 /* ROM ordinal 7 -- daObjClock_c_classInit_CLOCK_SHORT, 0x0211163c, size 0x38       */
 /* -------------------------------------------------------------------------- */
-/* ONE CLASS, TWO PROFILES. CLOCK_LONG (actor 293) and CLOCK_SHORT (actor 292)
- * each own a descriptor and a separate factory; both install the same
- * vtable at 0x02112200 and the same 0x128 allocation, and InitResources tells
- * them apart at run time by actorID.
- *
- * The factory suffixes distinguish the two profiles in the reconstruction
- * registry. Both factory names and g_profile_ spellings are reconstructed
- * source-style names, not original identifiers recovered from the image.
- * ROM RTTI supplies the class name; the debug string table supplies the
- * CLOCK_SHORT/CLOCK_LONG tokens at 0x02090230/0x0208ffa8. */
+/* The profile suffixes are reconstructed names. Both factories create the
+ * same class; InitResources selects the hand from actorID. */
 extern "C" {
-extern void *_ZN7fBase_cnwEj(u32 size);
-extern void _ZN8dActor_cC2Ev(void *self);
-extern void _ZN5ModelC1Ev(void *self);
 // @symbol daObjClock_c_classInit_CLOCK_LONG
 int *daObjClock_c_classInit_CLOCK_LONG(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(296);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        /* &[2], not the bare symbol: this TU EMITS the vtable, so mwcc's symbol
-         * is the object start at 0x021121f8 and +8 is what reaches the
-         * 0x02112200 address point. The addend-0 spelling is right only for a
-         * TU that imports its vtable. */
-        p[0] = (int)&_ZTV12daObjClock_c[2];
-        _ZN5ModelC1Ev((char *)p + 0xd4);
-    }
-    return p;
+    return (int *)new daObjClock_c;
 }
 
 // @symbol daObjClock_c_classInit_CLOCK_SHORT
 int *daObjClock_c_classInit_CLOCK_SHORT(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(296);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)&_ZTV12daObjClock_c[2];
-        _ZN5ModelC1Ev((char *)p + 0xd4);
-    }
-    return p;
+    return (int *)new daObjClock_c;
 }
 }
 
-/* The 0x1c actor descriptor, `actor_profile_0x1c` in
- * symbols/profile_reconstruction_registry.tsv. Emitted in SOURCE order, which
- * is why CLOCK_LONG (0x021121c0) is written before CLOCK_SHORT (0x021121dc).
- * The fBase_c constructor passes +4/+6 to behavior/render priority setters.
- * Their names describe those uses. The retained s16 fields, order and values
- * do not establish the original signedness. */
+/* Profiles are emitted in source order: long, then short. The priority
+ * halfwords use the unsigned types read by the fBase_c constructor. */
 struct ClockSpawnInfo {
     int *(*classInit)();
-    s16 behaviorPriority;
-    s16 renderPriority;
+    u16 behaviorPriority;
+    u16 renderPriority;
     u32 actorFlags;
     s32 clipOffsetY;
     s32 clipRadius;                 /* 0x1000 == 1.0 */
@@ -117,7 +67,6 @@ extern "C" ClockSpawnInfo g_profile_CLOCK_SHORT = {
 /* ROM ordinal 6 -- _ZN12daObjClock_c13InitResourcesEv, 0x021115cc, size 0x70 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_c13InitResourcesEv
-/* recovered: typed actor, model, and shared-file ownership */
 int daObjClock_c::InitResources()
 {
     int isLongHand = (int)(actorID == 0x125);
@@ -138,7 +87,6 @@ int daObjClock_c::InitResources()
 /* ROM ordinal 5 -- _ZN12daObjClock_c8BehaviorEv, 0x021114cc, size 0x100 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_c8BehaviorEv
-/* recovered: real C++ method over inherited actor fields */
 int daObjClock_c::Behavior()
 {
     if (data_02092110[0] <= 0) {
@@ -164,7 +112,6 @@ int daObjClock_c::Behavior()
 /* ROM ordinal 4 -- _ZN12daObjClock_c6RenderEv, 0x021114a4, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_c6RenderEv
-/* recovered: real C++ method over the owned Model */
 int daObjClock_c::Render()
 {
     mModel.Render(0);
@@ -175,7 +122,6 @@ int daObjClock_c::Render()
 /* ROM ordinal 3 -- _ZN12daObjClock_c16CleanupResourcesEv, 0x02111478, size 0x2c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_c16CleanupResourcesEv
-/* recovered: typed file ownership through the shared class APIs */
 int daObjClock_c::CleanupResources()
 {
     ((SharedFilePtr *)data_ov013_021116b0[mHandIndex])->Release();
@@ -186,11 +132,8 @@ int daObjClock_c::CleanupResources()
 /* ROM ordinal 2 -- func_ov013_02111430, 0x02111430, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov013_02111430
-/* Rebuild the owned model matrix from inherited actor angles and position.
- * The local receiver uses the existing class layout; include order preserves
- * the Matrix4x3 view with translation in t. Keep the external char* boundary
- * and address-derived name: original member/free-function status is unproven.
- * The @symbol marker keeps this helper separate in source-quality reports. */
+/* Rebuild the model matrix. The external helper boundary is retained;
+ * its original member/free-function form remains unproven. */
 extern "C" {
 void func_ov013_02111430(char *t)
 {
@@ -209,18 +152,6 @@ void func_ov013_02111430(char *t)
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12daObjClock_cD1Ev
 // @symbol _ZN12daObjClock_cD0Ev
-/* Both destructors are emitted from the INLINE `~daObjClock_c() {}` in
- * include/daObjClock_c.h -- there is deliberately no body here.
- *
- * A complete-object destructor stores this class's vtable over the one the base
- * constructor left, destroys members in reverse declaration order, then runs the
- * base subobject destructor; the deleting destructor does that and calls
- * operator delete. All of it follows from `: dActor_c` and the member types, so
- * the compiler writes both bodies and the bytes still reproduce.
- *
- * Defining ~daObjClock_c() out of line HERE instead would break the TU two ways:
- * mwccarm would emit D0 at 0x021113ec's slot before D1 at 0x021113bc's,
- * reversing ROM order so objisolate refuses the entire TU, and it would emit a
- * third symbol, D2, which has no address anywhere in the cartridge. See the
- * vtable comment in the header.
- */
+/* The inline destructor destroys Model and the actor base; D0 also frees
+ * the allocation. The measured out-of-line form adds an unlicensed D2 and
+ * puts D0 before D1. See the handoff for the exact compiler probe. */
