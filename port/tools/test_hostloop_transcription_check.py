@@ -34,9 +34,22 @@ class TranscriptionCheck(unittest.TestCase):
         self.assertIn('406 lines', result.stdout)
         self.assertIn('60 symbols', result.stdout)
 
-    def test_comments_do_not_change_the_reviewed_helper_tokens(self):
-        candidate = self.wide.replace('++n;', '/* observational count */ ++n;', 1)
-        self.assertEqual(H.check_sources(self.src, candidate)['lines'], 406)
+    def test_helper_comment_change_requires_a_fresh_source_pin_review(self):
+        self.reject('++n;', '/* observational count */ ++n;')
+
+    def test_indentation_and_line_endings_do_not_change_source_pins(self):
+        helper = H.function(self.wide, 'void report_bound_expiry(')
+        self.assertEqual(H.source_digest(helper),
+                         H.source_digest('\r\n'.join('  ' + line for line in helper.split('\n'))))
+
+    def test_split_increment_is_not_the_same_operator(self):
+        for changed in ('+ +n;', '+/*separator*/+n;'):
+            with self.subTest(changed=changed):
+                self.reject('++n;', changed)
+
+    def test_include_directive_logical_line_boundaries_are_preserved(self):
+        self.reject('#include <chrono>\n#include <cstdio>', '#include <chrono> #include <cstdio>')
+
 
     def test_changed_wait_condition_is_rejected(self):
         self.reject('while ((sp8 == 0) && (sp4 != 0))', 'while ((sp8 == 0) && (sp4 > 1))')

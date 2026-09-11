@@ -1,7 +1,7 @@
 """Compare the wide conductor with its cartridge-source body and declarations.
 
 Only the documented widening casts, local silencer, and exact diagnostic
-sites are normalized. Diagnostic helper token hashes pin the reviewed logging
+sites are normalized. Diagnostic helper source digests pin the reviewed logging
 implementation; changing one requires a fresh review of that exception.
 """
 import difflib
@@ -13,16 +13,16 @@ import re
 TOKEN = re.compile(r'/\*.*?\*/|//(?:\\\r?\n|[^\n])*|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|[A-Za-z_]\w*|[^\s]', re.S)
 HELPER_DIGESTS = {
     'void warn_info_mode_armed_wide(void)':
-        'f9fee24e03f69340415b7842db6cacc74c2df0a3a04d9476b27f33a806f6261c',
+        'd929f8e8957989049ea3a8f867f88032c7b5d0b86733179b3e1f12cb42365842',
     'unsigned host_ms(void)':
-        'ab54889932004774f3ef56fa9f15414e37d5ec7d20befb139e33110226eb925a',
+        '70cdae93dc05a2d17137500314d28e9335deb259f8419e3569c119b4d26cc869',
     'void report_bound_expiry(':
-        '9357cdb75dea41314d5e02120508f967121216b448dbe6d5a3eb45325b1be300',
+        '77e68d61c322bce56edc08a1deaa896a21e55c6979f403c08599f4dd40939ae7',
 }
 
 
-SOURCE_OUTSIDE_DIGEST = 'a0e64166c4e1e10301d7ea184697ed48bdafedb1cb023827d4cfa59bc690c2f2'
-WIDE_OUTSIDE_DIGEST = 'ce963e1aedc474223bbe5a2f3bcf95405edbb369499701468b68085d62ab43b0'
+SOURCE_OUTSIDE_DIGEST = 'c144d623f2e06c7a592d090044b7a6d4ec8095315b6174e155452c8e470c1cd5'
+WIDE_OUTSIDE_DIGEST = '8c3b8e564e0a18ce52b8f82ce3b0e63c01c8193d68c95d8bf53d54aa46704ab2'
 
 def without_comments(text):
     return TOKEN.sub(lambda m: ''.join('\n' if c == '\n' else ' ' for c in m.group())
@@ -48,10 +48,13 @@ def function(text, prefix):
     raise ValueError('unterminated function: ' + prefix)
 
 
-def token_digest(text):
-    tokens = [m.group() for m in TOKEN.finditer(text)
-              if not m.group().startswith(('/*', '//'))]
-    return hashlib.sha256(' '.join(tokens).encode('utf-8')).hexdigest()
+def source_digest(text):
+    # These small reviewed regions use exact source, allowing only CRLF/LF
+    # and leading indentation differences. Preserve operators, comments,
+    # directive boundaries and trailing whitespace (including after a slash).
+    lines = text.replace('\r\n', '\n').replace('\r', '\n').split('\n')
+    normalized = '\n'.join(line.lstrip(' \t') for line in lines)
+    return hashlib.sha256(normalized.encode('utf-8')).hexdigest()
 
 
 def replace_once(lines, before, after):
@@ -136,7 +139,7 @@ def outside_digest(text, prefixes):
     for prefix in prefixes:
         body = function(text, prefix)
         text = text.replace(body, prefix + ';', 1)
-    return token_digest(text)
+    return source_digest(text)
 
 
 def check_sources(src, wide):
@@ -145,7 +148,7 @@ def check_sources(src, wide):
     if outside_digest(wide, list(HELPER_DIGESTS) + ['void conductor_wide(void)']) != WIDE_OUTSIDE_DIGEST:
         raise ValueError('wide declarations, dispatch or preprocessor context changed')
     for prefix, expected in HELPER_DIGESTS.items():
-        if token_digest(function(wide, prefix)) != expected:
+        if source_digest(function(wide, prefix)) != expected:
             raise ValueError('diagnostic helper changed: ' + prefix)
     original = norm(function(src, 'void func_0203ea5c(void)'))
     candidate = norm(function(wide, 'void conductor_wide(void)'), wide=True)
@@ -175,7 +178,7 @@ def main():
         return 1
     print('TRANSCRIPTION EXACT after normalization: %d lines' % result['lines'])
     print('EXTERNS EXACT: %d symbols' % result['externs'])
-    print('DIAGNOSTIC HELPERS PINNED: %d token hashes' % result['diagnostic_helpers'])
+    print('DIAGNOSTIC HELPERS PINNED: %d source digests' % result['diagnostic_helpers'])
     return 0
 
 
