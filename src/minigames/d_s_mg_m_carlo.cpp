@@ -193,7 +193,7 @@ void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN11dScMgBase_cC2Ev(void*);
 void _ZN8Particle10SysTrackerC1Ev(void*);
 void func_ov006_020c1d80(void*);
-void func_020733a8(void*, int, int, void*, void*);
+void __cxa_vec_ctor(void*, int, int, void*, void*);
 extern int _ZTV19dScMgSingle3DBase_c;
 extern int _ZTV13dScMgMCarlo_c[];
 void _ZN18dMgMCarloCardObj_cC1Ev(void*);
@@ -235,7 +235,7 @@ extern "C" void* dScMgMCarlo_c_classInit()
         _ZN8Particle10SysTrackerC1Ev(p + 0x471c);
         *(int*)p = (int)&_ZTV13dScMgMCarlo_c[2];
         func_ov006_020c1d80(p + 0x4f38);
-        func_020733a8(p + 0x51a8, 0x50, 0x30,
+        __cxa_vec_ctor(p + 0x51a8, 0x50, 0x30,
                      (void*)_ZN18dMgMCarloCardObj_cC1Ev,
                      (void*)_ZN18dMgMCarloCardObj_cD1Ev);
     }

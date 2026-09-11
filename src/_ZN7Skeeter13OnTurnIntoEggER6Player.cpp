@@ -9,7 +9,7 @@
 #include "Skeeter.h"
 #include "Player.h"
 
-int Skeeter::OnTurnIntoEgg(Player &player)
+void Skeeter::OnTurnIntoEgg(Player &player)
 {
     GivePlayerCoins(player, (unsigned char)(unk_10a + 1), 0);
     KillAndTrackInDeathTable();

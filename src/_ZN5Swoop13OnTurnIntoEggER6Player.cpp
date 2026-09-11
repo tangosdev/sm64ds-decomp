@@ -9,7 +9,7 @@
 #include "Swoop.h"
 #include "Player.h"
 
-int Swoop::OnTurnIntoEgg(Player &player)
+void Swoop::OnTurnIntoEgg(Player &player)
 {
     GivePlayerCoins(player, (unsigned char)(unk_10a + 1), 0);
     KillAndTrackInDeathTable();

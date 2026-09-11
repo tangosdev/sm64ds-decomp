@@ -14,20 +14,21 @@
  * actor list is concerned. Leaf classes override the slot when they want
  * something else to happen.
  *
- * `player` is unused, and the bytes could not tell you otherwise: a tail call
- * never touches r0-r3, so the argument list is invisible here (runbook section
- * 8). The signature comes from the mangled name and include/dActor_c.h, not from
- * these three words. r0 still holds `this` when the branch is taken, which is
+ * `player` is unused, and the bytes could not tell you otherwise: this veneer
+ * does not change r0-r3, so the argument list is invisible here (runbook section
+ * 8). Player& is the reconstructed interface recorded in include/dActor_c.h;
+ * the project-assigned mangled name does not independently prove it from ROM.
+ * r0 still holds `this` when the branch is taken, which is
  * exactly what the target -- a non-static member taking nothing -- expects.
  *
- * The slot is declared `int` in include/dActor_c.h while the target returns void,
- * so this cannot `return` its callee. Falling off the end reproduces the
- * veneer: whatever KillAndTrackInDeathTable leaves in r0 becomes the caller's
- * answer, which is what a tail call means.
+ * The shared slot returns void, like KillAndTrackInDeathTable. The void
+ * forwarding body reproduces the veneer without inventing a return value.
+ * Actor override bodies and the observed Player call sites support this
+ * reconstruction; the veneer alone cannot establish the original return type.
  */
 #include "dActor_c.h"
 
-int dActor_c::OnTurnIntoEgg(Player &player)
+void dActor_c::OnTurnIntoEgg(Player &player)
 {
     KillAndTrackInDeathTable();
 }

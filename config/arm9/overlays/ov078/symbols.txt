@@ -1,5 +1,5 @@
-_ZN10KingBobOmbD1Ev kind:function(arm,size=0x58) addr:0x02123740
-_ZN10KingBobOmbD0Ev kind:function(arm,size=0x6c) addr:0x02123798
+_ZN12daBombking_cD1Ev kind:function(arm,size=0x58) addr:0x02123740
+_ZN12daBombking_cD0Ev kind:function(arm,size=0x6c) addr:0x02123798
 func_ov078_02123804 kind:function(arm,size=0x60) addr:0x02123804
 func_ov078_02123864 kind:function(arm,size=0x48) addr:0x02123864
 func_ov078_021238ac kind:function(arm,size=0x190) addr:0x021238ac
@@ -43,12 +43,12 @@ KingBobOmb_SetState kind:function(arm,size=0x50) addr:0x02125c48
 func_ov078_02125c98 kind:function(arm,size=0x148) addr:0x02125c98
 func_ov078_02125de0 kind:function(arm,size=0x1ac) addr:0x02125de0
 func_ov078_02125f8c kind:function(arm,size=0x68) addr:0x02125f8c
-_ZN10KingBobOmb16CleanupResourcesEv kind:function(arm,size=0xb4) addr:0x02125ff4
-_ZN10KingBobOmb16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021260a8
-_ZN10KingBobOmb6RenderEv kind:function(arm,size=0x58) addr:0x021260ac
-_ZN10KingBobOmb8BehaviorEv kind:function(arm,size=0x264) addr:0x02126104
-_ZN10KingBobOmb13InitResourcesEv kind:function(arm,size=0x28c) addr:0x02126368
-_ZN10KingBobOmb16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021265f4
+_ZN12daBombking_c16CleanupResourcesEv kind:function(arm,size=0xb4) addr:0x02125ff4
+_ZN12daBombking_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021260a8
+_ZN12daBombking_c6RenderEv kind:function(arm,size=0x58) addr:0x021260ac
+_ZN12daBombking_c8BehaviorEv kind:function(arm,size=0x264) addr:0x02126104
+_ZN12daBombking_c13InitResourcesEv kind:function(arm,size=0x28c) addr:0x02126368
+_ZN12daBombking_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x021265f4
 daBombking_c_classInit kind:function(arm,size=0x64) addr:0x021265fc
 __sinit_ov078_02126660 kind:function(arm,size=0x674) addr:0x02126660
 .p__sinit_ov078_02126660 kind:data(word) addr:0x02126cd4
@@ -92,7 +92,6 @@ data_ov078_02126e00 kind:data(any) addr:0x02126e00
 _ZTI12daBombking_c kind:data(any) addr:0x02126e0c
 _ZTS12daBombking_c kind:data(any) addr:0x02126e18
 g_profile_BOMBKING kind:data(any) addr:0x02126e28 ambiguous
-_ZTV10KingBobOmb kind:data(any) addr:0x02126e4c
 _ZTV12daBombking_c kind:data(any) addr:0x02126e4c
 data_ov078_02126ee0 kind:bss addr:0x02126ee0
 data_ov078_02126ee8 kind:bss addr:0x02126ee8

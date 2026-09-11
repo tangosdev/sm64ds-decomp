@@ -83,7 +83,7 @@ struct Crate : dBgActor_c {
 
     /* --- vtable, own overrides --- */
     virtual int  OnYoshiTryEat();                      /* slot 18 */
-    virtual int  OnTurnIntoEgg(Player &player);         /* slot 19 */
+    virtual void OnTurnIntoEgg(Player &player);         /* slot 19 */
     virtual void OnGroundPounded(dActor_c &other);      /* slot 21 */
     virtual void Kill();                                /* slot 31 */
 };

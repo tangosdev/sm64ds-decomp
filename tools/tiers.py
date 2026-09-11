@@ -554,6 +554,12 @@ def matched(db_path=None):
         "totalBytes": st.get("totalBytes"),
         "bytePct": (round(100.0 * st["matchedBytes"] / st["totalBytes"], 2)
                     if st.get("totalBytes") else None),
+        # The assembly subset, read from the same db for the same reason MATCHED is:
+        # recomputing it here would be a second source of truth. Absent from a db
+        # generated before the field existed, and every consumer treats that as
+        # "do not print the line" rather than as zero.
+        "handAsm": st.get("handAsmFunctions"),
+        "handAsmBytes": st.get("handAsmBytes"),
     }
 
 
@@ -564,11 +570,31 @@ def collect(db_path=None):
     return {"matched": matched(db_path), "converted": converted(), "linked": linked()}
 
 
+# Joining preserved README rows. Spelled as a constant because a newline escape
+# written inline here has been mangled by an editing shell before, and a generator
+# that will not import silently stops refreshing the bar.
+NEWLINE = chr(10)
+
+
 def bar(done, tot, width=30):
     filled = round(done / tot * width) if tot else 0
     if done and filled == 0:
         filled = 1
     return "█" * filled + "░" * (width - filled)
+
+
+def matched_caption(m):
+    """The indented line under MATCHED naming its assembly subset, or None.
+
+    Generated rather than written into the README by hand, because it is a number
+    and every number in that block goes stale the moment someone matches something.
+    Indented so ``write_readme``'s preserved-MATCHED search, which looks for a line
+    STARTING with "MATCHED", cannot mistake it for the row itself.
+    """
+    if not m or not m.get("handAsm"):
+        return None
+    return (f"           of which {m['handAsm']:,} are byte-exact assembly "
+            f"(hand-written in the original, not C)")
 
 
 def bar_block(t, preserved_matched=None):
@@ -578,6 +604,9 @@ def bar_block(t, preserved_matched=None):
     if m:
         rows.append(f"MATCHED    {bar(m['matched'], m['functions'])}  "
                     f"{m['pct']:4.1f}%   {m['matched']:,} / {m['functions']:,} functions")
+        caption = matched_caption(m)
+        if caption:
+            rows.append(caption)
     elif preserved_matched:
         # A worktree may have the ROM inputs needed for CONVERTED/LINKED but not
         # chaos-db.json, which supplies MATCHED.  Updating the live rows must not
@@ -596,11 +625,18 @@ def write_readme(t):
     start = text.index(README_START) + len(README_START)
     end = text.index(README_END)
     current = text[start:end]
-    preserved_matched = next(
-        (line.strip() for line in current.splitlines()
-         if line.strip().startswith("MATCHED")),
-        None,
-    )
+    # The MATCHED row AND its caption: a worktree with no chaos-db.json preserves
+    # whatever the last real generator wrote, and dropping the caption while keeping
+    # the row would leave the block claiming more C than it measured.
+    lines = current.splitlines()
+    keep = []
+    for i, line in enumerate(lines):
+        if line.strip().startswith("MATCHED"):
+            keep.append(line.strip())
+            if i + 1 < len(lines) and lines[i + 1].strip().startswith("of which"):
+                keep.append(lines[i + 1].rstrip())
+            break
+    preserved_matched = NEWLINE.join(keep) if keep else None
     new_text = text[:start] + "\n" + bar_block(t, preserved_matched) + "\n" + text[end:]
     if new_text != text:
         README.write_text(new_text, encoding="utf-8")
@@ -614,6 +650,10 @@ def report(t):
     if m:
         out.append(f"MATCHED    {m['matched']:,} / {m['functions']:,} functions  "
                    f"{m['pct']:.1f}%   ({m['bytePct']:.1f}% by code bytes)")
+        if m.get("handAsm"):
+            out.append(f"           of which {m['handAsm']:,} functions "
+                       f"({m['handAsmBytes']:,} bytes) are byte-exact assembly, "
+                       f"hand-written in the original game and reproduced as assembly")
     else:
         out.append("MATCHED    (no chaos-db.json; run tools/chaos_db_ci.py first)")
     out.append(f"CONVERTED  {c['converted']:,} / {c['functions']:,} functions  "

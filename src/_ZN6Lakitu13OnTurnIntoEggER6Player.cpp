@@ -6,7 +6,7 @@
 #include "Lakitu.h"
 #include "Player.h"
 
-int Lakitu::OnTurnIntoEgg(Player &player)
+void Lakitu::OnTurnIntoEgg(Player &player)
 {
     if (player.IsCollectingCap())
         GivePlayerCoins(player, 5, 0);

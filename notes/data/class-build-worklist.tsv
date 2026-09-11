@@ -97,7 +97,7 @@ abi::__vmi_class_type_info	MISSING	include/abi.h (outer header, nested class MIS
 dBgActor_c	DONE	include\dBgActor_c.h	dActor_c	101	ov002	10
 dEnemyBase_c	DONE	include\dEnemyBase_c.h	dActor_c	55	ov002	14
 daBar_c	DONE	include\daBar_c.h	dActor_c	0	ov002	7
-daBgSnmBdy_c	DONE	include\SnowmanBody.h  [alias: header uses pre-rename name]	dActor_c	0	ov072	28
+daBgSnmBdy_c	DONE	include\daBgSnmBdy_c.h	dActor_c	0	ov072	28
 daBgSnmHed_c	DONE	include\SnowmanHead.h  [alias: header uses pre-rename name]	dActor_c	0	ov072	19
 daBgSnwmn_c	DONE	include\daBgSnwmn_c.h	dActor_c	0	ov072	7
 daBookGen_c	DONE	include\BookShotSpawner.h  [alias: header uses pre-rename name]	dActor_c	0	ov020	5
@@ -175,7 +175,7 @@ daRedBombhei_c	DONE	include\BobOmbBuddy.h  [alias: header uses pre-rename name]	
 daSBird_c	DONE	include\Bird.h  [alias: header uses pre-rename name]	dActor_c	0	ov009	7
 daSCoin_c	DONE	include\daSCoin_c.h	dActor_c	0	ov002	5
 daSCre_c	DONE	include\daSCre_c.h	dActor_c	0	ov018	3
-daSanbo_c	DONE	include\Pokey.h  [alias: header uses pre-rename name]	dActor_c	0	ov096	10
+daSanbo_c	DONE	include\daSanbo_c.h	dActor_c	0	ov096	10
 daSetSE_c	DONE	include\daSetSE_c.h	dActor_c	0	ov002	7
 daSldMng_c	DONE	include\daSldMng_c.h	dActor_c	0	ov019	4
 daSnmBth_c	DONE	include\SnowmanBreath.h  [alias: header uses pre-rename name]	dActor_c	0	ov027	8
@@ -307,12 +307,12 @@ daSlide_Box_c	DONE	include\SlidingBox.h  [alias: header uses pre-rename name]	dB
 daUdlift_c	DONE	include\UpDownLiftBbh.h  [alias: header uses pre-rename name]	dBgActor_c	0	ov095	6
 daOts_c	DONE	include\daOts_c.h	dEnemyBase_c	3	ov064	11
 dCapEnemy_c	DONE	include\dCapEnemy_c.h	dEnemyBase_c	2	arm9;ov002	14
-da1up_c	DONE	include\OneUpMushroom.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov002	9
+da1up_c	DONE	include\da1up_c.h	dEnemyBase_c	0	ov002	9
 daBakubaku_c	DONE	include\daBakubaku_c.h	dEnemyBase_c	0	ov032	8
 daBasabasa_c	DONE	include\Swoop.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov065	10
 daBbl_c	DONE	include\LavaBubble.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov064	8
 daBmb_c	DONE	include\daBmb_c.h	dEnemyBase_c	0	ov102	9
-daBombking_c	DONE	include\KingBobOmb.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov078	8
+daBombking_c	DONE	include\daBombking_c.h	dEnemyBase_c	0	ov078	8
 daBook_c	DONE	include\BookShot.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov020	8
 daBtn_c	DONE	include\Whomp.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov079	9
 daC_Jugem_c	DONE	include\LakituBro.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov085	7
@@ -398,14 +398,14 @@ daObjFl_Gura_c	DONE	include\daObjFl_Gura_c.h	daObjGuragura_c	0	ov064	4
 daObjKm2_Gura_c	DONE	include\daObjKm2_Gura_c.h	daObjGuragura_c	0	ov045	4
 daObjKm1_Kuruma_c	DONE	include\daObjKm1_Kuruma_c.h	daObjKuruma_c	0	ov043	4
 daObjKm3_Kuruma_c	DONE	include\daObjKm3_Kuruma_c.h	daObjKuruma_c	0	ov047	4
-daObjKm1_Kurumajiku_c	DONE	include\RickshawBdw.h  [alias: header uses pre-rename name]	daObjKurumajiku_c	0	ov043	4
+daObjKm1_Kurumajiku_c	DONE	include\daObjKm1_Kurumajiku_c.h	daObjKurumajiku_c	0	ov043	4
 daObjKm3_Kurumajiku_c	DONE	include\daObjKm3_Kurumajiku_c.h	daObjKurumajiku_c	0	ov047	4
 daObjFlMaruta_c	DONE	include\RollingLogLll.h  [alias: header uses pre-rename name]	daObjMaruta_c	0	ov022	5
 daObjHmMaruta_c	PARTIAL	include\daObjHmMaruta_c.h	daObjMaruta_c	0	ov030	5
 daObjBSwdoor_c	DONE	include\daObjBSwdoor_c.h	daObjSwdoor_c	0	ov014	5
 daObjCvShutter_c	DONE	include\daObjCvShutter_c.h	daObjSwdoor_c	0	ov021	5
 daObjFl_Ukiyuka_c	DONE	include\FloatingFloorLllSmall.h  [alias: header uses pre-rename name]	daObjUkiyuka_c	0	ov022	4
-daObjKm2_Ukishima_c	DONE	include\FloatingFloorBfs.h  [alias: header uses pre-rename name]	daObjUkiyuka_c	0	ov045	4
+daObjKm2_Ukishima_c	DONE	include\daObjKm2_Ukishima_c.h	daObjUkiyuka_c	0	ov045	4
 daBDonketu_c	DONE	include\BigBully.h  [alias: header uses pre-rename name]	daOts_c	0	ov064	7
 daDonketu_c	DONE	include\Bully.h  [alias: header uses pre-rename name]	daOts_c	0	ov064	10
 daIDonketu_c	DONE	include\daIDonketu_c.h	daOts_c	0	ov027	6

@@ -33,6 +33,19 @@ class ProgressPolicy(unittest.TestCase):
         self.assertFalse(self.counted("// NONMATCHING\nint Example(void) { return 0; }"))
         self.assertFalse(self.counted("asm void Example(void) { dcd 0xe12fff1e }"))
 
+    def test_a_hand_asm_primitive_counts_even_with_a_draft_banner(self):
+        """Tango's ruling, 2026-09-09. This path and chaos_db_ci's used to spell the
+        banner rule separately, so a ruling had to be applied twice or the clean-clone
+        scan and the published database would disagree about the same file."""
+        self.assertTrue(self.counted(
+            "// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm.\n"
+            "// HAND-ASM PRIMITIVE: byte-faithful asm-block match.\n"
+            "asm void Example(void) { mrs r0, cpsr\n bx lr }"))
+
+    def test_the_ruling_does_not_reach_an_ordinary_draft(self):
+        self.assertFalse(self.counted(
+            "// NONMATCHING: scheduling wall.\nint Example(void) { return 0; }"))
+
     def test_zero_size_alias_and_manifest_exclusion_do_not_count(self):
         self.assertFalse(self.counted(
             size=0, aliases=frozenset({("arm9", 0x02000000)})))
@@ -75,6 +88,40 @@ class ProgressPolicy(unittest.TestCase):
         self.assertEqual(done_n, 3, "and every one of them has a source")
         self.assertEqual(total_bytes, 0x10 + 0x100)
         self.assertEqual(done_b, 0x10 + 0x100)
+
+    def test_a_source_filed_under_an_alias_name_is_found_and_counted(self):
+        """src/_dmul.c decompiles the bytes the symbol table calls func_01ff8708, and a
+        lookup by the sized record's own name finds nothing. Four byte-exact ITCM
+        primitives read as never attempted for that reason alone. Same fallback as
+        chaos_db_ci, tested the same way, so the two generators cannot disagree."""
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        repo = pathlib.Path(temp.name)
+        (repo / "src").mkdir()
+        sym = repo / "symbols.txt"
+        sym.write_text(
+            "func_01ff8708 kind:function(arm,size=0x100) addr:0x01ff8708\n"
+            "_dmul kind:function(arm,size=0x0) addr:0x01ff8708\n"
+            "func_01ff9000 kind:function(arm,size=0x40) addr:0x01ff9000\n",
+            encoding="utf-8")
+        (repo / "src" / "_dmul.c").write_text(
+            "// HAND-ASM PRIMITIVE: byte-faithful asm-block match.\n"
+            "asm void _dmul(void) { umull r0, r1, r2, r3\n bx lr }\n", encoding="utf-8")
+
+        with mock.patch.object(P, "REPO", repo), \
+                mock.patch.object(RL, "module_universe", lambda: [(sym, "itcm")]), \
+                mock.patch.object(BG, "excluded_paths", lambda *a, **k: set()), \
+                mock.patch.object(
+                    SP, "path_for",
+                    lambda n: (repo / "src" / f"{n}.c"
+                               if (repo / "src" / f"{n}.c").is_file() else None)):
+            done_n, done_b, n, total_bytes = P.synced_from_src()
+
+        self.assertEqual(n, 2, "three symbol lines, two functions")
+        self.assertEqual(done_n, 1, "the alias source counts for its sized twin")
+        self.assertEqual(done_b, 0x100)
+        self.assertEqual(total_bytes, 0x100 + 0x40,
+                         "and the record with no source under any name is untouched")
 
     def test_from_src_ignores_an_ambient_database(self):
         temp = tempfile.TemporaryDirectory()

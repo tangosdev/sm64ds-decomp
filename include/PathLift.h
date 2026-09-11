@@ -13,7 +13,7 @@
  * size rounds to 0x320).
  *
  * THE ARRAY IS Model[3]. The ROM destroys it with
- * __destroy_arr(this + 0x320, 3, 0x50, _ZN5ModelD1Ev) -- the element
+ * __cxa_vec_cleanup(this + 0x320, 3, 0x50, _ZN5ModelD1Ev) -- the element
  * destructor is named in the ROM already, and 0x50 is sizeof(Model), so this
  * one needed no new type at all. 0x320 + 3 * 0x50 = 0x410.
  */

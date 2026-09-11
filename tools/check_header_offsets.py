@@ -109,6 +109,18 @@ DECL = re.compile(r"^\s*(?:(?:struct|union|class|enum)\s+)?((?:\w+::)*[A-Za-z_]\
                   r"((?:\[\s*(?:0x[0-9a-fA-F]+|\d+)\s*\])*)\s*;"
                   r"(?:\s*/\*\s*(0x[0-9a-fA-F]+))?")
 ARR_DIMS = re.compile(r"\[\s*(0x[0-9a-fA-F]+|\d+)\s*\]")
+# A class-local allocation function occupies no instance storage. Recognize only
+# a complete allocation signature here; C++ validity is still the compiler's job.
+# Unlike the generated headers' ordinary method footer, an allocator can appear
+# between fields, so it must not terminate the layout walk.
+ALLOCATION_METHOD = re.compile(
+    r"^\s*(?:static\s+)?void\s*\*\s*operator\s+new\s*(?:\[\s*\]\s*)?"
+    r"\([^();{}]*\)\s*(?:;\s*$|\{|$)")
+# Neighboring named inline methods (for example `const Vector3 &Pos() const {`)
+# need the same body walk. Require a complete signature and a body opener or end
+# of line; do not reinterpret initializers or function-pointer fields as methods.
+INLINE_METHOD = re.compile(
+    r"^\s*(?:[A-Za-z_][\w:<>, &*]*|~\w+)\([^();{}]*\)\s*(?:const\s*)?(?:\{|$)")
 # lines inside a struct body that are legitimately not declarations
 IGNORABLE = re.compile(r"^\s*($|/\*|\*|//|\}|#)")
 
@@ -600,6 +612,7 @@ def main(argv, repo=None):
         skip_body = 0
         await_body = body_comment = False
         await_body_line = None
+        await_complete_signature = False
         unknown_base = derived_from = None
         expected = fp.stem
         all_lines = txt.splitlines()
@@ -686,12 +699,21 @@ def main(argv, repo=None):
                 saw_open = "{" in body_code
                 depth = body_code.count("{") - body_code.count("}")
                 if await_body:
-                    if saw_open:
+                    if (await_complete_signature and body_code.strip()
+                            and not re.match(r"^\s*(?:\{|;\s*$)", body_code)):
+                        # This signature already closed its parameter list. An
+                        # unrelated field cannot be its continuation, even when
+                        # DECL cannot size/parse that field. Report the missing
+                        # body and let the field reach the normal failure path.
+                        skipped.append(await_body_line)
+                        await_body = body_comment = False
+                        await_body_line = None
+                    elif saw_open:
                         await_body = False
                         await_body_line = None
                         skip_body = max(depth, 0)
                         continue
-                    if ";" in body_code:
+                    elif ";" in body_code:
                         # A split declaration, not an inline definition.  A real
                         # field on this line must still reach DECL; otherwise the
                         # pending-method state would create another zero-field pass.
@@ -754,7 +776,10 @@ def main(argv, repo=None):
             # SysTracker in include/Stage.h is the first instance) starts with `~`,
             # which the type-name alternative below never matches (`~` is not in
             # `[A-Za-z_]`), so without this alternative it fell through to UNPARSED.
-            if re.match(r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line):
+            method_code, _ = _code_without_comments_or_strings(line)
+            allocation_method = ALLOCATION_METHOD.match(method_code)
+            inline_method = INLINE_METHOD.match(method_code)
+            if allocation_method or inline_method or re.match(r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line):
                 # ...unless we started from a base whose size is asserted. A derived
                 # class places no vptr of its own -- it inherits the base's, and the
                 # base's asserted size already counts it. The running offset is sound,
@@ -770,7 +795,9 @@ def main(argv, repo=None):
                 # direction. Once a field HAS been seen, a method line ends the
                 # list as before -- that's the generated-header convention
                 # (Stage.h: fields, then methods).
-                if n == 0:
+                # Recognized allocation/inline methods consume no storage and
+                # resume the walk even when a commented field came before them.
+                if n == 0 or allocation_method or inline_method:
                     body_code, body_comment = _code_without_comments_or_strings(line)
                     saw_open = "{" in body_code
                     depth = body_code.count("{") - body_code.count("}")
@@ -782,6 +809,7 @@ def main(argv, repo=None):
                         # walk treated that `{` as a field and its `}` as the end of
                         # the outer struct, checking none of the fields below it.
                         await_body = True
+                        await_complete_signature = bool(allocation_method or inline_method)
                         await_body_line = f"{lineno}: {line.strip()}"
                     continue
                 break

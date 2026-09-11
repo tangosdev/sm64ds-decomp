@@ -442,6 +442,66 @@ class RomBuildEnrollment(unittest.TestCase):
             {"src/actors/TU.cpp"}, manifest={"entries": [entry]}),
             {"src/actors/TU.cpp": entry})
 
+    def test_intact_policy_admits_exact_exception_and_exceptix_claims(self):
+        """The CodeWarrior unwind pair claims retail ranges like any other section.
+
+        `__destroy_arr` is the first TU whose non-text content is unwind data rather
+        than rodata or globals: `.exception` carries the frame record and `.exceptix`
+        the 12-byte index entry. The section-name gate here is a hand copy of
+        tubuild._TU_SECTION_NAMES (tubuild imports this module, so it cannot import
+        back), which is exactly why it needs its own test: widening one table and not
+        the other refuses the entry with the build already half committed to it.
+        """
+        ranges = [
+            {"section": ".text", "start": "0x207328c", "end": "0x2073300",
+             "differingBytes": 0},
+            {"section": ".exception", "start": "0x207372c", "end": "0x2073740",
+             "differingBytes": 0},
+            {"section": ".exceptix", "start": "0x2073988", "end": "0x2073994",
+             "differingBytes": 0},
+        ]
+        entry = {
+            "id": "arm9/__destroy_arr", "status": "promoted",
+            "production_mode": "intact-object",
+            "source": "src/__cxa_vec_cleanup.cpp",
+            "promoted_source": "src/__cxa_vec_cleanup.cpp",
+            "sections": [
+                {"name": row["section"], "start": row["start"], "end": row["end"]}
+                for row in ranges
+            ],
+            "verification": {"linkcheck": {
+                "result": "scratch-data-verified",
+                "phases": {name: True for name in
+                           ("delink", "lcf", "compile", "link", "checkModules", "rom")},
+                "symbolCheckNewVsBaseline": [],
+                "symbolCheckErrors": ["[ERROR] old"],
+                "symbolCheckBaselineErrors": ["[ERROR] old"],
+                "tuRanges": ranges,
+                "rom": {"sha256": "a" * 64, "matchesStockRom": True},
+            }},
+        }
+        self.assertEqual(RB.intact_tu_policies(
+            {"src/__cxa_vec_cleanup.cpp"}, manifest={"entries": [entry]}),
+            {"src/__cxa_vec_cleanup.cpp": entry})
+
+        # The storage-alias refusal covers the two new owned fields too; leaving them
+        # out of `owned_fields` would let an unproven alias through the one path the
+        # rest of that rule exists to close.
+        entry["exception"] = [{"symbol": "@ET@__destroy_arr", "storage_alias": {
+            "symbol": "data_0207372c", "address": "0x207372c", "size": "0x14"}}]
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies({"src/__cxa_vec_cleanup.cpp"},
+                                  manifest={"entries": [entry]})
+        self.assertIn("baseline bootstrapping is non-circular", raised.exception.output)
+        entry.pop("exception")
+
+        entry["exceptix"] = [{"symbol": "@EX@__destroy_arr", "storage_alias": {
+            "symbol": "data_02073988", "address": "0x2073988", "size": "0xc"}}]
+        with self.assertRaises(RB.BuildError) as raised:
+            RB.intact_tu_policies({"src/__cxa_vec_cleanup.cpp"},
+                                  manifest={"entries": [entry]})
+        self.assertIn("baseline bootstrapping is non-circular", raised.exception.output)
+
     def test_intact_rom_comparison_uses_current_same_worker_control(self):
         verification = {
             "baseline": {

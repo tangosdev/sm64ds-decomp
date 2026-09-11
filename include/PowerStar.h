@@ -66,7 +66,7 @@ struct PowerStar : dEnemyBase_c {
     virtual ~PowerStar();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
 
     void AddStarMarker();
     int Behavior();

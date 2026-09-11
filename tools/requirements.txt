@@ -27,3 +27,10 @@
 # one, and it touches a workflow that writes commits to main.
 pyelftools==0.33
 capstone==5.0.9
+# test_validate_merge reaches evidence_rom, which is where `is_unconditional_return`
+# lives -- the one classifier that decides whether an ARM word is a return. The
+# matched-loss exception in validate_merge.py imports it rather than re-deriving the
+# encodings, because two spellings of that answer drifted apart once already and the
+# drift was invisible. evidence_rom's own module-level imports include yaml, so the
+# suite that exercises the classifier needs it even though nothing here reads YAML.
+pyyaml==6.0.3

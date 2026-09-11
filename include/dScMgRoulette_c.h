@@ -12,7 +12,7 @@
  * as five siblings -- see include/dScMgMemory_c.h's own note.
  *
  * ONE ARRAY at 0x51a8, 5 elements of 0x34 bytes each -- destructor calls
- * `__destroy_arr(p+0x51a8, 5, 0x34, func_ov006_021079c8)`, matching the
+ * `__cxa_vec_cleanup(p+0x51a8, 5, 0x34, func_ov006_021079c8)`, matching the
  * factory's own construction. Element type not evidenced -- raw bytes.
  *
  * 0x52ac..0x531c (0x70 bytes): touched only via raw offset calls
@@ -67,7 +67,7 @@
 #include "dScMgSingle3DBase_c.h"
 
 extern "C" int  func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void func_ov006_021079c8(void);
 extern "C" void _ZN5ModelD1Ev(void *);
 
@@ -78,7 +78,7 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
     virtual ~dScMgRoulette_c() {
         _ZN5ModelD1Ev(mModel2);
         _ZN5ModelD1Ev(mModel1);
-        __destroy_arr(mArray, 5, 0x34, (void *)func_ov006_021079c8);
+        __cxa_vec_cleanup(mArray, 5, 0x34, (void *)func_ov006_021079c8);
         func_ov006_020c1c64((char *)mTable);
     }
 

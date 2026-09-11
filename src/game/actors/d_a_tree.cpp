@@ -104,7 +104,7 @@ extern void* _ZN7fBase_cnwEj(unsigned int);
 extern void _ZN8dActor_cC2Ev(void*);
 extern void _ZN5ModelD1Ev(void*);
 extern void _ZN5ModelC1Ev(void*);
-extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
+extern void __cxa_vec_ctor(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void* _ZTV8daTree_c[];
 /* Reconstructed source-style name: SM64DS proves daTree_c through RTTI,
  * allocation size, vtable identity, and the TREE registry profile;
@@ -115,7 +115,7 @@ int* daTree_c_classInit(void){
   if(p){
     _ZN8dActor_cC2Ev(p);
     *(void***)p = (void**)&_ZTV8daTree_c[2]; /* +8: this TU defines the vtable */
-    func_020733a8((char*)p+0xd4, 5, 0x50, _ZN5ModelC1Ev, _ZN5ModelD1Ev);
+    __cxa_vec_ctor((char*)p+0xd4, 5, 0x50, _ZN5ModelC1Ev, _ZN5ModelD1Ev);
   }
   return p;
 }

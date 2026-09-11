@@ -5223,3 +5223,181 @@ both.
 
 Items 3 to 7 were measured by lanes DC1 and DC2 on 2026-09-07. Items 1 and 2, and the
 byte-level probes in item 3, were re-measured in the banking pass at origin/main 199b7ad3e.
+
+## 6by. Two loops that walk different tables share ONE cursor variable, and that alone fixes the callee-saved rotation (func_ov007_020c9688, div 10 -> 0, 2026-09-08)
+
+Run link100 lane DC3B. `func_ov007_020c9688` (ov007 0x020c9688, 0x300 bytes) sat at
+"pure r7/r8/sb register rotation" for two prior runs (the near-miss row records ~900
+hypotheses at exactly 10: 120 block declaration permutations, a 735-step greedy pairwise
+climb over a 15-element function-top declaration list, plus the 6y levers). Every one of
+those kept the two loops separate.
+
+The function has two passes. The first walks list A with a `RecA *p` declared at function
+top. The second walks list B and, in every candidate, declared its own `u8 *q` inside the
+tail block. With a separate cursor the tail is byte-identical to the ROM except for a
+three-way rotation of the callee-saved registers:
+
+    ROM   0x250  add sb, r1, #4      cursor -> sb      0x264 mov r8, r6   0x268 mov r7, r6
+    ours  0x250  add r7, r1, #4      cursor -> r7      0x264 mov sb, r6   0x268 mov r8, r6
+
+that is, cursor / hoisted-zero-argument / hoisted-loop-init colour to (sb, r8, r7) in the
+cartridge and to (r7, sb, r8) in every candidate. Ten instructions, nothing else.
+
+Reusing `p` for the second pass -- `p = (RecA *)((u8 *)ctx.listB + 4);` and casting at the
+three use sites -- puts all three where the ROM has them and the function matches at 0
+under 2004/b56.
+
+The lever generalises: when a second loop's induction pointer collides with the
+callee-saved numbering, ask whether the original source declared a NEW pointer at all.
+A cursor variable whose live range already spans the first loop enters the interference
+graph before the second loop's compiler temps do, and the temps take the registers below
+it instead of above it. Declaration ORDER cannot express that -- a fresh block-scope
+pointer is a different variable no matter where it is declared, and the 120-permutation
+sweep is blind to it. Reuse is a different axis from ordering, and it is cheap to probe:
+for every block-local pointer or counter, try the function-scope variable of the same
+shape that an earlier loop already finished with.
+
+Negative half, measured the same session on the same axis: reusing `i`, `j` and `cnt`
+as well (the counters, not just the cursor) costs 25 to 27 words, and reusing only `cnt`
+costs 18. The cursor is the one that carries the colouring; the counters are already
+spilled and reusing them only merges spill slots that the ROM keeps apart.
+
+Addendum, 2026-09-08 (out/DC4/results.md is the measurement). Lane DC4 applied the
+shared-cursor lever to every other near-miss row with this shape: eight rows, the whole
+population with two or more loops each declaring its own cursor (func_ov007_020c9688
+above was the ninth and had already landed, so it was excluded). All eight were inert or
+worse, costing 3 to 116 words and, in some of the eight, changing the frame size. The
+lever only pays off when a second pass walks a DIFFERENT table with a cursor whose live
+range would otherwise start only after the first pass ends, under enough callee-saved
+pressure for the interference order to decide the colouring; none of the eight remaining
+rows has that combination. Extending a cursor's live range past the point where the ROM
+lets it die cost words in every row that tried it, never saved any. Counters carry no
+colouring of their own either: swapping which function-scope counter a later loop reuses
+was byte-identical in the row that tested it. The shared-cursor lever's population on
+this near-miss DB is exhausted; a second pass over it needs a different table entirely,
+not more permutations of the same eight rows.
+
+## 6bz. Four MSL runtime entries are named by the COMPILER, not by us, and a size-0 alias row for one of them stops being a link definition the moment its range is carved out to source (2026-09-08, run link100 lanes DARRLINK and DARRFIX)
+
+mwccarm 2004/b56 plants calls to runtime helpers whose names appear nowhere in the source
+it is given. Four are now known, all in arm9:
+
+    __end__catch        0x02071ba0   end of every catch block
+    __rethrow           0x020717c0   a bare `throw;`
+    __cxa_vec_cleanup   0x0207328c   destroying an array member
+    __cxa_vec_ctor      0x020733a8   constructing an array member
+
+The object's own `.strtab` is the evidence. A try/catch/rethrow probe compiled under the
+ROM CFLAGS produces an object whose undefined set is exactly
+`['__end__catch', '__rethrow', 'sink']`, and every destructor object for a class with an
+array member imports `__cxa_vec_cleanup` without the source ever writing it.
+
+WHY THAT COST A LINK. config/**/symbols.txt lets a second name sit at an address with
+`size=0x0`. That row becomes a linker definition only while dsd owns the range: a gap
+object defines every symbols.txt row it covers STB_GLOBAL. Carve the range out with a
+`complete` delinks entry and the link is handed a compiled object instead, which defines
+only what the C source declares, so the size-0 name silently stops existing. Nothing
+per-function notices. `tools/match.py`, `tools/linkcheck.py`, `progress.py` and
+`validate_merge.py` all stay green, and the failure appears only in the real mwldarm
+link, as `Undefined : "<name>"` with a list of referrers that never mention it in source.
+
+THE FIX IS TO RENAME THE PRIMARY, NOT TO LAUNDER THE IMPORT. The compiler's spelling is
+the one the link must resolve, so the sized symbols.txt row takes it and every call site
+follows; a called name is a relocation, so no byte moves. The alternative, rewriting each
+object's import back to our name before the link, would put a symbol rewrite in the
+ordinary compile path of all 8947 objects, would not be covered by the object cache key,
+and would leave the tree calling the entry by a name the compiler never emits.
+
+HOW TO SEE IT BEFORE THE LINK DOES: `tools/tubuild.py undefinable_alias_names()` returns
+every name whose only symbols.txt homes are size-0 rows inside a carved-out range. It was
+`{__end__catch, __cxa_vec_cleanup, _deq}` when the trap fired; after both renames only
+`_deq` (arm9 itcm 0x01ff9d40) is left, and no object in a full stock build imports it.
+
+## 6ca. Under 2004/b56 the member RMW materialises by DEFAULT, and the fold is what you have to reach for; two identical lvalue spellings are the trigger (2026-09-09, run link100 lane MATCH3)
+
+Section 6ag measured the first-access-fold family on the 24 builds we had at the time and
+concluded the opposite of what 2004/b56 does: "every mwccarm we have re-folds that temp
+unconditionally at O1+", so the launder family existed to FORCE materialisation. That
+sentence is still true of those builds. It is false of `2004/b56`, which is the recovered
+CW-for-NITRO-era build the tree now pins, and the sign flip matters because the residue it
+produces looks like a size bug rather than an addressing one.
+
+MEASURED. Minimal probe, `-O4,p -enum int -lang c99 -char signed -interworking
+-proc arm946e -gccext,on`, `struct Obj { struct Base base; ... }` with `u32 param1` at
+offset 8:
+
+```c
+self->base.param1 = self->base.param1 >> 0x10;   /* add r2,r0,#8 / ldr r1,[r2] / lsr / str r1,[r2] */
+```
+
+2004/b56 value-numbers the two occurrences of the lvalue together, materialises the
+address once and uses it for both halves. That is 4 bytes longer than the folded
+`ldr r1,[r0,#8] / lsr / str r1,[r0,#8]` the ROM emits at these three sites, and the extra
+instruction pushes every later `ldr [pc,#N]` 4 bytes further from its pool word, so the
+whole tail of the function reads as mismatched and the growth reads as pool growth. It is
+not pool growth. Count the pool words on both sides before believing that: on
+daObjMarioCap_c::InitResources both pools are 25 words and the 8 bytes were two extra
+instructions, 0x2b4 apart.
+
+THE TRIGGER IS TEXTUAL IDENTITY, NOT THE READ-MODIFY-WRITE. Everything that keeps the two
+sides spelled the same still materialises; anything that makes them different folds.
+Measured, same probe, 2004/b56:
+
+| spelling | result |
+|---|---|
+| `x.f = x.f >> n` | materialised |
+| `x.f >>= n` | materialised |
+| `t = x.f; x.f = t >> n` (temp either way round) | materialised |
+| `T *p = &x.f; *p = *p >> n` | materialised |
+| `T *b = &x.base; x.base.f = b->f >> n` | materialised |
+| `((Base *)&x)->f = ((Base *)&x)->f >> n` (both sides cast) | materialised |
+| `x.f = (u32)(volatile u32)x.f >> n` (CVCAST on the read) | **folded** |
+| `x.f = (u32)x.f >> n` (a plain same-type redundant cast on the read) | **folded** |
+| `x.f = (u32)(unsigned long long)x.f >> n` (WIDEN on the read) | **folded** |
+| `x.f = ((Base *)&x)->f >> n` (one side cast) | **folded** |
+| `((Base *)&x)->f = x.f >> n` (the other side cast) | **folded** |
+| `*(T *)&x.f = x.f >> n` | **folded** |
+| `x.f = ((volatile Obj *)&x)->base.f >> n` | **folded** |
+
+C++ inheritance does not help: `param1 = param1 >> n` inside a method of a derived class,
+with the field inherited, materialises exactly like the C nested-member spelling, so a
+`.c` to `.cpp` conversion is not the lever here.
+
+THE u64 MASK IS NOT INTERCHANGEABLE WITH THE OTHER LAUNDERS AT THIS SITE. On the probe
+`(EXPR & 0xFFFFFFFFFFFFFFFFULL)` folds like the rest, but on the real function it left 8
+of 191 words differing: the 64-bit promotion perturbs the surrounding schedule.
+
+REACH FOR THE PLAIN REDUNDANT CAST FIRST, NOT CVCAST -- added 2026-09-09, run link100
+lane MATCH3B. CVCAST reads well and is the one `tools/delaunder.py` re-tests
+automatically (idiom name CVCAST), but it spells the fix with a `volatile` token, and
+`tools/tiers.py`'s CONVERTED classifier scores a bare `volatile` object or cast
+round-trip as a MATCH HACK (the regex is `\bvolatile\b(?![\s\w:]*\*)`, tools/tiers.py
+:164; it does not distinguish "steers codegen" from "the only way to touch this piece of
+hardware" -- a pointer-to-volatile like `(volatile Obj *)&x` reads as MMIO and is exempt,
+a volatile-then-discard cast on a plain scalar is not, and PR #2523 failed the converted
+ratchet on exactly this reading on all three sites below). A same-type redundant cast
+(`(u32)x.f` where `x.f` is already `u32`) folds identically on 2004/b56 -- confirmed on
+all three sites below, first candidate tried, no fallback needed -- and carries no
+`volatile` token at all, so it never trips that classifier. Prefer it; fall back to
+WIDEN or the one-side object-pointer cast only if the plain cast does not fold at a
+given site (not yet observed).
+
+WHERE IT LANDED. Three `InitResources` bodies carried this residue and nothing else, all
+three matched by respelling the read and nothing else. First matched with CVCAST (PR
+#2523); respelt to the plain redundant cast for the ratchet reason above, same bytes,
+same relocations, lane MATCH3B:
+
+  * `Door::InitResources`, ov100 0x021455a0 0x2fc -- one site (`param1 >> 0x10`). Before:
+    0x300, 156 of 192 words differing over the shared prefix. After: 0 of 191.
+  * `RollingIronBall::InitResources`, ov100 0x02142de0 0x38c -- one site (`param1 >> 4`).
+    Before: 0x390, 186 of 228. After: 0 of 227.
+  * `daObjMarioCap_c::InitResources`, ov002 0x020b86d0 0x4c8 -- two sites
+    (`param1 -= 0xa` at +0x37c and `param1 &= 0xfff` at +0x448). Before: 0x4d0, 98 of 308.
+    After: 0 of 306.
+
+All three are `fBase_c::param1` at offset 8, unpacked into fields and then shifted or
+masked down in place, which is why one spawn-parameter idiom produced the same residue in
+three unrelated classes. 6ag's closing advice ("do not spend model time hunting
+formulations for materialized-RMW residues") applies to the pre-2004 builds it was
+measured on; on 2004/b56 the inverse residue is cheap, and the table above is the whole
+search.

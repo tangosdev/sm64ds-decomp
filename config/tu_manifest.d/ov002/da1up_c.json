@@ -1,0 +1,559 @@
+{
+  "id": "ov002/da1up_c",
+  "module": "ov002",
+  "source": "src/actors/da1up_c.cpp",
+  "promoted_source": "src/actors/da1up_c.cpp",
+  "status": "promoted",
+  "boundary_confidence": "medium",
+  "boundary_evidence": [
+    "contiguous linker run: 0x20aee40..0x20b0530, 36 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "class label(s): da1up_c",
+    "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x020aee40",
+      "end": "0x020b0530"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN7da1up_cD1Ev",
+      "address": "0x020aee40",
+      "size": "0x00000048",
+      "legacy_source": "src/_ZN13OneUpMushroomD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN7da1up_cD0Ev",
+      "address": "0x020aee88",
+      "size": "0x0000005c",
+      "legacy_source": "src/_ZN13OneUpMushroomD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "func_ov002_020aeee4",
+      "address": "0x020aeee4",
+      "size": "0x000000c0",
+      "legacy_source": "src/func_ov002_020aeee4.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "func_ov002_020aefa4",
+      "address": "0x020aefa4",
+      "size": "0x00000014",
+      "legacy_source": "src/func_ov002_020aefa4.c",
+      "ordinal": 3
+    },
+    {
+      "symbol": "func_ov002_020aefb8",
+      "address": "0x020aefb8",
+      "size": "0x00000108",
+      "legacy_source": "src/func_ov002_020aefb8.cpp",
+      "ordinal": 4
+    },
+    {
+      "symbol": "func_ov002_020af0c0",
+      "address": "0x020af0c0",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov002_020af0c0.c",
+      "ordinal": 5
+    },
+    {
+      "symbol": "func_ov002_020af1dc",
+      "address": "0x020af1dc",
+      "size": "0x0000003c",
+      "legacy_source": "src/func_ov002_020af1dc.c",
+      "ordinal": 6
+    },
+    {
+      "symbol": "func_ov002_020af218",
+      "address": "0x020af218",
+      "size": "0x00000030",
+      "legacy_source": "src/func_ov002_020af218.c",
+      "ordinal": 7
+    },
+    {
+      "symbol": "func_ov002_020af248",
+      "address": "0x020af248",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov002_020af248.c",
+      "ordinal": 8
+    },
+    {
+      "symbol": "_ZN7da1up_c13OnTurnIntoEggER6Player",
+      "address": "0x020af2b0",
+      "size": "0x000000f0",
+      "legacy_source": "src/_ZN13OneUpMushroom13OnTurnIntoEggER6Player.cpp",
+      "ordinal": 9
+    },
+    {
+      "symbol": "_ZN7da1up_c13OnYoshiTryEatEv",
+      "address": "0x020af3a0",
+      "size": "0x00000008",
+      "legacy_source": "src/_ZN13OneUpMushroom13OnYoshiTryEatEv.cpp",
+      "ordinal": 10
+    },
+    {
+      "symbol": "func_ov002_020af3a8",
+      "address": "0x020af3a8",
+      "size": "0x000000cc",
+      "legacy_source": "src/func_ov002_020af3a8.c",
+      "ordinal": 11
+    },
+    {
+      "symbol": "func_ov002_020af474",
+      "address": "0x020af474",
+      "size": "0x00000078",
+      "legacy_source": "src/func_ov002_020af474.c",
+      "ordinal": 12
+    },
+    {
+      "symbol": "func_ov002_020af4ec",
+      "address": "0x020af4ec",
+      "size": "0x00000198",
+      "legacy_source": "src/func_ov002_020af4ec.cpp",
+      "ordinal": 13
+    },
+    {
+      "symbol": "func_ov002_020af684",
+      "address": "0x020af684",
+      "size": "0x000000a0",
+      "legacy_source": "src/func_ov002_020af684.cpp",
+      "ordinal": 14
+    },
+    {
+      "symbol": "func_ov002_020af724",
+      "address": "0x020af724",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov002_020af724.c",
+      "ordinal": 15
+    },
+    {
+      "symbol": "func_ov002_020af7cc",
+      "address": "0x020af7cc",
+      "size": "0x0000006c",
+      "legacy_source": "src/func_ov002_020af7cc.c",
+      "ordinal": 16
+    },
+    {
+      "symbol": "func_ov002_020af838",
+      "address": "0x020af838",
+      "size": "0x000000d0",
+      "legacy_source": "src/func_ov002_020af838.c",
+      "ordinal": 17
+    },
+    {
+      "symbol": "func_ov002_020af908",
+      "address": "0x020af908",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov002_020af908.c",
+      "ordinal": 18
+    },
+    {
+      "symbol": "func_ov002_020af924",
+      "address": "0x020af924",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov002_020af924.c",
+      "ordinal": 19
+    },
+    {
+      "symbol": "func_ov002_020af950",
+      "address": "0x020af950",
+      "size": "0x00000100",
+      "legacy_source": "src/func_ov002_020af950.c",
+      "ordinal": 20
+    },
+    {
+      "symbol": "func_ov002_020afa50",
+      "address": "0x020afa50",
+      "size": "0x0000001c",
+      "legacy_source": "src/func_ov002_020afa50.c",
+      "ordinal": 21
+    },
+    {
+      "symbol": "func_ov002_020afa6c",
+      "address": "0x020afa6c",
+      "size": "0x0000002c",
+      "legacy_source": "src/func_ov002_020afa6c.c",
+      "ordinal": 22
+    },
+    {
+      "symbol": "func_ov002_020afa98",
+      "address": "0x020afa98",
+      "size": "0x0000011c",
+      "legacy_source": "src/func_ov002_020afa98.c",
+      "ordinal": 23
+    },
+    {
+      "symbol": "func_ov002_020afbb4",
+      "address": "0x020afbb4",
+      "size": "0x00000090",
+      "legacy_source": "src/func_ov002_020afbb4.c",
+      "ordinal": 24
+    },
+    {
+      "symbol": "func_ov002_020afc44",
+      "address": "0x020afc44",
+      "size": "0x00000024",
+      "legacy_source": "src/func_ov002_020afc44.c",
+      "ordinal": 25
+    },
+    {
+      "symbol": "func_ov002_020afc68",
+      "address": "0x020afc68",
+      "size": "0x000000a8",
+      "legacy_source": "src/func_ov002_020afc68.cpp",
+      "ordinal": 26
+    },
+    {
+      "symbol": "func_ov002_020afd10",
+      "address": "0x020afd10",
+      "size": "0x000000d4",
+      "legacy_source": "src/func_ov002_020afd10.c",
+      "ordinal": 27
+    },
+    {
+      "symbol": "func_ov002_020afde4",
+      "address": "0x020afde4",
+      "size": "0x00000068",
+      "legacy_source": "src/func_ov002_020afde4.cpp",
+      "ordinal": 28
+    },
+    {
+      "symbol": "func_ov002_020afe4c",
+      "address": "0x020afe4c",
+      "size": "0x000000c4",
+      "legacy_source": "src/func_ov002_020afe4c.cpp",
+      "ordinal": 29
+    },
+    {
+      "symbol": "func_ov002_020aff10",
+      "address": "0x020aff10",
+      "size": "0x000000d8",
+      "legacy_source": "src/func_ov002_020aff10.c",
+      "ordinal": 30
+    },
+    {
+      "symbol": "_ZN7da1up_c16CleanupResourcesEv",
+      "address": "0x020affe8",
+      "size": "0x00000084",
+      "legacy_source": "src/_ZN13OneUpMushroom16CleanupResourcesEv.cpp",
+      "ordinal": 31
+    },
+    {
+      "symbol": "_ZN7da1up_c16OnPendingDestroyEv",
+      "address": "0x020b006c",
+      "size": "0x00000004",
+      "legacy_source": "src/_ZN13OneUpMushroom16OnPendingDestroyEv.cpp",
+      "ordinal": 32
+    },
+    {
+      "symbol": "_ZN7da1up_c6RenderEv",
+      "address": "0x020b0070",
+      "size": "0x00000078",
+      "legacy_source": "src/_ZN13OneUpMushroom6RenderEv.cpp",
+      "ordinal": 33
+    },
+    {
+      "symbol": "_ZN7da1up_c8BehaviorEv",
+      "address": "0x020b00e8",
+      "size": "0x000000d8",
+      "legacy_source": "src/_ZN13OneUpMushroom8BehaviorEv.cpp",
+      "ordinal": 34
+    },
+    {
+      "symbol": "_ZN7da1up_c13InitResourcesEv",
+      "address": "0x020b01c0",
+      "size": "0x00000370",
+      "legacy_source": "src/_ZN13OneUpMushroom13InitResourcesEv.cpp",
+      "ordinal": 35
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "The key function is this TU's out-of-line destructor (`_ZN7da1up_cD1Ev`, first virtual declared), so mwccarm emits the whole ancestor chain's vague-linkage RTTI here as passengers: da1up_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c. fBase_c is the chain root, so its __class_type_info is emitted with no base word. The cartridge's own copy is at arm9:0x02086d70; romdata_check compares this object's bytes and relocations against that home before text-only isolation discards the duplicate."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Type-name string `7fBase_c\u0000` emitted beside _ZTI7fBase_c. ROM home arm9:0x02086e60, 0x9 bytes -- the exact size verify reports for the copy in this object."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "__si_class_type_info for the second link of the chain; its +8 word relocates to _ZTI7fBase_c. ROM home arm9:0x02086e78."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Type-name string `7dBase_c\u0000`. ROM home arm9:0x02086e54, 0x9 bytes."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "__si_class_type_info whose +8 word reaches _ZTI7dBase_c. ROM home arm9:0x0208e390."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Type-name string `8dActor_c\u0000`. ROM home arm9:0x0208e384, 0xa bytes."
+    },
+    {
+      "symbol": "_ZTI12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081c0",
+      "reason": "__si_class_type_info for this class's direct base; its +8 word reaches _ZTI8dActor_c. Homed in this same overlay at ov002:0x021081c0, i.e. dEnemyBase_c's own key-function TU already owns it -- this copy is strictly a duplicate."
+    },
+    {
+      "symbol": "_ZTS12dEnemyBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021081cc",
+      "reason": "Type-name string `12dEnemyBase_c\u0000`. ROM home ov002:0x021081cc, 0xf bytes."
+    },
+    {
+      "symbol": "_ZTI7da1up_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x0210837c",
+      "reason": "This class's own __si_class_type_info, +8 word relocating to _ZTI12dEnemyBase_c at 0x021081c0. ROM home ov002:0x0210837c. It is the record that PROVES the class name used by this TU: the ROM pairs it with the string below."
+    },
+    {
+      "symbol": "_ZTS7da1up_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108370",
+      "reason": "This class's own type-name string. ov002:0x02108370 holds the bytes 37 64 61 31 75 70 5f 63 00 = `7da1up_c\u0000`, 0x9 bytes -- the cartridge's spelling of the class, and the reason this TU, header and members are named da1up_c and not the project's former coined name."
+    },
+    {
+      "symbol": "_ZTV7da1up_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021083c8",
+      "reason": "The vtable this TU is the key function for. ROM home ov002:0x021083c8, and verify's EXTRA line independently reports size=0x84 -- 33 words of storage, i.e. the two-word RTTI prologue plus 31 dispatch slots, matching the scout's extent. The two enrolled factory shards src/d_a_1up_oneupkinoko.c and src/d_a_1up_scaleup_kinoko.c still reference the ROM copy by name, so the reference is live and this object's copy is the duplicate."
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "This TU odr-uses Vector3 by value (Sound::PlayBank3 takes a const Vector3& and members build temporaries), so mwccarm re-emits Vector3's trivial vague-linkage D1 alongside the licensed text. The cartridge keeps one copy at arm9:0x020072c0, kind:function(arm,size=0x4), and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
+    },
+    {
+      "symbol": "_ZN7da1up_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "Homeless. One out-of-line destructor definition makes mwcc emit three variants -- under `#pragma defer_codegen off` in the order D1, D0, D2 -- but the cartridge carries only D1 (0x020aee40, 0x48) and D0 (0x020aee88, 0x5c). No address anywhere in config/ names a D2 for this class: config/arm9/overlays/ov002/symbols.txt has no such row and the scout's fact file records the variant set as D1/D0 with no D2. It therefore has no ROM home -- plain `deadstrip`, not `deadstrip-duplicate` -- and production isolation discards it. It is emitted after D0 and before ordinal 2, so it does not disturb the licensed run: verify reports all 36 licensed functions in the expected ROM-ascending section order with it present."
+    }
+  ],
+  "notes": [
+    "CURRENT HUMANIZER CONTINUATION (2026-09-07): the shared dActor_c::OnTurnIntoEgg(Player&) contract and 24 named actor overrides now return void. OneUp func_ov002_020af684, func_ov002_020af924 and func_ov002_020afa6c use a coherent void forwarding contract. The former int-without-return definition is removed; player lookup values and early returns are preserved. Historical PROMOTION notes below describe earlier states, not the current return interface. Original return-type spelling is not claimed recovered. Fresh targeted source-backed linkcheck verifies the hook and all three helpers; whole OneUp TU is 36/36 MATCH with clean relocation checks. The full source-qualified consumer inventory, complete production ROM build and emitted-data identity comparison are recorded in notes/agents/handoffs/issue-2411-humanizer-2.md. Production output is exact. Raw standalone checker gaps and host link limits remain explicit; independent verification and terminal private validation are pending.",
+    "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+    "tubuild create warning: RAW: src/func_ov002_020afde4.cpp (func_ov002_020afde4) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning: RAW: src/func_ov002_020afe4c.cpp (func_ov002_020afe4c) did not split (the definition is inside the extern \"C\" block opened on line 2, so it was consumed as a declaration -- tubuild cannot place a block-scoped member in a TU); carried verbatim -- its own includes/declarations stay inside its member block",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Vec3_HorzLen' differs between the legacy file that used to hold func_ov002_020aefb8 and the one that held func_ov002_020af0c0; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c24KillAndTrackInDeathTableEv' differs between the legacy file that used to hold func_ov002_020af248 and the one that held func_ov002_020af3a8; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020af3a8 and the one that held func_ov002_020af684; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c24KillAndTrackInDeathTableEv' differs between the legacy file that used to hold func_ov002_020af248 and the one that held func_ov002_020af684; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020aefb8' differs between the legacy file that used to hold func_ov002_020aefb8 and the one that held func_ov002_020af724; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020af3a8 and the one that held func_ov002_020af724; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov002_020af4ec and the one that held func_ov002_020af724; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af3a8' differs between the legacy file that used to hold func_ov002_020af0c0 and the one that held func_ov002_020af724; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c24KillAndTrackInDeathTableEv' differs between the legacy file that used to hold func_ov002_020af248 and the one that held func_ov002_020af838; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af684' differs between the legacy file that used to hold _ZN7da1up_c13OnTurnIntoEggER6Player and the one that held func_ov002_020af924; kept the first, the other is commented out for review -- RESOLVED: this one had to be settled, because the caller at ordinal 9 is the C++ member da1up_c::OnTurnIntoEgg, whose block-scope declarations would mangle instead of naming the C symbol. The single spelling int func_ov002_020af684(char* self, int target, char* player) is declared once at file scope above ordinal 9 and is the one the definition carries. Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020aefa4' differs between the legacy file that used to hold func_ov002_020af218 and the one that held func_ov002_020af950; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020af3a8 and the one that held func_ov002_020af950; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020aefb8' differs between the legacy file that used to hold func_ov002_020aefb8 and the one that held func_ov002_020af950; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020aeee4' differs between the legacy file that used to hold func_ov002_020af724 and the one that held func_ov002_020af950; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af684' differs between the legacy file that used to hold _ZN7da1up_c13OnTurnIntoEggER6Player and the one that held func_ov002_020afa6c; kept the first, the other is commented out for review -- RESOLVED: this one had to be settled, because the caller at ordinal 9 is the C++ member da1up_c::OnTurnIntoEgg, whose block-scope declarations would mangle instead of naming the C symbol. The single spelling int func_ov002_020af684(char* self, int target, char* player) is declared once at file scope above ordinal 9 and is the one the definition carries. Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020af3a8 and the one that held func_ov002_020afa98; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c15IsPlayerInRangeEi' differs between the legacy file that used to hold func_ov002_020af218 and the one that held func_ov002_020afbb4; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020aefb8' differs between the legacy file that used to hold func_ov002_020aefb8 and the one that held func_ov002_020afbb4; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020aeee4' differs between the legacy file that used to hold func_ov002_020af724 and the one that held func_ov002_020afbb4; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af3a8' differs between the legacy file that used to hold func_ov002_020af0c0 and the one that held func_ov002_020afbb4; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af248' differs between the legacy file that used to hold func_ov002_020afa98 and the one that held func_ov002_020afbb4; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af218' differs between the legacy file that used to hold func_ov002_020af724 and the one that held func_ov002_020afbb4; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af3a8' differs between the legacy file that used to hold func_ov002_020af0c0 and the one that held func_ov002_020afc44; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af218' differs between the legacy file that used to hold func_ov002_020af724 and the one that held func_ov002_020afc44; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZNK10dBgCh_Actr10IsOnGroundEv' differs between the legacy file that used to hold func_ov002_020af4ec and the one that held func_ov002_020afc68; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN8dActor_c15IsPlayerInRangeEi' differs between the legacy file that used to hold func_ov002_020af218 and the one that held func_ov002_020afc68; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af218' differs between the legacy file that used to hold func_ov002_020af724 and the one that held func_ov002_020afd10; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af248' differs between the legacy file that used to hold func_ov002_020afa98 and the one that held func_ov002_020afd10; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN5Sound9PlayBank3EjRK7Vector3' differs between the legacy file that used to hold func_ov002_020af3a8 and the one that held func_ov002_020aff10; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af248' differs between the legacy file that used to hold func_ov002_020afa98 and the one that held func_ov002_020aff10; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'func_ov002_020af218' differs between the legacy file that used to hold func_ov002_020af724 and the one that held func_ov002_020aff10; kept the first, the other is commented out for review -- RESOLVED: no file-scope declaration of this symbol survives in the promoted TU. Each member keeps its own recovered spelling as a block-scope extern inside that member's own file-scope extern \"C\" region, so both spellings coexist and neither had to be discarded (a block-scope declaration inside a C-linkage region gets C linkage, so they all name the one C symbol). Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210d9d8' differs between the legacy file that used to hold _ZN7da1up_c16CleanupResourcesEv and the one that held _ZN7da1up_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: kept BOTH views. Ordinal 31 (CleanupResources) declares it void* and casts at the use site; ordinal 35 (InitResources) declares it SharedFilePtr. Both declarations are block-scope inside their own C++ member, so the two views never meet at file scope. Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_ov002_0210da30' differs between the legacy file that used to hold _ZN7da1up_c16CleanupResourcesEv and the one that held _ZN7da1up_c13InitResourcesEv; kept the first, the other is commented out for review -- RESOLVED: kept BOTH views. Ordinal 31 (CleanupResources) declares it void* and casts at the use site; ordinal 35 (InitResources) declares it SharedFilePtr. Both declarations are block-scope inside their own C++ member, so the two views never meet at file scope. Verified: 36/36 MATCH.",
+    "tubuild create warning (RESOLVED): CONFLICT: local declaration ('struct', 'C') differs between the legacy file that used to hold func_ov002_020afc68 and the one that held _ZN7da1up_c8BehaviorEv; kept the first, the other is commented out for review -- RESOLVED: only one survives, and it is not shared. func_ov002_020afc68's recovered body does not use a pointer-to-member type in the promoted TU; the single file-scope struct C above ordinal 31 exists solely for ordinal 34's data_ov002_0210dc00[] PMF table and is deliberately an opaque stand-in rather than da1up_c, because mwccarm's PMF representation depends on the class named. Verified: 36/36 MATCH.",
+    "PROMOTION: the generated preamble from tubuild create was discarded and this TU was written by hand from the 36 shard sources, per notes/agents/roles/writer.md ('past roughly 30 members the generated preamble is unusable'). No /* TUBUILD CONFLICT */ marker therefore survives in the source; the CONFLICT notes above are marked RESOLVED with the disposition each key actually received.",
+    "PROMOTION: source order is ROM-ascending under #pragma defer_codegen off with an out-of-line destructor declared first, which is what reproduces the cartridge's D1-at-0x020aee40-then-D0-at-0x020aee88 with no D2. Only 3 of the intra-TU calls run upward, so the file carries just 3 forward declarations and every other member keeps its own independently recovered spelling.",
+    "PROMOTION: include/decl_common.h is deliberately NOT included. It declares 11 of these 36 symbols and 4 of those declarations disagree with the byte-matched shard: func_ov002_020af4ec and func_ov002_020afc68 on a pointer type, func_ov002_020af684 on two parameters, func_ov002_020afa6c on the return type.",
+    "PROMOTION: two deliberate signature changes are recorded in the source. func_ov002_020af218 gains a declared but unused second parameter (five callers pass 0xbb8), and func_ov002_020af684 changed from void to int without gaining a return statement. Reverting either change was recorded to move bytes; that measurement does not establish a valid C++ return contract for func_ov002_020af684 or a typed forwarding contract for func_ov002_020af218. Both remain source-reconstruction work requiring fresh caller/callee evidence and byte/relocation proof.",
+    "PRE-PROMOTION LINK EVIDENCE, recorded verbatim because it is the only usable kind: `python tools/tubuild.py linkcheck ov002/da1up_c` run against the pre-substitution tree returned SCRATCH-LINK-VERIFIED. The whole .text range 0x020aee40..0x020b0530 reproduces from one object; source-built functions 11,190 reproducing / 0 mismatching; module fidelity 106/106 exact, 100.000000% of compared bytes; `dsd check modules --fail` PASS; the full ROM builds to sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, IDENTICAL to the source-independent strict stock control. `dsd check symbols --fail` FAILS with 9 error lines (overlay_100, overlay_102, data_020ad524, data_020ad560 and five ITCM symbols) -- the baseline control has the same 9, so 0 NEW and 0 resolved, but the check is NOT green and must not be reported as such. Once the source is enrolled in delinks.txt a re-run routes down the intact path and fails at [4/8] regardless; that is pre-existing behaviour and not evidence about this TU."
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov002-da1up_c/da1up_c.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 36,
+    "functions_declared": 36,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN7Vector3D1Ev",
+        "_ZN7da1up_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev",
+        "_ZN7da1up_cD2Ev"
+      ],
+      "droppedSections": [
+        9,
+        10,
+        13,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85,
+        86,
+        87,
+        88,
+        89,
+        90,
+        91
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI12dEnemyBase_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTI7da1up_c",
+        "_ZTS7da1up_c",
+        "_ZTV7da1up_c"
+      ],
+      "dataExternalized": [
+        "_ZTI12dEnemyBase_c",
+        "_ZTI7dBase_c",
+        "_ZTI7da1up_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS12dEnemyBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7da1up_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV7da1up_c"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    },
+    "linkcheck": {
+      "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+      "result": "scratch-link-verified",
+      "scratch": "build/tu/ov002-da1up_c/link (gitignored)",
+      "phases": {
+        "delink": true,
+        "lcf": true,
+        "compile": true,
+        "link": true,
+        "checkModules": true,
+        "checkSymbols": false,
+        "rom": true
+      },
+      "tuRange": {
+        "start": "0x020aee40",
+        "end": "0x020b0530",
+        "differingBytes": 0,
+        "firstDiff": null
+      },
+      "tuRanges": [
+        {
+          "section": ".text",
+          "start": "0x020aee40",
+          "end": "0x020b0530",
+          "differingBytes": 0,
+          "firstDiff": null
+        }
+      ],
+      "objectAudit": {
+        "counts": {
+          "LICENSED": 36
+        },
+        "emittedTextOrderIsRomAscending": true,
+        "nonLicensedSymbols": [],
+        "unlicensedSections": []
+      },
+      "nontextSectionOrder": {
+        "groups": [],
+        "objisolate": null,
+        "errors": null
+      },
+      "linkedStorageAliases": null,
+      "symbolCheckNewVsBaseline": [],
+      "symbolCheckErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "symbolCheckBaselineErrors": [
+        "[ERROR] Symbol '_deq' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad524' in ARM9 main at 0x020ad524 not found in linked binary",
+        "[ERROR] Symbol 'data_020ad560' in ARM9 main at 0x020ad560 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff98f4' in ITCM at 0x01ff98f4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff99a4' in ITCM at 0x01ff99a4 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9d40' in ITCM at 0x01ff9d40 not found in linked binary",
+        "[ERROR] Symbol 'func_01ff9e2c' in ITCM at 0x01ff9e2c not found in linked binary",
+        "[ERROR] Symbol 'overlay_100' in ARM9 main at 0x00000064 not found in linked binary",
+        "[ERROR] Symbol 'overlay_102' in ARM9 main at 0x00000066 not found in linked binary"
+      ],
+      "moduleSetSha256": "f9852ffaf80ef19662ab5535df4b13b935188ac3087b5b1d4561c089e4dd802b",
+      "rom": {
+        "bytes": 16777216,
+        "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+        "matchesStockRom": true
+      },
+      "linkerOutput": null
+    }
+  }
+}
