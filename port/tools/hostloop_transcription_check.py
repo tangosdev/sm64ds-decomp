@@ -1,75 +1,156 @@
-"""Prove hal/comms_conductor_wide.cpp's wide copy is src/func_0203ea5c.c.
+"""Compare the wide conductor with its cartridge-source body and declarations.
 
-Normalizes the wide copy back to the ROM shape -- kRecs -> 4, the two C++
-casts C does not need, the one-shot info-path warning calls, the unused-local
-silencer -- strips comments on both sides, and diffs. Any output but
-TRANSCRIPTION EXACT is a divergence to explain or fix.
-
-Run from a worktree root:  python transcription_diff.py
+Only the documented widening casts, local silencer, and exact diagnostic
+sites are normalized. Diagnostic helper token hashes pin the reviewed logging
+implementation; changing one requires a fresh review of that exception.
 """
 import difflib
+import hashlib
+import pathlib
 import re
 
-src = open('src/func_0203ea5c.c').read()
-body_src = src[src.index('void func_0203ea5c(void)'):]
 
-wide = open('port/hal/comms_conductor_wide.cpp').read()
-i = wide.index('void conductor_wide(void)')
-j = wide.index('}  // namespace', i)
-body_w = wide[i:j]
+TOKEN = re.compile(r'/\*.*?\*/|//(?:\\\r?\n|[^\n])*|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\'|[A-Za-z_]\w*|[^\s]', re.S)
+HELPER_DIGESTS = {
+    'void warn_info_mode_armed_wide(void)':
+        'f9fee24e03f69340415b7842db6cacc74c2df0a3a04d9476b27f33a806f6261c',
+    'unsigned host_ms(void)':
+        'ab54889932004774f3ef56fa9f15414e37d5ec7d20befb139e33110226eb925a',
+    'void report_bound_expiry(':
+        '9357cdb75dea41314d5e02120508f967121216b448dbe6d5a3eb45325b1be300',
+}
 
-def norm(s, is_wide):
-    out = []
-    for ln in s.splitlines():
-        t = ln.strip()
-        if is_wide:
-            if t.startswith('warn_info_mode_armed_wide'):
-                continue
-            if t == '(void)temp_r0_7;':
-                continue
-        out.append(ln)
-    s = '\n'.join(out)
-    s = re.sub(r'/\*.*?\*/', '', s, flags=re.S)
-    if is_wide:
-        s = s.replace('kRecs', '4')
-        s = s.replace('(u8 *)func_0204068c', 'func_0204068c')
-        s = s.replace('(void *)&func_0203f644, (void *)&func_0203f604',
-                      '&func_0203f644, &func_0203f604')
-        s = s.replace('void conductor_wide(void)', 'void func_0203ea5c(void)')
-    lines = [re.sub(r'\s+', ' ', l).strip() for l in s.splitlines()]
-    return [l for l in lines if l]
 
-a = norm(body_src, False)
-b = norm(body_w, True)
-d = list(difflib.unified_diff(a, b, 'src', 'wide', lineterm=''))
-if d:
-    print('\n'.join(d))
-    raise SystemExit('DIVERGED: %d diff lines' % len(d))
-print('TRANSCRIPTION EXACT after normalization: %d lines' % len(a))
+def without_comments(text):
+    return TOKEN.sub(lambda m: ''.join('\n' if c == '\n' else ' ' for c in m.group())
+                     if m.group().startswith(('/*', '//')) else m.group(), text)
 
-# And the extern declarations, verbatim -- a wrong extern type is the one
-# corruption the body diff cannot see. The only tolerated difference is the
-# record array's extent (Rec[4] -> Rec[kRecs]); the narrow-arm extern
-# (func_0203ea5c_narrow's forward decl) is the wide file's own.
+
+def function(text, prefix):
+    start = text.find(prefix)
+    if start < 0 or text.find(prefix, start + len(prefix)) >= 0:
+        raise ValueError('missing or repeated function: ' + prefix)
+    opened, depth = False, 0
+    for match in TOKEN.finditer(text, start):
+        token = match.group()
+        if token.startswith(('/*', '//')):
+            continue
+        if token == '{':
+            opened = True
+            depth += 1
+        elif token == '}':
+            depth -= 1
+            if opened and depth == 0:
+                return text[start:match.end()]
+    raise ValueError('unterminated function: ' + prefix)
+
+
+def token_digest(text):
+    tokens = [m.group() for m in TOKEN.finditer(text)
+              if not m.group().startswith(('/*', '//'))]
+    return hashlib.sha256(' '.join(tokens).encode('utf-8')).hexdigest()
+
+
+def replace_once(lines, before, after):
+    hits = [i for i in range(len(lines) - len(before) + 1)
+            if lines[i:i + len(before)] == before]
+    if len(hits) != 1:
+        raise ValueError('diagnostic site changed or moved: ' + before[0])
+    i = hits[0]
+    return lines[:i] + after + lines[i + len(before):]
+
+
+def norm(text, wide=False):
+    lines = [re.sub(r'\s+', ' ', line).strip()
+             for line in without_comments(text).splitlines()]
+    lines = [line for line in lines if line]
+    if not wide:
+        return lines
+    # The declaration, increment and surrounding game condition must agree.
+    # Removing arbitrary lines containing a diagnostic variable would also
+    # erase a changed state assignment or a new call, so no prefix rules apply.
+    lines = replace_once(lines, [
+        'const unsigned vs7_bound = (unsigned)sp4;',
+        'const unsigned vs7_t0 = host_ms();',
+        'unsigned long vs7_turns = 0, vs7_with_data = 0;',
+        'while ((sp8 == 0) && (sp4 != 0)) {',
+        '++vs7_turns;',
+    ], ['while ((sp8 == 0) && (sp4 != 0)) {'])
+    lines = replace_once(lines, [
+        'if (temp_r0_5 != 0) {', '++vs7_with_data;',
+        'data_020a0f10 = func_02040704(temp_r0_5);',
+    ], ['if (temp_r0_5 != 0) {', 'data_020a0f10 = func_02040704(temp_r0_5);'])
+    lines = replace_once(lines, [
+        'report_bound_expiry(vs7_bound, vs7_turns, vs7_with_data,',
+        'host_ms() - vs7_t0);', 'data_020a0f04 = 0;',
+    ], ['data_020a0f04 = 0;'])
+    for before, after in (
+        (['u16 temp_r1_4;', '(void)temp_r0_7;', 'if (data_02099e1c != 0) {'],
+         ['u16 temp_r1_4;', 'if (data_02099e1c != 0) {']),
+        (['if (data_020a0ef8 != 0) {', 'warn_info_mode_armed_wide();',
+          'if (data_020a0f1c & 0x4000) {'],
+         ['if (data_020a0ef8 != 0) {', 'if (data_020a0f1c & 0x4000) {']),
+        (['if (data_020a1154[0].unkC & 1) {', 'warn_info_mode_armed_wide();',
+          'if (data_020a0f10 != 0) {'],
+         ['if (data_020a1154[0].unkC & 1) {', 'if (data_020a0f10 != 0) {']),
+        (['if ((var_r6_2 != 0) && (n75 > 1U)) {', 'warn_info_mode_armed_wide();', 'spC = 1;'],
+         ['if ((var_r6_2 != 0) && (n75 > 1U)) {', 'spC = 1;']),
+    ):
+        lines = replace_once(lines, before, after)
+    result = []
+    for line in lines:
+        line = re.sub(r'\bkRecs\b', '4', line)
+        line = line.replace('(u8 *)func_0204068c', 'func_0204068c')
+        line = line.replace('(void *)&func_0203f644, (void *)&func_0203f604',
+                            '&func_0203f644, &func_0203f604')
+        line = line.replace('void conductor_wide(void)', 'void func_0203ea5c(void)')
+        result.append(line)
+    return result
+
+
 def decls(text):
     out = {}
-    for m in re.finditer(r'^extern\s+(.+?);\s*$', text, re.M):
-        dd = re.sub(r'\s+', ' ', m.group(1)).strip()
-        nm = re.search(r'(func_[0-9a-fA-F]+|data_[0-9a-fA-F]+)', dd)
-        if nm:
-            out.setdefault(nm.group(1), []).append(dd)
+    for match in re.finditer(r'^extern\s+(.+?);\s*$', without_comments(text), re.M):
+        declaration = re.sub(r'\s+', ' ', match.group(1)).strip()
+        name = re.search(r'(func_[0-9a-fA-F]+|data_[0-9a-fA-F]+)', declaration)
+        if name:
+            out.setdefault(name.group(1), []).append(declaration)
     return out
 
-da, db = decls(src), decls(wide)
-bad = 0
-for k in sorted(set(da) | set(db)):
-    if k == 'func_0203ea5c':
-        continue
-    va = da.get(k)
-    vb = [x.replace('[kRecs]', '[4]') for x in (db.get(k) or [])]
-    if va != vb:
-        print('EXTERN DIFF', k, '| src:', va, '| wide:', vb)
-        bad += 1
-if bad:
-    raise SystemExit('EXTERNS DIVERGED: %d symbols' % bad)
-print('EXTERNS EXACT: %d symbols' % len(set(da) | set(db)))
+
+def check_sources(src, wide):
+    for prefix, expected in HELPER_DIGESTS.items():
+        if token_digest(function(wide, prefix)) != expected:
+            raise ValueError('diagnostic helper changed: ' + prefix)
+    original = norm(function(src, 'void func_0203ea5c(void)'))
+    candidate = norm(function(wide, 'void conductor_wide(void)'), wide=True)
+    diff = list(difflib.unified_diff(original, candidate, 'src', 'wide', lineterm=''))
+    if diff:
+        raise ValueError('DIVERGED:\n' + '\n'.join(diff))
+    expected, actual = decls(src), decls(wide)
+    for name in sorted(set(expected) | set(actual)):
+        if name == 'func_0203ea5c':  # the wide file's narrow-arm declaration
+            continue
+        values = [value.replace('[kRecs]', '[4]') for value in actual.get(name, [])]
+        if expected.get(name) != values:
+            raise ValueError('EXTERN DIFF ' + name)
+    return {'lines': len(original), 'externs': len(set(expected) | set(actual)),
+            'diagnostic_helpers': len(HELPER_DIGESTS)}
+
+
+def main():
+    root = pathlib.Path(__file__).resolve().parents[2]
+    try:
+        result = check_sources((root / 'src/func_0203ea5c.c').read_text(),
+                               (root / 'port/hal/comms_conductor_wide.cpp').read_text())
+    except (OSError, ValueError) as exc:
+        print(str(exc))
+        return 1
+    print('TRANSCRIPTION EXACT after normalization: %d lines' % result['lines'])
+    print('EXTERNS EXACT: %d symbols' % result['externs'])
+    print('DIAGNOSTIC HELPERS PINNED: %d token hashes' % result['diagnostic_helpers'])
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
