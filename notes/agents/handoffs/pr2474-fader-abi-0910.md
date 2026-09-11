@@ -38,3 +38,15 @@ Local evidence: `build/fader-actual-tests.log`,
 producer worktree. Source base and actual PR target remain b99310a8 and
 31f31604 respectively; target composition and public publication are separate.
 The prior PORT2474-01 and PORT2474-02 findings retain their dispositions.
+
+Independent review found **PORT-FADER-03**: the qualified-call comment still
+presented a pre-repair `__thiscall` disassembly as current. The comment now dates
+that observation before the 2026-09-10 `__cdecl` repair and explains the remaining
+reason for qualification: it selects this class's int completion-result body
+even for the separate color object whose installed slot returns void. This is
+a comment-only successor; the source statements and native test inputs are
+unchanged. The reviewer additionally compiled all seven current virtual calls
+with poisoned ECX and balanced-stack checks, and checked all 673 byte addresses
+around the wipe array. The producer reran its three native tests after this
+correction. The earlier full-battery result remains pinned to db3b5efb; its
+level-22 failure is being repaired in a separate owned Chuckya task.
