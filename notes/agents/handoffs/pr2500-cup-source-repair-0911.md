@@ -71,7 +71,11 @@ Fresh `2004/b56` strict checks cover all **32 functions, 7,344 text bytes and
 143 module-qualified relocation references**, with no blind words or differences.
 All 32 isolation plans and actual whole-TU output/order policies pass. Emitted
 metadata remains **7 VERIFIED and 6 PARTIAL**, with no differing record. Production
-continues to own text only. The class size remains 0x5470.
+continues to own text only. The class size remains 0x5470. The position type
+has an explicit checked eight-byte size assertion. The header gate now checks
+25 commented fields with zero mismatches or unparsed declarations. Its first
+run reported the new nested type as unknown until that size assertion was
+added; the diagnostic and final clean result are preserved.
 
 The earlier five-header return-contract review proved 171 source objects,
 924 production slots, three separately classified unenrolled drafts and 20 TUs.

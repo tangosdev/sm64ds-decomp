@@ -72,6 +72,9 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     u8  unk_5469[0x7];    /* 0x5469 -- live bytes through 0x546d; typing pending */
 };
 
+typedef char dScMgCup_CupPosition_size_must_be_0x8[
+    sizeof(dScMgCup_c::CupPosition) == 0x8 ? 1 : -1];
+
 typedef char dScMgCup_c_size_must_be_0x5470[sizeof(dScMgCup_c) == 0x5470 ? 1 : -1];
 
 #endif
