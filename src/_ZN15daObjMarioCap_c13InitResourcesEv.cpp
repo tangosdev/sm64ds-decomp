@@ -1,6 +1,15 @@
 //cpp
 #include "types.h"
 // @symbol _ZN15daObjMarioCap_c13InitResourcesEv
+/* Byte-matches under the pinned 2004/b56, 0x4c8 for 0x4c8, relocation
+   destinations checked. It did not until the two param1 read-modify-writes
+   below were respelt, and the 8 bytes were never in the literal pool: both
+   pools are 25 words. Two extra INSTRUCTIONS in the code, at +0x37c and
+   +0x448, pushed the pool 8 bytes further from every `ldr [pc, #N]` that
+   reaches it, which is why the earlier reading of the residue put the growth
+   in the pool. config/arm9/overlays/ov002/delinks.txt still carries no
+   `complete` marker for this range, so the ROM build does not yet compile
+   this file; that is a layout question and is untouched. */
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
@@ -154,7 +163,16 @@ int daObjMarioCap_c::InitResources()
         unk_400 = 2;
         mdCcAc_c.radius = 0x32000;
         mdCcAc_c.height = 0x32000;
-        param1 -= 0xa;
+        /* Spelt plainly (`param1 = param1 - 0xa;`), both sides of this
+           assignment are the same expression, and 2004/b56 value-numbers
+           them together and materialises the address once (`add r3, r5, #8`
+           at +0x37c, then `ldr r0, [r3]` and `str r2, [r3]`), where the ROM
+           folds the offset into both accesses. A redundant cast on the read
+           side is enough to make the two sides textually different and
+           reach the folded form -- no `volatile` needed, so tools/tiers.py
+           never reads this as a codegen trick. Same residue and same lever
+           as src/_ZN4Door13InitResourcesEv.c and the second site below. */
+        param1 = (u32)param1 - 0xa;
         mType = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
@@ -198,6 +216,10 @@ int daObjMarioCap_c::InitResources()
         func_ov001_020ab228(((char *)this) + 0x3d0, ((char *)this), mModelIndex & 0xff, unk_400, v);
     }
 
-    param1 &= 0xfff;
+    /* The second materialised param1 read-modify-write, at +0x448; see the
+       first one in case 14 for the mechanism. Measured: with both casts the
+       candidate is 0x4c8 and 0 of 306 words differ; with neither it is 0x4d0,
+       and over the shared prefix 98 of 308 differ. */
+    param1 = (u32)param1 & 0xfff;
     return 1;
 }

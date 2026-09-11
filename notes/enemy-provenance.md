@@ -40,12 +40,12 @@ were dropped in favour of `mStarPos`.
 
 ---
 
-## `KingBobOmb` (`include/KingBobOmb.h`, [ov078](../config/arm9/overlays/ov078/symbols.txt))
+## `daBombking_c` (`include/daBombking_c.h`, [ov078](../config/arm9/overlays/ov078/symbols.txt))
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x420 | `void *mState` | `src/KingBobOmb_SetState.cpp` is exactly `c->pp = p; if (*c->pp) return (c->**c->pp)();` with `pp` at 0x420, and `src/_ZN10KingBobOmb8BehaviorEv.cpp` compares the same word against four [ov078](../config/arm9/overlays/ov078/symbols.txt) state tables ([data_ov078_0212703c](../config/arm9/overlays/ov078/symbols.txt), [_0212707c](../config/arm9/overlays/ov078/symbols.txt), [_021270bc](../config/arm9/overlays/ov078/symbols.txt), [_021270fc](../config/arm9/overlays/ov078/symbols.txt)) to pick its per-state path. Previously unnamed inside `pad_420`. |
-| 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the `Fix12` triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState`([data_ov078_021270bc](../config/arm9/overlays/ov078/symbols.txt)), the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. The [ov078](../config/arm9/overlays/ov078/symbols.txt) handlers read the whole triple: [func_ov078_02123d3c](../src/func_ov078_02123d3c.c) loads all three into a `Vector3`, and [func_ov078_021240a0](../src/func_ov078_021240a0.c)/[_021243c0](../src/func_ov078_021243c0.cpp) pass `&mArenaPosX` to `Vec3_Dist` and `Vec3_HorzAngle` against `mPos`. |
+| 0x420 | `StateFunction *mState` | `StateFunction` is the reconstructed `int (daBombking_c::*)()` type. `KingBobOmb_SetState` (in [`src/actors/daBombking_c.cpp`](../src/actors/daBombking_c.cpp)) stores and rereads this pointer, returns 1 if the first member pointer is null, otherwise invokes that entry on the actor and returns its result. `Behavior` invokes the second member pointer at +8 when present and discards its result, then compares the state address against four [ov078](../config/arm9/overlays/ov078/symbols.txt) tables ([data_ov078_0212703c](../config/arm9/overlays/ov078/symbols.txt), [_0212707c](../config/arm9/overlays/ov078/symbols.txt), [_021270bc](../config/arm9/overlays/ov078/symbols.txt), [_021270fc](../config/arm9/overlays/ov078/symbols.txt)) to choose per-state behavior. The int dispatcher contract preserves current codegen; it does not establish every handler's original signature. Previously unnamed inside `pad_420`. |
+| 0x4d4/0x4d8/0x4dc | `mArenaPosX/Y/Z` | `InitResources` stores the `Fix12` triple `0xb1d000 / 0x1060000 / 0xfee15000` — a fixed world point. `Behavior`'s only read is `(mArenaPosY - 0x28000) > mPosY`, which forces `SetState`([data_ov078_021270bc](../config/arm9/overlays/ov078/symbols.txt)), the same state that switches position updates to `UpdatePosWithOnlySpeed`: a "fell below the arena floor" test. The [ov078](../config/arm9/overlays/ov078/symbols.txt) handlers read the whole triple: [func_ov078_02123d3c](../src/actors/daBombking_c.cpp) loads all three into a `Vector3`, and [func_ov078_021240a0](../src/actors/daBombking_c.cpp)/[_021243c0](../src/actors/daBombking_c.cpp) pass `&mArenaPosX` to `Vec3_Dist` and `Vec3_HorzAngle` against `mPos`. |
 | 0x4e0/0x4e4/0x4e8 | `mHomePosX/Y/Z` | `InitResources` writes them from `mPosX/mPosY/mPosZ` at spawn. |
 | 0x4f8 | `mInitAngleY` | `InitResources`' `*(short*)(this + 0x400 + 0xf8) = mAngleY;`, now spelled `mInitAngleY = mAngleY;`. Previously unnamed inside `pad_4ec`. |
 | 0x4fc | `mAnimSpeed` | `Behavior`'s only read is `mBlendModelAnim.speed = mAnimSpeed << 0xc`, i.e. it is the animation speed in whole units, converted to Fix12 on the way in. `BlendModelAnim`'s `speed` is at +0x5c (`include/BlendModelAnim.h`), and 0x2cc + 0x5c = 0x328, the address the raw poke used. `InitResources` sets it to 1. |
@@ -53,20 +53,26 @@ were dropped in favour of `mStarPos`.
 | 0x507 | `mStarTracked` | `InitResources`: `mStarTracked = dActor_c::TrackStar(this, mStarID, 2);`. |
 | 0x509 | `mStarID` | `InitResources`: `mStarID = param1 & 0xf;` and it is the star id argument of `TrackStar`. |
 
-Left `unk_`:
+Additional observed fields:
 
 - **0x494** — a pointer, null-checked, and one field at `+0xc8` is tested (`Render`,
   `Behavior`). Neither body says what it points at.
-- **0x498** — set to `0x1f` in `InitResources`, never read in a matched body.
-- **0x499** — `Behavior` compares it against 1; nothing writes it in matched code.
-- **0x4a0** — `InitResources` sets it to `((rand >> 0x1e) & 1) + 1`, so 1 or 2, and no
-  matched body reads it.
-- **0x500** — `mHealth`. Set to 3 in `InitResources`; [func_ov078_021243c0](../src/func_ov078_021243c0.cpp) decrements it
+- **0x498** — initialized to `0x1f` in `InitResources`; its meaning remains unnamed.
+- **0x499** — `Behavior` compares this byte against 1. State handlers also read it
+  and write 0, 1 and 2, so it is live state rather than an unwritten field.
+- **0x4a0** — `InitResources` sets it to `((rand >> 0x1e) & 1) + 1`, so 1 or 2.
+  `func_ov078_02125350` uses it as the spawning-loop bound;
+  `func_ov078_02125448` toggles it with XOR 3 when both actor slots are empty
+  and reads it when choosing the next state.
+- **0x500** — `mHealth`. Set to 3 in `InitResources`; [func_ov078_021243c0](../src/actors/daBombking_c.cpp) decrements it
   by one in the same body that plays the stagger anim and applies the knockback speeds,
-  and then latches `+0xb0` when it reaches 0; [func_ov078_021240a0](../src/func_ov078_021240a0.c) gates the whole
+  and then latches `+0xb0` when it reaches 0; [func_ov078_021240a0](../src/actors/daBombking_c.cpp) gates the whole
   chase-the-player branch on `<= 0`. Three throws, exactly as the fight plays.
-- **0x424/0x428/0x42c/0x42d** — zeroed by a two-iteration loop in `InitResources` and
-  otherwise untouched.
+- **0x424/0x428/0x42c/0x42d** — two actor IDs and two associated byte flags,
+  initialized by a two-iteration loop. State helpers store IDs from spawned
+  actors, resolve them with `FindWithID`, read and update the flags, and clear
+  entries when their actors no longer resolve. These fields remain raw accesses
+  in the partial reconstruction.
 
 ---
 
@@ -143,18 +149,27 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 | 0x434 | `Vector3 mFirePos` | `InitResources`' tail computes it: `0xe0` along the facing angle out of the shared sin/cos table `data_02082214`, plus `0x37800` above the spawn Y. The file's own header comment already called it "where the plant's fire comes from". |
 | 0x440 | `Vector3 mSpawnPos` | `InitResources` writes `mPosX/Y/Z` into it; `Behavior` passes `&mSpawnPos` to `dCcAcPos_c::SetPosRelativeToActor`. |
 | 0x44c | `Vector3 mHomePos` | copied wholesale from `mSpawnPos` in `InitResources`; `Behavior` restores `mPosX/Y/Z` from it when `UpdateKillByInvincibleChar` returns 2 (the plant zeroes its scale and goes home). Two separate copies of the spawn point, distinguished by which one is read back into the position. |
-| 0x45c | `mClsnEnabled` | zeroed in `InitResources`; its only read in `Behavior` gates `dCc_c::Update` on all three colliders (the `Clear` calls above it are unconditional). |
+| 0x45c | `mClsnEnabled` | zeroed in `InitResources`. In `Behavior`, nonzero enables both `dCcAc_c` updates; the `dCcAcPos_c` position and update also require `mState == 2`. All three `Clear` calls are unconditional. |
 | 0x468 | `mInitAngleY` | `InitResources`: `= mPrevAngleY`. |
 
 Left `unk_`:
 
 - **0x470** — `mParticleHandle`. [func_ov084_0212f460](../src/actors/daPkn_c.cpp) stores `Particle::System::New`'s
   return in it and reads it straight back as the `slot` argument of the next call.
-- **0x45d** (set to 1), **0x460** (0), **0x464** (`0x7fffffff`), **0x46c** (0),
-  **0x474** (0) — written in `InitResources`, never read in a matched body, including
-  in the [ov084](../config/arm9/overlays/ov084/symbols.txt) handlers.
-- **0x478** — zeroed in `InitResources` and again whenever `mState` changes, alongside the
-  `dEnemyBase_c` counter at 0x100. A per-state something, but nothing reads it.
+- **0x45d** — initialized to 1; state 1 (`func_ov084_0212fa7c`) reads and
+  updates this byte around two `Sound::PlaySub` calls. Its original meaning
+  and name are unknown.
+- **0x460** — `func_ov084_0212f204` stores the result of `ClosestPlayer` and
+  rereads it for position and flag access; `func_ov084_0212f1d0` also dereferences it.
+- **0x464** — `func_ov084_0212f204` stores the distance to that player, or
+  `0x7fffffff` when no player is found. Several state handlers compare it.
+- **0x46c** — receives the selected player's byte at `+0x6de`, widened to a word;
+  state handlers use it to select distance thresholds. That byte's meaning is
+  not established here.
+- **0x474** — state 6 (`func_ov084_0212f33c`) passes this word to
+  `Particle::System::New` and stores the returned handle. Other states clear it.
+- **0x478** — initialized to zero and cleared on state changes. State 1 passes
+  it to `Sound::PlayLong` and stores the returned handle for the next call.
 
 Byte-neutral source cleanups: `&mWithMeshClsn`, `&mModelAnim`, `&mdCcAc_c1`,
 `&mdCcAcPos_c` and `&mSpawnPos` replaced the corresponding `((char*)this) + 0xNNN`
@@ -222,10 +237,10 @@ remaining `unk_` fields resolve; the header's own prose already described two of
 | 0x428 | `Vector3 mStuckCheckPos` | written from `mPosX/Y/Z` in `InitResources`; `Behavior` compares `Vec3_Dist(&mPosX, &mStuckCheckPos) < 0xa000` and, while the enemy stays inside that radius, ticks the already-named `mStuckTimer`; the moment it leaves, the timer is zeroed and this field is re-recorded from the current position. |
 | 0x44c | `mSavedParam` | last statement of `InitResources`: a copy of `param1`, taken *after* the earlier `param1 &= 0xf0ff` masking. Named for what it holds; no matched body reads it back. |
 | 0x458 | `mTimer458` | `InitResources` zeroes it; `Behavior` sets it to `0x5a` when `mStuckTimer` hits 0x1e on a capped goomba, and both the release path (`mStuckTimer >= 0x12c && mTimer458 == 0`) and the fall-through (`if (mTimer458 == 0) mStuckTimer = 0`) gate on it reaching 0. Nothing in a matched body decrements it, so "a timer" is the whole of the evidence and the offset stays in the name. |
-| 0x45a | `mInitAngleY` | `InitResources`: `= mPrevAngleY`. Same shape as `Unagi`, `MrBlizzard`, `KingBobOmb` and `PiranhaPlant`. |
+| 0x45a | `mInitAngleY` | `InitResources`: `= mPrevAngleY`. Same shape as `Unagi`, `MrBlizzard`, `daBombking_c` and `PiranhaPlant`. |
 | 0x464 | `mRewardType` | `InitResources`: `= (param1 >> 4) & 0xf`. Value 1 calls `dActor_c::TrackStar` and loads the silver-star assets; value 2 loads the silver-star assets only; anything else does neither. It selects what this goomba is worth. |
-| 0x465 | `mStarTracked` | `InitResources` presets it to -1 and, when `mRewardType == 1`, assigns `dActor_c::TrackStar(mStarID, 1)` into it. Same call and same role as `KingBobOmb`'s 0x507. |
-| 0x466 | `mStarID` | `InitResources`: `= (param1 >> 0xc) & 0xf`, and it is the star-id argument of `TrackStar`. Same as `KingBobOmb`'s 0x509. |
+| 0x465 | `mStarTracked` | `InitResources` presets it to -1 and, when `mRewardType == 1`, assigns `dActor_c::TrackStar(mStarID, 1)` into it. Same call and same role as `daBombking_c`'s 0x507. |
+| 0x466 | `mStarID` | `InitResources`: `= (param1 >> 0xc) & 0xf`, and it is the star-id argument of `TrackStar`. Same as `daBombking_c`'s 0x509. |
 
 Left `unk_`:
 

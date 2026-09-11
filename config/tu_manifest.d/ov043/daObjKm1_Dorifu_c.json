@@ -864,7 +864,7 @@
   "notes": [
     "Manually curated against include/daObjKm1_Dorifu_c.h; an inline empty destructor makes mwccarm emit the retail D1/D0 pair in order without a D2 body.",
     "daObjKm1_Dorifu_c_classInit is the adjacent fifth function: it allocates exactly sizeof(daObjKm1_Dorifu_c), constructs the inherited Model[5] and dBgW_KcMbg[5], and installs this class's vtable; the next function is the overlay initializer.",
-    "The earlier 3/4 cleanup-helper warning was stale. Fresh strict isolation gives both D0 objects the same __cxa_vec_cleanup relocations; __destroy_arr remains the sized owner at the same ROM address and is not renamed."
+    "The earlier 3/4 cleanup-helper warning was stale. Fresh strict isolation gives both D0 objects the same __cxa_vec_cleanup relocations; __cxa_vec_cleanup is now the sized owner at that ROM address: the tree's own name __destroy_arr was deleted when 0x0207328c was carved out to source, because a size-0 alias row is a link definition only while a dsd gap object owns its range."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole class TU compiled once",

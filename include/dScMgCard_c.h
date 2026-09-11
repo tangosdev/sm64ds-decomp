@@ -40,7 +40,7 @@
  * _ZTV11dScMgCard_c. Slots 16 and 17 name D1 then D0, odr-using both, so the
  * compiler emits the pair for us in cartridge order. It also removes the
  * homeless D2 entirely -- a base-object variant byte-identical to D1, with no
- * ROM address to claim and no inbound relocation. The two __destroy_arr calls
+ * ROM address to claim and no inbound relocation. The two __cxa_vec_cleanup calls
  * preserve the cartridge's callback ABI and reverse member order; the third
  * releases the typed shared state. No separate operator delete is needed --
  * dScMgBase_c, two levels up, already provides one.
@@ -51,7 +51,7 @@
 
 extern "C" int  func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
 extern "C" void func_ov006_020c1d80(void *t);
-extern "C" void __destroy_arr(void *base, int count, int stride, void *dtor);
+extern "C" void __cxa_vec_cleanup(void *base, int count, int stride, void *dtor);
 extern "C" void _ZN12dMgCardObj_cD1Ev(void *elem);
 extern "C" void _ZN17dMgDilarCardObj_cD1Ev(void *elem);
 
@@ -171,8 +171,8 @@ typedef char dMgDilarCardObj_c_size_must_be_0x30[sizeof(dMgDilarCardObj_c) == 0x
 
 struct dScMgCard_c : dScMgSingle3DBase_c {
     virtual ~dScMgCard_c() {
-        __destroy_arr(mArray2, 5, 0x30, (void *)_ZN17dMgDilarCardObj_cD1Ev);
-        __destroy_arr(mArray1, 5, 0x30, (void *)_ZN12dMgCardObj_cD1Ev);
+        __cxa_vec_cleanup(mArray2, 5, 0x30, (void *)_ZN17dMgDilarCardObj_cD1Ev);
+        __cxa_vec_cleanup(mArray1, 5, 0x30, (void *)_ZN12dMgCardObj_cD1Ev);
         func_ov006_020c1c64((char *)&mShared);
     }
 

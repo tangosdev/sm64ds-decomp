@@ -1,0 +1,266 @@
+{
+  "id": "ov043/daObjKm1_Kurumajiku_c",
+  "module": "ov043",
+  "source": "src/game/actors/d_a_obj_km1_kurumajiku.cpp",
+  "promoted_source": "src/game/actors/d_a_obj_km1_kurumajiku.cpp",
+  "status": "promoted",
+  "boundary_confidence": "high",
+  "boundary_evidence": [
+    "contiguous linker run: 0x21113fc..0x2111518, 5 function(s), derived BY ADDRESS from config/arm9/overlays/ov043/delinks.txt: the five legacy entries tile the run end-to-start with no gap (0x50 + 0x64 + 0x14 + 0x18 + 0x3c = 0x11c), bounded below by src/game/actors/d_a_obj_km1_ukishima.cpp ending at 0x021113fc and above by src/game/actors/d_a_obj_km1_kuruma.cpp beginning at 0x02111518.",
+    "class label(s): daObjKm1_Kurumajiku_c",
+    "build/tu_map.json reports only 4 for this run and orphans the factory into the anonymous @021114dc-02111518 candidate: tu_map's factory rule matches names ending _Spawn, which labels zero functions in this image, so its count is a floor. The fifth member is daObjKm1_Kurumajiku_c_classInit at 0x021114dc, the KM1_KURUMAJIKU registry profile's factory, and the profile word at ov043 0x02112368 points at exactly that address.",
+    "the factory is registry-backed rather than inferred from adjacency alone: it allocates the RTTI-proven size 0x330, constructs through dBgActor_c::C2, installs daObjKurumajiku_c's vptr and then this class's leaf vptr, and ends exactly where the next class's D1 begins.",
+    "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU)"
+  ],
+  "sections": [
+    {
+      "name": ".text",
+      "start": "0x021113fc",
+      "end": "0x02111518"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "_ZN21daObjKm1_Kurumajiku_cD1Ev",
+      "address": "0x021113fc",
+      "size": "0x00000050",
+      "legacy_source": "src/_ZN11RickshawBdwD1Ev.cpp",
+      "ordinal": 0
+    },
+    {
+      "symbol": "_ZN21daObjKm1_Kurumajiku_cD0Ev",
+      "address": "0x0211144c",
+      "size": "0x00000064",
+      "legacy_source": "src/_ZN11RickshawBdwD0Ev.cpp",
+      "ordinal": 1
+    },
+    {
+      "symbol": "_ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv",
+      "address": "0x021114b0",
+      "size": "0x00000014",
+      "legacy_source": "src/_ZN11RickshawBdw16CleanupResourcesEv.cpp",
+      "ordinal": 2
+    },
+    {
+      "symbol": "_ZN21daObjKm1_Kurumajiku_c13InitResourcesEv",
+      "address": "0x021114c4",
+      "size": "0x00000018",
+      "legacy_source": "src/_ZN11RickshawBdw13InitResourcesEv.cpp",
+      "ordinal": 3
+    },
+    {
+      "symbol": "daObjKm1_Kurumajiku_c_classInit",
+      "address": "0x021114dc",
+      "size": "0x0000003c",
+      "legacy_source": "src/d_a_obj_km1_kurumajiku.c",
+      "ordinal": 4
+    }
+  ],
+  "data": [],
+  "bss": [],
+  "notes": [
+    "Hand-assembled rather than generated: src/d_a_obj_km1_kurumajiku.c wraps its body in an extern \"C\" block, which tubuild create refuses to split.",
+    "FOLD 2026-09-07. daObjKm1_Kurumajiku_c_classInit at 0x021114dc (historical alias RickshawBdw_Spawn) was folded in from src/d_a_obj_km1_kurumajiku.c. Folding it is also what frees the d_a_obj_km1_kurumajiku stem that tools/layout_check.py L2 checks tree-wide.",
+    "RENAME. The four class members and the vtable carried the coined spelling RickshawBdw in config/arm9/overlays/ov043/symbols.txt; they were renamed in place to the ROM's own daObjKm1_Kurumajiku_c, which _ZTS at 0x02112350 spells out. No alias or bounding row was added. src/_ZN17daObjKurumajiku_cD1Ev.cpp is a DIFFERENT class: daObjKurumajiku_c is this class's BASE, it lives in ov002 at 0x020b6a3c, and it is not part of this fold.",
+    "The three-word resource descriptor at 0x02112344 remains ROM-owned data, declared and not defined here: this entry claims .text only.",
+    "No static initializer is claimed: ov043's four sinits are module-wide and do not narrow an owner to this class TU.",
+    "Route is text-only. ov043's .data is unclaimed across 0x02112338..0x0211240c -- no delinks entry covers this class's RTTI, profile or vtable -- so an intact-object claim would have to carve that band out first, and the same band carries three vtable-interior phantom rows (data_ov043_021123e4/021123f4/02112404). Both landed ov043 siblings took text-only for the same reason.",
+    "The two-level inline constructor and destructor chain emits homeless _ZN17daObjKurumajiku_cD2Ev and _ZN10dBgActor_cD2Ev helpers. Exact compiler-only policy removes them before linking, the same disposition the adjacent ov043/daObjKm1_Kuruma_c entry records for its own pair."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN17daObjKurumajiku_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70",
+      "reason": "Vague-linkage typeinfo record for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086d70, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60",
+      "reason": "Vague-linkage type-name string for the inherited base fBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e60, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e78, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54",
+      "reason": "Vague-linkage type-name string for the inherited base dBase_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x02086e54, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390",
+      "reason": "Vague-linkage typeinfo record for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e390, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384",
+      "reason": "Vague-linkage type-name string for the inherited base dActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at arm9:0x0208e384, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021089ec",
+      "reason": "Vague-linkage typeinfo record for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x021089ec, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS10dBgActor_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02108a04",
+      "reason": "Vague-linkage type-name string for the inherited base dBgActor_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02108a04, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI17daObjKurumajiku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x021092f8",
+      "reason": "Vague-linkage typeinfo record for the inherited base daObjKurumajiku_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x021092f8, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTS17daObjKurumajiku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov002",
+      "canonical_address": "0x02109304",
+      "reason": "Vague-linkage type-name string for the inherited base daObjKurumajiku_c, re-emitted by every TU that names the derived class's RTTI. The cartridge's own copy lives at ov002:0x02109304, outside every range this entry claims, so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them."
+    },
+    {
+      "symbol": "_ZTI21daObjKm1_Kurumajiku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov043",
+      "canonical_address": "0x02112338",
+      "reason": "This class's own typeinfo record, vague-linkage and re-emitted by every TU that names its RTTI. The cartridge's own copy lives at ov043:0x02112338 -- inside this module's .data but OUTSIDE the 0x021113fc..0x02111518 .text run this entry claims -- so dsd delinks it from the image whatever this object does; rombuild proves this copy's relocation-resolved words against those cartridge bytes before isolation discards them. MEASURED in extracted/overlays/overlay_0043.bin (ov043 base 0x021111a0): the three words there are 0x0209a764 (__si_class_type_info's vtable+8), 0x02112350 (its _ZTS) and 0x021092f8 (_ZTI17daObjKurumajiku_c), so the cartridge itself states the direct base is daObjKurumajiku_c, exactly as the header declares."
+    },
+    {
+      "symbol": "_ZTS21daObjKm1_Kurumajiku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov043",
+      "canonical_address": "0x02112350",
+      "reason": "This class's own type-name string, vague-linkage and re-emitted by every TU that names its RTTI. The cartridge's own copy lives at ov043:0x02112350, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does. MEASURED in extracted/overlays/overlay_0043.bin: the 24 bytes at 0x02112350 are the NUL-terminated '21daObjKm1_Kurumajiku_c' -- the ROM's own length-prefixed spelling of this class's name, not a coined one -- and _ZTI21daObjKm1_Kurumajiku_c's middle word points at exactly that address. This is where the promotion's class name comes from; the tree's RickshawBdw was coined and has no cartridge attestation."
+    },
+    {
+      "symbol": "g_profile_KM1_KURUMAJIKU",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov043",
+      "canonical_address": "0x02112368",
+      "reason": "Typed 0x1c actor profile emitted beside the class initializer. Its cartridge copy at ov043:0x02112368 is outside the .text run this entry claims. MEASURED: the seven words are 0x021114dc (this TU's classInit), 0x00b20089 (profile ID 0x0089 in the low half, group flags 0x00b2 in the high half), 0x00000002, 0, 0x00300000, 0x01000000, 0. romdata_check verifies its classInit relocation and every descriptor word against the registry-backed cartridge object before production isolation discards the duplicate."
+    },
+    {
+      "symbol": "_ZTV21daObjKm1_Kurumajiku_c",
+      "disposition": "deadstrip-data",
+      "canonical_module": "ov043",
+      "canonical_address": "0x0211238c",
+      "reason": "This class's own vtable, vague-linkage and emitted here because the inline destructor makes every TU that names the class a candidate emitter. The cartridge's own copy lives at ov043:0x0211238c, outside the .text run this entry claims, so dsd delinks it from the image whatever this object does. MEASURED in extracted/overlays/overlay_0043.bin: symbols.txt's 0x0211238c IS the address point -- 0x02112384 is the offset-to-top word 0 and 0x02112388 is 0x02112338 (&_ZTI21daObjKm1_Kurumajiku_c) -- which is why the object's own 0x88-byte symbol starts eight bytes lower and the factory spells the leaf store &_ZTV[2]. Slot 0 at 0x0211238c is 0x021114c4 (InitResources) and slot 3 at 0x02112398 is 0x021114b0 (CleanupResources); slots 16 and 17 at 0x021123cc/0x021123d0 are 0x021113fc/0x0211144c (D1 then D0). Slots 6 and 9 at 0x021123a4/0x021123b0 hold 0x020b6b38 and 0x020b6b10 -- daObjKurumajiku_c's own ov002 Behavior and Render -- so they are inherited, not overridden here, and the table ends after 32 slots at 0x0211240c where _ZTI17daObjKm1_Kuruma_c begins."
+    }
+  ],
+  "verification": {
+    "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+    "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+    "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+    "object": "build/tu/ov043-daObjKm1_Kurumajiku_c/d_a_obj_km1_kurumajiku.o (gitignored)",
+    "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+    "functions_matched": 5,
+    "functions_declared": 5,
+    "compilerOnlyOutput": {
+      "requested": [
+        "_ZN17daObjKurumajiku_cD2Ev",
+        "_ZN10dBgActor_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
+        "_ZN17daObjKurumajiku_cD2Ev"
+      ],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        37,
+        38,
+        39,
+        40
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7fBase_c",
+        "_ZTI7dBase_c",
+        "_ZTS7dBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS8dActor_c",
+        "_ZTI10dBgActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTI17daObjKurumajiku_c",
+        "_ZTS17daObjKurumajiku_c",
+        "_ZTI21daObjKm1_Kurumajiku_c",
+        "_ZTS21daObjKm1_Kurumajiku_c",
+        "g_profile_KM1_KURUMAJIKU",
+        "_ZTV21daObjKm1_Kurumajiku_c"
+      ],
+      "dataExternalized": [
+        "_ZTI10dBgActor_c",
+        "_ZTI17daObjKurumajiku_c",
+        "_ZTI21daObjKm1_Kurumajiku_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS10dBgActor_c",
+        "_ZTS17daObjKurumajiku_c",
+        "_ZTS21daObjKm1_Kurumajiku_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV21daObjKm1_Kurumajiku_c",
+        "g_profile_KM1_KURUMAJIKU"
+      ]
+    },
+    "criteria": {
+      "every_declared_function_defined": "PASS",
+      "every_declared_function_bytes_match": "PASS",
+      "declared_function_set_equals_defined_function_set": "PASS",
+      "functions_occur_in_expected_order": "PASS",
+      "relocation_destinations_verified": "PASS"
+    }
+  }
+}

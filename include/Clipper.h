@@ -13,7 +13,7 @@ extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 #endif
 
 /* Same 0xc coordinate layout as Vector3, but deliberately POD. A Vector3[4]
- * member makes mwccarm emit __destroy_arr in Clipper's D1/D0; the cartridge's
+ * member makes mwccarm emit __cxa_vec_cleanup in Clipper's D1/D0; the cartridge's
  * trivial destructors prove these plane records have no element destructor. */
 struct ClipperPlane {
     Fix12i x, y, z;

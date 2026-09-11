@@ -22,7 +22,7 @@
  * very slot and recurse.
  *
  * WAS A C99 FILE. Its three declarations are gone rather than moved: decl_common.h
- * already declares __destroy_arr and NullDestructor_0203d47c with C linkage, and
+ * already declares __cxa_vec_cleanup and NullDestructor_0203d47c with C linkage, and
  * the base chain is a real call now. The pragma is load-bearing, not tidying. */
 #pragma opt_strength_reduction off
 
@@ -147,8 +147,8 @@ void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess)
         if (p != 0) {
             if (p != 0) {
                 *p = (int)_ZTV19cMgSmartball_slot_c;
-                __destroy_arr((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
-                __destroy_arr((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
+                __cxa_vec_cleanup((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
+                __cxa_vec_cleanup((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
                 *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }

@@ -760,3 +760,138 @@ class InlineMethodBodyTests(unittest.TestCase):
         rc, out = self._run(broken)
         self.assertEqual(rc, 1, out)
         self.assertIn("2 commented fields, 1 mismatched, 0 unparsed", out)
+
+
+# ------------------------- allocation methods do not occupy or end instance fields
+
+class AllocationMethodTests(unittest.TestCase):
+    def _run(self, members):
+        with tempfile.TemporaryDirectory(prefix="offset_opnew_") as tmp:
+            header = pathlib.Path(tmp) / "Widget.h"
+            header.write_text("struct Widget {\n" + members + "\n};\n",
+                              encoding="utf-8")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                rc = C.main([str(header)])
+            return rc, out.getvalue()
+
+    def _assert_checked(self, method):
+        rc, out = self._run(
+            "    u32 first; /* 0x000 */\n" + method +
+            "\n    u32 second; /* 0x004 */\n    u16 third; /* 0x008 */")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("3 commented fields, 0 mismatched, 0 unparsed, struct spans 0xa", out)
+
+    def test_allocation_declarations_do_not_end_the_field_walk(self):
+        for method in (
+            "    static void *operator new(unsigned long size);",
+            "    void* operator new(unsigned long);",
+            "    static void *operator new[](unsigned long size);",
+        ):
+            with self.subTest(method=method):
+                self._assert_checked(method)
+
+    def test_inline_allocation_bodies_do_not_end_the_field_walk(self):
+        for method in (
+            "    static void *operator new(unsigned long size) { return Alloc(size); }",
+            "    static void *operator new(unsigned long size) {\n"
+            "        if (size) { return Alloc(size); }\n        return 0;\n    }",
+            "    static void *operator new(unsigned long size)\n"
+            "    {\n        return Alloc(size);\n    }",
+        ):
+            with self.subTest(method=method):
+                self._assert_checked(method)
+
+    def test_braces_in_comments_and_strings_do_not_consume_fields(self):
+        self._assert_checked(
+            "    static void *operator new(unsigned long size) { // }\n"
+            "        /* { } { */\n"
+            '        const char *text = "}";\n'
+            "        return Alloc(size);\n    }")
+
+    def test_an_allocator_before_fields_adds_no_vptr_or_storage(self):
+        rc, out = self._run(
+            "    static void *operator new(unsigned long size) {\n"
+            "        return Alloc(size);\n    }\n"
+            "    u32 first; /* 0x000 */\n    u8 tail; /* 0x004 */")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("2 commented fields, 0 mismatched, 0 unparsed, struct spans 0x5", out)
+
+    def test_a_wrong_offset_on_either_side_still_fails(self):
+        for first, second in (("0x004", "0x004"), ("0x000", "0x008")):
+            with self.subTest(first=first, second=second):
+                rc, out = self._run(
+                    f"    u32 first; /* {first} */\n"
+                    "    static void *operator new(unsigned long size) { return Alloc(size); }\n"
+                    f"    u32 second; /* {second} */")
+                self.assertEqual(rc, 1, out)
+                self.assertIn("2 commented fields, 1 mismatched, 0 unparsed", out)
+
+    def test_unknown_and_malformed_fields_are_not_hidden(self):
+        for field in ("UnknownType mystery;", "u32 mystery[UNKNOWN_BOUND];"):
+            for before in (True, False):
+                with self.subTest(field=field, before=before):
+                    method = "    static void *operator new(unsigned long size) { return Alloc(size); }"
+                    members = field + "\n" + method if before else method + "\n" + field
+                    rc, out = self._run(members + "\n    u32 tail; /* 0x004 */")
+                    self.assertEqual(rc, 1, out)
+                    self.assertIn("UNPARSED", out)
+                    self.assertIn(field, out)
+
+    def test_a_missing_body_does_not_hide_the_following_field(self):
+        rc, out = self._run(
+            "    static void *operator new(unsigned long size)\n"
+            "    u32 first; /* 0x000 */")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("1 commented fields, 0 mismatched, 1 unparsed", out)
+        self.assertIn("operator new", out)
+
+    def test_an_incomplete_signature_is_not_an_allocation_method(self):
+        rc, out = self._run(
+            "    static void *operator new(unsigned long size;\n"
+            "    u32 first; /* 0x000 */")
+        self.assertEqual(rc, 1, out)
+        self.assertIn("UNPARSED", out)
+        self.assertIn("operator new", out)
+
+    def test_a_similarly_named_pointer_is_still_a_field(self):
+        rc, out = self._run(
+            "    void *operator_new; /* 0x000 */\n"
+            "    u32 tail; /* 0x004 */")
+        self.assertEqual(rc, 0, out)
+        self.assertIn("2 commented fields, 0 mismatched, 0 unparsed, struct spans 0x8", out)
+
+    def test_the_neighboring_inline_accessor_also_preserves_fields(self):
+        self._assert_checked(
+            "    static void *operator new(unsigned long size) { return Alloc(size); }\n"
+            "    const Vector3 &Pos() const {\n"
+            "        return *reinterpret_cast<const Vector3 *>(&mPosX);\n    }")
+
+    def test_a_named_allman_method_also_preserves_fields(self):
+        self._assert_checked(
+            "    int Value() const\n    {\n        return 0;\n    }")
+
+    def test_unknown_and_malformed_fields_cannot_complete_a_missing_body(self):
+        for field in ("UnknownType mystery;", "u32 mystery[UNKNOWN_BOUND];"):
+            with self.subTest(field=field):
+                rc, out = self._run(
+                    "    static void *operator new(unsigned long size)\n" + field)
+                self.assertEqual(rc, 1, out)
+                self.assertIn("2 unparsed", out)
+                self.assertIn("operator new", out)
+                self.assertIn(field, out)
+
+    def test_an_allman_allocator_can_split_the_semicolon_only(self):
+        self._assert_checked("    static void *operator new(unsigned long size)\n    ;")
+
+    def test_a_signature_without_body_at_end_of_file_is_not_a_pass(self):
+        with tempfile.TemporaryDirectory(prefix="offset_opnew_") as tmp:
+            header = pathlib.Path(tmp) / "Widget.h"
+            header.write_text(
+                "struct Widget {\n    static void *operator new(unsigned long size)\n",
+                encoding="utf-8")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                rc = C.main([str(header)])
+            self.assertEqual(rc, 1, out.getvalue())
+            self.assertIn("1 unparsed", out.getvalue())

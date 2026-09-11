@@ -8,6 +8,11 @@ GitHub issues can supply the human task identity (`issue-2400`) and discussion;
 the queue records exact ownership, resources, input commits and handoffs. No
 realtime messaging service is needed: agents poll `next` and `list` between tasks.
 
+The [source-review upgrade](SOURCE-REVIEW-CUTOVER.md) adds state schema 3 while
+keeping v2 commands and receipt schema 2. It is explicitly activated by the fleet
+coordinator after checkpointing/upgrading clients. Original task workflow pins,
+leases, outputs and history are preserved; old clients reject the upgraded state.
+
 ## Cutover boundary
 
 **Do not run v1 and v2 agents concurrently.** Before initialization, stop or upgrade
@@ -204,6 +209,35 @@ That object must include `"verdict": "pass"` and `"tested_commit": "FULL_INPUT_S
 It can also hold gate commands, tested source/base SHAs and
 links to reports. Evidence is retained in state; the queue does not certify its
 truth or replace the independent private validator.
+
+After source-review activation, source-affecting verify stages additionally
+require the populated `source_review` from the verification template, an exact
+`tested_base`, `reviewer_session` equal to the lease holder, and `workflow_commit`
+equal to the active review-policy pin. Every source write must lead to independent
+verification. Integrator claims reject an older byte-only predecessor pass.
+
+For continuations, `predecessor_tasks` lists existing task IDs. Enqueue retains
+their findings and contributing sessions as immutable inherited context. Optional
+`producer_sessions` supplies additional known authors of adopted source; do not
+omit an earlier writer merely because a different session last touched the branch.
+No contributing writer may verify their own work after another writer intervenes.
+
+An integrator records `composition_commit`, `composition_base`, and
+`composition_review_task` for a changed composition. That task must inherit the
+original task and publish its own independent verify output for the composition.
+It reserves its report artifact, with source files declared as read-only
+`requires`; it does not acquire the existing source reservation. The composition
+must preserve the accepted source and declared base as ancestors.
+
+Refresh the external check after a review decision:
+
+```powershell
+gh workflow run source-review.yml --repo tangosdev/sm64ds-decomp -f pr=2447
+python tools/check_pr_source_review.py --pr 2447
+```
+
+Use the actual PR number. The second command reads current state and exits
+nonzero on missing/stale review; it does not publish or merge anything.
 
 ### Failed verification and additional dependencies
 

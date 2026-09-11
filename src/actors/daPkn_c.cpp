@@ -1,103 +1,26 @@
 //cpp
-/* ==========================================================================
- * daPkn_c -- the piranha plant, ov084 0x0212eaf0..0x02130174.
+/* daPkn_c (PAKUN), ov084 0x0212eaf0..0x02130174.
  *
- * THE NAME IS THE CARTRIDGE'S OWN.  ov084 0x02130bec holds the bytes
- * "7daPkn_c\0" -- the length-prefixed mangled type name -- _ZTI7daPkn_c at
- * 0x02130bf8 points its +4 word back at that string, and the vtable's -4
- * header word at 0x02130c24 points back at the _ZTI.  The class was carried
- * here under the coined name PiranhaPlant, which occurs in none of the 106
- * extracted images; that spelling is gone.  The reconstructed factory
- * daPkn_c_classInit (historical alias PiranhaPlant_Spawn) builds it for the
- * PAKUN registry profile at 0x02130c04, whose id is 0xfa.
+ * The cartridge RTTI names daPkn_c: the string at 0x02130bec is referenced
+ * by typeinfo at 0x02130bf8 and the vtable header at 0x02130c24. The base is
+ * dEnemyBase_c. The 31 vtable slots end at 0x02130ca4, followed by seven zero
+ * words; the end of .data alone does not establish that extent.
  *
- * BASE: dEnemyBase_c, proven by the destructor at 0x0212eaf0 -- it stores this
- * class's vtable, destroys six member subobjects in reverse declaration order,
- * and tails into _ZN12dEnemyBase_cD2Ev.  Chain:
- * daPkn_c -> dEnemyBase_c -> dActor_c -> dBase_c -> fBase_c.  The vtable is 31
- * words, which is dEnemyBase_c's length exactly: this class adds no new
- * virtuals, it only overrides eight of the inherited slots, and all eight sit
- * inside this text run.
+ * This TU owns 24 text functions, including the PAKUN factory. Class metadata
+ * is compiler-only output; the canonical data remains supplied by the ROM.
+ * Definitions run in reverse address order for mwccarm 2004/b56. The inline
+ * destructor in the header emits the required D1/D0 pair below those bodies.
  *
- * VTABLE EXTENT.  The 31 slots end at 0x02130ca4; seven zero words follow
- * before .data ends at 0x02130cc0.  The section boundary alone therefore
- * does not bound the table.  The dossier records the base-class slot count,
- * the matching inherited final slot and the neighbouring tables that support
- * this extent.  Text-only production leaves the canonical table ROM-supplied.
+ * Behavior dispatches the nine PMFs initialized separately at 0x02130e80.
+ * Their address-derived symbols and remaining ABI bridges are reconstruction
+ * work tracked in issue #2473. Renaming a target also requires updating the
+ * module's symbol map. The current decl_common.h declarations conflict with
+ * several local helper signatures, so this TU includes the narrower headers.
  *
- * ROUTE: TEXT-ONLY.  ov084 delinks no .data at all -- every entry in
- * config/arm9/overlays/ov084/delinks.txt is a .text range -- so this TU
- * contributes code and nothing else.  It still COMPILES a vtable and an RTTI
- * group, because the key function lives here (see below); those sections are
- * licensed as compiler_only_output with disposition deadstrip-data in
- * config/tu_manifest.d/ov084/daPkn_c.json and are dropped at link time.  The
- * cartridge's own copies stay ROM-supplied.
- *
- * THE DESTRUCTOR IS INLINE, AND THAT IS MEASURED.  The cartridge has D1 at
- * 0x0212eaf0 BELOW D0 at 0x0212eb48 and carries no D2 anywhere.  That is what
- * mwccarm 2004/b56 emits for an inline in-class destructor; the out-of-line
- * form emits D2/D0/D1, in the wrong order and with a homeless D2.  So
- * include/daPkn_c.h carries the empty in-class body and this file writes no
- * destructor at all: both ROM bodies are compiler output from the typed member
- * list.  With the destructor inline, daPkn_c::OnAimedAtWithEgg becomes the
- * first out-of-line virtual the class declares -- the key function -- so this
- * TU is where the compiler puts _ZTV7daPkn_c, _ZTI7daPkn_c and _ZTS7daPkn_c.
- *
- * FUNCTION ORDER IS THE REVERSE OF THE ROM'S.  mwccarm emits one .text section
- * per function in the reverse of source order, so the highest-address ROM
- * function (daPkn_c_classInit, 0x02130110) is written FIRST here and the
- * lowest (func_ov084_0212ebb4) LAST.  The two destructor bodies are compiler
- * output and land below everything written, which is where the ROM has them.
- * Do not reorder.
- *
- * THE STATE MACHINE.  mState (+0x458) selects one of nine bodies through the
- * pointer-to-member table __sinit_ov084_02130654 builds into .bss at
- * 0x02130e80.  daPkn_c::Behavior dispatches it.  Those nine .data records are
- * resolved BY SYMBOL NAME by dsd, not by address, so the free functions they
- * name keep their func_ov084_* spellings: renaming one is a same-commit edit
- * to config/arm9/overlays/ov084/symbols.txt, and a mangled TU sitting beside a
- * stale name there links every one of those words as 0.  Naming them is the
- * next improvement and is deliberately not attempted here.
- *
- * DECLARATIONS.  Namespace-scope declarations name the remaining external
- * entry points.  The extern "C" blocks preserve their reconstructed linker
- * spellings; they do not create separate scopes or permit conflicting views
- * of the same function.  Calls use the real class declarations where the
- * measured form reproduces the ROM.
- *
- * include/decl_common.h is deliberately NOT included.  It declares five of this
- * TU's own members with signatures that contradict the definitions here
- * (func_ov084_0212ef00 as void where it returns int, func_ov084_0212ec60 over
- * void* where the body works a char*), and it restates _ZTV7daPkn_c, which
- * include/daPkn_c.h now owns.  The decl_* headers this file does include carry
- * nothing this file redefines.
- *
- * Assembled from these 24 legacy one-function sources (ROM address order):
- *   [0]  0x0212eaf0  _ZN7daPkn_cD1Ev.cpp                 -> compiler output
- *   [1]  0x0212eb48  _ZN7daPkn_cD0Ev.cpp                 -> compiler output
- *   [2]  0x0212ebb4  func_ov084_0212ebb4.c
- *   [3]  0x0212ec04  func_ov084_0212ec04.c
- *   [4]  0x0212ec58  _ZN7daPkn_c16OnAimedAtWithEggEv.cpp
- *   [5]  0x0212ec60  func_ov084_0212ec60.c
- *   [6]  0x0212ef00  func_ov084_0212ef00.c
- *   [7]  0x0212f1d0  func_ov084_0212f1d0.c
- *   [8]  0x0212f204  func_ov084_0212f204.c
- *   [9]  0x0212f298  func_ov084_0212f298.c
- *   [10] 0x0212f2dc  func_ov084_0212f2dc.c
- *   [11] 0x0212f33c  func_ov084_0212f33c.cpp
- *   [12] 0x0212f460  func_ov084_0212f460.cpp
- *   [13] 0x0212f588  func_ov084_0212f588.cpp
- *   [14] 0x0212f630  func_ov084_0212f630.cpp
- *   [15] 0x0212f6d8  func_ov084_0212f6d8.c
- *   [16] 0x0212fa7c  func_ov084_0212fa7c.c
- *   [17] 0x0212fc10  func_ov084_0212fc10.c
- *   [18] 0x0212fc84  _ZN7daPkn_c16CleanupResourcesEv.cpp
- *   [19] 0x0212fcd8  _ZN7daPkn_c16OnPendingDestroyEv.cpp
- *   [20] 0x0212fcdc  _ZN7daPkn_c6RenderEv.cpp
- *   [21] 0x0212fd4c  _ZN7daPkn_c8BehaviorEv.cpp
- *   [22] 0x0212feb4  _ZN7daPkn_c13InitResourcesEv.cpp
- *   [23] 0x02130110  d_a_pkn.c                            (daPkn_c_classInit)
- * ======================================================================== */
+ * Boundary, layout and compiler experiments are recorded in
+ * notes/data/class-facts/daPkn_c.json and
+ * notes/agents/handoffs/pr-2450-source-review-fixes.md.
+ */
 
 #include "daPkn_c.h"
 #include "types.h"
@@ -135,14 +58,10 @@ typedef void (daPkn_c::*PknStatePMF)();
 
 #define AT(p, off) ((void *)(int)((char *)(p) + (off)))
 
-/* --------------------------------------------------------------------------
- * The one file-scope extern "C" region.  Everything here is reached from a
- * C++-named member, which cannot declare it in its own body.
- * ------------------------------------------------------------------------ */
+/* C-linkage declarations for the remaining raw entry points and shared data. */
 extern "C" {
 
-/* -- this TU's own members, forward-declared because mwcc lays .text down in
-      reverse source order and every one of these calls is a forward reference. */
+/* Local helper declarations. */
 void  func_ov084_0212ebb4(void *c);
 void  func_ov084_0212ec60(char *c);
 int   func_ov084_0212ef00(char *self);
@@ -211,11 +130,9 @@ int   _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 b, u32 c, void *pos, u32
 /* ==========================================================================
  * ROM ordinal 23 -- daPkn_c_classInit, 0x02130110, size 0x64.
  *
- * NOT counted by the promotion queue's shard_count, which segments on symbol
- * NAME and does not recognise `daPkn_c_classInit` as a member of this class
- * (issue #2436).  It is one: it is the only code that builds a daPkn_c, its
- * allocation size 0x47c IS this class's sizeof, and it stores this class's
- * vptr.
+ * The pre-fold queue omitted this factory from its 23-function run. It
+ * belongs to the 24-function promotion: it allocates sizeof(daPkn_c), 0x47c,
+ * and installs this class's vptr. The current queue counts one promoted TU.
  *
  * The store is `_ZTV7daPkn_c + 2`.  config/arm9/overlays/ov084/symbols.txt binds
  * _ZTV7daPkn_c to the public ADDRESS POINT at 0x02130c28; mwcc's own emitted
@@ -257,8 +174,7 @@ int *daPkn_c_classInit(void)
 /* ROM ordinal 22 -- _ZN7daPkn_c13InitResourcesEv, 0x0212feb4, size 0x25c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method
- *
+/*
  * This was still `extern "C" int _ZN7daPkn_c13InitResourcesEv(char* c)`
  * working raw offsets -- a file renamed .cpp without ever being migrated. It is
  * a real method now, with the remaining copy seam measured below.
@@ -339,8 +255,6 @@ int daPkn_c::InitResources()
 /* ROM ordinal 21 -- _ZN7daPkn_c8BehaviorEv, 0x0212fd4c, size 0x168 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-/* recovered: named members + shared header, real C++ method */
 int daPkn_c::Behavior()
 {
     int r;
@@ -398,8 +312,7 @@ int daPkn_c::Behavior()
 /* ROM ordinal 20 -- _ZN7daPkn_c6RenderEv, 0x0212fcdc, size 0x70 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c6RenderEv
-/* recovered: named members + shared header, real C++ method
- *
+/*
  * The six-slot `struct Obj` this file used to cast both models to was their own
  * vtable, and the slot it called is Render -- ModelAnim's for the plant, Model's
  * for the pipe it sits in.
@@ -422,8 +335,7 @@ int daPkn_c::Render()
 /* ROM ordinal 19 -- _ZN7daPkn_c16OnPendingDestroyEv, 0x0212fcd8, size 0x4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16OnPendingDestroyEv
-/* recovered: shared header, real C++ method
- *
+/*
  * fBase_c slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
 void daPkn_c::OnPendingDestroy()
@@ -434,7 +346,6 @@ void daPkn_c::OnPendingDestroy()
 /* ROM ordinal 18 -- _ZN7daPkn_c16CleanupResourcesEv, 0x0212fc84, size 0x54 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16CleanupResourcesEv
-/* recovered: named members + shared header, real C++ method */
 int daPkn_c::CleanupResources()
 {
   int i;
@@ -451,7 +362,7 @@ int daPkn_c::CleanupResources()
 /* ROM ordinal 17 -- func_ov084_0212fc10, 0x0212fc10, size 0x74 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212fc10
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212fc10(char *c)
 {
     *(int *)(c + 0x80) = 0x1000;
@@ -473,7 +384,7 @@ void func_ov084_0212fc10(char *c)
 /* daPkn state 1: the PMF record at ov084:0x02130ba4 targets this body.
    The former FirePiranhaPlantBig_Kill / daFPkn_c::Kill comments were a
    misattribution: this is not a vtable slot.  Its original name is unknown. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212fa7c(char *c) {
     *(unsigned char *)(c + 0x45c) = 1;
     if (_ZN9Animation8FinishedEv(c + 0x160) || _ZNK9Animation12WillHitFrameEi(c + 0x160, 0)) {
@@ -506,9 +417,7 @@ void func_ov084_0212fa7c(char *c) {
 /* ROM ordinal 15 -- func_ov084_0212f6d8, 0x0212f6d8, size 0x3a4 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f6d8
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212f6d8(char *c)
 {
     void *actor;
@@ -733,7 +642,6 @@ void func_ov084_0212f460(void *self)
 /* ROM ordinal 11 -- func_ov084_0212f33c, 0x0212f33c, size 0x124 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f33c
-/* recovered: shared common types */
 void func_ov084_0212f33c(void *self)
 {
     char *c = (char*)self;
@@ -777,7 +685,7 @@ void func_ov084_0212f33c(void *self)
 /* ROM ordinal 10 -- func_ov084_0212f2dc, 0x0212f2dc, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f2dc
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212f2dc(daPkn_c *c){
     c->mClsnEnabled = 0;
     if (c->unk_464 <= 0x4b0000) return;
@@ -794,7 +702,7 @@ void func_ov084_0212f2dc(daPkn_c *c){
 // @symbol func_ov084_0212f298
 /* State 8 is reached through the void PMF table and has no result consumer.
    The previous int declaration fell through when this body became C++. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212f298(daPkn_c *c)
 {
     int v;
@@ -821,8 +729,7 @@ void func_ov084_0212f298(daPkn_c *c)
 /* ROM ordinal 8 -- func_ov084_0212f204, 0x0212f204, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f204
-/* recovered: shared common types */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212f204(char* r4){
   struct Vector3 v;
   *(char**)(r4 + 0x460) = _ZN8dActor_c13ClosestPlayerEv();
@@ -848,7 +755,7 @@ void func_ov084_0212f204(char* r4){
 /* ROM ordinal 7 -- func_ov084_0212f1d0, 0x0212f1d0, size 0x34 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f1d0
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 int func_ov084_0212f1d0(char *c) {
     char *p = *(char**)(c + 0x460);
     if (p == 0) return 0;
@@ -861,7 +768,7 @@ int func_ov084_0212f1d0(char *c) {
 /* ROM ordinal 6 -- func_ov084_0212ef00, 0x0212ef00, size 0x2d0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ef00
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 int func_ov084_0212ef00(char* self)
 {
     void *actor;
@@ -989,7 +896,7 @@ fail:
 /* ROM ordinal 5 -- func_ov084_0212ec60, 0x0212ec60, size 0x2a0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ec60
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212ec60(char* c)
 {
     volatile s16 ang[3];
@@ -1058,8 +965,6 @@ void func_ov084_0212ec60(char* c)
 /* ROM ordinal 4 -- _ZN7daPkn_c16OnAimedAtWithEggEv, 0x0212ec58, size 0x8 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16OnAimedAtWithEggEv
-// recovered name: PiranhaPlant_OnAimedAtWithEgg
-/* recovered: renamed to Class_Method */
 /* daPkn_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 s32 daPkn_c::OnAimedAtWithEgg() {
     return 286720;
@@ -1069,7 +974,7 @@ s32 daPkn_c::OnAimedAtWithEgg() {
 /* ROM ordinal 3 -- func_ov084_0212ec04, 0x0212ec04, size 0x54 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ec04
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212ec04(char* c, int arg) {
     *(int*)(c + 0x458) = 2;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
@@ -1081,7 +986,7 @@ void func_ov084_0212ec04(char* c, int arg) {
 /* ROM ordinal 2 -- func_ov084_0212ebb4, 0x0212ebb4, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ebb4
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212ebb4(void *c)
 {
     func_0201267c(0xc1, (char*)c + 0x74);

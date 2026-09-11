@@ -224,7 +224,7 @@ Candidate source SHA256: `ee6888954297d06561fc850a52732bd6856db5cc5609b13fd7c0cb
 +    mModelAnim.SetAnim((BCA_File *)data_ov084_02130df4.file, 0, animSpeed, 0);
      return 1;
  }
- 
+
 ```
 
 #### p07-real-init-dcc
@@ -358,7 +358,7 @@ Candidate source SHA256: `a6f491c85c12a3a1a760eb0a5e3c0d1f6dcb8b49d2a458cf0b6342
 +    mModelAnim.SetAnim((BCA_File *)data_ov084_02130df4.file, 0, animSpeed, 0);
      return 1;
  }
- 
+
 ```
 
 Final source SHA256: `9d742b2063f2b3c7b2e9b9fb24faeb0bbe662ac494c6d8b6a9bfda1c079e1c03`.

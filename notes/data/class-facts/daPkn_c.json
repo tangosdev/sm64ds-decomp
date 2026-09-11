@@ -393,5 +393,27 @@
     "state_1_provenance": "The old daFPkn_c::Kill/vtable comment on 0x0212fa7c was false. The existing state_machine.table and record at ov084:0x02130ba4 identify it as daPkn state 1.",
     "vtable_extent": "The original TU/handoff section-boundary claim was corrected to the existing vtable.end_evidence: the 31 slots end at 0x02130ca4, followed by seven zero words to .data end 0x02130cc0. No data claim or bounding symbol was added.",
     "remaining_reconstruction": "Fifteen address-named free helpers remain; state 7/8 now use the real actor fields. Raw factory and other helper/copy seams remain explicit follow-up, with tested alternatives documented in the handoff."
+  },
+  "integration_correction_2026_09_10": {
+    "accepted_source": "c7e6c4331bd20fecc2ada944a89dd48a331cbc85",
+    "scope": "The scout snapshot above remains historical. This correction supersedes its padding inference and queue census; current read/write observations are in notes/enemy-provenance.md.",
+    "padding": "The 32-bit field at0x478 occupies0x478..0x47b. Bytes0x479..0x47b are part of that field, not padding; the absence of instructions beginning at an interior byte does not establish padding.",
+    "current_queue": {
+      "source_files": 1,
+      "source_lines": 996,
+      "licensed_functions": 24,
+      "historical_pre_fold_count": 23,
+      "historical_omission": "daPkn_c_classInit factory"
+    },
+    "field_accesses": {
+      "0x45c": "Behavior updates the two dCcAc_c colliders when enabled; dCcAcPos_c additionally requires state2. All three Clear calls are unconditional.",
+      "0x45d": "State1 reads and updates this byte around two Sound::PlaySub calls; original meaning and name remain unknown.",
+      "0x460": "ClosestPlayer result stored/read by0212f204;0212f1d0 dereferences it.",
+      "0x464": "Player distance or0x7fffffff sentinel, compared by state handlers.",
+      "0x46c": "Widened player byte+0x6de; selects state distance thresholds. Meaning remains unproved.",
+      "0x474": "State6 particle handle read/write through Particle::System::New; other states clear it.",
+      "0x478": "State1 sound handle read/write through Sound::PlayLong; reset by InitResources and state changes."
+    },
+    "limits": "Source names and remaining raw interfaces remain partial under issue2473. These observations describe current accesses without renaming fields or claiming original identifiers."
   }
 }

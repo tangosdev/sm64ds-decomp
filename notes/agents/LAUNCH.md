@@ -83,6 +83,15 @@ in-flight source branch just to get a launcher.
 
 ## Specialists
 
+For a dedicated source reviewer, use:
+
+> Read notes/agents/PIPELINE.md, roles/humanizer.md and SOURCE-REVIEW-CUTOVER.md.
+> Review the assigned exact candidate and its inherited findings. Inspect existing
+> real interfaces before accepting shadow structs, raw fields or mangled calls.
+> Publish an independent source-review verdict with concrete dispositions. Return
+> unresolved findings through rework; do not edit the candidate you are reviewing.
+> Task: [issue URL, task ID, candidate SHA and report worktree].
+
 Scouts read [roles/scout.md](roles/scout.md); source reviewers read
 [roles/humanizer.md](roles/humanizer.md). They assist the producer or take an
 explicitly scheduled stage. They do not independently edit the producer's worktree.

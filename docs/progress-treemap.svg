@@ -1,10 +1,10 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1092" width="100%" font-family="Segoe UI, system-ui, sans-serif" shape-rendering="crispEdges">
   <rect x="0" y="0" width="1600" height="1092" fill="#141517" />
   <text x="6" y="30" font-size="24" font-weight="600" fill="#e6e7e9">SM64DS decompilation progress</text>
-  <text x="6" y="58" font-size="15" fill="#e6e7e9">Functions matched: 11,311 / 11,393 (99.28%)   |   Code bytes matched: 2,185,368 / 2,238,108 (97.64%)   |   Modules: 74</text>
+  <text x="6" y="58" font-size="15" fill="#e6e7e9">Functions matched: 11,342 / 11,390 (99.58%)   |   Code bytes matched: 2,191,568 / 2,238,108 (97.92%)   |   Modules: 74</text>
   <text x="6" y="80" font-size="13" fill="#a8abb0">Each rectangle is one function, sized by byte count. Green = matched, gray = unmatched.</text>
   <g transform="translate(0,92)">
-    <rect x="2.00" y="2.00" width="322.42" height="996.00" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="7.00" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">arm9  97.4%</text><rect x="328.42" y="2.00" width="18.68" height="846.69" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="328.42" y="852.69" width="18.68" height="1.30" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="328.42" y="857.99" width="18.68" height="140.01" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="351.10" y="2.00" width="257.55" height="996.00" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="356.10" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov002  98.7%</text><rect x="612.65" y="2.00" width="194.95" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="617.65" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov003  86.1%</text><rect x="811.60" y="2.00" width="666.70" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="816.60" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov004  98.9%</text><rect x="1482.30" y="2.00" width="115.70" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1487.30" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov005  100.0%</text><rect x="612.65" y="56.37" width="438.70" height="734.53" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="617.65" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov006  96.7%</text><rect x="612.65" y="794.90" width="438.70" height="203.10" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="617.65" y="809.90" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov007  99.2%</text><rect x="1055.35" y="56.37" width="77.01" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov009  93.7%</text><rect x="1136.35" y="56.37" width="51.36" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1141.35" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov010  100.0%</text><rect x="1191.71" y="56.37" width="18.94" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1214.66" y="56.37" width="15.75" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1234.41" y="56.37" width="112.99" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1239.41" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov014  100.0%</text><rect x="1351.40" y="56.37" width="109.85" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1356.40" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov015  95.5%</text><rect x="1465.26" y="56.37" width="132.74" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1470.26" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov016  100.0%</text><rect x="1055.35" y="109.22" width="11.48" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1070.82" y="109.22" width="115.64" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1075.82" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov018  100.0%</text><rect x="1190.46" y="109.22" width="108.76" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1195.46" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov019  100.0%</text><rect x="1303.22" y="109.22" width="155.47" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1308.22" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov020  100.0%</text><rect x="1462.69" y="109.22" width="135.31" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1467.69" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov021  100.0%</text><rect x="1055.35" y="150.78" width="104.71" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov022  100.0%</text><rect x="1164.06" y="150.78" width="19.96" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1188.02" y="150.78" width="25.00" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1217.02" y="150.78" width="82.81" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1222.02" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov025  100.0%</text><rect x="1303.83" y="150.78" width="77.90" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1308.83" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov026  100.0%</text><rect x="1385.73" y="150.78" width="106.77" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1390.73" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov027  100.0%</text><rect x="1496.50" y="150.78" width="101.50" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1501.50" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov029  100.0%</text><rect x="1055.35" y="197.92" width="207.77" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov030  100.0%</text><rect x="1267.11" y="197.92" width="7.72" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1278.83" y="197.92" width="89.57" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1283.83" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov032  100.0%</text><rect x="1372.40" y="197.92" width="17.74" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1394.14" y="197.92" width="162.82" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1399.14" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov034  100.0%</text><rect x="1560.96" y="197.92" width="37.04" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1565.96" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov035  100.0%</text><rect x="1055.35" y="248.44" width="150.27" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1209.61" y="248.44" width="10.82" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1224.43" y="248.44" width="55.08" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1283.52" y="248.44" width="6.84" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1294.36" y="248.44" width="93.18" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1391.53" y="248.44" width="47.82" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1443.35" y="248.44" width="44.54" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1491.89" y="248.44" width="43.34" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1539.24" y="248.44" width="25.24" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1568.48" y="248.44" width="29.52" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1055.35" y="277.18" width="185.50" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov060  98.6%</text><rect x="1244.84" y="277.18" width="165.07" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1249.84" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov062  100.0%</text><rect x="1413.92" y="277.18" width="184.08" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1418.92" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov063  94.5%</text><rect x="1055.35" y="408.79" width="142.55" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov064  100.0%</text><rect x="1201.90" y="408.79" width="174.90" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1206.90" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov065  100.0%</text><rect x="1380.80" y="408.79" width="124.05" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1385.80" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov066  100.0%</text><rect x="1508.85" y="408.79" width="89.15" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1513.85" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov070  100.0%</text><rect x="1055.35" y="518.66" width="86.22" height="115.96" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov071  95.6%</text><rect x="1055.35" y="638.62" width="86.22" height="107.41" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="653.62" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov072  100.0%</text><rect x="1055.35" y="750.03" width="86.22" height="124.20" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="765.03" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov073  100.0%</text><rect x="1055.35" y="878.23" width="86.22" height="119.77" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="893.23" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov074  94.3%</text><rect x="1145.57" y="518.66" width="187.09" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.57" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov075  95.0%</text><rect x="1336.66" y="518.66" width="87.94" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1341.66" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov077  100.0%</text><rect x="1428.60" y="518.66" width="72.39" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1433.60" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov078  100.0%</text><rect x="1504.98" y="518.66" width="93.02" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1509.98" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov079  100.0%</text><rect x="1145.57" y="647.02" width="134.67" height="88.12" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.57" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov080  95.7%</text><rect x="1145.57" y="739.14" width="134.67" height="102.67" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.57" y="754.14" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov081  100.0%</text><rect x="1145.57" y="845.81" width="134.67" height="152.19" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.57" y="860.81" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov084  100.0%</text><rect x="1284.24" y="647.02" width="182.28" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1289.24" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov085  100.0%</text><rect x="1470.51" y="647.02" width="42.93" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1475.51" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov089  100.0%</text><rect x="1517.45" y="647.02" width="80.55" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1522.45" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov090  100.0%</text><rect x="1284.24" y="754.74" width="68.25" height="148.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1289.24" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov091  100.0%</text><rect x="1284.24" y="907.17" width="68.25" height="43.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1289.24" y="922.17" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov092  100.0%</text><rect x="1284.24" y="954.58" width="68.25" height="43.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1289.24" y="969.58" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov094  100.0%</text><rect x="1356.48" y="754.74" width="47.89" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1361.48" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov095  100.0%</text><rect x="1408.37" y="754.74" width="58.62" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1413.37" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov096  100.0%</text><rect x="1471.00" y="754.74" width="127.00" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1476.00" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov098  100.0%</text><rect x="1356.48" y="854.10" width="134.98" height="143.90" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1361.48" y="869.10" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov100  100.0%</text><rect x="1495.46" y="854.10" width="102.54" height="143.90" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1500.46" y="869.10" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov102  100.0%</text>
+    <rect x="2.00" y="2.00" width="322.42" height="996.00" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="7.00" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">arm9  97.9%</text><rect x="328.42" y="2.00" width="18.68" height="846.69" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="328.42" y="852.69" width="18.68" height="1.30" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="328.42" y="857.99" width="18.68" height="140.01" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="351.10" y="2.00" width="257.55" height="996.00" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="356.10" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov002  98.7%</text><rect x="612.65" y="2.00" width="194.95" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="617.65" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov003  86.1%</text><rect x="811.60" y="2.00" width="666.70" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="816.60" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov004  98.9%</text><rect x="1482.30" y="2.00" width="115.70" height="50.37" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1487.30" y="17.00" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov005  100.0%</text><rect x="612.65" y="56.37" width="438.70" height="734.53" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="617.65" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov006  96.7%</text><rect x="612.65" y="794.90" width="438.70" height="203.10" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="617.65" y="809.90" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov007  99.8%</text><rect x="1055.35" y="56.37" width="77.01" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov009  93.7%</text><rect x="1136.35" y="56.37" width="51.36" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1141.35" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov010  100.0%</text><rect x="1191.71" y="56.37" width="18.94" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1214.66" y="56.37" width="15.75" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1234.41" y="56.37" width="112.99" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1239.41" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov014  100.0%</text><rect x="1351.40" y="56.37" width="109.85" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1356.40" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov015  95.5%</text><rect x="1465.26" y="56.37" width="132.74" height="48.84" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1470.26" y="71.37" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov016  100.0%</text><rect x="1055.35" y="109.22" width="11.48" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1070.82" y="109.22" width="115.64" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1075.82" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov018  100.0%</text><rect x="1190.46" y="109.22" width="108.76" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1195.46" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov019  100.0%</text><rect x="1303.22" y="109.22" width="155.47" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1308.22" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov020  100.0%</text><rect x="1462.69" y="109.22" width="135.31" height="37.57" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1467.69" y="124.22" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov021  100.0%</text><rect x="1055.35" y="150.78" width="104.71" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov022  100.0%</text><rect x="1164.06" y="150.78" width="19.96" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1188.02" y="150.78" width="25.00" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1217.02" y="150.78" width="82.81" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1222.02" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov025  100.0%</text><rect x="1303.83" y="150.78" width="77.90" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1308.83" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov026  100.0%</text><rect x="1385.73" y="150.78" width="106.77" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1390.73" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov027  100.0%</text><rect x="1496.50" y="150.78" width="101.50" height="43.14" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1501.50" y="165.78" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov029  100.0%</text><rect x="1055.35" y="197.92" width="207.77" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov030  100.0%</text><rect x="1267.11" y="197.92" width="7.72" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1278.83" y="197.92" width="89.57" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1283.83" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov032  100.0%</text><rect x="1372.40" y="197.92" width="17.74" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1394.14" y="197.92" width="162.82" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1399.14" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov034  100.0%</text><rect x="1560.96" y="197.92" width="37.04" height="46.52" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1565.96" y="212.92" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov035  100.0%</text><rect x="1055.35" y="248.44" width="150.27" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1209.61" y="248.44" width="10.82" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1224.43" y="248.44" width="55.08" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1283.52" y="248.44" width="6.84" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1294.36" y="248.44" width="93.18" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1391.53" y="248.44" width="47.82" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1443.35" y="248.44" width="44.54" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1491.89" y="248.44" width="43.34" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1539.24" y="248.44" width="25.24" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1568.48" y="248.44" width="29.52" height="24.75" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><rect x="1055.35" y="277.18" width="185.50" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov060  98.6%</text><rect x="1244.84" y="277.18" width="165.07" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1249.84" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov062  100.0%</text><rect x="1413.92" y="277.18" width="184.08" height="127.60" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1418.92" y="292.18" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov063  94.5%</text><rect x="1055.35" y="408.79" width="142.55" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov064  100.0%</text><rect x="1201.90" y="408.79" width="174.90" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1206.90" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov065  100.0%</text><rect x="1380.80" y="408.79" width="124.05" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1385.80" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov066  100.0%</text><rect x="1508.85" y="408.79" width="89.15" height="105.87" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1513.85" y="423.79" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov070  100.0%</text><rect x="1055.35" y="518.66" width="86.22" height="115.96" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov071  95.6%</text><rect x="1055.35" y="638.62" width="86.22" height="107.41" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="653.62" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov072  100.0%</text><rect x="1055.35" y="750.03" width="86.22" height="124.20" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="765.03" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov073  100.0%</text><rect x="1055.35" y="878.23" width="86.22" height="119.77" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1060.35" y="893.23" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov074  94.3%</text><rect x="1145.57" y="518.66" width="187.09" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.57" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov075  95.0%</text><rect x="1336.66" y="518.66" width="87.94" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1341.66" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov077  100.0%</text><rect x="1428.60" y="518.66" width="72.39" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1433.60" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov078  100.0%</text><rect x="1504.98" y="518.66" width="93.02" height="124.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1509.98" y="533.66" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov079  100.0%</text><rect x="1145.57" y="647.02" width="134.67" height="88.12" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.57" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov080  95.7%</text><rect x="1145.57" y="739.14" width="134.67" height="102.67" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.57" y="754.14" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov081  100.0%</text><rect x="1145.57" y="845.81" width="134.67" height="152.19" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1150.57" y="860.81" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov084  100.0%</text><rect x="1284.24" y="647.02" width="182.28" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1289.24" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov085  100.0%</text><rect x="1470.51" y="647.02" width="42.93" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1475.51" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov089  100.0%</text><rect x="1517.45" y="647.02" width="80.55" height="103.72" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1522.45" y="662.02" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov090  100.0%</text><rect x="1284.24" y="754.74" width="68.25" height="148.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1289.24" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov091  100.0%</text><rect x="1284.24" y="907.17" width="68.25" height="43.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1289.24" y="922.17" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov092  100.0%</text><rect x="1284.24" y="954.58" width="68.25" height="43.42" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1289.24" y="969.58" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov094  100.0%</text><rect x="1356.48" y="754.74" width="47.89" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1361.48" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov095  100.0%</text><rect x="1408.37" y="754.74" width="58.62" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1413.37" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov096  100.0%</text><rect x="1471.00" y="754.74" width="127.00" height="95.36" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1476.00" y="769.74" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov098  100.0%</text><rect x="1356.48" y="854.10" width="134.98" height="143.90" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1361.48" y="869.10" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov100  100.0%</text><rect x="1495.46" y="854.10" width="102.54" height="143.90" fill="#1d1f22" stroke="#888c92" stroke-width="1" /><text x="1500.46" y="869.10" font-size="12" font-family="Segoe UI, system-ui, sans-serif" fill="#e6e7e9" font-weight="600">ov102  100.0%</text>
     <rect x="5.00" y="27.13" width="0.56" height="7.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>VBlankIntrWait
 module: arm9
 addr: 0x020046c2
@@ -21,11 +21,11 @@ matched: yes</title></rect><rect x="26.64" y="27.13" width="15.30" height="7.19"
 module: arm9
 addr: 0x020048d8
 size: 164 bytes
-matched: yes</title></rect><rect x="41.94" y="27.13" width="10.45" height="7.19" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_0200497c
+matched: yes</title></rect><rect x="41.94" y="27.13" width="10.45" height="7.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0200497c
 module: arm9
 addr: 0x0200497c
 size: 112 bytes
-matched: no</title></rect><rect x="52.76" y="27.13" width="21.64" height="7.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4CP1511SystemSetupEv
+matched: yes</title></rect><rect x="52.76" y="27.13" width="21.64" height="7.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4CP1511SystemSetupEv
 module: arm9
 addr: 0x020049f0
 size: 232 bytes
@@ -8641,19 +8641,19 @@ matched: yes</title></rect><rect x="9.91" y="898.61" width="7.32" height="3.30" 
 module: arm9
 addr: 0x020524f0
 size: 36 bytes
-matched: yes</title></rect><rect x="9.91" y="901.90" width="7.32" height="5.50" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02052514
+matched: yes</title></rect><rect x="9.91" y="901.90" width="7.32" height="5.50" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052514
 module: arm9
 addr: 0x02052514
 size: 60 bytes
-matched: no</title></rect><rect x="9.91" y="907.40" width="7.32" height="2.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052550
+matched: yes</title></rect><rect x="9.91" y="907.40" width="7.32" height="2.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052550
 module: arm9
 addr: 0x02052550
 size: 28 bytes
-matched: yes</title></rect><rect x="9.91" y="909.97" width="7.32" height="2.57" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_0205256c
+matched: yes</title></rect><rect x="9.91" y="909.97" width="7.32" height="2.57" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205256c
 module: arm9
 addr: 0x0205256c
 size: 28 bytes
-matched: no</title></rect><rect x="9.91" y="912.53" width="7.32" height="2.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Matrix3x3_SetRotationZ
+matched: yes</title></rect><rect x="9.91" y="912.53" width="7.32" height="2.20" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>Matrix3x3_SetRotationZ
 module: arm9
 addr: 0x02052588
 size: 24 bytes
@@ -8669,23 +8669,23 @@ matched: yes</title></rect><rect x="9.91" y="964.58" width="7.32" height="3.67" 
 module: arm9
 addr: 0x020527c0
 size: 40 bytes
-matched: yes</title></rect><rect x="9.91" y="968.24" width="7.32" height="2.02" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_020527e8
+matched: yes</title></rect><rect x="9.91" y="968.24" width="7.32" height="2.02" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020527e8
 module: arm9
 addr: 0x020527e8
 size: 22 bytes
-matched: no</title></rect><rect x="9.91" y="970.26" width="7.32" height="2.75" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02052800
+matched: yes</title></rect><rect x="9.91" y="970.26" width="7.32" height="2.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052800
 module: arm9
 addr: 0x02052800
 size: 30 bytes
-matched: no</title></rect><rect x="9.91" y="973.01" width="7.32" height="2.38" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02052820
+matched: yes</title></rect><rect x="9.91" y="973.01" width="7.32" height="2.38" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052820
 module: arm9
 addr: 0x02052820
 size: 26 bytes
-matched: no</title></rect><rect x="9.91" y="975.39" width="7.32" height="2.38" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_0205283c
+matched: yes</title></rect><rect x="9.91" y="975.39" width="7.32" height="2.38" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205283c
 module: arm9
 addr: 0x0205283c
 size: 26 bytes
-matched: no</title></rect><rect x="9.91" y="977.77" width="7.32" height="17.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MulVec3Mat4x3
+matched: yes</title></rect><rect x="9.91" y="977.77" width="7.32" height="17.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>MulVec3Mat4x3
 module: arm9
 addr: 0x02052858
 size: 188 bytes
@@ -8697,11 +8697,11 @@ matched: yes</title></rect><rect x="54.23" y="684.56" width="62.31" height="9.86
 module: arm9
 addr: 0x02052b34
 size: 916 bytes
-matched: yes</title></rect><rect x="116.54" y="684.56" width="2.99" height="9.86" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02052ec8
+matched: yes</title></rect><rect x="116.54" y="684.56" width="2.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02052ec8
 module: arm9
 addr: 0x02052ec8
 size: 44 bytes
-matched: no</title></rect><rect x="119.54" y="684.56" width="5.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4cstd3modEii
+matched: yes</title></rect><rect x="119.54" y="684.56" width="5.99" height="9.86" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4cstd3modEii
 module: arm9
 addr: 0x02052ef4
 size: 88 bytes
@@ -9097,11 +9097,11 @@ matched: yes</title></rect><rect x="309.19" y="694.42" width="1.95" height="9.65
 module: arm9
 addr: 0x020553a4
 size: 28 bytes
-matched: yes</title></rect><rect x="311.14" y="694.42" width="10.28" height="9.65" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_020553c0
+matched: yes</title></rect><rect x="311.14" y="694.42" width="10.28" height="9.65" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020553c0
 module: arm9
 addr: 0x020553c0
 size: 148 bytes
-matched: no</title></rect><rect x="22.35" y="704.07" width="2.31" height="4.65" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02055454
+matched: yes</title></rect><rect x="22.35" y="704.07" width="2.31" height="4.65" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02055454
 module: arm9
 addr: 0x02055454
 size: 16 bytes
@@ -9389,19 +9389,19 @@ matched: yes</title></rect><rect x="228.54" y="705.20" width="2.67" height="5.03
 module: arm9
 addr: 0x02057000
 size: 20 bytes
-matched: yes</title></rect><rect x="231.21" y="705.20" width="1.60" height="5.03" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02057014
+matched: yes</title></rect><rect x="231.21" y="705.20" width="1.60" height="5.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02057014
 module: arm9
 addr: 0x02057014
 size: 12 bytes
-matched: no</title></rect><rect x="232.81" y="705.20" width="11.74" height="5.03" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02057020
+matched: yes</title></rect><rect x="232.81" y="705.20" width="11.74" height="5.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02057020
 module: arm9
 addr: 0x02057020
 size: 88 bytes
-matched: no</title></rect><rect x="244.55" y="705.20" width="6.41" height="5.03" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02057078
+matched: yes</title></rect><rect x="244.55" y="705.20" width="6.41" height="5.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02057078
 module: arm9
 addr: 0x02057078
 size: 48 bytes
-matched: no</title></rect><rect x="250.96" y="705.20" width="2.14" height="5.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020570a8
+matched: yes</title></rect><rect x="250.96" y="705.20" width="2.14" height="5.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_020570a8
 module: arm9
 addr: 0x020570a8
 size: 16 bytes
@@ -9561,11 +9561,11 @@ matched: yes</title></rect><rect x="189.04" y="710.22" width="5.39" height="5.98
 module: arm9
 addr: 0x02058538
 size: 48 bytes
-matched: yes</title></rect><rect x="194.43" y="710.22" width="11.22" height="5.98" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02058568
+matched: yes</title></rect><rect x="194.43" y="710.22" width="11.22" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02058568
 module: arm9
 addr: 0x02058568
 size: 100 bytes
-matched: no</title></rect><rect x="205.65" y="710.22" width="8.53" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>ARMSaveContext
+matched: yes</title></rect><rect x="205.65" y="710.22" width="8.53" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>ARMSaveContext
 module: arm9
 addr: 0x020585cc
 size: 76 bytes
@@ -9749,11 +9749,11 @@ matched: yes</title></rect><rect x="191.84" y="716.20" width="13.82" height="5.6
 module: arm9
 addr: 0x020593f4
 size: 116 bytes
-matched: yes</title></rect><rect x="205.66" y="716.20" width="2.38" height="5.63" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02059468
+matched: yes</title></rect><rect x="205.66" y="716.20" width="2.38" height="5.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02059468
 module: arm9
 addr: 0x02059468
 size: 20 bytes
-matched: no</title></rect><rect x="208.04" y="716.20" width="17.15" height="5.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205947c
+matched: yes</title></rect><rect x="208.04" y="716.20" width="17.15" height="5.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205947c
 module: arm9
 addr: 0x0205947c
 size: 144 bytes
@@ -9789,11 +9789,11 @@ matched: yes</title></rect><rect x="300.94" y="716.20" width="18.58" height="5.6
 module: arm9
 addr: 0x02059788
 size: 156 bytes
-matched: yes</title></rect><rect x="319.52" y="716.20" width="1.91" height="5.63" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02059824
+matched: yes</title></rect><rect x="319.52" y="716.20" width="1.91" height="5.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02059824
 module: arm9
 addr: 0x02059824
 size: 16 bytes
-matched: no</title></rect><rect x="45.58" y="721.83" width="6.51" height="29.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02059834
+matched: yes</title></rect><rect x="45.58" y="721.83" width="6.51" height="29.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02059834
 module: arm9
 addr: 0x02059834
 size: 284 bytes
@@ -9861,11 +9861,11 @@ matched: yes</title></rect><rect x="45.58" y="862.74" width="6.51" height="1.24"
 module: arm9
 addr: 0x02059d8c
 size: 12 bytes
-matched: no</title></rect><rect x="45.58" y="863.98" width="6.51" height="6.18" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02059d98
+matched: no</title></rect><rect x="45.58" y="863.98" width="6.51" height="6.18" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02059d98
 module: arm9
 addr: 0x02059d98
 size: 60 bytes
-matched: no</title></rect><rect x="45.58" y="870.16" width="6.51" height="4.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02059dd4
+matched: yes</title></rect><rect x="45.58" y="870.16" width="6.51" height="4.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02059dd4
 module: arm9
 addr: 0x02059dd4
 size: 48 bytes
@@ -9965,15 +9965,15 @@ matched: yes</title></rect><rect x="135.28" y="721.83" width="4.14" height="5.84
 module: arm9
 addr: 0x0205a564
 size: 36 bytes
-matched: yes</title></rect><rect x="139.42" y="721.83" width="17.01" height="5.84" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_0205a588
+matched: yes</title></rect><rect x="139.42" y="721.83" width="17.01" height="5.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205a588
 module: arm9
 addr: 0x0205a588
 size: 148 bytes
-matched: no</title></rect><rect x="156.42" y="721.83" width="34.93" height="5.84" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>CpuCopy8
+matched: yes</title></rect><rect x="156.42" y="721.83" width="34.93" height="5.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>CpuCopy8
 module: arm9
 addr: 0x0205a61c
 size: 304 bytes
-matched: no</title></rect><rect x="191.36" y="721.83" width="0.92" height="5.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205a74c
+matched: yes</title></rect><rect x="191.36" y="721.83" width="0.92" height="5.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0205a74c
 module: arm9
 addr: 0x0205a74c
 size: 8 bytes
@@ -10821,11 +10821,11 @@ matched: yes</title></rect><rect x="122.81" y="757.97" width="3.52" height="8.39
 module: arm9
 addr: 0x020610fc
 size: 44 bytes
-matched: no</title></rect><rect x="126.33" y="757.97" width="1.28" height="8.39" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02061128
+matched: no</title></rect><rect x="126.33" y="757.97" width="1.28" height="8.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02061128
 module: arm9
 addr: 0x02061128
 size: 16 bytes
-matched: no</title></rect><rect x="127.61" y="757.97" width="4.16" height="8.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02061138
+matched: yes</title></rect><rect x="127.61" y="757.97" width="4.16" height="8.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02061138
 module: arm9
 addr: 0x02061138
 size: 52 bytes
@@ -11977,15 +11977,15 @@ matched: yes</title></rect><rect x="219.42" y="935.86" width="4.49" height="1.79
 module: arm9
 addr: 0x02071784
 size: 12 bytes
-matched: yes</title></rect><rect x="219.42" y="937.65" width="4.49" height="7.17" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02071790
+matched: yes</title></rect><rect x="219.42" y="937.65" width="4.49" height="7.17" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071790
 module: arm9
 addr: 0x02071790
 size: 48 bytes
-matched: no</title></rect><rect x="219.42" y="944.82" width="4.49" height="11.35" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_020717c0
+matched: yes</title></rect><rect x="219.42" y="944.82" width="4.49" height="11.35" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__rethrow
 module: arm9
 addr: 0x020717c0
 size: 76 bytes
-matched: no</title></rect><rect x="219.42" y="956.17" width="4.49" height="8.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0207180c
+matched: yes</title></rect><rect x="219.42" y="956.17" width="4.49" height="8.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_0207180c
 module: arm9
 addr: 0x0207180c
 size: 56 bytes
@@ -12033,7 +12033,7 @@ matched: yes</title></rect><rect x="223.91" y="963.69" width="5.14" height="21.9
 module: arm9
 addr: 0x02071af8
 size: 168 bytes
-matched: yes</title></rect><rect x="223.91" y="985.61" width="5.14" height="9.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02071ba0
+matched: yes</title></rect><rect x="223.91" y="985.61" width="5.14" height="9.39" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__end__catch
 module: arm9
 addr: 0x02071ba0
 size: 72 bytes
@@ -12117,163 +12117,151 @@ matched: yes</title></rect><rect x="314.50" y="915.90" width="6.93" height="6.97
 module: arm9
 addr: 0x02073244
 size: 72 bytes
-matched: yes</title></rect><rect x="253.68" y="922.87" width="9.17" height="6.73" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__destroy_arr
+matched: yes</title></rect><rect x="253.68" y="922.87" width="10.02" height="7.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__cxa_vec_cleanup
 module: arm9
 addr: 0x0207328c
-size: 92 bytes
-matched: no</title></rect><rect x="262.84" y="922.87" width="2.39" height="6.73" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_020732e8
-module: arm9
-addr: 0x020732e8
-size: 24 bytes
-matched: no</title></rect><rect x="265.23" y="922.87" width="9.17" height="6.73" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02073300
+size: 116 bytes
+matched: yes</title></rect><rect x="263.70" y="922.87" width="14.52" height="7.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02073300
 module: arm9
 addr: 0x02073300
-size: 92 bytes
-matched: no</title></rect><rect x="274.40" y="922.87" width="7.57" height="6.73" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_0207335c
-module: arm9
-addr: 0x0207335c
-size: 76 bytes
-matched: no</title></rect><rect x="281.97" y="922.87" width="19.93" height="6.73" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_020733a8
+size: 168 bytes
+matched: yes</title></rect><rect x="278.22" y="922.87" width="17.28" height="7.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__cxa_vec_ctor
 module: arm9
 addr: 0x020733a8
 size: 200 bytes
-matched: no</title></rect><rect x="301.90" y="922.87" width="19.53" height="6.73" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02073470
+matched: yes</title></rect><rect x="295.50" y="922.87" width="16.94" height="7.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02073470
 module: arm9
 addr: 0x02073470
 size: 196 bytes
-matched: no</title></rect><rect x="253.68" y="929.61" width="4.60" height="11.68" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02073534
+matched: yes</title></rect><rect x="312.44" y="922.87" width="8.99" height="7.76" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02073534
 module: arm9
 addr: 0x02073534
-size: 80 bytes
-matched: no</title></rect><rect x="253.68" y="941.29" width="4.60" height="3.50" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_02073584
-module: arm9
-addr: 0x02073584
-size: 24 bytes
-matched: no</title></rect><rect x="253.68" y="944.79" width="4.60" height="6.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi21__vmi_class_type_infoD0Ev
+size: 104 bytes
+matched: yes</title></rect><rect x="253.68" y="930.64" width="3.59" height="8.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi21__vmi_class_type_infoD0Ev
 module: arm9
 addr: 0x0207359c
 size: 44 bytes
-matched: yes</title></rect><rect x="253.68" y="951.21" width="4.60" height="5.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi21__vmi_class_type_infoD1Ev
+matched: yes</title></rect><rect x="253.68" y="938.87" width="3.59" height="6.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi21__vmi_class_type_infoD1Ev
 module: arm9
 addr: 0x020735c8
 size: 36 bytes
-matched: yes</title></rect><rect x="253.68" y="956.47" width="4.60" height="6.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi20__si_class_type_infoD0Ev
+matched: yes</title></rect><rect x="253.68" y="945.61" width="3.59" height="8.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi20__si_class_type_infoD0Ev
 module: arm9
 addr: 0x020735ec
 size: 44 bytes
-matched: yes</title></rect><rect x="253.68" y="962.89" width="4.60" height="5.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi20__si_class_type_infoD1Ev
+matched: yes</title></rect><rect x="253.68" y="953.84" width="3.59" height="6.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi20__si_class_type_infoD1Ev
 module: arm9
 addr: 0x02073618
 size: 36 bytes
-matched: yes</title></rect><rect x="253.68" y="968.14" width="4.60" height="5.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi17__class_type_infoD2Ev
+matched: yes</title></rect><rect x="253.68" y="960.57" width="3.59" height="6.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi17__class_type_infoD2Ev
 module: arm9
 addr: 0x0207363c
 size: 36 bytes
-matched: yes</title></rect><rect x="253.68" y="973.40" width="4.60" height="6.42" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi17__class_type_infoD0Ev
+matched: yes</title></rect><rect x="253.68" y="967.31" width="3.59" height="8.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi17__class_type_infoD0Ev
 module: arm9
 addr: 0x02073660
 size: 44 bytes
-matched: yes</title></rect><rect x="253.68" y="979.82" width="4.60" height="5.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi17__class_type_infoD1Ev
+matched: yes</title></rect><rect x="253.68" y="975.54" width="3.59" height="6.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN3abi17__class_type_infoD1Ev
 module: arm9
 addr: 0x0207368c
 size: 36 bytes
-matched: yes</title></rect><rect x="253.68" y="985.07" width="4.60" height="2.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNSt9type_infoD2Ev
+matched: yes</title></rect><rect x="253.68" y="982.28" width="3.59" height="2.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNSt9type_infoD2Ev
 module: arm9
 addr: 0x020736b0
 size: 16 bytes
-matched: yes</title></rect><rect x="253.68" y="987.41" width="4.60" height="5.25" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNSt9type_infoD0Ev
+matched: yes</title></rect><rect x="253.68" y="985.27" width="3.59" height="6.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNSt9type_infoD0Ev
 module: arm9
 addr: 0x020736c0
 size: 36 bytes
-matched: yes</title></rect><rect x="253.68" y="992.66" width="4.60" height="2.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNSt9type_infoD1Ev
+matched: yes</title></rect><rect x="253.68" y="992.01" width="3.59" height="2.99" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZNSt9type_infoD1Ev
 module: arm9
 addr: 0x020736e4
 size: 16 bytes
-matched: yes</title></rect><rect x="258.27" y="929.61" width="13.92" height="52.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02073a24
+matched: yes</title></rect><rect x="257.26" y="930.64" width="14.14" height="51.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02073a24
 module: arm9
 addr: 0x02073a24
 size: 1096 bytes
-matched: yes</title></rect><rect x="272.19" y="929.61" width="49.23" height="52.82" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02073e6c
+matched: yes</title></rect><rect x="271.41" y="930.64" width="50.02" height="51.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02073e6c
 module: arm9
 addr: 0x02073e6c
 size: 3876 bytes
-matched: yes</title></rect><rect x="258.27" y="982.42" width="2.56" height="6.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074d90
+matched: yes</title></rect><rect x="257.26" y="982.62" width="2.60" height="6.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074d90
 module: arm9
 addr: 0x02074d90
 size: 24 bytes
-matched: yes</title></rect><rect x="258.27" y="988.71" width="2.56" height="5.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074da8
+matched: yes</title></rect><rect x="257.26" y="988.81" width="2.60" height="5.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074da8
 module: arm9
 addr: 0x02074da8
 size: 20 bytes
-matched: yes</title></rect><rect x="258.27" y="993.95" width="2.56" height="1.05" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074dbc
+matched: yes</title></rect><rect x="257.26" y="993.97" width="2.60" height="1.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074dbc
 module: arm9
 addr: 0x02074dbc
 size: 4 bytes
-matched: yes</title></rect><rect x="260.83" y="982.42" width="4.05" height="0.66" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074dc0
+matched: yes</title></rect><rect x="259.86" y="982.62" width="4.12" height="0.65" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074dc0
 module: arm9
 addr: 0x02074dc0
 size: 4 bytes
-matched: yes</title></rect><rect x="260.83" y="983.08" width="4.05" height="11.92" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074dc4
+matched: yes</title></rect><rect x="259.86" y="983.27" width="4.12" height="11.73" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074dc4
 module: arm9
 addr: 0x02074dc4
 size: 72 bytes
-matched: yes</title></rect><rect x="264.89" y="982.42" width="6.19" height="6.07" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074e0c
+matched: yes</title></rect><rect x="263.98" y="982.62" width="6.29" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074e0c
 module: arm9
 addr: 0x02074e0c
 size: 56 bytes
-matched: yes</title></rect><rect x="264.89" y="988.49" width="6.19" height="6.51" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074e44
+matched: yes</title></rect><rect x="263.98" y="988.60" width="6.29" height="6.40" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074e44
 module: arm9
 addr: 0x02074e44
 size: 60 bytes
-matched: yes</title></rect><rect x="271.07" y="982.42" width="4.91" height="0.55" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074e80
+matched: yes</title></rect><rect x="270.27" y="982.62" width="4.99" height="0.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074e80
 module: arm9
 addr: 0x02074e80
 size: 4 bytes
-matched: yes</title></rect><rect x="271.07" y="982.97" width="4.91" height="12.03" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074e84
+matched: yes</title></rect><rect x="270.27" y="983.16" width="4.99" height="11.84" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074e84
 module: arm9
 addr: 0x02074e84
 size: 88 bytes
-matched: yes</title></rect><rect x="275.98" y="982.42" width="8.75" height="12.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074edc
+matched: yes</title></rect><rect x="275.25" y="982.62" width="8.89" height="12.38" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074edc
 module: arm9
 addr: 0x02074edc
 size: 164 bytes
-matched: yes</title></rect><rect x="284.73" y="982.42" width="5.33" height="7.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074f80
+matched: yes</title></rect><rect x="284.14" y="982.62" width="5.42" height="6.93" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074f80
 module: arm9
 addr: 0x02074f80
 size: 56 bytes
-matched: yes</title></rect><rect x="284.73" y="989.47" width="5.33" height="5.53" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074fb8
+matched: yes</title></rect><rect x="284.14" y="989.55" width="5.42" height="5.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074fb8
 module: arm9
 addr: 0x02074fb8
 size: 44 bytes
-matched: yes</title></rect><rect x="290.06" y="982.42" width="5.97" height="6.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074fe4
+matched: yes</title></rect><rect x="289.56" y="982.62" width="6.07" height="6.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02074fe4
 module: arm9
 addr: 0x02074fe4
 size: 56 bytes
-matched: yes</title></rect><rect x="290.06" y="988.71" width="5.97" height="6.29" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_0207501c
+matched: yes</title></rect><rect x="289.56" y="988.81" width="6.07" height="6.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_0207501c
 module: arm9
 addr: 0x0207501c
 size: 56 bytes
-matched: yes</title></rect><rect x="296.04" y="982.42" width="5.12" height="12.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02075054
+matched: yes</title></rect><rect x="295.63" y="982.62" width="5.20" height="12.38" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02075054
 module: arm9
 addr: 0x02075054
 size: 96 bytes
-matched: yes</title></rect><rect x="301.16" y="982.42" width="2.99" height="0.90" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_020750b4
+matched: yes</title></rect><rect x="300.83" y="982.62" width="3.03" height="0.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_020750b4
 module: arm9
 addr: 0x020750b4
 size: 4 bytes
-matched: yes</title></rect><rect x="301.16" y="983.32" width="2.99" height="11.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_020750b8
+matched: yes</title></rect><rect x="300.83" y="983.51" width="3.03" height="11.49" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_020750b8
 module: arm9
 addr: 0x020750b8
 size: 52 bytes
-matched: yes</title></rect><rect x="304.14" y="982.42" width="5.33" height="6.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_020750ec
+matched: yes</title></rect><rect x="303.87" y="982.62" width="5.42" height="5.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_020750ec
 module: arm9
 addr: 0x020750ec
 size: 48 bytes
-matched: yes</title></rect><rect x="304.14" y="988.46" width="5.33" height="6.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_0207511c
+matched: yes</title></rect><rect x="303.87" y="988.56" width="5.42" height="6.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_0207511c
 module: arm9
 addr: 0x0207511c
 size: 52 bytes
-matched: yes</title></rect><rect x="309.48" y="982.65" width="11.95" height="12.35" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02075154
+matched: yes</title></rect><rect x="309.29" y="982.84" width="12.14" height="12.16" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__sinit_02075154
 module: arm9
 addr: 0x02075154
 size: 220 bytes
@@ -12285,11 +12273,11 @@ matched: no</title></rect><rect x="331.42" y="49.74" width="12.68" height="11.34
 module: itcm
 addr: 0x01ff859c
 size: 364 bytes
-matched: yes</title></rect><rect x="331.42" y="61.08" width="12.68" height="55.33" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8708
+matched: yes</title></rect><rect x="331.42" y="61.08" width="12.68" height="55.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ff8708
 module: itcm
 addr: 0x01ff8708
 size: 1776 bytes
-matched: no</title></rect><rect x="331.42" y="116.41" width="12.68" height="43.12" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8e10
+matched: yes</title></rect><rect x="331.42" y="116.41" width="12.68" height="43.12" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ff8e10
 module: itcm
 addr: 0x01ff8e10
 size: 1384 bytes
@@ -12341,19 +12329,19 @@ matched: no</title></rect><rect x="333.15" y="419.99" width="10.95" height="2.74
 module: itcm
 addr: 0x01ffa9e8
 size: 76 bytes
-matched: no</title></rect><rect x="331.42" y="422.73" width="12.68" height="13.46" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_01ffaa34
+matched: no</title></rect><rect x="331.42" y="422.73" width="12.68" height="13.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffaa34
 module: itcm
 addr: 0x01ffaa34
 size: 432 bytes
-matched: no</title></rect><rect x="331.42" y="436.19" width="12.68" height="16.33" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_idiv
+matched: yes</title></rect><rect x="331.42" y="436.19" width="12.68" height="16.33" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__aeabi_idiv
 module: itcm
 addr: 0x01ffabe4
 size: 524 bytes
-matched: no</title></rect><rect x="331.42" y="452.51" width="12.68" height="15.08" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>__aeabi_uidiv
+matched: yes</title></rect><rect x="331.42" y="452.51" width="12.68" height="15.08" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>__aeabi_uidiv
 module: itcm
 addr: 0x01ffadf0
 size: 484 bytes
-matched: no</title></rect><rect x="331.42" y="467.59" width="3.92" height="5.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffafd4
+matched: yes</title></rect><rect x="331.42" y="467.59" width="3.92" height="5.23" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_01ffafd4
 module: itcm
 addr: 0x01ffafd4
 size: 52 bytes
@@ -12681,11 +12669,11 @@ matched: yes</title></rect><rect x="546.33" y="39.27" width="10.44" height="4.85
 module: ov002
 addr: 0x020aedf4
 size: 76 bytes
-matched: yes</title></rect><rect x="556.77" y="39.27" width="9.89" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroomD1Ev
+matched: yes</title></rect><rect x="556.77" y="39.27" width="9.89" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_cD1Ev
 module: ov002
 addr: 0x020aee40
 size: 72 bytes
-matched: yes</title></rect><rect x="566.65" y="39.27" width="12.63" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroomD0Ev
+matched: yes</title></rect><rect x="566.65" y="39.27" width="12.63" height="4.85" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_cD0Ev
 module: ov002
 addr: 0x020aee88
 size: 92 bytes
@@ -12717,11 +12705,11 @@ matched: yes</title></rect><rect x="424.84" y="44.11" width="10.88" height="6.36
 module: ov002
 addr: 0x020af248
 size: 104 bytes
-matched: yes</title></rect><rect x="435.72" y="44.11" width="25.11" height="6.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroom13OnTurnIntoEggER6Player
+matched: yes</title></rect><rect x="435.72" y="44.11" width="25.11" height="6.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_c13OnTurnIntoEggER6Player
 module: ov002
 addr: 0x020af2b0
 size: 240 bytes
-matched: yes</title></rect><rect x="460.83" y="44.11" width="0.84" height="6.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroom13OnYoshiTryEatEv
+matched: yes</title></rect><rect x="460.83" y="44.11" width="0.84" height="6.36" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_c13OnYoshiTryEatEv
 module: ov002
 addr: 0x020af3a0
 size: 8 bytes
@@ -12805,23 +12793,23 @@ matched: yes</title></rect><rect x="559.38" y="50.47" width="28.72" height="5.01
 module: ov002
 addr: 0x020aff10
 size: 216 bytes
-matched: yes</title></rect><rect x="588.10" y="50.47" width="17.55" height="5.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroom16CleanupResourcesEv
+matched: yes</title></rect><rect x="588.10" y="50.47" width="17.55" height="5.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_c16CleanupResourcesEv
 module: ov002
 addr: 0x020affe8
 size: 132 bytes
-matched: yes</title></rect><rect x="354.10" y="55.48" width="0.42" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroom16OnPendingDestroyEv
+matched: yes</title></rect><rect x="354.10" y="55.48" width="0.42" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_c16OnPendingDestroyEv
 module: ov002
 addr: 0x020b006c
 size: 4 bytes
-matched: yes</title></rect><rect x="354.52" y="55.48" width="12.73" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroom6RenderEv
+matched: yes</title></rect><rect x="354.52" y="55.48" width="12.73" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_c6RenderEv
 module: ov002
 addr: 0x020b0070
 size: 120 bytes
-matched: yes</title></rect><rect x="367.25" y="55.48" width="22.91" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroom8BehaviorEv
+matched: yes</title></rect><rect x="367.25" y="55.48" width="22.91" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_c8BehaviorEv
 module: ov002
 addr: 0x020b00e8
 size: 216 bytes
-matched: yes</title></rect><rect x="390.16" y="55.48" width="93.32" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13OneUpMushroom13InitResourcesEv
+matched: yes</title></rect><rect x="390.16" y="55.48" width="93.32" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN7da1up_c13InitResourcesEv
 module: ov002
 addr: 0x020b01c0
 size: 880 bytes
@@ -29565,11 +29553,11 @@ matched: yes</title></rect><rect x="957.86" y="905.84" width="12.85" height="6.4
 module: ov007
 addr: 0x020c95fc
 size: 140 bytes
-matched: yes</title></rect><rect x="957.86" y="912.27" width="12.85" height="35.30" fill="#4a4d52" stroke="#393b3f" stroke-width="0.4"><title>func_ov007_020c9688
+matched: yes</title></rect><rect x="957.86" y="912.27" width="12.85" height="35.30" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov007_020c9688
 module: ov007
 addr: 0x020c9688
 size: 768 bytes
-matched: no</title></rect><rect x="957.86" y="947.57" width="12.85" height="3.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov007_020c9988
+matched: yes</title></rect><rect x="957.86" y="947.57" width="12.85" height="3.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov007_020c9988
 module: ov007
 addr: 0x020c9988
 size: 80 bytes
@@ -33981,19 +33969,19 @@ matched: yes</title></rect><rect x="1238.92" y="251.44" width="4.71" height="3.9
 module: ov043
 addr: 0x021113cc
 size: 48 bytes
-matched: yes</title></rect><rect x="1238.92" y="255.38" width="4.71" height="6.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11RickshawBdwD1Ev
+matched: yes</title></rect><rect x="1238.92" y="255.38" width="4.71" height="6.58" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21daObjKm1_Kurumajiku_cD1Ev
 module: ov043
 addr: 0x021113fc
 size: 80 bytes
-matched: yes</title></rect><rect x="1238.92" y="261.96" width="4.71" height="8.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11RickshawBdwD0Ev
+matched: yes</title></rect><rect x="1238.92" y="261.96" width="4.71" height="8.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21daObjKm1_Kurumajiku_cD0Ev
 module: ov043
 addr: 0x0211144c
 size: 100 bytes
-matched: yes</title></rect><rect x="1243.63" y="251.44" width="3.80" height="2.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11RickshawBdw16CleanupResourcesEv
+matched: yes</title></rect><rect x="1243.63" y="251.44" width="3.80" height="2.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21daObjKm1_Kurumajiku_c16CleanupResourcesEv
 module: ov043
 addr: 0x021114b0
 size: 20 bytes
-matched: yes</title></rect><rect x="1243.63" y="253.47" width="3.80" height="2.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11RickshawBdw13InitResourcesEv
+matched: yes</title></rect><rect x="1243.63" y="253.47" width="3.80" height="2.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21daObjKm1_Kurumajiku_c13InitResourcesEv
 module: ov043
 addr: 0x021114c4
 size: 24 bytes
@@ -34161,19 +34149,19 @@ matched: yes</title></rect><rect x="1349.91" y="251.44" width="5.44" height="4.9
 module: ov045
 addr: 0x02111ad4
 size: 64 bytes
-matched: yes</title></rect><rect x="1349.91" y="256.35" width="5.44" height="6.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16FloatingFloorBfsD1Ev
+matched: yes</title></rect><rect x="1349.91" y="256.35" width="5.44" height="6.15" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN19daObjKm2_Ukishima_cD1Ev
 module: ov045
 addr: 0x02111b14
 size: 80 bytes
-matched: yes</title></rect><rect x="1349.91" y="262.50" width="5.44" height="7.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16FloatingFloorBfsD0Ev
+matched: yes</title></rect><rect x="1349.91" y="262.50" width="5.44" height="7.68" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN19daObjKm2_Ukishima_cD0Ev
 module: ov045
 addr: 0x02111b64
 size: 100 bytes
-matched: yes</title></rect><rect x="1355.36" y="251.44" width="4.10" height="2.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16FloatingFloorBfs16CleanupResourcesEv
+matched: yes</title></rect><rect x="1355.36" y="251.44" width="4.10" height="2.04" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN19daObjKm2_Ukishima_c16CleanupResourcesEv
 module: ov045
 addr: 0x02111bc8
 size: 20 bytes
-matched: yes</title></rect><rect x="1355.36" y="253.47" width="4.10" height="2.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16FloatingFloorBfs13InitResourcesEv
+matched: yes</title></rect><rect x="1355.36" y="253.47" width="4.10" height="2.45" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN19daObjKm2_Ukishima_c13InitResourcesEv
 module: ov045
 addr: 0x02111bdc
 size: 24 bytes
@@ -38525,115 +38513,115 @@ matched: yes</title></rect><rect x="1128.37" y="622.30" width="10.20" height="9.
 module: ov071
 addr: 0x02122a64
 size: 204 bytes
-matched: yes</title></rect><rect x="1058.35" y="663.62" width="6.64" height="4.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBodyD1Ev
+matched: yes</title></rect><rect x="1058.35" y="663.62" width="6.64" height="4.91" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_cD1Ev
 module: ov072
 addr: 0x0211f000
 size: 72 bytes
-matched: yes</title></rect><rect x="1058.35" y="668.53" width="6.64" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBodyD0Ev
+matched: yes</title></rect><rect x="1058.35" y="668.53" width="6.64" height="6.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_cD0Ev
 module: ov072
 addr: 0x0211f048
 size: 92 bytes
-matched: yes</title></rect><rect x="1058.35" y="674.81" width="6.64" height="12.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody18IsPlayerNearCenterEv
+matched: yes</title></rect><rect x="1058.35" y="674.81" width="6.64" height="12.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c18IsPlayerNearCenterEv
 module: ov072
 addr: 0x0211f0a4
 size: 180 bytes
-matched: yes</title></rect><rect x="1058.35" y="687.09" width="6.64" height="9.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody15UpdateRollAngleEv
+matched: yes</title></rect><rect x="1058.35" y="687.09" width="6.64" height="9.00" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c15UpdateRollAngleEv
 module: ov072
 addr: 0x0211f158
 size: 132 bytes
-matched: yes</title></rect><rect x="1058.35" y="696.09" width="6.64" height="11.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody11AdvancePathEv
+matched: yes</title></rect><rect x="1058.35" y="696.09" width="6.64" height="11.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c11AdvancePathEv
 module: ov072
 addr: 0x0211f1dc
 size: 164 bytes
-matched: yes</title></rect><rect x="1058.35" y="707.28" width="6.64" height="12.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody10HurtPlayerEv
+matched: yes</title></rect><rect x="1058.35" y="707.28" width="6.64" height="12.01" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c10HurtPlayerEv
 module: ov072
 addr: 0x0211f280
 size: 176 bytes
-matched: yes</title></rect><rect x="1058.35" y="719.29" width="6.64" height="12.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody21UpdateGroundCollisionEP10dBgCh_Actr
+matched: yes</title></rect><rect x="1058.35" y="719.29" width="6.64" height="12.28" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c21UpdateGroundCollisionEP10dBgCh_Actr
 module: ov072
 addr: 0x0211f330
 size: 180 bytes
-matched: yes</title></rect><rect x="1058.35" y="731.57" width="6.64" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody11UpdateModelEv
+matched: yes</title></rect><rect x="1058.35" y="731.57" width="6.64" height="11.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c11UpdateModelEv
 module: ov072
 addr: 0x0211f3e4
 size: 168 bytes
-matched: yes</title></rect><rect x="1064.99" y="663.62" width="19.04" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody6State5Ev
+matched: yes</title></rect><rect x="1064.99" y="663.62" width="19.04" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c6State5Ev
 module: ov072
 addr: 0x0211f48c
 size: 236 bytes
-matched: yes</title></rect><rect x="1084.03" y="663.62" width="2.58" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody10InitState5Ev
+matched: yes</title></rect><rect x="1084.03" y="663.62" width="2.58" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c10InitState5Ev
 module: ov072
 addr: 0x0211f578
 size: 32 bytes
-matched: yes</title></rect><rect x="1086.61" y="663.62" width="13.23" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody6State4Ev
+matched: yes</title></rect><rect x="1086.61" y="663.62" width="13.23" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c6State4Ev
 module: ov072
 addr: 0x0211f598
 size: 164 bytes
-matched: yes</title></rect><rect x="1099.84" y="663.62" width="2.58" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody10InitState4Ev
+matched: yes</title></rect><rect x="1099.84" y="663.62" width="2.58" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c10InitState4Ev
 module: ov072
 addr: 0x0211f63c
 size: 32 bytes
-matched: yes</title></rect><rect x="1102.42" y="663.62" width="34.21" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody6State3Ev
+matched: yes</title></rect><rect x="1102.42" y="663.62" width="34.21" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c6State3Ev
 module: ov072
 addr: 0x0211f65c
 size: 424 bytes
-matched: yes</title></rect><rect x="1136.63" y="663.62" width="1.94" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody10InitState3Ev
+matched: yes</title></rect><rect x="1136.63" y="663.62" width="1.94" height="5.62" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c10InitState3Ev
 module: ov072
 addr: 0x0211f804
 size: 24 bytes
-matched: yes</title></rect><rect x="1064.99" y="669.24" width="26.62" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody6State2Ev
+matched: yes</title></rect><rect x="1064.99" y="669.24" width="26.62" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c6State2Ev
 module: ov072
 addr: 0x0211f81c
 size: 424 bytes
-matched: yes</title></rect><rect x="1091.61" y="669.24" width="4.27" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody10InitState2Ev
+matched: yes</title></rect><rect x="1091.61" y="669.24" width="4.27" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c10InitState2Ev
 module: ov072
 addr: 0x0211f9c4
 size: 68 bytes
-matched: yes</title></rect><rect x="1095.88" y="669.24" width="14.57" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody6State1Ev
+matched: yes</title></rect><rect x="1095.88" y="669.24" width="14.57" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c6State1Ev
 module: ov072
 addr: 0x0211fa08
 size: 232 bytes
-matched: yes</title></rect><rect x="1110.44" y="669.24" width="2.26" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody10InitState1Ev
+matched: yes</title></rect><rect x="1110.44" y="669.24" width="2.26" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c10InitState1Ev
 module: ov072
 addr: 0x0211faf0
 size: 36 bytes
-matched: yes</title></rect><rect x="1112.70" y="669.24" width="6.53" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody6State0Ev
+matched: yes</title></rect><rect x="1112.70" y="669.24" width="6.53" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c6State0Ev
 module: ov072
 addr: 0x0211fb14
 size: 104 bytes
-matched: yes</title></rect><rect x="1119.23" y="669.24" width="12.05" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody10InitState0Ev
+matched: yes</title></rect><rect x="1119.23" y="669.24" width="12.05" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c10InitState0Ev
 module: ov072
 addr: 0x0211fb7c
 size: 192 bytes
-matched: yes</title></rect><rect x="1131.29" y="669.24" width="3.77" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody17CallStateBehaviorEv
+matched: yes</title></rect><rect x="1131.29" y="669.24" width="3.77" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c17CallStateBehaviorEv
 module: ov072
 addr: 0x0211fc3c
 size: 60 bytes
-matched: yes</title></rect><rect x="1135.05" y="669.24" width="3.52" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody13CallStateInitEv
+matched: yes</title></rect><rect x="1135.05" y="669.24" width="3.52" height="7.22" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c13CallStateInitEv
 module: ov072
 addr: 0x0211fc78
 size: 56 bytes
-matched: yes</title></rect><rect x="1064.99" y="676.45" width="4.38" height="2.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody8SetStateEi
+matched: yes</title></rect><rect x="1064.99" y="676.45" width="4.38" height="2.89" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c8SetStateEi
 module: ov072
 addr: 0x0211fcb0
 size: 28 bytes
-matched: yes</title></rect><rect x="1064.99" y="679.35" width="4.38" height="3.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody16CleanupResourcesEv
+matched: yes</title></rect><rect x="1064.99" y="679.35" width="4.38" height="3.72" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c16CleanupResourcesEv
 module: ov072
 addr: 0x0211fccc
 size: 36 bytes
-matched: yes</title></rect><rect x="1064.99" y="683.07" width="4.38" height="0.41" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody16OnPendingDestroyEv
+matched: yes</title></rect><rect x="1064.99" y="683.07" width="4.38" height="0.41" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c16OnPendingDestroyEv
 module: ov072
 addr: 0x0211fcf0
 size: 4 bytes
-matched: yes</title></rect><rect x="1064.99" y="683.48" width="4.38" height="4.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody6RenderEv
+matched: yes</title></rect><rect x="1064.99" y="683.48" width="4.38" height="4.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c6RenderEv
 module: ov072
 addr: 0x0211fcf4
 size: 48 bytes
-matched: yes</title></rect><rect x="1064.99" y="688.45" width="4.38" height="4.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody8BehaviorEv
+matched: yes</title></rect><rect x="1064.99" y="688.45" width="4.38" height="4.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c8BehaviorEv
 module: ov072
 addr: 0x0211fd24
 size: 48 bytes
-matched: yes</title></rect><rect x="1064.99" y="693.41" width="4.38" height="40.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11SnowmanBody13InitResourcesEv
+matched: yes</title></rect><rect x="1064.99" y="693.41" width="4.38" height="40.52" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBgSnmBdy_c13InitResourcesEv
 module: ov072
 addr: 0x0211fd54
 size: 392 bytes
@@ -40337,11 +40325,11 @@ matched: yes</title></rect><rect x="1409.24" y="622.07" width="12.36" height="17
 module: ov077
 addr: 0x021275fc
 size: 464 bytes
-matched: yes</title></rect><rect x="1431.60" y="543.66" width="4.68" height="8.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmbD1Ev
+matched: yes</title></rect><rect x="1431.60" y="543.66" width="4.68" height="8.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_cD1Ev
 module: ov078
 addr: 0x02123740
 size: 88 bytes
-matched: yes</title></rect><rect x="1436.28" y="543.66" width="5.75" height="8.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmbD0Ev
+matched: yes</title></rect><rect x="1436.28" y="543.66" width="5.75" height="8.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_cD0Ev
 module: ov078
 addr: 0x02123798
 size: 108 bytes
@@ -40517,27 +40505,27 @@ matched: yes</title></rect><rect x="1492.95" y="593.46" width="5.03" height="9.6
 module: ov078
 addr: 0x02125f8c
 size: 104 bytes
-matched: yes</title></rect><rect x="1456.35" y="603.09" width="3.44" height="24.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb16CleanupResourcesEv
+matched: yes</title></rect><rect x="1456.35" y="603.09" width="3.44" height="24.44" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c16CleanupResourcesEv
 module: ov078
 addr: 0x02125ff4
 size: 180 bytes
-matched: yes</title></rect><rect x="1456.35" y="627.53" width="3.44" height="0.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb16OnPendingDestroyEv
+matched: yes</title></rect><rect x="1456.35" y="627.53" width="3.44" height="0.54" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c16OnPendingDestroyEv
 module: ov078
 addr: 0x021260a8
 size: 4 bytes
-matched: yes</title></rect><rect x="1456.35" y="628.08" width="3.44" height="11.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb6RenderEv
+matched: yes</title></rect><rect x="1456.35" y="628.08" width="3.44" height="11.95" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c6RenderEv
 module: ov078
 addr: 0x021260ac
 size: 88 bytes
-matched: yes</title></rect><rect x="1459.79" y="603.09" width="15.96" height="17.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb8BehaviorEv
+matched: yes</title></rect><rect x="1459.79" y="603.09" width="15.96" height="17.88" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c8BehaviorEv
 module: ov078
 addr: 0x02126104
 size: 612 bytes
-matched: yes</title></rect><rect x="1459.79" y="620.97" width="15.96" height="19.05" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb13InitResourcesEv
+matched: yes</title></rect><rect x="1459.79" y="620.97" width="15.96" height="19.05" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c13InitResourcesEv
 module: ov078
 addr: 0x02126368
 size: 652 bytes
-matched: yes</title></rect><rect x="1475.75" y="603.09" width="1.65" height="2.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN10KingBobOmb16OnAimedAtWithEggEv
+matched: yes</title></rect><rect x="1475.75" y="603.09" width="1.65" height="2.27" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12daBombking_c16OnAimedAtWithEggEv
 module: ov078
 addr: 0x021265f4
 size: 8 bytes

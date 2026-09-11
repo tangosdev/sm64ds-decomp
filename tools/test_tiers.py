@@ -201,5 +201,80 @@ class BaselineIsInSync(unittest.TestCase):
         self.assertEqual(backslid, [])
 
 
+class MatchedCaptionNamesTheAssemblySubset(unittest.TestCase):
+    """MATCHED is billed as byte-exact C, and 113 of the functions under it are not C.
+
+    They are real matches -- the original was assembly, so the asm block IS the
+    recovered source -- but a bar that does not say so is a bar a reader can be
+    surprised by. The caption is generated from the same database MATCHED is read from,
+    never written into the README by hand, because it is a number.
+    """
+
+    BASE = {"converted": {"converted": 5, "functions": 10, "pct": 50.0},
+            "linked": None}
+
+    def matched(self, **kw):
+        m = {"matched": 90, "functions": 100, "pct": 90.0,
+             "matchedBytes": 900, "totalBytes": 1000, "bytePct": 90.0,
+             "handAsm": 7, "handAsmBytes": 70}
+        m.update(kw)
+        return dict(self.BASE, matched=m)
+
+    def test_the_caption_follows_the_matched_row(self):
+        rows = tiers.bar_block(self.matched()).splitlines()
+        self.assertTrue(rows[1].startswith("MATCHED"))
+        self.assertIn("of which 7 are byte-exact assembly", rows[2])
+
+    def test_the_caption_is_indented_so_it_is_not_mistaken_for_the_row(self):
+        """write_readme preserves the last generated MATCHED row by finding the line
+        that STARTS with "MATCHED". A caption flush to the margin would be picked up as
+        the row itself and the real number would be lost on the next refresh."""
+        caption = tiers.matched_caption(self.matched()["matched"])
+        self.assertTrue(caption.startswith(" "))
+        self.assertFalse(caption.strip().startswith("MATCHED"))
+
+    def test_no_caption_when_the_database_predates_the_field(self):
+        """An older chaos-db.json has no handAsmFunctions. Absent must read as "do not
+        print the line", never as zero, or the bar would claim every match is C."""
+        self.assertIsNone(tiers.matched_caption(
+            {"matched": 90, "functions": 100, "pct": 90.0, "handAsm": None}))
+        rows = tiers.bar_block(self.matched(handAsm=None)).splitlines()
+        self.assertEqual(len(rows), 4, rows)
+
+    def test_no_caption_when_the_subset_is_empty(self):
+        self.assertIsNone(tiers.matched_caption(self.matched(handAsm=0)["matched"]))
+
+    def test_the_report_names_the_subset_in_bytes_as_well(self):
+        converted = {"converted": 5, "functions": 10, "pct": 50.0, "source_files": 8,
+                     "criteria": {k: 5 for k in tiers.CRITERIA},
+                     "distribution": {str(i): 2 for i in range(len(tiers.CRITERIA) + 1)},
+                     "alt_core_two": 6, "alt_shared_header": 7}
+        out = tiers.report(dict(self.matched(), converted=converted))
+        self.assertIn("of which 7 functions (70 bytes) are byte-exact assembly", out)
+
+    def test_a_preserved_matched_row_keeps_its_caption(self):
+        """A worktree with no chaos-db.json cannot supply MATCHED, so write_readme
+        carries the last generated row forward. Carrying the row without the caption
+        would leave the block claiming more C than anything measured."""
+        current = ("\n```\n"
+                   "MATCHED    ####  99.6%   11,342 / 11,390 functions\n"
+                   "           of which 113 are byte-exact assembly (hand-written "
+                   "in the original, not C)\n"
+                   "CONVERTED  ##    23.8%   2,707 / 11,357 functions\n"
+                   "```\n")
+        lines = current.splitlines()
+        keep = []
+        for i, line in enumerate(lines):
+            if line.strip().startswith("MATCHED"):
+                keep.append(line.strip())
+                if i + 1 < len(lines) and lines[i + 1].strip().startswith("of which"):
+                    keep.append(lines[i + 1].rstrip())
+                break
+        preserved = tiers.NEWLINE.join(keep)
+        block = tiers.bar_block(dict(self.BASE, matched=None), preserved)
+        self.assertIn("11,342 / 11,390", block)
+        self.assertIn("of which 113 are byte-exact assembly", block)
+
+
 if __name__ == "__main__":
     unittest.main()

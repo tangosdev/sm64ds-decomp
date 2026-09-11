@@ -14,5 +14,5 @@
 
 dScMgHanachan_c::~dScMgHanachan_c()
 {
-    __destroy_arr((char *)this + 0x4678, 0xf, 0x98, (void *)func_ov006_020ea324);
+    __cxa_vec_cleanup((char *)this + 0x4678, 0xf, 0x98, (void *)func_ov006_020ea324);
 }

@@ -11,7 +11,7 @@ void *_ZN7fBase_cnwEj(unsigned int size);
 void _ZN10dBgActor_cC2Ev(void *self);
 void _ZN9ModelAnimC1Ev(void *self);
 void _ZN11ShadowModelC1Ev(void *self);
-void func_020733a8(void *array, int count, int stride, void *ctor, void *dtor);
+void __cxa_vec_ctor(void *array, int count, int stride, void *ctor, void *dtor);
 void _ZN10dCcAcPos_cC1Ev(void *self);
 void _ZN10dCcAcPos_cD1Ev(void *self);
 void _ZN10dBgCh_ActrC1Ev(void *self);
@@ -32,7 +32,7 @@ extern "C" MadPiano *daPiano_c_classInit()
         _ZN11ShadowModelC1Ev(&actor->mShadowModel1);
         _ZN11ShadowModelC1Ev(&actor->mShadowModel2);
         _ZN11ShadowModelC1Ev(&actor->mShadowModel3);
-        func_020733a8(actor->mCylinderClsn, 2, sizeof(dCcAcPos_c),
+        __cxa_vec_ctor(actor->mCylinderClsn, 2, sizeof(dCcAcPos_c),
             (void *)_ZN10dCcAcPos_cC1Ev, (void *)_ZN10dCcAcPos_cD1Ev);
         _ZN10dBgCh_ActrC1Ev(&actor->mWithMeshClsn);
     }

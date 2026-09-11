@@ -6,14 +6,14 @@ authorize moving any production source.
 
 The claims service was unavailable locally (`tools/claims_key.txt` and
 `CLAIMS_API_KEY` were both absent).  `CLAIMS.md` had no active span for the
-three owners (the OneUpMushroom row is already `done`), so this lane made no
+three owners (the da1up_c row -- the class the note called OneUpMushroom -- is already `done`), so this lane made no
 claim and changed no production source, delinks, symbol file, or manifest.
 
 ## Verdict summary
 
 | initializer | ownership | regeneration readiness |
 |---|---|---|
-| `__sinit_ov002_02100adc` | **CONFIRMED: `ov002/OneUpMushroom`** | Exact organic proof: a natural non-const 14-entry PMF array emits a raw-identical `0x174` `.init`, the same 15 relocation word offsets/types/addends, 14 8-byte source descriptors, a `0x70` BSS destination, and one 4-byte `.ctor`. Production still needs names/signatures for the 14 anonymous state methods and TU-level link placement. |
+| `__sinit_ov002_02100adc` | **CONFIRMED: `ov002/da1up_c`** | Exact organic proof: a natural non-const 14-entry PMF array emits a raw-identical `0x174` `.init`, the same 15 relocation word offsets/types/addends, 14 8-byte source descriptors, a `0x70` BSS destination, and one 4-byte `.ctor`. Production still needs names/signatures for the 14 anonymous state methods and TU-level link placement. |
 | `__sinit_ov002_02100f84` | **CONFIRMED: `ov002/daObjKurumajiku_c`** | Partial organic proof: four separate vector objects with an inline three-component constructor and destructor emit the exact `0xe0` size, exact 13 relocation word offsets/types/addends, four 12-byte objects, four 12-byte registration nodes, one 4-byte destructor and one 4-byte `.ctor`. Sixteen non-relocation words differ because of store/register scheduling, so regeneration is **not byte-ready**. |
 | `__sinit_ov063_0211e5fc` | **CONFIRMED: `ov063/MadPiano`** | Exact organic proof: three distinct 8-byte resource objects plus a 2x2 PMF table emit a raw-identical `0x100` `.init`, the same 20 relocation word offsets/types/addends, three 12-byte registration nodes, four 8-byte descriptors, a 32-byte BSS table and one 4-byte `.ctor`. Production still needs the real special-member type declarations/names and TU-level link placement. |
 
@@ -21,12 +21,18 @@ The ownership verdicts stay confirmed even where regeneration is incomplete:
 ownership is established by exclusive consumers and TU boundaries; source
 reconstruction is a separate publication gate.
 
-## 1. OneUpMushroom (`ov002:3`)
+## 1. da1up_c (`ov002:3`)
+
+The cartridge names this class: ov002 holds the Itanium type-name string
+`7da1up_c` at 0x02108370 and `_ZTI7da1up_c` at 0x0210837c. This note originally
+called it OneUpMushroom, a coined name absent from the ROM; every mention below
+now uses the cartridge spelling.
 
 `__sinit_ov002_02100adc` copies fourteen 8-byte PMF descriptors into
 `data_ov002_0210dc00` (`0x70` bytes).  Its only ROM consumer relocation is
-`0x020b01bc -> 0x0210dc00`, in `OneUpMushroom::Behavior`; the only source
-consumer is `src/_ZN13OneUpMushroom8BehaviorEv.cpp`.  There are no unmapped or
+`0x020b01bc -> 0x0210dc00`, in `da1up_c::Behavior`; the only source
+consumer is now `src/actors/da1up_c.cpp`, the promoted TU that absorbed the 36
+shards of the 0x020aee40..0x020b0530 run.  There are no unmapped or
 external consumers.
 
 The descriptor copy order and relocated method targets are:
@@ -48,7 +54,7 @@ The descriptor copy order and relocated method targets are:
 | 12 | `0x02108368` | `0x020af908` |
 | 13 | `0x02108360` | `0x020af724` |
 
-Every target is inside the inferred OneUpMushroom TU
+Every target is inside the inferred da1up_c TU
 `0x020aee40..0x020b05d0` (38 functions, high-confidence boundaries).  The TU
 contains the class D1/D0 destructors, vtable-related methods, resource methods,
 Behavior and both spawn functions; no function hole was found.

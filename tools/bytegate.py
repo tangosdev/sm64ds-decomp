@@ -70,6 +70,40 @@ FUNC_RE = re.compile(
 )
 
 
+def alias_names(module_universe=None) -> dict[tuple[str, int], list[str]]:
+    """``{(module, addr): [zero-size alias names]}`` for every aliased address.
+
+    The names, not just the addresses, because the source file for an aliased
+    function is filed under whichever name its author knew it by, and in this tree
+    that is usually the ALIAS. ``src/_dmul.c`` decompiles the 1,776 bytes at
+    0x01ff8708; the sized symbol record on that address is called ``func_01ff8708``,
+    and a lookup by that name finds nothing. Four ITCM primitives sat unmatched for
+    that reason alone, each with a byte-exact source in the tree. See
+    ``alias_collision_addresses`` for why the zero-size record itself is dropped.
+    """
+    if module_universe is None:
+        sys.path.insert(0, str(REPO / "tools"))
+        import relocs as RL
+        module_universe = RL.module_universe
+
+    out: dict[tuple[str, int], list[str]] = {}
+    for symbols, label in module_universe():
+        sized, zero = set(), []
+        for line in symbols.read_text(errors="ignore").splitlines():
+            match = FUNC_RE.match(line)
+            if not match:
+                continue
+            name, size, addr = match.group(1), int(match.group(2), 16), int(match.group(3), 16)
+            if size:
+                sized.add(addr)
+            else:
+                zero.append((addr, name))
+        for addr, name in zero:
+            if addr in sized:
+                out.setdefault((label, addr), []).append(name)
+    return out
+
+
 def alias_collision_addresses(module_universe=None) -> set[tuple[str, int]]:
     """``{(module, addr)}`` where a zero-size function aliases a sized record.
 
@@ -77,25 +111,7 @@ def alias_collision_addresses(module_universe=None) -> set[tuple[str, int]]:
     while visiting the full symbol record, and deriving it from committed config keeps
     the progress and Chaos generators in lockstep.
     """
-    if module_universe is None:
-        sys.path.insert(0, str(REPO / "tools"))
-        import relocs as RL
-        module_universe = RL.module_universe
-
-    out = set()
-    for symbols, label in module_universe():
-        sized, zero = set(), []
-        for line in symbols.read_text(errors="ignore").splitlines():
-            match = FUNC_RE.match(line)
-            if not match:
-                continue
-            size, addr = int(match.group(2), 16), int(match.group(3), 16)
-            if size:
-                sized.add(addr)
-            else:
-                zero.append(addr)
-        out.update((label, addr) for addr in zero if addr in sized)
-    return out
+    return set(alias_names(module_universe))
 
 
 def is_zero_size_alias(module: str, addr: int, size: int, alias_addrs) -> bool:
@@ -114,6 +130,39 @@ def is_zero_size_alias(module: str, addr: int, size: int, alias_addrs) -> bool:
     in the repository each time.
     """
     return size == 0 and (module, addr) in alias_addrs
+
+
+def alias_target_size(module: str, addr: int, module_universe=None) -> int | None:
+    """The sized twin's byte length for an aliased address, or None if there is none.
+
+    ``is_zero_size_alias`` answers "should this record count", for the two counting
+    generators. A VERIFICATION gate needs a different answer: tools/linkcheck.py,
+    checking that ``src/_dmul.c`` reproduces the bytes at the address it shares with
+    ``func_01ff8708``, cannot byte-compare against the alias's own recorded size (0,
+    by construction -- nothing compiles to 0 bytes), and used to read that 0 straight
+    through and report every alias NO-SYM regardless of how correct its source was.
+    It has to compare against the SIZED twin's size instead. Same scan as
+    ``alias_names``, so the two never drift apart; kept separate because most callers
+    of ``alias_names`` want the NAME (which file to try compiling) and have no use
+    for the size, and this caller wants only the size.
+    """
+    if module_universe is None:
+        sys.path.insert(0, str(REPO / "tools"))
+        import relocs as RL
+        module_universe = RL.module_universe
+
+    for symbols, label in module_universe():
+        if label != module:
+            continue
+        for line in symbols.read_text(errors="ignore").splitlines():
+            match = FUNC_RE.match(line)
+            if not match:
+                continue
+            size, a = int(match.group(2), 16), int(match.group(3), 16)
+            if size and a == addr:
+                return size
+        break
+    return None
 
 
 def source_hash(path: pathlib.Path) -> str | None:

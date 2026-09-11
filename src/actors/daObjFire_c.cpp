@@ -123,7 +123,7 @@ s32 daObjFire_c::OnYoshiTryEat() {
  * body is a single `bx lr` -- an intentional no-op override, not a stub.
  * Matched byte-for-byte with mwccarm 2004/b56 (ov002).
  */
-int daObjFire_c::OnTurnIntoEgg(Player &player)
+void daObjFire_c::OnTurnIntoEgg(Player &player)
 {
 }
 

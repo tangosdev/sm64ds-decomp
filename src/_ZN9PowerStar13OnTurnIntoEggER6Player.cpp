@@ -11,9 +11,9 @@
 #include "PowerStar.h"
 #include "Player.h"
 
-extern "C" int func_ov002_020e8e80(PowerStar *thiz, Player &player);
+extern "C" void func_ov002_020e8e80(PowerStar *thiz, Player &player);
 
-int PowerStar::OnTurnIntoEgg(Player &player)
+void PowerStar::OnTurnIntoEgg(Player &player)
 {
     return func_ov002_020e8e80(this, player);
 }

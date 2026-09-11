@@ -112,6 +112,9 @@
 # test_premerge_check adds none on a runner with git installed, and test_symrecords,
 # test_nearmiss_db, test_tu_map, test_tu_promote, test_tu_production and
 # test_tubuild_owned_relocs add none anywhere.
+# The counting-rule work of 2026-09-09 adds 32 assertions to that historical total:
+# +10 test_asm_policy, +16 test_bytegate, +3 test_progress, +3 test_validate_merge.
+# None of them skips. test_tiers gains 6 more and runs in converted-ratchet.yml.
 # 505 of the 514 assert something. test_tubuild_vtable_partitions adds four to both
 # halves of that -- all four assert and none skips -- but the 514 was measured in the
 # container and the +4 is arithmetic on it, not a re-measurement. On a Windows tree
@@ -198,11 +201,14 @@ jobs:
             tools.test_delaunder \
             tools.test_enroll \
             tools.test_layout \
+            tools.test_linkcheck \
             tools.test_match_attempts \
             tools.test_match_provenance \
             tools.test_message_bank \
             tools.test_nearmiss_db \
+            tools.test_pgate \
             tools.test_premerge_check \
+            tools.test_prepush_linkcheck \
             tools.test_profile_reconstruction \
             tools.test_progress \
             tools.test_rombuild \
@@ -212,11 +218,13 @@ jobs:
             tools.test_sinit_owners \
             tools.test_srcpath \
             tools.test_stamp_provenance_verify \
+            tools.test_submit_pr_validation \
             tools.test_symrecords \
             tools.test_tu_map \
             tools.test_tu_production \
             tools.test_tu_promote \
             tools.test_tubuild_owned_relocs \
+            tools.test_tubuild_unwind_sections \
             tools.test_tubuild_vtable_partitions \
             tools.test_validate_merge
 
@@ -224,18 +232,23 @@ jobs:
 #
 #   test_affected_src            (1)   affected_src.py -- which src/ files a changed
 #                                      local header drags into the validation compile.
-#   test_asm_policy             (14)   asm_policy.py -- the one shared answer to "is this
-#                                      an asm transcription?". Guards the VACUOUS match.
+#   test_asm_policy             (24)   asm_policy.py -- the one shared answer to "is this
+#                                      an asm transcription?", and counts_as_matched, the
+#                                      one shared answer to "does this source count?".
+#                                      Guards the VACUOUS match at both.
 #   test_asset_catalog          (10)   asset_catalog.py -- NitroFS catalog build, the
 #                                      source references into it, and `resolve`, which
 #                                      must read an integer as a runtime handle and
 #                                      never as a NitroFS file ID.
 #   test_attribution            (17)   chaos_db_ci.py -- rebuilds chaos-db.json from
 #                                      COMMITTED history; the credit data the site reads.
-#   test_bytegate               (23)   bytegate.py -- the byte-gate-failure half of the
+#   test_bytegate               (39)   bytegate.py -- the byte-gate-failure half of the
 #                                      matched test, over layout_check/relocs/srcpath,
 #                                      plus is_zero_size_alias, which decides whether a
-#                                      symbol is in the published DENOMINATOR at all.
+#                                      symbol is in the published DENOMINATOR at all, and
+#                                      alias_names, which decides whether a source filed
+#                                      under a second name is found. Also drives the real
+#                                      chaos_db_ci over a fake repo for the counting rule.
 #   test_check_data_definitions  (3)   check_data_definitions.py -- WHICH objects the
 #                                      gate scans. It globbed only build/src/, which
 #                                      eligible.py never writes, so it skipped silently.
@@ -249,26 +262,84 @@ jobs:
 #   test_layout                 (11)   layout_check.py -- the invariants that make src/
 #                                      trustworthy; L1 is the one the ROM build cannot
 #                                      catch.
+#   test_linkcheck                (7)   linkcheck.py -- the len-mismatch verdict one
+#                                      level under pgate.py/prepush_linkcheck.py's own
+#                                      resolution: a zero-size EABI alias record (a
+#                                      second name for a differently-named, correctly-
+#                                      sized function at the same address) now compares
+#                                      against its sized twin's real length instead of
+#                                      its own recorded 0, and a nested entry point
+#                                      packed inside another symbol's compiled span
+#                                      (a hand-asm block with several ROM functions in
+#                                      one ELF symbol) is sliced and its relocations
+#                                      rebased into its own window rather than reported
+#                                      NO-SYM for a symbol the object never defines.
+#                                      Two tests compile the real committed fixtures
+#                                      (skip without mwccarm); the rest mock
+#                                      winning_object/extract_func/func_relocs_typed/
+#                                      rom_bytes to prove the offset arithmetic itself,
+#                                      including a deliberately wrong relocation a real
+#                                      compile alone could not distinguish from correct
+#                                      (any sub-slice of an already byte-perfect span
+#                                      trivially matches wherever you cut it).
 #   test_match_attempts         (10)   match_attempts.py -- append-only log of every
 #                                      matching attempt.
 #   test_match_provenance       (20)   match_provenance.py -- the durable how-record and
 #                                      ledger behind every banked match. (2 skip)
 #   test_message_bank            (5)   message_bank.py -- message-bank export/rebuild
 #                                      must round-trip to the exact original bytes.
-#   test_nearmiss_db            (21)   nearmiss_db.py -- the persistent near-miss DB, so
+#   test_nearmiss_db             (41)   nearmiss_db.py -- the persistent near-miss DB, so
 #                                      close attempts are never thrown away, plus the
 #                                      eval-pin guard: stored divergences are only
 #                                      comparable while their evaluator still exists.
+#                                      +7 (run link100, 2026-09-09): set-divergence, the
+#                                      hand-correction escape hatch for a row the live
+#                                      evaluator undercounts relative to tools/match.py's
+#                                      positional diff, and the reeval/bank-matches hold
+#                                      it needs to survive a re-score (was 21 documented
+#                                      here / 23 actual before this change).
+#                                      +11 (run link100, 2026-09-09): evaluate_full's
+#                                      divergence count is now tools/match.py's own
+#                                      compare() (METRIC_REV 2), not a second, separate
+#                                      SequenceMatcher-based diff that disagreed with it
+#                                      on a pure instruction reorder -- the actual bug
+#                                      set-divergence above exists to patch around.
+#                                      New: fix-refs (the check-refs dead-reference
+#                                      repair), the manual-hold auto-release reeval now
+#                                      runs every pass, apply_eval up/down coverage, and
+#                                      the match.py rotation-parity fixture (was 30
+#                                      documented here / 30 actual before this change).
+#   test_pgate                    (7)   pgate.py -- prepush_linkcheck.py's threaded
+#                                      twin resolves a file to every function its
+#                                      committed delinks.txt range owns the same way,
+#                                      via the same imported srcpath.symbols_for, so a
+#                                      consolidated TU gets one job per function in a
+#                                      parallel sweep instead of one blanket NO-SYM. No
+#                                      ROM, no compiler; srcpath/load_symbol_fn/
+#                                      run_linkcheck are mocked throughout, except one
+#                                      test that leaves load_symbol_fn real to prove an
+#                                      ITCM-housed symbol resolves through the actual
+#                                      config/arm9/itcm/symbols.txt.
 #   test_premerge_check         (87)   premerge_check.py -- runs the static gates on
 #                                      the git merge-tree RESULT, the one tree no CI
 #                                      job ever builds. Pure functions over verdict
 #                                      dicts and a stubbed main(); four honest
 #                                      skipTests need a git binary.
+#   test_prepush_linkcheck      (10)   prepush_linkcheck.py -- resolves a src file to
+#                                      EVERY function its committed delinks.txt range
+#                                      owns (srcpath.symbols_for), not only the one its
+#                                      filename spells, so a consolidated TU gets one
+#                                      verdict per function instead of one blanket
+#                                      NO-SYM. No ROM, no compiler; srcpath/
+#                                      _load_symbol/_run_linkcheck are mocked throughout,
+#                                      except one test that leaves _load_symbol real to
+#                                      prove an ITCM-housed symbol resolves through the
+#                                      actual config/arm9/itcm/symbols.txt.
 #   test_profile_reconstruction (14)   profile_reconstruction.py -- preserves the
 #                                      profile/class namespace split, actor/base layout
 #                                      distinction, overlay-address rejection, and the
 #                                      dry-run-only policy for ambiguous factory names.
-#   test_progress                (5)   progress.py -- matched functions/bytes vs the
+#   test_progress                (8)   progress.py -- matched functions/bytes vs the
 #                                      whole game; the number the README reports, both
 #                                      halves of the fraction.
 #   test_rombuild               (37)   rombuild.py -- the source-to-ROM build itself:
@@ -361,6 +432,35 @@ jobs:
 #                                      `cand_addr != expected["target_address"]` is
 #                                      likewise caught here alone; `>=` -> `>` and
 #                                      disabling the normalized bias are caught by both.
+#   test_tubuild_unwind_sections
+#                                (4)   the CodeWarrior unwind pair in the TU manifest
+#                                      schema. A TU compiled with exceptions on emits an
+#                                      `.exception` frame record and a 12-byte
+#                                      `.exceptix` index entry beside `.text`; arm9 holds
+#                                      636 bytes of `.exceptix` in retail. Until this the
+#                                      schema had no name for either, and `__destroy_arr`
+#                                      (.text 116 + .exception 20 + .exceptix 12) was
+#                                      refused three layers deep. Two tables have to move
+#                                      together: `_TU_SECTION_NAMES` admits the names and
+#                                      `_SECTION_SYMBOL_FIELDS` gives `@ET@`/`@EX@` a
+#                                      field to be licensed in. Widening the first
+#                                      alone makes `prepare_owned_nontext_section_order`
+#                                      call them unlicensed and refuse the entry with a
+#                                      worse message than before, so both halves are
+#                                      asserted, plus that the widening did not loosen
+#                                      the one-claim-per-name rule or admit an invented
+#                                      name. Dict-driven: no compiler, no ROM, no config/
+#                                      and no build/. 4 of 4 run in CI, none skips. Its
+#                                      own module rather than more of test_tubuild.py for
+#                                      the reason in group 3 of the header: the existing
+#                                      schema test it sits beside there,
+#                                      test_manifest_section_claims_are_explicit_and_
+#                                      unambiguous, contributes zero tests to
+#                                      `python -m unittest`. The third copy of the name
+#                                      list is inline in rombuild.intact_tu_policies
+#                                      (tubuild imports rombuild, so the dependency
+#                                      cannot run the other way) and is pinned in
+#                                      test_rombuild instead.
 #   test_tubuild_vtable_partitions
 #                                (4)   tubuild's vtable-partition licensing boundary --
 #                                      the fail-closed path #2091 added, which refuses a
@@ -387,7 +487,8 @@ jobs:
 #                                      linked ELF names a vtable's output section after
 #                                      its overlay (OV036/OV047/OV070 measured on the
 #                                      baseline link) while a manifest section is one of
-#                                      .rodata/.init/.ctor/.data/.bss. Comparing them
+#                                      .rodata/.init/.ctor/.data/.bss/.exception/
+#                                      .exceptix. Comparing them
 #                                      refuses every real input, which is what made the
 #                                      whole path unreachable; 0b0e319 removed exactly
 #                                      that comparison. Mutation-checked both ways:
@@ -395,8 +496,10 @@ jobs:
 #                                      the new test, and restoring the section-name
 #                                      comparison is caught by it and by the moved
 #                                      licensing test.
-#   test_validate_merge         (35)   validate_merge.py -- builds the machine-readable
+#   test_validate_merge         (76)   validate_merge.py -- builds the machine-readable
 #                                      PR validation report the validator comment renders.
+#                                      (The 35 recorded here was stale by 38 before this
+#                                      line was touched; 76 is a measurement, not a delta.)
 #
 # The two suites this list still refuses, and the number that says why. test_objisolate
 # is one `@unittest.skipUnless(_compiler(), "mwccarm not present")` class and nothing
