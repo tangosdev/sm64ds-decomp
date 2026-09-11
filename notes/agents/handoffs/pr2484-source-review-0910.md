@@ -34,6 +34,7 @@ and distinguish the newly discovered contract issue from remaining shared work.
 | FALL-04 | provenance | Fixed: cleanup-history prose and unsupported original Init/Cleanup linker-name claims are removed. The factory symbol is a reconstructed spelling supported by RTTI/registry context, not recovered original source text. Vtable evidence describes the actual definitions anchoring its emission. |
 | FALL-05 | provenance | Fixed: both live FL_KUZURE registry representations follow the factory rename. Only current_factory_file and factory_filename change in that one row. Historical census entries are retained as dated observations. |
 | FALL-06 | reconstruction | Partial under #2486: shared ov098 helper/base interfaces, common generic helper exports and a coordinated typed model/KCL/CLPS descriptor remain work for humanizer/integrator support through @andrewboudreau. This leaf does not establish original helper identities or a general compiler restriction. |
+| FALL-07 | provenance | Fixed 2026-09-11: the inherited direct-read note used the wrong ov022 base. Fresh bounded reads at configured base 0x021111a0 reproduce its class, RTTI, resource and vtable values; every corresponding offset computed from the old 0x0210f5e0 base is outside the image. |
 
 ## Scope and measured behavior
 
@@ -100,3 +101,23 @@ canonical contributor-credit check are recorded in producer evidence. Final
 current-main composition, independent source acceptance and required terminal
 private validation remain separate; old PR comments and historical manifest
 build reports do not establish those results for this candidate.
+
+
+## FALL-07 correction, 2026-09-11
+
+The historical manifest note's 0x0210f5e0 base was incorrect. The current
+ov022 delinks starts .text at 0x021111a0, and overlay_0022.bin is 13,152 bytes.
+The resource table at 0x0211427c therefore starts at file offset 0x30dc, and
+the class name at 0x02114288 starts at 0x30e8. Using the old base gives
+0x4c9c/0x4ca8, both beyond the complete image. Fresh bounded reads reproduce
+all three RTTI words, the complete null-terminated class name, all three resource
+words and vtable slots 0/3. The manifest now identifies the invalid old
+measurement explicitly and records these corrected reads.
+
+This successor changes only manifest notes[1] and this handoff. Every source,
+header, enrollment, attribution and registry blob is unchanged from 413c3a0f.
+All other manifest values, including ownership and compiler-output policy, are
+unchanged. Existing exact byte, module, metadata, consumer and credit proof is
+reused on that demonstrated input equivalence; no new full-ROM run is claimed.
+The direct-read proof is build/rom-base-correction.json. The producer evidence
+pins the successor and carries all seven findings and partial issue #2486.
