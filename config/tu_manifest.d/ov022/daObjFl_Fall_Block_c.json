@@ -50,9 +50,11 @@
   "data": [],
   "bss": [],
   "notes": [
-    "Cleanup of the promoted ov022/daObjFl_Fall_Block_c TU (InitResources, CleanupResources, inline D1/D0). Factory remains src/d_a_obj_fl_fall_block.c, outside this licensed .text range. Shared ov098 setup/teardown and the three-word file table stay address-named.",
+    "The promoted TU retains exactly four functions: InitResources, CleanupResources, and compiler-generated D1/D0. The separate factory src/d_a_obj_fl_fall_block.cpp now uses ordinary new through the actor allocator; it remains outside this licensed .text range. Shared ov098 interfaces and data ownership remain partial reconstruction under issue #2486.",
     "MEASURED 2026-08-30, reading extracted/overlays/overlay_0022.bin directly (ov022 base 0x0210f5e0): _ZTS20daObjFl_Fall_Block_c at ov022:0x02114288 is the byte string '20daObjFl_Fall_Block_c' -- the ROM's own length-prefixed spelling of this class's decomp name, NOT a coined one -- and _ZTI20daObjFl_Fall_Block_c at ov022:0x02114270 reads [0x0209a764, 0x02114288, 0x02114874]: __si_class_type_info vtable+8, that same _ZTS, and _ZTI16daObjFallBlock_c, so the cartridge states the direct base is daObjFallBlock_c. _ZTV20daObjFl_Fall_Block_c's symbols.txt address 0x021142c4 is the address point; slot 0 is 0x02112448 (InitResources) and slot 3 is 0x02112434 (CleanupResources), matching the header. Every record has a real ROM home outside this entry's claimed .text range, so all 13 compiler_only_output rows are deadstrip-data and none is a plain deadstrip.",
-    "PROMOTED AND ENROLLED 2026-08-30. config/arm9/overlays/ov022/delinks.txt now licenses the whole 0x02112380..0x0211245c run to src/game/actors/daObjFl_Fall_Block_c.cpp; the four legacy per-function sources are deleted. MEASURED: python tools/rombuild.py -j 16 reports 106/106 exact with this TU in place, matching origin/main @ ec8fe22d6 from the same invocation. READABILITY: tools/tiers.py scores this TU as passing ALL FIVE CONVERTED criteria -- it contains no mangled reference at all -- so the promotion ADDS src/game/actors/daObjFl_Fall_Block_c.cpp to config/converted-baseline.json rather than only removing paths from it."
+    "PROMOTED AND ENROLLED 2026-08-30. config/arm9/overlays/ov022/delinks.txt now licenses the whole 0x02112380..0x0211245c run to src/game/actors/daObjFl_Fall_Block_c.cpp; the four legacy per-function sources are deleted. MEASURED: python tools/rombuild.py -j 16 reports 106/106 exact with this TU in place, matching origin/main @ ec8fe22d6 from the same invocation. READABILITY: tools/tiers.py scores this TU as passing ALL FIVE CONVERTED criteria -- it contains no mangled reference at all -- so the promotion ADDS src/game/actors/daObjFl_Fall_Block_c.cpp to config/converted-baseline.json rather than only removing paths from it.",
+    "PR #2484 continues public 3030d667a05b14669ae8d67ecdb1516aeebd8699 from base 224e660ea0219d0999c58483eb2dd9b38991f5ef. Historical promotion/ROM records in this manifest remain pinned historical evidence; fresh source/byte/rename proof and review findings are in notes/agents/handoffs/pr2484-source-review-0910.md. The current TU metadata check reports eight VERIFIED and five PARTIAL rows, without new data or BSS ownership.",
+    "The leaf helper declarations follow the actual definitions: setup takes char* and char**, teardown takes char* and void**. The resource address retains the common int[] anchor declaration. Its three ROM words supply model, KCL and CLPS pointers, but these existing raw interfaces do not establish original member names or a shared typed descriptor. The generic decl_common.h helper exports remain separate shared-header work under issue #2486."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -212,7 +214,16 @@
       "disposition": "deadstrip-data",
       "canonical_module": "ov022",
       "canonical_address": "0x021142c4",
-      "reason": "the class's own vtable storage. This TU declares the class, so mwcc emits the table as vague linkage. MEASURED: the cartridge carries this record under this exact name at ov022:0x021142c4 -- daObjFl_Fall_Block_c is the ROM's own RTTI spelling, not a coined one (the length prefix and the string were read straight out of the overlay image). That home lies outside every range this entry claims, so dsd delinks the cartridge's copy regardless; rombuild proves this object's relocation-resolved words against it before isolation discards them."
+      "reason": "The TU's leaf virtual definitions and inline destructor anchor the emitted leaf vtable. Its ROM address point is ov022:0x021142c4, and the class spelling is supported by its RTTI string. This address lies outside the claimed text range. The emitted table is checked against the existing ROM data before isolation removes the unlicensed metadata; this entry does not claim its data ownership."
     }
-  ]
+  ],
+  "source_review_checkpoint": {
+    "status": "partial-awaiting-independent-review",
+    "task": "pr2484-source-review-0910",
+    "input_commit": "3030d667a05b14669ae8d67ecdb1516aeebd8699",
+    "source_base": "224e660ea0219d0999c58483eb2dd9b38991f5ef",
+    "rename_commit": "1ec41f86e7e32154d931e187383dc068043321a9",
+    "remaining_issue": "https://github.com/tangosdev/sm64ds-decomp/issues/2486",
+    "scope": "Four-function text-only TU plus separately enrolled 60-byte natural C++ factory; no five-function promotion or shared-base edit."
+  }
 }
