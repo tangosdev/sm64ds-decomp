@@ -760,6 +760,28 @@ def falls_off_return_patch(text, sym):
 # vptr[0], cdecl -- rather than to give slot 0 a second calling convention.
 # The local `virtual` declaration stays; only the call changes.
 VIRTUAL_CALL = {
+    # The graphics block is cdecl; its four scene-slot callees use the host
+    # receiver convention. Keep the slots, null path and return contract.
+    "func_ov004_020ae03c": [
+        ("void (*fn)(char*) = *(void(**)(char*))",
+         "void (__fastcall *fn)(char*, void*) = *(void(__fastcall **)(char*, void*))"),
+        ("fn(p);", "fn(p, 0);"),
+    ],
+    "func_ov004_020ae06c": [
+        ("int (*vfn)(void*) = (int(*)(void*))*(int*)(*(int*)r0 + 0x60);",
+         "int (__fastcall *vfn)(void*, void*) = (int(__fastcall *)(void*, void*))*(int*)(*(int*)r0 + 0x60);"),
+        ("return vfn(r0);", "return vfn(r0, 0);"),
+    ],
+    "func_ov004_020ae0a4": [
+        ("void (*fn)(char*) = *(void(**)(char*))",
+         "void (__fastcall *fn)(char*, void*) = *(void(__fastcall **)(char*, void*))"),
+        ("fn(p);", "fn(p, 0);"),
+    ],
+    "func_ov004_020ae0d4": [
+        ("void (*fn)(char*) = *(void(**)(char*))",
+         "void (__fastcall *fn)(char*, void*) = *(void(__fastcall **)(char*, void*))"),
+        ("fn(p);", "fn(p, 0);"),
+    ],
     # Chuckya's raw slot-3 call passes a stack receiver on x86, while the
     # hosted ModelAnim entry uses the same fastcall receiver/dummy-EDX pair
     # as the other model slots. Preserve its slot and all Behavior control flow.
@@ -1307,6 +1329,10 @@ def shadow_header_decl(text, sym, spec):
 # A matching expression hidden in a comment or inactive branch is insufficient.
 # read_text normalizes line endings; every other source byte must stay pinned.
 REVIEWED_ABI_INPUTS = {
+    "func_ov004_020ae03c": "19944a7aea87c62e03c6d95b27491500d47d4db99aa8530fe40640a4a7322e01",
+    "func_ov004_020ae06c": "4c34bfc8cbec53e999be4cf1efd70f39d95109838bec9c2c4eb7396370fabf4f",
+    "func_ov004_020ae0a4": "0f56be250d1bc9584807e1a2237017b9a0f9a2c1ff8b9476a49636f8094ec154",
+    "func_ov004_020ae0d4": "b2b64f714835c7c099cba2834ffbc4e9341959b3bd0f914b2e67fd5c3e211a0b",
     "_ZN7Chuckya8BehaviorEv": "0c984ac5d604c5a1502f6d9181f7be1b1183d0ffe17336e0dd4708f99e4865a2",
 }
 
