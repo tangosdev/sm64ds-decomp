@@ -61,6 +61,7 @@ grouped under `checks` for a human reading the file directly.
 """
 import argparse
 import ast
+import hashlib
 from dataclasses import dataclass
 import json
 import pathlib
@@ -150,7 +151,7 @@ def _cmake_tokens(text):
     """
     i = 0
     while i < len(text):
-        if text[i].isspace():
+        if text[i].isspace() or (i == 0 and text[i] == '\ufeff'):
             i += 1
             continue
         start = i
@@ -255,26 +256,122 @@ def _cmake_helper_writes(commands):
     return helpers
 
 
-def _invalidate_helper_writes(name, args, variables, helpers):
-    """An unevaluated helper must not leave its previous output looking current."""
-    if name not in helpers:
-        return
-    formal, body = helpers[name]
-    local = dict(variables)
-    actual = _cmake_values(args, variables)
-    for key, value in zip(formal, actual):
-        local[key] = [value]
-    for command, values in body:
-        words = [v.value for v in _cmake_values(values, local)]
-        output = None
-        if command in ("set", "unset", "option") and words:
-            output = words[0]
-        elif command == "list" and len(words) > 1:
-            output = words[-1] if words[0] in ("LENGTH", "GET", "JOIN", "FIND", "SUBLIST") else words[1]
-        elif command == "file" and len(words) > 2 and words[0] in ("STRINGS", "READ"):
-            output = words[2]
-        if output:
-            variables.pop(output, None)
+def _cmake_write_targets(name, args, variables, helpers, active=()):
+    """Return possible variable writes, or None when their identity is unknown.
+
+    This is an invalidation model, not a CMake evaluator. File contents, process
+    output and helper return values never preserve a preceding literal value.
+    """
+    if name in helpers:
+        if name in active:
+            return None
+        formal, body = helpers[name]
+        local = dict(variables)
+        for index, key in enumerate(formal):
+            local[key] = _cmake_values(args[index:index + 1], variables)
+        local['ARGN'] = _cmake_values(args[len(formal):], variables)
+        outputs = set()
+        for command, inner in body:
+            written = _cmake_write_targets(command, inner, local, helpers, active + (name,))
+            if written is None:
+                return None
+            outputs.update(written)
+            for key in written:
+                local.pop(key, None)
+        return outputs
+    # Outputs occupy argument positions: an empty replacement or input must
+    # not shift the following output name into another slot.
+    words = [';'.join(v.value for v in _cmake_values([arg], variables)) for arg in args]
+    op = words[0] if words else ''
+    outputs = []
+    if name in ('set', 'unset', 'option', 'find_program', 'find_file',
+                'find_path', 'find_library', 'get_filename_component',
+                'get_target_property', 'get_property', 'get_directory_property',
+                'get_source_file_property', 'get_test_property'):
+        outputs = words[:1]
+    elif name == 'list':
+        if op in ('LENGTH', 'GET', 'JOIN', 'FIND', 'SUBLIST'):
+            outputs = words[-1:]
+        elif op in ('POP_BACK', 'POP_FRONT'):
+            outputs = words[1:]
+        elif op == 'TRANSFORM' and 'OUTPUT_VARIABLE' in words:
+            outputs = words[words.index('OUTPUT_VARIABLE') + 1:]
+        else:
+            outputs = words[1:2]
+    elif name == 'file':
+        if op in ('READ', 'STRINGS'):
+            outputs = words[2:3]
+        elif op in ('GLOB', 'GLOB_RECURSE'):
+            outputs = words[1:2]
+        elif op in ('SIZE', 'TIMESTAMP', 'REAL_PATH', 'READ_SYMLINK'):
+            outputs = words[2:3]
+        elif op in ('RELATIVE_PATH', 'TO_CMAKE_PATH', 'TO_NATIVE_PATH'):
+            outputs = words[1:2] if op == 'RELATIVE_PATH' else words[2:3]
+        elif op in ('MD5', 'SHA1', 'SHA224', 'SHA256', 'SHA384', 'SHA512',
+                    'SHA3_224', 'SHA3_256', 'SHA3_384', 'SHA3_512'):
+            outputs = words[2:3]
+        elif op in ('DOWNLOAD', 'UPLOAD'):
+            outputs = [words[i + 1] for i, word in enumerate(words[:-1])
+                       if word in ('STATUS', 'LOG')]
+        elif op not in ('WRITE', 'APPEND', 'TOUCH', 'TOUCH_NOCREATE', 'GENERATE',
+                        'COPY', 'COPY_FILE', 'INSTALL', 'RENAME', 'REMOVE',
+                        'REMOVE_RECURSE', 'MAKE_DIRECTORY', 'CHMOD', 'CHMOD_RECURSE'):
+            return None
+    elif name == 'string':
+        if op == 'REGEX':
+            outputs = words[4:5] if words[1:2] == ['REPLACE'] else words[3:4]
+        elif op == 'REPLACE':
+            outputs = words[3:4]
+        elif op in ('APPEND', 'PREPEND', 'CONCAT', 'TIMESTAMP', 'RANDOM', 'UUID'):
+            outputs = words[1:2] if op != 'RANDOM' else words[-1:]
+        elif op in ('FIND', 'SUBSTRING'):
+            outputs = words[3:4] if op == 'FIND' else words[4:5]
+        elif op == 'COMPARE':
+            outputs = words[4:5]
+        elif op in ('JOIN',):
+            outputs = words[2:3]
+        elif op in ('STRIP', 'TOLOWER', 'TOUPPER', 'LENGTH', 'CONFIGURE',
+                    'MAKE_C_IDENTIFIER', 'GENEX_STRIP', 'REPEAT', 'HEX'):
+            outputs = words[3:4] if op == 'REPEAT' else words[2:3]
+        elif op in ('MD5', 'SHA1', 'SHA224', 'SHA256', 'SHA384', 'SHA512'):
+            outputs = words[1:2]
+        else:
+            return None
+    elif name == 'math':
+        outputs = words[1:2]
+    elif name == 'execute_process':
+        outputs = [words[i + 1] for i, word in enumerate(words[:-1])
+                   if word in ('RESULT_VARIABLE', 'RESULTS_VARIABLE',
+                               'OUTPUT_VARIABLE', 'ERROR_VARIABLE')]
+    elif name in ('include', 'find_package', 'cmake_language'):
+        return None  # arbitrary included/evaluated code can write any variable
+    elif name not in {
+            'cmake_minimum_required', '\ufeffcmake_minimum_required', 'project',
+            'if', 'elseif', 'else', 'endif', 'foreach', 'endforeach', 'while',
+            'endwhile', 'function', 'endfunction', 'macro', 'endmacro', 'block',
+            'endblock', 'return', 'continue', 'break', 'message', 'enable_language',
+            'add_executable', 'add_library', 'add_custom_command', 'add_custom_target',
+            'add_dependencies', 'add_test', 'enable_testing', 'set_tests_properties',
+            'target_sources', 'target_compile_definitions', 'target_compile_options',
+            'target_include_directories', 'target_link_libraries', 'target_link_options',
+            'target_link_directories', 'target_compile_features', 'add_compile_options',
+            'add_compile_definitions', 'add_definitions', 'include_directories',
+            'link_directories', 'link_libraries', 'set_property',
+            'set_target_properties', 'set_source_files_properties'}:
+        raise ValueError('unsupported CMake command cannot prove source selection: ' + name)
+    if any(not re.fullmatch(r'\w+', key) for key in outputs):
+        return None
+    return set(outputs)
+
+
+def _invalidate_cmake_writes(name, args, variables, helpers):
+    outputs = _cmake_write_targets(name, args, variables, helpers)
+    if outputs is None:
+        variables.clear()
+    else:
+        for key in outputs:
+            variables.pop(key, None)
+    return outputs
 
 
 def _cmake_symbol_lists(text):
@@ -283,17 +380,24 @@ def _cmake_symbol_lists(text):
     commands = list(_cmake_commands(text))
     helpers = _cmake_helper_writes(commands)
     for command, args in commands:
-        _invalidate_helper_writes(command, args, variables, helpers)
+        if command not in ('set', 'unset', 'list'):
+            written = _invalidate_cmake_writes(command, args, variables, helpers)
+            for key in written or ():
+                if re.fullmatch(r'\w+_SYMS', key):
+                    yield key, Token('${' + key + '}', args[0].pos if args else 0)
         if command in ("if", "foreach", "while", "function", "macro", "block"):
             depth += 1
         elif command in ("endif", "endforeach", "endwhile", "endfunction", "endmacro", "endblock"):
             depth = max(0, depth - 1)
         if command not in ("set", "unset", "list") or not args:
             continue
-        name = args[0].value
+        keys = _cmake_values(args[:1], variables)
+        name = keys[0].value if len(keys) == 1 else ''
         values = _cmake_values(args[1:], variables)
         if command == "set":
-            if depth or any(t.value in ("CACHE", "PARENT_SCOPE") for t in args[1:]):
+            if not re.fullmatch(r'\w+', name):
+                variables.clear()
+            elif depth or any(t.value in ("CACHE", "PARENT_SCOPE") for t in args[1:]):
                 variables.pop(name, None)
             else:
                 variables[name] = values
@@ -305,11 +409,30 @@ def _cmake_symbol_lists(text):
         elif len(args) > 1:
             name = args[1].value
             if args[0].value in ("LENGTH", "GET", "JOIN", "FIND", "SUBLIST"):
-                variables.pop(args[-1].value, None)  # output, not the input list
-            elif args[0].value == "APPEND" and not depth:
-                variables.setdefault(name, []).extend(_cmake_values(args[2:], variables))
+                outputs = _cmake_write_targets(command, args, variables, helpers)
+                _invalidate_cmake_writes(command, args, variables, helpers)
+                for key in outputs or ():
+                    if re.fullmatch(r'\w+_SYMS', key):
+                        yield key, Token('${' + key + '}', args[-1].pos)
+            elif args[0].value in ('APPEND', 'PREPEND', 'INSERT'):
+                added = _cmake_values(args[3:] if args[0].value == 'INSERT' else args[2:], variables)
+                if re.fullmatch(r'\w+_SYMS', name):
+                    for value in added:
+                        yield name, value
+                if depth or name not in variables:
+                    variables.pop(name, None)
+                elif args[0].value == 'APPEND':
+                    variables[name].extend(added)
+                elif args[0].value == 'PREPEND':
+                    variables[name] = added + variables[name]
+                else:
+                    variables.pop(name, None)
             else:
-                variables.pop(name, None)
+                written = _invalidate_cmake_writes(command, args, variables, helpers)
+                for key in written or ():
+                    if re.fullmatch(r'\w+_SYMS', key) and args[0].value not in (
+                            'REMOVE_ITEM', 'REMOVE_AT', 'REMOVE_DUPLICATES', 'FILTER', 'SORT', 'REVERSE'):
+                        yield key, Token('${' + key + '}', args[0].pos)
 
 
 # ---- check 1: slice manifests -----------------------------------------------
@@ -354,9 +477,27 @@ def check_cmake_symbols():
     checked = 0
     try:
         symbols = list(_cmake_symbol_lists(text))
+        expanded = {}
+        selected, requests = _cmake_build_inputs(text, expanded)
+        generated = set()
+        for request in requests:
+            if len(request) > 1 and pathlib.Path(request[1]).name in ('romdata.py', 'ovdata.py'):
+                index = 2 if pathlib.Path(request[1]).name == 'romdata.py' else 3
+                if len(request) > index and _generated_data_owners([request]):
+                    path = pathlib.Path(request[index])
+                    generated.add((path if path.is_absolute() else PORT / path).resolve())
     except ValueError as exc:
         return 0, [Failure(rel, 0, f"cannot parse CMake symbol lists: {exc}")]
     for list_name, tok in symbols:
+        # Some *_SYMS variables actually hold generated C source paths. Admit
+        # only expansions witnessed in the selected graph and named-data input
+        # proof; an unresolved path-looking expression is still a failure.
+        values = expanded.get((list_name, tok.pos), [])
+        paths = {(pathlib.Path(v.value) if pathlib.Path(v.value).is_absolute()
+                  else PORT / v.value).resolve() for v in values}
+        if paths and paths <= selected & generated:
+            checked += len(paths)
+            continue
         sym = tok.value
         checked += 1
         lineno = _line_at(text, tok.pos)
@@ -369,7 +510,54 @@ def check_cmake_symbols():
     return checked, failures
 
 
-def _cmake_build_inputs(text):
+# This existing tier-sharing pass moves common sources into an OBJECT library
+# and reinserts that library into every same target. It preserves source
+# selection. Pin the reviewed command stream and its list-emitting helper;
+# arbitrary target SOURCES mutations are unsupported and block ownership.
+TIER_SHARING_COMMANDS = '51c6017c7d71bd5c35bbc5f8eade86dfa3b2eaa11cfd33dd0bcbef688bb59200'
+TIER_SHARING_TOOL = '0ce272b764373cd019410e59f2a88c1fdea4c75a483c80ebe3d5314a87fa95d9'
+
+
+def _verified_tier_sharing(commands, first, last):
+    after = first + 148
+    if after > last:
+        raise ValueError('unsupported/incomplete tier-sharing source rewrite')
+    part = commands[first:after]
+    payload = [(name, [(arg.value, arg.literal, arg.punctuation) for arg in args])
+               for name, args in part]
+    digest = hashlib.sha256(json.dumps(payload, separators=(',', ':')).encode()).hexdigest()
+    helper = PORT / 'tools/tierscan.py'
+    if (digest != TIER_SHARING_COMMANDS or not helper.is_file() or
+            hashlib.sha256(helper.read_text(encoding='utf-8').encode()).hexdigest() != TIER_SHARING_TOOL):
+        raise ValueError('tier-sharing source rewrite changed; source preservation needs review')
+    return after
+
+
+def _reject_source_rewrite(name, args, variables, helpers, active=(), targets_exist=False):
+    if name in helpers:
+        if name in active:
+            raise ValueError('recursive CMake helper cannot prove source selection')
+        formal, body = helpers[name]
+        local = dict(variables)
+        for index, key in enumerate(formal):
+            local[key] = _cmake_values(args[index:index + 1], variables)
+        for command, inner in body:
+            _reject_source_rewrite(command, inner, local, helpers, active + (name,), targets_exist)
+        return
+    if targets_exist and name in ('include', 'find_package', 'cmake_language'):
+        raise ValueError('unevaluated CMake code can rewrite existing target sources: ' + name)
+    words = [arg.value for arg in _cmake_values(args, variables)]
+    if name == 'set_property' and words[:1] == ['TARGET'] and 'PROPERTY' in words:
+        prop = words[words.index('PROPERTY') + 1:][:1]
+        if not prop or prop == ['SOURCES'] or '$' in prop[0]:
+            raise ValueError('unsupported target SOURCES rewrite; cannot retain selected owners')
+    if name == 'set_target_properties' and 'PROPERTIES' in words:
+        props = words[words.index('PROPERTIES') + 1::2]
+        if any(prop == 'SOURCES' or '$' in prop for prop in props):
+            raise ValueError('unsupported target SOURCES rewrite; cannot retain selected owners')
+
+
+def _cmake_build_inputs(text, symbol_expansions=None):
     """Read the literal part of the host build graph without executing CMake.
 
     Only unconditional commands and foreach loops over known lists supply
@@ -402,15 +590,24 @@ def _cmake_build_inputs(text):
 
     def invalidate(first, last):
         for name, args in commands[first:last]:
-            if name in ("set", "unset", "option") and args:
-                env.pop(args[0].value, None)
-            elif name == "list" and len(args) > 1:
-                env.pop(args[1].value, None)
+            _reject_source_rewrite(name, args, env, helpers, targets_exist=bool(targets))
+            _invalidate_cmake_writes(name, args, env, helpers)
 
     def walk(first, last):
         i = first
         while i < last:
             name, args = commands[i]
+            if name == 'set' and args and args[0].value == 'PORT_SHARE_TARGETS':
+                after = _verified_tier_sharing(commands, i, last)
+                # The pinned pass only writes its own scratch variables and
+                # these partition lists. Retain the established source graph.
+                for key in list(env):
+                    if key.startswith('_') or key in ('PORT_SHARE_TARGETS', 'PORT_TIER_SHARED',
+                                                      'PORT_TIER_PERTGT', 'PORT_DIVERGENT_DEFINES'):
+                        env.pop(key, None)
+                i = after
+                continue
+            _reject_source_rewrite(name, args, env, helpers, targets_exist=bool(targets))
             if name in starts:
                 after = block_end(i, last)
                 values = _cmake_values(args, env)
@@ -442,28 +639,47 @@ def _cmake_build_inputs(text):
                     invalidate(i + 1, after - 1)
                 i = after
                 continue
-            _invalidate_helper_writes(name, args, env, helpers)
+            if name not in ('set', 'unset', 'list'):
+                _invalidate_cmake_writes(name, args, env, helpers)
             values = _cmake_values(args, env)
             words = [v.value for v in values]
+            if symbol_expansions is not None:
+                key = args[0].value if name == 'set' and args else (
+                    args[1].value if name == 'list' and len(args) > 1 else '')
+                if re.fullmatch(r'\w+_SYMS', key):
+                    start = 1 if name == 'set' else 3 if args[0].value == 'INSERT' else 2
+                    for arg in args[start:]:
+                        tokens = _cmake_values([arg], env)
+                        if all('$' not in token.value for token in tokens):
+                            symbol_expansions.setdefault((key, arg.pos), []).extend(tokens)
             if name == "set" and args:
-                key = args[0].value
-                if any(v.value in ("CACHE", "PARENT_SCOPE") for v in args[1:]):
+                keys = _cmake_values(args[:1], env)
+                key = keys[0].value if len(keys) == 1 else ''
+                if not re.fullmatch(r'\w+', key):
+                    env.clear()
+                elif any(v.value in ("CACHE", "PARENT_SCOPE") for v in args[1:]):
                     env.pop(key, None)
                 else:
                     env[key] = _cmake_values(args[1:], env)
             elif name == "unset" and args:
-                env.pop(args[0].value, None)
+                _invalidate_cmake_writes(name, args, env, helpers)
             elif name == "list" and len(args) > 1:
-                key = args[1].value
-                if args[0].value in ("LENGTH", "GET", "JOIN", "FIND", "SUBLIST"):
+                keys = _cmake_values(args[1:2], env)
+                key = keys[0].value if len(keys) == 1 else ''
+                if not re.fullmatch(r'\w+', key):
+                    env.clear()
+                elif args[0].value in ("LENGTH", "GET", "JOIN", "FIND", "SUBLIST"):
                     env.pop(args[-1].value, None)
                 elif args[0].value == "APPEND":
                     env.setdefault(key, []).extend(_cmake_values(args[2:], env))
                 elif args[0].value == "REMOVE_ITEM" and key in env:
                     remove = {v.value for v in _cmake_values(args[2:], env)}
-                    env[key] = [v for v in env[key] if v.value not in remove]
+                    if any('$' in value for value in remove):
+                        env.pop(key, None)
+                    else:
+                        env[key] = [v for v in env[key] if v.value not in remove]
                 else:
-                    env.pop(key, None)
+                    _invalidate_cmake_writes(name, args, env, helpers)
             elif name == "add_executable" and words and "IMPORTED" not in words:
                 targets[words[0]] = words[1:]
             elif name == "target_sources" and words:
