@@ -1,96 +1,40 @@
 //cpp
-/* ov022/daObjFl_London_c -- reconstructed translation unit (8 functions).
- *
- * ROM run 0x02111980..0x02111cac, plus the class's .data run at
- * 0x02113f2c..0x02113ff0 (_ZTI, _ZTS, the g_profile_FL_LONDON descriptor and
- * the 32-slot _ZTV whose 0x02113f70 address point the factory installs). The
- * run ends exactly where _ZTI16daObjFl_Seesaw_c begins, so no boundary symbol
- * is needed to bound the vtable's extent; tu_map splits the unlabelled factory
- * into a TU of its own, and the manifest is extended over it by hand
- * (config/tu_manifest.d/ov022/daObjFl_London_c.json, boundary_evidence).
- *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
- * emits one .text section per function in the reverse of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder; the
- * destructor pair at the end is the one documented exception, because the
- * compiler picks the order inside a D0/D1 group itself.
- *
- * Members, in ROM address order (each was a one-function shard before this
- * TU took over the run; the shards are gone):
- *   [0] 0x02111980  daObjFl_London_c::~daObjFl_London_c   (D1)
- *   [1] 0x021119c4  daObjFl_London_c::~daObjFl_London_c   (D0)
- *   [2] 0x02111a1c  func_ov022_02111a1c                   (state helper)
- *   [3] 0x02111a64  daObjFl_London_c::CleanupResources
- *   [4] 0x02111aa8  daObjFl_London_c::Render
- *   [5] 0x02111ad0  daObjFl_London_c::Behavior
- *   [6] 0x02111bdc  daObjFl_London_c::InitResources
- *   [7] 0x02111c7c  daObjFl_London_c_classInit             (the factory)
- */
+/* Tilting bridge in Lethal Lava Land. */
 
 #include "daObjFl_London_c.h"
 #include "decl_common.h"
+#include "SharedFilePtr.h"
+#include "Sound.h"
 
-/* Declarations shared by the members below. */
 extern "C" {
-extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void *v);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *t, int a, int b);
-extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *t);
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    void *self, void *kcl, void *mtx, int fix, short s, void *clps);
-extern void func_020393d4(void *p, void *v);
-extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
+unsigned char DecIfAbove0_Byte(unsigned char *value);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int radius, int offsetY);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *self, void *file, const Matrix4x3 *matrix, int scale, short angleY, void *clps);
+void func_020393d4(int *collider, int callback);
 extern void *data_ov022_02114580;
 extern void *data_ov022_02114578;
 extern void *data_ov064_0211bb2c;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daObjFl_London_c_classInit, 0x02111c7c, size 0x30         */
-/* plus the .data 0x02113f4c descriptor that names it                         */
-/* -------------------------------------------------------------------------- */
-extern "C" {
-extern void *_ZN7fBase_cnwEj(u32 size);
-extern void _ZN10dBgActor_cC2Ev(void *self);
-/* Reconstructed source-style factory name. RTTI proves daObjFl_London_c,
- * and the FL_LONDON descriptor identifies this factory; neither preserves
- * its original function spelling. Historical alias: daObjFl_London_c_Spawn. */
 // @symbol daObjFl_London_c_classInit
-int *daObjFl_London_c_classInit(void)
+extern "C" daObjFl_London_c *daObjFl_London_c_classInit()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(800);
-    if (p) {
-        _ZN10dBgActor_cC2Ev(p);
-        /* &[2], not the bare symbol: this TU EMITS the vtable, so the compiler's
-         * symbol is the object start at 0x02113f68 and +8 is what reaches the
-         * 0x02113f70 address point the ROM actually stores. While the class only
-         * IMPORTED its vtable, addend 0 was the right spelling for the same
-         * word. */
-        p[0] = (int)&_ZTV16daObjFl_London_c[2];
-    }
-    return p;
-}
+    return new daObjFl_London_c();
 }
 
-/* The 0x1c actor descriptor the profile table points at. Word 0 relocates to
- * the factory above; the rest is the ROM's, read back at 0x02113f4c.
- * The fBase_c constructor passes +4/+6 to behavior/render priority setters.
- * These names describe that use; the retained s16 storage does not establish
- * the original signedness. */
 struct LondonSpawnInfo {
-    int *(*classInit)();
-    s16 behaviorPriority;
-    s16 renderPriority;
+    daObjFl_London_c *(*classInit)();
+    u16 behaviorPriority;
+    u16 renderPriority;
     u32 actorFlags;
     s32 clipOffsetY;
     s32 clipRadius;
     s32 clipDistance;
     s32 farDistance;
 };
-typedef char LondonSpawnInfo_size_must_be_0x1c[sizeof(LondonSpawnInfo) == 0x1c ? 1 : -1];
+typedef char LondonSpawnInfo_size_must_be_0x1c[
+    sizeof(LondonSpawnInfo) == 0x1c ? 1 : -1];
 
 // @symbol g_profile_FL_LONDON
 extern "C" LondonSpawnInfo g_profile_FL_LONDON = {
@@ -98,58 +42,60 @@ extern "C" LondonSpawnInfo g_profile_FL_LONDON = {
     0x00100000, 0x00300000, 0x02000000, 0x00000000
 };
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN16daObjFl_London_c13InitResourcesEv, 0x02111bdc, 0xa0  */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFl_London_c13InitResourcesEv
-int daObjFl_London_c::InitResources()
+s32 daObjFl_London_c::InitResources()
 {
-    void *f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov022_02114580);
-    mModel.SetFile((BMD_File *)f, 1, -1);
-    func_ov022_02111a1c((char *)this);
+    void *modelFile = Model::LoadFile(
+        *reinterpret_cast<SharedFilePtr *>(&data_ov022_02114580));
+    mModel.SetFile(static_cast<BMD_File *>(modelFile), 1, -1);
+    func_ov022_02111a1c(reinterpret_cast<char *>(this));
     UpdateClsnPosAndRot();
-    void *k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov022_02114578);
+
+    void *clsnFile = dBgW_Kc::LoadFile(
+        *reinterpret_cast<SharedFilePtr *>(&data_ov022_02114578));
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov064_0211bb2c);
-    func_020393d4(&mMeshCollider, (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
+        &mMeshCollider, clsnFile, &mClsnMat, 0x1000, mAngleY, &data_ov064_0211bb2c);
+    func_020393d4(reinterpret_cast<int *>(&mMeshCollider),
+        reinterpret_cast<int>(&dBgW::UpdatePosWithTransform));
     mFlag = 0;
     mCooldown = 0xf;
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN16daObjFl_London_c8BehaviorEv, 0x02111ad0, size 0x10c  */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFl_London_c8BehaviorEv
 s32 daObjFl_London_c::Behavior()
 {
-    char *c = (char *)this;
-    if (DecIfAbove0_Byte((unsigned char *)c + 0x31e) == 0) {
+    if (DecIfAbove0_Byte(&mCooldown) == 0) {
         if (mFlag == 0) {
-            short *p = (short *)(c + 0x96);
-            *p = *p - 0x100;
-            if (mPrevAngleZ <= -0x2000) { mPrevAngleZ = -0x2000; mCooldown = 0xf; mFlag = 1; }
+            mPrevAngleZ -= 0x100;
+            if (mPrevAngleZ <= -0x2000) {
+                mPrevAngleZ = -0x2000;
+                mCooldown = 0xf;
+                mFlag = 1;
+            }
         } else {
-            short *p = (short *)(c + 0x96);
-            *p = *p + 0x100;
-            if (mPrevAngleZ >= 0) { mPrevAngleZ = 0; mCooldown = 0xf; mFlag = 0; }
+            mPrevAngleZ += 0x100;
+            if (mPrevAngleZ >= 0) {
+                mPrevAngleZ = 0;
+                mCooldown = 0xf;
+                mFlag = 0;
+            }
         }
     } else {
         if (mCooldown == 1) {
-            if (mFlag == 0) _ZN5Sound9PlayBank3EjRK7Vector3(0x34, c + 0x74);
-            else            _ZN5Sound9PlayBank3EjRK7Vector3(0x35, c + 0x74);
+            if (mFlag == 0)
+                Sound::PlayBank3(0x34, *reinterpret_cast<Vector3 *>(&mCamSpacePosX));
+            else
+                Sound::PlayBank3(0x35, *reinterpret_cast<Vector3 *>(&mCamSpacePosX));
         }
     }
     mAngleZ = mPrevAngleZ;
-    func_ov022_02111a1c(c);
-    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+    func_ov022_02111a1c(reinterpret_cast<char *>(this));
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+        UpdateClsnPosAndRot();
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN16daObjFl_London_c6RenderEv, 0x02111aa8, size 0x28     */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFl_London_c6RenderEv
 s32 daObjFl_London_c::Render()
 {
@@ -157,59 +103,23 @@ s32 daObjFl_London_c::Render()
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN16daObjFl_London_c16CleanupResourcesEv, 0x02111a64     */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjFl_London_c16CleanupResourcesEv
 s32 daObjFl_London_c::CleanupResources()
 {
-    void *t = (void *)this;
-    if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
-        _ZN4dBgW7DisableEv((char *)t + 0x124);
-    }
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov022_02114580);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov022_02114578);
+    if (mMeshCollider.IsEnabled())
+        mMeshCollider.Disable();
+    reinterpret_cast<SharedFilePtr *>(&data_ov022_02114580)->Release();
+    reinterpret_cast<SharedFilePtr *>(&data_ov022_02114578)->Release();
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov022_02111a1c, 0x02111a1c, size 0x48                */
-/* -------------------------------------------------------------------------- */
 // @symbol func_ov022_02111a1c
-/* Rebuild the inherited model matrix from the actor's angles, then write
- * its translation at 1/8 position scale. Both callers are in this TU. The
- * local receiver uses the real class layout; the external char* declaration
- * and address-derived helper name stay unchanged. Original member/free-function
- * spelling is unproven. Keep the existing common.h Matrix4x3 view (m[12]). */
-extern "C" void func_ov022_02111a1c(char *t)
+extern "C" void func_ov022_02111a1c(char *actor)
 {
-    daObjFl_London_c *self = (daObjFl_London_c *)t;
+    daObjFl_London_c *self = reinterpret_cast<daObjFl_London_c *>(actor);
     Matrix4x3_FromRotationZXYExt(&self->mModel.mat4x3,
         self->mAngleX, self->mAngleY, self->mAngleZ);
     self->mModel.mat4x3.m[9] = self->mPosX >> 3;
     self->mModel.mat4x3.m[10] = self->mPosY >> 3;
     self->mModel.mat4x3.m[11] = self->mPosZ >> 3;
 }
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN16daObjFl_London_cD0Ev, 0x021119c4, size 0x58          */
-/* ROM ordinal 0 -- _ZN16daObjFl_London_cD1Ev, 0x02111980, size 0x44          */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN16daObjFl_London_cD1Ev
-// @symbol _ZN16daObjFl_London_cD0Ev
-/* Both destructors are emitted from the INLINE `~daObjFl_London_c() {}` in
- * include/daObjFl_London_c.h -- there is deliberately no body here.
- *
- * A complete-object destructor stores this class's vtable over the one the base
- * constructor left, then dBgActor_c's -- inlined, because dBgActor_c declares
- * its destructor in its own class body -- then destroys the base's members in
- * reverse declaration order: dBgW_KcMbg at 0x124 and Model at 0xd4, then the
- * dActor_c base. This class adds only two u8 fields, which have nothing to
- * destroy. The deleting destructor does all of that and calls operator delete,
- * inlined, which is why neither body mentions a heap.
- *
- * Defining ~daObjFl_London_c() out of line HERE instead would break the TU two
- * ways: mwccarm would emit D0 at 0x021119c4 before D1 at 0x02111980, reversing
- * ROM order so objisolate refuses the entire TU, and it would emit a third
- * symbol, D2, which has no address anywhere in the cartridge.
- */
