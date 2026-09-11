@@ -305,7 +305,7 @@ All DS names below confirmed as live mangled symbols (`_ZTV*`, `_ZN*D1Ev`) in
 | N64 behavior | → | DS class | overlay |
 |---|---|---|---|
 | `bhvGoomba` | → | `Goomba` | ov084 |
-| `bhvBobomb` / `bhvKingBobomb` / `bhvBobombBuddy` | → | `BobOmb` / `KingBobOmb` / `BobOmbBuddy` | ov102 / ov078 / ov084 |
+| `bhvBobomb` / `bhvKingBobomb` / `bhvBobombBuddy` | → | `BobOmb` / `daBombking_c` / `BobOmbBuddy` | ov102 / ov078 / ov084 |
 | `bhvChainChomp` | → | `daWanwan_c` (+`daObjWanwanShutter_c`) | ov014 |
 | `bhvSmallBully` / `bhvBigBully` | → | `Bully` / `BigBully` | ov064 |
 | `bhvSmallWhomp` (+King) | → | `Whomp` (`mIsKing` flag) | ov079 |
