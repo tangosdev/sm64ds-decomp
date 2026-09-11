@@ -240,8 +240,7 @@ def _read_type(s, i, subs):
 def _read_substitution(s, i, subs):
     """Read a substitution reference S_, S0_, S1_, St, etc."""
     if i + 1 < len(s) and s[i + 1] == "t":
-        # St = std::
-        subs.append("std")
+        # St is a standard abbreviation, not a numbered substitution entry.
         return "std", i + 2
     m = re.match(r"S([A-Za-z0-9]*)_", s[i:])
     if m:
@@ -308,6 +307,7 @@ def demangle(sym):
     variant = None
     subs = []  # substitution stack (Itanium ABI: only qualified-name prefixes + types)
     i = 0
+    function_template = False
 
     while i < len(body):
         c = body[i]
@@ -318,12 +318,14 @@ def demangle(sym):
             name, i = _read_len_name(body, i)
             parts.append(name)
             if nested:
-                subs.append(name)
+                subs.append("::".join(parts))       # cumulative enclosing prefix
             if i < len(body) and body[i] == "I":     # template on this component
                 targs, i = _read_template_args(body, i, subs)
                 parts[-1] = f"{name}<{', '.join(targs)}>"
                 if nested:
-                    subs[-1] = parts[-1]
+                    subs.append("::".join(parts))   # retain prefix and full instance
+                if not nested or (i < len(body) and body[i] == "E"):
+                    function_template = True
         elif body[i:i + 2] in ("C1", "C2", "C3"):
             variant = body[i:i + 2]
             parts.append("ctor")
@@ -354,7 +356,7 @@ def demangle(sym):
         return None
 
     if nested and len(parts) >= 2 and parts[-1] not in ("ctor", "dtor"):
-        if subs and subs[-1] == parts[-1]:
+        if subs and subs[-1] == "::".join(parts):
             subs.pop()
 
     method = parts[-1]
@@ -375,6 +377,12 @@ def demangle(sym):
             break
         args.append(str(t))
         i = ni
+
+    # Function templates also encode a return type and dependent parameters.
+    # This parser does not resolve those parameters; do not let an initial void
+    # return masquerade as a known empty argument list containing no callback.
+    if function_template:
+        args = ["T"]
 
     qualified = "::".join(p for p in parts if p not in ("ctor", "dtor")) or method
     if (ctor or dtor):
