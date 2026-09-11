@@ -141,26 +141,35 @@ corresponding raw `c + 0xNNN` pokes in `Behavior`.
 
 ---
 
-## `PiranhaPlant` (`include/PiranhaPlant.h`, [ov084](../config/arm9/overlays/ov084/symbols.txt))
+## `daPkn_c` (`include/daPkn_c.h`, [ov084](../config/arm9/overlays/ov084/symbols.txt))
 
 | offset | new name | evidence |
 | --- | --- | --- |
-| 0x428 | `Vector3 mPipeScale` | `src/_ZN12PiranhaPlant6RenderEv.cpp` passes `&mPipeScale` as the `Vector3 *` argument of `mModel.Render` — the same slot `mModelAnim.Render` gets `&mScaleX` in. Twelve bytes of what used to be `u8 unk_428` plus `pad_429[0xb]`. |
+| 0x428 | `Vector3 mPipeScale` | `daPkn_c::Render` (now in `src/actors/daPkn_c.cpp`) passes `&mPipeScale` as the `Vector3 *` argument of `mModel.Render` — the same slot `mModelAnim.Render` gets `&mScaleX` in. Twelve bytes of what used to be `u8 unk_428` plus `pad_429[0xb]`. |
 | 0x434 | `Vector3 mFirePos` | `InitResources`' tail computes it: `0xe0` along the facing angle out of the shared sin/cos table `data_02082214`, plus `0x37800` above the spawn Y. The file's own header comment already called it "where the plant's fire comes from". |
 | 0x440 | `Vector3 mSpawnPos` | `InitResources` writes `mPosX/Y/Z` into it; `Behavior` passes `&mSpawnPos` to `dCcAcPos_c::SetPosRelativeToActor`. |
 | 0x44c | `Vector3 mHomePos` | copied wholesale from `mSpawnPos` in `InitResources`; `Behavior` restores `mPosX/Y/Z` from it when `UpdateKillByInvincibleChar` returns 2 (the plant zeroes its scale and goes home). Two separate copies of the spawn point, distinguished by which one is read back into the position. |
-| 0x45c | `mClsnEnabled` | zeroed in `InitResources`; its only read in `Behavior` gates `dCc_c::Update` on all three colliders (the `Clear` calls above it are unconditional). |
+| 0x45c | `mClsnEnabled` | zeroed in `InitResources`. In `Behavior`, nonzero enables both `dCcAc_c` updates; the `dCcAcPos_c` position and update also require `mState == 2`. All three `Clear` calls are unconditional. |
 | 0x468 | `mInitAngleY` | `InitResources`: `= mPrevAngleY`. |
 
 Left `unk_`:
 
-- **0x470** — `mParticleHandle`. [func_ov084_0212f460](../src/func_ov084_0212f460.cpp) stores `Particle::System::New`'s
+- **0x470** — `mParticleHandle`. [func_ov084_0212f460](../src/actors/daPkn_c.cpp) stores `Particle::System::New`'s
   return in it and reads it straight back as the `slot` argument of the next call.
-- **0x45d** (set to 1), **0x460** (0), **0x464** (`0x7fffffff`), **0x46c** (0),
-  **0x474** (0) — written in `InitResources`, never read in a matched body, including
-  in the [ov084](../config/arm9/overlays/ov084/symbols.txt) handlers.
-- **0x478** — zeroed in `InitResources` and again whenever `mState` changes, alongside the
-  `dEnemyBase_c` counter at 0x100. A per-state something, but nothing reads it.
+- **0x45d** — initialized to 1; state 1 (`func_ov084_0212fa7c`) reads and
+  updates this byte around two `Sound::PlaySub` calls. Its original meaning
+  and name are unknown.
+- **0x460** — `func_ov084_0212f204` stores the result of `ClosestPlayer` and
+  rereads it for position and flag access; `func_ov084_0212f1d0` also dereferences it.
+- **0x464** — `func_ov084_0212f204` stores the distance to that player, or
+  `0x7fffffff` when no player is found. Several state handlers compare it.
+- **0x46c** — receives the selected player's byte at `+0x6de`, widened to a word;
+  state handlers use it to select distance thresholds. That byte's meaning is
+  not established here.
+- **0x474** — state 6 (`func_ov084_0212f33c`) passes this word to
+  `Particle::System::New` and stores the returned handle. Other states clear it.
+- **0x478** — initialized to zero and cleared on state changes. State 1 passes
+  it to `Sound::PlayLong` and stores the returned handle for the next call.
 
 Byte-neutral source cleanups: `&mWithMeshClsn`, `&mModelAnim`, `&mdCcAc_c1`,
 `&mdCcAcPos_c` and `&mSpawnPos` replaced the corresponding `((char*)this) + 0xNNN`

@@ -175,7 +175,7 @@ daRedBombhei_c	DONE	include\BobOmbBuddy.h  [alias: header uses pre-rename name]	
 daSBird_c	DONE	include\Bird.h  [alias: header uses pre-rename name]	dActor_c	0	ov009	7
 daSCoin_c	DONE	include\daSCoin_c.h	dActor_c	0	ov002	5
 daSCre_c	DONE	include\daSCre_c.h	dActor_c	0	ov018	3
-daSanbo_c	DONE	include\Pokey.h  [alias: header uses pre-rename name]	dActor_c	0	ov096	10
+daSanbo_c	DONE	include\daSanbo_c.h	dActor_c	0	ov096	10
 daSetSE_c	DONE	include\daSetSE_c.h	dActor_c	0	ov002	7
 daSldMng_c	DONE	include\daSldMng_c.h	dActor_c	0	ov019	4
 daSnmBth_c	DONE	include\SnowmanBreath.h  [alias: header uses pre-rename name]	dActor_c	0	ov027	8
@@ -339,7 +339,7 @@ daObjKey_c	DONE	include\Key.h  [alias: header uses pre-rename name]	dEnemyBase_c
 daObjMarioCap_c	DONE	include\daObjMarioCap_c.h	dEnemyBase_c	0	ov002	9
 daObj_Mip_Key_c	DONE	include\RabbitKey.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov085	7
 daOwl_c	DONE	include\HootTheOwl.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov094	7
-daPkn_c	DONE	include\PiranhaPlant.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov084	8
+daPkn_c	DONE	include\daPkn_c.h	dEnemyBase_c	0	ov084	8
 daPopoi_c	DONE	include\HeaveHo.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov077	7
 daPropeller_Heyho_Fire_c	DONE	include\Bullet.h  [alias: header uses pre-rename name]	dEnemyBase_c	0	ov002	7
 daPropeller_Heyho_c	DONE	include\daPropeller_Heyho_c.h	dEnemyBase_c	0	ov070	10
