@@ -21,6 +21,15 @@ original source organization. The RTTI name is ten visible bytes plus NUL, eleve
 bytes total. Historical observations below remain evidence of their stated
 revisions; they do not override these corrections.
 
+The integration review also corrects the table ownership described below.
+The twelve PMF constants at `ov096:0x02137920..0x02137980` are read by
+`__sinit_ov096_0213770c`, which reorders them into six entry/update pairs in
+BSS at `0x02137b48..0x02137ba8`. Dispatch uses that BSS table. The initializer
+remains separately enrolled; an additional initializer is not an established
+consequence of every possible C++ table definition. The dated integration
+correction in the class facts records all twelve runtime entries. Historical
+shard counts below describe the pre-fold inputs, not the current queue row.
+
 ## Identity and resumption
 
 - Issue URL, task ID, stage, session and harness: no issue; direct fleet task

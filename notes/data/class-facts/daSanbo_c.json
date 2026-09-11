@@ -832,5 +832,161 @@
       "The actor-family OnTurnIntoEgg contract on the composed main is void. The TU override follows it, and the retired Pokey shard is not restored.",
       "Available Model interfaces replace the render shadows and five model loading/setup calls. Raw ABI bridges and remaining helper views are bounded by actual experiments, not blanket missing-interface claims."
     ]
+  },
+  "integration_correction_2026_09_10": {
+    "reviewed_input": "3723651db2a0c5ea1c488bfb3b9e704bf91d4177",
+    "scope": "This correction supersedes the scout state_machine, tu_structure, writer blockers and state-index claim above. The original snapshot remains intact as historical evidence.",
+    "constant_records": {
+      "section": ".data",
+      "start": "0x02137920",
+      "end_exclusive": "0x02137980",
+      "count": 12,
+      "record_bytes": 8,
+      "note": "state_machine.records above lists constant addresses and targets, not runtime state order."
+    },
+    "runtime_table": {
+      "section": ".bss",
+      "start": "0x02137b48",
+      "end_exclusive": "0x02137ba8",
+      "states": 6,
+      "pair_bytes": 16,
+      "initialized_by": "__sinit_ov096_0213770c",
+      "initializer_source": "src/__sinit_ov096_0213770c.c",
+      "initializer_source_sha256": "68137604b7694617aac2261156c1257bbddfc184518c41be1aec9c44e1dd6024",
+      "evidence": "The relocated 392-byte initializer matches the ROM with zero unresolved relocations. Its twelve assignments read the constant records and write the runtime BSS array; they do not write the constant band."
+    },
+    "runtime_records": [
+      {
+        "runtime_index": 0,
+        "state": 0,
+        "role": "entry",
+        "runtime_address": "0x2137b48",
+        "constant_address": "0x2137948",
+        "target": "0x21368a4",
+        "target_symbol": "func_ov096_021368a4",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 1,
+        "state": 0,
+        "role": "update",
+        "runtime_address": "0x2137b50",
+        "constant_address": "0x2137940",
+        "target": "0x2136754",
+        "target_symbol": "func_ov096_02136754",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 2,
+        "state": 1,
+        "role": "entry",
+        "runtime_address": "0x2137b58",
+        "constant_address": "0x2137950",
+        "target": "0x213670c",
+        "target_symbol": "func_ov096_0213670c",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 3,
+        "state": 1,
+        "role": "update",
+        "runtime_address": "0x2137b60",
+        "constant_address": "0x2137928",
+        "target": "0x21365d4",
+        "target_symbol": "func_ov096_021365d4",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 4,
+        "state": 2,
+        "role": "entry",
+        "runtime_address": "0x2137b68",
+        "constant_address": "0x2137930",
+        "target": "0x2136534",
+        "target_symbol": "func_ov096_02136534",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 5,
+        "state": 2,
+        "role": "update",
+        "runtime_address": "0x2137b70",
+        "constant_address": "0x2137920",
+        "target": "0x2136434",
+        "target_symbol": "func_ov096_02136434",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 6,
+        "state": 3,
+        "role": "entry",
+        "runtime_address": "0x2137b78",
+        "constant_address": "0x2137978",
+        "target": "0x213640c",
+        "target_symbol": "func_ov096_0213640c",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 7,
+        "state": 3,
+        "role": "update",
+        "runtime_address": "0x2137b80",
+        "constant_address": "0x2137970",
+        "target": "0x21363c4",
+        "target_symbol": "func_ov096_021363c4",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 8,
+        "state": 4,
+        "role": "entry",
+        "runtime_address": "0x2137b88",
+        "constant_address": "0x2137938",
+        "target": "0x21363b4",
+        "target_symbol": "func_ov096_021363b4",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 9,
+        "state": 4,
+        "role": "update",
+        "runtime_address": "0x2137b90",
+        "constant_address": "0x2137968",
+        "target": "0x2136264",
+        "target_symbol": "func_ov096_02136264",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 10,
+        "state": 5,
+        "role": "entry",
+        "runtime_address": "0x2137b98",
+        "constant_address": "0x2137960",
+        "target": "0x2136134",
+        "target_symbol": "func_ov096_02136134",
+        "second_word": 0
+      },
+      {
+        "runtime_index": 11,
+        "state": 5,
+        "role": "update",
+        "runtime_address": "0x2137ba0",
+        "constant_address": "0x2137958",
+        "target": "0x21360c4",
+        "target_symbol": "func_ov096_021360c4",
+        "second_word": 0
+      }
+    ],
+    "dispatch": "func_ov096_02136928 stores 0x02137b48 + state * 16 in this+0x384. func_ov096_021368f0 calls its first PMF on entry; func_ov096_021368b4 calls its second PMF on update. Runtime indices follow the initializer permutation, not constant-address order.",
+    "limits": "Handler names, original signatures and source organization remain unproved. The existing separately enrolled initializer and ROM-backed data/BSS remain outside this text-only promotion. No alternate table definition was tested here, so the old blanket extra-__sinit claim is withdrawn.",
+    "queue": {
+      "historical_input_shards": 36,
+      "historical_input_lines": 1013,
+      "current_source_files": 1,
+      "current_source_lines": 1146,
+      "source": "src/actors/daSanbo_c.cpp",
+      "licensed_functions": 36,
+      "note": "queue_audit.py derives the current row; the scout 34/957 and pre-fold 36/1013 are historical counts."
+    }
   }
 }

@@ -53,14 +53,13 @@
  * copy and comes out 0x23c bytes against the cartridge's 0x220. The order
  * below is load-bearing; it is not stylistic.
  *
- * THE STATE TABLE IS NOT DEFINED HERE. ov096 0x02137920 holds twelve
- * pointer-to-member records that the two dispatchers below load out of
- * [this+0x384]. It stays in unowned .data on purpose: defining it in this TU
- * would make mwcc emit a second __sinit for a module that has exactly two, and
- * dsd resolves those records by symbol NAME, so the handler spellings in
- * config/arm9/overlays/ov096/symbols.txt are what keeps them wired. All
- * twelve point at func_ov096_* addresses inside this run, none of which ever
- * carried the coined name, so the rename left every record untouched.
+ * The state table remains outside this TU. __sinit_ov096_0213770c copies
+ * twelve constant PMF records from .data 0x02137920..0x02137980 into
+ * .bss 0x02137b48..0x02137ba8, reordering them into six entry/update pairs.
+ * func_ov096_02136928 selects a pair at 0x02137b48 + state * 16 and stores
+ * its address at this+0x384. The dispatchers use that runtime pair, not the
+ * constants in address order. The existing initializer remains a separate
+ * source owner; this text-only promotion does not reconstruct its table.
  *
  * ov096 delinks no .data at all, so this is a text-only entry: it licenses one
  * .text span and nothing else. Owning every virtual makes mwcc emit the vtable
