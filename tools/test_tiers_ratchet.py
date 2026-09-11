@@ -700,6 +700,70 @@ class OrphanDestinationSplit(unittest.TestCase):
         # The claim that made the silence look deliberate is retired for good.
         self.assertNotIn("only check that means anything", TR.rewrite_target.__doc__)
 
+    def test_the_manifest_clash_is_named_in_every_arm_that_can_carry_one(self):
+        """VFY-2543-22: the docstring promises every state; one arm was pinned.
+
+        Dropping the clash from the `failing` arm, or from the `unvouched` arm, left
+        all 73 tests green. That gap matters more than the usual unpinned branch: 0 of
+        the 651 banked identities carrying a `#symbol` disagree with the manifest
+        today, so no run over the real tree exercises this text and a regression would
+        have nothing at all to notice it. Each arm is asserted on the returned detail
+        AND on the printed row, because the row is what a reader acts on.
+        """
+        carried = f"{self.LEGACY}#Other"       # manifest says Sym, identity says Other
+        ghost = f"{self.LEGACY}#Ghost"         # a symbol the destination never defines
+        clash = f"the manifest enrols {self.LEGACY} under Sym, not"
+        fails = self._scores(target_fails=(TR.tiers.CRITERIA[0],),
+                             sibling_fails=(TR.tiers.CRITERIA[0],))
+
+        # The promise itself, so weakening the prose alone cannot settle this.
+        self.assertIn("IN EVERY STATE", TR.target_state.__doc__)
+
+        failing = TR.target_state(carried, self.DEST, {self.DEST}, fails, self.OWN,
+                                  self.SYMBOLS)
+        self.assertEqual(failing[0], "failing")
+        self.assertIn(TR.tiers.CRITERION_LABEL[TR.tiers.CRITERIA[0]], failing[1])
+        self.assertIn(f"{clash} Other", failing[1])
+
+        # `unvouched` here is the arm that DOES reach the comparison: a target was
+        # named and the scan never scored it. The other two unvouched returns are
+        # below.
+        unvouched = TR.target_state(ghost, self.DEST, {self.DEST}, self._scores(),
+                                    self.OWN, self.SYMBOLS)
+        self.assertEqual(unvouched[0], "unvouched")
+        self.assertIn("does not define that symbol", unvouched[1])
+        self.assertIn(f"{clash} Ghost", unvouched[1])
+
+        # Both reach the reader.
+        self.assertIn(f"{clash} Other",
+                      self._report([carried], self.KNOWN, {self.DEST}, fails,
+                                   self.OWN))
+        self.assertIn(f"{clash} Ghost",
+                      self._report([ghost], self.KNOWN, {self.DEST}, self._scores(),
+                                   self.OWN))
+
+        # Agreement stays silent in these arms too, not only in the passing one.
+        agreed_failing = TR.target_state(f"{self.LEGACY}#Sym", self.DEST, {self.DEST},
+                                         fails, self.OWN, self.SYMBOLS)
+        self.assertEqual(agreed_failing[0], "failing")
+        self.assertNotIn("the manifest enrols", agreed_failing[1])
+        agreed_unvouched = TR.target_state(f"{self.LEGACY}#Sym", self.DEST,
+                                           {self.DEST},
+                                           {self.SIBLING: self._score()}, self.OWN,
+                                           self.SYMBOLS)
+        self.assertEqual(agreed_unvouched[0], "unvouched")
+        self.assertNotIn("the manifest enrols", agreed_unvouched[1])
+
+        # The two earlier `unvouched` returns are silent because a clash is UNDEFINED
+        # there, not because it is dropped, and that is why the promise holds without
+        # them. A None target needs an identity carrying no symbol at all. And an
+        # untracked destination is absent from the ownership index -- the index is
+        # built from the tracked tree -- so its target is the bare path, never
+        # `dest#carried`, which is the shape the comparison is about.
+        self.assertEqual(
+            TR.rewrite_target(carried, "src/Vanished.cpp", {}, self.SYMBOLS),
+            "src/Vanished.cpp")
+
 
 class SyntheticTree:
     """Build a throwaway src/ tree and a baseline, and run main() against them.
@@ -979,6 +1043,37 @@ class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("CONVERTED backslide", text)
         self.assertNotIn("Lines above name a promoted TU", text)
+
+    def test_the_count_claim_is_wired_to_the_baseline_not_to_the_orphans(self):
+        """VFY-2543-23: the sentence was pinned; the argument feeding it was not.
+
+        `report_orphans()` has one production caller, and passing `set(orphans)` there
+        instead of the baseline left all 73 tests green while quietly restoring the
+        claim VFY-2543-21 retired: an orphan set can never contain a rewrite TARGET,
+        so every run would print `0 of the N ... banked already` and a `count` that
+        never moves. The scan's current set is the other plausible mis-wiring and is
+        wrong by a different amount. Only the baseline produces the numbers below, and
+        only the baseline produces the real tree's 2702 -> 2701.
+        """
+        legacy = "src/Legacy.cpp"
+        dest = "src/actors/TU.cpp"
+        code, text = self._run(
+            {legacy, f"{dest}#First", f"{dest}#Second"}, [dest],
+            {dest: ["First", "Second"]}, ["--check"],
+            moves={legacy: ("ov001/TU", dest)}, extra={dest: self.TWO_FN},
+            symbols={legacy: "First"})
+        flat = " ".join(text.split())
+
+        self.assertEqual(code, 1)
+        # Three identities are banked and the target is one of them, so the rewrite
+        # drops the legacy key and inserts nothing.
+        self.assertIn("1 of the 1 target(s) above are banked already", flat)
+        self.assertIn("moves count 3 -> 2", flat)
+        # What the two mis-wirings would print: set(orphans) -> 0 of the 1, 1 -> 1;
+        # the scan's current set -> 1 of the 1, 2 -> 2.
+        self.assertNotIn("0 of the 1 target(s) above are banked already", flat)
+        self.assertNotIn("moves count 1 -> 1", flat)
+        self.assertNotIn("moves count 2 -> 2", flat)
 
 
 class UpdateBehaviourPin(SyntheticTree, unittest.TestCase):
