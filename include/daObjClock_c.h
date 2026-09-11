@@ -5,64 +5,36 @@
 #include "dActor_c.h"
 #include "Model.h"
 
-/* daObjClock_c -- the two rotating hands of the clock painting.
- *
- * THE NAME COMES OUT OF THE CARTRIDGE. The vtable header at ov013 0x021121f8
- * is {0, 0x021121a4}; that _ZTI is the three-word __si_class_type_info record
- * {0x0209a764, 0x021121b0, 0x0208e390} -- first word __si_class_type_info's
- * vtable+8, second the length-prefixed string "12daObjClock_c" at 0x021121b0,
- * third _ZTI8dActor_c in config/arm9/symbols.txt. So the ROM states the name
- * and the `: dActor_c` base. The file was ClockPaintingHandShort.h until that
- * read renamed it; _ZTV22ClockPaintingHandShort was a coined alias sitting on
- * the same 0x02112200 address point and is gone from symbols.txt.
- *
- * ONE CLASS, TWO PROFILES. CLOCK_SHORT (actor 292) and CLOCK_LONG (actor 293)
- * each own a descriptor and a separate factory, and both install this
- * one vtable and the same 0x128 allocation. InitResources tells them apart at
- * run time by actorID and stores the answer in mHandIndex.
- *
- * LAYOUT: dActor_c occupies 0x000..0x0cf; four bytes of derived padding precede
- * the owned Model the factories construct at +0xd4 (_ZN5ModelC1Ev, a relocation
- * the ROM build checks); the one-byte hand index follows it at 0x124. The
- * helper at 0x02111430 writes the model matrix at +0xf0 == mModel.mat4x3 and
- * its translation row at +0x114, which is the same span by another spelling.
- */
+/* ROM RTTI identifies daObjClock_c as a dActor_c. Both clock-hand profiles
+ * allocate 0x128 bytes and construct Model at +0xd4. The hand index selects
+ * the long (0) or short (1) hand. Unobserved byte ranges remain unnamed. */
 
 #ifdef __cplusplus
 
+extern "C" void *_ZN7fBase_cnwEj(u32 size);
+
 struct daObjClock_c : dActor_c {
-    u8    pad_0d0[0x4];    /* 0x0d0 */
+    /* mwcc requires unsigned long for operator new; forward to the existing
+     * actor allocator, whose configured ABI takes unsigned int. */
+    static void *operator new(unsigned long size) { return _ZN7fBase_cnwEj(size); }
+
+    u8    unk_0d0[0x4];    /* 0x0d0 */
     Model mModel;          /* 0x0d4 */
-    u8    mHandIndex;      /* 0x124 -- 0 = long hand, 1 = short hand */
-    u8    pad_125[0x3];    /* 0x125 */
+    u8    mHandIndex;      /* 0x124 -- 0 = long, 1 = short */
+    u8    unk_125[0x3];    /* 0x125 */
 
-    /* --- vtable. The destructor is INLINE, and that is load-bearing rather
-       than a style choice. Out of line, mwccarm emits D0 before D1 -- the
-       reverse of the ROM's 0x021113bc D1 / 0x021113ec D0 order, which makes
-       objisolate refuse the whole TU -- and additionally emits a D2 that has
-       no home anywhere in the cartridge. Inline, it emits exactly the retail
-       D1/D0 pair in ROM order and no D2. Nothing derives from this class, so
-       no descendant needs to `bl` a D2.
+    /* This inline form emits the retail D1/D0 pair without an extra D2. */
+    virtual ~daObjClock_c() {}         /* slots 16, 17 */
 
-       Declared FIRST, deliberately: with the destructor inline the key
-       function is the first DECLARED non-inline virtual, so this ordering is
-       what makes src/actors/daObjClock_c.cpp the TU that emits the
-       _ZTV/_ZTI/_ZTS group -- exactly what the promotion needs it to be. --- */
-    virtual ~daObjClock_c() {}         /* slots 16 (D1), 17 (D0) */
-
-    /* --- overrides of inherited fBase_c slots dActor_c left untouched.
-       The ROM installs all four in the vtable at 0x02112200. Matching an
-       inherited virtual signature already makes an override virtual without
-       repeating the keyword. These explicit declarations document that role;
-       the inline destructor and declaration order above control TU emission. --- */
-    virtual int InitResources();       /* slot 0 -- 0x021115cc */
-    virtual int CleanupResources();    /* slot 3 -- 0x02111478 */
-    virtual int Behavior();            /* slot 6 -- 0x021114cc */
-    virtual int Render();              /* slot 9 -- 0x021114a4 */
+    /* Overrides remain virtual through their inherited signatures.
+     * InitResources is the first declared non-inline virtual; its definition
+     * in the class TU supplies the vtable and RTTI group. */
+    virtual int InitResources();       /* slot 0 */
+    virtual int CleanupResources();    /* slot 3 */
+    virtual int Behavior();            /* slot 6 */
+    virtual int Render();              /* slot 9 */
 };
 
-/* Holds the chain to the size both factories' operator new(0x128) evidences.
-   A silently-added member anywhere fails this. */
 typedef char daObjClock_c_size_must_be_0x128[sizeof(daObjClock_c) == 0x128 ? 1 : -1];
 
 #endif /* __cplusplus */
