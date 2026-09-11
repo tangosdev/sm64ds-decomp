@@ -371,6 +371,7 @@ from concurrent.futures import ThreadPoolExecutor
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import slot_lock
 import build_lock
+import msvc_env
 
 SELFTEST_FRAMES = "300"
 STEP_TIMEOUT = 600
@@ -1545,16 +1546,15 @@ def shipcfg_script(root, build):
     """Write the cmd that configures (if the cache proves it may skip that)
     and builds the shipping configuration.
 
-    Toolchain located the way port/build-port.cmd locates it, switched the way
-    tools/portable_kit/package_kit.ps1 switches it, and the target is
+    Toolchain discovery is shared with port/build-port.cmd, and the target is
     walk_window ALONE for the reason the doctrine block gives. A file rather
     than a command line because vcvars32.bat has to leave its environment
     behind for cmake in the same shell, which a single subprocess call cannot
     arrange.
 
-    Returns (script path, no_vcvars, decision, detail). On a missing
-    vcvars32.bat, script is None, no_vcvars names the path that is not there,
-    and decision/detail are both None. Otherwise no_vcvars is None and
+    Returns (script path, setup_error, decision, detail). Missing compiler or
+    build tools return no script and an actionable setup error. Otherwise
+    setup_error is None and
     decision/detail are shipcfg_configure_decision(build)'s verdict, already
     BAKED into the generated script: "fast path" writes a configure step
     guarded by the same build.ninja test CFGFIX added; "refused" writes an
@@ -1563,19 +1563,17 @@ def shipcfg_script(root, build):
     shipcfg_configure_decision's docstring for why the guard alone is not
     enough here the way it is for the developer build.
     """
-    pf = os.environ.get("ProgramFiles(x86)", r"C:\Program Files (x86)")
-    vs = os.path.join(pf, "Microsoft Visual Studio", "2022", "BuildTools")
-    vcvars = os.path.join(vs, "VC", "Auxiliary", "Build", "vcvars32.bat")
-    cm = os.path.join(vs, "Common7", "IDE", "CommonExtensions", "Microsoft",
-                      "CMake")
-    if not os.path.isfile(vcvars):
-        return None, vcvars, None, None
+    try:
+        toolchain = msvc_env.discover()
+    except msvc_env.ToolchainError as exc:
+        return None, str(exc), None, None
 
     decision, detail = shipcfg_configure_decision(build)
-    configure_cmd = ('cmake -S "%s" -B "%s" -G %s %s '
-                     '-DCMAKE_MAKE_PROGRAM="%s\\Ninja\\ninja.exe" || exit /b 1'
-                     % (os.path.join(root, "port"), build, SHIPCFG_GENERATOR,
-                        shipcfg_cache_defines(), cm))
+    configure_cmd = ('"%s" -S "%s" -B "%s" -G %s %s '
+                     '-DCMAKE_MAKE_PROGRAM="%s" || exit /b 1'
+                     % (msvc_env.batch_path(toolchain.cmake),
+                        os.path.join(root, "port"), build, SHIPCFG_GENERATOR,
+                        shipcfg_cache_defines(), msvc_env.batch_path(toolchain.ninja)))
     if decision == "fast path":
         # CONFIGURE ONLY WHEN THERE IS SOMETHING TO CONFIGURE, the same rule
         # port/build-port-j4.cmd uses for the developer build -- safe HERE
@@ -1600,11 +1598,8 @@ def shipcfg_script(root, build):
     # anyone reading a red.
     path = os.path.join(root, "build", "shipcfg_build.cmd")
     os.makedirs(os.path.dirname(path), exist_ok=True)
-    header = ("@echo off\r\n"
-             'call "%s" >nul || exit /b 1\r\n'
-             'set "PATH=%s\\CMake\\bin;%s\\Ninja;%%PATH%%"\r\n'
-             % (vcvars, cm, cm))
-    footer = 'ninja -C "%s" walk_window\r\n' % build
+    header = toolchain.batch_header()
+    footer = '"%s" -C "%s" walk_window\r\n' % (msvc_env.batch_path(toolchain.ninja), build)
     with open(path, "w", encoding="ascii", newline="") as f:
         f.write(header + configure_block + footer)
     return path, None, decision, detail
@@ -1954,7 +1949,7 @@ def shipcfg_arm(root):
     build = os.path.join(root, SHIPCFG_BUILD)
     script, no_vcvars, decision, detail = shipcfg_script(root, build)
     if script is None:
-        print(f"shipcfg build: FAIL, no vcvars32.bat at {no_vcvars}")
+        print(f"shipcfg build: FAIL, {no_vcvars}")
         return False, None
     print(f"shipcfg configure: {decision} -- {detail}")
 

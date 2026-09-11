@@ -75,6 +75,7 @@ import pathlib
 import re
 import subprocess
 import sys
+import msvc_env
 import tempfile
 
 # The compile line is walk_window's own, transcribed from the lane probe
@@ -85,13 +86,7 @@ CL_FLAGS = ("/nologo /c /DWIN32 /D_WINDOWS /GR /EHsc /O2 /Ob2 /DNDEBUG "
             "-std:c++17 -MT /Oy- /wd4311 /wd4312 /wd4068 /wd4576 "
             "-DPORT_CXX_ALIASES_LINKED -DSM64DS_PLATFORM_PC")
 
-VCVARS_CANDIDATES = [
-    r"%s\Microsoft Visual Studio\2022\%s\VC\Auxiliary\Build\vcvars32.bat"
-    % (pf, ed)
-    for pf in (os.environ.get("ProgramFiles(x86)",
-                              r"C:\Program Files (x86)"),)
-    for ed in ("BuildTools", "Community", "Professional", "Enterprise")
-]
+
 
 # One map row: "  0001:00012345  _name  10012345  obj". Same expression the
 # SL0 probe used; it is deliberately anchored on the section:offset pair so
@@ -101,10 +96,11 @@ MAP_ROW = re.compile(
 
 
 def find_vcvars():
-    for c in VCVARS_CANDIDATES:
-        if os.path.exists(c):
-            return c
-    return None
+    try:
+        return str(msvc_env.discover_vcvars())
+    except msvc_env.ToolchainError:
+        return None
+
 
 
 # Spellings the linker folds under any-COMDAT selection: every TU that uses
@@ -213,7 +209,7 @@ def compile_batch(root, sources, outdir, extra_flags=""):
     """
     vcvars = find_vcvars()
     if vcvars is None:
-        sys.exit("no vcvars32.bat found under Visual Studio 2022; "
+        sys.exit("no installed x86 MSVC environment found; "
                  "closure needs cl.exe and dumpbin")
     outdir = pathlib.Path(outdir)
     outdir.mkdir(parents=True, exist_ok=True)
