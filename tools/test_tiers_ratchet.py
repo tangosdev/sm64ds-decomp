@@ -787,9 +787,12 @@ class OrphanDestinationSplit(unittest.TestCase):
         # `git ls-files src`. The two enumerations are independent, and `git ls-files`
         # omits a file that exists but is not staged, so between writing a promoted
         # destination and adding it the destination is enrolled with many members AND
-        # untracked. Live shape: src/Cloud_Spawn.c#_ZN11daObjKumo_cD1Ev ->
+        # untracked. Live shape: `Cloud_Spawn.c#_ZN11daObjKumo_cD1Ev` ->
         # src/game/actors/d_a_obj_kumo.cpp, 8 enrolled members, manifest enrols
-        # daObjKumo_c_classInit.
+        # daObjKumo_c_classInit. That legacy file sat under src/ and is not in the tree
+        # any more -- which is the whole point here -- so it is deliberately not spelled
+        # as a repo-rooted path: check_dead_references.py would read the spelling as a
+        # rename that did not carry, rather than as the state being described.
         self.assertEqual(TR.rewrite_target(carried, self.DEST, self.OWN, self.SYMBOLS),
                          self.SIBLING)
         untracked = TR.target_state(carried, self.DEST, set(), self._scores(),
@@ -1038,9 +1041,11 @@ class OrphanGateEndToEnd(SyntheticTree, unittest.TestCase):
 
         Same tree, same failing destination; the only change is that the baseline
         names the target instead of the legacy path. Reproduced on the real tree too:
-        src/_ZN7dBase_cD1Ev.cpp rewritten onto
-        src/actors/ActorDerived.cpp#_ZN7dBase_cD1Ev takes --check from 1 to 0 with no
-        exception row written at all.
+        the banked one-function identity `_ZN7dBase_cD1Ev.cpp` -- then under src/ and
+        absorbed since, so not spelled as a repo-rooted path for the same reason as the
+        comment in test_the_manifest_clash_is_named_in_every_arm_that_can_carry_one --
+        rewritten onto src/actors/ActorDerived.cpp#_ZN7dBase_cD1Ev takes --check from 1
+        to 0 with no exception row written at all.
         """
         dest = "src/actors/TU.cpp"
         code, text = self._run(
