@@ -308,6 +308,147 @@ target_sources(walk_window PRIVATE unmatched/two.cpp)
         sources, _ = self.selected('set(S unmatched/one.cpp)\nif(UNKNOWN)\nset(S unmatched/two.cpp)\nendif()\nadd_executable(walk_window ${S})')
         self.assertEqual(sources, set())
 
+    def test_file_and_process_outputs_cannot_reuse_prior_selected_sources(self):
+        for operation in (
+                'file(STRINGS empty.txt S)', 'file(READ empty.txt S)',
+                'file(GLOB S "*.cpp")', 'string(REPLACE "x" "" S "")',
+                'string(REGEX REPLACE ".*" "" S "")',
+                'execute_process(COMMAND tool OUTPUT_VARIABLE S)',
+                'set(NAME S)\nset(${NAME} "")',
+                'set(NAME S)\nunset(${NAME})',
+                'set(NAME ${UNKNOWN})\nset(${NAME} "")',
+                'file(STRINGS empty.txt REMOVE)\nlist(REMOVE_ITEM S ${REMOVE})'):
+            for wrapper in ('{}', 'if(TRUE)\n{}\nendif()'):
+                with self.subTest(operation=operation, wrapper=wrapper):
+                    text = 'set(S unmatched/ghost.cpp)\n' + wrapper.format(operation)
+                    selected, _ = self.selected(text + '\nadd_executable(host ${S})')
+                    self.assertEqual(selected, set())
+
+    def test_nested_helper_output_invalidates_the_actual_callers_variable(self):
+        text = ( 'macro(clearit out)\nset(${out} "")\nendmacro()\n'
+                 'macro(wrapper out)\nclearit(${out})\nendmacro()\n'
+                 'set(S unmatched/ghost.cpp)\nwrapper(S)\nadd_executable(host ${S})')
+        self.assertEqual(self.selected(text)[0], set())
+        text = text.replace('clearit(${out})', 'clearit("")\nclearit(${out})')
+        self.assertEqual(self.selected(text)[0], set())
+
+    def test_recursive_or_unknown_helpers_cannot_preserve_selected_input_claims(self):
+        for body in ('unknown(S)', 'unknown()', 'macro(loop out)\nloop(${out})\nendmacro()\nloop(S)'):
+            with self.subTest(body=body):
+                text = 'set(S unmatched/ghost.cpp)\n' + body + '\nadd_executable(host ${S})'
+                with self.assertRaises(ValueError):
+                    self.selected(text)
+
+    def test_generated_output_cannot_remain_selected_after_its_list_is_replaced(self):
+        self.generated_fixture()
+        text = ('set(S "${CMAKE_BINARY_DIR}/romdata.c")\n'
+                'add_custom_command(OUTPUT "${S}" COMMAND python '
+                '"${CMAKE_CURRENT_SOURCE_DIR}/tools/romdata.py" "${S}")\n'
+                'file(STRINGS empty.txt S)\nadd_executable(host ${S})')
+        selected, requests = self.selected(text)
+        self.assertEqual((selected, requests), (set(), []))
+
+    def test_actual_unselected_owner_does_not_clear_a_hal_reference(self):
+        folder = self.port / 'unmatched'
+        folder.mkdir()
+        self.write(folder / 'ghost.cpp', 'extern "C" void func_02000000() {}')
+        for mutation in ('file(STRINGS empty.txt S)',
+                         'if(TRUE)\nfile(STRINGS empty.txt S)\nendif()',
+                         'macro(clear out)\nset(${out} "")\nendmacro()\n'
+                         'macro(wrap out)\nclear(${out})\nendmacro()\nwrap(S)'):
+            with self.subTest(mutation=mutation):
+                self.write(self.port / 'CMakeLists.txt', 'set(S unmatched/ghost.cpp)\n'
+                           + mutation + '\nadd_executable(host ${S})')
+                with mock.patch.object(P.SP, 'path_for', return_value=None):
+                    count, failures = self.hal({'user.cpp': 'extern "C" void func_02000000();'})
+                self.assertEqual(count, 1)
+                self.assertEqual(len(failures), 1)
+                self.assertIn('func_02000000', failures[0].message)
+
+    def test_all_added_symbol_list_values_are_checked(self):
+        for operation in ('APPEND X_SYMS missing', 'PREPEND X_SYMS missing',
+                          'INSERT X_SYMS 0 missing'):
+            for wrapper in ('{}', 'if(TRUE)\n{}\nendif()'):
+                with self.subTest(operation=operation, wrapper=wrapper):
+                    count, failures = self.cmake('set(X_SYMS real)\n' +
+                                                wrapper.format('list(' + operation + ')'), ('real',))
+                    self.assertEqual(count, 2)
+                    self.assertEqual(len(failures), 1)
+                    self.assertIn("'missing'", failures[0].message)
+
+    def test_unknown_symbol_list_replacements_require_review(self):
+        for operation in ('file(STRINGS symbols.txt X_SYMS)',
+                          'string(REPLACE "real" "missing" X_SYMS "real")',
+                          'list(TRANSFORM X_SYMS APPEND "missing")'):
+            with self.subTest(operation=operation):
+                _, failures = self.cmake('set(X_SYMS real)\n' + operation, ('real',))
+                self.assertEqual(len(failures), 1)
+
+    def test_empty_replacement_does_not_shift_output_argument_identity(self):
+        count, failures = self.cmake('set(A first)\nstring(REGEX REPLACE ".*" "" B "")\n'
+                                    'set(X_SYMS ${A})', ('first',))
+        self.assertEqual((count, failures), (1, []))
+
+    def test_named_source_list_requires_selected_generated_output_proof(self):
+        self.generated_fixture()
+        self.write(self.port / 'CMakeLists.txt', """
+set(MODULES ov002)
+set(ACTOR_OV_SYMS "")
+foreach(mod IN LISTS MODULES)
+  set(out "${CMAKE_BINARY_DIR}/${mod}.c")
+  add_custom_command(OUTPUT "${out}" COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/ovdata.py" ${mod} "${out}" --from-list "${CMAKE_CURRENT_SOURCE_DIR}/${mod}_syms.txt" --pack)
+  list(APPEND ACTOR_OV_SYMS "${out}")
+endforeach()
+add_executable(host ${ACTOR_OV_SYMS})
+""")
+        with mock.patch.object(P.SP, 'path_for', return_value=None):
+            self.assertEqual(P.check_cmake_symbols(), (1, []))
+            text = (self.port / 'CMakeLists.txt').read_text().replace('add_executable(host ${ACTOR_OV_SYMS})', '')
+            self.write(self.port / 'CMakeLists.txt', text)
+            self.assertEqual(len(P.check_cmake_symbols()[1]), 1)
+
+    def test_unmodeled_final_source_replacement_blocks_ownership(self):
+        for mutation in ('set_property(TARGET host PROPERTY SOURCES "")',
+                         'set_target_properties(host PROPERTIES SOURCES "")',
+                         'if(UNKNOWN)\nset_property(TARGET host PROPERTY SOURCES "")\nendif()',
+                         'macro(clear target)\nset_property(TARGET ${target} PROPERTY SOURCES "")\n'
+                         'endmacro()\nclear(host)'):
+            with self.subTest(mutation=mutation):
+                with self.assertRaisesRegex(ValueError, 'SOURCES rewrite'):
+                    self.selected('add_executable(host unmatched/ghost.cpp)\n' + mutation)
+
+    def test_changed_or_incomplete_tier_transfer_cannot_license_source_selection(self):
+        for target in ('host', 'other'):
+            for reinsertion in ('', 'target_sources(other PRIVATE $<TARGET_OBJECTS:shared>)'):
+                with self.subTest(target=target, reinsertion=reinsertion):
+                    text = ('add_executable(host unmatched/ghost.cpp)\nset(PORT_SHARE_TARGETS host)\n'
+                            'set_property(TARGET ' + target + ' PROPERTY SOURCES "")\n' + reinsertion)
+                    with self.assertRaisesRegex(ValueError, 'tier-sharing'):
+                        self.selected(text)
+
+    def test_pop_output_and_unknown_list_destinations_do_not_retain_old_owners(self):
+        for mutation in ('set(A real.cpp)\nlist(POP_FRONT A S)',
+                         'list(REMOVE_AT ${UNKNOWN} 0)'):
+            with self.subTest(mutation=mutation):
+                selected, _ = self.selected('set(S unmatched/ghost.cpp)\n' + mutation + '\nadd_executable(host ${S})')
+                self.assertEqual(selected, set())
+
+    def test_list_output_symbol_contract_is_not_silently_skipped(self):
+        for operation in ('GET A 0 X_SYMS', 'POP_FRONT A X_SYMS'):
+            with self.subTest(operation=operation):
+                _, failures = self.cmake('set(A missing)\nlist(' + operation + ')')
+                self.assertTrue(failures)
+
+    def test_utf8_bom_does_not_hide_the_first_cmake_command(self):
+        count, failures = self.cmake('\ufeffcmake_minimum_required(VERSION 3.20)\nset(X_SYMS real)', ('real',))
+        self.assertEqual((count, failures), (1, []))
+
+    def test_later_external_cmake_code_cannot_retain_target_owners(self):
+        for command in ('include(other.cmake)', 'find_package(Other)', 'cmake_language(EVAL CODE "set_property(TARGET host PROPERTY SOURCES)")'):
+            with self.subTest(command=command):
+                with self.assertRaisesRegex(ValueError, 'rewrite existing target sources'):
+                    self.selected('add_executable(host unmatched/ghost.cpp)\n' + command)
+
     def generated_fixture(self):
         (self.port / 'tools').mkdir(exist_ok=True)
         (self.repo / 'config' / 'arm9' / 'overlays' / 'ov002').mkdir(parents=True)
