@@ -208,6 +208,7 @@ jobs:
             tools.test_nearmiss_db \
             tools.test_pgate \
             tools.test_premerge_check \
+            tools.test_port_refcheck \
             tools.test_prepush_linkcheck \
             tools.test_profile_reconstruction \
             tools.test_progress \
