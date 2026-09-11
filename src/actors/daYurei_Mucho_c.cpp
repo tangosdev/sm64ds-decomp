@@ -98,11 +98,10 @@ extern void _ZN10dBgCh_ActrC1Ev(void *);
 extern void _ZN9ModelAnimC1Ev(void *);
 extern void _ZN11ShadowModelC1Ev(void *);
 
-/* ov065 -- this class's own unowned .bss. The four SharedFilePtrs and the four
-   State objects are constructed by the module's static initializer, which lives
-   in ov065's .init section and is NOT part of this TU; defining any of them
-   here would make mwccarm emit a second initializer that the text-only
-   isolation would then have to strip. They stay extern. */
+/* The four shared-file handles and four State records remain ROM-supplied BSS.
+   __sinit_ov065_0211c110 initializes the handles and copies the eight PMF
+   constants into the State records. This text-only TU does not own that storage
+   or initializer; SharedFilePtr's complete layout is still unrecovered. */
 extern SharedFilePtr data_ov065_0211d600;
 extern SharedFilePtr data_ov065_0211d608;
 extern SharedFilePtr data_ov065_0211d610;
