@@ -124,6 +124,43 @@ class FunctionTypeTests(unittest.TestCase):
             with self.subTest(encoded=encoded):
                 self.assertTrue(any("T" in a for a in self.args(encoded)))
 
+    def test_malformed_nested_names_cannot_become_known_callbacks(self):
+        for encoded in ("PFvN1AQEE", "PFvN1ANEE", "PFvN1A0EE", "PFvN1AK1BEE",
+                        "PFvN99MissingE", "PFvN1A1B"):
+            with self.subTest(encoded=encoded):
+                self.assertTrue(any("T" in a for a in self.args(encoded)))
+        self.assertEqual(self.args("PFvN1A1BEE"), ["void (*)(A::B)"])
+        self.assertEqual(self.args("PFv1AIiEE"), ["void (*)(A<int>)"])
+
+    def test_qualifying_a_substitution_does_not_replace_its_original(self):
+        subs = []
+        first, _end = D._read_type("FviE", 0, subs)
+        qualified, _end = D._read_type("KS_", 0, subs)
+        reused, _end = D._read_type("S_", 0, subs)
+        self.assertEqual(str(first), "void (int)")
+        self.assertEqual(str(qualified), "void (int) const")
+        self.assertEqual(str(reused), "void (int)")
+        self.assertEqual(list(map(str, subs)), ["void (int)", "void (int) const"])
+
+    def test_nested_outer_c_linkage_remains_explicitly_unsupported(self):
+        for plain, qualified in (("PFPFifEdE", "PFYPFifEdE"),
+                                 ("PFPFYifEdE", "PFYPFYifEdE")):
+            with self.subTest(qualified=qualified):
+                self.assertTrue(any("T" in a for a in self.args(qualified)))
+                self.assertNotEqual(self.args(plain), self.args(qualified))
+
+    def test_nested_name_prefix_and_complete_type_have_distinct_substitutions(self):
+        self.assertEqual(self.args("PFvN1A1BEPS_S0_E"),
+                         ["void (*)(A::B, A *, A::B)"])
+
+    def test_substituted_nested_prefix_is_not_added_twice(self):
+        self.assertEqual(D.demangle("_ZN1A1fENS_1BES0_")["args"],
+                         ["A::B", "A::B"])
+
+    def test_nested_template_prefix_and_instance_are_distinct(self):
+        self.assertEqual(self.args("PFvN1AIiE1BEPS0_S1_E"),
+                         ["void (*)(A<int>::B, A<int> *, A<int>::B)"])
+
     def test_public_results_remain_json_strings(self):
         value = D.demangle("_Z1fPFviES0_")
         self.assertEqual(json.loads(json.dumps(value)), value)
