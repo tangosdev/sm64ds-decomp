@@ -138,6 +138,11 @@ def _read_function_type(s, i, subs):
     if j >= len(s) or len(types) < 2:
         return "T", min(j + 1, len(s))
     result, args = types[0], types[1:]
+    # A single printable declarator cannot express distinct language linkages
+    # for an outer function and the callback it returns. Keep that combination
+    # unresolved instead of dropping the outer Y and aliasing two types.
+    if linkage and isinstance(result, _FunctionType):
+        return "T", j + 1
     if (any(t is None or re.search(r"\bT\b", t) for t in types)
             or ("void" in args and args != ["void"])
             or (isinstance(result, _FunctionType) and not result.declarator)):
@@ -161,6 +166,7 @@ def _read_type(s, i, subs):
         while j < len(s) and s[j] in "KVr":
             j += 1
         group = s[i:j]
+        previous_subs = len(subs)
         inner, end = _read_type(s, j, subs)
         if not re.fullmatch(r"r?V?K?", group) or inner is None:
             return "T", end
@@ -169,7 +175,8 @@ def _read_type(s, i, subs):
         if isinstance(inner, _FunctionType):
             ty = inner.qualify(suffix)
             # A function's CV qualifiers are indivisible for substitution.
-            if not inner.declarator and subs and subs[-1] is inner:
+            if (not inner.declarator and len(subs) > previous_subs
+                    and subs[-1] is inner):
                 subs.pop()
         else:
             ty = inner + suffix
@@ -198,21 +205,34 @@ def _read_type(s, i, subs):
         return ty, j
     if c == "N":                                     # nested type name N..E
         j = i + 1
-        parts = []
+        parts, valid = [], True
+        previous_subs = len(subs)
         while j < len(s) and s[j] != "E":
             if s[j].isdigit():
                 name, j = _read_len_name(s, j)
+                if not name or j > len(s):
+                    valid = False
+                parts.append(name or "T")
+                prefix = "::".join(parts)
                 if j < len(s) and s[j] == "I":
+                    subs.append(prefix)              # nested template prefix
                     targs, j = _read_template_args(s, j, subs)
-                    name = f"{name}<{', '.join(targs)}>"
-                parts.append(name)
+                    parts[-1] = f"{parts[-1]}<{', '.join(targs)}>"
+                # Every newly spelled prefix is a candidate, not just the
+                # final type. N1A1BE records A before A::B; S_ can name A.
+                subs.append("::".join(parts))
             elif s[j] == "S":
                 sub_type, j = _read_substitution(s, j, subs)
                 parts.append(sub_type)
+                # A substituted prefix already has its own entry.
             else:
+                # Skipping an unsupported component is not type resolution.
+                valid = False
                 j += 1
-        ty = "::".join(p for p in parts if p) if parts else "T"
-        subs.append(ty)
+        ty = "::".join(parts)
+        if not valid or not parts or j >= len(s) or re.search(r"\bT\b", ty):
+            del subs[previous_subs:]
+            return "T", min(j + 1, len(s))
         return ty, j + 1  # skip E
     return "T", i + 1                                # give up on this code, keep going
 
