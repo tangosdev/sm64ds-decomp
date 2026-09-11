@@ -6,8 +6,8 @@
   "status": "promoted",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous linker run: 0x2115ee0..0x2116f98, 23 function(s); the 22-function run tu_map reports stops one entry short because tools/srcpath.py only recognises the '<Class>_Spawn' factory spelling, so 'daYurei_Mucho_c_classInit' is segmented as its own unlabelled unit (github.com/tangosdev/sm64ds-decomp/issues/2436)",
-    "the 23rd entry, src/d_a_yurei_mucho.c at 0x02116f48..0x02116f98, abuts the 22-function run with a zero-byte gap and is this class's registry factory: it allocates 0x3e4 through fBase_c::operator new and stores _ZTV15daYurei_Mucho_c",
+    "contiguous linker run: 0x02115ee0..0x02116f98, 23 functions including the factory; the historical pre-fold tu_map census counted 22 because tools/srcpath.py recognises '<Class>_Spawn' but not 'daYurei_Mucho_c_classInit' (github.com/tangosdev/sm64ds-decomp/issues/2436)",
+    "the retired 23rd shard, src/d_a_yurei_mucho.c at 0x02116f48..0x02116f98, abutted the method/helper run and is this class's registry factory: it allocates 0x3e4 through fBase_c::operator new and stores _ZTV15daYurei_Mucho_c",
     "class label(s): daYurei_Mucho_c",
     "the next delinks entry, 0x02116f98, opens daBasabasa_c's run and is reserved to another owner",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
