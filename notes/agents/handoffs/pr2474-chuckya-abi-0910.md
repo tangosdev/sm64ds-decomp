@@ -46,3 +46,16 @@ build/chuckya-full-battery.log. The source base is b99310a8; the actual PR targe
 is 31f31604. Final target composition and public publication remain separate.
 Inherited PORT2474-01/02 retain their accepted dispositions. The fader comment
 successor ec9908da is included; its independent acceptance remains separate.
+
+Independent review found **PORT-CHUCKYA-02**: counting an exact raw-call string
+also counted comments and inactive preprocessor branches. The generator now
+pins the complete reviewed input before any rewrite, with only line-ending
+normalization. It refuses changed or missing active calls even when an old call
+is preserved as inactive text. Unrecognized harmless context changes also
+require review; this bounded gate does not model the C++ preprocessor. The
+single-expression count remains an additional check after the input pin.
+Five tests cover the three independent inactive-decoy fixtures, previous drift
+cases, an unreviewed context edit and LF/CRLF/CR input equivalence, alongside the
+native positive and old-ABI negative controls. The generated Chuckya source is
+byte-identical to a3c1e551's output; its full-battery failure at scene 361 remains
+pinned to that earlier input and is being diagnosed separately.

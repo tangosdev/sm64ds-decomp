@@ -29,6 +29,7 @@ actor lost the Vector3 scale its Render asked for. See MMIO_PTR below.
 """
 
 import argparse
+import hashlib
 import pathlib
 import re
 import sys
@@ -1302,8 +1303,21 @@ def shadow_header_decl(text, sym, spec):
     return text.replace(inc, pre + inc + post, 1), 1
 
 
+# This new ABI adaptation is accepted only for the complete reviewed input.
+# A matching expression hidden in a comment or inactive branch is insufficient.
+# read_text normalizes line endings; every other source byte must stay pinned.
+REVIEWED_ABI_INPUTS = {
+    "_ZN7Chuckya8BehaviorEv": "0c984ac5d604c5a1502f6d9181f7be1b1183d0ffe17336e0dd4708f99e4865a2",
+}
+
+
 def emit(src_path, out_dir, decomp_root, extern_data=False):
     text = src_path.read_text(encoding="utf-8", errors="replace")
+    sym = src_path.stem
+    expected = REVIEWED_ABI_INPUTS.get(sym)
+    if expected and hashlib.sha256(text.encode("utf-8")).hexdigest() != expected:
+        sys.exit("hostgen: %s: reviewed ABI source changed; re-derive the "
+                 "complete input before emitting" % sym)
     # The decomp marks C++ files with a leading `//cpp` line; the host build
     # compiles everything as C++ anyway, so drop it.
     text = re.sub(r"\A//cpp[^\n]*\n", "", text)
