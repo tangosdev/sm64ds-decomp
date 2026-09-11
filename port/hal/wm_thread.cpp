@@ -402,7 +402,15 @@ static unsigned long g_wm5_face_hits[4];
 // ---------------------------------------------------------------------------
 namespace {
 
-struct BandRow { const unsigned char *p; long want; const char *name; };
+// These symbols are separate arrays. Compare their integer addresses; linker
+// spacing does not make them elements of one C++ array.
+unsigned long address_offset(const void *address, const void *base)
+{
+    return static_cast<unsigned long>(reinterpret_cast<uintptr_t>(address) -
+                                      reinterpret_cast<uintptr_t>(base));
+}
+
+struct BandRow { const unsigned char *p; unsigned long want; const char *name; };
 
 int wm5_band_check(void)
 {
@@ -416,7 +424,7 @@ int wm5_band_check(void)
     };
     int bad = 0;
     for (int i = 0; i < 6; ++i) {
-        const long got = (long)(k[i].p - data_020a1fc0);
+        const unsigned long got = address_offset(k[i].p, data_020a1fc0);
         if (got != k[i].want) {
             std::fprintf(stderr,
                          "  [wm5] BAND BROKEN: %s at +0x%lx, the ROM says "
@@ -425,11 +433,11 @@ int wm5_band_check(void)
         }
     }
     // And the OSThread record's own offset inside hal/wm_arm7.cpp's split.
-    if ((long)(data_020a15e4 - data_020a11e4) != 0x400) {
+    if (address_offset(data_020a15e4, data_020a11e4) != 0x400) {
         std::fprintf(stderr,
                      "  [wm5] BAND BROKEN: data_020a15e4 at +0x%lx of "
                      "data_020a11e4, the ROM says +0x400\n",
-                     (long)(data_020a15e4 - data_020a11e4));
+                     address_offset(data_020a15e4, data_020a11e4));
         bad = 1;
     }
     // AND THE SECOND GROUPED RUN, rung W7's (run link100, lane WM8): the
@@ -438,11 +446,11 @@ int wm5_band_check(void)
     // src/func_020652fc.c's sixteen-iteration loop walks from the first and
     // its table runs to the end of the second, so a gap between them is the
     // same class of defect the six rows above check for.
-    if ((long)(data_020a9570 - data_020a94d4) != 0x9c) {
+    if (address_offset(data_020a9570, data_020a94d4) != 0x9c) {
         std::fprintf(stderr,
                      "  [wm8] BAND BROKEN: data_020a9570 at +0x%lx of "
                      "data_020a94d4, the ROM says +0x9c\n",
-                     (long)(data_020a9570 - data_020a94d4));
+                     address_offset(data_020a9570, data_020a94d4));
         bad = 1;
     }
     if (bad) {
@@ -677,7 +685,7 @@ extern "C" void port_wm10_indication_report(void);
 extern "C" void port_wm8_band_report(void)
 {
     const unsigned char *base = data_020a94d4;
-    const long span = (long)((data_020a9570 + 1976) - data_020a94d4);
+    const unsigned long span = address_offset(data_020a9570 + 1976, data_020a94d4);
     int started = 0, banked = 0;
     unsigned long received = 0;
 
