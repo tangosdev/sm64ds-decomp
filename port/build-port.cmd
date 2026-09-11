@@ -1,12 +1,10 @@
 @echo off
-rem Build the PC port's gate-1 smoke runner: 32-bit MSVC via VS Build Tools,
-rem same toolchain-location pattern as the recomp's build scripts.
+rem Build with an installed x86 MSVC toolchain and CMake/Ninja.
 setlocal
-set "PATH=%ProgramFiles(x86)%\Microsoft Visual Studio\Installer;%PATH%"
-call "%ProgramFiles(x86)%\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvars32.bat" >nul
+python "%~dp0tools\msvc_env.py" --write "%~dp0..\build\port-msvc-env.cmd"
 if errorlevel 1 exit /b 1
-set "CMAKEBIN=%ProgramFiles(x86)%\Microsoft Visual Studio\2022\BuildTools\Common7\IDE\CommonExtensions\Microsoft\CMake"
-set "PATH=%CMAKEBIN%\CMake\bin;%CMAKEBIN%\Ninja;%PATH%"
+call "%~dp0..\build\port-msvc-env.cmd"
+if errorlevel 1 exit /b 1
 rem THE GUARD WAVE. Every check below still runs, in this order, with its own
 rem output and its own exit code; tools/guardcache.py just runs them ONCE PER
 rem CHANGE instead of once per build. This line runs the whole set in parallel
@@ -121,10 +119,10 @@ set "PORT_NEED_CONFIGURE="
 if not exist "%~dp0..\build\port\build.ninja" set "PORT_NEED_CONFIGURE=1"
 if not "%~1"=="" set "PORT_NEED_CONFIGURE=1"
 if defined PORT_NEED_CONFIGURE (
-    cmake -S "%~dp0." -B "%~dp0..\build\port" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM="%CMAKEBIN%\Ninja\ninja.exe" %*
+    "%PORT_CMAKE%" -S "%~dp0." -B "%~dp0..\build\port" -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM="%PORT_NINJA%" %*
     if errorlevel 1 exit /b 1
 )
-ninja -C "%~dp0..\build\port"
+"%PORT_NINJA%" -C "%~dp0..\build\port"
 if errorlevel 1 exit /b 1
 rem Fail after link if any /alternatename LHS is also a DEFINED symbol in the
 rem map -- a defined LHS defeats the alias silently (the wave-5 R1/R2 class;
