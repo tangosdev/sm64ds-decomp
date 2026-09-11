@@ -71,9 +71,43 @@ class GeneratorDrift(unittest.TestCase):
                 path.parent.mkdir()
                 path.write_text(source.replace(RAW_CALL, replacement), encoding="utf-8")
                 output = root / "output"
-                with self.assertRaisesRegex(SystemExit, "expected exactly one"):
+                with self.assertRaisesRegex(SystemExit, "reviewed ABI source changed"):
                     hostgen.emit(path, output, root)
                 self.assertFalse(output.exists(), "source drift must not produce a candidate")
+
+    def test_inactive_decoys_and_unreviewed_context_refuse_output(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        changed = RAW_CALL.replace("0xc", "0x10")
+        variants = [
+            source.replace(RAW_CALL, "/*" + RAW_CALL + "*/" + changed),
+            source.replace(RAW_CALL, "/*" + RAW_CALL + "*/(void)o;"),
+            source.replace(RAW_CALL, "#if 0\n" + RAW_CALL + "\n#endif\n" + changed),
+            source + "\n// unreviewed context\n",
+        ]
+        for index, text in enumerate(variants):
+            with self.subTest(index=index), tempfile.TemporaryDirectory() as temp:
+                root = Path(temp)
+                path = root / "src" / (SYMBOL + ".cpp")
+                path.parent.mkdir()
+                path.write_text(text, encoding="utf-8")
+                output = root / "output"
+                with self.assertRaisesRegex(SystemExit, "reviewed ABI source changed"):
+                    hostgen.emit(path, output, root)
+                self.assertFalse(output.exists())
+
+    def test_line_endings_preserve_the_reviewed_generation(self):
+        source = SOURCE.read_text(encoding="utf-8")
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            path = root / "src" / (SYMBOL + ".cpp")
+            path.parent.mkdir()
+            emitted = []
+            for index, newline in enumerate(("\n", "\r\n", "\r")):
+                path.write_bytes(source.replace("\n", newline).encode("utf-8"))
+                result, _ = hostgen.emit(path, root / str(index), root)
+                emitted.append(result.read_bytes())
+            self.assertEqual(emitted[0], emitted[1])
+            self.assertEqual(emitted[0], emitted[2])
 
 
 @unittest.skipUnless(os.name == "nt", "the production port uses Windows x86")
