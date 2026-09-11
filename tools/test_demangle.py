@@ -161,6 +161,29 @@ class FunctionTypeTests(unittest.TestCase):
         self.assertEqual(self.args("PFvN1AIiE1BEPS0_S1_E"),
                          ["void (*)(A<int>::B, A<int> *, A<int>::B)"])
 
+    def test_callback_substitution_uses_complete_enclosing_class_prefix(self):
+        self.assertEqual(D.demangle("_ZN1A1B1fEPFvPS0_E")["args"],
+                         ["void (*)(A::B *)"])
+
+    def test_std_abbreviation_does_not_consume_a_numbered_substitution(self):
+        self.assertEqual(self.args("PFvNSt1A1BEPS_E"),
+                         ["void (*)(std::A::B, std::A *)"])
+
+    def test_enclosing_template_prefix_and_instance_are_both_retained(self):
+        self.assertEqual(D.demangle("_ZN1AIiE1fEPFvPS0_E")["args"],
+                         ["void (*)(A<int> *)"])
+
+    def test_unsupported_function_template_cannot_hide_callback_behind_void_return(self):
+        self.assertEqual(D.demangle("_Z1fIiEvPFvT_E")["args"], ["T"])
+        self.assertEqual(D.demangle("_ZN1A1fIiEEvPFvT_E")["args"], ["T"])
+
+    def test_real_particle_nested_entries_keep_their_complete_type(self):
+        for symbol in ("_ZN8Particle10SysTracker8Contents4LinkERNS1_5EntryE",
+                       "_ZN8Particle10SysTracker8Contents6UnlinkERNS1_5EntryE"):
+            with self.subTest(symbol=symbol):
+                self.assertEqual(D.demangle(symbol)["args"],
+                                 ["Particle::SysTracker::Contents::Entry &"])
+
     def test_public_results_remain_json_strings(self):
         value = D.demangle("_Z1fPFviES0_")
         self.assertEqual(json.loads(json.dumps(value)), value)
