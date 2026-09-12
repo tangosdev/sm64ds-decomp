@@ -7,7 +7,7 @@
   "production_mode": "intact-object",
   "boundary_confidence": "high",
   "boundary_evidence": [
-    "contiguous class linker run: 0x2120570..0x21210ac, 18 function(s); the adjacent daBrq_c_classInit factory (historical alias Amp_Spawn) remains separately enrolled because mwccarm cannot express placement construction with the retail fBase_c allocator",
+    "contiguous class linker run: 0x2120570..0x2121118, 19 function(s) including daBrq_c_classInit (historical alias Amp_Spawn) folded as return new daBrq_c()",
     "ROM class identity: _ZTS7daBrq_c at 0x0212323c, _ZTI7daBrq_c at 0x02123248, and _ZTV7daBrq_c public address point at 0x02123278",
     "the adjacent deferred initializer at 0x02122d80 constructs daBrq_c resource globals and its PMF state table, but the initializer, .ctor word, read-only input tables, and resource BSS remain separately enrolled until their source types are reconstructed"
   ],
@@ -15,7 +15,7 @@
     {
       "name": ".text",
       "start": "0x02120570",
-      "end": "0x021210ac"
+      "end": "0x02121118"
     },
     {
       "name": ".data",
@@ -149,6 +149,13 @@
       "size": "0x000001c0",
       "legacy_source": "src/_ZN3Amp13InitResourcesEv.cpp",
       "ordinal": 17
+    },
+    {
+      "symbol": "daBrq_c_classInit",
+      "address": "0x021210ac",
+      "size": "0x0000006c",
+      "legacy_source": "src/d_a_brq.c",
+      "ordinal": 18
     }
   ],
   "data": [
@@ -687,11 +694,20 @@
     }
   ],
   "notes": [
-    "Retail RTTI proves daBrq_c and dActor_c as its sole base. The class layout is corroborated by the factory's seven member constructors, reverse-order destructor calls, and member offsets used throughout the 18-function class run.",
+    "Retail RTTI proves daBrq_c and dActor_c as its sole base. The class layout is corroborated by the factory's seven member constructors, reverse-order destructor calls, and member offsets used throughout the 19-function class run.",
     "daBrq_c_classInit and g_profile_BIRIKYU are reconstructed source-style names: SM64DS proves the daBrq_c RTTI identity, BIRIKYU registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were Amp_Spawn and Amp_SpawnInfo; readable private state-handler names remain inferred aliases.",
     "The inline destructor and InitResources key function naturally emit retail D1 then D0, type name, RTTI, vtable, and SpawnInfo without a retained D2 or forcing helper.",
-    "The pinned compiler cannot express placement construction against retail's fBase_c allocator, so daBrq_c_classInit remains separately enrolled in its exact C source while this genuine class TU owns the descriptor, members, destructor, RTTI, and vtable.",
+    "daBrq_c_classInit is folded as return new daBrq_c(). Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size).",
     "The deferred initializer at 0x02122d80, its .ctor word, PMF input table, resource globals, and state-table BSS remain separately enrolled for the next reconstruction phase."
+  ],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "return new daBrq_c() odr-uses inline ~Vector3 from include/types.h for mOrbitCenter and mCylinderOffset. The cartridge's copy lives at arm9:0x020072c0, owned by src/_ZN7Vector3D1Ev.cpp; rombuild compares this object copy against those cartridge bytes before dropping it."
+    }
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -699,8 +715,8 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov070-daBrq_c/daBrq_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 18,
-    "functions_declared": 18,
+    "functions_matched": 19,
+    "functions_declared": 19,
     "criteria": {
       "every_declared_function_defined": "PASS",
       "every_declared_function_bytes_match": "PASS",
@@ -709,8 +725,15 @@
       "relocation_destinations_verified": "PASS"
     },
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "deadstripped": [
+        "_ZN7Vector3D1Ev"
+      ],
+      "droppedSections": [
+        56
+      ],
       "data": [],
       "dataExternalized": []
     },

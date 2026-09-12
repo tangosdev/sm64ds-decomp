@@ -1844,6 +1844,7 @@
     "src/game/actors/daBrq_c.cpp#_ZN7daBrq_c8SetStateEi": "github-actions[bot]",
     "src/game/actors/daBrq_c.cpp#_ZN7daBrq_cD0Ev": "github-actions[bot]",
     "src/game/actors/daBrq_c.cpp#_ZN7daBrq_cD1Ev": "github-actions[bot]",
+    "src/game/actors/daBrq_c.cpp#daBrq_c_classInit": "andrewboudreau",
     "src/game/actors/d_a_ey_bm.cpp#MrI_Projectile_Spawn": "github-actions[bot]",
     "src/game/actors/d_a_ey_bm.cpp#_ZN8daEyBm_c10HurtPlayerEv": "github-actions[bot]",
     "src/game/actors/d_a_ey_bm.cpp#_ZN8daEyBm_c12UpdateShadowEv": "github-actions[bot]",

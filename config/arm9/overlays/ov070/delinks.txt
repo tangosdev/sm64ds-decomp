@@ -11,12 +11,8 @@ src/game/actors/d_a_propeller_heyho.cpp:
 
 src/game/actors/daBrq_c.cpp:
     complete
-    .text start:0x02120570 end:0x021210ac
+    .text start:0x02120570 end:0x02121118
     .data start:0x0212323c end:0x021232f4
-
-src/d_a_brq.c:
-    complete
-    .text start:0x021210ac end:0x02121118
 
 src/__sinit_ov070_02122afc.c:
     complete

@@ -10,6 +10,8 @@
 #include "dBgCh_Actr.h"
 #include "dActor_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daBrq_c;
 
 typedef s32 (daBrq_c::*BrqStateHandler)();
@@ -41,10 +43,10 @@ struct daBrq_c : dActor_c {
     dCcAcPos_c                mdCcAcPos_c;                  /* 0x1d8 */
     dBgCh_Actr                mWithMeshClsn;                /* 0x218 */
     /* Matrix4x3, on three witnesses: InitResources block-copies the identity
-       matrix IDENTITY_MATRIX4X3 (0x30 bytes) into it; the state handlers write the
-       position (>>3) at +0x24/+0x28/+0x2c -- exactly the translation row; and
-       func_ov070_021206b0-family passes &this->0x3d4 as the matrix argument of
-       the shadow call. Same role as Lakitu's 0x3f8 translation words. */
+       matrix IDENTITY_MATRIX4X3 (0x30 bytes) into it; UpdateModelTransform writes
+       the position (>>3) at m[9]/m[10]/m[11] -- exactly the translation row --
+       and passes &mMat4x3 as the matrix argument of DropShadowRadHeight. Same
+       role as Lakitu's 0x3f8 translation words. */
     Matrix4x3                 mMat4x3;                       /* 0x3d4 */
     Vector3                   mOrbitCenter;                  /* 0x404 */
     Vector3                   mCylinderOffset;               /* 0x410 */
@@ -64,6 +66,10 @@ struct daBrq_c : dActor_c {
     virtual s32 Behavior();
     virtual s32 Render();
     virtual void OnPendingDestroy();
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 
 private:
     /* These state-machine spellings are inferred aliases. Class ownership,

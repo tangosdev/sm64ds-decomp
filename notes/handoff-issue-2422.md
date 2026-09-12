@@ -51,7 +51,7 @@ This document describes this commit. The queue records its immutable output SHA.
   `883c4cf4a` is the same change as `7402d8be8`, already on `main` via
   https://github.com/tangosdev/sm64ds-decomp/pull/2084, and the later profile
   campaign moved the TU to `src/game/actors/daBrq_c.cpp` and renamed
-  `Amp_Spawn` to `daBrq_c_classInit` (`src/d_a_brq.c`) and `Amp_SpawnInfo` to
+  `Amp_Spawn` to `daBrq_c_classInit` (now in that cpp) and `Amp_SpawnInfo` to
   `g_profile_BIRIKYU`. Every differing line between the branch TU and `main`'s
   is that rename or comment prose. The branch's tools commit `e4650db21` was
   superseded by https://github.com/tangosdev/sm64ds-decomp/pull/2074. The only
@@ -70,9 +70,8 @@ This document describes this commit. The queue records its immutable output SHA.
 - Exact function/byte and relocation coverage: unchanged by this commit. For
   the record, `main`'s manifest lists 18 functions and `symbols.txt` lists 18
   `_ZN7daBrq_c*` symbols (set difference empty both ways); the 19th class
-  symbol is the factory `daBrq_c_classInit` at `0x021210ac`, deliberately
-  enrolled outside the TU in `src/d_a_brq.c` because mwccarm cannot express
-  placement construction against the retail `fBase_c` allocator. Neither side
+  symbol is the factory `daBrq_c_classInit` at `0x021210ac`, now enrolled in
+  `src/game/actors/daBrq_c.cpp` with the rest of the class. Neither side
   dropped a function.
 - Genuine methods; remaining free-function/ABI bridges: unchanged; the factory
   is the one C bridge.
