@@ -2516,10 +2516,13 @@ extern void RunKuppaScript(void *script);
 
 /* PORT_HOST_ABI: GetStarCameraSetting returns u8 (AL only); cdecl reads all
    of EAX, so mask to the ROM's own 0xf here (see the header above). */
-void func_0200ee8c(int arg0)
-{
-    if (arg0 < 0)
-        arg0 = GetStarCameraSetting((int)data_0209f224) & 0xf;
-    RunKuppaScript(data_020876e4[arg0]);
-}
+/* func_0200ee8c RETIRED (run link100, lane SEAT6, batch B6).
+   The u8-return ride-through is a DECLARATION, not a body: the callee
+   src/GetStarCameraSetting.c returns `unsigned char` and ends
+   `and r0,r0,#0xf / and r0,r0,#0xff`, so masking here said the same
+   arithmetic a second time.
+   The matched TU src/func_0200ee8c.c is seated in its place: port/tools/hostgen.py's ARG_WIDTH table declares the return the width
+   the definition really has, which makes MSVC read AL alone.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 }  // extern "C"

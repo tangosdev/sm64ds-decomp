@@ -174,100 +174,16 @@ extern int data_ov100_02148008[3];
 /* PORT_HOST_ABI: the matched TU calls PathPtr members as thiscall while
  * the C-linkage ROM bodies are cdecl (measured c0000005). See the note
  * above. */
-int _ZN14UnchainedChomp13InitResourcesEv(unsigned char *thiz)
-{
-    char *c = (char *)thiz;
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0211092c);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x30c,
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_021486bc), 1, -1);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_021486a4);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov100_021486ac);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov100_021486b4);
-    LoadSilverStarAndNumber();
-
-    {
-        int i = 0;
-        char *p = c + 0x370;
-        do {
-            _ZN9ModelBase7SetFileEP8BMD_Fileii(p,
-                *(void **)((char *)&data_ov100_021486a4 + 4), 1, -1);
-            i++;
-            p += 0x50;
-        } while (i < 6);
-    }
-
-    _ZN11ShadowModel12InitCylinderEv(c + 0x640);
-    {
-        int i = 0;
-        char *p = c + 0x550;
-        do {
-            _ZN11ShadowModel12InitCylinderEv(p);
-            i++;
-            p += 0x28;
-        } while (i < 6);
-    }
-
-    *(int *)(c + 0x6ac) = *(int *)(c + 8) & 0xff;
-    *(int *)(c + 0x6b8) = (*(unsigned int *)(c + 8) >> 8) & 0xf;
-    if (*(int *)(c + 0x6ac) == 0xff) *(int *)(c + 0x6ac) = 0;
-
-    {
-        int path[2] = {0, 0};
-        _ZN7PathPtr6FromIDEj(path, *(unsigned int *)(c + 0x6ac));
-        *(int *)(c + 0x6b0) = (int)_ZNK7PathPtr8NumNodesEv(path);
-    }
-
-    *(int *)(c + 0x9c) = -0x2000;
-    *(int *)(c + 0xa0) = -0x3c000;
-
-    {
-        struct { int x, y, z; } v;
-        v.x = data_ov100_02148008[0];
-        v.y = data_ov100_02148008[1];
-        v.z = data_ov100_02148008[2];
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-            c + 0x110, thiz, &v, 0xaa000, 0x140000, 0x200004, 0x6010);
-    }
-
-    *(unsigned char *)(c + 0x6c9) = 0x1f;
-    *(int *)(c + 0x6cc) = 3;
-
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    *(short *)(c + 0x600 + 0xa4) = *(short *)(c + 0x8e);
-
-    *(int *)(c + 0x6d0) = 0;
-    *(int *)(c + 0x6d4) = 0;
-
-    {
-        int i = 0;
-        char *dst = c;
-        do {
-            *(int *)(dst + 0x6d8) = *(int *)(c + 0x5c);
-            i++;
-            *(int *)(dst + 0x6dc) = *(int *)(c + 0x60);
-            *(int *)(dst + 0x6e0) = *(int *)(c + 0x64);
-            dst += 0xc;
-        } while (i < 6);
-    }
-
-    *(short *)(c + 0x600 + 0xca) = 0xc8;
-
-    {
-        int path[2] = {0, 0};
-        _ZN7PathPtr6FromIDEj(path, *(unsigned int *)(c + 0x6ac));
-        *(int *)(c + 0x6b4) = 1;
-        _ZNK7PathPtr7GetNodeER7Vector3j(path, (int *)(c + 0x5c),
-            *(unsigned int *)(c + 0x6b4));
-    }
-
-    *(int *)(c + 0x60) += 0x64000;
-    *(int *)(c + 0x80) = 0x1000;
-    *(int *)(c + 0x84) = 0x1000;
-    *(int *)(c + 0x88) = 0x1000;
-
-    func_ov100_02143b18(thiz, &data_ov100_021486f4);
-    return 1;
-}
+/* _ZN14UnchainedChomp13InitResourcesEv RETIRED (run link100, lane SEAT6, batch B6).
+   Its stated reason -- the matched TU calls PathPtr members as thiscall
+   while the C-linkage ROM bodies are cdecl -- is spent. Three of the four
+   decorations it needs are publics of this build already
+   (Klepto_PathPtrFaces.cpp, RacingPenguin_ShadowFaces.cpp) and the
+   fourth, ?NumNodes@PathPtr@@QBEHXZ, is a real __thiscall forwarder in
+   port/hal/dispatch_seat6.cpp. Nothing was aliased onto a cdecl body.
+   The matched TU src/_ZN14UnchainedChomp13InitResourcesEv.cpp is seated in its place: a plain line on port/slice_seat6.txt.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 }  /* extern "C" */
 
 typedef int (*PortChompFn)(void *, void *);

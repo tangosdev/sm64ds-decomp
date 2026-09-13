@@ -65,51 +65,12 @@ extern int data_ov072_02122c40[];
 /* PORT_HOST_ABI: TextureSequence::Prepare calling-convention seam (the
    SHORT-1 argsweep row, MotherPenguin's own shape re-applied); cdecl needs
    the third argument spelled explicitly. */
-int func_ov072_02120a44(char *c)
-{
-    char rg[0x50];
-    int v[3];
-    void *m;
-
-    if (IsStarCollectedInLevel(0xa, 5) == 0) {
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x111, 0, c + 0x5c, c + 0x8c,
-            *(signed char *)(c + 0xcc), -1);
-        _ZN9ActorBase18MarkForDestructionEv(c);
-    }
-
-    m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov072_02122c48);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, m, 1, 1);
-    m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov072_02122c40);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x124, m, 1, 1);
-
-    _ZN15TextureSequence8LoadFileER13SharedFilePtr(data_ov072_02122c50);
-    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File((void *)data_ov072_02122c48[1], (void *)data_ov072_02122c50[1], (void *)data_ov072_02122c50[1]);
-    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x174, (void *)data_ov072_02122c50[1], 0, 0x1000, 0);
-
-    if (_ZN11ShadowModel12InitCylinderEv(c + 0x188) == 0)
-        return 0;
-
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-        c + 0x1b0, c, data_ov072_02122c70, 0xc3000, 0x17c000, 0x800004, 0);
-
-    v[0] = *(int *)(c + 0x5c);
-    v[1] = *(int *)(c + 0x60);
-    v[2] = *(int *)(c + 0x64);
-    v[1] += 0x14000;
-    _ZN13RaycastGroundC1Ev(rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, v, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(rg))
-        *(int *)(c + 0x60) = *(int *)(rg + 0x44);
-    else
-        *(int *)(c + 0x60) = v[1];
-    (*(int *)(c + 0x60)) += 0xc3000;
-    *(int *)(c + 0x9c) = 0;
-    *(int *)(c + 0xa0) = 0;
-    *(int *)(c + 0x80) = 0x1800;
-    *(int *)(c + 0x84) = 0x1800;
-    *(int *)(c + 0x88) = 0x1800;
-    func_ov072_021208d8(c);
-    _ZN13RaycastGroundD1Ev(rg);
-    return 1;
-}
+/* func_ov072_02120a44 RETIRED (run link100, lane SEAT6, batch B6).
+   The SHORT-1 argsweep row is one declaration and one argument per call
+   site, which is all this copy ever changed.
+   The matched TU src/func_ov072_02120a44.c is seated in its place: port/tools/hostgen.py's REG_RIDE_ARG table, self=model, bmd=animFile,
+   btp=animFile -- this file's own derivation, applied to the
+   generated TU.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 }

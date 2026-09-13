@@ -69,15 +69,13 @@ void func_ov085_0212d2b8(void *self);
 /* PORT_HOST_ABI: ROM-order model slot-5 dispatch AND a convention
  * mismatch: the shadow's fn field is cdecl where mv_render is __fastcall.
  * See the note above. */
-int _ZN9RabbitKey6RenderEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    if (*(void **)(c + 0x188) == (void *)data_ov085_0213072c)
-        *(short *)(c + 0x8e) += 0x500;
-    func_ov085_0212d2b8(c);
-    /* ((Sub *)&mModel)->fn14(this+0x110, 0): Model at +0x110, ROM slot 5. */
-    ((Model *)(c + 0x110))->Model::Render(0);
-    return 1;
-}
+/* _ZN9RabbitKey6RenderEv RETIRED (run link100, lane SEAT6, batch B6).
+   The measured twist this file records -- the shadow's fn field is a
+   PLAIN cdecl pointer where _ZTV5Model[5] holds __fastcall mv_render --
+   is a property of the CALL, and the call is the only thing that moves.
+   The matched TU src/_ZN9RabbitKey6RenderEv.cpp is seated in its place: port/tools/hostgen.py's VIRTUAL_CALL table respells that one line as a
+   call through word 5 __fastcall, the shape mv_render is seated in.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 
 }  /* extern "C" */

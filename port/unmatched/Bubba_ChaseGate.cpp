@@ -47,20 +47,13 @@ extern char data_ov032_02113abc[];
 extern char data_0209f32c[];
 
 /* PORT_HOST_ABI: ARM r0 passthrough into a thiscall Actor::ClosestPlayer. */
-int func_ov032_02111350(char *c)
-{
-    if (_ZN5Actor13ClosestPlayerEv(c) == 0)
-        return 1;
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x190) != 0 ||
-        _ZNK12WithMeshClsn10IsOnGroundEv(c + 0x190) != 0)
-        return 1;
-    if (Vec3_HorzDist((struct Vector3 *)(c + 0x40c),
-                      (struct Vector3 *)(c + 0x5c)) > 0x4b0000)
-        return 1;
-    if (*(char **)(c + 0x3b0) != (char *)data_ov032_02113abc) {
-        if (*(int *)data_0209f32c < *(int *)(c + 0x60))
-            return 1;
-    }
-    return 0;
-}
+/* func_ov032_02111350 RETIRED (run link100, lane SEAT6, batch B6).
+   The r0 passthrough into a thiscall Actor::ClosestPlayer is one
+   declaration and one argument, not a body.
+   The matched TU src/func_ov032_02111350.c is seated in its place: port/tools/hostgen.py's REG_RIDE_ARG table gives the declaration its
+   receiver and the call site the body's own `c`.
+   port/tools/closestplayer_guard.py still refuses the RAW source in any
+   slice line, and is right to: the raw source is not what is compiled.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 }

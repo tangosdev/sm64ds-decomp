@@ -79,26 +79,16 @@ extern int func_ov074_021222e0(char *c);
 /* ---- (2) func_ov074_021222e0, ROM 0x021222e0 ----------------------------
    The mParam == 0x1111 Render. Same slot-5 collision, null scale.
    PORT_HOST_ABI: ROM-order ModelAnim slot-5 dispatch, the Whomp/Fish case. */
-int func_ov074_021222e0(char *c)
-{
-    Vector3 v;
-    Vec3_Asr(&v, (Vector3 *)(c + 0x5c), 3);
-    Matrix4x3_FromTranslation(&data_020a0e68, v.x, v.y, v.z);
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0x6400, 0);
-    Matrix4x3_ApplyInPlaceToRotationZXYExt(&data_020a0e68,
-                                           *(short *)(c + 0x8c),
-                                           *(short *)(c + 0x8e),
-                                           *(short *)(c + 0x90));
-    Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, -0x6400, 0);
-    *(Matrix4x3 *)(c + 0x22c) = data_020a0e68;
-
-    if (*(unsigned char *)(c + 0x60a) == 0)
-        return 1;
-
-    /* ((Obj210 *)(c + 0x210))->v5(0) -- ROM slot 5, spelled qualified */
-    ((ModelAnim *)(c + 0x210))->ModelAnim::Render(0);
-    _ZN15MaterialChanger6UpdateER15ModelComponents(c + 0x3d0, c + 0x218);
-    return 1;
-}
+/* func_ov074_021222e0 RETIRED (run link100, lane SEAT6, batch B6).
+   Both of its reasons expired. The ROM-order ModelAnim slot-5 numbering
+   died with lane SLOT5F (cxxname_bridge.cpp:577 fills _ZTV9ModelAnim[5]
+   with ma2_render, which is why lane FACEF could seat Goomboss::Render
+   above from the same instruction), and the ov070/ov074 shared-window
+   NAME RACE is re-cut as the per-source COMPILE_DEFINITIONS at
+   port/CMakeLists.txt:12640. This file has been DEFINING the name all
+   along, which is the proof that defining it from src is no change.
+   The matched TU src/func_ov074_021222e0.cpp is seated in its place: a plain line on port/slice_seat6.txt.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 
 }  /* extern "C" */
