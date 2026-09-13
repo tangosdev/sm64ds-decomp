@@ -14,6 +14,16 @@
 //
 // The argument registers are pushed across the call as they are in every other routine in
 // this block, which is the tell that these are one hand-written assembly file.
+//
+// `_i2f_addone` and `_i2f_trap308` are the (byte-neutral) labels this function's own
+// header +0x7c and +0x9c now carry: config/arm9/itcm/symbols.txt records them as label
+// aliases, because func_01ffa440 (unsigned int-to-float, three rows up) tail-jumps into
+// them directly to reuse this function's round/trap tail rather than duplicating it. This
+// is the one enrolled (delinks.txt-complete) file that cross-jump lands in, so unlike the
+// other ITCM cross-jump targets -- which sit in un-enrolled gap regions dsd's linked-
+// symbol check does not examine -- dsd's `check symbols` step here requires an actual
+// symbol at the address, not just a byte match; adding the label costs nothing (a label
+// emits no code) and was verified to leave every byte of this function unchanged.
 
 extern int func_0207322c(void);
 extern void func_0206ddcc(void);
@@ -51,6 +61,7 @@ asm float func_01ffa4bc(int value)
     andeqs r3, r0, #1
     addne r0, r0, #1
     bx lr
+_i2f_addone:
     add r0, r0, #1
     bx lr
 _L084:
@@ -61,6 +72,7 @@ _L090:
     cmp r2, #0
     addpl r0, r0, #1
     bx lr
+_i2f_trap308:
     stmdb sp!, {lr}
     ldr r1, =0x40000308
     bl func_0206ddcc
