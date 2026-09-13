@@ -4,55 +4,52 @@
 #include "dBgActor_c.h"
 #include "TextureTransformer.h"
 
-/* daObjMcWater_c -- the water plane inside the castle (profile MC_WATER, ov009).
- * It is a flat, scrolling sheet with a collision mesh on it: the moat and the
- * basement pool the player can swim in. It does not move on its own. Its whole
- * per-frame job is to keep the surface texture sliding at a fixed rate.
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* CASTLE_WATER (338) -- ov009/daObjMcWater_c, the castle water plane.
+ * The moat outside and the flooded basement inside are the same actor.
  *
- * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
+ * ov009 is mixed (DOCK_POLE / CASTLE_WATER / METAL_NET / FLAG / BIRD).
+ * RTTI names this class daObjMcWater_c; the debug table names CASTLE_WATER.
+ * This is the water plane, not daObjMc_Metalnet_c / daMcFlag_c / Bird.
+ *
  *   _ZTS  ov009 0x021139e0  "14daObjMcWater_c"
- *   _ZTI  ov009 0x021139d4  __si_class_type_info; +8 -> _ZTI10dBgActor_c
- *                           (ov002 0x021089ec), so the DIRECT base is
- *                           dBgActor_c and nothing else.
- *   _ZTV  ov009 0x02113a18  the ADDRESS POINT itself: the two words below it
- *                           at 0x02113a10 are a zero offset-to-top and
- *                           &_ZTI (0x021139d4). The factory's literal pool
- *                           word at 0x02111dc0 holds exactly 0x02113a18.
- *   size  0x338             daObjMcWater_c_classInit's own `mov r0, #0x338`
- *                           at 0x02111d90 (824). dBgActor_c ends at 0x31e, so
- *                           the TextureTransformer at 0x320 (0x14 bytes) and
- *                           four trailing bytes account for the remainder.
- * The coined `CastleWater` spelling this class used to carry is gone; the ROM's
- * own type string is where the class name now comes from.
+ *   _ZTI  ov009 0x021139d4  __si_class_type_info; base dBgActor_c
+ *                           (ov002 0x021089ec)
+ *   _ZTV  ov009 0x02113a18  address point
+ *   size  0x338             factory literal at 0x02111d90
  *
- * Only slots 0, 3, 6, 9, 16 and 17 of the cartridge's 32-word table point
- * inside ov009; every other slot still holds dBgActor_c's arm9 word, including
- * slot 31 (Kill, 0x020ee55c). There is no OnPendingDestroy override here --
- * unlike its two ov009 neighbours Bird and daObjMc_Metalnet_c, which both have
- * one.
+ * Only slots 0, 3, 6, 9, 16 and 17 of the 32-word table point inside ov009;
+ * every other slot still holds dBgActor_c's arm9 word, including slot 31
+ * (Kill, 0x020ee55c). No OnPendingDestroy override.
  *
- * The destructor is declared FIRST and INLINE on purpose. Out of line mwccarm
- * emits D0 ahead of D1 and the cartridge has D1 first, which rombuild refuses;
- * declaring it first is also what makes this TU the vtable's home.
+ * dBgActor_c ends at 0x31e (sizeof 0x320). TextureTransformer at 0x320
+ * (0x14 bytes) plus four trailing bytes make 0x338.
  */
+
 struct daObjMcWater_c : dBgActor_c {
-    virtual ~daObjMcWater_c() {}                  /* slots 16, 17 */
+    u8 unk_31e[0x2];
+    TextureTransformer mTexTransformer; /* 0x320 -- Behavior re-forces
+                                           speed to 0x1000 every frame */
+    u8 unk_334[0x4];                    /* 0x334 -- allocation tail; nothing
+                                           in the eight matched bodies reads
+                                           or writes it */
 
-    virtual int InitResources();                  /* slot 0 */
-    virtual int CleanupResources();               /* slot 3 */
-    virtual int Behavior();                       /* slot 6 */
-    virtual int Render();                         /* slot 9 */
+    /* INLINE ON PURPOSE. Out of line, mwccarm emits D0 ahead of D1 plus an
+       unhomed D2; the cartridge keeps D1 at 0x02111a70 below D0 at 0x02111abc.
+       Defined in the class body it yields the retail D1/D0 pair and no D2.
+       First non-inline virtual below (InitResources) is then the key function,
+       so this class's TU still homes _ZTV/_ZTI/_ZTS. */
+    virtual ~daObjMcWater_c() {}
 
-    u8 pad_31e[0x2];
-    TextureTransformer mTexTransformer;           /* 0x320 -- slides the water's
-                                                     surface texture; Behavior
-                                                     re-forces its speed to
-                                                     0x1000 every frame */
-    u8 pad_334[0x4];                              /* 0x334 -- nothing in the
-                                                     eight matched bodies reads
-                                                     or writes it; only the
-                                                     allocation literal proves
-                                                     it is there */
+    virtual int InitResources();       /* slot  0 */
+    virtual int CleanupResources();    /* slot  3 */
+    virtual int Behavior();            /* slot  6 */
+    virtual int Render();              /* slot  9 */
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daObjMcWater_c_size_must_be_0x338[sizeof(daObjMcWater_c) == 0x338 ? 1 : -1];
