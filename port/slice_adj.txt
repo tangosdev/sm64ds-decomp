@@ -1,0 +1,95 @@
+# Slice ADJ -- run link100 wave 7, the census's 23 GUESSED VTABLE rows.
+#
+# THIS FILE IS DELIBERATELY INERT. Every src/ line below is commented out, and
+# no CMake block reads this file. That is not an oversight, it is the finding.
+#
+# All 23 rows were disassembled out of the ROM and ruled REAL_DECOMP before
+# anything else was considered: port/tools/inferred_stub_adjudicated.txt's
+# "run link100 wave 7 (lane ADJ)" section carries the per-row ruling, and
+# runs/link100/out/ADJ/verify.txt carries the evidence (465 words compared, 375
+# byte-identical, 90 reloc slots, 0 MISMATCH; every compiled relocation offset
+# equal to the module's own config reloc rows inside the span).
+#
+# WHAT STOPS THE SEAT. inferred_stub_guard.py's SEATED is the conjunction of an
+# active TU line AND a port/hal file naming the symbol outside comments -- a
+# vtable fill. The house law says the same thing from the other side: a TU
+# counts only when the ROM's own reference graph reaches it, and a keep-alive
+# reference is forbidden. Measured on this tree, 0 of the 23 are named by any
+# port/hal fill, and every in-module ROM edge any of them has is a vtable-slot
+# `load` (not one has an in-module arm_call, so no linked ROM caller reaches
+# one on its own). Every hal file that would carry the fill belongs to another
+# lane, so this lane cannot complete a single seat.
+#
+# AN ACTIVE SLICE LINE IS NOT A SEAT, and two of these rows prove it: 
+# src/func_ov015_021111d0.c and src/func_ov015_02112c20.c have been on
+# slice_gate59.txt for a while, they compile on every build (their .obj files
+# are under build/port/CMakeFiles/walk_window.dir/), and neither symbol appears
+# in walk_window.map, because nothing references them.
+#
+# Uncommenting a line here without ALSO landing the port/hal fill named in its
+# blocker adds compile time and nothing else.
+#
+# ---- arm9 -----------------------------------------------------------------
+# blocker: host array _ZTV25MovingCylinderClsnWithPos[12] (hal/actor_vtables.cpp:412),
+# slot 3 filled there; and the src TU is a zero-argument tail-call veneer, which is
+# receiver-destroying on the host (the shape hal/fdr_arm9_fader_seat.cpp:167 writes up).
+#src/func_02014a20.c
+# blocker: host array data_0208ea6c[12] (hal/scene_boot.cpp:1219); slots 3 and 4 are
+# TRANSCRIBED rather than forwarded, and scene_boot.cpp:1533-1560 records the decision.
+#src/func_020171c8.cpp
+#src/func_020171f0.cpp
+# blocker: same table, slot 2; zero-argument veneer onto _ZN5Fader13AdvanceInterpEv.
+#src/func_0201721c.c
+# blocker: hal/fdr_arm9_fader_seat.cpp:167-183 rules this row explicitly -- slot 0x20
+# forwards through fdr_s20 to the same target the ROM veneer jumps to, and the src TU
+# is host-broken (no parameter, no argument).
+#src/func_0202ed08.c
+#
+# ---- ov002 ----------------------------------------------------------------
+# blocker: _ZTV13BigBrickBlock[32] (hal/actor_classes.cpp:711) does not name it.
+#src/func_ov002_020b37ec.c
+# blocker: a HOST DEFINITION of the same symbol exists under a PORT_HOST_ABI tag at
+# hal/actor_classes_ov002_w17.cpp:109 (ROM Itanium slot 5 is ModelAnim::Render, MSVC
+# slot 5 is ModelAnim::Virtual18). Adding this TU double-defines the symbol.
+#src/func_ov002_020bc4f8.cpp
+#
+# ---- ov003 (dScTitle_c) ---------------------------------------------------
+# blocker: the class's table data_ov003_020b1650 is ABSENT from the port -- two src
+# TUs declare it extern, nothing defines or mounts it. These six would not link.
+#src/func_ov003_020ad69c.c
+#src/func_ov003_020ad7a0.c
+#src/func_ov003_020ad7a4.cpp
+#src/func_ov003_020ad814.cpp
+#src/func_ov003_020ada80.c
+#src/func_ov003_020ada9c.cpp
+#
+# ---- ov006 ----------------------------------------------------------------
+# blocker: zero-argument veneers; the seat thunk passes the receiver INTO the veneer
+# (lane BNP's own ruling) and tailjump_guard asserts the jmp form survives.
+#src/func_ov006_020e6d8c.c
+#src/func_ov006_020e6d98.c
+# blocker: slot 17 of the mounted tables data_ov006_0213d9cc / 0213dbbc is served by
+# port/unmatched/MgPachinko_Dtor.cpp and MgPachinko2_Dtor.cpp; the VT/HEAP placeholders
+# would also need a per-TU COMPILE_DEFINITIONS rename.
+#src/func_ov006_020fa780.c
+#src/func_ov006_020ff444.c
+# already on slice_mga361.txt:222; slot 2 is deliberately paid by
+# port/unmatched/MgFlower_Slot2.cpp because the ROM's r1 rides through.
+#src/func_ov006_0210a6e4.cpp
+#
+# ---- ov015 ----------------------------------------------------------------
+# already on slice_gate59.txt:57 and :79; tables data_ov015_02114380 and 02114824 are
+# absent from the port, so neither symbol reaches the map. See out/ADJ/bugs.md for the
+# VT0/VT1/VT2 placeholder finding on these two.
+#src/func_ov015_021111d0.c
+#src/func_ov015_02112c20.c
+# blocker: zero-argument veneers onto func_ov015_02111414; table data_ov015_02114458
+# absent from the port.
+#src/func_ov015_021113fc.c
+#src/func_ov015_02111408.c
+#
+# ---- ov064 ----------------------------------------------------------------
+# blocker: the mounted table data_ov064_0211c1d8 is "raw DS words, pack-checked, never
+# dispatchable" (hal/actor_classes_bowserpuzzle.cpp:351-355); dispatch runs through the
+# host array port_bp_shell_vtable[31].
+#src/func_ov064_02118c10.c
