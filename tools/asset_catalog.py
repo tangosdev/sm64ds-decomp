@@ -212,13 +212,13 @@ ROM_HEADER_OVT = 0x50
 def write_nitrofs_tables(directory: pathlib.Path, rom: pathlib.Path) -> dict:
     """Copy the ROM's own FNT and FAT out verbatim, with their ROM offsets.
 
-    WHY THIS IS HERE AND NOT RECONSTRUCTED. port/hal/fs_names.cpp runs the
-    ROM's own NitroSDK archive registration, and the ROM's own FNT walker then
-    resolves a path by reading these two tables through the archive's read
-    function.  The tables have to be the CARTRIDGE'S BYTES: a name table built
-    back out of files.tsv would be a plausible-looking forgery, and the whole
-    point of running the ROM's walker is that nothing between the name and the
-    file id is this port's invention.
+    WHY THIS IS HERE AND NOT RECONSTRUCTED. The port's HAL runs the ROM's own
+    NitroSDK archive registration, and the ROM's own FNT walker then resolves
+    a path by reading these two tables through the archive's read function.
+    The tables have to be the CARTRIDGE'S BYTES: a name table built back out
+    of files.tsv would be a plausible-looking forgery, and the whole point of
+    running the ROM's walker is that nothing between the name and the file id
+    is this port's invention.
 
     The FAT is also what makes an absolute ROM offset resolvable at all.  Every
     read the walker asks for is an offset into the cartridge image, and the
@@ -232,9 +232,9 @@ def write_nitrofs_tables(directory: pathlib.Path, rom: pathlib.Path) -> dict:
     reader (src/func_02018c00.c, src/func_0205df40.c) reads the ARM9 pair at
     0x027FFE50 and the ARM7 pair at 0x027FFE58 whenever the overlay table has
     not been cached into RAM by src/func_020423dc.c -- which, in single-cart
-    play, it never is.  port/hal/nitrofs_boot.cpp writes those two pairs into
-    the mirror from these four values, exactly the way it already writes the
-    FNT and FAT pairs, so the ROM's own reader reads the cartridge's own words.
+    play, it never is.  The port's HAL writes those two pairs into the mirror
+    from these four values, exactly the way it already writes the FNT and FAT
+    pairs, so the ROM's own reader reads the cartridge's own words.
 
     Output is gitignored build/ like every other catalog product, and like
     them it needs a regenerate when the ROM changes.
