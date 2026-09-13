@@ -7,6 +7,8 @@
 #include "dActor_c.h"
 #include "math/Matrix.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* daEyBm_c is the ROM's own RTTI name for this class (this tree once coined it
  * MrI_Projectile): the typeinfo at ov071
  * 0x02122db8 names dActor_c as the sole base at offset 0, and the class's
@@ -39,9 +41,7 @@ struct daEyBm_c : dActor_c {
     Matrix4x3 mMatrix;        /* 0x2f8 */
     /* Two particle handles, effects 0x46 and 0x47, both fed back into
        Particle::System::NewUnkCallback818 every Render. mLifeTimer starts at
-       0x96 (150 frames) and is counted down by Behavior.
-       [_ZN8daEyBm_c6RenderEv.cpp, _ZN8daEyBm_c8BehaviorEv.cpp,
-        _ZN8daEyBm_c13InitResourcesEv.cpp] */
+       0x96 (150 frames) and is counted down by Behavior. */
     u32                       mParticle1;                       /* 0x328 */
     u32                       mParticle2;                       /* 0x32c */
     u16                       mLifeTimer;                       /* 0x330 */
@@ -61,9 +61,18 @@ struct daEyBm_c : dActor_c {
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnYoshiTryEat();       /* slot 18 */
 
+    /* Leaf in-class operator new until fBase_c::operator new(unsigned long)
+       lands (#2570). unsigned long, not unsigned int: `new daEyBm_c()` looks
+       up _Znwm. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
 private:
     /* Class ownership, calls, bodies and codegen are proven. These readable
-       private spellings are inferred aliases; no original names survive. */
+       private spellings are inferred aliases; no original names survive.
+       UpdateCollision mangles as R10dBgCh_Actr (reference). A pointer
+       (P10dBgCh_Actr) generates identical ARM; the ROM cannot prove which. */
     void SpawnDestroyEffect();
     void UpdateCollision(dBgCh_Actr &collision);
     void HurtPlayer();
@@ -72,11 +81,5 @@ private:
 
 typedef char daEyBm_c_size_must_be_0x334[
     sizeof(daEyBm_c) == 0x334 ? 1 : -1];
-
-/* InitResources owns the compiler-emitted definition of this vtable. The
- * measured factory must store its public address point directly because
- * natural new selects the wrong allocator; this declaration only exposes
- * that compiler-owned address to the factory seam. */
-extern int _ZTV8daEyBm_c[];
 
 #endif /* DAEYBM_C_H */
