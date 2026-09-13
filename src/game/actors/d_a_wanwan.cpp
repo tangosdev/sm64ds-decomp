@@ -1,186 +1,134 @@
 //cpp
-/* HAND-ASSEMBLED translation unit -- ov014/daWanwan_c (29 function(s)).
- * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
- * so this is a raw concatenation of the complete legacy files in REVERSE
- * ROM order (mwccarm emits one .text section per function in the reverse
- * of source order). Conflicting declarations were reconciled by hand; see
- * the manifest notes.
+/**
+ * Bob-omb Battlefield Chain Chomp (`wanwan`). Seven chain links,
+ * a stump (STUMP, actor 0x1b) and a fence (CHAIN_CHOMP_FENCE, actor
+ * 0x29) in ov014.
  *
- * PROMOTED: this file is compiled and linked into the ROM, and ov014's
- * delinks.txt gives it the whole .text run 0x02111308..0x02112e0c. The 29
- * legacy one-function sources listed below are deleted; they are named for
- * provenance only.
+ * daWanwan_c_classInit is reconstructed (RTTI daWanwan_c, WANWAN
+ * registry). Retail does not store that spelling.
  *
- * The class is spelled as the cartridge spells it. ov014 _ZTI 0x02114718 holds
- * _ZTS 0x02114740, reading `10daWanwan_c`, and its base word 0x021081c0 is
- * _ZTI12dEnemyBase_c. It is a leaf: a scan of all 977 .bin files under
- * extracted/ for the word 0x02114718 finds six hits. Two are this class's own
- * _ZTV - 4, at file offset 0x3648 in the same overlay under two paths. The
- * other four are ov034's, at 0x26cc and 0x2df4 under the same two paths, and
- * they are not RTTI at all: ov034 loads at the same base as ov014 (0x021111a0)
- * so the two are never co-resident, and at 0x02114718 ov034 has
- * data_ov034_02114718 kind:bss, an ordinary variable. One hit, 0x0211386c, is a
- * word inside the data record data_ov034_02113860; the other, 0x02113f94, is a
- * literal-pool word inside the function __sinit_ov034_021138ec (0x021138ec,
- * size 0x78c). A real descendant's hit would decode as an _ZTI triple whose
- * word[0] is 0x0209a764; neither of these does.
- *
- * The destructor is defined INLINE in include/daWanwan_c.h. Out of line
- * mwccarm emits D2, D0, D1; the ROM has D1 at 0x02111308 then D0 at 0x021113bc
- * and no D2 anywhere in ov014. mwcc picks a class's key function by the FIRST
- * DECLARED virtual, not by vtable slot, and ~daWanwan_c is declared first. With
- * it inline the class has no key function at all. The four overrides below it
- * ARE virtual and ARE out of line -- fBase_c declares InitResources,
- * CleanupResources, Behavior and Render virtual at slots 0/3/6/9, and
- * daWanwan_c inherits them through dEnemyBase_c -> dActor_c -> dBase_c -- but a
- * later virtual is never the key function, so mwccarm has nowhere to hang the
- * class's RTTI and emits _ZTV/_ZTI/_ZTS here as vague-linkage records, along
- * with the eight inherited base-chain ones. All eleven are licensed in the
- * manifest's compiler_only_output and word-compared against the cartridge by
- * tools/romdata_check.py: 6 VERIFIED, 5 PARTIAL, 0 DIFFERS. The PARTIALs are
- * the five _ZTS strings -- extent shortfalls, not disagreements; every byte
- * compared is equal.
- *
- * A twelfth record is a FUNCTION, not data: _ZN7Vector3D1Ev, the 4-byte
- * `bx lr` that include/types.h's in-class `~Vector3() {}` emits into every TU
- * holding a Vector3. This one holds fourteen (two Vector3[7]), and the kept
- * ROM destructor at 0x02111308 references it from its literal pool at +0xa0 --
- * exactly as the cartridge's own D1 does. It has a ROM home at arm9:0x020072c0
- * owned by src/_ZN7Vector3D1Ev.cpp, so it is licensed deadstrip-duplicate,
- * whose precondition is the opposite of deadstrip's: the body must be PROVED to
- * be the cartridge's own at that address before it may be discarded. The proof
- * is split. tools/objisolate.py compares the raw section, which can only speak
- * for the words no relocation covers -- an addend is not a linked address, so
- * every bl and every vptr store is masked out there.
- * tools/rombuild.py's _duplicate_body_reasons links the body against
- * arm9:0x020072c0 the way the linker would and compares exactly those masked
- * words, and it runs before the surgery. Together they cover every word.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111308  src/_ZN10daWanwan_cD1Ev.cpp
- *   [1] 0x021113bc  src/_ZN10daWanwan_cD0Ev.cpp
- *   [2] 0x02111484  src/func_ov014_02111484.c
- *   [3] 0x021114d8  src/func_ov014_021114d8.c
- *   [4] 0x0211150c  src/func_ov014_0211150c.c
- *   [5] 0x021115c0  src/func_ov014_021115c0.c
- *   [6] 0x021115ec  src/func_ov014_021115ec.cpp
- *   [7] 0x02111a6c  src/func_ov014_02111a6c.cpp
- *   [8] 0x02111af0  src/func_ov014_02111af0.c
- *   [9] 0x02111b70  src/func_ov014_02111b70.c
- *   [10] 0x02111ca8  src/func_ov014_02111ca8.cpp
- *   [11] 0x02111dc4  src/func_ov014_02111dc4.cpp
- *   [12] 0x02111e14  src/func_ov014_02111e14.c
- *   [13] 0x02111e74  src/func_ov014_02111e74.cpp
- *   [14] 0x02111ebc  src/func_ov014_02111ebc.cpp
- *   [15] 0x02111f08  src/func_ov014_02111f08.cpp
- *   [16] 0x02111f54  src/func_ov014_02111f54.cpp
- *   [17] 0x02111fb8  src/func_ov014_02111fb8.c
- *   [18] 0x02111fe0  src/func_ov014_02111fe0.c
- *   [19] 0x02112114  src/func_ov014_02112114.c
- *   [20] 0x021122dc  src/func_ov014_021122dc.c
- *   [21] 0x0211236c  src/func_ov014_0211236c.c
- *   [22] 0x0211250c  src/func_ov014_0211250c.c
- *   [23] 0x02112788  src/func_ov014_02112788.c
- *   [24] 0x0211294c  src/_ZN10daWanwan_c16CleanupResourcesEv.cpp
- *   [25] 0x02112994  src/_ZN10daWanwan_c6RenderEv.cpp
- *   [26] 0x021129ec  src/_ZN10daWanwan_c8BehaviorEv.cpp
- *   [27] 0x02112b14  src/_ZN10daWanwan_c13InitResourcesEv.cpp
- *   [28] 0x02112d1c  src/daWanwan_c_classInit.cpp
+ * deslop
+ * Leftover: func_ov014_02111484..02112788 are this TU's own helpers;
+ *   the ROM symbols are still the func_ov labels. Naming them as C++
+ *   methods would emit _ZN10daWanwan_c* and miss those labels.
+ * Leftover: dCcAcPos_c::Init and DropShadowRadHeight stay mangled
+ *   (Fix12-by-value, wall 6az).
+ * Leftover: SharedFilePtr has no recovered layout. Init's
+ *   `&data_ov014_02114978 + 4` is the BMD pointer LoadFile just
+ *   filled; decl_common.h spells the four handles as char, so
+ *   LoadFile/Release go through that view.
+ * Leftover: ClosestPlayer()+0x6fb is a Player byte this TU reads;
+ *   the name belongs on Player. Spawned stump +0x320 is Stump::mBusy;
+ *   including Stump.h pulls dBgActor_c/common.h and would change
+ *   this TU's matrix copies.
+ * Leftover: `(Vector3 *)&mPosX` / `&mScaleX` stay; Pos() is not on
+ *   this branch's dActor_c.
+ * Leftover: BMD/BCA handles still data_ov014_*; sinit file IDs
+ *   belong with that sinit. Text-only TU, so g_profile_WANWAN is
+ *   not defined here (S14).
+ * Leftover: factory stays the hand-rolled C2 / vec_ctor walk.
+ *   `return new` size-DIFF (Vector3[7] ctor is func_0203d384, not
+ *   the implicit default).
+ * Leftover: common.h must be included first. Matrix4x3 has two
+ *   0x30-byte spellings; 02112788 copies twelve uniform words.
  */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- daWanwan_c_classInit, 0x02112d1c, size 0xf0 */
-/* -------------------------------------------------------------------------- */
+#include "common.h"
+#include "daWanwan_c.h"
+#include "decl_common.h"
+#include "SharedFilePtr.h"
+#include "Player.h"
+#include "dCc_c.h"
+#include "Animation.h"
+
+enum {
+    kStumpActorId = 0x1b, /* STUMP */
+    kFenceActorId = 0x29  /* CHAIN_CHOMP_FENCE */
+};
+
 extern "C" {
+extern char data_ov014_02114970;
+extern char data_ov014_02114980;
+
+int func_ov014_02111fb8(char *c);
+void func_ov014_02111f08(void *c);
+void func_ov014_02112114(void *c);
+void func_ov014_02111fe0(char *c);
+void func_ov014_0211250c(char *c);
+void func_ov014_0211236c(char *c);
+void func_ov014_021122dc(char *c);
+void func_ov014_02112788(char *c);
+void func_ov014_02111ebc(void *c, int i);
+int _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    void *self, void *actor, void *pos, int fix, int t, unsigned a, unsigned b);
+}
+
 // @symbol daWanwan_c_classInit
-void* _ZN7fBase_cnwEj(unsigned int);
-void _ZN12dEnemyBase_cC2Ev(void*);
-int _ZN10dCcAcPos_cC1Ev(void*);
-int _ZN9ModelAnimC1Ev(void*);
-int _ZN11ShadowModelC1Ev(void*);
-int __cxa_vec_ctor(void*, int, int, void*, void*);
+extern "C" {
+void *_ZN7fBase_cnwEj(unsigned int);
+void _ZN12dEnemyBase_cC2Ev(void *);
+int _ZN10dCcAcPos_cC1Ev(void *);
+int _ZN9ModelAnimC1Ev(void *);
+int _ZN11ShadowModelC1Ev(void *);
+int __cxa_vec_ctor(void *, int, int, void *, void *);
 extern int _ZTV10daWanwan_c[];
 extern void _ZN5ModelD1Ev();
 extern void _ZN5ModelC1Ev();
 extern void _ZN11ShadowModelD1Ev();
 extern void _ZN7Vector3D1Ev();
 extern void func_0203d384();
-/* Reconstructed source-style name. Historical alias: ChainChomp_Spawn. */
-void* daWanwan_c_classInit(void){
-  char* c = (char*)_ZN7fBase_cnwEj(0x620);
-  if(c){
-    _ZN12dEnemyBase_cC2Ev(c);
-    *(int**)c = &_ZTV10daWanwan_c[2]; /* +8: this TU defines the vtable */
-    _ZN10dCcAcPos_cC1Ev(c+0x110);
-    _ZN9ModelAnimC1Ev(c+0x150);
-    _ZN11ShadowModelC1Ev(c+0x1b4);
-    __cxa_vec_ctor(c+0x1dc, 7, 0x50, (void*)_ZN5ModelC1Ev, (void*)_ZN5ModelD1Ev);
-    __cxa_vec_ctor(c+0x40c, 7, 0x28, (void*)_ZN11ShadowModelC1Ev, (void*)_ZN11ShadowModelD1Ev);
-    __cxa_vec_ctor(c+0x524, 7, 0xc, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);
-    __cxa_vec_ctor(c+0x578, 7, 0xc, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);
-  }
-  return c;
-}
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 27 -- _ZN10daWanwan_c13InitResourcesEv, 0x02112b14, size 0x208 */
-/* -------------------------------------------------------------------------- */
+extern "C" daWanwan_c *daWanwan_c_classInit()
+{
+    char *c = (char *)_ZN7fBase_cnwEj(0x620);
+    if (c) {
+        _ZN12dEnemyBase_cC2Ev(c);
+        *(int **)c = &_ZTV10daWanwan_c[2];
+        _ZN10dCcAcPos_cC1Ev(c + 0x110);
+        _ZN9ModelAnimC1Ev(c + 0x150);
+        _ZN11ShadowModelC1Ev(c + 0x1b4);
+        __cxa_vec_ctor(c + 0x1dc, 7, 0x50, (void *)_ZN5ModelC1Ev, (void *)_ZN5ModelD1Ev);
+        __cxa_vec_ctor(c + 0x40c, 7, 0x28, (void *)_ZN11ShadowModelC1Ev, (void *)_ZN11ShadowModelD1Ev);
+        __cxa_vec_ctor(c + 0x524, 7, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+        __cxa_vec_ctor(c + 0x578, 7, 0xc, (void *)func_0203d384, (void *)_ZN7Vector3D1Ev);
+    }
+    return (daWanwan_c *)c;
+}
+
 // @symbol _ZN10daWanwan_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
-#include "daWanwan_c.h"
-extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
-extern "C" void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
-extern "C" void _ZN11ShadowModel12InitCylinderEv(void *self);
-extern "C" void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, void *pos, int fix, int t, unsigned int a, unsigned int b);
-extern "C" void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
-
-extern char data_ov014_02114980;
-extern char data_ov014_02114970;
-
 int daWanwan_c::InitResources()
 {
-    unsigned char *c = (unsigned char *)((void *)this);
-    void *f;
-        int i;
-    unsigned char *p;
-    void *spawned;
-    int *px;
-    int *py;
-    int *pz;
-    int one;
+    void *f = Model::LoadFile(*(SharedFilePtr *)&data_ov014_02114968);
+    mModelAnim.SetFile((BMD_File *)f, 1, 1);
+    Model::LoadFile(*(SharedFilePtr *)&data_ov014_02114978);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov014_02114980);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov014_02114970);
 
-
-    f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov014_02114968);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x150, f, 1, 1);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov014_02114978);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov014_02114980);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov014_02114970);
-
-    p = c + 0x1dc;
-    i = 0;
+    int i = 0;
+    unsigned char *p = (unsigned char *)mLinkModels;
     do {
-        _ZN9ModelBase7SetFileEP8BMD_Fileii(p, *(void **)((char *)&data_ov014_02114978 + 4), 1, 1);
+        ((Model *)p)->SetFile(
+            (BMD_File *)*(void **)((char *)&data_ov014_02114978 + 4), 1, 1);
         i = i + 1;
         p = p + 0x50;
     } while (i < 7);
 
-    _ZN11ShadowModel12InitCylinderEv(c + 0x1b4);
+    mShadowModel.InitCylinder();
     {
-    int si; unsigned char *sp;
-    si = 0; sp = c + 0x40c;
-    do {
-        _ZN11ShadowModel12InitCylinderEv(sp);
-        si = si + 1;
-        sp = sp + 0x28;
-    } while (si < 7);
+        int si;
+        unsigned char *sp;
+        si = 0;
+        sp = (unsigned char *)mLinkShadows;
+        do {
+            ((ShadowModel *)sp)->InitCylinder();
+            si = si + 1;
+            sp = sp + 0x28;
+        } while (si < 7);
     }
 
-    *(int *)(c + 0x9c) = -0x2000;
-    *(int *)(c + 0xa0) = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
 
     {
         int v[3];
@@ -188,74 +136,46 @@ int daWanwan_c::InitResources()
         v[1] = data_ov014_02114700[1];
         v[2] = data_ov014_02114700[2];
         _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-            c + 0x110, c, v, 0x96000, 0x12c000, 0x200004, 0x26ff0);
+            &mdCcAcPos_c, this, v, 0x96000, 0x12c000, 0x200004, 0x26ff0);
     }
 
-    func_ov014_02111ebc(c, 1);
+    func_ov014_02111ebc(this, 1);
 
-        {
+    {
         int cnt = 0;
-        unsigned char *dst = c;
+        unsigned char *dst = (unsigned char *)this;
         do {
-            *(int *)(dst + 0x524) = *(int *)(c + 0x5c);
+            *(int *)(dst + 0x524) = mPosX;
             cnt = cnt + 1;
-            *(int *)(dst + 0x528) = *(int *)(c + 0x60);
-            *(int *)(dst + 0x52c) = *(int *)(c + 0x64);
+            *(int *)(dst + 0x528) = mPosY;
+            *(int *)(dst + 0x52c) = mPosZ;
             dst = dst + 0xc;
         } while (cnt < 7);
     }
 
+    mSpawnPosX = mPosX;
+    mSpawnPosY = mPosY;
+    mSpawnPosZ = mPosZ;
 
-    *(int *)(c + 0x5ec) = *(int *)(c + 0x5c);
-    *(int *)(c + 0x5f0) = *(int *)(c + 0x60);
-    *(int *)(c + 0x5f4) = *(int *)(c + 0x64);
-
-    spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-        0x1b, 0x11, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
-    *(int *)(c + 0x608) = *(int *)((unsigned char *)spawned + 4);
-    one = 1;
+    dActor_c *spawned = dActor_c::Spawn(
+        kStumpActorId, 0x11, *(Vector3 *)&mPosX, 0, mAreaId, -1);
+    mStumpUniqueID = spawned->uniqueID;
+    int one = 1;
     *(unsigned char *)((unsigned char *)spawned + 0x320) = (unsigned char)one;
-    *(int *)(c + 0x60c) = 0;
+    mFenceUniqueID = 0;
 
-    px = (int *)(c + 0x5c);
-    *px = *px + 0xc8000;
-    py = (int *)(c + 0x60);
-    *py = *py + 0xc8000;
-    pz = (int *)(c + 0x64);
-    *pz = *pz + 0xc8000;
+    mPosX = mPosX + 0xc8000;
+    mPosY = mPosY + 0xc8000;
+    mPosZ = mPosZ + 0xc8000;
 
-    *(int *)(c + 0x5f8) = 0x50000;
-    *(int *)(c + 0x80) = 0x1000;
-    *(int *)(c + 0x84) = 0x1000;
-    *(int *)(c + 0x88) = 0x1000;
+    mChainExtension = 0x50000;
+    mScaleX = 0x1000;
+    mScaleY = 0x1000;
+    mScaleZ = 0x1000;
     return one;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- _ZN10daWanwan_c8BehaviorEv, 0x021129ec, size 0x128 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daWanwan_c8BehaviorEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header, real C++ method */
-#include "daWanwan_c.h"
-extern "C" {
-int func_ov014_02111fb8(char* c);
-char* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int a, void* b);
-void func_ov014_02111f08(void* c);
-void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cc);
-void func_ov014_02112114(void* c);
-void func_ov014_02111fe0(char* c);
-void func_ov014_0211250c(char* c);
-void func_ov014_0211236c(char* c);
-void func_ov014_021122dc(char* c);
-void func_ov014_02112788(char* c);
-void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* self, void* v);
-void _ZN5dCc_c5ClearEv(void* self);
-char* _ZN8dActor_c13ClosestPlayerEv(char* self);
-void _ZN5dCc_c6UpdateEv(void* self);
-}
-
 int daWanwan_c::Behavior()
 {
     mIsOnGround = 0;
@@ -263,90 +183,61 @@ int daWanwan_c::Behavior()
         int v = mSpawnPosY + 0xc8000;
         if (mPosY <= v) {
             mPosY = v;
-            if (mWasOnGround == 0) {
-                func_ov014_02111fb8(((char*)this));
-            }
+            if (mWasOnGround == 0)
+                func_ov014_02111fb8((char *)this);
             mIsOnGround = 1;
         }
     }
     mWasOnGround = mIsOnGround;
     if (mFenceUniqueID == 0) {
-        char* r = _ZN8dActor_c15FindWithActorIDEjPS_(0x29, 0);
-        mFenceUniqueID = *(int*)(r + 4);
+        dActor_c *r = dActor_c::FindWithActorID(kFenceActorId, 0);
+        mFenceUniqueID = r->uniqueID;
     }
-    func_ov014_02111f08(((char*)this));
-    _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);
-    func_ov014_02112114(((char*)this));
+    func_ov014_02111f08(this);
+    UpdatePos(&mdCcAcPos_c);
+    func_ov014_02112114(this);
+    if (mChainBroken == 0)
+        func_ov014_02111fe0((char *)this);
+    func_ov014_0211250c((char *)this);
     if (mChainBroken == 0) {
-        func_ov014_02111fe0(((char*)this));
+        func_ov014_0211236c((char *)this);
+        func_ov014_021122dc((char *)this);
     }
-    func_ov014_0211250c(((char*)this));
-    if (mChainBroken == 0) {
-        func_ov014_0211236c(((char*)this));
-        func_ov014_021122dc(((char*)this));
-    }
-    func_ov014_02112788(((char*)this));
+    func_ov014_02112788((char *)this);
     {
         int v[3];
         v[0] = data_ov014_02114700[0];
         v[1] = data_ov014_02114700[1];
         v[2] = data_ov014_02114700[2];
-        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x110, v);
+        mdCcAcPos_c.SetPosRelativeToActor(*(Vector3 *)v);
     }
-    _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
-    if (*(unsigned char*)(_ZN8dActor_c13ClosestPlayerEv(((char*)this)) + 0x6fb) == 0) {
-        _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
-    }
+    mdCcAcPos_c.Clear();
+    if (*(unsigned char *)((char *)ClosestPlayer() + 0x6fb) == 0)
+        mdCcAcPos_c.Update();
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- _ZN10daWanwan_c6RenderEv, 0x02112994, size 0x58 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daWanwan_c6RenderEv
-/* recovered: named members + shared header, real C++ method */
-#include "daWanwan_c.h"
-struct A;
-struct B {
-    virtual void m0();
-    virtual void m1();
-    virtual void m2();
-    virtual void m3();
-    virtual void m4();
-    virtual void m5(A* arg);
-};
-
 int daWanwan_c::Render()
 {
-    B *b = (B*)((char *)&mModelAnim);
-    b->m5((A*)((char *)&mScaleX));
-    
+    mModelAnim.Render((const Vector3 *)&mScaleX);
+
     int j = 0;
     char *p2 = (char *)mLinkModels;
     for (;;) {
-        B *b2 = (B*)p2;
-        b2->m5((A*)0);
+        ((Model *)p2)->Render(0);
         j++;
         p2 += 0x50;
-        if (j >= 7) break;
+        if (j >= 7)
+            break;
     }
     return 1;
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- _ZN10daWanwan_c16CleanupResourcesEv, 0x0211294c, size 0x48 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN10daWanwan_c16CleanupResourcesEv
-
-#include "daWanwan_c.h"
-#include "SharedFilePtr.h"
-
-extern "C" {
-}
-
 int daWanwan_c::CleanupResources()
 {
-    ((SharedFilePtr *)&data_ov014_02114968)->Release();  /* decl_common's char view; same object */
+    ((SharedFilePtr *)&data_ov014_02114968)->Release();
     ((SharedFilePtr *)&data_ov014_02114978)->Release();
     ((SharedFilePtr *)&data_ov014_02114980)->Release();
     ((SharedFilePtr *)&data_ov014_02114970)->Release();

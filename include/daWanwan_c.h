@@ -34,10 +34,9 @@ struct daWanwan_c : dEnemyBase_c {
     ShadowModel mShadowModel;                              /* 0x1b4 */
     Model mLinkModels[7];                                  /* 0x1dc */
     ShadowModel mLinkShadows[7];                           /* 0x40c */
-    /* InitResources seeds all seven with the chomp's own position, one per link;
-       unk_578 is a second seven-element run of the same shape that nothing
-       matched writes, so which of the two is the chain's previous-position
-       history is unevidenced and it keeps its unk_ name. */
+    /* InitResources seeds all seven with the chomp's own position, one per link.
+       0211250c reads and writes unk_578[1..6] (c+0x584) as the previous-position
+       history of those links. unk_578[0] is constructed and unused by that loop. */
     Vector3 mLinkPos[7];                                   /* 0x524 */
     Vector3 unk_578[7];                                    /* 0x578 */
     u8  pad_5cc[0x20];
@@ -49,7 +48,7 @@ struct daWanwan_c : dEnemyBase_c {
     s32 mSpawnPosZ;         /* 0x5f4 */
     s32 mChainExtension;    /* 0x5f8 */
     u8  pad_5fc[0x9];
-    u8  mChainBroken;            /* 0x605 -- gates three Behavior helpers; nothing writes it */
+    u8  mChainBroken;            /* 0x605 -- 02111f54 writes 1; Behavior helpers gate on it */
     u8  pad_606[0x2];
     /* uniqueIDs (fBase_c +0x04) of two other actors. 0x1b and 0x29 are resolved
        through ACTOR_SPAWN_TABLE at 0x02090864 -- see notes/enemy-leaf-provenance.md. */
