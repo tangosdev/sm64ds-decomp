@@ -1928,6 +1928,7 @@
     "src/actors/daObjBk_Rotebar_c.cpp#_ZN17daObjBk_Rotebar_cD0Ev": "github-actions[bot]",
     "src/actors/daObjBk_Rotebar_c.cpp#_ZN17daObjBk_Rotebar_cD1Ev": "github-actions[bot]",
     "src/game/actors/d_a_obj_c1_trap.cpp#Trap_Spawn": "github-actions[bot]",
+    "src/game/actors/d_a_obj_c1_trap.cpp#daObjC1_Trap_c_classInit": "github-actions[bot]",
     "src/game/actors/d_a_obj_c1_trap.cpp#_ZN14daObjC1_Trap_c10GetSpawnerEv": "github-actions[bot]",
     "src/game/actors/d_a_obj_c1_trap.cpp#_ZN14daObjC1_Trap_c11OnCollisionER8dActor_c": "github-actions[bot]",
     "src/game/actors/d_a_obj_c1_trap.cpp#_ZN14daObjC1_Trap_c13InitResourcesEv": "github-actions[bot]",

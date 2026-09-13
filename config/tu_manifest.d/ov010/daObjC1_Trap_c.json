@@ -142,6 +142,11 @@
   "bss": [],
   "compiler_only_output": [
     {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjC1_Trap_c() emits a homeless base-object destructor helper with no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
@@ -229,7 +234,7 @@
   "notes": [
     "State0..State4, GetSpawner, UpdateCollisionTransform, UpdateModelTransform, and OnCollision are inferred class-anchored aliases: the class identity, relationships, relocations, and codegen are proven, but the original private source spellings are not. Behavior dispatches through the typed PMF table initialized by the separately retained __sinit source.",
     "The inline virtual destructor plus out-of-line InitResources key function emits retail's D1 then D0 pair with no D2 and no forcing or dummy output. A POD position local avoids introducing Vector3's unrelated vague-linkage destructor helper.",
-    "daObjC1_Trap_c_classInit (historical alias Trap_Spawn) and func_ov010_02111984 retain their proven C ABI linkage. The factory keeps the exact actor allocator/base/member constructor/vptr sequence because natural new selects the wrong allocator; the adapter is the measured three-argument callback boundary and immediately calls typed OnCollision.",
+    "daObjC1_Trap_c_classInit (historical alias Trap_Spawn) and func_ov010_02111984 retain their proven C ABI linkage. The factory is `return new daObjC1_Trap_c()`; leaf operator new(unsigned long) forwards fBase_c::operator new. `new` emits homeless _ZN10dBgActor_cD2Ev, deadstripped by compiler-only policy. The adapter is the measured three-argument callback boundary and immediately calls typed OnCollision.",
     "The PMF descriptor band, deferred initializer, SharedFilePtr resources, CLPS block, ctor pointer, and BSS remain externally owned. A natural initializer probe matched, but its resource special-member relocation identities are not yet proven, so this promotion deliberately claims none of those ranges."
   ],
   "verification": {
@@ -248,8 +253,12 @@
       "relocation_destinations_verified": "PASS"
     },
     "compilerOnlyOutput": {
-      "requested": [],
-      "deadstripped": [],
+      "requested": [
+        "_ZN10dBgActor_cD2Ev"
+      ],
+      "deadstripped": [
+        "_ZN10dBgActor_cD2Ev"
+      ],
       "droppedSections": [
         5,
         6,
@@ -269,7 +278,9 @@
         20,
         21,
         22,
-        23
+        23,
+        55,
+        56
       ],
       "data": [
         "_ZTI7fBase_c",
