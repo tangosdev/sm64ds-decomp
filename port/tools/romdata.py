@@ -132,6 +132,22 @@ NAMED = [
     # spelled as a C literal for the reason every other row here exists: the
     # port does not write Nintendo's bytes down, it reads them.
     "data_0209a048",
+    # Run link100 lane SND2, rung R4: the SDAT's own path,
+    # "/data/sound_data.sdat". func_020133bc loads its address and hands
+    # it to func_02050f34, which walks it through the ROM's own directory
+    # table. Twenty-two bytes of arm9 .data including the terminator.
+    #
+    # THE SIZE IS PINNED AT 0x18 AND THE DEFAULT WOULD BE WRONG. The next
+    # symbol in config/arm9/symbols.txt is _ZTV12ActorDerived at
+    # 0x0208e4b8, so the delta rule would emit 0x20 -- and the last word
+    # of that span, 0x0208e4b4, carries a RELOCATION
+    # (config/arm9/relocs.txt: "from:0x0208e4b4 kind:load
+    # to:0x02086e78"). It is the vtable's own RTTI-pointer prefix word,
+    # not part of the string, and emitting it would write a DS address
+    # down as a host constant. 0x18 covers the string, its terminator and
+    # the padding, and stops before both prefix words. The scout's report
+    # says 0x20; this is the correction.
+    "data_0208e498:0x18",
     # Run link100 lane FRAME: the EIGHT arm9 .data rows _ZTV5Stage slot 6's
     # closure reads. Seating the ROM's own Stage::Behavior brings the pause
     # screen, its five menu arms and the Message::Display* family into the link

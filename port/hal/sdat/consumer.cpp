@@ -153,6 +153,42 @@ extern int data_0209b498;      /* the sound heap handle func_02050f34 and
 void func_02052008(int arg);
 int func_0203d974(void);
 
+/* RUNG R4 (run link100, lane SND2): the SDAT archive opened OFF THE CARD,
+ * by the cartridge's own loader, into the rung-R2 heap.
+ *
+ *     anim = data_0208e498;                  the path, /data/sound_data.sdat
+ *     func_0201a9fc(data_0209d574);          the boot's own tick
+ *     func_02050f34(&data_0209b4b4, anim, data_0209b498, 0);
+ *     func_0201a9fc(data_0209d574);
+ *
+ * func_02050f34 resolves the path through the ROM's own open-by-name file
+ * system (func_0205d644 -> func_0205d714 -> func_0205c048 walks Nintendo's
+ * directory table; hal/fs_names.cpp is the seat that made that work and
+ * hal/nitrofs_boot.cpp's read face serves the bytes), opens the file,
+ * reads its 0x30 header into the root object, and then func_02050d54
+ * allocates the INFO and FAT blocks out of the sound heap and reads those
+ * in too. The last thing it does is data_020a5bb8 = self, which is why
+ * hal/sdat/sdat.cpp no longer seats that global: the cartridge does.
+ *
+ * THE FOURTH ARGUMENT IS 0 AND THAT MATTERS. func_02050d54 only allocates
+ * and reads the SYMB block when the flag is non-zero, so the port gets the
+ * two blocks the ROM's accessors read (INFO at root+0x84, FAT at root+0x7c)
+ * and not the name table, exactly as the DS does.
+ *
+ * WHAT IT DOES NOT DO IS LOAD WAVE DATA. The FAT the ROM just read has an
+ * empty runtime-address slot in every record, so every residency test would
+ * fail and every sound would go down the on-demand load path. The port
+ * answers that the way it always has -- the whole archive IS in memory --
+ * but into the ROM's own table now: sdat_seat_rom_residency(), the
+ * pre-seat that used to run inside sdat_init. See its header in
+ * hal/sdat/sdat.cpp for what that is and what it is not.
+ */
+void func_02050f34(void *self, int path, int heap, int flag);
+void func_0201a9fc(void *tick);
+void sdat_seat_rom_residency(void);
+extern unsigned char data_0208e498[];   /* "/data/sound_data.sdat" */
+extern unsigned char data_0209d574[];   /* the boot's own tick record */
+
 /* The rest of the init, still called by hand. See sd_sound_init_host. */
 void func_0204f94c(void *p);         /* clear one player's voice pointer */
 void func_02011a28(void *table);     /* PlayLong's 0x40-slot handle table */
@@ -634,8 +670,15 @@ void publish_player_status(void)
 //                        func_0204fc40's compiled-in 1. Nine of the 32 ask
 //                        for more than one in this cartridge.
 //
-//   SKIP func_02050f34   opens the SDAT off the card INTO that heap;
-//                        hal/sdat/sdat.cpp seats an equivalent root already.
+//   RUN  func_02050f34   THE ARCHIVE OPENED OFF THE CARD (rung R4). The
+//                        cartridge's own loader resolves
+//                        /data/sound_data.sdat through the ROM's own
+//                        open-by-name FS, reads the header into
+//                        data_0209b4b4 and the INFO and FAT blocks into the
+//                        rung-R2 heap, and seats data_020a5bb8 itself.
+//                        hal/sdat/sdat.cpp's root seat and residency
+//                        pre-seat inverted for it; the pre-seat now fills
+//                        the table the ROM read.
 //   SKIP func_020134d8   loads group 1 into that heap. Reached only on the
 //                        func_0203d974()==0 branch, and hal/star_flow.cpp's
 //                        hosted func_0203d974 answers 1 -- a face whose
@@ -659,10 +702,15 @@ void sd_sound_init_host(void)
        which of the two it got. */
     data_0209b498 = (int)func_0205130c(
         (unsigned int)(size_t)_ZN6Memory8AllocateEj(0x100000), 0x100000);
-    /* func_020133bc's next three statements are the SDAT opened off the
-       card (func_0201a9fc, func_02050f34, func_0201a9fc). hal/sdat/sdat.cpp
-       stands in for the middle one and the other two are the boot's own
-       tick; see the SKIP list above. Then rung R3, at its own line: */
+    /* rung R4: func_020133bc's next three statements, in its order. */
+    func_0201a9fc(data_0209d574);
+    func_02050f34(data_0209b4b4, (int)(size_t)data_0208e498,
+                  data_0209b498, 0);
+    func_0201a9fc(data_0209d574);
+    /* and the host's half of that statement, at the line after it: the FAT
+       the cartridge just read has no residency in it. */
+    sdat_seat_rom_residency();
+    /* rung R3, at its own line: */
     func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
     func_0204f94c(&data_0209b4a0);
     func_0204f94c(&data_0209b4b0);

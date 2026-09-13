@@ -69,3 +69,29 @@ src/func_0204fa3c.c
 src/func_02050ae8.cpp
 src/func_020512f0.c
 src/func_02052008.c
+
+# --- RUNG R4: the SDAT archive opened off the card -------------------------
+#
+# func_020133bc's fourth statement:
+#
+#     func_02050f34(&data_0209b4b4, data_0208e498, data_0209b498, 0);
+#
+# The cartridge opens its own archive. func_02050f34 clears the root's three
+# block pointers, resolves /data/sound_data.sdat through the ROM's own
+# open-by-name file system (func_0205d644, func_0205d568, FS_ReadFile -- all
+# already linked, and hal/fs_names.cpp is the seat that made that path work),
+# reads the 0x30 SDAT header into the root, hands off to func_02050d54 for
+# the INFO and FAT blocks out of the rung-R2 heap, and seats data_020a5bb8.
+# func_02050970, func_0205097c and func_02050988 are the three free callbacks
+# func_020511d4 is given for those blocks; they link and run on teardown,
+# which is the honest state and is what the census shows.
+#
+# data_0208e498, the path itself, comes out of the cartridge through
+# port/tools/romdata.py's NAMED list with its size PINNED at 0x18: the delta
+# to the next symbol is 0x20 and the last word of that span is the
+# _ZTV12ActorDerived RTTI-pointer prefix, which carries a relocation.
+src/func_02050970.c
+src/func_0205097c.c
+src/func_02050988.c
+src/func_02050d54.c
+src/func_02050f34.c
