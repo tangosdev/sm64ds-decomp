@@ -52,7 +52,7 @@ extern "C" void _ZN15dMg3DEspModel_cD1Ev(void *c);
 struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     virtual ~dScMg3DEsp_c();
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
-    virtual int  Virtual50();                          /* slot 20 */
+    virtual void Virtual50();                          /* slot 20 */
 
     u8  mModel1[0x50];        /* 0x4f38 -- Model, raw bytes, see file banner */
     u8  mModel2[0x50];        /* 0x4f88 -- Model, raw bytes, see file banner */

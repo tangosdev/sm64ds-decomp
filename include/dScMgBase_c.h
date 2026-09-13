@@ -109,110 +109,43 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            -- recovered before the vtable walk that placed it at 18. Unlike
            slots 19-30, this slot carries NO `recovered name:` comment on
            either side; the name is inherited, not independently proven here.
-           Only the signature is measured. dActor_c.h declares it with no
-           parameter, which the measurement above contradicts. */
+           These observations support the minigame signature; they do not
+           disprove a declaration in the separate dActor_c hierarchy. */
     virtual void OnYoshiTryEat(int arg);               /* slot 18 */
 
-    /* Slot 19 -- MEASURED, and dActor_c.h is wrong here too:
+    /* Slot 19 -- minigame body observations:
          arity: two of the eleven descendant overrides read r1, and both
            COMPARE it against small integer constants rather than
            dereferencing it -- dScMgJump_c does `if (sel == 0)`,
            dScMgBSC_c does `if (mode == 4) ... else if (mode == 5)`.
-           Comparing a reference against 4 and 5 is meaningless, so the
-           parameter is an int, not the `Player &` dActor_c.h:132 declares.
+           The minigame interface models this selector as int. The separate
+           actor declaration does not determine this scene contract.
            Dereference-versus-compare is the discriminator whenever a word
            in r1 could be either: both occupy one register, so codegen
            alone cannot separate `Ei` from `ER6Player`.
          return type: int, and this one needs no argument -- the ov004 base
            body ends `return 1;` and all eleven overrides return a value.
-         name: unlike slot 18, independently recovered. dScMgJump_c and
-           dScMgBSC_c each carry a `recovered name: <class>_OnTurnIntoEgg`
-           comment in their own legacy source, so the name here does not
-           rest on dActor_c.h at all. */
+         name: OnTurnIntoEgg is an existing reconstruction label. The
+           dScMgJump_c and dScMgBSC_c legacy comments use it, but those
+           comments do not establish an original source spelling. */
     virtual int  OnTurnIntoEgg(int mode);              /* slot 19 */
-    /* Slot 20 -- and this one has no name.  `Virtual50` is the placeholder
-       include/dActor_c.h:133 already uses, spelled from the byte offset
-       (slot 20 x 4 = 0x50).  All five bodies carry a
-       `recovered name: <class>_Virtual50` comment, but every one of them is
-       that same coined placeholder rather than a name read out of anything,
-       so five of them are not five pieces of evidence.  Naming it would be
-       inventing, so it keeps the placeholder until something real turns up.
-         arity: no explicit parameters.  dScMg3DEsp_c and dScMgTeresa_c take
-           nothing and tail-call `FreeGfxSlotsById(8)`; dScMgCup_c and
-           dScMgSound_c read only `this`, passing `this + 0x4f38` on.  No
-           override touches a second argument register.
-         return type: NOT determined here, and said plainly rather than
-           implied.  The ov004 base body is a bare `bx lr`, and all four
-           overrides are single tail calls -- both emit identical code under
-           `int` and under `void`, so the dereference-versus-compare trick that
-           settled slot 19 has nothing to bite on.  This takes
-           dActor_c.h:133's `int` as a hint that has held five times out of
-           six; the count, and why it is a count and not an authority, is
-           worked out under slot 21 below.  If a later override with an early
-           return shows otherwise, that override is the evidence and this
-           changes. */
-    virtual int  Virtual50();                          /* slot 20 */
-/* Slot 21 -- OnGroundPounded.  The name comes from all five bodies' own
-   `recovered name: <class>_OnGroundPounded` comments AND from
-   include/dActor_c.h:138, which is a different hierarchy that shares slot
-   indices; two sources, but the second has already been measured wrong twice
-   in this campaign (slot 18's arity, slot 19's parameter type), so treat it as
-   a hint that agrees rather than as a second measurement.
-     arity: no explicit parameters.  The ov004 base body is empty and none of
-       the four overrides reads a second argument register -- dScMgBSC_c and
-       dScMgCard_c both branch on `this->mHudScore` alone, and the two Memory
-       classes tail-call on one field of `this`.  dActor_c.h:138 spells a
-       `dActor_c &` here; nothing in these five bodies would emit differently
-       with or without it, so it is not carried.
-     return type: NOT determined by these five bodies.  All four overrides
-       converge on a single tail call, and a tail call emits the same `b` under
-       `int` and under `void`, so the discriminator that settled nothing at
-       slot 20 finds nothing here either.  This takes `void` from
-       dActor_c.h:138, whose comment records that slots 21, 24 and 27 were
-       MEASURED to return void via an override with early returns -- in that
-       hierarchy.
-       How much that is worth is a count, not a rule, and an earlier draft of
-       this comment got the count wrong.  It said dActor_c.h had been right on
-       every return type this campaign checked.  It has not.  Of the
-       eight dScMgBase_c slots with a body of their own that pins a return
-       type, dActor_c.h's type matches seven and differs on one:
-           18  int  / int   agree   sets r0 on a constant-return path
-           19  int  / int   agree   sets r0 on a constant-return path
-           22  int  / int   agree   OnAttacked1's body is `return 1;`
-           23  int  / int   agree   OnAttacked2's body is `return 1;`
-           24  int  / void  DIFFER  OnKicked's body ends `return 1;`
-           25  int  / int   agree   OnPushed returns `mMenuOpen == 0`
-           26  int  / int   agree   three bodies, three constants: 0, 1, 2
-           27  void / void  agree   MEASURED here: bare return, sets no r0
-       Slot 24 is the one that matters, because dActor_c.h names 24 as one of
-       its three MEASURED voids -- and it is right about its own hierarchy;
-       Stump and BigBrickBlock proved it there.  dScMgBase_c's slot-24 body
-       sets r0 to 1 and reproduces byte-exact, so this hierarchy returns `int`
-       at that same index.  Both measurements stand.  The two hierarchies
-       simply do not hold the same function at slot 24: they are parallel
-       branches that each began adding virtuals at 18 -- dActor_c off dBase_c
-       directly, this class off dBase_c through dScene_c -- and the
-       `recovered name:` comments that make the slots look paired were assigned
-       BY that index, so they cannot also be evidence for it.
-       So dActor_c.h transfers no better on return types than on parameter
-       lists; it is seven-for-eight rather than wrong-every-time, which is why
-       this line still follows it where the arity line above does not.
-       Seven-for-eight is the whole case for `void` here and is offered as a hint,
-       not a measurement.  Flipping all four overrides between `int` and `void`
-       was tried and moves no ROM byte, so nothing in the cartridge rides on
-       the choice -- but a later override with an early return would settle it,
-       and that override would outrank this count.
-       Slot 27 is now that case, for its own index only.  dScMgBase_c's own
-       body there takes an early `popne {r4,lr}; bxne lr` with nothing setting
-       r0 on either path out, so 27's `void` is MEASURED and the row above says
-       so rather than `agree`.  It settles 27 and nothing else; the other seven
-       rows are still the count.
-       Slot 28 is the opposite case and the first of its kind: NO body pins it
-       at all.  Neither dScMgBase_c's nor dScMgSlot1_c's sets r0 deliberately,
-       and all three callers that dispatch through vtable+0x70 throw the result
-       away -- two tail-call it out without reading it, the third overwrites r0
-       on the next instruction.  It gets no row above, and its `int` rests on
-       this count and on nothing else. */
+    /* Slot 20. Virtual50 is a placeholder named for the vtable byte offset,
+       not an original source name. The minigame return contract is
+       reconstructed as void: the base does nothing, Cup and Sound forward
+       to a void component helper, and 3DEsp and Teresa call the void
+       FreeGfxSlotsById function. The recorded caller in
+       func_ov004_020b6ddc discards the result. These bodies reproduce under
+       the coherent void declarations with 2004/b56; this does not recover
+       the original return-type spelling. The separate dActor_c slot 20
+       remains int. See issue #2492 for caller coverage and proof limits. */
+    virtual void Virtual50();                          /* slot 20 */
+    /* Slot 21. OnGroundPounded is an existing reconstruction name.
+       The base is empty; BSC/Card branch on mHudScore, and the two Memory
+       overrides forward a component of this scene. These bodies alone do
+       not settle the return contract. Keep the existing void declaration;
+       the slot-20 caller audit does not establish this slot's signature.
+       Prior int/void experiments and separate slot-27/28 observations are
+       retained in the original source history cited by issue #2492's handoff. */
     virtual void OnGroundPounded();                    /* slot 21 */
 /* Slot 22 -- OnAttacked1.  Name from the ov004 body's own
    `recovered name: dScMgBase_c_OnAttacked1` comment, agreeing with
@@ -224,9 +157,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        declaration failed to take.
      arity: no explicit parameters.  There is no override to read a second
        argument register, so the only evidence is the base body, which reads
-       none.  dActor_c.h:139 spells a `dActor_c &`; it has been wrong on every
-       parameter list this campaign has measured, and an unread parameter would
-       leave no trace either way, so it is not carried.
+       none. An unread parameter would leave no trace either way. The current
+       scene declaration has none; the separate actor signature does not
+       establish this scene's parameter list.
      return type: int, MEASURED.  The body is `return 1;` -- it sets r0, which
        a `void` function would not, so this one is not a coin-flip the way slot
        21's tail calls were. */
@@ -236,18 +169,17 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        agreeing with include/dActor_c.h:140.
          arity: no explicit parameters, MEASURED.  The base body reads no
            argument register at all, and none of the three overrides touches
-           a second one.  dActor_c.h:140 spells a `dActor_c &`; it has been
-           wrong on every parameter list this campaign has measured, so it
-           is not carried.  The two flat-C callers do not even agree on a
+           a second one. This supports the current scene declaration; the
+           separate actor hierarchy does not determine its parameters.
+           The two flat-C callers do not even agree on a
            prototype -- dScMgSnowball_c hands the base a `void *`,
            dScMgTrampoline2_c calls it with nothing -- which is only
            possible because the callee ignores both.  That is corroboration,
            not the measurement.
          return type: int, MEASURED twice.  The base body is `return 1;`,
            and dScMgTrampoline2_c's override has four early `return 0;`
-           paths and a final `return 1;` -- exactly the early-return shape
-           include/dActor_c.h names as the only thing that can separate
-           `int` from `void`, and here it comes down on int. */
+           paths and a final `return 1;`. These scene bodies support int;
+           no actor declaration is needed for that conclusion. */
     virtual int  OnAttacked2();                        /* slot 23 */
     /* Slot 24 -- OnKicked.  Name from all five bodies' own
        `recovered name: <class>_OnKicked` comments; include/dActor_c.h:141
@@ -255,21 +187,17 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
          arity: no explicit parameters, MEASURED.  The base body reads only
            `this`, and so does every override.  No body touches a second
            argument register and every call in the chain passes one pointer
-           and nothing else.  dActor_c.h:141 spells a `dActor_c &other`; it
-           has been wrong on every parameter list this campaign has
-           measured, so it is not carried.
-         return type: int, MEASURED, and this is the slot the table under
-           slot 21 flagged in advance as the one where dActor_c.h's `void`
-           and this hierarchy genuinely disagree.  The base body ends
+           and nothing else. The current scene declaration has no explicit
+           parameters; this does not judge the separate actor interface.
+         return type: int, MEASURED from these scene bodies. The base ends
            `return 1;`.  dScMgD3DBase_c, dScMgTrampoline_c and
            dScMgTrampoline2_c each guard on the result of the call to their
            own base and `return 0` early -- the early-return shape that is
            the only thing separating `int` from `void` -- and
            dScMgSnowball_c returns `<base call> != 0`, which cannot be
            written at all against a void callee.  Four independent
-           witnesses; the cartridge comes down on int.  dActor_c.h's
-           measurement of `void` at index 24 stands for ITS branch.  The two
-           hierarchies simply do not hold the same function here.
+           witnesses support int for this hierarchy. The separate actor
+           slot at the same index does not determine this contract.
          overrides: SIX tables, FOUR declarations.  dScMgJump_c and
            dScMgJump2_c point at dScMgD3DBase_c's own body (0x020e6e78) and
            override nothing themselves, so declaring it on their shared base
@@ -289,18 +217,14 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
          arity: no explicit parameters, MEASURED.  The base body reads one
            field of `this` and nothing else, and all five overrides are a
            single call passing that same one pointer through.  No body
-           touches a second argument register.  dActor_c.h:142 spells a
-           `dActor_c &other`; it has been wrong on every parameter list this
-           campaign has measured, so it is not carried.
+           touches a second argument register. This supports the current
+           scene declaration, independently of the actor parameter list.
          return type: int, MEASURED, and not a coin flip: the base body is
            `return mMenuOpen == 0;`, which computes a value into r0 -- a
            `void` function would not.  Every one of the five overrides then
            writes `<base call> != 0`, which cannot be written at all against
-           a void callee.  Six witnesses.  dActor_c.h:142 says `int` too,
-           which is the first slot in this campaign where it agrees on a
-           return type it had not already been credited with; the table
-           under slot 21 is updated to match.  (Slot 26 lands in that
-           table too, taking it to seven-for-eight.)
+           a void callee. These six scene bodies support the int contract;
+           an actor declaration at the same index is not additional proof.
          overrides: SEVEN tables, FIVE declarations.  dScMgJump_c and
            dScMgJump2_c point at dScMgD3DBase_c's own body (0x020e6e54) and
            override nothing themselves, exactly as at slot 24, so the
@@ -326,12 +250,12 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            dScMgSingle3DBase_c's ov006:0x0210a600 is `mov r0,#1`, and
            dScMgD3DBase_c's ov006:0x020e6e4c is `mov r0,#2`.  A void function
            cannot return three different values, and the callers have to be
-           able to tell them apart.  dActor_c.h:143 says `int` as well.
+           able to tell them apart. This is evidence from the scene family.
          arity: no explicit parameters, MEASURED.  All three bodies are two
            instructions and read NO argument register at all -- not even
-           `this`.  dActor_c.h:143 spells a `dActor_c &other`; it has been
-           wrong on every parameter list this campaign has measured, so it is
-           not carried.
+           `this`. The current scene declaration has no explicit parameters.
+           Unread arguments cannot be excluded by these bodies alone; the
+           separate actor parameter list does not resolve that uncertainty.
          overrides: NINETEEN tables, TWO declarations -- the widest gap in the
            campaign, and the one slot where the table count would have been
            badly misleading on its own.  The RTTI graph is what closes it:
@@ -359,9 +283,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        `recovered name: dScMgBase_c_OnHitByMegaChar` comment, agreeing with
        include/dActor_c.h:144 on the parallel branch and with dScMgSlot1_c's
        independently recovered override.
-         return type: void, MEASURED, and this is the one slot where the table
-           above records dActor_c.h's `void` as a measurement here rather than
-           a hint.  ov004:0x020af27c takes an early exit at 0x020af290 --
+         return type: void, supported by the scene bodies described here.
+           ov004:0x020af27c takes an early exit at 0x020af290 --
            `popne {r4,lr}; bxne lr` -- with r0 still holding the field it has
            just loaded and tested, and nothing sets a return value on either
            path out.
@@ -399,10 +322,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        `recovered name: dScMgBase_c_OnHitFromUnderneath` comment, agreeing with
        include/dActor_c.h:145 on the parallel branch and with dScMgSlot1_c's
        independently recovered override.
-         return type: int, A HINT -- and slot 28 is the first in this campaign
-           whose return type NO body pins, which is why it gets no row in the
-           table above: that table is the eight slots whose own bodies DO pin
-           one.  ov004:0x020af04c leaves r0 holding whatever it last tested or
+         return type: int is the current reconstruction; these bodies do
+           not establish an original return type. ov004:0x020af04c leaves
+           r0 holding whatever it last tested or
            last called: the early exit at
            `cmp r0,#0; popeq {r4,lr}; bxeq lr` returns the zero it has just
            compared, and the fall-through returns whatever Enable3dEngines
@@ -415,9 +337,9 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            to their own caller without ever reading it, and the third branches
            to a shared epilogue that overwrites r0 with `add r0,r4,#0x4000`
            before anything can use it.  Three sites, three discarded results.
-           `int` is include/dActor_c.h's, and its RETURN types have held up
-           where its parameter lists have not; `void` compiles to the same
-           bytes.
+           The historical local int/void experiment produced the same bytes.
+           The actor signature does not resolve the scene's return contract;
+           no declaration is changed by this comment correction.
          arity: no explicit parameters, MEASURED ONCE rather than twice.  The
            base body opens `mov r4, r0` and then writes r1 with
            `add r1, r4, #0x4000` before ever reading it, and reads no other
@@ -458,8 +380,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
        `recovered name: dScMgBase_c_OnAimedAtWithEgg` comment and from
        include/dActor_c.h:146 at the same index -- and this is the slot where
        that pairing stops being two witnesses.  See the caution below.
-         return type: int, A HINT, the second consecutive slot that no body
-           pins, so it gets no row in the table above.  ov004:0x020af094 has
+         return type: int remains an unproved reconstruction, as at slot 28.
+           ov004:0x020af094 has
            two exits and neither sets a result: the early one is
            `cmp r0,#2; addeq sp,sp,#8; popeq {r4-r8,lr}; bxeq lr`, returning
            the 2 it has just compared against slot 26's result, and the
@@ -471,7 +393,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            finds 35 sites, of which exactly ONE lies in ov004 or ov006, the
            two modules this class and all thirty-two of its descendants live
            in.  That one is ov004:0x020ae178, inside dScMgBase_c::OnKicked
-           (slot 21), and the instruction after the `blx` is
+           (slot 24), and the instruction after the `blx` is
            `add r0,r4,#0x4000`: the result is dead before anything can read
            it, and OnKicked goes on to return a literal 1.  The other
            thirty-four sites are in ov025, ov071, ov077, ov079, ov081, ov091,
@@ -488,8 +410,8 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            display-control register, and only then tail-branches `bx ip` into
            0x020af094.  A second argument passed in r1 would reach the base as
            a display-control word, so the base cannot be reading one.
-           include/dActor_c.h:146 declares no parameter here either -- the
-           first time in this campaign its parameter list has agreed.
+           These are scene-family observations; agreement with an actor
+           declaration at this index would not add independent evidence.
          overrides: SIX tables, TWO declarations, and NO reconciliation.  This
            is the first slot since 26 where no descendant had already declared
            the member early, so nothing has to be un-declared alongside it.
@@ -564,7 +486,7 @@ ALL EIGHTEEN ARE DECLARED (2026-08-31). This class and all 32 of
            already said void.
            Neither dispatch site reads a result
            either, and that is measured, not assumed: dScMgBase_c::OnKicked
-           (slot 21) is the only caller of this slot anywhere in ov004 or ov006
+           (slot 24) is the only caller of this slot anywhere in ov004 or ov006
            -- see the whole-image `ldr rN,[rM,#0x78]` + `blx rN` scan under slot
            29 for the method -- and at ov004:0x020ae16c the very next
            instruction after the `blx`, reached through `b 0x020ae180`, is
@@ -1031,8 +953,9 @@ public:
     virtual int GraphCallback3();                            /* slot 3 */
 };
 
-/* A floor, not a claim the object ends here: 0x465c is the last field any
-   matched body has observed. See notes/minigame-provenance.md. */
+/* The modeled storage spans 0x4660. The constructor initializes the
+   halfword mSceneKind at 0x465e; 0x465c is not the last observed field.
+   See notes/minigame-provenance.md for the earlier layout evidence. */
 typedef char dScMgBase_c_size_must_be_0x4660[sizeof(dScMgBase_c) == 0x4660 ? 1 : -1];
 
 #endif

@@ -142,7 +142,7 @@
 /* --- the state-machine dispatch family (incomplete view) ------------------ */
 struct C;                                   /* opaque: dispatch only */
 typedef void (C::*PMF)(int);
-struct Entry { PMF pmf; };                  /* one-word jump-table slot */
+struct Entry { PMF pmf; };                  /* PMF dispatch entry */
 
 /* --- the same dispatch, seen by the two members that index the array ------ */
 struct Elem {                               /* 0x24 stride at +0x51d1 */
@@ -404,14 +404,12 @@ extern "C" void *dScMgSound_c_classInit(void)
  * its slot 0 relocates here. The signature is include/fBase_c.h's own slot
  * 0, `virtual s32 InitResources()`.
  *
- * THE SPLIT LITERALS ARE ORIGINAL AND ARE LEFT ALONE. `r7 + 0x5000 + 0xe0` is
- * not the same instruction as `r7 + 0x50e0`: ARM's immediate encoding makes
- * mwccarm build the base once and address off it, which is what the cartridge
- * does. Folding them would be a readability change that has to be re-measured,
- * and they are also the form include/dScMgSound_c.h's banner means when it
- * says these offsets are matched access INSIDE mTable rather than fields of
- * this class -- 0x50e0, 0x5608, 0x5618 and 0x5626 all fall in the 0x6f4 the
- * ctor/dtor pair func_ov006_020c33dc/020c3288 owns.
+ * The split literals retain the measured instruction shape; they do not
+ * recover an original C++ spelling. `r7 + 0x5000 + 0xe0` lets mwccarm
+ * build a shared base before the displacement, as the cartridge does.
+ * Folding those expressions needs a fresh comparison. Offsets 0x50e0,
+ * 0x5608, 0x5618 and 0x5626 lie within the declared mTable storage, whose
+ * component/state boundary is not established by the ctor/dtor calls.
  *
  * mHudScore is dScMgBase_c's, and reads as an inherited member; the
  * pre-migration file wrote it as `*(int *)(r7 + 0xb4)`.
@@ -485,11 +483,9 @@ s32 dScMgSound_c::InitResources()
  * The minigame's state machine, on the word at 0x5608: 0 = init, 1 = intro
  * countdown at 0x5618, 2 = result countdown at 0x5616 with the win/lose
  * handling and the 9999-capped win counter, 3 = retry countdown. Every one of
- * those offsets is INSIDE mTable, the single 0x6f4-byte member
- * include/dScMgSound_c.h describes, so they stay raw casts off the scene
- * rather than becoming fields of this class -- func_ov006_020c33dc and
- * func_ov006_020c3288 own that object's shape, and nothing in this tree has
- * recovered it.
+ * those offsets lies within the unreconstructed mTable storage. The
+ * component's full extent and the ownership of these live state fields
+ * remain uncertain; their current raw accesses need measured replacements.
  *
  * mPromptBlinkTimer, mPromptEnabled and mPromptBlinkCount are dScMgBase_c's, and read as inherited
  * members. The pre-migration file wrote all three as `*(u8 *)(c + 0xc3)` and
@@ -593,8 +589,8 @@ s32 dScMgSound_c::Behavior()
  * it inherits from dScMgSingle3DBase_c. The signature is
  * include/dScMgBase_c.h's own slot 9, `virtual s32 Render()`.
  *
- * Five of the six calls take the scene itself; the last takes mTable, the one
- * member this class owns, at 0x4f38. */
+ * Six of the seven calls take the scene itself; the last takes the
+ * component at 0x4f38, the start of the current mTable storage. */
 s32 dScMgSound_c::Render()
 {
     char *c = (char *)this;
@@ -680,10 +676,9 @@ void dScMgSound_c::OnYoshiTryEat(int r1)
 /* ROM ordinal 76 -- _ZN12dScMgSound_c9Virtual50Ev, 0x0211c5b8, size 0x18 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN12dScMgSound_c9Virtual50Ev
-// recovered name: dScMgSound_c_Virtual50
-/* recovered: renamed to Class_Method */
-/* dScMgSound_c::Virtual50 - recovered from vtable slot identity */
-int dScMgSound_c::Virtual50()
+/* Minigame slot 20; Virtual50 is a placeholder, not an original name.
+   The reconstructed void contract is documented in dScMgBase_c.h. */
+void dScMgSound_c::Virtual50()
 {
     char *c = (char *)this;
 
@@ -960,9 +955,9 @@ void func_ov006_0211bf44(char* base, int slot)
  * destinations wired differently. Finally, when the mode byte at +0x5624 is
  * 1, the whole helper object at +0x4f38 is retriggered.
  *
- * Every offset here is inside mTable, the single 0x6f4-byte member
- * include/dScMgSound_c.h describes, so they stay raw casts off the scene, the
- * same way src/func_ov006_0211ba88.cpp and src/func_ov006_0211bbe0.c reach them.
+ * These offsets lie within the current mTable storage, but the component
+ * and scene-state boundary remains unresolved. The raw accesses are a
+ * reconstruction limit, not evidence that all fields belong to one helper.
  *
  * TWO SPELLINGS ARE LOAD-BEARING, both measured. First,
  * func_ov006_0211b654's SECOND argument: the callee is (scene, slot) --
@@ -1909,7 +1904,7 @@ extern "C" void func_ov006_0211a648(char *base, int idx) {
 /* ROM ordinal 29 -- func_ov006_0211a5ec, 0x0211a5ec, size 0x5c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov006_0211a5ec
-/* func_ov006_0211a5ec at 0x0211ab80
+/* func_ov006_0211a5ec at 0x0211a5ec
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (overlay ov006).
  */
