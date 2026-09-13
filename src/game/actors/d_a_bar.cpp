@@ -1,80 +1,66 @@
 //cpp
-/* Genuine production translation unit for ov002/daBar_c.
+/**
+ * Invisible climbable pole.
  *
- * The eight functions are defined in reverse ROM order because mwccarm emits
- * ordinary function sections in reverse source order. InitResources is the
- * key function; its vtable references the inline destructor in daBar_c.h, so
- * the compiler owns retail's D1/D0 pair and the complete RTTI/vtable group.
+ * No model. Mario grabs a cylinder. Height is 10 * (param1 low byte - 10)
+ * in Fix12, floored at 1.0. Bit 8 of param1 makes the cylinder hurt.
  *
- * daBar_c_classInit and g_profile_BAR are reconstructed source-style names.
- * SM64DS proves the daBar_c RTTI identity, BAR registry ID, descriptor/factory
- * relationship, and object shape; later EAD lineage supplies the spelling
- * prior. Exact original SM64DS symbols are not preserved. Historical project
- * aliases: InvisiblePole_Spawn and InvisiblePole_SpawnInfo.
+ * daBar_c_classInit / g_profile_BAR are reconstructed (RTTI daBar_c, BAR
+ * registry). Retail does not store those spellings.
+ *
+ * deslop
+ * Leftover: SetRanges / InitClsn are TU-local wrappers over the
+ *   mangled dActor_c::SetRanges / dCcAc_c::Init symbols. A real
+ *   Fix12<int> method form on those headers changed this TU's
+ *   InitResources size. Wrappers stay here; typed extern "C" of
+ *   those mangled names must not land on the shared headers.
  */
 
 #include "daBar_c.h"
 
-/* Natural new targets the wrong global allocator for actor factories. The
- * measured allocator/base/member construction sequence and the two Fix12-by-
- * value calls therefore remain narrow ABI seams. */
-extern "C" {
-extern int _ZTV7daBar_c[];
-extern void *_ZN7fBase_cnwEj(u32 size);
-extern void _ZN8dActor_cC2Ev(dActor_c *actor);
-extern void _ZN7dCcAc_cC1Ev(dCcAc_c *clsn);
-extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
-    dActor_c *actor, Fix12i offsetY, Fix12i radius,
-    Fix12i clipDistance, Fix12i farDistance);
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-    dCcAc_c *clsn, dActor_c *actor, Fix12i radius, Fix12i height,
-    u32 flags, u32 vulnFlags);
-}
+enum {
+    kHeightParamBias = 10,        /* subtracted from the param byte first */
+    kHeightMul = 10,              /* then ×10 */
+    kMinHeightFix12 = 0x1000,     /* 1.0 if that underflowed */
+    kClipPadFix12 = 0x640000,     /* extra clip past half-height */
+    kCylinderRadiusFix12 = 0x35555,
+    kParamHurtBit = 0x100,        /* param1 bit 8: cylinder hurts */
+    kClsnFlags = 0x0080000c,
+    kClsnHurtBit = 0x02000000,    /* the one extra bit on the hurt cylinder */
+    kClsnFlagsHurt = kClsnFlags | kClsnHurtBit
+};
 
-extern "C" daBar_c *daBar_c_classInit();
-
-/* ROM ordinal 7 -- actor-table C ABI factory. */
 // @symbol daBar_c_classInit
 extern "C" daBar_c *daBar_c_classInit()
 {
-    daBar_c *bar = (daBar_c *)_ZN7fBase_cnwEj(sizeof(daBar_c));
-    if (bar) {
-        _ZN8dActor_cC2Ev(bar);
-        *(int *)bar = (int)&_ZTV7daBar_c[2];
-        _ZN7dCcAc_cC1Ev(&bar->mClsn);
-    }
-    return bar;
+    return new daBar_c;
 }
 
 extern "C" DaBarSpawnInfo g_profile_BAR = {
     daBar_c_classInit,
-    0x011f,
-    0x0099,
-    0x00000003,
+    0x011f,       /* behavior/execute priority */
+    0x0099,       /* render priority */
+    0x00000003,   /* actorFlags */
     0,
     0,
     0,
     0
 };
 
-/* ROM ordinal 6 -- key function and class-data owner. */
 // @symbol _ZN7daBar_c13InitResourcesEv
 s32 daBar_c::InitResources()
 {
-    s32 height = (((param1 & 0xff) - 0xa) * 0xa) << 0xc;
+    s32 height = (((param1 & 0xff) - kHeightParamBias) * kHeightMul) << 12;
     if (height <= 0)
-        height = 0x1000;
+        height = kMinHeightFix12;
     s32 halfHeight = height >> 1;
 
-    _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
-        this, halfHeight, halfHeight, halfHeight + 0x640000, 0);
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
-        &mClsn, this, 0x35555, height,
-        (param1 & 0x100) ? 0x0280000c : 0x0080000c, 0);
+    SetRanges(halfHeight, halfHeight, halfHeight + kClipPadFix12, 0);
+    InitClsn(kCylinderRadiusFix12, height,
+        (param1 & kParamHurtBit) ? kClsnFlagsHurt : kClsnFlags, 0);
     return 1;
 }
 
-/* ROM ordinal 5. */
 // @symbol _ZN7daBar_c8BehaviorEv
 s32 daBar_c::Behavior()
 {
@@ -83,20 +69,17 @@ s32 daBar_c::Behavior()
     return 1;
 }
 
-/* ROM ordinal 4. */
 // @symbol _ZN7daBar_c6RenderEv
 s32 daBar_c::Render()
 {
     return 1;
 }
 
-/* ROM ordinal 3. */
 // @symbol _ZN7daBar_c16OnPendingDestroyEv
 void daBar_c::OnPendingDestroy()
 {
 }
 
-/* ROM ordinal 2. */
 // @symbol _ZN7daBar_c16CleanupResourcesEv
 s32 daBar_c::CleanupResources()
 {

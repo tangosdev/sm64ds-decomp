@@ -4,39 +4,49 @@
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 
-/* ROM-proven class identity: _ZTS7daBar_c and _ZTI7daBar_c at
- * ov002:0x02108444/0x02108450. The source-style daBar_c_classInit spelling is
- * reconstructed from that class identity and later EAD lineage; retail does
- * not preserve it. The historical project alias was InvisiblePole_Spawn.
- *
- * The factory allocates 0x108 bytes, constructs dActor_c, stores this class's
- * vptr, and constructs dCcAc_c at 0xd4. The complete destructor tears down the
- * same member and base in reverse order, closing the layout independently. */
-struct daBar_c : dActor_c {
-    u8 pad_0d0[0x4];       /* 0x0d0 */
-    dCcAc_c mClsn;         /* 0x0d4 */
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+extern "C" void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
+    dActor_c *self, int offsetY, int radius, int clipDistance, int farDistance);
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+    dCcAc_c *self, dActor_c *actor, int radius, int height, u32 flags, u32 vulnFlags);
 
-    /* InitResources is the first out-of-line virtual/key function. Together
-     * with this inline destructor, mwccarm naturally emits retail D1 then D0,
-     * the RTTI/vtable group, and no retained D2. */
+/**
+ * Invisible climbable pole. Mario grabs mClsn.
+ */
+struct daBar_c : dActor_c {
+    u8 pad_0d0[0x4];       /* 0x0d0 unused */
+    dCcAc_c mClsn;         /* 0x0d4 climb cylinder */
+
     virtual ~daBar_c() {}
     virtual s32 InitResources();
     virtual s32 CleanupResources();
     virtual s32 Behavior();
     virtual s32 Render();
     virtual void OnPendingDestroy();
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj(size);
+    }
+
+    /* Wrappers over the existing scalar SetRanges/Init definitions.
+     * The Fix12<int> method form made this TU's InitResources the wrong size. */
+    void SetRanges(Fix12i offsetY, Fix12i radius, Fix12i clipDistance, Fix12i farDistance) {
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(
+            this, offsetY, radius, clipDistance, farDistance);
+    }
+    void InitClsn(Fix12i radius, Fix12i height, u32 flags, u32 vulnFlags) {
+        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+            &mClsn, this, radius, height, flags, vulnFlags);
+    }
 };
 
 typedef char daBar_c_size_must_be_0x108[
     sizeof(daBar_c) == 0x108 ? 1 : -1];
 
-/* Typed owner for the ROM descriptor at ov002:0x0210845c. The field roles are
- * established by fBase_c/dActor_c constructor consumers; their exact original
- * SM64DS member spellings are not preserved. */
 struct DaBarSpawnInfo {
     daBar_c *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
+    s16 executeOrder;      /* +4 behavior/execute priority */
+    s16 drawOrder;         /* +6 render priority */
     u32 actorFlags;
     Fix12i clipOffsetY;
     Fix12i clipRadius;
