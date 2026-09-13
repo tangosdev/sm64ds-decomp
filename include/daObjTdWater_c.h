@@ -5,26 +5,27 @@
 #include "dBgActor_c.h"
 #include "TextureTransformer.h"
 
-/* The TD_WATER profile's water surface: a large animated water plane with a
- * collision mesh under it, whose texture scrolls for as long as the actor is
- * alive, and which is only spawned when the level's event bit is clear.
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* Huge water plane (profile HUGE_WATER / TD_WATER 107). ov032 also has
+ * HUGE_COVER(106) / daObjTdFuta_c.
  *
- * TWO WITNESSES, and they close on each other:
+ * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
+ *   _ZTS  ov032 0x0211396c  "14daObjTdWater_c"
+ *   _ZTI  ov032 0x02113960  __si_class_type_info; +8 -> _ZTI10dBgActor_c
+ *                           (ov002 0x021089ec), so the DIRECT base is
+ *                           dBgActor_c and nothing else.
+ *   _ZTV  ov032 0x021139a4  the ADDRESS POINT itself: V-8 is a zero
+ *                           offset-to-top, V-4 is &_ZTI, V+0 is slot 0
+ *                           (InitResources, 0x021127f0).
+ *   g_profile_TD_WATER      ov032 0x02113980
+ *   size  0x334             the factory's own literal: dBgActor_c's 0x320
+ *                           plus TextureTransformer at 0x320 (0x14 bytes).
+ * Ugly RTTI name is final. Historical alias: HugeWater.
  *
- *   daObjTdWater_c_classInit (historical alias HugeWater_Spawn)
- *                 fBase_c::operator new(820 = 0x334), dBgActor_c::dBgActor_c(),
- *                 stores _ZTV14daObjTdWater_c.
- *   ~daObjTdWater_c   its own vptr, then dBgActor_c's -- inlined, because
- *                 dBgActor_c's destructor is defined in its class body -- then
- *                 dBgActor_c's dBgW_KcMbg at 0x124 and Model at 0xd4, then
- *                 dActor_c. All three are the BASE's.
- *
- * SIZE 0x334 is the factory's own literal, and the last member closes exactly
- * on it: dBgActor_c rounds to 0x320 and TextureTransformer is 0x14 bytes.
- *
- * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots
- * declared below differ; every other slot holds the base's own word and is
- * inherited, so it is deliberately not redeclared here.
+ * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the
+ * slots declared below differ; every other slot holds the base's own word
+ * and is inherited, so it is deliberately not redeclared here.
  */
 struct daObjTdWater_c : dBgActor_c {
     /* dBgActor_c's last field ends at 0x31e and its size rounds to 0x320, so
@@ -48,6 +49,12 @@ struct daObjTdWater_c : dBgActor_c {
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
+
+    /* Leaf operator new. Parameter is size_t (unsigned long on this
+       compiler). `return new` relocates to `_Znwm` without this. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daObjTdWater_c_size_must_be_0x334[sizeof(daObjTdWater_c) == 0x334 ? 1 : -1];
