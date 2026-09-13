@@ -13,6 +13,26 @@
  * factory first and the ROM-low helper last. InitResources is the key function;
  * together with the inline destructor in the real header this naturally emits
  * retail D1 then D0 and the class RTTI/vtable without a forcing object.
+ *
+ * deslop leftovers:
+ * - dBgW_KcMbg::SetFile / dActor_c::DropShadowScaleXYZ / dActor_c::Earthquake
+ *   6az: InitResources, UpdateShadow, and Behavior pass Fix12<int> by value;
+ *   the header method form size-DIFFs.
+ * - func_020393d4: InitResources stores dBgW::UpdatePosWithTransform on
+ *   mMeshCollider; dBgW.h has no setter.
+ * - func_0200fa04: Behavior's squash-impact dust; no named method in this TU.
+ * - AddVec3 / Matrix4x3_FromRotationY / Matrix4x3_FromRotationXYZExt: no
+ *   shared header this TU can take without a campaign.
+ * - BattanVector3: a local Vector3 would emit vague-linkage ~Vector3.
+ * - data_ov023_02112088 / 02112080 resource handles and data_ov064_0211ba4c
+ *   CLPS; this TU's sinit owns the two handles, overlay .data owns the CLPS.
+ * - data_02082214 sine table.
+ * - common.h first (via dBgActor_c.h): Matrix4x3 is s32 m[12], so translation
+ *   stays m[9]/m[10]/m[11].
+ * - *(Vector3 *)&mCamSpacePosX addressing shape (a Vector3 member at 0x074 is
+ *   a dActor_c campaign, not this leaf).
+ * - no Player.h / Camera.h.
+ * - leaf operator new until #2570.
  */
 
 #include "daObjFm_Battan_c.h"
@@ -38,16 +58,13 @@ typedef char BattanSpawnInfo_size_must_be_0x1c[
     sizeof(BattanSpawnInfo) == 0x1c ? 1 : -1];
 
 extern "C" {
-extern int _ZTV16daObjFm_Battan_c[];
-extern void *_ZN7fBase_cnwEj(unsigned int);
-extern void _ZN10dBgActor_cC2Ev(void *);
-extern void _ZN11ShadowModelC1Ev(ShadowModel *);
-
 extern char data_ov064_0211ba4c[];
 extern s16 data_02082214[];
 
 extern void Matrix4x3_FromRotationY(void *, s16);
 extern void Matrix4x3_FromRotationXYZExt(void *, int, int, int);
+/* dActor_c::DropShadowScaleXYZ / Earthquake -- reached through the mangled
+   name because the by-value Fix12<int> parameters are wall 6az. */
 extern int _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     dActor_c *, ShadowModel *, Matrix4x3 *, Fix12i, Fix12i, Fix12i, u32);
 extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
@@ -90,20 +107,16 @@ extern "C" BattanCollisionFilePtr data_ov023_02112080;
 BattanModelFilePtr data_ov023_02112088(1558);
 BattanCollisionFilePtr data_ov023_02112080(1559);
 
-extern "C" daObjFm_Battan_c *daObjFm_Battan_c_classInit();
 
-/* ROM ordinal 8 -- class initializer, 0x02111728, size 0x38. */
 // @symbol daObjFm_Battan_c_classInit
+/* Every instruction the cartridge has here falls out of the one `new`.
+ * sizeof(daObjFm_Battan_c) is 0x37c; the leaf operator new forwards to
+ * fBase_c::operator new; the implicit constructor calls dBgActor_c's C2,
+ * stores this class's vptr, and constructs mShadowModel. The null check is
+ * the one `new` itself emits. */
 extern "C" daObjFm_Battan_c *daObjFm_Battan_c_classInit()
 {
-    daObjFm_Battan_c *actor =
-        (daObjFm_Battan_c *)_ZN7fBase_cnwEj(sizeof(daObjFm_Battan_c));
-    if (actor) {
-        _ZN10dBgActor_cC2Ev(actor);
-        *(int *)actor = (int)&_ZTV16daObjFm_Battan_c[2];
-        _ZN11ShadowModelC1Ev(&actor->mShadowModel);
-    }
-    return actor;
+    return new daObjFm_Battan_c();
 }
 
 extern "C" BattanSpawnInfo g_profile_FM_BATTAN = {
@@ -117,7 +130,7 @@ extern "C" BattanSpawnInfo g_profile_FM_BATTAN = {
     0x01000000
 };
 
-/* ROM ordinal 7 -- InitResources, 0x02111670, size 0xb8. */
+
 // @symbol _ZN16daObjFm_Battan_c13InitResourcesEv
 int daObjFm_Battan_c::InitResources()
 {
@@ -127,9 +140,12 @@ int daObjFm_Battan_c::InitResources()
     UpdateClsnPosAndRot();
 
     KCL_File *file = (KCL_File *)dBgW_Kc::LoadFile(data_ov023_02112080);
+    /* MEASURED: by-value Fix12<int> scale is wall 6az. */
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, file, &mClsnMat, 0x1000, mAngleY,
         data_ov064_0211ba4c);
+    /* Stores dBgW::UpdatePosWithTransform at mMeshCollider+0x18; dBgW.h has
+       no setter, so this stays the 8-byte store helper. */
     func_020393d4(
         (int *)&mMeshCollider,
         (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
@@ -141,7 +157,7 @@ int daObjFm_Battan_c::InitResources()
     return 1;
 }
 
-/* ROM ordinal 6 -- Behavior, 0x021113b0, size 0x2c0. */
+
 // @symbol _ZN16daObjFm_Battan_c8BehaviorEv
 int daObjFm_Battan_c::Behavior()
 {
@@ -172,6 +188,7 @@ int daObjFm_Battan_c::Behavior()
             pos.x = mPosX;
             pos.y = mPosY;
             pos.z = mPosZ;
+            /* MEASURED: by-value Fix12<int> is wall 6az. */
             _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(
                 this, &pos, 0x04000000);
             Sound::PlayBank3(0x44, *(Vector3 *)&mCamSpacePosX);
@@ -224,7 +241,7 @@ int daObjFm_Battan_c::Behavior()
     return 1;
 }
 
-/* ROM ordinal 5 -- Render, 0x02111388, size 0x28. */
+
 // @symbol _ZN16daObjFm_Battan_c6RenderEv
 int daObjFm_Battan_c::Render()
 {
@@ -232,7 +249,7 @@ int daObjFm_Battan_c::Render()
     return 1;
 }
 
-/* ROM ordinal 4 -- CleanupResources, 0x02111350, size 0x38. */
+
 // @symbol _ZN16daObjFm_Battan_c16CleanupResourcesEv
 int daObjFm_Battan_c::CleanupResources()
 {
@@ -242,8 +259,6 @@ int daObjFm_Battan_c::CleanupResources()
     return 1;
 }
 
-/* ROM ordinal 3 -- inferred daObjFm_Battan_c::UpdateModelTransform,
- * 0x02111308, size 0x48. */
 // @symbol _ZN16daObjFm_Battan_c20UpdateModelTransformEv
 void daObjFm_Battan_c::UpdateModelTransform()
 {
@@ -254,8 +269,6 @@ void daObjFm_Battan_c::UpdateModelTransform()
     mModel.mat4x3.m[11] = mPosZ >> 3;
 }
 
-/* ROM ordinal 2 -- inferred daObjFm_Battan_c::UpdateShadow,
- * 0x0211124c, size 0xbc. */
 // @symbol _ZN16daObjFm_Battan_c12UpdateShadowEv
 int daObjFm_Battan_c::UpdateShadow()
 {
@@ -267,6 +280,7 @@ int daObjFm_Battan_c::UpdateShadow()
     mShadowMat.m[9] = mPosX >> 3;
     mShadowMat.m[10] = mPosY >> 3;
     mShadowMat.m[11] = mPosZ >> 3;
+    /* MEASURED: three by-value Fix12<int> scales are wall 6az. */
     return _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         this, &mShadowModel, &mShadowMat,
         0x258000, 0x32000, -depth, 0xf);

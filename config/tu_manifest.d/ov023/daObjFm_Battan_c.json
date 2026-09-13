@@ -726,6 +726,11 @@
   ],
   "compiler_only_output": [
     {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjFm_Battan_c() emits a homeless base-object D2 helper; no configured ROM symbol names it and nothing here references it after the licensed leaf D1/D0 pair is retained"
+    },
+    {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",
@@ -785,7 +790,7 @@
   "notes": [
     "Genuine lifecycle source form: daObjFm_Battan_c defines its virtual destructor inline and InitResources as the key function. The compiler, not hand-written RTTI/vtable or a forcing object, owns the class destructor variants and class data.",
     "UpdateShadow and UpdateModelTransform are truthful inferred private spellings. Their class ownership, inbound calls, bodies, layout, relocations, and codegen are proven; the exact original English names are not.",
-    "daObjFm_Battan_c_classInit and g_profile_FM_BATTAN are reconstructed source-style names: SM64DS proves the RTTI class, FM_BATTAN registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were Squasher_Spawn and Squasher_SpawnInfo. Natural new was measured elsewhere in this actor family to target the wrong global allocator, so the factory retains retail's narrow allocator/base/member-constructor/vptr seam.",
+    "daObjFm_Battan_c_classInit and g_profile_FM_BATTAN are reconstructed source-style names: SM64DS proves the RTTI class, FM_BATTAN registry ID, descriptor/factory relationship, and object shape; later EAD lineage supplies the spelling prior. Exact original SM64DS spellings are not preserved. Historical project aliases were Squasher_Spawn and Squasher_SpawnInfo. The factory is return new daObjFm_Battan_c(); a leaf operator new(unsigned long) forwards to fBase_c::operator new until #2570. That new emits homeless _ZN10dBgActor_cD2Ev, deadstripped by compiler_only_output.",
     "The ov023 resource at 0x02112080 is the collision handle and 0x02112088 is the model handle. Their compiler-generated initialization and destructor-registration topology now belong to this same intact object. The old RotatingPlatformWdw symbol at the same virtual address in ov029 -- that class is now named daObjWc_Obj07_c after its cartridge RTTI -- was a cross-overlay collision and is not used here.",
     "The actor TU owns .text, .init, .ctor, its class .data, and its resource .bss. The intervening level .rodata/.data remains independently extracted ROM-gap input in the same final overlay link.",
     "Legacy per-function contribution comparison is intentionally inapplicable across the earlier atomic identity correction: those objects define the old Squasher mangles while this genuine object defines ROM-proven daObjFm_Battan_c mangles. Current production evidence is the intact object's exact owned-section/relocation audit plus the ordinary whole-module and stock-ROM link."
