@@ -17537,6 +17537,9 @@ foreach(sym IN LISTS SEAT6_GEN_SYMS)
         DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
         COMMENT "hostgen ${sym}")
     list(APPEND SEAT6_GEN "${sym_out}")
+    if(sym STREQUAL "_ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3")
+        set(SEAT6_MODELCOMP_GEN "${sym_out}")
+    endif()
 endforeach()
 
 port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_seat6.txt" SLICE_SEAT6_LINES)
@@ -17557,6 +17560,33 @@ list(APPEND SLICE_SEAT6_SOURCES
 # (SLICE10_CAM_SOURCES and the per-overlay cast lists all land here).
 foreach(_tseat6 walk_window walk_window_hires smoke_player)
     target_sources(${_tseat6} PRIVATE ${SLICE_SEAT6_SOURCES} ${SEAT6_GEN})
+endforeach()
+
+# ModelComponents::Render IS THE ONE ROW THAT RIDES WIDER THAN THOSE THREE, and
+# the gate-1 link is what said so rather than a reading: port/unmatched/
+# ModelComponents_Render.cpp is enrolled through port/slice_gate4b.txt, which
+# ten of the narrow smoke harnesses consume, and src/_ZN5Model6RenderEPK7Vector3
+# .cpp calls ?Render@ModelComponents@@QAEXPAUMatrix4x3@@PAUVector3@@@Z in every
+# one of them. Cutting the host body without following it to those targets left
+# exactly one unresolved external in each (LNK2019, ten times, one symbol).
+#
+# The generated TU goes to the targets that REFERENCE the symbol, and nowhere
+# else: the point of a narrow harness is that it links a narrow set, and the
+# other thirteen rows of this batch have no business in smoke_heap. This list
+# is the ten the link named, and it is a list rather than a slice edit so that
+# port/slice_gate4b.txt -- a file ten targets share and this lane does not own
+# -- keeps its line and keeps compiling the (now bodyless) host file.
+# THE LIST IS THE LINKER'S, NOT A READING. It is every target whose link line
+# in build/port/build.ninja carries _ZN5Model6RenderEPK7Vector3.cpp.obj -- the
+# TU that calls ?Render@ModelComponents@@QAEXPAUMatrix4x3@@PAUVector3@@@Z --
+# minus the three above, which already have the whole batch. Eleven narrow
+# harnesses; taking the first ten from one failed link and stopping there left
+# smoke_persist red on the next build, which is why this enumeration is
+# mechanical.
+foreach(_tseat6mc smoke_model smoke_soak smoke_anim smoke_frames
+                  smoke_soak_anim smoke_modelanim smoke_oam smoke_clsn
+                  smoke_actor smoke_savestate smoke_persist)
+    target_sources(${_tseat6mc} PRIVATE ${SEAT6_MODELCOMP_GEN})
 endforeach()
 
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list

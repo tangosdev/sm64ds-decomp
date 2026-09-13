@@ -66,6 +66,33 @@
 // class. The `char pad[8]` keeps the object the size both TUs give it.
 // ===========================================================================
 
+// ---------------------------------------------------------------------------
+// AND ONE C-NAME FACE, for the same reason lane FACEF needed four of them.
+//
+// src/_ZN9RabbitKey6RenderEv.cpp recovered as a REAL C++ METHOD against
+// include/RabbitKey.h, so the only symbol it puts in the map is MSVC's own
+// mangling ?Render@RabbitKey@@QAEHXZ. The seat that fills the ROM's vtable
+// word -- hal/actor_classes.cpp:1679, `vt[9] = rk_render` -- calls the ROM's
+// Itanium C name with an explicit self, which the retired host copy used to
+// define. The face supplies that name and nothing else; the ROM vtable word,
+// the seat and the call are all untouched. This is exactly the arrangement
+// lane FACEF shipped in hal/except_faces.cpp for Goomboss::Render,
+// ShipUp::Render, FloatOnWaterPlatformJrb::Render and Player::BlowAway, and
+// the gate-1b LINK is what named it here rather than a reading.
+//
+// It is a FACE, not a shadow: it forwards with a qualified call, so the map
+// carries both spellings and linkage.py's FACES bucket is the honest home for
+// it. The receiver is passed explicitly and bridged into ECX by the qualified
+// call, which is the method_faces.cpp checklist item (c).
+// ---------------------------------------------------------------------------
+
+#include "RabbitKey.h"
+
+extern "C" int _ZN9RabbitKey6RenderEv(void *self)
+{
+    return ((RabbitKey *)self)->RabbitKey::Render();
+}
+
 struct PathPtr {
     char pad[8];
     int NumNodes() const;
