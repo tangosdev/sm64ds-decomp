@@ -6,22 +6,23 @@
 #include "dBgCh_Actr.h"
 #include "dActor_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* daKpFr_c is the ROM's own RTTI name for this class (this tree once coined it
  * FlameChompFire): the typeinfo at ov070
  * 0x02123418 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02123448 (31 slots, same count as dActor_c's) is what pairs it
  * to daKpFr_c_classInit (historical aliases daKpFr_c_Spawn and
  * FlameChompFire_Spawn).
- * A natural `new daKpFr_c` was measured and rejected: its instruction bytes
- * match after relocation masking, but it targets the unresolved global
- * `_Znwm` rather than retail's fBase_c::operator new. The actor-table factory
- * therefore keeps an explicit typed construction seam for the allocator,
- * base/member constructors, and vptr store.
+ * The factory is `return new daKpFr_c()`. A bare `new` without the leaf
+ * operator new below relocates to unresolved `_Znwm`; the in-class
+ * `operator new(unsigned long)` forwards `_ZN7fBase_cnwEj((unsigned)size)`
+ * until #2570's fBase overload lands.
  *
- * The Spawn constructs the three owned subobjects below at 0xd4..0x130 in
- * declaration order; D1 destroys them in exactly the reverse order before
- * chaining to dActor_c::~dActor_c -- two independent witnesses for each
- * member's type and offset.
+ * The synthesized ctor constructs the three owned subobjects below at
+ * 0xd4..0x130 in declaration order; D1 destroys them in exactly the reverse
+ * order before chaining to dActor_c::~dActor_c -- two independent witnesses
+ * for each member's type and offset.
  *
  * Own vtable slots, from the ROM table diffed against dActor_c's: 0
  * InitResources, 3 CleanupResources, 6 Behavior, 9 Render, 12
@@ -49,8 +50,9 @@ struct daKpFr_c : dActor_c {
     ShadowModel        mShadowModel;           /* 0x0d4 */
     dCcAc_c mdCcAc_c;    /* 0x0fc */
     dBgCh_Actr       mWithMeshClsn;          /* 0x130 */
-    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot, Render passes
-       it to DropShadowRadHeight, and its translation lives at 0x310. */
+    /* InitResources assigns IDENTITY_MATRIX4X3 into this slot.
+       func_ov070_02121e14, called from Behavior, fills the translation and
+       passes it to DropShadowRadHeight. Render does not drop the shadow. */
     Matrix4x3          mMatrix;                /* 0x2ec */
     daKpFrState       *mStateMethods;          /* 0x31c */
     s32                mStateResult;           /* 0x320 */
@@ -73,6 +75,10 @@ struct daKpFr_c : dActor_c {
     virtual s32  Render();              /* slot 9 */
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnYoshiTryEat();       /* slot 18 */
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daKpFr_c_size_must_be_0x330[
