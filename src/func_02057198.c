@@ -9,7 +9,7 @@ extern u32 _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ10RestoreAllEj(u32 state);
 extern void _ZN3IRQ7RestoreEj(u32 state);
 
-static u32 func_0205a74c(u32 val, LockObj *addr);
+extern u32 func_0205a74c(u32 val, LockObj *addr);
 
 u32 func_02057198(u32 val, LockObj *addr, void (*cleanupFn)(void), u32 useAll)
 {

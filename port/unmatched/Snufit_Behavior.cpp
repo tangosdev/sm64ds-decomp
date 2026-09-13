@@ -44,85 +44,10 @@ extern int data_ov065_0211d650[];
 extern int data_ov065_0211d660[];
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member read at table+8 over the
-   incomplete Enemy -- the gate-173 widening, measured. */
-extern "C" int _ZN6Snufit8BehaviorEv(void *self)
-{
-    char *c = (char *)self;
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(self, c + 0x144) != 0) {
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        if (*(unsigned char *)(c + 0x107) != 0) {
-            if (*(unsigned short *)(c + 0x104) == 0) {
-                _ZN12CylinderClsn6UpdateEv(c + 0x110);
-            }
-        }
-        func_ov065_0211696c(c);
-        *(int *)(c + 0x3cc) = *(int *)(c + 0x5c);
-        *(int *)(c + 0x3d0) = *(int *)(c + 0x60);
-        *(int *)(c + 0x3d4) = *(int *)(c + 0x64);
-        func_ov065_0211691c(c, (unsigned *)data_ov065_0211d670);
-        return 1;
-    }
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
-            self, c + 0x144, c + 0x300, 3) != 0) {
-        return 1;
-    }
-    if (*(int *)(c + 0x10c) != 0) {
-        ApproachAngle((short *)(c + 0x8c), -0x4000, 0xa, 0x200, 0x100);
-        _ZN5Enemy11UpdateDeathER12WithMeshClsn(self, c + 0x144);
-        func_ov065_0211696c(c);
-        return 1;
-    }
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    {
-        /* the ROM's dispatch: one word at table+8, the per-frame fn */
-        unsigned *q = *(unsigned **)(c + 0x3bc);
-        if (q[2] != 0) {
-            ((int (*)(char *))q[2])(c);
-        }
-    }
-    {
-        int v = *(int *)(c + 0xa8) + *(int *)(c + 0x9c);
-        int hi = *(int *)(c + 0xa0);
-        if (v >= hi) {
-            hi = v;
-        }
-        int tmp = *(int *)(c + 0xac);
-        *(int *)(c + 0xa8) = hi;
-        *(int *)(c + 0xac) = tmp;
-    }
-    if (*(int **)(c + 0x3bc) != data_ov065_0211d650) {
-        int *p3d8;
-        int ang;
-        int idx;
-        short tbl;
-        int result;
-        p3d8 = (int *)(c + 0x3d8);
-        *p3d8 += 0x200;
-        ang = *(int *)(c + 0x3d8);
-        idx = ((unsigned short)(short)ang >> 4) * 2;
-        tbl = data_02082214[idx];
-        result = (int)(((long long)tbl * 0x46000 + 0x800) >> 12);
-        _Z14ApproachLinearRiii((int *)(void *)(c + 0x60),
-                               *(int *)(c + 0x3d0) + (result + 0xb4000),
-                               0x3000);
-    }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(self, c + 0x110);
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(self, c + 0x144, 0);
-    func_ov065_0211696c(c);
-    if (*(int **)(c + 0x3bc) != data_ov065_0211d660) {
-        *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-        *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-        *(short *)(c + 0x90) = *(short *)(c + 0x96);
-        func_ov065_02115ff0(c);
-    }
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    {
-        char *p = _ZN5Actor13ClosestPlayerEv(self);
-        if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
-        }
-    }
-    _ZN9Animation7AdvanceEv(c + 0x350);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN6Snufit8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */

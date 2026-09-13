@@ -87,9 +87,11 @@ struct KillSelf {
 };
 
 /* PORT_HOST_ABI: cdecl-vs-thiscall vtable dispatch -- the raw src's inner slot-31 call leaves the VTABLE POINTER in ecx and pushes `this` (`push eax / mov ecx,[eax] / call [ecx+0x7c] / pop ecx`), while the seated slot-31 veneer as_kill is __fastcall and reads `this` from ecx (hal/actor_classes_bob_world.cpp:1139,1190). Wrong receiver, not a lost word; listings in the block above. */
-extern "C" void func_ov098_02137d40(void *c, char *o)
-{
-    unsigned r = (*(unsigned short *)(o + 0xc) == 0xce) ? 1u : 0u;
-    if (r == 0) return;
-    ((KillSelf *)c)->Kill();
-}
+/* func_ov098_02137d40 RETIRED (run link100, lane SEAT6, batch B6).
+   Lane FACEF called the fix decomp-side ('only the matched TU's own
+   spelling can put `this` in ecx'). The generated TU's spelling does
+   exactly that, and src/ does not move.
+   The matched TU src/func_ov098_02137d40.cpp is seated in its place: port/tools/hostgen.py's VIRTUAL_CALL table calls word 31
+   __fastcall(c, 0), which is where as_kill reads its `this` from.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */

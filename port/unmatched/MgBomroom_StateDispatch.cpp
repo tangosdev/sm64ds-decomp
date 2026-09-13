@@ -380,18 +380,10 @@ extern "C" unsigned port_mg_bomroom_opencoded_calls(void)
 // would remove the only written record of which address belongs to which table
 // and the storage they name is still real.
 
-/* src/func_ov006_020d7c00.cpp -- one element, no loop: the caller hands it the
-   index. Stride 0x40 (the ROM's `add r2,r0,r1,lsl #6`), state byte at
-   +0x469b. `this` is the class base, the argument is the same index it was
-   given. It is ALSO state slot 6 of data_ov006_02141730, which is why the
-   switch above routes to this copy. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgBomroom_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020d7c00(char *c, int i)
-{
-    unsigned char *e = (unsigned char *)c + i * 0x40 + 0x4000;
-    const MgPmf *p = &data_ov006_02141708[e[0x69b]];
-    port_mg_bomroom_call1(c, p->code, p->adj, i);
-}
+/* src/func_ov006_020d7c00 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 // ---- THE TWENTY-FOUR FACES AND THE BOOT INSTALLER --------------------------
 //
@@ -558,12 +550,20 @@ static void __fastcall br_func_ov006_020d7c4c(void *self, void *dead_edx, int i)
     func_ov006_020d7c4c((char *)self, i);
 }
 
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_bomroom(void);
+
 extern "C" void port_mg_bomroom_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_bomroom();
 
     static const struct {
         MgPmf *table;

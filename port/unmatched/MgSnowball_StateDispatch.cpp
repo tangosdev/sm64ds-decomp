@@ -317,12 +317,20 @@ SNW_FACE(0, func_ov006_0212a274)
 SNW_FACE(1, func_ov006_0212a224)
 SNW_FACE(2, func_ov006_02129d94)
 
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_snowball(void);
+
 extern "C" void port_mg_snowball_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_snowball();
 
     static const struct { unsigned slot; unsigned rom; void *face; } seats[] = {
         {0, 0x0212a274u, (void *)snw_c0},
@@ -343,48 +351,12 @@ extern "C" void port_mg_snowball_states_seat(void)
     }
 }
 
-// func_ov006_0212a224 -- second level, table data_ov006_02143050.
-//
-// Reached ONLY as slot 1 of data_ov006_02143038.  It has no arm_call anywhere
-// in ov006; the pair word at 0x0213ffb0 is its only reference in the overlay.
-//
-// PORT_HOST_ABI: mwcc pointer-to-member wall, decoded through this class's
-// MgPmf {code,adj} table (section 0 above) and host-copied as the class's
-// address-switch dispatch, port_mg_snowball_call1.
-extern "C" void func_ov006_0212a224(char *base, int idx)
-{
-    unsigned char state = *(unsigned char *)(base + idx * 0x24 + 0xbeb0);
-    const MgPmf *e = &data_ov006_02143050[state];
-    port_mg_snowball_call1(base, e->code, e->adj, idx);
-}
+/* src/func_ov006_0212a224 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
-// func_ov006_02129d94 -- second level, and the ONE TU with TWO decode sites.
-//
-// Reached only as slot 2 of data_ov006_02143038 (pair word 0x0213ff78, its
-// only reference in the overlay).  It runs BOTH of its tables in order on the
-// same element: the byte at +0xbeb0 indexes data_ov006_02143070, then the byte
-// at +0xbeb1 indexes data_ov006_02143020.  The second read happens AFTER the
-// first dispatch, so a first-table body that rewrites +0xbeb1 changes which
-// body the second call reaches on the same pass -- src reads the two bytes at
-// two separate points and this copy keeps that order.
-//
-// src spells the element as a struct with a 0xbeb0-byte head and a 0x24-byte
-// element; the byte offsets below are that layout written out, which is also
-// how func_ov006_0212a2e0's src and the ROM at 0x02129db4 and 0x02129dec
-// spell it.
-//
-// PORT_HOST_ABI: mwcc pointer-to-member wall, two decode sites over this
-// class's MgPmf {code,adj} tables (section 0 above), host-copied as the
-// class's address-switch dispatch, port_mg_snowball_call1.
-extern "C" void func_ov006_02129d94(char *c, int i)
-{
-    unsigned char idx0 = *(unsigned char *)(c + 0xbeb0 + i * 0x24);
-    const MgPmf *e0 = &data_ov006_02143070[idx0];
-    port_mg_snowball_call1(c, e0->code, e0->adj, i);
-
-    {
-        unsigned char idx1 = *(unsigned char *)(c + 0xbeb1 + i * 0x24);
-        const MgPmf *e1 = &data_ov006_02143020[idx1];
-        port_mg_snowball_call1(c, e1->code, e1->adj, i);
-    }
-}
+/* src/func_ov006_02129d94 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */

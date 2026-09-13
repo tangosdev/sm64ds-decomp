@@ -198,3 +198,119 @@ int _ZN13UpDownLiftBbh8BehaviorEv(void *self)
 #pragma comment(linker, "/alternatename:_ApproachLinearI=__Z14ApproachLinearRiii")
 /* include/decl_common.h:1967, the same shape: the TU's own literal pool at 0x02132208 reads 0x0203923c, which config/arm9/symbols.txt names MeshColliderBase::UpdatePosWithVelocity */
 #pragma comment(linker, "/alternatename:_UpdatePosWithVelocitySym=__ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_")
+
+/* ---- RUN link100 LANE PMFB7 GATE 1 ---------------------------------------
+ * Nine of this gate's twelve object-field rows define a real C++ MEMBER
+ * (?Behavior@<Class>@@QAEHXZ, read off each TU's own object) while the port's
+ * actor class table calls the flat name the decomp's file is named after. The
+ * bridge is the same one FWD wrote for the table rows: a forwarder in the flat
+ * name's own convention that takes `this` as its argument and calls the member
+ * through the real class type. Three of the twelve -- MantaRay, Shark and
+ * Skeeter -- define the flat extern "C" name themselves and need nothing here.
+ * Every one of the nine declares `int Behavior();` in the tree's own
+ * include/<Class>.h, so all nine decorate ...@@QAEHXZ, and that was checked
+ * object against object in runs/link100/out/PMFB7/undef_gate1.txt.
+ */
+#include "Bullet.h"
+#include "WaterSuction.h"
+#include "Submarine.h"
+#include "BowserPuzzlePiece.h"
+#include "LavaBubble.h"
+#include "WaterRing.h"
+#include "Snufit.h"
+#include "Swoop.h"
+#include "CheepCheep.h"
+
+extern "C" {
+/* ov002 0x020fee44 -- descriptor data_ov002_02111190, main half at +8 */
+int _ZN6Bullet8BehaviorEv(void *self)
+{ return ((Bullet *)self)->Bullet::Behavior(); }
+/* ov026 0x0211233c -- cell data_ov036_02113f58, tick half at +8 */
+int _ZN12WaterSuction8BehaviorEv(void *self)
+{ return ((WaterSuction *)self)->WaterSuction::Behavior(); }
+/* ov026 0x0211200c -- cells data_ov026_02113f2c / _02113f3c */
+int _ZN9Submarine8BehaviorEv(void *self)
+{ return ((Submarine *)self)->Submarine::Behavior(); }
+/* ov064 0x021198bc -- cell data_ov064_0211c934, .b half at +8 */
+int _ZN17BowserPuzzlePiece8BehaviorEv(void *self)
+{ return ((BowserPuzzlePiece *)self)->BowserPuzzlePiece::Behavior(); }
+/* ov064 0x02118850 -- cells data_ov064_0211c7b8 / _0211c7c8 */
+int _ZN10LavaBubble8BehaviorEv(void *self)
+{ return ((LavaBubble *)self)->LavaBubble::Behavior(); }
+/* ov064 0x02119ffc -- cells data_ov064_0211c954 / _0211c944 */
+int _ZN9WaterRing8BehaviorEv(void *self)
+{ return ((WaterRing *)self)->WaterRing::Behavior(); }
+/* ov065 0x02116b84 -- cells data_ov065_0211d650/60/70/80 */
+int _ZN6Snufit8BehaviorEv(void *self)
+{ return ((Snufit *)self)->Snufit::Behavior(); }
+/* ov065 0x02117b64 -- cells data_ov065_0211d6e0/f0/700/710 */
+int _ZN5Swoop8BehaviorEv(void *self)
+{ return ((Swoop *)self)->Swoop::Behavior(); }
+/* ov090 0x02133430 -- cells data_ov090_02134584 / _02134594 */
+int _ZN10CheepCheep8BehaviorEv(void *self)
+{ return ((CheepCheep *)self)->CheepCheep::Behavior(); }
+}  /* extern "C" */
+
+/* ---- RUN link100 LANE PMFB7 GATE 2 ---------------------------------------
+ * Six of gate 2's nine rows define a real C++ MEMBER (?Behavior@<Class>@@QAEHXZ,
+ * read off each TU's own object) while the port's actor class table calls the
+ * flat name; Chuckya, Eyerok and ChiefChilly define the flat extern "C" name
+ * themselves and need nothing here. Every one of the six declares
+ * `int Behavior();` in the tree's own include/<Class>.h, so all six decorate
+ * ...@@QAEHXZ, checked object against object in
+ * runs/link100/out/PMFB7/undef_gate2.txt.
+ */
+#include "HeaveHo.h"
+#include "KingBobOmb.h"
+#include "LakituBro.h"
+#include "Stump.h"
+#include "UnchainedChomp.h"
+
+extern "C" {
+/* ov077 0x02126e88 -- five two-record cells data_ov077_02127cd8..d18 */
+int _ZN7HeaveHo8BehaviorEv(void *self)
+{ return ((HeaveHo *)self)->HeaveHo::Behavior(); }
+/* ov078 0x02126104 -- eighteen two-record cells from __sinit_ov078_02126660 */
+int _ZN10KingBobOmb8BehaviorEv(void *self)
+{ return ((KingBobOmb *)self)->KingBobOmb::Behavior(); }
+/* ov085 0x0212eb18 -- eleven two-record cells from __sinit_ov085_0212fe4c */
+int _ZN9LakituBro8BehaviorEv(void *self)
+{ return ((LakituBro *)self)->LakituBro::Behavior(); }
+/* ov091 0x021341ec -- the three FWOOSH cells 021356b0/c0/d0 */
+int _ZN5Stump8BehaviorEv(void *self)
+{ return ((Stump *)self)->Stump::Behavior(); }
+/* ov100 0x02143d64 -- the cell data_ov100_021486f4, hi half at +8 */
+int _ZN14UnchainedChomp8BehaviorEv(void *self)
+{ return ((UnchainedChomp *)self)->UnchainedChomp::Behavior(); }
+}  /* extern "C" */
+
+/* run link100 lane PMFB7 gate 2. LakituBro's matched TU declares the two ov085
+   State cells its Behavior compares a POINTER against -- `extern State
+   data_ov085_021307d0;` at line 15 and _021307e0 at line 16 -- OUTSIDE its own
+   extern "C" block, so MSVC decorates both references. The mount defines the
+   plain names and walk_window.map already carries them; read off the TU's own
+   object with dumpbin before the link, not guessed
+   (runs/link100/out/PMFB7/undef_gate2.txt). The comparison itself is on the
+   CELL ADDRESS and not on a pair's contents, so this gate does not disturb it. */
+#pragma comment(linker, "/alternatename:?data_ov085_021307d0@@3UState@@A=_data_ov085_021307d0")
+#pragma comment(linker, "/alternatename:?data_ov085_021307e0@@3UState@@A=_data_ov085_021307e0")
+
+/* ---- RUN link100 LANE PMFB7 GATE 3: THE THREE NAMES THE UNDEF SWEEP FOUND --
+ * src/func_ov006_02123340.cpp declares its two Particle::System statics through
+ * a local wrapper -- `struct PSys { static void *NewUnkCallback818(...);
+ * static void *FromUniqueID(unsigned); };` -- and declares data_ov006_02140830
+ * OUTSIDE its extern "C" block, so MSVC decorates all three references and
+ * nothing in this link defines those spellings. They are not undecompiled code
+ * and not stand-ins: the ROM's own relocations at those call sites reach
+ * Particle::System::NewUnkCallback818 and Particle::System::FromUniqueID, which
+ * this link already carries, and port/unmatched/MgTrampolineTerror_
+ * StateDispatch.cpp -- the host copy this gate retires -- spelled all three out
+ * in full for exactly that reason. Read off the TU's own object with dumpbin
+ * before the link (runs/link100/out/PMFB7/undef_gate3.txt), and every RHS
+ * checked present in walk_window.map. The ABI matches spelling for spelling:
+ * six four-byte arguments on the first (Fix12 is an int wrapper and
+ * Vector3_16f* a pointer) and one on the second.
+ */
+#pragma comment(linker, "/alternatename:?NewUnkCallback818@PSys@@SAPAXIIHHHPAX@Z=__ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f")
+#pragma comment(linker, "/alternatename:?FromUniqueID@PSys@@SAPAXI@Z=__ZN8Particle6System12FromUniqueIDEj")
+#pragma comment(linker, "/alternatename:?data_ov006_02140830@@3HA=_data_ov006_02140830")

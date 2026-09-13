@@ -85,6 +85,47 @@ unsigned long long g_hb_deliveries;
 unsigned long long g_hb_window_writes;
 bool g_hb_announced;
 unsigned g_hb_gates_said;
+// run link100, lane DET4: how many of the deliveries above saw the manager's
+// pending flag go 0->1 during the handler's own call -- see hblank_line and
+// the report this prints at exit for what that means.
+unsigned long long g_hb_modeask;
+
+// THE DEPTH HELPER, THROUGH A HOOK (run link100, lane DET4). hal/
+// boot2_thread.cpp owns port_irq_mode_depth and the manager's pending flag
+// this file wants to bracket the HBlank dispatch with (see that file's
+// header, THE OTHER TWO DISPATCHES) -- but ntr.lib has to stay linkable into
+// the smoke_* probes (port/CMakeLists.txt: smoke_gx, smoke_model,
+// smoke_frames, smoke_soak, smoke_clsn, smoke_modelanim, smoke_oam,
+// smoke_objwin, smoke_soak_anim, smoke_anim, smoke_actor, smoke_savestate,
+// smoke_persist), NONE of which link hal/boot2_thread.cpp or
+// hal/cxx_aliases.cpp. A direct extern reference to either symbol is an
+// unresolved external on all of them (measured: this is exactly what broke
+// before this file adopted the hook -- eight smoke_* link failures on
+// port_irq_mode_enter/exit and data_020a6134, all through this TU). So:
+// three hooks, null by default (a no-op bracket and an always-false
+// mode-ask, which is this file's behaviour before this lane on every target
+// that does not install them), that hal/boot2_thread.cpp wires up with a
+// static registration -- see that file's IrqModeHookReg -- on every target
+// that DOES link it (walk_window, walk_window_hires, smoke_player).
+void (*g_irq_mode_enter)() = nullptr;
+void (*g_irq_mode_exit)() = nullptr;
+uint16_t (*g_irq_pending_flag_read)() = nullptr;
+
+void hblank_irqmode_report() {
+    std::fprintf(stderr,
+        "[det4] hblank: %llu dispatch(es), %llu of them saw the manager's "
+        "pending flag (m0) go 0->1 during the call -- func_02057f54's own "
+        "deferral, i.e. a ROM body asked ARMProcessorMode() from inside THIS "
+        "handler and got 0x12 (run link100, lane DET4; SM64DS_DET3 gates the "
+        "depth this counts against, same as hal/boot2_thread.cpp's own "
+        "VBlank site). Dispatch count is ntr::rt_hblank_counters' own "
+        "deliveries; printed unconditionally, including when both are zero.\n",
+        g_hb_deliveries, g_hb_modeask);
+    std::fflush(stderr);
+}
+struct HblankIrqModeReportReg {
+    HblankIrqModeReportReg() { std::atexit(hblank_irqmode_report); }
+} g_hblank_irqmode_report_reg;
 
 // One scanline's HBlank. The status bit is up for the blanking period and down
 // again for the next line's visible period, which is what the handler's own
@@ -95,7 +136,17 @@ void hblank_line() {
 
     reg16(REG_DISPSTAT) |= DISPSTAT_HBLANK;
     reg32(REG_IF) |= IRQ_HBLANK;
+    // run link100, lane DET4: the depth helper brackets this call the same
+    // way hal/boot2_thread.cpp's own VBlank dispatch does, and the pending-
+    // flag read either side of it is this site's mode-ask census. Both go
+    // through the hooks above; see their own comment for why.
+    const bool m0_before =
+        g_irq_pending_flag_read && g_irq_pending_flag_read() != 0;
+    if (g_irq_mode_enter) g_irq_mode_enter();
     rt_hblank_dispatch();
+    if (g_irq_mode_exit) g_irq_mode_exit();
+    if (!m0_before && g_irq_pending_flag_read && g_irq_pending_flag_read() != 0)
+        ++g_hb_modeask;
     reg32(REG_IF) &= ~IRQ_HBLANK;
     reg16(REG_DISPSTAT) &= ~DISPSTAT_HBLANK;
 
@@ -180,6 +231,26 @@ void rt_hblank_counters(unsigned long long *deliveries,
                         unsigned long long *window_writes) {
     if (deliveries) *deliveries = g_hb_deliveries;
     if (window_writes) *window_writes = g_hb_window_writes;
+}
+
+// run link100, lane DET4. Read by port/tests/walk_window.cpp's own census
+// line, which ties this count to a run's frame number; the report in this
+// file (printed at process exit) is what carries it on the scene and
+// captured-pair paths, which do not go through that file's exit block.
+void rt_hblank_modeask(unsigned long long *modeask) {
+    if (modeask) *modeask = g_hb_modeask;
+}
+
+// run link100, lane DET4. hal/boot2_thread.cpp calls this once, at static
+// init, on every target that links it -- see that file's IrqModeHookReg. Any
+// argument left null (as all three are on every smoke_* probe, which never
+// calls this at all) makes the corresponding bracket/read in hblank_line a
+// no-op, which is this file's behaviour before this lane.
+void rt_install_irq_mode_hook(void (*enter)(), void (*exit)(),
+                              uint16_t (*pending_flag_read)()) {
+    g_irq_mode_enter = enter;
+    g_irq_mode_exit = exit;
+    g_irq_pending_flag_read = pending_flag_read;
 }
 
 // THE DS COMES UP WITH IME SET, and until this lane nothing said so outside

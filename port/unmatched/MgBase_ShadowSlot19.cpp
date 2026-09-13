@@ -122,47 +122,38 @@ struct ShadowObj { char pad[0x10]; struct P2 p10; int f18; int f1c; };
    byte offset the ROM's own `ldr r2,[r2,#0x4c]` uses. */
 typedef int (__fastcall *MgSlot19)(void *thiz, void *edx, int arg);
 
-static int shadow_slot19(void *g, int arg)
-{
-    MgSlot19 fn = (MgSlot19)(*(void ***)g)[0x13];
-    return fn(g, 0, arg);
-}
+/* the shadow_slot19 helper RETIRED (run link100, lane SEAT6, batch B6).
+   THE ONE CHANGED LINE this file exists for -- the shadow-array pointer
+   spelled __fastcall so mb_v19's one stack parameter is cleaned once
+   instead of twice -- is one line in each of the two byte-identical
+   sources, and hostgen can make it there.
+   The matched TU src/func_ov004_020b6b40.c and src/func_ov004_020b6c9c.c is seated in its place: port/tools/hostgen.py's VIRTUAL_CALL table, two rows carrying the same
+   patch text because the two src TUs are byte-identical apart from
+   their names.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 
 /* src/func_ov004_020b6b40.c and src/func_ov004_020b6c9c.c, verbatim apart from
    the call above. The ROM has two copies of this body -- 0x020b6b40 and
    0x020b6c9c disassemble instruction for instruction the same and the two src
    TUs are byte-identical apart from their symbol names -- so they are written
    once here and instantiated twice. */
-static void shadow_tick(void *self)
-{
-    ShadowObj *c = (ShadowObj *)self;
-    const int x = c->f1c;
-    void *g = data_ov004_020beb68;
-
-    if (x != 0) {
-        const unsigned char idx = data_020a0e40[0];
-        const int off = idx * 4;
-        int ok = 0;
-        if (data_020a0de8[off]) {
-            if (data_020a0de9[off]) ok = 1;
-        }
-        if (ok == 0)
-            return;
-    }
-
-    if (shadow_slot19(g, c->f18) == 0)
-        return;
-
-    c->p10 = data_02086b58;
-    FreeGfxSlotsById(0x1d);
-    if (func_ov004_020adbe0() != 0) {
-        func_ov004_020b6f14(c);
-        return;
-    }
-    func_ov004_020b7020((char *)c);
-}
+/* the shared shadow_tick body RETIRED (run link100, lane SEAT6, batch B6).
+   Written once here because the ROM has the body twice; both instances
+   come from their own matched sources now.
+   The matched TU src/func_ov004_020b6b40.c and src/func_ov004_020b6c9c.c is seated in its place: see the note above.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 
 // PORT_HOST_ABI: vtable slot 19 shadow-array call respelled __fastcall so MSVC does not double-clean the one stack parameter the host thunk already cleans
-extern "C" void func_ov004_020b6b40(void *c) { shadow_tick(c); }
+/* func_ov004_020b6b40 RETIRED (run link100, lane SEAT6, batch B6).
+   Instantiation of the shared body above.
+   The matched TU src/func_ov004_020b6b40.c is seated in its place: see the note above.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 // PORT_HOST_ABI: vtable slot 19 shadow-array call respelled __fastcall so MSVC does not double-clean the one stack parameter the host thunk already cleans
-extern "C" void func_ov004_020b6c9c(void *c) { shadow_tick(c); }
+/* func_ov004_020b6c9c RETIRED (run link100, lane SEAT6, batch B6).
+   Instantiation of the shared body above.
+   The matched TU src/func_ov004_020b6c9c.c is seated in its place: see the note above.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */

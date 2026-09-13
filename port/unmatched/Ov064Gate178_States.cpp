@@ -112,60 +112,13 @@ void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm, unsigned int
 void _ZN12CylinderClsn5ClearEv(void *self);
 void _ZN12CylinderClsn6UpdateEv(void *self);
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch; MSVC's PMF over an
- * incomplete class is the wider general representation. See the header. */
-int _ZN10LavaBubble8BehaviorEv(void *cv)
-{
-    char *c = (char *)cv;
-    int flags = *(int *)(c + 0x0b0);
-    int b20 = (flags & 0x20000) != 0;
-
-    if (b20) {
-        PortPmf *m = *(PortPmf **)(c + 0x300);
-        if (m[1].fn != 0)
-            /* PORT_HOST_ABI: mwcc `(this->*(m->pmf))()`, m->pmf = record[1].fn */
-            ((void (*)(void *))(size_t)m[1].fn)(c);
-        return 1;
-    }
-
-    if ((flags & 0x40000) != 0)
-        return 1;
-
-    if (_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(c, 0x5dc000)) {
-        if (*(unsigned char *)(c + 0x310) != 0)
-            _ZN9ActorBase18MarkForDestructionEv(c);
-        return 1;
-    }
-
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-
-    {
-        unsigned int id = *(unsigned int *)(c + 0x134);
-        if (id != 0) {
-            if ((*(int *)(c + 0x130) & 0x8000) == 0) {
-                char *a = (char *)_ZN5Actor10FindWithIDEj(id);
-                if (a != 0 && *(unsigned short *)(a + 0xc) == 0xbf)
-                    _ZN6Player4BurnEv(a);
-            } else {
-                *(int *)(c + 0x128) |= 1;
-            }
-        }
-    }
-
-    {
-        PortPmf *m = *(PortPmf **)(c + 0x300);
-        if (m[1].fn != 0)
-            /* PORT_HOST_ABI: mwcc `(this->*(m->pmf))()`, m->pmf = record[1].fn */
-            ((void (*)(void *))(size_t)m[1].fn)(c);
-    }
-
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-    if (*(int *)(c + 0x09c) != 0)
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x144, 0);
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN10LavaBubble8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 /* ---- THE SEAT ---------------------------------------------------------------
    The seven source PMF fn words, by ROM address, and the host bodies that
@@ -204,6 +157,16 @@ AMI_FACE(0, func_ov064_02117c24)
 AMI_FACE(1, func_ov064_02117bdc)
 AMI_FACE(2, func_ov064_02117b8c)
 
+/* RUN link100 LANE PMFB7 GATE 1: THE TWO LAVABUBBLE MAIN HALVES ARE FACES.
+   The paragraph above says "THE FOUR LAVABUBBLE ROWS DO NOT CHANGE: their
+   dispatcher _ZN10LavaBubble8BehaviorEv is still a host copy in this file" --
+   it is not any more. The matched TU dispatches c7b8[1] and c7c8[1] as a real
+   pointer to member (mov eax,[cell+8] / mov ecx,[cell+12] / add ecx,this /
+   call eax, arity 0, /Zp4 diff 0 lines), so the two MAIN records take faces.
+   The two ENTER records (c7b8[0], c7c8[0]) keep their plain cdecl bodies. */
+AMI_FACE(_lava0, func_ov064_02118760)
+AMI_FACE(_lava1, func_ov064_02118644)
+
 static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_ov064_gate178_sources[] = {
     /* Amilift Behavior states, source -> __sinit_ov064_0211afc0 -> c750[0..2] */
@@ -211,8 +174,8 @@ g_ov064_gate178_sources[] = {
     {&data_ov064_0211bc14, 0x02117bdc, (void *)ami_c1},
     {&data_ov064_0211bc1c, 0x02117b8c, (void *)ami_c2},
     /* LavaBubble states, source -> __sinit_ov064_0211b150 -> c7b8/c7c8 */
-    {&data_ov064_0211be90, 0x02118760, (void *)func_ov064_02118760},
-    {&data_ov064_0211be98, 0x02118644, (void *)func_ov064_02118644},
+    {&data_ov064_0211be90, 0x02118760, (void *)ami_c_lava0},
+    {&data_ov064_0211be98, 0x02118644, (void *)ami_c_lava1},
     {&data_ov064_0211bea0, 0x021187d0, (void *)func_ov064_021187d0},
     {&data_ov064_0211bea8, 0x0211873c, (void *)func_ov064_0211873c},
 };

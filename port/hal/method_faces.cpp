@@ -955,16 +955,39 @@ int _ZN13QuestionBlock16CleanupResourcesEv(void *self)
                                             (MSVC folds the two dtor slots;
                                             ROM numbering puts IsAtEnd at 6)
 
-   so on a null vptr it faults reading [0x14]. The only
-   receiver that reaches it here is &data_0209f5d0, whose host storage is
-   zeroed BSS because the port does not link the ROM's static initialiser for
-   it (src/__sinit_02074edc.c) -- so that dispatch would fault on a null vptr.
-   It cannot run: every call site is behind `data_0209f1e0 != 0`, and the only
+   so on a null vptr it would fault reading [0x14].
+
+   THE NULL IS GONE, run link100 lane CTOR2 rung C1c, re-landed by lane CTOR3
+   rung 1. This paragraph used to end "Do not wake the branch without giving
+   data_0209f5d0 a real vptr first", because the only receiver that reaches
+   SetForwardTime here is &data_0209f5d0 and its host storage was zeroed BSS --
+   the port did not link the ROM's static initialiser for it. It links it now:
+   src/__sinit_02074edc.c is on port/slice_ctor.txt and the ROM's own .ctor
+   walk runs it at Entry, so the object is constructed the way the DS
+   constructs it and its vptr is data_0208eacc, _ZTV15FaderBrightness. That
+   table's dtor pair is seated in hal/scene_boot.cpp and every slot from +0x08
+   up is that file's named l2_vt_trap, so the worst case at [vptr+0x14] moved
+   from an access violation to a line of output that says which table and which
+   slot. The [ctor] line of every captured run names the table this object's
+   vptr landed on.
+
+   THE FIRST LANDING OF C1c WAS BACKED OUT AND THE REASON MATTERS HERE. The
+   same initialiser also moves data_0209f5e8's live vptr onto data_0208eb2c,
+   and hal/scene_boot.cpp used to fill that table from scene_fill_title, far
+   later in the boot -- so a loopback pair called address 0 through byte +0x14
+   of it on the VS menu to level transition. hal/scene_boot.cpp now seats all
+   four fader vtables from a C++ static initialiser, before main and therefore
+   before the .ctor walk, which is what makes the sentence above true rather
+   than hopeful: the table this object's vptr names is live when the vptr is
+   written.
+
+   THE BRANCH IS STILL UNREACHABLE, and for its own separate reason rather than
+   for the null: every call site is behind `data_0209f1e0 != 0`, and the only
    TU that ever writes that byte non-zero (src/func_02023498.c) is not in the
    link. The sizing note in hal/auto_bss.cpp carries the same constraint at the
    storage, and slice_w1l2.txt's blocked list names the job that would lift it
-   (the ROM-class swap slice_w1l3.txt already scoped). Do not wake the branch
-   without giving data_0209f5d0 a real vptr first. */
+   (the ROM-class swap slice_w1l3.txt already scoped). What waking it now costs
+   is a trap report rather than a crash. */
 #include "FaderBrightness.h"
 extern "C" {
 int _ZN15FaderBrightness7IsAtEndEv(void *self)
@@ -1003,3 +1026,114 @@ void _ZN6Player16InitBalloonMarioEv(void *self)
 void _ZN6Player13InitFireYoshiEv(void *self)
 { ((Player *)self)->InitFireYoshi(); }
 }  /* extern "C" */
+
+/* ---- run link100, lane SHADOWS: two ZERO-INDEX FORWARDERS ----------------
+ *
+ * These are faces in the sense the header at the top of this file means: a
+ * one-line forwarder that stands between the ROM's calling convention and the
+ * host's. They exist so that two InitResources bodies can be the ROM's own
+ * code instead of a host copy of it.
+ *
+ * THE SEAM. Both classes' InitResources ends by putting the object in state 0
+ * through a two-argument state setter, and both matched TUs spell that call
+ * with the SECOND ARGUMENT DROPPED -- the r1 ride-through family this file's
+ * item 2 describes for a receiver, applied to an ordinary argument. On ARM the
+ * call is byte-identical because the caller has already put the value in r1
+ * and the `bl` does not disturb it; under cdecl the callee reads the caller's
+ * stack instead, so the setter indexes its state table at garbage << 4.
+ *
+ * THE VALUE IS THE ROM'S, read out of extracted/overlays/ at each overlay's
+ * own load base, one instruction before the branch in both:
+ *   ov072 (base 0x0211f000), BabyPenguin::InitResources 0x02121e84:
+ *     02121F68  mov r1, #0 ... 02121F78  bl #0x2121d50
+ *   ov080 (base 0x02123740), CrazedCrate::InitResources 0x021251ec:
+ *     021252DC  mov r1, #0 ... 021252E8  bl #0x212513c
+ *
+ * Each src TU is compiled with a per-source -D that renames its call of the
+ * setter onto the forwarder below (port/CMakeLists.txt, the gate-shadows
+ * block; the derivation and the full instruction quotes are in
+ * port/slice_shadows.txt). Nothing else in the tree is renamed, so every other
+ * caller of either setter still reaches it under the ROM's own name.
+ *
+ * The setters themselves are matched TUs already in the link, and both spell
+ * the two-argument shape (src/func_ov072_02121d50.c, src/func_ov080_0212513c.c:
+ * `*(char**)(c + OFF) = data_...[i << 4]`), which is why the declarations here
+ * are the real ones and not a cast. include/decl_common.h is not reachable
+ * from this file (nothing in include/ includes it), so its one-argument
+ * declaration of func_ov080_0212513c does not collide with this one. */
+extern "C" {
+void func_ov072_02121d50(void *c, int i);
+void func_ov080_0212513c(void *c, int i);
+
+void port_ov072_bp_state_i0(void *c) { func_ov072_02121d50(c, 0); }
+void port_ov080_cc_state_i0(void *c) { func_ov080_0212513c(c, 0); }
+}  /* extern "C" */
+
+/* The third forwarder of the same gate, and the one that reads the other way
+ * round. LakituBro::InitResources calls TextureSequence::Prepare with the two
+ * arguments the ROM passes -- verified in ov085, where 0x0212ec44's branch is
+ * preceded only by loads of r0 and r1 and r2 is written on the instruction
+ * AFTER it -- while the port's Prepare (hal/player_bridges.cpp) is the three-
+ * parameter thiscall face that reshapes r0/r1 into (self, bmd) and then wants a
+ * btp the ROM never sent. func_02046d50, which the ROM's Prepare tail-calls,
+ * ignores that third value entirely.
+ *
+ * So the third argument is a HOST value and it is supplied on the host side:
+ * the caller's own second argument again, which is a live object, exactly what
+ * the retired port/unmatched/TexSeq_Caller_LakituBro.cpp passed. The parameters
+ * are void* here and references in the calling TU; at this ABI those are the
+ * same word, and both sides are extern "C", so the call is exact. */
+extern "C" {
+void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd,
+                                                       void *btp);
+void port_texseq_prepare_r1(void *self, void *bmd)
+{ _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(self, bmd, bmd); }
+}  /* extern "C" */
+
+/* ---- RUNG 3 (run link100, lane SHADOWS2): the shadow whose seam is a RETURN
+ * TYPE, not an argument -------------------------------------------------------
+ *
+ * SharedFilePtr::ReallocateModelFile was the tenth MSVC-NAME SHADOW row. The
+ * ROM's body is one statement --
+ *
+ *     unsigned int SharedFilePtr::ReallocateModelFile()
+ *     { return func_02017060(file); }
+ *
+ * (src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp) -- and func_02017060 has
+ * been in this link since gate 16. Nothing was missing. What kept the body out
+ * is that the two matched TUs DISAGREE ABOUT THE RETURN TYPE: the definition
+ * returns unsigned int, while its one caller
+ * (src/_ZN5Model8LoadFileER13SharedFilePtr.cpp:12) and include/SharedFilePtr.h
+ * both declare `void ReallocateModelFile();`. On ARM that is invisible --
+ * _ZN13SharedFilePtr19ReallocateModelFileEv carries no return type, so both
+ * spellings are one symbol and mwcc links them -- but MSVC puts the return type
+ * IN the decoration, so the caller asks for ?...@@QAEXXZ and the body publishes
+ * ?...@@QAEIXZ. Two names, one function, and the port answered with an empty
+ * ?...@@QAEXXZ in hal/gx_upload_bridge.cpp, which is what made it a shadow.
+ *
+ * THE ALIAS IS ABI-EXACT, which is the whole reason this row is a bridge and
+ * not a host copy. Both spellings are `public: __thiscall f(void)`: the
+ * receiver rides in ecx, neither pushes a stack argument, both clean zero
+ * bytes, and the only difference is an eax the void-spelling caller does not
+ * read. Confirmed from the object rather than from the mangling rules --
+ * cl /c on the matched TU publishes
+ *   ?ReallocateModelFile@SharedFilePtr@@QAEIXZ
+ *   (public: unsigned int __thiscall SharedFilePtr::ReallocateModelFile(void))
+ * and walk_window.map carried ?ReallocateModelFile@SharedFilePtr@@QAEXXZ from
+ * gx_upload_bridge.cpp.obj. It is the same trade hal/cxxname_bridge.cpp's
+ * Model::LoadFile note already describes in this exact family: "Same ROM
+ * function, two host bodies, picked by how a caller spelled the return type."
+ *
+ * THE SHRINK IS THE ROM'S AGAIN, said out loud. The empty body did not just
+ * stand in for the ROM's body, it DECLINED the work: func_02017060 is the DS
+ * heap shrink-to-fit (Heap::_Sizeof, func_020469e0, Heap::Reallocate on
+ * Memory::gameHeapPtr). The port's other model path gates the same callee
+ * behind port_model_shrink_enabled (hal/level_boot.cpp, applied to
+ * src/func_02016ff4.cpp by hostgen), so with this seat the two paths no longer
+ * agree: Model::LoadFile's numRefs==1 branch now performs the ROM's shrink and
+ * Model::LoadAndSetFile's tail still declines it by default. That is the
+ * direction the port is supposed to move -- the ROM's own body doing the ROM's
+ * own thing -- and it is gated by measurement, not by assertion: this rung's
+ * battery, its eight proofs and its level-1 capture all ran with the shrink
+ * live. hostgen's own switch is untouched and is the A/B for the other half. */
+#pragma comment(linker, "/alternatename:?ReallocateModelFile@SharedFilePtr@@QAEXXZ=?ReallocateModelFile@SharedFilePtr@@QAEIXZ")

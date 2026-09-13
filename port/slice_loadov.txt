@@ -1,0 +1,70 @@
+# Run link100, lane LOADOV: the honest subset of the LoadOverlay / UnloadOverlay
+# chains -- which turns out to be ONE entry point and the twenty-eight TUs
+# behind it, and NOT the two the chains are named after.
+#
+# WHAT THE THREE ENTRY POINTS DO ON THIS HOST. All three read an overlay id and
+# then look it up. On the DS the id is a LINKER SYMBOL'S ADDRESS: src spells the
+# argument `(int)&overlay_100` and the DS linker gives that symbol the address
+# 100. MSVC cannot give a C++ global an absolute address, so on the host
+# `&overlay_100` is an ordinary host address, and hal/scene_boot.cpp says so
+# where the six ids are defined. That one fact rules all three rows:
+#
+#   func_02017e94(id)   SEATED HERE. It scans data_0209d3c4[12] for an entry
+#                       whose first word equals the id, and RETURNS when there
+#                       is none. Nothing on this host ever fills that table
+#                       (LoadOverlay is faced), so the scan finds nothing and
+#                       the ROM's own early return is taken -- which is also
+#                       what the ROM does when the overlay is not resident.
+#                       src/func_ov007_020cc4c0.cpp calls it twice,
+#                       unconditionally, on the first frame, so this row really
+#                       runs. Nothing past the return is entered.
+#
+#   UnloadOverlay(id)   REFUSED, and its reason is now stronger than the
+#                       "nothing to unload" the face used to carry. Its body is
+#                       func_02017e94's with ONE word changed: where
+#                       func_02017e94 says `if (found == 0) return;` it says
+#                       `if (found == 0) Crash();`. On this host found is
+#                       ALWAYS 0. The ROM's own body would take the crash arm on
+#                       the first call. hal/scene_vs_menu.cpp's VS_SEAM row
+#                       carries the measurement.
+#
+#   LoadOverlay(id)     REFUSED on two counts. (1) It ignores func_02018c00's
+#                       return value and then reads buf+4/+8/+0xc, so with the
+#                       lookup refusing a host-address id it reads UNINITIALISED
+#                       STACK and hands the result to a Crash() test and to a
+#                       residency table. (2) If the lookup ever did answer, the
+#                       tail FS_LoadOverlay -> func_02018b64 reads the overlay
+#                       IMAGE and copies it to the overlay's DS load address --
+#                       over host code, because every overlay this port hosts is
+#                       a static build-time mount (hal/scene_boot.cpp section 2).
+#                       The face stays.
+#
+# WHAT THE SEAT COSTS, AND WHY IT IS NOT A NEW COMPILE. Every TU behind
+# func_02017e94 is ALREADY ENROLLED in port/slice_gate214.txt and already
+# compiles in this build; the linker drops all of it under /OPT:REF because the
+# only thing that would name it was the host face. Seating the one entry point
+# is what makes the ROM's own reference graph reach the rest:
+#   func_02017e94 -> func_0205dc0c -> func_0205dc60 -> func_0205dc7c
+#                 -> func_02018c00 -> func_02018cbc -> func_02018e00
+#                 -> func_0203d7b8, func_02017fd0
+#   func_0205df40 -> func_0205dffc -> func_0205d5e8, and the cstd assert /
+#   MSL print subtree func_0206cf98 -> __assert -> func_0206ccd8 -> ...
+# Every leaf under that either has a host body already (hal/boot_hw.cpp's ARM
+# primitives, the CP15 and IRQ family, MultiStore_Int) or is a hosted global
+# already in the map. Nothing new is transcribed by this lane.
+#
+# ONE THING COMES IN THAT IS WORTH NAMING. src/func_02057140.c is on that
+# subtree (func_02057158 -> func_02057140) and its body is `*(u16 *)G &= ~128`,
+# where `G` is the decomp's generic placeholder and resolves in this binary to
+# hal/heap_vtable.cpp's default-heap word; hal/boot_os.cpp:450-457 has the
+# ROM's literal pool saying the address MEANS 0x04000204, EXMEMCNT. The port
+# refuses every path that RUNS it, and this seat does not create one: the only
+# way in is an assertion failure inside the overlay bookkeeping, and the entry
+# point returns before any of it. It is in the image and it is not on a path.
+#
+# TARGETS. walk_window and walk_window_hires only, for hal/nitrofs_face.cpp's
+# reason: the chain bottoms out on hal/boot_hw.cpp's OS primitives and that file
+# rides SLICE214_SOURCES, which smoke_player does not carry. smoke_player keeps
+# the face, moved out of hal/scene_boot.cpp (where it would be a duplicate
+# symbol on the two window targets) into hal/nitrofs_face.cpp.
+src/func_02017e94.c

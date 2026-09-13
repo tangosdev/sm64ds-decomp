@@ -344,6 +344,15 @@ def rung_det(frames):
             # command queue (hal/rollback.cpp in_sound_queue)
             good = v is not None and v.startswith("IDENTICAL") and (
                 " arena=0 " in v and " hw=0" in v)
+            # host=N is the fourth hash (run link100, lane RBFIX): the host
+            # statics the slot carries -- the match-end latch and its scoreline,
+            # King of the Star's points, Luigi Infection's team array. They live
+            # outside all three regions, so a rewind that lost one used to read
+            # IDENTICAL here while two consoles were in different matches. The
+            # field is required when the build emits it and absent on an older
+            # exe, which is why this reads it rather than assuming it.
+            if good and "host=" in v:
+                good = " host=0" in v
             ok &= say(good, "%s p%d restore+retick" % (rn, k), v or "no verdict")
         ok &= sweep(rn, r, pairs=[(0, 1), (0, n - 1), (1, n - 1)])
         summary_lines(r)

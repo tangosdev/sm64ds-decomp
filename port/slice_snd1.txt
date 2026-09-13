@@ -1,0 +1,68 @@
+# Run link100, lane SND1, rung R1: the ROM's own sound-init pool identity.
+#
+# WHAT UNBLOCKED IT. hal/sdat/consumer.cpp seeded the command pool by hand and
+# wrote down why: src/func_0205b358.c "depends on three symbols being ADJACENT
+# in DS memory ... Host symbols are separate objects, so running it would write
+# past two of them." That was a fact about the STORAGE, and the port has fixed
+# the same shape twice before (hal/globals_link100.cpp's CARDiCommon,
+# hal/wm_arm7.cpp's twenty WM globals). hal/snd_globals.cpp hosts
+# data_020a6760 + data_020a7760 + data_020a7f48 as ONE 0x1800 run with the
+# three names at their ROM offsets, with the callback table data_020a7f60
+# behind it, and reads the offsets back at static-init time. With the object
+# the ROM's shape, the ROM's own body runs unchanged.
+#
+# THIS SLICE GOES TO walk_window AND walk_window_hires ONLY. src/func_0205ae64.c
+# is the channel-7 registration and its retry arm calls func_02059d8c, the
+# cycle-counted busy wait hal/boot_hw.cpp transcribes -- and hal/boot_hw.cpp
+# rides SLICE214_SOURCES, which smoke_player does not carry. The loop is never
+# entered (boot2_ipc claims tag 7 at power-on, so func_0205ba3c(7, 1) is true on
+# the first turn), but a referenced symbol still has to link. smoke_player gets
+# the same primitive from hal/sdat/snd_smoke_face.cpp, which is exclusive with
+# hal/boot_hw.cpp the same way hal/nitrofs_face.cpp is.
+
+# The once-only sound-init guard, and the four sub-inits behind it. This is the
+# body hal/sdat/consumer.cpp's sd_sound_init_host now calls in place of its
+# first three transcribed lines: func_0204f070 runs func_0205a82c (the pool)
+# and then the same func_0204f1e8 / func_02050950 / func_0204fc40 the host was
+# calling by hand.
+src/func_0204f070.c
+src/func_0205a82c.c
+
+# SND_Init itself: chain 256 nodes, seat the free-list head and tail, zero the
+# ring cursors, point data_020a7fc0 at the 0x280 status block, clear it, and
+# send command 0x19 to tell the other core where that block is. The consumer
+# HONOURS 0x19 now, so the block the ARM7 publishes into is the block the ARM9
+# named -- not a host static beside it.
+src/func_0205b358.c
+src/func_0205b554.c
+
+# The channel-7 registration the ROM does from inside SND_Init: install
+# func_0205aed0 in data_020a7fc8[7] and wait for the ARM7 to hold the channel.
+# hal/boot2_ipc.cpp claims tag 7 at power-on, so the wait passes on its first
+# turn and func_02059d8c is never reached.
+src/func_0205ae64.c
+src/func_0205aed0.c
+
+# The reply dispatcher behind that handler and the table it reads. Nothing
+# sends a tag-7 reply today -- boot2_ipc holds channel 7 observed-only because
+# hal/sdat/consumer.cpp is the driver behind it -- so func_0205b470 is
+# reachable and quiet, which is the honest state and is what the census shows.
+src/func_0205b470.c
+src/func_0205b524.c
+
+# NOT HERE, and each one has a reason rather than an omission.
+#
+# src/func_0205b5d4.c    "read the other core's progress word". It stays hosted
+#                        in hal/sdat/consumer.cpp under its PORT_HOST_ABI
+#                        ruling: on a single-threaded host, reading the other
+#                        core's progress has to MAKE the other core run, and
+#                        that hook is what makes func_0205b274's spin
+#                        terminate. It returns data_020a7fc0[0] now -- the
+#                        ROM's own word, in the ROM's own block -- instead of a
+#                        host static.
+# src/func_0205b608.c    the player bitmask reader, same word pair, and it is
+#                        already linked; nothing about this rung moves it.
+# src/func_020133bc.c    Sound::Init whole, and src/func_020134c8.c above it.
+# src/func_020134c8.c    They drag the 1MB sound heap, the SDAT opened off the
+#                        card and the ARM9 sound thread (rungs R2/R4/R5/R7),
+#                        which are held for Tango's word.

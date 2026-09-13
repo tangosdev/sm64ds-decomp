@@ -265,7 +265,16 @@ src/CrazedCrate_Spawn.c
 # _ZN11CrazedCrate13InitResourcesEv.cpp: drops the state setter's second
 # argument (the r1-passthrough seam; ROM passes 0) -- mirrored with the
 # ROM's value spelled out:
-port/unmatched/CrazedCrate_InitResources.cpp
+# RETIRED by run link100 lane SHADOWS. The ROM's own body now takes the seat
+# and the dropped argument is supplied by a bridge instead of by an edited
+# copy: src/_ZN11CrazedCrate13InitResourcesEv.cpp rides on
+# port/slice_shadows.txt, compiled with -Dfunc_ov080_0212513c=
+# port_ov080_cc_state_i0, and that forwarder (hal/method_faces.cpp) calls the
+# real two-argument setter with the ROM's own zero -- read off ov080 at
+# 0x021252dc, `mov r1, #0` immediately before the branch. The host copy is
+# deleted; this line stays commented so the class's slice still says where its
+# InitResources went.
+# port/unmatched/CrazedCrate_InitResources.cpp
 src/_ZN11CrazedCrate16CleanupResourcesEv.c
 src/_ZN11CrazedCrate16OnPendingDestroyEv.c
 src/_ZN11CrazedCrate6RenderEv.cpp

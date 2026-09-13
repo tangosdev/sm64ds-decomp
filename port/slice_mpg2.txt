@@ -1,0 +1,64 @@
+# Gate mpg2 (run link100, lane MPG2): dScGameOver_c, scene id 8 -- ov003's
+# third and last scene class, and the one port/slice_scene1.txt derived,
+# mapped and then left out. The seat is in port/hal/scene_boot.cpp beside
+# dScStarSel_c's: the eighteen-word host vtable inside the .dsstate bracket,
+# seven counting faces, one fill and one row in port_scene_classes[].
+#
+# WHY THESE TUs LINK. The reference chain is the ROM's own and nothing here is
+# a link root. The arm9 ACTOR_SPAWN_TABLE (0x02090864) relocates slot 8 to
+# data_ov003_020b1750 (config/arm9/relocs.txt, from:0x02090884); the seat parks
+# that record in data_020a4bb8[8] with its factory word repointed at
+# func_ov003_020b1118, the same three statements every other scene row makes.
+# The class vtable is the host array the fill writes the ROM's own slot
+# contents into, which is what names the seven bodies; everything else here is
+# reached from one of those eight entry points. Nothing is /include:'d and no
+# alias points at any of it.
+#
+# BOTH OF port/slice_scene1.txt's BLOCKERS ARE CLEARED, and neither by this
+# gate deciding it was fine. (1) The five marker-carrying bodies are already
+# ruled REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt:2211-2215, each
+# behind a tools/match.py 2004/b56 strict-relocation byte gate; no new ruling
+# is added and inferred_stub_guard is not asked for one. (2) The two dtor TUs'
+# placeholder spellings are renamed per TU in port/CMakeLists.txt onto the ROM's
+# own literal-pool words, read out of each body's pool in
+# extracted/overlays/overlay_0003.bin.
+
+# ---- dScGameOver_c, scene id 8 (SpawnInfo 0x020b1750, vtable 0x020b179c) ----
+# the factory: ActorBase::operator new(0x98), the ActorBase ctor, the three
+# vptr writes the ROM makes in order and the two +0x13 flag bits. It already
+# spells data_ov003_020b179c and _ZTV5Scene by name, so it needs no rename.
+src/func_ov003_020b1118.cpp
+# slot 0  InitResources
+src/func_ov003_020b0b3c.c
+# slot 3  CleanupResources
+src/func_ov003_020b0b34.c
+# slot 6  Behavior
+src/func_ov003_020b0894.c
+# slot 9  Render
+src/func_ov003_020b0814.cpp
+# slot 12 OnPendingDestroy -- 4 bytes, bx lr
+src/func_ov003_020b0810.c
+# slot 16 D2
+src/func_ov003_020b0580.c
+# slot 17 D0. The recovered name says OnYoshiTryEat and is wrong; the
+# adjudication row says so too.
+src/func_ov003_020b05bc.c
+
+# ---- the class's own closure ----------------------------------------------
+# Both are named by Behavior and by InitResources and by nothing else in this
+# build, so each is a real gain rather than a re-count.
+src/func_ov003_020b060c.c
+src/func_ov003_020b0730.c
+
+# ---- the arm9 closure the game over screen opens up ------------------------
+# func_0201cebc is the text-drawing helper InitResources calls; no level path
+# reaches it.
+src/func_0201cebc.c
+# src/func_0202ae74.c is NOT LISTED HERE ON PURPOSE, and it is the one TU of
+# this gate's twelve that is not in this file. It is already an ACTIVE line in
+# port/slice_gate31.txt (the StartFile wrapper), so it is compiled today and
+# then dropped by /OPT:REF because nothing in the build reached it. A second
+# slice line would enroll the same source in a second target and hand the link
+# two definitions of _func_0202ae74. func_ov003_020b0894 is what reaches it now,
+# so it lands in the binary on this gate without a line of its own -- and it
+# counts towards this gate's twelve.

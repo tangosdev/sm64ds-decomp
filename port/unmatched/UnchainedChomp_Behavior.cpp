@@ -174,108 +174,48 @@ extern int data_ov100_02148008[3];
 /* PORT_HOST_ABI: the matched TU calls PathPtr members as thiscall while
  * the C-linkage ROM bodies are cdecl (measured c0000005). See the note
  * above. */
-int _ZN14UnchainedChomp13InitResourcesEv(unsigned char *thiz)
-{
-    char *c = (char *)thiz;
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0211092c);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x30c,
-        _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_021486bc), 1, -1);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov100_021486a4);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov100_021486ac);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov100_021486b4);
-    LoadSilverStarAndNumber();
-
-    {
-        int i = 0;
-        char *p = c + 0x370;
-        do {
-            _ZN9ModelBase7SetFileEP8BMD_Fileii(p,
-                *(void **)((char *)&data_ov100_021486a4 + 4), 1, -1);
-            i++;
-            p += 0x50;
-        } while (i < 6);
-    }
-
-    _ZN11ShadowModel12InitCylinderEv(c + 0x640);
-    {
-        int i = 0;
-        char *p = c + 0x550;
-        do {
-            _ZN11ShadowModel12InitCylinderEv(p);
-            i++;
-            p += 0x28;
-        } while (i < 6);
-    }
-
-    *(int *)(c + 0x6ac) = *(int *)(c + 8) & 0xff;
-    *(int *)(c + 0x6b8) = (*(unsigned int *)(c + 8) >> 8) & 0xf;
-    if (*(int *)(c + 0x6ac) == 0xff) *(int *)(c + 0x6ac) = 0;
-
-    {
-        int path[2] = {0, 0};
-        _ZN7PathPtr6FromIDEj(path, *(unsigned int *)(c + 0x6ac));
-        *(int *)(c + 0x6b0) = (int)_ZNK7PathPtr8NumNodesEv(path);
-    }
-
-    *(int *)(c + 0x9c) = -0x2000;
-    *(int *)(c + 0xa0) = -0x3c000;
-
-    {
-        struct { int x, y, z; } v;
-        v.x = data_ov100_02148008[0];
-        v.y = data_ov100_02148008[1];
-        v.z = data_ov100_02148008[2];
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-            c + 0x110, thiz, &v, 0xaa000, 0x140000, 0x200004, 0x6010);
-    }
-
-    *(unsigned char *)(c + 0x6c9) = 0x1f;
-    *(int *)(c + 0x6cc) = 3;
-
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    *(short *)(c + 0x600 + 0xa4) = *(short *)(c + 0x8e);
-
-    *(int *)(c + 0x6d0) = 0;
-    *(int *)(c + 0x6d4) = 0;
-
-    {
-        int i = 0;
-        char *dst = c;
-        do {
-            *(int *)(dst + 0x6d8) = *(int *)(c + 0x5c);
-            i++;
-            *(int *)(dst + 0x6dc) = *(int *)(c + 0x60);
-            *(int *)(dst + 0x6e0) = *(int *)(c + 0x64);
-            dst += 0xc;
-        } while (i < 6);
-    }
-
-    *(short *)(c + 0x600 + 0xca) = 0xc8;
-
-    {
-        int path[2] = {0, 0};
-        _ZN7PathPtr6FromIDEj(path, *(unsigned int *)(c + 0x6ac));
-        *(int *)(c + 0x6b4) = 1;
-        _ZNK7PathPtr7GetNodeER7Vector3j(path, (int *)(c + 0x5c),
-            *(unsigned int *)(c + 0x6b4));
-    }
-
-    *(int *)(c + 0x60) += 0x64000;
-    *(int *)(c + 0x80) = 0x1000;
-    *(int *)(c + 0x84) = 0x1000;
-    *(int *)(c + 0x88) = 0x1000;
-
-    func_ov100_02143b18(thiz, &data_ov100_021486f4);
-    return 1;
-}
+/* _ZN14UnchainedChomp13InitResourcesEv RETIRED (run link100, lane SEAT6, batch B6).
+   Its stated reason -- the matched TU calls PathPtr members as thiscall
+   while the C-linkage ROM bodies are cdecl -- is spent. Three of the four
+   decorations it needs are publics of this build already
+   (Klepto_PathPtrFaces.cpp, RacingPenguin_ShadowFaces.cpp) and the
+   fourth, ?NumNodes@PathPtr@@QBEHXZ, is a real __thiscall forwarder in
+   port/hal/dispatch_seat6.cpp. Nothing was aliased onto a cdecl body.
+   The matched TU src/_ZN14UnchainedChomp13InitResourcesEv.cpp is seated in its place: a plain line on port/slice_seat6.txt.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 }  /* extern "C" */
 
 typedef int (*PortChompFn)(void *, void *);
 
+/* ---- RUN link100 LANE PMFB7 GATE 2: THE PER-FRAME RECORDS ARE FACES -------
+ * UnchainedChomp's matched TU dispatches its state cell's +8 half as a real
+ * pointer to member -- mov eax,[cell+8] / test eax,eax / je /
+ * mov ecx,[cell+12] / add ecx,this / call eax, the ROM's own offsets, receiver
+ * in ecx, NOTHING pushed, ARITY ZERO, /Zp4 diff 0 lines
+ * (runs/link100/out/PMFB7/emit_all21_out.txt). The seat used to install plain
+ * cdecl bodies that take their self off the stack, so each PER-FRAME record now
+ * holds a zero-argument __fastcall face that forwards the receiver as the one
+ * cdecl argument the ROM's own state body takes -- the same call the cell held
+ * before, made through ecx instead of the stack.
+ *
+ * THE ENTER RECORDS DO NOT CHANGE: they are reached by the class's state-change
+ * helper, which MSVC compiles as a one-call forwarder ending in `jmp`, so the
+ * caller's own frame is reused and a plain cdecl body is right there.
+ *
+ * WHICH RECORD IS WHICH is read out of the class's own __sinit
+ * (runs/link100/out/PMFB7/slots_gate2.txt), never assumed.
+ */
+static void __fastcall pmfb7_ov100_02143aa4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02147ff8, the per-frame half */
+    ((void (*)(void *))(void *)func_ov100_02143aa4)(self);
+}
+
 static const struct { PortPmf *slot; unsigned rom; PortChompFn host; }
 g_unchained_chomp_states[] = {
     {data_ov100_02148000, 0x02143ae0, func_ov100_02143ae0},   /* lo */
-    {data_ov100_02147ff8, 0x02143aa4, func_ov100_02143aa4},   /* hi */
+    {data_ov100_02147ff8, 0x02143aa4, (PortChompFn)(void *)pmfb7_ov100_02143aa4},   /* hi */
 };
 
 extern "C" void port_unchained_chomp_states_seat(void)
@@ -321,107 +261,10 @@ static int port_chomp_call(const PortPmf *p, void *self)
    8-byte {function, delta} pair, and the matched TU compiles to the same
    tail jump this body was -- measured, listing in that slice's header.
    The reading above is kept because it is the derivation. */
-/* HOST COPY of src/_ZN14UnchainedChomp8BehaviorEv.cpp. The one PMF dispatch
-   (Holder+8, the hi pair) is spelled as a resolved plain call; everything else
-   is the matched source line for line. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" int _ZN14UnchainedChomp8BehaviorEv(void *selfv)
-{
-    char *c = (char *)selfv;
-    DecIfAbove0_Short((unsigned short *)(c + 0x6ca));
-    DecIfAbove0_Short((unsigned short *)(c + 0x6a8));
-    if (DecIfAbove0_Short((unsigned short *)(c + 0x6a6)) != 0) {
-        _Z14ApproachLinearRiii(*(int *)(c + 0x80), 0x1000, 0x500);
-        *(int *)(c + 0x88) = *(int *)(c + 0x80);
-        *(int *)(c + 0x84) = *(int *)(c + 0x88);
-        func_ov100_02143b68(c);
-        *(int *)(c + 0x98) = 0;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(selfv, c + 0x110);
-        if (func_ov100_02143370(c) != 0) {
-            *(int *)(c + 0xa0) = 0;
-        }
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        _ZN12CylinderClsn6UpdateEv(c + 0x110);
-        return 1;
-    }
-
-    *(int *)(c + 0xa0) = -0x3c000;
-
-    {
-        /* Holder *q = *(Holder**)(c+0x668); if (q->fn) (this->*q->fn)();
-           -- the hi pair (Holder+8), resolved and called plain. */
-        const PortPmf *q = (const PortPmf *)(*(char **)(c + 0x668) + 8);
-        if (q->fn != 0)
-            port_chomp_call(q, c);
-    }
-
-    *(int *)(c + 0x98) = 0x17000;
-    _ZN5Actor9UpdatePosEP12CylinderClsn(selfv, c + 0x110);
-
-    if (func_ov100_02143370(c) != 0) {
-        if (*(unsigned short *)(c + 0x6a8) == 0) {
-            func_02012694(0x39, c + 0x74);
-        }
-        *(int *)(c + 0xa8) = 0x14000;
-        _ZN5Actor15HugeLandingDustEb(selfv, true);
-    }
-
-    int flag = (data_0209f2d8[0] == 1);
-    if (flag != 0 && *(unsigned short *)(c + 0x6ca) == 0) {
-        int q16 = __aeabi_idiv(0x10000, *(int *)(c + 0x6b4));
-        short spd = (short)q16;
-        (void)_ZN5Actor13ClosestPlayerEv(selfv);
-
-        struct { int x, y, z; } v = {0, 4, 0};
-
-        void *sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-            0x120, 2, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
-        if (*(unsigned short *)(c + 0x6a8) == 0) {
-            func_02012694(0x3a, c + 0x74);
-        }
-        if (sp != 0) {
-            char *s = (char *)sp;
-            *(short *)(s + 0x92) = 0;
-            *(short *)(s + 0x94) = spd;
-            *(short *)(s + 0x96) = 0;
-            *(int *)(s + 0xa4) = v.x << 12;
-            *(int *)(s + 0xa8) = v.y << 12;
-            *(int *)(s + 0xac) = v.x << 12;
-        }
-        *(unsigned short *)(c + 0x6ca) = 0xc8;
-    }
-
-    {
-        char path[8];
-        struct { int x, y, z; } node, diff;
-        _ZN7PathPtrC1Ev(path);
-        _ZN7PathPtr6FromIDEj(path, *(unsigned int *)(c + 0x6ac));
-        _ZNK7PathPtr7GetNodeER7Vector3j(path, &node, *(unsigned int *)(c + 0x6b4));
-
-        Vec3_Sub(&diff, c + 0x5c, &node);
-
-        if (LenVec3(&diff) < 0x190000) {
-            *(int *)(c + 0x6b4) += 1;
-            if (*(int *)(c + 0x6b4) >= *(int *)(c + 0x6b0)) {
-                *(int *)(c + 0x6b4) = 0;
-            }
-            _ZNK7PathPtr7GetNodeER7Vector3j(path, &node, *(unsigned int *)(c + 0x6b4));
-        }
-
-        short ang = Vec3_HorzAngle(c + 0x5c, &node);
-        *(short *)(c + 0x6a4) = ang;
-
-        ApproachAngle((short *)(c + 0x94), *(short *)(c + 0x6a4), 0x10, 0x20, 0x500);
-
-        *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-
-        func_ov100_02143b68(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-
-        void *p = _ZN5Actor13ClosestPlayerEv(selfv);
-        if (p != 0 && *(unsigned char *)((char *)p + 0x6fb) == 0) {
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
-        }
-        return 1;
-    }
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN14UnchainedChomp8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */

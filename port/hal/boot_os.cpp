@@ -447,17 +447,28 @@ void port_boot_rom_pre_main(void)
        at the ROM's own point in the order, so OS_GetLockID hands out ids
        the way the ROM does instead of -3. */
     port_os_lock_words_seed();
-    /* func_02058ec8() -- REFUSED. Run link100 lane BOOT2 re-derived it: the
-       unmapped GBA slot at 0x08000000 is real but it is the SECOND blocker.
-       func_02058764 -> func_02058690 takes the ARM7 lock through func_02057158
-       first, whose cleanup callback func_02057140 writes `G` -- the decomp's
-       generic placeholder, which links to hal/heap_vtable.cpp's default-heap
-       word here and MEANS 0x04000204 (EXMEMCNT) per the ROM's own literal pool
-       at 0x02057154. Running this arm writes the default heap pointer. The
-       header block carries the whole table. */
+    /* func_02058ec8() -- STILL REFUSED, AND THE FIRST REASON HAS MOVED. Run
+       link100 lane BOOT2 derived two blockers here, in this order: (1)
+       func_02058764 -> func_02058690 takes the ARM7 lock through
+       func_02057158, whose cleanup callback func_02057140 wrote `G` -- the
+       decomp's generic placeholder, which linked to hal/heap_vtable.cpp's
+       default-heap word while the ROM's own literal pool at 0x02057154 says
+       0x04000204 (EXMEMCNT) -- so running this arm wrote the default heap
+       pointer; and (2) the unmapped GBA slot at 0x08000000.
+       BLOCKER (1) IS GONE. Run link100 rung R3F spelled the register in
+       src/func_02057140.c (and in func_02057128 and func_02055454), all three
+       still byte-verify against the ROM, and the three TUs are hostgen-ROUTED
+       so the store reaches EXMEMCNT instead. Taking the lock no longer touches
+       the heap pointer. What is left is blocker (2) ALONE: no ntr::kRegions
+       entry covers 0x08000000, so func_02058764 still reads the Slot-2 magic
+       out of nothing. Un-refusing this arm is a rung of its own and wants its
+       own proof; R3F did not take it. The header block carries the whole
+       table. */
     func_02057000();
-    /* func_02059594() -- REFUSED for the same reason: same func_02058764 path,
-       same lock, same `G`. Everything else about it is host-safe -- it stores
+    /* func_02059594() -- STILL REFUSED, and its reason moved the same way:
+       same func_02058764 path, same lock, same `G`, so R3F's spelling and
+       route retired the heap-pointer half of it and the empty Slot-2 region is
+       what remains. Everything else about it is host-safe -- it stores
        func_020593f4 into 0x027ffd9c (mapped, shared block) and 0x023c3fdc
        (mapped, inside ntr's main-RAM reservation). */
     /* func_02059f48(3) -- REFUSED ON THE SAME NAME, and the byte is now known.
@@ -780,11 +791,24 @@ void port_boot_rom_game_init_tail(void)
        is the one that stands. The 0x06800000 span is sub-engine BG VRAM, which
        no scene has loaded into by this line. */
     func_02019440();
-    /* func_020134c8() -- the ROM's sound bring-up. STILL REFUSED, and lane THR
-       did not open it: besides the two-players-over-one-SDAT reason BOOT gave,
-       its closure reaches func_02058200, and hal/boot2_thread.cpp states that
-       thread CREATION is not modelled -- the fiber seam has exactly two
-       threads and refuses a context it has never seen. */
+    /* func_020134c8() -- the ROM's sound bring-up. STILL REFUSED, and ON ONE
+       REASON RATHER THAN TWO. The thread half is GONE: this line used to say
+       "its closure reaches func_02058200, and hal/boot2_thread.cpp states that
+       thread CREATION is not modelled", and that has not been true since lane
+       THR -- func_02058200 is linked (port/slice_gate223.txt) and this file's
+       own header at the func_020134c8 entry, ~line 215, has said so for as
+       long. The call-site comment was the stale copy; corrected by run link100
+       lane SND1, which had to read both to know which one to believe.
+
+       WHAT STILL REFUSES IT is what BOOT gave first, narrowed by that lane's
+       measurement: func_020133bc takes 1MB out of Memory::Allocate and stands
+       the ROM's OWN SDAT player up over it (rung R2), and it opens the archive
+       off the card, which inverts hal/sdat/sdat.cpp's residency pre-seat and
+       root seat (rung R4). Those two are a subsystem decision, held for Tango's
+       word. The pieces below them that are NOT that decision have been taken:
+       the pool, the status block and the channel-7 registration are the ROM's
+       own now (port/slice_snd1.txt, rung R1), driven from
+       hal/sdat/consumer.cpp's sd_sound_init_host rather than from here. */
     func_0203b684();
     /* data_020a4bb8 = data_02090864 -- already seated by the host boot */
     func_020233f0();

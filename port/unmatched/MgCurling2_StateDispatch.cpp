@@ -318,31 +318,10 @@ static void c2_call1(void *p, const MgC2Pair &e, int i)
     c2_unhandled("UNHANDLED at a one-argument site", (unsigned)e.code, e.adj);
 }
 
-/* ---- src/func_ov006_020e683c.cpp, vtable slot 6, the Behavior -------------
- *
- * Verbatim except that the hand-written Itanium decode becomes c2_call0. The
- * state index at +0x5580 is the same word slot 0 sets to 1 and slot 18 zeroes.
- * The decode itself is kept rather than replaced by `tbl[idx]` indexing,
- * because the virtual bit and the adjustment shift are the ROM's own and this
- * file reports them rather than assuming them away. */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch open-coded as two ints, calling the raw DS code word MSVC's pmf ABI cannot reproduce
-extern "C" int func_ov006_020e683c(char *c)
-{
-    const int idx = *(int *)(c + 0x5580);
-    const MgC2Pair &e = data_ov006_02141a18[idx];
-
-    if (e.adj & 1) {
-        c2_unhandled("through the VIRTUAL arm of the member pointer, which no "
-                     "measured pair in this class uses",
-                     (unsigned)e.code, e.adj);
-    } else {
-        c2_call0(c + (e.adj >> 1), e);
-    }
-
-    func_ov006_020e4800(c);
-    func_ov006_020e3948(c);
-    return 1;
-}
+/* src/func_ov006_020e683c -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 /* ---- src/func_ov006_020e6354.cpp, table 02141978 (0) and 021419d8 (1) -----
  *
@@ -461,12 +440,20 @@ C2_FACE(0, func_ov006_020e4794)
 C2_FACE(1, func_ov006_020e4744)
 C2_FACE(2, func_ov006_020e42b4)
 
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_curling2(void);
+
 extern "C" void port_mg_curling2_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_curling2();
 
     static const struct {
         unsigned slot;
@@ -491,27 +478,12 @@ extern "C" void port_mg_curling2_states_seat(void)
     }
 }
 
-/* ---- src/func_ov006_020e42b4.cpp, tables 021419f8 and 021419a0 ------------
- *
- * Two dispatches off two adjacent index bytes, +0x48de and +0x48df, both at
- * arity 1 with the loop index the caller handed in. The ROM sets `mov r1,r5`
- * before each `blx r2`, which is where the arity is read from.
- * PORT_HOST_ABI: mwcc pointer-to-member wall, decoded through this class's
- * tables and host-copied as the class's address-switch dispatch, c2_call1. */
-extern "C" void func_ov006_020e42b4(char *c, int i)
-{
-    const int idx = i * 0x24;
-    const unsigned char k0 = *(unsigned char *)(c + idx + 0x48de);
-    c2_call1(c, data_ov006_021419f8[k0], i);
-    const unsigned char k1 = *(unsigned char *)(c + idx + 0x48df);
-    c2_call1(c, data_ov006_021419a0[k1], i);
-}
+/* src/func_ov006_020e42b4 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
-/* ---- src/func_ov006_020e4744.cpp, table 021419b8 (arity 1) ----------------
- * PORT_HOST_ABI: mwcc pointer-to-member wall, decoded through this class's
- * table and host-copied as the class's address-switch dispatch, c2_call1. */
-extern "C" void func_ov006_020e4744(char *o, int i)
-{
-    const unsigned char idx = *(unsigned char *)(o + i * 0x24 + 0x48de);
-    c2_call1(o, data_ov006_021419b8[idx], i);
-}
+/* src/func_ov006_020e4744 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */

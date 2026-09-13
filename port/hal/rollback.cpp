@@ -93,10 +93,33 @@ void port_dh_frame_set(int f);
 // the slot carries it the way it carries the counters above.
 void port_luigi_state_get(int *team, int *seeded);
 void port_luigi_state_set(const int *team, int seeded);
+// The MATCH FLOW's latched state (hal/star_flow.cpp, the block above
+// port_vs_end_state_get there): the end latch and its scoreline, and King of
+// the Star's points, gate and arm latch. Same class as the two above -- host
+// statics that decide what the simulation does on the next frame -- and the
+// same carriage. Every target that links this file links hal/star_flow.cpp.
+int  port_vs_end_state_words(void);
+void port_vs_end_state_get(int *w);
+void port_vs_end_state_set(const int *w);
 // The replay flag the mode's own files read. DEFINED in hal/luigi_infection.cpp
 // (which is linked into targets this file is not), mirrored from g_replaying at
 // the two places it moves, so a target without this boundary reads a truthful 0.
 extern "C" int g_port_rb_replaying;
+// THE ROM'S FRAME-LOOP BOOKKEEPING, named on the DET rung's own lines (run
+// link100, lane DET). These are the words a restore+retick came back differing
+// on once rung H2 made phase 7 the ROM's own sleep, and resolving a .dsstate
+// offset against walk_window.map is not something the next lane should have to
+// do again: the sleep queue func_0201a4bc sleeps on, the VBlank count
+// IRQ::VBlankHandler gates its wake on, the wait flag that gate also tests, the
+// frame divider that says how many edges a frame is, and the read cursor of the
+// ROM's WM command queue (src/func_02058940's struct at data_020a89b0 + 0xc,
+// one step per WM_SendCommand).
+extern unsigned char data_0209d500[4];
+extern int data_0209d514;
+extern unsigned char data_0209d4f0[4];
+extern int data_0208ee44;
+extern unsigned char data_020a89b0[20];
+extern unsigned char data_020a89c4[40];
 extern unsigned char data_020a1154[];     // the ROM's per-slot comms records
 extern int data_020a4b98[];               // the actor walker's list-5 view
 // THE HOSTED ARM7 SOUND COMMAND QUEUE (hal/player_bridges.cpp, hal/sdat).
@@ -110,7 +133,17 @@ extern int data_020a6484[], data_020a6488[], data_020a648c[], data_020a6490[],
            data_020a6494[], data_020a6498[], data_020a649c[], data_020a64a0[],
            data_020a64a4[];
 extern void *data_020a64a8[];             // the 16-slot batch ring
-extern int data_020a6760[];               // the 256 x 0x18 node pool
+extern unsigned char data_020a6760[];     // the 256 x 0x18 node pool
+// SNDSharedWork, the 0x280 block the ARM9 hands the ARM7 in command 0x19. It
+// belongs in this list as of run link100 lane SND1 (rung R1) and it did not
+// exist here before: the two words this list is about -- the batch progress
+// counter and the player bitmask -- used to be published into a host array
+// outside .dsstate, which the snapshot never captured and the DET rung
+// therefore never compared. The ROM's own SND_Init seats the real object now
+// (hal/snd_globals.cpp), so those same two words ARE captured, and they drift
+// on a restore for exactly the reason the whole queue does: the restore
+// re-seeds it and the replay re-triggers sounds into the reset queue.
+extern unsigned char data_020a64e0[];     // SNDSharedWork, 0x280
 extern unsigned char data_020a50ec[];     // sdat sound bss, 0x440
 // the ARM9's own voice bookkeeping, which follows the ARM7 state the restore
 // re-seeds: the FREE and ACTIVE voice lists (0xc-byte NestedHeapIterators)
@@ -121,6 +154,10 @@ extern unsigned char data_020a4d54[], data_020a4d60[], data_020a4d6c[];
 namespace {
 
 enum { kSlots = 12 };
+// The match flow's block, sized from the same constant hal/star_flow.cpp fills
+// it from. ring_init asks that file for its own count and refuses to carry the
+// block if the two ever disagree, rather than writing past the slot.
+enum { kVsEndWords = 9 + 2 * kPortMaxPlayers };
 enum { kPage = 4096 };
 enum { kUndoPages = 640 };           // 2.5 MB of previous page contents per slot
 enum { kHwRegions = 3 };
@@ -143,6 +180,7 @@ struct Slot {
     int       dh_frame;                     // the divergence detector's clock
     int       li_team[kPortMaxPlayers];     // Luigi Infection's team array
     int       li_seeded;                    // ...and its seed latch
+    int       vs_end[kVsEndWords];          // the match flow's latched state
     char     *arena;
     char     *ds;
     void     *cursor;
@@ -162,6 +200,7 @@ void   **g_ww_buf = 0;
 unsigned g_ww_pages = 0;              // entries in g_ww_buf
 size_t   g_arena_size = 0, g_ds_size = 0;
 
+bool     g_vs_end_ok = true;         // hal/star_flow's block fits this slot
 bool     g_replaying = false;        // host side: a rewind is being re-run
 unsigned g_replay_from = 0, g_replay_to = 0;
 double   g_replay_t0 = 0;
@@ -171,7 +210,7 @@ int      g_env_read = 0;
 int      g_pause_frame = -1, g_pause_ms = 0, g_pause_done = 0;
 int      g_det_frame = -1, g_det_n = 8, g_det_phase = 0;
 unsigned g_det_tag = 0;
-uint64_t g_det_straight[3];
+uint64_t g_det_straight[4];   // arena, dsstate, hw, and the carried host words
 char    *g_det_arena = 0, *g_det_ds = 0, *g_det_hw = 0;
 int      g_force_every = 0, g_force_depth = 0;   // SM64DS_ROLLBACK_FORCE=<every>:<depth>
 int      g_force_last = -1;          // the frame the last forced rewind fired at
@@ -394,6 +433,16 @@ bool ring_init()
     for (int r = 0; r < g_hw_n; ++r) total += g_hw[r].size;
     hw_shadow_refresh_all();
     hw_watch_reset_all();
+    // Ask hal/star_flow.cpp how wide its match-flow block is. Both sides derive
+    // the number from kPortMaxPlayers, so they can only disagree if one of them
+    // is edited alone -- and then the honest answer is to say so and not carry
+    // the block, never to copy more words than the slot has room for.
+    g_vs_end_ok = port_vs_end_state_words() == (int)kVsEndWords;
+    if (!g_vs_end_ok)
+        fprintf(stderr, "[rollback] hal/star_flow's match-end block is %d words "
+                "and a slot carries %d: the match flow is NOT carried in this "
+                "process and a rewind over a match end will desync\n",
+                port_vs_end_state_words(), (int)kVsEndWords);
     g_ring_ready = true;
     fprintf(stderr, "[rollback] ring: %d slots x (arena %zu + dsstate %zu) + "
             "hw stores %u bytes in %d regions (%s), %.1f MB preallocated\n",
@@ -497,6 +546,7 @@ int snapshot(unsigned tag, int frame)
     port_comms_counters_get(&s.exchanges, &s.rounds);
     s.dh_frame = port_dh_frame_get();
     port_luigi_state_get(s.li_team, &s.li_seeded);
+    if (g_vs_end_ok) port_vs_end_state_get(s.vs_end);
     memcpy(s.arena, port_arena_base(), g_arena_size);
     memcpy(s.ds, &dsstate_lo, g_ds_size);
     s.cursor = port_arena_cursor();
@@ -519,6 +569,7 @@ bool restore(unsigned tag)
     port_comms_counters_set(s->exchanges, s->rounds);
     port_dh_frame_set(s->dh_frame);
     port_luigi_state_set(s->li_team, s->li_seeded);
+    if (g_vs_end_ok) port_vs_end_state_set(s->vs_end);
     hw_restore_to(tag, *s);
     sd_consumer_reset();
     sd_sdat_reseat();
@@ -528,12 +579,38 @@ bool restore(unsigned tag)
     return true;
 }
 
-void hash_world(uint64_t out[3])
+// out[3] IS THE HOST WORDS THE SLOT CARRIES, and it is here because the DET
+// rung could not see them. The three regions are the whole world as far as the
+// game's own memory goes, so a match-end latch left standing across a rewind --
+// the defect this lane fixes -- came back IDENTICAL on every one of them while
+// two consoles were in fact in different matches. Hashing the carried words
+// makes that class VISIBLE to the rung instead of invisible to it.
+//
+// The seam's counters and the divergence detector's clock are NOT in this hash
+// even though the slot carries them: they follow packet timing rather than the
+// simulation, they are the evidence a rewind is acting on rather than a product
+// of it, and a straight run and its re-run are not owed the same value. Only
+// the words that decide what the next frame DOES are hashed.
+uint64_t hash_host_words()
+{
+    int w[kVsEndWords] = {0};
+    int team[kPortMaxPlayers] = {0}, seeded = 0;
+    port_luigi_state_get(team, &seeded);
+    uint64_t h = hash_bytes(team, sizeof team) ^ (hash_bytes(&seeded, sizeof seeded) * 3);
+    if (g_vs_end_ok) {
+        port_vs_end_state_get(w);
+        h ^= hash_bytes(w, sizeof w) * 5;
+    }
+    return h;
+}
+
+void hash_world(uint64_t out[4])
 {
     out[0] = hash_bytes(port_arena_base(), g_arena_size);
     out[1] = hash_bytes(&dsstate_lo, g_ds_size);
     out[2] = 0;
     for (int r = 0; r < g_hw_n; ++r) out[2] ^= hash_bytes(g_hw[r].base, g_hw[r].size) * (r + 1);
+    out[3] = hash_host_words();
 }
 
 void keep_world(char **a, char **d, char **h)
@@ -627,6 +704,7 @@ bool in_sound_queue(const char *p)
         { data_020a6490, 16 }, { data_020a6494, 16 }, { data_020a6498, 16 },
         { data_020a649c, 16 }, { data_020a64a0, 16 }, { data_020a64a4, 16 },
         { data_020a64a8, 16 * sizeof(void *) }, { data_020a6760, 256 * 0x18 },
+        { data_020a64e0, 0x280 },
         { data_020a50ec, 0x440 },
         // The ARM9's voice lists and nodes (DET on VS map 3, the arena with
         // an ambient voice sounding through the window): a voice the ARM7
@@ -643,10 +721,62 @@ bool in_sound_queue(const char *p)
     return false;
 }
 
+// THE RADIO'S COMMAND QUEUE, AND WHY IT IS EXCLUDED (run link100, lane DET).
+//
+// data_020a89b0 is src/func_02058940's twenty-byte queue struct and
+// data_020a89c4 is its ten-slot ring; src/func_020616e8.c:76-84 builds them and
+// hands the ring the ten 0x100 command buffers at data_020a8a40. WM_SendCommand
+// takes one buffer off the ring, fills it, sends it down PXI channel 0xa and
+// puts it back, so the struct's read cursor at +0xc steps once per command the
+// ARM7 is asked to run.
+//
+// WHY A RE-SIMULATED FRAME CANNOT REPRODUCE IT. Commands are not all sent by
+// the game: the WM protocol sends the NEXT command from inside the REPLY to the
+// last one (hal/wm_arm7.cpp's first law says so, and it is why the host ARM7
+// queues replies instead of posting them on the store), so the count of
+// commands over a span of frames is a count of RADIO ROUND TRIPS. Those happen
+// once, in real time, when the frame is first played. A frame the window
+// re-runs to fold in a corrected input serves its comms out of this file's own
+// record and takes no round trip at all -- and it must not take one: re-driving
+// the radio inside a replay is host I/O inside the simulation, which is exactly
+// what the pump suspension at tests/walk_window.cpp's phase 7 stops.
+//
+// WHY EXCLUDING IT IS SAFE RATHER THAN CONVENIENT. The ten slots are
+// interchangeable scratch: every buffer is written in full before it is sent
+// and nothing in the game ever reads one back as state. The measurement agrees
+// -- the 2560 bytes of command buffers at data_020a8a40 are inside .dsstate,
+// were NOT excluded, and came back byte-identical on every window of every DET
+// repetition; the only byte that moved was the cursor saying which slot is
+// next. So a rotated ring is the same ring, and the world the game computes
+// from does not depend on which one of ten equal buffers the next command lands
+// in.
+//
+// This is the same class hash_host_words already excludes in writing -- the
+// seam's counters and the divergence detector's clock, which follow packet
+// timing rather than the simulation -- and the same class in_sound_queue
+// excludes for the ARM7's audio. It is deliberately NARROW: the struct's queue
+// bookkeeping and its slot ring, nothing else. The two thread-queue halfwords
+// at +0 and +2 are NOT excluded, because a thread left blocked on this queue
+// across a rewind would be a real defect and this rung should still say so.
+bool in_radio_queue(const char *p)
+{
+    struct Span { const void *base; size_t n; };
+    static const Span spans[] = {
+        { data_020a89b0 + 0xc, 8 },       // firstIndex and usedCount
+        { data_020a89c4, 40 },            // the ten slots the ring rotates
+    };
+    for (size_t i = 0; i < sizeof spans / sizeof spans[0]; ++i) {
+        const char *b = (const char *)spans[i].base;
+        if (p >= b && p < b + spans[i].n) return true;
+    }
+    return false;
+}
+
 // `unexplained`, when given, counts the differing bytes that are NOT in the
-// sound command queue (used for the .dsstate region only).
+// sound command queue and NOT in the radio's command queue (used for the
+// .dsstate region only). `radio`, when given, counts the radio queue's own.
 size_t diff_region(const char *name, const char *want, const char *got, size_t n,
-                   size_t *unexplained = 0)
+                   size_t *unexplained = 0, size_t *radio = 0)
 {
     size_t differing = 0, ranges = 0, i = 0, first = (size_t)-1;
     while (i < n) {
@@ -654,27 +784,48 @@ size_t diff_region(const char *name, const char *want, const char *got, size_t n
         size_t j = i;
         while (j < n && want[j] != got[j]) ++j;
         differing += j - i;
-        size_t outside = 0;
+        size_t outside = 0, inradio = 0;
         if (unexplained)
-            for (size_t q = i; q < j; ++q)
-                if (!in_sound_queue(got + q)) { ++*unexplained; ++outside; }
+            for (size_t q = i; q < j; ++q) {
+                if (in_sound_queue(got + q)) continue;
+                if (in_radio_queue(got + q)) { ++inradio; if (radio) ++*radio; continue; }
+                ++*unexplained; ++outside;
+            }
         if (first == (size_t)-1) first = i;
-        // the first 8 ranges, and EVERY range with a byte outside the sound
-        // queue (those are the verdict; the queue's own are the noise)
-        if (ranges < 8 || outside)
+        // the first 8 ranges, and EVERY range with a byte outside both device
+        // queues (those are the verdict; the queues' own are the noise)
+        if (ranges < 8 || outside || inradio)
             fprintf(stderr, "[rb-det]     %s diff at +0x%zx len %zu: was %02x %02x %02x %02x"
                     " now %02x %02x %02x %02x%s\n", name, i, j - i,
                     (unsigned char)want[i], (unsigned char)want[i + 1],
                     (unsigned char)want[i + 2], (unsigned char)want[i + 3],
                     (unsigned char)got[i], (unsigned char)got[i + 1],
                     (unsigned char)got[i + 2], (unsigned char)got[i + 3],
-                    outside ? "  <-- OUTSIDE the sound command queue" : "");
+                    outside ? "  <-- OUTSIDE the sound command queue"
+                            : inradio ? "  <-- the radio's command queue (excluded, see in_radio_queue)"
+                                      : "");
         if (ranges < 8 && name[0] == 'a') { name_arena_addr(i); name_word(want, got, i, n); }
         ++ranges;
         i = j;
     }
     fprintf(stderr, "[rb-det]   %s: %zu differing bytes in %zu ranges\n", name, differing, ranges);
     return differing;
+}
+
+// THE ROM'S FRAME-LOOP WORDS, SAID OUT LOUD AT BOTH DET HASH POINTS (run
+// link100, lane DET). The rung used to report a .dsstate byte offset and leave
+// the reader to resolve it against walk_window.map; these are the four words
+// that actually moved, printed by name on both sides of the rollback so a run's
+// own log says whether the frame ended on the ROM's wake (queue 0, count 0) or
+// on this port's starvation bound (queue still holding the sleeper's bit).
+void det_frame_words(const char *when)
+{
+    fprintf(stderr, "[rb-det] %s frame-loop words: data_0209d500(sleep queue)="
+            "%u data_0209d514(vblank count)=%d data_0209d4f0(wait flag)=%u "
+            "data_0208ee44(divider)=%d data_020a89b0+0xc(WM queue cursor)=%d\n",
+            when, (unsigned)data_0209d500[0], data_0209d514,
+            (unsigned)data_0209d4f0[0], data_0208ee44,
+            *(const int *)(data_020a89b0 + 0xc));
 }
 
 void report()
@@ -966,36 +1117,57 @@ static void rb_frame_end_body(int *frame, int selftest)
     if (g_replaying && !port::comms_rb_replaying()) {
         end_replay();
         if (g_det_phase == 2 && *frame == g_det_frame + g_det_n) {
-            uint64_t h[3];
+            uint64_t h[4];
             hash_world(h);
+            const bool host_same = h[3] == g_det_straight[3];
             const bool same = h[0] == g_det_straight[0] && h[1] == g_det_straight[1] &&
-                              h[2] == g_det_straight[2];
+                              h[2] == g_det_straight[2] && host_same;
             fprintf(stderr, "[rb-det] f%d re-run: arena %016llx dsstate %016llx hw "
-                    "%016llx -> %s\n", *frame, (unsigned long long)h[0],
+                    "%016llx host %016llx -> %s\n", *frame, (unsigned long long)h[0],
                     (unsigned long long)h[1], (unsigned long long)h[2],
+                    (unsigned long long)h[3],
                     same ? "BYTE-IDENTICAL to the straight run" : "DIVERGED");
+            det_frame_words("re-run");
             if (!same) {
                 char *hw = g_hw_n ? big_alloc(port_hw_regions_size()) : 0;
                 if (hw) port_hw_regions_copy_out(hw);
-                size_t da = 0, dd = 0, dh = 0, dx = 0;
+                size_t da = 0, dd = 0, dh = 0, dx = 0, dr = 0;
                 if (h[0] != g_det_straight[0])
                     da = diff_region("arena", g_det_arena, (const char *)port_arena_base(), g_arena_size);
                 if (h[1] != g_det_straight[1])
-                    dd = diff_region("dsstate", g_det_ds, &dsstate_lo, g_ds_size, &dx);
+                    dd = diff_region("dsstate", g_det_ds, &dsstate_lo, g_ds_size, &dx, &dr);
                 if (h[2] != g_det_straight[2] && hw)
                     dh = diff_region("hw", g_det_hw, hw, port_hw_regions_size());
                 fprintf(stderr, "[rb-det] arena %zu bytes, dsstate %zu bytes (%zu outside the "
-                        "sound command queue), hw %zu bytes differ\n", da, dd, dx, dh);
+                        "sound command queue and the radio's, %zu in the radio's), hw %zu "
+                        "bytes differ; the carried host words %s\n", da, dd, dx, dr, dh,
+                        host_same ? "came back identical" : "DID NOT COME BACK");
                 // The verdict the rig reads. IDENTICAL-EXCEPT-SOUNDQUEUE is
                 // the pass: the game's world came back byte-for-byte and only
                 // the re-seeded audio queue moved (see in_sound_queue).
-                printf("rb-det: %s arena=%zu dsstate=%zu hw=%zu soundqueue=%zu\n",
-                       (da == 0 && dh == 0 && dx == 0) ? "IDENTICAL-EXCEPT-SOUNDQUEUE"
-                       : (da == 0 && dh == 0) ? "DSSTATE-DIFFERS" : "DIVERGED",
-                       da, dd, dh, dd - dx);
+                // IDENTICAL-EXCEPT-DEVICE-QUEUES is the same pass with the
+                // RADIO's command queue moving as well (in_radio_queue, run
+                // link100 lane DET): it is spelled apart from the sound-only
+                // verdict so a log still says which device moved, and it starts
+                // with IDENTICAL because it is a pass, which is what
+                // port/tools/rollback_proof.py's DET rung reads.
+                // HOST-STATICS-DIFFER is its own verdict rather than a flavour
+                // of DIVERGED, because the three regions coming back clean while
+                // a carried host word did not is EXACTLY the defect lane RBFIX
+                // fixed, and a future one should be told apart from an arena
+                // divergence on sight.
+                printf("rb-det: %s arena=%zu dsstate=%zu hw=%zu soundqueue=%zu "
+                       "radioqueue=%zu host=%d\n",
+                       !host_same ? "HOST-STATICS-DIFFER"
+                       : (da || dh || dx) ? ((da == 0 && dh == 0) ? "DSSTATE-DIFFERS" : "DIVERGED")
+                       : dr ? "IDENTICAL-EXCEPT-DEVICE-QUEUES"
+                            : "IDENTICAL-EXCEPT-SOUNDQUEUE",
+                       da, dd, dh, dd - dx - dr, dr, host_same ? 0 : 1);
             } else {
-                fprintf(stderr, "[rb-det] arena 0 bytes, dsstate 0 bytes, hw 0 bytes differ\n");
-                printf("rb-det: IDENTICAL arena=0 dsstate=0 hw=0\n");
+                fprintf(stderr, "[rb-det] arena 0 bytes, dsstate 0 bytes, hw 0 bytes "
+                        "differ, and the carried host words came back identical\n");
+                printf("rb-det: IDENTICAL arena=0 dsstate=0 hw=0 soundqueue=0 "
+                       "radioqueue=0 host=0\n");
             }
             g_det_phase = 3;
         }
@@ -1018,6 +1190,7 @@ static void rb_frame_end_body(int *frame, int selftest)
                     (unsigned long long)g_det_straight[0],
                     (unsigned long long)g_det_straight[1],
                     (unsigned long long)g_det_straight[2], g_det_tag, tag - g_det_tag);
+            det_frame_words("straight run");
             if (rollback_to(g_det_tag, frame, tag, true)) g_det_phase = 2;
             else { fprintf(stderr, "[rb-det] rollback refused; check off\n"); g_det_phase = 3; }
             return;

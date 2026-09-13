@@ -124,6 +124,26 @@ FRAMES_RE = re.compile(r"selftest: (\d+) frames")
 # life of this port until src/IPCSend.c was hostgen'd -- its store to
 # IPCFIFOSEND latched in ntr's mapped I/O window. See GATE2IPC_SYMS.
 EXIT_RE = re.compile(r"\[ipc:exit\] sync=\w+ steps=\d+ reads=\d+ send=(\d+)")
+# THE RADIO'S THREE NUMBERS (run link100, lane WM3, rung W4). hal/wm_arm7.cpp is
+# the host ARM7's WM driver: the ROM's own become-parent and become-child bodies
+# are linked now and they send commands on PXI channel 0xa. Commands received,
+# replies posted, replies the ROM's own dispatcher consumed -- and the three
+# must agree, because a gap between the first two is a command the stub
+# swallowed and a gap between the last two is the nested-dispatch drop that
+# file's law 1 exists to prevent.
+WM_CENSUS_RE = re.compile(
+    r"\[wm7:census\] commands (\d+), replies posted (\d+), replies dispatched "
+    r"(\d+), unanswered (\d+)")
+
+# Gate A: the association line the same census prints (run link100, lane WM4).
+# Gate B: the MP receive line, from the same census (run link100, lane WM4).
+WM_MPRECV_RE = re.compile(
+    r"\[wm7:census\] mp receive: (\d+) round\(s\) published, last mask "
+    r"0x([0-9a-f]+), (\d+) slot\(s\) at peak, stride (\d+), wide buffer (ARMED|not needed)")
+
+WM_ASSOC_RE = re.compile(
+    r"\[wm7:census\] association 0x([0-9a-f]+) \(peak 0x([0-9a-f]+), (\d+) "
+    r"change\(s\)\), status \+0x86 (\d+), \+0x17e (\d+)")
 
 
 def rung1(out_dir, frames):
@@ -157,6 +177,51 @@ def rung1(out_dir, frames):
           "the channel-7 sound-command path is among them: the host ARM7 saw "
           "src/func_0205b070.c's per-frame poke and declined it, so "
           "hal/sdat/consumer.cpp still owns the batch")
+    # THE RADIO'S THREE NUMBERS. R1 IS A SOLO BOOT, so the honest reading here
+    # is ZERO on all of them: the role byte data_020a0f04 never leaves 0, so
+    # src/func_0203df40.c takes its solo arm, neither src/func_02040820.c nor
+    # src/func_02040790.c is ever called, and nothing is asked of the radio. The
+    # NONZERO half of the same measurement belongs to a loopback pair, which
+    # this proof does not launch; the lane report carries that capture beside
+    # this one. Checking that the line is PRESENT and reads zero is what makes
+    # the zero a measurement rather than an absence of output.
+    wm = WM_CENSUS_RE.search(txt)
+    check("R1", wm is not None,
+          "the host ARM7's WM driver reported its census (hal/wm_arm7.cpp)")
+    if wm:
+        cmds, posted, disp, unans = (int(wm.group(i)) for i in (1, 2, 3, 4))
+        check("R1", cmds == 0 and posted == 0 and disp == 0 and unans == 0,
+              "a SOLO boot asked the radio nothing: %d command(s), %d reply(ies) "
+              "posted, %d dispatched, %d unanswered" % (cmds, posted, disp, unans))
+    # GATE A's HALF OF THE SAME MEASUREMENT (run link100, lane WM4). The
+    # association bitmap is now written by the ARM7 from the transport, so a
+    # solo run owes the zero: no transport, no children, and the two status
+    # fields src/func_02062428.c and src/func_020627e8.c read stay at 0. The
+    # NONZERO half is a loopback pair and lives in the lane report's capture.
+    am = WM_ASSOC_RE.search(txt)
+    check("R1", am is not None,
+          "the host ARM7 reported its association census (gate A)")
+    if am:
+        assoc, peak, ev, f86, f17e = (int(am.group(i)) for i in (1, 2, 3, 4, 5))
+        check("R1", assoc == 0 and peak == 0 and ev == 0 and f86 == 0 and f17e == 0,
+              "a SOLO boot has no association: bitmap 0x%04x (peak 0x%04x, %d "
+              "change(s)), status +0x86 %d, +0x17e %d" %
+              (assoc, peak, ev, f86, f17e))
+    # AND GATE B's, same shape. A solo run completes no round, so the ROM's own
+    # MP receive buffer is never published into and the port's wider buffer is
+    # never armed. The nonzero half is the loopback capture in the lane report.
+    mm = WM_MPRECV_RE.search(txt)
+    check("R1", mm is not None,
+          "the host ARM7 reported its MP receive census (gate B)")
+    if mm:
+        rounds, lastmask, peak, stride, wide = (mm.group(i) for i in range(1, 6))
+        check("R1", rounds == "0" and peak == "0" and wide == "not needed",
+              "a SOLO boot publishes no MP round: %s round(s), last mask 0x%s, "
+              "%s slot(s) at peak, stride %s, wide buffer %s" %
+              (rounds, lastmask, peak, stride, wide))
+    check("R1", "[arm7:census] tag 10" not in txt,
+          "and not one word reached tag 10 in a solo run, which is the same "
+          "measurement rung W1 was gated on")
     fm = FRAMES_RE.search(txt)
     check("R1", fm is not None and int(fm.group(1)) >= frames,
           "the boot proceeded %s frames" % (fm.group(1) if fm else "0"))

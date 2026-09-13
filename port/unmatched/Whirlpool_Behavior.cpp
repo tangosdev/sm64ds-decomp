@@ -44,50 +44,12 @@ void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
 void _ZN9Animation7AdvanceEv(void *thiz);
 void func_ov026_02111f30(char *c);
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately
-   incomplete class (the SoundObject/Cap/MrBlizzard/BabyPenguin-state
-   treatment); MSVC's PMF representation there does not reproduce the ROM's
-   {function,adjustment} pair. */
-int _ZN9Submarine8BehaviorEv(void *selfv)
-{
-    Submarine *self = (Submarine *)selfv;
-    char *c = (char *)selfv;
-    volatile int v[3];
-    int x, y, z;
-
-    DecIfAbove0_Short((unsigned short *)&self->unk_100);
-
-    /* the state tick: `((C *)this->**pp)()` over the cell's +8 record */
-    {
-        PortOv026Cell *cell = *(PortOv026Cell **)(c + 0x110);
-        if (cell->tick_fn != 0)
-            ((PortOv026Fn)(size_t)cell->tick_fn)(c);
-    }
-
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-
-    x = self->mPosX;
-    v[0] = x;
-    y = self->mPosY;
-    v[1] = y;
-    z = self->mPosZ;
-    v[2] = z;
-    y += 0x384000;
-    v[1] = y;
-
-    *(void **)&self->unk_1b8 =
-        _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-            *(volatile unsigned int *)&self->unk_1b8, 0x139,
-            v[0], v[1], z, 0, 0);
-
-    self->mAngleX = self->mPrevAngleX;
-    self->mAngleY = self->mPrevAngleY;
-    self->mAngleZ = self->mPrevAngleZ;
-
-    func_ov026_02111f30(c);
-    _ZN9Animation7AdvanceEv(&self->mTextureTransformer);
-    _ZN9Animation7AdvanceEv(&self->mAnimation);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN9Submarine8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 }

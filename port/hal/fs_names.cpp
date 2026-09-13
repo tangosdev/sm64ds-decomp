@@ -153,6 +153,13 @@ int  func_0205cb68(int *archive, int base, int fat, int fat_size,
 void func_0205d89c(int dma);                             /* the once-guard    */
 int  func_0205db24(void);                                /* the write stub    */
 
+/* ---- hal/nitrofs_boot.cpp -------------------------------------------------
+   The cartridge-header mirror at 0x027FFE40, and the read-back that proves the
+   ROM's own FS_Init went through it. Both are called from this file's static
+   initialiser, in that order, around the once-guard. */
+void port_nitrofs_header_mirror_seed(void);
+void port_nitrofs_boot_report(void);
+
 /* ---- hal/fs.cpp's read-only catalog accessor ------------------------------
    The one thing this seam borrows from the id-based one, and it is borrowed
    rather than copied ON PURPOSE. A second catalog reader in this file could
@@ -512,13 +519,40 @@ void port_nitrofs_fs_init(void *dma)
                   (int)(size_t)&func_0205db24);
 }
 
-/* The face src/func_0205d89c.c calls. Named for the ROM function it replaces
-   so the once-guard's own body needs no edit. */
-// PORT_HOST_ABI: src reads the DS cartridge-header mirror at 0x027FFE40 and
-// 0x027FFE48 and calls func_02057020, which reads 0x027FFFB0; both pages are
-// unmapped in the port. Same four words, taken from the cartridge by
-// tools/asset_catalog.py, and then the ROM's own registration calls verbatim.
-void func_0205d96c(void *dma) { port_nitrofs_fs_init(dma); }
+/* THE ROM-NAMED WRAPPER MOVED, and on the two window targets it is gone.
+   Run link100, lane NITROFS. The claim this file made -- "both pages are
+   unmapped in the port" -- was false, and had been since ntr/io.cpp made
+   SHARED_BASE a fatal region: 0x027FFE40, 0x027FFE48 and 0x027FFFB0 all sit
+   inside 0x027ff000 + 0x1000, and hal/os_lockid.cpp has been writing the last
+   of them for as long as this file claimed it could not. The mirror was
+   MAPPED AND NEVER WRITTEN. hal/nitrofs_boot.cpp writes the four
+   cartridge-header words into it, out of the same catalog this file reads,
+   and walk_window and walk_window_hires now run the cartridge's own
+   func_0205d96c from port/slice_nitrofs.txt. The once-guard's argument is
+   unchanged and the derivation above still stands.
+
+   smoke_player does not carry hal/boot_hw.cpp, so it cannot carry the OS lock
+   family the matched archive proc reaches; it keeps the face, alone, in
+   hal/nitrofs_face.cpp. port_nitrofs_fs_init above is still the body behind
+   that face, unchanged; on the window targets nothing references it and
+   /OPT:REF drops it. */
+
+/* ---- the four cartridge-header words, for hal/nitrofs_boot.cpp ------------
+   ONE READER. This file already parses build/assets/nitrofs.tsv, refuses
+   loudly when it is missing, and serves the ROM's own FNT and FAT walker out
+   of the two blobs beside it. The mirror seed asks it for the same four
+   values rather than opening the file a second time, so the bytes the ROM
+   reads at 0x027FFE40 and the bytes the read function serves cannot drift
+   apart across a regeneration. */
+void port_nitrofs_header_words(u32 *fnt_off, u32 *fnt_size,
+                               u32 *fat_off, u32 *fat_size)
+{
+    tables_load();
+    *fnt_off = g_tables.fnt_off;
+    *fnt_size = g_tables.fnt_size;
+    *fat_off = g_tables.fat_off;
+    *fat_size = g_tables.fat_size;
+}
 
 /* ---- FACE: func_02018e3c, and it is an ABI face, not a hardware one -------
    PORT_HOST_ABI: a RIDE-THROUGH. The ROM body is five instructions,
@@ -634,7 +668,16 @@ struct NitroFsNamesBoot {
     NitroFsNamesBoot()
     {
         const char *probe;
+        /* THE MIRROR FIRST, AND FROM HERE RATHER THAN FROM ITS OWN STATIC
+           INITIALISER. The cartridge-header words have to be in place before
+           the ROM's FS_Init reads them, and C++ says nothing about the order
+           of two translation units' initialisers -- so the seed is an ordinary
+           call from this one, two lines above the body that needs it. The
+           read-back after the guard is the proof that the ROM's own
+           func_0205cb68 laid them into the archive record. */
+        port_nitrofs_header_mirror_seed();
         func_0205d89c(-1);
+        port_nitrofs_boot_report();
         /* SM64DS_NFS_PROBE=1 runs the cross-seam check at boot instead of
            waiting for a caller. It exists because the useful comparison is
            between THIS path and the game's, and the game's dies later in the

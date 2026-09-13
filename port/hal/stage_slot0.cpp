@@ -22,21 +22,33 @@
 // new here; what is new is that Stage::InitResources now calls them by name.
 //
 // PORT_HOST_ABI: UnloadArchive releases a NARC the DS card loader mounted, and
-// the host has no mount to release. hal/scene_boot.cpp's LoadArchive face
-// records the whole trade in full: hal/fs.cpp resolves archive-interior file
-// ids (>= 0x8000) LAZILY out of port_archive_map, so on the host an archive is
-// never "mounted" and never "not mounted" -- the id resolves either way.
-// LoadArchive's host body therefore answers "is archive N available" with 1
-// for every archive in the table, and the symmetric answer for UnloadArchive
-// is to do nothing. It returns void in the ROM and has no out-parameter, so
-// there is no observable to reproduce.
+// the port's mount is not the DS's to release.
+//   THIS NOTE WAS REWRITTEN BY run link100, lane CARDFS, AND HALF OF WHAT IT
+// USED TO SAY IS NO LONGER TRUE. It used to rest on hal/scene_boot.cpp's
+// LoadArchive face and on "data_0208ecf4 hosted as raw ROM bytes with its DS
+// string pointers" being the unaffordable half of the alternative. Both have
+// moved: the face is retired, hal/card_mount.cpp hosts data_0208ecf4 at its
+// ROM span, and src/LoadArchive.c -- the matched TU -- is what answers the
+// mount call now, reading residency out of the real table.
+//   THE UNMOUNT STILL CANNOT TAKE THE ROM'S BODY, and the reason is specific
+// rather than general. src/UnloadArchive.c is `func_02018908(p->a, p->b)`
+// followed by zeroing both words, and func_02018908 is
+// `func_0204ee10(self); Heap::_Deallocate(heap, self)` -- it frees the archive
+// object back to the heap word at +0x04. On the host that word is zero and
+// stays zero: the mounted object is static storage in hal/card_mount.cpp, it
+// never came off the game heap, and the ROM only ever writes +0x04 on its way
+// into the mount branch, which the port does not take. So the ROM's body would
+// hand Heap::_Deallocate a null heap and free storage the heap never owned.
+//   That is the whole blocker, and it is one word, not a chain: an unmount
+// becomes takeable at the same moment the mount does, when the entry's two DS
+// string pointers are hosted (twenty-six rows in port/tools/romdata.py's NAMED
+// list, see hal/card_mount.cpp) and the archive comes off the ROM's own heap
+// through func_02018934 the way the DS gets it. Until then the face is empty.
 //   Stage::InitResources calls it in two places: the 2..5 sweep that drops
 // every level-specific archive except the one this level wants, and the tail
 // release when func_0203da3c() != 2. Both are heap hygiene on a heap the port
-// does not fill this way.
-//   The alternative is src/UnloadArchive.c, which wants func_02018908 and the
-// DS card overlay chain under it plus data_0208ecf4 hosted as raw ROM bytes
-// with its DS string pointers. Eleven TUs to undo a mount that never happened.
+// does not fill this way, and the port holds all thirteen archives for the
+// life of the process either way (1,035,956 bytes, measured).
 //
 // PORT_HOST_ABI: LoadLevelOverlays / UnloadLevelOverlays load and unload the
 // per-level DS overlay, and the port has no overlay loader at all. Every
@@ -72,7 +84,34 @@
 
 extern "C" {
 
-// PORT_HOST_ABI: releases a NARC the DS card loader mounted; the host has no mount to release (hal/fs.cpp resolves archive ids lazily, so an archive is never mounted).
+/* PORT_HOST_ABI: releases a NARC the DS card loader mounted back to the DS
+   heap; the host's mount is static storage in hal/card_mount.cpp and never came
+   off that heap (the note at the head of this file has the whole of it).
+
+   RULED AGAIN, run link100 lane CARDFS2, because the reason it used to rest on
+   has moved. The mount table is hosted now (lane CARDFS) and so are its two DS
+   strings (this lane), so "the table is not hosted" is no longer available as
+   an answer. Two things are, and both are about running, not about linking:
+
+     THE FREE IS WRONG. src/UnloadArchive.c is
+     `if (e->f0) { func_02018908(e->f0, e->f4); e->f0 = 0; e->f4 = 0; }`. On
+     this host e->f0 is hal/card_mount.cpp's static g_mount_obj[i] and e->f4 is
+     zero -- the residency publish never writes a heap word, which is exactly
+     what that file's audit line proves. So the ROM's body would hand static
+     host storage to a null heap, and then zero the residency word that keeps
+     src/LoadArchive.c out of its mount branch. The next LoadArchive would take
+     that branch, which hal/card_mount.cpp's "THE MOUNT BRANCH" section says
+     cannot run.
+
+     AND ITS ONE ARM9 CALLER RIDES A REGISTER. src/func_02018770.c -- linked,
+     and called by src/func_0201834c.c on every card read -- declares
+     `extern void UnloadArchive(void)` and calls it with no argument at all; the
+     ARM original leaves the archive index from data_0208eb54 in r0. Seating the
+     one-argument body would give that call site whatever cdecl left, and index
+     a thirteen-entry table with it.
+
+   Takeable when the mount is heap-shaped AND that arity is fixed, not before.
+   Neither is a decomp gap: both are host-ABI. */
 void UnloadArchive(int)             {}
 
 }  /* extern "C" */

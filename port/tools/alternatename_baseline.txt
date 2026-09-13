@@ -13,7 +13,7 @@
 #     LoadFile forwarder shape; MemoryLeft, FindWithID, Enable): references
 #     bind to the face, the face forwards to the body.
 #   * data bridges whose LHS became hosted after the alias landed
-#     (data_ov021_021149c0, EnemyC2).
+#     (data_ov021_021149c0).
 #
 # RATCHET TURNED, run linkw wave 6 close: _data_0209f2d8=_data_0209f2d8_c is
 # GONE. Lane w6-C's hostgen work (ROLE_DATA / ASM_EXCISION, item 3) stopped that
@@ -21,6 +21,14 @@
 # defeated, and the pair was removed BY HAND -- one line, the confirmed
 # tightening -- rather than by a blanket --update, so nothing else in this
 # reviewed set moved with it.
+#
+# RATCHET TURNED AGAIN, run link100 (Andrew's third review of PR #2474):
+# __ZN5EnemyC2Ev=_func_ov002_020aed98 is GONE. That pragma was not a fallback
+# with a live reader at all -- its RHS had no definition anywhere in the tree,
+# and its LHS is published by src/_ZN5EnemyC2Ev.cpp.obj, so the directive could
+# never fire. The pragma was deleted in hal/cxx_aliases.cpp (the evidence is at
+# that line) and this row followed it BY HAND, one line, so the list stays
+# exactly the set of pairs that are still defeated. 23 pairs to 22.
 #
 # GROWTH, run link60 Stage 4: _port_crash_dir_get=_port_crash_dir_get_stub and
 # _port_rich_dump_ex=_port_rich_dump_ex_stub were ADDED. They are not new debt.
@@ -90,7 +98,6 @@
 __ZN11ShadowModelD1Ev=_hal_shadow_d1_fallback
 __ZN4Heap8AllocateEj=_hal_heap_allocate_align4
 __ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j=_hal_dropshadow_scalexyz_fallback
-__ZN5EnemyC2Ev=_func_ov002_020aed98
 __ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_=_port_l7_particle_newsimple_stub
 _data_0209f250=_port_fault_no_pidx
 _data_0209f2f8=_port_fault_no_level

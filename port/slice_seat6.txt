@@ -1,0 +1,352 @@
+# LANE SEAT6 (run link100, wave 7): BATCH B6, SLOT-DISPATCH.
+#
+# out/REMAIN2/BATCHES.md section B6: the residue of exception families E
+# (vtable slot / virtual-shadow dispatch) and F (calling-convention face) that
+# lanes SLOT5F and FACEF left standing, eighteen rows, one derivation each.
+# FACEF's own verdicts.md listed fourteen of them under NOT TAKEN with a
+# measured second reason; this lane re-read every one of those reasons against
+# the ROM and against the tree as it stands today, and seventeen of them fall
+# to ONE recipe FACEF did not have in hand: the respelling lives at the CALL
+# SITE, in port/tools/hostgen.py's exact-string tables, not in a vtable word
+# and not in a face.
+#
+# WHY THAT IS THE ANSWER AND A FACE IS NOT. FACEF's refusal for the three
+# ov002 dispatchers reads "a face cannot make one vtable word two conventions",
+# and that is true. What it settles is that the SEATS cannot move -- thirty
+# classes fill slots 23/24/28 with __fastcall ret-4 veneers and dozens of other
+# matched TUs already dispatch them __thiscall. It does not settle where the
+# ONE disagreeing call site has to be spelled. lane FOLD2 had already shipped
+# exactly that fix for dScMgSnowball_c (hostgen VIRTUAL_CALL row
+# func_ov006_02127d10, "one VIRTUAL_CALL row in port/tools/hostgen.py away"),
+# and every host copy this lane retires ALREADY makes the same one-line change
+# by hand -- it just makes it in a transcribed copy of the body instead of in
+# the byte-locked source's own generated TU. So the change to what runs is
+# NIL; what changes is that the matched TU is the thing compiled.
+#
+# THE DERIVATION IS PER ROW AND IT IS FROM THE ROM. For every row below:
+#   the REFERRER is the class's own vtable word read out of the RAW overlay
+#     image at that overlay's .text base (config/arm9/overlays/ovNNN/
+#     delinks.txt line 1), with the RTTI name string reached through the
+#     typeinfo record at vtable-4 so the table is identified by what the ROM
+#     calls it and not by a filename, or the arm_call / load row in that
+#     module's relocs.txt;
+#   the RECORD is the kind:function(arm,size=..) line at the destination in
+#     that module's symbols.txt;
+#   the DISPATCH is the ROM's own instruction sequence at the matched TU's
+#     call site, read out of the same image at its own address.
+# Verified by ADDRESS, never by filename. Every row below agreed.
+#
+# WHAT THIS FILE CARRIES. Only the three rows that need NO respelling at all --
+# they are already correct C++ and were held out by a missing symbol, not by a
+# convention. The other fourteen are generated TUs and are listed in the
+# SEAT6_GEN_SYMS block in port/CMakeLists.txt instead, because a generated file
+# has no repo-relative path for this reader to name. The two lists together are
+# the seventeen rows.
+#
+# ONE ROW OF THE EIGHTEEN IS NOT TAKEN, with its reason, at the foot of this
+# file.
+#
+# ============================ THE THREE PLAIN ROWS =========================
+#
+# UnchainedChomp::InitResources (ov100) OK -- family F
+#   referrer  _ZTV14UnchainedChomp[0] @ 02148054 = 02144088   (overlay_0100.bin, base 02140d80)
+#             vtable-4 @ 02148050 -> typeinfo 02148014 -> name "11daWanwan2_c"
+#   record    _ZN14UnchainedChomp13InitResourcesEv kind:function(arm,size=0x24c) addr:0x02144088   (overlays/ov100/symbols.txt:47)
+#   entry     02144088  push {r4..r9,lr} / sub sp,#0x2c / mov r4,r0
+#             -- a real standalone entry, not an interior address
+#   dispatch  none. The TU's only host problem was a NAME: it declares a local
+#             `struct PathPtr { char pad[8]; PathPtr(); void FromID(unsigned);
+#             int NumNodes() const; void GetNode(Vector3&, unsigned) const; }`
+#             and calls those as __thiscall members, which MSVC decorates
+#             ??0PathPtr@@QAE@XZ / ?FromID@PathPtr@@QAEXI@Z /
+#             ?NumNodes@PathPtr@@QBEHXZ / ?GetNode@PathPtr@@QBEXAAUVector3@@I@Z.
+#             THREE OF THE FOUR ARE ALREADY PUBLICS OF walk_window.map
+#             (Klepto_PathPtrFaces.cpp gives the constructor and FromID,
+#             RacingPenguin_ShadowFaces.cpp gives GetNode); the fourth differs
+#             from the one method_faces.cpp:231 builds on only in its RETURN
+#             TYPE, `int` here against include/PathPtr.h's `unsigned int`
+#             (?NumNodes@PathPtr@@QBEIXZ), which MantaRay_HostSites.cpp's own
+#             banner names as the reason a header-built face cannot serve it.
+#   bridge    port/hal/dispatch_seat6.cpp, one real __thiscall forwarder onto
+#             the flat _ZNK7PathPtr8NumNodesEv -- never an /alternatename alias
+#             onto the cdecl body (the Klepto c0000005)
+#   retires   port/unmatched/UnchainedChomp_Behavior.cpp (InitResources body
+#             cut; its Spawn and Behavior bodies and the PMF seat all stay)
+src/_ZN14UnchainedChomp13InitResourcesEv.cpp
+#
+# MantaRay::InitResources (ov090) OK -- family F, the same missing decoration
+#   referrer  _ZTV8MantaRay[0] @ 0213423c = 02132e38   (overlay_0090.bin, base 02131ec0)
+#             vtable-4 @ 02134238 -> typeinfo 0213420c -> name "9daManta_c"
+#   record    _ZN8MantaRay13InitResourcesEv kind:function(arm,size=0x1b0) addr:0x02132e38   (overlays/ov090/symbols.txt:37)
+#   entry     02132e38  push {r4,lr} / sub sp,#0x28 / mov r4,r0
+#   dispatch  none -- the PathPtr decorations above, same four, same fix
+#   retires   port/unmatched/MantaRay_HostSites.cpp (InitResources body cut;
+#             its Render, its state setter and its Behavior stay, each with its
+#             own separate reason)
+src/_ZN8MantaRay13InitResourcesEv.cpp
+#
+# func_ov074_021222e0 (ov074) OK -- family E, and the reason is DEAD TWICE OVER
+#   referrer  config/arm9/overlays/ov074/relocs.txt
+#             from:0x02121b88 kind:arm_call to:0x021222e0 module:overlay(74)
+#             (inside _ZN8Goomboss6RenderEv, the mParam == 0x1111 arm, which
+#              lane FACEF seated from src in the same wave)
+#   record    func_ov074_021222e0 kind:function(arm,size=0xdc) addr:0x021222e0   (overlays/ov074/symbols.txt:51)
+#   dispatch  02122388  add r0,r4,#0x210 / ldr r2,[r0] / mov r1,#0 /
+#                       ldr r2,[r2,#0x14] / blx r2
+#                       the ModelAnim at +0x210, byte +0x14 = ROM slot 5,
+#                       Render, null scale
+#   REASON 1 (the slot-5 numbering) died with lane SLOT5F: the matched TU's own
+#             six-virtual ROM-order shadow `((Obj210*)(c+0x210))->v5(0)` reaches
+#             index 5, and hal/cxxname_bridge.cpp:577 fills _ZTV9ModelAnim[5]
+#             with ma2_render. __thiscall with one stack argument against
+#             __fastcall(self, dead edx, scale) puts the receiver in ecx, the
+#             null in the stack slot Render reads, and both sides clean four
+#             bytes -- which is why FACEF could seat Goomboss::Render, whose
+#             dispatch is the same instruction, in this same wave.
+#   REASON 2 (the ov070/ov074 shared-load-window NAME RACE, hal/cxx_aliases.cpp)
+#             is already SPENT: port/CMakeLists.txt:12640 re-cuts it as a
+#             per-source COMPILE_DEFINITIONS on the AMP TU
+#             (func_ov074_021222e0=data_ov070_021222e0), so this name is free
+#             for the code it belongs to. The host copy has been DEFINING it
+#             all along, which is the proof that defining it here is no change.
+#   retires   port/unmatched/Goomboss_HostSites.cpp (its second body cut; the
+#             file's first body was already retired by lane FACEF, so the file
+#             becomes a documented empty TU)
+src/func_ov074_021222e0.cpp
+#
+# =================== THE FOURTEEN GENERATED ROWS ===========================
+#
+# These are in port/CMakeLists.txt's SEAT6_GEN_SYMS list, in this order. Every
+# patch is an EXACT-STRING row in port/tools/hostgen.py, which hard-errors if
+# the source ever moves rather than going quietly inert.
+#
+# --- VIRTUAL_CALL, eight rows: the raw vtable read respelled -----------------
+#
+# _ZN9RabbitKey6RenderEv (ov085)
+#   referrer  _ZTV9RabbitKey[9] @ 021301fc = 0212d39c   (overlay_0085.bin, base 02129020)
+#             vtable-4 @ 021301d4 -> typeinfo 02130194 -> name "15daObj_Mip_Key_c"
+#   record    _ZN9RabbitKey6RenderEv kind:function(arm,size=0x50) addr:0x0212d39c   (overlays/ov085/symbols.txt:84)
+#   dispatch  0212d3c8  add r0,r4,#0x110 / ldr r2,[r0] / mov r1,#0 /
+#                       ldr r2,[r2,#0x14] / blx r2       Model at +0x110, slot 5
+#   patch     the shadow's `void (*fn14)(void*, int)` call becomes a call
+#             through word 5 __fastcall, the shape mv_render is seated in
+#   retires   port/unmatched/Ov085_Renders.cpp (last body cut; the file becomes
+#             a documented empty TU, its two siblings retired by lane EXCEPT)
+#
+# func_ov002_020eeeb8 (ov002), Actor::OnKicked's dispatcher
+#   referrer  config/arm9/overlays/ov002/relocs.txt
+#             from:0x020d8bd8 kind:arm_call to:0x020eeeb8 module:overlay(2)
+#   record    func_ov002_020eeeb8 kind:function(arm,size=0x1b8) addr:0x020eeeb8   (overlays/ov002/symbols.txt:1188)
+#   dispatch  020ef018  ldr r2,[r0] / mov r1,r4 / ldr r2,[r2,#0x60] / blx r2
+#                       byte +0x60 = word 24, (this, other)
+#   patch     word 24 __fastcall, plus the quarantine net's receiver latch
+#             carried over from the host copy (a host seam, stated as one)
+#   retires   port/unmatched/Actor_OnKickedDispatch.cpp
+#
+# func_ov002_020ef070 (ov002), Actor::OnAttacked2's dispatcher
+#   referrer  from:0x020d8bc8 kind:arm_call to:0x020ef070 module:overlay(2)
+#   record    func_ov002_020ef070 kind:function(arm,size=0x1b8) addr:0x020ef070   (overlays/ov002/symbols.txt:1189)
+#   dispatch  020ef1d0  ldr r2,[r0] / mov r1,r4 / ldr r2,[r2,#0x5c] / blx r2
+#                       byte +0x5c = word 23
+#   retires   port/unmatched/Actor_OnAttacked2Dispatch.cpp
+#
+# func_ov002_020cef84 (ov002), Actor::OnHitFromUnderneath's dispatcher
+#   referrer  from:0x020c28f0 kind:arm_call to:0x020cef84 module:overlay(2)
+#   record    func_ov002_020cef84 kind:function(arm,size=0x288) addr:0x020cef84   (overlays/ov002/symbols.txt:724)
+#   dispatch  020cf1d0  ldr r2,[r0] / mov r1,r5 / ldr r2,[r2,#0x70] / blx r2
+#                       byte +0x70 = word 28
+#   retires   port/unmatched/Player_HeadBonk.cpp
+#
+# func_ov004_020b6b40 and func_ov004_020b6c9c (ov004), dScMgBase_c's two ticks
+#   referrer  config/arm9/overlays/ov004/relocs.txt
+#             from:0x020bca34 kind:load to:0x020b6b40 module:overlay(4)
+#             from:0x020bc924 kind:load to:0x020b6c9c module:overlay(4)
+#             (the two {code, adjustment} framework records; both adjustments 0)
+#   record    func_ov004_020b6b40 kind:function(arm,size=0xd0) addr:0x020b6b40   (overlays/ov004/symbols.txt:223)
+#             func_ov004_020b6c9c kind:function(arm,size=0xd0) addr:0x020b6c9c   (overlays/ov004/symbols.txt:225)
+#   dispatch  020b6b98 and 020b6cf4, instruction for instruction the same:
+#                       ldr r2,[r0] / ldr r1,[r4,#0x18] / ldr r2,[r2,#0x4c] /
+#                       blx r2       slot 0x13 = 19, (this, int)
+#   patch     the plain `int (*)(void*, int)` becomes
+#             `int (__fastcall *)(void*, void*, int)` so the one stack
+#             parameter is cleaned once, by mb_v19, rather than twice
+#   retires   port/unmatched/MgBase_ShadowSlot19.cpp (both bodies)
+#
+# func_ov006_020c2924 (ov006), the +0x4f38 sub-object's fader gate
+#   referrer  config/arm9/overlays/ov006/relocs.txt, TWO arm_calls, one per
+#             class that mounts the sub-object:
+#             from:0x020e0018 kind:arm_call to:0x020c2924   dScMgCup_c slot 18
+#             from:0x0211c5a4 kind:arm_call to:0x020c2924   dScMgSound_c slot 0
+#   record    func_ov006_020c2924 kind:function(arm,size=0x60) addr:0x020c2924   (overlays/ov006/symbols.txt:62)
+#   dispatch  020c2938  ldr r1,[r0] / ldr r1,[r1,#0x18] / blx r1
+#                       byte +0x18 = word 6, no argument, r0 the object
+#   patch     word 6 __fastcall(obj, 0) -- ecx = obj, nothing pushed, which is
+#             what hal/fader_wipes.cpp's __thiscall HalFaderWipe::IsAtEnd
+#             expects. FACEF refused this row because reshaping fader_wipes.cpp
+#             was outside its files; the call site needs no reshaping at all.
+#   retires   port/unmatched/MgShared4f38_ShadowFader_020c2924.cpp
+#
+# func_ov098_02137d40 (ov098), ArrowSignRight::OnAttacked1
+#   referrer  _ZTV15daObjYajirusi_c (= _ZTV14ArrowSignRight) @ 0213c3d8, word 22
+#             config/arm9/overlays/ov098/relocs.txt
+#             from:0x0213c430 kind:load to:0x02137d40 module:overlay(98)
+#             (0x0213c430 - 0x0213c3d8 = 0x58 = word 22)
+#   record    func_ov098_02137d40 kind:function(arm,size=0x40) addr:0x02137d40   (overlays/ov098/symbols.txt:5)
+#   dispatch  02137d68  ldr r1,[r0] / ldr r1,[r1,#0x7c] / blx r1
+#                       byte +0x7c = word 31, Kill, no argument, r0 = this
+#   patch     word 31 __fastcall(c, 0). FACEF called the fix decomp-side
+#             ("only the matched TU's own spelling can put `this` in ecx");
+#             the generated TU's spelling does exactly that and src/ does not
+#             move.
+#   ADJUDICATED: this matched TU carries the inferred-stub marker
+#             ("recovered from vtable slot identity") and is listed REAL_DECOMP
+#             in port/tools/inferred_stub_adjudicated.txt (lane STUBADJ,
+#             match.py 2004/b56 strict-reloc MATCH against the ROM)
+#   retires   port/unmatched/ArrowSign_OnAttacked1.cpp
+#
+# --- REG_RIDE_ARG, four rows: an argument the ROM left in a register ---------
+#
+# _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3 (arm9)
+#   referrer  config/arm9/relocs.txt, six arm_calls, the nearest
+#             from:0x02015dbc kind:arm_call to:0x020443c8 module:main
+#             (_ZN11CommonModel6RenderEPK7Vector3 and its siblings)
+#   record    _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3 kind:function(arm,size=0x16c) addr:0x020443c8   (config/arm9/symbols.txt:1848)
+#   dispatch  02044458  ldrb r1,[r0,#4]     the module index, into r1
+#             02044474  mov r0,r10 / bl 0x02044b30      r1 UNTOUCHED between
+#             020444c4  ldrb r1,[r1,#5]
+#             020444d8  mov r0,r10 / bl 0x02044b30      same, second arm
+#             and src/func_02044b30.c DEFINES it `void func_02044b30(char *obj,
+#             int idx)` and indexes `obj+4`'s array by `idx * 0x30` on its
+#             first line, while this TU declares it `(ModelComponents*)`
+#   patch     the declaration gains `int idx` and both call sites pass the
+#             loop's own `u8 idx`, live and named at both
+#   retires   port/unmatched/ModelComponents_Render.cpp -- and this one is
+#             worth naming for what it is: a HOST REIMPLEMENTATION whose own
+#             first line says "not byte-verified against the ROM". The face in
+#             port/hal/scene_boot.cpp is untouched and stays: it is the cdecl
+#             C-name bridge the ov007 flat-name caller uses, and FACEF already
+#             ruled it correct.
+#
+# func_ov032_02111350 (ov032), BUBBA's chase gate
+#   referrer  config/arm9/overlays/ov032/relocs.txt, four arm_calls, first
+#             from:0x02111648 kind:arm_call to:0x02111350 module:overlay(32)
+#   record    func_ov032_02111350 kind:function(arm,size=0xac) addr:0x02111350   (overlays/ov032/symbols.txt:4)
+#   dispatch  02111350  push {r4,lr} / mov r4,r0 / bl 0x02010ad8
+#             and 0x02010ad8 is _ZN5Actor13ClosestPlayerEv
+#             (config/arm9/symbols.txt:297), reached with r0 still holding the
+#             receiver -- mwccarm had nothing to move
+#   patch     the declaration gains its receiver and the call passes `c`
+#   NOTE ON THE GUARD: port/tools/closestplayer_guard.py refuses this TU in any
+#             slice_*.txt line, and rightly -- it scans the RAW source, which
+#             still spells the zero-argument call, and the raw source is not
+#             what gets compiled here. The generated TU is, and it passes the
+#             receiver. This row is in the SEAT6_GEN_SYMS list and NOT in this
+#             file for that reason as well as the mechanical one.
+#   retires   port/unmatched/Bubba_ChaseGate.cpp
+#
+# func_ov002_020e5948 (ov002) and func_ov072_02120a44 (ov072), the two
+# TextureSequence::Prepare callers -- the SHORT-1 argsweep row
+#   referrer  ov002: from:0x020e56d4 kind:arm_call to:0x020e5948 module:overlay(2)
+#                    (inside _ZN6Player13InitResourcesEv)
+#             ov072: data_ov072_02122978[0] @ 02122978 = 02120a44   (overlay_0072.bin, base 0211f000)
+#                    vtable-4 @ 02122974 -> typeinfo 02122938 -> name "11daBgSnwmn_c"
+#                    (config/arm9/overlays/ov072/relocs.txt agrees:
+#                     from:0x02122978 kind:load to:0x02120a44 module:overlay(72))
+#   record    func_ov002_020e5948 kind:function(arm,size=0x9e8) addr:0x020e5948   (overlays/ov002/symbols.txt:1024)
+#             func_ov072_02120a44 kind:function(arm,size=0x1bc) addr:0x02120a44   (overlays/ov072/symbols.txt:57)
+#   dispatch  not a vtable word: TextureSequence::Prepare is a real non-static
+#             method consuming r0 this / r1 model / r2 animFile, its ROM body
+#             is a 0xc tail-call veneer into func_02046d50 which touches none
+#             of them, and both matched TUs declare it as a TWO-argument free
+#             function. The host bridge (hal/player_bridges.cpp) is the real
+#             three-parameter face and DEREFERENCES the third before
+#             func_02046d50, which never reads it, runs.
+#   patch     the declaration gains its third parameter and every call site
+#             repeats its own second argument -- a known-valid BTP_File
+#             pointer, which is the shape both retired host copies already ship
+#             and which MotherPenguin_InitResources.cpp derived
+#   ADJUDICATED (ov072): src/func_ov072_02120a44.c carries the inferred-stub
+#             marker and is listed REAL_DECOMP in
+#             port/tools/inferred_stub_adjudicated.txt (lane STUBADJ)
+#   retires   port/unmatched/TexSeq_Caller_ov002_020e5948.cpp and
+#             port/unmatched/Snowman_InitResources.cpp
+#
+# --- ARG_WIDTH, one row: a RETURN the ROM left a byte wide ------------------
+#
+# func_0200ee8c (arm9), the star-get camera-script launcher
+#   referrer  config/arm9/relocs.txt
+#             from:0x0200d4f4 kind:arm_call to:0x0200ee8c module:main
+#   record    func_0200ee8c kind:function(arm,size=0x3c) addr:0x0200ee8c   (config/arm9/symbols.txt:210)
+#   dispatch  0200eea4  bl 0x0202af28   (GetStarCameraSetting, symbols.txt:1057)
+#             0200eeac  ldr r0,[r1,r0,lsl #2]   the whole of r0 as the index
+#             and GetStarCameraSetting's own body ends
+#             0202af38  and r0,r0,#0xf / and r0,r0,#0xff
+#             so the value in r0 is four bits wide with the high bits already
+#             cleared by the callee. src/GetStarCameraSetting.c returns
+#             `unsigned char`; this TU declares the same symbol `s32` and reads
+#             the whole of EAX under cdecl, whose high bytes the callee never
+#             wrote (measured: 0x1001 where 1 was meant, 0x4000 bytes past a
+#             24-byte table, c0000005 in ProcessKuppaScript on the king-defeat
+#             star path).
+#   patch     the declaration gains the return width the definition has, which
+#             makes MSVC read AL alone. The retired host body reached the same
+#             value by masking with the ROM's own 0xf; declaring the width is
+#             the same arithmetic said once instead of twice.
+#   retires   the func_0200ee8c body in port/hal/star_flow.cpp
+#
+# --- HEADER_SHADOW, one row: two declarations of one function ---------------
+#
+# _ZN6Player16CleanupResourcesEv (ov002)
+#   referrer  _ZTV6Player[3] @ 0210a848 = 020e32d4   (overlay_0002.bin, base 020ad660)
+#             vtable-4 @ 0210a838 -> typeinfo 0210a56c -> name "7daPly_c"
+#   record    _ZN6Player16CleanupResourcesEv kind:function(arm,size=0x730) addr:0x020e32d4   (overlays/ov002/symbols.txt:1011)
+#   BLOCKER 1 IS DEAD. port/hal/method_faces.cpp's tag says the TU's five
+#             `p->v1()` model deletes are "ROM slot 1, mwcc's deleting
+#             destructor. MSVC folds D1 and D0 into one slot, so
+#             hal/cxxname_bridge.cpp's _ZTV5Model carries DoSetFile at index 1".
+#             That stopped being true with lane SLOT5F's destructor respelling:
+#             hal/model_dtor_seat.cpp:hal_seat_model_family_dtors now writes
+#             _ZTV5Model[0]=model_d1 / [1]=model_d0, _ZTV9ModelAnim[0]=
+#             modelanim_d1 / [1]=modelanim_d0 and _ZTV10ModelAnim2[0]/[1] the
+#             same pair, with cxxname_bridge.cpp:522 putting DoSetFile back at
+#             its ROM index 2. The two-virtual shadow's slot 1 is the ROM's own
+#             deleting destructor again, which is exactly what the retired host
+#             copy's port_model_family_delete was hand-built to reach.
+#   BLOCKER 2 is the one that remains and it is mechanical: the TU re-declares
+#             five functions include/decl_common.h already declares --
+#             func_ov002_020bdd2c/020bdd9c/020bdef0 (:2207-2209),
+#             func_ov002_020e032c (:2289) `char *` against the header's
+#             `void *`, and func_02073244 (:2158)
+#             `(int,int,int,void(*)(void))` against
+#             `(void*,int,int,void(*)(void*))`. mwcc reads one declaration seen
+#             twice; MSVC reads an extern "C" overload and refuses with five
+#             C2733s and one C2664.
+#   patch     HEADER_SHADOW hides the header's declaration of those five names
+#             for this TU alone, the func_ov102_0214b248 /
+#             _ZN5Whomp13InitResourcesEv case. Neither src/ nor include/ moves.
+#   retires   port/unmatched/Player_CleanupResources.cpp
+#
+# ============================ NOT TAKEN, one row ===========================
+#
+# func_ov006_02107db8 (ov006), the roulette WHEEL's per-frame tick.
+#   referrer  config/arm9/overlays/ov006/relocs.txt
+#             from:0x0210a120 kind:arm_call to:0x02107db8 module:overlay(6)
+#             (vtable slot 6, func_ov006_02109aac, the class's Behavior; the
+#              only arm_call in the whole overlay that reaches this body)
+#   record    func_ov006_02107db8 kind:function(arm,size=0xf0) addr:0x02107db8   (overlays/ov006/symbols.txt:1330)
+#   WHY NOT: it is not one seam but three, and the third is a LAYOUT. The
+#            matched TU declares `struct C { PMF pmf; char pad8[0x10-8]; Obj
+#            obj; }` where `PMF` is `void (C::*)()` formed while C is still
+#            incomplete. MSVC's member pointer for an incomplete class is the
+#            four-word general representation, so `obj` stops being at +0x10
+#            and every offset in the body moves -- which is a different family
+#            (C, mwcc pointer-to-member) from the one this batch is, and the
+#            fix is to respell the STRUCT, not a call. Its other two seams are
+#            ordinary B6 work (the `c->obj.v3()` shadow is ROM slot 3 of the
+#            Model at +0x10, and the `(c->*(c->pmf))()` needs
+#            port_mg_roulette_call0's address switch, which lives in the host
+#            file that would be retired), but a hostgen row that rewrites a
+#            type declaration is a bigger claim than an exact-string call
+#            respelling and this lane did not have the build budget to gate it
+#            on its own. It stays on port/unmatched/MgRoulette_WheelDispatch.cpp
+#            with its PORT_HOST_ABI tag, and it is the next lane's single row.

@@ -50,10 +50,17 @@
 // sixteen blocks on wire v3, func_0204068c bounded at kCommsMaxPlayers --
 // has been wide since the vs16 mainline.
 
+#include <chrono>
 #include <cstdio>
 
 #include "comms_loopback.h"
 #include "vs_width.h"
+
+// The seam's own two counters (hal/comms_seam.cpp), read by the bound-expiry
+// instrument below. Declared here rather than pulled through comms_seam.h so
+// this file keeps the short include list it has always had.
+extern "C" void port_comms_counters_get(unsigned long long *exchanges,
+                                        unsigned long long *rounds);
 
 namespace {
 
@@ -183,9 +190,54 @@ void warn_info_mode_armed_wide(void)
 }
 
 // ---------------------------------------------------------------------------
+// THE BOUND-EXPIRY INSTRUMENT. Run link100, lane VS7.
+//
+// src/func_0203ea5c.c's wait is bounded at 0x4B0 turns (0x12C once
+// data_020a0ef0 is set, which nothing on this port's session path sets), and
+// when the bound runs out the tail below stores data_020a0f04 = 0 -- the drop
+// to solo. Before this lane the port could see THAT it happened
+// (comms_retry_dropped_session says so once) and nothing about WHY: how many
+// turns were burned, over how much wall time, and what the carrier was doing
+// while they burned. The ladder's vs7_rtt160 row expires the bound on every
+// frame, which is the shape three of those numbers tell apart at a glance.
+//
+// Rate-limited to the first three expiries and then one in a thousand, because
+// a row that drops every frame would otherwise print nine hundred of these.
+unsigned host_ms(void)
+{
+    return (unsigned)std::chrono::duration_cast<std::chrono::milliseconds>(
+        std::chrono::steady_clock::now().time_since_epoch()).count();
+}
+
+void report_bound_expiry(unsigned start_bound, unsigned long turns,
+                         unsigned long turns_with_data, unsigned ms)
+{
+    static unsigned long long n = 0;
+    ++n;
+    if (n > 3 && n % 1000 != 0) return;
+    unsigned long long ex = 0, rd = 0;
+    port_comms_counters_get(&ex, &rd);
+    const port::CommsLoopbackStats s = port::comms_loopback_stats();
+    std::fprintf(stderr,
+        "[comms:conductor] WIDE BOUND EXPIRED (#%llu): the ROM's wait burned "
+        "its whole %u-turn bound without a completed round and is about to "
+        "store data_020a0f04 = 0. turns=%lu with_data=%lu wall=%u ms "
+        "players=%d exchanges=%llu rounds=%llu | carrier: live=0x%x round=%lu "
+        "sent=%llu recvd=%llu dropped=%llu resends=%llu stale=%llu "
+        "delay_ms=%d resend_ms=%d delay_overflow=%llu starved=%llu\n",
+        n, start_bound, turns, turns_with_data, ms,
+        port::comms_session_players(), ex, rd,
+        (unsigned)s.live_mask, s.round, s.sent, s.recvd, s.dropped, s.resends,
+        s.stale_serves, s.delay_ms, s.resend_ms, s.delay_overflow, s.starved);
+    std::fflush(stderr);
+}
+
+// ---------------------------------------------------------------------------
 // The wide copy of src/func_0203ea5c.c. Diff it against that file: the delta
-// is `4` -> `kRecs` on the seven record walks, and the warn call above at the
-// two info-path heads. Nothing else.
+// is `4` -> `kRecs` on the seven record walks, the warn call above at the two
+// info-path heads, and the three instrument lines marked VS7 (a turn counter,
+// a data counter and the report at the bound's tail), which read state and
+// print and decide nothing.
 // ---------------------------------------------------------------------------
 void conductor_wide(void)
 {
@@ -264,7 +316,13 @@ void conductor_wide(void)
     sp10 = 3;
     sp28 = 5;
     sp20 = 0x12C;
+    /* VS7 instrument, three lines: the bound as entered, the turns burned, and
+       the wall clock across them. Nothing below reads them. */
+    const unsigned vs7_bound = (unsigned)sp4;
+    const unsigned vs7_t0 = host_ms();
+    unsigned long vs7_turns = 0, vs7_with_data = 0;
     while ((sp8 == 0) && (sp4 != 0)) {
+        ++vs7_turns;                                   /* VS7 instrument */
         if (data_020a0ef8 != 0) {
             warn_info_mode_armed_wide();
             if (data_020a0f1c & 0x4000) {
@@ -345,6 +403,7 @@ void conductor_wide(void)
         }
         temp_r0_5 = data_020a0f1c & 0x4000;
         if (temp_r0_5 != 0) {
+            ++vs7_with_data;                           /* VS7 instrument */
             data_020a0f10 = func_02040704(temp_r0_5);
             data_02099e18 = 0;
             sp4 = sp20;
@@ -600,6 +659,10 @@ loop_147:
         data_020a0f30 = 1;
         return;
     }
+    /* VS7 instrument: the bound ran out, and this is the one place in the
+       program that knows it. Reads and prints; decides nothing. */
+    report_bound_expiry(vs7_bound, vs7_turns, vs7_with_data,
+                        host_ms() - vs7_t0);
     data_020a0f04 = 0;
     data_020a0f1c |= 1;
 }

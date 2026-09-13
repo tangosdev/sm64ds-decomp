@@ -124,106 +124,13 @@ extern PortPmf data_ov062_0211d900, data_ov062_0211d908, data_ov062_0211d910,
    pair, the matched TU compiles to the same tail jump this body was, and
    the seat in this file aborts the binary on a nonzero delta so the two
    agree word for word. The reading above is kept as the derivation. */
-/* PORT_HOST_ABI: mwcc pointer-to-member on the forward-declared struct Klass
-   (the MAIN half, State+8), plus one raw vptr+0xc model dispatch. The matched
-   Behavior's control flow line for line. */
-extern "C" int _ZN7Chuckya8BehaviorEv(void *cv)
-{
-    char *c = (char *)cv;
-
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
-            c, c + 0x144, c + 0x300, 3))
-        return 1;
-
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    DecIfAbove0_Short((unsigned short *)(c + 0x3e6));
-    DecIfAbove0_Short((unsigned short *)(c + 0x3e8));
-
-    {
-        /* (((Klass*)c)->*(m->pmf))() -- m = State at +0x364, pmf = the record
-           at m+8; read as a plain { fn, 0 } and fn called with `this`. */
-        PortPmf *m = *(PortPmf **)(c + 0x364);
-        if (m[1].fn != 0)
-            ((void (*)(void *))(size_t)m[1].fn)(c);
-    }
-
-    *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    *(short *)(c + 0x90) = *(short *)(c + 0x96);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-
-    if (*(void **)(c + 0x364) != (void *)data_ov062_0211dea0) {
-        if (*(void **)(c + 0x364) != (void *)data_ov062_0211dec0
-            && *(void **)(c + 0x364) != (void *)data_ov062_0211de70) {
-            int r2 = 0;
-            signed char t = data_0209f2f8;
-            if (t == 0x16) {
-                if (*(int *)(c + 0x5c) > (int)0xff95c000)
-                    r2 = 1;
-            } else if (t == 0x15) {
-                if (*(int *)(c + 0x64) < (int)0xff2f4000)
-                    r2 = 1;
-            }
-            if (r2 != 0
-                || (*(int *)(c + 0x98) != 0
-                    && _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
-                           c, c + 0x144, 0x3c000, (short)0x2888, 0, 1,
-                           (void *)0x32000))) {
-                *(int *)(c + 0x98) = 0;
-                *(char *)(c + 0x3e4) = 1;
-                *(int *)(c + 0x5c) = *(int *)(c + 0x3d8);
-                *(int *)(c + 0x60) = *(int *)(c + 0x3dc);
-                *(int *)(c + 0x64) = *(int *)(c + 0x3e0);
-            } else {
-                if (*(unsigned char *)(c + 0x3e4) == 1)
-                    *(char *)(c + 0x3e4) = 0;
-            }
-        }
-        *(int *)(c + 0x3d8) = *(int *)(c + 0x5c);
-        *(int *)(c + 0x3dc) = *(int *)(c + 0x60);
-        *(int *)(c + 0x3e0) = *(int *)(c + 0x64);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x144, 3);
-    }
-
-    if (*(void **)(c + 0x364) == (void *)data_ov062_0211ded0
-        || *(void **)(c + 0x364) == (void *)data_ov062_0211dee0
-        || *(void **)(c + 0x364) == (void *)data_ov062_0211de90
-        || *(void **)(c + 0x364) == (void *)data_ov062_0211df00) {
-        func_ov062_02116010(c);
-    }
-
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN9Animation7AdvanceEv(c + 0x350);
-
-    /* PORT_HOST_ABI: the matched TU reads the ModelAnim's vptr as an int and
-       dispatches *(vptr + 0xc) -- ROM slot 3, UpdateVerts (include/ModelAnim.h's
-       own slot map). The host _ZTV9ModelAnim is MSVC-ordered (one dtor slot
-       where Itanium spends two), so a raw +0xc would land on Virtual10 -- the
-       same shift as the Render collisions, one slot lower. Spell the qualified
-       method the ROM means (the cxxname_bridge reading). */
-    ((ModelAnim *)(c + 0x300))->ModelAnim::UpdateVerts();
-
-    {
-        char *p3f8 = *(char **)(c + 0x3f8);
-        if (p3f8 != 0) {
-            int flag = (*(int *)(c + 0xb0) & 0x4000) != 0;
-            if (flag) {
-                if (*(int *)(p3f8 + 0xc8) != 0) {
-                    func_ov062_02116d28(c);
-                    return 1;   /* the matched source's `goto ret` */
-                }
-            }
-        }
-    }
-
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    *(int *)(c + 0x42c) = 0;
-    *(int *)(c + 0x430) = 0;
-    *(int *)(c + 0x434) = 0;
-    func_ov062_02116e80(c);
-    func_ov062_02116dbc(c);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN7Chuckya8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 /* ---- THE SEAT --------------------------------------------------------------
    The twenty source fn words in FEEDER ORDER (0x0211d900..0x0211d998), each
@@ -231,27 +138,96 @@ extern "C" int _ZN7Chuckya8BehaviorEv(void *cv)
    config/arm9/overlays/ov062/relocs.txt (from:0x0211d900 -> 0x02116784 and so
    on down the run). Rewritten BEFORE __sinit_ov062_0211cf30 copies them into
    the ten bss State objects. */
+/* ---- RUN link100 LANE PMFB7 GATE 2: THE PER-FRAME RECORDS ARE FACES -------
+ * Chuckya's matched TU dispatches its state cell's +8 half as a real
+ * pointer to member -- mov eax,[cell+8] / test eax,eax / je /
+ * mov ecx,[cell+12] / add ecx,this / call eax, the ROM's own offsets, receiver
+ * in ecx, NOTHING pushed, ARITY ZERO, /Zp4 diff 0 lines
+ * (runs/link100/out/PMFB7/emit_all21_out.txt). The seat used to install plain
+ * cdecl bodies that take their self off the stack, so each PER-FRAME record now
+ * holds a zero-argument __fastcall face that forwards the receiver as the one
+ * cdecl argument the ROM's own state body takes -- the same call the cell held
+ * before, made through ecx instead of the stack.
+ *
+ * THE ENTER RECORDS DO NOT CHANGE: they are reached by the class's state-change
+ * helper, which MSVC compiles as a one-call forwarder ending in `jmp`, so the
+ * caller's own frame is reused and a plain cdecl body is right there.
+ *
+ * WHICH RECORD IS WHICH is read out of the class's own __sinit
+ * (runs/link100/out/PMFB7/slots_gate2.txt), never assumed.
+ */
+static void __fastcall pmfb7_ov062_021167c0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d908, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_021167c0)(self);
+}
+static void __fastcall pmfb7_ov062_0211632c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d910, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_0211632c)(self);
+}
+static void __fastcall pmfb7_ov062_021165e8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d918, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_021165e8)(self);
+}
+static void __fastcall pmfb7_ov062_02116274(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d928, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_02116274)(self);
+}
+static void __fastcall pmfb7_ov062_021163b0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d930, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_021163b0)(self);
+}
+static void __fastcall pmfb7_ov062_02116bf8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d938, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_02116bf8)(self);
+}
+static void __fastcall pmfb7_ov062_02116a08(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d950, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_02116a08)(self);
+}
+static void __fastcall pmfb7_ov062_02116894(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d960, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_02116894)(self);
+}
+static void __fastcall pmfb7_ov062_021161a8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d970, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_021161a8)(self);
+}
+static void __fastcall pmfb7_ov062_021164e8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 0211d990, the per-frame half */
+    ((void (*)(void *))(void *)func_ov062_021164e8)(self);
+}
+
 static const struct { PortPmf *slot; unsigned rom; int (*host)(void *); }
 g_chuckya_states[] = {
     {&data_ov062_0211d900, 0x02116784, func_ov062_02116784},
-    {&data_ov062_0211d908, 0x021167c0, func_ov062_021167c0},
-    {&data_ov062_0211d910, 0x0211632c, func_ov062_0211632c},
-    {&data_ov062_0211d918, 0x021165e8, func_ov062_021165e8},
+    {&data_ov062_0211d908, 0x021167c0, (int (*)(void *))(void *)pmfb7_ov062_021167c0},
+    {&data_ov062_0211d910, 0x0211632c, (int (*)(void *))(void *)pmfb7_ov062_0211632c},
+    {&data_ov062_0211d918, 0x021165e8, (int (*)(void *))(void *)pmfb7_ov062_021165e8},
     {&data_ov062_0211d920, 0x02116850, func_ov062_02116850},
-    {&data_ov062_0211d928, 0x02116274, func_ov062_02116274},
-    {&data_ov062_0211d930, 0x021163b0, func_ov062_021163b0},
-    {&data_ov062_0211d938, 0x02116bf8, func_ov062_02116bf8},
+    {&data_ov062_0211d928, 0x02116274, (int (*)(void *))(void *)pmfb7_ov062_02116274},
+    {&data_ov062_0211d930, 0x021163b0, (int (*)(void *))(void *)pmfb7_ov062_021163b0},
+    {&data_ov062_0211d938, 0x02116bf8, (int (*)(void *))(void *)pmfb7_ov062_02116bf8},
     {&data_ov062_0211d940, 0x02116c78, func_ov062_02116c78},
     {&data_ov062_0211d948, 0x02116238, func_ov062_02116238},
-    {&data_ov062_0211d950, 0x02116a08, func_ov062_02116a08},
+    {&data_ov062_0211d950, 0x02116a08, (int (*)(void *))(void *)pmfb7_ov062_02116a08},
     {&data_ov062_0211d958, 0x02116980, func_ov062_02116980},
-    {&data_ov062_0211d960, 0x02116894, func_ov062_02116894},
+    {&data_ov062_0211d960, 0x02116894, (int (*)(void *))(void *)pmfb7_ov062_02116894},
     {&data_ov062_0211d968, 0x021162b8, func_ov062_021162b8},
-    {&data_ov062_0211d970, 0x021161a8, func_ov062_021161a8},
+    {&data_ov062_0211d970, 0x021161a8, (int (*)(void *))(void *)pmfb7_ov062_021161a8},
     {&data_ov062_0211d978, 0x02116368, func_ov062_02116368},
     {&data_ov062_0211d980, 0x021165e0, func_ov062_021165e0},
     {&data_ov062_0211d988, 0x02116498, func_ov062_02116498},
-    {&data_ov062_0211d990, 0x021164e8, func_ov062_021164e8},
+    {&data_ov062_0211d990, 0x021164e8, (int (*)(void *))(void *)pmfb7_ov062_021164e8},
     {&data_ov062_0211d998, 0x02116b80, func_ov062_02116b80},
 };
 

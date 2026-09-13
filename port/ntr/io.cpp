@@ -566,6 +566,29 @@ bool io_init() {
     // display-list pump spin-waits on bit 25 before touching the FIFO, so the
     // latch must come up idle or the wait never falls through.
     raw_write(0x04000600u, 0x06000000u, 4);
+    /* POWCNT1 (0x04000304), a plain latch -- nothing in the io_write dispatch
+       chain below names this address, so its only wrong answer is coming up
+       whatever a freshly zeroed page holds. Run link100 lane GREG2:
+       src/func_0205f650.c reads bit 0 (LCDs enabled) as the fast-exit test for
+       the wait loop src/func_02019a58.c, and on the ROM this bit is not a
+       boot-time mystery -- main() -> func_0201a054 -> func_02053c40 writes it
+       before even Heap::InitializeGameHeap runs:
+
+           *(volatile u16*)0x4000304 |= 0x8000;
+           *(volatile u16*)0x4000304 = (*(volatile u16*)0x4000304 & 0xfffffdf1) | 0x20e;
+           *(volatile u16*)0x4000304 |= 1;
+
+       which is bit 15 (display swap), bits 1/2/3/9 (2D engine A, the 3D
+       render engine, the 3D geometry engine, 2D engine B) and bit 0 (the
+       LCDs) all lit -- 0x820F -- and Scene::ResetHardwareRegisters
+       (src/_ZN5Scene22ResetHardwareRegistersEv.cpp) repeats the identical
+       three lines on every scene entry after that. So by the time any game
+       code that can reach func_0205f650 runs, a real, running console
+       already reads 0x820F here; that is the seeded word, not a guess at
+       bit 0 alone. func_0205f68c (already plain-honest, no `G`) can still
+       clear or re-set bit 0 for real through the mapped window afterwards --
+       this is only the boot value the window does not otherwise have. */
+    raw_write(0x04000304u, 0x820Fu, 2);
     /* THE BOOT INDICATOR, and it says CARTRIDGE BOOT.
        Run mg15 lane MP1 replaced a 2 here, and the reason it was a 2 had
        already stopped being true twice over.

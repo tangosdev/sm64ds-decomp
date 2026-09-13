@@ -211,6 +211,49 @@ int func_ov090_02133830(void *c);
 
 }  /* extern "C" */
 
+
+/* ---- RUN link100 LANE PMFB7 GATE 1: THE EIGHT PER-FRAME RECORDS ARE FACES --
+ *
+ * The four ov090 Behaviors below are matched TUs now, and a matched TU
+ * dispatches the per-frame half of its state cell as a real pointer to member:
+ *     mov eax,[cell+8] / test eax,eax / je / mov ecx,[cell+12] /
+ *     add ecx,this / call eax
+ * -- the ROM's own +8/+0xc offsets, receiver in ecx, NOTHING pushed, ARITY
+ * ZERO (runs/link100/out/PMFB7/emit_all21_out.txt). The seats used to install
+ * plain cdecl bodies that take their self off the stack, so the eight SLOT-1
+ * records now hold zero-argument __fastcall faces that forward the receiver as
+ * the cdecl argument each ROM state body takes.
+ *
+ * THE EIGHT SLOT-0 RECORDS DO NOT CHANGE. They are dispatched by
+ * func_ov090_02131e00 / _021332e8 / _021338b4 / _02132ac4, and all four of
+ * those matched TUs compile to `jmp edx` -- a tail jump reuses the caller's own
+ * cdecl frame, so the receiver is still at [esp+4] and a plain cdecl body is
+ * right there while a face would be wrong.
+ *
+ * WHICH RECORD IS WHICH is read out of each class's own __sinit rather than
+ * assumed: __sinit_ov090_02133ce8 fills 021344f4={02134110,02134108},
+ * 02134504={02134118,021340f8}, 02134514={021340e8,021340e0},
+ * 021344e4={021340f0,02134100}; _02133ea8 fills 0213454c={021341ec,021341e4};
+ * _02133f4c fills 02134594={021342c0,021342b8} and 02134584={021342d0,
+ * 021342c8}; _02134020 fills 021345cc={021343a0,021343a8}. Slot 1 of each is
+ * the per-frame half.
+ */
+#define OV090_FACE(tag, sym)                                              \
+    static void __fastcall ov090_f##tag(void *self, void *dead_edx)       \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym(self);                                                        \
+    }
+
+OV090_FACE(02131648, func_ov090_02131648)   /* skeeter    021340e0 */
+OV090_FACE(02131ac4, func_ov090_02131ac4)   /* skeeter    021340f8 */
+OV090_FACE(02131584, func_ov090_02131584)   /* skeeter    02134100 */
+OV090_FACE(02131c48, func_ov090_02131c48)   /* skeeter    02134108 */
+OV090_FACE(021327e4, func_ov090_021327e4)   /* mantaray   021341e4 */
+OV090_FACE(02133200, func_ov090_02133200)   /* cheepcheep 021342b8 */
+OV090_FACE(02133190, func_ov090_02133190)   /* cheepcheep 021342c8 */
+OV090_FACE(02133830, func_ov090_02133830)   /* shark      021343a8 */
+
 /* ============================================================================
  * THE STATE SEAT
  * Every `rom` column below is the word the ROM actually holds at that record,
@@ -232,28 +275,28 @@ const Ov090Seat g_ov090_seats[] = {
     /* Skeeter, 0x021340e0..0x02134120, copied into the four two-record bss
        cells data_ov090_021344e4/_021344f4/_02134504/_02134514 by
        __sinit_ov090_02133ce8. */
-    {data_ov090_021340e0, 0x02131648, func_ov090_02131648, "skeeter/021340e0"},
+    {data_ov090_021340e0, 0x02131648, (int (*)(void *))(void *)ov090_f02131648, "skeeter/021340e0"},
     {data_ov090_021340e8, 0x02131a74, func_ov090_02131a74, "skeeter/021340e8"},
     {data_ov090_021340f0, 0x02131608, func_ov090_02131608, "skeeter/021340f0"},
-    {data_ov090_021340f8, 0x02131ac4, func_ov090_02131ac4, "skeeter/021340f8"},
-    {data_ov090_02134100, 0x02131584, func_ov090_02131584, "skeeter/02134100"},
-    {data_ov090_02134108, 0x02131c48, func_ov090_02131c48, "skeeter/02134108"},
+    {data_ov090_021340f8, 0x02131ac4, (int (*)(void *))(void *)ov090_f02131ac4, "skeeter/021340f8"},
+    {data_ov090_02134100, 0x02131584, (int (*)(void *))(void *)ov090_f02131584, "skeeter/02134100"},
+    {data_ov090_02134108, 0x02131c48, (int (*)(void *))(void *)ov090_f02131c48, "skeeter/02134108"},
     {data_ov090_02134110, 0x02131db0, func_ov090_02131db0, "skeeter/02134110"},
     {data_ov090_02134118, 0x02131b94, func_ov090_02131b94, "skeeter/02134118"},
     /* MantaRay, 0x021341e4..0x021341f4, into data_ov090_0213454c by
        __sinit_ov090_02133ea8. */
-    {data_ov090_021341e4, 0x021327e4, func_ov090_021327e4, "mantaray/021341e4"},
+    {data_ov090_021341e4, 0x021327e4, (int (*)(void *))(void *)ov090_f021327e4, "mantaray/021341e4"},
     {data_ov090_021341ec, 0x02132a58, func_ov090_02132a58, "mantaray/021341ec"},
     /* CheepCheep, 0x021342b8..0x021342d8, into data_ov090_02134584 and
        _02134594 by __sinit_ov090_02133f4c. */
-    {data_ov090_021342b8, 0x02133200, func_ov090_02133200, "cheepcheep/021342b8"},
+    {data_ov090_021342b8, 0x02133200, (int (*)(void *))(void *)ov090_f02133200, "cheepcheep/021342b8"},
     {data_ov090_021342c0, 0x02133290, func_ov090_02133290, "cheepcheep/021342c0"},
-    {data_ov090_021342c8, 0x02133190, func_ov090_02133190, "cheepcheep/021342c8"},
+    {data_ov090_021342c8, 0x02133190, (int (*)(void *))(void *)ov090_f02133190, "cheepcheep/021342c8"},
     {data_ov090_021342d0, 0x021331c4, func_ov090_021331c4, "cheepcheep/021342d0"},
     /* Shark, 0x021343a0..0x021343b0, into data_ov090_021345cc by
        __sinit_ov090_02134020. */
     {data_ov090_021343a0, 0x0213387c, func_ov090_0213387c, "shark/021343a0"},
-    {data_ov090_021343a8, 0x02133830, func_ov090_02133830, "shark/021343a8"},
+    {data_ov090_021343a8, 0x02133830, (int (*)(void *))(void *)ov090_f02133830, "shark/021343a8"},
 };
 bool g_ov090_seated = false;
 }  /* namespace */

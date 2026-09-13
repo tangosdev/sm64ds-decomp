@@ -1,0 +1,125 @@
+# RUNG W7 OF THE WIRELESS PLAN: THE 0x02063E-0x020655 MESSAGE-LAYER BAND.
+# Run link100, lane WM8, on top of lane WM5 (rung W6) and lane WM7 (which made
+# the ROM's own worker thread run in a session).
+#
+# THE ELEVEN TUs LANE WM5 REFUSED, AND WHY THEY ARE TAKEABLE NOW.
+#
+#   func_020652fc  func_02065234  func_02065050  func_020650d8   (WM5's 4 faces)
+#   func_020654d0  func_02065500  func_02063ea8  func_02064470
+#   func_02064674  func_020647a4  func_020647d8                  (behind them)
+#
+# WM5's refusal was: "the band is addressed through two ROM accessors that
+# return LITERAL DS ADDRESSES -- src/func_02065b94.c returns 0x020A9594 and
+# src/func_02065b88.c returns 0x020A9630 -- while hal/wm_arm7.cpp hosts that
+# ROM span (data_020a9570) at its own host address", and it added that
+# src/func_020652fc.c's walk "reaches 0x020A9D83, past data_020a9570's span and
+# across three further ROM symbols".
+#
+# BOTH ADDRESSES IN THAT SENTENCE ARE WRONG, and the correction is the whole of
+# this rung. The two sources spell their return value in DECIMAL:
+#
+#     src/func_02065b94.c   return 34247892;
+#     src/func_02065b88.c   return 34248048;
+#
+#     34247892 = 0x020A94D4      NOT 0x020A9594
+#     34248048 = 0x020A9570      NOT 0x020A9630
+#
+# The cartridge itself says so twice over. The two literal pools read
+#
+#     02065B90  70950a02      the word func_02065b88 loads = 0x020A9570
+#     02065B9C  d4940a02      the word func_02065b94 loads = 0x020A94D4
+#
+# (extracted/arm9_dec.bin, disassembled at those addresses), and
+# config/arm9/relocs.txt carries a relocation for each of them BY NAME:
+#
+#     10760: from:0x02065b90 kind:load to:0x020a9570 module:main
+#     10761: from:0x02065b9c kind:load to:0x020a94d4 module:main
+#
+# So neither accessor returns an address the port does not host, and neither
+# returns an interior address of some larger unhosted object. func_02065b88
+# returns the address of data_020a9570 EXACTLY -- the object hal/wm_arm7.cpp
+# has hosted since rung W4 -- and func_02065b94 returns the address of
+# data_020a94d4, the 0x9c bytes immediately in front of it, which nothing in
+# the port hosted until this rung.
+#
+# THE BAND IS ONE ROM OBJECT AND THE ROM'S OWN ARITHMETIC MEASURES IT.
+# src/func_020652fc.c takes p = func_02065b94() = 0x020A94D4 and runs the
+# cartridge's own sixteen-iteration loop
+#
+#     020C667C  mov  r1, r2
+#     020C6680  strb r1, [r0, #0x1d7]
+#     020C6684  cmp  r2, #0x10
+#     020C6688  add  r0, r0, #0x68
+#
+# so the table it initialises is sixteen 0x68-byte entries at p + 0x1d4, and it
+# ends at 0x020A94D4 + 0x1d4 + 0x680 = 0x020A9D28 -- which is the next symbol in
+# config/arm9/symbols.txt after data_020a9570, exactly. The last byte the loop
+# writes is 0x020A94D4 + 0x618 + 0x1d7 = 0x020A9CC3, INSIDE data_020a9570 and
+# nowhere near WM5's 0x020A9D83. There is no write past the span and there are
+# no "three further ROM symbols" to cross:
+#
+#     0x020A94D4  data_020a94d4  0x009c   the header (state, peer bitmaps,
+#                                         the +0x148 argument, the callbacks)
+#     0x020A9570  data_020a9570  0x07b8   the sixteen-entry table's tail, and
+#                                         the 0x9c block src/func_02065af0.c
+#                                         copies out with MultiCopy_Int
+#     0x020A9D28                          = the next ROM symbol. 0x854 total.
+#
+# WHAT THIS RUNG DOES ABOUT IT: hal/wm_arm7.cpp hosts data_020a94d4 in the same
+# grouped .dsstate run, immediately in front of data_020a9570, so the two are
+# one contiguous 0x854-byte host object at the ROM's own layout; and the two
+# accessors are answered with that object's HOST address in exactly the nine
+# TUs that call them, by a per-source rename in port/CMakeLists.txt onto two
+# faces in hal/wm_arm7.cpp. Each face CALLS the ROM body and TRANSLATES its
+# answer -- host base plus (the DS address the cartridge returned minus the DS
+# address config/arm9/relocs.txt says the object starts at) -- so the ROM's own
+# value is consumed rather than discarded. Measured: the first build returned
+# the host address straight and came back +9 rather than +11, because with all
+# nine call sites renamed nothing referenced func_02065b94 or func_02065b88 any
+# more and the linker dropped both. The full argument for choosing a rename
+# over publishing the span at 0x020A94D4 in DS main RAM -- which is what
+# ntr/io.cpp calls the one reserved range a process may lose, and which no save
+# state and no rollback snapshot captures -- is in hal/wm_thread.cpp's header.
+#
+# THE FOUR TUs THAT WERE ALREADY LIVE. Four callers of func_02065b94 have been
+# in the link since rung W4 on port/slice_wm3.txt -- src/func_02065170.c,
+# src/func_020653cc.c, src/func_02065538.c and src/func_020659a0.c -- as has
+# src/func_02065af0.c, the one caller of func_02065b88. Every one of them
+# already loaded the literal; none of them was ever entered, because
+# data_020a94c0 stays 0 until src/func_020652fc.c or src/func_02065234.c sets
+# it, and those two were faced. Renaming only the newly linked TUs would have
+# left the split object this rung exists to close, so the rename covers all
+# nine callers, not just the four this slice adds.
+#
+# WHAT RUNS AND WHAT DOES NOT, stated the way rung W6 stated it.
+#   RUNS on a session: src/func_02040c34.c reaches func_020652fc on the
+#   parent's arm and func_02065234 on the child's, so the message layer is
+#   brought up for real -- data_020a94c0 goes to 1, the sixteen table entries
+#   are initialised, src/func_020412f0.c is installed as the layer's callback
+#   (which is the thing rung W6 could not do, and the reason nothing ever
+#   pushed a node onto the worker's +0x2708 list), and func_02065af0 copies the
+#   0x9c header block out of the SAME object the initialiser just wrote.
+#   DOES NOT: the seven bodies behind the two guards. src/func_02065050.c and
+#   src/func_020650d8.c are reached only from src/func_020417d0.c's message
+#   types 0x15 and 0x9, and func_020417d0 is entered only when the host ARM7
+#   posts an 0x82 port-receive indication, which it does not (lane WM5 recorded
+#   this and it has not changed). They are LINKED AND UNENTERED, and
+#   hal/wm_thread.cpp's [wm8] census reads that back out of the ROM's own bytes
+#   rather than asserting it here.
+#
+# TWO TARGETS, NOT THREE, for the same forced reason rung W6 gave: these ride
+# with hal/wm_thread.cpp, which walk_window and walk_window_hires carry and
+# smoke_player and mp_comms_seam do not.
+#
+# Plain C, eleven files, no struct layout option and no pointer-to-member.
+src/func_020652fc.c
+src/func_02065234.c
+src/func_02065050.c
+src/func_020650d8.c
+src/func_020654d0.c
+src/func_02065500.c
+src/func_02063ea8.c
+src/func_02064470.c
+src/func_02064674.c
+src/func_020647a4.c
+src/func_020647d8.c

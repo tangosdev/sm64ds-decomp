@@ -453,6 +453,28 @@ HEADER_SHADOW = {
     "_ZN15TtcRotatingCube13InitResourcesEv": ("decl_common.h",
                                               ("func_ov065_021198a0",
                                                "func_ov065_0211990c")),
+    # Run link100, lane SEAT6, batch B6. src/_ZN6Player16CleanupResourcesEv.cpp
+    # re-declares five functions decl_common.h has already declared, `char *`
+    # against the header's `void *` (:2207-2209, :2289) and, for func_02073244
+    # (:2158), `(int,int,int,void(*)(void))` against `(void*,int,int,
+    # void(*)(void*))`. mwcc reads one declaration seen twice; MSVC reads an
+    # extern "C" overload and refuses the TU with five C2733s and one C2664 --
+    # the func_ov102_0214b248 / _ZN5Whomp13InitResourcesEv case exactly. The
+    # TU's own declarations then stand alone and its call to func_02073244
+    # type-checks against the `void (*)(void)` it declares func_020072c0 with,
+    # which decl_common.h does not declare at all. This is blocker 2 of the two
+    # port/unmatched/Player_CleanupResources.cpp records; blocker 1 (the
+    # `p->v1()` model deletes landing on DoSetFile) died with lane SLOT5F's
+    # destructor respelling -- hal/model_dtor_seat.cpp seats _ZTV5Model[1],
+    # _ZTV9ModelAnim[1] and _ZTV10ModelAnim2[1] with the ROM's own deleting D0
+    # today, which is the word the two-virtual shadow's slot 1 means.
+    # Retires port/unmatched/Player_CleanupResources.cpp.
+    "_ZN6Player16CleanupResourcesEv": ("decl_common.h",
+                                       ("func_ov002_020bdd2c",
+                                        "func_ov002_020bdef0",
+                                        "func_ov002_020bdd9c",
+                                        "func_ov002_020e032c",
+                                        "func_02073244")),
 }
 
 # ---- REDUNDANT OUT-OF-LINE MEMBER REDECLARATIONS ---------------------------
@@ -893,6 +915,182 @@ VIRTUAL_CALL = {
          "            ((void (__fastcall *)(void *, void *, int *))\n"
          "             (*(void ***)self)[5])(self, 0, vecArr);"),
     ],
+    # ------------------------------------------------------------------
+    # Run link100, lane SEAT6, batch B6 (families E and F, the residue lanes
+    # SLOT5F and FACEF left standing). Every row below is the SAME mechanism
+    # as func_ov006_02127d10 above: the matched TU reads a vtable word raw and
+    # calls it __cdecl (receiver PUSHED, caller cleans), while the word the
+    # host seats in that slot is entered with the receiver in ECX. On ARM the
+    # two spellings are the same three instructions, which is why byte-locked
+    # src carries the cdecl one; on x86 they are different calls. Each patch
+    # keeps the ROM's own word index and the ROM's own arguments and changes
+    # only how the call is entered.
+    #
+    # RabbitKey::Render (ov085), the Model at this+0x110. ROM:
+    #   ldr r2,[r0] / mov r1,#0 / ldr r2,[r2,#0x14] / blx r2
+    # byte +0x14 = word 5 = Render, scale argument null. The matched TU's
+    # shadow field is `void (*fn14)(void *self, int)`, a PLAIN cdecl pointer,
+    # and _ZTV5Model[5] holds `void __fastcall mv_render(void*, void*,
+    # const void*)` (hal/cxxname_bridge.cpp:522): the receiver never arrived
+    # and four bytes were cleaned twice (measured: the spawn-assisted key
+    # crashed frame 1, ecx=13811ba3, DEP-exec fault). Retires the
+    # _ZN9RabbitKey6RenderEv body in port/unmatched/Ov085_Renders.cpp.
+    "_ZN9RabbitKey6RenderEv": [
+        ("        s->vt->fn14(s, 0);",
+         "        /* hostgen VIRTUAL_CALL: byte +0x14 is word 5 of the Model\n"
+         "           vptr -- Render -- and the host seats a __fastcall thunk\n"
+         "           there. See the table. */\n"
+         "        ((void (__fastcall *)(void *, void *, const void *))\n"
+         "         (*(void ***)s)[5])(s, 0, (const void *)0);"),
+    ],
+    # Actor::OnKicked's dispatcher (ov002), vtable byte +0x60 = word 24. All
+    # thirty seated slot-24 bodies are `static int __fastcall ac_kicked(void*,
+    # void*, void*)` ret-4 veneers (hal/actor_classes.cpp:169,403), while the
+    # raw src emits `push ebx / push ecx / call [eax+0x60]` with the caller
+    # cleaning sixteen bytes. The two port_actor_interaction_* calls are the
+    # quarantine net's receiver latch, carried over verbatim from the host
+    # copy this retires: without it an access violation inside the receiver's
+    # slot freezes the PLAYER driving the interaction instead of the receiver,
+    # which presents as a permanent soft-lock rather than a frozen enemy. It
+    # is a HOST SEAM, the func_02016ff4 port_model_shrink_enabled case, not
+    # part of the convention fix. Retires
+    # port/unmatched/Actor_OnKickedDispatch.cpp.
+    "func_ov002_020eeeb8": [
+        ("extern short data_02082214[];",
+         "extern short data_02082214[];\n"
+         "/* hostgen VIRTUAL_CALL host seam: the quarantine net's receiver\n"
+         "   latch (port/unmatched/func_02043fdc_hostcopy.cpp). */\n"
+         "void *port_actor_interaction_begin(void *receiver);\n"
+         "void port_actor_interaction_end(void *prev);"),
+        ("                    (*(void (**)(void *, char *))(*(int *)a + 0x60))(\n"
+         "                        a, actor);",
+         "                    /* hostgen VIRTUAL_CALL: byte +0x60 is word 24 --\n"
+         "                       Actor::OnKicked -- and every seated slot-24\n"
+         "                       body is a __fastcall ret-4 veneer. See the\n"
+         "                       table. */\n"
+         "                    void *port_prev_recv =\n"
+         "                        port_actor_interaction_begin(a);\n"
+         "                    ((void (__fastcall *)(void *, void *, char *))\n"
+         "                     (*(void ***)a)[24])(a, 0, actor);\n"
+         "                    port_actor_interaction_end(port_prev_recv);"),
+    ],
+    # Actor::OnAttacked2's dispatcher (ov002), vtable byte +0x5c = word 23.
+    # Same shape, same seats (hal/actor_classes.cpp:167,402 `ac_atk2`).
+    # Retires port/unmatched/Actor_OnAttacked2Dispatch.cpp.
+    "func_ov002_020ef070": [
+        ("extern short data_02082214[];",
+         "extern short data_02082214[];\n"
+         "/* hostgen VIRTUAL_CALL host seam: the quarantine net's receiver\n"
+         "   latch (port/unmatched/func_02043fdc_hostcopy.cpp). */\n"
+         "void *port_actor_interaction_begin(void *receiver);\n"
+         "void port_actor_interaction_end(void *prev);"),
+        ("                    (*(void (**)(void *, char *))"
+         "(*(int *)a + 0x5c))(a, actor);",
+         "                    /* hostgen VIRTUAL_CALL: byte +0x5c is word 23 --\n"
+         "                       Actor::OnAttacked2 -- and every seated slot-23\n"
+         "                       body is a __fastcall ret-4 veneer. See the\n"
+         "                       table. */\n"
+         "                    void *port_prev_recv =\n"
+         "                        port_actor_interaction_begin(a);\n"
+         "                    ((void (__fastcall *)(void *, void *, char *))\n"
+         "                     (*(void ***)a)[23])(a, 0, actor);\n"
+         "                    port_actor_interaction_end(port_prev_recv);"),
+    ],
+    # Actor::OnHitFromUnderneath's dispatcher (ov002), vtable byte +0x70 =
+    # word 28 (hal/actor_classes.cpp:177,407 `ac_headbonk`). Slot 28's OTHER
+    # byte-locked dispatcher, src/func_ov002_020eeca8.cpp, already spells the
+    # same call as a C++ virtual, which is why one vtable word could not be
+    # both conventions and why this site had to move rather than the seats.
+    # Retires port/unmatched/Player_HeadBonk.cpp.
+    "func_ov002_020cef84": [
+        ("extern int data_02099368;",
+         "extern int data_02099368;\n"
+         "/* hostgen VIRTUAL_CALL host seam: the quarantine net's receiver\n"
+         "   latch (port/unmatched/func_02043fdc_hostcopy.cpp). */\n"
+         "void *port_actor_interaction_begin(void *receiver);\n"
+         "void port_actor_interaction_end(void *prev);"),
+        ("                if (a)\n"
+         "                    (*(void (**)(void *, char *))"
+         "(*(int *)a + 0x70))(a, self);",
+         "                if (a) {\n"
+         "                    /* hostgen VIRTUAL_CALL: byte +0x70 is word 28 --\n"
+         "                       Actor::OnHitFromUnderneath -- and every seated\n"
+         "                       slot-28 body is a __fastcall ret-4 veneer. See\n"
+         "                       the table. */\n"
+         "                    void *port_prev_recv =\n"
+         "                        port_actor_interaction_begin(a);\n"
+         "                    ((void (__fastcall *)(void *, void *, char *))\n"
+         "                     (*(void ***)a)[28])(a, 0, self);\n"
+         "                    port_actor_interaction_end(port_prev_recv);\n"
+         "                }"),
+    ],
+    # dScMgBase_c's two per-frame framework ticks (ov004), vtable slot 0x13 =
+    # byte +0x4c. The ROM at 0x020b6cf4 is `ldr r2,[r0] / ldr r1,[r4,#0x18] /
+    # ldr r2,[r2,#0x4c] / blx r2`, so slot 19 takes (this, int); the host
+    # thunk hal/scene_mg.cpp's `static int __fastcall mb_v19(void*, void*,
+    # int)` cleans the one stack parameter itself (`ret 4`) while the raw
+    # src's plain C pointer cleans it again -- four bytes cleaned twice, which
+    # walked func_ov004_020b6c9c's own epilogue one slot high and executed a
+    # word out of the live scene object on scene 387. The two src TUs are
+    # byte-identical apart from their names, so the two patches are the same
+    # text. Retires port/unmatched/MgBase_ShadowSlot19.cpp.
+    "func_ov004_020b6b40": [
+        ("        int (*fn)(void *, int) = "
+         "(int (*)(void *, int)) (*(void ***)g)[0x13];\n"
+         "        if (fn(g, c->f18) == 0)",
+         "        /* hostgen VIRTUAL_CALL: slot 0x13 (byte +0x4c) is seated as\n"
+         "           a __fastcall thunk with one stack parameter it cleans\n"
+         "           itself. See the table. */\n"
+         "        int (__fastcall *fn)(void *, void *, int) =\n"
+         "            (int (__fastcall *)(void *, void *, int)) "
+         "(*(void ***)g)[0x13];\n"
+         "        if (fn(g, 0, c->f18) == 0)"),
+    ],
+    "func_ov004_020b6c9c": [
+        ("        int (*fn)(void *, int) = "
+         "(int (*)(void *, int)) (*(void ***)g)[0x13];\n"
+         "        if (fn(g, c->f18) == 0)",
+         "        /* hostgen VIRTUAL_CALL: slot 0x13 (byte +0x4c) is seated as\n"
+         "           a __fastcall thunk with one stack parameter it cleans\n"
+         "           itself. See the table. */\n"
+         "        int (__fastcall *fn)(void *, void *, int) =\n"
+         "            (int (__fastcall *)(void *, void *, int)) "
+         "(*(void ***)g)[0x13];\n"
+         "        if (fn(g, 0, c->f18) == 0)"),
+    ],
+    # The +0x4f38 sub-object's fader gate (ov006), shared by dScMgCup_c and
+    # dScMgSound_c. ROM 0x020c2938: `ldr r1,[r0] / ldr r1,[r1,#0x18] / blx r1`
+    # with r0 the object -- byte +0x18, word 6. data_0209f5bc is a HOST object
+    # (hal/fader_wipes.cpp's HalFaderWipe, laid out in ROM byte order) whose
+    # virtuals MSVC compiles __thiscall, so the raw `int (**vt)(void*)` read
+    # left the receiver on the stack and IsAtEnd read currInterp off whatever
+    # ECX held. The stack balances either way, which is why nothing faulted
+    # and nothing saw it. Retires
+    # port/unmatched/MgShared4f38_ShadowFader_020c2924.cpp.
+    "func_ov006_020c2924": [
+        ("  int (**vt)(void*)=*(int(***)(void*))obj;\n"
+         "  if(vt[6](obj)==0) return;",
+         "  /* hostgen VIRTUAL_CALL: byte +0x18 is word 6 of the fader vptr --\n"
+         "     IsAtEnd -- and hal/fader_wipes.cpp compiles HalFaderWipe's\n"
+         "     virtuals __thiscall. See the table. */\n"
+         "  if (((int (__fastcall *)(void *, void *))"
+         "(*(void ***)obj)[6])(obj, 0) == 0) return;"),
+    ],
+    # ArrowSignRight::OnAttacked1's inner self-kill (ov098), vtable byte +0x7c
+    # = word 31. The raw src loads the vtable pointer into ECX to reach the
+    # slot and PUSHES `this`, while the seated veneer `static int __fastcall
+    # as_kill(void *s, void *)` (hal/actor_classes_bob_world.cpp:1139,1190)
+    # reads `this` from ECX: a WRONG RECEIVER, not a lost word -- the sign
+    # would have run its Kill against _ZTV14ArrowSignRight. The stack balances
+    # (one push, one pop, `ret 0`), so nothing faults. Retires
+    # port/unmatched/ArrowSign_OnAttacked1.cpp.
+    "func_ov098_02137d40": [
+        ("    c->vt->f[0x7c/4](c);",
+         "    /* hostgen VIRTUAL_CALL: byte +0x7c is word 31 -- Kill -- and the\n"
+         "       seated veneer as_kill is __fastcall with no stack argument.\n"
+         "       See the table. */\n"
+         "    ((int (__fastcall *)(void *, void *))(*(void ***)c)[31])(c, 0);"),
+    ],
 }
 
 
@@ -1090,6 +1288,26 @@ ARG_WIDTH = {
         ("void CollectStar(int a, int b){",
          "void CollectStar(signed char a, int b){"),
     ],
+    # Run link100, lane SEAT6, batch B6. The same disagreement on a RETURN
+    # rather than a parameter. src/func_0200ee8c.c declares
+    # `extern s32 GetStarCameraSetting(s32 star);` and indexes the six-entry
+    # table data_020876e4 with the whole of it, while src/GetStarCameraSetting.c
+    # DEFINES it `unsigned char GetStarCameraSetting(int idx)` returning
+    # `(data_02092134 >> (idx*4)) & 0xf` -- so the ROM's `bl` leaves a 4-bit
+    # value in r0 with the high bits already cleared by the AND, and the
+    # s8/s32 declaration mismatch is harmless on ARM. Under MSVC the cdecl
+    # caller reads the whole of EAX, whose high bytes the callee never wrote:
+    # a call that should return 1 came back 0x1001 and indexed 0x4000 bytes
+    # past the table (measured on the king-defeat star path, the c0000005 in
+    # ProcessKuppaScript that port/hal/star_flow.cpp's block records).
+    # Declaring the return the width the definition really has makes MSVC
+    # read AL alone, which is what ARM did. Retires the func_0200ee8c body in
+    # port/hal/star_flow.cpp.
+    "func_0200ee8c": [
+        ("extern s32 GetStarCameraSetting(s32 star);",
+         "extern unsigned char GetStarCameraSetting(s32 star);"
+         "  /* hostgen ARG_WIDTH: the definition returns u8, see the table */"),
+    ],
 }
 
 
@@ -1207,12 +1425,110 @@ def arg_width_patch(text, sym):
 # seam function would ADD a stand-in to retire one. The rewrite therefore lands
 # on the call expression, and hard-errors the same way CALLEE_SEAM does if the
 # source moves.
-REG_RIDE_ARG_DECL = 'extern "C" int func_ov002_020e3f90(char *);\n'
+# THE INJECTED DECLARATION IS PER SYMBOL (run link100, lane SEAT6). It used to
+# be one module-level string prepended to whatever TU this table touched, which
+# was correct while the table had one row and would have put func_ov002_020e3f90
+# 's declaration at the top of four unrelated generated TUs the moment it had
+# five. A row that patches the TU's OWN declaration -- which every row added
+# below does -- needs no injection at all and gets none.
+REG_RIDE_ARG_DECL = {
+    "func_ov002_020e444c": 'extern "C" int func_ov002_020e3f90(char *);\n',
+}
 REG_RIDE_ARG = {
     "func_ov002_020e444c": [
         ("    if (func_ov002_020e3f90() == 0) {",
          "    if (func_ov002_020e3f90(c) == 0) {  /* hostgen REG_RIDE_ARG: "
          "ARM r0 still held c at the ROM's bl, see the table */"),
+    ],
+    # ------------------------------------------------------------------
+    # Run link100, lane SEAT6, batch B6. Four more of the same shape, each
+    # patching the DECLARATION the TU itself carries plus the call sites that
+    # use it, so nothing is injected and neither src/ nor include/ moves.
+    #
+    # ModelComponents::Render (arm9). src declares
+    # `extern void func_02044b30(ModelComponents* self);` and calls it
+    # `func_02044b30(this)` at both ends of the module walk, while
+    # src/func_02044b30.c DEFINES it `void func_02044b30(char *obj, int idx)`
+    # and indexes `obj+4`'s module array by `idx * 0x30` on its first line. On
+    # ARM the material index is already in r1 from the loop's own arithmetic
+    # and mwccarm had nothing to move; under cdecl the callee reads its `idx`
+    # off a stack slot the caller never wrote. `idx` is the loop's own
+    # `u8 idx` and is live and named at both call sites. Retires
+    # port/unmatched/ModelComponents_Render.cpp (a host REIMPLEMENTATION, and
+    # its banner says so: "not byte-verified against the ROM").
+    "_ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3": [
+        ("extern void func_02044b30(ModelComponents* self);",
+         "extern void func_02044b30(ModelComponents* self, int idx);"
+         "  /* hostgen REG_RIDE_ARG: the material index rides r1, see the "
+         "table */"),
+        ("                        func_02044b30(this);",
+         "                        func_02044b30(this, idx);"),
+    ],
+    # Bubba's chase gate (ov032). src declares
+    # `extern char* _ZN5Actor13ClosestPlayerEv(void);` and calls it with no
+    # argument; Actor::ClosestPlayer is a __thiscall method that reads
+    # `this + 0x5c`. ROM 0x02111350 is `push {r4,lr} / mov r4,r0 /
+    # bl 0x02010ad8`, so r0 still holds the receiver at the branch. The body's
+    # own first parameter `c` is that value. port/tools/closestplayer_guard.py
+    # refuses this TU in any slice for exactly this reason, and it is right to:
+    # what it scans is the RAW source, and the generated TU below is the one
+    # that gets compiled. Retires port/unmatched/Bubba_ChaseGate.cpp.
+    "func_ov032_02111350": [
+        ("extern char* _ZN5Actor13ClosestPlayerEv(void);",
+         "extern char* _ZN5Actor13ClosestPlayerEv(char* self);"
+         "  /* hostgen REG_RIDE_ARG: ARM r0 still held c, see the table */"),
+        ("  if (_ZN5Actor13ClosestPlayerEv() == 0) return 1;",
+         "  if (_ZN5Actor13ClosestPlayerEv(c) == 0) return 1;"),
+    ],
+    # The two TextureSequence::Prepare callers, the SHORT-1 argsweep row.
+    # Prepare is a real non-static C++ method, Prepare(BMD_File &model,
+    # BTP_File &animFile), so it consumes THREE ARM registers (r0 this, r1
+    # model, r2 animFile) and its ROM body is a 0xc tail-call veneer into
+    # func_02046d50 that touches none of them -- whatever the caller has
+    # loaded rides straight through. Both matched TUs declare it as a
+    # TWO-argument free function. The host bridge (hal/player_bridges.cpp) is
+    # the real three-parameter face and DEREFERENCES its third argument
+    # (`*(BTP_File*)btp`) before func_02046d50, which never reads it, runs. The
+    # third argument is therefore the caller's own second value again -- a
+    # known-valid BTP_File pointer -- which is the shape the two host copies
+    # this retires already ship and which MotherPenguin_InitResources.cpp
+    # derived. Retires port/unmatched/TexSeq_Caller_ov002_020e5948.cpp and
+    # port/unmatched/Snowman_InitResources.cpp.
+    "func_ov002_020e5948": [
+        ("extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "(void* bmd, void* btp);",
+         "extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "(void* self, void* bmd, void* btp);"
+         "  /* hostgen REG_RIDE_ARG: the third register rides through, see "
+         "the table */"),
+        ("                _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "((void*)((s32*)data_ov002_0210a69c[k])[1], (void*)((s32*)entry)[1]);",
+         "                _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "((void*)((s32*)data_ov002_0210a69c[k])[1], (void*)((s32*)entry)[1], "
+         "(void*)((s32*)entry)[1]);"),
+        ("    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "((void*)data_ov002_0210ebb8[1], (void*)data_ov002_0210e8d0[1]);",
+         "    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "((void*)data_ov002_0210ebb8[1], (void*)data_ov002_0210e8d0[1], "
+         "(void*)data_ov002_0210e8d0[1]);"),
+        ("    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "((void*)data_ov002_0210eb20[1], (void*)data_ov002_0210ebd8[1]);",
+         "    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "((void*)data_ov002_0210eb20[1], (void*)data_ov002_0210ebd8[1], "
+         "(void*)data_ov002_0210ebd8[1]);"),
+    ],
+    "func_ov072_02120a44": [
+        ("extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "(void *bmd, void *btp);",
+         "extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "(void *self, void *bmd, void *btp);"
+         "  /* hostgen REG_RIDE_ARG: the third register rides through, see "
+         "the table */"),
+        ("    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "((void *)data_ov072_02122c48[1], (void *)data_ov072_02122c50[1]);",
+         "    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File"
+         "((void *)data_ov072_02122c48[1], (void *)data_ov072_02122c50[1], "
+         "(void *)data_ov072_02122c50[1]);"),
     ],
 }
 
@@ -1220,7 +1536,7 @@ REG_RIDE_ARG = {
 def reg_ride_arg_patch(text, sym):
     """Spell an argument the ROM's caller left riding in a register."""
     return apply_patches(text, sym, REG_RIDE_ARG, "REG_RIDE_ARG",
-                         REG_RIDE_ARG_DECL)
+                         REG_RIDE_ARG_DECL.get(sym, ""))
 
 
 def apply_patches(text, sym, table, what, decl=""):

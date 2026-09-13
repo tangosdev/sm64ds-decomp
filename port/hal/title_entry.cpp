@@ -723,6 +723,27 @@ extern "C" int port_title_entry_commit(void)
 
    Returns the process exit code. On an entry the census has already been
    written and the caller falls through to the level boot. */
+/* THE THIRD SCENE LOOP, UNDER THE ROM'S FRAME STATE (run link100, boot plan
+   rung D3, lane R3D). Rung R3a converted the windowed loop's readers and rung
+   R3B's step B0 put the headless one (hal/scene_boot.cpp's port_scene_run)
+   under the same three calls. This is the third and last: port_title_entry_run
+   is the loop tail2_states_proof's title path actually takes, and until this
+   rung it was the one frame loop in the port whose counter nothing checked.
+
+   The four points are the same four, in the same order, as the other two loops
+   (walk_window.cpp:6756/:6889/:6943/:6981 windowed, scene_boot.cpp:6903/:6907/
+   :6912/:6914 headless): begin with this loop's own name, the tick's frame
+   number read through the cross-check, phase 6 at the frame boundary, and the
+   account before the finish. Worth ZERO linked TUs by design; what it buys is
+   that a green title row has PROVED the ROM's phase-6 step count agreed with
+   this loop's counter on every frame of it. */
+extern "C" {
+void port_rom_frame_begin(const char *loop);
+void port_rom_frame_phase6(void);
+int  port_rom_frame_checked(int host, const char *reader);
+void port_rom_frame_report(void);
+}
+
 extern "C" int port_title_entry_run(void)
 {
     const int budget = port_scene_frames_wanted();
@@ -730,14 +751,23 @@ extern "C" int port_title_entry_run(void)
     if (rc)
         return rc;
 
+    port_rom_frame_begin("title loop (headless)");
     int frame = 0;
     for (; frame < budget; ++frame) {
-        port_scene_tick(frame, 1);
+        port_scene_tick(port_rom_frame_checked(frame, "title-entry-tick"), 1);
+        /* THE FRAME BOUNDARY. func_020197b8.c:49 is `data_0209d50c = 6;` and
+           this loop's frame ends here -- after the frame's work, before the
+           stop test that ends the run -- which is where the ROM's loop runs
+           it. The stop test below is deliberately BELOW this call: the title
+           writes its request from inside port_scene_tick, so the frame whose
+           tick made the request is a frame that ran and its phase 6 with it. */
+        port_rom_frame_phase6();
         if (port_title_entry_should_stop()) {
             ++frame;             /* this frame ran; count it */
             break;
         }
     }
+    port_rom_frame_report();
 
     /* THE CENSUS IS WRITTEN OVER THE FRAMES THAT ACTUALLY RAN, not over the
        budget. A short run that reports the budget is how a capture ends up

@@ -229,6 +229,16 @@ void hal_wipe_note(const char *what, const void *self)
    as the config has them -- and Color at 0x02017574 is its own base class,
    not a misnamed FaderColor D2. The commit message stands as history; this
    note carries the truth. */
+
+/* THE ROM'S OWN DELETING DESTRUCTOR, for slot 0x04 below.  Run link100 wave 7,
+   lane SEAT2, census batch B2.  src/engine/fader/_ZN9FaderWipeD0Ev.c is the
+   matched body at arm9 0x02017418, and the cartridge's own table holds it at
+   _ZTV9FaderWipe + 0x04 -- read out of extracted/arm9_dec.bin at 0x0208eaa0
+   and confirmed by config/arm9/relocs.txt's `from:0x0208eaa0 kind:load
+   to:0x02017418`.  That word is THIS class's slot 0x04, because the alias at
+   the bottom of this file makes ??_7HalFaderWipe@@6B@ the ROM's table. */
+extern "C" void *_ZN9FaderWipeD0Ev(void *thiz);
+
 struct HalFaderWipe {
     Fix12i currInterp;
     Fix12i speed;
@@ -242,7 +252,20 @@ struct HalFaderWipe {
     }
 
     virtual ~HalFaderWipe() {}                       /* 0x00  ROM D1 */
-    virtual void DtorDeleting() {}                   /* 0x04  ROM D0 */
+    /* 0x04  ROM D0.  WAS AN EMPTY STUB and the slot table above still says
+       what it says: "nobody on host".  It is the ROM's body now (lane SEAT2),
+       and that changes nothing about what runs, because no dispatch site in
+       the port or in src reaches a wipe's second destructor word -- the seven
+       wipes are Stage::InitResources' pool objects and hal/fader_wipes.cpp's
+       stand-ins for them are static, so nothing deletes one.  What it changes
+       is that the word is the cartridge's word.  The trace line is here
+       because a seat nothing enters and a seat that frees a static object are
+       opposite findings and both are silent otherwise. */
+    virtual void DtorDeleting()                      /* 0x04  ROM D0 */
+    {
+        hal_wipe_note("DtorDeleting (ROM D0, the matched body)", this);
+        _ZN9FaderWipeD0Ev(this);
+    }
     virtual int AdvanceFade()                        /* 0x08 */
     {
         /* Driven advance (the frame loop's port_fader_advance) STEPS the
@@ -506,7 +529,34 @@ void port_fader_advance(void)
     if (!f)
         return;
     g_hal_fader_stepping = 1;
-    int at_target = f->AdvanceFade();
+    /* QUALIFIED, NOT VIRTUAL, run link100 lane CTOR3 rung 2, and it is a
+       calling-convention fix rather than a style choice.
+
+       f is either one of the seven hal_wipes -- host C++ objects carrying this
+       class's own MSVC vtable -- or data_0209f5e8, the colour fader, which
+       port_fader_start_color installs into data_0209d4b0[0]. Since rung C1c the
+       ROM's own __sinit_02074edc is the last writer of THAT object's vptr, so
+       it points at hal/scene_boot.cpp's data_0208eb2c and not at this class's
+       table any more.
+
+       A virtual call here compiles to __thiscall: `mov ecx,f / mov eax,[ecx] /
+       call [eax+8]`, read out of this lane's own binary at
+       _port_fader_advance+0x22, with NOTHING pushed. Byte +0x08 of
+       data_0208eb2c is hal/scene_boot.cpp's l2_eb2c_s08, which is __cdecl on
+       purpose -- the ROM's one dispatch site for that slot, src/func_02018efc.c,
+       passes the receiver as a STACK argument -- so it would read its receiver
+       off this function's frame, dereference it in its own guard, and hand back
+       a void EAX where the line below wants an int. Nothing in the gates
+       reaches it (port_fader_start_color has one caller in
+       hal/level_change.cpp, the title row that warps to a level, and one in the
+       harness), which is exactly why it had to be read out of the binary rather
+       than waited for.
+
+       A qualified call takes no vtable at all. For the seven wipes it is the
+       same body the virtual call resolved to -- no class derives from this one
+       -- and for the colour fader it is what ran before C1c. So this restores
+       one behaviour and changes none. */
+    int at_target = f->HalFaderWipe::AdvanceFade();
     g_hal_fader_stepping = 0;
     /* Settled: drop it out of motion so the next transition's gates open, and
        leave the blend register at 0 when the fade landed fully OPEN (interp 0),

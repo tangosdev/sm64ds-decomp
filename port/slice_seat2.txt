@@ -1,0 +1,49 @@
+# SEAT2 slice: the ROM's own second destructor word for three cartridge
+# vtables.  Run link100 wave 7, census batch B2 (DTOR-THUNK-VTABLES).
+#
+# Three matched TUs, one per table, each of them the D0 (deleting) half of a
+# destructor pair the ROM keeps in vtable word 1 and MSVC used to have no slot
+# for.  The fold is gone -- include/ModelBase.h spells the pair as two plain
+# virtuals on the host (see sm64ds-port-msvc-dtor-slot-shift) -- so word 1 of
+# each of these tables is a real slot again and the ROM's own body belongs in
+# it.  hal/vtables_seat2.cpp carries the seat, the derivation and the refusals.
+#
+# THE FOURTH ROW OF THIS GATE IS NOT LISTED HERE ON PURPOSE.
+# src/_ZN5Stage19BeforeInitResourcesEv.cpp is already on port/slice_w8a.txt
+# (its own comment there reads "_ZTV5Stage slot 1 ... one of the four the
+# vtable seat will reach"), so it COMPILES into walk_window today and is
+# dropped by /OPT:REF for want of a reference.  Listing it again would put a
+# second object with the same definition into the same link.  Its seat is the
+# reference: hal/stage_bridges.cpp's st_binit calls it.
+#
+# WHAT EACH ONE NEEDS, CHECKED AGAINST THE BASE MAP (0046a2d11, 10523 linked)
+# BEFORE IT WAS LISTED:
+#   _ZN7ClipperD0Ev.c        _ZTV7Clipper (hal/ctor_runner.cpp) and
+#                            Memory::operator_delete2 -- both in the map.  Its
+#                            two placeholder names are bound in the CMake block
+#                            (see below), not here.
+#   _ZN11ShadowModelD0Ev.c   _ZTV11ShadowModel (hal/actor_vtables.cpp),
+#                            data_0209cef4 (same file), _ZN9ModelBaseD2Ev and
+#                            Memory::operator_delete2 -- all four in the map.
+#                            port/slice_w1l3.txt parked this row with the note
+#                            "a free +1 for whoever checks that closure links";
+#                            this is that check.
+#   _ZN9FaderWipeD0Ev.c      _ZTV9FaderWipe (the alias onto
+#                            ??_7HalFaderWipe@@6B@ in hal/fader_wipes.cpp),
+#                            _ZN5ModelD1Ev, _ZN5ColorD1Ev and
+#                            Memory::operator_delete2 -- all four in the map.
+#
+# NOT LISTED, refused with a measurement rather than parked:
+#   src/engine/fader/_ZN9FaderWipe11AdvanceFadeEv.cpp -- the matched body
+#     renders the wipe mesh through ModelComponents::Render on a
+#     ModelComponents the port never loads a file into, and the host's Render
+#     opens on info->field0 with no null guard.  See hal/vtables_seat2.cpp.
+#   the six src/_ZThn80_N*D{0,1}Ev.cpp adjustor-thunk TUs -- mwcc artefact
+#     sources that do not survive cl (LNK2005 within each pair, LNK2001 on four
+#     synthetic base virtuals).  port/slice_gate24.txt records the same
+#     exclusion for the BlendModelAnim two; out/SEAT2/thunk_msvc_probe.log is
+#     this lane's own measurement of all of it.
+
+src/_ZN7ClipperD0Ev.c
+src/_ZN11ShadowModelD0Ev.c
+src/engine/fader/_ZN9FaderWipeD0Ev.c

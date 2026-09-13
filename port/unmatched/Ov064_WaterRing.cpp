@@ -100,30 +100,13 @@ extern PortPmf data_ov064_0211c944[];   /* the record it switches to */
 
 }  /* extern "C" */
 
-/* PORT_HOST_ABI: mwcc pointer-to-member on a forward-declared struct. The
-   matched WaterRing::Behavior reads the record at this+0x370 and calls its
-   SECOND half (the tick, byte +8) when non-null. Read here as a plain
-   { fn, 0 }. The DecIfAbove0_Short, the three angle copies, the UpdatePos and
-   the collider/animation tail are the matched Behavior's own, in its order. */
-extern "C" int _ZN9WaterRing8BehaviorEv(void *self)
-{
-    char *c = (char *)self;
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    {
-        PortPmf *obj = *(PortPmf **)(c + 0x370);
-        if (obj && obj[1].fn)
-            ((int (*)(void *))(size_t)obj[1].fn)(c);
-    }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-    *(short *)(c + 0x08c) = *(short *)(c + 0x092);
-    *(short *)(c + 0x08e) = *(short *)(c + 0x094);
-    *(short *)(c + 0x090) = *(short *)(c + 0x096);
-    func_ov064_02119f1c(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    _ZN9Animation7AdvanceEv(c + 0x35c);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN9WaterRing8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 /* func_ov064_02119ecc IS NOT A HOST COPY ANY MORE. Run link100 lane PMF2 put
    src/func_ov064_02119ecc.cpp back on port/slice_pmf2.txt (batch 2): with /vmg /vmm
@@ -186,12 +169,30 @@ Lkeep:
 
 /* ---- the seat ------------------------------------------------------------ */
 
+/* run link100 lane PMFB7 gate 1: THE TWO TICK RECORDS ARE FACES.
+   src/_ZN9WaterRing8BehaviorEv.cpp dispatches the cell's +8 half as a real
+   pointer to member -- mov eax,[cell+8] / test / je / mov ecx,[cell+12] /
+   add ecx,this / call eax, ARITY ZERO, /Zp4 diff 0 lines -- so the receiver
+   arrives in ecx with nothing on the stack. The two ENTER records keep their
+   plain cdecl bodies: func_ov064_02119ecc reaches them through the caller's
+   own frame. */
+#define WR_FACE(tag, sym)                                                 \
+    static void __fastcall wr_##tag(void *self, void *dead_edx)           \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        sym(self);                                                        \
+    }
+WR_FACE(02119d28, func_ov064_02119d28)
+WR_FACE(02119c60, func_ov064_02119c60)
+
 static const struct { PortPmf *slot; unsigned rom; int (*host)(void *); }
 g_water_ring_states[] = {
     {data_ov064_0211c3b0, 0x02119ea0, func_ov064_02119ea0},  /* c954 enter */
-    {data_ov064_0211c3c8, 0x02119d28, func_ov064_02119d28},  /* c954 tick  */
+    {data_ov064_0211c3c8, 0x02119d28,
+     (int (*)(void *))(void *)wr_02119d28},                  /* c954 tick  */
     {data_ov064_0211c3c0, 0x02119ce4, func_ov064_02119ce4},  /* c944 enter */
-    {data_ov064_0211c3b8, 0x02119c60, func_ov064_02119c60},  /* c944 tick  */
+    {data_ov064_0211c3b8, 0x02119c60,
+     (int (*)(void *))(void *)wr_02119c60},                  /* c944 tick  */
 };
 
 extern "C" void port_water_ring_states_seat(void)

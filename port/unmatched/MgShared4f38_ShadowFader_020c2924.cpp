@@ -160,16 +160,12 @@ struct HalFaderVObj {
 
 // PORT_HOST_ABI: a __cdecl-typed raw vtable read against a __thiscall host
 // virtual -- the stack balances and the receiver does not arrive.
-void func_ov006_020c2924(char *c)
-{
-    func_ov006_020c2848(c);
-    if (((HalFaderVObj *)data_0209f5bc)->v6() == 0)          /* DELTA 1 */
-        return;
-    *(int *)(c + 0x190) = 0;
-    *(int *)(c + 0x18c) = *(int *)(c + 0x190);
-    *(int *)(c + 0x198) = 0;
-    *(int *)(c + 0x194) = *(int *)(c + 0x198);
-    *(int *)(c + 0x60)  = 0;
-    *(int *)(c + 0xd0)  = 0;
-    *(int *)(c + 0xe4)  = 0;
-}
+/* func_ov006_020c2924 RETIRED (run link100, lane SEAT6, batch B6).
+   DELTA 1 of this file -- the raw `int (**vt)(void*)` read against
+   hal/fader_wipes.cpp's __thiscall HalFaderWipe::IsAtEnd -- is one line,
+   and reshaping fader_wipes.cpp (lane FACEF's proposal 2) is not needed
+   to fix it. The stack balanced either way; only the receiver was wrong.
+   The matched TU src/func_ov006_020c2924.cpp is seated in its place: port/tools/hostgen.py's VIRTUAL_CALL table calls word 6
+   __fastcall(obj, 0), which puts obj in ecx and pushes nothing.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */

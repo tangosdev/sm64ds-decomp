@@ -171,6 +171,12 @@ extern "C" void func_ov006_020f300c(char *o);
 
 /* the boot installer at the end of this file; hal/scene_mg.cpp calls it after
    the ov006 constructors have filled the tables. */
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_luigi(void);
+
 extern "C" void port_mg_luigi_states_seat(void);
 
 /* Run mg5, lane INTEG: slot 7 of data_ov006_02142254 (func_ov006_020f15ac) was
@@ -263,34 +269,15 @@ extern "C" void port_mg_luigi_counts(unsigned *hits, unsigned *floor,
 // and each is stated next to its body so the check is visible rather than
 // assumed. The four that went are named after them.
 
-/* src/func_ov006_020f0044.cpp, table data_ov006_021421ec, one argument.
-   ROM 0x020f0044: add r1,r0,#0x4000; ldrb r2,[r1,#0x7f4] guard; ldrb
-   r1,[r1,#0x7f5] index; pool 0x020f00a0 = 021421EC; the dispatch passes
-   r1 = 0, which is the src's literal (0). */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020f0044(void *p)
-{
-    char *c = (char *)p;
-    if (*(unsigned char *)(c + 0x47f4) == 0)
-        return;
-    unsigned j = *(unsigned char *)(c + 0x47f5);
-    const MgPmf *e = &data_ov006_021421ec[j];
-    port_mg_luigi_call1(c, e->code, e->adj, 0);
-}
+/* src/func_ov006_020f0044 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
-/* src/func_ov006_020f0ba0.cpp, table data_ov006_0214221c, one argument. ALSO
-   state slot 1 of data_ov006_02142204, which is why luigi_try_1 calls it.
-   ROM 0x020f0ba0: mov r2,#0x18; mla r2,r1,r2,r0; add r2,#0x4000; ldrb
-   r2,[r2,#0x7b7]; pool 0x020f0bec = 0214221C. The ROM never writes r1 before
-   the blx, so the incoming index rides through; this copy passes it. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgLuigi_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020f0ba0(void *p, int i)
-{
-    char *c = (char *)p;
-    unsigned k = *(unsigned char *)(c + i * 0x18 + 0x47b7);
-    const MgPmf *e = &data_ov006_0214221c[k];
-    port_mg_luigi_call1(c, e->code, e->adj, i);
-}
+/* src/func_ov006_020f0ba0 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 // ---- FOUR HOST COPIES ARE RETIRED, TWO ARE LEFT ----------------------------
 //
@@ -430,6 +417,8 @@ extern "C" void port_mg_luigi_states_seat(void)
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_luigi();
 
     static const struct {
         MgPmf *table;

@@ -207,6 +207,50 @@ struct Ov077Seat {
 /* Each row's `rom` is the ROM's own relocation target for that record's word 0
    (config/arm9/overlays/ov077/relocs.txt, resolved in port/ov077_syms.txt's
    data map). The seat REFUSES a record whose mounted word is not that. */
+/* ---- RUN link100 LANE PMFB7 GATE 2: THE PER-FRAME RECORDS ARE FACES -------
+ * HeaveHo's matched TU dispatches its state cell's +8 half as a real
+ * pointer to member -- mov eax,[cell+8] / test eax,eax / je /
+ * mov ecx,[cell+12] / add ecx,this / call eax, the ROM's own offsets, receiver
+ * in ecx, NOTHING pushed, ARITY ZERO, /Zp4 diff 0 lines
+ * (runs/link100/out/PMFB7/emit_all21_out.txt). The seat used to install plain
+ * cdecl bodies that take their self off the stack, so each PER-FRAME record now
+ * holds a zero-argument __fastcall face that forwards the receiver as the one
+ * cdecl argument the ROM's own state body takes -- the same call the cell held
+ * before, made through ecx instead of the stack.
+ *
+ * THE ENTER RECORDS DO NOT CHANGE: they are reached by the class's state-change
+ * helper, which MSVC compiles as a one-call forwarder ending in `jmp`, so the
+ * caller's own frame is reused and a plain cdecl body is right there.
+ *
+ * WHICH RECORD IS WHICH is read out of the class's own __sinit
+ * (runs/link100/out/PMFB7/slots_gate2.txt), never assumed.
+ */
+static void __fastcall pmfb7_ov077_02126640(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02127a00, the per-frame half */
+    ((void (*)(void *))(void *)func_ov077_02126640)(self);
+}
+static void __fastcall pmfb7_ov077_0212679c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02127a08, the per-frame half */
+    ((void (*)(void *))(void *)func_ov077_0212679c)(self);
+}
+static void __fastcall pmfb7_ov077_02126ad0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02127a28, the per-frame half */
+    ((void (*)(void *))(void *)func_ov077_02126ad0)(self);
+}
+static void __fastcall pmfb7_ov077_02126a50(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02127a40, the per-frame half */
+    ((void (*)(void *))(void *)func_ov077_02126a50)(self);
+}
+static void __fastcall pmfb7_ov077_021269a8(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02127a48, the per-frame half */
+    ((void (*)(void *))(void *)func_ov077_021269a8)(self);
+}
+
 const Ov077Seat g_ov077_seats[] = {
     /* Lakitu, 0x021277e0..0x02127830, copied into data_ov077_02127bc4[0..9]
        by __sinit_ov077_02127240. */
@@ -237,16 +281,16 @@ const Ov077Seat g_ov077_seats[] = {
     {data_ov077_02127940, 0x02125830, func_ov077_02125830, "spiny/02127940"},
     /* HeaveHo, 0x02127a00..0x02127a50, copied into the five two-entry bss
        cells data_ov077_02127cd8/ce8/cf8/d08/d18 by __sinit_ov077_021275fc. */
-    {data_ov077_02127a00, 0x02126640, func_ov077_02126640, "heaveho/02127a00"},
-    {data_ov077_02127a08, 0x0212679c, func_ov077_0212679c, "heaveho/02127a08"},
+    {data_ov077_02127a00, 0x02126640, (PortOv077Fn)(void *)pmfb7_ov077_02126640, "heaveho/02127a00"},
+    {data_ov077_02127a08, 0x0212679c, (PortOv077Fn)(void *)pmfb7_ov077_0212679c, "heaveho/02127a08"},
     {data_ov077_02127a10, 0x02126a04, func_ov077_02126a04, "heaveho/02127a10"},
     {data_ov077_02127a18, 0x02126930, func_ov077_02126930, "heaveho/02127a18"},
     {data_ov077_02127a20, 0x02126cd4, func_ov077_02126cd4, "heaveho/02127a20"},
-    {data_ov077_02127a28, 0x02126ad0, func_ov077_02126ad0, "heaveho/02127a28"},
+    {data_ov077_02127a28, 0x02126ad0, (PortOv077Fn)(void *)pmfb7_ov077_02126ad0, "heaveho/02127a28"},
     {data_ov077_02127a30, 0x02126758, func_ov077_02126758, "heaveho/02127a30"},
     {data_ov077_02127a38, 0x02126a84, func_ov077_02126a84, "heaveho/02127a38"},
-    {data_ov077_02127a40, 0x02126a50, func_ov077_02126a50, "heaveho/02127a40"},
-    {data_ov077_02127a48, 0x021269a8, func_ov077_021269a8, "heaveho/02127a48"},
+    {data_ov077_02127a40, 0x02126a50, (PortOv077Fn)(void *)pmfb7_ov077_02126a50, "heaveho/02127a40"},
+    {data_ov077_02127a48, 0x021269a8, (PortOv077Fn)(void *)pmfb7_ov077_021269a8, "heaveho/02127a48"},
 };
 bool g_ov077_seated = false;
 }  /* namespace */

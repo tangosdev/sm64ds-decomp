@@ -294,10 +294,81 @@ void sd_waves_reset(void)
    the first sound lookup (func_02050c14 walking root+0x84) dereferences a
    pointer into a heap that no longer exists. lk6_savestate_load calls this
    after the section copy so the live root always wins. */
+/* RUNG R4's two, defined below and used by sd_sdat_reseat above them. */
+int g_rom_root_seated;
+extern "C" void sdat_seat_rom_residency(void);
+
 void sd_sdat_reseat(void)
 {
+    /* RUNG R4. The root the ROM's own func_02050f34 seated is data_0209b4b4,
+       a hosted DS global inside the .dsstate bracket -- so on that path this
+       global stops being a host boot pointer at all and a disk state carries
+       it correctly by itself. What a disk state still cannot carry is what
+       the RESIDENCY slots hold: the ROM's FAT lives in the arena (captured,
+       at a pinned base) but every address in it points into THIS process's
+       malloc'd archive image. So re-seat those, which is the same argument
+       this function was written for, one level down. */
+    if (g_rom_root_seated) {
+        sdat_seat_rom_residency();
+        return;
+    }
     if (g_sdat.root)
         data_020a5bb8 = g_sdat.root;   /* the extern "C" decl at the top */
+}
+
+/* RUNG R4: fill the residency slots of whatever FAT data_020a5bb8 names.
+
+   WHAT THIS IS AND WHAT IT IS NOT. It is the same pre-seat sdat_init used to
+   do, and the header's argument for it is unchanged and still true: the whole
+   4.4 MB archive IS in memory, so 'nothing needs loading from the card' is a
+   correct answer and the load commands 0x1b/0x1c/0x1d correctly never fire.
+   What changed under rung R4 is WHOSE table gets the answer. The ROM read its
+   own FAT off the card into the sound heap; this fills that one, so the
+   ROM's own func_020509b0 -- which every residency test in func_02051bd0,
+   func_02051a98 and func_020514b4 goes through -- reads the addresses the
+   START command then carries, exactly as before.
+
+   IT IS NOT THE ROM'S LOADER RUNNING. func_02051634 and the group load
+   func_020134d8 are linked and would do this properly, out of the sound heap,
+   and they stay unreached for two reasons that are not this rung's: the
+   on-demand path needs a PLAYER sub-heap, which exists only when rung R3's
+   argument is non-zero, and that argument is zero because hal/star_flow.cpp's
+   hosted func_0203d974 answers 1. The lane's report names both.
+
+   The FAT the ROM read has the same 16-byte records as this process's copy
+   (offset, size, then two reserved words), so entry i's runtime address slot
+   is at FAT + 0xc + i*16 + 8 either way. The count is read back out of the
+   ROM's own header word rather than assumed from ours, and the two are
+   compared: a disagreement means the ROM opened a DIFFERENT archive from the
+   one this file parsed, and that is worth saying out loud rather than
+   papering over. */
+extern "C" void sdat_seat_rom_residency(void)
+{
+    sd_u8 *root = (sd_u8 *)data_020a5bb8;
+    if (!root || !g_sdat.base) return;
+    sd_u8 *fat = *(sd_u8 **)(root + 0x7c);
+    if (!fat) {
+        fprintf(stderr, "[sdat] the ROM's root has no FAT block -- the "
+                        "archive open failed; sound stays silent\n");
+        return;
+    }
+    sd_u32 n = rd32(fat + 8);
+    if (n != g_sdat.fatCount)
+        fprintf(stderr, "[sdat] WARNING: the ROM read a FAT of %u entries "
+                        "and this process parsed %u -- different archives\n",
+                n, g_sdat.fatCount);
+    if (n > g_sdat.fatCount) n = g_sdat.fatCount;
+    for (sd_u32 i = 0; i < n; i++) {
+        sd_u8 *e = fat + 0xc + i * 16;
+        sd_u32 off = rd32(g_sdat.fat + 0xc + i * 16);
+        *(sd_u8 **)(e + 8) =
+            (off < (sd_u32)g_sdat.size) ? (g_sdat.base + off) : 0;
+    }
+    g_rom_root_seated = 1;
+    fprintf(stderr, "[sdat] the ROM opened its own archive: root %p, FAT %p "
+                    "(%u files), INFO %p; residency seated into the ROM's "
+                    "own table\n", (void *)root, (void *)fat, n,
+            (void *)*(sd_u8 **)(root + 0x84));
 }
 
 // Decode one SWAV record (12-byte header + payload) into mono s16.
@@ -566,18 +637,25 @@ int sdat_init(void)
     *(sd_u8 **)(root + 0x80) = file;
     *(sd_u8 **)(root + 0x84) = g_sdat.info;
     g_sdat.root = root;
-    data_020a5bb8 = root;
 
-    // Pre-seat residency for every file (see the header comment).
-    for (sd_u32 i = 0; i < g_sdat.fatCount; i++) {
-        sd_u8 *e = g_sdat.fat + 0xc + i * 16;
-        sd_u32 off = rd32(e);
-        *(sd_u8 **)(e + 8) = (off < (sd_u32)len) ? (buf + off) : 0;
-    }
+    // NEITHER THE ROOT SEAT NOR THE PRE-SEAT HAPPENS HERE ANY MORE (run
+    // link100, lane SND2, rung R4). data_020a5bb8 = root and the 282-entry
+    // residency fill used to stand on these lines. src/func_02050f34.c is
+    // what writes data_020a5bb8 on the DS, and it runs now -- it opens this
+    // same archive through the ROM's own open-by-name FS and reads the
+    // header, the INFO block and the FAT into the rung-R2 sound heap -- so
+    // a seat here would be a second writer racing the cartridge's own. The
+    // residency fill moved with it, into sdat_seat_rom_residency() below,
+    // which fills the FAT THE ROM READ instead of this process's copy and
+    // is called from hal/sdat/consumer.cpp at the line after the open.
+    // g_sdat.root is still built: it is what sd_sdat_reseat falls back to
+    // when the ROM's open did not happen (a target or a run with no sound
+    // bring-up), and it costs 0x100 bytes.
 
     fprintf(stderr,
             "[sdat] %s: %ld bytes, %u files, seq=%u seqarc=%u bank=%u "
-            "wavearc=%u group=%u; root seated at data_020a5bb8\n",
+            "wavearc=%u group=%u; parsed, NOT seated -- rung R4 hands the "
+            "seat to the cartridge's own func_02050f34\n",
             path, len, g_sdat.fatCount,
             rd32(g_sdat.info + rd32(g_sdat.info + 8 + SDAT_REC_SEQ * 4)),
             rd32(g_sdat.info + rd32(g_sdat.info + 8 + SDAT_REC_SEQARC * 4)),

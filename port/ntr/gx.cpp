@@ -561,6 +561,42 @@ uint32_t g_fifo_n;          // gx_write_fifo words since the last take
 uint32_t g_swap_param;      // the last SWAP_BUFFERS parameter word seen
 uint32_t g_resets;          // gx_reset calls since the last take
 
+// THE PENDING SWAP (run link100, boot plan rung R3b, step BSWAP).
+//
+// GEOMETRY COMMAND 0x50 IS NOT AN IMMEDIATE ON HARDWARE. SWAP_BUFFERS ends
+// a frame's geometry submission and the engine performs the swap AT THE
+// NEXT VBLANK, not at the store -- which is why the ROM issues it from
+// func_020190b8 at phase 6, one statement before the loop sleeps on the
+// VBlank at phase 7 (src/func_020197b8.c:51-55). Modelling it as an
+// immediate is what run link100 lane R3CFIX measured going wrong: its arm
+// ran the whole host frame reset inside the store, and
+// src/func_ov007_020b6c54.c -- the VS menu, battery scene 6 -- writes
+// SWAP_BUFFERS from INSIDE a scene body, so that scene's own swap wiped the
+// geometry state mid-frame (worklist.md, R3CFIX CLOSED RED).
+//
+// SO 0x50 LATCHES A REQUEST AND THE FRAME BOUNDARY CONSUMES IT. A body that
+// asks mid-frame is asking for the swap that ends the frame it is in, which
+// is what the hardware gives it.
+//
+// AND WHAT `APPLIED` DOES IN THIS HOST IS EXACTLY THIS AND NOTHING MORE:
+// it retires the request and counts it. The picture this port draws is
+// composed by gx_render and the triangle list is emptied by gx_reset, which
+// tests/walk_window.cpp calls at the head of its render section -- so the
+// host already performs, at its own point, the thing a swap means here.
+// Moving that reset onto this boundary is NOT this rung: R3CFIX measured
+// that too, and level 35 (the one battery row with a mid-run warp) faulted
+// on a texture bind, because this host tears a level down and boots and
+// renders its replacement INSIDE ONE FRAME and the cartridge's loop never
+// does that. Rung R3d removes the host loop and with it that artefact; then
+// the reset has a boundary to move onto. Until then this latch is the seam,
+// honestly empty, and the counters below are what make it measurable.
+uint32_t g_swap_pending;    // a SWAP_BUFFERS the boundary has not consumed
+uint32_t g_swap_pending_p;  // its parameter word (bit 0 manual sort,
+                            // bit 1 depth-buffering select)
+uint32_t g_swaps_requested; // 0x50 commands executed this run
+uint32_t g_swaps_applied;   // requests retired at a frame boundary
+uint32_t g_swaps_retired;   // requests retired by a gx_reset instead
+
 // SM64DS_MTX_LOG=<n>: the first n PROJECTION-mode matrix loads, as fixed-point
 // words, with the host return addresses that issued them. A projection whose
 // first row is zero collapses every vertex onto the framebuffer's vertical
@@ -864,7 +900,12 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             g.strip_parity = 0;
             break;
         case 0x41: g.prim = -1; g.strip.clear(); break;          // END_VTXS
-        case 0x50: break;                                        // SWAP_BUFFERS
+        case 0x50:                                               // SWAP_BUFFERS
+            /* rung R3b/BSWAP: latch, do not act. See THE PENDING SWAP above. */
+            g_swap_pending = 1;
+            g_swap_pending_p = p[0];
+            ++g_swaps_requested;
+            break;
         case 0x60: {                                             // VIEWPORT
             // The register speaks DS panel coordinates (0..255 x 0..191);
             // scale to the framebuffer so game-issued full-screen viewports
@@ -1207,6 +1248,27 @@ void gx_debug_commands(uint32_t counts[256], uint32_t &ports, uint32_t &fifo,
     }
 }
 
+/* THE FRAME BOUNDARY CONSUMES THE PENDING SWAP (rung R3b, step BSWAP).
+   Called from tests/walk_window.cpp's frame foot, immediately after the
+   ROM's own func_020190b8() -- which is where func_020197b8.c:52 puts it,
+   between phase 6 and the phase-7 wait. Read THE PENDING SWAP above for
+   what this does and, more importantly, what it deliberately does not. */
+void gx_swap_apply() {
+    if (!g_swap_pending) return;
+    g_swap_pending = 0;
+    ++g_swaps_applied;
+}
+
+/* The run's swap account, for the [r3b] line the gate captures. */
+void gx_swap_counts(uint32_t &requested, uint32_t &applied,
+                    uint32_t &retired, uint32_t &pending, uint32_t &param) {
+    requested = g_swaps_requested;
+    applied = g_swaps_applied;
+    retired = g_swaps_retired;
+    pending = g_swap_pending;
+    param = g_swap_pending_p ? g_swap_pending_p : g_swap_param;
+}
+
 void gx_write_port(uint32_t addr, uint32_t value) {
     ++g_port_n;
     gx_stream_note(addr ^ value);
@@ -1237,6 +1299,13 @@ void gx_invalidate_textures() { g_vram_tex_cache.clear(); }
 
 void gx_reset() {
     ++g_resets;
+    /* rung R3b/BSWAP: a reset ENDS the frame the pending swap was asking
+       about, so it retires the request rather than letting it stand into
+       the next frame. This is the path a scene body's own SWAP_BUFFERS
+       takes: hal/scene_boot.cpp opens every scene frame with a gx_reset and
+       has no frame-foot swap call, so scene 6's mid-body write is retired
+       here and the scene path behaves exactly as it did before this rung. */
+    if (g_swap_pending) { g_swap_pending = 0; ++g_swaps_retired; }
     static int nocache = -1;
     if (nocache < 0) nocache = getenv("SM64DS_TEX_NOCACHE") ? 1 : 0;
     if (nocache) g_vram_tex_cache.clear();

@@ -3269,14 +3269,21 @@ extern "C" void port_intro_arm_for_entry(void)
    addresses. The scripts ship with those fields ZERO, so without it the opening
    dereferences nulls (measured: a c0000005 inside SharedFilePtr::Release).
 
-   Called from HERE, not from the boot, on purpose. The ROM runs it
-   unconditionally at startup and nothing else in the port reads what it
-   patches, so running it unconditionally would also be correct -- but this lane
-   promised the default path stays byte-identical, and the only path that needs
-   these pointers is the one about to play the opening. Once per process; the
-   precedent for calling an arm9 sinit by hand is hal/fdr_arm9_fader_seat.cpp,
-   which does the same for __sinit_02074f80. */
-extern "C" void __sinit_02073e6c(void);
+   IT USED TO BE CALLED FROM HERE and it is not any more: run link100 lane
+   CTOR, rung C1a, moved it to where the ROM runs it. Entry calls
+   func_02072f94 at 0x020048a8 and that walker walks the .ctor table at
+   0x02086b60, whose second word IS __sinit_02073e6c; hal/ctor_runner.cpp
+   publishes the table and hal/rom_main.cpp calls the walker at Entry's own
+   point. The hand call below was deleted in the same commit, because a word in
+   the table plus a hand call is the initialiser running TWICE.
+
+   WHAT THAT CHANGES HERE: the blobs are patched at boot instead of on the
+   first opening. Nothing else in the port reads what they patch, this file's
+   own note above says running it unconditionally "would also be correct", and
+   the seat below is unaffected -- __sinit_02073e6c writes bytes 0x22..0x25,
+   0x3e..0x41 and 0x30d..0x310 of data_02089dcc and port_intro_seat_dcc writes
+   the word at 0x180, so the two touch no byte in common and the order between
+   them cannot change a value. */
 extern "C" void port_intro_seat_dcc(void);   /* hal/intro_dcc_blob.cpp */
 /* The PENDING script word. ProcessKuppaScript's cmd 0x0b stores it next to the
    closing LoadLevelNoReturn, and ContinueKuppaScriptIfNecessary reads it on the
@@ -3315,10 +3322,12 @@ static void port_intro_seat_scripts(void)
     if (done)
         return;
     done = 1;
-    /* Seat the one code pointer ptr_audit flagged BEFORE the sinit writes into
-       the same blob, so nothing can read a DS address in between. */
+    /* Seat the one code pointer ptr_audit flagged. It used to be seated ahead
+       of __sinit_02073e6c so nothing could read a DS address in between; that
+       initialiser now runs from the ROM's own .ctor walk at Entry (see the
+       note above this function's declarations) and the two write disjoint
+       bytes of data_02089dcc, so this seat keeps its place and its reason. */
     port_intro_seat_dcc();
-    __sinit_02073e6c();
 
     /* THE ov085 FILE POINTERS. The opening's cast loads its models through
        SharedFilePtrs that live in ov085 BSS and are Constructed by

@@ -1,0 +1,51 @@
+# RUNG W0 OF THE WIRELESS PLAN. Run link100, lane WM1.
+#
+# The plan is lane WMSCOUT's (runs/link100/out/WMSCOUT/report.md): the ROM's own
+# WM chain is 260 matched, never-linked TUs, and it comes back in rungs. W0 is
+# the first and the only one of the eight that touches no radio at all.
+#
+# THE TWO BODIES.
+#
+#   src/func_02040714.c   int func_02040714(void) { return data_020a0f94; }
+#   src/func_02040704.c   int func_02040704(void) { return data_020a0f24; }
+#
+# Two global reads. No callee, no SDK entry, nothing arm7.bin owns. They were
+# hosted in hal/comms_seam.cpp not because the instruction could not be ported
+# but because the port had decided the TRANSPORT answers the link state instead
+# of the ROM's own word -- which hal/comms_seam.cpp's own DF40 note says in as
+# many words, and which is the decision this rung reverses.
+#
+# WHAT HAD TO BE TRUE FIRST, and all three now are:
+#
+#   * data_020a0f94 was already hosted (hal/comms_conductor.cpp's MP3_BSS row
+#     ".dsstate$ymp3s0007"), and comms_seam.h's CommsLinkState enum IS its
+#     encoding -- 0 idle, 2 connecting, 3 parent-connected, 4 child-connected,
+#     exactly the cases src/func_02040724.c switches on. So the seam writing
+#     `data_020a0f94 = t->state()` is an identity, not an approximation. The word
+#     MOVED to hal/comms_seam.cpp on this rung, in the same section at the same
+#     alignment and therefore at the same address: the mp_comms_seam probe links
+#     the seam without the conductor, and the seam now names the word
+#     unconditionally.
+#   * data_020a0f24 was hosted nowhere. It is now, in hal/comms_seam.cpp's
+#     save-state block, sized by ROM SPAN (0x020a0f24 .. 0x020a0f28 = 4) rather
+#     than by the halfword its four ROM writers use.
+#   * SOMETHING HAS TO KEEP THE TWO WORDS FRESH. That is comms_publish_link_words()
+#     in hal/comms_seam.cpp, called from every seam face that remains hosted plus
+#     the one conductor read that happens before any lockstep round could have
+#     published it. The full argument, including the two windows it does NOT
+#     cover and why neither is reachable, is in that function's own banner.
+#
+# ABI. Both ROM bodies take no argument; src/func_0203ea5c.c:252 calls
+# func_02040704 WITH one (a dead r0 the DS callee overwrites) and
+# hal/comms_conductor.cpp:1176 does the same. This binary is 32-bit x86 and
+# these are extern "C" __cdecl -- the map names them _func_02040704 and
+# _func_02040714, a leading underscore and no @N suffix, which is __cdecl and
+# not __stdcall. The CALLER pops the argument it pushed, so a zero-parameter
+# callee reached through a one-parameter declaration is safe here. Under
+# __stdcall the same mismatch would be a LOUD link error (@0 against @4) rather
+# than a silent stack leak, so there is no shape of this that corrupts quietly.
+#
+# COUNT: +2. Exactly two translation units are newly linked by this file, and
+# the two host faces of the same names are deleted in the same commit.
+src/func_02040714.c
+src/func_02040704.c

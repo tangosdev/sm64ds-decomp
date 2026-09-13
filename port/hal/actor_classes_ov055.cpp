@@ -251,6 +251,28 @@ struct PortMirrorLuigiCell { unsigned enter_fn, enter_delta, tick_fn, tick_delta
 extern PortMirrorLuigiCell data_ov055_02111b70;
 }
 
+/* RUN link100 LANE PMFB8 GATE 1: THE ENTER WORD IS A __fastcall FACE NOW.
+   src/func_ov055_021112c4.cpp is in the link (port/slice_pmfb8.txt), and its own
+   emitted dispatch is
+       mov edx,[ecx] / test edx,edx / mov ecx,[ecx+4] / push a2 /
+       add ecx,eax  / call edx
+   -- receiver in ecx, ONE pushed word the caller never pops, because
+   __thiscall's stack half is callee-popped. __fastcall(self, dead_edx, int)
+   takes ecx as its first argument and pops the same one word, which is lane
+   FWD's MgCup shape. The body it reaches is unchanged: func_ov055_021112bc,
+   whose whole body is `return 1`, declared above as int(void) and called that
+   way here.
+   THE TICK WORD IS NOT TOUCHED. Its reader is still the host copy in
+   unmatched/MirrorLuigi_Behavior.cpp, which calls it (self, arg) on the stack;
+   the two halves are disjoint records, so they can differ. */
+static int __fastcall ml_enter_face_021112bc(void *self, void *dead_edx, int a2)
+{
+    (void)self;
+    (void)dead_edx;
+    (void)a2;
+    return func_ov055_021112bc();
+}
+
 extern "C" void port_mirrorluigi_state_seat(void)
 {
     static int done;
@@ -267,7 +289,7 @@ extern "C" void port_mirrorluigi_state_seat(void)
                      cell.tick_fn, cell.tick_delta);
         std::abort();
     }
-    cell.enter_fn = (unsigned)(size_t)&func_ov055_021112bc;
+    cell.enter_fn = (unsigned)(size_t)&ml_enter_face_021112bc;
     cell.tick_fn = (unsigned)(size_t)&func_ov055_02111288;
 }
 

@@ -52,34 +52,13 @@ extern void func_02044534(ModelComponents *self, int idx, Matrix4x3 *mat, Vector
 extern void func_0204488c(ModelComponents *self, int idx, Vector3 *vec);
 }
 
-void ModelComponents::Render(Matrix4x3 *mat, Vector3 *vec)
-{
-    data_020a4bd4 = 1u << (info->field0 + 12);
-    if (!mat) {
-        data_020a4bd0 = &data_02082190;
-    } else {
-        data_020a4bd0 = mat;
-    }
-
-    u32 i = 0;
-    Node *node = info->nodes;
-    for (; i < info->count; ++i, ++node) {
-        if (node->flags & 1) {
-            for (int j = 0; j < node->innerCount; j++) {
-                u8 idx = node->arrA[j];
-                if (!((modules[idx].flags >> 31) & 1)) {
-                    func_02044b30(this, idx);
-                    func_02044534(this, node->arrB[j], mat, vec);
-                }
-            }
-        } else {
-            for (int j = 0; j < node->innerCount; j++) {
-                u8 idx = node->arrA[j];
-                if (!(modules[idx].flags & 0x80000000)) {
-                    func_02044b30(this, idx);
-                    func_0204488c(this, node->arrB[j], vec);
-                }
-            }
-        }
-    }
-}
+/* ModelComponents::Render RETIRED (run link100, lane SEAT6, batch B6).
+   This file is a host REIMPLEMENTATION and says so in its first line
+   ('not byte-verified against the ROM'). Its one real divergence is the
+   material index the ROM leaves in r1, which src/func_02044b30.c's own
+   definition takes as its second parameter.
+   The matched TU src/_ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3.cpp is seated in its place: port/tools/hostgen.py's REG_RIDE_ARG table gives the declaration
+   `int idx` and both call sites the loop's own idx. The cdecl C-name
+   face in port/hal/scene_boot.cpp is untouched and stays.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */

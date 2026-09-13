@@ -317,8 +317,23 @@ int func_01ff9e2c(unsigned a, unsigned b, unsigned c, unsigned d)
 }
 
 /* PORT_HOST_ABI: reads the ARM CPSR mode bits, no host equivalent.
-   ARMProcessorMode reads CPSR & 0x1f; host always reports system mode */
-int ARMProcessorMode(void) { return 0x1f; }
+   src/ARMProcessorMode.c is one instruction and a mask:
+       asm void ARMProcessorMode(void) { mrs r0, cpsr; and r0, r0, #0x1f; bx lr }
+   The host has no CPSR. It has the one thing the ROM's single caller asks this
+   function about, though: whether the core is in IRQ mode. There is exactly one
+   caller in the linked set, src/func_02057f54.c:25 --
+       if (s->m4 == 0) { if (ARMProcessorMode() != 0x12) goto cont; }
+       s->m0 = 1; return;
+   -- and hal/boot2_thread.cpp raises port_irq_mode_depth for exactly the span an
+   ARM would be in IRQ mode, from the dispatch of IRQ::VBlankHandler to its
+   return. So 0x12 there and system mode everywhere else, which is what makes
+   func_02057f54's own line 27 raise the manager's pending flag and return
+   instead of switching a thread from inside an interrupt handler; the IRQ
+   return performs the switch, as it does on the cartridge (run link100, lane
+   DET3, which replaces lane DET2's host-side deferral in ARMRestoreContext).
+   SM64DS_DET3=0 leaves the depth at zero and this answers 0x1f all run. */
+extern unsigned port_irq_mode_depth;
+int ARMProcessorMode(void) { return port_irq_mode_depth ? 0x12 : 0x1f; }
 
 /* DS thread scheduler context ops -- MOVED, run link2 lane THR.
    ARMSaveContext and ARMRestoreContext used to be stubbed here: a save that
@@ -329,8 +344,10 @@ int ARMProcessorMode(void) { return 0x1f; }
    hal/boot2_thread.cpp, backed by the fiber seam ntr/include/ntr/rt.h:11-14
    describes. They are still PORT_HOST_ABI and for the same reason (hand-asm
    ARM register-file primitives); the tag and its evidence moved with them.
-   Nothing else changed here: ARMProcessorMode above still answers 0x1f, which
-   is what makes func_02057f54 take the switching arm of its own branch. */
+   ARMProcessorMode above used to answer 0x1f unconditionally, which is what
+   made func_02057f54 take the switching arm of its own branch even inside an
+   interrupt handler; run link100 lane DET3 gave it the IRQ-mode answer the ROM
+   reads there. */
 
 /* PORT_HOST_ABI: ARM asm primitive (hand-asm digit-carry), MSVC cannot assemble.
    func_02071644 (hand-asm): backward digit-carry increment over the decimal
@@ -1593,9 +1610,29 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
    hal/actor_vtables.cpp. */
 #pragma comment(linker, "/alternatename:_base_dtor_MovingCylinderClsnWithPos=__ZN18MovingCylinderClsnD2Ev")
 #pragma comment(linker, "/alternatename:_vtbl_MovingCylinderClsnWithPos=__ZTV25MovingCylinderClsnWithPos")
-/* ov002's Enemy constructor is func_ov002_020aed98 -- see the header of that
-   entry in slice_gate16.txt for why the file named _ZN5EnemyC2Ev is ov007's. */
-#pragma comment(linker, "/alternatename:__ZN5EnemyC2Ev=_func_ov002_020aed98")
+/* ov002's Enemy constructor at 0x020aed98 HAS a definition, and its name is
+   _ZN5EnemyC2Ev -- so the fallback that used to sit here was removed rather
+   than re-pointed (Andrew's third review of PR #2474).
+
+   The evidence, in the order it settles the question:
+     * src/_ZN5EnemyC2Ev.cpp is in the slice (port/slice_gate16.txt:233) and
+       the link publishes __ZN5EnemyC2Ev from its own object --
+       walk_window.map: `0001:00110a20  __ZN5EnemyC2Ev  _ZN5EnemyC2Ev.cpp.obj`.
+       An /alternatename only fires while its LHS is UNDEFINED, so with that
+       TU linked the directive could never apply.
+     * the RHS had no definition anywhere: `func_ov002_020aed98` was this
+       port's own spelling and appears in no config symbols.txt, so had the
+       src TU ever left the slice the link would have failed on the fallback
+       name instead of falling back.
+     * the port already routes ov002's constructor the other way round, by
+       renaming its CALLERS onto the defined name: port/CMakeLists.txt
+       compiles src/Goomboss_Spawn.cpp and src/ExplosionGoomba_Spawn.cpp with
+       -Dfunc_020aed98=_ZN5EnemyC2Ev (the lane w2-ov074 block). That is the
+       live mechanism; the pragma was inert beside it.
+   port/tools/alternatename_baseline.txt loses the matching row with this
+   commit, so the guard's baseline stays exactly the set of pairs that are
+   still defeated. slice_gate16.txt keeps the prose about why the file named
+   _ZN5EnemyC2Ev is ov007's -- nothing in that note depended on the pragma. */
 #pragma comment(linker, "/alternatename:?data_ov002_0211025c@@3PAHA=_data_ov002_0211025c")
 /* the same per-mangling faces, one round further into the 1-up's chain */
 #pragma comment(linker, "/alternatename:?data_0209f40c@@3PAHA=_data_0209f40c")

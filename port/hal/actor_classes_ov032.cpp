@@ -362,21 +362,46 @@ extern PortBubbaCell data_ov032_02113a7c;   /* cell 4 */
 
 typedef int (*PortBubbaFn)(void *);
 
+/* RUN link100 LANE PMFB8 GATE 2: THE FIVE TICK WORDS ARE __fastcall FACES NOW.
+   src/func_ov032_021121b4.cpp is in the link (port/slice_pmfb8.txt) and its own
+   emitted dispatch is
+       mov eax,[ecx+8] / test eax,eax / mov ecx,[ecx+12] / add ecx,esi /
+       call eax
+   -- the tick half at offset 8 of the cell, receiver in ecx, ZERO stack
+   arguments, nothing to clean. A zero-arg __fastcall face takes ecx as its
+   first argument and cleans the same nothing.
+   THE FIVE ENTER WORDS ARE NOT TOUCHED. Their dispatcher,
+   src/func_ov032_02111ff4.cpp, is already in the link and emits `jmp edx`, a
+   TAIL JUMP: the caller's frame survives the transfer, so the cdecl body reads
+   the caller's own first stack word, which is `c`. */
+#define BUBBA_TICK_FACE(sym)                                              \
+    static int __fastcall bb_tick_##sym(void *self, void *dead_edx)       \
+    {                                                                     \
+        (void)dead_edx;                                                   \
+        return ((PortBubbaFn)sym)(self);                                  \
+    }
+
+BUBBA_TICK_FACE(func_ov032_02111e24)
+BUBBA_TICK_FACE(func_ov032_02111d7c)
+BUBBA_TICK_FACE(func_ov032_02111b9c)
+BUBBA_TICK_FACE(func_ov032_02111830)
+BUBBA_TICK_FACE(func_ov032_02111620)
+
 static const struct {
     PortBubbaCell *cell;
     unsigned enter_rom, tick_rom;
     PortBubbaFn enter_host, tick_host;
 } g_bubba_cells[5] = {
     { &data_ov032_02113a8c, 0x02111f9c, 0x02111e24,
-      (PortBubbaFn)func_ov032_02111f9c, (PortBubbaFn)func_ov032_02111e24 },
+      (PortBubbaFn)func_ov032_02111f9c, (PortBubbaFn)bb_tick_func_ov032_02111e24 },
     { &data_ov032_02113a9c, 0x02111dd8, 0x02111d7c,
-      (PortBubbaFn)func_ov032_02111dd8, (PortBubbaFn)func_ov032_02111d7c },
+      (PortBubbaFn)func_ov032_02111dd8, (PortBubbaFn)bb_tick_func_ov032_02111d7c },
     { &data_ov032_02113aac, 0x02111d58, 0x02111b9c,
-      (PortBubbaFn)func_ov032_02111d58, (PortBubbaFn)func_ov032_02111b9c },
+      (PortBubbaFn)func_ov032_02111d58, (PortBubbaFn)bb_tick_func_ov032_02111b9c },
     { &data_ov032_02113abc, 0x02111b50, 0x02111830,
-      (PortBubbaFn)func_ov032_02111b50, (PortBubbaFn)func_ov032_02111830 },
+      (PortBubbaFn)func_ov032_02111b50, (PortBubbaFn)bb_tick_func_ov032_02111830 },
     { &data_ov032_02113a7c, 0x02111814, 0x02111620,
-      (PortBubbaFn)func_ov032_02111814, (PortBubbaFn)func_ov032_02111620 },
+      (PortBubbaFn)func_ov032_02111814, (PortBubbaFn)bb_tick_func_ov032_02111620 },
 };
 
 extern "C" void port_bubba_states_seat(void)

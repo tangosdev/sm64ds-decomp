@@ -35,6 +35,23 @@
 // sees indices 0..3 is more memory and nothing else. The visible mod arms only
 // when the session says more than four -- see hal/comms_loopback.cpp's THE TWO
 // WIRES.
+//
+// HOW THE MOD IS BUILT, AND WHAT IT IS NOT ALLOWED TO DO. Run link100 settled
+// the shape: the port EXTENDS the cartridge's code, it does not replace it.
+// Where the ROM has a body with the four in it -- the per-frame comms fan-out
+// at steps 0x16 and 0x17 is the case that forced the ruling -- the matched TU
+// runs first, on every frame of every session, and a host tail appends slots
+// kPortNarrowPlayers..kPortMaxPlayers-1 when the session is wider than four.
+// A host COPY of a matched body with the bound moved is not allowed, even when
+// it is byte-for-byte the same logic, because it leaves the cartridge's own
+// code called by nobody and hands the linkage tool a face it cannot tell from
+// a duplicate. See hal/comms_fanout_wide.cpp, which carries the arithmetic
+// that makes body-then-tail exactly equal to one wide loop.
+//
+// AND NONE OF THIS IS A PORT_HOST_ABI EXCEPTION. That tag is a ruling about
+// what MSVC cannot express. Sixteen players is a feature deviation, ruled
+// here, and it must never be filed in the bucket that says something could not
+// be done otherwise.
 
 #ifndef SM64DS_PORT_VS_WIDTH_H
 #define SM64DS_PORT_VS_WIDTH_H

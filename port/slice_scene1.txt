@@ -180,18 +180,33 @@ src/_ZN5Sound21UnsetPlayerVoiceGroupEv.c
 # -- so a reader comparing this lane's linkage delta against the CONVERTED
 # tier should subtract these four.
 #
-# ---- WHY dScTitle_c (id 2) AND dScGameOver_c (id 8) ARE NOT HERE -----------
-# Both are fully derived: SpawnInfo 0x020b1380 / 0x020b1750, vtables
-# data_ov003_020b1650 / data_ov003_020b179c, all eighteen slots read and
-# recorded in port/ov003_syms.txt, factories func_ov003_020adc10 /
-# func_ov003_020b1118, and every body has a src TU. Two things block seating
-# them and neither is the mount or the chain:
+# ---- WHY dScTitle_c (id 2) IS NOT HERE, AND WHY dScGameOver_c NO LONGER ----
+# ---- NEEDS THIS SECTION ----------------------------------------------------
+# BOTH BLOCKERS BELOW ARE RETIRED FOR dScGameOver_c (id 8). It is seated: the
+# row is in port_scene_classes[], the seat is in port/hal/scene_boot.cpp beside
+# dScStarSel_c's and the twelve TUs are in port/slice_mpg2.txt (run link100
+# lane MPG2). Blocker 1 was answered by the adjudication run -- its five
+# marker-carrying bodies are ruled REAL_DECOMP in
+# port/tools/inferred_stub_adjudicated.txt:2211-2215, each behind a
+# tools/match.py 2004/b56 strict-relocation byte gate -- and blocker 2 by the
+# port's per-TU placeholder treatment, applied in port/CMakeLists.txt onto the
+# words read out of each dtor's own literal pool. Neither was waived.
 #
-#   1. ELEVEN of their fourteen slot bodies carry the marker
+# dScTitle_c (id 2) is what is left, and only half of one blocker is left with
+# it: its six bodies are ruled in the same file, so what remains is the
+# placeholder trio in src/func_ov003_020ad660.c (_ZTV10dScTitle_c /
+# _ZTV8dScene_c / _ZTV7dBase_c, ROM words 0x020b1650 / 0x02092680 /
+# 0x0208e4b8) plus a row and a slice block. The treatment is the one
+# port/CMakeLists.txt's gate mpg2 block already spells out.
+#
+# The record of what the two blockers were, kept because the derivation is
+# still what a reader needs:
+#
+#   1. ELEVEN of the two classes' fourteen slot bodies carried the marker
 #      "recovered from vtable slot identity", so port/tools/inferred_stub_guard
-#      refuses them until each is disassembled from the ROM and ruled, the way
+#      refused them until each was disassembled from the ROM and ruled, the way
 #      the three star-select ones in port/tools/inferred_stub_adjudicated.txt
-#      were. Mechanical, and eleven times the work this lane did for three.
+#      were.
 #      (dScTitle_c: 020ada9c 020ada80 020ad814 020ad7a4 020ad7a0 020ad69c.
 #       dScGameOver_c: 020b0b3c 020b0b34 020b0814 020b0810 020b05bc.)
 #
@@ -203,8 +218,8 @@ src/_ZN5Sound21UnsetPlayerVoiceGroupEv.c
 #      exists in config; they are the decomp's own local stand-ins, and the ROM
 #      words at those three sites are 0x020b1650 / 0x02092680 / 0x0208e4b8 (and
 #      0x020a0eac for G0) -- read out of the image, the same values the
-#      star-select pair spells correctly. Seating them needs the port's per-TU
-#      placeholder treatment, which is its own gate.
+#      star-select pair spells correctly.
 #
-# The scene id and the chain are identical for all three, so whoever takes them
-# adds rows to port_scene_classes and to this slice, and changes nothing else.
+# The scene id and the chain are identical for all three, so whoever takes the
+# last one adds a row to port_scene_classes and a slice, and changes nothing
+# else.

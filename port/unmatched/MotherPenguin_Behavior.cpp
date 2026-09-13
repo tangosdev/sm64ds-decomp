@@ -34,6 +34,32 @@
  * vtable fill. Matched source line for line otherwise.
  * src/_ZN7SkiLift8BehaviorEv.cpp stays byte-locked and untouched, dropped
  * from slice_gate191.txt in favour of this file.
+ *
+ * THE SECOND BUG, and it is the bigger one (gate mpg). The matched src's
+ * FIRST call is spelled `_ZN13RacingPenguin16OnPendingDestroyEv()`. That
+ * symbol is ov019's own 4-byte `bx lr`
+ * (config/arm9/overlays/ov019/delinks.txt:106-108, 0x0211235c..0x02112360).
+ * The ROM's own instructions here are
+ *     02112480  push {r4,lr}
+ *     02112484  mov  r4, r0
+ *     02112488  bl   0x0211235c
+ * and ov018's own relocation table says where that branch goes:
+ *     from:0x02112488 kind:arm_call to:0x0211235c module:overlay(18)
+ * -- OVERLAY 18, whose 0x0211235c is func_ov018_0211235c, the 0x3c-byte
+ * TICK DISPATCHER of MotherPenguin's own state table (it reads the
+ * pointer-to-member record at self+0x370 PLUS 8 and calls through it; see
+ * port/unmatched/MotherPenguin_AfterClsnSeat.cpp for the whole table).
+ * ov018 and ov019 share load base 0x021111a0 and are never co-resident, so
+ * both symbols legitimately sit at that address in their own modules and the
+ * decomp picked the wrong one -- the same symscope-crossing family as
+ * PMFB7's HootTheOwl finding. The consequence in the port was total: the
+ * mother penguin's per-frame state tick never ran, because the port linked
+ * ov019's empty body and called that instead.
+ *
+ * Fixed here by calling func_ov018_0211235c, which is what the ROM's own
+ * relocation names. The matched src stays byte-locked and untouched (on ARM
+ * it assembles to the same `bl 0x0211235c` either way, which is exactly why
+ * no byte gate ever caught this); the crossing is reported decomp-side.
  */
 #include "SkiLift.h"
 
@@ -42,12 +68,12 @@ extern void _ZN9Animation7AdvanceEv(void*);
 extern void _ZN12CylinderClsn5ClearEv(void*);
 extern void _ZN12CylinderClsn6UpdateEv(void*);
 extern int func_ov018_02111d28(void*);
-extern int _ZN13RacingPenguin16OnPendingDestroyEv(void);
+extern void func_ov018_0211235c(void*);   /* ov018's own TICK DISPATCHER */
 }
 
 int SkiLift::Behavior()
 {
-  _ZN13RacingPenguin16OnPendingDestroyEv();
+  func_ov018_0211235c((char*)this);
   _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
   _ZN9Animation7AdvanceEv((char*)&mTextureSequence);
   _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);

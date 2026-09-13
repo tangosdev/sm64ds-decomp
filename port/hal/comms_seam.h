@@ -412,6 +412,73 @@ void comms_note_wire_activity();
 uint64_t comms_wire_activity();
 
 // ---------------------------------------------------------------------------
+// GIVE THE HOST ARM7 A TURN. Run link100, lane WM2 rung W1, WIDENED BY LANE
+// WM3 RUNG W4.
+//
+// src/func_020408b0.c is the ROM's own body now and the seam's t->open(mode)
+// call went with the face it lived in. hal/boot2_ipc.cpp -- the host ARM7 --
+// makes that call instead, when it sees the ROM claim channel 0xa. The claim is
+// a plain store into the shared block, so nothing traps it and the model has to
+// be given a moment to look. This is that moment.
+//
+// AND SINCE RUNG W4 A TURN ALSO ANSWERS ONE WM COMMAND. The ROM's own
+// become-parent and become-child bodies are linked and they SEND -- and every
+// command after the first is sent from inside the reply to the one before, so
+// the session forms one turn at a time. hal/wm_arm7.cpp holds the queue and the
+// reasoning; the short version is that a reply may never be posted from inside
+// the ARM9's store, because the nested dispatch that follows would swallow the
+// next one.
+//
+// WHERE THE TURNS COME FROM. The seam's lifecycle faces used to be the yield
+// points and they are the ROM's own bodies now, so the callers moved with them:
+// hal/comms_conductor.cpp turns between func_020408b0 and the role request,
+// once per turn of its seat wait, and once per turn of the pump -- which covers
+// src/func_0203ea5c.c's case-2 arm, where the ROM sits while its own bring-up
+// is still climbing. The seam's remaining exchange face turns once per round.
+//
+// Cheap and idempotent: one mask test after the open has happened, plus one
+// queue test, and a no-op with no transport installed.
+// ---------------------------------------------------------------------------
+void comms_arm7_turn();
+
+// ---------------------------------------------------------------------------
+// PUBLISH THE SLOT INTO THE ROM'S OWN WORD.
+//
+// Run link100, lane WM1 rung W0, NARROWED BY LANE WM3 RUNG W4. It published
+// BOTH words when W0 built it -- t->state() into data_020a0f94 and t->slot()
+// into data_020a0f24 -- because the ROM's own writers of those words were not
+// in the link and something had to keep them fresh.
+//
+// THE STATE WORD IS THE ROM'S NOW. src/func_0203fdac.c writes data_020a0f94
+// when a session forms, src/func_02040820.c and src/func_02040790.c write it
+// when one is asked for, and five callbacks write it on their failure arms. A
+// mirror would not merely duplicate those writes, it would FIGHT them: the
+// ROM's own state machine switches on that word, so a mirror write of 4 while
+// the ROM sits at 2 sends func_02040820 down its `case 4: Wireless_Reset` arm
+// and tears the session down. So data_020a0f94 is not written here any more,
+// and the chained pump that existed only to refresh it through
+// src/func_0203ea5c.c's silent case-2 arm is gone with it -- the ROM's own
+// callbacks are the path out of connecting now, which is what that arm was
+// always waiting for on hardware.
+//
+// WHAT IS LEFT IS THE AID, KEPT FOR ONE READ. The ROM writes data_020a0f24 too
+// (src/func_0203fec4.c:23, out of the connect reply), but that reply is posted
+// only once the transport reports the child connected -- and
+// hal/comms_conductor.cpp's comms_wait_for_session ends its wait on the SAME
+// signal and then immediately reads the slot through the ROM's own accessor.
+// One turn separates them, and a read in that window gives 0. So this writes
+// the aid the reply is about to carry, which makes the two writers agree rather
+// than race.
+//
+// IT IS NOT A CONTRACT CHANGE. Every CommsTransport entry is what it was, the
+// wire format is what it was, and a transport neither knows about this nor can
+// be affected by it. With no transport installed it now writes nothing at all.
+// The call sites and the whole argument are in the function's own banner in
+// hal/comms_seam.cpp.
+// ---------------------------------------------------------------------------
+void comms_publish_link_words();
+
+// ---------------------------------------------------------------------------
 // THE BOOT INDICATOR, honestly.
 // ---------------------------------------------------------------------------
 

@@ -59,7 +59,25 @@ void SharedFilePtr::LoadFile() { _ZN13SharedFilePtr8LoadFileEv(this); }
 void SharedFilePtr::Release() { _ZN13SharedFilePtr7ReleaseEv(this); }
 // Shrinks the file image to its post-parse size on the DS (a heap-space
 // optimization). Skipped on host: the image simply stays at load size.
+//
+// RETIRED IN THE THREE TARGETS THAT CARRY THE ROM'S OWN BODY (run link100,
+// lane SHADOWS2). This empty method was the SHADOW of
+// src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp -- a whole matched TU kept
+// out of the link by a host stand-in, while the ROM's one-statement body
+// (`return func_02017060(file)`) and its callee were both available. Where the
+// ROM body IS in the link, hal/method_faces.cpp aliases the void-returning
+// spelling every caller uses onto it, and this definition must NOT be there to
+// defeat the alias (alternatename_guard.py refuses a defined LHS).
+//
+// It stays for every OTHER target, and that is not a courtesy: the ROM body's
+// callee func_02017060 rides port/slice_gate16.txt, which is on smoke_player,
+// walk_window and walk_window_hires only. The ten narrow harnesses link the
+// CALLER (src/_ZN5Model8LoadFileER13SharedFilePtr.cpp, slice_gate4b) without
+// that callee, so for them the empty body is still the only definition there
+// can be. Same per-target shape as SM64DS_STAGE_SLOT6_ROM in CMakeLists.txt.
+#ifndef SM64DS_SFP_REALLOC_ROM
 void SharedFilePtr::ReallocateModelFile() {}
+#endif
 
 struct BCA_File;
 struct ModelComponents {

@@ -1,0 +1,97 @@
+# Run link100, lane SND2: the ROM's own sound BRING-UP, rungs R2 and up.
+#
+# Lane SND1 took rung R1 (the pool, the status block, the channel-7
+# registration) and rungs R8/R9/R10 (the frame). What it left behind is the
+# rest of src/func_020133bc.c -- the ROM's Sound::Init -- which
+# hal/sdat/consumer.cpp's sd_sound_init_host still transcribes line by line.
+# Each rung below deletes one more transcribed line and calls the ROM's own
+# body at the ROM's own point, in the ROM's own ORDER. See the header on
+# sd_sound_init_host for the order and for which lines are still host lines.
+#
+# NO SQUARE BRACKETS ANYWHERE IN THIS FILE, and that is not a style note.
+# CMake's file(STRINGS) reads an unbalanced open-square-bracket as the start
+# of a bracket argument and swallows the REST OF THE FILE into that single
+# element, joined with semicolons. Every source line after it then arrives
+# glued onto a comment line, the ^# filter in the CMake block drops the
+# whole thing, and the slice contributes NOTHING while looking correct. The
+# build fails at LINK on the very symbol the slice exists for, which reads
+# as a missing source rather than an eaten one. This lane spent a build
+# finding that out, on a comment that wrote an address interval the usual
+# mathematical way. Write 'base+0x10 up to end' instead.
+
+# --- RUNG R2: the 1 MB sound heap -----------------------------------------
+#
+# func_020133bc's second statement:
+#
+#     data_0209b498 = func_0205130c(Memory::Allocate(0x100000), 0x100000);
+#
+# func_0205130c lays a SolidHeapAllocator over a caller-supplied span: it
+# word-aligns the base, refuses a span with less than 0x10 bytes of payload,
+# builds the allocator over base+0x10 up to end through
+# Heap::CreateSolidHeapAllocator, and then runs func_02051024 over the 0x10
+# header -- a NestedHeapIterator at +0x04 with link offset 0xc, the allocator
+# pointer at +0x00 and the slot id func_02050fd4 hands out at +0x0c. The
+# returned pointer IS that header, and it is what every later sound
+# allocation (rung R3's per-player sub-heaps, rung R4's INFO and FAT blocks)
+# is asked out of.
+#
+# NOTHING NEW IS HOSTED. data_0209b498 is already a hosted DS global
+# (hal/actor_vtables.cpp), and every symbol under these two bodies is already
+# in the link: Heap::CreateSolidHeapAllocator, func_0204ebb8,
+# NestedHeapIterator::NestedHeapIterator(u32) and func_02050fd4.
+src/func_0205130c.c
+src/func_02051024.c
+
+# --- RUNG R3: the player/group table --------------------------------------
+#
+# func_020133bc's sixth statement:
+#
+#     func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
+#
+# func_02052008 walks the 32 sequence players, reads each one's PLAYER
+# record out of the SDAT INFO block through func_02050ae8, and sets its
+# playable-sequence limit through Sound::Player::SetPlayableSeqCount. With a
+# non-zero argument it also carves each player's own sub-heap out of the
+# rung-R2 heap through func_0204fa3c, which is where func_020511d4,
+# func_0204f278 (the sub-heap's own free callback) and func_020512f0 come
+# in. The argument is 0 today because hal/star_flow.cpp's hosted
+# func_0203d974 answers 1, so those three link and stay quiet -- the state
+# the census reports rather than one the count hides.
+#
+# func_02050ae8 reads the SDAT root out of data_020a5bb8, which
+# hal/sdat/sdat.cpp seats before sd_sound_init_host runs (see
+# sd_consumer_init's ORDER paragraph), so this rung needs nothing from rung
+# R4. Everything else it calls is already linked: func_02050d2c,
+# func_020511d4, NestedHeapIterator::AddLast and ::Remove, and the
+# SetPlayableSeqCount alias in hal/sdat/sound_abi.cpp.
+src/func_0204f278.cpp
+src/func_0204fa3c.c
+src/func_02050ae8.cpp
+src/func_020512f0.c
+src/func_02052008.c
+
+# --- RUNG R4: the SDAT archive opened off the card -------------------------
+#
+# func_020133bc's fourth statement:
+#
+#     func_02050f34(&data_0209b4b4, data_0208e498, data_0209b498, 0);
+#
+# The cartridge opens its own archive. func_02050f34 clears the root's three
+# block pointers, resolves /data/sound_data.sdat through the ROM's own
+# open-by-name file system (func_0205d644, func_0205d568, FS_ReadFile -- all
+# already linked, and hal/fs_names.cpp is the seat that made that path work),
+# reads the 0x30 SDAT header into the root, hands off to func_02050d54 for
+# the INFO and FAT blocks out of the rung-R2 heap, and seats data_020a5bb8.
+# func_02050970, func_0205097c and func_02050988 are the three free callbacks
+# func_020511d4 is given for those blocks; they link and run on teardown,
+# which is the honest state and is what the census shows.
+#
+# data_0208e498, the path itself, comes out of the cartridge through
+# port/tools/romdata.py's NAMED list with its size PINNED at 0x18: the delta
+# to the next symbol is 0x20 and the last word of that span is the
+# _ZTV12ActorDerived RTTI-pointer prefix, which carries a relocation.
+src/func_02050970.c
+src/func_0205097c.c
+src/func_02050988.c
+src/func_02050d54.c
+src/func_02050f34.c

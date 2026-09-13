@@ -166,133 +166,13 @@ extern void func_ov073_021215cc(void *self);
 extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 }
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch: the matched TU holds an
- * inline `PMF *p = c->pp + 1; (c->**p)();` that steps 8 bytes on ARM and 16
- * under MSVC. Three lines changed, the rest is the matched body verbatim. See
- * note (2) in this file's header. */
-extern "C" int _ZN11ChiefChilly8BehaviorEv(C *c)
-{
-    char *self = (char *)c;
-    int angx;
-    Vector3 v0;
-    RayParams rp;
-    Vector3 v3C;
-    Vector3 v48;
-    Vector3 v54;
-    int line[0x1f];
-
-    *(C **)((char *)data_0209f318 + 0x114) = c;
-    DecIfAbove0_Short((unsigned short *)(self + 0x100));
-
-    if (*(void **)((char *)c->pp + 8) != 0)
-        ov73_pmf_call(self, c->pp + 2);   /* record[1]: ROM steps pp by 8 bytes */
-
-    if ((char *)c->pp != data_ov073_02123400
-        && (char *)c->pp != data_ov073_02123320
-        && (char *)c->pp != data_ov073_02123340) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(self, self + 0x110);
-    } else {
-        int sum = *(int *)(self + 0xa8) + *(int *)(self + 0x9c);
-        int m = *(int *)(self + 0xa0);
-        int ac = *(int *)(self + 0xac);
-        if (sum >= m) m = sum;
-        *(int *)(self + 0xa8) = m;
-        *(int *)(self + 0xac) = ac;
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(self, self + 0x110);
-    }
-
-    if (((char *)c->pp == data_ov073_02123330 || (char *)c->pp == data_ov073_02123350)
-        && _ZNK9Animation12WillHitFrameEi(self + 0x35c, 7) != 0) {
-        data_020a0e68 = *(Mat4x3 *)(self + 0x328);
-        MulMat4x3Mat4x3(*(char **)(self + 0x320) + 0x60, &data_020a0e68, &data_020a0e68);
-        v0.x = data_020a0e68.m[9];
-        v0.y = data_020a0e68.m[10];
-        v0.z = data_020a0e68.m[11];
-        Vec3_Lsl(&v3C, &v0, 3);
-        v0 = v3C;
-        func_02012694(0x167, self + 0x74);
-        v48 = v0;
-        _ZN5Actor17HugeLandingDustAtER7Vector3b(self, &v48, 1);
-    }
-
-    if ((char *)c->pp != data_ov073_021233c0
-        && (char *)c->pp != data_ov073_021233d0
-        && (char *)c->pp != data_ov073_021233f0
-        && (char *)c->pp != data_ov073_02123400
-        && (char *)c->pp != data_ov073_02123320
-        && (char *)c->pp != data_ov073_02123340
-        && (char *)c->pp != data_ov073_02123380) {
-        _ZN11RaycastLineC1Ev(line);
-        rp.start.x = 0; rp.start.y = 0; rp.start.z = 0;
-        rp.end.x = 0; rp.end.y = 0; rp.end.z = 0;
-        rp.in.x = 0; rp.in.y = 0; rp.in.z = 0;
-        rp.out.x = 0; rp.out.y = 0; rp.out.z = 0;
-        {
-            int y;
-            rp.start.x = *(int *)(self + 0x5c);
-            angx = 0x2000;
-            y = *(int *)(self + 0x60);
-            rp.start.y = y;
-            rp.start.z = *(int *)(self + 0x64);
-            rp.start.y = y + 0x78000;
-            if (*(unsigned char *)(self + 0x4cb) > 1)
-                rp.in.z = 0x258000;
-            else
-                rp.in.z = 0x12c000;
-            Matrix4x3_FromRotationY(&data_020a0e68, *(short *)(self + 0x94));
-            Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, angx);
-        }
-        MulVec3Mat4x3(&rp.in, &data_020a0e68, &rp.out);
-        {
-            int sx = rp.start.x;
-            int ox = rp.out.x;
-            int sy = rp.start.y;
-            int sz = rp.start.z;
-            int oy, oz;
-            rp.end.x = sx;
-            rp.end.x = sx + ox;
-            oy = rp.out.y;
-            oz = rp.out.z;
-            rp.end.y = sy;
-            rp.end.y = sy + oy;
-            rp.end.z = sz;
-            rp.end.z = sz + oz;
-        }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(line, &rp.start, &rp.end, self);
-        if (_ZN11RaycastLine10DetectClsnEv(line) == 0) {
-            if (*(int *)(self + 0x98) > 0xa000) {
-                *(unsigned char *)(self + 0x4c9) = 1;
-            }
-            *(int *)(self + 0x4ec) = *(int *)(self + 0x5c);
-            *(int *)(self + 0x4f0) = *(int *)(self + 0x60);
-            *(int *)(self + 0x4f4) = *(int *)(self + 0x64);
-            if ((char *)c->pp != data_ov073_021233a0) {
-                *(int *)(self + 0x5c) = *(int *)(self + 0x68);
-                *(int *)(self + 0x60) = *(int *)(self + 0x6c);
-                *(int *)(self + 0x64) = *(int *)(self + 0x70);
-                *(int *)(self + 0x98) = 0;
-            }
-        } else {
-            *(unsigned char *)(self + 0x4c9) = 0;
-        }
-        _ZN11RaycastLineD1Ev(line);
-    }
-
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(self, self + 0x150, 0);
-
-    v54 = data_ov073_02123040;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(self + 0x110, &v54);
-
-    if ((char *)c->pp == data_ov073_02123360
-        || (char *)c->pp == data_ov073_02123390) {
-        func_ov073_0211f61c(self);
-    }
-    _ZN12CylinderClsn5ClearEv(self + 0x110);
-    _ZN12CylinderClsn6UpdateEv(self + 0x110);
-    func_ov073_021215cc(self);
-    _ZN14BlendModelAnim7AdvanceEv(self + 0x30c);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 2. src/_ZN11ChiefChilly8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 /* ---- the seat ------------------------------------------------------------ */
 extern "C" {
@@ -382,6 +262,105 @@ static void ov73_seat(unsigned char *rec, unsigned rom, void *host,
    addresses where the ROM words should be and abort the binary. Guarded here
    as well as at the bring-up, because all four registry rows call the
    bring-up and three of them share one fill. */
+/* ---- RUN link100 LANE PMFB7 GATE 2: THE PER-FRAME RECORDS ARE FACES -------
+ * ChiefChilly's matched TU dispatches its state cell's +8 half as a real
+ * pointer to member -- mov eax,[cell+8] / test eax,eax / je /
+ * mov ecx,[cell+12] / add ecx,this / call eax, the ROM's own offsets, receiver
+ * in ecx, NOTHING pushed, ARITY ZERO, /Zp4 diff 0 lines
+ * (runs/link100/out/PMFB7/emit_all21_out.txt). The seat used to install plain
+ * cdecl bodies that take their self off the stack, so each PER-FRAME record now
+ * holds a zero-argument __fastcall face that forwards the receiver as the one
+ * cdecl argument the ROM's own state body takes -- the same call the cell held
+ * before, made through ecx instead of the stack.
+ *
+ * THE ENTER RECORDS DO NOT CHANGE: they are reached by the class's state-change
+ * helper, which MSVC compiles as a one-call forwarder ending in `jmp`, so the
+ * caller's own frame is reused and a plain cdecl body is right there.
+ *
+ * WHICH RECORD IS WHICH is read out of the class's own __sinit
+ * (runs/link100/out/PMFB7/slots_gate2.txt), never assumed.
+ */
+static void __fastcall pmfb7_ov073_02120ed0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122f40, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_02120ed0)(self);
+}
+static void __fastcall pmfb7_ov073_0211fc78(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122f58, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_0211fc78)(self);
+}
+static void __fastcall pmfb7_ov073_0211fbf4(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122f68, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_0211fbf4)(self);
+}
+static void __fastcall pmfb7_ov073_0212005c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122f70, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_0212005c)(self);
+}
+static void __fastcall pmfb7_ov073_0212128c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122f80, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_0212128c)(self);
+}
+static void __fastcall pmfb7_ov073_021200e0(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122f88, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_021200e0)(self);
+}
+static void __fastcall pmfb7_ov073_02120910(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122f90, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_02120910)(self);
+}
+static void __fastcall pmfb7_ov073_02120b78(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122fa0, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_02120b78)(self);
+}
+static void __fastcall pmfb7_ov073_02120dec(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122fb0, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_02120dec)(self);
+}
+static void __fastcall pmfb7_ov073_02120610(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122fb8, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_02120610)(self);
+}
+static void __fastcall pmfb7_ov073_0211fa74(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122fc0, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_0211fa74)(self);
+}
+static void __fastcall pmfb7_ov073_02120844(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122fe0, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_02120844)(self);
+}
+static void __fastcall pmfb7_ov073_021203ac(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02122fe8, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_021203ac)(self);
+}
+static void __fastcall pmfb7_ov073_02121388(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02123000, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_02121388)(self);
+}
+static void __fastcall pmfb7_ov073_02120c7c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02123028, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_02120c7c)(self);
+}
+static void __fastcall pmfb7_ov073_0211fe8c(void *self, void *dead_edx)
+{
+    (void)dead_edx;   /* record 02123038, the per-frame half */
+    ((void (*)(void *))(void *)func_ov073_0211fe8c)(self);
+}
+
 extern "C" void port_ov073_states_seat(void)
 {
     static int done;
@@ -389,38 +368,38 @@ extern "C" void port_ov073_states_seat(void)
         return;
     done = 1;
     /* ChiefChilly: 32 records -> the sixteen tables at 0x02123320.. */
-    OV73_SEAT(data_ov073_02122f40, 0x02120ed0, func_ov073_02120ed0);
+    OV73_SEAT(data_ov073_02122f40, 0x02120ed0, pmfb7_ov073_02120ed0);
     OV73_SEAT(data_ov073_02122f48, 0x02120e60, func_ov073_02120e60);
     OV73_SEAT(data_ov073_02122f50, 0x0212000c, func_ov073_0212000c);
-    OV73_SEAT(data_ov073_02122f58, 0x0211fc78, func_ov073_0211fc78);
+    OV73_SEAT(data_ov073_02122f58, 0x0211fc78, pmfb7_ov073_0211fc78);
     OV73_SEAT(data_ov073_02122f60, 0x02120098, func_ov073_02120098);
-    OV73_SEAT(data_ov073_02122f68, 0x0211fbf4, func_ov073_0211fbf4);
-    OV73_SEAT(data_ov073_02122f70, 0x0212005c, func_ov073_0212005c);
+    OV73_SEAT(data_ov073_02122f68, 0x0211fbf4, pmfb7_ov073_0211fbf4);
+    OV73_SEAT(data_ov073_02122f70, 0x0212005c, pmfb7_ov073_0212005c);
     OV73_SEAT(data_ov073_02122f78, 0x02121378, func_ov073_02121378);
-    OV73_SEAT(data_ov073_02122f80, 0x0212128c, func_ov073_0212128c);
-    OV73_SEAT(data_ov073_02122f88, 0x021200e0, func_ov073_021200e0);
-    OV73_SEAT(data_ov073_02122f90, 0x02120910, func_ov073_02120910);
+    OV73_SEAT(data_ov073_02122f80, 0x0212128c, pmfb7_ov073_0212128c);
+    OV73_SEAT(data_ov073_02122f88, 0x021200e0, pmfb7_ov073_021200e0);
+    OV73_SEAT(data_ov073_02122f90, 0x02120910, pmfb7_ov073_02120910);
     OV73_SEAT(data_ov073_02122f98, 0x02120ad8, func_ov073_02120ad8);
-    OV73_SEAT(data_ov073_02122fa0, 0x02120b78, func_ov073_02120b78);
+    OV73_SEAT(data_ov073_02122fa0, 0x02120b78, pmfb7_ov073_02120b78);
     OV73_SEAT(data_ov073_02122fa8, 0x02120d80, func_ov073_02120d80);
-    OV73_SEAT(data_ov073_02122fb0, 0x02120dec, func_ov073_02120dec);
-    OV73_SEAT(data_ov073_02122fb8, 0x02120610, func_ov073_02120610);
-    OV73_SEAT(data_ov073_02122fc0, 0x0211fa74, func_ov073_0211fa74);
+    OV73_SEAT(data_ov073_02122fb0, 0x02120dec, pmfb7_ov073_02120dec);
+    OV73_SEAT(data_ov073_02122fb8, 0x02120610, pmfb7_ov073_02120610);
+    OV73_SEAT(data_ov073_02122fc0, 0x0211fa74, pmfb7_ov073_0211fa74);
     OV73_SEAT(data_ov073_02122fc8, 0x02120390, func_ov073_02120390);
     OV73_SEAT(data_ov073_02122fd0, 0x021205f0, func_ov073_021205f0);
     OV73_SEAT(data_ov073_02122fd8, 0x0211fbec, func_ov073_0211fbec);
-    OV73_SEAT(data_ov073_02122fe0, 0x02120844, func_ov073_02120844);
-    OV73_SEAT(data_ov073_02122fe8, 0x021203ac, func_ov073_021203ac);
+    OV73_SEAT(data_ov073_02122fe0, 0x02120844, pmfb7_ov073_02120844);
+    OV73_SEAT(data_ov073_02122fe8, 0x021203ac, pmfb7_ov073_021203ac);
     OV73_SEAT(data_ov073_02122ff0, 0x02121538, func_ov073_02121538);
     OV73_SEAT(data_ov073_02122ff8, 0x0211fc70, func_ov073_0211fc70);
-    OV73_SEAT(data_ov073_02123000, 0x02121388, func_ov073_02121388);
+    OV73_SEAT(data_ov073_02123000, 0x02121388, pmfb7_ov073_02121388);
     OV73_SEAT(data_ov073_02123008, 0x021208e4, func_ov073_021208e4);
     OV73_SEAT(data_ov073_02123010, 0x0212081c, func_ov073_0212081c);
     OV73_SEAT(data_ov073_02123018, 0x0212122c, func_ov073_0212122c);
     OV73_SEAT(data_ov073_02123020, 0x0211fe84, func_ov073_0211fe84);
-    OV73_SEAT(data_ov073_02123028, 0x02120c7c, func_ov073_02120c7c);
+    OV73_SEAT(data_ov073_02123028, 0x02120c7c, pmfb7_ov073_02120c7c);
     OV73_SEAT(data_ov073_02123030, 0x02120c08, func_ov073_02120c08);
-    OV73_SEAT(data_ov073_02123038, 0x0211fe8c, func_ov073_0211fe8c);
+    OV73_SEAT(data_ov073_02123038, 0x0211fe8c, pmfb7_ov073_0211fe8c);
     /* CccArena: 8 records -> the four tables at 0x021234a0.. */
     OV73_SEAT(data_ov073_0212310c, 0x02122200, func_ov073_02122200);
     OV73_SEAT(data_ov073_02123114, 0x021221e0, func_ov073_021221e0);

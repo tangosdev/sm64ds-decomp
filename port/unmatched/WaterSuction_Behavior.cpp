@@ -37,32 +37,12 @@ void _ZN12CylinderClsn5ClearEv(void *a);
 void _ZN12CylinderClsn6UpdateEv(void *a);
 void func_ov026_02112324(char *c);
 
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately
-   incomplete class, here also as a STRUCT MEMBER (the SoundObject/Cap/
-   MrBlizzard/BabyPenguin-state treatment); MSVC's PMF representation there
-   reproduces neither the ROM's {function,adjustment} pair nor its offset. */
-int _ZN12WaterSuction8BehaviorEv(void *selfv)
-{
-    WaterSuction *self = (WaterSuction *)selfv;
-    char *c = (char *)selfv;
-
-    DecIfAbove0_Short((unsigned short *)&self->unk_100);
-
-    /* the state tick: `(c->*(o->pmf))()` over the cell's +8 record */
-    {
-        PortOv026Cell *cell = *(PortOv026Cell **)(c + 0x30c);
-        if (cell->tick_fn != 0)
-            ((PortOv026Fn)(size_t)cell->tick_fn)(c);
-    }
-
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
-    self->unk_08c = self->unk_092;
-    self->unk_08e = self->unk_094;
-    self->unk_090 = self->unk_096;
-    func_ov026_02112324(c);
-    _ZN12CylinderClsn5ClearEv(&self->mMovingCylinderClsnWithPos);
-    _ZN12CylinderClsn6UpdateEv(&self->mMovingCylinderClsnWithPos);
-    return 1;
-}
+/* HOST COPY RETIRED, run link100 lane PMFB7 gate 1. src/_ZN12WaterSuction8BehaviorEv.cpp
+   dispatches its own field now: with /vmg /vmm (block R8) MSVC's pointer to
+   member IS the ROM's eight-byte {code, adjust} pair, so the widening this
+   banner was written for does not happen. The per-frame half of every state
+   cell holds a zero-argument __fastcall face; the enter half does not change,
+   because the helper that dispatches it tail-jumps. Measurements in
+   port/slice_pmfb7.txt and runs/link100/out/PMFB7/. */
 
 }
