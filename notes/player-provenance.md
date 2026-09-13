@@ -32,24 +32,24 @@ countdown block. Where a row cites "Behavior" that is the file meant.
 | offset | name | evidence |
 | --- | --- | --- |
 | 0x35c | `mGrabbedByActor` | `St_Grabbed_Cleanup` reads it, checks the actor's id word for 0xbf and calls `Player::DropActor` **with that actor as `this`** -- so it is the actor holding the player, not `mHeldObj` (0x358) which is what the player holds. `St_Grabbed_Main` drops through the same slot; `St_Walk_Init` and `St_NoControl_Init` clear it. |
-| 0x548 | `mPreClsnPosX` | Behavior stores `mPosX/Y/Z` into 0x548/0x54c/0x550 after the state's `mMain` has run and immediately before the collision calls `func_ov002_020bf36c(this, &mdCcAcPos_c)` / `func_ov002_020bf13c` -- i.e. the position after movement, before collision push-back. `St_Talk_Init` and `St_CeilingGrate_Main` copy all three back into `mPos*`, undoing the push-back. Two functions, opposite directions, the same three slots. |
+| 0x548 | `mPreClsnPosX` | Behavior stores `mPosX/Y/Z` into 0x548/0x54c/0x550 after the state's `mMain` has run and immediately before the collision calls [func_ov002_020bf36c](../src/actors/Player.cpp)(func 42 to assemble TU)`(this, &mdCcAcPos_c)` / [func_ov002_020bf13c](../src/actors/Player.cpp)(func 36 to assemble TU) -- i.e. the position after movement, before collision push-back. `St_Talk_Init` and `St_CeilingGrate_Main` copy all three back into `mPos*`, undoing the push-back. Two functions, opposite directions, the same three slots. |
 | 0x54c | `mPreClsnPosY` | as above; also read by `St_Swim_Main` (`mPosY = mPreClsnPosY - 0x8000`). |
 | 0x550 | `mPreClsnPosZ` | as above. |
 | 0x628 | `mParticle1` | Passed as the *existing-handle* first argument of `Particle::System::New` and reassigned from its result, in `St_BurnFire_Main`, `St_BurnLava_Main`, `St_YoshiPower_Main` and `St_Electrocute_Main`. `ChangeState` copies `mParticle2` into it. Same shape as the already-named `mParticle2` at 0x62c. |
 | 0x630 | `mParticle3` | Same `Particle::System::New` handle shape, in `St_Swim_Main` (via `func_02022d44`) and `St_Electrocute_Main`; `ChangeState` zeroes it and copies it back into `mParticle2`. Third of the three consecutive handles 0x628/0x62c/0x630. |
 | 0x6a2 | `mPrevAreaId` | Behavior: `if (mPrevAreaId != mAreaId) { mPrevAreaId = mAreaId; mMouthHoldTimer = 0; }`. `InitResources` seeds it from `mAreaId`. Compare-then-store against a base field is a previous-value latch. |
 | 0x6aa | `mPunchKickCooldown` | `St_PunchKick_Main` gates on `== 0` at the top and re-arms it to 0x10 on the way out; Behavior decrements it with `DecIfAbove0_Short`. Only that state touches it. |
-| 0x6ae | `mPowerupTimer` | `InitMetalWario` and `InitVanishLuigi` both arm it to 0x258 (600 frames, the cap duration); Behavior counts it down and, on reaching 0, calls the three teardown helpers `func_ov002_020e032c` / `_020bdef0` / `_020bdd9c` -- the same three `CleanupResources` calls to drop the powerup. |
+| 0x6ae | `mPowerupTimer` | `InitMetalWario` and `InitVanishLuigi` both arm it to 0x258 (600 frames, the cap duration); Behavior counts it down and, on reaching 0, calls the three teardown helpers [func_ov002_020e032c](../src/actors/Player.cpp) / [_020bdef0](../src/actors/Player.cpp), (func 14 used to assemble TU) / [_020bdd9c](../src/actors/Player.cpp), (func 12 used to assemble TU) -- the same three `CleanupResources` calls to drop the powerup. |
 | 0x6b0 | `mCrouchTimer` | Armed to 0xa by `St_Crouch_Main` and by nothing else; Behavior decrements. |
 | 0x6b4 | `mHoldHeavyTimer` | Armed to 0xa by `St_HoldHeavy_Main` and by nothing else; Behavior decrements. |
 | 0x6b8 | `mWalkTimer` | Armed to 0x10 by `St_Walk_Init` and by nothing else; Behavior decrements. What it gates is not in matched code, so the name claims only ownership and shape, both of which are witnessed. |
-| 0x6c6 | `mMouthHoldTimer` | Behavior: on reaching 0 **and** `mObjInMouth != 0` it calls `func_ov002_020d6790` (the same spit-out helper `St_YoshiPower_Cleanup` calls when the mouthful is not a player); the area-change latch above resets it; `St_YoshiPower_Main` arms it to 0x5a. Gated on `mObjInMouth`, so it is that object's hold time. |
-| 0x6c8 | `mTeleportTimer` | Armed to 0x3c by `St_Teleport_Main`; Behavior clears the global `data_0209f284` when it reaches 1. Only the teleport state touches it. |
+| 0x6c6 | `mMouthHoldTimer` | Behavior: on reaching 0 **and** `mObjInMouth != 0` it calls [func_ov002_020d6790](../src/func_ov002_020d6790.cpp) (the same spit-out helper `St_YoshiPower_Cleanup` calls when the mouthful is not a player); the area-change latch above resets it; `St_YoshiPower_Main` arms it to 0x5a. Gated on `mObjInMouth`, so it is that object's hold time. |
+| 0x6c8 | `mTeleportTimer` | Armed to 0x3c by `St_Teleport_Main`; Behavior clears the global [data_0209f284](../config/arm9/symbols.txt) when it reaches 1. Only the teleport state touches it. |
 | 0x6d0 | `mMegaKillCount` | `Player::IncMegaKillCount` pre-increments it **as a `u16`** and passes the new value straight to `dActor_c::Spawn(0x14b, <it>, ...)` as the spawn's param -- the escalating mega-cap kill combo. Widened from the declared `u8`+pad by that increment. |
 | 0x6d4 | `mPrevDesiredAngleY` | Behavior copies `mDesiredAngleY` here immediately before overwriting `mDesiredAngleY` from the controller table; `St_GrabBowserTail_Main` reads the difference `(mDesiredAngleY - mPrevDesiredAngleY)` as this frame's stick swing. |
 | 0x6d6 | `mPreClsnAngleY` | Behavior stores `mAngleY` in the same pre-collision block as 0x548; `St_SwingPlayer_Init` computes `mAngleYSpeed = mAngleY - mPreClsnAngleY`. Not `mPrevAngleY` -- see the shadowing section. |
 | 0x6db | `mBodyModelId` | `Render` passes it as the `a` argument of `Player::GetBodyModelID`, indexes the body-model pointer array at 0xdc with the result, indexes `mTexSeqBody[]` with it directly (`this + 0x1dc + it * 0x14`), and special-cases `it == 3`. |
-| 0x6dc | `mPrevCharacter` | `SetNewHatCharacter` saves the incoming `param1` (the displayed character) here, sets `param1 = mHatCharacter` for the duration of `func_ov002_020e6350`, then restores `param1` from it. `InitMetalWario` runs `TurnOffToonShading` over both `mHatCharacter` and this slot; `CleanupResources` uses it as a model index. |
+| 0x6dc | `mPrevCharacter` | `SetNewHatCharacter` saves the incoming `param1` (the displayed character) here, sets `param1 = mHatCharacter` for the duration of [func_ov002_020e6350](../src/func_ov002_020e6350.c), then restores `param1` from it. `InitMetalWario` runs `TurnOffToonShading` over both `mHatCharacter` and this slot; `CleanupResources` uses it as a model index. |
 | 0x6e6 | `mStatePhase` | 36 sites, the most-referenced `unk_` in the header. Zeroed by ~12 `St_*_Init` bodies; `switch`ed over 0/1/2 by `St_Hurt_Main`, `St_ButtSlide_Main`, `St_StomachSlide_Main`; tested `!= 2` by `St_Squish_Main` and `== 0` by `St_PunchKick_Main` and `St_Wait_Main`. A sub-step *within* the current state, reset on entry -- distinct from `mStateStep` (0x6e3) and `mStateWork` (0x6e5), which `St_EndingFly_Init` copies between (`mStateWork = mStatePhase`). `St_InYoshiMouth_Main` reuses it as a plain counter (`+= d`, exits at `>= 0x1e`). |
 | 0x6e8 | `mTeleportId` | `St_Teleport_Main`: `GetTeleportDestObj((u8)(mTeleportId - 1))`. Sole use, and it names itself. |
 | 0x6fb | `mIsVanish` | `InitVanishLuigi` sets it to 1 and nothing else writes it; `St_Wait_Init` and `St_Wait_Main` test it in the same expression as `mIsMetal` (`if (mIsMetal != 0 \|\| mIsVanish != 0)`), i.e. "wearing a cap power". `daBakubaku_c::Behavior` skips its collider update when the closest player has it set -- the vanish cap phasing through. |
@@ -133,7 +133,7 @@ the deleting destructor -- on each element.
 The two `s32` runs are parallel to the model runs, one word per model, and that
 pairing is witnessed rather than inferred: `TurnOffToonShading` passes
 `unk_27c[j]` with `mBodyModels[...]`, `unk_28c[j]` with `unk_154[j]` and
-`unk_28c[j + 4]` with `unk_154[j + 4]`, all three to `func_ov002_020e6b74`, which
+`unk_28c[j + 4]` with `unk_154[j + 4]`, all three to [func_ov002_020e6b74](../src/func_ov002_020e6b74.c), which
 walks the model's material records writing one word of the array into each
 record's `+0x1c`. So each element is an allocated per-material word buffer owned
 by the model at the same index -- `CleanupResources` frees them with
@@ -142,8 +142,7 @@ nothing matched allocates or fills either run, so what the word means is unread.
 Naming the shape was possible; naming the meaning was not.
 
 `unk_154`'s index range has one wrinkle worth writing down before someone
-"fixes" it. `Render` indexes it with `func_ov002_020becf4(mBodyModelId, 1)`, and
-that helper can return 8 or 9 -- the "no model" sentinels. `Render` loads the slot
+"fixes" it. `Render` indexes it with [func_ov002_020becf4](../src/actors/Player.cpp)`(mBodyModelId, 1)`(func 31 used to assemble TU), and that helper can return 8 or 9 -- the "no model" sentinels. `Render` loads the slot
 *first* and only then tests `i != 9 && i != 8`, so the ROM itself reads one or two
 words past the array, into `mModelAnim4`, and discards the result. That is
 reproduced as written; it is what the cartridge does.
@@ -278,10 +277,10 @@ Two details that are not free and are worth copying:
 
 Every "read by nothing matched" reason below was withdrawn on 2026-08-24. They
 were all decided by searching Bowser's own mangled methods, which is three files;
-Bowser's behaviour is in ov060, dispatched through the pointer-to-member table
-`data_ov060_0211aeb4[*(int *)(this + 0x410)]` that `func_ov060_02112434` calls.
+Bowser's behaviour is in [ov060](../config/arm9/overlays/ov060/symbols.txt), dispatched through the pointer-to-member table
+[data_ov060_0211aeb4](../config/arm9/overlays/ov060/symbols.txt)`[*(int *)(this + 0x410)]` that [func_ov060_02112434](../src/func_ov060_02112434.cpp) calls.
 A data-table dispatch names no caller, so the call graph never reaches those
-state functions -- but `tools/handler_owner.py` attributes ~30 ov060 handlers to
+state functions -- but `tools/handler_owner.py` attributes ~30 [ov060](../config/arm9/overlays/ov060/symbols.txt) handlers to
 Bowser decisively, and they read almost all of it. Named from that evidence:
 
 | offset | name | evidence |
@@ -289,14 +288,14 @@ Bowser decisively, and they read almost all of it. Named from that evidence:
 | 0x3a8 | `mUniqueID_3a8` | `InitResources` stores word +4 of the actor it spawns with id 0x116; a state handler passes that word to `dActor_c::FindWithID`. So it is an actor unique id, which is what `fBase_c +4` is called everywhere else -- `uniqueID`. Offset-suffixed because the *kind* is settled and the role of actor 0x116 is not. |
 | 0x3fc | `mTimer` | incremented as a `u16`, tested `== 0`, and `& 1` for alternate-frame work. |
 | 0x40c | `mState` | assigned 0, 1, 5, 0xd and 0x13 by different state handlers and compared against 4. An enum-like state word, distinct from the pmf index at 0x410. |
-| 0x414 | `mVariantID` | `param1 & 3`, wrapped by `if (== 3) = 0`, then used to index `data_ov060_02119264` for the byte at 0x41e. A variant selector that picks per-instance configuration -- which is exactly the part the old note called a guess. |
-| 0x41c | `mOpacity` | the missing `0xff` exists: `func_ov060_021123dc` writes `0xff` here and to 0x41d, and `func_ov060_02112434` steps 0x41c toward 0x41d by 0x14 a frame, clamping at 0xff and 0, while another handler passes `*(u8 *)(this + 0x41c) >> 3` to `ModelBase::ApplyOpacity` -- 0..255 scaled to the DS's 5-bit alpha. `Render`'s `< 8` early-out is the invisible case. |
+| 0x414 | `mVariantID` | `param1 & 3`, wrapped by `if (== 3) = 0`, then used to index [data_ov060_02119264](../config/arm9/overlays/ov060/symbols.txt) for the byte at 0x41e. A variant selector that picks per-instance configuration -- which is exactly the part the old note called a guess. |
+| 0x41c | `mOpacity` | the missing `0xff` exists: [func_ov060_021123dc](../src/func_ov060_021123dc.c) writes `0xff` here and to 0x41d, and [func_ov060_02112434](../src/func_ov060_02112434.cpp) steps 0x41c toward 0x41d by 0x14 a frame, clamping at 0xff and 0, while another handler passes `*(u8 *)(this + 0x41c) >> 3` to `ModelBase::ApplyOpacity` -- 0..255 scaled to the DS's 5-bit alpha. `Render`'s `< 8` early-out is the invisible case. |
 | 0x424 | `mTalkStep` | `switch` on it: case 0 calls `Player::StartTalk`, case 1 waits for `Player::GetTalkState() == 0` then `Player::ShowMessage`, each case incrementing it. |
 | 0x426 | `mDropsShadow` | gates the `dBgCh_Gnd` raycast that projects Bowser onto the ground and writes the shadow matrix at 0x330 -- the same role `BowserFire::mDropsShadow` was named for. |
 | 0x427 | `mBounceOnLand` | while set, `dBgCh_Actr::JustHitGround()` reflects the vertical speed at -60% (clamped to 0x14000); cleared once he settles. |
 | 0x42b | `mCapActorAlive` | actor 0x10d is the lost cap -- `MrBlizzard` spawns it under `SaveData::HasPlayerLostCap()` and stores its unique id as `mCapUniqueID`. This is the latch saying that actor still exists. |
 | 0x444 | `mCutsceneStep` | `switch` on it drives the camera: `Camera::SetFlag_3`, `Camera::SetLookAt`, and the computed eye position at 0x438/0x43c. |
-| 0x446 | `mStompFxLatch` | `func_ov060_02111a28` matches the animation frame at 0x12c against per-animation windows and, on the rising edge only, emits landing dust from the left foot (0x3d4) or right (0x3e0), plays sound 0xb0 and calls `dActor_c::Earthquake`. This is the edge-detect latch that makes it fire once per window. |
+| 0x446 | `mStompFxLatch` | [func_ov060_02111a28](../src/func_ov060_02111a28.cpp) matches the animation frame at 0x12c against per-animation windows and, on the rising edge only, emits landing dust from the left foot (0x3d4) or right (0x3e0), plays sound 0xb0 and calls `dActor_c::Earthquake`. This is the edge-detect latch that makes it fire once per window. |
 | 0x448 | `mParticleHandle` | stores the result of `Particle::System::New`. |
 | 0x44c | `mSoundHandle` | stores the result of `Sound::PlayLong`, and passes it back as that call's first argument. |
 | 0x450 | `mSoundID` | set to 0xba, compared against 0xba, and passed to `Sound::PlayLong` as the sound id. |
@@ -310,17 +309,17 @@ Still `unk_` in Bowser, with the reason:
   upward. Nothing compares it, so whether it counts bounces, throws or landings
   is not decided by the code.
 - **0x429, 0x42a** -- written once by `InitResources` (1 and 5) and read nowhere,
-  including in the ov060 handlers.
+  including in the [ov060](../config/arm9/overlays/ov060/symbols.txt) handlers.
 
 ## SpikeBomb
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x170 | `mStateIndex` | `InitResources` zeroes it; `Behavior` uses it as `data_ov060_0211b1d8[mStateIndex * 2]` -- a stride-8 `{ptr, adj}` pointer-to-member table, dispatched with the same ARM/Itanium pmf sequence `Player::ChangeState` uses. An index into a state table, not a flag. `Render` also early-outs while it is non-zero. |
+| 0x170 | `mStateIndex` | `InitResources` zeroes it; `Behavior` uses it as [data_ov060_0211b1d8](../config/arm9/overlays/ov060/symbols.txt)`[mStateIndex * 2]` -- a stride-8 `{ptr, adj}` pointer-to-member table, dispatched with the same ARM/Itanium pmf sequence `Player::ChangeState` uses. An index into a state table, not a flag. `Render` also early-outs while it is non-zero. |
 | 0x174 | `mHomePosX` | `InitResources` copies `mPosX/Y/Z` into 0x174/0x178/0x17c, then raises the Y copy by `unk_184 >> 3`. Saved-at-spawn position with a vertical offset. |
 | 0x178 | `mHomePosY` | as above; it is the one the `>> 3` term is added to. |
 | 0x17c | `mHomePosZ` | as above. |
-| 0x1a8 | `mSlotIndex` | `InitResources`: `mSlotIndex = AddSpikeBomb(this)`, and `src/AddSpikeBomb.c` returns the index of the first free slot in the eight-entry global `data_0209f3a4` (or -1). `src/ClearSpikeBomb.c` takes that index back. |
+| 0x1a8 | `mSlotIndex` | `InitResources`: `mSlotIndex = AddSpikeBomb(this)`, and `src/AddSpikeBomb.c` returns the index of the first free slot in the eight-entry global [data_0209f3a4](../config/arm9/symbols.txt) (or -1). `src/ClearSpikeBomb.c` takes that index back. |
 | 0x1ae | `mOpacity` | `InitResources` sets 0xff; `SpikeBomb::Render` returns early on `< 8`. Full alpha at spawn plus a "too faint to bother drawing" guard is an opacity byte, and 0xff is not a plausible state id or counter. |
 
 Left `unk_` in SpikeBomb: **0x180** (`Vec3_HorzLen` of the spawn position, i.e. a
@@ -334,9 +333,9 @@ Three more, all found while chasing the arrays.
 
 | offset | name | evidence |
 | --- | --- | --- |
-| 0x560/0x564/0x568 | `mWallNormalX/Y/Z` | The exact counterpart of `mFloorNormal*` three words earlier, and written the same way: `func_ov002_020c25a8` calls `SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)` and stores `wn.x/y/z` into the three slots, then pushes the actor back out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`). Seven bodies read the X/Z pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)` to recover the wall's facing -- `St_Shell_Main`, `St_OnWall_Main` (twice), `St_Balloon_Main`, `St_CrazedCrate_Main`, `func_ov002_020c2138`, `func_ov002_020dd2f4`, `func_ov002_020e28d4`. 0x564 was declared padding until that middle store was disassembled, which is exactly how 0x554 and 0x55c got here. |
+| 0x560/0x564/0x568 | `mWallNormalX/Y/Z` | The exact counterpart of `mFloorNormal*` three words earlier, and written the same way: [func_ov002_020c25a8](../src/actors/Player.cpp) (func 80 used to assemble TU) calls `SurfaceInfo::CopyNormalTo(dBgCh_Actr::GetWallResult(&mMeshClsn) + 4, &wn)` and stores `wn.x/y/z` into the three slots, then pushes the actor back out along it (`mPosX -= mWallNormalX * 2`, `mPosZ -= mWallNormalZ * 2`). Seven bodies read the X/Z pair back as `cstd::atan2(mWallNormalX, mWallNormalZ)` to recover the wall's facing -- `St_Shell_Main`, `St_OnWall_Main` (twice), `St_Balloon_Main`, `St_CrazedCrate_Main`, [func_ov002_020c2138](../src/actors/Player.cpp)(func 77 used to assemble the TU), [func_ov002_020dd2f4](../src/func_ov002_020dd2f4.c), [func_ov002_020e28d4](../src/func_ov002_020e28d4.c)(relation to `Player::UpdateAirMovement` on N64 decomp,[n64-decomp-cross-reference](../notes/archive/n64-decomp-cross-reference.md)). 0x564 was declared padding until that middle store was disassembled, which is exactly how 0x554 and 0x55c got here. |
 | 0x719 | `mKeyModelId` | `CleanupResources` passes it to `UnloadKeyModels(i)` under `mLoadedResourceFlags & 0x10`, and that function (`src/UnloadKeyModels.cpp`) indexes two eight-entry `SharedFilePtr` tables with it and releases both. `St_LevelEnter_Init` seeds it with -1, which `UnloadKeyModels`'s `if (i >= 8) return` treats as "nothing loaded". The same argument slot is `mState` in `Key::CleanupResources` and `v - 7` in `Door::CleanupResources`, so it selects WHICH key model, not how many. |
-| 0x6f7 | `mSwimMusicPushed` | A latch on a music push. `St_Swim_Main` sets it to 1 immediately after `func_ov002_020bd928(this, 0x33)` and clears it immediately after `func_ov002_020bd8c0(this, 0x33)`; `St_Swim_Cleanup` does nothing unless it is set, and then clears it and calls `func_ov002_020bd8c0(this, 0x33)`. The two helpers are `Sound::SetMusic` / `Sound::EndMusic` wrappers around the track words at 0x678/0x67c/0x680, so what is latched is "this state has a temporary track pushed and still owes the pop". Only the Swim states touch it. |
+| 0x6f7 | `mSwimMusicPushed` | A latch on a music push. `St_Swim_Main` sets it to 1 immediately after [func_ov002_020bd928](../src/actors/Player.cpp)`(this, 0x33)`, (func 3 used to assemble the TU) and clears it immediately after [func_ov002_020bd8c0](../src/actors/Player.cpp)`(this, 0x33)`, (func 2 used to assemble the TU); `St_Swim_Cleanup` does nothing unless it is set, and then clears it and calls [func_ov002_020bd8c0](../src/actors/Player.cpp)`(this, 0x33)`. The two helpers are `Sound::SetMusic` / `Sound::EndMusic` wrappers around the track words at 0x678/0x67c/0x680, so what is latched is "this state has a temporary track pushed and still owes the pop". Only the Swim states touch it. |
 
 ## daSldMng_c
 
@@ -350,7 +349,7 @@ mirrored its base instead of deriving from it, so `mPosX/Y/Z`, `mPrevPosX/Y/Z`,
 not independently evidenced here. That weaker claim is now moot:
 `include/daSldMng_c.h` declares `struct daSldMng_c : dActor_c`, so those fields
 are the base's own and this section makes no claim about them at all. The
-cartridge agrees -- `_ZTI10daSldMng_c` (ov019 `0x0211338c`) is an
+cartridge agrees -- `_ZTI10daSldMng_c` ([ov019](../config/arm9/overlays/ov019/symbols.txt) `0x0211338c`) is an
 `__si_class_type_info` naming `_ZTI8dActor_c` as its one base at subobject
 offset zero.
 
@@ -362,13 +361,13 @@ Only two slots are the actor's own, and both are witnessed:
 | 0x0d6 | `mState` | `Behavior` switches on it over exactly `{0, 1}`. State 0 waits for `DistToCPlayer() < 0x180000`, plays a sound and increments it; state 1 is the countdown above. A two-state machine, not a flag -- and the ROM's own store is a `strb` of the loaded byte plus one, which is why the slot is `u8`. |
 
 Both methods, the compiler-generated D1/D0 pair and the spawn veneer now live in
-one genuine translation unit, `src/game/actors/d_a_sld_mng.cpp` (manifest entry
-`ov019/daSldMng_c`, `.text 0x0211261c..0x0211277c`). The shadow that entry used
+one genuine translation unit, [src/game/actors/d_a_sld_mng.cpp](../src/game/actors/d_a_sld_mng.cpp) (manifest entry
+[ov019](../config/arm9/overlays/ov019/symbols.txt)/[daSldMng_c](../src/game/actors/d_a_sld_mng.cpp), `.text 0x0211261c..0x0211277c`). The shadow that entry used
 to carry under `src_tu/actors/` and the five per-function sources it was built
 from are deleted; that entry's `legacy_source` fields still name each of them. Because that TU defines `InitResources` -- the first declared
 non-inline virtual, so this class's key function -- it emits the whole
 `_ZTV/_ZTI/_ZTS` group, and `tools/romdata_check.py` word-compares
-`_ZTV10daSldMng_c` (ov019 `0x021133cc`, 124 bytes) against the cartridge:
+`_ZTV10daSldMng_c` ([ov019](../config/arm9/overlays/ov019/symbols.txt) `0x021133cc`, 124 bytes) against the cartridge:
 VERIFIED. Under the coined name that comparison was impossible.
 
 ## UpDownLiftBbh

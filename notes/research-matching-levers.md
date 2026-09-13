@@ -46,7 +46,7 @@ The single highest-leverage move available is **tooling adoption from the siblin
 
 ### Area 4 — Permuter leverage
 
-**F4.1 — The permuter's documented sweet spot is exactly your wall #3; upstream confirms it cannot reliably flip ordering/structural gaps.** [high] README: "generally best towards the end, when mostly regalloc changes remain"; and "If there are reorderings or functional changes, it's often easy to resolve those by hand, and neither the scorer nor the randomizer tends to play well with them." This is the tool author saying what your empirics already showed (~8k iters on func_0203faa8 and func_ov004_020b7e38, reorder penalty never dropped). Source: https://github.com/simonlindholm/decomp-permuter
+**F4.1 — The permuter's documented sweet spot is exactly your wall #3; upstream confirms it cannot reliably flip ordering/structural gaps.** [high] README: "generally best towards the end, when mostly regalloc changes remain"; and "If there are reorderings or functional changes, it's often easy to resolve those by hand, and neither the scorer nor the randomizer tends to play well with them." This is the tool author saying what your empirics already showed (~8k iters on `func_0203faa8` and [func_ov004_020b7e38](../src/func_ov004_020b7e38.c), reorder penalty never dropped). Source: https://github.com/simonlindholm/decomp-permuter
 
 **F4.2 — The scorer diffs objdump'd .o files with graded penalties (same / same-instruction / reordered / no-match); stack positions ignored unless `--stack-diffs`.** [high] This constrains what gaps it can close and dictates ARM setup. Source: https://github.com/laqieer/decomp-permuter-arm , `scorer.py`
 

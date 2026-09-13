@@ -55,7 +55,7 @@ reasoned about — an isolated copy of `config/arm9` in a scratch directory, rea
 
 ### 2.1 `delinks.txt` already accepts `.data` / `.rodata` / `.bss` entries
 
-Appending these to `config/arm9/delinks.txt` in the isolated copy:
+Appending these to [config/arm9/delinks.txt](../config/arm9/delinks.txt) in the isolated copy:
 
 ```sh
 src/testbss.c:
@@ -81,7 +81,7 @@ src/testrodata.c:
 Before: a single monolithic fragment per data section — `_dsd_gap@main_40.o(.rodata)`,
 `(.ctor)`, `(.data)`, `(.bss)`. After adding the entries, `dsd lcf` regenerates:
 
-```text
+```python
 ARM9_RODATA_START = .;   testrodata.o(.rodata)   _dsd_gap@main_37.o(.rodata)
 ARM9_DATA_START   = .;   testdata.o(.data)       _dsd_gap@main_39.o(.data)
 ARM9_BSS_START    = .;   testbss.o(.bss)         _dsd_gap@main_40.o(.bss)
@@ -94,7 +94,7 @@ src/testbssmid.c:
     complete
     .bss start:0x0209b038 end:0x0209b048
 ```
-```text
+```python
 ARM9_BSS_START = .;
     testbss.o(.bss)
     _dsd_gap@main_0.o(.bss)      <- new fragment, before

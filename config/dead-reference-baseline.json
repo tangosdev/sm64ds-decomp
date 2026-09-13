@@ -210,6 +210,10 @@
    "ref": "src/func_ov006_02110a20.c"
   },
   {
+    "file":"notes/rom-build.md",
+    "ref":"src/func_ov013_021112a8.c"
+  },
+  {
    "file": "notes/mwccarm-codegen.md",
    "ref": "docs/_private/CodeWarrior/mwccarm.help.txt"
   },

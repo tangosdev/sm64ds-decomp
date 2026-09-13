@@ -894,7 +894,7 @@ Three parked "not reachable from C" regalloc near-misses cracked byte-exact
   the extra *named webs* that `volatile` + named ints introduce - which is what the
   rotation was. Prefer this form; fall back to `volatile` only if the coloring already
   matches. (Mined from the twin `func_ov006_02107ea8`, now part of
-  `src/actors/dScMgRoulette_c.cpp`, which uses the same idiom.)
+  [src/actors/dScMgRoulette_c.cpp](../src/actors/dScMgRoulette_c.cpp), as ROM ordinal and func 13 used to assemble TU ,which uses the same idiom.)
 - **Stack layout is declaration order, low to high** (volatile arrays and structs
   included): `saved[3]` then `v1` then `v2` lands sp+0 / sp+0xc / sp+0x18
   (func_ov092_021311b0; confirmed again on func_ov092_02131010's tmp/eq/dust).

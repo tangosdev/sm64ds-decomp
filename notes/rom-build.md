@@ -151,7 +151,7 @@ unspent — matching the quota exactly measured slower than the old host-core de
 |---|---|
 | `dsd` (ds-decomp 0.11.0) | `tools/bin/dsd.exe` |
 | ROM extracted (`dsd rom extract`) | `extracted/dsd/` — header, banner, 2,072 asset files, arm7, arm9, overlays |
-| dsd project config | `config/arm9/config.yaml` + **106 modules** (main + itcm + dtcm + 103 overlays) of `symbols.txt` / `relocs.txt` / `delinks.txt` |
+| dsd project config | [config/arm9/config.yaml](../config/arm9/config.yaml) + **106 modules** (main + itcm + dtcm + 103 overlays) of `symbols.txt` / `relocs.txt` / `delinks.txt` |
 | Delinked gap objects | `build/delinks/*.o` — **93**, because 13 overlays are empty and emit none |
 | Linker script + object list | `build/arm9.lcf`, `build/objects.txt` |
 | Compiler **and linker** | `tools/mwccarm/1.2/sp2p3/{mwccarm,mwldarm}.exe` |
@@ -201,7 +201,7 @@ and the ARM7/secure-area/CRC handling *before* any of our C is in the mix.
 
 **Settle path plumbing first (30 seconds, before interpreting any error).**
 `build/objects.txt` holds repo-root-relative paths (`build\delinks\...`), the lcf's
-MEMORY block writes `> build/arm9.bin`, but `config/arm9/config.yaml` expects built
+MEMORY block writes `> build/arm9.bin`, but [config/arm9/config.yaml](../config/arm9/config.yaml) expects built
 binaries at `../../build/build/arm9.bin`. Run mwldarm from the repo root, then `ls
 build/ build/build/` to see where the region binaries actually landed. Also
 `mkdir -p build/src build/build` up front.
@@ -266,12 +266,12 @@ show up as a failure here.
 
 ### M1 — One function from source
 
-`AngleDiff` is a verified-good pick: `config/arm9/symbols.txt:1513`
+`AngleDiff` is a verified-good pick: [config/arm9/symbols.txt](../config/arm9/symbols.txt):1513
 (`kind:function(arm,size=0x14) addr:0x0203b0e8`), the next symbol is exactly adjacent at
 `0x0203b0fc`, `src/AngleDiff.c` is pure ALU with no literal pool, no data and no calls,
 and zero relocations originate inside it.
 
-1. Add its file entry (with `complete`) to `config/arm9/delinks.txt`.
+1. Add its file entry (with `complete`) to [config/arm9/delinks.txt](../config/arm9/delinks.txt).
 2. `dsd delink` — the main gap object splits, regenerated without that range.
 3. Compile with the canonical toolchain and flags (`2004/b56`, `-O4,p -enum int
    -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc`,
@@ -283,7 +283,7 @@ function's bytes came from our C.
 
 #### M1 result — passed
 
-`config/arm9/delinks.txt` grew the three-line entry; `dsd delink` split the single
+[config/arm9/delinks.txt](../config/arm9/delinks.txt) grew the three-line entry; `dsd delink` split the single
 `_dsd_gap@main_7.o` into `_dsd_gap@main_8.o` (everything before) and `_dsd_gap@main_1.o`
 (everything after), and the generated lcf placed them back-to-back around ours:
 
@@ -399,7 +399,7 @@ mwccarm emits **one `.text` section per function** within a TU, and the lcf's
 name collides — and `-nodead` disables the dead-stripping that might otherwise hide it.
 
 Bisection on a mismatch starts at the **earliest module in the `AFTER()` partial order**
-(`build/arm9.lcf:5–109`): a size change in ov002 shifts the origins of ov008–ov102, so
+(`build/arm9.lcf:5–109`): a size change in [ov002](../config/arm9/overlays/ov002/symbols.txt) shifts the origins of [ov008](../config/arm9/overlays/ov008/symbols.txt)–[ov102](../config/arm9/overlays/ov102/symbols.txt), so
 dozens of red modules mean "look upstream", not "dozens of bugs". Verdicts land in
 `build/rombuild-eligibility.json`.
 
@@ -451,19 +451,19 @@ compiling the same snippet under both compilers in isolation:
   two accesses with different expression shapes (`(char *)p + K` vs `(int)p + K`, or an
   index) stops it. Every sharing site has to be respelled together -- `func_02062428`
   has three, and respelling any one alone left the other two sharing. Fixed
-  `func_ov015_02111e80`, `func_ov006_020ded00`, `func_ov013_021112a8`, `func_02062428`,
-  `func_ov006_02111e90`.
+  [func_ov015_02111e80](../src/game/actors/d_a_obj_bk_dossunbar.cpp) (func 12 used to assemble the TU - `d_a_obj_bk_dossunbar`), [func_ov006_020ded00](../src/actors/dScMgCup_c.cpp) (part of `dScMgCup_c.cpp`, element 11 used to assemble the TU), `func_02062428`,
+  [func_ov006_02111e90](../src/func_ov006_02111e90.c).
 - **Prefer pointer arithmetic on a typed pointer over integer arithmetic then a cast.**
   `ldr` carries a 12-bit displacement and `ldrh`/`ldrsh`/`strh` only 8, so a large
   offset must be split. Given pointer arithmetic b56 splits it the ROM's way; given
   integer arithmetic it materialises the whole constant, from the literal pool if
   needed. In `func_0206a6d0` that one extra pool entry shifted every pc-relative load in
   the function by 4 -- a 52-word diff from a single spelling. Also fixed
-  `func_ov081_02127558`, where the compound-assignment form is the only spelling b56
+  `func_ov081_02127558` (weak ref to [daGmch_c.cpp](../src/actors/daGmch_c.cpp)), where the compound-assignment form is the only spelling b56
   refuses to split; an explicit read-modify-write through a temporary reproduces, and
   pre-splitting the base in the source does NOT work -- b56 has to do its own splitting.
 
-`func_ov084_0212f460` was neither: a straight r6/r7 swap. Callee-saved registers are
+[func_ov084_0212f460](../src/actors/daPkn_c.cpp) (local helper declaration of [Piranha Plant](../src/actors/daPkn_c.cpp)) was neither: a straight r6/r7 swap. Callee-saved registers are
 handed out in **assignment order** under b56 -- declaration order moves nothing -- so
 hoisting the pointer's assignment above the other local's put them the ROM's way round.
 The ROM emits the two in the opposite order regardless, because the independent store
@@ -521,10 +521,10 @@ individually with `match.py` before the link confirmed them:
 | `_ZN13PrincessPeach6RenderEv` | `CommonModel::Render` | `Model::Render` |
 | `_ZN7Tornado6RenderEv`, `_ZN9WaterRing6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
 | `_ZN11BillBlaster4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
-| `func_ov085_0212e778` | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
-| `func_ov006_0211a048`, `func_ov006_0211a5ec` | wrong `data_ov006_*` base | the adjacent one |
-| `func_ov006_02120c08` | `func_ov006_020eed68` | `func_ov006_02120a64` |
-| `func_ov002_020f23d0` | the veneer `func_0203cbc0` | `Memory::operator_delete2` |
+| [func_ov085_0212e778](../src/func_ov085_0212e778.cpp) | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
+| [func_ov006_0211a048](../src/actors/dScMgSound_c.cpp)(func 17 used to assemble TU), [func_ov006_0211a5ec](../src/actors/dScMgSound_c.cpp)(func 29 used to assemble TU) | wrong `data_ov006_*` base | the adjacent one |
+| [func_ov006_02120c08](../src//minigames/d_s_mg_trampoline.cpp)(func 13 used to assemble TU) | [func_ov006_020eed68](../src\minigames\d_s_mg_jump2.cpp)(func 3 used to assemble TU) | [func_ov006_02120a64](../src\minigames\d_s_mg_trampoline.cpp)(func 8 used to assemble TU) |
+| [func_ov002_020f23d0](../src/func_ov002_020f23d0.c) | the veneer `func_0203cbc0` | `Memory::operator_delete2` |
 
 The `XYZExt` → `ZXYExt` one is a genuine behavioural bug, not just a naming slip.
 
@@ -587,7 +587,7 @@ Why the rest are not source-built yet:
 | count | reason |
 |---:|---|
 | 1,972 | references a symbol name `config/**/symbols.txt` does not define — the BLIND matches. No address means nothing to link to, and gap objects import weakly, so it would silently resolve to 0. |
-| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines `daDsn_c_OnAimedAtWithEgg`) — a src/config naming drift, likely recoverable by reconciling names. |
+| 711 | the object defines a different symbol than the file/config name (e.g. `src/func_ov091_02132a0c.c` defines [daDsn_c_OnAimedAtWithEgg](../src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp)) — a src/config naming drift, likely recoverable by reconciling names. |
 | 70 | compiled `st_size` ≠ the size `symbols.txt` declares |
 | 301 | lives in a `.init` range, where a `File.o(.init)` selector would match nothing in an object whose code is in `.text` |
 | 88 | emits `.data` or `.bss` whose ROM address we do not know |
@@ -673,7 +673,7 @@ difference, then revert and confirm the ROM returns to identical.
 
 **Overlay edits are fine after all.** The original worry was HMAC signing, but M0 showed
 dsd *clears* the per-overlay signed bit (the 103 flag bytes `3` → `1`), so the loader
-never verifies and an overlay edit loads normally — which the ov002 mod confirms in
+never verifies and an overlay edit loads normally — which the [ov002](../config/arm9/overlays/ov002/symbols.txt) mod confirms in
 practice. Still worth knowing: a white screen with green `check modules` would point at
 the header CRCs (`extracted/dsd/header.yaml`), which `check modules` does not cover.
 
@@ -694,12 +694,12 @@ tracked `delinks.txt` entry points at that mod.
 
 `mods/Player_ScaleByCharFactor.c` (shift 12 → 11, doubling the scale factor) built
 cleanly and landed exactly as intended: **3 bytes changed**, both at the shift
-instructions, all inside the function, ov002's size unchanged at 394,048 bytes, so
+instructions, all inside the function, [ov002](../config/arm9/overlays/ov002/symbols.txt)'s size unchanged at 394,048 bytes, so
 nothing downstream moved. Saved as `build/sm64ds-mod.nds`.
 
 **Confirmed in play.** A/B of `build/sm64ds-mod.nds` against `build/sm64ds.nds` shows the
 difference in the running game. `Player_ScaleByCharFactor` is called from 44 sites across
-ov002's player physics, so doubling it is felt in movement rather than seen in a still
+[ov002](../config/arm9/overlays/ov002/symbols.txt)'s player physics, so doubling it is felt in movement rather than seen in a still
 frame — which is why a screenshot comparison was the wrong instrument for it and playing
 was the right one.
 
