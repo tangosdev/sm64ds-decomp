@@ -331,33 +331,15 @@ extern "C" unsigned port_mg_coin_touch_calls(void)
 // than a member-pointer type) and the dispatch site (port_mg_coin_callN rather
 // than `(c->*table[i].pmf)()`). Nothing else moves.
 
-/* src/func_ov006_020dc298.cpp. SILENT: its Entry table was declared inside
-   extern "C", so the link never named it. The guard byte is +0x51bc and the
-   index +0x51bf, which is what its src struct's pad/guard/pad2/idx layout
-   spells. The slot is a ONE-argument one and the ROM passes a constant zero. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020dc298(void *self)
-{
-    char *c = (char *)self;
-    if (*(unsigned char *)(c + 0x51bc) == 0)
-        return;
-    int j = *(unsigned char *)(c + 0x51bf);
-    const MgPmf *p = &data_ov006_021417c8[j];
-    port_mg_coin_call1(c, p->code, p->adj, 0);
-}
+/* src/func_ov006_020dc298 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
-/* src/func_ov006_020dc754.cpp. SILENT for the same reason. Guard +0x51a0,
-   index +0x51a1. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020dc754(void *self)
-{
-    char *c = (char *)self;
-    if (*(unsigned char *)(c + 0x51a0) == 0)
-        return;
-    int j = *(unsigned char *)(c + 0x51a1);
-    const MgPmf *p = &data_ov006_021417e8[j];
-    port_mg_coin_call1(c, p->code, p->adj, 0);
-}
+/* src/func_ov006_020dc754 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 /* src/func_ov006_020ddd6c.cpp. SILENT: `extern "C" Entry data_ov006_02141840[]`.
    Forty elements of stride 0x1c; the live flag at +0x4677, the state byte at
@@ -397,58 +379,10 @@ extern "C" void func_020ddd6c(void *c)
     func_ov006_020ddd6c((char *)c);
 }
 
-/* src/func_ov006_020de440.cpp. ALSO a state body: slot 2 of
-   data_ov006_02141810. Its src declares the SAME table as
-   `extern PMF data_ov006_02141840[];` with PMF a pointer-to-member-of-C, so it
-   emits a DIFFERENT unresolved symbol for the same storage than the TU above
-   does -- which is the clearest evidence in this class that the link names
-   spellings and not tables. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCoin_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020de440(char *c)
-{
-    char *p = c;
-    for (int i = 0; i < 0x28; i++, p += 0x1c) {
-        if (*(unsigned char *)(p + 0x4677) != 0) {
-            const MgPmf *e =
-                &data_ov006_02141840[*(unsigned char *)(p + 0x4675)];
-            port_mg_coin_call1(c, e->code, e->adj, i);
-            func_ov006_020dde28(c, i);
-        }
-    }
-    func_ov006_020dd2cc(c);
-    func_ov006_020dca04(c);
-    if (*(int *)(c + 0x51c8) == 3)
-        return;
-    {
-        int found = 0;
-        char *q = c;
-        for (int j = 0; j < 0x18; j++, q += 0x18) {
-            if (*(unsigned char *)(q + 0x4ad3) != 0) {
-                if (*(unsigned char *)(q + 0x4ad5) == 0) {
-                    found++;
-                    break;
-                }
-            }
-        }
-        if (found != 0)
-            return;
-    }
-    *(int *)(c + 0x51c8) = 3;
-    *(int *)(c + 0x51cc) = 0x40;
-    *(unsigned char *)(c + 0x51df) = 1;
-    {
-        int t;
-        char *g = func_020beb68;
-        if (g != 0)
-            t = *(int *)(g + 0xa8);
-        else
-            t = 0;
-        if (t > *(int *)(c + 0x51d4))
-            *(unsigned char *)(c + 0x51db) = 1;
-        else
-            *(unsigned char *)(c + 0x51db) = 0;
-    }
-}
+/* src/func_ov006_020de440 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 // ---- THREE TABLES SEATED, AND FIFTEEN FACES --------------------------------
 //
@@ -594,12 +528,20 @@ CN_FACE1(func_ov006_020dd7c0, (char *))
 CN_FACE1_VOID(func_ov006_020dd7bc)
 CN_FACE1(func_ov006_020dd658, (char *))
 
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_coin(void);
+
 extern "C" void port_mg_coin_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_coin();
 
     static const struct {
         MgPmf *table;

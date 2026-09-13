@@ -334,41 +334,15 @@ extern "C" unsigned port_mg_memory1_floor_hits(void) { return g_mem1_floor_hits;
 // rather than `(c->*table[i].pmf)()`).  Where anything else moved it is stated
 // on the line.
 
-/* src/func_ov006_020f5164.cpp.  Its table is declared at C++ linkage
-   (`extern Entry data_ov006_02142304[];`), so this one IS link-visible, as
-   ?data_ov006_02142304@@3PAUEntry@@A -- the PAU spelling that slips both of
-   port/tools/facegen.py's guards, which is tool finding 1 in section 10.
-   Refused by hand and host-copied here rather than aliased.
-   THE RETURN TYPE IS THE ONE PLACE THIS FILE DOES NOT COPY src.  src spells
-   this body `int` and returns func_ov006_020f3f10's value, while
-   src/func_ov006_020f3f10.cpp defines that symbol `void` -- the two TUs
-   disagree, and the ROM settles it by not caring: `mov r0,r4 / bl 0x020f3f10 /
-   pop / bx lr` returns whatever the tail call left in r0, and the only consumer
-   is an arity-0 PMF dispatch typed `void (C::*)()` that discards it.  Spelling
-   both void here is the reading that cannot be wrong; inventing a return value
-   would be.
-   PORT_HOST_ABI: mwcc pointer-to-member wall (this class's MgPmf {code,adj}
-   table, decoded through port_mg_memory1_call0) plus the link-visible PAU
-   table name that slips facegen's alias guards (section 10). Host-copied. */
-extern "C" void func_ov006_020f5164(void *c)
-{
-    char *p = (char *)c;
-    const MgPmf *e = &data_ov006_02142304[*(int *)(p + 0x5318)];
-    port_mg_memory1_call0(p, e->code, e->adj);
-    func_ov006_020f3f10(p);
-}
+/* src/func_ov006_020f5164 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
-/* src/func_ov006_020f50f8.cpp.  Its table is declared inside extern "C"
-   (`extern "C" Entry data_ov006_021422bc[];`), so this is the SECOND silent
-   shape: the link never complains and MSVC strides eight bytes by four.
-   PORT_HOST_ABI: mwcc pointer-to-member wall, this class's MgPmf {code,adj}
-   table decoded through port_mg_memory1_call0. Host-copied. */
-extern "C" void func_ov006_020f50f8(void *c)
-{
-    char *p = (char *)c;
-    const MgPmf *e = &data_ov006_021422bc[*(int *)(p + 0x5318)];
-    port_mg_memory1_call0(p, e->code, e->adj);
-}
+/* src/func_ov006_020f50f8 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 // ---- TWO TABLES SEATED, AND TWELVE FACES -----------------------------------
 //
@@ -468,12 +442,20 @@ M1_FACE1_VOID(func_ov006_020f41ac)
 M1_FACE1(func_ov006_020f411c, (char *))
 M1_FACE1(func_ov006_020f3f84, (char *))
 
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_memory1(void);
+
 extern "C" void port_mg_memory1_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_memory1();
 
     static const struct {
         MgPmf *table;

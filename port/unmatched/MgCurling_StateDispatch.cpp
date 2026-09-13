@@ -238,29 +238,10 @@ extern "C" unsigned port_mg_curling_state_hits(void)
 
 // ---- the five host copies --------------------------------------------------
 
-/* src/func_ov006_020e12d0.cpp. data_0209d4b8 keeps its C++ spelling so the
-   generated alias for ?data_0209d4b8@@3HA still has its reference. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020e12d0(char *o)
-{
-    int i;
-    char *e = o;
-    for (i = 0; i < 0x32; i++) {
-        if (*(unsigned char *)(e + 0x47a8) != 0) {
-            unsigned char idx = *(unsigned char *)(e + 0x47a9);
-            const MgPmf *p = &data_ov006_021418c0[idx];
-            port_mg_call1(o, p->code, p->adj, i);
-            if ((*(int *)(e + 0x4790) >> 0xc) >= 0xc8) {
-                *(int *)(e + 0x478c) = (((unsigned int)RandomIntInternal(&data_0209d4b8) >> 16) & 0x7fff) << 5 >> 0xf << 0xf;
-                *(int *)(e + 0x4790) = -0x8000;
-                *(unsigned char *)(e + 0x47aa) = 0;
-                *(unsigned char *)(e + 0x47a9) = 0;
-                *(unsigned char *)(e + 0x47ab) = 0;
-            }
-        }
-        e += 0x24;
-    }
-}
+/* src/func_ov006_020e12d0 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 /* src/func_ov006_020e0d84.cpp. Two dispatches, two tables, both one-argument. */
 /* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgCurling_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
@@ -439,12 +420,20 @@ CUR_FACE0(t50, 2, func_ov006_020e2f78)
 CUR_FACE0(t50, 3, func_ov006_020e2ebc)
 CUR_FACE0_VOID(t50, 4, func_ov006_020e2eb8)
 
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_curling(void);
+
 extern "C" void port_mg_curling_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_curling();
 
     static const struct {
         MgPmf      *table;

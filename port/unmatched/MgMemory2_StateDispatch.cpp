@@ -305,39 +305,15 @@ extern "C" unsigned port_mg_memory2_nonmatching(void)    { return g_mem2_nonmatc
 // rather than `(c->*table[i].pmf)()`).  Where anything else moved it is stated
 // on the line.
 
-/* src/func_ov006_020f7234.cpp.  Its table is declared at C++ linkage
-   (`extern Entry data_ov006_02142440[];`), so this one IS link-visible, as
-   ?data_ov006_02142440@@3PAUEntry@@A -- the PAU spelling that slips both of
-   port/tools/facegen.py's guards.  See section 4 of port/mg_fanout_costs.txt.
+/* src/func_ov006_020f7234 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
-   ONE THING OTHER THAN THE DISPATCH MOVED, and it is a dead value.  src ends
-   `return func_ov006_020f5c40(c);` with a local declaration of that callee as
-   int, while the callee's own definition returns void; on ARM that is the
-   ordinary r0 ride-through and in the ROM it is `mov r0,r4 / bl 0x020f5c40`
-   with the callee's r0 falling out.  Both declarations cannot live in one host
-   TU, and the value is dead in every case -- this function is reached only as
-   slot 1 of an arity-0 (void) table -- so it is DROPPED rather than invented.
-   Nothing reads it. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgMemory2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020f7234(void *self)
-{
-    char *c = (char *)self;
-    const int j = *(int *)(c + 0x53d8);
-    port_mg_memory2_call0(c, data_ov006_02142440[j].code,
-                             data_ov006_02142440[j].adj);
-    func_ov006_020f5c40(c);
-}
-
-/* src/func_ov006_020f71c8.cpp.  Table declared inside extern "C", so SILENT.
-   The index is at +0x53d8, which is the neighbour of slot 6's +0x53d4 and not
-   the same field; both offsets are read off the ROM in section 2. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMgMemory2_c state table); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020f71c8(void *self)
-{
-    char *c = (char *)self;
-    const MgPmf *e = &data_ov006_021423c0[*(int *)(c + 0x53d8)];
-    port_mg_memory2_call0(c, e->code, e->adj);
-}
+/* src/func_ov006_020f71c8 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 // ---- TWO TABLES SEATED, AND TWELVE FACES -----------------------------------
 //
@@ -430,12 +406,20 @@ M2_FACE1_VOID(func_ov006_020f5e70)
 M2_FACE1(func_ov006_020f5de0, (char *))
 M2_FACE1(func_ov006_020f5cb4, (char *))
 
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_memory2(void);
+
 extern "C" void port_mg_memory2_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_memory2();
 
     static const struct {
         MgPmf *table;

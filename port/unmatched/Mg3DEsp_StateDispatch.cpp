@@ -363,47 +363,15 @@ extern "C" void port_mg_esp3d_table_counts(unsigned *out7)
 // (port_mg_esp3d_callN rather than the member-pointer call or the open-coded
 // decode).  Where anything else moved it is stated on the line.
 
-/* src/func_ov006_020e9b70.cpp, and it is ALSO slot 1 of the table above.  Its
-   src declares `struct Entry { PMF pmf; }; extern Entry data_ov006_02141fac[];`
-   at C++ linkage, so this is the ?data_ov006_02141fac@@3PAUEntry@@A spelling --
-   the PAU form that slips both of port/tools/facegen.py's guards (section 10,
-   tool finding 1).  The struct is four bytes on MSVC and eight in the ROM.
+/* src/func_ov006_020e9b70 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
-   THE RETURN VALUE IS A RIDE-THROUGH AND IT IS DROPPED ON PURPOSE.  The ROM's
-   tail is `mov r0,r4 / bl 0x020e82fc / pop / bx lr`, so 020e9b70 returns
-   whatever 020e82fc leaves in r0, which is whatever the state IT dispatched
-   left there.  Neither value is reachable: 020e82fc's own src spells it
-   `void`, and the only consumer of 020e9b70's is slot 6's arity-0 member
-   pointer, which is `void (C::*)()`.  Two host copies cannot carry a value
-   through a routed call anyway -- port_mg_esp3d_call0 is void -- so this is
-   recorded rather than reproduced. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020e9b70(void *c)
-{
-    char *p = (char *)c;
-    const MgPmf *e = &data_ov006_02141fac[*(int *)(p + 0x5540)];
-    ++g_esp_table_hits[T_FAC];
-    port_mg_esp3d_call0(p, e->code, e->adj);
-    func_ov006_020e82fc(p);
-}
-
-/* src/func_ov006_020e8a44.cpp -- `extern "C" PMF data_ov006_02141f1c[];`, the
-   second SILENT one, and the Behavior calls it unconditionally on every frame.
-   Twenty records, stride 0x20 (the ROM's `lsl #5`), gate at +0x52d4 and index
-   at +0x52d9 of each. */
-/* PORT_HOST_ABI: mwcc pointer-to-member dispatch (dScMg3DEsp_c three-level state machine); the 8-byte {code,adj} pair is host-copied as an address switch, MSVC's 4-byte member pointer cannot express it */
-extern "C" void func_ov006_020e8a44(void *self)
-{
-    char *base = (char *)self;
-    for (int i = 0; i < 0x14; ++i) {
-        char *r = base + i * 0x20;
-        if (*(unsigned char *)(r + 0x52d4)) {
-            const MgPmf *e = &data_ov006_02141f1c[*(unsigned char *)(r + 0x52d9)];
-            ++g_esp_table_hits[T_F1C];
-            port_mg_esp3d_call1(base, e->code, e->adj, i);
-        }
-    }
-}
+/* src/func_ov006_020e8a44 -- RETIRED, run link100 lane SEAT4. Its table is
+   seated in port/hal/pmf_seat4.cpp and the matched TU is on
+   port/slice_seat4.txt, so the host copy that stood in for it is gone and
+   the declaration above is what the faces in this file reach. */
 
 /* src/func_ov006_020e8830.c -- THE THIRD SHAPE, and also slot 1 of the table
    above.  Its src is bannered
@@ -567,12 +535,20 @@ ES_FACE1(func_ov006_020e8cb0, T_F74)
 ES_FACE1(func_ov006_020e8c74, T_F74)
 ES_FACE1(func_ov006_020e8bd0, T_F74)
 
+/* run link100 lane SEAT4: this class's remaining state tables are
+   seated in port/hal/pmf_seat4.cpp, from inside this installer, so the
+   seat order hal/scene_mg.cpp already establishes is the one they get
+   and no new call site is added anywhere. */
+extern "C" void port_pmf_seat4_esp3d(void);
+
 extern "C" void port_mg_esp3d_states_seat(void)
 {
     static int done;
     if (done)
         return;
     done = 1;
+
+    port_pmf_seat4_esp3d();
 
     static const struct {
         MgPmf *table;
