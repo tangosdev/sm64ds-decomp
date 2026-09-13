@@ -20,7 +20,7 @@
 #include "dBgW_KcMbg.h"
 #include "dBgActor_c.h"
 
-static void actor_trap(const char *who)
+[[noreturn]] static void actor_trap(const char *who)
 {
     fprintf(stderr, "FATAL: %s dispatched, but the port defines it only so "
                     "MSVC can emit the vtable (hal/actor_ctor_bridge.cpp).\n", who);
@@ -58,9 +58,8 @@ void _ZN11ShadowModelC1Ev(void *self) { ::new (self) ShadowModel(); }
 // here is news -- it means the slice is missing a body, not that the port is
 // wrong.
 
-// dActor_c's own constructor is sliced, as the flat extern "C" spelling.
-extern "C" void _ZN8dActor_cC2Ev(void *self);
-dActor_c::dActor_c() { _ZN8dActor_cC2Ev(this); }
+// Gate 9 includes the native dActor_c constructor from src/. That definition
+// owns construction, including mActorListNode(this); no HAL wrapper is needed.
 
 ACTOR_TRAP(dActor_c::~dActor_c(), "dActor_c::~dActor_c")
 
@@ -80,7 +79,7 @@ ACTOR_TRAP(void dActor_c::AfterBehavior(u32), "dActor_c::AfterBehavior")
 ACTOR_TRAP(int dActor_c::BeforeRender(), "dActor_c::BeforeRender")
 ACTOR_TRAP(void dActor_c::AfterRender(u32), "dActor_c::AfterRender")
 ACTOR_TRAP(int dActor_c::OnYoshiTryEat(), "dActor_c::OnYoshiTryEat")
-ACTOR_TRAP(int dActor_c::OnTurnIntoEgg(Player &), "dActor_c::OnTurnIntoEgg")
+ACTOR_TRAP(void dActor_c::OnTurnIntoEgg(Player &), "dActor_c::OnTurnIntoEgg")
 ACTOR_TRAP(int dActor_c::Virtual50(), "dActor_c::Virtual50")
 ACTOR_TRAP(void dActor_c::OnGroundPounded(dActor_c &), "dActor_c::OnGroundPounded")
 ACTOR_TRAP(int dActor_c::OnAttacked1(dActor_c &), "dActor_c::OnAttacked1")

@@ -123,5 +123,68 @@ class Classify(unittest.TestCase):
             "/* HAND-ASM PRIMITIVE: byte-faithful asm-block match. */\n" + MNEMONIC_ASM))
 
 
+HAND_ASM = ("// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. There is no\n"
+            "// original C to recover and no match to chase.\n"
+            "// HAND-ASM PRIMITIVE: byte-faithful asm-block match. Per asm policy.\n"
+            + MNEMONIC_ASM)
+
+
+class CountsAsMatched(unittest.TestCase):
+    """Tango's ruling, 2026-09-09: byte-exact hand-written assembly counts."""
+
+    def test_plain_c_counts(self):
+        self.assertTrue(asm_policy.counts_as_matched(PLAIN_C))
+
+    def test_a_draft_banner_alone_does_not_count(self):
+        self.assertFalse(asm_policy.counts_as_matched("// NONMATCHING\n" + PLAIN_C))
+
+    def test_hand_asm_banner_alone_counts(self):
+        self.assertTrue(asm_policy.counts_as_matched(
+            "// HAND-ASM PRIMITIVE: byte-faithful asm-block match.\n" + MNEMONIC_ASM))
+
+    def test_both_banners_count_because_hand_asm_wins(self):
+        # The twenty files this ruling is about. They say in their own headers that
+        # there is no C to chase, and then print the word NONMATCHING; the count read
+        # only the second half and left them out.
+        self.assertTrue(asm_policy.counts_as_matched(HAND_ASM))
+
+    def test_unbannered_dcd_dump_never_counts(self):
+        self.assertFalse(asm_policy.counts_as_matched(DCD_DUMP))
+
+    def test_a_dcd_dump_cannot_be_laundered_by_the_hand_asm_banner(self):
+        # The clause that keeps the ruling from reopening the vacuous match: a raw
+        # word dump under both banners is still a transcription, whatever it claims.
+        self.assertFalse(asm_policy.counts_as_matched(
+            "// NONMATCHING\n"
+            "// HAND-ASM PRIMITIVE: byte-faithful asm-block match.\n" + DCD_DUMP))
+
+    def test_a_deep_hand_asm_mention_does_not_rescue_a_draft(self):
+        # has_draft_banner searches the header region and is exculpatory, so a loose
+        # search is safe there. This banner puts a file INTO the count, so it has to
+        # be a header claim, not the phrase turning up in a wall analysis.
+        deep = ("// NONMATCHING: register allocation wall.\n"
+                + MNEMONIC_ASM
+                + "\n// why not a HAND-ASM PRIMITIVE: the body is ordinary ARM.\n")
+        self.assertFalse(asm_policy.counts_as_matched(deep))
+
+    def test_has_hand_banner_reads_the_header_region_only(self):
+        self.assertTrue(asm_policy.has_hand_banner(HAND_ASM))
+        self.assertFalse(asm_policy.has_hand_banner(
+            PLAIN_C + "\n// HAND-ASM PRIMITIVE mentioned in a trailing note\n"))
+
+    def test_the_ordinary_arm_draft_still_does_not_count(self):
+        # notes/asm-policy.md's second row, untouched: ordinary ARM the compiler
+        # cannot yet reproduce is an unsolved matching problem, not a primitive.
+        self.assertFalse(asm_policy.counts_as_matched(
+            "// NONMATCHING: scheduling wall, see the analysis below.\n" + PLAIN_C))
+
+    def test_classify_is_unchanged_by_the_ruling(self):
+        # The acceptance criteria and the transcription gate are untouched: only the
+        # yes/no the counting tools ask for is new.
+        self.assertEqual(asm_policy.classify(DCD_DUMP), "transcribed")
+        self.assertEqual(asm_policy.classify(MNEMONIC_ASM), "unbannered-asm")
+        self.assertIsNone(asm_policy.classify(HAND_ASM))
+
+
 if __name__ == "__main__":
     unittest.main()

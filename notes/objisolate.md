@@ -22,7 +22,7 @@ selects code by section name — `_ZN4CoinD1Ev.o(.text)` — which matches **all
 `.text` sections and would place D0 and D2 at D1's address. So `eligible.py` rejected
 the object, correctly, and 81 files sat at `extra sections: .data`.
 
-The ROM says what to keep. ov002 declares `_ZN4CoinD1Ev` size 0x50 (ours matches),
+The ROM says what to keep. [ov002](../config/arm9/overlays/ov002/symbols.txt) declares `_ZN4CoinD1Ev` size 0x50 (ours matches),
 `_ZN4CoinD0Ev` size **0x64** (ours is 0x58 — the matching D0 is a separate `.c`
 file), `_ZTV4Coin` at 0x021087ec already carved out as a symbol, and **no D2 at all**.
 
@@ -73,7 +73,7 @@ obvious unseen case; refusing costs one function, guessing corrupts a module.
 (The other 6 local references are ordinary PC-relative branches carrying ARM's
 standard `-8` pipeline addend. Those need nothing.)
 
-**4. Isolation applied where it is unsound.** `func_ov002_020bd664.cpp` has a
+**4. Isolation applied where it is unsound.** [func_ov002_020bd664](../src/func_ov002_020bd664.cpp) has a
 function-local static — `table$8` and its guard `_ZGVtable$8`, both **STB_LOCAL** in
 `.bss`, both addressed by the kept function. Zeroing the section while leaving them
 defined pointed those loads at offset 0 of an empty section, which the lcf still
@@ -174,8 +174,8 @@ from:0x021125d8 kind:load to:0x02128338 module:overlays(79,80)
 from:0x02112490 kind:load to:0x0213c5bc module:overlays(6,98)
 ```
 
-The vtable those ov022 functions reference lives in **another overlay**, and dsd
-cannot even resolve which one. Those 7 symbols were absent from ov022 *because they
+The vtable those [ov022](../config/arm9/overlays/ov022/symbols.txt) functions reference lives in **another overlay**, and dsd
+cannot even resolve which one. Those 7 symbols were absent from [ov022](../config/arm9/overlays/ov022/symbols.txt) *because they
 are cross-module*, and defining them locally made the references resolve to the wrong
 overlay's copy.
 

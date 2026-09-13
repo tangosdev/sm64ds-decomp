@@ -17,6 +17,17 @@ Verdicts (from tools/linkcheck.py) and how they are treated:
 
 Files carrying a `// NONMATCHING` banner are drafts by definition and are skipped.
 
+RESOLVING A FILE TO THE FUNCTION(S) IT VERIFIES
+------------------------------------------------
+A legacy source owns exactly one function, named by its filename -- `src/<name>.c`. A
+consolidated translation unit (a merged multi-function `.cpp`, or a hand-authored actor
+file whose name is not any symbol it defines) owns however many functions its committed
+`config/**/delinks.txt` address range covers. `srcpath.symbols_for` answers both cases
+from the same table dsd itself reads to link the ROM, so a file that owns more than one
+function gets one verdict PER FUNCTION here -- the file cannot be waved through as
+NO-SYM just because its own name matches nothing. An unenrolled file still falls back to
+its filename, so nothing here changes for a source with no delinks.txt entry yet.
+
 Usage:
   python tools/prepush_linkcheck.py --range origin/main..HEAD   # changed src + header consumers
   python tools/prepush_linkcheck.py --files src/a.c src/b.cpp
@@ -35,6 +46,7 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import asm_policy  # noqa: E402
 import affected_src as A  # noqa: E402
+import srcpath  # noqa: E402
 
 # Fail closed. WRONG/NO-REPRO are false matches; ERROR means we could not get a verdict at
 # all, and a gate that waves through what it could not check is not a gate. BLIND and NO-SYM
@@ -101,22 +113,37 @@ def _run_linkcheck(module, name, addr, size):
 
 
 def verify(path):
-    """Run linkcheck for one src file. Returns a result dict.
+    """Run linkcheck for every function `path` owns. Returns a list of result dicts, one
+    row per function -- a legacy one-function source still returns a list of exactly one,
+    so every caller that used to hold a single dict now holds `verify(path)[0]` for that
+    case and a longer list for a consolidated TU.
+
+    `srcpath.symbols_for` is the resolver: the enrolment table (config/**/delinks.txt's
+    address range for this file, matched against config/**/symbols.txt) first, the
+    filename stem as a fallback for anything not enrolled there yet. That table is what
+    dsd itself reads to link the ROM, so a file that owns several functions is asked for
+    all of them instead of being reduced to the one name its own filename happens to
+    spell -- the gap this tool used to fall into for every merged TU and every
+    convention-named actor file.
 
     ERROR means linkcheck produced no parseable verdict - a compile timeout or a transient
     reverify import failure, which happens once in a while when a whole batch runs back to
     back. It is not evidence the file is bad, so retry once before treating it as blocking;
     a genuinely broken file (WRONG / NO-REPRO) returns a real verdict on the first try."""
-    name = pathlib.Path(path).stem
-    sym = _load_symbol(name)
-    if not sym:
-        return {"file": path, "name": name, "verdict": "NO-SYM", "note": "no symbol entry"}
-    module, addr, size = sym
-    verdict, blind, diffs = _run_linkcheck(module, name, addr, size)
-    if verdict == "ERROR":
-        verdict, blind, diffs = _run_linkcheck(module, name, addr, size)  # one retry on a flaky run
-    return {"file": path, "name": name, "module": module, "addr": hex(addr),
-            "verdict": verdict, "blind": blind, "diffs": diffs}
+    rows = []
+    for name in srcpath.symbols_for(path):
+        sym = _load_symbol(name)
+        if not sym:
+            rows.append({"file": path, "name": name, "verdict": "NO-SYM",
+                         "note": "no symbol entry"})
+            continue
+        module, addr, size = sym
+        verdict, blind, diffs = _run_linkcheck(module, name, addr, size)
+        if verdict == "ERROR":
+            verdict, blind, diffs = _run_linkcheck(module, name, addr, size)  # one retry on a flaky run
+        rows.append({"file": path, "name": name, "module": module, "addr": hex(addr),
+                     "verdict": verdict, "blind": blind, "diffs": diffs})
+    return rows
 
 
 def main():
@@ -136,14 +163,18 @@ def main():
         if is_draft(f):
             drafts.append(f)
             continue
-        r = verify(f)
-        results.append(r)
-        if r["verdict"] in BLOCKING:
-            blocked.append(r)
-        elif r["verdict"] != "VERIFIED":
-            warned.append(r)
-        icon = "OK  " if r["verdict"] == "VERIFIED" else "FAIL" if r["verdict"] in BLOCKING else "WARN"
-        print(f"  [{icon}] {r['name']:<44} {r['verdict']}")
+        rows = verify(f)
+        if len(rows) > 1:
+            print(f"  {f}  ({len(rows)} functions)")
+        for r in rows:
+            results.append(r)
+            if r["verdict"] in BLOCKING:
+                blocked.append(r)
+            elif r["verdict"] != "VERIFIED":
+                warned.append(r)
+            icon = "OK  " if r["verdict"] == "VERIFIED" else "FAIL" if r["verdict"] in BLOCKING else "WARN"
+            name = f"  {r['name']}" if len(rows) > 1 else r["name"]
+            print(f"  [{icon}] {name:<44} {r['verdict']}")
 
     if drafts:
         print(f"prepush-linkcheck: skipped {len(drafts)} NONMATCHING draft(s)")

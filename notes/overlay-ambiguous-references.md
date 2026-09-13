@@ -27,12 +27,12 @@ something, and the two disagree**:
 
 | references | name in source | candidates |
 |---:|---|---|
-| 22 | `func_020beb68` | `ov000:data_ov000_020beb68` vs `ov004:data_ov004_020beb68` |
-| 9 | `func_020aea30` | `ov002:func_ov002_020aea30` vs `ov004:_ZN5Enemy12KillByAttack...` |
-| 8 | `func_020ada40` | `ov002:func_ov002_020ada40` vs `ov004:_ZN5Enemy20KillByInvincib...` |
-| 6 | `func_020aed98` | `ov002:_ZN5EnemyC2Ev` vs `ov007:func_ov007_020aed98` |
-| 5 | `func_020bc7d4` | `ov000:data_ov000_020bc7d4` vs `ov004:data_ov004_020bc7d4` |
-| 5 | `_ZTV10dBgActor_c` | `ov006:data_ov006_0213c5bc` vs `ov098:data_ov098_0213c5bc` |
+| 22 | `func_020beb68` | [ov000](../config/arm9/overlays/ov000/symbols.txt):`data_ov000_020beb68` vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`data_ov004_020beb68` |
+| 9 | `func_020aea30` | [ov002](../config/arm9/overlays/ov002/symbols.txt):[func_ov002_020aea30](../src/func_ov002_020aea30.cpp) vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`_ZN5Enemy12KillByAttack...` |
+| 8 | `func_020ada40` | [ov002](../config/arm9/overlays/ov002/symbols.txt):[func_ov002_020ada40](../src_tu/actors/Enemy.cpp) vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`_ZN5Enemy20KillByInvincib...` |
+| 6 | `func_020aed98` | [ov002](../config/arm9/overlays/ov002/symbols.txt):`_ZN5EnemyC2Ev` vs [ov007](../config/arm9/overlays/ov007/symbols.txt):[func_ov007_020aed98](../src/func_ov007_020aed98.cpp) |
+| 5 | `func_020bc7d4` | [ov000](../config/arm9/overlays/ov000/symbols.txt):`data_ov000_020bc7d4` vs [ov004](../config/arm9/overlays/ov004/symbols.txt):`data_ov004_020bc7d4` |
+| 5 | `_ZTV10dBgActor_c` | [ov006](../config/arm9/overlays/ov006/symbols.txt):`data_ov006_0213c5bc` vs [ov098](../config/arm9/overlays/ov098/symbols.txt):`data_ov098_0213c5bc` |
 
 A guess here is not cheap. `match.py` compares relocated words as wildcards, so picking
 the wrong overlay still byte-matches -- the mistake would surface only at the ROM link,
@@ -45,17 +45,17 @@ that hid three wrong-callee bugs already (`Door::Behavior`, `func_ov004_020b29c0
 Any of these, per case:
 
 - **Overlay residency.** Which overlays are loaded together at the point this code
-  runs? If ov002 and ov004 are never resident simultaneously, the referring module's
+  runs? If [ov002](../config/arm9/overlays/ov002/symbols.txt) and [ov004](../config/arm9/overlays/ov004/symbols.txt) are never resident simultaneously, the referring module's
   own copy is the answer. An overlay load-order or scene-to-overlay map would resolve
   most of the table above mechanically, and would keep paying off afterwards.
   *This is what happened -- `notes/overlay-residency.md`. Every row of the table
-  above is settled: `func_020beb68` -> ov004, `func_020aea30` and `func_020ada40` ->
-  ov002, `func_020aed98` -> ov002 `_ZN5EnemyC2Ev`, `func_020bc7d4` -> ov004,
-  `_ZTV10dBgActor_c` at `0x0213c5bc` -> ov098.*
+  above is settled: `func_020beb68` -> [ov004](../config/arm9/overlays/ov004/symbols.txt), `func_020aea30` and `func_020ada40` ->
+  [ov002](../config/arm9/overlays/ov002/symbols.txt), `func_020aed98` -> [ov002](../config/arm9/overlays/ov002/symbols.txt) `_ZN5EnemyC2Ev`, `func_020bc7d4` -> [ov004](../config/arm9/overlays/ov004/symbols.txt),
+  `_ZTV10dBgActor_c` at `0x0213c5bc` -> [ov098](../config/arm9/overlays/ov098/symbols.txt).*
 - **Emulator trace.** Break on the call site and read the resolved target. See
   `notes/emu-trace-plan.md`.
 - **Reading the code.** Several pairs are plainly the same function under two names --
-  `_ZN5Enemy12KillByAttack...` in ov004 against an unnamed `func_ov002_...` in ov002.
+  `_ZN5Enemy12KillByAttack...` in [ov004](../config/arm9/overlays/ov004/symbols.txt) against an unnamed `func_ov002_...` in [ov002](../config/arm9/overlays/ov002/symbols.txt).
   Confirming that also closes a naming gap in `symbols.txt`.
 
 ## Reproducing the list

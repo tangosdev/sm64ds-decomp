@@ -9,7 +9,7 @@
 #include "Spindrift.h"
 #include "Player.h"
 
-int Spindrift::OnTurnIntoEgg(Player &player)
+void Spindrift::OnTurnIntoEgg(Player &player)
 {
     if (!player.IsCollectingCap())
         player.RegisterEggCoinCount(3, 0, 0);

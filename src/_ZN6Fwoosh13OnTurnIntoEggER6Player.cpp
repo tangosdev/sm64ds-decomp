@@ -11,7 +11,7 @@
 #include "Fwoosh.h"
 #include "Player.h"
 
-int Fwoosh::OnTurnIntoEgg(Player &player)
+void Fwoosh::OnTurnIntoEgg(Player &player)
 {
     MarkForDestruction();
 }

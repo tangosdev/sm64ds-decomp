@@ -435,7 +435,7 @@ tb.cmd_create(a)
 **Validated read-only against the tree**: over all 131 refused safe-pool files this
 recovers **130**. The single residual was [func_ov018_021118fc](../src/game/actors/d_a_pg_mthr.cpp) (Tier 2,
 [ov018](../config/arm9/overlays/ov018/symbols.txt)`/daPgMthr_c`; it lived in a per-function legacy source at the time and is now
-part of the promoted `src/game/actors/d_a_pg_mthr.cpp`), and it fails for a different
+part (ROM ordinal 2) of the promoted `src/game/actors/d_a_pg_mthr.cpp`), and it fails for a different
 reason worth naming — its definition is
 `struct dActor_c* func_ov018_021118fc(char* c) {`, and `split_legacy_source`'s first-word
 test sees `struct` in `_DECL_KEYWORDS` and consumes the whole function as a shadow

@@ -10,11 +10,11 @@
 #include "Player.h"
 
 extern "C" {
-extern int func_ov089_02131df4(Key *thiz, Player *player);
-extern int func_ov089_02131dcc(Key *thiz, Player *player);
+extern void func_ov089_02131df4(Key *thiz, Player *player);
+extern void func_ov089_02131dcc(Key *thiz, Player *player);
 }
 
-int Key::OnTurnIntoEgg(Player &player)
+void Key::OnTurnIntoEgg(Player &player)
 {
     unsigned isMatch = (actorID == 0x11a);
     if (isMatch)

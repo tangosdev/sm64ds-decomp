@@ -372,6 +372,52 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(report["asmPolicy"], {"transcribed": [], "unbanneredAsm": [],
                                                "strandedMarkers": []})
 
+    def test_both_banners_together_keep_a_primitive_matched(self):
+        # Tango's ruling, 2026-09-09. Twenty files in the tree carry the HAND-ASM
+        # PRIMITIVE banner AND the word NONMATCHING, because "there is no C to chase"
+        # was written as a NONMATCHING note. The published count now reads them as
+        # matched, and this validator has to agree: a per-PR report that still called
+        # them drafts would post a coverage loss for functions nothing had touched.
+        base = self._declare_symbol("Both")
+        (self.repo / "src" / "Both.c").write_text(
+            "// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. There is no\n"
+            "// original C to recover and no match to chase.\n"
+            "// HAND-ASM PRIMITIVE: byte-faithful asm-block match (CPSR read).\n"
+            "asm void Both(void) {\n    mrs r0, cpsr\n    bx lr\n}\n",
+            encoding="utf-8")
+        head = commit(self.repo, "banner Both", "bob")
+        snap = VM.function_snapshot(head)
+        self.assertEqual(snap["stats"]["matchedFunctions"], 2)
+        self.assertTrue(snap["functions"]["arm9:0x02000004"]["matched"])
+        report = VM.build_report(base, head)
+        self.assertEqual(report["status"], "Passed")
+
+    def test_an_ordinary_draft_is_still_not_matched_here(self):
+        # The refusal half of the ruling, asserted next to the acceptance so a rule
+        # that started counting every NONMATCHING file would fail loudly.
+        base = self._declare_symbol("Wall")
+        (self.repo / "src" / "Wall.c").write_text(
+            "// NONMATCHING: scheduling wall, see the analysis below.\n"
+            "int Wall(void) { return 0; }\n", encoding="utf-8")
+        head = commit(self.repo, "draft Wall", "bob")
+        snap = VM.function_snapshot(head)
+        self.assertEqual(snap["stats"]["matchedFunctions"], 1)
+        self.assertFalse(snap["functions"]["arm9:0x02000004"]["matched"])
+
+    def test_a_word_dump_under_both_banners_is_not_rescued(self):
+        # counts_as_matched refuses a raw dcd body on the hand-asm path, so the ruling
+        # cannot be used to launder the vacuous match this validator exists to block.
+        base = self._declare_symbol("Dump")
+        (self.repo / "src" / "Dump.c").write_text(
+            "// NONMATCHING\n"
+            "// HAND-ASM PRIMITIVE: byte-faithful asm-block match.\n"
+            "asm void Dump(void) {\n    dcd 0xe12fff1e\n}\n", encoding="utf-8")
+        head = commit(self.repo, "dump Dump", "bob")
+        snap = VM.function_snapshot(head)
+        self.assertEqual(snap["stats"]["matchedFunctions"], 1)
+        self.assertFalse(snap["functions"]["arm9:0x02000004"]["matched"])
+        self.assertEqual(VM.build_report(base, head)["status"], "Passed")
+
     def _claim_without_enrolling(self, name):
         """A symbol with a src/ file and NO `complete` delinks entry: matched by the
         filename test, byte-verified by nothing. The population policy D subtracts."""

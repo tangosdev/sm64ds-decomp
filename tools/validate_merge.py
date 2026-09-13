@@ -835,9 +835,14 @@ def function_snapshot(rev):
                   for line in grep.splitlines()}
     # Match progress.py and the rest of the repo's established hatch rule: the
     # marker is a source header, recognized anywhere in the file's leading comment
-    # block (asm_policy.has_draft_banner -- the one rule every consumer shares).
+    # block (asm_policy.counts_as_matched -- the one rule every consumer shares).
+    # It is the whole banner rule, not just the draft half, so a hand-written
+    # assembly primitive that carries both banners reads matched here exactly as it
+    # does in chaos_db_ci and progress.py. A per-PR validator that disagreed with
+    # the published count about what "matched" means would report a coverage loss
+    # for twenty functions the count had just gained.
     nonmatching = {path for path in candidates
-                   if AP.has_draft_banner(git_text(rev, path))}
+                   if not AP.counts_as_matched(git_text(rev, path))}
     # An unbannered dcd transcription byte-matches vacuously (it IS the ROM words
     # re-spelled), so it never counts as matched -- see tools/asm_policy.py. Built
     # the same revision-based way as ``nonmatching``: a cheap fixed-string grep

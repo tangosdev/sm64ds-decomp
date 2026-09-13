@@ -1,5 +1,5 @@
-_ZN6SnufitD1Ev kind:function(arm,size=0x48) addr:0x02115ee0
-_ZN6SnufitD0Ev kind:function(arm,size=0x5c) addr:0x02115f28
+_ZN15daYurei_Mucho_cD1Ev kind:function(arm,size=0x48) addr:0x02115ee0
+_ZN15daYurei_Mucho_cD0Ev kind:function(arm,size=0x5c) addr:0x02115f28
 func_ov065_02115f84 kind:function(arm,size=0x6c) addr:0x02115f84
 func_ov065_02115ff0 kind:function(arm,size=0x2d0) addr:0x02115ff0
 func_ov065_021162c0 kind:function(arm,size=0x68) addr:0x021162c0
@@ -12,14 +12,14 @@ func_ov065_02116744 kind:function(arm,size=0x164) addr:0x02116744
 func_ov065_021168a8 kind:function(arm,size=0x74) addr:0x021168a8
 func_ov065_0211691c kind:function(arm,size=0x50) addr:0x0211691c
 func_ov065_0211696c kind:function(arm,size=0x17c) addr:0x0211696c
-_ZN6Snufit16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02116ae8
-_ZN6Snufit16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02116b30
-_ZN6Snufit6RenderEv kind:function(arm,size=0x50) addr:0x02116b34
-_ZN6Snufit8BehaviorEv kind:function(arm,size=0x28c) addr:0x02116b84
-_ZN6Snufit13InitResourcesEv kind:function(arm,size=0xfc) addr:0x02116e10
-_ZN6Snufit16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02116f0c
-_ZN6Snufit13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02116f14
-_ZN6Snufit13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02116f40
+_ZN15daYurei_Mucho_c16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x02116ae8
+_ZN15daYurei_Mucho_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02116b30
+_ZN15daYurei_Mucho_c6RenderEv kind:function(arm,size=0x50) addr:0x02116b34
+_ZN15daYurei_Mucho_c8BehaviorEv kind:function(arm,size=0x28c) addr:0x02116b84
+_ZN15daYurei_Mucho_c13InitResourcesEv kind:function(arm,size=0xfc) addr:0x02116e10
+_ZN15daYurei_Mucho_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02116f0c
+_ZN15daYurei_Mucho_c13OnTurnIntoEggER6Player kind:function(arm,size=0x2c) addr:0x02116f14
+_ZN15daYurei_Mucho_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02116f40
 daYurei_Mucho_c_classInit kind:function(arm,size=0x50) addr:0x02116f48
 _ZN5SwoopD1Ev kind:function(arm,size=0x50) addr:0x02116f98
 _ZN5SwoopD0Ev kind:function(arm,size=0x64) addr:0x02116fe8
@@ -177,7 +177,6 @@ data_ov065_0211cb58 kind:data(any) addr:0x0211cb58
 _ZTI15daYurei_Mucho_c kind:data(any) addr:0x0211cb60
 _ZTS15daYurei_Mucho_c kind:data(any) addr:0x0211cb6c
 g_profile_YUREI_MUCHO kind:data(any) addr:0x0211cb80 ambiguous
-_ZTV6Snufit kind:data(any) addr:0x0211cba4
 _ZTV15daYurei_Mucho_c kind:data(any) addr:0x0211cba4
 data_ov065_0211cc20 kind:data(any) addr:0x0211cc20
 data_ov065_0211cc28 kind:data(any) addr:0x0211cc28

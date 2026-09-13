@@ -68,12 +68,11 @@ The address dependence was not a blend step or a draw-order step keyed off a poi
 It was an array running off the end of the block that hosted it, into memory whose
 contents depend on the image base.
 
-The castle moat water is a texgen mode 1 material whose S/T translation comes from a
+The *castle moat water* is a **texgen mode 1 material** whose S/T translation comes from a
 91 frame BTA track: `src/func_020469e8.c` reads `tableC[idx+frame]`,
 `TextureTransformer::Update` supplies the frame, and `Animation::Advance` wraps modulo
-the BTA header's 91. The track is one contiguous run of 91 Fix12 words at ov009 DS
+the BTA header's 91. The track is one contiguous run of 91 `Fix12` words at [ov009](../config/arm9/overlays/ov009/symbols.txt) DS
 address 0x021122ec.
-
 Nothing named that track, so the only thing hosting it was the synthetic gap block
 `port_ov009_gap_0211222c`. A gap block is sized by the next entry in dsd's
 `symbols.txt`, and dsd guessed eleven `ambiguous` boundaries inside the track's span.
@@ -96,7 +95,7 @@ The fix is one line in `port/ov009_syms.txt` naming the array with its ROM exten
 
 Sizing the symbol reshapes the gap runs around it (`port_ov009_gap_02112228` grows
 24 to 96 bytes, `port_ov009_gap_0211222c` shrinks 244 to 40, and a zeroed pad appears
-up to `data_ov009_02112bc4`). Net hosted coverage is +312 bytes of real track and
+up to [data_ov009_02112bc4](../config/arm9/overlays/ov009/symbols.txt)). Net hosted coverage is +312 bytes of real track and
 -100 bytes of unreferenced neighbour span. The track also moves out of ordinary
 `.data` into `.dsstate`, so save states now capture it.
 
@@ -107,19 +106,19 @@ render code it appeared to implicate. Wherever a real array is hosted only by a
 synthetic gap block, a dsd `ambiguous` boundary guess inside its span silently clips
 it, and the overrun reads whatever the linker parked next.
 
-A sweep of the 44 gap blocks found five more proven truncations (two ov009 path
-tables, ov016 CLPS, an ov021 class name string, and an ov070 curve cut at its apex),
+A sweep of the 44 gap blocks found five more proven truncations (two [ov009](../config/arm9/overlays/ov009/symbols.txt) path
+tables, [ov016](../config/arm9/overlays/ov016/symbols.txt) CLPS, an [ov021](../config/arm9/overlays/ov021/symbols.txt) class name string, and an [ov070](../config/arm9/overlays/ov070/symbols.txt) curve cut at its apex),
 all byte-verified against the raw ndspy overlay images in `extracted/overlays/`
-rather than the dsd export copies, which are stale or compressed for ov021.
+rather than the dsd export copies, which are stale or compressed for [ov021](../config/arm9/overlays/ov021/symbols.txt).
 
 Known leftovers, none of them fixed:
 
-- ov009 0x02113104, a path array never hosted at all (contested window).
-- ov002 plain mount named sizing, unaudited (383 targets, no `--pack` protection).
+- [ov009](../config/arm9/overlays/ov009/symbols.txt) 0x02113104, a path array never hosted at all (contested window).
+- [ov002](../config/arm9/overlays/ov002/symbols.txt) plain mount named sizing, unaudited (383 targets, no `--pack` protection).
 - Four spurious `kind:load` relocs inside `data_ov009_021133d4` in
-  `config/arm9/overlays/ov009/relocs.txt`. They are dsd misreading s16 path
-  coordinates that parse as ov006/ov007/ov089 addresses. Harmless while those
-  targets are unhosted; the ov089 leg is one symbol line away from arming a cross
+  [arm9/overlays/ov009/relocs.txt](../config/arm9/overlays/ov009/relocs.txt). They are dsd misreading s16 path
+  coordinates that parse as [ov006](../config/arm9/overlays/ov006/symbols.txt)/[ov007](../config/arm9/overlays/ov007/symbols.txt)/[ov089](../config/arm9/overlays/ov089/symbols.txt) addresses. Harmless while those
+  targets are unhosted; the [ov089](../config/arm9/overlays/ov089/symbols.txt) leg is one symbol line away from arming a cross
   pass overwrite. The banner in `port/ov009_syms.txt` documents it. Suppressing
   entries in shared dsd config is a call for the repo owner, so they are left in
   place deliberately.

@@ -20,20 +20,16 @@
  * models; and 0x008 is fBase_c's param1, the spawn parameter this door's
  * whole variant table is indexed by.
  *
- * STILL DOES NOT BYTE-MATCH, and this change does not pretend otherwise.
- * The word for that state is deliberately not spelt here: tools/asm_policy.py
- * matches DRAFT_BANNER as a bare substring anywhere in a file's header
- * region, so writing it in a comment makes enroll.candidates() drop the file
- * from the eligibility gate's job list altogether -- not "fails the gate",
- * but "the gate stops looking". Measured while writing this file: the draft
- * of this comment cost exactly this function its candidacy, 11189 jobs down
- * to 11188, while every other number stayed green.
- * config/arm9/overlays/ov100/delinks.txt carries no `complete` marker for
- * this range, so dsd supplies it from the cartridge and the ROM build never
- * compiles this file. Measured under the pinned 2004/b56 before and after
- * the fold: candidate 0x300 against the ROM's 0x2fc, one instruction long,
- * unchanged either way. Closing that gap is a matching problem, not a layout
- * one, and is deliberately not attempted here.
+ * BYTE-MATCHES under the pinned 2004/b56, 0x2fc for 0x2fc, with relocation
+ * destinations checked. It did not until the param1 shift below was respelt;
+ * the one-instruction gap this file used to carry (0x300 against the ROM's
+ * 0x2fc, diverging at +0x0c) is described at that line together with the
+ * lever that closed it.
+ *
+ * config/arm9/overlays/ov100/delinks.txt still carries no `complete` marker
+ * for this range, so dsd keeps supplying it from the cartridge and the ROM
+ * build does not yet compile this file. That is a layout question, separate
+ * from the byte question this file now answers, and is left where it was.
  *
  * NOT RENAMED BUT WORTH RECORDING: the block near the end writes mPosX,
  * mPosY + 0xb4000 and mPosZ into 0x0a4/0x0a8/0x0ac. dActor_c.h names the
@@ -102,7 +98,23 @@ int _ZN4Door13InitResourcesEv(struct Door *self)
     int y;
     int z;
 
-    self->base.param1 = self->base.param1 >> 0x10;
+    /* The spawn word arrives packed: this door's variant index is param1's
+       high halfword, and every later read of param1 in this function is that
+       index. Shifted down in place, once, before anything else.
+
+       Spelt plainly (`self->base.param1 = self->base.param1 >> 0x10;`), both
+       sides of this assignment are the same expression, and 2004/b56
+       value-numbers them together and materialises the address once --
+       `add r2, r5, #8` / `ldr r1, [r2]` / `lsr` / `str r1, [r2]` -- one
+       instruction longer than the ROM, which shifts every literal-pool load
+       in the rest of the function. The ROM keeps the offset folded into both
+       accesses: `ldr r1, [r5, #8]` / `lsr` / `str r1, [r5, #8]`. A redundant
+       cast on the read side is enough to make the two sides textually
+       different and reach the folded form -- no `volatile` needed, so
+       tools/tiers.py never reads this as a codegen trick. Measured: with the
+       cast the candidate is 0x2fc and 0 of 191 words differ; without it
+       0x300, and over the shared prefix 156 of 192 differ. */
+    self->base.param1 = (u32)self->base.param1 >> 0x10;
 
     if (!(data_ov100_02148710 & 1)) {
         data_ov100_021487c0.x = 0x4b000;

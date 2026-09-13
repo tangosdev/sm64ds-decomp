@@ -141,7 +141,7 @@ struct dActor_c : dBase_c {
 
     /* --- new slots, 18..30, in declaration order. Do not reorder. --- */
     virtual int  OnYoshiTryEat();                      /* slot 18 */
-    virtual int  OnTurnIntoEgg(Player &player);        /* slot 19 */
+    virtual void OnTurnIntoEgg(Player &player);        /* slot 19 */
     virtual int  Virtual50();                          /* slot 20 -- vtable+0x50 */
     /* Slots 21, 24 and 27 return void, NOT int. Nothing in the tree reads them,
        so only an override with early returns can tell the difference -- and one

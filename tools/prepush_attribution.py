@@ -61,8 +61,8 @@ sys.path.insert(0, str(REPO / "tools"))
 import chaos_db_ci as CDB  # noqa: E402
 
 
-def overrides_at(rev):
-    """Path-wide attribution overrides as of ``rev``."""
+def attribution_at(rev):
+    """Attribution policy from the revision being checked, including its aliases."""
     try:
         raw = subprocess.run(["git", "show", f"{rev}:attribution.json"], cwd=REPO,
                              capture_output=True, text=True, encoding="utf-8",
@@ -70,37 +70,89 @@ def overrides_at(rev):
         data = json.loads(raw)
     except (subprocess.CalledProcessError, json.JSONDecodeError):
         return {}
-    ov = data.get("overrides", {}) if isinstance(data, dict) else {}
-    return {k: v for k, v in ov.items()
-            if isinstance(k, str) and k.startswith("src/") and "#" not in k
-            and isinstance(v, str) and v}
+    return data if isinstance(data, dict) else {}
+
+
+def canonical_author(author, data):
+    # Keep this identical to validate_merge.attribution_snapshot's resolution.
+    return data.get("aliases", {}).get(str(author).lower(), author)
+
+
+def credit_overrides_at(rev):
+    """Canonical authors for both path and path#symbol overrides."""
+    data = attribution_at(rev)
+    return {key: canonical_author(author, data)
+            for key, author in data.get("overrides", {}).items()
+            if isinstance(key, str) and key.startswith("src/")
+            and isinstance(author, str) and author}
+
+
+def overrides_at(rev):
+    """Path-wide attribution overrides as of ``rev``."""
+    return {key: author for key, author in credit_overrides_at(rev).items()
+            if "#" not in key}
 
 
 def member_overrides_at(rev):
-    """``symbol -> (source path, author)`` for consolidated-TU overrides.
+    """Unambiguous ``symbol -> (source path, author)`` consolidation overrides.
 
-    ``validate_merge.attribution_snapshot`` resolves ``source.cpp#symbol`` before a
-    path-wide override.  Reading the same keys here lets a deliberate many-files-to-one
-    consolidation preserve each old symbol's author instead of reporting every legacy
-    basename as lost.
+    This exact-name fallback is only for sources without configured ROM identities.
+    Configured functions must follow module and address, including their new symbol
+    spelling, rather than allowing a same-named function in another overlay to rescue
+    missing credit.
     """
-    try:
-        raw = subprocess.run(["git", "show", f"{rev}:attribution.json"], cwd=REPO,
-                             capture_output=True, text=True, encoding="utf-8",
-                             errors="replace", check=True).stdout
-        data = json.loads(raw)
-    except (subprocess.CalledProcessError, json.JSONDecodeError):
-        return {}
-    ov = data.get("overrides", {}) if isinstance(data, dict) else {}
-    out = {}
-    for key, author in ov.items():
-        if (not isinstance(key, str) or not key.startswith("src/") or "#" not in key
-                or not isinstance(author, str) or not author):
+    out, ambiguous = {}, set()
+    for key, author in credit_overrides_at(rev).items():
+        if "#" not in key:
             continue
         path, symbol = key.rsplit("#", 1)
         if symbol:
+            if symbol in out:
+                ambiguous.add(symbol)
             out[symbol] = (path, author)
-    return out
+    return {symbol: member for symbol, member in out.items() if symbol not in ambiguous}
+
+
+def source_paths_at(rev):
+    """Only source files present in this revision can own contributor credit."""
+    paths = subprocess.run(
+        ["git", "ls-tree", "-r", "--name-only", rev, "--", "src/"],
+        cwd=REPO, capture_output=True, text=True, encoding="utf-8",
+        errors="replace", check=True).stdout.splitlines()
+    return {path for path in paths if path.endswith((".c", ".cpp"))}
+
+
+def function_ownership_at(rev):
+    """Use the merge validator's revision-scoped symbol and delinks ownership."""
+    import validate_merge as VM
+
+    old_repo = VM.REPO
+    VM.REPO = REPO
+    try:
+        # The enrolment cache is revision keyed; resolve HEAD before consulting it.
+        rev = VM.resolve_commit(rev)
+        matched = VM.function_snapshot(rev)["matched"]
+        claims, symbols = {}, set()
+        for path in VM.tree_paths(rev, "config/arm9"):
+            module = VM._module_from_symbols(path)
+            if module is None:
+                continue
+            for line in VM.git_text(rev, path).splitlines():
+                row = VM.FUNC_RE.match(line)
+                if not row:
+                    continue
+                name, size, addr = row.group(1), int(row.group(2), 16), int(row.group(3), 16)
+                symbols.add(name)
+                if size:
+                    key = f"{module}:0x{addr:08x}"
+                    claims.setdefault(key, set()).add((name, size))
+        # The snapshot chooses one record per address. That is sound for a real
+        # function plus zero-size aliases, but competing bodies do not establish
+        # unique ownership. Never let their row order choose whose credit survives.
+        ambiguous = {key for key, rows in claims.items() if len(rows) > 1}
+        return matched, ambiguous, symbols
+    finally:
+        VM.REPO = old_repo
 
 
 def lineage(rev):
@@ -125,9 +177,11 @@ def lineage(rev):
     first = CDB.first_matchers(rev)
     finishers = CDB.match_finishers(rev)
     overrides = overrides_at(rev)
+    data = attribution_at(rev)
     out = {}
-    for path in set(first) | set(finishers) | set(overrides):
-        who = overrides.get(path) or finishers.get(path) or first.get(path)
+    paths = source_paths_at(rev)
+    for path in (set(first) | set(finishers) | set(overrides)) & paths:
+        who = overrides.get(path) or canonical_author(finishers.get(path) or first.get(path), data)
         if who:
             out[path.rsplit(".", 1)[0]] = who
     return out
@@ -253,10 +307,45 @@ def main():
             renamed_ok.append((came_from, name, old_stem, new_stem, old_who))
         elif old_stem != new_stem:
             moved_ok.append((name, old_stem, new_stem, old_who))
-    members = member_overrides_at(args.head)
-    for name, (old_stem, old_who) in projected.items():
-        if name not in after_by_name:
-            member = members.get(name)
+    missing = {name: old for name, old in projected.items() if name not in after_by_name}
+    if missing:
+        base_functions, base_ambiguous, base_symbols = function_ownership_at(args.base)
+        head_functions, head_ambiguous, _head_symbols = function_ownership_at(args.head)
+        ambiguous = base_ambiguous | head_ambiguous
+        by_stem = {}
+        for key, rec in base_functions.items():
+            by_stem.setdefault(rec["srcPath"].rsplit(".", 1)[0], []).append((key, rec))
+        base_overrides = credit_overrides_at(args.base)
+        head_overrides = credit_overrides_at(args.head)
+        members = member_overrides_at(args.head)
+        head_paths = source_paths_at(args.head)
+        for name, (old_stem, old_who) in missing.items():
+            owned = by_stem.get(old_stem)
+            if owned:
+                # A file can own several differently credited functions. Check every
+                # identity and require a current, explicit per-member override.
+                for key, rec in owned:
+                    old_author = base_overrides.get(f"{rec['srcPath']}#{rec['name']}") or old_who
+                    dest = head_functions.get(key)
+                    new_author = (head_overrides.get(f"{dest['srcPath']}#{dest['name']}")
+                                  if dest and dest["size"] == rec["size"]
+                                  and key not in ambiguous else None)
+                    if not new_author:
+                        lost.append((rec["name"], old_stem, old_author))
+                    elif new_author != old_author:
+                        changed.append((rec["name"], old_stem, dest["srcPath"],
+                                        old_author, new_author))
+                    else:
+                        consolidated_ok.append((rec["name"], old_stem, dest["srcPath"],
+                                                old_author))
+                continue
+
+            # An unresolved configured symbol has no ownership proof. Only genuinely
+            # unconfigured sources can use the legacy exact-symbol fallback.
+            member = (members.get(name)
+                      if basename_key(old_stem) not in base_symbols else None)
+            if member and member[0] not in head_paths:
+                member = None
             if member and member[1] == old_who:
                 consolidated_ok.append((name, old_stem, member[0], old_who))
             elif member:

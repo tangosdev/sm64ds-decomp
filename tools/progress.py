@@ -46,10 +46,15 @@ FUNC_NAME_RE = re.compile(
 
 def source_counts_as_matched(path, src_path, module, addr, size,
                              alias_addrs, excluded_paths):
-    """Apply the same committed-data MATCHED policy as ``chaos_db_ci``."""
+    """Apply the same committed-data MATCHED policy as ``chaos_db_ci``.
+
+    The banner half is asm_policy.counts_as_matched, which both tools call rather
+    than re-spelling: this used to read "no NONMATCHING and not transcribed" here
+    and the same words over there, so the two agreed by coincidence and Tango's
+    hand-asm ruling would have had to be applied twice to keep them agreeing.
+    """
     text = path.read_text(errors="ignore")
-    countable = (not asm_policy.has_draft_banner(text)
-                 and asm_policy.classify(text) != "transcribed")
+    countable = asm_policy.counts_as_matched(text)
     zero_alias = BG.is_zero_size_alias(module, addr, size, alias_addrs)
     return countable and not zero_alias and src_path not in excluded_paths
 
@@ -88,6 +93,7 @@ def synced_from_src():
     Returns (done_n, done_b, n, total_bytes)."""
     n = total_bytes = done_n = done_b = 0
     alias_addrs = BG.alias_collision_addresses()
+    alias_srcnames = BG.alias_names()
     excluded_paths = BG.excluded_paths()
     # Every module, itcm included, via the one definition in relocs.py. This used
     # to skip itcm/dtcm to agree with chaos-db and the treemap, which skipped them
@@ -119,6 +125,15 @@ def synced_from_src():
             n += 1
             total_bytes += sz
             f = SP.path_for(name)
+            if f is None:
+                # The source for an aliased address is filed under the name its author
+                # used, which here is the alias: src/_dmul.c holds the bytes the symbol
+                # table calls func_01ff8708. Same fallback as chaos_db_ci, so the two
+                # generators keep answering with the same number.
+                for alt in alias_srcnames.get((_label, addr), ()):
+                    f = SP.path_for(alt)
+                    if f is not None:
+                        break
             if f is not None:
                 src_path = f.relative_to(REPO).as_posix()
                 if source_counts_as_matched(

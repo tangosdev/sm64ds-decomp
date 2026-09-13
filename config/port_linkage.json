@@ -28,11 +28,11 @@
     "Actor methods and free functions both count. Enrollment alone does not increase",
     "the count when the release build still dead-strips the unreachable object."
   ],
-  "linkedTus": 10227,
+  "linkedTus": 10523,
   "matchedTus": 11328,
-  "measuredAt": "2026-09-08",
+  "measuredAt": "2026-09-09",
   "branch": "port/link100",
-  "commit": "3d8374ff7",
+  "commit": "91f525963",
   "stale": false,
-  "basis": "Linkage measurement of integration branch port/link100 at 3d8374ff735e285a668e8af30e90e35ba2771050 on 2026-09-08: 10,227 of 11,328 matched TUs reach walk_window, 11 above the previous stamp. Hosted port-linkage push run 34284327226 checked that exact commit; its successful linkage job 102256251572 reports the count and retains the map. This link-only build establishes build/link coverage. It does not validate gameplay, private battery claims, or a shipping-branch landing."
+  "basis": "integration branch port/link100 at its pushed tip 91f525963, measured against that tip's own battery build walk_window.map (C:/tmp/l1-int, gate INT30: tree clean, reconfigure with the four hostgen register TUs, battery ALL GREEN at floor 10523 with all 51 level and 37 scene rows including the Game Over scene, the six proofs, the loopback pair with the ROM's own wireless worker created, entered, slept and woken on the parent, the four-player proof, the rollback ladder at eight wide with every session row green including seven windows at 160 ms, and a captured level under the ROM's own frame loop), and confirmed by the hosted-runner port-linkage workflow on every push of port/** and every pull request into the shipping branch. +2 over the previous stamp of 10521, +490 over the 2026-09-08 morning's 10033, +1402 over the 2026-08-30 stamp of 9121. Since the 10521 stamp: two more overlay bodies seated as the ROM's own, the intro Bowser dispatch body func_ov018_02111bf0 and the Jolly Roger Bay alias body func_ov002_020bd664 (+2); the hosted ARM7 posting the port-receive indication once per completed round so the ROM's own receive engine banks the parent's datagram on the child every frame (0); and the thread switch a ROM body asks for from inside the VBlank handler deferred to the interrupt return the cartridge's way, decided by the ROM's own processor-mode check now that the host answers IRQ mode inside a handler (0). Running: the ROM's own send and copy on the wireless path (the last host face on it), the same mode answer on the two remaining handler paths, the decomp-side honesty of the matched count."
 }

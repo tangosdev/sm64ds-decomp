@@ -50,6 +50,10 @@
    "ref": "src/_ZN8PlatformD0Ev.cpp"
   },
   {
+   "file": "notes/agents/handoffs/issue-2411-humanizer-2.md",
+   "ref": "src_tu/actors/Koopa"
+  },
+  {
    "file": "notes/archive/crack-loop-runbook.md",
    "ref": "notes/pret-idioms.md"
   },
@@ -204,6 +208,10 @@
   {
    "file": "notes/matching-style.md",
    "ref": "src/func_ov006_02110a20.c"
+  },
+  {
+    "file":"notes/rom-build.md",
+    "ref":"src/func_ov013_021112a8.c"
   },
   {
    "file": "notes/mwccarm-codegen.md",

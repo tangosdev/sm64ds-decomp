@@ -23,8 +23,8 @@ merge PRs read **[MERGE.md](MERGE.md)**.
 
 <!-- progress:start -->
 ```
-Functions  ██████████████████████████████  99.4%   11,318 / 11,390
-Code size  █████████████████████████████░  97.7%   2,186,936 / 2,238,108 bytes
+Functions  ██████████████████████████████  99.6%   11,342 / 11,390
+Code size  █████████████████████████████░  97.9%   2,191,568 / 2,238,108 bytes
 ```
 <!-- progress:end -->
 
@@ -46,13 +46,17 @@ here, and they move independently.
 
 <!-- tiers:start -->
 ```
-MATCHED    ██████████████████████████████  99.4%   11,318 / 11,390 functions
-CONVERTED  ███████░░░░░░░░░░░░░░░░░░░░░░░  23.8%   2,707 / 11,357 functions
-LINKED     ███████████████████████████░░░  90.3%   10,227 / 11,328 matched TUs
+MATCHED    ██████████████████████████████  99.6%   11,342 / 11,390 functions
+           of which 113 are byte-exact assembly (hand-written in the original, not C)
+CONVERTED  ███████░░░░░░░░░░░░░░░░░░░░░░░  23.9%   2,716 / 11,357 functions
+LINKED     ████████████████████████████░░  92.9%   10,523 / 11,328 matched TUs
 ```
 <!-- tiers:end -->
 
-- **MATCHED** is byte-exact C, verified against the ROM. This is the bar above and
+- **MATCHED** is source that compiles to the ROM's exact bytes, checked against the
+  cartridge. Nearly all of it is C. The rest is the small set of routines the original
+  game wrote in assembly, which count under the rule in
+  [What counts as matched](#what-counts-as-matched) below. This is the bar above and
   the treemap.
 - **CONVERTED** is source-owned code a person can read without the ROM open beside
   them. Matching
@@ -101,13 +105,40 @@ The matching compiler is pinned to **mwccarm 2004/b56** with these flags (the 1.
 -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
 ```
 
+## What counts as matched
+
+A function counts as matched when the source in this repo, compiled with the pinned
+compiler, produces exactly the bytes that are on the cartridge. Not similar bytes.
+The same bytes. If the check fails, it does not count, however close it looks.
+
+Almost all of the game was written in C, so almost all of that work is writing C. A
+small number of routines were never C. Nintendo wrote those by hand in assembly,
+because they do jobs the C language has no way to ask for: driving the chip's cache,
+calling into the DS firmware, switching the processor between modes, and a few pieces
+of the compiler's own maths library that hand back two answers at once.
+
+There is no C to find for those. The honest source for them is the same assembly, so
+that is what this repo carries, and each one is checked against the cartridge exactly
+like everything else. They count as matched, and every file counted that way carries a
+`HAND-ASM PRIMITIVE` line at the top so nobody mistakes it for recovered C. The caption
+under the MATCHED bar says how many there are.
+
+That exception is narrow on purpose. A function only qualifies when its body contains
+an instruction C cannot express at all. If it is ordinary code that we simply cannot
+reproduce yet, writing it out as assembly proves nothing, so it does not qualify and
+does not count. Those files are marked `NONMATCHING` instead, and unmatched means just
+that: the original was C, and we do not yet have C the compiler turns into those exact
+bytes. The rule is written up in [notes/asm-policy.md](notes/asm-policy.md).
+
 ## How matching works
 
 Every candidate is verified the same way: compile it with mwccarm, then compare the
 result to the ROM byte-for-byte, relocation-aware (call and data references are slots
 the linker fills in, so they are compared structurally). Nothing counts as matched
-until that check passes. The work is organized in tiers so the automatic methods clear
-as much as possible before any manual effort:
+until that check passes, including the hand-written assembly primitives above: the
+banner explains why a file is assembly, it never excuses it from the byte check. The
+work is organized in tiers so the automatic methods clear as much as possible before
+any manual effort:
 
 1. **Automatic templates.** A set of rules recognizes common function shapes (constant
    returns, field getters and setters, bitfield reads, struct copies, simple wrappers,

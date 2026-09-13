@@ -196,6 +196,7 @@ def check_file(path, idx, ledger):
                 "results": [], "note": "unresolved"}
 
     import reloc_audit as RA
+    import bytegate as BG
     results, checked_passengers = [], set()
     for sym, slots in named:
         # ONE OBJECT PER OWNED SYMBOL, not one per file. `winning_object` runs the
@@ -206,13 +207,36 @@ def check_file(path, idx, ledger):
         # Reset VERIFIED, SceneNode() NO-SYM; per-symbol -> both VERIFIED.) For the
         # ordinary one-function sources this is exactly one call, as before.
         obj = wsym = None
+        off = 0
         for addr, size, mod in slots:
-            obj, wsym, _ = RA.winning_object(sym, addr, size, mod)
+            # Mirror linkcheck.linkcheck's own resolution order exactly, since this loop
+            # pre-supplies obj/sym into LC.linkcheck below instead of letting it call
+            # winning_object itself: correct a zero-size EABI alias record to its sized
+            # twin's real length (bytegate.alias_target_size) BEFORE calling
+            # winning_object, the same substitution linkcheck() applies at its own top --
+            # a raw zero-size request can never resolve here (rom_bytes(...,0) is an
+            # empty target no compiled candidate's length ever equals), which used to
+            # send every alias through the `obj is None` fallback below instead of
+            # resolving directly. And carry `off`, the fourth element winning_object
+            # returns: nonzero when `sym` is a NESTED entry point's CONTAINING symbol
+            # rather than the symbol itself (a hand-asm block packing several ROM
+            # functions into one compiled body, e.g. func_01ff97d8.c). Both matter
+            # together for a symbol like _deq -- an alias (size 0) whose sized twin,
+            # func_01ff9d40, is itself a nested entry point: the size fix is what makes
+            # winning_object see a nonzero range at all, and the offset fix is what
+            # slices that range at the right place once it does.
+            csize = size
+            if csize == 0:
+                alt = BG.alias_target_size(mod, addr)
+                if alt:
+                    csize = alt
+            obj, wsym, _, off = RA.winning_object(sym, addr, csize, mod, name_index=_NAME_INDEX)
             if obj is not None:
                 break
         for addr, size, mod in slots:
             r = LC.linkcheck(sym, addr, size, mod, _NAME_INDEX,
-                             obj=obj, sym=(wsym if obj is not None else None))
+                             obj=obj, sym=(wsym if obj is not None else None),
+                             off=(off if obj is not None else 0))
             results.append({"sym": sym, "addr": f"0x{addr:08x}", "module": mod,
                             "verdict": r["verdict"], "diffs": r.get("diffs", []),
                             "passenger": False})
@@ -284,6 +308,13 @@ def source_policy(worst, text):
     WRONG (a resolvable reloc pointing at the wrong symbol) still fails -- a draft's
     call graph must be honest even if its bytes differ.
 
+    The test is `not asm_policy.counts_as_matched`, not `has_draft_banner`, because
+    those two stopped meaning the same thing on 2026-09-09. Twenty hand-written
+    assembly primitives carry the word NONMATCHING inside a note that says there is no
+    C to chase, and they DO count now -- so the sentence above, "chaos-db counts it as
+    unmatched", is exactly the condition to ask about, and asking the older question
+    would hand a counted match the downgrade that exists for uncounted drafts.
+
     The draft downgrade cannot collide with the transcription check: a transcription
     has no banner by definition, because a NONMATCHING banner reclassifies it as an
     honest draft (asm_policy.classify returns None for it).
@@ -294,7 +325,7 @@ def source_policy(worst, text):
     NO-REPRO -- and then the validator died on a NameError mid-loop, reporting "worker
     error" instead of grading the file. Untestable because inline, so untested.
     """
-    if worst == "NO-REPRO" and AP.has_draft_banner(text):
+    if worst == "NO-REPRO" and text and not AP.counts_as_matched(text):
         return "DRAFT"
     if AP.classify(text) == "transcribed":
         return "RAW-ASM"

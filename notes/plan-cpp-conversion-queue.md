@@ -15,7 +15,7 @@ Planned 2026-08-25. No builds were run during planning.
 | census said | tree says | impact |
 |---|---|---|
 | 19 of the 330 already compile as C++ → **311** un-migrated | **15** active, 1 inert, 314 bare → **315** un-migrated. The 15 are all `func_ov006_*.c` files under `src/`; 19 `.c` files tree-wide carry an active marker but 4 are tier P3/P4, outside the 330 | stage sizing |
-| 3 inert-marker violators "in the positive pool" | only **1** (`src/_ZN7dWipe_c15SetBackwardTimeEj.c`) is in the 1,167. `src/func_0204322c.c` is WEAK-refs-only, `src/func_ov075_0211b1cc.c` is PURE-C | two are not this workstream's problem |
+| 3 inert-marker violators "in the positive pool" | only **1** (`src/_ZN7dWipe_c15SetBackwardTimeEj.c`) is in the 1,167. [src/func_0204322c.c](../src/func_0204322c.c) is WEAK-refs-only, [src/func_ov075_0211b1cc.c](../src/func_ov075_0211b1cc.c) is PURE-C | two are not this workstream's problem |
 | — | **262 of the 315** un-migrated direct files are in `build/eligible-names.txt`; **53 are not** | the 53 have no per-file byte gate → TU-work or nothing |
 | — | of the 55 safe-pool TUs containing a provably-C++ `.c`, **all 55 are direct-seeded. Zero purely-transitive safe TUs exist.** | the 837 transitive files split 203 (inside direct-seeded safe TUs) / 634 (blocked TUs). There is no "transitive-only merge" to schedule |
 | — | `config/rombuild-versions.txt` holds exactly **one** override (`_ZN11dScMgCard_c13InitResourcesEv → 1.2/base`) | `match.py`'s default `CANONICAL` == the build's pin for every file in this plan except that one. Grep before each batch |
@@ -24,7 +24,7 @@ Two mechanical facts that shape every stage, both verified:
 
 1. **`build_pin.verify` calls `M.extract_func(obj, func)`** — the emitted symbol must
    still be spelled exactly as the file stem. A bare `//cpp` on
-   `int func_ov027_02111680(char*)` yields `_Z18func_ov027_02111680Pc`, and the gate
+   `int` [func_ov027_02111680](../config/arm9/overlays/ov027/symbols.txt)`(char*)` yields `_Z18func_ov027_02111680Pc`, and the gate
    reports *"not in the object"*, not a byte diff. So the mechanical flip is
    **`//cpp` + an `extern "C"` wrapper**, which is exactly what the 15 landed files do.
 2. **`rombuild.py:415` honours `//cpp` on a `.c` file** — the extension is never
@@ -38,7 +38,7 @@ Two mechanical facts that shape every stage, both verified:
 
 The population splits on two axes that are **almost disjoint**, and that drives the ordering:
 
-```
+```sh
                       cheap to convert          valuable to the merge
   P2 (func_<addr>)    YES  no name decision     mostly NO  (blocked TUs: ov006 51, ov004 13)
   P1 (mangled name)   NO   double-mangles       YES  (79 of the 293 safe-pool files)
@@ -54,7 +54,7 @@ The population splits on two axes that are **almost disjoint**, and that drives 
 | **S4** | remaining direct-proven enrolled files carrying a lexical hazard | **135 files** | file-level, bespoke | judgment |
 | **S5** | 53 direct-proven files **not** enrolled | **53 files** | TU-level or nothing | deferred to merge |
 | **S6** | 203 transitive `.c` members of the 55 direct-seeded safe TUs | **203 files** | **TU-level, unavoidably** | merge workstream |
-| **S7** | 871 provably-C++ `.c` in blocked TUs (573 ov006) | **871 files** | parked | until pragmas clear |
+| **S7** | 871 provably-C++ `.c` in blocked TUs (573 [ov006](../config/arm9/overlays/ov006/symbols.txt)) | **871 files** | parked | until pragmas clear |
 
 Sum: 1,167 = 293 (safe pool: 90 direct + 203 transitive) + 871 (blocked) + 3 (single-file TUs).
 
@@ -74,7 +74,7 @@ merge** — see the interface section.
 `tempfile.TemporaryDirectory` and never touches `build/`. Safe to run while the merge
 workstream builds.
 
-```
+```sh
 python tools/match.py --c src/<FILE>.c --func <SYMBOL> \
     --addr <ADDR> --size <SIZE> --module <ovNNN>
 ```
@@ -109,11 +109,8 @@ reason than tidiness.)*
 
 **Entry:** pilot (§3) passed.
 **Set:** direct-proven, tier `P2-vtable-only` (`func_<addr>`, no mangled name anywhere),
-enrolled, free of all seven lexical hazards. Modules: ov006 51, ov004 13, arm9 9, ov064 7,
-ov002 5, ov022 5, ov045 5, ov071 4, ov070 4, ov072 3, tail. Six sit in the safe merge pool
-(`func_ov081_021261b8`, `func_ov026_021122b0`, `func_ov026_021122cc`,
-`func_ov027_02111680`, `func_ov064_0211755c`, `func_ov022_02112710`) — **per §7 those six
-are ceded to the merge**, leaving 76 here.
+enrolled, free of all seven lexical hazards. Modules: [ov006](../config/arm9/overlays/ov006/symbols.txt) 51, [ov004](../config/arm9/overlays/ov004/symbols.txt) 13, [arm9](../config/arm9/symbols.txt) 9, [ov064](../config/arm9/overlays/ov064/symbols.txt) 7,
+[ov002](../config/arm9/overlays/ov002/symbols.txt) 5, [ov022](../config/arm9/overlays/ov022/symbols.txt) 5, [ov045](../config/arm9/overlays/ov045/symbols.txt) 5, [ov071](../config/arm9/overlays/ov071/symbols.txt) 4, [ov070](../config/arm9/overlays/ov070/symbols.txt) 4, [ov072](../config/arm9/overlays/ov072/symbols.txt) 3, tail. Six sit in the safe merge pool ([func_ov081_021261b8](../src/func_ov081_021261b8.c)(weak ref to `daSnowman_c`), [func_ov026_021122b0](../src/func_ov026_021122b0.c)(weak ref to `daWater_Tatumaki_c`), [func_ov026_021122cc](../src/func_ov026_021122cc.c)(weak ref to `daWater_Tatumaki_c`), [func_ov027_02111680](../src/game/actors/d_a_i_donketu.cpp)(func 3 used to assemble TU - `d_a_i_donketu.cpp`), `func_ov064_0211755c`(weak ref to `daBDonketu_c`), [func_ov022_02112710](../src/func_ov022_02112710.c))(ROM ordinal 4 of `daObj_volcanoCannon_c`) — **per §7 those six are ceded to the merge**, leaving 76 here.
 
 The exact edit — two lines, no restructuring:
 
@@ -183,7 +180,7 @@ the RTTI group to land, and the class stays unverifiable against the cartridge u
 does. The reasoning above is kept because the rest of the queue still rests on it, and it
 still holds wherever a class remains spread over per-function files.
 
-The exact edit (`src/game/actors/d_a_obj_km2_fall_block.cpp`, `0x02111e10`, size `0x14`, ov045):
+The exact edit (`src/game/actors/d_a_obj_km2_fall_block.cpp`, `0x02111e10`, size `0x14`, [ov045](../config/arm9/overlays/ov045/symbols.txt)):
 
 ```cpp
 //cpp
@@ -196,7 +193,7 @@ int daObjKm2_Fall_Block_c::InitResources() { return func_ov098_0213a794(this, da
 This is a **real** migration: the compiler mangles the name. Verify that claim with the
 oracle **before** the byte gate — it needs no ROM and no serialization:
 
-```
+```sh
 python tools/mangle.py src/game/actors/d_a_obj_km2_fall_block.cpp \
     --expect _ZN21daObjKm2_Fall_Block_c13InitResourcesEv
 ```
@@ -226,7 +223,7 @@ block, then do the S2 edit. Representative classes: `DonutBlock`, `FlameChomp`,
 `notes/plan-cpp-language-mode.md` §7 names "header retype silently un-matches a
 non-enrolled includer" as the top risk. Per class:
 
-```
+```sh
 python tools/affected_src.py include/<Class>.h      # what is in range
 ```
 
@@ -278,7 +275,7 @@ admission loop starts with the language question already answered.
 
 ### S7 — 871 in blocked TUs · parked
 
-573 are ov006. Dominant blocker signatures by file count: `1 member not complete` (96);
+573 are [ov006](../config/arm9/overlays/ov006/symbols.txt). Dominant blocker signatures by file count: `1 member not complete` (96);
 `1 not complete + opt pragma in 7 members` (68); `2 not complete + opt pragma in 35
 members` (62); `1 not complete + opt_strength_reduction` (59); `optimize_for_size in 1
 member` (51).
@@ -310,7 +307,7 @@ holding every other variable fixed:
 * Zero lexical hazards, so a failure is unambiguously codegen, not hygiene.
 * Enrolled; no entry in `config/rombuild-versions.txt`, so `match.py`'s default
   `CANONICAL` **is** the build's pin.
-* Sits in a **safe-pool** TU (ov027 @`0x21115c4`, 7 members, all `ChillBully`'s),
+* Sits in a **safe-pool** TU ([ov027](../config/arm9/overlays/ov027/symbols.txt) @`0x21115c4`, 7 members, all `ChillBully`'s),
   so a green result immediately feeds the merge workstream.
 * Includes `decl_common.h`, so it also exercises the one include known to be sometimes wrong.
 
@@ -333,7 +330,7 @@ the header first — that is the one judgment call in the pilot.
 
 **Verification, exactly this, serially:**
 
-```
+```sh
 python tools/match.py --c src/_ZN10ChillBully14UpdateRunStateEv.cpp \
     --func _ZN10ChillBully14UpdateRunStateEv --addr 0x02111680 --size 0x70 --module ov027
 ```
@@ -359,7 +356,7 @@ python tools/match.py --c src/_ZN10ChillBully14UpdateRunStateEv.cpp \
 **Follow-on, only if the pilot passes** — validates the *naming* half that S2 depends on
 and the pilot deliberately excludes:
 
-```
+```sh
 python tools/mangle.py src/game/actors/d_a_obj_km2_fall_block.cpp --expect _ZN21daObjKm2_Fall_Block_c13InitResourcesEv
 python tools/match.py --c src/game/actors/d_a_obj_km2_fall_block.cpp \
     --func _ZN21daObjKm2_Fall_Block_c13InitResourcesEv --addr 0x02111e10 --size 0x14 --module ov045
@@ -380,9 +377,9 @@ appears there, S2/S3 must be re-scoped as merge work.)
 | destructors — D0/D1/D2 | 259 dtor-only + every `~X()` | out of scope by instruction. Every stage is constructed to avoid becoming a key-function TU, the only route by which destructor form could leak in. S2's non-virtual triad declarations exist precisely to keep that door shut |
 | constructors | 54 | zero ever migrated in this tree. A research spike, not throughput |
 | `main` @0x20049f0 | 2,927 | not a TU; the un-segmented remainder of arm9 |
-| ov002 Player @0x20bd828 | 613 | swallower; 4 incomplete members; `opt_common_subs` in 13 |
-| ov007 @0x20b72a0 / @0x20ad660 | 389 + 123 | no class label, low boundaries, **zero sinits so no witness is constructible**. Where the map knows least and looks most confident |
-| ov004 @0x20b42c0 | 107 | unattributed, low/low, swallower. *13 S1 files are ov004 but from other, non-swallower ranges — S1 harvests files, not TUs, so this exclusion does not cost them* |
+| [ov002](../config/arm9/overlays/ov002/symbols.txt) Player @0x20bd828 | 613 | swallower; 4 incomplete members; `opt_common_subs` in 13 |
+| [ov007](../config/arm9/overlays/ov007/symbols.txt) @0x20b72a0 / @0x20ad660 | 389 + 123 | no class label, low boundaries, **zero sinits so no witness is constructible**. Where the map knows least and looks most confident |
+| [ov004](../config/arm9/overlays/ov004/symbols.txt) @0x20b42c0 | 107 | unattributed, low/low, swallower. *13 S1 files are [ov004](../config/arm9/overlays/ov004/symbols.txt) but from other, non-swallower ranges — S1 harvests files, not TUs, so this exclusion does not cost them* |
 | `#pragma opt_*` TUs | ~92 TUs | file-global, last-wins. **But a pragma blocks the *merge*, not a file-level conversion** — a per-file gate is unaffected by a sibling's pragma, so S1/S2 deliberately do convert individual members of pragma-blocked TUs |
 | 190 hand-spelled `.cpp` | 190 | separate debt (`langmode_audit`'s second population). Renaming an extension is not a migration |
 | 113 `.c` absent from delinks | 113 | invisible to every byte gate; any edit is unverifiable. Same rule that made S0 a report and S5 a deferral |
@@ -440,7 +437,7 @@ So they are **sequenced, not split**:
   owns the vtable anchor naturally instead of a lone one-function file carrying it.
 * This workstream's independent throughput comes from the **blocked pool**, where the
   merge will never contend: 101 of the 135 zero-hazard S1 files already live there, and
-  the merge has explicitly excluded ov006 (51) and ov004 (13).
+  the merge has explicitly excluded [ov006](../config/arm9/overlays/ov006/symbols.txt) (51) and [ov004](../config/arm9/overlays/ov004/symbols.txt) (13).
 
 **OWES the merge:**
 
