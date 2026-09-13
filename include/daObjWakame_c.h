@@ -14,8 +14,10 @@
 #include "dActor_c.h"
 #include "ModelAnim.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* An animated seaweed prop -- ov002/daObjWakame_c, a scenery model and nothing
- * else.
+ * else. Profile SEAWEED(296) in symbols/overlay_actors.md.
  *
  * THE SIZE HAS TWO WITNESSES AND THEY CLOSE ON EACH OTHER, which is the whole
  * reason this layout can be stated flatly rather than hedged.
@@ -39,11 +41,9 @@
  *     Animation base sits inside a ModelAnim. The second base lands where the
  *     class says it should.
  *
- * pad_0d0[0x4] IS AN UNKNOWN FIELD, NOT ALIGNMENT. dActor_c asserts its own
- * size at 0xd0 and ModelAnim needs no more than 4-byte alignment, so those four
- * bytes are a gap the ROM leaves and nothing in this TU reads or writes. It is
- * named pad_ because its purpose is unknown, not because it is known to be
- * padding.
+ * unk_0d0 IS AN UNKNOWN FIELD, NOT ALIGNMENT. dActor_c asserts its own size
+ * at 0xd0 and ModelAnim needs no more than 4-byte alignment, so those four
+ * bytes are a gap the ROM leaves and nothing in this TU reads or writes.
  *
  * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (arm9 0x0208e3a4).
  * Both tables are 31 words, and they differ in exactly slots 0, 3, 6, 9, 16 and
@@ -56,8 +56,23 @@
  * and whose one base, at subobject offset 0, is arm9 0x0208e390 = _ZTI8dActor_c.
  */
 struct daObjWakame_c : dActor_c {
-    u8        pad_0d0[0x4];
+    u32       unk_0d0;                  /* 0x0d0 -- not accessed by this TU */
     ModelAnim mModelAnim;               /* 0x0d4 -- model and its animation */
+
+    /* All four are overrides of fBase_c/dActor_c, not new members -- see the
+       vtable diff above. `virtual` is redundant to the compiler and costs no
+       codegen; it is written so a reader can tell these from a plain member. */
+    virtual s32 InitResources();        /* slot 0 -- 0x020bc540 */
+    virtual s32 CleanupResources();     /* slot 3 -- 0x020bc4c8 */
+    virtual s32 Behavior();             /* slot 6 -- 0x020bc520 */
+    virtual s32 Render();               /* slot 9 -- 0x020bc4f8 */
+
+    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
+       Parameter is size_t (unsigned long on this compiler). `return new`
+       relocates to `_Znwm` without this. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 
     /* INLINE, AND THAT IS WHAT LETS THIS CLASS OWN A TRANSLATION UNIT. Declared
        out of line, mwccarm 2004/b56 emits D0 before D1 -- the reverse of the
@@ -86,14 +101,6 @@ struct daObjWakame_c : dActor_c {
        class's D1 is 0x30 bytes where a scalar-only sibling's is 0x24. Writing
        anything between the braces would add code the cartridge does not have. */
     virtual ~daObjWakame_c() {}         /* slots 16 (D1), 17 (D0) */
-
-    /* All four are overrides of fBase_c/dActor_c, not new members -- see the
-       vtable diff above. `virtual` is redundant to the compiler and costs no
-       codegen; it is written so a reader can tell these from a plain member. */
-    virtual s32 InitResources();        /* slot 0 -- 0x020bc540 */
-    virtual s32 CleanupResources();     /* slot 3 -- 0x020bc4c8 */
-    virtual s32 Behavior();             /* slot 6 -- 0x020bc520 */
-    virtual s32 Render();               /* slot 9 -- 0x020bc4f8 */
 };
 
 typedef char daObjWakame_c_size_must_be_0x138[

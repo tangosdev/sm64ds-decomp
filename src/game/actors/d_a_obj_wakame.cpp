@@ -11,10 +11,8 @@
  * __si_class_type_info whose _ZTS at 0x02109b84 reads exactly `13daObjWakame_c`,
  * and whose one base, at subobject offset 0, is arm9 0x0208e390 -- _ZTI8dActor_c.
  * That is why the header says `struct daObjWakame_c : dActor_c` and why the RTTI
- * below has ROM homes to be compared against at all: a coined name is a
- * length-prefixed mangled string that matches nothing at any address, so it can
- * never be word-compared, and a class whose records cannot be compared cannot
- * have a key-function TU.
+ * below has ROM homes to be compared against at all. Profile SEAWEED(296) in
+ * symbols/overlay_actors.md.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so the
@@ -29,73 +27,71 @@
  * {offset-to-top, _ZTI pointer} header word pair is emitted here and
  * word-compared by nothing, so the 31 slots are proved and those two words are
  * not.
+ *
+ * deslop leftovers:
+ * - ModelAnim::SetAnim 6az: InitResources' by-value Fix12<int> speed makes
+ *   the header method form size-DIFF.
+ * - func_ov002_020bc488 keeps its unnamed ROM spelling; the image gives it
+ *   neither a member name nor a `this`.
+ * - data_ov002_0210e0d4 / _0210e0dc keep their ROM bss names (typed here as
+ *   SharedFilePtr). This TU claims .text only.
+ * - common.h is not first: this file wants math/Matrix.h's Matrix4x3 so
+ *   mModelAnim.mat4x3.t is a Vector3.
+ * - No Player.h / Camera.h.
  */
 
 #include "daObjWakame_c.h"
-#include "decl_Actor.h"
-#include "decl_ActorBase.h"
-#include "decl_common.h"
+#include "SharedFilePtr.h"
 
 extern "C" {
-extern int _ZTV13daObjWakame_c[];
-extern void Matrix4x3_FromRotationY(void *, int);
-extern void _ZN9ModelAnimC1Ev(void *);
+void Matrix4x3_FromRotationY(Matrix4x3 *m, s16 angleY);
 
-/* THE TWO FILE POINTERS KEEP THEIR MANGLED SPELLING, and that is a deliberate
- * limit rather than an oversight. data_ov002_0210e0d4 and _0210e0dc are two
- * SharedFilePtr objects -- Model::LoadFile, Animation::LoadFile and
- * SharedFilePtr::Release all take one -- but include/decl_common.h declares both
- * as `extern int []` and is included by a large part of the tree, so retyping
- * them is a tree-wide change with its own evidence and its own verify cycle, not
- * something to fold into a TU promotion. Until then these functions are reached
- * by their mangled names, which is what the legacy per-function sources did and
- * what byte-matches today. */
-extern void  _ZN13SharedFilePtr7ReleaseEv(void *);
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
-extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *);
-extern int   _ZN9ModelBase7SetFileEP8BMD_Fileii(char *, void *, int, int);
-extern int   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *, void *, int, int, unsigned int);
+/* ModelAnim::SetAnim -- wall 6az on InitResources. */
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(ModelAnim *self,
+                                                BCA_File *animFile,
+                                                int flags, int speed,
+                                                u32 startFrame);
+
+extern SharedFilePtr data_ov002_0210e0dc;   /* BMD model */
+extern SharedFilePtr data_ov002_0210e0d4;   /* BCA animation */
+
+void func_ov002_020bc488(daObjWakame_c *t);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daObjWakame_c_classInit, 0x020bc5a8, size 0x38 */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-/* The +2 addend is the vtable ADDRESS POINT: _ZTV names the record's start and
-   the object stores a pointer eight bytes in, past {offset-to-top, _ZTI}. */
 /* Reconstructed source-style name: SM64DS proves daObjWakame_c through RTTI,
  * allocation size, vtable identity, and the WAKAME registry profile;
  * later EAD lineage supplies classInit. Exact original spelling is not
- * preserved. Historical alias: daObjWakame_c_Spawn. */
-int *daObjWakame_c_classInit(void)
+ * preserved. Historical alias: daObjWakame_c_Spawn.
+ *
+ * Every instruction the cartridge has here falls out of the one `new`.
+ * 0x020bc5ac loads 312 = 0x138 -- the class's own size -- into the header's
+ * inline operator new; 0x020bc5bc calls dActor_c's C2, the store at
+ * 0x020bc5c8 lays down this class's vptr, and 0x020bc5d0 constructs
+ * mModelAnim. The null check is the one `new` itself emits. */
+// @symbol daObjWakame_c_classInit
+extern "C" daObjWakame_c *daObjWakame_c_classInit(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(312);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)(_ZTV13daObjWakame_c + 2);
-        _ZN9ModelAnimC1Ev((char *)p + 0xd4);
-    }
-    return p;
-}
+    return new daObjWakame_c();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN13daObjWakame_c13InitResourcesEv, 0x020bc540, size 0x68 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjWakame_c13InitResourcesEv
 s32 daObjWakame_c::InitResources()
 {
-    char *c = (char *)this;
-    void *m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210e0dc);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, m, 1, -1);
-    void *a = _ZN9Animation8LoadFileER13SharedFilePtr(data_ov002_0210e0d4);
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, a, 0, 0x1000, 0);
-    func_ov002_020bc488(c);
+    void *m = Model::LoadFile(data_ov002_0210e0dc);
+    mModelAnim.SetFile((BMD_File *)m, 1, -1);
+    void *a = Animation::LoadFile(data_ov002_0210e0d4);
+    /* MEASURED: by-value Fix12<int> speed is wall 6az. */
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        &mModelAnim, (BCA_File *)a, 0, 0x1000, 0);
+    func_ov002_020bc488(this);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN13daObjWakame_c8BehaviorEv, 0x020bc520, size 0x20 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjWakame_c8BehaviorEv
 /* The ROM's `add r0, r0, #0x124` then `bl 0x02015c3c` is this call and the
@@ -109,7 +105,6 @@ s32 daObjWakame_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN13daObjWakame_c6RenderEv, 0x020bc4f8, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjWakame_c6RenderEv
 /* A REAL VIRTUAL DISPATCH, and the ROM insists on it: `ldr r2,[r0,#0xd4]!` loads
@@ -124,43 +119,29 @@ s32 daObjWakame_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN13daObjWakame_c16CleanupResourcesEv, 0x020bc4c8, size 0x30 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjWakame_c16CleanupResourcesEv
 s32 daObjWakame_c::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210e0dc);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_0210e0d4);
+    data_ov002_0210e0dc.Release();
+    data_ov002_0210e0d4.Release();
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov002_020bc488, 0x020bc488, size 0x40 */
 /* -------------------------------------------------------------------------- */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
-/* Posts the actor's placement into the model's transform, and every offset here
-   reads as a field of the member once 0xd4 is subtracted: 0xf0 is ModelAnim+0x1c,
-   which include/Model.h names mat4x3, and 0x114/0x118/0x11c are ModelAnim+0x40/
-   0x44/0x48 -- the translation column of that same Matrix4x3, which begins 0x24
-   into it. The source is dActor_c's own mPosX/Y/Z at 0x5c/0x60/0x64, and the
-   angle fed to the rotation is mAngleY at 0x8e. The >> 3 is the ROM's, and this
-   file does not explain it.
-
-   It keeps its func_ov002_ name and its char* parameter because the cartridge
-   gives it neither a name nor a `this`: it is a file-scope helper the class
-   calls, not a member, and renaming it would be a claim the image does not
-   support. */
-void func_ov002_020bc488(char *t)
+// @symbol func_ov002_020bc488
+/* Posts the actor's placement into the model's transform. The >> 3 is the
+   ROM's, and this file does not explain it. */
+extern "C" void func_ov002_020bc488(daObjWakame_c *t)
 {
-    Matrix4x3_FromRotationY(t + 0xf0, *(short *)(t + 0x8e));
-    *(int *)(t + 0x114) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x118) = *(int *)(t + 0x60) >> 3;
-    *(int *)(t + 0x11c) = *(int *)(t + 0x64) >> 3;
-}
+    Matrix4x3_FromRotationY(&t->mModelAnim.mat4x3, t->mAngleY);
+    t->mModelAnim.mat4x3.t.x = t->mPosX >> 3;
+    t->mModelAnim.mat4x3.t.y = t->mPosY >> 3;
+    t->mModelAnim.mat4x3.t.z = t->mPosZ >> 3;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN13daObjWakame_cD0Ev, 0x020bc444, size 0x44 */
 /* -------------------------------------------------------------------------- */
 /* _ZN13daObjWakame_cD0Ev (vtable slot 17, the deleting destructor) is NOT
  * hand-written here. A hand-written mangled D0 next to a real out-of-line D1
@@ -169,7 +150,6 @@ void func_ov002_020bc488(char *t)
  * the inline operator delete, which is why nothing here mentions a heap. */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN13daObjWakame_cD1Ev, 0x020bc414, size 0x30 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN13daObjWakame_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body.
