@@ -10,16 +10,14 @@
 #ifndef DAOBJCTMECHA04_C_H
 #define DAOBJCTMECHA04_C_H
 #include "types.h"
+
 #ifdef __cplusplus
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 #include "dBgActor_c.h"
 #include "ShadowModel.h"
 #include "TextureTransformer.h"
 
 struct daObjCtMecha04_c : dBgActor_c {
-    /* Inline on purpose: this directly included declaration makes mwccarm emit
-     * the measured D1-then-D0 pair without a homeless D2. */
-    virtual ~daObjCtMecha04_c() {}
-
     TextureTransformer mTextureTransformer; /* 0x320 */
     ShadowModel mShadowModel;                /* 0x334 */
     /* UpdateShadow builds this from mAngleY, then writes the actor's X/Z and
@@ -46,6 +44,14 @@ struct daObjCtMecha04_c : dBgActor_c {
      * type encoded in the symbol are inferred from the callback ABI. */
     static void AfterClsnCallback(dBgW *collider, dActor_c *owner,
                                   dActor_c *other);
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
+    /* Declared last and inline so class instantiation emits the retail D1/D0
+     * pair in cartridge order without a separate leaf D2 body. */
+    virtual ~daObjCtMecha04_c() {}
 };
 
 typedef char daObjCtMecha04_c_size_must_be_0x3a0[

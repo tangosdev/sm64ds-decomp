@@ -1,40 +1,45 @@
 //cpp
 /* Production translation unit for ov065/daObjCtMecha04_c.
  *
- * mwccarm emits ordinary functions in reverse source order, so the nine
+ * deslop
+ *
+ * Leftover:
+ * - TextureTransformer::SetFile / dBgW_KcMbg::SetFile / DropShadowScaleXYZ /
+ *   dBgActor_c::IsClsnInRange stay mangled (Fix12-by-value, 6az)
+ * - func_020393c4 / func_020393bc store/load dBgW+0x1c (no setter)
+ * - Sound::PlayLong TU-local mangled (Sound.h has PlayBank3 only)
+ * - data_ov065_* handles; this TU is text-only (S14 no g_profile_CT_MECHA04*)
+ * - SharedFilePtr +4 BMD (Prepare; header has no fields)
+ * - common.h first (UpdateShadow mShadowMat.m[9..11] needs the flat 12-word spelling)
+ * - return new emits homeless _ZN10dBgActor_cD2Ev; compiler-only policy deadstrips it
+ *
+ * mwccarm emits ordinary functions in reverse source order, so the eleven
  * definitions below intentionally run from the highest retail address back
- * toward the compiler-owned destructor group.
+ * toward the compiler-owned destructor group. Keep the factories first.
  *
  * UpdateShadow, MoveActorOnBelt, and AfterClsnCallback are descriptive
  * reconstructions. The member/static forms and parameter spellings of the
  * latter two are also inferred; the manifest records the evidence boundary.
  *
- * Superseded one-function sources (ROM address order):
- *   [0] 0x0211a494  src/_ZN16daObjCtMecha04_cD1Ev.cpp
- *   [1] 0x0211a4e8  src/_ZN16daObjCtMecha04_cD0Ev.cpp
- *   [2] 0x0211a550  src/_ZN16daObjCtMecha04_c12UpdateShadowEv.cpp
- *   [3] 0x0211a638  src/_ZN16daObjCtMecha04_c16CleanupResourcesEv.cpp
- *   [4] 0x0211a69c  src/_ZN16daObjCtMecha04_c6RenderEv.cpp
- *   [5] 0x0211a6d0  src/_ZN16daObjCtMecha04_c8BehaviorEv.cpp
- *   [6] 0x0211a870  src/_ZN16daObjCtMecha04_c13InitResourcesEv.cpp
- *   [7] 0x0211aa38  src/_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c.cpp
- *   [8] 0x0211aacc  src/_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_.cpp
+ * The two factories (CT_MECHA04L / CT_MECHA04S) are `return new` in this file.
  */
 
+#include "common.h"
 #include "daObjCtMecha04_c.h"
-#include "decl_common.h"
 #include "SharedFilePtr.h"
 #include "dBgW.h"
 #include "types.h"
 #include "dBgCh_Gnd.h"
 
-/* The three resource tables are arrays of 12-byte records. Their entries
- * retain address-based names because the ROM does not preserve source names. */
+/* One 2-row {model, collision, clps} table indexed by mVariant.
+ * 0211d194 / 0211d198 / 0211d19c are the three columns of row 0. */
 struct Entry3 {
     void *a;
     void *b;
     void *c;
 };
+
+int ApproachLinear(int &r, int t, int step);
 
 /* Fix12-by-value calls retain their measured raw ABI declarations. Natural
  * class-typed declarations make mwccarm home arguments absent from retail. */
@@ -43,12 +48,13 @@ extern void Matrix4x3_FromRotationY(Matrix4x3 *matrix, s16 angle);
 extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     dActor_c *actor, ShadowModel *shadow, Matrix4x3 *matrix,
     int scaleX, int scaleY, int scaleZ, u32 opacity);
+extern char data_ov065_0211d16c[];
 extern char data_ov065_0211d194[];
 extern char data_ov065_0211d198[];
 extern char data_ov065_0211d19c[];
 extern void func_020393c4(void *p, void *v);
+extern int func_020393bc(int *p);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern int _Z14ApproachLinearRiii(int *r, int t, int step);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern int RandomIntInternal(int *seed);
 extern void *_ZN5Sound8PlayLongEjjjRK7Vector3s(
@@ -66,7 +72,22 @@ extern s16 data_02082214[];
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_, 0x0211aacc, size 0x14 */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjCtMecha04_c_classInit_CT_MECHA04S
+extern "C" daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04S()
+{
+    return new daObjCtMecha04_c();
+}
+
+/* -------------------------------------------------------------------------- */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjCtMecha04_c_classInit_CT_MECHA04L
+extern "C" daObjCtMecha04_c *daObjCtMecha04_c_classInit_CT_MECHA04L()
+{
+    return new daObjCtMecha04_c();
+}
+
+/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_
 /* Inferred descriptive name and observed three-register callback ABI. The
@@ -78,7 +99,6 @@ void daObjCtMecha04_c::AfterClsnCallback(dBgW *collider, dActor_c *owner,
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c, 0x0211aa38, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c
 /* Inferred descriptive name. The collision callback supplies this conveyor as
@@ -105,7 +125,6 @@ void daObjCtMecha04_c::MoveActorOnBelt(dActor_c &actor)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN16daObjCtMecha04_c13InitResourcesEv, 0x0211a870, size 0x1c8 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha04_c13InitResourcesEv
 int daObjCtMecha04_c::InitResources()
@@ -140,7 +159,7 @@ int daObjCtMecha04_c::InitResources()
         *(BTA_File *)animationFiles[variant]);
 
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(
-        (TextureTransformer *)((char *)&mTextureTransformer),
+        &mTextureTransformer,
         *(BTA_File *)animationFiles[mVariant], 0, 0x1000, 0);
 
     UpdateModelPosAndRotY();
@@ -181,7 +200,6 @@ int daObjCtMecha04_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN16daObjCtMecha04_c8BehaviorEv, 0x0211a6d0, size 0x1a0 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha04_c8BehaviorEv
 int daObjCtMecha04_c::Behavior()
@@ -191,15 +209,14 @@ int daObjCtMecha04_c::Behavior()
         _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0);
     } else {
         if (((mFlags & 8) ? 1 : 0) == 0) {
-            if (func_020393bc((int *)((char *)&mMeshCollider)) == 0) {
+            if (func_020393bc((int *)&mMeshCollider) == 0) {
                 func_020393c4(&mMeshCollider,
                               (void *)&daObjCtMecha04_c::AfterClsnCallback);
             }
 
             if (data_0209f2c0 == 2) {
-                if (_Z14ApproachLinearRiii(
-                        (int *)((char *)&mBeltSpeed), mTargetBeltSpeed, 0xcc) != 0
-                    && DecIfAbove0_Short((u16 *)((char *)&mDirectionTimer)) == 0) {
+                if (ApproachLinear(mBeltSpeed, mTargetBeltSpeed, 0xcc) != 0
+                    && DecIfAbove0_Short((u16 *)&mDirectionTimer) == 0) {
                     unsigned int randomValue = (u16)(
                         (unsigned int)RandomIntInternal(&data_0209e650) >> 0x10);
                     mDirectionTimer = (s16)(((int)randomValue % 7) * 0x14 + 0xa);
@@ -229,7 +246,6 @@ int daObjCtMecha04_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN16daObjCtMecha04_c6RenderEv, 0x0211a69c, size 0x34 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha04_c6RenderEv
 int daObjCtMecha04_c::Render()
@@ -240,7 +256,6 @@ int daObjCtMecha04_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN16daObjCtMecha04_c16CleanupResourcesEv, 0x0211a638, size 0x64 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha04_c16CleanupResourcesEv
 int daObjCtMecha04_c::CleanupResources()
@@ -253,7 +268,6 @@ int daObjCtMecha04_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN16daObjCtMecha04_c12UpdateShadowEv, 0x0211a550, size 0xe8 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjCtMecha04_c12UpdateShadowEv
 /* Inferred descriptive name. The owned ShadowModel and its matrix are fixed by
@@ -287,8 +301,6 @@ void daObjCtMecha04_c::UpdateShadow()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN16daObjCtMecha04_cD0Ev, 0x0211a4e8, size 0x68        */
-/* ROM ordinal 0 -- _ZN16daObjCtMecha04_cD1Ev, 0x0211a494, size 0x54        */
 /* -------------------------------------------------------------------------- */
 /* No separate body lives here. The inline virtual destructor in the directly
  * included class header makes mwccarm emit retail's D1 then D0 order without

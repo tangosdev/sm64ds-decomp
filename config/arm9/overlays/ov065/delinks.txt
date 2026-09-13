@@ -266,15 +266,7 @@ src/d_a_obj_ct_mecha03.c:
 
 src/actors/daObjCtMecha04_c.cpp:
     complete
-    .text start:0x0211a494 end:0x0211aae0
-
-src/d_a_obj_ct_mecha04_ct_mecha04l.cpp:
-    complete
-    .text start:0x0211aae0 end:0x0211ab20
-
-src/d_a_obj_ct_mecha04_ct_mecha04s.cpp:
-    complete
-    .text start:0x0211ab20 end:0x0211ab60
+    .text start:0x0211a494 end:0x0211ab60
 
 src/game/actors/daObjCtMecha05_c.cpp:
     complete

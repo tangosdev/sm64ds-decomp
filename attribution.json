@@ -2472,6 +2472,8 @@
     "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c13InitResourcesEv": "tangosdev",
     "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c15MoveActorOnBeltER8dActor_c": "noreply",
     "src/actors/daObjCtMecha04_c.cpp#_ZN16daObjCtMecha04_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_": "tangosdev",
+    "src/actors/daObjCtMecha04_c.cpp#daObjCtMecha04_c_classInit_CT_MECHA04L": "andrewboudreau",
+    "src/actors/daObjCtMecha04_c.cpp#daObjCtMecha04_c_classInit_CT_MECHA04S": "andrewboudreau",
     "src/actors/dScMgHanachan_c.cpp#func_ov006_020eb018": "tangosdev",
     "src/actors/dScMgHanachan_c.cpp#func_ov006_020eb0c8": "andrewboudreau",
     "src/actors/dScMgHanachan_c.cpp#func_ov006_020eb1e0": "andrewboudreau",
