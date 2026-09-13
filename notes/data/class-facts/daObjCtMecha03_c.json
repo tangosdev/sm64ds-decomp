@@ -76,15 +76,15 @@
       {"offset": "0x324", "type": "s16", "name": "mSwingSpeed", "evidence": "Behavior accumulates mSwingAccel * mSwingDir into it."},
       {"offset": "0x326", "type": "s16", "name": "mSoundTimer", "evidence": "DecIfAbove0_Short target; at 0 plays bank-3 sound 0x38 at the actor's camera-space position, and is reloaded as mPauseTimer + 0xf."},
       {"offset": "0x328", "type": "s16", "name": "mPauseTimer", "evidence": "DecIfAbove0_Short target that gates the whole swing update; reseeded from the random draw."},
-      {"offset": "0x32c", "type": "s32", "name": "ground Y (unnamed in the header, inside pad_32a)", "evidence": "func_ov065_02119fe8 writes the probe Y there, then overwrites it with dBgCh_Gnd::clsnY on a hit, then shifts it into the shadow matrix translation row."},
+      {"offset": "0x32c", "type": "s32", "name": "mGroundY", "evidence": "func_ov065_02119fe8 writes the probe Y there, then overwrites it with dBgCh_Gnd::clsnY on a hit, then shifts it into the shadow matrix translation row."},
       {"offset": "0x330", "type": "ShadowModel", "name": "mShadowModel", "evidence": "InitResources calls ShadowModel::InitCuboid on this + 0x330; func_ov065_02119fe8 passes it to dActor_c::DropShadowScaleXYZ. Size 0x28 puts the next field at 0x358."},
-      {"offset": "0x358", "type": "Matrix4x3", "name": "shadow matrix (spelled pad_358[0x30] in the header)", "evidence": "func_ov065_02119fe8 builds it with Matrix4x3_FromRotationY, writes 0x37c/0x380/0x384 (m[9..11], the translation row) and hands it to DropShadowScaleXYZ. 0x358 + 0x30 = 0x388, exactly the factory's allocation literal."}
+      {"offset": "0x358", "type": "Matrix4x3", "name": "mShadowMat", "evidence": "func_ov065_02119fe8 builds it with Matrix4x3_FromRotationY, writes 0x37c/0x380/0x384 (m[9..11], the translation row) and hands it to DropShadowScaleXYZ. 0x358 + 0x30 = 0x388, exactly the factory's allocation literal."}
     ]
   },
   "unproven": [
     "func_ov065_02119fe8 and func_ov065_0211a114 have no ROM-preserved names. config/arm9/overlays/ov065/symbols.txt spells both by address, so the promotion keeps those spellings and leaves them extern \"C\" free functions rather than inventing member names. Their bodies, signatures as used, and call sites are proven; their original identifiers, member-versus-free form, and parameter types are not.",
     "The header's field names (mSwingDir, mSwingAccel, mSwingAngle, mSwingSpeed, mSoundTimer, mPauseTimer) are descriptive reconstructions. Offsets, widths, and the arithmetic relating them are ROM-proven; the English spellings are not.",
-    "0x32a..0x32b and the 0x358 matrix are still spelled as padding in include/daObjCtMecha03_c.h. The evidence above supports naming them, but this promotion deliberately did not, so that no field-address CSE lever changed underneath a byte-verified body.",
+    "0x32a..0x32b is compiler alignment between mPauseTimer and mGroundY, not a live field.",
     "data_ov035_02112198 is the CLPS_Block passed to dBgW_KcMbg::SetFile. Eleven overlays declare an ambiguous symbol at that address; tools/overlay_residency.py settles it to ov035 as the only one able to coexist with ov065. That settlement is a residency argument, not a direct ROM fact.",
     "boundary_confidence is medium on both sides, and the module sinit corroboration is module-wide (10 sinits / 10 .ctor entries), not narrowed to this TU."
   ]

@@ -7,6 +7,7 @@
   "boundary_confidence": "medium",
   "boundary_evidence": [
     "contiguous linker run: 0x2119f3c..0x211a45c, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "adjacent CT_MECHA03 factory at 0x0211a45c..0x0211a494 allocates sizeof(daObjCtMecha03_c), constructs dBgActor_c plus ShadowModel, and installs this class vptr; the factory join is registry/factory-backed rather than tu_map-proven",
     "class label(s): daObjCtMecha03_c",
     "module sinit corroboration: 10 sinit(s) / 10 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
@@ -14,7 +15,7 @@
     {
       "name": ".text",
       "start": "0x02119f3c",
-      "end": "0x0211a45c"
+      "end": "0x0211a494"
     }
   ],
   "functions": [
@@ -73,6 +74,13 @@
       "size": "0x00000104",
       "legacy_source": "src/_ZN16daObjCtMecha03_c13InitResourcesEv.cpp",
       "ordinal": 7
+    },
+    {
+      "symbol": "daObjCtMecha03_c_classInit",
+      "address": "0x0211a45c",
+      "size": "0x00000038",
+      "legacy_source": "src/d_a_obj_ct_mecha03.c",
+      "ordinal": 8
     }
   ],
   "data": [],
@@ -84,6 +92,11 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "The genuine dBgCh_Gnd local in func_ov065_02119fe8 makes mwccarm emit Vector3's deliberately empty inline destructor as vague linkage. This copy is the exact four-byte bx lr body at its canonical arm9 home (config/arm9/symbols.txt names _ZN7Vector3D1Ev there) and no surviving section in this object references the discarded duplicate."
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "return new daObjCtMecha03_c() emits this homeless base-object destructor helper; it has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
     },
     {
       "symbol": "_ZTI7fBase_c",
@@ -168,9 +181,10 @@
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'Matrix4x3_FromRotationZXYExt' differs between the legacy file that used to hold func_ov065_02119fe8 and the one that held func_ov065_0211a114; kept the first, the other is commented out for review; the two declarations differed only in parameter NAMES (m/x/y/z versus dst/a/b/c2) and are the same type, so the consolidated TU keeps the first spelling and the alternate was deleted rather than left commented out.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN16daObjCtMecha03_c8BehaviorEv and the one that held _ZN16daObjCtMecha03_c13InitResourcesEv; kept the first, the other is commented out for review; the two declarations differed only in the parameter NAME (self versus thisp), so the consolidated TU keeps the first.",
     "tubuild create warning (RESOLVED): CONFLICT: extern declaration 'data_0209f2c0' differs between the legacy file that used to hold _ZN16daObjCtMecha03_c8BehaviorEv and the one that held _ZN16daObjCtMecha03_c13InitResourcesEv; kept the first, the other is commented out for review; the two declarations were u8 versus unsigned char, the same type through types.h, so the consolidated TU keeps the equivalent u8 declaration.",
-    "The inline destructor in the directly included class header makes mwccarm emit exactly the retail D1 (0x02119f3c) then D0 (0x02119f88) pair, without a D2. The header previously declared it out of line; moving it inline and first is the only header change this promotion makes. All six hand-written member/free definitions carry unique @symbol markers.",
+    "The inline destructor in the directly included class header, declared last, makes mwccarm emit exactly the retail D1 (0x02119f3c) then D0 (0x02119f88) pair, without a D2.",
     "func_ov065_02119fe8 and func_ov065_0211a114 keep their address-derived names because config/arm9/overlays/ov065/symbols.txt spells them that way; they stay extern \"C\" free functions rather than being renamed into members.",
-    "compiler_only_output is 12 rows, matching the closed-form prediction for this depth: 2 x (4 ancestors + self) typeinfo/type-string rows + 1 vtable + 1 Vector3 D1. Every canonical_module/canonical_address was read out of the ROM's own symbols.txt, not copied from the sibling oracle daObjCtMecha04_c."
+    "compiler_only_output is 13 rows: 2 x (4 ancestors + self) typeinfo/type-string rows + 1 vtable + 1 Vector3 D1 + 1 homeless dBgActor_c D2 from return new. Every canonical_module/canonical_address was read out of the ROM's own symbols.txt, not copied from the sibling oracle daObjCtMecha04_c.",
+    "Cleanup folded the adjacent CT_MECHA03 factory as return new daObjCtMecha03_c(). Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj((unsigned)size)."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -178,13 +192,15 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov065-daObjCtMecha03_c/daObjCtMecha03_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 8,
-    "functions_declared": 8,
+    "functions_matched": 9,
+    "functions_declared": 9,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev"
+        "_ZN7Vector3D1Ev",
+        "_ZN10dBgActor_cD2Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -205,7 +221,9 @@
         19,
         20,
         21,
-        28
+        28,
+        40,
+        41
       ],
       "data": [
         "_ZTI7fBase_c",

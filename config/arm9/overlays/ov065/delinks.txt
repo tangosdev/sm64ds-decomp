@@ -258,11 +258,7 @@ src/d_a_obj_ct_rotate_block_ct_mecha01.c:
 
 src/actors/daObjCtMecha03_c.cpp:
     complete
-    .text start:0x02119f3c end:0x0211a45c
-
-src/d_a_obj_ct_mecha03.c:
-    complete
-    .text start:0x0211a45c end:0x0211a494
+    .text start:0x02119f3c end:0x0211a494
 
 src/actors/daObjCtMecha04_c.cpp:
     complete
