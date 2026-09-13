@@ -13,16 +13,18 @@
  * returns an OAM attribute block, the low ten bits of the second word are the tile
  * index, and the digit or character index is ADDED to it rather than stored - that is
  * the `(val & ~0x3ff) | ((n + (val << 22 >> 22)) & 0x3ff)` in each block.
+ *
+ * Two spellings carry the register assignment and are load-bearing:
+ *   - `rem` (the n % 100 remainder) is declared INSIDE the digit block, after `dx`.
+ *     Giving that web a name and that rank is what hands the strength-reduced row
+ *     offset r7 and the remainder r8; with the remainder anonymous the two swap, and
+ *     with `rem` declared in any outer scope it lands in sb instead.
+ *   - in the LAST digit block only, the attribute field is added as
+ *     `(val << 22 >> 22) + digit`, not `digit + (val << 22 >> 22)`. The three earlier
+ *     blocks read their digit from a value that is already in hand, so either order
+ *     colours the same; here the digit is divided out at the point of use and the
+ *     operand order decides which of r0/r1 holds the shifted attribute word.
  */
-// NONMATCHING: 27/229 at exact size 0x394 (was 40). Every divergence is routing --
-// register fields and sp displacements only; no opcode, immediate, addressing mode or
-// condition differs, so the same operations run on the same values and only where they
-// are held changes. Three levers took it from 40 to 27:
-//   (1) the row x is not a variable -- spell every x as xbase + K + i * pitch so the
-//       induction variable stays the ROM's;
-//   (2) the leading-zero pen advance is an if/else over a named pen, not a ternary;
-//   (3) the digit blocks keep the OAM attribute word anonymous.
-// Residue is a callee-saved pair swap (sb <-> r7) plus the stack slots that follow it.
 #include "types.h"
 extern u8 data_0209fc50;
 extern u8 data_ov075_0211c6e8[];
@@ -93,9 +95,11 @@ void func_ov075_0211621c(char *c)
         {
           int n;
           int dx = off14;
+          int rem;
           n = (*((int *) (data_0209ee90 + 0x1d4))) + data_0209f358[pid];
           hundreds = n / 100;
-          tens = (n % 100) / 10;
+          rem = n % 100;
+          tens = rem / 10;
           if (hundreds != 0)
           {
             p = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(zD, data_ov075_0211c8b0, xbase + 0x14 + i * stride, yNum, minus1, minus1, scale, zD);
@@ -131,7 +135,7 @@ void func_ov075_0211621c(char *c)
           {
             int *q = (int *) ((int) (p + 1));
             int val = *q;
-            *q = (val & (~0x3ff)) | ((((n % 100) % 10) + (((u32) (val << 22)) >> 22)) & 0x3ff);
+            *q = (val & (~0x3ff)) | (((((u32) (val << 22)) >> 22) + (rem % 10)) & 0x3ff);
           }
         }
         i++;

@@ -5401,3 +5401,101 @@ three unrelated classes. 6ag's closing advice ("do not spend model time hunting
 formulations for materialized-RMW residues") applies to the pre-2004 builds it was
 measured on; on 2004/b56 the inverse residue is cheap, and the table above is the whole
 search.
+
+## 6cb. Block DEPTH of a named web is a rank lever that declaration ORDER is not, and the operand order of a `+` decides which side owns the shifter-operand register (func_ov075_0211621c, div 27 -> 0, 2026-09-12, run link100 lane OV75)
+
+`func_ov075_0211621c` (ov075, 0x394) draws the VS entry menu's per-player score rows.
+It sat at div 27 with the useful property that **every** divergent word was tagged
+`regperm` and not one was `SCHED`: the same operations on the same values, only the
+registers wrong. Two levers closed it, and both are reusable.
+
+**The residue was two independent pair swaps.** Reading the register ROLES out of the
+object rather than counting words (6bo addendum's method) named them in one pass:
+
+```text
+    role                                 ROM   draft
+    strength-reduced row offset i*pitch  r7    r8
+    the n % 100 remainder web            r8    r7
+    the shifted OAM attribute word       r1    r0     (last digit block only)
+    the rem % 10 division temp           r0    r1     (last digit block only)
+```
+
+**Lever 1: give the anonymous CSE web a NAME, and put its declaration at the right
+BLOCK DEPTH.** `n % 100` appeared twice in the draft (once for `/ 10`, once for `% 10`)
+and mwccarm CSE'd it into an anonymous temp that outranked the loop's own induction
+temp. Neither declaration order nor the pragma vocabulary moves that:
+
+* 6,000 random (outer x inner) declaration-order permutations produce exactly ONE
+  schedule-exact colouring. Decl order is completely inert here.
+* the full verified 246-name pragma vocabulary at on/off (492 compiles) produces
+  exactly ONE schedule-exact colouring. Inert.
+* making the induction explicit (`xoff = 0; ... xoff += stride;`) at every declaration
+  position in both scopes keeps the schedule exact but sends the offset to `sb` or
+  `sl`, never r7, and costs div 40.
+
+Naming the remainder (`int rem; ... rem = n % 100;`) is what moves it, and then WHERE
+it is declared picks the register:
+
+```text
+    rem at any outer-scope position        induction r7 (correct), rem sb,  div 29, 5 SCHED words
+    rem in the if(count>0) scope           same basin
+    rem in the digit block, AFTER `dx`     induction r7, rem r8  -- both ROM  div  7, 0 SCHED words
+```
+
+The block the ROM wants is the innermost one that already holds `dx`, and `rem` has to
+come after `dx` in it. This is NOT 6k restated. 6k orders webs WITHIN one declaration
+list; this orders them ACROSS nesting levels, and it works on a function where 6k's own
+axis is measurably flat. Reach for it when a rank swap survives a full order sweep:
+find the anonymous CSE web in the residue, name it, and walk its declaration outward
+one block at a time.
+
+**Lever 2: flip the operand order of the `+` whose other operand is a shifter
+operand.** The last seven words were the OAM attribute insert
+`(val & ~0x3ff) | ((digit + (val << 22 >> 22)) & 0x3ff)`, which mwccarm lowers to
+`add rD, rDigit, rVal, lsr #22`. Which of r0/r1 holds the shifted word and which holds
+the digit is decided by the SOURCE order of that `+`:
+
+```text
+    digit + (val << 22 >> 22)      shifted word r0, digit r1     div 7
+    (val << 22 >> 22) + digit      shifted word r1, digit r0     div 0
+```
+
+The flip only matters in the block where the digit is DIVIDED OUT at the point of use.
+The same function's three earlier blocks read a digit that is already in hand, and both
+orders colour them identically, which is why the lever has to be applied per site and
+not to the family. Eight other spellings of that block (naming the digit, naming the
+shift, hoisting the digit above the load, an in-place `val <<= 22`, a u32 round trip,
+re-reading `*q` for the mask) are all div 7 or worse.
+
+Generalisation worth carrying: `A + (B >> k)` and `(B >> k) + A` are the same value and
+different code. Whenever a residue is a caller-saved pair swap around an `add` with a
+shifted register operand, try the transposition before anything structural. Also true
+of `|` in principle, but measured destructive on `func_ov075_0211afb0` (below), so try
+it, do not assume it.
+
+### 6cb addendum: what this did NOT move, on two neighbours in the same overlay
+
+Both re-measured with the same role-scored harness, so the frontier is honest.
+
+* **`func_ov075_02116128` (6bo) stays at div 20.** Its residue is an in-place shift the
+  draft spells as a move. Spelling it in place (`hi = hi << 0x1c;` with `>> 16` left
+  implicit at all six sites) reproduces the ROM's schedule EXACTLY, zero SCHED words,
+  which the shipped div-20 draft does not (it carries 8). That is a structural gain
+  and not a divergence gain: it is 6bo's family B, div 24. On that shape, 1,200
+  declaration orders, a 3,000-draw grammar sample (pragma x statement order x pointer
+  form x loop form x type x store form) and the full 246-name pragma vocabulary crossed
+  with five declaration orders produce **exactly two** colourings, and the shifted value
+  is r0 in both. 6bo's "the shifted value never reaches r3" survives ~6,700 more
+  compiles from a schedule-exact starting point. Neither 6cb lever applies: there is no
+  anonymous CSE web to name and no `+` to transpose.
+
+* **`func_ov075_0211afb0` (6bn) stays at div 4.** Its four words are the mirror image:
+  the ROM MOVES both `<<9` shifts to freed registers and the draft coalesces both in
+  place. Lever 2 applied to the packed store's `|` is destructive, not inert, and never
+  reaches the ROM's window (`(u16)sx | ((u16)(...) << 16)` flipped in block A, block B
+  and both: div 16 to 75, 8 to 16 SCHED words, 0 of 4 window words). Lever 1 does not
+  reach it either: pushing `vx/vy/vz/sx/sz` down into per-vertex nested blocks, in 25
+  declaration orders x three placements (block A only, block B only, both), 76 variants,
+  is **byte-identical** to the function-scope draft every time. mwccarm flattens the
+  scopes before colouring here, so block depth is only a lever where the web is a real
+  CSE candidate the depth can re-rank. 6bn's floor statement stands unchanged.
