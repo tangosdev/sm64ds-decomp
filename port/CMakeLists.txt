@@ -17473,6 +17473,92 @@ endforeach()
 target_sources(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205ac28.c")
 
+# ===========================================================================
+# Run link100 wave 7, lane SEAT6: BATCH B6, SLOT-DISPATCH (families E and F)
+# ===========================================================================
+#
+# Seventeen rows of the eighteen out/REMAIN2/BATCHES.md section B6 lists, each
+# derived from the ROM one at a time. The per-row evidence -- the vtable word
+# or arm_call that reaches the body, the RTTI name at vtable-4, the
+# kind:function record, and the dispatch instruction read at its own address --
+# is in port/slice_seat6.txt, which also states the single row NOT taken and
+# why.
+#
+# FOURTEEN OF THE SEVENTEEN ARE GENERATED, and that is the whole lever of this
+# batch. Each is a matched TU whose ONE host problem is how a call is entered:
+# a vtable word read raw and called __cdecl where the seated word wants the
+# receiver in ECX (VIRTUAL_CALL), an argument the ROM left riding in a register
+# that a cdecl caller has to spell (REG_RIDE_ARG), a return the callee only
+# ever wrote a byte of (ARG_WIDTH), or a declaration the TU and
+# include/decl_common.h disagree about (HEADER_SHADOW). Every one of those is
+# an EXACT-STRING row in port/tools/hostgen.py that hard-errors if the source
+# ever moves, and every one of them makes the same one-line change the host
+# copy it retires already makes by hand. What runs does not change; what
+# changes is that the byte-locked TU is the thing compiled. The precedent is
+# lane FOLD2's own proposal for dScMgSnowball_c, shipped as VIRTUAL_CALL row
+# func_ov006_02127d10.
+#
+# THE OTHER THREE NEED NO RESPELLING AT ALL and are ordinary slice lines in
+# port/slice_seat6.txt: two InitResources bodies held out by ONE missing member
+# decoration (?NumNodes@PathPtr@@QBEHXZ, supplied by hal/dispatch_seat6.cpp)
+# and one whose two stated reasons both expired -- the slot-5 numbering with
+# lane SLOT5F, the ov070/ov074 name race with the per-source
+# COMPILE_DEFINITIONS at line 12640 of this file.
+set(SEAT6_GEN_SYMS
+    # VIRTUAL_CALL: the raw vtable read respelled at the one disagreeing site
+    _ZN9RabbitKey6RenderEv          # ov085, Model +0x110 word 5
+    func_ov002_020eeeb8             # ov002, actor word 24 (OnKicked)
+    func_ov002_020ef070             # ov002, actor word 23 (OnAttacked2)
+    func_ov002_020cef84             # ov002, actor word 28 (OnHitFromUnderneath)
+    func_ov004_020b6b40             # ov004, dScMgBase_c word 19
+    func_ov004_020b6c9c             # ov004, the same body at its second address
+    func_ov006_020c2924             # ov006, HalFaderWipe word 6 (IsAtEnd)
+    func_ov098_02137d40             # ov098, ArrowSignRight word 31 (Kill)
+    # REG_RIDE_ARG: an argument the ROM's caller left in a register
+    _ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3   # arm9, the r1 material index
+    func_ov032_02111350             # ov032, the r0 receiver into ClosestPlayer
+    func_ov002_020e5948             # ov002, TextureSequence::Prepare's r2
+    func_ov072_02120a44             # ov072, the same seam
+    # ARG_WIDTH: a return the callee only wrote a byte of
+    func_0200ee8c                   # arm9, GetStarCameraSetting returns u8
+    # HEADER_SHADOW: two declarations of one function, C2733
+    _ZN6Player16CleanupResourcesEv) # ov002
+set(SEAT6_GEN "")
+foreach(sym IN LISTS SEAT6_GEN_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND SEAT6_GEN "${sym_out}")
+endforeach()
+
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_seat6.txt" SLICE_SEAT6_LINES)
+set(SLICE_SEAT6_SOURCES "")
+foreach(line IN LISTS SLICE_SEAT6_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SEAT6_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# The one member decoration two of the plain rows need and nothing else in this
+# link defines; see the file's own banner for why it is a real __thiscall
+# forwarder and not an /alternatename alias.
+list(APPEND SLICE_SEAT6_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/hal/dispatch_seat6.cpp")
+# The same three targets every host copy this batch retires already rides
+# (SLICE10_CAM_SOURCES and the per-overlay cast lists all land here).
+foreach(_tseat6 walk_window walk_window_hires smoke_player)
+    target_sources(${_tseat6} PRIVATE ${SLICE_SEAT6_SOURCES} ${SEAT6_GEN})
+endforeach()
+
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
 # reconfigure and the build will look clean while compiling the old set of

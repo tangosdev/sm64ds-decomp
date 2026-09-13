@@ -113,63 +113,14 @@ extern int data_ov090_0213454c;
 extern unsigned char data_0209f2d8;
 
 /* PORT_HOST_ABI: two PathPtr locals built and walked as real C++ objects. */
-int _ZN8MantaRay13InitResourcesEv(void *selfv)
-{
-    unsigned char *thiz = (unsigned char *)selfv;
-
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(thiz + 0x30c,
-        _ZN5Model8LoadFileER13SharedFilePtr(data_ov090_02134524), 1, -1);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da10);
-    _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a8);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov090_0213452c);
-
-    *(int *)(thiz + 0x37c) = *(int *)(thiz + 8) & 0xff;
-    *(int *)(thiz + 0x388) = (*(unsigned int *)(thiz + 8) >> 0xc) & 0xf;
-    if (*(int *)(thiz + 0x37c) < 0) *(int *)(thiz + 0x37c) = 0;
-
-    {
-        char pp[8];
-        _ZN7PathPtrC1Ev(pp);
-        _ZN7PathPtr6FromIDEj(pp, *(unsigned int *)(thiz + 0x37c));
-        *(int *)(thiz + 0x380) = (int)_ZNK7PathPtr8NumNodesEv(pp);
-    }
-
-    *(int *)(thiz + 0xa0) = -0x3c000;
-
-    {
-        MrVec3 v;
-        v.x = data_ov090_02134200.x;
-        v.y = data_ov090_02134200.y;
-        v.z = data_ov090_02134200.z;
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-            thiz + 0x110, thiz, &v, 0x150000, 0xc8000, 0x200004, 0);
-    }
-
-    {
-        char pp[8];
-        _ZN7PathPtrC1Ev(pp);
-        _ZN7PathPtr6FromIDEj(pp, *(unsigned int *)(thiz + 0x37c));
-        *(int *)(thiz + 0x384) = 1;
-        _ZNK7PathPtr7GetNodeER7Vector3j(pp, (MrVec3 *)(thiz + 0x5c),
-                                        *(unsigned int *)(thiz + 0x384));
-    }
-
-    {
-        int b = (int)(data_0209f2d8 == 2);
-        if (b != 0) {
-            *(int *)(thiz + 0x384) = 3;
-            *(short *)(thiz + 0x92) = (short)0xf303;
-            *(short *)(thiz + 0x94) = 0xb50;
-            *(short *)(thiz + 0x96) = 0;
-            *(int *)(thiz + 0x5c) = (int)0xfdfb8000;
-            *(int *)(thiz + 0x60) = (int)0xff8f8000;
-            *(int *)(thiz + 0x64) = 0x29a000;
-            *(int *)(thiz + 0xb0) = 0;
-        }
-    }
-
-    func_ov090_02132ac4(thiz, &data_ov090_0213454c);
-    return 1;
-}
+/* _ZN8MantaRay13InitResourcesEv RETIRED (run link100, lane SEAT6, batch B6).
+   Refusal (4) of this file's banner -- 'the link named all four
+   decorations as unresolved' -- is down to ONE: three are publics of
+   this build now, and the fourth is the return-type difference the
+   banner itself names (int here against include/PathPtr.h's unsigned
+   int). port/hal/dispatch_seat6.cpp defines exactly that one member.
+   The matched TU src/_ZN8MantaRay13InitResourcesEv.cpp is seated in its place: a plain line on port/slice_seat6.txt.
+   Per-row ROM evidence (referrer, RTTI name, kind:function record, the
+   dispatch instruction read at its own address) is in port/slice_seat6.txt. */
 
 }  /* extern "C" */
