@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-/* ov036 -- the Rainbow Cruise swinging platform (profile RC_BURANKO): a mesh
- * collider hung like a pendulum, swinging back and forth about its Z axis
- * forever.
+/* ov036 -- the Rainbow Ride swinging platform (profile RC_BURANKO,
+ * SWINGING_PLATFORM 127): a mesh collider hung like a pendulum, swinging
+ * back and forth about its Z axis forever.
  *
  * MEASURED from extracted/overlays/overlay_0036.bin, base 0x021111a0:
  *   _ZTS16daObjRcBuranko_c  0x02113a60  bytes spell "16daObjRcBuranko_c"
@@ -29,6 +29,8 @@
 
 #include "dBgActor_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daObjRcBuranko_c : dBgActor_c {
     s16 mSwingVelZ;   /* 0x31e -- signed angular velocity added to mAngleZ each
                          frame; Behavior nudges it by +/-4 against the sign of
@@ -47,6 +49,11 @@ struct daObjRcBuranko_c : dBgActor_c {
     int Behavior();           /* slot  6 -- 0x021112f0 */
     int Render();             /* slot  9 -- 0x021112c8 */
     int CleanupResources();   /* slot  3 -- 0x02111284 */
+
+    /* size_t == unsigned long here; unsigned int is illegal. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daObjRcBuranko_c_size_must_be_0x320[sizeof(daObjRcBuranko_c) == 0x320 ? 1 : -1];
