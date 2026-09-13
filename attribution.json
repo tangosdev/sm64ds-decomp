@@ -1403,6 +1403,7 @@
     "src/game/actors/d_a_obj_c0_switch.cpp#_ZN16daObjC0_Switch_cD0Ev": "github-actions[bot]",
     "src/game/actors/d_a_obj_c0_switch.cpp#_ZN16daObjC0_Switch_cD1Ev": "github-actions[bot]",
     "src/game/actors/d_a_obj_c0_switch.cpp#daObjC0_Switch_c_Spawn": "andrewboudreau",
+    "src/game/actors/d_a_obj_c0_switch.cpp#daObjC0_Switch_c_classInit": "andrewboudreau",
     "src/game/actors/d_a_obj_clock_huriko.cpp#_ZN18daObjClockHuriko_c13InitResourcesEv": "github-actions[bot]",
     "src/game/actors/d_a_obj_clock_huriko.cpp#_ZN18daObjClockHuriko_c16CleanupResourcesEv": "andrewboudreau",
     "src/game/actors/d_a_obj_clock_huriko.cpp#_ZN18daObjClockHuriko_c6RenderEv": "andrewboudreau",

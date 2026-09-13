@@ -4,45 +4,56 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-/* TWO WITNESSES, and they close on each other:
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* daObjC0_Switch_c -- Castle basement switch pillar (profile C0_SWITCH /
+ * SWITCH_PILLAR, actor 34, ov012). ov012 also has BASEMENT_WATER(35); this
+ * class is the pillar, not the water.
  *
- *   daObjC0_Switch_c_classInit  fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV16daObjC0_Switch_c,
- *                 then the members below in this order.
- *   ~daObjC0_Switch_c   the same members destroyed in reverse, then ~dBgActor_c.
+ * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
+ *   _ZTS  ov012 0x0211230c  "16daObjC0_Switch_c"
+ *   _ZTI  ov012 0x02112300  __si_class_type_info; +8 -> _ZTI10dBgActor_c
+ *                           (ov002 0x021089ec), so the DIRECT base is
+ *                           dBgActor_c and nothing else.
+ *   _ZTV  ov012 0x02112344  the ADDRESS POINT itself: V-8 is a zero
+ *                           offset-to-top and V-4 is &_ZTI (0x02112300).
+ *   size  0x320             daObjC0_Switch_c_classInit's own literal, which
+ *                           is also dBgActor_c's own size. mPressed sits at
+ *                           0x31e, in the base's tail padding (same placement
+ *                           as daObjRc_Guruguru_c's mAngVelY).
+ * The coined `SwitchPillar` spelling this class used to carry is gone; the
+ * ROM's own type string is where the class name now comes from.
  *
- * SIZE 0x320 is the factory's own literal, and the last member closes exactly on it.
+ * Seven of the 32 slots point inside ov012 -- 0, 3, 6, 9, 16, 17 and 21 -- and
+ * every other slot still holds dBgActor_c's arm9 word, so nothing else is
+ * overridden.
  *
- * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots declared
- * below differ; every other slot holds the base's own word and is inherited, so it
- * is deliberately not redeclared here.
+ * mPressed is this pillar's own pressed state. InitResources and
+ * OnGroundPounded both guard on and set it; OnGroundPounded no-ops if already
+ * set, then returns at the first non-this actorID-0x22 pillar and, if that
+ * one is already pressed, sets a shared flag in data_0209caa0[2].
  *
- * mPressed sits at 0x31e, in dBgActor_c's TAIL PADDING (same placement rationale as
- * daObjRc_Guruguru_c's mAngVelY): InitResources and OnGroundPounded both guard on
- * and set this byte -- OnGroundPounded no-ops if already set, then walks every other
- * actorID-0x22 instance and, on finding one already pressed, sets a shared flag in
- * data_0209caa0[2]. It is this switch pillar's own "pressed" state.
- *
- * SM64DS RTTI names the implementation daObjC0_Switch_c. The reconstructed factory
- * daObjC0_Switch_c_classInit (historical alias daObjC0_Switch_c_Spawn) installs this class's
- * cartridge vtable for the C0_SWITCH registry profile.
- */
+ * The destructor is declared LAST and INLINE on purpose. Class instantiation
+ * via the factory's `new` emits the retail D1/D0 pair in cartridge order
+ * without a separate leaf D2 body; out of line mwccarm emits D0 ahead of D1
+ * and adds the D2 the ROM never carried. */
 struct daObjC0_Switch_c : dBgActor_c {
     u8  mPressed;            /* 0x31e */
-
-    /* Defined inline on purpose. InitResources is the first out-of-line
-     * virtual/key function, so together with this inline destructor mwcc owns the
-     * retail D1/D0 pair in the cartridge's own order and the complete class
-     * RTTI/vtable group, without retaining a D2 base-object body that has no ROM
-     * home. Written out-of-line, mwcc emits D0 before D1 and objisolate refuses
-     * the translation unit. The body is empty in the ROM too: D1 at 0x021111a0
-     * stores the vtable and tail-calls ~dBgActor_c, with no member teardown. */
-    virtual ~daObjC0_Switch_c() {}          /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
     virtual void  OnGroundPounded(dActor_c &other); /* slot 21 */
+
+    /* Leaf size_t operator new. A plain `new daObjC0_Switch_c` without this
+       relocates to the global `_Znwm`; this routes the factory through
+       fBase_c::operator new, the call this TU's classInit actually makes. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
+    virtual ~daObjC0_Switch_c() {}          /* slots 16 (D1), 17 (D0) */
 };
 
 typedef char daObjC0_Switch_c_size_must_be_0x320[sizeof(daObjC0_Switch_c) == 0x320 ? 1 : -1];
