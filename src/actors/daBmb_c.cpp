@@ -1,93 +1,35 @@
 //cpp
-/* Production translation unit for ov102/daBmb_c -- the Bob-omb.
+/* Bob-omb (BOB_OMB 206 / BOMBHEI) -- ov102/daBmb_c.
  *
- * SM64DS RTTI names this class daBmb_c: ov102 0x0214e4fc holds the bytes
- * "7daBmb_c\0", _ZTI7daBmb_c at 0x0214e508 points its +4 word back at that
- * string, and the vtable's -4 header word points at the _ZTI.  The tree used to
- * carry the class under the coined name BobOmb, which appears nowhere in the
- * cartridge; this file and include/daBmb_c.h use the cartridge's own spelling.
+ * ov102 is mixed (question/exclamation/cap blocks, fortress tower, Koopa
+ * shell, warp pipe). RTTI ov102:0x0214e4fc names this class daBmb_c; the
+ * debug table names BOB_OMB. This is the Bob-omb, not those. ov043 is BitDW
+ * not BoB; ov015 is WF not BoB; ov014 is BoB.
  *
- * The base is dEnemyBase_c, read from _ZTI7daBmb_c+8 -> 0x021081c0 in ov002.
- * Vtable LENGTH is NOT evidence here: _ZTV12dEnemyBase_c is 31 slots and so is
- * _ZTV7daBmb_c, so the "31 slots means dActor_c" heuristic gives the wrong
- * answer for this class.  daBmb_c declares no new virtual; it overrides nine
- * inherited slots -- 0, 3, 6, 9, 16, 17, 18, 19 and 29.
+ * common.h FIRST: InitResources assigns IDENTITY_MATRIX4X3 into mMatrix and
+ * func_ov102_0214b53c copies a Matrix4x3 at +0x31c / data_020a0e68. common.h's
+ * flat s32 m[12] is the ROM's twelve-word copy; math/Matrix.h's nested
+ * {Matrix3x3 r; Vector3 t;} scalarizes it (Vector3 is non-POD).
  *
- * THE DESTRUCTOR IS INLINE IN THE HEADER, AND DECLARED FIRST.  The cartridge
- * puts D1 at 0x0214a96c below D0 at 0x0214a9b4 and carries no D2 anywhere, which
- * is what mwccarm 2004/b56 emits for an inline in-class destructor; the
- * out-of-line form emits D2/D0/D1 in the wrong order plus a homeless D2.  The
- * typed member list in the header makes the empty body own the ShadowModel,
- * ModelAnim, dBgCh_Actr and dCcAc_c teardowns and the chain into
- * _ZN12dEnemyBase_cD2Ev.  With the destructor inline, OnYoshiTryEat is the first
- * out-of-line virtual the class declares -- the key function -- so this TU owns
- * the vtable and the RTTI group, and every one of those records is licensed
- * against a configured ov102 home.
- *
- * mwccarm emits one .text section per function in the REVERSE of source order,
- * so this file is written ROM-DESCENDING: daBmb_c_classInit (0x0214c6f8) first
- * and daBmb_c::OnAimedAtWithEgg (0x0214aa10) last.  D1 and D0 are
- * compiler-emitted from the inline body and land below everything written here,
- * at the bottom of the run, which is where the cartridge has them.  The TU
- * covers the whole contiguous linker run, 0x0214a96c..0x0214c748, 35 functions:
- * the 34 the tu_map cut reported plus the registry factory, which tu_map missed
- * only because it segments on symbol NAME and `daBmb_c_classInit` does not look
- * like a member.
- *
- * common.h is included FIRST on purpose.  daBmb_c.h reaches math/Matrix.h
- * through ModelAnim.h, and that header spells Matrix4x3 as `Matrix3x3 r;
- * Vector3 t;` where common.h spells it flat as `s32 m[12]`.  Two members
- * whole-struct-assign a Matrix4x3 -- InitResources into +0x394 and
- * func_ov102_0214b53c into +0x31c and through data_020a0e68 -- and only the flat
- * spelling reproduces the cartridge's block move.
- *
- * decl_common.h is deliberately NOT included.  It declares eight of this TU's
- * own members, and its spelling of func_ov102_0214baa0 is `void(void *)` where
- * the definition below takes `char *` -- and that parameter type is measured,
- * not cosmetic: a `void *` parameter plus a `char *` local at the top of the
- * body reorders the frame and the function stops matching.  Under `extern "C"`
- * a differing parameter type is not an overload but an `illegal function
- * overloading` error pointed at the definition.  The same is true of
- * func_ov102_0214b53c, whose pinned stack layout only survives with the `char *`
- * parameter the shard used.  Everything the header would have supplied is
- * declared here instead -- which is also the large-TU precedent (ov002/Player,
- * ov006/dScMgPanel_c, ov006/dScMgLuigi_c).
- *
- * DECLARATION POLICY, because it is what makes a merge this size compile.
- * There is exactly ONE file-scope `extern "C"` region, and it carries only what
- * the C++-NAMED members need: a class member function may not sit inside a
- * linkage specification, so a declaration written in daBmb_c::Behavior's own
- * body would get C++ linkage and the reference would mangle a second time.
- * Every OTHER member keeps its own independently recovered spellings at BLOCK
- * scope inside its own body, where two members may disagree about one symbol
- * without either giving way.  Where a member's spelling collided with the
- * file-scope region it was adapted at the call site with a cast, never by
- * rewriting the region.
- *
- * THAT POLICY IS ALSO THE CEILING ON HOW MANY MEMBERS CAN BE C++ METHODS.
- * Thirteen of the thirty-five are: the nine the cartridge itself names through
- * the vtable and the RTTI group (the two destructors among them, emitted from
- * the header's inline body), plus four of the six mState arms under coined
- * names.  One more, daBmb_c_classInit, is a member of the class in every sense
- * but has to keep C linkage because the ROM symbol is the bare name.  The other
- * twenty-one stay free functions, and the wall is one of exactly two things,
- * never codegen:
- *
- *   SCOPE -- func_ov102_0214bf64 and func_ov102_0214bd90 (mState arms 0 and 2)
- *   both compile to the ROM's exact size as members, and the TU then fails to
- *   LINK: as members they lose their own extern "C" declarations, and the
- *   file-scope region cannot take them because other members already own
- *   contradicting spellings of the same symbols -- decisively func_0200fc44,
- *   which arm 2 recovered with four parameters and func_ov102_0214aa18 with
- *   three.  Note that `tubuild.py verify` calls the broken form 35/35 MATCH with
- *   reloc destinations clean; only mwldarm sees it.
- *
- *   NAMING -- the remaining nineteen.  The cartridge carries their addresses and
- *   no identifier, and nothing in it constrains what they should be called the
- *   way the mState switch constrains the six arms.  Three of them are also
- *   called from outside ov102 (0x0214ad14 from ov002/ov078, 0x0214ae1c from
- *   ov014/ov098, 0x0214b384 from ov078), so naming those is a cross-module
- *   rename, not a local one.
+ * deslop leftovers:
+ * - dCcAc_c::Init / ModelAnim::SetAnim / dActor_c::DropShadowRadHeight /
+ *   dEnemyBase_c::KillByInvincibleChar 6az: this TU passes Fix12<int> by
+ *   value; the header method form size-DIFFs.
+ * - dBgCh_Actr::Init: header Fix12i mangles as i; ROM is Fix12<int>.
+ * - _ZNK10dBgCh_Actr14GetFloorResultEv: not in dBgCh_Actr.h.
+ * - Animation::Advance: State1/3 keep `_ZN9Animation7AdvanceEv(this+0x350)`
+ *   (named mModelAnim.Advance() goes through the thunk).
+ * - *(this+0x128) |= 2 / *(this+0xb0) &= ~1u / *(this+0xc8)=0 are
+ *   load-bearing (not mdCc_c.flags / mFlags / a new dActor_c field).
+ * - State1 named mPrevAngleY / unk_3ee / mAngleY 1-word DIFF; keeps
+ *   (char*)this+0x94 / +0x8e / +0x3ee. State1's this+0x35c is
+ *   mModelAnim.speed; arm 0's Player*+0x35c is Player::mGrabbedByActor.
+ * - func_ov102_0214bf64 / 0214bd90 (arms 0/2) stay free functions: member
+ *   form is byte-clean then mwldarm Undefined (block-scope extern "C"
+ *   contradicts the file-scope region; func_0200fc44 4-arg vs 3-arg).
+ * - func_ov102_* ROM labels (0214ad14 / 0214ae1c / 0214b384 are
+ *   cross-module). data_ov102_* handles. S14 no g_profile_BOMBHEI.
+ * - func_0203568c / func_02035684: dBgCh_Actr radius/height stores; no setter.
  */
 
 #include "common.h"
@@ -124,7 +66,7 @@ struct Bmb_Bf64Obj {
     int fa8;                  /* 0xa8 */
     char gac[0x350 - 0xac];
     char f350[0x35c - 0x350]; /* 0x350 -- Animation */
-    int f35c;                 /* 0x35c */
+    int f35c;                 /* 0x35c -- mModelAnim.speed on this object */
     char g360[0x38c - 0x360];
     void* f38c;               /* 0x38c */
     char g390[0x3c4 - 0x390];
@@ -135,17 +77,6 @@ struct Bmb_Bf64Obj {
     unsigned short f3e8;      /* 0x3e8 */
     char g3ea[0x3f5 - 0x3ea];
     unsigned char f3f5;       /* 0x3f5 */
-};
-
-/* daBmb_c::Render reaches the model object at +0x300 through slot 5 of its own
-   table.  Virtual dispatch, so nothing here names a symbol. */
-struct Bmb_VBase {
-    virtual void method0() = 0;
-    virtual void method1() = 0;
-    virtual void method2() = 0;
-    virtual void method3() = 0;
-    virtual void method4() = 0;
-    virtual void method5(char *arg);
 };
 
 /* The three shared files this actor claims.  InitResources loads them and
@@ -183,8 +114,6 @@ void  func_ov102_0214c0b8(void *self);
 void  GiveCoins(int who, int count);
 int   SurfaceInfo_TestFlag0x20(int *si);
 
-int   _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void *, void *, void *, unsigned int);
-void  _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void *, void *);
 void  _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *, void *, unsigned int);
 void  _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *, void *, void *, unsigned int);
 
@@ -198,17 +127,11 @@ int   _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
 int   _ZNK10dBgCh_Actr8IsOnWallEv(void *);
 void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *);
 
-/* ModelBase::SetFile is declared void in include/ModelBase.h -- which is what
-   its own matched definition compiles as -- but the ROM leaves DoSetFile's int
-   in r0 and InitResources reads it, so the value-returning entry keeps the
-   mangled spelling until that signature is settled. */
-int   _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, BMD_File *f, int a, int b);
-
-/* Both Init calls keep scalar slots: they carry Fix12<int> BY VALUE, which
-   mwccarm passes differently at the call site, so spelling the true types
-   breaks the byte match. */
+/* dCcAc_c::Init / dBgCh_Actr::Init stay scalar: they carry Fix12<int> BY
+   VALUE (6az). dBgCh_Actr::Init's header is Fix12i, which mangles as i;
+   ROM is Fix12<int>. */
 void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c *a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
-void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c *a, Fix12i b, Fix12i c, Vector3_16 *d, Fix12i e);
+void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c *a, Fix12i b, Fix12i c, Vector3_16 *d, Vector3_16 *e);
 
 /* Hoisted out of four member bodies.  A class member function may not sit in a
    block-scope linkage specification, so daBmb_c::State1/3/4/5 cannot carry their
@@ -219,7 +142,6 @@ void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor
    call sites bind the same address through the reference instead. */
 void  _Z14ApproachLinearRsss(short &v, short target, short step);
 void  _ZN9Animation7AdvanceEv(void *a);
-int   _ZN8dActor_c13DistToCPlayerEv(void *p);
 void  func_ov102_0214b3b8(void *c);
 
 extern signed char   data_0209f2f8;
@@ -229,30 +151,15 @@ extern unsigned char data_0209f2d8;
 }
 
 /* ==========================================================================
- * ROM ordinal 34 -- daBmb_c_classInit, 0x0214c6f8, size 0x50.
  *
- * The registry factory, folded in from its own one-function shard.  It is the TOP of the
- * cartridge's contiguous run (0x0214c748 is where daShl_c starts), so it is
- * written FIRST here: mwccarm lays .text down in reverse source order.
+ * The registry factory.  It is the TOP of the cartridge's contiguous run
+ * (0x0214c748 is where daShl_c starts), so it is written FIRST here: mwccarm
+ * lays .text down in reverse source order.
  *
- * C LINKAGE IS LOAD-BEARING -- the ROM symbol is the bare name, which the
- * legacy C file got for free and a C++ TU has to ask for.
- *
- * THE `+ 2` IS ALSO LOAD-BEARING, and it is what consolidation changed.  The
- * shard wrote the bare `(int)_ZTV7daBmb_c`, and that was right there: the
- * symbol was UNDEF and config/arm9/overlays/ov102/symbols.txt binds it to the
- * SLOT ARRAY at 0x0214e558.  Here the same spelling would bind to this TU's own
- * definition -- OnYoshiTryEat is the key function, so mwcc emits the vtable and
- * addresses the vtable OBJECT, two words of Itanium preamble (0x0214e550)
- * lower.  `+ 2` is int-indexed, so eight bytes, and it makes this store agree
- * with the addend-8 vptr stores the compiler itself emits in the destructor.
- * A relocated word is a wildcard to every byte gate, so `verify` prints the
- * same 35/35 either way; tools/objisolate.py's addend check is what refuses the
- * bare form.
- *
- * The declaration itself lives in include/daBmb_c.h, next to the class and the
- * allocation size this factory proves -- the vtable is a property of daBmb_c,
- * not of this file, and the legacy shard read it from a shared header too.
+ * C LINKAGE IS LOAD-BEARING -- the ROM symbol is the bare name.
+ * `return new daBmb_c()` MATCHES (size 0x50); the synthesized ctor stores
+ * `_ZTV7daBmb_c + 2` because this TU defines the vtable. Leaf operator new
+ * forwards `_ZN7fBase_cnwEj` until #2570.
  *
  * Reconstructed source-style name: SM64DS proves daBmb_c through RTTI,
  * allocation size, vtable identity, and the BOMBHEI registry profile; later EAD
@@ -263,31 +170,14 @@ extern unsigned char data_0209f2d8;
 extern "C" {
 
 // @symbol daBmb_c_classInit
-int *daBmb_c_classInit(void)
+daBmb_c *daBmb_c_classInit(void)
 {
-    extern void *_ZN7fBase_cnwEj(unsigned int size);
-    extern void  _ZN12dEnemyBase_cC2Ev(void *thiz);
-    extern void  _ZN7dCcAc_cC1Ev(char *thiz);
-    extern void  _ZN10dBgCh_ActrC1Ev(char *thiz);
-    extern void  _ZN9ModelAnimC1Ev(char *thiz);
-    extern void  _ZN11ShadowModelC1Ev(char *thiz);
-
-    int *p = (int *)_ZN7fBase_cnwEj(1024);
-    if (p) {
-        _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)(_ZTV7daBmb_c + 2);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x110);
-        _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
-        _ZN9ModelAnimC1Ev((char *)p + 0x300);
-        _ZN11ShadowModelC1Ev((char *)p + 0x364);
-    }
-    return p;
+    return new daBmb_c();
 }
 
 }
 
 /* ==========================================================================
- * ROM ordinal 33 -- daBmb_c::OnYoshiTryEat, 0x0214c6e4, size 0x14.
  * Vtable slot 18.  THE KEY FUNCTION: the first out-of-line virtual this class
  * declares, so this TU owns _ZTV7daBmb_c, _ZTI7daBmb_c and _ZTS7daBmb_c.
  * ======================================================================== */
@@ -299,7 +189,6 @@ s32 daBmb_c::OnYoshiTryEat() {
 }
 
 /* ==========================================================================
- * ROM ordinal 32 -- daBmb_c::InitResources, 0x0214c510, size 0x1d4.
  * Vtable slot 0.
  *
  * param1's low three bits pick the variant: 2 is the one that starts inert --
@@ -315,7 +204,7 @@ int daBmb_c::InitResources()
     Animation::LoadFile(data_ov102_0214e9c0);
     Animation::LoadFile(data_ov102_0214e9c8);
     bmd = (BMD_File*)Model::LoadFile(data_ov002_0210d9e0);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, bmd, 1, -1) == 0)
+    if (mModelAnim.SetFile(bmd, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;
@@ -364,7 +253,6 @@ int daBmb_c::InitResources()
 }
 
 /* ==========================================================================
- * ROM ordinal 31 -- daBmb_c::Behavior, 0x0214c1bc, size 0x354.
  * Vtable slot 6.
  * ======================================================================== */
 
@@ -386,7 +274,7 @@ int daBmb_c::Behavior()
         return 1;
     }
 
-    r0 = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(this, (char *)&mWithMeshClsn, (char *)&mModelAnim, 0);
+    r0 = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 0);
     if (r0 != 0) {
         if (r0 == 2) {
             func_ov102_0214ae1c(this);
@@ -395,7 +283,7 @@ int daBmb_c::Behavior()
     }
 
     if (mDeathState != 0) {
-        _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(this, (char *)&mWithMeshClsn);
+        UpdateDeath(mWithMeshClsn);
         func_ov102_0214b128(this);
         flag = mFlags & 0x100;
         flag = flag != 0;
@@ -403,8 +291,8 @@ int daBmb_c::Behavior()
             mDeathState = 0;
         } else if (mDeathState != 0) {
             func_ov102_0214b53c((char *)this);
-            _ZN5dCc_c5ClearEv((char *)&mdCc_c);
-            _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
+            mdCc_c.Clear();
+            mdCc_c.Update();
             return 1;
         }
     }
@@ -414,34 +302,34 @@ int daBmb_c::Behavior()
         if (mVertAccel != 0) {
             if ((*(int*)(&mdCc_c.hitFlags) & 0x10) != 0) {
                 short v[3];
-                other = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(&mdCc_c.otherOwner));
+                other = dActor_c::FindWithID(mdCc_c.otherOwner);
                 v[0] = -0x2000;
                 v[1] = 0;
                 v[2] = 0;
                 _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, v, other, 0x32000);
-                _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&mdCc_c);
-                _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 0);
-                _ZN5dCc_c5ClearEv((char *)&mdCc_c);
+                UpdatePos(&mdCc_c);
+                UpdateWMClsn(mWithMeshClsn, 0);
+                mdCc_c.Clear();
                 return 1;
             }
 
-            _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&mdCc_c);
+            UpdatePos(&mdCc_c);
             if (data_0209f2f8 == 6 && data_0209f220 == 3) {
                 if (mHorzSpeed == 0x5000) {
-                    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 3);
+                    UpdateWMClsn(mWithMeshClsn, 3);
                 } else {
-                    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 2);
+                    UpdateWMClsn(mWithMeshClsn, 2);
                 }
             } else {
-                _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 2);
+                UpdateWMClsn(mWithMeshClsn, 2);
             }
 
-            if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
+            if (mWithMeshClsn.IsOnGround()) {
                 if (SurfaceInfo_TestFlag0x20((int*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn)+4))) {
                     func_ov102_0214ae1c(this);
                     return 1;
                 }
-                if (_ZNK10dBgCh_Actr8IsOnWallEv((char *)&mWithMeshClsn) && mState == 0) {
+                if (mWithMeshClsn.IsOnWall() && mState == 0) {
                     func_ov102_0214beb4(this);
                 }
             }
@@ -452,14 +340,14 @@ int daBmb_c::Behavior()
             return 0;
         }
 
-        if (*(unsigned int*)(&mdCc_c.otherOwner) != 0) {
-            if ((*(int*)(&mdCc_c.hitFlags) & 0x4000) != 0) {
+        if (mdCc_c.otherOwner != 0) {
+            if ((mdCc_c.hitFlags & 0x4000) != 0) {
                 func_ov102_0214b384(this, 4);
             }
             if (mState == 4) {
                 unsigned char b = mVariant;
                 if (b == 2 || b == 3) {
-                    other = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(&mdCc_c.otherOwner));
+                    other = dActor_c::FindWithID(mdCc_c.otherOwner);
                     if (other != 0) {
                         int flag2 = *(unsigned short*)((char*)other+0xc);
                         flag2 = flag2 == 0xbd;
@@ -476,15 +364,14 @@ int daBmb_c::Behavior()
         }
 
         func_ov102_0214b53c((char *)this);
-        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
-        _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
+        mdCc_c.Clear();
+        mdCc_c.Update();
         func_ov102_0214ad40(this);
     }
     return 1;
 }
 
 /* ==========================================================================
- * ROM ordinal 30 -- daBmb_c::Render, 0x0214c168, size 0x54.
  * Vtable slot 9.
  * ======================================================================== */
 
@@ -496,15 +383,13 @@ int daBmb_c::Render()
         int flags = mFlags;
         int b = (flags & 0x40000) != 0;
         if (!b) {
-            Bmb_VBase *obj = (Bmb_VBase*)((char *)&mModelAnim);
-            obj->method5((char *)&mScaleX);
+            mModelAnim.Render((Vector3 *)&mScaleX);
         }
     }
     return result;
 }
 
 /* ==========================================================================
- * ROM ordinal 29 -- daBmb_c::CleanupResources, 0x0214c12c, size 0x3c.
  * Vtable slot 3.  Releases the three shared files InitResources claimed and
  * touches no field of its own.
  * ======================================================================== */
@@ -519,7 +404,6 @@ int daBmb_c::CleanupResources()
 }
 
 /* ==========================================================================
- * ROM ordinal 28 -- func_ov102_0214c0b8, 0x0214c0b8, size 0x74.
  * ======================================================================== */
 
 extern "C" {
@@ -544,7 +428,6 @@ void func_ov102_0214c0b8(void *cv)
 }
 
 /* ==========================================================================
- * ROM ordinal 27 -- func_ov102_0214bf64, 0x0214bf64, size 0x154.
  *
  * mState arm 0, and it STAYS A FREE FUNCTION.  The conversion itself is byte-clean
  * -- compiled as daBmb_c::State0() it emits exactly 0x154 -- but the TU then will
@@ -598,6 +481,7 @@ void func_ov102_0214bf64(void *ov)
             _Z14ApproachLinearRiii(o->f98, 0x10000, 0x1000);
             s16 target = Vec3_HorzAngle(&o->f5c, (Bmb_Vec3*)((char*)o->f38c + 0x5c));
             if (o->f3f5 == 3) {
+                /* Player::mGrabbedByActor: stop turning toward a held player. */
                 int b = (*(int*)((char*)o->f38c + 0x35c) != 0);
                 if (b)
                     target = o->f94;
@@ -613,7 +497,6 @@ void func_ov102_0214bf64(void *ov)
 }
 
 /* ==========================================================================
- * ROM ordinal 26 -- func_ov102_0214beb4, 0x0214beb4, size 0xb0.
  * ======================================================================== */
 
 extern "C" {
@@ -644,7 +527,6 @@ void func_ov102_0214beb4(void *cv)
 }
 
 /* ==========================================================================
- * ROM ordinal 25 -- daBmb_c::State1, 0x0214be1c, size 0x98.
  *
  * mState arm 1 (COINED NAME -- ov102 carries this address and no identifier;
  * func_ov102_0214b03c switching on mState is what proves the index): turns the facing angle (+0x94) toward the stored target angle (+0x3ee) at 0x400 a
@@ -656,7 +538,7 @@ void func_ov102_0214beb4(void *cv)
 // @symbol _ZN7daBmb_c6State1Ev
 void daBmb_c::State1() {
     char *c = (char *)this;
-    if (*(int*)(c + 0x38c) == 0) {
+    if (unk_38c == 0) {
         *(int*)(c + 0x35c) = 0x800;
         _Z14ApproachLinearRsss(*(short*)(c + 0x94), *(short*)(c + 0x3ee), 0x400);
     } else {
@@ -665,13 +547,12 @@ void daBmb_c::State1() {
     }
     *(short*)(c + 0x8e) = *(short*)(c + 0x94);
     _ZN9Animation7AdvanceEv(c + 0x350);
-    if (*(int*)(c + 0x3dc) == 2) return;
+    if (mState == 2) return;
     if (*(short*)(c + 0x94) != *(short*)(c + 0x3ee)) return;
     func_ov102_0214c0b8(c);
 }
 
 /* ==========================================================================
- * ROM ordinal 24 -- func_ov102_0214bd90, 0x0214bd90, size 0x8c.
  *
  * mState arm 2, and it STAYS A FREE FUNCTION for the same reason arm 0 does, with
  * a harder instance of it: this body recovered func_0200fc44 with FOUR parameters
@@ -708,7 +589,6 @@ void func_ov102_0214bd90(char* r4){
 }
 
 /* ==========================================================================
- * ROM ordinal 23 -- func_ov102_0214bd20, 0x0214bd20, size 0x70.
  * ======================================================================== */
 
 extern "C" {
@@ -733,7 +613,6 @@ void func_ov102_0214bd20(char* c)
 }
 
 /* ==========================================================================
- * ROM ordinal 22 -- daBmb_c::State3, 0x0214bcc8, size 0x58.
  *
  * mState arm 3 (COINED NAME -- ov102 carries this address and no identifier;
  * func_ov102_0214b03c switching on mState is what proves the index): the held arm: on mFlags bit 0x400 it runs func_ov102_0214b3b8 (which checks
@@ -745,12 +624,11 @@ void func_ov102_0214bd20(char* c)
 // @symbol _ZN7daBmb_c6State3Ev
 void daBmb_c::State3()
 {
-  char *c = (char *)this;
-  int r1 = *((int *) (c + 0xb0));
+  int r1 = mFlags;
   int b = (int) ((r1 & 0x400) != 0);
   if (b)
   {
-    func_ov102_0214b3b8(c);
+    func_ov102_0214b3b8(this);
   }
   else
   {
@@ -760,14 +638,13 @@ void daBmb_c::State3()
     }
     else
     {
-      func_ov102_0214c0b8(c);
+      func_ov102_0214c0b8(this);
     }
   }
-  _ZN9Animation7AdvanceEv(c + 0x350);
+  _ZN9Animation7AdvanceEv((char *)this + 0x350);
 }
 
 /* ==========================================================================
- * ROM ordinal 21 -- func_ov102_0214bc20, 0x0214bc20, size 0xa8.
  * ======================================================================== */
 
 extern "C" {
@@ -798,7 +675,6 @@ void func_ov102_0214bc20(char* c)
 }
 
 /* ==========================================================================
- * ROM ordinal 20 -- daBmb_c::State4, 0x0214bbd8, size 0x48.
  *
  * mState arm 4 (COINED NAME -- ov102 carries this address and no identifier;
  * func_ov102_0214b03c switching on mState is what proves the index): the thrown arm: unless the collision actor reports neither ground nor wall contact
@@ -807,18 +683,16 @@ void func_ov102_0214bc20(char* c)
 
 // @symbol _ZN7daBmb_c6State4Ev
 int daBmb_c::State4() {
-    void *c = this;
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)c + 0x144) == 0) {
-        int r = _ZNK10dBgCh_Actr8IsOnWallEv((char*)c + 0x144);
+    if (mWithMeshClsn.IsOnGround() == 0) {
+        int r = mWithMeshClsn.IsOnWall();
         if (r == 0) return r;
     }
-    func_ov102_0214b384(c, 4);
-    *(int*)((char*)c + 0x98) = 0;
+    func_ov102_0214b384(this, 4);
+    mHorzSpeed = 0;
     return 0;
 }
 
 /* ==========================================================================
- * ROM ordinal 19 -- func_ov102_0214baa0, 0x0214baa0, size 0x138.
  *
  * VOID, and that is measured, not stylistic.  The separate shard this came from
  * was `void`; daBmb_c::OnTurnIntoEgg's shard independently declared it `int` and
@@ -897,7 +771,6 @@ void func_ov102_0214baa0(char *self)
 }
 
 /* ==========================================================================
- * ROM ordinal 18 -- daBmb_c::State5, 0x0214ba30, size 0x70.
  *
  * mState arm 5 (COINED NAME -- ov102 carries this address and no identifier;
  * func_ov102_0214b03c switching on mState is what proves the index): the dormant arm, which func_ov102_0214baa0 puts the actor into after clearing
@@ -910,7 +783,7 @@ void func_ov102_0214baa0(char *self)
 void daBmb_c::State5()
 {
     char *c = (char *)this;
-    if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x7d0000)
+    if (DistToCPlayer() < 0x7d0000)
         return;
     if ((*(int*)(c + 0xb0) & 8) == 0) {
         int b = (data_0209f2d8 == 1);
@@ -922,11 +795,10 @@ void daBmb_c::State5()
         int* f = (int*)(((int)c + 0xb0));
         *f = *f | 0x10000001;
     }
-    *(unsigned char*)(c + 0x3f3) = 1;
+    mShouldRender = 1;
 }
 
 /* ==========================================================================
- * ROM ordinal 17 -- func_ov102_0214b988, 0x0214b988, size 0xa8.
  * ======================================================================== */
 
 extern "C" {
@@ -961,11 +833,10 @@ void func_ov102_0214b988(void *thiz)
 }
 
 /* ==========================================================================
- * ROM ordinal 16 -- func_ov102_0214b53c, 0x0214b53c, size 0x44c.
  *
- * The volatile pins and the chained u32 masks are load-bearing: they are what
- * hold the cartridge's stack layout and its compare destinations.  Do not
- * simplify them.
+ * The volatile pins are load-bearing: they hold the cartridge's stack layout.
+ * Do not simplify them.  The shard's chained `& 0xFFFFFFFFu` masks were
+ * C-only and were dropped; the plain `&&` MATCHES.
  * ======================================================================== */
 
 extern "C" {
@@ -1143,7 +1014,6 @@ void func_ov102_0214b53c(char *c)
 }
 
 /* ==========================================================================
- * ROM ordinal 15 -- func_ov102_0214b444, 0x0214b444, size 0xf8.
  * ======================================================================== */
 
 extern "C" {
@@ -1190,7 +1060,6 @@ void func_ov102_0214b444(void *cv)
 }
 
 /* ==========================================================================
- * ROM ordinal 14 -- func_ov102_0214b3f0, 0x0214b3f0, size 0x54.
  * ======================================================================== */
 
 extern "C" {
@@ -1212,7 +1081,6 @@ do_call:
 }
 
 /* ==========================================================================
- * ROM ordinal 13 -- func_ov102_0214b3b8, 0x0214b3b8, size 0x38.
  * ======================================================================== */
 
 extern "C" {
@@ -1232,7 +1100,6 @@ void func_ov102_0214b3b8(void *c)
 }
 
 /* ==========================================================================
- * ROM ordinal 12 -- func_ov102_0214b384, 0x0214b384, size 0x34.
  *
  * CALLED FROM OUTSIDE THIS TU: ov078 0x0212519c, and ov102's own
  * QuestionBlock run at 0x02149278.  It keeps external linkage.
@@ -1253,7 +1120,6 @@ void func_ov102_0214b384(void *arg0, unsigned int arg1) {
 }
 
 /* ==========================================================================
- * ROM ordinal 11 -- func_ov102_0214b248, 0x0214b248, size 0x13c.
  * ======================================================================== */
 
 extern "C" {
@@ -1309,7 +1175,6 @@ int func_ov102_0214b248(void *cv)
 }
 
 /* ==========================================================================
- * ROM ordinal 10 -- func_ov102_0214b128, 0x0214b128, size 0x120.
  * ======================================================================== */
 
 extern "C" {
@@ -1358,7 +1223,6 @@ void func_ov102_0214b128(void *cv) {
 }
 
 /* ==========================================================================
- * ROM ordinal 9 -- func_ov102_0214b03c, 0x0214b03c, size 0xec.
  * ======================================================================== */
 
 extern "C" {
@@ -1389,7 +1253,6 @@ void func_ov102_0214b03c(void *cv){
 }
 
 /* ==========================================================================
- * ROM ordinal 8 -- func_ov102_0214ae1c, 0x0214ae1c, size 0x220.
  *
  * CALLED FROM OUTSIDE THIS TU: ov014 0x021122c0 and ov098 0x0213ad80.  It
  * keeps external linkage.
@@ -1465,7 +1328,6 @@ void func_ov102_0214ae1c(void *cv) {
 }
 
 /* ==========================================================================
- * ROM ordinal 7 -- daBmb_c::OnTurnIntoEgg, 0x0214adc8, size 0x54.
  * Vtable slot 19.
  * ======================================================================== */
 
@@ -1481,7 +1343,6 @@ void daBmb_c::OnTurnIntoEgg(Player &player)
 }
 
 /* ==========================================================================
- * ROM ordinal 6 -- func_ov102_0214ad40, 0x0214ad40, size 0x88.
  * ======================================================================== */
 
 extern "C" {
@@ -1515,7 +1376,6 @@ void func_ov102_0214ad40(void *cv)
 }
 
 /* ==========================================================================
- * ROM ordinal 5 -- func_ov102_0214ad14, 0x0214ad14, size 0x2c.
  *
  * CALLED FROM OUTSIDE THIS TU: ov002 0x020f1740, ov078 0x02125284, and
  * ov102's own QuestionBlock run at 0x0214926c.  It keeps external linkage.
@@ -1536,7 +1396,6 @@ void func_ov102_0214ad14(void *c)
 }
 
 /* ==========================================================================
- * ROM ordinal 4 -- func_ov102_0214ab1c, 0x0214ab1c, size 0x1f8.
  * ======================================================================== */
 
 extern "C" {
@@ -1633,7 +1492,6 @@ ret0:
 }
 
 /* ==========================================================================
- * ROM ordinal 3 -- func_ov102_0214aa18, 0x0214aa18, size 0x104.
  * ======================================================================== */
 
 extern "C" {
@@ -1677,7 +1535,6 @@ int func_ov102_0214aa18(void *selfv)
 }
 
 /* ==========================================================================
- * ROM ordinal 2 -- daBmb_c::OnAimedAtWithEgg, 0x0214aa10, size 0x8.
  * Vtable slot 29.
  *
  * Below this, at 0x0214a9b4 and 0x0214a96c, the compiler emits D0 and D1 from

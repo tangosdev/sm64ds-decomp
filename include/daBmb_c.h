@@ -25,8 +25,8 @@
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `daBmb_c_classInit` calls
  * `fBase_c::operator new(1024)` -- 0x400 -- and stores `_ZTV7daBmb_c`,
- * so that literal IS this class's sizeof. The observed fields only span to
- * 0x3f8; the difference is trailing space no source reads.
+ * so that literal IS this class's sizeof. Particle handles at 0x3f8 / 0x3fc
+ * are written and read (0214b53c).
  *
  * THE NAME IS THE CARTRIDGE'S OWN. ov102 0x0214e4fc holds the bytes
  * "7daBmb_c\0" -- the length-prefixed mangled type name -- and _ZTI7daBmb_c at
@@ -47,15 +47,17 @@
 #include "TextureTransformer.h"
 #include "dBgCh_Actr.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daBmb_c : dEnemyBase_c {
     dCcAc_c           mdCc_c;         /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x364 */
-    u8  pad_38c[0x4];
-    /* Everything from here down was reachable only through the `struct Obj`
-       shadow InitResources used to carry, so the generated header never had
-       it. mMatrix is a 0x30-byte block copied wholesale from IDENTITY_MATRIX4X3. */
+    /* 0214b988 stores ClosestPlayer here after Dist/angle checks;
+       0214ad14 stores ClosestPlayer unconditionally. Arm 0 (0214bf64)
+       chases this pointer. Live pad. */
+    void                        *unk_38c;               /* 0x38c */
     /* The Player carrying this Bob-omb, or 0.  Proven by use, not guessed:
        func_ov102_0214b53c passes it as the `Player &` argument of
        dActor_c::UpdateCarry(Player &, Vector3 const &) and calls
@@ -71,14 +73,16 @@ struct daBmb_c : dEnemyBase_c {
     s32                          mHomePosX;             /* 0x3c4 */
     s32                          mHomePosY;             /* 0x3c8 */
     s32                          mHomePosZ;             /* 0x3cc */
-    u8  pad_3d0[0xc];
+    /* 0214b53c: UpdateCarry offset; zeroed after the copy. Live pad. */
+    s32                          unk_3d0[3];            /* 0x3d0 */
     /* Behavior's state selector: it branches on == 5 (skip almost everything),
        == 4 (the egg/Chuckya hand-off) and == 0 (allow the wall bounce). */
     s32                          mState;                /* 0x3dc */
-    s32                          unk_3e0;               /* 0x3e0 -- InitResources stores 2; no reader */
-    u8  pad_3e4[0x4];
+    s32                          unk_3e0;               /* 0x3e0 -- InitResources stores 2; 0214ae1c Hurt damage */
+    /* 0214b248 Sound::PlayLong recycled handle. Live pad. */
+    u32                          unk_3e4;               /* 0x3e4 */
     u16                          unk_3e8;               /* 0x3e8 -- zeroed by InitResources */
-    u16                          unk_3ea;               /* 0x3ea -- zeroed by InitResources */
+    u16                          unk_3ea;               /* 0x3ea -- 0214b384 setter; 0214b248 explodes at 1 */
     u16                          unk_3ec;               /* 0x3ec -- InitResources stores 0x2000 */
     u16                          unk_3ee;               /* 0x3ee */
     /* InitResources' last statement: a snapshot of mAngleY taken next to the
@@ -92,11 +96,11 @@ struct daBmb_c : dEnemyBase_c {
        collision volume's hit bit and clears mFlags bit 0), 4 starts clear,
        anything else starts live. Behavior reads it again for the egg path. */
     u8                           mVariant;              /* 0x3f5 */
-    /* A latch: while non-zero Behavior does nothing but call func_ov102_0214ae1c
-       and return. InitResources clears it, and nothing matched sets it, so what
-       the latch MEANS is not evidenced -- only that it diverts the whole frame. */
+    /* ov078/daBombking_c 02123864 sets 1; Behavior explodes via 0214ae1c. */
     u8                           unk_3f6;               /* 0x3f6 */
-    u8  pad_3f7[0x9];
+    u8                           pad_3f7;               /* 0x3f7 */
+    u32                          unk_3f8;               /* 0x3f8 -- 0214b53c particle handle, eff 0x13 */
+    u32                          unk_3fc;               /* 0x3fc -- 0214b53c particle handle, eff 0x19 */
 
     /* --- vtable --- */
 
@@ -135,23 +139,14 @@ struct daBmb_c : dEnemyBase_c {
     void State3();
     int  State4();
     void State5();
+
+    /* Leaf adapter until fBase_c::operator new(unsigned long) lands (#2570).
+       `return new daBmb_c()` then routes through the retail allocator. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daBmb_c_size_must_be_0x400[sizeof(daBmb_c) == 0x400 ? 1 : -1];
-
-/* The vtable this class's translation unit emits, declared here so the registry
-   factory can name it.  daBmb_c_classInit is an `extern "C"` factory and not a
-   constructor -- the cartridge's symbol is the bare name -- so the vptr store at
-   the head of a fresh object is written by hand and has to spell the vtable.
-   That declaration is a property of daBmb_c, so it belongs with the class and
-   with the allocation size the same factory proves, not in the body of whichever
-   source file does the store; the legacy one-function shard likewise read it
-   from a shared declaration header.
-
-   The factory addresses it as `_ZTV7daBmb_c + 2`, because that TU DEFINES the
-   vtable -- OnYoshiTryEat is the key function -- so the bare symbol names the
-   two-word Itanium preamble, eight bytes below the slot array the cartridge's
-   own store points at. */
-extern int _ZTV7daBmb_c[];
 
 #endif /* DABMB_C_H */
