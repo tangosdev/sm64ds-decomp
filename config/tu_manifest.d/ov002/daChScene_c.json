@@ -105,6 +105,48 @@
       "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 9 vague-linkage data record(s) emitted alongside the nine functions, every one licensed in compiler_only_output (there is no unlicensed_output_observed key in this manifest; an earlier wording cited one, and cited 10 records against a list that held 1 and now holds 9).",
       "functions_occur_in_expected_order": "PASS as shipped. Was PARTIAL -- ordinal pair (0, 1), the destructor variants -- while the destructor was out of line; moving it into the class body fixed the emission order.",
       "relocation_destinations_verified": "PASS"
+    },
+    "compilerOnlyOutput": {
+      "requested": [],
+      "deadstripped": [],
+      "droppedSections": [
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "data": [
+        "_ZTI7fBase_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTI7dBase_c",
+        "_ZTI11daChScene_c",
+        "_ZTI8dActor_c",
+        "_ZTS11daChScene_c",
+        "_ZTV11daChScene_c"
+      ],
+      "dataExternalized": [
+        "_ZTI11daChScene_c",
+        "_ZTI7dBase_c",
+        "_ZTI7fBase_c",
+        "_ZTI8dActor_c",
+        "_ZTS11daChScene_c",
+        "_ZTS7dBase_c",
+        "_ZTS7fBase_c",
+        "_ZTS8dActor_c",
+        "_ZTV11daChScene_c"
+      ]
     }
   },
   "compiler_only_output": [
