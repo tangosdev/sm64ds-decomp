@@ -4,27 +4,23 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-/* The RC_GURUGURU profile's powered turntable: a platform that simply spins
- * about its own yaw axis for as long as it is alive, carrying whatever stands
- * on it, and switches its collision mesh off once the actor is flagged.
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* Rainbow Ride armed rotating platform (ARMED_ROTATING_PLATFORM 132,
+ * profile RC_GURUGURU). ov036 is mixed (tricky triangles / ship wing /
+ * donut block / swinging platform / ROTATING_PLATFORM_RR / flying carpet);
+ * this is the spinning platform, not kaitendai/carpet/buranko/hane.
  *
- * TWO WITNESSES, and they close on each other:
+ * RTTI ov036:0x02113d90 spells daObjRc_Guruguru_c. _ZTI+8 at 0x02113d84
+ * points at _ZTI10dBgActor_c, so dBgActor_c is the direct and only base.
+ * SIZE 0x320 is the factory's own literal: one s16 in dBgActor_c's tail
+ * padding at 0x31e, and sizeof stays 0x320.
  *
- *   daObjRc_Guruguru_c_classInit (historical alias ArmedRotatingPlatform_Spawn)
- *                 fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(),
- *                 stores _ZTV18daObjRc_Guruguru_c.
- *   ~daObjRc_Guruguru_c   its own vptr, then dBgActor_c's -- inlined, because
- *                 dBgActor_c's destructor is defined in its class body -- then
- *                 dBgActor_c's dBgW_KcMbg at 0x124 and Model at 0xd4, then
- *                 dActor_c. All three are the BASE's; this class adds one s16,
- *                 which has no destructor of its own.
+ * Historical alias: ArmedRotatingPlatform. The coined name that sat on
+ * vtable 0x02113dcc is gone; the ROM type string is the class name.
  *
- * SIZE 0x320 is the factory's own literal, and the last member closes exactly
- * on it.
- *
- * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c at ov036
- * 0x02113dcc. Only the slots declared below differ; every other slot holds the
- * base's own word and is inherited, so it is deliberately not redeclared here.
+ * Vtable diff against _ZTV10dBgActor_c: only slots 0, 3, 6, 9, 16 and 17
+ * differ. Every other slot holds the base's word and is inherited.
  */
 struct daObjRc_Guruguru_c : dBgActor_c {
     /* THIS CLASS'S OWN, in dBgActor_c's TAIL PADDING: the base's last field
@@ -44,6 +40,12 @@ struct daObjRc_Guruguru_c : dBgActor_c {
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
+
+    /* size_t == unsigned long on this ABI; unsigned int is illegal.
+       A plain `new` without this relocates to the global `_Znwm`. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daObjRc_Guruguru_c_size_must_be_0x320[sizeof(daObjRc_Guruguru_c) == 0x320 ? 1 : -1];
