@@ -81,7 +81,7 @@ void  func_02012694(u32 id, void *pos);
 void  func_020105cc(void *thiz, u32 flags);
 
 void *_ZN8dActor_c10FindWithIDEj(u32 id);
-char *_ZN8dActor_c13ClosestPlayerEv(void);
+char *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int   _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *self, void *clsn, void *player);
 void  _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *c, const void *d, int e, int f);
 
@@ -732,7 +732,7 @@ void func_ov084_0212f298(daPkn_c *c)
 extern "C" {  /* Retained C-linkage helper. */
 void func_ov084_0212f204(char* r4){
   struct Vector3 v;
-  *(char**)(r4 + 0x460) = _ZN8dActor_c13ClosestPlayerEv();
+  *(char**)(r4 + 0x460) = _ZN8dActor_c13ClosestPlayerEv(r4);
   {
     char* p = *(char**)(r4 + 0x460);
     if (p != 0) {
