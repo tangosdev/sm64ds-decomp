@@ -20,7 +20,7 @@
 # one on its own). Every hal file that would carry the fill belongs to another
 # lane, so this lane cannot complete a single seat.
 #
-# AN ACTIVE SLICE LINE IS NOT A SEAT, and two of these rows prove it: 
+# AN ACTIVE SLICE LINE IS NOT A SEAT, and two of these rows prove it:
 # src/func_ov015_021111d0.c and src/func_ov015_02112c20.c have been on
 # slice_gate59.txt for a while, they compile on every build (their .obj files
 # are under build/port/CMakeFiles/walk_window.dir/), and neither symbol appears
@@ -77,14 +77,26 @@
 # port/unmatched/MgFlower_Slot2.cpp because the ROM's r1 rides through.
 #src/func_ov006_0210a6e4.cpp
 #
-# ---- ov015 ----------------------------------------------------------------
-# already on slice_gate59.txt:57 and :79; tables data_ov015_02114380 and 02114824 are
-# absent from the port, so neither symbol reaches the map. See out/ADJ/bugs.md for the
-# VT0/VT1/VT2 placeholder finding on these two.
+# ---- ov015 -- THE CLOSEST FOUR TO A SEAT IN THE WHOLE 23 ------------------
+# Both TUs are already on slice_gate59.txt (:57 and :79), both compile every build,
+# and neither symbol reaches walk_window.map, because the class fill does not name
+# it. Their tables ARE in the port: hal/actor_classes_wf.cpp:415 defines
+# data_ov015_02114360 (aliased _ZTV18daObjBkBillboard_c) and :543 defines
+# data_ov015_021147e8 (aliased _ZTV17daObjBk_Ukisima_c), and hal_fill_pole_billboard_vtable
+# / hal_fill_rotating_platform_wf_vtable already fill slots 0/3/6/9/16 of each with
+# __fastcall thunks. Each of these two rows is SLOT 17, the deleting destructor, one
+# word past the slot-16 D1 those fills already seat (pb_d1 -> func_ov015_021111a0,
+# rp_d1 -> func_ov015_02112bd0). So the seat is one thunk and one vt[17] line per
+# class in hal/actor_classes_wf.cpp, plus the per-TU placeholder rename in
+# out/ADJ/bugs.md. That file is not this lane's; the proposal is in
+# out/ADJ/seatability.md.
 #src/func_ov015_021111d0.c
 #src/func_ov015_02112c20.c
-# blocker: zero-argument veneers onto func_ov015_02111414; table data_ov015_02114458
-# absent from the port.
+# blocker: slots 23 and 24 of _ZTV13PoleBillboard (hal/actor_classes_wf.cpp:472, filled
+# at :501), which that fill leaves on its shared default. Both bodies are zero-argument
+# tail-call veneers onto func_ov015_02111414, so the thunk has to pass the receiver in
+# and tailjump_guard has to see the jmp form survive, the way lane BNP did it for the
+# ov006 pair.
 #src/func_ov015_021113fc.c
 #src/func_ov015_02111408.c
 #
