@@ -741,12 +741,22 @@
       "relocations": []
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN13daObjKuruma_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    }
+  ],
   "notes": [
     "The original four-function generated candidate was incomplete. The adjacent daObjKm3_Kuruma_c_classInit factory and its g_profile_KM3_KURUMA descriptor establish the corrected five-function boundary.",
     "This TU owns the contiguous data band 0x021123fc..0x021124cc: compiler-emitted RTTI and type-name records, resource descriptor, SpawnInfo, and vtable storage. Only inherited vague RTTI copies remain exact-symbol externalized.",
-    "The inline class-body destructor makes mwccarm emit only D1 then D0 in retail order; there is no compiler-only D2 body.",
-    "The manual C-linkage factory remains intentional: natural new has not been proven to preserve the retail allocator and vptr relocation shape."
+    "The inline class-body destructor makes mwccarm emit only D1 then D0 in retail order. return new also emits base D2 helpers; exact compiler-only policy deadstrips those."
   ],
   "verification": {
     "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
