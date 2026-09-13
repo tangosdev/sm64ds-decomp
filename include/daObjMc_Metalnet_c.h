@@ -4,11 +4,12 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-/* The MC_METALNET profile's chain-link net: a static mesh the player can climb,
- * with no state of its own. It decides ONCE, in InitResources, whether it is in
- * the level at all -- past the 150-star mark it returns 0 and is destroyed
- * before it is ever drawn -- and after that it only keeps its collider where
- * its model is.
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* Peach's Castle chain-link net (profile MC_METALNET / METAL_NET 339). A
+ * climbable mesh with no state of its own. ov009 is mixed -- CASTLE_WATER
+ * (338) and FLAG (342) sit next door -- this is the net, not those.
+ * MetalNetLift (ov064, _ZTV12MetalNetLift at 0x0211bc68) is a different class.
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
  *   _ZTS  ov009 0x02113aa4  "18daObjMc_Metalnet_c"
@@ -17,32 +18,26 @@
  *                           base is dBgActor_c and nothing else.
  *   _ZTV  ov009 0x02113ae0  the ADDRESS POINT itself: V-8 is a zero
  *                           offset-to-top, V-4 is &_ZTI, V+0 is slot 0
- *                           (InitResources, 0x02111f40). The vptr store is
- *                           addend-0 against this symbol.
+ *                           (InitResources, 0x02111f40).
  *   size  0x320             daObjMc_Metalnet_c_classInit's own literal (800),
  *                           which is also dBgActor_c's: this class adds no
- *                           field, so the two sizes are the same number for the
- *                           same reason and not by coincidence.
- * The coined MetalNet alias that used to sit on this vtable is gone; the ROM's
- * own type string is where the class name now comes from. MetalNetLift (ov064)
- * is a DIFFERENT class with its own RTTI and is untouched by that.
+ *                           field.
+ *   profile g_profile_MC_METALNET at ov009 0x02113abc.
  *
  * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c at ov002
- * 0x0210ae38. Exactly the slots declared below differ; all 33 other words are
- * the base's own, including slot 31 (Kill, 0x020ee55c), so nothing else is
- * overridden and nothing else is redeclared here.
+ * 0x0210ae38. Exactly the slots declared below differ; all other words are
+ * the base's own, including slot 31 (Kill, 0x020ee55c). Slot 12 is the one
+ * this family usually leaves alone: fBase_c::OnPendingDestroy at 0x02043ac0
+ * is replaced by a 4-byte empty body at 0x02111ea4.
  */
 struct daObjMc_Metalnet_c : dBgActor_c {
-    /* No field of its own. dBgActor_c ends at 0x31e and rounds to 0x320; unlike
-       daObjRc_Guruguru_c and daObjC0_Switch_c this class puts nothing in that
-       tail padding, which is why sizeof is the base's own 0x320 unchanged. */
+    /* No field of its own. dBgActor_c ends at 0x31e and rounds to 0x320. */
 
-    /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place these two
-       are emitted; with the body out of line mwcc emits D0 ahead of D1 and the
-       ROM has D1 first (rombuild refuses the object outright). An inline body
-       also drops the D2 variant the cartridge never carried. Declaring it FIRST
-       is what makes this TU the vtable's home, so _ZTV and the RTTI pair land
-       here rather than in whichever other TU happens to name them. */
+    /* MEASURED -- INLINE ON PURPOSE. Out of line, mwccarm 2004/b56 emits D0
+       before D1 (the reverse of the cartridge's 0x02111dc4 D1 / 0x02111e08 D0)
+       and a homeless D2, and objisolate rejects the whole translation unit.
+       Defined in the class body it emits D1 then D0 and no D2. Safe here
+       because the class is a leaf: nothing derives from it. */
     virtual ~daObjMc_Metalnet_c() {}        /* slots 16 (D1), 17 (D0) */
 
     virtual s32   InitResources();          /* slot  0 */
@@ -53,7 +48,17 @@ struct daObjMc_Metalnet_c : dBgActor_c {
        at 0x02111ea4. The override exists only to stop the base's own
        OnPendingDestroy from running. */
     virtual void  OnPendingDestroy();       /* slot 12 */
+
+    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
+       Parameter is size_t (unsigned long on this compiler). `return new`
+       relocates to `_Znwm` without this. */
+    static void *operator new(unsigned long size);
 };
+
+inline void *daObjMc_Metalnet_c::operator new(unsigned long size)
+{
+    return _ZN7fBase_cnwEj((unsigned)size);
+}
 
 typedef char daObjMc_Metalnet_c_size_must_be_0x320[sizeof(daObjMc_Metalnet_c) == 0x320 ? 1 : -1];
 
