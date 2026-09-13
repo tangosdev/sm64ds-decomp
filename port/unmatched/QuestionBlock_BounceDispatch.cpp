@@ -42,6 +42,7 @@
  * data_ov102_0214e8c0 (NOT 0214e870); only case 2 reads 0214e870. This was a
  * real bug fixed during matching and the relocs confirm it.
  */
+#include "hal/pmf_seat5.h"
 #include <cstdio>
 #include <cstdlib>
 
@@ -138,21 +139,21 @@ extern signed char data_0209f2f8;
    equivalent, and the eight distinct bodies the thirty-six records name need
    eight faces. */
 static void __fastcall seat5_qb_021494cc(void *s, void *e)
-{ (void)e; func_ov102_021494cc(s); }
+{ (void)e; port_seat5_count(5); func_ov102_021494cc(s); }
 static void __fastcall seat5_qb_02149478(void *s, void *e)
-{ (void)e; func_ov102_02149478(s); }
+{ (void)e; port_seat5_count(6); func_ov102_02149478(s); }
 static void __fastcall seat5_qb_02149428(void *s, void *e)
-{ (void)e; func_ov102_02149428(s); }
+{ (void)e; port_seat5_count(7); func_ov102_02149428(s); }
 static void __fastcall seat5_qb_02149384(void *s, void *e)
-{ (void)e; func_ov102_02149384(s); }
+{ (void)e; port_seat5_count(8); func_ov102_02149384(s); }
 static void __fastcall seat5_qb_021493dc(void *s, void *e)
-{ (void)e; func_ov102_021493dc(s); }
+{ (void)e; port_seat5_count(9); func_ov102_021493dc(s); }
 static void __fastcall seat5_qb_021492d4(void *s, void *e)
-{ (void)e; func_ov102_021492d4(s); }
+{ (void)e; port_seat5_count(10); func_ov102_021492d4(s); }
 static void __fastcall seat5_qb_02149288(void *s, void *e)
-{ (void)e; func_ov102_02149288(s); }
+{ (void)e; port_seat5_count(11); func_ov102_02149288(s); }
 static void __fastcall seat5_qb_02149220(void *s, void *e)
-{ (void)e; func_ov102_02149220(s); }
+{ (void)e; port_seat5_count(12); func_ov102_02149220(s); }
 
 static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_qblock_content_statics[] = {

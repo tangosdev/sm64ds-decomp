@@ -32,6 +32,7 @@
  * Each source's ROM fn is checked against the mount before it is overwritten, so
  * a mount pointing at the wrong bytes aborts instead of seating a stale address.
  */
+#include "hal/pmf_seat5.h"
 #include <cstdio>
 #include <cstdlib>
 
@@ -145,15 +146,15 @@ extern "C" int func_ov018_02111bf0(void *c, void *cell);
    in port/hal/pmf_seat5.cpp: the matched TU is a real C++ member and publishes
    ?Behavior@Unagi@@QAEHXZ. */
 static void __fastcall seat5_unagi_main_021119ec(void *self, void *dead_edx)
-{ (void)dead_edx; func_ov016_021119ec(self); }   /* cell d8c MAIN */
+{ (void)dead_edx; port_seat5_count(0); func_ov016_021119ec(self); }  /* d8c MAIN */
 static void __fastcall seat5_unagi_main_02111758(void *self, void *dead_edx)
-{ (void)dead_edx; func_ov016_02111758(self); }   /* cell d9c MAIN */
+{ (void)dead_edx; port_seat5_count(1); func_ov016_02111758(self); }  /* d9c MAIN */
 static void __fastcall seat5_unagi_main_021118b4(void *self, void *dead_edx)
-{ (void)dead_edx; func_ov016_021118b4(self); }   /* cell dac MAIN */
+{ (void)dead_edx; port_seat5_count(2); func_ov016_021118b4(self); }  /* dac MAIN */
 static void __fastcall seat5_unagi_main_021115c0(void *self, void *dead_edx)
-{ (void)dead_edx; func_ov016_021115c0(self); }   /* cell dbc MAIN */
+{ (void)dead_edx; port_seat5_count(3); func_ov016_021115c0(self); }  /* dbc MAIN */
 static void __fastcall seat5_unagi_main_02111534(void *self, void *dead_edx)
-{ (void)dead_edx; func_ov016_02111534(self); }   /* cell d7c MAIN */
+{ (void)dead_edx; port_seat5_count(4); func_ov016_02111534(self); }  /* d7c MAIN */
 
 static const struct { PortPmf *rec; unsigned rom; void (*host)(void *); }
 g_unagi_sources[] = {

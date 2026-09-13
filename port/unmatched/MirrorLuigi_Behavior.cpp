@@ -52,6 +52,7 @@
  * checked before the swap, so a cell that did not come out of
  * port_mirrorluigi_state_seat aborts instead of being overwritten.
  */
+#include "hal/pmf_seat5.h"
 #include <cstdio>
 #include <cstdlib>
 #include "MirrorLuigi.h"
@@ -68,6 +69,7 @@ static int __fastcall ml_tick_face_02111288(void *self, void *dead_edx,
                                             void *val)
 {
     (void)dead_edx;
+    port_seat5_count(13);
     return func_ov055_02111288(self, val);
 }
 
