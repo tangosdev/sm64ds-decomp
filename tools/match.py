@@ -9,7 +9,13 @@ slot lined up -- not a raw byte-for-byte compare.
 
 Usage:
     python tools/match.py --c match/f.c --func f --addr 0x02065a84 --size 0x10 \
-        --version 2004/b56 --flags "-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e"
+        --version 2004/b56
+
+Flags default to the ones the ROM build will actually hand this file -- `build_flags()`,
+which resolves through `build_pin.flags_for`. `--flags` overrides them for a deliberate
+lever sweep. Do NOT reach for `DEFAULT_FLAGS`: it is the sweep's string, it omits
+`-Cpp_exceptions off`, and compiling this gate with it has already banked a byte-exact
+C++ body as a divergence-7 near-miss.
 
 The repository's ``include/`` directory is always on the compiler search path.
 Use ``--include-dir`` for an additional candidate-specific header tree.
@@ -33,13 +39,67 @@ ARM9 = REPO / "extracted" / "arm9_dec.bin"
 ARM9_BASE = 0x02004000
 INCLUDE = REPO / "include"
 
-# -w illpragmas is a WARNING flag only (no codegen effect, verified: all banked matches still
-# match with it on). It exists here because mwccarm SILENTLY ACCEPTS an unknown #pragma by
-# default, so a typo'd or invented pragma name compiles clean and leaves the output unchanged
-# -- indistinguishable from a genuinely inert lever. Whole sweeps have recorded "pragma X is
-# inert" for pragmas the compiler never honoured. With this flag it prints
-# "<file>:<line>: warning: illegal #pragma" and names the line; compile_c surfaces that even
-# on a successful compile. See notes/mwccarm-codegen.md 6as.
+# THE SWEEP'S flag set -- NOT the ROM build's. The build compiles with
+# `-Cpp_exceptions off` (rombuild.CFLAGS) and this string does not; see build_flags()
+# below for which question each one answers and why the CLI no longer defaults here.
+# Kept as a single module-level literal on purpose: tools/test_nearmiss_db.py parses it
+# out of this file with ast.literal_eval and fails if it is ever derived or reassigned.
+#
+# -w illpragmas DOES NOT DO WHAT THIS COMMENT USED TO CLAIM. The old text said mwccarm
+# silently accepts an unknown #pragma by default and that this flag makes it warn, so a
+# sweep could tell "inert lever" from "pragma does not exist". Measured by direct
+# invocation, mwccarm 2004/b56, 2026-09-13:
+#
+#     #pragma totally_invented_pragma on     -w illpragmas -> NO diagnostic, exit 0
+#                                            -w all        -> NO diagnostic, exit 0
+#     #pragma opt_common_subs bogus_value    -w illpragmas -> "Warning: illegal #pragma",
+#                                                             caret under the ARGUMENT
+#
+# So the flag is real and it is not a no-op -- it just fires on an illegal ARGUMENT to a
+# pragma mwccarm KNOWS, never on an unknown pragma NAME. The `-w all` run is the positive
+# control both ways: it warns about `function has no prototype` in the same file, so the
+# silence on the invented name is the compiler's answer and not a swallowed stream.
+# An "inert" reading of a pragma is therefore still indistinguishable from that pragma not
+# existing, and HASH-SCREENING the object is the only valid screen for a pragma sweep.
+#
+# THERE IS, HOWEVER, A POSITIVE CONTROL FOR PRAGMA EXISTENCE -- use it before sweeping a
+# name. Feed the pragma a deliberately illegal argument and compile with -w illpragmas:
+#
+#     printf '#pragma %s __bogus_arg__\nint q(void){return 0;}\n' NAME > probe.c
+#     mwccarm -w illpragmas -c -o probe.o probe.c   # "illegal #pragma" => NAME EXISTS
+#
+# The argument has to be ILLEGAL for the probe to say anything: a known pragma given a
+# LEGAL argument is silent, exactly like an unknown one. That is the trap that makes the
+# naive reading of this flag useless and the probe useful.
+#
+# Measured over a mixed set: opt_common_subs, opt_dead_code, opt_propagation,
+# opt_lifetimes, opt_strength_reduction, opt_unroll_loops, opt_vectorize_loops,
+# inline_max_size, optimize_for_size, global_optimizer and `peephole` all warn (they
+# exist); totally_invented_pragma, zzz_not_a_pragma, opt_nopeephole, opt_schedule and
+# `scheduling` are all silent (they do not). `#pragma peephole off` then compiles clean.
+# Independently reproduced the same day by a second lane under both `-lang c99` and
+# `-lang c++`.
+#
+# WHAT DOES NOT WORK, so nobody spends the afternoon on it again: recovering the pragma
+# vocabulary by feeding every string in `mwccarm.exe`'s string table through this flag.
+# Tried; it returns 1,442 "valid" names, among them `wcscat` and `while`. The string
+# table is not the pragma table, and the flag cannot tell you which strings in it are.
+#
+# There is a SECOND, independent screen in notes/mwccarm-codegen.md 6br: the 1.2, 2.0 and
+# dsi builds DO warn on an unknown pragma name, so compiling the same file once under
+# `--version 1.2/sp2p3` names a typo that 2004/b56 swallows. Use either; the two agreed
+# on every name above. Only b56 -- the canonical matching compiler, so the one a sweep
+# reaches for by default -- is silent, which is what made this trap expensive.
+#
+# AND THE -opt OPTION NAMES ARE NOT FREE-FORM EITHER. `-opt nopeephole` and
+# `-opt noschedule` are REJECTED ("Unknown option ... while parsing option '-opt'"), so
+# any sweep that recorded either as "measured inert" measured nothing at all. mwccarm
+# 2004/b56 prints its own accepted list, verbatim:
+#     off|none, on, all|full, [no]space, [no]speed, l[evel], [no]cse | [no]commonsubs,
+#     [no]deadcode, [no]deadstore, [no]lifetimes, [no]loop[invariants],
+#     [no]prop[agation], [no]strength, [no]dead, or display|dump
+# mwccarm prints the same shape of list for a bad `-w` name, which is how the `-w`
+# vocabulary above was established. Neither list is guessable; ask the compiler.
 DEFAULT_FLAGS = ("-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e "
                  "-gccext,on -msgstyle gcc -w illpragmas")
 # The builds --all sweeps. This was a hand-written list of 12 while 25 mwccarm.exe were
@@ -84,6 +144,53 @@ PINNED = ["1.2/base", "1.2/sp2", "1.2/sp2p3"]
 # this corpus than the 1.2 service packs (notes/rom-build.md). Ships mwccarm only —
 # the ROM link still uses 1.2/sp2p3 mwldarm (LD_VERSION in tools/rombuild.py).
 CANONICAL = "2004/b56"
+
+
+def build_flags(path, text=None):
+    """The flags the ROM build will hand mwccarm for this file. The CLI's default.
+
+    Resolved through `build_pin.flags_for`, which is the ONE definition of the build's
+    flag string (it reads `rombuild.CFLAGS` and swaps `-lang c99` for `-lang c++` on the
+    `//cpp` first-line marker, exactly as `rombuild.compile_one` does). Deliberately a
+    reference and not a second copy: PR #2659 moved `linkcheck.py`, `reloc_audit.py` and
+    `bytegate.py`'s link gate here for the same reason, and a hand-synced duplicate is
+    the thing that goes stale.
+
+    WHY THIS IS NOT `DEFAULT_FLAGS`. The two strings differ by `-Cpp_exceptions off`, and
+    for a C++ body that flag can move `.text`. Measured 2026-09-13: `func_ov006_020ea914`
+    (ov006, 0x324 bytes) sat in the near-miss bank at divergence 7 for months. The
+    divergence was entirely the missing flag -- seven instructions reordered at
+    +0x98..+0xbc -- and the already-banked draft is byte-exact with no source change at
+    all when compiled the way the build compiles it. Isolated: adding only
+    `-Cpp_exceptions off` to `DEFAULT_FLAGS` takes it 7 -> 0, and removing only
+    `-w illpragmas` leaves the `.text` hash unchanged.
+
+    That is a false NEAR-MISS. The same gap runs the other way -- a body that reproduces
+    only with exceptions ON would be reported here as a match the ROM build then cannot
+    link -- which is why the answer is the build's flags rather than "both".
+
+    `-w illpragmas` is dropped by this rule rather than added to the build's string, and
+    that is a deliberate choice, not an oversight. It is codegen-inert (verified: the
+    `.text` hash is identical with and without it on every C++ row in the near-miss bank),
+    and the reason it was added in the first place -- surfacing an invented pragma name --
+    is not something it actually does; see the comment on `DEFAULT_FLAGS`. Keeping it
+    would buy no diagnostic and cost the exact divergence-from-the-build this function
+    exists to close. It stays one `--flags` away for anyone who wants it.
+
+    `DEFAULT_FLAGS` / `swarm.CPP_FLAGS` stay as they are, still answering a DIFFERENT
+    question: `bytegate.builds_anywhere` asks "does any of 25 compilers accept this
+    source at all?" (the denominator question), and #2659 kept it on the sweep's flags on
+    purpose. The near-miss evaluator (`swarm.oracle_check`, and `nearmiss_db` through it)
+    is still on them too; re-scored under this function's flags on 2026-09-13, all 17
+    C++ rows in `nearmiss/db.jsonl` produce a byte-identical function `.text` except the
+    one above, so moving it is a correctness cleanup and not a live defect.
+    """
+    # Lazy: build_pin imports this module, so importing it at module scope would be a
+    # cycle. Unguarded on purpose -- a match verdict compiled with fallback flags is the
+    # defect this closes, so it fails loudly rather than guessing a string.
+    import build_pin as BP
+    return BP.flags_for(path, text)
+
 
 md = Cs(CS_ARCH_ARM, CS_MODE_ARM)
 
@@ -131,13 +238,22 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
             detail = "\n".join(s for s in (r.stdout.strip(), r.stderr.strip()) if s)
             print(f"  ! compile failed ({version}): {detail[:500]}")
             return None
-        # A SUCCESSFUL compile can still be telling you the lever you are measuring does not
-        # exist. mwccarm accepts any unknown #pragma silently, so without this the sweep just
-        # reports the baseline number and the pragma gets banked as "inert". Surface it.
+        # A SUCCESSFUL compile can still be telling you the lever you are measuring is not
+        # being applied, so surface mwccarm's "illegal #pragma" line even on exit 0.
+        #
+        # Read it correctly, though. It means the pragma NAME IS KNOWN and its ARGUMENT is
+        # not. It never fires on an unknown pragma name -- mwccarm accepts one of those in
+        # total silence under every -w setting, `-w all` included. The line printed here
+        # used to claim the opposite ("mwccarm does NOT know this pragma"), which is
+        # backwards, and that reading is how sweeps came to bank levers the compiler never
+        # applied. Absence of this warning proves nothing; hash-screen the object. See
+        # DEFAULT_FLAGS above for the measurements and for the probe that does answer
+        # "does this pragma exist?".
         for line in (r.stdout + r.stderr).splitlines():
             if "illegal #pragma" in line:
-                print(f"  ! {line.strip()}  <- mwccarm does NOT know this pragma; "
-                      f"it is not being applied (see notes 6as)")
+                print(f"  ! {line.strip()}  <- mwccarm knows this pragma but REJECTED the "
+                      f"argument, so it is not being applied. (An unknown pragma NAME "
+                      f"warns about nothing at all; silence is not evidence.)")
         return out_o.read_bytes()
 
 
@@ -235,7 +351,10 @@ def main():
     ap.add_argument("--trio", action="store_true", help="sweep the 1.2 base/sp2/sp2p3 trio")
     ap.add_argument("--all", action="store_true", help="sweep every known version")
     ap.add_argument("--brief", action="store_true", help="terse: per-version pass/fail; diff only if none match")
-    ap.add_argument("--flags", default=DEFAULT_FLAGS)
+    ap.add_argument("--flags", default=None,
+                    help="override the compiler flags; default is the ROM build's own "
+                         "string for this file (build_flags/build_pin.flags_for), NOT "
+                         "match.DEFAULT_FLAGS -- see build_flags()'s docstring")
     ap.add_argument("--include-dir", action="append", default=[],
                     help="additional header search directory (repeatable; checked before repo include/)")
     ap.add_argument("--bin", default=None,
@@ -275,15 +394,25 @@ def main():
             print(f"  (reloc-destination check unavailable: {e}; byte-only compare)")
 
     cfile = pathlib.Path(args.c)
-    # Auto-detect C++ the same way fdiff/swarm do: a leading //cpp marker means compile with
-    # -lang c++ instead of the default -lang c99, so C++ candidates stop failing to compile
-    # (the file is already .cpp, so it compiles in place - no temp copy needed).
-    flags = args.flags
-    try:
-        if cfile.read_text(encoding="utf-8").startswith("//cpp") and "-lang c99" in flags:
-            flags = flags.replace("-lang c99", "-lang c++")
-    except OSError:
-        pass  # a missing/unreadable candidate surfaces later at compile_c with a clearer error
+    # Default to the flags the ROM BUILD will hand this file, resolved through the one
+    # helper that defines them (build_flags -> build_pin.flags_for). It already applies
+    # the `//cpp` first-line rule, which is what decides C vs C++ -- never the extension.
+    #
+    # Compiling this gate with anything else measures a build nobody ships: the same
+    # one-flag gap banked func_ov006_020ea914 as a divergence-7 near-miss when its
+    # already-written draft was byte-exact. See build_flags().
+    #
+    # An explicit --flags is taken verbatim, minus the same //cpp language swap the
+    # default gets, so a deliberate lever sweep can still pin any string it likes.
+    if args.flags is None:
+        flags = build_flags(cfile)
+    else:
+        flags = args.flags
+        try:
+            if cfile.read_text(encoding="utf-8").startswith("//cpp") and "-lang c99" in flags:
+                flags = flags.replace("-lang c99", "-lang c++")
+        except OSError:
+            pass  # a missing/unreadable candidate surfaces later at compile_c with a clearer error
     if args.bin:
         tgt = target_bytes(args.addr, args.size, pathlib.Path(args.bin), args.base)
     elif args.module and args.module != "arm9":
