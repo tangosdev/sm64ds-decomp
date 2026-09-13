@@ -8,6 +8,17 @@
  * mangled member rows in config/arm9/overlays/ov030/symbols.txt were renamed
  * to the cartridge spelling in the commit before this one.
  *
+ * deslop
+ * Leftover: func_ov030_* helpers stay those ROM labels (tick PMFs and
+ *   free functions). EnterState0..10 are already members; do not coin
+ *   names for the rest.
+ * Leftover: SetAnim / dCcAc_c::Init / dBgCh_Actr::Init /
+ *   DropShadowRadHeight / IsTooFarAwayFromPlayer stay mangled
+ *   (Fix12-by-value, 6az; dBgCh Init header Fix12i mangles as int).
+ * Leftover: common.h first (02112094 matrix copy). Player+8 param1
+ *   and cap +0xc8 belong on those classes. data_ov030_* handles.
+ *   Factories live in d_a_mky_monkey_*.c (after this TU's .text).
+ *
  * THE SOURCE IS WRITTEN ROM-ASCENDING and the file opens with
  * `#pragma defer_codegen off`.  The two go together: with codegen deferred
  * (the default) mwccarm lays .text down in reverse source order and an
@@ -68,6 +79,7 @@
 #include "common.h"
 #include "types.h"
 #include "daMky_c.h"
+#include "SharedFilePtr.h"
 #include "decl_PathPtr.h"
 #include "decl_SaveData.h"
 #include "dBgCh_Gnd.h"
@@ -719,14 +731,13 @@ int func_ov030_021122b0(dActor_c *self)
 /* The number 10 is read from the ROM too: this body writes the immediate 10 to the state word at +0x3b4, and it is the only one of the 44 that writes 10.  "EnterState" is coined; see the block above. */
 // @symbol _ZN7daMky_c12EnterState10Ev
 int daMky_c::EnterState10(){
-    char *c = (char *)this;
     struct S { int w[2]; };
     extern struct S data_ov030_02115d18;
-  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, (void*)data_ov030_02115d18.w[1], 0, 0x1000, 0);
-  *(int*)(c+0x130) = 0x1000;
-  *(int*)(c+0x98) = 0x13000;
-  *(unsigned char*)(c+0x3c6) = 0x1e;
-  *(int*)(c+0x3b4) = 0xa;
+  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, (void*)data_ov030_02115d18.w[1], 0, 0x1000, 0);
+  *(int*)((char *)this + 0x130) = 0x1000;
+  mHorzSpeed = 0x13000;
+  mActionTimer = 0x1e;
+  mState = 0xa;
   return 1;
 }
 
@@ -1106,7 +1117,7 @@ int daMky_c::EnterState7()
   s16 s;
   int mul = 0x4b000;
   int rnd = 0x800;
-  *((int *) ((int) (((s64) ((int) (c + 0xb0)))))) &= ~0x80000;
+  mFlags &= ~0x80000;
   _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115d08[1], 0x40000000, 0x1000, 0);
   *((int *) (c + 0x98)) = 0xa000;
   *((int *) (c + 0xa8)) = 0;
@@ -2048,14 +2059,12 @@ int daMky_c::EnterState0()
 /* ROM ordinal 35 -- func_ov030_02114134, 0x02114134, size 0x3c */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov030_02114134
-struct C4134;
-typedef void (C4134::*PMF4134)();
-struct C4134 { char pad[0x3a4]; PMF4134 *pp; };
+typedef void (daMky_c::*PMF)();
 extern "C" {
-void func_ov030_02114134(C4134 *c)
+void func_ov030_02114134(daMky_c *self)
 {
-    PMF4134 *p = c->pp + 1;
-    (c->**p)();
+    PMF *p = (PMF *)self->mStateDesc + 1;
+    (self->* *p)();
 }
 }
 
@@ -2063,14 +2072,11 @@ void func_ov030_02114134(C4134 *c)
 /* ROM ordinal 36 -- func_ov030_02114170, 0x02114170, size 0x38 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov030_02114170
-struct C4170;
-typedef void (C4170::*PMF4170)();
-struct C4170 { char pad[0x3a4]; PMF4170 *pp; };
 extern "C" {
-void func_ov030_02114170(C4170 *c)
+void func_ov030_02114170(daMky_c *self)
 {
-    PMF4170 *p = c->pp;
-    (c->**p)();
+    PMF *p = (PMF *)self->mStateDesc;
+    (self->* *p)();
 }
 }
 
@@ -2079,13 +2085,14 @@ void func_ov030_02114170(C4170 *c)
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov030_021141a8
 extern "C" {
-void func_ov030_021141a8(char *self, int idx)
+void func_ov030_021141a8(char *c, int idx)
 {
     typedef struct { int a, b, c, d; } Item16;
     extern Item16 data_ov030_02115e0c[];
+    daMky_c *self = (daMky_c *)c;
 
-    *(Item16 **)(self + 0x3a4) = &data_ov030_02115e0c[idx];
-    func_ov030_02114170((C4170 *)self);
+    self->mStateDesc = &data_ov030_02115e0c[idx];
+    func_ov030_02114170(self);
 }
 }
 
@@ -2117,28 +2124,18 @@ void func_ov030_021141a8(char *self, int idx)
  * ========================================================================== */
 extern "C" {
 
-struct SharedFilePtr_ { u32 data[4]; };
-
-void  _ZN13SharedFilePtr7ReleaseEv(SharedFilePtr_ *self);
-void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-int   _ZN5Model6RenderEPK7Vector3(void *self, void *ofs);
-int   _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int b);
-void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
-int   _ZN11ShadowModel12InitCylinderEv(void *self);
 void  _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int idx, int speed, u32 flags);
 void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, u32 c, u32 d);
 void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, void *v1);
 int   _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *self, int d);
-char *_ZN8dActor_c13ClosestPlayerEv(void *self);
-char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const void *pos, const void *rot, int areaID, int deathTableID);
 int   _ZN8SaveData16HasPlayerLostCapEv(void);
 
-extern SharedFilePtr_  data_ov002_0210da40;
-extern SharedFilePtr_  data_ov002_0210d9a0;
-extern SharedFilePtr_  data_ov002_0210d9c0;
-extern SharedFilePtr_  data_ov030_02115d00;
-extern SharedFilePtr_ *data_ov030_02114824[10];
-extern void           *data_ov030_02115cf0[];
+extern SharedFilePtr  data_ov002_0210da40;
+extern SharedFilePtr  data_ov002_0210d9a0;
+extern SharedFilePtr  data_ov002_0210d9c0;
+extern SharedFilePtr  data_ov030_02115d00;
+extern SharedFilePtr *data_ov030_02114824[10];
+extern void          *data_ov030_02115cf0[];
 
 }
 
@@ -2161,12 +2158,12 @@ struct VObj {
 s32 daMky_c::CleanupResources()
 {
     int i;
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da40);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210d9a0);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210d9c0);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov030_02115d00);
+    data_ov002_0210da40.Release();
+    data_ov002_0210d9a0.Release();
+    data_ov002_0210d9c0.Release();
+    data_ov030_02115d00.Release();
     for (i = 0; i < 10; i++)
-        _ZN13SharedFilePtr7ReleaseEv(data_ov030_02114824[i]);
+        data_ov030_02114824[i]->Release();
     return 1;
 }
 
@@ -2189,7 +2186,7 @@ s32 daMky_c::Render()
 {
     int b = (mFlags & 0x40000) != 0;
     if (b) return 1;
-    _ZN5Model6RenderEPK7Vector3(((char *)this) + 0xd4, 0);
+    mModelAnim.Model::Render(0);
     return 1;
 }
 
@@ -2200,32 +2197,32 @@ s32 daMky_c::Render()
 /* Vtable slot 6. */
 s32 daMky_c::Behavior()
 {
-    char *c = (char *)((dActor_c *)this);
-    if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((dActor_c *)this), 0x5dc000) != 0 &&
-        *(int *)(c + 0x3b4) != 8) {
-        int b = (*(unsigned short *)(c + 0xc) == 0x10b);
-        if (b != 0 && *(unsigned char *)(c + 0x3c8) == 0 && _ZN8SaveData16HasPlayerLostCapEv() != 0) {
-            char *pl = _ZN8dActor_c13ClosestPlayerEv(((dActor_c *)this));
-            unsigned cp = *(unsigned *)(pl + 8);
+    char *c = (char *)this;
+    if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(this, 0x5dc000) != 0 &&
+        mState != 8) {
+        int b = (actorID == 0x10b);
+        if (b != 0 && mHasSpawnedCap == 0 && _ZN8SaveData16HasPlayerLostCapEv() != 0) {
+            Player *pl = ClosestPlayer();
+            unsigned cp = *(unsigned *)((char *)pl + 8);
             if (cp < 3) {
-                char *spawned;
-                *(int *)(c + 0x3b0) = cp;
-                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+                dActor_c *spawned;
+                mCapPlayerNo = cp;
+                spawned = Spawn(
                     0x10d,
-                    ((unsigned)*(int *)(c + 0x3b0) << 8) | 2,
-                    (const void *)(c + 0x5c),
-                    (const void *)0,
-                    (int)*(signed char *)(c + 0xcc),
+                    (mCapPlayerNo << 8) | 2,
+                    *(const Vector3 *)&mPosX,
+                    0,
+                    mAreaId,
                     -1);
-                *(int *)(c + 0x3ac) = *(int *)(spawned + 4);
-                *(unsigned char *)(c + 0x3c8) = 1;
+                mCapUniqueID = spawned->uniqueID;
+                mHasSpawnedCap = 1;
                 func_ov030_021141a8(c, 1);
             }
         }
         func_ov030_02111734(c);
     } else {
-        func_ov030_02114134((C4134 *)c);
-        ((VObj *)(c + 0xd4))->v3();
+        func_ov030_02114134(this);
+        mModelAnim.UpdateVerts();
         func_ov030_02112094(c);
     }
     return 1;
@@ -2241,27 +2238,26 @@ s32 daMky_c::InitResources()
     int i;
     int b;
     u16 h;
-    int *py;
+    char *c = (char *)this;
 
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da40);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov030_02115d00), 1, 1);
+    Model::LoadFile(data_ov002_0210da40);
+    Model::LoadFile(data_ov002_0210d9a0);
+    Model::LoadFile(data_ov002_0210d9c0);
+    mModelAnim.SetFile((BMD_File *)Model::LoadFile(data_ov030_02115d00), 1, 1);
     for (i = 0; i < 10; i++)
-        _ZN9Animation8LoadFileER13SharedFilePtr(data_ov030_02114824[i]);
-    if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)
+        Animation::LoadFile(*data_ov030_02114824[i]);
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0xd4, data_ov030_02115cf0[1], 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, data_ov030_02115cf0[1], 0, 0x1000, 0);
     mModelAnim.speed = 0x1000;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x160, ((char *)this), 0x28000, 0x64000, 0x800004, 0x49000);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x194, ((char *)this), 0x32000, 0x32000, 0, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x28000, 0x64000, 0x800004, 0x49000);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    py = (int *)(((int)((char *)this) + 0x384));
-    unk_380 = mPosX;
-    unk_384 = mPosY;
-    unk_388 = mPosZ;
-    *py += 0x64000;
+    mPerchPosX = mPosX;
+    mPerchPosY = mPosY;
+    mPerchPosZ = mPosZ;
+    mPerchPosY += 0x64000;
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
     mSpawnPosZ = mPosZ;
@@ -2277,31 +2273,31 @@ s32 daMky_c::InitResources()
         b = 1;
     if (b != 0) {
         if (_ZN8SaveData16HasPlayerLostCapEv() != 0) {
-            char *player = _ZN8dActor_c13ClosestPlayerEv(((char *)this));
-            if (*(u32 *)(player + 8) >= 3)
+            Player *player = ClosestPlayer();
+            if (*(u32 *)((char *)player + 8) >= 3)
                 goto ov030_no_spawn;
             {
-                char *spawned;
-                mCapPlayerNo = *(u32 *)(player + 8);
-                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (mCapPlayerNo << 8) | 2, ((char *)this) + 0x5c, 0, mAreaId, -1);
-                mCapUniqueID = *(int *)(spawned + 4);
+                dActor_c *spawned;
+                mCapPlayerNo = *(u32 *)((char *)player + 8);
+                spawned = Spawn(0x10d, (mCapPlayerNo << 8) | 2, *(const Vector3 *)&mPosX, 0, mAreaId, -1);
+                mCapUniqueID = spawned->uniqueID;
                 mHasSpawnedCap = 1;
-                func_ov030_021141a8(((char *)this), 1);
+                func_ov030_021141a8(c, 1);
                 goto ov030_cap_done;
             }
 ov030_no_spawn:
-            func_ov030_021141a8(((char *)this), 0);
+            func_ov030_021141a8(c, 0);
 ov030_cap_done:
             ;
         } else {
-            func_ov030_021141a8(((char *)this), 0);
+            func_ov030_021141a8(c, 0);
         }
     } else {
         int t = (int)(h == 0x10c);
         if (t != 0)
-            func_ov030_021141a8(((char *)this), 1);
+            func_ov030_021141a8(c, 1);
     }
-    func_ov030_02112094(((char *)this));
+    func_ov030_02112094(c);
     return 1;
 }
 
