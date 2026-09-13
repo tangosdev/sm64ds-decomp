@@ -30,13 +30,34 @@
 // `ldrb r3,[r6,#2]` takes r3, dead at +0x240; +0x24c `add r6,r5,ip` takes r6, dead at
 // +0x248), and the first cluster fell to ordinary source-level rank levers.
 //
+// What the two sides actually disagree about is narrower: when a load's BASE register
+// holds a value whose last use is that same load, 2004/b56 takes it as the load's
+// destination, and the ROM's compiler takes it only when base and destination belong
+// to one expression chain. The ROM does dest == base 25 times in this function -- every
+// one a chained read like data_0209caa0[0x41] or the vptr walk at +0x18 -- and refuses
+// it at exactly the two sites where the destination is a distinct named value, +0x214
+// (`idx` off the pool temp) and +0x248 (`ty` off `rec`). Raising a named local's
+// colouring rank overrides our preference, and that is what closed +0x214. At +0x248
+// the value competing with `ty` is a compiler temp with no declaration, so there is no
+// rank to raise, and the sweeps below say so.
+//
 // MEASURED INERT on the remaining cluster, all at div 11 with the schedule intact
-// (SCHED==0 throughout): every type name for `ty`, `tx`, `rec` and the rest; naming
-// the window temp (8 types x 4 ranks); naming the scratch chain's address and load
-// intermediates (3 pointer types x 7 value types); `ty` before `tx`; a `rec` alias
-// copy; `*(u8 *)(rec + 3)` and the other access-expression forms; declaring `ty` or
-// `tx` at the point of use; the `data_020a0de9` respellings (`data_020a0de8[idx][1]`,
-// flat `[idx * 4]`, struct arrays). A 40-cell additive pragma sweep is inert as well,
+// (SCHED==0 throughout): `ty`'s declaration rank x type name is EXHAUSTIVE at 14 names
+// x 11 ranks and all 187 cells emit the identical `ldrb r6,[r6,#3]`; naming the window
+// temp (8 types x 4 ranks); naming the scratch chain's address and loaded byte as two
+// locals swept over 3 pointer types x 5 value types x 12 ranks (180 cells, one root-2
+// word in all of them); `ty` before `tx`; a `rec` alias copy; `*(u8 *)(rec + 3)` and
+// the other access-expression forms; declaring `ty` or `tx` at the point of use;
+// carrying `ty` in an existing local with a disjoint live range; the three nested-if
+// spellings of the guard (the banner this replaces recorded those as "did not
+// compile" -- they compile and they tie); moving the `ty` read into the loop with
+// opt_loop_invariants re-enabled, which keeps SCHED==0 and scores 23; the callee
+// return-type and argument-type axis; the `data_020a0de9` respellings
+// (`data_020a0de8[idx][1]`, flat `[idx * 4]`, struct arrays). Two randomized product
+// scans over declaration order x type names x spellings (1475 cells from the old shape,
+// 1359 from this one) never produce the ROM's `ldrb r7,[r6,#3]`, and neither does a
+// 45-minute permuter run on a plain-C base that compiles byte-identically to this file.
+// A 40-cell additive pragma sweep is inert as well,
 // and both pragmas here are load-bearing: dropping opt_strength_reduction rebuilds the
 // frame (0x830, pushes r8, loses the `sub sp,sp,#4`), dropping opt_loop_invariants
 // keeps the exact schedule and costs 5 more coloring words.
