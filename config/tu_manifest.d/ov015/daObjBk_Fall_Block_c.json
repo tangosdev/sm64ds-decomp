@@ -136,6 +136,23 @@
   },
   "compiler_only_output": [
     {
+      "symbol": "_ZN16daObjFallBlock_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN7Vector3D1Ev",
+      "disposition": "deadstrip-duplicate",
+      "canonical_module": "arm9",
+      "canonical_address": "0x020072c0",
+      "reason": "daObjFallBlock_c has Vector3 mRestPos. return new instantiates the class, so mwccarm emits daObjFallBlock_c D2, which destroys that member and re-emits Vector3's empty inline destructor as vague linkage. The cartridge owns it at arm9:0x020072c0."
+    },
+    {
       "symbol": "_ZTI7fBase_c",
       "disposition": "deadstrip-data",
       "canonical_module": "arm9",

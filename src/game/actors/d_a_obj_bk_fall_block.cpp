@@ -1,156 +1,61 @@
 //cpp
-/* Production translation unit for ov015/daObjBk_Fall_Block_c, hand-curated.
- * 5 function(s), .text 0x02112cf4..0x02112e0c.
+/**
+ * Whomp's Fortress falling block.
  *
- * ENROLLED AND CANONICAL. config/arm9/overlays/ov015/delinks.txt licenses that
- * whole run to this one path, so the ROM build compiles this file in place of
- * the four legacy one-function sources it replaces.
+ * No fields. InitResources / CleanupResources hand this overlay's
+ * model and collision files to daObjFallBlock_c's shared ov098
+ * helpers.
+ * func_ov098_0213a794 loads slot 0 with Model::LoadFile, slot 1
+ * with dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile. ov015 sinit
+ * constructs those SharedFilePtrs as file IDs 1423 / 1424.
  *
- * Bob-omb Battlefield's falling block. It adds no state of its own to
- * daObjFallBlock_c (see include/daObjBk_Fall_Block_c.h) and overrides only the
- * two vtable slots the base leaves null -- both of which hand the actor and
- * this level's descriptor to the shared ov098 falling-block helpers. Its
- * already-promoted siblings are ov022/daObjFl_Fall_Block_c (Lethal Lava Land)
- * and ov045/daObjKm2_Fall_Block_c, and all three have the identical shape.
+ * daObjBk_Fall_Block_c_classInit is reconstructed (RTTI
+ * daObjBk_Fall_Block_c, BK_DOWN_B registry). Retail does not store
+ * that spelling.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
- * emits one .text section per function in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder:
- * tools/rombuild.py refuses the object outright when the emitted order and the
- * ROM's disagree.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02112cf4  src/_ZN20daObjBk_Fall_Block_cD1Ev.cpp
- *   [1] 0x02112d44  src/_ZN20daObjBk_Fall_Block_cD0Ev.cpp
- *   [2] 0x02112da8  src/_ZN20daObjBk_Fall_Block_c16CleanupResourcesEv.cpp
- *   [3] 0x02112dbc  src/_ZN20daObjBk_Fall_Block_c13InitResourcesEv.cpp
- *   [4] 0x02112dd0  src/daObjBk_Fall_Block_c_classInit.c
- *
- * THE FIFTH IS THE FACTORY. daObjBk_Fall_Block_c_classInit is the BK_DOWN_B
- * registry profile's spawn function and sits immediately after InitResources in
- * the ROM's own .text order, so it is part of this TU. It keeps C linkage and
- * is written first here, being the highest-address member -- and above the
- * first positional `#pragma long_calls on`, which must not reach it.
+ * deslop
+ * Leftover: func_ov098_0213a794 / func_ov098_0213a2cc are still the
+ *   linker names of daObjFallBlock_c Init/Cleanup (the base leaves
+ *   those slots pure virtual). Naming belongs in ov098.
+ * Leftover: data_ov015_02114880 is overlay .data this TU does not
+ *   own; the BMD/KCL SharedFilePtrs and CLPS_Block are still
+ *   data_ov015_*.
+ * Leftover: g_profile_BK_DOWN_B lives outside this TU (S14).
  */
 
-/* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources
- * of this TU. `#pragma long_calls` is POSITIONAL in mwccarm 2004/b56 and is
- * carried verbatim before its own member below, bracketed with `off` so it
- * cannot leak into later members (dropping it silently costs the pooled
- * cross-overlay tail-call -- a byte diff; see ShutterBob in ov014).
- * Any OTHER pragma is FILE-GLOBAL last-wins (opt_propagation,
- * optimize_for_size) and is still left out: carried into a merged TU it
- * would silently recompile every other member. Decide those by hand:
- *   _ZN20daObjBk_Fall_Block_c16CleanupResourcesEv: #pragma long_calls on   [carried below]
- *   _ZN20daObjBk_Fall_Block_c13InitResourcesEv: #pragma long_calls on   [carried below]
- */
-
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "daObjBk_Fall_Block_c.h"
+#include "SharedFilePtr.h"
 
-/* The three-word block at ov015 0x02114880 that ov098's shared setup and
-   teardown helpers read: this level's model and collision file handles.
-   Nothing in this TU dereferences it, so it stays an opaque descriptor rather
-   than a guess at its members. */
+struct CLPS_Block;
+
 struct ResourceDescriptor {
-    void *entries[3];
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
 };
+typedef char ResourceDescriptor_size_must_be_0x0c[
+    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
-/* ov098's shared falling-block setup and teardown, still under placeholder
-   names. Both take the actor and the per-level descriptor. */
-int func_ov098_0213a2cc(daObjBk_Fall_Block_c *self, ResourceDescriptor *descriptor);
 int func_ov098_0213a794(daObjBk_Fall_Block_c *self, ResourceDescriptor *descriptor);
+int func_ov098_0213a2cc(daObjBk_Fall_Block_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov015_02114880;
-
-/* The factory's own dependencies, restated here. The legacy file already
-   declared them in place -- it pulled in no decl_*.h header at all -- so this
-   is that file's own spelling carried over verbatim. */
-extern void *_ZN7fBase_cnwEj(unsigned size);
-extern void _ZN10dBgActor_cC2Ev(void *self);
-extern int _ZTV16daObjFallBlock_c[];
-extern int _ZTV20daObjBk_Fall_Block_c[];
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- daObjBk_Fall_Block_c_classInit, 0x02112dd0, size 0x3c     */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjBk_Fall_Block_c_classInit
-/* Reconstructed source-style name: SM64DS proves daObjBk_Fall_Block_c through
-   RTTI, allocation size, most-derived vtable identity, and the BK_DOWN_B
-   registry profile; later EAD lineage supplies classInit. Exact original
-   spelling is not preserved. Historical alias: daObjBk_Fall_Block_c_Spawn.
-
-   Two vptr stores, not one: the inlined daObjFallBlock_c constructor writes its
-   own vptr and this class's write follows it. 844 = 0x34c = the whole object;
-   this class adds no fields.
-
-   Written above the first `#pragma long_calls on` below deliberately: the
-   pragma is positional and must not reach this function, which the ROM calls
-   with a plain near branch. */
-extern "C" int *daObjBk_Fall_Block_c_classInit(void)
+extern "C" daObjBk_Fall_Block_c *daObjBk_Fall_Block_c_classInit()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(844);
-    if (p) {
-        _ZN10dBgActor_cC2Ev(p);
-        p[0] = (int)_ZTV16daObjFallBlock_c;
-        p[0] = (int)_ZTV20daObjBk_Fall_Block_c;
-    }
-    return p;
+    return new daObjBk_Fall_Block_c();
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN20daObjBk_Fall_Block_c13InitResourcesEv, 0x02112dbc, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjBk_Fall_Block_c13InitResourcesEv
-/* Vtable slot 0. Delegates to the shared ov098 falling-block setup helper,
-   handing it the Bob-omb Battlefield descriptor.
-
-   Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit the
-   pooled `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise)
-   that the ROM uses to reach another overlay. */
-#pragma long_calls on  /* carried verbatim from the legacy file (positional) */
-int daObjBk_Fall_Block_c::InitResources()
+s32 daObjBk_Fall_Block_c::InitResources()
 {
     return func_ov098_0213a794(this, &data_ov015_02114880);
 }
-#pragma long_calls off  /* close the bracket: positional, must not leak downward */
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN20daObjBk_Fall_Block_c16CleanupResourcesEv, 0x02112da8, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN20daObjBk_Fall_Block_c16CleanupResourcesEv
-/* Vtable slot 3, the teardown half of the InitResources delegation, over the
-   same ov015 descriptor.
-
-   Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit the
-   pooled `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise)
-   that the ROM uses to reach another overlay. */
-#pragma long_calls on  /* carried verbatim from the legacy file (positional) */
-int daObjBk_Fall_Block_c::CleanupResources()
+s32 daObjBk_Fall_Block_c::CleanupResources()
 {
     return func_ov098_0213a2cc(this, &data_ov015_02114880);
 }
-#pragma long_calls off  /* close the bracket: positional, must not leak downward */
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN20daObjBk_Fall_Block_cD0Ev, 0x02112d44, size 0x64      */
-/* ROM ordinal 0 -- _ZN20daObjBk_Fall_Block_cD1Ev, 0x02112cf4, size 0x50      */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN20daObjBk_Fall_Block_cD1Ev
-// @symbol _ZN20daObjBk_Fall_Block_cD0Ev
-/* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjBk_Fall_Block_c() {}` in the
-   header is the whole source of both variants: from an inline body mwcc emits
-   D1 and then D0 -- the cartridge's own order -- and no D2. Writing the body
-   out of line here instead flips them to D0-before-D1 and the isolation step
-   rejects the object.
-
-   Their bodies are three vptr stores and the member destructions, every one a
-   consequence of `daObjBk_Fall_Block_c : daObjFallBlock_c : dBgActor_c`: this
-   class's vptr, then daObjFallBlock_c's and dBgActor_c's -- both inlined,
-   because both destructors are defined in their class bodies -- then
-   dBgActor_c's dBgW_KcMbg and Model, then dActor_c. This class adds no member
-   with a destructor of its own, and D0's trailing deallocation is the inline
-   `operator delete` it inherits, which is why nothing here names a heap. */

@@ -2,42 +2,31 @@
 #define DAOBJBK_FALL_BLOCK_C_H
 
 #include "types.h"
-
-/* Bob-omb Battlefield's falling block.
- *
- * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjFallBlock_c, which derives from
- * dBgActor_c, and the difference is in the bytes rather than only in the RTTI: its
- * destructor stores THREE vptrs -- its own, daObjFallBlock_c's, then dBgActor_c's.
- * A one-level chain emits two.
- *
- *   _ZTI20daObjBk_Fall_Block_c  ov015 0x02114868
- *   _ZTS20daObjBk_Fall_Block_c  ov015 0x021148a0
- *   _ZTV20daObjBk_Fall_Block_c  ov015 0x021148dc  (its record sits at V-4)
- *   kind  __si_class_type_info, ONE base, subobject offset 0
- *   base  daObjFallBlock_c, ov015 0x02114874
- *
- * NO FIELDS OF ITS OWN: daObjBk_Fall_Block_c_classInit passes 844 = 0x34c, which daObjFallBlock_c
- * fills exactly. It overrides slots 0 and 3, which the base leaves null.
- */
-
-#ifdef __cplusplus
-
 #include "daObjFallBlock_c.h"
 
-struct daObjBk_Fall_Block_c : daObjFallBlock_c {
-    /* --- vtable --- */
-    /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place these
-       two are emitted; with the body out of line mwcc emits D0 ahead of D1
-       and the ROM has D1 first (rombuild refuses the object outright). An
-       inline body also drops the D2 variant the cartridge never carried. */
-    virtual ~daObjBk_Fall_Block_c() {}       /* slots 16 (D1), 17 (D0) */
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
-    int CleanupResources();            /* slot  3 */
-    int InitResources();               /* slot  0 */
+/**
+ * Whomp's Fortress falling block. No fields of its own: the
+ * factory allocates 0x34c, which daObjFallBlock_c fills. Overrides
+ * the two slots the base leaves null (InitResources,
+ * CleanupResources) and hands this overlay's model/collision
+ * descriptor to the shared ov098 helpers.
+ *
+ * `daObjBk_Fall_Block_c` is the RTTI name.
+ */
+struct daObjBk_Fall_Block_c : daObjFallBlock_c {
+    /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
+    virtual ~daObjBk_Fall_Block_c() {}
+    virtual s32 CleanupResources(); /* slot 3 */
+    virtual s32 InitResources();    /* slot 0 */
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj(size);
+    }
 };
 
-typedef char daObjBk_Fall_Block_c_size_must_be_0x34c[sizeof(daObjBk_Fall_Block_c) == 0x34c ? 1 : -1];
-
-#endif /* __cplusplus */
+typedef char daObjBk_Fall_Block_c_size_must_be_0x34c[
+    sizeof(daObjBk_Fall_Block_c) == 0x34c ? 1 : -1];
 
 #endif /* DAOBJBK_FALL_BLOCK_C_H */
