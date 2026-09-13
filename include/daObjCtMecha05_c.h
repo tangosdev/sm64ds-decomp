@@ -1,86 +1,47 @@
+/* The cartridge's RTTI names this Tick Tock Clock moving-bar class
+ * daObjCtMecha05_c. Profile CT_MECHA05 (113) is TTC_MOVING_BAR in
+ * overlay_actors.md. ov065 is TTC.
+ *
+ * The factory constructs dBgActor_c, then ShadowModel at 0x33c, and
+ * installs this class vptr. The allocation literal is 0x394. */
 #ifndef DAOBJCTMECHA05_C_H
 #define DAOBJCTMECHA05_C_H
-
 #include "types.h"
 
-/* Derives from dBgActor_c directly: RTTI _ZTI16daObjCtMecha05_c /
- * _ZTS16daObjCtMecha05_c (config/arm9/overlays/ov065/symbols.txt) give the
- * class name, and unlike most names in that file this one IS the cartridge's
- * -- the string "16daObjCtMecha05_c" is present in overlay_0065.bin. The
- * un-migrated D1 (func_ov065_0211ab60) stored this class's own vtable, then
- * dBgActor_c's -- inlined, because dBgActor_c's destructor is defined in its
- * class body -- then destroyed the dBgW_KcMbg at 0x124 and the Model at 0xd4
- * before chaining to dActor_c. All three belong to dBgActor_c and are
- * inherited now.
- *
- * THE AUTO-GENERATED FLAT PLACEHOLDER'S FIELDS BELOW 0x320 WERE ALL
- * dActor_c's, not this class's own -- same defect the daObjCtMecha03_c pass
- * found at 0x08e/0x090. Every one of unk_05c/060/064/08e/094/098 is read or
- * written by this class's own functions, which is why the generator saw
- * them, but each already has a name in dActor_c.h: mPosX/mPosY/mPosZ
- * (0x05c/0x060/0x064), mAngleY (0x08e), mPrevAngleY (0x094 -- the flat
- * header's u16 was really dActor_c's s16), mHorzSpeed (0x098, reused here as
- * a plain accumulator rather than a physical speed). InitResources confirms
- * the 0x08e/0x094 pair directly: it copies mAngleY into mPrevAngleY
- * (`*(short*)(self+0x94) = *(short*)(self+0x8e)`), the ordinary
- * current-into-previous idiom the two field names already describe. dActor_c
- * ends its own data at 0x31e (sizeof rounds to 0x320, via dBgActor_c) -- see
- * the header comment there. This class's own storage starts at 0x320 and
- * nothing below it is restated.
- *
- * SIZE IS THE ROM'S OWN LITERAL: the factory now reconstructed as
- * daObjCtMecha05_c_classInit (historical project alias TTC_MovingBar_Spawn)
- * stores THIS class's vtable, data_ov065_0211d2b4, not
- * _ZTV13TTC_MovingBar, and calls fBase_c::operator new(0x394), read off the
- * retail instruction. Neither factory spelling survives in the cartridge.
- * A field span is only ever a LOWER BOUND on the size,
- * and this one used to stop at 0x364, with the remaining 0x30 bytes carried
- * as unclaimed trailing pad.
- *
- * THOSE 0x30 BYTES ARE NOW CLAIMED, and by the ROM's own typing rather than
- * by inference. The shadow helper (func_ov065_0211ac0c, before promotion
- * src/func_ov065_0211ac0c.c) builds a rotation into 0x364 with
- * `Matrix4x3_FromRotationY((void*)(c + 0x364), mAngleY)`, multiplies a vector
- * through the same address, writes 0x388/0x38c/0x390 -- exactly the
- * translation column at +0x24/+0x28/+0x2c of a 0x30-byte Matrix4x3 -- and
- * then passes that same address to
- * _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x3..., whose
- * mangled name types the parameter `Matrix4x3&` outright. The same call types
- * 0x33c as `ShadowModel&`. So the tail is mShadowMatrix, the field span now
- * reaches the ROM's full 0x394, and no pad is left over.
- */
-
 #ifdef __cplusplus
-
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 #include "dBgActor_c.h"
 #include "ShadowModel.h"
 
 struct daObjCtMecha05_c : dBgActor_c {
-    s32 mHomePosX;                     /* 0x320 -- snapshot of mPosX at InitResources */
-    s32 mHomePosY;                     /* 0x324 -- snapshot of mPosY at InitResources */
-    s32 mHomePosZ;                     /* 0x328 -- snapshot of mPosZ at InitResources */
-    s32 mTravel;                       /* 0x32c -- distance travelled along the path; += mHorzSpeed each tick, compared against 0xfa000 */
-    s32 mPrevTravel;                   /* 0x330 -- previous tick's mTravel; their product's sign is the turn test */
-    s16 mStateTimer;                   /* 0x334 -- DecIfAbove0_Short countdown, seeded from data_ov065_0211c0c8[setting] */
-    u8  mState;                        /* 0x336 -- Behavior's switch key, 0..3, incremented in place */
+    s32 mHomePosX;            /* 0x320 -- snapshot of mPosX at InitResources */
+    s32 mHomePosY;            /* 0x324 -- snapshot of mPosY at InitResources */
+    s32 mHomePosZ;            /* 0x328 -- snapshot of mPosZ at InitResources */
+    s32 mTravel;              /* 0x32c -- += mHorzSpeed each tick; compared to 0xfa000 */
+    s32 mPrevTravel;          /* 0x330 -- previous tick's mTravel */
+    s16 mStateTimer;          /* 0x334 -- DecIfAbove0_Short countdown */
+    u8  mState;               /* 0x336 -- Behavior switch key, 0..3 */
     u8  pad_337[0x1];
-    s32 mGroundY;                      /* 0x338 -- ground height from InitResources' dBgCh_Gnd raycast */
-    ShadowModel mShadowModel;          /* 0x33c -- typed by DropShadowScaleXYZ's ShadowModel& parameter */
-    Matrix4x3 mShadowMatrix;           /* 0x364 -- typed by DropShadowScaleXYZ's Matrix4x3& parameter */
-
-    /* --- vtable --- */
-    /* Inline on purpose: when this class's vtable is instantiated, mwccarm
-       emits the cartridge's D1 then D0 order without a homeless D2. */
-    virtual ~daObjCtMecha05_c() {}
+    s32 mGroundY;             /* 0x338 -- dBgCh_Gnd hit height */
+    ShadowModel mShadowModel; /* 0x33c */
+    Matrix4x3 mShadowMatrix;  /* 0x364 */
 
     int CleanupResources();
     int InitResources();
     int Behavior();
     int Render();
 
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
+    /* Declared last and inline so class instantiation emits the retail D1/D0
+     * pair in cartridge order without a separate leaf D2 body. */
+    virtual ~daObjCtMecha05_c() {}
 };
 
-typedef char daObjCtMecha05_c_size_must_be_0x394[sizeof(daObjCtMecha05_c) == 0x394 ? 1 : -1];
+typedef char daObjCtMecha05_c_size_must_be_0x394[
+    sizeof(daObjCtMecha05_c) == 0x394 ? 1 : -1];
 
 #endif /* __cplusplus */
 

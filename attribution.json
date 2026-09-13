@@ -1960,6 +1960,7 @@
     "src/game/actors/daObjCtMecha05_c.cpp#_ZN16daObjCtMecha05_cD1Ev": "tangosdev",
     "src/game/actors/daObjCtMecha05_c.cpp#func_ov065_0211ac0c": "github-actions[bot]",
     "src/game/actors/daObjCtMecha05_c.cpp#func_ov065_0211ad70": "github-actions[bot]",
+    "src/game/actors/daObjCtMecha05_c.cpp#daObjCtMecha05_c_classInit": "andrewboudreau",
     "src/actors/daObjCvShutter_c.cpp#_ZN16daObjCvShutter_c13InitResourcesEv": "github-actions[bot]",
     "src/actors/daObjCvShutter_c.cpp#_ZN16daObjCvShutter_c16CleanupResourcesEv": "github-actions[bot]",
     "src/actors/daObjCvShutter_c.cpp#_ZN16daObjCvShutter_c8BehaviorEv": "github-actions[bot]",
