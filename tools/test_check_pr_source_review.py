@@ -91,6 +91,8 @@ class PRSourceReviewTest(unittest.TestCase):
                 return {"ref": "refs/heads/main", "object": {"type": "commit", "sha": BASE}}
             if "/git/ref/" in path:
                 return {"object": {"sha": "e" * 40}}
+            if "/commits/" in path:
+                return reviewable_commit_response(path.rsplit("/", 1)[1])
             return copy.deepcopy(pr)
 
         with patch.object(gate, "api", side_effect=api), patch.object(
@@ -102,14 +104,40 @@ class PRSourceReviewTest(unittest.TestCase):
 
 
 
+
+def after_final_target_read(calls):
+    """Calls made after the last target ref read.
+
+    The tip is read last on purpose. stable_target() then resolves the anchor
+    from that tip, so the ref read is now followed by its own commit walk and
+    nothing else; assert on that shape rather than on a fixed offset.
+    """
+    last = max(i for i, call in enumerate(calls) if call.endswith("/git/ref/heads/main"))
+    return calls[last + 1:]
+
+def reviewable_commit_response(sha, parent="0" * 40, files=("src/actor.cpp",)):
+    """A target-branch commit that changed source, so stable_target stops on it."""
+    return {"sha": sha, "parents": [{"sha": parent}],
+            "files": [{"filename": name} for name in files]}
+
+
+def inert_commit_response(sha, parent):
+    """A bot progress refresh: it moves the tip and no reviewer can act on it."""
+    return {"sha": sha, "parents": [{"sha": parent}],
+            "files": [{"filename": "contributions.json"},
+                      {"filename": "docs/index.html"},
+                      {"filename": "docs/progress-treemap.svg"}]}
+
 class TargetBranchReviewTest(unittest.TestCase):
     def run_fixture(self, refs, review_base=BASE, publish=False, source=True,
-                    branch="main", final_branch=None, final_head=None, final_state=None):
+                    branch="main", final_branch=None, final_head=None, final_state=None,
+                    commits=None):
         snapshot = state()
         output = snapshot["tasks"]["actor"]["outputs"][0]["evidence"]
         output["tested_base"] = review_base
         output["source_review"]["reviewed_base"] = review_base
         pr = pull_request(branch)
+        commits = commits or {}
         replies = iter(refs)
         calls, posts = [], []
         reads = 0
@@ -124,6 +152,9 @@ class TargetBranchReviewTest(unittest.TestCase):
                 return [[{"filename": "src/actor.cpp" if source else "tools/inert.py"}]]
             if path.endswith("/git/ref/heads/agents/coordination"):
                 return {"object": {"sha": "d" * 40}}
+            if "/commits/" in path:
+                sha = path.rsplit("/", 1)[1]
+                return commits.get(sha, reviewable_commit_response(sha))
             if "/git/ref/" in path:
                 value = next(replies)
                 if isinstance(value, Exception):
@@ -165,7 +196,7 @@ class TargetBranchReviewTest(unittest.TestCase):
         self.assertEqual(result["result"], "fail")
         self.assertEqual(result["observed_base"], "e" * 40)
         self.assertEqual(posts, [])
-        self.assertTrue(calls[-1].endswith("/git/ref/heads/main"))
+        self.assertTrue(all("/commits/" in call for call in after_final_target_read(calls)))
 
     def test_final_read_failure_also_blocks_read_only_integrator_check(self):
         result, _, posts, _ = self.run_fixture([BASE, RuntimeError("ref unavailable")])
@@ -190,8 +221,9 @@ class TargetBranchReviewTest(unittest.TestCase):
         self.assertEqual(result["result"], "fail")
         self.assertIn("Target branch changed", result["summary"])
         self.assertEqual(posts[0]["conclusion"], "failure")
-        self.assertTrue(calls[-2].endswith("/git/ref/heads/main"))
-        self.assertTrue(calls[-1].endswith("/check-runs"))
+        tail = after_final_target_read(calls)
+        self.assertTrue(all("/commits/" in call for call in tail[:-1]))
+        self.assertTrue(tail[-1].endswith("/check-runs"))
 
     def test_current_base_review_can_publish_despite_retained_pr_base_metadata(self):
         tip = "e" * 40
@@ -338,7 +370,7 @@ class TreeAPI:
                                   evidence=evidence(head=self.head, base=self.base))
         task["outputs"][0]["evidence"]["source_review"]["files"] = list(reviewed)
         with patch.object(gate, "api", side_effect=self.api), patch.object(
-                gate, "target_branch", return_value=("main", self.base)), patch.object(
+                gate, "target_branch", return_value=("main", self.base, [self.base])), patch.object(
                 gate, "queue_state", return_value=("d" * 40, snapshot)):
             return gate.check_pr("tangosdev/sm64ds-decomp", 2445)
 
@@ -553,6 +585,132 @@ class ExactTreeScopeTest(unittest.TestCase):
         fixture.overrides[fixture.after_tree, True] = RuntimeError("transport failed")
         self.assertEqual(fixture.check()["result"], "fail")
 
+
+
+
+
+class StableTargetTest(unittest.TestCase):
+    """The review target must move only when reviewable source moves.
+
+    Anchoring on the raw tip made every published review expire on the progress
+    bot's timer: main advances on [skip ci] refreshes of contributions.json and
+    docs/, so review evidence went stale with nobody touching the PR. These
+    cover both halves -- that inert commits no longer expire a review, and that
+    nothing which changes reviewable source is ever walked over.
+    """
+    SOURCE = "a" * 40
+    BOT1 = "b" * 40
+    BOT2 = "c" * 40
+
+    def resolve(self, tip, commits):
+        calls = []
+
+        def api(path, payload=None, paginate=False, raw=False):
+            calls.append(path)
+            sha = path.rsplit("/", 1)[1]
+            value = commits[sha]
+            if isinstance(value, Exception):
+                raise value
+            return value
+
+        with patch.object(gate, "api", side_effect=api):
+            return gate.stable_target("tangosdev/sm64ds-decomp", tip) + (calls,)
+
+    def test_bot_refreshes_are_walked_over_to_the_last_reviewable_commit(self):
+        target, window, _ = self.resolve(self.BOT2, {
+            self.BOT2: inert_commit_response(self.BOT2, self.BOT1),
+            self.BOT1: inert_commit_response(self.BOT1, self.SOURCE),
+            self.SOURCE: reviewable_commit_response(self.SOURCE)})
+        self.assertEqual(target, self.SOURCE)
+        self.assertEqual(window, [self.BOT2, self.BOT1, self.SOURCE])
+
+    def reviewed_at(self, base):
+        snapshot = state()
+        review = snapshot["tasks"]["actor"]["outputs"][0]["evidence"]
+        review["tested_base"] = base
+        review["source_review"]["reviewed_base"] = base
+        return snapshot
+
+    def test_every_skipped_tip_is_accepted_as_a_tested_base(self):
+        # A reviewer names whichever tip was live when they measured. All three
+        # carry the same reviewable tree, so all three must be interchangeable
+        # -- otherwise the reviewer has to guess which one the check will pick.
+        window = [self.BOT2, self.BOT1, self.SOURCE]
+        for tested in window:
+            with self.subTest(tested_base=tested):
+                report = gate.evaluate(self.reviewed_at(tested), HEAD, self.SOURCE,
+                                       ["src/actor.cpp"], window)
+                self.assertEqual(report["result"], "pass")
+
+    def test_a_base_outside_the_window_is_still_rejected(self):
+        report = gate.evaluate(self.reviewed_at("9" * 40), HEAD, self.SOURCE,
+                               ["src/actor.cpp"], [self.BOT1, self.SOURCE])
+        self.assertEqual(report["result"], "fail")
+        self.assertIn("actor: PR base changed since source review", report["errors"])
+
+    def test_the_window_does_not_relax_the_single_base_default(self):
+        # evaluate() without a window must still accept exactly one base, so
+        # every other caller and test keeps the pre-existing contract.
+        self.assertEqual(gate.evaluate(self.reviewed_at(self.BOT1), HEAD, self.SOURCE,
+                                       ["src/actor.cpp"])["result"], "fail")
+        self.assertEqual(gate.evaluate(self.reviewed_at(self.SOURCE), HEAD, self.SOURCE,
+                                       ["src/actor.cpp"])["result"], "pass")
+
+    def test_a_commit_touching_reviewable_source_stops_the_walk(self):
+        for path in ("src/actor.cpp", "include/actor.h", "config/tu_manifest.d/ov023/x.json",
+                     "config/arm9/overlays/ov070/delinks.txt", "src_tu/x.cpp", "mods/x.cpp"):
+            with self.subTest(path=path):
+                target, window, _ = self.resolve(self.BOT1, {
+                    self.BOT1: {"sha": self.BOT1, "parents": [{"sha": self.SOURCE}],
+                                "files": [{"filename": "contributions.json"},
+                                          {"filename": path}]}})
+                self.assertEqual((target, window), (self.BOT1, [self.BOT1]))
+
+    def test_a_rename_out_of_source_still_stops_the_walk(self):
+        target, _, _ = self.resolve(self.BOT1, {
+            self.BOT1: {"sha": self.BOT1, "parents": [{"sha": self.SOURCE}],
+                        "files": [{"filename": "notes/moved.md",
+                                   "previous_filename": "src/actor.cpp"}]}})
+        self.assertEqual(target, self.BOT1)
+
+    def test_uncertain_commits_fail_closed_onto_the_live_tip(self):
+        cases = {
+            "unreadable": RuntimeError("commit unavailable"),
+            "merge": {"sha": self.BOT1, "files": [],
+                      "parents": [{"sha": self.SOURCE}, {"sha": "8" * 40}]},
+            "identity mismatch": {"sha": "7" * 40, "parents": [{"sha": self.SOURCE}], "files": []},
+            "files at the API cap": {
+                "sha": self.BOT1, "parents": [{"sha": self.SOURCE}],
+                "files": [{"filename": f"docs/p{n}.html"} for n in range(gate.COMMIT_FILES_CAP)]},
+            "missing files": {"sha": self.BOT1, "parents": [{"sha": self.SOURCE}]},
+            "malformed entry": {"sha": self.BOT1, "parents": [{"sha": self.SOURCE}],
+                                "files": [{"filename": None}]},
+            "unusable parent": {"sha": self.BOT1, "parents": [{"sha": "short"}], "files": []},
+        }
+        for label, response in cases.items():
+            with self.subTest(case=label):
+                target, window, _ = self.resolve(self.BOT1, {self.BOT1: response})
+                self.assertEqual((target, window), (self.BOT1, [self.BOT1]))
+
+    def test_a_long_run_of_refreshes_stops_at_the_walk_limit(self):
+        shas = ["%040x" % n for n in range(gate.TARGET_WALK_LIMIT + 5)]
+        commits = {sha: inert_commit_response(sha, shas[n + 1])
+                   for n, sha in enumerate(shas[:-1])}
+        commits[shas[-1]] = reviewable_commit_response(shas[-1])
+        target, window, calls = self.resolve(shas[0], commits)
+        self.assertEqual(target, shas[gate.TARGET_WALK_LIMIT])
+        self.assertEqual(len(window), gate.TARGET_WALK_LIMIT + 1)
+        self.assertEqual(len(calls), gate.TARGET_WALK_LIMIT)
+
+    def test_check_pr_reports_the_anchor_and_the_live_tip_separately(self):
+        result, _, _, _ = TargetBranchReviewTest().run_fixture(
+            [self.BOT1, self.BOT1], review_base=self.BOT1,
+            commits={self.BOT1: inert_commit_response(self.BOT1, self.SOURCE),
+                     self.SOURCE: reviewable_commit_response(self.SOURCE)})
+        self.assertEqual(result["result"], "pass")
+        self.assertEqual(result["base"], self.SOURCE)
+        self.assertEqual(result["live_tip"], self.BOT1)
+        self.assertEqual(result["base_window"], [self.BOT1, self.SOURCE])
 
 
 if __name__ == "__main__":

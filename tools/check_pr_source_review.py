@@ -13,7 +13,11 @@ from urllib.parse import quote
 import source_review as sr
 
 
-def evaluate(state, head, base, files):
+def evaluate(state, head, base, files, bases=None):
+    # Any commit in the base window carries the same reviewable tree, so a
+    # review naming the tip it was taken against is as good as one naming the
+    # anchor. See stable_target().
+    accepted_bases = {base} if bases is None else set(bases)
     required = {p.casefold() for p in files if sr.source_path(p)}
     if not required:
         return {"result": "pass", "summary": "No reconstruction source, header or TU manifest changed."}
@@ -36,7 +40,8 @@ def evaluate(state, head, base, files):
                 continue
             try:
                 review = sr.validate_evidence(task, evidence, head, reviewer)
-                sr.require(evidence.get("tested_base") == base, "PR base changed since source review")
+                sr.require(evidence.get("tested_base") in accepted_bases,
+                           "PR base changed since source review")
                 sr.require(evidence.get("workflow_commit") == policy, "review uses an older policy")
                 covered.update(p.casefold() for p in review["files"])
                 accepted.append(task["task_id"])
@@ -73,6 +78,80 @@ def queue_state(repo):
     return sha, contents
 
 
+# A progress refresh touches a handful of generated files; a real change does
+# not. Cap the walk so a long run of them cannot become an unbounded API crawl,
+# and keep the cap above the observed bot cadence (11 of 40 commits on main,
+# measured 2026-09-10).
+TARGET_WALK_LIMIT = 25
+
+# The commit endpoint caps its file list at 300 entries and reports no
+# truncation flag, so a list at the cap cannot prove a commit is inert.
+COMMIT_FILES_CAP = 300
+
+
+def reviewable_commit(repo, sha):
+    """Say whether one commit changes anything a source review could be about.
+
+    Reuses the source_path() predicate the check already uses to decide what
+    needs review, so this can never skip a commit that changes a reviewer's
+    answer. Fails closed in every uncertain case -- an unreadable commit, a
+    merge, a file list at the API cap, or a malformed entry all read reviewable,
+    which leaves the target on the live tip exactly as before.
+    """
+    try:
+        data = api(f"repos/{repo}/commits/{sha}")
+    except (RuntimeError, ValueError):
+        return True, None
+    if not isinstance(data, dict) or data.get("sha") != sha:
+        return True, None
+    parents, files = data.get("parents"), data.get("files")
+    if not isinstance(parents, list) or len(parents) != 1:
+        return True, None
+    if not isinstance(files, list) or len(files) >= COMMIT_FILES_CAP:
+        return True, None
+    for entry in files:
+        if not isinstance(entry, dict) or not isinstance(entry.get("filename"), str):
+            return True, None
+        previous = entry.get("previous_filename")
+        if previous is not None and not isinstance(previous, str):
+            return True, None
+        # A rename retains both sides, so source leaving src/ still needs review.
+        if sr.source_path(entry["filename"]) or sr.source_path(previous or ""):
+            return True, None
+    parent = parents[0].get("sha") if isinstance(parents[0], dict) else None
+    if not isinstance(parent, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", parent):
+        return True, None
+    return False, parent
+
+
+def stable_target(repo, tip):
+    """Anchor the target to the newest commit that changed review-relevant source.
+
+    Reading the live tip is deliberate: a composition has to be current. But
+    main also carries periodic bot progress refreshes -- contributions.json,
+    docs/index.html, docs/progress-treemap.svg, marked [skip ci] -- that move
+    the tip without changing anything a reviewer can act on. Anchoring to those
+    expires every open PR's published review on a timer nobody is watching.
+    Measured 2026-09-10 and again 2026-09-12: all open PRs red, and main moved
+    twice during a single triage session.
+
+    Walking back past only the commits that change no source_path() leaves the
+    ancestry requirement in changed_paths() exactly as strong, because any
+    commit that does touch reviewable source stops the walk. The commits walked
+    over are returned as the accepted base window: a review tested against any
+    of them was tested against the same reviewable tree, so they are
+    interchangeable as evidence and a reviewer need not guess which one to name.
+    """
+    target, window = tip, [tip]
+    for _ in range(TARGET_WALK_LIMIT):
+        reviewable, parent = reviewable_commit(repo, target)
+        if reviewable or parent is None:
+            break
+        target = parent
+        window.append(target)
+    return target, window
+
+
 def target_branch(repo, pr):
     """Resolve the live target ref; PR base.sha can retain an older commit."""
     base = pr["base"]
@@ -84,7 +163,9 @@ def target_branch(repo, pr):
     ref = api(f"repos/{repo}/git/ref/heads/{quote(branch, safe='')}")
     sr.require(ref["ref"] == "refs/heads/" + branch, "API returned a different target ref")
     sr.require(ref["object"]["type"] == "commit", "Target branch does not identify a commit")
-    return branch, sr.commit(ref["object"]["sha"], "target branch commit")
+    tip = sr.commit(ref["object"]["sha"], "target branch commit")
+    target, window = stable_target(repo, tip)
+    return branch, target, window
 
 
 def commit_tree(repo, commit):
@@ -189,19 +270,20 @@ def check_pr(repo, number, publish=False):
     if pr["state"] != "open":
         return {"pr": number, "result": "closed"}
     head = pr["head"]["sha"]
-    base, branch = None, None
+    base, branch, window = None, None, []
     state_sha = None
     try:
-        branch, base = target_branch(repo, pr)
+        branch, base, window = target_branch(repo, pr)
         paths = changed_paths(repo, base, head)
         if any(sr.source_path(p) for p in paths):
             state_sha, state = queue_state(repo)
         else:
             state = {}
-        report = evaluate(state, head, base, paths)
+        report = evaluate(state, head, base, paths, window)
     except (RuntimeError, sr.ReviewError, ValueError, KeyError, TypeError) as exc:
         report = {"result": "fail", "summary": "Source review could not be established: " + str(exc)}
     report.update(pr=number, head=head, base=base, base_ref=branch,
+                  live_tip=window[0] if window else None, base_window=window,
                   pr_base=pr["base"].get("sha"), queue_commit=state_sha)
     if not publish and report["result"] != "pass":
         return report
@@ -217,7 +299,7 @@ def check_pr(repo, number, publish=False):
                 report.update(result="fail", summary="Queue changed during review; refresh the check.")
         # Read the actual branch tip last, before returning or creating a check.
         # Re-reading the PR's cached base.sha cannot detect main advancing.
-        current_branch, current_base = target_branch(repo, current)
+        current_branch, current_base, _ = target_branch(repo, current)
         if (current_branch, current_base) != (branch, base):
             report.update(result="fail", summary="Target branch changed during review; refresh the check.",
                           observed_base=current_base, observed_base_ref=current_branch)

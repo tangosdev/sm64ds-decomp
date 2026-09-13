@@ -75,6 +75,23 @@ The reviewer still judges whether the experiment actually supports the claim.
    a changed head/base must lose that acceptance. Record the workflow run, ruleset
    readback, queue SHA and review-policy SHA on the cutover issue.
 
+**"Changed base" means changed reviewably.** The target is not the raw tip of
+main: `check_pr_source_review.stable_target` walks back from the tip past
+commits whose diff contains no `source_path()` entry, and anchors on the newest
+commit that changed reconstruction source, a header or a TU manifest. Every
+commit walked over is accepted as a `tested_base`, because all of them carry the
+same reviewable tree.
+
+This is a property of the deployed target, not a relaxation of the requirement:
+a commit that touches reviewable source stops the walk, and every uncertain case
+(an unreadable commit, a merge, a file list at the API cap, a malformed entry)
+fails closed onto the live tip. Without it the check is unsatisfiable in steady
+state rather than merely strict -- main receives periodic bot progress refreshes
+of `contributions.json` and `docs/` marked `[skip ci]`, so acceptance expired on
+a timer with nobody touching the PR. Measured 2026-09-12 before the change:
+**0 of 117 open PRs** contained the live tip and could clear ancestry at all;
+after it, 72 did.
+
 Ruleset activation is a repository setting, not a consequence of this source PR.
 Until it is configured, the check is advisory at GitHub even though upgraded
 queue transitions enforce review. Coordinators must still honor rejected reviews.
