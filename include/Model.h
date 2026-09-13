@@ -32,9 +32,9 @@
  * The static loaders (LoadFile, LoadTexAndPal, UpdateFileOffsets, the VRAM
  * routines) carry no this at all -- their mangled names take only the file
  * or size arguments -- which is why they are static members here.
- * LoadCompressedTextureToVram is declared but its definition stays at its
- * proven compiler floor (NONMATCHING terminal, see the file); a declaration
- * cannot change that file's codegen.
+ * LoadCompressedTextureToVram returns the pre-bump texel cursor, the same u32
+ * its sibling LoadTextureToVram returns; that return is what the matched
+ * definition needed, and the declaration here had it right all along.
  */
 
 #ifdef __cplusplus
