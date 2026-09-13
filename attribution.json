@@ -2018,6 +2018,8 @@
     "src/game/actors/d_a_obj_kinoko_tag.cpp#_ZN16daObjKinokoTag_cD0Ev": "github-actions[bot]",
     "src/game/actors/d_a_obj_kinoko_tag.cpp#_ZN16daObjKinokoTag_cD1Ev": "github-actions[bot]",
     "src/game/actors/d_a_obj_kinoko_tag.cpp#daObjKinokoTag_c_Spawn": "github-actions[bot]",
+    "src/game/actors/d_a_obj_kinoko_tag.cpp#daObjKinokoTag_c_classInit_KINOKO_CREATE_TAG": "github-actions[bot]",
+    "src/game/actors/d_a_obj_kinoko_tag.cpp#daObjKinokoTag_c_classInit_KINOKO_TAG": "github-actions[bot]",
     "src/game/actors/d_a_obj_km1_dorifu.cpp#StairsBdw_Spawn": "github-actions[bot]",
     "src/game/actors/d_a_obj_km1_dorifu.cpp#_ZN17daObjKm1_Dorifu_c13InitResourcesEv": "github-actions[bot]",
     "src/game/actors/d_a_obj_km1_dorifu.cpp#_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv": "github-actions[bot]",
