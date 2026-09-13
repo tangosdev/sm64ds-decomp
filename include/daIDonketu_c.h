@@ -4,6 +4,8 @@
 #include "types.h"
 #include "daOts_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* The third of daOts_c's children -- the small Bully that stands on the ice.
  * daIDonketu_c_classInit is daDonketu_c_classInit and daBDonketu_c_classInit again, with 0x3fc for the
  * allocation and this class's vtable stored last.
@@ -79,6 +81,13 @@ struct daIDonketu_c : daOts_c {
     int InitResources();                /* slot  0 */
     virtual int UpdateRunState();       /* slot 31 */
     virtual void UpdateDeathState();    /* slot 32 */
+
+    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
+       Parameter is size_t (unsigned long on this compiler). `return new`
+       relocates to `_Znwm` without this. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daIDonketu_c_size_must_be_0x3fc[sizeof(daIDonketu_c) == 0x3fc ? 1 : -1];

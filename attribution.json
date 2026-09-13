@@ -1361,6 +1361,7 @@
     "src/game/actors/d_a_i_donketu.cpp#_ZN12daIDonketu_cD0Ev": "github-actions[bot]",
     "src/game/actors/d_a_i_donketu.cpp#_ZN12daIDonketu_cD1Ev": "github-actions[bot]",
     "src/game/actors/d_a_i_donketu.cpp#daIDonketu_c_Spawn": "github-actions[bot]",
+    "src/game/actors/d_a_i_donketu.cpp#daIDonketu_c_classInit": "github-actions[bot]",
     "src/game/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_c13InitResourcesEv": "github-actions[bot]",
     "src/game/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_c16CleanupResourcesEv": "github-actions[bot]",
     "src/game/actors/d_a_mc_flag.cpp#_ZN10daMcFlag_c6RenderEv": "andrewboudreau",
