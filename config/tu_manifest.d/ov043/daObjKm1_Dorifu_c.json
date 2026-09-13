@@ -860,10 +860,21 @@
       "relocations": []
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN13daObjDorifu_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    }
+  ],
   "notes": [
-    "Manually curated against include/daObjKm1_Dorifu_c.h; an inline empty destructor makes mwccarm emit the retail D1/D0 pair in order without a D2 body.",
-    "daObjKm1_Dorifu_c_classInit is the adjacent fifth function: it allocates exactly sizeof(daObjKm1_Dorifu_c), constructs the inherited Model[5] and dBgW_KcMbg[5], and installs this class's vtable; the next function is the overlay initializer.",
+    "Manually curated against include/daObjKm1_Dorifu_c.h; an inline empty destructor makes mwccarm emit the retail D1/D0 pair in order. return new also emits base D2 helpers; exact compiler-only policy deadstrips those.",
+    "daObjKm1_Dorifu_c_classInit is the adjacent fifth function: return new allocates exactly sizeof(daObjKm1_Dorifu_c), constructs the inherited Model[5] and dBgW_KcMbg[5], and installs this class's vtable; the next function is the overlay initializer.",
     "The earlier 3/4 cleanup-helper warning was stale. Fresh strict isolation gives both D0 objects the same __cxa_vec_cleanup relocations; __cxa_vec_cleanup is now the sized owner at that ROM address: the tree's own name __destroy_arr was deleted when 0x0207328c was carved out to source, because a size-0 alias row is a link definition only while a dsd gap object owns its range."
   ],
   "verification": {
