@@ -4,33 +4,29 @@
 #include "types.h"
 #include "daObjGuragura_c.h"
 
-/* Bowser in the Fire Sea's tilting slab.
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/**
+ * Bowser in the Fire Sea's tilting slab. No fields of its own: the
+ * factory allocates 0x350, which daObjGuragura_c fills. Overrides
+ * the two slots the base leaves null (InitResources,
+ * CleanupResources) and hands this overlay's model/collision
+ * descriptor to the shared ov002 helpers.
  *
- * The class identity and inheritance are ROM evidence:
- *
- *   _ZTI15daObjKm2_Gura_c  ov045 0x02112fd0
- *   _ZTS15daObjKm2_Gura_c  ov045 0x02112fe8
- *   _ZTV15daObjKm2_Gura_c  ov045 0x02113020
- *   base                   daObjGuragura_c, ov002 0x0210905c
- *
- * The factory allocates 0x350 bytes, exactly sizeof(daObjGuragura_c), so this
- * leaf adds no fields. Historical project class alias: TiltingPlatformBfs.
+ * `daObjKm2_Gura_c` is the RTTI name. `guragura` is the wobble.
  */
-
-#ifdef __cplusplus
-
 struct daObjKm2_Gura_c : daObjGuragura_c {
-    /* The inline body makes mwccarm emit only the retail D1/D0 pair, in retail
-     * order, with this TU's RTTI and vtable. */
-    virtual ~daObjKm2_Gura_c() {}          /* slots 16 (D1), 17 (D0) */
+    /* Inline empty dtor: mwccarm emits D1 then D0, no D2. */
+    virtual ~daObjKm2_Gura_c() {}
+    s32 CleanupResources(); /* slot 3 */
+    s32 InitResources();    /* slot 0 */
 
-    int CleanupResources();                /* slot  3 */
-    int InitResources();                   /* slot  0 */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj(size);
+    }
 };
 
 typedef char daObjKm2_Gura_c_size_must_be_0x350[
     sizeof(daObjKm2_Gura_c) == 0x350 ? 1 : -1];
-
-#endif /* __cplusplus */
 
 #endif /* DAOBJKM2_GURA_C_H */
