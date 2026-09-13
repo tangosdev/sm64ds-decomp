@@ -663,8 +663,9 @@ class ExactTreeScopeTest(unittest.TestCase):
     def test_scope_is_measured_from_the_merge_base_not_the_branch_tip(self):
         """Merging can only introduce what the branch changed since the merge base.
 
-        Main landing src/landed.cpp is not this PR deleting it, and main's tip is
-        not this PR's base. The complete tree-derived path set still holds.
+        A source file landing on main after the branch point is not this PR
+        deleting it, and main's tip is not this PR's base. The complete
+        tree-derived path set still holds.
         """
         fixture = TreeAPI(before={"src/actor.cpp": blob("old"), "src/landed.cpp": blob("main")},
                           after={"src/actor.cpp": blob("new"), "tools/helper.py": blob("new")},
