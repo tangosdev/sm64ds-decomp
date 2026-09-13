@@ -41,17 +41,15 @@ extern unsigned char data_0209f2c0[];
 /* ROM ordinal 7 -- daObjClock_c_classInit_CLOCK_SHORT, 0x0211163c, size 0x38       */
 /* -------------------------------------------------------------------------- */
 /* ONE CLASS, TWO PROFILES. CLOCK_LONG (actor 293) and CLOCK_SHORT (actor 292)
- * each own a descriptor and a byte-identical factory; both install the same
+ * each own a descriptor and a separate factory; both install the same
  * vtable at 0x02112200 and the same 0x128 allocation, and InitResources tells
  * them apart at run time by actorID.
  *
- * The factories keep their coined spellings. The registry's
- * factory_rename_recommended is `no` for both rows for exactly this reason
- * (not_apply=global_classinit_name_collision): the EAD convention would name
- * both daObjClock_c_classInit, and two C-linkage definitions cannot share one
- * name. Only the two profile records are renamed, to the spellings the ROM's
- * own debug string table proves -- CLOCK_SHORT at 0x02090230, CLOCK_LONG at
- * 0x0208ffa8. */
+ * The factory suffixes distinguish the two profiles in the reconstruction
+ * registry. Both factory names and g_profile_ spellings are reconstructed
+ * source-style names, not original identifiers recovered from the image.
+ * ROM RTTI supplies the class name; the debug string table supplies the
+ * CLOCK_SHORT/CLOCK_LONG tokens at 0x02090230/0x0208ffa8. */
 extern "C" {
 extern void *_ZN7fBase_cnwEj(u32 size);
 extern void _ZN8dActor_cC2Ev(void *self);
@@ -87,11 +85,14 @@ int *daObjClock_c_classInit_CLOCK_SHORT(void)
 
 /* The 0x1c actor descriptor, `actor_profile_0x1c` in
  * symbols/profile_reconstruction_registry.tsv. Emitted in SOURCE order, which
- * is why CLOCK_LONG (0x021121c0) is written before CLOCK_SHORT (0x021121dc). */
+ * is why CLOCK_LONG (0x021121c0) is written before CLOCK_SHORT (0x021121dc).
+ * The fBase_c constructor passes +4/+6 to behavior/render priority setters.
+ * Their names describe those uses. The retained s16 fields, order and values
+ * do not establish the original signedness. */
 struct ClockSpawnInfo {
     int *(*classInit)();
-    s16 profileIDAndExecuteOrder;
-    s16 drawOrder;
+    s16 behaviorPriority;
+    s16 renderPriority;
     u32 actorFlags;
     s32 clipOffsetY;
     s32 clipRadius;                 /* 0x1000 == 1.0 */
@@ -119,8 +120,8 @@ extern "C" ClockSpawnInfo g_profile_CLOCK_SHORT = {
 /* recovered: typed actor, model, and shared-file ownership */
 int daObjClock_c::InitResources()
 {
-    int isShortHand = (int)(actorID == 0x125);
-    if (isShortHand != 0)
+    int isLongHand = (int)(actorID == 0x125);
+    if (isLongHand != 0)
         mHandIndex = 0;
     else
         mHandIndex = 1;
@@ -185,18 +186,20 @@ int daObjClock_c::CleanupResources()
 /* ROM ordinal 2 -- func_ov013_02111430, 0x02111430, size 0x48 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov013_02111430
-/* Not a vtable slot and not provably a member, so it keeps its func_ name and
- * its raw offsets: it reaches dActor_c's angle triple at +0x8c..+0x90 and the
- * matrix at +0xf0, none of which this class owns. The marker above is not
- * decoration -- without it tools/tiers.py folds this body into the preceding
- * member's fragment and scores these offsets against CleanupResources. */
-extern "C" {  /* .c-derived member: C linkage for the whole block */
+/* Rebuild the owned model matrix from inherited actor angles and position.
+ * The local receiver uses the existing class layout; include order preserves
+ * the Matrix4x3 view with translation in t. Keep the external char* boundary
+ * and address-derived name: original member/free-function status is unproven.
+ * The @symbol marker keeps this helper separate in source-quality reports. */
+extern "C" {
 void func_ov013_02111430(char *t)
 {
-    Matrix4x3_FromRotationZXYExt(t + 0xf0, *(short *)(t + 0x8c), *(short *)(t + 0x8e), *(short *)(t + 0x90));
-    *(int *)(t + 0x114) = *(int *)(t + 0x5c) >> 3;
-    *(int *)(t + 0x118) = *(int *)(t + 0x60) >> 3;
-    *(int *)(t + 0x11c) = *(int *)(t + 0x64) >> 3;
+    daObjClock_c *self = (daObjClock_c *)t;
+    Matrix4x3_FromRotationZXYExt(&self->mModel.mat4x3,
+        self->mAngleX, self->mAngleY, self->mAngleZ);
+    self->mModel.mat4x3.t.x = self->mPosX >> 3;
+    self->mModel.mat4x3.t.y = self->mPosY >> 3;
+    self->mModel.mat4x3.t.z = self->mPosZ >> 3;
 }
 }
 
