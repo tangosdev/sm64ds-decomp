@@ -1,50 +1,45 @@
 //cpp
 // @symbol _ZN12dScStarSel_c8BehaviorEv
-// NONMATCHING: 19/525 at exact size 0x834. Real dScStarSel_c method over
+// NONMATCHING: 11/525 at exact size 0x834. Real dScStarSel_c method over
 // include/dScStarSel_c.h, vtable slot 6. Declaring the two touch-record globals with
 // their real 4-byte stride (u8 [][4]) is what took 20 to 19: with the stride in the
 // type, the index scale folds into each addressing mode instead of being CSE'd into
 // one live temp, so the second read refolds it off the surviving index exactly as the
 // ROM does (+0x28c ldrb r0,[r1,r0,lsl#2]). See notes 6bv lever 2.
 //
-// The banner that stood here claimed 27 against a source that measures 48 today; this
-// body is the near-miss DB's row (#2382), which measures 19 in the same run. Do not
-// re-derive from the 27 shape.
+// 19 to 11 is the declaration block above: `idx` moved to rank 6 AND typed `long`
+// instead of `u8`. That kills the whole first cluster (8 words, +0x214..+0x2ec) -- the
+// ROM's `ldrb r2,[r0]` at +0x214 and the r0/r2 routing of `idx` against `n` that hangs
+// off it. The two edits only work together: the move alone measures 21, `long` alone
+// 31, both 11. `long` and `int` are the same 32-bit signed type here and emit the same
+// instruction, so this is a pure type-NAME rank effect, not a width effect; every other
+// local reverts to its natural type at 11 (measured one at a time).
 //
-// ALL 19 ARE THE 6bs DEAD-REGISTER DELTA, from exactly two roots, and the rest is
-// knock-on. The ROM's compiler will not reuse a register that died on the previous
-// instruction; every build we own takes it because it is the lowest free one.
-//   root 1  +0x228  the pool address of data_020a0e40 dies at the load of `idx`.
-//           ROM: ldrb r2,[r0] (skips r0).  Here: ldrb r0,[r0].  That one choice
-//           rotates `idx` and `n` against each other -- 8 words, including the
-//           latch cmp and both data_020a0de8/9 reads.
-//   root 2  +0x264  `rec` dies at the load of `ty`.
-//           ROM: ldrb r7,[r6,#3] (skips r6, then spends r6 on the loop scratch born
-//           one instruction later).  Here: ldrb r6,[r6,#3], scratch to r7 -- 11 words.
-// Every instruction shape, every immediate and the whole frame already agree, so this
-// is the build delta of notes 6bs, not a spelling that has not been found. Per that
-// section the only construct that skips a dead register is a volatile-fed separate
-// local, which materialises a stack slot and changes the size; it is not admissible
-// and was not banked.
+// The 11 that remain are ONE cluster, +0x248..+0x278: a clean r6 <-> r7 swap between
+// `ty` and the loop-body scratch chain. `rec` dies at the `ty` load (+0x248), freeing
+// r6, and the scratch web is born one instruction later at +0x24c. Both need a
+// register and their ranges nest, so the pair is {r6, r7}; the ROM gives the recycled
+// r6 to the short loop-local scratch and the fresh r7 to `ty`, which is loop-invariant
+// (it is hoisted into the preheader at +0x248 -- the loop proper starts at +0x24c) and
+// live across the whole loop. We give `ty` the recycled r6 and the scratch r7.
 //
-// MEASURED INERT at this shape (run m100 lane H1, on top of the earlier lane's decl-
-// order hill-climbs, single-type sweep, pragma table, statement shuffles and pointer
-// splits) -- 170 cells that compiled, nothing under 19:
-//   * 130 scope-depth cells moving cur/ty/idx/rec/found/i/tx/n/touched into the
-//     `if (touched)` and `if (n > 0)` blocks singly, in pairs and in triples. This is
-//     6bu lever 7 applied to exactly the swap it describes, and it does not reach it:
-//     any cell that moves `ty` costs, and the best tie is 19.
-//   * 24 cells of loop-condition shape x `ty` width. u8/u16/u32 tie at 19 and s32
-//     costs 1; a named u8 or s32 temp for the first condition ties; the
-//     `& (1 << i)` and reversed-subtract spellings of the guard tie. (The four
-//     nested-if cells in that batch did not compile and are not counted.)
-//   * 16 cells of the idx/n pair: both first-write orders, `n` hoisted above `idx`,
-//     beside it, and below `i = 0`, crossed with u8/s32 for each. This is the
-//     first-write-rank lever aimed at the rank tie it is meant for, and it is inert:
-//     the type of `idx` does not matter at all (u8 and s32 score identically), and
-//     hoisting `n`'s write above the `touched` guard costs 3. A rank tie would have
-//     moved; this does not, which is the positive evidence that root 1 is 6bs and
-//     not a naming problem.
+// Do NOT read the old banner's 6bs verdict here: it claimed both clusters were an
+// unreachable build delta because "the ROM's compiler will not reuse a register that
+// died on the previous instruction". That is false on this body in both directions.
+// The ROM itself recycles a just-died register twice in this very block (+0x244
+// `ldrb r3,[r6,#2]` takes r3, dead at +0x240; +0x24c `add r6,r5,ip` takes r6, dead at
+// +0x248), and the first cluster fell to ordinary source-level rank levers.
+//
+// MEASURED INERT on the remaining cluster, all at div 11 with the schedule intact
+// (SCHED==0 throughout): every type name for `ty`, `tx`, `rec` and the rest; naming
+// the window temp (8 types x 4 ranks); naming the scratch chain's address and load
+// intermediates (3 pointer types x 7 value types); `ty` before `tx`; a `rec` alias
+// copy; `*(u8 *)(rec + 3)` and the other access-expression forms; declaring `ty` or
+// `tx` at the point of use; the `data_020a0de9` respellings (`data_020a0de8[idx][1]`,
+// flat `[idx * 4]`, struct arrays). A 40-cell additive pragma sweep is inert as well,
+// and both pragmas here are load-bearing: dropping opt_strength_reduction rebuilds the
+// frame (0x830, pushes r8, loses the `sub sp,sp,#4`), dropping opt_loop_invariants
+// keeps the exact schedule and costs 5 more coloring words.
 // Cross-build: 2004/b56 is the ONLY installed build that even reaches 0x834 here
 // (1.2 lands 2008-2012, 2.0 1952, dsi 1764-1784), so the version axis is closed too.
 #pragma opt_loop_invariants off
@@ -89,15 +84,15 @@ s32 dScStarSel_c::Behavior()
 {
     s32 cur;
     u8 ty;
-    u8 idx;
-    u8 *rec;
     s32 found;
     s32 i;
+    u8 *rec;
     u8 tx;
-    s32 n;
-    s32 pressed;
+    long idx;
     u8 touched;
     s32 hit;
+    s32 n;
+    s32 pressed;
 
     if (data_0209f5bc->v5() != 0) {
         DecIfAbove0_Byte(&FB(this, 0x117));
