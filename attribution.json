@@ -1671,7 +1671,7 @@
     "src/game/actors/d_a_sld_mng.cpp#_ZN10daSldMng_c8BehaviorEv": "github-actions[bot]",
     "src/game/actors/d_a_sld_mng.cpp#_ZN10daSldMng_cD0Ev": "andrewboudreau",
     "src/game/actors/d_a_sld_mng.cpp#_ZN10daSldMng_cD1Ev": "andrewboudreau",
-    "src/game/actors/d_a_sld_mng.cpp#daSldMng_c_Spawn": "github-actions[bot]",
+    "src/game/actors/d_a_sld_mng.cpp#daSldMng_c_classInit": "github-actions[bot]",
     "src/game/actors/d_a_sound_obj.cpp#_ZN12daSoundObj_c13InitResourcesEv": "github-actions[bot]",
     "src/game/actors/d_a_sound_obj.cpp#_ZN12daSoundObj_c8BehaviorEv": "github-actions[bot]",
     "src/game/actors/d_a_sound_obj.cpp#_ZN12daSoundObj_cD0Ev": "github-actions[bot]",
