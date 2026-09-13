@@ -4,6 +4,8 @@
 #include "CommonModel.h"
 #include "dActor_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* Rainbow Ride's flapping wing (profile RC_HANE): a decorative model that
  * rocks about the actor's X and Y angles on a canned 64-entry table, and
  * optionally ticks a wingbeat sound every 0x40 frames.
@@ -81,6 +83,12 @@ struct daObjRc_Hane_c : dActor_c {
     u8          mReverseMotion;  /* 0x118 */
     u8          mPlaySound;      /* 0x119 */
     u8          pad_11a[0x2];    /* 0x11a */
+
+    /* Leaf until #2570 lands fBase_c::operator new. unsigned long is mwccarm
+       size_t; the unsigned cast is the ROM's _ZN7fBase_cnwEj signature. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daObjRc_Hane_c_size_must_be_0x11c[

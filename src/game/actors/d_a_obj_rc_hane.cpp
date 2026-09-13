@@ -2,10 +2,10 @@
 /* Production translation unit for ov036/daObjRc_Hane_c, hand-curated.
  * 8 function(s), .text 0x02111580..0x0211193c.
  *
- * Rainbow Ride's flapping wing (profile RC_HANE): a decorative model rocked
- * about the actor's X and Y angles by a canned 64-entry table, with an
- * optional wingbeat sound every 0x40 frames. The whole actor is that table
- * lookup plus a matrix rebuild; it has no collision and no interaction.
+ * Rainbow Ride's flapping wing (profile RC_HANE / SHIP_WING 125): a decorative
+ * model rocked about the actor's X and Y angles by a canned 64-entry table,
+ * with an optional wingbeat sound every 0x40 frames. The whole actor is that
+ * table lookup plus a matrix rebuild; it has no collision and no interaction.
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
  *   _ZTS  ov036 0x02113c00  "14daObjRc_Hane_c"
@@ -37,11 +37,7 @@
  * THE EIGHTH IS THE FACTORY. daObjRc_Hane_c_classInit (0x02111904, historical
  * alias daObjRc_Hane_c_Spawn) is the RC_HANE registry profile's spawn function
  * and sits immediately after InitResources in the ROM's own .text order, so it
- * is part of this TU. It used to keep its own C file -- the arrangement the
- * neighbouring promotions landed with -- and is folded in here because the
- * promotion predated the profile-reconstruction campaign, not because the ROM
- * ever put it elsewhere. It keeps C linkage and is written first here, being
- * the highest-address member.
+ * is part of this TU. Written first here, being the highest-address member.
  *
  * Consolidated from these legacy one-function sources (ROM address order):
  *   [0] 0x02111580  src/_ZN14daObjRc_Hane_cD1Ev.cpp
@@ -52,16 +48,31 @@
  *   [5] 0x021116c0  src/_ZN14daObjRc_Hane_c8BehaviorEv.cpp
  *   [6] 0x02111854  src/_ZN14daObjRc_Hane_c13InitResourcesEv.cpp
  *   [7] 0x02111904  src/daObjRc_Hane_c_classInit.c
+ *
+ * common.h FIRST: func_ov036_02111618 assigns a whole Matrix4x3, and the ROM
+ * copies it as three 4-word ldm/stm pairs. common.h's flat s32 m[12] is that
+ * copy; math/Matrix.h's nested {Matrix3x3 r; Vector3 t;} splits it.
+ *
+ * deslop
+ * Leftover:
+ * - common.h first (func_ov036_02111618 twelve-word Matrix4x3 copy)
+ * - leaf operator new(unsigned long) until #2570
+ * - mFrame pointer RMW (named mFrame++ CSEs the field address)
+ * - (s64) table <<n + 0x800 >> 12 (Fix12 round; (long long)(int) size-DIFF)
+ * - data_ov036_02114070 / data_02082214 / data_020a0e68 handles
+ * - func_ov036_02111618 C-linkage name (other config still names it)
+ * - S14: g_profile_RC_HANE stays outside the licensed .text
  */
 
 /* decl_common.h is deliberately NOT included: it declares
  * data_ov036_02114070 as a bare char[], which contradicts the SharedFilePtr
  * this TU (and the cartridge) actually uses. Everything this file needs from
  * it is declared explicitly below. */
-#include "types.h"
+#include "common.h"
 #include "daObjRc_Hane_c.h"
 #include "Model.h"
 #include "SharedFilePtr.h"
+#include "Sound.h"
 
 /* Externs: the union of the legacy files', kept at their legacy spelling.
  *
@@ -77,50 +88,26 @@
  * it. It is scratch, not state -- every caller in the game uses it the same
  * way, one call chain at a time.
  *
- * Sound::PlayBank3 keeps its mangled free spelling: it takes a Vector3 by
- * const reference, and an ordinary member call would let mwccarm re-home the
- * argument and change the ROM ABI.
- *
  * func_ov036_02111618 is this class's own private helper -- see its
  * definition below. It is a global symbol the cartridge calls with `this`
  * from Behavior, so it keeps C linkage and its existing name; renaming it
  * would move a symbol other config still names. */
-/* MEASURED: the flat spelling of Matrix4x3 on purpose. include/common.h
- * spells this type `s32 m[12]`, while math/Matrix.h -- which Model.h drags in
- * here -- spells the same 0x30 bytes as `Matrix3x3 r; Vector3 t;`. The legacy
- * C body saw the flat one, and mwccarm scalarises the trailing struct copy
- * differently for the two, so reaching the nested spelling costs the match.
- * This TU therefore names the scratch matrix in the flat spelling directly
- * rather than depending on which header happened to be seen first. */
-struct Mtx4x3Flat { s32 m[12]; };
 
 extern SharedFilePtr data_ov036_02114070;   /* the wing's BMD */
 
 extern "C" {
 extern s16 data_02082214[];                 /* the canned rock table */
-extern Mtx4x3Flat data_020a0e68;            /* global scratch matrix */
+extern Matrix4x3 data_020a0e68;             /* global scratch matrix */
 
-void func_ov036_02111618(char *self);
+void func_ov036_02111618(daObjRc_Hane_c *self);
 void Vec3_Asr(void *dst, void *src, int n);
-void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
-void Matrix4x3_ApplyInPlaceToRotationY(void *m, short ang);
-void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
-void Matrix4x3_ApplyInPlaceToRotationZ(void *m, short ang);
-
-void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *v);
-
-/* The factory's own dependencies, restated here rather than pulled in through
-   decl_Actor.h / decl_ActorBase.h / decl_common.h as the legacy file did --
-   this TU deliberately does not include decl_common.h (see the note above), so
-   reaching one now would undo that. */
-extern void *_ZN7fBase_cnwEj(unsigned size);
-extern void _ZN8dActor_cC2Ev(void *self);
-extern void _ZN11CommonModelC1Ev(void *self);
-extern int _ZTV14daObjRc_Hane_c[];
+void Matrix4x3_FromTranslation(Matrix4x3 *m, int x, int y, int z);
+void Matrix4x3_ApplyInPlaceToRotationY(Matrix4x3 *m, short ang);
+void Matrix4x3_ApplyInPlaceToRotationX(Matrix4x3 *m, short ang);
+void Matrix4x3_ApplyInPlaceToRotationZ(Matrix4x3 *m, short ang);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- daObjRc_Hane_c_classInit, 0x02111904, size 0x38           */
 /* -------------------------------------------------------------------------- */
 // @symbol daObjRc_Hane_c_classInit
 /* Reconstructed source-style name: SM64DS proves daObjRc_Hane_c through RTTI,
@@ -128,23 +115,16 @@ extern int _ZTV14daObjRc_Hane_c[];
    EAD lineage supplies classInit. Exact original spelling is not preserved.
    Historical alias: daObjRc_Hane_c_Spawn.
 
-   284 = 0x11c, the class size the header comment above already reads off the
-   cartridge. The base run here is dActor_c, not dBgActor_c -- the same fact
-   the 31-word vtable proves -- and the CommonModel at 0xd4 is constructed by
-   hand after it. */
-extern "C" int *daObjRc_Hane_c_classInit(void)
+   Every instruction the cartridge has here falls out of the one `new`.
+   sizeof is 0x11c; the implicit ctor calls dActor_c C2, stores this class's
+   vptr, then CommonModel C1 at 0xd4. The null check is the one `new` itself
+   emits. */
+extern "C" daObjRc_Hane_c *daObjRc_Hane_c_classInit()
 {
-    int *p = (int *)_ZN7fBase_cnwEj(284);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV14daObjRc_Hane_c;
-        _ZN11CommonModelC1Ev((char *)p + 0xd4);
-    }
-    return p;
+    return new daObjRc_Hane_c();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN14daObjRc_Hane_c13InitResourcesEv, 0x02111854, size 0xb0 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_c13InitResourcesEv
 s32 daObjRc_Hane_c::InitResources()
@@ -153,9 +133,10 @@ s32 daObjRc_Hane_c::InitResources()
     mModel.SetFile(file, 1, -1);
 
     /* Two independent bits of the spawn parameter: bit 0 mirrors the wing,
-       bit 8 lets it make noise. A mirrored wing starts a quarter-turn tipped
-       and half a turn around, so a mirrored pair reads as one pair of wings
-       rather than two copies of the same one. */
+       bit 8 lets it make noise. A mirrored wing starts tipped by 0x2400
+       (not a quarter turn; quarter = 0x4000) and half a turn around Y/Z,
+       so a mirrored pair reads as one pair of wings rather than two copies
+       of the same one. */
     mReverseMotion = param1 & 1;
     mPlaySound = (param1 >> 8) & 1;
     if (mReverseMotion != 0) {
@@ -173,16 +154,15 @@ s32 daObjRc_Hane_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN14daObjRc_Hane_c8BehaviorEv, 0x021116c0, size 0x194 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_c8BehaviorEv
 s32 daObjRc_Hane_c::Behavior()
 {
     /* mFrame << 10 wraps the frame counter into a full 16-bit turn, and >> 4
        brings it back to the table's entries -- the round trip through s16 is
-       what makes the cycle wrap for free. Each entry is a PAIR: [0] drives
-       yaw (<< 13), [1] drives pitch (<< 11), so the wing sweeps twice as far
-       sideways as it does up and down.
+       what makes the cycle wrap for free. data_02082214[2i] is sin (yaw,
+       << 13), [2i+1] is cos of the same angle (pitch, << 11): 90° apart,
+       and the yaw amplitude is 4× the pitch, not 2×.
 
        The two branches differ only in the SIGN of the yaw term: a mirrored
        wing sweeps the other way, but still pitches up on the same beat. */
@@ -210,17 +190,16 @@ s32 daObjRc_Hane_c::Behavior()
        the low bits either way. */
     if (mPlaySound != 0) {
         if (mFrame == 0x40) {
-            _ZN5Sound9PlayBank3EjRK7Vector3(0x75, &mCamSpacePosX);
+            Sound::PlayBank3(0x75, *(const Vector3 *)&mCamSpacePosX);
             mFrame = 0;
         }
     }
 
-    func_ov036_02111618(((char*)this));
+    func_ov036_02111618(this);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN14daObjRc_Hane_c6RenderEv, 0x0211169c, size 0x24 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_c6RenderEv
 s32 daObjRc_Hane_c::Render()
@@ -230,43 +209,35 @@ s32 daObjRc_Hane_c::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov036_02111618, 0x02111618, size 0x84 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov036_02111618
 /* This class's private "put the model where the actor is" helper, and the
  * reason the rocking is visible at all: it composes the actor's position and
  * three angles into the global scratch matrix, then copies the result into
- * mModel's own Matrix4x3 (mModel + 0xc, object offset 0xe0).
+ * mModel.mat4x3 (mModel + 0xc, object offset 0xe0).
  *
  * The rotation order is Y, X, Z -- yaw first, then the pitch the table
  * drives, then roll.
  *
- * KEPT AT RAW OFFSETS ON PURPOSE. The cartridge gives it C linkage and a
- * global symbol -- it is called with `this` from Behavior above, and other
- * config still names it -- so it is not yet a member, and the offsets are what
- * the delinked body actually spells. The comments say what each one is;
- * promoting it to a real method is a separate change with its own codegen
- * risk. */
+ * C linkage and the existing name stay: the cartridge calls it with `this`
+ * from Behavior above, and other config still names the symbol. */
 extern "C" {
-void func_ov036_02111618(char *c)
+void func_ov036_02111618(daObjRc_Hane_c *self)
 {
     int v[3];
 
-    /* actor position (0x5c) >> 3, into the scratch matrix's translation */
-    Vec3_Asr(v, c + 0x5c, 3);
+    Vec3_Asr(v, &self->mPosX, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v[0], v[1], v[2]);
 
-    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, *(short *)(c + 0x8e));
-    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, *(short *)(c + 0x8c));
-    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, *(short *)(c + 0x90));
+    Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, self->mAngleY);
+    Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, self->mAngleX);
+    Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, self->mAngleZ);
 
-    /* ... and out to mModel.mat4x3 */
-    *(Mtx4x3Flat *)(c + 0xe0) = data_020a0e68;
+    self->mModel.mat4x3 = data_020a0e68;
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN14daObjRc_Hane_c16CleanupResourcesEv, 0x021115f4, size 0x24 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_c16CleanupResourcesEv
 s32 daObjRc_Hane_c::CleanupResources()
@@ -276,8 +247,6 @@ s32 daObjRc_Hane_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN14daObjRc_Hane_cD0Ev, 0x021115b0, size 0x44        */
-/* ROM ordinal 0 -- _ZN14daObjRc_Hane_cD1Ev, 0x02111580, size 0x30        */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN14daObjRc_Hane_cD1Ev
 // @symbol _ZN14daObjRc_Hane_cD0Ev
