@@ -118,7 +118,7 @@ extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int flag);
 extern int _ZN6Player12GetTalkStateEv(void* player);
 extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actor, unsigned int msg, Vec3* pos, unsigned int a, unsigned int b);
 extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);
-extern void func_0201277c(int id); /* decl_common's view */
+extern unsigned int func_0201277c(int id); /* decl_common's view */
 extern int _Z14ApproachLinearRsss(short* val, short target, short step);
 extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void* actor, signed char* flag, unsigned int id, Vec3* pos, unsigned int arg);
 extern signed char data_0209f2f8;

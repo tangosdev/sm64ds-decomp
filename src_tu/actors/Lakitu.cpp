@@ -256,7 +256,7 @@ extern "C" void func_ov077_02124754(void *vc) { C *c = (C *)vc; PMF *p = c->pp; 
 /* ROM ordinal 22 -- func_ov077_02124718, 0x02124718, size 0x3c */
 /* -------------------------------------------------------------------------- */
 /* (struct C / PMF: defined once at ordinal 23 above) */
-extern "C" int func_ov077_02124718(void *vc) { C *c = (C *)vc; PMF *p = c->pp + 1; (c->**p)(); } /* int per decl_common; no value returned, matching the ROM */
+extern "C" void func_ov077_02124718(void *vc) { C *c = (C *)vc; PMF *p = c->pp + 1; (c->**p)(); } /* void per decl_common:1542; no value returned, matching the ROM */
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 21 -- func_ov077_02124698, 0x02124698, size 0x80 */
