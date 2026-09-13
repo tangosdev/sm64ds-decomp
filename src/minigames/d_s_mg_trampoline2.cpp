@@ -60,21 +60,12 @@
  *   [41] 0x021248a8  src/actors/MgTrampolineTerror.cpp#func_ov006_021248a8
  */
 
-/* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources
- * of this TU. `#pragma long_calls` is POSITIONAL in mwccarm 2004/b56 and is
- * carried verbatim before its own member below, bracketed with `off` so it
- * cannot leak into later members (dropping it silently costs the pooled
- * cross-overlay tail-call -- a byte diff; see ShutterBob in ov014).
- * Any OTHER pragma is FILE-GLOBAL last-wins (opt_propagation,
- * optimize_for_size) and is still left out: carried into a merged TU it
- * would silently recompile every other member. Decide those by hand:
- *   _ZN18dScMgTrampoline2_c9Virtual88Eiiii: #pragma opt_loop_invariants off   [NOT carried -- review]
- *   func_ov006_02123428: #pragma opt_loop_invariants off   [NOT carried -- review]
- */
+/* The production TU applies opt_loop_invariants off to the whole file, as
+ * spelled above. The legacy Virtual88 and func_ov006_02123428 sources used
+ * this setting; the complete TU, not just those two functions, is verified
+ * with it. Other generator conflict notes below record historical inputs. */
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
+/* Includes retained from the verified production TU. */
 #include "common.h"
 #include "types.h"
 #include "dScMgTrampoline2_c.h"
@@ -88,9 +79,9 @@
 
 extern int _ZTV18dScMgTrampoline2_c[];
 
-/* Local ABI-seam declarations retained from the verified legacy sources.
- * They express the layouts/codegen this TU needs without exporting uncertain
- * private types through shared headers. */
+/* Local declarations retained from the verified legacy sources. Their flat
+ * interfaces and raw layouts are remaining reconstruction under issue #2497;
+ * a byte match alone does not establish the original C++ types. */
 /* shadow struct 'C' */
 struct C {
     virtual void v0();
@@ -133,9 +124,6 @@ struct B4 {
     unsigned char v;
     unsigned char pad[3];
 };
-
-/* shadow struct 'Player' */
-struct Player { void St_Null_Init(); };
 
 /* shadow struct 'P2' */
 struct P2 { int words[2]; };
@@ -193,29 +181,6 @@ typedef struct {
     u8 pad4[2];
     s16 unk7BA8;
 } T;
-
-/* shadow struct 'Base' */
-struct Base {
-    virtual void m00();
-    virtual void m04();
-    virtual void m08();
-    virtual void m0c();
-    virtual void m10();
-    virtual void m14();
-    virtual void m18();
-    virtual void m1c();
-    virtual void m20();
-    virtual void m24();
-    virtual void m28();
-    virtual void m2c();
-    virtual void m30();
-    virtual void m34();
-    virtual void m38();
-    virtual void m3c();
-    virtual void m40();
-    virtual void m44();
-    virtual void m48(int x);
-};
 
 /* TUBUILD CONFLICT -- alternate body of struct 'Model', from the legacy file for func_ov006_02122c68, NOT applied:
 struct Model { ~Model(); };
@@ -282,7 +247,7 @@ extern int func_ov004_020ae5c4(int a, int b, int c, int d, int e, int f, int g);
 extern int func_020126e8(int a);
 extern int func_02012468(int a, int b, int c, int d, int e, int f, int g, short h);
 extern int data_ov006_0213fbd0[];
-extern Player *func_ov006_020cedf0(void *c);
+extern void func_ov006_020cedf0(void);
 extern int func_ov006_020ca7b8(void);
 extern union StateValue data_ov006_0213fbe0;
 extern void func_ov006_020ca840(void *c);
@@ -361,7 +326,8 @@ extern Model *func_ov006_02122c68(Model *model);
 /* TUBUILD CONFLICT -- alternate declaration of RandomIntInternal, from the legacy file for func_ov006_021237c8, NOT applied: extern int RandomIntInternal(void* seed); */
 /* TUBUILD CONFLICT -- alternate declaration of MultiStore16, from the legacy file for func_ov006_02123b24, NOT applied: extern void MultiStore16(unsigned short a, int b, int c); */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov006_02123bf4, NOT applied: extern int _Z14ApproachLinearRiii(int &v, int a, int b); */
-/* TUBUILD CONFLICT -- alternate declaration of func_ov006_020cedf0, from the legacy file for func_ov006_02123cb4, NOT applied: extern void func_ov006_020cedf0(void); */
+/* Both callers use the existing ov006 helpers' void(void) contracts. The
+ * unrelated Player::St_Null_Init at the same RAM address belongs to ov002. */
 /* TUBUILD CONFLICT -- alternate declaration of _Z14ApproachLinearRiii, from the legacy file for func_ov006_02123cb4, NOT applied: extern int _Z14ApproachLinearRiii(int *v, int step, int rate); */
 /* TUBUILD CONFLICT -- alternate declaration of func_0203cc28, from the legacy file for func_ov006_02123cb4, NOT applied: extern void func_0203cc28(int *p, int angle); */
 /* TUBUILD CONFLICT -- alternate declaration of func_ov006_020cefa4, from the legacy file for func_ov006_02123cb4, NOT applied: extern char *func_ov006_020cefa4(int a0, int *a1, int a2, int a3); */
@@ -386,7 +352,7 @@ void func_ov006_02123bf4(char *scene);
 void func_ov006_02123cb4(char *scene);
 void func_ov006_02124088(char *scene);
 
-/* Data owned by the same original TU. */
+/* Data owned by this production TU; the original TU grouping is inferred. */
 int data_ov006_0213fbc4 = 1;
 TrampolineTerrorProfile g_profile_MG_TRAMPOLINE2 = {
     dScMgTrampoline2_c_classInit, 0x181, 0x181
@@ -416,7 +382,7 @@ int *data_ov006_0213fc48[] = {
 }
 
 /* This overload is C++, unlike the address-spelled C ABI declarations above. */
-extern void ApproachLinear(int &x, int target, int step);
+extern int ApproachLinear(int &x, int target, int step);
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 41 -- func_ov006_021248a8, 0x021248a8, size 0x60 */
@@ -530,13 +496,9 @@ void func_ov006_021245a8(void *arg0)
 // @symbol _ZN18dScMgTrampoline2_c13InitResourcesEv
 /* dScMgTrampoline2_c::InitResources -- vtable slot 0.
  *
- * Attributed by tools/rtti_vtables.py --own dScMgTrampoline2_c, this class's own
- * slot 0 (fBase_c::InitResources). The old file's `recovered name:
- * dScMgTrampoline2_c_InitResources` agreed.
- *
- * The final `((Base *)base)->m48(-1)` is a self-dispatch through this class's own
- * vtable slot 18 -- left as a raw vtable-shim call, same shape the pre-migration
- * file used, just through `this` instead of a `char *base` parameter. */
+ * The class vtable's slot 0 points here. InitResources is the repository's
+ * reconstructed callback name, not an original spelling recovered from RTTI.
+ * The final OnYoshiTryEat(-1) dispatch uses this class's existing slot 18. */
 s32 dScMgTrampoline2_c::InitResources()
 {
     char *base = (char *)this;
@@ -574,7 +536,7 @@ s32 dScMgTrampoline2_c::InitResources()
     data_ov006_021421b4 = 0;
     func_ov006_02122c04((int)(base + 0x7164), 0x14);
     func_ov004_020b04d0(0x10);
-    ((Base *)base)->m48(-1);
+    OnYoshiTryEat(-1);
     return 1;
 }
 
@@ -582,9 +544,9 @@ s32 dScMgTrampoline2_c::InitResources()
 /* ROM ordinal 37 -- _ZN18dScMgTrampoline2_c13OnYoshiTryEatEi, 0x021242cc, size 0x120 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18dScMgTrampoline2_c13OnYoshiTryEatEi
-// recovered name: dScMgTrampoline2_c_OnYoshiTryEat_021242cc
-/* recovered: renamed to Class_Method, declarations from a shared header */
-/* recovered: renamed to Class_Method, vtable slot 18 -- an override of
+// reconstructed alias: dScMgTrampoline2_c_OnYoshiTryEat_021242cc
+/* Callback declaration follows the reconstructed shared base interface. */
+/* Vtable slot 18 -- an override of
    dScMgBase_c::OnYoshiTryEat(int). The signature must repeat the base
    declaration exactly, or mwcc appends a slot instead of overriding. */
 void dScMgTrampoline2_c::OnYoshiTryEat(int /* arg */)
@@ -633,10 +595,9 @@ void dScMgTrampoline2_c::OnYoshiTryEat(int /* arg */)
 /* ROM ordinal 36 -- _ZN18dScMgTrampoline2_c13OnTurnIntoEggEi, 0x02124298, size 0x34 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18dScMgTrampoline2_c13OnTurnIntoEggEi
-// recovered name: dScMgTrampoline2_c_OnTurnIntoEgg
-/* recovered: renamed to Class_Method, declarations from a shared header */
-/* recovered: renamed to Class_Method */
-/* dScMgTrampoline2_c::OnTurnIntoEgg - recovered from vtable slot identity */
+// reconstructed alias: dScMgTrampoline2_c_OnTurnIntoEgg
+/* Callback declaration follows the reconstructed shared base interface. */
+/* dScMgTrampoline2_c::OnTurnIntoEgg - vtable ownership is evidenced; the callback name is inferred. */
 int dScMgTrampoline2_c::OnTurnIntoEgg(int /* mode */)
 {
     func_ov006_020c8a9c(0, data_ov006_0213fc20[GetGameLanguage()]);
@@ -738,7 +699,7 @@ void func_ov006_02123cb4(char *c)
 
     old = data_ov006_02140818;
     func_ov006_020d0ac0();
-    ((void (*)(void))func_ov006_020cedf0)();
+    func_ov006_020cedf0();
     func_ov006_020cac30();
     if (old < data_ov006_02140818) {
         int n = data_ov006_02140818 - old;
@@ -829,7 +790,8 @@ void func_ov006_02123c78(char *c) {
 // @symbol func_ov006_02123bf4
 extern "C" void func_ov006_02123bf4(char *c)
 {
-    func_ov006_020cedf0(c)->St_Null_Init();
+    func_ov006_020cedf0();
+    func_ov006_020cac30();
     if (_Z14ApproachLinearRiii((int *)(c + 0x7b84), 0, 1) == 0)
         return;
     if (func_ov006_020ca7b8() == 0)
@@ -1140,20 +1102,15 @@ extern "C" void func_ov006_02123428(char *scene)
  * and its slot 6 relocates here. The signature is include/dScMgBase_c.h's own
  * slot 6, `virtual s32 Behavior()`.
  *
- * IT READS THE GAP include/dScMgTrampoline2_c.h CALLS UNEVIDENCED. pad_7ac4 is
- * 0xc bytes between mArray5 and mArray6; this function uses the first word as
- * a Particle::System unique ID -- passed in and back out of NewUnkCallback818
- * each frame, exactly as dScMgJump2_c::Behavior does with its own unk_5a6c --
- * and the second as a fix12 value ramped towards 0x14000 and written into the
- * system's byte at +0x58. Both stay inside the pad rather than becoming named
- * fields: the third word is still unreached, and cutting the gap two-thirds of
- * the way along would assert a boundary nothing shows.
+ * The raw storage at 0x7ac4 contains a Particle::System unique ID; 0x7ac8
+ * holds the fixed-point value ramped towards 0x14000 and written to the
+ * system's byte at +0x58. The purpose of 0x7acc remains unknown. That does not
+ * prevent typing the two observed words; this remains work under issue #2497.
  *
- * The two Particle::System declarations keep the pre-migration file's local
- * `int` spelling rather than the true Fix12<int> their ROM names carry --
- * mwccarm passes by-value class parameters differently at the call site, so
- * declaring the real types breaks the byte match (notes/mwccarm-codegen.md
- * 6az). Its sibling src/actors/d_sc_mg_jump2.cpp says the same.
+ * The Particle declarations retain the existing flat integer call interface.
+ * Their mangled spellings are reconstructed symbols, not ROM type evidence.
+ * No local comparison establishes a compiler barrier to the real API here;
+ * notes/mwccarm-codegen.md 6az retracts the earlier naming/ABI argument.
  *
  * ApproachLinear IS THE REAL OVERLOAD, `_Z14ApproachLinearRiii` at 0x0203ae58,
  * reached by declaring the C++ signature and letting the compiler mangle it --
@@ -1286,10 +1243,9 @@ s32 dScMgTrampoline2_c::CleanupResources()
 /* ROM ordinal 18 -- _ZN18dScMgTrampoline2_c8OnKickedEv, 0x021230e8, size 0xa4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18dScMgTrampoline2_c8OnKickedEv
-// recovered name: dScMgTrampoline2_c_OnKicked
-/* recovered: renamed to Class_Method, declarations from a shared header */
-/* recovered: renamed to Class_Method */
-/* dScMgTrampoline2_c::OnKicked - recovered from vtable slot identity */
+// reconstructed alias: dScMgTrampoline2_c_OnKicked
+/* Callback declaration follows the reconstructed shared base interface. */
+/* dScMgTrampoline2_c::OnKicked - vtable ownership is evidenced; the callback name is inferred. */
 int dScMgTrampoline2_c::OnKicked()
 {
     void *thiz = (void *)this;
@@ -1314,10 +1270,9 @@ int dScMgTrampoline2_c::OnKicked()
 /* ROM ordinal 17 -- _ZN18dScMgTrampoline2_c8OnPushedEv, 0x021230c4, size 0x24 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18dScMgTrampoline2_c8OnPushedEv
-// recovered name: dScMgTrampoline2_c_OnPushed
-/* recovered: renamed to Class_Method, declarations from a shared header */
-/* recovered: renamed to Class_Method */
-/* dScMgTrampoline2_c::OnPushed - recovered from vtable slot identity */
+// reconstructed alias: dScMgTrampoline2_c_OnPushed
+/* Callback declaration follows the reconstructed shared base interface. */
+/* dScMgTrampoline2_c::OnPushed - vtable ownership is evidenced; the callback name is inferred. */
 int dScMgTrampoline2_c::OnPushed()
 {
     void *t = (void *)this;
@@ -1327,9 +1282,8 @@ int dScMgTrampoline2_c::OnPushed()
 /* ROM ordinal 16 -- _ZN18dScMgTrampoline2_c11OnAttacked2Ev, 0x02122f24, size 0x1a0 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN18dScMgTrampoline2_c11OnAttacked2Ev
-// recovered name: dScMgTrampoline2_c_OnAttacked2
-/* recovered: renamed to Class_Method */
-/* dScMgTrampoline2_c::OnAttacked2 - recovered from vtable slot identity */
+// reconstructed alias: dScMgTrampoline2_c_OnAttacked2
+/* dScMgTrampoline2_c::OnAttacked2 - vtable ownership is evidenced; the callback name is inferred. */
 int dScMgTrampoline2_c::OnAttacked2()
 {
     char *self = (char *)this;
