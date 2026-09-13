@@ -147,7 +147,10 @@ struct SignPost : dBgActor_c {
     void OnHitByMegaChar(Player &player);    /* slot 27 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SignPost_size_must_be_0x5a4[sizeof(SignPost) == 0x5a4 ? 1 : -1];
+#endif
 
 #else
 

@@ -47,6 +47,9 @@ struct dScMgTeresa_c : dScMgBase_c {
     u8 pad_4c24[0x4];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgTeresa_c_size_must_be_0x4c28[sizeof(struct dScMgTeresa_c) == 0x4c28 ? 1 : -1];
+#endif
 
 #endif

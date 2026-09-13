@@ -39,6 +39,9 @@ struct VolcanoRing : dBgActor_c {
     int Render();            /* slot 9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char VolcanoRing_size_must_be_0x328[sizeof(VolcanoRing) == 0x328 ? 1 : -1];
+#endif
 
 #endif /* VOLCANORING_H */

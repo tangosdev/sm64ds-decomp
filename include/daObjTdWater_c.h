@@ -50,6 +50,9 @@ struct daObjTdWater_c : dBgActor_c {
     virtual s32   Render();                /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjTdWater_c_size_must_be_0x334[sizeof(daObjTdWater_c) == 0x334 ? 1 : -1];
+#endif
 
 #endif /* DAOBJTDWATER_C_H */

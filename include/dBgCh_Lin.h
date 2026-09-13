@@ -159,7 +159,10 @@ struct dBgCh_Lin {
 
 /* The standalone stack object in dActor_c::DetectRaycastClsn pins both
    language views to 0x78. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_Lin_size_must_be_0x78[
     sizeof(struct dBgCh_Lin) == 0x78 ? 1 : -1];
+#endif
 
 #endif /* DBGCH_LIN_H */

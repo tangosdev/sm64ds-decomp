@@ -66,6 +66,9 @@ struct Cannon {
 
 #endif
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Cannon_size_must_be_0x198[sizeof(struct Cannon) == 0x198 ? 1 : -1];
+#endif
 
 #endif /* CANNON_H */

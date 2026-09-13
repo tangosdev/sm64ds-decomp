@@ -42,7 +42,10 @@ struct dScMgPachinko2_Ball {
     u8  state;        /* +0x39 -- 2 while released, 0 when reset */
     u8  unk_3a[0x6];
 };
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPachinko2_Ball_size_must_be_0x40[sizeof(struct dScMgPachinko2_Ball) == 0x40 ? 1 : -1];
+#endif
 
 struct dScMgPachinko2_c : dScMgBase_c {
     virtual ~dScMgPachinko2_c();
@@ -60,6 +63,9 @@ struct dScMgPachinko2_c : dScMgBase_c {
     u8 pad_5670[0xc];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPachinko2_c_size_must_be_0x567c[sizeof(struct dScMgPachinko2_c) == 0x567c ? 1 : -1];
+#endif
 
 #endif

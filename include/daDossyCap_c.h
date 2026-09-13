@@ -67,7 +67,10 @@ struct daDossyCap_c : dActor_c {
     virtual int OnYoshiTryEat();       /* slot 18 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDossyCap_c_size_must_be_0x184[
     sizeof(daDossyCap_c) == 0x184 ? 1 : -1];
+#endif
 
 #endif /* DADOSSYCAP_C_H */

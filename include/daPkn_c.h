@@ -97,7 +97,10 @@ struct daPkn_c : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPkn_c_size_must_be_0x47c[sizeof(daPkn_c) == 0x47c ? 1 : -1];
+#endif
 
 /* The class's own vtable, declared next to the class rather than restated in
    the one translation unit that stores it. config/arm9/overlays/ov084/symbols.txt

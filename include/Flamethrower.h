@@ -69,6 +69,9 @@ struct Flamethrower {
 
 #endif /* __cplusplus */
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Flamethrower_size_must_be_0x46c[sizeof(struct Flamethrower) == 0x46c ? 1 : -1];
+#endif
 
 #endif

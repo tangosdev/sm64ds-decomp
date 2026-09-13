@@ -39,7 +39,10 @@ struct WaterSuction : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char WaterSuction_size_must_be_0x318[sizeof(WaterSuction) == 0x318 ? 1 : -1];
+#endif
 
 #else
 

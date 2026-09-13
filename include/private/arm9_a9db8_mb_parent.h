@@ -28,7 +28,10 @@ typedef struct MbParentFile {
     u8  pad_5c3[0x1];
 } MbParentFile;
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MbParentFile_size_must_be_0x5c4[sizeof(MbParentFile) == 0x5c4 ? 1 : -1];
+#endif
 
 typedef struct MbParentWork {
     u8  pad_0000[0x1524];

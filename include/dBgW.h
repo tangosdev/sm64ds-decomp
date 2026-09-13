@@ -145,7 +145,10 @@ struct dBgW {
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgW_size_must_be_0x20[sizeof(dBgW) == 0x20 ? 1 : -1];
+#endif
 
 #else
 

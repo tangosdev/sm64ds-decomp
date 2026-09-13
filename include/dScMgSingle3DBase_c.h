@@ -80,7 +80,10 @@ struct SysTracker {
     ~SysTracker();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
+#endif
 
 /* Called by dScMgSingle3DBase_c::BeforeRender. */
 void RenderAll();
@@ -152,6 +155,9 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
 
 /* A floor, not a claim the object ends here: 0x471c + sizeof(SysTracker).
    See notes/minigame-provenance.md. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgSingle3DBase_c_size_must_be_0x4f38[sizeof(dScMgSingle3DBase_c) == 0x4f38 ? 1 : -1];
+#endif
 
 #endif

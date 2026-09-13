@@ -68,7 +68,10 @@ struct dMgBSCSharedState_c {
     u8 data[0x270];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgBSCSharedState_c_size_must_be_0x270[sizeof(dMgBSCSharedState_c) == 0x270 ? 1 : -1];
+#endif
 
 struct dScMgBSC_c : dScMgSingle3DBase_c {
     virtual ~dScMgBSC_c() {
@@ -143,7 +146,10 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
     u8  pad_51cf[1];      /* 0x51cf */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgBSC_CardPos_size_must_be_0x8[sizeof(dScMgBSC_c::CardPos) == 0x8 ? 1 : -1];
 typedef char dScMgBSC_c_size_must_be_0x51d0[sizeof(dScMgBSC_c) == 0x51d0 ? 1 : -1];
+#endif
 
 #endif

@@ -19,7 +19,10 @@ struct BookShotSpawner : dActor_c {
     virtual int Behavior();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BookShotSpawner_size_must_be_0xd8[
     sizeof(BookShotSpawner) == 0xd8 ? 1 : -1];
+#endif
 
 #endif /* BOOKSHOTSPAWNER_H */

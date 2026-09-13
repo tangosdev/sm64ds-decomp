@@ -1033,6 +1033,9 @@ public:
 
 /* A floor, not a claim the object ends here: 0x465c is the last field any
    matched body has observed. See notes/minigame-provenance.md. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgBase_c_size_must_be_0x4660[sizeof(dScMgBase_c) == 0x4660 ? 1 : -1];
+#endif
 
 #endif

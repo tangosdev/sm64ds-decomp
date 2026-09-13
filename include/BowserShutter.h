@@ -27,6 +27,9 @@ struct BowserShutter : dBgActor_c {
     virtual s32   Render();                /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BowserShutter_size_must_be_0x320[sizeof(BowserShutter) == 0x320 ? 1 : -1];
+#endif
 
 #endif /* BOWSERSHUTTER_H */

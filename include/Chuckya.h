@@ -80,6 +80,9 @@ struct Chuckya : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Chuckya_size_must_be_0x438[sizeof(Chuckya) == 0x438 ? 1 : -1];
+#endif
 
 #endif /* CHUCKYA_H */

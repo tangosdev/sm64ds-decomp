@@ -26,7 +26,10 @@ struct LightBeam : dActor_c {
     virtual int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char LightBeam_size_must_be_0x16c[
     sizeof(LightBeam) == 0x16c ? 1 : -1];
+#endif
 
 #endif

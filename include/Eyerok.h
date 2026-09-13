@@ -128,7 +128,10 @@ struct Eyerok : dBgActor_c {
     int OnAimedAtWithEgg();  /* slot 29 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Eyerok_size_must_be_0x874[sizeof(Eyerok) == 0x874 ? 1 : -1];
+#endif
 
 #else
 

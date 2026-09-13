@@ -88,6 +88,9 @@ struct da1up_c : dEnemyBase_c {
     virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char da1up_c_size_must_be_0x398[sizeof(da1up_c) == 0x398 ? 1 : -1];
+#endif
 
 #endif /* DA1UP_C_H */

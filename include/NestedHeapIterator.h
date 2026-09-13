@@ -30,7 +30,10 @@ struct NestedHeapIterator {
 #endif
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char NestedHeapIterator_size_must_be_0xc[
     sizeof(struct NestedHeapIterator) == 0xc ? 1 : -1];
+#endif
 
 #endif

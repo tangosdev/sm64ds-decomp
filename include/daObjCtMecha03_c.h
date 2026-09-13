@@ -62,7 +62,10 @@ struct daObjCtMecha03_c : dBgActor_c {
     u8 pad_358[0x30];      /* 0x358, to the ROM's 0x388 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjCtMecha03_c_size_must_be_0x388[sizeof(daObjCtMecha03_c) == 0x388 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

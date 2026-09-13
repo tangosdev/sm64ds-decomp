@@ -36,7 +36,10 @@ struct CutsceneObject : dActor_c {
     virtual void OnPendingDestroy();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char CutsceneObject_size_must_be_0x104[
     sizeof(CutsceneObject) == 0x104 ? 1 : -1];
+#endif
 
 #endif

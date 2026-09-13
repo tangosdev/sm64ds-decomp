@@ -86,6 +86,9 @@ struct PowerFlower : dActor_c {
     virtual s32  OnYoshiTryEat();         /* slot 18 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PowerFlower_size_must_be_0x3cc[sizeof(PowerFlower) == 0x3cc ? 1 : -1];
+#endif
 
 #endif

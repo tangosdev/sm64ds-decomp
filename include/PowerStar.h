@@ -75,6 +75,9 @@ struct PowerStar : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PowerStar_size_must_be_0x4c4[sizeof(PowerStar) == 0x4c4 ? 1 : -1];
+#endif
 
 #endif /* POWERSTAR_H */

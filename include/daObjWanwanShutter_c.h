@@ -55,6 +55,9 @@ struct daObjWanwanShutter_c : dBgActor_c {
     virtual s32 Render();              /* slot  9 -- 0x02112f80 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWanwanShutter_c_size_must_be_0x320[sizeof(daObjWanwanShutter_c) == 0x320 ? 1 : -1];
+#endif
 
 #endif /* DAOBJWANWANSHUTTER_C_H */

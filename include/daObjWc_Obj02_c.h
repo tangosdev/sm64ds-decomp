@@ -56,6 +56,9 @@ struct daObjWc_Obj02_c {
 
 #endif
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWc_Obj02_c_size_must_be_0x328[sizeof(struct daObjWc_Obj02_c) == 0x328 ? 1 : -1];
+#endif
 
 #endif

@@ -41,8 +41,11 @@ struct daKrpaState {
     daKrpaStateMethod behavior;
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKrpaState_size_must_be_0x10[
     sizeof(daKrpaState) == 0x10 ? 1 : -1];
+#endif
 
 struct daKrpaFrameController {
     u32 mode;
@@ -51,8 +54,11 @@ struct daKrpaFrameController {
     u32 cursor;
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKrpaFrameController_size_must_be_0x10[
     sizeof(daKrpaFrameController) == 0x10 ? 1 : -1];
+#endif
 
 struct daKrpa_c : dActor_c {
     u8                        pad_0d0[0x4];
@@ -85,7 +91,10 @@ struct daKrpa_c : dActor_c {
     virtual int  OnYoshiTryEat();       /* slot 18 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKrpa_c_size_must_be_0x3b0[
     sizeof(daKrpa_c) == 0x3b0 ? 1 : -1];
+#endif
 
 #endif /* DAKRPA_C_H */

@@ -53,6 +53,9 @@ struct daTrsTrap_c : dActor_c {
     virtual void OnPendingDestroy(); /* slot 12 -- ov063:0x0211ce30 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daTrsTrap_c_size_must_be_0x354[sizeof(daTrsTrap_c) == 0x354 ? 1 : -1];
+#endif
 
 #endif

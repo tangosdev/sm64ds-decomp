@@ -72,6 +72,9 @@ struct HeaveHo : dEnemyBase_c {
     void OnPendingDestroy();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char HeaveHo_size_must_be_0x42c[sizeof(HeaveHo) == 0x42c ? 1 : -1];
+#endif
 
 #endif /* HEAVEHO_H */

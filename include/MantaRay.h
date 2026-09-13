@@ -60,6 +60,9 @@ struct MantaRay : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MantaRay_size_must_be_0x404[sizeof(MantaRay) == 0x404 ? 1 : -1];
+#endif
 
 #endif /* MANTARAY_H */

@@ -98,6 +98,9 @@ struct daObjMarioCap_c : dEnemyBase_c {
     void OnTurnIntoEgg(Player &player);  /* slot 19, ov002 0x020b81e0 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjMarioCap_c_size_must_be_0x410[sizeof(daObjMarioCap_c) == 0x410 ? 1 : -1];
+#endif
 
 #endif /* DAOBJMARIOCAP_C_H */

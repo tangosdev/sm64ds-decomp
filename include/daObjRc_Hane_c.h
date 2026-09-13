@@ -83,7 +83,10 @@ struct daObjRc_Hane_c : dActor_c {
     u8          pad_11a[0x2];    /* 0x11a */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjRc_Hane_c_size_must_be_0x11c[
     sizeof(daObjRc_Hane_c) == 0x11c ? 1 : -1];
+#endif
 
 #endif /* DAOBJRC_HANE_C_H */

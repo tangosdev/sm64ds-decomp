@@ -72,6 +72,9 @@ struct WingFeather : dActor_c {
     virtual s32 Render();               /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char WingFeather_size_must_be_0x388[sizeof(WingFeather) == 0x388 ? 1 : -1];
+#endif
 
 #endif

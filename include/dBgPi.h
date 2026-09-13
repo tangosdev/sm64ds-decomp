@@ -21,7 +21,10 @@ struct dBgPi {
     s32 unk_024;            /* 0x024 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgPi_size_must_be_0x28[sizeof(struct dBgPi) == 0x28 ? 1 : -1];
+#endif
 typedef struct dBgPi dBgPi;
 
 #else
@@ -71,7 +74,10 @@ struct dBgPi : dBgPc {
 
 /* Size is the dBgPi's own span AND the stride of the three consecutive results
    dBgCh_SphCrr holds at 0x74/0x9c/0xc4 -- notes/collision-system.md 3.2. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgPi_size_must_be_0x28[sizeof(struct dBgPi) == 0x28 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

@@ -14,7 +14,10 @@ struct CLPS_BlockRef {
     CLPS_BlockRef &operator=(CLPS_Block &block);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char CLPS_BlockRef_size_must_be_0x4[
     sizeof(CLPS_BlockRef) == 0x4 ? 1 : -1];
+#endif
 
 #endif /* CLPS_BLOCK_REF_H */

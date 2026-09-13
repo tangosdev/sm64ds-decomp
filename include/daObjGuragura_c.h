@@ -115,7 +115,10 @@ struct daObjGuragura_c : dBgActor_c {
     virtual s32 CleanupResources() = 0;     /* slot  3 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjGuragura_c_size_must_be_0x350[sizeof(daObjGuragura_c) == 0x350 ? 1 : -1];
+#endif
 
 #else
 

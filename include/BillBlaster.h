@@ -34,6 +34,9 @@ struct BillBlaster : dBgActor_c {
     virtual void  Kill();                  /* slot 31 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BillBlaster_size_must_be_0x324[sizeof(BillBlaster) == 0x324 ? 1 : -1];
+#endif
 
 #endif /* BILLBLASTER_H */

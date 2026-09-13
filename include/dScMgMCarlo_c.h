@@ -62,7 +62,10 @@ struct dMgMCarloSharedState_c {
     u8  pad_1e8[0x88];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgMCarloSharedState_c_size_must_be_0x270[sizeof(dMgMCarloSharedState_c) == 0x270 ? 1 : -1];
+#endif
 
 /* --- the board-card element class ------------------------------------------
    Name RTTI-confirmed (build/rtti.json: _ZTS18dMgMCarloCardObj_c at
@@ -128,7 +131,10 @@ struct dMgMCarloCardObj_c {
     u8  pad_2f;               /* 0x2f */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgMCarloCardObj_c_size_must_be_0x30[sizeof(dMgMCarloCardObj_c) == 0x30 ? 1 : -1];
+#endif
 
 struct dScMgMCarlo_c : dScMgSingle3DBase_c {
     virtual ~dScMgMCarlo_c() {}
@@ -171,6 +177,9 @@ struct dScMgMCarlo_c : dScMgSingle3DBase_c {
     s16 unk_60ae;          /* 0x60ae */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgMCarlo_c_size_must_be_0x60b0[sizeof(dScMgMCarlo_c) == 0x60b0 ? 1 : -1];
+#endif
 
 #endif

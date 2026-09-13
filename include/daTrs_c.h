@@ -82,7 +82,10 @@
 /* named (not anonymous inline) so check_header_offsets can parse the member
    declaration; layout identical -- four low bits of one u16. */
 struct BooFlags16 { u16 b0:1, b1:1, b2:1, b3:1; };
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BooFlags16_size_must_be_0x2[sizeof(BooFlags16) == 0x2 ? 1 : -1];
+#endif
 
 struct daTrs_c : dCapEnemy_c {
     u8  pad_180[0x4];
@@ -129,6 +132,9 @@ struct daTrs_c : dCapEnemy_c {
     int  Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daTrs_c_size_must_be_0x5e0[sizeof(daTrs_c) == 0x5e0 ? 1 : -1];
+#endif
 
 #endif

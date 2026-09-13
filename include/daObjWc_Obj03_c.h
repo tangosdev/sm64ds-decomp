@@ -54,7 +54,10 @@ struct daObjWc_Obj03_c : dActor_c {
     virtual ~daObjWc_Obj03_c();               /* slots 16 (D1), 17 (D0) */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWc_Obj03_c_size_must_be_0x160[
     sizeof(daObjWc_Obj03_c) == 0x160 ? 1 : -1];
+#endif
 
 #endif

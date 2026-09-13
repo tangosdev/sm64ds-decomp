@@ -78,6 +78,9 @@ inline dScene_c::dScene_c()
 
 /* Holds fBase_c, dBase_c and dScene_c to the layout the paragraph above
    claims. A silently-added member anywhere in the chain fails this. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScene_c_size_must_be_0x50[sizeof(dScene_c) == 0x50 ? 1 : -1];
+#endif
 
 #endif

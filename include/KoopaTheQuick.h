@@ -80,6 +80,9 @@ struct KoopaTheQuick : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char KoopaTheQuick_size_must_be_0x3e0[sizeof(KoopaTheQuick) == 0x3e0 ? 1 : -1];
+#endif
 
 #endif /* KOOPATHEQUICK_H */

@@ -128,6 +128,9 @@ struct Butterfly : dActor_c {
 #endif
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Butterfly_size_must_be_0x3f4[sizeof(struct Butterfly) == 0x3f4 ? 1 : -1];
+#endif
 
 #endif

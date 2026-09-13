@@ -66,8 +66,11 @@ struct daObjKinokoTag_c : dActor_c {
     void TrySpawnMegaMushroom();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKinokoTag_c_size_must_be_0x110[
     sizeof(daObjKinokoTag_c) == 0x110 ? 1 : -1];
+#endif
 
 /* POD view used only to preserve the three-word Vector3 call ABI without
  * emitting Vector3's vague-linkage destructor. */
@@ -77,8 +80,11 @@ struct KinokoPositionWords {
     Fix12i z;
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char KinokoPositionWords_size_must_be_0xc[
     sizeof(KinokoPositionWords) == 0xc ? 1 : -1];
+#endif
 
 /* Typed owner for the two 0x1c actor/process profile descriptors at
  * ov002:0x02108cb4 and 0x02108cd0. Field roles are recovered from
@@ -95,7 +101,10 @@ struct KinokoTagSpawnInfo {
     Fix12i farDistance;
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char KinokoTagSpawnInfo_size_must_be_0x1c[
     sizeof(KinokoTagSpawnInfo) == 0x1c ? 1 : -1];
+#endif
 
 #endif

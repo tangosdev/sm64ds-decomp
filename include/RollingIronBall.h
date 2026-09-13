@@ -102,6 +102,9 @@ struct RollingIronBall : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RollingIronBall_size_must_be_0x3fc[sizeof(RollingIronBall) == 0x3fc ? 1 : -1];
+#endif
 
 #endif /* ROLLINGIRONBALL_H */

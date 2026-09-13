@@ -47,7 +47,10 @@ struct TowerStep : dBgActor_c {
     virtual void Kill();              /* slot 31 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char TowerStep_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
+#endif
 
 #else
 

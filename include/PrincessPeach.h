@@ -82,7 +82,10 @@ struct PrincessPeach : dActor_c {
     void SetState(int state);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PrincessPeach_size_must_be_0x36c[
     sizeof(PrincessPeach) == 0x36c ? 1 : -1];
+#endif
 
 #endif

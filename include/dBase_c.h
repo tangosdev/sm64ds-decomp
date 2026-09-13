@@ -62,6 +62,9 @@ struct dBase_c : fBase_c {
 /* dBase_c adds no members -- it exists to carry one overridden slot -- so it
    is exactly fBase_c's 0x50. Asserting it holds that claim, and lets
    tools/check_header_offsets.py check everything below it. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBase_c_size_must_be_0x50[sizeof(dBase_c) == 0x50 ? 1 : -1];
+#endif
 
 #endif

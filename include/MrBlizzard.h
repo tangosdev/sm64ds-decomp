@@ -70,7 +70,10 @@ struct MrBlizzard : dEnemyBase_c {
     u8 pad_458[0x14];      /* 0x458, to the ROM's 0x46c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MrBlizzard_size_must_be_0x46c[sizeof(MrBlizzard) == 0x46c ? 1 : -1];
+#endif
 
 #else
 

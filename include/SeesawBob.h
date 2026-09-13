@@ -45,7 +45,10 @@ struct SeesawBob : dBgActor_c {
     virtual void OnGroundPounded(dActor_c &other); /* slot 21 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SeesawBob_size_must_be_0x328[sizeof(SeesawBob) == 0x328 ? 1 : -1];
+#endif
 
 #else
 

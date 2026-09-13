@@ -54,7 +54,10 @@ struct ModelAnim2 : ModelAnim {
 
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char ModelAnim2_size_must_be_0x78[sizeof(ModelAnim2) == 0x78 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

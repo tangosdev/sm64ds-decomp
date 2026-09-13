@@ -36,6 +36,9 @@ struct daSCre_c : dActor_c {
     virtual s32   Behavior();               /* slot  6 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daSCre_c_size_must_be_0xd4[sizeof(daSCre_c) == 0xd4 ? 1 : -1];
+#endif
 
 #endif /* DASCRE_C_H */

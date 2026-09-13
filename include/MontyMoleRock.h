@@ -39,7 +39,10 @@ struct MontyMoleRock : dEnemyBase_c {
     virtual s32 Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MontyMoleRock_size_must_be_0x354[sizeof(MontyMoleRock) == 0x354 ? 1 : -1];
+#endif
 
 #else
 

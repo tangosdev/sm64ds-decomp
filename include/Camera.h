@@ -66,6 +66,9 @@ struct Camera : View {
     void SetPos(const Vector3 & pos_);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Camera_size_must_be_0x1a8[sizeof(struct Camera) == 0x1a8 ? 1 : -1];
+#endif
 
 #endif

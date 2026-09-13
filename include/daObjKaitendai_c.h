@@ -91,7 +91,10 @@ struct daObjKaitendai_c : dBgActor_c {
     virtual s32 CleanupResources() = 0;     /* slot  3 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKaitendai_c_size_must_be_0x320[sizeof(daObjKaitendai_c) == 0x320 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

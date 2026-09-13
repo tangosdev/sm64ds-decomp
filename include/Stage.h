@@ -86,7 +86,10 @@ struct SysTracker {
 
 /* Deterministic from the field list above (0x819 + the explicit 3-byte pad),
    and it is also exactly the gap Stage's own D1/D0 give this member. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
+#endif
 }
 
 /* One per level texture animation, eight slots' worth at Stage+0x8bc.
@@ -105,7 +108,10 @@ struct StageTexAnimSlot {
     void *mBlockList;       /* 0x08 - singly linked, next pointer at +0x0c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char StageTexAnimSlot_size_must_be_0xc[sizeof(struct StageTexAnimSlot) == 0xc ? 1 : -1];
+#endif
 
 /* The playable level: fBase_c -> dBase_c -> dScene_c -> Stage (dScStage_c in
  * the ROM's own type graph). A leaf; it adds no virtual of its own and
@@ -187,6 +193,9 @@ struct Stage : dScene_c {
     int  GraphCallback2();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Stage_size_must_be_0x9c8[sizeof(struct Stage) == 0x9c8 ? 1 : -1];
+#endif
 
 #endif

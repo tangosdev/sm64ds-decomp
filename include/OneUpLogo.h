@@ -37,7 +37,10 @@ struct OneUpLogo : dActor_c {
     virtual s32 Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char OneUpLogo_size_must_be_0x150[
     sizeof(OneUpLogo) == 0x150 ? 1 : -1];
+#endif
 
 #endif /* ONEUPLOGO_H */

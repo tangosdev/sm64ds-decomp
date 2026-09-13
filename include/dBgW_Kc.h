@@ -151,7 +151,10 @@ struct dBgW_Kc : dBgW {
 
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgW_Kc_size_must_be_0x50[sizeof(dBgW_Kc) == 0x50 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

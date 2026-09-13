@@ -36,6 +36,9 @@ struct daObjFl_London_c : dBgActor_c {
     u8  mFlag;                             /* 0x31f */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFl_London_c_size_must_be_0x320[sizeof(daObjFl_London_c) == 0x320 ? 1 : -1];
+#endif
 
 #endif /* DAOBJFL_LONDON_C_H */

@@ -96,7 +96,10 @@ struct daObjWakame_c : dActor_c {
     virtual s32 Render();               /* slot 9 -- 0x020bc4f8 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWakame_c_size_must_be_0x138[
     sizeof(daObjWakame_c) == 0x138 ? 1 : -1];
+#endif
 
 #endif /* DAOBJWAKAME_C_H */

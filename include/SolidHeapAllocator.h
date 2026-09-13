@@ -39,8 +39,11 @@ struct SolidHeapFreeRegion {
     u32 flags;
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SolidHeapFreeRegion_size_must_be_0xc[
     sizeof(struct SolidHeapFreeRegion) == 0xc ? 1 : -1];
+#endif
 
 struct SolidHeapAllocator : HeapAllocator {
     SolidHeapFreeRegion mFreeRegion; /* 0x024 */
@@ -69,7 +72,10 @@ struct SolidHeapAllocator : HeapAllocator {
 #endif
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SolidHeapAllocator_size_must_be_0x30[
     sizeof(struct SolidHeapAllocator) == 0x30 ? 1 : -1];
+#endif
 
 #endif

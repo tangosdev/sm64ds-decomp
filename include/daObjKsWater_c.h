@@ -51,6 +51,9 @@ struct daObjKsWater_c : dBgActor_c {
                                                      water sound's handle */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKsWater_c_size_must_be_0x340[sizeof(daObjKsWater_c) == 0x340 ? 1 : -1];
+#endif
 
 #endif /* DAOBJKSWATER_C_H */

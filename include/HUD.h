@@ -71,7 +71,10 @@ struct HUD : dBase_c {
     u8 pad_078[0x4];      /* 0x078, to the ROM's 0x7c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char HUD_size_must_be_0x7c[sizeof(HUD) == 0x7c ? 1 : -1];
+#endif
 
 #else
 

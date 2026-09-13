@@ -98,7 +98,10 @@ struct Fader {
     void AdvanceInterp();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Fader_size_must_be_0xc[sizeof(Fader) == 0xc ? 1 : -1];
+#endif
 #else
 /* Same object, spelled for remaining C consumers: C cannot express the virtual
    functions, so the vptr the compiler would place is explicit. */

@@ -118,7 +118,10 @@ struct daDsnBase_c : dBgActor_c {
     virtual s32 Render();              /* slot 9 -- ov091:0x02133210 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daDsnBase_c_size_must_be_0x360[sizeof(daDsnBase_c) == 0x360 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

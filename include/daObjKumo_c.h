@@ -33,6 +33,9 @@ struct daObjKumo_c : dActor_c {
     virtual int Render();              /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKumo_c_size_must_be_0x124[sizeof(daObjKumo_c) == 0x124 ? 1 : -1];
+#endif
 
 #endif /* DAOBJKUMO_C_H */

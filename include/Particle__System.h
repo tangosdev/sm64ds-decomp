@@ -65,7 +65,10 @@ struct System {
     static System *FromUniqueID(u32 uniqueID);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char System_size_must_be_0x78[sizeof(System) == 0x78 ? 1 : -1];
+#endif
 
 }
 

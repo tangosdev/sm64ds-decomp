@@ -18,7 +18,10 @@ struct dScMgAmida_c_Piece {
     s32 timer;   /* +0x10 */
     u8  active;  /* +0x14 */
 };
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 0x18 ? 1 : -1];
+#endif
 
 /* The Amida (ghost-leg lottery) minigame scene -- a dScMgBase_c leaf.
    Field evidence and the full vtable census live in
@@ -176,7 +179,10 @@ struct dScMgAmida_c : dScMgBase_c {
     u8  pad_53ec[0x10];          /* tail padding to the 0x53fc allocation */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgAmida_c_Point_size_must_be_0x8[sizeof(dScMgAmida_c::Point) == 0x8 ? 1 : -1];
 typedef char dScMgAmida_c_size_must_be_0x53fc[sizeof(dScMgAmida_c) == 0x53fc ? 1 : -1];
+#endif
 
 #endif

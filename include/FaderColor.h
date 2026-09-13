@@ -57,7 +57,10 @@ struct FaderColor : FaderBrightness {
    has no out-of-line constructor for this class. */
 inline FaderColor::FaderColor() { color = 0; }
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char FaderColor_size_must_be_0x10[sizeof(FaderColor) == 0x10 ? 1 : -1];
+#endif
 #else
 /* Spelled for remaining C consumers, which cannot express the virtuals and so
    write out the vptr the compiler would place. */

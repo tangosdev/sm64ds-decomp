@@ -33,6 +33,9 @@ struct BootScene : dScene_c {
 
 /* Holds the chain to the size dScBoot_c_classInit's operator new(0x58) evidences.
    A silently-added member anywhere fails this. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BootScene_size_must_be_0x58[sizeof(BootScene) == 0x58 ? 1 : -1];
+#endif
 
 #endif

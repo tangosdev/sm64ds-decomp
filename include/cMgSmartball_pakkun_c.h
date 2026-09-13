@@ -56,6 +56,9 @@ struct cMgSmartball_pakkun_c : cMgSmartball_object_c {
                           RestoreInitial zeroes it. */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_pakkun_c_size_must_be_0x3c[sizeof(cMgSmartball_pakkun_c) == 0x3c ? 1 : -1];
+#endif
 
 #endif

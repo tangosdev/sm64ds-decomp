@@ -50,6 +50,9 @@ struct MadPiano : dBgActor_c {
     virtual int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MadPiano_size_must_be_0x6e4[sizeof(struct MadPiano) == 0x6e4 ? 1 : -1];
+#endif
 
 #endif

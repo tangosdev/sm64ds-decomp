@@ -76,7 +76,10 @@ struct daChRoom_c : dActor_c {
     virtual void OnPendingDestroy();    /* slot 12 -- 0x020b085c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daChRoom_c_size_must_be_0xd4[
     sizeof(daChRoom_c) == 0xd4 ? 1 : -1];
+#endif
 
 #endif /* DACHROOM_C_H */

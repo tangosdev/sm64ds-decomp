@@ -150,6 +150,9 @@ struct KoopaShell {
 
 #endif /* __cplusplus */
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char KoopaShell_size_must_be_0x3e0[sizeof(struct KoopaShell) == 0x3e0 ? 1 : -1];
+#endif
 
 #endif /* KOOPASHELL_H */

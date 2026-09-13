@@ -123,7 +123,10 @@ struct ExpandingHeapAllocator : HeapAllocator {
 #endif
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char ExpandingHeapAllocator_size_must_be_0x38[
     sizeof(struct ExpandingHeapAllocator) == 0x38 ? 1 : -1];
+#endif
 
 #endif

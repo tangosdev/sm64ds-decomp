@@ -108,6 +108,9 @@ struct Whomp : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Whomp_size_must_be_0x610[sizeof(Whomp) == 0x610 ? 1 : -1];
+#endif
 
 #endif /* WHOMP_H */

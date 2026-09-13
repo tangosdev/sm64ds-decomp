@@ -353,6 +353,9 @@ struct dActor_c {
    but it holds the two spellings to each other, catches a field retyped without
    shrinking the pad after it, and gives tools/check_header_offsets.py the base
    size it refuses to guess when checking include/Player.h. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dActor_c_size_must_be_0xd0[sizeof(struct dActor_c) == 0xd0 ? 1 : -1];
+#endif
 
 #endif

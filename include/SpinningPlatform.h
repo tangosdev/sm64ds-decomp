@@ -40,7 +40,10 @@ struct SpinningPlatform : dBgActor_c {
     void UpdateModel();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SpinningPlatform_size_must_be_0x380[
     sizeof(SpinningPlatform) == 0x380 ? 1 : -1];
+#endif
 
 #endif

@@ -52,6 +52,9 @@ struct Clam {
 
 #endif
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Clam_size_must_be_0x174[sizeof(struct Clam) == 0x174 ? 1 : -1];
+#endif
 
 #endif /* CLAM_H */

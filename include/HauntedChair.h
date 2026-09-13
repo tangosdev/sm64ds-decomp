@@ -66,7 +66,10 @@ struct HauntedChair : dActor_c {
     void UpdateModel();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char HauntedChair_size_must_be_0x3a8[
     sizeof(HauntedChair) == 0x3a8 ? 1 : -1];
+#endif
 
 #endif

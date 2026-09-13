@@ -84,6 +84,8 @@ struct RadiusConverge {
     static void Func(EffectData& effect, char* particle, Vector3& velocity);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char AccelerationData_size_must_be_0x8[
     sizeof(AccelerationData) == 0x8 ? 1 : -1];
 typedef char JitterData_size_must_be_0x8[
@@ -98,6 +100,7 @@ typedef char RadiusConvergeData_size_must_be_0x10[
     sizeof(RadiusConvergeData) == 0x10 ? 1 : -1];
 typedef char EffectData_size_must_be_0x10[
     sizeof(EffectData) == 0x10 ? 1 : -1];
+#endif
 } // namespace Particle
 
 #endif

@@ -65,7 +65,10 @@ struct dBgActor_c : dActor_c {
     int UpdateKillByMegaChar(s16 a, s16 b, s16 c, Fix12<int> d);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgActor_c_size_must_be_0x320[sizeof(dBgActor_c) == 0x320 ? 1 : -1];
+#endif
 
 #else
 

@@ -60,6 +60,9 @@ struct Number : dActor_c {
     virtual s32 Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Number_size_must_be_0x150[sizeof(Number) == 0x150 ? 1 : -1];
+#endif
 
 #endif

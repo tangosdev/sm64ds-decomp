@@ -103,11 +103,14 @@ struct BMD_File {
     void *unk_34;              /* 0x34 - block of four pointers, all fixed up */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BMD_DisplayList_size_must_be_0x10[sizeof(struct BMD_DisplayList) == 0x10 ? 1 : -1];
 typedef char BMD_DisplayListGroup_size_must_be_0x8[sizeof(struct BMD_DisplayListGroup) == 0x8 ? 1 : -1];
 typedef char BMD_Bone_size_must_be_0x40[sizeof(struct BMD_Bone) == 0x40 ? 1 : -1];
 typedef char BMD_Material_size_must_be_0x30[sizeof(struct BMD_Material) == 0x30 ? 1 : -1];
 typedef char BMD_Texture_size_must_be_0x14[sizeof(struct BMD_Texture) == 0x14 ? 1 : -1];
 typedef char BMD_Palette_size_must_be_0x10[sizeof(struct BMD_Palette) == 0x10 ? 1 : -1];
+#endif
 
 #endif /* BMD_FILE_H */

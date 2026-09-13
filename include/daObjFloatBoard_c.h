@@ -95,7 +95,10 @@ struct daObjFloatBoard_c : dBgActor_c {
     virtual int InitResources() = 0;        /* slot  0 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFloatBoard_c_size_must_be_0x348[sizeof(daObjFloatBoard_c) == 0x348 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

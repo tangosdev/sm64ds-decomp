@@ -127,6 +127,9 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
     u8  pad_5dc6[0x2];    /* 0x5dc6 -- rounds up to the 0x5dc8 boundary */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgTrampoline_c_size_must_be_0x5dc8[sizeof(dScMgTrampoline_c) == 0x5dc8 ? 1 : -1];
+#endif
 
 #endif

@@ -188,6 +188,9 @@ struct fBase_c {
    to drift from the C++ one. It is also what lets tools/check_header_offsets.py
    check the classes derived from this: a derived struct's own fields start at the
    base's size, and the tool refuses to guess it. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char fBase_c_size_must_be_0x50[sizeof(struct fBase_c) == 0x50 ? 1 : -1];
+#endif
 
 #endif

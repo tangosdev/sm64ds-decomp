@@ -58,7 +58,10 @@ struct daPgMthr_c : dActor_c {
     virtual void OnPendingDestroy();             /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MotherPenguin_size_must_be_0x38c[sizeof(daPgMthr_c) == 0x38c ? 1 : -1];
+#endif
 
 #else
 
@@ -109,7 +112,10 @@ struct daPgMthr_c {
     u8  pad_378[0x14];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MotherPenguin_size_must_be_0x38c[sizeof(struct daPgMthr_c) == 0x38c ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

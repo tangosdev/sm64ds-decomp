@@ -35,7 +35,10 @@ struct Bird : dActor_c {
     virtual void OnPendingDestroy();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Bird_size_must_be_0x184[
     sizeof(Bird) == 0x184 ? 1 : -1];
+#endif
 
 #endif /* BIRD_H */

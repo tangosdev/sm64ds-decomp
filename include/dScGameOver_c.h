@@ -87,6 +87,9 @@ struct dScGameOver_c : dScene_c {
     virtual void OnPendingDestroy();                      /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScGameOver_c_size_must_be_0x98[sizeof(dScGameOver_c) == 0x98 ? 1 : -1];
+#endif
 
 #endif

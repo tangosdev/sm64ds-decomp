@@ -99,6 +99,9 @@ struct daSCoin_c : dActor_c {
     virtual s32  Behavior();         /* slot  6 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daSCoin_c_size_must_be_0x114[sizeof(daSCoin_c) == 0x114 ? 1 : -1];
+#endif
 
 #endif

@@ -50,7 +50,10 @@ struct StarSwitch : dBgActor_c {
     void OnGroundPounded(dActor_c &other);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char StarSwitch_size_must_be_0x354[sizeof(StarSwitch) == 0x354 ? 1 : -1];
+#endif
 
 #else
 

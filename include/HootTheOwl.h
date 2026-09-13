@@ -87,6 +87,9 @@ struct HootTheOwl : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char HootTheOwl_size_must_be_0x3f8[sizeof(HootTheOwl) == 0x3f8 ? 1 : -1];
+#endif
 
 #endif /* HOOTTHEOWL_H */

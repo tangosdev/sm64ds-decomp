@@ -71,6 +71,9 @@ struct Lakitu : dActor_c {
     void OnPendingDestroy();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Lakitu_size_must_be_0x420[sizeof(Lakitu) == 0x420 ? 1 : -1];
+#endif
 
 #endif /* LAKITU_H */

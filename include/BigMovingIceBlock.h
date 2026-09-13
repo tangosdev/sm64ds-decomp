@@ -58,7 +58,10 @@ struct BigMovingIceBlock {
 
 #endif
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BigMovingIceBlock_size_must_be_0x330[
     sizeof(struct BigMovingIceBlock) == 0x330 ? 1 : -1];
+#endif
 
 #endif /* BIGMOVINGICEBLOCK_H */

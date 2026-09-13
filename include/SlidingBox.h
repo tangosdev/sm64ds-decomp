@@ -40,7 +40,10 @@ struct SlidingBox : dBgActor_c {
     void UpdateModel();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SlidingBox_size_must_be_0x4f8[
     sizeof(SlidingBox) == 0x4f8 ? 1 : -1];
+#endif
 
 #endif /* SLIDINGBOX_H */

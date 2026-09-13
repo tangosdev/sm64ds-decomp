@@ -69,7 +69,10 @@ struct daObjPushblock_c : dBgActor_c {
     void Kill();                           /* slot 31 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PushBlock_size_must_be_0x4f4[sizeof(daObjPushblock_c) == 0x4f4 ? 1 : -1];
+#endif
 
 /* Retail symbols.txt exposes _ZTV at the public address point rather than the
  * compiler object's two-word ABI preamble. Actor factories that must retain

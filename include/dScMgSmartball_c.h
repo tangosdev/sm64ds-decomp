@@ -95,6 +95,9 @@ struct dScMgSmartball_c : dScMgBase_c {
     u8 mArray4[0x900];    /* 0x599c -- 0x40 * 0x24, elem dtor func_ov006_0210d894 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgSmartball_c_size_must_be_0x629c[sizeof(dScMgSmartball_c) == 0x629c ? 1 : -1];
+#endif
 
 #endif

@@ -114,7 +114,10 @@ struct dBgCh {
     void StopDetectingWater();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_size_must_be_0x10[sizeof(dBgCh) == 0x10 ? 1 : -1];
+#endif
 
 #else
 

@@ -18,7 +18,10 @@ struct Fog {
    `dst += 0x28` and hands each element to Fog::Init. check_header_offsets.py
    sizes a member type from this typedef -- without it, Stage.h's Fog member is
    UNPARSED and the checker goes blind for the rest of that struct. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Fog_size_must_be_0x28[sizeof(struct Fog) == 0x28 ? 1 : -1];
+#endif
 typedef struct Fog Fog;
 
 #endif

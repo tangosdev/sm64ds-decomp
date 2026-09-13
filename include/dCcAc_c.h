@@ -74,8 +74,11 @@ struct dCcAc_c : dCc_c {
 
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCcAc_c_size_must_be_0x34[
     sizeof(dCcAc_c) == 0x34 ? 1 : -1];
+#endif
 
 #else
 
@@ -95,7 +98,10 @@ typedef struct dCcAc_c dCcAc_c;
 /* The C view substitutes for the C++ class only while it is the SAME SIZE. Once
    an owner embeds one by value the two branches lay that owner out differently if
    they ever disagree, and nothing else in the build compares them. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCcAc_c_size_must_be_0x34[sizeof(struct dCcAc_c) == 0x34 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

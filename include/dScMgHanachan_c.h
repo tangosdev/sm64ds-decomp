@@ -65,6 +65,9 @@ struct dScMgHanachan_c : dScMgBase_c {
     u8  unk_4f64;            /* 0x4f64 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgHanachan_c_size_must_be_0x4f68[sizeof(dScMgHanachan_c) == 0x4f68 ? 1 : -1];
+#endif
 
 #endif

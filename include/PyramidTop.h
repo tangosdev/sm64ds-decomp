@@ -49,7 +49,10 @@ struct PyramidTop : dBgActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PyramidTop_size_must_be_0x3b8[sizeof(PyramidTop) == 0x3b8 ? 1 : -1];
+#endif
 
 #else
 

@@ -38,7 +38,10 @@ struct ExtendingPlatform : dActor_c {
     void UpdateModelTransform();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char ExtendingPlatform_size_must_be_0x328[
     sizeof(ExtendingPlatform) == 0x328 ? 1 : -1];
+#endif
 
 #endif

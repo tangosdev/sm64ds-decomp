@@ -84,6 +84,9 @@ struct Key : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Key_size_must_be_0x470[sizeof(Key) == 0x470 ? 1 : -1];
+#endif
 
 #endif /* KEY_H */

@@ -82,7 +82,10 @@ struct RotatingUpDownPlatformUtm : dBgActor_c {
     void OnHitByMegaChar(Player &player);   /* slot 27 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RotatingUpDownPlatformUtm_size_must_be_0x3a8[sizeof(RotatingUpDownPlatformUtm) == 0x3a8 ? 1 : -1];
+#endif
 
 #else
 

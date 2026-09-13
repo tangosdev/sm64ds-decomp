@@ -103,7 +103,10 @@ struct Bowser : dActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Bowser_size_must_be_0x454[sizeof(Bowser) == 0x454 ? 1 : -1];
+#endif
 
 #else
 

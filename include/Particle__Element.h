@@ -17,8 +17,11 @@ struct Element {
     u16 age;                    /* 0x2e */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Element_size_must_be_0x30[
     sizeof(Element) == 0x30 ? 1 : -1];
+#endif
 
 } // namespace Particle
 

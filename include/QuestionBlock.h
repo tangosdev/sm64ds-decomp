@@ -85,7 +85,10 @@ struct QuestionBlock : dBgActor_c {
     u8 pad_3f4[0x4];      /* 0x3f4, to the ROM's 0x3f8 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char QuestionBlock_size_must_be_0x3f8[sizeof(QuestionBlock) == 0x3f8 ? 1 : -1];
+#endif
 
 #else
 

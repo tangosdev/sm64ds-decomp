@@ -117,6 +117,9 @@ struct cMgSmartball_board_c : cMgSmartball_object_c {
                         which of four jingles mFanfareTimer replays. */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_board_c_size_must_be_0x9c[sizeof(cMgSmartball_board_c) == 0x9c ? 1 : -1];
+#endif
 
 #endif

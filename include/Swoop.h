@@ -77,6 +77,9 @@ struct Swoop : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Swoop_size_must_be_0x440[sizeof(Swoop) == 0x440 ? 1 : -1];
+#endif
 
 #endif /* SWOOP_H */

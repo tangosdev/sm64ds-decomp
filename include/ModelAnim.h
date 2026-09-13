@@ -100,7 +100,10 @@ struct ModelAnim : Model, Animation {
 
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char ModelAnim_size_must_be_0x64[sizeof(ModelAnim) == 0x64 ? 1 : -1];
+#endif
 
 #else
 

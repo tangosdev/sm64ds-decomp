@@ -102,8 +102,11 @@ struct dBgCh_SphCrr : dBgCh, dBgPi, dM3dGSph {
    it against a 0x10c declaration came out one word short of the frame. That
    measurement is what let the byte stand-in there stay honest; growing this
    class is what will eventually let the stand-in become the real type. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_SphCrr_size_must_be_0x110[
     sizeof(dBgCh_SphCrr) == 0x110 ? 1 : -1];
+#endif
 
 #else
 
@@ -135,8 +138,11 @@ typedef struct dBgCh_SphCrr dBgCh_SphCrr;
 
 /* Same pin on the C view -- the two branches must agree while anything can
    still substitute one for the other. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_SphCrr_c_size_must_be_0x110[
     sizeof(struct dBgCh_SphCrr) == 0x110 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

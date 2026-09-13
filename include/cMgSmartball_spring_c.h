@@ -93,6 +93,9 @@ struct cMgSmartball_spring_c : cMgSmartball_object_c {
                           only field this class's RestoreInitial zeroes. */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_spring_c_size_must_be_0x48[sizeof(cMgSmartball_spring_c) == 0x48 ? 1 : -1];
+#endif
 
 #endif

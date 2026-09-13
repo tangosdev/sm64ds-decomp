@@ -82,8 +82,11 @@ inline void *daObjKm2_Ukishima_c::operator new(unsigned long size)
     return _ZN7fBase_cnwEj((unsigned)size);
 }
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKm2_Ukishima_c_size_must_be_0x32c[
     sizeof(daObjKm2_Ukishima_c) == 0x32c ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

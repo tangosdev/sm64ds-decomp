@@ -28,7 +28,10 @@ struct PeachPainting : dActor_c {
     void UpdateModelTransform();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PeachPainting_size_must_be_0x128[
     sizeof(PeachPainting) == 0x128 ? 1 : -1];
+#endif
 
 #endif

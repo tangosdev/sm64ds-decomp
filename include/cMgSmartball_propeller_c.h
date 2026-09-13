@@ -82,6 +82,9 @@ struct cMgSmartball_propeller_c : cMgSmartball_object_c {
                            above */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_propeller_c_size_must_be_0x78[sizeof(cMgSmartball_propeller_c) == 0x78 ? 1 : -1];
+#endif
 
 #endif

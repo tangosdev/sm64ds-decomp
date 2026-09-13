@@ -53,7 +53,10 @@ struct CheepCheep : dEnemyBase_c {
     u8 pad_380[0x8];      /* 0x380, to the ROM's 0x388 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char CheepCheep_size_must_be_0x388[sizeof(CheepCheep) == 0x388 ? 1 : -1];
+#endif
 
 #else
 

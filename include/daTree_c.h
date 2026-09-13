@@ -75,6 +75,9 @@ struct daTree_c : dActor_c {
     virtual void OnPendingDestroy();   /* slot 12 -- empty body in the ROM */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daTree_c_size_must_be_0x264[sizeof(daTree_c) == 0x264 ? 1 : -1];
+#endif
 
 #endif

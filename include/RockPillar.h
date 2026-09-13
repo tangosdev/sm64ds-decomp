@@ -27,6 +27,9 @@ struct RockPillar : dBgActor_c {
     virtual s32   Render();                /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RockPillar_size_must_be_0x328[sizeof(RockPillar) == 0x328 ? 1 : -1];
+#endif
 
 #endif /* ROCKPILLAR_H */

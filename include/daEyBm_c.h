@@ -70,8 +70,11 @@ private:
     void UpdateShadow();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daEyBm_c_size_must_be_0x334[
     sizeof(daEyBm_c) == 0x334 ? 1 : -1];
+#endif
 
 /* InitResources owns the compiler-emitted definition of this vtable. The
  * measured factory must store its public address point directly because

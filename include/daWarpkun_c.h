@@ -66,6 +66,9 @@ struct daWarpkun_c : dActor_c {
     virtual void  OnPendingDestroy();      /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daWarpkun_c_size_must_be_0x108[sizeof(daWarpkun_c) == 0x108 ? 1 : -1];
+#endif
 
 #endif /* DAWARPKUN_C_H */

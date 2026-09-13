@@ -183,6 +183,9 @@ struct dScMgSlot1_c : dScMgBase_c {
     u8  pad_470c[0x4];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgSlot1_c_size_must_be_0x4710[sizeof(dScMgSlot1_c) == 0x4710 ? 1 : -1];
+#endif
 
 #endif

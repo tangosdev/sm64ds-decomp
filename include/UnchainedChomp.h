@@ -68,6 +68,9 @@ struct UnchainedChomp : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char UnchainedChomp_size_must_be_0x7a4[sizeof(UnchainedChomp) == 0x7a4 ? 1 : -1];
+#endif
 
 #endif /* UNCHAINEDCHOMP_H */

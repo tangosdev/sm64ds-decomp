@@ -32,7 +32,10 @@ struct LavaPlank : dBgActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char LavaPlank_size_must_be_0x328[sizeof(LavaPlank) == 0x328 ? 1 : -1];
+#endif
 
 #else
 

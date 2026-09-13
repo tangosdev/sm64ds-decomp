@@ -80,7 +80,10 @@ struct Wiggler : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Wiggler_size_must_be_0x8e8[sizeof(struct Wiggler) == 0x8e8 ? 1 : -1];
+#endif
 
 #else
 

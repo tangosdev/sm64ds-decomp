@@ -24,7 +24,10 @@ struct dMgState_c {
     void SetState(s32 state);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgState_c_size_must_be_0x28[
     sizeof(dMgState_c) == 0x28 ? 1 : -1];
+#endif
 
 #endif

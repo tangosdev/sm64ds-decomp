@@ -95,7 +95,10 @@ struct Goomboss : dEnemyBase_c {
     virtual s32 Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Goomboss_size_must_be_0x610[sizeof(Goomboss) == 0x610 ? 1 : -1];
+#endif
 
 #else
 

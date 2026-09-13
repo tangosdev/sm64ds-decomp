@@ -68,7 +68,10 @@ struct dM3dGSph {
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dM3dGSph_size_must_be_0x14[sizeof(dM3dGSph) == 0x14 ? 1 : -1];
+#endif
 
 #else
 

@@ -50,7 +50,10 @@ struct TTC_MovingBeam : dBgActor_c {
     Matrix4x3 mShadowMat;        /* 0x35c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char TTC_MovingBeam_size_must_be_0x38c[sizeof(TTC_MovingBeam) == 0x38c ? 1 : -1];
+#endif
 
 #else
 

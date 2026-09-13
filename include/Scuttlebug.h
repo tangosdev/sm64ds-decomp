@@ -96,7 +96,10 @@ struct Scuttlebug : dActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Scuttlebug_size_must_be_0x3ac[sizeof(Scuttlebug) == 0x3ac ? 1 : -1];
+#endif
 
 /* ~Scuttlebug, the key function, owns the compiler-emitted definition of this
  * vtable, so to every other translation unit it is an ordinary external.

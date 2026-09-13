@@ -33,8 +33,11 @@ struct UnknownVsPlayer {
     ~UnknownVsPlayer();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char UnknownVsPlayer_size_must_be_0x158[
     sizeof(UnknownVsPlayer) == 0x158 ? 1 : -1];
+#endif
 
 struct UnknownVsEntry : dBase_c {
     Particle::SysTracker mParticles;   /* 0x050 */
@@ -89,6 +92,9 @@ struct UnknownVsEntry {
 
 #endif /* __cplusplus */
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char UnknownVsEntry_size_must_be_0xf48[sizeof(struct UnknownVsEntry) == 0xf48 ? 1 : -1];
+#endif
 
 #endif

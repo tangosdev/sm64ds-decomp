@@ -77,7 +77,10 @@ struct Model : ModelBase {
     static u32 LoadCompressedTextureToVram(char *src, u32 size, char *dst);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Model_size_must_be_0x50[sizeof(Model) == 0x50 ? 1 : -1];
+#endif
 
 #else
 

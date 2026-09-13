@@ -43,6 +43,9 @@ struct RabbitKey : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RabbitKey_size_must_be_0x1a0[sizeof(RabbitKey) == 0x1a0 ? 1 : -1];
+#endif
 
 #endif /* RABBITKEY_H */

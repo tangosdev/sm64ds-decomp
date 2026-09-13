@@ -131,6 +131,9 @@ struct cMgSmartball_slot_c : cMgSmartball_object_c {
                            zeroes it. */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_slot_c_size_must_be_0x88[sizeof(cMgSmartball_slot_c) == 0x88 ? 1 : -1];
+#endif
 
 #endif

@@ -59,8 +59,11 @@ struct dCcAcPos_c : dCcAc_c {
     void SetPosRelativeToActor(const Vector3 &offset);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCcAcPos_c_size_must_be_0x40[
     sizeof(dCcAcPos_c) == 0x40 ? 1 : -1];
+#endif
 
 #else
 
@@ -80,8 +83,11 @@ typedef struct dCcAcPos_c dCcAcPos_c;
 /* The C view substitutes for the C++ class only while it is the SAME SIZE. Once
    an owner embeds one by value the two branches lay that owner out differently if
    they ever disagree, and nothing else in the build compares them. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCcAcPos_c_size_must_be_0x40[
     sizeof(struct dCcAcPos_c) == 0x40 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

@@ -159,7 +159,10 @@ struct Door : dActor_c {
 
 /* Holds the chain to the size daDoor_c_classInit.c's operator new(0x148) call
    evidences. A silently-added member anywhere fails this. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Door_size_must_be_0x148[sizeof(Door) == 0x148 ? 1 : -1];
+#endif
 
 #else
 
@@ -194,7 +197,10 @@ struct Door {
 /* The C++ branch's assert, restated over the nested spelling: if either base
    changes width the sum stops being 0x148 and this branch fails to compile,
    which is the whole point of nesting them rather than restating offsets. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Door_size_must_be_0x148[sizeof(struct Door) == 0x148 ? 1 : -1];
+#endif
 
 /* So a source declaring a Door reads the same in both modes, the way
    include/ModelAnim.h does it. */

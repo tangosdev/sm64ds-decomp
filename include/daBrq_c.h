@@ -19,8 +19,11 @@ struct BrqStateHandlers {
     BrqStateHandler update;
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BrqStateHandlers_size_must_be_0x10[
     sizeof(BrqStateHandlers) == 0x10 ? 1 : -1];
+#endif
 
 /* daBrq_c is the ROM-proven class identity: ov070 owns _ZTS7daBrq_c at
  * 0x0212323c, _ZTI7daBrq_c at 0x02123248, and the public vtable address point
@@ -82,7 +85,10 @@ private:
     void UpdateModelTransform();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBrq_c_size_must_be_0x434[
     sizeof(daBrq_c) == 0x434 ? 1 : -1];
+#endif
 
 #endif /* DABRQ_C_H */

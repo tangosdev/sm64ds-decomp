@@ -90,8 +90,11 @@ struct BowserShockwaves : dActor_c {
     int InitResources();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BowserShockwaves_size_must_be_0x218[
     sizeof(BowserShockwaves) == 0x218 ? 1 : -1];
+#endif
 
 #else
 

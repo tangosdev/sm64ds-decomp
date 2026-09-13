@@ -17,8 +17,11 @@ struct fLiNdBa_c {
     ~fLiNdBa_c();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char fLiNdBa_c_size_must_be_0x0c[
     sizeof(fLiNdBa_c) == 0x0c ? 1 : -1];
+#endif
 
 /* Intrusive process-list node. The 0x10-byte layout and destructor lifetime are
  * ROM-proven. The fLiNdBaPr_c spelling follows Nintendo's later framework and
@@ -33,7 +36,10 @@ struct fLiNdBaPr_c {
     ~fLiNdBaPr_c();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char fLiNdBaPr_c_size_must_be_0x10[
     sizeof(fLiNdBaPr_c) == 0x10 ? 1 : -1];
+#endif
 
 #endif

@@ -96,9 +96,12 @@ struct dMgJump3DMario_c : dMg3DHeyhoObjAdapter_c {
     u8 unk_0b0[0x08];     /* 0xb0 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMg3DHeyhoObjAdapter_c_size_must_be_0x4c[
     sizeof(dMg3DHeyhoObjAdapter_c) == 0x4c ? 1 : -1];
 typedef char dMgJump3DMario_c_size_must_be_0xb8[
     sizeof(dMgJump3DMario_c) == 0xb8 ? 1 : -1];
+#endif
 
 #endif

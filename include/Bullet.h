@@ -57,6 +57,9 @@ struct Bullet : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Bullet_size_must_be_0x35c[sizeof(Bullet) == 0x35c ? 1 : -1];
+#endif
 
 #endif /* BULLET_H */

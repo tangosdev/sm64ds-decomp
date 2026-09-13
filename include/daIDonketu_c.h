@@ -81,6 +81,9 @@ struct daIDonketu_c : daOts_c {
     virtual void UpdateDeathState();    /* slot 32 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daIDonketu_c_size_must_be_0x3fc[sizeof(daIDonketu_c) == 0x3fc ? 1 : -1];
+#endif
 
 #endif /* DAIDONKETU_C_H */

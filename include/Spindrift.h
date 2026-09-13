@@ -64,6 +64,9 @@ struct Spindrift : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Spindrift_size_must_be_0x39c[sizeof(Spindrift) == 0x39c ? 1 : -1];
+#endif
 
 #endif /* SPINDRIFT_H */

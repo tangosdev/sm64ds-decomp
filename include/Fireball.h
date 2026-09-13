@@ -58,6 +58,9 @@ struct Fireball : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Fireball_size_must_be_0x378[sizeof(Fireball) == 0x378 ? 1 : -1];
+#endif
 
 #endif /* FIREBALL_H */

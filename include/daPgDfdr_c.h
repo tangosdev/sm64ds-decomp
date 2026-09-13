@@ -110,7 +110,10 @@ struct daPgDfdr_c : dBgActor_c {
        by reloc, not assumed. */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daPgDfdr_c_size_must_be_0x3dc[sizeof(daPgDfdr_c) == 0x3dc ? 1 : -1];
+#endif
 
 #else
 

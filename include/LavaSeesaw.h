@@ -35,6 +35,9 @@ struct LavaSeesaw : dBgActor_c {
     virtual s32   Render();                /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char LavaSeesaw_size_must_be_0x324[sizeof(LavaSeesaw) == 0x324 ? 1 : -1];
+#endif
 
 #endif /* LAVASEESAW_H */

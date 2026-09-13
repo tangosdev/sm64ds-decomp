@@ -28,6 +28,9 @@ struct SkiLift : dBgActor_c {
     virtual void  OnHitByMegaChar(Player &player); /* slot 27 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SkiLift_size_must_be_0x354[sizeof(SkiLift) == 0x354 ? 1 : -1];
+#endif
 
 #endif /* SKILIFT_H */

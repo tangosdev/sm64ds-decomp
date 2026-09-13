@@ -88,7 +88,10 @@ struct Crate : dBgActor_c {
     virtual void Kill();                                /* slot 31 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Crate_size_must_be_0x608[sizeof(Crate) == 0x608 ? 1 : -1];
+#endif
 
 #else
 

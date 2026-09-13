@@ -21,7 +21,10 @@ struct dScMgCurling2_stone {
     u8  unk2c[0x4];     /* 0x2c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgCurling2_stone_size_must_be_0x30[sizeof(struct dScMgCurling2_stone) == 0x30 ? 1 : -1];
+#endif
 
 struct dScMgCurling2_c : dScMgBase_c {
     virtual ~dScMgCurling2_c();
@@ -116,6 +119,9 @@ struct dScMgCurling2_c : dScMgBase_c {
     u8  unk_55c3;            /* 0x55c3 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgCurling2_c_size_must_be_0x55c4[sizeof(dScMgCurling2_c) == 0x55c4 ? 1 : -1];
+#endif
 
 #endif

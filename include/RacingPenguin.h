@@ -53,8 +53,11 @@ struct RacingPenguin : dActor_c {
     virtual void OnPendingDestroy();             /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RacingPenguin_size_must_be_0x398[
     sizeof(RacingPenguin) == 0x398 ? 1 : -1];
+#endif
 
 #else
 
@@ -123,7 +126,10 @@ struct RacingPenguin {
     u8  unk_396;            /* 0x396 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RacingPenguin_size_must_be_0x398[sizeof(struct RacingPenguin) == 0x398 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

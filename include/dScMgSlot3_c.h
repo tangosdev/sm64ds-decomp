@@ -103,6 +103,9 @@ struct dScMgSlot3_c : dScMgSingle3DBase_c {
     u8  pad_5043[0x1];      /* 0x5043 -- rounds up to the 0x5044 boundary */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgSlot3_c_size_must_be_0x5044[sizeof(dScMgSlot3_c) == 0x5044 ? 1 : -1];
+#endif
 
 #endif

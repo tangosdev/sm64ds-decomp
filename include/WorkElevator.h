@@ -81,6 +81,9 @@ struct WorkElevator {
 
 #endif /* __cplusplus */
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char WorkElevator_size_must_be_0xc80[sizeof(struct WorkElevator) == 0xc80 ? 1 : -1];
+#endif
 
 #endif

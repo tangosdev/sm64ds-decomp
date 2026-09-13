@@ -95,7 +95,10 @@ struct Animation {
 
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Animation_size_must_be_0x10[sizeof(Animation) == 0x10 ? 1 : -1];
+#endif
 
 #else
 

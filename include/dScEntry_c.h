@@ -80,6 +80,8 @@ struct dScEntry_c::graphCallback_c : dGraph_c::callback_c {
     virtual int GraphCallback2();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScEntry_c_size_must_be_0x288[sizeof(dScEntry_c) == 0x288 ? 1 : -1];
 typedef char icon_c_size_must_be_0x24[
     sizeof(dScEntry_c::icon_c) == 0x24 ? 1 : -1];
@@ -87,5 +89,6 @@ typedef char dScEntry_oam_animation_size_must_be_0x2c[
     sizeof(OamAnimation) == 0x2c ? 1 : -1];
 typedef char dScEntry_graphCallback_c_size_must_be_0x2c[
     sizeof(dScEntry_c::graphCallback_c) == 0x2c ? 1 : -1];
+#endif
 
 #endif

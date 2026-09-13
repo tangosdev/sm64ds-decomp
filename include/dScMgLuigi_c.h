@@ -120,6 +120,9 @@ struct dScMgLuigi_c : dScMgBase_c {
     u8  unk_545a;            /* 0x545a -- speed level the board must not reuse */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgLuigi_c_size_must_be_0x545c[sizeof(dScMgLuigi_c) == 0x545c ? 1 : -1];
+#endif
 
 #endif

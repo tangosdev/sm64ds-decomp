@@ -52,7 +52,10 @@ struct daObjWc_Obj04_c : dBgActor_c {
     virtual ~daObjWc_Obj04_c();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWc_Obj04_c_size_must_be_0x3a8[
     sizeof(struct daObjWc_Obj04_c) == 0x3a8 ? 1 : -1];
+#endif
 
 #endif

@@ -27,8 +27,11 @@ struct daBar_c : dActor_c {
     virtual void OnPendingDestroy();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daBar_c_size_must_be_0x108[
     sizeof(daBar_c) == 0x108 ? 1 : -1];
+#endif
 
 /* Typed owner for the ROM descriptor at ov002:0x0210845c. The field roles are
  * established by fBase_c/dActor_c constructor consumers; their exact original
@@ -44,7 +47,10 @@ struct DaBarSpawnInfo {
     Fix12i farDistance;
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char DaBarSpawnInfo_size_must_be_0x1c[
     sizeof(DaBarSpawnInfo) == 0x1c ? 1 : -1];
+#endif
 
 #endif /* DABAR_C_H */

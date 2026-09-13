@@ -29,12 +29,18 @@ typedef struct Matrix4x3 {
 } Matrix4x3;
 #endif
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Matrix3x3_size_must_be_0x24[
     sizeof(Matrix3x3) == 0x24 ? 1 : -1
 ];
+#endif
 /* With `r` first and 0x24 bytes wide, these two also pin `t` to 0x24. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Matrix4x3_size_must_be_0x30[
     sizeof(Matrix4x3) == 0x30 ? 1 : -1
 ];
+#endif
 
 #endif /* SM64DS_MATH_MATRIX_H */

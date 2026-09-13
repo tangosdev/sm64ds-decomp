@@ -190,6 +190,9 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     u8    mArray4[0x708];   /* 0xbe94 -- 50 * 0x24, trivial elements, see file banner */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgSnowball_c_size_must_be_0xc59c[sizeof(dScMgSnowball_c) == 0xc59c ? 1 : -1];
+#endif
 
 #endif

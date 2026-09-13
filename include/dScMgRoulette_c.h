@@ -135,6 +135,9 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
                                 Behavior and Render */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgRoulette_c_size_must_be_0x5400[sizeof(dScMgRoulette_c) == 0x5400 ? 1 : -1];
+#endif
 
 #endif

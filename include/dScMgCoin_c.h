@@ -33,6 +33,9 @@ struct dScMgCoin_c : dScMgBase_c {
     u8  unk_51dc;            /* 0x51dc */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgCoin_c_size_must_be_0x51e0[sizeof(dScMgCoin_c) == 0x51e0 ? 1 : -1];
+#endif
 
 #endif

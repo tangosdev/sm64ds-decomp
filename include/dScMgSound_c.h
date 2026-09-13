@@ -68,6 +68,9 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     s32 Render();             /* slot 9 -- ov006 0x0211c6c4 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgSound_c_size_must_be_0x562c[sizeof(dScMgSound_c) == 0x562c ? 1 : -1];
+#endif
 
 #endif

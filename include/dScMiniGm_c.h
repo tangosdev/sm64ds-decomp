@@ -40,6 +40,9 @@ struct dScMiniGm_c : dScene_c {
     virtual void OnPendingDestroy();                      /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMiniGm_c_size_must_be_0xb0[sizeof(dScMiniGm_c) == 0xb0 ? 1 : -1];
+#endif
 
 #endif

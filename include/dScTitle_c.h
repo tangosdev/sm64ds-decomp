@@ -54,6 +54,9 @@ struct dScTitle_c : dScene_c {
     virtual void OnPendingDestroy();                      /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScTitle_c_size_must_be_0x54[sizeof(dScTitle_c) == 0x54 ? 1 : -1];
+#endif
 
 #endif

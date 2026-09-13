@@ -74,6 +74,9 @@ struct dScMgJump_c : dScMgD3DBase_c {
     u8    mArray2[0x5a0];  /* 0x5294 -- 6 * 0xf0, elem dtor func_ov006_020c6f3c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgJump_c_size_must_be_0x5834[sizeof(dScMgJump_c) == 0x5834 ? 1 : -1];
+#endif
 
 #endif

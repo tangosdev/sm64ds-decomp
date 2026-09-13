@@ -52,7 +52,10 @@ struct TtcRotatingCube : dBgActor_c {
     void UpdateModel();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char TtcRotatingCube_size_must_be_0x3d8[
     sizeof(TtcRotatingCube) == 0x3d8 ? 1 : -1];
+#endif
 
 #endif

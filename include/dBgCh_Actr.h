@@ -155,8 +155,11 @@ struct dBgCh_Actr : dBgCh {
     s32 ShouldUpdatePosY() const;  /* !(mFlags & 0x1000) */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_Actr_size_must_be_0x1bc[
     sizeof(dBgCh_Actr) == 0x1bc ? 1 : -1];
+#endif
 
 #else
 
@@ -201,8 +204,11 @@ typedef struct dBgCh_Actr dBgCh_Actr;
    they ever disagree, and nothing else in the build compares them. Individual
    widths differ between the two on purpose (see the note above the #else); the
    total may not. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_Actr_size_must_be_0x1bc[
     sizeof(struct dBgCh_Actr) == 0x1bc ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

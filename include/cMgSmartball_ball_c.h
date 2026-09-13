@@ -147,6 +147,9 @@ struct cMgSmartball_ball_c : cMgSmartball_object_c {
     u8  pad_12a[0x2]; /* 0x12a-0x12b -- alignment */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_ball_c_size_must_be_0x12c[sizeof(cMgSmartball_ball_c) == 0x12c ? 1 : -1];
+#endif
 
 #endif

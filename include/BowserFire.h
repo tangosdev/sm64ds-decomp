@@ -63,7 +63,10 @@ struct BowserFire : dEnemyBase_c {
     int Behavior();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BowserFire_size_must_be_0x38c[sizeof(BowserFire) == 0x38c ? 1 : -1];
+#endif
 
 #else
 

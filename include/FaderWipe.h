@@ -46,7 +46,10 @@ struct FaderWipe : FaderColor {
     void LoadAndSetFile(u16 ov0ID);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char FaderWipe_size_must_be_0x60[sizeof(FaderWipe) == 0x60 ? 1 : -1];
+#endif
 #else
 struct FaderWipe {
     void*  vtable;      /* 0x00 */

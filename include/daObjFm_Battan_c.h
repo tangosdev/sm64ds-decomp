@@ -30,7 +30,10 @@ private:
     void UpdateModelTransform();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjFm_Battan_c_size_must_be_0x37c[
     sizeof(daObjFm_Battan_c) == 0x37c ? 1 : -1];
+#endif
 
 #endif /* DAOBJFM_BATTAN_C_H */

@@ -42,7 +42,10 @@ inline void *daObjKi_Ita_c::operator new(unsigned long size)
     return _ZN7fBase_cnwEj((unsigned)size);
 }
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjKi_Ita_c_size_must_be_0x348[sizeof(daObjKi_Ita_c) == 0x348 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

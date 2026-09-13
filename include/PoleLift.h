@@ -39,7 +39,10 @@ struct PoleLift : dBgActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PoleLift_size_must_be_0x358[sizeof(PoleLift) == 0x358 ? 1 : -1];
+#endif
 
 #else
 

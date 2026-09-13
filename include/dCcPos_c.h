@@ -51,8 +51,11 @@ struct dCcPos_c : dCc_c {
     void Init(const Vector3 &pos, Fix12<int> radius, Fix12<int> height, u32 flags, u32 vulnFlags);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCcPos_c_size_must_be_0x3c[
     sizeof(dCcPos_c) == 0x3c ? 1 : -1];
+#endif
 
 #else
 

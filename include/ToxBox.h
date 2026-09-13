@@ -176,6 +176,9 @@ struct ToxBox {
 
 #endif /* __cplusplus */
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char ToxBox_size_must_be_0x594[sizeof(struct ToxBox) == 0x594 ? 1 : -1];
+#endif
 
 #endif

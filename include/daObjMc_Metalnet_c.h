@@ -55,6 +55,9 @@ struct daObjMc_Metalnet_c : dBgActor_c {
     virtual void  OnPendingDestroy();       /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjMc_Metalnet_c_size_must_be_0x320[sizeof(daObjMc_Metalnet_c) == 0x320 ? 1 : -1];
+#endif
 
 #endif /* DAOBJMC_METALNET_C_H */

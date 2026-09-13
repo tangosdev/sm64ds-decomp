@@ -108,6 +108,9 @@ struct Coin : dActor_c {
     virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Coin_size_must_be_0x3b4[sizeof(Coin) == 0x3b4 ? 1 : -1];
+#endif
 
 #endif

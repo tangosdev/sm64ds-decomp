@@ -107,6 +107,9 @@ public:
     virtual int GraphCallback2();                            /* slot 2 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScDSMT_c_size_must_be_0x64[sizeof(dScDSMT_c) == 0x64 ? 1 : -1];
+#endif
 
 #endif

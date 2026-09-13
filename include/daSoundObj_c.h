@@ -85,6 +85,9 @@ struct daSoundObj_c : dActor_c {
     virtual int Behavior();             /* slot 6 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daSoundObj_c_size_must_be_0xe4[sizeof(daSoundObj_c) == 0xe4 ? 1 : -1];
+#endif
 
 #endif /* DASOUNDOBJ_C_H */

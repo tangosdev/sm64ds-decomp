@@ -45,8 +45,11 @@ private:
         dBgW *collider, dActor_c *owner, dActor_c *other);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjHatenaSwitch_c_size_must_be_0x724[
     sizeof(daObjHatenaSwitch_c) == 0x724 ? 1 : -1];
+#endif
 
 /* InitResources owns the compiler-emitted definition. Natural new selects the
  * wrong allocator, so the measured factory must address the public vtable

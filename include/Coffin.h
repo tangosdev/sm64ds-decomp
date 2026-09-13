@@ -53,6 +53,9 @@ struct Coffin {
 
 #endif
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Coffin_size_must_be_0x32c[sizeof(struct Coffin) == 0x32c ? 1 : -1];
+#endif
 
 #endif

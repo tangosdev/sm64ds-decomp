@@ -35,7 +35,10 @@ struct dMg3DEspModel_c {
     u8 pad_21b;                       /* 0x21b */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMg3DEspModel_c_size_must_be_0x21c[
     sizeof(dMg3DEspModel_c) == 0x21c ? 1 : -1];
+#endif
 
 #endif

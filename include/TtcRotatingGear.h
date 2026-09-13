@@ -40,7 +40,10 @@ struct TtcRotatingGear : dBgActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char TtcRotatingGear_size_must_be_0x330[sizeof(TtcRotatingGear) == 0x330 ? 1 : -1];
+#endif
 
 #else
 

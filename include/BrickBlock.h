@@ -42,6 +42,9 @@ struct BrickBlock : dActor_c {
     void SpawnSilverStar();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BrickBlock_size_must_be_0xdc[sizeof(BrickBlock) == 0xdc ? 1 : -1];
+#endif
 
 #endif /* BRICKBLOCK_H */

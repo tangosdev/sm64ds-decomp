@@ -73,6 +73,9 @@ struct cMgSmartball_kinoko_c : cMgSmartball_object_c {
                           while a ball is still resting on it */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_kinoko_c_size_must_be_0x40[sizeof(cMgSmartball_kinoko_c) == 0x40 ? 1 : -1];
+#endif
 
 #endif

@@ -47,7 +47,10 @@ struct dScMgPachinko_ball {
     u8  unk37;          /* 0x37 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPachinko_ball_size_must_be_0x38[sizeof(struct dScMgPachinko_ball) == 0x38 ? 1 : -1];
+#endif
 
 /* One ball being aimed with the stylus, 0x38 bytes, at 0x4ed8. */
 struct dScMgPachinko_shot {
@@ -70,7 +73,10 @@ struct dScMgPachinko_shot {
     u8  unk37;          /* 0x37 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPachinko_shot_size_must_be_0x38[sizeof(struct dScMgPachinko_shot) == 0x38 ? 1 : -1];
+#endif
 
 struct dScMgPachinko_c : dScMgBase_c {
     virtual ~dScMgPachinko_c();
@@ -101,6 +107,9 @@ struct dScMgPachinko_c : dScMgBase_c {
     u8  pad_5c32[0x6];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgPachinko_c_size_must_be_0x5c38[sizeof(struct dScMgPachinko_c) == 0x5c38 ? 1 : -1];
+#endif
 
 #endif

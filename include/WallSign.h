@@ -47,7 +47,10 @@ struct WallSign : dBgActor_c {
     u8 pad_360[0x8];      /* 0x360, to the ROM's 0x368 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char WallSign_size_must_be_0x368[sizeof(WallSign) == 0x368 ? 1 : -1];
+#endif
 
 #else
 

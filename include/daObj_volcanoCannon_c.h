@@ -45,7 +45,10 @@ struct daObj_volcanoCannon_c : dActor_c {
     int ChangeState(State *state);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObj_volcanoCannon_c_size_must_be_0x11c[
     sizeof(daObj_volcanoCannon_c) == 0x11c ? 1 : -1];
+#endif
 
 #endif /* DAOBJ_VOLCANOCANNON_C_H */

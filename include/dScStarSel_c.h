@@ -76,6 +76,9 @@ struct dScStarSel_c : dScene_c {
     virtual void OnPendingDestroy();                      /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScStarSel_c_size_must_be_0x13c[sizeof(dScStarSel_c) == 0x13c ? 1 : -1];
+#endif
 
 #endif

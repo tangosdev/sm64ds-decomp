@@ -51,6 +51,9 @@ struct cMgSmartball_ana_c : cMgSmartball_object_c {
                            the header comment */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_ana_c_size_must_be_0x38[sizeof(cMgSmartball_ana_c) == 0x38 ? 1 : -1];
+#endif
 
 #endif

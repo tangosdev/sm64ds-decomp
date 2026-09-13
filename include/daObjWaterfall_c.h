@@ -38,7 +38,10 @@ struct daObjWaterfall_c : dActor_c {
     virtual int Behavior();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWaterfall_c_size_must_be_0xdc[
     sizeof(daObjWaterfall_c) == 0xdc ? 1 : -1];
+#endif
 
 #endif /* DAOBJWATERFALL_C_H */

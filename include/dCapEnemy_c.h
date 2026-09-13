@@ -65,6 +65,9 @@ struct dCapEnemy_c : dEnemyBase_c {
     void Unk_02005d94();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dCapEnemy_c_size_must_be_0x180[sizeof(dCapEnemy_c) == 0x180 ? 1 : -1];
+#endif
 
 #endif /* DCAPENEMY_C_H */

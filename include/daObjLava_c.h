@@ -41,6 +41,9 @@ struct daObjLava_c : dActor_c {
     virtual s32   Behavior();          /* slot  6 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjLava_c_size_must_be_0xd8[sizeof(daObjLava_c) == 0xd8 ? 1 : -1];
+#endif
 
 #endif /* DAOBJLAVA_C_H */

@@ -132,6 +132,9 @@ struct Tornado : dActor_c {
     void State0();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Tornado_size_must_be_0x370[sizeof(Tornado) == 0x370 ? 1 : -1];
+#endif
 
 #endif

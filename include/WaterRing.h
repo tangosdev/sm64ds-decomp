@@ -57,6 +57,9 @@ struct WaterRing : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char WaterRing_size_must_be_0x390[sizeof(WaterRing) == 0x390 ? 1 : -1];
+#endif
 
 #endif /* WATERRING_H */

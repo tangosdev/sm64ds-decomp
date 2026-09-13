@@ -27,7 +27,10 @@ struct MugenBgm : dActor_c {
     virtual void OnPendingDestroy();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MugenBgm_size_must_be_0xd4[
     sizeof(MugenBgm) == 0xd4 ? 1 : -1];
+#endif
 
 #endif /* MUGENBGM_H */

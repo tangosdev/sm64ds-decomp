@@ -76,6 +76,9 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
     u8  pad_045[0x43]; /* 0x45..0x87 -- unmodelled, not unread; see above */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_wing_c_size_must_be_0x88[sizeof(cMgSmartball_wing_c) == 0x88 ? 1 : -1];
+#endif
 
 #endif

@@ -36,6 +36,9 @@ struct dM3dGLin {
 /* In C the tag alone is not a type name; this makes both spellings work. */
 typedef struct dM3dGLin dM3dGLin;
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dM3dGLin_size_must_be_0x18[sizeof(dM3dGLin) == 0x18 ? 1 : -1];
+#endif
 
 #endif

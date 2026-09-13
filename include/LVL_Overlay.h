@@ -133,6 +133,8 @@ struct LVL_Overlay {
    but it is a real check that fails the build rather than a report that passes
    without looking. The tree already uses this idiom, and
    check_header_offsets.py reads these names into its CLASS_SIZES table. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char LVL_Overlay_ObjTable_size_must_be_0x8[
     sizeof(LVL_Overlay::ObjTable) == 0x8 ? 1 : -1];
 typedef char LVL_Overlay_ObjSubTable_size_must_be_0x8[
@@ -145,6 +147,7 @@ typedef char LVL_Overlay_StandardEntry_size_must_be_0x10[
     sizeof(LVL_Overlay::StandardEntry) == 0x10 ? 1 : -1];
 typedef char LVL_Overlay_SimpleEntry_size_must_be_0x8[
     sizeof(LVL_Overlay::SimpleEntry) == 0x8 ? 1 : -1];
+#endif
 #endif
 
 #endif

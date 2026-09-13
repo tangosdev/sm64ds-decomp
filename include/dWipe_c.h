@@ -44,7 +44,10 @@ struct dWipe_c : FaderColor {
     virtual void SetToStart();                   /* slot 9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dWipe_c_size_must_be_0x2c[sizeof(dWipe_c) == 0x2c ? 1 : -1];
+#endif
 #else
 /* Spelled for the C destructor/leaf-method translation units, which cannot
    express the virtuals and so write out the vptr the compiler would place. */

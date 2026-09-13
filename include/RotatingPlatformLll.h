@@ -32,7 +32,10 @@ struct RotatingPlatformLll : daObjKaitendai_c {
     int InitResources();               /* slot  0 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RotatingPlatformLll_size_must_be_0x320[sizeof(RotatingPlatformLll) == 0x320 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

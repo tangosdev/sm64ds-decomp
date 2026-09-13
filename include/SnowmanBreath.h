@@ -39,8 +39,11 @@ struct SnowmanBreathParticle {
     int TrySpawn(Player &player);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SnowmanBreathParticle_size_must_be_0x60[
     sizeof(SnowmanBreathParticle) == 0x60 ? 1 : -1];
+#endif
 
 /* The cartridge RTTI calls this class daSnmBth_c. SnowmanBreath is the
  * readable compatibility spelling already carried by all seven named
@@ -75,7 +78,10 @@ struct SnowmanBreath : dActor_c {
     int IsPlayerInRange();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SnowmanBreath_size_must_be_0x13d4[
     sizeof(SnowmanBreath) == 0x13d4 ? 1 : -1];
+#endif
 
 #endif

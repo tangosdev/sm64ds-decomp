@@ -33,7 +33,10 @@ struct RotatingFirebar : dBgActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RotatingFirebar_size_must_be_0x540[sizeof(RotatingFirebar) == 0x540 ? 1 : -1];
+#endif
 
 #else
 

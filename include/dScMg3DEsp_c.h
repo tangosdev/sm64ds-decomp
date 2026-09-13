@@ -77,6 +77,9 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     s32 Render();             /* slot 9 -- src/_ZN12dScMg3DEsp_c6RenderEv.cpp */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMg3DEsp_c_size_must_be_0x5558[sizeof(dScMg3DEsp_c) == 0x5558 ? 1 : -1];
+#endif
 
 #endif

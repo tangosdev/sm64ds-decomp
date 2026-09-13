@@ -56,7 +56,10 @@ struct FaderBrightness : Fader {
    has no out-of-line constructor for this class. */
 inline FaderBrightness::FaderBrightness() { currInterp = 0x1000; speed = 0; }
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char FaderBrightness_size_must_be_0xc[sizeof(FaderBrightness) == 0xc ? 1 : -1];
+#endif
 #else
 struct FaderBrightness {
     void*  vtable;      /* 0x00 */

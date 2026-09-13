@@ -90,6 +90,9 @@ struct StarMarker : dActor_c {
     void Collect();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char StarMarker_size_must_be_0x1dc[sizeof(struct StarMarker) == 0x1dc ? 1 : -1];
+#endif
 
 #endif

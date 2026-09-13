@@ -53,7 +53,10 @@ struct dMgMCarlo2SharedState_c {
     u8  pad_1e8[0x88];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgMCarlo2SharedState_c_size_must_be_0x270[sizeof(dMgMCarlo2SharedState_c) == 0x270 ? 1 : -1];
+#endif
 
 struct dMgMCarlo2CardObj_c {
     dMgMCarlo2CardObj_c();
@@ -85,7 +88,10 @@ struct dMgMCarlo2CardObj_c {
     u8  pad_2f;                 /* 0x2f */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgMCarlo2CardObj_c_size_must_be_0x30[sizeof(dMgMCarlo2CardObj_c) == 0x30 ? 1 : -1];
+#endif
 
 struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
     virtual ~dScMgMCarlo2_c() {}
@@ -122,6 +128,9 @@ struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
     static void SetupBoard(dMgMCarlo2CardObj_c *cards);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgMCarlo2_c_size_must_be_0x5930[sizeof(dScMgMCarlo2_c) == 0x5930 ? 1 : -1];
+#endif
 
 #endif

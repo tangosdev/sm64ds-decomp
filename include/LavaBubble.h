@@ -56,6 +56,9 @@ struct LavaBubble : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char LavaBubble_size_must_be_0x31c[sizeof(LavaBubble) == 0x31c ? 1 : -1];
+#endif
 
 #endif /* LAVABUBBLE_H */

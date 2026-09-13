@@ -61,10 +61,13 @@ struct dMgMemoryCursor_c {
     u8 pad_0f;      /* 0x0f */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dMgMemorySharedState_c_size_must_be_0x270[sizeof(dMgMemorySharedState_c) == 0x270 ? 1 : -1];
 typedef char dMgMemoryCard_c_size_must_be_0x18[sizeof(dMgMemoryCard_c) == 0x18 ? 1 : -1];
 typedef char dMgMemoryPlayer_c_size_must_be_0x14[sizeof(dMgMemoryPlayer_c) == 0x14 ? 1 : -1];
 typedef char dMgMemoryCursor_c_size_must_be_0x10[sizeof(dMgMemoryCursor_c) == 0x10 ? 1 : -1];
+#endif
 
 struct dScMgMemory_c : dScMgSingle3DBase_c {
     virtual ~dScMgMemory_c();
@@ -148,6 +151,9 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     u8 pad_533f;                    /* 0x533f */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgMemory_c_size_must_be_0x5340[sizeof(dScMgMemory_c) == 0x5340 ? 1 : -1];
+#endif
 
 #endif

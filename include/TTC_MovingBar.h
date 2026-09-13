@@ -39,7 +39,10 @@ struct TTC_MovingBar : dBgActor_c {
     u8 pad_34c[0x30];      /* 0x34c, to the ROM's 0x37c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char TTC_MovingBar_size_must_be_0x37c[sizeof(TTC_MovingBar) == 0x37c ? 1 : -1];
+#endif
 
 #else
 

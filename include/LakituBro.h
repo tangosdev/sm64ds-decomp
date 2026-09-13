@@ -64,6 +64,9 @@ struct LakituBro : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char LakituBro_size_must_be_0x2e8[sizeof(LakituBro) == 0x2e8 ? 1 : -1];
+#endif
 
 #endif /* LAKITUBRO_H */

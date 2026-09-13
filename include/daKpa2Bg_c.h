@@ -86,8 +86,11 @@ struct daKpa2Bg_c : dBgActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daKpa2Bg_c_size_must_be_0x570[
     sizeof(daKpa2Bg_c) == 0x570 ? 1 : -1];
+#endif
 
 #else
 

@@ -123,6 +123,9 @@ struct cMgSmartball_object_c {
     u8  unk_033;      /* 0x033 -- high byte of that angle; a board cell. */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char cMgSmartball_object_c_size_must_be_0x34[sizeof(cMgSmartball_object_c) == 0x34 ? 1 : -1];
+#endif
 
 #endif

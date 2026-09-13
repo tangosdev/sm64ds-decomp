@@ -60,6 +60,9 @@ struct MontyMole : dActor_c {
     virtual s32  OnAimedAtWithEgg();      /* slot 29 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MontyMole_size_must_be_0x18c[sizeof(MontyMole) == 0x18c ? 1 : -1];
+#endif
 
 #endif

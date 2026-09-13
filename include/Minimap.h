@@ -110,7 +110,10 @@ struct Minimap : dBase_c {
     void OnPendingDestroy();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Minimap_size_must_be_0x258[sizeof(Minimap) == 0x258 ? 1 : -1];
+#endif
 
 #else
 

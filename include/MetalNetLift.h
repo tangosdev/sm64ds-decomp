@@ -29,6 +29,9 @@ struct MetalNetLift : dBgActor_c {
     virtual s32   Render();                /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char MetalNetLift_size_must_be_0x368[sizeof(MetalNetLift) == 0x368 ? 1 : -1];
+#endif
 
 #endif /* METALNETLIFT_H */

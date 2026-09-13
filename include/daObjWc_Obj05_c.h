@@ -49,6 +49,9 @@ struct daObjWc_Obj05_c : dBgActor_c {
     virtual s32   Render();                /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjWc_Obj05_c_size_must_be_0x330[sizeof(daObjWc_Obj05_c) == 0x330 ? 1 : -1];
+#endif
 
 #endif /* DAOBJWC_OBJ05_C_H */

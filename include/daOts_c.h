@@ -136,6 +136,9 @@ struct daOts_c : dEnemyBase_c {
     virtual int Behavior() = 0;             /* slot  6 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daOts_c_size_must_be_0x398[sizeof(daOts_c) == 0x398 ? 1 : -1];
+#endif
 
 #endif /* DAOTS_C_H */

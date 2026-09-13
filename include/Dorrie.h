@@ -38,8 +38,11 @@ struct DorriePlatform {
     ~DorriePlatform();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char DorriePlatform_size_must_be_0x200[
     sizeof(DorriePlatform) == 0x200 ? 1 : -1];
+#endif
 
 struct Dorrie : dActor_c {
     u32 unk_0d0;                 /* 0x0d0 */
@@ -86,7 +89,10 @@ struct Dorrie : dActor_c {
     virtual int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Dorrie_size_must_be_0x11b8[
     sizeof(Dorrie) == 0x11b8 ? 1 : -1];
+#endif
 
 #endif /* DORRIE_H */

@@ -59,7 +59,10 @@ struct JetStream : dEnemyBase_c {
     u8 pad_31c[0x5c];      /* 0x31c, to the ROM's 0x378 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char JetStream_size_must_be_0x378[sizeof(JetStream) == 0x378 ? 1 : -1];
+#endif
 
 #else
 

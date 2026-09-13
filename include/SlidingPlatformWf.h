@@ -44,7 +44,10 @@ struct SlidingPlatformWf : dBgActor_c {
     s32 mBasePosZ;                    /* 0x32c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SlidingPlatformWf_size_must_be_0x330[sizeof(SlidingPlatformWf) == 0x330 ? 1 : -1];
+#endif
 
 #else
 
@@ -65,7 +68,10 @@ struct SlidingPlatformWf {
     s32 mBasePosZ;            /* 0x32c */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char SlidingPlatformWf_C_size_must_be_0x330[sizeof(struct SlidingPlatformWf) == 0x330 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

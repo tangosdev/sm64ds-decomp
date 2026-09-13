@@ -36,7 +36,10 @@ struct PathPtr {
 #endif
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char PathDef_size_must_be_0x6[sizeof(struct PathDef) == 0x6 ? 1 : -1];
 typedef char PathPtr_size_must_be_0x8[sizeof(struct PathPtr) == 0x8 ? 1 : -1];
+#endif
 
 #endif

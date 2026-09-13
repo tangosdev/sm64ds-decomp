@@ -90,7 +90,10 @@ struct daObjMaruta_c : dBgActor_c {
     virtual s32 Behavior() = 0;             /* slot  6 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char daObjMaruta_c_size_must_be_0x320[sizeof(daObjMaruta_c) == 0x320 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

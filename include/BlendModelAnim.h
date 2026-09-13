@@ -62,7 +62,10 @@ struct BlendModelAnim : ModelAnim {
 
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BlendModelAnim_size_must_be_0x70[sizeof(BlendModelAnim) == 0x70 ? 1 : -1];
+#endif
 
 #else
 

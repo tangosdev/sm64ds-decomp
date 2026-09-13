@@ -173,6 +173,9 @@ struct dScMgD3DBase_c : dScMgBase_c {
 /* 0x47e4 + 0x81c = 0x5000, plus unk_5000 = 0x5004. See the file banner for
    both bounds. If this is short, all four children's fields land on the
    wrong bytes and build_pin says so at once. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgD3DBase_c_size_must_be_0x5004[sizeof(dScMgD3DBase_c) == 0x5004 ? 1 : -1];
+#endif
 
 #endif

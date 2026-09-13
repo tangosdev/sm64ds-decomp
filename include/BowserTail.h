@@ -48,7 +48,10 @@ struct BowserTail : dActor_c {
     int InitResources();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BowserTail_size_must_be_0x118[sizeof(BowserTail) == 0x118 ? 1 : -1];
+#endif
 
 #else
 

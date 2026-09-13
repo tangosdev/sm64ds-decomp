@@ -20,7 +20,10 @@ struct HeapAllocator {
 #endif
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char HeapAllocator_size_must_be_0x24[
     sizeof(struct HeapAllocator) == 0x24 ? 1 : -1];
+#endif
 
 #endif

@@ -33,6 +33,9 @@ struct BowserSkyPlatform : dBgActor_c {
     virtual s32   Render();                /* slot  9 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char BowserSkyPlatform_size_must_be_0x32c[sizeof(BowserSkyPlatform) == 0x32c ? 1 : -1];
+#endif
 
 #endif /* BOWSERSKYPLATFORM_H */

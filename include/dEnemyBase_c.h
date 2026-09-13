@@ -174,6 +174,9 @@ struct dEnemyBase_c : dActor_c {
 /* Makes dEnemyBase_c's size a claim the compiler enforces, and makes every header
    that derives from dEnemyBase_c checkable by tools/check_header_offsets.py -- which
    otherwise skips a derived class whose base asserts no size. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dEnemyBase_c_size_must_be_0x110[sizeof(dEnemyBase_c) == 0x110 ? 1 : -1];
+#endif
 
 #endif

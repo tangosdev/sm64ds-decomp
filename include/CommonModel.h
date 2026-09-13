@@ -55,7 +55,10 @@ struct CommonModel : ModelBase {
     void Func_020160AC(u32 flags);   /* ORs flags into every material */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char CommonModel_size_must_be_0x3c[sizeof(CommonModel) == 0x3c ? 1 : -1];
+#endif
 
 #else
 

@@ -132,10 +132,13 @@ struct SysTracker {
    these stand in for it: 0x81c is the whole object include/Particle.h models and
    0x748 is Contents' span from FindData's +0x708 bucket array to the callback
    bank at object offset 0x750. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Particle_SysTracker_size_must_be_0x81c[
     sizeof(SysTracker) == 0x81c ? 1 : -1];
 typedef char Particle_SysTracker_Contents_size_must_be_0x748[
     sizeof(SysTracker::Contents) == 0x748 ? 1 : -1];
+#endif
 
 }
 

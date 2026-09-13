@@ -87,8 +87,11 @@ struct Toad : dActor_c {
     void UpdateModelPose();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Toad_State_size_must_be_0x14[
     sizeof(Toad::State) == 0x14 ? 1 : -1];
+#endif
 
 #else
 
@@ -100,7 +103,10 @@ struct Toad {
 
 #endif
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Toad_size_must_be_0x210[
     sizeof(struct Toad) == 0x210 ? 1 : -1];
+#endif
 
 #endif /* TOAD_H */

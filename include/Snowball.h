@@ -64,6 +64,9 @@ struct Snowball : dEnemyBase_c {
     void OnPendingDestroy();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Snowball_size_must_be_0x38c[sizeof(Snowball) == 0x38c ? 1 : -1];
+#endif
 
 #endif /* SNOWBALL_H */

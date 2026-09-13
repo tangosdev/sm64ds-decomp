@@ -33,6 +33,9 @@ struct Painting : dActor_c {
     virtual void  OnPendingDestroy();      /* slot 12 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Painting_size_must_be_0x1bc[sizeof(Painting) == 0x1bc ? 1 : -1];
+#endif
 
 #endif /* PAINTING_H */

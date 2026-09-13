@@ -77,7 +77,10 @@ struct TextureSequence : Animation {
     static void UpdateFileOffsets(BTP_File &file);
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char TextureSequence_size_must_be_0x14[sizeof(TextureSequence) == 0x14 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

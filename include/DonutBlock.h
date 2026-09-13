@@ -39,7 +39,10 @@ struct DonutBlock : dBgActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char DonutBlock_size_must_be_0x4ec[sizeof(DonutBlock) == 0x4ec ? 1 : -1];
+#endif
 
 #else
 

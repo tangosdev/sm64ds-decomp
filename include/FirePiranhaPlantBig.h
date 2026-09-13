@@ -82,6 +82,9 @@ struct FirePiranhaPlantBig : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char FirePiranhaPlantBig_size_must_be_0x22c[sizeof(FirePiranhaPlantBig) == 0x22c ? 1 : -1];
+#endif
 
 #endif /* FIREPIRANHAPLANTBIG_H */

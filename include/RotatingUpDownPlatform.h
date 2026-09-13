@@ -65,8 +65,11 @@ struct RotatingUpDownPlatform : dBgActor_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RotatingUpDownPlatform_size_must_be_0x358[
     sizeof(RotatingUpDownPlatform) == 0x358 ? 1 : -1];
+#endif
 
 #else
 
@@ -116,8 +119,11 @@ struct RotatingUpDownPlatform {
     u8  pad_357;
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RotatingUpDownPlatform_size_must_be_0x358[
     sizeof(struct RotatingUpDownPlatform) == 0x358 ? 1 : -1];
+#endif
 
 #endif /* __cplusplus */
 

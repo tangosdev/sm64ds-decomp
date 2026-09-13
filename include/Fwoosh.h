@@ -50,7 +50,10 @@ struct Fwoosh : dEnemyBase_c {
     int Render();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Fwoosh_size_must_be_0x378[sizeof(Fwoosh) == 0x378 ? 1 : -1];
+#endif
 
 #else
 

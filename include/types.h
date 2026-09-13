@@ -50,7 +50,10 @@ typedef struct Vector3 {
 #ifdef __cplusplus
 /* 0xc, and the ROM agrees twice over: ChiefChilly's arrays stride by 0xc and
    its __cxa_vec_cleanup calls pass 0xc as the element size. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Vector3_size_must_be_0xc[sizeof(Vector3) == 0xc ? 1 : -1];
+#endif
 #endif
 
 typedef struct Vector3s {
@@ -65,7 +68,10 @@ typedef struct Vector3s {
 } Vector3s;
 
 #ifdef __cplusplus
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char Vector3s_size_must_be_0x6[sizeof(Vector3s) == 6 ? 1 : -1];
+#endif
 #endif
 
 

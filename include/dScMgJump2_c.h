@@ -95,6 +95,9 @@ struct dScMgJump2_c : dScMgD3DBase_c {
     s32 Render();             /* slot 9 -- ov006 0x020ef148 */
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgJump2_c_size_must_be_0x5a78[sizeof(dScMgJump2_c) == 0x5a78 ? 1 : -1];
+#endif
 
 #endif

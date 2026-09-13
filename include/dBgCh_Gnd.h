@@ -82,7 +82,10 @@ struct dBgCh_Gnd : dBgCh, dBgPi {
 
 /* Size is the flat span the .c branch spells below AND the stride the ~50
    stack stand-ins in src/ reserve. */
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dBgCh_Gnd_size_must_be_0x50[sizeof(dBgCh_Gnd) == 0x50 ? 1 : -1];
+#endif
 
 #else
 

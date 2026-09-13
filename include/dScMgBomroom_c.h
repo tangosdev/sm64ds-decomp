@@ -36,7 +36,10 @@ struct dScMgBomroom_Bomb {
     u8  unk_38;       /* +0x38 -- active */
     u8  unk_39[0x7];
 };
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgBomroom_Bomb_size_must_be_0x40[sizeof(struct dScMgBomroom_Bomb) == 0x40 ? 1 : -1];
+#endif
 
 struct dScMgBomroom_c : dScMgBase_c {
     virtual ~dScMgBomroom_c();
@@ -55,6 +58,9 @@ struct dScMgBomroom_c : dScMgBase_c {
     u8 pad_62f4[0xc];
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char dScMgBomroom_c_size_must_be_0x6300[sizeof(struct dScMgBomroom_c) == 0x6300 ? 1 : -1];
+#endif
 
 #endif

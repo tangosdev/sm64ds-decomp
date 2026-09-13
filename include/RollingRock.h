@@ -64,6 +64,9 @@ struct RollingRock : dEnemyBase_c {
     int CleanupResources();
 };
 
+#ifndef SM64DS_PLATFORM_PC
+/* ROM layout under mwccarm; host ABI divergence is tracked separately. */
 typedef char RollingRock_size_must_be_0x3c8[sizeof(RollingRock) == 0x3c8 ? 1 : -1];
+#endif
 
 #endif /* ROLLINGROCK_H */
