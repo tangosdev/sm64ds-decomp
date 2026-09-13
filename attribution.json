@@ -71,6 +71,7 @@
     "src/_ZN10dScTitle_cD0Ev.cpp": "tangosdev",
     "src/_ZN10dScTitle_cD1Ev.c": "tangosdev",
     "src/_ZN10dScTitle_cD1Ev.cpp": "tangosdev",
+    "src/actors/daPgDfdr_c.cpp#daPgDfdr_c_classInit": "andrewboudreau",
     "src/_ZN10daPgDfdr_c16OnPendingDestroyEv.c": "tangosdev",
     "src/_ZN10daPgDfdr_c16OnPendingDestroyEv.cpp": "tangosdev",
     "src/_ZN10daPgDfdr_c6RenderEv.c": "tangosdev",

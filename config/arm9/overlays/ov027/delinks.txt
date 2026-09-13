@@ -46,11 +46,7 @@ src/game/actors/d_a_i_donketu.cpp:
 
 src/actors/daPgDfdr_c.cpp:
     complete
-    .text start:0x021118c8 end:0x0211207c
-
-src/d_a_pg_dfdr.c:
-    complete
-    .text start:0x0211207c end:0x021120c4
+    .text start:0x021118c8 end:0x021120c4
 
 src/_ZN13SnowmanBreathD1Ev.cpp:
     complete
