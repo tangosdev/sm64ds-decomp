@@ -16845,6 +16845,38 @@ foreach(_tseat5 walk_window walk_window_hires smoke_player)
     target_sources(${_tseat5} PRIVATE ${SLICE_SEAT5_SOURCES})
 endforeach()
 
+# SLICE seat4 -- run link100 lane SEAT4, census batch B4 OV006-PMF-SWEEP: the
+# eighteen ov006 state-table dispatchers whose eight-byte mwcc {code, adjust}
+# pairs were host-copied. Their nineteen tables are seated in
+# port/hal/pmf_seat4.cpp, added to the same three targets below, from inside the
+# per-class installers hal/scene_mg.cpp already calls at overlay load -- so no
+# new call site, and the seat order the tree already establishes is the one the
+# tables get. The per-class universe proof (every cell filled from slot 0, no
+# gap, every ROM pair {code, 0}, every source record referenced exactly once and
+# only by its own class sinit, every table reachable from exactly two places),
+# the emitted side of each dispatcher read off its own /FAsc listing, and the
+# reason two of the eighteen tail-jump and one takes cdecl faces are all in
+# port/slice_seat4.txt; the raw measurements are in runs/link100/out/SEAT4/.
+#
+# NO /Zp4 ON THIS BLOCK, MEASURED AND NOT INHERITED. Lane PMFB6's rule is about
+# a member pointer held in an object FIELD at an offset 4 mod 8. Every row here
+# reads a TABLE, and all eighteen compile to the same listing with and without
+# the option: zero lines differ outside the TITLE on every one of them
+# (runs/link100/out/SEAT4/emit_tables.txt).
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_seat4.txt" SLICE_SEAT4_LINES)
+set(SLICE_SEAT4_SOURCES "")
+foreach(line IN LISTS SLICE_SEAT4_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SEAT4_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tseat4 walk_window walk_window_hires smoke_player)
+    target_sources(${_tseat4} PRIVATE ${SLICE_SEAT4_SOURCES}
+                   "${CMAKE_CURRENT_SOURCE_DIR}/hal/pmf_seat4.cpp")
+endforeach()
+
 # ===========================================================================
 # THE WIRELESS PLAN, RUNGS W4 AND W5 (run link100, lane WM3)
 # ===========================================================================

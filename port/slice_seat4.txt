@@ -1,0 +1,174 @@
+# run link100, lane SEAT4 -- CENSUS BATCH B4 OV006-PMF-SWEEP.
+#
+# Eighteen matched translation units, all func_ov006_02*, all the same mechanism
+# family C closed 62 rows of before this: an eight-byte mwcc {code, adjust}
+# pointer-to-member pair, host-copied because the port could not dispatch a DS
+# code word. Nineteen state tables are seated for them in port/hal/pmf_seat4.cpp
+# and the eighteen host copies in port/unmatched/Mg*_StateDispatch.cpp are gone.
+#
+# ===========================================================================
+# THE UNIVERSE, PER CLASS, AND HOW IT WAS CLOSED
+# ===========================================================================
+#
+# THE QUESTION A SEAT HAS TO ANSWER is not "does this table have cells" but "is
+# the set of code words that can ever reach this storage bounded, and is every
+# one of them mine". Three measurements answer it here, and all three are ROM
+# reads rather than readings of the port:
+#
+# 1. EVERY CELL OF EVERY TABLE IS FILLED, FROM SLOT 0, WITH NO GAP. Each class's
+#    own __sinit_ov006_* copies whole eight-byte pairs into its tables; the
+#    assignments were read out of the matched sinit source and each source record
+#    was then read out of extracted/overlays/overlay_0006.bin. All 86 cells of
+#    the twenty tables (nineteen seated here plus data_ov006_02141840, which lane
+#    PMFB4 seated already) read {code, 0}: an adjustment word of zero and a code
+#    word that is the ENTRY address of a function symbol, never an interior one.
+#    No slot in any table is unassigned. (runs/link100/out/SEAT4/classproof_all.txt)
+#
+# 2. NOTHING ELSE CAN SEE THE PAIRS. Every one of the 86 source records has
+#    EXACTLY ONE reference in the whole of ov006's relocation table, and that one
+#    reference is its own class sinit's load. So no second dispatcher, no foreign
+#    reader, and -- the hazard lanes PMFB6 and MGWRITER both had to stop for -- no
+#    BY-VALUE SENTINEL: nothing anywhere compares a stored pair against one of
+#    these records, so no cell has to move in step with another.
+#    (runs/link100/out/SEAT4/refs_cells.txt)
+#
+# 3. EACH TABLE HAS EXACTLY TWO REFERRERS: its sinit, which fills it, and ONE
+#    dispatcher, which reads it. That is what makes one face shape per table
+#    correct -- there is no second reader whose call shape could disagree with
+#    the one measured. The single exception is data_ov006_02141840, which has
+#    three dispatchers; it was seated by lane PMFB4 and is not re-seated here,
+#    and its third dispatcher is exactly the row this lane adds.
+#    (runs/link100/out/SEAT4/refs_tables.txt)
+#
+# The class-block sweep behind all three is lane PMFB8's ovblock.py, run over
+# each class's own code span: the pair counts it returns match the table cell
+# sums class for class (dScMgCoin_c 24 = 3+4+5+6+6, dScMgBomroom_c 33, and so
+# on), which is the statement that the tables ARE the universe and there is no
+# fourth table nobody enumerated.
+#
+# ===========================================================================
+# THE EMITTED SIDE, AND THE THREE CALLING CONVENTIONS
+# ===========================================================================
+#
+# Every dispatcher was compiled on its own with the port's exact flags and its
+# /FAsc listing read (runs/link100/out/SEAT4/emit_tables.txt and emit_coin.txt).
+# The uniform shape is
+#
+#     movzx eax, <state byte>
+#     push  <i>                     (only when the slot takes an argument)
+#     mov   ecx, tab[eax*8+4]       the ADJUSTMENT word
+#     mov   eax, tab[eax*8]         the CODE word
+#     add   ecx, <this>             the receiver, adjusted
+#     call  eax                     and NO `add esp,4` after it
+#
+# stride eight on both machines, receiver in ecx, the pushed word callee-popped.
+# So the faces are __fastcall(self, dead edx, int) where the slot takes an
+# argument and __fastcall(self, dead edx) where it does not. /Zp4 CHANGES NOTHING
+# on any of the eighteen -- zero listing lines differ outside the TITLE on every
+# one of them -- because these are TABLES, not fields held at an offset 4 mod 8,
+# which is the case lane PMFB6's rule is about. It is measured per source here
+# rather than predicted, and the answer is no for all eighteen.
+#
+# TWO ROWS DEPART FROM THAT SHAPE, both measured rather than assumed:
+#
+#   func_ov006_020f50f8 and func_ov006_020f71c8 emit `jmp eax`, not `call eax`.
+#   Their dispatch is the function's last statement and carries no argument, and
+#   an argument is what stops MSVC tail-jumping -- lane PMFB8's rule, reproduced
+#   here on two more rows. A zero-argument __fastcall face is correct under a
+#   tail jump as well as a call: it takes its receiver from ecx, pops nothing,
+#   and returns to whoever the jump left on the stack.
+#
+#   func_ov006_020e683c does not use a member-pointer type at all. It OPEN-CODES
+#   the decode in plain ints -- `struct Ent{int a; int b;}`, the virtual bit
+#   tested out of the LSB of the adjustment, `obj = c + (adj >> 1)` -- and
+#   transfers with `push edx / call eax`, with the CALLER cleaning up (the
+#   `add esp, 12` that covers this call and the two ordinary calls after it). So
+#   data_ov006_02141a18's five faces are __cdecl(void *self). A __fastcall face
+#   there would pop the argument the caller also pops, and the stack would drift
+#   by four bytes per dispatch. This row is the one place in the batch where the
+#   convention is not the family's usual one, and it is why the emitted side is
+#   read per row instead of once for the family.
+#
+# NO FACE IS INVENTED. Every state address in every cell already had a written
+# host switch case in its class's port/unmatched file, naming the symbol and the
+# argument list its own src TU defines -- including the four ride-throughs whose
+# whole ROM body is `bx lr` and whose src takes (void). The faces keep those
+# exactly, casts included, so nothing about which body runs with which arguments
+# is decided here; only where the code word points.
+#
+# TEN /alternatename DIRECTIVES, all ten read off the TUs' own EXTRN lists before
+# the link and all ten checked against walk_window.map for a DEFINED left-hand
+# side (none: an alias whose LHS is also defined is defeated silently, which is
+# the class port/tools/alternatename_guard.py exists to catch). They are in
+# port/hal/pmf_seat4.cpp next to the seats.
+#
+# ===========================================================================
+# WHAT IS NOT IN THIS BATCH
+# ===========================================================================
+#
+# Four of the census's twenty-two B4 rows are NOT seated here and each is listed
+# with the measurement that stops it in the lane's report: func_ov006_020c3d18,
+# func_ov006_020c8f20, func_ov006_020ed18c and func_ov006_021214f8. All four hold
+# their pair in an OBJECT FIELD rather than in a table, so the universe question
+# is a different one (which writers can ever fill that field), and the sweep that
+# closes a table does not close them.
+
+# ---- dScMgCoin_c -----------------------------------------------------------
+# 020dc298  data_ov006_021417c8, 4 cells, arity 1
+# 020dc754  data_ov006_021417e8, 5 cells, arity 1
+# 020de440  data_ov006_02141840, 6 cells, arity 1, SEATED ALREADY by lane PMFB4:
+#           this row needs no new face, only its two C++ decorations aliased.
+#           It is also slot 2 of the seated data_ov006_02141810, so the face
+#           lane PMFB4 installed there now reaches the matched TU.
+src/func_ov006_020dc298.cpp
+src/func_ov006_020dc754.cpp
+src/func_ov006_020de440.cpp
+
+# ---- dScMgBomroom_c --------------------------------------------------------
+# 020d7c00  data_ov006_02141708, 5 cells, arity 1. Also slot 6 of the seated
+#           data_ov006_02141730, so its own face now reaches the matched TU.
+src/func_ov006_020d7c00.cpp
+
+# ---- dScMgCurling_c --------------------------------------------------------
+# 020e12d0  data_ov006_021418c0, 3 cells, arity 1
+src/func_ov006_020e12d0.cpp
+
+# ---- dScMgCurling2_c -------------------------------------------------------
+# 020e42b4  data_ov006_021419f8 (4) and data_ov006_021419a0 (3), arity 1 on both
+# 020e4744  data_ov006_021419b8, 4 cells, arity 1
+# 020e683c  data_ov006_02141a18, 5 cells, OPEN-CODED, cdecl faces (see above)
+src/func_ov006_020e42b4.cpp
+src/func_ov006_020e4744.cpp
+src/func_ov006_020e683c.cpp
+
+# ---- dScMg3DEsp_c ----------------------------------------------------------
+# 020e8a44  data_ov006_02141f1c, 2 cells, arity 1
+# 020e9b70  data_ov006_02141fac, 4 cells, arity 0
+src/func_ov006_020e8a44.cpp
+src/func_ov006_020e9b70.cpp
+
+# ---- dScMgLuigi_c ----------------------------------------------------------
+# 020f0044  data_ov006_021421ec, 3 cells, arity 1 (the ROM passes a constant 0)
+# 020f0ba0  data_ov006_0214221c, 3 cells, arity 1
+src/func_ov006_020f0044.cpp
+src/func_ov006_020f0ba0.cpp
+
+# ---- dScMgMemory1_c --------------------------------------------------------
+# 020f50f8  data_ov006_021422bc, 4 cells, arity 0, TAIL JUMP
+# 020f5164  data_ov006_02142304, 6 cells, arity 0
+src/func_ov006_020f50f8.cpp
+src/func_ov006_020f5164.cpp
+
+# ---- dScMgMemory2_c --------------------------------------------------------
+# 020f71c8  data_ov006_021423c0, 4 cells, arity 0, TAIL JUMP
+# 020f7234  data_ov006_02142440, 10 cells, arity 0
+src/func_ov006_020f71c8.cpp
+src/func_ov006_020f7234.cpp
+
+# ---- dScMgSnowball_c -------------------------------------------------------
+# 02129d94  data_ov006_02143070 (4) and data_ov006_02143020 (3), arity 1 on both
+# 0212a224  data_ov006_02143050, 4 cells, arity 1
+# Both are also cells of the seated data_ov006_02143038, so the faces lane
+# SNOWBALL installed there now reach the matched TUs.
+src/func_ov006_02129d94.cpp
+src/func_ov006_0212a224.cpp
