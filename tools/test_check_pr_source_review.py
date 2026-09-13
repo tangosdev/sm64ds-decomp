@@ -21,6 +21,21 @@ def pull_request(branch="main"):
             "changed_files": 1}
 
 
+def authored_commit(sha, parent="0" * 40):
+    """A person's commit on main: it retires review acceptance however small it is."""
+    return {"sha": sha, "parents": [{"sha": parent}],
+            "author": {"login": "andrewboudreau"}, "committer": {"login": "web-flow"},
+            "files": [{"filename": "notes/handoff.md"}]}
+
+
+def progress_commit(sha, parent, files=("contributions.json", "docs/index.html",
+                                        "docs/progress-treemap.svg", "README.md")):
+    """The real shape of main's scheduled tip advance; see PR 2564's check history."""
+    return {"sha": sha, "parents": [{"sha": parent}],
+            "author": {"login": gate.PROGRESS_BOT}, "committer": {"login": gate.PROGRESS_BOT},
+            "files": [{"filename": path} for path in files]}
+
+
 def state():
     return {"schema": 3, "source_review_policy": {"workflow_commit": WORKFLOW}, "tasks": {
         "actor": {"task_id": "actor", "phase": "done", "input_session": "producer",
@@ -46,16 +61,28 @@ class PRSourceReviewTest(unittest.TestCase):
             "-H", "Accept: application/vnd.github.raw+json"])
 
     def test_old_queue_and_unreviewed_source_block_but_tooling_can_land(self):
-        self.assertEqual(gate.evaluate({}, HEAD, BASE, ["src/actor.cpp"])["result"], "fail")
-        self.assertEqual(gate.evaluate({}, HEAD, BASE, ["tools/source_review.py"])["result"], "pass")
-        self.assertEqual(gate.evaluate({}, HEAD, BASE, ["config/arm9/delinks.txt"])["result"], "fail")
+        self.assertEqual(gate.evaluate({}, HEAD, (BASE,), ["src/actor.cpp"])["result"], "fail")
+        self.assertEqual(gate.evaluate({}, HEAD, (BASE,), ["tools/source_review.py"])["result"], "pass")
+        self.assertEqual(gate.evaluate({}, HEAD, (BASE,), ["config/arm9/delinks.txt"])["result"], "fail")
 
     def test_exact_published_review_passes_and_stale_or_partial_review_fails(self):
-        self.assertEqual(gate.evaluate(state(), HEAD, BASE, ["src/actor.cpp"])["result"], "pass")
-        for head, base, files in ((WORKFLOW, BASE, ["src/actor.cpp"]),
-                                  (HEAD, WORKFLOW, ["src/actor.cpp"]),
-                                  (HEAD, BASE, ["src/actor.cpp", "src/unreviewed.cpp"])):
-            self.assertEqual(gate.evaluate(state(), head, base, files)["result"], "fail")
+        self.assertEqual(gate.evaluate(state(), HEAD, (BASE,), ["src/actor.cpp"])["result"], "pass")
+        for head, bases, files in ((WORKFLOW, (BASE,), ["src/actor.cpp"]),
+                                   (HEAD, (WORKFLOW,), ["src/actor.cpp"]),
+                                   (HEAD, (BASE,), ["src/actor.cpp", "src/unreviewed.cpp"])):
+            self.assertEqual(gate.evaluate(state(), head, bases, files)["result"], "fail")
+
+    def test_review_of_any_skipped_progress_commit_is_a_review_of_the_same_source(self):
+        """A reviewer may record the branch tip or the source it actually read."""
+        for tested in (WORKFLOW, BASE):
+            snapshot = state()
+            snapshot["tasks"]["actor"]["outputs"][0]["evidence"].update(tested_base=tested)
+            snapshot["tasks"]["actor"]["outputs"][0]["evidence"][
+                "source_review"]["reviewed_base"] = tested
+            self.assertEqual(gate.evaluate(snapshot, HEAD, (WORKFLOW, BASE),
+                                           ["src/actor.cpp"])["result"], "pass")
+        self.assertEqual(gate.evaluate(state(), HEAD, (WORKFLOW, "e" * 40),
+                                       ["src/actor.cpp"])["result"], "fail")
 
     def test_self_review_cancelled_task_and_unstructured_pass_fail(self):
         for change in ("author", "cancelled", "bare"):
@@ -67,7 +94,7 @@ class PRSourceReviewTest(unittest.TestCase):
                 task["phase"] = "cancelled"
             else:
                 task["outputs"][0]["evidence"] = {"verdict": "pass", "tested_commit": HEAD}
-            self.assertEqual(gate.evaluate(snapshot, HEAD, BASE, ["src/actor.cpp"])["result"], "fail")
+            self.assertEqual(gate.evaluate(snapshot, HEAD, (BASE,), ["src/actor.cpp"])["result"], "fail")
 
     def test_integrator_cannot_invent_an_independent_composition_reviewer(self):
         snapshot = state()
@@ -75,7 +102,7 @@ class PRSourceReviewTest(unittest.TestCase):
         output["commit"] = BASE
         output["evidence"].update(composition_commit=HEAD, composition_base=BASE,
                                  composition_independent_verification=evidence())
-        self.assertEqual(gate.evaluate(snapshot, HEAD, BASE, ["src/actor.cpp"])["result"], "fail")
+        self.assertEqual(gate.evaluate(snapshot, HEAD, (BASE,), ["src/actor.cpp"])["result"], "fail")
 
     def test_queue_change_before_publication_emits_failure(self):
         pr = pull_request()
@@ -91,10 +118,13 @@ class PRSourceReviewTest(unittest.TestCase):
                 return {"ref": "refs/heads/main", "object": {"type": "commit", "sha": BASE}}
             if "/git/ref/" in path:
                 return {"object": {"sha": "e" * 40}}
+            if "/commits/" in path:
+                return authored_commit(path.rsplit("/", 1)[1])
             return copy.deepcopy(pr)
 
         with patch.object(gate, "api", side_effect=api), patch.object(
                 gate, "queue_state", return_value=("d" * 40, state())), patch.object(
+                gate, "locate_composition", return_value=(BASE, True)), patch.object(
                 gate, "changed_paths", return_value=["src/actor.cpp"]):
             result = gate.check_pr("tangosdev/sm64ds-decomp", 2447, publish=True)
         self.assertEqual(result["result"], "fail")
@@ -103,8 +133,18 @@ class PRSourceReviewTest(unittest.TestCase):
 
 
 class TargetBranchReviewTest(unittest.TestCase):
+    def setUp(self):
+        gate._refresh_parents.clear()
+
+    def assert_target_resolved_last(self, calls, published=False):
+        """Nothing but the progress walk may follow the final branch tip read."""
+        ref = max(i for i, path in enumerate(calls) if path.endswith("/git/ref/heads/main"))
+        after = [path for path in calls[ref + 1:] if "/commits/" not in path]
+        self.assertEqual(after, ["repos/tangosdev/sm64ds-decomp/check-runs"] if published else [])
+
     def run_fixture(self, refs, review_base=BASE, publish=False, source=True,
-                    branch="main", final_branch=None, final_head=None, final_state=None):
+                    branch="main", final_branch=None, final_head=None, final_state=None,
+                    progress=(), retains_base=True):
         snapshot = state()
         output = snapshot["tasks"]["actor"]["outputs"][0]["evidence"]
         output["tested_base"] = review_base
@@ -132,6 +172,12 @@ class TargetBranchReviewTest(unittest.TestCase):
                     return value
                 return {"ref": "refs/" + unquote(path.split("/git/ref/")[1]),
                         "object": {"type": "commit", "sha": value}}
+            if "/commits/" in path:
+                sha = path.rsplit("/", 1)[1]
+                value = dict(progress).get(sha)
+                if isinstance(value, Exception):
+                    raise value
+                return value if value is not None else authored_commit(sha)
             if "/pulls/" in path:
                 reads += 1
                 current = copy.deepcopy(pr)
@@ -144,8 +190,12 @@ class TargetBranchReviewTest(unittest.TestCase):
                 return current
             raise AssertionError("Unexpected API request: " + path)
 
+        def composition(repo, base, head):
+            return base, retains_base
+
         with patch.object(gate, "api", side_effect=api), patch.object(
                 gate, "queue_state", return_value=("d" * 40, snapshot)) as queue, patch.object(
+                gate, "locate_composition", side_effect=composition), patch.object(
                 gate, "changed_paths", return_value=["src/actor.cpp" if source else "tools/inert.py"]):
             result = gate.check_pr("tangosdev/sm64ds-decomp", 2447, publish=publish)
         return result, calls, posts, queue.call_count
@@ -160,12 +210,88 @@ class TargetBranchReviewTest(unittest.TestCase):
         current, _, _, _ = self.run_fixture([tip, tip], review_base=tip)
         self.assertEqual(current["result"], "pass")
 
+    def test_scheduled_progress_push_does_not_retire_a_current_review(self):
+        """PR 2564: the same head passed, main's timer fired, the same head failed.
+
+        The tip advanced by a bot commit touching only contributions.json. No
+        review could read it differently, so it cannot invalidate one.
+        """
+        tip = "e" * 40
+        for review_base in (BASE, tip):
+            with self.subTest(review_base=review_base):
+                result, _, _, _ = self.run_fixture([tip, tip], review_base=review_base,
+                                                   progress={tip: progress_commit(tip, BASE)})
+                self.assertEqual(result["result"], "pass")
+                self.assertEqual(result["base"], BASE)
+                self.assertEqual(result["target_tip"], tip)
+
+    def test_consecutive_progress_pushes_collapse_to_one_reviewable_target(self):
+        first, second = "e" * 40, "f" * 40
+        result, _, _, _ = self.run_fixture(
+            [second, second], review_base=BASE,
+            progress={second: progress_commit(second, first),
+                      first: progress_commit(first, BASE)})
+        self.assertEqual(result["result"], "pass")
+        self.assertEqual((result["base"], result["target_tip"]), (BASE, second))
+
+    def test_a_person_s_commit_on_main_still_retires_review_acceptance(self):
+        """The written policy: a changed head/base must lose that acceptance."""
+        tip = "e" * 40
+        result, _, _, _ = self.run_fixture([tip, tip], review_base=BASE)
+        self.assertEqual(result["result"], "fail")
+        self.assertEqual(result["base"], tip)
+
+    def test_only_source_inert_single_parent_bot_commits_are_skipped(self):
+        tip = "e" * 40
+        cases = {
+            "changes source": progress_commit(tip, BASE, ("contributions.json", "src/actor.cpp")),
+            "changes enrollment": progress_commit(tip, BASE, ("config/arm9/symbols.txt",)),
+            "renames source away": dict(progress_commit(tip, BASE, ("notes/moved.md",)), files=[
+                {"filename": "notes/moved.md", "previous_filename": "src/actor.cpp"}]),
+            "human author": dict(progress_commit(tip, BASE), author={"login": "andrewboudreau"}),
+            "human committer": dict(progress_commit(tip, BASE), committer={"login": "web-flow"}),
+            "merge commit": dict(progress_commit(tip, BASE),
+                                 parents=[{"sha": BASE}, {"sha": WORKFLOW}]),
+            "capped file list": progress_commit(
+                tip, BASE, tuple(f"docs/page-{n}.html" for n in range(gate.COMMIT_FILE_CAP))),
+            "different commit": dict(progress_commit(tip, BASE), sha="0" * 40),
+            "no file list": {k: v for k, v in progress_commit(tip, BASE).items() if k != "files"},
+            "unnamed file": dict(progress_commit(tip, BASE), files=[{"status": "modified"}]),
+            "malformed parent": dict(progress_commit(tip, BASE), parents=[{"sha": "short"}]),
+            "unreadable commit": RuntimeError("commit unavailable"),
+        }
+        for name, reply in cases.items():
+            with self.subTest(case=name):
+                gate._refresh_parents.clear()
+                result, _, _, _ = self.run_fixture([tip, tip], review_base=BASE,
+                                                   progress={tip: reply})
+                self.assertEqual(result["result"], "fail")
+                self.assertEqual(result["base"], tip)
+
+    def test_progress_push_during_review_does_not_void_the_verdict(self):
+        later, tip = "f" * 40, "e" * 40
+        result, _, posts, _ = self.run_fixture(
+            [tip, later], review_base=BASE, publish=True,
+            progress={tip: progress_commit(tip, BASE), later: progress_commit(later, tip)})
+        self.assertEqual(result["result"], "pass")
+        self.assertEqual(posts[0]["conclusion"], "success")
+        self.assertIn(":" + BASE + ":", posts[0]["external_id"])
+
+    def test_nothing_reviewable_is_decided_before_base_currency(self):
+        """A PR with no source in scope has no review to keep current."""
+        result, _, _, reads = self.run_fixture([BASE, BASE], source=False, retains_base=False)
+        self.assertEqual(result["result"], "pass")
+        self.assertEqual(reads, 0)
+        stale_source, _, _, _ = self.run_fixture([BASE, BASE], retains_base=False)
+        self.assertEqual(stale_source["result"], "fail")
+        self.assertIn("restack", stale_source["summary"])
+
     def test_target_advance_during_read_only_evaluation_invalidates_success(self):
         result, calls, posts, _ = self.run_fixture([BASE, "e" * 40])
         self.assertEqual(result["result"], "fail")
         self.assertEqual(result["observed_base"], "e" * 40)
         self.assertEqual(posts, [])
-        self.assertTrue(calls[-1].endswith("/git/ref/heads/main"))
+        self.assert_target_resolved_last(calls)
 
     def test_final_read_failure_also_blocks_read_only_integrator_check(self):
         result, _, posts, _ = self.run_fixture([BASE, RuntimeError("ref unavailable")])
@@ -190,8 +316,7 @@ class TargetBranchReviewTest(unittest.TestCase):
         self.assertEqual(result["result"], "fail")
         self.assertIn("Target branch changed", result["summary"])
         self.assertEqual(posts[0]["conclusion"], "failure")
-        self.assertTrue(calls[-2].endswith("/git/ref/heads/main"))
-        self.assertTrue(calls[-1].endswith("/check-runs"))
+        self.assert_target_resolved_last(calls, published=True)
 
     def test_current_base_review_can_publish_despite_retained_pr_base_metadata(self):
         tip = "e" * 40
@@ -264,14 +389,18 @@ def blob(value, mode="100644", kind="blob"):
 
 class TreeAPI:
     """Git metadata fixtures; tree contents are never fetched or executed."""
-    def __init__(self, before, after, base=BASE, head=HEAD):
-        self.base, self.head = base, head
+    def __init__(self, before, after, base=BASE, head=HEAD, common=None):
+        self.base, self.head, self.common = base, head, "9" * 40
         self.objects, self.overrides, self.calls = {}, {}, []
         self.before_tree, self.after_tree = self.build(before), self.build(after)
+        self.common_tree = self.build(common) if common is not None else self.before_tree
         self.pr = pull_request()
         self.pr["head"]["sha"] = head
         self.comparison = {"base_commit": {"sha": base},
                            "merge_base_commit": {"sha": base}, "status": "ahead"}
+        if common is not None:
+            # Main moved on after this branch left it: the merge base is neither end.
+            self.comparison.update(merge_base_commit={"sha": self.common}, status="diverged")
 
     def build(self, leaves):
         root = {}
@@ -311,7 +440,8 @@ class TreeAPI:
             return copy.deepcopy(self.comparison)
         if "/git/commits/" in path:
             sha = path.rsplit("/", 1)[1]
-            tree = {self.base: self.before_tree, self.head: self.after_tree}[sha]
+            tree = {self.base: self.before_tree, self.head: self.after_tree,
+                    self.common: self.common_tree}[sha]
             return copy.deepcopy(self.overrides.get(sha, {"sha": sha, "tree": {"sha": tree}}))
         if "/git/trees/" in path:
             sha = path.rsplit("/", 1)[1].split("?")[0]
@@ -330,6 +460,13 @@ class TreeAPI:
         with patch.object(gate, "api", side_effect=self.api):
             return gate.changed_paths("tangosdev/sm64ds-decomp", self.base, self.head)
 
+    def scope(self):
+        """What the PR changes, measured the way check_pr measures it."""
+        with patch.object(gate, "api", side_effect=self.api):
+            merge_base, retains = gate.locate_composition(
+                "tangosdev/sm64ds-decomp", self.base, self.head)
+            return gate.changed_paths("tangosdev/sm64ds-decomp", merge_base, self.head), retains
+
     def check(self, reviewed=("src/actor.cpp", "include/actor.h")):
         snapshot = state()
         task = snapshot["tasks"]["actor"]
@@ -338,7 +475,7 @@ class TreeAPI:
                                   evidence=evidence(head=self.head, base=self.base))
         task["outputs"][0]["evidence"]["source_review"]["files"] = list(reviewed)
         with patch.object(gate, "api", side_effect=self.api), patch.object(
-                gate, "target_branch", return_value=("main", self.base)), patch.object(
+                gate, "target_branch", return_value=("main", (self.base,))), patch.object(
                 gate, "queue_state", return_value=("d" * 40, snapshot)):
             return gate.check_pr("tangosdev/sm64ds-decomp", 2445)
 
@@ -508,17 +645,35 @@ class ExactTreeScopeTest(unittest.TestCase):
                 fixture.overrides[HEAD] = data
                 self.assertEqual(fixture.check()["result"], "fail")
 
-    def test_nonancestor_and_unrelated_heads_need_a_new_composition(self):
-        for status in ("behind", "diverged", "unrelated"):
+    def test_nonancestor_source_heads_need_a_new_composition(self):
+        for status in ("behind", "diverged"):
             with self.subTest(status=status):
-                fixture = TreeAPI({}, {"tools/inert.py": blob("new")})
-                fixture.comparison.update(status=status, merge_base_commit={"sha": "e" * 40})
+                fixture = TreeAPI({}, {"src/unreviewed.cpp": blob("new")})
+                fixture.comparison.update(status=status)
                 result = fixture.check()
                 self.assertEqual(result["result"], "fail")
                 self.assertIn("restack", result["summary"])
-        fixture = TreeAPI({}, {"tools/inert.py": blob("new")})
-        fixture.comparison = {}
-        self.assertEqual(fixture.check()["result"], "fail")
+        for comparison in ({}, {"base_commit": {"sha": BASE}, "status": "unrelated",
+                                "merge_base_commit": {"sha": BASE}}):
+            with self.subTest(comparison=comparison):
+                fixture = TreeAPI({}, {"tools/inert.py": blob("new")})
+                fixture.comparison = comparison
+                self.assertEqual(fixture.check()["result"], "fail")
+
+    def test_scope_is_measured_from_the_merge_base_not_the_branch_tip(self):
+        """Merging can only introduce what the branch changed since the merge base.
+
+        Main landing src/landed.cpp is not this PR deleting it, and main's tip is
+        not this PR's base. The complete tree-derived path set still holds.
+        """
+        fixture = TreeAPI(before={"src/actor.cpp": blob("old"), "src/landed.cpp": blob("main")},
+                          after={"src/actor.cpp": blob("new"), "tools/helper.py": blob("new")},
+                          common={"src/actor.cpp": blob("old")})
+        paths, retains = fixture.scope()
+        self.assertEqual(paths, ["src/actor.cpp", "tools/helper.py"])
+        self.assertFalse(retains)
+        self.assertIn("src/landed.cpp", fixture.paths())  # The old base...head measure.
+        self.assertIn("restack", fixture.check()["summary"])
 
     def test_missing_subtree_and_tree_cycles_fail_closed(self):
         for cycle in (False, True):
