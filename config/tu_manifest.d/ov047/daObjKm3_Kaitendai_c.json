@@ -741,7 +741,18 @@
       "relocations": []
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZN16daObjKaitendai_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    },
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper has no configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained"
+    }
+  ],
   "notes": [
     "The original four-function generated candidate was incomplete. The adjacent unnamed factory and its actor-descriptor relocation establish the corrected five-function boundary; the function keeps its address name because no stronger retail name provenance exists.",
     "This TU owns the contiguous data band 0x02112328..0x021123fc: its compiler-emitted RTTI and type-name records, resource descriptor, actor descriptor, and vtable storage. Only inherited vague RTTI copies remain exact-symbol externalized.",
