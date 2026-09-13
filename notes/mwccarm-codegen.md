@@ -5402,7 +5402,7 @@ formulations for materialized-RMW residues") applies to the pre-2004 builds it w
 measured on; on 2004/b56 the inverse residue is cheap, and the table above is the whole
 search.
 
-## 6cb. `long` and `int` are the same type and colour differently: declaration RANK x type NAME is one joint axis, and neither half moves alone (_ZN12dScStarSel_c8BehaviorEv, div 19 -> 11, 2026-09-12, run link100 lane STAR)
+## 6cc. `long` and `int` are the same type and colour differently: declaration RANK x type NAME is one joint axis, and neither half moves alone (_ZN12dScStarSel_c8BehaviorEv, div 19 -> 11, 2026-09-12, run link100 lane STAR)
 
 `dScStarSel_c::Behavior` (ov003 0x020af038, 0x834) sat at 19 of 525 as a pure register
 permutation: size exact, every instruction shape, order and immediate already right, the
