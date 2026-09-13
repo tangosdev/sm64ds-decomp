@@ -5,38 +5,36 @@
 #include "dActor_c.h"
 #include "dCcAc_c.h"
 
-/* TWO WITNESSES, and they close on each other:
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* Red and blue flames. RTTI ov002:0x02108ee8 names daObjFire_c;
+ * overlay_actors.md lists RED_FLAME(316) and BLUE_FLAME(317). The
+ * debug table names those profiles OBJ_RED_FIRE / OBJ_BLUE_FIRE.
+ * POPPING_LAVA_BUBBLES(196) is daObjLava_c.
  *
- *   daObjFire_c_classInit_OBJ_BLUE_FIRE  fBase_c::operator new(280 = 0x118), dActor_c::dActor_c(), stores _ZTV11daObjFire_c,
- *                 then the member below in this order.
- *   ~daObjFire_c   the same member destroyed in reverse, then ~dActor_c.
- *
- * SIZE 0x118 is the factory's own literal, and the last member closes exactly on it.
- *
- * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Only the slots declared
- * below differ; every other slot holds the base's own word and is inherited, so it
- * is deliberately not redeclared here.
+ * SIZE 0x118, the literal both factories pass to operator new.
+ * Factory constructs dCcAc_c at 0xe4; D1 tears it down before ~dActor_c.
+ * dActor_c ends at 0xd0; pad_0d0 is the 4-byte gap before mFlamePos.
+ * 0xe4 + 0x34 = 0x118, closing on the allocation.
  */
 struct daObjFire_c : dActor_c {
-    u8  pad_0d0[0x4];
-    Vector3                mFlamePos;            /* 0x0d4 */
-    u8                     mDisappearTimer;      /* 0x0e0 */
-    u8  pad_0e1[0x3];
-    dCcAc_c     mdCcAc_c; /* 0x0e4 */
+    u8      pad_0d0[0x4];
+    Vector3 mFlamePos;       /* 0x0d4 */
+    u8      mDisappearTimer; /* 0x0e0 */
+    u8      pad_0e1[0x3];
+    dCcAc_c mdCcAc_c;        /* 0x0e4 */
 
-    /* Inline, and declared FIRST. This TU defines every virtual the class has,
-     * so it emits the vtable and RTTI whatever is declared first -- moving the
-     * declaration last buys nothing. Out of line, mwccarm emits the D2/D1/D0
-     * triple in D0-before-D1 order, but retail puts D1 (0x020b5734) ABOVE D0
-     * (0x020b5764), and objisolate then refuses the whole TU for emitting out
-     * of ROM address order. The inline body emits only the retail D1/D0 pair,
-     * in retail order, and emits no D2. */
-    virtual ~daObjFire_c() {}          /* slots 16 (D1), 17 (D0) */
+    /* Inline and first: out-of-line mwccarm emits D0 before D1; retail
+       has D1 at 0x020b5734 below D0 at 0x020b5764. */
+    virtual ~daObjFire_c() {}
+    virtual int  InitResources();               /* slot  0 */
+    virtual int  Behavior();                    /* slot  6 */
+    virtual s32  OnYoshiTryEat();               /* slot 18 */
+    virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
 
-    virtual int   InitResources();         /* slot  0 */
-    virtual int   Behavior();              /* slot  6 */
-    virtual s32   OnYoshiTryEat();         /* slot 18 */
-    virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daObjFire_c_size_must_be_0x118[sizeof(daObjFire_c) == 0x118 ? 1 : -1];
