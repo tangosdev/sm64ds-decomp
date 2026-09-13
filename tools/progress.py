@@ -253,6 +253,15 @@ def main():
 
     if dbp:
         done_n, done_b, n, tb, per = from_db(dbp)
+    elif "--from-src" in sys.argv:
+        # Same derivation --bar/--write-readme use for --from-src: the honest,
+        # committed-data-only count. Without this branch, a bare `--from-src` (no
+        # --bar) fell through to the branch below and read the local, gitignored
+        # progress/matched.jsonl regardless of the flag -- on a fresh worktree that
+        # ledger is empty, so it printed `functions : 0 / N` even though every
+        # function had a committed, byte-gate-passing source.
+        done_n, done_b, n, tb = synced_from_src()
+        _, _, per = totals()
     else:
         n, tb, per = totals()
         done = matched()
