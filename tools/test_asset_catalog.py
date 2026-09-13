@@ -184,6 +184,89 @@ class AssetCatalogTests(unittest.TestCase):
         handles = [AC.AssetHandle(1, 0x123, "data/a.bmd", 10)]
         self.assertEqual(AC.resolve_queries(["0x9807"], handles, []), [("0x9807", [])])
 
+    @staticmethod
+    def _fake_rom(directory, fnt=(0x100, 0x10), fat=(0x120, 0x20), size=0x200,
+                  ovt9=(0x140, 0x20), ovt7=(0, 0)):
+        """A blob shaped like a cartridge as far as the NitroFS words go.
+
+        Only the header offsets matter here: 0x40 fnt_offset, 0x44 fnt_size,
+        0x48 fat_offset, 0x4c fat_size, and the overlay half at 0x50 arm9 and
+        0x58 arm7. The spans are filled with distinct byte patterns so a copy
+        that reads the wrong offset cannot pass. The arm7 pair defaults to
+        0 + 0, which is what SM64DS's own cartridge carries.
+        """
+        import struct
+        blob = bytearray(size)
+        struct.pack_into("<IIII", blob, AC.ROM_HEADER_FNT,
+                         fnt[0], fnt[1], fat[0], fat[1])
+        struct.pack_into("<IIII", blob, AC.ROM_HEADER_OVT,
+                         ovt9[0], ovt9[1], ovt7[0], ovt7[1])
+        for off, length, first in ((fnt[0], fnt[1], 0x10),
+                                   (fat[0], fat[1], 0x80),
+                                   (ovt9[0], ovt9[1], 0x40)):
+            # only fill what fits; a slice assignment that ran off the end
+            # would GROW the bytearray and quietly repair the very truncation
+            # the refusal test is about
+            fits = max(0, min(length, size - off))
+            blob[off:off + fits] = bytes(range(first, first + fits))
+        path = pathlib.Path(directory) / "fake.nds"
+        path.write_bytes(bytes(blob))
+        return path
+
+    def test_nitrofs_tables_are_copied_verbatim_at_the_header_offsets(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            rom = self._fake_rom(tmp)
+            out = pathlib.Path(tmp) / "assets"
+            meta = AC.write_nitrofs_tables(out, rom)
+            self.assertEqual(meta, {"fnt_offset": 0x100, "fnt_size": 0x10,
+                                    "fat_offset": 0x120, "fat_size": 0x20,
+                                    "ovt9_offset": 0x140, "ovt9_size": 0x20,
+                                    "ovt7_offset": 0, "ovt7_size": 0})
+            self.assertEqual((out / "nitrofs_fnt.bin").read_bytes(),
+                             bytes(range(0x10, 0x20)))
+            self.assertEqual((out / "nitrofs_fat.bin").read_bytes(),
+                             bytes(range(0x80, 0xa0)))
+            self.assertEqual((out / "nitrofs_ovt9.bin").read_bytes(),
+                             bytes(range(0x40, 0x60)))
+            # An empty arm7 pair writes no file at all -- an empty blob would
+            # read as a table that exists and happens to be zero long.
+            self.assertFalse((out / "nitrofs_ovt7.bin").exists())
+            rows = (out / "nitrofs.tsv").read_text(encoding="utf-8").splitlines()
+            self.assertEqual(rows[0], "key\tvalue")
+            self.assertIn("fat_offset\t288", rows)
+            self.assertIn("ovt9_offset\t320", rows)
+            self.assertIn("ovt7_size\t0", rows)
+
+    def test_nitrofs_span_outside_the_image_is_refused(self):
+        # A span that runs off the end is a wrong-version or truncated ROM.
+        # Copying it short would produce a name table the walker reads past.
+        with tempfile.TemporaryDirectory() as tmp:
+            rom = self._fake_rom(tmp, fat=(0x1f0, 0x40))
+            with self.assertRaises(ValueError) as caught:
+                AC.write_nitrofs_tables(pathlib.Path(tmp) / "assets", rom)
+            self.assertIn("fat", str(caught.exception))
+
+    def test_overlay_table_span_outside_the_image_is_refused(self):
+        # A zero pair is legal (that processor has no overlays); a non-empty
+        # pair that runs off the end is a truncated or wrong-version ROM, and
+        # a short copy would hand the ROM's own overlay reader a record it
+        # would then copy code from.
+        with tempfile.TemporaryDirectory() as tmp:
+            rom = self._fake_rom(tmp, ovt9=(0x1f0, 0x40))
+            with self.assertRaises(ValueError) as caught:
+                AC.write_nitrofs_tables(pathlib.Path(tmp) / "assets", rom)
+            self.assertIn("arm9 overlay table", str(caught.exception))
+
+    def test_overlay_table_size_must_be_whole_records(self):
+        # 32 bytes per OverlayInfo. A size that is not a multiple of it means
+        # the header was read at the wrong offset, and every record after the
+        # first would be shifted.
+        with tempfile.TemporaryDirectory() as tmp:
+            rom = self._fake_rom(tmp, ovt9=(0x140, 0x21))
+            with self.assertRaises(ValueError) as caught:
+                AC.write_nitrofs_tables(pathlib.Path(tmp) / "assets", rom)
+            self.assertIn("32-byte OverlayInfo", str(caught.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

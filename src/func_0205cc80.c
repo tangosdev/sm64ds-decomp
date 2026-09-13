@@ -1,6 +1,6 @@
 extern unsigned int _ZN3IRQ7DisableEv(void);
 extern void _ZN3IRQ7RestoreEj(unsigned int saved);
-extern int func_0205d23c(void *a, void *b);
+extern void *func_0205d23c(void *a, int b);
 extern void *func_0205d304(void *a, void *b);
 
 typedef struct Node {
@@ -27,7 +27,7 @@ int func_0205cc80(Node *thiz, void *a, void *b)
 
     saved = _ZN3IRQ7DisableEv();
 
-    if (func_0205d23c(a, b) == 0) {
+    if (func_0205d23c(a, (int)b) == 0) {
         if (data_020a8048 == 0) {
             data_020a8048 = thiz;
             data_020a804c.field_0 = thiz;
