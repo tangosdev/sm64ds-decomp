@@ -4,26 +4,21 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
-/* TWO WITNESSES, and they close on each other:
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* BitDW floating island (profile KM1_UKISHIMA / DIAMOND_LIFT 135).
+ * ROM RTTI daObjKm1_Ukishima_c; direct base dBgActor_c (_ZTI+8 at
+ * ov043 0x02112270 points at _ZTI10dBgActor_c). Factory allocates
+ * 0x320 = sizeof(dBgActor_c); mTurnTimer lives in the base's tail
+ * padding at 0x31e (same placement as daObjRc_Guruguru_c::mAngVelY).
  *
- *   daObjKm1_Ukishima_c_classInit (historical alias DiamondLift_Spawn)
- *                 fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV19daObjKm1_Ukishima_c,
- *                 then the members below in this order.
- *   ~daObjKm1_Ukishima_c   the same members destroyed in reverse, then ~dBgActor_c.
- *
- * SIZE 0x320 is the factory's own literal, and the last member closes exactly on it.
- *
- * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots declared
- * below differ; every other slot holds the base's own word and is inherited, so it
- * is deliberately not redeclared here.
+ * Vtable was diffed slot by slot against _ZTV10dBgActor_c. Only the
+ * slots declared below differ; every other slot holds the base's own
+ * word and is inherited.
  */
 struct daObjKm1_Ukishima_c : dBgActor_c {
-    /* THIS CLASS'S OWN, in dBgActor_c's TAIL PADDING: the base's last field ends
-       at 0x31e and its size rounds to 0x320, so the Itanium ABI puts the first
-       derived byte at 0x31e and sizeof stays 0x320 (same placement as
-       daObjRc_Guruguru_c::mAngVelY). InitResources seeds it with 0x3c and
-       Behavior counts it down, turning the island a quarter turn each time it
-       reaches zero. */
+    /* InitResources seeds 0x3c; Behavior counts it down and turns the
+       island a quarter turn each time it reaches zero. */
     u8 mTurnTimer;            /* 0x31e */
 
     /* MEASURED -- INLINE ON PURPOSE. The class TU is the only place these
@@ -36,6 +31,12 @@ struct daObjKm1_Ukishima_c : dBgActor_c {
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
+
+    /* size_t == unsigned long here; unsigned int is illegal. Forwards
+       fBase_c::operator new until #2570 merges. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daObjKm1_Ukishima_c_size_must_be_0x320[sizeof(daObjKm1_Ukishima_c) == 0x320 ? 1 : -1];
