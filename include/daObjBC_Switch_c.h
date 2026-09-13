@@ -2,8 +2,6 @@
 #define DAOBJBC_SWITCH_C_H
 
 #include "types.h"
-#include "Model.h"
-#include "dBgW_KcMbg.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -14,6 +12,11 @@
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
  *
+ * dBgActor_c.h FIRST so common.h beats Model.h on Matrix4x3 (the two guarded
+ * spellings over the same 0x30 bytes). This class's TU does not copy a
+ * Matrix4x3, but the header used to pull Model.h ahead of the base and that
+ * is the order UpdateClsnPosAndRot refuses.
+ *
  * The flat-C `#else` spelling this header used to carry is gone: it existed
  * for the three .c members (D0's neighbours func_ov002_020f1578/020f15b8 and
  * the classInit factory), and the promotion folded all of them into the one
@@ -21,6 +24,8 @@
  */
 
 #include "dBgActor_c.h"
+
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daObjBC_Switch_c : dBgActor_c {
     u8  pad_31e[0x2];
@@ -51,6 +56,13 @@ struct daObjBC_Switch_c : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* Leaf operator new until #2570 puts the same allocator on fBase_c.
+       Parameter is size_t (unsigned long on this compiler). `return new`
+       relocates to `_Znwm` without this. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daObjBC_Switch_c_size_must_be_0x330[sizeof(daObjBC_Switch_c) == 0x330 ? 1 : -1];
