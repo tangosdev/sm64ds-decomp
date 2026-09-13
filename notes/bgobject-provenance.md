@@ -663,10 +663,12 @@ sources that used to hold them.
 
 ## daObjBk_Rotebar_c (`include/daObjBk_Rotebar_c.h`, [ov015](../config/arm9/overlays/ov015/symbols.txt), size 0x324)
 
+Whomp's Fortress rotating bar, not Bob-omb Battlefield.
+
 | Offset | Name | Evidence |
 | --- | --- | --- |
-| 0x31e | `mPauseTimer` | `InitResources` sets `0x3c`; `Behavior` turns the bridge only on the frame `DecIfAbove0_Byte` returns 0, and re-arms it to `0x3c` whenever `mPrevAngleY & 0x7fff` comes out zero — i.e. at each quarter turn. |
-| 0x320 | `mTurnSound` | passed as the first argument of `Sound::PlayLong(mTurnSound, 3, 0x88, &mCamSpacePosX, 0)` and overwritten with the result. |
+| 0x31e | `mPauseTimer` | `InitResources` sets `0x3c`; `Behavior` turns the bar only on the frame `DecIfAbove0_Byte` returns 0, and re-arms it to `0x3c` whenever `mPrevAngleY & 0x7fff` comes out zero — i.e. at each half turn (0x8000). |
+| 0x320 | `mTurnSound` | passed as the first argument of `Sound::PlayLong(mTurnSound, 3, 0x88, *(Vector3 *)&mCamSpacePosX, 0)` and overwritten with the result. |
 
 In the C twin, `0x074` becomes `mCamSpacePosX`, `0x08e` `mAngleY`, `0x094`
 `mPrevAngleY`.
