@@ -144,7 +144,7 @@
       "evidence": "model resource handle constructed with file ID 1570"
     },
     {
-      "symbol": "@214",
+      "symbol": "@222",
       "address": "0x02111688",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -200,7 +200,7 @@
       "evidence": "DSD exposes owned constructor-table symbols globally"
     },
     {
-      "symbol": "@214",
+      "symbol": "@222",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "the compiler-local registration node is an initializer relocation destination"
@@ -252,7 +252,7 @@
       "source": "0x02111350",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@214",
+      "symbol": "@222",
       "addend": 0,
       "target_module": "ov044",
       "target_address": "0x02111688"
@@ -675,7 +675,7 @@
   "notes": [
     "daObjKb1Billboard_c is ROM-proven by ov044 RTTI/ZTS. daObjKb1Billboard_c_classInit, g_profile_KB1_BILLBOARD, and d_a_obj_kb1_billboard.cpp are reconstructed source-style names; exact original SM64DS spellings do not survive.",
     "UpdateModelTransform is an inferred private spelling. Its class ownership, no-argument call shape, body, ordering, relocations, and codegen are proven.",
-    "The factory retains the measured allocator/base/member-constructor/vptr seam because fBase_c's operator new cannot be declared in the current shared class hierarchy without changing other consumers.",
+    "The factory is `return new daObjKb1Billboard_c()`. Leaf operator new(unsigned long) forwards to _ZN7fBase_cnwEj until fBase_c can declare it (#2570). The compiler-local registration node is @222 (was @214); #2513 keeps uniquifier rows on this class.",
     "The actor TU owns .text, .init, .ctor, its class/profile .data, and its resource .bss. The earlier ov044 .data remains an independently extracted ROM-gap input in the final overlay link."
   ],
   "verification": {
@@ -1097,7 +1097,7 @@
             "evidence": "DSD exposes owned constructor-table symbols globally"
           },
           {
-            "symbol": "@214",
+            "symbol": "@222",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "the compiler-local registration node is an initializer relocation destination"
@@ -1130,7 +1130,7 @@
           },
           {
             "symbolIndex": 15,
-            "symbol": "@214",
+            "symbol": "@222",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           }
@@ -1196,7 +1196,7 @@
         ],
         "licensedSymbols": [
           ".p__sinit_d_a_obj_kb1_billboard.cpp",
-          "@214",
+          "@222",
           "_ZTI19daObjKb1Billboard_c",
           "_ZTS19daObjKb1Billboard_c",
           "_ZTV19daObjKb1Billboard_c",
@@ -1797,7 +1797,7 @@
             "evidence": "DSD exposes owned constructor-table symbols globally"
           },
           {
-            "symbol": "@214",
+            "symbol": "@222",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL",
             "evidence": "the compiler-local registration node is an initializer relocation destination"
@@ -1830,7 +1830,7 @@
           },
           {
             "symbolIndex": 15,
-            "symbol": "@214",
+            "symbol": "@222",
             "from": "STB_LOCAL",
             "to": "STB_GLOBAL"
           }
@@ -1896,7 +1896,7 @@
         ],
         "licensedSymbols": [
           ".p__sinit_d_a_obj_kb1_billboard.cpp",
-          "@214",
+          "@222",
           "_ZTI19daObjKb1Billboard_c",
           "_ZTS19daObjKb1Billboard_c",
           "_ZTV19daObjKb1Billboard_c",
