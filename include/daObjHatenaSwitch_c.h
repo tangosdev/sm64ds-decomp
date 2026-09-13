@@ -7,10 +7,13 @@
 
 struct Player;
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* daObjHatenaSwitch_c is the ROM-proven class identity: the ov002 RTTI at
- * 0x02108e14 names this type and dBgActor_c as its sole base. The adjacent
- * factory allocates 0x724 bytes and constructs the two dBgW_KcMbg members and
- * ModelAnim below in declaration order; retail D1 destroys them in reverse. */
+ * 0x02108e14 names this type and dBgActor_c as its sole base. The factory
+ * allocates 0x724 bytes. ov002 also has EXCLAMATION_SWITCH(11),
+ * STAR_SWITCH(12), and BLUE_COIN_SWITCH(10); this class is QUESTION_SWITCH
+ * (HATENA_SWITCH 26). */
 struct daObjHatenaSwitch_c : dBgActor_c {
     dBgW_KcMbg *mActiveMeshCollider;    /* 0x320 */
     dBgW_KcMbg mStaticMeshCollider;     /* 0x324 */
@@ -21,7 +24,6 @@ struct daObjHatenaSwitch_c : dBgActor_c {
     u8 mPressedThisFrame;               /* 0x71a */
     u8 mTalking;                        /* 0x71b */
     u16 mSoundDelay;                    /* 0x71c */
-    u8 pad_71e[0x2];
     Player *mTalkingPlayer;             /* 0x720 */
 
     /* Inline plus the out-of-line InitResources key function makes mwccarm
@@ -33,6 +35,11 @@ struct daObjHatenaSwitch_c : dBgActor_c {
     virtual s32 Behavior();
     virtual s32 Render();
     virtual void OnGroundPounded(dActor_c &other);
+
+    /* size_t == unsigned long here; unsigned int is illegal. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 
 private:
     /* Class ownership and bodies are proven. These readable private spellings
@@ -47,10 +54,5 @@ private:
 
 typedef char daObjHatenaSwitch_c_size_must_be_0x724[
     sizeof(daObjHatenaSwitch_c) == 0x724 ? 1 : -1];
-
-/* InitResources owns the compiler-emitted definition. Natural new selects the
- * wrong allocator, so the measured factory must address the public vtable
- * point directly; this declaration only exposes that compiler-owned object. */
-extern int _ZTV19daObjHatenaSwitch_c[];
 
 #endif /* DAOBJHATENASWITCH_C_H */

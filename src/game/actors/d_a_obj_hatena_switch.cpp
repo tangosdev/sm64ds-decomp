@@ -1,15 +1,36 @@
 //cpp
-/* Genuine production translation unit for ov002/daObjHatenaSwitch_c.
+/**
+ * Question Switch (profile HATENA_SWITCH / QUESTION_SWITCH 26).
  *
- * The class identity comes from retail RTTI. The class initializer and profile
- * global use lineage-supported reconstructed spellings; exact original
- * SM64DS symbols do not survive. The private helper spellings are inferred;
- * their class ownership, bodies, calls, and ordering are proven.
+ * Ground-pound or walk-on switch: after an 8-frame press latch it swaps the
+ * static KCL for the depressed one, sets the save bit, talks, and plays the
+ * press animation.
  *
- * mwccarm emits ordinary function sections in reverse source order. Keep the
- * ROM-high factory first and OnGroundPounded last. InitResources is the key
- * function; together with the inline destructor in the real header it
- * naturally emits retail D1 then D0 and the complete class data group.
+ * daObjHatenaSwitch_c is the ROM RTTI name (ov002 0x02108e14). ov002 also
+ * has EXCLAMATION_SWITCH(11), STAR_SWITCH(12), BLUE_COIN_SWITCH(10); this
+ * class is QUESTION_SWITCH, not those.
+ *
+ * daObjHatenaSwitch_c_classInit is reconstructed (RTTI daObjHatenaSwitch_c,
+ * HATENA_SWITCH registry). Retail does not store that spelling. Historical
+ * alias QuestionSwitch_Spawn.
+ *
+ * deslop
+ * Leftover: ModelAnim::SetAnim and dBgW_KcMbg::SetFile stay mangled in this
+ *   TU -- both take Fix12<int> by value (wall 6az); a method call homes the
+ *   argument and size-DIFFs InitResources.
+ * Leftover: Sound::PlaySub and Particle::System::NewSimple stay mangled --
+ *   Fix12<int> by value (wall 6az). Sound.h still only has PlayBank3;
+ *   Particle.h has no System::NewSimple.
+ * Leftover: func_020393c4 is a 4-byte store into dBgW+0x1c (unk_1c). This
+ *   TU calls it; naming belongs with dBgW in arm9.
+ * Leftover: HatenaMatrixWords 12-word copies -- structured Matrix4x3
+ *   assignment scalarizes; common.h-first would drop mClsnMat.t used in
+ *   UpdateClsnTransform.
+ * Leftover: data_ov002_0210dd60/dd68/dd58/dd50 are this overlay's BMD/BCA/KCL
+ *   handles (sinit-owned BSS). data_ov002_0210d8b4 / 0210d774 are CLPS
+ *   blocks this TU does not own.
+ * Leftover: data_0209caa0 / data_0209d684 / data_0209d660 / data_020a0e68
+ *   are arm9 scratch/save globals.
  */
 
 #include "daObjHatenaSwitch_c.h"
@@ -37,21 +58,15 @@ struct HatenaSwitchSpawnInfo {
 typedef char HatenaSwitchSpawnInfo_size_must_be_0x1c[
     sizeof(HatenaSwitchSpawnInfo) == 0x1c ? 1 : -1];
 
-/* The factory allocator/constructor sequence, callback registration, and
- * Fix12-by-value calls below are measured narrow ABI seams. Other declarations
- * are genuine free functions or ROM-address globals. */
+/* SetAnim / SetFile / PlaySub / NewSimple are measured Fix12-by-value seams
+ * (wall 6az). func_020393c4 is the dBgW+0x1c store; naming belongs with dBgW. */
 extern "C" {
-extern void *_ZN7fBase_cnwEj(u32 size);
-extern void _ZN10dBgActor_cC2Ev(dBgActor_c *actor);
-extern void _ZN10dBgW_KcMbgC1Ev(dBgW_KcMbg *collider);
-extern void _ZN9ModelAnimC1Ev(ModelAnim *model);
-
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     ModelAnim *model, BCA_File *file, s32 mode, Fix12i speed, u32 flags);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     dBgW_KcMbg *collider, KCL_File *file, Matrix4x3 *matrix,
     Fix12i scale, s16 angleY, CLPS_Block *clps);
-extern void func_020393c4(int *collider, int callback);
+extern void func_020393c4(dBgW *collider, void *callback);
 
 extern u16 DecIfAbove0_Short(u16 *value);
 extern u8 DecIfAbove0_Byte(u8 *value);
@@ -78,25 +93,13 @@ extern u8 data_0209d684;
 extern u8 data_0209d660;
 extern u32 data_0209caa0[];
 
-extern "C" daObjHatenaSwitch_c *daObjHatenaSwitch_c_classInit();
-
-/* ROM ordinal 12 -- class initializer, 0x020b56d8, size 0x5c. Natural new
- * targets _Znwm instead of the retail actor allocator, so retain the measured
- * base/member construction and vptr sequence. Reconstructed spelling from
- * ROM RTTI plus later EAD lineage; historical alias QuestionSwitch_Spawn. */
+/*
+ * Every instruction the cartridge has here falls out of the one `new`.
+ * Reconstructed spelling from ROM RTTI plus later EAD lineage; historical
+ * alias QuestionSwitch_Spawn. */
 extern "C" daObjHatenaSwitch_c *daObjHatenaSwitch_c_classInit()
 {
-    daObjHatenaSwitch_c *actor =
-        (daObjHatenaSwitch_c *)_ZN7fBase_cnwEj(
-            sizeof(daObjHatenaSwitch_c));
-    if (actor) {
-        _ZN10dBgActor_cC2Ev(actor);
-        *(int *)actor = (int)&_ZTV19daObjHatenaSwitch_c[2];
-        _ZN10dBgW_KcMbgC1Ev(&actor->mStaticMeshCollider);
-        _ZN10dBgW_KcMbgC1Ev(&actor->mMovingMeshCollider);
-        _ZN9ModelAnimC1Ev(&actor->mModelAnim);
-    }
-    return actor;
+    return new daObjHatenaSwitch_c();
 }
 
 /* HATENA_SWITCH is the literal ROM registry ID. The g_profile spelling is a
@@ -112,7 +115,7 @@ extern "C" HatenaSwitchSpawnInfo g_profile_HATENA_SWITCH = {
     0
 };
 
-/* ROM ordinal 11 -- inferred static callback, 0x020b56c4, size 0x14. */
+
 // @symbol _ZN19daObjHatenaSwitch_c17AfterClsnCallbackEP4dBgWP8dActor_cS3_
 void daObjHatenaSwitch_c::AfterClsnCallback(
     dBgW *collider, dActor_c *owner, dActor_c *other)
@@ -120,15 +123,15 @@ void daObjHatenaSwitch_c::AfterClsnCallback(
     ((daObjHatenaSwitch_c *)owner)->HandleClsn(*other);
 }
 
-/* ROM ordinal 10 -- inferred collision handler, 0x020b567c, size 0x48. */
+
 // @symbol _ZN19daObjHatenaSwitch_c10HandleClsnER8dActor_c
 void daObjHatenaSwitch_c::HandleClsn(dActor_c &other)
 {
     u16 actorID = other.actorID;
     int isPlayer = (int)(actorID == 0xbf);
     if (isPlayer == 0) {
-        int isYoshi = (int)(actorID == 0xc2);
-        if (isYoshi == 0)
+        int isCrate = (int)(actorID == 0xc2);
+        if (isCrate == 0)
             return;
     }
 
@@ -136,7 +139,7 @@ void daObjHatenaSwitch_c::HandleClsn(dActor_c &other)
         mPressedThisFrame = 1;
 }
 
-/* ROM ordinal 9 -- key function, 0x020b5500, size 0x17c. */
+
 // @symbol _ZN19daObjHatenaSwitch_c13InitResourcesEv
 s32 daObjHatenaSwitch_c::InitResources()
 {
@@ -163,8 +166,8 @@ s32 daObjHatenaSwitch_c::InitResources()
         0x199, mAngleY, &data_ov002_0210d774);
 
     func_020393c4(
-        (int *)&mStaticMeshCollider,
-        (int)&daObjHatenaSwitch_c::AfterClsnCallback);
+        &mStaticMeshCollider,
+        (void *)&daObjHatenaSwitch_c::AfterClsnCallback);
 
     if (data_0209caa0[1] & 0x80000000) {
         mActiveMeshCollider = &mMovingMeshCollider;
@@ -181,7 +184,7 @@ s32 daObjHatenaSwitch_c::InitResources()
     return 1;
 }
 
-/* ROM ordinal 8 -- Behavior, 0x020b51dc, size 0x324. */
+
 // @symbol _ZN19daObjHatenaSwitch_c8BehaviorEv
 s32 daObjHatenaSwitch_c::Behavior()
 {
@@ -284,7 +287,7 @@ s32 daObjHatenaSwitch_c::Behavior()
     return 1;
 }
 
-/* ROM ordinal 7 -- Render, 0x020b51ac, size 0x30. */
+
 // @symbol _ZN19daObjHatenaSwitch_c6RenderEv
 s32 daObjHatenaSwitch_c::Render()
 {
@@ -292,7 +295,7 @@ s32 daObjHatenaSwitch_c::Render()
     return 1;
 }
 
-/* ROM ordinal 6 -- CleanupResources, 0x020b512c, size 0x80. */
+
 // @symbol _ZN19daObjHatenaSwitch_c16CleanupResourcesEv
 s32 daObjHatenaSwitch_c::CleanupResources()
 {
@@ -307,7 +310,7 @@ s32 daObjHatenaSwitch_c::CleanupResources()
     return 1;
 }
 
-/* ROM ordinal 5 -- inferred model transform, 0x020b50a0, size 0x8c. */
+
 // @symbol _ZN19daObjHatenaSwitch_c20UpdateModelTransformEv
 void daObjHatenaSwitch_c::UpdateModelTransform()
 {
@@ -322,7 +325,7 @@ void daObjHatenaSwitch_c::UpdateModelTransform()
         *(HatenaMatrixWords *)&mModelAnim.mat4x3;
 }
 
-/* ROM ordinal 4 -- inferred collision transform, 0x020b503c, size 0x64. */
+
 // @symbol _ZN19daObjHatenaSwitch_c19UpdateClsnTransformEv
 void daObjHatenaSwitch_c::UpdateClsnTransform()
 {
@@ -334,7 +337,7 @@ void daObjHatenaSwitch_c::UpdateClsnTransform()
     mActiveMeshCollider->Transform(mClsnMat, mAngleY);
 }
 
-/* ROM ordinal 3 -- inferred collision state, 0x020b4fd0, size 0x6c. */
+
 // @symbol _ZN19daObjHatenaSwitch_c15UpdateClsnStateEv
 s32 daObjHatenaSwitch_c::UpdateClsnState()
 {
@@ -351,12 +354,12 @@ s32 daObjHatenaSwitch_c::UpdateClsnState()
     return 0;
 }
 
-/* ROM ordinal 2 -- vtable slot 21, 0x020b4fc4, size 0x0c. */
+
 // @symbol _ZN19daObjHatenaSwitch_c15OnGroundPoundedER8dActor_c
 void daObjHatenaSwitch_c::OnGroundPounded(dActor_c &other)
 {
     mPressTimer = 0;
 }
 
-/* ROM ordinals 0/1 -- D1 at 0x020b4ed8 and D0 at 0x020b4f44 are emitted
+/*
  * naturally by the inline destructor and InitResources vtable instantiation. */
