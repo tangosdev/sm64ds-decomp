@@ -85,6 +85,110 @@ int func_0205b070(int blocking);
 void func_0204f070(void);
 void func_0205b358(void);
 
+/* RUNG R2 (run link100, lane SND2; port/slice_snd2.txt): the 1 MB sound heap,
+ * func_020133bc's SECOND statement and the storage every later statement of
+ * that body allocates out of.
+ *
+ *     data_0209b498 = func_0205130c(Memory::Allocate(0x100000), 0x100000);
+ *
+ * func_0205130c word-aligns the span, refuses one with under 0x10 bytes of
+ * payload, lays a SolidHeapAllocator over [base+0x10, end) and runs
+ * func_02051024 over the 0x10 header (the allocator pointer at +0, a
+ * NestedHeapIterator with link offset 0xc at +4, the slot id func_02050fd4
+ * hands out at +0xc). That header IS the handle: data_0209b498.
+ *
+ * WHERE THE MEGABYTE COMES FROM. Memory::Allocate(size) is
+ * Memory::Allocate(size, 4, 0), and src/_ZN6Memory8AllocateEjiP4Heap.c
+ * substitutes the DEFAULT heap for a null heap argument. At this line the
+ * default heap is the ROOT heap and not the game heap:
+ * Heap::InitializeGameHeap carved 0x3b000 out of the root a few lines
+ * earlier and left data_020a0ea0 pointing at the root (the pair is read back
+ * in hal/lk4_solidheap_seat.cpp), and Stage::InitResources is the only thing
+ * that ever swaps it. So the megabyte comes out of hal/os_arena.cpp's 8 MB
+ * arena in the DS's own order, and the GAME heap's layout is untouched. What
+ * does move is every later ROOT-heap allocation; the before/after
+ * measurement is in the lane's report.
+ */
+void *func_0205130c(unsigned int addr, unsigned int size);
+void *_ZN6Memory8AllocateEj(unsigned int size);
+extern int data_0209b498;      /* the sound heap handle func_02050f34 and
+                                  func_020134d8 allocate out of */
+
+/* RUNG R3 (run link100, lane SND2): the player/group table, and it is the
+ * first statement of func_020133bc that CHANGES WHAT THE PORT SOUNDS LIKE.
+ *
+ *     func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
+ *
+ * func_02052008 walks all 32 sequence players, asks the SDAT's own INFO
+ * block for each one's PLAYER record through func_02050ae8, and hands the
+ * record's first byte to Sound::Player::SetPlayableSeqCount -- 'how many
+ * sequences may this player run at once'. func_0204fc40, inside rung R1's
+ * func_0204f070, has already given every player the ROM's compiled-in
+ * default of 1, and until this line the port never replaced it. In this
+ * cartridge's archive nine players ask for more (2 for players 2, 21 and
+ * 29; 3 for 10 and 13; 4 for 14 and 20; 5 for 17; 6 for 9) and seven have no
+ * record at all, which func_02050ae8 answers with 0 and the loop skips. So
+ * the change can only RAISE a limit, never lower one: nothing that sounds
+ * today stops sounding, and a player the ROM allows two sequences on can
+ * now run two.
+ *
+ * THE ARGUMENT IS THE ROM'S OWN EXPRESSION, face and all. func_0203d974 is
+ * hosted in hal/star_flow.cpp and answers 1, so the argument is 0 and the
+ * per-player sub-heap loop at the bottom of func_02052008 is skipped -- the
+ * same branch a DSi or a download-played console takes. Only two players in
+ * this archive ask for a sub-heap at all (0x2c00 for player 0, 0x1000 for
+ * player 1); the rest ask for zero and are skipped by the ROM's own test.
+ * When that face retires the expression starts passing the rung-R2 heap and
+ * those two allocations happen, which is why the call is written the ROM's
+ * way rather than as a constant.
+ *
+ * NO NULL CHECK, AND THAT IS FAITHFUL. func_02050ae8 dereferences
+ * data_020a5bb8 + 0x84 without testing either, so an archive that failed to
+ * open faults here -- on the DS as much as on the host, because
+ * func_02050f34 discards func_02050d54's failure in exactly the same way.
+ * hal/sdat/sdat.cpp's 'cannot open ... sound stays silent' path is the host
+ * standing in for that failure, and it now ends the same way the cartridge
+ * would.
+ */
+void func_02052008(int arg);
+int func_0203d974(void);
+
+/* RUNG R4 (run link100, lane SND2): the SDAT archive opened OFF THE CARD,
+ * by the cartridge's own loader, into the rung-R2 heap.
+ *
+ *     anim = data_0208e498;                  the path, /data/sound_data.sdat
+ *     func_0201a9fc(data_0209d574);          the boot's own tick
+ *     func_02050f34(&data_0209b4b4, anim, data_0209b498, 0);
+ *     func_0201a9fc(data_0209d574);
+ *
+ * func_02050f34 resolves the path through the ROM's own open-by-name file
+ * system (func_0205d644 -> func_0205d714 -> func_0205c048 walks Nintendo's
+ * directory table; hal/fs_names.cpp is the seat that made that work and
+ * hal/nitrofs_boot.cpp's read face serves the bytes), opens the file,
+ * reads its 0x30 header into the root object, and then func_02050d54
+ * allocates the INFO and FAT blocks out of the sound heap and reads those
+ * in too. The last thing it does is data_020a5bb8 = self, which is why
+ * hal/sdat/sdat.cpp no longer seats that global: the cartridge does.
+ *
+ * THE FOURTH ARGUMENT IS 0 AND THAT MATTERS. func_02050d54 only allocates
+ * and reads the SYMB block when the flag is non-zero, so the port gets the
+ * two blocks the ROM's accessors read (INFO at root+0x84, FAT at root+0x7c)
+ * and not the name table, exactly as the DS does.
+ *
+ * WHAT IT DOES NOT DO IS LOAD WAVE DATA. The FAT the ROM just read has an
+ * empty runtime-address slot in every record, so every residency test would
+ * fail and every sound would go down the on-demand load path. The port
+ * answers that the way it always has -- the whole archive IS in memory --
+ * but into the ROM's own table now: sdat_seat_rom_residency(), the
+ * pre-seat that used to run inside sdat_init. See its header in
+ * hal/sdat/sdat.cpp for what that is and what it is not.
+ */
+void func_02050f34(void *self, int path, int heap, int flag);
+void func_0201a9fc(void *tick);
+void sdat_seat_rom_residency(void);
+extern unsigned char data_0208e498[];   /* "/data/sound_data.sdat" */
+extern unsigned char data_0209d574[];   /* the boot's own tick record */
+
 /* The rest of the init, still called by hand. See sd_sound_init_host. */
 void func_0204f94c(void *p);         /* clear one player's voice pointer */
 void func_02011a28(void *table);     /* PlayLong's 0x40-slot handle table */
@@ -555,10 +659,33 @@ void publish_player_status(void)
 //                                       Player_PlaySoundEffect returns at its
 //                                       first line and NOTHING makes a sound.
 //
-//   SKIP func_02050f34   opens the SDAT off the card into a 1MB sound heap;
-//                        hal/sdat/sdat.cpp seats an equivalent root already.
-//   SKIP func_020134d8   loads group 1 into that heap; residency is
-//                        pre-seated, so there is nothing to load.
+//   RUN  func_0205130c   THE 1 MB SOUND HEAP (rung R2). This is
+//                        func_020133bc's second statement and it is the
+//                        ROM's own now; data_0209b498 is a real
+//                        SolidHeapAllocator handle from this line on, where
+//                        it used to stay null for the life of the process.
+//   RUN  func_02052008   THE PLAYER/GROUP TABLE (rung R3). Every player's
+//                        playable-sequence limit now comes from the SDAT's
+//                        own PLAYER records instead of staying at
+//                        func_0204fc40's compiled-in 1. Nine of the 32 ask
+//                        for more than one in this cartridge.
+//
+//   RUN  func_02050f34   THE ARCHIVE OPENED OFF THE CARD (rung R4). The
+//                        cartridge's own loader resolves
+//                        /data/sound_data.sdat through the ROM's own
+//                        open-by-name FS, reads the header into
+//                        data_0209b4b4 and the INFO and FAT blocks into the
+//                        rung-R2 heap, and seats data_020a5bb8 itself.
+//                        hal/sdat/sdat.cpp's root seat and residency
+//                        pre-seat inverted for it; the pre-seat now fills
+//                        the table the ROM read.
+//   SKIP func_020134d8   loads group 1 into that heap. Reached only on the
+//                        func_0203d974()==0 branch, and hal/star_flow.cpp's
+//                        hosted func_0203d974 answers 1 -- a face whose
+//                        written reason is that data_0209b498 was null.
+//                        Rung R2 removes that reason but not the face: the
+//                        file is not this lane's to edit, and the branch
+//                        also needs func_02050f34. Named in the report.
 //   SKIP func_020506fc   starts the ARM9 sound THREAD that would drain the
 //                        queue. This consumer is that drain.
 //
@@ -568,13 +695,32 @@ void publish_player_status(void)
 void sd_sound_init_host(void)
 {
     func_0204f070();
+    /* rung R2, at func_020133bc's own second line. The ROM tests nothing
+       here and neither does this: a null handle is the ROM's own state of
+       affairs after a refused carve, and the first statement that would use
+       it is the one that reports. The value is printed below, so a run says
+       which of the two it got. */
+    data_0209b498 = (int)func_0205130c(
+        (unsigned int)(size_t)_ZN6Memory8AllocateEj(0x100000), 0x100000);
+    /* rung R4: func_020133bc's next three statements, in its order. */
+    func_0201a9fc(data_0209d574);
+    func_02050f34(data_0209b4b4, (int)(size_t)data_0208e498,
+                  data_0209b498, 0);
+    func_0201a9fc(data_0209d574);
+    /* and the host's half of that statement, at the line after it: the FAT
+       the cartridge just read has no residency in it. */
+    sdat_seat_rom_residency();
+    /* rung R3, at its own line: */
+    func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
     func_0204f94c(&data_0209b4a0);
     func_0204f94c(&data_0209b4b0);
     func_0204f94c(&data_0209b4a4);
     func_02011a28(data_0209b53c);
     func_02048f34(data_0209b4b4);
     data_0209b480 = 1;
-    fprintf(stderr, "[snd] sound init: 16 voices, 32 players, SFX enabled\n");
+    fprintf(stderr, "[snd] sound init: 16 voices, 32 players, SFX enabled; "
+                    "sound heap %p (1 MB out of the root heap, rung R2)\n",
+            (void *)(size_t)data_0209b498);
 }
 
 }  // namespace

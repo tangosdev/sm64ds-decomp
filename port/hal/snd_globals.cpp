@@ -143,6 +143,25 @@ SND1_RUN(".dsstate$yzsnd10", data_020a5bc8, 0x0c, 4);
 #pragma comment(linker, "/alternatename:?data_0209b53c@@3HA=_data_0209b53c")
 #pragma comment(linker, "/alternatename:?Next@NestedHeapIterator@@QAEPAUHeapAllocator@@PAU2@@Z=?Next@NestedHeapIterator@@QAEHPAUHeapAllocator@@@Z")
 
+/* RUNG R3 (run link100, lane SND2): the EIGHTH spelling, and the same fact
+ * one more time. src/func_0204f278.cpp carries the //cpp marker and declares
+ *
+ *     struct Elem { char pad[0x1c]; };
+ *     extern Elem data_020a4d6c[];
+ *
+ * outside its own extern "C" block, so MSVC mangles the reference with the
+ * element type in it. hal/cxx_aliases.cpp publishes the storage as
+ * unsigned char and already carries the ?data_020a4d6c@@3PAEA row for its own
+ * callers; this is the struct-Elem spelling of the SAME 32 x 0x1c array, at
+ * the same address. One object, now three spellings, and
+ * port/tools/alternatename_guard.py checks on every build that this one fired
+ * with its left and right sides at one address.
+ *
+ * The row is here rather than beside the other one because this lane is what
+ * makes the reference exist: nothing linked src/func_0204f278.cpp before rung
+ * R3, and a directive is easiest to retire beside the slice that needed it. */
+#pragma comment(linker, "/alternatename:?data_020a4d6c@@3PAUElem@@A=_data_020a4d6c")
+
 /* The layout the ROM's body depends on, read back rather than assumed. Returns
    non-zero if anything moved, and says which name and by how much. */
 extern "C" int port_snd_pool_check(void)
