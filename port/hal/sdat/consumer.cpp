@@ -85,6 +85,35 @@ int func_0205b070(int blocking);
 void func_0204f070(void);
 void func_0205b358(void);
 
+/* RUNG R2 (run link100, lane SND2; port/slice_snd2.txt): the 1 MB sound heap,
+ * func_020133bc's SECOND statement and the storage every later statement of
+ * that body allocates out of.
+ *
+ *     data_0209b498 = func_0205130c(Memory::Allocate(0x100000), 0x100000);
+ *
+ * func_0205130c word-aligns the span, refuses one with under 0x10 bytes of
+ * payload, lays a SolidHeapAllocator over [base+0x10, end) and runs
+ * func_02051024 over the 0x10 header (the allocator pointer at +0, a
+ * NestedHeapIterator with link offset 0xc at +4, the slot id func_02050fd4
+ * hands out at +0xc). That header IS the handle: data_0209b498.
+ *
+ * WHERE THE MEGABYTE COMES FROM. Memory::Allocate(size) is
+ * Memory::Allocate(size, 4, 0), and src/_ZN6Memory8AllocateEjiP4Heap.c
+ * substitutes the DEFAULT heap for a null heap argument. At this line the
+ * default heap is the ROOT heap and not the game heap:
+ * Heap::InitializeGameHeap carved 0x3b000 out of the root a few lines
+ * earlier and left data_020a0ea0 pointing at the root (the pair is read back
+ * in hal/lk4_solidheap_seat.cpp), and Stage::InitResources is the only thing
+ * that ever swaps it. So the megabyte comes out of hal/os_arena.cpp's 8 MB
+ * arena in the DS's own order, and the GAME heap's layout is untouched. What
+ * does move is every later ROOT-heap allocation; the before/after
+ * measurement is in the lane's report.
+ */
+void *func_0205130c(unsigned int addr, unsigned int size);
+void *_ZN6Memory8AllocateEj(unsigned int size);
+extern int data_0209b498;      /* the sound heap handle func_02050f34 and
+                                  func_020134d8 allocate out of */
+
 /* The rest of the init, still called by hand. See sd_sound_init_host. */
 void func_0204f94c(void *p);         /* clear one player's voice pointer */
 void func_02011a28(void *table);     /* PlayLong's 0x40-slot handle table */
@@ -555,10 +584,21 @@ void publish_player_status(void)
 //                                       Player_PlaySoundEffect returns at its
 //                                       first line and NOTHING makes a sound.
 //
-//   SKIP func_02050f34   opens the SDAT off the card into a 1MB sound heap;
+//   RUN  func_0205130c   THE 1 MB SOUND HEAP (rung R2). This is
+//                        func_020133bc's second statement and it is the
+//                        ROM's own now; data_0209b498 is a real
+//                        SolidHeapAllocator handle from this line on, where
+//                        it used to stay null for the life of the process.
+//
+//   SKIP func_02050f34   opens the SDAT off the card INTO that heap;
 //                        hal/sdat/sdat.cpp seats an equivalent root already.
-//   SKIP func_020134d8   loads group 1 into that heap; residency is
-//                        pre-seated, so there is nothing to load.
+//   SKIP func_020134d8   loads group 1 into that heap. Reached only on the
+//                        func_0203d974()==0 branch, and hal/star_flow.cpp's
+//                        hosted func_0203d974 answers 1 -- a face whose
+//                        written reason is that data_0209b498 was null.
+//                        Rung R2 removes that reason but not the face: the
+//                        file is not this lane's to edit, and the branch
+//                        also needs func_02050f34. Named in the report.
 //   SKIP func_020506fc   starts the ARM9 sound THREAD that would drain the
 //                        queue. This consumer is that drain.
 //
@@ -568,13 +608,22 @@ void publish_player_status(void)
 void sd_sound_init_host(void)
 {
     func_0204f070();
+    /* rung R2, at func_020133bc's own second line. The ROM tests nothing
+       here and neither does this: a null handle is the ROM's own state of
+       affairs after a refused carve, and the first statement that would use
+       it is the one that reports. The value is printed below, so a run says
+       which of the two it got. */
+    data_0209b498 = (int)func_0205130c(
+        (unsigned int)(size_t)_ZN6Memory8AllocateEj(0x100000), 0x100000);
     func_0204f94c(&data_0209b4a0);
     func_0204f94c(&data_0209b4b0);
     func_0204f94c(&data_0209b4a4);
     func_02011a28(data_0209b53c);
     func_02048f34(data_0209b4b4);
     data_0209b480 = 1;
-    fprintf(stderr, "[snd] sound init: 16 voices, 32 players, SFX enabled\n");
+    fprintf(stderr, "[snd] sound init: 16 voices, 32 players, SFX enabled; "
+                    "sound heap %p (1 MB out of the root heap, rung R2)\n",
+            (void *)(size_t)data_0209b498);
 }
 
 }  // namespace

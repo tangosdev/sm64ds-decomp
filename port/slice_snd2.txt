@@ -1,0 +1,43 @@
+# Run link100, lane SND2: the ROM's own sound BRING-UP, rungs R2 and up.
+#
+# Lane SND1 took rung R1 (the pool, the status block, the channel-7
+# registration) and rungs R8/R9/R10 (the frame). What it left behind is the
+# rest of src/func_020133bc.c -- the ROM's Sound::Init -- which
+# hal/sdat/consumer.cpp's sd_sound_init_host still transcribes line by line.
+# Each rung below deletes one more transcribed line and calls the ROM's own
+# body at the ROM's own point, in the ROM's own ORDER. See the header on
+# sd_sound_init_host for the order and for which lines are still host lines.
+#
+# NO SQUARE BRACKETS ANYWHERE IN THIS FILE, and that is not a style note.
+# CMake's file(STRINGS) reads an unbalanced open-square-bracket as the start
+# of a bracket argument and swallows the REST OF THE FILE into that single
+# element, joined with semicolons. Every source line after it then arrives
+# glued onto a comment line, the ^# filter in the CMake block drops the
+# whole thing, and the slice contributes NOTHING while looking correct. The
+# build fails at LINK on the very symbol the slice exists for, which reads
+# as a missing source rather than an eaten one. This lane spent a build
+# finding that out, on a comment that wrote an address interval the usual
+# mathematical way. Write 'base+0x10 up to end' instead.
+
+# --- RUNG R2: the 1 MB sound heap -----------------------------------------
+#
+# func_020133bc's second statement:
+#
+#     data_0209b498 = func_0205130c(Memory::Allocate(0x100000), 0x100000);
+#
+# func_0205130c lays a SolidHeapAllocator over a caller-supplied span: it
+# word-aligns the base, refuses a span with less than 0x10 bytes of payload,
+# builds the allocator over base+0x10 up to end through
+# Heap::CreateSolidHeapAllocator, and then runs func_02051024 over the 0x10
+# header -- a NestedHeapIterator at +0x04 with link offset 0xc, the allocator
+# pointer at +0x00 and the slot id func_02050fd4 hands out at +0x0c. The
+# returned pointer IS that header, and it is what every later sound
+# allocation (rung R3's per-player sub-heaps, rung R4's INFO and FAT blocks)
+# is asked out of.
+#
+# NOTHING NEW IS HOSTED. data_0209b498 is already a hosted DS global
+# (hal/actor_vtables.cpp), and every symbol under these two bodies is already
+# in the link: Heap::CreateSolidHeapAllocator, func_0204ebb8,
+# NestedHeapIterator::NestedHeapIterator(u32) and func_02050fd4.
+src/func_0205130c.c
+src/func_02051024.c

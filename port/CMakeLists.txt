@@ -8524,6 +8524,26 @@ foreach(line IN LISTS SLICE_SND1_LINES)
 endforeach()
 
 # ---------------------------------------------------------------------------
+# Run link100, lane SND2: the ROM's own sound BRING-UP, the rest of
+# src/func_020133bc.c that lane SND1's rung R1 left behind.
+#
+# Same three targets and the same reason as the two blocks above:
+# hal/sdat/consumer.cpp calls these bodies from sd_sound_init_host, and that
+# file is on all three sound targets, so a target with the sound stack and
+# without this slice would not link. Nothing under the slice is hosted by this
+# lane -- every global it names is already a hosted DS global elsewhere in
+# hal/, and every symbol it calls is already in the link.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_snd2.txt" SLICE_SND2_LINES)
+set(SLICE_SND2_SOURCES "")
+foreach(line IN LISTS SLICE_SND2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SND2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# ---------------------------------------------------------------------------
 # Run link100, lane SND1, rungs R8 + R9 + R10: the ROM's own sound FRAME.
 #
 # Same three targets and the same reason as the block above: hal/sdat/consumer.cpp
@@ -17472,6 +17492,12 @@ foreach(_tsnd8 smoke_player walk_window walk_window_hires)
 endforeach()
 target_sources(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205ac28.c")
+
+# Run link100, lane SND2: the sound bring-up, same three targets and the same
+# reason (hal/sdat/consumer.cpp calls it).
+foreach(_tsnd2 smoke_player walk_window walk_window_hires)
+    target_sources(${_tsnd2} PRIVATE ${SLICE_SND2_SOURCES})
+endforeach()
 
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
