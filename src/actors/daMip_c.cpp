@@ -70,9 +70,18 @@
  * FUNCTIONS cannot be handled that way -- a class member function may not sit
  * inside a linkage-specification region -- so every external call this TU makes
  * is declared once, below, with C linkage, on one reconciled signature.
+ *
+ * deslop
+ * Leftover: SetAnim / dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight
+ *   stay mangled (Fix12-by-value, 6az; dBgCh Init header Fix12i mangles as
+ *   int). Player+8 param1 / +0x6d9 / +0x6ce belong on Player. data_ov085_*
+ *   handles. S14 no g_profile_MIP. common.h first (shadow matrix copy).
  */
+#include "common.h"
 #include "daMip_c.h"
 #include "SharedFilePtr.h"
+#include "Player.h"
+#include "PathPtr.h"
 #include "decl_Message.h"
 #include "decl_PathPtr.h"
 
@@ -450,8 +459,8 @@ int daMip_c::StateTalkMain()
 // @symbol _ZN7daMip_c13StateTalkInitEv
 int daMip_c::StateTalkInit()
 {
-    int *p = (int *)this;
-    p[263] = 0; return 1;
+    mActionStep = 0;
+    return 1;
 }
 
 /* -------------------------------------------------------------------------- */
@@ -978,7 +987,7 @@ int daMip_c::StateFleeMain()
       *((s32 *) (c + 0x60)) = node.y;
       *((s32 *) (c + 0x64)) = node.z;
       {
-        s32 *p = (s32 *) ((int) (((long long) ((int) (c + 0x448)))));
+        s32 *p = (s32 *)(c + 0x448);
         *p = (*p) + (*((s32 *) (c + 0x44c)));
       }
       if ((*((s32 *) (c + 0x448))) >= (*((s32 *) (c + 0x444))))
@@ -1395,15 +1404,6 @@ int daMip_c::Render()
     extern signed char data_0209f2f8;
     extern signed char data_02092120;
 
-    struct VObj {
-        virtual void v0();
-        virtual void v1();
-        virtual void v2();
-        virtual void v3();
-        virtual void v4();
-        virtual void m14(void* arg);
-    };
-
     if (mIsDisabled == 1) return 1;
 
     {
@@ -1429,7 +1429,7 @@ int daMip_c::Render()
         RenderMirrorImage();
     }
 
-    ((struct VObj*)((char*)&mModelAnim))->m14((char*)&mScaleX);
+    mModelAnim.Render((Vector3 *)&mScaleX);
     return 1;
 }
 
@@ -1487,17 +1487,13 @@ void daMip_c::RenderMirrorImage()
  * address -- run on whatever mState points at. It is kept verbatim because there
  * is no recovered type for the descriptor to call a member through.
  *
- * TWO SPELLINGS HERE ARE LOAD-BEARING, both measured against the pre-image
- * rather than assumed:
+ * `_ZN9Animation7AdvanceEv((char *)this + 0x350)` must offset from THIS.
+ * 0x350 is mModelAnim's Animation base at +0x50; `(char *)&mModelAnim + 0x50`
+ * costs a word.
  *
- *   `_ZN9Animation7AdvanceEv((char *)this + 0x350)` must offset from THIS.
- *   0x350 is mModelAnim's Animation base at +0x50, and writing it that way --
- *   `(char *)&mModelAnim + 0x50` -- costs a word. Offsetting from a typed
- *   sub-object's ADDRESS is not the same as offsetting from `this`.
- *
- *   The `(long long)(int)` round-trip on mEatenTimer stays. Removing it changes
- *   the size. Every other round-trip and every other offset in this function
- *   came out free -- the idiom is per-site, not per-function. */
+ * The `(long long)(int)` round-trip on c+0x42a (mEatenTimer) is measured:
+ * replacing it with `c + 0x42a` or `mEatenTimer = mEatenTimer + 1` size-DIFFs
+ * Behavior (0x5cc). The same round-trip on c+0x448 is a no-op and was dropped. */
 int daMip_c::Behavior()
 {
     /* A LOCAL COORDINATE TRIPLE, NOT A Vector3 OBJECT. Vector3 declares a
@@ -1601,13 +1597,13 @@ int daMip_c::Behavior()
         }
     }
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, &mWithMeshClsn) != 0) {
-        _ZN5dCc_c5ClearEv(&mdCcAc_c);
+    if (UpdateYoshiEat(mWithMeshClsn) != 0) {
+        mdCcAc_c.Clear();
         if (mEatenByYoshi != 0) {
             if (unk_104 == 5)
                 mHorzSpeed = 0;
             if (unk_104 == 0)
-                _ZN5dCc_c6UpdateEv(&mdCcAc_c);
+                mdCcAc_c.Update();
         }
         if (mEatenByYoshi == 1) {
             *(u8*)((long long)(int)(c + 0x42a)) = *(u8*)((long long)(int)(c + 0x42a)) + 1;
@@ -1669,19 +1665,19 @@ int daMip_c::Behavior()
         int v = (mFlags & 0x4000) ? 1 : 0;
         if (v == 0) {
             if (*(void**)&mState != (void*)&data_ov085_021306ac || unk_426 != 0)
-                _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAc_c);
+                UpdatePos(&mdCcAc_c);
             mAngleX = mPrevAngleX;
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;
-            _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 0);
+            UpdateWMClsn(mWithMeshClsn, 0);
             if (*(void**)&mState != (void*)&data_ov085_021306ac)
                 UpdateGrab();
         }
     }
 
     if (*(void**)&mState != (void*)&data_ov085_021306ac) {
-        _ZN5dCc_c5ClearEv(&mdCcAc_c);
-        _ZN5dCc_c6UpdateEv(&mdCcAc_c);
+        mdCcAc_c.Clear();
+        mdCcAc_c.Update();
     }
 
     return 1;
@@ -1706,20 +1702,19 @@ int daMip_c::InitResources()
     extern s8 data_0209f2f8;
     extern int data_0209e650;
 
-    char sp8[8];
     void* r0;
     void* r6;
     int r1;
 
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305b8);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305d0);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305b0);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305c8);
-    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_021305c0);
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021305d8);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021305e0), 1, -1);
-    _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel1);
-    _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel2);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305b8);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305d0);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305b0);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305c8);
+    Animation::LoadFile(*(SharedFilePtr *)&data_ov085_021305c0);
+    Model::LoadFile(*(SharedFilePtr *)&data_ov085_021305d8);
+    mModelAnim.SetFile((BMD_File *)Model::LoadFile(*(SharedFilePtr *)&data_ov085_021305e0), 1, -1);
+    mShadowModel1.InitCylinder();
+    mShadowModel2.InitCylinder();
 
     mPathId = param1 & 0xff;
     if (mPathId == 0xff)
@@ -1763,11 +1758,13 @@ skip17:
     mTalkingPlayer = 0;
     mModelAnim.speed = 0x1000;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, ((char*)this), 0x28000, 0x28000, 0, 0);
-    _ZN7PathPtrC1Ev(sp8);
-    _ZN7PathPtr6FromIDEj(sp8, mPathId);
-    mPathNodeIndex = 1;
-    _ZNK7PathPtr7GetNodeER7Vector3j(sp8, &mPosX, mPathNodeIndex);
-    mNumPathNodes = _ZNK7PathPtr8NumNodesEv(sp8);
+    {
+        PathPtr path;
+        path.FromID(mPathId);
+        mPathNodeIndex = 1;
+        path.GetNode(*(Vector3 *)&mPosX, mPathNodeIndex);
+        mNumPathNodes = path.NumNodes();
+    }
     UpdateMatrixAndShadow();
     mEatingPlayer = 0;
     mScaleX = 0x1000;
@@ -1858,34 +1855,13 @@ s32 daMip_c::OnYoshiTryEat() {
 /* ROM ordinal 31 -- daMip_c_classInit, 0x0212cc2c, size 0x5c                  */
 /* -------------------------------------------------------------------------- */
 // @symbol daMip_c_classInit
-/* The registry factory behind the MIP profile: allocate 0x474 with
- * fBase_c::operator new, run the base and the five member constructors, stamp
- * this class's vptr and hand the object back. The literal construction spelling
- * is kept because the cartridge folded the constructor into this function and
- * emitted no _ZN7daMip_cC1Ev/C2Ev of its own.
- *
- * `_ZTV7daMip_c + 2` is the address point. Now that this TU owns the key
- * function it emits the table itself, and the emitted symbol names the START of
- * storage -- eight bytes below the offset-to-top/typeinfo pair that the
- * cartridge's 0x021300f8 sits above. The declaration lives in daMip_c.h beside
- * the class, not in this file: the table is a real compiler-emitted one, and
- * a file-local `extern _ZTV` here reads as the hand-stamped-vptr idiom that
- * tools/langmode_audit.py counts for classes that have no vtable at all.
+/* The registry factory behind the MIP profile. `return new daMip_c()` MATCHES
+ * (size 0x5c); the synthesized ctor stores `_ZTV7daMip_c + 2`.
  *
  * Reconstructed source-style name: SM64DS proves daMip_c through RTTI,
  * allocation size, vtable identity and the MIP registry profile; later EAD
  * lineage supplies classInit. The exact original spelling is not preserved. */
-extern "C" int *daMip_c_classInit(void)
+extern "C" daMip_c *daMip_c_classInit(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(1140);
-    if (p) {
-        _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)(_ZTV7daMip_c + 2);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x110);
-        _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
-        _ZN9ModelAnimC1Ev((char *)p + 0x300);
-        _ZN11ShadowModelC1Ev((char *)p + 0x368);
-        _ZN11ShadowModelC1Ev((char *)p + 0x3c0);
-    }
-    return p;
+    return new daMip_c();
 }

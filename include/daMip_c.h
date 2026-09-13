@@ -44,6 +44,8 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daMip_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
@@ -55,11 +57,16 @@ struct daMip_c : dEnemyBase_c {
        assigns it. */
     s32                          mState;                /* 0x364 */
     ShadowModel                  mShadowModel1;         /* 0x368 */
-    u8  pad_390[0x30];
+    /* 0212bcc8 / 0212bdbc copy data_020a0e68 here then DropShadowRadHeight. */
+    s32                          mShadowMtx[12];        /* 0x390 */
     ShadowModel                  mShadowModel2;         /* 0x3c0 */
-    u8  pad_3e8[0x38];
+    u8  pad_3e8[0x34];
+    /* Idle/talk/save step: StateIdleMain cycles 0..2; StateSaveTalkMain walks
+       0,1,2; several inits zero it. */
+    s32                          mActionStep;           /* 0x41c */
     s32                          mColorVariant;         /* 0x420 */
-    u8  pad_424[0x2];
+    /* HorzAngle target; ApproachAngle reads it (StateSaveTalkMain / StateIdleMain). */
+    s16                          mTargetAngY;           /* 0x424 */
     u8                           unk_426;               /* 0x426 -- set to 2 the frame Yoshi eats it;
                                                             read only as `!= 0`, to force the idle
                                                             state and zero mHorzSpeed */
@@ -76,22 +83,31 @@ struct daMip_c : dEnemyBase_c {
     /* Counted up while dEnemyBase_c's mEatenByYoshi reads 1 (inside the Yoshi-eat
        branch) and reset together with it once it passes 0x96. */
     u8                           mEatenTimer;           /* 0x42a */
-    u8  pad_42b[0xd];
+    u8  pad_42b[0x1];
+    /* StateIdleInit snapshots pos here; StateIdleMain HorzAngle's to it. */
+    s32                          mIdlePosX;             /* 0x42c */
+    s32                          mIdlePosY;             /* 0x430 */
+    s32                          mIdlePosZ;             /* 0x434 */
     s32                          mPathId;               /* 0x438 -- param1 & 0xff, handed to PathPtr::FromID */
     s32                          mRabbitId;             /* 0x43c */
     s32                          mCharacterId;          /* 0x440 */
     s32                          mNumPathNodes;         /* 0x444 -- PathPtr::NumNodes() */
     s32                          mPathNodeIndex;        /* 0x448 -- the index handed to PathPtr::GetNode */
-    u8  pad_44c[0x10];
-    /* A Player *. Assigned dActor_c::ClosestPlayer() and then passed to
-       Player::ShowMessage, Player::GetTalkState and Player::DropActor. */
-    s32                          mTalkingPlayer;        /* 0x45c */
-    u8  pad_460[0x8];
+    /* StateFleeInit: +1 or -1 along the path. */
+    s32                          mPathDir;              /* 0x44c */
+    u8  pad_450[0xc];
+    /* Assigned ClosestPlayer(); ShowMessage / GetTalkState / DropActor. */
+    Player                      *mTalkingPlayer;        /* 0x45c */
+    /* StateSaveTalkMain / StateCaughtMain store the player they turn toward. */
+    Player                      *mSaveTalkPlayer;       /* 0x460 */
+    /* TestWaterBelow caches the water-detect clsn Y. */
+    s32                          mFloorY;               /* 0x464 */
     /* (mColorVariant << 1) + the material record's own +0x20 word. Render writes
        it back into +0x20 of EVERY material of the model, which is how the six
        rabbit colours come out of one model file. */
     s32                          mMaterialColor;        /* 0x468 */
-    u8  pad_46c[0x4];
+    /* StateFleeMain / StateIdleMain splash-or-dust particle handle. */
+    s32                          mDustParticle;         /* 0x46c */
     /* The glow particle's handle: Behavior passes the old value straight back
        into Particle::System::New and stores the result. Glowing rabbits only. */
     s32                          mGlowParticle;         /* 0x470 */
@@ -144,18 +160,17 @@ struct daMip_c : dEnemyBase_c {
     int  StateIdleMain();
     int  StateTalkInit();                  /* record 0x021306dc */
     int  StateTalkMain();
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daMip_c_size_must_be_0x474[sizeof(daMip_c) == 0x474 ? 1 : -1];
 
 /* ~daMip_c, the key function, owns the compiler-emitted definition of this
- * vtable, so the table itself is real and `tools/romdata_check.py` compares it
- * against 0x021300f8. daMip_c_classInit must still store its public address
- * point by hand because the measured factory calls fBase_c::operator new rather
- * than a natural new, and fBase_c cannot declare that operator in-class (see
- * include/fBase_c.h). This declaration only exposes the address to that factory
- * seam; it is spelled exactly as include/decl_common.h spells it, and as
- * include/Scuttlebug.h does for the same seam. */
+ * vtable. The factory is `return new daMip_c()`; the leaf size_t operator new
+ * forwards to `_ZN7fBase_cnwEj` until #2570's fBase overload lands. */
 extern int _ZTV7daMip_c[];
 
 #endif /* DAMIP_C_H */
