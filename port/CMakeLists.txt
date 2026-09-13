@@ -9388,6 +9388,72 @@ foreach(line IN LISTS SLICE59_LINES)
     list(APPEND SLICE59_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# LANE ADJSEAT (run link100 wave 7): the two gate-59 deleting destructors whose
+# vptr stores are shared-header placeholders. Both TUs have compiled on this
+# slice for a while and neither reached the link, because nothing named them;
+# hal/actor_classes_wf.cpp now fills their ROM slot 17 and that is the reference
+# edge. The placeholders must be bound here at the same time, or the seat is
+# worse than the trap it replaces: include/decl_common.h:412-415 declares VT0,
+# VT1 and VT2 with no definition, and the port DEFINES them as dummy arrays
+# (hal/actor_vtables.cpp:413-414 int VT0[20] / VT2[20], hal/auto_bss.cpp:20
+# int VT1[8]), so an unrenamed TU links clean and writes the address of an
+# 80-byte host scratch array into the object's vptr. The names below are the
+# ROM's own literal-pool words, read out of extracted/overlays/overlay_0015.bin
+# and cross-checked against config/arm9/overlays/ov015/relocs.txt:
+#
+#   func_ov015_021111d0  pool 0x0211120c -> 0x02114360  (its own table)
+#   func_ov015_02112c20  pool 0x02112c74 -> 0x021147e8  (its own table)
+#                        pool 0x02112c78 -> 0x021091d4  (ov002)
+#                        pool 0x02112c7c -> 0x0210ae38  (ov002, config
+#                                                        _ZTV8Platform)
+#
+# The three store instructions are at +0x10, +0x18 and +0x20 of 02112c20 and
+# they all write t[0]: the three sub-object vtable restores mwccarm emits when
+# the base destructors inline, in derived-to-base order. The CastleWater row a
+# few thousand lines up is the same shape and the same remedy.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov015_021111d0.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov015_02114360")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov015_02112c20.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "VT0=data_ov015_021147e8;VT1=data_ov002_021091d4;VT2=_ZTV8Platform")
+# A slice line that stops matching would silently drop the rename with it, so
+# the two rows assert their own slice membership rather than hoping.
+foreach(adjseat_vt src/func_ov015_021111d0.c src/func_ov015_02112c20.c)
+    if(NOT adjseat_vt IN_LIST SLICE59_LINES)
+        message(FATAL_ERROR "slice_gate59.txt no longer lists ${adjseat_vt}; "
+                "its VT placeholder rename above is now dead and the deleting "
+                "destructor would store a dummy host array as the object vptr")
+    endif()
+endforeach()
+
+# LANE ADJSEAT, second rung: _ZTV13PoleBillboard's slots 23 and 24 and the body
+# both of their ROM veneers jump to. See the head of slice_adjseat.txt for the
+# ROM edge, the Itanium slot derivation and the tail-jump dependency. The three
+# TUs ride the gate-59 targets rather than three new source-list entries,
+# because they are ov015 Whomp's Fortress platform bodies filled by the same
+# hal/actor_classes_wf.cpp the rest of gate 59 is filled by.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_adjseat.txt" SLICE_ADJSEAT_LINES)
+set(SLICE_ADJSEAT_SOURCES "")
+foreach(line IN LISTS SLICE_ADJSEAT_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_ADJSEAT_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(LENGTH SLICE_ADJSEAT_SOURCES adjseat_n)
+if(NOT adjseat_n EQUAL 3)
+    message(FATAL_ERROR "slice_adjseat.txt carries ${adjseat_n} active lines, "
+            "not the three this lane measured: the two _ZTV13PoleBillboard "
+            "veneers and func_ov015_02111414, the body both jump to. Dropping "
+            "the body leaves an unresolved external; dropping a veneer leaves "
+            "its vtable slot on the trap")
+endif()
+list(APPEND SLICE59_SOURCES ${SLICE_ADJSEAT_SOURCES})
+
 # Gates 70-74: Whomp's Fortress' level-7 enemies and platforms (ov084, ov091).
 # Both overlays are already mounted (gate 32); these slices are the matched
 # lifecycle closures of the five classes, one file each. The HAL seam is

@@ -1,0 +1,41 @@
+# port/slice_adjseat.txt -- lane ADJSEAT, run link100 wave 7.
+#
+# The two _ZTV13PoleBillboard tail overrides lane ADJ adjudicated REAL_DECOMP,
+# plus the single body both of them jump to. All three are ov015 and all three
+# are MATCHING under 2004/b56 with the default --strict-relocs.
+#
+# THE ROM EDGE, from config/arm9/overlays/ov015/relocs.txt:
+#   from:0x0211447c kind:load to:0x02111408 module:overlay(15)   slot 23
+#   from:0x02114480 kind:load to:0x021113fc module:overlay(15)   slot 24
+# _ZTV13PoleBillboard is 0x02114420: base-8 (0x02114418) is a plain unrelocated
+# zero, the Itanium offset-to-top; base-4 (0x0211441c) relocates to the typeinfo
+# at 0x021143dc; base + 4*23 = 0x0211447c and base + 4*24 = 0x02114480. The
+# words are filled by hal_fill_knock_down_plank_vtable, which is the reference
+# edge that links these TUs -- before this lane both slots carried wf_trap23 and
+# wf_trap24, so an id-44 object that was attacked or kicked printed UNHOSTED and
+# declined the slot.
+#
+# WHY THE THIRD FILE. 0x021113fc and 0x02111408 are both the three-word ROM
+# veneer "ldr ip,[pc] ; bx ip ; .word 0x02111414", so neither does anything on
+# its own and func_ov015_02111414 is the body. Nothing in the port defined it:
+# it is in no slice and no hal file, so seating the two veneers without it is an
+# unresolved external. It is a plain matched body and not a guessed one -- no
+# "recovered from vtable slot identity" header, no row in
+# inferred_stub_adjudicated.txt, nothing for inferred_stub_guard.py to rule on.
+#
+# THE ARGUMENTS RIDE A TAIL JUMP, AND THAT IS PINNED. The recovered veneers
+# spell themselves (void) and name neither argument, which is faithful to the
+# ROM, where r0 and r1 ride both frames untouched. On the host the ride works
+# only because MSVC compiles a void-calls-void forwarder as a jmp, reusing the
+# caller's own cdecl frame so self and other are still at [esp+4] and [esp+8]
+# when func_ov015_02111414 reads them. Nothing in the tree asks for that, so
+# both frames are declared as Class C rows in port/tools/tailjump_guard.py and
+# the build fails loudly if either ever reads as a call. That is the RF1
+# heap-teardown and CUR2 curling precedent: a dependency somebody just created
+# is the one most worth pinning on the day it is created.
+#
+# These three ride the gate-59 targets, appended to SLICE59_SOURCES in
+# port/CMakeLists.txt next to the gate-59 list.
+src/func_ov015_02111408.c
+src/func_ov015_021113fc.c
+src/func_ov015_02111414.c

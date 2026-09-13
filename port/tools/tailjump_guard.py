@@ -408,6 +408,34 @@ CLASS_C = tuple(
              'hal/scene_mg_faces.cpp, which forwards to the transcription; '
              'the arguments ride the whole chain because each link is one '
              'call.'},
+        # WHOMP'S FORTRESS' KNOCK-DOWN PLANK, added by run link100 lane ADJSEAT
+        # when _ZTV13PoleBillboard's slots 23 and 24 stopped being wf_trap23 and
+        # wf_trap24 and became the ROM's own bodies. Not from section 5d either:
+        # it is ov015, and 5d only screened ov007. The ROM shape is the same
+        # three words the VENEER set scans overlay 7 for --
+        #     021113fc  ldr ip,[pc]; bx ip; .word 0x02111414
+        #     02111408  ldr ip,[pc]; bx ip; .word 0x02111414
+        # -- so r0 and r1 ride both frames untouched. These rows are REQUIRED
+        # and not decoration: hal/actor_classes_wf.cpp's kp_atk2 and kp_kicked
+        # push (self, other) into a veneer whose src TU declares itself (void)
+        # and names neither, and the only thing that puts them where
+        # func_ov015_02111414 reads them is the jmp reusing the thunk's frame.
+        # If either becomes a call, an id-44 plank that is attacked or kicked
+        # steps a counter through a saved register and takes an angle off a
+        # return address.
+        {'frame': 'func_ov015_02111408',
+         'callee': 'func_ov015_02111414',
+         'tu': 'src/func_ov015_02111408.c',
+         'note':
+             'Slot 23, OnAttacked2. func_ov015_02111414 reads c+0x397 at its '
+             'first instruction and other+0x5c at its Vec3_HorzAngle call, so '
+             'both pushed words are real.'},
+        {'frame': 'func_ov015_021113fc',
+         'callee': 'func_ov015_02111414',
+         'tu': 'src/func_ov015_021113fc.c',
+         'note':
+             'Slot 24, OnKicked, the same veneer onto the same body and the '
+             'same consequence.'},
     ))
 
 # THE VENEER SET, DERIVED. Not a list: the three-word ROM shape below is

@@ -121,6 +121,83 @@ static void wf_trap_report(void *self, int slot)
                     slot, id, port_actor_class_name(id));
       port_actor_slot_decline(_m); }
 }
+/* LANE ADJSEAT (run link100 wave 7), env-gated and silent by default: the
+   evidence that the words this lane seated are the words the running game
+   enters, and that the receiver reaching them is the object. One getenv per
+   process; nothing is emitted unless SM64DS_ADJSEAT_TRACE is set to something
+   other than 0. The id read is wf_trap_report's own, the actor id at +0xc. */
+static int adjseat_trace_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_ADJSEAT_TRACE");
+        on = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return on;
+}
+/* LANE ADJSEAT, the other half of the evidence and gated by its own variable:
+   SM64DS_ADJSEAT_PROBE=<n> fires once per seated slot, on the nth behaviour
+   tick of the first live object of that class. It reads the word the LIVE
+   object dispatches at the seated slot straight out of the object's own vptr,
+   says whether it is this file's thunk, and for the two slots that are safe to
+   enter it ENTERS the word through that same vptr, so the trace above prints
+   the receiver the ROM's body actually got.
+
+   SLOT 17 IS READ AND NOT ENTERED, and that is a measurement rather than
+   caution. Nothing on a mounted level dispatches a deleting destructor:
+   AfterCleanupResources dispatches slot 16 and frees the object itself, which
+   is what this file already says one class up and what lane SEAT2 recorded
+   when it traced the same shape. Entering 17 here would free an actor the
+   level manager still holds, which would prove nothing about the ROM and
+   would break the run. So for those two rows the evidence is the vptr
+   readback: the word the live object would dispatch IS the seated thunk.
+
+   SLOTS 23 AND 24 ARE ENTERED. func_ov015_02111414 reads self+0x397, +0x396,
+   +0x394, +0x8e and +0x5c and the other actor's +0x5c and +0x60 -- all inside
+   two live Actors, no allocation, no free -- so the probe hands it the plank
+   as both arguments and the run carries on. */
+static int adjseat_probe_at(void)
+{
+    static int at = -2;
+    if (at == -2) {
+        const char *e = std::getenv("SM64DS_ADJSEAT_PROBE");
+        at = (e && *e) ? std::atoi(e) : -1;
+    }
+    return at;
+}
+typedef int(__fastcall *AdjSeatSlotFn)(void *, void *, void *);
+static void adjseat_probe(const char *cls, void *s, int slot, const void *want,
+                          int *ticks, int enter)
+{
+    int at = adjseat_probe_at();
+    if (at < 0 || !s)
+        return;
+    if (++*ticks != at)
+        return;
+    void **vt = *(void ***)s;
+    void *live = vt ? vt[slot] : 0;
+    unsigned id = *(unsigned short *)((char *)s + 0xc);
+    std::fprintf(stderr,
+                 "ADJSEAT-PROBE: %s tick %d, this=%p id=%u %s, vptr=%p, "
+                 "slot %d word=%p, seated thunk=%p -- %s\n",
+                 cls, at, s, id, port_actor_class_name(id), (void *)vt,
+                 slot, live, want, live == want ? "SAME WORD" : "DIFFERENT");
+    std::fflush(stderr);
+    if (enter && live == want)
+        ((AdjSeatSlotFn)live)(s, 0, s);
+}
+
+static void adjseat_trace(const char *what, void *self)
+{
+    if (!adjseat_trace_on())
+        return;
+    unsigned id = self ? *(unsigned short *)((char *)self + 0xc) : 0u;
+    std::fprintf(stderr, "ADJSEAT: %s entered, this=%p id=%u %s\n",
+                 what, self, id,
+                 self ? port_actor_class_name(id) : "(null)");
+    std::fflush(stderr);
+}
+
 #define WF_TRAP(n) \
     static int __fastcall wf_trap##n(void *s, void *) \
     { wf_trap_report(s, n); return 0; }
@@ -150,12 +227,19 @@ static int __fastcall wf_bclean(void *s, void *)
 { return ((Actor *)s)->Actor::BeforeCleanupResources(); }
 static void __fastcall wf_aclean(void *s, void *, unsigned a)
 { ((ActorBase *)s)->ActorBase::AfterCleanupResources(a); }
+static void adjseat_probe_actor(void *s);
 static int __fastcall wf_bbeh(void *s, void *)
-{ return _ZN5Actor14BeforeBehaviorEv(s); }
+{
+    adjseat_probe_actor(s);
+    return _ZN5Actor14BeforeBehaviorEv(s);
+}
 static void __fastcall wf_abeh(void *s, void *, unsigned a)
 { ((ActorBase *)s)->ActorBase::AfterBehavior(a); }
 static int __fastcall wf_bren(void *s, void *)
-{ return _ZN5Actor12BeforeRenderEv(s); }
+{
+    adjseat_probe_actor(s);
+    return _ZN5Actor12BeforeRenderEv(s);
+}
 static void __fastcall wf_aren(void *s, void *, unsigned a)
 { ((ActorBase *)s)->ActorBase::AfterRender(a); }
 static int __fastcall wf_pdes(void *s, void *)
@@ -411,6 +495,7 @@ int func_ov015_021112a0(char *self);   /* slot 0  InitResources (.cpp extern C) 
 int func_ov015_02111254(char *self);   /* slot 3  CleanupResources */
 int func_ov015_02111278(char *self);   /* slot 9  Render */
 int *func_ov015_021111a0(int *self);   /* slot 16 D1 */
+int *func_ov015_021111d0(int *self);   /* slot 17 D0 (lane ADJSEAT) */
 DSSTATE_BEGIN
 void *data_ov015_02114360[31];
 DSSTATE_END
@@ -431,8 +516,14 @@ static int __fastcall pb_clean(void *s, void *)
 { return func_ov015_02111254((char *)s); }
 /* slot 6 is ActorBase::Behavior, a base no-op the .cpp defines as a real
    method. */
+static int __fastcall pb_d0(void *s, void *);
 static int __fastcall pb_behavior(void *s, void *)
-{ return ((ActorBase *)s)->ActorBase::Behavior(); }
+{
+    static int t;
+    adjseat_probe("data_ov015_02114360[17] daObjBkBillboard_c D0", s, 17,
+                  (const void *)pb_d0, &t, 0);
+    return ((ActorBase *)s)->ActorBase::Behavior();
+}
 static int __fastcall pb_render(void *s, void *)
 {
     port_actor_render_probe("POLE_BILLBOARD", (char *)s + 0xd4);
@@ -440,6 +531,11 @@ static int __fastcall pb_render(void *s, void *)
 }
 static int __fastcall pb_d1(void *s, void *)
 { return (int)(size_t)func_ov015_021111a0((int *)s); }
+static int __fastcall pb_d0(void *s, void *)
+{
+    adjseat_trace("data_ov015_02114360[17] daObjBkBillboard_c D0 (func_ov015_021111d0)", s);
+    return (int)(size_t)func_ov015_021111d0((int *)s);
+}
 extern "C" void hal_fill_pole_billboard_vtable(void)
 {
     void **vt = data_ov015_02114360;
@@ -449,6 +545,18 @@ extern "C" void hal_fill_pole_billboard_vtable(void)
     vt[6] = (void *)pb_behavior;
     vt[9] = (void *)pb_render;
     vt[16] = (void *)pb_d1;
+    /* Slot 17, the ROM's own deleting destructor, the kp_d0/rb_d0 shape one
+       class up. ov015 relocs.txt has from:0x021143a4 kind:load
+       to:0x021111d0 module:overlay(15), and 0x021143a4 is this table's
+       base + 4*17 (base-8 at 0x02114358 is a plain unrelocated zero, the
+       Itanium offset-to-top; base-4 at 0x0211435c relocates to the
+       typeinfo at 0x02114318). func_ov015_021111d0 takes its receiver as a
+       real first parameter (mov r4,r0 at 0x021111d4), so the thunk is a
+       plain forward with no ride-through. Its own vptr store is the
+       shared-header VT0 placeholder, bound per source to this table in
+       port/CMakeLists.txt -- without that rename it would write the
+       address of hal/actor_vtables.cpp's dummy VT0[20] into the object. */
+    vt[17] = (void *)pb_d0;
     /* THIRTY-ONE and correct: id 42 POLE_BILLBOARD installs the billboard base
        table, which is a plain Actor and not a Platform, so it has no slot 31.
        The only one of the seven that does not grow. */
@@ -469,6 +577,8 @@ int _ZN13PoleBillboard13InitResourcesEv(char *self);  /* .c, C linkage */
 int _ZN13PoleBillboard8BehaviorEv(char *self);         /* .cpp extern "C" */
 int *_ZN13PoleBillboardD1Ev(int *self);                /* .c, C linkage */
 int *_ZN13PoleBillboardD0Ev(int *self);                /* .c, slot 17, DTOR-PAIRS seat (0x02111360) */
+void func_ov015_02111408(char *self, char *other);     /* .c, slot 23 (lane ADJSEAT) */
+void func_ov015_021113fc(char *self, char *other);     /* .c, slot 24 (lane ADJSEAT) */
 void *_ZTV13PoleBillboard[32];
 }
 /* PORT_HOST_ABI: two names of ONE ROM table, read off the ROM rather than
@@ -485,8 +595,17 @@ static int __fastcall kp_init(void *s, void *)
 { return _ZN13PoleBillboard13InitResourcesEv((char *)s); }
 static int __fastcall kp_clean(void *s, void *)
 { return ((PoleBillboard *)s)->PoleBillboard::CleanupResources(); }
+static int __fastcall kp_atk2(void *s, void *, void *other);
+static int __fastcall kp_kicked(void *s, void *, void *other);
 static int __fastcall kp_behavior(void *s, void *)
-{ return _ZN13PoleBillboard8BehaviorEv((char *)s); }
+{
+    static int t23, t24;
+    adjseat_probe("_ZTV13PoleBillboard[23] OnAttacked2", s, 23,
+                  (const void *)kp_atk2, &t23, 1);
+    adjseat_probe("_ZTV13PoleBillboard[24] OnKicked", s, 24,
+                  (const void *)kp_kicked, &t24, 1);
+    return _ZN13PoleBillboard8BehaviorEv((char *)s);
+}
 static int __fastcall kp_render(void *s, void *)
 {
     port_actor_render_probe("KNOCK_DOWN_PLANK", (char *)s + 0xd4);
@@ -496,6 +615,39 @@ static int __fastcall kp_d1(void *s, void *)
 { return (int)(size_t)_ZN13PoleBillboardD1Ev((int *)s); }
 static int __fastcall kp_d0(void *s, void *)
 { return (int)(size_t)_ZN13PoleBillboardD0Ev((int *)s); }
+/* SLOTS 23 AND 24, the ROM's own tail-jump veneers (lane ADJSEAT). Read out of
+   extracted/overlays/overlay_0015.bin, both are the three-word shape
+
+       0x021113fc  E59FC000 ldr ip,[pc] ; E12FFF1C bx ip ; .word 0x02111414
+       0x02111408  E59FC000 ldr ip,[pc] ; E12FFF1C bx ip ; .word 0x02111414
+
+   so r0 and r1 ride each frame untouched into func_ov015_02111414, which reads
+   c+0x397 at its first instruction and other+0x5c at its Vec3_HorzAngle call.
+   The recovered src spells each veneer (void) and names neither argument, which
+   is faithful to the ROM, and is why the declarations above give them the real
+   signature instead: the two pushed words sit at [esp+4] and [esp+8] of the
+   veneer's frame and the jmp hands that same frame to 02111414. If MSVC ever
+   emits a real prologue here, 02111414 reads a saved register and a return
+   address instead. Nothing in the tree asks for the jmp, so both frames are
+   declared Class C rows in port/tools/tailjump_guard.py and the build fails if
+   either becomes a call -- the RF1 heap-teardown and CUR2 curling precedent.
+
+   The three-parameter shape is wf_trap23's and is not optional: the dispatch
+   sites (unmatched/Actor_OnAttacked2Dispatch.cpp and
+   unmatched/Actor_OnKickedDispatch.cpp) are thiscall and push one argument the
+   callee must pop, so these must emit ret 4 exactly as the traps did. */
+static int __fastcall kp_atk2(void *s, void *, void *other)
+{
+    adjseat_trace("_ZTV13PoleBillboard[23] OnAttacked2 (func_ov015_02111408)", s);
+    func_ov015_02111408((char *)s, (char *)other);
+    return 0;
+}
+static int __fastcall kp_kicked(void *s, void *, void *other)
+{
+    adjseat_trace("_ZTV13PoleBillboard[24] OnKicked (func_ov015_021113fc)", s);
+    func_ov015_021113fc((char *)s, (char *)other);
+    return 0;
+}
 extern "C" void hal_fill_knock_down_plank_vtable(void)
 {
     void **vt = _ZTV13PoleBillboard;
@@ -515,10 +667,15 @@ extern "C" void hal_fill_knock_down_plank_vtable(void)
     /* 32 slots. _ZTV13PoleBillboard overrides four of the tail with its own
        ov015 bodies, all matched in src and none in a slice: 23 OnAttacked2
        (0x02111408), 24 OnKicked (0x021113fc), 27 OnHitByMegaChar (0x021113c0)
-       and 31 Kill, which is Platform's (0x020ee55c). Slot 27 is seated now
-       (gate 62, kp_mega -> func_ov015_021113c0); 23/24 stay trapped. */
-    vt[23] = (void *)wf_trap23;
-    vt[24] = (void *)wf_trap24;
+       and 31 Kill, which is Platform's (0x020ee55c). Slot 27 is seated at gate
+       62 (kp_mega -> func_ov015_021113c0), and 23/24 are seated here by lane
+       ADJSEAT: config relocs from:0x0211447c -> 0x02111408 and from:0x02114480
+       -> 0x021113fc, which are this table's base + 4*23 and base + 4*24
+       (base-8 at 0x02114418 is a plain unrelocated zero, base-4 at 0x0211441c
+       relocates to the typeinfo at 0x021143dc). All four of the tail overrides
+       now run the ROM's own bodies. */
+    vt[23] = (void *)kp_atk2;
+    vt[24] = (void *)kp_kicked;
     vt[27] = (void *)kp_mega;
     vt[31] = (void *)wf_kill;
 }
@@ -540,6 +697,7 @@ int func_ov015_02112c84(char *self);   /* slot 3  CleanupResources */
 int func_ov002_020b6718(char *self);   /* slot 6  Behavior (ov002 base) */
 int func_ov002_020b66f0(char *self);   /* slot 9  Render (ov002 base) */
 int *func_ov015_02112bd0(int *self);   /* slot 16 D1 */
+int *func_ov015_02112c20(int *self);   /* slot 17 D0 (lane ADJSEAT) */
 DSSTATE_BEGIN
 void *data_ov015_021147e8[32];
 DSSTATE_END
@@ -573,8 +731,14 @@ static int __fastcall rp_init(void *s, void *)
 { return func_ov015_02112c98((char *)s); }
 static int __fastcall rp_clean(void *s, void *)
 { return func_ov015_02112c84((char *)s); }
+static int __fastcall rp_d0(void *s, void *);
 static int __fastcall rp_behavior(void *s, void *)
-{ return func_ov002_020b6718((char *)s); }
+{
+    static int t;
+    adjseat_probe("data_ov015_021147e8[17] daObjBk_Ukisima_c D0", s, 17,
+                  (const void *)rp_d0, &t, 0);
+    return func_ov002_020b6718((char *)s);
+}
 static int __fastcall rp_render(void *s, void *)
 {
     port_actor_render_probe("ROTATING_PLATFORM_WF", (char *)s + 0xd4);
@@ -582,6 +746,11 @@ static int __fastcall rp_render(void *s, void *)
 }
 static int __fastcall rp_d1(void *s, void *)
 { return (int)(size_t)func_ov015_02112bd0((int *)s); }
+static int __fastcall rp_d0(void *s, void *)
+{
+    adjseat_trace("data_ov015_021147e8[17] daObjBk_Ukisima_c D0 (func_ov015_02112c20)", s);
+    return (int)(size_t)func_ov015_02112c20((int *)s);
+}
 extern "C" void hal_fill_rotating_platform_wf_vtable(void)
 {
     void **vt = data_ov015_021147e8;
@@ -591,8 +760,45 @@ extern "C" void hal_fill_rotating_platform_wf_vtable(void)
     vt[6] = (void *)rp_behavior;
     vt[9] = (void *)rp_render;
     vt[16] = (void *)rp_d1;
+    /* Slot 17, the ROM's own deleting destructor. ov015 relocs.txt has
+       from:0x0211482c kind:load to:0x02112c20 module:overlay(15), and
+       0x0211482c is this table's base + 4*17 (base-8 at 0x021147e0 is a
+       plain unrelocated zero; base-4 at 0x021147e4 relocates to the
+       typeinfo at 0x02114798). The body takes its receiver as a real first
+       parameter (mov r4,r0 at 0x02112c28). It stores THREE vptrs into the
+       same word as the base destructors inline -- the ROM's literal pool at
+       0x02112c74/78/7c reads 0x021147e8, 0x021091d4 and 0x0210ae38 -- and
+       the src spells them VT0/VT1/VT2, bound per source in
+       port/CMakeLists.txt to data_ov015_021147e8, data_ov002_021091d4 and
+       _ZTV8Platform. Without those renames all three stores would write the
+       address of a dummy host array. */
+    vt[17] = (void *)rp_d0;
     /* 32 slots; slot 31 is Platform::Kill. dsd's bound reads 15 words here. */
     vt[31] = (void *)wf_kill;
+}
+
+/* The shared half of the ADJSEAT probe, keyed by the actor id at +0xc so
+   one call site covers all three seated classes. It sits here because
+   every thunk it names -- pb_d0, rp_d0, kp_atk2, kp_kicked -- is defined
+   above this line. Inert unless SM64DS_ADJSEAT_PROBE is set. */
+static void adjseat_probe_actor(void *s)
+{
+    if (adjseat_probe_at() < 0 || !s)
+        return;
+    unsigned id = *(unsigned short *)((char *)s + 0xc);
+    static int t42, t50, t44a, t44b;
+    if (id == 42)
+        adjseat_probe("data_ov015_02114360[17] daObjBkBillboard_c D0 "
+                      "(shared hook)", s, 17, (const void *)pb_d0, &t42, 0);
+    else if (id == 50)
+        adjseat_probe("data_ov015_021147e8[17] daObjBk_Ukisima_c D0 "
+                      "(shared hook)", s, 17, (const void *)rp_d0, &t50, 0);
+    else if (id == 44) {
+        adjseat_probe("_ZTV13PoleBillboard[23] OnAttacked2 (shared hook)",
+                      s, 23, (const void *)kp_atk2, &t44a, 1);
+        adjseat_probe("_ZTV13PoleBillboard[24] OnKicked (shared hook)",
+                      s, 24, (const void *)kp_kicked, &t44b, 1);
+    }
 }
 
 // ============================================================================
