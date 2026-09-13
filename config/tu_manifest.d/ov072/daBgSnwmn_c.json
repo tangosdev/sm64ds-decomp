@@ -493,7 +493,50 @@
       "target_address": "0x020100dc"
     }
   ],
-  "compiler_only_output": [],
+  "compiler_only_output": [
+    {
+      "symbol": "_ZTI7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "inherited vague-linkage RTTI copy; canonical home is arm9:0x02086d70, outside this TU's licensed .data",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086d70"
+    },
+    {
+      "symbol": "_ZTS7fBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "inherited vague-linkage type-name string; canonical home is arm9:0x02086e60",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e60"
+    },
+    {
+      "symbol": "_ZTS7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "inherited vague-linkage type-name string; canonical home is arm9:0x02086e54",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e54"
+    },
+    {
+      "symbol": "_ZTS8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "inherited vague-linkage type-name string; canonical home is arm9:0x0208e384",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e384"
+    },
+    {
+      "symbol": "_ZTI7dBase_c",
+      "disposition": "deadstrip-data",
+      "reason": "inherited vague-linkage RTTI copy; canonical home is arm9:0x02086e78",
+      "canonical_module": "arm9",
+      "canonical_address": "0x02086e78"
+    },
+    {
+      "symbol": "_ZTI8dActor_c",
+      "disposition": "deadstrip-data",
+      "reason": "inherited vague-linkage RTTI copy; canonical home is arm9:0x0208e390",
+      "canonical_module": "arm9",
+      "canonical_address": "0x0208e390"
+    }
+  ],
   "externalized_output": [
     {
       "symbol": "_ZTI7fBase_c",
@@ -640,7 +683,7 @@
   "notes": [
     "The class name daBgSnwmn_c and profile ID BIG_SNOWMAN survive in the ROM. daBgSnwmn_c_classInit, g_profile_BIG_SNOWMAN, and d_a_bg_snwmn.cpp are source-style reconstructions supported by the registry relationship and later EAD conventions.",
     "The full factory join is a tested reconstruction hypothesis backed by direct registry and constructor evidence; build/tu_map.json does not itself label that one-function run as daBgSnwmn_c.",
-    "The typed 0x1c profile layout is classInit, signed 16-bit profileID, signed 16-bit groupFlags, actorFlags, two Fix12 cull radii, executeOrder, and drawOrder. Its unchanged retail words are 0x0110, 0x0083, 3, 1, 0x0012c000, 0x01000000, and 0x00001000 after the factory pointer.",
+    "The typed 0x1c profile layout is classInit, signed 16-bit behaviorPriority, signed 16-bit renderPriority, actorFlags, clipOffsetY, clipRadius, clipDistance, and farDistance. Its unchanged retail words are 0x0110, 0x0083, 3, 1, 0x0012c000, 0x01000000, and 0x00001000 after the factory pointer.",
     "The inline destructor declared last makes mwccarm emit the exact D1 then D0 pair with no D2 body. The class-local operator new routes ordinary `new daBgSnwmn_c()` to the retail fBase_c allocator; the compiler emits and owns the vptr store.",
     "Legacy per-function contribution comparison is not applicable to the final lifecycle form: the two old out-of-line destructor shards cannot compile beside the inline destructor that emits their exact replacements. The ordinary intact-object linkcheck is the production proof."
   ],

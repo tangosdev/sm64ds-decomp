@@ -1,62 +1,60 @@
 //cpp
-/* Reconstructed ov072/daBgSnwmn_c translation unit.
+/* ov072/daBgSnwmn_c -- BIG_SNOWMAN (272), the snowman manager/head assembly.
  *
- * The RTTI-backed class run is 0x02120824..0x02120c00. The registry-backed
- * factory at 0x02120c00 allocates exactly sizeof(daBgSnwmn_c), installs this
- * class's vtable, constructs its five members, and ends at the next class's
- * D1 at 0x02120c58. That direct registry/factory evidence supports testing
- * the combined nine-function TU; tu_map alone does not prove the join.
+ * ov072 is mixed (BABY_PENGUIN / BIG_SNOWMAN / SNOWMAN_HEAD / SNOWMAN_BODY).
+ * RTTI names this class daBgSnwmn_c; the debug table names BIG_SNOWMAN.
+ * This is the manager, not daBgSnmBdy_c (body) and not the penguin.
  *
- * mwccarm emits ordinary function sections in reverse source order. Keep the
- * factory first. The inline destructor declared last in daBgSnwmn_c emits the
- * retail D1/D0 pair first and emits no D2 body.
+ * deslop leftovers:
+ * - TextureSequence::SetFile / dCcAcPos_c::Init / DropShadowRadHeight 6az:
+ *   InitResources and func_ov072_021208d8 pass Fix12<int> by value
+ *   (notes/mwccarm-codegen.md 6az).
+ * - SharedFilePtr +4: InitResources' TextureSequence::Prepare / SetFile
+ *   read the BMD/BTP at data_ov072_02122c48 / 02122c50 +4;
+ *   SharedFilePtr.h has no fields.
+ * - data_ov072_02122c40 / 02122c48 / 02122c50 model/BTP handles and
+ *   data_ov072_02122c70 cylinder offset; this TU consumes them, overlay
+ *   .bss owns them.
+ * - InitResources ground probe stays a POD Position: a local Vector3
+ *   emits unlicensed _ZN7Vector3D1Ev (empty dtor, size 0x4).
  */
 
 #include "daBgSnwmn_c.h"
-#include "decl_common.h"
+#include "SharedFilePtr.h"
 #include "dBgCh_Gnd.h"
-
-struct Matrix4x3;
-struct ShadowModel;
 
 extern "C" {
 extern int IsStarCollectedInLevel(s8 levelID, int starID);
-extern void _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-    u32 id, u32 param, void *pos, void *ang, int areaID, int unk);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *file);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(
-    void *self, void *file, int unk0, int unk1);
-extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *file);
-extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(
-    void *modelFile, void *textureFile);
-extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
+void Matrix4x3_FromRotationY(void *, short);
+void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
     void *self, void *textureFile, int animation, int speed, u32 flags);
-extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *self, void *actor, const void *offset, int radius, int height,
     u32 flags, u32 unk);
-extern void _ZN13SharedFilePtr7ReleaseEv(void *self);
-extern int _ZN15TextureSequence6UpdateER15ModelComponents(
-    void *self, void *modelComponents);
-extern void Matrix4x3_FromRotationY(void *matrix, int angle);
-extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, ShadowModel *shadow, Matrix4x3 *matrix, int radius,
     int height, u32 flags);
-extern void func_ov072_021208d8(void *self);
+void func_ov072_021208d8(daBgSnwmn_c *self);
+
+extern SharedFilePtr data_ov072_02122c40;
+extern SharedFilePtr data_ov072_02122c48;
+extern SharedFilePtr data_ov072_02122c50;
+extern const Vector3 data_ov072_02122c70;
 }
 
-extern const Vector3 data_ov072_02122c70;
-
+/* The typed 0x1c actor profile: fBase_c reads the halfwords at +4/+6 as
+ * behavior/render priorities. dActor_c reads actor flags at +8 and passes
+ * the words at +0xc/+0x10/+0x14/+0x18 to SetRanges as clip offset Y, clip
+ * radius, clip distance and far distance. */
 struct SnwmnProfile {
     daBgSnwmn_c *(*classInit)();
-    s16 profileID;
-    s16 groupFlags;
+    s16 behaviorPriority;
+    s16 renderPriority;
     u32 actorFlags;
-    Fix12i cullRadiusX;
-    Fix12i cullRadiusY;
-    u32 executeOrder;
-    u32 drawOrder;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    u32 clipDistance;
+    u32 farDistance;
 };
 
 typedef char SnwmnProfile_size_must_be_0x1c[
@@ -84,6 +82,8 @@ extern "C" SnwmnProfile g_profile_BIG_SNOWMAN = {
 // @symbol _ZN11daBgSnwmn_c13InitResourcesEv
 s32 daBgSnwmn_c::InitResources()
 {
+    /* POD, not Vector3: a local Vector3 emits _ZN7Vector3D1Ev (empty dtor,
+       size 0x4) as unlicensed EXTRA. */
     struct Position {
         s32 x;
         s32 y;
@@ -92,23 +92,23 @@ s32 daBgSnwmn_c::InitResources()
     void *model;
 
     if (IsStarCollectedInLevel(0xa, 5) == 0) {
-        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-            0x111, 0, &mPosX, &mAngleX, mAreaId, -1);
-        _ZN7fBase_c18MarkForDestructionEv(this);
+        dActor_c::Spawn(0x111, 0, *(Vector3 *)&mPosX, (Vector3_16 *)&mAngleX,
+                        mAreaId, -1);
+        MarkForDestruction();
     }
 
-    model = _ZN5Model8LoadFileER13SharedFilePtr(data_ov072_02122c48);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel1, model, 1, 1);
-    model = _ZN5Model8LoadFileER13SharedFilePtr(data_ov072_02122c40);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel2, model, 1, 1);
+    model = Model::LoadFile(data_ov072_02122c48);
+    mModel1.SetFile((BMD_File *)model, 1, 1);
+    model = Model::LoadFile(data_ov072_02122c40);
+    mModel2.SetFile((BMD_File *)model, 1, 1);
 
-    _ZN15TextureSequence8LoadFileER13SharedFilePtr(data_ov072_02122c50);
-    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(
-        (void *)data_ov072_02122c48[1], (void *)data_ov072_02122c50[1]);
+    TextureSequence::LoadFile(data_ov072_02122c50);
+    TextureSequence::Prepare(**(BMD_File **)((char *)&data_ov072_02122c48 + 4),
+                             **(BTP_File **)((char *)&data_ov072_02122c50 + 4));
     _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
-        &mTexSeq, (void *)data_ov072_02122c50[1], 0, 0x1000, 0);
+        &mTexSeq, *(void **)((char *)&data_ov072_02122c50 + 4), 0, 0x1000, 0);
 
-    if (_ZN11ShadowModel12InitCylinderEv(&mShadow) == 0)
+    if (mShadow.InitCylinder() == 0)
         return 0;
 
     _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
@@ -145,24 +145,12 @@ s32 daBgSnwmn_c::Behavior()
     return 1;
 }
 
-struct SnwmnModelRender {
-    virtual int Unk0();
-    virtual int Unk1();
-    virtual int Unk2();
-    virtual int Unk3();
-    virtual int Unk4();
-    virtual int Render(void *scale);
-};
-
 // @symbol _ZN11daBgSnwmn_c6RenderEv
 s32 daBgSnwmn_c::Render()
 {
-    _ZN15TextureSequence6UpdateER15ModelComponents(
-        (char *)this + 0x174, (char *)this + 0xdc);
-    reinterpret_cast<SnwmnModelRender *>((char *)this + 0xd4)->Render(
-        (char *)this + 0x80);
-    reinterpret_cast<SnwmnModelRender *>((char *)this + 0x124)->Render(
-        (char *)this + 0x80);
+    mTexSeq.Update(mModel1.data);
+    mModel1.Render((Vector3 *)&mScaleX);
+    mModel2.Render((Vector3 *)&mScaleX);
     return 1;
 }
 
@@ -174,34 +162,25 @@ void daBgSnwmn_c::OnPendingDestroy()
 // @symbol _ZN11daBgSnwmn_c16CleanupResourcesEv
 s32 daBgSnwmn_c::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov072_02122c48);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov072_02122c40);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov072_02122c50);
+    data_ov072_02122c48.Release();
+    data_ov072_02122c40.Release();
+    data_ov072_02122c50.Release();
     return 1;
 }
 
 // @symbol func_ov072_021208d8
-extern "C" void func_ov072_021208d8(void *self)
+extern "C" void func_ov072_021208d8(daBgSnwmn_c *self)
 {
-    unsigned char *actor = static_cast<unsigned char *>(self);
+    Matrix4x3_FromRotationY(&self->mModel1.mat4x3, self->mAngleY);
+    self->mModel1.mat4x3.t.x = self->mPosX >> 3;
+    self->mModel1.mat4x3.t.y = (self->mPosY + 0x13b000) >> 3;
+    self->mModel1.mat4x3.t.z = self->mPosZ >> 3;
 
-    Matrix4x3_FromRotationY(actor + 0xf0, *reinterpret_cast<short *>(actor + 0x8e));
-    *reinterpret_cast<int *>(actor + 0x114) =
-        *reinterpret_cast<int *>(actor + 0x5c) >> 3;
-    *reinterpret_cast<int *>(actor + 0x118) =
-        (*reinterpret_cast<int *>(actor + 0x60) + 0x13b000) >> 3;
-    *reinterpret_cast<int *>(actor + 0x11c) =
-        *reinterpret_cast<int *>(actor + 0x64) >> 3;
-
-    Matrix4x3_FromRotationY(actor + 0x140, *reinterpret_cast<short *>(actor + 0x8e));
-    *reinterpret_cast<int *>(actor + 0x164) =
-        *reinterpret_cast<int *>(actor + 0x5c) >> 3;
-    *reinterpret_cast<int *>(actor + 0x168) =
-        *reinterpret_cast<int *>(actor + 0x60) >> 3;
-    *reinterpret_cast<int *>(actor + 0x16c) =
-        *reinterpret_cast<int *>(actor + 0x64) >> 3;
+    Matrix4x3_FromRotationY(&self->mModel2.mat4x3, self->mAngleY);
+    self->mModel2.mat4x3.t.x = self->mPosX >> 3;
+    self->mModel2.mat4x3.t.y = self->mPosY >> 3;
+    self->mModel2.mat4x3.t.z = self->mPosZ >> 3;
 
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-        actor, reinterpret_cast<ShadowModel *>(actor + 0x188),
-        reinterpret_cast<Matrix4x3 *>(actor + 0x140), 0xe6000, 0x12c000, 0xf);
+        self, &self->mShadow, &self->mModel2.mat4x3, 0xe6000, 0x12c000, 0xf);
 }
