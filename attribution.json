@@ -1410,6 +1410,7 @@
     "src/game/actors/d_a_obj_clock_huriko.cpp#_ZN18daObjClockHuriko_cD0Ev": "github-actions[bot]",
     "src/game/actors/d_a_obj_clock_huriko.cpp#_ZN18daObjClockHuriko_cD1Ev": "github-actions[bot]",
     "src/game/actors/d_a_obj_clock_huriko.cpp#daObjClockHuriko_c_Spawn": "github-actions[bot]",
+    "src/game/actors/d_a_obj_clock_huriko.cpp#daObjClockHuriko_c_classInit": "github-actions[bot]",
     "src/game/actors/d_a_obj_clock_huriko.cpp#func_ov013_02111238": "github-actions[bot]",
     "src/game/actors/d_a_obj_cv_shutter.cpp#_ZN16daObjCvShutter_c13InitResourcesEv": "github-actions[bot]",
     "src/game/actors/d_a_obj_cv_shutter.cpp#_ZN16daObjCvShutter_c16CleanupResourcesEv": "github-actions[bot]",

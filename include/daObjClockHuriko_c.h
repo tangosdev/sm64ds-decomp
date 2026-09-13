@@ -70,35 +70,35 @@
  * what makes this TU the key-function TU. Bodies are unchanged apart from the
  * implicit `this`; the ROM bytes still match at 106/106.
  *
- * SIZE. daObjClockHuriko_c_Spawn.c calls `_ZN7fBase_cnwEj(296)` -- 0x128 --
- * then _ZN8dActor_cC2Ev and _ZN5ModelC1Ev at +0xd4. dActor_c is 0xd0
- * (include/dActor_c.h) and Model is 0x50 (include/Model.h), so the embedded
- * Model runs 0xd4..0x124 (the same 4-byte alignment pad include/dBgActor_c.h
- * and include/Door.h both take before their own Model/ModelAnim members).
- * That leaves exactly 0x124..0x127 (4 bytes) as this class's own storage --
- * one s16, read and written as `*(short *)(c + 0x124)` in both
- * InitResources (set to 0x100) and Behavior (nudged by 8 per frame, compared
- * against +-0x10), plus 2 bytes of trailing padding. Same offset,
- * daObjClock_c.h's sibling field (`mHandIndex`, u8) confirms the
- * shape -- one small scalar right after the embedded Model.
+ * SIZE. daObjClockHuriko_c_classInit asks fBase_c::operator new for 296 =
+ * 0x128 bytes. dActor_c is 0xd0 (include/dActor_c.h) and Model is 0x50
+ * (include/Model.h), so the embedded Model runs 0xd4..0x124 (the same
+ * 4-byte alignment pad include/dBgActor_c.h and include/Door.h both take
+ * before their own Model/ModelAnim members). That leaves exactly
+ * 0x124..0x127 (4 bytes) as this class's own storage -- one s16, mAngSpeed,
+ * plus 2 bytes of trailing padding. Same offset, daObjClock_c.h's sibling
+ * field (`mHandIndex`, u8) confirms the shape -- one small scalar right
+ * after the embedded Model.
  *
  * Field NAMES are placeholders and cannot change codegen. Offsets and widths
  * are observed.
  *
- * SM64DS RTTI names the implementation daObjClockHuriko_c. The reconstructed factory
- * daObjClockHuriko_c_classInit (historical alias daObjClockHuriko_c_Spawn) installs this class's
- * cartridge vtable for the CLOCK_HURIKO registry profile.
+ * SM64DS RTTI names the implementation daObjClockHuriko_c. The reconstructed
+ * factory daObjClockHuriko_c_classInit (historical alias daObjClockHuriko_c_Spawn)
+ * installs this class's cartridge vtable for CLOCK_HURIKO (actor 294).
  */
 
 #ifdef __cplusplus
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daObjClockHuriko_c : dActor_c {
     u8  pad_0d0[0x4];
-    /* Named by daObjClockHuriko_c_Spawn.c's own _ZN5ModelC1Ev call at
-       +0xd4 -- a relocation the ROM build checks. */
+    /* Named by the implicit constructor's _ZN5ModelC1Ev call at +0xd4 -- a
+       relocation the ROM build checks. */
     Model mModel;             /* 0x0d4 */
 
-    s16 mAngSpeed;               /* 0x124 -- swing angle/phase, see SIZE above */
+    s16 mAngSpeed;               /* 0x124 -- swing speed, see SIZE above */
     u8  pad_126[0x2];
 
     /* --- vtable. The destructor is INLINE, and that is load-bearing rather
@@ -123,11 +123,17 @@ struct daObjClockHuriko_c : dActor_c {
     virtual s32 CleanupResources();       /* slot 3 */
     virtual s32 Behavior();               /* slot 6 */
     virtual s32 Render();                 /* slot 9 */
+
+    /* Until #2570 merges, a leaf `unsigned long` new forwards the retail
+       `fBase_c::operator new(unsigned int)`. `unsigned int` here mangles
+       differently and the factory misses. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
-/* Holds the chain to the size daObjClockHuriko_c_Spawn.c's
-   operator new(0x128) call evidences. A silently-added member anywhere
-   fails this. */
+/* Holds the chain to the size the factory's operator new(0x128) evidences.
+   A silently-added member anywhere fails this. */
 typedef char daObjClockHuriko_c_size_must_be_0x128[sizeof(daObjClockHuriko_c) == 0x128 ? 1 : -1];
 
 #endif /* __cplusplus */
