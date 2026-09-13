@@ -9,6 +9,17 @@
  * interleave for -0x14000 / 0xff06a000 / func_0201267c (same wall as sibling
  * 021116ec avoids by not calling after the stores).
  */
+/* Re-measured 2026-09-12 under 2004/b56 (the stored near-miss draft is div 3, size-exact
+ * 0x17c; residual is the pool constant 0xff06a000 coloured r3 not r0, so our str/mov pair
+ * lands the wrong way round against the ROM's `ldr r0; add r1; str r0; mov r0,#0x6a; bl`).
+ * Five axes the stored evidence had not covered, all byte-identical to that baseline:
+ * declaring func_0201267c void instead of int (the missing-return-value lever), declaring
+ * its first parameter int rather than unsigned, storing the constant through an unsigned
+ * type, storing it as a pointer value, and naming `c + 0x74` in a local before the stores.
+ * The wall is that the outgoing 0x6a pins r0 before the store is scheduled; the sibling
+ * func_ov009_021116ec colours the same constant r0 only because it has no call after the
+ * stores to compete for it. Ordinary ARM, so NOT an asm primitive: this stays NONMATCHING.
+ */
 
 extern char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int Vec3_Sub(struct Vector3* dst, void* a, void* b);
