@@ -165,14 +165,14 @@
       "evidence": "model resource handle constructed with file ID 1558"
     },
     {
-      "symbol": "@336",
+      "symbol": "@344",
       "address": "0x02112090",
       "size": "0xc",
       "binding": "STB_GLOBAL",
       "evidence": "compiler-generated collision resource destructor-registration node"
     },
     {
-      "symbol": "@335",
+      "symbol": "@343",
       "address": "0x0211209c",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -230,13 +230,13 @@
       "evidence": "mwcc emits the ctor-table object local; DSD exposes owned symbols globally and cannot encode a local symbols.txt entry"
     },
     {
-      "symbol": "@336",
+      "symbol": "@344",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local collision registration node is a configured initializer relocation destination at 0x02112090"
     },
     {
-      "symbol": "@335",
+      "symbol": "@343",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "compiler-local model registration node is a configured initializer relocation destination at 0x0211209c"
@@ -308,7 +308,7 @@
       "source": "0x02111b00",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@335",
+      "symbol": "@343",
       "addend": 0,
       "target_module": "ov023",
       "target_address": "0x0211209c"
@@ -338,7 +338,7 @@
       "source": "0x02111b10",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@336",
+      "symbol": "@344",
       "addend": 0,
       "target_module": "ov023",
       "target_address": "0x02112090"

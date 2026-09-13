@@ -33,5 +33,5 @@ _ZTS19daObjKb1Billboard_c kind:data(any) addr:0x021115c8
 g_profile_KB1_BILLBOARD kind:data(any) addr:0x021115e0 ambiguous
 _ZTV19daObjKb1Billboard_c kind:data(any) addr:0x02111604
 data_ov044_02111680 kind:bss addr:0x02111680
-@214 kind:bss addr:0x02111688
+@222 kind:bss addr:0x02111688
 data_ov044_02111694 kind:bss addr:0x02111694

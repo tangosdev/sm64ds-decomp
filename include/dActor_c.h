@@ -56,7 +56,7 @@ struct dActor_c : dBase_c {
        constructor appends this node, the destructor unlinks it, and Next() walks
        the next link and reads its owner to get back to the actor. */
     fLiNdBa_c mActorListNode; /* 0x050 -- owner is always `this` */
-    s32 mPosX;              /* 0x05c */
+    s32 mPosX;              /* 0x05c -- with Y/Z, one vector; call Pos() */
     s32 mPosY;              /* 0x060 */
     s32 mPosZ;              /* 0x064 */
     s32 mPrevPosX;          /* 0x068 -- last frame's position, snapshotted by BeforeBehavior */
@@ -163,6 +163,13 @@ struct dActor_c : dBase_c {
     virtual Vector3 OnAimedAtWithEggReturnVec();       /* slot 30 */
 
     /* --- non-virtual --- */
+    /* mPosX/Y/Z at 0x5c are one vector. Reference, not value:
+       Vector3-by-value emits ~Vector3 D1. */
+    Vector3 &Pos() { return *reinterpret_cast<Vector3 *>(&mPosX); }
+    const Vector3 &Pos() const {
+        return *reinterpret_cast<const Vector3 *>(&mPosX);
+    }
+
     /* ClosestPlayer walks the player table measuring from this actor and caches
        both ends in globals; the rest read that cache, which is why each calls
        ClosestPlayer first and then returns a global rather than its result.

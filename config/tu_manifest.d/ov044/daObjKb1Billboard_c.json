@@ -144,7 +144,7 @@
       "evidence": "model resource handle constructed with file ID 1570"
     },
     {
-      "symbol": "@214",
+      "symbol": "@222",
       "address": "0x02111688",
       "size": "0xc",
       "binding": "STB_GLOBAL",
@@ -200,7 +200,7 @@
       "evidence": "DSD exposes owned constructor-table symbols globally"
     },
     {
-      "symbol": "@214",
+      "symbol": "@222",
       "from": "STB_LOCAL",
       "to": "STB_GLOBAL",
       "evidence": "the compiler-local registration node is an initializer relocation destination"
@@ -252,7 +252,7 @@
       "source": "0x02111350",
       "type": "R_ARM_ABS32",
       "kind": "load",
-      "symbol": "@214",
+      "symbol": "@222",
       "addend": 0,
       "target_module": "ov044",
       "target_address": "0x02111688"

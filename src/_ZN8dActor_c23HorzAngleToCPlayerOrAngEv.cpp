@@ -36,5 +36,5 @@ s16 dActor_c::HorzAngleToCPlayerOrAng()
     if (player == 0)
         return mAngleY;
 
-    return Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&player->mPosX);
+    return Vec3_HorzAngle(&Pos(), &player->Pos());
 }

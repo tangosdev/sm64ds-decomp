@@ -60,7 +60,7 @@ _ZTV16daObjFm_Battan_c kind:data(any) addr:0x02111fe4
 data_ov023_02112064 kind:data(any) addr:0x02112064
 data_ov023_02112080 kind:bss addr:0x02112080
 data_ov023_02112088 kind:bss addr:0x02112088
-@336 kind:bss addr:0x02112090
-@335 kind:bss addr:0x0211209c
+@344 kind:bss addr:0x02112090
+@343 kind:bss addr:0x0211209c
 data_ov023_021120a8 kind:bss addr:0x021120a8
 data_ov023_021120bc kind:bss addr:0x021120bc ambiguous

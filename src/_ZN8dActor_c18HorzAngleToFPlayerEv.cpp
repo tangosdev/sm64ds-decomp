@@ -34,5 +34,5 @@ extern dActor_c *data_0209b450;   /* farthest player */
 s16 dActor_c::HorzAngleToFPlayer()
 {
     ClosestPlayer();
-    return Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)&data_0209b450->mPosX);
+    return Vec3_HorzAngle(&Pos(), &data_0209b450->Pos());
 }
