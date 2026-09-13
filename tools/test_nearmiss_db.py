@@ -21,6 +21,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 TOOLS = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(TOOLS))
@@ -651,6 +652,169 @@ class RealCompileResolverFixtures(unittest.TestCase):
         self.assertEqual(full["divergences"], 0)
         self.assertTrue(full["ok"])
         self.assertEqual(full["resolved"], "func_01ff97d8")
+
+
+class PruneMatchedTests(unittest.TestCase):
+    """prune-matched must resolve a row's CURRENT state by address through a
+    consolidated TU, not only through the row's own (possibly stale) name.
+
+    The shape this covers: a merged TU can fold a ROM address into a
+    NEIGHBOUR's compiled body, leaving no symbols.txt row of its own at that
+    address (the nested-entry-point shape reloc_audit.resolve_nested_slice
+    resolves at the compiled-object level for linkcheck.py/pr_linkcheck.py --
+    func_01ff97d8.c is the real-tree example). Name-only resolution -- the old
+    prune_matched -- can never see that address again once nothing names it, so
+    a real match reads as open work forever. These tests are bare-interpreter:
+    filesystem and srcpath only, no compiler."""
+
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self._saved_db = NDB.DB
+        self.addCleanup(setattr, NDB, "DB", self._saved_db)
+        NDB.DB = pathlib.Path(tmp.name) / "db.jsonl"
+        import srcpath as SP
+        self.SP = SP
+        saved = (SP.REPO, SP.SRC)
+        self.addCleanup(self._restore_srcpath, saved)
+        SP.REPO = pathlib.Path(tmp.name)
+        SP.SRC = SP.REPO / "src"
+        SP.SRC.mkdir(parents=True, exist_ok=True)
+        SP.invalidate()
+        # nearmiss_db.REPO (used only to print a dropped row's path relative to the
+        # repo root) is the same notion of "repo root" as srcpath.REPO in a real
+        # checkout -- both tools live in the one tools/ directory -- so redirect it
+        # alongside srcpath's for the fixture to keep matching that reality.
+        self._saved_ndb_repo = NDB.REPO
+        self.addCleanup(setattr, NDB, "REPO", self._saved_ndb_repo)
+        NDB.REPO = SP.REPO
+
+    def _restore_srcpath(self, saved):
+        self.SP.REPO, self.SP.SRC = saved
+        self.SP.invalidate()
+
+    def write_rows(self, *rows):
+        NDB.DB.write_text("".join(json.dumps(r) + "\n" for r in rows), encoding="utf-8")
+
+    def load_quiet(self):
+        with contextlib.redirect_stderr(io.StringIO()):
+            return NDB.load_db()
+
+    def write_src(self, rel, text):
+        p = self.SP.SRC / rel
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text(text)
+        self.SP.invalidate()
+        return p
+
+    def enrol(self, entries, symbols, module="arm9"):
+        """Same shape as test_srcpath.SrcPath.enrol: write a config/ symbols.txt +
+        delinks.txt pair at the path relocs.iter_symbol_files actually looks for."""
+        if module == "arm9":
+            cfg = self.SP.REPO / "config" / "arm9"
+        elif module in ("itcm", "dtcm"):
+            cfg = self.SP.REPO / "config" / "arm9" / module
+        else:
+            cfg = self.SP.REPO / "config" / "arm9" / "overlays" / module
+        cfg.mkdir(parents=True, exist_ok=True)
+        (cfg / "symbols.txt").write_text("".join(
+            "%s kind:function(arm,size=0x4) addr:0x%08x\n" % (n, a) for n, a in symbols))
+        lines = ["    .text       start:0x02000000 end:0x03000000 kind:code align:32", ""]
+        for rel, secs in entries:
+            lines.append(rel + ":")
+            lines.append("    complete")
+            lines += ["    .text start:0x%08x end:0x%08x" % (a, b) for a, b in secs]
+            lines.append("")
+        (cfg / "delinks.txt").write_text("\n".join(lines))
+        self.SP.invalidate()
+
+    def test_prune_matched_resolves_a_consolidated_tus_interior_address(self):
+        # 0x02100050 carries no symbols.txt row of its own (only the class's own
+        # method, at 0x02100000, does) -- NM.name_at (mocked as the real one would
+        # answer for an absorbed address) has nothing to offer, and path_for on
+        # the row's own stale placeholder finds nothing either. Only owner_at's
+        # raw range containment can still see it.
+        self.write_src("actors/Foo_c.cpp", "int Foo_Behavior(void) { return 1; }\n")
+        self.enrol([("src/actors/Foo_c.cpp", [(0x02100000, 0x02100100)])],
+                   [("_ZN5Foo_c8BehaviorEv", 0x02100000)])
+        self.write_rows(row(37, module="arm9", addr="0x02100050", name="func_02100050"))
+        with mock.patch("names.name_at", return_value=None):
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                NDB.prune_matched(argparse.Namespace(dry_run=True))
+            self.assertIn("1 ghost entries", out.getvalue())
+            self.assertIn("actors/Foo_c.cpp", out.getvalue())
+            with contextlib.redirect_stdout(io.StringIO()) as out2:
+                NDB.prune_matched(argparse.Namespace(dry_run=False))
+            self.assertIn("dropped 1 ghost", out2.getvalue())
+        db = self.load_quiet()
+        self.assertEqual(db, {})
+
+    def test_prune_matched_leaves_a_genuinely_unenrolled_row_alone(self):
+        """A sourceless hole -- a gap between delinks entries -- must not be
+        pruned: the cartridge's own bytes still stand there, and this is exactly
+        the shape that must not be confused with a consolidated-TU ghost."""
+        self.write_src("actors/Foo_c.cpp", "int Foo_Behavior(void) { return 1; }\n")
+        self.enrol([("src/actors/Foo_c.cpp", [(0x02100000, 0x02100100)])],
+                   [("_ZN5Foo_c8BehaviorEv", 0x02100000)])
+        self.write_rows(row(113, module="arm9", addr="0x02100200", name="func_02100200"))
+        with mock.patch("names.name_at", return_value=None):
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                NDB.prune_matched(argparse.Namespace(dry_run=True))
+        self.assertIn("0 ghost entries", out.getvalue())
+        db = self.load_quiet()
+        self.assertEqual(len(db), 1)
+
+    def test_prune_matched_leaves_a_bannered_consolidated_tu_row_open(self):
+        """A promoted TU that still carries the NONMATCHING draft banner is not a
+        ghost: the function is still open work, just parked mid-migration, so
+        pruning it here would silently delete a live near-miss draft."""
+        self.write_src("actors/Foo_c.cpp",
+                        "// NONMATCHING: hand-written asm, does NOT count as matched\n"
+                        "int Foo_Behavior(void) { return 1; }\n")
+        self.enrol([("src/actors/Foo_c.cpp", [(0x02100000, 0x02100100)])],
+                   [("_ZN5Foo_c8BehaviorEv", 0x02100000)])
+        self.write_rows(row(37, module="arm9", addr="0x02100050", name="func_02100050"))
+        with mock.patch("names.name_at", return_value=None):
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                NDB.prune_matched(argparse.Namespace(dry_run=True))
+        self.assertIn("0 ghost entries", out.getvalue())
+        db = self.load_quiet()
+        self.assertEqual(len(db), 1)
+
+    def test_prune_matched_prunes_a_hand_asm_bannered_row_via_address_fallback(self):
+        """The ghost test is asm_policy.counts_as_matched, not a re-spelling of
+        "no NONMATCHING banner" -- a HAND-ASM PRIMITIVE file also carries the word
+        NONMATCHING (the 2026-09-09 ruling), so a plain draft-banner check would
+        wrongly leave it open. This combines that with the address-fallback shape:
+        the row sits at a consolidated TU's interior address with no symbols.txt
+        row of its own, so only owner_at can find the file at all, and only
+        counts_as_matched (not has_draft_banner) can tell it is done."""
+        self.write_src("actors/Foo_c.cpp",
+                        "// HAND-ASM PRIMITIVE\n"
+                        "// NONMATCHING: byte-exact hand-written asm, no C to recover\n"
+                        "asm int Foo_Behavior(void) { mrs r0, cpsr; bx lr; }\n")
+        self.enrol([("src/actors/Foo_c.cpp", [(0x02100000, 0x02100100)])],
+                   [("_ZN5Foo_c8BehaviorEv", 0x02100000)])
+        self.write_rows(row(1, module="arm9", addr="0x02100050", name="func_02100050"))
+        with mock.patch("names.name_at", return_value=None):
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                NDB.prune_matched(argparse.Namespace(dry_run=True))
+        self.assertIn("1 ghost entries", out.getvalue())
+        self.assertIn("actors/Foo_c.cpp", out.getvalue())
+
+    def test_prune_matched_still_resolves_an_ordinary_rename_by_name(self):
+        """Baseline: an address whose CURRENT symbol is a plain rename (no
+        containment fallback needed) must still be caught -- the new address
+        fallback must not have cost the ordinary case anything."""
+        self.write_src("Foo_Init.c", "int Foo_Init(void) { return 1; }\n")
+        self.enrol([("src/Foo_Init.c", [(0x02100000, 0x02100004)])],
+                   [("Foo_Init", 0x02100000)])
+        self.write_rows(row(9, module="arm9", addr="0x02100000", name="func_02100000"))
+        with mock.patch("names.name_at", return_value="Foo_Init"):
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                NDB.prune_matched(argparse.Namespace(dry_run=True))
+        self.assertIn("1 ghost entries", out.getvalue())
+        self.assertIn("Foo_Init.c", out.getvalue())
 
 
 class EvalPinGuardTests(unittest.TestCase):

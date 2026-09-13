@@ -39,8 +39,19 @@ class SrcPath(unittest.TestCase):
         ``entries`` is [(delinks path, [(start, end)])] and ``symbols`` is
         [(name, addr)]. The delinks file gets a module section header first, because
         that header is an indented `.text start:.. end:..` line belonging to no entry,
-        and reading it as one would hand the first file its whole module."""
-        cfg = SP.REPO / "config" / module
+        and reading it as one would hand the first file its whole module.
+
+        ``module`` is placed the way ``relocs.iter_symbol_files`` actually looks for
+        it: "arm9" at ``config/arm9/``, "itcm"/"dtcm" nested under that, anything
+        else (``ovNNN``) under ``config/arm9/overlays/``. Getting this wrong does
+        not fail quietly -- ``relocs.module_universe`` hard-``SystemExit``s the
+        moment it finds a ``config/**/symbols.txt`` its own enumeration missed."""
+        if module == "arm9":
+            cfg = SP.REPO / "config" / "arm9"
+        elif module in ("itcm", "dtcm"):
+            cfg = SP.REPO / "config" / "arm9" / module
+        else:
+            cfg = SP.REPO / "config" / "arm9" / "overlays" / module
         cfg.mkdir(parents=True, exist_ok=True)
         (cfg / "symbols.txt").write_text("".join(
             "%s kind:function(arm,size=0x4) addr:0x%08x\n" % (n, a) for n, a in symbols))
@@ -288,6 +299,56 @@ class SrcPath(unittest.TestCase):
                          "src/actors/ActorBase_SceneNode.cpp")
         self.assertEqual(idx["_ZN7fBase_c9SceneNodeC1Ev"],
                          "src/actors/ActorBase_SceneNode.cpp")
+
+    # --- owner_at: the nested-entry-point shape, by address instead of by name ---
+    def test_owner_at_finds_a_consolidated_tus_interior_address(self):
+        """A merged TU can own an address with no symbols.txt row of its own left --
+        every symbol the merge kept is elsewhere in the range. path_for has nothing to
+        key on there; owner_at answers off the delinks RANGE itself."""
+        self.write("actors/ActorBase_SceneNode.cpp")
+        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+                   [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac)])
+        # 0x0203b4c4 carries no symbols.txt row in this fixture, so a stale DB row
+        # naming a placeholder there (func_0203b4c4) cannot be found by path_for --
+        # this is exactly the shape a consolidated-TU ghost row would present.
+        self.assertIsNone(SP.path_for("func_0203b4c4"))
+        self.assertEqual(SP.owner_at("arm9", 0x0203b4c4),
+                         SP.SRC / "actors" / "ActorBase_SceneNode.cpp")
+
+    def test_owner_at_agrees_with_path_for_on_an_ordinary_symbol(self):
+        self.write("actors/ActorBase_SceneNode.cpp")
+        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+                   [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac)])
+        self.assertEqual(SP.owner_at("arm9", 0x0203b4ac), SP.path_for("_ZN7fBase_c9SceneNode5ResetEv"))
+
+    def test_owner_at_is_none_in_a_sourceless_hole(self):
+        """A gap between two delinks entries is unenrolled on purpose -- the cartridge's
+        own bytes stand there. owner_at must not claim a neighbour owns it."""
+        self.write("actors/Foo.cpp")
+        self.enrol([("src/actors/Foo.cpp", [(0x0203b000, 0x0203b100)])],
+                   [("_ZN3Foo4InitEv", 0x0203b000)])
+        # 0x0203b100..0x0203b200 is not enrolled to anything.
+        self.assertIsNone(SP.owner_at("arm9", 0x0203b150))
+
+    def test_owner_at_is_module_scoped(self):
+        """ROM addresses are not globally unique -- two overlays can reuse one
+        address, and owner_at must not let one module answer for another."""
+        self.write("a.cpp")
+        self.write("b.cpp")
+        self.enrol([("src/a.cpp", [(0x02100000, 0x02100100)])],
+                   [("A_Init", 0x02100000)], module="ov001")
+        self.enrol([("src/b.cpp", [(0x02100000, 0x02100100)])],
+                   [("B_Init", 0x02100000)], module="ov002")
+        self.assertEqual(SP.owner_at("ov001", 0x02100050), SP.SRC / "a.cpp")
+        self.assertEqual(SP.owner_at("ov002", 0x02100050), SP.SRC / "b.cpp")
+        self.assertIsNone(SP.owner_at("ov003", 0x02100050))
+
+    def test_owner_at_missing_file_on_disk_is_none(self):
+        """Enrolled in delinks.txt but the file itself was deleted/moved: owner_at
+        must not hand back a path that does not exist."""
+        self.enrol([("src/actors/Ghost.cpp", [(0x0203c000, 0x0203c100)])],
+                   [("_ZN5Ghost4InitEv", 0x0203c000)])
+        self.assertIsNone(SP.owner_at("arm9", 0x0203c050))
 
     def test_enrolment_beats_a_stale_one_function_file(self):
         """A leftover src/<symbol>.c beside a promoted TU is a file nothing compiles.
