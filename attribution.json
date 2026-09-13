@@ -3393,6 +3393,8 @@
     "src/actors/da1up_c.cpp#func_ov002_020afde4": "tangosdev",
     "src/actors/da1up_c.cpp#func_ov002_020afe4c": "tangosdev",
     "src/actors/da1up_c.cpp#func_ov002_020aff10": "tangosdev",
+    "src/actors/da1up_c.cpp#da1up_c_classInit_ONEUPKINOKO": "andrewboudreau",
+    "src/actors/da1up_c.cpp#da1up_c_classInit_SCALEUP_KINOKO": "andrewboudreau",
     "src/actors/daGmch_c.cpp#_ZN8daGmch_c11EnterState0Ev": "tangosdev",
     "src/actors/daGmch_c.cpp#_ZN8daGmch_c11EnterState1Ev": "tangosdev",
     "src/actors/daGmch_c.cpp#_ZN8daGmch_c11EnterState2Ev": "tangosdev",

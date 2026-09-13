@@ -142,15 +142,7 @@ src/_ZN11dCapEnemy_cD0Ev.cpp:
 
 src/actors/da1up_c.cpp:
     complete
-    .text start:0x020aee40 end:0x020b0530
-
-src/d_a_1up_scaleup_kinoko.c:
-    complete
-    .text start:0x020b0530 end:0x020b0580
-
-src/d_a_1up_oneupkinoko.c:
-    complete
-    .text start:0x020b0580 end:0x020b05d0
+    .text start:0x020aee40 end:0x020b05d0
 
 src/game/actors/d_a_bar.cpp:
     complete

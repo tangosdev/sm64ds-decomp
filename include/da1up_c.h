@@ -47,6 +47,8 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct da1up_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
@@ -57,7 +59,9 @@ struct da1up_c : dEnemyBase_c {
     s32                          unk_380;               /* 0x380 */
     s32                          mMushroomType;         /* 0x384 */
     s32                          unk_388;               /* 0x388 */
-    u16                          mStateTimer;            /* 0x38c; coined name */
+    /* 0x38c is live and distinct from dEnemyBase_c::mStateTimer at 0x100.
+       Naming it mStateTimer shadowed the base field. */
+    u16                          unk_38c;               /* 0x38c */
     u8                           unk_38e;               /* 0x38e */
     u8                           unk_38f;               /* 0x38f */
     s32                          unk_390;               /* 0x390 */
@@ -86,6 +90,13 @@ struct da1up_c : dEnemyBase_c {
     virtual void  OnPendingDestroy();            /* slot 12 */
     virtual s32   OnYoshiTryEat();               /* slot 18 */
     virtual void  OnTurnIntoEgg(Player &player); /* slot 19 */
+
+    /* Leaf allocator until fBase_c::operator new is a real method (#2570).
+       unsigned long, not unsigned int: that is the C++ new signature mwccarm
+       2004/b56 emits for `new da1up_c()`. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char da1up_c_size_must_be_0x398[sizeof(da1up_c) == 0x398 ? 1 : -1];
