@@ -22,13 +22,14 @@
  * run time by actorID and stores the answer in mHandIndex.
  *
  * LAYOUT: dActor_c occupies 0x000..0x0cf; four bytes of derived padding precede
- * the owned Model the factories construct at +0xd4 (_ZN5ModelC1Ev, a relocation
- * the ROM build checks); the one-byte hand index follows it at 0x124. The
- * helper at 0x02111430 writes the model matrix at +0xf0 == mModel.mat4x3 and
- * its translation row at +0x114, which is the same span by another spelling.
+ * the owned Model the implicit constructor builds at +0xd4 (_ZN5ModelC1Ev);
+ * the one-byte hand index follows it at 0x124. The helper at 0x02111430 writes
+ * mModel.mat4x3 from mAngleX/Y/Z and mModel.mat4x3.t from mPosX/Y/Z >> 3.
  */
 
 #ifdef __cplusplus
+
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct daObjClock_c : dActor_c {
     u8    pad_0d0[0x4];    /* 0x0d0 */
@@ -57,6 +58,13 @@ struct daObjClock_c : dActor_c {
     virtual int CleanupResources();    /* slot 3 -- 0x02111478 */
     virtual int Behavior();            /* slot 6 -- 0x021114cc */
     virtual int Render();              /* slot 9 -- 0x021114a4 */
+
+    /* Until #2570 merges, a leaf `unsigned long` new forwards the retail
+       `fBase_c::operator new(unsigned int)`. `unsigned int` here mangles
+       differently and the factories miss. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 /* Holds the chain to the size both factories' operator new(0x128) evidences.
