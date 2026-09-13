@@ -44,6 +44,10 @@
 #include "dCcAcPos_c.h"
 #include "dBgCh_Actr.h"
 
+/* Leaf until #2570: fBase_c still has no in-class operator new, so this
+   class forwards the `new daPkn_c()` allocation to the retail allocator. */
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daPkn_c : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
     Model                        mModel;                /* 0x174 */
@@ -51,17 +55,17 @@ struct daPkn_c : dEnemyBase_c {
     dCcAc_c           mdCcAc_c1;  /* 0x380 */
     dCcAc_c           mdCcAc_c2;  /* 0x3b4 */
     dCcAcPos_c    mdCcAcPos_c; /* 0x3e8 */
-    Vector3                      mPipeScale;            /* 0x428 */
-    Vector3                      mFirePos;              /* 0x434 */
-    Vector3                      mSpawnPos;             /* 0x440 */
-    Vector3                      mHomePos;              /* 0x44c */
+    Vector3                      mBubbleScale;          /* 0x428 -- sleep-bubble Model */
+    Vector3                      mBubblePos;            /* 0x434 -- sleep-bubble world pos */
+    Vector3                      mHeadClsnOffset;       /* 0x440 -- head cylinder; rewritten every frame */
+    Vector3                      mHomePos;              /* 0x44c -- spawn point; InitResources copies 0x440 once */
     s32                          mState;                /* 0x458 */
     u8                           mClsnEnabled;          /* 0x45c */
     u8                           unk_45d;               /* 0x45d */
     u8  pad_45e[0x2];
     s32                          unk_460;               /* 0x460 */
     s32                          unk_464;               /* 0x464 */
-    s16                          mInitAngleY;           /* 0x468 */
+    s16                          mTargetAngleY;         /* 0x468 -- yaw toward player; rewritten every frame */
     u8  pad_46a[0x2];
     s32                          unk_46c;               /* 0x46c */
     s32                          mParticleHandle;       /* 0x470 */
@@ -95,6 +99,10 @@ struct daPkn_c : dEnemyBase_c {
     int InitResources();
     void OnPendingDestroy();
     int Render();
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daPkn_c_size_must_be_0x47c[sizeof(daPkn_c) == 0x47c ? 1 : -1];
@@ -102,11 +110,10 @@ typedef char daPkn_c_size_must_be_0x47c[sizeof(daPkn_c) == 0x47c ? 1 : -1];
 /* The class's own vtable, declared next to the class rather than restated in
    the one translation unit that stores it. config/arm9/overlays/ov084/symbols.txt
    binds _ZTV7daPkn_c to the public ADDRESS POINT at 0x02130c28; mwcc's own
-   emitted symbol addresses the vtable OBJECT two words lower, so the factory in
-   src/actors/daPkn_c.cpp addresses it as `_ZTV7daPkn_c + 2` (int-indexed, eight
-   bytes) to agree with the addend-8 vptr stores the compiler emits in the
-   destructor. include/decl_common.h already carries the same declaration for
-   the C shards that read it. */
+   emitted symbol addresses the vtable OBJECT two words lower, so `new daPkn_c()`
+   and the inline destructor store `_ZTV7daPkn_c + 2` (int-indexed, eight bytes).
+   include/decl_common.h already carries the same declaration for the C shards
+   that read it. */
 extern int _ZTV7daPkn_c[];
 
 #endif /* DAPKN_C_H */

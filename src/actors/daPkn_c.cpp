@@ -1,30 +1,39 @@
 //cpp
-/* daPkn_c (PAKUN), ov084 0x0212eaf0..0x02130174.
+/* daPkn_c (PAKUN / PIRANHA_PLANT 250), ov084 0x0212eaf0..0x02130174.
+ * deslop
  *
  * RTTI names daPkn_c. Typeinfo at 0x02130bf8 points to the string at
  * 0x02130bec; the vtable header at 0x02130c24 points to that typeinfo.
  * The base is dEnemyBase_c. This vtable's 31 slots end at 0x02130ca4; seven
  * zero words follow. The section boundary alone does not establish its extent.
  *
- * This TU owns 24 text functions, including the PAKUN factory. Class metadata
- * is compiler-only output; the canonical data remains supplied by the ROM.
- * Definitions run in reverse address order for mwccarm 2004/b56. The inline
- * destructor in the header emits the required D1/D0 pair below those bodies.
+ * Factory is `return new daPkn_c()`. Leaf operator new(unsigned long) forwards
+ * `_ZN7fBase_cnwEj` until #2570. Definitions run in reverse address order for
+ * mwccarm 2004/b56. The inline destructor in the header emits the required
+ * D1/D0 pair; `new` odr-uses the class so that pair is emitted here.
  *
- * Behavior dispatches the nine PMFs initialized separately at 0x02130e80.
- * Their address-derived symbols and remaining ABI bridges are reconstruction
- * work tracked in issue #2473. Renaming a target also requires updating the
- * module's symbol map. The current decl_common.h declarations conflict with
- * several local helper signatures, so this TU includes the narrower headers.
+ * Leftover:
+ * - ModelAnim::SetAnim / dCcAc_c::Init / dCcAcPos_c::Init stay mangled
+ *   (Fix12<int> by value, wall 6az -- InitResources and the state helpers)
+ * - dBgCh_Actr::Init stays mangled: header Fix12i mangles as i; ROM is
+ *   Fix12<int> (InitResources)
+ * - Particle::System::New / NewSimple, Sound::PlaySub / PlayLong, Player::Hurt
+ *   / Bounce stay mangled (Fix12<int> by value, 6az)
+ * - Animation::Finished / WillHitFrame keep +0x160 (ModelAnim MI +0x50)
+ * - (int)this + 0x440 in InitResources (named `mHomePos = mHeadClsnOffset` DIFFs)
+ * - mStateTimer unsigned halfword increment (ldrh; ++mStateTimer is ldrsh)
+ * - func_ov084_0212f204 / 0212f460 named fields size-DIFF (keep offset soup)
+ * - PknMtx43 / PknVec3 POD copies (Vector3 / nested Matrix4x3 scalarize)
+ * - data_ov084_* SharedFilePtr handles and the PMF table at 0x02130e80
+ *   (text-only TU; sinit-owned BSS)
  *
  * Boundary, layout and compiler experiments are recorded in
  * notes/data/class-facts/daPkn_c.json and
  * notes/agents/handoffs/pr-2450-source-review-fixes.md.
  */
 
-#include "daPkn_c.h"
-#include "types.h"
 #include "common.h"
+#include "daPkn_c.h"
 #include "decl_Animation.h"
 #include "SharedFilePtr.h"
 
@@ -35,7 +44,7 @@
    of `.file`, which is the second word, so one spelling serves all of them. */
 struct PknSharedFile { int id; void *file; };
 extern PknSharedFile data_ov084_02130dfc;   /* the plant's own model */
-extern PknSharedFile data_ov002_0210da38;   /* the pipe, shared out of ov002 */
+extern PknSharedFile data_ov002_0210da38;   /* BUBBLE_MODEL_PTR -- sleep bubble, shared out of ov002 */
 extern PknSharedFile data_ov084_02130df4;   /* idle animation */
 extern PknSharedFile data_ov084_02130e0c;   /* recoil animation */
 extern PknSharedFile data_ov084_02130e14;   /* lunge animation */
@@ -62,12 +71,12 @@ typedef void (daPkn_c::*PknStatePMF)();
 extern "C" {
 
 /* Local helper declarations. */
-void  func_ov084_0212ebb4(void *c);
-void  func_ov084_0212ec60(char *c);
-int   func_ov084_0212ef00(char *self);
-int   func_ov084_0212f1d0(char *c);
+void  func_ov084_0212ebb4(daPkn_c *c);
+void  func_ov084_0212ec60(daPkn_c *c);
+int   func_ov084_0212ef00(daPkn_c *self);
+int   func_ov084_0212f1d0(daPkn_c *c);
 void  func_ov084_0212f204(char *r4);
-void  func_ov084_0212f33c(void *self);
+void  func_ov084_0212f33c(daPkn_c *self);
 void  func_ov084_0212f460(void *self);
 
 /* -- the state table __sinit_ov084_02130654 fills in -- */
@@ -105,9 +114,9 @@ void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, vo
 
 /* -- shared tables -- */
 extern s16 data_02082214[];              /* the sin/cos table, two shorts a step */
-extern int data_ov084_0213030c[];        /* per-frame horizontal fire offset */
-extern int data_ov084_02130334[];        /* per-frame vertical fire offset */
-extern u8  data_ov084_021302ec[];        /* the five bones the head angle sums */
+extern int data_ov084_0213030c[];        /* per-frame particle X/Z offset (0212f460, 0xfb) */
+extern int data_ov084_02130334[];        /* per-frame particle Y offset */
+extern u8  data_ov084_021302ec[];        /* five indices {0,3,4,5,6}; 0212ec60 sums s16 at [i]*0x34+0x1c into ang[1] (dead -- later y-adjust reads ang[0]==0, so the offset is constant 0x32000). 0x34 is not BMD_Bone (0x40). */
 extern PknMtx43 data_020a0e68;           /* the shared scratch matrix */
 
 void  _Z14ApproachLinearRsss(s16 *val, s16 target, s16 step);
@@ -128,50 +137,19 @@ int   _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 handle, u32 b, u32 c, void *pos, u32
 }
 
 /* ==========================================================================
- * ROM ordinal 23 -- daPkn_c_classInit, 0x02130110, size 0x64.
  *
- * The pre-fold queue omitted this factory from its 23-function run. It
- * belongs to the 24-function promotion: it allocates sizeof(daPkn_c), 0x47c,
- * and installs this class's vptr. The current queue counts one promoted TU.
- *
- * The store is `_ZTV7daPkn_c + 2`.  config/arm9/overlays/ov084/symbols.txt binds
- * _ZTV7daPkn_c to the public ADDRESS POINT at 0x02130c28; mwcc's own emitted
- * symbol addresses the vtable OBJECT two words lower, and this TU emits the
- * vtable, so the +2 (int-indexed, eight bytes) is what agrees with the addend-8
- * vptr stores the compiler puts in the destructor.
+ * Allocates sizeof(daPkn_c) (0x47c) through the leaf operator new and
+ * inlines the implicit constructor: dEnemyBase_c C2, vptr store, then the
+ * six member C1s in declaration order.
  * ======================================================================== */
 
-extern "C" {
-
 // @symbol daPkn_c_classInit
-int *daPkn_c_classInit(void)
+extern "C" daPkn_c *daPkn_c_classInit()
 {
-    extern void *_ZN7fBase_cnwEj(unsigned int size);
-    extern void  _ZN12dEnemyBase_cC2Ev(void *thiz);
-    extern void  _ZN9ModelAnimC1Ev(char *thiz);
-    extern void  _ZN5ModelC1Ev(char *thiz);
-    extern void  _ZN10dBgCh_ActrC1Ev(char *thiz);
-    extern void  _ZN7dCcAc_cC1Ev(char *thiz);
-    extern void  _ZN10dCcAcPos_cC1Ev(char *thiz);
-
-    int *p = (int *)_ZN7fBase_cnwEj(1148);
-    if (p) {
-        _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)(_ZTV7daPkn_c + 2);
-        _ZN9ModelAnimC1Ev((char *)p + 0x110);
-        _ZN5ModelC1Ev((char *)p + 0x174);
-        _ZN10dBgCh_ActrC1Ev((char *)p + 0x1c4);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x380);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x3b4);
-        _ZN10dCcAcPos_cC1Ev((char *)p + 0x3e8);
-    }
-    return p;
-}
-
+    return new daPkn_c();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN7daPkn_c13InitResourcesEv, 0x0212feb4, size 0x25c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c13InitResourcesEv
 /*
@@ -182,9 +160,10 @@ int *daPkn_c_classInit(void)
  * Unlike FirePiranhaPlantBig's, this one DOES check its loads: a failed SetFile
  * on either model returns 0 rather than carrying on.
  *
- * The tail computes where the plant's fire comes from: 0xe0 along the facing
- * angle out of the shared sin/cos table at data_02082214, and 0x37800 above the
- * spawn position.
+ * The tail seeds the sleep-bubble position: 0xe0 along the facing angle out
+ * of the shared sin/cos table at data_02082214, and 0x37800 above mPosY.
+ * 0212ec60 rewrites mBubblePos every frame. PIRANHA_PLANT (250) does not
+ * breathe fire -- that is daFPkn_c.
  *
  * The remaining SetAnim/Init bridges are described at their declarations.
  * Their measured alternatives are recorded in the continuation handoff;
@@ -211,7 +190,7 @@ int daPkn_c::InitResources()
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     mState = 0;
-    mInitAngleY = mPrevAngleY;
+    mTargetAngleY = mPrevAngleY;
     unk_464 = 0x7fffffff;
     unk_460 = 0;
     mClsnEnabled = 0;
@@ -220,13 +199,13 @@ int daPkn_c::InitResources()
     unk_108 = 3;
     unk_46c = 0;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
-    mSpawnPos.x = mPosX;
-    mSpawnPos.y = mPosY;
-    mSpawnPos.z = mPosZ;
+    mHeadClsnOffset.x = mPosX;
+    mHeadClsnOffset.y = mPosY;
+    mHeadClsnOffset.z = mPosZ;
     {
         s16 *tbl = data_02082214;
         /* The add sits INSIDE the integer cast, which is load-bearing here:
-           not interchangeable with `&mSpawnPos`. */
+           not interchangeable with `&mHeadClsnOffset`. */
         Vector3* home = (Vector3*)(((int)this + 0x440));
         mHomePos = *home;
         /* The shift must be LOGICAL so the angle wraps -- on the signed s16 it
@@ -240,9 +219,9 @@ int daPkn_c::InitResources()
         int z = cosv * 0xe0 + z0;
         int y = y0 + 0x37800;
         int x = sinv * 0xe0 + mPosX;
-        mFirePos.x = x;
-        mFirePos.y = y;
-        mFirePos.z = z;
+        mBubblePos.x = x;
+        mBubblePos.y = y;
+        mBubblePos.z = z;
     }
     unk_474 = 0;
     mParticleHandle = unk_474;
@@ -252,7 +231,6 @@ int daPkn_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN7daPkn_c8BehaviorEv, 0x0212fd4c, size 0x168 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c8BehaviorEv
 int daPkn_c::Behavior()
@@ -276,7 +254,7 @@ int daPkn_c::Behavior()
     }
     MakeVanishLuigiWork(mdCcAc_c1);
     mModelAnim.Advance();
-    func_ov084_0212f204(((char*)this));
+    func_ov084_0212f204((char *)this);
     old = mState;
     (this->*data_ov084_02130e80[old])();
     {
@@ -293,7 +271,7 @@ int daPkn_c::Behavior()
         mStateTimer = 0;
         unk_478 = 0;
     }
-    func_ov084_0212ec60(((char*)this));
+    func_ov084_0212ec60(this);
     mdCcAc_c1.Clear();
     mdCcAc_c2.Clear();
     mdCcAcPos_c.Clear();
@@ -301,7 +279,7 @@ int daPkn_c::Behavior()
         mdCcAc_c1.Update();
         mdCcAc_c2.Update();
         if (mState == 2) {
-            mdCcAcPos_c.SetPosRelativeToActor(mSpawnPos);
+            mdCcAcPos_c.SetPosRelativeToActor(mHeadClsnOffset);
             mdCcAcPos_c.Update();
         }
     }
@@ -309,13 +287,12 @@ int daPkn_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN7daPkn_c6RenderEv, 0x0212fcdc, size 0x70 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c6RenderEv
 /*
  * The six-slot `struct Obj` this file used to cast both models to was their own
  * vtable, and the slot it called is Render -- ModelAnim's for the plant, Model's
- * for the pipe it sits in.
+ * for the sleep bubble (BUBBLE_MODEL_PTR).
  *
  * `mModelAnim.file` is a BCA_File * where the raw field was an int, so the
  * comparison against the second word of data_ov084_02130df4 needs the cast the
@@ -327,12 +304,11 @@ int daPkn_c::Render()
         return 1;
     mModelAnim.Render((Vector3 *)&mScaleX);
     if ((int)mModelAnim.file == (int)data_ov084_02130df4.file)
-        mModel.Render(&mPipeScale);
+        mModel.Render(&mBubbleScale);
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN7daPkn_c16OnPendingDestroyEv, 0x0212fcd8, size 0x4 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16OnPendingDestroyEv
 /*
@@ -343,7 +319,6 @@ void daPkn_c::OnPendingDestroy()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN7daPkn_c16CleanupResourcesEv, 0x0212fc84, size 0x54 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16CleanupResourcesEv
 int daPkn_c::CleanupResources()
@@ -359,67 +334,65 @@ int daPkn_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- func_ov084_0212fc10, 0x0212fc10, size 0x74 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212fc10
 extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212fc10(char *c)
+void func_ov084_0212fc10(daPkn_c *c)
 {
-    *(int *)(c + 0x80) = 0x1000;
-    *(int *)(c + 0x84) = 0x1000;
-    *(int *)(c + 0x88) = 0x1000;
-    *(unsigned char *)(c + 0x45c) = 1;
-    *(int *)(c + 0xb0) |= 0x10000000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130df4.file, 0, 0x1000, 0);
-    if (*(int *)(c + 0x464) < 0x4b0000)
-        *(int *)(c + 0x458) = 1;
+    c->mScaleX = 0x1000;
+    c->mScaleY = 0x1000;
+    c->mScaleZ = 0x1000;
+    c->mClsnEnabled = 1;
+    c->mFlags |= 0x10000000;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
+    if (c->unk_464 < 0x4b0000)
+        c->mState = 1;
     func_ov084_0212ef00(c);
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- func_ov084_0212fa7c, 0x0212fa7c, size 0x194 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212fa7c
 /* daPkn state 1: the PMF record at ov084:0x02130ba4 targets this body.
    The former FirePiranhaPlantBig_Kill / daFPkn_c::Kill comments were a
    misattribution: this is not a vtable slot.  Its original name is unknown. */
 extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212fa7c(char *c) {
-    *(unsigned char *)(c + 0x45c) = 1;
-    if (_ZN9Animation8FinishedEv(c + 0x160) || _ZNK9Animation12WillHitFrameEi(c + 0x160, 0)) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130df4.file, 0, 0x1000, 0);
+void func_ov084_0212fa7c(daPkn_c *c) {
+    c->mClsnEnabled = 1;
+    if (_ZN9Animation8FinishedEv((char *)c + 0x160) || _ZNK9Animation12WillHitFrameEi((char *)c + 0x160, 0)) {
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130df4.file, 0, 0x1000, 0);
     }
     {
-        int thr = (*(int *)(c + 0x46c) != 0) ? 0x12c000 : 0x190000;
-        if (*(int *)(c + 0x464) < thr && func_ov084_0212f1d0(c)) {
-            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
-            *(int *)(c + 0x458) = 3;
-            func_02012694(0x175, c + 0x74);
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xfe, *(int *)(c + 0x434), *(int *)(c + 0x438), *(int *)(c + 0x43c));
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xff, *(int *)(c + 0x434), *(int *)(c + 0x438), *(int *)(c + 0x43c));
+        int thr = (c->unk_46c != 0) ? 0x12c000 : 0x190000;
+        if (c->unk_464 < thr && func_ov084_0212f1d0(c)) {
+            _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
+            c->mState = 3;
+            func_02012694(0x175, &c->mCamSpacePosX);
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xfe, c->mBubblePos.x, c->mBubblePos.y, c->mBubblePos.z);
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xff, c->mBubblePos.x, c->mBubblePos.y, c->mBubblePos.z);
             return;
         }
     }
-    *(int *)(c + 0x478) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(int *)(c + 0x478), 3, 0x174, c + 0x74, 0);
-    if (*(int *)(c + 0x464) < 0x352000) {
+    c->unk_478 = _ZN5Sound8PlayLongEjjjRK7Vector3s(c->unk_478, 3, 0x174, &c->mCamSpacePosX, 0);
+    if (c->unk_464 < 0x352000) {
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0, 0x7f, 0x1451, 0);
-        *(unsigned char *)(c + 0x45d) = 0;
-    } else if (*(unsigned char *)(c + 0x45d) == 0) {
+        c->unk_45d = 0;
+    } else if (c->unk_45d == 0) {
         if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0x7f, 0, 0x1451, 0))
-            *(unsigned char *)(c + 0x45d) = 1;
+            c->unk_45d = 1;
     }
     func_ov084_0212ef00(c);
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- func_ov084_0212f6d8, 0x0212f6d8, size 0x3a4 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f6d8
 extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212f6d8(char *c)
+void func_ov084_0212f6d8(daPkn_c *self)
 {
+    char *c = (char *)self;
     void *actor;
     u16 type;
     int isPlayer;
@@ -464,11 +437,11 @@ void func_ov084_0212f6d8(char *c)
                 if (flags & 0x10) {
                     _ZN6Player16IncMegaKillCountEv(actor);
                     func_02012694(0x1d, c + 0x74);
-                    func_ov084_0212ebb4(c);
+                    func_ov084_0212ebb4(self);
                     return;
                 }
                 if (*(u8 *)((char *)actor + 0x6f9) != 0) {
-                    func_ov084_0212ebb4(c);
+                    func_ov084_0212ebb4(self);
                     return;
                 }
                 if (*(u8 *)((char *)actor + 0x6fb) == 0) {
@@ -480,13 +453,13 @@ void func_ov084_0212f6d8(char *c)
                 }
                 if ((flags & 0x40000) == 0)
                     return;
-                func_ov084_0212ebb4(c);
+                func_ov084_0212ebb4(self);
                 return;
             }
             if ((*(u32 *)(c + 0x3a0) & 0x2000) != 0) {
                 isNine = (int)(type == 9);
                 if (isNine != 0) {
-                    func_ov084_0212ebb4(c);
+                    func_ov084_0212ebb4(self);
                     return;
                 }
             }
@@ -503,22 +476,22 @@ void func_ov084_0212f6d8(char *c)
                 if ((*(u32 *)(c + 0x3a0) & 0x10) != 0) {
                     _ZN6Player16IncMegaKillCountEv(actor);
                     func_02012694(0x1d, c + 0x74);
-                    func_ov084_0212ebb4(c);
+                    func_ov084_0212ebb4(self);
                     return;
                 }
                 if (*(u8 *)((char *)actor + 0x6f9) != 0) {
-                    func_ov084_0212ebb4(c);
+                    func_ov084_0212ebb4(self);
                     return;
                 }
                 if ((*(u32 *)(c + 0x3d4) & 0x40000) == 0)
                     return;
-                func_ov084_0212ebb4(c);
+                func_ov084_0212ebb4(self);
                 return;
             }
             if ((*(u32 *)(c + 0x3d4) & 0x2000) != 0) {
                 isNine = (int)(type == 9);
                 if (isNine != 0) {
-                    func_ov084_0212ebb4(c);
+                    func_ov084_0212ebb4(self);
                     return;
                 }
             }
@@ -538,7 +511,7 @@ void func_ov084_0212f6d8(char *c)
     if ((*(u32 *)(c + 0x408) & 0x10) != 0) {
         _ZN6Player16IncMegaKillCountEv(actor);
         func_02012694(0x1d, c + 0x74);
-        func_ov084_0212ebb4(c);
+        func_ov084_0212ebb4(self);
         return;
     }
     if (*(u8 *)((char *)actor + 0x6f9) != 0)
@@ -551,46 +524,43 @@ void func_ov084_0212f6d8(char *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- func_ov084_0212f630, 0x0212f630, size 0xa8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f630
-extern "C" void func_ov084_0212f630(void *thiz)
+extern "C" void func_ov084_0212f630(daPkn_c *c)
 {
-    unsigned char *c = (unsigned char *)thiz;
     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0x7f, 0, 0xcb33, 0);
-    if (func_ov084_0212ef00((char *)c) != 0) return;
-    if (*(unsigned short *)(c + 0x100) <= 0xb) return;
-    if (!_ZN9Animation8FinishedEv(c + 0x160)) return;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
-    *(int *)(c + 0x458) = 2;
+    if (func_ov084_0212ef00(c) != 0) return;
+    /* mStateTimer is signed; the ROM compares it as unsigned ldrh. */
+    if ((unsigned short)c->mStateTimer <= 0xb) return;
+    if (!_ZN9Animation8FinishedEv((char *)c + 0x160)) return;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
+    c->mState = 2;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- func_ov084_0212f588, 0x0212f588, size 0xa8 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f588
-extern "C" void func_ov084_0212f588(void *thiz)
+extern "C" void func_ov084_0212f588(daPkn_c *c)
 {
-    unsigned char *c = (unsigned char *)thiz;
-    *(unsigned char *)(c + 0x45c) = 1;
-    if (_ZN9Animation8FinishedEv(c + 0x160)) {
-        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
-        *(int *)(c + 0x458) = 1;
+    c->mClsnEnabled = 1;
+    if (_ZN9Animation8FinishedEv((char *)c + 0x160)) {
+        _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e0c.file, 0x40000000, 0x1000, 0);
+        c->mState = 1;
     } else {
-        int thresh = (*(int *)(c + 0x46c) != 0) ? 0x12c000 : 0x190000;
-        if (*(int *)(c + 0x464) < thresh) {
-            if (func_ov084_0212f1d0((char *)c) != 0) {
-                *(int *)(c + 0x168) = 0;
-                *(int *)(c + 0x458) = 2;
+        int thresh = (c->unk_46c != 0) ? 0x12c000 : 0x190000;
+        if (c->unk_464 < thresh) {
+            if (func_ov084_0212f1d0(c) != 0) {
+                *(int *)((char *)c + 0x168) = 0;
+                c->mState = 2;
             }
         }
     }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- func_ov084_0212f460, 0x0212f460, size 0x128 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f460
+/* Named mStateTimer / mPos* / mAngleY / mParticleHandle size-DIFF this body. */
 void func_ov084_0212f460(void *self)
 {
     char *c = (char *)self;
@@ -639,50 +609,47 @@ void func_ov084_0212f460(void *self)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- func_ov084_0212f33c, 0x0212f33c, size 0x124 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f33c
-void func_ov084_0212f33c(void *self)
+void func_ov084_0212f33c(daPkn_c *c)
 {
-    char *c = (char*)self;
     int r4;
     struct Vector3 v;
 
-    *(unsigned char*)(c + 0x45c) = 0;
-    r4 = *(int*)(c + 0x80);
-    if (*(unsigned short*)(c + 0x100) == 0) {
-        func_02012694(0x11f, c + 0x74);
+    c->mClsnEnabled = 0;
+    r4 = c->mScaleX;
+    if ((unsigned short)c->mStateTimer == 0) {
+        func_02012694(0x11f, &c->mCamSpacePosX);
         r4 = 0x1000;
     }
 
-    *(void**)(c + 0x470) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(unsigned int*)(c + 0x470), 0xfc, *(int*)(c + 0x5c),
-        *(int*)(c + 0x60) + 0x1e000, *(int*)(c + 0x64), 0, 0);
-    *(void**)(c + 0x474) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-        *(unsigned int*)(c + 0x474), 0xfd, *(int*)(c + 0x5c),
-        *(int*)(c + 0x60) + 0x1e000, *(int*)(c + 0x64), 0, 0);
+    c->mParticleHandle = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        (unsigned int)c->mParticleHandle, 0xfc, c->mPosX,
+        c->mPosY + 0x1e000, c->mPosZ, 0, 0);
+    c->unk_474 = (s32)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+        (unsigned int)c->unk_474, 0xfd, c->mPosX,
+        c->mPosY + 0x1e000, c->mPosZ, 0, 0);
 
     if (r4 > 0) {
         r4 = r4 - 0xa3;
     } else {
         r4 = 0;
-        if (*(unsigned char*)(c + 0x108) != 0) {
-            int y = *(int*)(c + 0x60);
-            int z = *(int*)(c + 0x64);
-            v = (struct Vector3){*(int*)(c + 0x5c), y + 0x78000, z};
+        if (c->unk_108 != 0) {
+            int y = c->mPosY;
+            int z = c->mPosZ;
+            v = (struct Vector3){c->mPosX, y + 0x78000, z};
             _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x122, r4, &v, (void*)r4, *(signed char*)(c + 0xcc), -1);
-            *(unsigned char*)(c + 0x108) = r4;
+                0x122, r4, &v, (void*)r4, c->mAreaId, -1);
+            c->unk_108 = r4;
         }
-        *(int*)(c + 0x458) = 7;
+        c->mState = 7;
     }
-    *(int*)(c + 0x80) = r4;
-    *(int*)(c + 0x84) = r4;
-    *(int*)(c + 0x88) = r4;
+    c->mScaleX = r4;
+    c->mScaleY = r4;
+    c->mScaleZ = r4;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- func_ov084_0212f2dc, 0x0212f2dc, size 0x60 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f2dc
 extern "C" {  /* Retained C-linkage helper. */
@@ -697,7 +664,6 @@ void func_ov084_0212f2dc(daPkn_c *c){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- func_ov084_0212f298, 0x0212f298, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f298
 /* State 8 is reached through the void PMF table and has no result consumer.
@@ -726,10 +692,10 @@ void func_ov084_0212f298(daPkn_c *c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- func_ov084_0212f204, 0x0212f204, size 0x94 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f204
 extern "C" {  /* Retained C-linkage helper. */
+/* Named unk_460 / mPosX / mTargetAngleY / mAngleY size-DIFF this body. */
 void func_ov084_0212f204(char* r4){
   struct Vector3 v;
   *(char**)(r4 + 0x460) = _ZN8dActor_c13ClosestPlayerEv();
@@ -752,25 +718,25 @@ void func_ov084_0212f204(char* r4){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- func_ov084_0212f1d0, 0x0212f1d0, size 0x34 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212f1d0
 extern "C" {  /* Retained C-linkage helper. */
-int func_ov084_0212f1d0(char *c) {
-    char *p = *(char**)(c + 0x460);
+int func_ov084_0212f1d0(daPkn_c *c) {
+    char *p = (char *)c->unk_460;
     if (p == 0) return 0;
+    /* Player mVertSpeed at +0xa8 / mHorzSpeed at +0x98. */
     if (*(int*)(p + 0xa8) > 0xa000) return 1;
     return *(int*)(p + 0x98) > 0xa000;
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- func_ov084_0212ef00, 0x0212ef00, size 0x2d0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ef00
 extern "C" {  /* Retained C-linkage helper. */
-int func_ov084_0212ef00(char* self)
+int func_ov084_0212ef00(daPkn_c *pkn)
 {
+    char *self = (char *)pkn;
     void *actor;
     u32 flags;
     u32 raw;
@@ -798,18 +764,18 @@ int func_ov084_0212ef00(char* self)
         func_02012694(0x1d, self + 0x74);
     }
     func_020105cc(self, flags);
-    func_ov084_0212ebb4(self);
+    func_ov084_0212ebb4(pkn);
     goto successA;
 
 jumpA:
     if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(self, self + 0x380, actor) != 0) {
         _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
-        func_ov084_0212ebb4(self);
+        func_ov084_0212ebb4(pkn);
         goto successA;
     }
 
     if (*(u32*)(self + 0x3a0) & 0x40000) {
-        func_ov084_0212ebb4(self);
+        func_ov084_0212ebb4(pkn);
         goto successA;
     }
 
@@ -836,7 +802,7 @@ checkA2:
         int u = (int)(type == 9);
         if (u == 0) goto second;
     }
-    func_ov084_0212ebb4(self);
+    func_ov084_0212ebb4(pkn);
     return 1;
 
 second:
@@ -861,18 +827,18 @@ second:
         func_02012694(0x1d, self + 0x74);
     }
     func_020105cc(self, flags);
-    func_ov084_0212ebb4(self);
+    func_ov084_0212ebb4(pkn);
     return 1;
 
 jumpB:
     if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(self, self + 0x380, actor) != 0) {
         _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
-        func_ov084_0212ebb4(self);
+        func_ov084_0212ebb4(pkn);
         return 1;
     }
 
     if (*(u32*)(self + 0x3d4) & 0x40000) {
-        func_ov084_0212ebb4(self);
+        func_ov084_0212ebb4(pkn);
         return 1;
     }
 
@@ -884,7 +850,7 @@ checkB2:
         int u = (int)(type == 9);
         if (u == 0) goto fail;
     }
-    func_ov084_0212ebb4(self);
+    func_ov084_0212ebb4(pkn);
     return 1;
 
 fail:
@@ -893,12 +859,12 @@ fail:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- func_ov084_0212ec60, 0x0212ec60, size 0x2a0 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ec60
 extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212ec60(char* c)
+void func_ov084_0212ec60(daPkn_c *self)
 {
+    char *c = (char *)self;
     volatile s16 ang[3];
     struct { PknMtx43 saved; PknVec3 tv; PknVec3 v; } L;
     int lr;
@@ -962,35 +928,34 @@ void func_ov084_0212ec60(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN7daPkn_c16OnAimedAtWithEggEv, 0x0212ec58, size 0x8 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN7daPkn_c16OnAimedAtWithEggEv
 /* daPkn_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 s32 daPkn_c::OnAimedAtWithEgg() {
-    return 286720;
+    return 0x46000;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- func_ov084_0212ec04, 0x0212ec04, size 0x54 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ec04
 extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212ec04(char* c, int arg) {
-    *(int*)(c + 0x458) = 2;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
-    *(unsigned int*)(c + 0x168) = ((unsigned int)(arg << 0x10)) >> 4;
+void func_ov084_0212ec04(daPkn_c *c, int arg) {
+    c->mState = 2;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e14.file, 0x40000000, 0x1000, 0);
+    /* currFrame is ModelAnim's Animation base at +0x50, then +0x8. Named
+       `mModelAnim.currFrame` DIFFs the store (MI this-adjust). */
+    *(unsigned int *)((char *)c + 0x168) = ((unsigned int)(arg << 0x10)) >> 4;
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- func_ov084_0212ebb4, 0x0212ebb4, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol func_ov084_0212ebb4
 extern "C" {  /* Retained C-linkage helper. */
-void func_ov084_0212ebb4(void *c)
+void func_ov084_0212ebb4(daPkn_c *c)
 {
-    func_0201267c(0xc1, (char*)c + 0x74);
-    *(int*)((char*)c + 0x458) = 5;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x110, data_ov084_02130e24.file, 0x40000000, 0x1000, 0);
+    func_0201267c(0xc1, &c->mCamSpacePosX);
+    c->mState = 5;
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&c->mModelAnim, data_ov084_02130e24.file, 0x40000000, 0x1000, 0);
 }
 }
