@@ -7,6 +7,13 @@
 // full closed-axis list). Not byte-matchable without the NITRO V0.5-V0.6.1 compiler.
 // For recomp/port purposes this file is complete: the compiled code is functionally
 // identical to the ROM, differing only in register names and instruction order.
+// 2026-09-12 (run link100 wave 7, lane FLOORS/BANK): the L0() u64-mask launder
+// below was audited and is DEAD under 2004/b56 -- redefining it to a plain
+// identity leaves the function byte-identical at the same 96-word divergence
+// (tools/match.py --c src/func_02009e70.cpp --func func_02009e70 --addr
+// 0x02009e70 --size 0x109c --module arm9 --version 2004/b56, 96 MISMATCH both
+// before and after). Kept as a no-op macro rather than inlined at every call
+// site so the historical diff stays reviewable.
 #include "dBgCh_Gnd.h"
 #include "dBgCh_Lin.h"
 
@@ -87,7 +94,11 @@ extern struct CamMode data_020874cc;
 
 static inline int CheckMode(void) { return data_0209f2d8 == 1; }
 
-#define L0(p) ((s32)(((long long)(s32)(p)) & 0xFFFFFFFFFFFFFFFFLL))
+// L0() was a u64-mask launder (`& 0xFFFFFFFFFFFFFFFFLL` through a long long round
+// trip); dead under 2004/b56, run link100 wave 7 lane BANK: identity vs the launder
+// re-measures byte-identical at 96 (see tools/match.py output pasted in the PR).
+// Kept as a macro (not inlined at each call site) so the diff stays reviewable.
+#define L0(p) (p)
 #define FXMUL(a, b) ((s32)((((s64)(a)) * (b) + 0x800) >> 12))
 #define FXMULC(a, b) ((s32)((((s64)(a)) * (s64)(b) + 0x800) >> 12))
 
