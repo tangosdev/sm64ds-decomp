@@ -8,6 +8,18 @@
  * extra bytes. Hand-asm matches: ldmeqia (not ldmeq alone) spells the ROM's
  * predicated early-return (ldmeq sp!,{lr}; bxeq lr).
  * mwccarm 1.2/sp2p3: -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e
+ *
+ * Re-measured 2026-09-12 under 2004/b56, three axes notes 6u had not covered, all inert
+ * (the stored draft's div stays 1, residual unchanged at +0x38):
+ *   #pragma peephole off, #pragma opt_rebuildconditionals off,
+ *   #pragma opt_rebuildlogicals off, #pragma opt_collapselogicalselectionintobittest off
+ *     -- byte-identical output, consistent with 6u's finding that cond-opt runs on post-RA
+ *        physical code where no IRO-level pragma reaches it;
+ *   #pragma optimization_level 1 -- changes the function's size (0x80 vs 0x78), the same
+ *        trade -O1 makes: the branch comes back but the predicated early-return goes;
+ *   the TU language (the 6al lever): the same draft as //cpp with extern "C" linkage is
+ *        byte-identical to the C build, div 1.
+ * 6u's verdict stands. Ordinary ARM, so it is NOT an asm primitive and stays NONMATCHING.
  */
 extern unsigned char data_020a9d2c;
 extern void func_02068484(void);

@@ -9,10 +9,27 @@
 // the old stem config declared a function at 0x020717c0 that no source resolved to,
 // and tools/nearmiss_db.py resync-names would have relabelled the stored row to
 // __rethrow and then lost its link to this source.
-// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm. Nintendo shipped this as an
-// assembly primitive, so there is no original C to recover and no match to chase. Counts as
-// done under the asm-primitive policy - see notes/arm9-endgame.md.
+// NONMATCHING (ASM-PRIMITIVE): byte-exact hand-written asm, so there is no original C to
+// recover and no match to chase. Counts as done under the asm-primitive policy - see
+// notes/arm9-endgame.md. (Metrowerks shipped this one, not Nintendo: it is MSL's C++
+// exception runtime, not an SDK or BIOS shim.)
 // HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
+//
+// Which class, precisely, re-checked 2026-09-12. The body carries no instruction from
+// notes/asm-policy.md's objective list (no mcr/mrc, swi, msr/mrs, banked ldm/stm ^, swp), so
+// that test does not admit it. What does is the other accepted bucket in notes/arm9-endgame.md,
+// the frame fragments the symbol table split out (func_020729e8 is a bare epilogue;
+// func_020732e8, func_02073584 and func_0207335c start mid-frame): this is the mirror image,
+// a PROLOGUE-only fragment. It opens a 0x70 frame, snapshots r4-r11, the caller's sp and lr
+// into it, zeroes the first three words, points r0 at the frame and BRANCHES to
+// func_02071be8. It never restores those registers and never returns.
+//
+// mwccarm cannot be made to emit that. Callee-saved registers are only saved because the
+// function body uses them, and every save it emits is paired with a restore in an epilogue
+// this function does not have. Measured under 2004/b56: the closest C shape (a 0x70 local
+// context struct, three fields zeroed, func_02071be8(&ctx) as the last statement) compiles
+// to 0x2c bytes opening `stmdb sp!,{lr}; sub sp,sp,#0x74` with a full epilogue, and no
+// source form reaches a prologue that saves without restoring.
 extern void func_02071be8(void);
 
 asm void __rethrow(void) {
