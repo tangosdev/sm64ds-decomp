@@ -14,11 +14,7 @@ src/d_a_dgr.c:
 
 src/actors/daDkk_c.cpp:
     complete
-    .text start:0x021118c8 end:0x02111cf4
-
-src/d_a_dkk.c:
-    complete
-    .text start:0x02111cf4 end:0x02111d40
+    .text start:0x021118c8 end:0x02111d40
 
 src/_ZN11PyramidStepD1Ev.cpp:
     complete

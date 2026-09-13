@@ -5,15 +5,15 @@
 
 /* RTTI names the class directly: _ZTS7daDkk_c / _ZTI7daDkk_c
  * (config/arm9/overlays/ov025/symbols.txt 0x021137e0/0x021137ec). The
- * factory the tree calls daDkk_c_classInit (src/d_a_dkk.c) gives the real
- * size: fBase_c::operator new(928) == 0x3a0.
+ * factory the tree calls daDkk_c_classInit gives the real size:
+ * fBase_c::operator new(928) == 0x3a0.
  *
- * BASE IS daDsnBase_c, NOT dBgActor_c DIRECTLY. daDkk_c_classInit's un-migrated
- * form stores _ZTV11daDsnBase_c as a mid-construction vtable before this
- * class's own -- daDsnBase_c.h documents the whole family (it and daDsn_c /
- * Thwomp share this base). daDsnBase_c's own destructor is defined inline in
- * its class body specifically so descendants inline its teardown rather than
- * emitting a `bl` to it; this class defines its own destructor inline for the
+ * BASE IS daDsnBase_c, NOT dBgActor_c DIRECTLY. daDkk_c_classInit stores
+ * _ZTV11daDsnBase_c as a mid-construction vtable before this class's own --
+ * daDsnBase_c.h documents the whole family (it and daDsn_c / Thwomp share
+ * this base). daDsnBase_c's own destructor is defined inline in its class
+ * body specifically so descendants inline its teardown rather than emitting
+ * a `bl` to it; this class defines its own destructor inline for the
  * separate reason spelled out at the declaration below. D1 (0x021118c8) and D0
  * (0x02111928) both walk: own vptr, then daDsnBase_c's (inlined --
  * ShadowModel@0x338 then TextureSequence@0x324), then dBgActor_c's (also
@@ -24,26 +24,21 @@
  * there. daDsnBase_c.h notes 0x360..0x3a0 exists in both leaves
  * (daDkk_c_classInit allocates 0x3a0, Thwomp_Spawn 0x3a4) but stays declared
  * per-leaf until a later pass shows both reading the same offsets. This TU
- * touches SIX words in that span. TWO ARE NAMED HERE:
+ * touches SIX words in that span:
  *
  *   0x390  a Fix12 height InitResources' raycast probe writes and nothing in
  *          this TU reads -- coined mProbeHeight.
- *   0x398  a small state selector Behavior switches on (cases 0..7) --
- *          coined mState.
- *
- * FOUR MORE ARE LIVE BUT LEFT UNNAMED, reached through raw offsets exactly as
- * the un-migrated shards reached them. They stay inside pad_394 and pad_39c
- * until a second reader fixes what they are:
- *
  *   0x394  s32. The state-5 fall reads it as the ground height to snap to and
  *          never writes it -- so it is NOT mProbeHeight under another name.
  *          0x390 and 0x394 are separate words; both accesses byte-match.
+ *          Live: pad_394 -> unk_394.
+ *   0x398  a small state selector Behavior switches on (cases 0..7) --
+ *          coined mState.
  *   0x39c  s16, a target facing angle: state 6 writes it, state 7 approaches it.
- *   0x39e  u8, the post-landing pause countdown.
+ *          Live: pad_39c -> unk_39c.
+ *   0x39e  u8, the post-landing pause countdown. Live: unk_39e.
  *   0x39f  u8, the landing counter that turns the actor on its fourth pass.
- *
- * Naming them is a prose question only -- every access above is already a raw
- * offset, so no byte moves either way.
+ *          Live: unk_39f.
  *
  * Slot 29, OnAimedAtWithEgg, is an override this class supplies beyond the
  * two (InitResources, Behavior) daDsnBase_c leaves abstract; the signature
@@ -52,20 +47,26 @@
  * SM64DS RTTI names the implementation daDkk_c. The reconstructed factory
  * daDkk_c_classInit (historical alias Grindel_Spawn) installs this class's
  * cartridge vtable; the reconstructed profile global g_profile_DONKAKU
- * (historical alias Grindel_SpawnInfo) is its registry descriptor.
+ * (historical alias Grindel_SpawnInfo) is its registry descriptor. Overlay
+ * actor 162 is GRINDEL in symbols/overlay_actors.md and DONKAKU in the ROM
+ * debug table -- this class, not daDgr_c (DONGURU, actor 163).
  */
 
 #ifdef __cplusplus
 
 #include "daDsnBase_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 struct daDkk_c : daDsnBase_c {
     u8  pad_360[0x30];                /* 0x360 -- unclaimed, within daDsnBase_c's
                                           declared-but-unmodelled 0x360..0x3a0 span */
     s32 mProbeHeight;                 /* 0x390 */
-    u8  pad_394[0x4];
+    s32 unk_394;                      /* 0x394 -- ground height the fall snaps to */
     s32 mState;                       /* 0x398 */
-    u8  pad_39c[0x4];                 /* 0x39c, to the ROM's 0x3a0 */
+    s16 unk_39c;                      /* 0x39c -- target facing for the turn */
+    u8  unk_39e;                      /* 0x39e -- post-landing pause countdown */
+    u8  unk_39f;                      /* 0x39f -- landing-pass counter */
 
     /* --- vtable --- */
     /* INLINE ON PURPOSE, and this is a byte-level requirement rather than a
@@ -94,6 +95,15 @@ struct daDkk_c : daDsnBase_c {
     int InitResources();
     int Behavior();
     int OnAimedAtWithEgg();
+
+    /* Leaf operator new until #2570 merges fBase_c's own. unsigned long, not
+       unsigned int: mwccarm 2004/b56 mangles the two differently and the
+       global ::operator new the implicit `new` would otherwise call is
+       `_Znwm`. */
+    static void *operator new(unsigned long size)
+    {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daDkk_c_size_must_be_0x3a0[sizeof(daDkk_c) == 0x3a0 ? 1 : -1];
