@@ -75,7 +75,9 @@ struct daBmb_c : dEnemyBase_c {
     /* Behavior's state selector: it branches on == 5 (skip almost everything),
        == 4 (the egg/Chuckya hand-off) and == 0 (allow the wall bounce). */
     s32                          mState;                /* 0x3dc */
-    s32                          unk_3e0;               /* 0x3e0 -- InitResources stores 2; no reader */
+    /* InitResources stores 2. func_ov102_0214ae1c reads it as Player::Hurt's
+       damage; ov078/daBombking_c 02123864 writes 0 on a spawned bob-omb. */
+    s32                          unk_3e0;               /* 0x3e0 */
     u8  pad_3e4[0x4];
     u16                          unk_3e8;               /* 0x3e8 -- zeroed by InitResources */
     u16                          unk_3ea;               /* 0x3ea -- zeroed by InitResources */
@@ -93,8 +95,8 @@ struct daBmb_c : dEnemyBase_c {
        anything else starts live. Behavior reads it again for the egg path. */
     u8                           mVariant;              /* 0x3f5 */
     /* A latch: while non-zero Behavior does nothing but call func_ov102_0214ae1c
-       and return. InitResources clears it, and nothing matched sets it, so what
-       the latch MEANS is not evidenced -- only that it diverts the whole frame. */
+       and return. InitResources clears it; ov078/daBombking_c 02123864 writes 1
+       on a spawned bob-omb. */
     u8                           unk_3f6;               /* 0x3f6 */
     u8  pad_3f7[0x9];
 
