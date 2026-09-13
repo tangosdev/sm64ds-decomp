@@ -80,6 +80,10 @@ src/_ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo.cpp:
     complete
     .text start:0x01ffd920 end:0x01ffd97c
 
+src/_ZN3IRQ20UserInterruptHandlerEv.cpp:
+    complete
+    .text start:0x01ffd97c end:0x01ffd9d4
+
 src/func_01ffd9d4.c:
     complete
     .text start:0x01ffd9d4 end:0x01ffdb28
