@@ -1,6 +1,7 @@
 // NONMATCHING (NOT-C-EXPRESSIBLE): byte-exact hand-written asm. Nintendo shipped this as an
 // assembly primitive, so there is no original C to recover and no match to chase. Counts as
 // done under the asm-primitive policy - see notes/asm-policy.md.
+// HAND-ASM PRIMITIVE: byte-faithful asm-block match (assembly-only primitive). Per asm policy.
 // bhs reads the CARRY flag, which is a property of the value before the subtraction. C has
 // no expression over the post-subtraction result that denotes carry, and mwccarm fuses a
 // subtract with its following test only when the test is against zero (Z/N), so the HS
