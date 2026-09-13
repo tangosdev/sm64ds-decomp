@@ -3,7 +3,10 @@
 
 #include "dBgActor_c.h"
 
-/* daObjIceBoard_c -- the shatterable ice sheet (profile ICE_BOARD, ov018).
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* daObjIceBoard_c -- Cool Cool Mountain's shatterable ice sheet (profile
+ * ICE_BOARD, actor 295, ov018).
  *
  * WHAT THE CARTRIDGE PROVES ABOUT THE NAME AND THE SHAPE:
  *   _ZTS  ov018 0x02113afc  "15daObjIceBoard_c"
@@ -24,12 +27,11 @@
  * Nine of the 32 slots point inside ov018 and are listed below; every other
  * slot still holds dBgActor_c's arm9 word, so nothing else is overridden.
  *
- * The destructor is declared FIRST and INLINE on purpose. Out of line mwccarm
- * emits D0 ahead of D1 and the cartridge has D1 first, which rombuild refuses;
- * declaring it first is also what makes this TU the vtable's home. */
+ * The destructor is declared LAST and INLINE on purpose. Class instantiation
+ * via the factory's `new` emits the retail D1/D0 pair in cartridge order
+ * without a separate leaf D2 body; out of line mwccarm emits D0 ahead of D1
+ * and adds the D2 the ROM never carried. */
 struct daObjIceBoard_c : dBgActor_c {
-    virtual ~daObjIceBoard_c() {}                 /* slots 16, 17 */
-
     virtual int InitResources();                  /* slot  0 */
     virtual int CleanupResources();               /* slot  3 */
     virtual int Behavior();                       /* slot  6 */
@@ -37,6 +39,15 @@ struct daObjIceBoard_c : dBgActor_c {
     virtual void OnGroundPounded(dActor_c &other);/* slot 21 */
     virtual void OnHitByMegaChar(Player &player); /* slot 27 */
     virtual void Kill();                          /* slot 31 */
+
+    /* Leaf size_t operator new. A plain `new daObjIceBoard_c` without this
+       relocates to the global `_Znwm`; this routes the factory through
+       fBase_c::operator new, the call this TU's classInit actually makes. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
+    virtual ~daObjIceBoard_c() {}                 /* slots 16, 17 */
 };
 
 typedef char daObjIceBoard_c_size_must_be_0x320[sizeof(daObjIceBoard_c) == 0x320 ? 1 : -1];
