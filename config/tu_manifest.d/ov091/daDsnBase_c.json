@@ -113,12 +113,12 @@
         "_ZN11daDsnBase_cD1Ev",
         "_ZN11daDsnBase_cD0Ev",
         "_ZN7Vector3D1Ev",
-        "_ZN25@class$424daDsnBase_c_cppD1Ev"
+        "_ZN25@class$430daDsnBase_c_cppD1Ev"
       ],
       "deadstripped": [
         "_ZN11daDsnBase_cD0Ev",
         "_ZN11daDsnBase_cD1Ev",
-        "_ZN25@class$424daDsnBase_c_cppD1Ev",
+        "_ZN25@class$430daDsnBase_c_cppD1Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -354,9 +354,9 @@
       "reason": "Vector3's four-byte inline destructor, emitted as vague linkage because func_ov091_02132f04 takes two Vector3 locals. The cartridge owns it at arm9:0x020072c0 and an enrolled source already reaches it, so this object's copy is a duplicate that production isolation discards."
     },
     {
-      "symbol": "_ZN25@class$424daDsnBase_c_cppD1Ev",
+      "symbol": "_ZN25@class$430daDsnBase_c_cppD1Ev",
       "disposition": "deadstrip",
-      "reason": "The implicit destructor of the file-local anonymous struct that func_ov091_02132f04 declares to hold its two Vector3 locals. mwccarm names such a type after the translation unit, so this four-byte body exists only in this object and has no ROM home anywhere -- no symbols.txt in config/ names it. Nothing references it; production isolation deadstrips it."
+      "reason": "The implicit destructor of the file-local anonymous struct that func_ov091_02132f04 declares to hold its two Vector3 locals. mwccarm names such a type after the translation unit, so this four-byte body exists only in this object and has no ROM home anywhere -- no symbols.txt in config/ names it. Nothing references it; production isolation deadstrips it. The $430 uniquifier moved from $424 when include/fBase_c.h gained the size_t operator new adapter."
     }
   ]
 }

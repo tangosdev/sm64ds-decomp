@@ -37,9 +37,23 @@ struct daPgMthr_c : dActor_c {
     s32 mHomePosX;                   /* 0x364 */
     s32 mHomePosY;                   /* 0x368 */
     s32 mHomePosZ;                   /* 0x36c */
-    u8  pad_370[0x4];
-    s32 unk_374;                     /* 0x374 */
-    u8  pad_378[0x14];
+    /* 021123d0 writes data_ov018_02113c4c + (i<<4) here; 02112398/0211235c
+       call through it as a PMF pair. */
+    void *mState;                    /* 0x370 */
+    /* ClosestPlayer / FindWithID result. StartTalk, ShowMessage,
+       GetTalkState, DropActor take it as Player. */
+    Player *mPlayer;                 /* 0x374 */
+    /* 021118fc: last FindWithID hit, so a new PLAYER (0xbf) is noticed. */
+    dActor_c *mLastPlayer;           /* 0x378 */
+    s32 unk_37c;                     /* 0x37c -- 021122ec/021121dc/02111f1c write 0/1/2; no reader in this TU */
+    s16 mLookAngX;                   /* 0x380 -- 02111a48 approaches, 02111d28 applies */
+    s16 mLookAngY;                   /* 0x382 */
+    s16 mMessageId;                  /* 0x384 -- 0xac / 0xad / 0xae from 02111968 */
+    u8  mGaveStar;                   /* 0x386 -- 02111fac sets when spawning POWER_STAR */
+    u8  mHoldingBaby;                /* 0x387 -- 02111968, held actorID 0x100 (BABY_PENGUIN) */
+    u8  mTalkStep;                   /* 0x388 -- 02111fac 0..3 */
+    u8  mTalkTimer;                  /* 0x389 -- 021121dc arms 0x3c; DecIfAbove0_Byte */
+    u8  pad_38a[2];
 
     /* --- vtable overrides. Slots are inherited from fBase_c/dActor_c. --- */
     /* Defined here, in the class body, and not out of line in the .cpp: the
@@ -100,13 +114,18 @@ struct daPgMthr_c {
     s32 mHomePosX;            /* 0x364 */
     s32 mHomePosY;            /* 0x368 */
     s32 mHomePosZ;            /* 0x36c */
-    u8  pad_370[0x4];
-    s32 unk_374;            /* 0x374 */
-    /* Trailing remainder, 0x14 bytes. Every marker is already typed and the
-       last field the five recovered functions touch ends at 0x378;
-       daPgMthr_c_classInit allocates 0x38c. The reference does not document
-       this class's members. */
-    u8  pad_378[0x14];
+    void *mState;             /* 0x370 */
+    s32 mPlayer;              /* 0x374 */
+    s32 mLastPlayer;          /* 0x378 */
+    s32 unk_37c;              /* 0x37c */
+    s16 mLookAngX;            /* 0x380 */
+    s16 mLookAngY;            /* 0x382 */
+    s16 mMessageId;           /* 0x384 */
+    u8  mGaveStar;            /* 0x386 */
+    u8  mHoldingBaby;         /* 0x387 */
+    u8  mTalkStep;            /* 0x388 */
+    u8  mTalkTimer;           /* 0x389 */
+    u8  pad_38a[2];
 };
 
 typedef char MotherPenguin_size_must_be_0x38c[sizeof(struct daPgMthr_c) == 0x38c ? 1 : -1];

@@ -52,7 +52,10 @@ struct daBmb_c : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x364 */
-    u8  pad_38c[0x4];
+    /* 0214b988 stores ClosestPlayer here after Dist/angle checks;
+       0214ad14 stores ClosestPlayer unconditionally. Arm 0 (0214bf64)
+       chases this pointer. */
+    Player                      *mChasePlayer;          /* 0x38c */
     /* Everything from here down was reachable only through the `struct Obj`
        shadow InitResources used to carry, so the generated header never had
        it. mMatrix is a 0x30-byte block copied wholesale from IDENTITY_MATRIX4X3. */
@@ -71,14 +74,20 @@ struct daBmb_c : dEnemyBase_c {
     s32                          mHomePosX;             /* 0x3c4 */
     s32                          mHomePosY;             /* 0x3c8 */
     s32                          mHomePosZ;             /* 0x3cc */
-    u8  pad_3d0[0xc];
+    /* 0214b53c: UpdateCarry offset; zeroed after the copy. */
+    s32                          mCarryOffX;            /* 0x3d0 */
+    s32                          mCarryOffY;            /* 0x3d4 */
+    s32                          mCarryOffZ;            /* 0x3d8 */
     /* Behavior's state selector: it branches on == 5 (skip almost everything),
        == 4 (the egg/Chuckya hand-off) and == 0 (allow the wall bounce). */
     s32                          mState;                /* 0x3dc */
-    s32                          unk_3e0;               /* 0x3e0 -- InitResources stores 2; no reader */
+    /* 0214ae1c passes this as Player::Hurt's damage; InitResources stores 2. */
+    s32                          mHurtDamage;           /* 0x3e0 */
     u8  pad_3e4[0x4];
     u16                          unk_3e8;               /* 0x3e8 -- zeroed by InitResources */
-    u16                          unk_3ea;               /* 0x3ea -- zeroed by InitResources */
+    /* 0214b384 is the setter (also called from ov078 / QuestionBlock);
+       0214b248 decrements and explodes at 1. */
+    u16                          mFuseTimer;            /* 0x3ea */
     u16                          unk_3ec;               /* 0x3ec -- InitResources stores 0x2000 */
     u16                          unk_3ee;               /* 0x3ee */
     /* InitResources' last statement: a snapshot of mAngleY taken next to the
@@ -139,19 +148,12 @@ struct daBmb_c : dEnemyBase_c {
 
 typedef char daBmb_c_size_must_be_0x400[sizeof(daBmb_c) == 0x400 ? 1 : -1];
 
-/* The vtable this class's translation unit emits, declared here so the registry
-   factory can name it.  daBmb_c_classInit is an `extern "C"` factory and not a
-   constructor -- the cartridge's symbol is the bare name -- so the vptr store at
-   the head of a fresh object is written by hand and has to spell the vtable.
-   That declaration is a property of daBmb_c, so it belongs with the class and
-   with the allocation size the same factory proves, not in the body of whichever
-   source file does the store; the legacy one-function shard likewise read it
-   from a shared declaration header.
-
-   The factory addresses it as `_ZTV7daBmb_c + 2`, because that TU DEFINES the
-   vtable -- OnYoshiTryEat is the key function -- so the bare symbol names the
-   two-word Itanium preamble, eight bytes below the slot array the cartridge's
-   own store points at. */
+/* The vtable this class's translation unit emits.  daBmb_c_classInit is an
+   `extern "C"` factory (`return new daBmb_c()`) and not a constructor -- the
+   cartridge's symbol is the bare name -- so the synthesized ctor stores
+   `_ZTV7daBmb_c + 2`.  That `+ 2` is int-indexed: this TU DEFINES the vtable
+   (OnYoshiTryEat is the key function), so the bare symbol names the two-word
+   Itanium preamble, eight bytes below the slot array. */
 extern int _ZTV7daBmb_c[];
 
 #endif /* DABMB_C_H */

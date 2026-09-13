@@ -158,11 +158,18 @@ as "illegal function overloading". That cost 105 files their eligibility when it
 was tried. Correcting the parameter type is worth doing -- in `decl_common.h`,
 once, for every caller at the same time.
 
-### 6b. Why `operator new` is not declared in-class
+### 6b. Why the ROM `operator new` body is still an extern-C `j` function
 
-CW 1.2 rejects an in-class declaration of `operator new` ("illegal 'operator'
-declaration"), and it is neither virtual nor layout-affecting, so
-`src/_ZN7fBase_cnwEj.cpp` defines it under its mangled name instead.
+CW 1.2 accepts an in-class `operator new` only when the first parameter is
+`size_t` (`unsigned long`, mangled `m`). The ROM body is
+`fBase_c::operator new(unsigned)` (`j` / `_ZN7fBase_cnwEj`). Declaring that
+`j` signature in-class is `illegal 'operator' declaration`; `u32` is the same
+reject (notes/ctor-migration.md 5d).
+
+`include/fBase_c.h` therefore carries the legal size_t overload, inline, which
+forwards to the ROM `j` body. `return new T` binds that overload.
+`src/_ZN7fBase_cnwEj.cpp` stays the `j` definition under the mangled name
+because that signature cannot be spelled as a member. Not virtual, not layout.
 
 ## 7. `dActor_c` field widths -- the `0x080..0x0ab` block
 

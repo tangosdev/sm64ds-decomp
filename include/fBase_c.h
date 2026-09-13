@@ -45,6 +45,10 @@
    declarations of one name in a single TU, which mwcc rejects. */
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
+/* ROM body of fBase_c::operator new(unsigned) — mangled _ZN7fBase_cnwEj.
+   CW will not accept that signature as an in-class operator new (first
+   parameter is not size_t). Defined in src/_ZN7fBase_cnwEj.cpp. */
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct fBase_c {
     /* Intrusive scene-graph node owned by every actor. */
@@ -147,11 +151,14 @@ struct fBase_c {
 
     /* --- non-virtual --- */
     void MarkForDestruction();
-    /* operator new is deliberately NOT declared here: CW rejects an in-class
-       declaration of it, so src/_ZN7fBase_cnwEj.cpp defines it under its mangled
-       name instead. It is neither virtual nor layout-affecting.
-
-       operator delete IS accepted in-class, and must be, INLINE: CW builds D0
+    /* size_t is unsigned long (`m`). The ROM allocator is operator new(unsigned)
+       (`j` / _ZN7fBase_cnwEj); CW rejects that signature in-class
+       ("illegal 'operator' declaration"). `return new T` binds this size_t
+       overload and forwards. Not virtual, not layout. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+    /* operator delete IS accepted in-class, and must be, INLINE: CW builds D0
        (slot 17) as "run the destructor, then call operator delete", and without
        this it calls the global _ZdlPv, which exists nowhere in this image. The
        ROM's D0s under this class are each exactly their D1 plus the two

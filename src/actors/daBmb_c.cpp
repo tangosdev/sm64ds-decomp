@@ -7,6 +7,20 @@
  * carry the class under the coined name BobOmb, which appears nowhere in the
  * cartridge; this file and include/daBmb_c.h use the cartridge's own spelling.
  *
+ * deslop
+ * Leftover: func_ov102_* helpers stay those ROM labels. State1/3/4/5 are
+ *   already members; arms 0/2 stay free functions (block-scope extern "C"
+ *   contradicts the file-scope region -- member form links Undefined). Do
+ *   not coin names for the rest.
+ * Leftover: SetAnim / dCcAc_c::Init / dBgCh_Actr::Init /
+ *   DropShadowRadHeight / KillByInvincibleChar stay mangled
+ *   (Fix12-by-value, 6az; dBgCh Init header Fix12i mangles as int).
+ * Leftover: 0214bf64 keeps Bmb_Bf64Obj (member form fails link). common.h
+ *   first (matrix copy). Player+8 param1 and Player+0xc8 belong on those
+ *   classes. data_ov102_* handles. S14 no g_profile_BOMBHEI in this TU.
+ *   *(this+0x128) |= 2 / *(this+0xb0) and *(this+0xc8)=0 are load-bearing
+ *   (not mdCc_c.flags / a new dActor_c field).
+ *
  * The base is dEnemyBase_c, read from _ZTI7daBmb_c+8 -> 0x021081c0 in ov002.
  * Vtable LENGTH is NOT evidence here: _ZTV12dEnemyBase_c is 31 slots and so is
  * _ZTV7daBmb_c, so the "31 slots means dActor_c" heuristic gives the wrong
@@ -137,17 +151,6 @@ struct Bmb_Bf64Obj {
     unsigned char f3f5;       /* 0x3f5 */
 };
 
-/* daBmb_c::Render reaches the model object at +0x300 through slot 5 of its own
-   table.  Virtual dispatch, so nothing here names a symbol. */
-struct Bmb_VBase {
-    virtual void method0() = 0;
-    virtual void method1() = 0;
-    virtual void method2() = 0;
-    virtual void method3() = 0;
-    virtual void method4() = 0;
-    virtual void method5(char *arg);
-};
-
 /* The three shared files this actor claims.  InitResources loads them and
    CleanupResources releases them, so both C++-named members need one agreed
    spelling; the members below that read the loaded handle out of the same bytes
@@ -183,8 +186,6 @@ void  func_ov102_0214c0b8(void *self);
 void  GiveCoins(int who, int count);
 int   SurfaceInfo_TestFlag0x20(int *si);
 
-int   _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void *, void *, void *, unsigned int);
-void  _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void *, void *);
 void  _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *, void *, unsigned int);
 void  _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(void *, void *, void *, unsigned int);
 
@@ -196,19 +197,12 @@ void  _ZN8dActor_c9UpdatePosEP5dCc_c(void *, void *);
 
 int   _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
 int   _ZNK10dBgCh_Actr8IsOnWallEv(void *);
-void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *);
 
-/* ModelBase::SetFile is declared void in include/ModelBase.h -- which is what
-   its own matched definition compiles as -- but the ROM leaves DoSetFile's int
-   in r0 and InitResources reads it, so the value-returning entry keeps the
-   mangled spelling until that signature is settled. */
-int   _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, BMD_File *f, int a, int b);
-
-/* Both Init calls keep scalar slots: they carry Fix12<int> BY VALUE, which
-   mwccarm passes differently at the call site, so spelling the true types
-   breaks the byte match. */
+/* dCcAc_c::Init and dBgCh_Actr::Init stay mangled. Header Init uses Fix12i
+   (s32 / `i`); the ROM symbols are Fix12<int> (`5Fix12IiE`). Method form
+   links Undefined (full-ROM #2571). */
 void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c *a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
-void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c *a, Fix12i b, Fix12i c, Vector3_16 *d, Fix12i e);
+void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c *a, Fix12i b, Fix12i c, Vector3_16 *d, Vector3_16 *e);
 
 /* Hoisted out of four member bodies.  A class member function may not sit in a
    block-scope linkage specification, so daBmb_c::State1/3/4/5 cannot carry their
@@ -219,7 +213,6 @@ void  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor
    call sites bind the same address through the reference instead. */
 void  _Z14ApproachLinearRsss(short &v, short target, short step);
 void  _ZN9Animation7AdvanceEv(void *a);
-int   _ZN8dActor_c13DistToCPlayerEv(void *p);
 void  func_ov102_0214b3b8(void *c);
 
 extern signed char   data_0209f2f8;
@@ -231,28 +224,14 @@ extern unsigned char data_0209f2d8;
 /* ==========================================================================
  * ROM ordinal 34 -- daBmb_c_classInit, 0x0214c6f8, size 0x50.
  *
- * The registry factory, folded in from its own one-function shard.  It is the TOP of the
- * cartridge's contiguous run (0x0214c748 is where daShl_c starts), so it is
- * written FIRST here: mwccarm lays .text down in reverse source order.
+ * The registry factory.  It is the TOP of the cartridge's contiguous run
+ * (0x0214c748 is where daShl_c starts), so it is written FIRST here: mwccarm
+ * lays .text down in reverse source order.
  *
- * C LINKAGE IS LOAD-BEARING -- the ROM symbol is the bare name, which the
- * legacy C file got for free and a C++ TU has to ask for.
- *
- * THE `+ 2` IS ALSO LOAD-BEARING, and it is what consolidation changed.  The
- * shard wrote the bare `(int)_ZTV7daBmb_c`, and that was right there: the
- * symbol was UNDEF and config/arm9/overlays/ov102/symbols.txt binds it to the
- * SLOT ARRAY at 0x0214e558.  Here the same spelling would bind to this TU's own
- * definition -- OnYoshiTryEat is the key function, so mwcc emits the vtable and
- * addresses the vtable OBJECT, two words of Itanium preamble (0x0214e550)
- * lower.  `+ 2` is int-indexed, so eight bytes, and it makes this store agree
- * with the addend-8 vptr stores the compiler itself emits in the destructor.
- * A relocated word is a wildcard to every byte gate, so `verify` prints the
- * same 35/35 either way; tools/objisolate.py's addend check is what refuses the
- * bare form.
- *
- * The declaration itself lives in include/daBmb_c.h, next to the class and the
- * allocation size this factory proves -- the vtable is a property of daBmb_c,
- * not of this file, and the legacy shard read it from a shared header too.
+ * C LINKAGE IS LOAD-BEARING -- the ROM symbol is the bare name.
+ * `return new daBmb_c()` MATCHES (size 0x50); it inherits
+ * `fBase_c::operator new(unsigned long)`. The synthesized ctor stores
+ * `_ZTV7daBmb_c + 2` because this TU defines the vtable.
  *
  * Reconstructed source-style name: SM64DS proves daBmb_c through RTTI,
  * allocation size, vtable identity, and the BOMBHEI registry profile; later EAD
@@ -263,25 +242,9 @@ extern unsigned char data_0209f2d8;
 extern "C" {
 
 // @symbol daBmb_c_classInit
-int *daBmb_c_classInit(void)
+daBmb_c *daBmb_c_classInit(void)
 {
-    extern void *_ZN7fBase_cnwEj(unsigned int size);
-    extern void  _ZN12dEnemyBase_cC2Ev(void *thiz);
-    extern void  _ZN7dCcAc_cC1Ev(char *thiz);
-    extern void  _ZN10dBgCh_ActrC1Ev(char *thiz);
-    extern void  _ZN9ModelAnimC1Ev(char *thiz);
-    extern void  _ZN11ShadowModelC1Ev(char *thiz);
-
-    int *p = (int *)_ZN7fBase_cnwEj(1024);
-    if (p) {
-        _ZN12dEnemyBase_cC2Ev(p);
-        p[0] = (int)(_ZTV7daBmb_c + 2);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x110);
-        _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
-        _ZN9ModelAnimC1Ev((char *)p + 0x300);
-        _ZN11ShadowModelC1Ev((char *)p + 0x364);
-    }
-    return p;
+    return new daBmb_c();
 }
 
 }
@@ -315,7 +278,7 @@ int daBmb_c::InitResources()
     Animation::LoadFile(data_ov102_0214e9c0);
     Animation::LoadFile(data_ov102_0214e9c8);
     bmd = (BMD_File*)Model::LoadFile(data_ov002_0210d9e0);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim, bmd, 1, -1) == 0)
+    if (mModelAnim.SetFile(bmd, 1, -1) == 0)
         return 0;
     if (mShadowModel.InitCylinder() == 0)
         return 0;
@@ -344,7 +307,7 @@ int daBmb_c::InitResources()
     mHomePosZ = mPosZ;
     *(Matrix4x3 *)mMatrix = IDENTITY_MATRIX4X3;
     unk_3e8 = 0;
-    unk_3ea = 0;
+    mFuseTimer = 0;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
@@ -357,7 +320,7 @@ int daBmb_c::InitResources()
        mAreaId -- so this one stays an offset rather than growing a field on a
        header 200+ files include. */
     *(int *)((char *)this + 0xc8) = 0;
-    unk_3e0 = 2;
+    mHurtDamage = 2;
     unk_3f6 = 0;
     mHomeAngleY = mAngleY;
     return 1;
@@ -386,7 +349,7 @@ int daBmb_c::Behavior()
         return 1;
     }
 
-    r0 = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(this, (char *)&mWithMeshClsn, (char *)&mModelAnim, 0);
+    r0 = UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 0);
     if (r0 != 0) {
         if (r0 == 2) {
             func_ov102_0214ae1c(this);
@@ -395,7 +358,7 @@ int daBmb_c::Behavior()
     }
 
     if (mDeathState != 0) {
-        _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(this, (char *)&mWithMeshClsn);
+        UpdateDeath(mWithMeshClsn);
         func_ov102_0214b128(this);
         flag = mFlags & 0x100;
         flag = flag != 0;
@@ -403,8 +366,8 @@ int daBmb_c::Behavior()
             mDeathState = 0;
         } else if (mDeathState != 0) {
             func_ov102_0214b53c((char *)this);
-            _ZN5dCc_c5ClearEv((char *)&mdCc_c);
-            _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
+            mdCc_c.Clear();
+            mdCc_c.Update();
             return 1;
         }
     }
@@ -414,34 +377,34 @@ int daBmb_c::Behavior()
         if (mVertAccel != 0) {
             if ((*(int*)(&mdCc_c.hitFlags) & 0x10) != 0) {
                 short v[3];
-                other = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(&mdCc_c.otherOwner));
+                other = dActor_c::FindWithID(mdCc_c.otherOwner);
                 v[0] = -0x2000;
                 v[1] = 0;
                 v[2] = 0;
                 _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player5Fix12IiE(this, v, other, 0x32000);
-                _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&mdCc_c);
-                _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 0);
-                _ZN5dCc_c5ClearEv((char *)&mdCc_c);
+                UpdatePos(&mdCc_c);
+                UpdateWMClsn(mWithMeshClsn, 0);
+                mdCc_c.Clear();
                 return 1;
             }
 
-            _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&mdCc_c);
+            UpdatePos(&mdCc_c);
             if (data_0209f2f8 == 6 && data_0209f220 == 3) {
                 if (mHorzSpeed == 0x5000) {
-                    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 3);
+                    UpdateWMClsn(mWithMeshClsn, 3);
                 } else {
-                    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 2);
+                    UpdateWMClsn(mWithMeshClsn, 2);
                 }
             } else {
-                _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 2);
+                UpdateWMClsn(mWithMeshClsn, 2);
             }
 
-            if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
-                if (SurfaceInfo_TestFlag0x20((int*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn)+4))) {
+            if (mWithMeshClsn.IsOnGround()) {
+                if (SurfaceInfo_TestFlag0x20((int *)((char *)mWithMeshClsn.GetFloorResult() + 4))) {
                     func_ov102_0214ae1c(this);
                     return 1;
                 }
-                if (_ZNK10dBgCh_Actr8IsOnWallEv((char *)&mWithMeshClsn) && mState == 0) {
+                if (mWithMeshClsn.IsOnWall() && mState == 0) {
                     func_ov102_0214beb4(this);
                 }
             }
@@ -452,14 +415,14 @@ int daBmb_c::Behavior()
             return 0;
         }
 
-        if (*(unsigned int*)(&mdCc_c.otherOwner) != 0) {
-            if ((*(int*)(&mdCc_c.hitFlags) & 0x4000) != 0) {
+        if (mdCc_c.otherOwner != 0) {
+            if ((mdCc_c.hitFlags & 0x4000) != 0) {
                 func_ov102_0214b384(this, 4);
             }
             if (mState == 4) {
                 unsigned char b = mVariant;
                 if (b == 2 || b == 3) {
-                    other = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(&mdCc_c.otherOwner));
+                    other = dActor_c::FindWithID(mdCc_c.otherOwner);
                     if (other != 0) {
                         int flag2 = *(unsigned short*)((char*)other+0xc);
                         flag2 = flag2 == 0xbd;
@@ -476,8 +439,8 @@ int daBmb_c::Behavior()
         }
 
         func_ov102_0214b53c((char *)this);
-        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
-        _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
+        mdCc_c.Clear();
+        mdCc_c.Update();
         func_ov102_0214ad40(this);
     }
     return 1;
@@ -496,8 +459,7 @@ int daBmb_c::Render()
         int flags = mFlags;
         int b = (flags & 0x40000) != 0;
         if (!b) {
-            Bmb_VBase *obj = (Bmb_VBase*)((char *)&mModelAnim);
-            obj->method5((char *)&mScaleX);
+            mModelAnim.Render((Vector3 *)&mScaleX);
         }
     }
     return result;
@@ -807,13 +769,12 @@ void func_ov102_0214bc20(char* c)
 
 // @symbol _ZN7daBmb_c6State4Ev
 int daBmb_c::State4() {
-    void *c = this;
-    if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)c + 0x144) == 0) {
-        int r = _ZNK10dBgCh_Actr8IsOnWallEv((char*)c + 0x144);
+    if (mWithMeshClsn.IsOnGround() == 0) {
+        int r = mWithMeshClsn.IsOnWall();
         if (r == 0) return r;
     }
-    func_ov102_0214b384(c, 4);
-    *(int*)((char*)c + 0x98) = 0;
+    func_ov102_0214b384(this, 4);
+    mHorzSpeed = 0;
     return 0;
 }
 
@@ -909,20 +870,19 @@ void func_ov102_0214baa0(char *self)
 // @symbol _ZN7daBmb_c6State5Ev
 void daBmb_c::State5()
 {
-    char *c = (char *)this;
-    if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x7d0000)
+    if (DistToCPlayer() < 0x7d0000)
         return;
-    if ((*(int*)(c + 0xb0) & 8) == 0) {
+    if ((*(int *)((char *)this + 0xb0) & 8) == 0) {
         int b = (data_0209f2d8 == 1);
         if (b == 0)
             return;
     }
-    func_ov102_0214c0b8(c);
+    func_ov102_0214c0b8(this);
     {
-        int* f = (int*)(((int)c + 0xb0));
+        int *f = (int *)(((int)this + 0xb0));
         *f = *f | 0x10000001;
     }
-    *(unsigned char*)(c + 0x3f3) = 1;
+    mShouldRender = 1;
 }
 
 /* ==========================================================================

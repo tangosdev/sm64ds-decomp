@@ -538,9 +538,9 @@
       "reason": "Vague-linkage Vector3 destructor. Vector3 carries a user-declared ~Vector3() (include/types.h) and this TU odr-uses several as function locals -- three in func_ov030_02111734 alone. One row however many objects: the emitted symbol is the single vague copy. arm9 owns the kept copy at 0x020072c0, four bytes of bx lr."
     },
     {
-      "symbol": "_ZN21Bundle$724daMky_c_cppD1Ev",
+      "symbol": "_ZN21Bundle$730daMky_c_cppD1Ev",
       "disposition": "deadstrip",
-      "reason": "The implicit destructor of the file-local `struct Bundle` that func_ov030_02112094 declares in its own body -- it holds a Vector3_16 and a Vector3, so the aggregate gets a destructor of its own, and mwccarm names it after the file. The name is file-scoped by construction and exists nowhere in the cartridge, so it is genuinely homeless: a plain deadstrip, not a duplicate of anything. The $724 in the name is a POSITION-DEPENDENT uniquifier, not a stable identity, and not a line number either: this row read _ZN21Bundle$701daMky_c_cppD1Ev until stage 3b added the file-scope declaration region and converted eleven members, at which point the same struct came back as $724 -- and a later 25-line comment edit above it moved nothing. The struct itself is declared inside func_ov030_02112094's body and has not moved in the source at all. Any future edit to this TU may renumber it, and the promotion then refuses with `unlicensed function ... has no compiler_only_output policy` until this row is updated. Re-read the symbol from verify's output rather than assuming it held."
+      "reason": "The implicit destructor of the file-local `struct Bundle` that func_ov030_02112094 declares in its own body -- it holds a Vector3_16 and a Vector3, so the aggregate gets a destructor of its own, and mwccarm names it after the file. The name is file-scoped by construction and exists nowhere in the cartridge, so it is genuinely homeless: a plain deadstrip, not a duplicate of anything. The $730 in the name is a POSITION-DEPENDENT uniquifier, not a stable identity, and not a line number either: this row read $701, then $724 after a file-scope declaration region, then $730 when include/fBase_c.h gained the size_t operator new adapter. The struct itself is declared inside func_ov030_02112094's body and has not moved in the source at all. Any future edit to this TU or to a header it parses may renumber it; re-read the symbol from verify's output rather than assuming it held."
     }
   ],
   "verification": {
@@ -555,10 +555,10 @@
       "requested": [
         "_ZN7daMky_cD2Ev",
         "_ZN7Vector3D1Ev",
-        "_ZN21Bundle$724daMky_c_cppD1Ev"
+        "_ZN21Bundle$730daMky_c_cppD1Ev"
       ],
       "deadstripped": [
-        "_ZN21Bundle$724daMky_c_cppD1Ev",
+        "_ZN21Bundle$730daMky_c_cppD1Ev",
         "_ZN7Vector3D1Ev",
         "_ZN7daMky_cD2Ev"
       ],

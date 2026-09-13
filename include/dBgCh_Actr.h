@@ -148,6 +148,9 @@ struct dBgCh_Actr : dBgCh {
        field of our own. --- */
     s32 GetResultFlag1() const;    /* mClsnFlags & 0x01 -- collision exists */
     s32 IsOnWall() const;          /* mClsnFlags & 0x08 */
+    /* Returns the floor dBgPi (enrolled body at 0x0203566c). Callers take
+       +4 as SurfaceInfo. Pointer, not dBgPi*: +4 must stay a byte offset. */
+    void *GetFloorResult() const;
     s32 GetLimMovFlag() const;     /* mFlags & 0x80 -- limited movement */
     s32 IsOnGround() const;        /* mFlags & 0x10 */
     s32 JustHitGround() const;     /* mFlags & 0x20 */
