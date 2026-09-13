@@ -17541,6 +17541,80 @@ endforeach()
 target_sources(smoke_player PRIVATE
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_0205ac28.c")
 
+# ===========================================================================
+# SEAT2 -- the ROM's second destructor word for four cartridge vtables
+# (run link100 wave 7, census batch B2 DTOR-THUNK-VTABLES)
+# ===========================================================================
+#
+# port/slice_seat2.txt is the derivation and hal/vtables_seat2.cpp carries the
+# seat, the ROM addresses each word was read at, and the refusals.  Three
+# matched TUs and one host file; the fourth row of the gate is seated without a
+# slice entry, and that asymmetry is the point of the two blocks below.
+#
+# WALK_WINDOW ONLY, deliberately.  The three TUs' closures
+# (_ZTV11ShadowModel + data_0209cef4 + ModelBase::~ModelBase(D2), _ZTV9FaderWipe
+# + Model::~Model + Color::~Color, _ZTV7Clipper) were each checked against
+# walk_window.map at 0046a2d11 before this block was written; none of the three
+# was checked against smoke_player's or walk_window_hires' narrower links, and
+# a seat that has not been measured on a target does not belong on it.  Nothing
+# regresses on the other two: the words this file writes were null or a named
+# trap there before and still are.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_seat2.txt" SLICE_SEAT2_LINES)
+set(SLICE_SEAT2_SOURCES "")
+foreach(line IN LISTS SLICE_SEAT2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SEAT2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+list(APPEND SLICE_SEAT2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/hal/vtables_seat2.cpp")
+target_sources(walk_window PRIVATE ${SLICE_SEAT2_SOURCES})
+
+# TWO PLACEHOLDER NAMES, the gate-225b technique one class over.
+# src/_ZN7ClipperD0Ev.c spells its own vtable `vtbl_Clipper` (declared in
+# include/decl_common.h:3174, defined nowhere in this build) and
+# Memory::operator_delete2 `base_dtor_Clipper`.  Both bindings are read off
+# that body's OWN literal pool and call, not off the recovery's names:
+#   0x0201571c  .word 0x0208e730             _ZTV7Clipper, the table it writes
+#   from:0x0201570c kind:arm_call to:0x0203cbcc  _ZN6Memory16operator_delete2EPv
+# which is the same shape as src/engine/fader/_ZN5FaderD0Ev.c's pair above.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN7ClipperD0Ev.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "vtbl_Clipper=_ZTV7Clipper;base_dtor_Clipper=_ZN6Memory16operator_delete2EPv")
+
+# _ZTV5Stage SLOT 1, and it is named here rather than on port/slice_seat2.txt
+# for the reason src/_ZN5Stage16OnPendingDestroyEv.cpp is named beside
+# hal/stage_bridges.cpp three targets up: walk_window already compiles
+# src/_ZN5Stage19BeforeInitResourcesEv.cpp through SLICE_W8A_SOURCES, and
+# SLICE_W8A_SOURCES is on walk_window ALONE.  smoke_player and
+# walk_window_hires compile hal/stage_bridges.cpp -- whose st_binit is now the
+# reference that seats this TU -- and would fail with LNK2019 on
+# __ZN5Stage19BeforeInitResourcesEv without the body.  Naming it on
+# walk_window as well would put the object in that link twice.
+#
+# AND _ZTV9FaderWipe SLOT 0x04 RIDES WITH IT, the same rule from the other
+# direction, measured rather than predicted: hal/fader_wipes.cpp is compiled
+# into port_slice_shared and therefore into ALL THREE targets, so the moment
+# HalFaderWipe::DtorDeleting became the seat every target needed the body.  The
+# first build of this gate said so --
+#   fader_wipes.cpp.obj : error LNK2019: unresolved external symbol
+#   __ZN9FaderWipeD0Ev referenced in function "public: virtual void __thiscall
+#   HalFaderWipe::DtorDeleting(void)" (?DtorDeleting@HalFaderWipe@@UAEXXZ)
+# on smoke_player and walk_window_hires, with walk_window itself linking clean
+# at 10527.  It is the rule the LoadAndSetFile block three targets up states in
+# advance: face and body link together or the target does not link at all.  All
+# four of the body's externals are already in both narrow links --
+# _ZN5ModelD1Ev and _ZN5ColorD1Ev are in each target's own .rsp,
+# Memory::operator_delete2 comes from hal/cxxname_bridge.cpp which both
+# compile, and _ZTV9FaderWipe is the alias hal/fader_wipes.cpp defines itself.
+foreach(_tseat2s smoke_player walk_window_hires)
+    target_sources(${_tseat2s} PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN5Stage19BeforeInitResourcesEv.cpp"
+        "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipeD0Ev.c")
+endforeach()
+
 # THE CONFIGURE-DEPENDS SELF-CHECK (run link100, lane CMAKEDEPS).  Every list
 # read at configure time has to be registered, or an edit to it will not
 # reconfigure and the build will look clean while compiling the old set of

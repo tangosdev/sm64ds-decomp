@@ -229,6 +229,16 @@ void hal_wipe_note(const char *what, const void *self)
    as the config has them -- and Color at 0x02017574 is its own base class,
    not a misnamed FaderColor D2. The commit message stands as history; this
    note carries the truth. */
+
+/* THE ROM'S OWN DELETING DESTRUCTOR, for slot 0x04 below.  Run link100 wave 7,
+   lane SEAT2, census batch B2.  src/engine/fader/_ZN9FaderWipeD0Ev.c is the
+   matched body at arm9 0x02017418, and the cartridge's own table holds it at
+   _ZTV9FaderWipe + 0x04 -- read out of extracted/arm9_dec.bin at 0x0208eaa0
+   and confirmed by config/arm9/relocs.txt's `from:0x0208eaa0 kind:load
+   to:0x02017418`.  That word is THIS class's slot 0x04, because the alias at
+   the bottom of this file makes ??_7HalFaderWipe@@6B@ the ROM's table. */
+extern "C" void *_ZN9FaderWipeD0Ev(void *thiz);
+
 struct HalFaderWipe {
     Fix12i currInterp;
     Fix12i speed;
@@ -242,7 +252,20 @@ struct HalFaderWipe {
     }
 
     virtual ~HalFaderWipe() {}                       /* 0x00  ROM D1 */
-    virtual void DtorDeleting() {}                   /* 0x04  ROM D0 */
+    /* 0x04  ROM D0.  WAS AN EMPTY STUB and the slot table above still says
+       what it says: "nobody on host".  It is the ROM's body now (lane SEAT2),
+       and that changes nothing about what runs, because no dispatch site in
+       the port or in src reaches a wipe's second destructor word -- the seven
+       wipes are Stage::InitResources' pool objects and hal/fader_wipes.cpp's
+       stand-ins for them are static, so nothing deletes one.  What it changes
+       is that the word is the cartridge's word.  The trace line is here
+       because a seat nothing enters and a seat that frees a static object are
+       opposite findings and both are silent otherwise. */
+    virtual void DtorDeleting()                      /* 0x04  ROM D0 */
+    {
+        hal_wipe_note("DtorDeleting (ROM D0, the matched body)", this);
+        _ZN9FaderWipeD0Ev(this);
+    }
     virtual int AdvanceFade()                        /* 0x08 */
     {
         /* Driven advance (the frame loop's port_fader_advance) STEPS the
