@@ -10659,6 +10659,10 @@ src/_ZN3IRQ21GameCardIREQMCHandlerEv.cpp:
     complete
     .text start:0x020610ac end:0x020610fc
 
+src/func_020610fc.c:
+    complete
+    .text start:0x020610fc end:0x02061128
+
 src/func_02061128.c:
     complete
     .text start:0x02061128 end:0x02061138
