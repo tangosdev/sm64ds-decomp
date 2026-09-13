@@ -48,19 +48,22 @@
  *   0x344  a stage-specific fallback water level, read only when the current
  *          stage id is 0x15.
  *
- * 0x344 + 4 = 0x348 closes the class on the factories' literal. The four gaps --
- * 0x320, 0x328, 0x33a and 0x340 -- are UNOBSERVED, not inherited: nothing this
- * class's own methods touch lands in them and no leaf declares anything there.
- * Field NAMES are coined from what the code does; nothing in the ROM names them.
+ * 0x344 + 4 = 0x348 closes the class on the factories' literal. 0x320 and
+ * 0x328 are this object's mPos X/Z copy, written by the shared Init helper
+ * and by the WDW leaves after they drop the board; this class's own methods
+ * do not read them. The two remaining gaps -- 0x33a and 0x340 -- are
+ * UNOBSERVED: nothing this class's own methods touch lands in them and no
+ * leaf declares anything there. Field NAMES are coined from what the code
+ * does; nothing in the ROM names them.
  */
 
 #ifdef __cplusplus
 
 struct daObjFloatBoard_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
-    u8   pad_320[0x4];
+    s32  unk_320;           /* 0x320 */
     s32  mWaterY;           /* 0x324 */
-    u8   pad_328[0x4];
+    s32  unk_328;           /* 0x328 */
     void **mFileTable;      /* 0x32c */
     s32  mSinkOffset;       /* 0x330 */
     s32  mBobOffset;        /* 0x334 */
