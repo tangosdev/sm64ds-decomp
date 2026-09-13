@@ -114,6 +114,45 @@ void *_ZN6Memory8AllocateEj(unsigned int size);
 extern int data_0209b498;      /* the sound heap handle func_02050f34 and
                                   func_020134d8 allocate out of */
 
+/* RUNG R3 (run link100, lane SND2): the player/group table, and it is the
+ * first statement of func_020133bc that CHANGES WHAT THE PORT SOUNDS LIKE.
+ *
+ *     func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
+ *
+ * func_02052008 walks all 32 sequence players, asks the SDAT's own INFO
+ * block for each one's PLAYER record through func_02050ae8, and hands the
+ * record's first byte to Sound::Player::SetPlayableSeqCount -- 'how many
+ * sequences may this player run at once'. func_0204fc40, inside rung R1's
+ * func_0204f070, has already given every player the ROM's compiled-in
+ * default of 1, and until this line the port never replaced it. In this
+ * cartridge's archive nine players ask for more (2 for players 2, 21 and
+ * 29; 3 for 10 and 13; 4 for 14 and 20; 5 for 17; 6 for 9) and seven have no
+ * record at all, which func_02050ae8 answers with 0 and the loop skips. So
+ * the change can only RAISE a limit, never lower one: nothing that sounds
+ * today stops sounding, and a player the ROM allows two sequences on can
+ * now run two.
+ *
+ * THE ARGUMENT IS THE ROM'S OWN EXPRESSION, face and all. func_0203d974 is
+ * hosted in hal/star_flow.cpp and answers 1, so the argument is 0 and the
+ * per-player sub-heap loop at the bottom of func_02052008 is skipped -- the
+ * same branch a DSi or a download-played console takes. Only two players in
+ * this archive ask for a sub-heap at all (0x2c00 for player 0, 0x1000 for
+ * player 1); the rest ask for zero and are skipped by the ROM's own test.
+ * When that face retires the expression starts passing the rung-R2 heap and
+ * those two allocations happen, which is why the call is written the ROM's
+ * way rather than as a constant.
+ *
+ * NO NULL CHECK, AND THAT IS FAITHFUL. func_02050ae8 dereferences
+ * data_020a5bb8 + 0x84 without testing either, so an archive that failed to
+ * open faults here -- on the DS as much as on the host, because
+ * func_02050f34 discards func_02050d54's failure in exactly the same way.
+ * hal/sdat/sdat.cpp's 'cannot open ... sound stays silent' path is the host
+ * standing in for that failure, and it now ends the same way the cartridge
+ * would.
+ */
+void func_02052008(int arg);
+int func_0203d974(void);
+
 /* The rest of the init, still called by hand. See sd_sound_init_host. */
 void func_0204f94c(void *p);         /* clear one player's voice pointer */
 void func_02011a28(void *table);     /* PlayLong's 0x40-slot handle table */
@@ -589,6 +628,11 @@ void publish_player_status(void)
 //                        ROM's own now; data_0209b498 is a real
 //                        SolidHeapAllocator handle from this line on, where
 //                        it used to stay null for the life of the process.
+//   RUN  func_02052008   THE PLAYER/GROUP TABLE (rung R3). Every player's
+//                        playable-sequence limit now comes from the SDAT's
+//                        own PLAYER records instead of staying at
+//                        func_0204fc40's compiled-in 1. Nine of the 32 ask
+//                        for more than one in this cartridge.
 //
 //   SKIP func_02050f34   opens the SDAT off the card INTO that heap;
 //                        hal/sdat/sdat.cpp seats an equivalent root already.
@@ -615,6 +659,11 @@ void sd_sound_init_host(void)
        which of the two it got. */
     data_0209b498 = (int)func_0205130c(
         (unsigned int)(size_t)_ZN6Memory8AllocateEj(0x100000), 0x100000);
+    /* func_020133bc's next three statements are the SDAT opened off the
+       card (func_0201a9fc, func_02050f34, func_0201a9fc). hal/sdat/sdat.cpp
+       stands in for the middle one and the other two are the boot's own
+       tick; see the SKIP list above. Then rung R3, at its own line: */
+    func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
     func_0204f94c(&data_0209b4a0);
     func_0204f94c(&data_0209b4b0);
     func_0204f94c(&data_0209b4a4);

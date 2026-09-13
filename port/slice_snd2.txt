@@ -41,3 +41,31 @@
 # NestedHeapIterator::NestedHeapIterator(u32) and func_02050fd4.
 src/func_0205130c.c
 src/func_02051024.c
+
+# --- RUNG R3: the player/group table --------------------------------------
+#
+# func_020133bc's sixth statement:
+#
+#     func_02052008(func_0203d974() == 0 ? data_0209b498 : 0);
+#
+# func_02052008 walks the 32 sequence players, reads each one's PLAYER
+# record out of the SDAT INFO block through func_02050ae8, and sets its
+# playable-sequence limit through Sound::Player::SetPlayableSeqCount. With a
+# non-zero argument it also carves each player's own sub-heap out of the
+# rung-R2 heap through func_0204fa3c, which is where func_020511d4,
+# func_0204f278 (the sub-heap's own free callback) and func_020512f0 come
+# in. The argument is 0 today because hal/star_flow.cpp's hosted
+# func_0203d974 answers 1, so those three link and stay quiet -- the state
+# the census reports rather than one the count hides.
+#
+# func_02050ae8 reads the SDAT root out of data_020a5bb8, which
+# hal/sdat/sdat.cpp seats before sd_sound_init_host runs (see
+# sd_consumer_init's ORDER paragraph), so this rung needs nothing from rung
+# R4. Everything else it calls is already linked: func_02050d2c,
+# func_020511d4, NestedHeapIterator::AddLast and ::Remove, and the
+# SetPlayableSeqCount alias in hal/sdat/sound_abi.cpp.
+src/func_0204f278.cpp
+src/func_0204fa3c.c
+src/func_02050ae8.cpp
+src/func_020512f0.c
+src/func_02052008.c
