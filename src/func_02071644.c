@@ -2,19 +2,7 @@
 // The 2004/b56 output occupies 0x02071644..0x02071698, including the final bx lr.
 // recovered: real C, no asm hatch; the investigation is in notes/mwccarm-codegen.md 9a(3).
 #include "types.h"
-
-typedef struct Decimal
-{
-  unsigned char sign;
-  char unused;
-  short exp;
-  struct
-  {
-    unsigned char length;
-    unsigned char text[32];
-    unsigned char unused;
-  } sig;
-} Decimal;
+#include "Decimal.h"
 
 void func_02071644(Decimal *d, int len)
 {

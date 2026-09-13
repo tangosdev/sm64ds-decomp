@@ -1,17 +1,5 @@
 #include "types.h"
-
-typedef struct Decimal
-{
-  unsigned char sign;
-  char unused;
-  short exp;
-  struct
-  {
-    unsigned char length;
-    unsigned char text[32];
-    unsigned char unused;
-  } sig;
-} Decimal;
+#include "Decimal.h"
 
 // func_02071698 is still spelled the way its own definition is, over a raw byte
 // pointer and its own offsets; recovering that interface is a separate slice.
