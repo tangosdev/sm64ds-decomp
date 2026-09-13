@@ -1,78 +1,67 @@
 //cpp
-/* Production translation unit for ov043/daObjKm1_Kuruma_c, hand-curated.
- * 5 function(s), .text 0x02111518..0x02111630.
+/**
+ * Bowser in the Dark World's rickshaw cart (`kuruma`).
  *
- * ENROLLED AND CANONICAL. config/arm9/overlays/ov043/delinks.txt licenses that
- * whole run to this one path, so the ROM build compiles this file in place of
- * the four legacy class-method sources and adjacent factory it replaces.
+ * No fields. InitResources / CleanupResources hand this overlay's
+ * model and collision files to daObjKuruma_c's shared ov002 helpers.
+ * func_ov002_020b6958 loads slot 0 with Model::LoadFile, slot 1 with
+ * dBgW_Kc::LoadFile, slot 2 as CLPS into SetFile. ov043 sinit
+ * constructs those SharedFilePtrs as file IDs 1619 / 1620.
  *
- * The Bob-omb Battlefield rickshaw platform -- the cart that rides on the axle
- * (daObjKm1_Kurumajiku_c, the same overlay's other half). It adds no state of
- * its own to daObjKuruma_c (see include/daObjKm1_Kuruma_c.h) and overrides
- * only the two vtable slots the base leaves null, both of which hand the actor
- * and this level's descriptor to the shared ov002 helpers.
+ * daObjKm1_Kuruma_c_classInit is reconstructed (RTTI daObjKm1_Kuruma_c,
+ * KM1_KURUMA registry). Retail does not store that spelling.
  *
- * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S. mwccarm 2004/b56
- * emits one .text section per function in the REVERSE of source order, so the
- * highest-address ROM function is written FIRST here. Do not reorder:
- * tools/rombuild.py refuses the object outright when the emitted order and the
- * ROM's disagree.
- *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02111518  src/_ZN17daObjKm1_Kuruma_cD1Ev.cpp
- *   [1] 0x02111568  src/_ZN17daObjKm1_Kuruma_cD0Ev.cpp
- *   [2] 0x021115cc  src/_ZN17daObjKm1_Kuruma_c16CleanupResourcesEv.cpp
- *   [3] 0x021115e0  src/_ZN17daObjKm1_Kuruma_c13InitResourcesEv.cpp
- *   [4] 0x021115f4  src/daObjKm1_Kuruma_c_classInit.c
+ * deslop
+ * Leftover: func_ov002_020b6958 / func_ov002_020b68b0 are still the
+ *   linker names of daObjKuruma_c Init/Cleanup (the base leaves
+ *   those slots pure virtual). Naming belongs in ov002.
+ * Leftover: data_ov043_02112418 is overlay data this TU does not
+ *   own; the BMD/KCL SharedFilePtrs and CLPS_Block are still
+ *   data_ov043_*.
+ * Leftover: g_profile_KM1_KURUMA is overlay data; this TU is
+ *   text-only so the definition here is a deadstripped duplicate.
  */
 
-/* Includes: union of the legacy files', first-seen in ROM-ascending
- * processing order. NOT verified for header ordering constraints (e.g. a
- * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "daObjKm1_Kuruma_c.h"
+#include "SharedFilePtr.h"
 
-/* The three-word block at ov043 0x02112418 that ov002's shared setup and
-   teardown helpers read: this level's model and collision file handles.
-   Nothing in this TU dereferences it, so it stays an opaque descriptor rather
-   than a guess at its members. */
+struct CLPS_Block;
+
 struct ResourceDescriptor {
-    void *entries[3];
+    SharedFilePtr *model;
+    SharedFilePtr *collision;
+    CLPS_Block *clps;
 };
+typedef char ResourceDescriptor_size_must_be_0x0c[
+    sizeof(ResourceDescriptor) == 0x0c ? 1 : -1];
 
 extern "C" {
-/* ov002's shared rickshaw setup and teardown, still under placeholder names.
-   Both take the actor and the per-level descriptor. */
-int func_ov002_020b68b0(daObjKm1_Kuruma_c *self, ResourceDescriptor *descriptor);
 int func_ov002_020b6958(daObjKm1_Kuruma_c *self, ResourceDescriptor *descriptor);
+int func_ov002_020b68b0(daObjKm1_Kuruma_c *self, ResourceDescriptor *descriptor);
 extern ResourceDescriptor data_ov043_02112418;
 }
 
-struct Km1KurumaProfile {
+struct KurumaSpawnInfo {
     daObjKm1_Kuruma_c *(*classInit)();
-    s16 profileID;
-    s16 groupFlags;
+    s16 executePriority; /* +4: also KM1_KURUMA registry id 0x0088 = 136 */
+    s16 renderPriority;  /* +6 */
     u32 actorFlags;
-    Fix12i cullRadiusX;
-    Fix12i cullRadiusY;
-    u32 executeOrder;
-    u32 drawOrder;
+    Fix12i clipOffsetY;
+    Fix12i clipRadius;
+    Fix12i clipDistance;
+    Fix12i farDistance;
 };
+typedef char KurumaSpawnInfo_size_must_be_0x1c[
+    sizeof(KurumaSpawnInfo) == 0x1c ? 1 : -1];
 
-typedef char Km1KurumaProfile_size_must_be_0x1c[
-    sizeof(Km1KurumaProfile) == 0x1c ? 1 : -1];
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- daObjKm1_Kuruma_c_classInit, 0x021115f4, size 0x3c       */
-/* -------------------------------------------------------------------------- */
 // @symbol daObjKm1_Kuruma_c_classInit
 extern "C" daObjKm1_Kuruma_c *daObjKm1_Kuruma_c_classInit()
 {
     return new daObjKm1_Kuruma_c();
 }
 
-/* The profile ID and descriptor relationship survive in the cartridge. The
-   local descriptor type name is reconstructed from that runtime role. */
-extern "C" Km1KurumaProfile g_profile_KM1_KURUMA = {
+// @symbol g_profile_KM1_KURUMA
+extern "C" KurumaSpawnInfo g_profile_KM1_KURUMA = {
     daObjKm1_Kuruma_c_classInit,
     0x0088,
     0x00b1,
@@ -83,44 +72,14 @@ extern "C" Km1KurumaProfile g_profile_KM1_KURUMA = {
     0
 };
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN17daObjKm1_Kuruma_c13InitResourcesEv, 0x021115e0, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN17daObjKm1_Kuruma_c13InitResourcesEv
-/* Vtable slot 0. Delegates to the shared ov002 setup helper, handing it the
-   Bob-omb Battlefield descriptor. */
-int daObjKm1_Kuruma_c::InitResources()
+s32 daObjKm1_Kuruma_c::InitResources()
 {
     return func_ov002_020b6958(this, &data_ov043_02112418);
 }
 
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv, 0x021115cc, size 0x14 */
-/* -------------------------------------------------------------------------- */
 // @symbol _ZN17daObjKm1_Kuruma_c16CleanupResourcesEv
-/* Vtable slot 3, the teardown half of the InitResources delegation, over the
-   same ov043 descriptor. */
-int daObjKm1_Kuruma_c::CleanupResources()
+s32 daObjKm1_Kuruma_c::CleanupResources()
 {
     return func_ov002_020b68b0(this, &data_ov043_02112418);
 }
-
-/* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN17daObjKm1_Kuruma_cD0Ev, 0x02111568, size 0x64        */
-/* ROM ordinal 0 -- _ZN17daObjKm1_Kuruma_cD1Ev, 0x02111518, size 0x50        */
-/* -------------------------------------------------------------------------- */
-// @symbol _ZN17daObjKm1_Kuruma_cD1Ev
-// @symbol _ZN17daObjKm1_Kuruma_cD0Ev
-/* NOT WRITTEN HERE ON PURPOSE. The inline `~daObjKm1_Kuruma_c() {}` in the
-   header is the whole source of both variants: from an inline body mwcc emits
-   D1 and then D0 -- the cartridge's own order -- and no leaf D2. Writing the body
-   out of line here instead flips them to D0-before-D1 and the isolation step
-   rejects the object.
-
-   Their bodies are three vptr stores and the member destructions, every one a
-   consequence of `daObjKm1_Kuruma_c : daObjKuruma_c : dBgActor_c`: this
-   class's vptr, then daObjKuruma_c's and dBgActor_c's -- both inlined,
-   because both destructors are defined in their class bodies -- then
-   dBgActor_c's dBgW_KcMbg and Model, then dActor_c. This class adds no member
-   with a destructor of its own, and D0's trailing deallocation is the inline
-   `operator delete` it inherits, which is why nothing here names a heap. */
