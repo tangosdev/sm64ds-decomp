@@ -5,21 +5,29 @@
 #include "Model.h"
 #include "dCcAc_c.h"
 
-/* daObjWc_Obj03_c is the name the cartridge's own RTTI gives this class, and it
- * is now the only name the tree uses for it. The typeinfo string at 0x02113d7c
- * reads daObjWc_Obj03_c and every method mangles against that spelling; the
- * project's earlier coined name, WaterDiamond, is gone from the sources and
- * survives only in the rename ledger and in generated snapshots.
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
+/* daObjWc_Obj03_c -- Wet-Dry World's water diamond (profile WATER_DIAMOND,
+ * actor 97, ov029). The name is the cartridge's own RTTI: the typeinfo string
+ * at 0x02113d7c reads daObjWc_Obj03_c and every method mangles against that
+ * spelling. The project's earlier coined name, WaterDiamond, survives only in
+ * the rename ledger.
  *
- * The factory allocates 0x160 bytes, constructs dActor_c, then constructs the
- * Model at 0x0d4 and dCcAc_c at 0x124. Both destructor variants destroy those
- * members in reverse order before chaining to dActor_c, independently proving
- * their ownership and the class extent.
+ * The factory allocates 0x160 bytes. dActor_c ends at 0xd0; Model sits at
+ * 0x0d4 and dCcAc_c at 0x124, the same gap dBgActor_c uses, independently
+ * proven by both destructor variants destroying those members in reverse
+ * order before chaining to dActor_c.
  *
  * The 31-slot ROM vtable differs from dActor_c only in slots 0, 3, 6, 9, 16
  * and 17, exactly the virtual declarations below. The three non-virtual
  * helpers form the rest of the same high-confidence ten-function TU and are
  * called directly by Behavior.
+ *
+ * The destructor is declared LAST and INLINE on purpose. Class instantiation
+ * via the factory's `new` emits the retail D1/D0 pair in cartridge order
+ * (D1 at 0x02111728, then D0 at 0x02111760) without a separate leaf D2 body;
+ * out of line mwccarm emits D0 ahead of D1 and adds the D2 the ROM never
+ * carried.
  */
 struct daObjWc_Obj03_c : dActor_c {
     u8      pad_0d0[0x4];
@@ -39,19 +47,14 @@ struct daObjWc_Obj03_c : dActor_c {
     void SetWaterID();
     void UpdateModelTransform();
 
-    /* DECLARED LAST ON PURPOSE, after the other members. Nothing DEFINES this
-       destructor as a C++ member -- D1 and D0 are carried in
-       src/actors/d_a_obj_wc_obj03.cpp as `// @symbol` marked mangled bodies, for
-       the emission-order reason that file's header gives -- so the class's
-       vtable and RTTI have no key function to home them. With the declaration
-       LAST, mwccarm still emits them as vague linkage into the TU that defines
-       the class's members, and tools/romdata_check.py word-compares that
-       emitted copy against the cartridge; with the declaration FIRST it emits
-       no data at all and those ROM records go unverified by any source.
-       Measured both ways on the sibling daObjWc_Mizu_c: first -> 0 data
-       symbols, last -> 11. include/daObjWc_Mizu_c.h and
-       include/daObjWc_Obj04_c.h have the same shape for the same reason. */
-    virtual ~daObjWc_Obj03_c();               /* slots 16 (D1), 17 (D0) */
+    /* Leaf size_t operator new. A plain `new daObjWc_Obj03_c` without this
+       relocates to the global `_Znwm`; this routes the factory through
+       fBase_c::operator new, the call this TU's classInit actually makes. */
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
+
+    virtual ~daObjWc_Obj03_c() {}             /* slots 16 (D1), 17 (D0) */
 };
 
 typedef char daObjWc_Obj03_c_size_must_be_0x160[
