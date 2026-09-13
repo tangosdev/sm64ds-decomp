@@ -1089,3 +1089,51 @@ void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *self, void *bmd,
 void port_texseq_prepare_r1(void *self, void *bmd)
 { _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(self, bmd, bmd); }
 }  /* extern "C" */
+
+/* ---- RUNG 3 (run link100, lane SHADOWS2): the shadow whose seam is a RETURN
+ * TYPE, not an argument -------------------------------------------------------
+ *
+ * SharedFilePtr::ReallocateModelFile was the tenth MSVC-NAME SHADOW row. The
+ * ROM's body is one statement --
+ *
+ *     unsigned int SharedFilePtr::ReallocateModelFile()
+ *     { return func_02017060(file); }
+ *
+ * (src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp) -- and func_02017060 has
+ * been in this link since gate 16. Nothing was missing. What kept the body out
+ * is that the two matched TUs DISAGREE ABOUT THE RETURN TYPE: the definition
+ * returns unsigned int, while its one caller
+ * (src/_ZN5Model8LoadFileER13SharedFilePtr.cpp:12) and include/SharedFilePtr.h
+ * both declare `void ReallocateModelFile();`. On ARM that is invisible --
+ * _ZN13SharedFilePtr19ReallocateModelFileEv carries no return type, so both
+ * spellings are one symbol and mwcc links them -- but MSVC puts the return type
+ * IN the decoration, so the caller asks for ?...@@QAEXXZ and the body publishes
+ * ?...@@QAEIXZ. Two names, one function, and the port answered with an empty
+ * ?...@@QAEXXZ in hal/gx_upload_bridge.cpp, which is what made it a shadow.
+ *
+ * THE ALIAS IS ABI-EXACT, which is the whole reason this row is a bridge and
+ * not a host copy. Both spellings are `public: __thiscall f(void)`: the
+ * receiver rides in ecx, neither pushes a stack argument, both clean zero
+ * bytes, and the only difference is an eax the void-spelling caller does not
+ * read. Confirmed from the object rather than from the mangling rules --
+ * cl /c on the matched TU publishes
+ *   ?ReallocateModelFile@SharedFilePtr@@QAEIXZ
+ *   (public: unsigned int __thiscall SharedFilePtr::ReallocateModelFile(void))
+ * and walk_window.map carried ?ReallocateModelFile@SharedFilePtr@@QAEXXZ from
+ * gx_upload_bridge.cpp.obj. It is the same trade hal/cxxname_bridge.cpp's
+ * Model::LoadFile note already describes in this exact family: "Same ROM
+ * function, two host bodies, picked by how a caller spelled the return type."
+ *
+ * THE SHRINK IS THE ROM'S AGAIN, said out loud. The empty body did not just
+ * stand in for the ROM's body, it DECLINED the work: func_02017060 is the DS
+ * heap shrink-to-fit (Heap::_Sizeof, func_020469e0, Heap::Reallocate on
+ * Memory::gameHeapPtr). The port's other model path gates the same callee
+ * behind port_model_shrink_enabled (hal/level_boot.cpp, applied to
+ * src/func_02016ff4.cpp by hostgen), so with this seat the two paths no longer
+ * agree: Model::LoadFile's numRefs==1 branch now performs the ROM's shrink and
+ * Model::LoadAndSetFile's tail still declines it by default. That is the
+ * direction the port is supposed to move -- the ROM's own body doing the ROM's
+ * own thing -- and it is gated by measurement, not by assertion: this rung's
+ * battery, its eight proofs and its level-1 capture all ran with the shrink
+ * live. hostgen's own switch is untouched and is the A/B for the other half. */
+#pragma comment(linker, "/alternatename:?ReallocateModelFile@SharedFilePtr@@QAEXXZ=?ReallocateModelFile@SharedFilePtr@@QAEIXZ")

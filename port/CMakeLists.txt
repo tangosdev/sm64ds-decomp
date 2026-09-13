@@ -14348,6 +14348,14 @@ target_include_directories(smoke_player PRIVATE
 target_link_libraries(smoke_player PRIVATE ntr)
 target_compile_definitions(smoke_player PRIVATE SM64DS_PLATFORM_PC
     ${PORT_REPO_ROOT_DEF}
+    # GATE SHADOWS RUNG 3 (run link100, lane SHADOWS2): this target carries
+    # port/slice_shadows.txt AND port/slice_gate16.txt, so the ROM's own
+    # SharedFilePtr::ReallocateModelFile is in the link with func_02017060
+    # under it.  The define retires the empty stand-in in
+    # hal/gx_upload_bridge.cpp, which would otherwise defeat that file's
+    # /alternatename by defining its LHS.  The ten narrow harnesses link the
+    # caller without the callee and keep the stand-in.
+    SM64DS_SFP_REALLOC_ROM=1
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
@@ -14669,6 +14677,14 @@ target_compile_definitions(walk_window PRIVATE SM64DS_PLATFORM_PC
     # on ONE binary; the compile definition is what puts the ROM body in the
     # slot at all.
     SM64DS_STAGE_SLOT9_ROM=1
+    # GATE SHADOWS RUNG 3 (run link100, lane SHADOWS2): this target carries
+    # port/slice_shadows.txt AND port/slice_gate16.txt, so the ROM's own
+    # SharedFilePtr::ReallocateModelFile is in the link with func_02017060
+    # under it.  The define retires the empty stand-in in
+    # hal/gx_upload_bridge.cpp, which would otherwise defeat that file's
+    # /alternatename by defining its LHS.  The ten narrow harnesses link the
+    # caller without the callee and keep the stand-in.
+    SM64DS_SFP_REALLOC_ROM=1
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)
@@ -14978,6 +14994,14 @@ target_compile_definitions(walk_window_hires PRIVATE SM64DS_PLATFORM_PC
     # on ONE binary; the compile definition is what puts the ROM body in the
     # slot at all.
     SM64DS_STAGE_SLOT9_ROM=1
+    # GATE SHADOWS RUNG 3 (run link100, lane SHADOWS2): this target carries
+    # port/slice_shadows.txt AND port/slice_gate16.txt, so the ROM's own
+    # SharedFilePtr::ReallocateModelFile is in the link with func_02017060
+    # under it.  The define retires the empty stand-in in
+    # hal/gx_upload_bridge.cpp, which would otherwise defeat that file's
+    # /alternatename by defining its LHS.  The ten narrow harnesses link the
+    # caller without the callee and keep the stand-in.
+    SM64DS_SFP_REALLOC_ROM=1
     # this target links hal/cxx_aliases.cpp, which already carries
     # the Heap::_Deallocate face hal/blend_vtable.cpp repeats
     PORT_CXX_ALIASES_LINKED)

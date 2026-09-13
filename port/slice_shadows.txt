@@ -111,3 +111,61 @@ src/_ZN11CrazedCrate13InitResourcesEv.cpp
 # the opening; this one line of it does not.
 #
 src/_ZN9LakituBro13InitResourcesEv.cpp
+
+# ---------------------------------------------------------------------------
+# RUNG 3: THE SHADOW WHOSE SEAM IS A RETURN TYPE
+# ---------------------------------------------------------------------------
+#
+# src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp -- the tenth MSVC-NAME
+# SHADOW row, and the first of the 29 whose host stand-in was not a copy of the
+# matched body at all. It was an empty method:
+#
+#   port/hal/gx_upload_bridge.cpp:62
+#     // Shrinks the file image to its post-parse size on the DS (a heap-space
+#     // optimization). Skipped on host: the image simply stays at load size.
+#     void SharedFilePtr::ReallocateModelFile() {}
+#
+# NOTHING WAS MISSING UNDER IT. The ROM's body is one statement,
+# `return func_02017060(file);`, and func_02017060 (the DS shrink-to-fit:
+# Heap::_Sizeof, func_020469e0, Heap::Reallocate on Memory::gameHeapPtr) has
+# ridden port/slice_gate16.txt since gate 16. What kept the body out is that
+# the two matched TUs DISAGREE ABOUT THE RETURN TYPE:
+#
+#   src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp  unsigned int  (the body)
+#   src/_ZN5Model8LoadFileER13SharedFilePtr.cpp:12     void          (the caller)
+#   include/SharedFilePtr.h:25                         void
+#
+# On ARM that is invisible: the Itanium name carries no return type, so all
+# three are _ZN13SharedFilePtr19ReallocateModelFileEv and mwcc links them. MSVC
+# puts the return type IN the decoration, so the caller asks for ?...@@QAEXXZ
+# and the body publishes ?...@@QAEIXZ -- two names for one function, and the
+# empty host method answered the first one.
+#
+# THE ALIAS IS ABI-EXACT AND READ OFF THE OBJECT, not off the mangling rules.
+# cl /c on the matched TU publishes
+#   ?ReallocateModelFile@SharedFilePtr@@QAEIXZ
+#     (public: unsigned int __thiscall SharedFilePtr::ReallocateModelFile(void))
+# and walk_window.map line 10683 carried
+#   ?ReallocateModelFile@SharedFilePtr@@QAEXXZ   gx_upload_bridge.cpp.obj
+# Both are public __thiscall f(void): receiver in ecx, no stack argument,
+# callee cleans zero bytes, and the only difference is an eax the void-spelling
+# caller never reads. hal/method_faces.cpp carries the one /alternatename.
+#
+# WHAT IS RETIRED, AND WHERE IT IS NOT. The empty method goes behind
+# #ifndef SM64DS_SFP_REALLOC_ROM, which smoke_player, walk_window and
+# walk_window_hires define -- the three targets that carry this slice AND
+# slice_gate16.txt. The other ten harnesses link the CALLER (slice_gate4b) with
+# no func_02017060 under it, so there the empty body is still the only
+# definition there can be. A defined ?...@@QAEXXZ would also defeat the alias
+# silently, which alternatename_guard.py refuses.
+#
+# THE SHRINK GOES LIVE ON THIS PATH, stated rather than hidden. The empty body
+# was not only standing in for the ROM's body, it was declining the ROM's work.
+# Model::LoadFile's numRefs==1 branch now performs the real shrink; the other
+# model path (src/func_02016ff4.cpp, patched by hostgen) keeps its
+# port_model_shrink_enabled gate and still declines by default, so the two
+# halves now differ and hostgen's switch is the A/B for the second one. This
+# rung's battery, its eight proofs and its level-1 capture all ran with the
+# shrink live.
+#
+src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp
