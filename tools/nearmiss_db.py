@@ -812,34 +812,77 @@ def export_close(args):
     print(f"exported {len(out)} close seeds (div<={args.max_div}) -> {args.out}")
 
 
+def _current_source(module, addr, fallback_name):
+    """(path, text) for whatever src/ file currently answers to (module, addr), or
+    (None, None) if nothing does.
+
+    Tries the CURRENT symbol name first -- tools/names.py resolves a rename,
+    tools/srcpath.py's enrolment table then resolves an ordinary match OR a
+    symbol promoted whole into a consolidated TU -- and falls back to raw
+    delinks-range CONTAINMENT by address (srcpath.owner_at) for the one shape
+    name resolution cannot see: a consolidated TU that folded this address into
+    a NEIGHBOUR's compiled body with no symbols.txt row of its own left there
+    (the nested-entry-point shape reloc_audit.resolve_nested_slice resolves at
+    the compiled-object level for linkcheck.py/pr_linkcheck.py -- func_01ff97d8.c
+    is the canonical example). owner_at shares srcpath's existing delinks.txt
+    parse; this is not a second resolver, just the by-address query on it."""
+    import names as NM
+    import srcpath as SP
+    name = NM.name_at(module, addr) or fallback_name
+    path = SP.path_for(name) or SP.owner_at(module, addr)
+    if path is None:
+        return None, None
+    return path, path.read_text(encoding="utf-8", errors="ignore")
+
+
 def prune_matched(args):
     """Drop entries whose function already has a committed, CI-validated match in
-    src/ (a src file without a NONMATCHING header). The local matched ledger is
-    often stale on multi-contributor checkouts, so ingest's matched_set() drop
-    misses these; they linger as ghosts and pollute stats and export-close.
+    src/. The local matched ledger is often stale on multi-contributor checkouts,
+    so ingest's matched_set() drop misses these; they linger as ghosts and pollute
+    stats and export-close.
 
-    The src-file check resolves the CURRENT symbol name at (module, addr) via
-    tools/names.py -- an entry named with a stale func_ADDR placeholder is still
-    detected when its match landed under the real symbol. Surviving entries also
-    have their display name resynced so the label never drifts from the key."""
-    import worklist as WL
+    The ghost test is asm_policy.counts_as_matched, the one function every counting
+    tool publishes from, not a second spelling of it. It used to read "no
+    NONMATCHING banner", which was the same answer until the hand-asm ruling of
+    2026-09-09 gave a HAND-ASM PRIMITIVE file that also says NONMATCHING back its
+    place in the count. Eight rows then sat in this DB describing functions the
+    progress bar already counted -- __rethrow, func_02052ec8, func_02057014,
+    func_02057078, func_02058568, func_02059468, func_02059824, func_0205a588 --
+    and every close-first worklist put them at the top of the queue, because a
+    divergence of 1 against an assembly primitive with no C to recover is the
+    lowest number in the file.
+
+    Resolution is _current_source's: the CURRENT symbol name at (module, addr)
+    via tools/names.py, then tools/srcpath.py -- by name for an ordinary match, a
+    rename, or a symbol promoted whole into a consolidated TU, and by raw
+    delinks-range address containment (srcpath.owner_at) for a TU that absorbed
+    this address into a neighbour's body with no symbols.txt row of its own left.
+    Surviving entries also have their display name resynced so the label never
+    drifts from the key. Every drop is printed with the file that matched it --
+    never a silent count alone -- both in --dry-run and on the real run."""
     import names as NM
     db = load_db()
-    ghosts = [key for key, r in db.items()
-              for text in [WL.read_src_text(NM.name_at(r["module"], r["addr"]) or r["name"])]
-              if text is not None and not asm_policy.has_draft_banner(text)]
+    ghosts = []
+    for key, r in db.items():
+        path, text = _current_source(r["module"], L.norm_addr(r["addr"]), r["name"])
+        if text is not None and asm_policy.counts_as_matched(text):
+            ghosts.append((key, path))
     if args.dry_run:
-        for key in ghosts:
+        for key, path in ghosts:
             r = db[key]
-            print(f"  would drop div={r.get('divergences'):<4} {r['module']:6} {r['name']}")
+            print(f"  would drop div={r.get('divergences'):<4} {r['module']:6} {r['name']:<40} "
+                  f"-> {path.relative_to(REPO).as_posix()}")
         print(f"{len(ghosts)} ghost entries (matched in committed src/)")
         return
     with locked():
         db = load_db()
         dropped = renamed = 0
-        for key in ghosts:
-            if db.pop(key, None) is not None:
+        for key, path in ghosts:
+            r = db.pop(key, None)
+            if r is not None:
                 dropped += 1
+                print(f"  dropped {r['module']:6} {r['name']:<40} "
+                      f"-> {path.relative_to(REPO).as_posix()}")
         for r in db.values():                       # resync survivors' labels to the key
             cur = NM.name_at(r["module"], r["addr"])
             if cur and cur != r["name"]:

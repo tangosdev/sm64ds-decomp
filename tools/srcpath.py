@@ -87,6 +87,7 @@ _scan_cache = None
 _cohort_cache = None
 _enrolment_cache = None
 _definition_ownership_cache = None
+_range_cache = None
 
 
 def symbol_for(path):
@@ -117,10 +118,12 @@ def invalidate():
     The enrolment index is dropped too: `enroll` and `tubuild promote` both rewrite
     delinks.txt, and a stale index would keep answering with the file they replaced."""
     global _scan_cache, _cohort_cache, _enrolment_cache, _definition_ownership_cache
+    global _range_cache
     _scan_cache = None
     _cohort_cache = None
     _enrolment_cache = None
     _definition_ownership_cache = None
+    _range_cache = None
 
 
 # One delinks entry opens with an unindented `<path>:` and owns the indented
@@ -190,10 +193,11 @@ def _enrolment():
     This module's first line is "where does symbol X live in src/", and that is exactly
     the rule: only entries under `src/`. (`mods/` is currently empty, but the exclusion
     stays load-bearing for the next divergence someone adds there.)"""
-    global _enrolment_cache, _definition_ownership_cache
+    global _enrolment_cache, _definition_ownership_cache, _range_cache
     if _enrolment_cache is None:
         by_symbol, by_path = {}, {}
-        for symbols_path, _label in relocs.module_universe(repo=REPO):
+        ranges = {}   # module label -> [(start, end, entry)], for owner_at
+        for symbols_path, label in relocs.module_universe(repo=REPO):
             delinks = symbols_path.parent / "delinks.txt"
             if not delinks.is_file():
                 continue
@@ -219,11 +223,24 @@ def _enrolment():
                 if not m:
                     continue
                 start, end = int(m.group(1), 16), int(m.group(2), 16)
+                # Recorded regardless of whether any symbols.txt row falls inside --
+                # owner_at (below) answers by RANGE, which is the only thing that can
+                # still see a consolidated TU's interior address once a merge has left
+                # it with no symbols.txt row of its own (the nested-entry-point shape
+                # reloc_audit.resolve_nested_slice resolves at the compiled-object
+                # level for linkcheck.py/pr_linkcheck.py). Built in the same pass as
+                # by_symbol/by_path -- one delinks.txt walk, two derived indexes -- so
+                # this can never disagree with them about where a range's boundaries
+                # are.
+                ranges.setdefault(label, []).append((start, end, entry))
                 i = bisect.bisect_left(addrs, start)
                 while i < len(addrs) and addrs[i] < end:
                     by_symbol[funcs[i][2]] = entry
                     by_path.setdefault(entry, []).append(funcs[i])
                     i += 1
+        for label in ranges:
+            ranges[label].sort()
+        _range_cache = ranges
         _definition_ownership_cache = {
             path: definition_symbols(path, rows) for path, rows in by_path.items()
         }
@@ -233,6 +250,41 @@ def _enrolment():
              for path, rows in by_path.items()},
         )
     return _enrolment_cache
+
+
+def owner_at(module, addr):
+    """The enrolled ``src/`` file whose delinks RANGE contains ``addr``, or None.
+
+    ``enrolled_path_for``/``path_for`` answer by SYMBOL: they need ``addr`` to be
+    some symbols.txt row's own address, which is right for the overwhelmingly
+    common case (an ordinary match, a rename, a symbol promoted whole into a
+    consolidated TU). They go silently blind for exactly one shape: a
+    consolidated TU that folds a ROM address into a NEIGHBOUR's compiled body
+    with no symbols.txt row of its own left at that address -- the same
+    nested-entry-point shape ``reloc_audit.resolve_nested_slice`` resolves at the
+    compiled-object level for ``linkcheck.py``/``pr_linkcheck.py`` (see
+    ``func_01ff97d8.c``: one compiled symbol, several ROM addresses inside).
+    ``owner_at`` is the source-level, no-compile-needed answer to the same
+    question, off the exact delinks.txt ranges ``_enrolment()`` already parses --
+    not a second parser, the same one pass, queried a second way.
+
+    Callers that already have a current symbol name should try ``path_for``
+    first (cheaper, and correct for everything except the shape above); this is
+    the by-ADDRESS fallback for when that comes back empty. Module-scoped,
+    because ROM addresses are NOT globally unique -- every overlay reuses the
+    same address space.
+    """
+    _enrolment()
+    addr = int(addr, 0) if isinstance(addr, str) else int(addr)
+    starts = [r[0] for r in (_range_cache or {}).get(module, ())]
+    i = bisect.bisect_right(starts, addr) - 1
+    if i < 0:
+        return None
+    start, end, rel = _range_cache[module][i]
+    if not (start <= addr < end):
+        return None
+    path = REPO / rel
+    return path if path.is_file() else None
 
 
 def enrolment_index():
