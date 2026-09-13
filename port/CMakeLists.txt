@@ -16665,6 +16665,36 @@ foreach(_tpmfb8 walk_window walk_window_hires smoke_player)
     target_sources(${_tpmfb8} PRIVATE ${SLICE_PMFB8_SOURCES})
 endforeach()
 
+# SLICE seat5 -- run link100 wave 7, lane SEAT5: census batch B5, the family-C
+# pointer-to-member rows outside ov006 that no prior lane had scouted. THREE
+# rows land here: _ZN5Unagi8BehaviorEv (ov016, a per-instance field, five bss
+# state cells), func_ov102_021498e0 (ov102, two bss content tables) and
+# _ZN11MirrorLuigi8BehaviorEv (ov055, one cell, the ARITY-ONE one). The first
+# two are ARITY ZERO with the receiver in ecx and nothing pushed; MirrorLuigi
+# pushes the one word its face never pops. All three read their
+# pair at the ROM's own stride of EIGHT, which is what /vmg /vmm (block R8)
+# makes an incomplete-class pointer to member. NO /Zp4 on this block, measured
+# on both sources rather than inherited: 0 listing lines differ outside the
+# TITLE (Unagi's member sits at offset 8 of its holder, the ov102 tables are
+# indexed by the compiler's own lsl #5 / lsl #3). The per-row universe proof,
+# the sentinel check, the emitted shape and the four rows this lane did NOT
+# seat are in port/slice_seat5.txt and the raw measurements in
+# runs/link100/out/SEAT5/. port/hal/pmf_seat5.cpp rides on the same list: it
+# carries the flat C name for Unagi's matched C++ member and the three
+# C++-linkage data spellings the two TUs need.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_seat5.txt" SLICE_SEAT5_LINES)
+set(SLICE_SEAT5_SOURCES "")
+foreach(line IN LISTS SLICE_SEAT5_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SEAT5_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tseat5 walk_window walk_window_hires smoke_player)
+    target_sources(${_tseat5} PRIVATE ${SLICE_SEAT5_SOURCES})
+endforeach()
+
 # ===========================================================================
 # THE WIRELESS PLAN, RUNGS W4 AND W5 (run link100, lane WM3)
 # ===========================================================================

@@ -1,0 +1,166 @@
+# ===========================================================================
+# SLICE seat5 -- run link100 wave 7, lane SEAT5
+# CENSUS BATCH B5, "PMF-SINGLES": the six family-C rows outside ov006 that no
+# prior lane had scouted individually
+# (runs/link100/out/REMAIN2/BATCHES.md section B5, rows.tsv batch=B5-PMF-SINGLES)
+# ===========================================================================
+#
+# THE FAMILY. Each row is a matched TU that dispatches an mwcc POINTER TO MEMBER
+# formed over a deliberately INCOMPLETE class -- "struct C;" then
+# "typedef void (C::*PMF)();" -- held either in a per-instance field or in a
+# table. Every one was host-copied with a banner claiming MSVC widens that PMF
+# past the ROM's eight-byte {code, adjust} pair. Block R8 turns on /vmg AND /vmm
+# for every C++ source in this build and /vmm picks the multiple-inheritance
+# worst case, which IS eight bytes, so the banner's stated reason is dead
+# (PMFB6's finding 1; PMFB7's twenty, PMFB8's five). What is NOT automatic is
+# the two things this lane measured per row before seating anything:
+#
+#   (a) THE UNIVERSE MUST CLOSE. A pointer to member reached through a field or
+#       a table can only be seated when the whole set of source pairs that can
+#       reach it is bounded and named. The instrument is PMFB8's ovblock.py
+#       (PMFB7's class-block sweep generalised): derive the class code block
+#       from its own vtable, keep every "load" relocation into the block whose
+#       word reads the reloc target and whose FOLLOWING word is zero, and then
+#       read who references the resulting run.
+#   (b) THE SENTINEL HAZARD. A stored pair that is ALSO compared by value must
+#       move with its pair (MGWRITER's data_ov004_020bc254). The rows below
+#       compare a CELL ADDRESS, never a stored pair, so a face per record is
+#       exact and one-face-per-code-word is not needed.
+#
+# ---------------------------------------------------------------------------
+# ROW 1 -- _ZN5Unagi8BehaviorEv, ov016, the eel's per-frame state half
+# ---------------------------------------------------------------------------
+# UNIVERSE. _ZTV5Unagi 0x02114958 gives seven own-overlay bodies; the class code
+# block snapped to symbol boundaries is 021111a0..02112588. The sweep over it:
+# 17 load relocations, TEN {code,0} pairs, seven not-pairs (the vtable's own
+# consecutive code words). The pairs are
+#   02114878 02111534 | 02114880 021118b4 | 02114888 02111994 | 02114890 021115c0
+#   02114898 021115a4 | 021148a0 02111bac | 021148a8 021119ec | 021148b0 02111718
+#   021148b8 02111860 | 021148c0 02111758
+# run 02114878..021148c8, SOLID (stride 8, no gap), ten distinct code words, and
+# every reference into the run is __sinit_ov016_021136ec. That sinit, read at
+# 02113764..0211383c, copies them PAIRWISE into five 16-byte bss cells (the
+# overlay image ends at 02114d20, so the cells are bss):
+#   02114d7c <- {02114898 enter, 02114878 MAIN}
+#   02114d8c <- {021148a0 enter, 021148a8 MAIN}
+#   02114d9c <- {021148b8 enter, 021148c0 MAIN}
+#   02114dac <- {02114888 enter, 02114880 MAIN}
+#   02114dbc <- {021148b0 enter, 02114890 MAIN}
+# Nothing else in ov016 can hand this class's +0x34c field an address. CLOSED.
+# (02114898 carries the symbol name BookSwitch_SpawnInfo and 021115a4 the name
+# BookSwitch_Spawn: a dsd mis-symbolization the port's own host copy already
+# named and reproduced as unagi_state_arrive; the address is Unagi's d7c ENTER
+# and it is NOT touched by this seat.)
+# SENTINEL. The one comparison the row makes is
+# *(void**)(this+0x34c) != &data_ov016_02114dbc -- a CELL ADDRESS against a
+# cell, not a stored pair. The seat moves no cell. NO SENTINEL.
+# EMITTED. mov eax,[ecx+8] / test eax,eax / je / mov ecx,[ecx+12] / add ecx,edi
+# / call eax. ARITY ZERO, receiver in ecx, nothing pushed, a CALL not a jump.
+# /Zp4 changes 0 listing lines outside the TITLE (holder offset 8, 8 mod 8 = 0),
+# so the option is left off rather than claimed.
+# SEAT. The five MAIN records take zero-argument __fastcall faces in
+# port/unmatched/Unagi_StateDispatch.cpp, which keeps its seat and its enter
+# halves and loses only the host Behavior. The ENTER records do not change:
+# func_ov016_02111bf0 (matched, port/slice_pmf2.txt) tail-jumps into them.
+# The flat C name is defined in port/hal/pmf_seat5.cpp.
+#
+# ---------------------------------------------------------------------------
+# ROW 2 -- func_ov102_021498e0, ov102, the QUESTION_BLOCK's content dispatch
+# ---------------------------------------------------------------------------
+# UNIVERSE. Two bss content tables, data_ov102_0214e870 (0x20 = ONE row of four
+# 8-byte records) and data_ov102_0214e8c0 (0x100 = EIGHT rows of four); the
+# overlay image ends at 0214e6e0 so both are bss and carry no static relocs.
+# __sinit_ov102_0214d908 fills them from the THIRTY-SIX source statics the port's
+# own seat already names (data_ov102_0214e270..0214e390), every one {fn, 0}
+# checked against its own reloc destination. THE ONLY READER IS THIS ROW: the
+# only two code-side "load" relocations that reach either table are the pool
+# words at 02149c6c and 02149c70, and both sit inside func_ov102_021498e0 itself
+# (021498e0 + 0x398 = 02149c78). CLOSED, and single-reader.
+# SENTINEL. Nothing in ov102 compares a stored pair against a constant. NONE.
+# EMITTED, all three indirect sites:
+#   movzx eax,[esi+1011] / shl eax,5 / mov ecx,tbl[eax+4] / mov eax,tbl[eax] /
+#   add ecx,esi / call eax
+# and the ch-indexed sites read tbl[eax*8] / tbl[eax*8+4] with eax = content*4 +
+# ch -- the ROM's own "add r0,r1,r0,lsl #5" then "add r3,r0,r4,lsl #3" at
+# 021498e0+0x2a8, stride EIGHT. ARITY ZERO, receiver in ecx, nothing pushed.
+# /Zp4 changes 0 listing lines outside the TITLE.
+# SEAT. One zero-argument __fastcall face per distinct code word (eight) in
+# port/unmatched/QuestionBlock_BounceDispatch.cpp, which keeps its 36-entry seat
+# and loses only the host body and its qblock_content_call reader. The TU
+# publishes the flat C name itself, so no forwarder.
+#
+#
+# ---------------------------------------------------------------------------
+# ROW 3 -- _ZN11MirrorLuigi8BehaviorEv, ov055, the mirror's per-frame half
+# ---------------------------------------------------------------------------
+# UNIVERSE. Lane PMFB8 measured it for its own gate 1 and this lane re-read the
+# result: MirrorLuigi's class code block is 021111a0..02111860, the sweep gives
+# exactly TWO {code,0} pairs, 02111a94 = 021112bc (the ENTER half, whose whole
+# body is "return 1") and 02111a9c = 02111288 (the TICK half, the mirror of the
+# player), a solid run 02111a94..02111aa4 whose only references are
+# __sinit_ov055_021118d4's own two loads, which copy both into the single
+# sixteen-byte cell data_ov055_02111b70. ONE cell, TWO halves, TWO readers, and
+# the readers are DISJOINT RECORDS: the ENTER word is read by
+# src/func_ov055_021112c4.cpp (PMFB8's own seat, already a __fastcall face) and
+# the TICK word is read by this row and by nothing else. CLOSED.
+# SENTINEL. Nothing compares a stored pair by value. NONE.
+# EMITTED. mov eax,[ecx+8] / test eax,eax / je / mov ecx,[ecx+12] / push ebx /
+# add ecx,edi / call eax. ARITY ONE -- one pushed word, the player pointer, that
+# the caller never pops because __thiscall's stack half is callee popped -- so
+# the face is __fastcall(self, dead_edx, void *val), lane FWD's MgCup shape.
+# /Zp4 changes 0 listing lines outside the TITLE (the member sits at offset 8 of
+# its holder).
+# SEAT. The TICK word takes that one face. It is installed from the flat-C
+# forwarder in port/unmatched/MirrorLuigi_Behavior.cpp rather than from
+# port_mirrorluigi_state_seat, because that seat lives in
+# port/hal/actor_classes_ov055.cpp and is not this lane's file; the forwarder is
+# the ONLY path to the TICK word in the binary (vtable slot 6 is its sole
+# caller and the matched TU its sole reader), so the swap is strictly before the
+# first dispatch through it, and the ROM value is checked before the swap. The
+# one-line alternative for whoever owns that file is written up in
+# runs/link100/out/SEAT5/decomp_side.md.
+#
+# ---------------------------------------------------------------------------
+# THE ROWS OF B5 THAT ARE NOT SEATED, each with the measurement that stops it
+# (the universe closes on three of the three -- what stops them is not the
+# family's own hazard):
+# ---------------------------------------------------------------------------
+# _ZN10HootTheOwl8BehaviorEv (ov094). UNIVERSE CLOSES: _ZTV7daOwl_c 02136a58,
+#   block 02135700..02136798, TEN {code,0} pairs, run 021369c0..02136a10 solid,
+#   every reference __sinit_ov094_021367e8. NOT SEATED: the NINETEENTH SYMSCOPE
+#   CROSSING is still live on this tip. src/_ZN10HootTheOwl8BehaviorEv.cpp:69
+#   spells the ROM's call to 0x021357a4 as func_ov096_021357a4 -- an eight-byte
+#   ov096 stub -- where the ROM reaches ov094's own 0x110-byte body (ov094 and
+#   ov096 both base at 0x02135700). Confirmed on 0046a2d11 by the TU's own EXTRN
+#   list. Seating it raises the count by one and loses two matched TUs to
+#   /OPT:REF, one of which is the correct target of the call it breaks (lane
+#   PMFB7 measured exactly that: 10182 where 10184 was predicted). The unblock
+#   is one word in src/ and is decomp-side, not a port seat:
+#   runs/link100/out/SEAT5/decomp_side.md.
+# _ZN6Klepto8BehaviorEv (ov062). UNIVERSE CLOSES: _ZTV9daJango_c 0211dd5c, block
+#   0211b248..0211ce80, TEN {code,0} pairs, run 0211dcd0..0211dd20 solid, every
+#   reference __sinit_ov062_0211d6fc; the comparison against data_ov062_0211e14c
+#   is a cell address, so no sentinel. NOT SEATED: THE TU DOES NOT COMPILE on
+#   this toolchain. src/_ZN6Klepto8BehaviorEv.cpp:21 declares
+#   "void func_ov062_0211b51c(void *self);" inside its extern "C" block while
+#   include/decl_common.h:2750 declares "extern void func_ov062_0211b51c(char*);"
+#   -- MSVC C2733, you cannot overload a function with extern "C" linkage. A
+#   declaration-agreement defect in src/, DECLGATE's territory, not a port file.
+# func_ov002_020f7d74 (ov002). UNIVERSE CLOSES IN THE SOURCE ITSELF: the 24
+#   entries are named one by one as the initialisers of the TU's own static
+#   table, they are disjoint from the first dispatcher's fourteen
+#   (data_ov002_0210a*), and the emitted dispatch is
+#   mov ecx,tbl[edx*8+4] / add ecx,self / mov eax,tbl[edx*8] / call eax with
+#   three pushed words -- ARITY THREE, stride eight, /Zp4 0 diff lines. NOT
+#   SEATED HERE: the host copy and the record seat both live in
+#   port/hal/intro_kuppa_dispatch.cpp, which is not this lane's file, and the
+#   seat has to run inside ov002's own bring-up (the same wall PMFB8 recorded
+#   for func_ov002_020bd664). The TU also drags MSVC's magic-static machinery
+#   (__Init_thread_header/footer/epoch, __tls_index) in for its function-local
+#   table, which is a second thing a reviewer should see measured before it
+#   lands. Written up as a hunk in runs/link100/out/SEAT5/decomp_side.md.
+# ===========================================================================
+src/_ZN11MirrorLuigi8BehaviorEv.cpp
+src/_ZN5Unagi8BehaviorEv.cpp
+src/func_ov102_021498e0.cpp
+port/hal/pmf_seat5.cpp

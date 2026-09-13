@@ -107,75 +107,71 @@ extern "C" int func_ov018_02111bf0(void *c, void *cell);
    pair, the matched TU compiles to the same tail jump this body was, and
    the seat in this file aborts the binary on a nonzero delta so the two
    agree word for word. The reading above is kept as the derivation. */
-/* PORT_HOST_ABI: Unagi::Behavior, host copy. Only the PMF dispatch (the MAIN
- * half at cell+8) differs from the matched src; the rest is transcribed line
- * for line off _ZN5Unagi8BehaviorEv.cpp with raw offsets. */
-extern "C" int _ZN5Unagi8BehaviorEv(void *self)
-{
-    char *t = (char *)self;
+/* HOST COPY RETIRED, run link100 lane SEAT5, census batch B5 (PMF-SINGLES).
+   src/_ZN5Unagi8BehaviorEv.cpp dispatches its own field now: with /vmg /vmm
+   (block R8) MSVC's pointer to member IS the ROM's eight-byte {code, adjust}
+   pair, so the widening this file's banner was written for does not happen.
+   The TU's own /FAsc listing under the port's flags is
 
-    DecIfAbove0_Short((unsigned short *)(t + 0x100));
-    {
-        PortPmf *cell = *(PortPmf **)(t + 0x34c);
-        if (cell[1].fn)                         /* the MAIN half, cell+8 */
-            ((void (*)(void *))(size_t)cell[1].fn)(self);
-    }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(self, t + 0x110);
-    *(short *)(t + 0x8c) = *(short *)(t + 0x92);   /* mAngleX = mPrevAngleX */
-    *(short *)(t + 0x8e) = *(short *)(t + 0x94);   /* mAngleY = mPrevAngleY */
-    *(short *)(t + 0x90) = *(short *)(t + 0x96);   /* mAngleZ = mPrevAngleZ */
-    func_ov016_02111c40(self);
+       mov eax,DWORD PTR [ecx+8]    the MAIN half's code word, ROM offset +8
+       test eax,eax / je            the ROM's own null guard
+       mov ecx,DWORD PTR [ecx+12]   the adjust word at cell+0xc
+       add ecx,edi                  receiver = this + adjust
+       call eax                     a CALL, receiver in ecx, NOTHING pushed
 
-    unsigned id = *(unsigned *)(t + 0x49c);        /* mStarUniqueID (Unagi.h 0x49c) */
-    if (id != 0) {
-        void *found = _ZN5Actor10FindWithIDEj(id);
-        if (found == 0) {
-            *(unsigned *)(t + 0x49c) = 0;          /* clear_id */
-        } else {
-            if (*(int *)(t + 0x408) == 1) {        /* mVariant == 1 (0x408) */
-                void *cp = _ZN5Actor13ClosestPlayerEv(self);
-                if (cp != 0 &&
-                    Vec3_Dist(t + 0x43c, (char *)cp + 0x5c) < 0xfa000) {
-                    _ZN9ActorBase18MarkForDestructionEv(found);
-                    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(
-                        0xb2, *(unsigned char *)(t + 0x414) | 0x40,
-                        t + 0x43c, 0, *(signed char *)(t + 0xcc) /*mAreaId*/, -1);
-                    *(unsigned *)(t + 0x49c) = 0;
-                }
-            }
-            if (*(unsigned *)(t + 0x49c) != 0) {
-                *(int *)((char *)found + 0x5c) = *(int *)(t + 0x43c);
-                *(int *)((char *)found + 0x60) = *(int *)(t + 0x440);
-                *(int *)((char *)found + 0x64) = *(int *)(t + 0x444);
-                *(short *)(t + 0x416) += 0x1000;
-            }
-        }
-    }
+   -- ARITY ZERO, /Zp4 changes 0 listing lines outside the TITLE (the member
+   sits at offset 8 of its holder, 8 mod 8 = 0). So each of the FIVE MAIN
+   records now holds a zero-argument __fastcall face that forwards the receiver
+   as the one cdecl argument the ROM's own state body takes.
 
-    func_ov016_02111284(self);
-    _ZN12CylinderClsn5ClearEv(t + 0x110);
-    _ZN12CylinderClsn6UpdateEv(t + 0x110);
-    if (data_0209f220 == 1 &&
-        *(void **)(t + 0x34c) != (void *)&data_ov016_02114dbc) {
-        _ZN12CylinderClsn5ClearEv(t + 0x150);
-        _ZN12CylinderClsn6UpdateEv(t + 0x150);
-    }
-    _ZN14BlendModelAnim7AdvanceEv(t + 0x350);
-    return 1;
-}
+   THE ENTER RECORDS DO NOT CHANGE. They are reached by func_ov016_02111bf0,
+   itself a matched TU (port/slice_pmf2.txt) that MSVC compiles as a one-call
+   forwarder ending in jmp, so the caller's own cdecl frame is reused and a
+   plain cdecl body is right there.
+
+   THE UNIVERSE IS CLOSED. ovblock.py over Unagi's own class code block
+   (021111a0..02112588, derived from _ZTV5Unagi at 02114958) gives TEN {code,0}
+   pairs in ONE SOLID run 02114878..021148c8, ten distinct code words, and every
+   reference into that run is __sinit_ov016_021136ec -- the overlay's own sinit,
+   which copies them PAIRWISE into the five 16-byte bss cells named above (read
+   off the sinit at 02113764..0211383c). Nothing else in ov016 can hand this
+   field an address. NO BY-VALUE SENTINEL: the one comparison Behavior makes,
+   `*(void**)(this+0x34c) != &data_ov016_02114dbc`, is on the CELL ADDRESS, not
+   on a stored pair, and the seat does not move any cell. Measurements in
+   runs/link100/out/SEAT5/ (sweep_unagi.txt, dis_unagi_sinit.txt,
+   emit_seat5_out.txt) and port/slice_seat5.txt.
+
+   The flat C name _ZN5Unagi8BehaviorEv the actor class table calls is defined
+   in port/hal/pmf_seat5.cpp: the matched TU is a real C++ member and publishes
+   ?Behavior@Unagi@@QAEHXZ. */
+static void __fastcall seat5_unagi_main_021119ec(void *self, void *dead_edx)
+{ (void)dead_edx; func_ov016_021119ec(self); }   /* cell d8c MAIN */
+static void __fastcall seat5_unagi_main_02111758(void *self, void *dead_edx)
+{ (void)dead_edx; func_ov016_02111758(self); }   /* cell d9c MAIN */
+static void __fastcall seat5_unagi_main_021118b4(void *self, void *dead_edx)
+{ (void)dead_edx; func_ov016_021118b4(self); }   /* cell dac MAIN */
+static void __fastcall seat5_unagi_main_021115c0(void *self, void *dead_edx)
+{ (void)dead_edx; func_ov016_021115c0(self); }   /* cell dbc MAIN */
+static void __fastcall seat5_unagi_main_02111534(void *self, void *dead_edx)
+{ (void)dead_edx; func_ov016_02111534(self); }   /* cell d7c MAIN */
 
 static const struct { PortPmf *rec; unsigned rom; void (*host)(void *); }
 g_unagi_sources[] = {
     {&data_ov016_021148a0, 0x02111bac, func_ov016_02111bac},  /* d8c enter */
-    {&data_ov016_021148a8, 0x021119ec, func_ov016_021119ec},  /* d8c main  */
+    {&data_ov016_021148a8, 0x021119ec,
+     (void (*)(void *))(void *)seat5_unagi_main_021119ec},  /* d8c main  */
     {&data_ov016_021148b8, 0x02111860, func_ov016_02111860},  /* d9c enter */
-    {&data_ov016_021148c0, 0x02111758, func_ov016_02111758},  /* d9c main  */
+    {&data_ov016_021148c0, 0x02111758,
+     (void (*)(void *))(void *)seat5_unagi_main_02111758},  /* d9c main  */
     {&data_ov016_02114888, 0x02111994, func_ov016_02111994},  /* dac enter */
-    {&data_ov016_02114880, 0x021118b4, func_ov016_021118b4},  /* dac main  */
+    {&data_ov016_02114880, 0x021118b4,
+     (void (*)(void *))(void *)seat5_unagi_main_021118b4},  /* dac main  */
     {&data_ov016_021148b0, 0x02111718, func_ov016_02111718},  /* dbc enter */
-    {&data_ov016_02114890, 0x021115c0, func_ov016_021115c0},  /* dbc main  */
+    {&data_ov016_02114890, 0x021115c0,
+     (void (*)(void *))(void *)seat5_unagi_main_021115c0},  /* dbc main  */
     {&BookSwitch_SpawnInfo, 0x021115a4, unagi_state_arrive},  /* d7c enter */
-    {&data_ov016_02114878, 0x02111534, func_ov016_02111534},  /* d7c main  */
+    {&data_ov016_02114878, 0x02111534,
+     (void (*)(void *))(void *)seat5_unagi_main_02111534},  /* d7c main  */
 };
 
 extern "C" void port_unagi_states_seat(void)
