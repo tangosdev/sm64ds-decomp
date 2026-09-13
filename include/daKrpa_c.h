@@ -7,16 +7,20 @@
 #include "dBgCh_Actr.h"
 #include "dActor_c.h"
 
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
+
 /* daKrpa_c is the ROM's own RTTI name for this class (this tree once coined it
  * FlameChomp): the typeinfo at ov070
  * 0x02123340 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02123370 (31 slots, same count as dActor_c's) is what pairs it
  * to daKrpa_c_classInit (historical aliases daKrpa_c_Spawn and
- * FlameChomp_Spawn). A natural
- * `new daKrpa_c` is not retail-accurate: it targets the unresolved global
- * `_Znwm`, while the ROM calls fBase_c::operator new. The actor-table factory
- * therefore keeps an explicit typed construction seam for the allocator,
- * base/member constructors, and vptr store.
+ * FlameChomp_Spawn). ov070 is mixed FLY_GUY/AMP/FLAME_CHOMP/FLAME_CHOMP_FIRE;
+ * the debug table at 0x0208f8f8 names KERONPA (270), which overlay_actors.md
+ * maps to FLAME_CHOMP. AMP is 266 / BIRIKYU / daBrq_c; flame-chomp fire is
+ * 271 / KERONPA_FIRE / daKpFr_c.
+ *
+ * The factory is `return new daKrpa_c()`. The leaf unsigned-long operator new
+ * forwards to `_ZN7fBase_cnwEj` until #2570's fBase overload lands.
  *
  * The Spawn constructs the four owned subobjects below at 0xd4..0x1a0 in
  * declaration order; D1 destroys them in exactly the reverse order before
@@ -83,6 +87,10 @@ struct daKrpa_c : dActor_c {
     virtual s32  Render();              /* slot 9 */
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnYoshiTryEat();       /* slot 18 */
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char daKrpa_c_size_must_be_0x3b0[
