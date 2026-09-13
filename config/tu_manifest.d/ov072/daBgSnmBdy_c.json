@@ -640,11 +640,6 @@
       "canonical_module": "arm9",
       "canonical_address": "0x020072c0",
       "reason": "InitResources, HurtPlayer, UpdateGroundCollision and State3 each declare a Vector3 local, so this TU re-emits Vector3's vague-linkage D1 alongside its own text. The cartridge keeps one copy at arm9:0x020072c0 and an enrolled source already owns it; rombuild compares this object's body against those cartridge bytes and refuses anything but byte-identical vague-linkage output before discarding the duplicate."
-    },
-    {
-      "symbol": "_ZN9Matrix4x3D1Ev",
-      "disposition": "deadstrip",
-      "reason": "mwccarm emits Matrix4x3's vague-linkage D1 while lowering this class's own inline destructor over the Matrix4x3 member at 0x350; no configured ROM symbol of that name exists in any module and no surviving reference reaches it"
     }
   ],
   "externalized_output": [
@@ -799,7 +794,8 @@
     "State<N>/InitState<N> are coined member names that claim the PMF table INDEX and nothing more. The static initializer at 0x02122018 copies twelve pointer-to-member constants into data_ov072_02122b64 in those pairs; SetState indexes it at state * 0x10, CallStateInit invokes the first of the pair and CallStateBehavior the second. The cartridge carries no descriptive identifier for any of them.",
     "IsPlayerNearCenter, UpdateRollAngle, AdvancePath, HurtPlayer, UpdateGroundCollision, UpdateModel, CallStateInit, CallStateBehavior and SetState are truthful inferred private spellings. Their class ownership, inbound calls, bodies, relocations and codegen are proven; the exact original English names are not. UpdateGroundCollision's mangled spelling asserts a POINTER parameter (P10dBgCh_Actr); the bytes cannot distinguish a pointer from a reference here, and R10dBgCh_Actr would have matched equally well. SetState's Ei suffix chooses int for the state index; the table access and call sites do not establish the original parameter type or rule out an enum. The int spelling is inferred, not a recovered identifier or type.",
     "Legacy per-function contribution comparison is not applicable to the final lifecycle form: the two old out-of-line destructor shards cannot compile beside the inline destructor that emits their exact replacements. The ordinary intact-object linkcheck is the production proof.",
-    "Substantial reconstruction work remains. Recounted at adopted input 19921838ecf6acaf689a4dbc3bb4fd05e4d0effc with tiers.py's RAW_OFFSET regex: 18 of 26 out-of-line member definitions contain its raw-offset pattern, 154 occurrences across 117 source lines. The separate factory makes 27 out-of-line definitions total; the inline destructor emits the other two of the 29 function symbols. The previous report's 639 source lines were a historical snapshot; that input has 642. The TU still spells other modules' mangled symbols directly instead of calling declared C++ methods. Promotion is a packaging state, not a finished reconstruction."
+    "Substantial reconstruction work remains. Recounted at adopted input 19921838ecf6acaf689a4dbc3bb4fd05e4d0effc with tiers.py's RAW_OFFSET regex: 18 of 26 out-of-line member definitions contain its raw-offset pattern, 154 occurrences across 117 source lines. The separate factory makes 27 out-of-line definitions total; the inline destructor emits the other two of the 29 function symbols. The previous report's 639 source lines were a historical snapshot; that input has 642. The TU still spells other modules' mangled symbols directly instead of calling declared C++ methods. Promotion is a packaging state, not a finished reconstruction.",
+    "Leftover cleanup substituted named fields and already-declared methods (LoadFile/SetFile/FromID/UpdatePos/FindWithID/FindWithActorID/IsOnGround/JustHitGround/CopyNormalTo/StartTalk/ShowMessage/GetTalkState, mShadowMat = IDENTITY_MATRIX4X3 with common.h first, State3 SnowmanHead::unk_336 via include/SnowmanHead.h). MATCH-preserving walls remain: 6az Init/SetRanges/DropShadowRadHeight/Earthquake/RunningSlidingDustAt/Func_02015560/Player::Hurt; dBgCh_Actr::Init header Fix12i vs ROM Fix12<int>; UpdateContinuous veneer; GetFloorResult not in the header; func_0203568c/84; func_0201267c; Sound::PlayLong; data_ov072_* handles; AdvancePath c+off (named members 29-word DIFF, GetNode/NumNodes methods 14-word DIFF); State1/State3 (int)this+0x3a2 mSubstate++ (named form size-DIFFs); (long long)(int) on mScaleX/mRadius. Including SnowmanHead.h stops mwccarm emitting unused Matrix4x3 D1; compiler_only_output keeps only Vector3 D1."
   ],
   "verification": {
     "linkcheck": {
@@ -907,16 +903,13 @@
     "functions_declared": 29,
     "compilerOnlyOutput": {
       "requested": [
-        "_ZN7Vector3D1Ev",
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
-        "_ZN7Vector3D1Ev",
-        "_ZN9Matrix4x3D1Ev"
+        "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
-        33,
-        71
+        33
       ],
       "data": [],
       "dataExternalized": []
