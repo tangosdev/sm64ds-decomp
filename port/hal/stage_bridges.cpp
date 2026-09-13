@@ -495,8 +495,30 @@ static int __fastcall st_render(void *s, void *)
 static int __fastcall st_render(void *, void *)   { return 1; }
 #endif
 
+/* _ZTV5Stage SLOT 1 IS THE ROM'S OWN WORD NOW (run link100 wave 7, lane SEAT2,
+   census batch B2).  This used to call Scene::ResetFadersAndSound directly --
+   correct arithmetic, host spelling.  The cartridge's word is
+   _ZN5Stage19BeforeInitResourcesEv at arm9 0x0202ddc8 (read at 0x020921c4:
+   reloc `from:0x020921c4 kind:load to:0x0202ddc8`), and that body is a
+   THREE-WORD ARM VENEER -- `ldr ip,[pc]; bx ip; .word 0x0202e66c` -- so its
+   matched TU, src/_ZN5Stage19BeforeInitResourcesEv.cpp, names NO parameter:
+   the receiver the ROM leaves in r0 is still in r0 when
+   Scene::ResetFadersAndSound reads it.
+
+   THE RECEIVER RIDES THE CALLER'S OWN CDECL FRAME, which is the ov007 veneer
+   contract port/tools/tailjump_guard.py exists for: MSVC compiles a one-call
+   forwarder as a `jmp`, so the frame Scene::ResetFadersAndSound reads its
+   argument out of is THIS function's, and the `s` pushed below is where the
+   callee looks.  It is correct only while that jump is a jump, so this lane
+   disassembled the linked frame rather than assuming it -- the transcript is
+   out/SEAT2/stage_binit_tailjump.txt -- and the cast is spelled here, at the
+   one call site, rather than hidden in a wrong-arity extern.  Related:
+   sm64ds-port-fastcall-face-arity, the face that DROPS `this`. */
+extern "C" void _ZN5Stage19BeforeInitResourcesEv(void);
+typedef int (*Seat2StageBeforeInit)(void *);
+
 static int  __fastcall st_binit(void *s, void *)
-{ return _ZN5Scene19ResetFadersAndSoundEv(s); }
+{ return ((Seat2StageBeforeInit)&_ZN5Stage19BeforeInitResourcesEv)(s); }
 static void __fastcall st_ainit(void *s, void *, unsigned a)
 { port_scene_after_init(s, a); }
 static int  __fastcall st_bclean(void *s, void *)
