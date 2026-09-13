@@ -87,6 +87,10 @@ class PRSourceReviewTest(unittest.TestCase):
                 return {}
             if "/files?" in path:
                 return [[{"filename": "src/actor.cpp"}]]
+            if "/git/commits/" in path:
+                sha = path.rsplit("/", 1)[1]
+                return {"sha": sha, "author": {"name": "Andrew", "email": "andrewboudreau@gmail.com"},
+                        "message": "Ordinary commit", "parents": [{"sha": "0" * 40}]}
             if path.endswith("/git/ref/heads/main"):
                 return {"ref": "refs/heads/main", "object": {"type": "commit", "sha": BASE}}
             if "/git/ref/" in path:
@@ -124,6 +128,13 @@ class TargetBranchReviewTest(unittest.TestCase):
                 return [[{"filename": "src/actor.cpp" if source else "tools/inert.py"}]]
             if path.endswith("/git/ref/heads/agents/coordination"):
                 return {"object": {"sha": "d" * 40}}
+            if "/git/commits/" in path:
+                # An ordinary (non-refresh) commit by default: the walk stops
+                # immediately, so the resolved live target is the tip itself,
+                # matching every scenario below unless a test says otherwise.
+                sha = path.rsplit("/", 1)[1]
+                return {"sha": sha, "author": {"name": "Andrew", "email": "andrewboudreau@gmail.com"},
+                        "message": "Ordinary commit", "parents": [{"sha": "0" * 40}]}
             if "/git/ref/" in path:
                 value = next(replies)
                 if isinstance(value, Exception):
@@ -165,7 +176,9 @@ class TargetBranchReviewTest(unittest.TestCase):
         self.assertEqual(result["result"], "fail")
         self.assertEqual(result["observed_base"], "e" * 40)
         self.assertEqual(posts, [])
-        self.assertTrue(calls[-1].endswith("/git/ref/heads/main"))
+        # The ref is read last, then its commit is inspected for a refresh-bot
+        # skip before the verdict is used, so that inspection is the final call.
+        self.assertTrue(calls[-1].endswith("/git/commits/" + "e" * 40))
 
     def test_final_read_failure_also_blocks_read_only_integrator_check(self):
         result, _, posts, _ = self.run_fixture([BASE, RuntimeError("ref unavailable")])
@@ -190,7 +203,7 @@ class TargetBranchReviewTest(unittest.TestCase):
         self.assertEqual(result["result"], "fail")
         self.assertIn("Target branch changed", result["summary"])
         self.assertEqual(posts[0]["conclusion"], "failure")
-        self.assertTrue(calls[-2].endswith("/git/ref/heads/main"))
+        self.assertTrue(calls[-2].endswith("/git/commits/" + "e" * 40))
         self.assertTrue(calls[-1].endswith("/check-runs"))
 
     def test_current_base_review_can_publish_despite_retained_pr_base_metadata(self):
@@ -252,6 +265,102 @@ class TargetBranchReviewTest(unittest.TestCase):
             result = gate.check_pr("tangosdev/sm64ds-decomp", 2447)
         self.assertEqual(result["result"], "fail")
         self.assertEqual(api.call_count, 1)
+
+
+def sha_for(n):
+    return format(n, "040x")
+
+
+BOT_AUTHOR = {"name": gate.REFRESH_BOT_NAME, "email": gate.REFRESH_BOT_EMAIL}
+HUMAN_AUTHOR = {"name": "Andrew", "email": "andrewboudreau@gmail.com"}
+
+
+def raw_commit(sha, author, message, parent=None):
+    """A raw git commit object shaped like `git/commits/<sha>` returns it."""
+    return {"sha": sha, "author": author, "message": message,
+            "parents": [{"sha": parent}] if parent else []}
+
+
+class RefreshCommitSkipTest(unittest.TestCase):
+    """The live-target walk that skips the progress-refresh bot's commits: the
+    fix for Andrew's "any review expires before merge" report (2026-09-12,
+    live main moved 9c7f38a24 -> 49e250fa4 on a bot-only commit)."""
+
+    def api_for(self, commits):
+        def api(path, payload=None, paginate=False):
+            self.assertIn("/git/commits/", path)
+            return copy.deepcopy(commits[path.rsplit("/", 1)[1]])
+        return api
+
+    def test_refresh_tip_resolves_to_its_non_refresh_parent(self):
+        bot, real = sha_for(2), sha_for(1)
+        commits = {bot: raw_commit(bot, BOT_AUTHOR, gate.REFRESH_BOT_MESSAGE, parent=real),
+                   real: raw_commit(real, HUMAN_AUTHOR, "Promote daPkn_c (#2450)")}
+        with patch.object(gate, "api", side_effect=self.api_for(commits)):
+            result = gate.skip_refresh_commits("tangosdev/sm64ds-decomp", bot)
+        self.assertEqual(result, (real, 1, [bot, real]))
+
+    def test_two_consecutive_refresh_commits_skip_both(self):
+        newest, middle, real = sha_for(3), sha_for(2), sha_for(1)
+        commits = {
+            newest: raw_commit(newest, BOT_AUTHOR, gate.REFRESH_BOT_MESSAGE, parent=middle),
+            middle: raw_commit(middle, BOT_AUTHOR, gate.REFRESH_BOT_MESSAGE, parent=real),
+            real: raw_commit(real, HUMAN_AUTHOR, "Promote daSanbo_c (#2447)"),
+        }
+        with patch.object(gate, "api", side_effect=self.api_for(commits)):
+            result = gate.skip_refresh_commits("tangosdev/sm64ds-decomp", newest)
+        self.assertEqual(result, (real, 2, [newest, middle, real]))
+
+    def test_human_commit_with_skip_ci_in_message_is_not_skipped(self):
+        # Carries the same "[skip ci]" marker a human commit can type, but
+        # neither the bot's exact message nor its author: must not skip.
+        sha = sha_for(4)
+        commits = {sha: raw_commit(sha, HUMAN_AUTHOR, "Quick doc typo fix [skip ci]")}
+        with patch.object(gate, "api", side_effect=self.api_for(commits)):
+            result = gate.skip_refresh_commits("tangosdev/sm64ds-decomp", sha)
+        self.assertEqual(result, (sha, 0, [sha]))
+
+    def test_refresh_shaped_message_by_a_different_author_is_not_skipped(self):
+        sha = sha_for(5)
+        other_author = {"name": "Someone Else", "email": "someone@example.com"}
+        commits = {sha: raw_commit(sha, other_author, gate.REFRESH_BOT_MESSAGE)}
+        with patch.object(gate, "api", side_effect=self.api_for(commits)):
+            result = gate.skip_refresh_commits("tangosdev/sm64ds-decomp", sha)
+        self.assertEqual(result, (sha, 0, [sha]))
+
+    def test_bound_stops_the_walk(self):
+        count = gate.MAX_REFRESH_SKIP + 3
+        shas = [sha_for(n) for n in range(count)]
+        commits = {}
+        for i, sha in enumerate(shas):
+            parent = shas[i - 1] if i > 0 else None
+            commits[sha] = raw_commit(sha, BOT_AUTHOR, gate.REFRESH_BOT_MESSAGE, parent=parent)
+        with patch.object(gate, "api", side_effect=self.api_for(commits)):
+            with self.assertRaises(gate.sr.ReviewError):
+                gate.skip_refresh_commits("tangosdev/sm64ds-decomp", shas[-1])
+
+    def test_published_review_pinned_to_a_skipped_refresh_commit_still_passes(self):
+        """notes/agents/templates/verification.json requires an exact
+        tested_base. A reviewer who tests while the branch tip is itself a
+        refresh commit records that commit; the same walk must equate it with
+        the live target the check resolves later, not just the raw tip at
+        review time -- the "handle both sides consistently" half of the fix."""
+        bot, real = sha_for(7), sha_for(6)
+        commits = {bot: raw_commit(bot, BOT_AUTHOR, gate.REFRESH_BOT_MESSAGE, parent=real),
+                   real: raw_commit(real, HUMAN_AUTHOR, "Promote daBombking_c (#2446)")}
+        with patch.object(gate, "api", side_effect=self.api_for(commits)):
+            live, _, chain = gate.skip_refresh_commits("tangosdev/sm64ds-decomp", bot)
+        self.assertEqual(live, real)
+        snapshot = state()
+        task = snapshot["tasks"]["actor"]
+        task["outputs"][0]["evidence"]["tested_base"] = bot
+        task["outputs"][0]["evidence"]["source_review"]["reviewed_base"] = bot
+        # Without an alias set (the prior, strict behavior) a review pinned to
+        # the bot commit does not equal the live target and is rejected.
+        self.assertEqual(gate.evaluate(snapshot, HEAD, real, ["src/actor.cpp"])["result"], "fail")
+        # The live target's own walked chain accepts the same review.
+        self.assertEqual(gate.evaluate(snapshot, HEAD, real, ["src/actor.cpp"],
+                                       base_aliases=frozenset(chain))["result"], "pass")
 
 
 def object_id(value):
