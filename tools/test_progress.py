@@ -1,4 +1,6 @@
 """The clean-clone progress scan uses the published MATCHED policy."""
+import contextlib
+import io
 import pathlib
 import tempfile
 import unittest
@@ -122,6 +124,52 @@ class ProgressPolicy(unittest.TestCase):
         self.assertEqual(done_b, 0x100)
         self.assertEqual(total_bytes, 0x100 + 0x40,
                          "and the record with no source under any name is untouched")
+
+    def test_bare_from_src_reads_the_committed_scan_not_the_local_ledger(self):
+        """``python tools/progress.py --from-src`` (no ``--bar``) is the exact
+        verification idiom the house laws cite. Before this fix, main()'s plain-report
+        branch never looked at --from-src at all: it always called matched(), which
+        reads the local, gitignored progress/matched.jsonl ledger, so a fresh
+        worktree with an empty ledger printed `functions : 0 / N` even though every
+        function here has a committed, byte-gate-passing source. This runs main()
+        end to end against a fixture with an empty ledger and checks the printed
+        numerator and denominator against synced_from_src's own numbers, so the
+        plain path and --bar cannot disagree again."""
+        temp = tempfile.TemporaryDirectory()
+        self.addCleanup(temp.cleanup)
+        repo = pathlib.Path(temp.name)
+        (repo / "src").mkdir()
+        (repo / "progress").mkdir()
+        sym = repo / "symbols.txt"
+        sym.write_text(
+            "good kind:function(arm,size=0x10) addr:0x02000000\n"
+            "sized kind:function(arm,size=0x100) addr:0x02000030\n", encoding="utf-8")
+        for name in ("good", "sized"):
+            (repo / "src" / f"{name}.c").write_text(
+                f"int {name}(void) {{ return 0; }}\n", encoding="utf-8")
+        empty_ledger = repo / "progress" / "matched.jsonl"
+        empty_ledger.write_text("", encoding="utf-8")  # the fresh-worktree ledger
+
+        with mock.patch.object(P, "REPO", repo), \
+                mock.patch.object(P, "CONFIG", repo), \
+                mock.patch.object(P, "MATCHED", empty_ledger), \
+                mock.patch.object(P.sys, "argv", ["progress.py", "--from-src"]), \
+                mock.patch.object(RL, "module_universe", lambda: [(sym, "arm9")]), \
+                mock.patch.object(BG, "excluded_paths", lambda *a, **k: set()), \
+                mock.patch.object(
+                    SP, "path_for",
+                    lambda n: (repo / "src" / f"{n}.c"
+                               if (repo / "src" / f"{n}.c").is_file() else None)):
+            done_n, done_b, n, total_bytes = P.synced_from_src()
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                P.main()
+
+        self.assertEqual((done_n, n), (2, 2), "both fixture functions are ordinary matches")
+        printed = out.getvalue()
+        self.assertIn(f"functions : {done_n:,} / {n:,}", printed)
+        self.assertIn(f"code bytes: {done_b:,} / {total_bytes:,}", printed)
+        self.assertNotIn("functions : 0 /", printed)
 
     def test_from_src_ignores_an_ambient_database(self):
         temp = tempfile.TemporaryDirectory()
