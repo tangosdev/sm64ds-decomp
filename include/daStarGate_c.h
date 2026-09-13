@@ -81,7 +81,7 @@ struct daStarGate_c : dActor_c {
 
 inline void *daStarGate_c::operator new(unsigned long size)
 {
-    return _ZN7fBase_cnwEj((unsigned int)size);
+    return _ZN7fBase_cnwEj((unsigned)size);
 }
 
 typedef char daStarGate_c_State_size_must_be_0x10[
