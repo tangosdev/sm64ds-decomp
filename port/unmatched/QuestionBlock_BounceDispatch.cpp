@@ -101,48 +101,101 @@ extern signed char data_0209f2f8;
 /* __sinit_ov102_0214d908 copy them into the BSS tables. Runs BEFORE that     */
 /* __sinit from hal/actor_overlays.cpp.                                       */
 /* ------------------------------------------------------------------------- */
+/* HOST COPY RETIRED, run link100 wave 7 lane SEAT5, census batch B5.
+   src/func_ov102_021498e0.cpp dispatches the two content tables itself now.
+   THE WIDTH CLAIM IN THIS FILE'S BANNER IS DEAD: block R8 turns on /vmg AND
+   /vmm for every C++ source in this build, and /vmm picks the multiple-
+   inheritance worst case, which is EIGHT bytes -- the ROM's own {fn, delta}
+   pair. The TU's own /FAsc listing under the port's flags reads the tables at
+   the ROM's own stride, at all three indirect sites
+   (runs/link100/out/SEAT5/emit_seat5_out.txt):
+
+       movzx eax,BYTE PTR [esi+1011]      content, the +0x3f3 byte
+       shl   eax,5                        content*32, the ROM's own lsl #5
+       mov   ecx,DWORD PTR tbl[eax+4]     the adjust word
+       mov   eax,DWORD PTR tbl[eax]       the code word
+       add   ecx,esi                      receiver = this + adjust
+       call  eax                          a CALL, receiver in ecx, NOTHING pushed
+
+   and the ch-indexed sites read tbl[eax*8] / tbl[eax*8+4] with eax =
+   content*4 + ch -- the ROM's own lsl #3. ARITY ZERO; /Zp4 changes 0 listing
+   lines outside the TITLE. So every content record holds a zero-argument
+   __fastcall face that forwards the receiver as the one cdecl argument the
+   matched content body takes.
+
+   THE UNIVERSE IS CLOSED AND IS THIS ROW'S OWN. The two tables are bss (the
+   overlay image ends at 0x0214e6e0), __sinit_ov102_0214d908 fills them from
+   exactly the THIRTY-SIX source statics listed below, every one {fn, 0} checked
+   against its own reloc destination, and the tables are 0x20 and 0x100 bytes =
+   ONE and EIGHT content rows of four records. THE ONLY READER IS THIS ROW: the
+   only two code-side `load` relocations that reach either table are the pool
+   words at 0x02149c6c and 0x02149c70, and both sit inside func_ov102_021498e0
+   itself (0x021498e0 + 0x398 = 0x02149c78); the sinit's own three are the fill.
+   NO BY-VALUE SENTINEL: nothing in ov102 compares a stored pair against a
+   constant. Measurements in runs/link100/out/SEAT5/ and port/slice_seat5.txt.
+
+   ONE FACE PER CODE WORD, not per record: with no by-value sentinel the two are
+   equivalent, and the eight distinct bodies the thirty-six records name need
+   eight faces. */
+static void __fastcall seat5_qb_021494cc(void *s, void *e)
+{ (void)e; func_ov102_021494cc(s); }
+static void __fastcall seat5_qb_02149478(void *s, void *e)
+{ (void)e; func_ov102_02149478(s); }
+static void __fastcall seat5_qb_02149428(void *s, void *e)
+{ (void)e; func_ov102_02149428(s); }
+static void __fastcall seat5_qb_02149384(void *s, void *e)
+{ (void)e; func_ov102_02149384(s); }
+static void __fastcall seat5_qb_021493dc(void *s, void *e)
+{ (void)e; func_ov102_021493dc(s); }
+static void __fastcall seat5_qb_021492d4(void *s, void *e)
+{ (void)e; func_ov102_021492d4(s); }
+static void __fastcall seat5_qb_02149288(void *s, void *e)
+{ (void)e; func_ov102_02149288(s); }
+static void __fastcall seat5_qb_02149220(void *s, void *e)
+{ (void)e; func_ov102_02149220(s); }
+
 static const struct { PortPmf *slot; unsigned rom; void *host; }
 g_qblock_content_statics[] = {
     /* --- 0214e8c0 feeders. Which table offset each lands at is the matched
        __sinit's business, not the seat's: the seat only rewrites each source
        static's fn word, checked against its own reloc destination. --- */
-    { data_ov102_0214e388, 0x021494cc, (void *)func_ov102_021494cc },
-    { data_ov102_0214e380, 0x021494cc, (void *)func_ov102_021494cc },
-    { data_ov102_0214e378, 0x021494cc, (void *)func_ov102_021494cc },
-    { data_ov102_0214e370, 0x021494cc, (void *)func_ov102_021494cc },
-    { data_ov102_0214e368, 0x02149478, (void *)func_ov102_02149478 },
-    { data_ov102_0214e360, 0x02149478, (void *)func_ov102_02149478 },
-    { data_ov102_0214e358, 0x02149478, (void *)func_ov102_02149478 },
-    { data_ov102_0214e350, 0x02149478, (void *)func_ov102_02149478 },
-    { data_ov102_0214e348, 0x02149428, (void *)func_ov102_02149428 },
-    { data_ov102_0214e340, 0x02149428, (void *)func_ov102_02149428 },
-    { data_ov102_0214e320, 0x02149428, (void *)func_ov102_02149428 },
-    { data_ov102_0214e288, 0x02149428, (void *)func_ov102_02149428 },
-    { data_ov102_0214e338, 0x02149384, (void *)func_ov102_02149384 },
-    { data_ov102_0214e330, 0x02149384, (void *)func_ov102_02149384 },
-    { data_ov102_0214e280, 0x02149384, (void *)func_ov102_02149384 },
-    { data_ov102_0214e318, 0x02149384, (void *)func_ov102_02149384 },
-    { data_ov102_0214e2a8, 0x021493dc, (void *)func_ov102_021493dc },
-    { data_ov102_0214e2b0, 0x021493dc, (void *)func_ov102_021493dc },
-    { data_ov102_0214e270, 0x021493dc, (void *)func_ov102_021493dc },
-    { data_ov102_0214e298, 0x021493dc, (void *)func_ov102_021493dc },
-    { data_ov102_0214e2a0, 0x021492d4, (void *)func_ov102_021492d4 },
-    { data_ov102_0214e2f8, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e2f0, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e2e8, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e390, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e2d8, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e2d0, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e2c8, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e2c0, 0x02149220, (void *)func_ov102_02149220 },
-    { data_ov102_0214e2b8, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e2e0, 0x02149288, (void *)func_ov102_02149288 },
-    { data_ov102_0214e328, 0x02149288, (void *)func_ov102_02149288 },
+    { data_ov102_0214e388, 0x021494cc, (void *)seat5_qb_021494cc },
+    { data_ov102_0214e380, 0x021494cc, (void *)seat5_qb_021494cc },
+    { data_ov102_0214e378, 0x021494cc, (void *)seat5_qb_021494cc },
+    { data_ov102_0214e370, 0x021494cc, (void *)seat5_qb_021494cc },
+    { data_ov102_0214e368, 0x02149478, (void *)seat5_qb_02149478 },
+    { data_ov102_0214e360, 0x02149478, (void *)seat5_qb_02149478 },
+    { data_ov102_0214e358, 0x02149478, (void *)seat5_qb_02149478 },
+    { data_ov102_0214e350, 0x02149478, (void *)seat5_qb_02149478 },
+    { data_ov102_0214e348, 0x02149428, (void *)seat5_qb_02149428 },
+    { data_ov102_0214e340, 0x02149428, (void *)seat5_qb_02149428 },
+    { data_ov102_0214e320, 0x02149428, (void *)seat5_qb_02149428 },
+    { data_ov102_0214e288, 0x02149428, (void *)seat5_qb_02149428 },
+    { data_ov102_0214e338, 0x02149384, (void *)seat5_qb_02149384 },
+    { data_ov102_0214e330, 0x02149384, (void *)seat5_qb_02149384 },
+    { data_ov102_0214e280, 0x02149384, (void *)seat5_qb_02149384 },
+    { data_ov102_0214e318, 0x02149384, (void *)seat5_qb_02149384 },
+    { data_ov102_0214e2a8, 0x021493dc, (void *)seat5_qb_021493dc },
+    { data_ov102_0214e2b0, 0x021493dc, (void *)seat5_qb_021493dc },
+    { data_ov102_0214e270, 0x021493dc, (void *)seat5_qb_021493dc },
+    { data_ov102_0214e298, 0x021493dc, (void *)seat5_qb_021493dc },
+    { data_ov102_0214e2a0, 0x021492d4, (void *)seat5_qb_021492d4 },
+    { data_ov102_0214e2f8, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e2f0, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e2e8, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e390, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e2d8, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e2d0, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e2c8, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e2c0, 0x02149220, (void *)seat5_qb_02149220 },
+    { data_ov102_0214e2b8, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e2e0, 0x02149288, (void *)seat5_qb_02149288 },
+    { data_ov102_0214e328, 0x02149288, (void *)seat5_qb_02149288 },
     /* --- 0214e870 feeders --- */
-    { data_ov102_0214e310, 0x021492d4, (void *)func_ov102_021492d4 },
-    { data_ov102_0214e308, 0x021492d4, (void *)func_ov102_021492d4 },
-    { data_ov102_0214e300, 0x021492d4, (void *)func_ov102_021492d4 },
-    { data_ov102_0214e290, 0x021492d4, (void *)func_ov102_021492d4 },
+    { data_ov102_0214e310, 0x021492d4, (void *)seat5_qb_021492d4 },
+    { data_ov102_0214e308, 0x021492d4, (void *)seat5_qb_021492d4 },
+    { data_ov102_0214e300, 0x021492d4, (void *)seat5_qb_021492d4 },
+    { data_ov102_0214e290, 0x021492d4, (void *)seat5_qb_021492d4 },
 };
 
 extern "C" void port_question_block_content_seat(void)
@@ -165,113 +218,3 @@ extern "C" void port_question_block_content_seat(void)
     }
 }
 
-/* Read the two content tables at the ROM stride: content row is 32 bytes
- * (four {fn,delta} pairs, one per ch), pmf[ch] at +ch*8. Flat pair index =
- * content*4 + ch -- the ROM's own `lsl #5` / `lsl #3` at 0x021498e0+0x2a8. */
-static void qblock_content_call(PortPmf *tbl, unsigned content, int ch,
-                                void *self)
-{
-    PortPmf *p = &tbl[content * 4 + ch];
-    /* every ROM .delta here is 0 (non-virtual, complete class): plain fn ptr */
-    ((void (*)(void *))(size_t)p->fn)(self);
-}
-
-/* ------------------------------------------------------------------------- */
-/* HOST COPY of src/func_ov102_021498e0.cpp -- semantics preserved exactly.   */
-/* ------------------------------------------------------------------------- */
-// PORT_HOST_ABI: mwcc pointer-to-member dispatch (MSVC widens PMF over an incomplete class).
-extern "C" void func_ov102_021498e0(void *selfv)
-{
-    char *c = (char *)selfv;
-    int pos[3];
-    int ch;
-    unsigned short typ;
-    void *held;
-
-    func_ov102_02149684(pos, c);
-
-    if (DecIfAbove0_Short((short *)(c + 0x3ee)) != 0) {
-        short *pang = (short *)(c + 0x3ec);
-        unsigned short ang = *(unsigned short *)(c + 0x3ec);
-        short s = data_02082214[(ang >> 4) * 2];
-        int t = (int)s + 0x1000;
-        *(int *)(c + 0x84) =
-            (int)(((long long)t * 0x999 + 0x800) >> 12) + 0x666;
-        ang = *(unsigned short *)(c + 0x3ec);
-        s = data_02082214[(ang >> 4) * 2];
-        *(int *)(c + 0x80) =
-            (int)(((long long)(0x1000 - (int)s) * 0x1000 + 0x800) >> 12)
-            + 0x1000;
-        *(int *)(c + 0x88) = *(int *)(c + 0x80);
-        ang = *(unsigned short *)(c + 0x3ec);
-        s = data_02082214[(ang >> 4) * 2];
-        *(int *)(c + 0x3dc) = (0x1000 - (int)s) * 0xd;
-        *pang += 0x1000;
-        return;
-    }
-
-    held = *(void **)(c + 0x3f4);
-    if (held != 0) {
-        if (*(unsigned short *)((char *)held + 0xc) == 0x149)
-            func_ov002_020f0438(held);
-        *(void **)(c + 0x3f4) = 0;
-    }
-
-    _ZN5Sound9PlayBank3EjRK7Vector3(0, c + 0x74);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xb, pos[0], pos[1], pos[2]);
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd, pos[0], pos[1], pos[2]);
-
-    typ = *(unsigned short *)(c + 0xc);
-    switch (typ - 0x14) {
-    case 1: case 2:
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x10, pos[0], pos[1], pos[2]);
-        break;
-    case 0:
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xc, pos[0], pos[1], pos[2]);
-        break;
-    case 3: case 4: case 5:
-        _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(9, pos[0], pos[1], pos[2]);
-        break;
-    }
-
-    ch = (int)*(unsigned char *)(c + 0x3f2);
-    if (ch < 0) ch = 0; else if (ch > 3) ch = 3;
-
-    typ = *(unsigned short *)(c + 0xc);
-    switch (typ - 0x14) {
-    case 1: {
-        unsigned content = *(unsigned char *)(c + 0x3f3);
-        qblock_content_call(data_ov102_0214e8c0, content, 0, c);
-        break;
-    }
-    case 2: {
-        unsigned content = *(unsigned char *)(c + 0x3f3);
-        if (ch >= 4) ch = 0;
-        qblock_content_call(data_ov102_0214e870, content, ch, c);
-        break;
-    }
-    case 0:
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0 || data_0209f2f8 == 0x1f) {
-            unsigned content = *(unsigned char *)(c + 0x3f3);
-            if (ch >= 4) ch = 0;
-            qblock_content_call(data_ov102_0214e8c0, content, ch, c);
-        } else {
-            func_ov102_02149220(c);
-        }
-        break;
-    case 3:
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0) func_ov102_0214953c(c, 0, 0x12);
-        else func_ov102_02149220(c);
-        break;
-    case 5:
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0) func_ov102_0214953c(c, 1, 0x12);
-        else func_ov102_02149220(c);
-        break;
-    case 4:
-        if (_ZN8SaveData16HasPlayerLostCapEv() == 0) func_ov102_0214953c(c, 2, 0x12);
-        else func_ov102_02149220(c);
-        break;
-    }
-
-    func_ov102_02149da8(c, 2);
-}
