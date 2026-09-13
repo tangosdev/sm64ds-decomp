@@ -6,7 +6,7 @@
   "status": "promoted",
   "boundary_confidence": "medium",
   "boundary_evidence": [
-    "contiguous linker run: 0x21111a0..0x2111898, 9 function(s), from build/tu_map.json (tools/tu_map.py)",
+    "contiguous linker run: 0x21111a0..0x21118c8, 10 function(s), from build/tu_map.json (tools/tu_map.py) plus the adjacent factory daDgr_c_classInit at 0x02111898",
     "class label(s): daDgr_c",
     "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
   ],
@@ -14,7 +14,7 @@
     {
       "name": ".text",
       "start": "0x021111a0",
-      "end": "0x02111898"
+      "end": "0x021118c8"
     }
   ],
   "functions": [
@@ -80,6 +80,13 @@
       "size": "0x000000bc",
       "legacy_source": "src/_ZN7daDgr_c13InitResourcesEv.cpp",
       "ordinal": 8
+    },
+    {
+      "symbol": "daDgr_c_classInit",
+      "address": "0x02111898",
+      "size": "0x00000030",
+      "legacy_source": "src/d_a_dgr.c",
+      "ordinal": 9
     }
   ],
   "data": [],
@@ -92,7 +99,7 @@
     "TWO MERGE CONFLICTS THAT tubuild's DETECTOR DOES NOT LOOK FOR, both of which would have failed to compile and both reported under `no cross-file conflicts detected`. (1) The two SharedFilePtr handles arrived with contradictory types: `extern int data_ov025_02113a68[]` from the CleanupResources shard and `extern SharedFilePtr data_ov025_02113a68` from the InitResources shard, same for _02113a60. Unified on the object spelling, which lets both call sites be ordinary C++ (`.Release()` and a plain reference argument) with no cast. (2) The local `struct dActor_c` described above. The detector does not compare types and does not compare against real headers, so it saw neither.",
     "THE ONLY BYTE-LEVEL REGRESSION THE MERGE CAUSED, and it is the include-union hazard rather than field-address CSE. func_ov025_021112e0 was the sole DIFF in the first verify of the merged TU -- a function nobody had touched. Matrix4x3 has two guarded 0x30-byte spellings, common.h's flat `s32 m[12]` and math/Matrix.h's `Matrix3x3 r; Vector3 t`, and whichever a TU reaches first stands. As a one-function shard this file included common.h with nothing ahead of it and got the flat one; merged, daDgr_c.h -> dBgW_KcMbg.h -> math/Matrix.h arrives first and common.h's guard stands down, which changed the codegen of the whole-matrix assignment `o->m = *(Matrix4x3*)(self + 0xf0)`. Spelling that one copy against a local flat `struct Mat12 { s32 m[12]; }` restored 9/9 and makes the function immune to any future include reordering.",
     "DESTRUCTOR ORDER: the cartridge puts D1 at 0x021111a0 BELOW D0 at 0x021111e4 and carries no D2 anywhere in ov025. That is the reproducible direction -- exactly what mwccarm 2004/b56 emits from an inline in-class virtual destructor -- so this TU promotes WHOLE and needs no subset licensing. include/daDgr_c.h previously declared `virtual ~daDgr_c();` out of line, reasoning by analogy with include/BigBrickBlock.h's leaf-class convention; the ROM's own addresses refute that analogy and the header is now `virtual ~daDgr_c() {}` declared first. Each of the two shards had also carried its own out-of-line definition, harmless in isolation but a duplicate definition once merged; both are deleted and the header body is the single source of both variants.",
-    "compiler_only_output IS 12 ROWS, AND THIS CLASS IS THE MEASUREMENT PASS FOR IT. notes/data/tu-promotion-queue.tsv lists daDgr_c with no sibling_oracle and `compiler-only:unknown(... measure directly ...)`, defaulting the route to text-only. The route IS text-only and the count IS 12, derived: 2 x (4 ancestors + self) = 10 RTTI rows, + 1 _ZTV7daDgr_c + 1 Vector3 = 12. The Vector3 term is a FUNCTION LOCAL, not a member -- daDgr_c has no Vector3 field; func_ov025_0211123c declares `volatile struct Vector3 v;` on the stack and that odr-use alone re-emits _ZN7Vector3D1Ev. No file-local anonymous struct holds it, so there is no 13th genuinely-homeless row. Every one of the 12 has a configured ROM home in some module's symbols.txt (arm9, ov002 and ov025), so all 12 license as deadstrip-data -- deadstrip-duplicate for the one function -- and externalized_output is EMPTY. Nothing here takes the non-promotable canonical-import route.",
+    "compiler_only_output IS 13 ROWS. The original 12 (10 RTTI + _ZTV7daDgr_c + Vector3 D1) plus homeless _ZN10dBgActor_cD2Ev emitted by `return new daDgr_c()`. Vector3 is a FUNCTION LOCAL in func_ov025_0211123c. The twelve have configured ROM homes (deadstrip-data / deadstrip-duplicate); D2 has none and is exact-deadstripped.",
     "VTABLE EXTENT IS PROVEN BY THE FOLLOWING WORD. _ZTV7daDgr_c has 32 slots: the address point is 0x02113760, the last slot is at 0x021137dc, and the next word at 0x021137e0 is 0x44616437 -- little-endian bytes 37 64 61 44, the ASCII \"7daD\" that begins the next type-name string, not a code pointer. Emitted storage is therefore 0x02113758..0x021137e0 = 0x88 bytes, which is the size tubuild verify reports independently (2 preamble words + 32 slots). Own slots are exactly {0, 3, 6, 9, 16, 17}, MEASURED by word-diffing the table against _ZTV10dBgActor_c (ov002 0x0210ae38): exactly six words differ and every other word is byte-identical, so this class overrides nothing else and adds no new virtual. Slot 31 is 0x020ee55c, dBgActor_c's own Kill, inherited."
   ],
   "verification": {
@@ -101,13 +108,15 @@
     "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
     "object": "build/tu/ov025-daDgr_c/daDgr_c.o (gitignored)",
     "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-    "functions_matched": 9,
-    "functions_declared": 9,
+    "functions_matched": 10,
+    "functions_declared": 10,
     "compilerOnlyOutput": {
       "requested": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "deadstripped": [
+        "_ZN10dBgActor_cD2Ev",
         "_ZN7Vector3D1Ev"
       ],
       "droppedSections": [
@@ -128,7 +137,9 @@
         19,
         20,
         21,
-        28
+        28,
+        42,
+        43
       ],
       "data": [
         "_ZTI7fBase_c",
@@ -179,7 +190,7 @@
       },
       "tuRange": {
         "start": "0x021111a0",
-        "end": "0x02111898",
+        "end": "0x021118c8",
         "differingBytes": 0,
         "firstDiff": null
       },
@@ -187,14 +198,14 @@
         {
           "section": ".text",
           "start": "0x021111a0",
-          "end": "0x02111898",
+          "end": "0x021118c8",
           "differingBytes": 0,
           "firstDiff": null
         }
       ],
       "objectAudit": {
         "counts": {
-          "LICENSED": 9
+          "LICENSED": 10
         },
         "emittedTextOrderIsRomAscending": true,
         "nonLicensedSymbols": [],
@@ -239,6 +250,11 @@
     }
   },
   "compiler_only_output": [
+    {
+      "symbol": "_ZN10dBgActor_cD2Ev",
+      "disposition": "deadstrip",
+      "reason": "compiler-emitted base-object destructor helper from `return new daDgr_c()`. No configured ROM symbol and no inbound relocation after the licensed leaf D1/D0 pair is retained."
+    },
     {
       "symbol": "_ZN7Vector3D1Ev",
       "disposition": "deadstrip-duplicate",

@@ -6,11 +6,7 @@
     .bss        start:0x02113a60 end:0x02113b00 kind:bss align:32
 src/actors/daDgr_c.cpp:
     complete
-    .text start:0x021111a0 end:0x02111898
-
-src/d_a_dgr.c:
-    complete
-    .text start:0x02111898 end:0x021118c8
+    .text start:0x021111a0 end:0x021118c8
 
 src/actors/daDkk_c.cpp:
     complete
