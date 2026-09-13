@@ -170,8 +170,10 @@ jobs:
           python-version: "3.12"
 
       - name: Pinned tool dependencies
-        # Every module in the list below except four is stdlib-only and would run without
-        # this step. test_rombuild, test_tu_promote and test_tu_production import
+        # Every module in the list below except five is stdlib-only and would run without
+        # this step. test_tu_manifest_resync imports tu_order_check, which reaches
+        # elftools directly and capstone through rombuild -> romdata_check ->
+        # linkcheck -> match; test_rombuild, test_tu_promote and test_tu_production import
         # rombuild.py, which reaches elftools (via objisolate) and capstone (via
         # romdata_check -> linkcheck -> match); test_tubuild_owned_relocs imports
         # tubuild.py, which reaches the same two by its own path. Without both wheels
@@ -221,6 +223,7 @@ jobs:
             tools.test_stamp_provenance_verify \
             tools.test_submit_pr_validation \
             tools.test_symrecords \
+            tools.test_tu_manifest_resync \
             tools.test_tu_map \
             tools.test_tu_production \
             tools.test_tu_promote \
@@ -400,6 +403,29 @@ jobs:
 #                                      that decides whether a produced object may stand in
 #                                      for the cartridge's. Pure mock and tempdir; needs no
 #                                      compiler, no ROM and no git. 17 of 17 run in CI.
+#   test_tu_manifest_resync     (36)   tu_manifest_resync.py -- re-pointing a TU
+#                                      manifest at the compiler-numbered symbols the
+#                                      tree currently emits. mwccarm's `@344` and
+#                                      `Bundle$725daMky_c_cpp` are POSITIONAL, so an
+#                                      edit to a shared base header renumbers manifests
+#                                      the PR never touched, and the shifts compose
+#                                      additively -- two independently-correct re-syncs
+#                                      of one manifest are mutually exclusive. A
+#                                      manifest is configuration, so a mispaired symbol
+#                                      does not fail to compile: it licenses the wrong
+#                                      address, and every byte gate stays green. The 36
+#                                      cover both pairing rules (shape for mangled
+#                                      names, ordered position guarded by section and
+#                                      size for bare `@NNN`), the simultaneous
+#                                      substitution the overlapping ov100 map needs,
+#                                      the two-file rule (manifest AND the overlay
+#                                      symbols.txt -- fixing one turns the failure into
+#                                      the other's), and --check returning BOTH answers.
+#                                      One mock, `compile_and_read`, which is the only
+#                                      function in the module that needs mwccarm. 36 of
+#                                      36 run in CI, none skips, 0.04s -- measured in a
+#                                      `git archive HEAD tools config` export with none
+#                                      of the three private inputs present.
 #   test_tu_promote              (9)   tu_promote.py -- TU promotion, including the
 #                                      per-member scoring #2052 changed and the baseline
 #                                      self-contradiction check #2053 added. Promotion
