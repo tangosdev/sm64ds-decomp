@@ -18,8 +18,6 @@ func_01ff9e2c kind:function(arm,size=0x518) addr:0x01ff9e2c
 func_01ffa344 kind:function(arm,size=0xfc) addr:0x01ffa344
 func_01ffa440 kind:function(arm,size=0x7c) addr:0x01ffa440
 func_01ffa4bc kind:function(arm,size=0xcc) addr:0x01ffa4bc
-_i2f_addone kind:label(arm) addr:0x01ffa538
-_i2f_trap308 kind:label(arm) addr:0x01ffa558
 .L_01ffa588 kind:label(arm) addr:0x01ffa588
 func_01ffa594 kind:function(arm,size=0x448) addr:0x01ffa594
 _fsub_core kind:label(arm) addr:0x01ffa5a8
