@@ -2068,6 +2068,7 @@
     "src/game/actors/daObjPathLift_c.cpp#_ZN15daObjPathLift_cD1Ev": "tangosdev",
     "src/game/actors/daObjPathLift_c.cpp#func_ov100_02146e70": "aitddlabs",
     "src/game/actors/daObjPathLift_c.cpp#func_ov100_0214700c": "tangosdev",
+    "src/game/actors/daObjPushblock_c.cpp#daObjPushblock_c_classInit": "andrewboudreau",
     "src/game/actors/daObjPushblock_c.cpp#_ZN16daObjPushblock_c13InitResourcesEv": "github-actions[bot]",
     "src/game/actors/daObjPushblock_c.cpp#_ZN16daObjPushblock_c15OnHitByMegaCharER6Player": "tangosdev",
     "src/game/actors/daObjPushblock_c.cpp#_ZN16daObjPushblock_c16CleanupResourcesEv": "github-actions[bot]",

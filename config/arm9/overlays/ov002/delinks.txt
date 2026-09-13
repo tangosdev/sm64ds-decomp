@@ -680,11 +680,7 @@ src/d_a_obj_mario_cap.c:
 
 src/game/actors/daObjPushblock_c.cpp:
     complete
-    .text start:0x020b8bf0 end:0x020b910c
-
-src/d_a_obj_pushblock.cpp:
-    complete
-    .text start:0x020b910c end:0x020b9148
+    .text start:0x020b8bf0 end:0x020b9148
 
 src/_ZN11PowerFlowerD1Ev.cpp:
     complete

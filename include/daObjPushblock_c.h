@@ -1,44 +1,43 @@
 #ifndef DAOBJPUSHBLOCK_C_H
 #define DAOBJPUSHBLOCK_C_H
 
-/* RECONSTRUCTED NAMES USED IN THIS HEADER. SM64DS RTTI names the
- * implementation(s) below; the registry profile object and the factory
- * spelling are Tier B reconstructions -- evidence-bounded proposals, not
- * recovered SM64DS symbols. Exact original spellings are not preserved.
+/* Push Block (PUSH_BLOCK 192).
  *
- *   daObjPushblock_c -- daObjPushblock_c_classInit (was PushBlock_Spawn), g_profile_PUSHBLOCK (was PushBlock_SpawnInfo)
- */
-
-#include "types.h"
-
-/* Derives from dBgActor_c: the destructor stores this class's vtable, then
- * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
- * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
- * Everything this header used to restate below 0x320 was dActor_c's and
- * dBgActor_c's, and is inherited now.
+ * RTTI ov002:0x0210966c names the class daObjPushblock_c; overlay_actors
+ * and the debug table name the profile PUSH_BLOCK. Base is dBgActor_c
+ * (RTTI edge ov002:0x021089ec). The factory spelling daObjPushblock_c_classInit
+ * (historical alias PushBlock_Spawn) and g_profile_PUSHBLOCK (historical
+ * alias PushBlock_SpawnInfo) are Tier B reconstructions -- evidence-bounded
+ * proposals, not recovered SM64DS symbols.
  *
- * SIZE IS 0x4f4, THE LITERAL d_a_obj_pushblock.cpp passes to fBase_c::operator
- * new (1268 decimal) -- not merely the observed field span, though here they
- * agree: dBgActor_c ends at 0x320 and this class adds exactly one dBgCh_Actr
+ * SIZE 0x4f4, the literal daObjPushblock_c_classInit passes to operator new
+ * (1268 decimal). dBgActor_c ends at 0x320; this class adds one dBgCh_Actr
  * (0x1bc) plus six trailing scalars, landing on 0x4f4 with no padding.
  */
 
+#include "types.h"
 #include "dBgActor_c.h"
 #include "dBgCh_Actr.h"
+
+extern "C" void *_ZN7fBase_cnwEj(unsigned size);
 
 struct dActor_c;
 struct Player;
 
 struct daObjPushblock_c : dBgActor_c {
     dBgCh_Actr mWithMeshClsn;       /* 0x320 */
-    s32 mHomePosX;                      /* 0x4dc */
-    s32 mHomePosY;                      /* 0x4e0 */
-    s32 mHomePosZ;                      /* 0x4e4 */
-    s32 mGroundY;                      /* 0x4e8 */
-    u32 mSlideSound;                      /* 0x4ec */
-    dActor_c *mLinkedActor;                 /* 0x4f0 */
+    s32 mHomePosX;                  /* 0x4dc */
+    s32 mHomePosY;                  /* 0x4e0 */
+    s32 mHomePosZ;                  /* 0x4e4 */
+    s32 mGroundY;                   /* 0x4e8 */
+    u32 mSlideSound;                /* 0x4ec */
+    dActor_c *mLinkedActor;         /* 0x4f0 */
 
-    /* --- vtable --- */
+    /* INLINE IS LOAD-BEARING. Out of line, mwccarm emits D0 before D1
+       (cartridge is 0x020b8bf0 D1 then 0x020b8c3c D0) plus a D2 with no ROM
+       home. Empty body: mWithMeshClsn teardown, the vptr store and
+       dBgActor_c's two member teardowns are synthesised. Key function is
+       InitResources, the first declared non-inline virtual. */
     virtual ~daObjPushblock_c() {}          /* slots 16 (D1), 17 (D0) */
 
     int InitResources();
@@ -67,14 +66,12 @@ struct daObjPushblock_c : dBgActor_c {
        0x7c -- where _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv. Confirmed
        with tools/mangle.py: _ZN16daObjPushblock_c4KillEv. */
     void Kill();                           /* slot 31 */
+
+    static void *operator new(unsigned long size) {
+        return _ZN7fBase_cnwEj((unsigned)size);
+    }
 };
 
 typedef char PushBlock_size_must_be_0x4f4[sizeof(daObjPushblock_c) == 0x4f4 ? 1 : -1];
-
-/* Retail symbols.txt exposes _ZTV at the public address point rather than the
- * compiler object's two-word ABI preamble. Actor factories that must retain
- * the exact allocator/constructor seam use this declaration for that one
- * measured address-point store. */
-extern void *_ZTV16daObjPushblock_c[];
 
 #endif /* DAOBJPUSHBLOCK_C_H */

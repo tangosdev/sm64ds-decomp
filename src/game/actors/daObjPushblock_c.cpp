@@ -1,7 +1,9 @@
 //cpp
-/* Production translation unit for ov002/daObjPushblock_c's nine-method run,
- * 0x020b8bf0..0x020b910c. The adjacent daObjPushblock_c_classInit function starts a
- * separate high-confidence TU and remains in d_a_obj_pushblock.cpp.
+/* Push Block (PUSH_BLOCK 192) -- ov002/daObjPushblock_c.
+ *
+ * ov002 is mixed (Yoshi egg / switches / stars / player / ...). RTTI ov002:
+ * 0x0210966c names this class daObjPushblock_c; overlay_actors and the debug
+ * table name the profile PUSH_BLOCK. Base is dBgActor_c.
  *
  * FUNCTION ORDER IS DELIBERATELY THE REVERSE OF THE ROM'S -- mwccarm 2004/b56
  * emits one .text section per function, in the REVERSE of source order, so
@@ -10,16 +12,30 @@
  * header makes mwccarm emit retail's D1-then-D0 pair with no D2 and no forcing
  * helper. The compiler-owned RTTI and vtable are audited through the manifest.
  *
- * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x020b8bf0  src/_ZN16daObjPushblock_cD1Ev.cpp
- *   [1] 0x020b8c3c  src/_ZN16daObjPushblock_cD0Ev.cpp
- *   [2] 0x020b8c9c  src/_ZN16daObjPushblock_c4KillEv.cpp
- *   [3] 0x020b8d14  src/_ZN16daObjPushblock_c15OnHitByMegaCharER6Player.cpp
- *   [4] 0x020b8d3c  src/_ZN16daObjPushblock_c8OnPushedER8dActor_c.cpp
- *   [5] 0x020b8d68  src/_ZN16daObjPushblock_c16CleanupResourcesEv.cpp
- *   [6] 0x020b8dac  src/_ZN16daObjPushblock_c6RenderEv.cpp
- *   [7] 0x020b8dd4  src/_ZN16daObjPushblock_c8BehaviorEv.c
- *   [8] 0x020b8fe0  src/_ZN16daObjPushblock_c13InitResourcesEv.cpp
+ * deslop leftovers:
+ * - dBgW_KcMbg::SetFile 6az: InitResources passes Fix12<int> by value; the
+ *   header method form size-DIFFs.
+ * - dBgCh_Actr::Init: header Fix12i mangles as i; ROM is Fix12<int> --
+ *   mangled TU-local (InitResources).
+ * - Particle::System::NewSimple 6az (Kill; notes/mwccarm-codegen.md 6az).
+ * - dBgActor_c::IsClsnInRangeOnScreen 6az (Behavior; header method form
+ *   refused).
+ * - dBgActor_c::UpdateKillByMegaChar stays mangled at the call site
+ *   (Fix12<int> by value, 6az; include/dBgActor_c.h).
+ * - dBgCh_Actr_UpdateContinuous_Veneer: named UpdateContinuous misses the
+ *   veneer dest (Behavior).
+ * - (Vector3 *)&mPosX / mPrevPosX / mHomePosX / mCamSpacePosX: dActor_c
+ *   stores the triples as scalars; grouping as Vector3 is a shared-header
+ *   campaign, and the address-of-first-component form is the MATCH shape.
+ * - data_ov002_0210df9c / 0210df94 SharedFilePtr handles and
+ *   data_ov002_0210d7b4 CLPS; this TU consumes them, overlay .data/.bss owns
+ *   them. S14: g_profile_PUSHBLOCK stays outside the licensed .text.
+ * - func_020393a4 / func_02039394 store clip ranges on mMeshCollider
+ *   (no setter).
+ * - func_ov002_020f0438 linked-actor helper (Behavior).
+ * - Sound::PlayLong has no header declaration.
+ * - OnPushed fall-off-the-end return: adding `return 0;` emits mov r0,#0
+ *   and DIFFs (measured 2026-08-22).
  */
 
 #include "daObjPushblock_c.h"
@@ -59,7 +75,22 @@ u32 PlayLong(u32 handle, u32 bank, u32 soundId, const Vector3 &pos, s16 pitch);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN16daObjPushblock_c13InitResourcesEv, 0x020b8fe0, size 0x12c */
+/* -------------------------------------------------------------------------- */
+// @symbol daObjPushblock_c_classInit
+/* Reconstructed source-style name: SM64DS proves daObjPushblock_c through RTTI,
+ * allocation size, vtable identity, and the PUSHBLOCK registry profile;
+ * later EAD lineage supplies classInit. Exact original spelling is not
+ * preserved. Historical alias: PushBlock_Spawn.
+ *
+ * Leaf operator new(unsigned long) forwards _ZN7fBase_cnwEj until a tree-wide
+ * fBase_c::operator new lands. A natural `new daObjPushblock_c` then emits
+ * the retail allocation/base/member seam (dBgActor_c C2, vptr, dBgCh_Actr C1). */
+extern "C" daObjPushblock_c *daObjPushblock_c_classInit()
+{
+    return new daObjPushblock_c();
+}
+
+/* -------------------------------------------------------------------------- */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjPushblock_c13InitResourcesEv
 /* recovered: vtable identified, shared common types, declarations from a shared header
@@ -105,7 +136,6 @@ int daObjPushblock_c::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN16daObjPushblock_c8BehaviorEv, 0x020b8dd4, size 0x20c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjPushblock_c8BehaviorEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header
@@ -187,7 +217,6 @@ int daObjPushblock_c::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN16daObjPushblock_c6RenderEv, 0x020b8dac, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjPushblock_c6RenderEv
 /* daObjPushblock_c::Render -- vtable slot 9, ov002 0x020b8dac. Attributed by the
@@ -204,7 +233,6 @@ int daObjPushblock_c::Render() {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN16daObjPushblock_c16CleanupResourcesEv, 0x020b8d68, size 0x44 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjPushblock_c16CleanupResourcesEv
 /* recovered: real C++ method */
@@ -221,13 +249,12 @@ int daObjPushblock_c::CleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- _ZN16daObjPushblock_c8OnPushedER8dActor_c, 0x020b8d3c, size 0x2c */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjPushblock_c8OnPushedER8dActor_c
 /* recovered: named members + real C++ method */
 /* daObjPushblock_c::OnPushed(dActor_c &) -- slot 25. Takes the pusher's facing as its
- * own slide direction and picks the speed from the pusher's state: 2 (a dash?)
- * gets the fast 0x8000, anything else 0x4000. */
+ * own slide direction and picks the speed from the pusher's character id:
+ * 2 (Wario) gets the fast 0x8000, anything else 0x4000. */
 /* THE MISSING RETURN IS DELIBERATE AND LOAD-BEARING. The header declares slot 25
  * as `int`, but this body sets no return value and the ROM's 0x2c bytes leave r0
  * holding whatever the caller had. Adding `return 0;` to satisfy the declaration
@@ -254,7 +281,6 @@ int daObjPushblock_c::OnPushed(dActor_c &other)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN16daObjPushblock_c15OnHitByMegaCharER6Player, 0x020b8d14, size 0x28 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjPushblock_c15OnHitByMegaCharER6Player
 /* daObjPushblock_c::OnHitByMegaChar -- vtable slot 27, ov002 0x020b8d14. Attributed by
@@ -273,7 +299,6 @@ void daObjPushblock_c::OnHitByMegaChar(Player &player)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN16daObjPushblock_c4KillEv, 0x020b8c9c, size 0x78 */
 /* -------------------------------------------------------------------------- */
 // @symbol _ZN16daObjPushblock_c4KillEv
 /* daObjPushblock_c::Kill() -- vtable slot 31, ov002 0x020b8c9c. Attributed by the
