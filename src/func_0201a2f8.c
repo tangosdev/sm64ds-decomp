@@ -12,7 +12,7 @@ extern void* _ZN6Memory8AllocateEj(unsigned int);
 extern void LoadOverlay(int id);
 extern void func_ov001_020aa420(void);
 extern void UnloadOverlay(int id);
-extern void func_0205d23c(void* p, int n);
+extern void* func_0205d23c(void* p, int n);
 extern void func_0205c91c(void);
 extern void _ZN6Memory10DeallocateEPv(void*);
 extern void _ZN5Sound19LoadGroupAndSetBankEii(int a, int b);
