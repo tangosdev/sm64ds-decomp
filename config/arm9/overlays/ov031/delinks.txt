@@ -6,23 +6,7 @@
     .bss        start:0x02111a00 end:0x02111a60 kind:bss align:32
 src/game/actors/d_a_obj_hs_billboard.cpp:
     complete
-    .text start:0x021111a0 end:0x02111344
-
-src/d_a_obj_hs_billboard_hs_b_star.c:
-    complete
-    .text start:0x02111344 end:0x0211137c
-
-src/d_a_obj_hs_billboard_hs_y_star.c:
-    complete
-    .text start:0x0211137c end:0x021113b4
-
-src/d_a_obj_hs_billboard_hs_star.c:
-    complete
-    .text start:0x021113b4 end:0x021113ec
-
-src/d_a_obj_hs_billboard_hs_moon.c:
-    complete
-    .text start:0x021113ec end:0x02111424
+    .text start:0x021111a0 end:0x02111424
 
 src/__sinit_ov031_02111434.c:
     complete
