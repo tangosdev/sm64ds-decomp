@@ -1,0 +1,183 @@
+# GATE SEAT1 (run link100 wave 7, lane SEAT1) -- the rows of the REMAIN2
+# census's B7 / B7b batches that survive reading. B1 ACTORBASE-TAIL and the
+# ov006 half of B7 do not, and the reasons are at the foot of this file so the
+# next census starts from the refusal instead of re-deriving it.
+#
+# ---------------------------------------------------------------------------
+# ROW 1: ov031's OWN 0x02111214, WHICH THE PORT WAS CALLING THROUGH ov044's
+# ---------------------------------------------------------------------------
+#
+# _ZN25SlideDecorationSilverStar13InitResourcesEv (ov031, 0x021112a8) ends on a
+# call the ROM's own relocation names precisely:
+#
+#     config/arm9/overlays/ov031/relocs.txt:14
+#     from:0x0211132c kind:arm_call to:0x02111214 module:overlay(31)
+#
+# overlay(31), its own module. The recovered source spells that callee
+# `func_ov044_02111214` -- a dsd label shift, because ov031, ov039 and ov044
+# all load at 0x021111a0 and the label picker chose a sibling's name for the
+# shared-window address. src/ is not this lane's to edit, so the fix is the
+# alternatename guard's own R1/R2 recipe, the one lane SMALLS used for the
+# mother penguin's tenth TU and one step simpler because there is no alias to
+# delete: the CALLER is recompiled with a per-source
+# -Dfunc_ov044_02111214=func_ov031_02111214 and ov031's own body joins the
+# link under its own name.
+#
+# Lane w10a measured this exact shift and wrote it down (port/slice_w10a.txt,
+# "ONE dsd LABEL SHIFT, LEFT AS IT IS AND WHY"): the two bodies are
+# character-for-character the same, ov044's was already linked from
+# port/slice_w7c.txt, and adding ov031's without redirecting a caller would
+# have been zero linkage because /OPT:REF strips a name nothing spells. That
+# reading is right; this gate supplies the missing half, the redirect.
+#
+# THE OTHER TWO SPELLINGS STAY AS THEY ARE, and both are accounted for:
+#   src/_ZN19OrangeBallBillboard13InitResourcesEv.c  ov044 0x021112a0 -- its
+#       own reloc is from:0x021112c8 to:0x02111214 module:overlay(44), so
+#       `func_ov044_02111214` is the CORRECT name there and keeps that TU in
+#       the link after this redirect.
+#   src/_ZN5Cloud13InitResourcesEv.cpp               ov039 0x0211132c -- the
+#       same shift one overlay over. ov039 has no src TU at its own 0x02111214
+#       in this tree, so there is nothing to redirect it to. Recorded, not
+#       touched: it is not this lane's row.
+#
+# Byte gate, this tree, pinned compiler:
+#   tools/match.py --c src/func_ov031_02111214.c --func func_ov031_02111214
+#     --addr 0x02111214 --size 0x40 --bin extracted/overlays/overlay_0031.bin
+#     --base 0x021111a0 --version 2004/b56   ->  2004/b56: MATCH
+#
+src/func_ov031_02111214.c
+
+# ---------------------------------------------------------------------------
+# ROWS 2 AND 3: THE EXMEMCNT CARD BIT, R3F's RECIPE ONE BIT OVER
+# ---------------------------------------------------------------------------
+#
+# THESE TWO ARE DELIBERATELY NOT SLICE LINES. They ride the hostgen route, the
+# way rung R3F took func_02055454 / func_02057128 / func_02057140, so their
+# CMake entries are the SEAT1_GREG block beside the R3F_GREG one and not this
+# list. The derivation belongs with the gate, so it is here.
+#
+# src/func_020570c0.c and src/func_020570d8.c are two instructions each and
+# spelled the absolute address as the decomp's generic placeholder `G`:
+#
+#     func_020570c0:  *(unsigned short *)G |= 2048;
+#     func_020570d8:  *(unsigned short *)G &= ~2048;
+#
+# `G` resolves in this binary to hal/heap_vtable.cpp's default-heap word, so
+# linking them as written would OR and AND bit 11 of a heap pointer four times
+# a boot -- the landmine lane R3E traced to a NULL defaultHeapPtr and lane R3F
+# disarmed for the two bodies one page down. port/hal/nitrofs_boot.cpp faced
+# them at port_rom_exmemcnt_card_grant / port_rom_exmemcnt_card_release and
+# said in as many words what would retire the faces: "the day the decomp spells
+# REG_EXMEMCNT instead of `G` both faces retire into two real TUs".
+#
+# This gate spells it. The ROM's own literal pools name the register and carry
+# NO relocation, because an absolute I/O address needs none:
+#
+#     func_020570c0  pool 0x020570d4  word 0x04000204  ldrh / orr 0x800 / strh
+#     func_020570d8  pool 0x020570ec  word 0x04000204  ldrh / bic 0x800 / strh
+#
+# (config/arm9/relocs.txt carries entries at 0x020570b4 and 0x02057108 and none
+# at either pool slot.) EXMEMCNT bit 11 is the NDS slot's access right: set
+# hands the cartridge to the ARM7, clear takes it for the ARM9, which is what
+# the two callers use them for. The spelling is src/func_02057128.c's and
+# src/func_0205583c.c's verbatim convention, and both still byte-verify --
+# BETTER than before, since the placeholder made the pool word a reloc slot the
+# byte gate wildcarded and a literal address is compared for real:
+#
+#   tools/match.py func_020570c0 0x020570c0 0x18   2004/b56: MATCH
+#   tools/match.py func_020570d8 0x020570d8 0x18   2004/b56: MATCH
+#   (the compared span ends 04020004 = 0x04000204, the pool word itself)
+#
+# Spelling it is half. port/ntr/io.cpp only routes a store into ntr::io_write
+# if the TU went through tools/hostgen.py; built plain it latches in the mapped
+# window and tells no register. So both go through hostgen on R3F's own
+# R3F_GREG_PLAIN switch, in their OWN counter for the GREG2 reason: an addition
+# must not perturb R3F's already-verified 3/3 SLICE214 accounting.
+#
+# Their callers src/func_020570f0.c and src/func_0205710c.c lose their
+# per-source renames in port/CMakeLists.txt and reach the ROM's own bodies; the
+# two faces come out of hal/nitrofs_boot.cpp. Both callers ship on
+# port/slice_nitrofs.txt, which goes to walk_window and walk_window_hires only,
+# so the generated pair is appended to exactly those two targets beside
+# R3F_GREG_GEN. smoke_player carries hal/nitrofs_face.cpp instead and never
+# names either symbol.
+#
+# ---------------------------------------------------------------------------
+# NOT HERE: the census's B1, and the ov006 half of B7. Each has a reason.
+# ---------------------------------------------------------------------------
+#
+# The REMAIN2 census listed nine more rows for this lane on the premise that
+# "no host copy exists for any". Every one of the nine already carries a
+# written, evidenced refusal by an earlier lane, in a file this lane does not
+# own. All nine were verified by ROM address first: each symbol starts at its
+# own address with its own size record, none is an interior address of a
+# tail-shared body.
+#
+# _ZN5Actor21AfterCleanupResourcesEj  arm9 0x02011214, 0xc
+#     The tail-call veneer `ldr ip,[pc]; bx ip; .word 0x02043b2c`, transcribed
+#     as void(void). hal/actor_classes.cpp's slot-5 comment rules it with the
+#     callee's own bytes: ActorBase::AfterCleanupResources is NOT empty -- it
+#     walks this->sceneNode (+0x14) and this->behavNode (+0x28) off the
+#     processing lists, destroys +0x4c and +0x48, dispatches its own virtual
+#     destructor and hands the object to Memory::Deallocate, and its first
+#     statement tests the ARGUMENT. Every one of those is a read of a receiver
+#     the void(void) transcription drops. Slots 8 and 11 of the same class DO
+#     take their veneers, because their callees are `ret 4` and read neither.
+#     This one is the crash half of the dropped-receiver mode. A seat needs an
+#     arity-carrying veneer face, not a slice line.
+#
+# _ZN8PoleLift16CleanupResourcesEv             ov045 0x02111938, 0x38
+# _ZN8MadPiano16CleanupResourcesEv             ov063 0x0211de3c, 0x50
+# _ZN19FloatingFloorLllBig16CleanupResourcesEv ov022 0x021121cc, 0x44
+# _ZN18BowserFireSeaArena16CleanupResourcesEv  ov060 0x02117b58, 0x44
+#     The same defect four times, and it is ROW 2/3's defect one level up: each
+#     spells its SharedFilePtrs as the placeholders G0/G1(/G2), and
+#     hal/cxx_aliases.cpp has bound ?G0@@3PAHA / ?G1@@3PAHA to SignPost's ov002
+#     pointers. Linked as written, PoleLift would Release SignPost's LIVE
+#     SharedFilePtrs on every level-37 teardown (relocs.txt 0x02111968 ->
+#     0x021131d8, 0x0211196c -> 0x021131d0); MadPiano the same on level 12.
+#     Each is replaced by a host thunk that calls the right addresses: ep_clean
+#     in hal/actor_classes_ov045.cpp, mp_clean in hal/actor_classes_ov063.cpp,
+#     and the ov022 / ov060 equivalents.
+#     THE SRC-SIDE HALF OF THE FIX IS THIS GATE'S SHAPE and costs nothing: a
+#     per-source COMPILE_DEFINITIONS giving each TU the real symbols, the way
+#     port/CMakeLists.txt already writes "VT0=...;G0=data_020a0eac" for
+#     src/func_ov003_020b05bc.c. What it ALSO needs is the class's vtable slot 3
+#     retargeted off the host thunk onto the matched TU, one hunk per
+#     hal/actor_classes_ovNNN.cpp -- four files this lane does not own, and a
+#     dispatch move that owes a capture. Proposed hunks are in
+#     runs/link100/out/SEAT1/decomp_side.md.
+#
+# _ZN10BigBooIconD1Ev    ov063 0x02116068, 0x24
+# _ZN12MansionStepsD1Ev  ov063 0x0211c600, 0x38
+#     Real MSVC destructors written over shadow structs LOCAL to their own .cpp
+#     (`struct Actor { virtual ~Actor(); };` and so on), so MSVC mangles the
+#     definition ??1BigBooIcon@@UAE@XZ and its auto-emitted base call resolves
+#     to ??1Actor@@UAE@XZ / ??1Model@@QAE@XZ / ??1MovingMeshCollider@@QAE@XZ,
+#     none of which this binary defines. hal/actor_classes_ov063.cpp's two
+#     slot-16 comments name it as the HauntedChair hc_d1 case and give each
+#     chain. This is the msvc-dtor-slot-shift class, not a slice line.
+#
+# func_ov079_02123b54   ov079 0x02123b54, 0xc
+#     Already ON a slice (port/slice_gate64.txt) and STRIPPED: nothing spells
+#     it, because hal/actor_classes_wf_enemy.cpp's whomp_s30 dispatches the
+#     veneer's target func_ov079_02123d4c directly, and says why -- slot 30 is
+#     OnAimedAtWithEggReturnVec(), which returns a Vector3 BY VALUE, and the
+#     veneer's void(void) transcription drops both the hidden result pointer
+#     and the receiver. Written with two parameters "the thunk popped nothing
+#     and wrote through whatever the stale stack word pointed at". Same class as
+#     Actor::AfterCleanupResources: a veneer needs an arity-carrying face.
+#
+# func_ov006_020ddd6c   ov006 0x020ddd6c, 0xbc
+#     HOST-COPIED by lane CCN in port/unmatched/MgCoin_StateDispatch.cpp, and it
+#     is an mwcc POINTER-TO-MEMBER dispatcher: the ROM's table stride is eight
+#     bytes (0x020ddd98 `add r3, r4, r0, lsl #3`) where MSVC's member pointer is
+#     four, and the sequence at 0x020ddd9c..0x020dddbc is the mwcc virtual /
+#     non-virtual PMF shape. It is one of CCN's three SILENT ones -- it declares
+#     `extern "C" Entry data_ov006_02141840[]`, so it mangles as the plain C
+#     name the ov006 mount already defines and THE LINKER IS SATISFIED WHILE THE
+#     STRIDE IS WRONG. The census's reason column was empty for this row because
+#     the host copy is a commented-out slice line plus a body in unmatched/,
+#     which the census's host_obj join does not see. It belongs to the B4
+#     OV006-PMF-SWEEP batch (the /vmg /vmm plus seated-table treatment lane
+#     SMALLS gave the kuppa dispatcher), not to a free-pickup lane.

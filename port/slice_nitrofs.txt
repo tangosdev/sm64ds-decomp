@@ -45,7 +45,7 @@ src/func_0205ffb0.c
 src/func_0205710c.c
 src/func_020572b8.c
 src/func_020572c8.c
-#   func_020570d8 -> port_rom_exmemcnt_card_release
+#   func_020570d8 is the ROM's own body now (SEAT1 retired the face)
 # The retry arm of the lock. func_02059d8c under it is hal/boot_hw.cpp's
 # cycle-counted busy wait, faced; the loop is never entered here because
 # nothing else on the host holds that word.
@@ -56,7 +56,7 @@ src/func_0205ff90.c
 src/func_020570f0.c
 src/func_02057218.c
 src/func_02057228.c
-#   func_020570c0 -> port_rom_exmemcnt_card_grant
+#   func_020570c0 is the ROM's own body now (SEAT1 retired the face)
 
 # The lock primitive both commands bottom out on (run link100, lane LOADOV).
 # func_02057198 masks interrupts, does the `swp` through func_0205a74c and
@@ -84,8 +84,13 @@ src/func_02057198.c
 #                        through func_0205db2c's a4 argument, so with the read
 #                        faced nothing references them and /OPT:REF drops them
 #                        again. They are the card driver's, not the archive's.
-# src/func_020570c0.c    the two EXMEMCNT stores. `G` resolves in this binary
-# src/func_020570d8.c    to hal/heap_vtable.cpp's default-heap word, so the
-#                        matched bodies would OR and AND bit 11 of a heap
-#                        pointer four times a boot. Faced at the register the
-#                        ROM's literal pool names until the decomp spells it.
+# src/func_020570c0.c    the two EXMEMCNT stores. THEY ARE IN THE LINK NOW
+# src/func_020570d8.c    (run link100 wave 7, lane SEAT1). They were faced
+#                        because `G` resolves in this binary to
+#                        hal/heap_vtable.cpp's default-heap word, so the matched
+#                        bodies would have ORed and ANDed bit 11 of a heap
+#                        pointer four times a boot. src/ now spells the register
+#                        the ROM's literal pool names and both ride hostgen; see
+#                        port/slice_seat1.txt rows 2 and 3. They are not slice
+#                        lines here or there: the hostgen'd pair is added to the
+#                        same two targets as this slice, in the SEAT1_GREG block.

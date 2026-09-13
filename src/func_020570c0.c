@@ -1,2 +1,1 @@
-extern unsigned short G[];
-void func_020570c0(void) { *(unsigned short*)G |= 2048; }
+void func_020570c0(void) { *(volatile unsigned short *)0x4000204 |= 0x800; }

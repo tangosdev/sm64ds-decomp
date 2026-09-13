@@ -92,8 +92,12 @@
 // by this change rather than work it did.
 //
 //   func_02060890  -> port_nitrofs_card_bringup      (in src/func_0205d96c.c)
-//   func_020570c0  -> port_rom_exmemcnt_card_grant   (in src/func_020570f0.c)
-//   func_020570d8  -> port_rom_exmemcnt_card_release (in src/func_0205710c.c)
+//
+// The two EXMEMCNT renames that stood here are RETIRED (run link100 wave 7,
+// lane SEAT1): src/func_020570c0.c and src/func_020570d8.c now spell the
+// register instead of the placeholder `G`, so src/func_020570f0.c and
+// src/func_0205710c.c call the ROM's own bodies under their own names. See the
+// retired faces further down this file and port/slice_seat1.txt rows 2 and 3.
 //
 // ---------------------------------------------------------------------------
 #include <cstdio>
@@ -306,52 +310,39 @@ void port_nitrofs_card_bringup(void)
 {
 }
 
-// ---- FACES: EXMEMCNT bit 11, the card's ARM7/ARM9 ownership bit ------------
-// PORT_HOST_ABI: src/func_020570c0.c and src/func_020570d8.c are two
-// instructions each --
+// ---- RETIRED: the EXMEMCNT bit-11 faces -----------------------------------
+// port_rom_exmemcnt_card_grant and port_rom_exmemcnt_card_release stood here
+// until run link100 wave 7, lane SEAT1. They existed because
+// src/func_020570c0.c and src/func_020570d8.c spelled their absolute address as
+// the decomp's GENERIC PLACEHOLDER `G`, which resolves in this binary to
+// hal/heap_vtable.cpp's default-heap word -- so the ROM's own bodies, linked as
+// they stood, would have ORed and ANDed bit 11 of a heap pointer four times a
+// boot. The comment that stood here named its own retirement condition: "the
+// day the decomp spells REG_EXMEMCNT instead of `G` both faces retire into two
+// real TUs". That day is this gate.
 //
-//     func_020570c0:  *(u16 *)G |= 0x0800;
-//     func_020570d8:  *(u16 *)G &= ~0x0800;
+// src/ now spells it, the way src/func_02057128.c and src/func_02057140.c
+// already spelled the same register one page down and one bit over:
 //
-// -- and `G` is the decomp's GENERIC PLACEHOLDER for an absolute address that
-// is not in config/arm9/relocs.txt because it is an I/O register. The ROM's own
-// literal pools say which one, and port/hal/boot_os.cpp:180-190 already carries
-// the table read out of them:
+//     func_020570c0:  *(volatile unsigned short *)0x4000204 |= 0x800;
+//     func_020570d8:  *(volatile unsigned short *)0x4000204 &= ~0x800;
 //
-//     func_020570c0  pool 0x020570d4  0x04000204  EXMEMCNT, |= 0x0800
-//     func_020570d8  pool 0x020570ec  0x04000204  EXMEMCNT, &= ~0x0800
+// The ROM's own literal pools are what name it (pools 0x020570d4 and
+// 0x020570ec, both the word 0x04000204, neither carrying a relocation because
+// an absolute I/O address needs none), and both TUs byte-verify on 2004/b56
+// with that pool word now compared for real instead of wildcarded as a reloc
+// slot. They reach the register through hostgen, in port/CMakeLists.txt's
+// SEAT1_GREG block beside R3F_GREG, because ntr/io.cpp only routes a store into
+// ntr::io_write when the TU went through tools/hostgen.py.
 //
 // EXMEMCNT bit 11 is the NDS slot's access right: clear gives the cartridge to
-// the ARM9, set gives it back to the ARM7. That is exactly what the two
-// callers do with them -- src/func_0205710c.c passes the CLEARING one as the
-// cleanup that runs when the cartridge lock is taken, src/func_020570f0.c the
-// SETTING one for when it is released.
+// the ARM9, set gives it back to the ARM7, which is what the two callers use
+// them for -- src/func_0205710c.c takes the cartridge as the lock is taken,
+// src/func_020570f0.c gives it back on the unlock. ntr maps 0x04000000 + 0x2000
+// (ntr/io.cpp kRegions, fatal), so the store lands in held memory, and nothing
+// on the host reads bit 11 back -- there is no ARM7 arbitrating a cartridge
+// slot -- which is why running the ROM's own lock arm is safe here.
 //
-// LINKING THE TWO MATCHED TUs WOULD BE WRONG, not merely unhelpful. `G`
-// resolves in this binary: hal/heap_vtable.cpp defines it as the default-heap
-// word. So the ROM's own bodies, linked as they stand, would OR and AND bit 11
-// of a heap pointer four times per boot. boot_os.cpp refuses func_02058ec8 and
-// func_02059594 for that same store, and this port's rule against non-faithful
-// fixes cuts the other way too: a matched TU that writes the wrong address is
-// not a link, it is a bug with a good name.
-//
-// The bodies below write the register the ROM's literal pool names. They are
-// faces, not seats: the two matched TUs stay unenrolled and unclaimed, so
-// nothing here moves linkage.py's count, and the day the decomp spells
-// REG_EXMEMCNT instead of `G` both faces retire into two real TUs.
-//
-// ntr maps 0x04000000 + 0x2000 (ntr/io.cpp kRegions, fatal), so the store lands
-// in held memory. Nothing on the host reads bit 11 back -- there is no ARM7
-// arbitrating a cartridge slot -- which is precisely why running the ROM's own
-// lock arm is safe here.
-void port_rom_exmemcnt_card_grant(void)
-{
-    *(volatile unsigned short *)0x04000204u |= 0x0800u;
-}
-
-void port_rom_exmemcnt_card_release(void)
-{
-    *(volatile unsigned short *)0x04000204u &= (unsigned short)~0x0800u;
-}
+// Derivation: port/slice_seat1.txt rows 2 and 3.
 
 }  // extern "C"
