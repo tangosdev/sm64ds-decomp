@@ -61,6 +61,17 @@
  * constants in address order. The existing initializer remains a separate
  * source owner; this text-only promotion does not reconstruct its table.
  *
+ * deslop
+ * Leftover: dCcAc_c::Init / dBgCh_Actr::Init / DropShadowRadHeight /
+ *   IsTooFarAwayFromPlayer stay mangled (Fix12-by-value, 6az; dBgCh Init
+ *   header Fix12i mangles as int -- this TU's InitResources call).
+ *   dActor_c::Spawn s8/s16 by-value at some sites. func_02038414 is the
+ *   veneer to dBgCh_Actr::UpdateDiscreteNoLava_2. Player+8 param1 belongs
+ *   on Player. data_ov096_* SharedFilePtr handles (Init LoadFile / Cleanup
+ *   Release) and state records (func_ov096_02136928). S14 no
+ *   g_profile_SANBO. common.h first (mMatrix IDENTITY copy).
+ *   unk_3a8 stays the placeholder.
+ *
  * ov096 delinks no .data at all, so this is a text-only entry: it licenses one
  * .text span and nothing else. Owning every virtual makes mwcc emit the vtable
  * and the whole RTTI group regardless of declaration order, and each of those
@@ -71,13 +82,15 @@
  * provenance -- is notes/data/class-facts/daSanbo_c.json.
  */
 
-/* ORDER IS LOAD-BEARING -- see the Matrix4x3 note above. */
+/* common.h first: Matrix4x3 must stay the flat s32[12] spelling. */
 #include "common.h"
 #include "daSanbo_c.h"
 #include "types.h"
 #include "SharedFilePtr.h"
 #include "decl_common.h"
 #include "Player.h"
+
+enum { SANBO_HEAD = 0xf0, SANBO_BODY = 0xf1 };
 
 /* Declarations retained from the individually matched fragments. These ABI
  * bridges and raw helper layouts remain reconstruction work; their presence
@@ -153,58 +166,28 @@ extern Matrix4x3 IDENTITY_MATRIX4X3;
  * symbols are not preserved. Historical project aliases: Pokey_Spawn and
  * PokeySegment_Spawn. */
 
-/* THE `[2]` IS LOAD-BEARING, and it is what consolidation changed. Each shard
- * wrote the bare `(int)_ZTV9daSanbo_c` and that was right there: the symbol was
- * UNDEF and config/arm9/overlays/ov096/symbols.txt binds it to the address
- * point at 0x021379d8. Here the same spelling binds to this TU's own
- * definition, and mwcc's symbol addresses the vtable OBJECT at 0x021379d0 --
- * the offset-to-top and typeinfo words lower. `[2]` on an int[] is exactly that
- * eight-byte bias, so the compiler computes it and no addend is hand-edited; it
- * also makes these stores agree with the addend-8 vptr store the compiler emits
- * in the destructor itself. Raw match.compare wildcards relocated words;
- * whole-TU verification also checks relocation types, addends and destinations.
- * Linked-byte verification is required in addition to a masked byte match.
- *
- * The declaration is include/decl_common.h's, which this file already includes.
- * It is deliberately not restated here: an `extern _ZTV` array in a source file
- * is the hand-rolled-vptr idiom the langmode ratchet counts, and this class is
- * a real polymorphic type whose vtable this TU emits, so the count would be
- * measuring nothing. */
+/* Both factories are `return new daSanbo_c()`. The synthesized ctor stores
+ * `_ZTV9daSanbo_c + 2`; do not restate a file-local `extern _ZTV`. */
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 35 -- daSanbo_c_classInit_SANBO, 0x02136d60, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol daSanbo_c_classInit_SANBO
-extern "C" int *daSanbo_c_classInit_SANBO(void)
+/* The registry factory behind the SANBO profile. `return new daSanbo_c()`
+ * MATCHES (size 0x50); the synthesized ctor stores `_ZTV9daSanbo_c + 2`. */
+extern "C" daSanbo_c *daSanbo_c_classInit_SANBO(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(944);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)&_ZTV9daSanbo_c[2];
-        _ZN5ModelC1Ev((char *)p + 0xd4);
-        _ZN11ShadowModelC1Ev((char *)p + 0x124);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x14c);
-        _ZN10dBgCh_ActrC1Ev((char *)p + 0x180);
-    }
-    return p;
+    return new daSanbo_c();
 }
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 34 -- daSanbo_c_classInit_SANBO_BODY, 0x02136d10, size 0x50 */
 /* -------------------------------------------------------------------------- */
 // @symbol daSanbo_c_classInit_SANBO_BODY
-extern "C" int *daSanbo_c_classInit_SANBO_BODY(void)
+/* Same class, SANBO_BODY profile (actor id 0xf1). */
+extern "C" daSanbo_c *daSanbo_c_classInit_SANBO_BODY(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(944);
-    if (p) {
-        _ZN8dActor_cC2Ev(p);
-        p[0] = (int)&_ZTV9daSanbo_c[2];
-        _ZN5ModelC1Ev((char *)p + 0xd4);
-        _ZN11ShadowModelC1Ev((char *)p + 0x124);
-        _ZN7dCcAc_cC1Ev((char *)p + 0x14c);
-        _ZN10dBgCh_ActrC1Ev((char *)p + 0x180);
-    }
-    return p;
+    return new daSanbo_c();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -216,7 +199,7 @@ extern "C" int *daSanbo_c_classInit_SANBO_BODY(void)
  * itself for destruction. */
 void daSanbo_c::OnTurnIntoEgg(Player &player)
 {
-    int flag = (actorID == 0xf0);
+    int flag = (actorID == SANBO_HEAD);
     if (flag)
         GivePlayerCoins(player, 1, 2);
     MarkForDestruction();
@@ -231,7 +214,7 @@ int daSanbo_c::InitResources()
 {
     int t;
 
-    t = (actorID == 0xf0);
+    t = (actorID == SANBO_HEAD);
     if (t != false) {
         void* m = Model::LoadFile(*(SharedFilePtr *)data_ov096_02137b20);
         mModel.SetFile((BMD_File *)m, 1, 1);
@@ -239,7 +222,7 @@ int daSanbo_c::InitResources()
         LoadBlueCoinModel(((char*)this));
         unk_3a8 = 1;
     } else {
-        t = (actorID == 0xf1);
+        t = (actorID == SANBO_BODY);
         if (t != false) {
             void* m = Model::LoadFile(*(SharedFilePtr *)data_ov096_02137b28);
             if (mModel.SetFile((BMD_File *)m, 1, 1) == 0)
@@ -250,14 +233,14 @@ int daSanbo_c::InitResources()
     if (mShadowModel.InitCylinder() == 0)
         return 0;
 
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x3c000, 0x78000, 0x200004, 0x6eff0);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x180, ((char*)this), 0x3c000, 0x3c000, 0, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x3c000, 0x78000, 0x200004, 0x6eff0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x3c000, 0x3c000, 0, 0);
 
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     mHorzSpeed = 0x3000;
 
-    t = (actorID == 0xf0);
+    t = (actorID == SANBO_HEAD);
     if (t != false) {
         mRootPosX = mPosX;
         mRootPosY = mPosY;
@@ -268,7 +251,7 @@ int daSanbo_c::InitResources()
         mPrevSegment = 0;
         mNextSegment = 0;
     } else {
-        t = (actorID == 0xf1);
+        t = (actorID == SANBO_BODY);
         if (t != false) {
             mScaleX = 0;
             mScaleY = 0;
@@ -332,7 +315,7 @@ int daSanbo_c::Render()
 void daSanbo_c::OnPendingDestroy()
 {
     int r1 = *(unsigned short *)((char *)&actorID);
-    r1 = (r1 == 0xf1);
+    r1 = (r1 == SANBO_BODY);
     if (r1) return;
     daSanbo_c *p = mNextSegment;
     if (!p) return;
@@ -350,13 +333,13 @@ void daSanbo_c::OnPendingDestroy()
 int daSanbo_c::CleanupResources()
 {
   int id = actorID;
-  int a = (id == 0xf0);
+  int a = (id == SANBO_HEAD);
   if (a) {
     UnloadBlueCoinModel(((char *)this));
     ((SharedFilePtr *)(data_ov096_02137b20))->Release();
     ((SharedFilePtr *)(data_ov096_02137b28))->Release();
   } else {
-    a = (id == 0xf1);
+    a = (id == SANBO_BODY);
     if (a) {
       ((SharedFilePtr *)(data_ov096_02137b28))->Release();
     }
@@ -405,7 +388,8 @@ extern "C" void func_ov096_021368b4(void *cc)
 extern "C" {
 int func_ov096_021368a4(int *p)
 {
-    p[227] = 0; return 1;
+    ((daSanbo_c *)p)->mState = 0;
+    return 1;
 }
 }
 
@@ -481,14 +465,14 @@ void func_ov096_0213670c(void *c) {
     void *ret = func_ov096_021357b4((char *)c);
     u8 r0 = *(u8*)((char*)ret + 0x3a8);
     if (r0 != 0) r0 = 0; else r0 = 0x5a;
-    *(u8*)((char*)(s32)r4 + 0x3ac) = r0;
-    r0 = *(u8*)((char*)(s32)r4 + 0x3ac);
+    ((daSanbo_c *)r4)->mTimer = r0;
+    r0 = ((daSanbo_c *)r4)->mTimer;
     if (r0 == 0) {
         *(s32*)((char*)(s32)r4 + 0x80) = 0x1000;
         *(s32*)((char*)(s32)r4 + 0x84) = 0x1000;
         *(s32*)((char*)(s32)r4 + 0x88) = 0x1000;
     }
-    *(s32*)((char*)(s32)r4 + 0x38c) = 1;
+    ((daSanbo_c *)r4)->mState = 1;
 }
 }
 
@@ -520,7 +504,7 @@ int func_ov096_021365d4(char* c) {
     if (func_ov096_02135838(c) < 4) {
         if (DecIfAbove0_Byte((unsigned char*)(c + 0x3ac)) == 0) {
             void* sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0xf1, *(unsigned int*)(c + 4), (struct Vector3*)(c + 0x5c), c + 0x8c,
+                SANBO_BODY, *(unsigned int*)(c + 4), (struct Vector3*)(c + 0x5c), c + 0x8c,
                 *(signed char*)(c + 0xcc), -1);
             if (sp != 0) {
                 *(void**)(c + 0x394) = sp;
@@ -549,7 +533,7 @@ int func_ov096_021365d4(char* c) {
 // @symbol func_ov096_02136534
 extern "C" int func_ov096_02136534(char *c)
 {
-    int b = (int)(*(unsigned short *)(c + 0xc) == 0xf0);
+    int b = (int)(*(unsigned short *)(c + 0xc) == SANBO_HEAD);
     if (b != 0) {
         dActor_c::Spawn(0x122, 2, *(Vector3 *)(c + 0x5c), (Vector3_16 *)0, *(signed char *)(c + 0xcc), -1);
     }
@@ -560,7 +544,7 @@ extern "C" int func_ov096_02136534(char *c)
         *(int *)(c + 0x98) = 0x28000;
     else
         *(int *)(c + 0x98) = 0x14000;
-    *(int *)(c + 0x38c) = 2;
+    ((daSanbo_c *)c)->mState = 2;
     return 1;
 }
 
@@ -617,7 +601,7 @@ int func_ov096_0213640c(char *c)
 {
     func_ov096_02135800(c);
     *(int *)(c + 0x98) = 0;
-    *(int *)(c + 0x38c) = 3;
+    ((daSanbo_c *)c)->mState = 3;
     return 1;
 }
 }
@@ -646,7 +630,8 @@ int func_ov096_021363c4(void *c) {
 extern "C" {
 int func_ov096_021363b4(int *p)
 {
-    p[227] = 4; return 1;
+    ((daSanbo_c *)p)->mState = 4;
+    return 1;
 }
 }
 
@@ -710,7 +695,7 @@ int func_ov096_02136264(char* self)
 // @symbol func_ov096_02136134
 /* recovered: shared common types */
 extern "C" int func_ov096_02136134(char* c){
-  int cond = (*(unsigned short*)(c+0xc) == 0xf0);
+  int cond = (*(unsigned short*)(c+0xc) == SANBO_HEAD);
   if(cond){
     _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x122, 2, (struct Vector3*)(c+0x5c), 0, *(signed char*)(c+0xcc), -1);
   }
@@ -727,7 +712,7 @@ extern "C" int func_ov096_02136134(char* c){
     daSanbo_c* o = (daSanbo_c*)c;
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x43, *(int*)(c+0x5c), *(int*)(c+0x60)+o->OnAimedAtWithEgg(), *(int*)(c+0x64));
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, *(int*)(c+0x5c), *(int*)(c+0x60)+o->OnAimedAtWithEgg(), *(int*)(c+0x64));
-    *(int*)(c+0x38c) = 5;
+    ((daSanbo_c *)c)->mState = 5;
   }
   return 1;
 }
@@ -738,7 +723,7 @@ extern "C" int func_ov096_02136134(char* c){
 // @symbol func_ov096_021360c4
 extern "C" {
 int func_ov096_021360c4(char *c) {
-    int eq = (*(unsigned short*)(c+0xc) == 0xf0) ? 1 : 0;
+    int eq = (*(unsigned short*)(c+0xc) == SANBO_HEAD) ? 1 : 0;
     if (eq != 0) {
         *(short*)(c+0x8c) = *(short*)(c+0x8c) - 0x1000;
     }
@@ -762,8 +747,8 @@ extern "C" void func_ov096_02135efc(void* cv)
     struct Vector3 v;
     enum Bool b;
 
-    if (*(int*)(c + 0x38c) == 5) {
-        b = (enum Bool)(*(unsigned short*)(c + 0xc) == 0xf0);
+    if (((daSanbo_c *)c)->mState == 5) {
+        b = (enum Bool)(*(unsigned short*)(c + 0xc) == SANBO_HEAD);
         if (b) {
             int y1, y2;
 
@@ -797,7 +782,7 @@ extern "C" void func_ov096_02135efc(void* cv)
     *(int*)(c + 0x118) = (*(int*)(c + 0x60) + 0x3c000) >> 3;
     *(int*)(c + 0x11c) = (*(int*)(c + 0x64) + *(int*)(c + 0x380)) >> 3;
 
-    if (*(int*)(c + 0x394) == 0 || *(int*)(c + 0x38c) == 2 || *(int*)(c + 0x38c) == 5) {
+    if (*(int*)(c + 0x394) == 0 || ((daSanbo_c *)c)->mState == 2 || ((daSanbo_c *)c)->mState == 5) {
         _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, c + 0x124, c + 0xf0, 0x82000, 0x2bc000, 0xf);
     }
@@ -874,6 +859,7 @@ void func_ov096_02135948(char* c)
     int st38c;
     char* q;
     struct Vector3 pos;
+    /* Five arrays: collapsing to one int vv[3] DIFFs this helper 23 words. */
     int vv1[3];
     int vv2[3];
     int vv3[3];
@@ -886,7 +872,7 @@ void func_ov096_02135948(char* c)
         _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
         func_ov096_02135800(c);
         {
-            int b = (*(unsigned short*)(c + 0xc) == 0xf0);
+            int b = (*(unsigned short*)(c + 0xc) == SANBO_HEAD);
             if (b) {
                 _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x122, 2, c + 0x5c, 0, *(signed char*)(c + 0xcc), -1);
@@ -904,7 +890,7 @@ void func_ov096_02135948(char* c)
     if (p == 0)
         return;
 
-    if (*(int*)(c + 0x38c) == 1) {
+    if (((daSanbo_c *)c)->mState == 1) {
         int b = (*(unsigned short*)(p + 0xc) == 0x135);
         if (b) {
             r150 = *(int*)(c + 0x150);
@@ -953,7 +939,7 @@ void func_ov096_02135948(char* c)
             _ZN6Player16IncMegaKillCountEv(p);
             func_ov096_02136928(c, 5);
         } else {
-            st38c = *(int*)(c + 0x38c);
+            st38c = ((daSanbo_c *)c)->mState;
             if (st38c == 0) {
                 q = *(char**)(c + 0x390);
                 if (q == 0) {
@@ -1078,7 +1064,7 @@ int func_ov096_02135838(char *c) {
 // @symbol func_ov096_02135800
 extern "C" void func_ov096_02135800(char* c){
   daSanbo_c *segment = (daSanbo_c *)c;
-  int b = (segment->actorID == 0xf0);
+  int b = (segment->actorID == SANBO_HEAD);
   if(b) return;
   daSanbo_c *next = segment->mNextSegment;
   daSanbo_c *prev = segment->mPrevSegment;
@@ -1097,7 +1083,7 @@ char *func_ov096_021357b4(char *cc){
     daSanbo_c *p = c->mPrevSegment;
     if(p==0) return (char *)c;
     while(p){
-        unsigned r2 = (p->actorID != 0xf0) ? 1u : 0u;
+        unsigned r2 = (p->actorID != SANBO_HEAD) ? 1u : 0u;
         if(!r2) return (char *)p;
         p = p->mPrevSegment;
     }
