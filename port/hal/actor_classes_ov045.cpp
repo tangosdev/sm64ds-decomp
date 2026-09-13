@@ -510,12 +510,15 @@ extern "C" void hal_fill_pole_lift_vtable(void)
 // host chain, both for the reasons in this file's header.
 extern "C" {
 int _ZN8PoleLift13InitResourcesEv(void *self);        /* slot 0  */
+int _ZN8PoleLift16CleanupResourcesEv(void *self);     /* slot 3  */
 int _ZN8PoleLift8BehaviorEv(char *self);              /* slot 6, extern-C .cpp */
 int _ZN8PoleLift6RenderEv(void *self);                /* slot 9  */
 void _ZN8PoleLift16OnPendingDestroyEv(void);          /* slot 12 */
 int *_ZN8PoleLiftD0Ev(int *self);                     /* slot 17 */
 void *ExtendingPlatform_Spawn(void);
-/* what ep_clean and ep_d1 need to spell out by hand */
+/* what the RETIRED ep_clean and ep_d1 thunks spelled out by hand; kept
+   as declarations only (B1SEAT seated slot 3, DTOR-FACES-CPP slot 16) */
+void port_b1seat_cleanup_probe(const char *cls);  /* hal/b1seat_globals.cpp */
 int _ZN16MeshColliderBase9IsEnabledEv(void *self);
 void _ZN16MeshColliderBase7DisableEv(void *self);
 void _ZN13SharedFilePtr7ReleaseEv(void *sfp);
@@ -530,23 +533,28 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:__ZTV17daObjKm2_Nobiru_c=__ZTV8PoleLift")
 static int __fastcall ep_init(void *s, void *)
 { return _ZN8PoleLift13InitResourcesEv(s); }
-/* slot 3, HOST THUNK, not the matched TU. src/_ZN8PoleLift16CleanupResourcesEv
-   .cpp spells its two SharedFilePtrs G0/G1, which hal/cxx_aliases.cpp has bound
-   to SignPost's ov002 pointers; linking it would Release those live. relocs.txt
-   (0x02111968/0x0211196c) says the ROM releases 0x021131d8 then 0x021131d0, and
-   the body ahead of them is one unconditional MeshColliderBase::Disable
-   (func_02039140) on the collider at +0x158, then SharedFilePtr::Release
-   (func_02017b64) twice, at 0x02111944/4c/54. The IsEnabled guard below is
-   behavior-identical: Disable's own body no-ops on a disabled collider
-   (slotIdx 0x18 is exactly IsEnabled's test). */
+/* slot 3, SEATED (run link100 wave 7, lane B1SEAT). The transcription that
+   stood here is retired. It stood because
+   src/_ZN8PoleLift16CleanupResourcesEv.cpp spelled its two SharedFilePtrs as
+   the POSITIONAL placeholders G0/G1, and hal/cxx_aliases.cpp binds the single
+   global names ?G0@@3PAHA / ?G1@@3PAHA to SignPost's ov002 pointers, so linked
+   as written it would have Released SignPost's LIVE files on every level-37
+   teardown. The TU now names ov045's own two cells, data_ov045_021131d8 then
+   data_ov045_021131d0, which are exactly the words ov045/relocs.txt carries at
+   0x02111968 and 0x0211196c. tools/match.py re-verifies the body byte-exact
+   under 2004/b56 either way -- it wildcards every relocated word, so it cannot
+   see this at all -- and the tool that can is tools/linkcheck.py, which
+   resolves each relocation and relinks the function against the ROM: BLIND-2
+   on the placeholder spelling, VERIFIED with 0 blind slots on this one. The names arrive from include/decl_common.h, whose whole body is
+   one extern "C" block, so they are the plain C names port/ov045_syms.txt
+   already mounts at ROM span: no new storage and no alias.
+   One behaviour note, in the ROM's favour: the retired thunk guarded Disable
+   with IsEnabled and the ROM body at 0x02111938 does not. The seat drops the
+   guard, which is what the cartridge does. */
 static int __fastcall ep_clean(void *s, void *)
 {
-    char *t = (char *)s;
-    if (_ZN16MeshColliderBase9IsEnabledEv(t + 0x158))
-        _ZN16MeshColliderBase7DisableEv(t + 0x158);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov045_021131d8);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov045_021131d0);
-    return 1;
+    port_b1seat_cleanup_probe("EXTENDING_PLATFORM");
+    return _ZN8PoleLift16CleanupResourcesEv(s);
 }
 static int __fastcall ep_behavior(void *s, void *)
 { return _ZN8PoleLift8BehaviorEv((char *)s); }
@@ -827,6 +835,8 @@ int _ZN15FireSeaElevator6RenderEv(void *self)
 { return ((FireSeaElevator *)self)->FireSeaElevator::Render(); }
 int _ZN8PoleLift13InitResourcesEv(void *self)
 { return ((PoleLift *)self)->PoleLift::InitResources(); }
+int _ZN8PoleLift16CleanupResourcesEv(void *self)
+{ return ((PoleLift *)self)->PoleLift::CleanupResources(); }
 int _ZN8PoleLift6RenderEv(void *self)
 { return ((PoleLift *)self)->PoleLift::Render(); }
 }

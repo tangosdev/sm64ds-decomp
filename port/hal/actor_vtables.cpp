@@ -621,7 +621,14 @@ extern "C" {
    names it. Filled at runtime if a gate ever dispatches ModelAnim2. */
 void *_ZTV10ModelAnim2[12];
 void *VTable_Animation_ModelAnim2Thunk[12];
-void *data_020a5bb8;            /* table root pointer (func_02050xxx family) */
+/* data_020a5bb8 (the SDAT root pointer the func_02050xxx family reads) moved to
+   hal/snd_globals.cpp. It is not a standalone word: src/func_020506fc.c hands
+   &data_020a5bb8 to func_02058200 as the TOP of the sound thread's DOWNWARD
+   1 KB stack, so the ROM has it as the last four bytes of one 0x534-byte run,
+   data_020a5684 + data_020a5718 + data_020a5bb8. Hosted alone here, that
+   thread's stack wrote a kilobyte over whatever the linker happened to place
+   below it. Same treatment, same reason, as the card driver's data_020a8760 in
+   hal/globals_link100.cpp. (run link100 wave 7, lane SND3, rung R5.) */
 int data_0209f5c0[8];
 /* data_020ad560 USED TO BE A ZEROED int[0x3c/4] HERE (run linkw wave 4, lane
    w4-a), the exact counterpart of the cuboid's host array that wave 3 removed

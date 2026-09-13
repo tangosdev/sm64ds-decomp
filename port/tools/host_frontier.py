@@ -86,8 +86,69 @@ def vc_env():
     return env
 
 
+ERR_RE = re.compile(r"^(.*?)\((\d+)\): (?:fatal )?error (C\d+):")
+
+
+def _same_file(path, f):
+    """True if an error line's own path names batch member f."""
+    base = path.replace("/", "\\").rsplit("\\", 1)[-1]
+    return base == f.name
+
+
+def parse_cl_transcript(text, files):
+    """{file: (code, raised_in) or None} from one cl /Zs transcript.
+
+    Factored out of check_batch so the attribution can be unit-tested
+    without invoking cl. `files` must be in the same order they were
+    passed on cl's command line.
+
+    cl compiles a multi-source invocation sequentially in argument order,
+    and echoes each source's bare file name on its own line right before
+    it starts compiling that source -- that echo is the only reliable
+    per-file cursor. An error line's OWN path names wherever the error
+    was actually raised, which is the source itself for an ordinary
+    error but a HEADER's path for an error raised while expanding a
+    header that source pulled in; attributing by that path alone (the
+    old bug) makes such a source read as clean, because the error's path
+    matches no batch member. So every error line here is attributed to
+    `current` -- the most recently echoed batch member -- and the
+    error's own path is kept only as `raised_in`, set when it differs
+    from `current` (i.e. the error was raised inside a header), and left
+    None when the error was raised in the source itself. The
+    first-error-per-source rule still holds: a second error against a
+    source that already has one is dropped, whether or not it was raised
+    in a header. Because attribution no longer depends on the error's
+    own path resolving to a batch member, a source whose every error is
+    raised in a header still lands in `bad`, not in `ok`.
+    """
+    order = list(files)
+    results = {f: None for f in order}
+    next_idx = 0
+    current = None
+    for raw in text.splitlines():
+        line = raw.strip()
+        if next_idx < len(order) and line == order[next_idx].name:
+            current = order[next_idx]
+            next_idx += 1
+            continue
+        m = ERR_RE.match(line)
+        if not m:
+            continue
+        if current is None:
+            # An error line before this batch's first echo names no
+            # source cl has told us it is compiling; nothing to charge
+            # it to.
+            continue
+        if results[current] is not None:
+            continue
+        path, code = m.group(1), m.group(3)
+        raised_in = None if _same_file(path, current) else path
+        results[current] = (code, raised_in)
+    return results
+
+
 def check_batch(files, env):
-    """{file: first_error or None} for one cl /Zs invocation over many files."""
+    """{file: (code, raised_in) or None} for one cl /Zs invocation."""
     cmd = [env["SM64DS_CL"], "/nologo", "/Zs", "/W0",
            f"/I{INCLUDE}", f"/I{PORT}", "/DSM64DS_PLATFORM_PC"]
     # //cpp-marked .c files and .cpp files are C++; plain .c stays C. cl
@@ -95,21 +156,7 @@ def check_batch(files, env):
     cmd += [str(f) for f in files]
     p = subprocess.run(cmd, capture_output=True, text=True, errors="replace",
                        env=env, cwd=str(SRC))
-    results = {f: None for f in files}
-    current = None
-    err_re = re.compile(r"^(.*?)\((\d+)\): (?:fatal )?error (C\d+):")
-    for line in (p.stdout + p.stderr).splitlines():
-        m = err_re.match(line.strip())
-        if not m:
-            continue
-        path = m.group(1)
-        code = m.group(3)
-        for f in files:
-            if str(f).endswith(path.split("\\")[-1]) or path.endswith(f.name):
-                if results[f] is None:
-                    results[f] = code
-                break
-    return results
+    return parse_cl_transcript(p.stdout + p.stderr, files)
 
 
 def main():
@@ -155,10 +202,10 @@ def main():
     bad = {f: e for f, e in results.items() if e is not None}
     buckets = Counter()
     members = defaultdict(list)
-    for f, code in bad.items():
+    for f, (code, raised_in) in bad.items():
         b = BUCKETS.get(code, code)
         buckets[b] += 1
-        members[b].append(f)
+        members[b].append((f, raised_in))
 
     total = len(files) + len(hal_owned)
     pct = 100.0 * len(ok) / len(files) if files else 0
@@ -171,8 +218,11 @@ def main():
     if args.detail:
         for b in [k for k in members if args.detail.lower() in k.lower()]:
             print(f"\n--- {b} ({len(members[b])}) ---")
-            for f in sorted(members[b])[:args.limit]:
-                print(f"  {f.relative_to(REPO)}")
+            for f, raised_in in sorted(members[b], key=lambda t: t[0])[:args.limit]:
+                line = f"  {f.relative_to(REPO)}"
+                if raised_in:
+                    line += f"  (raised in {raised_in})"
+                print(line)
             if len(members[b]) > args.limit:
                 print(f"  ... {len(members[b]) - args.limit} more")
 

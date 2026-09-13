@@ -285,7 +285,9 @@ void __sinit_ov022_02112d80(void);
 void __sinit_ov022_02112ec0(void);
 void __sinit_ov022_02112f78(void);
 
-/* what lp_clean has to spell out by hand (id 82, slot 3) */
+/* what the RETIRED lp_clean thunk spelled out by hand (id 82, slot 3);
+   kept as declarations only (lane B1SEAT seated slot 3) */
+void port_b1seat_cleanup_probe(const char *cls);  /* hal/b1seat_globals.cpp */
 int _ZN16MeshColliderBase9IsEnabledEv(void *self);
 void _ZN16MeshColliderBase7DisableEv(void *self);
 void _ZN13SharedFilePtr7ReleaseEv(void *sfp);
@@ -665,29 +667,24 @@ DSSTATE_END
 #pragma comment(linker, "/alternatename:?data_02082214@@3PAUSEnt@@A=_data_02082214")
 static int __fastcall lp_init(void *s, void *)
 { return ((FloatingFloorLllBig *)s)->FloatingFloorLllBig::InitResources(); }
-/* slot 3, HOST THUNK, not the matched TU: the matched
-   src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp spells its two
-   SharedFilePtrs G0/G1, which hal/cxx_aliases.cpp has bound to the game heap
-   pointer and to SignPost's ov002 file pointers. Statement-for-statement
-   transcription of the ROM body at 0x021121cc.
-   run rel0215 wave 3 (lane w3-e) TRIED to retire this thunk with the
-   per-source -D it used on 73's and 77's identically-shaped CleanupResources,
-   and MEASURED THE REFUSAL instead: both this body's targets are declared in
-   include/decl_common.h (lines 238-239, `extern char data_ov022_02114618[]`
-   and `..._02114620[]`) while G1 is declared there too (line 396,
-   `extern int G1[]`), so -DG1=data_ov022_02114618 rewrites one into a
-   redefinition of the other with a different type -- error C2371, the same
-   wall the ov006 Mg3DEsp block at port/CMakeLists.txt:6295 already records.
-   73's and 77's targets are NOT in that header, which is why the rename works
-   there and not here. The thunk stays and the TU stays out of the slice. */
+/* slot 3, SEATED (run link100 wave 7, lane B1SEAT). The transcription that
+   stood here is retired, and so is the C2371 that kept it.
+   run rel0215 wave 3 (lane w3-e) tried to retire this thunk with a per-source
+   -DG1=data_ov022_02114618 and MEASURED THE REFUSAL: both targets are declared
+   in include/decl_common.h (extern char data_ov022_02114618[] and ..._02114620[])
+   and so is G1 (extern int G1[]), so the -D rewrote one declaration into a
+   redefinition of the other with a different type. The fix is not a -D at all.
+   src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp now SPELLS the two real
+   names itself and declares neither: decl_common.h already has both, with the
+   right type, inside its extern "C" block, so there is one declaration and no
+   collision. The two words are what ov022/relocs.txt carries at 0x02112208 and
+   0x0211220c. match.py re-verifies the body byte-exact under 2004/b56 but
+   wildcards every relocated word, so the slot check is tools/linkcheck.py:
+   BLIND-2 on the placeholder spelling, VERIFIED with 0 blind slots here. */
 static int __fastcall lp_clean(void *s, void *)
 {
-    char *t = (char *)s;
-    if (_ZN16MeshColliderBase9IsEnabledEv(t + 0x124))
-        _ZN16MeshColliderBase7DisableEv(t + 0x124);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov022_02114620);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov022_02114618);
-    return 1;
+    port_b1seat_cleanup_probe("LAVA_PLANK");
+    return ((FloatingFloorLllBig *)s)->FloatingFloorLllBig::CleanupResources();
 }
 static int __fastcall lp_behavior(void *s, void *)
 { return _ZN19FloatingFloorLllBig8BehaviorEv((char *)s); }

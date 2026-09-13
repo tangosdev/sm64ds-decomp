@@ -1,0 +1,75 @@
+# run link100 wave 7, lane B1SEAT -- the four CleanupResources rows lane SEAT1
+# refused, now seatable.
+#
+# SEAT1 (out/SEAT1/decomp_side.md, group 2) refused these four because the port
+# could not bind their file pointers: every one of the four TUs spelled its
+# SharedFilePtrs as the delinker's POSITIONAL placeholders G0/G1/G2, and
+# hal/cxx_aliases.cpp binds the single global names ?G0@@3PAHA / ?G1@@3PAHA to
+# SignPost's ov002 pointers. Linked as written, PoleLift's teardown would have
+# Released SignPost's LIVE SharedFilePtrs on every level-37 teardown, and
+# MadPiano's the same on level 12. That is not a dying-object write.
+#
+# The obvious port-side fix was measured and refused twice: a per-source
+# -DG1=data_ovNNN_ADDR is a C2371, because both the placeholder and the target
+# are declared in include/decl_common.h with different types, so the -D rewrites
+# one declaration into a redefinition of the other (lane w3-e on ov022,
+# port/CMakeLists.txt's Mg3DEsp block on ov006). SEAT1's own reading was that
+# the honest route is a DECOMP-side respelling, and lane DECL2 then showed
+# origin/main has already done exactly that (PR #1083 named these bss slots).
+#
+# WHAT THIS LANE ACTUALLY DID, AND HOW IT DIFFERS FROM main:
+# main's four files could not be taken by content. Three of the four classes
+# were RENAMED after this branch's base (PoleLift -> ExtendingPlatform,
+# FloatingFloorLllBig -> LavaPlank, BowserFireSeaArena -> daKpa2Bg_c) and
+# main's bodies include ExtendingPlatform.h / LavaPlank.h / daKpa2Bg_c.h /
+# dBgW.h, none of which exists on this branch -- that rename wave is lane
+# SYNC2's merge, not a seat lane's. So this lane applied main's SUBSTANCE (name
+# the real per-address cell instead of the positional placeholder) in this
+# branch's own spelling, using the names this branch's own
+# config/arm9/overlays/*/symbols.txt and include/decl_common.h already carry:
+#
+#   ov045 0x021131d8 / 0x021131d0   data_ov045_021131d8 / _021131d0
+#                                   (main: PoleLift_ModelFile / _ClsnFile)
+#   ov063 0x0211ef80/ef90/ef88      data_ov063_0211ef80 / _0211ef90 / _0211ef88
+#                                   (main: MadPiano_ModelFile/_AnimFile/_ClsnFile)
+#   ov022 0x02114620 / 0x02114618   data_ov022_02114620 / _02114618
+#                                   (main: FloatingFloorLllBig_ModelFile/_ClsnFile)
+#   ov060 0x0211affc / 0x0211aff4   data_ov060_0211affc / _0211aff4
+#                                   (main: daKpa2Bg_c_ModelFile / _ClsnFile)
+#
+# Same addresses, same order, same bytes. When SYNC2's merge lands, main's four
+# files replace these by content and the port half here is unaffected: the four
+# faces call the class method, not a spelling.
+#
+# EACH ROW, verified by ADDRESS (config/arm9/overlays/<ov>/symbols.txt). Two
+# gates, and only the second one can see this change: tools/match.py
+# --version 2004/b56 says MATCHING for all four both before and after, because
+# it wildcards every relocated word; tools/linkcheck.py resolves each
+# relocation and relinks the function against the ROM, and it goes
+# BLIND-2 / BLIND-3 / BLIND-2 / BLIND-2 -> VERIFIED, 0 blind slots, on the four
+# rows in the order below. Nine blind literal-pool slots closed, one per cell.
+#
+#   _ZN8PoleLift16CleanupResourcesEv              ov045 0x02111938  0x38
+#       retires ep_clean in hal/actor_classes_ov045.cpp; the seat also drops
+#       that thunk's IsEnabled guard, which the ROM body does not have.
+#   _ZN8MadPiano16CleanupResourcesEv              ov063 0x0211de3c  0x50
+#       retires mp_clean in hal/actor_classes_ov063.cpp.
+#   _ZN19FloatingFloorLllBig16CleanupResourcesEv  ov022 0x021121cc  0x44
+#       retires lp_clean in hal/actor_classes_ov022.cpp, and with it the C2371
+#       lane w3-e measured.
+#   _ZN18BowserFireSeaArena16CleanupResourcesEv   ov060 0x02117b58  0x44
+#       retires arena_clean in hal/actor_classes_ov060.cpp.
+#
+# The nine .bss cells need no new storage: port/ov045_syms.txt, ov063, ov022 and
+# ov060 already mount all nine by name at ROM span, which is what the retired
+# thunks were already releasing through.
+#
+# DISPATCH: all four move a vtable word from a host thunk to a matched TU, the
+# class COMMON's DISPATCH CHANGES block gates on a captured transition and a
+# per-class trace. port/hal/b1seat_globals.cpp carries the env-gated probe
+# (SM64DS_B1SEAT_PROBE=1) the four faces call; the lane report pastes the four
+# trace lines and the scene-to-level transition capture.
+src/_ZN8PoleLift16CleanupResourcesEv.cpp
+src/actors/MadPiano/_ZN8MadPiano16CleanupResourcesEv.cpp
+src/_ZN19FloatingFloorLllBig16CleanupResourcesEv.cpp
+src/_ZN18BowserFireSeaArena16CleanupResourcesEv.cpp

@@ -639,7 +639,9 @@ extern "C" void hal_fill_fall_block_bbh_vtable(void)
 // its state table is seated in ov63_bringup above.
 extern "C" {
 int *_ZN8MadPianoD1Ev(void *self);              /* slot 16, matched .c */
-/* what mp_clean spells out by hand (see its banner) */
+/* what the RETIRED mp_clean thunk spelled out by hand; kept as
+   declarations only (lane B1SEAT seated slot 3) */
+void port_b1seat_cleanup_probe(const char *cls);  /* hal/b1seat_globals.cpp */
 int _ZN16MeshColliderBase9IsEnabledEv(void *self);
 void _ZN16MeshColliderBase7DisableEv(void *self);
 void _ZN13SharedFilePtr7ReleaseEv(void *sfp);
@@ -651,26 +653,28 @@ DSSTATE_BEGIN
 void *_ZTV8MadPiano[32];
 DSSTATE_END
 }
-struct MadPiano { int InitResources(); int Behavior(); int Render(); };
+struct MadPiano { int InitResources(); int CleanupResources();
+                  int Behavior(); int Render(); };
 static int __fastcall mp_init(void *s, void *)
 { return ((MadPiano *)s)->MadPiano::InitResources(); }
-/* slot 3, HOST THUNK, not the matched TU: src/actors/MadPiano/
-   _ZN8MadPiano16CleanupResourcesEv.cpp spells its three SharedFilePtrs
-   G0/G1/G2, and hal/cxx_aliases.cpp has already bound G0/G1 to SignPost's
-   ov002 pointers -- linking it would Release SignPost's LIVE files on every
-   level-12 teardown. The ov045 PoleLift ep_clean ruling, one global deeper.
-   The ROM body (0x0211de3c, disassembled + relocs): IsEnabled on the
-   collider at +0x124, Disable if so, then Release on 0x0211ef80 (model),
-   0x0211ef90 (attack anim), 0x0211ef88 (collision), in that pool order. */
+/* slot 3, SEATED (run link100 wave 7, lane B1SEAT). The transcription that
+   stood here is retired. It stood because
+   src/actors/MadPiano/_ZN8MadPiano16CleanupResourcesEv.cpp spelled its three
+   SharedFilePtrs as the positional placeholders G0/G1/G2, and
+   hal/cxx_aliases.cpp binds ?G0@@3PAHA / ?G1@@3PAHA to SignPost's ov002
+   pointers: the ov045 ep_clean ruling, one global deeper. The TU now names
+   ov063's own cells in the ROM's own pool order, data_ov063_0211ef80 (model),
+   data_ov063_0211ef90 (attack anim), data_ov063_0211ef88 (collision), which
+   are the three words ov063/relocs.txt carries at 0x0211de80/84/88.
+   match.py re-verifies the body byte-exact under 2004/b56 but wildcards every
+   relocated word, so the slot check is tools/linkcheck.py: BLIND-3 on the
+   placeholder spelling, VERIFIED with 0 blind slots on this one. decl_common.h declares them as SCALARS, so the TU
+   takes their addresses; the storage is port/ov063_syms.txt's ROM-span mount,
+   the same three cells this thunk was already releasing. */
 static int __fastcall mp_clean(void *s, void *)
 {
-    char *t = (char *)s;
-    if (_ZN16MeshColliderBase9IsEnabledEv(t + 0x124))
-        _ZN16MeshColliderBase7DisableEv(t + 0x124);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov063_0211ef80);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov063_0211ef90);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov063_0211ef88);
-    return 1;
+    port_b1seat_cleanup_probe("MAD_PIANO");
+    return ((MadPiano *)s)->MadPiano::CleanupResources();
 }
 static int __fastcall mp_behavior(void *s, void *)
 { return ((MadPiano *)s)->MadPiano::Behavior(); }

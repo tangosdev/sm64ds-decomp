@@ -1,0 +1,55 @@
+# Run link100 wave 7, lane SND3, rung R5: THE ARM9 SOUND THREAD.
+#
+# src/func_020133bc.c's twelfth statement is func_020506fc(2) and this is it.
+# hal/sdat/consumer.cpp's sd_sound_init_host carried the line as a SKIP with a
+# one-sentence reason -- "starts the ARM9 sound THREAD that would drain the
+# queue. This consumer is that drain." -- and the reason was wrong about which
+# thread. func_020506fc does not create a command-queue drain. It creates the
+# STREAM SERVICE thread: func_02050038 blocks on the message queue at
+# data_020a5600 and, for each message, invalidates two cache ranges and calls
+# the callback out of the message's own record. That is the thread a STRM
+# player wakes when it needs its next buffer filled, and nothing in this build
+# has ever posted to it because rungs R2, R4 and R5 are what stand a stream up.
+# The ARM7 command drain is hal/sdat/consumer.cpp and stays exactly where it is.
+#
+# WHAT IT DOES ON THE FIRST BOOT, and it is the card driver's shape:
+# OS_CreateThread builds the record, OS_WakeupThreadDirect makes it runnable and
+# reschedules into it at priority 2, func_02050038 runs its first statement --
+# a blocking OS_ReceiveMessage on an empty queue -- and goes straight back to
+# sleep. So the port gains a second created ROM thread that parks itself, which
+# is precisely what port/tools/thread_create_proof.py already measures for
+# func_020602bc, and it is ROM code doing it.
+#
+# WHY IT LINKS NOW AND DID NOT BEFORE. Two halves, both already landed:
+#
+#   the creation   src/func_02058200.c runs as written (port/slice_gate223.txt,
+#                  run link100 lane THREAD) and hal/boot2_thread.cpp adopts the
+#                  record it builds onto a Windows fiber.
+#   the storage    everything func_020506fc addresses is hosted DS storage at
+#                  the ROM's own address as of this rung. The one line that had
+#                  to move is data_020a5bb8: it was a standalone `void *` in
+#                  hal/actor_vtables.cpp, and func_02058200 takes its ADDRESS as
+#                  the top of a downward 1 KB stack, so hosted alone it made the
+#                  thread's creation write a kilobyte over whatever the linker
+#                  placed below it. hal/snd_globals.cpp now has
+#                  data_020a5684 + data_020a5718 + data_020a5bb8 as one
+#                  0x534-byte run with the three names at their ROM offsets, the
+#                  same treatment hal/globals_link100.cpp gives the card
+#                  driver's data_020a81bc + data_020a8760, and
+#                  port_snd_pool_check reads the three offsets back on every
+#                  boot rather than reasoning about them.
+#
+# The message queue is two objects and they are two arguments, not one run:
+# func_02058940(&data_020a5600, &data_020a5614, 8) is OS_InitMessageQueue(queue,
+# msgArray, 8), so data_020a5600 (0x14, hosted since rung R8) is the queue and
+# data_020a5614 (0x20 = eight words) is the array. Nothing addresses across the
+# gap between them; checked against every body that names either.
+#
+# THE OTHER CALLEES ARE ALL IN THE LINK ALREADY: func_02058940 comes from
+# port/slice_wm2.txt, func_020587e4 from port/slice_wm3.txt, func_02058200 and
+# func_02058048 from port/slice_gate223.txt -- and all three slices go to the
+# same three targets this one does. _ZN4CP1519InvalidateDataCacheEjj is the
+# hand-asm cache primitive port/ntr/runtime.cpp answers with a no-op host body,
+# tagged there, as it has for every other caller.
+src/func_020506fc.c
+src/func_02050038.c

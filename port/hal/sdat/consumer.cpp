@@ -193,6 +193,13 @@ extern unsigned char data_0209d574[];   /* the boot's own tick record */
 void func_0204f94c(void *p);         /* clear one player's voice pointer */
 void func_02011a28(void *table);     /* PlayLong's 0x40-slot handle table */
 void func_02048f34(void *owner);     /* 3D voice pools */
+/* RUNG R5 (run link100 wave 7, lane SND3): the ARM9 sound thread. Four
+ * statements -- a once-only guard, OS_InitMessageQueue, OS_CreateThread and
+ * OS_WakeupThreadDirect -- and its body func_02050038 blocks on the queue at
+ * data_020a5600 the moment it is entered, so what the port gains at this line
+ * is a created ROM thread that parks itself, exactly like the card driver's.
+ * See port/slice_snd3.txt for what had to move for it to link. */
+void func_020506fc(int prio);
 extern int data_0209b4a0[], data_0209b4b0[], data_0209b4a4[];
 extern int data_0209b53c[];
 extern unsigned char data_0209b4b4[];
@@ -686,8 +693,20 @@ void publish_player_status(void)
 //                        Rung R2 removes that reason but not the face: the
 //                        file is not this lane's to edit, and the branch
 //                        also needs func_02050f34. Named in the report.
-//   SKIP func_020506fc   starts the ARM9 sound THREAD that would drain the
-//                        queue. This consumer is that drain.
+//   RUN  func_020506fc   THE ARM9 SOUND THREAD (rung R5). The SKIP that stood
+//                        here said it 'starts the ARM9 sound THREAD that would
+//                        drain the queue. This consumer is that drain.' The
+//                        first half is right and the second names the wrong
+//                        thread: func_02050038 is not a command drain, it is
+//                        the STREAM SERVICE loop -- a blocking receive on the
+//                        message queue at data_020a5600, then two cache
+//                        invalidations and the callback carried in the message
+//                        itself. A STRM player posts to that queue when it
+//                        wants its next buffer filled; nothing in this build
+//                        posts to it yet, so the thread is created, entered,
+//                        and blocks on its own first statement. The hosted
+//                        ARM7 command drain is unaffected and still lives in
+//                        this file.
 //
 // If a sound plays that this init did not prepare for, the failure is a
 // missing voice or a skipped command, both of which print -- not silence
@@ -717,6 +736,10 @@ void sd_sound_init_host(void)
     func_0204f94c(&data_0209b4a4);
     func_02011a28(data_0209b53c);
     func_02048f34(data_0209b4b4);
+    /* rung R5, at func_020133bc's own line after it. The argument is the
+       ROM's: priority 2, above the game thread, so the wakeup reschedules
+       into the new thread at once and it blocks there. */
+    func_020506fc(2);
     data_0209b480 = 1;
     fprintf(stderr, "[snd] sound init: 16 voices, 32 players, SFX enabled; "
                     "sound heap %p (1 MB out of the root heap, rung R2)\n",

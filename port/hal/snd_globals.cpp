@@ -135,6 +135,82 @@ SND1_RUN(".dsstate$yzsnd08", data_020a5600, 0x14, 4);
 SND1_RUN(".dsstate$yzsnd09", data_020a5bbc, 0x0c, 4);
 SND1_RUN(".dsstate$yzsnd10", data_020a5bc8, 0x0c, 4);
 
+/* ---------------------------------------------------------------------------
+ * RUNG R5 (run link100 wave 7, lane SND3): THE ARM9 SOUND THREAD'S STORAGE.
+ *
+ * src/func_020506fc.c is four statements and the whole rung is what they ask
+ * of the host:
+ *
+ *     if (data_020a55fc != 0) return;          the once-only guard
+ *     data_020a55f8 = 0;
+ *     func_02058940(&data_020a5600, &data_020a5614, 8);   OS_InitMessageQueue
+ *     func_02058200(&data_020a5684, func_02050038, 0,
+ *                   &data_020a5bb8, 0x400, arg);          OS_CreateThread
+ *     data_020a55fc = 1;
+ *     func_02058048(&data_020a5684);                      make it runnable
+ *
+ * THE RUN, AND WHY IT HAS TO BE ONE OBJECT. This is hal/globals_link100.cpp's
+ * card block a second time, and the same argument decides it: func_02058200
+ * takes its fourth argument as the TOP of a DOWNWARD stack and fills
+ * [top - 0x400, top), writing the two guard words at the two ends of it
+ *
+ *     02058270  sub r5, r6, r0     base = end - 0x400
+ *     0205828c  str r1, [r0, #-4]  magic at end - 4
+ *     02058298  str r2, [r1]       magic at base
+ *
+ * so the kilobyte below &data_020a5bb8 has to be the ROM's own bytes. Deltas
+ * from config/arm9/symbols.txt, every one kind:bss:
+ *
+ *   +0x0000  data_020a5684  0x094  the sound thread's OSThread record.
+ *                                  func_02058200's last store in the object it
+ *                                  is handed is at +0x90.
+ *   +0x0094  data_020a5718  0x4a0  TWO THINGS, and the arithmetic says so.
+ *                                  src/func_020500a4.c reads this name as an
+ *                                  8-entry ring of 0x14-byte message records
+ *                                  (`data_020a5718[data_020a55f8]`, index
+ *                                  wrapped at 8), which is 8 * 0x14 = 0xa0
+ *                                  bytes; 0x94 + 0xa0 = 0x134, and
+ *                                  0x534 - 0x400 = 0x134 as well. So the
+ *                                  records are the bottom 0xa0 of this member
+ *                                  and the thread's 1 KB stack is exactly the
+ *                                  rest of it. Nothing is padding and nothing
+ *                                  overlaps, which is the check this run
+ *                                  exists to keep true.
+ *   +0x0534  data_020a5bb8  0x004  THE STACK TOP, and the SDAT root pointer
+ *                                  func_02050f34 seats (rung R4). It was a
+ *                                  standalone `void *` in hal/actor_vtables.cpp
+ *                                  and that is the ONE line rung R5 had to
+ *                                  move: there, the stack fill landed on
+ *                                  whatever the linker put underneath it.
+ *                                  Above the stack rather than inside it, so
+ *                                  the root the cartridge parked there in rung
+ *                                  R4 is not touched by the thread's creation.
+ *
+ * THE TWO SINGLETONS beside the run, each at its own ROM span because their
+ * neighbours are hosted elsewhere and no body addresses across a boundary:
+ *
+ *   data_020a55f8  0x04  the message ring's WRITE INDEX, 0..7, which is why
+ *                        func_020506fc zeroes it on the line before it creates
+ *                        the thread. src/func_020500a4.c is the writer.
+ *                        Nothing in this build posts yet (that is the capture
+ *                        alarm, rung R6), so it stays 0.
+ *   data_020a5614  0x20  the message queue's message ARRAY, eight words --
+ *                        func_02058940(&queue, &data_020a5614, 8) is
+ *                        OS_InitMessageQueue and 8 * 4 is the 0x20 the delta
+ *                        rule gives. The queue itself, data_020a5600 (0x14),
+ *                        is $yzsnd08 above; the two are separate arguments and
+ *                        nothing spans the gap between them.
+ *
+ * data_020a55fc (the guard) and data_020a5634 are hosted already, in
+ * hal/sdat/sound_bss.cpp, and neither is in this run.
+ * --------------------------------------------------------------------------- */
+SND1_RUN(".dsstate$yzsnd11", data_020a5684, 0x094, 32);
+SND1_RUN(".dsstate$yzsnd12", data_020a5718, 0x4a0, 1);
+SND1_RUN(".dsstate$yzsnd13", data_020a5bb8, 0x004, 1);
+
+SND1_RUN(".dsstate$yzsnd14", data_020a55f8, 0x04, 4);
+SND1_RUN(".dsstate$yzsnd15", data_020a5614, 0x20, 4);
+
 #pragma comment(linker, "/alternatename:?data_020a552c@@3PAHA=_data_020a552c")
 #pragma comment(linker, "/alternatename:?data_020a5bc8@@3UNestedHeapIterator@@A=_data_020a5bc8")
 #pragma comment(linker, "/alternatename:?data_0209b480@@3EA=_data_0209b480")
@@ -191,6 +267,32 @@ extern "C" int port_snd_pool_check(void)
     if (((unsigned)(size_t)data_020a64e0 & 3) != 0) {
         fprintf(stderr, "  [snd1] STATUS BLOCK BROKEN: %p is not "
                 "word-aligned\n", (void *)data_020a64e0);
+        bad = 1;
+    }
+
+    /* RUNG R5: the sound thread's record and its stack, checked the same way
+       and for a harder reason -- func_02058200 fills [end - 0x400, end) the
+       moment the thread is created, so a run that came apart here corrupts
+       whatever the linker placed below data_020a5bb8 on the FIRST boot, in
+       silence. The third offset is the one that matters: 0x534 - 0x400 =
+       0x134, so the kilobyte the ROM writes starts inside data_020a5718 and
+       ends at data_020a5bb8's own first byte. */
+    static const struct { const unsigned char *p; int want; const char *n; } t[] = {
+        { data_020a5684, 0x0000, "data_020a5684" },
+        { data_020a5718, 0x0094, "data_020a5718" },
+        { data_020a5bb8, 0x0534, "data_020a5bb8" },
+    };
+    for (int i = 0; i < 3; ++i) {
+        if (t[i].p - data_020a5684 != t[i].want) {
+            fprintf(stderr, "  [snd3] SOUND THREAD RUN BROKEN: %s at +0x%x, "
+                    "ROM says +0x%x\n", t[i].n,
+                    (unsigned)(t[i].p - data_020a5684), t[i].want);
+            bad = 1;
+        }
+    }
+    if (((unsigned)(size_t)data_020a5684 & 3) != 0) {
+        fprintf(stderr, "  [snd3] SOUND THREAD RUN BROKEN: base %p is not "
+                "word-aligned\n", (void *)data_020a5684);
         bad = 1;
     }
     return bad;

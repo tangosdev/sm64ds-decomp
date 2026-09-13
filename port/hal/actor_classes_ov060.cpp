@@ -125,12 +125,15 @@ void __sinit_ov060_0211a428(void);
 
 /* the arena's own bodies (the .cpp methods are faced at file bottom) */
 int _ZN18BowserFireSeaArena13InitResourcesEv(void *self);     /* slot 0  */
+int _ZN18BowserFireSeaArena16CleanupResourcesEv(void *self);  /* slot 3  */
 int _ZN18BowserFireSeaArena8BehaviorEv(void *self);           /* slot 6  */
 int _ZN18BowserFireSeaArena6RenderEv(void *self);             /* slot 9  */
 int *_ZN18BowserFireSeaArenaD1Ev(int *self);                  /* slot 16 */
 int *_ZN18BowserFireSeaArenaD0Ev(int *self);                  /* slot 17 */
 void *BowserFireSeaArena_Spawn(void);
-/* what arena_clean spells by hand (the ep_clean recipe) */
+/* what the RETIRED arena_clean thunk spelled by hand; kept as
+   declarations only (lane B1SEAT seated slot 3) */
+void port_b1seat_cleanup_probe(const char *cls);  /* hal/b1seat_globals.cpp */
 int _ZN16MeshColliderBase9IsEnabledEv(void *self);
 void _ZN16MeshColliderBase7DisableEv(void *self);
 void _ZN13SharedFilePtr7ReleaseEv(void *sfp);
@@ -460,15 +463,22 @@ extern "C" void port_ov60_bringup(void)
 // helpers. Own slots 0/3/6/9/16/17 + Platform::Kill at 31.
 static int __fastcall arena_init(void *s, void *)
 { return _ZN18BowserFireSeaArena13InitResourcesEv(s); }
-/* slot 3, HOST THUNK, not the matched TU -- the G0/G1 trap (file header). */
+/* slot 3, SEATED (run link100 wave 7, lane B1SEAT). The G0/G1 trap this
+   file's header describes is gone at the source:
+   src/_ZN18BowserFireSeaArena16CleanupResourcesEv.cpp no longer spells its two
+   SharedFilePtrs as the positional placeholders, it names ov060's own
+   data_ov060_0211affc then data_ov060_0211aff4, the words ov060/relocs.txt
+   carries at 0x02117b94 and 0x02117b98. match.py re-verifies the body
+   byte-exact under 2004/b56 but wildcards every relocated word, so the slot
+   check is tools/linkcheck.py: BLIND-2 on the placeholder spelling, VERIFIED
+   with 0 blind slots here.
+   decl_common.h declares the pair as void* scalars, so the TU takes their
+   addresses; the storage is port/ov060_syms.txt's ROM-span mount, the same
+   two cells this thunk was already releasing. */
 static int __fastcall arena_clean(void *s, void *)
 {
-    char *t = (char *)s;
-    if (_ZN16MeshColliderBase9IsEnabledEv(t + 0x374))
-        _ZN16MeshColliderBase7DisableEv(t + 0x374);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov060_0211affc);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov060_0211aff4);
-    return 1;
+    port_b1seat_cleanup_probe("BOWSER_FIRE_SEA_ARENA");
+    return _ZN18BowserFireSeaArena16CleanupResourcesEv(s);
 }
 static int __fastcall arena_behavior(void *s, void *)
 { return _ZN18BowserFireSeaArena8BehaviorEv(s); }
@@ -758,6 +768,8 @@ extern "C" void hal_fill_bowser_sky_platform_vtable(void)
 extern "C" {
 int _ZN18BowserFireSeaArena13InitResourcesEv(void *self)
 { return ((BowserFireSeaArena *)self)->BowserFireSeaArena::InitResources(); }
+int _ZN18BowserFireSeaArena16CleanupResourcesEv(void *self)
+{ return ((BowserFireSeaArena *)self)->BowserFireSeaArena::CleanupResources(); }
 int _ZN18BowserFireSeaArena8BehaviorEv(void *self)
 { return ((BowserFireSeaArena *)self)->BowserFireSeaArena::Behavior(); }
 int _ZN18BowserFireSeaArena6RenderEv(void *self)

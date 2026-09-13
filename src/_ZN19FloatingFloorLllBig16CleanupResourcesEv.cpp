@@ -6,14 +6,13 @@
 #include "FloatingFloorLllBig.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
 
 int FloatingFloorLllBig::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
+    ((SharedFilePtr *)(data_ov022_02114620))->Release();
+    ((SharedFilePtr *)(data_ov022_02114618))->Release();
     return 1;
 }

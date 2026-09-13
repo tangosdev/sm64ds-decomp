@@ -6,15 +6,14 @@
 #include "MadPiano.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
-extern int G0[];
 
 int MadPiano::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
-    ((SharedFilePtr *)(G0))->Release();
-    ((SharedFilePtr *)(G1))->Release();
-    ((SharedFilePtr *)(G2))->Release();
+    ((SharedFilePtr *)(&data_ov063_0211ef80))->Release();
+    ((SharedFilePtr *)(&data_ov063_0211ef90))->Release();
+    ((SharedFilePtr *)(&data_ov063_0211ef88))->Release();
     return 1;
 }
