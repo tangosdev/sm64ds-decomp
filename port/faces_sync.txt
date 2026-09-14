@@ -2644,3 +2644,48 @@ __ZN13daObjKuruma_cD0Ev                                                  ??1daOb
 __ZN17daObjKurumajiku_cD0Ev                                              ??1daObjKurumajiku_c@@UAE@XZ                                     0x020b69e4 D _ZN6Memory10DeallocateEPvP4Heap GAME_HEAP_PTR
 
 __ZN12daStarGate_cD0Ev                                                   ??1daStarGate_c@@UAE@XZ                                          0x02145904 D _ZN6Memory10DeallocateEPvP4Heap GAME_HEAP_PTR
+
+# ============================================================================
+# LANE FACES3 (run link100 wave 9). Rows below are this lane's, appended in one
+# block so a rebase onto the sync line carries them as one hunk.
+#
+# The worklist is the 434 FLAT ITANIUM NAME rows of
+# runs/link100/out/HOSTGEN3/residue.txt, measured again off this tree's own
+# link at d9ea8dda4 (walk_window: 680 unresolved, 6 duplicates) and re-derived
+# against a DEFINED-EXTERNAL UNIVERSE read out of the link's own 8663 objects
+# with dumpbin, because a tree that does not link has a zero-byte map and
+# linkage.py and the map readers all refuse it by design.
+#
+# BATCH 1: the rows that derive under the rules exactly as lane FACES1 wrote
+# them, with no tool change at all. Every one is a member the link defines
+# under its MSVC decoration and asks for under the ROM's flat C name.
+# ============================================================================
+__ZN6Eyerok16OnPendingDestroyEv                                          ?OnPendingDestroy@Eyerok@@UAEXXZ                                 0x021197a0 R
+__ZN6Eyerok8BehaviorEv                                                   ?Behavior@Eyerok@@UAEHXZ                                         0x02119838 R
+__ZN15dScMgCurling2_c10DragUpdateEv                                      ?DragUpdate@dScMgCurling2_c@@QAEXXZ                              0x020e4bd4 R
+__ZN15dScMgCurling2_c11StepXSettleEi                                     ?StepXSettle@dScMgCurling2_c@@QAEXH@Z                            0x020e3e4c R
+__ZN15dScMgCurling2_c11StepYRampUpEi                                     ?StepYRampUp@dScMgCurling2_c@@QAEXH@Z                            0x020e3ce0 R
+__ZN15dScMgCurling2_c12PickStepModeEi                                    ?PickStepMode@dScMgCurling2_c@@QAEXH@Z                           0x020e4794 R
+__ZN15dScMgCurling2_c12StepXPushNegEi                                    ?StepXPushNeg@dScMgCurling2_c@@QAEXH@Z                           0x020e3f54 R
+__ZN15dScMgCurling2_c12StepXPushPosEi                                    ?StepXPushPos@dScMgCurling2_c@@QAEXH@Z                           0x020e4094 R
+__ZN15dScMgCurling2_c12StepYRestartEi                                    ?StepYRestart@dScMgCurling2_c@@QAEXH@Z                           0x020e3db4 R
+__ZN15dScMgCurling2_c13StepXPickFastEi                                   ?StepXPickFast@dScMgCurling2_c@@QAEXH@Z                          0x020e4630 R
+__ZN15dScMgCurling2_c13StepYRampDownEi                                   ?StepYRampDown@dScMgCurling2_c@@QAEXH@Z                          0x020e3c4c R
+__ZN15dScMgCurling2_c15StepXSettleFastEi                                 ?StepXSettleFast@dScMgCurling2_c@@QAEXH@Z                        0x020e4348 R
+__ZN15dScMgCurling2_c16StepXPushNegFastEi                                ?StepXPushNegFast@dScMgCurling2_c@@QAEXH@Z                       0x020e440c R
+__ZN15dScMgCurling2_c16StepXPushPosFastEi                                ?StepXPushPosFast@dScMgCurling2_c@@QAEXH@Z                       0x020e4520 R
+__ZN15dScMgCurling2_c9DragBeginEv                                        ?DragBegin@dScMgCurling2_c@@QAEXXZ                               0x020e4ed4 R
+__ZN15dScMgCurling2_c9StepXAndYEi                                        ?StepXAndY@dScMgCurling2_c@@QAEXH@Z                              0x020e42b4 R
+__ZN15dScMgCurling2_c9StepXOnlyEi                                        ?StepXOnly@dScMgCurling2_c@@QAEXH@Z                              0x020e4744 R
+__ZN15dScMgCurling2_c9StepXPickEi                                        ?StepXPick@dScMgCurling2_c@@QAEXH@Z                              0x020e41d0 R
+__ZN15dScMgCurling2_cD1Ev                                                ??1dScMgCurling2_c@@UAE@XZ                                       0x020e3854 R
+__ZN15dScMgHanachan_c13InitResourcesEv                                   ?InitResources@dScMgHanachan_c@@UAEHXZ                           0x020edb04 R
+__ZN15dScMgHanachan_c13OnYoshiTryEatEi                                   ?OnYoshiTryEat@dScMgHanachan_c@@UAEXH@Z                          0x020eda48 R
+__ZN15dScMgHanachan_c16CleanupResourcesEv                                ?CleanupResources@dScMgHanachan_c@@UAEHXZ                        0x020ecec8 R
+__ZN15dScMgHanachan_c6RenderEv                                           ?Render@dScMgHanachan_c@@UAEHXZ                                  0x020ecee4 R
+__ZN15dScMgRoulette_c13InitResourcesEv                                   ?InitResources@dScMgRoulette_c@@UAEHXZ                           0x0210a194 R
+__ZN15dScMgRoulette_c13OnTurnIntoEggEi                                   ?OnTurnIntoEgg@dScMgRoulette_c@@UAEHH@Z                          0x021096c8 R
+__ZN15dScMgRoulette_c13OnYoshiTryEatEi                                   ?OnYoshiTryEat@dScMgRoulette_c@@UAEXH@Z                          0x021095cc R
+__ZN15dScMgRoulette_c16CleanupResourcesEv                                ?CleanupResources@dScMgRoulette_c@@UAEHXZ                        0x0210980c R
+__ZN15dScMgRoulette_c6RenderEv                                           ?Render@dScMgRoulette_c@@UAEHXZ                                  0x02109834 R
+__ZN15dScMgRoulette_c8BehaviorEv                                         ?Behavior@dScMgRoulette_c@@UAEHXZ                                0x02109aac R
