@@ -45,6 +45,14 @@ rule were dropped:
      than "its D1 plus one deallocation", and both must refuse: a wrong heap
      pointer is heap corruption, and it would link.
 
+ 10. THE PARAMETER-TYPE JOIN (case 19). Rule 2's key is (class, method) and
+     drops the parameter list, so three ROM overloads of
+     dBgW_KcMbg::DetectClsn landed on one key and all three refused. Each ROM
+     name spells its own parameter types and so does each MSVC definition, and
+     the two spellings join -- but only when the ROM names tell each OTHER
+     apart, which case 3c's scalar-only pair does not, and only when exactly
+     one definition matches, which the missing-definition arm checks.
+
   9. THE SHAPES LANE FACES3 ADDED BEYOND THE TWIN RULE. A NESTED parameter or
      return type (Particle::System, dPa_c::level_c::callback_c::Entry), which
      cannot be forward-declared from outside its enclosing class, so the
@@ -174,10 +182,12 @@ SYMBOLS = [
     # 3b. the same shape with the sizes APART: not one body, still refused.
     ("_ZN8MismatchD1Ev", 0x02017700, 0x50),
     ("_ZN8MismatchD2Ev", 0x02017760, 0x40),
-    # 3c. an ORDINARY overload at two addresses: never a twin, always refused.
-    #     This is the ApproachLinear/ApproachLinear2 shape that shipped.
-    ("_ZN8Overload6UpdateEv", 0x02017800),
-    ("_ZN8Overload6UpdateEi", 0x02017840),
+    # 3c. an ORDINARY overload at two addresses whose parameter lists differ
+    #     only in a SCALAR type. The two ROM names cannot tell each other
+    #     apart, so the join stays refused: the ApproachLinear/ApproachLinear2
+    #     shape that shipped.
+    ("_ZN8Overload6UpdateEi", 0x02017800),
+    ("_ZN8Overload6UpdateEs", 0x02017840),
     # a class with a D1 and NO D2 must still generate
     ("_ZN10BowserFireD1Ev", 0x02116484),
     # 4. the arity ruling
@@ -198,6 +208,10 @@ def run():
         # THREE parameters where the ROM name takes two: TrackStar is the
         # second arity arm, and it must refuse here rather than drop one.
         "?TrackStar@Actor@@QAEIII@Z",
+        # the two scalar overloads of case 3c, which the parameter-type join
+        # must NOT be able to tell apart
+        "?Update@Overload@@QAEXH@Z",
+        "?Update@Overload@@QAEXF@Z",
     ]
 
     with tempfile.TemporaryDirectory() as td:
@@ -231,17 +245,18 @@ def run():
 
         print("case 3: a sibling by address is REFUSED unless the ROM proves "
               "the pair is one body emitted twice")
-        for flat in ("__ZN8Overload6UpdateEv", "__ZN8Overload6UpdateEi"):
+        for flat in ("__ZN8Overload6UpdateEi", "__ZN8Overload6UpdateEs"):
             check(flat not in by_flat, "%s not generated" % flat)
             check("rule 2" in why.get(flat, "") and
                   "plausible-sibling" in why.get(flat, ""),
                   "%s refused with the sibling reason" % flat)
-        check("0x02017800" in why.get("__ZN8Overload6UpdateEv", "") and
-              "0x02017840" in why.get("__ZN8Overload6UpdateEv", ""),
+        check("0x02017800" in why.get("__ZN8Overload6UpdateEi", "") and
+              "0x02017840" in why.get("__ZN8Overload6UpdateEi", ""),
               "the refusal names both ROM addresses")
-        check("not a constructor or a destructor"
-              in why.get("__ZN8Overload6UpdateEv", ""),
-              "and says the twin rule cannot save an overload")
+        check("same parameter CLASSES"
+              in why.get("__ZN8Overload6UpdateEi", ""),
+              "and says the parameter types cannot tell them apart either: %s"
+              % why.get("__ZN8Overload6UpdateEi", "")[-80:])
 
         print("case 3b: a D1/D2 pair the ROM proves identical DOES bind")
         for flat in ("__ZN10FaderColorD1Ev", "__ZN10FaderColorD2Ev"):
@@ -559,6 +574,42 @@ def run():
                   "the shadow keeps the reference in the mangle")
             check("*(signed char *)a0" in text,
                   "and the face dereferences the address the caller pushed")
+
+    print("case 19: three ROM OVERLOADS on one join key are told apart by "
+          "their parameter types")
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [
+            ("_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd", 0x02039CB8),
+            ("_ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin", 0x02039970),
+            ("_ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr", 0x02039A3C)])
+        uni = {"?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_Gnd@@@Z",
+               "?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_Lin@@@Z",
+               "?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_SphCrr@@@Z"}
+        rows, ref = facegen.derive_rows(
+            ["__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Gnd",
+             "__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin",
+             "__ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr"], uni, str(root))
+        check(len(rows) == 3, "all three derived: %s" % (dict(ref) or "yes"))
+        got = dict((r["flat"], (r["target"], r["addr"])) for r in rows)
+        check(got.get("__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin") ==
+              ("?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_Lin@@@Z", 0x02039970),
+              "the Lin row took the Lin definition at the Lin address: %s"
+              % (got.get("__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin"),))
+        check(got.get("__ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr") ==
+              ("?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_SphCrr@@@Z", 0x02039A3C),
+              "and the SphCrr row the SphCrr one")
+        check(len(set(v[0] for v in got.values())) == 3,
+              "no two rows took the same definition")
+        # and the same join with ONE definition missing must refuse, not
+        # fall back on whatever is left
+        rows2, ref2 = facegen.derive_rows(
+            ["__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin"],
+            uni - {"?DetectClsn@dBgW_KcMbg@@UAEHAAUdBgCh_Lin@@@Z"}, str(root))
+        check(not rows2 and "do not tell them apart" in dict(ref2).get(
+            "__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin", ""),
+            "a join whose own definition is absent refuses: %s"
+            % dict(ref2).get("__ZN10dBgW_KcMbg10DetectClsnER9dBgCh_Lin",
+                             "")[-70:])
 
     print("")
     if FAILED:
