@@ -76,13 +76,20 @@ int _ZN8dActor_c16OnAimedAtWithEggEv(void *self);                     /* slot 29
 int _ZN20daObjFl_Fall_Block_c13InitResourcesEv(void *self);      /* slot 0  InitResources veneer   */
 int _ZN20daObjFl_Fall_Block_c16CleanupResourcesEv(void *self);      /* slot 3  CleanupResources veneer*/
 int *_ZN20daObjFl_Fall_Block_cD1Ev(int *self);      /* slot 16 D1                     */
-/* Slot 17, the deleting destructor. Its TU is src/game/actors/daObjFl_Fall_Block_c.cpp but it
-   EMITS daObjFl_Fall_Block_c_OnYoshiTryEat -- the recovered name is wrong (the
-   body is the D0; OnYoshiTryEat is slot 18) and the TU took its name from the
-   recovery, so that is the spelling the linker sees. Declared under the name
-   the object file actually exports, seated into the slot the ROM table puts it
-   in. The wrong name is on the decomp-side correction list. */
-int *daObjFl_Fall_Block_c_OnYoshiTryEat(int *self);   /* slot 17 D0 */
+/* Slot 17, the deleting destructor. RE-SPELLED (run link100 wave 9c, lane
+   DTORS2, on lane SEATS3's handoff item 3). The note that stood here said the
+   TU emitted daObjFl_Fall_Block_c_OnYoshiTryEat because the recovered name was
+   wrong, and that the wrong name was on the decomp-side correction list. main
+   has since made the correction: config/arm9/overlays/ov022/symbols.txt:54
+   carries _ZN20daObjFl_Fall_Block_cD0Ev at 0x021123d0, size 0x64, and
+   src/game/actors/daObjFl_Fall_Block_c.cpp carries `// @symbol
+   _ZN20daObjFl_Fall_Block_cD0Ev` with no body under it, because the class
+   header spells the destructor inline. So the stale name asked for a symbol
+   nothing exports any more, and this slot pointed at an unresolved row.
+   hal/dtor_forwarders_gen_w9c.cpp now defines the D0 under the ROM's own name,
+   the same way hal/dtor_forwarders_gen.cpp already defines this class's D1 one
+   line above, and the slot asks for that. */
+int *_ZN20daObjFl_Fall_Block_cD0Ev(int *self);   /* slot 17 D0 */
 void *daObjFl_Fall_Block_c_classInit(void);
 
 /* the four ov098 base bodies, all already in walk_window.map */
@@ -220,7 +227,7 @@ static int __fastcall fb83_render(void *s, void *)
 static int __fastcall fb83_d1(void *s, void *)
 { return (int)(size_t)_ZN20daObjFl_Fall_Block_cD1Ev((int *)s); }
 static int __fastcall fb83_d0(void *s, void *)
-{ return (int)(size_t)daObjFl_Fall_Block_c_OnYoshiTryEat((int *)s); }
+{ return (int)(size_t)_ZN20daObjFl_Fall_Block_cD0Ev((int *)s); }
 /* Slot 27 is OnHitByMegaChar(Player &): the caller pushes the player, so the
    veneer takes the third parameter to pop it even though the ov098 body reads
    only the receiver -- the fb_slot27 contract in hal/actor_classes_wf.cpp. */

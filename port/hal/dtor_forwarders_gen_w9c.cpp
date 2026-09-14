@@ -51,6 +51,7 @@
 #include "TextureTransformer.h"
 #include "dCapEnemy_c.h"
 #include "dScMgSnowball_c.h"
+#include "daObjFl_Fall_Block_c.h"
 #include "daObjWc_Mizu_c.h"
 #include "daObjWc_Obj03_c.h"
 #include "daObjWc_Obj04_c.h"
@@ -87,6 +88,10 @@ extern "C" void _ZN15daObjWc_Obj03_cD0Ev(void *self)
 /* ROM 0x0211267c _ZN15daObjWc_Obj04_cD0Ev -- batch 4, the inline ~daObjWc_Obj04_c() plus _ZN6Memory10DeallocateEPvP4Heap */
 extern "C" void _ZN15daObjWc_Obj04_cD0Ev(void *self)
 { ((daObjWc_Obj04_c *)self)->daObjWc_Obj04_c::~daObjWc_Obj04_c(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
+
+/* ROM 0x021123d0 _ZN20daObjFl_Fall_Block_cD0Ev -- batch 4, the inline ~daObjFl_Fall_Block_c() plus _ZN6Memory10DeallocateEPvP4Heap */
+extern "C" void _ZN20daObjFl_Fall_Block_cD0Ev(void *self)
+{ ((daObjFl_Fall_Block_c *)self)->daObjFl_Fall_Block_c::~daObjFl_Fall_Block_c(); _ZN6Memory10DeallocateEPvP4Heap(self, GAME_HEAP_PTR); }
 
 /* ROM 0x0212eb48 _ZN7daPkn_cD0Ev -- batch 4, the inline ~daPkn_c() plus _ZN6Memory10DeallocateEPvP4Heap */
 extern "C" void _ZN7daPkn_cD0Ev(void *self)

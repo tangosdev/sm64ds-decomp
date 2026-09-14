@@ -364,6 +364,7 @@ _ZN9daSetSE_cD0Ev
 # lane hands back.
 BATCHES[4] = """
 _ZN10daWanwan_cD0Ev
+_ZN20daObjFl_Fall_Block_cD0Ev
 _ZN10daWanwan_cD1Ev
 _ZN14daObjWc_Mizu_cD0Ev
 _ZN15daObjWc_Obj03_cD0Ev
