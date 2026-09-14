@@ -512,6 +512,102 @@ def d0_reloc_proof(root, d0name, d1name, dealloc_addr, heap_addr):
     return {"addr": a0, "module": m0, "size": z0, "d1_addr": a1}, None
 
 
+# ---------------------------------------------------------------------------
+# THE STRUCTOR TWIN RULE (lane FACES3).
+#
+# Rule 2 refuses a flat name whose (class, method) key joins more than one ROM
+# address, because one decorated definition cannot be two different functions.
+# For an ordinary overload that is exactly right and it stays. For a STRUCTOR
+# PAIR it is a question about the ROM rather than about names: the Itanium ABI
+# emits D1 (complete object) and D2 (base object) as two symbols, and C1/C2
+# likewise, and for a class with no virtual bases the two are the SAME CODE
+# emitted twice. MSVC emits ONE destructor and one constructor. So the pair can
+# be bound to that one definition exactly when the two ROM bodies are PROVED to
+# be one body emitted twice, and it keeps refusing when they are not.
+#
+# That refusal is also the net for config/**/symbols.txt carrying a pair the
+# wrong way round (the Actor/ActorBase D1/D2 swap this tree has seen): an
+# identical pair cannot be swapped into a wrong answer, and a pair that is not
+# identical never binds.
+#
+# WHAT IS CHECKED WHERE, the same split the D0 rule uses.
+#   * At DERIVATION (a lane, once, with extracted/): the two bodies' BYTES are
+#     compared over the ROM image with every relocated word masked out, and the
+#     only difference allowed beyond that is an ARM B/BL word whose resolved
+#     target is the same in both -- a call that did not leave the delink unit
+#     encodes a different displacement from a different address and is the same
+#     call. Lane FACES3 ran that over the 28 pairs the sync wall asks for: 27
+#     are byte-identical bodies, and the one that is not (dCapEnemy_c, whose D1
+#     is in arm9 and whose D2 is in ov002) refuses on the first clause below.
+#   * At BUILD (this tool, every time): the same claim re-proved from the
+#     checked-in config alone -- one module, equal sizes, and relocations equal
+#     as body-relative (offset, kind, target) triples, so the two bodies
+#     reference the same things at the same places. A pair that stops saying
+#     that fails the build.
+
+
+def _reloc_triples(root, mod, addr, size):
+    """A body's relocations as sorted body-relative (offset, kind, target)."""
+    out = []
+    for frm, kind, to in rom_relocs(root).get(mod, ()):
+        if addr <= frm < addr + size:
+            out.append((frm - addr, kind, to))
+    return sorted(out)
+
+
+def structor_twin_proof(root, name_a, name_b):
+    """(True, None) when two ROM structor bodies are one body emitted twice."""
+    sa, why = _span_of(root, name_a)
+    if sa is None:
+        return False, why
+    sb, why = _span_of(root, name_b)
+    if sb is None:
+        return False, why
+    a_addr, a_mod, a_size = sa
+    b_addr, b_mod, b_size = sb
+    if a_mod != b_mod:
+        return False, ("%s is in %s and %s in %s, so they are not one body "
+                       "emitted twice" % (name_a, a_mod, name_b, b_mod))
+    if a_size != b_size:
+        return False, ("%s is 0x%x bytes and %s is 0x%x, so they are not one "
+                       "body emitted twice" % (name_a, a_size, name_b, b_size))
+    ra = _reloc_triples(root, a_mod, a_addr, a_size)
+    rb = _reloc_triples(root, b_mod, b_addr, b_size)
+    if ra != rb:
+        return False, ("%s and %s relocate differently (%s against %s), so "
+                       "they are not one body emitted twice"
+                       % (name_a, name_b,
+                          ["+0x%x %s 0x%08x" % t for t in ra],
+                          ["+0x%x %s 0x%08x" % t for t in rb]))
+    return True, None
+
+
+def structor_twin_slot(root, rec, slot):
+    """(True, None) when a rule-2 slot is a provable C1/C2 or D1/D2 pair.
+
+    `slot` is rom_join_addresses' {address: [ROM names]} for one key. The pair
+    has to be exactly the two structor spellings of ONE class -- the same name
+    components, the same structor letter, the digits 1 and 2 -- before the ROM
+    proof is asked at all, so an overload or a third address never reaches it.
+    """
+    if rec["meth"] not in ("ctor", "~"):
+        return False, "the joined name is not a constructor or a destructor"
+    if len(slot) != 2:
+        return False, ("%d ROM addresses join it, and only a pair of structor "
+                       "siblings can be one body emitted twice" % len(slot))
+    names = sorted(n for a in slot for n in slot[a])
+    if len(names) != 2:
+        return False, ("the two addresses carry %d ROM names (%s)"
+                       % (len(names), ", ".join(names)))
+    letter = "C" if rec["meth"] == "ctor" else "D"
+    stem = "_ZN" + "".join("%d%s" % (len(c), c) for c in rec["cls"])
+    want = ["%s%s1Ev" % (stem, letter), "%s%s2Ev" % (stem, letter)]
+    if names != want:
+        return False, ("the pair is %s, not the %s1/%s2 siblings of one class"
+                       % (", ".join(names), letter, letter))
+    return structor_twin_proof(root, names[0], names[1])
+
+
 def member_ptr_typed(sym):
     """True when an MSVC mangle names a pointer-to-member TYPE anywhere in
     its type text -- P8/Q8 direct, or under any wrapping such as PAP8 (an
@@ -1209,15 +1305,19 @@ def derive_rows(flat_names, defined, root, und=None):
         key = (tuple(rec["cls"]), rec["meth"])
         slot = joins.get(key, {})
         if len(slot) > 1:
-            parts = []
-            for a in sorted(slot):
-                parts.append("0x%08x %s" % (a, "/".join(sorted(slot[a]))))
-            refusals.append((raw, "rule 2: %d ROM addresses join %s::%s, so "
-                             "one decorated definition cannot be all of them "
-                             "-- the plausible-sibling trap (%s)"
-                             % (len(slot), cpp_qualified(rec),
-                                rec["meth"], "; ".join(parts))))
-            continue
+            twin, twhy = structor_twin_slot(root, rec, slot)
+            if not twin:
+                parts = []
+                for a in sorted(slot):
+                    parts.append("0x%08x %s" % (a, "/".join(sorted(slot[a]))))
+                refusals.append((raw, "rule 2: %d ROM addresses join %s::%s, "
+                                 "so one decorated definition cannot be all "
+                                 "of them -- the plausible-sibling trap (%s); "
+                                 "and the structor twin rule does not save it: "
+                                 "%s"
+                                 % (len(slot), cpp_qualified(rec),
+                                    rec["meth"], "; ".join(parts), twhy)))
+                continue
         cands = midx.get(key, [])
         if not cands:
             refusals.append((raw, "no MSVC definition of %s::%s in this link"

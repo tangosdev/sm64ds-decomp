@@ -66,8 +66,15 @@
 #   * a D0 whose class has no destructor body in this link at all. 130 of the
 #     356 are that; they need their D1 seated first and are listed in
 #     runs/link100/out/FACES2/d0_needs_d1.txt.
-#   * any class whose D1 and D2 (or C1 and C2) are two ROM addresses: one
-#     decorated definition cannot be both.
+#   * any class whose D1 and D2 (or C1 and C2) are two ROM addresses AND whose
+#     two bodies are not the same body. Lane FACES3 added the STRUCTOR TWIN
+#     RULE for the rest: the Itanium ABI emits D1 (complete) and D2 (base) as
+#     two symbols and MSVC emits one destructor, so when the ROM proves the two
+#     bodies identical the pair binds to that one definition, and when it does
+#     not the row still refuses. The proof is in facegen.py's STRUCTOR TWIN
+#     RULE block; the pairs it accepted and the one it refused (dCapEnemy_c,
+#     whose D1 is in arm9 and whose D2 is in ov002) are in
+#     runs/link100/out/FACES3/twin_proof.txt.
 #   * float and double signatures, by-value structs, member pointers,
 #     templates: refused by the emitter, listed with the reason in
 #     runs/link100/out/FACES1/refused.txt.
@@ -2689,3 +2696,43 @@ __ZN15dScMgRoulette_c13OnYoshiTryEatEi                                   ?OnYosh
 __ZN15dScMgRoulette_c16CleanupResourcesEv                                ?CleanupResources@dScMgRoulette_c@@UAEHXZ                        0x0210980c R
 __ZN15dScMgRoulette_c6RenderEv                                           ?Render@dScMgRoulette_c@@UAEHXZ                                  0x02109834 R
 __ZN15dScMgRoulette_c8BehaviorEv                                         ?Behavior@dScMgRoulette_c@@UAEHXZ                                0x02109aac R
+
+# ---- BATCH 2: the STRUCTOR TWIN rows --------------------------------------
+# A D1/D2 or C1/C2 pair is not an overload. The Itanium ABI emits one body
+# twice and MSVC emits it once, so the pair binds to that one definition when
+# the ROM proves the two bodies are the same body: one module, equal sizes,
+# equal body-relative relocations, and identical bytes once the relocated words
+# are masked out. Twenty-seven of the twenty-eight pairs the wall asks for are
+# byte-identical; dCapEnemy_c is not (its D1 is in arm9 and its D2 in ov002)
+# and ModelAnim has two MSVC destructors, so those three rows stay refused.
+__ZN9AnimationD1Ev                                                       ??1Animation@@UAE@XZ                                             0x02015ce8 R
+__ZN5FaderD1Ev                                                           ??1Fader@@UAE@XZ                                                 0x0201786c R
+__ZN15FaderBrightnessD1Ev                                                ??1FaderBrightness@@UAE@XZ                                       0x02017814 R
+__ZN10FaderColorD1Ev                                                     ??1FaderColor@@UAE@XZ                                            0x020175c4 R
+__ZN4HeapD1Ev                                                            ??1Heap@@UAE@XZ                                                  0x0203ca44 R
+__ZN5ModelC1Ev                                                           ??0Model@@QAE@XZ                                                 0x02016d58 R
+__ZN5ModelC2Ev                                                           ??0Model@@QAE@XZ                                                 0x02016da8 R
+__ZN9ModelAnimC1Ev                                                       ??0ModelAnim@@QAE@XZ                                             0x02016958 R
+__ZN9ModelAnimC2Ev                                                       ??0ModelAnim@@QAE@XZ                                             0x02016998 R
+__ZN8dActor_cC1Ev                                                        ??0dActor_c@@QAE@XZ                                              0x020113c0 R
+__ZN8dActor_cC2Ev                                                        ??0dActor_c@@QAE@XZ                                              0x0201150c R
+__ZN8dActor_cD1Ev                                                        ??1dActor_c@@UAE@XZ                                              0x02011374 R
+__ZN8dActor_cD2Ev                                                        ??1dActor_c@@UAE@XZ                                              0x020112c8 R
+__ZN5dBgChD1Ev                                                           ??1dBgCh@@UAE@XZ                                                 0x02035504 R
+__ZN5dBgPcC1Ev                                                           ??0dBgPc@@QAE@XZ                                                 0x02037eec R
+__ZN5dBgPcD1Ev                                                           ??1dBgPc@@QAE@XZ                                                 0x02037ee8 R
+__ZN5dBgPiC1Ev                                                           ??0dBgPi@@QAE@XZ                                                 0x0203816c R
+__ZN5dBgPiD1Ev                                                           ??1dBgPi@@UAE@XZ                                                 0x02038144 R
+__ZN4dBgWD1Ev                                                            ??1dBgW@@UAE@XZ                                                  0x0203968c R
+__ZN7dBgW_KcC1Ev                                                         ??0dBgW_Kc@@QAE@XZ                                               0x02039894 R
+__ZN7dBgW_KcD1Ev                                                         ??1dBgW_Kc@@UAE@XZ                                               0x02039864 R
+__ZN10dBgW_KcMbgC1Ev                                                     ??0dBgW_KcMbg@@QAE@XZ                                            0x0203a494 R
+__ZN10dBgW_KcMbgD1Ev                                                     ??1dBgW_KcMbg@@UAE@XZ                                            0x0203a470 R
+__ZN7dCcAc_cC1Ev                                                         ??0dCcAc_c@@QAE@XZ                                               0x020149c8 R
+__ZN7dCcAc_cD1Ev                                                         ??1dCcAc_c@@UAE@XZ                                               0x020149a4 R
+__ZN5dCc_cD1Ev                                                           ??1dCc_c@@UAE@XZ                                                 0x020150a8 R
+__ZN12dEnemyBase_cD1Ev                                                   ??1dEnemyBase_c@@UAE@XZ                                          0x020aed74 R
+__ZN8dM3dGSphD1Ev                                                        ??1dM3dGSph@@UAE@XZ                                              0x0203ac50 R
+__ZN11dScMgBase_cD1Ev                                                    ??1dScMgBase_c@@UAE@XZ                                           0x020b2a84 R
+__ZN11dScMgBase_cD2Ev                                                    ??1dScMgBase_c@@UAE@XZ                                           0x020b29c0 R
+__ZN7fBase_cD1Ev                                                         ??1fBase_c@@UAE@XZ                                               0x02043dbc R
