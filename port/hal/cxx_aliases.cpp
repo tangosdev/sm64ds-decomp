@@ -2089,8 +2089,8 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
    (_ZN16MeshColliderBase..) but the .cpp defines as real C++ methods (MSVC
    ?..@@SAX..). Alias the C name onto the method the caller means -- the same
    shape as the STAR_DOOR method aliases above. */
-#pragma comment(linker, "/alternatename:__ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_=?UpdatePosAndAngs@dBgW@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
-#pragma comment(linker, "/alternatename:__ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_=?UpdatePosWithVelocity@dBgW@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:__ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_=?UpdatePosAndAngs@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:__ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_=?UpdatePosWithVelocity@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
 /* gate 63: _ZN17daObjBk_Ukisima_c16CleanupResourcesEv (RotatingPlatformWf's CleanupResources) calls
    func_ov002_020b66a8 by a name the decompiler emitted without the ov002_
    prefix; the real symbol is the ov002 one, in the slice above. */
@@ -2099,17 +2099,17 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
    MeshColliderBase::UpdatePosAndAngs as an `extern int` -- a DATA mangling
    (?..@@3HA) of the same function the MovingBar path spells as a call. Land it
    on the same MSVC method. */
-#pragma comment(linker, "/alternatename:?_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3HA=?UpdatePosAndAngs@dBgW@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3HA=?UpdatePosAndAngs@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
 /* gate 72: func_ov091_02133254 (the THWOMP's InitResources helper) spells the
    same static as an `extern void *` -- the ?..@@3PAXA data mangling of the
    function whose address it stores through func_020393d4. Land it on the same
    MSVC method as the int form above. */
-#pragma comment(linker, "/alternatename:?_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3PAXA=?UpdatePosAndAngs@dBgW@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3PAXA=?UpdatePosAndAngs@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
 /* gate 74: SlidingPlatformWf::InitResources threads its collider through
    MeshColliderBase::UpdatePosWithTransform, the third of the three update
    statics; the src spells the C name and the .cpp defines the MSVC method
    (slice_gate59), the same shape as UpdatePosAndAngs above. */
-#pragma comment(linker, "/alternatename:__ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_=?UpdatePosWithTransform@dBgW@@SAXAAU1@PAUActor@@AAUClsnResult@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:__ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_=?UpdatePosWithTransform@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
 /* gate 74: SlidingPlatformWf::InitResources declares five of its ov091
    construction-data tables with C++ types (SFP*, char*, u16*), so MSVC mangles
    the references to names the ov091 per-symbol mount does not carry. Each lands
@@ -3372,3 +3372,271 @@ DSSTATE_END
  * sides, which is the admissibility rule met on every clause. The host bridge
  * that used to supply the return is retired in hal/gx_upload_bridge.cpp. */
 #pragma comment(linker, "/alternatename:__ZN5Model27LoadCompressedTextureToVramEPcjS0_=?LoadCompressedTextureToVram@Model@@SAIPADI0@Z")
+
+
+/* ======================================================================
+ * Wave 9b, lane HALROWS. Three kinds of row, all of them one rule: a NAME
+ * the link needs, bridged onto a DEFINITION the link already has at the
+ * SAME ROM ADDRESS. Nothing below adds storage, changes a width, changes
+ * who fills a table, or changes what any object dispatches.
+ *
+ * THE ADMISSIBILITY RULE, met clause by clause on every row: the right
+ * hand side is already DEFINED in this link (checked against the 48406
+ * defined externals of walk_window's own 8663 link objects, read out of
+ * their COFF symbol tables, never guessed from a name), and it describes
+ * the same thing as the left hand side -- for a function the same calling
+ * convention, receiver passing and argument slots; for data the same
+ * object at the same address. Every left hand side is lifted verbatim from
+ * walk_window's own unresolved block and none of them is defined anywhere
+ * in this link, so no row can defeat itself the way alternatename_guard
+ * refuses.
+ * ====================================================================== */
+
+/* ---- 1. THE NINETEEN _ZTV ROWS OF THE SYNC WALL ----------------------
+ *
+ * The brief's first answer was to seat each of these as a fresh ROM-shaped
+ * word array in hal/actor_vtables.cpp, and NONE of the nineteen qualifies
+ * for that. Re-derived against this link's own defined-external set, every
+ * one still has words nothing in the build defines: the dActor_c and
+ * fBase_c lifecycle virtuals, and each class's own D1/D0, which are the
+ * 192 inline-in-header rows lanes DTORS-A and DTORS-B hold. A table seated
+ * with an undefined word is one new unresolved external per word, so
+ * seating them would raise the wall rather than lower it.
+ * out/HALROWS/ztv_rows.txt has every word of every table with the
+ * undefined ones named.
+ *
+ * The answer the ROM supports is that NONE of these tables is missing from
+ * the port. Every one is a table the port ALREADY hosts under a DIFFERENT
+ * NAME, because the main to port sync renamed the class: config records two
+ * _ZTV names at one ROM address and the port's host array was written under
+ * the older one. So each row is a name bridge onto storage that is already
+ * there. This is the shape the tree already uses for exactly this case:
+ * __ZTV14TTC_MovingBeam onto __ZTV16daObjCtMecha09_c above, and the nine
+ * standing rows in hal/actor_classes_*.cpp that this block cites.
+ *
+ * DERIVED BY ADDRESS, NEVER BY NAME (the clinkage-flip ruling: a class
+ * shift leaves the old name alive on a different body). Per row: the left
+ * hand side's address out of config symbols.txt; the table's span as the run
+ * of words whose relocation IN THAT MODULE'S OWN relocs.txt lands on a
+ * function symbol, keeping the ROM's own null slots (daOts_c words 0 and 6
+ * are a literal zero in extracted/overlays/overlay_0064.bin); and a right
+ * hand side that is a real DEFINITION, never another alias, because
+ * /alternatename does not chain.
+ *
+ * WHAT REFERENCES THEM: the ROM's own factory for each class, spelled
+ * `p[0] = (int)_ZTV10SlidingBox;` in src/d_a_slide_box.c and the like. So
+ * the count these close is the ROM's own reference graph reaching the
+ * port's table. Those factories spell the table with NO addend, which is
+ * the port's vptr address point (table + 0, the VPTR ruling);
+ * vptr_addend_guard checks that on every build.
+ */
+
+/* ov002 0x0210c2c8, 18 words. hal/sub_actors.cpp defines the storage as
+   _ZTV8dMeter_c and says so itself ("vtspan: _ZTV3HUD"): dMeter_c is the
+   name the matched constructor writes and _ZTV3HUD the config name.
+   src/d_meter.cpp stores it as the HUD's vptr. */
+#pragma comment(linker, "/alternatename:__ZTV3HUD=__ZTV8dMeter_c")
+
+/* ov002 0x0210c1c0, 18 words. Same file, same statement ("vtspan:
+   _ZTV7Minimap"); src/d_map.cpp stores it as the Minimap's vptr. */
+#pragma comment(linker, "/alternatename:__ZTV7Minimap=__ZTV6dMap_c")
+
+/* ov002 0x0210b0ec, 31 words. The address's other ROM name is
+   _ZTV13daObjNumber_c, which hal/actor_classes_vspopup.cpp:307 already
+   aliases onto the host array _ZTV15InvisibleSecret[31]. */
+#pragma comment(linker, "/alternatename:__ZTV6Number=__ZTV15InvisibleSecret")
+
+/* ov002 0x02109c74, 31 words. Other ROM name _ZTV12daObjHeart_c, aliased
+   onto _ZTV7Seaweed[31] at hal/actor_classes_bob_world.cpp:1166. */
+#pragma comment(linker, "/alternatename:__ZTV12HealingHeart=__ZTV7Seaweed")
+
+/* ov002 0x02109800. THE ONE INVERTED ROW. _ZTV9PushBlock is not a config
+   symbol any more: the sync renamed that table to _ZTV11PowerFlower (and
+   _ZTV18daObjPowerUpItem_c), port/ov002_syms.txt mounts it under the new
+   name, and hal/actor_classes_ov002g200.cpp's standing row
+   (__ZTV18daObjPowerUpItem_c onto __ZTV9PushBlock) therefore points at the
+   undefined side now. This is that alias turned the way the current config
+   spells it. The old row is left exactly as it is: its own left hand side
+   is unreferenced in this link, so it is inert either way. The address is
+   the port's own record in three places (ov002_syms.txt:534,
+   actor_classes_bob_world.cpp:2050, slice_gate204.txt:28). */
+#pragma comment(linker, "/alternatename:__ZTV9PushBlock=__ZTV11PowerFlower")
+
+/* ov010 0x02112ba8, 31 words. Three names for one table, read off the ROM
+   by lane ALIASCHK (hal/actor_classes.cpp:2366): config's _ZTV4Trap, which
+   is the host array, LIGHT_BEAM's _ZTV15daObjC1Hikari_c and TRAP's
+   _ZTV14daObjC1_Trap_c. Config puts _ZTV9LightBeam and
+   _ZTV15daObjC1Hikari_c at that same address. */
+#pragma comment(linker, "/alternatename:__ZTV9LightBeam=__ZTV4Trap")
+
+/* ov012 0x02112408, 32 words. Other ROM name _ZTV14daObjC0Water_c, aliased
+   onto _ZTV12SwitchPillar[32] at hal/actor_classes_ov012.cpp:107. */
+#pragma comment(linker, "/alternatename:__ZTV13BasementWater=__ZTV12SwitchPillar")
+
+/* ov015 0x02114420. Other ROM name _ZTV17daObjBk_Botaosi_c, aliased onto
+   _ZTV13PoleBillboard[32] at hal/actor_classes_wf.cpp:483. */
+#pragma comment(linker, "/alternatename:__ZTV14KnockDownPlank=__ZTV13PoleBillboard")
+
+/* ov015 0x02114650, 32 words. Other ROM name _ZTV14daObjBk_Lift_c, aliased
+   onto _ZTV14MovingBarSmall[32] at hal/actor_classes_wf.cpp:294. */
+#pragma comment(linker, "/alternatename:__ZTV9TowerStep=__ZTV14MovingBarSmall")
+
+/* ov016 0x02114c8c, 32 words. Other ROM name _ZTV13daSlide_Box_c, aliased
+   onto _ZTV23FloatOnWaterPlatformJrb[37] at hal/actor_classes_jrb.cpp:223. */
+#pragma comment(linker, "/alternatename:__ZTV10SlidingBox=__ZTV23FloatOnWaterPlatformJrb")
+
+/* ov026 0x02113d54. Other ROM name _ZTV18daWater_Tatumaki_c, which is the
+   host array itself (hal/actor_classes_ov026.cpp:228, "vtspan:
+   _ZTV18daWater_Tatumaki_c"), so this row needs no second hop. */
+#pragma comment(linker, "/alternatename:__ZTV9Whirlpool=__ZTV18daWater_Tatumaki_c")
+
+/* ov035 0x02112bcc, 32 words. Other ROM name _ZTV16daObjCtMecha11_c,
+   aliased onto _ZTV17RotatingClockHand[32] at
+   hal/actor_classes_ov035.cpp:149, whose own comment carries the address. */
+#pragma comment(linker, "/alternatename:__ZTV16SpinningPlatform=__ZTV17RotatingClockHand")
+
+/* ov036 0x02113cf8, 32 words. Other ROM name _ZTV16daObjRc_Tikuwa_c; the
+   port hosts the table as _ZTV8ShipWing[32] and records the join in two
+   places (hal/actor_classes_ov036.cpp:26 and ov036_syms.txt:135, both
+   "126 DONUT_BLOCK  16daObjRc_Tikuwa_c  _ZTV8ShipWing  0x02113cf8"). */
+#pragma comment(linker, "/alternatename:__ZTV10DonutBlock=__ZTV8ShipWing")
+
+/* ov064 0x0211b768, 37 words, two of them (0 and 6) the ROM's own null
+   slots. The table is left out of the ov064 mount on purpose, because its
+   typeinfo word relocates into the shared level window, and is hosted as
+   data_ov064_0211b768[37] in hal/actor_classes_ov027.cpp:340, which is the
+   address's other config name. */
+#pragma comment(linker, "/alternatename:__ZTV7daOts_c=_data_ov064_0211b768")
+
+/* ov064 0x0211bc68, 32 words. hal/actor_classes_ov064_gate178.cpp:172
+   defines the storage as _ZTV17daObjFl_Amilift_c[32] and names this very
+   symbol as the span it stands for ("vtspan: _ZTV12MetalNetLift"). */
+#pragma comment(linker, "/alternatename:__ZTV12MetalNetLift=__ZTV17daObjFl_Amilift_c")
+
+/* ov064 0x0211c334. Other ROM name _ZTV18daWater_Hakidasi_c, aliased onto
+   _ZTV17BowserPuzzlePiece[31] at hal/actor_classes_bowserpuzzle.cpp:181,
+   whose comment carries the address. */
+#pragma comment(linker, "/alternatename:__ZTV9JetStream=__ZTV17BowserPuzzlePiece")
+
+/* ov091 0x021353ac, 31 words. Other ROM name _ZTV10daHyuhyu_c, aliased onto
+   _ZTV5Stump[31] at hal/actor_classes_ov091.cpp:598; that array's own
+   comment carries the address. */
+#pragma comment(linker, "/alternatename:__ZTV6Fwoosh=__ZTV5Stump")
+
+/* ov075 0x0211d304. The address's other config name is the mount symbol
+   data_ov075_0211d304, which port/ov075_syms.txt publishes and
+   hal/scene_vs_menu.cpp:79 already treats as this scene's vtable. */
+#pragma comment(linker, "/alternatename:__ZTV10dScEntry_c=_data_ov075_0211d304")
+
+/* ov006 0x0213eb40. Same shape: the mount symbol data_ov006_0213eb40, which
+   port/ov006_syms.txt publishes and hal/scene_boot.cpp names as
+   dScMgSlot1_c's vtable. */
+#pragma comment(linker, "/alternatename:__ZTV12dScMgSlot1_c=_data_ov006_0213eb40")
+
+/* ---- 2. THE FOUR STATIC ROWS AND THE GLOBAL DEALLOCATOR --------------
+ *
+ * A flat reference is an extern "C" declaration, so the call is __cdecl
+ * with no receiver, and an /alternatename is a NAME bridge and never an ABI
+ * bridge. These are the only members on this wall that pass that test:
+ * three STATIC members of dBgW (include/dBgW.h:124,127,130 declare all
+ * three `static`; decorated S = static, A = __cdecl) and one NAMESPACE free
+ * function (src/_ZN5Sound8EndMusicEjj.cpp defines
+ * `namespace Sound { void EndMusic(unsigned, unsigned); }`; decorated
+ * Y = free, A = __cdecl). Each right hand side was read out of the COFF
+ * symbol table of the object built from the matched TU that OWNS THAT ROM
+ * ADDRESS, so the join is the address and not the name.
+ */
+/* THE THREE dBgW STATICS WERE ALREADY BRIDGED, ONTO A NAME THE SYNC RETIRED.
+   Gate 1 wrote three fresh rows for them and closed nothing, because MSVC
+   takes the FIRST /alternatename for a symbol and ignores every later one,
+   and this file has carried rows for all three since gate 59 pointing at
+   ?...@@SAXAAU1@PAUActor@@AAUClsnResult@@... -- the PRE-SYNC decoration,
+   which appears zero times among this link's 48406 defined externals. The
+   fix is at those rows, not here: their right hand sides are repointed in
+   place at the class names the sync gave them (Actor -> dActor_c,
+   ClsnResult -> dBgPi), which is the only edit this lane made to a line it
+   did not add. Nothing else about them changed, including their comments,
+   which are still correct about the shape.
+
+   THE SAME THREE STATICS, SPELLED AS DATA, SEVEN MORE TIMES. Several src
+   TUs declare one of these statics `extern char`, `extern int`,
+   `extern int *` or `extern void *` at C++ linkage rather than calling it,
+   so MSVC mangles the reference as a VARIABLE whose identifier is the flat
+   ROM name: ?<flat name>@@3DA, @@3HA, @@3PAHA, @@3PAXA. Two of those seven
+   already had rows (gate 63 and gate 72, repointed with the rest); the five
+   below are the ones that never did. Each takes the same function's
+   address, which is what the declaring TU stores, and each right hand side
+   is the same static this file now names in the rows above. */
+#pragma comment(linker, "/alternatename:?_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3DA=?UpdatePosAndAngs@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3DA=?UpdatePosWithTransform@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3HA=?UpdatePosWithTransform@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3PAHA=?UpdatePosWithTransform@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:?_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_@@3PAXA=?UpdatePosWithTransform@dBgW@@SAXAAU1@PAUdActor_c@@AAUdBgPi@@AAUVector3@@PAUVector3_16@@4@Z")
+#pragma comment(linker, "/alternatename:__ZN5Sound8EndMusicEjj=?EndMusic@Sound@@YAXII@Z")
+
+/* THE GLOBAL DEALLOCATOR. _ZdlPv is `operator delete(void *)` at ROM
+   0x0203cbf0, a FREE function, and src/_ZdlPv.cpp compiles to ??3@YAXPAX@Z
+   in this link: Y free, A __cdecl, one pointer argument, void return on
+   both sides. The Itanium spelling is what the ROM's own callers reference. */
+#pragma comment(linker, "/alternatename:__ZdlPv=??3@YAXPAX@Z")
+
+/* ---- 3. THREE FLAT DATA NAMES ----------------------------------------
+ *
+ * IDENTITY_MATRIX4X3 is config's name for arm9 0x02082128 and romdata.c
+ * defines the port's one copy as data_02082128. Eight DECORATED spellings
+ * of it are already bridged onto that name (hal/actor_classes_bbh.cpp:268,
+ * ov070.cpp:281 and 282, ov096.cpp:206, bob_enemy_bridges.cpp:65 and 428,
+ * and more); the FLAT spelling had no row, and a src TU that declares it
+ * extern "C" wants exactly that. Same object, same address, same eight
+ * precedents. */
+#pragma comment(linker, "/alternatename:_IDENTITY_MATRIX4X3=_data_02082128")
+
+/* data_0208e87c is the port's OLD name for arm9 0x0208e87c, which config
+   now calls _ZTV9ModelBase. hal/model_host.cpp:296 defines the storage as
+   _ZTV9ModelBase[8] and hal/model_dtor_seat.cpp:107-111 records the address
+   ("ROM from:0x0208e87c -> 0x02017120 is ModelBase's D1"). The one
+   reference left is port/unmatched/ModelFamily_Dtors_HostCopy.c inside
+   _ZN11CommonModelD0Ev, which still spells the pre-sync name. */
+#pragma comment(linker, "/alternatename:_data_0208e87c=__ZTV9ModelBase")
+
+/* port_trap36_states is the port's own five-entry pointer-to-member table
+   (hal/actor_classes_ov010.cpp:185), defined at C++ LINKAGE, while the TU
+   that reads it is a C file reached through the CMake rename
+   data_ov010_02112d28=port_trap36_states (CMakeLists.txt:16642) and so
+   spells the plain C name. One object, two spellings. The tidier fix is to
+   give the definition extern "C" linkage, which is the standing ruling for
+   this shape; that file is not this lane's, so the row goes here and the
+   preferred fix is written up in the lane report. */
+#pragma comment(linker, "/alternatename:_port_trap36_states=?port_trap36_states@@3PAP8C@@AEXXZA")
+
+/* ---- 4. THREE PRE-SYNC SPELLINGS OF THREE LIVE NAMES ------------------
+ *
+ * Lane FACES3 filed these under "rule 1: no ROM address for this name in
+ * config symbols.txt, so it is not a ROM function and no face can be
+ * derived". That reading is right about the name and wrong about the
+ * function: the name is a PRE-SYNC spelling, from before main renamed the
+ * class `Actor` to `dActor_c`, and the function is very much in this link.
+ *
+ * All three are referenced by ONE translation unit,
+ * src/_ZN3MrI13InitResourcesEv.cpp, whose ROM body is ov071 0x02121734
+ * size 0x298. The join below is that body's OWN arm_call relocations out of
+ * config/arm9/overlays/ov071/relocs.txt, so nothing here is a name match:
+ *
+ *   ROM call -> 0x020148c8   _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj
+ *   ROM call -> 0x0200ff94   _ZN8dActor_c9TrackStarEjj
+ *   ROM call -> 0x0203748c   _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c
+ *
+ * and each of those three current spellings is DEFINED in this link under
+ * its flat C name. The old spellings are absent from config entirely, under
+ * every address, so this is not the hazard the clinkage-flip ruling warns
+ * about (an old name left alive on a DIFFERENT body): there is no other
+ * body for them to be alive on.
+ *
+ * Both sides of every row are flat ROM names, so both are extern "C",
+ * __cdecl, with the receiver (where there is one) as the first stack
+ * argument and the same argument slots after it. The rename changes the
+ * class name inside the mangled string and nothing about the call.
+ */
+#pragma comment(linker, "/alternatename:__ZN10dCcAcPos_c4InitEP5ActorRK7Vector35Fix12IiES6_jj=__ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj")
+#pragma comment(linker, "/alternatename:__ZN5Actor9TrackStarEjj=__ZN8dActor_c9TrackStarEjj")
+#pragma comment(linker, "/alternatename:__ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P5Actor=__ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c")
