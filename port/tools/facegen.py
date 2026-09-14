@@ -833,19 +833,37 @@ def parse_param(text):
     if "<" in t or "(" in t:
         return None
     is_const = False
-    m = re.match(r"^(?:struct|class) (\w+) (const )?([*&])$", t)
+    # A QUALIFIED class name (Particle::System, dPa_c::level_c::callback_c) is
+    # a class like any other at the ABI: the face takes a pointer either way.
+    # What it needs beyond a plain name is a nested DECLARATION rather than a
+    # bare `struct X;`, which emit_sync does from the same spelling.
+    # A CLASS-SPELLED TYPE IS NOT A STRUCT-SPELLED ONE. MSVC mangles a class
+    # as V and a struct as U, and every shadow this tool writes is a struct,
+    # so a `class X *` parameter comes out as PAUX@@ against the definition's
+    # PAVX@@ -- a face that names a symbol nothing defines. Nothing but
+    # --verify's surface check ever caught it, and only after a compile. It is
+    # a refusal here instead, with its reason, until a lane rules on giving
+    # shadows a keyword and on what to do when two rows disagree about one
+    # class. The old regexes accepted class and struct alike and dropped the
+    # word.
+    m = re.match(r"^(?:const )?(struct|class) ([\w:]+) (const )?([*&])$", t)
     if m:
-        cls, is_const = m.group(1), bool(m.group(2))
-        kind = "ptr" if m.group(3) == "*" else "ref"
-        return (kind, cls, is_const)
-    m = re.match(r"^(?:const )?(?:struct|class) (\w+) ([*&])$", t)
-    if m:
-        return ("ptr" if m.group(2) == "*" else "ref", m.group(1),
-                t.startswith("const "))
+        if m.group(1) == "class":
+            return None
+        kind = "ptr" if m.group(4) == "*" else "ref"
+        return (kind, m.group(2),
+                bool(m.group(3)) or t.startswith("const "))
     if t in SCALARS:
         return ("scalar", t, False)
     if t in ("void *", "void const *", "const void *"):
         return ("ptr", "void", "const" in t)
+    # A REFERENCE TO A SCALAR (short &, signed char &) is a pointer at the
+    # ABI, so the flat caller pushes an address and the face passes *(T *)a.
+    # It is spelled as a 'ref' whose name is the scalar, which is what tells
+    # the emitter not to forward-declare a struct called `short`.
+    m = re.match(r"^(const )?(.+) &$", t)
+    if m and m.group(2).strip() in SCALARS:
+        return ("ref", m.group(2).strip(), bool(m.group(1)))
     return None
 
 
@@ -883,6 +901,11 @@ def parse_msvc_sig(und):
         for p in params.split(","):
             parsed = parse_param(p)
             if parsed is None:
+                if re.match(r"^\s*(?:const )?class\b", p):
+                    return ("refused param %r: a class-spelled type mangles V "
+                            "where this file's struct shadows mangle U, so the "
+                            "face would name a symbol nothing defines"
+                            % p.strip())
                 return "refused param %r" % p.strip()
             if parsed[0] == "scalar" and parsed[1] in REFUSED_SCALARS:
                 return "refused param %r" % p.strip()
@@ -1746,8 +1769,12 @@ def refuse_face_cycles(rows):
 # the sync-face emitter
 
 def _fwd_from(text):
-    """The class name a 'struct X *' / 'class X &' spelling names, or None."""
-    m = re.match(r"^(?:const )?(?:struct|class) (\w+) (?:const )?[*&]$",
+    """The class name a 'struct X *' / 'class X &' spelling names, or None.
+
+    The name may be QUALIFIED (Particle::SysTracker::Contents::Entry), which
+    is what a nested return type undecorates to.
+    """
+    m = re.match(r"^(?:const )?(?:struct|class) ([\w:]+) (?:const )?[*&]$",
                  text.strip())
     return m.group(1) if m else None
 
@@ -1814,14 +1841,91 @@ def _member_decl(rec, sig, comps=None):
     return "%s: %s;" % (sig["access"], body)
 
 
-def _render_struct(name, node, indent):
-    pad = " " * indent
-    out = ["%sstruct %s {" % (pad, name)]
+def _node(tree, comps):
+    """Walk/create the shadow-tree node for a list of class components."""
+    cur, node = tree, None
+    for c in comps:
+        node = cur.setdefault(c, {"kids": {}, "decls": [], "fwds": set()})
+        node.setdefault("fwds", set())
+        cur = node["kids"]
+    return node
+
+
+def _walk(tree, prefix=()):
+    """[(path tuple, node)] over the whole shadow tree."""
+    out = []
+    for name in sorted(tree):
+        path = prefix + (name,)
+        out.append((path, tree[name]))
+        out += _walk(tree[name]["kids"], path)
+    return out
+
+
+QUAL_USE = re.compile(r"\b(\w+(?:::\w+)+)\b")
+
+
+def _render_struct(path, node):
+    """One class's definition, written OUT OF LINE.
+
+    THE SHADOWS ARE FLATTENED, not nested, and the reason is a parameter type
+    that names another tree's nested class. dPa_c::level_c::callback_c's
+    members take a Particle::System &, and Particle::SysTracker::Contents'
+    members take a dPa_c::level_c::callback_c *: each needs the OTHER tree's
+    nested name declared before its own body is read, and a class cannot be
+    reopened to add that later. Written out of line the two orders are
+    separable -- `struct Particle { struct System; ... };` declares the name,
+    `struct dPa_c::level_c::callback_c { ... };` uses it, and
+    `struct Particle::SysTracker::Contents { ... };` comes after both. The
+    mangling is identical either way; what changes is only what is declared by
+    the time a body is read.
+    """
+    out = ["struct %s {" % "::".join(path)]
+    # nested declarations first, so a member of this same shadow may use one
+    for f in sorted(node.get("fwds", ())):
+        out.append("    struct %s;" % f)
     for kid in sorted(node["kids"]):
-        out += _render_struct(kid, node["kids"][kid], indent + 4)
+        out.append("    struct %s;" % kid)
     for d in node["decls"]:
-        out.append("%s    %s" % (pad, d))
-    out.append("%s};" % pad)
+        out.append("    %s" % d)
+    out.append("};")
+    return out
+
+
+def _render_tree(tree):
+    """Every shadow class, out of line, in an order that always compiles.
+
+    The order obeys two edges. A class is declared by its ENCLOSING class, so
+    a parent is written before its children. And a class whose member
+    declarations name a qualified type needs that type's enclosing class
+    written first, which is the edge that makes the flattening worth anything.
+    Ties break alphabetically so the generated file is stable.
+    """
+    nodes = dict(_walk(tree))
+    deps = {p: set() for p in nodes}
+    for path, node in nodes.items():
+        if len(path) > 1:
+            deps[path].add(path[:-1])
+        for d in node["decls"]:
+            for use in QUAL_USE.findall(d):
+                owner = tuple(use.split("::"))[:-1]
+                if owner in nodes and owner != path:
+                    deps[path].add(owner)
+    out, done = [], set()
+    ready = sorted(nodes)
+    while len(done) < len(nodes):
+        progressed = False
+        for path in ready:
+            if path in done or deps[path] - done:
+                continue
+            out += _render_struct(path, nodes[path]) + [""]
+            done.add(path)
+            progressed = True
+        if not progressed:
+            stuck = sorted("::".join(p) for p in nodes if p not in done)
+            sys.exit("facegen: the shadow classes %s depend on each other's "
+                     "nested names in a cycle, so no order of definitions "
+                     "declares every name before it is used. Refuse the rows "
+                     "that cross, do not reorder by hand." % ", ".join(stuck))
     return out
 
 
@@ -1857,17 +1961,24 @@ def emit_sync(rows, out, header_note=""):
         if sig is None:
             continue
         for kind, name, _c in sig["params"]:
-            if kind != "scalar" and name != "void":
+            # a 'ref' to a SCALAR carries the scalar's own spelling, and
+            # `struct short;` is not a declaration of anything
+            if kind != "scalar" and name != "void" and name not in SCALARS:
                 fwd.add(name)
         n = _fwd_from(sig["ret"])
         if n:
             fwd.add(n)
+    # A QUALIFIED name cannot be forward-declared from the outside, so it is
+    # handed to the shadow tree instead and its enclosing class declares it.
+    nested_fwd = sorted(n for n in fwd if "::" in n)
+    fwd = set(n for n in fwd if "::" not in n)
     # EVERY class name gets a forward declaration first, shadows included.
     # The shadow definitions are emitted in name order and one of them can
     # name another as a parameter type (ExpandingHeap's constructor takes an
     # ExpandingHeapAllocator *), so without this the later one is an unknown
     # identifier at the point of use.
-    for name in sorted(fwd | shadow_names):
+    for name in sorted(fwd | shadow_names | set(n.split("::")[0]
+                                                for n in nested_fwd)):
         lines.append("struct %s;" % name)
     lines.append("")
     if any(r["rec"]["meth"] == "ctor" for r in rows):
@@ -1888,15 +1999,16 @@ def emit_sync(rows, out, header_note=""):
     # the shadow classes
     tree = {}
     prototypes = []
+    for name in nested_fwd:
+        comps = name.split("::")
+        parent = _node(tree, comps[:-1])
+        if comps[-1] not in parent["kids"]:
+            parent["fwds"].add(comps[-1])
     for r in rows:
         if r.get("d0") and r.get("flat_callee"):
             continue
         rec = r["rec"]
-        node = None
-        cur = tree
-        for c in _shadow_comps(r):
-            node = cur.setdefault(c, {"kids": {}, "decls": []})
-            cur = node["kids"]
+        node = _node(tree, _shadow_comps(r))
         d = _member_decl(rec, r["sig"], _shadow_comps(r))
         if d not in node["decls"]:
             node["decls"].append(d)
@@ -1922,9 +2034,7 @@ def emit_sync(rows, out, header_note=""):
             "// protected member is called without changing the access -- and",
             "// the access is half of the decorated name.",
         ] + sorted(set(prototypes)) + [""]
-    for name in sorted(tree):
-        lines += _render_struct(name, tree[name], 0)
-        lines.append("")
+    lines += _render_tree(tree)
 
     # the flat bodies a FORWARD face calls, declared extern "C"
     fwd_rows = [r for r in rows if r.get("forward")]
