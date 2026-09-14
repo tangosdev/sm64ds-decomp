@@ -16,9 +16,16 @@ rule were dropped:
      ALIAS2 are public virtual. The generator that shipped declared every
      shadow member non-virtual, which is why none of them could be used.
   3. A SIBLING THAT MUST BE REFUSED. Two ROM addresses joining one decorated
-     definition -- the D1/D2 destructor pair is the mechanical form, and
-     ApproachLinear/ApproachLinear2 is the one that shipped (signs spinning
-     forever, 156 src TUs). Both rows refuse; neither is chosen.
+     definition: ApproachLinear/ApproachLinear2 is the one that shipped (signs
+     spinning forever, 156 src TUs). Both rows refuse; neither is chosen.
+     3b/3c/14/15 are the STRUCTOR TWIN RULE lane FACES3 added on top of it. A
+     D1/D2 or C1/C2 pair is not an overload: the Itanium ABI emits one body
+     twice and MSVC emits it once, so the pair binds to that one definition
+     when -- and only when -- the ROM proves the two bodies are the same body.
+     The arms are a proved pair that binds, a pair whose sizes disagree, a pair
+     whose relocations disagree (equal sizes would slip past a size-only
+     check), and a pair split across two modules, which is the one pair of the
+     twenty-eight on the sync wall that refuses.
   4. AN ARG-COUNT MISMATCH. ModelBase::ApplyOpacity takes 2 on the caller's
      side and 1 in the ROM body; that was a RULING, not plumbing, and the tool
      must refuse rather than drop an argument.
@@ -61,14 +68,22 @@ def check(cond, what):
         FAILED.append(what)
 
 
-def fake_root(td, symbols):
-    """A repo root carrying just config/arm9/symbols.txt."""
+def fake_root(td, symbols, relocs=()):
+    """A repo root carrying just config/arm9/symbols.txt.
+
+    A symbol row is (name, address) at the default size, or (name, address,
+    size) where the size matters -- the structor twin rule compares the two
+    bodies' sizes, so a fixture that wants a pair REFUSED spells them apart.
+    """
     root = pathlib.Path(td) / "root"
     cfg = root / "config" / "arm9"
     cfg.mkdir(parents=True, exist_ok=True)
-    rows = ["%s kind:function(arm,size=0x40) addr:0x%08x" % (n, a)
-            for n, a in symbols]
+    rows = ["%s kind:function(arm,size=0x%x) addr:0x%08x"
+            % (s[0], s[2] if len(s) > 2 else 0x40, s[1]) for s in symbols]
     (cfg / "symbols.txt").write_text("\n".join(rows) + "\n")
+    (cfg / "relocs.txt").write_text(
+        "\n".join("from:0x%08x kind:%s to:0x%08x module:main" % r
+                  for r in relocs) + "\n")
     facegen._ROM_INDEX_CACHE.clear()
     facegen._JOIN_CACHE.clear()
     facegen._SPAN_CACHE.clear()
@@ -140,9 +155,18 @@ SYMBOLS = [
     ("_ZN13BigBrickBlock4KillEv", 0x020B38A0),
     # 2. a U target: public virtual
     ("_ZN11BillBlaster8BehaviorEv", 0x02126F8C),
-    # 3. the sibling pair: D1 and D2 of one class at two addresses
-    ("_ZN10FaderColorD1Ev", 0x02017574),
-    ("_ZN10FaderColorD2Ev", 0x020175C4),
+    # 3. the sibling pair: D1 and D2 of one class at two addresses. Equal
+    #    sizes and equal relocations, so the structor twin rule PROVES them
+    #    one body emitted twice and both bind to the one ??1.
+    ("_ZN10FaderColorD1Ev", 0x02017574, 0x50),
+    ("_ZN10FaderColorD2Ev", 0x020175C4, 0x50),
+    # 3b. the same shape with the sizes APART: not one body, still refused.
+    ("_ZN8MismatchD1Ev", 0x02017700, 0x50),
+    ("_ZN8MismatchD2Ev", 0x02017760, 0x40),
+    # 3c. an ORDINARY overload at two addresses: never a twin, always refused.
+    #     This is the ApproachLinear/ApproachLinear2 shape that shipped.
+    ("_ZN8Overload6UpdateEv", 0x02017800),
+    ("_ZN8Overload6UpdateEi", 0x02017840),
     # a class with a D1 and NO D2 must still generate
     ("_ZN10BowserFireD1Ev", 0x02116484),
     # 4. the arity ruling
@@ -167,7 +191,7 @@ def run():
 
     with tempfile.TemporaryDirectory() as td:
         root = fake_root(td, SYMBOLS)
-        flats = ["_" + n for n, _a in SYMBOLS]
+        flats = ["_" + s[0] for s in SYMBOLS]
         rows, refusals = facegen.derive_rows(flats, set(universe), root)
         by_flat = {r["flat"]: r for r in rows}
         why = dict(refusals)
@@ -194,15 +218,38 @@ def run():
             check("virtual int Behavior()" in decl,
                   "declaration carries virtual: %s" % decl)
 
-        print("case 3: a sibling by address is REFUSED, never chosen")
-        for flat in ("__ZN10FaderColorD1Ev", "__ZN10FaderColorD2Ev"):
+        print("case 3: a sibling by address is REFUSED unless the ROM proves "
+              "the pair is one body emitted twice")
+        for flat in ("__ZN8Overload6UpdateEv", "__ZN8Overload6UpdateEi"):
             check(flat not in by_flat, "%s not generated" % flat)
             check("rule 2" in why.get(flat, "") and
                   "plausible-sibling" in why.get(flat, ""),
                   "%s refused with the sibling reason" % flat)
-        check("0x02017574" in why.get("__ZN10FaderColorD1Ev", "") and
-              "0x020175c4" in why.get("__ZN10FaderColorD1Ev", ""),
+        check("0x02017800" in why.get("__ZN8Overload6UpdateEv", "") and
+              "0x02017840" in why.get("__ZN8Overload6UpdateEv", ""),
               "the refusal names both ROM addresses")
+        check("not a constructor or a destructor"
+              in why.get("__ZN8Overload6UpdateEv", ""),
+              "and says the twin rule cannot save an overload")
+
+        print("case 3b: a D1/D2 pair the ROM proves identical DOES bind")
+        for flat in ("__ZN10FaderColorD1Ev", "__ZN10FaderColorD2Ev"):
+            r = by_flat.get(flat)
+            check(r is not None, "%s derived: %s"
+                  % (flat, why.get(flat, "")[:90]))
+            if r:
+                check(r["target"] == "??1FaderColor@@UAE@XZ",
+                      "%s bound to the one MSVC destructor" % flat)
+        check(by_flat["__ZN10FaderColorD1Ev"]["addr"] == 0x02017574
+              and by_flat["__ZN10FaderColorD2Ev"]["addr"] == 0x020175C4,
+              "each row keeps its OWN ROM address")
+
+        print("case 3c: a D1/D2 pair whose bodies differ is still REFUSED")
+        for flat in ("__ZN8MismatchD1Ev", "__ZN8MismatchD2Ev"):
+            check(flat not in by_flat, "%s not generated" % flat)
+            check("not one body emitted twice" in why.get(flat, ""),
+                  "%s refused with the twin reason: %s"
+                  % (flat, why.get(flat, "")[-70:]))
         check("__ZN10BowserFireD1Ev" in by_flat,
               "a D1 with no D2 sibling still generates")
 
@@ -389,6 +436,60 @@ def run():
         check(not rows2 and ref2 and "not the one heap pointer" in ref2[0][1],
               "a wrong heap column is refused: %s"
               % (ref2[0][1][:120] if ref2 else None))
+
+    print("case 14: a structor pair split across two MODULES is REFUSED")
+    # the dCapEnemy_c shape: D1 in arm9 and D2 in ov002. Two bodies in two
+    # modules are not one body emitted twice, whatever their sizes say, and
+    # this is the one pair of the twenty-eight on the sync wall that refuses.
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td) / "splitroot"
+        for mod, rows in (
+                ("arm9", [("_ZN5SplitD1Ev", 0x02001000, 0x40)]),
+                ("arm9/overlays/ov002",
+                 [("_ZN5SplitD2Ev", 0x020C0000, 0x40)])):
+            d = root / "config" / mod
+            d.mkdir(parents=True, exist_ok=True)
+            (d / "symbols.txt").write_text(
+                "\n".join("%s kind:function(arm,size=0x%x) addr:0x%08x"
+                          % (n, z, a) for n, a, z in rows) + "\n")
+            (d / "relocs.txt").write_text("")
+        facegen._ROM_INDEX_CACHE.clear()
+        facegen._JOIN_CACHE.clear()
+        facegen._SPAN_CACHE.clear()
+        facegen._RELOC_CACHE.clear()
+        rows, ref = facegen.derive_rows(["__ZN5SplitD1Ev"],
+                                        {"??1Split@@UAE@XZ"}, str(root))
+        why = dict(ref).get("__ZN5SplitD1Ev", "")
+        check(not rows, "refused, not generated")
+        check("arm9/overlays/ov002" in why and "not one body emitted twice"
+              in why, "the reason names the two modules: %s" % why[-110:])
+
+    print("case 15: the twin rule needs BOTH the sizes and the relocations")
+    # equal sizes but different relocations is the shape that would slip past
+    # a size-only check, and it is the one that matters: two bodies the same
+    # length that reference different things are two bodies.
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [("_ZN4TwinD1Ev", 0x02001000, 0x40),
+                              ("_ZN4TwinD2Ev", 0x02001040, 0x40),
+                              ("_ZN5ThingC1Ev", 0x02001100, 0x40),
+                              ("_ZN5ThingC2Ev", 0x02001140, 0x40),
+                              ("_ZN5Inner4KillEv", 0x02011000, 0x10),
+                              ("_ZN5Other4KillEv", 0x02012000, 0x10)],
+                         relocs=[(0x02001008, "arm_call", 0x02011000),
+                                 (0x02001048, "arm_call", 0x02012000),
+                                 (0x02001108, "arm_call", 0x02011000),
+                                 (0x02001148, "arm_call", 0x02011000)])
+        rows, ref = facegen.derive_rows(
+            ["__ZN4TwinD1Ev", "__ZN5ThingC1Ev"],
+            {"??1Twin@@UAE@XZ", "??0Thing@@QAE@XZ"}, str(root))
+        why = dict(ref)
+        check("__ZN4TwinD1Ev" not in [r["flat"] for r in rows],
+              "the pair that calls two different functions is refused")
+        check("relocate differently" in why.get("__ZN4TwinD1Ev", ""),
+              "and says so: %s" % why.get("__ZN4TwinD1Ev", "")[-90:])
+        check(any(r["flat"] == "__ZN5ThingC1Ev" for r in rows),
+              "a C1/C2 pair that relocates the same way DOES bind: %s"
+              % why.get("__ZN5ThingC1Ev", "")[:90])
 
     print("")
     if FAILED:
