@@ -2736,3 +2736,33 @@ __ZN8dM3dGSphD1Ev                                                        ??1dM3d
 __ZN11dScMgBase_cD1Ev                                                    ??1dScMgBase_c@@UAE@XZ                                           0x020b2a84 R
 __ZN11dScMgBase_cD2Ev                                                    ??1dScMgBase_c@@UAE@XZ                                           0x020b29c0 R
 __ZN7fBase_cD1Ev                                                         ??1fBase_c@@UAE@XZ                                               0x02043dbc R
+
+# ---- BATCH 3: nested type names and scalar references ---------------------
+# A parameter or return type that names a NESTED class (Particle::System,
+# dPa_c::level_c::callback_c::Entry) is an ordinary pointer at the ABI, but it
+# cannot be forward-declared from outside its enclosing class, so the shadows
+# are now written OUT OF LINE in an order that declares every name before it is
+# used. A reference to a SCALAR (short &, signed char &) is a pointer too, and
+# the face re-lands it as *(T *)a. A CLASS-spelled parameter stays refused:
+# MSVC mangles a class as V where this file's struct shadows mangle U, and the
+# one row of that shape here (Particle::SysTracker::Contents::Create) is in
+# runs/link100/out/FACES3/refused.txt.
+__ZN8Particle7Manager9AddSystemEiR7Vector3                               ?AddSystem@Manager@Particle@@QAEPAUSystem@2@HAAUVector3@@@Z      0x02049e0c R
+__ZNK8Particle10SysTracker8Contents8FindDataEj                           ?FindData@Contents@SysTracker@Particle@@QBEPAUEntry@123@I@Z      0x02021b58 R
+__ZN8dActor_c11UntrackStarERa                                            ?UntrackStar@dActor_c@@QAEXAAC@Z                                 0x0200ff60 R
+__ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h                        ?UntrackAndSpawnStar@dActor_c@@QAEPAU1@AACIABUVector3@@E@Z       0x0200ff14 R
+__ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs             ?AngleAwayFromWallOrCliff@dEnemyBase_c@@QAEHAAUdBgCh_Actr@@AAF@Z 0x020ae244 R
+__ZN5dPa_c7level_c10callback_c14SpawnParticlesERN8Particle6SystemE       ?SpawnParticles@callback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z 0x020226d0 R
+__ZN5dPa_c7level_c10callback_c8OnUpdateERN8Particle6SystemEb             ?OnUpdate@callback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x020226c8 R
+__ZN5dPa_c7level_c14clipCallback_c8OnUpdateERN8Particle6SystemEb         ?OnUpdate@clipCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x02021e70 R
+__ZN5dPa_c7level_c15scaleCallback_c14SpawnParticlesERN8Particle6SystemE  ?SpawnParticles@scaleCallback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z 0x020225d0 R
+__ZN5dPa_c7level_c15scaleCallback_c8OnUpdateERN8Particle6SystemEb        ?OnUpdate@scaleCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x020225a8 R
+__ZN5dPa_c7level_c16bubbleCallback_c8OnUpdateERN8Particle6SystemEb       ?OnUpdate@bubbleCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x02022464 R
+__ZN5dPa_c7level_c16simpleCallback_c8OnUpdateERN8Particle6SystemEb       ?OnUpdate@simpleCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x02022630 R
+__ZN5dPa_c7level_c16splashCallback_c8OnUpdateERN8Particle6SystemEb       ?OnUpdate@splashCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x020224fc R
+__ZN5dPa_c7level_c18fitWaterCallback_c8OnUpdateERN8Particle6SystemEb     ?OnUpdate@fitWaterCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x0202202c R
+__ZN5dPa_c7level_c20checkWaterCallback_c8OnUpdateERN8Particle6SystemEb   ?OnUpdate@checkWaterCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x02022160 R
+__ZN5dPa_c7level_c20checkYoganCallback_c8OnUpdateERN8Particle6SystemEb   ?OnUpdate@checkYoganCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x020222f0 R
+__ZN5dPa_c7level_c20edStarKiraCallback_c14SpawnParticlesERN8Particle6SystemE ?SpawnParticles@edStarKiraCallback_c@level_c@dPa_c@@UAEXAAUSystem@Particle@@@Z 0x0202222c R
+__ZN5dPa_c7level_c20edStarKiraCallback_c8OnUpdateERN8Particle6SystemEb   ?OnUpdate@edStarKiraCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x020221dc R
+__ZN5dPa_c7level_c24fitWaterSimpleCallback_c8OnUpdateERN8Particle6SystemEb ?OnUpdate@fitWaterSimpleCallback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z 0x02022418 R

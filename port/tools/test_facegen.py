@@ -45,6 +45,17 @@ rule were dropped:
      than "its D1 plus one deallocation", and both must refuse: a wrong heap
      pointer is heap corruption, and it would link.
 
+  9. THE SHAPES LANE FACES3 ADDED BEYOND THE TWIN RULE. A NESTED parameter or
+     return type (Particle::System, dPa_c::level_c::callback_c::Entry), which
+     cannot be forward-declared from outside its enclosing class, so the
+     shadows are written OUT OF LINE in an order that declares every name
+     before it is used. A CLASS-spelled parameter, refused: MSVC mangles a
+     class as V and a struct as U, every shadow here is a struct, and the old
+     regexes accepted both words and dropped them -- a wrong-mangling face that
+     only --verify caught, and only after a compile. And a reference to a
+     SCALAR, which is a pointer at the ABI and must not be forward-declared as
+     a struct called `short`.
+
 Run: python port/tools/test_facegen.py          (add --verify to compile too)
 """
 
@@ -490,6 +501,64 @@ def run():
         check(any(r["flat"] == "__ZN5ThingC1Ev" for r in rows),
               "a C1/C2 pair that relocates the same way DOES bind: %s"
               % why.get("__ZN5ThingC1Ev", "")[:90])
+
+    print("case 16: a NESTED parameter type is declared by its own enclosing "
+          "class, and the shadows are written out of line so it can be")
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [
+            ("_ZN5dPa_c7level_c10callback_c8OnUpdateERN8Particle6SystemEb",
+             0x020226C8),
+            ("_ZNK8Particle10SysTracker8Contents8FindDataEj", 0x02022800)])
+        rows, ref = facegen.derive_rows(
+            ["__ZN5dPa_c7level_c10callback_c8OnUpdateERN8Particle6SystemEb",
+             "__ZNK8Particle10SysTracker8Contents8FindDataEj"],
+            {"?OnUpdate@callback_c@level_c@dPa_c@@UAEHAAUSystem@Particle@@_N@Z",
+             "?FindData@Contents@SysTracker@Particle@@QBEPAUEntry@123@I@Z"},
+            str(root))
+        check(len(rows) == 2, "both derived: %s" % (dict(ref) or "yes"))
+        if len(rows) == 2:
+            text = facegen.emit_sync(rows, pathlib.Path(td) / "nest.cpp")
+            check("    struct System;" in text,
+                  "Particle declares its own nested System")
+            check("struct Particle::SysTracker::Contents {" in text,
+                  "and Contents is defined OUT OF LINE, not inside Particle")
+            check(text.index("    struct System;")
+                  < text.index("OnUpdate(Particle::System &"),
+                  "the nested name is declared before the member using it")
+            check("*(Particle::System *)a0" in text,
+                  "the reference parameter is re-landed through its own type")
+            check("Particle::SysTracker::Contents::Entry *" in text,
+                  "a nested RETURN type keeps its qualification")
+
+    print("case 17: a CLASS-spelled parameter is refused, U against V")
+    with tempfile.TemporaryDirectory() as td:
+        flat = ("__ZN8Particle10SysTracker8Contents6CreateEjR7Vector3PK11"
+                "Vector3_16fPN5dPa_c7level_c10callback_cE")
+        root = fake_root(td, [(flat[1:], 0x02022900)])
+        rows, ref = facegen.derive_rows(
+            [flat],
+            {"?Create@Contents@SysTracker@Particle@@QAEIIAAUVector3@@PBU"
+             "Vector3_16f@@PAVcallback_c@level_c@dPa_c@@@Z"}, str(root))
+        why = dict(ref).get(flat, "")
+        check(not rows, "refused, not generated")
+        check("mangles V" in why and "struct shadows mangle U" in why,
+              "the reason is the keyword, not the shape: %s" % why[:130])
+
+    print("case 18: a reference to a SCALAR is re-landed, not forward-declared")
+    with tempfile.TemporaryDirectory() as td:
+        root = fake_root(td, [("_ZN8dActor_c11UntrackStarERa", 0x0200FF60)])
+        rows, ref = facegen.derive_rows(
+            ["__ZN8dActor_c11UntrackStarERa"],
+            {"?UntrackStar@dActor_c@@QAEXAAC@Z"}, str(root))
+        check(len(rows) == 1, "derived: %s" % (dict(ref) or "yes"))
+        if rows:
+            text = facegen.emit_sync(rows, pathlib.Path(td) / "sref.cpp")
+            check("struct signed char;" not in text,
+                  "no struct is forward-declared for a scalar")
+            check("UntrackStar(signed char &)" in text,
+                  "the shadow keeps the reference in the mangle")
+            check("*(signed char *)a0" in text,
+                  "and the face dereferences the address the caller pushed")
 
     print("")
     if FAILED:
