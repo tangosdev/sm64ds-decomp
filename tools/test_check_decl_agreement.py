@@ -447,6 +447,143 @@ class MovedDefinitionTests(unittest.TestCase):
                          [("return", "src/caller.cpp", "int", "void")])
 
 
+class AdoptedSymbolMarkTests(unittest.TestCase):
+    """A delinked shard's `@symbol` line names its definition even from the top.
+
+    The mark scan only honours a mark sitting between the previous statement and
+    the declarator. A converted shard that declares a helper above its definition
+    -- which the converted ones routinely do -- pushed its mark out of window, and
+    the definition was then discarded as unnameable. 1180 of this tree's real C++
+    definitions were invisible to the gate that way, so `_reference()` fell back to
+    a plurality vote among the unconverted shards the conversion campaign exists to
+    retire.
+    """
+
+    CONVERTED = '''// @symbol _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c
+#include "types.h"
+
+extern "C" void func_020374d4(void *ray, const Vector3 *pos);
+
+void dBgCh_Gnd::SetObjAndPos(const Vector3 &vec_, void *actor_)
+{
+    func_020374d4(this, &vec_);
+}
+'''
+
+    def test_a_helper_declaration_does_not_cost_the_definition_its_name(self):
+        def tree(t):
+            t.write("src/_ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c.cpp",
+                    self.CONVERTED)
+        _findings, _d, defs, _files = build(tree)
+        self.assertIn("_ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c",
+                      {d.symbol for d in defs})
+
+    def test_the_definition_outranks_a_contradicting_plurality(self):
+        """Twenty shards spelling a pointer do not outvote the reference that the
+        ROM's own mangled name (`RK7Vector3`) spells."""
+        sym = "_ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c"
+        def tree(t):
+            t.write("src/%s.cpp" % sym, self.CONVERTED)
+            for i in range(20):
+                t.write("src/shard%d.c" % i,
+                        '#include "types.h"\n'
+                        "extern void %s(void *self, Vector3 *pos, void *actor);\n"
+                        % sym)
+        findings, _d, _f, _files = build(tree)
+        basis = {f["basis"] for f in findings if f["symbol"] == sym}
+        self.assertEqual(basis, {"definition"})
+        self.assertEqual({f["want"] for f in findings if f["symbol"] == sym},
+                         {"#2 const Vector3 &"})
+
+    def test_two_marks_in_one_file_adopt_nothing(self):
+        """Two marks say nothing about which belongs to which definition."""
+        def tree(t):
+            t.write("src/pair.cpp",
+                    '// @symbol _ZN1A1fEv\n'
+                    '// @symbol _ZN1A1gEv\n'
+                    '#include "types.h"\n'
+                    'extern "C" void helper(void);\n'
+                    'void A::f(void)\n{\n    helper();\n}\n')
+        _findings, _d, defs, _files = build(tree)
+        self.assertNotIn("_ZN1A1fEv", {d.symbol for d in defs})
+        self.assertNotIn("_ZN1A1gEv", {d.symbol for d in defs})
+
+    def test_two_unnamed_definitions_adopt_nothing(self):
+        def tree(t):
+            t.write("src/two.cpp",
+                    '// @symbol _ZN1A1fEv\n'
+                    '#include "types.h"\n'
+                    'extern "C" void helper(void);\n'
+                    'void A::f(void)\n{\n    helper();\n}\n'
+                    'void A::g(void)\n{\n    helper();\n}\n')
+        _findings, _d, defs, _files = build(tree)
+        self.assertNotIn("_ZN1A1fEv", {d.symbol for d in defs})
+
+    def test_a_mark_already_claimed_is_not_handed_out_twice(self):
+        """The in-window mark named one definition; the orphan does not take it."""
+        def tree(t):
+            t.write("src/claimed.cpp",
+                    '#include "types.h"\n'
+                    'extern "C" void helper(void);\n'
+                    '// @symbol _ZN1A1fEv\n'
+                    'void A::f(void)\n{\n    helper();\n}\n')
+        _findings, _d, defs, _files = build(tree)
+        owners = [d for d in defs if d.symbol == "_ZN1A1fEv"]
+        self.assertEqual(len(owners), 1)
+
+    def test_an_unmarked_member_definition_still_claims_nothing(self):
+        """No `@symbol` anywhere: the linker name is genuinely unrecoverable."""
+        def tree(t):
+            t.write("src/bare.cpp",
+                    '#include "types.h"\n'
+                    'void A::f(void)\n{\n}\n')
+        _findings, _d, defs, _files = build(tree)
+        self.assertEqual([d for d in defs if "::" in (d.symbol or "")], [])
+
+
+class EastConstTests(unittest.TestCase):
+    """`Vector3 const &` and `const Vector3 &` spell one type.
+
+    The gate compared the two as text, so a converted definition writing the type
+    one way contradicted a caller writing it the other. That false positive only
+    became load-bearing once the adoption pass above let definitions be seen.
+    """
+
+    def test_east_const_and_west_const_are_one_type(self):
+        def tree(t):
+            t.write("src/def.cpp",
+                    '#include "types.h"\n'
+                    'extern "C" void Take(const Vector3 &v)\n{\n    (void)v;\n}\n')
+            t.write("src/caller.cpp",
+                    '#include "types.h"\n'
+                    'extern "C" void Take(Vector3 const &v);\n')
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "Take"), [])
+
+    def test_a_pointer_level_const_is_still_its_own_type(self):
+        """`T * const *` is a pointer to a const pointer; it is not `const T **`."""
+        def tree(t):
+            t.write("src/def.cpp",
+                    '#include "types.h"\n'
+                    'extern "C" void Take(Vector3 * const *v)\n{\n    (void)v;\n}\n')
+            t.write("src/caller.cpp",
+                    '#include "types.h"\n'
+                    'extern "C" void Take(const Vector3 **v);\n')
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(len(kinds(findings, "Take")), 1)
+
+    def test_const_still_contradicts_non_const(self):
+        def tree(t):
+            t.write("src/def.cpp",
+                    '#include "types.h"\n'
+                    'extern "C" void Take(const Vector3 *v)\n{\n    (void)v;\n}\n')
+            t.write("src/caller.cpp",
+                    '#include "types.h"\n'
+                    'extern "C" void Take(Vector3 *v);\n')
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(len(kinds(findings, "Take")), 1)
+
+
 # ------------------------------------------------------------------- other controls
 
 class KindTests(unittest.TestCase):
