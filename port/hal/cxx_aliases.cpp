@@ -2127,6 +2127,17 @@ extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?data_ov015_02114a64@@3PAXA=_data_ov015_02114a64")
 #pragma comment(linker, "/alternatename:?data_ov015_02114a5c@@3PAXA=_data_ov015_02114a5c")
 #pragma comment(linker, "/alternatename:?data_ov015_02113594@@3PAXA=_data_ov015_02113594")
+/* A SECOND SPELLING OF THE SAME THREE WORDS, added at the main -> port sync
+   (lane SYNC7, wave 9). main gave the reading translation units real types, so
+   the same three mount objects are now also named
+   ?...@@3USharedFilePtr@@A and ?...@@3UCLPS_Block@@A. This is the
+   data_0209f318 case again -- one object, four spellings, one definition -- and
+   the size question the struct spelling raises is already answered here: these
+   three are port/ov015_syms.txt mount rows, so their storage is the ROM's own
+   bytes at the ROM's own spacing rather than a hand-sized host global. */
+#pragma comment(linker, "/alternatename:?data_ov015_02114a64@@3USharedFilePtr@@A=_data_ov015_02114a64")
+#pragma comment(linker, "/alternatename:?data_ov015_02114a5c@@3USharedFilePtr@@A=_data_ov015_02114a5c")
+#pragma comment(linker, "/alternatename:?data_ov015_02113594@@3UCLPS_Block@@A=_data_ov015_02113594")
 /* The two platforms' InitResources thread their MovingMeshCollider through
    MeshColliderBase's two update statics, which src spells at C linkage
    (_ZN16MeshColliderBase..) but the .cpp defines as real C++ methods (MSVC
