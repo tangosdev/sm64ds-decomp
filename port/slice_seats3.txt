@@ -1,0 +1,129 @@
+# port/slice_seats3.txt -- lane SEATS3, run link100 wave 9c, over 319f0f191.
+#
+# FOUR SEATS AND ONE BRIDGE FILE. Every row was measured the same way and none
+# was predicted: the candidate was GENERATED through tools/hostgen.py with this
+# tree's own tables, compiled STANDALONE with the build's own flags, and its
+# object's COFF symbol table read against two lists -- walk_window's 241-row
+# wall at this base, and the 49,647 defined externals of its own 8,662 link
+# inputs. A row was written only when the object CLOSES wall rows, DUPLICATES
+# nothing the retirement in port/faces_sync.txt does not remove, and REFERENCES
+# nothing this link cannot already answer.
+#
+# ALL FOUR GO THROUGH hostgen (PORT_HOSTGEN_TU at the top of
+# port/CMakeLists.txt), so the rows below are rewritten to
+# build/port/host-src/<path> as they are read and the raw text is never
+# compiled. Each needs the substitution for a stated reason, not by habit.
+
+# ---- ov081 MONEYBAG (actor 261) -------------------------------------------
+# Closes two rows outright, ??1daGmch_c@@UAE@XZ and daGmch_c_classInit, and
+# that is the smaller half of why it is here.
+#
+# THE BIGGER HALF IS THE RECURSION. port/faces_sync.txt carried three F rows
+# for this class -- InitResources, Render and Behavior -- each of which DEFINED
+# the decorated member and called the flat ROM name, while the flat ROM name is
+# defined by a hand face in port/hal/actor_classes_ov081.cpp:879 and :881 and
+# port/hal/actor_classes_bob_world.cpp:2119 which calls the decorated member.
+# The two called each other with no body at the bottom, so Moneybag recursed
+# until the stack ran out on InitResources, the first call of his spawn path.
+# Lane INT3 closed eleven members of that defect at the wave-9b fold and left
+# these three live ON PURPOSE, because the class TU was on no live slice row
+# there. This row is the other half: the seat and the three retirements are one
+# commit, because retiring alone leaves the decorated names undefined and
+# seating alone is a duplicate symbol (COMDAT selection 1, pick no duplicates).
+#
+# AND IT UNBLOCKS TWENTY-THREE FACES. The object defines twenty-three decorated
+# members whose flat Itanium twins are rows on this wall today -- the nine
+# EnterState, the nine UpdateState, OnTurnIntoEgg, OnYoshiTryEat,
+# CleanupResources, OnPendingDestroy and OnAimedAtWithEgg. They are lane
+# FACES4's to write and they are listed for it in
+# runs/link100/out/SEATS3/faces_for_faces4.txt.
+#
+# WHY THE SUBSTITUTION, both halves in one line of the factory:
+#     p[0] = (int)&_ZTV8daGmch_c[2];
+# The [2] is the Itanium address point, which on the host is a DIR32
+# relocation with 8 applied at the site. The port's tables are host arrays
+# whose slot 0 IS the first virtual, so raw that store puts every dispatch two
+# slots high and vptr_addend_guard refuses it (no daGmch_c row is in
+# tools/vptr_addend_baseline.txt). And include/daGmch_c.h:180 declares the
+# table as a plain C++ extern, so MSVC asks for ?_ZTV8daGmch_c@@3PAHA while the
+# /alternatename at port/hal/actor_classes_ov081.cpp:747 carries
+# __ZTV8daGmch_c to the host array __ZTV8Moneybag, and an alias cannot cross a
+# decoration. hostgen drops the bias and gives the extern C linkage.
+#
+# MEASURED: closes 2, duplicates exactly the three retired members and nothing
+# else, and of the 27 names it references outside the wall, 19 have live
+# /alternatename rows, 5 come out of the CRT under -MT and 8 are bridged below.
+src/actors/daGmch_c.cpp
+
+# ---- ov085 MIPS THE RABBIT (actor 229) ------------------------------------
+# The same shape and the same day. Closes daMip_c_classInit outright, and the
+# two members that kept it out -- InitResources and Render -- are the identical
+# recursion against the hand faces at port/hal/method_faces.cpp:760 and
+# port/hal/except_faces.cpp:109, so their two ledger rows retire with this seat
+# and MIPS stops recursing on his own spawn path.
+#
+# Lane HOSTGEN4 PREPARED this TU and did not seat it: the repair for the nine
+# MSVC errors it raises (four members define an identical local struct Mtx43,
+# two then declare an extern of it, and Render's local VObj declares six
+# virtuals it never defines -- C2624 and C3640, one shape) is already in
+# tools/hostgen.py's REDECL_CONFLICT table and was verified compiling there.
+# That lane left the seat because one closed row did not justify a build slot
+# at the end of its budget. With the two ledger rows counted it is worth more
+# than one row, and it unblocks about two dozen faces besides.
+#
+# It needs ZTV_C_LINKAGE for the same reason daGmch_c does -- line 1883 is
+# p[0] = (int)(_ZTV7daMip_c + 2); under a plain C++ extern, and the live
+# alias is __ZTV7daMip_c=__ZTV6Rabbit at port/hal/actor_classes.cpp:1584.
+#
+# MEASURED: closes 1, duplicates exactly the two retired members, and of the 60
+# names it references outside the wall, 29 have live /alternatename rows, 5 are
+# CRT, 25 decorated ov085 data names are bridged below and the last is the
+# vtable extern the ZTV row closes.
+src/actors/daMip_c.cpp
+
+# ---- ov006 MG_ROULETTE (scene 383) ----------------------------------------
+# One row, func_ov006_0210a4ac, an empty four-byte ROM stub. The translation
+# unit holds exactly two bodies and the other is dScMgRoulette_c_classInit,
+# which port/unmatched/MgRoulette_Factory.cpp host-copies under a standing
+# PORT_HOST_ABI ruling: the matched factory calls _ZN11dScMgBase_cC2Ev() with
+# NO argument, relying on r0 still holding the object, one of exactly two such
+# calls in the ROM. port/CMakeLists.txt refuses this file on slice_rlt.txt by
+# name for that duplicate.
+#
+# The LEDGER_PARK bracket removes the duplicate instead of the slice row, so
+# the host copy and its repair are untouched and nothing re-adjudicates that
+# ruling tonight. The refusal itself is left in place and still guards
+# slice_rlt.txt. MEASURED on the parked copy: closes 1, duplicates nothing,
+# references nothing at all.
+src/minigames/d_s_mg_roulette.cpp
+
+# ---- dScMgBase_c::OnAimedAtWithEgg, the minigame overlay menu --------------
+# One member, one row: ?OnAimedAtWithEgg@dScMgBase_c@@UAEHXZ, which four class
+# TUs' vtables ask for by LNK2001 (dScMgPanel_c, dScMgCup_c, dScMgHanachan_c's
+# D1 and dScMgAmida_c's D1) and nothing in this link defines. The TU is on no
+# live slice row: slice_slice1.txt line 67 has it commented out.
+#
+# IT GOES THROUGH THE SUBSTITUTION FOR THE MMIO REWRITE and that is not a
+# formality. The name is transplanted from dActor_c at the same slot index and
+# says nothing about what the body does: it stashes POWCNT1's screen-swap bit
+# and both BG-enable bytes into the object, clears every layer- and
+# window-enable bit in BOTH DISPCNTs, saves 0x400 bytes of BG palette and
+# 0x2000 bytes of sub-screen OBJ VRAM into the object, and draws the
+# per-language menu image over them. hostgen rewrites SIX register writes in
+# it, counted on the generated file. Compiled raw they latch in the mapped I/O
+# window and never reach the PPU.
+#
+# MEASURED: closes 1, duplicates nothing, and the two names it references
+# outside the wall (__ZN2GX10LoadBGPlttEPKvjj and its GXS twin) are both on
+# live /alternatename rows at port/hal/cxx_aliases.cpp:3200 and :3201 whose
+# right-hand sides are defined in this link.
+src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp
+
+# ---- the name bridges the seats need, and two flat rows of their own -------
+# Thirty-three decorated ROM data names across the daGmch_c and daMip_c seats,
+# each one a C++ declaration of a hosted symbol that MSVC decorates because the
+# declaration carries no linkage specification, plus the two
+# daObjWc_Obj07_c_*File rows, which are a second spelling of an ov029 address
+# the mount already emits. The file says which flat symbol each one is and how
+# it was checked.
+port/unmatched/Seats3_NameBridges.cpp

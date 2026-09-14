@@ -2242,6 +2242,35 @@ ZTV_C_LINKAGE = {
     # vtable now rather than the port's hosted array, which is the vptr
     # address-point question and not this row's.
     # "daPkn_c": [("int", "_ZTV7daPkn_c")],
+    # daGmch_c (MONEYBAG, ov081), added with its seat (run link100, lane
+    # SEATS3). The same defect as daBmb_c above, and NOT the one the three
+    # dropped rows have: this factory still stores its table by name.
+    # src/actors/daGmch_c.cpp line 1111 is
+    #     p[0] = (int)&_ZTV8daGmch_c[2];
+    # and the declaration it reaches is include/daGmch_c.h:180, a plain C++
+    # `extern int _ZTV8daGmch_c[];`, so MSVC asks the linker for
+    # ?_ZTV8daGmch_c@@3PAHA. The /alternatename in
+    # port/hal/actor_classes_ov081.cpp:747 carries __ZTV8daGmch_c to the host
+    # array __ZTV8Moneybag, and an alias is a NAME bridge that cannot cross a
+    # decoration, so without this row the seat trades two closed rows for one
+    # fresh decorated one. Under C linkage the reference is the name the alias
+    # already binds. The +8 address-point bias on the same line is dropped by
+    # VPTR_ADDRESS_POINT below, which is the other half of why this TU is
+    # substituted rather than sliced raw: compiled raw the bias would be a new
+    # nonzero addend and vptr_addend_guard refuses any row that is not in
+    # tools/vptr_addend_baseline.txt.
+    "daGmch_c": [("int", "_ZTV8daGmch_c")],
+    # daMip_c (MIPS the rabbit, ov085), added with its seat (run link100, lane
+    # SEATS3). Identical defect to daGmch_c above, one line down:
+    # src/actors/daMip_c.cpp line 1883 is
+    #     p[0] = (int)(_ZTV7daMip_c + 2);
+    # under a plain C++ `extern` the file's own note at line 1867 explains, so
+    # MSVC asks for ?_ZTV7daMip_c@@3PAHA while the live alias in
+    # port/hal/actor_classes.cpp:1584 carries __ZTV7daMip_c to the host array
+    # __ZTV6Rabbit. Measured on the generated object rather than predicted:
+    # ?_ZTV7daMip_c@@3PAHA came back as one of its undefined externals and
+    # nothing in this link defines it.
+    "daMip_c": [("int", "_ZTV7daMip_c")],
 }
 
 
@@ -2396,6 +2425,28 @@ LEDGER_PARK = {
     # classInit is the exception to the exception: it lives INSIDE an
     # `extern "C" {` block, so its bracket closes on its own last line
     # instead, or the block's closing brace would end up inside the #if 0.
+    # d_s_mg_roulette (MG_ROULETTE, scene 383), run link100 lane SEATS3. This
+    # is the LEDGER_PARK bracket used for a reason that is not a ledger row:
+    # the TU holds exactly two bodies, func_ov006_0210a4ac (an empty ROM stub,
+    # the one row the seat closes) and dScMgRoulette_c_classInit, which
+    # port/unmatched/MgRoulette_Factory.cpp already host-copies. That host copy
+    # is a PORT_HOST_ABI repair, not a convenience: the matched factory calls
+    # _ZN11dScMgBase_cC2Ev() with NO argument, relying on r0 still holding the
+    # object, one of exactly two such calls in the ROM. port/CMakeLists.txt
+    # refuses this TU on slice_rlt.txt by name for that duplicate. The bracket
+    # removes the duplicate instead of the slice row, so the host copy and its
+    # repair are untouched, the refusal's premise is gone, and the assertion
+    # itself is left in place and still guards slice_rlt.txt.
+    "d_s_mg_roulette": [
+        ('extern "C" void* dScMgRoulette_c_classInit(void){\n',
+         "#if 0  /* hostgen LEDGER_PARK: dScMgRoulette_c_classInit -- "
+         "port/unmatched/MgRoulette_Factory.cpp hosts this factory for the\n"
+         "          dropped-receiver _ZN11dScMgBase_cC2Ev call */\n"
+         'extern "C" void* dScMgRoulette_c_classInit(void){\n'),
+        ("    _ZN5ModelC1Ev(m + 0x60);\n  }\n  return c;\n}\n",
+         "    _ZN5ModelC1Ev(m + 0x60);\n  }\n  return c;\n}\n"
+         "#endif  /* hostgen LEDGER_PARK: dScMgRoulette_c_classInit */\n"),
+    ],
     "d_a_wanwan": [
         ("void* daWanwan_c_classInit(void){\n",
          "#if 0  /* hostgen LEDGER_PARK: daWanwan_c_classInit */\n"

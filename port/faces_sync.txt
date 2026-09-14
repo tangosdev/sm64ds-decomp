@@ -1708,9 +1708,38 @@ __ZN8daEyBm_c13OnYoshiTryEatEv                                           ?OnYosh
 __ZN8daEyBm_c16CleanupResourcesEv                                        ?CleanupResources@daEyBm_c@@UAEHXZ                               0x02121d08 R
 __ZN8daEyBm_c16OnPendingDestroyEv                                        ?OnPendingDestroy@daEyBm_c@@UAEXXZ                               0x02121d10 R
 
-__ZN8daGmch_c13InitResourcesEv                                           ?InitResources@daGmch_c@@UAEHXZ                                  0x021278a8 F
-__ZN8daGmch_c6RenderEv                                                   ?Render@daGmch_c@@UAEHXZ                                         0x021277e0 F
-__ZN8daGmch_c8BehaviorEv                                                 ?Behavior@daGmch_c@@UAEHXZ                                       0x02127854 F
+# RETIRED at lane SEATS3 (run link100 wave 9c), the last three rows of the
+# recursion defect lane INT3 closed eleven of at the wave-9b fold. These three
+# were LEFT LIVE ON PURPOSE there, because daGmch_c was on no live slice row in
+# that tree and retiring them would have put three decorated names back on the
+# wall. It is seated now, through port/slice_seats3.txt and the whole-TU
+# substitution, so the members have their real ROM bodies back.
+#
+# WHAT THE PAIR DID. Each of these rows defined the decorated member and called
+# the flat ROM name; the flat ROM name is defined by a HAND FACE which calls the
+# decorated member:
+#     port/hal/actor_classes_ov081.cpp:879   _ZN8daGmch_c13InitResourcesEv
+#     port/hal/actor_classes_ov081.cpp:881   _ZN8daGmch_c8BehaviorEv
+#     port/hal/actor_classes_bob_world.cpp:2119  _ZN8daGmch_c6RenderEv
+# so the two called each other with no body at the bottom. Moneybag (actor 261,
+# ov081) recursed until the stack ran out on InitResources, which is the first
+# call on its spawn path. out/SEATS2/bugs.md section 1 is the measurement.
+#
+# CHECKED BEFORE THE RETIREMENT, per the wave-9c recursion rule: all three hand
+# faces include "daGmch_c.h" (ov081 line 871, bob_world line 2087), which is the
+# same header the seated translation unit compiles against, and each call is
+# nullary returning int against a nullary int member, so the arity matches on
+# every one.
+#
+# Retiring the row and seating the body are ONE change: retiring alone leaves
+# the decorated name undefined, and seating alone is a duplicate symbol (COMDAT
+# selection 1, pick no duplicates). No hostgen LEDGER_PARK bracket was written
+# for these three because the park and its un-park would have been the same
+# commit.
+#
+#__ZN8daGmch_c13InitResourcesEv                                          ?InitResources@daGmch_c@@UAEHXZ                                  0x021278a8 F
+#__ZN8daGmch_c6RenderEv                                                  ?Render@daGmch_c@@UAEHXZ                                         0x021277e0 F
+#__ZN8daGmch_c8BehaviorEv                                                ?Behavior@daGmch_c@@UAEHXZ                                       0x02127854 F
 
 __ZN12daIDonketu_c13InitResourcesEv                                      ?InitResources@daIDonketu_c@@UAEHXZ                              0x0211181c R
 __ZN12daIDonketu_c14UpdateRunStateEv                                     ?UpdateRunState@daIDonketu_c@@UAEHXZ                             0x02111680 R
@@ -1735,8 +1764,24 @@ __ZN8daKrpa_c16OnPendingDestroyEv                                        ?OnPend
 
 __ZN10daMcFlag_c16CleanupResourcesEv                                     ?CleanupResources@daMcFlag_c@@UAEHXZ                             0x021120ec R
 
-__ZN7daMip_c13InitResourcesEv                                            ?InitResources@daMip_c@@UAEHXZ                                   0x0212c7fc F
-__ZN7daMip_c6RenderEv                                                    ?Render@daMip_c@@UAEHXZ                                          0x0212c074 F
+# RETIRED at lane SEATS3 (run link100 wave 9c), the same recursion defect as
+# the daGmch_c block above and the eleven lane INT3 closed at the wave-9b fold.
+# Each row defined the decorated member and called the flat ROM name; the flat
+# ROM name is defined by a HAND FACE which calls the decorated member:
+#     port/hal/method_faces.cpp:760   _ZN7daMip_c13InitResourcesEv
+#     port/hal/except_faces.cpp:109   _ZN7daMip_c6RenderEv
+# so MIPS (actor 229, ov085) recursed until the stack ran out on the first call
+# of his spawn path. src/actors/daMip_c.cpp is seated through
+# port/slice_seats3.txt and the whole-TU substitution, so both members have
+# their real ROM bodies back and the hand faces call a body.
+#
+# CHECKED BEFORE THE RETIREMENT: both hand-face files include "daMip_c.h"
+# (method_faces.cpp:757, except_faces.cpp:61), which is the header the seated
+# translation unit compiles against, and each call is nullary returning int
+# against a nullary int member (include/daMip_c.h:106 and 108).
+#
+#__ZN7daMip_c13InitResourcesEv                                           ?InitResources@daMip_c@@UAEHXZ                                   0x0212c7fc F
+#__ZN7daMip_c6RenderEv                                                   ?Render@daMip_c@@UAEHXZ                                          0x0212c074 F
 
 __ZN12daObjAbuku_c13InitResourcesEv                                      ?InitResources@daObjAbuku_c@@UAEHXZ                              0x020b3518 R
 __ZN12daObjAbuku_c8BehaviorEv                                            ?Behavior@daObjAbuku_c@@UAEHXZ                                   0x020b33dc R

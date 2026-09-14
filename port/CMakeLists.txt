@@ -423,7 +423,65 @@ set(PORT_HOSTGEN_TU
     # wider bracket swallowed an include and four file-scope declarations a
     # member further down still needs; the LEDGER_PARK table says so at the
     # row.
-    src/game/actors/d_a_wanwan.cpp)
+    src/game/actors/d_a_wanwan.cpp
+    # ZTV_C_LINKAGE plus the vptr address-point rewrite, run link100 lane
+    # SEATS3. src/actors/daGmch_c.cpp (MONEYBAG, ov081) is on no slice and
+    # closes two rows itself, ??1daGmch_c@@UAE@XZ and daGmch_c_classInit. It
+    # is seated for the other half: its object defines twenty-three decorated
+    # members that are flat rows on walk_window's wall today, which is the
+    # largest single block a face lane can bind after daMip_c, and its three
+    # ledger rows retire with it so Moneybag's InitResources stops calling the
+    # face that calls it.
+    #
+    # It goes through the substitution rather than a plain slice row for two
+    # reasons, both in one line of the factory:
+    #     p[0] = (int)&_ZTV8daGmch_c[2];
+    # The `[2]` is the Itanium address point, which compiled raw is a DIR32
+    # relocation with 8 applied at the site; the port's tables have no header
+    # words for that bias to skip and vptr_addend_guard refuses a nonzero
+    # addend that is not in tools/vptr_addend_baseline.txt. And the name is
+    # declared in include/daGmch_c.h as a plain C++ extern, so MSVC asks for
+    # ?_ZTV8daGmch_c@@3PAHA, which the /alternatename in
+    # port/hal/actor_classes_ov081.cpp cannot reach across a decoration. The
+    # substitution drops the bias and gives the extern C linkage.
+    src/actors/daGmch_c.cpp
+    # LEDGER_PARK, same lane. src/minigames/d_s_mg_roulette.cpp holds exactly
+    # two bodies: func_ov006_0210a4ac, an empty ROM stub which is the one wall
+    # row it closes, and dScMgRoulette_c_classInit, which
+    # port/unmatched/MgRoulette_Factory.cpp host-copies to repair a factory
+    # that calls _ZN11dScMgBase_cC2Ev with no argument. The park brackets the
+    # factory out of the generated copy, so the host copy and its ruling are
+    # untouched and the duplicate port/CMakeLists.txt refuses this TU for on
+    # slice_rlt.txt does not exist.
+    src/minigames/d_s_mg_roulette.cpp
+    # REDECL_CONFLICT (lane HOSTGEN4's, already in tools/hostgen.py) plus
+    # ZTV_C_LINKAGE and the vptr address-point rewrite, run link100 lane
+    # SEATS3. src/actors/daMip_c.cpp (MIPS the rabbit, ov085) was PREPARED AND
+    # NOT SEATED by lane HOSTGEN4: the repair for the nine MSVC errors is in
+    # the REDECL_CONFLICT table and verified compiling, and the seat was left
+    # because one closed row did not justify a build slot at the end of that
+    # lane's budget. It is worth more than one row here, because the two
+    # members that stopped it -- InitResources and Render -- are the same
+    # recursion defect the fold closed eleven of, and their ledger rows retire
+    # with this seat. Re-measured on this tree's own generated object: closes
+    # daMip_c_classInit, duplicates exactly those two members and nothing else,
+    # and its twenty-five decorated ov085 data references are bridged in
+    # port/unmatched/Seats3_NameBridges.cpp.
+    src/actors/daMip_c.cpp
+    # THE MMIO REWRITE, run link100 lane SEATS3, and this row is the reason
+    # the mechanism exists. src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp is a
+    # one-member translation unit on no live slice row (slice_slice1.txt
+    # line 67 has it commented out) and it closes
+    # ?OnAimedAtWithEgg@dScMgBase_c@@UAEHXZ, which four class TUs' vtables ask
+    # for by LNK2001 today. It is the minigame overlay menu going up: the body
+    # stashes POWCNT1's screen-swap bit, clears every layer- and window-enable
+    # bit in BOTH DISPCNTs, saves the BG palette and the sub-screen OBJ VRAM
+    # into the object and draws the menu over them. SIX of its writes are
+    # register writes hostgen rewrites, measured on the generated file rather
+    # than counted by eye. Compiled raw they would latch in the mapped I/O
+    # window and never reach the PPU, which is what the substitution exists to
+    # prevent and the same reason dScMgD3DBase_c is on this list.
+    src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -4148,6 +4206,9 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov077_02124718.cpp"  # ov077 +0x3f0
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov077_02125e20.cpp"  # ov077 +0x3d0
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daGmch_c.cpp"  # ov081 +0x3dc
+    # and the generated copy, lane SEATS3: this TU is on PORT_HOSTGEN_TU now,
+    # so the raw path alone would set the option on a source nothing compiles.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daGmch_c.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13PrincessPeach17CallStateBehaviorEv.cpp"  # ov085 +0x350
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daSanbo_c.cpp"  # ov096 +0x384
     # and the generated copy, lane HOSTGEN4: this TU is on PORT_HOSTGEN_TU
@@ -18725,6 +18786,19 @@ set(PORT_FALLS_OFF_END_SOURCES
     # The loop below puts the option on the generated path too, so the
     # substitution does not lose it.
     src/actors/dScMgD3DBase_c.cpp
+    # Added by lane SEATS3 with the daGmch_c seat. ONE body in that TU,
+    # daGmch_c::ApplySlopeToVertSpeed, is an int member whose ROM code reaches
+    # the closing brace with the result still in r0. Measured with the build's
+    # own flags on the generated copy, not predicted: C4716 on that member and
+    # on nothing else in the file. The loop below puts the option on the
+    # generated path too, which is the path this TU is compiled from.
+    src/actors/daGmch_c.cpp
+    # And the dScMgBase_c member seated beside it, same lane. The body reaches
+    # its closing brace with nothing to return on every path -- the decomp's
+    # own note at the top of that file says the ROM leaves r0 holding whatever
+    # the last call left there -- so MSVC raises C4716 on it. Measured on the
+    # generated copy: that member and nothing else.
+    src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp
     )
 # A WHOLE-TU HOSTGEN SUBSTITUTION MOVES THE COMPILE, AND A PER-SOURCE PROPERTY
 # DOES NOT FOLLOW IT. Run link100, lane HOSTGEN2, measured: putting
@@ -18924,6 +18998,42 @@ foreach(line IN LISTS SLICE_SEATS2_LINES)
 endforeach()
 foreach(_tseats2 walk_window walk_window_hires smoke_player)
     target_sources(${_tseats2} PRIVATE ${SLICE_SEATS2_SOURCES})
+endforeach()
+
+# ===========================================================================
+# LANE SEATS3, run link100 wave 9c: the last four class/member seats
+# ===========================================================================
+#
+# Four translation units on no live slice row and the name-bridge file they
+# need. port/slice_seats3.txt carries the derivation and the measured counts
+# per row; all four are also on PORT_HOSTGEN_TU at the top of this file, so
+# port_read_lines rewrites each row to its generated path as the list is read
+# and the raw text is never compiled.
+#
+# TWO OF THE FOUR ARE HALF OF A CORRECTNESS CHANGE and not only a count. The
+# daGmch_c and daMip_c seats land in the same commit as the retirement of five
+# rows in port/faces_sync.txt, because those five faces and the hand faces in
+# port/hal/ called each other with no body at the bottom: Moneybag and MIPS
+# each recursed until the stack ran out on the first call of their spawn path.
+# Retiring a row alone leaves the decorated name undefined and seating alone is
+# a duplicate symbol, so neither half stands without the other.
+#
+# The block goes on all three hosting targets rather than walk_window alone.
+# Nothing here is measured against one target's wall, the seats define members
+# every hosting target's vtables reach, and the bridge file holds
+# /alternatename directives, which a link that never sees the left-hand side
+# does not fire.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_seats3.txt" SLICE_SEATS3_LINES)
+set(SLICE_SEATS3_SOURCES "")
+foreach(line IN LISTS SLICE_SEATS3_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SEATS3_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tseats3 walk_window walk_window_hires smoke_player)
+    target_sources(${_tseats3} PRIVATE ${SLICE_SEATS3_SOURCES})
 endforeach()
 
 
