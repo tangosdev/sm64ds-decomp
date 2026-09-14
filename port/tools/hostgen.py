@@ -1988,6 +1988,13 @@ ZTV_C_LINKAGE = {
     "daBmb_c": [("int", "_ZTV7daBmb_c")],
     "d_a_ey_bm": [("int", "_ZTV8daEyBm_c")],
     "d_a_mc_flag": [("int", "_ZTV10daMcFlag_c")],
+    # Added run link100 wave 9b, lane SEATS2, seating src/actors/daPkn_c.cpp.
+    # That TU declares `extern int _ZTV7daPkn_c[];` with no linkage
+    # specification, so MSVC emits ?_ZTV7daPkn_c@@3PAHA, and the
+    # /alternatename in port/hal/actor_classes_l7.cpp that carries
+    # __ZTV7daPkn_c to the host array __ZTV12PiranhaPlant cannot reach
+    # across a decoration. Same defect and same fix as the three rows above.
+    "daPkn_c": [("int", "_ZTV7daPkn_c")],
 }
 
 
@@ -2067,6 +2074,155 @@ VPTR_ADDRESS_POINT = re.compile(
 def vptr_address_point(text):
     """Drop the Itanium +8 address-point bias from a vptr store."""
     return VPTR_ADDRESS_POINT.subn(lambda m: m.group(1) or m.group(2), text)
+
+
+# ---- SEAT_PARK: the bodies a SEATED translation unit must not define --------
+# NEW BLOCK, run link100 wave 9b, lane SEATS2. Nothing above this line is
+# touched by it.
+#
+# THE SHAPE. main folds a whole actor class into one translation unit: the
+# class's C++ members and, beside them, the flat extern "C" ROM bodies of the
+# same overlay that nobody has named yet. The port wants the flat bodies --
+# ten to fourteen unresolved rows per class, and nothing else in the tree can
+# supply them -- and it already has an answer for one or two of the members:
+#
+#   * port/faces_sync.txt carries an F row for the member, so faces_sync_gen.cpp
+#     DEFINES ?Member@Cls@@UAEHXZ and calls the flat ROM name. Seating the TU
+#     defines that same decorated name a second time. MSVC emits every function
+#     into its own COMDAT here (/O2 implies /Gy), but an out-of-line body's
+#     selection is 1, "pick no duplicates", so the two are an LNK2005 and not a
+#     fold. Measured rather than assumed: the selection comes out of the section
+#     symbol's auxiliary record, and a census that stops at "is it COMDAT"
+#     predicts no duplicates at all.
+#   * port/unmatched/ host-copies one of the flat bodies for a standing
+#     PORT_HOST_ABI ruling (a mwcc pointer-to-member dispatch, a ModelAnim
+#     slot-5 Render, an ARM r0 ride-through in a spawn factory). Retiring that
+#     host copy ships the defect the ruling names, and the ruling is not this
+#     lane's to overturn.
+#
+# In both cases the row is already answered and the seat only has to stop
+# offering a second answer. So the body is bracketed out of the GENERATED copy.
+# The matched source in src/ is not touched, and the raw TU is never compiled,
+# because a substituted slice row compiles build/port/host-src/<path> instead.
+# Everything else in the TU is seated.
+#
+# WHY BRACKETING AND NOT A RETIREMENT. A park costs nothing and asserts nothing:
+# the name keeps exactly the definition the link already had, so a gate's "the
+# rows that leave are exactly the seated bodies, and nothing new appears" reads
+# true. Retiring the other side is the better end state for the five daSanbo_c,
+# three daWanwan_c and three daPkn_c F rows, because the flat name is defined by
+# a hand face in port/hal/actor_classes_*.cpp that calls the decorated member
+# while the F face defines that member by calling the flat name, which is a
+# two-hop recursion with no body at the bottom of it. But retiring an F row is
+# an edit to port/faces_sync.txt, frozen while lane FACES3 is under review, so
+# those rows are handed on in runs/link100/out/SEATS2/faces_after_seat.txt.
+#
+# Each row is (anchor, reason). The anchor is the definition's first line as the
+# source spells it, and it must occur ONCE: the patch takes the body from the
+# first brace after the anchor to that brace's match. A missing or repeated
+# anchor exits, for apply_patches' reason -- a park that stops matching is a
+# duplicate symbol at best and a second, wrong dispatch at worst.
+SEAT_PARK = {
+    "daSanbo_c": [
+        ("int daSanbo_c::InitResources()",
+         "faces_sync.txt F row, ROM 0x02136ab0"),
+        ("int daSanbo_c::CleanupResources()",
+         "faces_sync.txt F row, ROM 0x02136944"),
+        ("void daSanbo_c::OnPendingDestroy()",
+         "faces_sync.txt F row, ROM 0x021369b0"),
+        ("int daSanbo_c::Render()",
+         "faces_sync.txt F row, ROM 0x021369fc"),
+        ("int daSanbo_c::Behavior()",
+         "faces_sync.txt F row, ROM 0x02136a50"),
+        # The forward declaration on this TU's own line 504 spells the
+        # signature identically, so the anchor carries the opening brace of the
+        # definition with it.
+        ("void func_ov096_02135e2c(int* self, void* clsn)" "\n" "{",
+         "port/unmatched/Pokey_HostSites.cpp hosts this body"),
+    ],
+    "daPkn_c": [
+        ("int daPkn_c::CleanupResources()",
+         "faces_sync.txt F row, ROM 0x0212fc84"),
+        ("int daPkn_c::Render()",
+         "faces_sync.txt F row, ROM 0x0212fcdc"),
+        ("int daPkn_c::Behavior()",
+         "faces_sync.txt F row, ROM 0x0212fd4c"),
+        ("void func_ov084_0212f204(char* r4){",
+         "port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp hosts this "
+         "body for the receiver-less ClosestPlayer call closestplayer_guard "
+         "refuses"),
+    ],
+    "d_a_wanwan": [
+        ("int daWanwan_c::InitResources()",
+         "faces_sync.txt F row, ROM 0x02112b14"),
+        ("int daWanwan_c::Render()",
+         "faces_sync.txt F row, ROM 0x02112994"),
+        ("int daWanwan_c::Behavior()",
+         "faces_sync.txt F row, ROM 0x021129ec"),
+        ("void* daWanwan_c_classInit(void){",
+         "port/unmatched/ChainChomp_Spawn_hostcopy.cpp hosts this factory for "
+         "the ARM r0 ride-through ruling"),
+    ],
+}
+
+SEAT_PARK_QUOTES = "'" + '"'
+
+
+def _seat_park_body_end(text, start):
+    """Index just past the closing brace of the body that starts at `start`."""
+    i = text.index("{", start)
+    depth = 0
+    n = len(text)
+    while i < n:
+        c = text[i]
+        if c == "/" and i + 1 < n and text[i + 1] == "/":
+            j = text.find("\n", i)
+            if j < 0:
+                break
+            i = j
+            continue
+        if c == "/" and i + 1 < n and text[i + 1] == "*":
+            j = text.find("*/", i + 2)
+            i = n if j < 0 else j + 2
+            continue
+        if c in SEAT_PARK_QUOTES:
+            i += 1
+            while i < n and text[i] != c:
+                i += 2 if text[i] == "\\" else 1
+            i += 1
+            continue
+        if c == "{":
+            depth += 1
+        elif c == "}":
+            depth -= 1
+            if depth == 0:
+                return i + 1
+        i += 1
+    sys.exit("hostgen: SEAT_PARK: no closing brace for the body at offset %d"
+             % start)
+
+
+def seat_park_patch(text, sym):
+    """Bracket out the bodies this link already defines somewhere else."""
+    rows = SEAT_PARK.get(sym)
+    if not rows:
+        return text, 0
+    for anchor, why in rows:
+        n = text.count(anchor)
+        if n != 1:
+            sys.exit(
+                "hostgen: %s: SEAT_PARK anchor occurs %d time(s), expected 1:\n"
+                "  %s\nThe source moved. Re-read the TU and re-spell the anchor "
+                "-- dropping the row seats a body the link already defines."
+                % (sym, n, anchor))
+        start = text.index(anchor)
+        end = _seat_park_body_end(text, start)
+        text = (text[:start]
+                + "#if 0  /* hostgen SEAT_PARK: " + why + " */\n"
+                + text[start:end]
+                + "\n#endif  /* hostgen SEAT_PARK */"
+                + text[end:])
+    return text, len(rows)
 
 
 def apply_patches(text, sym, table, what, decl=""):
@@ -2160,6 +2316,10 @@ def emit(src_path, out_dir, decomp_root, extern_data=False):
     text, _ = arg_width_patch(text, sym)
     text, _ = callee_seam_patch(text, sym)
     text, _ = reg_ride_arg_patch(text, sym)
+    text, npark = seat_park_patch(text, sym)
+    if npark and not QUIET_VPTR:
+        print("  %s: %d body(ies) parked; this link already defines them"
+              % (sym, npark))
     text, nztv = ztv_c_linkage(text, sym)
     if nztv and not QUIET_VPTR:
         print("  %s: %d vtable extern(s) given C linkage" % (sym, nztv))

@@ -316,7 +316,15 @@ set(PORT_HOSTGEN_TU
     src/actors/dScMgHanachan_c.cpp
     src/actors/dScMgRoulette_c.cpp
     src/game/actors/d_a_bg_snwmn.cpp
-    src/game/actors/d_a_propeller_heyho.cpp)
+    src/game/actors/d_a_propeller_heyho.cpp
+    # Added run link100 wave 9b, lane SEATS2, seating three consolidated
+    # actor TUs. Each one needs the SEAT_PARK block in tools/hostgen.py to
+    # bracket out the bodies this link already defines somewhere else, and
+    # daPkn_c needs ZTV_C_LINKAGE as well. The derivation, with the
+    # measured close and duplicate counts per TU, is in slice_seats2.txt.
+    src/actors/daSanbo_c.cpp
+    src/actors/daPkn_c.cpp
+    src/game/actors/d_a_wanwan.cpp)
 get_filename_component(PORT_HOSTGEN_TU_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/.." ABSOLUTE)
 set(PORT_HOSTGEN_TU_GEN "")
 foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
@@ -4039,6 +4047,9 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daGmch_c.cpp"  # ov081 +0x3dc
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN13PrincessPeach17CallStateBehaviorEv.cpp"  # ov085 +0x350
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/actors/daSanbo_c.cpp"  # ov096 +0x384
+    # and the hostgen copy lane SEATS2 seats instead of it, so this option
+    # does not go missing when the substitution moves the compile.
+    "${CMAKE_BINARY_DIR}/host-src/src/actors/daSanbo_c.cpp"
     PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
 
 # run linkw wave 18 (lane w18): the four matched dispatchers reclaimed from
@@ -4142,6 +4153,11 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov002_020efa54.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_wanwan.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_wanwan.cpp"
+    # and the hostgen copy lane SEATS2 seats instead of it, twice, so the
+    # count this file asserts on stays balanced and the option follows the
+    # compile the substitution moves.
+    "${CMAKE_BINARY_DIR}/host-src/src/game/actors/d_a_wanwan.cpp"
+    "${CMAKE_BINARY_DIR}/host-src/src/game/actors/d_a_wanwan.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov034_021125b8.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov034_02112604.cpp"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/unnamed/ov063/func_ov063_0211ddac.cpp"
@@ -13874,6 +13890,12 @@ set_source_files_properties(
 # and includes no header that declares it either, so the -D is exact.
 set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/game/actors/d_a_wanwan.cpp"
+    # THE GENERATED PATH TOO. Lane SEATS2 put this TU on PORT_HOSTGEN_TU, so
+    # the build compiles build/port/host-src/src/game/actors/d_a_wanwan.cpp
+    # and this -D is the load-bearing kind the block above describes: without
+    # it on the compiled path the chomp state-2 main binds the racing
+    # penguin body and the link never says so.
+    "${CMAKE_BINARY_DIR}/host-src/src/game/actors/d_a_wanwan.cpp"
     PROPERTIES COMPILE_DEFINITIONS "func_ov019_02111f54=func_ov014_02111f54")
 # ---- end lane w3-e ---------------------------------------------------------
 
@@ -18464,6 +18486,42 @@ list(LENGTH _PORT_CONFIGURE_DEPS _PORT_CONFIGURE_DEPS_N)
 message(STATUS "CONFIGURE DEPS: ${_PORT_CONFIGURE_DEPS_N} configure-time inputs "
                "registered, ${_PORT_RAW_READ_N} raw reads")
 
+
+# ===========================================================================
+# SEATS, BOTTOM-UP (run link100 wave 9b, lane SEATS2)
+# ===========================================================================
+#
+# The same consolidation gap lanes SLICE1 and FACES2 worked, taken from the
+# other end: the translation units with the FEWEST unresolved rows each, so
+# this lane and the lane working the table top-down meet in the middle.
+#
+# A row is on port/slice_seats2.txt only when the candidate, compiled STANDALONE
+# with this build's own flags, closes rows, duplicates nothing and references
+# nothing the link cannot already answer. The duplicate half of that test reads
+# the COMDAT SELECTION out of each section symbol's auxiliary record rather
+# than the COMDAT flag: /O2 implies /Gy, so every function here is in its own
+# COMDAT and the flag alone predicts no duplicates at all, while an out-of-line
+# body's selection is 1, "pick no duplicates", which is the LNK2005 the linker
+# actually raises.
+#
+# Three of the five rows are consolidated actor TUs that duplicated three to
+# six names each on that test. Every one of those names is parked in the
+# hostgen copy instead of being fought over -- see the SEAT_PARK block in
+# tools/hostgen.py -- so no host copy is retired by this block and no ruling in
+# port/unmatched/ is disturbed.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_seats2.txt" SLICE_SEATS2_LINES)
+set(SLICE_SEATS2_SOURCES "")
+foreach(line IN LISTS SLICE_SEATS2_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_SEATS2_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tseats2 walk_window walk_window_hires smoke_player)
+    target_sources(${_tseats2} PRIVATE ${SLICE_SEATS2_SOURCES})
+endforeach()
+
 # ---- WHOLE-TU HOSTGEN SUBSTITUTION: THE COUNT ------------------------------
 #
 # Every substitution declared in PORT_HOSTGEN_TU near the top of this file has
@@ -18557,10 +18615,18 @@ set(PORT_FALLS_OFF_END_SOURCES
     src/game/actors/daObjPushblock_c.cpp
     # d_a_wanwan.cpp raises C4716 twice as well (func_ov014_02111fb8 and
     # func_ov014_0211150c) and its row belongs here the moment the TU is seated,
-    # but the TU is held out of the build again for the factory collision
-    # written up on its slice rows, so the row would name a source nothing
-    # compiles:
-    # src/game/actors/d_a_wanwan.cpp
+    # which lane SEATS2 did in port/slice_seats2.txt: the factory collision the
+    # note below describes is answered by a hostgen SEAT_PARK rather than by
+    # retiring port/unmatched/ChainChomp_Spawn_hostcopy.cpp, so the host copy and
+    # its ruling stay put and the TU compiles. The loop below sets the option on
+    # the generated path too, which is the one this TU is now built from.
+    src/game/actors/d_a_wanwan.cpp
+    # Added by lane SEATS2 with the same TU: main rewrote this body's valueless
+    # early exits as nested ifs (#2663's shape), which is what C2561 was raised
+    # on, and what is left is the plain fall-off-the-end the rows above cover.
+    # Measured with the build's own flags: C4716 on dScMgBase_c::OnAimedAtWithEgg
+    # and nothing else.
+    src/_ZN11dScMgBase_c16OnAimedAtWithEggEv.cpp
     )
 # A WHOLE-TU HOSTGEN SUBSTITUTION MOVES THE COMPILE, AND A PER-SOURCE PROPERTY
 # DOES NOT FOLLOW IT. Run link100, lane HOSTGEN2, measured: putting
