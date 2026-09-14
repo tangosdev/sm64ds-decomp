@@ -81,6 +81,38 @@
 // reads (32 cells); and 175 more permuter-minutes over two structurally distinct seeds,
 // 16,626 candidates, base score 85 and minimum score 85 on both -- neither run improved on
 // its base once. Do not re-run any of those.
+//
+// CHARACTERISED 2026-09-14, before any new sweep. Compiled with the pinned flags and
+// compared word by word against the ROM: the two sides are identical in every measure
+// except register colouring. 505 instructions each; all 49 mnemonics equal in count;
+// the same push {r4,r5,r6,r7,lr} and pop, the same `sub sp,sp,#4`, and the same 20
+// literal-pool words in the same order at the same offsets. The 11 divergent words are
+// ONE cluster, +0x248..+0x278, and every one of them is the same instruction with r6
+// and r7 exchanged -- a pure transposition, with no extra or missing work anywhere. So
+// instruction selection, scheduling, CSE and the frame are closed here by measurement
+// rather than by sweep: nothing that moves them can help, and the only open question is
+// which of {r6, r7} holds `ty`.
+//
+// The dest==base census reproduces exactly. The ROM takes the dying base as a load's
+// destination 25 times and refuses it 62 times; this file takes it 26 and refuses 61.
+// The two sides disagree at exactly ONE site in the whole function, +0x248.
+//
+// Two corrections to the sweep list above. (1) Removing `#pragma opt_loop_invariants
+// off` measures 23, not the "5 more coloring words" (16) recorded above, and it widens
+// the window to +0x210..+0x2ec instead of holding it; do not plan around 16. (2)
+// Crossing that pragma with `ty`'s declaration rank -- the one product the grids above
+// never took, since all of them ran at the pinned pragma pair -- is monotonic and buys
+// nothing: 11,11,18,23,23,23,27,29,29,31,31 with the pragma off, and
+// 23,23,27,31,31,31,30,31,31,31,31 with it on. Coupling was the reason to try it; on
+// this pair there is none.
+//
+// One lever that reads as obvious is refuted by the ROM's own bytes rather than by a
+// compile. Keeping `rec` live past +0x248 would block the coalesce, and `rec[1]` spells
+// the `data_020a0de9[idx][0]` read as a reuse of the pointer already sitting in r6. The
+// ROM does not do that: at +0x288 it reloads the `data_020a0de9` base from the literal
+// pool and re-indexes it with `idx` (+0x28c `ldrb r0,[r0,r2,lsl #2]`), so `rec` is dead
+// after +0x248 in the ROM exactly as it is here. Any spelling that keeps `rec` live to
+// win +0x248 must lose +0x288.
 #pragma opt_loop_invariants off
 #pragma opt_strength_reduction off
 #include "common.h"
