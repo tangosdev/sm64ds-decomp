@@ -569,7 +569,11 @@ MEMBER_REDECL = {
 # declaration makes four of them an error. A block-scope declaration whose TYPE
 # has linkage is all C2624 asks for, and it keeps the C linkage of the
 # enclosing extern "C" member, which is the spelling the mount emits.
-REDECL_CONFLICT_DECL = """\
+# THE HOISTED BLOCK LANDS ABOVE THE TU'S OWN INCLUDES, so it may use nothing
+# but builtin types: `int` where the member wrote `s32`, which is the same type
+# under a different spelling and keeps the block readable without a header.
+REDECL_CONFLICT_DECL = {
+    "daMky_c": """\
 /* hostgen REDECL_CONFLICT: the file-scope half of the repair below. ONLY THE
    TYPES move. Each datum keeps its own block-scope declaration, in the member
    that recovered it, because the members do not agree on its type: five
@@ -580,7 +584,30 @@ struct daMky_S { int w[2]; };
 struct daMky_G { void *a; void *b; };
 struct daMky_Item16 { int a, b, c, d; };
 
-"""
+""",
+    "daMip_c": """\
+/* hostgen REDECL_CONFLICT: the file-scope half of the repair below. Four
+   members define an identical `struct Mtx43 { s32 m[12]; }` for themselves and
+   two of them then declare an extern of that type, which C++ refuses because a
+   local class has no linkage; one definition up here serves all four and every
+   `struct Mtx43` spelling in the file still reads. VObj is the render shadow:
+   six virtuals declared and never defined, which is legal at namespace scope
+   and C3640 inside a function body. daMip_G carries StateReleasedInit's own
+   two-word view of data_ov085_021305c0, which four other members spell four
+   other ways at their own block scope. */
+struct Mtx43 { int m[12]; };
+struct daMip_G { int w[2]; };
+struct VObj {
+    virtual void v0();
+    virtual void v1();
+    virtual void v2();
+    virtual void v3();
+    virtual void v4();
+    virtual void m14(void *arg);
+};
+
+""",
+}
 
 REDECL_CONFLICT = {
     "daMky_c": [
@@ -623,6 +650,28 @@ REDECL_CONFLICT = {
          "    extern daMky_G data_ov030_02115d18;\n"),
         ("    typedef struct { int a, b, c, d; } Item16;\n",
          "    typedef daMky_Item16 Item16;\n"),
+    ],
+    # daMip_c (MIPS the rabbit). Nine errors, both classes of them the local-type
+    # shape and no return-type disagreement anywhere: the TU's own header at line
+    # 61 already records that its members spell data_ov085_021305c0 five
+    # different ways. Four members define the SAME `struct Mtx43` for themselves
+    # (identical text, checked), two of those then declare an extern of it, and
+    # Render's VObj declares six virtuals it never defines. All three go to file
+    # scope; the Mtx43 definition is deleted from all four members at once and
+    # the file-scope one carries every `struct Mtx43` spelling that is left.
+    "daMip_c": [
+        ("    struct G { int w[2]; };\n"
+         "    extern struct G data_ov085_021305c0;\n",
+         "    extern daMip_G data_ov085_021305c0;\n"),
+        ("    struct Mtx43 { s32 m[12]; };\n", ""),
+        ("    struct VObj {\n"
+         "        virtual void v0();\n"
+         "        virtual void v1();\n"
+         "        virtual void v2();\n"
+         "        virtual void v3();\n"
+         "        virtual void v4();\n"
+         "        virtual void m14(void* arg);\n"
+         "    };\n", ""),
     ],
 }
 
@@ -2475,7 +2524,7 @@ def redecl_conflict_patch(text, sym):
     file-scope spelling, and hoist the function-local types the ROM data
     declarations need."""
     return apply_patches(text, sym, REDECL_CONFLICT, "REDECL_CONFLICT",
-                         REDECL_CONFLICT_DECL)
+                         REDECL_CONFLICT_DECL.get(sym, ""))
 
 
 def extern_c_data_patch(text, sym):

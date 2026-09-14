@@ -82,3 +82,58 @@
 # of dActor_c, dBase_c and fBase_c, Vector3's inline destructor, and the four
 # __empty_global_delete stubs. No LNK2005 row.
 src/actors/daMky_c.cpp
+
+# ---------------------------------------------------------------------------
+# SIX PER-FUNCTION TRANSLATION UNITS THAT WERE SIMPLY NEVER SLICED
+# ---------------------------------------------------------------------------
+#
+# Nothing is wrong with any of these. Each exists in src/ under the decomp's
+# one-function-per-file convention, each owns exactly one flat ROM name that
+# walk_window still reports unresolved, and each is compiled by nothing: no
+# slice list, no CMake block, no hostgen generation list. This is lane SLICE1's
+# rule, run again against the wall as it stands after the four gates above.
+#
+# EVERY ONE WAS COMPILED STANDALONE with the build's own flags, in the language
+# its extension asks for, and its object's defined externals were compared
+# against walk_window's whole link universe (8661 objects, 46837 defined
+# externals). One row closed each, no collision anywhere, and the undefined
+# references each one brings are already answered in this link:
+#
+#   src/__sinit_ov023_02111aa8.c    ___sinit_ov023_02111aa8
+#   src/func_0205fc44.c             _func_0205fc44
+#   src/func_ov002_020e3e00.cpp     _func_ov002_020e3e00
+#
+# THREE MORE WERE TRIED HERE AND BELONG SOMEWHERE ELSE, and the build is what
+# said so. src/func_ov006_0211ea70.c, src/func_ov006_0211f9fc.c and
+# src/func_ov074_02121800.c are ALREADY on slices (slice_boo.txt line 426,
+# slice_ov074.txt line 232 and their siblings) and already compiled -- but with
+# PROPERTIES LANGUAGE CXX, because each carries the decomp's //cpp marker. So
+# each emits ?func_ov006_0211ea70@@YAXPADH@Z and not the flat ROM name its
+# callers ask for, and the flat name stayed on the wall while the body was in
+# the binary all along. A second slice row just produced the same object twice:
+#
+#   func_ov006_0211ea70.c.obj : error LNK2005:
+#       "void __cdecl func_ov006_0211ea70(char *,int)"
+#       (?func_ov006_0211ea70@@YAXPADH@Z) already defined in
+#       func_ov006_0211ea70.c.obj
+#
+# The three rows are withdrawn and the three names are bridged instead, in
+# port/unmatched/HostGen4_CxxNameBridges.cpp. A defined-symbol census cannot
+# see this shape either: the body IS defined, under the other spelling.
+#
+# The two ov006 rows each reference one flat Itanium name that the defined-symbol
+# census called new, __ZN3G2S13GetBG0CharPtrEv and __ZN4cstd4sqrtEy, and
+# hal/cxx_aliases.cpp lines 3176 and 3186 already bridge both to their MSVC
+# spellings. That is the same over-prediction the Monkey seat above ran into and
+# it is written up there.
+#
+# ONE CANDIDATE IS DELIBERATELY NOT HERE. src/func_0206a4a0.c closes
+# _func_0206a4a0 and brings five names with it (_data_020a9de0, _func_0206a37c,
+# _func_0206a3a4, _func_0206a424 and _func_0206a458). The four functions have
+# translation units of their own and could be seated in the same pass, but they
+# close nothing themselves, so the trade is five translation units for one row
+# and a fresh closure into the OS boot path that hal/boot_os.cpp already has
+# opinions about. Left for a lane that wants that whole region.
+src/__sinit_ov023_02111aa8.c
+src/func_0205fc44.c
+src/func_ov002_020e3e00.cpp

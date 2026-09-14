@@ -18773,6 +18773,14 @@ foreach(line IN LISTS SLICE_HOSTGEN4_LINES)
     endif()
     list(APPEND SLICE_HOSTGEN4_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+# Three ROM bodies that are in the binary under their MSVC-decorated spelling
+# because their sources carry the decomp's //cpp marker and are compiled
+# LANGUAGE CXX, while their callers are .c files asking for the flat ROM
+# name. The file is three /alternatename directives and its own banner; it
+# adds no body and no slice row. A second slice row was tried first and just
+# compiled each object twice.
+list(APPEND SLICE_HOSTGEN4_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/HostGen4_CxxNameBridges.cpp")
 foreach(_thg4 walk_window walk_window_hires smoke_player)
     target_sources(${_thg4} PRIVATE ${SLICE_HOSTGEN4_SOURCES})
 endforeach()
