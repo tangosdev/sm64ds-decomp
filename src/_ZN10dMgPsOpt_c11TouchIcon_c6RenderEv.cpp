@@ -21,10 +21,12 @@
 #include "types.h"
 #include "dMgPsOpt_c.h"
 
+struct M;
+
 extern "C" {
 
 extern u16 *_ZN3G2S12GetBG1ScrPtrEv(void);
-extern void func_ov004_020aea78(void *self, int a1, int a2, int a3);
+extern void func_ov004_020aea78(void *self, int a1, int a2, struct M *a3);
 
 extern u16 data_ov004_020bca58[];
 extern u16 data_ov004_020bca60[];

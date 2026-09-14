@@ -96,7 +96,7 @@ struct daObjMarioCap_c : dEnemyBase_c {
     /* Leaf until fBase_c can declare operator new (#2570). unsigned long, not
        unsigned int: size_t is unsigned int on this include path and mangles
        nwEj, colliding with fBase_c's own allocator. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

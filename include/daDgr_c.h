@@ -75,7 +75,7 @@ struct daDgr_c : dBgActor_c {
 
     /* Leaf allocator until #2570 merges a shared fBase_c::operator new.
        `unsigned long` is size_t on this ABI; `unsigned int` is illegal. */
-    static void *operator new(unsigned long size)
+    static void *operator new(size_t size)
     {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

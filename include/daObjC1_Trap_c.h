@@ -52,10 +52,10 @@ struct daObjC1_Trap_c : dBgActor_c {
 
     /* Leaf operator new until fBase_c can declare it (#2570). unsigned long
        is size_t on this ABI; unsigned int is illegal. */
-    static void *operator new(unsigned long size);
+    static void *operator new(size_t size);
 };
 
-inline void *daObjC1_Trap_c::operator new(unsigned long size)
+inline void *daObjC1_Trap_c::operator new(size_t size)
 {
     return _ZN7fBase_cnwEj((unsigned)size);
 }

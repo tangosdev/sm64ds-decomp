@@ -37,7 +37,7 @@ struct daObjHatenaSwitch_c : dBgActor_c {
     virtual void OnGroundPounded(dActor_c &other);
 
     /* size_t == unsigned long here; unsigned int is illegal. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 

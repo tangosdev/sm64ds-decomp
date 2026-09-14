@@ -117,10 +117,10 @@ daTrsTrap_c_classInit_TERESAPIT kind:function(arm,size=0x40) addr:0x0211d2a0
 daTrsTrap_c_classInit_MERRYGOROUND kind:function(arm,size=0x40) addr:0x0211d2e0
 daTrsTrap_c_classInit_BOOKSHELF kind:function(arm,size=0x40) addr:0x0211d320
 daTrsTrap_c_classInit_KAIDAN kind:function(arm,size=0x40) addr:0x0211d360
-_ZN12FallBlockBbhD1Ev kind:function(arm,size=0x50) addr:0x0211d3a0
-_ZN12FallBlockBbhD0Ev kind:function(arm,size=0x64) addr:0x0211d3f0
-_ZN12FallBlockBbh16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x0211d454
-_ZN12FallBlockBbh13InitResourcesEv kind:function(arm,size=0x14) addr:0x0211d468
+_ZN20daObjTh_Fall_Block_cD1Ev kind:function(arm,size=0x50) addr:0x0211d3a0
+_ZN20daObjTh_Fall_Block_cD0Ev kind:function(arm,size=0x64) addr:0x0211d3f0
+_ZN20daObjTh_Fall_Block_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x0211d454
+_ZN20daObjTh_Fall_Block_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x0211d468
 daObjTh_Fall_Block_c_classInit kind:function(arm,size=0x3c) addr:0x0211d47c
 _ZN8MadPianoD1Ev kind:function(arm,size=0x94) addr:0x0211d4b8
 _ZN8MadPianoD0Ev kind:function(arm,size=0xa8) addr:0x0211d54c
@@ -190,7 +190,7 @@ _ZTI20daObjTh_Fall_Block_c kind:data(any) addr:0x0211eb04
 data_ov063_0211eb10 kind:data(any) addr:0x0211eb10
 _ZTS20daObjTh_Fall_Block_c kind:data(any) addr:0x0211eb1c
 g_profile_TH_DOWN_B kind:data(any) addr:0x0211eb34
-_ZTV12FallBlockBbh kind:data(any) addr:0x0211eb58
+_ZTV20daObjTh_Fall_Block_c kind:data(any) addr:0x0211eb58
 data_ov063_0211ebd8 kind:data(any) addr:0x0211ebd8
 data_ov063_0211ebf8 kind:data(any) addr:0x0211ebf8
 data_ov063_0211ec18 kind:data(any) addr:0x0211ec18

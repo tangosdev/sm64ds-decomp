@@ -215,6 +215,64 @@ class ArityMismatchTests(unittest.TestCase):
                          [("arity", "src/caller.cpp", "0", "2")])
 
 
+class OpaquePointerTests(unittest.TestCase):
+    """`void *` declines to answer; it does not contradict another pointer.
+
+    Half this tree is still unpromoted C shards that reconstruct an object as an
+    opaque `char buf[0x50]` and have no type to name, so they spell every object
+    pointer `void *`. Promoting ONE caller to the real C++ type flips the
+    plurality, and without this the gate reds every shard left behind -- nine
+    files for `dBgCh_Gnd`'s constructor alone, not one of them touched by the PR
+    that flipped it. The gate would be measuring the promotion campaign's
+    progress rather than a defect.
+    """
+
+    def test_void_star_against_a_named_pointer_is_silent(self):
+        def tree(t):
+            t.write("src/Init.cpp",
+                    "void Init(dBgCh_Gnd *self)\n{\n    (void)self;\n}\n")
+            t.write("src/shard.c", "extern void Init(void *self);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "Init"), [])
+
+    def test_it_is_silent_in_both_directions(self):
+        def tree(t):
+            t.write("src/Init.cpp", "void Init(void *self)\n{\n    (void)self;\n}\n")
+            t.write("src/shard.c", "extern void Init(dBgCh_Gnd *self);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "Init"), [])
+
+    def test_two_DIFFERENT_named_pointees_still_contradict(self):
+        """The silence is about `void *` only. Two real claims still disagree."""
+        def tree(t):
+            t.write("src/Init.cpp",
+                    "void Init(dBgCh_Gnd *self)\n{\n    (void)self;\n}\n")
+            t.write("src/shard.cpp", "extern void Init(dActor_c *self);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "Init"),
+                         [("param", "src/shard.cpp",
+                           "#1 dActor_c *", "#1 dBgCh_Gnd *")])
+
+    def test_void_star_against_a_NON_pointer_still_contradicts(self):
+        """`int` is a real claim, so one of the two sides is genuinely wrong."""
+        def tree(t):
+            t.write("src/Init.cpp", "void Init(void *self)\n{\n    (void)self;\n}\n")
+            t.write("src/shard.c", "extern void Init(int self);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "Init"),
+                         [("param", "src/shard.c", "#1 int", "#1 void *")])
+
+    def test_a_void_star_RETURN_is_not_covered(self):
+        """Only parameters. A return type is the callee's own statement, not a
+        placeholder the shard was forced into by having no type to name."""
+        def tree(t):
+            t.write("src/Get.cpp", "dBgCh_Gnd *Get(void)\n{\n    return 0;\n}\n")
+            t.write("src/shard.c", "extern void *Get(void);\n")
+        findings, _d, _f, _files = build(tree)
+        self.assertEqual(kinds(findings, "Get"),
+                         [("return", "src/shard.c", "void *", "dBgCh_Gnd *")])
+
+
 class TypedefAliasTests(unittest.TestCase):
     """Fixture 3: spellings the tree already treats as the same type must be silent."""
 

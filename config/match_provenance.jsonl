@@ -719,3 +719,5 @@
 {"id":"ov021:0x021116c8","module":"ov021","addr":34674376,"name":"_ZN12WorkElevator8BehaviorEv","matchProvenance":{"kind":"human"},"author":"github-actions[bot]","srcPath":"src/_ZN12WorkElevator8BehaviorEv.cpp"}
 {"id":"ov004:0x020ae5c4","module":"ov004","addr":34268612,"name":"func_ov004_020ae5c4","matchProvenance":{"kind":"human"},"author":"tangosdev","srcPath":"src/func_ov004_020ae5c4.cpp"}
 {"id":"ov006:0x0212a764","module":"ov006","addr":34776932,"name":"func_ov006_0212a764","matchProvenance":{"kind":"human","note":"m100 OV63 exact-match landing"},"author":"tangosdev","srcPath":"src/func_ov006_0212a764.cpp"}
+{"id":"ov071:0x02121734","module":"ov071","addr":34740020,"name":"_ZN3MrI13InitResourcesEv","matchProvenance":{"kind":"ai","model":"claude-opus-5","reasoning":"high","harness":"claude-code"},"author":"andrewboudreau","srcPath":"src/_ZN3MrI13InitResourcesEv.cpp"}
+{"id":"arm9:0x0202cc0c","module":"arm9","addr":33737740,"name":"_ZN5Stage13InitResourcesEv","matchProvenance":{"kind":"ai","model":"claude-opus-5","reasoning":"high","harness":"claude-code"},"author":"tangosdev","srcPath":"src/_ZN5Stage13InitResourcesEv.cpp"}

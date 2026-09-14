@@ -94,7 +94,7 @@ struct da1up_c : dEnemyBase_c {
     /* Leaf allocator until fBase_c::operator new is a real method (#2570).
        unsigned long, not unsigned int: that is the C++ new signature mwccarm
        2004/b56 emits for `new da1up_c()`. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

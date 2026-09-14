@@ -1,72 +1,67 @@
 //cpp
-#include "dBgCh_Actr.h"
+// @symbol _ZN11daTBasket_c8BehaviorEv
+/* Vtable slot 6. The cage bounces: a ground hit halves the rise speed and
+ * kicks dust, while airborne frames trail secret sparkles (effect 0x119).
+ * Grounded, once the secret chime is done (or its counter passes 0x3c), a
+ * touching player jumps into the cage. */
 
-struct dCc_c;
-struct dActor_c {
-    static dActor_c* FindWithID(unsigned int id);
-    void LandingDust(bool b);
-    void UpdatePos(dCc_c* cyl);
-};
-struct Player {
-    void JumpIntoBooCage(Vector3& v);
-};
-struct dEnemyBase_c {
-    void UpdateWMClsn(dBgCh_Actr& w, unsigned int f);
-};
-struct dCc_c {
-    void Clear();
-    void Update();
-};
-extern "C" unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
-    unsigned int a, unsigned int b, int x, int y, int z, const void* v, void* cb);
-extern "C" int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, unsigned short* t);
-extern "C" void func_ov063_021169c4(char* c);
+#include "daTBasket_c.h"
+#include "Player.h"
 
-struct daTBasket_c {
-    int Behavior();
-};
+/* Sound::PlaySecretSound / Particle::System::New stay mangled: no shared
+ * header declares them yet (d_a_wanwan / da1up precedent). The shadow helper
+ * func_ov063_021169c4 is this class's own (only caller) but enrolled
+ * separately; see daTBasket_c.h. */
+extern "C" {
+int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(dActor_c *actor, u16 *timer);
+unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+    unsigned int uniqueID, unsigned int effectID,
+    int x, int y, int z, const void *dir, void *callback);
+void func_ov063_021169c4(char *c);
+}
 
 int daTBasket_c::Behavior()
 {
-    char* self = (char*)this;
-    int r4 = 0;
-    int r6 = 1;
+    int onGround = 0;
+    int secretDone = 1;
 
-    if (*(unsigned char*)(self + 0x37e) == 0)
-        r6 = _ZN5Sound15PlaySecretSoundEP8dActor_cPt(self, (unsigned short*)(self + 0x37c));
+    if (mMuteSecretSound == 0)
+        secretDone = _ZN5Sound15PlaySecretSoundEP8dActor_cPt(this, (u16 *)&mSoundTimer);
 
-    if (((dBgCh_Actr*)(self + 0x144))->JustHitGround()) {
-        int v = *(int*)(self + 0xa8);
-        *(int*)(self + 0xa8) = (-v) >> 1;
-        ((dActor_c*)self)->LandingDust(0);
-    } else if (((dBgCh_Actr*)(self + 0x144))->IsOnGround()) {
-        r4 = 1;
-        /* secret non-zero skips timer gate; secret zero requires timer > 0x3c */
-        if (r6 != 0 || *(unsigned short*)(self + 0x300 + 0x7c) > 0x3c) {
-            unsigned int id = *(unsigned int*)(self + 0x134);
+    if (mWithMeshClsn.JustHitGround()) {
+        int vertSpeed = mVertSpeed;
+        mVertSpeed = (-vertSpeed) >> 1;
+        LandingDust(false);
+    } else if (mWithMeshClsn.IsOnGround()) {
+        onGround = 1;
+        /* Secret non-zero skips the timer gate; secret zero requires the chime
+         * counter past 0x3c. The counter reads UNSIGNED: mSoundTimer is an s16
+         * and the plain comparison sign-extends. */
+        if (secretDone != 0 || (u16)mSoundTimer > 0x3c) {
+            unsigned int id = mdCcAc_c.otherOwner;
             if (id != 0) {
-                dActor_c* a = dActor_c::FindWithID(id);
-                if (a != 0) {
-                    if ((*(unsigned int*)(self + 0x130) & 0x400000) != 0)
-                        ((Player*)a)->JumpIntoBooCage(*(Vector3*)(self + 0x5c));
+                dActor_c *touched = dActor_c::FindWithID(id);
+                if (touched != 0) {
+                    if ((mdCcAc_c.hitFlags & 0x400000) != 0)
+                        ((Player *)touched)->JumpIntoBooCage(*(Vector3 *)&mPosX);
                 }
             }
         }
     }
 
-    if (r4 == 0) {
-        int z = *(int*)(self + 0x64);
-        int y = *(int*)(self + 0x60);
-        int x = *(int*)(self + 0x5c);
-        unsigned int pid = *(unsigned int*)(self + 0x378);
-        *(unsigned int*)(self + 0x378) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
+    if (onGround == 0) {
+        int z = mPosZ;
+        int y = mPosY;
+        int x = mPosX;
+        unsigned int pid = (unsigned int)mParticleID;
+        mParticleID = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
             pid, 0x119, x, y + 0x64000, z, 0, 0);
     }
 
-    ((dActor_c*)self)->UpdatePos(0);
-    ((dEnemyBase_c*)self)->UpdateWMClsn(*(dBgCh_Actr*)(self + 0x144), 0);
-    func_ov063_021169c4(self);
-    ((dCc_c*)(self + 0x110))->Clear();
-    ((dCc_c*)(self + 0x110))->Update();
+    UpdatePos(0);
+    UpdateWMClsn(mWithMeshClsn, 0);
+    func_ov063_021169c4((char *)this);
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

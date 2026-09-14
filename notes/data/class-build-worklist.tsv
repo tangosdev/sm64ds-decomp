@@ -383,7 +383,7 @@ daObjWc_Obj07_c	DONE	include\daObjWc_Obj07_c.h	daObjKaitendai_c	0	ov029	4
 daObjBk_Fall_Block_c	DONE	include\daObjBk_Fall_Block_c.h	daObjFallBlock_c	0	ov015	4
 daObjFl_Fall_Block_c	DONE	include\daObjFl_Fall_Block_c.h	daObjFallBlock_c	0	ov022	4
 daObjKm2_Fall_Block_c	DONE	include\daObjKm2_Fall_Block_c.h	daObjFallBlock_c	0	ov045	4
-daObjTh_Fall_Block_c	DONE	include\FallBlockBbh.h  [alias: header uses pre-rename name]	daObjFallBlock_c	0	ov063	4
+daObjTh_Fall_Block_c	DONE	include\daObjTh_Fall_Block_c.h  [alias: header uses pre-rename name]	daObjFallBlock_c	0	ov063	4
 daObjKm1_Dorifu_c	DONE	include\daObjKm1_Dorifu_c.h	daObjDorifu_c	0	ov043	4
 daObjKm3_Dorifu_c	DONE	include\daObjKm3_Dorifu_c.h	daObjDorifu_c	0	ov047	4
 daObjRc_Dorifu_c	DONE	include\daObjRc_Dorifu_c.h	daObjDorifu_c	0	ov036	4

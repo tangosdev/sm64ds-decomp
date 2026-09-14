@@ -38,7 +38,7 @@ struct daChRoom_c : dActor_c {
     /* Leaf operator new until #2570 puts the same allocator on fBase_c.
        Parameter is size_t (unsigned long on this compiler). `return new`
        relocates to `_Znwm` without this. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

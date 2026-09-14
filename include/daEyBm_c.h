@@ -64,7 +64,7 @@ struct daEyBm_c : dActor_c {
     /* Leaf in-class operator new until fBase_c::operator new(unsigned long)
        lands (#2570). unsigned long, not unsigned int: `new daEyBm_c()` looks
        up _Znwm. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 

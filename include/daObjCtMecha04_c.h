@@ -45,7 +45,7 @@ struct daObjCtMecha04_c : dBgActor_c {
     static void AfterClsnCallback(dBgW *collider, dActor_c *owner,
                                   dActor_c *other);
 
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 

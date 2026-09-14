@@ -43,7 +43,7 @@ struct daObjRc_Guruguru_c : dBgActor_c {
 
     /* size_t == unsigned long on this ABI; unsigned int is illegal.
        A plain `new` without this relocates to the global `_Znwm`. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

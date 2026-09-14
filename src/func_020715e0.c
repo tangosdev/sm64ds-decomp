@@ -1,16 +1,18 @@
 #include "types.h"
-extern int func_02071698(void *thiz, int val);
-extern void func_02071644(void *thiz, int val);
+#include "Decimal.h"
 
-struct T { char pad[4]; unsigned char field4; };
+// func_02071698 is still spelled the way its own definition is, over a raw byte
+// pointer and its own offsets; recovering that interface is a separate slice.
+extern int func_02071698(void *value, int length);
+extern void func_02071644(Decimal *value, int length);
 
-void func_020715e0(struct T *thiz, int val)
+void func_020715e0(Decimal *value, int length)
 {
     int r;
-    if (val <= 0) return;
-    if (val >= thiz->field4) return;
-    r = func_02071698(thiz, val);
-    thiz->field4 = val;
+    if (length <= 0) return;
+    if (length >= value->sig.length) return;
+    r = func_02071698(value, length);
+    value->sig.length = length;
     if (r < 0) return;
-    func_02071644(thiz, val);
+    func_02071644(value, length);
 }

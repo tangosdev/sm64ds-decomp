@@ -28,15 +28,16 @@ struct C {
     virtual int f25();
     virtual int f26();
 };
+struct M { int _00, _01, _10, _11; };
 extern "C" {
 extern C* data_ov004_020beb68;
-extern void func_ov004_020b1c68(void* a0, int a1, int a2, int a3, int a4, int a5);
+extern void func_ov004_020b1c68(void* a0, int a1, int a2, int a3, int a4, struct M* a5);
 }
 
 struct BF { unsigned int lo:10; unsigned int hi:22; };
 struct S { int x; BF y; };
 
-extern "C" void func_ov004_020aea78(S* self, int a1, int a2, int a3)
+extern "C" void func_ov004_020aea78(S* self, int a1, int a2, struct M* a3)
 {
     S v = *self;
     if (data_ov004_020beb68->f26() == 2) {

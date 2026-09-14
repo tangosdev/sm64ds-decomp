@@ -51,7 +51,7 @@ struct daObjRcBuranko_c : dBgActor_c {
     int CleanupResources();   /* slot  3 -- 0x02111284 */
 
     /* size_t == unsigned long here; unsigned int is illegal. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

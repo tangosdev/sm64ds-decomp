@@ -32,7 +32,7 @@ struct daObjFire_c : dActor_c {
     virtual s32  OnYoshiTryEat();               /* slot 18 */
     virtual void OnTurnIntoEgg(Player &player); /* slot 19 */
 
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

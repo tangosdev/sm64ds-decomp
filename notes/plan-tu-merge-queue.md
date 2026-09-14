@@ -56,7 +56,7 @@ it lose it. Both directions are live. Affected Tier 1:
 | Class |
 |---|
 |[ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj02_c(1/9)`  [ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj05_c(1/9)`  [ov029](../config/arm9/overlays/ov029/symbols.txt)/`daObjWc_Obj07_c(1/5)` |
-|[ov014](../config/arm9/overlays/ov014/symbols.txt)/`daObjBSwdoor_c(1/6)` [ov030](../config/arm9/overlays/ov030/symbols.txt)/`RollingLogTtm(3/6)` [ov063](../config/arm9/overlays/ov063/symbols.txt)/`FallBlockBbh(2/5)` |
+|[ov014](../config/arm9/overlays/ov014/symbols.txt)/`daObjBSwdoor_c(1/6)` [ov030](../config/arm9/overlays/ov030/symbols.txt)/`RollingLogTtm(3/6)` [ov063](../config/arm9/overlays/ov063/symbols.txt)/`daObjTh_Fall_Block_c(2/5)` |
 |[ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBk_Fall_Block_c(2/5)` [ov015](../config/arm9/overlays/ov015/symbols.txt)/`daObjBk_Ukisima_c(1/5)` [ov022](../config/arm9/overlays/ov022/symbols.txt)/`RotatingPlatformLll(1/5)` |
 |[ov036](../config/arm9/overlays/ov036/symbols.txt)/`RotatingPlatformRr(1/5)` [ov064](../config/arm9/overlays/ov064/symbols.txt)/`TiltingPlatformLll(2/5)` [ov016](../config/arm9/overlays/ov016/symbols.txt)/`FloatOnWaterPlatformJrb(1/4)` |
 
@@ -290,7 +290,7 @@ first module where a `config_tu/` conversion becomes conceivable.
 **B13 — R3 tail · 2 TUs / 10 files / net −8 / 206 lines**
 | TU | Address | Files | Description | Status |
 |----|---------|-------|-------------|--------|
-|[ov063](../config/arm9/overlays/ov063/symbols.txt)| 0x211d3a0|  n=5|   `FallBlockBbh`|        2/5|
+|[ov063](../config/arm9/overlays/ov063/symbols.txt)| 0x211d3a0|  n=5|   `daObjTh_Fall_Block_c`|        2/5|
 |[ov064](../config/arm9/overlays/ov064/symbols.txt)| 0x2118020|  n=5|   `TiltingPlatformLll`|  2/5|
 
 

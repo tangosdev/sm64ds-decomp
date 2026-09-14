@@ -9486,15 +9486,15 @@
    "start": "0x211d3a0",
    "end": "0x211d4b8",
    "classes": [
-    "FallBlockBbh"
+    "daObjTh_Fall_Block_c"
    ],
    "n_functions_map": 5,
    "n_files": 5,
    "files": [
-    "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD1Ev.cpp",
-    "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbhD0Ev.cpp",
-    "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbh16CleanupResourcesEv.cpp",
-    "src/game/actors/daObjTh_Fall_Block_c/_ZN12FallBlockBbh13InitResourcesEv.cpp",
+    "src/game/actors/daObjTh_Fall_Block_c/_ZN20daObjTh_Fall_Block_cD1Ev.cpp",
+    "src/game/actors/daObjTh_Fall_Block_c/_ZN20daObjTh_Fall_Block_cD0Ev.cpp",
+    "src/game/actors/daObjTh_Fall_Block_c/_ZN20daObjTh_Fall_Block_c16CleanupResourcesEv.cpp",
+    "src/game/actors/daObjTh_Fall_Block_c/_ZN20daObjTh_Fall_Block_c13InitResourcesEv.cpp",
     "src/game/actors/daObjTh_Fall_Block_c/d_a_obj_th_fall_block.c"
    ],
    "ext_mix": {

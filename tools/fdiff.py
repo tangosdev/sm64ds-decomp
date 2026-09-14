@@ -77,7 +77,9 @@ def main():
     ap.add_argument("--common-prefix", action="store_true",
                     help="diff only the shared byte prefix when sizes differ")
     ap.add_argument("--limit", type=lambda x: int(x, 0), default=None,
-                    help="limit the verbose comparison to this many bytes")
+                    help="limit the per-word VERBOSE listing to this many "
+                         "bytes; the RESULT verdict is always scored over "
+                         "the whole function")
     ap.add_argument("--align", action="store_true",
                     help="show size-tolerant normalized instruction alignment")
     ap.add_argument("--align-mnemonic", action="store_true",
@@ -173,11 +175,24 @@ def main():
         common = min(len(target), len(code))
         compare_target = target[:common]
         compare_code = code[:common]
+    # --limit used to truncate the arrays that were SCORED, not just the
+    # ones printed, while `words` below stayed full-length. So `--limit 96`
+    # on a 1063-word function that really scores 72 printed
+    #     RESULT match=True mismatches=0/1063
+    # -- a full-length denominator behind a verdict covering 24 words, and
+    # --track then banked that 0 as a new best. The flag is documented as
+    # limiting the *verbose comparison*, so it now does exactly that: the
+    # window bounds what is listed, never what is judged.
     if a.limit is not None:
-        compare_target = compare_target[:a.limit]
-        compare_code = compare_code[:a.limit]
-    ok, ndiff = M.compare(compare_target, compare_code, relocs,
-                          verbose=not a.quiet)
+        ok, ndiff = M.compare(compare_target, compare_code, relocs, verbose=False)
+        if not a.quiet:
+            M.compare(compare_target[:a.limit], compare_code[:a.limit],
+                      relocs, verbose=True)
+            print(f"  (listing truncated to {a.limit} bytes by --limit; "
+                  f"the RESULT below scores all {len(compare_target)})")
+    else:
+        ok, ndiff = M.compare(compare_target, compare_code, relocs,
+                              verbose=not a.quiet)
     words = max(len(target), len(code)) // 4
     print(f"RESULT match={ok} mismatches={ndiff}/{words} version={a.version}")
 

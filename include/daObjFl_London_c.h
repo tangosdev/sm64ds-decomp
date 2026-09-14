@@ -34,7 +34,7 @@ struct daObjFl_London_c : dBgActor_c {
 
     /* Leaf until fBase_c::operator new(unsigned long) lands (#2570).
      * MWCC has no size_t here; unsigned long is the new-expression operand. */
-    static void *operator new(unsigned long size)
+    static void *operator new(size_t size)
     {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

@@ -69,7 +69,7 @@ struct daYurei_Mucho_c : dEnemyBase_c {
     void OnPendingDestroy();
     int Render();
 
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

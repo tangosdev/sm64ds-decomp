@@ -40,7 +40,7 @@ struct daSldMng_c : dActor_c {
     virtual int InitResources(); /* slot 0 */
     virtual int Behavior();      /* slot 6 */
 
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 

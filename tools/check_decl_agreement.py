@@ -1339,6 +1339,31 @@ def _reference(symbol, decls, defs):
     return best[0], "plurality"
 
 
+def _declines_to_answer(a, b):
+    """True when one spelling is `void *` and the other is any other object pointer.
+
+    `void *` is not a claim about the pointee -- it is the absence of one. It is
+    what an unpromoted C shard can say and no more: those files reconstruct the
+    object as an opaque `char buf[0x50]` and have no type to name. C converts
+    between `void *` and any object pointer without a cast, and both occupy one
+    register identically, so a declaration spelling `void *` neither agrees nor
+    disagrees with one spelling `T *` -- it declines to answer, and a gate that
+    reads silence as contradiction is measuring the promotion campaign's progress
+    rather than a defect.
+
+    Two DIFFERENT named pointees (`Vector3 *` vs `dActor_c *`) still contradict,
+    and so does `void *` against any non-pointer: `int` is a real claim, and one
+    of the two sides is then genuinely wrong.
+    """
+    if a == b:
+        return False
+    if a == "void *":
+        return b.endswith("*")
+    if b == "void *":
+        return a.endswith("*")
+    return False
+
+
 def disagreements(decls, defs, unmangled, root=REPO):
     """[(record dict)] for every declaration that contradicts its reference.
 
@@ -1387,6 +1412,13 @@ def disagreements(decls, defs, unmangled, root=REPO):
                                                 "#%d %s" % (i + 1, a),
                                                 "#%d a pointer (the implicit this)"
                                                 % (i + 1,)))
+                            continue
+                        # Promoting ONE caller to a real C++ type flips the
+                        # plurality and would otherwise red every shard that
+                        # has not been promoted yet -- nine files for the
+                        # `dBgCh_Gnd` constructor alone, not one of them
+                        # touched by the PR that flipped it.
+                        if _declines_to_answer(a, b):
                             continue
                         if a != b:
                             out.append(_finding(symbol, "param", d, ref, basis,

@@ -127,7 +127,7 @@ struct daObjClockHuriko_c : dActor_c {
     /* Until #2570 merges, a leaf `unsigned long` new forwards the retail
        `fBase_c::operator new(unsigned int)`. `unsigned int` here mangles
        differently and the factory misses. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

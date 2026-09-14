@@ -28,7 +28,7 @@ struct daObjKb1Billboard_c : dActor_c {
 
     /* Leaf operator new until fBase_c can declare it (#2570). unsigned long
        is size_t on this ABI; unsigned int is illegal. */
-    static void *operator new(unsigned long size);
+    static void *operator new(size_t size);
 
 private:
     /* Ownership, body, call site, and codegen are proven. The readable name is
@@ -36,7 +36,7 @@ private:
     void UpdateModelTransform();
 };
 
-inline void *daObjKb1Billboard_c::operator new(unsigned long size)
+inline void *daObjKb1Billboard_c::operator new(size_t size)
 {
     return _ZN7fBase_cnwEj((unsigned)size);
 }

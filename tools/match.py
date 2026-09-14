@@ -35,12 +35,50 @@ ARM9_BASE = 0x02004000
 INCLUDE = REPO / "include"
 
 # -w illpragmas is a WARNING flag only (no codegen effect, verified: all banked matches still
-# match with it on). It exists here because mwccarm SILENTLY ACCEPTS an unknown #pragma by
-# default, so a typo'd or invented pragma name compiles clean and leaves the output unchanged
-# -- indistinguishable from a genuinely inert lever. Whole sweeps have recorded "pragma X is
-# inert" for pragmas the compiler never honoured. With this flag it prints
-# "<file>:<line>: warning: illegal #pragma" and names the line; compile_c surfaces that even
-# on a successful compile. See notes/mwccarm-codegen.md 6as.
+# match with it on).
+#
+# What it does NOT do, corrected 2026-09-13 after the older reading below cost several sweeps:
+# it does NOT warn on an unknown pragma NAME. `#pragma totally_invented_pragma on` compiles
+# silently under -w illpragmas, -warn illpragmas, -w on, -warnings on and -w all alike. It
+# fires on an ILLEGAL ARGUMENT to a pragma mwccarm already knows -- `#pragma opt_common_subs
+# bogus_value` warns with the caret under the argument. Control that the diagnostic stream is
+# not simply being swallowed: -w all warns "function has no prototype" in the same file.
+#
+# Inverting that reading gives a partial positive control where this project had asserted
+# there is none -- but mind the direction. A warning PROVES the name exists. Silence proves
+# NOTHING: `#pragma pack(bogus)`, `mark bogus_value` and `once bogus_value` are all silent and
+# all certainly exist, so the probe has a real false-negative class. Read a silent result as
+# "not shown to exist", never as "absent". What makes the positive direction trustworthy is
+# that the warning is NAME-gated, not argument-shape-gated: an unknown name with an illegal
+# argument (`totally_invented_pragma bogus_value`) is silent too.
+#
+# Shown to exist this way: opt_common_subs, opt_dead_code, opt_propagation, opt_lifetimes,
+# opt_strength_reduction, opt_unroll_loops, opt_vectorize_loops, inline_max_size,
+# optimize_for_size, global_optimizer, peephole. Not shown to exist: opt_nopeephole,
+# opt_schedule, scheduling -- earlier sweeps recorded the first two as inert FINDINGS, which
+# they cannot be either way.
+#
+# Existence is a front-end fact and says nothing about whether the ARM backend honours the
+# pragma, so it does not by itself hand you a lever. Swept across the whole near-miss bank
+# afterwards: peephole, global_optimizer, opt_unroll_loops and inline_max_size are byte-inert
+# on every scorable row -- recognised names the backend ignores. The live set is
+# opt_common_subs, opt_propagation, optimize_for_size, opt_lifetimes, opt_dead_code and
+# opt_strength_reduction, and on every row where one of them moves code it moves it WORSE.
+# Use the probe to stop a sweep wasting cells on a name, not as evidence a lever exists.
+#
+# Two further screens for when that one is inconclusive. mwccarm 1.2/sp2p3 and 2.0/sp2p3 DO
+# warn on an unknown pragma name where 2004/b56 -- the canonical matching compiler, and the
+# only silent one of the three -- does not, so a second build answers the same question. And
+# do not try to enumerate the vocabulary out of mwccarm.exe's string table: run through this
+# same probe it returns 1,442 "valid" names, including `wcscat` and `while`.
+#
+# Not to be confused with the -opt OPTION: `-opt nopeephole` and `-opt noschedule` are
+# rejected option names, so a sweep recording either as "measured inert" measured nothing.
+# mwccarm's accepted -opt list is off|none, on, all|full, [no]space, [no]speed, l[evel],
+# [no]cse|[no]commonsubs, [no]deadcode, [no]deadstore, [no]lifetimes, [no]loop[invariants],
+# [no]prop[agation], [no]strength, [no]dead, display|dump.
+#
+# compile_c surfaces the warning even on a successful compile. See notes/mwccarm-codegen.md 6as.
 DEFAULT_FLAGS = ("-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e "
                  "-gccext,on -msgstyle gcc -w illpragmas")
 # The C++ lane needs one flag the C lane does not: `-Cpp_exceptions off`, which
@@ -156,13 +194,15 @@ def compile_c(cfile: pathlib.Path, version: str, flags: str,
             detail = "\n".join(s for s in (r.stdout.strip(), r.stderr.strip()) if s)
             print(f"  ! compile failed ({version}): {detail[:500]}")
             return None
-        # A SUCCESSFUL compile can still be telling you the lever you are measuring does not
-        # exist. mwccarm accepts any unknown #pragma silently, so without this the sweep just
-        # reports the baseline number and the pragma gets banked as "inert". Surface it.
+        # A SUCCESSFUL compile can still be telling you something about the lever being
+        # measured -- but note what this does and does not catch. mwccarm accepts an unknown
+        # pragma NAME silently, so a typo'd name still slips past here and gets banked as
+        # "inert". What it catches is a KNOWN pragma handed an argument it rejects: real
+        # pragma, not applied. See DEFAULT_FLAGS above for the probe that tests a name.
         for line in (r.stdout + r.stderr).splitlines():
             if "illegal #pragma" in line:
-                print(f"  ! {line.strip()}  <- mwccarm does NOT know this pragma; "
-                      f"it is not being applied (see notes 6as)")
+                print(f"  ! {line.strip()}  <- mwccarm DOES know this pragma and is "
+                      f"rejecting the ARGUMENT, so it is not applied (see notes 6as)")
         return out_o.read_bytes()
 
 

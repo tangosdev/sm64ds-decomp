@@ -4213,6 +4213,10 @@ src/_ZN5Stage16CleanupResourcesEv.cpp:
     complete
     .text start:0x0202c9a8 end:0x0202cc0c
 
+src/_ZN5Stage13InitResourcesEv.cpp:
+    complete
+    .text start:0x0202cc0c end:0x0202d690
+
 src/_ZN5Stage14LoadGraphics2DEbi.cpp:
     complete
     .text start:0x0202d690 end:0x0202ddc8
@@ -11743,9 +11747,9 @@ src/func_020715e0.c:
     complete
     .text start:0x020715e0 end:0x02071644
 
-src/func_02071694.c:
+src/func_02071644.c:
     complete
-    .text start:0x02071694 end:0x02071698
+    .text start:0x02071644 end:0x02071698
 
 src/func_02071698.c:
     complete

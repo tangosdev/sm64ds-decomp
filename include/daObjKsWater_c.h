@@ -57,7 +57,7 @@ struct daObjKsWater_c : dBgActor_c {
     s32 mSoundID;                                 /* 0x33c -- the looping draining-
                                                      water sound's handle */
 
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

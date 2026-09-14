@@ -1774,12 +1774,12 @@ ov063	0x0211d320	func_ov063_0211d320	Bookshelf_Spawn	spawnfunc
 ov063	0x0211d320	Bookshelf_Spawn	daTrsTrap_c_classInit_BOOKSHELF	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211d360	func_ov063_0211d360	MansionSteps_Spawn	spawnfunc
 ov063	0x0211d360	MansionSteps_Spawn	daTrsTrap_c_classInit_KAIDAN	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
-ov063	0x0211d3a0	func_ov063_0211d3a0	_ZN12FallBlockBbhD1Ev	vtable slot 16
-ov063	0x0211d3f0	func_ov063_0211d3f0	_ZN12FallBlockBbhD0Ev	vtable slot 17
-ov063	0x0211d454	func_ov063_0211d454	_ZN12FallBlockBbh16CleanupResourcesEv	vtable slot 3
-ov063	0x0211d468	func_ov063_0211d468	_ZN12FallBlockBbh13InitResourcesEv	vtable slot 0
-ov063	0x0211d47c	func_ov063_0211d47c	FallBlockBbh_Spawn	spawnfunc
-ov063	0x0211d47c	FallBlockBbh_Spawn	daObjTh_Fall_Block_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
+ov063	0x0211d3a0	func_ov063_0211d3a0	_ZN20daObjTh_Fall_Block_cD1Ev	vtable slot 16
+ov063	0x0211d3f0	func_ov063_0211d3f0	_ZN20daObjTh_Fall_Block_cD0Ev	vtable slot 17
+ov063	0x0211d454	func_ov063_0211d454	_ZN20daObjTh_Fall_Block_c16CleanupResourcesEv	vtable slot 3
+ov063	0x0211d468	func_ov063_0211d468	_ZN20daObjTh_Fall_Block_c13InitResourcesEv	vtable slot 0
+ov063	0x0211d47c	func_ov063_0211d47c	daObjTh_Fall_Block_c_Spawn	spawnfunc
+ov063	0x0211d47c	daObjTh_Fall_Block_c_Spawn	daObjTh_Fall_Block_c_classInit	reconstructed classInit; ROM RTTI+factory shape+unique class factory+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211d4b8	func_ov063_0211d4b8	_ZN8MadPianoD1Ev	vtable slot 16
 ov063	0x0211d54c	func_ov063_0211d54c	_ZN8MadPianoD0Ev	vtable slot 17
 ov063	0x0211de3c	func_ov063_0211de3c	_ZN8MadPiano16CleanupResourcesEv	vtable slot 3
@@ -1808,9 +1808,9 @@ ov063	0x0211ea48	MerryGoRound_SpawnInfo	g_profile_MERRYGOROUND	reconstructed pro
 ov063	0x0211ea64	data_ov063_0211ea64	TrapDoor_SpawnInfo	spawninfo
 ov063	0x0211ea64	TrapDoor_SpawnInfo	g_profile_TERESAPIT	reconstructed profile global; literal ROM ID TERESAPIT+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211ea88	data_ov063_0211ea88	_ZTV11daTrsTrap_c	vtable alloc=0x354
-ov063	0x0211eb34	data_ov063_0211eb34	FallBlockBbh_SpawnInfo	spawninfo
-ov063	0x0211eb34	FallBlockBbh_SpawnInfo	g_profile_TH_DOWN_B	reconstructed profile global; literal ROM ID TH_DOWN_B+registry role+later EAD lineage; exact SM64DS spelling not preserved
-ov063	0x0211eb58	data_ov063_0211eb58	_ZTV12FallBlockBbh	vtable alloc=0x34c
+ov063	0x0211eb34	data_ov063_0211eb34	daObjTh_Fall_Block_c_SpawnInfo	spawninfo
+ov063	0x0211eb34	daObjTh_Fall_Block_c_SpawnInfo	g_profile_TH_DOWN_B	reconstructed profile global; literal ROM ID TH_DOWN_B+registry role+later EAD lineage; exact SM64DS spelling not preserved
+ov063	0x0211eb58	data_ov063_0211eb58	_ZTV20daObjTh_Fall_Block_c	vtable alloc=0x34c
 ov063	0x0211ed10	data_ov063_0211ed10	MadPiano_SpawnInfo	spawninfo
 ov063	0x0211ed10	MadPiano_SpawnInfo	g_profile_PIANO	reconstructed profile global; literal ROM ID PIANO+registry role+later EAD lineage; exact SM64DS spelling not preserved
 ov063	0x0211ed34	data_ov063_0211ed34	_ZTV8MadPiano	vtable alloc=?

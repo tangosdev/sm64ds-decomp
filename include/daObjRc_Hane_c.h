@@ -86,7 +86,7 @@ struct daObjRc_Hane_c : dActor_c {
 
     /* Leaf until #2570 lands fBase_c::operator new. unsigned long is mwccarm
        size_t; the unsigned cast is the ROM's _ZN7fBase_cnwEj signature. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

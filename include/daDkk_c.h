@@ -100,7 +100,7 @@ struct daDkk_c : daDsnBase_c {
        unsigned int: mwccarm 2004/b56 mangles the two differently and the
        global ::operator new the implicit `new` would otherwise call is
        `_Znwm`. */
-    static void *operator new(unsigned long size)
+    static void *operator new(size_t size)
     {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

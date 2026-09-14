@@ -1,28 +1,37 @@
 //cpp
 // @symbol _ZN11daTBasket_c13InitResourcesEv
-/* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_dBgCh_Actr.h"
-/* recovered: named members + shared header, real C++ method */
+/* Vtable slot 0. Loads the shared cage model (module file 0x6c9, which daTrs_c
+ * loads too), builds the 100-unit collision cylinder and the mesh collider,
+ * and zeroes the particle/sound tail. */
+
 #include "daTBasket_c.h"
+#include "SharedFilePtr.h"
+
+extern SharedFilePtr data_ov063_0211edec;
+
+/* dCcAc_c::Init / dBgCh_Actr::Init stay scalar: the header member forms take
+ * Fix12<int> BY VALUE but the tree's Fix12 has no int constructor (measured:
+ * neither a bare 0x64000 nor Fix12<int>(0x64000) converts), so only the scalar
+ * spelling reproduces the ROM's raw-word passing. dBgCh_Actr::Init's header
+ * additionally takes Fix12i, which mangles as i while the ROM is Fix12<int>.
+ * da1up_c calls them in this same spelling. */
 extern "C" {
-extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
-extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
-extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *actor, Fix12i radius, Fix12i height, unsigned int flags, unsigned int vulnFlags);
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *actor, Fix12i radius, Fix12i height, Vector3_16 *a, Vector3_16 *b);
 }
-extern void *data_ov063_0211edec;
 
 int daTBasket_c::InitResources()
 {
-    void *m = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov063_0211edec);
-    if (!_ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x300, m, 1, -1)) return 0;
-    if (!_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel)) return 0;
+    BMD_File *bmd = (BMD_File *)Model::LoadFile(data_ov063_0211edec);
+    if (mModel.SetFile(bmd, 1, -1) == 0)
+        return 0;
+    if (mShadowModel.InitCylinder() == 0)
+        return 0;
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x46000;
-    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0x200004, 0);
-    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x64000, 0x64000, 0, 0);
-    _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)&mWithMeshClsn);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x64000, 0x64000, 0x200004, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
+    mWithMeshClsn.SetLimMovFlag();
     mParticleID = 0;
     mSoundTimer = 0;
     mMuteSecretSound = 0;

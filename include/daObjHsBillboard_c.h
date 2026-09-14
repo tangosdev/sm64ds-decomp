@@ -29,10 +29,10 @@ struct daObjHsBillboard_c : dActor_c {
     virtual int Render();
     virtual int CleanupResources();
 
-    static void *operator new(unsigned long size);
+    static void *operator new(size_t size);
 };
 
-inline void *daObjHsBillboard_c::operator new(unsigned long size)
+inline void *daObjHsBillboard_c::operator new(size_t size)
 {
     return _ZN7fBase_cnwEj((unsigned)size);
 }

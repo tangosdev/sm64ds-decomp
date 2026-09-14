@@ -34,7 +34,7 @@
  * FOUR DESCENDANTS, one per level overlay: daObjBk_Fall_Block_c (daObjBk_Fall_Block_c,
  * ov015), daObjFl_Fall_Block_c (ov022, only ever named by its factory
  * daObjFl_Fall_Block_c_classInit), daObjKm2_Fall_Block_c (FallBlockBfs, ov045) and
- * daObjTh_Fall_Block_c (FallBlockBbh, ov063). Each one's destructor stores this
+ * daObjTh_Fall_Block_c (daObjTh_Fall_Block_c, ov063). Each one's destructor stores this
  * class's vtable between its own and _ZTV10dBgActor_c.
  *
  * SIZE 0x34c, the literal all four factories pass to fBase_c::operator new.

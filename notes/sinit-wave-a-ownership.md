@@ -166,7 +166,7 @@ containing D0/D1, all four PMF targets, both dispatchers, Behavior, Render,
 resource methods and spawn; no function hole was found.  ov063 has exactly four
 inferred TUs, four initializers and four ctor entries, providing independent
 order corroboration.  MadPiano's final `.ctor` word is `0x0211e708`, after
-BigBooIcon+BooCage+daTrs_c (`e6fc`), MansionSteps (`e700`) and FallBlockBbh
+BigBooIcon+BooCage+daTrs_c (`e6fc`), MansionSteps (`e700`) and daObjTh_Fall_Block_c
 (`e704`).
 
 Natural probe result:

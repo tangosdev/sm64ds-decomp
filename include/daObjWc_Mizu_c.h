@@ -56,7 +56,7 @@ struct daObjWc_Mizu_c : dBgActor_c {
     virtual int Behavior();            /* slot  6 */
     virtual int Render();              /* slot  9 */
 
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

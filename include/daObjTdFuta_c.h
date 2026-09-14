@@ -35,7 +35,7 @@ struct daObjTdFuta_c : dBgActor_c {
     /* Leaf size_t operator new. A plain `new daObjTdFuta_c` without this
        relocates to the global `_Znwm`; this routes the factory through
        fBase_c::operator new, the call this TU's classInit actually makes. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 

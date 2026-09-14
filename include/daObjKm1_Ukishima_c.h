@@ -34,7 +34,7 @@ struct daObjKm1_Ukishima_c : dBgActor_c {
 
     /* size_t == unsigned long here; unsigned int is illegal. Forwards
        fBase_c::operator new until #2570 merges. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

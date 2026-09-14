@@ -67,7 +67,7 @@ struct daObjPushblock_c : dBgActor_c {
        with tools/mangle.py: _ZN16daObjPushblock_c4KillEv. */
     void Kill();                           /* slot 31 */
 
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };

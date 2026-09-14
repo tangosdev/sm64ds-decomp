@@ -37,7 +37,7 @@ struct daStarGate_c : dActor_c {
         StateFunc main;
     };
 
-    static void *operator new(unsigned long size);
+    static void *operator new(size_t size);
 
     u8          pad_0d0[0x4];
     CommonModel mModel;          /* 0x0d4 */
@@ -79,7 +79,7 @@ struct daStarGate_c : dActor_c {
     static State ST_UNLOCKING;
 };
 
-inline void *daStarGate_c::operator new(unsigned long size)
+inline void *daStarGate_c::operator new(size_t size)
 {
     return _ZN7fBase_cnwEj((unsigned)size);
 }

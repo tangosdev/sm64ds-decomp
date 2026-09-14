@@ -44,7 +44,7 @@ struct daObjPathLift_c : dPathLiftActor_c {
     s32         mGroundY;     /* 0x4ac */
     u8          mTimer;       /* 0x4b0 */
 
-    static void *operator new(unsigned long size)
+    static void *operator new(size_t size)
     {
         return _ZN7fBase_cnwEj((unsigned)size);
     }

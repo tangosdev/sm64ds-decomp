@@ -49,7 +49,7 @@ struct daObjKumo_c : dActor_c {
 
     /* size_t == unsigned long here; unsigned int is illegal. Forwards to
        fBase_c::operator new until #2570 merges a shared spelling. */
-    static void *operator new(unsigned long size) {
+    static void *operator new(size_t size) {
         return _ZN7fBase_cnwEj((unsigned)size);
     }
 };
