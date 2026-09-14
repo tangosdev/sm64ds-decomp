@@ -110,6 +110,31 @@ src/minigames/d_s_mg_roulette.cpp
 # assumed: the object leaves it UNDEF and link resolves it, rc 0).
 src/actors/daGmch_c.cpp
 
+# ---- GATE 3: two one-row seats, neither needing hostgen --------------------
+#
+# Both were found by a sweep from the SOURCE side rather than from the delinks
+# side (out/SEATS2/sweep.txt): every src TU on no live slice row, indexed by
+# the ROM names its own "// @symbol" lines claim and by the out-of-line
+# members it defines, intersected with the wall. A scan keyed on file names
+# misses both, and misses more than that: src/_ZN9JetStream8BehaviorEv.cpp
+# defines BowserPuzzleManager::Behavior.
+
+# dPa_c::level_c::simpleCallback_c::SpawnParticles, the base of nine particle
+# callback classes. Closes ?SpawnParticles@simpleCallback_c@level_c@dPa_c@@
+# UAEXAAUSystem@Particle@@@Z, which Particle::SysTracker's constructor and
+# three derived callbacks all reference. Duplicates nothing, references
+# nothing new.
+src/_ZN5dPa_c7level_c16simpleCallback_c14SpawnParticlesERN8Particle6SystemE.cpp
+
+# TTC_MovingBeam::Behavior. The TU declares the member itself, non-virtual,
+# so it compiles to ?Behavior@TTC_MovingBeam@@QAEHXZ while the reference the
+# link carries is the virtual spelling out of the class header
+# (_ZN14TTC_MovingBeamD1Ev.cpp.obj, which emits the class vftable). Seating
+# the TU alone therefore closes nothing; it is seated WITH the access-letter
+# bridge in port/unmatched/Seats2_NameBridges.cpp, and the pair closes the
+# row. Duplicates nothing: the flat ROM name stays with the hand face in
+# port/hal/actor_classes_ov065.cpp, which now has a real body under it.
+src/_ZN14TTC_MovingBeam8BehaviorEv.cpp
 # ---- the name bridges the class seats need --------------------------------
 # Sixteen decorated ROM data names, each a C++ declaration of a hosted symbol
 # that MSVC decorates because the declaration carries no linkage
