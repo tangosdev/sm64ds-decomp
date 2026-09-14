@@ -18954,3 +18954,29 @@ foreach(_hgt_rel IN LISTS PORT_HOSTGEN_TU)
     message(STATUS "HOSTGEN TU: ${_hgt_rel} substituted in "
                    "${PORT_HOSTGEN_TU_HITS_${_hgt_rel}} slice row(s)")
 endforeach()
+
+# ===========================================================================
+# SLICE FACES4 (run link100, lane FACES4, wave 9c)
+# ===========================================================================
+#
+# One host file, port/hal/faces4_rows.cpp, carrying thirty NAME rows of
+# walk_window's wall: twenty-three destructor adapters the main -> port sync
+# renamed on one side only, five ROM free functions a caller spells at C++
+# linkage, and two real faces whose left hand sides are __thiscall. No src TU
+# is compiled here and no ROM body enters the link because of it, so this is
+# not a seat list. port/slice_faces4.txt carries the derivation and the file
+# itself carries the evidence for every row, including what the tidy version of
+# each looks like once a lane owns hal/dtor_faces_cpp.h and the fillers.
+port_read_lines("${CMAKE_CURRENT_SOURCE_DIR}/slice_faces4.txt"
+                SLICE_FACES4_LINES)
+set(SLICE_FACES4_SOURCES "")
+foreach(line IN LISTS SLICE_FACES4_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_FACES4_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+foreach(_tfaces4 walk_window walk_window_hires)
+    target_sources(${_tfaces4} PRIVATE ${SLICE_FACES4_SOURCES})
+endforeach()
